@@ -35,7 +35,6 @@ export interface CarouselProps extends ElementProps<'div', 'onChange'> {
     speed?: number;
     style?: React.CSSProperties;
     trigger?: (typeof strings.TRIGGER)[number];
-    /** Exposes the play, stop, goTo, prev and next methods */
     ref?: React.Ref<CarouselHandle>;
 }
 

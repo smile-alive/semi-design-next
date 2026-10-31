@@ -33,7 +33,6 @@ export type AutosizeRow = {
     maxRows?: number;
 };
 
-/** A native event on the textarea, typed as Solid hands it to a handler */
 export type TextAreaElementEvent<E extends Event> = E & { currentTarget: HTMLTextAreaElement; target: Element };
 
 /**
@@ -75,11 +74,9 @@ export interface TextAreaProps extends ElementProps<'textarea', 'onChange' | 'on
     /** Internal, used by Chat: Enter does not start a new line, Shift+Enter does */
     disabledEnterStartNewLine?: boolean;
     showLineNumber?: boolean;
-    /** The starting line number, default is 1 */
     lineNumberStart?: number;
     lineNumberClassName?: string;
     lineNumberStyle?: JSX.CSSProperties;
-    /** The style of the textarea element */
     textareaStyle?: JSX.CSSProperties;
     /** When enabled, onChange fires once after an IME composition ends, not during it */
     composition?: boolean;
@@ -126,7 +123,6 @@ export default function TextArea(rawProps: TextAreaProps) {
 
     const inGroup = group?.layer === layer ? group : undefined;
 
-    // own value, then the enclosing InputGroup's, then the global default
     const props = mergeProps(defaulted, {
         get disabled() {
             return rawProps.disabled ?? inGroup?.view().disabled ?? defaulted.disabled;
@@ -239,7 +235,6 @@ export default function TextArea(rawProps: TextAreaProps) {
 
     const observesSize = () => Boolean(local.autosize) || (local.resize !== undefined && local.resize !== 'none');
 
-    // the stylesheet turns the row counts into the min/max block size (see textarea.scss)
     const textareaStyle = (): JSX.CSSProperties | undefined => {
         if (local.autosize) {
             const bounds = typeof local.autosize === 'object' ? local.autosize : {};
@@ -255,7 +250,6 @@ export default function TextArea(rawProps: TextAreaProps) {
 
     const lineNumberStyle = (): JSX.CSSProperties => {
         const { height } = lineLayout();
-        // capped at the textarea height so the panel does not expand it
         return { ...local.lineNumberStyle, height: height ? `${height}px` : undefined, 'max-height': height ? `${height}px` : undefined };
     };
 
@@ -281,7 +275,6 @@ export default function TextArea(rawProps: TextAreaProps) {
             return;
         }
         const { scrollTop } = e.currentTarget;
-        // rAF avoids layout thrash
         scheduleScrollSync(() => {
             if (lineNumberPanel) {
                 lineNumberPanel.scrollTop = scrollTop;
@@ -304,7 +297,6 @@ export default function TextArea(rawProps: TextAreaProps) {
         handover(node);
     };
 
-    // showLineNumber remounts the textarea inside a content wrapper, as React does
     const textareaNode = () => (
         <textarea
             {...rest}
@@ -361,7 +353,6 @@ export default function TextArea(rawProps: TextAreaProps) {
             return;
         }
         autofocus(local.autofocus, textarea());
-        // focusing a textarea that holds a value leaves the caret at the end
         if (local.autofocus) {
             textarea()?.setSelectionRange(0, 0);
         }
@@ -374,7 +365,6 @@ export default function TextArea(rawProps: TextAreaProps) {
     useResizeObserver(
         () => (local.showLineNumber ? textarea() : null),
         (entries) => {
-            // contentRect excludes borders, matching textarea.clientHeight
             const { width, height } = entries[entries.length - 1].contentRect;
             setLineLayout({ width, height });
         }

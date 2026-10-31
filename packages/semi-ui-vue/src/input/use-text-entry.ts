@@ -21,10 +21,6 @@ interface Options {
     emitUpdate: (value: string) => void;
 }
 
-/**
- * The `v-model` modifiers Input and TextArea share: the `.lazy` draft, and the text a `.trim` or `.number` model or a
- * rejecting parent leaves in the element.
- */
 export default function useTextEntry({ element, draft, props, shown, foundation, emitUpdate }: Options) {
     // Both the value binding and restoreShownValue write this, so every render keeps a typed value the model normalised
     const elementText = () => {

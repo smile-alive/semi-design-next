@@ -202,9 +202,7 @@ type RegionFilter = (r: FoldingRegion) => boolean;
 type RegionFilterWithLevel = (r: FoldingRegion, level: number) => boolean;
 
 /**
- * Collapse or expand the regions at the given locations
- * @param levels The number of levels. Use 1 to only impact the regions at the location, use Number.MAX_VALUE for all levels.
- * @param lineNumbers the location of the regions to collapse or expand, or if not set, all regions in the model.
+ * @param levels Use 1 to only impact the regions at the location, Number.MAX_VALUE for all levels.
  */
 export function toggleCollapseState(foldingModel: FoldingModel, levels: number, lineNumbers: number[]) {
     const toToggle: FoldingRegion[] = [];

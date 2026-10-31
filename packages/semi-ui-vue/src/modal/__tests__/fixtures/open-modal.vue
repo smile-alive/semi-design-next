@@ -10,7 +10,6 @@
 
 <template>
     <Button @click="visible = true">Open Modal</Button>
-    <!-- No motion, so the measured height is not a frame of the opening animation -->
     <Modal v-bind="$attrs" v-model:visible="visible" :motion="false" title="Modal">
         <slot>
             <p>This is the content of a basic modal.</p>

@@ -13,7 +13,6 @@ import useWatch from '../_base/use-watch';
 import { RadioGroupContext, type RadioGroupButtonSize, type RadioGroupContextValue, type RadioMode } from './context';
 import Radio, { type RadioType } from './radio';
 
-/** Data only; other label and extra content goes through RadioGroup's `renderLabel` and `renderExtra` */
 export interface OptionItem {
     label?: string | number;
     value?: string | number | boolean;
@@ -33,7 +32,6 @@ export interface RadioGroupProps extends ElementProps<'div', 'onChange' | 'defau
     disabled?: boolean;
     name?: string;
     options?: Options;
-    /** The label of an `options` item */
     renderLabel?: (option: OptionItem, index: number) => JSX.Element;
     /** The extra text of an `options` item; a button radio has none */
     renderExtra?: (option: OptionItem, index: number) => JSX.Element;

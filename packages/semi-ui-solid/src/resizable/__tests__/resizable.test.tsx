@@ -271,7 +271,6 @@ describe('Resizable', () => {
         expect(sizeOf(container).width).toBe('230px');
         setExtra({ snap: { x: [100, 300] } });
         drag(getHandle(container, 'right'), [100, 100], [100, 100]);
-        // 230 is nearer to 300 than to 100
         expect(sizeOf(container).width).toBe('300px');
     });
 

@@ -101,7 +101,6 @@ describe('Svelte AudioPlayer', () => {
         const audio = getAudio(root);
         expect(audio).toHaveAttribute('src', SRC);
         expect(audio.autoplay).toBe(false);
-        // the hidden media element does not repeat the root's class and style
         expect(audio).not.toHaveAttribute('class');
         expect(audio).not.toHaveAttribute('style');
         // the captions track exists for the media rule only: it does not point at the audio itself
@@ -341,7 +340,6 @@ describe('Svelte AudioPlayer', () => {
         const trigger = closestButton(container, 'volume_2');
         expect(trigger).toHaveAttribute('type', 'button');
         expect(trigger).toHaveAccessibleName('音量');
-        // the popup holds a focusable slider, so it is a dialog rather than a tooltip
         expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
         expect(trigger.parentElement?.closest('[tabindex="0"]')).toBeNull();
         await hoverOpen(trigger);
@@ -689,7 +687,6 @@ describe('Svelte AudioPlayer 滑块', () => {
         setMedia(audio, { currentTime: 65 });
         await fire(fireEvent(audio, new Event('timeupdate')));
         const slider = within(container as HTMLElement).getByRole('slider', { name: '播放进度' });
-        // a native range exposes its own min, max and value as the slider's aria-valuemin, -valuemax and -valuenow
         expect(slider).toHaveAttribute('min', '0');
         expect(slider).toHaveAttribute('max', '200');
         expect(slider).toHaveValue('65');

@@ -51,7 +51,6 @@ export interface ScrollPanelProps extends BasicScrollPanelProps {
 
 /** Live like component props: read the fields where they are used */
 export interface TriggerRenderProps<Multiple extends boolean | undefined = undefined> extends Omit<BasicTriggerRenderProps, 'componentProps' | 'value' | 'inputValue' | 'onClear'> {
-    /** The Cascader's props without `ref` */
     componentProps: Omit<CascaderProps<boolean>, 'ref'>;
     /** The position in treeData (such as `0-0-1`) of the selected node, or in multiple mode of each checked node */
     value: ByMultiple<Multiple, string | undefined, Set<string>>;
@@ -61,16 +60,13 @@ export interface TriggerRenderProps<Multiple extends boolean | undefined = undef
     onClear: (e?: MouseEvent) => void;
 }
 
-/* The basic type of the value of Cascader */
 export type SimpleValueType = string | number | CascaderData;
 
-/* The value of Cascader */
 export type Value = SimpleValueType | Array<SimpleValueType> | Array<Array<SimpleValueType>>;
 
 /** A single-mode value is one node or its path; a multiple-mode value may also be a list of paths */
 type ModeValue<Multiple> = ByMultiple<Multiple, SimpleValueType | Array<SimpleValueType>, Value>;
 
-/** The methods on a Cascader ref */
 export interface CascaderHandle {
     open: () => void;
     close: () => void;
@@ -108,7 +104,6 @@ export interface CascaderProps<Multiple extends boolean | undefined = undefined>
     autoMergeValue?: boolean;
     disabled?: boolean;
     filterTreeNode?: ((inputValue: string, treeNodeString: string, data?: CascaderData) => boolean) | boolean;
-    /** `first` and `second` are the two result paths, from the root to the matched node */
     filterSorter?: (first: CascaderData[], second: CascaderData[], inputValue: string) => number;
     /** Called once per search result with live props */
     filterRender?: (props: FilterRenderProps) => JSX.Element;
@@ -160,7 +155,6 @@ export interface CascaderProps<Multiple extends boolean | undefined = undefined>
     onSearch?: (value: string) => void;
     /** Renders the selected path's labels, or in multiple mode one tag per checked node */
     displayRender?: ByMultiple<Multiple, (selected: Array<string | number>) => JSX.Element, (selected: Entity, idx: number) => JSX.Element>;
-    /** Content of an option in the columns; the search results, the selection and the tags show the label text */
     renderLabel?: (item: CascaderData) => JSX.Element;
     /** Focus entering the trigger or the dropdown from outside passes the `focusin` event; moving within them does not report again. A click or key that reopens after a pick closed it reports it too */
     onFocus?: (e: MouseEvent | KeyboardEvent | FocusEvent) => void;
@@ -173,7 +167,6 @@ export interface CascaderProps<Multiple extends boolean | undefined = undefined>
     ref?: Ref<CascaderElement>;
 }
 
-// The body serves both modes, so it reads the mode-dependent props through one wide type
 interface CascaderBodyProps extends Omit<CascaderProps<boolean>, 'value' | 'defaultValue' | 'onChange' | 'onSelect' | 'displayRender' | 'triggerRender'> {
     value?: Value;
     defaultValue?: Value;
@@ -238,7 +231,6 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
     // fixed for the instance's lifetime: the layer and the context value are
     const inGroup = untrack(() => own.inGroup);
 
-    // as Input: own value, then the group's, then the global default
     const props = mergeProps(defaulted, {
         get size() {
             return bodyProps.size ?? inGroup?.view().size ?? defaulted.size ?? 'default';
@@ -439,7 +431,6 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
     // ids are IDREFs for aria-activedescendant, so a key with spaces is encoded
     const optionId = (key: string) => `${popupId}-option-${encodeURIComponent(key)}`;
 
-    // multiple mode shows tags; its displayRender renders one tag
     const selectedPath = createMemo(() => {
         const [key] = view.selectedKeys;
         return key === undefined || local.multiple ? undefined : (CascaderFoundation.getItemPropPath(key, local.displayProp, view.keyEntities) as Array<string | number>);
@@ -693,7 +684,6 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
 
     const setRoot = (node: HTMLDivElement) => {
         root = node;
-        // ref.focus() focuses the combobox, as Tooltip and focus handover expect; it does not open the dropdown
         node.focus = (options) => untrack(() => focusCombobox(options));
         node.blur = foundation.blur;
         // React's handle methods ride on the element: a Tooltip wrapping the Cascader needs the element itself as its ref

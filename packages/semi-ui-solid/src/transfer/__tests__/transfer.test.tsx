@@ -99,7 +99,6 @@ const getLeftItemTexts = () => Array.from(document.querySelectorAll(`.${prefixCl
 const getRightItemTexts = () => Array.from(document.querySelectorAll(`.${prefixCls}-right-item-text`)).map((item) => item.textContent);
 const getHeaderButtons = () => document.querySelectorAll<HTMLButtonElement>(`button.${prefixCls}-header-all`);
 
-/** Renders with props a test can replace, as React's rerender */
 function renderWith(initial: TransferProps) {
     const [props, setProps] = createSignal(initial);
     const result = render(() => <Transfer {...props()} />);
@@ -276,7 +275,6 @@ describe('Transfer', () => {
 
     it('可排序的已选列表仍是其项目的列表', async () => {
         render(() => <Transfer defaultValue={['1']} dataSource={defaultItems} draggable />);
-        // dnd-kit loads lazily; until then a plain list stands in
         await waitFor(() => expect(document.querySelector(`.${prefixCls}-right-item-sortable-item`)).not.toBeNull());
         const selected = screen.getByRole('list', { name: zh_CN.Transfer.selectedList });
         expect(within(selected).getByRole('listitem')).toHaveTextContent('item1');
@@ -1050,7 +1048,6 @@ describe('Transfer 排序与禁用', () => {
                 <Transfer defaultValue={['1']} dataSource={defaultItems} draggable />
             </>
         ));
-        // once the enabled one shows sortable items, dnd-kit has loaded for both
         await waitFor(() => expect(document.querySelector(`.${prefixCls}-right-item-sortable-item`)).not.toBeNull());
         const [disabledTransfer] = document.querySelectorAll<HTMLElement>(`.${prefixCls}`);
         const handles = within(disabledTransfer).getAllByRole('button', { name: zh_CN.Transfer.dragSort });

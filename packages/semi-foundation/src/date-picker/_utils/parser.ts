@@ -1,12 +1,5 @@
-/**
- * @file
- * Various date-related analysis methods
- */
 import { type Locale, isValid, parseISO, parse } from 'date-fns';
 
-/**
- * Parsing value to Date object
- */
 export function compatibleParse(value: string, formatToken?: string, baseDate?: Date, locale?: Locale): Date | null {
     let result = null;
     if (value) {

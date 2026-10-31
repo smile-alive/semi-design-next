@@ -8,15 +8,10 @@ import { hasContent } from '../_utils';
 const prefixcls = cssClasses.PREFIX;
 
 export interface MetaProps extends ElementProps<'div', 'title'> {
-    /** Avatar */
     avatar?: React.ReactNode;
-    /** Style class name */
     className?: string;
-    /** Description */
     description?: React.ReactNode;
-    /** Inline style */
     style?: React.CSSProperties;
-    /** Title */
     title?: React.ReactNode;
     /** Attached to the root div */
     ref?: React.Ref<HTMLDivElement>;

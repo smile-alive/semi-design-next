@@ -6,7 +6,6 @@ import OverflowList, { type OverflowItem, type OverflowListProps } from '..';
 
 const items = ['alarm', 'bookmark', 'camera', 'duration', 'edit', 'folder'].map((key) => ({ key }));
 const prefixCls = `${BASE_CLASS_PREFIX}-overflow-list`;
-// Stands in for Tag: a fixed-size inline box, since no theme is loaded
 function Chip(props: { width?: number; marginRight?: number; children: unknown }) {
     return <span style={{ display: 'inline-block', flex: '0 0 auto', width: `${props.width ?? 60}px`, 'margin-right': props.marginRight ? `${props.marginRight}px` : undefined }}>{props.children as string}</span>;
 }

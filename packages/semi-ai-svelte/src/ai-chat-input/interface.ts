@@ -53,7 +53,6 @@ export interface AIChatInputTopSlotSnippetProps {
 }
 
 export interface AIChatInputUploadButtonSnippetProps {
-    /** The built-in trigger content */
     defaultNode: Snippet;
     /** Upload opens the dialog on click already; for content that stops the click from reaching it */
     onOpenFileDialog: () => void;
@@ -64,7 +63,6 @@ export interface AIChatInputUploadButtonSnippetProps {
 export interface AIChatInputActionAreaSnippetProps {
     /** The upload trigger, which stays mounted (hidden when `showUploadButton` is off): paste upload goes through it */
     upload: Snippet;
-    /** The send or stop button */
     send: Snippet;
     class: string;
 }
@@ -94,7 +92,6 @@ export interface AIChatInputSkillIconSnippetProps {
 
 export interface AIChatInputTemplateSnippetProps {
     skill?: Skill;
-    /** Replaces the editor content */
     onTemplateClick: (content: string) => void;
 }
 
@@ -116,7 +113,6 @@ export interface AIChatInputProps extends Omit<HTMLAttributes<HTMLDivElement>, N
     placeholder?: PlaceholderProps;
     popoverProps?: AIChatInputPopoverProps;
     references?: Reference[];
-    /** Full round footer buttons */
     round?: boolean;
     sendHotKey?: 'enter' | 'shift+enter';
     /** Read once, when the editor is created */
@@ -148,24 +144,17 @@ export interface AIChatInputProps extends Omit<HTMLAttributes<HTMLDivElement>, N
     onSkillChange?: (skill?: Skill) => void;
     onStopGenerate?: () => void;
     onUploadChange?: (props: UploadOnChangeProps) => void;
-    /** Replaces each reference */
     reference?: Snippet<[AIChatInputReferenceSnippetProps]>;
-    /** Placed by `topSlotPosition` */
     topSlot?: Snippet<[AIChatInputTopSlotSnippetProps]>;
     /** Replaces the upload trigger content; Upload keeps handling clicks and pasted files */
     uploadButton?: Snippet<[AIChatInputUploadButtonSnippetProps]>;
-    /** The upload tooltip content */
     uploadTip?: Snippet;
-    /** Configure items (`AIChatInput.Configure.*`) */
     configureArea?: Snippet;
-    /** Replaces the action area */
     actionArea?: Snippet<[AIChatInputActionAreaSnippetProps]>;
-    /** Replaces each suggestion; spread the option props onto its root */
+    /** Spread the option props onto its root */
     suggestionItem?: Snippet<[AIChatInputSuggestionItemSnippetProps]>;
-    /** Replaces each skill; spread the option props onto its root */
+    /** Spread the option props onto its root */
     skillItem?: Snippet<[AIChatInputSkillItemSnippetProps]>;
-    /** The icon before each skill in the skill panel */
     skillIcon?: Snippet<[AIChatInputSkillIconSnippetProps]>;
-    /** The template panel content */
     template?: Snippet<[AIChatInputTemplateSnippetProps]>;
 }

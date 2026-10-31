@@ -4,7 +4,6 @@ import { isSecondaryPress } from '../utils/pointer';
 import { type CornerDir, KEYBOARD_STEP, MIN_BOX_SIZE } from './constants';
 import { fitAspect, getCropperGeometry } from './utils';
 
-/** The props the foundation and the adapter read */
 export interface CropperFoundationProps {
     src?: string;
     aspectRatio?: number;
@@ -475,7 +474,6 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         this.#resizeDir = dir as CornerDir;
     }
 
-    /** `point` is in container coordinates */
     #resizeCornerFree = (point: Point) => {
         const { cropperBox } = this.getStates();
         const offsetX = clamp(point.x, ...this.#rangeX);
@@ -489,7 +487,6 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
             },
         };
         const { paramX, paramY } = this.#resizeVector;
-        // the opposite edge stays put; dragging past it flips the direction; MIN_BOX_SIZE keeps the box from collapsing
         if (paramX) {
             const fixed = cropperBox.centerPoint.x - (paramX * cropperBox.width) / 2;
             const raw = cropperBox.width + paramX * (offsetX - (fixed + paramX * cropperBox.width));

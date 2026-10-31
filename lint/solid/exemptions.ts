@@ -427,9 +427,6 @@ export const solidExemptions: Exemption[] = [
         files: ['packages/semi-ui-solid/src/table/resizable-header-cell.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
-
-    // Demos
-
     // Like Select's Option: aria-activedescendant keeps focus on the input; native <option> needs <select>
     {
         files: ['website/content/input/select/demos/render-option-item.solid.tsx'],

@@ -3,7 +3,6 @@
     import Feedback from '../feedback.svelte';
     import type { FeedbackProps } from '../interface';
 
-    // The snippets are passed only when their flag is on, so absence stays observable
     let {
         store,
         onReady,

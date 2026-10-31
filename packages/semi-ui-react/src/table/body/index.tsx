@@ -35,7 +35,6 @@ export interface BodyProps extends BaseProps {
     showHeader?: boolean;
     size?: Size;
     virtualized?: Virtualized;
-    /** The rows a virtualized body renders, flattened by Table */
     virtualizedData?: Array<FlattenData | GroupFlattenData>;
     components?: TableComponents;
     groups?: Map<string | number, Set<string | number>>;
@@ -246,9 +245,6 @@ export default function Body(props: BodyProps) {
         [prefixCls]
     );
 
-    /**
-     * Updates hoveredRowKey; with rowSpanHover also highlights all rows covered by rowSpan cells
-     */
     const onRowHover = useCallback(
         (isHover: boolean, rowKeyOfRow: string | number) => {
             setHoveredRowKey(isHover ? rowKeyOfRow : null);

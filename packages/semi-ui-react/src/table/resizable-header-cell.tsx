@@ -2,7 +2,6 @@ import { memo, useRef, type PointerEvent, type SyntheticEvent, type ThHTMLAttrib
 import { cssClasses, numbers } from '@fibrae/semi-foundation/table/constants';
 import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
 
-/** The header cell attributes TableHeaderRow passes, with the resize handlers ResizableTable adds */
 export interface ResizableHeaderCellProps extends ThHTMLAttributes<HTMLTableCellElement> {
     onResize?: ResizeFn;
     onResizeStart?: ResizeFn;

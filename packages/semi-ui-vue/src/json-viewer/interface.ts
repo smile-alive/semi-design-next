@@ -22,7 +22,6 @@ export interface JsonViewerProps {
     height?: number | string;
     showSearch?: boolean;
     options?: JsonViewerOptions;
-    /** Whether to limit the search button drag bounds within the JsonViewer container */
     limitSearchButtonBounds?: boolean;
 }
 
@@ -32,7 +31,6 @@ export interface JsonViewerEmits {
 }
 
 export interface JsonViewerCustomRenderSlotProps {
-    /** The matched rule */
     item: JsonViewerCustomRenderRule;
     /** Its index in options.customRenderRule */
     index: number;
@@ -41,7 +39,6 @@ export interface JsonViewerCustomRenderSlotProps {
 }
 
 export interface JsonViewerSearchButtonSlotProps {
-    /** The default search button, rendered with `<component :is>` */
     defaultButton: VNode;
     showSearchBar: boolean;
     onToggleSearchBar: () => void;

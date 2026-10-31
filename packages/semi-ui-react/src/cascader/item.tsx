@@ -78,7 +78,6 @@ export interface CascaderItemProps {
 
 const prefixcls = cssClasses.PREFIX_OPTION;
 
-/** The inner element of the virtual search list: the rows are its `li` children */
 function VirtualListInner(props: React.ComponentProps<'ul'>) {
     return <ul {...props} className={`${prefixcls}-list`} role="none" />;
 }

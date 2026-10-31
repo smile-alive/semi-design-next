@@ -59,7 +59,6 @@ function renderDrag(initial: Props, children: () => VNodeChild, wrapper?: Props)
 }
 const dragMe = () => <div>Drag me</div>;
 
-// jsdom has no layout; give elements the offset sizes the absolute strategy reads
 function setSize(element: Element, width: number, height: number) {
     Object.defineProperty(element, 'offsetWidth', { configurable: true, value: width });
     Object.defineProperty(element, 'offsetHeight', { configurable: true, value: height });

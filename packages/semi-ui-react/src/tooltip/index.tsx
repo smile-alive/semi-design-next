@@ -148,9 +148,6 @@ const defaultProps = {
     condition: true,
 } satisfies Partial<TooltipProps>;
 
-/**
- * The trigger FragmentInstance, popup node and adapter-managed listeners; one per Tooltip
- */
 class TooltipRuntime {
     readonly #triggerElements = new Set<Element>();
     // cached between the observer's reports; undefined once they change the set
@@ -273,7 +270,6 @@ class TooltipRuntime {
 
 type SpecialStatus = typeof strings.STATUS_DISABLED | typeof strings.STATUS_LOADING | false;
 
-/** `groupDisabled`: a Button without its own `disabled` takes the enclosing ButtonGroup's */
 function getSpecialStatus(elem: React.ReactNode, groupDisabled?: boolean): SpecialStatus {
     if (!isValidElement<{ disabled?: boolean; loading?: boolean }>(elem)) {
         return false;
@@ -303,7 +299,6 @@ export function wrapSpan(elem: React.ReactNode, wrapperClassName?: string, focus
     );
 }
 
-/** Whether a trigger can carry the popup state attributes: a generic one (a Tag, a div, an icon) cannot */
 export function canCarryPopupState(child: React.ReactElement<Record<string, any>>) {
     const { role } = child.props;
     if (role) {
@@ -464,8 +459,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
         const stop = (e: React.MouseEvent | React.FocusEvent<HTMLElement>) => props.stopPropagation && stopPropagation(e);
 
         return (
-            // tabIndex -1 keeps it out of the tab order; popover="manual" (T4):
-            // Semi drives open/close, not UA light dismiss. The foundation writes x-placement and the position.
+            // popover="manual" (T4): Semi drives open/close, not UA light dismiss
             <div
                 ref={setContainer}
                 className={className}
@@ -544,7 +538,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
         return { ...aria, ...target.props, ...(joinsDescription && { 'aria-describedby': aria['aria-describedby'] }) };
     };
 
-    // keydown is excluded; it is merged into the trigger's onKeyDown below
     useLayoutEffect(() => {
         const frag = runtime.trigger;
         if (!frag) {
@@ -571,7 +564,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
         return () => el.hidePopover();
     }, [runtime, state.isInsert]);
 
-    // Top layer enter/leave runs after commit so the container ref is attached
     useLayoutEffect(() => {
         const el = runtime.container;
         if (!el || !state.isInsert) {
@@ -733,7 +725,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
             : ownKeyDown,
         style: { ...child.props.style, ...extraStyle },
         className: clsx(child.props.className),
-        // keyboard access; some triggers such as Select set -1 or 0 themselves
+        // some triggers such as Select set -1 or 0 themselves
         tabIndex: child.props.tabIndex || 0,
         'data-popupid': popupId,
     });

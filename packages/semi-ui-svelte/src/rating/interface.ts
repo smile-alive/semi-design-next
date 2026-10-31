@@ -37,7 +37,6 @@ export interface RatingItemProps {
     disabled: boolean;
     count: number;
     size: number | 'small' | 'default';
-    /** A custom unit used as is; otherwise the locale names it */
     unit?: string;
     preventScroll?: boolean;
     /** No radio stands for the value: this star's first radio is the Tab stop */
@@ -45,7 +44,6 @@ export interface RatingItemProps {
     character?: string | Snippet;
     /** From a wrapping Tooltip: the description reaches the radios, the Tab stop is dropped */
     trigger?: TooltipTriggerProps;
-    /** The pointer moved over the star: a preview of its value */
     onPreview: (event: MouseEvent) => void;
     onPick: (event: MouseEvent) => void;
     /** Enter or Space on a radio, or a click without a pointer (assistive technology): the value that radio stands for */

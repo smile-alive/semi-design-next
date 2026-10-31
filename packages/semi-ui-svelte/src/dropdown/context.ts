@@ -4,27 +4,21 @@ import { createContext } from '../_base/create-context.js';
 import type { Trigger } from '../tooltip/index.js';
 
 export interface DropdownContextView {
-    /** How many menus enclose this point: 1 inside a top-level menu */
     readonly menuDepth: number;
     readonly showTick: boolean;
     readonly selectionMode?: DropdownSelectionMode;
     readonly trigger: Trigger;
 }
 
-/** What a Dropdown provides to its popup content; its trigger reads the context of the menu around the Dropdown */
 export interface DropdownContext {
-    /** Getters over the Dropdown's props, so readers stay reactive */
     readonly view: DropdownContextView;
-    /** Closes the popup that renders the menu, without moving focus */
     close: () => void;
-    /** Closes that popup and the popups of every enclosing menu */
     closeAll: () => void;
     getPopupId: () => string;
 }
 
 export const [getDropdownContext, setDropdownContext] = createContext<DropdownContext>('Dropdown', { optional: true });
 
-/** The foundation context; outside any menu the depth is 0 */
 export function menuContext(context?: DropdownContext, direction?: 'ltr' | 'rtl'): DropdownMenuContext {
     return {
         ...context?.view,

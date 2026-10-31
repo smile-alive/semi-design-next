@@ -16,7 +16,6 @@ export function createContext<T>(name: string, { optional = false }: ContextOpti
         provide(key, value);
     };
 
-    // `caller` names the child in the error, e.g. useCollapseContext('Collapse.Panel')
     const useContext = (caller = 'This component') => {
         const ctx = inject(key, undefined);
         if (ctx === undefined && !optional) {

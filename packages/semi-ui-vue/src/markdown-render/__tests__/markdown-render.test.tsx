@@ -17,7 +17,6 @@ import MdxWrapper from './fixtures/mdx-wrapper.vue';
 import OwnHeading from './fixtures/own-heading.vue';
 import TemplateDefaults from './fixtures/template-defaults.vue';
 
-// unified calls a plugin's attacher once per compile, so a no-op remark plugin counts compiles
 const compileCounter = () => vi.fn<() => undefined>(() => undefined);
 const settle = () => sleep(20);
 const prefix = `${BASE_CLASS_PREFIX}-markdownRender`;
@@ -46,7 +45,6 @@ describe('MarkdownRender', () => {
 
     it('代码块的子节点是元素时不交给高亮，直接渲染 code', async () => {
         type Node = { type?: string; tagName?: string; properties?: { className?: string[] }; children?: Node[] };
-        // stands in for a highlighter plugin that splits the code text into spans
         const wrapCodeText = () => (tree: Node) => {
             const visit = (node: Node) => {
                 if (node.tagName === 'code' && node.properties?.className?.includes('language-js')) {

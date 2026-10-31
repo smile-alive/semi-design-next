@@ -7,7 +7,6 @@ const prefix = cssClasses.PREFIX;
 
 interface FieldGridProps {
     label?: JSX.Element;
-    /** The main content: the control, its messages and extra text */
     children?: JSX.Element;
     mainClass?: string;
     labelAlign?: string;

@@ -8,7 +8,6 @@
         log: string[];
     }
 
-    // `target` is the prop under test; the other one is left out
     let { target, mode, store }: { target: 'value' | 'inputValue'; mode: 'bind' | 'function' | 'one-way' | 'uncontrolled'; store: Store } = $props();
 
     const log = (entry: string) => {

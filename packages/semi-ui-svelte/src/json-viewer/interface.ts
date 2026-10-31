@@ -17,7 +17,6 @@ export interface JsonViewerOptions extends Omit<CoreOptions, 'customRenderRule' 
 }
 
 export interface JsonViewerCustomRenderArgs {
-    /** The matched rule */
     item: JsonViewerCustomRenderRule;
     /** Its index in options.customRenderRule */
     index: number;
@@ -26,7 +25,6 @@ export interface JsonViewerCustomRenderArgs {
 }
 
 export interface JsonViewerSearchButtonArgs {
-    /** The default search button, drawn with `{@render defaultButton()}` */
     defaultButton: Snippet;
     showSearchBar: boolean;
     onToggleSearchBar: () => void;
@@ -45,7 +43,6 @@ export interface JsonViewerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'c
     height?: number | string;
     showSearch?: boolean;
     options?: JsonViewerOptions;
-    /** Whether to limit the search button drag bounds within the JsonViewer container */
     limitSearchButtonBounds?: boolean;
     onChange?: (value: string) => void;
     /**
@@ -53,7 +50,6 @@ export interface JsonViewerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'c
      * token's text in place, decided once when the token is laid out.
      */
     customRender?: Snippet<[JsonViewerCustomRenderArgs]>;
-    /** Replaces the search button; draws the default one through `defaultButton` */
     searchButton?: Snippet<[JsonViewerSearchButtonArgs]>;
 }
 

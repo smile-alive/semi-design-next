@@ -14,7 +14,6 @@ function apiCollector() {
     return { onApi, api: () => formApi as FormApi };
 }
 
-/** Like renderForm, with every field type available (DatePicker and Upload included) */
 export function renderAnyFields(form: Record<string, unknown>, fields: AnyFieldSpec[]) {
     const store = createStore<AnyFieldsStore>({ form, fields });
     const { onApi, api } = apiCollector();
@@ -22,7 +21,6 @@ export function renderAnyFields(form: Record<string, unknown>, fields: AnyFieldS
     return { ...view, store, api };
 }
 
-/** A field around a custom control, through FormField */
 export function renderWithField(store: WithFieldStore) {
     const state = createStore<WithFieldStore>(store);
     const { onApi, api } = apiCollector();

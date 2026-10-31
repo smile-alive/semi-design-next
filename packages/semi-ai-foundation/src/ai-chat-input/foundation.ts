@@ -5,7 +5,6 @@ import { cssClasses, strings } from './constants';
 import type { Attachment, BaseSkill, Suggestion, Reference, Content, LeftMenuChangeProps, MessageContent, RichTextJSON } from './interface';
 import { findSkillSlot, getSkillSlotString, transformJSONResult } from './utils';
 
-/** The props the foundation reads with getProps */
 export interface AIChatInputBaseProps {
     uploadProps?: {
         disabled?: boolean;
@@ -23,7 +22,6 @@ export interface AIChatInputBaseProps {
     references?: Reference[];
 }
 
-/** The state the foundation reads and writes */
 export interface AIChatInputBaseState {
     templateVisible: boolean;
     skillVisible: boolean;
@@ -39,7 +37,6 @@ export interface AIChatInputAdapter<P extends AIChatInputBaseProps = AIChatInput
     setContent: (content: string) => void;
     focusEditor: (pos?: any) => void;
     getEditor: () => any;
-    /** The option element at `index` of the open skill or suggestion list */
     getOptionNode: (kind: 'skill' | 'suggestion', index: number) => HTMLElement | null;
     notifyContentChange: (result: Content[]) => void;
     /** Writes the transformed content without notifying `onContentChange` */

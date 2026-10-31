@@ -2,7 +2,6 @@ import { createUniqueId } from 'solid-js';
 import { cssClasses } from '@fibrae/semi-foundation/avatar/constants';
 
 export default function TopSlotSvg(props: { gradientStart: string; gradientEnd: string }) {
-    // the url(#id) references need an id unique per instance
     const id = `${cssClasses.PREFIX}-top-slot${createUniqueId()}`;
     const filterId = `${id}-filter`;
 

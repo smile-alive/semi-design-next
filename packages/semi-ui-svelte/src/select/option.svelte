@@ -14,21 +14,16 @@
         label?: string | number;
         disabled?: boolean;
         showTick?: boolean;
-        /** The row stands for the empty state; children hold its content */
         empty?: boolean;
         selected?: boolean;
-        /** Highlighted by the keyboard or the pointer */
         focused?: boolean;
         /** The row aria-activedescendant points at; AutoComplete marks it aria-selected */
         current?: boolean;
-        /** Highlighted in a plain-text label */
         inputValue?: string;
         prefixCls?: string;
         class?: ClassValue;
         style?: string;
-        /** The option's data-* fields */
         dataAttrs?: Record<string, unknown>;
-        /** Replaces the label text */
         children?: Snippet;
         onSelect?: (event: MouseEvent) => void;
         onMouseEnter?: (event: MouseEvent) => void;

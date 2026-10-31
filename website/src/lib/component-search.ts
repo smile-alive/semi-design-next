@@ -1,6 +1,6 @@
 import type { Locale } from '#/i18n/locales';
 
-// 构建期由 docs.ts 的 getComponentIndex 生成，经 /search/<框架>.json 提供给页头搜索
+// built by getComponentIndex in docs.ts and served to the header search as /search/<framework>.json
 export interface ComponentEntry {
     page: string;
     icon?: string;
@@ -8,10 +8,10 @@ export interface ComponentEntry {
     hrefs: Record<Locale, string>;
 }
 
-// 空格和连字符不参与比较：「date picker」「Date-Picker」都能找到 DatePicker
+// ignores spaces and hyphens so "date picker" and "Date-Picker" both find DatePicker
 const normalize = (text: string) => text.toLowerCase().replace(/[\s-]+/g, '');
 
-// 任一语言的标题或目录名命中即可。完全相同排最前，其次是前缀匹配，再次是包含；同档保持侧栏顺序
+// matches any locale's title or the page folder; exact matches rank first, then prefix, then substring; ties keep sidebar order
 export function searchComponents(entries: readonly ComponentEntry[], query: string) {
     const q = normalize(query);
     if (!q) return [];

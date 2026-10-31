@@ -19,7 +19,6 @@ export interface AnnotationInfo {
 export interface ContentProps extends ElementProps<'div', 'onChange' | 'onClick'> {
     activeKey?: string | string[];
     info?: AnnotationInfo[];
-    /** A group's header after its icon */
     renderHeader?: (info: AnnotationInfo) => JSX.Element;
     renderItem?: (annotation: AnnotationItem) => JSX.Element;
     onChange?: (key: string | string[]) => void;

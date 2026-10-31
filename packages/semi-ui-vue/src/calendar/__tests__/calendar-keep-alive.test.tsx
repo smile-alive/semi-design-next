@@ -19,7 +19,6 @@ describe('Calendar KeepAlive', () => {
     it('失活后当前时间线停止更新，激活后恢复', async () => {
         vi.useFakeTimers({ toFake: ['Date', 'setInterval', 'clearInterval'] });
         vi.setSystemTime(new Date(2019, 7, 8, 12, 0, 0));
-        // jsdom has no layout: the scroll area is 480px, 20px per hour
         vi.spyOn(Element.prototype, 'scrollHeight', 'get').mockReturnValue(480);
         const view = render(Host, { props: { active: true } });
         await nextTick();

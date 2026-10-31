@@ -41,7 +41,6 @@ interface TooltipRuntime {
 
 interface PopupRegistryHandle {
     descendants: Set<() => HTMLElement | null>;
-    /** Hands a focus change inside this popup to the popups it was opened from. */
     relayFocus: (event: FocusEvent) => void;
 }
 
@@ -256,7 +255,6 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
                     element.showPopover();
                 }
                 foundation.handleShown();
-                // read right after showPopover() to see the enter animation it started
                 const entering = element.getAnimations();
                 let cancelled = false;
                 const timer = setTimeout(() => {

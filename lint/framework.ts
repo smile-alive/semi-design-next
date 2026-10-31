@@ -8,7 +8,6 @@ export interface Exemption {
     off: string[];
 }
 
-// One framework's lint configuration; override `files` globs are relative to the repository root.
 export interface FrameworkLint {
     name: string;
     // From frameworkFiles. Files of no framework are framework-free

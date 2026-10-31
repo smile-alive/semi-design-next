@@ -2,7 +2,6 @@ import type { AnchorLinkItem, AnchorProps } from '../interface';
 
 export const flat = (...ids: string[]): AnchorLinkItem[] => ids.map((id) => ({ href: `#${id}`, title: id }));
 
-/** welcome, api > docs > (doc1, doc2), contact */
 export const nested: AnchorLinkItem[] = [
     { href: '#welcome', title: 'welcome' },
     {

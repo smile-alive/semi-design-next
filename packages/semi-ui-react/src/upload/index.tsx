@@ -30,7 +30,6 @@ export interface UploadHandle {
     insert: (files: Array<CustomFile>, index?: number) => void;
     /** Uploads the files waiting for `uploadTrigger="custom"` */
     upload: () => void;
-    /** Opens the file dialog */
     openFileDialog: () => void;
 }
 
@@ -106,20 +105,15 @@ export interface UploadProps extends ElementProps<'div', 'onChange' | 'onDrop' |
     validateStatus?: ValidateStatus;
     withCredentials?: boolean;
     showTooltip?: boolean | ShowTooltip;
-    /**
-     * Enables image cropping; `true` uses defaults
-     */
+    /** `true` uses the default crop options */
     crop?: boolean | CropProps;
     /**
      * Called once with the first selected image before the crop modal opens; its result applies to the whole batch.
      * Return `false` to skip cropping and upload directly.
      */
     beforeCrop?: (file: File, fileList: File[]) => boolean | Promise<boolean>;
-    /** Called when cropping fails */
     onCropError?: (error: Error) => void;
-    /** Extra props for the crop Modal */
     cropModalProps?: UploadCropModalProps;
-    /** Imperative handle */
     ref?: React.Ref<UploadHandle>;
 }
 
@@ -307,8 +301,6 @@ function Upload(rawProps: UploadProps) {
     // A control inside a button is invalid nesting with two Tab stops, so when the content brings its own control it
     // is the button and its click bubbles up; observed since children may change what they render
     const [addAreaHasControl, setAddAreaHasControl] = useState(false);
-
-    // an icon-only area gets the locale name; any text or labelled child wins
     const [addAreaHasName, setAddAreaHasName] = useState(true);
     let addContent: ReactNode = null;
 

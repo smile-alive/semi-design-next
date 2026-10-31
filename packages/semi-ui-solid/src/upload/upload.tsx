@@ -35,7 +35,6 @@ export interface UploadHandle {
     insert: (files: Array<CustomFile>, index?: number) => void;
     /** Uploads the files waiting for `uploadTrigger="custom"` */
     upload: () => void;
-    /** Opens the file dialog */
     openFileDialog: () => void;
 }
 
@@ -121,9 +120,7 @@ export interface UploadProps extends ElementProps<'div', 'onChange' | 'onDrop' |
      * Return `false` to skip cropping and upload directly.
      */
     beforeCrop?: (file: File, fileList: File[]) => boolean | Promise<boolean>;
-    /** Called when cropping fails */
     onCropError?: (error: Error) => void;
-    /** Extra props for the crop Modal */
     cropModalProps?: UploadCropModalProps;
     /** The root element with the UploadHandle methods */
     ref?: Ref<UploadElement>;
@@ -280,7 +277,6 @@ export default function Upload(rawProps: UploadProps) {
             // called only when beforeUpload is a function; its result goes through unchanged, so undefined uploads nothing
             notifyBeforeUpload: ({ file, fileList }) => (base.getProps().beforeUpload as NonNullable<UploadProps['beforeUpload']>)({ file, fileList }),
             notifyAfterUpload: ({ response, file, fileList }) => base.getProps().afterUpload?.({ response, file, fileList }) ?? {},
-            // clearing the value makes picking the same file again fire change
             resetInput: () => {
                 if (input) {
                     input.value = '';

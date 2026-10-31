@@ -141,7 +141,6 @@ describe('Notification 浏览器', () => {
             await finishAnimations(host.notices());
             await userEvent.hover(host.notices()[0]);
             host.add('c', 1);
-            // asserting that nothing closes needs a fixed wait longer than the duration
             await new Promise((resolve) => setTimeout(resolve, 1500));
             expect(host.notices()).toHaveLength(3);
             await userEvent.unhover(host.notices()[0]);
@@ -307,7 +306,6 @@ describe('Notification 浏览器', () => {
             closeButton(notices().find((notice) => notice.textContent?.includes('first')) as HTMLElement).focus();
             api.close(leaving);
             await waitFor(() => expect(notices()).toHaveLength(1));
-            // asserting that nothing closes needs a fixed wait longer than the duration
             await new Promise((resolve) => setTimeout(resolve, 1500));
             expect(notices()).toHaveLength(1);
         } finally {

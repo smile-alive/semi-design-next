@@ -140,8 +140,6 @@ export default function UserGuide(rawProps: UserGuideProps) {
 
     // nothing rendered (popup target not measured yet) must not lock the page or take focus
     const shown = createMemo(() => Boolean(visible() && step() && (mode() === 'modal' || state().spotlightRect)));
-
-    // modal mode leaves locking and focus to Modal
     const popupShown = createMemo(() => shown() && mode() === 'popup');
 
     const showMask = () => step()?.mask ?? local.mask;
@@ -156,10 +154,8 @@ export default function UserGuide(rawProps: UserGuideProps) {
 
     const isPrimaryTheme = () => (step()?.theme ?? local.theme) === 'primary';
 
-    // read only under the guard that the step exists
     const item = () => step() as StepItem;
 
-    // read only under the guard that the target was measured
     const rect = () => state().spotlightRect as DOMRect;
 
     // only a step change scrolls, so a user scroll is followed, not fought
@@ -362,7 +358,6 @@ export default function UserGuide(rawProps: UserGuideProps) {
     useWatch(() => props.current, syncCurrent);
     useWatch(visible, syncCurrent);
 
-    // modal mode gets this from Modal
     createEffect(
         on(popupShown, (isShown) => {
             if (!isShown) {

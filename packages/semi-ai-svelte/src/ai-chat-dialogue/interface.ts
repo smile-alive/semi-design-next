@@ -25,14 +25,12 @@ export interface RoleConfig {
 }
 
 export interface AIChatDialogueTitleSnippetProps {
-    /** The built-in title */
     defaultTitle: Snippet;
     message: Message;
     role?: Metadata;
 }
 
 export interface AIChatDialogueAvatarSnippetProps {
-    /** The built-in avatar */
     defaultAvatar: Snippet;
     message: Message;
     role?: Metadata;
@@ -41,7 +39,6 @@ export interface AIChatDialogueAvatarSnippetProps {
 export interface AIChatDialogueContentSnippetProps {
     message: Message;
     role?: Metadata;
-    /** The built-in content */
     defaultContent: Snippet;
     class: string;
 }
@@ -78,7 +75,6 @@ export interface AIChatDialogueFullDialogueSnippetProps {
     class: string;
 }
 
-/** An item inside a message item's content array */
 export type MessageInnerItem = InputText | InputImage | InputFile | OutputText | Refusal;
 
 export interface AIChatDialogueContentItemSnippetProps {
@@ -148,7 +144,6 @@ export interface AIChatDialogueProps extends Omit<HTMLAttributes<HTMLDivElement>
     contentItem?: Snippet<[AIChatDialogueContentItemSnippetProps]>;
     /** Replaces the markdown rendering of a message whose content is plain text */
     messageText?: Snippet<[AIChatDialogueMessageTextSnippetProps]>;
-    /** The editor shown while a user message is being edited */
     messageEdit?: Snippet<[AIChatDialogueMessageEditSnippetProps]>;
     hintBox?: Snippet<[AIChatDialogueHintBoxSnippetProps]>;
 }
@@ -186,7 +181,6 @@ export interface ReasoningWidgetProps extends Omit<HTMLAttributes<HTMLDivElement
     summary?: ReasoningPart[];
     content?: ReasoningPart[];
     markdownRenderProps?: MarkdownRenderProps;
-    /** Replaces the markdown body */
     children?: Snippet<[ReasoningWidgetContentSnippetProps]>;
 }
 
@@ -211,6 +205,5 @@ export interface DialogueStepWidgetActionIconSnippetProps {
 
 export interface DialogueStepWidgetProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
     steps: DialogueStep[];
-    /** Shown before each action's description */
     actionIcon?: Snippet<[DialogueStepWidgetActionIconSnippetProps]>;
 }

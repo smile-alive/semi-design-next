@@ -85,7 +85,6 @@ export interface ModalHandle {
 /** A text, a VNode, or a function rendered as a functional component (it may inject); same shape as ToastNode */
 export type ModalNode = string | VNode | (() => VNodeChild);
 
-/** Options of Modal.confirm/info/success/warning/error and of the useModal methods */
 export interface ModalConfirmProps extends Omit<ModalProps, 'title' | 'visible'> {
     title?: ModalNode;
     content?: ModalNode;
@@ -123,7 +122,6 @@ export type { ConfirmType } from '@fibrae/semi-foundation/modal/confirm';
 /** A confirm's options with its type; the options ConfirmModal does not declare reach Modal as attrs. */
 export type ConfirmProps = ModalConfirmProps & { type: ConfirmType };
 
-/** The props ConfirmModal declares itself */
 export interface ConfirmModalProps {
     type: ConfirmType;
     title?: ModalNode;
@@ -140,7 +138,6 @@ export interface ConfirmModalProps {
     onCancel?: ModalProps['onCancel'];
 }
 
-/** Internal props of ModalContent; Modal passes every one of them */
 export interface ModalContentProps {
     visible: boolean;
     motion: boolean;
@@ -166,7 +163,6 @@ export interface ModalContentProps {
     contentClass?: HTMLAttributes['class'];
 }
 
-/** Internal props of the role="dialog" element */
 export interface ModalDialogProps {
     idPrefix: string;
     title?: string;

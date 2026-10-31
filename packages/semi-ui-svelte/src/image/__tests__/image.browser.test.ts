@@ -24,7 +24,6 @@ async function openPreview(index = 0) {
     await waitFor(() => expect(getPreview()).not.toBeNull());
 }
 
-// The preview image is sized once it has loaded and fitted into the container
 const imageSized = () => waitFor(() => expect(previewImg().style.width).not.toBe(''));
 const width = () => Number.parseFloat(previewImg().style.width);
 const translateX = () => new DOMMatrix(getComputedStyle(previewImg()).transform).m41;

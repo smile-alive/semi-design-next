@@ -23,7 +23,6 @@ export interface CodeItemProps {
 export interface CodeItemSlots {
     /** JsonViewer's slot, for the tokens matched by `jsonViewerProps.options.customRenderRule` */
     customRender?: (props: JsonViewerCustomRenderSlotProps) => VNode[];
-    /** JsonViewer's slot, replacing its search button */
     searchButton?: (props: JsonViewerSearchButtonSlotProps) => VNode[];
 }
 
@@ -33,7 +32,6 @@ export type CodeItemData = CodeItemProps & { key?: string };
 /** Upload props and listeners for the image slot, which binds them to its Upload */
 export type ImageUploadNodeOptions = Partial<UploadProps> &
     ElementLook & {
-        /** Attributes of the slot node in the editor's HTML */
         HTMLAttributes?: Record<string, unknown>;
         /** The uploaded image's src from the upload response; by default the response itself or its `src` */
         getUploadImageSrc?: (response: any) => string;
@@ -53,7 +51,6 @@ export interface FileItemProps {
 }
 
 export interface FileItemEmits {
-    /** The document as HTML after an edit */
     contentChange: [content: string];
 }
 
@@ -66,9 +63,7 @@ interface CollapseListProps {
 
 interface CollapseListEmits<T> {
     'update:activeKey': [activeKey: string[]];
-    /** A panel opened or closed through its arrow */
     change: [activeKey: string | string[]];
-    /** The expand button beside a panel's header */
     expand: [event: MouseEvent, item: T, mode: string];
 }
 

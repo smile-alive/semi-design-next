@@ -44,11 +44,9 @@ export interface RatingState {
     value: number;
     hoverValue: number;
     clearedValue: number;
-    /** index of the star that holds keyboard focus */
     focusVisibleStar?: number;
 }
 
-/** The props the foundation reads with getProps */
 export interface RatingBaseProps extends RatingValueProps {
     count?: number;
     allowHalf?: boolean;
@@ -145,7 +143,6 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
         };
     }
 
-    /** Whether a focus on `value` belongs to the first (half) radio of the star at `index` */
     static isFirstRadio(value: number, index: number, allowHalf: boolean) {
         return allowHalf && value - index === 0.5;
     }
@@ -159,7 +156,6 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
         return detail === 0 ? radioValue : undefined;
     }
 
-    /** What Enter or Space on a radio does: whether to `preventDefault` the key, and the value to select if any */
     static resolveKeyActivation(key: string, radioValue: number | undefined, value: number): { preventDefault: boolean; selectValue?: number } {
         const isSpace = key === ' ';
         if ((key !== 'Enter' && !isSpace) || radioValue === undefined) {
@@ -207,7 +203,6 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
         this.handleSelect(event, index, this.getStarValue(index, event.pageX));
     };
 
-    /** Commits `newValue` for the star at `index`; selecting the current value clears it when allowClear is on */
     handleSelect = (event: CE, index: number, newValue: number) => {
         const { allowClear } = this.getProps();
         const value = RatingFoundation.deriveValue(this.getProps(), this.getStates());

@@ -1,6 +1,3 @@
-// Checks every mdx under content/:
-// - Table cell counts: GFM renders a table only when header and delimiter rows match; extra body cells are dropped.
-// - Compilation with the `site:build` MDX processor, for React and (with Vue demos) Vue; MDX stops at the first error.
 import assert from 'node:assert/strict';
 import fs, { globSync } from 'node:fs';
 import path from 'node:path';
@@ -20,7 +17,6 @@ function countCells(row: string) {
 
 const delimiterRow = /^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$/;
 
-/** `line: message` for every table row whose cell count does not fit its header */
 export function tableErrors(source: string) {
     const lines = source.split('\n');
     const errors: string[] = [];
@@ -55,7 +51,6 @@ const processor = unified({ remarkPlugins: [remarkDemo], smartypants: false });
 assert(processor.createMdxRenderer !== undefined, 'the unified processor renders MDX');
 const renderer = await processor.createMdxRenderer({ syntaxHighlight: false }, { optimize: false });
 
-/** `line:column: message` of the first error compiling the file, or null when it compiles */
 export async function compileError(source: string, file: string) {
     try {
         // 'empty-with-spaces' keeps the content's line numbers, as Astro strips the frontmatter the same way

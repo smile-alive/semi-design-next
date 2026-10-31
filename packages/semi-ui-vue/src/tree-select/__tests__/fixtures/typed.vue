@@ -3,7 +3,6 @@
     import TreeSelect from '../..';
     import type { TreeNodeData } from '../../../tree';
 
-    // Type cases only: vue-tsc checks the template; no test mounts it
     type ChangeEvent = MouseEvent | KeyboardEvent | null;
     const data: TreeNodeData[] = [{ key: 'a', label: 'A', value: 'a' }];
     const one = ref<string>();

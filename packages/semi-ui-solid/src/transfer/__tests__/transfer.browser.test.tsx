@@ -55,7 +55,6 @@ describe('Transfer（浏览器）', () => {
         expect(Math.abs(rect.top - item.top)).toBeLessThan(1);
 
         await userEvent.keyboard('{Escape}');
-        // the overlay element exists only while dragging
         await waitFor(() => expect(document.querySelector(overlaySelector)).toBeNull());
         expect(screen.getByRole('dialog')).toBeVisible();
     });

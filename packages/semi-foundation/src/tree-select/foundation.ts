@@ -322,7 +322,6 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         this.adapter.notifyBlur(e);
     }
 
-    /** Loads a node's children once, after it is expanded */
     #handleNodeLoad(key: string, data: BasicTreeNodeData) {
         const { loadData } = this.getProps();
         const { loadedKeys, loadingKeys } = this.getStates();
@@ -374,7 +373,6 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         const { expandedKeys, selectedKeys, keyEntities, treeData } = this.getStates();
         const { keyMaps } = this.getProps();
         const newExpandedKeys: Set<string> = new Set(expandedKeys);
-        // controlled expandedKeys stay as the owner gave them
         const expandedOptsKeys = this.#isExpandControlled() ? [] : findAncestorKeys(selectedKeys, keyEntities, false);
         expandedOptsKeys.forEach((item) => newExpandedKeys.add(item));
         const newFlattenNodes = flattenTreeData(treeData, newExpandedKeys, keyMaps);
@@ -395,7 +393,6 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         const { expandedKeys, selectedKeys, keyEntities, treeData } = this.getStates();
         const { showFilteredOnly, filterTreeNode, treeNodeFilterProp, keyMaps, remote } = this.getProps();
 
-        // Remote search skips local filtering: only inputValue is updated and onSearch is called
         if (remote) {
             this.adapter.notifySearch(searchValue, [], []);
             return;
@@ -668,7 +665,6 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         return newState;
     }
 
-    /** The state of a new TreeSelect: the empty state with what the props imply */
     static getInitialState(props: BasicTreeSelectProps): BasicTreeSelectInnerData {
         const state: BasicTreeSelectInnerData = {
             inputTriggerFocus: false,
@@ -706,7 +702,6 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         if (props.checkRelation === 'unRelated') {
             return [...realCheckedKeys];
         }
-        // leafOnly takes precedence over autoMergeValue={false}
         if (props.autoMergeValue || props.leafOnly) {
             return normalizeKeyList([...checkedKeys], keyEntities, props.leafOnly, true);
         }
@@ -759,7 +754,6 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         this.adapter.updateState(derived);
     };
 
-    /** Searches as if `value` were typed, opening the dropdown first */
     search = (value: string) => {
         if (!this.getState('isOpen')) {
             this.#open();
@@ -810,8 +804,6 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
             // claim the key: closing removes the overlay layer first, and the stack would close an enclosing dialog
             if (isOpen) {
                 e.preventDefault();
-                // hiding the dropdown while it holds focus would drop focus to the body
-                // (APG: return it to the combobox)
                 this.adapter.focusTrigger();
                 this.close();
             }

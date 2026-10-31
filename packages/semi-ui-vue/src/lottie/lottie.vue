@@ -48,7 +48,6 @@
 
     const prefix = cssClasses.PREFIX;
 
-    // a named animation is an image; an unnamed one is decoration
     const named = () => Boolean(attrs['aria-label'] || attrs['aria-labelledby']);
 
     useKeepAliveFoundation(foundation);

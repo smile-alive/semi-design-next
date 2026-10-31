@@ -12,7 +12,6 @@ type Store = { value?: boolean; accept: boolean; log: string[]; shown: boolean; 
 const popup = () => document.querySelector<HTMLElement>('.semi-tooltip-wrapper');
 const shown = () => document.querySelector<HTMLElement>('.semi-tooltip-wrapper-show');
 
-// lets the foundation's timers and the effects they schedule run
 async function settle() {
     flushSync();
     await new Promise((resolve) => setTimeout(resolve));

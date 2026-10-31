@@ -31,7 +31,6 @@ describe('Svelte Portal', () => {
         expect(portal?.style.zIndex).toBe('1000');
         expect(portal?.style.position).toBe('');
         expect(screen.getByText('inside')).toHaveAttribute('data-in-body', 'true');
-        // the component's own place keeps only its siblings
         expect(screen.getByText('before').nextElementSibling).toBe(screen.getByText('after'));
     });
 

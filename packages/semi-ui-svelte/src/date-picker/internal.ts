@@ -12,7 +12,6 @@ import type { DatePickerDateSnippetProps, DatePickerDensity, DatePickerFullDateS
 
 export type DatePickerLocale = Locale['DatePicker'];
 
-/** What DatePicker focuses: an Input of the trigger, or an inset input of the panel */
 export interface DatePickerFocusTarget {
     focus: (options?: FocusOptions) => void;
     blur: () => void;
@@ -30,10 +29,8 @@ export interface NavigationProps {
     locale: DatePickerLocale;
     monthText?: string;
     density?: DatePickerDensity;
-    /** Whether the two panels switch together (syncSwitchMonth) */
     shouldBimonthSwitch?: boolean;
     panelType?: PanelType;
-    /** id of the month button, which names the month grid */
     titleId?: string;
     onPrevYear: () => void;
     onPrevMonth: () => void;
@@ -65,7 +62,6 @@ export interface MonthProps {
     hoverDay: string;
     rangeInputFocus: string | boolean;
     focusRecords: FocusRecords;
-    /** id of the element naming the grid */
     labelledby?: string;
     date?: Snippet<[DatePickerDateSnippetProps]>;
     fullDate?: Snippet<[DatePickerFullDateSnippetProps]>;
@@ -122,7 +118,6 @@ export interface MonthsGridProps {
     focusRecords?: FocusRecords;
     insetInput: boolean | DatePickerInsetInputProps;
     presetPosition?: DatePickerPresetPosition;
-    /** Whether `quickControls` renders presets, which sets the panel's x-preset-position */
     hasPresets?: boolean;
     selectedValue?: (Date | null)[];
     defaultPickerValue?: DatePickerValueType;
@@ -134,7 +129,6 @@ export interface MonthsGridProps {
     quickControls?: Snippet;
     date?: Snippet<[DatePickerDateSnippetProps]>;
     fullDate?: Snippet<[DatePickerFullDateSnippetProps]>;
-    /** Whether the range input other than the given one has been focused since the panel opened */
     hasOtherRangeInputBeenFocused?: (currentRangeInput: RangeInput) => boolean;
     onChange: (value: Date[], options?: { closePanel?: boolean; needCheckFocusRecord?: boolean; rangeInputFocus?: RangeInput | false }) => void;
     onPanelChange: (date: Date | Date[], dateString: string | string[]) => void;
@@ -177,7 +171,6 @@ export interface DateInputProps {
     insetInputValue?: InsetInputValue | null;
     defaultPickerValue?: DatePickerValueType;
     density?: DatePickerDensity;
-    /** Attributes of the native input(s): the field state, the combobox role and the popup state */
     controlAttrs?: Record<string, unknown>;
     prefix?: Snippet;
     insetLabel?: Snippet;

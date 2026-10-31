@@ -17,7 +17,6 @@
     import RestPages from './rest-pages.svelte';
     import StepButton from './step-button.svelte';
 
-    // The props the foundation reads, plus the ones its initial state reads
     interface FoundationProps extends PaginationBaseProps {
         defaultCurrentPage?: number;
         pageSize?: number;
@@ -59,7 +58,6 @@
     const globalCurrentPage = defaults('currentPage');
     const globalPageSize = defaults('pageSize');
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: FoundationProps = {
         get currentPage() {
             return currentPage ?? globalCurrentPage;

@@ -19,7 +19,6 @@ export interface MonthProps extends MonthFoundationProps, BaseProps {
     labelledby?: string;
 }
 
-/** One month of day cells */
 export default function Month({ ref, labelledby, month, weekStartsOn, locale, multiple, renderDate, renderFullDate, selected, rangeStart, rangeEnd, offsetRangeStart, offsetRangeEnd, disabledDate, hoverDay, rangeInputFocus, focusRecords, onDayClick, onDayHover, onMonthSwitch, onWeeksRowNumChange }: MonthProps) {
     const gridId = useId();
     const reportedRowNum = useRef(0);

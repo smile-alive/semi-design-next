@@ -84,7 +84,6 @@ describe('Form.ArrayField', () => {
         await clickAddEmptyLine();
         expect(getFieldInput('data[3][name]')).toHaveValue('');
         expect(getFieldInput('data[3][type]')).toHaveValue('');
-        // existing lines are kept
         expect(getFieldInput('data[1][name]')).toHaveValue(data[1].name);
     });
 

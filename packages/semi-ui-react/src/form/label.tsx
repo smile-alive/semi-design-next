@@ -8,19 +8,14 @@ import useLocale from '../locale/use-locale';
 const prefixCls = cssClasses.PREFIX;
 
 export interface LabelProps extends ElementProps<'label'> {
-    /** text-align of label */
     align?: string;
     className?: string;
     children?: React.ReactNode;
     disabled?: boolean;
     id?: string;
-    /** Whether to display the required * symbol */
     required?: boolean;
-    /** Content of label */
     text?: React.ReactNode;
-    /** Used to configure the htmlFor attribute of the label tag */
     name?: string;
-    /** width of label */
     width?: number | string;
     style?: React.CSSProperties;
     extra?: React.ReactNode;

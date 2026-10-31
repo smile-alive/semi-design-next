@@ -7,7 +7,6 @@
 
     const config = getConfigContext();
 
-    // subscribes once on mount with the arguments it was created with
     onMount(() => {
         const subscribe = config.onBreakpoint;
         return args.length === 1 ? subscribe?.(args[0]) : subscribe?.(args[0], args[1]);

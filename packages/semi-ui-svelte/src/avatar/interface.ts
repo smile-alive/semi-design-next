@@ -12,7 +12,6 @@ export interface AvatarTopSlot {
     textColor?: string;
     className?: string;
     style?: string;
-    /** Replaces the whole top mark */
     render?: Snippet;
 }
 
@@ -22,7 +21,6 @@ export interface AvatarBottomSlot {
     textColor?: string;
     className?: string;
     style?: string;
-    /** Replaces the whole bottom mark */
     render?: Snippet;
 }
 
@@ -63,7 +61,6 @@ export interface AvatarGroupItemContext {
 
 export interface AvatarGroupMoreContext {
     restNumber: number;
-    /** The hidden items, in order */
     restAvatars: AvatarGroupItem[];
 }
 
@@ -75,6 +72,5 @@ export interface AvatarGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, '
     items?: AvatarGroupItem[];
     /** Content of every avatar, taking precedence over the item's own `children` */
     item?: Snippet<[AvatarGroupItemContext]>;
-    /** Replaces the default `+N` avatar */
     more?: Snippet<[AvatarGroupMoreContext]>;
 }

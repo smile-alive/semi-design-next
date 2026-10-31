@@ -101,7 +101,6 @@ describe('Svelte DatePicker 年月选择器的滚动与样式（浏览器）', (
         await expectSelectedYMVisible();
     });
 
-    // weekStartsOn 0: April and May 2030 have 5 week rows, March and June 6
     it.each([
         {
             ymSide: 'left',

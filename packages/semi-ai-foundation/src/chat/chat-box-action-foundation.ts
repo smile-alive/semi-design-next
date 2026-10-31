@@ -2,7 +2,6 @@ import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/bas
 import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
 import type { Message } from './foundation';
 
-/** The props the foundation reads with getProps */
 export interface ChatBoxActionBaseProps {
     message?: Message;
 }

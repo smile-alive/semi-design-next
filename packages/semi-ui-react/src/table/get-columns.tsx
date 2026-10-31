@@ -4,9 +4,6 @@ import elementTypeOf from '../_base/element-type';
 import Column from './column';
 import type { ColumnProps } from './interface';
 
-/**
- * Convert jsx children into object columns
- */
 export default function getColumns(children: React.ReactNode) {
     if (children) {
         const columns: ColumnProps[] = [];

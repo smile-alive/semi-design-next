@@ -1,4 +1,3 @@
-// Type-checks the projects in parallel, one per CPU, and prints each project's output as a block once it finishes
 import { spawn, spawnSync } from 'node:child_process';
 import { globSync } from 'node:fs';
 import os from 'node:os';

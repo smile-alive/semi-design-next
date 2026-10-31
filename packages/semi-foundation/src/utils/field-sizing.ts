@@ -24,7 +24,6 @@ export function fitTextareaHeight(textarea: HTMLTextAreaElement) {
     return height;
 }
 
-/** Sets the input's inline width to fit its value, or its placeholder while empty. */
 export function fitInputWidth(input: HTMLInputElement) {
     const style = getComputedStyle(input);
     const mirror = document.createElement('span');
@@ -51,7 +50,6 @@ export function fitInputWidth(input: HTMLInputElement) {
     return width;
 }
 
-/** Calls `refit` when web fonts finish loading, which changes text metrics after the first measurement. */
 export function onFontsLoaded(refit: () => void, signal: AbortSignal) {
     document.fonts.addEventListener('loadingdone', refit, { signal });
 }

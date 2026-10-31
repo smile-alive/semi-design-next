@@ -7,7 +7,6 @@ import type { InputProps, InputSize, ValidateStatus } from '../input/index.js';
 import type { ScrollItemProps } from '../scroll-list/index.js';
 import type { Position } from '../tooltip/index.js';
 
-/** A time as `value` accepts it: a Date, a timestamp, a string in `format`, or an unpicked range side */
 export type TimePickerBaseValueType = string | number | Date | undefined;
 
 export type TimePickerType = 'time' | 'timeRange';
@@ -58,9 +57,7 @@ export interface TimePickerProps extends Omit<HTMLInputAttributes, NativeInputKe
     inputReadOnly?: boolean;
     validateStatus?: ValidateStatus;
     insetLabelId?: string;
-    /** Style of the Input's root element */
     inputStyle?: string;
-    /** Focuses the input on mount, which opens the panel */
     autofocus?: boolean;
     /** Focuses and selects the input once mounted */
     focusOnOpen?: boolean;
@@ -92,14 +89,12 @@ export interface TimePickerProps extends Omit<HTMLInputAttributes, NativeInputKe
     clearIcon?: Snippet;
 }
 
-/** What `trigger` receives; `onChange` sets the input text, as typing would */
 export interface TimePickerTriggerRenderProps {
     /** The unpicked side of a range is undefined */
     value: (Date | undefined)[];
     inputValue: string;
     placeholder: string;
     disabled: boolean;
-    /** The declared props, without snippets and undeclared attributes */
     componentProps: Omit<TimePickerProps, 'trigger' | 'panelHeader' | 'panelFooter' | 'panel' | 'prefix' | 'insetLabel' | 'clearIcon'>;
     onChange: (inputValue: string) => void;
 }
@@ -111,9 +106,7 @@ export interface TimePickerState {
     invalid: boolean;
 }
 
-/** TimePicker's input; the other Input props reach the Input as they are */
 export interface TimeInputProps extends Omit<InputProps, 'value' | 'onChange' | 'onFocus' | 'onBlur'> {
-    /** The input text */
     value?: string;
     inputReadOnly?: boolean;
     invalid?: boolean;
@@ -123,14 +116,12 @@ export interface TimeInputProps extends Omit<InputProps, 'value' | 'onChange' | 
     onBlur?: (event: FocusEvent) => void;
 }
 
-/** One time panel, which DatePicker renders as well */
 export interface ComboboxProps {
     timeStampValue?: TimeStamp;
     format?: string;
     /** Prefix of the column class names (`${prefixCls}-list-hour` and so on); without it the columns get none */
     prefixCls?: string;
     use12Hours?: boolean;
-    /** The half day the AM/PM and hour columns show while there is no value */
     defaultIsAM?: boolean;
     hideDisabledOptions?: boolean;
     hourStep?: number;

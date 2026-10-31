@@ -19,14 +19,12 @@ interface FooterButtonProps {
     disabled?: boolean;
 }
 
-/** The props the foundation reads */
 export interface PopconfirmBaseProps {
     cancelButtonProps?: FooterButtonProps;
     okButtonProps?: FooterButtonProps;
     visible?: boolean;
 }
 
-/** The state the foundation reads */
 export interface PopconfirmBaseState {
     visible: boolean;
     cancelLoading: boolean;
@@ -113,7 +111,6 @@ export default class PopConfirmFoundation<P extends PopconfirmBaseProps = Popcon
 
     /** Hosts call this when the popup really closes, whoever set `visible`; the card is still mounted */
     handlePopupClose = () => {
-        // recorded like a requested close, so dropping control cannot revive it
         this.adapter.setVisible(false);
         this.#closeCount++;
         this.adapter.focusPrevFocusElement();

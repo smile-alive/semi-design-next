@@ -67,7 +67,6 @@ type PathStep<T, K extends string> = T extends readonly (infer E)[] ? (K extends
 
 type ValueAtPath<T, P extends string> = P extends `${infer K}.${infer Rest}` ? ValueAtPath<PathStep<T, K>, Rest> : PathStep<T, P>;
 
-// The value type at a field path
 export type FieldPathValue<T, P extends FieldPath<T>> = ValueAtPath<T, DotPath<P>>;
 
 export type ScrollToErrorOptions<K> = {
@@ -84,35 +83,24 @@ export interface ValidateOptions<K extends keyof any = keyof any> {
 }
 
 export interface BaseFormApi<T extends object = any> {
-    /** get value of field */
     getValue: <P extends FieldPath<T>>(field?: P) => FieldPathValue<T, P>;
-    /** set value of field */
     setValue: <K extends FieldPath<T>>(field: K, newFieldValue: any) => void;
-    /** get error of field */
     getError: <K extends FieldPath<T>>(field: K) => any;
-    /** set error of field */
     setError: <K extends FieldPath<T>>(field: K, fieldError: any) => void;
-    /** get touched of field */
     getTouched: <K extends FieldPath<T>>(field: K) => boolean;
-    /** set touch of field; a parent path takes the nested touched object of its fields */
+    /** A parent path takes the nested touched object of its fields */
     setTouched: <K extends FieldPath<T>>(field: K, fieldTouch: boolean | Record<string, any>) => void;
-    /** judge field exist */
     getFieldExist: <K extends FieldPath<T>>(field: K) => boolean;
-    /** get formState of form */
     getFormState: () => FormState<T extends object ? T : object>;
-    /** get formProps of form */
     getFormProps: (keys?: Array<string>) => ComponentProps;
-    /** submit form manual */
     submitForm: () => void;
-    /** reset form manual */
     reset: (fields?: Array<string>) => void;
-    /** trigger validate manual; resolves with the form values */
+    /** Resolves with the form values */
     validate: <K extends FieldPath<T>>(fields?: Array<K> | ValidateOptions<K>) => Promise<T>;
     /** Without a field, returns all the initial values */
     getInitValue: <K extends FieldPath<T>>(field?: K) => any;
     getInitValues: () => any;
     getValues: () => T;
-    /** set value of multiple fields */
     setValues: (fieldsValue: Partial<T>, config?: setValuesConfig) => void;
     scrollToField: <K extends FieldPath<T>>(field: K, scrollConfig?: ScrollIntoViewOptions) => void;
     scrollToError: <K extends FieldPath<T>>(config?: ScrollToErrorOptions<K>) => void;
@@ -149,7 +137,6 @@ export interface FieldValidateOptions {
     stopValidateWithError?: boolean;
 }
 
-/** A registered field: what the Form keeps per field to validate, reset and restore it */
 export interface FieldRegistration {
     /** Identifies the field component instance, which a remounted field of the same name does not share */
     id: string;
@@ -183,7 +170,6 @@ export interface ArrayFieldRegistration {
     updateKey?: number;
     initValue?: any;
 }
-/** What fields and ArrayFields use to read and write the Form's state and to register themselves */
 export interface FieldBridge {
     register: (field: string, registration: FieldRegistration) => void;
     unRegister: (field: string) => void;

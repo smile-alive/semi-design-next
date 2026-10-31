@@ -2,7 +2,6 @@ import { untrack } from 'svelte';
 import { cloneFormValue } from '@fibrae/semi-foundation/form/utils';
 import type { CommonFieldProps, FieldError, FieldLabel } from './interface.js';
 
-/** The props a field consumes itself; a bare Checkbox or Radio drops them, except id and name */
 const fieldOnlyKeys = new Set<string>([
     'allowEmpty',
     'allowEmptyString',
@@ -45,7 +44,6 @@ export function cloneDeep<T>(value: T) {
     return cloneFormValue(value, (item) => typeof Node !== 'undefined' && item instanceof Node);
 }
 
-/** Whether an error has content ErrorMessage renders; a number or a boolean does not */
 export function hasErrorContent(error: unknown) {
     if (Array.isArray(error)) {
         return error.some(Boolean);

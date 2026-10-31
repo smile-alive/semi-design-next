@@ -12,7 +12,6 @@ describe('PinCode（浏览器）', () => {
     it('输入时焦点向后移动，Backspace 向前移动，聚焦的数字位显示主题焦点边框', async () => {
         render(() => <PinCode aria-label="code" count={4} />);
         await tabTo(input(1));
-        // Input marks focus with the theme focus border (no outline ring), shared by every digit
         const probe = document.createElement('span');
         probe.style.color = 'var(--semi-color-focus-border)';
         document.body.append(probe);

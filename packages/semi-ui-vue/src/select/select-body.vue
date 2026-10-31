@@ -160,7 +160,6 @@
                 const custom = slots.optionItem ? '-custom' : '';
                 // document.getElementById misses a list rendered inside a ShadowRoot
                 const destNode = optionContainer.value?.querySelector<HTMLElement>(index === undefined ? `.${prefix}-option${custom}-selected` : `#${CSS.escape(optionId(index))}`);
-                // an option in a group is one level deeper
                 const listbox = destNode?.closest<HTMLElement>('[role="listbox"]');
                 if (destNode && listbox) {
                     centerInScroller(destNode, listbox);
@@ -215,7 +214,6 @@
 
     const activeDescendant = computed(() => {
         const { isOpen, focusIndex } = state.value;
-        // while loading the list shows a spinner instead of the options
         return isOpen && !props.loading && focusIndex !== -1 && focusIndex < visibleOptions.value.length ? optionId(focusIndex) : undefined;
     });
 

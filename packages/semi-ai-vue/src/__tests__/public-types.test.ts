@@ -74,7 +74,6 @@ describe('主入口公开类型', () => {
     it('Message 类型区分 Chat 与对话组件', () => {
         expectTypeOf<ChatProps['chats']>().toEqualTypeOf<ChatMessage[] | undefined>();
         expectTypeOf<AIChatDialogueProps['chats']>().toEqualTypeOf<AIChatDialogueMessage[] | undefined>();
-        // The dialogue message requires id and role; Chat's are optional
         expectTypeOf<AIChatDialogueMessage['id']>().toEqualTypeOf<string>();
         expectTypeOf<ChatMessage['id']>().toEqualTypeOf<string | undefined>();
         expectTypeOf<ChatMessage>().not.toEqualTypeOf<AIChatDialogueMessage>();

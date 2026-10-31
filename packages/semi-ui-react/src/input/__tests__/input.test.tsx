@@ -153,7 +153,6 @@ describe('Input', () => {
     });
 
     it('password 点击眼睛图标', async () => {
-        // autofocus is not a declared prop; it is only forwarded to the DOM
         render(<Input defaultValue="123456" {...{ autofocus: true }} mode="password" />);
         expect(getInput()).toHaveAttribute('type', 'password');
         await userEvent.click(screen.getByRole('button', { name: zh_CN.Input.showPassword }));
@@ -624,7 +623,6 @@ describe('Input', () => {
         getModeBtn().focus();
         await userEvent.keyboard(' ');
         expect(getInput()).toHaveAttribute('type', 'text');
-        // toggling moves focus into the input, so focus the button again
         expect(getInput()).toHaveFocus();
         getModeBtn().focus();
         await userEvent.keyboard(' ');

@@ -25,7 +25,6 @@ function sameTags(a: string[], b: string[]) {
     return a.length === b.length && a.every((value, index) => value === b[index]);
 }
 
-/** The props the foundation reads with getProps */
 export interface TagInputBaseProps {
     value?: string[] | null;
     inputValue?: string;
@@ -191,7 +190,6 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         return { values, ids: values.map((value) => unused.get(value)?.shift() ?? newId(value)) };
     }
 
-    /** The input text on screen: a string `inputValue` prop wins over state */
     static getInputValue(props: { inputValue?: string }, state: { inputValue?: string }) {
         return typeof props.inputValue === 'string' ? props.inputValue : state.inputValue;
     }

@@ -57,7 +57,6 @@ describe('Svelte ConfigProvider', () => {
 
     it('provider 外上下文为空，provider 内只填充配置默认值', () => {
         const outside = vi.fn<(value: ContextValue) => void>();
-        // Tree always wraps in a provider, so the outside case renders the probe through ConsumerFixture's bare mode
         render(ConsumerFixture, { props: { store: createStore({ props: undefined, onSeen: outside }) } });
         expect(outside.mock.calls[0][0]).toEqual({});
         const inside = vi.fn<(value: ContextValue) => void>();
@@ -183,7 +182,6 @@ describe('Svelte ConfigProvider', () => {
             expect(media.handlerCount(custom.xs)).toBe(0);
             expect(media.handlerCount(defaultResponsiveMap.xs)).toBe(1);
             expect(media.totalHandlers()).toBe(6);
-            // the default map no longer matches xs: subscribers hear it once
             expect(callback).toHaveBeenCalledTimes(2);
             expect(callback).toHaveBeenLastCalledWith(allFalse);
         });

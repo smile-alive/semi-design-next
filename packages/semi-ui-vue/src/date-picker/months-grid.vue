@@ -177,7 +177,6 @@
             if (previous === 1 && count === 2) {
                 panelHeight = scrollListHeight();
                 applyPanelSize();
-                // min-height reaches the DOM on the next flush; the lists centre against it
                 void nextTick(reselect);
             } else if (previous === 2 && count === 1) {
                 reselect();

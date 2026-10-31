@@ -17,7 +17,6 @@ import { useSpecialTrigger } from '../tooltip/context';
 /** `class`, `style`, `ref` and other attributes go to the role="group" wrapper; the aria states, `id` and `tabindex` to the inputs */
 export interface PinCodeProps extends Omit<PinCodeBaseProps, 'autoFocus'>, ElementProps<'div', 'defaultValue' | 'onChange' | 'onFocus' | 'onBlur'> {
     size?: InputSize;
-    /** Injected by Form; shown on every input */
     validateStatus?: ValidateStatus;
     /** Fires as focus enters the code from outside; moving between its inputs does not fire it */
     onFocus?: (e: FocusEvent) => void;
@@ -115,7 +114,6 @@ export default function PinCode(rawProps: PinCodeProps) {
     const setRoot = (node: HTMLDivElement) => {
         // React's handle only focuses a given index; without one, the first empty cell (or the last when full) is where typing continues
         forwardFocus(node, () => {
-            // the rendered cells: `inputs` keeps the ones a smaller count removed
             const cells = Array.from(node.querySelectorAll('input'));
             return cells.find((cell) => !cell.value) ?? cells.at(-1);
         });

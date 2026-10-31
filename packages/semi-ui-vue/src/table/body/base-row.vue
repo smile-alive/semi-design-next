@@ -25,20 +25,15 @@
 
     const props = defineProps<{
         record: AnyRecord;
-        /** The index among its siblings, or of the row in a virtualized body */
         index: number;
         rowKey: BaseRowKeyType;
-        /** The tree level, given when the row or its table has expand buttons */
         level?: number;
         expanded?: boolean;
-        /** The row has an expand button */
         expandableRow?: boolean;
-        /** A click on the row toggles its expansion */
         clickToExpand?: boolean;
         selected?: boolean;
         disabled?: boolean;
         hovered?: boolean;
-        /** Highlighted with a hovered row its rowSpan cell covers */
         highlighted?: boolean;
         displayNone?: boolean;
         cellWidths: number[];

@@ -51,7 +51,6 @@ export interface TreeScrollData {
 export interface TreeLabelSnippetProps {
     item: TreeNodeData;
     label?: string | number;
-    /** The search keyword, empty while not searching */
     searchWord: string;
 }
 
@@ -84,7 +83,6 @@ export interface TreeFullLabelSnippetProps {
     expandStatus: { expanded: boolean; loading: boolean };
     filtered: boolean;
     searchWord: string;
-    /** Selects the row, or checks it in a multiple tree */
     onClick: (event: MouseEvent) => void;
     onCheck: (event: MouseEvent) => void;
     onExpand: (event: MouseEvent) => void;
@@ -101,7 +99,6 @@ export interface TreeSearchSnippetProps {
 }
 
 export interface TreeDraggingNodeSnippetProps {
-    /** The dragged row element */
     nodeInstance: HTMLElement;
     node: TreeNodeData;
 }
@@ -136,7 +133,6 @@ export interface TreeProps extends Omit<HTMLAttributes<HTMLDivElement>, NativeKe
     loadedKeys?: string[];
     motion?: boolean;
     multiple?: boolean;
-    /** `onChange` reports the nodes instead of their values */
     onChangeWithObject?: boolean;
     showClear?: boolean;
     showFilteredOnly?: boolean;
@@ -164,7 +160,6 @@ export interface TreeProps extends Omit<HTMLAttributes<HTMLDivElement>, NativeKe
     onDragLeave?: (info: TreeDragProps) => void;
     onDragEnd?: (info: TreeDragProps) => void;
     onDrop?: (info: TreeOnDragProps) => void;
-    /** Content of a row's label */
     label?: Snippet<[TreeLabelSnippetProps]>;
     /** A row's icon, in place of the directory icon */
     icon?: Snippet<[TreeIconSnippetProps]>;
@@ -174,7 +169,6 @@ export interface TreeProps extends Omit<HTMLAttributes<HTMLDivElement>, NativeKe
     /** Replaces the search box; `false` hides it while `filterTreeNode` still filters */
     search?: Snippet<[TreeSearchSnippetProps]> | false;
     emptyContent?: Snippet;
-    /** The image the browser shows while a node is dragged */
     renderDraggingNode?: Snippet<[TreeDraggingNodeSnippetProps]>;
 }
 
@@ -182,7 +176,6 @@ export interface TreeProps extends Omit<HTMLAttributes<HTMLDivElement>, NativeKe
 export interface TreeHandle {
     /** Searches as if typed into the search box; needs `filterTreeNode` */
     search: (value: string) => void;
-    /** Scrolls a virtualized tree to an expanded node */
     scrollTo: (scrollData: TreeScrollData) => void;
 }
 
@@ -214,10 +207,8 @@ export interface TreeNodeProps {
     row: TreeRowProps;
     /** The row's id, which the tree's aria-activedescendant points at */
     id: string;
-    /** The row the keyboard is on */
     focused?: boolean;
     showLine?: boolean;
-    /** The position of a virtual row */
     rowStyle?: string;
     label?: Snippet<[TreeLabelSnippetProps]>;
     icon?: Snippet<[TreeIconSnippetProps]>;

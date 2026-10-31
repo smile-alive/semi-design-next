@@ -87,8 +87,6 @@ $moduleGroup: #{$prefix}-floatButtonGroup;
             .#{$prefix}-badge-dot,
             .#{$prefix}-badge-count {
                 inset-inline-end: calc(0.29 * 0.5 * $width-floatButton);
-
-                /* Badge center sits on the circle's diagonal: 0.29 * R, R = 0.5 * width */
                 top: calc(0.29 * 0.5 * $width-floatButton);
             }
         }

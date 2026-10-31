@@ -162,7 +162,6 @@ export default function ModalContent(props: ModalContentProps) {
 
     const hasHeaderProp = () => header() !== undefined;
 
-    // a custom header replaces the title and the icon, so they are not read at all then
     const title = children(() => (hasHeaderProp() ? undefined : local.title));
     const icon = children(() => (hasHeaderProp() ? undefined : local.icon));
 
@@ -212,7 +211,6 @@ export default function ModalContent(props: ModalContentProps) {
         </div>
     );
 
-    // a factory: the modalRender branch and the plain one each get their own element
     const renderDialog = () => (
         <div
             {...dialogAria}

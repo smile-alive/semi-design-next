@@ -77,7 +77,6 @@ export interface TypographyCopySnippets {
 }
 
 export interface TypographyEllipsisTooltipProps {
-    /** The full text */
     content: string;
     /** The text element, to be placed in the custom popup with `{@render trigger()}` */
     trigger: Snippet;

@@ -5,7 +5,6 @@
 
     interface Store {
         props?: BreadcrumbProps;
-        // which snippets to pass
         icon?: boolean;
         item?: boolean;
         more?: boolean;

@@ -17,9 +17,6 @@ export interface MergedTableComponents {
     };
 }
 
-/**
- * Merges the components passed in by the user with the default components
- */
 export function mergeComponents(components: TableComponents | undefined, virtualized: boolean): MergedTableComponents {
     return merge(
         {},

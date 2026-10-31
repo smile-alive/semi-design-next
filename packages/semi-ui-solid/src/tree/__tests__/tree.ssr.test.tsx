@@ -59,7 +59,6 @@ it('tree/renderFullLabel 的 expandIcon 是渲染函数，在插入处调用时�
     });
     expect(errors).toEqual([]);
     expect(html).toMatch(/<i[^>]*>arrow<\/i>/);
-    // only the branch row calls it
     expect(created).toEqual(['arrow']);
 });
 

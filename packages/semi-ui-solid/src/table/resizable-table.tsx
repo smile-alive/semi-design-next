@@ -13,10 +13,6 @@ const childrenColumnName = 'children';
 type ColumnKey = string | number;
 type ColumnOverrides = Record<ColumnKey, Partial<ColumnProps>>;
 
-/**
- * A copy of the columns prop with keys, plus width placeholders for the expand and selection columns that Table adds,
- * so that those columns can be resized too
- */
 function getResizableColumns({ columns, expandedRowRender, hideExpandedColumn, rowSelection, expandCellFixed }: Pick<TableProps, 'columns' | 'expandedRowRender' | 'hideExpandedColumn' | 'rowSelection' | 'expandCellFixed'>) {
     const resizableColumns = assignColumnKeys(cloneDeep(columns ?? []), childrenColumnName) as ColumnProps[];
     // Table merges its own column into the placeholder in place, so the placeholder sits where Table puts the column
@@ -42,7 +38,6 @@ function getResizableColumns({ columns, expandedRowRender, hideExpandedColumn, r
     return resizableColumns;
 }
 
-/** The columns with what dragging changed, collected by key into `byKey` */
 function applyOverrides(cols: ColumnProps[], drag: { overrides: ColumnOverrides; resizing: ColumnKey[]; handlerClass: string; byKey: Record<ColumnKey, ColumnProps> }) {
     return cols.map((column) => {
         const key = column.key as ColumnKey;
@@ -59,7 +54,6 @@ function applyOverrides(cols: ColumnProps[], drag: { overrides: ColumnOverrides;
     });
 }
 
-/** Table with resizable header cells */
 export default function ResizableTable(props: TableProps) {
     const [local, rest] = splitProps(props, ['components', 'columns', 'resizable', 'children']);
 
@@ -72,14 +66,12 @@ export default function ResizableTable(props: TableProps) {
     // The handler class is added when the columns are built, so a later class prop is not shadowed by a snapshot
     const [resizing, setResizing] = createSignal<ColumnKey[]>([]);
 
-    // A shallow override: Table merges in the defaults
     const components = createMemo((): TableComponents => ({ ...local.components, header: { ...local.components?.header, cell: local.components?.header?.cell ?? ResizableHeaderCell } }));
 
     const options = () => (typeof local.resizable === 'object' ? local.resizable : {});
 
     const handlerClassName = () => options().handlerClassName ?? 'resizing';
 
-    // The resize handlers look the columns up by key, at any level of the column tree
     const resizableColumns = createMemo(() => {
         const byKey: Record<ColumnKey, ColumnProps> = {};
         const base = getResizableColumns({ columns: local.columns, expandedRowRender: props.expandedRowRender, hideExpandedColumn: props.hideExpandedColumn, rowSelection: props.rowSelection, expandCellFixed: props.expandCellFixed });

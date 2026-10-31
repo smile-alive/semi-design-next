@@ -2,7 +2,6 @@ import type { Snippet } from 'svelte';
 import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 import type { CarouselAutoPlay } from '@fibrae/semi-foundation/carousel/foundation';
 
-/** Data for one arrow button; `onclick` and `class` merge with the built-in handler and classes */
 export interface ArrowButton {
     props?: HTMLButtonAttributes;
 }
@@ -39,9 +38,7 @@ export interface CarouselProps<T = unknown> extends Omit<HTMLAttributes<HTMLDivE
     onChange?: (activeIndex: number, preIndex: number) => void;
     /** The content of one slide; the carousel wraps it in the element that carries the slide's classes, role and `inert` */
     slide: Snippet<[CarouselSlideContext<T>]>;
-    /** Replaces the icon of the previous arrow */
     leftArrow?: Snippet;
-    /** Replaces the icon of the next arrow */
     rightArrow?: Snippet;
 }
 

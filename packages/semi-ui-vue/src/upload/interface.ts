@@ -43,7 +43,6 @@ export interface UploadOnChangeProps {
 
 export interface UploadCustomRequestArgs {
     fileName: string;
-    /** The resolved `data` prop */
     data: Record<string, any>;
     file: FileItem;
     fileInstance: File;
@@ -70,7 +69,6 @@ export interface UploadCropProps {
     zoomStep?: number;
     /** Output image quality, range 0 - 1, defaults to 0.92 */
     quality?: number;
-    /** Fill color of the area outside the cropped region */
     fill?: string;
     /** Title of the crop modal; the locale's by default */
     modalTitle?: string;
@@ -127,7 +125,6 @@ export interface UploadHandle {
 export interface UploadProps {
     accept?: string;
     action: string;
-    /** Adds the files pasted anywhere on the page */
     addOnPasting?: boolean;
     afterUpload?: (object: AfterUploadProps) => AfterUploadResult;
     beforeClear?: (fileList: FileItem[]) => boolean | Promise<boolean>;
@@ -142,18 +139,15 @@ export interface UploadProps {
     /** `true` crops with the defaults; an object configures the cropper */
     crop?: boolean | UploadCropProps;
     cropModalProps?: UploadCropModalProps;
-    /** Replaces the built-in XMLHttpRequest */
     customRequest?: (object: UploadCustomRequestArgs) => void;
     data?: Record<string, any> | ((file: File) => Record<string, unknown>);
     defaultFileList?: FileItem[];
     directory?: boolean;
     disabled?: boolean;
     draggable?: boolean;
-    /** Controlled list, for `v-model:fileList` */
     fileList?: FileItem[];
     fileName?: string;
     headers?: Record<string, any> | ((file: File) => Record<string, string>);
-    /** Where the picture wall's add button sits */
     hotSpotLocation?: 'start' | 'end';
     itemStyle?: StyleValue;
     limit?: number;
@@ -194,7 +188,6 @@ export interface UploadEmits {
     exceed: [fileList: File[]];
     fileChange: [files: File[]];
     openFileDialog: [];
-    /** A pasted clipboard file could not be read */
     pastingError: [error: Error];
     progress: [percent: number, file: CustomFile, fileList: FileItem[]];
     /** `currentFile` is undefined for an item that came without its File, e.g. from defaultFileList */

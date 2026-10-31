@@ -17,7 +17,6 @@ const prefix = 'semi-toast';
 const getInfoToast = () => document.querySelector<HTMLElement>(`.${prefix}-info`);
 const texts = (selector = `.${prefix}-info`) => [...document.querySelectorAll(selector)].map((toast) => toast.textContent?.trim());
 const innerWrapper = (root: ParentNode = document) => root.querySelector(`.${prefix}-innerWrapper`) as HTMLElement;
-// The animation classes sit on the element around the toast
 const wrapperOf = (toast: Element | null) => toast?.parentElement;
 const text = (html: string) => createRawSnippet(() => ({ render: () => html }));
 
@@ -53,7 +52,6 @@ function renderHook(props: { reachable?: string } = {}) {
             },
         },
     });
-    // hook toasts are mounted into the body
     return { ...result, holder: document.body };
 }
 

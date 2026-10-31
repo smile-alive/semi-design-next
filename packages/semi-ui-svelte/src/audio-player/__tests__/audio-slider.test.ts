@@ -89,7 +89,6 @@ describe('Svelte AudioSlider', () => {
         expect(onChange).toHaveBeenLastCalledWith(30);
         await fireEvent.lostPointerCapture(wrapper);
         await fireEvent.pointerMove(wrapper, { clientX: 150 });
-        // a hover alone does not seek
         await fireEvent.mouseEnter(wrapper, { clientX: 180 });
         flushSync();
         expect(onChange).toHaveBeenCalledTimes(2);

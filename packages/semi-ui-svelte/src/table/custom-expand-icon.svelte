@@ -7,10 +7,8 @@
 
     type AnyRecord = Record<string, any>;
 
-    /** The expand button of a record row, a tree row or a group section */
     interface CustomExpandIconProps {
         record?: AnyRecord;
-        /** A tree row: the tree icon */
         isNested?: boolean;
         groupKey?: string | number;
     }

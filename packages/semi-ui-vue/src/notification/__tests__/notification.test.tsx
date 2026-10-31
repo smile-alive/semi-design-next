@@ -464,7 +464,6 @@ describe('Notification', () => {
         vi.useFakeTimers();
         const onClose = vi.fn<() => void>();
         await show('info', { id: 'btn', title: 'btn', duration: 1, onClose });
-        // Vue drops an event stamped no later than its listener was attached, and the fake clock has not moved
         await advance(1);
         (document.querySelector(`.${noticeCls} button`) as HTMLButtonElement).click();
         await nextTick();

@@ -139,7 +139,6 @@ $module: #{$prefix}-typography;
         white-space: nowrap;
 
         &.#{$module}-ellipsis-overflow-ellipsis-text {
-            // max-width keeps it within the parent when no width is set
             display: inline-block;
             max-width: 100%;
             vertical-align: top;

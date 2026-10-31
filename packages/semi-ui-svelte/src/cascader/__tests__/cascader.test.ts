@@ -51,7 +51,6 @@ const treeDataWithDisabled: CascaderData[] = [
     },
 ];
 
-// lets the foundation's timers and the effects they schedule run
 async function settle() {
     flushSync();
     await new Promise((resolve) => setTimeout(resolve));
@@ -228,7 +227,6 @@ describe('Svelte Cascader 单选', () => {
 
     it('displayProp 与 separator', () => {
         setup({ displayProp: 'value', separator: ' > ' }, { value: ['Asia', 'China'], data: treeData });
-        // 'China' is a branch, so without changeOnSelect nothing is selected
         expect(getSelectionText()).toBe('');
     });
 
@@ -471,7 +469,6 @@ describe('Svelte Cascader 多选', () => {
         await click(getOption('北美洲'));
         await click(getCheckbox('美国'));
         expect(onExceed).not.toHaveBeenCalled();
-        // the two children merge into one parent, which is still one item
         await click(getCheckbox('加拿大'));
         expect(onExceed).not.toHaveBeenCalled();
         expect(getTagTexts()).toEqual(['北美洲']);
@@ -547,7 +544,6 @@ describe('Svelte Cascader 多选', () => {
         await openDropdown();
         await click(getOption('北美洲'));
         await click(getCheckbox('美国'));
-        // both children are checked, so they merge into their parent
         expect(store.value).toEqual([['North America']]);
         store.value = [['Asia', 'China', 'Beijing']];
         await settle();

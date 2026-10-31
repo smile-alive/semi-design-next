@@ -12,7 +12,6 @@
     import { getNavContext } from './context.js';
     import type { NavIconArgs, NavLinkOptions, OnSelectedData, SelectedData } from './interface.js';
 
-    // The li of a Nav.Item or Nav.Sub, or the Dropdown.Item that stands in for it inside a popup
     interface ItemShellProps extends Omit<HTMLAttributes<HTMLLIElement>, 'children'> {
         isSubNav?: boolean;
         /** Resolved by the caller: a Sub provides its own context to the subtree, which includes this shell */
@@ -20,7 +19,6 @@
         level: number;
         disabled?: boolean;
         indent?: boolean | number;
-        /** Or'ed with the collapsed state of the Nav */
         isCollapsed?: boolean;
         itemKey?: ItemKey;
         link?: string;
@@ -28,12 +26,10 @@
         text?: string | number;
         tooltipHideDelay?: number;
         tooltipShowDelay?: number;
-        /** What the item was given, reported in `selectedItems` */
         given: Record<string, unknown>;
         icon?: Snippet<[NavIconArgs]>;
         toggleIcon?: Snippet<[NavIconArgs]>;
         label?: Snippet;
-        /** A Sub's title and list, in place of the control */
         content?: Snippet;
         onItemClick?: (data: SelectedData) => void;
     }

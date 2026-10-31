@@ -8,7 +8,6 @@ export interface PopupRegistry {
 
 export const [getTooltipPopupsContext, setTooltipPopupsContext] = createContext<PopupRegistry>('TooltipPopups', { optional: true });
 
-/** What a trigger component (Button, Switch, Checkbox) tells the Tooltip around it about itself */
 export interface TriggerState {
     disabled: boolean;
     loading: boolean;
@@ -17,7 +16,6 @@ export interface TriggerState {
     describes?: boolean;
 }
 
-/** What the Tooltip hands back to a registered trigger to apply to its own elements */
 export interface TriggerBinding {
     /** The Tooltip's span takes the pointer events: a loading Button ignores the pointer and a disabled one gets no click (F4) */
     pointerEventsNone: boolean;

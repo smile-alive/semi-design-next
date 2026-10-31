@@ -4,7 +4,6 @@
 
     interface Case {
         props?: TextAreaProps;
-        // the component instance, for the handle methods
         handle?: { current?: ReturnType<typeof TextArea> };
     }
 

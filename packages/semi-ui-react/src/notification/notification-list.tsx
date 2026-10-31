@@ -34,7 +34,6 @@ function positionStyle(notice: NoticeInstance & Pick<ConfigProps, 'top' | 'left'
     return style;
 }
 
-/** Renders the notices of a store, one list per position */
 export default function NotificationList({ store }: NotificationListProps) {
     const { direction } = useConfigContext();
 

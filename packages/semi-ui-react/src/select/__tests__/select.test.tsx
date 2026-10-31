@@ -3273,7 +3273,6 @@ describe('Select 行为基线', () => {
         act(() => ref.current.open());
         const popup = screen.getByRole('listbox').closest<HTMLElement>('[popover]');
         expect(popup?.style.left).toBe('0px');
-        // the trigger moved without scrolling or resizing
         const rect = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(new DOMRect(100, 50, 80, 20));
         onTestFinished(() => rect.mockRestore());
         act(() => ref.current.rePosition());

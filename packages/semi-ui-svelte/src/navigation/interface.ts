@@ -10,7 +10,6 @@ export type Mode = 'vertical' | 'horizontal';
 type DataAttributes = { [key: `data-${string}`]: unknown };
 type AriaAttributes = { [key: `aria-${string}`]: unknown };
 
-/** The attributes an `items` entry hands to its li */
 interface EntryAttributes extends DataAttributes, AriaAttributes {
     class?: ClassValue;
     style?: string;
@@ -18,7 +17,6 @@ interface EntryAttributes extends DataAttributes, AriaAttributes {
     onmouseleave?: (event: MouseEvent) => void;
 }
 
-/** The attributes of the item or header link; Nav spreads them onto the a element */
 export type NavLinkOptions = HTMLAnchorAttributes;
 
 export interface NavItemProps extends Omit<HTMLAttributes<HTMLLIElement>, 'children'> {
@@ -59,7 +57,6 @@ export interface SelectedData {
     domEvent?: MouseEvent | KeyboardEvent;
 }
 
-/** Dropdown props of a popup Sub */
 export type SubDropdownProps = DropdownProps;
 
 export interface SubNavProps extends Omit<HTMLAttributes<HTMLLIElement>, 'children'> {
@@ -73,7 +70,6 @@ export interface SubNavProps extends Omit<HTMLAttributes<HTMLLIElement>, 'childr
     /** Applies when dropdownProps is not given */
     subDropdownProps?: SubDropdownProps;
     text?: string | number;
-    /** The Sub's items: Nav.Item and Nav.Sub, rendered in the inline list or the popup */
     children?: Snippet;
     /** Replaces the shown text. Named `label`: `text` is the prop, and a prop and a snippet share one namespace */
     label?: Snippet;
@@ -104,7 +100,6 @@ export interface NavCollapseButtonProps {
     onToggle: () => void;
 }
 
-/** An entry of `items`: Item or Sub data, the attributes its li takes, and nested entries; Nav's snippets give its content */
 export interface NavItemConfig extends EntryAttributes {
     disabled?: boolean;
     dropdownProps?: SubDropdownProps;
@@ -120,10 +115,8 @@ export interface NavItemConfig extends EntryAttributes {
     tooltipShowDelay?: number;
 }
 
-/** A string entry is both the text and the itemKey of a plain item */
 export type NavItems = (string | NavItemConfig)[];
 
-/** The `header` prop as data; `logo` is a snippet shown with the header */
 export interface NavHeaderConfig extends Omit<NavHeaderProps, 'children'> {}
 
 export interface NavFooterConfig extends Omit<NavFooterProps, 'children'> {}
@@ -157,13 +150,11 @@ export interface NavWrapperArgs {
     itemElement: Snippet;
     isSubNav: boolean;
     isInSubNav: boolean;
-    /** What the Nav.Item or Nav.Sub was given */
     props: Partial<NavItemProps> | Partial<SubNavProps>;
 }
 
 export interface NavItemRenderProps {
     item: NavItemConfig;
-    /** Nesting depth of the entry, 0 at the top */
     level: number;
 }
 
@@ -178,7 +169,6 @@ export interface NavProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> 
     openKeys?: ItemKey[] | null;
     /** Bindable; null is a controlled empty value */
     selectedKeys?: ItemKey[] | null;
-    /** Dropdown props of the Subs generated from `items` */
     subDropdownProps?: SubDropdownProps;
     subNavCloseDelay?: number;
     subNavMotion?: boolean;
@@ -186,20 +176,14 @@ export interface NavProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> 
     toggleIconPosition?: 'left' | 'right';
     tooltipHideDelay?: number;
     tooltipShowDelay?: number;
-    /** A config object, or content that holds a `NavHeader`; it shows before the list */
     header?: NavHeaderConfig | Snippet;
-    /** A config object, or content that holds a `NavFooter`; it shows after the list */
     footer?: NavFooterConfig | Snippet;
-    /** Nav.Item and Nav.Sub, after the ones made from `items` */
     children?: Snippet;
     wrapper?: Snippet<[NavWrapperArgs]>;
-    /** For the entries of `items` */
     icon?: Snippet<[NavItemRenderProps & NavIconArgs]>;
-    /** For the entries of `items`; without it the entry's text shows */
+    /** Without it the entry's text shows */
     text?: Snippet<[NavItemRenderProps]>;
-    /** For the items made from `items` */
     toggleIcon?: Snippet<[NavItemRenderProps & NavIconArgs]>;
-    /** For the Subs made from `items` */
     expandIcon?: Snippet<[NavItemRenderProps & NavExpandIconArgs]>;
     onClick?: (data: NavClickData) => void;
     onCollapseChange?: (isCollapsed: boolean) => void;

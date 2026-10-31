@@ -992,7 +992,6 @@ describe('AIChatInput 输入法、粘贴与焦点', () => {
         await fireEvent.click(root(container), { detail: 1 });
         await settle(50);
         expect(pm(container)).not.toHaveFocus();
-        // the same press and release on one element still focuses the editor
         await fireEvent.mouseDown(root(container));
         await fireEvent.click(root(container), { detail: 1 });
         await settle(50);

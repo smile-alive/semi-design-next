@@ -23,8 +23,8 @@
     }
 
     /**
-     * Fixed or per-row-height vertical list that renders only the rows in view. Attributes land on the scroll container;
-     * lists whose rows take no focus pass `tabindex="-1"` so Chrome does not make the container a second tab stop.
+     * Attributes land on the scroll container; lists whose rows take no focus pass `tabindex="-1"` so Chrome does not
+     * make the container a second tab stop.
      */
     const props = withDefaults(
         defineProps<{
@@ -34,9 +34,7 @@
             width?: number | string;
             itemCount: number;
             itemSize: number | ((index: number) => number);
-            /** Key of a row; the index when absent */
             itemKey?: (index: number) => PropertyKey;
-            /** Rows rendered beyond each edge of the viewport */
             overscan?: number;
             /** Element that holds the rows, such as `ul` for `li` rows, since a list's content model admits only items */
             innerTag?: string;

@@ -118,7 +118,6 @@ interface StubObserver {
     elements: Set<Element>;
 }
 
-// observers that still watch an element; the stub never fires on its own
 function stubIntersectionObserver() {
     const observers: StubObserver[] = [];
     vi.stubGlobal(
@@ -458,7 +457,6 @@ describe('ImagePreview', () => {
         const onZoomIn = vi.fn<(zoom: number) => void>();
         await renderPreview({ maxZoom: 1.5, zoomStep: 0.5, onZoomIn });
         await fireEvent.load(previewImg());
-        // 720 / 100 = 7.2 is clamped to maxZoom
         expect(previewImg()).toHaveStyle({ width: '150px' });
         expect(footerIcon('plus')).toHaveClass(`${previewCls}-footer-disabled`);
         await fireEvent.click(footerIcon('minus'));
@@ -553,7 +551,6 @@ describe('ImagePreview', () => {
         expect(previewImg().style.transform).toBe('translate(50px, 30px) rotate(0deg)');
         await fireEvent.pointerMove(previewImg(), { clientX: 150, clientY: 330, buttons: 1 });
         expect(previewImg().style.transform).toBe('translate(50px, 100px) rotate(0deg)');
-        // without the left button pressed nothing moves
         await fireEvent.pointerMove(previewImg(), { clientX: 400, clientY: 330, buttons: 0 });
         expect(previewImg().style.transform).toBe('translate(50px, 100px) rotate(0deg)');
     });

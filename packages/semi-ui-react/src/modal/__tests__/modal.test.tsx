@@ -186,7 +186,6 @@ describe('modal', () => {
             okText: 'ok',
             okType: 'secondary',
             visible: true,
-            // remove close btn to avoid selected by selector
             closable: false,
         };
         const { rerender } = renderModal(baseProps);
@@ -741,7 +740,6 @@ describe('modal 行为', () => {
     });
 });
 
-// Fixed in the function component; these fail on the class component
 describe('modal 修复', () => {
     afterEach(() => {
         document.body.style.overflow = '';

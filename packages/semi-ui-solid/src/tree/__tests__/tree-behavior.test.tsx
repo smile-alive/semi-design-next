@@ -223,7 +223,6 @@ describe('Tree 行为', () => {
 
         it('行内可聚焦控件保留自身的 Enter 和 Space', async () => {
             const onSelect = vi.fn<NonNullable<TreeProps['onSelect']>>();
-            // a click would bubble to the row and select it, as with the mouse; stopping it isolates the key handling
             const onClick = vi.fn<(e: MouseEvent) => void>((e) => e.stopPropagation());
             render(() => (
                 <Tree
@@ -792,7 +791,6 @@ describe('Tree 拖拽', () => {
         fireEvent.dragEnter(getNode('beimeizhou'));
         await wait(0);
         fireEvent.dragLeave(getNode('beimeizhou'));
-        // the auto-expand delay is 400ms
         await wait(450);
         expect(getNode('meiguo')).toBeNull();
     });

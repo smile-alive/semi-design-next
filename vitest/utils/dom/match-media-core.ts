@@ -8,11 +8,7 @@ interface MediaListStub {
     removeEventListener: (type: string, handler: MediaListStub['handlers'][number]) => void;
 }
 
-/**
- * Replaces window.matchMedia with lists matching exactly the queries in `matching` and recording their change
- * handlers, so a test can fire changes and count live subscriptions. Only addEventListener and removeEventListener
- * are implemented, the members Semi reads.
- */
+/** Only addEventListener and removeEventListener are implemented, the members Semi reads */
 export function mockMatchMediaCore(matching: string[] = []) {
     const lists: Record<string, MediaListStub[]> = {};
     vi.stubGlobal(

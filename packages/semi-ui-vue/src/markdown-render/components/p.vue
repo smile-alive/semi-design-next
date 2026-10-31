@@ -6,7 +6,6 @@
     import A from './a.vue';
     import Img from './img.vue';
 
-    // TypographyParagraph's props reach it as fallthrough attrs; typed behind `@vue-ignore` for call sites only
     defineProps</* @vue-ignore */ InstanceType<typeof TypographyParagraph>['$props']>();
 
     // The image component renders a div, invalid inside a p, so a paragraph holding one becomes a div. Known limit: only

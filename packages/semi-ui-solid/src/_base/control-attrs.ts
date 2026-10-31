@@ -5,7 +5,6 @@ const formInjectedKeys = new Set(['validateStatus', 'insetLabel', 'insetLabelId'
 
 /** Every field component wraps its props in this first, so the injected keys never reach `splitProps` or the DOM */
 export function omitFormInjected<P extends object>(props: P) {
-    // the injected keys are not part of any component's declared props, so the type stays P
     return view(props, (key) => !formInjectedKeys.has(key)) as P;
 }
 

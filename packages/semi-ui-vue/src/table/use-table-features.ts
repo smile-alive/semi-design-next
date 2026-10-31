@@ -13,14 +13,11 @@ type AnyRecord = Record<string, any>;
 export interface ColumnFlags {
     hasSorter: boolean;
     hasFilter: boolean;
-    /** The header cell renders ColumnTitle instead of the plain title */
     needsTitle: boolean;
-    /** A click on the header cell sorts */
     clickToSort: boolean;
     showSortTip: boolean;
     sortOrder: SortOrder;
     filteredValue?: unknown[];
-    /** The sort and filter state of the column, when it has a dataIndex */
     query?: ColumnProps;
 }
 
@@ -35,7 +32,6 @@ const PLAIN_FLAGS: ColumnFlags = {
     query: undefined,
 };
 
-/** How the header cell of a column sorts and filters, decided as React Table does */
 export function columnFlags(column: ColumnProps, queries?: ColumnProps[]): ColumnFlags {
     // filterDropdown counts, unlike React where a lone element renders nothing: here the flag only opens a panel
     if (!(column.sorter || column.filters || column.onFilter || column.useFullRender || column.filterDropdown)) {
@@ -66,7 +62,6 @@ export const filterProps = (column: ColumnProps, flags: ColumnFlags) => ({
     filteredValue: flags.filteredValue,
 });
 
-/** The sort button of a full render title */
 export const renderSorterNode = (column: ColumnProps, flags: ColumnFlags): VNode => h(ColumnSorter, sorterProps(column, flags));
 export const renderFilterNode = (column: ColumnProps, flags: ColumnFlags): VNode => h(ColumnFilter, filterProps(column, flags));
 export const renderSelectionNode = (record: AnyRecord | undefined, inHeader: boolean, index?: number): VNode => h(ColumnSelection, { record, inHeader, index });
@@ -93,7 +88,6 @@ export function mergePagination(pagination: TablePaginationProps | null | undefi
     return { onChange: setPage, ...pagination };
 }
 
-/** The column of expand buttons, shown when hideExpandedColumn is false */
 export function expandColumn(props: Pick<TableProps, 'hideExpandedColumn' | 'expandCellFixed'>, prefixCls: string) {
     return props.hideExpandedColumn
         ? null
@@ -104,7 +98,6 @@ export function expandColumn(props: Pick<TableProps, 'hideExpandedColumn' | 'exp
           } satisfies ColumnProps);
 }
 
-/** The column of selection checkboxes */
 export function selectionColumn(rowSelection: TableProps['rowSelection'], prefixCls: string) {
     if (!rowSelection || (isObject(rowSelection) && rowSelection.hidden)) {
         return null;

@@ -316,7 +316,6 @@ describe('Svelte ButtonGroup', () => {
         flushSync();
         expect(screen.getByRole('button', { name: 'a' })).toBe(a);
         expect(screen.getAllByRole('button').map((el) => el.textContent)).toEqual(['c', 'a', 'b']);
-        // the group re-reads the button order from a MutationObserver callback
         await waitFor(() => expect(screen.getByRole('button', { name: 'c' }).nextElementSibling).toBe(lines()[0]));
         expect(screen.getByRole('button', { name: 'b' }).nextElementSibling).toBeNull();
         expect(lines()).toHaveLength(2);

@@ -24,7 +24,6 @@ const subMenu = (items = defaultItems) => (
 // the menu is built lazily: JSX created in the test body, outside the Dropdown, would not see its context
 const renderDD = (props: Partial<DropdownProps>, content: () => JSX.Element = () => subMenu()) =>
     render(() => (
-        // Tooltip-based layers animate and delay; turn both off so tests need no waiting
         <Dropdown motion={false} mouseEnterDelay={0} mouseLeaveDelay={0} render={content()} {...props}>
             {props.children ?? 'semi dropdown'}
         </Dropdown>
@@ -1051,7 +1050,6 @@ describe('Dropdown 行为', () => {
             </Dropdown>
         ));
         const button = screen.getByRole('button', { name: 'prevent trigger' });
-        // fireEvent returns false when a handler called preventDefault
         expect(fireEvent.keyDown(button, { key: 'ArrowDown' })).toBe(true);
         setVisible(true);
         await waitFor(() => expect(button).toHaveAttribute('aria-expanded', 'true'));

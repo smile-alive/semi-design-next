@@ -44,7 +44,6 @@ describe('RichTextInput 编辑器宿主（attachment）', () => {
         const { pm, store, editor } = setup({ defaultContent: '<p>hello</p>' });
         expect(pm()).toHaveTextContent('hello');
         store.log.length = 0;
-        // the end of the paragraph
         editor().commands.insertContentAt(editor().state.doc.content.size - 1, ' world');
         expect(store.log).toEqual(['change hello world']);
     });

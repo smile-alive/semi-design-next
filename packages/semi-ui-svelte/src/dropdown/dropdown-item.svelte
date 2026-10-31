@@ -41,7 +41,6 @@
         }
     };
 
-    // detail 0: activated from the keyboard
     const handleClick = (event: MouseEvent & { currentTarget: HTMLLIElement }) => {
         if (!disabled && (topLevel || event.detail === 0)) {
             rest.onclick?.(event);

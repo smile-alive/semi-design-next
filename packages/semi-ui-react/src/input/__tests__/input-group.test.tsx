@@ -203,7 +203,6 @@ describe('复合控件内部自己渲染的控件不读组', () => {
         TreeSelect: () => <TreeSelect treeData={treeData} prefix={inner} />,
         AutoComplete: () => <AutoComplete prefix={inner} />,
         DatePicker: () => <DatePicker prefix={inner} />,
-        // TimePicker has no prefix; insetLabel is the slot in front of the input
         TimePicker: () => <TimePicker insetLabel={inner} />,
         TagInput: () => <TagInput prefix={inner} />,
         InputNumber: () => <InputNumber prefix={inner} />,

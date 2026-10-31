@@ -212,7 +212,6 @@ describe('Modal.confirm', () => {
         const before = document.body.children.length;
         render(Host);
         await vi.waitFor(() => expect(afterClose).toHaveBeenCalledTimes(1));
-        // only the render container remains
         expect(document.body.children.length).toBe(before + 1);
     });
 

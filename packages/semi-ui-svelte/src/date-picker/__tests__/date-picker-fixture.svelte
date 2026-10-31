@@ -4,7 +4,6 @@
     export type Mode = 'bind' | 'function' | 'one-way' | 'uncontrolled';
 
     export interface FixtureStore {
-        /** Which prop the mode applies to; the other one is passed one-way (undefined: left out) */
         target: 'value' | 'open';
         mode: Mode;
         value?: DatePickerProps['value'];
@@ -52,7 +51,6 @@
         bottomSlot: store.slots ? bottom : undefined,
     });
 
-    // the annotation checks that the component instance satisfies the public DatePickerHandle
     export function api(): DatePickerHandle | undefined {
         return picker;
     }

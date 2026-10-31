@@ -15,7 +15,6 @@ import ZoomOneWay from './fixtures/zoom-one-way.vue';
 const SRC = 'https://example.com/a.png';
 const size = { width: 400, height: 300 };
 
-// jsdom has no layout: every element reports the container size, and the image its natural size once loaded
 function mockLayout() {
     vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockImplementation(() => size.width);
     vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockImplementation(() => size.height);
@@ -64,7 +63,6 @@ async function release(el: Element) {
     await fireEvent.lostPointerCapture(el);
 }
 
-// an 800 x 400 image fits the 400 x 300 container at scale 0.5: 400 x 200, centered
 async function loadImage(container: Element, naturalWidth = 800, naturalHeight = 400) {
     const img = getImg(container);
     Object.defineProperty(img, 'naturalWidth', { value: naturalWidth, configurable: true });
@@ -414,7 +412,6 @@ describe('Cropper', () => {
             vi.spyOn(Element.prototype, 'clientLeft', 'get').mockReturnValue(10);
             vi.spyOn(Element.prototype, 'clientTop', 'get').mockReturnValue(10);
             const { container } = await renderLoaded();
-            // the pointer sits on the container's top-left corner, which is (10, 10) in viewport coordinates
             await wheel(container, { deltaY: -1, clientX: 10, clientY: 10 });
             const [x, y] = offsets(imgStyle(container).transform);
             expect(x).toBeCloseTo(0);
@@ -576,7 +573,6 @@ describe('Cropper', () => {
                 expect(capture.mock.calls.at(-1)).toEqual([7]);
                 await release(surface);
             }
-            // the corner press bubbles to the box, which leaves it to the corner
             expect(capture).toHaveBeenCalledTimes(3);
         });
     });
@@ -760,7 +756,6 @@ describe('Cropper', () => {
     });
 
     describe('preview', () => {
-        // the node's size follows its inline style, as a real layout does
         const createPreviewNode = (style = '') => {
             const node = document.createElement('div');
             node.style.cssText = style;

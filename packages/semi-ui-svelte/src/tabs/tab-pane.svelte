@@ -16,8 +16,6 @@
 
     const shouldRender = $derived(!view.lazyRender || active || activated);
     const paneMotion = $derived(TabsFoundation.getPaneMotion({ ...view, itemKey }));
-
-    // split so the effect below runs only when one of the two values changes
     const startClassName = $derived(paneMotion.startClassName);
     const hasMotion = $derived(paneMotion.hasMotion);
 

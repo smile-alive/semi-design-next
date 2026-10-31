@@ -62,11 +62,7 @@
     const uid = $props.id();
     let rootEl = $state.raw<HTMLDivElement | null>(null);
     let dialogEl = $state.raw<HTMLDivElement | null>(null);
-
-    // True until the first show, and again once a leave animation has ended; the sheet stays mounted while it is false
     let displayNone = $state(true);
-
-    // The animation the mask and the dialog play; each run ends with the dialog's animationend
     let animating = $state<'show' | 'hide'>();
     let started = false;
     let shown = false;
@@ -84,7 +80,6 @@
     const maskAnimation = $derived(animating ? `${prefix}-animation-mask_${animating}` : undefined);
     const dialogAnimation = $derived(animating ? `${prefix}-animation-content_${animating}_${placement}` : undefined);
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: SideSheetBaseProps = {
         get closeOnEsc() {
             return closeOnEsc;
@@ -109,7 +104,6 @@
             disabledBodyScroll: () => (isModal() ? scroll.hold(lockBodyScroll) : scroll.release()),
             enabledBodyScroll: () => scroll.release(),
             notifyCancel: (event) => {
-                // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 visible = false;
                 onCancel?.(event);
             },
@@ -203,7 +197,6 @@
         });
     });
 
-    // The sheet takes the layer, scroll lock and focus once its content is in the document
     $effect(() => {
         const element = dialogEl;
         if (!visible || !element || !rootEl) {
@@ -226,7 +219,6 @@
 
     onMount(() => {
         shown = !hidden;
-        // Unmounting while shown or leaving counts as hiding
         return () => {
             if (shown) {
                 foundation.onVisibleChange(false);
@@ -234,7 +226,6 @@
         };
     });
 
-    /** The outer `.semi-sidesheet` element inside the portal; null while nothing is rendered */
     export function getRoot() {
         return rootEl;
     }

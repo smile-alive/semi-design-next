@@ -22,7 +22,6 @@ const MODES = ['day', 'week', 'month', 'range'] as const;
 const today = new Date(2019, 7, 8);
 const weekRange = [new Date(2019, 7, 4), new Date(2019, 7, 11)];
 
-// lets the host's setState, the effects it schedules and the measured positions render
 async function settle() {
     flushSync();
     await tick();
@@ -135,7 +134,6 @@ describe('Calendar', () => {
         const month = renderCal({ mode: 'month', onClick: onMonthClick });
         await userEvent.click(month.container.querySelector(`.${prefixCls}-month-skeleton [role="cell"]`) as HTMLElement);
         expect(onMonthClick).toHaveBeenCalledTimes(1);
-        // August 2019 starts on Thursday, so the month grid begins on Sunday 2019-07-28
         expect(onMonthClick.mock.calls[0][1]).toEqual(new Date(2019, 6, 28));
     });
 
@@ -221,7 +219,6 @@ describe('Calendar', () => {
     });
 
     it('month 视图：同一天低行为空、高行有跨天事件时，被折叠的事件仍有 "more" 入口', async () => {
-        // a 84px week row fits (84 - 60) / 24 = 1 event row
         mockLayout({ rectHeight: 84 });
         const events = [event('a', new Date(2019, 7, 5), undefined, { allDay: true }), event('b', new Date(2019, 7, 5), new Date(2019, 7, 7), { allDay: true })];
         renderCal({ displayValue: today, events, mode: 'month' });
@@ -302,7 +299,6 @@ describe('Calendar 行为', () => {
         const { container } = await renderLaidOut({ displayValue: today, events, mode: 'day' });
         const items = dayItems(container);
         expect(items.map((item) => item.textContent?.trim())).toEqual(['a', 'b', 'c']);
-        // positions are rounded to 1/1000 of the day, so 10:00 lands at 0.417 * 480
         expect(items.map((item) => [Math.round(px(item.style.top)), Math.round(px(item.style.height))])).toEqual([
             [200, 20],
             [200, 20],
@@ -399,7 +395,6 @@ describe('Calendar 行为', () => {
     });
 
     it('month 视图显示到行数上限的事件，其余折叠为 "more" 链接', async () => {
-        // a week row of 108px fits (108 - 60) / 24 = 2 event rows
         mockLayout({ rectHeight: 108 });
         const events = ['a', 'b', 'c'].map((key, i) => event(key, new Date(2019, 7, 8, 9 + i)));
         const { container } = renderCal({ displayValue: today, events, mode: 'month' });
@@ -887,7 +882,6 @@ describe('Calendar 属性与全局默认值', () => {
         expect(root().style.height).toBe('200px');
         view.unmount();
 
-        // the app-level config does not leak into the module-level one
         const plain = renderCal();
         expect(rootOf(plain.container)).toHaveClass(`${prefixCls}-week`);
         expect(rootOf(plain.container).style.height).toBe('600px');
@@ -1063,7 +1057,6 @@ describe('Calendar 事件内容', () => {
     it('event 的参数是 events 中的原对象，每处渲染各调用一次', async () => {
         mockLayout();
         const timed = event('timed', new Date(2019, 7, 8, 10), new Date(2019, 7, 8, 11), { color: 'red' });
-        // spans Saturday 08-10 to Monday 08-12, across two week rows of the month
         const span = event('span', new Date(2019, 7, 10), new Date(2019, 7, 12), { allDay: true, color: 'blue' });
         const events = [timed, span];
         const seen: EventObject[] = [];
@@ -1116,7 +1109,6 @@ describe('Calendar 事件内容', () => {
         dates.length = 0;
         const month = renderCal({ displayValue: today, mode: 'month', dateDisplay });
         expect(dates).toHaveLength(month.container.querySelectorAll('[role="cell"]').length);
-        // the August 2019 month grid starts on Sunday 2019-07-28
         expect(month.container.querySelector('[role="cell"]')).toHaveTextContent('d28');
         month.unmount();
 

@@ -15,12 +15,10 @@ export interface EmptyProps {
     title?: string;
     /** Image URL or sprite symbol; use the `image` slot for other content */
     image?: string | EmptySvgNode;
-    /** Shown instead of `image` while the page is in dark mode */
     darkModeImage?: string | EmptySvgNode;
 }
 
 export interface EmptySlots {
-    /** Actions below the description */
     default?: () => VNode[];
     title?: () => VNode[];
     description?: () => VNode[];

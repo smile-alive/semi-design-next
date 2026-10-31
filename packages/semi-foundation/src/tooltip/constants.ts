@@ -12,7 +12,6 @@ export const strings = {
     LEAVE_DELAY_WARNING: "[Semi Tooltip] 'mouseLeaveDelay' cannot be less than 'mouseEnterDelay', which may cause the dropdown layer to not be hidden.",
 } as const;
 
-/** The DOM event names the trigger and popup listeners bind to */
 export const TRIGGER_EVENT_NAMES = {
     mouseEnter: 'mouseenter',
     mouseLeave: 'mouseleave',
@@ -32,7 +31,6 @@ const BLOCK_DISPLAYS: ReadonlySet<string | undefined> = new Set(['flex', 'block'
 
 export const canRoleCarryPopupState = (role: string) => POPUP_TRIGGER_ROLES.has(role);
 
-/** Whether a wrapper around a trigger with this `display` must fill the width */
 export const isBlockDisplay = (display?: string) => BLOCK_DISPLAYS.has(display);
 
 /**
@@ -47,7 +45,6 @@ const alwaysLight = `${BASE_CLASS_PREFIX}-always-light`;
 /** The forced light and dark areas; the popup leaves the trigger's subtree, so it copies the innermost one around it */
 export const COLOR_SCHEME_SELECTOR = `.${alwaysDark}, .${alwaysLight}`;
 
-/** The class that keeps a popup in the scheme of `area`, the innermost COLOR_SCHEME_SELECTOR element around the trigger */
 export const colorSchemeOf = (area?: Element | null) => (area ? (area.classList.contains(alwaysDark) ? alwaysDark : alwaysLight) : undefined);
 
 /**

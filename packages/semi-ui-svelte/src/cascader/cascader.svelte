@@ -141,7 +141,6 @@
     const selectionTextId = `${uid}-selection`;
     const cls = cssClasses.PREFIX;
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: BasicCascaderProps = {
         get autoMergeValue() {
             return autoMergeValue;
@@ -226,7 +225,6 @@
                 if (searchInput) {
                     searchInput.focus({ preventScroll });
                 } else if (tagInput) {
-                    // TagInput reads preventScroll from its own prop
                     tagInput.focus();
                 } else {
                     triggerEl?.focus({ preventScroll });
@@ -238,7 +236,6 @@
             },
             updateStates: (next) => base.setState(next as BasicCascaderInnerData),
             notifyChange: (next) => {
-                // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 value = next as CascaderValue;
                 onChange?.(next as CascaderChangeValue);
             },
@@ -279,7 +276,6 @@
         })
     );
 
-    // controlled values and the multiple-mode tree are derived here, so they reach the DOM in the render that receives them
     const view: BasicCascaderInnerData = $derived(multiple ? { ...states(), ...CascaderFoundation.deriveMultipleState(foundationProps, states()) } : states());
     const renderData = $derived(CascaderFoundation.getRenderData(foundationProps, view));
     const isEmpty = $derived(!renderData.length);
@@ -342,7 +338,6 @@
 
     const triggerSnippetProps: CascaderTriggerSnippetProps = $derived.by(() => {
         const { keyEntities, checkedKeys, resolvedCheckedKeys, selectedKeys } = view;
-        // the trigger gets positions; mergeType decides which checked set they come from, whatever checkRelation is
         const keys = mergeType === strings.NONE_MERGE_TYPE ? checkedKeys : resolvedCheckedKeys;
         return {
             value: multiple ? new Set([...keys].map((key) => keyEntities[key]?.pos)) : keyEntities[[...selectedKeys][0]]?.pos,
@@ -692,7 +687,6 @@
 {/snippet}
 
 {#snippet triggerNode({ props }: { props: TooltipTriggerProps })}
-    <!-- the combobox is the Tab stop -->
     <div
         bind:this={triggerEl}
         {...props}

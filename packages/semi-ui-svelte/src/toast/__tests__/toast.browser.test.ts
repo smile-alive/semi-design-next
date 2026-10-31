@@ -9,7 +9,6 @@ import HookHost from './hook-host.svelte';
 const prefix = 'semi-toast';
 const closeButton = (toast: Element) => toast.querySelector(`.${prefix}-close-button .semi-button`) as HTMLButtonElement;
 const finishAnimations = (elements: Element[]) => elements.forEach((el) => el.getAnimations({ subtree: true }).forEach((a) => a.finish()));
-// The enter and leave classes, and so their animations, sit on the element around the toast
 const wrapperOf = (toast: Element) => toast.parentElement as HTMLElement;
 
 function renderHook(reachable?: string) {
@@ -22,7 +21,6 @@ function renderHook(reachable?: string) {
             },
         },
     });
-    // hook toasts are mounted into the body
     const toasts = () => [...document.body.querySelectorAll<HTMLElement>(`.${prefix}`)];
     return { api: result.api, toasts, view };
 }
@@ -192,7 +190,6 @@ describe('Toast 浏览器', () => {
         const toastEl = () => document.querySelector<HTMLElement>(`.${prefix}`);
         await waitFor(() => expect(toastEl()).not.toBeNull());
         await tabTo(closeButton(toastEl() as HTMLElement));
-        // asserting that nothing closes needs a fixed wait longer than the duration
         await new Promise((resolve) => setTimeout(resolve, 1200));
         expect(toastEl()).not.toBeNull();
         await userEvent.keyboard('{Enter}');
@@ -223,7 +220,6 @@ describe('Toast 浏览器', () => {
         closeButton(toasts().find((toast) => toast.textContent?.includes('first')) as HTMLElement).focus();
         api.close(leaving);
         await waitFor(() => expect(toasts()).toHaveLength(1));
-        // asserting that nothing closes needs a fixed wait longer than the duration
         await new Promise((resolve) => setTimeout(resolve, 1500));
         expect(toasts()).toHaveLength(1);
     });

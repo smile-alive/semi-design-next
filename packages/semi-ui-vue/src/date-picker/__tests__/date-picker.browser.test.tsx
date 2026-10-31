@@ -27,11 +27,9 @@ const getPanel = (side: string) => document.querySelector<HTMLElement>(`.${dp}-m
 const getNavTitles = () => Array.from(document.querySelectorAll(`.${dp}-navigation-month`)).map((el) => el.textContent);
 const getPopupInputs = () => document.querySelectorAll<HTMLInputElement>(`${popover} .${BASE_CLASS_PREFIX}-input`);
 const getPopupInputWrappers = () => document.querySelectorAll(`${popover} .${BASE_CLASS_PREFIX}-input-wrapper`);
-// year/month scroll lists in DOM order: [year, month] per panel (left first)
 const getYMLists = () => document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-scrolllist-item ul`);
 const getYMSelected = () => Array.from(document.querySelectorAll(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`)).map((li) => li.textContent);
 
-// A click target above the picker that the popup never covers, for blurring or closing the picker
 const withOutside = (...children: VNodeChild[]) => (
     <div>
         <div style={{ height: '40px' }} data-testid="outside">
@@ -808,7 +806,6 @@ describe('DatePicker', () => {
         await expectSelectedYMVisible();
     });
 
-    // weekStartsOn 0: April and May 2030 have 5 week rows, March and June 6
     it.each([
         {
             ymSide: 'left',

@@ -232,7 +232,6 @@ describe('Radio', () => {
             </Radio>
         ));
         expect(screen.getByRole('radio')).not.toBeChecked();
-        // a non-boolean checked is ignored, so the radio shows its state
         setChecked(null);
         expect(screen.getByRole('radio')).not.toBeChecked();
     });
@@ -511,7 +510,6 @@ describe('Radio', () => {
         expect(a).not.toHaveClass(`${prefixCls}-checked`);
         expect(b).toHaveClass(`${prefixCls}-checked`);
         expect(c).toHaveClass(`${prefixCls}-checked`);
-        // the native uncheck of the previous radio reports no change
         expect(onChange).toHaveBeenCalledTimes(1);
     });
 

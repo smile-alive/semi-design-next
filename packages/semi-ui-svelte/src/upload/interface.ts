@@ -44,7 +44,6 @@ export interface UploadOnChangeProps {
 
 export interface UploadCustomRequestArgs {
     fileName: string;
-    /** The resolved `data` prop */
     data: Record<string, any>;
     file: FileItem;
     fileInstance: File;
@@ -71,9 +70,7 @@ export interface UploadCropProps {
     zoomStep?: number;
     /** Output image quality, range 0 - 1, defaults to 0.92 */
     quality?: number;
-    /** Fill color of the area outside the cropped region */
     fill?: string;
-    /** Title of the crop modal; the locale's by default */
     modalTitle?: string;
     modalOkText?: string;
     modalCancelText?: string;
@@ -165,7 +162,6 @@ export interface UploadProps extends Omit<HTMLAttributes<HTMLDivElement>, 'oncha
     headers?: Record<string, any> | ((file: File) => Record<string, string>);
     /** Where the picture wall's add button sits */
     hotSpotLocation?: 'start' | 'end';
-    /** Style of each file card */
     itemStyle?: string;
     limit?: number;
     listType?: UploadListType;

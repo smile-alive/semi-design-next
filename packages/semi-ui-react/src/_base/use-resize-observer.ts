@@ -3,7 +3,6 @@ import { type RefObject, useEffectEvent, useLayoutEffect } from 'react';
 type Target = Element | RefObject<Element | null> | null;
 
 interface Options {
-    /** false stops observing, true observes again */
     enabled?: boolean;
 }
 

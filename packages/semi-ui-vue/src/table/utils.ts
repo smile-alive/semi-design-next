@@ -29,9 +29,6 @@ export function mergeComponents(components: TableComponents | undefined, virtual
     };
 }
 
-/**
- * The slot output as keyed nodes, or null when it renders nothing so the caller shows its default
- */
 export function slotOutput(slot?: (...args: any[]) => VNodeChild, ...args: unknown[]): KeyedNode[] | null {
     if (!slot) {
         return null;
@@ -40,7 +37,6 @@ export function slotOutput(slot?: (...args: any[]) => VNodeChild, ...args: unkno
     return nodes.some(isSlotContent) ? nodes : null;
 }
 
-/** Resolves a template ref to an element or a component's root element */
 export function toElement(target: unknown) {
     if (target instanceof HTMLElement) {
         return target;
@@ -53,7 +49,6 @@ const booleanKeys = new Set(['fixed', 'ellipsis', 'sorter', 'useFullRender', 're
 
 export interface CollectedColumns {
     columns: ColumnProps[];
-    /** Slots of each `Table.Column` child */
     slots: Map<ColumnProps, RawSlots>;
 }
 
@@ -124,9 +119,6 @@ export function collectColumns(nodes: VNode[], prev?: CollectedColumns): Collect
     return { columns: prev.columns, slots: kept };
 }
 
-/**
- * Copies the columns, adds selection and expand columns and assigns keys; `origins` maps each copy to its source.
- */
 export function buildColumns(columns: ColumnProps[], innerColumns: (ColumnProps | null)[], origins: WeakMap<ColumnProps, ColumnProps>) {
     const copy = (list: ColumnProps[]) =>
         list.map((column) => {

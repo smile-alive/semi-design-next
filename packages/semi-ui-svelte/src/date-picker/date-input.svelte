@@ -52,8 +52,6 @@
     });
 
     const allowRangeClear = $derived(DateInputFoundation.getRangeClearVisible({ ...rangeParts, showClear: props.showClear ?? true, disabled: props.disabled, showClearIgnoreDisabled: props.showClearIgnoreDisabled }));
-
-    // a missing insetInputValue makes the foundation format `value` instead
     const insetValue = $derived(DateInputFoundation.getInsetInputValue(props, { value, insetInputValue: props.insetInputValue as InsetInputValue }));
 
     const insetPlaceholders = $derived.by(() => {
@@ -127,12 +125,10 @@
         }
     });
 
-    /** The single input of the trigger */
     export function getSingle() {
         return single ?? null;
     }
 
-    /** The start input of a range trigger, or the first inset date input */
     export function getRangeStart() {
         return (props.insetInput ? insetStart : rangeStartInput) ?? null;
     }

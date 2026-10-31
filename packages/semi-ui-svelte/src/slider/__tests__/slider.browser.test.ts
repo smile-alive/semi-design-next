@@ -179,7 +179,6 @@ describe('Svelte Slider 拖动（浏览器）', () => {
         await flush();
         expect(change).toHaveBeenLastCalledWith([0, 100]);
         const railRect = rail.getBoundingClientRect();
-        // the min handle dragged past the max handle stops at it
         dragHandle(handles[0] as HTMLElement, railRect.right + 200, 0);
         await flush();
         expect(rects(handles)[0]?.left).toBeLessThanOrEqual(rects(handles)[1]?.left as number);
@@ -207,7 +206,6 @@ describe('Svelte Slider 键盘（浏览器）', () => {
         const [input, next] = inputs as [HTMLInputElement, HTMLInputElement];
         await userEvent.click(handles[0] as HTMLElement);
         expect(input).toHaveFocus();
-        // a pointer press focuses the input without the keyboard focus ring
         expect(input.matches(':focus-visible')).toBe(false);
         const steps = [
             ['{ArrowUp}', '1'],

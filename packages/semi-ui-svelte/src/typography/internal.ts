@@ -9,9 +9,7 @@ export interface TypographyBaseProps extends HTMLAttributes<HTMLElement>, Typogr
     spacing?: string;
     weight?: string | number;
     icon?: Snippet;
-    /** Title's tag, which also picks the heading class */
     headingTag?: `h${1 | 2 | 3 | 4 | 5 | 6}`;
-    /** Numeral's formatter of the rendered text nodes */
     format?: (value: string) => string;
 }
 

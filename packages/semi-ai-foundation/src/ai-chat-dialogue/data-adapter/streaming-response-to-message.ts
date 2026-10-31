@@ -9,7 +9,6 @@ const MAX_GAP = 10;
  * Incremental reducer for streaming Response chunks. Chunks are buffered by sequence_number and applied in
  * consecutive order; chunks seen in earlier calls (via prevState) are skipped.
  *
- * @param chunks - Incoming response chunks
  * @param prevState - State returned by the previous call
  * @returns The accumulated message and the next state, or null if there are no chunks
  */

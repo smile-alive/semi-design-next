@@ -137,7 +137,6 @@
 
     watch(() => aspectRatio, foundation.applyAspectRatio);
 
-    // a controlled value dropped again falls back to the default, like the other components
     watch(
         () => zoom,
         (value) => {

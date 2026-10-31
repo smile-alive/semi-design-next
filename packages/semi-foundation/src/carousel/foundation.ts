@@ -14,14 +14,12 @@ export interface CarouselAdapter<P extends CarouselBaseProps = CarouselBaseProps
 
 export type CarouselAutoPlay = boolean | { interval?: number; hoverToPause?: boolean };
 
-/** The props the foundation reads */
 export interface CarouselBaseProps {
     activeIndex?: number;
     autoPlay?: CarouselAutoPlay;
     speed?: number;
 }
 
-/** The state the foundation reads */
 export interface CarouselBaseState {
     activeIndex: number;
     isInit: boolean;

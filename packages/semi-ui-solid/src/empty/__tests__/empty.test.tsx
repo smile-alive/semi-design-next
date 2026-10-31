@@ -18,7 +18,6 @@ function expectEmpty(element: HTMLElement) {
     expect(element.textContent).toBe('');
 }
 
-// the same shape as an illustration component: an svg element
 const illustration = () => <svg data-testid="illustration" />;
 
 describe('Empty', () => {

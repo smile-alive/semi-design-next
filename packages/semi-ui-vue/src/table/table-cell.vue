@@ -19,9 +19,7 @@
         attrs: Record<string, unknown>;
         indentWidth: number;
         expandIcon: VNode | null;
-        /** The output of a #cell slot */
         output: KeyedNode[] | null;
-        /** The value shown without a slot */
         text?: string | number;
         inner: 'default' | 'selection' | 'expand' | 'slot';
     }
@@ -31,25 +29,19 @@
         record?: AnyRecord;
         /** The index of the record among its siblings, or of the row in a virtualized body */
         index?: number;
-        /** The sticky offset of a left fixed column */
         fixedLeft?: number | false;
         fixedRight?: number | false;
         lastFixedLeft?: boolean;
         firstFixedRight?: boolean;
-        /** The columns from this one to the table's end, itself included */
         columnsToEnd?: number;
-        /** The tree level the cell content is indented by */
         indent?: number;
-        /** The cell shows the expand button of its row before the content */
         showExpandIcon?: boolean;
-        /** The expand button of the row, for the first data cell of an expandable row */
         expandIconArgs?: { isNested: boolean; groupKey?: string | number };
         hovered?: boolean;
         isSection?: boolean;
         width?: number;
         height?: number | string;
         component?: TableComponent;
-        /** Extra cell attributes of an expanded or section row */
         cellAttrs?: Record<string, unknown>;
     }>();
 

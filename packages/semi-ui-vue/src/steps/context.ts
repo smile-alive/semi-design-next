@@ -21,7 +21,6 @@ export interface StepsContextValue {
 
 export const [provideStepsContext, useStepsContext] = createContext<StepsContextValue>('Steps', { optional: true });
 
-/** Position of a step among the Step children of its Steps */
 export interface StepItemView {
     index: number;
     total: number;

@@ -11,7 +11,6 @@ type Store = CollapsibleProps & { text?: string; height?: string; log?: string[]
 const queryContent = () => screen.queryByText('hello');
 const getWrapper = (container: Element) => container.querySelector<HTMLElement>('.semi-collapsible-wrapper') as HTMLElement;
 const getInner = (container: Element) => container.querySelector<HTMLElement>('[x-semi-prop="children"]') as HTMLElement;
-// the wrapper's height goes through this custom property (collapsible.scss)
 const heightVar = '--semi-collapsible-height';
 const openHeight = 'calc-size(auto, size)';
 
@@ -212,7 +211,6 @@ describe('Svelte Collapsible', () => {
 
     it('展开更新中同时写入新高度与过渡类，而不是分两次提交', () => {
         const { wrapper, update } = setup({ isOpen: false });
-        // one flush after the prop change: the height, the class and the duration are all already on the element
         update({ isOpen: true });
         expect(wrapper().style.getPropertyValue(heightVar)).toBe(openHeight);
         expect(wrapper()).toHaveClass('semi-collapsible-transition');

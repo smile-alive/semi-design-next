@@ -9,8 +9,8 @@ const toCssText = (style: JSX.CSSProperties) =>
         .join('; ');
 
 /**
- * Merges a component's own style with the consumer's. Later styles win; Solid accepts a style as an object or as CSS
- * text, so one string among them turns the result into CSS text.
+ * Later styles win; Solid accepts a style as an object or as CSS text, so one string among them turns the result into
+ * CSS text.
  */
 export default function mergeStyles(...styles: (Style | undefined | null)[]): Style {
     const defined = styles.filter((style): style is Style => style != null && style !== '');

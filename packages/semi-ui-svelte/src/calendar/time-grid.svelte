@@ -13,7 +13,6 @@
 
     interface Props extends CalendarViewProps, Pick<CalendarProps, 'dateDisplay' | 'timeDisplay' | 'allDayEvents'> {
         range: Date[];
-        /** The date whose month names the grid; the first day of the range by default */
         labelDate?: Date;
         minEventHeight?: number;
         showCurrTime: boolean;
@@ -94,7 +93,6 @@
                     {#if allDayEvents}
                         {@render allDayEvents({ events })}
                     {:else}
-                        <!-- positioned spans always carry leftPos, width and topInd; the foundation type keeps them optional -->
                         {#each withKeys(allDayItems, 'allDay') as { id, item } (id)}
                             <li class={[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-allday`]} style:left={toPercent(item.leftPos ?? 0)} style:top={`${item.topInd ?? 0}em`} style:width={toPercent(item.width ?? 0)}>
                                 {#if event}

@@ -15,7 +15,6 @@ export const footerIcon = (name: string) => $(`.${previewCls}-footer .${BASE_CLA
 export const thumbs = () => document.querySelectorAll<HTMLImageElement>(`.${prefixCls}-img`);
 export const arrow = (side: 'prev' | 'next') => $(`.${previewCls}-${side}`) as HTMLElement;
 
-/** Runs the event, then lets Svelte commit what the handlers changed */
 export async function fire(action: Promise<unknown>) {
     await action;
     flushSync();
@@ -73,7 +72,6 @@ export function stubFailingFetch() {
     return fetchMock;
 }
 
-/** A `Image` stand-in recording the preloads the foundation starts with `new Image()` */
 export function stubPreloadImage() {
     const created: { requested: string[]; onload: () => void; onerror: () => void }[] = [];
     vi.stubGlobal(

@@ -21,7 +21,6 @@ export interface ComponentApi {
     methods: ApiMember[];
 }
 
-/** What sets one framework's components apart for the extraction */
 export interface Framework {
     /** Declarations in matching files are the platform's native attributes and members, left out of the tables */
     native: RegExp;
@@ -47,7 +46,6 @@ export function unwrap(expression: ts.Expression) {
     return expression;
 }
 
-/** The module-level variables of a file */
 export function moduleVariables(file: ts.SourceFile) {
     return file.statements.filter(ts.isVariableStatement).flatMap((statement) => [...statement.declarationList.declarations]);
 }
@@ -107,7 +105,6 @@ function evaluate(checker: ts.TypeChecker, node: ts.Expression | ts.QualifiedNam
     return unresolved;
 }
 
-/** The declaration a name refers to, through imports */
 export function valueDeclaration(checker: ts.TypeChecker, node: ts.Node) {
     let symbol = checker.getSymbolAtLocation(node);
     if (symbol && symbol.flags & ts.SymbolFlags.Alias) symbol = checker.getAliasedSymbol(symbol);
@@ -256,7 +253,6 @@ function readDefaults(checker: ts.TypeChecker, file: ts.SourceFile, initializer?
     return defaults;
 }
 
-/** Reads the component each source names: its own props, their defaults, and the methods of what its `ref` receives */
 export function extractApis(framework: Framework, sources: string[]): ComponentApi[] {
     const targets = sources.map((source) => {
         const [path, name = 'default'] = source.split('#');
@@ -314,7 +310,6 @@ export function renderApi(api: ComponentApi, description: ApiDescription, locale
     return tables.join('\n\n') + '\n';
 }
 
-/** Writes, or with `check` verifies, the fragments of every `api.<id>.json` among the pages */
 export function generateApis(framework: Framework, id: string, label: string, check: boolean, pages: string[]) {
     const entries = apiFiles(id, pages).flatMap((file) => {
         const json = join(website, file);

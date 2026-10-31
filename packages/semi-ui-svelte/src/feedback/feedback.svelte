@@ -72,7 +72,6 @@
                 () => {
                     visible = false;
                 },
-                // the foundation rethrows the rejection; only skip the close
                 () => {}
             );
         } else {

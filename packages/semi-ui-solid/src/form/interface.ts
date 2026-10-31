@@ -11,10 +11,8 @@ export type FormApi<Values extends Record<string, any> = any> = BaseFormApi<Valu
 /** A field error: text, nodes, or a list of them; an empty string or undefined means valid */
 export type FieldError = BasicFieldError | JSX.Element;
 
-/** Any non-empty result (string, nodes, array) is an error; an empty string or undefined means valid */
 export type FieldValidateResult = FieldError;
 
-/** An async-validator rule, as the foundation validates it */
 export type RuleItem = NonNullable<FieldValidateOptions['rules']>[number];
 
 export type ScrollOptions = NonNullable<Parameters<BaseFormApi['scrollToField']>[1]>;
@@ -35,12 +33,9 @@ export interface CommonFieldProps {
     initValue?: any;
     /** Returns the error, an empty string or undefined for valid, or a Promise of either */
     validator?: (fieldValue: any, values: Record<string, any>) => FieldValidateResult | Promise<FieldValidateResult>;
-    /** Validation rules, checked by async-validator */
     rules?: Array<RuleItem>;
     trigger?: FieldValidateTriggerType;
-    /** Converts the value before validation */
     transform?: (fieldValue: any) => any;
-    /** Converts the value before it is stored and shown */
     convert?: (fieldValue: any) => any;
     allowEmptyString?: boolean;
     /** Keep the key in the form values when the value becomes undefined; falls back to the Form's `allowEmpty` */
@@ -51,11 +46,9 @@ export interface CommonFieldProps {
     labelCol?: ColProps;
     /** Overrides the Form's `wrapperCol` for this field */
     wrapperCol?: ColProps;
-    /** Stops checking further rules after the first one fails */
     stopValidateWithError?: boolean;
     /** Shown in the error message's place while the field has no error */
     helpText?: JSX.Element;
-    /** Shown together with the error or the help text */
     extraText?: JSX.Element;
     extraTextPosition?: 'middle' | 'bottom';
     /** Takes over only the data flow: no Label, ErrorMessage or extra text is rendered */
@@ -98,7 +91,6 @@ export interface FormHandle<Values extends Record<string, any> = any> {
     formApi: FormApi<Values>;
 }
 
-/** The form element, with the formApi on it */
 export type FormElement<Values extends Record<string, any> = any> = HTMLFormElement & FormHandle<Values>;
 
 type FormValidateResult<Values> = string | Partial<AllErrors<Values>>;
@@ -120,7 +112,6 @@ export interface FormProps<Values extends Record<string, any> = any> extends Ele
     id?: string;
     /** Called once when the Form mounts, to save the formApi reference */
     getFormApi?: (formApi: FormApi<Values>) => void;
-    /** The formApi created by `Form.useForm()` */
     form?: FormApi<Values>;
     extraTextPosition?: 'middle' | 'bottom';
     layout?: 'horizontal' | 'vertical';
@@ -131,7 +122,6 @@ export interface FormProps<Values extends Record<string, any> = any> extends Ele
     wrapperCol?: ColProps;
     /** Called once; read the fields of its argument in the returned JSX to follow the form state */
     render?: (props: FormRenderProps<Values>) => JSX.Element;
-    /** Rendered with the form state, values and formApi as its props */
     component?: (props: FormRenderProps<Values>) => JSX.Element;
     /** A function is called once, like `render` */
     children?: JSX.Element | ((props: FormRenderProps<Values>) => JSX.Element);

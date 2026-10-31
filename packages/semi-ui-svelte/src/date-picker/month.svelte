@@ -62,7 +62,6 @@
         return [cssClasses.DAY, MonthFoundation.getDayClasses(statusOf(day), day.fullDate === activeDate)];
     };
 
-    // a range keeps its value in rangeStart and rangeEnd, not in `selected`
     const isSelected = (day: MonthDayInfo) => {
         const status = statusOf(day);
         return Boolean(status.isSelected || status.isSelectedStart || status.isSelectedEnd);

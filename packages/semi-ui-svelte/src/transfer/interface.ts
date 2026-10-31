@@ -37,7 +37,6 @@ export interface TransferVirtualize {
 }
 
 export interface TransferPagination {
-    /** Controlled page of the left list */
     currentPage?: number;
     defaultCurrentPage?: number;
     pageSize?: number;
@@ -74,7 +73,6 @@ export interface TransferProps extends Omit<HTMLAttributes<HTMLDivElement>, Nati
     inputProps?: TransferInputProps;
     /** treeList only; of the Tree's snippets only `label` is forwarded */
     treeProps?: TransferTreeProps;
-    /** Pages the left list */
     pagination?: TransferPagination;
     /** Renders the selected list virtually; ignored while `draggable` */
     virtualize?: TransferVirtualize;
@@ -93,11 +91,9 @@ export interface TransferProps extends Omit<HTMLAttributes<HTMLDivElement>, Nati
     selectedHeader?: Snippet<[TransferSelectedHeaderSnippetProps]>;
     sourcePanel?: Snippet<[TransferSourcePanelSnippetProps]>;
     selectedPanel?: Snippet<[TransferSelectedPanelSnippetProps]>;
-    /** No data; `false` hides the empty state */
+    /** `false` hides the empty state */
     emptyLeft?: Snippet | false;
-    /** Nothing selected; `false` hides the empty state */
     emptyRight?: Snippet | false;
-    /** The search matches nothing; `false` hides the empty state */
     emptySearch?: Snippet | false;
 }
 
@@ -144,12 +140,10 @@ export interface TransferSelectedHeaderSnippetProps {
 }
 
 export interface TransferSourcePanelSnippetProps {
-    /** The values of the selected items */
     value: TransferValue;
     loading?: boolean;
     /** Whether a search is on and matches nothing */
     noMatch: boolean;
-    /** The items that match the search */
     filterData: TransferDataItem[];
     sourceData: TransferDataItem[];
     propsDataSource: TransferDataSource;
@@ -161,7 +155,6 @@ export interface TransferSourcePanelSnippetProps {
     /** Selects every shown item, or clears them when all are selected */
     onAllClick: () => void;
     onSelectOrRemove: (item: TransferDataItem) => void;
-    /** Replaces the selection with the items of these values */
     onSelect: (values: TransferValue) => void;
 }
 

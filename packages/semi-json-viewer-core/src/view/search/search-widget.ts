@@ -72,7 +72,6 @@ export class SearchWidget {
         this.#jsonModel.applyOperation(op);
     }
 
-    /** Drops the results and their highlights */
     clear() {
         this.searchResults = null;
         this.currentResultIndex = -1;

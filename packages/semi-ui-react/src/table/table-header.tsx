@@ -27,9 +27,6 @@ const DEFAULT_COMPONENTS: TableComponents = {
 };
 const EMPTY_COLUMNS: any[] = [];
 
-/**
- * Render the header of the table header, and control the merging of the columns of the header
- */
 export default function TableHeader({ ref, components = DEFAULT_COMPONENTS, columns = EMPTY_COLUMNS, prefixCls = cssClasses.PREFIX, onHeaderRow, bodyHasScrollBar, hidden }: TableHeaderProps) {
     const { splitTable } = useTableContext('Table.Header');
 

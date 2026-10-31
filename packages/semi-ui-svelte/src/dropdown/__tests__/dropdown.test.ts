@@ -21,7 +21,6 @@ const portals = () => document.querySelectorAll('.semi-dropdown-wrapper');
 const item = (name: string) => screen.getByText(name, { selector: '[role^="menuitem"]' });
 const trigger = () => screen.getByText(/trigger|self click/);
 
-// lets the foundation's timers and the effects they schedule run
 async function settle() {
     flushSync();
     await new Promise((resolve) => setTimeout(resolve));
@@ -147,7 +146,6 @@ describe('Svelte Dropdown 渲染', () => {
         await settle();
         expect(item('on')).toHaveAttribute('role', role);
         expect(item('on').getAttribute('aria-checked')).toBe(checked ? 'true' : null);
-        // only showTick draws a tick
         expect(item('on').querySelector('.semi-icon-tick')).toBeNull();
     });
 

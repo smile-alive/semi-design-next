@@ -75,7 +75,6 @@ describe('TimePicker（浏览器）', () => {
 
     it('自定义触发器', async () => {
         render(CustomTrigger);
-        // the wrapper drops its button role once the mounted trigger is measured as focusable
         await userEvent.click(await screen.findByRole('button', { name: 'time' }));
         await waitFor(() => expect(getPanel()).not.toBeNull());
         getList('hour').scrollTop = 0;

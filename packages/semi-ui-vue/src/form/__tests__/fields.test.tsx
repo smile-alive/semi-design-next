@@ -65,9 +65,7 @@ interface FieldCase {
     component: Component;
     props?: Record<string, unknown>;
     slots?: Record<string, () => VNodeChild>;
-    /** A value to start from, other than the one `change` produces */
     init: unknown;
-    /** Makes the control report a new value through its own change */
     change: () => Promise<unknown>;
     /** The form value the change leaves without an initValue */
     value: unknown;

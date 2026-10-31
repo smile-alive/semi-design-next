@@ -26,7 +26,6 @@ export type ContextOf<T> = T extends DefaultAdapter<any, any, infer C> ? C : nev
 // The keyof check tells an undeclared context from a declared one: `unknown extends X` also holds for weak and nullable declared types when strictNullChecks is off.
 export type HostContext<A> = unknown extends ContextOf<A> ? ([keyof ContextOf<A>] extends [never] ? any : ContextOf<A>) : ContextOf<A>;
 
-/** The context of a foundation that only reads the reading direction from the enclosing ConfigProvider */
 export interface DirectionContext {
     direction?: 'ltr' | 'rtl';
 }

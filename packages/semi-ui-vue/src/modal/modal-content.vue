@@ -33,12 +33,7 @@
     const focusScope = new FocusScope();
     const layer = new ReleaseHolder();
     let bodyFocus: HTMLElement | null = null;
-
-    // Kept by the Transition hooks: true once the dialog is shown and vShow has restored its display, false once the leave
-    // has ended
     const displayed = shallowRef(false);
-
-    // KeepAlive: give up the layer and focus trap on deactivation without closing, retake them on reactivation
     const active = shallowRef(true);
 
     const idPrefix = `dialog-${useId()}`;
@@ -118,7 +113,6 @@
         ],
     });
 
-    // only set keys, so an unset width does not wipe the caller's style
     const sizeStyle = (): CSSProperties => {
         if (props.isFullScreen) return { width: '100%', height: '100%', margin: 'unset' };
         return {

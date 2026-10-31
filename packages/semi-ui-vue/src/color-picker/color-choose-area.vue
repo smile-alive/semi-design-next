@@ -25,7 +25,6 @@
         props,
         () => ({ isHandleGrabbing: false }),
         () => ({
-            // the foundation guards a missing element itself
             getDOM: () => dom.value as HTMLDivElement,
             notifyChange: (color) => emit('change', color),
         })
@@ -38,7 +37,6 @@
         return `rgba(${r},${g},${b},${a})`;
     });
 
-    // both ranges report the same two-dimensional position, as React Aria's ColorArea does
     const valueText = computed(() => i18n.value.locale.saturationBrightness.replace('${saturation}', String(round(props.hsva.s))).replace('${brightness}', String(round(props.hsva.v))));
 
     const sliders = computed(

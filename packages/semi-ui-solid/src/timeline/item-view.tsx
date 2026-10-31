@@ -24,7 +24,6 @@ export default function TimelineItemView(props: TimelineItemProps) {
             {...rest}
             class={clsx(prefixCls, local.class)}
             onClick={(event) => {
-                // Interactive content in extra must not also trigger the item
                 if (extraClicks.get(event) !== event.currentTarget) {
                     callHandler(local.onClick, event);
                 }

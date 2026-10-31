@@ -24,7 +24,6 @@ export interface SliderProps {
     vertical?: boolean;
     verticalReverse?: boolean;
     railStyle?: CSSProperties;
-    /** One dot for a single handle, one per handle for a range */
     handleDot?: HandleDot | HandleDot[];
     /** Names the first handle's input, so a `<label for>` focuses the slider */
     id?: string;
@@ -40,7 +39,6 @@ export interface SliderMarkSlotProps {
 }
 
 export interface SliderTipSlotProps {
-    /** The handle's value after `tipFormatter` */
     value: string | number;
     handle: 'min' | 'max';
 }

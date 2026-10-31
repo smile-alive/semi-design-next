@@ -43,7 +43,6 @@ function MarkdownRender(rawProps: MarkdownRenderProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, MarkdownRenderProps, MarkdownRenderBaseState>(
         MarkdownRenderFoundation,
         props,
-        // compiled during render so the server output and the first client render both start with the content
         (p) => ({ renderContent: MarkdownRenderFoundation.compileMdSync(p, runtime) }),
         () => ({
             getRuntime: () => runtime,

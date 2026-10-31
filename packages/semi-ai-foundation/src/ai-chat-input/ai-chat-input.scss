@@ -648,7 +648,6 @@ $module: #{$prefix}-aiChatInput;
                         background-color: $color-aiChatInput_rich_text-skill_slot-bg-hover;
                     }
 
-                    // opacity rather than display:none keeps the button focusable
                     &:hover .skill-slot-delete,
                     &:focus-within .skill-slot-delete {
                         pointer-events: auto;

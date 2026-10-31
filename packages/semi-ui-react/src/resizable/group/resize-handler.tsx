@@ -48,7 +48,6 @@ export default function ResizeHandler(rawProps: ResizeHandlerProps) {
             ref={mergedRef}
             className={clsx(className, prefixCls + '-handler', prefixCls + '-handler-' + direction)}
             style={style}
-            // the bar between side-by-side panes is vertical
             aria-orientation={direction === 'horizontal' ? 'vertical' : 'horizontal'}
             role="separator"
             tabIndex={0}

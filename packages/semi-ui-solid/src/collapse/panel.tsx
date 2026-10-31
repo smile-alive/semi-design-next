@@ -68,7 +68,6 @@ export default function CollapsePanel(rawProps: CollapsePanelProps) {
 
     const iconLeft = () => context.view().expandIconPosition === 'left';
 
-    // A string header keeps the extra slot: its end padding spaces the arrow
     const hasRight = () => typeof header() === 'string' || hasContent(extra());
 
     // Each branch reads its own icon: reading creates it, and the branch not shown would leave it uninserted.

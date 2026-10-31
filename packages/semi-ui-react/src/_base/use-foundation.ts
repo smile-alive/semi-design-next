@@ -57,7 +57,6 @@ class FoundationHost<F, A extends DefaultAdapter<P, S, any>, P, S extends object
         this.#context = context;
     }
 
-    /** Runs the callbacks whose update the committed `state` includes */
     flushCallbacks(state: S) {
         for (const id of this.#applied.get(state) ?? []) {
             const callback = this.#callbacks.get(id);

@@ -49,17 +49,6 @@ export function transformToArray<T>(value: T[]) {
     return Array.isArray(value) ? [...value] : [];
 }
 
-/**
- * Determine whether the time length is the same as the format
- * e.g.
- *  format      | time      | return
- *  HH:mm       | 12:00     | true
- *  HH:mm:ss    | 12:00:00  | true
- *  yyyy HH:mm  | 2021 12:00| true
- *  HH          | 1         | false
- *  HH:mm       | 12:0      | false
- *  HH:mm:ss    | 12:00:0   | false
- */
 export function isTimeFormatLike(time: string, formatToken: string) {
     let isLike = true;
     const dateFnsSupportFormatCh = 'BDEGHKLMOPQRSTXYabcehimopqstuwxyz';

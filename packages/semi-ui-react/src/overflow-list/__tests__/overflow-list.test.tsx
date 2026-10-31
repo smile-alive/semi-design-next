@@ -10,7 +10,6 @@ const prefixCls = `${BASE_CLASS_PREFIX}-overflow-list`;
 const keys = ['alarm', 'bookmark', 'camera', 'duration', 'edit', 'folder'];
 const items = keys.map((key) => ({ key }));
 
-// Returns a function that reports `width` for an observed element, the only size the list reads.
 function stubResizeObserver() {
     const observer = mockResizeObserver();
     return (element: Element, width: number) => observer.fire(element, [{ target: { clientWidth: width }, contentRect: { width } }]);
@@ -70,11 +69,9 @@ const getItems = (container: HTMLElement) => [...container.querySelectorAll<HTML
 const plusRenderer = (overflow) => (overflow.length ? <span>+{overflow.length}</span> : null);
 
 type ScrollRenderer = NonNullable<Extract<OverflowListProps, { renderMode: 'scroll' }>['overflowRenderer']>;
-// one node for each side, showing how many items it holds
 const sidesRenderer: ScrollRenderer = ([start, end]) => [<span key="start">{`overflow-0:${start.length}`}</span>, <span key="end">{`overflow-1:${end.length}`}</span>];
 const modeProps = (renderMode: 'collapse' | 'scroll'): OverflowListProps => (renderMode === 'scroll' ? { renderMode, overflowRenderer: () => [null, null] } : { renderMode });
 
-// Reports the container width, then every rendered item's width, the order a browser reports them after mount
 function measure(resize, container, containerWidth, itemWidth = 50) {
     resize(getList(container), containerWidth);
     getItems(container).forEach((item) => resize(item, itemWidth));

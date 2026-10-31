@@ -22,7 +22,6 @@ export interface EmptyProps extends ElementProps<'div', 'title'> {
     imageStyle?: JSX.CSSProperties | string;
     title?: JSX.Element;
     description?: JSX.Element;
-    /** A URL, a DOM node (an illustration) or the id of an SVG sprite symbol */
     image?: JSX.Element | SVGNode;
     /** Replaces `image` while `theme-mode="dark"` is set on `document.body` */
     darkModeImage?: JSX.Element | SVGNode;

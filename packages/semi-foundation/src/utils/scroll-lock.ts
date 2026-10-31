@@ -3,10 +3,9 @@ let lockCount = 0;
 let restore: { overflow: string; paddingInlineEnd: string } | null = null;
 
 /**
- * Stops the page from scrolling behind an overlay and returns the function that releases this lock. Locks are
- * counted, so stacked overlays release the page only when the last one closes. The body's end padding grows by the
- * scrollbar width, so the page does not shift sideways when its scrollbar disappears; padding rather than width keeps
- * the body's own margin and any width set by the page's stylesheet.
+ * Locks are counted, so stacked overlays release the page only when the last one closes. The body's end padding grows
+ * by the scrollbar width, so the page does not shift sideways when its scrollbar disappears; padding rather than width
+ * keeps the body's own margin and any width set by the page's stylesheet.
  */
 export function lockBodyScroll() {
     if (lockCount === 0) {

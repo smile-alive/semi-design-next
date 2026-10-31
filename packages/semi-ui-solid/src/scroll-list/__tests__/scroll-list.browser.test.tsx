@@ -19,7 +19,6 @@ function Demo() {
     );
 }
 
-// The option the column centres: the one whose box is closest to the middle of its scroll container
 function centredText(outer: Element) {
     const middle = outer.getBoundingClientRect().top + outer.getBoundingClientRect().height / 2;
     const options = Array.from(outer.querySelectorAll('li')).filter((li) => li.getAttribute('aria-hidden') !== 'true');
@@ -54,7 +53,6 @@ describe('scrollList', () => {
         document.body.setAttribute('theme-mode', 'dark');
         onTestFinished(() => document.body.removeAttribute('theme-mode'));
         const { container } = render(() => <Demo />);
-        // the dark token has an inset ring, the light literal does not
         expect(getComputedStyle(container.querySelector(`.${prefix}`) as HTMLElement).boxShadow).toContain('inset');
     });
 

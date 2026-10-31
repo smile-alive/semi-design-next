@@ -610,9 +610,6 @@ describe(`DatePicker`, () => {
         expect(endInput).toHaveValue('2021-08-10');
     });
 
-    /**
-     * A range end outside the disabled month (August) stays selectable.
-     */
     it('rangeStart 禁用时仍可选择 rangeEnd', async () => {
         const onChange = vi.fn<ChangeHandler>();
         const defaultValue = ['2021-08-06', '2021-08-15'];
@@ -636,7 +633,7 @@ describe(`DatePicker`, () => {
         const [startInput, endInput] = container.querySelectorAll('input');
 
         fireEvent.focus(endInput);
-        const endIndex = 5; // 2021-09-10
+        const endIndex = 5;
         await userEvent.click(getWeekDays('right', 1)[endIndex]);
 
         expect(onChange).toHaveBeenCalledTimes(1);
@@ -686,7 +683,7 @@ describe(`DatePicker`, () => {
 
         expect(getSelectedDays()).toEqual(['2021-08-06', '2021-08-10', '2021-08-15']);
         expect(input).toHaveValue('2021-08-06,2021-08-15,2021-08-10');
-        expect(onChange).toHaveBeenCalledTimes(1); // still calledOnce
+        expect(onChange).toHaveBeenCalledTimes(1);
     });
 
     it('禁用时间的回调', async () => {
@@ -3633,7 +3630,7 @@ describe(`DatePicker`, () => {
     it('yearAndMonth autoSelectMonth 当前月禁用时向后查找可用月份', async () => {
         const disabledDate = (date) => {
             if (!date) return false;
-            return date.getMonth() === 5; // Disable June in all years
+            return date.getMonth() === 5;
         };
         const onChange = vi.fn<ChangeHandler>();
         render(<DatePicker type="monthRange" defaultValue={['2021-06', '2021-08']} defaultOpen disabledDate={disabledDate} motion={false} onChange={onChange} />);
@@ -3732,7 +3729,7 @@ describe(`DatePicker`, () => {
             if (!date) return false;
             const year = date.getFullYear();
             const month = date.getMonth();
-            if (year === 2022 && month > 0) return true; // Only January is valid
+            if (year === 2022 && month > 0) return true;
             return false;
         };
         render(<DatePicker type="monthRange" defaultValue={['2022-06', '2022-08']} defaultOpen disabledDate={disabledDate} motion={false} />);

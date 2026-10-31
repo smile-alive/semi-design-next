@@ -7,6 +7,5 @@ export interface SpaceProps extends HTMLAttributes<HTMLDivElement> {
     wrap?: boolean;
     align?: Align;
     vertical?: boolean;
-    /** A pair is [horizontal, vertical] */
     spacing?: Spacing | [Spacing, Spacing];
 }

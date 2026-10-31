@@ -22,13 +22,10 @@ export type MotionViewInput = Pick<MotionView, 'activeKey' | 'propsActiveKey' | 
 /** The members of a keyboard event the foundation reads; DOM and synthetic events both satisfy it */
 export type TabKeyEvent = Pick<KeyboardEvent, 'key' | 'altKey' | 'ctrlKey' | 'metaKey' | 'target' | 'currentTarget' | 'preventDefault' | 'stopPropagation'>;
 
-/** What a pane's slide-in depends on */
 export interface PaneMotionInput {
     itemKey?: string;
     activeKey: string | null;
-    /** The key selected before activeKey, null on mount */
     prevActiveKey: string | null;
-    /** The itemKeys of the panes in order */
     paneKeys: ReadonlyArray<string | undefined>;
     tabPosition: 'top' | 'left';
     tabPaneMotion: boolean;
@@ -49,14 +46,12 @@ interface TabEntry {
     disabled?: boolean;
 }
 
-/** The props the foundation reads */
 export interface TabsBaseProps {
     activeKey?: string | null;
     tabPosition?: 'top' | 'left';
     preventScroll?: boolean;
 }
 
-/** The state the foundation reads */
 export interface TabsBaseState {
     activeKey: string | null;
 }
@@ -127,7 +122,6 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
         }
     }
 
-    /** activeKey, else defaultActiveKey, else the first enabled entry of `list` that has a key */
     static getDefaultActiveKey(props: { activeKey?: string | null; defaultActiveKey?: string }, list: ReadonlyArray<TabEntry | null>): string | null {
         if (props.activeKey !== undefined) {
             return props.activeKey;
@@ -149,7 +143,6 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
         return tabs.find((tab) => !tab.disabled)?.itemKey;
     }
 
-    /** The slide-in class of a pane and whether it plays: only the selected pane slides, from the side of the previous one */
     static getPaneMotion({ itemKey, activeKey, prevActiveKey, paneKeys, tabPosition, tabPaneMotion, forceDisableMotion }: PaneMotionInput) {
         const activeIndex = activeKey === null ? -1 : paneKeys.indexOf(activeKey);
         const itemIndex = itemKey === undefined ? -1 : paneKeys.indexOf(itemKey);
@@ -174,12 +167,10 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
             prevActiveKey: activeKey === prev.activeKey ? prev.prevActiveKey : prev.activeKey,
             propsActiveKey,
             paneKeys,
-            // a pane added and selected by the same update shows without sliding in
             forceDisableMotion: propsActiveKey === prev.propsActiveKey ? prev.forceDisableMotion : paneKeys.includes(propsActiveKey) && !prev.paneKeys.includes(propsActiveKey),
         };
     }
 
-    /** Splits `list` into the tabs that stay in the bar and the last `more` ones (or `more.count`) that move into the menu */
     static splitMore<T>(list: readonly T[], more: number | { count: number }) {
         if (typeof more !== 'number' && typeof more !== 'object') {
             throw new Error('[Semi Tabs]: invalid tab props format: more');
@@ -208,7 +199,6 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
         }
     }
 
-    /** Re-keys the OverflowList visibility map by itemKey; `hasHidden` and `isShowInViewport` summarize it */
     static readVisibleState(visibleMap: ReadonlyMap<string, boolean>) {
         const visibleState = new Map([...visibleMap].map(([barItemKey, visible]) => [getItemKeyByBarItemKey(barItemKey), visible]));
         const visibles = [...visibleState.values()];
@@ -273,7 +263,6 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
                 break;
             case 'Enter':
             case ' ':
-                // a disabled tab can hold focus after a click
                 if (tab.getAttribute('aria-disabled') === 'true') {
                     break;
                 }

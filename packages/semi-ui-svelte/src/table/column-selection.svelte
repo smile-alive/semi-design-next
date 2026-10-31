@@ -8,7 +8,6 @@
 
     type AnyRecord = Record<string, any>;
 
-    /** The checkbox of a selection cell: select all in the header, select the row in the body */
     interface ColumnSelectionProps {
         record?: AnyRecord;
         index?: number;

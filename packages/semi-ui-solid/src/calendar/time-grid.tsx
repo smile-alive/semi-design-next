@@ -27,7 +27,6 @@ export interface TimeGridProps extends DayCalendarProps {
     labelDate?: Date;
 }
 
-/** The time grid behind the week view and the range view: one column per day of `range` */
 export default function TimeGrid(props: TimeGridProps) {
     const [local, rest] = splitProps(props, [...viewPropKeys, 'labelDate']);
 

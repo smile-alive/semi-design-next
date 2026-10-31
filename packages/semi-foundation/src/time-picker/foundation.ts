@@ -23,7 +23,6 @@ export interface TimePickerAdapter<P extends TimePickerBaseProps = TimePickerBas
     setTriggerFocus: () => void;
 }
 
-/** The props the foundation reads with getProp */
 export interface TimePickerBaseProps {
     dateFnsLocale?: Locale;
     disabled?: boolean;
@@ -181,10 +180,6 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
         return [];
     }
 
-    /**
-     * The format in use: the `format` prop when not `undefined`, else the 12- or 24-hour default; a value that is
-     * not a string falls back to the 24-hour default
-     */
     static getValidFormat(props: Record<string, any>) {
         let _format = props.format;
         if (_format === undefined) {
@@ -218,7 +213,6 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
         return (props.open !== undefined ? Boolean(props.open) : Boolean(state.open)) && !props.disabled;
     }
 
-    /** The value and input text of the first render, from `value` or else `defaultValue` */
     static getInitialState(props: Record<string, any>) {
         // null is a controlled empty value; only undefined leaves the picker uncontrolled
         const value = props.value === undefined ? props.defaultValue : props.value;
@@ -258,10 +252,6 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
         }
     };
 
-    /**
-     * Derives the value, input text and validity state from a `value` prop. With `prevTimeZone`, `value` is the
-     * shown value in that zone and is re-zoned into `timeZone`.
-     */
     syncValueFromProps = ({ value, timeZone, prevTimeZone }: { value: TimeValue | (TimeValue | undefined)[]; timeZone?: string | number; prevTimeZone?: string | number }) => {
         const dates = TimePickerFoundation.#parseDates(value, this.getProps(), timeZone, prevTimeZone);
         this.setState({

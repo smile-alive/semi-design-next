@@ -2,7 +2,6 @@ import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 
 export type ImageLoadStatus = 'loading' | 'success' | 'error';
 
-/** The props the foundation reads */
 export interface ImageBaseProps {
     preview?: boolean | { visible?: boolean };
 }
@@ -11,7 +10,6 @@ export interface ImageBaseState {}
 
 export interface ImageAdapter<P extends ImageBaseProps = ImageBaseProps, S extends ImageBaseState = ImageBaseState> extends DefaultAdapter<P, S> {
     getIsInGroup: () => boolean;
-    /** Opens the group preview at this image */
     openGroupPreview: () => void;
     setLoadStatus: (status: ImageLoadStatus) => void;
     setPreviewVisible: (visible: boolean) => void;

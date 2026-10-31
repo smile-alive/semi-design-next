@@ -20,7 +20,6 @@ async function emulateReducedMotion(value: string) {
     await cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] });
 }
 
-// lottie-web is imported on demand, so the animation is created a few microtasks after mounting
 async function autoplayOf(params: LottieProps['params']) {
     render(() => <Lottie aria-label="spinner" params={params} />);
     await waitFor(() => expect(loadAnimation).toHaveBeenCalledTimes(1));

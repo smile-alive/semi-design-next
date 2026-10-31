@@ -25,13 +25,11 @@ describe('calendar/跨日', () => {
         const ssrCase = caseNamed(mode);
         const { html } = inject('solidSsr').cases[ssrCase.name];
         expect(html).not.toContain('aria-current');
-        // `-today-date` sits on every date; `-today` alone marks the current one
         expect(html).not.toMatch(/-today(?!-date)/);
         const { mounted } = await expectHydratedCase(ssrCase, casesUrl);
         const marked = new DOMParser().parseFromString(mounted, 'text/html').querySelectorAll('[aria-current="date"]');
         expect(marked).toHaveLength(1);
         expect(marked[0].className).toMatch(/-today(?!-date)/);
-        // the server's day is the 1st, the browser's the 2nd
         expect(marked[0].textContent).toMatch(/(?<!\d)2(?!\d)/);
     });
 

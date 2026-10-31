@@ -2,18 +2,15 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import UploadFoundation, { type BaseFileItem, type UploadAdapter } from '../foundation';
 
 /**
- * #3335: every file whose `beforeUpload` returns `{ shouldUpload: false, autoRemove: true }` is removed.
  * Drives the foundation with a mock adapter that batches setState: updateFileList is not visible via getState
  * until the synchronous batch finishes.
  */
 describe('Upload foundation 批量 autoRemove (#3335)', () => {
     const createFoundation = ({ initialFileList, beforeUpload, ...uploadProps }) => {
         let committedFileList = initialFileList.slice();
-        // pending (batched) update; not visible via getState until flushed
         let pendingFileList = null;
         const changes = [];
 
-        // only the adapter methods the batch flow calls are provided
         const adapter = {
             getContext: () => undefined,
             getContexts: () => ({}),
@@ -22,7 +19,6 @@ describe('Upload foundation 批量 autoRemove (#3335)', () => {
             getState: (key) => ({ fileList: committedFileList })[key],
             getStates: () => ({ fileList: committedFileList, replaceUid: 'a' }),
             updateFileList: (fileList, callback) => {
-                // batching: keep the latest value, flush only in flush()
                 pendingFileList = fileList;
                 if (callback) {
                     callback();
@@ -70,7 +66,6 @@ describe('Upload foundation 批量 autoRemove (#3335)', () => {
 
         foundation.manualUpload();
 
-        // after the synchronous batch is committed, no file should remain
         expect(flush()).toEqual([]);
     });
 
@@ -79,7 +74,6 @@ describe('Upload foundation 批量 autoRemove (#3335)', () => {
         const fileB = makeFile('b');
         const fileC = makeFile('c');
 
-        // remove a and c, keep b
         const beforeUpload = ({ file }) => (file.uid === 'b' ? { shouldUpload: false, autoRemove: false } : { shouldUpload: false, autoRemove: true });
         const { foundation, flush } = createFoundation({ initialFileList: [fileA, fileB, fileC], beforeUpload });
 
@@ -126,7 +120,6 @@ describe('Upload foundation 批量 autoRemove (#3335)', () => {
         const { foundation, flush } = createFoundation({ initialFileList: [fileA, fileB], beforeUpload });
 
         foundation.manualUpload();
-        // sync part of the batch is done; flush what React would have committed so far
         expect(flush().map((f) => f.uid)).toEqual(['b']);
 
         await Promise.resolve();

@@ -2,7 +2,6 @@ import type { Accessor, JSX } from 'solid-js';
 import { createContext } from '../_base/create-context';
 import type { AvatarProps, AvatarShape } from './interface';
 
-/** What a group tells the avatars it creates */
 export interface AvatarGroupItem {
     size: Accessor<string>;
     shape: Accessor<AvatarShape>;

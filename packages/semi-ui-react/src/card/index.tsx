@@ -21,40 +21,23 @@ export type { MetaProps } from './meta';
 export type { CardGroupProps } from './card-group';
 
 export interface CardProps extends ElementProps<'div', 'title'> {
-    /** Operation group at the bottom of the card content area */
     actions?: ReactNode[];
-    /** Card content area inline style */
     bodyStyle?: CSSProperties;
-    /** Whether there is an outer border */
     bordered?: boolean;
-    /** Style class name */
     className?: string;
     children?: React.ReactNode;
-    /** Cover */
     cover?: ReactNode;
-    /** Additional additions to the right of the title */
     headerExtraContent?: ReactNode;
-    /** Custom end of page */
     footer?: ReactNode;
-    /** Whether there is an edge between the bottom of the page and the content area */
     footerLine?: boolean;
-    /** Inline style at the end of the page */
     footerStyle?: CSSProperties;
-    /** Custom head */
     header?: ReactNode;
-    /** Whether there is an edge line between the head and the content area */
     headerLine?: boolean;
-    /** Head inline style */
     headerStyle?: CSSProperties;
-    /** Whether to preload */
     loading?: boolean;
-    /** Set shadow */
     shadows?: Shadows;
-    /** Card inline style */
     style?: CSSProperties;
-    /** Title */
     title?: ReactNode;
-    /** aria label */
     'aria-label'?: string;
     /** Attached to the root div */
     ref?: React.Ref<HTMLDivElement>;

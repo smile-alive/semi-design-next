@@ -29,7 +29,6 @@ import { useSpecialTrigger } from '../tooltip/context';
 import type { ShowTooltip } from '../typography';
 import Paragraph from '../typography/paragraph';
 
-// dnd-kit is only needed once a draggable TagInput is active
 const Sortable = lazy(() => import('../_sortable').then((module) => ({ default: module.Sortable })));
 
 const prefixCls = cssClasses.PREFIX;
@@ -48,9 +47,7 @@ export interface TagInputProps extends ElementProps<'div', 'prefix' | 'defaultVa
     inputValue?: string;
     /** Attached to the text input */
     name?: string;
-    /** Maximum length of one tag */
     maxLength?: number;
-    /** Maximum number of tags */
     max?: number;
     maxTagCount?: number;
     showRestTagsPopover?: boolean;
@@ -84,7 +81,6 @@ export interface TagInputProps extends ElementProps<'div', 'prefix' | 'defaultVa
     validateStatus?: TagInputValidateStatus;
     /** The tags; `null` means controlled with no tags */
     value?: string[] | null;
-    /** Focuses the input on mount, with `preventScroll` */
     autofocus?: boolean;
     'aria-label'?: string;
     preventScroll?: boolean;
@@ -95,7 +91,6 @@ export interface TagInputState {
     inputValue: string;
     focusing: boolean;
     active: boolean;
-    // whether the user is in a new IME composition session
     entering: boolean;
 }
 
@@ -156,7 +151,6 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
     // fixed for the instance's lifetime: the layer and the context value are
     const inGroup = untrack(() => own.inGroup);
 
-    // as Input: own value, then the group's, then the global default
     const props = mergeProps(defaulted, {
         get size() {
             return rawProps.size ?? inGroup?.view().size ?? defaulted.size;
@@ -206,7 +200,6 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
         // the root is a group, not a focus target; a tabIndex (Tooltip injects 0) belongs on the input
         'tabIndex',
         'tabindex',
-        // declared for the foundation, which reads them from props
         'addOnBlur',
         'allowDuplicates',
         'defaultValue',
@@ -329,7 +322,6 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
         }
     };
 
-    // A tag list has come: the tag in the place of the one that had the focus takes it back
     const restoreTagFocus = () => {
         if (focusedTagStop >= 0) {
             focusTagStop(wrapper ?? null, focusedTagStop);
@@ -420,7 +412,6 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
                 content()
             );
 
-        // Show runs its child untracked; the fragment is what calls render again when the tag's index or value changes
         return (
             <Show keyed when={local.renderTagItem} fallback={withHandle(defaultTag)}>
                 {(render) => withHandle(() => <>{render(itemProps.value, itemProps.index, onClose)}</>)}
@@ -448,7 +439,6 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
         </>
     );
 
-    // an item is rendered once per id, so its place in the list is read live
     const SortableTagItem = (itemProps: { id: string; sortableHandle: SortableHandle }) => {
         const index = () => sortIds().ids.ids.indexOf(itemProps.id);
         return <TagItem value={tagsArray()[index()]} index={index()} sortableHandle={itemProps.sortableHandle} />;
@@ -476,7 +466,6 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
         </Suspense>
     );
 
-    // only leaving control empties what the state kept
     useWatch(
         () => props.value === undefined,
         (uncontrolled) => uncontrolled && foundation.setState({ tagsArray: [] })
@@ -511,10 +500,8 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
                 [`${prefixCls}-with-suffix`]: Boolean(suffixKind()),
             })}
             style={local.style}
-            // the input, tags and clear button form one control, so the group carries its disabled state as a whole
             aria-disabled={local.disabled || undefined}
             role="group"
-            // focus moving between the input, the tags and the clear button stays inside the TagInput
             onFocusOut={(e) => {
                 callHandler(local.onFocusOut, e);
                 // Chromium blurs the picked-up handle when dnd-kit moves it; that is not the focus leaving, and ending

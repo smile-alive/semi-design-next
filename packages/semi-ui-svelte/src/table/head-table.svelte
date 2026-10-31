@@ -8,7 +8,6 @@
 
     interface HeadTableProps {
         columns: ColumnProps[];
-        /** The scrolling header element, which the body's horizontal scroll moves */
         element?: HTMLDivElement;
     }
 

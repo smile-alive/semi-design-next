@@ -203,7 +203,6 @@ export default function MonthCalendar(props: MonthViewProps) {
         );
     };
 
-    // rows split the grid height evenly, so their height follows the height prop and the week count
     useLayoutEffect(() => {
         measureItemLimit();
     }, [measureItemLimit, height, weekCount]);

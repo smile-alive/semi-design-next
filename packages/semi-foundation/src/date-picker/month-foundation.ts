@@ -36,7 +36,6 @@ export interface MonthFoundationProps {
     renderFullDate: RenderFullDateType;
     hoverDay: string;
     rangeInputFocus: string | boolean;
-    /** which range inputs have been focused since the panel opened */
     focusRecords: FocusRecords;
     locale: any;
     multiple: boolean;
@@ -62,7 +61,6 @@ export interface MonthTable {
 
 export type DayStatusOptions = Pick<MonthFoundationProps, 'selected' | 'rangeStart' | 'rangeEnd' | 'offsetRangeStart' | 'offsetRangeEnd' | 'disabledDate' | 'hoverDay' | 'rangeInputFocus' | 'focusRecords'> & { todayText: string };
 
-/** The pure computations behind one month grid of the DatePicker panel */
 export default class CalendarMonthFoundation {
     static #getSingleDayStatus(fullDate: string, { todayText, selected, disabledDate, rangeStart, rangeEnd, rangeInputFocus, focusRecords }: DayStatusOptions) {
         const disabledOptions = { rangeStart, rangeEnd, rangeInputFocus };
@@ -169,7 +167,6 @@ export default class CalendarMonthFoundation {
         };
     }
 
-    /** The weekday keys of a row, starting from `weekStartsOn` */
     static getWeekdays(weekStartsOn: WeekStartNumber) {
         return getDayOfWeek({ weekStartsOn });
     }

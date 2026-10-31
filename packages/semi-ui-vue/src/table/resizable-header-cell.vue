@@ -2,10 +2,6 @@
     import { cssClasses, numbers } from '@fibrae/semi-foundation/table/constants';
     import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
 
-    /**
-     * The header cell of a resizable table, set as `components.header.cell`. It gets every attribute of the header cell;
-     * the width and the resize listeners come from the column's onHeaderCell, which ResizableTable wraps.
-     */
     const props = withDefaults(
         defineProps<{
             width?: number | string;

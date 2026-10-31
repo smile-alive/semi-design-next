@@ -52,7 +52,6 @@ function mockReducedMotion(initial: boolean) {
 
 const animations = () => loadAnimation.mock.results.map((result) => result.value);
 const live = () => animations().filter((animation) => animation.destroy.mock.calls.length === 0);
-// lottie-web is imported on demand, so animations appear a few microtasks after mounting
 const loaded = (count = 1) => waitFor(() => expect(loadAnimation).toHaveBeenCalledTimes(count));
 
 describe('Lottie', () => {

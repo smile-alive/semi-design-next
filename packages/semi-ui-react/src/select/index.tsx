@@ -100,19 +100,14 @@ export interface TriggerRenderProps {
     componentProps: Record<string, any>;
 }
 
-/** The methods on a Select ref */
 export interface SelectHandle {
-    /** closes the dropdown */
     close: () => void;
-    /** opens the dropdown */
     open: () => void;
     /** focuses the trigger, or the search input when filterable; the dropdown opens only when filterable */
     focus: () => void;
-    /** empties the search input */
     clearInput: () => void;
     /** selects every option (multiple only) */
     selectAll: () => void;
-    /** clears every selection */
     deselectAll: () => void;
     /** searches as if `value` were typed into the search input */
     search: (value: string, event?: unknown) => void;
@@ -220,7 +215,6 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
     preventScroll?: boolean;
     showRestTagsPopover?: boolean;
     restTagsPopoverProps?: PopoverProps;
-    /** the imperative methods, see SelectHandle */
     ref?: React.Ref<SelectHandle>;
 }
 
@@ -526,8 +520,6 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     let inner: React.ReactNode;
 
     const filterable = Boolean(filter);
-
-    // while loading the list shows a spinner instead of the options
     const activeDescendant = isOpen && !loading && deferredFocusIndex !== -1 && deferredFocusIndex < visibleOptions.length ? `${selectID}-option-${deferredFocusIndex}` : undefined;
     const hasPrefix = hasContent(prefix) || hasContent(insetLabel);
     const insetLabelShown = hasContent(insetLabel) && !hasContent(prefix) && typeof triggerRender !== 'function';
@@ -787,7 +779,6 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                 ref={optionContainerEl}
                 className={clsx(
                     {
-                        // No padding when the list is empty and emptyContent is null: nothing is shown
                         [`${prefixcls}-option-list-wrapper`]: !(isEmpty && emptyContent === null),
                     },
                     dropdownClassName

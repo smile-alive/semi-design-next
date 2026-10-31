@@ -89,8 +89,6 @@
     const parentPopups = getTooltipPopupsContext();
 
     const uid = $props.id();
-
-    // the trigger element: Tooltip's own span, or the element the `child` snippet spread the trigger props on
     let triggerElement = $state.raw<HTMLElement | null>(null);
     let container = $state.raw<HTMLDivElement | null>(null);
 
@@ -114,8 +112,6 @@
     // showing again in one task (focus moving between trigger and popup with a zero delay) stays synchronous
     let selfWritten = false;
     const descendants = new SvelteSet<() => HTMLElement | null>();
-
-    // trigger components (Button, Switch, Checkbox) by their root element, filled in as they mount
     const triggers = new SvelteMap<Element, () => TriggerState>();
 
     const attachmentKey = createAttachmentKey();
@@ -470,7 +466,6 @@
         }
         return untrack(() => {
             if (current === 'enter') {
-                // reopened during its exit animation, it is still shown
                 if (!element.matches(':popover-open')) {
                     element.showPopover();
                 }

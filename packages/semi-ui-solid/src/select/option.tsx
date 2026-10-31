@@ -37,12 +37,10 @@ export interface OptionViewProps {
     empty?: boolean;
     disabled?: boolean;
     selected?: boolean;
-    /** Highlighted by the keyboard or the pointer */
     focused?: boolean;
     /** The row aria-activedescendant points at; AutoComplete marks it aria-selected */
     current?: boolean;
     showTick?: boolean;
-    /** Highlighted in a plain-text label */
     inputValue?: string;
     semiOptionId?: string;
     prefixCls?: string;

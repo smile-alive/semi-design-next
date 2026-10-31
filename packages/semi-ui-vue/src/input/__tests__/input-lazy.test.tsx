@@ -8,8 +8,6 @@ import Input, { TextArea } from '..';
 
 type Modifiers = { lazy?: boolean; trim?: boolean; number?: boolean };
 
-// Stands in for `<Input v-model.lazy="value">`; `accept: false` stands in for a one-way binding that rejects the update.
-// `rerender` re-renders the host with a changed prop, as any parent update would.
 function createHost(Control: typeof Input | typeof TextArea, modifiers: Modifiers, accept = true, extraProps: Record<string, unknown> = {}) {
     const rerender = ref(false);
     const Host = defineComponent(() => {

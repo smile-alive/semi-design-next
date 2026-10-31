@@ -16,20 +16,16 @@ import useLocale from '../locale/use-locale';
 const prefixCls = cssClasses.PREFIX;
 
 export interface ToastHandle {
-    /** Starts the duration over */
     restartCloseTimer: () => void;
     /** Paused by the list while the pointer or focus is inside it */
     pauseCloseTimer: () => void;
     resumeCloseTimer: () => void;
     /** Called on removal so the countdown cannot call onClose during the leave */
     leave: () => void;
-    /** The text a screen reader should announce for this toast */
     announcement: () => string;
 }
 
-/** What the list holds per toast; kept out of the public handle */
 export interface ToastItemHandle extends ToastHandle {
-    /** The toast element, which the list's animation inspects */
     element: () => HTMLDivElement | null;
 }
 

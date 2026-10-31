@@ -15,7 +15,6 @@ export interface ChatMetadata {
     name?: string;
     /** Image URL; a custom avatar node goes through the `roleAvatar` slot */
     avatar?: string;
-    /** Avatar background, for an avatar without an image */
     color?: AvatarProps['color'];
     [x: string]: unknown;
 }
@@ -45,7 +44,6 @@ export type ChatUploadProps = Partial<Omit<UploadProps, 'fileList' | 'defaultFil
 };
 
 export interface ChatProps {
-    /** Controlled list, for `v-model:chats` */
     chats?: ChatMessage[];
     align?: ChatAlign;
     mode?: ChatMode;
@@ -56,9 +54,7 @@ export interface ChatProps {
     showStopGenerate?: boolean;
     showClearContext?: boolean;
     enableUpload?: boolean | ChatEnableUploadProps;
-    /** Overrides the built-in send state when given */
     canSend?: boolean;
-    /** Escapes HTML in the user's messages */
     escapeHtml?: boolean;
     uploadProps?: ChatUploadProps;
     /** The tooltip of the upload button; its text is the `uploadTip` slot */
@@ -95,7 +91,6 @@ export interface ChatEmits {
 export interface ChatHandle {
     resetMessage: () => void;
     clearContext: () => void;
-    /** `animation` true scrolls smoothly, otherwise jumps */
     scrollToBottom: (animation?: boolean) => void;
     sendMessage: (content: string, attachment?: FileItem[]) => void;
 }
@@ -140,7 +135,6 @@ export interface ChatActionSlotProps {
     class: string;
 }
 
-/** Each part as the message would render it, including what the avatar, title, content and action slots give */
 export interface ChatFullChatBoxNodes {
     avatar: VNode;
     title: VNode;
@@ -164,7 +158,6 @@ export interface ChatInputAreaSlotProps {
     sendNode: VNode;
     onSend: (content?: string, attachment?: FileItem[]) => void;
     onClear: () => void;
-    /** Focuses the input */
     onClick: () => void;
 }
 
@@ -193,8 +186,6 @@ export interface ChatSlots {
     inputArea?: (props: ChatInputAreaSlotProps) => VNode[];
     hintBox?: (props: ChatHintBoxSlotProps) => VNode[];
     divider?: (props: ChatDividerSlotProps) => VNode[];
-    /** Replaces the upload button */
     uploadButton?: () => VNode[];
-    /** The upload button's tooltip text */
     uploadTip?: () => VNode[];
 }

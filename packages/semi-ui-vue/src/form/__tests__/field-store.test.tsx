@@ -314,7 +314,6 @@ describe('Form 字段状态与发布时机', () => {
     });
 });
 
-/** Renders one field named `name` (unless props say otherwise) whose props `rerender` replaces */
 function renderFieldWithProps(fieldProps: Record<string, unknown>, formProps: Record<string, unknown> = {}, component: unknown = MountChangeField) {
     let api: FormApi | undefined;
     const Demo = defineComponent({

@@ -75,7 +75,6 @@ const texts = (container: HTMLElement) => getItems(container).map((item) => item
 const plusRenderer = (overflow: OverflowItem[]) => (overflow.length ? <span>+{overflow.length}</span> : null);
 
 type ScrollRenderer = NonNullable<Extract<OverflowListProps, { renderMode: 'scroll' }>['overflowRenderer']>;
-// one node for each side, showing how many items it holds
 const sidesRenderer: ScrollRenderer = ([start, end]) => [<span>{`overflow-0:${start.length}`}</span>, <span>{`overflow-1:${end.length}`}</span>];
 const modeProps = (renderMode: 'collapse' | 'scroll'): OverflowListProps => (renderMode === 'scroll' ? { renderMode, overflowRenderer: () => [null, null] } : { renderMode });
 const renderKey = (item: OverflowItem) => <div>{item.key}</div>;
@@ -262,7 +261,6 @@ describe('OverflowList', () => {
         expect(getItems(container)).toHaveLength(2);
 
         setList(items.slice(0, 3));
-        // alarm and bookmark keep their boxes, which are not observed again
         resize(getItems(container)[2], 50);
         expect(texts(container)).toEqual(['alarm', 'bookmark']);
         expect(screen.getByText('+1')).toBeInTheDocument();
@@ -298,7 +296,6 @@ describe('OverflowList', () => {
         expect(texts(container)).toEqual(keys);
 
         setItemKey('id');
-        // new keys create new measured boxes; their widths are all that counts now
         getItems(container).forEach((item) => resize(item, 30));
         resize(getList(container), 120);
         expect(texts(container)).toEqual(keys.slice(0, 4));
@@ -408,7 +405,6 @@ describe('OverflowList', () => {
         setList(keys.map((key) => ({ key })));
         expect(texts(container)).toEqual(['alarm', 'bookmark']);
 
-        // the reset and the recompute from the kept widths land before the test can observe them
         setStyle({ color: 'blue' });
         expect(texts(container)).toEqual(['alarm', 'bookmark']);
         expect(getList(container)).toHaveStyle({ color: 'rgb(0, 0, 255)', visibility: 'visible' });

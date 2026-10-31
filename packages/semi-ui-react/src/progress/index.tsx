@@ -69,7 +69,6 @@ export default function Progress(rawProps: ProgressProps) {
 
     if (type === 'line') {
         const innerStyle: React.CSSProperties = { background: strokeColor };
-        // indeterminate is driven by CSS animation; percent is ignored
         if (!indeterminate) {
             if (direction === strings.DEFAULT_DIRECTION) {
                 innerStyle.width = `${perc}%`;

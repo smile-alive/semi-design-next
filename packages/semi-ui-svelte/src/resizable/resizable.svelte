@@ -53,7 +53,6 @@
 
     let root = $state<HTMLDivElement>();
 
-    // the foundation reads the props through getters, so it always sees the current values
     const foundationProps: ResizableBaseProps = {
         get size() {
             return size;

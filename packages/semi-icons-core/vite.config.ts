@@ -10,7 +10,6 @@ export default defineConfig({
         platform: 'neutral',
         outDir: 'dist',
         dts: true,
-        // Framework-free icon styles, shared by every framework's icon package
         plugins: [
             semiPackStyles(fileURLToPath(new URL('./src', import.meta.url)), {
                 sourceOnly: ['styles/variables.scss'],

@@ -14,7 +14,6 @@ interface ResizableHandlerProps {
     onResizeEnd: (e: PointerEvent) => void;
     class?: string;
     style?: JSX.CSSProperties | string;
-    /** Role, name, values and keys of a handle the keyboard can reach */
     separatorProps?: JSX.HTMLAttributes<HTMLDivElement>;
 }
 

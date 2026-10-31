@@ -41,7 +41,6 @@ export type TableRowAttrs = HTMLAttributes<HTMLElement>;
 export type TableCellAttrs = Omit<HTMLTdAttributes, 'colspan' | 'rowspan'> & CellSpans;
 export type TableHeaderCellAttrs = Omit<HTMLThAttributes, 'colspan' | 'rowspan'> & CellSpans;
 
-/** A column holds data only: markup goes to the Table's `cell`, `headerCell`, `sortIcon` and other snippets */
 export interface ColumnProps<R extends AnyRecord = AnyRecord> {
     align?: ColumnAlign;
     children?: ColumnProps<R>[];
@@ -53,7 +52,6 @@ export interface ColumnProps<R extends AnyRecord = AnyRecord> {
     defaultSortOrder?: SortOrder;
     ellipsis?: BaseEllipsis;
     filterChildrenRecord?: boolean;
-    /** Shows the filter button for a panel given by the Table's `filterDropdown` snippet */
     filterDropdown?: boolean;
     /** Props of the filter Dropdown; the trigger is always a click */
     filterDropdownProps?: Omit<DropdownProps, 'visible' | 'trigger' | 'children' | 'child' | 'content' | 'onVisibleChange'>;
@@ -98,7 +96,6 @@ export interface RowSelectionProps<R extends AnyRecord = AnyRecord> {
     /** The initial selection of an uncontrolled table: `selectedRowKeys` lives in an object, which `bind:` cannot reach */
     defaultSelectedRowKeys?: (string | number)[];
     width?: number | string;
-    /** Clicking a row toggles its selection */
     clickRow?: boolean;
     checkRelation?: CheckRelation;
     onChange?: RowSelectionOnChange<R>;
@@ -120,7 +117,6 @@ export interface ResizableProps<R extends AnyRecord = AnyRecord> {
     onResize?: TableResizeFn<R>;
     onResizeStart?: TableResizeFn<R>;
     onResizeStop?: TableResizeFn<R>;
-    /** Added to the column's class while it is resized */
     handlerClassName?: string;
 }
 /** The returned fields are merged into the column */
@@ -143,12 +139,10 @@ export type TableVirtualizedItemSize = number | TableVirtualizedItemSizeFn;
 export interface TableVirtualizedProps {
     /** Row height in pixels; 53, 45 or 37 by size when absent */
     itemSize?: TableVirtualizedItemSize;
-    /** Rows rendered above and below the visible area */
     overscanCount?: number;
 }
 export type TableVirtualized = boolean | TableVirtualizedProps;
 
-/** A tag name; the element replaces the default tag of that part */
 export type TableComponent = string;
 export interface TableComponents {
     header?: {
@@ -184,7 +178,6 @@ export interface TableCellSnippetProps<R extends AnyRecord = AnyRecord> {
     record: R;
     index: number;
     column: ColumnProps<R>;
-    /** The row's expand button, on the first data cell of an expandable row */
     expandIcon?: Snippet;
     isHovering: boolean;
     /** With `useFullRender` only */
@@ -203,7 +196,6 @@ export interface TableHeaderCellSnippetProps<R extends AnyRecord = AnyRecord> {
 }
 
 export interface TableTitleSnippetProps<R extends AnyRecord = AnyRecord> {
-    /** The records of the current page */
     pageData: R[];
 }
 
@@ -224,7 +216,6 @@ export interface TableSortIconSnippetProps<R extends AnyRecord = AnyRecord> {
 }
 
 export interface TableFilterIconSnippetProps<R extends AnyRecord = AnyRecord> {
-    /** The column has a filtered value applied */
     filtered: boolean;
     column: ColumnProps<R>;
 }
@@ -240,7 +231,6 @@ export interface TableFilterDropdownSnippetProps<R extends AnyRecord = AnyRecord
     /** Clears the temporary and the applied value */
     onClear: (options?: { closeDropdown?: boolean }) => void;
     onClose: () => void;
-    /** Drops the temporary value, back to the applied one */
     onReset: () => void;
 }
 
@@ -252,9 +242,7 @@ export interface TableFilterDropdownItemSnippetProps<R extends AnyRecord = AnyRe
     /** The value the menu shows: the temporary one in confirm mode */
     filteredValue: any[];
     filterMultiple: boolean;
-    /** The depth of the menu the item sits in, 0 for the top menu */
     level: number;
-    /** Toggles the item; bind it to the item's click */
     onChange: (event: MouseEvent) => void;
 }
 
@@ -266,7 +254,6 @@ export interface TableSelectionCellSnippetProps<R extends AnyRecord = AnyRecord>
     inHeader: boolean;
     disabled?: boolean;
     indeterminate: boolean;
-    /** The default checkbox */
     originNode: Snippet;
     /** Row cells only */
     onSelectRow?: (selected: boolean, event: Event) => void;
@@ -293,12 +280,12 @@ export interface TableProps<R extends AnyRecord = AnyRecord> extends Omit<HTMLAt
     clickGroupedRowToExpand?: boolean;
     columns?: ColumnProps<R>[];
     components?: TableComponents;
+    /** Bindable; wins over `pagination.currentPage` because `bind:` cannot reach a field inside an object. Paging writes it back */
+    currentPage?: number;
     /**
      * Rows added or removed in place (push, splice on a `$state` array) are sorted and filtered again; a record field
      * changed in place shows in its cell but does not sort or filter again
      */
-    /** Bindable; wins over `pagination.currentPage` because `bind:` cannot reach a field inside an object. Paging writes it back */
-    currentPage?: number;
     dataSource?: R[];
     defaultExpandAllGroupRows?: boolean;
     defaultExpandAllRows?: boolean;
@@ -313,7 +300,6 @@ export interface TableProps<R extends AnyRecord = AnyRecord> extends Omit<HTMLAt
     expandRowByClick?: boolean;
     footer?: string | Snippet<[TableTitleSnippetProps<R>]>;
     groupBy?: TableGroupBy<R>;
-    /** The column config of a group section's single cell */
     groupSectionColumn?: (groupKey: string | number, group: (string | number)[]) => Omit<ColumnProps<R>, 'title' | 'children' | 'dataIndex'>;
     headerStyle?: string;
     hideExpandedColumn?: boolean;
@@ -326,7 +312,6 @@ export interface TableProps<R extends AnyRecord = AnyRecord> extends Omit<HTMLAt
     rowExpandable?: TableRowExpandable<R>;
     rowKey?: TableRowKey<R>;
     rowSelection?: boolean | RowSelectionProps<R>;
-    /** Hovering a cell with rowSpan highlights every row it spans */
     rowSpanHover?: boolean;
     scroll?: TableScroll;
     /** Bindable; wins over `rowSelection.selectedRowKeys` because `bind:` cannot reach a field inside an object. Needs `rowSelection` to show the checkboxes */
@@ -353,19 +338,15 @@ export interface TableProps<R extends AnyRecord = AnyRecord> extends Omit<HTMLAt
     cell?: Snippet<[TableCellSnippetProps<R>]>;
     /** The title of a column header; render `title` for the columns it leaves alone */
     headerCell?: Snippet<[TableHeaderCellSnippetProps<R>]>;
-    /** Replaces the empty text */
     empty?: Snippet;
     /** The content of an expanded row; given, every expandable row gets an expand button */
     expandedRow?: Snippet<[TableExpandedRowSnippetProps<R>]>;
     groupSection?: Snippet<[TableGroupSectionSnippetProps]>;
     sortIcon?: Snippet<[TableSortIconSnippetProps<R>]>;
-    /** The content of a column's filter button */
     filterIcon?: Snippet<[TableFilterIconSnippetProps<R>]>;
-    /** The filter panel of a column with `filterDropdown: true` */
     filterDropdown?: Snippet<[TableFilterDropdownSnippetProps<R>]>;
     /** An item of a filter menu; given, it replaces every item */
     filterDropdownItem?: Snippet<[TableFilterDropdownItemSnippetProps<R>]>;
-    /** A selection cell, header and rows */
     selectionCell?: Snippet<[TableSelectionCellSnippetProps<R>]>;
     /** Replaces the pagination info and Pagination; named apart from the `pagination` prop, which shares the namespace */
     paginationContent?: Snippet<[TablePaginationSnippetProps]>;

@@ -9,7 +9,6 @@
         children: Snippet<[{ height: number; width: number | string }]>;
     }
 
-    /** Passes a pixel height to its snippet: `defaultHeight` when it is a number, else the parent's content height */
     let { defaultHeight, defaultWidth = '100%', children }: AutoSizerProps = $props();
 
     let wrapper = $state<HTMLDivElement>();

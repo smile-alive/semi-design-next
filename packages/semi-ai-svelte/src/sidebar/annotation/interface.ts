@@ -11,9 +11,8 @@ export interface AnnotationItem {
     logo?: string;
     siteName?: string;
     order?: number;
-    /** The video cover */
     img?: string;
-    /** The video length in seconds */
+    /** In seconds */
     duration?: number;
 }
 
@@ -30,7 +29,6 @@ export interface AnnotationHeaderSnippetProps {
 
 export interface AnnotationItemSnippetProps {
     item: AnnotationItem;
-    /** The position within its group */
     index: number;
 }
 
@@ -38,13 +36,11 @@ interface AnnotationContentOwnProps {
     /** Bindable; the open groups */
     activeKey?: string | string[];
     info?: AnnotationInfo[];
-    /** A group opened or closed */
     onChange?: (activeKey: string | string[]) => void;
     /** An item was clicked; the native click of the root is not reported apart from it */
     onClick?: (event: MouseEvent, item: AnnotationItem) => void;
     /** A group's header after its icon; the `header` field is its plain-text form */
     header?: Snippet<[AnnotationHeaderSnippetProps]>;
-    /** Replaces the built-in item */
     item?: Snippet<[AnnotationItemSnippetProps]>;
 }
 

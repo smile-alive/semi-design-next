@@ -47,7 +47,6 @@ const lastArg = (spy: { mock: { calls: unknown[][] } }) => spy.mock.calls.at(-1)
 const thousands = (value: number | string) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 const removeThousands = (value: string) => value.replace(/,/g, '');
 
-/** Renders with props a test can replace, the way a parent re-renders with new ones */
 function renderWith(initial: InputNumberProps) {
     const [props, setProps] = createSignal(initial);
     const result = render(() => <InputNumber {...props()} />);

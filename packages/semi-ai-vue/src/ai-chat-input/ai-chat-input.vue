@@ -232,7 +232,6 @@
         return [h(UploadButton, { ...uploadButtonProps(), ref: 'upload', onChange: foundation.onUploadChange }, { ...slots }), send];
     };
 
-    // compared deeply: callers often pass a new array with the same items
     useDidUpdate(
         () => props.suggestions,
         (current) => {

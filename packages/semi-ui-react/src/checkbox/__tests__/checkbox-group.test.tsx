@@ -149,7 +149,6 @@ describe('CheckboxGroup', () => {
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-checkbox-inner-pureCardType`)).not.toBeNull();
         unmount();
 
-        // a string instead of an array on purpose: the group must still mark the matching card checked
         const disabled = render(getCG({ type: 'pureCard', disabled: true, defaultValue: 'abc' as unknown as string[] }));
         const cards = disabled.container.querySelectorAll(`.${BASE_CLASS_PREFIX}-checkbox-cardType`);
         expect(cards[0]).toHaveClass(`${BASE_CLASS_PREFIX}-checkbox-cardType_checked_disabled`);

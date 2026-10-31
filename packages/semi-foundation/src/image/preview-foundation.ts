@@ -1,10 +1,8 @@
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 
-/** An Image registered with its group */
 export interface PreviewGroupImage {
     /** The thumbnail element: the group lists its images in document order */
     node: Element;
-    /** The thumbnail src */
     src: string;
     /** The srcs the image adds to the group preview; undefined when the image does not open the group preview */
     previewSrc?: string | string[];
@@ -12,7 +10,6 @@ export interface PreviewGroupImage {
     alt?: string;
 }
 
-/** The props the foundation reads */
 export interface PreviewBaseProps {
     src?: string | string[];
     visible?: boolean;

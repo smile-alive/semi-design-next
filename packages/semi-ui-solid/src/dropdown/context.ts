@@ -12,7 +12,6 @@ export interface DropdownContextView {
     trigger: Trigger;
 }
 
-/** What a Dropdown provides to its popup content; its trigger reads the context of the menu around the Dropdown */
 export interface DropdownContextValue {
     view: Accessor<DropdownContextView>;
     /** Closes the popup that renders the menu, without moving focus */
@@ -24,7 +23,6 @@ export interface DropdownContextValue {
 
 export const [DropdownContext, useDropdownContext] = createContext<DropdownContextValue>('Dropdown', { optional: true });
 
-/** The foundation context; outside any menu the depth is 0 */
 export function menuContext(context?: DropdownContextValue, direction?: 'ltr' | 'rtl'): DropdownMenuContext {
     return {
         ...context?.view(),

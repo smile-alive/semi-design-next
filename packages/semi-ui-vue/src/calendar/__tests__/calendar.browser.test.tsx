@@ -113,7 +113,6 @@ describe('Calendar（浏览器）', () => {
         await userEvent.click(screen.getByText('日视图'));
         await settle();
         expect(eventItems()).toContain('7月23日 8:32');
-        // Event blocks may cover the time slot, the click only needs to reach the slot's handler
         await userEvent.click(timeSlot('01:30:00'), { force: true });
         await waitFor(() => expect(screen.getByText('当前点击的日期是23号')).toBeInTheDocument());
 
@@ -198,7 +197,6 @@ describe('Calendar（浏览器）', () => {
     });
 
     it('右侧边缘日期的 "more" 卡片在关闭的离场期间保持打开时的位置', async () => {
-        // 2019-08-10 is a Saturday, the last column, so the card has to open leftwards to fit
         const saturday = [0, 1].map((i) => ({
             key: String(i),
             start: new Date(2019, 7, 10, 9 + i),

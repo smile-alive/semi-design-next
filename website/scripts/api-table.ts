@@ -7,7 +7,6 @@ export type Locale = 'zh-CN' | 'en-US';
 export type Description = Record<Locale, string>;
 export interface ApiRow {
     name: string;
-    /** Cells after the name and description columns */
     cells: string[];
 }
 
@@ -37,7 +36,6 @@ export function apiType(value: string, optional = false) {
     return `\`${cell(type)}\``;
 }
 
-/** Renders one group's table; every member needs a bilingual description and every description a member */
 export function renderTable(group: string, title: string, columns: string[], rows: ApiRow[], descriptions: Record<string, Description> | undefined, locale: Locale) {
     if (!descriptions || typeof descriptions !== 'object') throw new Error(`缺少 ${group} 说明`);
     for (const name of Object.keys(descriptions)) {
@@ -58,7 +56,6 @@ export function renderTable(group: string, title: string, columns: string[], row
     return [`**${title}**`, '', `| ${columns.join(' | ')} |`, `| ${columns.map(() => '---').join(' | ')} |`, ...lines, ...empty].join('\n');
 }
 
-/** Formats each fragment with vp fmt, then writes it, or with `check` fails when the file on disk differs */
 export function writeFragments(fragments: { path: string; body: string }[], check: boolean, label: string) {
     const outputs = fragments.map(({ path, body }) => ({
         path,

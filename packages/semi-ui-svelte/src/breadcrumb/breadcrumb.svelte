@@ -78,7 +78,6 @@
         BreadcrumbFoundation.genRoutes(routes).map((route, index) => ({
             index,
             route: route._origin,
-            // Only the Item attributes a route may set stay; other route fields stay off the DOM
             attrs: getDataAttr(route) as Record<`data-${string}`, string>,
             key: String(route._origin.key || `item-${route.name || route.path}-${index}`),
         }))

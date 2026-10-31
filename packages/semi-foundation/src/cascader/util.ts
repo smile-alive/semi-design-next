@@ -11,9 +11,6 @@ export interface KeyMapProps {
     isLeaf?: string;
 }
 
-/**
- * @returns whether option matches sugInput; a function filterTreeNode decides with (sugInput, target, option).
- */
 export function filter(sugInput: string, option: BasicCascaderData, filterTreeNode: any, filteredPath?: string[]) {
     if (!filterTreeNode) {
         return true;
@@ -33,7 +30,6 @@ export function filter(sugInput: string, option: BasicCascaderData, filterTreeNo
     return filterFn(sugInput, target, option);
 }
 
-/** One column per level of the active path: the top level, then the children of each active node that has some */
 export function getColumns<T extends { key: string; data: { children?: unknown[] }; children?: T[] }>(topLevel: T[], activeKeys: Set<string>) {
     const columns: Array<{ items: T[]; level: number }> = [];
     let items: T[] | undefined = topLevel;
@@ -44,10 +40,7 @@ export function getColumns<T extends { key: string; data: { children?: unknown[]
     return columns;
 }
 
-/**
- * The labels of a search result joined by the separator, split into the runs that match the keyword and the rest. Only
- * a string label is matched, as the default filter does; any other label passes through whole.
- */
+/** Only a string label is matched, as the default filter does; any other label passes through whole */
 export function highlightParts<T>(searchText: T[], keyword: string, separator: string) {
     const parts: Array<{ text: string | T; match: boolean }> = [];
     const lowerKeyword = keyword.toLowerCase();

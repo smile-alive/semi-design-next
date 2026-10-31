@@ -80,7 +80,6 @@
         }
     };
 
-    // the foundation reads the row element from nodeInstance, to place the drop and to build the drag image
     const withInstance = (event: DragEvent): TreeRowProps => ({ ...row, nodeInstance: event.currentTarget });
 
     const onDragstart = (event: DragEvent) => {

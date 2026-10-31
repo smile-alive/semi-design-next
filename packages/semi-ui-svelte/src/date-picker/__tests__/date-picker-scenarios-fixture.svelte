@@ -2,13 +2,6 @@
     import type { DatePickerProps, DatePickerTriggerRenderProps } from '../interface';
 
     export interface ScenarioStore {
-        /**
-         * focus-open: a controlled `open` that the focus event sets and the bottom slot's "close" button resets.
-         * bottom-button: a bottom slot with a focusable button.
-         * reset-trigger: a bound `value` with a custom trigger that has a button clearing it from outside the picker.
-         * trigger-scope: a custom trigger that prints the keys of the `componentProps` it received.
-         * tabs: two pickers in tabs, switching to the second one calls close() on the first.
-         */
         scenario: 'focus-open' | 'bottom-button' | 'reset-trigger' | 'trigger-scope' | 'tabs';
         open?: boolean;
         value?: DatePickerProps['value'];

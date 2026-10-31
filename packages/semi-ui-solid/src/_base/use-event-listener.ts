@@ -3,14 +3,10 @@ import { type Accessor, createEffect, onCleanup } from 'solid-js';
 type EventMap = HTMLElementEventMap & WindowEventMap & DocumentEventMap;
 
 interface Options extends Pick<AddEventListenerOptions, 'capture' | 'passive'> {
-    /** false removes the listener, true adds it back */
     enabled?: Accessor<boolean>;
 }
 
 /**
- * Listens to `type` on the target `target` returns while `enabled`, follows the target when it changes, and removes
- * the listener on disposal. Global targets go in as `() => window` or `() => document.body`.
- *
  * Delegated handlers are not batched (S-H1): turning `enabled` on from a delegated handler of the same event adds the
  * listener mid-dispatch, and it receives that event too. `useClickOutside` guards this for `mousedown`. Do not turn
  * `enabled` on from a delegated handler of the same event type.

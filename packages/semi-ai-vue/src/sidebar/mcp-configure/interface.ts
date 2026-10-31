@@ -3,7 +3,6 @@ import type { MCPOption } from '@fibrae/semi-ai-foundation/sidebar/mcp-cof-conte
 import type { ContainerEmits, ContainerProps } from '../container/interface';
 
 export interface MCPConfigureOption extends MCPOption {
-    /** Image URL; use the `#icon` slot for other content */
     icon?: string;
     /** Plain text; use the `#desc` slot for other content. The built-in filter searches it with the label */
     desc?: string;
@@ -33,14 +32,12 @@ export interface MCPConfigureContentEmits {
 export interface MCPConfigureItemSlotProps {
     item: MCPConfigureOption;
     index: number;
-    /** Whether the custom list is shown */
     custom: boolean;
 }
 
 export interface MCPConfigureContentSlots {
     icon?: (props: MCPConfigureItemSlotProps) => VNode[];
     desc?: (props: MCPConfigureItemSlotProps) => VNode[];
-    /** Replaces the whole built-in row */
     item?: (props: MCPConfigureItemSlotProps) => VNode[];
 }
 
@@ -50,6 +47,5 @@ export interface MCPConfigureEmits extends ContainerEmits, MCPConfigureContentEm
 
 export interface MCPConfigureSlots extends MCPConfigureContentSlots {
     title?: () => VNode[];
-    /** Replaces the container header; empty content falls back to the default header */
     header?: () => VNode[];
 }

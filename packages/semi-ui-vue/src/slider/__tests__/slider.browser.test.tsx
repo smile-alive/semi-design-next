@@ -220,7 +220,6 @@ describe('Slider 交互（浏览器）', () => {
         const [input, next] = container.querySelectorAll('input[type="range"]');
         await userEvent.click(handle);
         expect(input).toHaveFocus();
-        // a pointer press focuses the input without the keyboard focus ring
         expect(input.matches(':focus-visible')).toBe(false);
         const steps = [
             ['{ArrowUp}', '1'],

@@ -21,7 +21,6 @@ const hiddenStyle = { display: 'none' } as const;
 
 export interface InputBoxHandle {
     focus: () => void;
-    /** Adds dropped files to the attachments through the Upload the input renders */
     insert: (files: File[]) => void;
 }
 

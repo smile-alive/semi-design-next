@@ -9,7 +9,6 @@
     let { onApi }: { onApi?: (api: FormApi) => void } = $props();
 </script>
 
-<!-- FormCheckbox and FormRadio without `field`: the bare controls, as the groups use them -->
 <Form getFormApi={onApi}>
     <FormCheckboxGroup field="group">
         <FormCheckbox class="own" data-testid="a" id="own-checkbox" value="a">A</FormCheckbox>

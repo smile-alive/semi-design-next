@@ -5,7 +5,6 @@ import type { FormApi, FormProps } from './interface';
 
 export interface FormContextValue {
     formState: ComputedRef<FormState>;
-    /** The Form props with their defaults resolved, read by the fields while rendering */
     formProps: ComputedRef<FormProps>;
     formApi: FormApi;
     bridge: FieldBridge;

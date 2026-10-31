@@ -2,7 +2,6 @@ import type { CodeHighlightThemes, LanguageInput } from '@fibrae/semi-foundation
 
 export type { CodeHighlightRegistration, CodeHighlightThemes, LanguageInput, ThemeInput } from '@fibrae/semi-foundation/code-highlight/registry';
 
-// The `code` prop is the root's only content, so there is no default slot.
 export interface CodeHighlightProps {
     /** Treated as an empty string when undefined */
     code?: string;

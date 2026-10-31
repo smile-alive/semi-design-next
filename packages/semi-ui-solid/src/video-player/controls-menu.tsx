@@ -35,7 +35,6 @@ export default function ControlsMenu<T extends string | number>(props: ControlsM
             selectionMode="single"
         >
             {(getTriggerProps) => (
-                // the visible text alone does not say what the menu sets
                 <button {...getTriggerProps({ class: clsx(`${controlsCls}-menu-item`, `${controlsCls}-popup`) })} type="button" aria-label={[props.label, currentLabel()].filter(Boolean).join(' ')}>
                     {currentLabel()}
                 </button>

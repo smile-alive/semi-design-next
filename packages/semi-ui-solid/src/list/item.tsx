@@ -69,7 +69,6 @@ export default function ListItem(props: ListItemProps) {
         </Dynamic>
     );
 
-    // each branch reads the children itself: only one of the two positions is live at a time
     const item = (
         <li
             {...(clickable() ? rootAttrs : rest)}

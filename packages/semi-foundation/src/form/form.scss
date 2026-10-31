@@ -50,12 +50,6 @@ $rating: #{$prefix}-rating;
             margin: 0;
             overflow: hidden;
 
-            &[x-label-pos='top'] {
-                // .#{$col}-right,
-                // .#{$col}-left {
-                //     width: 100%;
-                // }
-            }
             .#{$col} {
                 &-right {
                     display: flex;
@@ -81,12 +75,6 @@ $rating: #{$prefix}-rating;
                     justify-content: flex-start;
                 }
             }
-        }
-
-        .#{$field}-pure {
-            // padding-top: 0;
-            // padding-bottom: 0;
-            // overflow: inherit;
         }
     }
 

@@ -18,7 +18,6 @@ const switchOf = (side: string, name: string) => getPanel(side).querySelector(`[
 const timeLists = (root: ParentNode) => root.querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`);
 const hourList = (root: ParentNode = getPopup() as HTMLElement) => timeLists(root)[0];
 
-/** Mounts the picker directly, for the cases that need the exact Date handed to a callback */
 async function renderRaw(props: DatePickerProps) {
     const view = render(DatePicker, { props: { motion: false, ...props } });
     await settle();

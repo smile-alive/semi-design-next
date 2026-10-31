@@ -66,13 +66,11 @@ const treeDataWithDisabled: CascaderData[] = [
     },
 ];
 
-// the popup animates; turn it off so tests need no waiting
 const commonProps = { motion: false };
 
 type Emits = CascaderEmits<boolean>;
 const spy = <K extends keyof Emits>() => vi.fn<(...args: Emits[K]) => void>();
 type Slots = Record<string, (scope: never) => VNodeChild>;
-// The popup content mounts after the popover opens, a few ticks after the Cascader
 const settle = () => new Promise((resolve) => setTimeout(resolve));
 // Every render uses a non-Chinese locale; `handle` is the component's exposed handle
 async function renderWith<Handle>(component: Component, props: Record<string, unknown> = {}, slots: Slots = {}, provider: Record<string, unknown> = {}) {
@@ -149,7 +147,6 @@ const addChildren = (list: CascaderData[], value: unknown, children: CascaderDat
         return node.children ? { ...node, children: addChildren(node.children, value, children) } : node;
     });
 
-// Like the docs' loadData demo, the loaded children are put into treeData before the promise resolves
 function loadTwo(target: CascaderData, append: (children: CascaderData[]) => void) {
     if (!target.children) {
         append([
@@ -934,7 +931,6 @@ describe('Cascader', () => {
     it('handle 的 focus 与 blur', async () => {
         const { handle } = await renderCascader();
         await act(() => handle().focus());
-        // the focus ring comes from :focus; the class marks only the open state
         expect(getTrigger()).not.toHaveClass(`${prefixCls}-focus`);
         expect(getTrigger()).toHaveFocus();
         await act(() => handle().blur());
@@ -1143,7 +1139,6 @@ describe('Cascader', () => {
         const rows = document.querySelectorAll(`.${prefixCls}-option-list li`);
         expect(rows).toHaveLength(3);
         rows.forEach((row) => expect(row).toHaveStyle({ position: 'absolute', height: '36px' }));
-        // the rows sit in a ul, the scroll container's only child; the listbox holds the scroll container
         const list = rows[0].parentElement as HTMLElement;
         expect(list.tagName).toBe('UL');
         expect(list).toHaveAttribute('role', 'none');

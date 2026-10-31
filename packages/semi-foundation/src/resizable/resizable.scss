@@ -111,7 +111,6 @@ $module: #{$prefix}-resizable;
     &-handler {
         @include flex-center;
         z-index: $z-resizable_handler;
-        // a touch drag would otherwise scroll the page and cancel the pointer
         touch-action: none;
         user-select: none;
         background-color: var(--semi-color-fill-0);

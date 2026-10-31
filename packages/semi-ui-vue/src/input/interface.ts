@@ -11,16 +11,13 @@ export type ValidateStatus = (typeof VALIDATE_STATUS)[number];
 /** What `change` receives: typing (input), an IME composition ending, or the clear button */
 export type InputChangeEvent = Event | CompositionEvent | MouseEvent;
 
-/** The methods and nodes on an Input ref */
 export interface InputHandle {
     /** Focuses the native input; `preventScroll` defaults to the prop */
     focus(options?: FocusOptions): void;
     blur(): void;
     select(): void;
     setSelectionRange(start: number | null, end: number | null, direction?: 'forward' | 'backward' | 'none'): void;
-    /** The native input */
     readonly input: HTMLInputElement | null;
-    /** The root element, the wrapper div */
     readonly nativeElement: HTMLElement | null;
 }
 
@@ -55,7 +52,6 @@ export interface InputProps {
     /** When enabled, `change` fires once after an IME composition ends instead of during it */
     composition?: boolean;
     preventScroll?: boolean;
-    /** Focuses the input on mount, with `preventScroll` */
     autofocus?: boolean;
     /** Counted by `getValueLength` when given, otherwise the native attribute */
     maxlength?: number;
@@ -107,15 +103,12 @@ export interface AutosizeRow {
 /** What `change` receives: typing, an IME composition ending, the clear button, or the blur that truncates */
 export type TextAreaChangeEvent = Event | CompositionEvent | MouseEvent | FocusEvent;
 
-/** The methods and nodes on a TextArea ref */
 export interface TextAreaHandle {
     focus(options?: FocusOptions): void;
     blur(): void;
     select(): void;
     setSelectionRange(start: number | null, end: number | null, direction?: 'forward' | 'backward' | 'none'): void;
-    /** The native textarea */
     readonly textarea: HTMLTextAreaElement | null;
-    /** The root element, the wrapper div */
     readonly nativeElement: HTMLElement | null;
 }
 
@@ -133,7 +126,6 @@ export interface TextAreaProps {
     showClear?: boolean;
     disabled?: boolean;
     readonly?: boolean;
-    /** Focuses the textarea on mount */
     autofocus?: boolean;
     validateStatus?: ValidateStatus;
     composition?: boolean;
@@ -185,7 +177,6 @@ export interface InputGroupProps {
     size?: InputSize;
     disabled?: boolean;
     label?: InputGroupLabel;
-    /** 'top' or 'left' */
     labelPosition?: string;
 }
 

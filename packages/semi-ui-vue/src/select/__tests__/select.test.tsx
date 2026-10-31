@@ -371,7 +371,6 @@ describe('Select', async () => {
 
     it('spacing', async () => {
         await renderSelect({ spacing: 20, defaultOpen: true });
-        // jsdom puts the trigger's box at 0, so a bottomLeft popup's top is the spacing
         expect(getPopover().style.top).toBe('20px');
     });
 
@@ -1382,7 +1381,6 @@ describe('Select', async () => {
             optionList: [{ value: 'abc', label: 'Abc', disabled: true }],
             onChange,
         });
-        // the default highlight skips a disabled option; hovering still lands on it
         await fireEvent.mouseEnter(getOptionByText('Abc') as Element);
         await keyDown('Enter');
         expect(onChange).not.toHaveBeenCalled();
@@ -3314,7 +3312,6 @@ describe('Select', async () => {
         await act(() => handle().open());
         const popup = screen.getByRole('listbox').closest<HTMLElement>('[popover]');
         expect(popup?.style.left).toBe('0px');
-        // the trigger moved without scrolling or resizing
         const rect = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(new DOMRect(100, 50, 80, 20));
         onTestFinished(() => rect.mockRestore());
         await act(() => handle().rePosition());

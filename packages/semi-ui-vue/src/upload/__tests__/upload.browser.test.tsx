@@ -177,9 +177,7 @@ describe('Upload', () => {
             </div>
         ));
         // each Upload renders its select input followed by its replace input
-        // not an acceptable type
         await userEvent.upload(fileInputs()[2], readme());
-        // not an acceptable size
         await userEvent.upload(fileInputs()[4], readme());
         await waitFor(() => expect(onSizeError).toHaveBeenCalledTimes(1));
 

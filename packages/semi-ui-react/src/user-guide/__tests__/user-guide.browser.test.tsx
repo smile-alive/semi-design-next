@@ -96,7 +96,6 @@ describe('UserGuide 弹出模式焦点', () => {
         const steps = [{ target: () => mount.querySelector<HTMLElement>('#tour-a'), title: 'Step A' }];
         const view = render(<Tour steps={steps} />, { container: mount });
         try {
-            // the popup mounts in the shadow root itself, beside the render container
             const page = within(shadow as unknown as HTMLElement);
             const opener = page.getByRole('button', { name: 'Start' });
             await userEvent.click(opener);

@@ -18,7 +18,6 @@
     type Foundation = BreadcrumbItemFoundation<Pick<ItemProps, 'route'>, object, MouseEvent>;
     type Adapter = BreadcrumbItemAdapter<Pick<ItemProps, 'route'>, object, MouseEvent>;
 
-    // Only the Breadcrumb renders items; `rest` holds the route's data-* attributes
     const { route, index, active, shouldRenderSeparator, ...rest }: ItemProps = $props();
 
     const context = getBreadcrumbContext('Breadcrumb item');

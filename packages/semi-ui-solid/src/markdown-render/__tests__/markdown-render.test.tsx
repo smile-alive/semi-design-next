@@ -15,7 +15,6 @@ import MarkdownRender, { type MarkdownRenderProps } from '../index';
 const compileCounter = () => vi.fn<() => undefined>(() => undefined);
 const settle = () => sleep(20);
 
-// MarkdownRender compiles the source asynchronously after mount, so wait for the table to show up.
 async function renderTable(props: MarkdownRenderProps) {
     const { container } = render(() => <MarkdownRender {...props} />);
     await waitFor(() => expect(container.querySelector(`.${BASE_CLASS_PREFIX}-table-container`)).not.toBeNull());
@@ -317,7 +316,6 @@ describe('MarkdownRender', () => {
         setProps({ remarkPlugins: [second] });
         await waitFor(() => expect(second).toHaveBeenCalledTimes(1));
 
-        // an options literal is a new object every time, so it compiles again
         setProps({ remarkPlugins: [[second, { a: 1 }]] });
         await waitFor(() => expect(second).toHaveBeenCalledTimes(2));
         setProps({ remarkPlugins: [[second, { a: 1 }]] });
@@ -330,7 +328,6 @@ describe('MarkdownRender', () => {
     });
 
     it('md 中把原始 HTML 交给 rehype 插件，并丢弃插件保留为 raw 的内容', async () => {
-        // stands in for rehype-raw: turns the block of raw HTML into an element
         const rawToElement = () => (tree: HastNode) => {
             tree.children = tree.children?.map((node) => (node.type === 'raw' && node.value?.includes('keep') ? { type: 'element', tagName: 'mark', properties: {}, children: [{ type: 'text', value: 'kept' }] } : node));
         };
@@ -529,7 +526,6 @@ describe('MarkdownRender', () => {
     });
 
     it('代码块的子节点是元素时不交给高亮，保留 pre 直接渲染 code', async () => {
-        // stands in for a highlighter plugin that splits the code text into spans
         const wrapCodeText = () => (tree: HastNode) => {
             const visit = (node: HastNode) => {
                 if (node.tagName === 'code' && node.properties?.className?.includes('language-js')) {

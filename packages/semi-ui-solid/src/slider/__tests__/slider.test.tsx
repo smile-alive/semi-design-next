@@ -103,7 +103,6 @@ describe('Slider', () => {
         expect(onChange).toHaveBeenLastCalledWith([0, 100]);
     });
 
-    // a click on the rail moves the handle nearest to it, in every layout direction
     it.each([
         ['horizontal', {}, SIZED, { clientX: 25, clientY: 16 }, undefined],
         ['horizontal rtl', {}, SIZED, { clientX: 75, clientY: 16 }, 'rtl'],
@@ -722,7 +721,6 @@ describe('Slider 的 tooltip', () => {
 
         render(() => <Slider style={SIZED} defaultValue={30} tooltipVisible={null as unknown as boolean} />);
         fireEvent.mouseEnter(getHandle());
-        // give a tooltip the time it would need to show
         await new Promise((resolve) => setTimeout(resolve, 100));
         expect(getTooltip()).toBeNull();
     });

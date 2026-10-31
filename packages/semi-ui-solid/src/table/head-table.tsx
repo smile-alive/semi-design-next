@@ -9,13 +9,9 @@ import TableHeader from './table-header';
 
 export interface HeadTableProps {
     columns: ColumnProps[];
-    /** Receives the header wrapper div */
     ref?: (element: HTMLDivElement) => void;
 }
 
-/**
- * When the header is fixed, it is rendered as a separate table
- */
 export default function HeadTable(props: HeadTableProps) {
     const table = useTableContext('Table.HeadTable');
 

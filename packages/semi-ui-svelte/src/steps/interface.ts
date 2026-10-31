@@ -9,7 +9,6 @@ export type StepsType = 'fill' | 'basic' | 'nav';
 
 /** One step of `dataSource`; nodes for its title and description come from the Steps snippets. Other attributes land on the step's root. */
 export interface StepData extends Omit<HTMLAttributes<HTMLDivElement>, 'title' | 'onclick'> {
-    /** Own status; when omitted it follows the Steps' current and status */
     status?: StepStatus;
     title?: string | number;
     /** Not rendered by the nav type */
@@ -41,7 +40,6 @@ export interface StepsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
     dataSource?: StepData[];
     /** Not bindable: whether it is set decides if the steps are buttons, and Svelte cannot tell a `bind:` from a plain prop */
     onChange?: (current: number) => void;
-    /** Title of each step; defaults to `item.title` */
     title?: Snippet<[StepSnippetProps]>;
     /** Description of each step; defaults to `item.description`. Not rendered by the nav type */
     description?: Snippet<[StepSnippetProps]>;

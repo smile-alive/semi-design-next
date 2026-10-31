@@ -30,7 +30,6 @@
 
     let root = $state<HTMLDivElement>();
 
-    // the foundation reads the props through getters, so it always sees the current values
     const foundationProps: CollapsibleBaseProps = {
         get isOpen() {
             return isOpen;
@@ -58,7 +57,6 @@
         },
     };
 
-    // derived once up front, so an adapter write never starts from an underived view
     let view = $state.raw(CollapsibleFoundation.deriveView(foundationProps, CollapsibleFoundation.getInitialView(foundationProps)));
 
     const { foundation } = useFoundation<Foundation, Adapter, CollapsibleBaseProps, object>(

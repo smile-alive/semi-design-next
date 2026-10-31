@@ -1,6 +1,5 @@
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 
-/** The props the foundation reads */
 export interface AvatarBaseProps {
     gap?: number;
 }

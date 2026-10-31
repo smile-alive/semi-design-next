@@ -276,7 +276,6 @@ const asyncTreeData = [
     { label: 'Leaf Node', value: '2', key: '2', isLeaf: true },
 ];
 
-// Appends two children to the expanded node, the way the docs' loadData demo does
 function AsyncTree(props: TreeProps) {
     const [data, setData] = createSignal<TreeNodeData[]>(asyncTreeData);
     const loadData = (node?: TreeNodeData) => {
@@ -655,7 +654,6 @@ describe('Tree', () => {
         search('北');
         await userEvent.click(getExpandIcon(getNode('zhongguo')));
 
-        // the filtered-out descendant must stay out of the animation, or the wrapper lands at the wrong position
         const motionWrapper = document.querySelector(`.${BASE_CLASS_PREFIX}-collapsible-wrapper`) as HTMLElement;
         expect(motionWrapper).not.toBeNull();
         expect(getNode('zhongguo').nextElementSibling).toBe(motionWrapper);
@@ -802,9 +800,6 @@ describe('Tree', () => {
         expect(getSelected()).toHaveLength(0);
     });
 
-    /**
-     * Expansion follows value or treeData changes while expandedKeys is uncontrolled
-     */
     const treeJsonData1 = {
         Node0: {
             'Child Node0-0': '0-0',
@@ -951,7 +946,6 @@ describe('Tree', () => {
         expect(spyOnDragEnter).not.toHaveBeenCalled();
 
         fireEvent.dragEnter(getNode('beimeizhou'));
-        // the drop target is auto expanded after a delay, then onDragEnter fires
         await waitFor(() => expect(spyOnDragEnter).toHaveBeenCalledTimes(1));
         expect(spyOnDragEnter).toHaveBeenCalledWith(expect.objectContaining({ node: dropNodeData, expandedKeys: ['beimeizhou'] }));
         expect(getNode('beimeizhou')).not.toHaveClass(collapsedCls);
@@ -1109,7 +1103,6 @@ describe('非数字高度的 Tree virtualize', () => {
         ));
         const wrapper = document.querySelector(`.${BASE_CLASS_PREFIX}-tree-auto-wrapper`) as HTMLElement;
         const parent = wrapper.parentElement as HTMLElement;
-        // only the parent's size matters, so only the parent is observed
         expect(resize.observed()).toEqual([parent]);
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tree-virtual-list`)).toBeNull();
 

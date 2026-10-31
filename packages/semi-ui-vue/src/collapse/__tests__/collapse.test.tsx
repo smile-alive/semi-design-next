@@ -572,7 +572,6 @@ describe('Collapse', () => {
     it('标题控制内容，内容为由标题命名的 region', async () => {
         const { container } = renderPanels({ motion: false });
         const [header] = getHeaders();
-        // collapsed without keepDOM: no content in the DOM, so no dangling aria-controls
         expect(header).not.toHaveAttribute('aria-controls');
         await userEvent.click(header);
         const region = document.getElementById(header.getAttribute('aria-controls') as string);

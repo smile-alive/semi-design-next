@@ -2,7 +2,7 @@ import { navigate } from 'astro:transitions/client';
 import type { Locale } from '#/i18n/locales';
 import { searchComponents, type ComponentEntry } from '#/lib/component-search';
 
-// 页头和对话框每次跳转都换成新节点，元素现取，事件委托到 document（与 DocLayout 的页头脚本一致）
+// view transitions replace the header and dialog on every navigation, so elements are looked up per use and events delegate to document
 const dialog = () => document.getElementById('search-dialog') as HTMLDialogElement;
 const input = () => document.getElementById('search-input') as HTMLInputElement;
 const list = () => document.getElementById('search-results') as HTMLUListElement;
@@ -18,7 +18,7 @@ function loadIndex(framework: string) {
         if (!response.ok) throw new Error(`Component search index failed to load: ${response.status} ${response.url}`);
         return response.json() as Promise<ComponentEntry[]>;
     });
-    // 失败后下次打开重新请求，错误照常抛出
+    // retry on the next open after a failure; the error still propagates
     indexes.set(framework, index);
     index.catch(() => indexes.delete(framework));
     return index;
@@ -37,10 +37,10 @@ function setActive(next: number) {
     }
 }
 
-// 同源站：中文页写「Button 按钮」，英文页只写英文名
+// same as the original site: other locales show "<English> <localized>", en-US the English name only
 const labelOf = ({ titles }: ComponentEntry, locale: Locale) => (locale === 'en-US' || titles['en-US'] === titles[locale] ? titles[locale] : `${titles['en-US']} ${titles[locale]}`);
 
-// 输入原样出现在名字里时标出命中部分；靠忽略空格、连字符才命中的不标
+// highlights only verbatim matches, not ones that need spaces and hyphens ignored
 function highlight(target: HTMLElement, label: string, query: string) {
     const q = query.trim().toLowerCase();
     const at = q ? label.toLowerCase().indexOf(q) : -1;
@@ -53,8 +53,8 @@ function highlight(target: HTMLElement, label: string, query: string) {
     target.append(label.slice(0, at), em, label.slice(at + q.length));
 }
 
-// 每个组件只建一次选项节点，之后每次输入只调整顺序和文字。重新创建的 <img> 在下一帧前常常还没解码完，
-// 图标会空一帧，连续输入时整列闪烁。对话框随页面替换，缓存按对话框节点区分
+// Options are built once and only reordered and relabeled on input: a recreated <img> is often not decoded by the
+// next frame, so the list flickers while typing. Keyed by dialog because the dialog is replaced with the page.
 const options = new WeakMap<HTMLDialogElement, Map<string, HTMLLIElement>>();
 
 function optionOf(entry: ComponentEntry) {
@@ -98,11 +98,11 @@ function render(entries: ComponentEntry[], query: string) {
 function open() {
     const target = dialog();
     if (!target || target.open) return;
-    // 在打开前清空而不是关闭时：关闭有淡出动画，那时清空会看到内容先没了
+    // clear on open, not on close: close fades out, and clearing then empties the list visibly
     input().value = '';
     render([], '');
     target.showModal();
-    // 打开时预取，输入时再等它；失败会作为未处理的 rejection 报到控制台
+    // prefetch; search() awaits it, and a failure shows up as an unhandled rejection
     void loadIndex(target.dataset.framework as string);
 }
 
@@ -138,7 +138,7 @@ document.addEventListener('keydown', (event) => {
         const step = event.key === 'ArrowDown' ? 1 : -1;
         setActive((active + step + results.length) % results.length);
     }
-    // 输入法选词时的回车只是确认拼音
+    // Enter during IME composition only confirms the candidate
     if (event.key === 'Enter' && !event.isComposing) {
         event.preventDefault();
         go(results[active]);
@@ -149,11 +149,11 @@ async function search() {
     const target = dialog();
     const entries = await loadIndex(target.dataset.framework as string);
     if (target !== dialog()) return;
-    // 索引首次加载期间可能又输入了几个字，按最新的值渲染
+    // input may have changed while the index loaded
     render(entries, input().value);
 }
 
-// 输入法拼写中的「anniu」不搜，选词结束后按汉字搜一次，避免列表随每个字母跳动
+// skip searches during IME composition and search once on compositionend, so the list does not jump with each letter
 document.addEventListener('input', (event) => {
     if (event.target === input() && !(event as InputEvent).isComposing) void search();
 });

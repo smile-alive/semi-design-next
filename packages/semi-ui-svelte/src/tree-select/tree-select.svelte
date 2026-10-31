@@ -277,7 +277,6 @@
         },
     };
 
-    /** Remembers whether the TreeSelect owned the prop when writing it back */
     const echo = (name: Bindable, next: unknown) => {
         echoes[name] = foundationProps[name] === undefined ? { value: next } : undefined;
     };
@@ -553,7 +552,6 @@
         foundation.handleKeyDown(event);
     };
 
-    // The popup is not a DOM descendant of the trigger, so its keys arrive here
     const handleContentKeyDown = (event: KeyboardEvent) => {
         handleTreeKeyDown(event);
         foundation.handleKeyDown(event);

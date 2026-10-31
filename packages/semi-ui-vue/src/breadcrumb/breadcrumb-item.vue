@@ -31,7 +31,6 @@
 
     defineSlots<BreadcrumbItemSlots>();
 
-    // A standalone Item has no Breadcrumb: no tooltip config, no shared separator, nobody to notify.
     const context = useBreadcrumbContext();
 
     const { foundation } = useFoundation<Foundation, Adapter, BreadcrumbItemProps, ItemState>(
@@ -53,7 +52,6 @@
     // A route without a name renders `{{ undefined }}`, an empty text node that is no title.
     const titleNodes = (nodes: VNode[]) => slotNodes(nodes).filter(([node]) => node.type !== Text || node.children !== '');
 
-    // Only plain text (numbers included) is truncated; elements keep their markup inline.
     const isText = (nodes: KeyedNode[]) => nodes.every(([node]) => node.type === Text);
 
     const iconProps = (node: VNode) => iconAttrs(node, compact.value ? 'small' : 'default', `${prefix}-item-icon`);

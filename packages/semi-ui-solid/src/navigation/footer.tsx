@@ -12,7 +12,6 @@ const prefix = cssClasses.PREFIX;
 
 export const NAV_FOOTER = 'Nav.Footer';
 
-// Nav renders the footer from this token (FooterView); standing alone it renders nothing
 export default function NavFooter(props: NavFooterProps) {
     return createToken(NAV_FOOTER, props);
 }

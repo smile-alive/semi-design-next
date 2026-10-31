@@ -110,7 +110,6 @@ describe('Svelte DatePicker 变化与打开状态的通知次数', () => {
     it('对与当前选中值不同的已输入日期按 Enter 时报告变化', async () => {
         const { store } = await setup({ value: baseDate });
         const input = getInput();
-        // the text reaches the input without an input event, so only Enter parses it
         await fireEvent.keyDown(input, { key: 'Enter', target: { value: '2019-09-20' } });
         await settle();
         expect(changes(store)).toEqual(['change 2019-09-20 00:00:00 "2019-09-20"']);

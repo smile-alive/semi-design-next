@@ -92,13 +92,9 @@ export interface VirtualizeProps {
 }
 
 export interface PaginationProps {
-    /** Controlled page */
     currentPage?: number;
-    /** Uncontrolled initial page */
     defaultCurrentPage?: number;
-    /** Number of items per page */
     pageSize?: number;
-    /** Callback when page changes */
     onPageChange?: (currentPage: number) => void;
 }
 
@@ -119,7 +115,6 @@ export interface SelectedHeaderProps {
 }
 
 export interface TransferState {
-    /** The uncontrolled selection */
     selectedValues: Array<string | number>;
     inputValue: string;
     /** The uncontrolled left page; a numeric `pagination.currentPage` takes its place */
@@ -153,7 +148,6 @@ export interface TransferProps extends ElementProps<'div', 'defaultValue' | 'onC
     showPath?: boolean;
     loading?: boolean;
     virtualize?: VirtualizeProps;
-    /** Pagination of the left panel */
     pagination?: PaginationProps;
     onChange?: (values: Array<string | number>, items: Array<DataItem>) => void;
     onSelect?: (item: DataItem) => void;

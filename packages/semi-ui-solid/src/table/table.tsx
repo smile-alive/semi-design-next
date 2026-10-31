@@ -93,23 +93,18 @@ type SelectionConfig = Pick<RowSelectionProps<AnyRecord>, 'class' | 'fixed' | 'w
 
 const sameSelectionConfig = (a: SelectionConfig | null, b: SelectionConfig | null) => a === b || (a !== null && b !== null && (Object.keys(a) as (keyof SelectionConfig)[]).every((key) => a[key] === b[key]));
 
-// the foundation keeps the column objects as given, typed with its own callbacks
 const toFoundationColumns = (columns: ColumnProps[]) => columns as BaseColumnProps<AnyRecord>[];
 
-/** A copy of the column tree, so the keys assignColumnKeys writes and the merged inner columns stay off the user's objects */
+// a copy, so the keys assignColumnKeys writes and the merged inner columns stay off the user's objects
 const copyColumns = (columns: ColumnProps[]): ColumnProps[] => columns.map((column) => (Array.isArray(column.children) && column.children.length ? { ...column, children: copyColumns(column.children) } : { ...column }));
 
-/**
- * The columns with the expand and selection columns added; a user column with the same key overrides their fields.
- * Sorting and filtering are composed by the header cell from the queries, so they do not rebuild the columns.
- */
+// A user column with the same key overrides the inner column's fields. Sorting and filtering are composed by the header cell from the queries, so they do not rebuild the columns.
 function buildColumns(cachedColumns: ColumnProps[], expandColumn: ColumnProps | null, selectionColumn: ColumnProps | null) {
     const columns = placeInnerColumns(copyColumns(cachedColumns), [expandColumn, selectionColumn]);
     assignColumnKeys(columns);
     return columns;
 }
 
-/** The Table without the global defaults, which the exported Table applies */
 export default function NormalTable(props: TableProps) {
     const [local, rest] = splitProps(props, TABLE_PROP_KEYS);
 
@@ -157,7 +152,6 @@ export default function NormalTable(props: TableProps) {
         // initialized in place, so they are copies; the clone keeps the nodes a column holds
         (fprops) => TableFoundation.getInitialState<AnyRecord>(fprops, toFoundationColumns(flattened()), TableFoundation.initColumnsFilteredValueAndSorterOrder<AnyRecord>(cloneDeep(toFoundationColumns(flattened())))),
         (base) => {
-            // the callbacks of the latest rowSelection prop, merged into state
             const getRowSelectionFn = (funcName: string) => {
                 const func = get(base.getState('rowSelection'), funcName);
                 return typeof func === 'function' ? func : undefined;
@@ -287,7 +281,6 @@ export default function NormalTable(props: TableProps) {
         return merged ? untrack(() => TableFoundation.formatPaginationInfo(merged, pageText, formatPageText)) : null;
     });
 
-    // the methods read the state only when called
     const handle: TableHandle = {
         getCurrentPageData: () => {
             const pageData = foundation.getCurrentPageData();
@@ -323,7 +316,6 @@ export default function NormalTable(props: TableProps) {
     const flattenedColumns = createMemo(() => flattenColumns(columns()) as ColumnProps[]);
     const anyColumnFixed = createMemo(() => columns().some((column) => Boolean(column.fixed)));
 
-    // the header renders as a separate table above the body
     const fixedHeader = () => Boolean(local.scroll?.y) || Boolean(local.sticky);
 
     const view = createMemo(() => ({
@@ -341,7 +333,6 @@ export default function NormalTable(props: TableProps) {
 
     const needSyncTableWidth = () => anyColumnFixed() || (Boolean(local.showHeader) && fixedHeader());
 
-    // the visible title names the table unless the user names it
     const titleNamesTable = () => hasContent(titleNode()) && !local['aria-label'] && !local['aria-labelledby'];
 
     const tableAria = createMemo(() => ({

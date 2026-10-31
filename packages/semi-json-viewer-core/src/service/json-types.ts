@@ -1,9 +1,6 @@
 /** Based on https://github.com/microsoft/vscode-json-languageservice with modifications for custom requirements */
 import type { Position } from '../common/position';
 import type { Range } from '../common/range';
-/**
- * Error codes used by diagnostics
- */
 export enum ErrorCode {
     Undefined = 0,
     EnumValueMismatch = 1,
@@ -146,21 +143,9 @@ export namespace CompletionItemKind {
 export type CompletionItemKind = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25;
 
 export namespace InsertTextFormat {
-    /**
-     * The primary text to be inserted is treated as a plain string.
-     */
     export const PlainText = 1 as const;
 
-    /**
-     * The primary text to be inserted is treated as a snippet.
-     *
-     * A snippet can define tab stops and placeholders with `$1`, `$2`
-     * and `${3:foo}`. `$0` defines the final tab stop, it defaults to
-     * the end of the snippet. Placeholders with equal identifiers are linked,
-     * that is typing in one will update others too.
-     *
-     * See also: https://microsoft.github.io/language-server-protocol/specifications/specification-current/#snippet_syntax
-     */
+    /** See https://microsoft.github.io/language-server-protocol/specifications/specification-current/#snippet_syntax */
     export const Snippet = 2 as const;
 }
 

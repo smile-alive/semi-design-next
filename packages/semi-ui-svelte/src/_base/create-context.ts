@@ -19,7 +19,6 @@ export function createContext<T>(name: string, options?: { optional?: false }): 
 export function createContext<T>(name: string, { optional = false, defaultValue }: ContextOptions<T> = {}): Context<T, T | undefined, T | undefined> {
     const [get, set, has] = createSvelteContext<T>();
 
-    // `caller` names the child in the error, e.g. getCollapseContext('Collapse.Panel')
     const getContext = (caller = 'This component') => {
         if (has()) {
             return get();

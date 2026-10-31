@@ -606,7 +606,6 @@ describe('Cropper', () => {
     });
 
     it('getCropperCanvas 按图片分辨率返回裁剪区域', () => {
-        // jsdom has no canvas implementation; only the canvas size is asserted
         vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockImplementation(
             () =>
                 new Proxy({} as Record<PropertyKey, unknown>, {

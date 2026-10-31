@@ -36,7 +36,6 @@ export function vueEslint(overlappingRules: Linter.Config[]): Linter.Config[] {
                 'vue/v-on-event-hyphenation': ['error', 'never'],
                 'vue/attributes-order': ['error', { alphabetical: true }],
                 'vue/no-template-target-blank': 'error',
-                // Guard the current SFC conventions: script before template, macros declared by type, no stray blocks
                 'vue/padding-line-between-blocks': 'error',
                 'vue/block-order': ['error', { order: ['script', 'template'] }],
                 'vue/prefer-define-options': 'error',

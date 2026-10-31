@@ -960,7 +960,6 @@ describe('Chat 上传', () => {
         const onChatsChange = vi.fn<Listener<'onChatsChange'>>();
         const onMessageSend = vi.fn<Listener<'onMessageSend'>>();
         const { handle } = renderChat({ onChatsChange, onMessageSend });
-        // Only the fields the message builder reads; the rest of FileItem is left out
         const attachment = [
             { name: 'a.png', url: 'https://semi.design/a.png', fileInstance: { type: 'image/png' } },
             { name: 'b.pdf', url: 'https://semi.design/b.pdf', size: '1KB', fileInstance: { type: 'application/pdf' } },

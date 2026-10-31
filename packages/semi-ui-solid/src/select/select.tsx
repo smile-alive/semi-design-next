@@ -114,7 +114,6 @@ export interface SelectHandle {
     open: () => void;
     close: () => void;
     clearInput: () => void;
-    /** Selects every shown, enabled option (multiple only) */
     selectAll: () => void;
     deselectAll: () => void;
     /** Searches as if `value` were typed into the search input */
@@ -202,7 +201,6 @@ export interface SelectProps<T = BasicSelectValue, Multiple extends boolean | un
     onBlur?: (e: FocusEvent | MouseEvent) => void;
     /** A scroll in the option list, the virtual list included */
     onListScroll?: (e: Event) => void;
-    /** `Select.Option`s and `Select.OptGroup`s */
     children?: JSX.Element;
     preventScroll?: boolean;
     showRestTagsPopover?: boolean;
@@ -541,7 +539,6 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
 
     const activeDescendant = () => {
         const { isOpen, focusIndex } = state();
-        // while loading the list shows a spinner instead of the options
         return isOpen && !local.loading && focusIndex !== -1 && focusIndex < visibleOptions().length ? optionId(focusIndex) : undefined;
     };
 

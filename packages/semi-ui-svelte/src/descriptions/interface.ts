@@ -5,7 +5,6 @@ export type DescriptionsAlign = 'center' | 'justify' | 'left' | 'plain';
 export type DescriptionsLayout = 'horizontal' | 'vertical';
 export type DescriptionsSize = 'small' | 'medium' | 'large';
 
-/** An item of `data`; nodes for its key and value come from the `itemKey` and `value` snippets */
 export interface DescriptionsData {
     key?: string | number;
     value?: string | number;

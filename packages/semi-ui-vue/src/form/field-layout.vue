@@ -21,7 +21,6 @@
             labelAlign?: string;
             labelCol?: ColProps;
             wrapperCol?: ColProps;
-            /** Wraps the columns in the field's own Row */
             row?: boolean;
             /** The Label's props; undefined renders no Label */
             label?: LabelProps & { id: string };

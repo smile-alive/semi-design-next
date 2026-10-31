@@ -5,7 +5,6 @@ export interface CalendarMonthAdapter<P extends object = object, S extends objec
     openCard: (key: string) => void;
 }
 
-/** Drives the month view's "more" card */
 export default class CalendarMonthFoundation<P extends object = object, S extends object = object> extends BaseFoundation<CalendarMonthAdapter<P, S>, P, S> {
     /** Closes the "more" card from its close button or a mousedown outside */
     closeCard = (e: unknown, key: string) => {

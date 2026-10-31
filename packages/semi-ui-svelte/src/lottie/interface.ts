@@ -11,7 +11,7 @@ export interface LottieAnimation extends AnimationSource {}
 export interface LottieModule extends ModuleSource {}
 
 export interface LottieProps extends HTMLAttributes<HTMLDivElement> {
-    /** The options of lottie-web's `loadAnimation`. It reloads when its content changes. */
+    /** It reloads when its content changes. */
     params: LottieParams;
     width?: string;
     height?: string;

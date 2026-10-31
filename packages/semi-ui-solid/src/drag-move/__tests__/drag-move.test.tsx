@@ -40,7 +40,6 @@ function render(ui: () => JSX.Element) {
     return result;
 }
 
-// jsdom has no layout; give elements the offset sizes the absolute strategy reads
 function setSize(element: HTMLElement, width: number, height: number) {
     Object.defineProperty(element, 'offsetWidth', { configurable: true, value: width });
     Object.defineProperty(element, 'offsetHeight', { configurable: true, value: height });
@@ -478,7 +477,6 @@ describe('DragMove', () => {
         const oldHandle = screen.getByTestId('handle');
 
         setKey('b');
-        // the MutationObserver callback re-prepares the handler
         await vi.waitFor(() => {
             expect(screen.getByTestId('handle')).not.toBe(oldHandle);
             expect(screen.getByTestId('handle')).toHaveStyle({ cursor: 'move', touchAction: 'none' });

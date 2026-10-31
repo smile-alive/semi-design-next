@@ -161,7 +161,7 @@
     const overflowNodes = () => slotNodes(slots.overflow?.({ items: view.value.overflow as T[], position: props.collapseFrom }) ?? []).filter(([node]) => node.type !== Text || String(node.children).trim() !== '');
 
     // Scroll mode: the first element of each item's slot output carries the data-scrollkey the observer reports by;
-    // <component :is> keeps the element's own ref. An item without an element is skipped.
+    // <component :is> keeps the element's own ref.
     const scrollItems = () =>
         view.value.visible.flatMap((item, index) => {
             const node = slotNodes(slots.item?.({ item: item as T, index }) ?? []).find(([n]) => n.type !== Text)?.[0];

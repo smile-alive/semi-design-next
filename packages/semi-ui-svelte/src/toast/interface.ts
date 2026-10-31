@@ -17,7 +17,6 @@ export interface ToastProps extends Omit<FoundationToastProps, 'content' | 'icon
     motion?: boolean;
 }
 
-/** Options of one toast opened through the static methods */
 export type ToastOptions = Omit<ToastProps, 'type'>;
 
 /** Props of the single toast the list renders; list-level options are stripped before they reach it */
@@ -29,7 +28,6 @@ export interface ToastItemProps extends Omit<ToastProps, 'content' | 'stack' | '
     /** The store removed the toast: it plays its leave animation, then calls `onLeaveEnd` */
     leaving?: boolean;
     onLeaveEnd?: () => void;
-    /** Asks the list to remove the toast, with its id */
     close?: (id: string) => void;
 }
 

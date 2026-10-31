@@ -10,7 +10,6 @@ export interface AutoSizerProps {
     children: (size: { readonly height: number; readonly width: number | string }) => JSX.Element;
 }
 
-/** Passes a pixel height to its children: `defaultHeight` when it is a number, else the parent's content height */
 export default function AutoSizer(props: AutoSizerProps) {
     // the starting value only: later heights come from measuring the parent
     const [height, setHeight] = createSignal(untrack(() => props.defaultHeight) || 0);

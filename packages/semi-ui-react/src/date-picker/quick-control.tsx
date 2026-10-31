@@ -21,7 +21,6 @@ export interface QuickControlProps {
 
 const noPresets: PresetsType = [];
 
-/** The preset buttons of the DatePicker panel */
 export default function QuickControl({ presets = noPresets, onPresetClick = noop, type, presetPosition = 'bottom', insetInput, locale }: QuickControlProps) {
     if (!presets.length) {
         return null;

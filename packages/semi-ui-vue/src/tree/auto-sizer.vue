@@ -5,7 +5,6 @@
     import useResizeObserver from '../_base/use-resize-observer';
     import type { AutoSizerProps } from './interface';
 
-    /** Passes a pixel height to its slot: `defaultHeight` when it is a number, else the parent's content height */
     const props = withDefaults(defineProps<AutoSizerProps>(), { defaultWidth: '100%' });
     defineSlots<{ default(props: { height: number; width: number | string }): unknown }>();
 

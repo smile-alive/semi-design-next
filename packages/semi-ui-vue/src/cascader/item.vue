@@ -26,7 +26,6 @@
         checkedKeys: Set<string>;
         halfCheckedKeys: Set<string>;
         showNext: 'click' | 'hover';
-        /** the search results, a listbox, rather than the tree */
         searchable: boolean;
         keyword: string;
         /** a node without isLeaf is a branch while loadData is set */
@@ -37,7 +36,6 @@
         virtualize?: CascaderVirtualize;
         /** id of the tree, or of the listbox of search results; the combobox's aria-controls points at it */
         id: string;
-        /** the popup's name, the same as the combobox's */
         ariaLabel?: string;
         ariaLabelledby?: string;
         /** the option the arrow keys are on, pointed at by the combobox's aria-activedescendant */
@@ -91,7 +89,6 @@
 
     const isBranch = (item: CascaderEntity) => CascaderFoundation.isBranch(item.data, props.hasLoadData);
 
-    // one state per row: the class and the aria attributes read the same object from the v-for alias
     const treeRow = (item: CascaderEntity, index: number) => ({ item, index, state: CascaderFoundation.getTreeItemState(item.key, props, props.multiple, isBranch(item)) });
 
     const treeItemClass = (item: CascaderEntity, state: ReturnType<typeof CascaderFoundation.getTreeItemState>) => [
@@ -139,7 +136,6 @@
         return slotNodes(rendered);
     };
 
-    // Renders the slot once per row so the template reads the nodes from the v-for alias
     const resultRow = (item: SearchData) => ({ item, nodes: filterNodes(item) });
 
     // Only an element can carry the option's id and role; text and several nodes get an li around them. Known limit: a

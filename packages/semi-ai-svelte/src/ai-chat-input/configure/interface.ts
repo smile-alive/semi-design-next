@@ -14,13 +14,11 @@ export interface ConfigureProps {
 }
 
 export interface ConfigureHandle {
-    /** The current value of every item */
     getConfigureValue: () => LeftMenuChangeProps;
 }
 
 /** What every item declares itself; the rest goes to the wrapped component */
 export interface ConfigureItemOwnProps<V> {
-    /** The key of this item in the Configure value */
     field: string;
     /** Seeds the field when the item is mounted */
     initValue?: V;
@@ -32,7 +30,6 @@ export type ConfigureSelectProps = Omit<SelectProps, 'value' | 'onChange'> & Con
 export type ConfigureRadioButtonProps = Omit<RadioGroupProps, 'value' | 'onChange'> & ConfigureItemOwnProps<RadioValue | undefined>;
 
 export interface ConfigureButtonProps extends Omit<ButtonProps, 'onclick' | 'value'>, ConfigureItemOwnProps<boolean> {
-    /** The value after the toggle */
     onClick?: (value: boolean) => void;
 }
 
@@ -55,7 +52,6 @@ export interface McpProps extends Omit<DropdownProps, 'children' | 'child' | 'co
     num?: number;
     showConfigure?: boolean;
     onConfigureButtonClick?: () => void;
-    /** Replaces the built-in menu below the header */
     children?: Snippet;
     optionIcon?: Snippet<[McpOptionIconSnippetProps]>;
 }

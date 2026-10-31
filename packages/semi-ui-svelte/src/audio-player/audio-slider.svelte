@@ -19,8 +19,6 @@
 
     // $size-audio-player-slider-dot
     const dotSize = 16;
-
-    // the duration is 0 until the metadata loads
     const percent = $derived(max ? (value / max) * 100 : 0);
 
     // the popup is anchored to the slider's center, so only a translate moves it to the pointer; the vertical offset
@@ -53,7 +51,6 @@
         onPointer(event, true);
     };
 
-    // the preview belongs to the pointer; a keyboard use shows the value
     const clearPreview = () => {
         movingInfo = null;
     };

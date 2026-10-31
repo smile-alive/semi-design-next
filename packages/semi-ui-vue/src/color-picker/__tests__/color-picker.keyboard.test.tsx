@@ -62,7 +62,6 @@ describe('ColorPicker 键盘操作', () => {
         await userEvent.keyboard('{ArrowDown}');
         expect(last()).toMatchObject({ s: 49, v: 60 });
         expect(getSlider(text.saturation)).toHaveValue('49');
-        // the keys follow the screen in the two-dimensional area, whichever of its sliders has focus
         await userEvent.keyboard('{ArrowLeft}');
         expect(last()).toMatchObject({ s: 48, v: 60 });
         getSlider(text.saturation).focus();

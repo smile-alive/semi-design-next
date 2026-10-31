@@ -14,7 +14,6 @@ export function resolveValue(value: string, colors: string[], uid: string) {
     return value.replace(/\{(?:fill(\d)|uid)\}/g, (_match, index?: string) => (index === undefined ? uid : colors[Number(index)]));
 }
 
-/** The colours of a multi-colour icon: `num` is the icon's `fills`, `fill` the colour or colours the user passed */
 export function getFillColor(fill: string | string[] | undefined, num: number) {
     if (typeof fill === 'string') {
         return Array.from({ length: num }, () => fill);

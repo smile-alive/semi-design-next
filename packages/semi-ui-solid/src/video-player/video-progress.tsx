@@ -46,7 +46,6 @@ export default function VideoProgress(props: VideoProgressProps) {
         return info ? `${info.offset}px 0` : undefined;
     };
 
-    // the pointer's position, or the playhead when the bar is used by keyboard
     const renderTooltipContent = () => {
         const info = state().movingInfo;
         const previewValue = info ? info.value : props.value;

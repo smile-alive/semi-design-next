@@ -13,7 +13,6 @@ function collectTokens(node: unknown, tokens: Token<ColumnElementProps>[]) {
     }
 }
 
-/** Converts `Table.Column` children into column objects; anything else is dropped */
 export default function getColumns(children: unknown): ColumnProps[] {
     const tokens: Token<ColumnElementProps>[] = [];
     collectTokens(children, tokens);

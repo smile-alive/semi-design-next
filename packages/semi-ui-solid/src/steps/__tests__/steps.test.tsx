@@ -552,7 +552,6 @@ describe('Steps 响应式', () => {
         expect(second).toHaveAttribute('aria-current', 'step');
         expect(first).not.toHaveAttribute('aria-current');
         setStatus('error');
-        // nav has neither a status class nor next-error
         expect(second.classList.contains(`${ITEM}-error`)).toBe(type !== 'nav');
         expect(first.classList.contains(`${PREFIX}-next-error`)).toBe(type !== 'nav');
         const handler = vi.fn<(current: number) => void>();
@@ -636,7 +635,6 @@ describe('Steps 响应式', () => {
         expect(items).toHaveLength(2);
         expect(container.querySelector('.own')).toBeNull();
         expect(items[1]).toHaveClass(type === 'fill' ? `${ITEM}-process` : `${ITEM}-active`);
-        // nav shows no step number
         expect(items[1]).toHaveTextContent(type === 'nav' ? 'B' : '2B');
         expect(warn).toHaveBeenCalledWith(expect.stringContaining('[Semi Steps]'));
     });

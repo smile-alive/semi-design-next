@@ -5,9 +5,7 @@ import type { HTMLAttributes } from 'svelte/elements';
 export interface SkeletonProps extends Omit<HTMLAttributes<HTMLDivElement>, 'placeholder'> {
     active?: boolean;
     loading?: boolean;
-    /** Shown while `loading` is true */
     placeholder?: Snippet;
-    /** Shown once `loading` is false */
     children?: Snippet;
 }
 

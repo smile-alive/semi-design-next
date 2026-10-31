@@ -72,7 +72,6 @@ export default function Switch(rawProps: SwitchProps) {
 
     const checked = () => SwitchFoundation.deriveChecked(local, state());
 
-    // only the text of the current state is created, and none on a small switch, which renders neither
     const checkedText = children(() => (checked() && local.size !== 'small' ? local.checkedText : undefined));
     const uncheckedText = children(() => (!checked() && local.size !== 'small' ? local.uncheckedText : undefined));
 

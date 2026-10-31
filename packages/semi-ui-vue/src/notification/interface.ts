@@ -8,7 +8,6 @@ export type { NoticePosition, NoticeTheme, NoticeType } from '@fibrae/semi-found
 /** Same shape as ToastNode: a text, a VNode, or a function rendered as a functional component (it may inject) */
 export type NotificationNode = string | VNode | (() => VNodeChild);
 
-/** Options of one notification for the static API, useNotification and overrideDefaultProps.Notification */
 export interface NoticeProps extends Omit<FoundationNoticeProps, 'title' | 'content' | 'icon' | 'className' | 'style' | 'close' | 'onClick'> {
     title?: NotificationNode;
     content?: NotificationNode;
@@ -38,7 +37,6 @@ export interface NotificationHookApi {
 }
 
 export interface NoticeHandle {
-    /** Starts the duration over */
     restartCloseTimer: () => void;
     pauseCloseTimer: () => void;
     resumeCloseTimer: () => void;

@@ -199,7 +199,6 @@ describe('Card', () => {
     });
 
     it('忽略非数组的 actions，无 children 时不渲染骨架屏', () => {
-        // a deliberately invalid value: actions must be an array
         const notAnArray = 'a' as unknown as ReactNode[];
         const { container } = render(<Card actions={notAnArray} loading />);
         expect(container.querySelector(`.${prefixCls}-body-actions`)).toBeNull();

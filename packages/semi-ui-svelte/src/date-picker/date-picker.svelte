@@ -69,7 +69,6 @@
         presetPosition = defaults('presetPosition', 'bottom'),
         timePickerOpts = defaults('timePickerOpts'),
         yearAndMonthOpts = defaults('yearAndMonthOpts'),
-        // read below: ConfigProvider's timeZone comes before the global default
         timeZone,
         motion = defaults('motion', true),
         autoAdjustOverflow = defaults('autoAdjustOverflow', true),
@@ -140,8 +139,6 @@
     const shownPlaceholder = $derived(placeholder || (locale().locale.placeholder as Record<string, string | string[] | undefined>)[type] || '');
     const hasPresets = $derived(Boolean(presets?.length));
     const isTriggerButton = $derived(Boolean(trigger) && !customTriggerFocusable);
-
-    // A range with a custom trigger has no range inputs
     const hasRangeInputs = $derived(isRangeType(type) && !trigger);
     const attrs = $derived(splitControlAttrs(rest, (key) => controlKeys.includes(key)));
     const rootRole = $derived((rest.role as string | undefined) ?? (hasRangeInputs || rest['aria-label'] ? 'group' : undefined));
@@ -205,7 +202,6 @@
         get autoFocus() {
             return autofocus;
         },
-        // the foundation tells a custom trigger by a function here
         get triggerRender() {
             return trigger ? customTrigger : undefined;
         },
@@ -459,14 +455,12 @@
         }
     });
 
-    /** Opens the panel; a bound `open` decides through its setter */
     export function open() {
         foundation.open();
         // once a user action wrote `open`, the prop (not the foundation state) decides whether the panel shows
         openProp = true;
     }
 
-    /** Closes the panel; a bound `open` decides through its setter */
     export function close() {
         foundation.close();
         openProp = false;
@@ -517,7 +511,6 @@
                 {#if topSlot}
                     <div class={`${prefixCls}-topSlot`} x-semi-prop="topSlot">{@render topSlot()}</div>
                 {/if}
-                <!-- monthRange does not support presetPosition -->
                 {#if presetPosition === 'top' && type !== 'monthRange'}
                     {@render quickControls()}
                 {/if}

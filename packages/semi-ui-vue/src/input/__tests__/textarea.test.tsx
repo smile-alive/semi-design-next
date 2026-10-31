@@ -25,7 +25,6 @@ function keyDownPrevented(el: Element, init: KeyboardEventInit) {
     el.dispatchEvent(event);
     return event.defaultPrevented;
 }
-// A function ref receives the handle that defineExpose builds
 function renderWithHandle(props: TextAreaProps & Record<string, unknown> = {}) {
     const refFn = vi.fn<(handle: TextAreaHandle | null) => void>();
     const Host = (hostProps: Record<string, unknown>) => <TextArea {...hostProps} ref={(value) => refFn(value as TextAreaHandle | null)} />;

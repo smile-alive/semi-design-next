@@ -24,7 +24,6 @@ const getRadios = () => screen.getAllByRole('radio');
 const getFullStars = () => document.querySelectorAll(`.${prefixCls}-star-full`);
 const getHalfStars = () => document.querySelectorAll(`.${prefixCls}-star-half`);
 const tabStops = () => getRadios().filter((radio) => radio.getAttribute('tabindex') === '0');
-// the list's aria-label summarizes the committed value in text
 const expectValue = (value: number, count = 5) => expect(getList()).toHaveAttribute('aria-label', `Rating: ${value} of ${count} star${value === 1 ? '' : 's'},`);
 
 describe('Rating', () => {

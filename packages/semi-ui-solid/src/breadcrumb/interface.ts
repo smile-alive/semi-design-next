@@ -11,7 +11,6 @@ export interface showToolTipProps {
 
 export type MoreType = 'default' | 'popover';
 
-/** What a click on an item written as children reports: the children become `name` */
 export interface BreadcrumbItemInfo extends BaseBreadcrumbItemInfo {
     name?: JSX.Element;
 }
@@ -31,7 +30,6 @@ export interface BreadcrumbItemProps extends ElementProps<'span', 'onClick'> {
     onClick?: (item: BreadcrumbItemInfo | RouteProps, e: MouseEvent) => void;
 }
 
-/** What the Breadcrumb adds to the props an item was written with */
 export interface BreadcrumbItemViewProps extends BreadcrumbItemProps {
     active?: boolean;
     shouldRenderSeparator?: boolean;
@@ -52,7 +50,6 @@ export interface BreadcrumbProps extends ElementProps<'nav', 'onClick'> {
     autoCollapse?: boolean;
     /** Customizes the content of the ellipsis area; receives the hidden routes, or the props of the hidden Breadcrumb.Item children */
     renderMore?: (restItems: Array<RouteProps | BreadcrumbItemProps>) => JSX.Element;
-    /** Style type for the ellipsis area */
     moreType?: MoreType;
     activeIndex?: number;
 }

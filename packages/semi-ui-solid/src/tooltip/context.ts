@@ -46,7 +46,6 @@ export function useSpecialTrigger(state: Accessor<Partial<SpecialTriggerState>>,
  * reach the ancestors through the component tree. A Tooltip provides one value for its trigger and one for its content.
  */
 export interface TooltipPopups {
-    /** Registers a descendant popup with this Tooltip and every enclosing one; returns the unregistration */
     register: (popup: Accessor<HTMLElement | undefined>) => () => void;
     /**
      * A mouseenter or mouseleave on a descendant popup, handed to every enclosing Tooltip whose content renders it.

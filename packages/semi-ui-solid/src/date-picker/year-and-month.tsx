@@ -16,15 +16,12 @@ export type YearAndMonthOpts = Partial<Omit<ScrollItemProps, 'list' | 'onSelect'
 export interface YearAndMonthProps extends Omit<YearAndMonthFoundationProps, 'renderQuickControls' | 'renderDateInput' | 'locale'> {
     yearAndMonthOpts?: YearAndMonthOpts;
     locale: Locale['DatePicker'];
-    /** Rendered beside the columns when `presetPosition` is left or right */
     renderQuickControls?: () => JSX.Element;
-    /** Rendered above the columns */
     renderDateInput?: () => JSX.Element;
     /** Receives the handle once, while the panel is created */
     ref?: Ref<YearAndMonthHandle>;
 }
 
-/** Called by MonthsGrid to re-centre the year and month columns, e.g. after the panel resizes */
 export interface YearAndMonthHandle {
     reselect: () => void;
 }
@@ -40,7 +37,6 @@ const defaultProps = {
     type: 'month',
 } satisfies Partial<YearAndMonthProps>;
 
-/** The year and month scroll columns, for the month, monthRange and year types and the year switch of a date panel */
 export default function YearAndMonth(rawProps: YearAndMonthProps) {
     const props = mergeProps(defaultProps, rawProps);
 

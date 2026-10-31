@@ -48,27 +48,13 @@ export const react: FrameworkLint = {
                         type: 'alphabetical',
                         order: 'asc',
                         ignoreCase: true,
-                        groups: [
-                            'react-reserved', // key, ref
-                            'identity', // id, name
-                            'element-type', // as, type, htmlFor
-                            'class-name',
-                            'style',
-                            'data',
-                            'a11y', // role, aria-*, tabIndex, title and the like
-                            'form-state', // value, checked, disabled and the like
-                            'unknown', // everything else, alphabetical
-                            'render', // render*, *Render and node props such as icon
-                            'react-special', // children, dangerouslySetInnerHTML, suppress*Warning
-                            'callback', // on*, handle*
-                        ],
+                        groups: ['react-reserved', 'identity', 'element-type', 'class-name', 'style', 'data', 'a11y', 'form-state', 'unknown', 'render', 'react-special', 'callback'],
                         customGroups: [
                             { groupName: 'react-reserved', elementNamePattern: '^(key|ref)$' },
                             { groupName: 'identity', elementNamePattern: '^(id|name)$' },
                             { groupName: 'element-type', elementNamePattern: '^(as|component|type|htmlFor)$' },
                             {
                                 groupName: 'class-name',
-                                // multi-word prefixes such as lineNumberClassName and Resizable's handleWrapperClass
                                 elementNamePattern: '^(className|classNames|[a-z][a-zA-Z]*(ClassName|Class))$',
                             },
                             // matched before callback, so handleStyle and handleWrapperStyle are not handlers

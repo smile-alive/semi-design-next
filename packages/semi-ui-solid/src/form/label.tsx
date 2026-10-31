@@ -11,10 +11,8 @@ import useLocale from '../locale/use-locale';
 const prefixCls = cssClasses.PREFIX;
 
 export interface LabelProps extends ElementProps<'label'> {
-    /** text-align of label */
     align?: string;
     disabled?: boolean;
-    /** Whether to display the required * symbol */
     required?: boolean;
     /** Content of label; `children` when not set */
     text?: JSX.Element;

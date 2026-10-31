@@ -59,14 +59,12 @@ export class LinkedMap<K, V> {
             this.#head = undefined;
             this.#tail = undefined;
         } else if (item === this.#head) {
-            // size === 1 is handled above
             if (!item.next) {
                 throw new Error('Invalid list');
             }
             item.next.previous = undefined;
             this.#head = item.next;
         } else if (item === this.#tail) {
-            // size === 1 is handled above
             if (!item.previous) {
                 throw new Error('Invalid list');
             }
@@ -103,11 +101,9 @@ export class LinkedMap<K, V> {
             const previous = item.previous;
 
             if (item === this.#tail) {
-                // previous is defined: the item is the tail but not the head
                 previous.next = undefined;
                 this.#tail = previous;
             } else {
-                // next and previous are defined: the item is neither head nor tail
                 next.previous = previous;
                 previous.next = next;
             }
@@ -126,11 +122,9 @@ export class LinkedMap<K, V> {
             const previous = item.previous;
 
             if (item === this.#head) {
-                // next is defined: the item is the head but not the tail
                 next.previous = undefined;
                 this.#head = next;
             } else {
-                // next and previous are defined: the item is neither head nor tail
                 next.previous = previous;
                 previous.next = next;
             }

@@ -2,9 +2,6 @@
     import { List, ListItem } from '../index';
     import type { ListItemProps, ListItemSnippetProps, ListProps } from '../interface';
 
-    // `mode` picks what fills the List: the `item` snippet, ListItem children, both, or nothing.
-    // `chrome` picks the header, footer, emptyContent and loadMore snippets to supply.
-    // `store` is a reactive object a test writes to.
     let {
         mode = 'item',
         rows = [],

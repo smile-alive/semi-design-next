@@ -4,7 +4,6 @@
     interface Store {
         kind?: 'text' | 'title' | 'paragraph' | 'numeral' | 'typography';
         text?: string;
-        // props of the component under test: snippets, callbacks and plain values
         props?: Record<string, unknown>;
     }
 

@@ -521,7 +521,6 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
     { name: 'cropper/默认', covers: ['Cropper'], render: () => <Cropper src={imageSrc} style={{ width: '300px', height: '200px' }} /> },
     { name: 'date-picker/默认', covers: ['DatePicker'], render: () => <DatePicker placeholder="Pick a date" /> },
     { name: 'date-picker/受控值', covers: ['DatePicker'], render: () => <DatePicker value={day} />, html: ['value="2019-08-08"'] },
-    // Start and end differ, so a swapped or empty end input fails the substring checks
     { name: 'date-picker/dateRange 受控值', covers: ['DatePicker'], render: () => <DatePicker type="dateRange" value={[rangeStart, day]} />, html: ['value="2019-08-01"', 'value="2019-08-08"'] },
     { name: 'date-picker/默认打开', covers: ['DatePicker'], render: () => <DatePicker defaultValue={day} defaultOpen />, html: ['value="2019-08-08"'], mountDiff: ['aria-expanded', 'aria-controls'] },
     {
@@ -1704,7 +1703,6 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
         name: 'user-guide/modal 模式默认打开',
         covers: ['UserGuide'],
         render: () => <UserGuide mode="modal" visible steps={[{ title: 'Guide title', description: 'Guide body' }]} renderCover={() => <img alt="Guide cover" />} renderDescription={() => <b>Guide body</b>} />,
-        // the dialog opens after hydration, so the server has nothing to compare with
         mountDiff: ['*'],
     },
     { name: 'video-player/默认', covers: ['VideoPlayer'], render: () => <VideoPlayer src={videoSrc} height={300} /> },

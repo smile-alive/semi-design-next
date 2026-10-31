@@ -4,7 +4,6 @@
     import { useNav } from './context';
     import type { NavItemProps, SubNavProps } from './interface';
 
-    // Hands the item's li to the Nav's #wrapper slot when there is one; otherwise the li is the single root.
     // Known limit: a #wrapper added or removed at runtime reaches only items that re-render; count slot changes in the
     // context view if such a use appears.
     defineOptions({ inheritAttrs: false });

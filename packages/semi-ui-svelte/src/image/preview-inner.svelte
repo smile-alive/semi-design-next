@@ -24,7 +24,6 @@
     // Internal: Image and ImagePreview have already filled the global defaults
     interface Props extends PreviewOptions, PreviewSnippets {
         visible: boolean;
-        /** The alt of the previewed image when `alts` has no entry for it, for a single Image */
         alt?: string;
         /** Given by a group, which owns the index: a controlled index changes through it */
         setCurrentIndex?: (index: number) => void;
@@ -198,7 +197,6 @@
     // 0.29 * 100 is 28.999999999999996, which the slider would read out
     const toPercent = (value: number) => Number((value * 100).toFixed(2));
 
-    // stable reference: the listener added on show is the one removed on hide
     const handleKeyDown = (event: KeyboardEvent) => foundation.handleKeyDown(event);
 
     const handlePrev = () => foundation.handleSwitchImage('prev');
@@ -212,7 +210,6 @@
         }
     });
 
-    // The preview takes the layer, scroll lock and focus once its dialog is in the document
     $effect(() => {
         const element = wrapEl;
         if (!visible || !element) {

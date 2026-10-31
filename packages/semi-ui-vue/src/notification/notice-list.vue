@@ -43,7 +43,7 @@
     const paused = computed(() => pointerInside.value || focusInside.value);
     const offsets = ['top', 'bottom', 'left', 'right'] as const;
 
-    // Vue does not add px to numbers in style bindings. The newest notice decides the list's offsets.
+    // The newest notice decides the list's offsets.
     const listStyle = computed(() => {
         const newest = props.items[0];
         return Object.fromEntries(
@@ -55,8 +55,6 @@
     });
 
     const threshold = computed(() => getStackThreshold(props.items[0].stack ?? readSemiDefault(semi, 'Notification', 'stack')));
-
-    // TransitionGroup keeps a leaving notice's element by itself, so only the shown notices are its children.
     const shown = computed(() => props.items.filter((item) => !props.removedIds.includes(item.id)));
     const expanded = computed(() => paused.value || shown.value.length <= threshold.value);
     const rows = computed(() => shown.value.map((item, index) => ({ item, depth: index, layer: shown.value.length - index })));
@@ -83,7 +81,6 @@
         finishLeaves();
     };
 
-    // List-level and unused options would otherwise land on the notice element as attributes like zindex="1010".
     const itemProps = (item: ListedNotice) => omit(item, ['top', 'bottom', 'left', 'right', 'zIndex', 'getPopupContainer', 'stack', 'position']);
 
     // A focused notice that unmounts gives no reliable focusout, which would keep every countdown paused.

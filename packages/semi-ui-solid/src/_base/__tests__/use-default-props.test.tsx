@@ -10,7 +10,6 @@ interface ProbeProps {
     defaultChecked?: boolean;
 }
 
-// No component is registered yet; the probe stands in for one
 declare module '../../_utils/semi-global' {
     interface OverrideDefaultProps {
         Probe?: Omit<ProbeProps, 'onClick'>;

@@ -6,7 +6,6 @@ export interface RadioGroupAdapter<P extends RadioGroupBaseProps = RadioGroupBas
     setValue: (value: any) => void;
 }
 
-/** The props the foundation reads with getProp */
 export interface RadioGroupBaseProps {
     mode?: string;
     value?: unknown;

@@ -11,13 +11,12 @@ export function useFormApi<Values extends Record<string, any> = any>(): FormApi<
     return getFormContext()?.formApi ?? ({} as FormApi<Values>);
 }
 
-/** Reads the form state of the enclosing Form, an empty object outside one; call the result in the template to follow it */
+/** An empty object outside a Form; call the result in the template to follow the state */
 export function useFormState<Values extends Record<string, any> = any>(): () => FormState<Values> {
     const form = getFormContext();
     return () => form?.formState ?? {};
 }
 
-/** The formApi methods of one field; a getter path follows its changes */
 export function useFieldApi(field: FieldPath) {
     const formApi = useFormApi();
 

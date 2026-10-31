@@ -20,7 +20,6 @@ const rangeStart = () => getRoot().querySelector(`.${dp}-range-input-wrapper-sta
 const rangeEnd = () => getRoot().querySelector(`.${dp}-range-input-wrapper-end`);
 const rangeClass = (name: 'start' | 'end') => `${dp}-day-selected-${name}`;
 
-/** The input that opens the panel */
 async function openFromInput(index = 0) {
     const input = getInputs()[index];
     await click(input);
@@ -194,7 +193,6 @@ describe('Svelte DatePicker 回归：选择与受控值', () => {
         const input = await openFromInput();
         await click(getDay('2020-02-15'));
         expect(changes(store)).toHaveLength(1);
-        // in GMT+00:00 the shown wall time must equal the UTC time of the emitted date
         const utcText = (store.value as Date).toISOString().slice(0, 19).replace('T', ' ');
         expect(utcText.startsWith('2020-02-15')).toBe(true);
         expect(input).toHaveValue(utcText);

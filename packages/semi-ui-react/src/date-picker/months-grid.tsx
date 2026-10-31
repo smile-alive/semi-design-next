@@ -59,7 +59,6 @@ class PanelNodes {
         this.currentPanelHeight = this.calcScrollListHeight();
     }
 
-    /** The height of the taller panel, or 0 while the panels are not laid out */
     calcScrollListHeight() {
         const height = (panelType: PanelType) => (this.wrap[panelType]?.getBoundingClientRect().height || 0) + (this.switch[panelType]?.getBoundingClientRect().height || 0);
         return Math.max(height(PANEL_TYPE_LEFT), height(PANEL_TYPE_RIGHT));
@@ -80,7 +79,6 @@ class PanelNodes {
     }
 }
 
-/** The date panels of DatePicker: one month, or two for a range, each with its year and time picker */
 export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     const props: MonthsGridProps = {
         ...rawProps,

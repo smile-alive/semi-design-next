@@ -73,8 +73,6 @@
     // Starts true for a modal mounted visible: inside a post flush its mount hook runs late, and a close before then must
     // still report afterClose.
     let closePending = props.visible;
-
-    // KeepAlive: release the scroll lock on deactivation without closing, retake it on reactivation
     const active = shallowRef(true);
 
     const prefix = cssClasses.DIALOG;
@@ -86,7 +84,6 @@
     const hidden = computed(() => (props.visible ? false : !props.motion || displayNone.value));
     const shouldRender = computed(() => props.visible || (props.keepDOM && (!props.lazyRender || haveRendered.value)) || (props.motion && !hidden.value));
 
-    // default and footer are rendered by Modal itself
     const passedSlots = () => Object.keys(slots).filter((name) => name !== 'default' && name !== 'footer');
 
     const closeAfter = (result: unknown) => {
@@ -158,7 +155,6 @@
 
     const initialFocus = (customFooter: boolean) => ModalFoundation.getInitialFocus({ customFooter, okButtonProps: props.okButtonProps, hasCancel: props.hasCancel, cancelButtonProps: props.cancelButtonProps });
 
-    // pre flush: showing reaches the DOM with `visible`; hiding waits for the leave animation
     watch(
         () => props.visible,
         (visible) => {

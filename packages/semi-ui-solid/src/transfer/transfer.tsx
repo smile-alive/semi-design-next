@@ -157,7 +157,6 @@ export default function Transfer(rawProps: TransferProps) {
     const noMatch = createMemo(() => searchResult()?.size === 0);
     const showNumber = createMemo(() => searchResult()?.size ?? data().length);
 
-    // the live arguments of the render props; the built-in panels call the same handlers
     const sourcePanelProps: SourcePanelProps = {
         get value() {
             return values();
@@ -335,7 +334,6 @@ export default function Transfer(rawProps: TransferProps) {
             <Show when={local.type === strings.TYPE_GROUP_LIST} fallback={<For each={visibleData()}>{(item, index) => <SourceItem item={item} index={index()} />}</For>}>
                 <For each={visibleGroups()}>
                     {(group) => {
-                        // the group's position among all groups, which search and paging leave unchanged
                         const titleId = () => `${idPrefix}-group-${groupIndexes().get(group)}`;
                         return (
                             <div role="listitem">

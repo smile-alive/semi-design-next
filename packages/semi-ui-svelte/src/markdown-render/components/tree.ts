@@ -11,7 +11,6 @@ export function containsImage(child: MarkdownChild): boolean {
     return childNodes(child).some((node) => node.type === Img || containsImage(node.props.children as MarkdownChild));
 }
 
-/** A rehype plugin may split code text into elements, which have no source text to highlight */
 export function isPlainText(child: MarkdownChild) {
     return Array.isArray(child) ? child.every(isPlainText) : !isNode(child);
 }
@@ -24,7 +23,6 @@ export function isHighlightedBlock(child: MarkdownChild) {
     return type === Code && Boolean(MarkdownRenderFoundation.getCodeLanguage(props.class as string | undefined)) && isPlainText(props.children as MarkdownChild);
 }
 
-/** The plain text of a subtree, through components too */
 export function textOf(child: MarkdownChild): string {
     if (Array.isArray(child)) return child.map(textOf).join('');
     if (isNode(child)) return textOf(child.props.children as MarkdownChild);
@@ -34,9 +32,7 @@ export function textOf(child: MarkdownChild): string {
 export interface ParsedTable {
     columns: ColumnProps[];
     dataSource: { key: string }[];
-    /** Content of each header cell, by column */
     head: MarkdownChild[];
-    /** Content of each body cell, by row and column */
     body: MarkdownChild[][];
 }
 

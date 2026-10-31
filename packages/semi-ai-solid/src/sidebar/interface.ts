@@ -17,7 +17,6 @@ export interface ContainerSolidProps extends ElementProps<'div', 'title' | 'styl
     /** Receives the `.semi-sidebar-container` div, as `ref` does */
     containerRef?: Ref<HTMLDivElement>;
     children?: JSX.Element;
-    /** The close button or, with `closeOnEsc`, Escape */
     onCancel?: (e: MouseEvent | KeyboardEvent) => void;
 }
 
@@ -30,7 +29,6 @@ export interface Option {
 export interface OptionProps {
     activeKey?: string;
     options?: Option[];
-    /** The icon of the built-in option button */
     renderOptionIcon?: (option: Option) => JSX.Element;
     renderOptionItem?: (option: Option, onChange: (e: MouseEvent, activeKey: string) => void) => JSX.Element;
     onChange?: (e: MouseEvent, activeKey: string) => void;
@@ -39,7 +37,6 @@ export interface OptionProps {
 export type DetailContent = CodeItemProps | Omit<FileItemProps, 'editable' | 'imgUploadProps' | 'onContentChange'>;
 
 export interface SideBarProps extends Omit<ContainerSolidProps, 'onChange'>, Omit<OptionProps, 'onChange'> {
-    /** main, code, file or a custom mode */
     mode?: string;
     detailContent?: DetailContent;
     onActiveOptionChange?: (e: MouseEvent, activeKey: string) => void;

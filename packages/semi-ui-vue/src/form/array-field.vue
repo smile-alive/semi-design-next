@@ -67,7 +67,6 @@
         if (typeof index === 'number') {
             keys.value = keys.value.toSpliced(added.index, 0, createId());
             cachedUpdateKey = added.updateKey;
-            // the new row's fields take the given row value, as after syncKeys
             shouldUseInitValue.value = false;
         }
     };

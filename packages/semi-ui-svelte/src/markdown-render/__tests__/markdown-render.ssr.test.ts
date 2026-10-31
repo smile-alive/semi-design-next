@@ -19,7 +19,6 @@ it('md 的服务端 HTML 已用默认组件渲染标题、链接、代码与表�
     expect(body).toContain('semi-markdownRender-simple-code');
     expect(body).toContain('semi-table-thead');
     expect(body).toContain('cell');
-    // a highlighted block drops its pre wrapper, which cannot hold CodeHighlight's div
     expect(body).not.toMatch(/<pre[^>]*><div/);
 });
 

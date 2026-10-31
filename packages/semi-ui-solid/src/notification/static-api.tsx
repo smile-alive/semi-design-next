@@ -17,7 +17,6 @@ let dispose: () => void = noop;
 
 function addNotice(notice: NotificationOptions) {
     assertClient();
-    // an explicit undefined must not replace the defaults
     const merged: NoticeProps = { ...store.defaults, ...readGlobalDefaults('Notification'), ...omitBy(notice, (value) => value === undefined) };
     const id = merged.id ?? createId('notification');
     if (!wrapper) {

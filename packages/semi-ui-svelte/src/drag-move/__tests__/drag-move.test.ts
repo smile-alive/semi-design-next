@@ -318,7 +318,6 @@ describe('Svelte dragMove', () => {
         expect(element).toHaveStyle({ position: 'relative' });
 
         drag(element, [100, 100], [130, 140]);
-        // one listener only: the first attachment removed its own
         expect(onMouseDown).toHaveBeenCalledTimes(1);
     });
 

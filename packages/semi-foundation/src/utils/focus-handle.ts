@@ -93,7 +93,6 @@ export default class FocusTrapHandle {
         return Boolean(container && active && container.contains(active) && active.matches(':focus-visible'));
     }
 
-    /** Focuses the first focusable element in `container`, or the container itself when it holds none */
     static focusFirstOrSelf(container?: HTMLElement | null, options?: FocusOptions) {
         const target = container ? (FocusTrapHandle.getFocusableElements(container)[0] ?? container) : undefined;
         target?.focus(options);

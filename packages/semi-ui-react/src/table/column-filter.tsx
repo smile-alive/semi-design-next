@@ -307,18 +307,13 @@ export interface OnSelectData {
 }
 
 export interface RenderFilterDropdownProps {
-    /** temporary filteredValue  */
     tempFilteredValue: any[];
-    /** set temporary filteredValue  */
     setTempFilteredValue: (tempFilteredValue: any[]) => void;
     /** set tempFilteredValue to filteredValue. You can also pass filteredValue to directly set the filteredValue  */
     confirm: (props?: { closeDropdown?: boolean; filteredValue?: any[] }) => void;
-    /** clear tempFilteredValue and filteredValue  */
     clear: (props?: { closeDropdown?: boolean }) => void;
-    /** close dropdown  */
     close: () => void;
     /** reset tempFilteredValue to the applied filteredValue  */
     reset: () => void;
-    /** column filters  */
     filters?: RenderDropdownProps['filters'];
 }

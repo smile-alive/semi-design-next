@@ -360,13 +360,9 @@ describe('Calendar', () => {
         const firstRowCells = rows[0].querySelectorAll('[role="cell"]');
         const lastRowCells = rows[rows.length - 1].querySelectorAll('[role="cell"]');
         const sameMonthClass = `${prefixCls}-month-same`;
-        // 2023-03-26
         expect(firstRowCells[0]).not.toHaveClass(sameMonthClass);
-        // 2023-04-01
         expect(firstRowCells[firstRowCells.length - 1]).toHaveClass(sameMonthClass);
-        // 2023-04-30
         expect(lastRowCells[0]).toHaveClass(sameMonthClass);
-        // 2023-05-06
         expect(lastRowCells[lastRowCells.length - 1]).not.toHaveClass(sameMonthClass);
     });
 

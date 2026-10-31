@@ -21,20 +21,16 @@ type Style = JSX.CSSProperties | string;
 type Role = JSX.HTMLAttributes<HTMLDivElement>['role'];
 
 export interface CardProps extends ElementProps<'div', 'title'> {
-    /** Operation group at the bottom of the card content area */
     actions?: JSX.Element[];
     bodyStyle?: Style;
     bordered?: boolean;
     cover?: JSX.Element;
-    /** Additional content to the right of the title */
     headerExtraContent?: JSX.Element;
     footer?: JSX.Element;
-    /** Whether there is a border between the content area and the footer */
     footerLine?: boolean;
     footerStyle?: Style;
     /** Replaces `title` and `headerExtraContent` */
     header?: JSX.Element;
-    /** Whether there is a border between the header and the content area */
     headerLine?: boolean;
     headerStyle?: Style;
     loading?: boolean;

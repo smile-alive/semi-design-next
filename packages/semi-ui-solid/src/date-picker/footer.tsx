@@ -9,7 +9,6 @@ interface FooterProps {
     onConfirmClick?: () => void;
 }
 
-/** The cancel and confirm buttons of a panel that needs confirmation */
 export default function Footer(props: FooterProps) {
     return (
         <div class={`${props.prefixCls}-footer`}>

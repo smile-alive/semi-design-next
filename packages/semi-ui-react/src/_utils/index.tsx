@@ -30,7 +30,6 @@ export function isSameNode(a: unknown, b: unknown): boolean | undefined {
     return undefined;
 }
 
-/** Whether the element is a built-in Semi icon */
 export function isSemiIcon(icon: unknown): icon is React.ReactElement<{ size?: string }> {
     return elementTypeOf(icon) === 'Icon';
 }
@@ -45,7 +44,7 @@ export function isText(node: React.ReactNode): node is string | number {
     return typeof node === 'string' || typeof node === 'number';
 }
 
-/** The prefix or inset label of a Select-like trigger; `id` lets the combobox name itself by the inset label */
+/** `id` lets the combobox name itself by the inset label */
 export function renderTriggerPrefix(prefixcls: string, prefix: React.ReactNode, insetLabel: React.ReactNode, id?: string) {
     const labelNode = hasContent(prefix) ? prefix : insetLabel;
     const cls = clsx({
@@ -61,7 +60,6 @@ export function renderTriggerPrefix(prefixcls: string, prefix: React.ReactNode, 
     );
 }
 
-/** The suffix of a Select-like trigger */
 export function renderTriggerSuffix(prefixcls: string, suffix: React.ReactNode) {
     const cls = clsx({
         [`${prefixcls}-suffix`]: true,

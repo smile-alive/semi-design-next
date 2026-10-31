@@ -47,14 +47,12 @@ describe('Svelte DatePicker 年月面板与周行数', () => {
 
     it('两侧按月份渲染周行数', async () => {
         await setup({ value: [new Date(2021, 5, 1), new Date(2021, 5, 15)], open: true, props: { type: 'dateRange' } });
-        // June and July 2021 both need five week rows
         expect(weekRows('left')).toHaveLength(5);
         expect(weekRows('right')).toHaveLength(5);
     });
 
     it('切换月份时周行数随之变化', async () => {
         await setup({ value: new Date(2019, 8, 8), open: true, props: { type: 'date' } });
-        // September 2019 needs five week rows, June 2019 needs six
         expect(weekRows('left')).toHaveLength(5);
         for (let i = 0; i < 3; i++) {
             await click(screen.getByRole('button', { name: zh_CN.DatePicker.prevMonth }));

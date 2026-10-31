@@ -386,7 +386,6 @@ describe('ScrollItem 行为', () => {
         screen.getByRole('listbox').focus();
         await userEvent.keyboard('{ArrowDown}');
         expect(onSelect).toHaveBeenLastCalledWith({ value: 'cherry', type: 'fruit', index: 2 });
-        // the selection wrote back locally, so End and Home continue from cherry
         await userEvent.keyboard('{End}');
         expect(onSelect).toHaveBeenLastCalledWith({ value: 'cocoa', type: 'fruit', index: 3 });
         await userEvent.keyboard('{Home}');

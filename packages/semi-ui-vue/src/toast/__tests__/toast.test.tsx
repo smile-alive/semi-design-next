@@ -27,7 +27,6 @@ async function advance(ms: number) {
     vi.advanceTimersByTime(ms);
     await nextTick();
 }
-// TransitionGroup puts the enter and leave classes on the toast's wrapper element
 const wrapperOf = (toast: Element | null) => toast?.parentElement;
 // Vue skips a listener attached in the same millisecond as the event, so move the clock past the mount first.
 async function clickAfterMount(el: Element) {
@@ -278,7 +277,6 @@ describe('Toast', () => {
         const button = getInfoToast()?.querySelector('button');
         button?.click();
         await nextTick();
-        // jsdom fires no animationend, so the toast stays mounted while leaving
         expect(wrapperOf(getInfoToast())).toHaveClass(`${prefix}-animation-hide`);
         await advance(1);
         button?.click();
@@ -657,7 +655,6 @@ describe('Toast', () => {
             expect(document.getElementById(Toast.getWrapperId() ?? '')?.style.top).toBe('12px');
             expect(semiGlobal.config.overrideDefaultProps?.Toast).toBeUndefined();
         } finally {
-            // the installed app is module state; leave a context without provides for the other tests
             Toast.destroyAll();
             Toast.install(createApp({ render: () => null }));
         }

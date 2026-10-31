@@ -45,7 +45,6 @@ export interface RatingProps extends ElementProps<'ul', 'defaultValue' | 'onChan
     onFocus?: (event: RatingFocusEvent) => void;
     /** Called when focus leaves the rating, not when it moves between stars */
     onBlur?: (event: RatingFocusEvent) => void;
-    /** Called for the arrow keys that change the value */
     onKeyDown?: (event: RatingKeyboardEvent) => void;
     onClick?: (event: RatingClickEvent, index: number) => void;
     autofocus?: boolean;
@@ -116,7 +115,6 @@ export default function Rating(rawProps: RatingProps) {
         () => local.ref
     );
 
-    // index === count is the empty (zero) star
     const indexes = createMemo(() => Array.from({ length: props.count + 1 }, (_, index) => index));
 
     // read once here and inserted by the first star, whose result also tells whether the character is a string;

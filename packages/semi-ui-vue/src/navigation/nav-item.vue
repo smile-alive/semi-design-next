@@ -20,7 +20,6 @@
 
     const ctx = useNav('Nav.Item');
 
-    // content is rendered by ItemShell itself
     const passedSlots = () => Object.keys(slots).filter((name) => name !== 'content');
 </script>
 

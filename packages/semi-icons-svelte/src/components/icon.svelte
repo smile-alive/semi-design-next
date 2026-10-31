@@ -11,7 +11,6 @@
         prefixCls?: string;
         type?: string;
         fill?: string | string[];
-        /** Receives the `fill` prop, so a custom svg can apply it */
         children?: Snippet<[{ fill?: string | string[] }]>;
     }
 </script>
@@ -23,7 +22,6 @@
     let { size = 'default', spin = false, rotate, prefixCls = BASE_CLASS_PREFIX, type, fill, children, ...rest }: IconProps = $props();
 
     const prefix = $derived(`${prefixCls}-icon`);
-    // An icon with a name or in the tab order is content; otherwise it is decoration
     const exposed = $derived(Boolean(rest['aria-label'] || rest['aria-labelledby']) || Number(rest.tabindex) >= 0);
     // The user's style comes last so it can override the rotation
     const style = $derived([Number.isSafeInteger(rotate) ? `transform: rotate(${rotate}deg)` : undefined, rest.style].filter(Boolean).join(';') || undefined);

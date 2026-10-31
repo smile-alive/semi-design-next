@@ -23,15 +23,12 @@ export interface RatingItemProps {
     /** No radio stands for the value: this star's first radio is the Tab stop */
     firstTabStop: boolean;
     size: number | (typeof strings.SIZE_SET)[number];
-    /** The unit named after n stars: singular for 1, plural otherwise */
     unitOf: (n: number) => string;
-    /** What the star's Tooltip puts on its trigger */
     liProps?: JSX.HTMLAttributes<HTMLLIElement>;
     onHover: (event: MouseEvent, index: number) => void;
     onClick: (event: MouseEvent, index: number) => void;
     /** Enter or Space on a radio, or a click without a pointer (assistive technology): the value that radio stands for */
     onSelect: (event: KeyboardEvent | MouseEvent, index: number, value: number) => void;
-    /** A radio of this star got focus */
     onFocus: (event: FocusEvent & { target: Element }, index: number) => void;
 }
 

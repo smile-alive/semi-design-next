@@ -3,7 +3,6 @@ import type { NotificationListState } from '@fibrae/semi-foundation/notification
 import { createContext } from '../_base/create-context';
 
 export interface NotificationListContextValue {
-    /** The pointer or focus is on this notice's position list: its countdown waits */
     paused: Accessor<boolean>;
     /** The store snapshot: a notice stops counting once removed and starts over when updated in place */
     state: Accessor<NotificationListState>;

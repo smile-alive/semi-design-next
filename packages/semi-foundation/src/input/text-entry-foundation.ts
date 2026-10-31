@@ -1,7 +1,6 @@
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import truncateValue from './util/truncate-value';
 
-/** The props the shared text entry logic reads with getProps */
 export interface TextEntryBaseProps {
     value?: string | number;
     composition?: boolean;
@@ -37,7 +36,6 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
     #compositionEnter: boolean = false;
     #composedSinceFocus = false;
 
-    /** Whether an IME composition started since the element last took the focus */
     protected get composedSinceFocus() {
         return this.#composedSinceFocus;
     }

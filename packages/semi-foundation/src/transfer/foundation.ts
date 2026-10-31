@@ -31,13 +31,11 @@ export interface BasicResolvedDataItem extends BasicDataItem {
     _parent?: Omit<BasicGroupItem, 'children'>;
     /** The nodes from the root to this one in treeList mode; underscored so it never collides with the caller's `path` */
     _path?: Array<BasicDataItem>;
-    /** Whether the node has no children in treeList mode; underscored for the same reason as `_path` */
     _isLeaf?: boolean;
 }
 
 export type BasicFilter = boolean | ((searchValue: string, item: BasicDataItem) => boolean);
 
-/** The props the foundation reads with getProp */
 export interface TransferBaseProps {
     dataSource?: Array<object>;
     defaultValue?: Array<number | string>;
@@ -49,7 +47,6 @@ export interface TransferBaseProps {
     value?: Array<number | string>;
 }
 
-/** The state the foundation reads with getState */
 export interface TransferBaseState {
     inputValue: string;
     leftCurrentPage: number;
@@ -202,7 +199,6 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
         return fullPath ? { ...publicItem, fullPath } : publicItem;
     }
 
-    /** The treeList path label shown with `showPath`, e.g. "Asia > China > Shanghai" */
     static generatePath({ _path = [] }: BasicResolvedDataItem) {
         return _path.map((p) => p.label).join(' > ');
     }

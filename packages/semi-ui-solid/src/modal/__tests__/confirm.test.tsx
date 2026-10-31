@@ -46,7 +46,6 @@ function renderHookHolder(wrap: (holder: JSX.Element) => JSX.Element = (holder) 
 }
 
 describe('Modal 静态方法', () => {
-    // the detached tree is released in a microtask after it closes
     afterEach(async () => {
         Modal.destroyAll();
         await sleep(0);

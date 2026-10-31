@@ -823,7 +823,6 @@ describe('Select 在 ShadowRoot 内的焦点', () => {
         render(() => <Select multiple value={value()} optionList={options} showClear />, { container });
         const combobox = shadow.querySelector<HTMLElement>('[role="combobox"]') as HTMLElement;
         combobox.focus();
-        // past the closable tag
         await tab();
         await tab();
         expect(shadow.activeElement).toBe(shadow.querySelector(`.${prefixCls}-clear`));

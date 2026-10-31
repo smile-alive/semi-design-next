@@ -13,7 +13,6 @@ export interface StepProps extends ElementProps<'div', 'title' | 'onChange' | 'c
     title?: JSX.Element;
 }
 
-/** What Steps hands a step item besides the step's own props */
 export interface BasicStepProps extends StepProps {
     active?: boolean;
     prefixCls?: string;

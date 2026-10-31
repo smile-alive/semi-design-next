@@ -12,7 +12,6 @@ export interface SearchOptions {
     regex: boolean;
 }
 
-/** The props the foundation reads with getProps */
 export interface JsonViewerBaseProps {
     value: string;
     options?: JsonViewerOptions;
@@ -162,7 +161,6 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
         this.jsonViewer?.getSearchWidget().replaceAll(replaceText);
     };
 
-    /** Toggles one search option, then searches again with the input text and the new options */
     toggleSearchOption = (key: keyof SearchOptions) => {
         this.adapter.toggleSearchOption(key);
         this.search(this.#lastSearch?.text ?? '');

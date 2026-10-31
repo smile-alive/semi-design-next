@@ -17,7 +17,6 @@
             size: TagInputSize;
             disabled?: boolean;
             showContentTooltip: boolean | ShowTooltip;
-            /** the drag handles are on: the tag makes room for one */
             draggableActive: boolean;
             withHandle: boolean;
         }>(),

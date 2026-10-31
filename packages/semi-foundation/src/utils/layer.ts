@@ -93,7 +93,6 @@ function updateInert() {
         }
     }
     for (const element of next) {
-        // an element made inert by someone else stays theirs to release
         if (!inertElements.has(element) && !(element as HTMLElement).inert) {
             (element as HTMLElement).inert = true;
             // a popover stays in the top layer, above the modal layer's mask, where an inert popup would let the

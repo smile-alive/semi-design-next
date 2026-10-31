@@ -69,7 +69,6 @@
         return previous && isEqual(previous, next) ? previous : next;
     });
 
-    // null reaches the foundation as a controlled empty value, which its readers handle
     const foundationProps = props as Readonly<NavigationBaseProps>;
 
     const { foundation, state } = useFoundation<NavigationFoundation, NavigationAdapter, NavigationBaseProps, NavigationState>(

@@ -6,7 +6,6 @@ import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import type { Position } from '../tooltip/interface.js';
 import type { ShowTooltip } from '../typography/interface.js';
 
-/** A link is activated by a click or by Enter */
 export type AnchorClickEvent = MouseEvent | KeyboardEvent;
 
 export interface AnchorLinkItem {
@@ -15,7 +14,6 @@ export interface AnchorLinkItem {
     /** Plain-text title, also the native tooltip without showTooltip; the `title` snippet wins when given */
     title?: string;
     disabled?: boolean;
-    /** Nested links */
     children?: AnchorLinkItem[];
 }
 
@@ -46,7 +44,6 @@ export interface AnchorProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title
     onChange?: (currentLink: string, previousLink: string) => void;
     /** Only when a link is activated, so a click elsewhere on the root does not reach it */
     onClick?: (event: AnchorClickEvent, currentLink: string) => void;
-    /** Renders every link's title */
     title?: Snippet<[AnchorTitleContext]>;
 }
 

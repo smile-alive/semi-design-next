@@ -96,7 +96,6 @@
     const prefixCls = cssClasses.PREFIX;
     const listId = `${uid}-listbox`;
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: AutoCompleteBaseProps = {
         get data() {
             return data;
@@ -131,7 +130,6 @@
         (base) => ({
             updateFocusIndex: (focusIndex) => base.setState({ focusIndex }),
             updateScrollTop: (index) => {
-                // the rows are the listbox's direct children
                 const destNode = listbox?.children[index];
                 if (listbox && destNode instanceof HTMLElement) {
                     centerInScroller(destNode, listbox);
@@ -143,7 +141,6 @@
             updateSelection: (selection) => base.setState({ selection }),
             notifySearch: (inputValue) => onSearch?.(inputValue),
             notifyChange: (next) => {
-                // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 value = next;
                 onChange?.(next);
             },
@@ -269,7 +266,6 @@
     useClickOutside(
         [() => root, () => listbox],
         (event) => {
-            // without a rendered list there is nothing to close
             if (listbox) {
                 foundation.handleClickOutside(event);
             }
@@ -286,7 +282,6 @@
         input?.blur();
     }
 
-    /** The root div, which wraps the input or the custom trigger */
     export function getNativeElement() {
         return root;
     }

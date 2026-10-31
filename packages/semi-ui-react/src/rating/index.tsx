@@ -119,7 +119,6 @@ export default function Rating(rawProps: RatingProps) {
     const { locale } = useLocale('Rating');
     const context = useConfigContext();
 
-    // star handles by index; the empty star (index === count) is the last one
     const [stars] = useState(() => new Map<number, RatingItemHandle>());
     const listRef = useRef<HTMLUListElement>(null);
 
@@ -156,13 +155,10 @@ export default function Rating(rawProps: RatingProps) {
     const value = RatingFoundation.deriveValue(props, state);
     const onRadio = RatingFoundation.isRadioValue(value, count, allowHalf);
     const { hoverValue, focusVisibleStar } = state;
-
-    // a string character is the unit as is, without pluralization; otherwise the locale names it
     const customUnit = typeof character === 'string' ? character : undefined;
 
     const unitOf = (n: number) => customUnit ?? (n === 1 ? locale.star : locale.stars);
 
-    // a caller-given aria-label replaces the generated summary as the radiogroup name
     // a function replacer keeps `$&` and `$$` in a custom unit literal
     const ariaLabel =
         ariaLabelProp ||
@@ -171,7 +167,6 @@ export default function Rating(rawProps: RatingProps) {
             .replace('${count}', String(count))
             .replace('${unit}', () => unitOf(value));
 
-    // index === count is the empty (zero) star
     const itemList = Array.from({ length: count + 1 }, (_, ind) => {
         const content = (
             <Item

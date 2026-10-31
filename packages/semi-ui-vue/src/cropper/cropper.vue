@@ -95,7 +95,6 @@
 
     const corners = computed(() => (props.shape === 'round' ? strings.roundCorner : strings.corner));
 
-    // The user's attributes come first: the cropper owns src, class, style and the load order.
     const imgAttrs = computed<ImgHTMLAttributes>(() => ({
         crossorigin: 'anonymous',
         ...omit(props.imgProps ?? {}, ['class', 'style', 'src', 'onLoad']),
@@ -124,7 +123,6 @@
 
     watch(() => props.aspectRatio, foundation.applyAspectRatio, { flush: 'post' });
 
-    // a controlled value dropped again falls back to the default, like the other components
     watch(
         () => props.zoom,
         (zoom) => {
@@ -159,7 +157,6 @@
 <template>
     <div ref="root" :class="prefix" :role="groupRole($attrs)">
         <div :class="cssClasses.IMG_WRAPPER">
-            <!-- the cropping surface, not content: there is no description to give -->
             <img v-bind="imgAttrs" ref="img" :alt="props.imgProps?.alt ?? ''" :class="[cssClasses.IMG, props.imgProps?.class]" :src="props.src" :style="[props.imgProps?.style, imgStyle]" @load="handleLoad($event)" />
         </div>
         <div :class="cssClasses.MASK" @lostpointercapture="foundation.handleMaskLostPointerCapture" @pointerdown="foundation.handleMaskPointerDown" @pointermove="foundation.handleMaskPointerMove" />

@@ -157,7 +157,6 @@ describe('Modal（浏览器）', () => {
         expect(opener).toHaveFocus();
     });
 
-    // A radio group is one Tab stop: from the checked radio the browser leaves the whole group
     it('焦点陷阱：末尾 RadioGroup 选中第一项时 Tab 回绕到第一个元素', async () => {
         render(() => (
             <OpenModal closable={false} footer={null}>

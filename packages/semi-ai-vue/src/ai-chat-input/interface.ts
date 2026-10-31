@@ -53,7 +53,6 @@ export interface AIChatInputProps {
     placeholder?: PlaceholderProps;
     popoverProps?: AIChatInputPopoverProps;
     references?: Reference[];
-    /** Full round footer buttons */
     round?: boolean;
     sendHotKey?: 'enter' | 'shift+enter';
     /** Read once, when the editor is created */
@@ -104,7 +103,6 @@ export interface AIChatInputTopSlotProps {
 }
 
 export interface AIChatInputUploadButtonSlotProps {
-    /** The built-in trigger content */
     defaultNode: VNode;
     /** Upload opens the dialog on click already; for content that stops the click from reaching it */
     onOpenFileDialog: () => void;
@@ -113,7 +111,6 @@ export interface AIChatInputUploadButtonSlotProps {
 }
 
 export interface AIChatInputActionAreaSlotProps {
-    /** The upload trigger (when shown) and the send or stop button, in that order */
     menuItem: VNode[];
     class: string;
 }
@@ -143,29 +140,22 @@ export interface AIChatInputSkillIconSlotProps {
 
 export interface AIChatInputTemplateSlotProps {
     skill?: Skill;
-    /** Replaces the editor content */
     onTemplateClick: (content: string) => void;
 }
 
 export interface AIChatInputSlots {
-    /** Replaces each reference */
     reference?: (props: AIChatInputReferenceSlotProps) => VNode[];
     /** Placed by `topSlotPosition` */
     topSlot?: (props: AIChatInputTopSlotProps) => VNode[];
     /** Replaces the upload trigger content; Upload keeps handling clicks and pasted files */
     uploadButton?: (props: AIChatInputUploadButtonSlotProps) => VNode[];
-    /** The upload tooltip content */
     uploadTip?: () => VNode[];
-    /** Configure items (`AIChatInput.Configure.*`) */
     configureArea?: () => VNode[];
-    /** Replaces the action area */
     actionArea?: (props: AIChatInputActionAreaSlotProps) => VNode[];
     /** Replaces each suggestion; bind the option attributes onto its root */
     suggestionItem?: (props: AIChatInputSuggestionItemSlotProps) => VNode[];
     /** Replaces each skill; bind the option attributes onto its root */
     skillItem?: (props: AIChatInputSkillItemSlotProps) => VNode[];
-    /** The icon before each skill in the skill panel */
     skillIcon?: (props: AIChatInputSkillIconSlotProps) => VNode[];
-    /** The template panel content */
     template?: (props: AIChatInputTemplateSlotProps) => VNode[];
 }

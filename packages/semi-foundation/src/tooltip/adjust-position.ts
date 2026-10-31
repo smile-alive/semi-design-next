@@ -1,5 +1,5 @@
 /**
- * Position fine-tuning for `autoAdjustOverflow`. Only rects and numbers go in (no DOM, window or class instance), so it can be table-tested.
+ * Only rects and numbers go in (no DOM, window or class instance), so it can be table-tested.
  */
 
 export interface AdjustRect {
@@ -24,7 +24,6 @@ export interface AdjustPositionInput {
     triggerRect: AdjustRect;
     /** popup size, nothing is adjusted when width or height is 0 */
     wrapperRect: Pick<AdjustRect, 'width' | 'height'>;
-    /** rect of the popup container */
     containerRect: Pick<AdjustRect, 'left' | 'right' | 'top' | 'bottom'>;
     viewport: { width: number; height: number };
     spacing: number | { x: number; y: number };
@@ -51,17 +50,14 @@ function isTB(position: string) {
     return position.includes('top') || position.includes('bottom');
 }
 
-// Insufficient original space, enough reverse space
 function isReverse(rowSpace: number, reverseSpace: number, size: number) {
     return rowSpace < size && reverseSpace > size;
 }
 
-// Neither the original nor the reverse space is enough
 function isOverFlow(rowSpace: number, reverseSpace: number, size: number) {
     return rowSpace < size && reverseSpace < size;
 }
 
-// A short positive or negative half space means the popup is occluded and must be offset
 function isHalfOverFlow(posSpace: number, negSpace: number, size: number) {
     return posSpace < size || negSpace < size;
 }
@@ -107,7 +103,6 @@ export function adjustPosition(input: AdjustPositionInput): AdjustPositionResult
     let spacing: number;
     let ano_spacing = 0;
     if (typeof raw_spacing !== 'number') {
-        // extended spacing api with {x: number, y: number}, the axes of the spacing is determined based on the position
         const isTopOrBottom = isTB(position);
         spacing = isTopOrBottom ? raw_spacing.y : raw_spacing.x;
         ano_spacing = isTopOrBottom ? raw_spacing.x : raw_spacing.y;
@@ -182,8 +177,6 @@ export function adjustPosition(input: AdjustPositionInput): AdjustPositionResult
         const isContainerYOverFlowSideHalf = isHalfOverFlow(clientBottomInContainer - halfHeight, restClientTopInContainer - halfHeight, (wrapperRect.height + ano_spacing) / 2);
         const isContainerXOverFlowSideHalf = isHalfOverFlow(clientRightInContainer - halfWidth, restClientLeftInContainer - halfWidth, (wrapperRect.width + ano_spacing) / 2);
 
-        // Flip when the viewport is short on this side but not the opposite one, or short on both sides while the
-        // container has room on the opposite side
         const shouldReverseTop = shouldFlip(isViewYOverFlow, shouldViewReverseTop, shouldContainerReverseTop);
         const shouldReverseLeft = shouldFlip(isViewXOverFlow, shouldViewReverseLeft, shouldContainerReverseLeft);
         const shouldReverseBottom = shouldFlip(isViewYOverFlow, shouldViewReverseBottom, shouldContainerReverseBottom);
@@ -342,8 +335,6 @@ export function adjustPosition(input: AdjustPositionInput): AdjustPositionResult
         }
         if (isLR(position)) {
             isWidthOverFlow = isViewXOverFlow && isContainerXOverFlow;
-            // If clientTop or restClientTop less than 0, means that the top and bottom parts of the trigger are blocked
-            // Then the display of the wrapper will also be affected, make height overflow to offset the wrapper
             if (position === 'left' || position === 'right') {
                 isHeightOverFlow = (isViewYOverFlowSideHalf && isContainerYOverFlowSideHalf) || clientTop < 0 || restClientTop < 0;
             } else {

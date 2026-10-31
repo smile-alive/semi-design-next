@@ -10,7 +10,6 @@ import CodeHighlight from '..';
 import { SemiGlobal, semiGlobalKey } from '../../_utils/semi-global';
 import { grammar } from './grammars';
 
-// counts the highlights that actually start, to tell a skipped update from a repeated one
 const highlights = vi.hoisted(() => ({ count: 0 }));
 vi.mock('@fibrae/semi-foundation/code-highlight/highlighter', async (importOriginal) => {
     const original = await importOriginal<typeof import('@fibrae/semi-foundation/code-highlight/highlighter')>();

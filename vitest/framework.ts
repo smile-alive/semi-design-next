@@ -19,10 +19,8 @@ interface Threshold {
     lines: number;
 }
 
-// The only shape a framework module hands to vitest/index.ts
 export interface TestFramework {
     projects: TestProjectInlineConfiguration[];
-    // A framework without a coverage gate leaves this out
     coverage?: { include: string[]; exclude: string[]; thresholds?: Record<string, Threshold> };
 }
 

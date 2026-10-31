@@ -95,7 +95,6 @@ describe('Checkbox（浏览器）', () => {
         });
         const input = screen.getByRole<HTMLInputElement>('checkbox', { name: 'partial' });
         expect(input.matches(':indeterminate')).toBe(true);
-        // the native input is visually hidden, so the click goes to the wrapper like a pointer would
         await userEvent.click(input.closest(`.${prefix}`) as Element);
         expect(change).toHaveBeenCalledTimes(1);
         expect(input.matches(':indeterminate')).toBe(true);

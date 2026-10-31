@@ -43,7 +43,6 @@ export default class NotificationListStore {
 
     getSnapshot = () => this.#items.getSnapshot();
 
-    /** Shows a notice, or updates the shown one with the same id */
     add = (notice: NoticeInstance) => {
         this.#items.add(notice);
     };

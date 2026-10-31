@@ -14,7 +14,6 @@
     import { getNoticeListContext } from './context.js';
     import type { NoticeItemProps } from './interface.js';
 
-    // The foundation reads only these two
     type FoundationProps = Pick<NoticeItemProps, 'id' | 'duration'>;
     type Foundation = NotificationFoundation<FoundationProps>;
     type Adapter = NoticeAdapter<FoundationProps>;
@@ -102,7 +101,6 @@
     };
 
     const handleAnimationEnd = (event: AnimationEvent) => {
-        // the content's own animations bubble up to here
         if (event.target !== event.currentTarget) return;
         if (!leaving) {
             entered = true;

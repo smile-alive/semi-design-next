@@ -264,7 +264,6 @@ describe('Svelte Form 字段：标签与布局', () => {
         const nodes = createRawSnippet(() => ({ render: () => '<span><b>A</b>b</span>' }));
         const { container } = renderForm({}, [input('top', { fieldLabel: nodes }), input('inset', { labelPosition: 'inset', fieldLabel: nodes })]);
         expect(container.querySelector(`.${prefix}-field-label-text`)?.textContent?.trim()).toBe('Ab');
-        // one control per layout, both named by the same content
         expect(screen.getAllByRole('textbox', { name: 'Ab' })).toHaveLength(2);
     });
 

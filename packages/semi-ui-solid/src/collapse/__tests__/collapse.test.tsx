@@ -26,7 +26,6 @@ const panels = (panel1Props: Partial<CollapsePanelProps> = {}) => (
     </>
 );
 
-/** Renders three panels; `set` swaps the Collapse props and keeps the instance */
 function setup(initial: CollapseProps = {}, panel1Props: Partial<CollapsePanelProps> = {}) {
     const [props, setProps] = createSignal(initial);
     const view = render(() => <Collapse {...props()}>{panels(panel1Props)}</Collapse>);

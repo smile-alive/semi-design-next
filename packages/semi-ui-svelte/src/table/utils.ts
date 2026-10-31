@@ -7,14 +7,11 @@ import type { ColumnProps, RowSelectionProps, SortOrder, TableComponents, TableP
 export interface ColumnFlags {
     hasSorter: boolean;
     hasFilter: boolean;
-    /** The header cell composes the title with the sort and filter buttons instead of the plain title */
     needsTitle: boolean;
-    /** A click on the header cell sorts */
     clickToSort: boolean;
     showSortTip: boolean;
     sortOrder: SortOrder;
     filteredValue?: unknown[];
-    /** The sort and filter state of the column, when it has a dataIndex */
     query?: ColumnProps;
 }
 
@@ -29,7 +26,6 @@ const PLAIN_FLAGS: ColumnFlags = {
     query: undefined,
 };
 
-/** How the header cell of a column sorts and filters, decided as React Table does */
 export function columnFlags(column: ColumnProps, queries?: ColumnProps[]) {
     // filterDropdown counts, unlike React where a lone element renders nothing: here the flag only opens a panel
     if (!(column.sorter || column.filters || column.onFilter || column.useFullRender || column.filterDropdown)) {
@@ -50,7 +46,6 @@ export function columnFlags(column: ColumnProps, queries?: ColumnProps[]) {
     };
 }
 
-// Not a deep merge: only the tags are replaced
 export function mergeComponents(components: TableComponents | undefined, virtualized: boolean): MergedTableComponents {
     const defaults = virtualized ? { outer: 'div', wrapper: 'div', row: 'div', cell: 'div', colgroup: { wrapper: 'div', col: 'div' } } : { outer: 'table', wrapper: 'tbody', row: 'tr', cell: 'td', colgroup: { wrapper: 'colgroup', col: 'col' } };
     return {
@@ -59,12 +54,10 @@ export function mergeComponents(components: TableComponents | undefined, virtual
     };
 }
 
-/** The column of expand buttons, shown when hideExpandedColumn is false */
 export function expandColumn(hideExpandedColumn: boolean, expandCellFixed: TableProps['expandCellFixed'], prefixCls: string): ColumnProps | null {
     return hideExpandedColumn ? null : { fixed: expandCellFixed, key: strings.DEFAULT_KEY_COLUMN_EXPAND, class: `${prefixCls}-column-expand` };
 }
 
-/** The column of selection checkboxes */
 export function selectionColumn(rowSelection: TableProps['rowSelection'], prefixCls: string): ColumnProps | null {
     if (!rowSelection || (typeof rowSelection === 'object' && rowSelection.hidden)) {
         return null;
@@ -80,19 +73,14 @@ export function selectionColumn(rowSelection: TableProps['rowSelection'], prefix
     };
 }
 
-/** Copies the column tree, so that keys and overrides can be written without touching the prop */
 export const copyColumns = (list: ColumnProps[]): ColumnProps[] => list.map((column) => (Array.isArray(column.children) && column.children.length ? { ...column, children: copyColumns(column.children) } : { ...column }));
 
-/**
- * Places the expand and selection columns with a default width, so that a resizable table can resize them too. The
- * placeholders are the table's own columns, so the drag class lands next to their class rather than replacing it.
- */
+/** The placeholders are the table's own columns, so the drag class lands next to their class rather than replacing it */
 export function addWidthPlaceholders(columns: ColumnProps[], expand: ColumnProps | null, selection: ColumnProps | null) {
     const withWidth = (column: ColumnProps | null, width: number) => column && { ...column, width: column.width ?? width };
     return placeInnerColumns(columns, [withWidth(expand, numbers.DEFAULT_WIDTH_COLUMN_EXPAND), withWidth(selection, numbers.DEFAULT_WIDTH_COLUMN_SELECTION)]);
 }
 
-/** Copies the columns, so the keys and merged inner columns stay off the user's objects, and adds the inner columns */
 export function buildColumns(columns: ColumnProps[], innerColumns: (ColumnProps | null)[]) {
     return assignColumnKeys(placeInnerColumns(copyColumns(columns), innerColumns)) as ColumnProps[];
 }
@@ -119,5 +107,4 @@ export function mergePagination(pagination: TablePaginationProps | undefined, sc
     };
 }
 
-/** Joins style declarations, skipping empty ones */
 export const joinStyles = (...styles: (string | false | null | undefined)[]) => styles.filter(Boolean).join(';') || undefined;

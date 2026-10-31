@@ -10,14 +10,12 @@ export const fieldSelector = `.${prefix}-field`;
 export const labelSelector = `.${prefix}-field-label`;
 export const errorSelector = `.${prefix}-field-error-message`;
 
-/** Lets the foundation's promises (validation, submit) and the effects they schedule run */
 export async function settle() {
     flushSync();
     await new Promise((resolve) => setTimeout(resolve));
     flushSync();
 }
 
-/** Renders a Form with the given fields; `api()` is the formApi it reported through getFormApi */
 export function renderForm(form: Record<string, unknown> = {}, fields: FieldSpec[] = [], options: Omit<FormFixtureStore, 'form' | 'fields'> = {}) {
     const store = createStore<FormFixtureStore>({ form, fields, ...options });
     let formApi: FormApi | undefined;
@@ -40,7 +38,6 @@ export const select = (props: Record<string, unknown> = {}): FieldSpec => ({ typ
 
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/** The Input's native input inside the element matching `scope` */
 export const inputIn = (scope: string) => document.querySelector<HTMLInputElement>(`${scope} input.semi-input`) as HTMLInputElement;
 
 export function getInput(scope: ParentNode = document) {

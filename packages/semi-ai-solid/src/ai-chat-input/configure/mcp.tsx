@@ -19,7 +19,6 @@ export interface McpProps extends Omit<DropdownProps, 'children' | 'render'> {
     num?: number;
     showConfigure?: boolean;
     onConfigureButtonClick?: () => void;
-    /** The icon of each built-in menu item */
     renderOptionIcon?: (option: McpOption) => JSX.Element;
     /** The menu under the header, in place of the one built from `options` */
     children?: JSX.Element;

@@ -25,5 +25,4 @@ export const ssrCases: SsrCase[] = [
     { name: 'sidebar/mcp-configure 默认打开', covers: ['MCPConfigure'], render: () => <MCPConfigure visible options={mcpOptions} /> },
 ];
 
-// Data-adapter functions are plain helpers
 export const nonComponentExports = new Set(['getConfigureItem', 'chatCompletionToMessage', 'streamingChatCompletionToMessage', 'streamingResponseToMessage', 'responseToMessage', 'chatInputToMessage', 'chatInputToChatCompletion']);

@@ -41,7 +41,6 @@ const prefixTree = cssClasses.PREFIX_TREE;
 
 export type ExpandAction = false | 'click' | 'doubleClick';
 
-/** The value of a tree node */
 export type TreeSelectNodeValue = string | number;
 
 type ByMultiple<Multiple, Single, Many> = Multiple extends unknown ? (true extends Multiple ? Many : Single) : never;
@@ -97,7 +96,6 @@ export interface TriggerRenderProps {
 export interface TreeSelectHandle {
     /** Searches as if `value` were typed, opening the dropdown first; needs `filterTreeNode` */
     search: (value: string) => void;
-    /** Closes the dropdown */
     close: () => void;
 }
 

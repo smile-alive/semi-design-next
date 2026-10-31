@@ -6,7 +6,6 @@
 
     interface Case {
         group?: InputGroupProps;
-        // a text child shows the group renders what it is given, whatever the child
         text?: string;
         onChildFocus?: () => void;
     }

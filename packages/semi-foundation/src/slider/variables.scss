@@ -1,6 +1,6 @@
 @use 'semi:theme' as *;
 @use '../base/mixin' as *;
-// Color
+
 $color-slider-text-default: var(--semi-color-text-0); // 滑动条文本颜色 - 默认
 $color-slider_dot-bg-default: var(--semi-color-white); // 滑动条圆形刻度点颜色 - 默认态
 $color-slider_dot-border-active: var(--semi-color-white); // 滑动条圆形刻度点描边颜色 - 按下态
@@ -18,7 +18,6 @@ $color-slider_track_disabled-bg: var(--semi-color-primary-disabled); // 禁用�
 $color-slider_handle-focus: $color-focus-ring; // 圆形按钮轮廓 - 聚焦
 $color-slider_handle_dot: var(--semi-color-primary); // 圆形按钮内部圆点颜色
 
-// Spacing
 $spacing-slider-paddingX: 13px; // 滑动条整体水平内边距
 $spacing-slider-paddingY: 0px; // 滑动条整体垂直内边距
 $spacing-slider-margin: 0px; // 滑动条整体外边距
@@ -45,11 +44,9 @@ $spacing-slider_vertical_handle-translateX: 0px; // 垂直滑动条原型按钮�
 $spacing-slider_dot-translateX: 0px; //  水平滑动条圆形刻度点水平偏移量
 $spacing-slider_vertical_dot-translateY: 0px; // 垂直滑动条圆形刻度点垂直偏移量
 
-// Radius
 $radius-slider_rail: var(--semi-border-radius-small); // 滚动条未填充轨道圆角
 $radius-slider_track: var(--semi-border-radius-small); // 滚动条已填充轨道圆角
 
-// Width/Height
 $height-slider_wrapper: 32px; // 滚动条容器整体高度
 $height-slider_vertical_wrapper: 4px; // 垂直滚动条整体宽度
 $height-slider_rail: 4px; // 滚动条未填充轨道高度
@@ -61,7 +58,6 @@ $width-slider_handle_border_disabled: 1px; // 禁用滚动条圆形按钮按下�
 $width-slider_handle-focus: $width-focus-ring; // 圆形按钮轮廓 - 聚焦
 $width-slider_handle_dot: 4px; // 圆形按钮内部圆点宽度
 
-// Font
 $font-slider_rail-fontSize: 14px; // 滚动条轨道文本字号
 $font-slider_marks-fontSize: 14px; // 滚动条刻度标签字号
 $font-slider_rail-lineHeight: 1.5; // 滚动条轨道文本行高倍数

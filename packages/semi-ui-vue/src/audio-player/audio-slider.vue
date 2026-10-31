@@ -30,8 +30,6 @@
 
     // $size-audio-player-slider-dot
     const dotSize = 16;
-
-    // the duration is 0 until the metadata loads
     const percent = computed(() => (props.max ? (props.value / props.max) * 100 : 0));
 
     // Template notes, kept here because a template comment would become an extra node in the Tooltip's trigger slot:
@@ -61,7 +59,6 @@
         onPointer(e, true);
     };
 
-    // the preview belongs to the pointer; a keyboard use shows the value
     const clearPreview = () => {
         movingInfo.value = null;
     };

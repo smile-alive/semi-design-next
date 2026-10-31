@@ -33,7 +33,6 @@
         ...rest
     }: CheckboxGroupProps = $props();
 
-    // One name per group, so form submission never mixes groups.
     const uid = $props.id();
 
     // role="group" supports none of these. aria-invalid and aria-errormessage go to each checkbox (the role supports
@@ -41,7 +40,6 @@
     // Tooltip injects the rest for a dialog trigger, and tabindex would add a stray Tab stop.
     const DROPPED_ATTRS = new Set(['aria-invalid', 'aria-errormessage', 'aria-required', 'aria-expanded', 'aria-haspopup', 'aria-controls', 'tabindex', 'tabIndex']);
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: CheckboxGroupBaseProps = {
         get value() {
             return value;
@@ -55,7 +53,6 @@
         (base) => ({
             updateGroupValue: (next) => base.setState({ value: next }),
             notifyChange: (next) => {
-                // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 value = next;
                 onChange?.(next);
             },

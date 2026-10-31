@@ -56,8 +56,6 @@ export default function ButtonGroup(rawProps: ButtonGroupProps) {
 
     const parent = outer?.layer === layer ? outer : undefined;
     const inputGroup = inputGroupContext?.layer === layer ? inputGroupContext : undefined;
-
-    // Own value, then the outer ButtonGroup, then the InputGroup
     const view = createMemo(() => inheritGroupLooks(local, parent ? parent.view() : inputGroup?.view()));
     const context: ButtonGroupContextValue = { view, layer, buttons: new WeakMap() };
 

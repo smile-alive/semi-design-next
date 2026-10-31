@@ -325,7 +325,6 @@ describe(`Typography`, () => {
         rect = setup({ containerWidth: 100, textWidth: 90, padding: '10px', border: '0px' });
         expect(await getRowOverflow(rect)).toBe(true);
 
-        // 4. No overflow: text 30 < content box 96
         rect = setup({ containerWidth: 100, textWidth: 30, padding: '0px', border: '2px' });
         expect(await getRowOverflow(rect)).toBe(false);
     });

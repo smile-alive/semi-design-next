@@ -31,7 +31,6 @@ describe('ColorPicker（浏览器）', () => {
         const outside = required(container.querySelector<HTMLElement>('[data-testid="outside"]'));
         expect(getComputedStyle(slider).touchAction).toBe('none');
 
-        // the pointer is released over another element, past the slider's right end
         await userEvent.dragAndDrop(handle, outside);
         expect(onChange.mock.lastCall?.[0].hsva.h).toBe(360);
 

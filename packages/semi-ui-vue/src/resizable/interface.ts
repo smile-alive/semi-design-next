@@ -47,7 +47,6 @@ export interface ResizableHandleSlotProps {
 
 export interface ResizableSlots {
     default?: () => VNode[];
-    /** Content of each enabled handle */
     handle?: (props: ResizableHandleSlotProps) => VNode[];
 }
 
@@ -78,6 +77,5 @@ export interface ResizeItemSlots {
 }
 
 export interface ResizeHandlerSlots {
-    /** Replaces the default grip icon */
     default?: () => VNode[];
 }

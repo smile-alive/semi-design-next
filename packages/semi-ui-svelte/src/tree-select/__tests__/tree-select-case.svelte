@@ -21,7 +21,6 @@
         store.log.push(entry);
     };
 
-    // `store.props` lets a test change the props after mount
     const common = $derived({
         motion: false,
         motionExpand: false,

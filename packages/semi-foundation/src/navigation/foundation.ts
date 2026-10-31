@@ -33,7 +33,6 @@ export interface NavigationAdapter<P extends NavigationBaseProps = NavigationBas
     updateOpenKeys(keys: ItemKey[]): void;
 }
 
-/** The props the foundation reads */
 export interface NavigationBaseProps {
     items?: (string | NavItemInput)[];
     children?: unknown;
@@ -115,9 +114,6 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
         });
     }
 
-    /**
-     * Formatted items and the itemKey -> parent keys map
-     */
     static getFormattedItems({ items }: NavigationBaseProps, children: NavItemType[] = []) {
         const formattedItems = NavigationFoundation.formatItems(items);
         const willHandleItems = Array.isArray(items) && items.length ? formattedItems : children;
@@ -226,9 +222,6 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
     // The four handlers below are arrow properties: a host hands them out as context values, and a stable identity keeps
     // memoized consumers from re-rendering.
 
-    /**
-     * Selects keys together with their top level parents
-     */
     updateSelectedKeys = (keys: ItemKey[]) => {
         const parentKeys = NavigationFoundation.getZeroParentKeys(this.#getItemKeysMap(), ...keys);
         this.adapter.updateSelectedKeys(Array.from(new Set(keys.concat(parentKeys))));

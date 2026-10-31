@@ -33,7 +33,6 @@ export interface DropDownMenuItemTitle extends Omit<DropdownTitleProps, 'childre
 
 export type DropDownMenuItem = DropDownMenuItemItem | DropDownMenuItemDivider | DropDownMenuItemTitle;
 
-/** What Dropdown puts on the trigger element on top of Tooltip's; every key is a live getter */
 export type DropdownTriggerProps = TooltipTriggerProps & {
     class: string;
     onKeyDown: (event: KeyboardEvent) => void;
@@ -84,7 +83,6 @@ const defaultProps = {
     mouseLeaveDelay: strings.DEFAULT_LEAVE_DELAY,
     showTick: false,
     closeOnEsc: true,
-    // the popup is an interactive menu, not a tooltip
     role: 'presentation',
     returnFocusOnClose: true,
 } satisfies Partial<DropdownProps>;
@@ -130,8 +128,6 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
     );
 
     const ref = props.ref;
-
-    // moves focus into the menu when Tooltip gives the popup its initial focus
     const focusTarget = { focus: foundation.handleOpened };
     const handle: DropdownHandle = { focusTrigger: () => tooltip?.focusTrigger(), rePosition: () => tooltip?.rePosition() };
     const view = createMemo(() => ({ menuDepth: (parent?.view().menuDepth ?? 0) + 1, showTick: props.showTick, selectionMode: local.selectionMode, trigger: props.trigger }));
@@ -155,7 +151,6 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
         return Boolean(el && menuItems.get(el)?.());
     };
 
-    // Tooltip's getTriggerProps plus the menu button of the APG pattern
     const withMenuButton =
         (getTooltipProps: GetTriggerProps): GetDropdownTriggerProps =>
         (own = {} as never) => {

@@ -155,7 +155,6 @@
             setPanelOpen: (next) => base.setState({ open: next }),
             setInputValue: (inputValue) => base.setState({ inputValue }),
             notifyOpenChange: (next) => {
-                // the bindable props are the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 open = next;
                 onOpenChange?.(next);
             },
@@ -252,7 +251,6 @@
         return a instanceof Date && b instanceof Date ? a.getTime() === b.getTime() : Object.is(a, b);
     };
 
-    // Compared by time, so a new Date of the same time does not overwrite the text being typed
     const sameValue = (a: Value, b: Value) => {
         return Array.isArray(a) && Array.isArray(b) ? a.length === b.length && a.every((item, index) => sameTime(item, b[index])) : sameTime(a, b);
     };

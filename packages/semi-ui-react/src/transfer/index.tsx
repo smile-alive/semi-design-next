@@ -55,9 +55,7 @@ export interface RenderSourceItemProps extends DataItem {
 export interface RenderSelectedItemProps extends DataItem {
     onRemove?: () => void;
     sortableHandle?: SortableHandle;
-    /**
-     * The node's full path in treeList mode (only with showPath)
-     */
+    /** The node's full path in treeList mode (only with showPath) */
     fullPath?: Array<FullPathItem>;
 }
 
@@ -103,13 +101,9 @@ export interface VirtualizeProps {
 }
 
 export interface PaginationProps {
-    /** Controlled page */
     currentPage?: number;
-    /** Uncontrolled initial page */
     defaultCurrentPage?: number;
-    /** Number of items per page */
     pageSize?: number;
-    /** Callback when page changes */
     onPageChange?: (currentPage: number) => void;
 }
 
@@ -179,7 +173,6 @@ export interface TransferProps extends ElementProps<'div', 'defaultValue' | 'onC
     showPath?: boolean;
     loading?: boolean;
     virtualize?: VirtualizeProps;
-    /** Pagination of the left panel */
     pagination?: PaginationProps;
     onChange?: (values: Array<string | number>, items: Array<DataItem>) => void;
     onSelect?: (item: DataItem) => void;
@@ -192,7 +185,6 @@ export interface TransferProps extends ElementProps<'div', 'defaultValue' | 'onC
     renderSelectedPanel?: (selectedPanelProps: SelectedPanelProps) => React.ReactNode;
     renderSourceHeader?: (headProps: SourceHeaderProps) => React.ReactNode;
     renderSelectedHeader?: (headProps: SelectedHeaderProps) => React.ReactNode;
-    /** Imperative handle */
     ref?: React.Ref<TransferHandle>;
 }
 

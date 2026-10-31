@@ -4,7 +4,6 @@ import { Typeahead } from '@fibrae/semi-foundation/utils/a11y';
 import type { FlattenNode, TreeRowProps } from './interface';
 
 export interface TreeKeyboardOptions {
-    /** The visible rows the keys act on */
     rows: Accessor<FlattenNode[]>;
     /** The row the keys act on before any is chosen, -1 for none */
     defaultIndex: Accessor<number>;
@@ -18,9 +17,7 @@ export interface TreeKeyboardOptions {
     editing?: (event: KeyboardEvent) => boolean;
     /** Enter, and Space outside a text field: selects, or checks in a multiple tree */
     select: (event: KeyboardEvent, row: TreeRowProps) => void;
-    /** Expands or collapses the row */
     expand: (event: KeyboardEvent, row: TreeRowProps) => void;
-    /** Scrolls the row the keys moved to into view */
     reveal: (index: number, key: string) => void;
 }
 
@@ -29,7 +26,6 @@ export interface TreeKeyboard {
     setKeyboardKey: (key: string | null) => void;
     activeIndex: Accessor<number>;
     activeKey: Accessor<string | undefined>;
-    /** Returns whether the key was handled */
     handleKeyDown: (event: KeyboardEvent) => boolean;
 }
 

@@ -8,7 +8,6 @@ export type MarkdownChild = MarkdownNode | string | number | boolean | null | un
 
 export const Fragment = Symbol('MarkdownRender.Fragment');
 
-// Svelte has no JSX runtime, so the compiled source yields a plain node tree that markdown-render.svelte renders.
 function jsx(type: MarkdownNode['type'], props: Record<string, unknown>) {
     // MDX hands a `components.wrapper` its content as the element `<_createMdxContent />`, a plain function that is
     // not a Svelte component; calling it yields the content tree. Known limit: relies on the name @mdx-js/mdx emits.

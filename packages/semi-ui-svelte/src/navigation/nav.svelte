@@ -57,7 +57,6 @@
     const NO_TREE: NavItemType[] = [];
     const prefix = cssClasses.PREFIX;
 
-    // null is a controlled empty value, which the foundation's readers handle
     const foundationProps: NavigationBaseProps = {
         get children() {
             return children ? NO_TREE : undefined;

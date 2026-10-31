@@ -171,7 +171,6 @@ describe('Tree 键盘焦点', () => {
 
     it('行内按钮是自行响应 Enter 的 Tab 停留点，指针聚焦的复选框仍可用方向键', async () => {
         const onSelect = vi.fn<NonNullable<TreeProps['onSelect']>>();
-        // a click would bubble to the row and select it, as with the mouse; stopping it isolates the key handling
         const onClick = vi.fn<(e: MouseEvent) => void>((e) => e.stopPropagation());
         const [multiple, setMultiple] = createSignal(false);
         render(() => (

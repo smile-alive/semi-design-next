@@ -59,7 +59,6 @@ export interface ChatAdapter<P = Record<string, any>, S = Record<string, any>> e
     getDropAreaElement: () => HTMLDivElement;
 }
 
-/** The props the foundation reads with getProp */
 export interface ChatBaseProps {
     chats?: Message[];
 }
@@ -69,7 +68,6 @@ export interface ChatBaseState {
 }
 
 export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S extends ChatBaseState = ChatBaseState> extends BaseFoundation<ChatAdapter<P, S>, P, S> {
-    /** Cancels the running scroll animation */
     #cancelAnimation?: () => void;
     #scrollFrame?: number;
     /** Whether new content scrolls into view: stops when the user scrolls up, resumes on return or on send */

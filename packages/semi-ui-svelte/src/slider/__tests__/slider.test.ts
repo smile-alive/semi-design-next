@@ -134,7 +134,6 @@ describe('Svelte Slider 受控值（$bindable）', () => {
         flushSync();
         expectValues(20);
         expect(getHandle()).toHaveStyle({ left: '20%' });
-        // a controlled value change ends a change too
         expect(store.log).toEqual(['change 70', 'after 70', 'after 20']);
     });
 
@@ -538,7 +537,6 @@ describe('Svelte Slider 拖动', () => {
         await move({ clientX: 64, clientY: 10 });
         expect(change).toHaveBeenLastCalledWith(65);
         await move({ clientX: 100, clientY: 10 });
-        // max need not sit on the step grid: the last step below it
         expect(change).toHaveBeenLastCalledWith(95);
         await release();
     });

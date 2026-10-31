@@ -229,11 +229,9 @@ describe('Progress', () => {
     it('line 的 indeterminate 忽略 percent 与 showInfo，并渲染动画类名', () => {
         const { container } = renderProgress({ indeterminate: true, percent: 50, showInfo: true });
         expect(getProgressbar()).toHaveClass(`${prefixCls}-indeterminate`);
-        // the CSS animation drives the block, so no fixed width is written
         const inner = container.querySelectorAll<HTMLElement>(`.${prefixCls}-track-inner-indeterminate`);
         expect(inner).toHaveLength(1);
         expect(inner[0].style.width).toEqual('');
-        // showInfo is ignored and aria-valuenow is not set
         expect(container.querySelector(`.${prefixCls}-line-text`)).toBeNull();
         expect(getProgressbar()).not.toHaveAttribute('aria-valuenow');
     });

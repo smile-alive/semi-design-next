@@ -19,9 +19,7 @@ import { cloneDeep, hasErrorContent, invoke, isLabelConfig } from './utils';
 const prefix = cssClasses.PREFIX;
 
 export interface WithFieldOption {
-    /** The wrapped component's value prop; `value` by default */
     valueKey?: string;
-    /** The wrapped component's change handler; `onChange` by default */
     onKeyChangeFnName?: string;
     /** Where the value sits in the handler's first argument, such as `target.checked` for an event */
     valuePath?: string;
@@ -94,7 +92,6 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
     function FormField(props: AnyProps) {
         const [local, rest] = splitProps(props, [...fieldKeys, ...valueKeys, valueKey, changeKey, 'onBlur', 'prefix']) as [AnyProps, AnyProps];
 
-        // rendered only inside a Form, see InjectedField
         const form = useFormContext() as FormContextValue;
         const arrayField = useArrayFieldContext();
         const group = useFormInputGroupContext();
@@ -186,7 +183,6 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
         const helpText = children(() => (ownLayout() && !local.noErrorMessage && !errorReplacesHelp() ? (local.helpText as JSX.Element) : undefined));
         const extraText = children(() => (ownLayout() && extraTextShown() ? (local.extraText as JSX.Element) : undefined));
 
-        // Form.InputGroup adds its ids to the field's own references
         const ownAria = () => {
             if (!group) {
                 return rest;

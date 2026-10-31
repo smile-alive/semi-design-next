@@ -7,7 +7,6 @@ import Tooltip, { PopupContent, type Position, type RenderContentProps, type Too
 import Arrow, { type ArrowStyle } from './arrow';
 
 export interface PopoverHandle {
-    /** Focuses the trigger (only with returnFocusOnClose and a non-custom trigger) */
     focusTrigger: () => void;
     /** Repositions the open popup at once; it already follows scrolling, resizing and trigger moves, a move a frame late */
     rePosition: () => void;
@@ -23,7 +22,6 @@ export interface PopoverProps {
      * A combobox passes presentation because it points at the inner listbox itself
      */
     role?: string;
-    /** On the popup */
     class?: string;
     /** On the popup; the arrow color reads `background-color` and `border-color` of an object style only */
     style?: JSX.CSSProperties | string;

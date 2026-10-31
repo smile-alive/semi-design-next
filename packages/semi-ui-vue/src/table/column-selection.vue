@@ -11,7 +11,6 @@
     type AnyRecord = Record<string, any>;
     type StateRowSelection = RowSelectionProps & { selectedRowKeysSet?: Set<BaseRowKeyType> };
 
-    /** The checkbox of a selection cell: select all in the header, select the row in the body */
     defineOptions({ inheritAttrs: false });
 
     const props = withDefaults(defineProps<{ record?: AnyRecord; index?: number; inHeader?: boolean }>(), {

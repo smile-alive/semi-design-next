@@ -36,14 +36,11 @@
     type FoundationEvent = MouseEvent | KeyboardEvent;
     type Foundation = TreeSelectFoundation<BasicTreeSelectProps, BasicTreeSelectInnerData, FoundationEvent | null>;
     type Adapter = TreeSelectAdapter<BasicTreeSelectProps, BasicTreeSelectInnerData, FoundationEvent | null>;
-
-    /** The built-in Input's handle, or what a `search` slot binds `inputRef` to */
     type Focusable = { focus: (options?: FocusOptions) => void };
 
     interface TagEntry {
         key: string;
         slotProps: TreeSelectSelectedItemSlotProps;
-        /** The tag slot replaces the whole tag */
         whole: boolean;
         nodes?: KeyedNode[];
         text?: unknown;
@@ -91,7 +88,6 @@
         showLine: () => semiDefault('TreeSelect', 'showLine', false),
         virtualize: semiGlobalDefault('TreeSelect', 'virtualize'),
         placeholder: semiGlobalDefault('TreeSelect', 'placeholder'),
-        // size and disabled resolve own value -> InputGroup -> global default in useGroupLooks
         disabled: undefined,
         size: undefined,
         borderless: () => semiDefault('TreeSelect', 'borderless', false),
@@ -510,7 +506,6 @@
         foundation.handleKeyDown(event);
     };
 
-    // The popup is not a DOM descendant of the trigger, so its keys arrive here
     const handleContentKeyDown = (event: KeyboardEvent) => {
         handleTreeKeyDown(event);
         foundation.handleKeyDown(event);
@@ -558,7 +553,6 @@
 
     const listClass = () => [`${prefixTree}-option-list`, `${prefixTree}-option-list-block`, { [`${prefixTree}-option-list-hidden`]: emptyHidden() && noData() }];
 
-    // With expandedKeys controlled, a search hit renders without the animated group
     const searchTargetIsDeep = () => props.expandedKeys !== undefined && props.motionExpand && view.value.motionKeys.size === 0 && view.value.filteredKeys.size > 0;
 
     watch(derived, (value) => {

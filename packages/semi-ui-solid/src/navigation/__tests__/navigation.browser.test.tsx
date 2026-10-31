@@ -191,7 +191,6 @@ describe('Navigation（浏览器）', () => {
         ));
         const button = screen.getByRole('button', { name: '首页' });
         const li = button.closest('li') as HTMLElement;
-        // the button fills the li and carries the item padding, so the text sits where the li used to put it
         expect(button.getBoundingClientRect().toJSON()).toEqual(li.getBoundingClientRect().toJSON());
         const text = screen.getByText('首页').getBoundingClientRect();
         expect(text.left - li.getBoundingClientRect().left).toBe(12);
@@ -233,7 +232,6 @@ describe('Navigation（浏览器）', () => {
         // A DOM click keeps the expand and the checks below in one task: the 200ms fades cannot finish before they
         // are paused, while the round trip of a real pointer click can outlast them on a loaded machine
         toggleButton().click();
-        // the texts mount again on expanding, so they all start from transparent instead of showing at once
         for (const animation of document.getAnimations()) {
             animation.pause();
             animation.currentTime = 0;

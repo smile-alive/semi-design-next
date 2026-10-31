@@ -25,7 +25,6 @@ const settle = (ms = 50) => new Promise((resolve) => setTimeout(resolve, ms));
 // mouseenter does not bubble: the hover listener sits on the span wrapping the text, a pointer over the text enters it first
 const enterText = (node: HTMLElement) => fireEvent.mouseEnter(node.firstElementChild as Element);
 
-// The full text stays in the DOM, hidden, while the truncated text shows; what a reader sees skips it
 function visibleText(node: Element): string {
     return [...node.childNodes].map((child) => (child.nodeType === Node.TEXT_NODE ? child.textContent : child instanceof HTMLElement && child.hidden ? '' : visibleText(child as Element))).join('');
 }
@@ -84,7 +83,6 @@ function captureResizeObserver() {
     return { observers, report };
 }
 
-// An element the text is mounted inside, standing for a composite widget item
 function mountIn(tag: string, attrs: Record<string, string>, store: Store) {
     const host = document.createElement(tag);
     Object.entries(attrs).forEach(([name, value]) => host.setAttribute(name, value));

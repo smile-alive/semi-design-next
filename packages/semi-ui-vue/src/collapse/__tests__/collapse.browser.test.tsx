@@ -21,7 +21,6 @@ describe('Collapse（浏览器）', () => {
             </Collapse>
         ));
         const content = container.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-collapse-content`) as HTMLElement;
-        // consumers such as Sidebar cap the height and let the content scroll
         content.style.cssText = 'max-height: 40px; overflow: auto';
         await tabTo(content);
         expectThemeFocusRing(content);

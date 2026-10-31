@@ -274,7 +274,6 @@ describe('radio', () => {
         expect(e.target.value).toBe('v1');
         expect(e.target.name).toBe('n1');
         expect(typeof e.preventDefault).toBe('function');
-        // stopPropagation is forwarded to the React change event
         expect(parentChange).not.toHaveBeenCalled();
     });
 
@@ -341,7 +340,6 @@ describe('radio', () => {
         expect(container.querySelector(`.${prefixCls}-extra`)).toBeNull();
     });
 
-    // hover styles are CSS :hover, asserted in radio.browser.test.tsx
     it('radio button 类型的选中类名', async () => {
         const { container } = render(<Radio type="button">A</Radio>);
         const addon = container.querySelector(`.${prefixCls}-addon-buttonRadio`);
@@ -523,7 +521,6 @@ describe('radio 审计修复', () => {
             </Radio>
         );
         expect(screen.getByRole('radio')).not.toBeChecked();
-        // a non-boolean checked is ignored, so the radio shows its state
         rerender(
             <Radio checked={null as unknown as boolean} defaultChecked>
                 A

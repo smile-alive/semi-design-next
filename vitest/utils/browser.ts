@@ -28,7 +28,6 @@ export async function clickOutside() {
     }
 }
 
-// A silent WAV: a local media source with a known duration
 export function silentWavUrl(seconds: number) {
     const sampleRate = 8000;
     const dataSize = sampleRate * seconds;
@@ -67,7 +66,6 @@ export function disableFieldSizing() {
     onTestFinished(() => style.remove());
 }
 
-// Moves the real mouse to (x, y) in this frame's viewport and presses or releases the left button there
 export function mouse(type: 'move' | 'down' | 'up', x: number, y: number) {
     // Vitest runs every browser test inside an iframe of its runner page
     const frame = (window.frameElement as Element).getBoundingClientRect();

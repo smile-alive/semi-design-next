@@ -11,7 +11,6 @@ export interface TableSelectionCellProps {
     onChange?: (checked: boolean, e: CheckboxEvent) => void;
     selected?: boolean;
     disabled?: boolean;
-    /** Intermediate state, shown as a solid horizontal line */
     indeterminate?: boolean;
     prefixCls?: string;
     class?: string;
@@ -28,9 +27,6 @@ export default function TableSelectionCell(props: TableSelectionCellProps) {
     );
 }
 
-/**
- * The selection checkbox of a row, or of the header when `inHeader`, following the table's selection state
- */
 export function TableSelection(props: { record?: Record<string, any>; inHeader?: boolean; index?: number }) {
     const table = useTableContext('Table.Selection');
     const locale = useLocale('Table');

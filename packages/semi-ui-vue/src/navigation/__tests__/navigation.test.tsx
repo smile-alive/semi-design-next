@@ -336,7 +336,6 @@ describe('Navigation', () => {
         expect(title).toHaveAttribute('aria-haspopup', 'menu');
         expect(title).toHaveAttribute('aria-expanded', 'false');
         expect(title).not.toHaveAttribute('aria-controls');
-        // a hover trigger also opens on focus; the popup reports visible after its positioning fallback
         title.focus();
         await vi.advanceTimersByTimeAsync(0);
         expect(screen.getByRole('menu')).toHaveTextContent('用户列表');
@@ -756,7 +755,6 @@ describe('Navigation 行为', () => {
         expect(title).toHaveAttribute('role', 'menuitem');
         title.focus();
         await fireEvent.keyDown(title, { key: 'Enter', code: 'Enter' });
-        // the Dropdown reports its visibility only after positioning
         await vi.advanceTimersByTimeAsync(500);
         const inner = onOpenChange.mock.calls.filter(([data]) => data.itemKey === 'inner');
         expect(inner).toHaveLength(1);

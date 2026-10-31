@@ -16,7 +16,6 @@ export interface Item {
     disabled?: boolean;
 }
 
-/** The props the foundation reads with getProp */
 export interface ScrollItemBaseProps<I extends Item = Item> {
     cycled?: boolean;
     list?: I[];
@@ -227,7 +226,6 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
             const appendCount = this.shouldAppend(listNode, wrapper, ratio);
 
             if (prependCount) {
-                // move last nodes to first position
                 for (let i = 0; i < prependCount; i++) {
                     const nodes = Array.from(allNodes).slice(total - list.length * (i + 1), total - list.length * i);
                     listNode.prepend(...nodes);
@@ -354,7 +352,6 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
                 const firstRect = firstNode.getBoundingClientRect();
 
                 const listHeight = firstRect.height * list.length;
-                // without layout (jsdom) `baseTop -= listHeight` never advances and the loop would not end
                 if (listHeight <= 0) {
                     return 0;
                 }
@@ -482,7 +479,6 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         this.scrollToSelected();
     };
 
-    /** Centres the item last selected */
     scrollToSelected = (duration: number = numbers.DEFAULT_SCROLL_DURATION) => {
         this.#scrollToNode(this.#selectedNode, duration);
     };

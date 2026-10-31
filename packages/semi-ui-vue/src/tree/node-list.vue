@@ -10,10 +10,6 @@
     import type { FlattenNode, NodeListProps } from './interface';
     import NodeCollapsible from './node-collapsible.vue';
 
-    /**
-     * The rows of Tree and TreeSelect. A virtualized list renders the rows in view; otherwise every row renders, with the
-     * ones that appear or disappear (motionKeys) grouped into one animated NodeCollapsible.
-     */
     const props = withDefaults(defineProps<NodeListProps>(), {
         flattenList: undefined,
         motionType: null,

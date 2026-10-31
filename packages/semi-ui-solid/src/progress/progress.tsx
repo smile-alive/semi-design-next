@@ -133,12 +133,7 @@ export default function Progress(rawProps: ProgressProps) {
                 role="progressbar"
             >
                 <div class={`${prefixCls}-track`} style={local.orbitStroke ? { 'background-color': local.orbitStroke } : {}} aria-hidden="true">
-                    <div
-                        class={clsx(`${prefixCls}-track-inner`, { [`${prefixCls}-track-inner-indeterminate`]: local.indeterminate })}
-                        // indeterminate is driven by CSS animation; percent is ignored
-                        style={{ background: strokeColor(), ...(local.indeterminate ? {} : horizontal() ? { width: `${percent()}%` } : { height: `${percent()}%` }) }}
-                        aria-hidden="true"
-                    />
+                    <div class={clsx(`${prefixCls}-track-inner`, { [`${prefixCls}-track-inner-indeterminate`]: local.indeterminate })} style={{ background: strokeColor(), ...(local.indeterminate ? {} : horizontal() ? { width: `${percent()}%` } : { height: `${percent()}%` }) }} aria-hidden="true" />
                 </div>
                 <Show when={local.showInfo && !local.indeterminate}>
                     <div class={`${prefixCls}-line-text`}>{text()}</div>

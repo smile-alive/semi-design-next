@@ -39,7 +39,6 @@
 
     provideButtonGroupContext(context);
 
-    // Reads the button's effective looks so the line matches the rendered button.
     const lineClass = (node: VNode) => {
         const kind = elementType(node);
         if (kind !== 'Button' && kind !== 'IconButton') return undefined;

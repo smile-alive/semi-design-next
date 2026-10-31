@@ -100,7 +100,6 @@ describe('Radio', () => {
         const buttons = container.querySelectorAll(`.${prefix}-buttonRadioGroup-small`);
 
         await userEvent.click(buttons[0]);
-        // Native radio-group arrow navigation checks the next radio with the same name
         await userEvent.keyboard('{ArrowDown}');
         expect(screen.getByRole('radio', { name: 'design' })).toBeChecked();
         expect(buttons[1].querySelector(`.${prefix}-inner-checked`)).not.toBeNull();

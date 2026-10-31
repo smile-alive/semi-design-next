@@ -93,7 +93,6 @@ describe('Svelte DatePicker 面板导航', () => {
         expect(weekRows('right')).toHaveLength(5);
         await click(titleButton('left'));
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'year');
-        // May 2021 needs six week rows
         await click(navButton('right', zh_CN.DatePicker.nextMonth));
         await click(navButton('right', zh_CN.DatePicker.nextMonth));
         expect(getNavTitle('right')).toBe('2021年 5月');
@@ -284,12 +283,10 @@ describe('Svelte DatePicker 日期格', () => {
     it('weekStartsOn 为 0（周日）：表头与首格', async () => {
         await setup({ value: baseDate, open: true, props: { type: 'date', weekStartsOn: 0 } });
         expect(screen.getAllByRole('columnheader').map((header) => header.textContent?.trim())).toEqual(['日', '一', '二', '三', '四', '五', '六']);
-        // 2019-09-01 is a Sunday, the first cell of the first week
         expect(getWeekDays('left', 0)[0]).toHaveAttribute('aria-label', '2019-09-01');
     });
 
     it('weekStartsOn 为 1 时日期格位置随之移动', async () => {
-        // January 2021 starts on Friday
         await setup({ value: new Date(2021, 0, 1), open: true, props: { type: 'date', weekStartsOn: 1 } });
         expect((getPopup() as HTMLElement).querySelectorAll(`.${dp}-day[aria-label]`)).toHaveLength(31);
         expect(getWeekDays('left', 0)[4]).toHaveAttribute('aria-label', '2021-01-01');

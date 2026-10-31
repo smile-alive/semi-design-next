@@ -12,7 +12,6 @@ import { reachableKey } from './fixtures/reachable';
 const prefix = 'semi-toast';
 const closeButton = (toast: Element) => toast.querySelector(`.${prefix}-close-button .semi-button`) as HTMLButtonElement;
 const finishAnimations = (elements: Element[]) => elements.forEach((el) => el.getAnimations({ subtree: true }).forEach((a) => a.finish()));
-// TransitionGroup puts the enter and leave classes, and so their animations, on the toast's wrapper element
 const wrapperOf = (toast: Element) => toast.parentElement as HTMLElement;
 
 function renderHook(reachable?: string) {
@@ -52,7 +51,6 @@ describe('Toast 浏览器', () => {
         const contentTop = content.getBoundingClientRect().top;
 
         await userEvent.click(closeButton(first));
-        // seek the paused leave animation instead of sleeping, so frame timing cannot skew samples
         const leave = await waitFor(() => {
             const animations = wrapperOf(first).getAnimations({ subtree: true });
             expect(animations.some((a) => (a as CSSAnimation).animationName.includes('hide'))).toBe(true);
@@ -227,7 +225,6 @@ describe('Toast 浏览器', () => {
             closeButton(toasts().find((toast) => toast.textContent?.includes('first')) as HTMLElement).focus();
             api.close(leaving);
             await waitFor(() => expect(toasts()).toHaveLength(1));
-            // asserting that nothing closes needs a fixed wait longer than the duration
             await new Promise((resolve) => setTimeout(resolve, 1500));
             expect(toasts()).toHaveLength(1);
         } finally {

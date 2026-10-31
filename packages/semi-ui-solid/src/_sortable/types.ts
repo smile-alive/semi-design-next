@@ -1,7 +1,6 @@
 import type { Component, JSX } from 'solid-js';
 import type { UseSortableInput } from '@dnd-kit/solid/sortable';
 
-/** Wraps the drag handle content and returns the component that renders the handle */
 export type SortableHandle = (WrapperComponent: Component) => Component;
 
 export interface OnSortEndProps {
@@ -24,10 +23,8 @@ export interface SortableProps {
     useDragOverlay?: boolean;
     container?: Component<{ children?: JSX.Element }>;
     transition?: UseSortableInput['transition'];
-    /** Builds `${prefix}-sortable-item`, `-over`, `-active` and `${prefix}-sortable-handle` */
     prefix?: string;
     dragOverlayCls?: string;
-    /** Accessible name of each drag handle, read by the caller from its own locale */
     dragHandleLabel: string;
     // Lets the caller ignore the focus loss dnd-kit causes during a drag
     onDraggingChange?: (dragging: boolean) => void;

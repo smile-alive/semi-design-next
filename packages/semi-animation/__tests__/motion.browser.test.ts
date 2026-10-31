@@ -17,7 +17,6 @@ afterEach(() => {
     }
 });
 
-// The presets are data for Motion; these check Motion takes them as they are
 describe('Motion 中的 semi-animation 预设', () => {
     it('通过浏览器对元素运行 Bézier 缓动', async () => {
         const el = box();

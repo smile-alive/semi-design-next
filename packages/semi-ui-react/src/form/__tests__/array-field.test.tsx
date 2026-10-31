@@ -102,7 +102,6 @@ describe('Form.ArrayField', () => {
         await clickAddEmptyLine();
         expect(getFieldInput('data[3][name]')).toHaveValue('');
         expect(getFieldInput('data[3][type]')).toHaveValue('');
-        // existing lines are kept
         expect(getFieldInput('data[1][name]')).toHaveValue(data[1].name);
     });
 
@@ -129,7 +128,6 @@ describe('Form.ArrayField', () => {
             { name: 'b', type: '2' },
             { name: 'c', type: '3' },
         ];
-        // ArrayField re-renders its lines when updateKey (a Date.now() value) changes, and Date is frozen in tests
         vi.setSystemTime(Date.now() + 1);
         void act(() => formApi.setValues({ name: 'nike', data: lines }, { isOverride: true }));
         expect(formApi.getValues()).toEqual({ name: 'nike', data: lines });
@@ -160,7 +158,6 @@ describe('Form.ArrayField', () => {
         renderForm({ formProps: { initValues: { data }, getFormApi: (api) => (formApi = api) } });
         await clickAddEmptyLine();
         expect(getFieldInput('data[2][name]')).not.toBeNull();
-        // ArrayField re-renders its lines when updateKey (a Date.now() value) changes, and Date is frozen in tests
         vi.setSystemTime(Date.now() + 1);
         void act(() => formApi.reset());
         expect(formApi.getValue('data')).toEqual(data);

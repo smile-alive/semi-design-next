@@ -13,7 +13,6 @@ export interface PlainTab {
     closable?: boolean;
 }
 
-/** Dropdown props of a bar side, plus the class, style and listener Dropdown takes as attrs */
 export type TabsDropdownItemProps = DropdownProps & {
     class?: HTMLAttributes['class'];
     style?: StyleValue;
@@ -25,7 +24,6 @@ export interface TabsDropdownProps {
     end?: TabsDropdownItemProps;
 }
 
-/** The menu content is the `#moreContent` slot and the trigger the `#more` slot */
 export interface TabsMore {
     count: number;
     dropdownProps?: TabsDropdownItemProps;
@@ -71,7 +69,6 @@ export interface TabsEmits {
     visibleTabsChange: [visibleState: Map<string, boolean>];
 }
 
-/** The data of the default tab bar; its behavior reaches the TabItems inside the Tabs on its own */
 export interface TabBarProps {
     activeKey: string | null;
     /** TabPane entries carry `tab` only when the pane's `#tab` slot is plain text */
@@ -96,40 +93,31 @@ export interface TabsTabSlotProps {
 
 export interface TabsTabBarSlotProps {
     tabBarProps: TabBarProps;
-    /** The default tab bar, ready for `<component :is="tabBar" />` */
     tabBar: VNode;
 }
 
 export interface TabsArrowSlotProps {
-    /** The tabs scrolled out on this side */
     items: OverflowItem[];
     position: 'start' | 'end';
-    /** Scrolls the next hidden tab of this side into view */
     onClick: () => void;
     /** The default arrow, ready for `<component :is="defaultNode" />` */
     defaultNode: VNode;
 }
 
 export interface TabsMoreContentSlotProps {
-    /** The tabs moved into the more menu */
     items: PlainTab[];
 }
 
 export interface TabsSlots {
-    /** TabPanes, or the content when `tabList` is an array */
     default?: () => VNode[];
     /** The tab of each `tabList` entry; without it the entry's `tab` text shows */
     tab?: (props: TabsTabSlotProps) => VNode[];
     /** The icon of each `tabList` entry; an empty result renders no icon */
     icon?: (props: TabsTabSlotProps) => VNode[];
     tabBarExtraContent?: () => VNode[];
-    /** Replaces the tab bar */
     tabBar?: (props: TabsTabBarSlotProps) => VNode[];
-    /** Replaces each arrow of the collapsed bar */
     arrow?: (props: TabsArrowSlotProps) => VNode[];
-    /** Replaces the trigger of the more menu */
     more?: () => VNode[];
-    /** Replaces the content of the more menu */
     moreContent?: (props: TabsMoreContentSlotProps) => VNode[];
 }
 
@@ -141,9 +129,7 @@ export interface TabPaneProps {
 
 export interface TabPaneSlots {
     default?: () => VNode[];
-    /** The pane's tab, rendered by the Tabs */
     tab?: () => VNode[];
-    /** The icon of the pane's tab, rendered by the Tabs */
     icon?: () => VNode[];
 }
 

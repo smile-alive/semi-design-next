@@ -88,7 +88,6 @@ describe('TagInput（浏览器）', () => {
         await waitFor(() => expect(document.querySelector(`.${tagInputCls}-drag-item-move`)).not.toBeNull());
         await userEvent.keyboard('{ArrowRight}');
         expect(document.querySelector(`.${tagInputCls}-drag-item-move`)).not.toBeNull();
-        // the overlay renders a copy of the dragged tag with its handle content
         expect(getHandles()).toHaveLength(4);
         expect(onBlur).not.toHaveBeenCalled();
         await userEvent.keyboard(' ');

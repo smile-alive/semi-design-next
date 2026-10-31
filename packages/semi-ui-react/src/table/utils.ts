@@ -2,9 +2,6 @@
 import { merge } from 'es-toolkit/compat';
 import type { TableComponents, Virtualized } from './interface';
 
-/**
- * Merges the components passed in by the user with the default components
- */
 export function mergeComponents(components: TableComponents, virtualized: Virtualized) {
     return merge(
         {},

@@ -8,7 +8,6 @@
     import DataPart from './data-part.vue';
     import type { ColorPickerPanelSlots } from './interface';
 
-    // Not exposed on its own: ColorPicker renders it inline or inside the popover, so the structure is written once.
     defineSlots<ColorPickerPanelSlots>();
 
     const { view, foundation } = useColorPickerContext('ColorPicker panel');

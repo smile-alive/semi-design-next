@@ -23,13 +23,9 @@ type AnyRecord = Record<string, any>;
 
 export interface BodyProps {
     columns: ColumnProps[];
-    /** The header is rendered inside the body table rather than as a separate table */
     includeHeader?: boolean;
-    /** Shown after the table when the page has no rows */
     emptySlot?: JSX.Element;
-    /** Receives the body wrapper div (the scroll container) */
     ref?: (element: HTMLDivElement) => void;
-    /** Receives the thead of a header inside the body table */
     headerRef?: (element: HTMLElement) => void;
 }
 
@@ -163,9 +159,6 @@ export default function Body(props: BodyProps) {
         highlightedRowKeys = nextSet;
     };
 
-    /**
-     * Updates hoveredRowKey; with rowSpanHover also highlights all rows covered by rowSpan cells
-     */
     const onRowHover = (isHover: boolean, rowKey: BaseRowKeyType) => {
         setHoveredRowKey(isHover ? rowKey : null);
         if (table.props.rowSpanHover) {
@@ -229,7 +222,6 @@ export default function Body(props: BodyProps) {
         props.ref?.(node);
     };
 
-    // the width of a virtualized row: its div cells sit in no table layout
     const rowWidth = () => arrayAdd(cellWidths(), 0, props.columns.length);
 
     const itemSize = (index: number) =>

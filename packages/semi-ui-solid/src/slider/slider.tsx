@@ -22,7 +22,6 @@ import { useSpecialTrigger } from '../tooltip/context';
 const prefixCls = cssClasses.PREFIX;
 
 export interface SliderProps extends Omit<BasicSliderProps, 'className' | 'style' | 'railStyle' | 'marks' | 'onMouseUp'>, ElementProps<'div', 'defaultValue' | 'onChange' | 'onMouseUp' | 'onFocus' | 'onBlur' | 'onKeyDown' | 'children'> {
-    /** Mark labels by value; node labels go through `renderMark` */
     marks?: Record<number, string | number>;
     /** A mark's label next to the mark and, with `tooltipOnMark`, in its tooltip; called once for each place. Defaults to the label */
     renderMark?: (value: number, label: string | number) => JSX.Element;

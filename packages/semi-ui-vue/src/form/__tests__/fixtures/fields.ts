@@ -20,7 +20,6 @@ export const flush = () => new Promise((resolve) => setTimeout(resolve));
 
 type Content = (scope: FormDefaultSlotProps) => VNodeChild;
 
-/** Renders a Form with `content` as its default slot; the returned `api()` is the Form's formApi */
 export function renderForm(props: Record<string, unknown> = {}, content?: Content) {
     let formApi: FormApi | undefined;
     const view = render(Form, {

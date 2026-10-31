@@ -1,4 +1,3 @@
-/** The part of a Toast or Notification list's state the kernel maintains */
 export interface ListStoreState<T> {
     removedItems: T[];
     // the items the latest change updated in place; any later change resets it

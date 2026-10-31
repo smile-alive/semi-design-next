@@ -121,8 +121,6 @@
      * Only these outlive a change of the columns prop; a column never dragged follows the prop.
      */
     const overrides = new SvelteMap<string | number, Partial<ColumnProps>>();
-
-    // the columns being dragged get the handler class, which is not kept once the drag ends
     const resizing = new SvelteSet<string | number>();
 
     /*
@@ -263,7 +261,6 @@
         },
     };
 
-    // the Svelte columns carry snippets and wider callbacks than the foundation's column type declares
     const toFoundationColumns = (list: ColumnProps[]) => {
         return list as BaseColumnProps<AnyRecord>[];
     };
@@ -326,7 +323,6 @@
             },
             notifyExpand: (expanded, record, mouseEvent) => onExpand?.(expanded, record, mouseEvent),
             notifyExpandedRowsChange: (expandedRows, nextKeys) => {
-                // bound, the write reaches the parent; unbound, it overrides locally
                 expandedRowKeys = nextKeys;
                 onExpandedRowsChange?.(expandedRows);
             },
@@ -645,7 +641,6 @@
         root?.style.setProperty('--semi-table-section-width', `${amendTableWidth(root.getBoundingClientRect().width)}px`);
     };
 
-    /** The data of the current page, deep cloned */
     const readCurrentPageData = () => {
         const current = foundation.getCurrentPageData();
         const result: ReturnType<TableHandle['getCurrentPageData']> = {};

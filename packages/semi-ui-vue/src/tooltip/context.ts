@@ -3,7 +3,6 @@ import { createContext } from '../_base/create-context';
 
 export interface PopupRegistry {
     register: (container: () => HTMLElement | null) => () => void;
-    /** A focusin or focusout inside the popup of a Tooltip whose trigger is `from` */
     relayFocus: (event: FocusEvent, from: Element | null) => void;
 }
 

@@ -147,8 +147,6 @@ export default function Radio(rawProps: RadioProps) {
     );
 
     const hasChildren = hasContent(children);
-
-    // a button radio is only its label, so its extra is not rendered
     const hasExtra = hasContent(extra) && !isButtonRadio;
 
     const content =

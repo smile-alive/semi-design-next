@@ -23,7 +23,6 @@ export type CheckboxEvent = {
 // name and autofocus reach the inner input, which the span's attributes do not cover
 export interface CheckboxProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'onchange'>, Pick<HTMLInputAttributes, 'name' | 'autofocus'> {
     checked?: boolean;
-    /** Identifies the checkbox inside a CheckboxGroup; a checkbox without it works on its own. */
     value?: CheckboxValue;
     disabled?: boolean;
     indeterminate?: boolean;

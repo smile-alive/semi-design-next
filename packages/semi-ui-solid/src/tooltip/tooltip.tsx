@@ -87,7 +87,6 @@ export interface TooltipProps extends TooltipBaseProps {
     /** A function (declare its parameter) gets getTriggerProps for the element that takes focus; anything else is wrapped in Tooltip's span */
     children?: JSX.Element | ((getTriggerProps: GetTriggerProps) => JSX.Element);
     content?: JSX.Element | RenderContent;
-    /** On the popup */
     class?: string;
     /** On the popup, before the positioning declarations; the arrow color reads `background-color` of an object style only */
     style?: JSX.CSSProperties | string;
@@ -214,8 +213,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
     // last mousedown through the popup's delegated handler: also a press in any portal the content renders, as
     // React's portal events count it, not only the Tooltip popups registered in `descendants`
     let pressedInside: Event | undefined;
-
-    // the popups of the Tooltips rendered in this trigger or content, at any depth
     const descendants = new Set<Accessor<HTMLElement | undefined>>();
 
     // only those rendered in the content: as React's enter and leave events through portals, moving onto one stays in
@@ -241,7 +238,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
         setOwnElement(element);
     };
 
-    // listeners and the position reference are the wrapper span when there is one
     const target = () => wrapper() ?? ownElement();
 
     const popupId = () => props.wrapperId || `${prefix}-${id}`;
@@ -379,7 +375,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
         const [local, rest] = splitProps(own as TriggerOwnProps, OWN_KEYS);
         // a disabled trigger wrapped for click hands every attribute to the wrapper span (F4)
         const carries = () => !wrapped() || special() === strings.STATUS_LOADING;
-        // Popover is a dialog trigger; ARIA forbids popup state on generic elements
         const popupState = <K extends 'aria-expanded' | 'aria-haspopup' | 'aria-controls'>(key: K, value: TooltipTriggerProps[K]) => {
             if (local[key] !== undefined) {
                 return ownValue(local[key]);
@@ -390,7 +385,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
             ref: triggerRef,
             get tabIndex() {
                 const value = local.tabIndex !== undefined ? local.tabIndex : local.tabindex;
-                // keyboard access for a non-focusable trigger (an icon, a span)
                 return value !== undefined ? ownValue(value) : carries() ? 0 : undefined;
             },
             get 'data-popupid'() {
@@ -456,7 +450,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
         };
         // a text node only reaches here in the browser; the server gives text as strings
         const textOnly = () => resolved.toArray().every((node) => typeof node === 'string' || typeof node === 'number' || (!isServer && node instanceof Text));
-        // A generic span: no popup state attributes, which ARIA forbids on it
         return (
             <span
                 ref={trackWrapper}
@@ -478,7 +471,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
         }
     };
 
-    // a mouseenter or mouseleave on this popup or one opened from its content, handed on to the enclosing Tooltips
     const relay = (e: Event) => {
         runPortal(e);
         outerPopups?.relay(e);
@@ -561,12 +553,10 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                 return;
             }
             if (current === 'enter') {
-                // reopened during its exit animation, it is still shown
                 if (!el.matches(':popover-open')) {
                     el.showPopover();
                 }
                 foundation.handleShown();
-                // read right after showPopover() to see the enter animation it started
                 const entering = el.getAnimations();
                 let cancelled = false;
                 // a prop getter compiled from a conditional creates a memo, which needs this effect as its owner
@@ -575,7 +565,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                 const timer = setTimeout(() => {
                     runWithOwner(owner, foundation.handleOpened);
                     void Promise.allSettled(entering.map((animation) => animation.finished)).then(() => {
-                        // a hover popup that backed out in handleOpened, or one closed meanwhile, is leaving
                         if (!cancelled && openPending && foundation.getState('transitionState') === 'enter') {
                             openPending = false;
                             props.afterOpen?.();
@@ -760,7 +749,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                                 stop(e);
                             }}
                             onClick={(e) => {
-                                // a hover popup's click handler already hides it for clickToHide
                                 if (state().portalEventSet[TRIGGER_EVENT_NAMES.click]) {
                                     runPortal(e);
                                 } else if (props.clickToHide) {

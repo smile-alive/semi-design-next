@@ -1,4 +1,3 @@
-/** Records the text after the caret, so the caret can follow it when a change reformats the value */
 export function recordCaretTail(input: HTMLInputElement | null): string | undefined {
     if (!input) {
         return undefined;

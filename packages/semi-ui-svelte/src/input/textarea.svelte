@@ -211,7 +211,6 @@
 
     const handleScroll = (event: Event & { currentTarget: HTMLTextAreaElement }) => {
         const { scrollTop } = event.currentTarget;
-        // the user's own listener keeps working next to the line number sync
         (attrs.control.onscroll as ((event: Event) => void) | undefined)?.(event);
         cancelAnimationFrame(scrollFrame);
         scrollFrame = requestAnimationFrame(() => {
@@ -299,12 +298,10 @@
         textarea?.setSelectionRange(start, end, direction);
     }
 
-    /** The native textarea */
     export function getTextarea() {
         return textarea;
     }
 
-    /** The root element, the wrapper div */
     export function getNativeElement() {
         return root;
     }

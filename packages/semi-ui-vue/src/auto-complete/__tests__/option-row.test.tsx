@@ -5,7 +5,6 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { render } from '@test/utils/vue';
 import SelectOption from '../../select/option.vue';
 
-// The row AutoComplete renders its items with; on its own it keeps Select's class names
 const optionCls = `${BASE_CLASS_PREFIX}-select-option`;
 type SelectHandler = (option: Record<string, unknown>, event: MouseEvent) => void;
 

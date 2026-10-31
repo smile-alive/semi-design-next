@@ -6,10 +6,7 @@ export type StrokeArr = Array<StrokeSet>;
 
 const PALETTE_TOKEN = /^(?:(black|white)|(amber|blue|cyan|green|grey|indigo|light-blue|light-green|lime|orange|pink|purple|red|teal|violet|yellow)(?:-(\d))?)$/;
 
-/**
- * Picks the stroke color for `percent` from the color stops in `s`. The result is a CSS color expression
- * (`var(--semi-...)` or `color-mix()`), so theme switches apply without a re-render.
- */
+/** The result is a CSS color expression (`var(--semi-...)` or `color-mix()`), so theme switches apply without a re-render. */
 export function generateColor(s: StrokeArr, percent: number, gradient: boolean): string | undefined {
     if (s.length === 0) return undefined;
     const sorted = s.toSorted((a, b) => a.percent - b.percent);

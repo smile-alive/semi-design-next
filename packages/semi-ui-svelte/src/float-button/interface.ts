@@ -20,7 +20,6 @@ export interface FloatButtonProps extends Omit<HTMLButtonAttributes, 'children' 
     shape?: FloatButtonShape;
     size?: FloatButtonSize;
     target?: string;
-    /** Custom badge count, in place of `badge.count` */
     badgeCount?: Snippet;
     icon?: Snippet;
 }
@@ -29,7 +28,6 @@ export interface FloatButtonGroupItem extends Pick<FloatButtonProps, 'badge' | '
     /** Accessible name, required when the item shows only an icon */
     'aria-label'?: string;
     class?: string;
-    /** Text; richer content is the `content` snippet */
     content?: string | number;
     id?: string;
     /** Called before the group's `onClick` */

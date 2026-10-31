@@ -6,7 +6,6 @@ import svelteNodeViewRenderer from './node-view.svelte.js';
 import SelectSlotView from './select-slot.svelte';
 import SkillSlotView from './skill-slot.svelte';
 
-/** The slot extensions of one editor; their views mount with `context`, the editor component's contexts */
 export default function slotExtensions(context: Map<unknown, unknown>) {
     return [
         BaseInputSlot.extend({

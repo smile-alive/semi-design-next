@@ -11,7 +11,6 @@ const prefix = 'semi-notification';
 const noticeCls = `${prefix}-notice`;
 const closeButton = (notice: Element) => notice.querySelector(`.${noticeCls}-icon-close`) as HTMLButtonElement;
 const top = (el: HTMLElement) => el.getBoundingClientRect().top;
-// The list animates each notice's root wrapper, which is also its stack item
 const wrapperOf = (notice: HTMLElement) => notice.parentElement as HTMLElement;
 // The enter and leave classes go on animationend; until then a finished slide still holds the wrapper's height
 async function finishAnimations(notices: HTMLElement[]) {
@@ -32,7 +31,6 @@ function renderHook(reachable?: string) {
             },
         },
     });
-    // hook notifications are mounted into the body
     const notices = () => [...document.body.querySelectorAll<HTMLElement>(`.${noticeCls}`)];
     const add = (title: string, duration = 0, options: NotificationHookOptions = {}) => result.api.info({ title, content: title, duration, ...options });
     return { api: result.api, add, notices, view };

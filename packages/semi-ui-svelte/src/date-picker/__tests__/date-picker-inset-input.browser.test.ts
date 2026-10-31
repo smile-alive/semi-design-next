@@ -209,7 +209,6 @@ describe('Svelte DatePicker 整段粘贴拆分到 inset 输入框（浏览器）
     it('拆分首个 inset 输入框 + dateTime', async () => {
         await setup({ props: { ...splitProps, type: 'dateTime' } });
         await userEvent.click(getInput());
-        // the whole pasted string must reach the first inset input in one change
         await userEvent.fill(await waitFor(() => getPopupInputs()[0]), '2023-09-05 17:41:36');
         await waitFor(() => expect(getPopupInputs()[0]).toHaveValue('2023-09-05'));
         expect(getPopupInputs()[1]).toHaveValue('17:41:36');

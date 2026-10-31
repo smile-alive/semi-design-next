@@ -43,7 +43,6 @@
     let input = $state<HTMLInputElement>();
     let root = $state<HTMLSpanElement>();
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: BaseCheckboxProps = {
         get checked() {
             return checked;
@@ -63,7 +62,6 @@
         (base) => ({
             setChecked: (next) => base.setState({ checked: next }),
             notifyChange: (event) => {
-                // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 checked = event.target.checked;
                 onChange?.(event as CheckboxEvent);
             },
@@ -107,8 +105,6 @@
     const labelledby = $derived(joinIds(rest['aria-labelledby'], children ? addonDomId : undefined));
     const tooltip = $derived(bindTrigger());
     const describedby = $derived(joinIds(rest['aria-describedby'], extra ? extraDomId : undefined, tooltip?.['aria-describedby']));
-
-    // aria-*, id, tabindex, autofocus and focus listeners name and focus the input, the only focus target
     const attrs = $derived(splitControlAttrs(rest, isNativeInputKey));
 
     // The root is a span rather than a label so that text clicks and box clicks share this one handler (gitlab #364).

@@ -3,7 +3,6 @@
 
     export interface SnippetsFixtureStore {
         props: Omit<DatePickerProps, 'trigger' | 'leftSlot' | 'rightSlot' | 'rangeSeparatorNode'>;
-        /** A trigger with its own input and clear button, driven through the snippet's callbacks */
         inputTrigger?: boolean;
         sides?: boolean;
         separatorNode?: boolean;

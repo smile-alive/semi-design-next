@@ -2,7 +2,6 @@
     import type { DatePickerProps } from '../interface';
 
     export interface NestedFixtureStore {
-        /** What the panel's topSlot holds */
         nested: 'popover' | 'time-picker';
         open?: boolean;
         props?: DatePickerProps;

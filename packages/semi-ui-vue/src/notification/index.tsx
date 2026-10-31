@@ -38,7 +38,6 @@ function addNotice(notice: NoticeProps) {
         wrapper.className = cssClasses.WRAPPER;
         wrapper.setAttribute(KEEP_INTERACTIVE_ATTRIBUTE, '');
         (merged.getPopupContainer?.() ?? document.body).appendChild(wrapper);
-        // A factory outside any tree: the app context supplies app-level provides and global components.
         const vnode = <NotificationList store={store} />;
         vnode.appContext = rootAppContext();
         // render() mounts synchronously, so the list subscribes before the first notice is added.

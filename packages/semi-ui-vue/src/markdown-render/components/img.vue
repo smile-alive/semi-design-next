@@ -5,8 +5,6 @@
     import { useMarkdownLinkContext } from '../context';
 
     defineOptions({ inheritAttrs: false });
-
-    // Image's props reach it as attrs; typed behind `@vue-ignore` for call sites only
     defineProps</* @vue-ignore */ InstanceType<typeof Image>['$props']>();
 
     const inLink = useMarkdownLinkContext();

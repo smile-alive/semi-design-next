@@ -19,7 +19,6 @@
     }: {
         item: TransferDataItem;
         index: number;
-        /** treeList with showPath: the text shown instead of the label */
         pathLabel?: string;
         disabled?: boolean;
         draggable: boolean;

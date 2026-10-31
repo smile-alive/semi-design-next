@@ -41,7 +41,6 @@ describe('服务端 HTML 注水无不匹配', () => {
     }
 });
 
-// Gradient and clip ids come from useId, so server and client must resolve the same prefixed id
 describe('带 {uid} 的图标与插画注水后 id 一致', () => {
     it.each([
         ['图标', icons.IconLoading],

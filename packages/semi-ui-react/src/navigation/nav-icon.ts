@@ -8,9 +8,6 @@ interface IconElementProps {
     className?: string;
 }
 
-/**
- * A Semi icon takes the size of its slot unless it sets its own; other nodes get no `size`.
- */
 export function fitNavIcon(node: React.ReactNode, size: string, className?: string) {
     if (!isValidElement<IconElementProps>(node)) {
         return node;

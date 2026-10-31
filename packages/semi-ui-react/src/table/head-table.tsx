@@ -19,9 +19,6 @@ export interface HeadTableProps {
     ref?: React.Ref<HTMLDivElement>;
 }
 
-/**
- * When the header is fixed, it is rendered as a separate Table
- */
 function HeadTable({ ref, scroll, prefixCls, handleBodyScroll, columns, components, showHeader, tableLayout, bodyHasScrollBar, sticky, onHeaderRow }: HeadTableProps) {
     const Table = components?.header?.outer ?? 'table';
     const x = scroll?.x;

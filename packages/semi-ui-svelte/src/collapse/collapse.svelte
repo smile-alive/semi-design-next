@@ -30,7 +30,6 @@
         ...rest
     }: CollapseProps = $props();
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: FoundationProps = {
         get activeKey() {
             return activeKey;
@@ -46,7 +45,6 @@
         (view) => CollapseFoundation.getInitialState(view),
         (base) => ({
             notifyChange: (next, event) => {
-                // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 activeKey = next;
                 onChange?.(next, event);
             },

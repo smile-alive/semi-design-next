@@ -43,7 +43,6 @@ function isEditable(target: any) {
     return Boolean(target?.isContentEditable) || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target?.tagName);
 }
 
-/** The props the foundation reads with getProp */
 export interface PreviewInnerBaseProps {
     closeOnEsc?: boolean;
     src?: string | string[];

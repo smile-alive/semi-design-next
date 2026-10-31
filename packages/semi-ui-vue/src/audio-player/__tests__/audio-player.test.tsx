@@ -70,7 +70,6 @@ function globalWith(overrideDefaultProps: SemiGlobal['config']['overrideDefaultP
 const withLocale = (locale: typeof en_US, props: AudioPlayerProps) => render({ render: () => <ConfigProvider locale={locale}>{() => <AudioPlayer {...props} />}</ConfigProvider> });
 
 beforeEach(() => {
-    // a real element reports `paused` and fires play and pause when its state changes
     vi.spyOn(HTMLMediaElement.prototype, 'play').mockImplementation(function (this: HTMLMediaElement) {
         setMedia(this, { paused: false });
         void fireEvent(this, new Event('play'));
@@ -92,7 +91,6 @@ describe('AudioPlayer', () => {
         const audio = getAudio(root);
         expect(audio).toHaveAttribute('src', SRC);
         expect(audio.autoplay).toBe(false);
-        // the hidden media element does not repeat the root's class and style
         expect(audio).not.toHaveAttribute('class');
         expect(audio).not.toHaveAttribute('style');
         // the captions track exists for the media rule only: it does not point at the audio itself
@@ -144,7 +142,6 @@ describe('AudioPlayer', () => {
         const { container } = renderPlayer({ autoPlay: true });
         const audio = getAudio(container);
         expect(audio.autoplay).toBe(true);
-        // a blocked autoplay never plays, so the button stays on play
         expect(container.querySelector(icon('play'))).toBeInTheDocument();
         await loadMetadata(audio, { duration: 65, volume: 0.4 });
         await fireEvent(audio, new Event('play'));
@@ -225,7 +222,6 @@ describe('AudioPlayer', () => {
         await fireEvent.lostPointerCapture(wrapper);
         await fireEvent.pointerMove(wrapper, { clientX: 150 });
         expect(audio.currentTime).toBe(60);
-        // a hover alone does not seek, and the position is clamped to the track
         await fireEvent.mouseEnter(wrapper, { clientX: 400 });
         expect(audio.currentTime).toBe(60);
         await fireEvent.pointerDown(wrapper, { clientX: 400 });
@@ -372,7 +368,6 @@ describe('AudioPlayer', () => {
         expect(audio).toHaveAttribute('src', tracks[1].src);
         expect(query(container, `.${prefixCls}-info-title`)).toHaveTextContent('Track B');
         expect(container.querySelector('img')).toBeNull();
-        // the new source is in the DOM before it is played, from the start at the normal rate
         expect(srcAtPlay).toBe(tracks[1].src);
         expect(audio.currentTime).toBe(0);
         expect(audio.playbackRate).toBe(1);

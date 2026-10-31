@@ -31,17 +31,14 @@ export interface RatingEmits {
     click: [event: MouseEvent | KeyboardEvent, index: number];
     focus: [event: FocusEvent];
     blur: [event: FocusEvent];
-    /** An arrow key that moved the value */
     keydown: [event: KeyboardEvent];
 }
 
 export interface RatingHandle {
-    /** Focuses the radio that Tab would reach */
     focus: () => void;
     blur: () => void;
 }
 
-/** What a star exposes to Rating */
 export interface RatingItemHandle {
     /** Focuses the radio of this star that stands for `value`: the first half for a half value */
     starFocus: (value: number) => void;

@@ -6,7 +6,6 @@ export interface BackTopProps extends Pick<FloatButtonProps, 'badge' | 'colorful
     duration?: number;
     /** The scrolled element; defaults to the window. Read on mount and whenever the function itself changes */
     target?: () => Window | HTMLElement | null;
-    /** The button shows once the target is scrolled beyond this many pixels */
     visibilityHeight?: number;
 }
 

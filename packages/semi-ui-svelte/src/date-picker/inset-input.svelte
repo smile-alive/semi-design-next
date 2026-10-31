@@ -26,6 +26,5 @@
 </script>
 
 {#if kind === 'date' || type.includes('Time')}
-    <!-- Fully controlled: the picker owns the text -->
     <Input aria-label={ariaLabel} bind:this={input} bind:value={() => insetInputValue[panel][field], () => {}} {disabled} onChange={handleChange} {onFocus} {placeholder} showClear={false} />
 {/if}

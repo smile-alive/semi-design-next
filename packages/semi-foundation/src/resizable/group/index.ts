@@ -26,7 +26,6 @@ export interface ResizeGroupAdapter<P extends ResizeGroupBaseProps = ResizeGroup
     getItemDefaultSize: (index: number) => string | number | undefined;
 }
 
-/** The props the foundation reads with getProp */
 export interface ResizeGroupBaseProps {
     direction?: 'horizontal' | 'vertical';
 }
@@ -97,7 +96,7 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
             nextItemPercent = this.#itemPercentMap.get(curHandler + 1);
 
         let lastNewPercent = (lastNewSize / parentSize) * 100;
-        let nextNewPercent = lastItemPercent + nextItemPercent - lastNewPercent; // no float drift
+        let nextNewPercent = lastItemPercent + nextItemPercent - lastNewPercent;
         this.#itemPercentMap.set(curHandler, lastNewPercent);
         this.#itemPercentMap.set(curHandler + 1, nextNewPercent);
         if (direction === 'horizontal') {
@@ -268,7 +267,6 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
         };
     }
 
-    /** Returns false when either item's onResizeStart returned false */
     #notifyResizeStart(handlerIndex: number, e: PointerEvent | KeyboardEvent) {
         const [lastDir, nextDir] = getItemDirection(this.#direction);
         const lastResult = this.adapter.getItemStart(handlerIndex)?.(e, lastDir);
@@ -291,9 +289,6 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
         }
     };
 
-    /**
-     * Moves each item's inline size to the new axis, where the handlers take a different length
-     */
     handleDirectionChange = () => {
         const [stale, current] = this.#direction === 'horizontal' ? ['height', 'width'] : ['width', 'height'];
         this.#measureHandlerRoom();

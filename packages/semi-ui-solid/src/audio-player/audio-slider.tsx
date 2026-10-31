@@ -18,9 +18,7 @@ interface AudioSliderProps {
     height?: number | string;
     showTooltip?: boolean;
     theme?: AudioPlayerTheme;
-    /** Accessible name of the slider */
     label: string;
-    /** Spoken form of a value, announced instead of the bare number */
     getValueText: (value: number) => string;
 }
 

@@ -10,17 +10,13 @@
     import type { ColumnProps, SortOrder } from './interface';
     import { slotOutput } from './utils';
 
-    /**
-     * The sort button of a column header: named by the column title, with the sort state as aria-sort on the header cell.
-     * When the whole header cell sorts, the click handler sits on the cell and the button's click reaches it by bubbling.
-     */
+    /** When the whole header cell sorts, the click handler sits on the cell and the button's click reaches it by bubbling. */
     defineOptions({ inheritAttrs: false });
 
     const props = defineProps<{
         column: ColumnProps;
         sortOrder: SortOrder;
         showTooltip: boolean;
-        /** The button sorts on click itself, since the header cell does not */
         sortsOnClick: boolean;
     }>();
 

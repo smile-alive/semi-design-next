@@ -72,7 +72,6 @@ async function tick(ms: number) {
     await vi.advanceTimersByTimeAsync(ms);
     await nextTick();
 }
-// Renders each props variant on its own and reports which of the given class suffixes are present.
 const presentClasses = (propsList: Props[], suffixes: string[]) =>
     propsList.map((props) => {
         const view = renderCarousel(props);
@@ -197,7 +196,6 @@ describe('Carousel', () => {
             await nextTick();
             expect(getIndicatorItems(container)).toHaveLength(3);
 
-            // One switch takes the default interval (2000ms) plus the default speed (300ms)
             await tick(2300);
             expect(getActiveItem(container)).toHaveTextContent(/^index0$/);
 
@@ -330,7 +328,6 @@ describe('Carousel', () => {
             await nextTick();
             expect(getActiveItem(container)).toHaveTextContent(/^index2$/);
             expect(getIndicatorItems(container)[2]).toHaveClass(`${BASE_CLASS_PREFIX}-carousel-indicator-item-active`);
-            // the next step starts from the controlled index
             await clickNext(container);
             expect(onChange).toHaveBeenLastCalledWith(0, 2);
         });
@@ -1092,7 +1089,6 @@ describe('Carousel', () => {
             expect(tabs().map((tab) => tab.getAttribute('aria-selected'))).toEqual(['false', 'true', 'false']);
             expect(tabs().map((tab) => tab.getAttribute('tabindex'))).toEqual(['-1', '0', '-1']);
             expect(tabs()[0]).toHaveAccessibleName(zh_CN.Carousel.slideN.replace('${index}', '1'));
-            // Tab order: only the current tab of the tablist, then the arrows
             await userEvent.tab();
             expect(tabs()[1]).toHaveFocus();
             await userEvent.tab();

@@ -8,7 +8,6 @@
         initialData: CascaderData[];
         multiple?: boolean;
         load?: (target: CascaderData, append: (children: CascaderData[]) => void) => Promise<void>;
-        /** Mutates the loaded node in place instead of replacing treeData */
         inPlace?: boolean;
     }>();
     const value = ref<CascaderValue | undefined>(props.initialValue);

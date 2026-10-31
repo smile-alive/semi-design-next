@@ -17,10 +17,7 @@ export interface ColumnSorterProps {
     showTooltip?: boolean;
 }
 
-/**
- * The sort button of a column header: named by the column title, with the sort state as aria-sort on the header cell.
- * When the whole title sorts, the click handler sits on the header cell and the button's click reaches it by bubbling.
- */
+// When the whole title sorts, the click handler sits on the header cell and the button's click reaches it by bubbling.
 export default function ColumnSorter(props: ColumnSorterProps) {
     const locale = useLocale('Table');
 

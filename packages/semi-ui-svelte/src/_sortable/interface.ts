@@ -25,7 +25,6 @@ export interface SortableProps extends HTMLAttributes<HTMLDivElement> {
     /** Builds `${prefix}-sortable-item`, `-over`, `-active` and `${prefix}-sortable-handle` */
     prefix?: string;
     transition?: SortableTransition;
-    /** Class of the copy of the item that follows the pointer during a drag */
     dragOverlayClass?: string;
     onSortEnd?: (payload: SortEndPayload) => void;
     /** A drag starts (true) or ends, dropped or canceled (false) */

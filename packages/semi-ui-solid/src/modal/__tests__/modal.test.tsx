@@ -339,7 +339,6 @@ describe('Modal', () => {
         expect(second).toHaveAccessibleName('Second');
     });
 
-    // a dangling aria-labelledby points at nothing; without a title element there is nothing to reference
     it('缺少标题元素时不设置标注', () => {
         vi.spyOn(console, 'warn').mockImplementation(() => {});
         render(() => (
@@ -399,7 +398,6 @@ describe('Modal 行为', () => {
         const afterClose = vi.fn<() => void>();
         const { rerender } = renderModal({ afterClose, visible: true, motion: true }, () => <span data-testid="inner">content</span>);
         rerender({ afterClose, visible: false, motion: true });
-        // e.g. a Tooltip or Tabs pane inside the dialog finishing its own animation
         animationEnd(screen.getByTestId('inner'));
         expect($(`.${p}`)).not.toBeNull();
         expect(afterClose).not.toHaveBeenCalled();
@@ -652,7 +650,6 @@ describe('Modal 行为', () => {
         const { rerender } = renderModal({ visible: true, getPopupContainer: container });
         container.mockClear();
         rerender({ visible: true, getPopupContainer: container, title: 'next' });
-        // Modal's own check plus the portal's lookup
         expect(container.mock.calls.length).toBeLessThanOrEqual(2);
     });
 
@@ -892,7 +889,6 @@ describe('Modal 模态判断与初始焦点', () => {
         expect(document.activeElement).toBe(ok);
     });
 
-    // keepDOM keeps the dialog mounted, so hiding runs the restore rather than unmounting the content
     it('非模态关闭时不夺回已移到页面其他位置的焦点', () => {
         const trigger = document.body.appendChild(document.createElement('button'));
         const other = document.body.appendChild(document.createElement('button'));

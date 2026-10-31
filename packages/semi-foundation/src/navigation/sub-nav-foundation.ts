@@ -31,7 +31,6 @@ export interface SubNavAdapter<P extends SubNavBaseProps = SubNavBaseProps, S ex
     getIsOpen(): boolean;
 }
 
-/** The props the foundation reads */
 export interface SubNavBaseProps {
     itemKey?: string | number;
     disabled?: boolean;

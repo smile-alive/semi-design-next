@@ -21,6 +21,5 @@ it('transfer/renderLabel 在每个插入处各创建一次', async () => {
     });
     expect(errors).toEqual([]);
     expect(html.match(/<b[\s>]/g)).toHaveLength(3);
-    // both lists show the selected item
     expect(rendered.toSorted((x, y) => x.localeCompare(y))).toEqual(['a', 'a', 'b']);
 });

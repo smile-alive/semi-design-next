@@ -41,7 +41,6 @@ export function getPosition(parentPos: string, index: number) {
     return `${parentPos}-${index}`;
 }
 
-/** Flattens nested tree data into a list, as the virtual list renders it. */
 export function flattenTreeData(treeNodeList: any[], expandedKeys: Set<string>, keyMaps: KeyMapProps, filteredShownKeys: boolean | Set<any> = false) {
     const flattenList: any[] = [];
     const filterSearch = Boolean(filteredShownKeys);
@@ -335,7 +334,6 @@ export function calcCheckedKeys(values: any, keyEntities: KeyEntities) {
             findAncestorKeys([key], keyEntities, false).forEach((ancestorKey: string) => halfCheckedKeys.add(ancestorKey));
         } else {
             checkedKeys.add(parent.key);
-            // the parent level may not exist in levelMap yet
             if (level - 1 in levelMap && level) {
                 levelMap[level - 1].push(parent.key);
             } else {
@@ -393,10 +391,7 @@ export function calcMotionKeys(oldKeySet: Set<string>, newKeySet: Set<string>, k
         motionKeys: diffKeys.length === 1 ? findDescendantKeys(diffKeys, keyEntities, false) : [],
     };
 }
-/**
- * @returns whether option includes searchValue.
- * When filterTreeNode is a function,returns the result of filterTreeNode which called with (searchValue, target, option).
- */
+
 export function matchTreeNode(searchValue: string, option: any, filterTreeNode: any, filterProps: any) {
     if (!filterTreeNode) {
         return true;

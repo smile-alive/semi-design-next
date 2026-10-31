@@ -26,9 +26,7 @@ export interface TagInputProps extends Omit<HTMLAttributes<HTMLDivElement>, Nati
     /** The input text, bindable; leave it out for an uncontrolled text. `bind:inputValue={get, set}` makes it fully controlled */
     inputValue?: string;
     disabled?: boolean;
-    /** Maximum length of one tag */
     maxLength?: number;
-    /** Maximum number of tags */
     max?: number;
     maxTagCount?: number;
     showRestTagsPopover?: boolean;
@@ -45,7 +43,6 @@ export interface TagInputProps extends Omit<HTMLAttributes<HTMLDivElement>, Nati
     size?: TagInputSize;
     split?: (originString: string, separators: string | string[] | null) => string[];
     validateStatus?: TagInputValidateStatus;
-    /** Focuses the input on mount, with `preventScroll` */
     autofocus?: boolean;
     preventScroll?: boolean;
     onChange?: (value: string[]) => void;
@@ -68,8 +65,6 @@ export interface TagInputProps extends Omit<HTMLAttributes<HTMLDivElement>, Nati
     prefix?: Snippet;
     suffix?: Snippet;
     insetLabel?: Snippet;
-    /** Replaces the clear icon */
     clearIcon?: Snippet;
-    /** Replaces each tag as a whole */
     tag?: Snippet<[TagInputTagSnippetProps]>;
 }

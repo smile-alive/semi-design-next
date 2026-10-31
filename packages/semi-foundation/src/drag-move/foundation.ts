@@ -12,7 +12,6 @@ export interface DragMoveAdapter<P extends DragMoveBaseProps = DragMoveBaseProps
     notifyTouchCancel: (e: PointerEvent) => void;
 }
 
-/** The props the foundation reads with getProp */
 export interface DragMoveBaseProps {
     handler?: () => HTMLElement | null;
     constrainer?: 'parent' | (() => HTMLElement | null);

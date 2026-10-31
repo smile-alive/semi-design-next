@@ -89,7 +89,7 @@ describe('Breadcrumb', () => {
             children: [{ children: 'semi' }, { children: 'design' }, { children: 'powered' }, { children: 'by' }, { children: 'douyin' }],
         };
         const { container } = getBr(props);
-        expect(container.querySelector('.semi-breadcrumb-wrapper').children).toHaveLength(4); // semi/.../by/douyin
+        expect(container.querySelector('.semi-breadcrumb-wrapper').children).toHaveLength(4);
         const texts = Array.from(container.querySelectorAll('.semi-breadcrumb-item-wrap .semi-typography')).map((el) => el.textContent);
         expect(texts).toEqual(['semi', 'by', 'douyin']);
         expect(container.querySelector('.semi-breadcrumb-collapse .semi-icon-more')).not.toBeNull();

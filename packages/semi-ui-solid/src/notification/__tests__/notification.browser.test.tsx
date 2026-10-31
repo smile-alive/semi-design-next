@@ -228,7 +228,6 @@ describe('Notification', () => {
             (notices()[0].querySelector('button') as HTMLElement).focus();
             notification.info({ title: 'second', duration: 0 });
             await waitFor(() => expect(notices()).toHaveLength(2));
-            // asserting that nothing closes needs a fixed wait longer than the duration
             await new Promise((resolve) => setTimeout(resolve, 1500));
             expect(notices()).toHaveLength(2);
         } finally {

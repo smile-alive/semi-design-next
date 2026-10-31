@@ -34,18 +34,14 @@ export interface TreeSelectSelectedItemSnippetProps {
 }
 
 export interface TreeSelectTriggerSnippetProps {
-    /** The selected nodes */
     value: TreeNodeData[];
     inputValue: string;
     placeholder?: string;
     disabled: boolean;
-    /** The TreeSelect's props */
     componentProps: TreeSelectProps;
-    /** Updates the search keyword */
     onSearch: (inputValue: string) => void;
     /** Pass the click event when bound to a control inside the trigger, so the click does not open the dropdown */
     onClear: (event?: MouseEvent) => void;
-    /** Unchecks the node with the key */
     onRemove: (key: string) => void;
 }
 
@@ -144,7 +140,6 @@ export interface TreeSelectProps extends Omit<HTMLAttributes<HTMLDivElement>, Na
     /** Goes on the `role="tree"` element */
     optionListStyle?: string;
     preventScroll?: boolean;
-    /** Lets the tags of a multiple trigger search wrap onto more lines */
     triggerTagWrap?: boolean;
 
     /** With `onChangeWithObject` the value and the node are both the node */
@@ -153,7 +148,6 @@ export interface TreeSelectProps extends Omit<HTMLAttributes<HTMLDivElement>, Na
     onLoad?: (loadedKeys: Set<string>, node: TreeNodeData) => void;
     onSelect?: (selectedKey: string, selected: boolean, node: TreeNodeData) => void;
     onSearch?: (input: string, filteredExpandedKeys: string[], filteredNodes: TreeNodeData[]) => void;
-    /** Called when the dropdown opens or closes */
     onVisibleChange?: (visible: boolean) => void;
     /**
      * Focus entering the trigger or the dropdown from outside (the focusin); moving within them does not fire it again.
@@ -167,9 +161,7 @@ export interface TreeSelectProps extends Omit<HTMLAttributes<HTMLDivElement>, Na
     onBlur?: (event: MouseEvent | KeyboardEvent | FocusEvent) => void;
     onClear?: (event: TreeSelectChangeEvent) => void;
 
-    /** Content of a row's label */
     label?: Snippet<[TreeLabelSnippetProps]>;
-    /** A row's icon */
     icon?: Snippet<[TreeIconSnippetProps]>;
     /** A single element gets the class and the click that expands */
     expandIcon?: Snippet<[TreeExpandIconSnippetProps]>;
@@ -179,7 +171,6 @@ export interface TreeSelectProps extends Omit<HTMLAttributes<HTMLDivElement>, Na
     selectedItem?: Snippet<[TreeSelectSelectedItemSnippetProps]>;
     /** Replaces each tag in multiple mode, ahead of `selectedItem` */
     tag?: Snippet<[TreeSelectSelectedItemSnippetProps]>;
-    /** Replaces the trigger content */
     trigger?: Snippet<[TreeSelectTriggerSnippetProps]>;
     /** Replaces the search box; `false` hides it while `filterTreeNode` still filters */
     search?: Snippet<[TreeSelectSearchSnippetProps]> | false;
@@ -188,7 +179,6 @@ export interface TreeSelectProps extends Omit<HTMLAttributes<HTMLDivElement>, Na
     insetLabel?: Snippet;
     /** `null` hides the arrow */
     arrowIcon?: Snippet | null;
-    /** Replaces the clear icon */
     clearIcon?: Snippet;
     /** `null` hides the empty state */
     emptyContent?: Snippet | null;
@@ -201,6 +191,5 @@ export interface TreeSelectProps extends Omit<HTMLAttributes<HTMLDivElement>, Na
 export interface TreeSelectHandle {
     /** Searches as if `value` were typed, opening the dropdown first; needs `filterTreeNode` */
     search: (value: string) => void;
-    /** Closes the dropdown */
     close: () => void;
 }

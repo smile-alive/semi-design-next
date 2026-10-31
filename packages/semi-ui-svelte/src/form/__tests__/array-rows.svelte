@@ -4,7 +4,6 @@
     import FormInput from '../form-input.svelte';
     import ProbeControl from './probe-control.svelte';
 
-    // An ArrayField of one `name` field per row, with buttons for the row operations
     let { field, initValue, rowInitValue, probe = false }: { field: string; initValue?: unknown[]; rowInitValue?: string; probe?: boolean } = $props();
 </script>
 

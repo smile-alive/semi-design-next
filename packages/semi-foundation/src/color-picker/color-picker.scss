@@ -49,7 +49,6 @@ $module: #{$prefix}-colorPicker;
     &-alphaSlider {
         position: relative;
         margin-top: $spacing-colorPicker_slider-marginTop;
-        // scrolling the page would cancel the pointer mid-drag
         touch-action: none;
         cursor: pointer;
         background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill-opacity=".05"><rect x="8" width="8" height="8"/><rect y="8" width="8" height="8"/></svg>');
@@ -74,7 +73,6 @@ $module: #{$prefix}-colorPicker;
     &-colorSlider {
         position: relative;
         margin-top: $spacing-colorPicker_slider-marginTop;
-        // scrolling the page would cancel the pointer mid-drag
         touch-action: none;
         cursor: pointer;
         background: linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);

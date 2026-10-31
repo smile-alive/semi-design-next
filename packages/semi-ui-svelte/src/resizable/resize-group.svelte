@@ -114,7 +114,6 @@
         const observer = new ResizeObserver(() => {
             // a group first mounted inside display:none measures 0: lay out again once it becomes measurable
             foundation.handleGroupResize();
-            // a container change without a window resize can leave px limits violated
             foundation.ensureConstraint();
         });
         observer.observe(node);

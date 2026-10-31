@@ -317,7 +317,6 @@ describe('ScrollItem 行为', () => {
     it('wheel 列的 listbox 按空格不触发原生翻页', () => {
         render(() => <ScrollItem aria-label="wheel" list={numbers(10)} mode="wheel" motion={false} selectedIndex={4} />);
         const listbox = screen.getByRole('listbox');
-        // fireEvent returns false when the default action was prevented
         expect(fireEvent.keyDown(listbox, { key: ' ' })).toBe(false);
     });
 

@@ -144,7 +144,6 @@ describe('Svelte SideSheet 遮罩与浮层栈（浏览器）', () => {
         await keyboardClick(openInner);
         const inner = await screen.findByRole('dialog', { name: 'Inner' });
         await waitFor(() => expect(focusInside(inner)).toBe(true));
-        // the layer below a modal layer is inert while the top one is open
         expect(outer.closest('[inert]')).not.toBeNull();
 
         await userEvent.keyboard('{Escape}');

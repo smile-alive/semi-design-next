@@ -9,15 +9,12 @@
     import type { ColumnProps, TableFilterDropdownSlotProps } from './interface';
     import { slotOutput } from './utils';
 
-    /** The filter button of a column header and its Dropdown: the filter menu or the `#filterDropdown` panel */
     defineOptions({ inheritAttrs: false });
 
     const props = defineProps<{
-        /** The header column, whose `Table.Column` slots apply */
         column: ColumnProps;
         /** The filter options: the column's query, or the column itself when it has no dataIndex */
         query: ColumnProps;
-        /** The applied value */
         filteredValue?: any[];
     }>();
 

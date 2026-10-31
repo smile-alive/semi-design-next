@@ -1,15 +1,9 @@
 import { beforeEach, vi } from 'vite-plus/test';
 
 class ResizeObserver {
-    observe() {
-        // do nothing
-    }
-    unobserve() {
-        // do nothing
-    }
-    disconnect() {
-        // do nothing
-    }
+    observe() {}
+    unobserve() {}
+    disconnect() {}
 }
 
 global.ResizeObserver = ResizeObserver;
@@ -24,7 +18,7 @@ Element.prototype.animate = () => ({ finished: new Promise(() => {}), playState:
 // jsdom has no FontFaceSet; on the prototype so a test can shadow it on `document` and delete its own again
 const fonts = new EventTarget() as FontFaceSet;
 Object.defineProperty(Document.prototype, 'fonts', { configurable: true, get: () => fonts });
-// jsdom has no TextTrack; each track element gets one object that only carries the mode
+// jsdom has no TextTrack
 const textTracks = new WeakMap<HTMLTrackElement, TextTrack>();
 Object.defineProperty(HTMLTrackElement.prototype, 'track', {
     configurable: true,

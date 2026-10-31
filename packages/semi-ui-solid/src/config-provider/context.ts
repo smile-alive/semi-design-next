@@ -12,12 +12,10 @@ export interface ContextValue {
     /** Whether the ConfigProvider observes breakpoints, so consumers know `onBreakpoint` reports anything */
     responsiveObserve?: boolean;
     responsiveMap?: ResponsiveMap;
-    /** Subscribes to breakpoint changes and returns the unsubscribe function */
     onBreakpoint?: {
         (callback: OnBreakpointScreensCallback): () => void;
         (breakpoints: Breakpoint[], callback: OnBreakpointChangeCallback): () => void;
     };
-    /** The current breakpoint matches, read-only */
     screens?: BreakpointScreens;
 }
 

@@ -61,7 +61,6 @@
         onClick: foundation.handleChange,
     });
 
-    // an inline activeKey array is a new reference on every parent render
     useDidUpdate(() => props.activeKey, foundation.syncActiveKey, isEqual, 'pre');
 </script>
 

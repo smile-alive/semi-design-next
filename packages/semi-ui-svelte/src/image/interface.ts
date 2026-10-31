@@ -4,7 +4,6 @@ import type { RatioType } from '@fibrae/semi-foundation/image/preview-inner-foun
 
 export type { RatioType, RotateDirection, SwitchDirection } from '@fibrae/semi-foundation/image/preview-inner-foundation';
 
-/** The preview's data and callbacks, shared by a group (`ImagePreview`) and the `preview` object of a single `Image` */
 export interface PreviewOptions {
     /** The images of the preview. A group lists the srcs its `Image` children open at */
     src?: string | string[];
@@ -16,7 +15,6 @@ export interface PreviewOptions {
     previewTitle?: string;
     /** One per entry of `src`; the title of the shown image wins over `previewTitle` */
     titles?: (string | undefined)[];
-    /** One per entry of `src`; the alt of the shown preview image */
     alts?: (string | undefined)[];
     maskClosable?: boolean;
     closable?: boolean;
@@ -58,7 +56,6 @@ export interface PreviewOptions {
     onDownloadError?: (src: string) => void;
 }
 
-/** The `preview` object of a single Image: its custom nodes go through Image's snippets */
 export type ImagePreviewProps = PreviewOptions;
 
 /** The zoom values are percentages, as the footer shows them */
@@ -88,7 +85,6 @@ export interface MenuProps {
 }
 
 export interface ImagePreviewTitleSnippetProps {
-    /** The shown image's title, else `previewTitle` */
     title: string | undefined;
     index: number;
 }
@@ -99,7 +95,6 @@ export interface ImagePreviewIconSnippetProps {
 
 /** Custom nodes of the preview; on Image they apply to its own preview only, not inside a group */
 export interface PreviewSnippets {
-    /** Replaces the title text; the dialog keeps its name */
     title?: Snippet<[ImagePreviewTitleSnippetProps]>;
     previewMenu?: Snippet<[MenuProps]>;
     leftIcon?: Snippet<[ImagePreviewIconSnippetProps]>;
@@ -118,9 +113,7 @@ export interface PreviewProps extends Omit<HTMLAttributes<HTMLDivElement>, Nativ
     visible?: boolean;
     /** Bindable; leave it out for an uncontrolled preview. `bind:currentIndex={get, set}` makes it fully controlled */
     currentIndex?: number;
-    /** Whether the images of the group wait for the viewport before they load */
     lazyLoad?: boolean;
-    /** Margin around the viewport within which a lazy image of the group starts loading */
     lazyLoadMargin?: string;
     children?: Snippet;
 }
@@ -136,7 +129,6 @@ export interface ImageProps extends Omit<HTMLImgAttributes, ImgNativeKeys>, Prev
     crossOrigin?: 'anonymous' | 'use-credentials';
     /** A string is the src of the image shown when loading fails; a snippet renders instead of it */
     fallback?: string | Snippet;
-    /** Shown while the image loads, instead of the skeleton */
     placeholder?: Snippet;
     preview?: boolean | ImagePreviewProps;
     imgStyle?: string;

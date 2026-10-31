@@ -29,7 +29,6 @@ function createBaseToast(initialConfig?: ConfigProps) {
         create(opts: ToastProps) {
             assertClient('Toast', 'Toast.useToast');
             const id = opts.id ?? createId('toast');
-            // an explicit undefined must not replace the defaults
             const mergedOpts = { ...store.defaults, ...omitInstanceIds(semiGlobal.config.overrideDefaultProps?.Toast), ...omitBy(opts, (value) => value === undefined) };
             if (!wrapper) {
                 wrapper = document.createElement('div');

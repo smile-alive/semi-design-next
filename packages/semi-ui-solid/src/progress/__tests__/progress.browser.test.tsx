@@ -5,7 +5,6 @@ import Progress, { type ProgressProps } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-progress`;
 
-/** Paints the computed color on a canvas pixel, which turns any CSS color syntax into [r, g, b, a] bytes */
 function toRgba(color: string) {
     const context = document.createElement('canvas').getContext('2d') as CanvasRenderingContext2D;
     context.fillStyle = color;

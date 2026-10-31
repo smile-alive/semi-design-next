@@ -10,7 +10,6 @@
     import type { NotificationListProps } from './interface.js';
     import NoticeList from './notice-list.svelte';
 
-    // A list renders one store for its whole life
     let { store }: NotificationListProps = $props();
     const defaults = useDefaultProps('Notification');
 

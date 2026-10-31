@@ -46,13 +46,11 @@ export interface VirtualListProps<T> extends ElementProps<'div', 'children' | 'r
     itemData: T;
     /** Identity of a row: a row keeps its DOM nodes while its key stays in view. The index when absent */
     itemKey?: (index: number, data: T) => PropertyKey;
-    /** Rows rendered beyond each edge of the viewport */
     overscan?: number;
     /** Receives `ref`, `style`, `onScroll` and `children` and must land them on its scroll element */
     outerElementType?: ValidComponent;
     /** Receives `style` and `children` (the rows) */
     innerElementType?: ValidComponent;
-    /** Called when the scroll offset changes */
     onScroll?: (args: VirtualListScrollArgs) => void;
     style?: JSX.CSSProperties;
     /** Renders one row, called once per row key; a component works as is */
@@ -60,9 +58,9 @@ export interface VirtualListProps<T> extends ElementProps<'div', 'children' | 'r
 }
 
 /**
- * Fixed or per-row-height vertical list that renders only the rows in view. Lists whose rows take no focus (Tree,
- * TreeSelect, Cascader, Select) pass `tabIndex={-1}`: Chrome would otherwise make the scroll container a tab stop of
- * its own, while the widget, which scrolls the active row into view, is the only stop.
+ * Lists whose rows take no focus (Tree, TreeSelect, Cascader, Select) pass `tabIndex={-1}`: Chrome would otherwise
+ * make the scroll container a tab stop of its own, while the widget, which scrolls the active row into view, is the
+ * only stop.
  */
 export default function VirtualList<T>(props: VirtualListProps<T>) {
     const [local, rest] = splitProps(props, ['ref', 'outerRef', 'height', 'width', 'itemCount', 'itemSize', 'itemData', 'itemKey', 'overscan', 'outerElementType', 'innerElementType', 'onScroll', 'style', 'children']);

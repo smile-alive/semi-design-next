@@ -17,7 +17,6 @@ export function isFeedbackValueEmpty(value?: FeedbackValue | null) {
 
 type PromiseStatus = 'pending' | 'fulfilled' | 'rejected';
 
-/** The state the foundation reads with getState */
 export interface FeedbackBaseState {
     value: FeedbackValue | null;
     onOKReturnPromiseStatus?: PromiseStatus;
@@ -81,7 +80,6 @@ export default class FeedbackFoundation<P extends object = object, S extends Fee
     handleEmojiReasonChange = (value: string, e?: TE) => {
         this.adapter.notifyTextAreaChange(value, e);
         const oldValue = this.adapter.getState('value');
-        // the emoji picked earlier; a string or checkbox value has none
         const emoji = typeof oldValue === 'object' && !Array.isArray(oldValue) ? oldValue?.emoji : undefined;
         this.#changeValue({ ...(emoji !== undefined && { emoji }), text: value });
     };

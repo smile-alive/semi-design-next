@@ -33,8 +33,6 @@
     type Adapter = TableAdapter<AnyRecord, FoundationProps>;
 
     defineOptions({ inheritAttrs: false });
-
-    // The collected columns are an internal prop that Table reads from its Table.Column children during render
     const props = defineProps<TableProps<R> & { collectedColumns?: CollectedColumns }>();
     const emit = defineEmits<TableEmits<R>>();
     const slots = defineSlots<TableSlots<R>>();
@@ -367,7 +365,6 @@
         getState: () => state.value,
     });
 
-    /** The parts of a render that read attrs and slots, which are not reactive */
     const renderFrame = () => {
         const { root, control } = splitControlAttrs(attrs, isNameKey);
         const { class: rootClass, style: rootStyle, ...rootRest } = root;

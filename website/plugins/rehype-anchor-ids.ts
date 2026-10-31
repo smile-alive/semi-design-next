@@ -18,7 +18,6 @@ const textOf = (node: ElementContent): string => (node.type === 'text' ? node.va
 
 export default function rehypeAnchorIds() {
     return (tree: Root) => {
-        // Duplicates get -1, -2 from the second on; the first keeps its id so existing links still hit it.
         const used = new Set<string>();
         visit(tree, 'element', (node: Element) => {
             if (typeof node.properties.id === 'string') {

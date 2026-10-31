@@ -69,8 +69,8 @@ export interface AIChatInputProps extends ElementProps<'div'> {
     showUploadFile?: boolean;
     showReference?: boolean;
     showUploadButton?: boolean;
-    round?: boolean; // fully rounds the footer operate and configure buttons
-    canSend?: boolean; // overrides whether the send button is enabled
+    round?: boolean;
+    canSend?: boolean;
     onMessageSend?: (props: MessageContent) => void;
     onStopGenerate?: () => void;
     uploadTipProps?: TooltipProps;

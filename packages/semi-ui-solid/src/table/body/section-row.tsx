@@ -12,7 +12,6 @@ type SectionRecord = Parameters<OnGroupedRow<Record<string, any>>>[0];
 
 export interface SectionRowProps {
     groupKey: string | number;
-    /** The row keys of the group */
     group: BaseRowKeyType[];
     record: SectionRecord;
     index: number;
@@ -20,11 +19,9 @@ export interface SectionRowProps {
     style?: JSX.CSSProperties;
 }
 
-/** The row heading a group: one cell across the table with the group's expand button */
 export default function SectionRow(props: SectionRowProps) {
     const table = useTableContext('Table.SectionRow');
 
-    // called again when the group changes
     const cell = createMemo(() => {
         const render = table.props.renderGroupSection;
         const groupKey = props.groupKey;

@@ -9,7 +9,6 @@
 
     const notification = Notification.useNotification();
 
-    // Both props are read once at setup, as the test hands them over before rendering
     untrack(() => {
         if (reachable !== undefined) setReachable(reachable);
         onApi(notification, reach);

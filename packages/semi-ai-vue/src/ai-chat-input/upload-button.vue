@@ -19,7 +19,6 @@
 
     const upload = useTemplateRef('upload');
 
-    // AIChatInput owns the attachment list and calls onChange and onRemove itself
     const bindings = computed(() => ({
         ...omit(props.uploadProps ?? {}, ['onChange', 'onRemove']),
         action: props.uploadProps?.action ?? '',

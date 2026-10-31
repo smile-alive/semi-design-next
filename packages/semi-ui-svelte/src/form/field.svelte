@@ -28,7 +28,6 @@
         warning(!bare && !inForm, '[Semi Form]: Field Component must be use inside the Form, please check your dom declaration');
     });
 
-    // The wrapped control's instance, for calling its own methods (focus, open ...)
     export function getControl() {
         return bareControl ?? inner?.getControl();
     }

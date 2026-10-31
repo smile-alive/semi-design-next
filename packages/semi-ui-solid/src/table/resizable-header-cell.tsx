@@ -5,7 +5,6 @@ import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
 /** The second argument carries the new width for onResize */
 export type ResizeHandler = (e: PointerEvent, data?: { size: { width: number } }) => void;
 
-/** The header cell attributes TableHeaderRow passes, with the resize handlers ResizableTable adds */
 export interface ResizableHeaderCellProps extends Omit<JSX.ThHTMLAttributes<HTMLTableCellElement>, 'onResize'> {
     onResize?: ResizeHandler;
     onResizeStart?: ResizeHandler;

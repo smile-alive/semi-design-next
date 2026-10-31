@@ -4,8 +4,7 @@ import { cdp } from 'vite-plus/test/browser';
 import { render } from '@test/utils/vue';
 import Lottie, { type LottieParams } from '..';
 
-// the project aliases lottie-web to a stub; this keeps the calls so the autoplay decision can be read. Hoisted so the
-// tests read the mock directly: lottie-web types loadAnimation as a method, which lint forbids passing around
+// hoisted so the tests read the mock directly: lottie-web types loadAnimation as a method, which lint forbids passing around
 const loadAnimation = vi.hoisted(() => {
     const animation = (_params: { autoplay?: boolean }) => ({
         destroy: vi.fn<() => void>(),
@@ -20,7 +19,6 @@ async function emulateReducedMotion(value: string) {
     await cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] });
 }
 
-// lottie-web is imported on demand, so the animation is created a few microtasks after mounting
 async function autoplayOf(params: LottieParams) {
     render(Lottie, { attrs: { 'aria-label': 'spinner' }, props: { params } });
     await waitFor(() => expect(loadAnimation).toHaveBeenCalledTimes(1));

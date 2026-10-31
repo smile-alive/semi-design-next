@@ -22,7 +22,6 @@ export default function ColorChooseArea(props: ColorChooseAreaProps) {
         props,
         () => ({ isHandleGrabbing: false }),
         () => ({
-            // the foundation guards a missing element itself
             getDOM: () => dom as HTMLDivElement,
             notifyChange: (newColor) => props.onChange(newColor),
         })

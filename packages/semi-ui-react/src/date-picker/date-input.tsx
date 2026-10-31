@@ -52,7 +52,6 @@ export interface DateInputProps
     rangeSeparatorNode?: React.ReactNode;
 }
 
-/** The trigger input of DatePicker (two inputs for a range), or the inset inputs at the top of its panel */
 export default function DateInput(rawProps: DateInputProps) {
     const props: DateInputProps = {
         ...rawProps,

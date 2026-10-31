@@ -13,7 +13,6 @@
 
     const props = defineProps<{
         range: Date[];
-        /** The date whose month names the grid; the first day of the range by default */
         labelDate?: Date;
         events: EventObject[];
         markWeekend: boolean;
@@ -84,7 +83,6 @@
                     <ul :class="`${cssClasses.PREFIX}-event-items`">
                         <slot v-if="$slots.allDayEvents" :events="props.events" name="allDayEvents" />
                         <template v-else>
-                            <!-- positioned spans always carry leftPos, width and topInd; the foundation type keeps them optional -->
                             <li v-for="(item, ind) in allDayEvents" :key="item.key || `allDay-${ind}`" :class="[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-allday`]" :style="{ left: toPercent(item.leftPos ?? 0), width: toPercent(item.width ?? 0), top: `${item.topInd ?? 0}em` }">
                                 <slot :event="eventOf(item)" name="event">{{ item.children }}</slot>
                             </li>

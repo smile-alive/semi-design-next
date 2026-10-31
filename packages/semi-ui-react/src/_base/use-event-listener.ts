@@ -5,7 +5,6 @@ type Target = HTMLElement | Window | Document | RefObject<HTMLElement | null> | 
 type EventMap = HTMLElementEventMap & WindowEventMap & DocumentEventMap;
 
 interface Options extends Pick<AddEventListenerOptions, 'capture' | 'passive' | 'once'> {
-    /** false removes the listeners, true adds them back */
     enabled?: boolean;
 }
 

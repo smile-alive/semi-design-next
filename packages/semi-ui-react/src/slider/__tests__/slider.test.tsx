@@ -155,7 +155,6 @@ describe('Slider', () => {
 
         render(<Slider style={SIZED} defaultValue={30} tooltipVisible={null} />);
         fireEvent.mouseEnter(getHandle());
-        // give a tooltip the time it would need to show
         await new Promise((resolve) => setTimeout(resolve, 100));
         expect(getTooltip()).toBeNull();
     });
@@ -245,7 +244,6 @@ describe('Slider', () => {
         expect(boundary).not.toBeNull();
         expect(query(container, 'boundary-min')).toHaveTextContent(/^0$/);
         expect(query(container, 'boundary-max')).toHaveTextContent(/^100$/);
-        // the boundary values show while the pointer is over the slider
         expect(boundary).not.toHaveClass(`${prefix}-boundary-show`);
         fireEvent.mouseEnter(query(container, 'wrapper'));
         expect(boundary).toHaveClass(`${prefix}-boundary-show`);

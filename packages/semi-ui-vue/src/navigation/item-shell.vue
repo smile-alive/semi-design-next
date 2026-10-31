@@ -68,7 +68,6 @@
 
     const selected = computed(isSelected);
 
-    // selectedItems report what the item was given: no unset props and none of the shell's own
     const reportedProps = ({ isSubNav: _sub, isInSubNav: _in, ...rest }: ItemShellProps) => Object.fromEntries(Object.entries(toRaw(rest)).filter(([, value]) => value !== undefined));
 
     const { foundation } = useFoundation<ItemFoundation<ItemShellProps>, ItemAdapter<ItemShellProps>, ItemShellProps, object>(
@@ -86,7 +85,6 @@
         })
     );
 
-    // the li is a plain list item: aria-* and tabindex describe the link or button that takes focus
     const isControlKey = (key: string) => key.startsWith('aria-') || key === 'tabindex';
 
     const handleClick = (event: MouseEvent) => foundation.handleClick(event);
@@ -143,7 +141,6 @@
     const controlAttrs = (attrs: Record<string, unknown>) => {
         if (props.isSubNav) return {};
         if (popup.value) {
-            // the li is the menuitem, so the link inside is not a focus target of its own
             return hasLink.value ? mergeProps({ class: `${prefix}-item-link`, href: props.link, tabindex: -1 }, { ...props.linkOptions }) : {};
         }
         const own = {

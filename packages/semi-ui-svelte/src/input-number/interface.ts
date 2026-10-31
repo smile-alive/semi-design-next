@@ -24,7 +24,6 @@ export interface InputNumberProps extends Omit<InputProps, InputOnlyKeys> {
     minimumFractionDigits?: number;
     maximumFractionDigits?: number;
     precision?: number;
-    /** Shows long numbers in exponent form, and the full number while focused */
     scientificNotation?: boolean | ScientificNotationConfig;
     showCurrencySymbol?: boolean;
     formatter?: (value: number | string) => string;

@@ -183,7 +183,6 @@ const exportsPageChecks: HostPage = { name: 'exports', path: '/exports', ready: 
 const tailwindPageChecks: HostPage = { name: 'tailwind', path: '/tailwind', ready: '[data-hydrated]', checks: [tailwindCoexist(), tailwindFirstPaint()] };
 
 interface StepOptions {
-    // Extra checks on the home page
     home?: PageCheck[];
     pages?: HostPage[];
     prefixCls?: string;
@@ -229,7 +228,6 @@ const variants: Variant[] = [
         prod: prod(),
     },
     {
-        // Dev is left out: inlineStyles only acts on the production render
         name: 'inline-styles',
         files: { 'nuxt.config.ts': config('    features: { inlineStyles: true },\n') },
         build,

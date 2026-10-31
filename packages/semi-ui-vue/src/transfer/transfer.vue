@@ -30,7 +30,6 @@
     type ResolvedItem = BasicResolvedDataItem & TransferDataItem;
 
     interface LeftGroup {
-        /** The group's position among the non-empty groups of the dataSource, which search and paging keep */
         index: number;
         parent?: Omit<TransferGroupItem, 'children'>;
         items: { item: ResolvedItem; index: number }[];
@@ -228,7 +227,6 @@
     );
 
     defineExpose<TransferHandle>({
-        // a search through the handle comes from the caller, so `search` is not emitted
         search: (value) => foundation.handleInputChange(value, false),
     });
 </script>

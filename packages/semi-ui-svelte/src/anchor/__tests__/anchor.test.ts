@@ -292,7 +292,6 @@ describe('Svelte Anchor', () => {
             setTop('b', 40);
             click(link('b'));
             expect(link('b')).toHaveClass(activeCls);
-            // the target was already in place: the click scrolled nothing
             vi.advanceTimersByTime(200);
 
             scroll();
@@ -372,7 +371,6 @@ describe('Svelte Anchor', () => {
             setTop('a', -5);
             setTop('b', 40);
             scroll();
-            // only #b is a link now, and it is below the top
             expect(link('x')).not.toHaveClass(activeCls);
             setTop('b', -10);
             scroll();

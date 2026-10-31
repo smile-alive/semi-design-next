@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { render } from '@test/utils/vue';
 import Lottie from '..';
 
-// the module factory only settles once the test opens the gate, which stands in for a slow network
 const gate = vi.hoisted(() => {
     const { promise, resolve: open } = Promise.withResolvers<void>();
     return { promise, open };

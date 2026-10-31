@@ -8,13 +8,10 @@ import TableHeaderRow from './table-header-row';
 
 export interface TableHeaderProps {
     columns: ColumnProps[];
-    /** Rendered only to measure the column widths of fixed columns: no height, and inert */
     hidden?: boolean;
-    /** Receives the thead element */
     ref?: (element: HTMLElement) => void;
 }
 
-/** A header cell: the column with the colSpan and rowSpan that merge the cells of grouped columns */
 export type HeaderCell = Omit<TableHeaderCell<ColumnProps>, 'column' | 'children' | 'className' | 'parents'> & { column: ColumnProps };
 
 interface MirrorColumn {
@@ -33,9 +30,6 @@ const mirror = (columns: ColumnProps[]): MirrorColumn[] =>
         source: column,
     }));
 
-/**
- * Render the header of the table header, and control the merging of the columns of the header
- */
 export default function TableHeader(props: TableHeaderProps) {
     const table = useTableContext('Table.Header');
 

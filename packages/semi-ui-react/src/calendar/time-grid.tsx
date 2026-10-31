@@ -22,7 +22,6 @@ export interface TimeGridProps extends CalendarProps {
     labelDate?: Date;
 }
 
-/** The time grid behind the week view and the range view: one column per day of `range` */
 export default function TimeGrid(props: TimeGridProps) {
     const { ref, className, style, mode, displayValue, range, labelDate, header, events, showCurrTime, weekStartsOn, scrollTop, onClick, onClose, onMoreClick, renderTimeDisplay, markWeekend, minEventHeight, width, height, renderDateDisplay, dateGridRender, allDayEventsRender, ...rest } = props;
 

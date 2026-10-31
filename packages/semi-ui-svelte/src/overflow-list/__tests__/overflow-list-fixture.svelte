@@ -7,7 +7,6 @@
     type OverflowKind = 'plus' | 'sides' | 'direction' | 'text' | 'list' | 'none';
 
     interface Hooks {
-        /** Called while an overflow snippet renders, to record what it received */
         overflow?: (position: string, items: OverflowListItem[]) => void;
         item?: (item: OverflowListItem) => void;
         onOverflow?: OverflowListProps<OverflowListItem>['onOverflow'];

@@ -6,7 +6,6 @@ import { expect } from 'vite-plus/test';
 // both sides; scope an entry to the elements that change, so the rest of the tree is still compared
 export type MountDiff = string | { selector: string; attrs?: string[]; classes?: string[] };
 
-// One server-render case; both packages' tables and the hydration project share the shape
 export interface SsrCase<Export extends string = string> {
     // `<component directory>/<scene>`, so `-t '^(tooltip|popover)/'` selects by directory
     name: string;
@@ -109,7 +108,6 @@ export function uncoveredExports(source: string, cases: SsrCase[], others: strin
     const covered = new Set(cases.flatMap((ssrCase) => ssrCase.covers));
     return {
         uncovered: exported.filter((name) => !others.includes(name) && !covered.has(name)),
-        // An entry in `others` that the package no longer exports is stale
         stale: others.filter((name) => !exported.includes(name)),
     };
 }

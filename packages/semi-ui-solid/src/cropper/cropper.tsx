@@ -21,7 +21,6 @@ type Foundation = CropperFoundation;
 type Adapter = CropperAdapter<CropperFoundationProps>;
 
 export interface CropperHandle {
-    /** Draws the area inside the cropper box, at the image's own resolution, onto a new canvas */
     getCropperCanvas: () => HTMLCanvasElement;
 }
 
@@ -117,7 +116,6 @@ export default function Cropper(rawProps: CropperProps) {
 
     useWatch(() => local.aspectRatio, foundation.applyAspectRatio);
 
-    // a controlled value dropped again falls back to the default, like the other components
     useWatch(
         () => local.zoom,
         (zoom) => {

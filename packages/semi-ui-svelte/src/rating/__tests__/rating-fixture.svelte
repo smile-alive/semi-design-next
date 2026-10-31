@@ -12,9 +12,7 @@
     interface Store {
         props: RatingProps;
         direction?: 'ltr' | 'rtl';
-        /** Falls back to the default zh_CN texts */
         zh?: boolean;
-        /** Draws `text` in a node instead of passing it as the character string */
         node?: boolean;
         text?: string;
         after?: boolean;

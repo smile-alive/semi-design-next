@@ -10,7 +10,6 @@
     const prefixCls = cssClasses.PREFIX;
     const presets: string[] = [strings.SPACING_TIGHT, strings.SPACING_MEDIUM, strings.SPACING_LOOSE];
 
-    // A preset becomes a class; a number becomes a gap in px
     const axes = $derived.by(() => {
         const [columns, rows]: Spacing[] = Array.isArray(spacing) ? spacing : [spacing, spacing];
         return {

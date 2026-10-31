@@ -4,7 +4,6 @@ import { strings } from './constants';
 export type TimeStamp = Date | string | number;
 export type ColumnType = 'ampm' | 'hour' | 'minute' | 'second';
 
-/** The props one time panel is computed from */
 export interface ComboboxBaseProps {
     timeStampValue?: TimeStamp;
     format?: string;
@@ -48,9 +47,7 @@ function toColumn(options: number[], disabledOptions: number[], selected: number
     };
 }
 
-/** Pure calculations for one time panel: which columns show, what each lists, and the time a picked item makes */
 export default class ComboboxFoundation {
-    /** The columns `format` asks for */
     static getColumns(format: string) {
         return {
             showHour: /HH|hh|H|h/.test(format),
@@ -60,8 +57,8 @@ export default class ComboboxFoundation {
     }
 
     /**
-     * The items and the selected index of each column. Every column reads the shown time (midnight, or noon in a PM
-     * panel, while there is no value), the time a picked item is applied to.
+     * Every column reads the shown time (midnight, or noon in a PM panel, while there is no value), the time a picked
+     * item is applied to.
      */
     static getOptions(props: ComboboxBaseProps) {
         const { timeStampValue, use12Hours, hourStep, disabledMinutes, disabledSeconds, hideDisabledOptions, minuteStep, secondStep } = props;
@@ -92,10 +89,7 @@ export default class ComboboxFoundation {
         };
     }
 
-    /**
-     * The time after picking `itemValue` in column `type`. A 12-hour hour keeps the half day `isAM` names; AM/PM moves
-     * the time by 12 hours only when it is in the other half day.
-     */
+    /** A 12-hour hour keeps the half day `isAM` names; AM/PM moves the time by 12 hours only when it is in the other half day */
     static applyItem(timeStampValue: TimeStamp, type: ColumnType, itemValue: string, use12Hours: boolean, isAM: boolean) {
         const date = ComboboxFoundation.getDisplayDateFromTimeStamp(timeStampValue, use12Hours && !isAM);
         const hours = date.getHours();
@@ -129,7 +123,6 @@ export default class ComboboxFoundation {
         return disabledOptions;
     }
 
-    /** The half day of the value; `defaultIsAM` applies while there is no value */
     static isAM(timeStamp: TimeStamp, defaultIsAM = true) {
         return ComboboxFoundation.hasValue(timeStamp) ? ComboboxFoundation.getDisplayDateFromTimeStamp(timeStamp).getHours() < 12 : defaultIsAM;
     }
@@ -139,7 +132,6 @@ export default class ComboboxFoundation {
         return timeStamp != null && timeStamp !== '' && isValidDate(new Date(timeStamp as Date));
     }
 
-    /** The time a panel shows; without a value, today's midnight, or noon when the panel shows PM */
     static getDisplayDateFromTimeStamp(timeStamp: TimeStamp, defaultIsPM = false) {
         if (!ComboboxFoundation.hasValue(timeStamp)) {
             const now = new Date();

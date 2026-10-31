@@ -31,7 +31,6 @@ export interface RadioInnerProps {
     tabIndex?: number;
 }
 
-// A view: the parent Radio decides `checked` and handles the events
 export default function RadioInner({
     ref,
     checked,

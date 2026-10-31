@@ -28,9 +28,6 @@ export interface SectionRowProps {
     rowKey?: RowKey<any>;
 }
 
-/**
- * Props that Body forwards to SectionRow; everything else in Body's render props is dropped.
- */
 export const sectionRowPropKeys = ['record', 'index', 'columns', 'group', 'groupKey', 'data', 'renderGroupSection', 'onGroupedRow', 'clickGroupedRowToExpand', 'components', 'expanded', 'prefixCls', 'onExpand', 'virtualized', 'style', 'renderExpandIcon', 'className', 'rowKey'];
 
 const DEFAULT_COMPONENTS: TableComponents = {

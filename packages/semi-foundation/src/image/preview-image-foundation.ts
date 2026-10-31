@@ -30,7 +30,6 @@ export interface Translate {
     y: number;
 }
 
-/** The props the foundation reads with getProp */
 export interface PreviewImageBaseProps {
     src?: string;
     rotation?: number;

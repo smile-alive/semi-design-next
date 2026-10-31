@@ -24,10 +24,8 @@ export type DatePickerRangeInput = RangeInput;
 
 export type DatePickerType = Type;
 
-/** The time panel options a caller may set; the panel owns the format, the value and the disabled times */
 export type DatePickerTimePickerOpts = Partial<Pick<ComboboxProps, 'use12Hours' | 'hourStep' | 'minuteStep' | 'secondStep' | 'defaultIsAM' | 'scrollItemProps'>>;
 
-/** The year and month column options a caller may set; the panel owns the list and the selection */
 export type DatePickerYearAndMonthOpts = Partial<Pick<ScrollItemProps, 'cycled' | 'mode' | 'motion' | 'transform'>>;
 
 export interface DatePickerProps {
@@ -39,7 +37,6 @@ export interface DatePickerProps {
     /** A format without time tokens turns dateTime into date and dateTimeRange into dateRange */
     type?: DatePickerType;
     format?: string;
-    /** The month the panel shows while there is no value */
     defaultPickerValue?: DatePickerValueType;
     /** Only for the date type */
     multiple?: boolean;
@@ -64,9 +61,7 @@ export interface DatePickerProps {
     borderless?: boolean;
     showClear?: boolean;
     inputReadOnly?: boolean;
-    /** Style of the Input's root element */
     inputStyle?: StyleValue;
-    /** Moves the inputs into the panel */
     insetInput?: boolean | DatePickerInsetInputProps;
     insetLabelId?: string;
     validateStatus?: ValidateStatus;
@@ -143,7 +138,6 @@ export interface DatePickerTriggerSlotProps {
 
 export interface DatePickerDateSlotProps {
     dayNumber: number;
-    /** yyyy-MM-dd */
     fullDate: string;
 }
 
@@ -153,7 +147,6 @@ export interface DatePickerFullDateSlotProps extends DatePickerDateSlotProps {
 
 export interface DatePickerSlots {
     trigger?: (props: DatePickerTriggerSlotProps) => VNode[];
-    /** The content of a day cell */
     date?: (props: DatePickerDateSlotProps) => VNode[];
     /** The whole day cell, which then keeps only its base and active classes */
     fullDate?: (props: DatePickerFullDateSlotProps) => VNode[];
@@ -164,11 +157,9 @@ export interface DatePickerSlots {
     prefix?: () => VNode[];
     insetLabel?: () => VNode[];
     clearIcon?: () => VNode[];
-    /** How the separator between the range inputs is shown */
     rangeSeparator?: () => VNode[];
 }
 
-/** The methods on a DatePicker ref */
 export interface DatePickerHandle {
     /** Opens the panel; a controlled `open` wins */
     open(): void;

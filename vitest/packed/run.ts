@@ -228,7 +228,6 @@ write(
     ].join('\n')
 );
 execFileSync('pnpm', ['install'], { cwd: appDir, stdio: ['ignore', 'ignore', 'inherit'] });
-// A failing tsc throws, so declaration errors in the published packages fail the run
 execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/tsc'), '-p', 'tsconfig.json'], {
     cwd: appDir,
     stdio: 'inherit',
@@ -440,7 +439,6 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
                 assert.ok(key === './package.json' || fs.existsSync(path.join(root, entry)), `${name} exports ${key} points at a shipped file`);
                 continue;
             }
-            // Conditions match in key order, so `svelte` must precede `default`
             assert.ok(entry.types && entry.svelte && Object.keys(entry).indexOf('svelte') < Object.keys(entry).indexOf('default'), `${name} exports ${key} has types, then svelte before default`);
         }
         assert.ok(fs.existsSync(path.join(root, exports['.'].svelte)) && fs.existsSync(path.join(root, exports['.'].types)), `${name} exports . points at files that exist`);
@@ -667,7 +665,6 @@ for (const ui of ['', 'vue-']) {
 {
     const { css, js } = await bundle('src/vue-deep-ai.js', null);
     assert.match(css, /\.semi-aiChatInput\b/i, 'the Vue deep aiChatInput import brings its component CSS');
-    // AIChatInput reaches Input, whose group rules name .semi-datepicker; match a class only DatePicker's own sheet has
     assert.doesNotMatch(css, /\.semi-datepicker-month-grid\b/, 'the Vue deep aiChatInput import adds no unrelated component CSS');
     assert.match(js, /from\s*["']vue["']/, 'Vue stays external in the Vue AI bundle');
     assert.doesNotMatch(js, /from\s*["']react(?:\/|["'])/, 'the Vue AI package does not import React');
@@ -863,7 +860,6 @@ for (const ui of ['', 'vue-']) {
             '',
         ].join('\n')
     );
-    // A failing svelte-check throws, so declaration errors in the published Svelte packages fail the run
     execFileSync(process.execPath, [path.join(appDir, 'node_modules/svelte-check/bin/svelte-check'), '--workspace', appDir, '--tsconfig', path.join(appDir, 'tsconfig.svelte.json'), '--fail-on-warnings'], { cwd: appDir, stdio: 'inherit' });
 
     const { svelte }: { svelte: () => Vite.Plugin[] } = await import(path.join(appDir, 'node_modules/@sveltejs/vite-plugin-svelte/src/index.js'));

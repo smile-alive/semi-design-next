@@ -19,7 +19,6 @@ export interface UserGuideStepItem {
     target?: UserGuideTarget;
     title?: string | Snippet<[UserGuideStepSnippetProps]>;
     description?: string | Snippet<[UserGuideStepSnippetProps]>;
-    /** Without a cover the step has no cover area. */
     cover?: Snippet<[UserGuideStepSnippetProps]>;
     mask?: boolean;
     /** Only applies to the popup mode. */

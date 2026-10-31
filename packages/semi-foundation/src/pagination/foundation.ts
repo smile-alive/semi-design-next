@@ -25,14 +25,12 @@ export interface AdapterPageList {
     restRightRange: PageRange;
 }
 
-/** The props the foundation reads */
 export interface PaginationBaseProps {
     currentPage?: number;
     preventPageChangeOnPageSizeChange?: boolean;
     total?: number;
 }
 
-/** The state the foundation reads */
 export interface PaginationBaseState {
     currentPage: number;
     pageSize: number;

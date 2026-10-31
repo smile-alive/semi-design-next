@@ -10,13 +10,9 @@ export interface LinkNode {
     entries: Accessor<Entry[]>;
 }
 
-/** What sits in a link list: a link, or any other content, which is rendered as it is */
 export type Entry = { link: LinkNode } | { content: JSX.Element };
 
-/**
- * Resolves `source` once and reads the children of every link in it, so each JSX field is read at one place. Links are
- * resolved even when autoCollapse leaves them unmounted: the active link's ancestors must stay expanded.
- */
+// Links are resolved even when autoCollapse leaves them unmounted: the active link's ancestors must stay expanded.
 export function collectEntries(source: () => JSX.Element): Accessor<Entry[]> {
     const resolved = children(source);
     return createMemo(() =>

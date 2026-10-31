@@ -8,13 +8,11 @@ export type AudioInfo = {
     src: string;
 };
 
-/** The props the foundation reads with getProp */
 export interface AudioPlayerBaseProps {
     audioUrl: string | AudioInfo | (AudioInfo | string)[];
     skipDuration?: number;
 }
 
-/** The state the foundation reads and writes */
 export interface AudioPlayerBaseState {
     isPlaying: boolean;
     currentIndex: number;
@@ -166,7 +164,6 @@ export default class AudioPlayerFoundation<P extends AudioPlayerBaseProps = Audi
         this.setState({ volume });
     };
 
-    /** Mutes, or restores half volume when muted */
     handleVolumeSilent = () => {
         this.handleVolumeChange(this.getState('volume') === 0 ? 50 : 0);
     };

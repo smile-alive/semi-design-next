@@ -49,9 +49,6 @@ export class SelectionModel {
         this.endCol = endCol;
     }
 
-    /**
-     * Restore multi-selection (non-collapsed selection) after DOM re-render
-     */
     #restoreMultiSelection(selection: Selection) {
         const firstVisibleLineElement = this.#view.scrollDom.firstElementChild as HTMLElement | null;
         const lastVisibleLineElement = this.#view.scrollDom.lastElementChild as HTMLElement | null;
@@ -124,9 +121,6 @@ export class SelectionModel {
         selection.addRange(range);
     }
 
-    /**
-     * Find the text node and offset for a given column position in a line element
-     */
     #findPositionInLine(lineElement: HTMLElement, col: number) {
         if (col === 0) {
             const walker = document.createTreeWalker(lineElement, NodeFilter.SHOW_TEXT, null);
@@ -202,7 +196,6 @@ export class SelectionModel {
         };
     }
 
-    /** Updates only the start point, used while dragging a selection. */
     updateFromSelectingStart() {
         const selection = this.#getValidSelection();
         if (!selection) return;
@@ -212,7 +205,6 @@ export class SelectionModel {
         this.#setSelection(row, col, this.endRow, this.endCol);
     }
 
-    /** Updates only the end point, used while dragging a selection. */
     updateFromSelectingEnd() {
         const selection = this.#getValidSelection();
         if (!selection) return;

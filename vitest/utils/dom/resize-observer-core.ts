@@ -6,8 +6,7 @@ interface RecordedObserver {
 }
 
 /**
- * Replaces the global ResizeObserver (a no-op in the unit setup) with one that records observations and lets the
- * test report sizes. Entries pass through as given, so a test supplies only the members the component reads.
+ * Entries pass through as given, so a test supplies only the members the component reads.
  *
  * `onObserve` reports synchronously from `observe()` like a browser's initial size; return undefined to stay silent.
  */
@@ -47,11 +46,9 @@ export function mockResizeObserverCore(options: { onObserve?: (target: Element) 
         /** Every element under observation across observers; a node observed twice shows up twice */
         observed: () => observers.flatMap((observer) => observer.targets),
         live,
-        /** Calls the callback of every observer watching `target` */
         fire(target: Element, entries: unknown[]) {
             observers.filter((observer) => observer.targets.includes(target)).forEach((observer) => observer.callback(entries, observer));
         },
-        /** Reports one entry per live observer, built from the first element it watches */
         fireLive(makeEntry: (target: Element) => unknown) {
             live().forEach((observer) => observer.callback([makeEntry(observer.targets[0])], observer));
         },

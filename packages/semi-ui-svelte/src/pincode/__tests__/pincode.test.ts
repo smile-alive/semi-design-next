@@ -50,7 +50,6 @@ describe('Svelte PinCode 受控值（$bindable）', () => {
         await userEvent.click(getInputs()[0]);
         await userEvent.keyboard('12');
         await waitFor(() => expect(getValues()).toEqual(['1', '2', '', '']));
-        // the first Backspace leaves the empty cell for the previous one, the second clears it
         await userEvent.keyboard('{Backspace}{Backspace}');
         await waitFor(() => expect(getValues()).toEqual(['1', '', '', '']));
         expect(store.log.at(-1)).toBe('change 1');

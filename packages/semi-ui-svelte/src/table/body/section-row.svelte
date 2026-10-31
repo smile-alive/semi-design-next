@@ -11,9 +11,7 @@
     interface SectionRowProps {
         groupKey: BaseRowKeyType;
         group: Set<BaseRowKeyType>;
-        /** The records of the group in the current page */
         records: AnyRecord[];
-        /** The index among the groups, or of the row in a virtualized body */
         index: number;
         expanded: boolean;
         style?: string;

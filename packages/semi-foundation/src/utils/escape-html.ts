@@ -38,9 +38,6 @@ export function escapeHtmlInMarkdown(text: string) {
     return result.join('\n');
 }
 
-/**
- * Escape `<` to `&lt;` in a single line, but preserve content inside inline code spans.
- */
 function escapeAngleBracketsOutsideInlineCode(line: string) {
     const parts: string[] = [];
     let i = 0;

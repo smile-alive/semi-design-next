@@ -248,7 +248,6 @@ describe('Tooltip 触发（浏览器）', () => {
         const popup = shown() as HTMLElement;
         toggle.click();
         await new Promise(requestAnimationFrame);
-        // reopen while the exit transition the close started is still running
         expect(popup.getAnimations().length).toBeGreaterThan(0);
         toggle.click();
         await sleep(300);

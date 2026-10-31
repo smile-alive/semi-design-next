@@ -544,9 +544,7 @@ describe('Steps（Vue）', () => {
         const items = getItems(container);
         expect(items).toHaveLength(2);
         expect(container.querySelector('.own')).toHaveTextContent('x');
-        // fill marks the current step by status only
         expect(items[1]).toHaveClass(type === 'fill' ? `${ITEM}-process` : `${ITEM}-active`);
-        // nav shows no step number
         expect(items[1]).toHaveTextContent(type === 'nav' ? 'B' : '3B');
         expect(items[0].parentElement?.style.width).toBe(type === 'fill' ? `${100 / 3}%` : '');
         expect(warn).not.toHaveBeenCalled();

@@ -49,7 +49,6 @@
     export interface FieldSpec {
         type: keyof typeof fieldComponents;
         props: Record<string, unknown>;
-        /** Rendered only while true */
         shown?: boolean;
     }
 
@@ -58,7 +57,6 @@
         fields: FieldSpec[];
         showState?: boolean;
         submitButton?: boolean;
-        /** One row of FormInputs per item of `values[path]`, with a field per sub key */
         rows?: { path: string; subs: string[]; keyBy?: string };
     }
 </script>

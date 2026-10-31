@@ -278,7 +278,6 @@ const getPopover = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREF
 const getPopoverWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`) as HTMLElement;
 const getOptions = () => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option`)];
 const getOptionsOfLevel = (level: number) => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option.${BASE_CLASS_PREFIX}-tree-option-level-${level}`)];
-// label text queries break once Highlight splits a searched label into several spans
 const getNode = (label: string) => getOptions().find((node) => node.textContent === label) as HTMLElement;
 const getNodeLabels = () => getOptions().map((node) => node.textContent);
 const getSelectedLabels = () => [...document.querySelectorAll(`.${BASE_CLASS_PREFIX}-tree-option-selected`)].map((node) => node.textContent);
@@ -2817,7 +2816,6 @@ describe('TreeSelect', () => {
         const collapsible = document.querySelector(`.${BASE_CLASS_PREFIX}-collapsible-wrapper`) as HTMLElement;
         expect(collapsible).toContainElement(getNode('China'));
         await waitFor(() => expect(collapsible).toHaveStyle({ '--semi-collapsible-height': '0px' }));
-        // jsdom runs no CSS transitions, so end it by hand
         await fireEvent.transitionEnd(collapsible, { propertyName: 'height' });
         await settle();
         expect(getNode('China')).toBeUndefined();
@@ -3887,7 +3885,6 @@ describe('TreeSelect Vue', () => {
         await userEvent.keyboard(keys);
         await settle();
     };
-    // dispatches by hand so the test can read whether the TreeSelect prevented the default
     const pressKey = async (target: Element, key: string) => {
         const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
         target.dispatchEvent(event);

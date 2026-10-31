@@ -10,7 +10,6 @@ import Fixture, { type FixtureStore } from './time-picker-fixture.svelte';
 const prefixCls = `${BASE_CLASS_PREFIX}-timepicker`;
 const scrollListCls = `${BASE_CLASS_PREFIX}-scrolllist`;
 
-// lets the foundation's timers and the effects they schedule run
 async function settle() {
     flushSync();
     await new Promise((resolve) => setTimeout(resolve));

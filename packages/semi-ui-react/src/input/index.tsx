@@ -26,16 +26,13 @@ export type InputMode = 'password';
 // Form passes 'success' as validateStatus, though Input styles nothing for it
 export type { ValidateStatus };
 
-/** The methods and nodes on an Input ref */
 export interface InputHandle {
     /** Focuses the native input; `preventScroll` defaults to the prop */
     focus(options?: FocusOptions): void;
     blur(): void;
     select(): void;
     setSelectionRange(start: number | null, end: number | null, direction?: 'forward' | 'backward' | 'none'): void;
-    /** The native input */
     readonly input: HTMLInputElement | null;
-    /** The root element, the wrapper div */
     readonly nativeElement: HTMLElement | null;
 }
 

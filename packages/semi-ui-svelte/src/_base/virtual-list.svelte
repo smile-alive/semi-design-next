@@ -17,7 +17,6 @@
         itemSize: number | ((index: number) => number);
         /** Key of a row; the index when absent */
         itemKey?: (index: number) => PropertyKey;
-        /** Rows rendered beyond each edge of the viewport */
         overscan?: number;
         /** Attributes of the element that holds the rows */
         innerAttrs?: HTMLAttributes<HTMLElement>;
@@ -32,8 +31,8 @@
     }
 
     /**
-     * Fixed or per-row-height vertical list that renders only the rows in view. Attributes land on the scroll container;
-     * lists whose rows take no focus pass `tabindex={-1}` so Chrome does not make the container a second tab stop.
+     * Attributes land on the scroll container; lists whose rows take no focus pass `tabindex={-1}` so Chrome does not
+     * make the container a second tab stop.
      */
     let { height, width = '100%', itemCount, itemSize, itemKey, overscan = 2, innerAttrs, innerTag = 'div', wrapperAttrs, after, children, ...rest }: VirtualListProps = $props();
 

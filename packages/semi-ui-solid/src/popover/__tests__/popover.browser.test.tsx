@@ -158,7 +158,6 @@ describe('Popover（浏览器）', () => {
             </Popover>
         ));
         await userEvent.click(screen.getByRole('button', { name: 'closeOnEsc=false' }));
-        // The popup stays transparent until it is positioned
         await waitFor(() => expect(screen.getByTestId('pop')).toBeVisible());
         await userEvent.keyboard('{Escape}');
         expect(screen.getByTestId('pop')).toBeVisible();

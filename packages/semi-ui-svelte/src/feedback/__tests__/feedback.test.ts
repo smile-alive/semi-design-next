@@ -353,7 +353,6 @@ describe('Svelte Feedback 提交与取消', () => {
         await click(cancel());
         expect(onCancel).toHaveBeenCalledTimes(1);
         expect(onCancel.mock.calls[0][0]).toBeInstanceOf(MouseEvent);
-        // cancel closes the sheet; the value is already gone when it opens again
         expect(store.props.visible).toBe(false);
         update(store, { visible: true });
         await placed();

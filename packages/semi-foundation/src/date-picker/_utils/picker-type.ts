@@ -1,7 +1,6 @@
 import type { Type } from '../input-foundation';
 import isValidDate from './is-valid-date';
 
-/** dateRange, dateTimeRange and monthRange select a start and an end */
 export function isRangeType(type?: Type) {
     return typeof type === 'string' && type.endsWith('Range');
 }
@@ -20,7 +19,6 @@ export function needConfirm({ type, needConfirm: confirm }: { type?: Type; needC
     return isDateTimeType(type) && confirm === true;
 }
 
-/** These types pick in the year and month panel instead of the day grid */
 export function isYearOrMonthType(type?: Type) {
     return type === 'year' || type === 'month' || type === 'monthRange';
 }

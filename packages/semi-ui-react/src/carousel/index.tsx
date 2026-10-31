@@ -124,7 +124,6 @@ export default function Carousel(rawProps: CarouselProps) {
 
     return (
         <div
-            // the name is the user's to give with aria-label or aria-labelledby
             aria-roledescription={locale.carousel}
             role="region"
             {...rest}

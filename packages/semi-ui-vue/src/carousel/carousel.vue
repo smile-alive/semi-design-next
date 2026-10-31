@@ -53,8 +53,6 @@
 
     // onActivated also runs after the first mount; only a return from the cache sets up again
     let deactivated = false;
-
-    // the roving tabindex moves with the current slide, so focus follows it after a key changed it
     let focusPending = false;
 
     // Slides that arrive after mount (data still loading) start the configured autoplay, as mounting with them would.
@@ -129,7 +127,6 @@
 
     const hasIndicator = (total: number) => props.showIndicator && total > 1;
 
-    // a slide keeps an id of its own, so links to it still work
     const slideId = (slides: KeyedNode[], index: number) => (slides[index][0].props?.id as string | undefined) ?? `${baseId}-slide-${index}`;
 
     // What the slide receives, merged into it by <component :is>: with indicators the slides are the panels of their
@@ -184,7 +181,6 @@
         (activeIndex) => foundation.syncActiveIndex(activeIndex as number)
     );
 
-    // a boolean, since autoPlay is often a fresh object literal on every render
     watch(() => CarouselFoundation.isAutoPlayOn(props.autoPlay), foundation.handleAutoPlayChange);
 
     watch(

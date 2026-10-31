@@ -122,7 +122,6 @@
                 notifyBlur: (event) => onBlur?.(event),
                 updateSelected: (selectedValues) => base.setState({ selectedValues }),
                 notifyChange: (values, items) => {
-                    // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                     value = values;
                     onChange?.(values, items as TransferDataItem[]);
                 },

@@ -17,7 +17,6 @@ function setup(store: { kind?: 'text' | 'title' | 'paragraph' | 'numeral'; text?
     return { state, ...view, node: () => view.container.querySelector(`.${prefix}`) as HTMLElement };
 }
 
-// What the reader sees: the full text stays in the DOM, hidden, while the truncated text shows
 const visibleText = (node: Element): string => [...node.childNodes].map((child) => (child.nodeType === Node.TEXT_NODE ? child.textContent : child instanceof HTMLElement && child.hidden ? '' : visibleText(child as Element))).join('');
 
 describe('Svelte Typography（浏览器）', () => {

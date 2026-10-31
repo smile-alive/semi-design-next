@@ -541,7 +541,6 @@ describe('VideoPlayer', () => {
     it('音量弹层是名为音量的对话框', async () => {
         const { container } = renderPlayer();
         const trigger = buttonWith(container, 'volume_2');
-        // the popup holds a focusable range, which a tooltip may not
         expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
         trigger.focus();
         const dialog = await waitFor(() => screen.getByRole('dialog', { name: zh_CN.VideoPlayer.volume }));

@@ -12,7 +12,6 @@ export interface AutoSizerProps {
 const prefixcls = cssClasses.PREFIX;
 const wrapperCls = `${prefixcls}-auto-wrapper`;
 
-/** Passes a pixel height to its children: `defaultHeight` when it is a number, else the parent's content height */
 export default function AutoSizer({ children, defaultWidth = '100%', defaultHeight = '100%' }: AutoSizerProps) {
     const [height, setHeight] = useState<number | string>(defaultHeight || 0);
 

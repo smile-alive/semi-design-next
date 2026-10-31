@@ -18,7 +18,6 @@ export function useIconSlot() {
     return useContext(IconSlotContext);
 }
 
-// The registration ends with the icon
 export function registerIcon(slot: IconSlot | undefined, node: JSX.Element) {
     if (slot) {
         onCleanup(slot.register(node));

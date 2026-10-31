@@ -51,14 +51,6 @@ export function generateKeys(value: unknown, oldKeys: string[] = []) {
     return value.map((_, i) => oldKeys[i] ?? createId());
 }
 
-/**
- * trigger transform rule
-    1. If the user has set fieldProps, follow the user's fieldProps
-    2. If the user does not set fieldProps, follow formProps
-    3. If there is no formProps, follow the change
-    4. If it is an array, follow the array, if it is not an array (pure string), convert it to a string array
- */
-
 export function transformTrigger(fieldTrigger: FieldValidateTriggerType, formTrigger: FieldValidateTriggerType): Array<BasicTriggerType> {
     let result: BasicTriggerType[] | FieldValidateTriggerType = [];
     let finalResult = [];
@@ -112,7 +104,6 @@ export function resolveFieldInitValue(initValue: unknown, valueInForm: unknown, 
     return valueInForm !== undefined ? valueInForm : initValue;
 }
 
-/** The props a field falls back to its Form for when it does not set them itself */
 export interface FieldConfig {
     labelPosition?: string;
     labelWidth?: number | string;

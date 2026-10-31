@@ -104,7 +104,6 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
         // before anything else, or the browser may paste first and write twice
         e.preventDefault();
 
-        // by code point, so a character outside the BMP is not split into lone surrogates
         const textWillPaste = Array.from(e.clipboardData.getData('text'));
         const count = this.getProp('count');
         const start = Math.min(startInputIndex, this.getState('valueList').length);
@@ -118,10 +117,7 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
         }
     };
 
-    /**
-     * Removes the character and closes the gap. Also covers a cell emptied without Backspace or Delete (cut, a
-     * virtual keyboard's delete).
-     */
+    /** Also covers a cell emptied without Backspace or Delete (cut, a virtual keyboard's delete). */
     removeCell(index: number) {
         const valueList = this.getState('valueList').toSpliced(index, 1);
         void this.updateValueList(valueList);

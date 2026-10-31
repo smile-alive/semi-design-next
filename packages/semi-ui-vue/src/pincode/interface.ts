@@ -23,7 +23,6 @@ export interface PinCodeEmits {
     complete: [value: string];
     /** Focus entering the code from outside; moving between the digits does not fire it */
     focus: [event: FocusEvent];
-    /** Focus leaving the whole code */
     blur: [event: FocusEvent];
 }
 

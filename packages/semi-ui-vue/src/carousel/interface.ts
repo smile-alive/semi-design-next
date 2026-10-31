@@ -1,7 +1,6 @@
 import type { ButtonHTMLAttributes, VNode } from 'vue';
 import type { CarouselAutoPlay } from '@fibrae/semi-foundation/carousel/foundation';
 
-/** Data for one arrow button; `onClick` and `class` merge with the built-in handler and classes */
 export interface ArrowButton {
     props?: ButtonHTMLAttributes;
 }
@@ -47,7 +46,6 @@ export interface CarouselEmits {
 export interface CarouselHandle {
     next: () => void;
     prev: () => void;
-    /** Out-of-range indexes wrap around */
     goTo: (targetIndex: number) => void;
     /** Starts autoplay, even with `autoPlay` off */
     play: () => void;

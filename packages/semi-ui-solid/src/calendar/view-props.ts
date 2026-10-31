@@ -2,7 +2,6 @@ import type { JSX } from 'solid-js';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import mergeStyles from '../_base/merge-styles';
 
-/** The props every view declares itself; the rest go to the root element */
 export const viewPropKeys = [
     'allDayEventsRender',
     'class',

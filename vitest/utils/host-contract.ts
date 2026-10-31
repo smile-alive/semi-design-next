@@ -34,7 +34,6 @@ export class ContractFoundation extends BaseFoundation<ContractAdapter, Contract
         this.adapter.log(`destroy attached=${stateText() !== null} aborted=${this.signal.aborted}`);
     }
 
-    /** An event handler that updates state first, then notifies the consumer */
     increment() {
         const x = this.getState('x') + 1;
         this.setState({ x }, () => this.adapter.log(`callback state=${stateText()} label=${this.getProp('label')}`));
@@ -64,7 +63,6 @@ export interface ContractMountOptions {
  */
 export interface ContractHost {
     readonly log: string[];
-    /** The `theme` context the foundation read in each post-commit hook */
     readonly commitContexts: string[];
     /** The instance the host keeps (StrictMode discards one) */
     foundation(): ContractFoundation;

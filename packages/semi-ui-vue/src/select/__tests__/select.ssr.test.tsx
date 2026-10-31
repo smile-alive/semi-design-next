@@ -25,6 +25,5 @@ it('受控值在服务端 HTML 中显示所选项的 label', async () => {
 it('服务端编译的单根模板保留 changeWithObject 简写', async () => {
     const { html, warnings } = await renderOnServer(() => <Shorthand />);
     expect(warnings).toEqual([]);
-    // the selection text holds the label; without the flag it would hold the stringified object
     expect(html).toMatch(/semi-select-selection-text[^>]*>(<!--\[-->)*Apple/);
 });

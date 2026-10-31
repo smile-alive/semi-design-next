@@ -292,7 +292,6 @@ describe('Svelte TreeSelect 受控写法', () => {
         await click(getRow('加拿大'));
         expect(store.log.filter((entry) => entry.startsWith('change'))).toEqual(['change "Jianada"']);
         expect(getSelectionText()).toBe('加拿大');
-        // only a two-way binding hears the write
         expect(store.value).toBe({ bind: 'Jianada', function: 'Jianada', 'one-way': 'Meiguo', uncontrolled: undefined }[mode]);
     });
 
@@ -327,7 +326,6 @@ describe('Svelte TreeSelect 受控写法', () => {
         await settle();
         await expand('亚洲');
         expect(store.log.filter((entry) => entry.startsWith('expand'))).toEqual(['expand yazhou']);
-        // a one-way prop is overridden locally; the owner's value stays
         expect(getRowLabels()).toEqual(['亚洲', '中国', '日本', '北美洲']);
         expect(store.expandedKeys).toEqual({ bind: ['yazhou'], function: ['yazhou'], 'one-way': [], uncontrolled: undefined }[mode]);
     });
@@ -372,7 +370,6 @@ describe('Svelte TreeSelect 受控写法', () => {
             store.value = undefined;
             await settle();
             expect(getSelectionText()).toBe('请选择');
-            // a later pick still works; a single pick closed the dropdown
             if (!getPopover()) await click(getRoot());
             await click(getRow('加拿大'));
             expect(getSelectionText()).toBe('加拿大');

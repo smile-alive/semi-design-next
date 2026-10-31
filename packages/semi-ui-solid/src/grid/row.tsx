@@ -22,7 +22,6 @@ export default function Row(rawProps: RowProps) {
     const props = useDefaultProps('Row', rawProps, defaultProps);
     const [local, rest] = splitProps(props, ['align', 'children', 'class', 'gutter', 'justify', 'prefixCls', 'style', 'type']);
 
-    // the consumer's style comes last so it can override a gutter variable
     const style = () => {
         const [horizontal, vertical] = normalizeGutter(local.gutter ?? 0);
         const gutter = { ...gutterStyle('x', horizontal), ...gutterStyle('y', vertical) };

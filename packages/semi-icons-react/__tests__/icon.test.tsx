@@ -70,7 +70,6 @@ describe('semi-icons-react', () => {
         );
         expect(screen.getByRole('img', { name: 'Alarm set' })).toHaveClass('semi-icon');
 
-        // an empty name is no name
         rerender(<IconAlarm aria-label="" />);
         expect(container.querySelector('.semi-icon')).toHaveAttribute('aria-hidden', 'true');
     });

@@ -284,7 +284,6 @@ describe('Select', () => {
     });
 
     it('spacing', () => {
-        // jsdom puts the trigger's box at 0, so a bottomLeft popup's top is the spacing
         renderSelect({ spacing: 20, defaultOpen: true });
         expect(getWrapper().style.top).toBe('20px');
     });
@@ -3357,7 +3356,6 @@ describe('ref 上的 SelectHandle 方法', () => {
         ref().open();
         const popup = screen.getByRole('listbox').closest<HTMLElement>('[popover]');
         expect(popup?.style.left).toBe('0px');
-        // the trigger moved without scrolling or resizing
         const rect = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(new DOMRect(100, 50, 80, 20));
         onTestFinished(() => rect.mockRestore());
         ref().rePosition();

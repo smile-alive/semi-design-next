@@ -44,7 +44,6 @@ export interface InputProps extends Omit<HTMLInputAttributes, NativeInputKeys> {
     /** When enabled, `onChange` fires once after an IME composition ends instead of during it */
     composition?: boolean;
     preventScroll?: boolean;
-    /** Focuses the input on mount, with `preventScroll` */
     autofocus?: boolean;
     /** Counted by `getValueLength` when given, otherwise the native attribute */
     maxlength?: number;
@@ -96,7 +95,6 @@ export interface TextAreaProps extends Omit<HTMLTextareaAttributes, NativeTextAr
     showClear?: boolean;
     disabled?: boolean;
     readonly?: boolean;
-    /** Focuses the textarea on mount */
     autofocus?: boolean;
     validateStatus?: ValidateStatus;
     composition?: boolean;
@@ -133,7 +131,6 @@ export interface TextAreaState {
     isFocus: boolean;
 }
 
-/** Label props plus the label element's attributes such as id, class and style; nodes go to the `fieldLabel` and `labelExtra` snippets */
 export type InputGroupLabel = Omit<LabelProps, 'children' | 'extra'>;
 
 /** Undeclared attributes go on the group's `role="group"` element and are not passed to the controls inside */

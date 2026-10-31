@@ -38,7 +38,6 @@
     const uid = $props.id();
     const syncs = new SvelteSet<() => void>();
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: RadioGroupBaseProps = {
         get mode() {
             return mode;

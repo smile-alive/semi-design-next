@@ -15,7 +15,6 @@ interface SsrRun {
     warnings: string[];
 }
 
-// Every exported name is covered by a row or listed as a non-component, and neither list may keep a stale name
 export function uncoveredExports(exported: string[], cases: SsrCase[], nonComponents: ReadonlySet<string>): { uncovered: string[]; stale: string[] } {
     const covered = new Set(cases.flatMap((item) => item.covers));
     return {

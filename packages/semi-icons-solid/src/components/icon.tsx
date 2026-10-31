@@ -11,7 +11,6 @@ export default function Icon(props: IconProps) {
     const merged = mergeProps({ spin: false, prefixCls: BASE_CLASS_PREFIX } as const, props);
     const [local, rest] = splitProps(merged, ['svg', 'size', 'spin', 'rotate', 'prefixCls', 'type', 'fill', 'class', 'style']);
     const prefix = () => `${local.prefixCls}-icon`;
-    // an explicit size wins over the slot's
     const size = () => local.size ?? slot?.size?.() ?? 'default';
     // Decorative unless named (the type is no screen-reader name); a focusable icon stays exposed, since hiding it
     // leaves a silent tab stop and a11y checks flag it so the caller adds an aria-label

@@ -248,7 +248,6 @@ describe('adjustPosition: 阈值附近差 1px', () => {
     });
 
     it.each([
-        // Object margin: only marginTop affects top
         [67, 'bottom'],
         [68, 'top'],
     ])('marginTop 10 其余 0: top 触发元素顶部 %i 时为 %s', (top, expected) => {
@@ -311,7 +310,7 @@ describe('adjustPosition: 旧 Cypress 用例 adjustPosIfNeed (视口 400×200)',
     // Layout: outer paddingLeft 40, top row marginLeft 40, left column 40 wide floated, right column marginLeft 180,
     // bottom row clear: both, 8 margin between Tags. The Storybook iframe adds P = 16px padding; P = 0 means none.
     // Expected: clicking topAndLeft[i] yields bottomAndRight[i] and vice versa.
-    // Derivations are in each group comment. Sizes are estimates, every check is at least 4px from its threshold.
+    // Sizes are estimates, every check is at least 4px from its threshold.
     const viewport = { width: 400, height: 200 };
     const wrapperRect = { width: 200, height: 56 };
     const layout = (padding: number) => {

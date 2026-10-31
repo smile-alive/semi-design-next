@@ -346,7 +346,6 @@ describe('treeSelect', () => {
         expect(spies[0].onFocus).toHaveBeenCalledTimes(2);
         await userEvent.click(triggers[0]);
         expect(spies[0].onBlur).toHaveBeenCalledTimes(1);
-        // clicking during the exit animation still reaches the handler
         await waitFor(() => expect(getPopover()).toBeNull());
         await userEvent.click(triggers[1]);
         expect(spies[0].onBlur).toHaveBeenCalledTimes(2);
@@ -515,7 +514,6 @@ describe('treeSelect', () => {
         mount(() => <TreeSelect style={{ width: '300px' }} filterTreeNode searchPosition="trigger" showFilteredOnly treeData={regionTreeData} />);
         await clickAndType(screen.getByRole('combobox'), '上');
         await waitFor(() => expect(getOptions()).toHaveLength(3));
-        // one keyboard() call sends both keys inside the exit animation
         await userEvent.keyboard('{Escape}{ArrowDown}');
         expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'true');
         await waitFor(() => expect(within(getPopover() as HTMLElement).getByText('北美洲')).toBeInTheDocument());

@@ -11,7 +11,6 @@ import type { ToastProps } from './toast';
 import ToastList from './toast-list';
 import useToast from './use-toast';
 
-/** Options of one toast opened through the static methods; the list supplies `close` */
 export type ToastOptions = Omit<ToastProps, 'type' | 'close'>;
 
 function createBaseToast(initialConfig?: ConfigProps) {

@@ -75,7 +75,6 @@ export default function confirm(props: ConfirmProps): ModalHookRef {
     return ref;
 }
 
-/** The props of `Modal.<type>()`; ConfirmModal adds the type's icon */
 export function withType(type: ConfirmProps['type'], props: ModalConfirmProps): ConfirmProps {
     return { type, ...resolveConfirmProps(type, props) };
 }

@@ -3,7 +3,6 @@
     import type { ImageProps, MenuProps, PreviewProps } from '../interface';
     import ImagePreview from '../preview.svelte';
 
-    // `images` are the thumbnails in the group; `props.src` is the group's list, which they open at
     let { store }: { store: { props: PreviewProps; images: ImageProps[]; snippets: string[] } } = $props();
 
     const on = (name: string) => store.snippets.includes(name);

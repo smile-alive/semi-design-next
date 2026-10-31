@@ -26,7 +26,6 @@ describe('服务端渲染', () => {
         expect(typeof document).toBe('undefined');
     });
 
-    // Lowercase exports are the data-adapter functions and getConfigureItem
     it('用例表覆盖 index.ts 的全部组件导出', () => {
         const covered = new Set(ssrCases.flatMap((ssrCase) => ssrCase.covers));
         const components = Object.keys(semiAi).filter((name) => /^[A-Z]/.test(name));

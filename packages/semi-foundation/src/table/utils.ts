@@ -137,7 +137,6 @@ export interface VirtualizedRowKind {
     sectionRow: boolean;
 }
 
-/** The height of a virtualized row from the itemSize option; the size preset's default stands in when it gives none */
 export function resolveVirtualizedItemSize(itemSize: number | ((index: number, row: VirtualizedRowKind) => number) | undefined, size: string | undefined, index: number, row: VirtualizedRowKind) {
     const config = getDefaultVirtualizedRowConfig(size, row.sectionRow);
     const value = typeof itemSize === 'function' ? itemSize(index, row) : itemSize;
@@ -358,7 +357,6 @@ export function mergeColumns<C extends Record<string, any>>(oldColumns: C[] = []
     });
 }
 
-/** The number of header rows: the depth of the column tree */
 export function getHeaderRowCount(columns: Record<string, any>[]): number {
     return Math.max(0, ...columns.map((column) => (column.children?.length ? 1 + getHeaderRowCount(column.children) : 1)));
 }
@@ -389,7 +387,6 @@ export function toggleFilteredValue<V>(filteredValue: V[], value: V, filterMulti
 export interface TableHeaderCell<Column extends Record<string, any> = Record<string, any>> {
     key: string | number;
     className: string;
-    /** The column title, or what a title function returns */
     children: any;
     column: Column;
     colStart: number;
@@ -404,9 +401,6 @@ export interface TableHeaderCell<Column extends Record<string, any> = Record<str
     title?: string;
 }
 
-/**
- * The header cells by row, with the colSpan and rowSpan that merge the cells of grouped columns
- */
 export function parseHeaderRows<Column extends Record<string, any>>(columns: Column[]) {
     const rows: TableHeaderCell<Column>[][] = [];
 
@@ -428,9 +422,6 @@ export function parseHeaderRows<Column extends Record<string, any>>(columns: Col
 
             let colSpan = 1;
 
-            /**
-             * colSpan: the sum of the children's colSpan, or 1 without children
-             */
             const subColumns = column.children;
             if (subColumns && subColumns.length > 0) {
                 colSpan = fillRowCells(subColumns, currentColIndex, [...parents, cell], rowIndex + 1, level + 1).reduce((total, count) => total + count, 0);
@@ -459,9 +450,6 @@ export function parseHeaderRows<Column extends Record<string, any>>(columns: Col
 
     const columnCount = fillRowCells(columns, 0).reduce((total, count) => total + count, 0);
 
-    /**
-     * rowSpan: a cell without children spans the remaining rows; a cell with children needs none
-     */
     const rowCount = rows.length;
     for (let rowIndex = 0; rowIndex < rowCount; rowIndex += 1) {
         rows[rowIndex].forEach((cell) => {
@@ -475,7 +463,6 @@ export function parseHeaderRows<Column extends Record<string, any>>(columns: Col
     return rows;
 }
 
-/** The keys whose selection state differs between two selections */
 export function getChangedRowKeys(before: Array<string | number>, after: Array<string | number>) {
     return xor(before, after);
 }
@@ -552,7 +539,6 @@ export interface FlattenData {
     sectionRow?: boolean;
 }
 
-/** The first record of each row key; an empty or missing key cannot be looked up */
 export function buildRecordsByKey(dataSource: Record<string, any>[] | undefined, rowKey: FlattenDataProps['rowKey']) {
     const recordsByKey = new Map<BaseRowKeyType, Record<string, any>>();
     dataSource?.forEach((record) => {

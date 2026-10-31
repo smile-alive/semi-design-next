@@ -10,11 +10,9 @@
         defineProps<{
             item: TransferDataItem;
             index: number;
-            /** treeList with showPath: the text shown instead of the label */
             pathLabel?: string;
             disabled?: boolean;
             draggable: boolean;
-            /** the sortable list has loaded, so the handle is a real drag handle */
             sortable: boolean;
         }>(),
         { pathLabel: undefined, disabled: false }

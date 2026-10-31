@@ -16,7 +16,6 @@ export interface SideBarOptionSnippetProps {
 
 export interface SideBarOptionItemSnippetProps extends SideBarOptionSnippetProps {
     active: boolean;
-    /** Selects the option, as the built-in button does */
     onClick: (event: MouseEvent) => void;
 }
 
@@ -46,19 +45,14 @@ export interface SideBarProps extends Omit<ContainerProps, 'header' | 'children'
     imgUploadProps?: ImageUploadNodeOptions;
     /** After `activeKey` took the clicked option */
     onActiveOptionChange?: (event: MouseEvent, activeKey: string) => void;
-    /** The back button of the detail header */
     onBackWard?: (event: MouseEvent, mode: string) => void;
     /** After the copy button wrote the detail content to the clipboard, or failed to */
     onDetailContentCopy?: (event: MouseEvent, content: string, success: boolean) => void;
     /** An edit in file mode, as HTML */
     onFileContentChange?: (content: string) => void;
-    /** The icon of the built-in option button */
     optionIcon?: Snippet<[SideBarOptionSnippetProps]>;
-    /** Replaces the whole option button */
     optionItem?: Snippet<[SideBarOptionItemSnippetProps]>;
-    /** Below the options in main mode */
     mainContent?: Snippet<[SideBarMainContentSnippetProps]>;
-    /** Replaces the header in detail modes */
     detailHeader?: Snippet<[SideBarDetailHeaderSnippetProps]>;
     /** Replaces the content in detail modes; named apart from the `detailContent` data */
     detailBody?: Snippet<[SideBarDetailBodySnippetProps]>;

@@ -21,7 +21,6 @@ const getRestPages = () => within(document.querySelector(`.${prefixCls}-rest-lis
 const getJumper = (container: HTMLElement) => container.querySelector(`.${prefixCls}-quickjump-input-number input`) as HTMLInputElement;
 const getSelectionText = (container: HTMLElement) => container.querySelector(`.${BASE_CLASS_PREFIX}-select-selection-text`);
 
-/** Renders with props that can be replaced as a whole later, like a rerender */
 function renderPagination(initial: PaginationProps) {
     const [props, setProps] = createSignal(initial);
     const result = render(() => <Pagination {...props()} />);
@@ -43,7 +42,6 @@ afterEach(() => {
 });
 
 describe('Pagination', () => {
-    // Checks the number of rendered page items and the last page number
     it('Pagination total 与 pageSize', () => {
         const maxItemCount = 9;
 

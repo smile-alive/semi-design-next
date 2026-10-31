@@ -20,7 +20,6 @@
     const iconSize = computed(() => (props.density === 'compact' ? 'default' : 'large'));
     const buttonSize = computed(() => (props.density === 'compact' ? 'small' : 'default'));
 
-    // `visibility: hidden` keeps the icons in position
     const hidden = (panelType: string) => (props.shouldBimonthSwitch && props.panelType === panelType ? { visibility: 'hidden' as const } : undefined);
 </script>
 

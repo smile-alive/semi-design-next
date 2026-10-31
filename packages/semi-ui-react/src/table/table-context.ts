@@ -19,7 +19,6 @@ export interface TableContextProps {
     direction?: ContextValue['direction'];
     handleRowSelection?: (rowKey: BaseRowKeyType, selected: boolean, e: React.MouseEvent) => void;
     headerStyle?: React.CSSProperties;
-    /** Whether to highlight all related rows when hovering over a rowspan cell */
     rowSpanHover?: boolean;
     /**
      * The header and the body render as separate elements (fixed header, sticky or virtualized): their common

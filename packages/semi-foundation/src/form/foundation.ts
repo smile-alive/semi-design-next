@@ -260,7 +260,6 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                 if (!silent) {
                     this.adapter.notifyChange(this.#data);
                     this.#notifyErrorChange(prevErrors, paths);
-                    // the error messages the scroll looks for exist only once this update is rendered
                     this.#forceUpdate(valid ? undefined : () => this.#autoScroll());
                 }
                 if (valid) {
@@ -273,19 +272,6 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         });
     }
 
-    /**
-     * Case A：
-     *      All fields: a[0]、a[1]、b.type、b.name[2]、b.name[0]
-     *      input => output:
-     *           a  => a[0]、a[1]
-     *           b  => b.type、b.name[0]、b.name[2]
-     *
-     * Case B：
-     *      All fields: activity.a[0]、activity.a[1]、activity.c、activity.d、other
-     *      input => output:
-     *           activity.a => activity.a[0]、activity.a[1]
-     *
-     */
     #getNestedField(path: string): Map<string, FieldRegistration> {
         const allRegisterField = this.#fields;
         const allFieldPath = [...allRegisterField].map((item) => item[0]);
@@ -434,7 +420,6 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         return validation;
     }
 
-    /** Resolves with the field's error value, undefined when valid */
     #validateCustom(registration: FieldRegistration, value: unknown, opts: CallOpts) {
         const { validate } = registration.getValidateOptions();
         const epoch = this.#epoch;
@@ -444,7 +429,6 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             try {
                 maybePromisedErrors = validate(value, this.#getValue());
             } catch (err) {
-                // a throwing sync validate reports its error as the result
                 maybePromisedErrors = err;
             }
             const settle = (result: unknown) => {
@@ -655,7 +639,6 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         return updateKey;
     };
 
-    /** Inserts a row holding `rowValue` before `index`, or appends it without one */
     #addArrayFieldRowWithValue = (arrayFieldPath: string, rowValue: unknown, index?: number) => {
         const values = this.#getValue(arrayFieldPath);
         const rows = values ? values.slice() : [];

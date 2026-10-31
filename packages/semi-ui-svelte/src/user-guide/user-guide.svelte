@@ -176,7 +176,6 @@
         };
     });
 
-    // The first measure of a step scrolls it into view
     $effect(() => {
         void currentIndex;
         if (measuring) untrack(() => measure(true));

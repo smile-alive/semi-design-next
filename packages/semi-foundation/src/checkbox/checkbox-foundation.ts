@@ -16,7 +16,6 @@ export interface BasicCheckboxEvent {
     [x: string]: any;
 }
 
-/** The click that toggles the checkbox: only what the foundation reads or forwards */
 export interface CheckboxSourceEvent {
     stopPropagation: () => void;
     preventDefault: () => void;
@@ -40,7 +39,6 @@ export interface CheckboxBaseState {
 
 type AriaInvalid = boolean | 'true' | 'false' | 'grammar' | 'spelling';
 
-/** What a CheckboxGroup hands to the checkboxes inside it */
 export interface CheckboxGroupView {
     value: CheckboxValue[];
     disabled: boolean;
@@ -51,7 +49,7 @@ export interface CheckboxGroupView {
     ariaErrormessage?: string;
 }
 
-/** The props deriveView reads; `checked` is the controlled value */
+/** `checked` is the controlled value */
 export interface CheckboxViewProps {
     checked?: unknown;
     disabled?: boolean;
@@ -92,7 +90,6 @@ export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckb
         this.adapter.notifyGroupChange(event);
     }
 
-    /** How the checkbox looks and behaves, from its own props or, with a value inside a group, from the group */
     static deriveView(props: CheckboxViewProps, state: CheckboxBaseState, group?: CheckboxGroupView | null): CheckboxView {
         if (group && props.value !== undefined) {
             return {
@@ -119,7 +116,6 @@ export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckb
         };
     }
 
-    /** Whether a click landed on an interactive element inside the root other than the checkbox's own input */
     static isInnerInteractiveClick(target: Element, root: Element, input?: Element | null) {
         const interactive = target.closest(INTERACTIVE_SELECTOR);
         return Boolean(interactive && interactive !== input && root.contains(interactive));

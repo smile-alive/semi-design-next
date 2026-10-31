@@ -31,7 +31,6 @@ function setupGroup(props: FloatButtonGroupProps, flags: { icon?: boolean; conte
     return { store, container: view.container };
 }
 
-// Runs after the component's own listener; it also stops jsdom from navigating.
 async function clickAndObservePrevented(target: Element) {
     let prevented: boolean | undefined;
     const listener = (event: Event) => {

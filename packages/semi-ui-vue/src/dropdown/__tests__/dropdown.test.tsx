@@ -232,14 +232,7 @@ describe('Dropdown', () => {
         const view = render(Dropdown, { props: { menu, trigger: 'custom', visible: true, motion: false } });
         await screen.findByRole('menu');
         expect(screen.getByRole('menu').children).toHaveLength(menu.length);
-        const menu2 = [
-            // iconType is not a declared title field; it is ignored at runtime
-            { node: 'title', name: '分组1', iconType: 'menu' },
-            { node: 'item', name: 'secondary', type: 'secondary' },
-            { node: 'divider' },
-            { node: 'title', name: '分组2' },
-            { node: 'invalid node', name: '分组2' },
-        ] as unknown as DropDownMenuItem[];
+        const menu2 = [{ node: 'title', name: '分组1', iconType: 'menu' }, { node: 'item', name: 'secondary', type: 'secondary' }, { node: 'divider' }, { node: 'title', name: '分组2' }, { node: 'invalid node', name: '分组2' }] as unknown as DropDownMenuItem[];
         await view.rerender({ menu: menu2 });
         expect(screen.getByRole('menu').children).toHaveLength(menu2.length - 1);
     });
@@ -916,7 +909,6 @@ describe('Dropdown 行为', () => {
         const clicks = () => view.emitted<[MouseEvent]>('innerClick') ?? [];
         expect(clicks()).toHaveLength(1);
         expect(clicks()[0][0].type).toBe('click');
-        // Space is prevented so that the page does not scroll
         expect(keyDown(item('inner item'), ' ')).toBe(false);
         expect(clicks()).toHaveLength(2);
         expect(view.emitted('outerClick')).toBeUndefined();
@@ -1174,7 +1166,6 @@ describe('Dropdown Vue 受控与插槽', () => {
         await screen.findByRole('menu');
         const popup = portalInner() as HTMLElement;
         expect(popup).toHaveAttribute('role', 'group');
-        // jsdom puts the trigger's box at 0, so a bottom popup's top is the spacing
         expect(popup.style.top).toBe('12px');
         expect(document.querySelector('.semi-dropdown.global-content')).not.toBeNull();
         await fireEvent.mouseDown(document.body);

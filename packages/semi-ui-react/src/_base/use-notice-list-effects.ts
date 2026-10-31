@@ -2,7 +2,6 @@ import { useEffect, useLayoutEffect, useRef } from 'react';
 import { pickFreshAnnouncements } from '@fibrae/semi-foundation/utils/announcer';
 import useAnnouncer from './use-announcer';
 
-/** What a Toast or Notice gives the list that renders it */
 interface NoticeItemHandle {
     restartCloseTimer: () => void;
     leave: () => void;

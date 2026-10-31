@@ -103,7 +103,6 @@
     // A disabled Popconfirm renders the trigger alone; a spread of no props leaves the user's element as written
     const noTriggerProps = {} as TooltipTriggerProps;
 
-    // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: PopconfirmBaseProps = {
         get cancelButtonProps() {
             return cancelButtonProps;
@@ -230,7 +229,6 @@
         if (popoverVisible) foundation.handlePopupOpen();
     });
 
-    /** Focuses the trigger (only with returnFocusOnClose and a non-custom trigger) */
     export function focusTrigger() {
         popover?.focusTrigger();
     }

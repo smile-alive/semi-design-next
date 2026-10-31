@@ -16,18 +16,13 @@
     type AnyRecord = Record<string, any>;
 
     interface BodyProps {
-        /** The column tree */
         columns: ColumnProps[];
-        /** The records of the current page */
         dataSource: AnyRecord[];
         groups?: Map<BaseRowKeyType, Set<BaseRowKeyType>> | null;
         expandedRowKeys: BaseRowKeyType[];
         pageDisabledRowKeysSet: Set<BaseRowKeyType>;
-        /** The rows of a virtualized body */
         virtualizedData: (FlattenData | GroupFlattenData)[];
-        /** The header renders inside the body table, since it is not fixed */
         includeHeader: boolean;
-        /** The accessible name of the body table, when it is the table */
         tableAttrs?: Record<string, unknown>;
         emptyContent: Snippet;
         onScroll?: (args: TableVirtualizedScrollArgs) => void;
@@ -92,7 +87,6 @@
 
     const groupRecords = (group: Set<BaseRowKeyType>) => [...group].flatMap((key) => recordsByKey.get(key) ?? []);
 
-    /** The props of a record row that depend on the table state */
     const baseRowState = (record: AnyRecord, rowKey: BaseRowKeyType, level: number) => {
         const expandable = table.rowExpandable(record);
         const inRow = expandable || expandBtnInRow;
@@ -175,7 +169,6 @@
         };
     });
 
-    /** The scrolling body element, whose horizontal offset the separate header follows */
     export function element() {
         return scrollElement();
     }

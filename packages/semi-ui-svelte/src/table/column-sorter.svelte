@@ -9,17 +9,12 @@
     import { getTableContext } from './context.js';
     import type { ColumnProps, SortOrder } from './interface.js';
 
-    /**
-     * The sort button of a column header: named by the column title, with the sort state as aria-sort on the header cell.
-     * When the whole header cell sorts, the click handler sits on the cell and the button's click reaches it by bubbling.
-     */
+    /** When the whole header cell sorts, the click handler sits on the cell and the button's click reaches it by bubbling */
     interface ColumnSorterProps {
         column: ColumnProps;
         sortOrder: SortOrder;
         showTooltip: boolean;
-        /** The button sorts on click itself, since the header cell does not */
         sortsOnClick: boolean;
-        /** The title the button wraps */
         children?: Snippet;
     }
 

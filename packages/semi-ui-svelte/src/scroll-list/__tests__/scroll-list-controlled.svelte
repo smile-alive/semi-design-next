@@ -14,7 +14,6 @@
     let { cycled = false, initial = 1, label = '1', mode = 'normal', motion = true, onSelect }: Props = $props();
 
     const list = Array.from({ length: 20 }, (_, index) => ({ value: index }));
-    // the column starts from the prop, then follows its own selections
     let selectedIndex = $state<number | undefined>(undefined);
 </script>
 

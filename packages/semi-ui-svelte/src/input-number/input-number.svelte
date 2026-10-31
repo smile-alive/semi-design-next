@@ -234,12 +234,10 @@
         input?.setSelectionRange(start, end, direction);
     }
 
-    /** The native input */
     export function getInput() {
         return input?.getInput();
     }
 
-    /** The root element, the number wrapper div */
     export function getNativeElement() {
         return root;
     }

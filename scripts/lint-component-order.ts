@@ -168,7 +168,6 @@ function declaredNames(node: Node): Set<string> {
     return new Set(id?.type === 'Identifier' ? [id.name as string] : []);
 }
 
-// Every identifier the statement may read; property names and JSX attribute names are not reads
 function readNames(node: Node, names = new Set<string>()) {
     if (node.type === 'Identifier' || node.type === 'JSXIdentifier') names.add(node.name as string);
     for (const [key, value] of Object.entries(node)) {
@@ -193,12 +192,10 @@ interface Ordered {
     misplaced?: Chunk;
 }
 
-// Reorders `statements`, which sit in source[bodyStart, bodyEnd), and returns the new text of that range
 function orderBody(source: string, statements: Node[], comments: Span[], bodyStart: number, bodyEnd: number, propsNames: Set<string>, calls: Calls): Ordered | undefined {
     if (statements.length < 2) return undefined;
     let previous = bodyStart;
     const chunks: Chunk[] = statements.map((node) => {
-        // comments between the previous statement and this one lead this one
         const leading = comments.find((comment) => comment.start >= previous && comment.end <= node.start);
         let end = node.end;
         for (const comment of comments) {
@@ -215,7 +212,6 @@ function orderBody(source: string, statements: Node[], comments: Span[], bodySta
     if (!prefix.includes('\n')) return undefined;
     const indent = prefix.slice(prefix.lastIndexOf('\n') + 1);
 
-    // a statement reads what the statements declaring its reads read
     const declaredBy = new Map<string, Chunk>();
     for (const chunk of chunks) for (const name of chunk.declares) declaredBy.set(name, chunk);
     for (let changed = true; changed;) {
@@ -272,7 +268,6 @@ interface Edit {
     name: string;
 }
 
-// `function Name() {}` or `const Name = () => {}`, exported or not
 function topLevelFunction(statement: Node): [string, Node] | undefined {
     const declaration = statement.type === 'ExportNamedDeclaration' || statement.type === 'ExportDefaultDeclaration' ? (statement.declaration as Node | null) : statement;
     if (declaration?.type === 'FunctionDeclaration') return [((declaration.id as Node | null)?.name as string) ?? '', declaration];
@@ -334,7 +329,6 @@ function components(files: string[], calls: Calls) {
 // attribute values match whole: `generic="T extends Record<string, any>"` contains `>`
 const scriptOpen = /<script\b(?:\s+[^\s=>]+(?:="[^"]*"|='[^']*'|=[^\s>]+)?)*\s*>/g;
 
-// Orders the statements of the script block that `open` starts; only that block's range is rewritten
 function orderScript(file: string, source: string, open: RegExpExecArray, name: string, calls: Calls) {
     const start = open.index + open[0].length;
     const end = source.indexOf('</script>', start);

@@ -16,11 +16,7 @@
     type ColumnKey = string | number;
     type ResizeOverride = Partial<ColumnProps>;
 
-    /**
-     * A Table whose column widths the header cells can drag; loaded only for `resizable`, so plain tables skip this code.
-     * The props it reads are declared here, the rest of the Table props and listeners pass through to NormalTable; the
-     * listeners are typed behind `@vue-ignore` so Table's re-emitting handlers infer their arguments.
-     */
+    /** The listeners are typed behind `@vue-ignore` so Table's re-emitting handlers infer their arguments. */
     defineOptions({ inheritAttrs: false });
 
     const props = withDefaults(defineProps<Pick<TableProps<R>, 'columns' | 'components' | 'expandCellFixed' | 'hideExpandedColumn' | 'resizable' | 'rowSelection'> & /* @vue-ignore */ EmitProps<TableEmits<R>>>(), {
@@ -59,10 +55,6 @@
 
     const options = computed(() => (typeof props.resizable === 'object' ? (props.resizable as ResizableProps) : {}));
 
-    /**
-     * The columns prop with keys, plus width placeholders for the expand and selection columns that Table adds, so that
-     * those columns can be resized too
-     */
     const baseColumns = computed(() => {
         const columns = assignColumnKeys(cloneDeep(props.columns ?? [])) as ColumnProps[];
         // Table merges its own column into the placeholder in place, so the placeholder sits where Table puts the column

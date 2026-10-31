@@ -43,7 +43,6 @@ export type Ellipsis = {
     onExpand?: (expanded: boolean, event: MouseEvent) => void;
 };
 
-/** Props every Typography component takes besides its own tag's attributes */
 export interface TypographyCommonProps {
     class?: string;
     component?: ValidComponent;
@@ -69,7 +68,6 @@ export interface TypographyEllipsisProps {
     ellipsis?: Ellipsis | boolean;
 }
 
-/** An icon element, or an icon component that takes the size the text implies */
 export type TypographyIcon = JSX.Element | Component<{ size?: 'small' | 'default' }>;
 
 export type OmitTypographyProps = 'innerHTML' | 'textContent';

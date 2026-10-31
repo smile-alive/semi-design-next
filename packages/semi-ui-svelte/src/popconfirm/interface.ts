@@ -20,7 +20,6 @@ export interface PopconfirmProps extends Omit<PopoverProps, 'content'> {
     okText?: string;
     okType?: ButtonType;
     showCloseIcon?: boolean;
-    /** Names the dialog; a string or a snippet */
     title?: string | Snippet;
     content?: Snippet<[RenderContentProps]>;
     /** Replaces the warning icon; `null` shows no icon */

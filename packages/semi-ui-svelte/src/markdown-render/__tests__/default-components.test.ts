@@ -142,7 +142,6 @@ describe('Svelte MarkdownRender 默认组件', () => {
 
     it('代码块的子节点是元素时不交给高亮，直接渲染 code', async () => {
         type Node = { type?: string; tagName?: string; properties?: { className?: string[] }; children?: Node[] };
-        // stands in for a highlighter plugin that splits the code text into spans
         const wrapCodeText = () => (tree: Node) => {
             const visit = (node: Node) => {
                 if (node.tagName === 'code' && node.properties?.className?.includes('language-js')) {

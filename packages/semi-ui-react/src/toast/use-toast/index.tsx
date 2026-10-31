@@ -52,8 +52,6 @@ function createToastHook(): [ToastHookApi, ReactElement] {
 }
 
 export default function useToast(): [ToastHookApi, ReactElement] {
-    // Created once with its store: the api must still reach earlier toasts, and a stable api and holder let memo
-    // components that receive them skip rendering
     const [hook] = useState(createToastHook);
     return hook;
 }

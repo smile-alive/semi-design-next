@@ -8,9 +8,7 @@
 
     type FoundationPageText = Parameters<typeof TableFoundation.formatPaginationInfo>[2];
 
-    /** Pagination info and Pagination, or the `paginationContent` snippet */
     interface TablePaginationPartProps {
-        /** The pagination state with the page change handler */
         pagination: TablePaginationProps;
         formatPageText?: FormatPageText;
     }

@@ -4,7 +4,6 @@ import NavItemPart from './nav-item.svelte';
 import NavBase from './nav.svelte';
 import SubNavPart from './sub-nav.svelte';
 
-// Svelte components are functions, so the parts attach to the component itself
 export const Nav: typeof NavBase & {
     Sub: typeof SubNavPart;
     Item: typeof NavItemPart;

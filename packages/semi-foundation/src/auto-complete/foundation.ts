@@ -19,7 +19,6 @@ export interface StateOptionItem extends DataItem {
 
 export type AutoCompleteData = ReadonlyArray<DataItem | string | number>;
 
-/** The props the foundation reads with getProps */
 export interface AutoCompleteBaseProps {
     data?: AutoCompleteData;
     defaultActiveFirstOption?: boolean;
@@ -33,7 +32,6 @@ export interface AutoCompleteBaseProps {
     value?: string | number;
 }
 
-/** The state the foundation reads with getStates */
 export interface AutoCompleteBaseState {
     focusIndex: number;
     inputValue?: string | number;
@@ -87,7 +85,6 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         return renderSelectedItem ?? ((option: DataItem) => option?.value);
     }
 
-    /** The input text, selection and highlight that `selectedValue` shows */
     static #valueStates(props: AutoCompleteBaseProps, selectedValue: AutoCompleteBaseProps['value']) {
         // a controlled value set back to undefined empties the input; there is no option to render it from
         if (selectedValue === undefined) {

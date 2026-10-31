@@ -83,13 +83,9 @@ export interface RenderFileListTitleProps {
 export interface CropProps {
     /** Width / height, e.g. 16/9 */
     aspectRatio?: number;
-    /** Crop box shape */
     shape?: 'rect' | 'round' | 'roundRect';
-    /** Minimum zoom ratio */
     minZoom?: number;
-    /** Maximum zoom ratio */
     maxZoom?: number;
-    /** Zoom step size */
     zoomStep?: number;
     /** Output quality, 0 - 1 @default 0.92 */
     quality?: number;
@@ -97,11 +93,9 @@ export interface CropProps {
     fill?: string;
     /** Overrides the locale text */
     modalTitle?: string;
-    /** Overrides the locale text */
     modalOkText?: string;
-    /** Overrides the locale text */
     modalCancelText?: string;
 }
 
-/** Props of the crop Modal; the visibility, title, button texts and handlers belong to Upload */
+/** The visibility, title, button texts and handlers belong to Upload */
 export type UploadCropModalProps = Omit<ModalReactProps, 'visible' | 'title' | 'okText' | 'cancelText' | 'onOk' | 'onCancel'>;

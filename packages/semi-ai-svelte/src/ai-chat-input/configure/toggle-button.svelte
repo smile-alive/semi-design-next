@@ -3,10 +3,8 @@
     import { Button, type ButtonProps } from '@fibrae/semi-ui-svelte/button/index';
 
     interface ToggleButtonProps extends Omit<ButtonProps, 'onclick' | 'value'> {
-        /** Whether the button is pressed */
         value?: boolean;
         onChange: (value: boolean) => void;
-        /** The value after the toggle */
         onClick?: (value: boolean) => void;
     }
 

@@ -37,11 +37,9 @@ export interface ToastProps extends Omit<FoundationToastProps, 'className' | 'co
     style?: JSX.CSSProperties | string;
 }
 
-/** A toast as its list renders it */
 export interface ToastItemProps extends Omit<ToastProps, 'content' | 'stack'> {
     content?: ToastNode;
     ref?: (element: HTMLDivElement) => void;
-    /** The list stacks its toasts */
     stack?: boolean;
     stackExpanded?: boolean;
     positionInList?: { index: number; length: number };
@@ -89,7 +87,6 @@ export default function Toast(rawProps: ToastItemProps) {
         })
     );
 
-    // the slot calls a function node here, under this toast's owner
     const icon = createIconSlot(
         () => local.icon as JSX.Element,
         () => 'large'

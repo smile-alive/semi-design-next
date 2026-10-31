@@ -11,7 +11,6 @@ const getPopupWrapper = () => document.querySelector<HTMLElement>('.semi-popover
 const getInput = () => screen.getByRole<HTMLInputElement>('combobox');
 const getClearButton = () => document.querySelector<HTMLElement>('.semi-input-clearbtn') as HTMLElement;
 
-// an email-domain suggester: the data follows what is typed
 function setup(props: Omit<AutoCompleteProps, 'value' | 'data'> = {}, data: AutoCompleteItems[] = []) {
     const store = createStore<{ value?: string | number; accept: boolean; log: string[]; data: AutoCompleteItems[] }>({ value: '', accept: true, log: [], data });
     const onSearch = (input: string) => {

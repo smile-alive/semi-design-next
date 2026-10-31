@@ -238,7 +238,6 @@ describe('VideoPlayer', () => {
                 return Math.round(rect.left + rect.width / 2 - bar.left);
             })
             .toBe(40);
-        // polled: the enter animation moves the popup until it settles
         await expect.poll(() => Math.round(bar.top - tooltip.getBoundingClientRect().bottom)).toBe(2);
     });
 

@@ -11,7 +11,6 @@ import type { PaginationProps } from '../pagination';
 
 export interface TableProps<RecordType extends Record<string, any> = any> extends ElementProps<'div', 'title' | 'onChange' | 'ref'> {
     bordered?: boolean;
-    /** `Table.Column` children, read when `columns` is not given */
     children?: JSX.Element;
     childrenRecordName?: string;
     clickGroupedRowToExpand?: boolean;
@@ -45,7 +44,6 @@ export interface TableProps<RecordType extends Record<string, any> = any> extend
     rowExpandable?: RowExpandable<RecordType>;
     rowKey?: RowKey<RecordType>;
     rowSelection?: RowSelection<RecordType>;
-    /** Whether to highlight all related rows when hovering over a rowspan cell */
     rowSpanHover?: boolean;
     scroll?: Scroll;
     showHeader?: boolean;
@@ -91,9 +89,7 @@ export interface ColumnProps<RecordType extends Record<string, any> = any> {
     filterChildrenRecord?: boolean;
     /** Renders what replaces the filter trigger and its menu */
     filterDropdown?: () => JSX.Element;
-    /** render filter Dropdown panel content  */
     renderFilterDropdown?: (props: RenderFilterDropdownProps) => JSX.Element;
-    /** filter Dropdown props  */
     filterDropdownProps?: FilterDropdownProps;
     filterDropdownVisible?: boolean;
     filterIcon?: FilterIcon;
@@ -176,7 +172,6 @@ export interface RenderOptions {
     readonly expandIcon?: () => JSX.Element;
     readonly selection?: () => JSX.Element;
     readonly indentText?: () => JSX.Element;
-    /** Whether the current row is being hovered */
     readonly isHovering?: boolean;
 }
 /** Merged into the td attributes; colSpan or rowSpan 0 leaves the cell out, for the cell another cell spans over */
@@ -226,10 +221,8 @@ export interface RowSelectionProps<RecordType extends Record<string, any>> {
     getCheckboxProps?: GetCheckboxProps<RecordType>;
     hidden?: boolean;
     selectedRowKeys?: (string | number)[];
-    /** Selected row keys on mount when selectedRowKeys is not set */
     defaultSelectedRowKeys?: (string | number)[];
     width?: string | number;
-    /** Whether to enable click row to select */
     clickRow?: boolean;
     /** When set to 'related', parent and child nodes will be associated during selection. Default is 'unRelated' */
     checkRelation?: CheckRelation;
@@ -316,7 +309,6 @@ export type VirtualizedOnScroll = (object: VirtualizedOnScrollArgs) => void;
 export interface VirtualizedProps {
     itemSize?: VirtualizedItemSize;
     onScroll?: VirtualizedOnScroll;
-    /** Rows rendered above and below the visible area */
     overscanCount?: number;
 }
 export type Virtualized = boolean | VirtualizedProps;
@@ -331,7 +323,6 @@ export interface ResizableProps<RecordType extends Record<string, any>> {
     onResize?: ResizeFn<RecordType>;
     onResizeStart?: ResizeFn<RecordType>;
     onResizeStop?: ResizeFn<RecordType>;
-    /** Added to the column's class while it is being resized */
     handlerClassName?: string;
 }
 /** The returned fields are merged into the column */
@@ -341,19 +332,14 @@ export interface FilterDropdownProps extends Omit<DropdownProps, 'render' | 'onV
 
 /** Called once; the fields are live, read them in the returned JSX */
 export interface RenderFilterDropdownProps {
-    /** temporary filteredValue  */
     readonly tempFilteredValue: any[];
-    /** set temporary filteredValue  */
     readonly setTempFilteredValue: (tempFilteredValue: any[]) => void;
     /** set tempFilteredValue to filteredValue. You can also pass filteredValue to directly set the filteredValue  */
     readonly confirm: (props?: { closeDropdown?: boolean; filteredValue?: any[] }) => void;
-    /** clear tempFilteredValue and filteredValue  */
     readonly clear: (props?: { closeDropdown?: boolean }) => void;
-    /** close dropdown  */
     readonly close: () => void;
     /** reset tempFilteredValue to the applied filteredValue  */
     readonly reset: () => void;
-    /** column filters  */
     readonly filters?: Filter[];
 }
 

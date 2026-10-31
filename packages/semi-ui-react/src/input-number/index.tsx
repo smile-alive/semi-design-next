@@ -19,16 +19,13 @@ export type { ScientificNotationConfig };
 /** What changed the value: typing, a step button or key, or the blur that reformats the text */
 export type InputNumberChangeEvent = InputChangeEvent | React.PointerEvent<HTMLSpanElement> | React.KeyboardEvent<HTMLInputElement> | React.FocusEvent<HTMLDivElement>;
 
-/** The methods and nodes on an InputNumber ref */
 export interface InputNumberHandle {
     /** Focuses the native input; `preventScroll` defaults to the prop */
     focus(options?: FocusOptions): void;
     blur(): void;
     select(): void;
     setSelectionRange(start: number | null, end: number | null, direction?: 'forward' | 'backward' | 'none'): void;
-    /** The native input */
     readonly input: HTMLInputElement | null;
-    /** The root element, the number wrapper div */
     readonly nativeElement: HTMLElement | null;
 }
 
@@ -74,7 +71,6 @@ export interface InputNumberProps extends Omit<InputProps, 'ref'> {
     onFocus?: (e: React.FocusEvent<HTMLDivElement>) => void;
     onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
     onNumberChange?: (value: number, e: InputNumberChangeEvent) => void;
-    /** While a button is held, `e` stays the pointerdown that began the press for every repeat */
     onUpClick?: (value: string, e: React.PointerEvent<HTMLSpanElement>) => void;
     /** Other HTML attributes go to the native input, className and style to the wrapper */
     ref?: React.Ref<InputNumberHandle>;

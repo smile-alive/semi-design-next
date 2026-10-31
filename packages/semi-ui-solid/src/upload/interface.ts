@@ -94,17 +94,12 @@ export interface RenderFileListTitleProps {
 export interface CropProps {
     /** Width / height, e.g. 16/9 */
     aspectRatio?: number;
-    /** Crop box shape */
     shape?: 'rect' | 'round' | 'roundRect';
-    /** Minimum zoom ratio */
     minZoom?: number;
-    /** Maximum zoom ratio */
     maxZoom?: number;
-    /** Zoom step size */
     zoomStep?: number;
     /** Output quality, 0 - 1 @default 0.92 */
     quality?: number;
-    /** Fill color outside the cropped region */
     fill?: string;
     /** Overrides the locale text */
     modalTitle?: string;

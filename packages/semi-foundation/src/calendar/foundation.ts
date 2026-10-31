@@ -43,7 +43,6 @@ export interface RangeData {
 
 export type MonthData = Record<number, DateObj[]>;
 
-/** The props the foundation reads with getProps */
 export interface CalendarBaseProps {
     displayValue?: Date;
     showCurrTime?: boolean;
@@ -54,9 +53,6 @@ export interface CalendarAdapter<P extends CalendarBaseProps = CalendarBaseProps
     setShowCurrTime: (show: boolean) => void;
 }
 
-/**
- * Static pure layout functions for the views; an instance drives a day column's current time line.
- */
 export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBaseProps, S extends object = object> extends BaseFoundation<CalendarAdapter<P, S>, P, S> {
     #currTimeTimer: ReturnType<typeof setInterval>;
 
@@ -244,12 +240,11 @@ export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBa
         };
     }
 
-    /** How many event rows fit in a month cell of this height */
     static getItemLimit(cellHeight: number) {
         return Math.max(0, Math.ceil((cellHeight - numbers.MONTH_CELL_PADDING) / numbers.MONTH_EVENT_HEIGHT));
     }
 
-    /** How many of a day's events overflow the limit; a day's events are a sparse array indexed by row */
+    /** A day's events are a sparse array indexed by row */
     static countHidden(dayEvents: ParsedRangeEvent[] | undefined, itemLimit: number) {
         return dayEvents?.slice(itemLimit).filter(Boolean).length ?? 0;
     }

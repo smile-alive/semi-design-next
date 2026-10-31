@@ -4,10 +4,8 @@ import type { Attachment } from 'svelte/attachments';
 interface ShowHideOptions {
     visible: () => boolean;
     motion: () => boolean;
-    /** Classes the foundation SCSS animates; the keyframes live only there */
     showClass: string;
     hideClass: string;
-    /** The leave animation has ended, or a hide needed none */
     onHidden?: () => void;
 }
 
@@ -21,12 +19,8 @@ export default function useShowHide({ visible, motion, showClass, hideClass, onH
 
     // true from a show until the leave has ended, so the element is laid out the whole time it can be seen
     let displayed = $state(untrack(visible));
-
-    // true while the show or hide class is applied
     let animating = $state(false);
     let first = true;
-
-    // identifies the latest animation check, so a check of a replaced run does nothing
     let runs = 0;
 
     const finish = () => {
@@ -40,7 +34,6 @@ export default function useShowHide({ visible, motion, showClass, hideClass, onH
     const attach: Attachment<HTMLElement> = (element) => {
         node = element;
         const controller = new AbortController();
-        // animation events bubble; a descendant's animation is not this run
         element.addEventListener(
             'animationend',
             (event) => {
@@ -64,7 +57,6 @@ export default function useShowHide({ visible, motion, showClass, hideClass, onH
             if (isVisible) {
                 displayed = true;
             }
-            // a dialog that was never shown has nothing to leave
             animating = withMotion && !(first && !isVisible);
             first = false;
             if (!animating && !isVisible) {

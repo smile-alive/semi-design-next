@@ -17,10 +17,7 @@ function isEmptyStyle(style: React.CSSProperties) {
     return !style || Object.keys(style).length === 0;
 }
 
-/**
- * One row of the tree. Callbacks pass the whole props object to the tree's handlers.
- * The row takes no focus: the tree keeps it and points at the row with aria-activedescendant (`id`, `focused`).
- */
+/** The row takes no focus: the tree keeps it and points at the row with aria-activedescendant (`id`, `focused`) */
 function TreeNode(props: TreeNodeProps): React.ReactNode {
     const { id, focused, eventKey, expanded, checked, halfChecked, loading, level, empty, emptyContent, filtered, style, isEnd, showLine, expandIcon, disabled: disabledProp, icon, label, keyword, data } = props;
 

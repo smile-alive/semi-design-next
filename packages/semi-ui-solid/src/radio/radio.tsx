@@ -106,7 +106,6 @@ export default function Radio(rawProps: RadioProps) {
 
     const prefix = () => view().prefixCls || css.PREFIX;
 
-    // the circle keeps the radio's own prefix, not the group's
     const innerPrefix = () => local.prefixCls || css.PREFIX;
 
     const addonId = () => local.addonId || `addon-${uid}`;

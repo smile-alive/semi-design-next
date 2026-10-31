@@ -3,7 +3,6 @@
 
     export interface YamFixtureStore {
         props: Omit<YearAndMonthProps, 'onSelect' | 'onBackToMain' | 'dateInput' | 'quickControls'>;
-        /** Entries of onSelect (JSON of the selection) and onBackToMain ('back') */
         log: string[];
         quickControls?: boolean;
         dateInput?: boolean;

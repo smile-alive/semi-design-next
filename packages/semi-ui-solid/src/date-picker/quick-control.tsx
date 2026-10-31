@@ -18,7 +18,6 @@ export interface QuickControlProps {
     locale: Locale['DatePicker'];
 }
 
-/** The preset buttons of the DatePicker panel */
 export default function QuickControl(props: QuickControlProps) {
     const position = () => props.presetPosition ?? 'bottom';
 

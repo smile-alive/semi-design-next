@@ -15,7 +15,6 @@ export type LinkType = AnchorHTMLAttributes | boolean;
 export type EllipsisPos = 'end' | 'middle';
 
 export interface ShowTooltip {
-    /** Defaults to 'tooltip' */
     type?: 'tooltip' | 'popover';
     /** Props of the Tooltip or Popover; `class` and `style` land on the popup. Content is the `ellipsisContent` slot */
     opts?: Partial<TooltipProps> & Partial<PopoverProps> & { class?: unknown; style?: StyleValue };
@@ -51,7 +50,6 @@ export interface TypographySlots {
     default?: () => VNode[];
 }
 
-/** Props every Typography component takes besides the attributes of its root element */
 export interface TypographyCommonProps {
     component?: string | Component;
     copyable?: TypographyCopyableConfig | boolean;
@@ -106,7 +104,6 @@ export interface TypographyCopySlots {
 }
 
 export interface TypographyEllipsisTooltipProps {
-    /** The full text */
     content: string;
     /** The text element, to be placed in the custom popup with `<component :is="trigger" />` */
     trigger: VNode;

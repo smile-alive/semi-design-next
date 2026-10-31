@@ -77,7 +77,6 @@ for (const file of files) {
     if (![...iconPackages].some((name) => source.includes(name))) continue;
     const sourceFile = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 
-    // local names of imported Icon* components, so a renamed import (`IconX as Y`) is tracked as Y
     const icons = new Set<string>();
     for (const statement of sourceFile.statements) {
         if (ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier) && iconPackages.has(statement.moduleSpecifier.text)) {

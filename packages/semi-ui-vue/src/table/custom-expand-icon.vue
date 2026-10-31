@@ -9,13 +9,11 @@
 
     type AnyRecord = Record<string, any>;
 
-    /** The expand button of a record row, a tree row or a group section */
     defineOptions({ inheritAttrs: false });
 
     const props = withDefaults(
         defineProps<{
             record?: AnyRecord;
-            /** A tree row: the tree icon */
             isNested?: boolean;
             groupKey?: string | number;
         }>(),

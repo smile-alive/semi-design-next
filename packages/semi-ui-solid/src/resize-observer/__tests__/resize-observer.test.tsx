@@ -8,7 +8,6 @@ let mock: ReturnType<typeof mockResizeObserver>;
 const observed = () => mock.observed();
 const fire = (entries: ResizeEntry[]) => mock.fire(entries[0].target, entries);
 
-// a rect with only the members the tests read
 const entry = (target: Element, width: number, height: number): ResizeEntry => ({
     target,
     contentRect: { width, height } as DOMRectReadOnly,

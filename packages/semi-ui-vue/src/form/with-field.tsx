@@ -59,10 +59,6 @@ function componentName(component: unknown): string {
     return capitalize(camelize(options.name ?? options.__name ?? ''));
 }
 
-/**
- * Wraps a component as a form field: the Form owns its value, the field re-emits its change with the latest form
- * values appended, and the shell adds the Label, ErrorMessage and extra text.
- */
 export default function withField<K extends keyof IntrinsicElementAttributes, V extends string = 'modelValue', E extends string = 'change'>(component: K, opts?: WithFieldOptions<V, E>): FieldComponent<K, V, E>;
 export default function withField<C, V extends string = 'modelValue', E extends string = 'change'>(component: C, opts?: WithFieldOptions<V, E>): FieldComponent<C, V, E>;
 export default function withField(component: unknown, opts: WithFieldOptions<string, string> = {}): unknown {

@@ -76,12 +76,10 @@
     const parsedEvents = computed(() => CalendarFoundation.getParseMonthlyEvents(props.events, props.displayValue, props.weekStartsOn));
     const weekCount = computed(() => Object.keys(monthlyData.value).length);
 
-    // A day's events are a sparse array indexed by row, so the holes are dropped before listing or counting them.
     const weeks = computed(() =>
         Object.values(monthlyData.value).map((weekDays, weekInd) => {
             const parsed = parsedEvents.value[weekInd];
             return {
-                // positioned spans always carry leftPos, width and topInd; the foundation type keeps them optional
                 display: (parsed?.display ?? [])
                     .filter((item) => (item.topInd ?? 0) < itemLimit.value)
                     .map((item) => ({
@@ -109,7 +107,6 @@
 
     const isOpen = (key: string) => state.value.showCard[key] ?? false;
 
-    // rows split the grid height evenly; the last row is measured because it always renders
     const measure = () => {
         const row = grid.value?.lastElementChild;
         if (row) {
@@ -140,7 +137,6 @@
         emit('moreClick', event, date, count);
     };
 
-    // IconButton exposes no focus method; its root element is the native button.
     const setInitialFocus = (focusRef: ShallowRef<FocusTarget | null>, el: unknown) => {
         focusRef.value = (el as ComponentPublicInstance | null)?.$el ?? null;
     };
@@ -204,7 +200,6 @@
                 <div ref="grid" :class="`${prefixCls}-grid-col`">
                     <div v-for="(week, weekInd) in weeks" :key="weekInd" :class="`${prefixCls}-weekrow`">
                         <div :class="`${prefixCls}-skeleton`" role="row">
-                            <!-- a collapsed day is the anchor of its "more" card -->
                             <component :is="day.hidden > 0 ? Popover : SlotFragment" v-for="day in week.days" :key="day.date.valueOf()" :ariaLabelledby="day.titleId" position="leftTopOver" trigger="custom" :visible="isOpen(day.key)" @escKeyDown="closeCardToMore($event, day.key)">
                                 <!-- Tooltip makes a trigger without a tabindex a tab stop; "more" is the stop -->
                                 <div
@@ -263,7 +258,6 @@
                                 </template>
                             </component>
                         </div>
-                        <!-- the overlay sits beside the row, where a list is not a valid child of the table -->
                         <div :class="`${cssClasses.PREFIX}-event-items`">
                             <div v-for="(span, ind) in week.display" :key="span.item.key || `${ind}-monthevent`" :class="[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-month`]" :style="span.style">
                                 <slot :event="eventOf(span.item)" name="event">{{ span.item.children }}</slot>

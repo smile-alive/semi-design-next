@@ -5,11 +5,9 @@ export interface DragMoveProps {
     handler?: () => HTMLElement | null;
     /** The element that bounds the movement; it needs a positioned layout */
     constrainer?: 'parent' | (() => HTMLElement | null);
-    /** Whether pressing on a native input or textarea starts a drag */
     allowInputDrag?: boolean;
     /** Called when a pointer goes down: return `false` to not drag */
     allowMove?: (e: PointerEvent, element: HTMLElement) => boolean;
-    /** Takes the new position instead of the element's top and left */
     customMove?: (element: HTMLElement, top: number, left: number) => void;
     /** `relative` keeps the element's place in the layout */
     positionStrategy?: 'absolute' | 'relative';

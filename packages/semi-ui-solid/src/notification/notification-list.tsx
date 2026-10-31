@@ -44,12 +44,10 @@ export default function NotificationList(props: NotificationListProps) {
 
     const [announcement, announcer] = useAnnouncer();
 
-    // a list renders one store for its whole life
     const store = untrack(() => props.store);
 
     const [state, setState] = createSignal(store.getSnapshot());
 
-    // the store holds the options as given to Notification.open and the hooks
     const notices = createMemo(() => state().notices as NoticeProps[]);
     const shown = createMemo(() => new Set(notices().map((notice) => notice.id)));
     const byId = createMemo(() => new Map([...notices(), ...(state().removedItems as NoticeProps[])].map((notice) => [notice.id as string, notice])));
@@ -83,7 +81,6 @@ export default function NotificationList(props: NotificationListProps) {
         const animation = useCSSAnimation({
             startClassName: () => `${prefixCls}-animation-${leaving() ? 'hide' : 'show'}_${position}`,
             onAnimationStart: () => pinAnimatedHeight(elements.get(id)),
-            // the enter animation ends here too
             onAnimationEnd: () => {
                 if (leaving()) {
                     store.finishLeave(id);
@@ -154,7 +151,6 @@ export default function NotificationList(props: NotificationListProps) {
 
     onMount(() => {
         onCleanup(store.subscribe(() => setState(store.getSnapshot())));
-        // the store may have changed between the first read and the subscription
         setState(store.getSnapshot());
     });
 

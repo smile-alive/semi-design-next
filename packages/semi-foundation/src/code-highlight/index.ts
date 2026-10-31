@@ -8,7 +8,6 @@ export interface CodeHighlightBaseProps {
     lineNumber?: boolean;
     /** Grammars this block needs beyond the registered ones, loaded once into the shared highlighter */
     languages?: LanguageInput[];
-    /** Overrides the registered themes for this block */
     themes?: CodeHighlightThemes;
 }
 

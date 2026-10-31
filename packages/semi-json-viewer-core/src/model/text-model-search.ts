@@ -206,7 +206,6 @@ export class SearchParams {
 
         let canUseSimpleSearch = !this.isRegex && !multiline;
         if (canUseSimpleSearch && this.searchString.toLowerCase() !== this.searchString.toUpperCase()) {
-            // casing might make a difference
             canUseSimpleSearch = this.matchCase;
         }
 

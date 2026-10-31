@@ -3,10 +3,8 @@ import { easeInOutCubic, tween } from '../utils/tween';
 import warning, { isDev } from '../utils/warning';
 import { strings } from './constants';
 
-/** What `target()` returns: the window or a scrollable element */
 export type Target = Window | HTMLElement;
 
-/** The props the foundation reads */
 export interface BackTopBaseProps {
     // null: node not available yet, nothing is bound
     target?: () => Target | null;
@@ -71,7 +69,6 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
         this.#bind();
     }
 
-    /** Rebinds the scroll listener when `target` returns a different element */
     handleTargetChange = () => {
         if (this.getProps().target() !== this.#targetNode) {
             this.#unbind();

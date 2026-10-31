@@ -34,7 +34,6 @@
 
     useEditorAppContext(editor);
 
-    // The image button follows the same snapshot as the upload node, so it never offers an upload without a target
     const canUpload = canUploadImage(props.imgUploadProps);
     const prefix = cssClasses.FILE;
 

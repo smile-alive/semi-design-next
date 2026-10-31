@@ -22,7 +22,6 @@ const itemPrefix = `${prefix}-item`;
 
 export const NAV_ITEM = 'Nav.Item';
 
-// Nav renders the item from this token (ItemView); standing alone it renders nothing
 export default function NavItem(props: NavItemProps) {
     return createToken(NAV_ITEM, props);
 }
@@ -32,7 +31,6 @@ export function iconSlotClass(toggle: boolean, toggleIconPosition: 'left' | 'rig
     return clsx(`${itemPrefix}-icon`, toggle ? `${itemPrefix}-icon-toggle-${toggleIconPosition}` : `${itemPrefix}-icon-info`);
 }
 
-/** The aria-* attributes of an item belong to the link, button or title that takes focus, not to the li */
 export const isAriaKey = (key: string): key is `aria-${string}` => key.startsWith('aria-');
 
 export const plainTrigger: GetTriggerProps = (own = {} as never) => own as never;
@@ -51,7 +49,6 @@ export function ItemWrapper(props: { element: JSX.Element; isInSubNav: boolean; 
     const context = useNavContext();
 
     return (
-        // Show runs the callback once per function, which is the one call renderWrapper promises
         <Show keyed when={context.view().renderWrapper} fallback={props.element}>
             {(renderWrapper) => renderWrapper({ itemElement: props.element, isSubNav: props.isSubNav, isInSubNav: props.isInSubNav, props: props.wrapperProps })}
         </Show>
@@ -126,7 +123,6 @@ export function ItemView(props: NavItemProps) {
             length: countPlaceholderIcons({ mode: view().mode, limitIndent: view().limitIndent, isCollapsed: isCollapsed(), hasIcon: hasContent(icon()), indent: local.indent ?? false, level: local.level ?? 0 }),
         });
 
-    // a horizontal bar leaves out the slots that hold nothing
     const showToggle = () => !horizontal() || hasContent(toggleIcon());
 
     const showIcon = () => (hasContent(icon()) || Boolean(local.indent) || view().isInSubNav) && (!horizontal() || hasContent(icon()));
@@ -191,7 +187,6 @@ export function ItemView(props: NavItemProps) {
     const inlineItem = () => (
         <li
             {...liRest}
-            // the Show memo around this branch tracks these reads; a spread signal object would rebuild the item
             ref={untrack(() => mergeRefs((node: HTMLLIElement) => forwardFocus(node, () => node.querySelector<HTMLElement>('a, button')), local.forwardRef, local.ref))}
             class={clsx(local.class || `${itemPrefix}-normal`, {
                 [itemPrefix]: true,

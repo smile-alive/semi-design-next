@@ -195,7 +195,6 @@ describe('Tree 行为', () => {
         expect(getNode('yazhou')).toHaveAttribute('aria-checked', 'mixed');
         expect(getNode('yazhou')).not.toHaveAttribute('aria-selected');
         expect(getExpandIcon(getNode('yazhou'))).toHaveAttribute('aria-hidden', 'true');
-        // Vue Checkbox puts aria-hidden and tabindex on its input
         const input = getNode('yazhou').querySelector(`.${BASE_CLASS_PREFIX}-checkbox input`);
         expect(input).toHaveAttribute('aria-hidden', 'true');
         expect(input).toHaveAttribute('tabindex', '-1');
@@ -457,7 +456,6 @@ describe('Tree 行为', () => {
             y: 0,
         } as DOMRect);
         try {
-            // jsdom has no DragEvent, so the coordinate is set on the generic event
             const drag = async (type: 'dragEnter' | 'dragOver' | 'drop', key: string, clientY: number) => {
                 const event = createEvent[type](getNode(key));
                 Object.defineProperty(event, 'clientY', { value: clientY });
@@ -584,7 +582,6 @@ describe('Tree 审计修复', () => {
         await fireEvent.dragEnter(getNode('beimeizhou'));
         await settle();
         await fireEvent.dragLeave(getNode('beimeizhou'));
-        // the auto-expand delay is 400ms
         await new Promise((resolve) => setTimeout(resolve, 450));
         await nextTick();
         expect(getNode('meiguo')).toBeNull();

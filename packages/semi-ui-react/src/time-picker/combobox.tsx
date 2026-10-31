@@ -29,7 +29,6 @@ export interface AMPMOptionItem {
     text: string;
 }
 
-/** One time panel: a scroll column each for AM/PM, hours, minutes and seconds */
 export default function Combobox({ ref, prefixCls, format = strings.DEFAULT_FORMAT, disabledHours, disabledMinutes, disabledSeconds, hideDisabledOptions, use12Hours, hourStep, minuteStep, secondStep, scrollItemProps, panelHeader, panelFooter, onChange, defaultIsAM, timeStampValue }: ComboboxProps) {
     const { locale } = useLocale('TimePicker');
 

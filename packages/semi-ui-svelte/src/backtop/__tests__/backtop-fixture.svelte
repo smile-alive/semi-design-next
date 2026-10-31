@@ -4,7 +4,6 @@
     import BackTop from '../backtop.svelte';
     import type { BackTopProps } from '../interface';
 
-    // the snippets are passed only when their flag is on, so absence stays observable; `locale` wraps the button in a LocaleProvider
     let { store }: { store: { props?: BackTopProps; icon?: boolean; badgeCount?: boolean; children?: string; locale?: Locale } } = $props();
 </script>
 

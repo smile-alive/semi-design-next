@@ -6,7 +6,6 @@ import type { ElementProps } from '../_base/element-props';
 import type { Position } from '../tooltip';
 import type { ShowTooltip } from '../typography/interface';
 
-/** A link is activated by a click or by Enter */
 export type AnchorClickEvent = MouseEvent | KeyboardEvent;
 
 export interface AnchorProps extends ElementProps<'div', 'onChange' | 'onClick'> {

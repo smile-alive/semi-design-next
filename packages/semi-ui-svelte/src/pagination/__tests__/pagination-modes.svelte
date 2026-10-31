@@ -3,7 +3,6 @@
 
     type Mode = 'bind' | 'function' | 'one-way' | 'uncontrolled';
 
-    // `target` is the prop under test; the other one stays unbound
     let { target, mode, store }: { target: 'currentPage' | 'pageSize'; mode: Mode; store: { page?: number; size?: number; accept: boolean; log: string[] } } = $props();
 
     const log = (entry: string) => {

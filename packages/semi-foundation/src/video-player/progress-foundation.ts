@@ -107,7 +107,6 @@ export default class VideoProgressFoundation<P extends VideoProgressBaseProps = 
         return `calc(${(max ? value / max : 0) * 100}% - 8px)`;
     }
 
-    /** How much of a marker `value` covers, as a CSS width */
     static getValueWidth({ start, end }: MarkerListItem, value: number) {
         // the default item spans [0, 0] until the duration is known
         if (end <= start) {

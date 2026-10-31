@@ -11,7 +11,6 @@ interface InsetInputBaseProps extends Pick<InsetInputChangeFoundationProps, 'pan
 }
 
 export interface InsetDateInputProps extends InsetInputBaseProps {
-    /** The native input */
     inputRef?: (element: HTMLInputElement) => void;
 }
 

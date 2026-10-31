@@ -20,8 +20,6 @@
 
     const titleId = $props.id();
     let panelHeight = 0;
-
-    // The values the effects below last saw, to act on changes only
     let syncedPickerValue: { value: MonthsGridProps['defaultPickerValue'] } | undefined;
     let previousCount: number | undefined;
     let panelSize = $state.raw<PanelSize>({ left: { minWidth: '', minHeight: '' }, right: { minWidth: '', minHeight: '' } });
@@ -59,8 +57,6 @@
     const panelTypes = $derived<PanelType[]>(isRange ? [PANEL_TYPE_LEFT, PANEL_TYPE_RIGHT] : [PANEL_TYPE_LEFT]);
     const dateFormat = $derived(MonthsGridFoundation.getValidDateFormat(props));
     const hasTime = $derived(props.type.includes('Time'));
-
-    // Both panels show year or time lists in a range, which then share a minHeight
     const scrollListCount = $derived(isRange ? Number(isYearOrTime(states().monthLeft)) + Number(isYearOrTime(states().monthRight)) : 0);
 
     const detailOf = (panelType: PanelType) => {
@@ -116,7 +112,6 @@
         }
     };
 
-    // Panels share a minHeight only while both show scroll lists, so only the cached height is updated here
     const handleWeeksRowNumChange = () => {
         if (isRange && !(isYearOrTime(states().monthLeft) && isYearOrTime(states().monthRight))) {
             panelHeight = scrollListHeight();
@@ -172,7 +167,6 @@
         untrack(() => void syncScrollLists(previous, count));
     });
 
-    // The panel size follows the views each panel shows, measured once the DOM shows them
     $effect(() => {
         void states().monthLeft;
         void states().monthRight;

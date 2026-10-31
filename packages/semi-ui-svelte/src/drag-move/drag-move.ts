@@ -13,7 +13,6 @@ export default function dragMove(options: DragMoveOptions = {}): Attachment<HTML
     return (element) => {
         const { handler, onMouseDown, onMouseMove, onMouseUp, onTouchStart, onTouchMove, onTouchEnd, onTouchCancel, ...rest } = options;
         const props: DragMoveBaseProps = { ...rest, handler: typeof handler === 'object' ? () => handler : handler };
-        // the foundation reads neither state nor context
         const adapter: DragMoveAdapter = {
             getContext: () => undefined as never,
             getContexts: () => ({}),

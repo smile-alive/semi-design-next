@@ -21,7 +21,6 @@ export interface ToastReactProps extends ToastProps {
     [attribute: `data-${string}` | `aria-${string}`]: string | number | boolean | undefined;
 }
 
-/** Options of one toast opened through the static methods or a hook; the list supplies `close` */
 export type ToastOptions = Omit<ToastReactProps, 'type' | 'close'>;
 
 export type { ConfigProps, ToastState } from '@fibrae/semi-foundation/toast/toast-foundation';

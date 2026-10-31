@@ -4,7 +4,6 @@
     import type { TreeProps } from '../interface';
     import Tree from '../tree.svelte';
 
-    // `props` is a $state store: a test changes its fields to re-render the tree
     let { props, direction }: { props: TreeProps; direction?: 'ltr' | 'rtl' } = $props();
 
     let tree = $state<ReturnType<typeof Tree>>();

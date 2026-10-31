@@ -1,7 +1,6 @@
 <script lang="ts">
     import Feedback from '../feedback.svelte';
 
-    // The four ways a parent can hold `visible`; `rejectClose` makes the function binding refuse to close
     let { mode, rejectClose = false, feedbackMode = 'modal' }: { mode: 'bind' | 'get-set' | 'one-way' | 'none'; rejectClose?: boolean; feedbackMode?: 'modal' | 'popup' } = $props();
 
     let visible = $state(true);

@@ -4,8 +4,7 @@
     import ColorPicker from '../color-picker.svelte';
     import type { ColorPickerProps } from '../interface';
 
-    // an English locale for every render, so a hard-coded Chinese name cannot pass; the snippets are passed only when
-    // their flag is on, so absence stays observable
+    // an English locale for every render, so a hard-coded Chinese name cannot pass
     let { store }: { store: { props: ColorPickerProps; trigger?: boolean; slots?: boolean } } = $props();
 
     let picker = $state<ColorPicker>();

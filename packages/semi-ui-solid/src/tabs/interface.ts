@@ -19,7 +19,6 @@ export type TabRender = (item: PlainTab, index: number) => JSX.Element;
 
 /** A tab of the collapsed bar. Data only: with TabPane children it has no `tab`; use `tabList` when the text is needed */
 export interface OverflowItem extends PlainTab {
-    /** `${itemKey}-bar` */
     key: string;
     active: boolean;
 }
@@ -57,7 +56,6 @@ export interface TabBarProps extends ElementProps<'div'> {
     dropdownProps?: TabsDropdownProps;
     /** The content of each tab in `list`; without it the entry's `tab` shows */
     renderTab?: TabRender;
-    /** The icon of each tab in `list` */
     renderIcon?: TabRender;
 }
 
@@ -83,7 +81,6 @@ export interface TabsProps extends ElementProps<'div', 'onChange'> {
     tabList?: PlainTab[];
     /** The content of each `tabList` tab; without it the entry's `tab` shows */
     renderTab?: TabRender;
-    /** The icon of each `tabList` tab */
     renderIcon?: TabRender;
     tabPaneMotion?: boolean;
     tabPosition?: TabPosition;

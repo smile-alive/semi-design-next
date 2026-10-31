@@ -61,7 +61,6 @@
         stopPropagation: () => semiDefault('Select', 'stopPropagation', true),
         virtualize: semiGlobalDefault('Select', 'virtualize'),
         preventScroll: semiGlobalDefault('Select', 'preventScroll'),
-        // A global id would repeat on every instance, and aria-controls and aria-activedescendant would point elsewhere.
         id: undefined,
     });
 
