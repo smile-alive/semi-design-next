@@ -26,13 +26,13 @@ jobs:
             - uses: jdx/mise-action@v5
             - run: pnpm install --frozen-lockfile
             - run: pnpm build
-            - uses: changesets/action@v1
+            # v1 finds published packages by parsing "New tag:" lines that Changesets CLI v3 no longer prints, so it
+            # skipped tags and GitHub releases; v2 reads the CLI's CHANGESETS_OUTPUT file. v2 has no floating major tag.
+            # No NPM_TOKEN: every @fibrae package trusts this workflow, so the CLI publishes through OIDC
+            # (`id-token: write`) and attaches provenance on its own
+            - uses: changesets/action@v2.1.2
               with:
-                  version: pnpm changeset version
-                  publish: pnpm changeset publish
-                  title: 'chore: 发布新版本'
-                  commit: 'chore: 发布新版本'
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  # No NPM_TOKEN: every @fibrae package trusts this workflow, so pnpm publishes through OIDC
-                  # (`id-token: write`) and attaches provenance on its own
+                  version-script: pnpm changeset version
+                  publish-script: pnpm changeset publish
+                  pr-title: 'chore: 发布新版本'
+                  commit-message: 'chore: 发布新版本'
