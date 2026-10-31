@@ -633,6 +633,12 @@ describe('Table 行为基线', () => {
         expect(document.querySelector(`.${P}-small`)).toHaveClass(`${P}-bordered`);
     });
 
+    it('props 的默认值声明在对外的 Table 上，文档生成从这里读取', () => {
+        const declared = (Table as unknown as { props: Record<string, { default?: unknown }> }).props;
+        const withDefault = Object.keys(declared).filter((name) => 'default' in declared[name]);
+        expect(withDefault).toEqual(expect.arrayContaining(['bordered', 'childrenRecordName', 'dataSource', 'indentSize', 'pagination', 'prefixCls', 'showHeader', 'size']));
+    });
+
     it('通过 components 渲染自定义 body 行', () => {
         const Row = defineComponent((_props, { slots }) => () => <tr data-custom-row="">{slots.default?.()}</tr>);
         mountTable({

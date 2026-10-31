@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | afterClose | Called after the panel has fully closed, in both modes. | <ApiType detail={"() => void"}>Type</ApiType> | - |
 | bodyStyle | Style of the content area, passed through to the Modal or SideSheet of the current mode. | `JSX.CSSProperties \| string` | - |
 | cancelButtonProps | Props of the cancel button. In popup mode it is loading when either the built-in pending state or your loading says so, and onClick runs before the built-in handling. | `ModalButtonProps` | - |
-| checkboxGroupProps | Props of the checkbox group for the checkbox type, written as the props of CheckboxGroup. The group has no accessible name by default; name it with aria-label. | `CheckboxGroupProps` | - |
+| checkboxGroupProps | Props of the checkbox group for the checkbox type, written as the props of CheckboxGroup. The group has no accessible name by default; name it with aria-label. | <ApiType detail={"Omit\u003cCheckboxGroupProps, 'value'>"}>Type</ApiType> | - |
 | children | Feedback content for type custom. | `JSX.Element` | - |
 | class | Class name of the root element, merged with the built-in class names. | `string` | - |
 | closable | Whether to show the close button. Passed through to the Modal or SideSheet of the current mode. | `boolean` | - |
@@ -26,13 +26,13 @@ import ApiType from '#/components/ApiType.astro';
 | onCancel | Called by the cancel button, the close button, Esc and, in modal mode, a click on the mask; the argument is a native KeyboardEvent for Esc. In popup mode a returned Promise keeps the cancel button loading, the filled-in value is cleared only once it fulfills, and kept when it rejects. Closing is controlled by visible; the component never closes itself. | <ApiType detail={"(e: MouseEvent \u007c KeyboardEvent) => unknown"}>Type</ApiType> | - |
 | onOk | Called when the submit button is clicked. In popup mode a returned Promise keeps the submit button loading, the filled-in value is cleared only once it fulfills, and kept when it rejects; any other return clears the value at once. Closing is controlled by visible; the component never closes itself. | <ApiType detail={"(e: MouseEvent) => unknown"}>Type</ApiType> | - |
 | onValueChange | Called when the feedback content changes with the current value: a string for text, `{ emoji, text }` for emoji (text is the reason filled in after choosing the bad face), the value of the chosen option for radio, and an array of chosen values for checkbox. | <ApiType detail={"(value: FeedbackValue) => void"}>Type</ApiType> | - |
-| radioGroupProps | Props of the radio group for the radio type, written as the props of RadioGroup. The group has no accessible name by default; name it with aria-label. | `RadioGroupProps` | - |
+| radioGroupProps | Props of the radio group for the radio type, written as the props of RadioGroup. The group has no accessible name by default; name it with aria-label. | <ApiType detail={"Omit\u003cRadioGroupProps, 'value'>"}>Type</ApiType> | - |
 | ref | Reference to the root element: the SideSheet root in popup mode, and the outermost element of the Modal in modal mode. | <ApiType detail={"Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
 | renderContent | Wraps the feedback content: receives the built-in content (the children for type custom) and returns the wrapped node. | <ApiType detail={"(content: JSX.Element) => JSX.Element"}>Type</ApiType> | - |
 | role | Role of the dialog, dialog or alertdialog. Passed through to the Modal or SideSheet of the current mode. | `'dialog' \| 'alertdialog'` | - |
 | size | Size of the panel. Passed through to the Modal or SideSheet of the current mode. | `Size` | - |
 | style | Inline style, applied to the content box of the panel; see the note below for where it lands. | `JSX.CSSProperties \| string` | - |
-| textAreaProps | Props of the multi-line input for the text and emoji types, written as the props of TextArea. | `TextAreaProps` | - |
+| textAreaProps | Props of the multi-line input for the text and emoji types, written as the props of TextArea. | <ApiType detail={"Omit\u003cTextAreaProps, 'value'>"}>Type</ApiType> | - |
 | title | Title of the panel. | `JSX.Element` | - |
 | type | Type of the feedback content. For custom, the content goes in the children. | `FeedbackType` | `"emoji"` |
 | visible | Whether the feedback is shown. The component never closes itself; set it to false in onOk or onCancel. | `boolean` | - |

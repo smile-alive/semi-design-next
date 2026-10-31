@@ -28,6 +28,23 @@ describe('TableFoundation.getInitialState', () => {
         expect(state.queries).toEqual([{ dataIndex: 'name', sorter: true, sortOrder: false, filteredValue: [] }]);
     });
 
+    it('传 groupBy 时首帧状态已有分组', () => {
+        const state = initialState({
+            groupBy: 'name',
+            dataSource: [
+                { key: '1', name: 'a' },
+                { key: '2', name: 'a' },
+                { key: '3', name: 'b' },
+            ],
+        });
+        expect(state.groups).toEqual(
+            new Map([
+                ['a', new Set(['1', '2'])],
+                ['b', new Set(['3'])],
+            ])
+        );
+    });
+
     it('已按当前 props 派生，同一份 props 再派生没有变化', () => {
         const props = { dataSource, rowKey: 'key', rowSelection: { selectedRowKeys: ['1'] }, pagination: {} };
         const state = TableFoundation.getInitialState(props, columns, [...columns]);

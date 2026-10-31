@@ -1,11 +1,12 @@
 import { flushSync } from 'svelte';
-import { render, screen } from '@testing-library/svelte';
+import { fireEvent, render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '../../_base/__tests__/store.svelte';
 import semiGlobal from '../../_utils/semi-global';
+import InputGroup from '../input-group.svelte';
 import GroupCase from './group-case.svelte';
 import GroupLabel from './group-label.svelte';
 
@@ -172,5 +173,19 @@ describe('Svelte InputGroup', () => {
         setup();
         expect(screen.getByRole('group')).toHaveClass(`${prefixCls}-large`);
         expect(byPlaceholder('inherit')).toHaveClass(`${prefixCls}-large`);
+    });
+});
+
+describe('Svelte InputGroup 使用方监听', () => {
+    it('传入 onfocusin、onfocusout 时与 onFocus、onBlur 同时触发', async () => {
+        const onfocusin = vi.fn<() => void>();
+        const onfocusout = vi.fn<() => void>();
+        const onFocus = vi.fn<() => void>();
+        const onBlur = vi.fn<() => void>();
+        render(InputGroup, { props: { onfocusin, onfocusout, onFocus, onBlur } });
+        const group = screen.getByRole('group');
+        await fireEvent.focusIn(group);
+        await fireEvent.focusOut(group);
+        expect([onfocusin, onfocusout, onFocus, onBlur].map((fn) => fn.mock.calls.length)).toEqual([1, 1, 1, 1]);
     });
 });

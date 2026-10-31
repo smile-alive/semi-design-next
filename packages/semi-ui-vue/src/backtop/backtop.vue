@@ -65,11 +65,9 @@
     // and a different default would contradict them.
     const ariaLabel = () => (attrs['aria-label'] as string | undefined) ?? (hasSlotContent(slots.default) ? undefined : i18n.value.locale.backToTop);
 
-    const warnInteractive = () => {
-        if (hasSlotContent(slots.default)) {
-            BackTopFoundation.warnInteractiveChildren(button.value?.$el);
-        }
-    };
+    // Checks the rendered button instead of the slot: calling a slot in a hook makes Vue warn, and the built-in icon
+    // and badge contain nothing interactive
+    const warnInteractive = () => BackTopFoundation.warnInteractiveChildren(button.value?.$el);
 
     // The function itself is the source: calling it here would read the window during setup, which SSR does not have.
     watch(

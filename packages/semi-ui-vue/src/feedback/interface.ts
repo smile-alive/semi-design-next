@@ -15,17 +15,18 @@ export type FeedbackType = 'text' | 'emoji' | 'radio' | 'checkbox' | 'custom';
 /** Same shape as the Modal footer buttons; `onClick` runs before the built-in ok or cancel handling. */
 export type FeedbackButtonProps = ModalButtonProps;
 
-export type FeedbackTextAreaProps = TextAreaProps & {
+/** `modelValue` is Feedback's own; `onChange` is called after Feedback has handled the change. */
+export type FeedbackTextAreaProps = Omit<TextAreaProps, 'modelValue'> & {
     class?: HTMLAttributes['class'];
     style?: StyleValue;
     onChange?: (value: string, event: TextAreaChangeEvent) => void;
 };
-export type FeedbackRadioGroupProps = RadioGroupProps & {
+export type FeedbackRadioGroupProps = Omit<RadioGroupProps, 'modelValue'> & {
     class?: HTMLAttributes['class'];
     style?: StyleValue;
     onChange?: (event: RadioChangeEvent) => void;
 };
-export type FeedbackCheckboxGroupProps = CheckboxGroupProps & {
+export type FeedbackCheckboxGroupProps = Omit<CheckboxGroupProps, 'modelValue'> & {
     class?: HTMLAttributes['class'];
     style?: StyleValue;
     onChange?: (value: CheckboxValue[]) => void;

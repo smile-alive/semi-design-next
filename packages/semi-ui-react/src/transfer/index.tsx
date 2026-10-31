@@ -295,6 +295,8 @@ export default function Transfer(rawProps: TransferProps) {
         renderSelectedHeader,
         // the root is not a focus target: a tabIndex (one injected by a wrapping Tooltip included) goes to the search box
         tabIndex,
+        // role="group" does not support aria-required
+        'aria-required': _ariaRequired,
         ...rest
     } = props;
 

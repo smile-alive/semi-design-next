@@ -150,8 +150,9 @@
     // replace the search handle
     const treeBindings = computed(() => omit((props.treeProps ?? {}) as Record<string, unknown>, ['modelValue', 'defaultValue', 'onChange', 'onUpdate:modelValue', 'ref', 'keyMaps', 'treeData', 'treeDataSimpleJson', 'changeWithObject']));
 
-    // the root is not a focus target: a tabindex (one injected by a wrapping Tooltip included) goes to the search box
-    const splitAttrs = (attrs: Record<string, unknown>) => splitControlAttrs(attrs, (key) => key === 'tabindex' || key === 'tabIndex');
+    // the root is not a focus target: a tabindex (one injected by a wrapping Tooltip included) goes to the search box;
+    // role="group" does not support aria-required
+    const splitAttrs = (attrs: Record<string, unknown>) => splitControlAttrs(omit(attrs, ['aria-required']), (key) => key === 'tabindex' || key === 'tabIndex');
 
     const pathLabel = (item: ResolvedItem) => (isTree.value && props.showPath ? TransferFoundation.generatePath(item) : undefined);
 

@@ -108,6 +108,21 @@ describe('Svelte Navigation', () => {
         expect(screen.queryByText('叶子')).toBeNull();
         expect(getSubTitle('用户')).not.toHaveClass(`${prefix}-sub-title-selected`);
     });
+
+    it('子项写法：openKeys 变化不清掉点击选中的项，openKeys 变回 undefined 时展开状态清空', async () => {
+        const store = createStore<{ props: NavProps }>({ props: { openKeys: ['user'] } });
+        render(NavChildren, { props: { props: store.props } });
+        await click(screen.getByRole('button', { name: '用户列表' }));
+        expect(isSelected('用户列表')).toBe(true);
+        store.props.openKeys = ['user', 'deep'];
+        flushSync();
+        expect(isOpen('更多')).toBe(true);
+        expect(isSelected('用户列表')).toBe(true);
+        store.props.openKeys = undefined;
+        flushSync();
+        expect(isOpen('用户')).toBe(false);
+        expect(isSelected('用户列表')).toBe(true);
+    });
 });
 
 describe('Svelte Navigation 行为', () => {

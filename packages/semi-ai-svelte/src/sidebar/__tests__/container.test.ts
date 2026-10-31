@@ -133,6 +133,19 @@ describe('Svelte Sidebar.Container', () => {
         expect(afterVisibleChange).toHaveBeenCalledTimes(2);
     });
 
+    it('使用方传入的 onintroend、onoutroend 与组件自身的动画结束逻辑都会执行', async () => {
+        const onintroend = vi.fn<NonNullable<ContainerProps['onintroend']>>();
+        const onoutroend = vi.fn<NonNullable<ContainerProps['onoutroend']>>();
+        const afterVisibleChange = vi.fn<NonNullable<ContainerProps['afterVisibleChange']>>();
+        const view = setup({ visible: false, afterVisibleChange, onintroend, onoutroend });
+        await view.rerender({ visible: true });
+        await vi.waitFor(() => expect(afterVisibleChange).toHaveBeenLastCalledWith(true));
+        expect(onintroend).toHaveBeenCalledTimes(1);
+        await view.rerender({ visible: false });
+        await vi.waitFor(() => expect(afterVisibleChange).toHaveBeenLastCalledWith(false));
+        expect(onoutroend).toHaveBeenCalledTimes(1);
+    });
+
     it('初始可见时不报告 afterVisibleChange', async () => {
         const afterVisibleChange = vi.fn<NonNullable<ContainerProps['afterVisibleChange']>>();
         setup({ visible: true, afterVisibleChange });

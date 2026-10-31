@@ -130,8 +130,8 @@
     const content = useTemplateRef('content');
     const nodeList = useTemplateRef('nodeList');
 
-    // refs inside the v-for are arrays
-    const triggers = useTemplateRef('trigger');
+    // refs inside the v-for are arrays; annotated because the adapter's isInTrigger reads it, so inference is circular (TS7022)
+    const triggers = useTemplateRef<HTMLDivElement[]>('trigger');
     const tagInputs = useTemplateRef('tagInput');
 
     // A function ref: the `search` slot hands it to the consumer's Input as `inputRef`, which a string ref cannot be

@@ -239,12 +239,14 @@
     };
 
     const handleFocusIn = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
+        rest.onfocusin?.(event);
         if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
             foundation.handleInputFocus(event);
         }
     };
 
     const handleFocusOut = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
+        rest.onfocusout?.(event);
         // Chromium blurs the picked-up handle when dnd-kit moves it; ending the active state would unmount the list
         if (dragging) {
             return;

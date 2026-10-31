@@ -160,4 +160,14 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
         html: ['class="option-icon"', 'class="mcp-icon"'],
         mountDiff: sidebarMountDiff,
     },
+    {
+        name: 'sidebar/隐藏时带 header 与 detail 渲染函数',
+        covers: ['Sidebar'],
+        render: () => (
+            <div>
+                <Sidebar mode="code" visible={false} renderDetailHeader={() => <i class="detail-header">Header</i>} renderDetailContent={() => <i class="detail-content">Content</i>} />
+                <Sidebar.Container visible={false} renderHeader={() => <i class="container-header">Header</i>} />
+            </div>
+        ),
+    },
 ];

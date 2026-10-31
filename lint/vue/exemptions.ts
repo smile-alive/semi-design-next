@@ -306,7 +306,7 @@ export const vueExemptions: VueExemption[] = [
         templateOff: ['vuejs-accessibility/click-events-have-key-events', 'vuejs-accessibility/interactive-supports-focus', 'vuejs-accessibility/mouse-events-have-key-events'],
     },
     {
-        files: ['packages/semi-ui-vue/src/select/select.vue'],
+        files: ['packages/semi-ui-vue/src/select/select-body.vue'],
         off: [],
         templateOff: ['vuejs-accessibility/click-events-have-key-events', 'vuejs-accessibility/interactive-supports-focus', 'vuejs-accessibility/mouse-events-have-key-events', 'vuejs-accessibility/no-static-element-interactions'],
     },

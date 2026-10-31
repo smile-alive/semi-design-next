@@ -2,7 +2,7 @@
     import { computed, normalizeStyle, onMounted, onUpdated, shallowRef, useAttrs, useId, useTemplateRef, watch, watchEffect, type CSSProperties, type HTMLAttributes, type StyleValue } from 'vue';
     import { cloneDeep, isEqual } from 'es-toolkit';
     import { get } from 'es-toolkit/compat';
-    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/table/constants';
+    import { numbers, strings } from '@fibrae/semi-foundation/table/constants';
     import TableFoundation, { type BaseColumnProps, type BaseHeadWidth, type BaseRowKeyType, type TableAdapter } from '@fibrae/semi-foundation/table/foundation';
     import { amendTableWidth, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, isMissingDataIndex, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
@@ -10,7 +10,7 @@
     import '@fibrae/semi-foundation/table/table.scss';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { RawSlots } from '../_base/read-vnode';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
+    import { readSemiDefault, useSemiGlobal } from '../_base/semi-default';
     import useFoundation from '../_base/use-foundation';
     import useRaf from '../_base/use-raf';
     import useResizeObserver from '../_base/use-resize-observer';
@@ -25,56 +25,17 @@
     import type { ColumnProps, TableChangeInfo, TableEmits, TableHandle, TableHeaderCellSlotProps, TablePaginationProps, TableProps, TableRowKey, TableSlots, TableVirtualizedProps } from './interface';
     import TablePagination from './table-pagination.vue';
     import { expandColumn, mergePagination, selectionColumn } from './use-table-features';
-    import { buildColumns, collectColumns, mergeComponents, slotOutput, toElement, type CollectedColumns } from './utils';
+    import { buildColumns, mergeComponents, slotOutput, toElement, type CollectedColumns } from './utils';
 
     type AnyRecord = Record<string, any>;
     type FoundationColumn = BaseColumnProps<AnyRecord>;
+    type Foundation = TableFoundation<AnyRecord, FoundationProps>;
+    type Adapter = TableAdapter<AnyRecord, FoundationProps>;
 
     defineOptions({ inheritAttrs: false });
 
-    const props = withDefaults(defineProps<TableProps<R>>(), {
-        bordered: () => semiDefault('Table', 'bordered', false),
-        childrenRecordName: () => semiDefault('Table', 'childrenRecordName', 'children'),
-        clickGroupedRowToExpand: semiGlobalDefault('Table', 'clickGroupedRowToExpand'),
-        columns: semiGlobalDefault('Table', 'columns'),
-        components: semiGlobalDefault('Table', 'components'),
-        dataSource: () => semiDefault('Table', 'dataSource', []) as R[],
-        defaultExpandAllGroupRows: () => semiDefault('Table', 'defaultExpandAllGroupRows', false),
-        defaultExpandAllRows: () => semiDefault('Table', 'defaultExpandAllRows', false),
-        defaultExpandedRowKeys: () => semiDefault('Table', 'defaultExpandedRowKeys', []),
-        direction: semiGlobalDefault('Table', 'direction'),
-        expandAllGroupRows: () => semiDefault('Table', 'expandAllGroupRows', false),
-        expandAllRows: () => semiDefault('Table', 'expandAllRows', false),
-        expandCellFixed: () => semiDefault('Table', 'expandCellFixed', false),
-        expandIcon: semiGlobalDefault('Table', 'expandIcon'),
-        expandedRowKeys: semiGlobalDefault('Table', 'expandedRowKeys'),
-        expandRowByClick: () => semiDefault('Table', 'expandRowByClick', false),
-        footer: semiGlobalDefault('Table', 'footer'),
-        groupBy: undefined,
-        groupSectionColumn: undefined,
-        headerStyle: semiGlobalDefault('Table', 'headerStyle'),
-        hideExpandedColumn: () => semiDefault('Table', 'hideExpandedColumn', true),
-        indentSize: () => semiDefault('Table', 'indentSize', 20),
-        keepDOM: semiGlobalDefault('Table', 'keepDOM'),
-        loading: () => semiDefault('Table', 'loading', false),
-        pagination: () => semiDefault('Table', 'pagination', true),
-        prefixCls: () => semiDefault('Table', 'prefixCls', cssClasses.PREFIX),
-        resizable: () => semiDefault('Table', 'resizable', false) as NonNullable<TableProps<R>['resizable']>,
-        rowExpandable: undefined,
-        rowKey: undefined,
-        rowSelection: semiGlobalDefault('Table', 'rowSelection'),
-        rowSpanHover: () => semiDefault('Table', 'rowSpanHover', false),
-        scroll: semiGlobalDefault('Table', 'scroll'),
-        showHeader: () => semiDefault('Table', 'showHeader', true),
-        size: () => semiDefault('Table', 'size', 'default'),
-        sticky: semiGlobalDefault('Table', 'sticky'),
-        title: semiGlobalDefault('Table', 'title'),
-        virtualized: semiGlobalDefault('Table', 'virtualized'),
-        onGroupedRow: undefined,
-        onHeaderRow: undefined,
-        onRow: undefined,
-    });
-
+    // The collected columns are an internal prop that Table reads from its Table.Column children during render
+    const props = defineProps<TableProps<R> & { collectedColumns?: CollectedColumns }>();
     const emit = defineEmits<TableEmits<R>>();
     const slots = defineSlots<TableSlots<R>>();
     const attrs = useAttrs();
@@ -95,40 +56,6 @@
     const bodies = useTemplateRef<InstanceType<typeof Body>[]>('body');
     let lastScrollLeft: number | undefined;
 
-    const slotVersion = useSlotVersion(slots);
-
-    const direction = computed(() => props.direction ?? config.value.direction ?? 'ltr');
-    const rowKey = computed(() => (props.rowKey ?? readSemiDefault(semi, 'Table', 'rowKey') ?? 'key') as TableRowKey);
-    const groupBy = computed(() => (props.groupBy ?? readSemiDefault(semi, 'Table', 'groupBy')) as TableProps['groupBy']);
-    const rowExpandableProp = computed(() => (props.rowExpandable ?? readSemiDefault(semi, 'Table', 'rowExpandable')) as TableProps['rowExpandable']);
-    const onRow = computed(() => props.onRow ?? readSemiDefault(semi, 'Table', 'onRow'));
-    const onHeaderRow = computed(() => props.onHeaderRow ?? readSemiDefault(semi, 'Table', 'onHeaderRow'));
-    const onGroupedRow = computed(() => props.onGroupedRow ?? readSemiDefault(semi, 'Table', 'onGroupedRow'));
-    const groupSectionColumn = computed(() => props.groupSectionColumn ?? readSemiDefault(semi, 'Table', 'groupSectionColumn'));
-
-    const collected = computed<CollectedColumns>((prev) => {
-        void slotVersion.value;
-        return collectColumns(slots.default?.() ?? [], prev);
-    });
-
-    const cachedColumns = computed(() => (props.columns ? (props.columns as ColumnProps[]) : collected.value.columns));
-    const flattened = computed(() => flattenColumns(cachedColumns.value) as ColumnProps[]);
-
-    const hasExpandedRow = computed(() => {
-        void slotVersion.value;
-        return Boolean(slots.expandedRow);
-    });
-
-    // the foundation only tests whether it is a function; the content comes from the #expandedRow slot
-    const expandedRowRender = () => null;
-
-    warning(Boolean(props.columns && slots.default), '[Semi Table] columns should not given by object and children at the same time');
-
-    // The default slot may only be called while rendering, so the first state holds just the data columns; the
-    // columns of Table.Column children are merged in during the first render and the foundation re-initialized on mount
-    type Foundation = TableFoundation<AnyRecord, FoundationProps>;
-    type Adapter = TableAdapter<AnyRecord, FoundationProps>;
-
     /*
      * The foundation compares dataSource by reference, so rows added or removed in place (push, splice) get a new
      * reference for it; a new array with the same records (an inline literal re-rendered by the parent) keeps the old one.
@@ -137,13 +64,34 @@
      */
     const dataSource = shallowRef<R[]>(props.dataSource ?? []);
 
+    const slotVersion = useSlotVersion(slots);
+
+    // Table resolves every default before passing its props down; they stay optional in the declaration so that
+    // ResizableTable can forward its attrs without listing them
+    const resolved = props as typeof props & Required<Pick<TableProps, 'childrenRecordName' | 'expandRowByClick' | 'hideExpandedColumn' | 'indentSize' | 'prefixCls' | 'rowSpanHover' | 'showHeader' | 'size'>>;
+    const direction = computed(() => props.direction ?? config.value.direction ?? 'ltr');
+    const rowKey = computed(() => (props.rowKey ?? readSemiDefault(semi, 'Table', 'rowKey') ?? 'key') as TableRowKey);
+    const groupBy = computed(() => (props.groupBy ?? readSemiDefault(semi, 'Table', 'groupBy')) as TableProps['groupBy']);
+    const rowExpandableProp = computed(() => (props.rowExpandable ?? readSemiDefault(semi, 'Table', 'rowExpandable')) as TableProps['rowExpandable']);
+    const onRow = computed(() => props.onRow ?? readSemiDefault(semi, 'Table', 'onRow'));
+    const onHeaderRow = computed(() => props.onHeaderRow ?? readSemiDefault(semi, 'Table', 'onHeaderRow'));
+    const onGroupedRow = computed(() => props.onGroupedRow ?? readSemiDefault(semi, 'Table', 'onGroupedRow'));
+    const groupSectionColumn = computed(() => props.groupSectionColumn ?? readSemiDefault(semi, 'Table', 'groupSectionColumn'));
+    const cachedColumns = computed(() => (props.columns ?? props.collectedColumns?.columns ?? []) as ColumnProps[]);
+    const flattened = computed(() => flattenColumns(cachedColumns.value) as ColumnProps[]);
+
+    const hasExpandedRow = computed(() => {
+        void slotVersion.value;
+        return Boolean(slots.expandedRow);
+    });
+
     const fixedHeader = computed(() => Boolean(props.scroll?.y) || Boolean(props.sticky));
     const virtualized = computed(() => Boolean(props.virtualized));
     const splitTable = computed(() => fixedHeader.value || virtualized.value);
 
     const built = computed(() => {
         const origins = new WeakMap<ColumnProps, ColumnProps>();
-        const columns = buildColumns(cachedColumns.value, [expandColumn(props, props.prefixCls), selectionColumn(props.rowSelection as TableProps['rowSelection'], props.prefixCls)], origins);
+        const columns = buildColumns(cachedColumns.value, [expandColumn(props, resolved.prefixCls), selectionColumn(props.rowSelection as TableProps['rowSelection'], resolved.prefixCls)], origins);
         return { columns, origins };
     });
 
@@ -162,6 +110,9 @@
     const paginationPosition = computed(() => (props.pagination as TablePaginationProps | undefined)?.position ?? 'bottom');
     const formatPageText = computed(() => (props.pagination as TablePaginationProps | undefined)?.formatPageText);
 
+    // the foundation only tests whether it is a function; the content comes from the #expandedRow slot
+    const expandedRowRender = () => null;
+
     const toFoundationColumns = (columns: ColumnProps[]) => columns as unknown as FoundationColumn[];
 
     const fromFoundationColumns = (columns?: FoundationColumn[]) => (columns ?? []) as unknown as ColumnProps[];
@@ -173,13 +124,13 @@
 
     const rowExpandable = (record: AnyRecord) =>
         mergedRowExpandable(record, {
-            childrenRecordName: props.childrenRecordName,
+            childrenRecordName: resolved.childrenRecordName,
             hasExpandedRow: hasExpandedRow.value,
             rowExpandable: rowExpandableProp.value,
         });
 
     const resolveColumnSlot = (name: string, column: ColumnProps) => {
-        const own = props.columns ? undefined : collected.value.slots.get(built.value.origins.get(column) ?? column)?.[name];
+        const own = props.columns ? undefined : props.collectedColumns?.slots.get(built.value.origins.get(column) ?? column)?.[name];
         return own ?? (slots as RawSlots)[name === 'title' ? 'headerCell' : name];
     };
 
@@ -229,7 +180,7 @@
         TableFoundation,
         props as Readonly<Partial<FoundationProps>>,
         (view) => {
-            const columns = toFoundationColumns(props.columns ? flattened.value : []);
+            const columns = toFoundationColumns(flattened.value);
             const queries = TableFoundation.initColumnsFilteredValueAndSorterOrder<AnyRecord>(cloneDeep(columns));
             return TableFoundation.getInitialState<AnyRecord>(view, columns, queries);
         },
@@ -320,14 +271,14 @@
     );
 
     const contextView = computed<TableContextView>(() => ({
-        prefixCls: props.prefixCls,
+        prefixCls: resolved.prefixCls,
         direction: direction.value,
-        size: props.size,
+        size: resolved.size,
         anyColumnFixed: anyColumnFixed.value,
         flattenedColumns: flattenedColumns.value,
         headWidths: view.value.headWidths ?? [],
         headerStyle: props.headerStyle,
-        rowSpanHover: props.rowSpanHover,
+        rowSpanHover: resolved.rowSpanHover,
         splitTable: splitTable.value,
         headerRowCount: headerRowCount.value,
         virtualized: virtualized.value,
@@ -337,13 +288,13 @@
         queries: fromFoundationColumns(view.value.queries),
         scroll: props.scroll,
         sticky: props.sticky,
-        showHeader: props.showHeader,
+        showHeader: resolved.showHeader,
         virtualizedProps: typeof props.virtualized === 'object' ? (props.virtualized as TableVirtualizedProps) : undefined,
-        childrenRecordName: props.childrenRecordName,
-        indentSize: props.indentSize,
-        hideExpandedColumn: props.hideExpandedColumn,
+        childrenRecordName: resolved.childrenRecordName,
+        indentSize: resolved.indentSize,
+        hideExpandedColumn: resolved.hideExpandedColumn,
         expandIcon: props.expandIcon,
-        expandRowByClick: props.expandRowByClick,
+        expandRowByClick: resolved.expandRowByClick,
         keepDOM: Boolean(props.keepDOM),
         clickGroupedRowToExpand: Boolean(props.clickGroupedRowToExpand),
         hasExpandedRow: hasExpandedRow.value,
@@ -438,16 +389,6 @@
     };
 
     onMounted(() => {
-        if (!props.columns && flattened.value.length) {
-            // useFoundation already ran init() on the empty first state; run it again with the columns of the children so
-            // the default sort order and filtered values apply before the first paint
-            const columns = toFoundationColumns(flattened.value);
-            foundation.setState({
-                flattenColumns: columns,
-                queries: TableFoundation.initColumnsFilteredValueAndSorterOrder<AnyRecord>(cloneDeep(columns)),
-            });
-            foundation.init();
-        }
         watch(
             () => flattened.value.some(isMissingDataIndex),
             (missing) => warning(missing, `[Semi Table] The column with sorter or filter must pass the 'dataIndex' prop`),

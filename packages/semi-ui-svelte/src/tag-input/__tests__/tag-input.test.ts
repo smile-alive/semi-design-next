@@ -7,6 +7,7 @@ import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '../../_base/__tests__/store.svelte';
 import semiGlobal from '../../_utils/semi-global';
 import type { TagInputProps } from '../interface';
+import TagInput from '../tag-input.svelte';
 import TagInputCase from './tag-input-case.svelte';
 import TagInputModes from './tag-input-modes.svelte';
 
@@ -990,5 +991,19 @@ describe('Svelte TagInput 受控值的写法', () => {
         await settle();
         expect(input).toHaveValue('ab');
         expect(store.log).toEqual(['input a', 'input ab']);
+    });
+});
+
+describe('Svelte TagInput 使用方监听', () => {
+    it('传入 onfocusin、onfocusout 时与 onFocus、onBlur 同时触发', async () => {
+        const onfocusin = vi.fn<() => void>();
+        const onfocusout = vi.fn<() => void>();
+        const onFocus = vi.fn<() => void>();
+        const onBlur = vi.fn<() => void>();
+        render(TagInput, { props: { onfocusin, onfocusout, onFocus, onBlur } });
+        const input = screen.getByRole('textbox');
+        await fireEvent.focusIn(input, { relatedTarget: document.body });
+        await fireEvent.focusOut(input, { relatedTarget: document.body });
+        expect([onfocusin, onfocusout, onFocus, onBlur].map((fn) => fn.mock.calls.length)).toEqual([1, 1, 1, 1]);
     });
 });

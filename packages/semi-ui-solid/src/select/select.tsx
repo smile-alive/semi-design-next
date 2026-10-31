@@ -21,7 +21,6 @@ import hasContent from '../_base/has-content';
 import { createIconSlot } from '../_base/icon-slot';
 import mergeRefs from '../_base/merge-refs';
 import mergeStyles from '../_base/merge-styles';
-import { usePopupLayer } from '../_base/popup-layer';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
 import useFocusHandover from '../_base/use-focus-handover';
@@ -29,7 +28,8 @@ import useFoundation from '../_base/use-foundation';
 import useWatch from '../_base/use-watch';
 import VirtualList, { type VirtualListHandle } from '../_base/virtual-list';
 import useConfig from '../config-provider/use-config';
-import { InputGroupContext, useInputGroupContext } from '../input/context';
+import type { InputGroupContextValue } from '../input/context';
+import InputGroupBoundary from '../input/group-boundary';
 import Input, { type InputChangeEvent, type InputElementEvent, type InputProps, type ValidateStatus } from '../input/input';
 import useLocale from '../locale/use-locale';
 import OverflowList, { type OverflowItem } from '../overflow-list';
@@ -284,11 +284,13 @@ function renderCreate(render: RenderCreateItem, value: OptionProps['value'], foc
 }
 
 export default function Select<T = BasicSelectValue, Multiple extends boolean | undefined = undefined>(rawProps: SelectProps<T, Multiple>) {
-    const bodyProps = rawProps as SelectBodyProps;
+    return <InputGroupBoundary>{(inGroup) => <SelectControl {...(rawProps as SelectBodyProps)} inGroup={inGroup} />}</InputGroupBoundary>;
+}
+
+function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue }) {
+    const [own, bodyProps] = splitProps(all, ['inGroup']);
     const defaulted = useDefaultProps('Select', bodyProps, defaultProps);
 
-    const group = useInputGroupContext();
-    const layer = usePopupLayer();
     const config = useConfig();
     const locale = useLocale('Select');
 
@@ -303,7 +305,8 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
     let optionContainer: HTMLDivElement | undefined;
     let virtualList: VirtualListHandle | undefined;
 
-    const inGroup = group?.layer === layer ? group : undefined;
+    // fixed for the instance's lifetime: the layer and the context value are
+    const inGroup = untrack(() => own.inGroup);
 
     // as Input: own value, then the group's, then the global default
     const props = mergeProps(defaulted, {
@@ -997,8 +1000,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
     };
 
     const DefaultTrigger = () => (
-        // the search input is part of the Select, not a control of an enclosing InputGroup
-        <InputGroupContext.Provider value={undefined}>
+        <>
             <Show when={labelKind()}>
                 <div
                     id={prefixId()}
@@ -1042,7 +1044,7 @@ export default function Select<T = BasicSelectValue, Multiple extends boolean | 
                     </Show>
                 </div>
             </Show>
-        </InputGroupContext.Provider>
+        </>
     );
 
     const optionItemProps = (record: Accessor<OptionRecord>, index: Accessor<number>, select: (e: MouseEvent) => void, rowStyle?: Accessor<JSX.CSSProperties>) => {

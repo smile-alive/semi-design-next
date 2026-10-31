@@ -29,13 +29,23 @@ const defaultProps = {
     direction: 'horizontal',
 } satisfies Partial<ResizeGroupProps>;
 
+type ElementRef = RefObject<HTMLDivElement | null>;
+
+// registered refs are attached: layout effects run after the elements mount
+const inDocumentOrder = (a: ElementRef, b: ElementRef) => ((a.current as Node).compareDocumentPosition(b.current as Node) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
+
+const orderedItems = (items: Map<ElementRef, RefObject<ResizeItemProps>>) => [...items].sort(([a], [b]) => inDocumentOrder(a, b));
+
+const orderedHandlers = (handlers: Set<ElementRef>) => [...handlers].sort(inDocumentOrder);
+
 export default function ResizeGroup(rawProps: ResizeGroupProps) {
     const props = useDefaultProps('ResizeGroup', rawProps, defaultProps);
     const { ref, children, direction, className, ...rest } = props;
 
     const groupRef = useRef<HTMLDivElement>(null);
 
-    // children register in layout effects, in tree order: index = layout order
+    // Children register in layout effects: tree order on mount, but an item inserted later registers last. Index =
+    // layout order, which is DOM order; it is read on use because items can come and go.
     const [items] = useState(() => new Map<RefObject<HTMLDivElement | null>, RefObject<ResizeItemProps>>());
     const [handlers] = useState(() => new Set<RefObject<HTMLDivElement | null>>());
 
@@ -49,12 +59,12 @@ export default function ResizeGroup(rawProps: ResizeGroupProps) {
             curHandler: null,
         }),
         () => {
-            const itemProps = (index: number) => [...items.values()][index].current;
+            const itemProps = (index: number) => orderedItems(items)[index][1].current;
             return {
                 getGroupRef: () => groupRef.current,
-                getItem: (index) => [...items.keys()][index].current,
+                getItem: (index) => orderedItems(items)[index][0].current,
                 getItemCount: () => items.size,
-                getHandler: (index) => [...handlers][index].current,
+                getHandler: (index) => orderedHandlers(handlers)[index].current,
                 getHandlerCount: () => handlers.size,
                 getItemMin: (index) => itemProps(index).min,
                 getItemMax: (index) => itemProps(index).max,
@@ -80,10 +90,10 @@ export default function ResizeGroup(rawProps: ResizeGroupProps) {
                     handlers.delete(ref);
                 };
             },
-            notifyResizeStart: (handler: RefObject<HTMLDivElement | null>, e: PointerEvent) => foundation.onResizeStart([...handlers].indexOf(handler), e),
+            notifyResizeStart: (handler: RefObject<HTMLDivElement | null>, e: PointerEvent) => foundation.onResizeStart(orderedHandlers(handlers).indexOf(handler), e),
             notifyResizing: (e: PointerEvent) => foundation.onResizing(e),
             notifyResizeEnd: (e: PointerEvent) => foundation.onResizeEnd(e),
-            notifyKeyDown: (handler: RefObject<HTMLDivElement | null>, e: KeyboardEvent) => foundation.resizeByKey([...handlers].indexOf(handler), e),
+            notifyKeyDown: (handler: RefObject<HTMLDivElement | null>, e: KeyboardEvent) => foundation.resizeByKey(orderedHandlers(handlers).indexOf(handler), e),
         }),
         [items, handlers, foundation]
     );

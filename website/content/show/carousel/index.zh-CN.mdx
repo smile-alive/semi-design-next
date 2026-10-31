@@ -60,6 +60,12 @@ Svelte 的幻灯片用 `items` 数据加 `slide` snippet 渲染，不接受 chil
 
 </Framework>
 
+<Framework only="solid">
+
+每个子元素是一张幻灯片，Carousel 给每张包一层带 role 与 `inert` 的元素，幻灯片自身的属性原样保留；要撑满轮播区域，给幻灯片设置 `height: 100%`。
+
+</Framework>
+
 <Demo id="basic" />
 
 ### 主题切换

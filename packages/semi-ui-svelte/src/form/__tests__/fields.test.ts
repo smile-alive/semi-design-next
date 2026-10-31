@@ -3,6 +3,7 @@ import { fireEvent, render, screen, within } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { misplacedAriaRequired } from '@test/utils/dom/common';
 import type { FormApi } from '../interface';
 import BareControls from './b-bare-controls.svelte';
 import { renderAnyFields } from './b-helpers';
@@ -388,6 +389,16 @@ describe('Svelte Form 全部字段', () => {
         expect(references.length).toBeGreaterThanOrEqual(names.length);
         expect(references.filter((id) => !document.getElementById(id))).toEqual([]);
         warn.mockRestore();
+    });
+
+    it('必填字段的 aria-required 只落在支持它的角色上', async () => {
+        renderAnyFields(
+            {},
+            names.map((name) => ({ type: cases[name].type, props: { field: name, label: name, fieldClassName: name, rules: [{ required: true }], ...cases[name].props } }))
+        );
+        await settle();
+        expect(document.querySelectorAll('[aria-required="true"]').length).toBeGreaterThan(0);
+        expect(Object.fromEntries(names.map((name) => [name, misplacedAriaRequired(document.querySelector(`.${name}`) as Element)]))).toEqual(Object.fromEntries(names.map((name) => [name, []])));
     });
 
     it('labelPosition="inset" 时，不支持内嵌标签的字段以渲染出的 top label 命名控件', async () => {

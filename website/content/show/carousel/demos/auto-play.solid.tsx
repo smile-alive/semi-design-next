@@ -30,7 +30,7 @@ export default function CarouselDemo() {
             <Carousel style={{ width: '100%', height: '400px' }} autoPlay={{ interval: 1500, hoverToPause: true }} theme="dark">
                 <For each={slides}>
                     {(slide) => (
-                        <div style={{ 'background-size': 'cover', 'background-image': `url('${slide.src}')` }}>
+                        <div style={{ height: '100%', 'background-size': 'cover', 'background-image': `url('${slide.src}')` }}>
                             <Space vertical align="start" spacing="medium" style={titleStyle}>
                                 <img src={logo} alt="semi_logo" style={{ width: '87px', height: '31px' }} />
                                 <Typography.Title heading={2} style={colorStyle}>

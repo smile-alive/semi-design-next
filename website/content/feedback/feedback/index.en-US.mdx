@@ -155,7 +155,7 @@ Undeclared attributes go to the Modal or SideSheet of the current `mode` and lan
 
 <FeedbackVueApi />
 
-Undeclared attributes go to the Modal or SideSheet of the current `mode` and land where they do there: all `aria-*` attributes land on the `role="dialog"` element; `style` lands on the `.semi-modal` dialog box in `modal` mode and on the `role="dialog"` element in `popup` mode; `class`, the other undeclared attributes and native event listeners land on the outermost element inside the portal (in `modal` mode, `role` also lands on the `role="dialog"` element). In `textAreaProps`, `radioGroupProps` and `checkboxGroupProps`, the controlled key is `modelValue` and the listener key is `onChange`.
+Undeclared attributes go to the Modal or SideSheet of the current `mode` and land where they do there: all `aria-*` attributes land on the `role="dialog"` element; `style` lands on the `.semi-modal` dialog box in `modal` mode and on the `role="dialog"` element in `popup` mode; `class`, the other undeclared attributes and native event listeners land on the outermost element inside the portal (in `modal` mode, `role` also lands on the `role="dialog"` element). `textAreaProps`, `radioGroupProps` and `checkboxGroupProps` take no `modelValue`, as Feedback owns the value; their `onChange` is called after Feedback handles the change.
 
 </Framework>
 
@@ -171,7 +171,7 @@ Undeclared attributes go to the Modal or SideSheet of the current `mode` and lan
 
 <FeedbackSvelteApi />
 
-Undeclared attributes go to the Modal or SideSheet of the current `mode` and land where they do there: all `aria-*` attributes land on the `role="dialog"` element; `style` lands on the `.semi-modal` dialog box in `modal` mode and on the `role="dialog"` element in `popup` mode; `class`, the other undeclared attributes and native events land on the outermost element inside the portal. `textAreaProps`, `radioGroupProps` and `checkboxGroupProps` are written as the props of the matching component, with `value` as the controlled key and `onChange` as the listener; the `bind:this` instance provides `getRoot()`.
+Undeclared attributes go to the Modal or SideSheet of the current `mode` and land where they do there: all `aria-*` attributes land on the `role="dialog"` element; `style` lands on the `.semi-modal` dialog box in `modal` mode and on the `role="dialog"` element in `popup` mode; `class`, the other undeclared attributes and native events land on the outermost element inside the portal. `textAreaProps`, `radioGroupProps` and `checkboxGroupProps` are written as the props of the matching component without `value`, as Feedback owns the value; their `onChange` is called after Feedback handles the change; the `bind:this` instance provides `getRoot()`.
 
 </Framework>
 

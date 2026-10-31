@@ -6,8 +6,14 @@
 
     let props: OptionalFieldProps<RadioProps> = $props();
 
+    let field: ReturnType<typeof Field> | undefined;
+
     // Radio forwards native focus listeners to its input
     const fieldOptions: WithFieldOption = { valueKey: 'checked', valuePath: 'target.checked', shouldInject: false, onBlurFnName: 'onblur', insetLabel: false, validateStatus: false };
+
+    export function getControl() {
+        return field?.getControl();
+    }
 </script>
 
-<Field {...props as OptionalFieldProps<RadioProps> & { field: string }} component={Radio} {fieldOptions} />
+<Field bind:this={field} {...props as OptionalFieldProps<RadioProps> & { field: string }} component={Radio} {fieldOptions} />

@@ -73,6 +73,20 @@ describe('Carousel', () => {
         expect(getActiveItem(container)).toHaveTextContent(/^index0$/);
     });
 
+    it('Fragment 内的每个子元素各算一张幻灯片', () => {
+        const { container } = render(
+            <Carousel autoPlay={false}>
+                <>
+                    <div>index0</div>
+                    <div>index1</div>
+                </>
+                <div>index2</div>
+            </Carousel>
+        );
+        expect(query(container, 'content').children).toHaveLength(3);
+        expect(getIndicatorItems(container)).toHaveLength(3);
+    });
+
     it('自定义 className 与 style 的 Carousel', () => {
         const { container } = render(getCarousel({ className: 'test', style: { color: 'red' } }));
         const carousel = container.querySelector(`.${BASE_CLASS_PREFIX}-carousel`);

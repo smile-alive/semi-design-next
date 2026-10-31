@@ -40,8 +40,14 @@
         role="group"
         {...rest}
         class={[`${prefixCls}-group`, rest.class, { [`${prefixCls}-${size}`]: size !== undefined && size !== 'default' }]}
-        onfocusin={onFocus}
-        onfocusout={onBlur}
+        onfocusin={(event) => {
+            rest.onfocusin?.(event);
+            onFocus?.(event);
+        }}
+        onfocusout={(event) => {
+            rest.onfocusout?.(event);
+            onBlur?.(event);
+        }}
     >
         {@render children?.()}
     </span>

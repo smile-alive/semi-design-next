@@ -26,7 +26,7 @@ export interface ArrowProps {
 }
 
 /**
- * Every child element is a slide and receives its classes, role and `inert` from Carousel. Focus and blur inside the
+ * Every child element is a slide, rendered inside a wrapper that carries the classes, role and `inert`. Focus and blur inside the
  * carousel are reported through `onFocusIn` and `onFocusOut`, since a div's own `onFocus` never sees focus moving
  * within it.
  */

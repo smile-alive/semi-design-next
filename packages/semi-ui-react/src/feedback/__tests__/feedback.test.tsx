@@ -213,12 +213,43 @@ describe('Feedback', () => {
         expect(submit()).toBeDisabled();
     });
 
-    it('使用方在 textAreaProps 中传入 value 时以使用方为准', () => {
-        render(<Feedback type="text" textAreaProps={{ value: 'fixed' }} visible />);
+    it('textAreaProps 中的 value 不盖过 Feedback 的值', () => {
+        const onValueChange = vi.fn<NonNullable<FeedbackProps['onValueChange']>>();
+        const onChange = vi.fn<NonNullable<TextAreaProps['onChange']>>();
+        // @ts-expect-error value is omitted from the type; the runtime must still let Feedback's own value win
+        render(<Feedback type="text" textAreaProps={{ value: 'fixed', onChange }} visible onValueChange={onValueChange} />);
         const textarea = screen.getByRole('textbox');
-        expect(textarea).toHaveValue('fixed');
+        expect(textarea).toHaveValue('');
         fireEvent.change(textarea, { target: { value: 'typed' } });
-        expect(textarea).toHaveValue('fixed');
+        expect(textarea).toHaveValue('typed');
+        expect(onValueChange).toHaveBeenLastCalledWith('typed');
+        expect(onChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('radioGroupProps 中的 value 不盖过 Feedback 的值', () => {
+        const onValueChange = vi.fn<NonNullable<FeedbackProps['onValueChange']>>();
+        const onChange = vi.fn<NonNullable<RadioGroupProps['onChange']>>();
+        // @ts-expect-error value is omitted from the type; the runtime must still let Feedback's own value win
+        render(<Feedback type="radio" radioGroupProps={{ options, value: 'a', onChange }} visible onValueChange={onValueChange} />);
+        expect(screen.getByRole('radio', { name: 'A' })).not.toBeChecked();
+        fireEvent.click(screen.getByRole('radio', { name: 'B' }));
+        expect(screen.getByRole('radio', { name: 'B' })).toBeChecked();
+        expect(screen.getByRole('radio', { name: 'A' })).not.toBeChecked();
+        expect(onValueChange).toHaveBeenLastCalledWith('b');
+        expect(onChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('checkboxGroupProps 中的 value 不盖过 Feedback 的值', () => {
+        const onValueChange = vi.fn<NonNullable<FeedbackProps['onValueChange']>>();
+        const onChange = vi.fn<NonNullable<CheckboxGroupProps['onChange']>>();
+        // @ts-expect-error value is omitted from the type; the runtime must still let Feedback's own value win
+        render(<Feedback type="checkbox" checkboxGroupProps={{ options, value: ['a'], onChange }} visible onValueChange={onValueChange} />);
+        expect(screen.getByRole('checkbox', { name: 'A' })).not.toBeChecked();
+        fireEvent.click(screen.getByRole('checkbox', { name: 'B' }));
+        expect(screen.getByRole('checkbox', { name: 'B' })).toBeChecked();
+        expect(screen.getByRole('checkbox', { name: 'A' })).not.toBeChecked();
+        expect(onValueChange).toHaveBeenLastCalledWith(['b']);
+        expect(onChange).toHaveBeenLastCalledWith(['b']);
     });
 
     it('回调显式传 null 时提交、取消与关闭不抛错', () => {

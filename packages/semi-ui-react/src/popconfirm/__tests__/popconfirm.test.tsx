@@ -652,6 +652,26 @@ describe(`Popconfirm`, () => {
         expect(screen.queryByRole('dialog')).toBeNull();
     });
 
+    it('disabled 切换时触发器保持同一个 DOM 节点，禁用时点击不弹出', async () => {
+        const onVisibleChange = vi.fn<(visible: boolean) => void>();
+        const view = (disabled: boolean) => (
+            <Popconfirm title="确定是否要保存此修改？" disabled={disabled} motion={false} trigger="click" onVisibleChange={onVisibleChange}>
+                <Button>Save</Button>
+            </Popconfirm>
+        );
+        const { rerender } = render(view(false));
+        const trigger = screen.getByRole('button', { name: 'Save' });
+        rerender(view(true));
+        expect(screen.getByRole('button', { name: 'Save' })).toBe(trigger);
+        await userEvent.click(trigger);
+        await sleep(50);
+        expect(screen.queryByRole('dialog')).toBeNull();
+        expect(onVisibleChange).not.toHaveBeenCalled();
+        rerender(view(false));
+        expect(screen.getByRole('button', { name: 'Save' })).toBe(trigger);
+        await openByClick(onVisibleChange);
+    });
+
     it('卡片在 shadow root 内时，焦点已移到主文档的元素，关闭后不被拉回触发器', async () => {
         const outside = document.body.appendChild(document.createElement('button'));
         const host = document.body.appendChild(document.createElement('div'));

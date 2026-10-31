@@ -42,6 +42,23 @@ it('Sidebar 的选项图标由 renderOptionIcon 在每个按钮里创建一次',
     expect(created).toEqual(['code', 'file']);
 });
 
+it('Sidebar 与 Container 隐藏时不创建 header、detail 的内容', async () => {
+    const { created, mark } = counter();
+    const hidden = await renderServer({
+        render: () => <Sidebar mode="code" visible={false} renderDetailHeader={() => mark('detail-header')} renderDetailContent={() => mark('detail-content')} />,
+    });
+    expect(hidden.errors).toEqual([]);
+    expect(hidden.html).not.toContain('data-mark');
+
+    const container = await renderServer({ render: () => <Sidebar.Container visible={false} renderHeader={() => mark('container-header')} /> });
+    expect(container.errors).toEqual([]);
+    expect(created).toEqual([]);
+
+    const shown = await renderServer({ render: () => <Sidebar.Container visible renderHeader={() => mark('container-header')} /> });
+    expect(shown.html).toContain('data-mark="container-header"');
+    expect(created).toEqual(['container-header']);
+});
+
 it('MCPConfigure 的图标与描述由 renderIcon、renderDesc 在每行创建一次，字符串图标是图片地址', async () => {
     const { created, mark } = counter();
     const options: MCPSolidOption[] = [

@@ -69,6 +69,7 @@
     const uid = $props.id();
     let extraKind = $state<SlotKind>();
     let registered: { field: string; registration: FieldRegistration; leaveGroup?: () => void } | undefined;
+    let controlInstance = $state.raw<Record<string, any>>();
 
     const Control = $derived(component as Component<Record<string, any>, object, string>);
     const valueKey = $derived(fieldOptions.valueKey ?? 'value');
@@ -250,6 +251,11 @@
         }
         return unregister;
     });
+
+    // Svelte exports are static, so the wrapped control's own methods (focus, open ...) cannot be re-exported by name
+    export function getControl() {
+        return controlInstance;
+    }
 </script>
 
 {#snippet insetText()}
@@ -271,11 +277,11 @@
         ...(blurKey && { [blurKey]: handleBlur }),
     }}
     {#if valueKey === 'checked'}
-        <Control {...injected} bind:checked={() => snapshot().value, () => {}} />
+        <Control {...injected} bind:checked={() => snapshot().value, () => {}} bind:this={controlInstance} />
     {:else if valueKey === 'fileList'}
-        <Control {...injected} bind:fileList={() => snapshot().value, () => {}} />
+        <Control {...injected} bind:fileList={() => snapshot().value, () => {}} bind:this={controlInstance} />
     {:else}
-        <Control {...injected} bind:value={() => snapshot().value, () => {}} />
+        <Control {...injected} bind:this={controlInstance} bind:value={() => snapshot().value, () => {}} />
     {/if}
 {/snippet}
 

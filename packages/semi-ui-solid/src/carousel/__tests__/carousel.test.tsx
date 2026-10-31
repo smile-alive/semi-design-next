@@ -791,7 +791,8 @@ describe('Carousel', () => {
         it('只有当前幻灯片在焦点顺序与无障碍树中', () => {
             const { container } = setup({ autoPlay: false, defaultActiveIndex: 1 });
             const slides = [...(query(container, 'content')?.children ?? [])];
-            expect(slides.map((slide) => slide.hasAttribute('inert'))).toEqual([true, false, true]);
+            // Solid writes inert as a property, which jsdom does not reflect to the attribute
+            expect(slides.map((slide) => (slide as HTMLElement).inert)).toEqual([true, false, true]);
             expect(query(container, 'content')).toHaveAttribute('aria-live', 'polite');
         });
 
@@ -814,7 +815,31 @@ describe('Carousel', () => {
                 expect(panel).toHaveAttribute('role', 'tabpanel');
                 expect(panel).toHaveAccessibleName(tab.getAttribute('aria-label') as string);
             }
-            expect(tabs[0]).toHaveAttribute('aria-controls', 'mine');
+            expect(screen.getByText('a')).toHaveAttribute('id', 'mine');
+        });
+
+        it('role、aria 与 class 写在 Carousel 的包装元素上，使用方元素原样保留', () => {
+            render(() => (
+                <Carousel autoPlay={false} showIndicator={false}>
+                    <div class="mine" role="note" aria-label="cover" aria-roledescription="custom" id="mine" data-testid="first">
+                        a
+                    </div>
+                    <div>b</div>
+                </Carousel>
+            ));
+            const first = screen.getByTestId('first');
+            expect(first.className).toBe('mine');
+            expect(first).toHaveAttribute('role', 'note');
+            expect(first).toHaveAttribute('aria-label', 'cover');
+            expect(first).toHaveAttribute('aria-roledescription', 'custom');
+            expect(first).toHaveAttribute('id', 'mine');
+            expect(first).not.toHaveAttribute('inert');
+            const wrapper = first.parentElement as HTMLElement;
+            expect(wrapper).toHaveClass(`${BASE_CLASS_PREFIX}-carousel-content-item`, `${BASE_CLASS_PREFIX}-carousel-content-item-active`);
+            expect(wrapper).toHaveAttribute('role', 'group');
+            expect(wrapper).toHaveAttribute('aria-roledescription', zh_CN.Carousel.slide);
+            expect(wrapper).toHaveAttribute('aria-label', zh_CN.Carousel.slideN.replace('${index}', '1'));
+            expect(wrapper.parentElement).toHaveClass(`${BASE_CLASS_PREFIX}-carousel-content`);
         });
 
         it('无 indicator 时，每张幻灯片是以位置命名的 group', () => {
@@ -827,24 +852,19 @@ describe('Carousel', () => {
             }
         });
 
-        it('幻灯片减少到一张后恢复使用方原有的 id 与 aria-label', () => {
+        it('幻灯片减少到一张后包装元素从 tabpanel 变回 group', () => {
             const [count, setCount] = createSignal(2);
             render(() => (
                 <Carousel autoPlay={false}>
-                    <div id="mine" aria-label="cover" data-testid="first">
-                        a
-                    </div>
+                    <div data-testid="first">a</div>
                     {count() > 1 ? <div>b</div> : null}
                 </Carousel>
             ));
-            const first = screen.getByTestId('first');
-            expect(first).toHaveAttribute('role', 'tabpanel');
-            expect(first).toHaveAttribute('aria-label', 'cover');
+            const wrapper = screen.getByTestId('first').parentElement as HTMLElement;
+            expect(wrapper).toHaveAttribute('role', 'tabpanel');
             setCount(1);
-            expect(first).toHaveAttribute('id', 'mine');
-            expect(first).toHaveAttribute('role', 'group');
-            expect(first).toHaveAttribute('aria-label', 'cover');
-            expect(first).not.toHaveAttribute('aria-labelledby');
+            expect(wrapper).toHaveAttribute('role', 'group');
+            expect(wrapper).not.toHaveAttribute('aria-labelledby');
         });
 
         it('幻灯片保留使用方自己的 class 与 style', () => {
@@ -857,7 +877,7 @@ describe('Carousel', () => {
                 </Carousel>
             ));
             const first = screen.getByTestId('first');
-            expect(first).toHaveClass('mine', `${BASE_CLASS_PREFIX}-carousel-content-item`);
+            expect(first).toHaveClass('mine');
             expect(first).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         });
     });
@@ -987,18 +1007,6 @@ describe('Carousel', () => {
                 }
             }
             expect(activeTitle(container)).toBe('index0');
-        });
-
-        it('无指示器时幻灯片自带的 aria-label 优先于内置的第 N 项', () => {
-            const { container } = render(() => (
-                <Carousel autoPlay={false} showIndicator={false}>
-                    <div aria-label="cover">a</div>
-                    <div>b</div>
-                </Carousel>
-            ));
-            const slides = query(container, 'content')?.children as HTMLCollection;
-            expect(slides[0]).toHaveAttribute('aria-label', 'cover');
-            expect(slides[1]).toHaveAttribute('aria-label', zh_CN.Carousel.slideN.replace('${index}', '2'));
         });
 
         it('RTL 下 Left 切换到下一张，Right 切换到上一张', async () => {

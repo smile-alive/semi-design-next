@@ -1,35 +1,33 @@
 <script lang="ts">
-    import type { Snippet } from 'svelte';
-    import type { HTMLAttributes } from 'svelte/elements';
     import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-    import { cssClasses as markdownCssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
     import MarkdownRenderFoundation from '@fibrae/semi-foundation/markdown-render/foundation';
     import { IconCopyStroked, IconTick } from '@fibrae/semi-icons-svelte';
     import { useCopied, useLocale } from '@fibrae/semi-ui-svelte/hooks';
+    import MarkdownCode from '@fibrae/semi-ui-svelte/markdown-render/components/code.svelte';
+    import { codeText, type MarkdownRenderElementProps } from '@fibrae/semi-ui-svelte/markdown-render/index';
 
-    // markdown attributes belong to the code element, which reads the language from class
-    let { children, ...rest }: HTMLAttributes<HTMLElement> & { children?: Snippet } = $props();
+    // only the class (the fence language) carries meaning
+    const { class: className, node, children }: { class?: string } & MarkdownRenderElementProps = $props();
 
     const locale = useLocale('Chat');
-
-    let code: HTMLElement | undefined = $state();
 
     const copier = useCopied(() => 2000);
 
     const { PREFIX_CHAT_BOX } = cssClasses;
     const bar = `${PREFIX_CHAT_BOX}-content-code-topSlot`;
-    const language = $derived(MarkdownRenderFoundation.getCodeLanguage(typeof rest.class === 'string' ? rest.class : undefined));
+    const language = $derived(MarkdownRenderFoundation.getCodeLanguage(className));
+    const source = $derived(node ? codeText(node.props.children) : '');
 
-    // MarkdownRender hands a component its children as a snippet, so the source text is read from the rendered element
     const onCopy = () => {
         if (!copier.copied) {
-            void copier.copy(code?.textContent ?? '');
+            void copier.copy(source);
         }
     };
 </script>
 
 {#if language}
+    <!-- The bar and the code touch: whitespace between them would become a line of its own -->
     <div class="{PREFIX_CHAT_BOX}-content-code {BASE_CLASS_PREFIX}-always-dark">
         <div class={bar}>
             <span class="{bar}-type">{language}</span>
@@ -45,8 +43,8 @@
                 </button>
             </span>
         </div>
-        <code {...rest} bind:this={code}>{@render children?.()}</code>
+        <MarkdownCode {children} class={className} {node} />
     </div>
 {:else}
-    <code {...rest} class={[`${markdownCssClasses.PREFIX}-simple-code`, rest.class]}>{@render children?.()}</code>
+    <MarkdownCode {children} class={className} {node} />
 {/if}

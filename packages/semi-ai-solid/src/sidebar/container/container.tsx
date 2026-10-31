@@ -74,10 +74,11 @@ export default function Container(rawProps: ContainerSolidProps) {
         onAnimationEnd: foundation.handleAnimationEnd,
     });
 
-    const customHeader = children(() => local.renderHeader?.());
-
     // a hidden container stays mounted only while its leave animation runs
     const mounted = () => visible() || (local.motion && !displayNone());
+
+    // gated by mounted: the header is only inserted while mounted, and a created but uninserted node breaks hydration
+    const customHeader = children(() => (mounted() ? local.renderHeader?.() : undefined));
 
     // content() is created inside the Show fallback memo or Resizable's children effect, which would track the ref read;
     // a spread props signal would then remount the whole content

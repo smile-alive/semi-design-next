@@ -256,6 +256,15 @@ describe('Chat 消息', () => {
         expect(container.querySelector('.semi-chat-chatBox-content-code-topSlot-type')?.textContent).toBe('objective-c');
     });
 
+    it('带语言的代码围栏经高亮组件渲染，code 元素上没有 markdown 节点属性', async () => {
+        const { container } = renderChat({}, {}, { chats: [{ role: 'assistant', id: '1', content: '```js\nconst a = 1;\n```' }] });
+        await waitFor(() => expect(container.querySelector('code')).not.toBeNull());
+        for (const code of container.querySelectorAll('code')) {
+            expect(code).not.toHaveAttribute('node');
+        }
+        await waitFor(() => expect(container.querySelector('.semi-chat-chatBox-content-code .semi-codeHighlight')).not.toBeNull());
+    });
+
     it('渲染时没有控制台警告与报错', async () => {
         const warn = vi.spyOn(console, 'warn');
         const error = vi.spyOn(console, 'error');

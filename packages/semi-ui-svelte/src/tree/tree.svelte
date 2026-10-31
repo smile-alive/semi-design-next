@@ -381,6 +381,11 @@
     watch(
         () => [value, expandedKeys, loadedKeys] as const,
         (current) => {
+            // The foundation never saw its own echo as the prop, so clearing the prop back to undefined is no change to
+            // it: the selection is emptied here
+            if (current[0] === undefined && echoes.value && echoes.value.value !== undefined) {
+                foundation.syncDerivedState({ selectedKeys: [], checkedKeys: new Set(), halfCheckedKeys: new Set(), realCheckedKeys: new Set() });
+            }
             (['value', 'expandedKeys', 'loadedKeys'] as const).forEach((name, i) => {
                 if (echoes[name] && !isEqual(current[i], echoes[name].value)) {
                     echoes[name] = undefined;

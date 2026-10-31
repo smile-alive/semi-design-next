@@ -646,6 +646,22 @@ describe('ResizeGroup', () => {
         expect(widths(second.container)).toEqual(['calc(20% - 5px)', 'calc(20% - 10px)', 'calc(60% - 5px)']);
     });
 
+    it('中途插入到中间的项按文档顺序参与布局：拖动它相邻的手柄只调整相邻两项', () => {
+        const tree = (ids: string[]) => (
+            <div style={{ width: '1010px', height: '500px' }}>
+                <ResizeGroup>{ids.flatMap((id, i) => [i > 0 && <ResizeHandler key={`h-${id}`} />, <ResizeItem key={id}>{id}</ResizeItem>])}</ResizeGroup>
+            </div>
+        );
+        const { container, rerender } = render(tree(['a', 'c']));
+        rerender(tree(['a', 'b', 'c']));
+        const before = widths(container);
+        fireEvent.keyDown(getHandlers(container)[0], { key: 'ArrowRight' });
+        const after = widths(container);
+        expect(after[0]).not.toBe(before[0]);
+        expect(after[1]).not.toBe(before[1]);
+        expect(after[2]).toBe(before[2]);
+    });
+
     it('在被拖动手柄两侧的两个项之间转移空间', () => {
         const calls = { start: [], change: [], end: [] };
         const record = (i) => ({

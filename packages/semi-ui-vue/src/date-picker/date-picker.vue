@@ -94,7 +94,9 @@
 
     const root = useTemplateRef('root');
     const combobox = useTemplateRef('combobox');
-    const panel = useTemplateRef('panel');
+
+    // Annotated: the adapter's isKeyboardFocusInPanel reads this ref, so inference is circular (TS7022)
+    const panel = useTemplateRef<HTMLDivElement>('panel');
     const triggerInput = useTemplateRef('triggerInput');
     const insetDateInput = useTemplateRef('insetDateInput');
     const monthsGrid = useTemplateRef('monthsGrid');

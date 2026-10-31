@@ -23,6 +23,12 @@ describe('Svelte Table 服务端首帧', () => {
         expect(body).toContain('semi-page');
     });
 
+    it('传 groupBy 时首帧已有分组行', () => {
+        const grouped = [...dataSource, { key: '3', name: 'Jake', age: 32 }];
+        const { body } = render(Table, { props: { columns, dataSource: grouped, groupBy: 'age', pagination: false } });
+        expect(body.match(/semi-table-row-section/g)).toHaveLength(2);
+    });
+
     it('首帧带选择列与树形数据的展开按钮', () => {
         const tree = [{ ...dataSource[0], children: [dataSource[1]] }];
         const { body } = render(Table, { props: { columns, dataSource: tree, rowSelection: {}, pagination: false } });

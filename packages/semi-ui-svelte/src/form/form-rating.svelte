@@ -6,7 +6,13 @@
 
     let props: FieldProps<RatingProps> = $props();
 
+    let field: ReturnType<typeof Field> | undefined;
+
     const fieldOptions: WithFieldOption = { insetLabel: false, validateStatus: false };
+
+    export function getControl() {
+        return field?.getControl();
+    }
 </script>
 
-<Field {...props} component={Rating} {fieldOptions} />
+<Field bind:this={field} {...props} component={Rating} {fieldOptions} />

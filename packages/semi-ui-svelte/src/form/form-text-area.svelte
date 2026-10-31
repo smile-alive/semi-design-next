@@ -6,7 +6,13 @@
 
     let props: FieldProps<TextAreaProps> = $props();
 
+    let field: ReturnType<typeof Field> | undefined;
+
     const fieldOptions: WithFieldOption = { insetLabel: false };
+
+    export function getControl() {
+        return field?.getControl();
+    }
 </script>
 
-<Field {...props} component={TextArea} {fieldOptions} />
+<Field bind:this={field} {...props} component={TextArea} {fieldOptions} />

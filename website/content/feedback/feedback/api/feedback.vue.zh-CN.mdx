@@ -8,7 +8,7 @@ import ApiType from '#/components/ApiType.astro';
 | type | 反馈内容的类型。custom 时内容写在默认插槽中。 | `FeedbackType` | `semiDefault("Feedback", "type", "emoji")` |
 | visible | 是否显示，配合 v-model:visible 使用。 | `boolean` | `semiDefault("Feedback", "visible", false)` |
 | title | 纯文本标题，同时作为对话框的可访问名称；同时给出 title 插槽时以插槽为准。 | `string` | `semiGlobalDefault("Feedback", "title")` |
-| textAreaProps | type 为 text 与 emoji 时多行输入框的属性。受控值键为 modelValue，监听键为 onChange；传入的 modelValue 优先于 Feedback 的内部值。 | `FeedbackTextAreaProps` | `semiGlobalDefault("Feedback", "textAreaProps")` |
+| textAreaProps | type 为 text 与 emoji 时多行输入框的属性，不含 modelValue（值由 Feedback 管理）；其中的 onChange 在 Feedback 处理后调用。 | `FeedbackTextAreaProps` | `semiGlobalDefault("Feedback", "textAreaProps")` |
 | radioGroupProps | type 为 radio 时单选组的属性，写法同 RadioGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | `FeedbackRadioGroupProps` | `semiGlobalDefault("Feedback", "radioGroupProps")` |
 | checkboxGroupProps | type 为 checkbox 时多选组的属性，写法同 CheckboxGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | `FeedbackCheckboxGroupProps` | `semiGlobalDefault("Feedback", "checkboxGroupProps")` |
 | okButtonProps | 提交按钮的属性。未给 disabled 时按值禁用（值为空时禁用），给出后以使用方的值为准，type 为 custom 时用它控制提交；loading 取内置的挂起态与使用方的 loading 任一为真；onClick 先于内置处理调用，不会替换内置处理。 | `ModalButtonProps` | `semiGlobalDefault("Feedback", "okButtonProps")` |

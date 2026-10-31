@@ -8,6 +8,7 @@ import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { countLiveListeners } from '@test/utils/solid';
 import TreeSelect, { type SearchRenderProps, type TreeSelectElement, type TreeSelectProps, type TriggerRenderProps } from '..';
 import semiGlobal from '../../_utils/semi-global';
+import Button from '../../button';
 import { CheckboxGroup } from '../../checkbox';
 import ConfigProvider from '../../config-provider';
 import { InputGroup } from '../../input';
@@ -4507,6 +4508,19 @@ describe('TreeSelect 在 InputGroup 内', () => {
             </InputGroup>
         ));
         expect(getTrigger()).not.toHaveClass(`${cls}-disabled`);
+    });
+
+    it('插槽里的 Button 不继承组的 size 与 disabled', () => {
+        render(() => (
+            <InputGroup size="large" disabled>
+                <TreeSelect motion={false} defaultValue="Beijing" prefix={<Button>prefix</Button>} renderSelectedItem={() => <Button>selected</Button>} treeData={treeData} />
+            </InputGroup>
+        ));
+        for (const name of ['prefix', 'selected']) {
+            const button = screen.getByRole('button', { name });
+            expect(button).toBeEnabled();
+            expect(button).not.toHaveClass(`${BASE_CLASS_PREFIX}-button-size-large`);
+        }
     });
 
     it('触发器内的搜索框不受组影响', () => {

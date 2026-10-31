@@ -8,6 +8,9 @@
 
     let props: FormFieldProps<C> = $props();
 
+    let bareControl = $state.raw<Record<string, any>>();
+    let inner = $state.raw<{ getControl: () => Record<string, any> | undefined }>();
+
     const inForm = Boolean(getFormContext());
     const shouldInject = $derived(props.fieldOptions?.shouldInject ?? true);
 
@@ -24,10 +27,15 @@
         warning(props.field === undefined && shouldInject, "[Semi Form]: 'field' is required, please check your props of Field Component");
         warning(!bare && !inForm, '[Semi Form]: Field Component must be use inside the Form, please check your dom declaration');
     });
+
+    // The wrapped control's instance, for calling its own methods (focus, open ...)
+    export function getControl() {
+        return bareControl ?? inner?.getControl();
+    }
 </script>
 
 {#if bare}
-    <Control {...bareProps} />
+    <Control {...bareProps} bind:this={bareControl} />
 {:else if inForm}
-    <FieldInner {...props} />
+    <FieldInner {...props} bind:this={inner} />
 {/if}

@@ -19,7 +19,7 @@ export interface ResizeGroupView {
 
 export interface ResizeGroupContext {
     view: ComputedRef<ResizeGroupView>;
-    // registration order is layout order; both return the unregister function
+    // the group orders them by DOM position; both return the unregister function
     registerItem: (entry: ResizeItemEntry) => () => void;
     registerHandler: (handler: HTMLDivElement) => () => void;
     notifyResizeStart: (handler: HTMLDivElement, e: PointerEvent) => void;

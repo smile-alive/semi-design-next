@@ -1,11 +1,13 @@
-import { tick } from 'svelte';
+import { flushSync, tick } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import type { ResizeCallback } from '..';
+import { createStore } from '../../_base/__tests__/store.svelte';
 import semiGlobal from '../../_utils/semi-global';
 import Group from './group.svelte';
 import { down, drag, key, mockLayout, up } from './helpers';
+import KeyedGroup from './keyed-group.svelte';
 
 const getGroup = () => document.querySelector<HTMLElement>('.semi-resizable-group') as HTMLElement;
 const getItems = () => [...document.querySelectorAll<HTMLElement>('.semi-resizable-item')];
@@ -64,6 +66,19 @@ describe('Svelte ResizeGroup', () => {
         const [first, second] = widths();
         expect(first).not.toBe('calc(50% - 5px)');
         expect(second).not.toBe('calc(50% - 5px)');
+    });
+
+    it('中途插入到中间的项按文档顺序参与布局：拖动它相邻的手柄只调整相邻两项', async () => {
+        const store = createStore({ ids: ['a', 'c'] });
+        render(KeyedGroup, { props: store });
+        store.ids = ['a', 'b', 'c'];
+        flushSync();
+        const before = widths();
+        await key(handler(), 'ArrowRight');
+        const after = widths();
+        expect(after[0]).not.toBe(before[0]);
+        expect(after[1]).not.toBe(before[1]);
+        expect(after[2]).toBe(before[2]);
     });
 
     it('item 的 min 限制拖动范围', async () => {

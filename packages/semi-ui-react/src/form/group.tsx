@@ -5,6 +5,7 @@ import { isValid } from '@fibrae/semi-foundation/form/utils';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import warning from '@fibrae/semi-foundation/utils/warning';
+import flattenChildren from '../_base/flatten-children';
 import { Col } from '../grid/index';
 import InputGroup, { type InputGroupProps as BacisInputGroupProps } from '../input/input-group';
 import { useFieldBridgeContext } from './context';
@@ -76,7 +77,7 @@ export default function FormInputGroup(props: InputGroupProps) {
 
     const groupFieldSet: Array<string> = [];
 
-    const inner = React.Children.map(children, (child: any) => {
+    const inner = flattenChildren(children).map((child: any) => {
         if (child && child.props && child.props.field) {
             groupFieldSet.push(child.props.field);
             // merged per child: InputGroup would overwrite each field's own references with the group's

@@ -250,12 +250,23 @@ describe('Feedback', () => {
             expect(emitted(view, 'second')).toEqual([[{ emoji: '😐' }]]);
         });
 
-        it('textAreaProps.modelValue 以使用方为准', async () => {
-            await renderFeedback({ type: 'text', textAreaProps: { modelValue: 'fixed' }, title: 'T', visible: true });
+        it('textAreaProps.modelValue 不盖过 Feedback 的值', async () => {
+            const onValueChange = vi.fn<(...args: unknown[]) => void>();
+            const onChange = vi.fn<(...args: unknown[]) => void>();
+            await renderFeedback({
+                type: 'text',
+                // @ts-expect-error modelValue is omitted from the type; the runtime must still let Feedback's own value win
+                textAreaProps: { modelValue: 'fixed', onChange },
+                title: 'T',
+                visible: true,
+                onValueChange,
+            });
             const textarea = screen.getByRole('textbox');
-            expect(textarea).toHaveValue('fixed');
+            expect(textarea).toHaveValue('');
             await fireEvent.update(textarea, 'typed');
-            expect(textarea).toHaveValue('fixed');
+            expect(textarea).toHaveValue('typed');
+            expect(onValueChange).toHaveBeenLastCalledWith('typed');
+            expect(onChange).toHaveBeenCalledTimes(1);
         });
 
         it('textAreaProps.onChange 被调用，且不替换上报的值', async () => {
@@ -280,18 +291,42 @@ describe('Feedback', () => {
             expect(onChange).toHaveBeenCalledTimes(2);
         });
 
-        it('radioGroupProps.modelValue 与 checkboxGroupProps.modelValue 以使用方为准', async () => {
-            const view = await renderFeedback({
+        it('radioGroupProps.modelValue 不盖过 Feedback 的值', async () => {
+            const onValueChange = vi.fn<(...args: unknown[]) => void>();
+            const onChange = vi.fn<(...args: unknown[]) => void>();
+            await renderFeedback({
                 type: 'radio',
-                radioGroupProps: { options, modelValue: 'a' },
+                // @ts-expect-error modelValue is omitted from the type; the runtime must still let Feedback's own value win
+                radioGroupProps: { options, modelValue: 'a', onChange },
                 title: 'T',
                 visible: true,
+                onValueChange,
             });
-            expect(screen.getByRole('radio', { name: 'A' })).toBeChecked();
+            expect(screen.getByRole('radio', { name: 'A' })).not.toBeChecked();
             await userEvent.click(screen.getByRole('radio', { name: 'B' }));
-            expect(screen.getByRole('radio', { name: 'A' })).toBeChecked();
-            await update(view, { type: 'checkbox', checkboxGroupProps: { options, modelValue: ['b'] } });
+            expect(screen.getByRole('radio', { name: 'B' })).toBeChecked();
+            expect(screen.getByRole('radio', { name: 'A' })).not.toBeChecked();
+            expect(onValueChange).toHaveBeenLastCalledWith('b');
+            expect(onChange).toHaveBeenCalledTimes(1);
+        });
+
+        it('checkboxGroupProps.modelValue 不盖过 Feedback 的值', async () => {
+            const onValueChange = vi.fn<(...args: unknown[]) => void>();
+            const onChange = vi.fn<(...args: unknown[]) => void>();
+            await renderFeedback({
+                type: 'checkbox',
+                // @ts-expect-error modelValue is omitted from the type; the runtime must still let Feedback's own value win
+                checkboxGroupProps: { options, modelValue: ['a'], onChange },
+                title: 'T',
+                visible: true,
+                onValueChange,
+            });
+            expect(screen.getByRole('checkbox', { name: 'A' })).not.toBeChecked();
+            await userEvent.click(screen.getByRole('checkbox', { name: 'B' }));
             expect(screen.getByRole('checkbox', { name: 'B' })).toBeChecked();
+            expect(screen.getByRole('checkbox', { name: 'A' })).not.toBeChecked();
+            expect(onValueChange).toHaveBeenLastCalledWith(['b']);
+            expect(onChange).toHaveBeenLastCalledWith(['b']);
         });
     });
 

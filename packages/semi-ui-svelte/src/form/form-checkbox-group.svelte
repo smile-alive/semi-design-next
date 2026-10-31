@@ -6,7 +6,13 @@
 
     let props: FieldProps<CheckboxGroupProps> = $props();
 
+    let field: ReturnType<typeof Field> | undefined;
+
     const fieldOptions: WithFieldOption = { insetLabel: false, validateStatus: false };
+
+    export function getControl() {
+        return field?.getControl();
+    }
 </script>
 
-<Field {...props} component={CheckboxGroup} {fieldOptions} />
+<Field bind:this={field} {...props} component={CheckboxGroup} {fieldOptions} />

@@ -14,14 +14,14 @@ import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import { createIconSlot } from '../_base/icon-slot';
 import mergeRefs from '../_base/merge-refs';
-import { usePopupLayer } from '../_base/popup-layer';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import useWatch from '../_base/use-watch';
 import type { SortableHandle } from '../_sortable/types';
 import Input, { type InputChangeEvent, type InputElementEvent } from '../input';
-import { type InputGroupContextValue, InputGroupContext, useInputGroupContext } from '../input/context';
+import type { InputGroupContextValue } from '../input/context';
+import InputGroupBoundary from '../input/group-boundary';
 import useLocale from '../locale/use-locale';
 import Popover, { type PopoverProps } from '../popover';
 import Tag from '../tag';
@@ -130,15 +130,7 @@ function TagFocusKeeper(props: { keep: () => void; restore: () => void }) {
 }
 
 export default function TagInput(props: TagInputProps) {
-    const group = useInputGroupContext();
-    const layer = usePopupLayer();
-
-    // the slots resolve in the control's body, so the whole control, not only its markup, leaves the InputGroup
-    return (
-        <InputGroupContext.Provider value={undefined}>
-            <TagInputControl {...props} inGroup={group?.layer === layer ? group : undefined} />
-        </InputGroupContext.Provider>
-    );
+    return <InputGroupBoundary>{(inGroup) => <TagInputControl {...props} inGroup={inGroup} />}</InputGroupBoundary>;
 }
 
 function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue }) {

@@ -3,6 +3,7 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { Form } from '@fibrae/semi-ui-react';
+import { misplacedAriaRequired } from '@test/utils/dom/common';
 import type { FormApi } from '../interface';
 
 interface Harness {
@@ -220,6 +221,13 @@ describe('Form labelPosition="inset"', () => {
         expect(references.length).toBeGreaterThanOrEqual(names.length);
         expect(references.filter((id) => !document.getElementById(id))).toEqual([]);
         warn.mockRestore();
+    });
+
+    it('必填字段的 aria-required 只落在支持它的角色上', () => {
+        const names = Object.keys(fields);
+        renderForm(names.map((name) => cloneElement(fields[name], { key: name, fieldClassName: name, label: name, rules: [{ required: true }] })));
+        expect(document.querySelectorAll('[aria-required="true"]').length).toBeGreaterThan(0);
+        expect(Object.fromEntries(names.map((name) => [name, misplacedAriaRequired(document.querySelector(`.${name}`) as Element)]))).toEqual(Object.fromEntries(names.map((name) => [name, []])));
     });
 
     it('不支持内嵌标签的字段以渲染出的 top label 命名控件', () => {

@@ -155,7 +155,7 @@ import { Feedback } from '@fibrae/semi-ui-solid';
 
 <FeedbackVueApi />
 
-未声明的属性按 `mode` 透传给 Modal 或 SideSheet，落点与它们相同：全部 `aria-*` 属性落在 `role="dialog"` 元素上；`style` 在 `modal` 模式落在 `.semi-modal` 对话框盒子上，在 `popup` 模式落在 `role="dialog"` 元素上；`class` 与其余未声明的属性、原生事件监听落在 portal 内最外层元素上（`modal` 模式的 `role` 同样落在 `role="dialog"` 元素上）。`textAreaProps`、`radioGroupProps`、`checkboxGroupProps` 的受控值键是 `modelValue`，监听键是 `onChange`。
+未声明的属性按 `mode` 透传给 Modal 或 SideSheet，落点与它们相同：全部 `aria-*` 属性落在 `role="dialog"` 元素上；`style` 在 `modal` 模式落在 `.semi-modal` 对话框盒子上，在 `popup` 模式落在 `role="dialog"` 元素上；`class` 与其余未声明的属性、原生事件监听落在 portal 内最外层元素上（`modal` 模式的 `role` 同样落在 `role="dialog"` 元素上）。`textAreaProps`、`radioGroupProps`、`checkboxGroupProps` 不含 `modelValue`，值由 Feedback 管理，其中的 `onChange` 在 Feedback 处理后调用。
 
 </Framework>
 
@@ -171,7 +171,7 @@ import { Feedback } from '@fibrae/semi-ui-solid';
 
 <FeedbackSvelteApi />
 
-未声明的属性按 `mode` 透传给 Modal 或 SideSheet，落点与它们相同：全部 `aria-*` 属性落在 `role="dialog"` 元素上；`style` 在 `modal` 模式落在 `.semi-modal` 对话框盒子上，在 `popup` 模式落在 `role="dialog"` 元素上；`class` 与其余未声明的属性、原生事件落在 portal 内最外层元素上。`textAreaProps`、`radioGroupProps`、`checkboxGroupProps` 的写法同对应组件的属性，受控值用 `value`，监听用 `onChange`；`bind:this` 的实例提供 `getRoot()`。
+未声明的属性按 `mode` 透传给 Modal 或 SideSheet，落点与它们相同：全部 `aria-*` 属性落在 `role="dialog"` 元素上；`style` 在 `modal` 模式落在 `.semi-modal` 对话框盒子上，在 `popup` 模式落在 `role="dialog"` 元素上；`class` 与其余未声明的属性、原生事件落在 portal 内最外层元素上。`textAreaProps`、`radioGroupProps`、`checkboxGroupProps` 的写法同对应组件的属性，但不含 `value`，值由 Feedback 管理，其中的 `onChange` 在 Feedback 处理后调用；`bind:this` 的实例提供 `getRoot()`。
 
 </Framework>
 

@@ -19,7 +19,6 @@ import forwardFocus, { focusElement } from '../_base/forward-focus';
 import hasContent from '../_base/has-content';
 import { createIconSlot } from '../_base/icon-slot';
 import mergeRefs from '../_base/merge-refs';
-import { usePopupLayer } from '../_base/popup-layer';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
 import useFocusHandover from '../_base/use-focus-handover';
@@ -27,7 +26,8 @@ import useFoundation from '../_base/use-foundation';
 import type { VirtualListHandle } from '../_base/virtual-list';
 import useConfig from '../config-provider/use-config';
 import Input, { type InputProps, type ValidateStatus } from '../input';
-import { InputGroupContext, useInputGroupContext } from '../input/context';
+import type { InputGroupContextValue } from '../input/context';
+import InputGroupBoundary from '../input/group-boundary';
 import useLocale from '../locale/use-locale';
 import Popover, { type PopoverProps } from '../popover';
 import Tag, { TagGroup, type TagGroupItem } from '../tag';
@@ -235,11 +235,13 @@ const defaultProps = {
 const isShownText = (text: unknown) => Boolean(text) || text === 0;
 
 export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNodeValue, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined>(rawProps: TreeSelectProps<T, Multiple, WithObject>) {
-    const bodyProps = rawProps as TreeSelectBodyProps;
+    return <InputGroupBoundary>{(inGroup) => <TreeSelectControl {...(rawProps as TreeSelectBodyProps)} inGroup={inGroup} />}</InputGroupBoundary>;
+}
+
+function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupContextValue }) {
+    const [own, bodyProps] = splitProps(all, ['inGroup']);
     const defaulted = useDefaultProps('TreeSelect', bodyProps, defaultProps);
 
-    const group = useInputGroupContext();
-    const layer = usePopupLayer();
     const config = useConfig();
     const locale = useLocale('TreeSelect');
     const treeLocale = useLocale('Tree');
@@ -251,7 +253,8 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     let optionContainer: HTMLDivElement | undefined;
     let list: VirtualListHandle | undefined;
 
-    const inGroup = group?.layer === layer ? group : undefined;
+    // fixed for the instance's lifetime: the layer and the context value are
+    const inGroup = untrack(() => own.inGroup);
 
     // as Input: own value, then the group's, then the global default
     const props = mergeProps(defaulted, {
@@ -1016,8 +1019,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     );
 
     const DefaultTrigger = () => (
-        // the search input is part of the TreeSelect, not a control of an enclosing InputGroup
-        <InputGroupContext.Provider value={undefined}>
+        <>
             <Show when={labelKind()}>
                 <div
                     id={prefixId()}
@@ -1069,7 +1071,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                     </Show>
                 </div>
             </Show>
-        </InputGroupContext.Provider>
+        </>
     );
 
     const renderRow = (node: Accessor<FlattenNode | undefined>, style?: Accessor<JSX.CSSProperties>) => {

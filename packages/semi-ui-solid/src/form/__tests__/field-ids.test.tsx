@@ -2,9 +2,11 @@ import { type JSX, For, Show, createRoot, createSignal } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
+import { misplacedAriaRequired } from '@test/utils/dom/common';
 import {
     type FormApi,
     type FormProps,
+    type RuleItem,
     Form,
     FormAutoComplete,
     FormCascader,
@@ -209,35 +211,35 @@ describe('Form 字段的 aria 引用', () => {
 describe('Form labelPosition="inset"', () => {
     const options = [{ label: 'One', value: 1 }];
     const treeData = [{ label: 'One', value: 'one', key: 'one' }];
-    const fields: Record<string, (name: string) => JSX.Element> = {
-        FormInput: (name) => <FormInput field={name} fieldClassName={name} label={name} />,
-        FormInputNumber: (name) => <FormInputNumber field={name} fieldClassName={name} label={name} />,
-        FormTextArea: (name) => <FormTextArea field={name} fieldClassName={name} label={name} />,
-        FormSelect: (name) => <FormSelect field={name} fieldClassName={name} label={name} optionList={options} />,
-        FormCheckboxGroup: (name) => <FormCheckboxGroup field={name} fieldClassName={name} label={name} options={options} />,
-        FormCheckbox: (name) => (
-            <FormCheckbox field={name} fieldClassName={name} label={name}>
+    const fields: Record<string, (name: string, rules?: RuleItem[]) => JSX.Element> = {
+        FormInput: (name, rules) => <FormInput field={name} fieldClassName={name} label={name} rules={rules} />,
+        FormInputNumber: (name, rules) => <FormInputNumber field={name} fieldClassName={name} label={name} rules={rules} />,
+        FormTextArea: (name, rules) => <FormTextArea field={name} fieldClassName={name} label={name} rules={rules} />,
+        FormSelect: (name, rules) => <FormSelect field={name} fieldClassName={name} label={name} optionList={options} rules={rules} />,
+        FormCheckboxGroup: (name, rules) => <FormCheckboxGroup field={name} fieldClassName={name} label={name} options={options} rules={rules} />,
+        FormCheckbox: (name, rules) => (
+            <FormCheckbox field={name} fieldClassName={name} label={name} rules={rules}>
                 Agree
             </FormCheckbox>
         ),
-        FormRadioGroup: (name) => <FormRadioGroup field={name} fieldClassName={name} label={name} options={options} />,
-        FormRadio: (name) => (
-            <FormRadio field={name} fieldClassName={name} label={name}>
+        FormRadioGroup: (name, rules) => <FormRadioGroup field={name} fieldClassName={name} label={name} options={options} rules={rules} />,
+        FormRadio: (name, rules) => (
+            <FormRadio field={name} fieldClassName={name} label={name} rules={rules}>
                 Pick
             </FormRadio>
         ),
-        FormDatePicker: (name) => <FormDatePicker field={name} fieldClassName={name} label={name} />,
-        FormSwitch: (name) => <FormSwitch field={name} fieldClassName={name} label={name} />,
-        FormSlider: (name) => <FormSlider field={name} fieldClassName={name} label={name} />,
-        FormTimePicker: (name) => <FormTimePicker field={name} fieldClassName={name} label={name} />,
-        FormTreeSelect: (name) => <FormTreeSelect field={name} fieldClassName={name} label={name} treeData={treeData} />,
-        FormCascader: (name) => <FormCascader field={name} fieldClassName={name} label={name} treeData={treeData} />,
-        FormTransfer: (name) => <FormTransfer dataSource={[{ label: 'One', value: 1, key: 1 }]} field={name} fieldClassName={name} label={name} />,
-        FormRating: (name) => <FormRating field={name} fieldClassName={name} label={name} />,
-        FormAutoComplete: (name) => <FormAutoComplete field={name} fieldClassName={name} label={name} />,
-        FormUpload: (name) => <FormUpload action="/upload" field={name} fieldClassName={name} label={name} />,
-        FormTagInput: (name) => <FormTagInput field={name} fieldClassName={name} label={name} />,
-        FormPinCode: (name) => <FormPinCode field={name} fieldClassName={name} label={name} />,
+        FormDatePicker: (name, rules) => <FormDatePicker field={name} fieldClassName={name} label={name} rules={rules} />,
+        FormSwitch: (name, rules) => <FormSwitch field={name} fieldClassName={name} label={name} rules={rules} />,
+        FormSlider: (name, rules) => <FormSlider field={name} fieldClassName={name} label={name} rules={rules} />,
+        FormTimePicker: (name, rules) => <FormTimePicker field={name} fieldClassName={name} label={name} rules={rules} />,
+        FormTreeSelect: (name, rules) => <FormTreeSelect field={name} fieldClassName={name} label={name} treeData={treeData} rules={rules} />,
+        FormCascader: (name, rules) => <FormCascader field={name} fieldClassName={name} label={name} treeData={treeData} rules={rules} />,
+        FormTransfer: (name, rules) => <FormTransfer dataSource={[{ label: 'One', value: 1, key: 1 }]} field={name} fieldClassName={name} label={name} rules={rules} />,
+        FormRating: (name, rules) => <FormRating field={name} fieldClassName={name} label={name} rules={rules} />,
+        FormAutoComplete: (name, rules) => <FormAutoComplete field={name} fieldClassName={name} label={name} rules={rules} />,
+        FormUpload: (name, rules) => <FormUpload action="/upload" field={name} fieldClassName={name} label={name} rules={rules} />,
+        FormTagInput: (name, rules) => <FormTagInput field={name} fieldClassName={name} label={name} rules={rules} />,
+        FormPinCode: (name, rules) => <FormPinCode field={name} fieldClassName={name} label={name} rules={rules} />,
     };
     const inset = ['FormInput', 'FormInputNumber', 'FormSelect', 'FormDatePicker', 'FormTimePicker', 'FormTreeSelect', 'FormCascader', 'FormAutoComplete', 'FormTagInput'];
 
@@ -252,6 +254,13 @@ describe('Form labelPosition="inset"', () => {
         expect(references.length).toBeGreaterThanOrEqual(names.length);
         expect(references.filter((id) => !document.getElementById(id))).toEqual([]);
         warn.mockRestore();
+    });
+
+    it('必填字段的 aria-required 只落在支持它的角色上', () => {
+        const names = Object.keys(fields);
+        renderForm(() => <For each={names}>{(name) => fields[name](name, [{ required: true }])}</For>);
+        expect(document.querySelectorAll('[aria-required="true"]').length).toBeGreaterThan(0);
+        expect(Object.fromEntries(names.map((name) => [name, misplacedAriaRequired(document.querySelector(`.${name}`) as Element)]))).toEqual(Object.fromEntries(names.map((name) => [name, []])));
     });
 
     it('不支持内嵌标签的字段以渲染出的 top label 命名控件', () => {

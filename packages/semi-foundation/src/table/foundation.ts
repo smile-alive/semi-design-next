@@ -1008,7 +1008,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             preExpandedRowKeys: props.expandedRowKeys,
             rowSelection: props.rowSelection ? (isObject(props.rowSelection) ? { ...props.rowSelection } : {}) : null,
             pagination: pageData.pagination,
-            groups: null,
+            groups: pageData.groups ?? null,
             allRowKeys: [],
             pageDisabledRowKeys: [],
             pageDisabledRowKeysSet: new Set(),
