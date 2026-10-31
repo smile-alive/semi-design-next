@@ -9,7 +9,7 @@ import isObject from '../utils/is-object';
 import type { ArrayElement } from '../utils/type';
 import { isDev } from '../utils/warning';
 import { strings, numbers } from './constants';
-import { getChangedRowKeys, mergeColumns } from './utils';
+import { buildRecordsByKey, flattenBodyRows, getChangedRowKeys, mergeColumns } from './utils';
 
 export interface BaseColumnProps<RecordType> {
     align?: BaseAlign;
@@ -180,6 +180,12 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     // Without `scroll-state` container queries (Chrome < 133) the fixed-column shadows follow data attributes written by
     // syncScrollEdges. Removable once Firefox and Safari support `container-type: scroll-state`.
     #trackScrollEdges: boolean | undefined;
+    // Shift+click works like Finder: the anchor is the last row clicked without Shift, and each Shift+click replaces the
+    // previous range, so the selection from before the first Shift+click is kept to apply the new range to. When the
+    // selection no longer matches the last range's result, something else changed it and it becomes the new base.
+    #rangeAnchor: BaseRowKeyType | null = null;
+    #rangeBase: Set<BaseRowKeyType> | null = null;
+    #rangeResult: Set<BaseRowKeyType> | null = null;
 
     static #pagerIsControlled(props: { pagination?: BasePagination | boolean }) {
         return (props.pagination as BasePagination)?.currentPage != null;
@@ -194,6 +200,10 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     static #getRelatedCheckedRowKeys(rowKeys: BaseRowKeyType[] = [], keyEntities: BaseEntitys = {}) {
         const { checkedKeys, halfCheckedKeys } = calcCheckedKeysForCheckedKeys(rowKeys.map(String), keyEntities, new Set(), new Set());
         return { checkedRowKeys: TableFoundation.#restoreRowKeys(checkedKeys, rowKeys, keyEntities), halfCheckedRowKeys: TableFoundation.#restoreRowKeys(halfCheckedKeys, rowKeys, keyEntities) };
+    }
+
+    static #sameKeys(a: Set<BaseRowKeyType>, b: Set<BaseRowKeyType>) {
+        return a.size === b.size && [...a].every((key) => b.has(key));
     }
 
     #addNoDuplicatedItemsToArr(srcArr: any[] = [], ...objArrs: any[][]) {
@@ -251,6 +261,55 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
 
     #getSelectedRowKeysSet() {
         return this.getState('rowSelection')?.selectedRowKeysSet ?? new Set();
+    }
+
+    // the rows of the current page in render order, without collapsed tree children and groups: a range covers only
+    // the rows the user sees between the two clicks
+    #getVisibleRowKeys() {
+        const { rowKey, childrenRecordName } = this.getProps();
+        const dataSource = this.getState('dataSource');
+        const options = { rowKey, childrenRecordName, expandedRowKeys: this.getState('expandedRowKeys'), hasExpandedRow: false };
+        return flattenBodyRows(options, dataSource, this.getState('groups'), buildRecordsByKey(dataSource, rowKey)).flatMap((row) => (row.kind === 'base' ? [row.key] : []));
+    }
+
+    /** Gives every enabled row from the anchor to `rowKey` the anchor's state; false when either row is not shown */
+    #selectRange(rowKey: BaseRowKeyType) {
+        const visibleRowKeys = this.#getVisibleRowKeys();
+        const anchorIndex = visibleRowKeys.indexOf(this.#rangeAnchor);
+        const index = visibleRowKeys.indexOf(rowKey);
+        if (anchorIndex === -1 || index === -1) {
+            return false;
+        }
+
+        const currentKeys = this.#getSelectedRowKeysSet();
+        if (!this.#rangeBase || !this.#rangeResult || !TableFoundation.#sameKeys(this.#rangeResult, currentKeys)) {
+            this.#rangeBase = new Set(this.#getSelectedRowKeys());
+        }
+        const selected = this.#rangeBase.has(this.#rangeAnchor);
+        const disabledRowKeys = this.adapter.getFilteredDisabledRowKeysSet();
+        const nextKeys = new Set(this.#rangeBase);
+        for (const key of visibleRowKeys.slice(Math.min(anchorIndex, index), Math.max(anchorIndex, index) + 1)) {
+            if (!disabledRowKeys.has(key)) {
+                if (selected) {
+                    nextKeys.add(key);
+                } else {
+                    nextKeys.delete(key);
+                }
+            }
+        }
+        // Shift+mousedown extends the page's text selection over the rows clicked across
+        window.getSelection()?.removeAllRanges();
+
+        this.#rangeResult = nextKeys;
+        if (TableFoundation.#sameKeys(nextKeys, currentKeys)) {
+            return true;
+        }
+        const selectedRowKeys = [...nextKeys];
+        if (!this.#selectionIsControlled()) {
+            this.adapter.setSelectedRowKeys(selectedRowKeys);
+        }
+        this.adapter.notifySelectionChange(selectedRowKeys, this.getRecordsByKeys(null, selectedRowKeys));
+        return true;
     }
 
     #getDataSource() {
@@ -1129,10 +1188,18 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         this.#notifyChange(pagination, undefined, undefined, { changeType: 'pagination' });
     };
 
-    handleSelectRow = (realKey: BaseRowKeyType, selected: boolean, e?: Pick<Event, 'stopPropagation'>) => {
+    handleSelectRow = (realKey: BaseRowKeyType, selected: boolean, e?: BaseSelectRowEvent) => {
         e?.stopPropagation();
         if (typeof selected === 'boolean' && realKey != null) {
             const checkRelation = this.adapter.getCheckRelation();
+            // a related tree checks whole subtrees, so a Shift range has no clear meaning there
+            const shiftKey = e?.shiftKey ?? e?.nativeEvent?.shiftKey;
+            if (shiftKey && checkRelation !== 'related' && this.#rangeAnchor != null && this.#selectRange(realKey)) {
+                return;
+            }
+            this.#rangeAnchor = realKey;
+            this.#rangeResult = null;
+
             const selectedRowKeys = this.#getSelectedRowKeys();
             const halfCheckedRowKeys = [...(this.adapter.getHalfCheckedRowKeys() || [])];
             let foundIdx = -1;
@@ -1356,7 +1423,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         this.#notifyChange(pagination, filters, curQuery, { changeType: 'sorter' });
     };
 
-    handleRowClickSelection = (rowKey: BaseRowKeyType, selected: boolean, e: Pick<Event, 'stopPropagation'>) => {
+    handleRowClickSelection = (rowKey: BaseRowKeyType, selected: boolean, e: BaseSelectRowEvent) => {
         const rowSelection = this.getState('rowSelection');
 
         if (rowSelection?.clickRow && !rowSelection.disabled) {
@@ -1373,6 +1440,12 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
 }
 
 export type BaseRowKeyType = string | number;
+/** A row click passes its mouse event; a checkbox change passes its change event, with the click in nativeEvent */
+export interface BaseSelectRowEvent {
+    stopPropagation: () => void;
+    shiftKey?: boolean;
+    nativeEvent?: { shiftKey?: boolean };
+}
 export type BaseRowKey<RecordType> = BaseRowKeyType | ((record: RecordType) => BaseRowKeyType);
 export interface BasePagination {
     total?: number;

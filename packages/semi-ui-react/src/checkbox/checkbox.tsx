@@ -17,9 +17,8 @@ import CheckboxInner from './checkbox-inner';
 import { useCheckboxGroupContext } from './context';
 
 export interface CheckboxEvent extends BasicCheckboxEvent {
-    nativeEvent: {
-        stopImmediatePropagation: () => void;
-    };
+    /** The click that toggled the checkbox; a Space press reaches it as a click too */
+    nativeEvent: MouseEvent;
 }
 export type TargetObject = BasicTargetObject;
 
@@ -114,20 +113,15 @@ export default function Checkbox(rawProps: CheckboxProps) {
         () => ({ checked: Boolean(props.checked ?? props.defaultChecked) }),
         (base) => ({
             setChecked: (checked) => base.setState({ checked }),
-            notifyChange: (event) => base.getProps().onChange?.(event),
+            notifyChange: (event) => base.getProps().onChange?.(event as CheckboxEvent),
             generateEvent: (checked, e) => {
                 const { ref, ...target } = base.getProps();
                 return {
                     target: { ...target, checked },
                     stopPropagation: () => e.stopPropagation(),
                     preventDefault: () => e.preventDefault(),
-                    nativeEvent: {
-                        stopImmediatePropagation: () => {
-                            if (typeof e.nativeEvent?.stopImmediatePropagation === 'function') {
-                                e.nativeEvent.stopImmediatePropagation();
-                            }
-                        },
-                    },
+                    // handleChange gets the click on the root span
+                    nativeEvent: (e as React.MouseEvent).nativeEvent,
                 };
             },
             getIsInGroup: () => Boolean(base.getContexts()?.checkboxGroup && base.getProps().value !== undefined),

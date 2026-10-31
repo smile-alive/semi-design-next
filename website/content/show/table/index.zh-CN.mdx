@@ -312,6 +312,7 @@ Svelte 版没有 `Table.Column`：列只用 `columns` 数据声明，列里的�
 
 - 点击表头的选择框，会选择 `dataSource` 里所有不是 `disabled` 状态的行。选择所有行回调函数为 `onSelectAll`；
 - 点击行的选择框会选中当前行。它的回调函数为 `onSelect`；
+- 按住 Shift 点击行的选择框（开启 `clickRow` 时也可以点击行，或在选择框上按 Shift+Space），会把上一次不按 Shift 点击的行（锚点）到当前行之间的可见行设成与锚点相同的选中状态，跳过禁用的行。锚点不变时，再次按住 Shift 点击会替换上一段范围，范围外的选择保持不变。范围只在当前页内，锚点不在当前页或 `checkRelation` 为 `'related'` 时按普通点击处理。范围选择只触发一次 `onChange`，不触发 `onSelect`；
 
 <Framework only="react">
 
