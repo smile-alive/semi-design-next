@@ -4,6 +4,8 @@
 // `node scripts/check-pages.ts [baseUrl] [pathFilter]`. Use dev for SSR checks: production builds silently keep
 // hydration mismatches.
 // `--update-a11y-baseline` rewrites the baseline from one full run.
+// Besides demos, axe scans each page outside its demo previews (`#page`: shell, article, landing page), and the first
+// page of each site section with the search dialog, menus and drawer open (`#shell-<state>`).
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -93,6 +95,57 @@ async function findUserAgentFocusRings(page: Page, demoId: string) {
     return [...found];
 }
 
+// Shiki theme syntax colors are not Semi's, and palette swatches show a contrast on purpose, so neither is checked.
+async function scan(page: Page, builder: AxeBuilder) {
+    const result = await builder.analyze();
+    const found: Violation[] = [];
+    for (const v of result.violations) {
+        let nodes = v.nodes;
+        if (v.id === 'color-contrast') {
+            const inShiki = await Promise.all(nodes.map((n) => page.$eval(String(n.target.at(-1)), (el) => el.closest('.shiki, pre[data-language], [data-contrast-sample]') !== null).catch(() => false)));
+            nodes = nodes.filter((_, i) => !inShiki[i]);
+        }
+        if (nodes.length) {
+            found.push({ rule: v.id, impact: v.impact, nodes: nodes.length });
+        }
+    }
+    return found;
+}
+
+// The shell's overlays render closed, so a page scan never reaches them. Narrow-only ones need the phone width.
+const SHELL_STATES = [
+    { name: 'search', width: 1440, trigger: '#search-toggle', content: '#search-dialog' },
+    { name: 'framework-menu', width: 1440, trigger: '[popovertarget="framework-menu"]', content: '#framework-menu' },
+    { name: 'locale-menu', width: 1440, trigger: '[popovertarget="locale-menu"]', content: '#locale-menu' },
+    { name: 'more-menu', width: 375, trigger: '[popovertarget="more-menu"]', content: '#more-menu' },
+    { name: 'drawer', width: 375, trigger: '#nav-toggle', content: '#side-nav' },
+];
+// Shell markup only varies by locale and framework, so one page of each section stands for the rest
+const scannedSections = new Set<string>();
+
+async function scanShellStates(page: Page, url: string) {
+    const section = url.split('/').slice(0, 3).join('/');
+    if (scannedSections.has(section)) {
+        return;
+    }
+    scannedSections.add(section);
+    for (const { name, width, trigger, content } of SHELL_STATES) {
+        await page.setViewportSize({ width, height: 900 });
+        const button = page.locator(trigger);
+        if (!(await button.count())) {
+            continue;
+        }
+        await button.click();
+        await page.locator(content).waitFor({ state: 'visible' });
+        const found = await scan(page, new AxeBuilder({ page }).include(content));
+        if (found.length) {
+            violations[`${url}#shell-${name}`] = found;
+        }
+        await page.keyboard.press('Escape');
+    }
+    await page.setViewportSize({ width: 1440, height: 900 });
+}
+
 async function check(url: string) {
     // AxeBuilder needs its own context; reduced motion keeps transitions from racing the scan
     const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' });
@@ -141,6 +194,13 @@ async function check(url: string) {
                     await new Promise((resolve) => setTimeout(resolve, 50));
                 }
             }
+            // Figures outside demos are in the page scan, which would otherwise see them only when they win the race
+            for (const island of document.querySelectorAll('astro-island[ssr]')) {
+                const deadline = performance.now() + 15000;
+                while (island.hasAttribute('ssr') && performance.now() < deadline) {
+                    await new Promise((resolve) => setTimeout(resolve, 50));
+                }
+            }
         });
     } catch (err) {
         // page.goto throws only Error
@@ -186,23 +246,17 @@ async function check(url: string) {
         errors.push(`duplicate id in demos: ${id}`);
     }
     for (const { id } of demos) {
-        const result = await new AxeBuilder({ page }).include(`[id="${id}"] .demo-preview`).analyze();
-        const found = [];
-        for (const v of result.violations) {
-            let nodes = v.nodes;
-            // Shiki theme syntax colors are not Semi's, so contrast is not checked there.
-            if (v.id === 'color-contrast') {
-                const inShiki = await Promise.all(nodes.map((n) => page.$eval(String(n.target.at(-1)), (el) => el.closest('.shiki') !== null).catch(() => false)));
-                nodes = nodes.filter((_, i) => !inShiki[i]);
-            }
-            if (nodes.length) {
-                found.push({ rule: v.id, impact: v.impact, nodes: nodes.length });
-            }
-        }
+        const found = await scan(page, new AxeBuilder({ page }).include(`[id="${id}"] .demo-preview`));
         if (found.length) {
             violations[`${url}#${id}`] = found;
         }
     }
+    const pageFound = await scan(page, new AxeBuilder({ page }).exclude('.demo-preview').disableRules(['landmark-no-duplicate-main']));
+    if (pageFound.length) {
+        violations[`${url}#page`] = pageFound;
+    }
+    // Before the Tab walk: a popup it leaves open can cover the shell's triggers.
+    await scanShellStates(page, url).catch((err: Error) => errors.push(`shell states: ${err.message.split('\n')[0]}`));
     // After axe: Tab opens popups and mutates the DOM axe scans.
     for (const { id, empty } of demos) {
         const rings = empty ? [] : await findUserAgentFocusRings(page, id).catch(() => []);

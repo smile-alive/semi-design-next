@@ -1,0 +1,72 @@
+---
+import '#/styles/reset.css';
+import '@fibrae/semi-foundation/base/tokens.scss';
+import '#/styles/site.scss';
+import { IllustrationNotFound, IllustrationNotFoundDark } from '@fibrae/semi-illustrations-react';
+import { Empty, Typography } from '@fibrae/semi-ui-react';
+import ThemeScript from '#/components/ThemeScript.astro';
+
+const { Text } = Typography;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="noindex" />
+        <title>404 - Semi Design Next</title>
+    </head>
+    <body>
+        <ThemeScript />
+        <main class="not-found">
+            <Empty>
+                <Fragment slot="image">
+                    <IllustrationNotFound className="not-found-light" />
+                    <IllustrationNotFoundDark className="not-found-dark" />
+                </Fragment>
+                <h1 slot="title">404</h1>
+                <Fragment slot="description">
+                    <p>页面不存在。<Text link={{ href: '/zh-CN/' }}>返回首页</Text></p>
+                    <p lang="en">This page does not exist. <Text link={{ href: '/en-US/' }}>Back to home</Text></p>
+                </Fragment>
+            </Empty>
+        </main>
+    </body>
+</html>
+
+<style>
+    .not-found {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: var(--semi-spacing-loose);
+        text-align: center;
+    }
+
+    .not-found h1 {
+        margin: 0;
+        font: inherit;
+    }
+
+    .not-found p {
+        margin: var(--semi-spacing-tight) 0 0;
+    }
+
+    /* Illustrations are rendered by React, so they have no scope marker */
+    :global(.not-found-light),
+    :global(.not-found-dark) {
+        width: 150px;
+        height: 150px;
+    }
+
+    :global(.not-found-dark),
+    :global([theme-mode='dark']) :global(.not-found-light) {
+        display: none;
+    }
+
+    :global([theme-mode='dark']) :global(.not-found-dark) {
+        display: inline-block;
+    }
+</style>

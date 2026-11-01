@@ -121,7 +121,7 @@ function IconCategory({ groups, pkgType, className = '' }: IconCategoryProps) {
     };
     return groups.map((g, i) => (
         <article key={i} className={`semi-icons-category ${className}`}>
-            <Title heading={5}>
+            <Title heading={5} component="h3">
                 <button type="button" id={g[0]} className="semi-icons-title" style={buttonResetStyle} onClick={() => handleToggle(i)}>
                     {g[0]}&nbsp;&nbsp;
                     <IconChevronDown className={`semi-icons-title${categorySet.has(i) ? '' : ' semi-icons-title-closed'}`} />

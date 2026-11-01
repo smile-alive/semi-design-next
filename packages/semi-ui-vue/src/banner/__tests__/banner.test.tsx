@@ -32,7 +32,7 @@ describe('Banner', () => {
         button.focus();
         await fireEvent.click(button);
         await nextTick();
-        expect(screen.queryByRole('alert')).toBeNull();
+        expect(document.querySelector(`.${prefix}`)).toBeNull();
         expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
     });
 
@@ -75,11 +75,11 @@ describe('Banner', () => {
         expect(getRoot(view.container)).toBeNull();
     });
 
-    it('根元素为 alert，每种 type 在 icon 区域显示带名称的默认图标', async () => {
+    it('根元素默认不设 role，每种 type 在 icon 区域显示带名称的默认图标', async () => {
         const view = render(Banner);
         for (const type of ['info', 'success', 'danger', 'warning'] as const satisfies BannerType[]) {
             await view.rerender({ type });
-            expect(screen.getByRole('alert')).toBe(getRoot(view.container));
+            expect(getRoot(view.container)).not.toHaveAttribute('role');
             const slot = view.container.querySelector('[x-semi-prop="icon"]');
             expect(slot).toHaveClass(`${prefix}-icon`);
             expect(slot?.parentElement).toHaveClass(`${prefix}-content`);
@@ -224,10 +224,10 @@ describe('Banner', () => {
         expect(getRoot(view.container)).toHaveAttribute('data-foo', 'bar');
     });
 
-    it('未声明的属性落在根元素，role 固定为 alert', () => {
+    it('未声明的属性落在根元素，包括 role', () => {
         const onMouseenter = vi.fn<() => void>();
         const view = render(Banner, {
-            attrs: { id: 'b', 'aria-live': 'polite', role: 'status', onMouseenter },
+            attrs: { id: 'b', 'aria-live': 'polite', role: 'alert', onMouseenter },
         });
         const root = getRoot(view.container) as HTMLElement;
         expect(root).toHaveAttribute('id', 'b');

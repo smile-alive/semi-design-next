@@ -252,11 +252,11 @@ The essence of the folding panel is that the card container adds the function of
 
 ## FAQ
 
-- ##### Why is the data in Form cleared when using Collapse?
+- ### Why is the data in Form cleared when using Collapse?
 
     When Collapse is collapsed, the related DOM is destroyed and so are the fields data stored in Form. You could set `keepDOM` of Collapse to true to keep the DOM from being destroyed.
 
-- ##### The whole header row is a click hot zone for folding and expanding. If a control (such as Input) is placed in the row, clicking it collapses/expands the panel. How to avoid it?
+- ### The whole header row is a click hot zone for folding and expanding. If a control (such as Input) is placed in the row, clicking it collapses/expands the panel. How to avoid it?
     Put the control in `extra`, not in `header`: `header` is inside the toggle button and must not contain controls. With `clickHeaderToExpand` set to false only the toggle button and the icon respond to clicks; otherwise stop the click from bubbling to the header row in the control's click handler, or in a wrapping element's click handler if the control does not provide the event object, as in the example below.
 
 <Framework only="react">

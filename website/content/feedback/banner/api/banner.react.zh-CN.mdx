@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | fullMode    | 是否为全屏模式；设为 false 时使用非全屏样式。                                  | `boolean`                                                         | `true`   |
 | icon        | 替换 `type` 对应的图标；传 `null` 时不显示图标，未设置时显示该类型的默认图标。 | `React.ReactNode`                                                 | -        |
 | onClose     | 点击关闭按钮时调用，参数为按钮的原生 click 事件；回调返回后横幅隐藏。          | <ApiType detail={"(e: React.MouseEvent) => void"}>Type</ApiType>  | -        |
-| ref         | 根元素（`role="alert"` 的 `div`）的引用。                                      | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -        |
+| ref         | 根元素 `div` 的引用。                                                          | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | -        |
 | style       | 根元素的样式。                                                                 | `React.CSSProperties`                                             | -        |
 | title       | 标题内容。                                                                     | `React.ReactNode`                                                 | -        |
 | type        | 类型，可选 `info`、`success`、`danger` 或 `warning`。                          | `Type`                                                            | `"info"` |

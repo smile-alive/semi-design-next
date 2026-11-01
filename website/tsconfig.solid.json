@@ -1,6 +1,6 @@
 {
     "extends": "./tsconfig.json",
-    "include": ["content/**/*.solid.tsx"],
+    "include": [".astro/types.d.ts", "content/**/*.solid.tsx", "src/components/landing/**/*.solid.tsx"],
     "exclude": ["dist"],
     "compilerOptions": {
         "jsx": "preserve",

@@ -252,11 +252,11 @@ Svelte 没有 `defaultActiveKey`：只传 `activeKey` 时作为初始展开的�
 
 ## FAQ
 
-- ##### Collapse 内嵌表单收起后表单数据会清空 ?
+- ### Collapse 内嵌表单收起后表单数据会清空 ?
 
     Collapse 收起之后，默认会销毁相应的 DOM 。所以相应的 field 被卸载了，数据也被清空。可以将 Collapse 的 `keepDOM` 设为 true，保留对应的 DOM 节点。
 
-- ##### 面板头整行是折叠、展开的点击热区，在这一行放置控件（例如 Input）后，点击它会导致 Collapse 收起/展开。如何避免？
+- ### 面板头整行是折叠、展开的点击热区，在这一行放置控件（例如 Input）后，点击它会导致 Collapse 收起/展开。如何避免？
     控件放在 `extra` 而不是 `header` 中：`header` 位于切换按钮内，不能包含控件。设置 `clickHeaderToExpand` 为 `false` 时只有切换按钮和箭头响应点击；否则在控件的点击回调中阻止事件冒泡至面板头即可，若控件未提供 event 对象，在外层包裹元素的点击回调中阻止冒泡亦可，见下方示例。
 
 <Framework only="react">

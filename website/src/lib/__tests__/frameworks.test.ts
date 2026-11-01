@@ -29,9 +29,10 @@ describe('文档框架清单', () => {
     });
 
     it('只改写已存在的同框架文档链接，保留查询与锚点', () => {
-        const targets = ['/zh-CN/vue/basic/icon'];
-        expect(frameworkHref('/zh-CN/react/basic/icon?q=1#api', 'vue', targets)).toBe('/zh-CN/vue/basic/icon?q=1#api');
-        expect(frameworkHref('/zh-CN/react/basic/button', 'vue', targets)).toBe('/zh-CN/react/basic/button');
+        const targets = ['/zh-CN/vue/basic/icon/'];
+        expect(frameworkHref('/zh-CN/react/basic/icon?q=1#api', 'vue', targets)).toBe('/zh-CN/vue/basic/icon/?q=1#api');
+        expect(frameworkHref('/zh-CN/react/basic/icon/#api', 'vue', targets)).toBe('/zh-CN/vue/basic/icon/#api');
+        expect(frameworkHref('/zh-CN/react/basic/button', 'vue', targets)).toBe('/zh-CN/react/basic/button/');
         expect(frameworkHref('https://example.com/react/basic/icon', 'vue', targets)).toBe('https://example.com/react/basic/icon');
     });
 });

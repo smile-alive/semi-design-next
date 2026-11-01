@@ -322,6 +322,12 @@ export const vueExemptions: VueExemption[] = [
         off: [],
         templateOff: ['vuejs-accessibility/form-control-has-label'],
     },
+    // The landing page only displays this file as source text; it is never rendered.
+    {
+        files: ['website/src/components/landing/samples/select.vue'],
+        off: [],
+        templateOff: ['vuejs-accessibility/form-control-has-label'],
+    },
     // Slot and day clicks are pointer shortcuts (keyboard event creation needs a grid, see component-issues).
     {
         files: ['packages/semi-ui-vue/src/calendar/day-col.vue', 'packages/semi-ui-vue/src/calendar/month-calendar.vue'],

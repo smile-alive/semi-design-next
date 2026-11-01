@@ -5,7 +5,7 @@ description: 在文档站扫描控制台报错、空 demo、axe 违规和焦点�
 
 # 文档站页面扫描
 
-`website/scripts/check-pages.ts` 逐页打开文档站：收集浏览器报错，检查每个 demo 是否渲染出内容，对每个 demo 跑 axe，再和 `website/scripts/a11y-baseline.json` 对比；最后在每个 demo 里逐个 Tab，检查 Semi 元素的键盘焦点环。命令都在 `website/` 目录下执行，先按 `AGENTS.md` 设置 PATH。
+`website/scripts/check-pages.ts` 逐页打开文档站：收集浏览器报错，检查每个 demo 是否渲染出内容，对每个 demo 跑 axe，再对 demo 预览区以外的页面（顶栏、侧栏、目录、文章正文、落地页）跑一次 axe，都和 `website/scripts/a11y-baseline.json` 对比；然后在每个站点分区（语言加框架）扫到的第一个页面上，打开搜索弹窗、框架和语言菜单，再切到 375px 打开更多菜单和侧栏抽屉，逐个跑 axe；最后在每个 demo 里逐个 Tab，检查 Semi 元素的键盘焦点环。命令都在 `website/` 目录下执行，先按 `AGENTS.md` 设置 PATH。
 
 ## 准备
 
@@ -39,13 +39,13 @@ node scripts/check-pages.ts http://127.0.0.1:<本检出的端口> /<框架>/
 | --- | --- | --- |
 | `failures[].errors` | 页面的浏览器报错，以及 demo 预览区里重复的 id（`duplicate id in demos`，axe 按 demo 分别扫描看不到） | 修代码或 demo |
 | `failures[].emptyDemos` | 没有渲染出内容的 demo，包括超时仍未完成 hydration（`astro-island` 一直带着 `ssr` 属性）的 demo | 修 demo 或组件 |
-| `newA11yViolations` | 基线里没有的 axe 违规。CodeHighlight 等用 Shiki 渲染的代码（`.shiki` 内）的 color-contrast 不计入：语法配色来自 Shiki 主题，维护者决定不处理 | 修组件或 demo。确认无法修、需要接受时，先问维护者，再加入基线 |
+| `newA11yViolations` | 基线里没有的 axe 违规。CodeHighlight 等用 Shiki 渲染的代码（`.shiki` 内）的 color-contrast 不计入：语法配色来自 Shiki 主题，维护者决定不处理；带 `data-contrast-sample` 的色板也不计入：它展示的就是调色板本身的对比度 | 修组件或 demo。确认无法修、需要接受时，先问维护者，再加入基线 |
 | `fixedA11yViolationsStillInBaseline` | 已经不再出现、但还在基线里的违规 | 从基线里删掉 |
 | `userAgentFocusRings` | 从示例预览区逐个 Tab，键盘聚焦时显示浏览器默认 `auto` 焦点环的 Semi 元素（`标签.类名`） | 在组件样式的 `:focus-visible` 里 `@include focus-ring`，见 [a11y](../../references/a11y.md)。没有基线，出现即失败。焦点时打开、渲染到 body 的弹层内的元素不在检查范围内 |
 
 ## 维护基线
 
-- 基线的键是 `<页面路径>#demo-<id>`，值是排好序的 axe 规则 id 列表。删掉已修复的条目是收紧，可以直接做；新增条目是放宽，需要维护者同意。
+- 基线的键是 `<页面路径>#demo-<id>`、`<页面路径>#page`（demo 预览区以外）或 `<页面路径>#shell-<状态>`（打开的弹层），值是排好序的 axe 规则 id 列表。外壳弹层只扫分区的第一个页面，路径过滤会改变这个页面，所以 `#shell-` 违规直接修复，不进基线。删掉已修复的条目是收紧，可以直接做；新增条目是放宽，需要维护者同意。
 - 框架 key 没有独立条目时的回退规则见该框架的 `website.md`；超出回退基线的违规仍失败。全量更新写入前按同一规则校验，不通过则拒绝写入。
 - `--update-a11y-baseline` 要求全站运行且没有失败页面，它会同时写入新增违规，等于放宽，只在维护者同意后使用。日常收紧用编辑工具手工修改：只改本次扫描结果涉及的键，保持键名和规则列表的排序。
 - 改完基线后，对涉及的页面重扫一次，确认没有 `newA11yViolations` 和 `fixedA11yViolationsStillInBaseline`。

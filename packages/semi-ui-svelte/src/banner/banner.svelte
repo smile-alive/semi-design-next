@@ -61,7 +61,7 @@
 </script>
 
 {#if states().visible}
-    <div {...rest} class={[prefix, `${prefix}-${type}`, rest.class, fullMode ? `${prefix}-full` : `${prefix}-in-container`, { [`${prefix}-bordered`]: !fullMode && bordered }]} role="alert">
+    <div {...rest} class={[prefix, `${prefix}-${type}`, rest.class, fullMode ? `${prefix}-full` : `${prefix}-in-container`, { [`${prefix}-bordered`]: !fullMode && bordered }]}>
         <div class={`${prefix}-content-wrapper`}>
             <div class={`${prefix}-content`}>
                 {#if icon !== null}

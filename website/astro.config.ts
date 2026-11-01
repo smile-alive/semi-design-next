@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import { unified } from '@astrojs/markdown-remark';
 import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
 import solid from '@astrojs/solid-js';
 import svelte from '@astrojs/svelte';
 import vue from '@astrojs/vue';
@@ -12,12 +13,16 @@ import rehypeAnchorIds from './plugins/rehype-anchor-ids.ts';
 import rehypeTableContainer from './plugins/rehype-table-container.ts';
 import remarkDemo from './plugins/remark-demo.ts';
 import { defaultLocale, locales } from './src/i18n/locales.ts';
+import { frameworks } from './src/lib/frameworks.ts';
 import { shikiThemes } from './src/lib/shiki.ts';
 
 // Two JSX integrations split files by the repo's naming rule: the Solid packages (aliased to source) and *.solid.tsx demos
 const solidFiles = [/\/packages\/semi-[a-z-]+-solid\//, /\.solid\.tsx$/];
+// src/pages/index.astro and [locale]/[framework]/index.astro only redirect
+const redirectPage = new RegExp(`^/(?:[^/]+/(?:${frameworks.join('|')})/)?$`);
 
 export default defineConfig({
+    site: 'https://semi-design-next.pages.dev',
     devToolbar: {
         enabled: false,
     },
@@ -40,7 +45,7 @@ export default defineConfig({
     // Compiling demos and semi-ui-react source (via semiSourceAliases) matches what consumers get with the compiler on.
     // exclude feeds compiler and Fast Refresh alike: Vue and Solid package .tsx also resolve to source; neither handles their JSX.
     // Svelte package .ts resolve to source too, and the compiler would rewrite their `use*` functions into React hooks.
-    integrations: [react({ compiler: true, exclude: [/\/packages\/semi-(ui|ai|icons|illustrations)-(vue|svelte)\//, ...solidFiles] }), vue({ appEntrypoint: '/src/lib/vue.app.ts' }), solid({ include: solidFiles }), svelte(), mdx()],
+    integrations: [react({ compiler: true, exclude: [/\/packages\/semi-(ui|ai|icons|illustrations)-(vue|svelte)\//, ...solidFiles] }), vue({ appEntrypoint: '/src/lib/vue.app.ts' }), solid({ include: solidFiles }), svelte(), mdx(), sitemap({ filter: (page) => !redirectPage.test(new URL(page).pathname) })],
     vite: {
         plugins: [frameworkMdx(), semiInlineJsonWorker],
         build: {

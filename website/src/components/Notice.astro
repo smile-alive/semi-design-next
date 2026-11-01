@@ -22,8 +22,8 @@ const { title, type = 'primary' } = Astro.props;
     .notice {
         display: flex;
         align-items: flex-start;
-        padding: 24px;
-        margin: 0 0 32px;
+        padding: var(--semi-spacing-loose);
+        margin: 0 0 var(--semi-spacing-extra-loose);
         border-radius: 3px 6px 6px 3px;
     }
 
@@ -39,7 +39,7 @@ const { title, type = 'primary' } = Astro.props;
     }
 
     .warning {
-        color: var(--semi-color-warning);
+        color: var(--semi-color-warning-active);
         background: var(--semi-color-warning-light-default);
         border-left: 4px solid var(--semi-color-warning);
     }
@@ -52,7 +52,7 @@ const { title, type = 'primary' } = Astro.props;
 
     .notice-caption {
         min-width: 0;
-        padding-left: 12px;
+        padding-left: var(--semi-spacing-base-tight);
     }
 
     .notice-title {
