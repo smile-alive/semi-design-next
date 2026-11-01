@@ -69,13 +69,8 @@ export async function getSidebar(locale: Locale, framework: Framework) {
     }));
 }
 
-export async function getComponentCategories(locale: Locale, framework: Framework) {
-    return (await getSidebar(locale, framework))
-        .filter((group) => componentCategories.has(group.key) && group.items.length > 0)
-        .map((group) => {
-            const { category, page } = parseDocId(group.items[0].id);
-            return { key: group.key, count: group.items.length, href: docUrl(locale, framework, category, page) };
-        });
+export async function getComponentCount(locale: Locale, framework: Framework) {
+    return (await getSidebar(locale, framework)).filter((group) => componentCategories.has(group.key)).reduce((sum, group) => sum + group.items.length, 0);
 }
 
 // one entry per page with every locale's title, so any locale finds it by either name; sidebar order
