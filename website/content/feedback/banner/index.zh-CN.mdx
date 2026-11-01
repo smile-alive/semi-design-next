@@ -139,7 +139,7 @@ import { Banner } from '@fibrae/semi-ui-solid';
 
 <BannerReactApi />
 
-其他原生属性（如 `aria-*`、`onClick`、`id`）落在根元素 `div` 上；根元素的 `role="alert"` 固定，不能被覆盖。
+其他原生属性（如 `aria-*`、`onClick`、`id`）落在根元素 `div` 上。
 
 </Framework>
 
@@ -147,7 +147,7 @@ import { Banner } from '@fibrae/semi-ui-solid';
 
 <BannerVueApi />
 
-`class`、`style` 与原生属性经 attrs 传入，落在根元素上；根元素的 `role="alert"` 固定，不能被覆盖。`title` 另有 string prop，同时给出 `#title` 插槽时以插槽为准。`title`、`description` 与默认插槽的内容为 `0` 时也会渲染。关闭状态在组件内部，没有 v-model，用 `v-if` 卸载再挂载即可重新显示。
+`class`、`style` 与原生属性经 attrs 传入，落在根元素上。`title` 另有 string prop，同时给出 `#title` 插槽时以插槽为准。`title`、`description` 与默认插槽的内容为 `0` 时也会渲染。关闭状态在组件内部，没有 v-model，用 `v-if` 卸载再挂载即可重新显示。
 
 </Framework>
 
@@ -155,7 +155,7 @@ import { Banner } from '@fibrae/semi-ui-solid';
 
 <BannerSolidApi />
 
-`class`、`style`、`ref` 与原生属性和事件（如 `aria-*`、`onClick`）落在根元素（`role="alert"`）上，根元素的 `role` 固定，不能被覆盖。关闭状态在组件内部，卸载后再挂载即可重新显示。
+`class`、`style`、`ref` 与原生属性和事件（如 `aria-*`、`onClick`）落在根元素上。关闭状态在组件内部，卸载后再挂载即可重新显示。
 
 </Framework>
 
@@ -163,7 +163,7 @@ import { Banner } from '@fibrae/semi-ui-solid';
 
 <BannerSvelteApi />
 
-`class`、`style`（字符串）与原生属性和事件（如 `aria-*`、`onclick`）落在根元素（`role="alert"`）上，根元素的 `role` 固定，不能被覆盖。`title` 可以是字符串或 snippet，`description`、`icon`、`closeIcon` 是 snippet。关闭状态在组件内部，没有 `bind:`，用 `{#if}` 卸载再挂载即可重新显示。
+`class`、`style`（字符串）与原生属性和事件（如 `aria-*`、`onclick`）落在根元素上。`title` 可以是字符串或 snippet，`description`、`icon`、`closeIcon` 是 snippet。关闭状态在组件内部，没有 `bind:`，用 `{#if}` 卸载再挂载即可重新显示。
 
 </Framework>
 
@@ -171,7 +171,7 @@ import { Banner } from '@fibrae/semi-ui-solid';
 
 ### ARIA
 
-- 组件的 `role` 为 'alert'
+- 根元素默认不设 `role`，页面上常驻的说明不会被读屏软件当作警报。动态出现、需要立即播报的消息（如操作失败提示）传 `role="alert"`
 - 关闭按钮的 `aria-label` 来自当前语言包（简体中文为「关闭」，英文为 'Close'）
 
 ### 键盘和焦点

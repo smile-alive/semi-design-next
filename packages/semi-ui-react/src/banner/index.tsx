@@ -96,7 +96,6 @@ export default function Banner(rawProps: BannerProps) {
                 [`${prefixCls}-bordered`]: !fullMode && bordered,
             })}
             style={style}
-            role="alert"
         >
             <div ref={handoverFocus} className={`${prefixCls}-content-wrapper`}>
                 <div className={`${prefixCls}-content`}>

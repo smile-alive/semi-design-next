@@ -5,10 +5,10 @@ import { createStore } from '../../_base/__tests__/store.svelte';
 import BannerFixture from './banner-fixture.svelte';
 
 describe('Svelte Banner 服务端首帧', () => {
-    it('首帧带 alert、type 类名、图标名称、标题与关闭按钮', () => {
+    it('首帧带 type 类名、图标名称、标题与关闭按钮，默认不设 role', () => {
         const store = createStore({ props: { type: 'danger' as const, title: 'Oops', 'data-x': '1' }, description: true, extra: true });
         const { body } = render(BannerFixture, { props: { store } });
-        expect(body).toContain('role="alert"');
+        expect(body).not.toContain('role="alert"');
         expect(body).toContain('semi-banner-danger');
         expect(body).toContain('semi-banner-full');
         expect(body).toContain(`aria-label="${zh_CN.Banner.danger}"`);
