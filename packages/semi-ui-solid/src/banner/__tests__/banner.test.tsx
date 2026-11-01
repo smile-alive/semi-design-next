@@ -30,7 +30,7 @@ describe('Banner', () => {
         ));
         closeButton().focus();
         await userEvent.keyboard('{Enter}');
-        expect(screen.queryByRole('alert')).toBeNull();
+        expect(document.querySelector(`.${prefix}`)).toBeNull();
         expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
     });
 
@@ -46,7 +46,7 @@ describe('Banner', () => {
         ));
         closeButton().focus();
         await userEvent.keyboard('{Enter}');
-        expect(screen.queryByRole('alert')).toBeNull();
+        expect(document.querySelector(`.${prefix}`)).toBeNull();
         expect(screen.getByRole('button', { name: 'after' })).toHaveFocus();
     });
 
@@ -79,10 +79,10 @@ describe('Banner', () => {
         expect(getRoot(container)).toBeNull();
     });
 
-    it('根元素为 alert，每种 type 在 icon 插槽中显示默认图标', () => {
+    it('根元素默认不设 role，每种 type 在 icon 插槽中显示默认图标', () => {
         for (const type of ['info', 'success', 'danger', 'warning'] as const) {
             const { container, unmount } = render(() => <Banner type={type} />);
-            expect(screen.getByRole('alert')).toBe(getRoot(container));
+            expect(getRoot(container)).not.toHaveAttribute('role');
             const slot = query(container, '[x-semi-prop="icon"]');
             expect(slot).toHaveClass(`${prefix}-icon`);
             expect(slot.parentElement).toHaveClass(`${prefix}-content`);
@@ -204,9 +204,9 @@ describe('Banner', () => {
         expect(getRoot(container)).toHaveAttribute('data-foo', 'bar');
     });
 
-    it('将未声明的属性传给根元素，role 始终是 alert', () => {
+    it('将未声明的属性传给根元素，包括 role', () => {
         const onMouseEnter = vi.fn<() => void>();
-        const { container } = render(() => <Banner id="b" aria-live="polite" onMouseEnter={onMouseEnter} />);
+        const { container } = render(() => <Banner id="b" aria-live="polite" role="alert" onMouseEnter={onMouseEnter} />);
         const root = getRoot(container);
         expect(root).toHaveAttribute('id', 'b');
         expect(root).toHaveAttribute('aria-live', 'polite');
