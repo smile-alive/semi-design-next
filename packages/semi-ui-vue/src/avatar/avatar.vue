@@ -94,7 +94,6 @@
 
     const isPresetSize = computed(() => strings.SIZE.some((preset) => preset === size.value));
     const sizeStyle = computed(() => (isPresetSize.value ? {} : { width: size.value, height: size.value }));
-
     const hasSlotSize = computed(() => isPresetSize.value && size.value !== 'extra-extra-small');
 
     const avatarClass = computed(() => [

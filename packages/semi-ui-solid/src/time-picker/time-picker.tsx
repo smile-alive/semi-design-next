@@ -158,7 +158,6 @@ export default function TimePicker(rawProps: TimePickerProps) {
     let root: HTMLDivElement | undefined;
     const [panel, setPanel] = createSignal<HTMLDivElement>();
     const panelId = createUniqueId();
-
     const [customTrigger, setCustomTrigger] = createSignal<HTMLDivElement>();
     const [customTriggerFocusable, setCustomTriggerFocusable] = createSignal(false);
 

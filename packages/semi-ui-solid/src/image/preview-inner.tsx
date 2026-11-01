@@ -129,7 +129,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
 
     const visible = createMemo(() => Boolean(props.visible));
     const currentIndex = createMemo(() => PreviewInnerFoundation.getCurrentIndex(props, state()));
-
     const shown = createMemo(() => mounted() && visible());
 
     // by content: a group builds a new list on every change, which must not restart the delay

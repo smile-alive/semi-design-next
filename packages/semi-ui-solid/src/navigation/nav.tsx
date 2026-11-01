@@ -171,7 +171,6 @@ export default function Nav(rawProps: NavProps) {
 
     const selectedKeysSource = createMemo(() => local.selectedKeys);
     const openKeysSource = createMemo(() => local.openKeys);
-
     const headerContent = children(() => local.header as JSX.Element);
     const footerContent = children(() => local.footer as JSX.Element);
     const headerSlot = createMemo(() => slotProps<NavHeaderProps>(headerContent(), NAV_HEADER));

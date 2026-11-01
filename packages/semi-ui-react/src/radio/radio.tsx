@@ -147,7 +147,6 @@ export default function Radio(rawProps: RadioProps) {
     );
 
     const hasChildren = hasContent(children);
-
     const hasExtra = hasContent(extra) && !isButtonRadio;
 
     const content =

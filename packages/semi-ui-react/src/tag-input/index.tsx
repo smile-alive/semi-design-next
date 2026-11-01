@@ -297,7 +297,6 @@ export default function TagInput(rawProps: TagInputProps) {
     const [sortIds, setSortIds] = useState(() => TagInputFoundation.getSortIds(tagsArray));
 
     const nextSortIds = sortIds.values === tagsArray ? sortIds : TagInputFoundation.getSortIds(tagsArray, sortIds);
-
     const showPlaceholder = tagsArray.length === 0;
 
     useDidUpdate(props.value, (value) => {

@@ -67,7 +67,6 @@
     const isSelected = computed(() => props.itemKey !== undefined && view.value.selectedKeys.includes(props.itemKey));
     const horizontal = computed(() => view.value.mode === strings.MODE_HORIZONTAL);
     const isPopup = computed(() => view.value.isCollapsed || horizontal.value);
-
     const menuTitle = computed(() => isPopup.value && view.value.isInSubNav);
 
     const titleWrapper = computed(() => {

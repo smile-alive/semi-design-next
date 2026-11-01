@@ -18,7 +18,6 @@
     let contentKind = $state<SlotKind>();
 
     const prefix = cssClasses.PREFIX;
-
     const namedByContent = $derived(typeof text === 'string' ? text !== '' : text !== undefined && contentKind === 'text');
 
     // A snippet exposes nothing to read before it renders, so a lone text names the button from the second frame on;

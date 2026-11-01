@@ -36,7 +36,6 @@
     type FoundationEvent = MouseEvent | KeyboardEvent;
     type Foundation = TreeSelectFoundation<BasicTreeSelectProps, BasicTreeSelectInnerData, FoundationEvent | null>;
     type Adapter = TreeSelectAdapter<BasicTreeSelectProps, BasicTreeSelectInnerData, FoundationEvent | null>;
-
     type Focusable = { focus: (options?: FocusOptions) => void };
 
     interface TagEntry {

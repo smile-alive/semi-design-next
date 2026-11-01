@@ -73,7 +73,6 @@
     // Starts true for a modal mounted visible: inside a post flush its mount hook runs late, and a close before then must
     // still report afterClose.
     let closePending = props.visible;
-
     const active = shallowRef(true);
 
     const prefix = cssClasses.DIALOG;

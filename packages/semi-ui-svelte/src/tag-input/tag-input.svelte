@@ -81,7 +81,6 @@
     let clearButton = $state<HTMLButtonElement>();
     let prefixKind = $state<SlotKind>();
     let suffixKind = $state<SlotKind>();
-
     let Sortable = $state.raw<typeof SortableComponent>();
 
     // not reactive: only the focus handlers read it, to ignore the blur dnd-kit causes when it moves the picked-up handle

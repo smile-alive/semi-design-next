@@ -62,9 +62,7 @@
     const uid = $props.id();
     let rootEl = $state.raw<HTMLDivElement | null>(null);
     let dialogEl = $state.raw<HTMLDivElement | null>(null);
-
     let displayNone = $state(true);
-
     let animating = $state<'show' | 'hide'>();
     let started = false;
     let shown = false;

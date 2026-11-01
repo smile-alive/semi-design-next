@@ -30,7 +30,6 @@
 
     // $size-audio-player-slider-dot
     const dotSize = 16;
-
     const percent = computed(() => (props.max ? (props.value / props.max) * 100 : 0));
 
     // Template notes, kept here because a template comment would become an extra node in the Tooltip's trigger slot:

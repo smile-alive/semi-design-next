@@ -161,7 +161,6 @@ export default function Tree(rawProps: TreeProps) {
 
     // read here, untracked: the Provider's children run in a memo that would track it
     const ref = props.ref;
-
     const derived = createMemo(() => TreeFoundation.deriveState(snapshot(), state()));
     const resolvedEmpty = children(() => local.emptyContent);
 

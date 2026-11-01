@@ -142,7 +142,6 @@ export default function Modal(rawProps: ModalProps) {
     const mounted = useMounted();
 
     const visible = createMemo(() => Boolean(local.visible));
-
     const hidden = createMemo(() => (visible() ? false : displayNone()));
     const everShown = createMemo((shown: boolean) => shown || visible(), false);
 

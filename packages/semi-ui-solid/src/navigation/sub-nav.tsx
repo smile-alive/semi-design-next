@@ -78,7 +78,6 @@ export function NavNodes(props: { nodes: readonly unknown[] }) {
 /** The wrapper li of a sub, with its title and its list: inline, or inside a popup when the list is a Dropdown */
 export function SubView(props: SubNavProps) {
     const [local, restProps] = splitProps(props, ['children', 'class', 'disabled', 'dropdownProps', 'dropdownStyle', 'expandIcon', 'icon', 'indent', 'itemKey', 'level', 'ref', 'style', 'subDropdownProps', 'text']);
-
     const [aria, rest] = splitControlAttrs(restProps, isAriaKey);
 
     const outer = useNavContext('Nav.Sub');

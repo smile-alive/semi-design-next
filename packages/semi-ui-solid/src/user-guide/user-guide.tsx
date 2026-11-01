@@ -140,7 +140,6 @@ export default function UserGuide(rawProps: UserGuideProps) {
 
     // nothing rendered (popup target not measured yet) must not lock the page or take focus
     const shown = createMemo(() => Boolean(visible() && step() && (mode() === 'modal' || state().spotlightRect)));
-
     const popupShown = createMemo(() => shown() && mode() === 'popup');
 
     const showMask = () => step()?.mask ?? local.mask;

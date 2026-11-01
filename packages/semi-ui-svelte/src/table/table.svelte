@@ -121,7 +121,6 @@
      * Only these outlive a change of the columns prop; a column never dragged follows the prop.
      */
     const overrides = new SvelteMap<string | number, Partial<ColumnProps>>();
-
     const resizing = new SvelteSet<string | number>();
 
     /*

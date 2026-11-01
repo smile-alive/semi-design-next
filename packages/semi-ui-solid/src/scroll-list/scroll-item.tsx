@@ -58,7 +58,6 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
     let root!: HTMLDivElement;
     let listbox!: HTMLUListElement;
     const listId = createUniqueId();
-
     let outer!: HTMLDivElement;
     let selector!: HTMLDivElement;
 

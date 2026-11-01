@@ -20,7 +20,6 @@
 
     const titleId = $props.id();
     let panelHeight = 0;
-
     let syncedPickerValue: { value: MonthsGridProps['defaultPickerValue'] } | undefined;
     let previousCount: number | undefined;
     let panelSize = $state.raw<PanelSize>({ left: { minWidth: '', minHeight: '' }, right: { minWidth: '', minHeight: '' } });
@@ -58,7 +57,6 @@
     const panelTypes = $derived<PanelType[]>(isRange ? [PANEL_TYPE_LEFT, PANEL_TYPE_RIGHT] : [PANEL_TYPE_LEFT]);
     const dateFormat = $derived(MonthsGridFoundation.getValidDateFormat(props));
     const hasTime = $derived(props.type.includes('Time'));
-
     const scrollListCount = $derived(isRange ? Number(isYearOrTime(states().monthLeft)) + Number(isYearOrTime(states().monthRight)) : 0);
 
     const detailOf = (panelType: PanelType) => {

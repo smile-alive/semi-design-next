@@ -90,7 +90,6 @@ export default function Notice(rawProps: NoticeProps) {
     );
 
     const titleId = `${prefixCls}-title-${createUniqueId()}`;
-
     const title = children(() => local.title as JSX.Element);
     const content = children(() => local.content as JSX.Element);
 

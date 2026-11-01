@@ -21,7 +21,6 @@ function Lottie(rawProps: LottieProps) {
     const [local, rest] = splitProps(props, ['params', 'width', 'height', 'getAnimationInstance', 'getLottie', 'class', 'style', 'ref']);
 
     let wrapper: HTMLDivElement | undefined;
-
     let committedParams = props.params;
 
     const { foundation } = useFoundation<LottieFoundation<LottieProps, LottieState>, LottieAdapter<LottieProps, LottieState>, LottieProps, LottieState>(

@@ -19,10 +19,8 @@ export default function useShowHide({ visible, motion, showClass, hideClass, onH
 
     // true from a show until the leave has ended, so the element is laid out the whole time it can be seen
     let displayed = $state(untrack(visible));
-
     let animating = $state(false);
     let first = true;
-
     let runs = 0;
 
     const finish = () => {

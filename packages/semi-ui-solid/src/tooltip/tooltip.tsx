@@ -213,7 +213,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
     // last mousedown through the popup's delegated handler: also a press in any portal the content renders, as
     // React's portal events count it, not only the Tooltip popups registered in `descendants`
     let pressedInside: Event | undefined;
-
     const descendants = new Set<Accessor<HTMLElement | undefined>>();
 
     // only those rendered in the content: as React's enter and leave events through portals, moving onto one stays in
