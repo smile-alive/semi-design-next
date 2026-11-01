@@ -1,0 +1,144 @@
+---
+import { IconGithubLogo, IconMoon, IconMore, IconTick } from '@fibrae/semi-icons-react';
+import { Button } from '@fibrae/semi-ui-react';
+import FrameworkLogo from '#/components/FrameworkLogo.astro';
+import { languageLabels, translate } from '#/i18n';
+import { locales, type Locale } from '#/lib/docs';
+import { frameworkLabels, frameworks, type Framework } from '#/lib/frameworks';
+
+interface Props {
+    locale: Locale;
+    framework: Framework;
+    localeHrefs: Record<Locale, string>;
+    frameworkHrefs: Partial<Record<Framework, string>>;
+    github: string;
+}
+
+const { locale, framework, localeHrefs, frameworkHrefs, github } = Astro.props;
+const t = translate(locale);
+---
+
+{/* Narrow screens fold the header actions into this menu, as VitePress's navbar "extra" menu does; SiteHeader decides which shows */}
+<Button className="more-menu-button" theme="borderless" type="tertiary" size="large" popoverTarget="more-menu" aria-label={t('nav_more')}>
+    <IconMore slot="icon" size="extra-large" />
+</Button>
+<div class="more-menu" id="more-menu" popover>
+    <div class="more-menu-group" role="group" aria-labelledby="more-menu-framework">
+        <div class="more-menu-title" id="more-menu-framework">{t('nav_framework')}</div>
+        {
+            frameworks.map((item) =>
+                frameworkHrefs[item] ? (
+                    <a class="more-menu-item" href={frameworkHrefs[item]} aria-current={item === framework ? 'page' : undefined}>
+                        <IconTick className="more-menu-tick" />
+                        <FrameworkLogo framework={item} class="more-menu-icon" />
+                        {frameworkLabels[item]}
+                    </a>
+                ) : (
+                    <span class="more-menu-item" aria-disabled="true">
+                        <IconTick className="more-menu-tick" />
+                        <FrameworkLogo framework={item} class="more-menu-icon" />
+                        {frameworkLabels[item]}
+                    </span>
+                )
+            )
+        }
+    </div>
+    <div class="more-menu-group" role="group" aria-labelledby="more-menu-language">
+        <div class="more-menu-title" id="more-menu-language">{t('nav_language')}</div>
+        {
+            locales.map((l) => (
+                <a class="more-menu-item" href={localeHrefs[l]} hreflang={l} lang={l} aria-current={l === locale ? 'page' : undefined}>
+                    <IconTick className="more-menu-tick" />
+                    {languageLabels[l]}
+                </a>
+            ))
+        }
+    </div>
+    <div class="more-menu-group">
+        <button type="button" class="more-menu-item" data-theme-toggle aria-pressed="false">
+            <IconTick className="more-menu-tick" />
+            <IconMoon className="more-menu-icon" />
+            {t('nav_dark_mode')}
+        </button>
+        <a class="more-menu-item" href={github}>
+            <span class="more-menu-tick"></span>
+            <IconGithubLogo className="more-menu-icon" />
+            GitHub
+        </a>
+    </div>
+</div>
+
+<style>
+    /* Mirrors LocaleMenu; the header is fixed with the button at the far right, so position by viewport */
+    .more-menu {
+        inset: 46px var(--semi-spacing-tight) auto auto;
+        min-width: 200px;
+        padding: var(--semi-spacing-extra-tight) 0;
+        margin: 0;
+        color: var(--semi-color-text-0);
+        background: var(--semi-color-bg-3);
+        border: 0;
+        border-radius: var(--semi-border-radius-medium);
+        box-shadow: var(--semi-shadow-elevated);
+    }
+
+    .more-menu-group + .more-menu-group {
+        padding-top: var(--semi-spacing-extra-tight);
+        margin-top: var(--semi-spacing-extra-tight);
+        border-top: 1px solid var(--semi-color-border);
+    }
+
+    .more-menu-title {
+        padding: var(--semi-spacing-tight) var(--semi-spacing-base) var(--semi-spacing-extra-tight);
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-text-2);
+    }
+
+    .more-menu-item {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+        align-items: center;
+        width: 100%;
+        padding: var(--semi-spacing-tight) var(--semi-spacing-base) var(--semi-spacing-tight) var(--semi-spacing-base-tight);
+        font: inherit;
+        color: var(--semi-color-text-0);
+        text-align: start;
+        text-decoration: none;
+        cursor: pointer;
+        background: none;
+        border: 0;
+    }
+
+    .more-menu-item:not([aria-disabled='true']):is(:hover, :focus-visible) {
+        outline: none;
+        background-color: var(--semi-color-fill-0);
+    }
+
+    .more-menu-item:is([aria-current='page'], [aria-pressed='true']) {
+        font-weight: var(--semi-font-weight-bold);
+    }
+
+    .more-menu-item[aria-disabled='true'] {
+        color: var(--semi-color-disabled-text);
+        cursor: default;
+    }
+
+    /* Icons are rendered by React components and FrameworkLogo, so they have no scope marker */
+    .more-menu-item :global(.more-menu-tick) {
+        flex-shrink: 0;
+        width: 12px;
+        font-size: var(--semi-font-size-small);
+    }
+
+    .more-menu-item:not([aria-current='page'], [aria-pressed='true']) :global(.more-menu-tick) {
+        color: transparent;
+    }
+
+    .more-menu-item :global(.more-menu-icon) {
+        flex-shrink: 0;
+        width: 16px;
+        height: 16px;
+        font-size: var(--semi-font-size-header-6);
+    }
+</style>

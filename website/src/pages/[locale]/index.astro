@@ -1,0 +1,1095 @@
+---
+import { Code } from 'astro:components';
+import { ClientRouter } from 'astro:transitions';
+import '#/styles/reset.css';
+import '@fibrae/semi-foundation/base/tokens.scss';
+import '#/styles/site.scss';
+// .changeset fixes every @fibrae/* package to one version
+import pkgJson from '#packages/semi-foundation/package.json';
+import { Button } from '@fibrae/semi-ui-react';
+import AppWindow from '#/components/landing/AppWindow.solid';
+import reactSample from '#/components/landing/samples/select.react.tsx?raw';
+import solidSample from '#/components/landing/samples/select.solid.tsx?raw';
+import svelteSample from '#/components/landing/samples/select.svelte?raw';
+import vueSample from '#/components/landing/samples/select.vue?raw';
+import FrameworkLogo from '#/components/FrameworkLogo.astro';
+import SiteHeader from '#/components/SiteHeader.astro';
+import ThemeScript from '#/components/ThemeScript.astro';
+import { translate } from '#/i18n';
+import { landingText } from '#/i18n/landing';
+import { docUrl, frameworks, getComponentCategories, getDocs, locales, type Locale } from '#/lib/docs';
+import { frameworkLabels } from '#/lib/frameworks';
+import { shikiThemes } from '#/lib/shiki';
+
+export function getStaticPaths() {
+    return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = translate(locale);
+const l = landingText[locale];
+
+const languageCount = Object.keys(import.meta.glob('#packages/semi-foundation/src/locale/source/*.ts')).length;
+const categories = (await getComponentCategories(locale, 'react')).sort((a, b) => b.count - a.count);
+const componentCount = categories.reduce((sum, category) => sum + category.count, 0);
+const maxCount = Math.max(...categories.map((category) => category.count));
+const fill = (value: string) => value.replace('{count}', String(componentCount)).replace('{languages}', String(languageCount)).replace('{categories}', String(categories.length));
+
+// Rows list a few well-known pages per category; titles come from the en-US docs so a renamed or removed page fails the build
+const highlights: Record<string, string[]> = {
+    show: ['table', 'calendar', 'modal', 'side-sheet', 'timeline', 'descriptions'],
+    input: ['form', 'select', 'date-picker', 'cascader', 'upload', 'transfer'],
+    basic: ['button', 'typography', 'grid', 'layout', 'space', 'resizable'],
+    plus: ['json-viewer', 'markdown-render', 'video-player', 'code-highlight', 'hot-keys'],
+    navigation: ['navigation', 'tabs', 'breadcrumb', 'pagination', 'steps', 'anchor'],
+    feedback: ['notification', 'toast', 'popconfirm', 'skeleton', 'spin', 'banner'],
+    ai: ['ai-chat-dialogue', 'ai-chat-input'],
+    other: ['config-provider', 'locale'],
+};
+const docs = await getDocs();
+const titleOf = (category: string, page: string) => {
+    const doc = docs.find((d) => d.id === `${category}/${page}/index.en-US`);
+    if (!doc) throw new Error(`Landing page highlights "${category}/${page}", which has no en-US doc`);
+    return doc.data.title;
+};
+const rows = categories.map((category) => {
+    const names = (highlights[category.key] ?? []).map((page) => titleOf(category.key, page));
+    if (category.key === 'ai') names.push(l.catalog_ai_note);
+    return { ...category, label: l[`category_${category.key}` as keyof typeof l] as string, names: names.join(' · ') };
+});
+
+const install = 'pnpm add @fibrae/semi-ui-react';
+const startHref = docUrl(locale, 'react', 'start', 'introduction');
+const overviewHref = docUrl(locale, 'react', 'start', 'overview');
+const localeHrefs = Object.fromEntries(locales.map((item) => [item, `/${item}/`])) as Record<Locale, string>;
+const frameworkHrefs = Object.fromEntries(frameworks.map((framework) => [framework, docUrl(locale, framework, 'start', 'introduction')]));
+
+// Real files under samples/, so lint, fmt and the per-framework type checks cover what the page shows
+const samples = [
+    { framework: 'react', name: 'React', brief: 'JSX · useState', lang: 'tsx', code: reactSample },
+    { framework: 'vue', name: 'Vue', brief: 'SFC · v-model', lang: 'vue', code: vueSample },
+    { framework: 'solid', name: 'Solid', brief: 'JSX · createSignal', lang: 'tsx', code: solidSample },
+    { framework: 'svelte', name: 'Svelte 5', brief: 'runes · $state', lang: 'svelte', code: svelteSample },
+] as const;
+---
+
+<!doctype html>
+<html lang={locale} transition:animate="none">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <ClientRouter />
+        <title>{l.title}</title>
+        <meta name="description" content={l.description} />
+        {locales.map((item) => <link rel="alternate" hreflang={item} href={localeHrefs[item]} />)}
+        <link rel="alternate" hreflang="x-default" href={localeHrefs['zh-CN']} />
+    </head>
+    <body>
+        <a class="skip-link" href="#main">{t('nav_skip')}</a>
+        <ThemeScript />
+        <SiteHeader locale={locale} framework="react" localeHrefs={localeHrefs} frameworkHrefs={frameworkHrefs} sideNav={false} />
+        <main class="landing" id="main">
+            <section class="hero">
+                <p class="hero-badge"><span>{pkgJson.version}</span>{l.hero_badge}</p>
+                <h1 class="hero-title">{l.hero_title[0]}<br />{l.hero_title[1]}</h1>
+                <p class="hero-brief">{fill(l.hero_brief[0])}<br />{fill(l.hero_brief[1])}</p>
+                <div class="hero-actions">
+                    <a class="landing-button landing-button-primary" href={startHref}>{l.hero_start}</a>
+                    <a class="landing-button" href={overviewHref}>{fill(l.hero_browse)}</a>
+                </div>
+                <code class="install"><span aria-hidden="true">$</span>{install}</code>
+                <p class="hero-frameworks">
+                    {frameworks.map((framework) => <FrameworkLogo framework={framework} class="landing-logo" brand />)}
+                    <span class="hero-frameworks-divider"></span>
+                    React 19 · Vue 3.5+ · Solid · Svelte 5
+                </p>
+                <div class="hero-window" role="group" aria-label={l.hero_window} inert>
+                    <AppWindow locale={locale} client:media="(min-width: 821px)" />
+                </div>
+            </section>
+
+            <section class="landing-section cross" aria-labelledby="cross-title">
+                <div class="landing-inner">
+                    <div class="cross-heading">
+                        <div>
+                            <p class="eyebrow"><span>01</span>{l.cross_label}</p>
+                            <h2 id="cross-title">{l.cross_title}</h2>
+                        </div>
+                        <p class="cross-brief">{l.cross_brief}</p>
+                    </div>
+                    <div class="adapter">
+                        <div class="adapter-foundation">
+                            <svg width="26" height="26" viewBox="40 40 360 360" aria-hidden="true">
+                                <path d="M200 60A120 120 0 0 0 200 300Z" fill="currentColor" />
+                                <path d="M240 140A120 120 0 0 1 240 380Z" fill="currentColor" opacity="0.6" />
+                            </svg>
+                            <span><strong>Foundation</strong>{l.foundation_brief}</span>
+                        </div>
+                        <div class="adapter-line"><span>Adapter</span></div>
+                        <ul class="adapter-frameworks">
+                            {
+                                frameworks.map((framework) => (
+                                    <li>
+                                        <FrameworkLogo framework={framework} class="landing-logo" brand />
+                                        {frameworkLabels[framework]}
+                                    </li>
+                                ))
+                            }
+                        </ul>
+                    </div>
+                    <div class="samples">
+                        {
+                            samples.map((sample) => (
+                                <article class="sample">
+                                    <header class="sample-header">
+                                        <FrameworkLogo framework={sample.framework} class="landing-logo" brand />
+                                        <span>
+                                            <strong>{sample.name}</strong>
+                                            {sample.brief}
+                                        </span>
+                                    </header>
+                                    <Code class="sample-code" code={sample.code.trimEnd()} lang={sample.lang} themes={shikiThemes} defaultColor={false} wrap />
+                                    <footer class="sample-footer">@fibrae/semi-ui-{sample.framework}</footer>
+                                </article>
+                            ))
+                        }
+                    </div>
+                </div>
+            </section>
+
+            <section class="landing-section enterprise" aria-labelledby="enterprise-title">
+                <div class="landing-inner">
+                    <p class="eyebrow"><span>02</span>{l.enterprise_label}</p>
+                    <h2 id="enterprise-title">{l.enterprise_title[0]}<br />{l.enterprise_title[1]}</h2>
+                    <div class="features">
+                        <div class="feature">
+                            <p class="feature-label">{l.a11y_label}</p>
+                            {/* inert keeps the illustrative button out of the Tab order and the accessibility tree */}
+                            <div class="feature-visual feature-a11y" inert>
+                                <Button className="feature-a11y-button" theme="solid">
+                                    {l.a11y_button}
+                                </Button>
+                                <span class="feature-keys"><kbd>Tab</kbd><kbd>Enter</kbd><kbd>Esc</kbd></span>
+                            </div>
+                            <h3>{l.a11y_title}</h3>
+                            <p>{l.a11y_brief}</p>
+                        </div>
+                        <div class="feature">
+                            <p class="feature-label">{l.i18n_label}</p>
+                            <div class="feature-visual feature-i18n" aria-hidden="true">
+                                <span class="feature-stat"><strong>{languageCount}</strong>{l.i18n_unit}</span>
+                                <span class="feature-rtl" dir="rtl" lang="ar">حفظ التغييرات؟<span>حفظ</span></span>
+                                <code class="feature-caption">dir="rtl"</code>
+                            </div>
+                            <h3>{fill(l.i18n_title)}</h3>
+                            <p>{l.i18n_brief}</p>
+                        </div>
+                        <div class="feature">
+                            <p class="feature-label">{l.theme_label}</p>
+                            <div class="feature-visual feature-theme" aria-hidden="true">
+                                {
+                                    ['light', 'dark'].map((mode) => (
+                                        <div class={`feature-theme-half semi-always-${mode}`}>
+                                            <span class="feature-swatches">
+                                                <i />
+                                                <i />
+                                                <i />
+                                            </span>
+                                            <code>--semi-color-<br />primary</code>
+                                            <strong>{mode === 'light' ? 'Light' : 'Dark'}</strong>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                            <h3>{l.theme_title}</h3>
+                            <p>{l.theme_brief}</p>
+                        </div>
+                        <div class="feature">
+                            <p class="feature-label">{l.engineering_label}</p>
+                            <dl class="feature-visual feature-specs">
+                                <div><dt>SSR</dt><dd class="feature-specs-ok">hydration</dd></div>
+                                <div><dt>format</dt><dd>ESM only</dd></div>
+                                <div><dt>Chrome</dt><dd>≥ 120</dd></div>
+                                <div><dt>Firefox</dt><dd>≥ 125</dd></div>
+                                <div><dt>Safari</dt><dd>≥ 17.2</dd></div>
+                            </dl>
+                            <h3>{l.engineering_title}</h3>
+                            <p>{l.engineering_brief}</p>
+                        </div>
+                        <div class="feature">
+                            <p class="feature-label">{l.license_label}</p>
+                            <div class="feature-visual feature-license" aria-hidden="true">
+                                <strong>MIT</strong>License
+                            </div>
+                            <h3>{l.license_title}</h3>
+                            <p>{l.license_brief}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="landing-section catalog" aria-labelledby="catalog-title">
+                <div class="landing-inner catalog-inner">
+                    <div class="catalog-intro">
+                        <p class="eyebrow"><span>03</span>{l.catalog_label}</p>
+                        <h2 id="catalog-title" class="catalog-count"><strong>{componentCount}</strong>{l.catalog_unit}</h2>
+                        <p class="catalog-brief">{fill(l.catalog_brief)}</p>
+                        <a class="landing-button landing-button-primary" href={overviewHref}>{l.catalog_browse}</a>
+                        <code class="install"><span aria-hidden="true">$</span>{install}</code>
+                    </div>
+                    <ul class="catalog-list">
+                        {
+                            rows.map((row) => (
+                                <li>
+                                    <a class="catalog-row" href={row.href}>
+                                        <span class="catalog-name">{row.label}</span>
+                                        <span class="catalog-number">{row.count}</span>
+                                        <span class="catalog-bar" aria-hidden="true">
+                                            <span style={`inline-size: ${(row.count / maxCount) * 100}%`} />
+                                        </span>
+                                        <span class="catalog-items">{row.names}</span>
+                                        <svg class="catalog-arrow" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                                            <path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </a>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>
+
+<script>
+    const wide = matchMedia('(min-width: 821px)');
+    const sync = () => document.querySelector('.hero-window')?.toggleAttribute('inert', !wide.matches);
+    wide.addEventListener('change', sync);
+    document.addEventListener('astro:page-load', sync);
+</script>
+
+<style>
+    .landing {
+        padding-block-start: var(--site-header-height);
+    }
+
+    .landing-inner {
+        max-inline-size: 1312px;
+        margin-inline: auto;
+    }
+
+    .landing-section {
+        padding-inline: 64px;
+    }
+
+    /* Bare element selectors so the section rules below can set margins; reset.css already zeroes p */
+    h2 {
+        margin: 0;
+        font-size: 46px;
+        font-weight: var(--semi-font-weight-bold);
+        line-height: 56px;
+    }
+
+    h3 {
+        margin: 0;
+        font-size: var(--semi-font-size-header-4);
+        font-weight: var(--semi-font-weight-bold);
+        line-height: var(--semi-line-height-header-4);
+    }
+
+    .landing-button {
+        display: inline-flex;
+        align-items: center;
+        block-size: 48px;
+        padding-inline: var(--semi-spacing-loose);
+        font-weight: var(--semi-font-weight-bold);
+        color: var(--semi-color-text-0);
+        text-decoration: none;
+        background: var(--semi-color-bg-1);
+        border: 1px solid var(--semi-color-border);
+        border-radius: var(--semi-border-radius-small);
+    }
+
+    .landing-button:hover {
+        background: var(--semi-color-fill-0);
+    }
+
+    .landing-button-primary {
+        color: var(--semi-color-white);
+        background: var(--semi-color-primary);
+        border-color: transparent;
+    }
+
+    .landing-button-primary:hover {
+        background: var(--semi-color-primary-hover);
+    }
+
+    .landing-button:focus-visible {
+        outline: 2px solid var(--semi-color-primary-light-active);
+        outline-offset: 2px;
+    }
+
+    .install {
+        display: inline-flex;
+        gap: var(--semi-spacing-base-tight);
+        align-items: center;
+        block-size: 40px;
+        padding-inline: var(--semi-spacing-base);
+        font-family: var(--site-mono);
+        font-size: var(--semi-font-size-regular);
+        font-weight: var(--semi-font-weight-bold);
+        color: var(--semi-color-text-0);
+        background: var(--semi-color-bg-1);
+        border: 1px solid var(--semi-color-border);
+        border-radius: var(--semi-border-radius-medium);
+    }
+
+    .install span {
+        font-weight: var(--semi-font-weight-regular);
+        color: var(--semi-color-text-2);
+        user-select: none;
+    }
+
+    .eyebrow {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+        align-items: center;
+        font-weight: var(--semi-font-weight-bold);
+        color: var(--semi-color-text-1);
+    }
+
+    .eyebrow span {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+        align-items: center;
+        color: var(--semi-color-primary);
+    }
+
+    .eyebrow span::after {
+        inline-size: 28px;
+        block-size: 1px;
+        content: '';
+        background: var(--semi-color-primary);
+    }
+
+    /* FrameworkLogo renders the svg, so it has no scope marker from this page */
+    :global(.landing-logo) {
+        flex-shrink: 0;
+        inline-size: 22px;
+        block-size: 22px;
+        object-fit: contain;
+    }
+
+    /* Hero: the product window is cut off by the section and fades into the next one */
+    .hero {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        block-size: 1020px;
+        padding: 84px var(--semi-spacing-base) 0;
+        overflow: clip;
+        text-align: center;
+        background: linear-gradient(var(--semi-color-bg-0), var(--semi-color-fill-0));
+    }
+
+    /* The section is shorter than its content on purpose; nothing may shrink to fit */
+    .hero > * {
+        flex-shrink: 0;
+    }
+
+    .hero::after {
+        position: absolute;
+        inset: auto 0 0;
+        block-size: 140px;
+        pointer-events: none;
+        content: '';
+        background: linear-gradient(transparent, var(--semi-color-bg-0));
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        gap: var(--semi-spacing-tight);
+        align-items: center;
+        padding: var(--semi-spacing-extra-tight) var(--semi-spacing-base-tight) var(--semi-spacing-extra-tight) var(--semi-spacing-tight);
+        font-size: var(--semi-font-size-small);
+        font-weight: var(--semi-font-weight-bold);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-primary-active);
+        background: var(--semi-color-primary-light-default);
+        border-radius: var(--semi-border-radius-full);
+    }
+
+    .hero-badge span {
+        padding: var(--semi-spacing-super-tight) var(--semi-spacing-tight);
+        color: var(--semi-color-white);
+        background: var(--semi-color-primary);
+        border-radius: var(--semi-border-radius-full);
+    }
+
+    .hero-title {
+        margin: var(--semi-spacing-loose) 0 0;
+        font-size: 62px;
+        font-weight: var(--semi-font-weight-bold);
+        line-height: 76px;
+        text-wrap: balance;
+    }
+
+    .hero-brief {
+        max-inline-size: 760px;
+        margin-block-start: var(--semi-spacing-loose);
+        font-size: var(--semi-font-size-header-6);
+        line-height: 24px;
+        color: var(--semi-color-text-1);
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: var(--semi-spacing-base-tight);
+        margin-block-start: var(--semi-spacing-extra-loose);
+    }
+
+    .hero .install {
+        margin-block-start: 18px;
+    }
+
+    .hero-frameworks {
+        display: flex;
+        gap: var(--semi-spacing-base);
+        align-items: center;
+        margin-block-start: var(--semi-spacing-loose);
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-text-1);
+    }
+
+    .hero-frameworks :global(.landing-logo) {
+        inline-size: 24px;
+        block-size: 24px;
+    }
+
+    .hero-frameworks-divider {
+        inline-size: 1px;
+        block-size: 18px;
+        background: var(--semi-color-border);
+    }
+
+    .hero-window {
+        margin-block-start: var(--semi-spacing-super-loose);
+        text-align: start;
+    }
+
+    /* 01 */
+    .cross {
+        padding-block: 48px 96px;
+        background: var(--semi-color-fill-0);
+    }
+
+    .cross-heading {
+        display: flex;
+        gap: 48px;
+        align-items: flex-end;
+        justify-content: space-between;
+    }
+
+    .cross-heading h2 {
+        margin-block-start: var(--semi-spacing-base-tight);
+    }
+
+    .cross-brief {
+        flex-shrink: 0;
+        inline-size: 480px;
+        padding-block-end: var(--semi-spacing-tight);
+        line-height: 24px;
+        color: var(--semi-color-text-1);
+    }
+
+    .adapter {
+        display: flex;
+        align-items: center;
+        margin-block-start: var(--semi-spacing-super-loose);
+    }
+
+    .adapter-foundation {
+        display: flex;
+        flex-shrink: 0;
+        gap: var(--semi-spacing-base-tight);
+        align-items: center;
+        block-size: 64px;
+        padding-inline: var(--semi-spacing-base-loose);
+        color: var(--semi-color-white);
+        background: var(--semi-color-primary);
+        border-radius: var(--semi-border-radius-large);
+    }
+
+    .adapter-foundation span {
+        display: flex;
+        flex-direction: column;
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+    }
+
+    .adapter-foundation strong {
+        font-size: var(--semi-font-size-header-6);
+        line-height: var(--semi-line-height-header-6);
+        color: var(--semi-color-white);
+    }
+
+    .adapter-line {
+        display: flex;
+        flex: 1;
+        align-items: center;
+    }
+
+    .adapter-line::before,
+    .adapter-line::after {
+        flex: 1;
+        block-size: 2px;
+        content: '';
+        background: var(--semi-color-primary-light-hover);
+    }
+
+    .adapter-line span {
+        padding: var(--semi-spacing-extra-tight) var(--semi-spacing-base-tight);
+        font-size: var(--semi-font-size-small);
+        font-weight: var(--semi-font-weight-bold);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-primary-active);
+        background: var(--semi-color-bg-1);
+        border: 1px solid var(--semi-color-primary-light-hover);
+        border-radius: var(--semi-border-radius-full);
+    }
+
+    .adapter-frameworks {
+        display: flex;
+        flex-shrink: 0;
+        gap: var(--semi-spacing-tight);
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .adapter-frameworks li {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+        align-items: center;
+        block-size: 44px;
+        padding-inline: var(--semi-spacing-base-tight);
+        font-weight: var(--semi-font-weight-bold);
+        line-height: 18px;
+        background: var(--semi-color-bg-1);
+        border-radius: var(--semi-border-radius-medium);
+    }
+
+    .samples {
+        display: grid;
+
+        /* The samples are formatted at printWidth 80 (vite.config.ts), too wide for four columns */
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--semi-spacing-base);
+        margin-block-start: var(--semi-spacing-loose);
+    }
+
+    .sample {
+        display: flex;
+        flex-direction: column;
+        overflow: clip;
+        background: var(--semi-color-bg-1);
+        border-radius: var(--semi-border-radius-large);
+        box-shadow: var(--semi-shadow-elevated);
+    }
+
+    .sample-header {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+        align-items: center;
+        padding: var(--semi-spacing-base) var(--semi-spacing-base-loose) var(--semi-spacing-base-tight);
+    }
+
+    .sample-header :global(.landing-logo) {
+        inline-size: 24px;
+        block-size: 24px;
+    }
+
+    .sample-header span {
+        display: flex;
+        flex-direction: column;
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-text-2);
+    }
+
+    .sample-header strong {
+        font-size: var(--semi-font-size-regular);
+        line-height: var(--semi-line-height-regular);
+        color: var(--semi-color-text-0);
+    }
+
+    /* Code renders <pre class="astro-code">; site.scss picks its colours by mode */
+    .sample :global(.sample-code) {
+        flex: 1;
+        padding: var(--semi-spacing-extra-tight) var(--semi-spacing-base-loose) var(--semi-spacing-base);
+        margin: 0;
+        font-family: var(--site-mono);
+        font-size: var(--semi-font-size-small);
+        line-height: 20px;
+        background: none;
+    }
+
+    .sample-footer {
+        padding: var(--semi-spacing-base-tight) var(--semi-spacing-base-loose);
+        font-family: var(--site-mono);
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-text-1);
+        background: var(--semi-color-fill-0);
+    }
+
+    /* 02 */
+    .enterprise {
+        padding-block: 112px 96px;
+    }
+
+    .enterprise h2 {
+        margin-block-start: var(--semi-spacing-base);
+    }
+
+    .features {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        padding-block-start: 64px;
+    }
+
+    .feature {
+        display: flex;
+        flex-direction: column;
+        gap: var(--semi-spacing-base);
+        padding-inline: var(--semi-spacing-loose);
+    }
+
+    .feature:first-child {
+        padding-inline-start: 0;
+    }
+
+    .feature:last-child {
+        padding-inline-end: 0;
+    }
+
+    .feature + .feature {
+        border-inline-start: 1px solid var(--semi-color-border);
+    }
+
+    .feature > p:last-child {
+        line-height: 22px;
+        color: var(--semi-color-text-1);
+    }
+
+    .feature-label {
+        font-size: var(--semi-font-size-small);
+        font-weight: var(--semi-font-weight-bold);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-text-2);
+        letter-spacing: 0.08em;
+    }
+
+    .feature-visual {
+        display: flex;
+        flex-direction: column;
+        gap: var(--semi-spacing-tight);
+        justify-content: center;
+        block-size: 164px;
+        padding-inline: var(--semi-spacing-base);
+        margin: 0;
+        background: var(--semi-color-fill-0);
+        border-radius: var(--semi-border-radius-large);
+    }
+
+    .feature-a11y {
+        gap: var(--semi-spacing-base);
+        align-items: center;
+    }
+
+    /* A static render cannot hold :focus-visible, so the ring repeats Semi's focus-ring mixin (base/mixin.scss) */
+    :global(.feature-a11y-button) {
+        outline: 2px solid var(--semi-color-primary-light-active);
+    }
+
+    .feature-keys {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+    }
+
+    kbd {
+        padding: var(--semi-spacing-super-tight) var(--semi-spacing-tight);
+        font-family: var(--site-mono);
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        background: var(--semi-color-bg-2);
+        border: 1px solid var(--semi-color-border);
+        border-block-end-width: 2px;
+        border-radius: var(--semi-border-radius-small);
+    }
+
+    .feature-stat {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+        align-items: baseline;
+        color: var(--semi-color-text-1);
+    }
+
+    .feature-stat strong {
+        font-size: 36px;
+        line-height: 44px;
+        color: var(--semi-color-text-0);
+        letter-spacing: -0.04em;
+    }
+
+    .feature-rtl {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--semi-spacing-tight) var(--semi-spacing-base-tight);
+        line-height: 22px;
+        background: var(--semi-color-bg-2);
+        border-radius: var(--semi-border-radius-medium);
+    }
+
+    .feature-rtl span {
+        padding: var(--semi-spacing-extra-tight) var(--semi-spacing-tight);
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-white);
+        background: var(--semi-color-primary);
+        border-radius: var(--semi-border-radius-small);
+    }
+
+    .feature-caption {
+        font-family: inherit;
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-text-2);
+        text-align: end;
+    }
+
+    .feature-theme {
+        flex-direction: row;
+        gap: 0;
+        padding: 0;
+        overflow: clip;
+    }
+
+    .feature-theme-half {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: var(--semi-spacing-tight);
+        justify-content: center;
+        padding-inline: var(--semi-spacing-base-tight);
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-text-0);
+        background: var(--semi-color-bg-1);
+    }
+
+    .feature-theme-half.semi-always-light {
+        border: 1px solid var(--semi-color-border);
+        border-start-start-radius: var(--semi-border-radius-large);
+        border-end-start-radius: var(--semi-border-radius-large);
+    }
+
+    .feature-theme-half.semi-always-dark {
+        background: var(--semi-color-bg-0);
+    }
+
+    .feature-theme-half code {
+        font-family: var(--site-mono);
+        color: var(--semi-color-text-1);
+    }
+
+    .feature-swatches {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+    }
+
+    .feature-swatches i {
+        inline-size: 22px;
+        block-size: 22px;
+        background: var(--semi-color-primary);
+        border-radius: var(--semi-border-radius-medium);
+    }
+
+    .feature-swatches i:nth-child(2) {
+        background: var(--semi-color-primary-light-default);
+    }
+
+    .feature-swatches i:nth-child(3) {
+        background: var(--semi-color-fill-0);
+        border: 1px solid var(--semi-color-border);
+    }
+
+    .feature-specs > div {
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--site-mono);
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+    }
+
+    .feature-specs > div:nth-child(-n + 2) {
+        padding-block-end: var(--semi-spacing-tight);
+        border-block-end: 1px solid var(--semi-color-border);
+    }
+
+    .feature-specs dt {
+        color: var(--semi-color-text-1);
+    }
+
+    .feature-specs dd {
+        margin: 0;
+        font-weight: var(--semi-font-weight-bold);
+    }
+
+    .feature-specs .feature-specs-ok {
+        color: var(--semi-color-success-active);
+    }
+
+    .feature-license {
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-text-1);
+    }
+
+    .feature-license strong {
+        font-size: 44px;
+        line-height: 54px;
+        color: var(--semi-color-text-0);
+        letter-spacing: -0.04em;
+    }
+
+    /* 03 */
+    .catalog {
+        padding-block: 120px 112px;
+        background: var(--semi-color-fill-0);
+    }
+
+    .catalog-inner {
+        display: flex;
+        gap: 96px;
+        align-items: flex-start;
+    }
+
+    .catalog-intro {
+        display: flex;
+        flex-shrink: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        inline-size: 372px;
+    }
+
+    .catalog-count {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+        align-items: baseline;
+        margin-block-start: var(--semi-spacing-base);
+        font-size: var(--semi-font-size-header-1);
+        line-height: var(--semi-line-height-header-1);
+    }
+
+    .catalog-count strong {
+        font-size: 120px;
+        line-height: 144px;
+        color: var(--semi-color-primary);
+        letter-spacing: -0.04em;
+    }
+
+    .catalog-brief {
+        margin-block: var(--semi-spacing-base-tight) var(--semi-spacing-loose);
+        line-height: 24px;
+        color: var(--semi-color-text-1);
+    }
+
+    .catalog .install {
+        margin-block-start: var(--semi-spacing-base-loose);
+    }
+
+    .catalog-list {
+        flex: 1;
+        min-inline-size: 0;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        border-block: 2px solid var(--semi-color-text-0);
+        border-block-end: 1px solid var(--semi-color-border);
+    }
+
+    .catalog-list li + li {
+        border-block-start: 1px solid var(--semi-color-border);
+    }
+
+    .catalog-row {
+        display: flex;
+        gap: var(--semi-spacing-loose);
+        align-items: center;
+        padding-block: var(--semi-spacing-base-loose);
+        color: var(--semi-color-text-1);
+        text-decoration: none;
+    }
+
+    .catalog-row:hover .catalog-name,
+    .catalog-row:hover .catalog-arrow {
+        color: var(--semi-color-primary);
+    }
+
+    .catalog-row:focus-visible {
+        outline: 2px solid var(--semi-color-primary-light-active);
+        outline-offset: -2px;
+    }
+
+    .catalog-name {
+        flex-shrink: 0;
+        inline-size: 116px;
+        font-size: var(--semi-font-size-header-4);
+        font-weight: var(--semi-font-weight-bold);
+        line-height: var(--semi-line-height-header-4);
+        color: var(--semi-color-text-0);
+    }
+
+    .catalog-number {
+        flex-shrink: 0;
+        inline-size: 56px;
+        font-size: var(--semi-font-size-header-1);
+        font-weight: var(--semi-font-weight-bold);
+        line-height: var(--semi-line-height-header-1);
+        color: var(--semi-color-text-0);
+        text-align: end;
+        letter-spacing: -0.03em;
+    }
+
+    .catalog-bar {
+        flex-shrink: 0;
+        inline-size: 120px;
+        block-size: 6px;
+        background: var(--semi-color-fill-1);
+        border-radius: var(--semi-border-radius-small);
+    }
+
+    .catalog-bar span {
+        display: block;
+        block-size: 100%;
+        background: var(--semi-color-primary);
+        border-radius: inherit;
+    }
+
+    .catalog-items {
+        flex: 1;
+        line-height: 22px;
+    }
+
+    .catalog-arrow {
+        flex-shrink: 0;
+        color: var(--semi-color-text-2);
+    }
+
+    @media (max-width: 1100px) {
+        .cross-heading,
+        .adapter,
+        .catalog-inner {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .cross-brief,
+        .catalog-intro {
+            inline-size: auto;
+        }
+
+        .adapter {
+            gap: var(--semi-spacing-base);
+        }
+
+        .adapter-line {
+            display: none;
+        }
+
+        .features {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 48px var(--semi-spacing-loose);
+        }
+
+        .feature,
+        .feature + .feature {
+            padding-inline: 0;
+            border: 0;
+        }
+
+        .catalog-inner {
+            gap: 48px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .landing-section {
+            padding-inline: var(--semi-spacing-base);
+        }
+
+        .landing h2 {
+            font-size: var(--semi-font-size-header-1);
+            line-height: 40px;
+        }
+
+        .hero-title {
+            font-size: 40px;
+            line-height: 50px;
+        }
+
+        .hero-window {
+            align-self: flex-start;
+        }
+
+        /* The version text is too wide to share a line with the logos, so it wraps whole onto its own line */
+        .hero-frameworks {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .hero-frameworks-divider {
+            display: none;
+        }
+
+        .catalog-intro {
+            align-items: stretch;
+        }
+
+        .landing-button {
+            justify-content: center;
+        }
+
+        .adapter-frameworks {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .samples,
+        .features {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .catalog-row {
+            flex-wrap: wrap;
+            gap: var(--semi-spacing-base-tight);
+        }
+
+        .catalog-bar {
+            display: none;
+        }
+
+        .catalog-items {
+            flex-basis: 100%;
+        }
+
+        .catalog-arrow {
+            display: none;
+        }
+    }
+</style>

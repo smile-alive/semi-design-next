@@ -117,6 +117,13 @@ document.addEventListener('click', (event) => {
     const target = event.target;
     if (!(target instanceof Element)) return;
     if (target.closest('#search-toggle')) open();
+    // closedby="any" needs Chrome 134 and Firefox 141 and has not shipped in Safari; delete once the floor has it.
+    // The dialog itself is also the target of clicks on its padding, hence the box check
+    if (target === dialog() && !('closedBy' in target)) {
+        const box = target.getBoundingClientRect();
+        const { clientX: x, clientY: y } = event;
+        if (x < box.left || x > box.right || y < box.top || y > box.bottom) dialog().close();
+    }
     if (target.closest('#search-clear')) {
         input().value = '';
         render([], '');
@@ -163,5 +170,5 @@ document.addEventListener('compositionend', (event) => {
 
 document.addEventListener('astro:page-load', () => {
     const shortcut = document.querySelector('#search-toggle kbd');
-    if (shortcut) shortcut.textContent = /Mac/.test(navigator.userAgent) ? '⌘ K' : 'Ctrl K';
+    if (shortcut instanceof HTMLElement) shortcut.dataset.keys = /Mac/.test(navigator.userAgent) ? '⌘ K' : 'Ctrl K';
 });

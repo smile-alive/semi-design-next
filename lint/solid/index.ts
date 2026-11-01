@@ -1,6 +1,7 @@
 import preset from 'eslint-plugin-solid/configs/typescript';
 import { frameworkFiles, frameworkSpecifiers, type FrameworkLint } from '../framework.ts';
 import { jsxA11yRules } from '../jsx-a11y.ts';
+import { jsxPropsOrderRules, landingSamples } from '../jsx-props-order.ts';
 import { solidComponentOrder } from './component-order.ts';
 import { solidExemptions, solidIconOnClickExemptions } from './exemptions.ts';
 
@@ -25,6 +26,11 @@ export const solid: FrameworkLint = {
             plugins: ['jsx-a11y'],
             jsPlugins: ['eslint-plugin-solid'],
             rules: { ...solidRules, ...jsxA11yRules },
+        },
+        {
+            files: [`${landingSamples}/*.solid.tsx`],
+            jsPlugins: ['eslint-plugin-perfectionist'],
+            rules: jsxPropsOrderRules,
         },
     ],
     exemptions: solidExemptions,

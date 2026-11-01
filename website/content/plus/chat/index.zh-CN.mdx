@@ -890,7 +890,7 @@ export interface ChatHintBoxSnippetProps {
 
 其他未声明的原生属性（如 `data-*`、`id`）落在根元素 `div` 上；根元素带有 `aria-label` 或 `aria-labelledby` 且没有传 `role` 时，自动加上 `role="group"`。`onDragOver`、`onDragStart`、`onDragEnd` 监听同样落在根元素上，Chat 自己的拖拽上传处理先于使用方的监听执行。
 
-#### RoleConfig
+### RoleConfig
 
 | 属性      | 说明     | 类型     | 默认值 |
 | --------- | -------- | -------- | ------ |
@@ -898,7 +898,7 @@ export interface ChatHintBoxSnippetProps {
 | assistant | 助手信息 | Metadata | -      |
 | system    | 系统信息 | Metadata | -      |
 
-#### Metadata
+### Metadata
 
 | 属性   | 说明                                                                                                                                                                                                                | 类型                | 默认值 |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ------ |
@@ -914,7 +914,7 @@ export interface ChatHintBoxSnippetProps {
 
 `class`、`style` 和其他未声明的属性落在根元素上，根元素带有 `aria-label` 或 `aria-labelledby` 且没有传 `role` 时，自动加上 `role="group"`。`dragover`、`dragstart`、`dragend` 监听同样落在根元素上，Chat 自己的拖拽上传处理先于使用方的监听执行。
 
-#### RoleConfig
+### RoleConfig
 
 | 属性      | 说明     | 类型         | 默认值 |
 | --------- | -------- | ------------ | ------ |
@@ -922,7 +922,7 @@ export interface ChatHintBoxSnippetProps {
 | assistant | 助手信息 | ChatMetadata | -      |
 | system    | 系统信息 | ChatMetadata | -      |
 
-#### Metadata
+### Metadata
 
 | 属性   | 说明                                                                                                                                                                                                                | 类型        | 默认值 |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------ |
@@ -938,7 +938,7 @@ export interface ChatHintBoxSnippetProps {
 
 `class`、`style` 与其他未声明的属性（如 `data-*`、`aria-*`）落在根元素 `div` 上，`class` 与组件自身的类名合并。根元素带有 `aria-label` 或 `aria-labelledby` 且没有传 `role` 时，自动加上 `role="group"`。`onDragOver`、`onDragStart`、`onDragEnd` 监听同样落在根元素上，Chat 自己的拖拽上传处理先于使用方的监听执行。
 
-#### RoleConfig
+### RoleConfig
 
 | 属性      | 说明     | 类型         | 默认值 |
 | --------- | -------- | ------------ | ------ |
@@ -946,7 +946,7 @@ export interface ChatHintBoxSnippetProps {
 | assistant | 助手信息 | ChatMetadata | -      |
 | system    | 系统信息 | ChatMetadata | -      |
 
-#### Metadata
+### Metadata
 
 | 属性   | 说明                                                                                                                                                                                                                | 类型        | 默认值 |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------ |
@@ -962,7 +962,7 @@ export interface ChatHintBoxSnippetProps {
 
 `class`、`style` 与其他未声明的属性及事件（如 `data-*`、`aria-*`、`ondragover`）落在根元素 `div` 上，`class` 与组件自身的类名合并。根元素带有 `aria-label` 或 `aria-labelledby` 且没有传 `role` 时，自动加上 `role="group"`。`ondragover`、`ondragstart`、`ondragend` 监听同样落在根元素上，Chat 自己的拖拽上传处理先于使用方的监听执行。
 
-#### RoleConfig
+### RoleConfig
 
 | 属性      | 说明     | 类型         | 默认值 |
 | --------- | -------- | ------------ | ------ |
@@ -970,7 +970,7 @@ export interface ChatHintBoxSnippetProps {
 | assistant | 助手信息 | ChatMetadata | -      |
 | system    | 系统信息 | ChatMetadata | -      |
 
-#### Metadata
+### Metadata
 
 | 属性   | 说明                                                                                                                                                                                                                | 类型        | 默认值 |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------ |
@@ -980,7 +980,7 @@ export interface ChatHintBoxSnippetProps {
 
 </Framework>
 
-#### Message
+### Message
 
 | 属性     | 说明                                                                  | 类型                | 默认值   |
 | -------- | --------------------------------------------------------------------- | ------------------- | -------- |
@@ -992,7 +992,7 @@ export interface ChatHintBoxSnippetProps {
 | createAt | 创建时间                                                              | number              | -        |
 | status   | 消息状态，可选值为 `loading` \| `incomplete` \| `complete` \| `error` | string              | complete |
 
-#### Content
+### Content
 
 | 属性      | 说明                                            | 类型                                                        | 默认值 |
 | --------- | ----------------------------------------------- | ----------------------------------------------------------- | ------ |

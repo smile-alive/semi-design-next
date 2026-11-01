@@ -80,7 +80,7 @@
 
 - 站点全局的元素规则放进 `website/src/styles/reset.css` 的 `@layer semi.reset`。不写未分层的元素规则（会胜过 Semi，例如 `button { line-height }` 曾弄坏 Input），也不另声明 `@layer reset, semi`：Astro 先输出组件样式，`semi` 会先被声明，顺序就反了。
 - 文档站使用 modern-normalize（`html { line-height: 1.15 }` 等），与空白页和 Tailwind Preflight 页面的元素默认值不同；在文档站量到的尺寸不能直接当作空白页的结果，核对尺寸时换空白页。
-- 站点自己的类样式不分层。页头、侧栏、目录、搜索等外壳组件（`website/src/components/*.astro`）的样式写在组件自己的 `<style>` 里，由 Astro 加作用域；脚本生成的节点和图标组件输出的元素没有作用域标记，选择器用 `:global()`。`website/src/styles/site.css` 只放全局变量、多个组件共用的类（如 `.site-icon-button`）、页面布局和正文排版。文章排版只作用于 `.doc > ...` 的直接子元素，demo 由 `.demo-preview` 隔离（14px / 20px）。
+- 站点自己的类样式不分层。页头、侧栏、目录、搜索等外壳组件（`website/src/components/*.astro`）的样式写在组件自己的 `<style>` 里，由 Astro 加作用域；脚本生成的节点和图标组件输出的元素没有作用域标记，选择器用 `:global()`。`website/src/styles/site.scss` 只放全局变量、多个组件共用的类（如 `.site-icon-button`）、页面布局和正文排版。外壳的断点只在 `website/src/styles/_breakpoints.scss` 定义，组件在 `<style lang="scss">` 里 `@use` 它，不在 `@media` 里写死像素值。文章排版只作用于 `.doc > ...` 的直接子元素，demo 由 `.demo-preview` 隔离（14px / 20px）。
 - stylelint 经 `postcss-html` 一并检查 `.astro` 里的 `<style>`。
 - 多个页面共用的 demo 样式放在 `website/src/styles/docDemo.scss`；只有一个页面用的放到该页面目录。
 - 测量盒模型影响时用 `box-sizing: revert-layer`，不用 `content-box`：原生 button 在 UA 样式表里是 border-box。

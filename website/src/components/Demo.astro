@@ -76,7 +76,7 @@ const focusablePre: ShikiTransformer = {
 
 <style>
     .demo {
-        margin: 24px 0;
+        margin: var(--semi-spacing-loose) 0;
         overflow: hidden;
         border: 1px solid var(--semi-color-border);
         border-radius: var(--semi-border-radius-small);
@@ -86,11 +86,11 @@ const focusablePre: ShikiTransformer = {
         /* Absolutely positioned demo elements (DragMove) stay inside the preview */
         position: relative;
         min-height: 32px;
-        padding: 20px;
+        padding: var(--semi-spacing-base-loose);
 
         /* Components are designed for 14px / 20px, not the prose 16px / 28px */
-        font-size: 14px;
-        line-height: 20px;
+        font-size: var(--semi-font-size-regular);
+        line-height: var(--semi-line-height-regular);
     }
 
     .demo-code {
@@ -103,7 +103,7 @@ const focusablePre: ShikiTransformer = {
     }
 
     .demo-code summary {
-        padding: 8px 26px;
+        padding: var(--semi-spacing-tight) 26px;
         color: var(--semi-color-text-2);
         cursor: pointer;
         user-select: none;
@@ -111,11 +111,11 @@ const focusablePre: ShikiTransformer = {
 
     .demo-copy {
         position: absolute;
-        top: 4px;
-        right: 16px;
-        padding: 4px 8px;
+        top: var(--semi-spacing-extra-tight);
+        right: var(--semi-spacing-base);
+        padding: var(--semi-spacing-extra-tight) var(--semi-spacing-tight);
         font: inherit;
-        font-size: 12px;
+        font-size: var(--semi-font-size-small);
         color: var(--semi-color-text-2);
         cursor: pointer;
         background: none;
@@ -132,12 +132,12 @@ const focusablePre: ShikiTransformer = {
     .demo-code :global(pre.astro-code) {
         max-height: 400px;
         contain-intrinsic-size: auto 400px;
-        padding: 4px 26px 20px;
+        padding: var(--semi-spacing-extra-tight) 26px var(--semi-spacing-base-loose);
         margin: 0;
         content-visibility: auto;
         overflow: auto;
         font-family: var(--site-mono);
-        font-size: 12px;
+        font-size: var(--semi-font-size-small);
         line-height: 18px;
         background-color: transparent;
     }

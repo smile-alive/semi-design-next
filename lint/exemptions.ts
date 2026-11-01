@@ -23,7 +23,7 @@ export const exemptions: Exemption[] = [
     },
     // The shell renders React icons and components to static HTML at build time (no client: directive), so no React reaches the browser
     {
-        files: ['website/src/components/{SearchDialog,SiteHeader,ThemeToggle,LocaleMenu,FrameworkMenu,PrevNext,Notice,SideNav,DesignToken}.astro'],
+        files: ['website/src/components/{SearchDialog,SiteHeader,ThemeToggle,LocaleMenu,FrameworkMenu,MoreMenu,PrevNext,Notice,SideNav,DesignToken}.astro', 'website/src/pages/*/index.astro'],
         off: ['no-restricted-imports'],
     },
 ];

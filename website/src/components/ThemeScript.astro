@@ -1,0 +1,10 @@
+<script is:inline>
+    // Before first paint to avoid a dark flash; system default if unset; reads throw with storage disabled
+    let stored = null;
+    try {
+        stored = localStorage.getItem('semi-theme');
+    } catch {}
+    if (stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.setAttribute('theme-mode', 'dark');
+    }
+</script>

@@ -50,7 +50,7 @@ import FormErrorMessageSvelteApi from './api/form-error-message.svelte.zh-CN.mdx
 Semi 将所有自带的输入控件（文本输入框、下拉选择、复选框、单选框等）都使用 withField 封装了一次。接管了他们的数据流（value & onChange）  
 使用的时候，需要从 Form 中导出（注意：从 Form 导出的控件才具有数据同步功能）
 
-#### 目前 Form 提供了如下表单控件
+### 目前 Form 提供了如下表单控件
 
 - `Input`、`InputNumber`、`TextArea`、`Select`、`Checkbox`、`CheckboxGroup`、`Radio`、`RadioGroup`、`Switch`、`DatePicker`、`TimePicker`、`Slider`、`InputGroup`、`TreeSelect`、`Cascader`、`Transfer`、`Rating`、`AutoComplete`、`Upload`、`PinCode`、`Label`、`ErrorMessage`、`Section`、`Slot`、`TagInput` 都挂载在 Form 下，使用时直接以\<Form.Input\> 、\<Form.Select\>声明即可
 
@@ -82,7 +82,7 @@ Form 提供的 Field 级别组件，它的 value（或者 valueKey 指定的其�
 Semi 将所有自带的输入控件（文本输入框、下拉选择、复选框、单选框等）都使用 withField 封装了一次。接管了他们的数据流（`modelValue` & `change`）  
 使用的时候，需要使用以 Form 开头的控件（注意：只有这些控件才具有数据同步功能），它们是具名导出，不挂载在 Form 上
 
-#### 目前 Form 提供了如下表单控件
+### 目前 Form 提供了如下表单控件
 
 - 表单控件：`FormInput`、`FormInputNumber`、`FormTextArea`、`FormSelect`、`FormCheckbox`、`FormCheckboxGroup`、`FormRadio`、`FormRadioGroup`、`FormSwitch`、`FormDatePicker`、`FormTimePicker`、`FormSlider`、`FormTreeSelect`、`FormCascader`、`FormTransfer`、`FormRating`、`FormAutoComplete`、`FormUpload`、`FormPinCode`、`FormTagInput`
 - 其他部件：`ArrayField`、`FormInputGroup`、`FormLabel`、`FormErrorMessage`、`FormSection`、`FormSlot`
@@ -122,7 +122,7 @@ Form 提供的 Field 级别组件，它的 `modelValue`（或者 `valueKey` 指�
 Semi 将所有自带的输入控件（文本输入框、下拉选择、复选框、单选框等）都使用 withField 封装了一次。接管了他们的数据流（`value` & `onChange`）  
 使用的时候，需要使用以 Form 开头的控件（注意：只有这些控件才具有数据同步功能），它们是具名导出，不挂载在 Form 上
 
-#### 目前 Form 提供了如下表单控件
+### 目前 Form 提供了如下表单控件
 
 - 表单控件：`FormInput`、`FormInputNumber`、`FormTextArea`、`FormSelect`、`FormCheckbox`、`FormCheckboxGroup`、`FormRadio`、`FormRadioGroup`、`FormSwitch`、`FormDatePicker`、`FormTimePicker`、`FormSlider`、`FormTreeSelect`、`FormCascader`、`FormTransfer`、`FormRating`、`FormAutoComplete`、`FormUpload`、`FormPinCode`、`FormTagInput`
 - 其他部件：`ArrayField`，以及挂载在 Form 下的 `Form.InputGroup`、`Form.Label`、`Form.ErrorMessage`、`Form.Section`、`Form.Slot`
@@ -153,7 +153,7 @@ Form 提供的 Field 级别组件，它的 `value`（或者 `valueKey` 指定的
 Semi 将所有自带的输入控件（文本输入框、下拉选择、复选框、单选框等）都封装了一次，接管了他们的数据流（`value` & `onChange`）  
 使用的时候，需要使用以 Form 开头的控件（注意：只有这些控件才具有数据同步功能），它们既是具名导出，也挂载在 Form 下，`FormInput` 与 `Form.Input` 是同一个组件
 
-#### 目前 Form 提供了如下表单控件
+### 目前 Form 提供了如下表单控件
 
 - 表单控件：`FormInput`、`FormInputNumber`、`FormTextArea`、`FormSelect`、`FormCheckbox`、`FormCheckboxGroup`、`FormRadio`、`FormRadioGroup`、`FormSwitch`、`FormDatePicker`、`FormTimePicker`、`FormSlider`、`FormTreeSelect`、`FormCascader`、`FormTransfer`、`FormRating`、`FormAutoComplete`、`FormUpload`、`FormPinCode`、`FormTagInput`
 - 其他部件：`FormField`、`ArrayField`、`FormInputGroup`、`FormLabel`、`FormErrorMessage`、`FormSection`、`FormSlot`
@@ -2350,9 +2350,9 @@ import { FormErrorMessage } from '@fibrae/semi-ui-svelte';
 - 表单按钮
     - 关于表单按钮的文案规范，参考[按钮Button组件的文案规范](/zh-CN/react/basic/button#%E6%96%87%E6%A1%88%E8%A7%84%E8%8C%83)
 
-| ✅ 推荐用法                                                                      | ❌ 不推荐用法                                                                   |
-| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| <img src='/assets/content_guide/formdemogood.jpg' style={{ height: '280px' }} /> | <img src='/assets/content_guide/formdemobad.jpg' style={{ height: '280px' }} /> |
+| ✅ 推荐用法                                                                                                                                       | ❌ 不推荐用法                                                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img src='/assets/content_guide/formdemogood.jpg' alt='表单标签使用简短名词：First name、Last name、Email address' style={{ height: '280px' }} /> | <img src='/assets/content_guide/formdemobad.jpg' alt='表单标签写成完整句子：My first name is、What’s your email address' style={{ height: '280px' }} /> |
 
 ## 设计变量
 

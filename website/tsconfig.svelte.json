@@ -1,6 +1,6 @@
 {
     "extends": "./tsconfig.json",
-    "include": ["content/**/*.svelte"],
+    "include": ["content/**/*.svelte", "src/components/landing/samples/*.svelte"],
     "exclude": ["dist"],
     "compilerOptions": {
         "noEmit": true,

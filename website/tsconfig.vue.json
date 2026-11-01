@@ -1,6 +1,6 @@
 {
     "extends": "./tsconfig.json",
-    "include": ["content/**/*.vue"],
+    "include": ["content/**/*.vue", "src/components/landing/samples/*.vue"],
     "exclude": ["dist"],
     "compilerOptions": {
         "jsx": "preserve",

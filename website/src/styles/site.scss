@@ -3,6 +3,8 @@
  * The header is 60px: Table's sticky={{ top: 60 }} in docs and Toc highlighting depend on it.
  * No font files load: Inter applies only when installed locally.
  */
+@use 'breakpoints' as *;
+
 :root {
     --site-header-height: 60px;
     --site-sidebar-width: 280px;
@@ -15,7 +17,7 @@
 
 /* Anchor jumps would land under the fixed header; Toc.astro highlights from this 84px line */
 html {
-    scroll-padding-top: calc(var(--site-header-height) + 24px);
+    scroll-padding-top: calc(var(--site-header-height) + var(--semi-spacing-loose));
 }
 
 /* Scrollbars and native controls follow the root color scheme; Semi dark mode is set on body */
@@ -26,8 +28,8 @@ html {
 /* Narrow screens still overflow (654px DatePicker figure, edge popups); clip horizontal scroll */
 body {
     overflow-x: hidden;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: var(--semi-font-size-regular);
+    line-height: var(--semi-line-height-regular);
     color: var(--semi-color-text-0);
     background: var(--semi-color-bg-0);
     -webkit-font-smoothing: antialiased;
@@ -35,10 +37,10 @@ body {
 
 .skip-link {
     position: fixed;
-    top: 12px;
-    left: 12px;
+    top: var(--semi-spacing-base-tight);
+    left: var(--semi-spacing-base-tight);
     z-index: 200;
-    padding: 8px 16px;
+    padding: var(--semi-spacing-tight) var(--semi-spacing-base);
     color: var(--semi-color-link);
     background: var(--semi-color-bg-0);
     border-radius: var(--semi-border-radius-medium);
@@ -58,24 +60,28 @@ body {
 .doc-header a,
 .doc a:not(.demo-preview *) {
     color: var(--semi-color-link);
-    text-decoration: none;
+
+    /* WCAG 1.4.1: within text, color alone does not mark a link */
+    text-decoration: underline;
 }
 
+/* Semi Button renders only <button>, so header links copy its large borderless tertiary icon-only look */
 .site-icon-button {
     display: inline-flex;
-    gap: 4px;
     align-items: center;
-    padding: 0;
-    font: inherit;
-    font-weight: 600;
-    color: var(--semi-color-text-2);
-    cursor: pointer;
-    background: none;
-    border: 0;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: var(--semi-color-tertiary);
+    border-radius: var(--semi-border-radius-small);
 }
 
 .site-icon-button:hover {
-    color: var(--semi-color-text-0);
+    background-color: var(--semi-color-fill-0);
+}
+
+.site-icon-button:active {
+    background-color: var(--semi-color-fill-1);
 }
 
 .site-main {
@@ -86,7 +92,7 @@ body {
     position: relative;
     left: -50px;
     width: 80%;
-    padding-top: 24px;
+    padding-top: var(--semi-spacing-loose);
     margin: 0 auto;
 }
 
@@ -96,21 +102,21 @@ body {
 }
 
 .doc-breadcrumb {
-    font-size: 18px;
+    font-size: var(--semi-font-size-header-5);
     font-weight: 500;
-    line-height: 24px;
+    line-height: var(--semi-line-height-header-5);
 }
 
 .doc-header h1 {
-    margin: 16px 0 24px;
+    margin: var(--semi-spacing-base) 0 var(--semi-spacing-loose);
     font-size: 40px;
-    font-weight: 600;
+    font-weight: var(--semi-font-weight-bold);
     line-height: 48px;
 }
 
 .doc-brief {
-    margin: 0 0 32px;
-    font-size: 16px;
+    margin: 0 0 var(--semi-spacing-extra-loose);
+    font-size: var(--semi-font-size-header-6);
     line-height: 28px;
     color: var(--semi-color-text-2);
 }
@@ -118,7 +124,7 @@ body {
 /* Only Markdown-generated direct children; demos, Notice and DesignToken style themselves */
 
 .doc {
-    padding-top: 32px;
+    padding-top: var(--semi-spacing-extra-loose);
 }
 
 /* Prose only: inherited into demos it breaks short component text (AudioPlayer time) per character */
@@ -129,7 +135,7 @@ body {
 
 .doc > p {
     margin: 0 0 1.46em;
-    font-size: 16px;
+    font-size: var(--semi-font-size-header-6);
     line-height: 28px;
     color: var(--semi-color-text-1);
 }
@@ -140,27 +146,27 @@ body {
 }
 
 .doc > h2 {
-    margin: 64px 0 24px;
+    margin: 64px 0 var(--semi-spacing-loose);
     font-size: 27.648px;
     line-height: 1.43;
 }
 
 .doc > h2:first-child {
-    margin-top: 16px;
+    margin-top: var(--semi-spacing-base);
 }
 
 .doc > h3 {
-    margin: 32px 0 24px;
+    margin: var(--semi-spacing-extra-loose) 0 var(--semi-spacing-loose);
     font-size: 23.04px;
     line-height: 1.6;
 }
 
 .doc > h2 + h3 {
-    margin-top: 16px;
+    margin-top: var(--semi-spacing-base);
 }
 
 .doc > h4 {
-    margin: 16px 0;
+    margin: var(--semi-spacing-base) 0;
     font-size: 19.2px;
     font-weight: 700;
     line-height: 40px;
@@ -168,13 +174,13 @@ body {
 
 .doc > :is(ul, ol) {
     padding: 0;
-    margin: 0 0 24px 6px;
+    margin: 0 0 var(--semi-spacing-loose) 6px;
 }
 
 .doc > :is(ul, ol) li {
-    padding-left: 4px;
-    margin-left: 20px;
-    font-size: 16px;
+    padding-left: var(--semi-spacing-extra-tight);
+    margin-left: var(--semi-spacing-base-loose);
+    font-size: var(--semi-font-size-header-6);
     line-height: 28px;
     color: var(--semi-color-text-1);
 }
@@ -184,7 +190,7 @@ body {
 }
 
 .doc > hr {
-    margin: 32px 0;
+    margin: var(--semi-spacing-extra-loose) 0;
     border: 0;
     border-top: 1px solid var(--semi-color-border);
 }
@@ -194,14 +200,19 @@ body {
 }
 
 .doc :not(pre) > code:not(.demo-preview *) {
-    margin: 0 4px;
+    margin: 0 var(--semi-spacing-extra-tight);
     font-family: var(--site-mono);
     background: var(--semi-color-fill-1);
 }
 
+/* --semi-color-link falls under 4.5:1 on the code background */
+.doc a:not(.demo-preview *) > code {
+    color: var(--semi-color-link-hover);
+}
+
 .doc > .astro-code {
-    padding: 16px;
-    margin: 24px 0;
+    padding: var(--semi-spacing-base);
+    margin: var(--semi-spacing-loose) 0;
     overflow-x: auto;
     font-size: 13px;
     line-height: 1.5;
@@ -226,8 +237,8 @@ body {
 }
 
 .table-container th {
-    padding: 8px 10px;
-    font-size: 12px;
+    padding: var(--semi-spacing-tight) 10px;
+    font-size: var(--semi-font-size-small);
     font-weight: 700;
     line-height: 21px;
     text-align: left;
@@ -235,23 +246,23 @@ body {
 }
 
 .table-container td {
-    padding: 4px 6px;
+    padding: var(--semi-spacing-extra-tight) 6px;
     vertical-align: top;
 }
 
 .table-container td:nth-of-type(1) {
     font-family: var(--site-mono);
-    font-weight: 600;
+    font-weight: var(--semi-font-weight-bold);
 }
 
 .table-container td:nth-of-type(3) {
     font-family: var(--site-mono);
-    color: var(--semi-color-warning);
+    color: var(--semi-color-warning-active);
 }
 
 .table-container td:nth-of-type(4) {
     font-family: var(--site-mono);
-    color: var(--semi-color-success);
+    color: var(--semi-color-success-active);
 }
 
 /* Shiki emits only CSS variables (defaultColor: false); pick by color mode here */
@@ -273,18 +284,16 @@ body {
     color: var(--shiki-dark);
 }
 
-/* Below 1400px the Toc hides (see Toc); below 820px the sidebar becomes a drawer (see SideNav) */
-
-@media (max-width: 1399px) {
+@media (max-width: $toc-hidden) {
     .article-wrapper {
         left: 0;
         box-sizing: border-box;
         width: 100%;
-        padding: 24px 24px 0;
+        padding: var(--semi-spacing-loose) var(--semi-spacing-loose) 0;
     }
 }
 
-@media (max-width: 820px) {
+@media (max-width: $sidebar-drawer) {
     .site-main {
         padding-left: 0;
     }

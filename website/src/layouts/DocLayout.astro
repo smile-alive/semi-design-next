@@ -4,10 +4,11 @@ import { ClientRouter } from 'astro:transitions';
 import '#/styles/reset.css';
 import '@fibrae/semi-foundation/base/tokens.scss';
 import '#/styles/docDemo.scss';
-import '#/styles/site.css';
+import '#/styles/site.scss';
 import PrevNext from '#/components/PrevNext.astro';
 import SideNav from '#/components/SideNav.astro';
 import SiteHeader from '#/components/SiteHeader.astro';
+import ThemeScript from '#/components/ThemeScript.astro';
 import Toc from '#/components/Toc.astro';
 import { translate } from '#/i18n';
 import {
@@ -78,16 +79,7 @@ const breadcrumb = locale === 'zh-CN' ? categoryLabel(locale, category) : `${cat
     </head>
     <body>
         <a class="skip-link" href="#main">{t('nav_skip')}</a>
-        <script is:inline>
-            // Before first paint to avoid a dark flash; system default if unset; reads throw with storage disabled
-            let stored = null;
-            try {
-                stored = localStorage.getItem('semi-theme');
-            } catch {}
-            if (stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.body.setAttribute('theme-mode', 'dark');
-            }
-        </script>
+        <ThemeScript />
         <SiteHeader locale={locale} framework={framework} localeHrefs={localeHrefs} frameworkHrefs={frameworkHrefs} />
         <SideNav locale={locale} framework={framework} groups={navGroups} current={hrefOf(doc)} />
         <main class="site-main" id="main">

@@ -46,7 +46,9 @@ const t = translate(locale);
     import '#/lib/search-dialog';
 </script>
 
-<style>
+<style lang="scss">
+    @use '../styles/breakpoints' as *;
+
     /* Script-built options and React-rendered icons have no scope marker, hence :global */
     .site-search {
         display: inline-flex;
@@ -55,7 +57,7 @@ const t = translate(locale);
         height: 40px;
         padding: 10px 13px;
         font: inherit;
-        color: var(--semi-color-text-2);
+        color: var(--semi-color-text-1);
         cursor: pointer;
         background: var(--semi-color-fill-0);
         border: 0;
@@ -63,20 +65,25 @@ const t = translate(locale);
     }
 
     .site-search-text {
-        font-weight: 600;
+        font-weight: var(--semi-font-weight-bold);
     }
 
     .site-search-kbd {
-        margin-left: 4px;
+        margin-left: var(--semi-spacing-extra-tight);
         font-family: inherit;
+    }
+
+    /* Generated content, not text: axe's label-in-name check counts the button's text even under aria-hidden */
+    .site-search-kbd::before {
+        content: attr(data-keys);
     }
 
     .search-dialog {
         flex-direction: column;
-        gap: 16px;
-        width: min(684px, 100% - 32px);
+        gap: var(--semi-spacing-base);
+        width: min(684px, 100% - 2 * var(--semi-spacing-base));
         max-height: calc(100% - 160px);
-        padding: 24px;
+        padding: var(--semi-spacing-loose);
         margin: 80px auto auto;
         color: var(--semi-color-text-0);
         background: var(--semi-color-bg-2);
@@ -117,7 +124,7 @@ const t = translate(locale);
         flex: 1;
         min-width: 0;
         height: 100%;
-        padding: 0 12px;
+        padding: 0 var(--semi-spacing-base-tight);
         font: inherit;
         color: inherit;
         outline: none;
@@ -161,7 +168,7 @@ const t = translate(locale);
     }
 
     .search-group-label {
-        margin-bottom: 4px;
+        margin-bottom: var(--semi-spacing-extra-tight);
         color: var(--semi-color-text-2);
     }
 
@@ -178,8 +185,8 @@ const t = translate(locale);
         gap: 14px;
         align-items: center;
         min-height: 40px;
-        padding: 8px 8px 8px 7px;
-        font-size: 16px;
+        padding: var(--semi-spacing-tight) var(--semi-spacing-tight) var(--semi-spacing-tight) 7px;
+        font-size: var(--semi-font-size-header-6);
         cursor: pointer;
         border-radius: var(--semi-border-radius-medium);
     }
@@ -204,13 +211,13 @@ const t = translate(locale);
     }
 
     .search-empty {
-        padding: 8px 0;
+        padding: var(--semi-spacing-tight) 0;
         margin: 0;
         color: var(--semi-color-text-2);
         text-align: center;
     }
 
-    @media (max-width: 820px) {
+    @media (max-width: $sidebar-drawer) {
         .site-search {
             padding: 0;
             background: none;
@@ -226,7 +233,7 @@ const t = translate(locale);
         }
 
         .site-search :global(.semi-icon) {
-            font-size: 24px;
+            font-size: var(--semi-font-size-header-3);
         }
     }
 
