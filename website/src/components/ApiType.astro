@@ -18,7 +18,7 @@ const id = `api-type-${(Astro.locals.apiTypeCount = (Astro.locals.apiTypeCount ?
     }
 
     .api-type code {
-        color: var(--semi-color-warning);
+        color: var(--semi-color-warning-active);
         text-decoration: underline dotted;
         background: var(--semi-color-warning-light-default);
     }
@@ -30,7 +30,7 @@ const id = `api-type-${(Astro.locals.apiTypeCount = (Astro.locals.apiTypeCount ?
         z-index: 20;
         width: max-content;
         max-width: 650px;
-        padding: 8px 12px;
+        padding: var(--semi-spacing-tight) var(--semi-spacing-base-tight);
         font-family: var(--site-mono);
         font-size: 13px;
         color: var(--semi-color-text-0);

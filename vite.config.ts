@@ -41,7 +41,11 @@ export default defineConfig({
         vueIndentScriptAndStyle: true,
         svelte: true,
         // Svelte renders the whitespace between any two tags, so the formatter may not move it, even around block elements
-        overrides: [{ files: ['*.svelte'], options: { htmlWhitespaceSensitivity: 'strict' } }],
+        overrides: [
+            { files: ['*.svelte'], options: { htmlWhitespaceSensitivity: 'strict' } },
+            // The landing page shows these files in narrow cards, so they break props one per line
+            { files: ['website/src/components/landing/samples/**'], options: { printWidth: 80, singleAttributePerLine: true } },
+        ],
         sortPackageJson: false,
         sortImports: {
             newlinesBetween: false,

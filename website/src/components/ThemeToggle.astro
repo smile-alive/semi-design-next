@@ -1,5 +1,6 @@
 ---
 import { IconMoon, IconSun } from '@fibrae/semi-icons-react';
+import { Button } from '@fibrae/semi-ui-react';
 import { translate } from '#/i18n';
 import type { Locale } from '#/lib/docs';
 
@@ -10,16 +11,19 @@ interface Props {
 const t = translate(Astro.props.locale);
 ---
 
-<button type="button" class="site-icon-button theme-toggle" id="theme-toggle" aria-label={t('nav_theme')} aria-pressed="false">
-    <IconMoon className="theme-toggle-light" size="extra-large" />
-    <IconSun className="theme-toggle-dark" size="extra-large" />
-</button>
+<Button className="theme-toggle site-wide-only" data-theme-toggle theme="borderless" type="tertiary" size="large" aria-label={t('nav_theme')} aria-pressed="false">
+    <Fragment slot="icon">
+        <IconMoon className="theme-toggle-light" size="extra-large" />
+        <IconSun className="theme-toggle-dark" size="extra-large" />
+    </Fragment>
+</Button>
 
 <script>
     // body[theme-mode] is the single source: the button and dark-mode demos only change it; sync the button and persist
     const syncThemeToggle = () => {
         const dark = document.body.getAttribute('theme-mode') === 'dark';
-        document.getElementById('theme-toggle')?.setAttribute('aria-pressed', String(dark));
+        // MoreMenu carries a second toggle for narrow screens
+        for (const toggle of document.querySelectorAll('[data-theme-toggle]')) toggle.setAttribute('aria-pressed', String(dark));
         return dark;
     };
     const themeObserver = new MutationObserver(() => {
@@ -33,7 +37,7 @@ const t = translate(Astro.props.locale);
 
     // The header is replaced on every navigation, so clicks delegate to document
     document.addEventListener('click', (event) => {
-        if (!(event.target as Element).closest('#theme-toggle')) return;
+        if (!(event.target as Element).closest('[data-theme-toggle]')) return;
         if (document.body.getAttribute('theme-mode') === 'dark') {
             document.body.removeAttribute('theme-mode');
         } else {

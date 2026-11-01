@@ -1,5 +1,6 @@
 import { frameworkFiles, frameworkSpecifiers, type FrameworkLint } from '../framework.ts';
 import { jsxA11yRules } from '../jsx-a11y.ts';
+import { jsxPropsOrderRules, landingSamples } from '../jsx-props-order.ts';
 import { reactComponentOrder } from './component-order.ts';
 import { reactExemptions, reactIconOnClickExemptions } from './exemptions.ts';
 
@@ -39,48 +40,9 @@ export const react: FrameworkLint = {
             },
         },
         {
-            files: ['packages/{semi-ui-react,semi-ai-react}/**/*.tsx'],
+            files: ['packages/{semi-ui-react,semi-ai-react}/**/*.tsx', `${landingSamples}/*.react.tsx`],
             jsPlugins: ['eslint-plugin-perfectionist'],
-            rules: {
-                'perfectionist/sort-jsx-props': [
-                    'error',
-                    {
-                        type: 'alphabetical',
-                        order: 'asc',
-                        ignoreCase: true,
-                        groups: ['react-reserved', 'identity', 'element-type', 'class-name', 'style', 'data', 'a11y', 'form-state', 'unknown', 'render', 'react-special', 'callback'],
-                        customGroups: [
-                            { groupName: 'react-reserved', elementNamePattern: '^(key|ref)$' },
-                            { groupName: 'identity', elementNamePattern: '^(id|name)$' },
-                            { groupName: 'element-type', elementNamePattern: '^(as|component|type|htmlFor)$' },
-                            {
-                                groupName: 'class-name',
-                                elementNamePattern: '^(className|classNames|[a-z][a-zA-Z]*(ClassName|Class))$',
-                            },
-                            // matched before callback, so handleStyle and handleWrapperStyle are not handlers
-                            { groupName: 'style', elementNamePattern: '^(style|styles|[a-z][a-zA-Z]*Style)$' },
-                            { groupName: 'data', elementNamePattern: '^data-' },
-                            {
-                                groupName: 'a11y',
-                                elementNamePattern: ['^role$', '^aria-', '^tabIndex$', '^title$', '^alt$', '^lang$', '^dir$', '^hidden$', '^inert$', '^autoFocus$', '^accessKey$'],
-                            },
-                            {
-                                groupName: 'form-state',
-                                elementNamePattern: ['^(value|defaultValue)$', '^(checked|defaultChecked)$', '^(disabled|readOnly|required|multiple)$', '^(placeholder|autoComplete|form|min|max|step|pattern|maxLength|minLength)$'],
-                            },
-                            {
-                                groupName: 'render',
-                                elementNamePattern: ['^render[A-Z]', '[a-z]Render$', '^(icon|prefix|suffix|extra)$'],
-                            },
-                            {
-                                groupName: 'react-special',
-                                elementNamePattern: ['^children$', '^dangerouslySetInnerHTML$', '^suppressHydrationWarning$', '^suppressContentEditableWarning$'],
-                            },
-                            { groupName: 'callback', elementNamePattern: ['^on[A-Z]', '^handle[A-Z]'] },
-                        ],
-                    },
-                ],
-            },
+            rules: jsxPropsOrderRules,
         },
         {
             files: ['packages/semi-ai-react/**', 'packages/semi-ui-react/**'],

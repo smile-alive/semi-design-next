@@ -333,9 +333,9 @@ Other native attributes land on the split button group's root element (`role="gr
 
 - When the button is combined with other components, the button can only display \{verb\}, such as "Add", "Create", if the other components (such as Modal and Sidesheet) already provide enough context for the information
 
-| ✅ Recommended usage                                                             | ❌ Deprecated usage                                                             |
-| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| <img src='/assets/content_guide/button-good-2.png' style={{ width: '350px' }} /> | <img src='/assets/content_guide/button-bad-2.png' style={{ width: '350px' }} /> |
+| ✅ Recommended usage                                                                                                                             | ❌ Deprecated usage                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| <img src='/assets/content_guide/button-good-2.png' alt='The dialog primary button keeps its label short: "Create"' style={{ width: '350px' }} /> | <img src='/assets/content_guide/button-bad-2.png' alt='The dialog primary button repeats the title: "Create translation task"' style={{ width: '350px' }} /> |
 
 - Always write in Sentence case
 
@@ -352,21 +352,21 @@ Other native attributes land on the split button group's root element (`role="gr
 
 <Framework only="react">
 
-- #### Why does the icon prop of Button not work?
+- ### Why does the icon prop of Button not work?
     Please check the import path of Button. The correct import path is `import { Button } from '@fibrae/semi-ui-react;'`. If you mistakenly import from @fibrae/semi-ui-react/button/button, you get the basic Button component without icon support.
 
 </Framework>
 
 <Framework only="vue">
 
-- #### Why is the icon of Button not shown?
+- ### Why is the icon of Button not shown?
     The icon is passed through the `#icon` slot, not an `icon` prop: `<Button><template #icon><IconCamera /></template></Button>`.
 
 </Framework>
 
 <Framework only="svelte">
 
-- #### Why is the icon of Button not shown?
+- ### Why is the icon of Button not shown?
     The icon is passed through the `icon` snippet, not an `icon` component prop: `<Button>{#snippet icon()}<IconCamera />{/snippet}</Button>`.
 
 </Framework>

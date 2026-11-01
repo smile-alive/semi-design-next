@@ -890,7 +890,7 @@ Example:
 
 Other undeclared native attributes (such as `data-*` and `id`) fall on the root `div` element. When the root element has `aria-label` or `aria-labelledby` and no `role`, `role="group"` is added automatically. The `onDragOver`, `onDragStart` and `onDragEnd` listeners also fall on the root element, and Chat's own drag upload handling runs before the listeners passed by the caller.
 
-#### RoleConfig
+### RoleConfig
 
 | PROPERTIES | INSTRUCTIONS          | TYPE     | DEFAULT |
 | ---------- | --------------------- | -------- | ------- |
@@ -898,7 +898,7 @@ Other undeclared native attributes (such as `data-*` and `id`) fall on the root 
 | assistant  | Assistant information | Metadata | -       |
 | system     | System information    | Metadata | -       |
 
-#### Metadata
+### Metadata
 
 | PROPERTIES | INSTRUCTIONS                                                                                                                                                                                                                                            | TYPE                | DEFAULT |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | ------- |
@@ -914,7 +914,7 @@ Other undeclared native attributes (such as `data-*` and `id`) fall on the root 
 
 `class`, `style` and the other undeclared attributes land on the root element. When the root has `aria-label` or `aria-labelledby` and no `role`, it gets `role="group"`. The `dragover`, `dragstart` and `dragend` listeners also land on the root, and Chat's own drag-upload handling runs before the caller's listener.
 
-#### RoleConfig
+### RoleConfig
 
 | PROPERTIES | INSTRUCTIONS          | TYPE         | DEFAULT |
 | ---------- | --------------------- | ------------ | ------- |
@@ -922,7 +922,7 @@ Other undeclared native attributes (such as `data-*` and `id`) fall on the root 
 | assistant  | Assistant information | ChatMetadata | -       |
 | system     | System information    | ChatMetadata | -       |
 
-#### Metadata
+### Metadata
 
 | PROPERTIES | INSTRUCTIONS                                                                                                                                                                                                                                            | TYPE        | DEFAULT |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------- |
@@ -938,7 +938,7 @@ Other undeclared native attributes (such as `data-*` and `id`) fall on the root 
 
 `class`, `style` and the other undeclared attributes (such as `data-*` and `aria-*`) land on the root `div`, and `class` is merged with the component's own class name. When the root has `aria-label` or `aria-labelledby` and no `role`, it gets `role="group"`. The `onDragOver`, `onDragStart` and `onDragEnd` listeners also land on the root, and Chat's own drag-upload handling runs before the caller's listener.
 
-#### RoleConfig
+### RoleConfig
 
 | PROPERTIES | INSTRUCTIONS          | TYPE         | DEFAULT |
 | ---------- | --------------------- | ------------ | ------- |
@@ -946,7 +946,7 @@ Other undeclared native attributes (such as `data-*` and `id`) fall on the root 
 | assistant  | Assistant information | ChatMetadata | -       |
 | system     | System information    | ChatMetadata | -       |
 
-#### Metadata
+### Metadata
 
 | PROPERTIES | INSTRUCTIONS                                                                                                                                                                                                                                            | TYPE        | DEFAULT |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------- |
@@ -962,7 +962,7 @@ Other undeclared native attributes (such as `data-*` and `id`) fall on the root 
 
 `class`, `style` and the other undeclared attributes and events (such as `data-*`, `aria-*` and `ondragover`) land on the root `div`, and `class` is merged with the component's own class name. When the root has `aria-label` or `aria-labelledby` and no `role`, it gets `role="group"`. The `ondragover`, `ondragstart` and `ondragend` listeners also land on the root, and Chat's own drag-upload handling runs before the caller's listener.
 
-#### RoleConfig
+### RoleConfig
 
 | PROPERTIES | INSTRUCTIONS          | TYPE         | DEFAULT |
 | ---------- | --------------------- | ------------ | ------- |
@@ -970,7 +970,7 @@ Other undeclared native attributes (such as `data-*` and `id`) fall on the root 
 | assistant  | Assistant information | ChatMetadata | -       |
 | system     | System information    | ChatMetadata | -       |
 
-#### Metadata
+### Metadata
 
 | PROPERTIES | INSTRUCTIONS                                                                                                                                                                                                                                            | TYPE        | DEFAULT |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------- |
@@ -980,7 +980,7 @@ Other undeclared native attributes (such as `data-*` and `id`) fall on the root 
 
 </Framework>
 
-#### Message
+### Message
 
 | PROPERTIES | INSTRUCTIONS                                                            | TYPE                | DEFAULT  |
 | ---------- | ----------------------------------------------------------------------- | ------------------- | -------- |
@@ -992,7 +992,7 @@ Other undeclared native attributes (such as `data-*` and `id`) fall on the root 
 | createAt   | creation time                                                           | number              | -        |
 | status     | Information status， `loading` \| `incomplete` \| `complete` \| `error` | string              | complete |
 
-#### Content
+### Content
 
 | PROPERTIES | INSTRUCTIONS                                      | TYPE                                                        | DEFAULT |
 | ---------- | ------------------------------------------------- | ----------------------------------------------------------- | ------- |

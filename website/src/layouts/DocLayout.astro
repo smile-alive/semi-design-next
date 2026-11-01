@@ -4,10 +4,12 @@ import { ClientRouter } from 'astro:transitions';
 import '#/styles/reset.css';
 import '@fibrae/semi-foundation/base/tokens.scss';
 import '#/styles/docDemo.scss';
-import '#/styles/site.css';
+import '#/styles/site.scss';
 import PrevNext from '#/components/PrevNext.astro';
+import SeoHead from '#/components/SeoHead.astro';
 import SideNav from '#/components/SideNav.astro';
 import SiteHeader from '#/components/SiteHeader.astro';
+import ThemeScript from '#/components/ThemeScript.astro';
 import Toc from '#/components/Toc.astro';
 import { translate } from '#/i18n';
 import {
@@ -15,6 +17,7 @@ import {
     docIconUrl,
     docUrl,
     docFrameworks,
+    getDocs,
     getSidebar,
     locales,
     parseDocId,
@@ -22,6 +25,7 @@ import {
     type Framework,
     type Locale,
 } from '#/lib/docs';
+import { frameworkLabels } from '#/lib/frameworks';
 
 interface Props {
     doc: Doc;
@@ -61,8 +65,15 @@ const linkOf = (d: Doc | undefined) =>
         icon: docIconUrl(d.data.icon),
     };
 
-const { title } = doc.data;
+const { title, brief } = doc.data;
 const breadcrumb = locale === 'zh-CN' ? categoryLabel(locale, category) : `${categoryLabel(locale, category)} · ${title}`;
+
+// Each framework has its own URL for the same prose, so the framework name keeps titles and descriptions distinct.
+// Chinese readers also search components by English name, which the zh-CN title alone would miss
+const englishTitle = (await getDocs()).find((d) => d.id === `${category}/${page}/index.en-US`)?.data.title ?? title;
+const frameworkLabel = frameworkLabels[framework];
+const seoTitle = `${title.includes(englishTitle) ? title : `${title} ${englishTitle}`} - ${frameworkLabel} - Semi Design Next`;
+const seoDescription = locale === 'zh-CN' ? `Semi Design Next ${frameworkLabel}：${brief}` : `Semi Design Next for ${frameworkLabel}: ${brief}`;
 ---
 
 <!doctype html>
@@ -71,23 +82,11 @@ const breadcrumb = locale === 'zh-CN' ? categoryLabel(locale, category) : `${cat
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <ClientRouter />
-        <title>{title} - Semi Design Next</title>
-        {doc.data.brief && <meta name="description" content={doc.data.brief} />}
-        {locales.map((l) => <link rel="alternate" hreflang={l} href={localeHrefs[l]} />)}
-        <link rel="alternate" hreflang="x-default" href={localeHrefs['zh-CN']} />
+        <SeoHead title={seoTitle} description={seoDescription} locale={locale} hrefs={localeHrefs} type="article" />
     </head>
     <body>
         <a class="skip-link" href="#main">{t('nav_skip')}</a>
-        <script is:inline>
-            // Before first paint to avoid a dark flash; system default if unset; reads throw with storage disabled
-            let stored = null;
-            try {
-                stored = localStorage.getItem('semi-theme');
-            } catch {}
-            if (stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.body.setAttribute('theme-mode', 'dark');
-            }
-        </script>
+        <ThemeScript />
         <SiteHeader locale={locale} framework={framework} localeHrefs={localeHrefs} frameworkHrefs={frameworkHrefs} />
         <SideNav locale={locale} framework={framework} groups={navGroups} current={hrefOf(doc)} />
         <main class="site-main" id="main">
@@ -95,7 +94,7 @@ const breadcrumb = locale === 'zh-CN' ? categoryLabel(locale, category) : `${cat
                 <header class="doc-header">
                     <div class="doc-breadcrumb">{breadcrumb}</div>
                     <h1>{title}</h1>
-                    {doc.data.brief && <p class="doc-brief">{doc.data.brief}</p>}
+                    <p class="doc-brief">{brief}</p>
                 </header>
                 <article class="doc">
                     <slot />

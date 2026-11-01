@@ -1,7 +1,9 @@
 ---
 import { IconGithubLogo, IconMenu } from '@fibrae/semi-icons-react';
+import { Button } from '@fibrae/semi-ui-react';
 import SemiLogo from '#/assets/semi-logo.svg';
 import LocaleMenu from '#/components/LocaleMenu.astro';
+import MoreMenu from '#/components/MoreMenu.astro';
 import FrameworkMenu from '#/components/FrameworkMenu.astro';
 import SearchDialog from '#/components/SearchDialog.astro';
 import ThemeToggle from '#/components/ThemeToggle.astro';
@@ -13,17 +15,24 @@ interface Props {
     framework: Framework;
     localeHrefs: Record<Locale, string>;
     frameworkHrefs: Partial<Record<Framework, string>>;
+    // the menu button opens SideNav; pages without SideNav must leave it out so popoverTarget has a target
+    sideNav?: boolean;
 }
 
-const { locale, framework, localeHrefs, frameworkHrefs } = Astro.props;
+const { locale, framework, localeHrefs, frameworkHrefs, sideNav = true } = Astro.props;
 const t = translate(locale);
+const github = 'https://github.com/smile-alive/semi-design-next';
 ---
 
 <header class="site-header">
-    <button type="button" class="site-icon-button site-menu" id="nav-toggle" aria-controls="side-nav" aria-expanded="false" aria-label={t('nav_menu')}>
-        <IconMenu size="extra-large" />
-    </button>
-    <a class="site-logo" href={docUrl(locale, framework, 'start', 'introduction')} aria-label="Semi Design Next">
+    {
+        sideNav && (
+            <Button className="site-menu" id="nav-toggle" theme="borderless" type="tertiary" size="large" popoverTarget="side-nav" aria-label={t('nav_menu')}>
+                <IconMenu slot="icon" size="extra-large" />
+            </Button>
+        )
+    }
+    <a class="site-logo" href={`/${locale}/`} aria-label="Semi Design Next">
         <SemiLogo aria-hidden="true" />
     </a>
     <nav class="site-nav" aria-label={t('nav_main')}>
@@ -33,14 +42,56 @@ const t = translate(locale);
         <SearchDialog locale={locale} framework={framework} />
         <ThemeToggle locale={locale} />
         <FrameworkMenu locale={locale} framework={framework} hrefs={frameworkHrefs} />
-        <a class="site-icon-button" href="https://github.com/smile-alive/semi-design-next" aria-label="GitHub">
+        <a class="site-icon-button site-wide-only" href={github} aria-label="GitHub">
             <IconGithubLogo size="extra-large" />
         </a>
         <LocaleMenu locale={locale} hrefs={localeHrefs} />
+        <MoreMenu locale={locale} framework={framework} localeHrefs={localeHrefs} frameworkHrefs={frameworkHrefs} github={github} />
     </div>
+    <div class="site-nav-progress" aria-hidden="true" />
 </header>
 
-<style>
+<script>
+    // Header and sidebar are replaced on every navigation, so clicks delegate to document
+    document.addEventListener('click', (event) => {
+        (event.target as Element).closest('a')?.closest<HTMLElement>('.site-header :popover-open, #side-nav:popover-open')?.hidePopover();
+    });
+    // The client router handles clicks in the bubble phase and skips preventDefault'ed ones, so intercept in capture
+    document.addEventListener(
+        'click',
+        (event) => {
+            if ((event.target as Element).closest('.site-header [popover] a[aria-current="page"], #side-nav a[aria-current="page"]')) event.preventDefault();
+        },
+        true
+    );
+
+    // The delay keeps fast navigations from flashing the bar. The swap replaces the header, so the new page's bar
+    // finishes from where the old one stopped; redirect pages have no header
+    const progressDelay = 150;
+    const progressBar = () => document.querySelector('.site-nav-progress');
+    let trickle: Animation | undefined;
+    let reached: string | undefined;
+    document.addEventListener('astro:before-preparation', () => {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        trickle?.cancel();
+        trickle = progressBar()?.animate(
+            { transform: ['scaleX(0)', 'scaleX(0.9)'] },
+            { delay: progressDelay, duration: 10000, easing: 'cubic-bezier(0.1, 0.8, 0.2, 1)', fill: 'forwards' }
+        );
+    });
+    document.addEventListener('astro:before-swap', () => {
+        const bar = progressBar();
+        reached = bar && Number(trickle?.currentTime) >= progressDelay ? getComputedStyle(bar).transform : undefined;
+    });
+    document.addEventListener('astro:after-swap', () => {
+        if (reached) progressBar()?.animate({ transform: [reached, 'scaleX(1)', 'scaleX(1)'], opacity: [1, 1, 0] }, { duration: 400 });
+        trickle = undefined;
+    });
+</script>
+
+<style lang="scss">
+    @use '../styles/breakpoints' as *;
+
     .site-header {
         position: fixed;
         inset: 0 0 auto;
@@ -48,7 +99,7 @@ const t = translate(locale);
         display: flex;
         align-items: center;
         height: var(--site-header-height);
-        padding: 0 24px;
+        padding: 0 var(--semi-spacing-loose);
         background: color-mix(in srgb, var(--semi-color-bg-0) 75%, transparent);
         border-bottom: 1px solid var(--semi-color-border);
         backdrop-filter: saturate(1.8) blur(40px);
@@ -58,38 +109,66 @@ const t = translate(locale);
         text-decoration: none;
     }
 
+    .site-nav-progress {
+        position: absolute;
+        inset: 0 0 auto;
+        height: 2px;
+        background: var(--semi-color-primary);
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+
     .site-logo {
         display: flex;
-        margin-left: 8px;
+        margin-left: var(--semi-spacing-tight);
         color: var(--semi-color-text-0);
     }
 
     .site-nav {
         display: flex;
-        gap: 40px;
-        margin-left: 40px;
+        gap: var(--semi-spacing-super-loose);
+        margin-left: var(--semi-spacing-super-loose);
     }
 
     .site-nav a {
-        font-weight: 600;
+        font-weight: var(--semi-font-weight-bold);
         color: var(--semi-color-text-0);
     }
 
     .site-actions {
         display: flex;
-        gap: 18px;
+        gap: var(--semi-spacing-extra-tight);
         align-items: center;
         margin-left: auto;
     }
 
     .site-menu {
         display: none;
-        margin-right: 12px;
+        margin-right: var(--semi-spacing-base-tight);
     }
 
-    @media (max-width: 820px) {
+    /* Child components render these, partly through React, so they have no scope marker from this component */
+    .site-actions :global(.more-menu-button) {
+        display: none;
+    }
+
+    @media (max-width: $sidebar-drawer) {
+        .site-actions :global(.site-wide-only) {
+            display: none;
+        }
+
+        .site-actions :global(.more-menu-button) {
+            display: inline-flex;
+        }
+
+        /* The 40px Semi buttons carry their own padding, so the bar edge and the menu button need none */
+        .site-header {
+            padding-inline: var(--semi-spacing-tight);
+        }
+
         .site-menu {
             display: inline-flex;
+            margin-right: 0;
         }
 
         .site-nav {

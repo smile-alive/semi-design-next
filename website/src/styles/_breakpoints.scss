@@ -1,0 +1,4 @@
+// Layout breakpoints of the docs shell, used as max-width; SideNav's matchMedia repeats $sidebar-drawer in JS
+$sidebar-drawer: 820px; // the sidebar becomes a drawer
+$toc-hidden: 1399px; // the Toc hides and the article takes the full width
+$toc-narrow: 1599px; // the Toc narrows to 120px
