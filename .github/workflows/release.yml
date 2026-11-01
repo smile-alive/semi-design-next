@@ -1,26 +1,28 @@
 name: Release
 
-# workflow_run only fires from this file on the default branch
+# A push trigger, not workflow_run: workflow_run sets github.sha and github.ref to the default branch (release), and
+# changesets/action resets the version branch, tags and targets its PR from those. npm Trusted Publishing matches
+# this file as the top-level workflow, so publishing stays here rather than in a reusable workflow
 on:
-    workflow_run:
-        workflows: [CI]
-        types: [completed]
+    push:
         branches: [main]
 
-concurrency: release
-
 permissions:
-    contents: write
-    pull-requests: write
-    id-token: write
+    contents: read
 
 jobs:
+    ci:
+        uses: ./.github/workflows/ci.yml
+
     release:
-        # changesets/action tags and resets the version branch at github.sha, the newest main commit; when main
-        # has moved past the commit CI passed, that commit's own CI run releases it
-        if: >-
-            github.repository == 'smile-alive/semi-design-next' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_sha == github.sha
+        if: github.repository == 'smile-alive/semi-design-next'
+        needs: ci
         runs-on: ubuntu-latest
+        concurrency: release
+        permissions:
+            contents: write
+            pull-requests: write
+            id-token: write
         steps:
             - uses: actions/checkout@v5
             - uses: jdx/mise-action@v5
@@ -30,9 +32,29 @@ jobs:
             # skipped tags and GitHub releases; v2 reads the CLI's CHANGESETS_OUTPUT file. v2 has no floating major tag.
             # No NPM_TOKEN: every @fibrae package trusts this workflow, so the CLI publishes through OIDC
             # (`id-token: write`) and attaches provenance on its own
-            - uses: changesets/action@v2.1.2
+            - id: changesets
+              uses: changesets/action@v2.1.2
               with:
                   version-script: pnpm changeset version
                   publish-script: pnpm changeset publish
                   pr-title: 'chore: 发布新版本'
                   commit-message: 'chore: 发布新版本'
+            # The version commit lands on main only; without this PR the next release -> main PR conflicts on it
+            - if: steps.changesets.outputs.published == 'true'
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  if [ "$(gh api "repos/$GITHUB_REPOSITORY/compare/release...main" --jq .ahead_by)" = 0 ]; then
+                      exit 0
+                  fi
+                  if [ -n "$(gh pr list --base release --head main --state open --json number --jq '.[].number')" ]; then
+                      exit 0
+                  fi
+                  gh pr create --base release --head main --title 'chore: 发版后同步 main 到 release' \
+                      --body '发布后 main 上的版本提交与 CHANGELOG 合回 release。用「Create a merge commit」合并。'
+
+    site:
+        if: github.repository == 'smile-alive/semi-design-next'
+        needs: ci
+        uses: ./.github/workflows/site.yml
+        secrets: inherit
