@@ -13,6 +13,7 @@ import solidSample from '#/components/landing/samples/select.solid.tsx?raw';
 import svelteSample from '#/components/landing/samples/select.svelte?raw';
 import vueSample from '#/components/landing/samples/select.vue?raw';
 import FrameworkLogo from '#/components/FrameworkLogo.astro';
+import SeoHead from '#/components/SeoHead.astro';
 import SiteHeader from '#/components/SiteHeader.astro';
 import ThemeScript from '#/components/ThemeScript.astro';
 import { translate } from '#/i18n';
@@ -79,10 +80,7 @@ const samples = [
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <ClientRouter />
-        <title>{l.title}</title>
-        <meta name="description" content={l.description} />
-        {locales.map((item) => <link rel="alternate" hreflang={item} href={localeHrefs[item]} />)}
-        <link rel="alternate" hreflang="x-default" href={localeHrefs['zh-CN']} />
+        <SeoHead title={l.title} description={l.description} locale={locale} hrefs={localeHrefs} type="website" />
     </head>
     <body>
         <a class="skip-link" href="#main">{t('nav_skip')}</a>

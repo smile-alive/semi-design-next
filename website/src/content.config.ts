@@ -13,7 +13,7 @@ const docs = defineCollection({
     }),
     schema: z.object({
         title: z.string(),
-        brief: z.string().optional(),
+        brief: z.string(),
         order: z.number(),
         icon: z.string().optional(),
         showNew: z.boolean().optional(),

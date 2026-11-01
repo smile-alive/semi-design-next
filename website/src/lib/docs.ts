@@ -35,8 +35,9 @@ export function parseDocId(id: string) {
     return { category, page, locale: locale as Locale };
 }
 
+// The trailing slash is the served URL: Cloudflare Pages answers the slashless form with a 308
 export function docUrl(locale: Locale, framework: Framework, category: string, page: string) {
-    return `/${locale}/${framework}/${category}/${page}`;
+    return `/${locale}/${framework}/${category}/${page}/`;
 }
 
 // sidebar group order; labels are category_<folder> in src/i18n
