@@ -6,6 +6,7 @@ import { type CheckboxEvent, type CheckboxProps, Checkbox } from '../checkbox';
 export interface TableSelectionCellProps {
     getCheckboxProps?: () => CheckboxProps;
     onChange?: (checked: boolean, e: CheckboxEvent) => void;
+    onKeyUp?: React.KeyboardEventHandler<HTMLSpanElement>;
     selected?: boolean;
     disabled?: boolean;
     indeterminate?: boolean; // Intermediate state, shown as a solid horizontal line
@@ -15,13 +16,14 @@ export interface TableSelectionCellProps {
 }
 
 export default function TableSelectionCell(props: TableSelectionCellProps) {
-    const { selected, getCheckboxProps, indeterminate, disabled = false, prefixCls = cssClasses.PREFIX, className, onChange = noop } = props;
+    const { selected, getCheckboxProps, indeterminate, disabled = false, prefixCls = cssClasses.PREFIX, className, onChange = noop, onKeyUp } = props;
 
     let checkboxProps: CheckboxProps = {
         onChange: (e: CheckboxEvent) => onChange(e.target.checked, e),
         disabled,
         indeterminate,
         checked: selected,
+        onKeyUp,
     };
 
     if (typeof getCheckboxProps === 'function') {

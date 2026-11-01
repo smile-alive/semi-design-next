@@ -186,6 +186,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     #rangeAnchor: BaseRowKeyType | null = null;
     #rangeBase: Set<BaseRowKeyType> | null = null;
     #rangeResult: Set<BaseRowKeyType> | null = null;
+    #spaceShiftKey = false;
 
     static #pagerIsControlled(props: { pagination?: BasePagination | boolean }) {
         return (props.pagination as BasePagination)?.currentPage != null;
@@ -1188,12 +1189,22 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         this.#notifyChange(pagination, undefined, undefined, { changeType: 'pagination' });
     };
 
+    // Firefox leaves shiftKey false on the click (detail 0) that a Space keyup fires on a checkbox, so the selection
+    // cell reports the keyup here and handleSelectRow reads its Shift state
+    handleSelectionKeyUp = (e: Pick<KeyboardEvent, 'key' | 'shiftKey'>) => {
+        if (e.key === ' ') {
+            this.#spaceShiftKey = e.shiftKey;
+        }
+    };
+
     handleSelectRow = (realKey: BaseRowKeyType, selected: boolean, e?: BaseSelectRowEvent) => {
         e?.stopPropagation();
         if (typeof selected === 'boolean' && realKey != null) {
             const checkRelation = this.adapter.getCheckRelation();
             // a related tree checks whole subtrees, so a Shift range has no clear meaning there
-            const shiftKey = e?.shiftKey ?? e?.nativeEvent?.shiftKey;
+            const native = e?.nativeEvent;
+            const shiftKey = e?.shiftKey ?? (native?.shiftKey || (native?.detail === 0 && this.#spaceShiftKey));
+            this.#spaceShiftKey = false;
             if (shiftKey && checkRelation !== 'related' && this.#rangeAnchor != null && this.#selectRange(realKey)) {
                 return;
             }
@@ -1444,7 +1455,7 @@ export type BaseRowKeyType = string | number;
 export interface BaseSelectRowEvent {
     stopPropagation: () => void;
     shiftKey?: boolean;
-    nativeEvent?: { shiftKey?: boolean };
+    nativeEvent?: { shiftKey?: boolean; detail?: number };
 }
 export type BaseRowKey<RecordType> = BaseRowKeyType | ((record: RecordType) => BaseRowKeyType);
 export interface BasePagination {

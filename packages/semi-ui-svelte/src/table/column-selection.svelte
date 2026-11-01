@@ -44,7 +44,7 @@
 <!-- The checkbox is fully controlled: the table state decides, so a rejected change shows the old value -->
 {#snippet originNode()}
     <span class={[`${table.prefixCls}-selection-wrap`, { [`${table.prefixCls}-selection-disabled`]: disabled }]}>
-        <Checkbox aria-label={inHeader ? locale().locale.selectAllRows : locale().locale.selectRow} {disabled} {...checkboxProps} bind:checked={() => selected, () => {}} {indeterminate} onChange={handleChange} />
+        <Checkbox aria-label={inHeader ? locale().locale.selectAllRows : locale().locale.selectRow} {disabled} {...checkboxProps} bind:checked={() => selected, () => {}} {indeterminate} onChange={handleChange} onkeyup={table.foundation.handleSelectionKeyUp} />
     </span>
 {/snippet}
 

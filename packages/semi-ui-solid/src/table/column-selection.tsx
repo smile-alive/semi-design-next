@@ -9,6 +9,7 @@ import { useTableContext } from './context';
 export interface TableSelectionCellProps {
     getCheckboxProps?: () => CheckboxProps;
     onChange?: (checked: boolean, e: CheckboxEvent) => void;
+    onKeyUp?: (e: KeyboardEvent) => void;
     selected?: boolean;
     disabled?: boolean;
     indeterminate?: boolean;
@@ -22,7 +23,7 @@ export default function TableSelectionCell(props: TableSelectionCellProps) {
 
     return (
         <span class={clsx(`${prefixCls()}-selection-wrap`, { [`${prefixCls()}-selection-disabled`]: Boolean(props.disabled) }, props.class)}>
-            <Checkbox aria-label={props['aria-label']} disabled={Boolean(props.disabled)} indeterminate={props.indeterminate} checked={props.selected} onChange={(e) => props.onChange?.(e.target.checked, e)} {...props.getCheckboxProps?.()} />
+            <Checkbox aria-label={props['aria-label']} disabled={Boolean(props.disabled)} indeterminate={props.indeterminate} checked={props.selected} onKeyUp={props.onKeyUp} onChange={(e) => props.onChange?.(e.target.checked, e)} {...props.getCheckboxProps?.()} />
         </span>
     );
 }
@@ -60,7 +61,7 @@ export function TableSelection(props: { record?: Record<string, any>; inHeader?:
         props.inHeader ? (
             <TableSelectionCell aria-label={locale().locale.selectAllRows} disabled={disabled()} indeterminate={indeterminate()} selected={selected()} onChange={selectAll} />
         ) : (
-            <TableSelectionCell aria-label={locale().locale.selectRow} getCheckboxProps={getCheckboxProps} indeterminate={indeterminate()} selected={selected()} onChange={selectRow} />
+            <TableSelectionCell aria-label={locale().locale.selectRow} getCheckboxProps={getCheckboxProps} indeterminate={indeterminate()} selected={selected()} onChange={selectRow} onKeyUp={table.foundation.handleSelectionKeyUp} />
         );
 
     // renderCell is called once with live fields, so what it reads in its JSX follows the selection

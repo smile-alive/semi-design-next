@@ -107,7 +107,7 @@ function TableSelection({ record, inHeader, index }: { record?: any; inHeader?: 
 
     const selectRow = (rowSelected: boolean, e?: Pick<Event, 'stopPropagation'>) => foundation.handleSelectRow(key, rowSelected, e);
 
-    const originNode = <ColumnSelection aria-label={locale.selectRow} getCheckboxProps={() => (typeof getCheckboxProps === 'function' ? getCheckboxProps(record) : {})} indeterminate={halfChecked} selected={selected} onChange={selectRow} />;
+    const originNode = <ColumnSelection aria-label={locale.selectRow} getCheckboxProps={() => (typeof getCheckboxProps === 'function' ? getCheckboxProps(record) : {})} indeterminate={halfChecked} selected={selected} onChange={selectRow} onKeyUp={foundation.handleSelectionKeyUp} />;
 
     return typeof renderCell === 'function'
         ? renderCell({
