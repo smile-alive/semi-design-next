@@ -115,13 +115,23 @@ pnpm site:stop
 - pre-commit 对暂存文件运行 `vp lint --fix`、`vp fmt`、stylelint，`.vue` 与 `.svelte` 另跑 ESLint，warning 也会阻止提交；规则见 `vite.config.ts` 的 `staged`。
 - 钩子由 `pnpm install` 的 `prepare`（`vp config`）安装，`core.hooksPath` 设为相对路径 `.vite-hooks/_`。`vp config` 不覆盖已有的其他 `core.hooksPath`，提交时钩子没有执行就先 `git config --unset core.hooksPath`，再跑 `pnpm install`。
 
+## 分支
+
+| 分支      | 作用                                                                                                                                                    |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `release` | 默认分支，集成分支。所有改动从它拉分支，经 PR 合入；推送后跑 CI，通过后部署预览站 `release.semi-design-next.pages.dev`。每日的 Browser tests 也跑在这里 |
+| `main`    | 已发版的代码。只接收 `release` 的发版 PR 与 Release 工作流的版本 PR，不直接推送                                                                         |
+
+功能 PR 合入 `release` 时可以 squash；`release` 与 `main` 之间互相合并一律用「Create a merge commit」，squash 会让两边历史分叉，下一次合并必然冲突。
+
 ## 发布
 
 所有 `@fibrae/*` 包发布到 npm 公共 registry，共用一个版本号，由 [changesets](.changeset/README.md) 管理。
 
-1. 改动发布包的行为或公开 API 时，运行 `pnpm changeset` 添加变更说明；没有 changeset 的改动不会发版。
-2. 推送到 `main` 后先跑 CI；CI 通过后 Release 工作流开出「chore: 发布新版本」PR，汇总版本号与各包 CHANGELOG。
-3. 这个 PR 由 github-actions[bot] 开出，它的 CI 停在等待批准：在 PR 底部点「Approve workflows to run」，CI 通过后再 squash 合入。
-4. 合入后 `main` 上的 CI 通过，Release 工作流用 npm Trusted Publishing（OIDC，不用 `NPM_TOKEN`）发布并附带 provenance，再为每个包推送 `<包名>@<版本>` tag 并创建 GitHub Release。新增的发布包要先在 npm 上存在并为 `release.yml` 配置 Trusted Publisher，才能由工作流发布。
+1. 改动发布包的行为或公开 API 时，在功能 PR 里运行 `pnpm changeset` 添加变更说明；没有 changeset 的改动不会发版。
+2. 要发版时，开一个 `release` -> `main` 的 PR，CI 通过后用 merge commit 合入。
+3. `main` 收到推送后，Release 工作流先跑 CI，通过后开出「chore: 发布新版本」PR，汇总版本号与各包 CHANGELOG。这个 PR 由 github-actions[bot] 开出，它的 CI 停在等待批准：在 PR 底部点「Approve workflows to run」，CI 通过后再 squash 合入。
+4. 版本 PR 合入后，Release 工作流用 npm Trusted Publishing（OIDC，不用 `NPM_TOKEN`）发布并附带 provenance，为每个包推送 `<包名>@<版本>` tag 并创建 GitHub Release。新增的发布包要先在 npm 上存在并为 `release.yml` 配置 Trusted Publisher，才能由工作流发布。
+5. 发布成功后，Release 工作流开出「chore: 发版后同步 main 到 release」PR，把版本提交合回 `release`。它同样要先批准 CI，再用 merge commit 合入，否则下一次发版 PR 会冲突。
 
-文档站由 Deploy site 工作流在 `main` 的 CI 通过后部署到 Cloudflare Pages，也可在 Actions 页手动触发。
+正式文档站由 Release 工作流在 `main` 的 CI 通过后部署到 Cloudflare Pages。也可以在 Actions 页手动运行 Deploy site，「Use workflow from」选 `main` 部署正式站，选 `release` 部署预览站。

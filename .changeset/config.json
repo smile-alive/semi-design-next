@@ -1,6 +1,6 @@
 {
     "$schema": "https://unpkg.com/@changesets/config@4.0.1/schema.json",
-    "baseBranch": "main",
+    "baseBranch": "release",
     "access": "public",
     "fixed": [["@fibrae/*"]],
     "ignore": [],
