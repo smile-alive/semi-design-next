@@ -30,7 +30,6 @@
     const plainDescription = $derived(String(item.description ?? ''));
     const hasTitle = $derived(Boolean(steps.title) || plainTitle !== '');
     const hasDescription = $derived(Boolean(steps.description) || plainDescription !== '');
-
     const titleText = $derived(steps.title ? undefined : plainTitle || undefined);
     const descriptionText = $derived(steps.description ? undefined : plainDescription || undefined);
 

@@ -105,7 +105,6 @@
     const labelledby = $derived(joinIds(rest['aria-labelledby'], children ? addonDomId : undefined));
     const tooltip = $derived(bindTrigger());
     const describedby = $derived(joinIds(rest['aria-describedby'], extra ? extraDomId : undefined, tooltip?.['aria-describedby']));
-
     const attrs = $derived(splitControlAttrs(rest, isNativeInputKey));
 
     // The root is a span rather than a label so that text clicks and box clicks share this one handler (gitlab #364).

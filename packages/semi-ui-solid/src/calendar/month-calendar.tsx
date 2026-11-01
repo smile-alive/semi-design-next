@@ -245,7 +245,6 @@ export default function MonthCalendar(props: DayCalendarProps) {
     };
 
     useResizeObserver(grid, measureItemLimit);
-
     createEffect(on([() => local.height, () => weeks().length], measureItemLimit));
 
     createEffect(() => {

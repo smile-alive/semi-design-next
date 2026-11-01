@@ -75,7 +75,6 @@
     const config = getConfigContext();
 
     let tooltip = $state<Tooltip>();
-
     let triggerElement = $state.raw<HTMLElement | null>(null);
     let popupElement = $state<HTMLDivElement>();
     let textOnly = $state(false);

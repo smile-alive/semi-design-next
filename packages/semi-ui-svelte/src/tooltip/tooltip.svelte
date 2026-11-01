@@ -89,7 +89,6 @@
     const parentPopups = getTooltipPopupsContext();
 
     const uid = $props.id();
-
     let triggerElement = $state.raw<HTMLElement | null>(null);
     let container = $state.raw<HTMLDivElement | null>(null);
 
@@ -113,7 +112,6 @@
     // showing again in one task (focus moving between trigger and popup with a zero delay) stays synchronous
     let selfWritten = false;
     const descendants = new SvelteSet<() => HTMLElement | null>();
-
     const triggers = new SvelteMap<Element, () => TriggerState>();
 
     const attachmentKey = createAttachmentKey();

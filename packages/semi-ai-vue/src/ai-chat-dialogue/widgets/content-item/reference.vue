@@ -10,7 +10,6 @@
 
     const prefixCls = cssClasses.PREFIX_REFERENCES;
     const referencePrefixCls = cssClasses.PREFIX_REFERENCE;
-
     const ICONS = { word: IconWord, pdf: IconPdf, excel: IconExcel, code: IconCode, video: IconVideo };
 
     const items = computed(() =>

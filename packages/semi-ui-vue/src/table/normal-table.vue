@@ -33,7 +33,6 @@
     type Adapter = TableAdapter<AnyRecord, FoundationProps>;
 
     defineOptions({ inheritAttrs: false });
-
     const props = defineProps<TableProps<R> & { collectedColumns?: CollectedColumns }>();
     const emit = defineEmits<TableEmits<R>>();
     const slots = defineSlots<TableSlots<R>>();

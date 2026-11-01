@@ -128,7 +128,6 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
     );
 
     const ref = props.ref;
-
     const focusTarget = { focus: foundation.handleOpened };
     const handle: DropdownHandle = { focusTrigger: () => tooltip?.focusTrigger(), rePosition: () => tooltip?.rePosition() };
     const view = createMemo(() => ({ menuDepth: (parent?.view().menuDepth ?? 0) + 1, showTick: props.showTick, selectionMode: local.selectionMode, trigger: props.trigger }));

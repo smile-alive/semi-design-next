@@ -36,7 +36,6 @@
     // every layout rebuilds the spans, so a fresh id remounts each custom render on its new span
     let customRenderEntries = $state.raw<CustomRenderEntry[]>([]);
     let nextEntryId = 0;
-
     let appliedOptions: JsonViewerOptions;
 
     const prefix = cssClasses.PREFIX;

@@ -10,7 +10,6 @@
     const ctx = getNavContext('Nav.Footer');
 
     const prefix = cssClasses.PREFIX;
-
     const showButton = $derived(!children && Boolean(collapseButton) && ctx.mode !== strings.MODE_HORIZONTAL);
 </script>
 

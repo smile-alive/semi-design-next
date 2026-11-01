@@ -14,7 +14,6 @@
     import RatingItem from './item.svelte';
 
     type ClickEvent = MouseEvent | KeyboardEvent;
-
     type ListFocusEvent = FocusEvent & RatingFocusEvent;
     type Foundation = RatingFoundation<RatingBaseProps, RatingState, ClickEvent, ListFocusEvent, KeyboardEvent>;
     type Adapter = RatingAdapter<RatingBaseProps, RatingState, ClickEvent, ListFocusEvent, KeyboardEvent>;

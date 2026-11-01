@@ -55,7 +55,6 @@
     });
 
     const threshold = computed(() => getStackThreshold(props.items[0].stack ?? readSemiDefault(semi, 'Notification', 'stack')));
-
     const shown = computed(() => props.items.filter((item) => !props.removedIds.includes(item.id)));
     const expanded = computed(() => paused.value || shown.value.length <= threshold.value);
     const rows = computed(() => shown.value.map((item, index) => ({ item, depth: index, layer: shown.value.length - index })));

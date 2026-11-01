@@ -301,7 +301,6 @@ function Upload(rawProps: UploadProps) {
     // A control inside a button is invalid nesting with two Tab stops, so when the content brings its own control it
     // is the button and its click bubbles up; observed since children may change what they render
     const [addAreaHasControl, setAddAreaHasControl] = useState(false);
-
     const [addAreaHasName, setAddAreaHasName] = useState(true);
     let addContent: ReactNode = null;
 

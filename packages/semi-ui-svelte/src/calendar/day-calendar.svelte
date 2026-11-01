@@ -36,7 +36,6 @@
     const prefixCls = `${cssClasses.PREFIX}-day`;
     const allDayCls = `${cssClasses.PREFIX}-all-day`;
     const parsedEvents = $derived(CalendarFoundation.getParseDailyEvents(events, displayValue));
-
     const dayStart = $derived(startOfDay(displayValue));
     const isWeekend = $derived(markWeekend && checkWeekend(displayValue));
 </script>

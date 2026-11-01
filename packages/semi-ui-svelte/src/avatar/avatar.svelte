@@ -87,7 +87,6 @@
 
     const prefix = cssClasses.PREFIX;
     const more = outerMore?.layer === layer ? outerMore : undefined;
-
     const size = $derived(ownSize ?? more?.size ?? defaults('size', 'medium'));
     const shape = $derived(ownShape ?? more?.shape ?? defaults('shape', 'circle'));
     const clickable = $derived(rest.onclick !== undefined);

@@ -19,7 +19,6 @@
 
     // $size-audio-player-slider-dot
     const dotSize = 16;
-
     const percent = $derived(max ? (value / max) * 100 : 0);
 
     // the popup is anchored to the slider's center, so only a translate moves it to the pointer; the vertical offset

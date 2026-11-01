@@ -69,7 +69,6 @@
     const lineNumberEl = useTemplateRef('lineNumber');
     const clearButton = useTemplateRef('clearButton');
     const lineLayout = shallowRef({ width: 0, height: 0 });
-
     const draft = shallowRef<string>();
 
     // only `looks.disabled` is used: a TextArea has no size

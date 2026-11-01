@@ -162,7 +162,6 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
     const overflowItems = createMemo(() => view().overflow, [], { equals: shallowEqual });
     const isScroll = createMemo(() => props.renderMode === 'scroll');
     const threshold = createMemo(() => props.threshold);
-
     const items = createMemo(() => props.items);
     const overflowRenderer = createMemo(() => local.overflowRenderer);
     const overflowRenderDirection = createMemo(() => local.overflowRenderDirection);

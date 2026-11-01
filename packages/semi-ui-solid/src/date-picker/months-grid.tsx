@@ -58,7 +58,6 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
     const props = mergeProps(defaultProps, rawProps);
 
     const titleId = createUniqueId();
-
     const columns = new Set<Reselectable>();
 
     // the cached height of both panels while they show a scroll list; 0 means measure it

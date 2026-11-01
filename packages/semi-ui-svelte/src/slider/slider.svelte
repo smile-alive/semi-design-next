@@ -151,7 +151,6 @@
     );
 
     const shownMarks = $derived(markList.filter((item) => item.active !== false));
-
     const attrs = $derived(splitControlAttrs(rest, (key) => key.startsWith('aria-') || key === 'name' || key === 'autofocus' || key === 'tabindex'));
 
     // The inputs are the Tab stops, and the slider role supports no aria-required (a native range has no required either);

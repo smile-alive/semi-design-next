@@ -520,7 +520,6 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     let inner: React.ReactNode;
 
     const filterable = Boolean(filter);
-
     const activeDescendant = isOpen && !loading && deferredFocusIndex !== -1 && deferredFocusIndex < visibleOptions.length ? `${selectID}-option-${deferredFocusIndex}` : undefined;
     const hasPrefix = hasContent(prefix) || hasContent(insetLabel);
     const insetLabelShown = hasContent(insetLabel) && !hasContent(prefix) && typeof triggerRender !== 'function';
