@@ -60,7 +60,7 @@ export function ColorBlock({ colorKey, colorVar, theme }: ColorBlockProps) {
         );
 
     const content = (
-        <button type="button" className={styles['color-block']} style={{ border: 'none', fontFamily: 'inherit', color: 'inherit', textAlign: 'left' }} onClick={copy}>
+        <button type="button" className={styles['color-block']} data-contrast-sample style={{ border: 'none', fontFamily: 'inherit', color: 'inherit', textAlign: 'left' }} onClick={copy}>
             <span className={styles['color-rect']} data-color={colorVar} style={isAiGeneral ? { background: colorVar } : { backgroundColor: colorVar }} />
             <span className={`${styles['color-cap']} ${styles[colorCapClassName]}`}>
                 <span className={styles['color-name']}>{colorName}</span>
