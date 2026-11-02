@@ -25,11 +25,18 @@
     height: 100%;
 }
 
+.app-window .semi-navigation-item-text:has(.app-window-nav-badge) {
+    flex: 1;
+}
+
 .app-window-nav-badge {
     display: flex;
-    flex: 1;
     align-items: center;
     justify-content: space-between;
+}
+
+.app-window-nav-badge .semi-badge-count {
+    border-color: transparent;
 }
 
 .app-window-main {
