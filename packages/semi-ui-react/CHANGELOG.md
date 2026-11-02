@@ -1,5 +1,20 @@
 # @fibrae/semi-ui-react
 
+## 0.3.0
+
+### Minor Changes
+
+- b132487: Banner（破坏性）：根元素不再固定 `role="alert"`，默认不设 `role`，传入的 `role` 落在根元素上。依赖读屏立即播报的场景要自己传 `role="alert"`。
+- 22fcbb6: React Checkbox：`onChange` 事件的 `nativeEvent` 改为原生点击事件 `MouseEvent`（空格切换也是点击事件），可读 `shiftKey` 等修饰键，与其他框架一致。
+- 22fcbb6: Table 行选择支持 Shift 范围选择：按住 Shift 点击选择框（`clickRow` 时也可点击行，或在选择框上按 Shift+Space），把锚点到当前行之间的当前页可见行设成锚点的选中状态，跳过禁用行。范围选择只调用一次 `onChange`，不调用 `onSelect`；`checkRelation` 为 `'related'` 时按普通点击处理。
+
+### Patch Changes
+
+- Updated dependencies [22fcbb6]
+    - @fibrae/semi-foundation@0.3.0
+    - @fibrae/semi-icons-react@0.3.0
+    - @fibrae/semi-illustrations-react@0.3.0
+
 ## 0.2.0
 
 ### Minor Changes
