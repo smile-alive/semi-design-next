@@ -33,7 +33,6 @@
 
     // not useId: it counts per render root, and every imperative confirm is its own root
     const contentId = createId('modal-confirm-content');
-
     const direction = computed(() => props.direction ?? config.value.direction);
 
     const settle = (result: unknown, loading: ShallowRef<boolean | undefined>) =>

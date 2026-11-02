@@ -1,5 +1,6 @@
 ---
 import { IconLanguage, IconTick } from '@fibrae/semi-icons-react';
+import { Button } from '@fibrae/semi-ui-react';
 import { languageLabels, translate } from '#/i18n';
 import { locales, type Locale } from '#/lib/docs';
 
@@ -12,9 +13,9 @@ const { locale, hrefs } = Astro.props;
 const t = translate(locale);
 ---
 
-<button type="button" class="site-icon-button" popovertarget="locale-menu" aria-label={t('nav_language')}>
-    <IconLanguage size="extra-large" />
-</button>
+<Button className="site-wide-only" theme="borderless" type="tertiary" size="large" popoverTarget="locale-menu" aria-label={t('nav_language')}>
+    <IconLanguage slot="icon" size="extra-large" />
+</Button>
 <div class="locale-menu" id="locale-menu" popover>
     {
         locales.map((l) => (
@@ -26,28 +27,11 @@ const t = translate(locale);
     }
 </div>
 
-<script>
-    // The header is replaced on every navigation, so clicks delegate to document
-    document.addEventListener('click', (event) => {
-        if ((event.target as Element).closest('#locale-menu a')) {
-            document.getElementById('locale-menu')?.hidePopover();
-        }
-    });
-    // The client router handles clicks in the bubble phase and skips preventDefault'ed ones, so intercept in capture
-    document.addEventListener(
-        'click',
-        (event) => {
-            if ((event.target as Element).closest('#locale-menu a[aria-current="page"]')) event.preventDefault();
-        },
-        true
-    );
-</script>
-
 <style>
     /* Mirrors Semi Dropdown; the header is fixed with the button at the far right, so position by viewport */
     .locale-menu {
-        inset: 46px 24px auto auto;
-        padding: 4px 0;
+        inset: 46px var(--semi-spacing-loose) auto auto;
+        padding: var(--semi-spacing-extra-tight) 0;
         margin: 0;
         color: var(--semi-color-text-0);
         background: var(--semi-color-bg-3);
@@ -59,7 +43,7 @@ const t = translate(locale);
     .locale-menu-item {
         display: flex;
         align-items: center;
-        padding: 8px 16px 8px 12px;
+        padding: var(--semi-spacing-tight) var(--semi-spacing-base) var(--semi-spacing-tight) var(--semi-spacing-base-tight);
         color: var(--semi-color-text-0);
         text-decoration: none;
     }
@@ -70,13 +54,13 @@ const t = translate(locale);
     }
 
     .locale-menu-item[aria-current='page'] {
-        font-weight: 600;
+        font-weight: var(--semi-font-weight-bold);
     }
 
     /* The check icon comes from a React component, so it has no scope marker */
     .locale-menu-item :global(.locale-menu-tick) {
         margin-right: 9px;
-        font-size: 12px;
+        font-size: var(--semi-font-size-small);
     }
 
     .locale-menu-item:not([aria-current='page']) :global(.locale-menu-tick) {

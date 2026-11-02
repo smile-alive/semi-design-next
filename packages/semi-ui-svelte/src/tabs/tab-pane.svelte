@@ -16,7 +16,6 @@
 
     const shouldRender = $derived(!view.lazyRender || active || activated);
     const paneMotion = $derived(TabsFoundation.getPaneMotion({ ...view, itemKey }));
-
     const startClassName = $derived(paneMotion.startClassName);
     const hasMotion = $derived(paneMotion.hasMotion);
 

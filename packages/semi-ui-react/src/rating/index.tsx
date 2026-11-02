@@ -155,7 +155,6 @@ export default function Rating(rawProps: RatingProps) {
     const value = RatingFoundation.deriveValue(props, state);
     const onRadio = RatingFoundation.isRadioValue(value, count, allowHalf);
     const { hoverValue, focusVisibleStar } = state;
-
     const customUnit = typeof character === 'string' ? character : undefined;
 
     const unitOf = (n: number) => customUnit ?? (n === 1 ? locale.star : locale.stars);

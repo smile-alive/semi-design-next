@@ -51,7 +51,6 @@
 
     // Used to find the indicator tab to focus, from the root: slides may contain tabs or nested carousels
     let root: HTMLElement | undefined;
-
     let focusPending = false;
 
     // Slides that arrive after mount (data still loading) start the configured autoplay, as mounting with them would

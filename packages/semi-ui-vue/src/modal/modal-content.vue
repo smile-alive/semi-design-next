@@ -33,9 +33,7 @@
     const focusScope = new FocusScope();
     const layer = new ReleaseHolder();
     let bodyFocus: HTMLElement | null = null;
-
     const displayed = shallowRef(false);
-
     const active = shallowRef(true);
 
     const idPrefix = `dialog-${useId()}`;

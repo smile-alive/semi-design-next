@@ -3,8 +3,8 @@ import type { HTMLAttributes } from 'svelte/elements';
 
 export type BannerType = 'info' | 'danger' | 'warning' | 'success';
 
-// `title` is the heading here, so the native tooltip attribute is not accepted; `role` is always "alert"
-export interface BannerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title' | 'role'> {
+// `title` is the heading here, so the native tooltip attribute is not accepted
+export interface BannerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
     bordered?: boolean;
     fullMode?: boolean;
     title?: string | Snippet;

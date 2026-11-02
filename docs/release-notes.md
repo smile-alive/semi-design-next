@@ -132,10 +132,11 @@
 
 ### Banner
 
+- 破坏性：根元素不再固定 `role="alert"`，默认不设 `role`，传入的 `role` 落在根元素上。依赖读屏立即播报的场景要自己传 `role="alert"`。
 - 删除已废弃的 `target` 属性，传入时作为未声明属性落到根 DOM。
 - Vue：`onClose` 改为 `close` 事件；没有 `showIcon`、`closable`，用 `#icon`、`#closeIcon`、`#title`、`#description` 插槽，`#icon`、`#closeIcon` 为空时不显示图标或关闭按钮。
 - Solid：关闭按钮的点击不冒泡，祖先元素的原生监听也收不到（React 只拦住 React 处理函数）。
-- Svelte：`onClose(event)` 是回调 prop；`title` 是 `string | Snippet`，`description`、`children` 是 snippet；`icon`、`closeIcon` 传 snippet 替换默认图标，传 `null` 隐藏图标或去掉关闭按钮（传渲染为空的 snippet 不会隐藏）；`role` 固定为 `alert`；关闭按钮的点击不冒泡。
+- Svelte：`onClose(event)` 是回调 prop；`title` 是 `string | Snippet`，`description`、`children` 是 snippet；`icon`、`closeIcon` 传 snippet 替换默认图标，传 `null` 隐藏图标或去掉关闭按钮（传渲染为空的 snippet 不会隐藏）；关闭按钮的点击不冒泡。
 
 ### Input、TextArea
 

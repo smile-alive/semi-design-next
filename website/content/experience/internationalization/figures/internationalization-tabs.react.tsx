@@ -168,6 +168,7 @@ interface ChildrenProps {
 }
 
 const copySuccess = { 'zh-CN': '复制成功', 'en-US': 'Copy Success' };
+const copyLink = { 'zh-CN': '复制链接', 'en-US': 'Copy link' };
 
 function makeComponents(locale: Locale) {
     const AnchorHeading = ({ as: Tag, children }: { as: 'h2' | 'h3'; children?: ReactNode }) => {
@@ -182,7 +183,7 @@ function makeComponents(locale: Locale) {
         return (
             <Tag className={`md markdown gatsby-${Tag}`} id={makeAnchorId(children) ?? undefined}>
                 {children}
-                <button type="button" style={{ padding: 0, border: 'none', background: 'none', font: 'inherit', color: 'inherit' }} onClick={onIconLinkClick}>
+                <button type="button" style={{ padding: 0, border: 'none', background: 'none', font: 'inherit', color: 'inherit' }} aria-label={copyLink[locale]} onClick={onIconLinkClick}>
                     <IconLink className="anchor-link-button-icon" />
                 </button>
             </Tag>

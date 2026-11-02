@@ -145,7 +145,6 @@
     const labelledby = $derived(!attrs.control['aria-label'] && !isCustomHeader && hasTitle ? `${idPrefix}-title` : undefined);
     const modalDialog = $derived(isModal({ mask, maskFixed, inBody }));
     const heightSet = $derived(Boolean(height) || /(^|;)\s*height\s*:/.test(userStyle ?? ''));
-
     const sizeStyle = $derived(isFullScreen ? 'width: 100%; height: 100%; margin: unset' : [width ? `width: ${toCssLength(width)}` : '', height ? `height: ${toCssLength(height)}` : ''].filter(Boolean).join('; '));
     const boxStyle = $derived([userStyle, sizeStyle].filter(Boolean).join(';') || undefined);
 

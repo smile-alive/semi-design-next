@@ -144,7 +144,6 @@
     const disabled = $derived(disabledProp ?? group?.disabled ?? defaults('disabled') ?? false);
     const size = $derived(sizeProp ?? group?.size ?? defaults('size', 'default'));
     const cls = cssClasses.PREFIX;
-
     const collectedOptions: OptionRecord[] = $derived((optionList ?? []).map((item, index) => toOptionRecord(item, index, item.group)));
 
     const foundationProps: FoundationProps = {

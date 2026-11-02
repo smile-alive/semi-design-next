@@ -1,0 +1,1040 @@
+---
+import { Code } from 'astro:components';
+import { ClientRouter } from 'astro:transitions';
+import '#/styles/reset.css';
+import '@fibrae/semi-foundation/base/tokens.scss';
+import '#/styles/site.scss';
+// .changeset fixes every @fibrae/* package to one version
+import pkgJson from '#packages/semi-foundation/package.json';
+import { IconCopy, IconTick } from '@fibrae/semi-icons-react';
+import { Button } from '@fibrae/semi-ui-react';
+import AppWindow from '#/components/landing/AppWindow.solid';
+import reactSample from '#/components/landing/samples/select.react.tsx?raw';
+import solidSample from '#/components/landing/samples/select.solid.tsx?raw';
+import svelteSample from '#/components/landing/samples/select.svelte?raw';
+import vueSample from '#/components/landing/samples/select.vue?raw';
+import FrameworkLogo from '#/components/FrameworkLogo.astro';
+import SeoHead from '#/components/SeoHead.astro';
+import SiteHeader from '#/components/SiteHeader.astro';
+import ThemeScript from '#/components/ThemeScript.astro';
+import { translate } from '#/i18n';
+import { landingText } from '#/i18n/landing';
+import { docUrl, frameworks, getComponentCount, locales, type Locale } from '#/lib/docs';
+import { frameworkLabels } from '#/lib/frameworks';
+import { shikiThemes } from '#/lib/shiki';
+
+export function getStaticPaths() {
+    return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = translate(locale);
+const l = landingText[locale];
+
+const languageCount = Object.keys(import.meta.glob('#packages/semi-foundation/src/locale/source/*.ts')).length;
+const componentCount = await getComponentCount(locale, 'react');
+const fill = (value: string) => value.replace('{count}', String(componentCount)).replace('{languages}', String(languageCount));
+
+const heroFrameworks: Record<(typeof frameworks)[number], string> = { react: 'React 19', vue: 'Vue 3.5+', solid: 'Solid', svelte: 'Svelte 5' };
+const localeHrefs = Object.fromEntries(locales.map((item) => [item, `/${item}/`])) as Record<Locale, string>;
+const frameworkHrefs = Object.fromEntries(frameworks.map((framework) => [framework, docUrl(locale, framework, 'start', 'introduction')]));
+
+// Real files under samples/, so lint, fmt and the per-framework type checks cover what the page shows
+const samples = [
+    { framework: 'react', name: 'React', brief: 'JSX · useState', lang: 'tsx', code: reactSample },
+    { framework: 'vue', name: 'Vue', brief: 'SFC · v-model', lang: 'vue', code: vueSample },
+    { framework: 'solid', name: 'Solid', brief: 'JSX · createSignal', lang: 'tsx', code: solidSample },
+    { framework: 'svelte', name: 'Svelte 5', brief: 'runes · $state', lang: 'svelte', code: svelteSample },
+] as const;
+---
+
+<!doctype html>
+<html lang={locale} transition:animate="none">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <ClientRouter />
+        <SeoHead title={l.title} description={l.description} locale={locale} hrefs={localeHrefs} type="website" />
+    </head>
+    <body>
+        <a class="skip-link" href="#main">{t('nav_skip')}</a>
+        <ThemeScript />
+        <SiteHeader locale={locale} framework="react" localeHrefs={localeHrefs} frameworkHrefs={frameworkHrefs} sideNav={false} />
+        <main class="landing" id="main">
+            <section class="hero">
+                <p class="hero-badge"><span>{pkgJson.version}</span>{l.hero_badge}</p>
+                <h1 class="hero-title">{l.hero_title[0]}<br />{l.hero_title[1]}</h1>
+                <p class="hero-brief">{fill(l.hero_brief[0])}<br />{fill(l.hero_brief[1])}</p>
+                <div class="hero-frameworks" role="radiogroup" aria-label={l.hero_framework}>
+                    {
+                        frameworks.map((framework, index) => (
+                            <label class="hero-framework">
+                                <input type="radio" name="hero-framework" value={framework} checked={index === 0} />
+                                <FrameworkLogo framework={framework} class="landing-logo" brand />
+                                {heroFrameworks[framework]}
+                            </label>
+                        ))
+                    }
+                </div>
+                {
+                    frameworks.map((framework) => (
+                        <div class="hero-framework-panel" data-framework={framework}>
+                            <div class="install">
+                                <span class="install-prompt" aria-hidden="true">$</span>
+                                <code>pnpm add @fibrae/semi-ui-{framework}</code>
+                                <button type="button" class="install-copy" aria-label={l.hero_copy} data-copied={t('demo_copied')} data-failed={t('demo_copy_failed')}>
+                                    <IconCopy />
+                                    <IconTick />
+                                </button>
+                                <span class="install-status" role="status" />
+                            </div>
+                            <div class="hero-actions">
+                                <a class="landing-button landing-button-primary" href={docUrl(locale, framework, 'start', 'introduction')}>
+                                    {l.hero_start}
+                                </a>
+                                <a class="landing-button" href={docUrl(locale, framework, 'start', 'overview')}>
+                                    {fill(l.hero_browse)}
+                                </a>
+                            </div>
+                        </div>
+                    ))
+                }
+                <div class="hero-window" role="group" aria-label={l.hero_window} inert>
+                    <AppWindow locale={locale} client:media="(min-width: 821px)" />
+                </div>
+            </section>
+
+            <section class="landing-section cross" aria-labelledby="cross-title">
+                <div class="landing-inner">
+                    <div class="cross-heading">
+                        <div>
+                            <p class="eyebrow"><span>01</span>{l.cross_label}</p>
+                            <h2 id="cross-title">{l.cross_title}</h2>
+                        </div>
+                        <p class="cross-brief">{l.cross_brief}</p>
+                    </div>
+                    <div class="adapter">
+                        <div class="adapter-foundation">
+                            <svg width="26" height="26" viewBox="40 40 360 360" aria-hidden="true">
+                                <path d="M200 60A120 120 0 0 0 200 300Z" fill="currentColor" />
+                                <path d="M240 140A120 120 0 0 1 240 380Z" fill="currentColor" opacity="0.6" />
+                            </svg>
+                            <span><strong>Foundation</strong>{l.foundation_brief}</span>
+                        </div>
+                        <div class="adapter-line"><span>Adapter</span></div>
+                        <ul class="adapter-frameworks">
+                            {
+                                frameworks.map((framework) => (
+                                    <li>
+                                        <FrameworkLogo framework={framework} class="landing-logo" brand />
+                                        {frameworkLabels[framework]}
+                                    </li>
+                                ))
+                            }
+                        </ul>
+                    </div>
+                    <div class="samples">
+                        {
+                            samples.map((sample) => (
+                                <article class="sample">
+                                    <header class="sample-header">
+                                        <FrameworkLogo framework={sample.framework} class="landing-logo" brand />
+                                        <span>
+                                            <strong>{sample.name}</strong>
+                                            {sample.brief}
+                                        </span>
+                                    </header>
+                                    <Code class="sample-code" code={sample.code.trimEnd()} lang={sample.lang} themes={shikiThemes} defaultColor={false} wrap />
+                                    <footer class="sample-footer">@fibrae/semi-ui-{sample.framework}</footer>
+                                </article>
+                            ))
+                        }
+                    </div>
+                </div>
+            </section>
+
+            <section class="landing-section enterprise" aria-labelledby="enterprise-title">
+                <div class="landing-inner">
+                    <p class="eyebrow"><span>02</span>{l.enterprise_label}</p>
+                    <h2 id="enterprise-title">{l.enterprise_title[0]}<br />{l.enterprise_title[1]}</h2>
+                    <div class="features">
+                        <div class="feature">
+                            <p class="feature-label">{l.a11y_label}</p>
+                            {/* inert keeps the illustrative button out of the Tab order and the accessibility tree */}
+                            <div class="feature-visual feature-a11y" inert>
+                                <Button className="feature-a11y-button" theme="solid">
+                                    {l.a11y_button}
+                                </Button>
+                                <span class="feature-keys"><kbd>Tab</kbd><kbd>Enter</kbd><kbd>Esc</kbd></span>
+                            </div>
+                            <h3>{l.a11y_title}</h3>
+                            <p>{l.a11y_brief}</p>
+                        </div>
+                        <div class="feature">
+                            <p class="feature-label">{l.i18n_label}</p>
+                            <div class="feature-visual feature-i18n" aria-hidden="true">
+                                <span class="feature-stat"><strong>{languageCount}</strong>{l.i18n_unit}</span>
+                                <span class="feature-rtl" dir="rtl" lang="ar">حفظ التغييرات؟<span>حفظ</span></span>
+                                <code class="feature-caption">dir="rtl"</code>
+                            </div>
+                            <h3>{fill(l.i18n_title)}</h3>
+                            <p>{l.i18n_brief}</p>
+                        </div>
+                        <div class="feature">
+                            <p class="feature-label">{l.theme_label}</p>
+                            <div class="feature-visual feature-theme" aria-hidden="true">
+                                {
+                                    ['light', 'dark'].map((mode) => (
+                                        <div class={`feature-theme-half semi-always-${mode}`}>
+                                            <span class="feature-swatches">
+                                                <i />
+                                                <i />
+                                                <i />
+                                            </span>
+                                            <code>--semi-color-<br />primary</code>
+                                            <strong>{mode === 'light' ? 'Light' : 'Dark'}</strong>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                            <h3>{l.theme_title}</h3>
+                            <p>{l.theme_brief}</p>
+                        </div>
+                        <div class="feature">
+                            <p class="feature-label">{l.engineering_label}</p>
+                            <dl class="feature-visual feature-specs">
+                                <div><dt>SSR</dt><dd class="feature-specs-ok">hydration</dd></div>
+                                <div><dt>format</dt><dd>ESM only</dd></div>
+                                <div><dt>Chrome</dt><dd>≥ 120</dd></div>
+                                <div><dt>Firefox</dt><dd>≥ 125</dd></div>
+                                <div><dt>Safari</dt><dd>≥ 17.2</dd></div>
+                            </dl>
+                            <h3>{l.engineering_title}</h3>
+                            <p>{l.engineering_brief}</p>
+                        </div>
+                        <div class="feature">
+                            <p class="feature-label">{l.license_label}</p>
+                            <div class="feature-visual feature-license" aria-hidden="true">
+                                <strong>MIT</strong>License
+                            </div>
+                            <h3>{l.license_title}</h3>
+                            <p>{l.license_brief}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>
+
+<script>
+    const wide = matchMedia('(min-width: 821px)');
+    const sync = () => document.querySelector('.hero-window')?.toggleAttribute('inert', !wide.matches);
+    wide.addEventListener('change', sync);
+    document.addEventListener('astro:page-load', sync);
+
+    // Runs once; the buttons are new nodes after client-side navigation, so delegate to document
+    const resetTimers = new WeakMap<HTMLButtonElement, number>();
+    document.addEventListener('click', async (event) => {
+        const button = (event.target as Element).closest<HTMLButtonElement>('.install-copy');
+        const install = button?.parentElement;
+        const status = install?.querySelector('.install-status');
+        if (!button || !status) {
+            return;
+        }
+        const { copied = '', failed = '' } = button.dataset;
+        try {
+            await navigator.clipboard.writeText(install?.querySelector('code')?.textContent ?? '');
+            button.dataset.state = 'copied';
+            status.textContent = copied;
+        } catch {
+            button.dataset.state = 'failed';
+            status.textContent = failed;
+        }
+        clearTimeout(resetTimers.get(button));
+        resetTimers.set(
+            button,
+            window.setTimeout(() => {
+                delete button.dataset.state;
+                status.textContent = '';
+            }, 2000)
+        );
+    });
+</script>
+
+<style>
+    .landing {
+        padding-block-start: var(--site-header-height);
+    }
+
+    .landing-inner {
+        max-inline-size: 1312px;
+        margin-inline: auto;
+    }
+
+    .landing-section {
+        padding-inline: 64px;
+    }
+
+    /* Bare element selectors so the section rules below can set margins; reset.css already zeroes p */
+    h2 {
+        margin: 0;
+        font-size: 46px;
+        font-weight: var(--semi-font-weight-bold);
+        line-height: 56px;
+    }
+
+    h3 {
+        margin: 0;
+        font-size: var(--semi-font-size-header-4);
+        font-weight: var(--semi-font-weight-bold);
+        line-height: var(--semi-line-height-header-4);
+    }
+
+    .landing-button {
+        display: inline-flex;
+        align-items: center;
+        block-size: 48px;
+        padding-inline: var(--semi-spacing-loose);
+        font-weight: var(--semi-font-weight-bold);
+        color: var(--semi-color-text-0);
+        text-decoration: none;
+        background: var(--semi-color-bg-1);
+        border: 1px solid var(--semi-color-border);
+        border-radius: var(--semi-border-radius-small);
+    }
+
+    .landing-button:hover {
+        background: var(--semi-color-fill-0);
+    }
+
+    .landing-button-primary {
+        color: var(--semi-color-white);
+        background: var(--semi-color-primary);
+        border-color: transparent;
+    }
+
+    .landing-button-primary:hover {
+        background: var(--semi-color-primary-hover);
+    }
+
+    .landing-button:focus-visible {
+        outline: 2px solid var(--semi-color-primary-light-active);
+        outline-offset: 2px;
+    }
+
+    .install {
+        position: relative;
+        display: flex;
+        gap: var(--semi-spacing-base-tight);
+        align-items: center;
+        block-size: 52px;
+        padding-inline: var(--semi-spacing-base) var(--semi-spacing-tight);
+        font-family: var(--site-mono);
+        font-size: var(--semi-font-size-regular);
+        color: var(--semi-color-text-0);
+        text-align: start;
+        background: var(--semi-color-bg-1);
+        border: 1px solid var(--semi-color-border);
+        border-end-start-radius: var(--semi-border-radius-large);
+        border-end-end-radius: var(--semi-border-radius-large);
+    }
+
+    .install code {
+        flex: 1;
+        min-inline-size: 0;
+        font-family: inherit;
+        font-weight: var(--semi-font-weight-bold);
+        white-space: nowrap;
+    }
+
+    .install-prompt {
+        color: var(--semi-color-text-2);
+        user-select: none;
+    }
+
+    .install-copy {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        inline-size: 36px;
+        block-size: 36px;
+        padding: 0;
+        color: var(--semi-color-text-2);
+        cursor: pointer;
+        background: none;
+        border: 0;
+        border-radius: var(--semi-border-radius-medium);
+    }
+
+    .install-copy:hover {
+        color: var(--semi-color-text-0);
+        background: var(--semi-color-fill-0);
+    }
+
+    .install-copy:focus-visible {
+        outline: 2px solid var(--semi-color-primary-light-active);
+    }
+
+    .install-copy[data-state='copied'] {
+        color: var(--semi-color-success);
+    }
+
+    .install-copy[data-state='failed'] {
+        color: var(--semi-color-danger);
+    }
+
+    .install-copy :global(.semi-icon-tick),
+    .install-copy[data-state='copied'] :global(.semi-icon-copy) {
+        display: none;
+    }
+
+    .install-copy[data-state='copied'] :global(.semi-icon-tick) {
+        display: inline-flex;
+    }
+
+    /* The icon alone says nothing to a screen reader, so the result is announced here */
+    .install-status {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        overflow: hidden;
+        white-space: nowrap;
+        clip-path: inset(50%);
+    }
+
+    .eyebrow {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+        align-items: center;
+        font-weight: var(--semi-font-weight-bold);
+        color: var(--semi-color-text-1);
+    }
+
+    .eyebrow span {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+        align-items: center;
+        color: var(--semi-color-primary);
+    }
+
+    .eyebrow span::after {
+        inline-size: 28px;
+        block-size: 1px;
+        content: '';
+        background: var(--semi-color-primary);
+    }
+
+    /* FrameworkLogo renders the svg, so it has no scope marker from this page */
+    :global(.landing-logo) {
+        flex-shrink: 0;
+        inline-size: 22px;
+        block-size: 22px;
+        object-fit: contain;
+    }
+
+    /* Hero: the product window is cut off by the section and fades into the next one */
+    .hero {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        block-size: 1020px;
+        padding: 84px var(--semi-spacing-base) 0;
+        overflow: clip;
+        text-align: center;
+        background: linear-gradient(var(--semi-color-bg-0), var(--semi-color-fill-0));
+    }
+
+    /* The section is shorter than its content on purpose; nothing may shrink to fit */
+    .hero > * {
+        flex-shrink: 0;
+    }
+
+    .hero::after {
+        position: absolute;
+        inset: auto 0 0;
+        block-size: 140px;
+        pointer-events: none;
+        content: '';
+        background: linear-gradient(transparent, var(--semi-color-bg-0));
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        gap: var(--semi-spacing-tight);
+        align-items: center;
+        padding: var(--semi-spacing-extra-tight) var(--semi-spacing-base-tight) var(--semi-spacing-extra-tight) var(--semi-spacing-tight);
+        font-size: var(--semi-font-size-small);
+        font-weight: var(--semi-font-weight-bold);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-primary-active);
+        background: var(--semi-color-primary-light-default);
+        border-radius: var(--semi-border-radius-full);
+    }
+
+    .hero-badge span {
+        padding: var(--semi-spacing-super-tight) var(--semi-spacing-tight);
+        color: var(--semi-color-white);
+        background: var(--semi-color-primary);
+        border-radius: var(--semi-border-radius-full);
+    }
+
+    .hero-title {
+        margin: var(--semi-spacing-loose) 0 0;
+        font-size: 62px;
+        font-weight: var(--semi-font-weight-bold);
+        line-height: 76px;
+        text-wrap: balance;
+    }
+
+    .hero-brief {
+        max-inline-size: 760px;
+        margin-block-start: var(--semi-spacing-loose);
+        font-size: var(--semi-font-size-header-6);
+        line-height: 24px;
+        color: var(--semi-color-text-1);
+    }
+
+    /* The switch and the install command read as one card; the buttons below follow the selection */
+    .hero-frameworks {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        inline-size: min(560px, 100%);
+        margin-block-start: var(--semi-spacing-loose);
+        overflow: clip;
+        background: var(--semi-color-bg-1);
+        border: 1px solid var(--semi-color-border);
+        border-block-end: 0;
+        border-start-start-radius: var(--semi-border-radius-large);
+        border-start-end-radius: var(--semi-border-radius-large);
+    }
+
+    .hero-framework {
+        position: relative;
+        display: flex;
+        gap: var(--semi-spacing-tight);
+        align-items: center;
+        justify-content: center;
+        block-size: 48px;
+        font-weight: var(--semi-font-weight-bold);
+        color: var(--semi-color-text-1);
+        cursor: pointer;
+    }
+
+    .hero-framework:hover {
+        background: var(--semi-color-fill-0);
+    }
+
+    .hero-framework:has(input:checked) {
+        color: var(--semi-color-primary-active);
+        box-shadow: inset 0 -2px 0 var(--semi-color-primary);
+    }
+
+    .hero-framework:has(input:focus-visible) {
+        outline: 2px solid var(--semi-color-primary-light-active);
+        outline-offset: -2px;
+    }
+
+    /* Kept in the accessibility tree and Tab order; the label is the visible control */
+    .hero-framework input {
+        position: absolute;
+        inset: 0;
+        margin: 0;
+        cursor: inherit;
+        opacity: 0;
+    }
+
+    /* The switch needs no script, so it also works before the page's JS runs */
+    .hero-framework-panel {
+        display: none;
+        inline-size: min(560px, 100%);
+    }
+
+    .hero:has([value='react']:checked) [data-framework='react'],
+    .hero:has([value='vue']:checked) [data-framework='vue'],
+    .hero:has([value='solid']:checked) [data-framework='solid'],
+    .hero:has([value='svelte']:checked) [data-framework='svelte'] {
+        display: block;
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: var(--semi-spacing-base-tight);
+        justify-content: center;
+        margin-block-start: var(--semi-spacing-loose);
+    }
+
+    .hero-window {
+        margin-block-start: var(--semi-spacing-super-loose);
+        text-align: start;
+    }
+
+    /* 01 */
+    .cross {
+        padding-block: 48px 96px;
+        background: var(--semi-color-fill-0);
+    }
+
+    .cross-heading {
+        display: flex;
+        gap: 48px;
+        align-items: flex-end;
+        justify-content: space-between;
+    }
+
+    .cross-heading h2 {
+        margin-block-start: var(--semi-spacing-base-tight);
+    }
+
+    .cross-brief {
+        flex-shrink: 0;
+        inline-size: 480px;
+        padding-block-end: var(--semi-spacing-tight);
+        line-height: 24px;
+        color: var(--semi-color-text-1);
+    }
+
+    .adapter {
+        display: flex;
+        align-items: center;
+        margin-block-start: var(--semi-spacing-super-loose);
+    }
+
+    .adapter-foundation {
+        display: flex;
+        flex-shrink: 0;
+        gap: var(--semi-spacing-base-tight);
+        align-items: center;
+        block-size: 64px;
+        padding-inline: var(--semi-spacing-base-loose);
+        color: var(--semi-color-white);
+        background: var(--semi-color-primary);
+        border-radius: var(--semi-border-radius-large);
+    }
+
+    .adapter-foundation span {
+        display: flex;
+        flex-direction: column;
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+    }
+
+    .adapter-foundation strong {
+        font-size: var(--semi-font-size-header-6);
+        line-height: var(--semi-line-height-header-6);
+        color: var(--semi-color-white);
+    }
+
+    .adapter-line {
+        display: flex;
+        flex: 1;
+        align-items: center;
+    }
+
+    .adapter-line::before,
+    .adapter-line::after {
+        flex: 1;
+        block-size: 2px;
+        content: '';
+        background: var(--semi-color-primary-light-hover);
+    }
+
+    .adapter-line span {
+        padding: var(--semi-spacing-extra-tight) var(--semi-spacing-base-tight);
+        font-size: var(--semi-font-size-small);
+        font-weight: var(--semi-font-weight-bold);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-primary-active);
+        background: var(--semi-color-bg-1);
+        border: 1px solid var(--semi-color-primary-light-hover);
+        border-radius: var(--semi-border-radius-full);
+    }
+
+    .adapter-frameworks {
+        display: flex;
+        flex-shrink: 0;
+        gap: var(--semi-spacing-tight);
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .adapter-frameworks li {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+        align-items: center;
+        block-size: 44px;
+        padding-inline: var(--semi-spacing-base-tight);
+        font-weight: var(--semi-font-weight-bold);
+        line-height: 18px;
+        background: var(--semi-color-bg-1);
+        border-radius: var(--semi-border-radius-medium);
+    }
+
+    .samples {
+        display: grid;
+
+        /* The samples are formatted at printWidth 80 (vite.config.ts), too wide for four columns */
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--semi-spacing-base);
+        margin-block-start: var(--semi-spacing-loose);
+    }
+
+    .sample {
+        display: flex;
+        flex-direction: column;
+        overflow: clip;
+        background: var(--semi-color-bg-1);
+        border-radius: var(--semi-border-radius-large);
+        box-shadow: var(--semi-shadow-elevated);
+    }
+
+    .sample-header {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+        align-items: center;
+        padding: var(--semi-spacing-base) var(--semi-spacing-base-loose) var(--semi-spacing-base-tight);
+    }
+
+    .sample-header :global(.landing-logo) {
+        inline-size: 24px;
+        block-size: 24px;
+    }
+
+    .sample-header span {
+        display: flex;
+        flex-direction: column;
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-text-2);
+    }
+
+    .sample-header strong {
+        font-size: var(--semi-font-size-regular);
+        line-height: var(--semi-line-height-regular);
+        color: var(--semi-color-text-0);
+    }
+
+    /* Code renders <pre class="astro-code">; site.scss picks its colours by mode */
+    .sample :global(.sample-code) {
+        flex: 1;
+        padding: var(--semi-spacing-extra-tight) var(--semi-spacing-base-loose) var(--semi-spacing-base);
+        margin: 0;
+        font-family: var(--site-mono);
+        font-size: var(--semi-font-size-small);
+        line-height: 20px;
+        background: none;
+    }
+
+    .sample-footer {
+        padding: var(--semi-spacing-base-tight) var(--semi-spacing-base-loose);
+        font-family: var(--site-mono);
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-text-1);
+        background: var(--semi-color-fill-0);
+    }
+
+    /* 02 */
+    .enterprise {
+        padding-block: 112px 96px;
+    }
+
+    .enterprise h2 {
+        margin-block-start: var(--semi-spacing-base);
+    }
+
+    .features {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        padding-block-start: 64px;
+    }
+
+    .feature {
+        display: flex;
+        flex-direction: column;
+        gap: var(--semi-spacing-base);
+        padding-inline: var(--semi-spacing-loose);
+    }
+
+    .feature:first-child {
+        padding-inline-start: 0;
+    }
+
+    .feature:last-child {
+        padding-inline-end: 0;
+    }
+
+    .feature + .feature {
+        border-inline-start: 1px solid var(--semi-color-border);
+    }
+
+    .feature > p:last-child {
+        line-height: 22px;
+        color: var(--semi-color-text-1);
+    }
+
+    .feature-label {
+        font-size: var(--semi-font-size-small);
+        font-weight: var(--semi-font-weight-bold);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-text-2);
+        letter-spacing: 0.08em;
+    }
+
+    .feature-visual {
+        display: flex;
+        flex-direction: column;
+        gap: var(--semi-spacing-tight);
+        justify-content: center;
+        block-size: 164px;
+        padding-inline: var(--semi-spacing-base);
+        margin: 0;
+        background: var(--semi-color-fill-0);
+        border-radius: var(--semi-border-radius-large);
+    }
+
+    .feature-a11y {
+        gap: var(--semi-spacing-base);
+        align-items: center;
+    }
+
+    /* A static render cannot hold :focus-visible, so the ring repeats Semi's focus-ring mixin (base/mixin.scss) */
+    :global(.feature-a11y-button) {
+        outline: 2px solid var(--semi-color-primary-light-active);
+    }
+
+    .feature-keys {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+    }
+
+    kbd {
+        padding: var(--semi-spacing-super-tight) var(--semi-spacing-tight);
+        font-family: var(--site-mono);
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        background: var(--semi-color-bg-2);
+        border: 1px solid var(--semi-color-border);
+        border-block-end-width: 2px;
+        border-radius: var(--semi-border-radius-small);
+    }
+
+    .feature-stat {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+        align-items: baseline;
+        color: var(--semi-color-text-1);
+    }
+
+    .feature-stat strong {
+        font-size: 36px;
+        line-height: 44px;
+        color: var(--semi-color-text-0);
+        letter-spacing: -0.04em;
+    }
+
+    .feature-rtl {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--semi-spacing-tight) var(--semi-spacing-base-tight);
+        line-height: 22px;
+        background: var(--semi-color-bg-2);
+        border-radius: var(--semi-border-radius-medium);
+    }
+
+    .feature-rtl span {
+        padding: var(--semi-spacing-extra-tight) var(--semi-spacing-tight);
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-white);
+        background: var(--semi-color-primary);
+        border-radius: var(--semi-border-radius-small);
+    }
+
+    .feature-caption {
+        font-family: inherit;
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-text-2);
+        text-align: end;
+    }
+
+    .feature-theme {
+        flex-direction: row;
+        gap: 0;
+        padding: 0;
+        overflow: clip;
+    }
+
+    .feature-theme-half {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: var(--semi-spacing-tight);
+        justify-content: center;
+        padding-inline: var(--semi-spacing-base-tight);
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-text-0);
+        background: var(--semi-color-bg-1);
+    }
+
+    .feature-theme-half.semi-always-light {
+        border: 1px solid var(--semi-color-border);
+        border-start-start-radius: var(--semi-border-radius-large);
+        border-end-start-radius: var(--semi-border-radius-large);
+    }
+
+    .feature-theme-half.semi-always-dark {
+        background: var(--semi-color-bg-0);
+    }
+
+    .feature-theme-half code {
+        font-family: var(--site-mono);
+        color: var(--semi-color-text-1);
+    }
+
+    .feature-swatches {
+        display: flex;
+        gap: var(--semi-spacing-tight);
+    }
+
+    .feature-swatches i {
+        inline-size: 22px;
+        block-size: 22px;
+        background: var(--semi-color-primary);
+        border-radius: var(--semi-border-radius-medium);
+    }
+
+    .feature-swatches i:nth-child(2) {
+        background: var(--semi-color-primary-light-default);
+    }
+
+    .feature-swatches i:nth-child(3) {
+        background: var(--semi-color-fill-0);
+        border: 1px solid var(--semi-color-border);
+    }
+
+    .feature-specs > div {
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--site-mono);
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+    }
+
+    .feature-specs > div:nth-child(-n + 2) {
+        padding-block-end: var(--semi-spacing-tight);
+        border-block-end: 1px solid var(--semi-color-border);
+    }
+
+    .feature-specs dt {
+        color: var(--semi-color-text-1);
+    }
+
+    .feature-specs dd {
+        margin: 0;
+        font-weight: var(--semi-font-weight-bold);
+    }
+
+    .feature-specs .feature-specs-ok {
+        color: var(--semi-color-success-active);
+    }
+
+    .feature-license {
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
+        color: var(--semi-color-text-1);
+    }
+
+    .feature-license strong {
+        font-size: 44px;
+        line-height: 54px;
+        color: var(--semi-color-text-0);
+        letter-spacing: -0.04em;
+    }
+
+    @media (max-width: 1100px) {
+        .cross-heading,
+        .adapter {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .cross-brief {
+            inline-size: auto;
+        }
+
+        .adapter {
+            gap: var(--semi-spacing-base);
+        }
+
+        .adapter-line {
+            display: none;
+        }
+
+        .features {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 48px var(--semi-spacing-loose);
+        }
+
+        .feature,
+        .feature + .feature {
+            padding-inline: 0;
+            border: 0;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .landing-section {
+            padding-inline: var(--semi-spacing-base);
+        }
+
+        .landing h2 {
+            font-size: var(--semi-font-size-header-1);
+            line-height: 40px;
+        }
+
+        .hero-title {
+            font-size: 40px;
+            line-height: 50px;
+        }
+
+        .hero-framework {
+            flex-direction: column;
+            gap: var(--semi-spacing-extra-tight);
+            block-size: 64px;
+            font-size: var(--semi-font-size-small);
+        }
+
+        .install {
+            font-size: var(--semi-font-size-small);
+        }
+
+        .hero-actions {
+            flex-direction: column;
+        }
+
+        .hero-window {
+            align-self: flex-start;
+        }
+
+        .landing-button {
+            justify-content: center;
+        }
+
+        .adapter-frameworks {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .samples,
+        .features {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+</style>

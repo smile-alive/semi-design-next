@@ -17,7 +17,7 @@
     type Foundation = BannerFoundation<BannerProps, BannerState, MouseEvent>;
     type Adapter = BannerAdapter<BannerProps, BannerState, MouseEvent>;
 
-    // role="alert" must survive the consumer's attrs, so they are bound by hand ahead of it.
+    // Bound by hand: the root is behind v-if, and Vue warns about inherited attrs once it is gone.
     defineOptions({ inheritAttrs: false });
 
     const props = withDefaults(defineProps<BannerProps & /* @vue-ignore */ ElementProps<'div', keyof BannerProps | EmitHandlers<BannerEmits>>>(), {
@@ -72,7 +72,7 @@
 </script>
 
 <template>
-    <div v-if="state.visible" v-bind="$attrs" :class="[prefix, `${prefix}-${props.type}`, props.fullMode ? `${prefix}-full` : `${prefix}-in-container`, { [`${prefix}-bordered`]: !props.fullMode && props.bordered }]" role="alert">
+    <div v-if="state.visible" v-bind="$attrs" :class="[prefix, `${prefix}-${props.type}`, props.fullMode ? `${prefix}-full` : `${prefix}-in-container`, { [`${prefix}-bordered`]: !props.fullMode && props.bordered }]">
         <div :ref="handoverFocus" :class="`${prefix}-content-wrapper`">
             <div :class="`${prefix}-content`">
                 <div v-if="hasIcon()" :class="`${prefix}-icon`" x-semi-prop="icon">

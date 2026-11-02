@@ -43,7 +43,7 @@ export default function ComponentOverview({ locale, names, framework }: { locale
                 );
                 // Names without a page title render as plain cards
                 return url ? (
-                    <a key={name} href={url} className="semi-overview-card">
+                    <a key={name} href={url} className="semi-overview-card" style={{ textDecoration: 'none' }}>
                         {card}
                     </a>
                 ) : (

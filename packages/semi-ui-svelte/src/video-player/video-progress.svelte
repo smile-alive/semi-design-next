@@ -51,7 +51,6 @@
     );
 
     const texts = $derived(locale().locale);
-
     const previewValue = $derived(states().movingInfo?.value ?? value);
 
     // The popup is anchored to the bar's center, so only a translate moves it to the pointer

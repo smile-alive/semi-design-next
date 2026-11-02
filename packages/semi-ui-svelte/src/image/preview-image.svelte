@@ -31,7 +31,6 @@
 
     let container = $state.raw<HTMLDivElement | null>(null);
     let image = $state.raw<HTMLImageElement | null>(null);
-
     let previous = untrack(() => ({ src, ratio, rotation, zoom }));
 
     const { foundation, states } = useFoundation<Foundation, Adapter, PreviewImageBaseProps, PreviewImageBaseState>(

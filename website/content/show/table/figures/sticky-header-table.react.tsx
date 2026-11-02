@@ -24,7 +24,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text) => {
             return (
                 <div>
-                    <Avatar size="small" shape="square" src={figmaIconUrl} style={{ marginRight: 12 }} />
+                    <Avatar alt="" size="small" shape="square" src={figmaIconUrl} style={{ marginRight: 12 }} />
                     {text}
                 </div>
             );
@@ -73,7 +73,7 @@ const columns: ColumnProps<Row>[] = [
         },
     },
     {
-        title: '',
+        title: '操作',
         dataIndex: 'operate',
         fixed: 'right',
         align: 'center',

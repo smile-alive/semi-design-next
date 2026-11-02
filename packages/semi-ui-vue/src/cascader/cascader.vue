@@ -97,7 +97,6 @@
 
     const trigger = useTemplateRef('trigger');
     const content = useTemplateRef('content');
-
     const searchInputs = useTemplateRef<InputHandle[]>('searchInput');
     const tagInputs = useTemplateRef<TagInputHandle[]>('tagInput');
     const item = useTemplateRef('item');

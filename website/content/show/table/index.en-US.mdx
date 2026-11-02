@@ -532,7 +532,7 @@ const columns = [
         render: (text, record, index) => {
             return (
                 <div>
-                    <Avatar size="small" shape="square" src={figmaIconUrl} style={{ marginRight: 12 }}></Avatar>
+                    <Avatar alt="" size="small" shape="square" src={figmaIconUrl} style={{ marginRight: 12 }}></Avatar>
                     {text}
                 </div>
             );
@@ -581,7 +581,7 @@ const columns = [
         },
     },
     {
-        title: '',
+        title: '操作',
         dataIndex: 'operate',
         fixed: 'right',
         align: 'center',

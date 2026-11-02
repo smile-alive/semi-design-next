@@ -1,0 +1,159 @@
+/* Static product mock on the landing page; sizes follow the B3 design at 1200 × 560 */
+.app-window {
+    display: flex;
+    width: 1200px;
+    height: 560px;
+    overflow: clip;
+    color: var(--semi-color-text-0);
+    background: var(--semi-color-bg-0);
+    border: 1px solid var(--semi-color-border);
+    border-start-start-radius: var(--semi-border-radius-large);
+    border-start-end-radius: var(--semi-border-radius-large);
+    box-shadow: var(--semi-shadow-elevated);
+}
+
+/* Not headings: the mock app's titles would sit in the landing page outline between its h1 and h2s */
+.app-window .app-window-heading {
+    font-size: var(--semi-font-size-header-5);
+    font-weight: var(--semi-font-weight-bold);
+    line-height: var(--semi-line-height-header-5);
+}
+
+.app-window .app-window-nav {
+    flex-shrink: 0;
+    width: 200px;
+    height: 100%;
+}
+
+.app-window-nav-badge {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.app-window-main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.app-window-header {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    padding: 0 var(--semi-spacing-loose);
+    border-block-end: 1px solid var(--semi-color-border);
+}
+
+.app-window-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--semi-spacing-base-loose) var(--semi-spacing-loose) 0;
+}
+
+.app-window-filters {
+    display: flex;
+    gap: var(--semi-spacing-base-tight);
+    align-items: center;
+    padding: var(--semi-spacing-base) var(--semi-spacing-loose) 0;
+}
+
+.app-window-query {
+    margin-inline-start: auto;
+}
+
+.app-window-table {
+    padding: var(--semi-spacing-base) var(--semi-spacing-loose) 0;
+    white-space: nowrap;
+}
+
+.app-window-person {
+    display: flex;
+    gap: var(--semi-spacing-tight);
+    align-items: center;
+}
+
+.app-window-pagination {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    padding: 0 var(--semi-spacing-loose);
+    color: var(--semi-color-text-2);
+}
+
+.app-window-sheet {
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: column;
+    width: 320px;
+    background: var(--semi-color-bg-2);
+    border-inline-start: 1px solid var(--semi-color-border);
+}
+
+.app-window-sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--semi-spacing-loose) var(--semi-spacing-base) var(--semi-spacing-base-loose) var(--semi-spacing-loose);
+}
+
+.app-window-sheet-body {
+    flex: 1;
+    min-height: 0;
+    padding: 0 var(--semi-spacing-loose);
+}
+
+.app-window-applicant {
+    gap: var(--semi-spacing-base-tight);
+    padding-block-end: var(--semi-spacing-tight);
+}
+
+.app-window-applicant-name {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.app-window-applicant-name span {
+    font-size: var(--semi-font-size-small);
+    line-height: var(--semi-line-height-small);
+    color: var(--semi-color-text-2);
+    white-space: nowrap;
+}
+
+.app-window-field {
+    display: block;
+    padding-block: var(--semi-spacing-base-tight);
+}
+
+.app-window-label {
+    display: block;
+    margin-block-end: var(--semi-spacing-extra-tight);
+    font-weight: var(--semi-font-weight-bold);
+    line-height: var(--semi-line-height-regular);
+    color: var(--semi-color-text-0);
+}
+
+.app-window-sheet-row {
+    display: flex;
+    gap: var(--semi-spacing-base-tight);
+}
+
+.app-window-sheet-row > * {
+    flex: 1;
+    min-width: 0;
+}
+
+.app-window-sheet-footer {
+    display: flex;
+    gap: var(--semi-spacing-tight);
+    justify-content: flex-end;
+    padding: var(--semi-spacing-base) var(--semi-spacing-loose) var(--semi-spacing-loose);
+}

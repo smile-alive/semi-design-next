@@ -162,7 +162,6 @@ export default function UserGuide(rawProps: UserGuideProps) {
 
     // nothing rendered (popup target not measured yet) must not lock the page or take focus
     const shown = Boolean(visible && step && (mode === 'modal' || spotlightRect));
-
     const locksScroll = shown && mode === 'popup' && showMask;
 
     // only a step change scrolls, so a user scroll is followed, not fought

@@ -4,14 +4,15 @@ on:
     # Markdown feeds no build or test (the site reads .mdx), and the pre-commit hook formats it
     pull_request:
         paths-ignore: ['**/*.md']
-    # Every push to main runs: Release and Deploy site start from a passing run of the newest commit,
-    # and a changeset is a .md file
+    # Every push to release runs, since a changeset is a .md file; main runs this through release.yml
     push:
-        branches: [main]
+        branches: [release]
+    workflow_call:
 
+# Push runs queue instead of cancelling, so a deploy or release never stops halfway
 concurrency:
     group: ci-${{ github.ref }}
-    cancel-in-progress: true
+    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
     contents: read
@@ -53,3 +54,9 @@ jobs:
             - run: pnpm build
             # `pnpm check` also runs the browser projects; those run in browser.yml, so this job runs the jsdom and node ones
             - run: pnpm test --shard=${{ matrix.shard }}/6
+
+    preview:
+        if: github.repository == 'smile-alive/semi-design-next' && github.event_name == 'push' && github.ref == 'refs/heads/release'
+        needs: [lint, typecheck, test]
+        uses: ./.github/workflows/site.yml
+        secrets: inherit

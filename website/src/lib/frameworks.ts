@@ -1,6 +1,8 @@
 export const frameworks = ['react', 'vue', 'solid', 'svelte'] as const;
 export type Framework = (typeof frameworks)[number];
 
+export const frameworkLabels: Record<Framework, string> = { react: 'React', vue: 'Vue', solid: 'Solid', svelte: 'Svelte' };
+
 // clientOnly is the renderer name Astro's client:only expects, not always the framework name
 export const frameworkDemo = {
     react: { extension: 'react.tsx', language: 'tsx', clientOnly: 'react' },

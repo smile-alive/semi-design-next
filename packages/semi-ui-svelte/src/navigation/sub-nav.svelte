@@ -18,7 +18,6 @@
 
     type Foundation = SubNavFoundation<SubNavBaseProps>;
     type Adapter = SubNavAdapter<SubNavBaseProps>;
-
     type TitleTriggerProps = Omit<Partial<DropdownTriggerProps>, 'aria-haspopup' | 'aria-expanded'> & { 'aria-haspopup'?: 'menu' | 'dialog'; 'aria-expanded'?: boolean | 'true' | 'false' };
 
     // Left undefined when not passed, so `wrapper` receives only what the Sub was given
@@ -64,7 +63,6 @@
     const isSelected = $derived(itemKey !== undefined && outer.selectedKeys.includes(itemKey));
     const horizontal = $derived(outer.mode === strings.MODE_HORIZONTAL);
     const isPopup = $derived(outer.isCollapsed || horizontal);
-
     const menuTitle = $derived(isPopup && outer.isInSubNav);
 
     // A disabled Sub opens no Dropdown; collapsed, it shows its hidden text in a tooltip instead

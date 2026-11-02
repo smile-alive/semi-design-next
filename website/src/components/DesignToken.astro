@@ -60,7 +60,7 @@ const t = translate(asLocale(Astro.currentLocale));
 
 <style>
     :global(.design-token) {
-        margin-bottom: 24px;
+        margin-bottom: var(--semi-spacing-loose);
     }
 
     :global(.design-token td) {
@@ -68,6 +68,6 @@ const t = translate(asLocale(Astro.currentLocale));
     }
 
     :global(.design-token td:first-child) {
-        font-weight: 600;
+        font-weight: var(--semi-font-weight-bold);
     }
 </style>

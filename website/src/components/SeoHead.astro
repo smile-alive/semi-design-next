@@ -1,0 +1,33 @@
+---
+import { locales, type Locale } from '#/lib/docs';
+
+interface Props {
+    title: string;
+    description: string;
+    locale: Locale;
+    hrefs: Record<Locale, string>;
+    type: 'website' | 'article';
+}
+
+const { title, description, locale, hrefs, type } = Astro.props;
+// Search engines ignore relative canonical and hreflang URLs
+const absolute = (path: string) => new URL(path, Astro.site).href;
+const ogLocale = (value: Locale) => value.replace('-', '_');
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={absolute(hrefs[locale])} />
+{locales.map((item) => <link rel="alternate" hreflang={item} href={absolute(hrefs[item])} />)}
+<link rel="alternate" hreflang="x-default" href={absolute(hrefs['zh-CN'])} />
+<meta property="og:site_name" content="Semi Design Next" />
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={absolute(hrefs[locale])} />
+<meta property="og:locale" content={ogLocale(locale)} />
+{locales.filter((item) => item !== locale).map((item) => <meta property="og:locale:alternate" content={ogLocale(item)} />)}
+<meta property="og:image" content={absolute('/assets/og-image.png')} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />

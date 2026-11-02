@@ -333,9 +333,9 @@ import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-solid';
 
 - 当按钮和其他组件一起时候，如果其他组件（比如 Modal 和Sidesheet）已经提供了足够信息的上下文的话，按钮可以只展示 \{动词\}，如“Add”、“Create”；
 
-| ✅ 推荐用法                                                                      | ❌ 不推荐用法                                                                   |
-| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| <img src='/assets/content_guide/button-good-2.png' style={{ width: '350px' }} /> | <img src='/assets/content_guide/button-bad-2.png' style={{ width: '350px' }} /> |
+| ✅ 推荐用法                                                                                                                   | ❌ 不推荐用法                                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img src='/assets/content_guide/button-good-2.png' alt='对话框的主按钮文案简短，只写「Create」' style={{ width: '350px' }} /> | <img src='/assets/content_guide/button-bad-2.png' alt='对话框的主按钮重复标题，写成「Create translation task」' style={{ width: '350px' }} /> |
 
 - 始终按句子大小写（Sentence case）原则书写
 
@@ -352,21 +352,21 @@ import { Button, ButtonGroup, SplitButtonGroup } from '@fibrae/semi-ui-solid';
 
 <Framework only="react">
 
-- #### 为什么Button中的icon属性不起作用？
+- ### 为什么Button中的icon属性不起作用？
     请检查你的Button import路径，正确的import路径应该为`import { Button } from '@fibrae/semi-ui-react;'`，如果你错误地从 @fibrae/semi-ui-react/button/button中import的话，获取到的是不带icon功能的基础Button组件
 
 </Framework>
 
 <Framework only="vue">
 
-- #### 为什么 Button 的图标不显示？
+- ### 为什么 Button 的图标不显示？
     图标通过 `#icon` 插槽传入，不是 `icon` 属性：`<Button><template #icon><IconCamera /></template></Button>`。
 
 </Framework>
 
 <Framework only="svelte">
 
-- #### 为什么 Button 的图标不显示？
+- ### 为什么 Button 的图标不显示？
     图标通过 `icon` snippet 传入，不是 `icon` 组件属性：`<Button>{#snippet icon()}<IconCamera />{/snippet}</Button>`。
 
 </Framework>

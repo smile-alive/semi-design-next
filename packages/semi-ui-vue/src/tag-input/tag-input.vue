@@ -274,7 +274,6 @@
 
     // mousedown: a press inside released outside makes a click on their common ancestor, which reads as outside
     useClickOutside([root], foundation.deactivate, () => Boolean(state.value.active), useNestedPopups());
-
     watch([inputValue, () => tags.value.length === 0, () => props.placeholder, () => looks.size], foundation.fitInputWidth, { flush: 'post' });
 
     // A removed node fires no blur, so move focus off the clear button in a pre-flush watcher, before the patch removes it.

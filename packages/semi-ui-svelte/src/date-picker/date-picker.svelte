@@ -139,7 +139,6 @@
     const shownPlaceholder = $derived(placeholder || (locale().locale.placeholder as Record<string, string | string[] | undefined>)[type] || '');
     const hasPresets = $derived(Boolean(presets?.length));
     const isTriggerButton = $derived(Boolean(trigger) && !customTriggerFocusable);
-
     const hasRangeInputs = $derived(isRangeType(type) && !trigger);
     const attrs = $derived(splitControlAttrs(rest, (key) => controlKeys.includes(key)));
     const rootRole = $derived((rest.role as string | undefined) ?? (hasRangeInputs || rest['aria-label'] ? 'group' : undefined));

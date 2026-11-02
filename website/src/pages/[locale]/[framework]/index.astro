@@ -7,5 +7,5 @@ export function getStaticPaths() {
 
 const { locale, framework } = Astro.params;
 // In static output a 302 becomes a 2 s meta refresh page; a 301 redirects immediately
-return Astro.redirect(`/${locale}/${framework}/start/introduction`, 301);
+return Astro.redirect(`/${locale}/${framework}/start/introduction/`, 301);
 ---

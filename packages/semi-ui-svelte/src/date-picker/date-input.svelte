@@ -52,7 +52,6 @@
     });
 
     const allowRangeClear = $derived(DateInputFoundation.getRangeClearVisible({ ...rangeParts, showClear: props.showClear ?? true, disabled: props.disabled, showClearIgnoreDisabled: props.showClearIgnoreDisabled }));
-
     const insetValue = $derived(DateInputFoundation.getInsetInputValue(props, { value, insetInputValue: props.insetInputValue as InsetInputValue }));
 
     const insetPlaceholders = $derived.by(() => {

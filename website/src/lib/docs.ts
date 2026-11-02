@@ -35,8 +35,9 @@ export function parseDocId(id: string) {
     return { category, page, locale: locale as Locale };
 }
 
+// The trailing slash is the served URL: Cloudflare Pages answers the slashless form with a 308
 export function docUrl(locale: Locale, framework: Framework, category: string, page: string) {
-    return `/${locale}/${framework}/${category}/${page}`;
+    return `/${locale}/${framework}/${category}/${page}/`;
 }
 
 // sidebar group order; labels are category_<folder> in src/i18n
@@ -66,6 +67,10 @@ export async function getSidebar(locale: Locale, framework: Framework) {
         label: categoryLabel(locale, key),
         items: docs.filter((doc) => parseDocId(doc.id).category === key).sort((a, b) => a.data.order - b.data.order),
     }));
+}
+
+export async function getComponentCount(locale: Locale, framework: Framework) {
+    return (await getSidebar(locale, framework)).filter((group) => componentCategories.has(group.key)).reduce((sum, group) => sum + group.items.length, 0);
 }
 
 // one entry per page with every locale's title, so any locale finds it by either name; sidebar order

@@ -139,7 +139,7 @@ Write the content directly inside the Banner tag (the `children` snippet) to cre
 
 <BannerReactApi />
 
-Other native attributes (such as `aria-*`, `onClick` and `id`) land on the root `div` element. The root's `role="alert"` is fixed and cannot be overridden.
+Other native attributes (such as `aria-*`, `onClick` and `id`) land on the root `div` element.
 
 </Framework>
 
@@ -147,7 +147,7 @@ Other native attributes (such as `aria-*`, `onClick` and `id`) land on the root 
 
 <BannerVueApi />
 
-`class`, `style` and native attributes are passed through attrs and land on the root element; the root's `role="alert"` is fixed and cannot be overridden. `title` is also a string prop, and the `#title` slot wins when both are given. Content of `0` in `title`, `description` and the default slot is rendered. The closed state lives inside the component and has no v-model; unmount and mount again with `v-if` to show it again.
+`class`, `style` and native attributes are passed through attrs and land on the root element. `title` is also a string prop, and the `#title` slot wins when both are given. Content of `0` in `title`, `description` and the default slot is rendered. The closed state lives inside the component and has no v-model; unmount and mount again with `v-if` to show it again.
 
 </Framework>
 
@@ -155,7 +155,7 @@ Other native attributes (such as `aria-*`, `onClick` and `id`) land on the root 
 
 <BannerSolidApi />
 
-`class`, `style`, `ref` and native attributes and events (such as `aria-*` and `onClick`) land on the root element (`role="alert"`). The root's `role` is fixed and cannot be overridden. The closed state lives inside the component; unmount and mount again to show it again.
+`class`, `style`, `ref` and native attributes and events (such as `aria-*` and `onClick`) land on the root element. The closed state lives inside the component; unmount and mount again to show it again.
 
 </Framework>
 
@@ -163,7 +163,7 @@ Other native attributes (such as `aria-*`, `onClick` and `id`) land on the root 
 
 <BannerSvelteApi />
 
-`class`, `style` (a string) and native attributes and events (such as `aria-*` and `onclick`) land on the root element (`role="alert"`). The root's `role` is fixed and cannot be overridden. `title` can be a string or a snippet, and `description`, `icon` and `closeIcon` are snippets. The closed state lives inside the component and there is no `bind:`; unmount with `{#if}` and mount again to show it again.
+`class`, `style` (a string) and native attributes and events (such as `aria-*` and `onclick`) land on the root element. `title` can be a string or a snippet, and `description`, `icon` and `closeIcon` are snippets. The closed state lives inside the component and there is no `bind:`; unmount with `{#if}` and mount again to show it again.
 
 </Framework>
 
@@ -171,7 +171,7 @@ Other native attributes (such as `aria-*`, `onClick` and `id`) land on the root 
 
 ### ARIA
 
-- The component has a `role` of 'alert'.
+- The root has no `role` by default, so a note that stays on the page is not announced as an alert. For a message that appears dynamically and must be announced at once, such as a failed operation, pass `role="alert"`.
 - The close button's `aria-label` comes from the current locale ('Close' in English, '关闭' in Simplified Chinese).
 
 ### Keyboard and Focus

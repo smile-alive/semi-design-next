@@ -269,7 +269,6 @@ export default function Tabs(rawProps: TabsProps) {
     };
 
     useWatch(() => local.activeKey, foundation.syncActiveKey);
-
     useWatch(paneKeys, () => foundation.handleTabPanesChange(panes()));
 
     return (

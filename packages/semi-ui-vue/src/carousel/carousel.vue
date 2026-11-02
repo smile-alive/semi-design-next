@@ -53,7 +53,6 @@
 
     // onActivated also runs after the first mount; only a return from the cache sets up again
     let deactivated = false;
-
     let focusPending = false;
 
     // Slides that arrive after mount (data still loading) start the configured autoplay, as mounting with them would.

@@ -41,7 +41,7 @@ const toc =
 
 <script>
     // Highlights the last entry scrolled past the anchor line. The observed zone runs from just below where anchor jumps
-    // land (the html scroll-padding-top in site.css, 84px) up through the whole page; a viewport-only zone misses jumps
+    // land (the html scroll-padding-top in site.scss, 84px) up through the whole page; a viewport-only zone misses jumps
     // from the TOC and headings scrolled past in one screen
     const anchorLine = 85;
     let tocObserver: IntersectionObserver | undefined;
@@ -69,7 +69,9 @@ const toc =
     document.addEventListener('astro:page-load', watchToc);
 </script>
 
-<style>
+<style lang="scss">
+    @use '../styles/breakpoints' as *;
+
     .site-toc {
         position: fixed;
         top: 120px;
@@ -77,8 +79,8 @@ const toc =
         width: 150px;
         max-height: 77vh;
         overflow-y: auto;
-        font-size: 12px;
-        line-height: 16px;
+        font-size: var(--semi-font-size-small);
+        line-height: var(--semi-line-height-small);
         scrollbar-width: none;
     }
 
@@ -91,7 +93,7 @@ const toc =
 
     .site-toc a {
         display: block;
-        padding: 4px 0 4px 8px;
+        padding: var(--semi-spacing-extra-tight) 0 var(--semi-spacing-extra-tight) var(--semi-spacing-tight);
         margin-left: -2px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -110,13 +112,13 @@ const toc =
         border-left-color: var(--semi-color-primary);
     }
 
-    @media (max-width: 1599px) {
+    @media (max-width: $toc-narrow) {
         .site-toc {
             width: 120px;
         }
     }
 
-    @media (max-width: 1399px) {
+    @media (max-width: $toc-hidden) {
         .site-toc {
             display: none;
         }
