@@ -22,6 +22,7 @@
         "lint:fix": "vp lint --fix && eslint '**/*.{vue,svelte}' --fix --max-warnings 0 && stylelint '**/*.{scss,css,astro}' --fix",
         "format": "vp fmt",
         "format:check": "vp fmt --check",
+        "changeset:version": "changeset version && vp fmt",
         "typecheck": "node scripts/typecheck.ts",
         "test": "vp test run --project '!*-browser' --silent=true",
         "test:packed": "node vitest/packed/run.ts",
