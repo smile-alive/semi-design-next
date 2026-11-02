@@ -35,7 +35,8 @@ jobs:
             - id: changesets
               uses: changesets/action@v2.1.2
               with:
-                  version-script: pnpm changeset version
+                  # Changesets indents CHANGELOG lists by 2 and vp fmt by 4, so an unformatted version commit fails CI
+                  version-script: pnpm changeset:version
                   publish-script: pnpm changeset publish
                   pr-title: 'chore: 发布新版本'
                   commit-message: 'chore: 发布新版本'
