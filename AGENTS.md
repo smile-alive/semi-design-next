@@ -47,7 +47,7 @@
 - 部署在 HTTPS 下（D1），`navigator.clipboard`、`crypto.randomUUID` 直接用，不留回退。
 - 发布物只有 ESM，由 `vp pack` 产出；不提供 UMD、CDN 构建。
 - 支持服务端渲染与 hydration（React 另支持 RSC 客户端边界），写法见 [components](.agents/references/components.md#服务端渲染)。
-- 原组件只作参考实现（F10）：a11y 按 WAI-ARIA 与 APG 的推荐做法；证据确凿的原有 bug 默认修复，并补一条在旧实现上会失败的用例；文档与代码不一致时，先用 git 历史判断原意，再改另一边。
+- 原组件只作参考实现（F10）：a11y 按 WAI-ARIA 与 APG 的推荐做法；证据确凿的原有 bug 默认修复；文档与代码不一致时，先用 git 历史判断原意，再改另一边。
 - 属性落点以决策为准：F2 根元素透传未声明属性；F6 Props 类型为原 Semi 声明加属性落点元素的原生属性（`ElementProps`，同名时原 Semi 签名优先）；F7 对外导出的顶层组件都读全局默认值；F11 无根 DOM 的包装组件丢弃未声明属性；F12 对话框的 `aria-*` 落在 `role="dialog"` 元素上。
 - 可访问名称和内置文案一律从语言包读取，不写死字面量；新增时 57 个语言包一起补齐。
 - 已有成熟库能覆盖的能力（如 Motion 动画），Semi 只提供给该库使用的预设，不做包装组件或绑定包。
@@ -67,7 +67,7 @@
 - TS/TSX 按 [coding-style](.agents/references/coding-style.md)。硬性规则：私有成员用 `#`，不用 TS `private`、`public` 和构造参数属性；Node 脚本写成 `.ts`，只用可擦除语法。
 - 组件按 [components](.agents/references/components.md) 与所属框架的 components.md。硬性规则：对外导出的顶层组件都读全局默认值（F7），并在本框架 `semi-global.ts` 的类型里补上组件名；渲染与派生计算无副作用。各框架的其余硬性写法见上文框架表中该框架的 `components.md`。
 - 样式按 [styles](.agents/references/styles.md)：Sass 变量是内部实现，不写 `!default`、不与 `semi:theme` 的名字重名；用逻辑属性，不写 `!important`。
-- 测试按 [testing](.agents/references/testing.md)：放在 `__tests__/`，断言可见行为；修 bug 先写在当前代码上会失败的用例。
+- 测试按 [testing](.agents/references/testing.md)：放在 `__tests__/`，断言可见行为；修 bug 不新增回归用例。
 
 ## 注释
 

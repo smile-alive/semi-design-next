@@ -27,7 +27,7 @@ pnpm site:dev
 
 1. 从 `main` 新建分支，一个 PR 只做一件事。
 2. 组件逻辑放 `packages/semi-foundation`，React、Vue、Solid 三个框架的包同步修改。
-3. 修 bug 先写一条在当前代码上会失败的用例；测试断言可见行为。
+3. 测试断言可见行为；修 bug 不新增回归用例。
 4. 行为或公开 API 有变化时：
     - 更新 `docs/release-notes.md` 对应组件的章节；
     - 文档页的中英文同步修改；
