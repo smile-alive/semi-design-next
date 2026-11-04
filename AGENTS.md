@@ -99,14 +99,14 @@ export PATH="$(mise where node@26.10.0)/bin:$(mise where pnpm@12.9.1):$PATH"
 | --- | --- |
 | 单元测试 | `vp test run --project <项目> <目录...>`，项目为 `common` 或框架名，`-t "<用例名>"` 只跑指定用例 |
 | 浏览器测试 | `vp test run --project <项目>-browser <目录...>`，项目为 `common` 或框架名 |
-| lint | `vp lint --deny-warnings <路径...>`，`pnpm lint:scopes`，`pnpm lint:private`，`pnpm lint:class-order`，`pnpm lint:component-order`，`pnpm lint:scss-variables`，`pnpm lint:style`，`pnpm lint:mdx-tables`（文档表格列数与 MDX 编译）；反复重跑整条 lint 用 `vp run --cache lint`，没变的步骤直接回放结果，`lint:style` 每次都执行（stylelint 加载 TS 配置时会写临时文件）；各框架的专属检查 `pnpm lint:<框架>` 见其 lint.md |
+| lint | `vp lint --deny-warnings <路径...>`，`pnpm lint:scopes`，`pnpm lint:private`，`pnpm lint:class-order`，`pnpm lint:component-order`，`pnpm lint:scss-variables`，`pnpm lint:style`，`pnpm lint:docs`（文档表格列数与 MDX 编译）；前五项合并为 `pnpm lint:rules`；反复重跑整条 lint 用 `vp run --cache lint`，没变的步骤直接回放结果，`lint:style` 每次都执行（stylelint 加载 TS 配置时会写临时文件）；各框架的专属检查 `pnpm lint:<框架>` 见其 lint.md |
 | 格式 | `pnpm format:check` |
 | 类型 | `pnpm build && pnpm typecheck`（框架包和部分测试 tsconfig 读取 foundation 已构建的 dist，foundation 有改动时先 build） |
 | 覆盖率 | `pnpm test:coverage`（全局阈值在 `vitest/index.ts`，包级阈值在所属框架的 `vitest/<框架>/index.ts`；不含 SSR 与 hydration 项目，它们由 `pnpm test:ssr` 另跑；两者已在 `check:full` 中） |
 | 打包产物 | `pnpm build && pnpm test:packed` |
 | 宿主夹具 | `pnpm build && pnpm test:hosts [宿主...] [--full]`；改动构建插件、发布形态或宿主相关代码时跑，需要网络或预热的 pnpm store，写法见 [testing](.agents/references/testing.md#宿主夹具) |
 | 文档页面 | 见 [check-pages](.agents/skills/check-pages/SKILL.md) |
-| 提交前 | `pnpm check`；完整校验 `pnpm check:full` |
+| 提交前 | 日常 `pnpm check:changed`（相对 release 的改动，需要本地有 `release` 分支）；全量 `pnpm check`（不含浏览器测试）；完整校验 `pnpm check:full` |
 
 - 只验证改动范围：相关目录的用例、改动文件的 lint；公开类型变化时跑 typecheck；改动布局、焦点或指针行为时才跑浏览器测试。全量测试和全站页面扫描在一批改动合入后跑一次，不为几行改动反复跑全套。
 - 完成声明要有本次实际运行的输出，未执行或无法验证的部分标 `UNKNOWN`。

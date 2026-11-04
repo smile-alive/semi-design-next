@@ -38,7 +38,6 @@
     },
     "scripts": {
         "build:icon": "node scripts/build-illustration.ts",
-        "build": "vp pack",
-        "prepublishOnly": "npm run build"
+        "build": "vp pack"
     }
 }

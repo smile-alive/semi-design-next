@@ -30,8 +30,7 @@
         "./src/tokens.ts"
     ],
     "scripts": {
-        "build": "vp pack",
-        "prepublishOnly": "npm run build"
+        "build": "vp pack"
     },
     "dependencies": {
         "@dnd-kit/vue": "catalog:",

@@ -78,15 +78,16 @@ pnpm lint:react              # 用 React Compiler 编译 semi-ui-react 全部组
 pnpm lint:fix                # 自动修复 lint 问题
 pnpm format                  # oxfmt 格式化
 pnpm format:check            # 检查格式
-pnpm typecheck               # 逐个检查 tsconfig.node.json、各包、website 与 vitest 的配置（Vue 配置用 vue-tsc，其余用 tsc），输出每个配置的结果与耗时；semi-ui-react 读取 semi-foundation 已构建的类型，需先 build
+pnpm typecheck               # 逐个检查 tsconfig.node.json、各包、website 与 vitest 的配置（Vue 配置用 vue-tsc，其余用 tsc）并运行 `astro check`，输出每个配置的结果与耗时；semi-ui-react 读取 semi-foundation 已构建的类型，需先 build
 
 pnpm build                   # 构建所有包到各自的 dist/，UI 包同时产出整包样式 styles.css 与 tailwind.css
 pnpm build:icon              # 由 SVG 重新生成 core 数据及各框架的图标和插画组件
 pnpm test:packed             # 在临时 Vite + React 19 应用中安装并构建打包产物，需先运行 build
-pnpm test:plugins            # 各插件包的冒烟测试
+pnpm test:plugins            # 各插件包的冒烟测试，需先运行 build
 
-pnpm check                   # 提交前：lint、格式、单元与浏览器测试
-pnpm check:full              # 完整校验：构建、类型检查、lint、格式、带覆盖率的测试、SSR 与 hydration 测试、打包产物与插件测试
+pnpm check:changed           # 日常：只检查相对 release 改动的文件，测试只跑受改动影响的用例，不含浏览器测试
+pnpm check                   # 提交前：全量 lint、格式、单元与 SSR 测试，不含浏览器测试
+pnpm check:full              # 完整校验：构建、类型检查、lint、格式、带覆盖率的测试（含浏览器）、SSR 与 hydration 测试、打包产物与插件测试
 ```
 
 文档站页面检查（加载错误、空 demo、a11y 基线）：

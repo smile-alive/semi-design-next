@@ -28,8 +28,7 @@
     ],
     "scripts": {
         "build:icon": "node scripts/build-icon.ts",
-        "build": "vp pack",
-        "prepublishOnly": "npm run build"
+        "build": "vp pack"
     },
     "dependencies": {
         "@fibrae/semi-icons-core": "workspace:*"
