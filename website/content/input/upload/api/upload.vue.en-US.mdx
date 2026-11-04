@@ -27,7 +27,7 @@ import ApiType from '#/components/ApiType.astro';
 | hotSpotLocation | Position of the picture wall add button: start or end. | `"start" \| "end"` | `semiDefault("Upload", "hotSpotLocation", "end")` |
 | itemStyle | Inline style of the file cards. | `StyleValue` | `semiGlobalDefault("Upload", "itemStyle")` |
 | limit | Maximum number of files. With 1, the newest file always replaces the current one and exceed is not emitted. | `number` | `semiGlobalDefault("Upload", "limit")` |
-| listType | How the file list is displayed: list, picture or none. none renders no file list, only the trigger area. | `"list" \| "picture" \| "none"` | `semiDefault("Upload", "listType", "list")` |
+| listType | How the file list is displayed: list, picture or none. none renders no file list, only the trigger area. | `"list" \| "none" \| "picture"` | `semiDefault("Upload", "listType", "list")` |
 | maxSize | Maximum file size in KB. | `number` | `semiGlobalDefault("Upload", "maxSize")` |
 | minSize | Minimum file size in KB. | `number` | `semiGlobalDefault("Upload", "minSize")` |
 | multiple | Whether several files can be selected at once. | `boolean` | `semiDefault("Upload", "multiple", false)` |
