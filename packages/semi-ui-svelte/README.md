@@ -1,16 +1,18 @@
 # @fibrae/semi-ui-svelte
 
-Semi Design Next 的 Svelte 组件库，面向 Svelte 5.57+ 应用。它是上游 [Semi Design](https://github.com/DouyinFE/semi-design) 的社区 fork，与字节跳动及 Semi Design 官方团队无关，与各框架的 UI 包共用同一份 foundation 的逻辑和样式。
+[简体中文](README.zh-CN.md)
 
-## 安装
+The Svelte component library of Semi Design Next, for Svelte 5.57+ applications. It is a community fork of [Semi Design](https://github.com/DouyinFE/semi-design), unaffiliated with ByteDance and the Semi Design team, and shares the logic and styles of one foundation with the UI packages of other frameworks.
+
+## Installation
 
 ```sh
 pnpm add svelte @fibrae/semi-ui-svelte @fibrae/semi-icons-svelte
 ```
 
-peer 依赖：`svelte` ^5.57.0。浏览器、模块格式、Node.js 与构建插件的版本要求见[快速开始的环境要求](../../website/content/start/getting-started/index.zh-CN.mdx#环境要求)。
+Peer dependency: `svelte` ^5.57.0. For browser, module format, Node.js and build plugin requirements, see the [requirements in Getting Started](../../website/content/start/getting-started/index.en-US.mdx#requirements).
 
-## 使用
+## Usage
 
 ```svelte
 <script lang="ts">
@@ -20,36 +22,36 @@ peer 依赖：`svelte` ^5.57.0。浏览器、模块格式、Node.js 与构建插
 </script>
 
 <Button theme="solid" type="primary">Hello Semi</Button>
-<Switch bind:checked aria-label="开关" />
+<Switch bind:checked aria-label="Switch" />
 ```
 
-样式与主题 token 随组件一起加载，不需要手动引入基础样式，也不需要 reset.css。
+Styles and theme tokens load with the components. You do not need to import base styles or reset.css.
 
-### 入口
+### Entry points
 
-| 入口                                          | 说明                                                                                            |
-| --------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `@fibrae/semi-ui-svelte`                      | 全部组件、类型、`ConfigProvider`、`LocaleProvider`、`LocaleConsumer`、`useLocale`、`semiGlobal` |
-| `@fibrae/semi-ui-svelte/<目录>/index`         | 逐文件深路径，与 `src/` 下的目录一一对应；组件文件是 `<目录>/<名>.svelte`                       |
-| `@fibrae/semi-ui-svelte/hooks`                | `useLocale`、`useClickOutside`、`useCopied`，以及 attachment `observeResize`                    |
-| `@fibrae/semi-ui-svelte/tokens`               | 主题 token 与 base 规则，在应用入口文件最先导入，首个组件懒加载时 token 仍随入口加载            |
-| `@fibrae/semi-ui-svelte/styles.css`           | 整包样式，需要一次性加载全部组件样式时使用                                                      |
-| `@fibrae/semi-ui-svelte/tailwind.css`         | Tailwind v4 的 `@theme inline` 映射                                                             |
-| `@fibrae/semi-ui-svelte/locale/source/<语言>` | 内置语言包，重导出 `@fibrae/semi-foundation/locale/source/<语言>`                               |
+| Entry                                           | Description                                                                                                                                       |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@fibrae/semi-ui-svelte`                        | All components and types, `ConfigProvider`, `LocaleProvider`, `LocaleConsumer`, `useLocale` and `semiGlobal`                                      |
+| `@fibrae/semi-ui-svelte/<directory>/index`      | Deep file paths that map one-to-one to the directories under `src/`; component files are `<directory>/<name>.svelte`                              |
+| `@fibrae/semi-ui-svelte/hooks`                  | `useLocale`, `useClickOutside`, `useCopied` and the attachment `observeResize`                                                                    |
+| `@fibrae/semi-ui-svelte/tokens`                 | Theme tokens and base rules. Import it first in the application entry so tokens still load with the entry when the first component is lazy-loaded |
+| `@fibrae/semi-ui-svelte/styles.css`             | The full stylesheet, for loading all component styles at once                                                                                     |
+| `@fibrae/semi-ui-svelte/tailwind.css`           | The Tailwind v4 `@theme inline` mapping                                                                                                           |
+| `@fibrae/semi-ui-svelte/locale/source/<locale>` | Built-in locale packs, re-exporting `@fibrae/semi-foundation/locale/source/<locale>`                                                              |
 
-包里发布的是 `.svelte` 源码与 `.d.ts`，不是编译产物：`exports` 带 `svelte` 条件，由 `@sveltejs/vite-plugin-svelte`（SvelteKit 已内置）按应用的目标（DOM 或服务端）编译。不认 `svelte` 条件、也不编译 `.svelte` 的工具无法使用本包。
+The package ships `.svelte` source and `.d.ts` files, not compiled output. `exports` carries the `svelte` condition, and `@sveltejs/vite-plugin-svelte` (built into SvelteKit) compiles for the application's target (DOM or server). Tools that neither honor the `svelte` condition nor compile `.svelte` cannot use this package.
 
-使用整包 `styles.css` 时，需要开启 `@fibrae/semi-vite-plugin` 的 `omitCss`，否则组件自带的样式导入会被再打包一份。整包样式已含 token，`omitCss` 下 `tokens` 入口和组件样式一起被移除。
+To use the full `styles.css`, turn on `omitCss` in `@fibrae/semi-vite-plugin`; otherwise the style imports inside the components are bundled a second time. The full stylesheet already includes tokens, and under `omitCss` the `tokens` entry is removed along with the component styles.
 
-与 `@fibrae/semi-ai-svelte` 同用并加载整包样式时，在 `styles.css` 之后引入 `@fibrae/semi-ai-svelte/styles.css`。
+When using `@fibrae/semi-ai-svelte` with the full stylesheet, import `@fibrae/semi-ai-svelte/styles.css` after `styles.css`.
 
-### 样式定制
+### Customizing styles
 
-覆写 `--semi-*` CSS 变量即可改变全局颜色、圆角、字号和间距；Semi 的样式位于 `@layer semi`，应用中不分层的 CSS 规则总是优先。没有主题包，也没有编译期的 Sass 覆写。发布的 `.scss` 含有 `semi:` 地址，需要通过构建插件（`@fibrae/semi-vite-plugin` 等）或 `@fibrae/semi-scss-compile` 使用。
+Override `--semi-*` CSS variables to change global colors, radii, font sizes and spacing. Semi's styles sit in `@layer semi`, so unlayered CSS rules in your application always win. There are no theme packages and no compile-time Sass overrides. The published `.scss` contains `semi:` addresses and must go through a build plugin (such as `@fibrae/semi-vite-plugin`) or `@fibrae/semi-scss-compile`.
 
-### 多语言
+### Internationalization
 
-默认语言为 `zh_CN`。用 `LocaleProvider` 传入语言包；`useLocale(组件名)` 在组件初始化时调用，返回一个函数，读作 `locale().locale.xxx`，语言切换后随之更新：
+The default locale is `zh_CN`. Pass a locale pack with `LocaleProvider`. Call `useLocale(componentName)` during component initialization. It returns a function, read as `locale().locale.xxx`, that updates when the locale changes:
 
 ```svelte
 <script lang="ts">
@@ -62,28 +64,28 @@ peer 依赖：`svelte` ^5.57.0。浏览器、模块格式、Node.js 与构建插
 </LocaleProvider>
 ```
 
-语言包的结构见 [@fibrae/semi-foundation](../semi-foundation/README.md#语言包)。
+For the structure of a locale pack, see [@fibrae/semi-foundation](../semi-foundation/README.md#locale-packs).
 
-### 服务端渲染
+### Server rendering
 
-组件可在 `svelte/server` 的 `render` 与 SvelteKit 中输出服务端 HTML，浏览器用 `hydrate` 注水。注意：
+Components output server HTML with `render` from `svelte/server` and in SvelteKit, and the browser hydrates with `hydrate`. Keep in mind:
 
-- 组件内的 id 来自 `$props.id()`，服务端与浏览器一致。
-- `onMount` 与 `$effect` 不在服务端执行，依赖它们的状态（如测量尺寸）在注水后才出现。
-- `semiGlobal.config` 只在应用启动时设置，服务端与浏览器使用同一份配置。
+- Ids inside components come from `$props.id()`, so the server and browser agree.
+- `onMount` and `$effect` do not run on the server, and state that depends on them (such as measured sizes) appears after hydration.
+- Set `semiGlobal.config` only at application startup. The server and browser use the same config.
 
-### 文档
+### Documentation
 
-组件文档在 [website/content](../../website/content)，入门见 [快速开始](../../website/content/start/getting-started/index.zh-CN.mdx)。
+Component docs are in [website/content](../../website/content). To get started, read [Getting Started](../../website/content/start/getting-started/index.en-US.mdx).
 
-## 与其他包的关系
+## Related packages
 
-- 依赖 `@fibrae/semi-foundation`（逻辑与样式）、`@fibrae/semi-icons-svelte`。
-- 被 `@fibrae/semi-ai-svelte` 和文档站 `website` 使用。
-- 各框架的 UI 包（`semi-ui-<框架>`）共用同一份 foundation，Vue 版见 [@fibrae/semi-ui-vue](../semi-ui-vue/README.md)，它是 Svelte 版能力对齐的参照。
+- Depends on `@fibrae/semi-foundation` (logic and styles) and `@fibrae/semi-icons-svelte`.
+- Used by `@fibrae/semi-ai-svelte` and the docs site `website`.
+- The UI package of each framework (`semi-ui-<framework>`) shares the same foundation.
 
-## 开发
+## Development
 
-`pnpm --filter @fibrae/semi-ui-svelte build` 执行 `scripts/svelte-package.ts`：用 `svelte-package` 把 `src` 输出到 `dist`（`.svelte` 原样、`.ts` 编译为 `.js` 与 `.d.ts`），把样式导入改为 foundation 的 `.css`，去掉 `__tests__`，并写出整包 `styles.css`、`tailwind.css` 与 `locale/source/` 的重导出。
+`pnpm --filter @fibrae/semi-ui-svelte build` runs `scripts/svelte-package.ts`: `svelte-package` outputs `src` to `dist` (`.svelte` files as they are, `.ts` compiled to `.js` and `.d.ts`). The script changes style imports to the foundation's `.css`, removes `__tests__`, and writes the full `styles.css`, `tailwind.css` and the re-exports under `locale/source/`.
 
-通用命令见根目录 [README.md](../../README.md#常用命令)。组件写法见 [components](../../.agents/references/svelte/components.md)，相对上游的变化见 [release-notes](../../docs/release-notes.md)。
+For general commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root. For how to write components, see [components](../../.agents/references/svelte/components.md). For changes relative to upstream, see [release-notes](../../docs/release-notes.md).

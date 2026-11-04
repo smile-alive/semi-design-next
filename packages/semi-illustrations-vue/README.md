@@ -1,16 +1,18 @@
 # @fibrae/semi-illustrations-vue
 
-Semi Design Next 的 Vue 3 插画组件，导出名与 `@fibrae/semi-illustrations-react` 一致（每组含 `Dark` 变体），常配合 `@fibrae/semi-ui-vue` 的 `Empty` 使用。
+[简体中文](README.zh-CN.md)
 
-## 安装
+The Vue 3 illustration components of Semi Design Next. Export names match `@fibrae/semi-illustrations-react` (each set has a `Dark` variant), and they often pair with `Empty` from `@fibrae/semi-ui-vue`.
+
+## Installation
 
 ```shell
 pnpm add @fibrae/semi-illustrations-vue
 ```
 
-peer 依赖：`vue`。`@fibrae/semi-icons-core` 与 `@fibrae/semi-icons-vue` 是普通依赖，随包安装。仅发布 ESM。
+Peer dependency: `vue`. `@fibrae/semi-icons-core` and `@fibrae/semi-icons-vue` are regular dependencies and install with the package. Ships ESM only.
 
-## 使用
+## Usage
 
 ```vue
 <script setup lang="ts">
@@ -26,20 +28,20 @@ peer 依赖：`vue`。`@fibrae/semi-icons-core` 与 `@fibrae/semi-icons-vue` 是
 </template>
 ```
 
-- 导出名为 `Illustration` 加插画名，暗色变体加 `Dark` 后缀。
-- 每个插画是一个 `svg` 组件，属性透传给根 `svg`，默认宽高 200，默认装饰性（`aria-hidden`）。
-- 渐变、mask、clipPath 的 id 按实例生成，同页多个实例互不影响。
-- 配色使用 `var(--semi-color-*)`，页面需要已加载 Semi 主题样式（由 `semi-ui-vue` 的样式提供），本包自身不含样式。
+- The export name is `Illustration` plus the illustration name, and dark variants add a `Dark` suffix.
+- Each illustration is an `svg` component whose attributes pass through to the root `svg`, with a default size of 200, and decorative by default (`aria-hidden`).
+- Gradient, mask and clipPath ids are generated per instance, so multiple instances on a page do not interfere.
+- Colors use `var(--semi-color-*)`, so the page must have the Semi theme styles loaded (provided by the styles of `semi-ui-vue`). This package has no styles of its own.
 
-组件文档见 [website/content/show/empty](../../website/content/show/empty)。
+Component docs are in [website/content/show/empty](../../website/content/show/empty).
 
-## 与其他包的关系
+## Related packages
 
-- 依赖 `@fibrae/semi-icons-vue` 的 `createSvgComponent`。
-- 插画数据来自 `@fibrae/semi-icons-core/illustrations`，与其他框架的插画包读取同一份。
-- React 对应包是 `@fibrae/semi-illustrations-react`。
+- Depends on `createSvgComponent` from `@fibrae/semi-icons-vue`.
+- Illustration data comes from `@fibrae/semi-icons-core/illustrations`, the same data the illustration packages of other frameworks read.
+- The equivalent package for each framework is `@fibrae/semi-illustrations-<framework>`.
 
-## 开发
+## Development
 
-- `src/illustrations` 是生成源码，不要手改。插画 SVG 在 `semi-icons-core` 的 `svgs/illustrations`，见 [semi-icons-core](../semi-icons-core/README.md#新增插画)；修改后在仓库根目录运行 `pnpm build:icon` 重新生成。
-- 构建与测试命令见根目录 [README.md](../../README.md#常用命令)。
+- `src/illustrations` is generated source, so do not edit it by hand. The illustration SVGs are in `svgs/illustrations` of `semi-icons-core`, as described in [semi-icons-core](../semi-icons-core/README.md#adding-illustrations). After changing them, run `pnpm build:icon` at the repository root to regenerate.
+- For build and test commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.

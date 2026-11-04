@@ -11,7 +11,7 @@
 
 | 任务                                                                       | 先读                                                                                                                  |
 | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| 目录结构、支持环境、常用命令                                               | [README.md](README.md)                                                                                                |
+| 目录结构、支持环境、常用命令、分支与发布                                   | [CONTRIBUTING.md](CONTRIBUTING.md)                                                                                    |
 | 已定决策（D、S、C、F 系列）与未完成事项                                    | [decisions](docs/decisions.md) 第 1、2 节；依赖现状看各 `package.json` 与 `pnpm-workspace.yaml` 的 catalog            |
 | 某组件未结的问题、已知限制与保持原样的决定                                 | [component-issues](docs/component-issues.md)                                                                          |
 | 相对原 Semi 的破坏性变化与行为变化                                         | [release-notes](docs/release-notes.md)                                                                                |
@@ -113,7 +113,7 @@ export PATH="$(mise where node@26.10.0)/bin:$(mise where pnpm@12.9.1):$PATH"
 
 ## 交付
 
-- 回复和文档用简体中文，技术标识保持原文。结果用 `PASS`、`FAIL`、`SKIP`、`UNKNOWN` 标记。
+- 回复和文档用简体中文，技术标识保持原文。README 例外：`README.md` 用英文，`README.zh-CN.md` 用简体中文，两份同步修改。结果用 `PASS`、`FAIL`、`SKIP`、`UNKNOWN` 标记。
 - 组件的行为或公开 API 有变化时，写进 `docs/release-notes.md` 对应组件的章节；发现但不在本次范围内的问题，登记到 `docs/component-issues.md`。
 - 文件用编辑工具修改，不用 sed、重定向、heredoc 或脚本改写内容；formatter、linter 自动修复和生成命令除外。用 codemod 改写仓库文件前，先说明范围并取得用户确认（见 [ast](.agents/references/ast.md)）。删除用 `trash`。一次性脚本放在仓库外的临时目录。
-- 只在用户要求时 commit，不 push。用户要求推送时，从 `release` 拉分支推送并开 PR 合入 `release`，不直接推 `release` 或 `main`；分支模型见 [README](README.md#分支)。commit 用 Conventional Commits：`type(scope)` 用英文，scope 写包名或组件目录名；subject 和 body 用简体中文，header 不超过 72 个字符；只暂存本任务的改动，不加 AI 署名。
+- 只在用户要求时 commit，不 push。用户要求推送时，从 `release` 拉分支推送并开 PR 合入 `release`，不直接推 `release` 或 `main`；分支模型见 [CONTRIBUTING](CONTRIBUTING.md#分支)。commit 用 Conventional Commits：`type(scope)` 用英文，scope 写包名或组件目录名；subject 和 body 用简体中文，header 不超过 72 个字符；只暂存本任务的改动，不加 AI 署名。

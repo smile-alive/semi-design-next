@@ -1,20 +1,22 @@
 # @fibrae/semi-rspack-plugin
 
-Semi Design Next 的 rspack 2 构建插件（`SemiRspackPlugin`），给使用 Semi 组件包的 rspack 应用用：替换 CSS 类名前缀、控制样式是否包在 `@layer semi` 中、去掉 Semi 包内的 `.css` 导入。
+[简体中文](README.zh-CN.md)
 
-样式通过 `--semi-*` CSS 变量（见 [tokens](../../website/content/basic/tokens)）和应用自己的未分层 CSS 定制，后者总是优先于 `@layer semi` 内的样式；插件没有编译期的 theme、variables 等选项。
+The rspack 2 build plugin of Semi Design Next (`SemiRspackPlugin`), for rspack applications that use the Semi component packages. It replaces the CSS class prefix, controls whether styles are wrapped in `@layer semi`, and removes the `.css` imports inside Semi packages.
 
-## 安装
+Styles are customized through `--semi-*` CSS variables (see [tokens](../../website/content/basic/tokens)) and your own unlayered CSS, which always wins over styles inside `@layer semi`. The plugin has no compile-time theme or variables options.
+
+## Installation
 
 ```shell
 pnpm add -D @fibrae/semi-rspack-plugin
 ```
 
-peer 依赖：`@rspack/core ^2.0.0`。仅提供 ESM。
+Peer dependency: `@rspack/core ^2.0.0`. Ships ESM only.
 
-## 使用
+## Usage
 
-插件的 loader 输出纯 CSS，项目需要另有一条规则把 `.scss` 当 CSS 处理，例如 rspack 原生 CSS 支持。
+The plugin's loader outputs plain CSS, so the project needs a separate rule that treats `.scss` as CSS, such as rspack's native CSS support.
 
 ```js
 // rspack.config.mjs
@@ -30,38 +32,38 @@ export default {
 };
 ```
 
-### 选项
+### Options
 
-选项类型沿用 webpack 插件的名字 `SemiWebpackPluginOptions`，只有以下三项（没有 `extractCssOptions` 和 `overrideStylesheetLoaders`）：
+The option type keeps the webpack plugin's name `SemiWebpackPluginOptions` and has only these three options (no `extractCssOptions` or `overrideStylesheetLoaders`):
 
-| 选项        | 类型      | 默认值  | 说明                                                                          |
-| ----------- | --------- | ------- | ----------------------------------------------------------------------------- |
-| `prefixCls` | `string`  | `semi`  | CSS 类名前缀。同时改写 Semi JS 里的 `BASE_CLASS_PREFIX`，`omitCss` 时也生效。 |
-| `cssLayer`  | `boolean` | `true`  | 编译后的样式是否包在 `@layer semi { ... }` 中；`false` 输出不分层的样式。     |
-| `omitCss`   | `boolean` | `false` | 去掉 Semi 包 `dist` 下 JS 里的 `.css` 导入，且不再编译样式。                  |
+| Option      | Type      | Default | Description                                                                                     |
+| ----------- | --------- | ------- | ----------------------------------------------------------------------------------------------- |
+| `prefixCls` | `string`  | `semi`  | CSS class prefix. Also rewrites `BASE_CLASS_PREFIX` in Semi's JS, including under `omitCss`.    |
+| `cssLayer`  | `boolean` | `true`  | Whether compiled styles are wrapped in `@layer semi { ... }`. `false` outputs unlayered styles. |
+| `omitCss`   | `boolean` | `false` | Removes the `.css` imports from JS under `dist` in Semi packages and stops compiling styles.    |
 
-`omitCss` 与 `cssLayer` 互斥，同时传入会在构造时抛错。需要无分层样式表时，用 [`@fibrae/semi-scss-compile`](../semi-scss-compile/README.md) 生成（`semi-build-scss --no-layer`），并让它的 `--prefix` 与 `prefixCls` 一致。
+`omitCss` and `cssLayer` are mutually exclusive, and passing both throws in the constructor. For an unlayered stylesheet, generate it with [`@fibrae/semi-scss-compile`](../semi-scss-compile/README.md) (`semi-build-scss --no-layer`) and keep its `--prefix` the same as `prefixCls`.
 
-### 工作方式
+### How it works
 
-`apply` 只向 `compiler.options.module.rules` 追加规则：
+`apply` only appends rules to `compiler.options.module.rules`:
 
-1. 设置了 `prefixCls`：对各 `env.js` 追加前缀 loader 规则。
-2. `omitCss`：只追加去除 `.css` 导入的规则。
-3. 否则：追加把 JS 里 `.css` 导入指回 `.scss` 的规则，以及编译 `dist/**/*.scss` 的主题规则。后者通过 `semi:` Sass importer 编译，`semi:theme` 来自 `@fibrae/semi-foundation/theme/index.scss`。
+1. With `prefixCls` set: appends a prefix loader rule for each `env.js`.
+2. With `omitCss`: appends only the rule that removes `.css` imports.
+3. Otherwise: appends a rule that points `.css` imports in JS back to `.scss`, and a theme rule that compiles `dist/**/*.scss`. The latter compiles through the `semi:` Sass importer, with `semi:theme` coming from `@fibrae/semi-foundation/theme/index.scss`.
 
-规则构造函数 `applySemiRules`、`createSourceSuffixLoaderRule`、`createThemeLoaderRule`、`createOmitCssLoaderRule`、`createPrefixLoaderRule` 和各 loader（`semiScssLoader`、`semiPrefixLoader`、`semiSourceSuffixLoader`、`semiOmitCssLoader`）也从入口导出，供需要自行组装规则的场景使用。
+The rule constructors `applySemiRules`, `createSourceSuffixLoaderRule`, `createThemeLoaderRule`, `createOmitCssLoaderRule` and `createPrefixLoaderRule`, and the loaders (`semiScssLoader`, `semiPrefixLoader`, `semiSourceSuffixLoader` and `semiOmitCssLoader`), are also exported from the entry for assembling rules yourself.
 
-## 与其他包的关系
+## Related packages
 
-- 构建时把私有包 `@fibrae/semi-theme-shared` 打进 `dist`；运行时依赖只有 `sass`。
-- 同类插件：[`@fibrae/semi-vite-plugin`](../semi-vite/README.md)、[`@fibrae/semi-webpack-plugin`](../semi-webpack/README.md)。
+- Bundles the private package `@fibrae/semi-theme-shared` into `dist` at build time. The only runtime dependency is `sass`.
+- Sibling plugins: [`@fibrae/semi-vite-plugin`](../semi-vite/README.md) and [`@fibrae/semi-webpack-plugin`](../semi-webpack/README.md).
 
-## 开发
+## Development
 
-loader 通过 `src/constants.ts` 以文件路径引用，所以 `vp pack` 以 `unbundle` 方式把 `src/index.ts` 与 `src/loaders/*.ts` 分别产出。
+Loaders are referenced by file path through `src/constants.ts`, so `vp pack` emits `src/index.ts` and `src/loaders/*.ts` separately in `unbundle` mode.
 
-- `pnpm --filter @fibrae/semi-rspack-plugin build`：构建。
-- `pnpm --filter @fibrae/semi-rspack-plugin test`：先构建，再用 `test/run.ts` 以 `dist` 产物跑 fixture 构建（`entry`、`omit-entry`、`vue-entry`、`ai-entry`）。
+- `pnpm --filter @fibrae/semi-rspack-plugin build`: builds.
+- `pnpm --filter @fibrae/semi-rspack-plugin test`: builds first, then uses `test/run.ts` to run fixture builds against the `dist` output (`entry`, `omit-entry`, `vue-entry` and `ai-entry`).
 
-通用命令见根目录 [README.md](../../README.md) 的「常用命令」。
+For general commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.

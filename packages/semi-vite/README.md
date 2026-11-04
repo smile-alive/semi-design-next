@@ -1,18 +1,20 @@
 # @fibrae/semi-vite-plugin
 
-Semi Design Next 的 Vite 构建插件，给使用 Semi 各框架 UI 包与 AI 包的 Vite 应用用：替换 CSS 类名前缀、控制样式是否包在 `@layer semi` 中、可选地去掉 Semi 包内的 `.css` 导入；服务端渲染的宿主（React Router、SolidStart 等）靠它把 Semi 包接入服务端构建与 dev 预构建。
+[简体中文](README.zh-CN.md)
 
-只在浏览器渲染时，样式本身不需要插件即可加载。主题通过 `--semi-*` CSS 变量（见 [tokens](../../website/content/basic/tokens)）和应用自己的未分层 CSS 定制，后者总是优先于 `@layer semi` 内的样式；插件没有编译期的 theme、variables 等选项。
+The Vite build plugin of Semi Design Next, for Vite applications that use the Semi UI and AI packages of any framework. It replaces the CSS class prefix, controls whether styles are wrapped in `@layer semi`, and can remove the `.css` imports inside Semi packages. Server-rendering hosts (React Router, SolidStart and others) rely on it to bring Semi packages into the server build and dev pre-bundling.
 
-## 安装
+For browser-only rendering, the styles themselves load without the plugin. Themes are customized through `--semi-*` CSS variables (see [tokens](../../website/content/basic/tokens)) and your own unlayered CSS, which always wins over styles inside `@layer semi`. The plugin has no compile-time theme or variables options.
+
+## Installation
 
 ```shell
 pnpm add -D @fibrae/semi-vite-plugin
 ```
 
-peer 依赖：`vite >=8.0.0`。仅提供 ESM。
+Peer dependency: `vite >=8.0.0`. Ships ESM only.
 
-## 使用
+## Usage
 
 ```ts
 // vite.config.ts
@@ -28,20 +30,20 @@ export default defineConfig({
 });
 ```
 
-插件名为 `semi-theme`，`enforce: 'pre'`。包同时具名导出 `semiTheming` 和类型 `SemiVitePluginOptions`。
+The plugin is named `semi-theme` and has `enforce: 'pre'`. The package also has a named export `semiTheming` and the type `SemiVitePluginOptions`.
 
-### 服务端渲染
+### Server rendering
 
-宿主配置里加上插件即可服务端渲染与 hydration。默认按组件加载样式（组件 JS 自带样式导入），不导入 `styles.css`；整包样式是可选路线：开 `omitCss` 再导入一次 `styles.css`。两条路线不混用，混用时 CSS 体积约翻倍。
+Adding the plugin to the host config is enough for server rendering and hydration. By default, styles load per component (the component JS brings its own style imports), so do not import `styles.css`. The full stylesheet is an optional route: turn on `omitCss` and import `styles.css` once. Do not mix the two routes; mixing roughly doubles the CSS size.
 
-| 宿主                                                | 安装                                                    | 宿主配置                                                    | 样式                                                  |
-| --------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------- |
-| React Router 8 framework mode（含 `serverBundles`） | `@fibrae/semi-ui-react`、`-D @fibrae/semi-vite-plugin`  | `plugins: [semi(), reactRouter()]`                          | 无                                                    |
-| SolidStart 2                                        | `@fibrae/semi-ui-solid`、`-D @fibrae/semi-vite-plugin`  | `plugins: [solidStart(), nitro(), semi({ omitCss: true })]` | `app.tsx` 导入一次 `@fibrae/semi-ui-solid/styles.css` |
-| SvelteKit 3                                         | `@fibrae/semi-ui-svelte`、`-D @fibrae/semi-vite-plugin` | `plugins: [sveltekit({ adapter }), semi()]`                 | 无                                                    |
+| Host                                                      | Install                                                 | Host config                                                 | Styles                                                      |
+| --------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| React Router 8 framework mode (including `serverBundles`) | `@fibrae/semi-ui-react`, `-D @fibrae/semi-vite-plugin`  | `plugins: [semi(), reactRouter()]`                          | None                                                        |
+| SolidStart 2                                              | `@fibrae/semi-ui-solid`, `-D @fibrae/semi-vite-plugin`  | `plugins: [solidStart(), nitro(), semi({ omitCss: true })]` | Import `@fibrae/semi-ui-solid/styles.css` once in `app.tsx` |
+| SvelteKit 3                                               | `@fibrae/semi-ui-svelte`, `-D @fibrae/semi-vite-plugin` | `plugins: [sveltekit({ adapter }), semi()]`                 | None                                                        |
 
 ```ts
-// vite.config.ts（React Router）
+// vite.config.ts (React Router)
 import { reactRouter } from '@react-router/dev/vite';
 import { defineConfig } from 'vite';
 import semi from '@fibrae/semi-vite-plugin';
@@ -51,38 +53,38 @@ export default defineConfig({
 });
 ```
 
-SolidStart 选整包样式，是因为它的 dev 服务端默认不收集 `node_modules` 内组件导入的 CSS：按组件路线在生产环境正常，dev 首屏无样式。给 `solidStart()` 传 `css: { filter: { exclude: [/^(?!.*\/node_modules\/@fibrae\/semi-).*\/node_modules\//] } }` 后 dev 也收集 Semi 包的组件 CSS，代价是多一处宿主配置，且 dev 首屏的样式略大于整包样式（约多 20%），分成数十个 `<style>`。
+SolidStart uses the full stylesheet because its dev server does not collect CSS imported by components in `node_modules` by default: the per-component route works in production, but the first dev render has no styles. Passing `css: { filter: { exclude: [/^(?!.*\/node_modules\/@fibrae\/semi-).*\/node_modules\//] } }` to `solidStart()` makes dev collect the component CSS of Semi packages too. The cost is one more host setting, and first-render dev styles slightly larger than the full stylesheet (about 20% more), split into dozens of `<style>` tags.
 
-### 选项
+### Options
 
-| 选项        | 类型      | 默认值  | 说明                                                                                                 |
-| ----------- | --------- | ------- | ---------------------------------------------------------------------------------------------------- |
-| `prefixCls` | `string`  | `semi`  | CSS 类名前缀。                                                                                       |
-| `cssLayer`  | `boolean` | `true`  | 编译后的 CSS 是否包在 `@layer semi { ... }` 中；`false` 输出不分层的 CSS。                           |
-| `omitCss`   | `boolean` | `false` | 注释掉 Semi 包内的 `.css` 导入，配合一次性导入 `styles.css` 的整包样式路线使用，dev 预构建同样生效。 |
+| Option      | Type      | Default | Description                                                                                                                                    |
+| ----------- | --------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `prefixCls` | `string`  | `semi`  | CSS class prefix.                                                                                                                              |
+| `cssLayer`  | `boolean` | `true`  | Whether compiled CSS is wrapped in `@layer semi { ... }`. `false` outputs unlayered CSS.                                                       |
+| `omitCss`   | `boolean` | `false` | Comments out the `.css` imports inside Semi packages, for the route that imports the full `styles.css` once. Also applies to dev pre-bundling. |
 
-### 工作方式
+### How it works
 
-1. 拦截 Semi 各框架包与共享包（foundation、icons-core 等）`dist` 下 `.css` 的请求，把后缀换成 `.scss`；对应的 `.scss` 存在时读取它作为源码。
-2. 通过 `semi:` Sass importer 编译，`semi:theme` 来自 `@fibrae/semi-foundation/theme/index.scss`，`$prefix` 取 `prefixCls`，再按 `cssLayer` 决定是否包 `@layer semi`。
-3. 设置 `prefixCls` 时，改写各 `env.js` 中的 `BASE_CLASS_PREFIX`；同时向 `optimizeDeps.rolldownOptions.plugins` 注册插件，使 dev 预构建（`.vite/deps`）里的 env 模块也被改写。
-4. `omitCss` 为真时，注释掉 Semi 包 `dist` 下 JS（含 Solid 包的 `.jsx`、Svelte 包的 `.svelte`）里的 `.css` 导入，避免它们进入打包器；同样注册进 `optimizeDeps.rolldownOptions.plugins`，dev 预构建也不再注入组件 CSS。
-5. 对每个 server 环境（`consumer` 为 `server`，未设时按 Vite 的默认：除 `client` 外都是 server，覆盖 Nuxt 与 React Router `serverBundles` 的 `ssrBundle_*`）设置 `resolve.noExternal`，把 React、Vue 的 UI、AI、图标、插画包打进服务端产物，Node 不必加载它们的 `.css` 导入。foundation 默认保持 external；设置 `prefixCls` 时，foundation 与 ai-foundation 一并打进服务端产物（它们持有 `BASE_CLASS_PREFIX`，保持 external 会使服务端类名仍为 `semi-`）。vite-plugin-solid 在 dev 中把 Solid 包的非 Solid 依赖（含 foundation）写进服务端环境的 `resolve.external`，Vite 先查 `external` 再查 `noExternal`，所以设置 `prefixCls` 时插件在所有插件之后（`configEnvironment` 的 `order: 'post'`）把 foundation 从中移除。Solid 包交给 vite-plugin-solid，Svelte 包由 vite-plugin-svelte 按 `svelte` 条件自行打进服务端产物，都不在此列。
-6. 对应用能解析到的 `@fibrae/semi-ui-solid`、`@fibrae/semi-ai-solid`，按它直接依赖的 foundation、ai-foundation，把 foundation `package.json` 中的依赖写成 `<Solid 包> > <foundation> > <依赖>`（如 `@fibrae/semi-ai-solid > @fibrae/semi-foundation > hast-util-to-jsx-runtime`）加入 `optimizeDeps.include`：vite-plugin-solid 把 Solid 包排除在预构建之外，其中的 CommonJS 依赖不预构建就无法在浏览器导入。只装 ai-solid 的 pnpm 应用解析不到 ui-solid，foundation 的依赖经 ai-solid 列入。没有根入口的依赖（如 `@tiptap/pm`）按 `exports` 中的子路径逐个加入，否则直接导入的子路径与其他预构建依赖内联的副本是两份实例。
+1. Intercepts requests for `.css` under `dist` of the Semi framework packages and shared packages (foundation, icons-core and others) and swaps the suffix for `.scss`. When the matching `.scss` exists, it reads that as the source.
+2. Compiles through the `semi:` Sass importer, with `semi:theme` coming from `@fibrae/semi-foundation/theme/index.scss` and `$prefix` from `prefixCls`, then wraps in `@layer semi` according to `cssLayer`.
+3. When `prefixCls` is set, rewrites `BASE_CLASS_PREFIX` in each `env.js`, and registers the plugin in `optimizeDeps.rolldownOptions.plugins` so the env modules in dev pre-bundling (`.vite/deps`) are rewritten too.
+4. When `omitCss` is true, comments out the `.css` imports in JS under `dist` of Semi packages (including `.jsx` in the Solid packages and `.svelte` in the Svelte packages) so they never reach the bundler. It is also registered in `optimizeDeps.rolldownOptions.plugins`, so dev pre-bundling stops injecting component CSS.
+5. For each server environment (`consumer` is `server`; when unset, Vite's default treats everything except `client` as server, which covers Nuxt and the `ssrBundle_*` of React Router `serverBundles`), sets `resolve.noExternal` to bundle the React and Vue UI, AI, icon and illustration packages into the server output, so Node does not have to load their `.css` imports. The foundation stays external by default. When `prefixCls` is set, foundation and ai-foundation are bundled into the server output as well (they hold `BASE_CLASS_PREFIX`, and staying external would leave server class names as `semi-`). In dev, vite-plugin-solid writes the non-Solid dependencies of Solid packages (including the foundation) into the server environment's `resolve.external`, and Vite checks `external` before `noExternal`. So when `prefixCls` is set, the plugin removes the foundation from it after all other plugins (`order: 'post'` on `configEnvironment`). Solid packages are left to vite-plugin-solid, and vite-plugin-svelte bundles Svelte packages into the server output through the `svelte` condition, so neither is included here.
+6. For the `@fibrae/semi-ui-solid` and `@fibrae/semi-ai-solid` the application can resolve, it follows their direct foundation and ai-foundation dependencies and adds the dependencies in the foundation's `package.json` to `optimizeDeps.include` as `<Solid package> > <foundation> > <dependency>` (for example `@fibrae/semi-ai-solid > @fibrae/semi-foundation > hast-util-to-jsx-runtime`). vite-plugin-solid excludes Solid packages from pre-bundling, and their CommonJS dependencies cannot be imported in the browser without pre-bundling. A pnpm application that installs only ai-solid cannot resolve ui-solid, so the foundation's dependencies are listed through ai-solid. Dependencies with no root entry (such as `@tiptap/pm`) are added subpath by subpath from `exports`; otherwise a directly imported subpath and the copy inlined by other pre-bundled dependencies would be two separate instances.
 
-## 常见问题
+## Troubleshooting
 
-`vite dev` 中类名仍是 `semi-*`，或开 `omitCss` 后 dev 仍注入组件 CSS：`.vite/deps` 缓存是在没有插件或另一组选项下生成的。停止 dev server，用 `vite --force` 重新预构建。
+In `vite dev`, class names are still `semi-*`, or dev still injects component CSS after turning on `omitCss`: the `.vite/deps` cache was generated without the plugin or with different options. Stop the dev server and pre-bundle again with `vite --force`.
 
-## 与其他包的关系
+## Related packages
 
-- 构建时把私有包 `@fibrae/semi-theme-shared` 打进 `dist`，不作为运行时依赖；运行时依赖只有 `sass`。
-- 同类插件：[`@fibrae/semi-webpack-plugin`](../semi-webpack/README.md)、[`@fibrae/semi-rspack-plugin`](../semi-rspack/README.md)、[`@fibrae/semi-next`](../semi-next/README.md)；Nuxt 经 [`@fibrae/semi-nuxt`](../semi-nuxt/README.md) 使用本插件，无需手写 `vite.plugins`。
-- 需要预编译整份样式表时见 [`@fibrae/semi-scss-compile`](../semi-scss-compile/README.md)。
+- Bundles the private package `@fibrae/semi-theme-shared` into `dist` at build time, not as a runtime dependency. The only runtime dependency is `sass`.
+- Sibling plugins: [`@fibrae/semi-webpack-plugin`](../semi-webpack/README.md), [`@fibrae/semi-rspack-plugin`](../semi-rspack/README.md) and [`@fibrae/semi-next`](../semi-next/README.md). Nuxt uses this plugin through [`@fibrae/semi-nuxt`](../semi-nuxt/README.md), with no hand-written `vite.plugins`.
+- For a precompiled full stylesheet, see [`@fibrae/semi-scss-compile`](../semi-scss-compile/README.md).
 
-## 开发
+## Development
 
-- `pnpm --filter @fibrae/semi-vite-plugin build`：`vp pack` 构建 `dist/index.mjs`。
-- `pnpm --filter @fibrae/semi-vite-plugin test`：先构建，再用 `test/run.ts` 以 `dist` 产物跑 fixture 构建（`entry`、`omit-entry`、`vue-entry`、`ai-entry`、`solid-entry`），并用 `resolveConfig` 检查各环境的 `noExternal` 与 Solid 的 `optimizeDeps.include`，用 dev server 检查预构建中的 CSS 导入。
+- `pnpm --filter @fibrae/semi-vite-plugin build`: builds `dist/index.mjs` with `vp pack`.
+- `pnpm --filter @fibrae/semi-vite-plugin test`: builds first, then uses `test/run.ts` to run fixture builds against the `dist` output (`entry`, `omit-entry`, `vue-entry`, `ai-entry` and `solid-entry`). It checks each environment's `noExternal` and Solid's `optimizeDeps.include` with `resolveConfig`, and the CSS imports in pre-bundling with a dev server.
 
-通用命令见根目录 [README.md](../../README.md) 的「常用命令」。
+For general commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.

@@ -1,18 +1,20 @@
 # @fibrae/semi-webpack-plugin
 
-Semi Design Next 的 webpack 5 构建插件（`SemiWebpackPlugin`），给使用 Semi 组件包的 webpack 应用用：替换 CSS 类名前缀、控制样式是否包在 `@layer semi` 中、去掉 Semi 包内的 `.css` 导入（Next.js 场景），并允许定制样式的 loader 链。[`@fibrae/semi-next`](../semi-next/README.md) 建立在它之上。
+[简体中文](README.zh-CN.md)
 
-样式通过 `--semi-*` CSS 变量（见 [tokens](../../website/content/basic/tokens)）和应用自己的未分层 CSS 定制，后者总是优先于 `@layer semi` 内的样式；插件没有编译期的 theme、variables 等选项。
+The webpack 5 build plugin of Semi Design Next (`SemiWebpackPlugin`), for webpack applications that use the Semi component packages. It replaces the CSS class prefix, controls whether styles are wrapped in `@layer semi`, removes the `.css` imports inside Semi packages (for Next.js), and lets you customize the style loader chain. [`@fibrae/semi-next`](../semi-next/README.md) builds on it.
 
-## 安装
+Styles are customized through `--semi-*` CSS variables (see [tokens](../../website/content/basic/tokens)) and your own unlayered CSS, which always wins over styles inside `@layer semi`. The plugin has no compile-time theme or variables options.
+
+## Installation
 
 ```shell
 pnpm add -D @fibrae/semi-webpack-plugin
 ```
 
-peer 依赖 `webpack` 5（可选；插件运行时经 `compiler.webpack` 取宿主自带的 webpack，类型声明仍引用 `webpack`）。仅提供 ESM。
+Peer dependency: `webpack` 5 (optional; at runtime the plugin takes the host's webpack through `compiler.webpack`, while the type declarations still reference `webpack`). Ships ESM only.
 
-## 使用
+## Usage
 
 ```js
 // webpack.config.mjs
@@ -27,44 +29,44 @@ export default {
 };
 ```
 
-除默认导出外，还具名导出类型 `SemiWebpackPluginOptions` 和 loader 函数 `semiScssLoader`、`semiPrefixLoader`、`semiSourceSuffixLoader`。
+Besides the default export, the package has the named type `SemiWebpackPluginOptions` and the loader functions `semiScssLoader`, `semiPrefixLoader` and `semiSourceSuffixLoader`.
 
-按路径引用 loader 的宿主（如 Next.js 的 `turbopack.rules`）用子路径导出取得 loader 文件，例如 `require.resolve('@fibrae/semi-webpack-plugin/semi-omit-css-loader')`：
+Hosts that reference loaders by path (such as `turbopack.rules` in Next.js) get the loader files from subpath exports, for example `require.resolve('@fibrae/semi-webpack-plugin/semi-omit-css-loader')`:
 
-| 子路径                   | 作用                                                                  |
-| ------------------------ | --------------------------------------------------------------------- |
-| `./semi-omit-css-loader` | 注释掉 JS 中的 `.css` 导入                                            |
-| `./semi-prefix-loader`   | 按 `options.replacers` 改写 `env.js` 中的常量，如 `BASE_CLASS_PREFIX` |
+| Subpath                  | Purpose                                                                                       |
+| ------------------------ | --------------------------------------------------------------------------------------------- |
+| `./semi-omit-css-loader` | Comments out `.css` imports in JS                                                             |
+| `./semi-prefix-loader`   | Rewrites constants in `env.js`, such as `BASE_CLASS_PREFIX`, according to `options.replacers` |
 
-### 选项
+### Options
 
-| 选项                        | 类型                                      | 默认值  | 说明                                                                                                  |
-| --------------------------- | ----------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------- |
-| `prefixCls`                 | `string`                                  | `semi`  | CSS 类名前缀。同时改写 Semi JS 里的 `BASE_CLASS_PREFIX`，`omitCss` 时也生效。                         |
-| `cssLayer`                  | `boolean`                                 | `true`  | 编译后的样式是否包在 `@layer semi { ... }` 中；`false` 输出不分层的样式。                             |
-| `omitCss`                   | `boolean`                                 | `false` | 去掉 Semi 包 `dist` 下 JS 里的 `.css` 导入，且不再编译样式，样式改由应用导入的完整样式表提供。        |
-| `extractCssOptions`         | `{ loader: string; loaderOptions?: any }` | 无      | 抽取 CSS 的 loader（如 `mini-css-extract-plugin` 的 loader）。未设置时使用 `style-loader`。           |
-| `overrideStylesheetLoaders` | `(loaders: any[]) => any[]`               | 无      | 收到默认 loader 列表（已含 `extractCssOptions`），返回新列表。建议只追加自己的 loader，不删改默认项。 |
+| Option                      | Type                                      | Default | Description                                                                                                                                                                |
+| --------------------------- | ----------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `prefixCls`                 | `string`                                  | `semi`  | CSS class prefix. Also rewrites `BASE_CLASS_PREFIX` in Semi's JS, including under `omitCss`.                                                                               |
+| `cssLayer`                  | `boolean`                                 | `true`  | Whether compiled styles are wrapped in `@layer semi { ... }`. `false` outputs unlayered styles.                                                                            |
+| `omitCss`                   | `boolean`                                 | `false` | Removes the `.css` imports from JS under `dist` in Semi packages and stops compiling styles. Styles come from a full stylesheet the application imports.                   |
+| `extractCssOptions`         | `{ loader: string; loaderOptions?: any }` | None    | The loader that extracts CSS (such as the `mini-css-extract-plugin` loader). Without it, `style-loader` is used.                                                           |
+| `overrideStylesheetLoaders` | `(loaders: any[]) => any[]`               | None    | Receives the default loader list (already including `extractCssOptions`) and returns a new list. Prefer appending your own loaders over removing or changing the defaults. |
 
-`omitCss` 与 `cssLayer` 互斥：样式不再编译，`cssLayer` 无从生效，同时传入会在构造时抛错。需要无分层样式表时，用 [`@fibrae/semi-scss-compile`](../semi-scss-compile/README.md) 生成（`semi-build-scss --no-layer`），并让它的 `--prefix` 与 `prefixCls` 一致。
+`omitCss` and `cssLayer` are mutually exclusive: with no styles compiled, `cssLayer` has nothing to act on, and passing both throws in the constructor. For an unlayered stylesheet, generate it with [`@fibrae/semi-scss-compile`](../semi-scss-compile/README.md) (`semi-build-scss --no-layer`) and keep its `--prefix` the same as `prefixCls`.
 
-### 工作方式
+### How it works
 
-1. Semi 的 JS 导入编译产物 `.css`；插件为 Semi 各框架包（UI、AI、图标）`dist` 下的 JS 追加 `semi-source-suffix-loader`，把导入指回 `.scss`。
-2. 对 `dist/**/*.scss` 使用 `[style-loader 或 extractCssOptions.loader, css-loader, semi-scss-loader]`。`semi-scss-loader` 通过 `semi:` Sass importer 编译，`semi:theme` 来自 `@fibrae/semi-foundation/theme/index.scss`，`$prefix` 取 `prefixCls`。
-3. 通过 `compiler.webpack` 取得运行中的 webpack 实例，因此可在自带 webpack 的 Next.js 中使用。
+1. Semi's JS imports the compiled `.css`. The plugin appends `semi-source-suffix-loader` to the JS under `dist` of the Semi framework packages (UI, AI, icons), which points those imports back to `.scss`.
+2. `dist/**/*.scss` uses `[style-loader or extractCssOptions.loader, css-loader, semi-scss-loader]`. `semi-scss-loader` compiles through the `semi:` Sass importer, with `semi:theme` coming from `@fibrae/semi-foundation/theme/index.scss` and `$prefix` from `prefixCls`.
+3. It gets the running webpack instance through `compiler.webpack`, so it works in Next.js, which bundles its own webpack.
 
-## 与其他包的关系
+## Related packages
 
-- 构建时把私有包 `@fibrae/semi-theme-shared` 打进 `dist`；运行时依赖 `css-loader`、`style-loader`、`sass`。
-- 被 [`@fibrae/semi-next`](../semi-next/README.md) 依赖。
-- 同类插件：[`@fibrae/semi-vite-plugin`](../semi-vite/README.md)、[`@fibrae/semi-rspack-plugin`](../semi-rspack/README.md)。
+- Bundles the private package `@fibrae/semi-theme-shared` into `dist` at build time. Runtime dependencies are `css-loader`, `style-loader` and `sass`.
+- Depended on by [`@fibrae/semi-next`](../semi-next/README.md).
+- Sibling plugins: [`@fibrae/semi-vite-plugin`](../semi-vite/README.md) and [`@fibrae/semi-rspack-plugin`](../semi-rspack/README.md).
 
-## 开发
+## Development
 
-webpack 按文件路径加载 loader，所以 `vp pack` 以 `unbundle` 方式把每个源文件产出为独立的 `dist` 文件。
+webpack loads loaders by file path, so `vp pack` emits each source file as a separate `dist` file in `unbundle` mode.
 
-- `pnpm --filter @fibrae/semi-webpack-plugin build`：构建。
-- `pnpm --filter @fibrae/semi-webpack-plugin test`：先构建，再用 `test/run.ts` 以 `dist` 产物跑 fixture 构建（`entry`、`vue-entry`、`ai-entry`）。
+- `pnpm --filter @fibrae/semi-webpack-plugin build`: builds.
+- `pnpm --filter @fibrae/semi-webpack-plugin test`: builds first, then uses `test/run.ts` to run fixture builds against the `dist` output (`entry`, `vue-entry` and `ai-entry`).
 
-通用命令见根目录 [README.md](../../README.md) 的「常用命令」。
+For general commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.
