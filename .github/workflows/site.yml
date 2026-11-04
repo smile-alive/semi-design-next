@@ -1,13 +1,20 @@
 name: Deploy site
 
-# Called after CI passes on a push: main deploys the production site, release a preview at release.<project>.pages.dev.
-# A manual run deploys the branch picked in "Use workflow from"
+# main deploys the production site, release a preview at release.<project>.pages.dev. CI calls this after a push to
+# release passes, Release after publishing; a push to main by hand (docs between releases) and a manual run deploy the
+# branch pushed or picked in "Use workflow from"
 on:
     workflow_call:
+        inputs:
+            branch:
+                type: string
+                default: ''
+    push:
+        branches: [main]
     workflow_dispatch:
 
 concurrency:
-    group: site-${{ github.ref }}
+    group: site-${{ inputs.branch || github.ref_name }}
     cancel-in-progress: true
 
 permissions:
@@ -15,15 +22,19 @@ permissions:
 
 jobs:
     deploy:
-        if: github.repository == 'smile-alive/semi-design-next' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release')
+        if: github.repository == 'smile-alive/semi-design-next' && contains(fromJSON('["main", "release"]'), inputs.branch || github.ref_name)
         runs-on: ubuntu-latest
         timeout-minutes: 60
+        env:
+            BRANCH: ${{ inputs.branch || github.ref_name }}
         steps:
             - uses: actions/checkout@v5
+              with:
+                  ref: ${{ inputs.branch || github.ref_name }}
             - uses: ./.github/actions/setup
             - run: pnpm site:build
             # wrangler-action installs wrangler with `pnpm add` at the workspace root, which pnpm refuses
-            - run: pnpm dlx wrangler@4.153.0 pages deploy website/dist --project-name=semi-design-next --branch=${{ github.ref_name }}
+            - run: pnpm dlx wrangler@4.153.0 pages deploy website/dist --project-name=semi-design-next --branch="$BRANCH"
               env:
                   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                   CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

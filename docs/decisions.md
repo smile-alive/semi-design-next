@@ -27,6 +27,7 @@
 | D-3 | Vue 版插画与图标 | 已定（2026-10-16）：新增 `semi-illustrations-vue` 与 `semi-icons-vue`，与 React 包读同一份 `semi-icons-core` 数据 | Empty 与 semi-ai-vue 需要 Vue 版插画 |
 | D14 | 规则文档、lint、测试基础设施按前端框架隔离 | 已定（2026-10-23）：规则文档在 `.agents/references/<框架>/`，lint 在 `lint/<框架>/`，测试在 `vitest/<框架>/`；框架配置目录属于通用范围，运行时文件带框架名；新增框架只加目录与注册项 | 推广了 D-2：D-2 只覆盖 Vue 的 lint，按框架隔离同样用于文档与测试；共享文件不写框架名，新增框架不改共享逻辑 |
 | D15 | 支持的浏览器与兼容层交付方式 | 已定（2026-10-27）：Chrome 120、Firefox 125、Safari 17.2 及以上（Baseline 2023，Firefox 取 125 以原生支持 Popover，D5 不变）。兼容写法分三种：es-toolkit 等已有依赖能直接替代的 JS 能力，组件代码直接调用该函数；只能从全局补齐的 API（`AbortSignal.any`、`checkVisibility`）由可选包 `@fibrae/semi-polyfill` 提供，使用方在入口最先导入；参数级差异与 CSS 新特性（`scrollIntoView({ container })`、`focus({ focusVisible })`、`scroll-state`、`field-sizing`、`interpolate-size` 等）在 foundation 挂载后做特性检测，支持时走新写法，否则走兼容写法。视觉效果不接受降级：滚动条、固定列阴影、自适应尺寸、焦点环与进出场动画都有兼容写法 | 组件包不自动导入 polyfill，避免污染使用方全局、让新浏览器白白加载；`requestIdleCallback` 在所有 Safari 都没有，回退写在 JsonViewer 代码里而不是 polyfill。特性检测集中在 `semi-foundation/src/utils/supports.ts`，每项注释写明可删除的浏览器版本；兼容路径在 Firefox、Safari 上是主路径，测试覆盖 Playwright Firefox 与 WebKit |
+| D16 | 分支模型与历史形态 | 已定（2026-11-04）：历史一条直线。`release` 是唯一集成分支，PR 只允许 Rebase and merge；`main` 只是最后一次发版的指针，由 Release 工作流在发布后 fast-forward 推送，不接收 PR；版本 PR 开到 `release`。`main`、`release` 的规则集都要求线性历史 | 原先 `release` 与 `main` 互相 merge，每次发版留下两个 merge commit，历史图无法阅读；rebase 合并会改写哈希，两个分支来回 rebase 必然冲突，所以 `main` 不能再有自己的提交。正式文档站只随发版更新，发版之间上线文档要手动 fast-forward `main`（CONTRIBUTING「发布」） |
 
 方案与预研提出的待决策项：
 

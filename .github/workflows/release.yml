@@ -1,57 +1,57 @@
 name: Release
 
-# A push trigger, not workflow_run: workflow_run sets github.sha and github.ref to the default branch (release), and
-# changesets/action resets the version branch, tags and targets its PR from those. npm Trusted Publishing matches
-# this file as the top-level workflow, so publishing stays here rather than in a reusable workflow
+# Runs after CI passes on a push to release: with changesets pending it keeps the version PR current, otherwise it
+# publishes what the version commit bumped and moves main to the published commit. npm Trusted Publishing matches this
+# file as the top-level workflow, so publishing stays here rather than in a reusable workflow
 on:
-    push:
-        branches: [main]
+    workflow_run:
+        workflows: [CI]
+        types: [completed]
+        branches: [release]
 
 permissions:
     contents: read
 
 jobs:
-    # ci.yml saves this marker after passing on release; merging release into main usually keeps the same tree
-    gate:
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
-        outputs:
-            passed: ${{ steps.marker.outputs.cache-hit }}
-        steps:
-            - id: marker
-              uses: actions/cache/restore@v6
-              with:
-                  path: .ci-passed
-                  key: ci-passed-${{ github.event.head_commit.tree_id }}
-                  lookup-only: true
-
-    ci:
-        needs: gate
-        if: needs.gate.outputs.passed != 'true'
-        uses: ./.github/workflows/ci.yml
-
     release:
-        # A skipped dependency would skip this job too, so the condition states which results may continue
-        if: ${{ !cancelled() && github.repository == 'smile-alive/semi-design-next' && needs.gate.result == 'success' && (needs.ci.result == 'success' || needs.ci.result == 'skipped') }}
-        needs: [gate, ci]
+        if: github.repository == 'smile-alive/semi-design-next' && github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success'
         runs-on: ubuntu-latest
+        timeout-minutes: 30
         concurrency: release
         permissions:
             contents: write
             pull-requests: write
             id-token: write
+        outputs:
+            published: ${{ steps.changesets.outputs.published }}
         steps:
             - uses: actions/checkout@v5
-            - uses: ./.github/actions/setup
+            # Under workflow_run github.sha is the branch tip, which the checkout follows; a newer push gets its own run,
+            # so this one must not build code that CI did not pass. Nothing to version or publish skips the build
+            - id: pending
+              env:
+                  TESTED: ${{ github.event.workflow_run.head_sha }}
+                  MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
+              run: |
+                  if [ "$TESTED" != "$GITHUB_SHA" ]; then
+                      exit 0
+                  fi
+                  if [ -n "$(find .changeset -name '*.md' ! -name README.md)" ] || [ "${MESSAGE#chore: 发布新版本}" != "$MESSAGE" ]; then
+                      echo "run=true" >> "$GITHUB_OUTPUT"
+                  fi
+            - if: steps.pending.outputs.run == 'true'
+              uses: ./.github/actions/setup
               with:
                   dist: none
             # Published files are always built from this commit, never restored from a cache
-            - run: pnpm build
+            - if: steps.pending.outputs.run == 'true'
+              run: pnpm build
             # v1 finds published packages by parsing "New tag:" lines that Changesets CLI v3 no longer prints, so it
             # skipped tags and GitHub releases; v2 reads the CLI's CHANGESETS_OUTPUT file. v2 has no floating major tag.
             # No NPM_TOKEN: every @fibrae package trusts this workflow, so the CLI publishes through OIDC
             # (`id-token: write`) and attaches provenance on its own
             - id: changesets
+              if: steps.pending.outputs.run == 'true'
               uses: changesets/action@v2.1.2
               with:
                   # Changesets indents CHANGELOG lists by 2 and vp fmt by 4, so an unformatted version commit fails CI
@@ -59,22 +59,15 @@ jobs:
                   publish-script: pnpm changeset publish
                   pr-title: 'chore: 发布新版本'
                   commit-message: 'chore: 发布新版本'
-            # The version commit lands on main only; without this PR the next release -> main PR conflicts on it
+            # main is a fast-forward pointer to the last published commit; the SHA already carries release's check runs
             - if: steps.changesets.outputs.published == 'true'
-              env:
-                  GH_TOKEN: ${{ github.token }}
-              run: |
-                  if [ "$(gh api "repos/$GITHUB_REPOSITORY/compare/release...main" --jq .ahead_by)" = 0 ]; then
-                      exit 0
-                  fi
-                  if [ -n "$(gh pr list --base release --head main --state open --json number --jq '.[].number')" ]; then
-                      exit 0
-                  fi
-                  gh pr create --base release --head main --title 'chore: 发版后同步 main 到 release' \
-                      --body '发布后 main 上的版本提交与 CHANGELOG 合回 release。用「Create a merge commit」合并。'
+              run: git push origin HEAD:main
 
+    # A push made with GITHUB_TOKEN triggers no workflow, so the production deploy is called here
     site:
-        if: ${{ !cancelled() && github.repository == 'smile-alive/semi-design-next' && needs.gate.result == 'success' && (needs.ci.result == 'success' || needs.ci.result == 'skipped') }}
-        needs: [gate, ci]
+        needs: release
+        if: needs.release.outputs.published == 'true'
         uses: ./.github/workflows/site.yml
+        with:
+            branch: main
         secrets: inherit

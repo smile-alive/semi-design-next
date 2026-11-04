@@ -147,7 +147,20 @@ pnpm site:stop
     vp test run --project react-browser packages/semi-ui-react/src/<组件>
     ```
 
-CI 在每个 PR 上运行与 `pnpm check` 相同的检查和类型检查；Chromium、Firefox、WebKit 三个浏览器的完整测试每天定时运行。
+CI 的 `gate` job 先看改了哪些文件，再决定跑什么。多类改动取并集；跳过的 job 以 skipped 计入必需检查。
+
+```mermaid
+flowchart LR
+    G[gate：对比 base 的改动文件] --> C{改动只落在}
+    C -->|*.md、docs/、.agents/、.claude/、.changeset/、.github/workflows/| F[只跑 fmt]
+    C -->|website/| W[lint + fmt<br/>astro check<br/>website/src 时 test common<br/>部署预览站]
+    C -->|packages/semi-*-框架/src/| P[lint + fmt + typecheck<br/>只跑该框架的 test<br/>部署预览站]
+    C -->|其余 packages/*/src/，如 foundation| S[lint + fmt + typecheck<br/>5 个 test 都跑<br/>部署预览站]
+    C -->|其他任何文件：lockfile、vitest/、lint/、vite*.ts、package.json| A[全量：5 个 test 不按改动筛选]
+    W & P & S --> T[test 带 --changed base<br/>只跑 import 链连到改动文件的测试]
+```
+
+Chromium、Firefox、WebKit 三个浏览器的完整测试每天定时运行，只在上次通过的 commit 之后有 `packages/` 改动时才真正执行。
 
 ## 提交
 
@@ -157,24 +170,29 @@ CI 在每个 PR 上运行与 `pnpm check` 相同的检查和类型检查；Chrom
 
 ## 分支
 
-| 分支      | 作用                                                                                                                                                    |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `release` | 默认分支，集成分支。所有改动从它拉分支，经 PR 合入；推送后跑 CI，通过后部署预览站 `release.semi-design-next.pages.dev`。每日的 Browser tests 也跑在这里 |
-| `main`    | 已发版的代码。只接收 `release` 的发版 PR 与 Release 工作流的版本 PR，不直接推送                                                                         |
+历史是一条直线：仓库只允许「Rebase and merge」，`main` 和 `release` 的规则集都要求线性历史，不接受 merge commit。
 
-功能 PR 合入 `release` 时可以 squash；`release` 与 `main` 之间互相合并一律用「Create a merge commit」，squash 会让两边历史分叉，下一次合并必然冲突。
+| 分支      | 作用                                                                                                                                                                   |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `release` | 默认分支，唯一的集成分支。所有改动从它拉分支，经 PR rebase 合入；推送后跑 CI，通过后部署预览站 `release.semi-design-next.pages.dev`，再由 Release 工作流处理版本与发布 |
+| `main`    | 指向最后一次发版的 commit，永远是 `release` 的祖先。只由 Release 工作流在发布成功后 fast-forward 推送；它不接收 PR                                                     |
 
 ## 发布
 
 所有 `@fibrae/*` 包发布到 npm 公共 registry，共用一个版本号，由 [changesets](.changeset/README.md) 管理。
 
 1. 改动发布包的行为或公开 API 时，在功能 PR 里运行 `pnpm changeset` 添加变更说明；没有 changeset 的改动不会发版。
-2. 要发版时，开一个 `release` -> `main` 的 PR，CI 通过后用 merge commit 合入。
-3. `main` 收到推送后，Release 工作流先跑 CI（同一份代码已在 `release` 上通过时跳过），通过后开出「chore: 发布新版本」PR，汇总版本号与各包 CHANGELOG。这个 PR 由 github-actions[bot] 开出，它的 CI 停在等待批准：在 PR 底部点「Approve workflows to run」，CI 通过后再 squash 合入。
-4. 版本 PR 合入后，Release 工作流用 npm Trusted Publishing（OIDC，不用 `NPM_TOKEN`）发布并附带 provenance，为每个包推送 `<包名>@<版本>` tag 并创建 GitHub Release。新增的发布包要先在 npm 上存在并为 `release.yml` 配置 Trusted Publisher，才能由工作流发布。
-5. 发布成功后，Release 工作流开出「chore: 发版后同步 main 到 release」PR，把版本提交合回 `release`。它同样要先批准 CI，再用 merge commit 合入，否则下一次发版 PR 会冲突。
+2. `release` 上有 changeset 时，Release 工作流在每次 CI 通过后开出或更新「chore: 发布新版本」PR（分支 `changeset-release/release`），汇总版本号与各包 CHANGELOG。这个 PR 由 github-actions[bot] 开出，它的 CI 停在等待批准：在 PR 底部点「Approve workflows to run」。
+3. 要发版时，把版本 PR rebase 合入 `release`。它的 CI 通过后，Release 工作流用 npm Trusted Publishing（OIDC，不用 `NPM_TOKEN`）发布并附带 provenance，为每个包推送 `<包名>@<版本>` tag 并创建 GitHub Release，然后把 `main` fast-forward 到这个 commit 并部署正式站。新增的发布包要先在 npm 上存在并为 `release.yml` 配置 Trusted Publisher，才能由工作流发布。
+4. 版本 PR 合入到发布完成之间几分钟内合入的功能 PR 会一起发出去；要精确控制发版内容，等 Release 工作流结束再合。
 
-正式文档站由 Release 工作流在 `main` 的 CI 通过后部署到 Cloudflare Pages。也可以在 Actions 页手动运行 Deploy site，「Use workflow from」选 `main` 部署正式站，选 `release` 部署预览站。
+正式文档站只在发版时更新。发版之间要上线文档改动，手动 fast-forward `main`（这个 commit 在 `release` 上已通过 CI，满足 `main` 的必需检查）：
+
+```bash
+git push private release:main
+```
+
+`main` 收到推送会部署正式站。也可以在 Actions 页手动运行 Deploy site，「Use workflow from」选 `main` 部署正式站，选 `release` 部署预览站。
 
 ## 许可
 
