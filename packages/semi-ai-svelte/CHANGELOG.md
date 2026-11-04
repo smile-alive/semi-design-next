@@ -1,5 +1,15 @@
 # @fibrae/semi-ai-svelte
 
+## 0.3.1
+
+### Patch Changes
+
+- @fibrae/semi-ai-foundation@0.3.1
+    - @fibrae/semi-foundation@0.3.1
+    - @fibrae/semi-icons-svelte@0.3.1
+    - @fibrae/semi-illustrations-svelte@0.3.1
+    - @fibrae/semi-ui-svelte@0.3.1
+
 ## 0.3.0
 
 ### Patch Changes
