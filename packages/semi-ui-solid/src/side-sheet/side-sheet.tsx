@@ -1,4 +1,5 @@
 import { type JSX, Show, createEffect, createMemo, createRenderEffect, createSignal, on, onCleanup, splitProps, untrack } from 'solid-js';
+import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/side-sheet/constants';
 import SideSheetFoundation, { type Placement, type SideSheetAdapter, type SideSheetState } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
@@ -123,8 +124,8 @@ export default function SideSheet(rawProps: SideSheetProps) {
     let root: HTMLDivElement | undefined;
 
     // shown or leaving: an unmount in this period still reports afterVisibleChange(false). The initial value only, as
-    // hidden starts as !visible; the watch on hidden keeps it in step
-    let shown = Boolean(props.visible);
+    // hidden starts as !visible; the watch on hidden keeps it in step. The server disposes the root without ever showing it
+    let shown = !isServer && Boolean(props.visible);
 
     // getPopupContainer may query a node that exists only once the parent is inserted
     const mounted = useMounted();

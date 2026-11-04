@@ -27,7 +27,7 @@ import ApiType from '#/components/ApiType.astro';
 | hotSpotLocation | 照片墙添加按钮的位置，可选 start 或 end。 | `"start" \| "end"` | `semiDefault("Upload", "hotSpotLocation", "end")` |
 | itemStyle | 文件卡片的内联样式。 | `StyleValue` | `semiGlobalDefault("Upload", "itemStyle")` |
 | limit | 最多允许上传的文件个数。为 1 时始终用最新选择的文件替换当前文件，不触发 exceed。 | `number` | `semiGlobalDefault("Upload", "limit")` |
-| listType | 文件列表的展示类型，可选 list、picture、none；none 不渲染文件列表，只保留触发区。 | `"list" \| "picture" \| "none"` | `semiDefault("Upload", "listType", "list")` |
+| listType | 文件列表的展示类型，可选 list、picture、none；none 不渲染文件列表，只保留触发区。 | `"list" \| "none" \| "picture"` | `semiDefault("Upload", "listType", "list")` |
 | maxSize | 文件体积上限，单位 KB。 | `number` | `semiGlobalDefault("Upload", "maxSize")` |
 | minSize | 文件体积下限，单位 KB。 | `number` | `semiGlobalDefault("Upload", "minSize")` |
 | multiple | 是否允许一次选择多个文件。 | `boolean` | `semiDefault("Upload", "multiple", false)` |

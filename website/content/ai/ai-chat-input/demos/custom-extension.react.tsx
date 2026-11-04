@@ -178,7 +178,7 @@ const suggestion: MentionSuggestion = {
         const { item, allowHotKeySend } = props as MentionCommandProps;
         if (typeof allowHotKeySend === 'boolean') {
             // AIChatInput registers its state under the extension name, which tiptap's Storage type does not know
-            (editor.storage as Record<string, { allowHotKeySend: boolean }>).SemiAIChatInput.allowHotKeySend = allowHotKeySend;
+            (editor.storage as unknown as Record<string, { allowHotKeySend: boolean }>).SemiAIChatInput.allowHotKeySend = allowHotKeySend;
         }
         if (item) {
             editor

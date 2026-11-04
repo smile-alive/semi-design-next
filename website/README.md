@@ -40,7 +40,7 @@ MDX 写法、分类与 demo 约定见 [website](../.agents/references/website.md
 ## 检查
 
 ```sh
-pnpm lint:mdx-tables                                              # 表格列数与 MDX 编译
+pnpm lint:docs                                                    # 表格列数与 MDX 编译
 pnpm site:build && pnpm site:dev
 pnpm --filter semi-website check:pages http://127.0.0.1:4321      # 控制台报错、空 demo、axe 违规
 ```

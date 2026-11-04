@@ -10,7 +10,26 @@ permissions:
     contents: read
 
 jobs:
+    # 25 hours, not 24: GitHub can start a scheduled run late, and a commit between two runs must not be skipped
+    changes:
+        if: github.event_name == 'schedule'
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        outputs:
+            count: ${{ steps.commits.outputs.count }}
+        steps:
+            - id: commits
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  since=$(date -u -d '25 hours ago' +%FT%TZ)
+                  count=$(gh api "repos/$GITHUB_REPOSITORY/commits?sha=$GITHUB_REF_NAME&since=$since" --jq length)
+                  echo "count=$count" >> "$GITHUB_OUTPUT"
+
     browser:
+        needs: changes
+        # !cancelled(): a manual run skips `changes`, which would otherwise skip this job too; a failed check still runs it
+        if: ${{ !cancelled() && (github.event_name == 'workflow_dispatch' || needs.changes.outputs.count != '0') }}
         runs-on: ubuntu-latest
         timeout-minutes: 120
         strategy:
@@ -19,8 +38,7 @@ jobs:
                 project: [react, vue, solid, svelte, common]
         steps:
             - uses: actions/checkout@v5
-            - uses: jdx/mise-action@v5
-            - run: pnpm install --frozen-lockfile
+            - uses: ./.github/actions/setup
             - id: playwright
               run: echo "version=$(pnpm exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
             - id: browsers
@@ -33,7 +51,6 @@ jobs:
             # the cache holds the browsers only; the system libraries they load still come from apt
             - if: steps.browsers.outputs.cache-hit == 'true'
               run: pnpm exec playwright install-deps chromium firefox webkit
-            - run: pnpm build
             - run: pnpm exec vp test run --project '${{ matrix.project }}*-browser'
             - if: failure()
               uses: actions/upload-artifact@v7

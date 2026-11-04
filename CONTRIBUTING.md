@@ -27,7 +27,7 @@ pnpm site:dev
 
 1. 从 `main` 新建分支，一个 PR 只做一件事。
 2. 组件逻辑放 `packages/semi-foundation`，React、Vue、Solid 三个框架的包同步修改。
-3. 修 bug 先写一条在当前代码上会失败的用例；测试断言可见行为。
+3. 测试断言可见行为；修 bug 不新增回归用例。
 4. 行为或公开 API 有变化时：
     - 更新 `docs/release-notes.md` 对应组件的章节；
     - 文档页的中英文同步修改；
@@ -46,7 +46,7 @@ pnpm site:dev
 
 6. commit 使用 [Conventional Commits](https://www.conventionalcommits.org/)，`type(scope)` 用英文，scope 写包名或组件目录名，subject 中英文均可，header 不超过 72 个字符。
 
-CI 在每个 PR 上运行 `pnpm check` 与类型检查；Chromium、Firefox、WebKit 三个浏览器的完整测试每天定时运行。
+CI 在每个 PR 上运行与 `pnpm check` 相同的检查和类型检查；Chromium、Firefox、WebKit 三个浏览器的完整测试每天定时运行。
 
 ## 许可
 

@@ -7,15 +7,18 @@
         "#scripts/*": "./scripts/*"
     },
     "scripts": {
-        "dev": "astro dev",
+        "dev": "astro dev --port 4321 --host 127.0.0.1",
         "build": "astro build",
-        "preview": "astro preview",
+        "preview": "astro preview --port 4322 --host 127.0.0.1",
+        "stop": "astro dev stop && astro preview stop",
         "check": "astro check",
         "check:pages": "node scripts/check-pages.ts",
+        "lint:mdx": "node scripts/lint-mdx-tables.ts",
         "gen:react-api": "node scripts/gen-react-api.ts",
         "gen:solid-api": "node scripts/gen-solid-api.ts",
         "gen:svelte-api": "node scripts/gen-svelte-api.ts",
-        "gen:vue-api": "node scripts/gen-vue-api.ts"
+        "gen:vue-api": "node scripts/gen-vue-api.ts",
+        "gen:api:check": "node scripts/gen-react-api.ts --check && node scripts/gen-vue-api.ts --check && node scripts/gen-solid-api.ts --check && node scripts/gen-svelte-api.ts --check"
     },
     "dependencies": {
         "@astrojs/markdown-remark": "^7.3.4",
