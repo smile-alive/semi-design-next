@@ -8,9 +8,11 @@ on:
 
 permissions:
     contents: read
+    # `gh run list` reads this workflow's past runs
+    actions: read
 
 jobs:
-    # 25 hours, not 24: GitHub can start a scheduled run late, and a commit between two runs must not be skipped
+    # Compared against the last passing run, not a time window: a late schedule then neither skips nor repeats a commit
     changes:
         if: github.event_name == 'schedule'
         runs-on: ubuntu-latest
@@ -22,8 +24,12 @@ jobs:
               env:
                   GH_TOKEN: ${{ github.token }}
               run: |
-                  since=$(date -u -d '25 hours ago' +%FT%TZ)
-                  count=$(gh api "repos/$GITHUB_REPOSITORY/commits?sha=$GITHUB_REF_NAME&since=$since" --jq length)
+                  passed=$(gh run list --workflow "$GITHUB_WORKFLOW" --branch "$GITHUB_REF_NAME" --status success --limit 1 --json headSha --jq '.[0].headSha // empty')
+                  if [ -z "$passed" ]; then
+                      count=all
+                  else
+                      count=$(gh api "repos/$GITHUB_REPOSITORY/compare/$passed...$GITHUB_SHA" --jq '[.files[].filename | select(test("\\.md$|^(docs|website|\\.agents|\\.claude|\\.changeset|\\.github/workflows)/") | not)] | length')
+                  fi
                   echo "count=$count" >> "$GITHUB_OUTPUT"
 
     browser:
