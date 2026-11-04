@@ -6,7 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ----------- |
 | file            | 要展示的文件，必填。                                                                                  | `FileItem`                                      | `undefined` |
 | index           | 文件在列表中的位置。                                                                                  | `number`                                        | `undefined` |
-| listType        | 卡片的展示类型，可选 list、picture、none；none 不渲染卡片。                                           | `"list" \| "picture" \| "none"`                 | `"list"`    |
+| listType        | 卡片的展示类型，可选 list、picture、none；none 不渲染卡片。                                           | `"list" \| "none" \| "picture"`                 | `"list"`    |
 | disabled        | 是否禁用，禁用后不显示移除、重试和替换按钮。                                                          | `boolean`                                       | `undefined` |
 | showRetry       | 上传失败时是否展示重试按钮，文件自身的 showRetry 优先。                                               | `boolean`                                       | `undefined` |
 | showReplace     | 上传成功后是否展示替换按钮，文件自身的 showReplace 优先。                                             | `boolean`                                       | `undefined` |

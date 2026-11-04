@@ -35,8 +35,8 @@
                 "en-US": "Called when the close button is clicked, with its native click event. The banner hides after the callback returns."
             },
             "ref": {
-                "zh-CN": "根元素（`role=\"alert\"` 的 `div`）的引用。",
-                "en-US": "Reference to the root `div` element (`role=\"alert\"`)."
+                "zh-CN": "根元素 `div` 的引用。",
+                "en-US": "Reference to the root `div` element."
             },
             "style": {
                 "zh-CN": "根元素的样式。",
