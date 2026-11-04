@@ -25,9 +25,11 @@ jobs:
                   key: ci-passed-${{ github.event.head_commit.tree_id }}
                   lookup-only: true
 
+    # main's ruleset makes the version PR pass CI before this squash lands. Its PR-scoped cache is out of the gate's reach,
+    # so the commit title identifies it
     ci:
         needs: gate
-        if: needs.gate.outputs.passed != 'true'
+        if: "needs.gate.outputs.passed != 'true' && !startsWith(github.event.head_commit.message, 'chore: 发布新版本')"
         uses: ./.github/workflows/ci.yml
 
     release:

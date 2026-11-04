@@ -19,9 +19,34 @@ concurrency:
 permissions:
     contents: read
 
-# Package exports point at dist, which lint, typecheck and the tests all resolve, so one job builds it for the others
 jobs:
+    # Skipping build skips every job below it
+    gate:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        outputs:
+            skip: ${{ steps.branch-pr.outputs.skip || steps.synced.outputs.skip }}
+        steps:
+            # Push runs already cover this SHA, and main's ruleset still needs their matrix checks. A fork's branch of
+            # the same name has no such run, so it keeps its CI
+            - id: branch-pr
+              if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && (github.head_ref == 'release' || github.head_ref == 'main')
+              run: echo "skip=true" >> "$GITHUB_OUTPUT"
+            # A post-release sync leaves release on the tree that release.yml already checked on main
+            - id: synced
+              if: github.event_name == 'push' && github.ref == 'refs/heads/release'
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  HEAD_TREE: ${{ github.event.head_commit.tree_id }}
+              run: |
+                  if [ "$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .commit.tree.sha)" = "$HEAD_TREE" ]; then
+                      echo "skip=true" >> "$GITHUB_OUTPUT"
+                  fi
+
+    # Package exports point at dist, which lint, typecheck and the tests all resolve, so one job builds it for the others
     build:
+        needs: gate
+        if: needs.gate.outputs.skip != 'true'
         runs-on: ubuntu-latest
         timeout-minutes: 30
         steps:

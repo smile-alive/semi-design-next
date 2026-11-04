@@ -169,10 +169,10 @@ CI 在每个 PR 上运行与 `pnpm check` 相同的检查和类型检查；Chrom
 所有 `@fibrae/*` 包发布到 npm 公共 registry，共用一个版本号，由 [changesets](.changeset/README.md) 管理。
 
 1. 改动发布包的行为或公开 API 时，在功能 PR 里运行 `pnpm changeset` 添加变更说明；没有 changeset 的改动不会发版。
-2. 要发版时，开一个 `release` -> `main` 的 PR，CI 通过后用 merge commit 合入。
+2. 要发版时，开一个 `release` -> `main` 的 PR，等 `release` 上这个 commit 的 push CI 通过后用 merge commit 合入。这个 PR 自身不再跑 CI。
 3. `main` 收到推送后，Release 工作流先跑 CI（同一份代码已在 `release` 上通过时跳过），通过后开出「chore: 发布新版本」PR，汇总版本号与各包 CHANGELOG。这个 PR 由 github-actions[bot] 开出，它的 CI 停在等待批准：在 PR 底部点「Approve workflows to run」，CI 通过后再 squash 合入。
-4. 版本 PR 合入后，Release 工作流用 npm Trusted Publishing（OIDC，不用 `NPM_TOKEN`）发布并附带 provenance，为每个包推送 `<包名>@<版本>` tag 并创建 GitHub Release。新增的发布包要先在 npm 上存在并为 `release.yml` 配置 Trusted Publisher，才能由工作流发布。
-5. 发布成功后，Release 工作流开出「chore: 发版后同步 main 到 release」PR，把版本提交合回 `release`。它同样要先批准 CI，再用 merge commit 合入，否则下一次发版 PR 会冲突。
+4. 版本 PR 合入后，Release 工作流按 commit 标题「chore: 发布新版本」跳过 CI，用 npm Trusted Publishing（OIDC，不用 `NPM_TOKEN`）发布并附带 provenance，为每个包推送 `<包名>@<版本>` tag 并创建 GitHub Release。新增的发布包要先在 npm 上存在并为 `release.yml` 配置 Trusted Publisher，才能由工作流发布。
+5. 发布成功后，Release 工作流开出「chore: 发版后同步 main 到 release」PR，把版本提交合回 `release`。它同样要先批准工作流（这里的 CI job 都会跳过），再用 merge commit 合入，否则下一次发版 PR 会冲突。合入后 `release` 与 `main` 代码相同，push CI 和预览站部署也跳过。
 
 正式文档站由 Release 工作流在 `main` 的 CI 通过后部署到 Cloudflare Pages。也可以在 Actions 页手动运行 Deploy site，「Use workflow from」选 `main` 部署正式站，选 `release` 部署预览站。
 
