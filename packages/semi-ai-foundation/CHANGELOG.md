@@ -1,5 +1,11 @@
 # @fibrae/semi-ai-foundation
 
+## 0.3.1
+
+### Patch Changes
+
+- @fibrae/semi-foundation@0.3.1
+
 ## 0.3.0
 
 ### Patch Changes
