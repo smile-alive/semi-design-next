@@ -41,28 +41,28 @@ When you need to switch the language, you can directly switch the locale passed 
 
 ```jsx
 import React, { useCallback, useMemo, useState } from 'react';
-import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
-import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import ko_KR from '@fibrae/semi-foundation/locale/source/ko_KR';
-import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import vi_VN from '@fibrae/semi-foundation/locale/source/vi_VN';
-import ru_RU from '@fibrae/semi-foundation/locale/source/ru_RU';
-import id_ID from '@fibrae/semi-foundation/locale/source/id_ID';
-import ms_MY from '@fibrae/semi-foundation/locale/source/ms_MY';
-import th_TH from '@fibrae/semi-foundation/locale/source/th_TH';
-import tr_TR from '@fibrae/semi-foundation/locale/source/tr_TR';
-import pt_BR from '@fibrae/semi-foundation/locale/source/pt_BR';
-import zh_TW from '@fibrae/semi-foundation/locale/source/zh_TW';
-import sv_SE from '@fibrae/semi-foundation/locale/source/sv_SE';
-import pl_PL from '@fibrae/semi-foundation/locale/source/pl_PL';
-import nl_NL from '@fibrae/semi-foundation/locale/source/nl_NL';
-import ar from '@fibrae/semi-foundation/locale/source/ar';
-import es from '@fibrae/semi-foundation/locale/source/es';
-import it from '@fibrae/semi-foundation/locale/source/it';
-import de from '@fibrae/semi-foundation/locale/source/de';
-import fr from '@fibrae/semi-foundation/locale/source/fr';
-import ro from '@fibrae/semi-foundation/locale/source/ro';
+import zh_CN from '@fibrae/semi-ui-react/locale/source/zh_CN';
+import en_GB from '@fibrae/semi-ui-react/locale/source/en_GB';
+import en_US from '@fibrae/semi-ui-react/locale/source/en_US';
+import ko_KR from '@fibrae/semi-ui-react/locale/source/ko_KR';
+import ja_JP from '@fibrae/semi-ui-react/locale/source/ja_JP';
+import vi_VN from '@fibrae/semi-ui-react/locale/source/vi_VN';
+import ru_RU from '@fibrae/semi-ui-react/locale/source/ru_RU';
+import id_ID from '@fibrae/semi-ui-react/locale/source/id_ID';
+import ms_MY from '@fibrae/semi-ui-react/locale/source/ms_MY';
+import th_TH from '@fibrae/semi-ui-react/locale/source/th_TH';
+import tr_TR from '@fibrae/semi-ui-react/locale/source/tr_TR';
+import pt_BR from '@fibrae/semi-ui-react/locale/source/pt_BR';
+import zh_TW from '@fibrae/semi-ui-react/locale/source/zh_TW';
+import sv_SE from '@fibrae/semi-ui-react/locale/source/sv_SE';
+import pl_PL from '@fibrae/semi-ui-react/locale/source/pl_PL';
+import nl_NL from '@fibrae/semi-ui-react/locale/source/nl_NL';
+import ar from '@fibrae/semi-ui-react/locale/source/ar';
+import es from '@fibrae/semi-ui-react/locale/source/es';
+import it from '@fibrae/semi-ui-react/locale/source/it';
+import de from '@fibrae/semi-ui-react/locale/source/de';
+import fr from '@fibrae/semi-ui-react/locale/source/fr';
+import ro from '@fibrae/semi-ui-react/locale/source/ro';
 
 import { LocaleProvider } from '@fibrae/semi-ui-react';
 
@@ -85,7 +85,7 @@ When you need to switch the language, change the value of the `locale` prop.
 
 ```vue
 <script setup lang="ts">
-    import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
+    import en_GB from '@fibrae/semi-ui-vue/locale/source/en_GB';
     import { LocaleProvider } from '@fibrae/semi-ui-vue';
 </script>
 
@@ -104,7 +104,7 @@ When you need to switch the language, change the value of the `locale` prop.
 When you need to switch the language, bind `locale` to a value that changes; the subtree updates automatically.
 
 ```jsx
-import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
+import en_GB from '@fibrae/semi-ui-solid/locale/source/en_GB';
 import { LocaleProvider } from '@fibrae/semi-ui-solid';
 
 () => (
@@ -123,7 +123,7 @@ When you need to switch the language, bind `locale` to state that changes; the s
 
 ```svelte
 <script lang="ts">
-    import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
+    import en_GB from '@fibrae/semi-ui-svelte/locale/source/en_GB';
     import { LocaleProvider } from '@fibrae/semi-ui-svelte';
 </script>
 
