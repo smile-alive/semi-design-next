@@ -27,8 +27,7 @@
         "*.css"
     ],
     "scripts": {
-        "build": "vp pack",
-        "prepublishOnly": "npm run build"
+        "build": "vp pack"
     },
     "dependencies": {
         "@fibrae/semi-ai-foundation": "workspace:*",

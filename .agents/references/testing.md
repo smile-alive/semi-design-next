@@ -32,7 +32,7 @@
     - 键盘与焦点、禁用态、事件回调的参数、`data-*` 等属性透传；
     - 定时器与动画（`vi.useFakeTimers`）；
     - 与 Tooltip、Form 等组件的组合；StrictMode 下的挂载与卸载清理。
-- 修 bug 先写一条在当前代码上会失败的用例，只用 `-t` 跑这一条确认它失败，再修复。需要临时撤回修复来证明用例有效时，用编辑工具手动撤回再恢复，不用 `git stash`。多个 agent 并行时，撤回源码会影响别人的测试运行，只能由协调方串行进行。
+- 修 bug 不新增回归用例。需要复现时写临时用例，验证后用 `trash` 删除；修复改变了已有用例断言的行为时，更新该用例。
 - 已知缺口用 `it.fails`（它只要求用例失败，任何断言失败都算通过，不锁定具体的错误行为；断言写成预期的正确行为，修复后改成 `it`）或 `it.todo` 记录。不提交 `.only` 和 `.skip`，lint 会检查。
 - 断言用 helper（如 `expectValues()`）时，函数名以 `expect` 开头，`vitest/expect-expect` 才能识别。
 - jsdom 没有 pointer capture，`vitest/setup.ts` 把 `setPointerCapture` 等打成空函数。单元测试把浏览器会重定向到被按下元素的 `pointerMove`、`pointerUp` 直接发在该元素上，松开时再发 `lostPointerCapture`；用 spy 断言按下时捕获了正确的 `pointerId`。移出元素后仍跟随、在外面松开即结束，放到浏览器测试里用 `userEvent.dragAndDrop(源, 外部元素)` 加随后的 `userEvent.hover` 验证。

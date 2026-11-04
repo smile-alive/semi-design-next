@@ -23,8 +23,7 @@
     ],
     "scripts": {
         "build": "vp pack",
-        "test": "vp pack && node test/run.ts",
-        "prepublishOnly": "npm run build"
+        "test": "node test/run.ts"
     },
     "dependencies": {
         "@fibrae/semi-vite-plugin": "workspace:*",

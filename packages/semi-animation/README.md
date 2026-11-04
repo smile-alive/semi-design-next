@@ -1,18 +1,20 @@
 # @fibrae/semi-animation
 
-Semi Design Next 提供给 [Motion](https://motion.dev) 使用的缓动（easings）与弹簧（springs）预设，加上框架无关的 View Transition 预设类样式。Semi 不封装 Motion，需要使用方自行安装。
+[简体中文](README.zh-CN.md)
 
-## 安装
+Easing and spring presets from Semi Design Next for [Motion](https://motion.dev), plus framework-agnostic View Transition preset classes. Semi does not wrap Motion, so you install it yourself.
+
+## Installation
 
 ```sh
 pnpm add motion @fibrae/semi-animation
 ```
 
-`motion`（`^14`）是可选 peer 依赖：只用 View Transition 预设类时不需要它。
+`motion` (`^14`) is an optional peer dependency. You do not need it if you only use the View Transition preset classes.
 
-## 缓动
+## Easings
 
-`easings` 按名称提供 Penner 缓动，值可直接用于 Motion 的 `ease`：三次贝塞尔曲线为四元组，弹性（Elastic）缓动会越过终点，是函数。
+`easings` provides Penner easings by name, and the values work directly as Motion's `ease`. Cubic Bezier curves are four-element tuples. Elastic easings overshoot the end point, so they are functions.
 
 ```js
 import { animate } from 'motion';
@@ -27,11 +29,11 @@ import { motion } from 'motion/react';
 <motion.div animate={{ opacity: 1 }} transition={{ duration: 0.3, ease: easings.easeInOutQuart }} />;
 ```
 
-名称：`linear` 与 `ease{In,Out,InOut}{Quad,Cubic,Quart,Quint,Sine,Expo,Circ,Back,Elastic}`。贝塞尔缓动同样适用于 CSS：`` `cubic-bezier(${easings.easeOutCubic.join(', ')})` ``。
+Names: `linear` and `ease{In,Out,InOut}{Quad,Cubic,Quart,Quint,Sine,Expo,Circ,Back,Elastic}`. Bezier easings also work in CSS: `` `cubic-bezier(${easings.easeOutCubic.join(', ')})` ``.
 
-## 弹簧
+## Springs
 
-`springs` 提供弹簧过渡：`default`、`gentle`、`wobbly`、`stiff`、`slow`、`molasses`。
+`springs` provides spring transitions: `default`, `gentle`, `wobbly`, `stiff`, `slow` and `molasses`.
 
 ```js
 animate(el, { scale: [0.9, 1] }, springs.wobbly);
@@ -42,34 +44,34 @@ animate(el, { scale: [0.9, 1] }, springs.wobbly);
 ```
 
 ```html
-<!-- Vue，配合 motion-v -->
+<!-- Vue, with motion-v -->
 <motion.div :animate="{ x: 100 }" :transition="springs.gentle" />
 ```
 
-每个预设是 `{ type: 'spring', stiffness, damping }`，需要附加 Motion 选项时展开即可：`{ ...springs.stiff, delay: 0.1 }`。
+Each preset is `{ type: 'spring', stiffness, damping }`. Spread it to add Motion options: `{ ...springs.stiff, delay: 0.1 }`.
 
-## 性能
+## Performance
 
-Motion 把 `opacity` 和完整的 `transform` 字符串交给浏览器，在主线程之外执行动画；而独立的 `x`、`y`、`scale`、`rotate` 经 CSS 变量，在主线程运行（见 [Motion 文档](https://motion.dev/docs/performance)）。元素多或页面繁忙时，优先使用 `transform`。
+Motion hands `opacity` and full `transform` strings to the browser, which animates them off the main thread. The independent `x`, `y`, `scale` and `rotate` go through CSS variables and run on the main thread (see the [Motion docs](https://motion.dev/docs/performance)). Prefer `transform` when there are many elements or the page is busy.
 
-## View Transition 预设类
+## View Transition preset classes
 
 ```js
 import '@fibrae/semi-animation/styles/viewTransition.css';
 ```
 
-用于 [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API) 的类。一个类同时覆盖所有触发场景：出现的元素进入，消失的元素退出，保留的元素（或共享元素）两者都做。
+Classes for the [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API). One class covers every trigger: an appearing element enters, a disappearing element exits, and a kept (or shared) element does both.
 
-| 类                 | 进入              | 退出              |
-| ------------------ | ----------------- | ----------------- |
-| `semi-fade`        | 淡入              | 淡出              |
-| `semi-zoom`        | 从 85% 放大并淡入 | 缩小到 85% 并淡出 |
-| `semi-slide-up`    | 从下方进入        | 向上方退出        |
-| `semi-slide-down`  | 从上方进入        | 向下方退出        |
-| `semi-slide-left`  | 从右侧进入        | 向左侧退出        |
-| `semi-slide-right` | 从左侧进入        | 向右侧退出        |
+| Class              | Enter                         | Exit                           |
+| ------------------ | ----------------------------- | ------------------------------ |
+| `semi-fade`        | Fade in                       | Fade out                       |
+| `semi-zoom`        | Scale up from 85% and fade in | Scale down to 85% and fade out |
+| `semi-slide-up`    | Enter from below              | Exit upward                    |
+| `semi-slide-down`  | Enter from above              | Exit downward                  |
+| `semi-slide-left`  | Enter from the right          | Exit to the left               |
+| `semi-slide-right` | Enter from the left           | Exit to the right              |
 
-React 中把类传给 `<ViewTransition enter exit update share>`，并在 `startTransition` 里更新状态：
+In React, pass the classes to `<ViewTransition enter exit update share>` and update state inside `startTransition`:
 
 ```jsx
 import { ViewTransition, startTransition } from 'react';
@@ -81,7 +83,7 @@ import { ViewTransition, startTransition } from 'react';
 startTransition(() => setShown(true));
 ```
 
-不用框架或在 Vue 中，给元素设置唯一的 `view-transition-name`，把类写进 `view-transition-class`，并在 `document.startViewTransition()` 里修改 DOM：
+Without a framework, or in Vue, give the element a unique `view-transition-name`, put the class in `view-transition-class`, and change the DOM inside `document.startViewTransition()`:
 
 ```html
 <script setup>
@@ -102,14 +104,14 @@ startTransition(() => setShown(true));
 </template>
 ```
 
-用自定义属性调整。View Transition 伪元素挂在 `html` 上而不是你的元素上，所以要设置在 `:root`，或设置在 `::view-transition-group(.semi-fade)` 这样的选择器上以只作用于某个类：
+Adjust with custom properties. View Transition pseudo-elements hang off `html`, not your element, so set them on `:root`, or on a selector such as `::view-transition-group(.semi-fade)` to affect one class:
 
-- `--semi-view-transition-duration`：时长，默认 `250ms`。
-- `--semi-view-transition-easing`：缓动，默认 `cubic-bezier(0.2, 0, 0, 1)`。
-- `--semi-view-transition-offset`：滑动距离，默认元素尺寸的 `100%`。
+- `--semi-view-transition-duration`: duration, `250ms` by default.
+- `--semi-view-transition-easing`: easing, `cubic-bezier(0.2, 0, 0, 1)` by default.
+- `--semi-view-transition-offset`: slide distance, `100%` of the element size by default.
 
-设置了 `prefers-reduced-motion: reduce` 时，所有类都退化为淡入淡出。样式位于 `semi` cascade layer 中，未分层的应用样式优先级更高。
+Under `prefers-reduced-motion: reduce`, every class falls back to a fade. The styles sit in the `semi` cascade layer, so unlayered application styles win.
 
-## 开发
+## Development
 
-`pnpm build` 在本包目录运行 `vp pack`，并把 `src/styles/viewTransition.scss` 编译为 `dist/styles/viewTransition.css`（同时保留 `.scss`）。测试在 `__tests__/`，命令见根目录 [README.md](../../README.md) 的「常用命令」。
+`pnpm build` runs `vp pack` in this package directory and compiles `src/styles/viewTransition.scss` to `dist/styles/viewTransition.css` (the `.scss` also ships). Tests are in `__tests__/`. For commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.

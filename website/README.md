@@ -1,54 +1,56 @@
 # semi-website
 
-Semi Design Next 的文档站，基于 Astro 7，为各框架的组件库提供中英文文档和 demo。工作区私有包，不发布；同时承载页面扫描和 API 表生成脚本。
+[简体中文](README.zh-CN.md)
 
-## 运行
+The docs site of Semi Design Next, built on Astro 7, with documentation and demos in Chinese and English for the component libraries of each framework. It is a private workspace package that is not published, and it also hosts the page scan and API table generation scripts.
 
-根目录命令（详见根目录 [README.md](../README.md#常用命令)）：
+## Running
+
+Commands at the repository root (details in [CONTRIBUTING.md](../CONTRIBUTING.md#常用命令)):
 
 ```sh
-pnpm site:dev        # 后台启动 dev server，http://127.0.0.1:4321
-pnpm site:build      # 生产构建，产物在 website/dist
-pnpm site:preview    # 后台预览生产构建，http://127.0.0.1:4322，需先 site:build
-pnpm site:serve      # site:build 加 site:preview
-pnpm site:stop       # 停止 dev server 与 preview
+pnpm site:dev        # start the dev server in the background, http://127.0.0.1:4321
+pnpm site:build      # production build, output in website/dist
+pnpm site:preview    # preview the production build in the background, http://127.0.0.1:4322, requires site:build
+pnpm site:serve      # site:build plus site:preview
+pnpm site:stop       # stop the dev server and preview
 ```
 
-新 checkout 先在 `website` 下运行 `pnpm exec astro sync` 生成类型（`website/.astro` 不入库）。
+In a new checkout, first run `pnpm exec astro sync` under `website` to generate types (`website/.astro` is not committed).
 
-## 目录
+## Directories
 
-| 路径              | 内容                                                                                             |
-| ----------------- | ------------------------------------------------------------------------------------------------ |
-| `content/`        | 文档正文，按 `<分类>/<页面>/index.<语言>.mdx` 组织，语言为 `zh-CN` 与 `en-US`                    |
-| `src/`            | 页面、布局、组件、样式；`content.config.ts` 校验 frontmatter，`lib/docs.ts` 定义分类顺序         |
-| `plugins/`        | Markdown 管线插件：`remark-demo`、`framework-mdx`、`rehype-anchor-ids`、`rehype-table-container` |
-| `scripts/`        | 页面检查、API 表生成、MDX 表格检查、React Compiler 检查、布局对比                                |
-| `astro.config.ts` | i18n、Markdown 管线、各框架与 `mdx` 的集成，以及直接读取各 UI 包源码的别名                       |
+| Path              | Contents                                                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `content/`        | Doc pages, organized as `<category>/<page>/index.<locale>.mdx`, with `zh-CN` and `en-US` as locales                            |
+| `src/`            | Pages, layouts, components and styles. `content.config.ts` validates frontmatter, and `lib/docs.ts` defines the category order |
+| `plugins/`        | Markdown pipeline plugins: `remark-demo`, `framework-mdx`, `rehype-anchor-ids` and `rehype-table-container`                    |
+| `scripts/`        | Page checks, API table generation, MDX table checks, React Compiler checks and layout comparison                               |
+| `astro.config.ts` | i18n, the Markdown pipeline, framework and `mdx` integrations, and aliases that read each UI package's source directly         |
 
-页面路径为 `/{语言}/{框架}/{分类}/{页面}`，框架为框架包名里的框架名（如 `react`），React 以外框架的路由随该页全部 demo 迁移完成而启用。
+Page paths are `/{locale}/{framework}/{category}/{page}`, where the framework is the framework name in the package name (such as `react`). A page generates routes only for the frameworks that have demos.
 
-## 写文档
+## Writing docs
 
-- 示例写 `<Demo id="types" />`，构建时只导入当前框架的 demo 文件（如 `demos/<id>.react.tsx`，各框架的文件名见 `.agents/references/<框架>/website.md`）；demo 界面文案统一用中文。
-- 框架专属正文用 `<Framework only="<框架>">`。
-- React 以外框架的 API 表由 `pnpm --filter semi-website gen:<框架>-api` 从组件类型生成，只能由该命令更新；`--check` 用于校验。
-- 文档站用 React Compiler 编译，库构建不用。
+- Write examples as `<Demo id="types" />`. The build imports only the demo file for the current framework (such as `demos/<id>.react.tsx`; see `.agents/references/<framework>/website.md` for each framework's file names). Demo UI text is written in Chinese.
+- Use `<Framework only="<framework>">` for framework-specific content.
+- API tables for each framework are generated from component types by `pnpm --filter semi-website gen:<framework>-api`, and only that command updates them. `--check` validates them.
+- The docs site compiles with React Compiler; library builds do not.
 
-MDX 写法、分类与 demo 约定见 [website](../.agents/references/website.md)，样式规则见 [styles](../.agents/references/styles.md)。
+For MDX conventions, categories and demos, see [website](../.agents/references/website.md). For style rules, see [styles](../.agents/references/styles.md).
 
-## 检查
+## Checks
 
 ```sh
-pnpm lint:mdx-tables                                              # 表格列数与 MDX 编译
+pnpm lint:docs                                                    # table column counts and MDX compilation
 pnpm site:build && pnpm site:dev
-pnpm --filter semi-website check:pages http://127.0.0.1:4321      # 控制台报错、空 demo、axe 违规
+pnpm --filter semi-website check:pages http://127.0.0.1:4321      # console errors, empty demos, axe violations
 ```
 
-`check:pages` 可追加路径过滤，例如 `/show/table`；全量运行时加 `--update-a11y-baseline` 重写 `scripts/a11y-baseline.json`，带路径过滤时会报错。流程见 [check-pages](../.agents/skills/check-pages/SKILL.md)。
+`check:pages` accepts path filters, such as `/show/table`. On a full run, add `--update-a11y-baseline` to rewrite `scripts/a11y-baseline.json`; with a path filter it reports an error. For the process, see [check-pages](../.agents/skills/check-pages/SKILL.md).
 
-`scripts/compare-layout.ts` 对比两份构建的布局，用于不应移动任何元素的 CSS 改动：`node scripts/compare-layout.ts <baselineUrl> <candidateUrl> <path>... [--mode=ltr|rtl|both]`。
+`scripts/compare-layout.ts` compares the layout of two builds, for CSS changes that should not move any element: `node scripts/compare-layout.ts <baselineUrl> <candidateUrl> <path>... [--mode=ltr|rtl|both]`.
 
-## 与其他包的关系
+## Related packages
 
-依赖全部 UI 相关包：各框架的 UI 包与 AI 包、`@fibrae/semi-ai-foundation`、`@fibrae/semi-foundation`，以及各框架的图标与插画包。文档站不挂 `@fibrae/semi-vite-plugin`。
+Depends on all UI-related packages: the UI and AI packages of each framework, `@fibrae/semi-ai-foundation`, `@fibrae/semi-foundation`, and the icon and illustration packages of each framework. The docs site does not use `@fibrae/semi-vite-plugin`.

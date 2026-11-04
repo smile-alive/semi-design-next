@@ -1,16 +1,18 @@
 # @fibrae/semi-icons-svelte
 
-Semi Design Next 的 Svelte 图标组件，与其他框架的图标包共用 `@fibrae/semi-icons-core` 的数据和样式，供 Svelte 应用和 `@fibrae/semi-ui-svelte` 使用。
+[简体中文](README.zh-CN.md)
 
-## 安装
+The Svelte icon components of Semi Design Next, sharing the data and styles of `@fibrae/semi-icons-core` with the icon packages of other frameworks, for Svelte applications and `@fibrae/semi-ui-svelte`.
+
+## Installation
 
 ```shell
 pnpm add @fibrae/semi-icons-svelte
 ```
 
-peer 依赖：`svelte` ^5.57.0。`@fibrae/semi-icons-core` 是普通依赖，随包安装。发布 `.svelte` 源码，由 `@sveltejs/vite-plugin-svelte`（SvelteKit 已内置）经 `svelte` 条件编译。
+Peer dependency: `svelte` ^5.57.0. `@fibrae/semi-icons-core` is a regular dependency and installs with the package. Ships `.svelte` source, compiled through the `svelte` condition by `@sveltejs/vite-plugin-svelte` (built into SvelteKit).
 
-## 使用
+## Usage
 
 ```svelte
 <script lang="ts">
@@ -20,11 +22,11 @@ peer 依赖：`svelte` ^5.57.0。`@fibrae/semi-icons-core` 是普通依赖，随
 <IconSend size="large" spin />
 ```
 
-- 样式随组件引入，不需要单独引入。
-- 单个图标没有自己的 props，所有属性透传给 `Icon`。`Icon` 的 props：`size`（`inherit`、`extra-small`、`small`、`default`、`large`、`extra-large`，默认 `default`）、`spin`、`rotate`、`prefixCls`、`type`、`fill`（`string` 或 `string[]`）；`style` 只接受字符串。
-- 多色图标的 `fill` 按顺序给各部分上色；其他图标把 `fill` 传给根 `svg`。
-- 图标默认是装饰性的（`aria-hidden`）。传 `aria-label`、`aria-labelledby` 或 `tabindex >= 0` 时改为 `role="img"` 且不隐藏。
-- 自定义图标：默认导出的 `Icon` 用 `children` snippet 渲染自己的 `svg`，snippet 参数带上 `fill`。不支持 React 版的 `elementType` 与 ref。
+- Styles load with the components, with no separate import.
+- A single icon has no props of its own, and all attributes pass through to `Icon`. `Icon` props: `size` (`inherit`, `extra-small`, `small`, `default`, `large` or `extra-large`, `default` by default), `spin`, `rotate`, `prefixCls`, `type` and `fill` (`string` or `string[]`). `style` accepts strings only.
+- On multi-color icons, `fill` colors each part in order. Other icons pass `fill` to the root `svg`.
+- Icons are decorative by default (`aria-hidden`). With `aria-label`, `aria-labelledby` or `tabindex >= 0`, they become `role="img"` and are no longer hidden.
+- Custom icons: the default-exported `Icon` renders your own `svg` with a `children` snippet, and the snippet parameter carries `fill`. `elementType` and ref from the React version are not supported.
 
 ```svelte
 <script lang="ts">
@@ -38,29 +40,29 @@ peer 依赖：`svelte` ^5.57.0。`@fibrae/semi-icons-core` 是普通依赖，随
 </Icon>
 ```
 
-### 彩色图标
+### Color icons
 
 ```ts
 import { IconAnchor } from '@fibrae/semi-icons-svelte/lab';
 ```
 
-### 入口
+### Entry points
 
-| 入口                                              | 内容                                                                 |
-| ------------------------------------------------- | -------------------------------------------------------------------- |
-| `@fibrae/semi-icons-svelte`                       | 默认导出 `Icon`，具名导出 `IconXxx`、类型 `IconProps`、`SvgProps` 等 |
-| `@fibrae/semi-icons-svelte/lab`                   | 彩色图标                                                             |
-| `@fibrae/semi-icons-svelte/components/svg.svelte` | 按图标数据渲染 `svg` 的组件，供插画包使用                            |
+| Entry                                             | Contents                                                                                     |
+| ------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `@fibrae/semi-icons-svelte`                       | Default export `Icon`, named exports `IconXxx`, the types `IconProps`, `SvgProps` and others |
+| `@fibrae/semi-icons-svelte/lab`                   | Color icons                                                                                  |
+| `@fibrae/semi-icons-svelte/components/svg.svelte` | Component that renders an `svg` from icon data, used by the illustration package             |
 
-组件文档见 [website/content/basic/icon](../../website/content/basic/icon)。
+Component docs are in [website/content/basic/icon](../../website/content/basic/icon).
 
-## 与其他包的关系
+## Related packages
 
-- 依赖 `@fibrae/semi-icons-core` 的图标数据与样式。
-- 被 `@fibrae/semi-ui-svelte` 与 `@fibrae/semi-illustrations-svelte` 使用。
-- React、Vue、Solid 对应包是 `@fibrae/semi-icons-react`、`@fibrae/semi-icons-vue`、`@fibrae/semi-icons-solid`。
+- Depends on the icon data and styles of `@fibrae/semi-icons-core`.
+- Used by `@fibrae/semi-ui-svelte` and `@fibrae/semi-illustrations-svelte`.
+- The equivalent package for each framework is `@fibrae/semi-icons-<framework>`.
 
-## 开发
+## Development
 
-- `src/icons`、`src/lab` 整个目录是生成源码，不要手改。新增图标按 [semi-icons-core 的「新增图标」](../semi-icons-core/README.md#新增图标)操作，在仓库根目录运行 `pnpm build:icon` 重新生成。
-- 构建与测试命令见根目录 [README.md](../../README.md#常用命令)。
+- `src/icons` and all of `src/lab` are generated source, so do not edit them by hand. To add an icon, follow [Adding icons in semi-icons-core](../semi-icons-core/README.md#adding-icons) and run `pnpm build:icon` at the repository root to regenerate.
+- For build and test commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.

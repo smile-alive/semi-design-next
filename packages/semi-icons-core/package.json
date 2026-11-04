@@ -35,8 +35,7 @@
     ],
     "scripts": {
         "build:icon": "node scripts/build-icon.ts",
-        "build": "vp pack",
-        "prepublishOnly": "npm run build"
+        "build": "vp pack"
     },
     "devDependencies": {
         "typescript": "catalog:"

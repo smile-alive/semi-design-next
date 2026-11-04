@@ -23,9 +23,7 @@
     ],
     "scripts": {
         "build": "vp pack",
-        "dev": "vp pack --watch",
-        "test": "vp pack && node test/run.ts",
-        "prepublishOnly": "npm run build"
+        "test": "node test/run.ts"
     },
     "dependencies": {
         "sass": "catalog:"

@@ -1,137 +1,144 @@
-# Semi Design Next
+<p align="center">
+    <a href="https://semi-design-next.pages.dev">
+        <picture>
+            <source media="(prefers-color-scheme: dark)" srcset=".github/assets/logo-dark.svg" />
+            <img src=".github/assets/logo-light.svg" width="72" height="72" alt="Semi Design Next" />
+        </picture>
+    </a>
+</p>
 
-Semi Design Next 是 [Semi Design](https://github.com/DouyinFE/semi-design) 的社区 fork，提供 React、Vue、Solid、Svelte 四套组件库，独立演进，不合并回上游，也不保留与上游的向后兼容。包名（`@fibrae/semi-*`）、类名前缀（`semi-`）与 CSS 变量（`--semi-*`）沿用 Semi 的标识。
+<h1 align="center">Semi Design Next</h1>
 
-> 本项目是非官方的社区项目，与字节跳动、DouyinFE 及 Semi Design 官方团队没有关联，也未获得其认可。「Semi Design」名称归其权利人所有。
+<p align="center">Accessible components for React, Vue, Solid and Svelte, from one shared core.</p>
 
-文档站：https://semi-design-next.pages.dev
+<p align="center">
+    <a href="https://www.npmjs.com/package/@fibrae/semi-ui-react"><img src="https://img.shields.io/npm/v/@fibrae/semi-ui-react" alt="npm version" /></a>
+    <a href="https://github.com/smile-alive/semi-design-next/actions/workflows/ci.yml?query=branch%3Arelease"><img src="https://github.com/smile-alive/semi-design-next/actions/workflows/ci.yml/badge.svg?branch=release" alt="CI status" /></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license" /></a>
+</p>
 
-## 支持环境
+<p align="center">
+    <a href="https://semi-design-next.pages.dev">Documentation</a>
+    ·
+    <a href="README.zh-CN.md">简体中文</a>
+</p>
 
-- 各框架包的版本范围以其 `package.json` 的 `peerDependencies` 为准
-- 浏览器、模块格式、Node.js 与构建插件的版本要求见[快速开始的环境要求](website/content/start/getting-started/index.zh-CN.mdx#环境要求)
-- React、Vue、Solid、Svelte 支持服务端渲染与 hydration，React 另支持 RSC 客户端边界；宿主配置见各插件 README
-- 开发本仓库：Node 26.10.0 与 pnpm 12.9.1，由 [mise](https://mise.jdx.dev) 按 `mise.toml` 安装
+<picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/preview-dark.png" />
+    <img src=".github/assets/preview-light.png" alt="An expense approval screen built with Semi Design Next, with a navigation sidebar, a filterable table and a details panel" />
+</picture>
 
-## 目录结构
+> Semi Design Next is an unofficial community fork of [Semi Design](https://github.com/DouyinFE/semi-design). It is not affiliated with or endorsed by ByteDance, DouyinFE or the Semi Design team. The name "Semi Design" belongs to its rights holders.
 
-| 路径 | 说明 |
-| --- | --- |
-| [`packages/semi-ui-react`](packages/semi-ui-react/README.md) | React 组件库 `@fibrae/semi-ui-react` |
-| [`packages/semi-ui-vue`](packages/semi-ui-vue/README.md) | Vue 组件库 `@fibrae/semi-ui-vue` |
-| [`packages/semi-ui-solid`](packages/semi-ui-solid/README.md) | Solid 组件库 `@fibrae/semi-ui-solid` |
-| [`packages/semi-ui-svelte`](packages/semi-ui-svelte/README.md) | Svelte 组件库 `@fibrae/semi-ui-svelte`，发布 `.svelte` 源码 |
-| [`packages/semi-foundation`](packages/semi-foundation/README.md) | 与框架无关的组件逻辑和 SCSS；唯一的主题（全局 token、色板、mixin）在 `src/theme/` |
-| [`packages/semi-ai-react`](packages/semi-ai-react/README.md) | AI 组件 `@fibrae/semi-ai-react`（AIChatInput、AIChatDialogue、Chat、Sidebar），基于 semi-ui-react |
-| [`packages/semi-ai-vue`](packages/semi-ai-vue/README.md) | Vue 版 AI 组件 `@fibrae/semi-ai-vue`（AIChatInput、AIChatDialogue、Chat、Sidebar），基于 semi-ui-vue |
-| [`packages/semi-ai-solid`](packages/semi-ai-solid/README.md) | Solid 版 AI 组件 `@fibrae/semi-ai-solid`，基于 semi-ui-solid |
-| [`packages/semi-ai-svelte`](packages/semi-ai-svelte/README.md) | Svelte 版 AI 组件 `@fibrae/semi-ai-svelte`，基于 semi-ui-svelte，发布 `.svelte` 源码 |
-| [`packages/semi-ai-foundation`](packages/semi-ai-foundation/README.md) | AI 组件与框架无关的逻辑、SCSS 和编辑器插件，基于 semi-foundation |
-| [`packages/semi-icons-core`](packages/semi-icons-core/README.md) | 图标的唯一源 `svgs/icons`（保留原色的彩色图标在 `svgs/lab`，插画在 `svgs/illustrations`）与由它生成的框架无关图标与插画数据 `@fibrae/semi-icons-core` |
-| [`packages/semi-icons-react`](packages/semi-icons-react/README.md) | React 图标组件 `@fibrae/semi-icons-react`，每个图标由 core 的数据经 `createIcon` 生成；彩色图标在子路径 `@fibrae/semi-icons-react/lab` |
-| [`packages/semi-icons-vue`](packages/semi-icons-vue/README.md) | Vue 图标组件 `@fibrae/semi-icons-vue`，与 React 共享 core 数据与样式；彩色图标在子路径 `/lab` |
-| [`packages/semi-icons-solid`](packages/semi-icons-solid/README.md) | Solid 图标组件 `@fibrae/semi-icons-solid`，读同一份 core 数据 |
-| [`packages/semi-icons-svelte`](packages/semi-icons-svelte/README.md) | Svelte 图标组件 `@fibrae/semi-icons-svelte`，读同一份 core 数据 |
-| [`packages/semi-animation`](packages/semi-animation/README.md) | 给 Motion 用的 Semi 预设（缓动、弹簧）与 View Transition 预设类 `@fibrae/semi-animation` |
-| [`packages/semi-polyfill`](packages/semi-polyfill/README.md) | 可选 polyfill `@fibrae/semi-polyfill`（`AbortSignal.any`、`Element.prototype.checkVisibility`），供 Safari 17.2 与 17.3 在入口最先导入 |
-| [`packages/semi-illustrations-react`](packages/semi-illustrations-react/README.md) | React 插画组件，由 `semi-icons-core` 的插画数据生成，实例隔离渐变、滤镜与 mask ID |
-| [`packages/semi-illustrations-vue`](packages/semi-illustrations-vue/README.md) | Vue 插画组件，由 `semi-icons-core` 的插画数据生成，实例隔离渐变、滤镜与 mask ID |
-| [`packages/semi-illustrations-solid`](packages/semi-illustrations-solid/README.md) | Solid 插画组件，由同一份插画数据生成 |
-| [`packages/semi-illustrations-svelte`](packages/semi-illustrations-svelte/README.md) | Svelte 插画组件，由同一份插画数据生成 |
-| [`packages/semi-json-viewer-core`](packages/semi-json-viewer-core/README.md) | JsonViewer 的编辑器内核 |
-| [`packages/semi-scss-compile`](packages/semi-scss-compile/README.md) | 把 Semi SCSS 编译为 CSS 的工具 |
-| [`packages/semi-theme-shared`](packages/semi-theme-shared/README.md) | 插件与 `semi-scss-compile` 共用的 `semi:` Sass importer 与编译管线，不发布 |
-| [`packages/semi-vite`](packages/semi-vite/README.md)、[`semi-webpack`](packages/semi-webpack/README.md)、[`semi-rspack`](packages/semi-rspack/README.md)、[`semi-next`](packages/semi-next/README.md) | 类名前缀替换、`@layer semi` 开关与 `omitCss` 的构建插件 |
-| [`packages/semi-nuxt`](packages/semi-nuxt/README.md) | Nuxt 4 模块 `@fibrae/semi-nuxt`，把 semi-vite 插件注册进 Nuxt 的 Vite 构建，并在应用未设置时关闭 `features.inlineStyles` |
-| `scripts/svg-to-icon-data.ts` | 图标与插画共用的 SVG 转数据脚本，各框架的图标与插画组件都由这份数据生成 |
-| `vitest/` | 测试项目注册与 setup（`vitest/<框架>/` 放该框架的 setup、tsconfig 与工具）、测试工具（`@test/utils/<框架>` 与框架无关的模块）与打包产物测试 `vitest/packed` |
-| `.agents/references/<框架>/` | 各框架的组件、测试、lint 与 website 写法，框架无关的写法见 `.agents/references/` 下的共享文件 |
-| [`website/`](website/README.md) | Astro 文档站，正文在 `website/content/<分类>/<页面>/index.<语言>.mdx` |
+## Features
 
-各包的源码在 `src/`，`vp pack` 的产物在 `dist/`，含逐文件的 ESM、类型声明和组件 CSS，UI 包另有整包样式 `styles.css` 与 `tailwind.css`；发布的子路径与 `src/` 下的目录一一对应。
+- **Native in four frameworks.** Component logic lives in a framework-agnostic core, and each framework connects to it in its own idiom.
+- **Accessible.** Roles, keyboard behavior and accessible names follow WAI-ARIA and the APG.
+- **Server rendering.** All four frameworks support SSR and hydration. React also supports the RSC client boundary.
+- **ESM and on-demand styles.** Packages ship as ESM only, and each component loads just the CSS it needs.
+- **AI components.** Chat input, dialogue and sidebar components come as separate packages.
+- **Themeable with CSS.** Customize with `--semi-*` CSS variables and your own CSS rules, with no Sass build step.
 
-## 样式定制
+## Quick start
 
-仓库只有一份主题，位于 `packages/semi-foundation/src/theme/`，组件 SCSS 经 `semi:theme` 加载它；没有主题包，也没有编译期的 Sass 变量覆写。使用方只通过 `--semi-*` CSS 变量（全局 token，Tailwind 映射见 `@fibrae/semi-ui-react/tailwind.css`）和 `@layer semi` 之外的 CSS 规则定制样式。Sass 变量是内部实现。
+Styles load with the components, and no reset stylesheet is needed. Check the [requirements](https://semi-design-next.pages.dev/en-US/react/start/getting-started/#requirements) for supported browsers and tools.
 
-## 常用命令
+<details open>
+<summary><strong>React</strong></summary>
 
-```sh
-mise install                 # 安装 Node 与 pnpm
-pnpm install                 # 安装依赖
-
-pnpm site:dev                # 后台启动文档站 dev server（http://127.0.0.1:4321）
-pnpm site:build              # 文档站生产构建，产物在 website/dist
-pnpm site:preview            # 后台预览生产构建（http://127.0.0.1:4322），需先 site:build
-pnpm site:serve              # 生产构建后直接后台预览，等于 site:build 加 site:preview
-pnpm site:stop               # 停止后台的 dev server 与 preview
-
-pnpm test                    # 单元测试（jsdom）
-pnpm test:browser            # 浏览器测试（Playwright Chromium）
-pnpm test:coverage           # 先单元后浏览器测试，合并覆盖率低于 vitest/ 中登记的阈值即失败；不含 SSR 与 hydration 项目
-pnpm test:ssr                # SSR 与 hydration 项目（*-ssr、*-hydration-browser），不统计覆盖率
-
-pnpm lint                    # 文件的框架归属、oxlint、stylelint、私有成员、类成员与组件内语句顺序、SCSS 变量、MDX 表格列数与各框架的专属检查，warning 也算失败
-vp run --cache lint          # 反复重跑 lint 时用：每一步按读取的文件缓存，没变的步骤直接回放结果；lint:style 每次都执行（stylelint 加载 TS 配置时会写临时文件）
-pnpm lint:scopes             # 按命名列出各区域属于各框架与通用范围的文件数；带文件参数时逐个列出归属
-pnpm lint:react              # 用 React Compiler 编译 semi-ui-react 全部组件与 hook，列出被放弃的函数
-pnpm lint:fix                # 自动修复 lint 问题
-pnpm format                  # oxfmt 格式化
-pnpm format:check            # 检查格式
-pnpm typecheck               # 逐个检查 tsconfig.node.json、各包、website 与 vitest 的配置（Vue 配置用 vue-tsc，其余用 tsc），输出每个配置的结果与耗时；semi-ui-react 读取 semi-foundation 已构建的类型，需先 build
-
-pnpm build                   # 构建所有包到各自的 dist/，UI 包同时产出整包样式 styles.css 与 tailwind.css
-pnpm build:icon              # 由 SVG 重新生成 core 数据及各框架的图标和插画组件
-pnpm test:packed             # 在临时 Vite + React 19 应用中安装并构建打包产物，需先运行 build
-pnpm test:plugins            # 各插件包的冒烟测试
-
-pnpm check                   # 提交前：lint、格式、单元与浏览器测试
-pnpm check:full              # 完整校验：构建、类型检查、lint、格式、带覆盖率的测试、SSR 与 hydration 测试、打包产物与插件测试
+```bash
+pnpm add @fibrae/semi-ui-react @fibrae/semi-icons-react
 ```
 
-文档站页面检查（加载错误、空 demo、a11y 基线）：
+```tsx
+import { Button, Toast } from '@fibrae/semi-ui-react';
 
-```sh
-pnpm site:build
-pnpm site:dev
-pnpm --filter semi-website check:pages http://127.0.0.1:4321
-pnpm site:stop
+export function App() {
+    return <Button onClick={() => Toast.warning({ content: 'welcome' })}>Hello Semi</Button>;
+}
 ```
 
-`check:pages` 可追加路径过滤参数，例如 `/show/table`；全量运行时加 `--update-a11y-baseline` 会重写 `website/scripts/a11y-baseline.json`。
+</details>
 
-## 文档
+<details>
+<summary><strong>Vue</strong></summary>
 
-| 文件                                                         | 内容                                                          |
-| ------------------------------------------------------------ | ------------------------------------------------------------- |
-| [docs/decisions.md](docs/decisions.md)                       | 已定决策与未完成事项                                          |
-| [docs/release-notes.md](docs/release-notes.md)               | 相对原 Semi 的破坏性变化与行为变化                            |
-| [docs/component-issues.md](docs/component-issues.md)         | 未结问题、已知限制与保持原样的决定                            |
-| [.agents/references/styles.md](.agents/references/styles.md) | 组件 SCSS 写法、Sass 模块与 `semi:` importer、主题 token 协议 |
+```bash
+pnpm add @fibrae/semi-ui-vue @fibrae/semi-icons-vue
+```
 
-## 提交
+```vue
+<script setup lang="ts">
+    import { Button, Toast } from '@fibrae/semi-ui-vue';
+</script>
 
-- Conventional Commits，`type(scope)` 用英文，标题与正文用中文；标题不超过 72 个字符，正文每段一行，由 commitlint 检查。
-- pre-commit 对暂存文件运行 `vp lint --fix`、`vp fmt`、stylelint，`.vue` 与 `.svelte` 另跑 ESLint，warning 也会阻止提交；规则见 `vite.config.ts` 的 `staged`。
-- 钩子由 `pnpm install` 的 `prepare`（`vp config`）安装，`core.hooksPath` 设为相对路径 `.vite-hooks/_`。`vp config` 不覆盖已有的其他 `core.hooksPath`，提交时钩子没有执行就先 `git config --unset core.hooksPath`，再跑 `pnpm install`。
+<template>
+    <Button @click="Toast.warning({ content: 'welcome' })">Hello Semi</Button>
+</template>
+```
 
-## 分支
+</details>
 
-| 分支      | 作用                                                                                                                                                    |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `release` | 默认分支，集成分支。所有改动从它拉分支，经 PR 合入；推送后跑 CI，通过后部署预览站 `release.semi-design-next.pages.dev`。每日的 Browser tests 也跑在这里 |
-| `main`    | 已发版的代码。只接收 `release` 的发版 PR 与 Release 工作流的版本 PR，不直接推送                                                                         |
+<details>
+<summary><strong>Solid</strong></summary>
 
-功能 PR 合入 `release` 时可以 squash；`release` 与 `main` 之间互相合并一律用「Create a merge commit」，squash 会让两边历史分叉，下一次合并必然冲突。
+```bash
+pnpm add @fibrae/semi-ui-solid @fibrae/semi-icons-solid
+```
 
-## 发布
+```tsx
+import { Button, Toast } from '@fibrae/semi-ui-solid';
 
-所有 `@fibrae/*` 包发布到 npm 公共 registry，共用一个版本号，由 [changesets](.changeset/README.md) 管理。
+export function App() {
+    return <Button onClick={() => Toast.warning({ content: 'welcome' })}>Hello Semi</Button>;
+}
+```
 
-1. 改动发布包的行为或公开 API 时，在功能 PR 里运行 `pnpm changeset` 添加变更说明；没有 changeset 的改动不会发版。
-2. 要发版时，开一个 `release` -> `main` 的 PR，CI 通过后用 merge commit 合入。
-3. `main` 收到推送后，Release 工作流先跑 CI（同一份代码已在 `release` 上通过时跳过），通过后开出「chore: 发布新版本」PR，汇总版本号与各包 CHANGELOG。这个 PR 由 github-actions[bot] 开出，它的 CI 停在等待批准：在 PR 底部点「Approve workflows to run」，CI 通过后再 squash 合入。
-4. 版本 PR 合入后，Release 工作流用 npm Trusted Publishing（OIDC，不用 `NPM_TOKEN`）发布并附带 provenance，为每个包推送 `<包名>@<版本>` tag 并创建 GitHub Release。新增的发布包要先在 npm 上存在并为 `release.yml` 配置 Trusted Publisher，才能由工作流发布。
-5. 发布成功后，Release 工作流开出「chore: 发版后同步 main 到 release」PR，把版本提交合回 `release`。它同样要先批准 CI，再用 merge commit 合入，否则下一次发版 PR 会冲突。
+</details>
 
-正式文档站由 Release 工作流在 `main` 的 CI 通过后部署到 Cloudflare Pages。也可以在 Actions 页手动运行 Deploy site，「Use workflow from」选 `main` 部署正式站，选 `release` 部署预览站。
+<details>
+<summary><strong>Svelte</strong></summary>
+
+```bash
+pnpm add svelte @fibrae/semi-ui-svelte @fibrae/semi-icons-svelte
+```
+
+```svelte
+<script lang="ts">
+    import { Button, Toast } from '@fibrae/semi-ui-svelte';
+</script>
+
+<Button onclick={() => Toast.warning({ content: 'welcome' })}>Hello Semi</Button>
+```
+
+</details>
+
+The full guide covers build plugins, server rendering and theming: [React](https://semi-design-next.pages.dev/en-US/react/start/getting-started/), [Vue](https://semi-design-next.pages.dev/en-US/vue/start/getting-started/), [Solid](https://semi-design-next.pages.dev/en-US/solid/start/getting-started/), [Svelte](https://semi-design-next.pages.dev/en-US/svelte/start/getting-started/).
+
+## Packages
+
+Replace `<framework>` with `react`, `vue`, `solid` or `svelte`.
+
+| Package                                                                                                                                                              | Purpose                                                         |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `@fibrae/semi-ui-<framework>`                                                                                                                                        | Components                                                      |
+| `@fibrae/semi-ai-<framework>`                                                                                                                                        | AI components                                                   |
+| `@fibrae/semi-icons-<framework>`                                                                                                                                     | Icons                                                           |
+| `@fibrae/semi-illustrations-<framework>`                                                                                                                             | Illustrations                                                   |
+| [`@fibrae/semi-animation`](packages/semi-animation/README.md)                                                                                                        | Presets for Motion and View Transitions                         |
+| [`@fibrae/semi-polyfill`](packages/semi-polyfill/README.md)                                                                                                          | Optional polyfills for older supported Safari versions          |
+| [`@fibrae/semi-vite-plugin`](packages/semi-vite/README.md), [`-webpack-plugin`](packages/semi-webpack/README.md), [`-rspack-plugin`](packages/semi-rspack/README.md) | Build plugins for the class prefix, `@layer semi` and `omitCss` |
+| [`@fibrae/semi-next`](packages/semi-next/README.md), [`@fibrae/semi-nuxt`](packages/semi-nuxt/README.md)                                                             | Next.js and Nuxt integrations                                   |
+| [`@fibrae/semi-scss-compile`](packages/semi-scss-compile/README.md)                                                                                                  | Compiles Semi SCSS to CSS                                       |
+
+## Coming from Semi Design
+
+This fork evolves independently and keeps no backward compatibility with upstream. It keeps the `semi-` class prefix and the `--semi-*` CSS variables, under the `@fibrae/semi-*` package scope. [Release notes](docs/release-notes.md) list the breaking and behavior changes.
+
+## Contributing
+
+Read the [contributing guide](CONTRIBUTING.md) for the repository layout, commands and pull request process. Report security issues as described in [SECURITY.md](SECURITY.md).
+
+## License
+
+[MIT](LICENSE). Third-party notices are in [THIRD-PARTY-NOTICES](THIRD-PARTY-NOTICES).
