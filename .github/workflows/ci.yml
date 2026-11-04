@@ -1,12 +1,9 @@
 name: CI
 
 on:
-    # Markdown feeds no build or test (the site reads .mdx), and the pre-commit hook formats it
     # `reopened` is left out: reopening a PR changes no code, and any later push still runs through `synchronize`
     pull_request:
         types: [opened, synchronize]
-        paths-ignore: ['**/*.md']
-    # Every push to release runs, since a changeset is a .md file; main runs this through release.yml
     push:
         branches: [release]
     workflow_call:
@@ -19,13 +16,19 @@ concurrency:
 permissions:
     contents: read
 
+# A skipped job still satisfies main's ruleset, a missing one does not, so every job keeps its name and skips through `if`
 jobs:
-    # Skipping build skips every job below it
     gate:
         runs-on: ubuntu-latest
         timeout-minutes: 5
         outputs:
             skip: ${{ steps.branch-pr.outputs.skip || steps.synced.outputs.skip }}
+            lint: ${{ steps.scope.outputs.lint }}
+            build: ${{ steps.scope.outputs.build }}
+            typecheck: ${{ steps.scope.outputs.typecheck }}
+            tests: ${{ steps.scope.outputs.tests }}
+            site: ${{ steps.scope.outputs.site }}
+            changed: ${{ steps.scope.outputs.changed }}
         steps:
             # Push runs already cover this SHA, and main's ruleset still needs their matrix checks. A fork's branch of
             # the same name has no such run, so it keeps its CI
@@ -42,31 +45,104 @@ jobs:
                   if [ "$(gh api "repos/$GITHUB_REPOSITORY/commits/main" --jq .commit.tree.sha)" = "$HEAD_TREE" ]; then
                       echo "skip=true" >> "$GITHUB_OUTPUT"
                   fi
+            - if: ${{ !(steps.branch-pr.outputs.skip || steps.synced.outputs.skip) }}
+              uses: actions/checkout@v5
+            # Unclaimed files (lockfile, vitest/, lint/, vite*.ts, package.json, …) run everything: the import graph
+            # behind `--changed` cannot see them, so `changed` stays empty
+            - id: scope
+              if: ${{ !(steps.branch-pr.outputs.skip || steps.synced.outputs.skip) }}
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+              run: |
+                  all='react vue solid svelte common'
+                  full() {
+                      printf '%s\n' "lint=full" "build=true" "typecheck=full" "tests=$all" "site=true" "changed=" >> "$GITHUB_OUTPUT"
+                  }
+                  # A new branch has no `before`; after a force push `before` is no ancestor and the diff means nothing
+                  if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+                      full
+                      exit 0
+                  fi
+                  if [ "$GITHUB_EVENT_NAME" = push ] && [ "$(gh api "repos/$GITHUB_REPOSITORY/compare/$BASE...$GITHUB_SHA" --jq .status)" != ahead ]; then
+                      full
+                      exit 0
+                  fi
+                  git fetch --depth=1 origin "$BASE" || { full; exit 0; }
+
+                  infra='' pkg='' shared='' web='' websrc='' fmt='' frameworks=''
+                  while IFS= read -r file; do
+                      case "$file" in
+                          # oxfmt formats Markdown and YAML too
+                          *.md | docs/* | .agents/* | .claude/* | .changeset/* | .github/workflows/*) fmt=1 ;;
+                          website/src/*) web=1 websrc=1 ;;
+                          website/*) web=1 ;;
+                          *)
+                              if [[ $file =~ ^packages/semi-[a-z-]+-(react|vue|solid|svelte)/(src|__tests__)/ ]]; then
+                                  pkg=1
+                                  case " $frameworks " in *" ${BASH_REMATCH[1]} "*) ;; *) frameworks="$frameworks ${BASH_REMATCH[1]}" ;; esac
+                              elif [[ $file =~ ^packages/semi-[a-z-]+/(src|__tests__)/ ]]; then
+                                  shared=1
+                              else
+                                  infra=1
+                              fi
+                              ;;
+                      esac
+                  done < <(git diff --name-only "$BASE" HEAD)
+
+                  if [ -n "$infra" ]; then
+                      full
+                      exit 0
+                  fi
+                  lint='' build='' typecheck='' tests='' site=''
+                  # The site reads packages/ for demos and API tables
+                  if [ -n "$pkg$shared$web" ]; then
+                      lint=full build=true site=true
+                  elif [ -n "$fmt" ]; then
+                      lint=fmt
+                  fi
+                  if [ -n "$pkg$shared" ]; then
+                      typecheck=full
+                  elif [ -n "$web" ]; then
+                      typecheck=website
+                  fi
+                  # Every framework's tests import the shared packages; the common project holds website/src tests
+                  if [ -n "$shared" ]; then
+                      tests=$all
+                  else
+                      tests="$frameworks${websrc:+ common}"
+                      tests="${tests# }"
+                  fi
+                  printf '%s\n' "lint=$lint" "build=$build" "typecheck=$typecheck" "tests=$tests" "site=$site" "changed=$BASE" >> "$GITHUB_OUTPUT"
 
     # Package exports point at dist, which lint, typecheck and the tests all resolve, so one job builds it for the others
     build:
         needs: gate
-        if: needs.gate.outputs.skip != 'true'
+        if: needs.gate.outputs.build == 'true'
         runs-on: ubuntu-latest
         timeout-minutes: 30
         steps:
             - uses: actions/checkout@v5
             - uses: ./.github/actions/setup
 
+    # Runs without dist when only the format check applies, so it cannot wait for build to succeed
     lint:
-        needs: build
+        needs: [gate, build]
+        if: ${{ !cancelled() && needs.gate.outputs.lint != '' && needs.build.result != 'failure' }}
         runs-on: ubuntu-latest
         timeout-minutes: 30
         steps:
             - uses: actions/checkout@v5
             - uses: ./.github/actions/setup
               with:
-                  dist: required
+                  dist: ${{ needs.gate.outputs.lint == 'full' && 'required' || 'none' }}
             - run: pnpm format:check
-            - run: pnpm lint
+            - if: needs.gate.outputs.lint == 'full'
+              run: pnpm lint
 
     typecheck:
-        needs: build
+        needs: [gate, build]
+        if: needs.gate.outputs.typecheck != ''
         runs-on: ubuntu-latest
         timeout-minutes: 30
         steps:
@@ -74,39 +150,69 @@ jobs:
             - uses: ./.github/actions/setup
               with:
                   dist: required
-            - run: pnpm typecheck
+            - if: needs.gate.outputs.typecheck == 'full'
+              run: pnpm typecheck
+            - if: needs.gate.outputs.typecheck == 'website'
+              run: pnpm --filter semi-website check
 
+    # A job-level `if` cannot read `matrix`, so a leg that gate did not pick skips its steps instead
     test:
-        needs: build
+        needs: [gate, build]
+        if: needs.gate.outputs.tests != ''
         runs-on: ubuntu-latest
         timeout-minutes: 30
         strategy:
             fail-fast: false
             matrix:
                 project: [react, vue, solid, svelte, common]
+        env:
+            PICKED: ${{ contains(needs.gate.outputs.tests, matrix.project) }}
+            CHANGED: ${{ needs.gate.outputs.changed }}
         steps:
-            - uses: actions/checkout@v5
-            - uses: ./.github/actions/setup
+            - if: env.PICKED == 'true'
+              uses: actions/checkout@v5
+            # `--changed` diffs against the base, which the shallow checkout does not have
+            - if: env.PICKED == 'true' && env.CHANGED != ''
+              run: git fetch --depth=1 origin "$CHANGED"
+            - if: env.PICKED == 'true'
+              uses: ./.github/actions/setup
               with:
                   dist: required
-            - run: pnpm exec vp test run --silent --project '${{ matrix.project }}' --project '${{ matrix.project }}-ssr'
+            - if: env.PICKED == 'true'
+              run: pnpm exec vp test run --silent --project '${{ matrix.project }}' --project '${{ matrix.project }}-ssr' ${CHANGED:+--changed "$CHANGED" --passWithNoTests}
 
     # release.yml skips CI on main when this marker exists for the same tree. main can read release's caches because
-    # release is the default branch
+    # release is the default branch. A scoped run saves its marker only when its base had one, so every marker leads
+    # back to a full pass
     mark-passed:
-        if: github.event_name == 'push' && github.ref == 'refs/heads/release'
-        needs: [lint, typecheck, test]
+        if: ${{ !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/release' && needs.gate.outputs.skip != 'true' && !contains(needs.*.result, 'failure') }}
+        needs: [gate, lint, typecheck, test]
         runs-on: ubuntu-latest
         timeout-minutes: 5
         steps:
-            - run: touch .ci-passed
-            - uses: actions/cache/save@v6
+            - id: base
+              if: needs.gate.outputs.changed != ''
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  BASE: ${{ needs.gate.outputs.changed }}
+              run: echo "tree=$(gh api "repos/$GITHUB_REPOSITORY/commits/$BASE" --jq .commit.tree.sha)" >> "$GITHUB_OUTPUT"
+            - id: previous
+              if: needs.gate.outputs.changed != ''
+              uses: actions/cache/restore@v6
+              with:
+                  path: .ci-passed
+                  key: ci-passed-${{ steps.base.outputs.tree }}
+                  lookup-only: true
+            - if: needs.gate.outputs.changed == '' || steps.previous.outputs.cache-hit == 'true'
+              run: touch .ci-passed
+            - if: needs.gate.outputs.changed == '' || steps.previous.outputs.cache-hit == 'true'
+              uses: actions/cache/save@v6
               with:
                   path: .ci-passed
                   key: ci-passed-${{ github.event.head_commit.tree_id }}
 
     preview:
-        if: github.repository == 'smile-alive/semi-design-next' && github.event_name == 'push' && github.ref == 'refs/heads/release'
-        needs: [lint, typecheck, test]
+        if: ${{ !cancelled() && github.repository == 'smile-alive/semi-design-next' && github.event_name == 'push' && github.ref == 'refs/heads/release' && needs.gate.outputs.site == 'true' && !contains(needs.*.result, 'failure') }}
+        needs: [gate, lint, typecheck, test]
         uses: ./.github/workflows/site.yml
         secrets: inherit

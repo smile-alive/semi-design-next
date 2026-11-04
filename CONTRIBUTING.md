@@ -147,7 +147,20 @@ pnpm site:stop
     vp test run --project react-browser packages/semi-ui-react/src/<组件>
     ```
 
-CI 在每个 PR 上运行与 `pnpm check` 相同的检查和类型检查；Chromium、Firefox、WebKit 三个浏览器的完整测试每天定时运行。
+CI 的 `gate` job 先看改了哪些文件，再决定跑什么。多类改动取并集；跳过的 job 以 skipped 计入 `main` 规则集的必需检查。
+
+```mermaid
+flowchart LR
+    G[gate：对比 base 的改动文件] --> C{改动只落在}
+    C -->|*.md、docs/、.agents/、.claude/、.changeset/、.github/workflows/| F[只跑 fmt]
+    C -->|website/| W[lint + fmt<br/>astro check<br/>website/src 时 test common<br/>部署预览站]
+    C -->|packages/semi-*-框架/src/| P[lint + fmt + typecheck<br/>只跑该框架的 test<br/>部署预览站]
+    C -->|其余 packages/*/src/，如 foundation| S[lint + fmt + typecheck<br/>5 个 test 都跑<br/>部署预览站]
+    C -->|其他任何文件：lockfile、vitest/、lint/、vite*.ts、package.json| A[全量：5 个 test 不按改动筛选]
+    W & P & S --> T[test 带 --changed base<br/>只跑 import 链连到改动文件的测试]
+```
+
+Chromium、Firefox、WebKit 三个浏览器的完整测试每天定时运行，只在上次通过的 commit 之后有 `packages/` 改动时才真正执行。
 
 ## 提交
 

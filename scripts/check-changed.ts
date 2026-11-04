@@ -1,4 +1,5 @@
-// Checks what differs from the merge base with release, plus uncommitted and untracked files. CI still runs everything.
+// Checks what differs from the merge base with release, plus uncommitted and untracked files. CI's gate job picks jobs
+// by the same kind of file classification, see .github/workflows/ci.yml.
 // Usage: node scripts/check-changed.ts
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
