@@ -9,7 +9,7 @@
 - 框架范围的插件与模板规则见各框架目录的 `lint.md`。豁免按文件所属框架放在 `lint/<框架>/exemptions.ts`，框架无关的文件放 `lint/exemptions.ts`；只加入实际报错的规则并解释原因。源码与模板都不写禁用 lint 的注释。
 - 同包相对导入、跨包包名导入。测试工具按框架分入口（如 `@test/utils/<框架>`），框架无关的工具直接导入所在模块；导入另一框架的入口由边界规则拦下。
 - `lint-private` 检查框架源文件中的 private 关键字，图标点击的 TSX 检查不覆盖模板。
-- 检查命令：`pnpm lint:scopes [文件...]` 输出文件的归属框架；`pnpm lint:component-order` 检查各框架的组件体语句顺序；`pnpm lint:private`、`pnpm lint:<框架>`（框架专属检查）、`pnpm lint:script` 内的模板检查等见 `package.json` 的 `lint` 链。
+- 检查命令：`pnpm lint:scopes [文件...]` 输出文件的归属框架；`pnpm lint:component-order` 检查各框架的组件体语句顺序；`pnpm lint:private`、`pnpm lint:<框架>`（框架专属检查，含模板）等见 `package.json` 的 `lint` 链。
 
 ## 新增框架
 

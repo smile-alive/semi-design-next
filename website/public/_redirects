@@ -1,0 +1,12 @@
+# Cloudflare Pages answers these before serving a file, so visitors skip the meta-refresh pages that
+# src/pages/index.astro and src/pages/[locale]/[framework]/index.astro emit in a static build.
+# shortcut: locales and frameworks are listed by hand; a new one falls back to its meta-refresh page until added here.
+/ /zh-CN/ 301
+/zh-CN/react/ /zh-CN/react/start/introduction/ 301
+/zh-CN/vue/ /zh-CN/vue/start/introduction/ 301
+/zh-CN/solid/ /zh-CN/solid/start/introduction/ 301
+/zh-CN/svelte/ /zh-CN/svelte/start/introduction/ 301
+/en-US/react/ /en-US/react/start/introduction/ 301
+/en-US/vue/ /en-US/vue/start/introduction/ 301
+/en-US/solid/ /en-US/solid/start/introduction/ 301
+/en-US/svelte/ /en-US/svelte/start/introduction/ 301

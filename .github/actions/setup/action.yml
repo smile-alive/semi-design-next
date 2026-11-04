@@ -1,0 +1,36 @@
+name: Setup
+description: Install the toolchain and dependencies, and provide the packages' dist
+
+inputs:
+    dist:
+        description: '`auto` restores dist or builds and caches it, `required` fails when it is not cached, `none` leaves it to the caller'
+        default: auto
+
+runs:
+    using: composite
+    steps:
+        - uses: jdx/mise-action@v5
+        - run: pnpm install --frozen-lockfile
+          shell: bash
+        # Excludes what the build cannot read rather than listing what it reads, so a new root file invalidates the cache
+        - id: key
+          if: inputs.dist != 'none'
+          shell: bash
+          run: |
+              hash=$(git ls-tree HEAD | grep -Ev $'\t(website|docs|vitest|\\.agents|\\.claude|\\.changeset|\\.github|.*\\.md)$' | git hash-object --stdin)
+              echo "value=dist-$RUNNER_OS-$hash" >> "$GITHUB_OUTPUT"
+        - id: restore
+          if: inputs.dist != 'none'
+          uses: actions/cache/restore@v6
+          with:
+              path: packages/*/dist
+              key: ${{ steps.key.outputs.value }}
+              fail-on-cache-miss: ${{ inputs.dist == 'required' }}
+        - if: inputs.dist == 'auto' && steps.restore.outputs.cache-hit != 'true'
+          run: pnpm build
+          shell: bash
+        - if: inputs.dist == 'auto' && steps.restore.outputs.cache-hit != 'true'
+          uses: actions/cache/save@v6
+          with:
+              path: packages/*/dist
+              key: ${{ steps.key.outputs.value }}

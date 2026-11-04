@@ -20,9 +20,7 @@ jobs:
         timeout-minutes: 60
         steps:
             - uses: actions/checkout@v5
-            - uses: jdx/mise-action@v5
-            - run: pnpm install --frozen-lockfile
-            - run: pnpm build
+            - uses: ./.github/actions/setup
             - run: pnpm site:build
             # wrangler-action installs wrangler with `pnpm add` at the workspace root, which pnpm refuses
             - run: pnpm dlx wrangler@4.153.0 pages deploy website/dist --project-name=semi-design-next --branch=${{ github.ref_name }}

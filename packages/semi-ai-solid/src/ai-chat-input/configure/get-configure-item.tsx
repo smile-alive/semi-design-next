@@ -44,9 +44,9 @@ export default function getConfigureItem<P extends object, VK extends keyof P = 
             if (initValue !== undefined) {
                 context.onChange({ [registered]: initValue }, true);
             }
+            // in onMount: the server disposes the root without mounting, and onRemove reports a change to onConfigureChange
+            onCleanup(() => context.onRemove(registered));
         });
-
-        onCleanup(() => context.onRemove(registered));
 
         // the value and change props go under keys only known at runtime, which TS cannot check against P
         const componentProps = mergeProps(

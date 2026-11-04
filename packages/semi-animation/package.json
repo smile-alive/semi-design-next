@@ -32,8 +32,7 @@
         "*.css"
     ],
     "scripts": {
-        "build": "vp pack",
-        "prepublishOnly": "npm run build"
+        "build": "vp pack"
     },
     "peerDependencies": {
         "motion": "^14.0.0"

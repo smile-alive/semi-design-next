@@ -51,6 +51,15 @@ export default defineConfig({
         build: {
             // Every page's sidebar emits 101 doc icons; inlining them as data URIs adds ~140 KB per page.
             assetsInlineLimit: (file) => (file.includes('/doc-icons/') ? false : undefined),
+            rolldownOptions: {
+                // lottie-web evaluates After Effects expressions with a direct eval; only its own build can remove that
+                onLog(level, log, defaultHandler) {
+                    if (log.code === 'EVAL' && log.id?.includes('/lottie-web/')) return;
+                    // Both packages have a bare '' statement at module level; it is not a real directive, so losing it changes nothing
+                    if (log.code === 'MODULE_LEVEL_DIRECTIVE' && /\/(@mdx-js\/mdx|hast-util-to-estree)\//.test(log.id ?? '')) return;
+                    defaultHandler(level, log);
+                },
+            },
         },
         optimizeDeps: {
             // Astro only scans src/ but demos live in content/. Deps found late trigger a mid-session re-bundle,

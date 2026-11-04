@@ -1,68 +1,70 @@
 # @fibrae/semi-icons-core
 
-Semi Design Next 的图标与插画数据、图标样式，与框架无关。各框架的图标包（`semi-icons-<框架>`）和插画包（`semi-illustrations-<框架>`）都读取这里的数据；需要自行渲染图标的使用者也可以直接使用。
+[简体中文](README.zh-CN.md)
 
-## 安装
+Framework-agnostic icon and illustration data, plus icon styles, for Semi Design Next. The icon packages (`semi-icons-<framework>`) and illustration packages (`semi-illustrations-<framework>`) of every framework read this data. You can also use it directly to render icons yourself.
+
+## Installation
 
 ```shell
 pnpm add @fibrae/semi-icons-core
 ```
 
-仅发布 ESM，没有 peer 依赖。
+Ships ESM only, with no peer dependencies.
 
-## 使用
+## Usage
 
-每个图标是一个 ESM 模块，导出 `IconData`，导出名与各框架的图标组件同名：
+Each icon is an ESM module that exports `IconData`, under the same name as the icon component in each framework:
 
 ```ts
 import { IconActivity } from '@fibrae/semi-icons-core';
-import { IconAvatar } from '@fibrae/semi-icons-core/lab'; // 保留原色的彩色图标
+import { IconAvatar } from '@fibrae/semi-icons-core/lab'; // color icon that keeps its original colors
 
 IconActivity;
 // {
-//     name: 'activity', // 图标 type，渲染为 `semi-icon-activity` 类
+//     name: 'activity', // icon type, rendered as the `semi-icon-activity` class
 //     attrs: { viewBox: '0 0 24 24', fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
 //     children: [['path', { 'fill-rule': 'evenodd', 'clip-rule': 'evenodd', d: '...', fill: 'currentColor' }]],
 // }
 ```
 
-- 节点是 `[tag, attrs, children?]`。属性名用 DOM 名（`fill-rule`、`class`，`style` 为字符串），框架可以原样透传，或映射一次（React 为 `fillRule`、`className` 和 style 对象）。
-- 渲染时给根 `svg` 加上 `defaultAttrs`：`width` 与 `height` 为 `1em`，`focusable="false"`，`aria-hidden="true"`。
-- 多色图标（`IconAI*Level2`、`IconAI*Level3`、`IconAILoading`）带 `fills`，表示由 `fill` 属性提供的颜色个数。属性值里有占位符：`{fillN}` 是 `getFillColor(fill, fills)` 的第 N 个颜色，`{uid}` 是每个渲染实例唯一的 id。用 `resolveValue(value, colors, uid)` 替换。其他图标把 `fill` 直接传给根 `svg`。
+- A node is `[tag, attrs, children?]`. Attribute names are DOM names (`fill-rule`, `class`, with `style` as a string), so a framework can pass them through as they are or map them once (React uses `fillRule`, `className` and a style object).
+- When rendering, add `defaultAttrs` to the root `svg`: `width` and `height` of `1em`, `focusable="false"`, `aria-hidden="true"`.
+- Multi-color icons (`IconAI*Level2`, `IconAI*Level3`, `IconAILoading`) carry `fills`, the number of colors supplied through the `fill` prop. Attribute values contain placeholders: `{fillN}` is the Nth color of `getFillColor(fill, fills)`, and `{uid}` is an id unique to each rendered instance. Replace them with `resolveValue(value, colors, uid)`. Other icons pass `fill` straight to the root `svg`.
 
-### 子路径入口
+### Subpath entries
 
-| 入口                                        | 内容                                                                                                  |
-| ------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `@fibrae/semi-icons-core`                   | 全部 `IconXxx` 数据、类型 `IconData`、`IconNode`，工具 `defaultAttrs`、`getFillColor`、`resolveValue` |
-| `@fibrae/semi-icons-core/lab`               | 保留原色的彩色图标数据                                                                                |
-| `@fibrae/semi-icons-core/illustrations`     | 插画数据 `IllustrationXxx`，保留原色与默认宽高 200                                                    |
-| `@fibrae/semi-icons-core/styles/icons.scss` | 图标样式，也提供编译后的 `.css`                                                                       |
-| `@fibrae/semi-icons-core/*`                 | 其余深路径，如 `/utils`、`/types`                                                                     |
+| Entry                                       | Contents                                                                                                                     |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `@fibrae/semi-icons-core`                   | All `IconXxx` data, the types `IconData` and `IconNode`, and the utilities `defaultAttrs`, `getFillColor` and `resolveValue` |
+| `@fibrae/semi-icons-core/lab`               | Data for color icons that keep their original colors                                                                         |
+| `@fibrae/semi-icons-core/illustrations`     | Illustration data `IllustrationXxx`, keeping original colors and a default size of 200                                       |
+| `@fibrae/semi-icons-core/styles/icons.scss` | Icon styles, also available as compiled `.css`                                                                               |
+| `@fibrae/semi-icons-core/*`                 | Other deep paths, such as `/utils` and `/types`                                                                              |
 
-样式定义 `.{prefix}-icon`、`-extra-small`、`-small`、`-default`、`-large`、`-extra-large`、`-spinning` 及旋转动画，依赖 `semi:theme` 的 `$prefix`。各框架的图标包已自行引入，直接使用 core 时需要自己引入。
+The styles define `.{prefix}-icon`, `-extra-small`, `-small`, `-default`, `-large`, `-extra-large`, `-spinning` and the spin animation, and depend on `$prefix` from `semi:theme`. The framework icon packages already import them; import them yourself when using core directly.
 
-## 与其他包的关系
+## Related packages
 
-- 不依赖其他 Semi 包。
-- 被各框架的图标包和插画包使用。
+- Depends on no other Semi package.
+- Used by the icon and illustration packages of each framework.
 
-## 新增图标
+## Adding icons
 
-- 单色图标：新增 `svgs/icons/<name>.svg`，并在 `svgs/icons/meta.json` 加条目（`category` 是图标页的分组名，沿用已有值，如 `Basic`、`Arrow`、`Interface`；AI 图标按颜色层级用 `One Color`、`Two Color`、`Multiple Color`）。颜色会转为 `currentColor`。
-- 彩色图标：新增 `svgs/lab/<name>.svg`，并在 `svgs/lab/meta.json` 加条目。颜色保持原样。
-- 文件名即图标 type，导出名是 `Icon` 加 PascalCase（`ai_` 变为 `AI`）。
-- SVG 源文件里的 id 不手写 `{uid}`，生成器统一加前缀，渲染时按实例替换。
-- 在仓库根目录运行 `pnpm build:icon`：先在本包写出 `src/icons`、`src/lab/icons` 与 `src/illustrations/icons`（`scripts/build-icon.ts`，svgo 使用固定配置以保持路径数据稳定），再依次生成各框架的图标与插画组件。不要手改生成文件。
-- 运行 `pnpm site:dev`，打开[图标文档页](../../website/content/basic/icon)检查新图标。
+- Monochrome icon: add `svgs/icons/<name>.svg` and an entry in `svgs/icons/meta.json`. `category` is the group name on the icon page and reuses existing values such as `Basic`, `Arrow` and `Interface`; AI icons use `One Color`, `Two Color` and `Multiple Color` by color level. Colors become `currentColor`.
+- Color icon: add `svgs/lab/<name>.svg` and an entry in `svgs/lab/meta.json`. Colors stay as they are.
+- The file name is the icon type, and the export name is `Icon` plus PascalCase (`ai_` becomes `AI`).
+- Do not hand-write `{uid}` for ids in the SVG source. The generator adds the prefix, and rendering replaces it per instance.
+- Run `pnpm build:icon` at the repository root. It first writes `src/icons`, `src/lab/icons` and `src/illustrations/icons` in this package (`scripts/build-icon.ts`, with a fixed svgo config to keep path data stable), then generates the icon and illustration components of each framework. Do not edit generated files by hand.
+- Run `pnpm site:dev` and open the [icon docs page](../../website/content/basic/icon) to check the new icon.
 
-## 新增插画
+## Adding illustrations
 
-- 新增 `svgs/illustrations/<name>.svg`，暗色变体命名为 `<name>-dark.svg`。颜色与 `width`、`height` 保持原样，配色用 `var(--semi-color-*)`。
-- 导出名是 `Illustration` 加 PascalCase，如 `noContent-dark` 为 `IllustrationNoContentDark`。
-- id 同样不手写 `{uid}`；运行 `pnpm build:icon` 生成 `src/illustrations/icons` 与各框架的插画组件。
+- Add `svgs/illustrations/<name>.svg`, and name the dark variant `<name>-dark.svg`. Colors, `width` and `height` stay as they are, with colors written as `var(--semi-color-*)`.
+- The export name is `Illustration` plus PascalCase, so `noContent-dark` becomes `IllustrationNoContentDark`.
+- Ids also skip the hand-written `{uid}`. Run `pnpm build:icon` to generate `src/illustrations/icons` and the illustration components of each framework.
 
-## 开发
+## Development
 
-- 构建：`vp pack`；通用命令见根目录 [README.md](../../README.md#常用命令)。
-- 测试：`__tests__/data.test.ts` 检查所有图标与插画的 id 与引用。
+- Build: `vp pack`. For general commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.
+- Tests: `__tests__/data.test.ts` checks the ids and references of all icons and illustrations.

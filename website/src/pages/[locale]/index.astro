@@ -465,7 +465,7 @@ const samples = [
         display: inline-flex;
         gap: var(--semi-spacing-tight);
         align-items: center;
-        padding: var(--semi-spacing-extra-tight) var(--semi-spacing-base-tight) var(--semi-spacing-extra-tight) var(--semi-spacing-tight);
+        padding: var(--semi-spacing-extra-tight) var(--semi-spacing-base-tight) var(--semi-spacing-extra-tight) var(--semi-spacing-extra-tight);
         font-size: var(--semi-font-size-small);
         font-weight: var(--semi-font-weight-bold);
         line-height: var(--semi-line-height-small);
@@ -476,7 +476,9 @@ const samples = [
 
     .hero-badge span {
         padding: var(--semi-spacing-super-tight) var(--semi-spacing-tight);
-        color: var(--semi-color-white);
+
+        /* --semi-color-white stays near white in dark mode, where the primary turns light */
+        color: var(--semi-color-bg-0);
         background: var(--semi-color-primary);
         border-radius: var(--semi-border-radius-full);
     }

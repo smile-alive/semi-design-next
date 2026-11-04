@@ -28,8 +28,7 @@
     ],
     "sideEffects": true,
     "scripts": {
-        "build": "vp pack",
-        "prepublishOnly": "npm run build"
+        "build": "vp pack"
     },
     "devDependencies": {
         "typescript": "catalog:"
