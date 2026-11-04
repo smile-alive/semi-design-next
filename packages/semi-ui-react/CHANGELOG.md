@@ -1,5 +1,13 @@
 # @fibrae/semi-ui-react
 
+## 0.3.1
+
+### Patch Changes
+
+- @fibrae/semi-foundation@0.3.1
+    - @fibrae/semi-icons-react@0.3.1
+    - @fibrae/semi-illustrations-react@0.3.1
+
 ## 0.3.0
 
 ### Minor Changes

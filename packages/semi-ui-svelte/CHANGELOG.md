@@ -1,5 +1,12 @@
 # @fibrae/semi-ui-svelte
 
+## 0.3.1
+
+### Patch Changes
+
+- @fibrae/semi-foundation@0.3.1
+    - @fibrae/semi-icons-svelte@0.3.1
+
 ## 0.3.0
 
 ### Minor Changes

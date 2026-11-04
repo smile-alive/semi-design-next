@@ -1,5 +1,17 @@
 # @fibrae/semi-ai-solid
 
+## 0.3.1
+
+### Patch Changes
+
+- b2c7260: 修复 AIChatInput 的配置项在服务端渲染释放时误触发 `onConfigureChange`
+- Updated dependencies [b2c7260]
+    - @fibrae/semi-ui-solid@0.3.1
+    - @fibrae/semi-ai-foundation@0.3.1
+    - @fibrae/semi-foundation@0.3.1
+    - @fibrae/semi-icons-solid@0.3.1
+    - @fibrae/semi-illustrations-solid@0.3.1
+
 ## 0.3.0
 
 ### Patch Changes

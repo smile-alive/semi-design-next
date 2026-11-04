@@ -1,5 +1,13 @@
 # @fibrae/semi-ui-solid
 
+## 0.3.1
+
+### Patch Changes
+
+- b2c7260: 修复 SideSheet 默认打开时在服务端渲染释放阶段误触发 `afterVisibleChange(false)`
+- @fibrae/semi-foundation@0.3.1
+    - @fibrae/semi-icons-solid@0.3.1
+
 ## 0.3.0
 
 ### Minor Changes

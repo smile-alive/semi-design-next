@@ -1,5 +1,12 @@
 # @fibrae/semi-scss-compile
 
+## 0.3.1
+
+### Patch Changes
+
+- @fibrae/semi-foundation@0.3.1
+    - @fibrae/semi-icons-core@0.3.1
+
 ## 0.3.0
 
 ### Patch Changes
