@@ -2,7 +2,9 @@ name: CI
 
 on:
     # Markdown feeds no build or test (the site reads .mdx), and the pre-commit hook formats it
+    # `reopened` is left out: reopening a PR changes no code, and any later push still runs through `synchronize`
     pull_request:
+        types: [opened, synchronize]
         paths-ignore: ['**/*.md']
     # Every push to release runs, since a changeset is a .md file; main runs this through release.yml
     push:
@@ -17,30 +19,40 @@ concurrency:
 permissions:
     contents: read
 
-# Each job builds first: package exports point at dist, which lint, typecheck and the tests all resolve
+# Package exports point at dist, which lint, typecheck and the tests all resolve, so one job builds it for the others
 jobs:
-    lint:
+    build:
         runs-on: ubuntu-latest
         timeout-minutes: 30
         steps:
             - uses: actions/checkout@v5
-            - uses: jdx/mise-action@v5
-            - run: pnpm install --frozen-lockfile
+            - uses: ./.github/actions/setup
+
+    lint:
+        needs: build
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        steps:
+            - uses: actions/checkout@v5
+            - uses: ./.github/actions/setup
+              with:
+                  dist: required
             - run: pnpm format:check
-            - run: pnpm build
             - run: pnpm lint
 
     typecheck:
+        needs: build
         runs-on: ubuntu-latest
         timeout-minutes: 30
         steps:
             - uses: actions/checkout@v5
-            - uses: jdx/mise-action@v5
-            - run: pnpm install --frozen-lockfile
-            - run: pnpm build
+            - uses: ./.github/actions/setup
+              with:
+                  dist: required
             - run: pnpm typecheck
 
     test:
+        needs: build
         runs-on: ubuntu-latest
         timeout-minutes: 30
         strategy:
@@ -49,11 +61,24 @@ jobs:
                 shard: [1, 2, 3, 4, 5, 6]
         steps:
             - uses: actions/checkout@v5
-            - uses: jdx/mise-action@v5
-            - run: pnpm install --frozen-lockfile
-            - run: pnpm build
-            # `pnpm check` also runs the browser projects; those run in browser.yml, so this job runs the jsdom and node ones
+            - uses: ./.github/actions/setup
+              with:
+                  dist: required
             - run: pnpm test --shard=${{ matrix.shard }}/6
+
+    # release.yml skips CI on main when this marker exists for the same tree. main can read release's caches because
+    # release is the default branch
+    mark-passed:
+        if: github.event_name == 'push' && github.ref == 'refs/heads/release'
+        needs: [lint, typecheck, test]
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - run: touch .ci-passed
+            - uses: actions/cache/save@v6
+              with:
+                  path: .ci-passed
+                  key: ci-passed-${{ github.event.head_commit.tree_id }}
 
     preview:
         if: github.repository == 'smile-alive/semi-design-next' && github.event_name == 'push' && github.ref == 'refs/heads/release'

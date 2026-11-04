@@ -11,12 +11,29 @@ permissions:
     contents: read
 
 jobs:
+    # ci.yml saves this marker after passing on release; merging release into main usually keeps the same tree
+    gate:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        outputs:
+            passed: ${{ steps.marker.outputs.cache-hit }}
+        steps:
+            - id: marker
+              uses: actions/cache/restore@v6
+              with:
+                  path: .ci-passed
+                  key: ci-passed-${{ github.event.head_commit.tree_id }}
+                  lookup-only: true
+
     ci:
+        needs: gate
+        if: needs.gate.outputs.passed != 'true'
         uses: ./.github/workflows/ci.yml
 
     release:
-        if: github.repository == 'smile-alive/semi-design-next'
-        needs: ci
+        # A skipped dependency would skip this job too, so the condition states which results may continue
+        if: ${{ !cancelled() && github.repository == 'smile-alive/semi-design-next' && needs.gate.result == 'success' && (needs.ci.result == 'success' || needs.ci.result == 'skipped') }}
+        needs: [gate, ci]
         runs-on: ubuntu-latest
         concurrency: release
         permissions:
@@ -25,8 +42,10 @@ jobs:
             id-token: write
         steps:
             - uses: actions/checkout@v5
-            - uses: jdx/mise-action@v5
-            - run: pnpm install --frozen-lockfile
+            - uses: ./.github/actions/setup
+              with:
+                  dist: none
+            # Published files are always built from this commit, never restored from a cache
             - run: pnpm build
             # v1 finds published packages by parsing "New tag:" lines that Changesets CLI v3 no longer prints, so it
             # skipped tags and GitHub releases; v2 reads the CLI's CHANGESETS_OUTPUT file. v2 has no floating major tag.
@@ -55,7 +74,7 @@ jobs:
                       --body '发布后 main 上的版本提交与 CHANGELOG 合回 release。用「Create a merge commit」合并。'
 
     site:
-        if: github.repository == 'smile-alive/semi-design-next'
-        needs: ci
+        if: ${{ !cancelled() && github.repository == 'smile-alive/semi-design-next' && needs.gate.result == 'success' && (needs.ci.result == 'success' || needs.ci.result == 'skipped') }}
+        needs: [gate, ci]
         uses: ./.github/workflows/site.yml
         secrets: inherit
