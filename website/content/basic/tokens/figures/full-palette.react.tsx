@@ -13,7 +13,7 @@ function toUpper(str: string) {
     const color = str
         .toLowerCase()
         .split(' ')
-        .map((word) => word[0].toUpperCase() + word.substr(1))
+        .map((word) => word[0].toUpperCase() + word.slice(1))
         .join(' ');
     if (color.indexOf('Ai ') === 0) {
         return 'AI' + color.slice(2);
