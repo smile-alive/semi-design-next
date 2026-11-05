@@ -63,7 +63,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderSelectedItem | Customizes how the selected items render in the Select. In single mode it returns the content; in multiple mode the second argument holds index, disabled and onClose, and it returns `{ isRenderInTag, content }`, wrapping the content in a Tag when isRenderInTag is true. | <ApiType detail={"ByMultiple\u003cMultiple, RenderSingleSelectedItemFn, RenderMultipleSelectedItemFn>"}>Type</ApiType> | - |
 | restTagsPopoverProps | Props of the Popover that shows the remaining tags, such as position and trigger. | `PopoverProps` | - |
 | searchPlaceholder | Placeholder of the search input when it is in the dropdown (searchPosition is dropdown). | `string` | - |
-| searchPosition | Where the search input sits when search is on: trigger puts it in the Select, dropdown at the top of the dropdown. With trigger, the clear button of the Select also clears the search text; with dropdown it clears the selection only. | `'trigger' \| 'dropdown'` | `"trigger"` |
+| searchPosition | Where the search input sits when search is on: trigger puts it in the Select, dropdown at the top of the dropdown. With trigger, the clear button of the Select also clears the search text; with dropdown it clears the selection only. | `'dropdown' \| 'trigger'` | `"trigger"` |
 | showArrow | Whether to show the dropdown arrow on the right. | `boolean` | `true` |
 | showClear | Whether to show the clear button. With a selected value or search text and not disabled, the button appears in the Select. | `boolean` | `false` |
 | showRestTagsPopover | Past maxTagCount, whether hovering +N shows the remaining tags in a Popover. | `boolean` | `false` |

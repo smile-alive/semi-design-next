@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | clearIcon | Icon of the clear button, as an element. Takes effect only when `showClear` is `true`. | `JSX.Element` | - |
 | composition | Whether to enable composition mode. When enabled, `onChange` is not called during IME composition and is called once after it ends. | `boolean` | - |
 | currency | Currency, such as CNY, EUR or USD. When `true`, uses `defaultCurrency`, or the currency of the locale pack when that is not set. | `string \| boolean` | - |
-| currencyDisplay | How the currency is shown: `symbol`, `code` or `name`. | `'code' \| 'symbol' \| 'name'` | - |
+| currencyDisplay | How the currency is shown: `symbol`, `code` or `name`. | `'code' \| 'name' \| 'symbol'` | - |
 | defaultCurrency | Currency used when `currency` is `true`. Priority: own prop, global default, locale pack. | `string` | - |
 | defaultValue | Initial value when uncontrolled. | `number \| string` | - |
 | disabled | Whether disabled. Falls back to the value of the enclosing `InputGroup` when not set. | `boolean` | - |

@@ -31,7 +31,7 @@ import ApiType from '#/components/ApiType.astro';
 | inputStyle | 输入框根元素的样式。 | `StyleValue` | `semiGlobalDefault("DatePicker", "inputStyle")` |
 | insetInput | 把输入框嵌入面板，可传对象设置各输入框的占位文字。 | `boolean \| InsetInputProps` | `semiDefault("DatePicker", "insetInput", false)` |
 | insetLabelId | 内嵌标签元素的 id。 | `string` | `undefined` |
-| validateStatus | 校验状态，可选 default、error、warning，仅影响样式。 | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("DatePicker", "validateStatus")` |
+| validateStatus | 校验状态，可选 default、error、warning，仅影响样式。 | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("DatePicker", "validateStatus")` |
 | autofocus | 挂载时聚焦输入框，同时打开面板。 | `boolean` | `semiDefault("DatePicker", "autofocus", false)` |
 | preventScroll | 聚焦时是否阻止浏览器滚动到输入框。 | `boolean` | `semiGlobalDefault("DatePicker", "preventScroll")` |
 | weekStartsOn | 每周的第一天，0 为周日，1 为周一，以此类推。 | `WeekStartNumber` | `semiDefault("DatePicker", "weekStartsOn", numbers.WEEK_START_ON)` |
@@ -40,13 +40,13 @@ import ApiType from '#/components/ApiType.astro';
 | autoSwitchDate | 通过面板上方左右按钮、下拉菜单更改年月时，自动切换日期。仅对 date 类型生效。 | `boolean` | `semiDefault("DatePicker", "autoSwitchDate", true)` |
 | syncSwitchMonth | 范围选择时，同步切换双面板的月份。 | `boolean` | `semiDefault("DatePicker", "syncSwitchMonth", false)` |
 | presets | 日期时间快捷方式。数组项以及 start、end 可以是函数，在面板渲染和点击时调用。 | `PresetsType` | `semiGlobalDefault("DatePicker", "presets")` |
-| presetPosition | 快捷方式面板的位置，可选 left、right、top、bottom。 | `"top" \| "bottom" \| "left" \| "right"` | `semiDefault("DatePicker", "presetPosition", "bottom")` |
-| timePickerOpts | 传给时间面板的参数：use12Hours、hourStep、minuteStep、secondStep、defaultIsAM、scrollItemProps。格式、值和禁用时间由面板设置。 | <ApiType detail={"Partial\u003cPick\u003cComboboxProps, \"use12Hours\" \u007c \"hourStep\" \u007c \"minuteStep\" \u007c \"secondStep\" \u007c \"scrollItemProps\" \u007c \"defaultIsAM\">>"}>Type</ApiType> | `semiGlobalDefault("DatePicker", "timePickerOpts")` |
-| yearAndMonthOpts | 传给年月滚动列的参数：cycled、mode、motion、transform。列表和选中项由面板设置。 | <ApiType detail={"Partial\u003cPick\u003cScrollItemProps\u003cItem>, \"motion\" \u007c \"mode\" \u007c \"cycled\" \u007c \"transform\">>"}>Type</ApiType> | `semiGlobalDefault("DatePicker", "yearAndMonthOpts")` |
+| presetPosition | 快捷方式面板的位置，可选 left、right、top、bottom。 | `"bottom" \| "left" \| "right" \| "top"` | `semiDefault("DatePicker", "presetPosition", "bottom")` |
+| timePickerOpts | 传给时间面板的参数：use12Hours、hourStep、minuteStep、secondStep、defaultIsAM、scrollItemProps。格式、值和禁用时间由面板设置。 | <ApiType detail={"Partial\u003cPick\u003cComboboxProps, \"defaultIsAM\" \u007c \"hourStep\" \u007c \"minuteStep\" \u007c \"scrollItemProps\" \u007c \"secondStep\" \u007c \"use12Hours\">>"}>Type</ApiType> | `semiGlobalDefault("DatePicker", "timePickerOpts")` |
+| yearAndMonthOpts | 传给年月滚动列的参数：cycled、mode、motion、transform。列表和选中项由面板设置。 | <ApiType detail={"Partial\u003cPick\u003cScrollItemProps\u003cItem>, \"cycled\" \u007c \"mode\" \u007c \"motion\" \u007c \"transform\">>"}>Type</ApiType> | `semiGlobalDefault("DatePicker", "yearAndMonthOpts")` |
 | timeZone | 时区，数字为 UTC 偏移的小时数。未设置时依次取 ConfigProvider 的 timeZone、全局默认值。 | `string \| number` | `undefined` |
 | motion | 是否开启面板展开的动画。 | `boolean` | `semiDefault("DatePicker", "motion", true)` |
 | autoAdjustOverflow | 浮层被遮挡时是否自动调整方向。 | `boolean` | `semiDefault("DatePicker", "autoAdjustOverflow", true)` |
-| position | 浮层位置。默认 bottomLeft（RTL 下为 bottomRight），开启 insetInput 时为 leftTopOver。 | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("DatePicker", "position")` |
+| position | 浮层位置。默认 bottomLeft（RTL 下为 bottomRight），开启 insetInput 时为 leftTopOver。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("DatePicker", "position")` |
 | spacing | 浮层与触发器的距离。开启 insetInput 且面板覆盖触发器时为 1，否则为 Popover 的默认间距。 | `number` | `semiGlobalDefault("DatePicker", "spacing")` |
 | stopPropagation | 是否阻止浮层上的点击事件冒泡。 | `string \| boolean` | `semiDefault("DatePicker", "stopPropagation", true)` |
 | dropdownClassName | 浮层的类名。 | `string` | `semiGlobalDefault("DatePicker", "dropdownClassName")` |

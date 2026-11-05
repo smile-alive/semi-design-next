@@ -42,7 +42,7 @@ import ApiType from '#/components/ApiType.astro';
 | showStopGenerate | 是否在最后一条消息生成中时显示停止生成按钮。生成中发送按钮不可用，点击停止按钮触发 `onStopGenerator`。 | `boolean` | `false` |
 | style | 根元素的样式。 | `React.CSSProperties` | - |
 | topSlot | 对话区域顶部的节点。 | `ReactNode \| ReactNode[]` | - |
-| uploadProps | 传给 Upload 的属性。`fileList` 与 `defaultFileList` 由 Chat 管理，`onChange` 由 Chat 处理，不会传给 Upload；`children` 替换默认的上传按钮，作为触发元素。 | <ApiType detail={"Omit\u003cUploadProps, 'fileList' \u007c 'defaultFileList'>"}>Type</ApiType> | - |
+| uploadProps | 传给 Upload 的属性。`fileList` 与 `defaultFileList` 由 Chat 管理，`onChange` 由 Chat 处理，不会传给 Upload；`children` 替换默认的上传按钮，作为触发元素。 | <ApiType detail={"Omit\u003cUploadProps, 'defaultFileList' \u007c 'fileList'>"}>Type</ApiType> | - |
 | uploadTipProps | 上传按钮提示 Tooltip 的属性，`content` 为提示文字。 | `TooltipProps` | - |
 
 **Methods**

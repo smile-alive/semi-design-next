@@ -66,7 +66,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderSelectedItem | Custom rendering of the selected item in the trigger. In single mode it receives the option object and returns a ReactNode. In multiple mode it receives the option object and `{ index, disabled, onClose }`, and returns `{ isRenderInTag, content }`; when `isRenderInTag` is `true`, `content` is wrapped in a tag with a background and a close button. | <ApiType detail={"ByMultiple\u003cMultiple, RenderSingleSelectedItemFn, RenderMultipleSelectedItemFn>"}>Type</ApiType> | - |
 | restTagsPopoverProps | Popover props for the overflowing tags when `showRestTagsPopover` is on, such as `position` and `trigger`. See the Popover component. | `PopoverProps` | `{}` |
 | searchPlaceholder | Placeholder of the search input when it is in the dropdown, that is, when `searchPosition` is `dropdown`. | `string` | - |
-| searchPosition | Position of the search input when `filter` is on. `trigger` places it inside the Select, and `dropdown` places it at the top of the dropdown. Combined with `triggerRender`, it allows more flexible interaction. | `'trigger' \| 'dropdown'` | `"trigger"` |
+| searchPosition | Position of the search input when `filter` is on. `trigger` places it inside the Select, and `dropdown` places it at the top of the dropdown. Combined with `triggerRender`, it allows more flexible interaction. | `'dropdown' \| 'trigger'` | `"trigger"` |
 | showArrow | Whether the dropdown arrow is shown. | `boolean` | `true` |
 | showClear | Whether the clear button is shown. | `boolean` | `false` |
 | showRestTagsPopover | When tags overflow `maxTagCount`, whether hovering over `+N` shows the remaining content in a Popover. | `boolean` | `false` |

@@ -22,7 +22,7 @@ import ApiType from '#/components/ApiType.astro';
 | motion | Whether animation is enabled. | `boolean` | `true` |
 | onCancel | Called when the user closes the sheet with the close button, the mask or Esc. The argument is the native MouseEvent, or the native KeyboardEvent for Esc. The sheet does not close by itself; set `visible` to `false` in the callback. | <ApiType detail={"(e: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
 | placement | Edge the sheet slides in from: `top`, `bottom`, `left` or `right`. | `Placement` | `"right"` |
-| size | Size: `small` is 448px, `medium` 684px, `large` 920px. Used only when placement is `left` or `right`. | `'small' \| 'medium' \| 'large'` | `"small"` |
+| size | Size: `small` is 448px, `medium` 684px, `large` 920px. Used only when placement is `left` or `right`. | `'large' \| 'medium' \| 'small'` | `"small"` |
 | style | Style of the dialog element (`.semi-sidesheet-inner`), merged with the computed width and height, which take precedence. | `JSX.CSSProperties \| string` | - |
 | title | Title, a JSX element. Nothing is rendered when it is empty, and it names the dialog. | `JSX.Element` | - |
 | visible | Whether the sheet is visible. A controlled prop: set it to false in onCancel to close the sheet. | `boolean` | `false` |

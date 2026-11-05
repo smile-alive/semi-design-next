@@ -26,7 +26,7 @@ import ApiType from '#/components/ApiType.astro';
 | borderless | 无边框模式。 | `boolean` | `semiDefault("TimePicker", "borderless", false)` |
 | showClear | 是否展示清除按钮。 | `boolean` | `semiDefault("TimePicker", "showClear", true)` |
 | inputReadOnly | 输入框只读，避免在移动设备上打开虚拟键盘。 | `boolean` | `semiDefault("TimePicker", "inputReadOnly", false)` |
-| validateStatus | 校验状态。 | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("TimePicker", "validateStatus")` |
+| validateStatus | 校验状态。 | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("TimePicker", "validateStatus")` |
 | insetLabelId | insetLabel 的 id，用于 aria-labelledby 关联。 | `string` | `undefined` |
 | inputStyle | 输入框根元素的样式。 | `StyleValue` | `semiGlobalDefault("TimePicker", "inputStyle")` |
 | autofocus | 挂载时让输入框获得焦点，同时打开面板。 | `boolean` | `semiDefault("TimePicker", "autofocus", false)` |
@@ -34,7 +34,7 @@ import ApiType from '#/components/ApiType.astro';
 | preventScroll | 指示浏览器是否应滚动文档以显示新聚焦的元素，作用于组件内的 focus 方法。 | `boolean` | `semiGlobalDefault("TimePicker", "preventScroll")` |
 | motion | 是否展示弹出层动画。 | `boolean` | `semiDefault("TimePicker", "motion", true)` |
 | autoAdjustOverflow | 浮层被遮挡时是否自动调整方向。 | `boolean` | `semiDefault("TimePicker", "autoAdjustOverflow", true)` |
-| position | 浮层位置，type 为 timeRange 时默认为 bottom，为 time 时默认为 bottomLeft。 | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("TimePicker", "position")` |
+| position | 浮层位置，type 为 timeRange 时默认为 bottom，为 time 时默认为 bottomLeft。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("TimePicker", "position")` |
 | popupClassName | 弹出层的类名。 | `string` | `semiGlobalDefault("TimePicker", "popupClassName")` |
 | popupStyle | 弹出层的样式。 | `StyleValue` | `semiGlobalDefault("TimePicker", "popupStyle")` |
 | stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean` | `semiDefault("TimePicker", "stopPropagation", true)` |

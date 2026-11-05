@@ -4,7 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | 属性         | 说明                                                                                                             | 类型                                                                | 默认值      |
 | ------------ | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ----------- |
-| align        | header 与 main 的垂直对齐方式，可选 flex-start、flex-end、center、baseline 或 stretch，未传时为 flex-start。     | `"flex-start" \| "flex-end" \| "center" \| "baseline" \| "stretch"` | `undefined` |
+| align        | header 与 main 的垂直对齐方式，可选 flex-start、flex-end、center、baseline 或 stretch，未传时为 flex-start。     | `"baseline" \| "center" \| "flex-end" \| "flex-start" \| "stretch"` | `undefined` |
 | onClick      | 点击回调，优先于 List 的 onClick；有处理函数时项渲染为原生按钮。使用方写 @click，保留为函数 prop 的原因同 List。 | <ApiType detail={"((event: MouseEvent) => void)"}>Type</ApiType>    | `undefined` |
 | onRightClick | 右键（上下文菜单）回调，优先于 List 的 onRightClick；只设置它时项同样渲染为原生按钮。使用方写 @rightClick。      | <ApiType detail={"((event: MouseEvent) => void)"}>Type</ApiType>    | `undefined` |
 

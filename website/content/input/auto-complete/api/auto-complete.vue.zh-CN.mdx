@@ -22,12 +22,12 @@ import ApiType from '#/components/ApiType.astro';
 | motion | 下拉面板显示、隐藏时是否有动画。 | `boolean` | `semiDefault("AutoComplete", "motion", true)` |
 | selectWithObject | 布尔属性，不是事件：为 true 时，select 事件收到去掉内部字段的数据项对象，而不是选中值。 | `boolean` | `semiDefault("AutoComplete", "selectWithObject", false)` |
 | placeholder | 输入框的提示文案。 | `string` | `semiGlobalDefault("AutoComplete", "placeholder")` |
-| position | 下拉面板的位置，可选值同 Tooltip 的 position。未设置时为 bottomLeft，ConfigProvider 的 direction 为 rtl 时为 bottomRight。 | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("AutoComplete", "position")` |
+| position | 下拉面板的位置，可选值同 Tooltip 的 position。未设置时为 bottomLeft，ConfigProvider 的 direction 为 rtl 时为 bottomRight。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("AutoComplete", "position")` |
 | renderSelectedItem | 选中候选项后输入框显示的文本，必须返回字符串；字符串或数字项收到 `{ value, label }`，对象项收到数据项本身。保留为函数 prop，因为 foundation 在渲染之外调用它。 | <ApiType detail={"((option: AutoCompleteSelectedItem\u003cT>) => string)"}>Type</ApiType> | `undefined` |
 | showClear | 有内容时是否显示清除按钮。 | `boolean` | `semiDefault("AutoComplete", "showClear", false)` |
 | size | 输入框尺寸。 | `Size` | `undefined` |
 | stopPropagation | 是否阻止下拉面板上的 click、mousedown 与焦点进出事件冒泡。 | `string \| boolean` | `semiDefault("AutoComplete", "stopPropagation", true)` |
-| validateStatus | 校验状态，只影响展示样式。 | `"default" \| "error" \| "warning" \| "success"` | `semiDefault("AutoComplete", "validateStatus", "default")` |
+| validateStatus | 校验状态，只影响展示样式。 | `"default" \| "error" \| "success" \| "warning"` | `semiDefault("AutoComplete", "validateStatus", "default")` |
 
 **Events**
 

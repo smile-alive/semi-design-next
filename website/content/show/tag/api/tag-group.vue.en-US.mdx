@@ -5,7 +5,7 @@
 | tagList      | Tag configurations. Each item holds the props of a Tag, with children as the string or number label. | `TagGroupItem[]`                  | `undefined`                                        |
 | maxTagCount  | Maximum number of visible tags. The rest is shown as +N.                                             | `number`                          | `semiGlobalDefault("TagGroup", "maxTagCount")`     |
 | restCount    | The number shown in +N. Defaults to the number of tags beyond maxTagCount.                           | `number`                          | `semiGlobalDefault("TagGroup", "restCount")`       |
-| size         | Size of the tags in the group.                                                                       | `"default" \| "small" \| "large"` | `semiDefault("TagGroup", "size", "default")`       |
+| size         | Size of the tags in the group.                                                                       | `"default" \| "large" \| "small"` | `semiDefault("TagGroup", "size", "default")`       |
 | showPopover  | Whether hovering +N shows the remaining tags in a Popover.                                           | `boolean`                         | `semiGlobalDefault("TagGroup", "showPopover")`     |
 | popoverProps | Props passed to the Popover, such as position and trigger.                                           | `PopoverProps`                    | `semiGlobalDefault("TagGroup", "popoverProps")`    |
 | avatarShape  | Avatar shape of the avatar tags in the group.                                                        | `AvatarShape`                     | `semiDefault("TagGroup", "avatarShape", "square")` |

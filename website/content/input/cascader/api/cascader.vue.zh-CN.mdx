@@ -20,7 +20,7 @@ import ApiType from '#/components/ApiType.astro';
 | restTagsPopoverProps | 剩余标签 Popover 的配置，可设置 position、trigger 等，参见 Popover。 | `PopoverProps` | `semiGlobalDefault("Cascader", "restTagsPopoverProps")` |
 | enableLeafClick | 多选时，点击叶子节点所在的选项是否触发勾选。 | `boolean` | `semiDefault("Cascader", "enableLeafClick", false)` |
 | clickToSelect | 多选时，点击任意节点即触发选中，常与 showNext 为 hover 配合：悬停展开子菜单，点击选中当前节点。 | `boolean` | `semiDefault("Cascader", "clickToSelect", false)` |
-| showNext | 展开子菜单的时机：click 为点击，hover 为悬停。 | `"hover" \| "click"` | `semiDefault("Cascader", "showNext", strings.SHOW_NEXT_BY_CLICK)` |
+| showNext | 展开子菜单的时机：click 为点击，hover 为悬停。 | `"click" \| "hover"` | `semiDefault("Cascader", "showNext", strings.SHOW_NEXT_BY_CLICK)` |
 | loadData | 异步加载数据，参数为从根到当前节点的路径，需要返回 Promise；reject 后节点不再显示加载态，可以再次展开重试。不能与搜索同时使用。保留为函数 prop，因为需要读取返回的 Promise。 | <ApiType detail={"((selectOptions: CascaderData[]) => Promise\u003cvoid>)"}>Type</ApiType> | `undefined` |
 | filterTreeNode | 是否开启搜索：true 时按 treeNodeFilterProp 对应的属性值匹配输入，不区分大小写；也可以传入自定义的匹配函数。保留为函数 prop，因为需要读取返回值。 | <ApiType detail={"boolean \u007c ((inputValue: string, treeNodeString: string, data?: CascaderData \u007c undefined) => boolean)"}>Type</ApiType> | `undefined` |
 | filterSorter | 对筛选后的结果排序，参数为两条结果路径（从根节点到匹配节点的节点数组）与输入内容。保留为函数 prop，因为需要读取返回值。 | <ApiType detail={"((first: CascaderData[], second: CascaderData[], inputValue: string) => number)"}>Type</ApiType> | `undefined` |
@@ -32,17 +32,17 @@ import ApiType from '#/components/ApiType.astro';
 | changeWithObject | 是否让 change 事件携带每个节点的数据而不是它的 value。开启后受控的 modelValue 与 defaultValue 也要传节点数据，并含有 value。这是布尔属性，不是事件，不要写成 @changeWithObject。 | `boolean` | `semiDefault("Cascader", "changeWithObject", false)` |
 | placeholder | 选择框的占位文字。 | `string` | `semiGlobalDefault("Cascader", "placeholder")` |
 | searchPlaceholder | 搜索框的占位文字，不传时使用 placeholder。 | `string` | `semiGlobalDefault("Cascader", "searchPlaceholder")` |
-| searchPosition | 搜索框的位置：trigger 在触发器内，custom 由使用方自定义，此时用 search 方法传入搜索词。 | `"trigger" \| "custom"` | <ApiType detail={"semiDefault(\"Cascader\", \"searchPosition\", strings.SEARCH_POSITION_TRIGGER)"}>Type</ApiType> |
+| searchPosition | 搜索框的位置：trigger 在触发器内，custom 由使用方自定义，此时用 search 方法传入搜索词。 | `"custom" \| "trigger"` | <ApiType detail={"semiDefault(\"Cascader\", \"searchPosition\", strings.SEARCH_POSITION_TRIGGER)"}>Type</ApiType> |
 | disabled | 是否禁用。禁用后不可 Tab 到达。 | `boolean` | `undefined` |
 | size | 选择框的尺寸。 | `Size` | `undefined` |
 | borderless | 是否使用无边框模式。 | `boolean` | `semiDefault("Cascader", "borderless", false)` |
-| validateStatus | 触发器的校验状态，只影响样式。 | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("Cascader", "validateStatus")` |
+| validateStatus | 触发器的校验状态，只影响样式。 | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("Cascader", "validateStatus")` |
 | insetLabelId | insetLabel 内容的 id，用于关联 combobox 的名称；不传时在使用 insetLabel 插槽时由组件生成。 | `string` | `undefined` |
 | showClear | 是否展示清除按钮。 | `boolean` | `semiDefault("Cascader", "showClear", false)` |
 | defaultOpen | 是否在挂载时展开下拉。 | `boolean` | `semiDefault("Cascader", "defaultOpen", false)` |
 | motion | 是否开启下拉的弹出动画。 | `boolean` | `semiDefault("Cascader", "motion", true)` |
 | autoAdjustOverflow | 下拉被边缘遮挡时是否自动调整展开方向。 | `boolean` | `semiGlobalDefault("Cascader", "autoAdjustOverflow")` |
-| position | 下拉的展开方向，默认 bottomLeft，RTL 下为 bottomRight。 | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("Cascader", "position")` |
+| position | 下拉的展开方向，默认 bottomLeft，RTL 下为 bottomRight。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("Cascader", "position")` |
 | stopPropagation | 是否阻止下拉上的点击事件冒泡。 | `string \| boolean` | `semiDefault("Cascader", "stopPropagation", true)` |
 | dropdownClassName | 下拉的 class。 | `string` | `semiGlobalDefault("Cascader", "dropdownClassName")` |
 | dropdownStyle | 下拉的样式。 | `StyleValue` | `semiGlobalDefault("Cascader", "dropdownStyle")` |

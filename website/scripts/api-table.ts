@@ -18,7 +18,12 @@ function cell(value: string) {
     return value.replaceAll('|', '\\|').replaceAll('\n', ' ');
 }
 
-export function apiType(value: string, optional = false) {
+// The checker prints string-literal union members in the order the program first created them, which shifts with
+// unrelated source files; sorted, the tables of all frameworks read alike and --check only fails on an API change.
+const sortUnions = (type: string) => type.replace(/(["'])[^"'|]*\1(?: \| (["'])[^"'|]*\2)+/g, (run) => run.split(' | ').toSorted().join(' | '));
+
+export function apiType(raw: string, optional = false) {
+    const value = sortUnions(raw);
     const parsed = ts.createSourceFile('type.ts', `type T = ${value}`, ts.ScriptTarget.Latest, true);
     const statement = parsed.statements[0];
     const union = statement && ts.isTypeAliasDeclaration(statement) && ts.isUnionTypeNode(statement.type) ? statement.type : undefined;

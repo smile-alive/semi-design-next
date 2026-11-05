@@ -6,7 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | ellipsis | Truncates overflowing text; pass an object for the Ellipsis Config. | `boolean \| Ellipsis` | `false` |
 | heading | Heading level, matching h1 to h6. | `1 \| 2 \| 3 \| 4 \| 5 \| 6` | `1` |
-| weight | Font weight: light, regular, medium, semibold, bold, default, or a number. | <ApiType detail={"number \u007c \"bold\" \u007c \"default\" \u007c \"medium\" \u007c \"light\" \u007c \"regular\" \u007c \"semibold\""}>Type</ApiType> | `undefined` |
+| weight | Font weight: light, regular, medium, semibold, bold, default, or a number. | <ApiType detail={"number \u007c \"bold\" \u007c \"default\" \u007c \"light\" \u007c \"medium\" \u007c \"regular\" \u007c \"semibold\""}>Type</ApiType> | `undefined` |
 | component | Element to render: a tag name or a Vue component. Defaults to h1 to h6 by heading. | `string \| Component` | `undefined` |
 | copyable | Whether the text can be copied; pass an object for the Copyable Config. | `boolean \| TypographyCopyableConfig` | `false` |
 | delete | Adds a strikethrough. | `boolean` | `false` |
@@ -14,7 +14,7 @@ import ApiType from '#/components/ApiType.astro';
 | link | Whether the text is a link; with an object, its attributes (href, target, class, style, onClick and so on) are applied to the a element. | `LinkType` | `false` |
 | mark | Adds a highlight. | `boolean` | `false` |
 | strong | Whether the text is bold. | `boolean` | `false` |
-| type | Text type. | <ApiType detail={"\"primary\" \u007c \"secondary\" \u007c \"danger\" \u007c \"warning\" \u007c \"success\" \u007c \"tertiary\" \u007c \"quaternary\""}>Type</ApiType> | `"primary"` |
+| type | Text type. | <ApiType detail={"\"danger\" \u007c \"primary\" \u007c \"quaternary\" \u007c \"secondary\" \u007c \"success\" \u007c \"tertiary\" \u007c \"warning\""}>Type</ApiType> | `"primary"` |
 | underline | Adds an underline. | `boolean` | `false` |
 
 **Events**

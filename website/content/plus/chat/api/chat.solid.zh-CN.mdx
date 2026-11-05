@@ -40,7 +40,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClearContext         | 是否在输入框中显示清除上下文按钮。                                                                                                                            | `boolean`                                                                                          | `false`       |
 | showStopGenerate         | 是否在最后一条消息生成中时显示停止生成按钮。生成中发送按钮不可用，点击停止按钮触发 `onStopGenerator`。                                                        | `boolean`                                                                                          | `false`       |
 | topSlot                  | 对话区域顶部的节点。                                                                                                                                          | `JSX.Element`                                                                                      | -             |
-| uploadProps              | 传给 Upload 的属性。`fileList` 与 `defaultFileList` 由 Chat 管理，`onChange` 由 Chat 处理，不会传给 Upload；`children` 作为上传按钮的自定义触发元素。         | <ApiType detail={"Omit\u003cUploadProps, 'fileList' \u007c 'defaultFileList'>"}>Type</ApiType>     | -             |
+| uploadProps              | 传给 Upload 的属性。`fileList` 与 `defaultFileList` 由 Chat 管理，`onChange` 由 Chat 处理，不会传给 Upload；`children` 作为上传按钮的自定义触发元素。         | <ApiType detail={"Omit\u003cUploadProps, 'defaultFileList' \u007c 'fileList'>"}>Type</ApiType>     | -             |
 | uploadTipProps           | 上传按钮提示 Tooltip 的属性，`content` 为提示文字。                                                                                                           | `TooltipProps`                                                                                     | -             |
 
 **Methods**

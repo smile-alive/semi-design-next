@@ -54,9 +54,9 @@ import ApiType from '#/components/ApiType.astro';
 | prefix | 前缀内容。 | `Snippet` | - |
 | preventScroll | 组件内的 focus 是否阻止浏览器滚动文档以显示获得焦点的元素。 | `boolean` | - |
 | remote | 是否开启远程搜索。开启后输入不再做本地过滤，只触发 onSearch，由使用方异步更新 treeData。 | `boolean` | `false` |
-| restTagsPopoverProps | 剩余标签 Popover 的配置，可设置 position、trigger 等，参见 Popover。 | <ApiType detail={"Omit\u003cPopoverProps, 'children' \u007c 'child' \u007c 'content'>"}>Type</ApiType> | - |
+| restTagsPopoverProps | 剩余标签 Popover 的配置，可设置 position、trigger 等，参见 Popover。 | <ApiType detail={"Omit\u003cPopoverProps, 'child' \u007c 'children' \u007c 'content'>"}>Type</ApiType> | - |
 | searchPlaceholder | 搜索框的占位文字，不传时使用 placeholder。 | `string` | - |
-| searchPosition | 搜索框的位置：trigger 在触发器内，custom 由使用方自定义。 | `'trigger' \| 'custom'` | `"trigger"` |
+| searchPosition | 搜索框的位置：trigger 在触发器内，custom 由使用方自定义。 | `'custom' \| 'trigger'` | `"trigger"` |
 | separator | 分隔符，用于搜索结果和单选回填到触发器的路径。 | `string` | `" / "` |
 | showClear | 是否展示清除按钮。 | `boolean` | `false` |
 | showNext | 展开子菜单的时机：click 为点击，hover 为悬停。 | `'click' \| 'hover'` | `"click"` |

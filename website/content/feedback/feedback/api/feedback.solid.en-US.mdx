@@ -29,7 +29,7 @@ import ApiType from '#/components/ApiType.astro';
 | radioGroupProps | Props of the radio group for the radio type, written as the props of RadioGroup. The group has no accessible name by default; name it with aria-label. | <ApiType detail={"Omit\u003cRadioGroupProps, 'value'>"}>Type</ApiType> | - |
 | ref | Reference to the root element: the SideSheet root in popup mode, and the outermost element of the Modal in modal mode. | <ApiType detail={"Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
 | renderContent | Wraps the feedback content: receives the built-in content (the children for type custom) and returns the wrapped node. | <ApiType detail={"(content: JSX.Element) => JSX.Element"}>Type</ApiType> | - |
-| role | Role of the dialog, dialog or alertdialog. Passed through to the Modal or SideSheet of the current mode. | `'dialog' \| 'alertdialog'` | - |
+| role | Role of the dialog, dialog or alertdialog. Passed through to the Modal or SideSheet of the current mode. | `'alertdialog' \| 'dialog'` | - |
 | size | Size of the panel. Passed through to the Modal or SideSheet of the current mode. | `Size` | - |
 | style | Inline style, applied to the content box of the panel; see the note below for where it lands. | `JSX.CSSProperties \| string` | - |
 | textAreaProps | Props of the multi-line input for the text and emoji types, written as the props of TextArea. | <ApiType detail={"Omit\u003cTextAreaProps, 'value'>"}>Type</ApiType> | - |

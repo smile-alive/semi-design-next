@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | showTick | Whether an active Dropdown.Item shows a tick on its leading side. It applies to the menu of this Dropdown only; nested submenus do not inherit it. | `boolean` | `semiDefault("Dropdown", "showTick", false)` |
 | motion | Whether the popup is animated. | `boolean` | `semiDefault("Dropdown", "motion", true)` |
 | autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `semiGlobalDefault("Dropdown", "autoAdjustOverflow")` |
-| position | Position of the menu relative to the trigger. Common values are bottom, bottomLeft and bottomRight; see the Tooltip positions for more. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiDefault("Dropdown", "position", "bottom")` |
+| position | Position of the menu relative to the trigger. Common values are bottom, bottomLeft and bottomRight; see the Tooltip positions for more. | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiDefault("Dropdown", "position", "bottom")` |
 | prefixCls | Class prefix of the popup. A custom value drops the Dropdown styles. | `string` | `semiDefault("Dropdown", "prefixCls", cssClasses.PREFIX)` |
 | spacing | Distance in pixels between the popup and the trigger. Defaults to 4 for a top-level menu and 2 for a nested submenu. | `number \| { x: number; y: number; }` | `semiGlobalDefault("Dropdown", "spacing")` |
 | role | ARIA role of the popup container around the menu. The menu itself has role menu. | `string` | `semiDefault("Dropdown", "role", "presentation")` |
@@ -32,7 +32,7 @@ import ApiType from '#/components/ApiType.astro';
 | mouseLeaveDelay | Milliseconds before the menu hides after the pointer leaves the popup. Applies to the hover and focus triggers; not less than mouseEnterDelay. | `number` | <ApiType detail={"semiDefault(\"Dropdown\", \"mouseLeaveDelay\", strings.DEFAULT_LEAVE_DELAY)"}>Type</ApiType> |
 | preventScroll | Whether focusing an element avoids scrolling it into view. | `boolean` | `semiGlobalDefault("Dropdown", "preventScroll")` |
 | returnFocusOnClose | Whether focus returns to the trigger after the menu closes. | `boolean` | `semiDefault("Dropdown", "returnFocusOnClose", true)` |
-| trigger | What shows the menu: hover, focus, click, custom or contextMenu. With custom, visible alone decides. | `"hover" \| "focus" \| "click" \| "custom" \| "contextMenu"` | `semiDefault("Dropdown", "trigger", "hover")` |
+| trigger | What shows the menu: hover, focus, click, custom or contextMenu. With custom, visible alone decides. | `"click" \| "contextMenu" \| "custom" \| "focus" \| "hover"` | `semiDefault("Dropdown", "trigger", "hover")` |
 | visible | Whether the menu is shown, used with trigger custom and v-model:visible. When given, this value decides. | `boolean` | `semiGlobalDefault("Dropdown", "visible")` |
 
 **Events**

@@ -40,7 +40,7 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | Distance in pixels between the popup and the trigger. An object sets the horizontal and vertical distances. | `number \| { x: number; y: number }` | `8` |
 | stopPropagation | Whether click, mousedown and focus in/out events on the popup stop propagating. | `boolean` | - |
 | style | Style string of the popup, written before the positioning declarations; its `background-color` also colors the arrow. | `string` | - |
-| trigger | When the popup shows. With custom, visible alone decides. | `'hover' \| 'focus' \| 'click' \| 'custom' \| 'contextMenu'` | `"hover"` |
+| trigger | When the popup shows. With custom, visible alone decides. | `'click' \| 'contextMenu' \| 'custom' \| 'focus' \| 'hover'` | `"hover"` |
 | visible | Whether the popup is shown; bind it with `bind:visible`. `bind:visible={get, set}` makes it fully controlled, and when given this value decides. | `boolean` | - |
 | wrapperClassName | Class name of the span that wraps the trigger when a wrapper is needed. | `string` | - |
 | wrapperId | id of the popup element, referenced by the trigger's ARIA attributes. Generated when omitted. | `string` | - |

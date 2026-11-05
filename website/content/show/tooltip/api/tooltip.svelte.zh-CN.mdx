@@ -40,7 +40,7 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | 弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。 | `number \| { x: number; y: number }` | `8` |
 | stopPropagation | 是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。 | `boolean` | - |
 | style | 弹出层的样式字符串，写在定位样式之前；其中的 `background-color` 同时给箭头着色。 | `string` | - |
-| trigger | 触发显示的时机。custom 时显示与否完全由 visible 决定。 | `'hover' \| 'focus' \| 'click' \| 'custom' \| 'contextMenu'` | `"hover"` |
+| trigger | 触发显示的时机。custom 时显示与否完全由 visible 决定。 | `'click' \| 'contextMenu' \| 'custom' \| 'focus' \| 'hover'` | `"hover"` |
 | visible | 弹出层是否显示，可用 `bind:visible` 绑定；`bind:visible={get, set}` 时完全受控，传入后由该值决定显示。 | `boolean` | - |
 | wrapperClassName | 触发元素被 span 包裹时，该 span 的类名。 | `string` | - |
 | wrapperId | 弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。 | `string` | - |

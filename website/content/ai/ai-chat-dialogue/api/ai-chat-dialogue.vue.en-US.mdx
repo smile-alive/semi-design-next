@@ -4,7 +4,7 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| align | Conversation layout: leftRight or leftAlign. | `"leftRight" \| "leftAlign"` | `semiDefault("AIChatDialogue", "align", "leftRight")` |
+| align | Conversation layout: leftRight or leftAlign. | `"leftAlign" \| "leftRight"` | `semiDefault("AIChatDialogue", "align", "leftRight")` |
 | chats | Controlled list of conversation messages; bind it with v-model:chats. | `Message[]` | `semiGlobalDefault("AIChatDialogue", "chats")` |
 | disabledFileItemClick | Whether clicking a file card is disabled. | `boolean` | `semiDefault("AIChatDialogue", "disabledFileItemClick", false)` |
 | escapeHtml | Whether to escape HTML tags in user messages, so the Markdown parser does not treat them as HTML and drop content. | `boolean` | `semiDefault("AIChatDialogue", "escapeHtml", true)` |

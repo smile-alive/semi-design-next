@@ -13,7 +13,7 @@ import ApiType from '#/components/ApiType.astro';
 | onClick   | 点击回调，参数为 `React.MouseEvent`；禁用时不触发。          | <ApiType detail={"(e: React.MouseEvent) => void"}>Type</ApiType>                              | -           |
 | ref       | 指向根元素：设置 `href` 时为 `<a>`，否则为 `<button>`。      | <ApiType detail={"React.Ref\u003cHTMLButtonElement \u007c HTMLAnchorElement>"}>Type</ApiType> | -           |
 | rel       | 与链接目标的关系，仅在设置 `href` 时生效。                   | `string`                                                                                      | -           |
-| shape     | 形状，可选 `round`、`square`。                               | `'square' \| 'round'`                                                                         | `"round"`   |
-| size      | 尺寸，可选 `default`、`small`、`large`。                     | `'small' \| 'default' \| 'large'`                                                             | `"default"` |
+| shape     | 形状，可选 `round`、`square`。                               | `'round' \| 'square'`                                                                         | `"round"`   |
+| size      | 尺寸，可选 `default`、`small`、`large`。                     | `'default' \| 'large' \| 'small'`                                                             | `"default"` |
 | style     | 根元素的样式。                                               | `React.CSSProperties`                                                                         | -           |
 | target    | 指定在何处显示链接的 URL，仅在设置 `href` 时生效。           | `string`                                                                                      | -           |

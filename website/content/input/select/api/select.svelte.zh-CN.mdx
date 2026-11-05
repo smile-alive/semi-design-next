@@ -60,7 +60,7 @@ import ApiType from '#/components/ApiType.astro';
 | remote | 是否为远程搜索，开启后不再在本地筛选选项，由使用方更新 `optionList`。 | `boolean` | `false` |
 | restTagsPopoverProps | +N 浮层的 Popover 属性。 | `PopoverProps` | - |
 | searchPlaceholder | 搜索框在下拉列表中时（`searchPosition="dropdown"`）搜索框的占位文字。 | `string` | - |
-| searchPosition | 搜索框的位置，可选 `trigger`、`dropdown`。 | `'trigger' \| 'dropdown'` | `"trigger"` |
+| searchPosition | 搜索框的位置，可选 `trigger`、`dropdown`。 | `'dropdown' \| 'trigger'` | `"trigger"` |
 | selectedItem | 已选内容，snippet，参数为 `{ option, index, disabled, onClose }`。单选时替换选择框内容，多选时替换每个标签里的内容。 | <ApiType detail={"Snippet\u003c[SelectSelectedItemSnippetProps]>"}>Type</ApiType> | - |
 | showArrow | 是否显示右侧下拉箭头。 | `boolean` | `true` |
 | showClear | 是否显示清除按钮。 | `boolean` | `false` |

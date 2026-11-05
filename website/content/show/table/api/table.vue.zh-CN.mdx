@@ -22,7 +22,7 @@ import ApiType from '#/components/ApiType.astro';
 | expandRowByClick | 点击行时是否展开可展开行。 | `boolean` | `semiDefault("Table", "expandRowByClick", false)` |
 | footer | 纯文本表格尾部，footer 插槽优先。 | `string` | `semiGlobalDefault("Table", "footer")` |
 | groupBy | 分组依据，可以是数据项中的字段名，或返回字符串、数字的函数。 | <ApiType detail={"TableGroupBy\u003cR>"}>Type</ApiType> | `undefined` |
-| groupSectionColumn | 分组行唯一一列的列配置，返回值不含 title、children、dataIndex。 | <ApiType detail={"((groupKey: string \u007c number, group: (string \u007c number)[]) => Omit\u003cColumnProps\u003cR>, \"title\" \u007c \"children\" \u007c \"dataIndex\">)"}>Type</ApiType> | `undefined` |
+| groupSectionColumn | 分组行唯一一列的列配置，返回值不含 title、children、dataIndex。 | <ApiType detail={"((groupKey: string \u007c number, group: (string \u007c number)[]) => Omit\u003cColumnProps\u003cR>, \"children\" \u007c \"dataIndex\" \u007c \"title\">)"}>Type</ApiType> | `undefined` |
 | headerStyle | 所有表头单元格（包括固定表头）的内联样式。 | `CSSProperties` | `semiGlobalDefault("Table", "headerStyle")` |
 | hideExpandedColumn | 表格可展开时，展开按钮默认与第一列内容渲染在同一个单元格；设为 false 时展开按钮单独占一列。 | `boolean` | `semiDefault("Table", "hideExpandedColumn", true)` |
 | indentSize | 树形数据每一层的缩进宽度，单位为像素。 | `number` | `semiDefault("Table", "indentSize", 20)` |
@@ -37,7 +37,7 @@ import ApiType from '#/components/ApiType.astro';
 | rowSpanHover | 悬停在带 rowSpan 的单元格上时，高亮它跨越的所有行。 | `boolean` | `semiDefault("Table", "rowSpanHover", false)` |
 | scroll | 滚动区域配置，x 为横向宽度，y 为纵向高度，详见 scroll。 | `TableScroll` | `semiGlobalDefault("Table", "scroll")` |
 | showHeader | 是否显示表头。 | `boolean` | `semiDefault("Table", "showHeader", true)` |
-| size | 表格尺寸，影响单元格的内边距。 | `"small" \| "default" \| "middle"` | `semiDefault("Table", "size", "default")` |
+| size | 表格尺寸，影响单元格的内边距。 | `"default" \| "middle" \| "small"` | `semiDefault("Table", "size", "default")` |
 | sticky | 将表头固定在页面顶部，传对象时 top 为距离滚动容器顶部的距离。 | `TableSticky` | `semiGlobalDefault("Table", "sticky")` |
 | title | 纯文本表格标题，title 插槽优先。 | `string` | `semiGlobalDefault("Table", "title")` |
 | virtualized | 开启虚拟化，需同时传 scroll.y（数字）。对象形式可配置行高 itemSize 与额外渲染的行数 overscanCount。 | `TableVirtualized` | `semiGlobalDefault("Table", "virtualized")` |

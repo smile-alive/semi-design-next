@@ -6,12 +6,12 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | initValues | Initial values of the form, copied once when the Form is created. | `Values` | `undefined` |
 | layout | Direction in which the fields are arranged: vertical or horizontal. | `"horizontal" \| "vertical"` | `semiDefault("Form", "layout", "vertical")` |
-| labelPosition | Label position of every field. inset is supported by some fields only; the others are laid out as top. The same property on a field takes precedence. | `"top" \| "left" \| "inset"` | `semiDefault("Form", "labelPosition", "top")` |
+| labelPosition | Label position of every field. inset is supported by some fields only; the others are laid out as top. The same property on a field takes precedence. | `"inset" \| "left" \| "top"` | `semiDefault("Form", "labelPosition", "top")` |
 | labelWidth | Label width of every field. A number is in px. | `string \| number` | `semiGlobalDefault("Form", "labelWidth")` |
 | labelAlign | Text alignment of the label of every field. The same property on a field takes precedence. | `"left" \| "right"` | `semiGlobalDefault("Form", "labelAlign")` |
 | labelCol | Grid layout of the label of every field, with the properties of Col such as span and offset. Set it together with wrapperCol. | `ColProps` | `semiGlobalDefault("Form", "labelCol")` |
 | wrapperCol | Grid layout of the control of every field, with the properties of Col such as span and offset. Set it together with labelCol. | `ColProps` | `semiGlobalDefault("Form", "wrapperCol")` |
-| extraTextPosition | Position of the extra text of every field: middle puts it between the label and the control, bottom after the control. The same property on a field takes precedence. | `"middle" \| "bottom"` | `semiGlobalDefault("Form", "extraTextPosition")` |
+| extraTextPosition | Position of the extra text of every field: middle puts it between the label and the control, bottom after the control. The same property on a field takes precedence. | `"bottom" \| "middle"` | `semiGlobalDefault("Form", "extraTextPosition")` |
 | allowEmpty | Whether a field whose value becomes empty keeps its key in values. The same property on a field takes precedence. | `boolean` | `semiDefault("Form", "allowEmpty", false)` |
 | autoScrollToError | Whether to scroll to the first invalid field when submit or formApi.validate fails. An object is passed to scroll-into-view-if-needed as its options. | `boolean \| Options` | `semiDefault("Form", "autoScrollToError", false)` |
 | showValidateIcon | Whether the validation message is preceded by an icon of its status. | `boolean` | `semiDefault("Form", "showValidateIcon", true)` |

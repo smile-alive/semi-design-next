@@ -14,7 +14,7 @@ import ApiType from '#/components/ApiType.astro';
 | fieldLabel        | Group 的 Label 内容，优先于 label 属性中的文本。                                                                | `Snippet`                                                      | -          |
 | label             | 整个 Group 的 Label：字符串作为文本，对象作为 Label 配置，其中 id 用作 Label 的 id；`fieldLabel` snippet 优先。 | `string \| number \| (FieldLabel & { id?: string })`           | -          |
 | labelExtra        | 跟随在 Group Label 文本后的内容。                                                                               | `Snippet`                                                      | -          |
-| labelPosition     | Label 的位置，默认取自 Form，可选 top 或 left。                                                                 | `'top' \| 'left'`                                              | -          |
+| labelPosition     | Label 的位置，默认取自 Form，可选 top 或 left。                                                                 | `'left' \| 'top'`                                              | -          |
 | onBlur            | 焦点离开整个 Group 时的回调。                                                                                   | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | -          |
 | onFocus           | 焦点进入整个 Group 时的回调。                                                                                   | <ApiType detail={"(event: FocusEvent) => void"}>Type</ApiType> | -          |
 | size              | 组内控件的尺寸。                                                                                                | `InputSize`                                                    | -          |

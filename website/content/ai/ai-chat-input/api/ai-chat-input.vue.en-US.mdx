@@ -26,7 +26,7 @@ import ApiType from '#/components/ApiType.astro';
 | suggestions | Suggestions, each a string or an object with content. | `Suggestion[]` | `semiGlobalDefault("AIChatInput", "suggestions")` |
 | templatesCls | Class name of the template panel. | `string` | `semiGlobalDefault("AIChatInput", "templatesCls")` |
 | templatesStyle | Style of the template panel. | `StyleValue` | `semiGlobalDefault("AIChatInput", "templatesStyle")` |
-| topSlotPosition | Position of #topSlot relative to the reference area and the uploaded files area. | `"top" \| "bottom" \| "middle"` | `semiDefault("AIChatInput", "topSlotPosition", "top")` |
+| topSlotPosition | Position of #topSlot relative to the reference area and the uploaded files area. | `"bottom" \| "middle" \| "top"` | `semiDefault("AIChatInput", "topSlotPosition", "top")` |
 | transformer | Transform rules of custom extensions: the key is the node name, the value turns the node into a contentChange item. | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "transformer")` |
 | uploadTipProps | Tooltip props of the upload tip without content; the tip content goes through the #uploadTip slot. | <ApiType detail={"Omit\u003cTooltipProps, \"content\">"}>Type</ApiType> | `semiGlobalDefault("AIChatInput", "uploadTipProps")` |
 | uploadProps | Upload settings, as Upload but without fileList and listType. AIChatInput calls onChange and onRemove itself; beforeRemove may return a Promise. | `AIChatInputUploadProps` | `semiGlobalDefault("AIChatInput", "uploadProps")` |

@@ -41,7 +41,7 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | 弹出层与触发元素的距离，单位为像素；缺省时顶层菜单为 4，嵌套的子菜单为 2。 | `number \| { x: number; y: number }` | - |
 | stopPropagation | 是否阻止弹出层上的 click、mousedown 与焦点进出事件冒泡。 | `boolean` | - |
 | style | 弹出层 `.semi-dropdown-wrapper` 的内联样式字符串。 | `string` | - |
-| trigger | 触发菜单显示的行为，可选 hover、focus、click、custom、contextMenu；custom 时显示与否完全由 visible 决定。 | `'hover' \| 'focus' \| 'click' \| 'custom' \| 'contextMenu'` | `"hover"` |
+| trigger | 触发菜单显示的行为，可选 hover、focus、click、custom、contextMenu；custom 时显示与否完全由 visible 决定。 | `'click' \| 'contextMenu' \| 'custom' \| 'focus' \| 'hover'` | `"hover"` |
 | visible | 菜单是否显示，可用 `bind:visible` 绑定，配合 trigger 为 custom 使用；传入后由该值决定显示，绑定 undefined 则回到非受控。 | `boolean` | - |
 | wrapperClassName | 触发元素被 span 包裹时，该 span 的类名。 | `string` | - |
 | wrapperId | 弹出层节点的 id，触发元素的 aria 属性指向它；缺省时自动生成。 | `string` | - |

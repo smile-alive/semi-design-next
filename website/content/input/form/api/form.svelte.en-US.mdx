@@ -8,14 +8,14 @@ import ApiType from '#/components/ApiType.astro';
 | autoScrollToError | Whether to scroll to the failing field when submit or formApi.validate fails; an object is passed on as options of scroll-into-view-if-needed. | `boolean \| ScrollOptions` | `false` |
 | children | Content of the form, with `{ formState, formApi, values }`, for reading only; change the form through formApi. | <ApiType detail={"Snippet\u003c[FormRenderProps\u003cValues>]>"}>Type</ApiType> | - |
 | disabled | The disabled applied to every field; the disabled of a field takes precedence. | `boolean` | - |
-| extraTextPosition | Position of extraText applied to every field: middle puts it between the Label and the control, bottom after the control. The same prop on a field takes precedence. | `'middle' \| 'bottom'` | - |
+| extraTextPosition | Position of extraText applied to every field: middle puts it between the Label and the control, bottom after the control. The same prop on a field takes precedence. | `'bottom' \| 'middle'` | - |
 | form | The formApi returned by useForm, to control the form from outside the Form. | <ApiType detail={"FormApi\u003cValues>"}>Type</ApiType> | - |
 | getFormApi | Called once the Form has mounted, with the formApi, to keep a reference to it. | <ApiType detail={"(formApi: FormApi\u003cValues>) => void"}>Type</ApiType> | - |
 | id | The id of the form element, also written to x-form-id; generated when omitted. | `string` | - |
 | initValues | Initial values of the form, copied once when the Form is created. | `Values` | - |
 | labelAlign | Label text alignment applied to every field. The same prop on a field takes precedence. | `'left' \| 'right'` | - |
 | labelCol | Label grid layout applied to every field, with the span, offset and other props of Col; set it together with wrapperCol. | `ColProps` | - |
-| labelPosition | Label position applied to every field; inset is only supported by some fields, the others lay out as top. The same prop on a field takes precedence. | `'top' \| 'left' \| 'inset'` | `"top"` |
+| labelPosition | Label position applied to every field; inset is only supported by some fields, the others lay out as top. The same prop on a field takes precedence. | `'inset' \| 'left' \| 'top'` | `"top"` |
 | labelWidth | Label width applied to every field; a number is in px. | `number \| string` | - |
 | layout | Direction the fields are laid out in, vertical or horizontal. | `'horizontal' \| 'vertical'` | `"vertical"` |
 | onChange | Called when the form state updates, including field mount, unmount, value change, blur, and changes of validation status and errors, with the formState. | <ApiType detail={"(formState: FormState\u003cValues>) => void"}>Type</ApiType> | - |

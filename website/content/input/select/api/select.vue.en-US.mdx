@@ -27,10 +27,10 @@ import ApiType from '#/components/ApiType.astro';
 | size | Size: small, default or large. | `Size` | `undefined` |
 | disabled | Whether the Select is disabled. | `boolean` | `undefined` |
 | borderless | Whether the Select has no border. | `boolean` | `semiDefault("Select", "borderless", false)` |
-| validateStatus | Validation status: default, warning or error. It only affects styles such as the background color. | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("Select", "validateStatus")` |
+| validateStatus | Validation status: default, warning or error. It only affects styles such as the background color. | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("Select", "validateStatus")` |
 | placeholder | Placeholder text shown while nothing is selected. | `string` | `semiGlobalDefault("Select", "placeholder")` |
 | searchPlaceholder | Placeholder of the search input when it sits in the dropdown (searchPosition is dropdown). | `string` | `semiGlobalDefault("Select", "searchPlaceholder")` |
-| searchPosition | Where the search input sits when search is on: trigger puts it in the select box, dropdown at the top of the list. With trigger the clear button also clears the search text; with dropdown it clears the selection only. | `"trigger" \| "dropdown"` | `semiDefault("Select", "searchPosition", "trigger")` |
+| searchPosition | Where the search input sits when search is on: trigger puts it in the select box, dropdown at the top of the list. With trigger the clear button also clears the search text; with dropdown it clears the selection only. | `"dropdown" \| "trigger"` | `semiDefault("Select", "searchPosition", "trigger")` |
 | loading | Whether the dropdown shows a loading indicator. | `boolean` | `semiDefault("Select", "loading", false)` |
 | showArrow | Whether the dropdown arrow is shown. | `boolean` | `semiDefault("Select", "showArrow", true)` |
 | showClear | Whether the clear button is shown. It appears in the select box when there is a selection or search text and the Select is enabled. | `boolean` | `semiDefault("Select", "showClear", false)` |
@@ -39,7 +39,7 @@ import ApiType from '#/components/ApiType.astro';
 | dropdownClassName | Class of the dropdown popup. | `string` | `semiGlobalDefault("Select", "dropdownClassName")` |
 | dropdownStyle | Style of the dropdown popup, for example width. The style on the root element does not reach the popup. | `StyleValue` | `semiGlobalDefault("Select", "dropdownStyle")` |
 | dropdownMatchSelectWidth | Whether the minimum width of the popup equals the select box. | `boolean` | `semiDefault("Select", "dropdownMatchSelectWidth", true)` |
-| position | Where the popup opens; the values are those of the Tooltip position. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("Select", "position")` |
+| position | Where the popup opens; the values are those of the Tooltip position. | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("Select", "position")` |
 | spacing | The distance between the popup and the select box, in pixels. | `number \| { x: number; y: number; }` | `semiGlobalDefault("Select", "spacing")` |
 | motion | Whether the popup is animated. | `boolean` | `semiDefault("Select", "motion", true)` |
 | autoAdjustOverflow | Whether the popup flips automatically when it would be clipped. | `boolean` | `semiDefault("Select", "autoAdjustOverflow", true)` |

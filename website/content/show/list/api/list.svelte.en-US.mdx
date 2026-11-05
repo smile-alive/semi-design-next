@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | grid | Grid configuration: align, gutter, justify and type of Row, and span, offset, order, push, pull, the responsive breakpoints, class and style of Col. class and style land on the Col around each item. | `Grid` | - |
 | header | Snippet for the list header. | `Snippet` | - |
 | item | Snippet that renders each entry of dataSource, receiving `{ item, index }` and usually returning a ListItem. | <ApiType detail={"Snippet\u003c[ListItemSnippetProps\u003cT>]>"}>Type</ApiType> | - |
-| layout | List layout: vertical or horizontal. | `'vertical' \| 'horizontal'` | `"vertical"` |
+| layout | List layout: vertical or horizontal. | `'horizontal' \| 'vertical'` | `"vertical"` |
 | loading | Whether the list is loading; a Spin is shown when true. | `boolean` | `false` |
 | loadMore | Snippet for the load-more button. | `Snippet` | - |
 | onClick | Click handler for the items that have no onClick of their own; an item with a handler renders a native button. It is a function prop rather than the native onclick because its presence decides whether an item renders a button. | <ApiType detail={"(event: MouseEvent) => void"}>Type</ApiType> | - |

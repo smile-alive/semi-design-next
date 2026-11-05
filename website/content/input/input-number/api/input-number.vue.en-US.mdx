@@ -7,7 +7,7 @@ import ApiType from '#/components/ApiType.astro';
 | modelValue | Current value, for v-model. A partial or invalid text is a string and a cleared input is ''; an explicit undefined is treated as uncontrolled. | `string \| number` | `undefined` |
 | defaultValue | Initial value when uncontrolled. | `string \| number` | `semiGlobalDefault("InputNumber", "defaultValue")` |
 | currency | Currency, such as CNY, EUR or USD. When true, uses defaultCurrency, or the currency of the locale pack when that is not set; a bare currency attribute equals true. | `string \| boolean` | `semiGlobalDefault("InputNumber", "currency")` |
-| currencyDisplay | How the currency is shown: symbol, code or name. | `"symbol" \| "name" \| "code"` | `semiGlobalDefault("InputNumber", "currencyDisplay")` |
+| currencyDisplay | How the currency is shown: symbol, code or name. | `"code" \| "name" \| "symbol"` | `semiGlobalDefault("InputNumber", "currencyDisplay")` |
 | defaultCurrency | Currency used when currency is true. Priority: own prop, global default, locale pack. | `string` | `semiGlobalDefault("InputNumber", "defaultCurrency")` |
 | localeCode | Locale code used for formatting in currency mode, such as zh-CN, en-US or de-DE. Priority: own prop, global default, locale pack of LocaleProvider or ConfigProvider. | `string` | `semiGlobalDefault("InputNumber", "localeCode")` |
 | minimumFractionDigits | Minimum number of fraction digits shown, passed to Intl.NumberFormat. | `number` | `semiGlobalDefault("InputNumber", "minimumFractionDigits")` |
@@ -38,7 +38,7 @@ import ApiType from '#/components/ApiType.astro';
 | maxlength | Maximum length of the input text. | `number` | `semiGlobalDefault("InputNumber", "maxlength")` |
 | minlength | Minimum length of the input text. | `number` | `semiGlobalDefault("InputNumber", "minlength")` |
 | placeholder | Placeholder text. | `string \| number` | `semiGlobalDefault("InputNumber", "placeholder")` |
-| validateStatus | Validation status: default, error, warning or success. | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("InputNumber", "validateStatus")` |
+| validateStatus | Validation status: default, error, warning or success. | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("InputNumber", "validateStatus")` |
 | inputStyle | Style of the native input. | `StyleValue` | `semiGlobalDefault("InputNumber", "inputStyle")` |
 | insetLabelId | The id of the inset label. | `string` | `undefined` |
 
@@ -73,6 +73,6 @@ import ApiType from '#/components/ApiType.astro';
 | focus             | Focuses the input; preventScroll prop applies when options.preventScroll is not given. | <ApiType detail={"(options?: FocusOptions \u007c undefined) => void"}>Type</ApiType>                                                                                          |
 | blur              | Removes focus.                                                                         | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                 |
 | select            | Selects all the text in the input.                                                     | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                 |
-| setSelectionRange | Sets the selection, with the parameters of the native setSelectionRange.               | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: \"none\" \u007c \"forward\" \u007c \"backward\" \u007c undefined) => void"}>Type</ApiType> |
+| setSelectionRange | Sets the selection, with the parameters of the native setSelectionRange.               | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: \"backward\" \u007c \"forward\" \u007c \"none\" \u007c undefined) => void"}>Type</ApiType> |
 | input             | The native input element; null after unmount.                                          | `HTMLInputElement \| null`                                                                                                                                                    |
 | nativeElement     | The root element of the component; null after unmount.                                 | `HTMLElement \| null`                                                                                                                                                         |

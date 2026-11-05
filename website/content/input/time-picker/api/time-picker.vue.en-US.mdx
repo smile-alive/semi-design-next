@@ -26,7 +26,7 @@ import ApiType from '#/components/ApiType.astro';
 | borderless | Borderless mode. | `boolean` | `semiDefault("TimePicker", "borderless", false)` |
 | showClear | Whether to show the clear button. | `boolean` | `semiDefault("TimePicker", "showClear", true)` |
 | inputReadOnly | Makes the input read-only, which avoids opening the virtual keyboard on mobile devices. | `boolean` | `semiDefault("TimePicker", "inputReadOnly", false)` |
-| validateStatus | Validation status. | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("TimePicker", "validateStatus")` |
+| validateStatus | Validation status. | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("TimePicker", "validateStatus")` |
 | insetLabelId | id of the insetLabel, referenced through aria-labelledby. | `string` | `undefined` |
 | inputStyle | Style of the input's root element. | `StyleValue` | `semiGlobalDefault("TimePicker", "inputStyle")` |
 | autofocus | Focuses the input on mount, which opens the panel. | `boolean` | `semiDefault("TimePicker", "autofocus", false)` |
@@ -34,7 +34,7 @@ import ApiType from '#/components/ApiType.astro';
 | preventScroll | Whether the browser should scroll the document to show the newly focused element; applies to the focus call inside the component. | `boolean` | `semiGlobalDefault("TimePicker", "preventScroll")` |
 | motion | Whether the popup animates. | `boolean` | `semiDefault("TimePicker", "motion", true)` |
 | autoAdjustOverflow | Whether to flip the popup automatically when it is clipped. | `boolean` | `semiDefault("TimePicker", "autoAdjustOverflow", true)` |
-| position | Popup position. Defaults to bottom when type is timeRange, and bottomLeft when it is time. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("TimePicker", "position")` |
+| position | Popup position. Defaults to bottom when type is timeRange, and bottomLeft when it is time. | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("TimePicker", "position")` |
 | popupClassName | Class name of the popup. | `string` | `semiGlobalDefault("TimePicker", "popupClassName")` |
 | popupStyle | Style of the popup. | `StyleValue` | `semiGlobalDefault("TimePicker", "popupStyle")` |
 | stopPropagation | Whether to stop click events on the popup from bubbling. | `boolean` | `semiDefault("TimePicker", "stopPropagation", true)` |

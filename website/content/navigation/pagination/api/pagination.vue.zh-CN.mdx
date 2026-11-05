@@ -8,12 +8,12 @@ import ApiType from '#/components/ApiType.astro';
 | showTotal | 是否显示总页数，size 为 small 时不显示。 | `boolean` | `semiDefault("Pagination", "showTotal", false)` |
 | pageSize | 每页条数，未传时取 pageSizeOpts 的第一项。非严格受控：每页条数选择器的选择保留在组件内部，只有该属性变为与当前不同的值时才会覆盖它，并回到第 1 页（受控时回到 currentPage）；用 v-model:pageSize 回写选择器的结果不会重置页码。 | `number` | `semiGlobalDefault("Pagination", "pageSize")` |
 | pageSizeOpts | 每页条数选择器的可选值；当前每页条数不在其中时按大小插入选项。 | `number[]` | <ApiType detail={"semiDefault(\"Pagination\", \"pageSizeOpts\", [...numbers.PAGE_SIZE_OPTION])"}>Type</ApiType> |
-| size | 尺寸，可选 default 或 small。 | `"small" \| "default"` | `semiDefault("Pagination", "size", "default")` |
+| size | 尺寸，可选 default 或 small。 | `"default" \| "small"` | `semiDefault("Pagination", "size", "default")` |
 | currentPage | 当前页码，对应 v-model:currentPage；传入后分页器受控，不传（undefined）时由组件自己管理。 | `number` | `semiGlobalDefault("Pagination", "currentPage")` |
 | defaultCurrentPage | 非受控时的初始页码。 | `number` | `semiDefault("Pagination", "defaultCurrentPage", 1)` |
 | showSizeChanger | 是否显示每页条数选择器，size 为 small 时不生效。开启后 hideOnSinglePage 不再生效。 | `boolean` | `semiDefault("Pagination", "showSizeChanger", false)` |
 | showQuickJumper | 是否显示快速跳转输入框，总页数小于 2 时禁用。 | `boolean` | `semiDefault("Pagination", "showQuickJumper", false)` |
-| popoverPosition | 省略页码浮层与每页条数下拉的位置。未传时每页条数下拉为 bottomLeft（RTL 下 bottomRight），省略页码浮层使用 Popover 的默认位置 bottom；size 为 small 时不使用。 | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("Pagination", "popoverPosition")` |
+| popoverPosition | 省略页码浮层与每页条数下拉的位置。未传时每页条数下拉为 bottomLeft（RTL 下 bottomRight），省略页码浮层使用 Popover 的默认位置 bottom；size 为 small 时不使用。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("Pagination", "popoverPosition")` |
 | hideOnSinglePage | 总页数小于 2 时是否隐藏分页器；每页条数选择器显示时不生效。 | `boolean` | `semiDefault("Pagination", "hideOnSinglePage", false)` |
 | hoverShowPageSelect | 仅 size 为 small 时生效：悬停或聚焦页码文字时打开页码列表。 | `boolean` | `semiGlobalDefault("Pagination", "hoverShowPageSelect")` |
 | disabled | 是否禁用。 | `boolean` | `semiDefault("Pagination", "disabled", false)` |

@@ -54,9 +54,9 @@ import ApiType from '#/components/ApiType.astro';
 | prefix | Prefix content. | `Snippet` | - |
 | preventScroll | Whether focusing inside the component stops the browser scrolling the document to show the focused element. | `boolean` | - |
 | remote | Whether to search remotely. Input is then not filtered locally and only calls onSearch, and the caller updates treeData asynchronously. | `boolean` | `false` |
-| restTagsPopoverProps | Configuration of the Popover of the remaining tags, such as position and trigger. See Popover. | <ApiType detail={"Omit\u003cPopoverProps, 'children' \u007c 'child' \u007c 'content'>"}>Type</ApiType> | - |
+| restTagsPopoverProps | Configuration of the Popover of the remaining tags, such as position and trigger. See Popover. | <ApiType detail={"Omit\u003cPopoverProps, 'child' \u007c 'children' \u007c 'content'>"}>Type</ApiType> | - |
 | searchPlaceholder | Placeholder of the search input; placeholder is used when it is not given. | `string` | - |
-| searchPosition | Where the search input is: trigger puts it in the trigger, custom leaves it to the caller. | `'trigger' \| 'custom'` | `"trigger"` |
+| searchPosition | Where the search input is: trigger puts it in the trigger, custom leaves it to the caller. | `'custom' \| 'trigger'` | `"trigger"` |
 | separator | The separator of a path in the search results and in the trigger in single mode. | `string` | `" / "` |
 | showClear | Whether to show the clear button. | `boolean` | `false` |
 | showNext | When the submenu expands: on click or on hover. | `'click' \| 'hover'` | `"click"` |

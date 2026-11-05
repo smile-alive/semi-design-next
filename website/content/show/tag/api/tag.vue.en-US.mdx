@@ -6,9 +6,9 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | tabindex | tabindex of the tag. An interactive tag defaults to 0. | `number` | `semiGlobalDefault("Tag", "tabindex")` |
 | tagKey | Unique identifier of the tag, passed as the second argument of close. | `string \| number` | `semiGlobalDefault("Tag", "tagKey")` |
-| size | Tag size: small, default or large. | `"default" \| "small" \| "large"` | `semiDefault("Tag", "size", "default")` |
-| color | Tag color: one of the 16 palette colors or white. | <ApiType detail={"\"grey\" \u007c \"red\" \u007c \"pink\" \u007c \"purple\" \u007c \"violet\" \u007c \"indigo\" \u007c \"blue\" \u007c \"light-blue\" \u007c \"cyan\" \u007c \"teal\" \u007c \"green\" \u007c \"light-green\" \u007c \"lime\" \u007c \"yellow\" \u007c \"amber\" \u007c \"orange\" \u007c \"white\""}>Type</ApiType> | `semiDefault("Tag", "color", "grey")` |
-| type | Style type: light, ghost or solid. | `"light" \| "solid" \| "ghost"` | `semiDefault("Tag", "type", "light")` |
+| size | Tag size: small, default or large. | `"default" \| "large" \| "small"` | `semiDefault("Tag", "size", "default")` |
+| color | Tag color: one of the 16 palette colors or white. | <ApiType detail={"\"amber\" \u007c \"blue\" \u007c \"cyan\" \u007c \"green\" \u007c \"grey\" \u007c \"indigo\" \u007c \"light-blue\" \u007c \"light-green\" \u007c \"lime\" \u007c \"orange\" \u007c \"pink\" \u007c \"purple\" \u007c \"red\" \u007c \"teal\" \u007c \"violet\" \u007c \"white\" \u007c \"yellow\""}>Type</ApiType> | `semiDefault("Tag", "color", "grey")` |
+| type | Style type: light, ghost or solid. | `"ghost" \| "light" \| "solid"` | `semiDefault("Tag", "type", "light")` |
 | closable | Whether the tag can be closed. | `boolean` | `semiDefault("Tag", "closable", false)` |
 | visible | Whether the tag is visible, used with v-model:visible. When given, this value decides. | `boolean` | `semiGlobalDefault("Tag", "visible")` |
 | avatarSrc | Avatar image URL. Setting it makes an avatar tag. | `string` | `semiGlobalDefault("Tag", "avatarSrc")` |

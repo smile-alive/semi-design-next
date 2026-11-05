@@ -18,7 +18,7 @@ import ApiType from '#/components/ApiType.astro';
 | clearIcon | 清除按钮的图标，可传 ReactNode。仅 `showClear` 为 `true` 时有效。 | `React.ReactNode` | - |
 | composition | 是否启用输入法组合模式。开启后组合输入期间不触发 `onChange`，组合结束后触发一次。 | `boolean` | - |
 | currency | 货币种类，可选值有 CNY、EUR、USD 等。设为 `true` 时使用 `defaultCurrency`，未设置时为语言包对应的货币。 | `string \| boolean` | - |
-| currencyDisplay | 货币展示方式，可选 `symbol`、`code`、`name`。 | `'code' \| 'symbol' \| 'name'` | - |
+| currencyDisplay | 货币展示方式，可选 `symbol`、`code`、`name`。 | `'code' \| 'name' \| 'symbol'` | - |
 | defaultCurrency | `currency` 为 `true` 时使用的货币种类，优先级为自身属性、全局默认值、语言包。 | `string` | - |
 | defaultValue | 非受控时的初始值。 | `number \| string` | - |
 | disabled | 是否禁用。未设置时使用所在 `InputGroup` 的值。 | `boolean` | - |
@@ -64,7 +64,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClear | 是否显示清除按钮。 | `boolean` | - |
 | showClearIgnoreDisabled | 内部属性，由 DatePicker 设置，使用方一般不需要传入。 | `boolean` | - |
 | showCurrencySymbol | 是否显示货币符号、代码或名称，仅货币模式下生效。 | `boolean` | `true` |
-| size | 输入框大小，可选 `default`、`small`、`large`。所在 `InputGroup` 设置了 `size` 时以其为准。 | `'small' \| 'large' \| 'default'` | `"default"` |
+| size | 输入框大小，可选 `default`、`small`、`large`。所在 `InputGroup` 设置了 `size` 时以其为准。 | `'default' \| 'large' \| 'small'` | `"default"` |
 | step | 每次改变的步长，可以为小数。 | `number` | `1` |
 | style | 根元素（`.semi-input-number`）的样式。 | `React.CSSProperties` | - |
 | suffix | 后缀内容，显示在输入框内部的右侧。 | `React.ReactNode` | - |
@@ -81,4 +81,4 @@ import ApiType from '#/components/ApiType.astro';
 | input             | 原生 `input` 元素，卸载后为 `null`。                                          | `HTMLInputElement \| null`                                                                                                                             |
 | nativeElement     | 组件根元素（`.semi-input-number`），卸载后为 `null`。                         | `HTMLElement \| null`                                                                                                                                  |
 | select            | 选中输入框中的全部文本。                                                      | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                          |
-| setSelectionRange | 设置输入框的选区，参数同原生 `setSelectionRange`。                            | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: 'forward' \u007c 'backward' \u007c 'none') => void"}>Type</ApiType> |
+| setSelectionRange | 设置输入框的选区，参数同原生 `setSelectionRange`。                            | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: 'backward' \u007c 'forward' \u007c 'none') => void"}>Type</ApiType> |

@@ -29,7 +29,7 @@ import ApiType from '#/components/ApiType.astro';
 | radioGroupProps | type 为 radio 时单选组的属性，写法同 RadioGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | <ApiType detail={"Omit\u003cRadioGroupProps, 'value'>"}>Type</ApiType> | - |
 | ref | 根元素的引用：popup 模式为 SideSheet 的根元素，modal 模式为 Modal 的最外层元素。 | <ApiType detail={"Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
 | renderContent | 包裹反馈内容：接收内置内容（type 为 custom 时是子节点），返回包裹后的节点。 | <ApiType detail={"(content: JSX.Element) => JSX.Element"}>Type</ApiType> | - |
-| role | 对话框的 role，可选 dialog 或 alertdialog，透传给当前模式的 Modal 或 SideSheet。 | `'dialog' \| 'alertdialog'` | - |
+| role | 对话框的 role，可选 dialog 或 alertdialog，透传给当前模式的 Modal 或 SideSheet。 | `'alertdialog' \| 'dialog'` | - |
 | size | 弹层尺寸，透传给当前模式的 Modal 或 SideSheet。 | `Size` | - |
 | style | 内联样式，落在弹层的内容盒子上，位置见下方说明。 | `JSX.CSSProperties \| string` | - |
 | textAreaProps | type 为 text 与 emoji 时多行输入框的属性，写法同 TextArea 的属性。 | <ApiType detail={"Omit\u003cTextAreaProps, 'value'>"}>Type</ApiType> | - |

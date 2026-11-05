@@ -44,7 +44,7 @@ import ApiType from '#/components/ApiType.astro';
 | spacing | Distance in pixels between the popup and the trigger. Defaults to 4 for a top-level menu and 2 for a nested submenu. | `number \| { x: number; y: number; }` | - |
 | stopPropagation | Whether click, mousedown and focus in/out events on the popup stop propagating. Defaults to false. | `boolean` | - |
 | style | Style of the menu container `.semi-dropdown`, as an object with kebab-case keys such as `'margin-top'`, or a string. | `JSX.CSSProperties \| string` | - |
-| trigger | What shows the menu: hover, focus, click, custom or contextMenu. Defaults to hover. With custom, visible alone decides. | `'hover' \| 'focus' \| 'click' \| 'custom' \| 'contextMenu'` | - |
+| trigger | What shows the menu: hover, focus, click, custom or contextMenu. Defaults to hover. With custom, visible alone decides. | `'click' \| 'contextMenu' \| 'custom' \| 'focus' \| 'hover'` | - |
 | visible | Whether the menu is shown. Used with trigger custom. When given, this value decides, and the trigger, a click outside and Esc only request a change through onVisibleChange. | `boolean` | - |
 | wrapperClassName | Class name of the span that wraps the trigger when a wrapper is needed. | `string` | - |
 | wrapperId | id of the popup element, referenced by the trigger's ARIA attributes. Generated when omitted. | `string` | - |

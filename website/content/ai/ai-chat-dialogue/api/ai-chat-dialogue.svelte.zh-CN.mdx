@@ -5,7 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | action | 自定义消息操作栏的 snippet，参数含默认按钮数组 `defaultActions`、按名称索引的 `defaultActionsObj`、消息 `message` 与 `class`；按钮不显示时（如消息未完成）对应的键不存在。 | <ApiType detail={"Snippet\u003c[AIChatDialogueActionSnippetProps]>"}>Type</ApiType> | - |
-| align | 对话布局方式，可选 leftRight（左右分布）或 leftAlign（左对齐）。 | `'leftRight' \| 'leftAlign'` | `"leftRight"` |
+| align | 对话布局方式，可选 leftRight（左右分布）或 leftAlign（左对齐）。 | `'leftAlign' \| 'leftRight'` | `"leftRight"` |
 | avatar | 自定义头像的 snippet，参数含默认头像 `defaultAvatar`、消息 `message` 与角色 `role`。 | <ApiType detail={"Snippet\u003c[AIChatDialogueAvatarSnippetProps]>"}>Type</ApiType> | - |
 | chats | 对话消息列表，可用 `bind:chats` 双向绑定。不绑定时，组件内的增删改（如删除消息）只在组件内生效；`onChatsChange` 在每次变更时只调用一次。 | `Message[]` | - |
 | content | 自定义内容区域的 snippet，参数含默认内容 `defaultContent`、消息 `message`、角色 `role` 与 `class`。`defaultContent` 与默认渲染一致，包含引用列表与加载指示。 | <ApiType detail={"Snippet\u003c[AIChatDialogueContentSnippetProps]>"}>Type</ApiType> | - |

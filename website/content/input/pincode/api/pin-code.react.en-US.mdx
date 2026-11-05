@@ -9,7 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | count | Number of digits, which is also the number of inputs. | `number` | `6` |
 | defaultValue | Initial content when uncontrolled. | `string` | - |
 | disabled | Whether every input is disabled. | `boolean` | - |
-| format | Format limit for a single character: `number` allows digits only, `mixed` allows digits and letters, and a regular expression or function judges each character, and a function allows the character by returning `true`. | <ApiType detail={"'number' \u007c 'mixed' \u007c RegExp \u007c ((value: string) => boolean)"}>Type</ApiType> | `"number"` |
+| format | Format limit for a single character: `number` allows digits only, `mixed` allows digits and letters, and a regular expression or function judges each character, and a function allows the character by returning `true`. | <ApiType detail={"'mixed' \u007c 'number' \u007c RegExp \u007c ((value: string) => boolean)"}>Type</ApiType> | `"number"` |
 | onChange | Called when the content changes, with the current content as a string. | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
 | onComplete | Called once every digit is filled, with the current content as a string. | <ApiType detail={"(value: string) => void"}>Type</ApiType> | - |
 | ref | Reference to the handle, through which the methods below are called. | <ApiType detail={"React.Ref\u003cPinCodeHandle>"}>Type</ApiType> | - |

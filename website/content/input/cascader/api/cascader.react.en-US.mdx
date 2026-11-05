@@ -59,7 +59,7 @@ import ApiType from '#/components/ApiType.astro';
 | remote | Whether to search remotely. Input is then not filtered locally; only `onSearch` is called, and the caller updates `treeData` asynchronously, as Select's remote does. | `boolean` | `false` |
 | restTagsPopoverProps | Props of the Popover that shows the remaining tags, such as `position` and `trigger`; the type is PopoverProps. | `PopoverProps` | `{}` |
 | searchPlaceholder | Placeholder of the search input; `placeholder` is used when it is not set. | `string` | - |
-| searchPosition | Where the search input is: `trigger` puts it in the trigger, `custom` leaves it to the caller, who passes the keyword with the ref's `search` method. | `'trigger' \| 'custom'` | `"trigger"` |
+| searchPosition | Where the search input is: `trigger` puts it in the trigger, `custom` leaves it to the caller, who passes the keyword with the ref's `search` method. | `'custom' \| 'trigger'` | `"trigger"` |
 | separator | Separator between the levels of a path, used in the search results and in the trigger in single mode. | `string` | `" / "` |
 | showClear | Whether to show the clear button. | `boolean` | `false` |
 | showNext | When a submenu expands: `click` or `hover`. | `ShowNextType` | `"click"` |

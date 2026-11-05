@@ -47,7 +47,7 @@ import ApiType from '#/components/ApiType.astro';
 | uploadButton | 替换上传按钮的 snippet。 | `Snippet` | - |
 | uploadProps | 传给 Upload 的属性，`fileList` 与 `children` 由 Chat 管理，上传按钮的内容使用 `uploadButton` snippet；添加或移除附件时 Chat 自己处理 `onChange`，其余回调照常传入。未设置 `action` 时为空字符串，需要自行提供 `customRequest` 或 `action` 才会上传。 | `ChatUploadProps` | - |
 | uploadTip | 上传按钮提示文字的 snippet。 | `Snippet` | - |
-| uploadTipProps | 上传按钮提示 Tooltip 的属性，不含 `content`；提示文字使用 `uploadTip` snippet。 | <ApiType detail={"Omit\u003cTooltipProps, 'content' \u007c 'children' \u007c 'child'>"}>Type</ApiType> | - |
+| uploadTipProps | 上传按钮提示 Tooltip 的属性，不含 `content`；提示文字使用 `uploadTip` snippet。 | <ApiType detail={"Omit\u003cTooltipProps, 'child' \u007c 'children' \u007c 'content'>"}>Type</ApiType> | - |
 
 **Methods**
 

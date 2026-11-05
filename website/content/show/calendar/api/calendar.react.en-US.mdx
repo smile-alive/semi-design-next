@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | height | Height of the calendar; a number is in pixels. | `number \| string` | `600` |
 | markWeekend | Shows weekend columns in grey to tell them from weekdays. | `boolean` | `false` |
 | minEventHeight | Minimum height in pixels of events in the day, range and week views. Without it the height has no minimum. | `number` | - |
-| mode | View mode: `day`, `week`, `month` or `range`. The view switches as soon as it changes. | `'day' \| 'week' \| 'month' \| 'range'` | `"week"` |
+| mode | View mode: `day`, `week`, `month` or `range`. The view switches as soon as it changes. | `'day' \| 'month' \| 'range' \| 'week'` | `"week"` |
 | onClick | Called when a date cell is clicked, with the event and the date of the cell. The unit is half an hour in the day, week and range views and one day in the month view. | <ApiType detail={"(e: React.MouseEvent, value: Date) => void"}>Type</ApiType> | - |
 | onClose | Called when the card showing all events of a day closes in the month view: the click event for the close button or a second click on "N more", the keyboard event for Esc, and `null` for a click outside. | <ApiType detail={"(e: React.MouseEvent \u007c KeyboardEvent \u007c null) => void"}>Type</ApiType> | - |
 | onMoreClick | Called when a click on "N more" opens the card in the month view, with the event, the date and the number of collapsed events. It is not called when a second click closes the card. | <ApiType detail={"(e: React.MouseEvent, date: Date, remaining: number) => void"}>Type</ApiType> | - |

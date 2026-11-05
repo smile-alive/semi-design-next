@@ -42,7 +42,7 @@ import ApiType from '#/components/ApiType.astro';
 | disabled | Whether the component is disabled. | `boolean` | `undefined` |
 | size | Size of the select box: small, default or large. | `Size` | `undefined` |
 | borderless | Borderless mode. | `boolean` | `semiDefault("TreeSelect", "borderless", false)` |
-| validateStatus | Validation status, which only affects the style: default, warning or error. | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("TreeSelect", "validateStatus")` |
+| validateStatus | Validation status, which only affects the style: default, warning or error. | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("TreeSelect", "validateStatus")` |
 | insetLabelId | The id of the element around the insetLabel slot, for aria-labelledby to point at; an internal id is used when omitted. | `string` | `undefined` |
 | showClear | Whether the select box shows a clear button when it has a value. | `boolean` | `semiDefault("TreeSelect", "showClear", false)` |
 | clickToHide | Whether the dropdown closes after a node is selected in single mode. | `boolean` | `semiDefault("TreeSelect", "clickToHide", true)` |
@@ -50,7 +50,7 @@ import ApiType from '#/components/ApiType.astro';
 | defaultOpen | Opens the dropdown on mount. | `boolean` | `semiDefault("TreeSelect", "defaultOpen", false)` |
 | motion | Whether the dropdown animates in and out. | `boolean` | `semiDefault("TreeSelect", "motion", true)` |
 | autoAdjustOverflow | Whether the dropdown flips when it would be clipped. | `boolean` | `semiDefault("TreeSelect", "autoAdjustOverflow", true)` |
-| position | Position of the dropdown; see the position of Tooltip. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "position")` |
+| position | Position of the dropdown; see the position of Tooltip. | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "position")` |
 | stopPropagation | Whether click events on the dropdown stop propagating; a string is treated as a boolean. | `string \| boolean` | `semiDefault("TreeSelect", "stopPropagation", true)` |
 | dropdownClassName | Class of the dropdown. | `string` | `semiGlobalDefault("TreeSelect", "dropdownClassName")` |
 | dropdownStyle | Style of the dropdown. | `StyleValue` | `semiGlobalDefault("TreeSelect", "dropdownStyle")` |

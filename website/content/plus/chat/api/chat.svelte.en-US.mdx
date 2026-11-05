@@ -47,7 +47,7 @@ import ApiType from '#/components/ApiType.astro';
 | uploadButton | Snippet that replaces the upload button. | `Snippet` | - |
 | uploadProps | Props passed to Upload. Chat owns `fileList` and `children`, and the upload button content is the `uploadButton` snippet; Chat handles `onChange` itself when an attachment is added or removed, and the other callbacks pass through. `action` falls back to an empty string, so nothing is uploaded unless a `customRequest` or an `action` is given. | `ChatUploadProps` | - |
 | uploadTip | Snippet for the upload button's tip text. | `Snippet` | - |
-| uploadTipProps | Props of the upload button's Tooltip, without `content`; the tip text is the `uploadTip` snippet. | <ApiType detail={"Omit\u003cTooltipProps, 'content' \u007c 'children' \u007c 'child'>"}>Type</ApiType> | - |
+| uploadTipProps | Props of the upload button's Tooltip, without `content`; the tip text is the `uploadTip` snippet. | <ApiType detail={"Omit\u003cTooltipProps, 'child' \u007c 'children' \u007c 'content'>"}>Type</ApiType> | - |
 
 **Methods**
 
