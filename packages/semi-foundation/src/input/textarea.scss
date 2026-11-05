@@ -165,6 +165,13 @@ $module: #{$prefix}-input;
         color: $color-input_placeholder-text-default;
     }
 
+    // same as the input: only a transition outranks the UA's !important autofill colors
+    &:autofill {
+        transition:
+            background-color 0s 1000000s,
+            color 0s 1000000s;
+    }
+
     &-showClear {
         padding-inline-end: $spacing-textarea_withShowClear-paddingRight;
     }

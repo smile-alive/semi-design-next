@@ -10,6 +10,9 @@ export function splitControlAttrs(attrs: Record<string, unknown>, isControlKey: 
 /** class and style size the visual root; every other attribute belongs to the inner control */
 export const isNotClassOrStyle = (key: string) => key !== 'class' && key !== 'style';
 
+/** A valueless template attribute (`<Input readOnly />`) arrives as an empty string, so Boolean() would read it as off */
+export const isBooleanAttrOn = (value: unknown) => value !== undefined && value !== null && value !== false;
+
 export const isAriaKey = (key: string) => key.startsWith('aria-');
 
 const NATIVE_INPUT_KEYS = new Set(['id', 'name', 'tabindex', 'tabIndex', 'autofocus', 'onFocus', 'onBlur']);

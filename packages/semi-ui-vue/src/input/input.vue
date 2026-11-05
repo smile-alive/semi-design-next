@@ -5,7 +5,7 @@
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import '@fibrae/semi-foundation/input/input.scss';
     import { IconClear, IconEyeClosedSolid, IconEyeOpened } from '@fibrae/semi-icons-vue';
-    import { isNotClassOrStyle, splitControlAttrs } from '../_base/control-attrs';
+    import { isBooleanAttrOn, isNotClassOrStyle, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import slotKind from '../_base/slot-kind';
@@ -289,7 +289,7 @@
             :maxlength="getLength ? undefined : props.maxlength"
             :minlength="InputFoundation.getNativeMinLength({ minLength: props.minlength, getValueLength: getLength }, shown)"
             :placeholder="props.placeholder?.toString()"
-            :readonly="props.readonly || Boolean(attrs.readOnly)"
+            :readonly="props.readonly || isBooleanAttrOn(attrs.readOnly)"
             :style="props.inputStyle"
             :type="InputFoundation.getInputType(props.type, props.mode, state.eyeClosed)"
             :value="elementText()"

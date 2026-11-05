@@ -685,7 +685,7 @@ describe('TextArea', () => {
         expect(onChange).toHaveBeenCalledWith('', expect.objectContaining({ type: 'click' }));
         expectTypeOf<React.MouseEvent<HTMLButtonElement>>().toExtend<TextAreaChangeEvent>();
         expectTypeOf<React.CompositionEvent<HTMLTextAreaElement>>().toExtend<TextAreaChangeEvent>();
-        expectTypeOf<FocusEvent>().toExtend<TextAreaChangeEvent>();
+        expectTypeOf<React.FocusEvent<HTMLDivElement>>().toExtend<TextAreaChangeEvent>();
     });
 
     it('不声明从不调用的 onPressEnter，回车入口只有 onEnterPress', () => {
