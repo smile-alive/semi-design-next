@@ -308,7 +308,7 @@ describe('Resizable', () => {
         expect(sizeOf(container)).toEqual({ width: '200px', height: '150px' });
     });
 
-    it('拖动时受控尺寸比指针落后一次移动', () => {
+    it('拖动时受控尺寸跟随指针', () => {
         function Controlled() {
             const [size, setSize] = useState<ComponentProps<typeof Resizable>['size']>({ width: 200, height: 100 });
             return <Resizable size={size} onChange={(next) => setSize(next)} />;
@@ -316,9 +316,9 @@ describe('Resizable', () => {
         const { container } = render(<Controlled />);
         down(getHandle(container, 'right'), [100, 100]);
         move([150, 100]);
-        expect(sizeOf(container).width).toBe('200px');
-        move([170, 100]);
         expect(sizeOf(container).width).toBe('250px');
+        move([170, 100]);
+        expect(sizeOf(container).width).toBe('270px');
         up();
         expect(sizeOf(container).width).toBe('270px');
     });

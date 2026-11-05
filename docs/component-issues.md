@@ -259,7 +259,7 @@
 
 ### Resizable、ResizeGroup、ResizeItem、ResizeHandler
 
-- 保持原样：React Handler 的 `direction`、`onResizeStart`、`disabled` 声明但不生效（Vue、Solid 不提供）；受控 size 拖动时显示落后一次 mousemove（React、Vue）；动态增删子项不重新分配比例；ResizeGroup 直写子项 `style.width/height`。
+- 保持原样：React Handler 的 `direction`、`onResizeStart`、`disabled` 声明但不生效（Vue、Solid 不提供）；动态增删子项不重新分配比例；ResizeGroup 直写子项 `style.width/height`。
 - 带内边距的项在真实浏览器中的拖动最小值只有 jsdom 用例覆盖。UNKNOWN（补浏览器用例）。
 - 分组不卸载、只移除正在拖动的 ResizeHandler 时，结束事件被忽略，透明背景层一直挡住页面（React、Solid）。UNKNOWN（影响：拖动中动态移除手柄；解决条件：确认节点移除后 `lostpointercapture` 的派发目标）。
 - Solid：分隔条的 `aria-valuemin`、`aria-valuemax`、`aria-valuenow` 与各项尺寸依赖布局，挂载后才写入，服务端 HTML 中分隔条可聚焦但没有这些值。Vue：ResizeGroup 的项尺寸（`width: calc(...)`）与分隔条的 `aria-valuenow`、`aria-controls` 同样挂载后才写入。已知限制（升级条件：需要首帧即正确时，按 props 推算初值）。
