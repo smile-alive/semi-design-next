@@ -89,6 +89,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
     // StrictMode and React Activity replay init on this instance after destroy, over a dropdown and focus the user
     // may have changed since: defaultOpen and autoFocus belong to the first mount
     #initialized = false;
+    #hiddenByWidth = 0;
     readonly #typeahead = new Typeahead();
     // close() defers clearing the search to the end of the leave animation, which the host reports as popoverClose
     readonly #events = new EventEmitter();
@@ -1030,19 +1031,20 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         this.adapter.updateScrollTop(focusIndex === -1 ? undefined : focusIndex);
     };
 
-    updateOverflowItemCount = (selectionLength: number, overFlowCount?: number) => {
+    /**
+     * The hidden count is what maxTagCount hides plus what the width hides. OverflowList reports only when its overflow
+     * changes, so the width part reported last is kept for selection changes that leave the visible tags as they are.
+     */
+    updateOverflowItemCount = (selectionLength: number, hiddenByWidth?: number) => {
         const { maxTagCount, ellipsisTrigger } = this.getProps();
         if (!ellipsisTrigger) {
             return;
         }
-        if (overFlowCount) {
-            this.adapter.updateOverflowItemCount(overFlowCount);
-        } else if (typeof maxTagCount === 'number') {
-            if (selectionLength - maxTagCount > 0) {
-                this.adapter.updateOverflowItemCount(selectionLength - maxTagCount);
-            } else {
-                this.adapter.updateOverflowItemCount(0);
-            }
+        if (hiddenByWidth !== undefined) {
+            this.#hiddenByWidth = hiddenByWidth;
+        }
+        if (typeof maxTagCount === 'number') {
+            this.adapter.updateOverflowItemCount(Math.max(selectionLength - maxTagCount, 0) + this.#hiddenByWidth);
         }
     };
 
