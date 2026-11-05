@@ -175,6 +175,19 @@
     {/if}
     <!-- inside the root to keep one root; its content is moved out -->
     {#if canPreview}
-        <PreviewInner {...innerProps} {alt} {closeIcon} crossOrigin={crossOrigin ?? previewObject?.crossOrigin} {leftIcon} onVisibleChange={foundation.handlePreviewVisibleChange} {previewMenu} {rightIcon} {setDownloadName} src={previewSrc} {title} visible={previewVisible} />
+        <PreviewInner
+            {...innerProps}
+            {alt}
+            {closeIcon}
+            crossOrigin={crossOrigin ?? previewObject?.crossOrigin}
+            {leftIcon}
+            onVisibleChange={foundation.handlePreviewVisibleChange}
+            {previewMenu}
+            {rightIcon}
+            setDownloadName={setDownloadName ?? previewObject?.setDownloadName}
+            src={previewSrc}
+            {title}
+            visible={previewVisible}
+        />
     {/if}
 </div>

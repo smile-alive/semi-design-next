@@ -442,6 +442,7 @@
 - Svelte：分组列表是数据，由 `ImagePreview` 的 `src`（`string | string[]`）给出，Image 不向父级注册；Image 用自己的 `src`（或 `preview.src` 的第一项）在列表里找索引，找不到或 `preview` 为 false 时不入组，前者单独预览；不再按 DOM 顺序排序，不支持「src 加子元素」的组合写法；逐张的 `alt`、`title` 改为 `ImagePreview` 的 `titles`、`alts` 数组属性（按索引对应）。
 - Svelte：没有 `defaultVisible`、`defaultCurrentIndex`，`visible`、`currentIndex` 可绑定（`bind:visible`、`bind:currentIndex`，函数绑定与单向传值也成立），Image 的 `preview` 对象不含 `defaultCurrentIndex`；插槽改为同名 snippet：`title({ title, index })`、`previewMenu(MenuProps)`、`leftIcon({ index })`、`rightIcon({ index })`、`closeIcon`，Image 另有 `placeholder`、`fallback`（`fallback` 可为字符串或 snippet）；`MenuProps.menuItems` 是渲染 9 个默认底部按钮的 snippet，不含分隔线。
 - Svelte：Image 的 `onLoad`、`onError` 是带 Event 的 Semi 回调；`class`、`style` 落在根 div，其余未声明属性落在 img；未入组的 Image 加载成功后才可打开预览，入组的缩略图无需加载；分组 `lazyLoad` 时缩略图先只有 `data-src`，进入视口后才给 `src`。
+- Image 的 `preview.setDownloadName` 生效，优先级为顶层 `setDownloadName` > `preview` > 全局默认值。Svelte：全局默认值先于 `preview`。
 
 ### Popconfirm
 
