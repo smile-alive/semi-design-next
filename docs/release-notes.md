@@ -850,6 +850,7 @@
 - Svelte：AIChatInput 的 `popoverProps`、`templatesStyle` 样式只接受字符串；`uploadProps` 不含 `fileList`、`listType`、`children`，初始附件用 `uploadProps.defaultFileList`。
 - Svelte：`Configure` 的子项是 `Configure.Select`、`Configure.Button`、`Configure.Mcp`、`Configure.RadioButton`、`Configure.Item`；不提供 `getConfigureItem`，自定义项写 `<Configure.Item component={X} field="..." />`。
 - Svelte：AIChatDialogue 的代码块有语言栏、复制按钮与语法高亮，复制的内容取自 `node` 的源码；Chat 消息里带语言的代码块同样语法高亮。
+- Chat：`uploadProps.beforeRemove` 返回或 resolve 为 `false`、或 reject 时保留附件，删除后调用 `uploadProps.onRemove`。
 
 ### Spin、Skeleton
 

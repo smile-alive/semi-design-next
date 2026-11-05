@@ -48,6 +48,8 @@ function InputBox(props: InputBoxProps) {
             setAttachment: (attachment) => base.setState({ attachment }),
             notifySend: (content, attachment) => base.getProps().onSend?.(content, attachment),
             notifyUploadChange: (props) => base.getProps().uploadProps?.onChange?.(props),
+            notifyBeforeRemove: (file, attachment) => base.getProps().uploadProps?.beforeRemove?.(file, attachment),
+            notifyRemove: (fileInstance, attachment, file) => base.getProps().uploadProps?.onRemove?.(fileInstance, attachment, file),
             manualUpload: (files) => base.getProps().uploadRef?.current?.insert(files),
         })
     );

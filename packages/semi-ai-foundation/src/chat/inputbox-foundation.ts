@@ -10,6 +10,9 @@ export interface InputBoxAdapter<P = Record<string, any>, S = Record<string, any
     setAttachment: (attachment: any[]) => void;
     notifySend: (content: string, attachment: any[]) => void;
     notifyUploadChange: (props: any) => void;
+    /** Resolves to false to keep the attachment, like Upload's beforeRemove */
+    notifyBeforeRemove: (file: any, attachment: any[]) => boolean | void | Promise<boolean | void>;
+    notifyRemove: (fileInstance: File | undefined, attachment: any[], file: any) => void;
     /** Adds pasted files to the attachments through the same Upload as dropped files */
     manualUpload: (files: File[]) => void;
 }
@@ -54,14 +57,31 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
     };
 
     onAttachmentDelete = (props: any) => {
-        const { content, attachment } = this.getStates();
-        const newAttachMent = attachment.filter((item) => item.uid !== props.uid);
-        this.adapter.setAttachment(newAttachMent);
-        this.adapter.notifyUploadChange({ fileList: newAttachMent, currentFile: props });
-        this.adapter.notifyInputChange({
-            inputValue: content,
-            attachment: newAttachMent,
-        });
+        const remove = (allowed: boolean | void) => {
+            if (allowed === false) {
+                return;
+            }
+            // the list may have changed while beforeRemove was pending
+            const { content, attachment } = this.getStates();
+            const newAttachMent = attachment.filter((item) => item.uid !== props.uid);
+            if (newAttachMent.length === attachment.length) {
+                return;
+            }
+            this.adapter.setAttachment(newAttachMent);
+            this.adapter.notifyRemove(props.fileInstance, newAttachMent, props);
+            this.adapter.notifyUploadChange({ fileList: newAttachMent, currentFile: props });
+            this.adapter.notifyInputChange({
+                inputValue: content,
+                attachment: newAttachMent,
+            });
+        };
+        const allowed = this.adapter.notifyBeforeRemove(props, this.getState('attachment'));
+        if (allowed instanceof Promise) {
+            // a rejected beforeRemove keeps the attachment, like Upload's
+            allowed.then(remove, () => {});
+        } else {
+            remove(allowed);
+        }
     };
 
     onSend = (_e: unknown) => {
