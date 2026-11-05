@@ -198,6 +198,9 @@
 - Svelte：插槽改为同名 snippet：`trigger`、`date`、`fullDate`、`topSlot`、`bottomSlot`、`leftSlot`、`rightSlot`、`prefix`、`insetLabel`、`clearIcon`，分隔符节点的 snippet 叫 `rangeSeparatorNode`（`rangeSeparator` 已是字符串 prop），`trigger` 参数的 `componentProps` 不含原生属性、`on*` 回调与 snippet。
 - Svelte：`inputStyle`、`dropdownStyle`、`dropdownClassName` 只接受字符串；`inputReadOnly` 只禁止键入、保留清除按钮；`open()`、`close()`、`focus(focusType?)`、`blur()` 经 `bind:this` 调用。
 - Svelte：`needConfirm` 下点清除按钮立即写回空值（`undefined`，范围类型为 `[]`），不等确认；`autoSwitchDate` 选年份只通知一次 `onChange`；范围类型的清除按钮因值清空而消失时（键盘清除、指针清除、父级清空），焦点交给起始输入框，焦点原本不在清除按钮上时不移交；单值类型清除后焦点落在输入框；实例 `open()`、`close()` 在用户交互后仍有效；新增类型导出 `DatePickerHandle`（`open`、`close`、`focus(focusType?)`、`blur`）。
+- 受控 `value` 加 `autoSwitchDate` 时，选年只触发一次 `onChange`。范围选择中一侧显示时间或年月列表时，另一侧月份周数变化后列表选中项保持居中。React：input 上不再有 `format` 属性。
+- 设置 `timeZone` 后，输入按目标时区解析：系统时区夏令时跳过、目标时区有效的时刻可以输入并正确显示；目标时区自身跳过的时刻一律不接受。
+- `utcToZonedTime`（TimePicker 同用）遇到系统时区跳过的时刻不再后移一小时，返回 `TZDate`（`Date` 子类），其 `toISOString()` 带偏移而不带 `Z`。`TZDate` 在首次加载时从 `Date.prototype` 复制 getter，测试中 mock `Date` 且用 `timeZone` 时，要在 mock 之前加载组件。
 
 ### Tooltip、Popover
 

@@ -1,4 +1,4 @@
-import { format, set, addMonths, subMonths, subYears, addYears, differenceInCalendarMonths, differenceInCalendarYears, isSameDay, parseISO } from 'date-fns';
+import { format, set, addMonths, subMonths, subYears, addYears, differenceInCalendarMonths, isSameDay, parseISO } from 'date-fns';
 import { isEqual } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import type { Locale } from '../locale/interface';
@@ -15,11 +15,6 @@ import { strings } from './constants';
 import type { DateInputFoundationProps, DateOffsetType, DisabledDateType, DisabledTimeType, PresetPosition, RenderDateType, RenderFullDateType, ValueType } from './foundation';
 import type { FocusRecords, MonthDayInfo } from './month-foundation';
 import type { YearAndMonthFoundationProps } from './year-and-month-foundation';
-
-const dateDiffFns = {
-    month: differenceInCalendarMonths,
-    year: differenceInCalendarYears,
-};
 
 const dateCalcFns = {
     prevMonth: subMonths,
@@ -201,12 +196,6 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         this.#initDateRangePickerFromValue(values, true);
     }
 
-    #getDiff(type: 'month' | 'year', target: Date, panelType: PanelType) {
-        const panelDetail = this.#getPanelDetail(panelType);
-        const diff = dateDiffFns[type] && dateDiffFns[type](target, panelDetail.pickerDate);
-        return diff;
-    }
-
     #getPanelDetail(panelType: PanelType) {
         return panelType === strings.PANEL_TYPE_RIGHT ? this.getState('monthRight') : this.getState('monthLeft');
     }
@@ -290,17 +279,12 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
 
     #toMonth(panelType: PanelType, target: Date) {
         const { type } = this.adapter.getProps();
-        const diff = this.#getDiff('month', target, panelType);
+        const diff = differenceInCalendarMonths(target, this.#getPanelDetail(panelType).pickerDate);
         this.#handleYearOrMonthChange(diff < 0 ? 'prevMonth' : 'nextMonth', panelType, Math.abs(diff), false);
 
         if (isRangeType(type)) {
             this.handleSyncChangeMonths({ panelType, target });
         }
-    }
-
-    #toYear(panelType: PanelType, target: Date) {
-        const diff = this.#getDiff('year', target, panelType);
-        this.#handleYearOrMonthChange(diff < 0 ? 'prevYear' : 'nextYear', panelType, Math.abs(diff), false);
     }
 
     #handleYearOrMonthChange(type: YearMonthChangeType, panelType: PanelType = strings.PANEL_TYPE_LEFT, step = 1, notSeparateInRange = false) {
@@ -687,7 +671,6 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
     };
 
     toYearMonth = (panelType: PanelType, target: Date) => {
-        this.#toYear(panelType, target);
         this.#toMonth(panelType, target);
     };
 
@@ -734,6 +717,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         }
     };
 
+    // Known limitation: the time list picks system-local Dates, so a wall time the system zone skips for DST can only be typed; upgrade by picking in `timeZone`
     handleTimeChange = (newTime: { timeStampValue: number }, panelType: PanelType) => {
         const { rangeEnd, rangeStart } = this.getStates();
         const { type, dateFnsLocale } = this.getProps();

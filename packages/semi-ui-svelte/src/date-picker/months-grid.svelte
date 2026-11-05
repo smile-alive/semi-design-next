@@ -115,6 +115,8 @@
     const handleWeeksRowNumChange = () => {
         if (isRange && !(isYearOrTime(states().monthLeft) && isYearOrTime(states().monthRight))) {
             panelHeight = scrollListHeight();
+            // the month's height sets the height of the list beside it, moving the selected item off centre
+            reselect();
         }
     };
 

@@ -156,6 +156,8 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     const handleWeeksRowNumChange = () => {
         if (isRange && !(leftIsYearOrTime && rightIsYearOrTime)) {
             nodes.measurePanelHeight();
+            // the month's height sets the height of the list beside it, moving the selected item off centre
+            reselect();
         }
     };
 

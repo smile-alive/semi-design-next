@@ -141,6 +141,8 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
     const handleWeeksRowNumChange = () => {
         if (isRange() && untrack(yearOrTimePanels) < 2) {
             measurePanelHeight();
+            // the month's height sets the height of the list beside it, moving the selected item off centre
+            reselect();
         }
     };
 

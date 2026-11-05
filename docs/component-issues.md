@@ -544,6 +544,7 @@
 - month、monthRange 带 disabledDate 且当前月被禁用时 onChange 收到两次且第一次是禁用日期；`DatePickerFoundation.init` 仍解析初始值，靠 `#initialized` 只执行一次（移入静态 `getInitialState`）。待处理。
 - 受控 `open` 改 false 关闭且 `insetInput` 时焦点归还未验证。UNKNOWN（补浏览器用例）。
 - `InsetTimeInput` 的可访问名称无专用语言包键。UNKNOWN（确认是否需要，需要则按 locale-text 补齐 57 个语言包）。
+- 设置 `timeZone` 后，系统时区夏令时跳过的时刻在面板时间列表里选不到（选 02 时变成 03:30，值为 02:30 时列表高亮 03），只能输入；这类时刻与一小时后的时刻 `getTime` 相同，`disabledDate` 判定与多值去重按同一时刻处理。已知限制（升级条件：时间列表改为按 `timeZone` 取值）。
 - 保持原样：autoSwitchDate 对范围无效；`onFocus` 打开面板的页面键盘选择或 Esc 后会重新打开；左面板键盘移出本月时焦点不跨到右面板。
 - Svelte：自定义 `trigger` 内是否有焦点目标只在挂载时测量一次（同 TimePicker）。已知限制。
 - Svelte：没有 KeepAlive，停用时关闭面板的行为没有移植。已知限制。

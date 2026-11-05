@@ -1,9 +1,10 @@
+import { TZDate } from '@date-fns/tz';
 import { format, isValid, isSameSecond, isEqual as isDateEqual, isDate, startOfDay } from 'date-fns';
 import { isEqual } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import { strings as inputStrings } from '../input/constants';
 import { isInnerControlActivation } from '../utils/a11y';
-import { utcToZonedTime, zonedTimeToUtc } from '../utils/date-fns-extra';
+import { toIANA, utcToZonedTime, zonedTimeToUtc } from '../utils/date-fns-extra';
 import isValidTimeZone from '../utils/is-valid-time-zone';
 import type { ArrayElement } from '../utils/type';
 import warning from '../utils/warning';
@@ -213,6 +214,11 @@ export interface DatePickerAdapter extends DefaultAdapter<DatePickerFoundationPr
     /** focuses the first focus target in the trigger (an input, or a custom trigger's own element), else its wrapper */
     setTriggerFocus: () => void;
     blurFocusedElement: () => void;
+}
+
+// utcToZonedTime gives a wall time the system zone skips the same getTime as the wall time one gap later, so the hours tell them apart
+function isSameValue(dates: Date[], stateValue: Date[]) {
+    return isEqual(dates, stateValue) && dates.every((date, i) => date?.getHours() === stateValue[i]?.getHours());
 }
 
 export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapter, DatePickerFoundationProps, DatePickerFoundationState> {
@@ -459,6 +465,17 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         this.adapter.updateInsetInputValue(null);
     }
 
+    // Typed text is a wall time of the target zone and is parsed there: whether it exists must not depend on the system zone
+    #getNowInTimeZone() {
+        const timeZone = this.getProp('timeZone');
+        return isValidTimeZone(timeZone) ? new TZDate(Date.now(), toIANA(timeZone)) : new Date();
+    }
+
+    #toZonedValue(parsed: Date) {
+        const timeZone = this.getProp('timeZone');
+        return isValidTimeZone(timeZone) ? utcToZonedTime(parsed, timeZone) : parsed;
+    }
+
     #parseMultipleInput(input: string, parse: (part: string) => Array<Date | null>, { needDedupe = false }: { needDedupe?: boolean } = {}) {
         const max = this.getProp('max');
         const result: Array<Date | null> = [];
@@ -516,7 +533,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
             const type = this.getProp('type');
             const formatToken = format || this.getProp('format') || getDefaultFormatTokenByType(type);
             let parsedResult, formatedInput;
-            const nowDate = new Date();
+            const nowDate = this.#getNowInTimeZone();
             switch (type) {
                 case 'date':
                 case 'dateTime':
@@ -525,7 +542,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
                     parsedResult = compatibleParse(input, formatToken, nowDate, dateFnsLocale);
                     formatedInput = parsedResult && isValid(parsedResult) && this.localeFormat(parsedResult, formatToken);
                     if (parsedResult && formatedInput === input) {
-                        result = [parsedResult];
+                        result = [this.#toZonedValue(parsedResult)];
                     }
                     break;
                 case 'dateRange':
@@ -536,7 +553,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
                     parsedResult = values.map((cur) => cur && compatibleParse(cur, formatToken, nowDate, dateFnsLocale)).filter(Boolean);
                     formatedInput = parsedResult && parsedResult.map((v) => v && isValid(v) && this.localeFormat(v, formatToken)).join(separator);
                     if (parsedResult && formatedInput === input) {
-                        result = parsedResult.toSorted((d1, d2) => d1.getTime() - d2.getTime());
+                        result = parsedResult.toSorted((d1, d2) => d1.getTime() - d2.getTime()).map((date) => this.#toZonedValue(date));
                     }
                     break;
                 default:
@@ -570,7 +587,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         if (input && input.length) {
             const formatToken = format || getDefaultFormatTokenByType(type);
             let parsedResult, formatedInput;
-            const nowDate = new Date();
+            const nowDate = this.#getNowInTimeZone();
             switch (type) {
                 case 'date':
                 case 'dateTime':
@@ -580,7 +597,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
                     if (isValidDate(_parsedResult)) {
                         formatedInput = this.localeFormat(_parsedResult, formatToken);
                         if (formatedInput === input) {
-                            parsedResult = _parsedResult;
+                            parsedResult = this.#toZonedValue(_parsedResult);
                         }
                     } else {
                         parsedResult = null;
@@ -595,7 +612,8 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
                         const parsedVal = compatibleParse(cur, formatToken, nowDate, dateFnsLocale);
                         return isValidDate(parsedVal) && this.localeFormat(parsedVal, formatToken) === cur ? parsedVal : null;
                     });
-                    result = Array.isArray(parsedResult) && parsedResult.every((item) => isValid(item)) ? parsedResult.toSorted((d1, d2) => d1.getTime() - d2.getTime()) : parsedResult;
+                    const ordered = parsedResult.every((item) => isValid(item)) ? parsedResult.toSorted((d1, d2) => d1.getTime() - d2.getTime()) : parsedResult;
+                    result = ordered.map((date) => date && this.#toZonedValue(date));
                     break;
                 default:
                     break;
@@ -900,7 +918,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
             this.#updateValueAndInput(result, input === '', input);
             const changedDates = this.#getChangedDates(result);
             if (!this.#someDateDisabled(changedDates, result)) {
-                if (!isEqual(result, stateValue)) {
+                if (!isSameValue(result, stateValue)) {
                     this.#notifyChange(result);
                 }
             }
@@ -918,7 +936,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         if (result && result.length) {
             const changedDates = this.#getChangedDates(result);
             if (!this.#someDateDisabled(changedDates, result)) {
-                if (!isEqual(result, stateValue)) {
+                if (!isSameValue(result, stateValue)) {
                     if (!this.isControlledComponent() && !this.#needConfirm() && this.#isValueCommittable(result)) {
                         this.adapter.updateValue(result);
                     }
@@ -1005,7 +1023,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         const { value: stateValue } = this.getStates();
         this.#updateValueAndInput(parsedResult);
         const changedDates = this.#getChangedDates(parsedResult);
-        if (!this.#someDateDisabled(changedDates, parsedResult) && !isEqual(parsedResult, stateValue)) {
+        if (!this.#someDateDisabled(changedDates, parsedResult) && !isSameValue(parsedResult, stateValue)) {
             this.#notifyChange(parsedResult);
         }
     };
@@ -1057,7 +1075,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
                 this.#updateValueAndInput(dates, true, inputValue);
                 this.adapter.updateInsetInputValue(insetInputValue);
             }
-            if (!isEqual(value, stateValue)) {
+            if (!isSameValue(value, stateValue)) {
                 this.#notifyChange(value);
             }
         }

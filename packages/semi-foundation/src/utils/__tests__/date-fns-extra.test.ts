@@ -101,9 +101,12 @@ describe('系统时区含 DST 时的 utcToZonedTime', () => {
         process.env.TZ = originalTZ;
     });
 
-    it('将系统时区间隙内的本地时间按系统间隙向后移动', () => {
+    it('系统时区间隙内的本地时间保持不变，getTime 与 Date 构造函数一致', () => {
         process.env.TZ = 'America/New_York';
-        expect(wallOf(utcToZonedTime('2026-03-08T02:30:00.000Z', 'UTC'))).toEqual([2026, 2, 8, 3, 30]);
+        const zoned = utcToZonedTime('2026-03-08T02:30:00.000Z', 'UTC');
+        expect(wallOf(zoned)).toEqual([2026, 2, 8, 2, 30]);
+        expect(zoned.getTime()).toBe(new Date(2026, 2, 8, 2, 30).getTime());
+        expect(zonedTimeToUtc(zoned, 'UTC').toISOString()).toBe('2026-03-08T02:30:00.000Z');
     });
 });
 
