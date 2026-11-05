@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { onMounted, useTemplateRef, watch, type StyleValue } from 'vue';
     import { strings } from '@fibrae/semi-foundation/table/constants';
-    import { getColumnsByLevel, getHeaderStickyOffset, getNextSortOrder, getRTLAlign, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isLastLeftFixed, isSelectionColumn, sliceColumnsByLevel, type TableHeaderCell } from '@fibrae/semi-foundation/table/utils';
+    import { getColumnsByLevel, getHeadWidths, getHeaderStickyOffset, getNextSortOrder, getRTLAlign, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isLastLeftFixed, isSelectionColumn, sliceColumnsByLevel, type TableHeaderCell } from '@fibrae/semi-foundation/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import SlotFragment from '../_base/slot-fragment';
     import type { KeyedNode } from '../_base/slot-nodes';
@@ -150,14 +150,9 @@
         }
         const levelColumns = getColumnsByLevel(props.columns, props.index) as ColumnProps[];
         const heads = node.querySelectorAll(`.${table.view.value.prefixCls}-row-head`);
+        const renderedKeys = new Set<unknown>(headerCells().map((cell) => cell.column.key));
         table.setHeadWidths(
-            Array.from(heads, (head, headIndex) => {
-                const configWidth = levelColumns[headIndex]?.width;
-                return {
-                    width: typeof configWidth === 'number' ? configWidth : head.getBoundingClientRect().width || 0,
-                    key: levelColumns[headIndex]?.key as string,
-                };
-            }),
+            getHeadWidths(levelColumns, renderedKeys, (headIndex) => heads[headIndex]?.getBoundingClientRect().width || 0),
             props.index
         );
     };

@@ -482,7 +482,7 @@
 - Vue、Solid：`--semi-table-section-width` 要测量后才写入，服务端 HTML 中表格区段宽度未定。已知限制（升级条件：首屏布局移动成为问题时，按列宽推算初值）。
 - 未设 `ellipsis`、`fixed`、固定表头时表格为 `table-layout: auto`，各列数值 `width` 之和超过容器时，Chrome、Firefox 加宽表格并横向滚动，WebKit 把表格限在容器宽度并按比例压缩各列（1000px 容器中 364、400、100、100 渲染为 343、378、99、99），`resizable` 拖到的宽度随之不准。待决（影响：Safari 中列宽小于声明值，拖动时手柄落后于指针；解决条件：决定是否在列宽之和超出时改用 `fixed` 布局或给表格写 `min-width`）。
 - 不做：列宽拖动手柄的键盘操作（APG 无对应模式；升级条件：出现需求时按 Resizable 的 separator 模式实现）。
-- 保持原样：根类名 `semi-table-wrapper-undefined`；非受控只改 pageSize 不切页；只应用第一个排序器；受控 currentPage 不调用 onChange；RTL 虚拟化与表头阴影；`OnHeaderCell<R>` 使 `ColumnProps` 对 R 不变；`rowSelection.disabled` 阻止 `clickRow`；`handlerClassName` 默认 `'resizing'`。
+- 保持原样：根类名 `semi-table-wrapper-undefined`；只应用第一个排序器；受控 currentPage 不调用 onChange；RTL 虚拟化与表头阴影；`OnHeaderCell<R>` 使 `ColumnProps` 对 R 不变；`rowSelection.disabled` 阻止 `clickRow`；`handlerClassName` 默认 `'resizing'`。
 - Svelte：虚拟化只支持固定行高，`itemSize` 函数不测量实际高度。已知限制（升级条件：`_base/virtual-list.svelte` 提供测量接口后支持动态行高）。
 - Vue、Svelte：列宽拖拽的覆盖值按生成的 key 存，列既无 `key` 也无 `dataIndex` 时 key 是 `${level}-${index}`，列顺序变化后覆盖值错位。待处理。
 - Svelte：`table.svelte` 不是泛型组件，`ColumnProps`、`TableProps` 的行类型为 `Record<string, any>`，snippet 与回调里需 `as` 收窄。已知限制。

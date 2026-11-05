@@ -262,6 +262,7 @@
 - Svelte：`components` 只接受字符串标签；`onRow`、`onCell`、`onHeaderRow` 返回 Svelte 小写属性（`onclick`、`colspan`）；受控 `pagination.currentPage` 表示远程分页，Table 不再切片 `dataSource`。
 - Svelte：`virtualized.itemSize` 可以是函数 `(index, { sectionRow, expandedRow }) => number`，返回空值时用默认行高；`virtualizedData`、`itemSize` 或 `size` 变化时重新计算行偏移。
 - Vue：`Table.Column` 子列的 `defaultSortOrder`、`defaultFilteredValue` 在服务端渲染的首帧已生效。
+- 只改 `pagination.pageSize` 时行数随之更新。合并表头中 `colSpan`、`rowSpan` 为 0 的列不再让后面列的固定偏移错位。
 
 ### Checkbox、Switch
 
