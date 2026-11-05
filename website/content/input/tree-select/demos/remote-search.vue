@@ -5,13 +5,19 @@
     const value = ref<string>();
     const treeData = shallowRef<TreeNodeData[]>([]);
 
+    let latestInput = '';
+
     const onSearch = (inputValue: string) => {
+        latestInput = inputValue;
         if (!inputValue) {
             treeData.value = [];
             return;
         }
 
         setTimeout(() => {
+            if (latestInput !== inputValue) {
+                return;
+            }
             treeData.value = [
                 { label: `${inputValue} - 结果1`, value: `${inputValue}-1`, key: `${inputValue}-1` },
                 { label: `${inputValue} - 结果2`, value: `${inputValue}-2`, key: `${inputValue}-2` },

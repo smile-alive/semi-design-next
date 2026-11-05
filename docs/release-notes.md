@@ -478,6 +478,7 @@
 - 下拉打开时按 Tab 离开会关闭下拉并触发一次 `onBlur`（APG combobox 模式），原来只触发 `onBlur`、下拉保持打开；窗口失焦时下拉保持打开。
 - Svelte：设置 `trigger` snippet 后根元素不带 `semi-tree-select` 类，只保留传入的 `class`、`style`、`data-*`。
 - Svelte：`value` 被父级设为 `undefined` 时，选择框清空显示。
+- `checkRelation="unRelated"` 多选加触发器内搜索时，已有标签后不再带 `tagInput-empty` 类，左侧间距恢复正常。
 
 ### Cascader
 

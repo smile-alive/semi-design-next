@@ -665,7 +665,7 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
             if (local.triggerRender) {
                 return clsx(local.class);
             }
-            const emptyTriggerSearch = isTriggerPositionSearch() && state().checkedKeys.size === 0;
+            const emptyTriggerSearch = isTriggerPositionSearch() && !hasValue();
             return clsx(
                 prefix,
                 {
