@@ -78,7 +78,7 @@
         })
     );
 
-    const setDownloadName = computed(() => props.setDownloadName ?? readSemiDefault(semi, 'Image', 'setDownloadName'));
+    const setDownloadName = computed(() => props.setDownloadName ?? previewObject.value?.setDownloadName ?? readSemiDefault(semi, 'Image', 'setDownloadName'));
     const canOpen = computed(() => ImageFoundation.canOpen(props.preview, loadStatus.value, Boolean(group)));
     const canPreview = computed(() => ImageFoundation.canPreview(props.preview, Boolean(group)));
     const previewSrc = computed(() => previewObject.value?.src ?? props.src);

@@ -156,7 +156,9 @@ export default function Image(rawProps: ImageProps) {
                 {extra && <div className={`${prefixCls}-overlay`}>{extra}</div>}
             </div>
             {/* a sibling: clicks inside the portal bubble through the React tree and would reopen the thumbnail */}
-            {canPreview && <PreviewInner {...previewProps} alt={alt} crossOrigin={crossOrigin !== undefined ? crossOrigin : previewObject?.crossOrigin} setDownloadName={setDownloadName} src={previewSrc} visible={previewVisible} onVisibleChange={foundation.handlePreviewVisibleChange} />}
+            {canPreview && (
+                <PreviewInner {...previewProps} alt={alt} crossOrigin={crossOrigin !== undefined ? crossOrigin : previewObject?.crossOrigin} setDownloadName={setDownloadName ?? previewObject?.setDownloadName} src={previewSrc} visible={previewVisible} onVisibleChange={foundation.handlePreviewVisibleChange} />
+            )}
         </>
     );
 }
