@@ -807,7 +807,7 @@
 - React：服务端渲染的 Avatar 图片在 hydration 前已加载失败时，hydration 提交后调用 `onError` 并显示文字（原来保留破图）。
 - AutoComplete：下拉中有可聚焦元素（`renderItem`、`emptyContent` 里的按钮或链接）时，方向键只移动高亮，焦点不再移入下拉。
 - Vue：AutoComplete、PinCode、TagInput 用 `v-model`（`modelValue`，TagInput 另有 `v-model:inputValue`），回调为同名事件，`autoFocus` 写作 `autofocus`；AutoComplete 的 `renderItem`、`triggerRender` 为 `#item`、`#trigger`，`prefix`、`suffix`、`insetLabel`、`clearIcon`、`emptyContent` 只有插槽，ref 为 `{ nativeElement }`；TagInput 插槽 `#prefix`、`#suffix`、`#insetLabel`、`#clearIcon`、`#tag`；PinCode 新增按整组计的 `focus`、`blur` 事件。
-- Solid：AvatarGroup 只给 Avatar 加重叠类（经 context，包括被 Tooltip 包住的头像），其他子元素不加；Avatar 的 `onError` 类型为 `() => boolean | void`。
+- Solid：AvatarGroup 只给 Avatar 加重叠类（经 context，包括被 Tooltip 包住的头像），其他子元素不加。
 - Solid 破坏性：AvatarGroup 的 `renderMore` 签名为 `(restNumber: number, restAvatars: ((props?: AvatarProps) => JSX.Element)[]) => JSX.Element`。超出 `maxCount` 的头像在组内不创建，`restAvatars` 的每一项是渲染函数，在调用处才创建该头像（独立头像，不是列表项，不取组的 `size`、`shape`），传入的属性覆盖头像自身的属性（如 `avatar({ size: 'extra-small' })`，对应 React 的 `cloneElement`）；`maxCount` 与 React 一样按子节点计数，包装元素（如 Tooltip）里的头像随包装元素整体隐藏，不单独隐藏，`maxCount` 变化或增删子节点时由后面的子节点补位。默认 `+N` 头像的名称只列被隐藏头像的 `alt`。
 - Solid 破坏性（类型）：Avatar 的 `topSlot.text`、`bottomSlot.text` 改为 `AvatarSlotText`（`string | number | (() => JSX.Element)`，从包入口导出），自定义内容写成函数 `text: () => <IconPlus />`，只在标记实际显示时（预设尺寸，topSlot 另需圆形）调用；`render` 仍完全替换标记。
 - Solid：AutoComplete 的 `ref` 是根 div，其 `focus()`、`blur()` 转给输入框，用 `triggerRender` 时没有可转交的输入框，`ref.focus()` 不移动焦点（React 聚焦根 div）；`autoFocus` 写作 `autofocus`，`onFocus`、`onBlur` 收到原生 `focusin`、`focusout`；`id`、`name` 与 `aria-*` 落在输入框；数据项的类名字段为 `class`；`triggerRender` 的参数字段是 getter，在 JSX 之外解构只得到当前值；`stopPropagation` 只接受布尔值。破坏性（类型）：`data` 对象项的 `label` 收窄为 `string | number`，标记内容经 `renderItem` 渲染。
@@ -823,6 +823,8 @@
 - Svelte：`id`、`name`、`role`、`tabindex` 与全部 `aria-*` 落在内部 `<input>`（根元素是 `role="group"`），根元素上的 `onclick` 与组件自己的点击处理组合调用。
 - Svelte：AutoComplete 的 `value` 可绑定，没有 `defaultValue`；`renderItem`、`triggerRender` 改为 `item`、`trigger` snippet（`trigger` 参数不含 `componentProps`），`prefix`、`suffix`、`insetLabel`、`clearIcon`、`emptyContent` 为 snippet，`insetLabel` 只要传了 snippet 就当作有内容。
 - Svelte：回调为 `onChange`、`onSearch`、`onSelect`、`onSelectWithObject`、`onClear`、`onFocus`、`onBlur`、`onDropdownVisibleChange`；`focus()`、`blur()`、`getNativeElement()` 经 `bind:this` 调用；数据项的 `class` 接受 clsx 值，`style`、`dropdownStyle` 只接受字符串；`id`、`name`、`aria-*` 落在输入框，用 `trigger` 时 `id` 落在根元素。
+- Avatar：`size`、`gap` 变化后重算文字缩放。
+- 破坏性（类型）：Avatar 图片加载失败时 `onError` 收到 error 事件，返回 `false` 保留破图：React 为 `(event: SyntheticEvent<HTMLImageElement>) => boolean | void`，Vue、Svelte 为 `(event: Event) => boolean | void`，Solid 的事件带 `currentTarget: HTMLImageElement`。
 
 ### Chat、AIChatInput、AIChatDialogue
 

@@ -6,19 +6,19 @@ export interface AvatarBaseProps {
 
 export interface AvatarBaseState {}
 
-/** E is the host's mouse event, which the foundation only passes through */
-export interface AvatarAdapter<P = AvatarBaseProps, S = AvatarBaseState, E = unknown> extends DefaultAdapter<P, S> {
+/** E is the host's mouse event and ErrorEvent the host's image error event; the foundation only passes them through */
+export interface AvatarAdapter<P = AvatarBaseProps, S = AvatarBaseState, E = unknown, ErrorEvent = unknown> extends DefaultAdapter<P, S> {
     setImgExist(isImgExist: boolean): void;
     notifyLeave(event: E): void;
     /** Returns what the callback returned: `false` keeps the broken image instead of falling back */
-    notifyError(): boolean | void;
+    notifyError(event: ErrorEvent): boolean | void;
     notifyEnter(event: E): void;
     setScale: (scale: number) => void;
     /** Widths of the avatar and of its text content; null while no text is rendered */
     getTextWidths: () => { container: number; text: number } | null;
 }
 
-export default class AvatarFoundation<P extends AvatarBaseProps = AvatarBaseProps, S extends AvatarBaseState = AvatarBaseState, E = unknown> extends BaseFoundation<AvatarAdapter<P, S, E>, P, S> {
+export default class AvatarFoundation<P extends AvatarBaseProps = AvatarBaseProps, S extends AvatarBaseState = AvatarBaseState, E = unknown, ErrorEvent = unknown> extends BaseFoundation<AvatarAdapter<P, S, E, ErrorEvent>, P, S> {
     override init() {
         this.changeScale();
     }
@@ -29,8 +29,8 @@ export default class AvatarFoundation<P extends AvatarBaseProps = AvatarBaseProp
         this.adapter.setImgExist(true);
     };
 
-    handleImgLoadError = () => {
-        const errorFlag = this.adapter.notifyError();
+    handleImgLoadError = (e: ErrorEvent) => {
+        const errorFlag = this.adapter.notifyError(e);
         if (errorFlag !== false) {
             this.adapter.setImgExist(false);
         }

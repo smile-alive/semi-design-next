@@ -170,7 +170,7 @@
 
 ### Avatar、AvatarGroup
 
-- 保持原样：topSlot、bottomSlot 只在 6 个预设尺寸渲染；`onError` 返回类型未写；`destroy()` 为空；AvatarGroup 包装元素内多个 Avatar 共用重叠序号。
+- 保持原样：topSlot、bottomSlot 只在 6 个预设尺寸渲染；`destroy()` 为空；AvatarGroup 包装元素内多个 Avatar 共用重叠序号。
 - `bottomSlot` 方形标签比头像宽时按字换行。待决（加 `white-space: nowrap` 后标签超出头像两侧）。
 - Solid：文字头像的缩放 `transform: scale(...)` 要测量后才确定，服务端 HTML 不含缩放。已知限制（升级条件：首帧文字溢出成为问题时，改为按字数推算初值）。
 - Solid：AvatarGroup 在首帧与服务端还不知道子节点的位置，按 Avatar 的创建顺序计数 `maxCount`，挂载后才按子节点位置计数：子节点之间夹有文字或包装元素（`<Tooltip><Avatar /></Tooltip>`、`<div>`）时，首帧可能隐藏包装元素里的头像，包装元素收到 token 后显示为空（在数组中显示为「[object Object]」），挂载后恢复；超出 `maxCount` 的包装元素整体交给 `renderMore`，默认 `+N` 的名称不含其中头像的 `alt`；新增的头像在列表协调前先创建，协调后超出 `maxCount` 的再释放。已知限制（升级条件：包装元素里的头像需要在服务端正确渲染时，让包装元素也向组登记）。

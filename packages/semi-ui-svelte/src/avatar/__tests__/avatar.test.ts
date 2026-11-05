@@ -85,7 +85,7 @@ describe('Svelte Avatar', () => {
         expect(root(container)).toHaveClass(`${prefix}-img`);
         await fireEvent.error(image);
         flushSync();
-        expect(onError).toHaveBeenCalledExactlyOnceWith();
+        expect(onError).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ type: 'error', target: image }));
         expect(container.querySelector('img')).toBeNull();
         expect(screen.getByRole('img', { name: 'Bob' })).toHaveTextContent('B');
         expect(root(container)).toHaveClass(`${prefix}-red`);

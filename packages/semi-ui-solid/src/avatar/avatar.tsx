@@ -28,8 +28,9 @@ export interface AvatarState {
 }
 
 type AvatarMouseEvent = MouseEvent & { currentTarget: HTMLElement; target: Element };
-type Foundation = AvatarFoundation<AvatarProps, AvatarState, AvatarMouseEvent>;
-type Adapter = AvatarAdapter<AvatarProps, AvatarState, AvatarMouseEvent>;
+type AvatarErrorEvent = Event & { currentTarget: HTMLImageElement; target: Element };
+type Foundation = AvatarFoundation<AvatarProps, AvatarState, AvatarMouseEvent, AvatarErrorEvent>;
+type Adapter = AvatarAdapter<AvatarProps, AvatarState, AvatarMouseEvent, AvatarErrorEvent>;
 
 const defaultProps = {
     size: 'medium',
@@ -67,7 +68,7 @@ function AvatarView(rawProps: AvatarProps) {
                 base.setState({ hovered: true });
                 callHandler(base.getProps().onMouseEnter, event);
             },
-            notifyError: () => base.getProps().onError?.(),
+            notifyError: (event) => base.getProps().onError?.(event),
             notifyLeave: (event) => {
                 base.setState({ hovered: false });
                 callHandler(base.getProps().onMouseLeave, event);
@@ -162,7 +163,7 @@ function AvatarView(rawProps: AvatarProps) {
                     class={clsx(local.imgAttr?.class, focusClass())}
                     onError={(event) => {
                         callHandler(local.imgAttr?.onError, event);
-                        foundation.handleImgLoadError();
+                        foundation.handleImgLoadError(event);
                     }}
                     {...focusProps()}
                 />
@@ -255,6 +256,9 @@ function AvatarView(rawProps: AvatarProps) {
             createEffect(() => untrack(foundation.changeScale));
         }
     });
+
+    useWatch(size, foundation.changeScale);
+    useWatch(() => local.gap, foundation.changeScale);
 
     // Element children move into the focus wrapper only after the avatar has reconciled its own children: inserting
     // them in the wrapper's JSX lets that reconcile remove them again, since they are still in its old list

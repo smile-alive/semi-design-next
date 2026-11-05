@@ -19,8 +19,8 @@
         scale: number;
     }
 
-    type Foundation = AvatarFoundation<AvatarProps, AvatarState, MouseEvent>;
-    type Adapter = AvatarAdapter<AvatarProps, AvatarState, MouseEvent>;
+    type Foundation = AvatarFoundation<AvatarProps, AvatarState, MouseEvent, Event>;
+    type Adapter = AvatarAdapter<AvatarProps, AvatarState, MouseEvent, Event>;
 
     const defaults = useDefaultProps('Avatar');
 
@@ -72,7 +72,7 @@
         (base) => ({
             setImgExist: (isImgExist) => base.setState({ isImgExist }),
             setScale: (scale) => base.setState({ scale }),
-            notifyError: () => onError?.(),
+            notifyError: (event) => onError?.(event),
             notifyEnter: (event) => {
                 base.setState({ hovered: true });
                 onMouseEnter?.(event);
@@ -129,7 +129,7 @@
         class: [imgAttr?.class, focusAttrs.class],
         onerror: (event: Event) => {
             (imgAttr?.onerror as ((event: Event) => void) | null | undefined)?.(event);
-            foundation.handleImgLoadError();
+            foundation.handleImgLoadError(event);
         },
     });
 
@@ -167,6 +167,8 @@
     };
 
     watch(() => src, foundation.handleSrcChange);
+    watch(() => size, foundation.changeScale);
+    watch(() => gap, foundation.changeScale);
 </script>
 
 {#snippet body(outer: boolean)}

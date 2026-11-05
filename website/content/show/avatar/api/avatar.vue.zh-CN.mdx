@@ -16,7 +16,7 @@ import ApiType from '#/components/ApiType.astro';
 | bottomSlot    | 底部标记的形状、背景色、文字颜色、类名和样式；内容使用 bottomSlotText 插槽。 | `AvatarBottomSlot`                                                                                                        | `semiGlobalDefault("Avatar", "bottomSlot")`    |
 | border        | 显示额外边框，可配置颜色和动画。                                             | <ApiType detail={"boolean \u007c { color?: string \u007c undefined; motion?: boolean \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("Avatar", "border")`        |
 | contentMotion | 启用头像内容区域的动画。                                                     | `boolean`                                                                                                                 | `semiGlobalDefault("Avatar", "contentMotion")` |
-| onError       | 图片加载失败时调用，返回 false 阻止默认回退；保留为函数 prop 以读取返回值。  | <ApiType detail={"(() => boolean \u007c void)"}>Type</ApiType>                                                            | `undefined`                                    |
+| onError       | 图片加载失败时调用，返回 false 阻止默认回退；保留为函数 prop 以读取返回值。  | <ApiType detail={"((event: Event) => boolean \u007c void)"}>Type</ApiType>                                                | `undefined`                                    |
 
 **Events**
 

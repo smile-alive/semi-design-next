@@ -19,8 +19,8 @@ export interface AvatarProps extends ElementProps<'span', 'onError'> {
     srcSet?: string;
     alt?: string;
     gap?: number;
-    /** Called without an event when the image fails to load; returning `false` keeps the broken image */
-    onError?: () => boolean | void;
+    /** Called when the image fails to load; returning `false` keeps the broken image */
+    onError?: (event: Event & { currentTarget: HTMLImageElement; target: Element }) => boolean | void;
     imgAttr?: ElementProps<'img'>;
     bottomSlot?: {
         render?: () => JSX.Element;

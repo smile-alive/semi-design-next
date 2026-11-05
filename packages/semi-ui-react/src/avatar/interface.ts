@@ -17,7 +17,8 @@ export interface AvatarProps extends BaseProps, ElementProps<'span', 'onError'> 
     srcSet?: string;
     alt?: string;
     gap?: number;
-    onError?: React.MouseEventHandler;
+    /** Called when the image fails to load; returning `false` keeps the broken image instead of falling back to the content */
+    onError?: (event: React.SyntheticEvent<HTMLImageElement>) => boolean | void;
     onClick?: React.MouseEventHandler;
     onMouseEnter?: React.MouseEventHandler;
     onMouseLeave?: React.MouseEventHandler;

@@ -13,7 +13,7 @@ import ApiType from '#/components/ApiType.astro';
 | gap | Space in pixels between the text and either side of the avatar. | `number` | `3` |
 | hoverMask | Overlay content shown on hover; the overlay has no default style. | `JSX.Element` | - |
 | imgAttr | Native attributes applied to the inner `img` element. | <ApiType detail={"ElementProps\u003c'img'>"}>Type</ApiType> | - |
-| onError | Called when the image fails to load, without an event argument. Returning `false` keeps the broken image instead of switching to the text fallback. | <ApiType detail={"() => boolean \u007c void"}>Type</ApiType> | - |
+| onError | Called with the error event when the image fails to load. Returning `false` keeps the broken image instead of switching to the text fallback. | <ApiType detail={"(event: Event & { currentTarget: HTMLImageElement; target: Element }) => boolean \u007c void"}>Type</ApiType> | - |
 | shape | Avatar shape: `circle` or `square`. | `AvatarShape` | `"circle"` |
 | size | Avatar size, as a preset name or a valid CSS size. | `string` | `"medium"` |
 | src | Image source URL. | `string` | - |

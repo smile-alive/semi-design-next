@@ -60,7 +60,7 @@ export default function Avatar(rawProps: AvatarProps) {
     const contentRef = useRef<HTMLSpanElement>(null);
     const imgRef = useRef<HTMLImageElement>(null);
 
-    const [foundation, state] = useFoundation<AvatarFoundation<AvatarProps, AvatarState, React.MouseEvent>, AvatarAdapter<AvatarProps, AvatarState, React.MouseEvent>, AvatarProps, AvatarState>(
+    const [foundation, state] = useFoundation<AvatarFoundation<AvatarProps, AvatarState, React.MouseEvent, React.SyntheticEvent<HTMLImageElement>>, AvatarAdapter<AvatarProps, AvatarState, React.MouseEvent, React.SyntheticEvent<HTMLImageElement>>, AvatarProps, AvatarState>(
         AvatarFoundation,
         props,
         () => ({ isImgExist: true, hovered: false, scale: 1 }),
@@ -70,8 +70,7 @@ export default function Avatar(rawProps: AvatarProps) {
                 base.setState({ hovered: true });
                 base.getProp('onMouseEnter')?.(e);
             },
-            // called without an event, as upstream did; its mouse-handler typing is kept
-            notifyError: () => (base.getProps().onError as (() => boolean | void) | undefined)?.(),
+            notifyError: (e) => base.getProps().onError?.(e),
             notifyLeave: (e) => {
                 base.setState({ hovered: false });
                 base.getProp('onMouseLeave')?.(e);
@@ -119,6 +118,9 @@ export default function Avatar(rawProps: AvatarProps) {
         }
     });
 
+    useDidUpdate(size, foundation.changeScale);
+    useDidUpdate(gap, foundation.changeScale);
+
     for (const [key, value] of Object.entries(rest)) {
         (hasFocusTarget && (key === 'tabIndex' || key.startsWith('aria-')) ? controlProps : rootProps)[key] = value;
     }
@@ -154,7 +156,7 @@ export default function Avatar(rawProps: AvatarProps) {
                 className={clsx(imgAttr?.className, focusCls)}
                 onError={(e) => {
                     imgAttr?.onError?.(e);
-                    foundation.handleImgLoadError();
+                    foundation.handleImgLoadError(e);
                 }}
                 {...a11yFocusProps}
             />
