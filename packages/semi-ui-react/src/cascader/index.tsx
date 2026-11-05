@@ -656,10 +656,8 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     const renderCustomTrigger = () => {
         let realValue: string | Set<string>;
         if (multiple) {
-            // the trigger gets positions; mergeType decides which checked set they come from, whatever checkRelation is
-            const keys = mergeType === strings.NONE_MERGE_TYPE ? checkedKeys : resolvedCheckedKeys;
             realValue = new Set();
-            keys.forEach((key) => {
+            realKeys.forEach((key) => {
                 (realValue as Set<string>).add(keyEntities[key]?.pos);
             });
         } else {

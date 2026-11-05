@@ -358,9 +358,8 @@
     });
 
     const triggerSlotProps = (): CascaderTriggerSlotProps<Multiple> => {
-        const { keyEntities, checkedKeys, resolvedCheckedKeys, selectedKeys } = view.value;
-        const keys = mergeType.value === strings.NONE_MERGE_TYPE ? checkedKeys : resolvedCheckedKeys;
-        const value = multiple.value ? new Set([...keys].map((key) => keyEntities[key]?.pos)) : keyEntities[[...selectedKeys][0]]?.pos;
+        const { keyEntities, selectedKeys } = view.value;
+        const value = multiple.value ? new Set([...realKeys.value].map((key) => keyEntities[key]?.pos)) : keyEntities[[...selectedKeys][0]]?.pos;
         return {
             value: value as CascaderTriggerSlotProps<Multiple>['value'],
             inputValue: view.value.inputValue,
