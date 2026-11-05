@@ -53,7 +53,7 @@
                 const { preventScroll } = props;
                 const footer = el.querySelector(`:scope > .${prefix}-footer`);
                 const active = FocusTrapHandle.getActiveElement(el);
-                // Neither the browser nor Vue focuses an inserted autofocus element: pick the body element the first open
+                // Vue does not focus an inserted autofocus element, and WebKit only does at the next rendering update: pick the body element the first open
                 // focused (a component's mount-time focus acts once, so a keepDOM reopen needs it), autofocus, footer
                 // button, first. Known limit: keepDOM with lazyRender={false} that starts hidden mounts under display:none,
                 // where mount-time focus fails, so nothing is remembered and the default button wins.
