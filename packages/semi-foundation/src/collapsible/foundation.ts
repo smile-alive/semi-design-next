@@ -120,7 +120,15 @@ export default class CollapsibleFoundation<P extends CollapsibleBaseProps = Coll
     handleOpenChange = () => {
         const { isOpen, duration, collapseHeight, collapseHeightAdaptive } = this.getProps();
         const wrapper = this.adapter.getWrapper();
-        if (!wrapper || !CollapsibleFoundation.hasMotion(this.getProps()) || CSS.supports('height', 'calc-size(auto, size)')) {
+        if (!wrapper || !CollapsibleFoundation.hasMotion(this.getProps())) {
+            return;
+        }
+        // under `display: none` no box is rendered, so no transition runs and no transitionend would ever come
+        if (wrapper.getClientRects().length === 0) {
+            this.handleTransitionEnd({ isSelf: true, propertyName: 'height' });
+            return;
+        }
+        if (CSS.supports('height', 'calc-size(auto, size)')) {
             return;
         }
         // reversing midway starts from the height on screen
