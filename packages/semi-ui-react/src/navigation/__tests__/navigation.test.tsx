@@ -645,7 +645,7 @@ describe('Navigation 行为', () => {
         expect(isOpen('用户')).toBe(false);
     });
 
-    it('受控的 selectedKeys 变化时，已打开的子菜单重置为 defaultOpenKeys', async () => {
+    it('受控的 selectedKeys 变化时，保留手动展开的子菜单', async () => {
         // items keep their reference: new children would rebuild the menu on every render
         const { rerender } = render(<Nav defaultOpenKeys={['user']} items={treeItems} selectedKeys={['home']} />);
         await userEvent.click(getSubTitle('任务'));
@@ -653,13 +653,11 @@ describe('Navigation 行为', () => {
         rerender(<Nav defaultOpenKeys={['user']} items={treeItems} selectedKeys={['home']} />);
         expect(isOpen('任务')).toBe(true);
         rerender(<Nav defaultOpenKeys={['user']} items={treeItems} selectedKeys={['list']} />);
-        expect(isOpen('任务')).toBe(false);
+        expect(isOpen('任务')).toBe(true);
         expect(isOpen('用户')).toBe(true);
     });
 
-    // New children (any parent render) recompute the menu from the props: the uncontrolled selection goes back to
-    // defaultSelectedKeys, the open subs are kept because openKeys accumulate when only selected keys are given
-    it('父组件重新渲染 children 时，重置非受控的选中状态', async () => {
+    it('父组件重新渲染 children 时，保留非受控的选中状态', async () => {
         function Parent() {
             const [count, setCount] = useState(0);
             return (
@@ -675,8 +673,8 @@ describe('Navigation 行为', () => {
         expect(isSelected('任务查询')).toBe(true);
         expect(isOpen('任务')).toBe(true);
         await userEvent.click(screen.getByRole('button', { name: 'rerender 0' }));
-        expect(isSelected('任务查询')).toBe(false);
-        expect(isSelected('首页')).toBe(true);
+        expect(isSelected('任务查询')).toBe(true);
+        expect(isSelected('首页')).toBe(false);
         expect(isOpen('任务')).toBe(true);
     });
 

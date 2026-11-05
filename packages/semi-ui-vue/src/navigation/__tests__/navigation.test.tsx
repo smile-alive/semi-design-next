@@ -544,14 +544,14 @@ describe('Navigation 行为', () => {
         expect(isOpen('用户')).toBe(false);
     });
 
-    it('受控的 selectedKeys 变化时，已打开的子菜单重置为 defaultOpenKeys', async () => {
+    it('受控的 selectedKeys 变化时，保留手动展开的子菜单', async () => {
         const view = renderNav({ defaultOpenKeys: ['user'], items: treeItems, selectedKeys: ['home'] });
         await userEvent.click(getSubTitle('任务'));
         expect(isOpen('任务')).toBe(true);
         await view.rerender({ selectedKeys: ['home'] });
         expect(isOpen('任务')).toBe(true);
         await view.rerender({ selectedKeys: ['list'] });
-        expect(isOpen('任务')).toBe(false);
+        expect(isOpen('任务')).toBe(true);
         expect(isOpen('用户')).toBe(true);
     });
 

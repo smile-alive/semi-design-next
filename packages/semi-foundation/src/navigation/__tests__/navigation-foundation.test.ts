@@ -131,14 +131,13 @@ describe('NavigationFoundation 更新', () => {
         expect(adapter.updateSelectedKeys).toHaveBeenCalledWith(['child', 'parent']);
     });
 
-    it('items 变化时从 props 重新构建', () => {
+    it('items 变化时保留非受控的当前选中', () => {
         const props = { items, defaultSelectedKeys: ['list'], mode: 'vertical' };
-        const { host, adapter, foundation } = createNav(props, getInitialState(props));
+        const { host, foundation } = createNav(props, getInitialState(props));
         host.state = { ...host.state, selectedKeys: ['query'] };
         host.props = { ...props, items: [...items] };
         foundation.handlePropsUpdate(props);
-        expect(adapter.updateSelectedKeys).toHaveBeenCalledTimes(1);
-        expect(host.state.selectedKeys).toEqual(['list', 'user']);
+        expect(host.state.selectedKeys).toEqual(['query', 'job']);
     });
 
     it('重建得到的选中与展开状态不变时不写 state', () => {

@@ -225,7 +225,7 @@ export default function SubNav({ ref, ...props }: SubNavProps) {
         <NavItemShell
             {...rest}
             ref={setItemRef}
-            className={`${cssClasses.PREFIX}-sub-wrap`}
+            className={clsx(`${cssClasses.PREFIX}-sub-wrap`, className)}
             style={style}
             disabled={disabled}
             isCollapsed={isCollapsed}
