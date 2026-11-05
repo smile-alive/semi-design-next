@@ -851,6 +851,7 @@
 - Svelte：`Configure` 的子项是 `Configure.Select`、`Configure.Button`、`Configure.Mcp`、`Configure.RadioButton`、`Configure.Item`；不提供 `getConfigureItem`，自定义项写 `<Configure.Item component={X} field="..." />`。
 - Svelte：AIChatDialogue 的代码块有语言栏、复制按钮与语法高亮，复制的内容取自 `node` 的源码；Chat 消息里带语言的代码块同样语法高亮。
 - Chat：`uploadProps.beforeRemove` 返回或 resolve 为 `false`、或 reject 时保留附件，删除后调用 `uploadProps.onRemove`。
+- AIChatInput：StrictMode 下 Configure 不再多通知 `onConfigureChange`，移除不存在的字段不通知，真实卸载的通知推迟一个微任务；`editor.can()` 不再改变发送热键状态；`@tiptap/core` 的 Commands、Storage 补上类型。
 
 ### Spin、Skeleton
 

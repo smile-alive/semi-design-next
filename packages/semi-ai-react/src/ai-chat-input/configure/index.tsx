@@ -9,17 +9,18 @@ export interface ConfigureHandle {
     getConfigureValue: () => Record<string, any>;
 }
 
-export interface ConfigureProps {
+export interface ConfigureProps extends React.PropsWithChildren {
     value?: Record<string, any>;
     defaultValue?: Record<string, any>;
     onChange?: (value: Record<string, any>, changedValue?: Record<string, any>) => void;
-    children?: React.ReactNode;
     /** Exposes the current value of every item */
     ref?: React.Ref<ConfigureHandle>;
 }
 
 // Items register in one effect pass, each building on the previous, so the merged value lives outside state
 class ConfigureStore {
+    // StrictMode's simulated unmount removes a field that the remount seeds again, which must not reach onChange
+    #removed = new Set<string>();
     value: Record<string, any>;
 
     constructor(value: Record<string, any>) {
@@ -28,20 +29,33 @@ class ConfigureStore {
 
     merge(changed: Record<string, any>) {
         this.value = { ...this.value, ...changed };
+        for (const field of Object.keys(changed)) {
+            this.#removed.delete(field);
+        }
         return this.value;
     }
 
+    /** Returns false when the field is not in the value */
     remove(field: string) {
-        const { [field]: removed, ...rest } = this.value ?? {};
+        if (!this.value || !(field in this.value)) {
+            return false;
+        }
+        const { [field]: removed, ...rest } = this.value;
         this.value = rest;
-        return this.value;
+        this.#removed.add(field);
+        return true;
+    }
+
+    /** Returns whether a removal is still standing, and forgets it */
+    takeRemoved() {
+        const removed = this.#removed.size > 0;
+        this.#removed.clear();
+        return removed;
     }
 }
 
-function Configure(props: ConfigureProps) {
-    const { children, onChange, ref } = props;
-
-    const [store] = useState(() => new ConfigureStore(props.value || props.defaultValue));
+function Configure({ value: valueProp, defaultValue, children, onChange, ref }: ConfigureProps) {
+    const [store] = useState(() => new ConfigureStore(valueProp || defaultValue));
     const [value, setValue] = useState(store.value);
 
     const handleChange = useCallback(
@@ -57,9 +71,15 @@ function Configure(props: ConfigureProps) {
 
     const handleRemove = useCallback(
         (field: string) => {
-            const newValue = store.remove(field);
-            setValue(newValue);
-            onChange?.(newValue);
+            if (!store.remove(field)) {
+                return;
+            }
+            setValue(store.value);
+            queueMicrotask(() => {
+                if (store.takeRemoved()) {
+                    onChange?.(store.value);
+                }
+            });
         },
         [store, onChange]
     );
