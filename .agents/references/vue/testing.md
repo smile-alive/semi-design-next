@@ -7,6 +7,7 @@
 - Vue 单测在 `vue` 项目中运行（jsdom），setup 为 `vitest/vue/vue.setup.ts`，项目另加载 `vitest/vue/vue.jsdom.setup.ts`。
 - `vitest/vue/vue.jsdom.setup.ts` 把事件时间戳顺延 1ms。Vue 按 `Date.now()` 给事件打时间戳，跳过不早于该时间戳挂上的监听器，冻结时钟（见 [testing](../testing.md)）下冒泡路径上只有第一个 Vue 监听器会执行。这段补丁只在 `vue` 项目加载，不放进 `vue.setup.ts`：`vue-browser` 也加载 `vue.setup.ts`，改动真实浏览器的事件时间戳不可接受。Vue 用例不必为此调用 `vi.useRealTimers()`。
 - 单测类型由 `vitest/vue/tsconfig.vue.json` 的 vue-tsc 检查；fixture SFC 放在对应 `__tests__/fixtures`。unit 不能用通用 `.vue` shim 掩盖模板类型错误。
+- `vp test` 的模块缓存按文件自身内容命中。运行时 props 来自导入的 `interface.ts` 的 SFC，只改 interface 时仍用旧的编译结果，`Invalid prop` 警告看起来没修好；先加 `--experimental.fsModuleCache=false` 重跑再下结论。
 - 浏览器用例在 `vue-browser` 项目中运行（Chromium），setup 为 `vitest/vue/vue.setup.ts`，类型由 `vitest/vue/tsconfig.vue.browser.json` 的 vue-tsc 检查，不加载 jest-dom 的 matcher 类型。
 - 公共工具从 `@test/utils/vue` 或框架无关的模块导入。
 
