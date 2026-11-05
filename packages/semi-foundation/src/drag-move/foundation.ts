@@ -38,6 +38,7 @@ export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBa
     #startClientY: number;
     #startLeft: number;
     #startTop: number;
+    #frame: { id: number; apply: () => void } | null = null;
 
     #getConstrainer(element: HTMLElement): HTMLElement | null {
         const constrainer = this.getProp('constrainer');
@@ -119,14 +120,36 @@ export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBa
             newTop = clamp(newTop, this.#yMin, this.#yMax);
         }
 
-        requestAnimationFrame(() => {
+        this.#cancelFrame();
+        const apply = () => {
             if (customMove) {
                 customMove(element, newTop, newLeft);
                 return;
             }
             element.style.top = newTop + 'px';
             element.style.left = newLeft + 'px';
-        });
+        };
+        this.#frame = {
+            id: requestAnimationFrame(() => {
+                this.#frame = null;
+                apply();
+            }),
+            apply,
+        };
+    }
+
+    #cancelFrame() {
+        if (this.#frame) {
+            cancelAnimationFrame(this.#frame.id);
+            this.#frame = null;
+        }
+    }
+
+    // Applies the last queued position before the end callbacks, so a position they set is not overwritten by a later frame.
+    #flushFrame() {
+        const frame = this.#frame;
+        this.#cancelFrame();
+        frame?.apply();
     }
 
     #isTouch(e: PointerEvent) {
@@ -137,12 +160,13 @@ export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBa
         if (e.pointerId !== this.#pointerId) {
             return;
         }
+        // before the callback: it may unmount the component, and destroy() must see the queued frame
+        this.#changePos(e);
         if (this.#isTouch(e)) {
             this.adapter.notifyTouchMove(e);
         } else {
             this.adapter.notifyMouseMove(e);
         }
-        this.#changePos(e);
     };
 
     #onPointerEnd = (e: PointerEvent) => {
@@ -150,6 +174,7 @@ export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBa
             return;
         }
         this.#stopDrag();
+        this.#flushFrame();
         if (e.type === 'pointercancel') {
             this.adapter.notifyTouchCancel(e);
         } else if (this.#isTouch(e)) {
@@ -255,6 +280,7 @@ export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBa
 
     override destroy() {
         this.#stopDrag();
+        this.#cancelFrame();
         this.#handlerObserver?.disconnect();
         this.#handlerObserver = null;
         // a StrictMode remount reports the children again and must observe them again
