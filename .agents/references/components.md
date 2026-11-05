@@ -74,6 +74,7 @@
 ## 类型与体积
 
 - 改了组件的 Props 类型后跑全量 `tsc`，报出的错误属性在使用方处修正。
+- 互斥的属性只在对外 Props 上互斥：互斥类型放 foundation 定义一处（Form 的 `ExclusiveFormValidation`，即 `{ a?: never } | { b?: never }`），对外 Props 写成「全部属性 & 互斥类型」；组件内部、adapter 与 context 用全部属性的类型（Form 的 `AllFormProps`），因为全局默认值可能同时填上两者，内部再套联合类型会让 getter 映射和 context 赋值报错。运行时由 foundation 在一处判定取哪个，并在开发模式警告。
 - 体积敏感的依赖（Lottie、MarkdownRender、CodeHighlight 的 shiki）保持按需加载。改动公开组件的依赖或导入时对比前后体积（命令见所属框架的 components.md），增长要说明原因。
 
 ## 组值回落
