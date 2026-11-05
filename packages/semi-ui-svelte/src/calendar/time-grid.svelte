@@ -94,7 +94,7 @@
                         {@render allDayEvents({ events })}
                     {:else}
                         {#each withKeys(allDayItems, 'allDay') as { id, item } (id)}
-                            <li class={[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-allday`]} style:left={toPercent(item.leftPos ?? 0)} style:top={`${item.topInd ?? 0}em`} style:width={toPercent(item.width ?? 0)}>
+                            <li class={[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-allday`]} style:inset-inline-start={toPercent(item.leftPos ?? 0)} style:top={`${item.topInd ?? 0}em`} style:width={toPercent(item.width ?? 0)}>
                                 {#if event}
                                     {@render event({ event: calendar.eventOf(item) })}
                                 {:else}

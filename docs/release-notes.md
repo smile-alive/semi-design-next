@@ -370,6 +370,7 @@
 - Solid：「今天」的标记（`semi-calendar-today` 与 `aria-current="date"`）挂载后才出现，服务端 HTML 不含；其余日期不再输出 `aria-current="false"`。月视图首帧显示全部事件，测量后才折叠为「N 更多」。
 - Svelte：自定义渲染用 snippet，名字照 Vue 插槽：`header`、`event`、`dateDisplay`、`dateGrid`、`timeDisplay`、`allDayEvents`；事件为回调 prop：`onClick(event, value)`、`onClose(event | null)`、`onMoreClick(event, date, remaining)`；`events[].children` 只接受 `string | number`，其他内容用 `event` snippet。
 - Svelte：提供 `header` snippet 后，即使渲染为空也保留表头行；month 视图首帧行数上限为 0，有事件的日期在服务端 HTML 里先折叠成「还有 N 项」，挂载后按真实行高展开；未传 `displayValue` 时，服务端不输出 today 高亮与当前时间线，挂载后才出现，SSR 场景应传 `displayValue`。
+- RTL 下全天事件与日视图事件镜像，内联定位由 `left` 改为 `inset-inline-start`。React：月视图可见事件数变化时不再重新挂载整棵视图，事件内容的状态保留。
 
 ### Navigation
 

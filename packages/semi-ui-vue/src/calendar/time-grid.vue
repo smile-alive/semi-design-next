@@ -83,7 +83,7 @@
                     <ul :class="`${cssClasses.PREFIX}-event-items`">
                         <slot v-if="$slots.allDayEvents" :events="props.events" name="allDayEvents" />
                         <template v-else>
-                            <li v-for="(item, ind) in allDayEvents" :key="item.key || `allDay-${ind}`" :class="[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-allday`]" :style="{ left: toPercent(item.leftPos ?? 0), width: toPercent(item.width ?? 0), top: `${item.topInd ?? 0}em` }">
+                            <li v-for="(item, ind) in allDayEvents" :key="item.key || `allDay-${ind}`" :class="[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-allday`]" :style="{ insetInlineStart: toPercent(item.leftPos ?? 0), width: toPercent(item.width ?? 0), top: `${item.topInd ?? 0}em` }">
                                 <slot :event="eventOf(item)" name="event">{{ item.children }}</slot>
                             </li>
                         </template>

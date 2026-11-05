@@ -304,7 +304,7 @@ describe('Calendar 行为', () => {
             [200, 20],
             [280, 20],
         ]);
-        expect(items.map((item) => item.style.left)).toEqual(['0px', '50%', '0px']);
+        expect(items.map((item) => item.style.insetInlineStart)).toEqual(['0px', '50%', '0px']);
     });
 
     it('minEventHeight 会放大过短的事件', async () => {
@@ -348,10 +348,10 @@ describe('Calendar 行为', () => {
         const row = container.querySelector<HTMLElement>(`.${prefixCls}-all-day`) as HTMLElement;
         const items = allDayItems(row);
         expect(items.map((item) => item.textContent?.trim())).toEqual(['span', 'overlap']);
-        expect(px(items[0].style.left)).toBeCloseTo((2 / 7) * 100, 0);
+        expect(px(items[0].style.insetInlineStart)).toBeCloseTo((2 / 7) * 100, 0);
         expect(px(items[0].style.width)).toBeCloseTo((3 / 7) * 100, 0);
         expect(items[0].style.top).toBe('0em');
-        expect(px(items[1].style.left)).toBeCloseTo((3 / 7) * 100, 0);
+        expect(px(items[1].style.insetInlineStart)).toBeCloseTo((3 / 7) * 100, 0);
         expect(items[1].style.top).toBe('1em');
         expect(row.style.height).toBe('2em');
     });
@@ -376,7 +376,7 @@ describe('Calendar 行为', () => {
         const { container } = renderCal({ displayValue: today, events, mode: 'week' });
         const [item] = allDayItems(container);
         expect(item).toHaveTextContent('long');
-        expect(px(item.style.left)).toBeCloseTo((1 / 7) * 100, 0);
+        expect(px(item.style.insetInlineStart)).toBeCloseTo((1 / 7) * 100, 0);
         expect(px(item.style.width)).toBeCloseTo((3 / 7) * 100, 0);
         expect(dayItems(container)).toHaveLength(0);
     });
@@ -389,9 +389,9 @@ describe('Calendar 行为', () => {
         const rows = [...container.querySelectorAll(`.${prefixCls}-month-weekrow`)];
         const items = rows.map((row) => [...row.querySelectorAll<HTMLElement>(`.${prefixCls}-event-month`)]);
         expect(items.map((list) => list.length)).toEqual([0, 1, 1, 0, 0]);
-        expect(px(items[1][0].style.left)).toBeCloseTo((6 / 7) * 100, 0);
+        expect(px(items[1][0].style.insetInlineStart)).toBeCloseTo((6 / 7) * 100, 0);
         expect(px(items[1][0].style.width)).toBeCloseTo((1 / 7) * 100, 0);
-        expect(items[2][0].style.left).toBe('0%');
+        expect(items[2][0].style.insetInlineStart).toBe('0%');
     });
 
     it('month 视图显示到行数上限的事件，其余折叠为 "more" 链接', async () => {
@@ -431,7 +431,7 @@ describe('Calendar 行为', () => {
             mode: 'week',
         });
         const item = document.querySelector<HTMLElement>(`.${prefixCls}-event-allday`) as HTMLElement;
-        expect(parseFloat(item.style.left)).toBeCloseTo((2 / 7) * 100, 1);
+        expect(parseFloat(item.style.insetInlineStart)).toBeCloseTo((2 / 7) * 100, 1);
     });
 
     it('markWeekend 标记周六与周日', () => {
@@ -932,7 +932,7 @@ describe('Calendar 数据更新', () => {
         await settle();
         expect(rowOf(container)).toBe(0);
         const item = container.querySelector<HTMLElement>(`.${prefixCls}-event-month`) as HTMLElement;
-        expect(px(item.style.left)).toBeCloseTo((6 / 7) * 100, 0);
+        expect(px(item.style.insetInlineStart)).toBeCloseTo((6 / 7) * 100, 0);
     });
 
     it('month 视图不会重排传入的 events 数组', () => {

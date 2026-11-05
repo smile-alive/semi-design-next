@@ -36,10 +36,7 @@ $module: #{$prefix}-calendar;
 
         .#{$module}-event-day {
             position: absolute;
-            // stylelint-disable-next-line property-disallowed-list -- pairs with left
-            right: $spacing-calendar_event_day-right;
-            // stylelint-disable-next-line property-disallowed-list -- dayCol writes an inline physical left
-            left: $spacing-calendar_event_day-left;
+            inset-inline: $spacing-calendar_event_day-left $spacing-calendar_event_day-right;
             z-index: $z-calendar_item;
             overflow: hidden;
         }

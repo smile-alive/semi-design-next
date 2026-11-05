@@ -62,7 +62,7 @@ export default function DayCol(props: DayColProps) {
                         const top = startPos * scrollHeight;
                         const height = (endPos - startPos) * scrollHeight;
                         return (
-                            <li key={key} className={`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-day`} style={{ top: `${top}px`, height: `${Math.max(minEventHeight, height)}px`, left }}>
+                            <li key={key} className={`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-day`} style={{ top: `${top}px`, height: `${Math.max(minEventHeight, height)}px`, insetInlineStart: left }}>
                                 {children}
                             </li>
                         );

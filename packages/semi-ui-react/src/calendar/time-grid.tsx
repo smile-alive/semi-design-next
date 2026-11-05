@@ -105,7 +105,7 @@ export default function TimeGrid(props: TimeGridProps) {
                                           key={key || `allDay-${ind}`}
                                           className={`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-allday`}
                                           style={{
-                                              left: toPercent(leftPos),
+                                              insetInlineStart: toPercent(leftPos),
                                               width: toPercent(eventWidth),
                                               top: `${topInd}em`,
                                           }}

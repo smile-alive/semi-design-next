@@ -74,7 +74,12 @@
         {@render dateGrid?.({ date: displayValue, dateString: displayValue.toString() })}
         <ul class={`${cssClasses.PREFIX}-event-items`}>
             {#each withKeys(events, 'day') as { id, item: layout } (id)}
-                <li class={[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-day`]} style:height={`${Math.max(minEventHeight ?? Number.MIN_SAFE_INTEGER, (layout.endPos - layout.startPos) * scrollHeight)}px`} style:left={toCssLength(layout.left)} style:top={`${layout.startPos * scrollHeight}px`}>
+                <li
+                    class={[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-day`]}
+                    style:height={`${Math.max(minEventHeight ?? Number.MIN_SAFE_INTEGER, (layout.endPos - layout.startPos) * scrollHeight)}px`}
+                    style:inset-inline-start={toCssLength(layout.left)}
+                    style:top={`${layout.startPos * scrollHeight}px`}
+                >
                     {#if event}
                         {@render event({ event: calendar.eventOf(layout) })}
                     {:else}
