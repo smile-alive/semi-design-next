@@ -927,3 +927,4 @@
 - Svelte 破坏性：Timeline 不提供 `Timeline.Item`，只用 `dataSource` 加 `content`、`time`、`extra` snippet（参数 `{ item, index }`）；自定义圆点逐项设置：`TimelineData.dot?: Snippet`，设了的节点按自定义圆点（`head-custom`）渲染，未设的节点画默认圆点，没有组件级 `dot` snippet；`dataSource` 项的 `class`、`style`（字符串）与其他 li 属性落在 `li` 上。
 - Svelte：导出为 `List`、`ListItem`；`onClick`、`onRightClick` 是函数 prop，类型中去掉了小写的 `onclick`、`oncontextmenu`；`item`、`header`、`footer`、`emptyContent`、`loadMore`、`children` 都是 snippet，`item` 参数 `{ item, index }`。
 - Svelte：空状态按 `children` snippet 是否存在判断（Vue 版按内容是否为空）；ListItem 的 `header`、`main`、`extra` 同样按 snippet 是否存在判断。
+- Timeline（React）：`extra`、`time` 为 0 时渲染在各自容器内，不再作为裸文本出现在正文后。

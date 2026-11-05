@@ -74,12 +74,12 @@ function Item({ ref, className, color, children, dot, type = 'default', time = '
                 ) : (
                     children
                 )}
-                {extra && (
+                {(extra || extra === 0) && (
                     <div className={`${prefixCls}-content-extra`} onClick={(e) => extraClicks.set(e.nativeEvent, e.currentTarget.closest('li'))}>
                         {extra}
                     </div>
                 )}
-                {time && <div className={`${prefixCls}-content-time`}>{time}</div>}
+                {(time || time === 0) && <div className={`${prefixCls}-content-time`}>{time}</div>}
             </div>
         </li>
     );
