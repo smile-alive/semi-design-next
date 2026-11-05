@@ -707,14 +707,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
     };
 
     // OverflowList shows the first overflowed item collapsed, so every other one is hidden; [] means all fit
-    const handleOverflow = (items: OverflowItem[]) => {
-        const { size } = state().selections;
-        const hiddenByMaxTagCount = size - Math.min(size, local.maxTagCount ?? 0);
-        const count = hiddenByMaxTagCount + Math.max(items.length - 1, 0);
-        if (state().overflowItemCount !== count) {
-            foundation.updateOverflowItemCount(size, count);
-        }
-    };
+    const handleOverflow = (items: OverflowItem[]) => foundation.updateOverflowItemCount(state().selections.size, Math.max(items.length - 1, 0));
 
     const scrollToSelection = () => {
         const { focusIndex } = state();

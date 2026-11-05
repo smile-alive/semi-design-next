@@ -877,11 +877,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                 content
             );
         if (isRenderInTag) {
-            const tagProps = {
-                // Tag declares no `disabled`; it lands on the Tag's root div
-                disabled: tagDisabled,
-                ...(inTagGroup ? { tabIndex: -1 } : { style: { maxWidth: '100%' } }),
-            };
+            const tagProps = inTagGroup ? { tabIndex: -1 } : { style: { maxWidth: '100%' } };
             return (
                 <Tag {...tagProps} key={tagValue} closable={!tagDisabled} color="white" size={tagSize} onClose={onClose}>
                     {realContent}
@@ -920,13 +916,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     };
 
     // OverflowList shows the first overflowed item collapsed, so only the others count as hidden
-    const handleOverflow = (items: [OptionProps['value'], any][]) => {
-        const hiddenByMaxTagCount = selections.size - Math.min(selections.size, maxTagCount);
-        const newOverFlowItemCount = hiddenByMaxTagCount + Math.max(items.length - 1, 0);
-        if (overflowItemCount !== newOverFlowItemCount) {
-            foundation.updateOverflowItemCount(selections.size, newOverFlowItemCount);
-        }
-    };
+    const handleOverflow = (items: [OptionProps['value'], any][]) => foundation.updateOverflowItemCount(selections.size, Math.max(items.length - 1, 0));
 
     const renderCollapsedTags = (selectedItems: [OptionProps['value'], any][], length?: number) => {
         const normalTags = typeof length === 'number' ? selectedItems.slice(0, length) : selectedItems;

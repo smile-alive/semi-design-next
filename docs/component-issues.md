@@ -519,8 +519,9 @@
 - `filter` 加 `searchPosition="trigger"` 的单选关闭时字符、Space、Home、End 无反应；`renderSelectedItem` 类型不随 `multiple` 收窄。待决。
 - React：`filter` 函数类型的参数名拼写为 `inpueValue`，出现在 API 表的类型列。待处理（改为 `inputValue`）。
 - `allowCreate` 不支持异步创建；读屏虚拟光标激活触发器内控件不开合弹层；`virtualize` 时回落的高亮可能在渲染窗口外。已知限制。
+- `ellipsisTrigger` 加 `expandRestTagsOnClick` 时，展开期间选项变化、收起后恰好放得下，`+N` 偏多（OverflowList 只在溢出变化时回调）。已知限制（升级条件：OverflowList 每个实例首次必报，需核对其他使用方）。
 - 不做：未选值时 placeholder 成为 select-only combobox 的 AX value（2026-10-11，与 React Aria、Radix 一致）。
-- 保持原样：多选标签传未声明 `disabled`；分组标题使 `:nth-child` 偏移；自定义创建项不可聚焦；重开下拉保留上次高亮；`prefix` 与 `insetLabelId` 同传时 prefix 不作名称来源。
+- 保持原样：分组标题使 `:nth-child` 偏移；自定义创建项不可聚焦；重开下拉保留上次高亮；`prefix` 与 `insetLabelId` 同传时 prefix 不作名称来源。
 - Solid：`OptionGroupProps` 用索引签名，没有原生属性的类型提示；`inputProps` 内含 JSX 时每次读取都新建节点。待处理。
 - Vue、Solid：选项数据上仍挂框架层的 `_slot`（Vue 的分组另有 `_labelSlot`），Vue 的 `optionItem`、`selectedItem` 插槽参数会带出 `_slot`。待处理（与 foundation 的选项记录一样，移到包装记录的字段上）。
 - Vue、Solid、Svelte：`defaultOpen` 的 Select 服务端 HTML 中触发器 `aria-expanded="false"`，挂载后才打开。已知限制（升级条件：弹层进入服务端 HTML 时一并处理，TreeSelect、AutoComplete 相同）。

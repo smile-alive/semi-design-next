@@ -732,6 +732,7 @@
 - Svelte：`dropdownStyle` 与选项的 `style` 是字符串；按键先由 Select 处理再调用根元素上的 `onkeydown`，`onclick`、`onfocusin`、`onfocusout` 同样先处理再调用，鼠标移入移出用根元素原生的 `onmouseenter`、`onmouseleave`；不支持泛型 `T` 与 `Multiple`，`onChange` 参数类型是 `SelectValue`；对外方法 `open`、`close`、`focus`、`clearInput`、`selectAll`、`deselectAll`、`search`、`rePosition` 经 `bind:this` 调用。
 - Vue：模板里不带值的 `multiple` 按多选处理。
 - Solid：Select、TreeSelect、Cascader 放在 InputGroup 里时只有组件自身继承组的 `size`、`disabled`，插槽与下拉里的 Button、Input 等控件不再继承（同 TagInput、AutoComplete）。
+- `ellipsisTrigger` 加 `maxTagCount` 时，新增选项后的 `+N` 计入宽度造成的隐藏项。React：多选 Tag 的根元素不再带 `disabled` 属性。
 
 ### Form
 

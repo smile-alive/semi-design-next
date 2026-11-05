@@ -474,14 +474,7 @@
     };
 
     // OverflowList shows the first overflowed item collapsed, so every other one is hidden; [] means all fit
-    const handleOverflow = (items: OptionData[]) => {
-        const { size } = state.value.selections;
-        const hiddenByMaxTagCount = size - Math.min(size, props.maxTagCount ?? 0);
-        const count = hiddenByMaxTagCount + Math.max(items.length - 1, 0);
-        if (state.value.overflowItemCount !== count) {
-            foundation.updateOverflowItemCount(size, count);
-        }
-    };
+    const handleOverflow = (items: OptionData[]) => foundation.updateOverflowItemCount(state.value.selections.size, Math.max(items.length - 1, 0));
 
     const groupTags = () => {
         const count = props.maxTagCount ?? 0;

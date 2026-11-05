@@ -489,13 +489,7 @@
     };
 
     // OverflowList shows the first overflowed item collapsed, so every other one is hidden; [] means all fit
-    const handleOverflow = (items: SelectOptionProps[]) => {
-        const { size: count } = states().selections;
-        const hidden = count - Math.min(count, tagLimit) + Math.max(items.length - 1, 0);
-        if (states().overflowItemCount !== hidden) {
-            foundation.updateOverflowItemCount(count, hidden);
-        }
-    };
+    const handleOverflow = (items: SelectOptionProps[]) => foundation.updateOverflowItemCount(states().selections.size, Math.max(items.length - 1, 0));
 
     useClickOutside([() => root, () => optionContainer], foundation.handleClickOutside, () => states().isOpen, nestedPopups);
 
