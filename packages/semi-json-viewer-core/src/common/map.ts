@@ -17,15 +17,12 @@ export class LinkedMap<K, V> {
     #head: Item<K, V> | undefined;
     #tail: Item<K, V> | undefined;
     #size: number;
-    #state: number;
-    readonly [Symbol.toStringTag] = 'LinkedMap';
 
     constructor() {
         this.#map = new Map<K, Item<K, V>>();
         this.#head = undefined;
         this.#tail = undefined;
         this.#size = 0;
-        this.#state = 0;
     }
 
     #addItemFirst(item: Item<K, V>) {
@@ -38,7 +35,6 @@ export class LinkedMap<K, V> {
             this.#head.previous = item;
         }
         this.#head = item;
-        this.#state++;
     }
 
     #addItemLast(item: Item<K, V>) {
@@ -51,7 +47,6 @@ export class LinkedMap<K, V> {
             this.#tail.next = item;
         }
         this.#tail = item;
-        this.#state++;
     }
 
     #removeItem(item: Item<K, V>) {
@@ -81,7 +76,6 @@ export class LinkedMap<K, V> {
         }
         item.next = undefined;
         item.previous = undefined;
-        this.#state++;
     }
 
     #touch(item: Item<K, V>, touch: Touch) {
@@ -112,7 +106,6 @@ export class LinkedMap<K, V> {
             item.next = this.#head;
             this.#head.previous = item;
             this.#head = item;
-            this.#state++;
         } else if (touch === Touch.AsNew) {
             if (item === this.#tail) {
                 return;
@@ -132,7 +125,6 @@ export class LinkedMap<K, V> {
             item.previous = this.#tail;
             this.#tail.next = item;
             this.#tail = item;
-            this.#state++;
         }
     }
 
@@ -156,7 +148,6 @@ export class LinkedMap<K, V> {
         if (current) {
             current.previous = undefined;
         }
-        this.#state++;
     }
 
     protected trimNew(newSize: number) {
@@ -179,7 +170,6 @@ export class LinkedMap<K, V> {
         if (current) {
             current.next = undefined;
         }
-        this.#state++;
     }
 
     clear() {
@@ -187,7 +177,6 @@ export class LinkedMap<K, V> {
         this.#head = undefined;
         this.#tail = undefined;
         this.#size = 0;
-        this.#state++;
     }
 
     isEmpty() {
@@ -277,119 +266,6 @@ export class LinkedMap<K, V> {
         this.#removeItem(item);
         this.#size--;
         return item.value;
-    }
-
-    forEach(callbackfn: (value: V, key: K, map: LinkedMap<K, V>) => void, thisArg?: any) {
-        const state = this.#state;
-        let current = this.#head;
-        while (current) {
-            if (thisArg) {
-                callbackfn.bind(thisArg)(current.value, current.key, this);
-            } else {
-                callbackfn(current.value, current.key, this);
-            }
-            if (this.#state !== state) {
-                throw new Error(`LinkedMap got modified during iteration.`);
-            }
-            current = current.next;
-        }
-    }
-
-    keys() {
-        const map = this;
-        const state = this.#state;
-        let current = this.#head;
-        const iterator: IterableIterator<K> = {
-            [Symbol.iterator]() {
-                return iterator;
-            },
-            next(): IteratorResult<K> {
-                if (map.#state !== state) {
-                    throw new Error(`LinkedMap got modified during iteration.`);
-                }
-                if (current) {
-                    const result = { value: current.key, done: false };
-                    current = current.next;
-                    return result;
-                } else {
-                    return { value: undefined, done: true };
-                }
-            },
-        };
-        return iterator;
-    }
-
-    values() {
-        const map = this;
-        const state = this.#state;
-        let current = this.#head;
-        const iterator: IterableIterator<V> = {
-            [Symbol.iterator]() {
-                return iterator;
-            },
-            next(): IteratorResult<V> {
-                if (map.#state !== state) {
-                    throw new Error(`LinkedMap got modified during iteration.`);
-                }
-                if (current) {
-                    const result = { value: current.value, done: false };
-                    current = current.next;
-                    return result;
-                } else {
-                    return { value: undefined, done: true };
-                }
-            },
-        };
-        return iterator;
-    }
-
-    entries() {
-        const map = this;
-        const state = this.#state;
-        let current = this.#head;
-        const iterator: IterableIterator<[K, V]> = {
-            [Symbol.iterator]() {
-                return iterator;
-            },
-            next(): IteratorResult<[K, V]> {
-                if (map.#state !== state) {
-                    throw new Error(`LinkedMap got modified during iteration.`);
-                }
-                if (current) {
-                    const result: IteratorResult<[K, V]> = {
-                        value: [current.key, current.value],
-                        done: false,
-                    };
-                    current = current.next;
-                    return result;
-                } else {
-                    return { value: undefined, done: true };
-                }
-            },
-        };
-        return iterator;
-    }
-
-    [Symbol.iterator]() {
-        return this.entries();
-    }
-
-    toJSON() {
-        const data: [K, V][] = [];
-
-        this.forEach((value, key) => {
-            data.push([key, value]);
-        });
-
-        return data;
-    }
-
-    fromJSON(data: [K, V][]) {
-        this.clear();
-
-        for (const [key, value] of data) {
-            this.set(key, value);
-        }
     }
 }
 

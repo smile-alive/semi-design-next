@@ -17,11 +17,6 @@ export class FindMatch {
     }
 }
 
-/** Iterator-like: returns chunks of roughly 64KB, null when finished. */
-export interface ITextSnapshot {
-    read(): string | null;
-}
-
 export class SearchData {
     readonly regex: RegExp;
     readonly wordSeparators: WordCharacterClassifier | null;

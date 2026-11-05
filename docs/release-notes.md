@@ -875,6 +875,7 @@
 - Solid：`ref` 拿到根元素 `JsonViewerElement`，其上带 `JsonViewerHandle` 的方法；破坏性（类型）：`renderSearchButton` 的第一个参数改为创建默认按钮的函数 `() => JSX.Element`，在插入处调用 `defaultButton()`；`renderSearchButton` 只调用一次，`searchControls.showSearchBar` 是随状态更新的 getter，需要在返回的 JSX 中读取；`customRenderRule[].render` 返回 JSX，放进带 token 类名的 span，在继承 JsonViewer 所在位置 context 的独立 root 中执行，下一次布局或卸载时释放；搜索栏用 `preventDefault` 认领 Esc，祖先元素的 JSX 处理函数收不到，document 上的监听仍会收到已标记 `defaultPrevented` 的事件（React 中收不到）。
 - Svelte：`value` 可绑定（`bind:`、函数绑定、单向、不传），变化同时触发 `onChange`；`customRender`、`searchButton` 为同名 snippet，参数分别是 `{ item, index, content }` 与 `{ defaultButton, showSearchBar, onToggleSearchBar, onSearch, onPrevSearch, onNextSearch, onReplace, onReplaceAll }`，`defaultButton` 是 snippet，用 `{@render}` 渲染。
 - Svelte：实例方法 `getValue`、`format`、`search`、`getSearchResults`、`prevSearch`、`nextSearch`、`replace`、`replaceAll`、`getStyle` 经 `bind:this` 调用。
+- 折叠区域超过 65535 个时不再抛错。
 
 ### Collapse
 
