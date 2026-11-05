@@ -41,7 +41,7 @@ export interface TextAreaHandle {
  * What `onChange` receives: typing, an IME composition ending, the clear button, or the native blur event when
  * blurring mid-composition truncates the value to `maxLength`
  */
-export type TextAreaChangeEvent = React.ChangeEvent<HTMLTextAreaElement> | React.CompositionEvent<HTMLTextAreaElement> | React.MouseEvent<HTMLButtonElement> | FocusEvent;
+export type TextAreaChangeEvent = React.ChangeEvent<HTMLTextAreaElement> | React.CompositionEvent<HTMLTextAreaElement> | React.MouseEvent<HTMLButtonElement> | React.FocusEvent<HTMLDivElement>;
 
 export interface TextAreaProps extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, OmitTextareaAttr> {
     autosize?: boolean | AutosizeRow;
@@ -61,7 +61,7 @@ export interface TextAreaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
     onClear?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     onChange?: (value: string, e: TextAreaChangeEvent) => void;
     /** Listens on the wrapper: focus moving between the textarea and its clear button does not fire it */
-    onBlur?: (e: FocusEvent) => void;
+    onBlur?: (e: React.FocusEvent<HTMLDivElement>) => void;
     onFocus?: (e: React.FocusEvent<HTMLDivElement>) => void;
     onInput?: (e: React.InputEvent<HTMLTextAreaElement>) => void;
     onKeyDown?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
@@ -401,7 +401,7 @@ export default function TextArea(rawProps: TextAreaProps) {
             style={style}
             onBlur={(e) => {
                 if (!e.currentTarget.contains(e.relatedTarget)) {
-                    foundation.handleBlur(e.nativeEvent);
+                    foundation.handleBlur(e);
                 }
             }}
             onClick={foundation.handleClick}

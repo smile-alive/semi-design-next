@@ -414,6 +414,7 @@
 ### Input、TextArea、InputGroup
 
 - Input 在输入法组合中失焦是否需像 TextArea 按 `maxLength` 截断未验证；Vue TextArea 同设 `maxlength` 与 `composition` 时受控或 `v-model.lazy` 下失焦截断可能与显示文字不一致。UNKNOWN（需真实输入法复现、补用例）。
+- 自动填充用延迟 `transition` 保持主题颜色，只在 Chromium 中实测，Firefox、Safari 未验证。UNKNOWN（影响：这两个浏览器可能仍显示自动填充底色；解决条件：真实浏览器保存表单数据后实测）。
 - 保持原样：未声明属性落在原生 input；内部 Input 的全局默认值按 F7 由宿主显式挡掉；TextArea 清除按钮在 `click` 清除。
 - Solid：在图标槽位（Input、Select 等的 `prefix`、`suffix`，Toast、Notification、Modal.confirm 的 `icon`）之外预先创建的图标元素读不到槽位 context，服务端 HTML 不带槽位的尺寸与类名，挂载后才补上。已知限制（升级条件：首帧图标尺寸跳变成为问题时，数据对象的 `icon` 改为接受图标组件）。
 - Svelte：prefix、suffix、addon 的内容是文本、图标还是其他节点靠挂载后观察 DOM 判定，首帧先按其他节点渲染，随后修正。已知限制（升级条件：出现可测的首帧闪烁）。

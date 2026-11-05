@@ -103,11 +103,10 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
 
     handleBlur = (e: unknown) => {
         const { value } = this.getStates();
-        const { maxLength } = this.getProps();
         let realValue = value;
         // blurring mid-composition commits the whole IME buffer, which may exceed maxLength; a value that only came
         // in through the prop is left to its owner
-        if (maxLength && this.composedSinceFocus) {
+        if (this.composedSinceFocus) {
             realValue = this.handleVisibleMaxLength(value);
             if (realValue !== value) {
                 if (!this.isControlledComponent()) {

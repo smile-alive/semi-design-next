@@ -41,11 +41,10 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
     }
 
     protected getNextValue(value: string) {
-        const { maxLength, getValueLength } = this.getProps();
-        if (typeof getValueLength !== 'function') {
+        if (typeof this.getProp('getValueLength') !== 'function') {
             return value;
         }
-        return maxLength ? this.handleVisibleMaxLength(value) : value;
+        return this.handleVisibleMaxLength(value);
     }
 
     protected changeValue(value: string, e: unknown) {
@@ -125,8 +124,7 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
             }
             return;
         }
-        const { getValueLength, maxLength } = this.getProps();
-        if (typeof getValueLength !== 'function' || !maxLength) {
+        if (typeof this.getProp('getValueLength') !== 'function') {
             return;
         }
         const nextValue = this.handleVisibleMaxLength(value);

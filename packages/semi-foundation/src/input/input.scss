@@ -486,6 +486,14 @@ $module: #{$prefix}-input;
         text-overflow: ellipsis;
     }
 
+    // the UA paints autofill with !important over the wrapper's background and its error and warning colors; only a
+    // transition outranks that, so the change is delayed for good
+    &:autofill {
+        transition:
+            background-color 0s 1000000s,
+            color 0s 1000000s;
+    }
+
     &[type='search']::-webkit-search-cancel-button {
         display: none;
     }

@@ -8,7 +8,7 @@
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import '@fibrae/semi-foundation/input/textarea.scss';
     import { IconClear } from '@fibrae/semi-icons-vue';
-    import { isNotClassOrStyle, splitControlAttrs } from '../_base/control-attrs';
+    import { isBooleanAttrOn, isNotClassOrStyle, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import useFoundation from '../_base/use-foundation';
@@ -258,7 +258,7 @@
             maxlength: getLength.value ? undefined : props.maxlength,
             minlength: TextAreaFoundation.getNativeMinLength({ minLength: props.minlength, getValueLength: getLength.value }, shown.value),
             placeholder: props.placeholder || undefined,
-            readonly: props.readonly || Boolean(attrs.readOnly),
+            readonly: props.readonly || isBooleanAttrOn(attrs.readOnly),
             rows: props.rows,
             style: [props.textareaStyle, sizeStyle.value],
             value: elementText(),

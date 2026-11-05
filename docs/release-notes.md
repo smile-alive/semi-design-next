@@ -162,6 +162,9 @@
 - Svelte：InputGroup 新增 `label`、`labelPosition`、`fieldLabel`、`labelExtra`，有标签时 group 以 `aria-labelledby` 指向标签，没有标签时 `aria-label` 取语言包文案。
 - Svelte：Input、TextArea 不接受原生 `defaultValue`；不传 `value` 即非受控，单向传值作初值。
 - Svelte：新增 `readOnly` prop，对应原生 `readonly`，只禁止键入、保留清除按钮；`readonly` 仍同时隐藏清除按钮。
+- 传 `getValueLength` 时 `maxLength={0}` 也生效，不再放行输入。Vue：模板里不带值的 `readOnly` 按开启处理。
+- 浏览器自动填充后，Input、TextArea 保持主题的背景与文字颜色，错误、警告状态的底色不再被盖住。
+- 破坏性（类型，React）：TextArea 的 `onBlur` 收到 React 合成事件 `FocusEvent<HTMLDivElement>`，`TextAreaChangeEvent` 同样改为该类型（原来是原生 `FocusEvent`）。
 
 ### InputNumber
 
