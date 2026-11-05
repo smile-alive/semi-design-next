@@ -81,6 +81,8 @@ describe('Modal（浏览器）', () => {
         await userEvent.click(screen.getByRole('button', { name: 'show dialog' }));
         const footerButton = (name: string) => screen.getByRole('button', { name });
         await waitFor(() => expect(screen.getByRole('textbox', { name: 'name' })).toHaveFocus());
+        // WebKit runs the field's native autofocus at the next rendering update and would pull the focus back to it later in the test
+        await new Promise((resolve) => requestAnimationFrame(resolve));
 
         await tab();
         expect(screen.getByRole('button', { name: 'hide dialog' })).toHaveFocus();
