@@ -388,6 +388,7 @@
 - Svelte：`header`、`footer` 是配置对象或 snippet，`NavHeader`、`NavFooter` 放在这两个 snippet 里使用，不会从 Nav 的 children 中提取；`icon` snippet 始终保留图标列，不能用空内容去掉图标框，收到 `{ size }`；折叠态下折叠按钮的可访问名称固定取语言包 `expandText`。
 - Svelte：`children` 直接渲染在列表 `ul` 内，自定义内容要自带 `li`（Vue 会把非导航项内容包进列表项，Svelte 读不到 snippet 内容）。
 - Svelte：子项写法下 `openKeys` 变回 `undefined` 时展开状态清空。
+- `items`、children 变化时保留非受控的选中与展开；`selectedKeys` 变化不再收起手动展开的项，竖向模式下补上选中项的祖先。React：Nav.Sub 的 `className` 落在外层 li。
 
 ### Transfer
 

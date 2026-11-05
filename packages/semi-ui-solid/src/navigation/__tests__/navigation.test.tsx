@@ -556,7 +556,7 @@ describe('Navigation 行为', () => {
         expect(isOpen('用户')).toBe(false);
     });
 
-    it('受控的 selectedKeys 变化时，已打开的子菜单重置为 defaultOpenKeys', async () => {
+    it('受控的 selectedKeys 变化时，保留手动展开的子菜单', async () => {
         const [selectedKeys, setSelectedKeys] = createSignal<ItemKey[]>(['home']);
         render(() => <Nav defaultOpenKeys={['user']} items={treeItems} selectedKeys={selectedKeys()} />);
         await userEvent.click(getSubTitle('任务'));
@@ -564,7 +564,7 @@ describe('Navigation 行为', () => {
         setSelectedKeys(['home']);
         expect(isOpen('任务')).toBe(true);
         setSelectedKeys(['list']);
-        expect(isOpen('任务')).toBe(false);
+        expect(isOpen('任务')).toBe(true);
         expect(isOpen('用户')).toBe(true);
     });
 
@@ -636,9 +636,7 @@ describe('Navigation 行为', () => {
         expect(title).toHaveFocus();
     });
 
-    // New content under Nav rebuilds the menu from the props: the uncontrolled selection goes back to
-    // defaultSelectedKeys, the open subs are kept because openKeys accumulate when only selected keys are given
-    it('children 的结构变化时，重置非受控的选中状态', async () => {
+    it('children 的结构变化时，保留非受控的选中状态', async () => {
         const [extra, setExtra] = createSignal<string[]>([]);
         render(() => (
             <Nav defaultSelectedKeys={['home']}>
@@ -653,8 +651,8 @@ describe('Navigation 行为', () => {
         await userEvent.click(getItemControl('任务查询'));
         expect(isSelected('任务查询')).toBe(true);
         setExtra(['tail']);
-        expect(isSelected('任务查询')).toBe(false);
-        expect(isSelected('首页')).toBe(true);
+        expect(isSelected('任务查询')).toBe(true);
+        expect(isSelected('首页')).toBe(false);
         expect(isOpen('任务')).toBe(true);
     });
 
