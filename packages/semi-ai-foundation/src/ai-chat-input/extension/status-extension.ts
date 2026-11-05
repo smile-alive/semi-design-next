@@ -1,4 +1,19 @@
-import { Extension, type RawCommands } from '@tiptap/core';
+import { Extension } from '@tiptap/core';
+
+declare module '@tiptap/core' {
+    interface Commands<ReturnType> {
+        SemiAIChatInput: {
+            /** Sets whether the send hotkey may fire. Does nothing under editor.can(), which only checks without applying */
+            setAllowHotKeySendForSemiAIChatInput: (allow: boolean) => ReturnType;
+        };
+    }
+
+    interface Storage {
+        SemiAIChatInput: {
+            allowHotKeySend: boolean;
+        };
+    }
+}
 
 /**
  * Holds SemiAIChatInput state in the editor storage so other extensions can avoid conflicts with it. For example, a
@@ -14,13 +29,15 @@ export default Extension.create({
 
     addCommands() {
         return {
-            setAllowHotKeySendForSemiAIChatInput(allow: boolean) {
+            setAllowHotKeySendForSemiAIChatInput:
+                (allow) =>
                 // command props carry the editor, not the extension storage
-                return ({ editor }) => {
-                    editor.storage.SemiAIChatInput.allowHotKeySend = allow;
+                ({ editor, dispatch }) => {
+                    if (dispatch) {
+                        editor.storage.SemiAIChatInput.allowHotKeySend = allow;
+                    }
                     return true;
-                };
-            },
-        } as Partial<RawCommands>;
+                },
+        };
     },
 });
