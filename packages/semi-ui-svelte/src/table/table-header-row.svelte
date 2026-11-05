@@ -2,7 +2,7 @@
     import { untrack } from 'svelte';
     import { numbers, strings } from '@fibrae/semi-foundation/table/constants';
     import type { BaseEllipsis } from '@fibrae/semi-foundation/table/foundation';
-    import { getColumnsByLevel, getHeaderStickyOffset, getNextSortOrder, getRTLAlign, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isLastLeftFixed, isSelectionColumn, shouldShowEllipsisTitle, sliceColumnsByLevel, type TableHeaderCell } from '@fibrae/semi-foundation/table/utils';
+    import { getColumnsByLevel, getHeadWidths, getHeaderStickyOffset, getNextSortOrder, getRTLAlign, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isLastLeftFixed, isSelectionColumn, shouldShowEllipsisTitle, sliceColumnsByLevel, type TableHeaderCell } from '@fibrae/semi-foundation/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
     import useLocale from '../locale/use-locale.svelte.js';
@@ -113,14 +113,9 @@
     const measure = (node: HTMLElement) => {
         const levelColumns = getColumnsByLevel(columns, index) as ColumnProps[];
         const heads = node.querySelectorAll(`.${table.prefixCls}-row-head`);
+        const renderedKeys = new Set<unknown>(cells.map((cell) => cell.column.key));
         table.setHeadWidths(
-            Array.from(heads, (head, headIndex) => {
-                const configWidth = levelColumns[headIndex]?.width;
-                return {
-                    width: typeof configWidth === 'number' ? configWidth : head.getBoundingClientRect().width || 0,
-                    key: levelColumns[headIndex]?.key as string,
-                };
-            }),
+            getHeadWidths(levelColumns, renderedKeys, (headIndex) => heads[headIndex]?.getBoundingClientRect().width || 0),
             index
         );
     };

@@ -448,7 +448,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
      * @param dataSourceChanged the dataSource prop changed: the uncontrolled page goes back to 1
      * @param recompute the dataSource prop or the columns changed
      */
-    #handleDataUpdate(dataSourceChanged: boolean, recompute: boolean) {
+    #handleDataUpdate(dataSourceChanged: boolean, recompute: boolean, prevPagination: TableBaseProps<RecordType>['pagination']) {
         const { dataSource, groupBy, pagination: propsPagination, defaultExpandAllRows, expandAllRows, expandAllGroupRows } = this.getProps();
         // before the writes below: the page is computed from the pagination before this update
         const statePagination = this.getState('pagination');
@@ -479,6 +479,12 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                 : statePagination;
         }
 
+        // deriveState already holds the new pageSize; the rows still come from the old page slice
+        const pageSizeChanged = isObject(propsPagination) && propsPagination.pageSize !== (isObject(prevPagination) ? prevPagination.pageSize : undefined);
+        if (pageSizeChanged) {
+            states.pagination ??= { ...statePagination };
+        }
+
         if (Object.keys(states).length) {
             const pageData = this.getCurrentPageData(states.dataSource ?? null, states.pagination ?? (statePagination && { ...statePagination }), null);
 
@@ -493,6 +499,9 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                 }
                 this.adapter.setDataSource(pageData.dataSource);
                 states.pagination = pageData.pagination;
+            }
+            if (pageSizeChanged && !('dataSource' in states)) {
+                this.adapter.setDataSource(pageData.dataSource);
             }
             if ('groups' in states) {
                 this.adapter.setGroups(pageData.groups);
@@ -1139,7 +1148,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             this.#updateKeyEntities();
         }
         // sorting and filtering recompute in their own handlers and disabled keys in deriveState
-        this.#handleDataUpdate(dataSourceChanged, recompute);
+        this.#handleDataUpdate(dataSourceChanged, recompute, prevProps.pagination);
     };
 
     initExpandedRowKeys({ groups }: { groups?: Map<string | number, Set<BaseRowKeyType>> } = {}) {

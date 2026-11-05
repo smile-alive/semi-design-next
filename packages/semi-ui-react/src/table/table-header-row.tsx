@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/table/constants';
-import { getHeaderStickyOffset, isFirstFixedRight, isLastLeftFixed, isFixedLeft, isFixedRight, sliceColumnsByLevel, getColumnsByLevel, getRTLAlign, getNextSortOrder, type TableHeaderCell } from '@fibrae/semi-foundation/table/utils';
+import { getHeadWidths, parseHeaderRows, getHeaderStickyOffset, isFirstFixedRight, isLastLeftFixed, isFixedLeft, isFixedRight, sliceColumnsByLevel, getColumnsByLevel, getRTLAlign, getNextSortOrder, type TableHeaderCell } from '@fibrae/semi-foundation/table/utils';
 import LocaleConsumer from '../locale/locale-consumer';
 import Tooltip from '../tooltip';
 import type { TableComponents, OnHeaderRow, TableLocale, ColumnProps } from './interface';
@@ -138,15 +138,17 @@ export default function TableHeaderRow({ components, row, prefixCls = cssClasses
         if (node && setHeadWidths) {
             const levelColumns = getColumnsByLevel(columns, index);
             const heads = node.querySelectorAll?.(`.${prefixCls}-row-head`);
+            // the same span rule as the cells above, which render nothing for a span of 0
+            const renderedKeys = new Set<unknown>(
+                (parseHeaderRows(columns)[index] ?? [])
+                    .filter(({ column, ...cellProps }, cellIndex) => {
+                        const { rowSpan, colSpan } = { ...cellProps, ...column.onHeaderCell?.(column, cellIndex, index) };
+                        return rowSpan !== 0 && colSpan !== 0;
+                    })
+                    .map(({ column }) => column.key)
+            );
             setHeadWidths(
-                Array.from(heads ?? [], (head, headIndex) => {
-                    let configWidth = levelColumns[headIndex]?.width;
-                    const key = levelColumns[headIndex]?.key;
-                    if (typeof configWidth !== 'number') {
-                        configWidth = (head && head.getBoundingClientRect().width) || 0;
-                    }
-                    return { width: configWidth, key };
-                }),
+                getHeadWidths(levelColumns, renderedKeys, (headIndex) => heads?.[headIndex]?.getBoundingClientRect().width || 0),
                 index
             );
         }

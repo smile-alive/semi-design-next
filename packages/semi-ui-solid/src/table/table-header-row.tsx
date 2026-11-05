@@ -3,7 +3,7 @@ import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { strings } from '@fibrae/semi-foundation/table/constants';
 import TableFoundation from '@fibrae/semi-foundation/table/foundation';
-import { getColumnsByLevel, getHeaderStickyOffset, getNextSortOrder, getRTLAlign, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isLastLeftFixed, isSelectionColumn, shouldShowEllipsisTitle, sliceColumnsByLevel } from '@fibrae/semi-foundation/table/utils';
+import { getColumnsByLevel, getHeadWidths, getHeaderStickyOffset, getNextSortOrder, getRTLAlign, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isLastLeftFixed, isSelectionColumn, shouldShowEllipsisTitle, sliceColumnsByLevel } from '@fibrae/semi-foundation/table/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import callHandler from '../_base/call-handler';
 import mergeStyles from '../_base/merge-styles';
@@ -315,12 +315,17 @@ export default function TableHeaderRow(props: TableHeaderRowProps) {
             }
             const levelColumns = getColumnsByLevel(props.columns, props.index) as ColumnProps[];
             const heads = rowElement.querySelectorAll(`.${table.view().prefixCls}-row-head`);
+            // the same span rule as HeaderCellView, which renders nothing for a span of 0
+            const renderedKeys = new Set<unknown>(
+                props.row
+                    .filter(({ column, colSpan, rowSpan }, cellIndex) => {
+                        const attrs: Record<string, any> = { colSpan, rowSpan, ...column.onHeaderCell?.(column, cellIndex, props.index) };
+                        return (attrs.colSpan ?? attrs.colspan) !== 0 && (attrs.rowSpan ?? attrs.rowspan) !== 0;
+                    })
+                    .map(({ column }) => column.key)
+            );
             table.setHeadWidths(
-                Array.from(heads, (head, headIndex) => {
-                    const configWidth = levelColumns[headIndex]?.width;
-                    const width = typeof configWidth === 'number' ? configWidth : head.getBoundingClientRect().width || 0;
-                    return { width, key: levelColumns[headIndex]?.key as string };
-                }),
+                getHeadWidths(levelColumns, renderedKeys, (headIndex) => heads[headIndex]?.getBoundingClientRect().width || 0),
                 props.index
             );
         })

@@ -208,6 +208,20 @@ export function getCellWidths(headWidths?: BaseHeadWidth[][], columns?: { key?: 
     });
 }
 
+/**
+ * A merged header leaves no th for a column whose span is 0, so the th elements pair only with the columns in `renderedKeys`;
+ * the others keep their configured width, or 0.
+ */
+export function getHeadWidths(levelColumns: { key?: unknown; width?: unknown }[], renderedKeys: Set<unknown>, measureHead: (headIndex: number) => number): BaseHeadWidth[] {
+    let headIndex = 0;
+    return levelColumns.map((column) => {
+        const rendered = renderedKeys.has(column.key);
+        const measured = rendered ? headIndex++ : -1;
+        const width = typeof column.width === 'number' ? column.width : rendered ? measureHead(measured) : 0;
+        return { width, key: column.key as string };
+    });
+}
+
 export function sliceColumnsByLevel(columns: any[], targetLevel = 0, childrenColumnName = 'children', currentLevel = 0) {
     const slicedColumns: any[] = [];
     if (Array.isArray(columns) && columns.length && currentLevel <= targetLevel) {
