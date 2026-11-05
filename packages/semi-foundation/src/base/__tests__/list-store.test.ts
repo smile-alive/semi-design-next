@@ -53,10 +53,11 @@ describe('ListStore', () => {
         expect(store.getSnapshot().updatedItems).toBe(updatedItems);
     });
 
-    it('clear 与 set 保留其他字段，set 默认清空 updatedItems', () => {
+    it('clear 与 set 保留其他字段，set 默认清空 updatedItems', async () => {
         const store = create('end');
         store.add({ id: 'a' });
         store.add({ id: 'a' });
+        await Promise.resolve();
         store.set({ extra: 2 });
         expect(store.getSnapshot()).toMatchObject({ extra: 2, updatedItems: [] });
         store.clear();

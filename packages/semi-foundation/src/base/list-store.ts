@@ -14,6 +14,7 @@ export interface ListStoreState<T> {
 export default class ListStore<T extends { id?: string }, K extends string, S extends ListStoreState<T> & Record<K, T[]>> {
     #state: S;
     #listeners = new Set<() => void>();
+    #sameRunUpdates: T[] = [];
     readonly #key: K;
     readonly #insertAt: 'start' | 'end';
 
@@ -25,6 +26,23 @@ export default class ListStore<T extends { id?: string }, K extends string, S ex
 
     #withItems(items: T[], state: Partial<S>): Partial<S> {
         return { ...state, [this.#key]: items };
+    }
+
+    /**
+     * The updates of the `add` calls in one synchronous run: a batching host renders only the last snapshot, which
+     * would otherwise lose an update that a later `add` of another item reset.
+     */
+    #collectUpdates(updated: T[]) {
+        if (!updated.length) {
+            return this.#sameRunUpdates;
+        }
+        if (!this.#sameRunUpdates.length) {
+            queueMicrotask(() => {
+                this.#sameRunUpdates = [];
+            });
+        }
+        this.#sameRunUpdates = [...this.#sameRunUpdates.filter((kept) => !updated.some((item) => item.id === kept.id)), ...updated];
+        return this.#sameRunUpdates;
     }
 
     subscribe = (listener: () => void) => {
@@ -48,7 +66,7 @@ export default class ListStore<T extends { id?: string }, K extends string, S ex
         const items: T[] = this.#state[this.#key];
         if (items.some((shown) => shown.id === item.id)) {
             const updated = items.map((shown) => (shown.id === item.id ? { ...shown, ...item } : shown));
-            this.set(this.#withItems(updated, { updatedItems: updated.filter((shown) => shown.id === item.id) } as Partial<S>));
+            this.set(this.#withItems(updated, { updatedItems: this.#collectUpdates(updated.filter((shown) => shown.id === item.id)) } as Partial<S>));
         } else {
             const others = order.filter((id) => id !== item.id);
             const atStart = this.#insertAt === 'start';
@@ -56,7 +74,7 @@ export default class ListStore<T extends { id?: string }, K extends string, S ex
             // restarts its duration
             this.set(
                 this.#withItems(atStart ? [item, ...items] : [...items, item], {
-                    updatedItems: removedItems.some((removed) => removed.id === item.id) ? [item] : [],
+                    updatedItems: this.#collectUpdates(removedItems.some((removed) => removed.id === item.id) ? [item] : []),
                     removedItems: removedItems.filter((removed) => removed.id !== item.id),
                     order: atStart ? [item.id, ...others] : [...others, item.id],
                 } as Partial<S>)

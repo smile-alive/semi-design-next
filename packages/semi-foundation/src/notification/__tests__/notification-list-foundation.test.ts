@@ -23,7 +23,7 @@ describe('NotificationListStore', () => {
         expect(listener).toHaveBeenCalledTimes(1);
     });
 
-    it('新消息插入最前，并原位更新已有 id', () => {
+    it('新消息插入最前，并原位更新已有 id', async () => {
         const store = new NotificationListStore();
         store.add({ id: 'a', title: 'a' });
         store.add({ id: 'b', title: 'b' });
@@ -33,6 +33,7 @@ describe('NotificationListStore', () => {
         const { notices, updatedItems } = store.getSnapshot();
         expect(notices.map(({ title }) => title)).toEqual(['b', 'updated']);
         expect(ids(updatedItems)).toEqual(['a']);
+        await Promise.resolve();
         store.add({ id: 'c' });
         expect(store.getSnapshot().updatedItems).toEqual([]);
     });
@@ -54,13 +55,14 @@ describe('NotificationListStore', () => {
         expect(store.getSnapshot().removedItems).toEqual([]);
     });
 
-    it('离场中的通知被同 id 重新加入时算作更新，使其重新计时', () => {
+    it('离场中的通知被同 id 重新加入时算作更新，使其重新计时', async () => {
         const store = new NotificationListStore();
         store.subscribe(() => {});
         store.add({ id: 'a' });
         store.remove('a');
         store.add({ id: 'a' });
         expect(ids(store.getSnapshot().updatedItems)).toEqual(['a']);
+        await Promise.resolve();
         store.add({ id: 'b' });
         expect(store.getSnapshot().updatedItems).toEqual([]);
     });
