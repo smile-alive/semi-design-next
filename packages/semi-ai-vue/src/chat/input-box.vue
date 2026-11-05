@@ -59,6 +59,8 @@
             setAttachment: (attachment) => base.setState({ attachment }),
             notifySend: (content, attachment) => emit('send', content, attachment),
             notifyUploadChange: (change) => props.uploadProps?.onChange?.(change),
+            notifyBeforeRemove: (file, attachment) => props.uploadProps?.beforeRemove?.(file, attachment),
+            notifyRemove: (fileInstance, attachment, file) => props.uploadProps?.onRemove?.(fileInstance, attachment, file),
             manualUpload: (files) => upload.value?.insert(files),
         })
     );

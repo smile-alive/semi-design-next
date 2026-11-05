@@ -83,6 +83,8 @@ export default function InputBox(props: InputBoxProps) {
             setAttachment: (attachment) => base.setState({ attachment }),
             notifySend: (content, attachment) => props.onSend?.(content, attachment),
             notifyUploadChange: (changed) => props.uploadProps?.onChange?.(changed),
+            notifyBeforeRemove: (file, attachment) => props.uploadProps?.beforeRemove?.(file, attachment),
+            notifyRemove: (fileInstance, attachment, file) => props.uploadProps?.onRemove?.(fileInstance, attachment, file),
             manualUpload: (files) => uploads.latest()?.insert(files),
         })
     );

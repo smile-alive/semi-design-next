@@ -69,6 +69,8 @@
             setAttachment: (attachment) => base.setState({ attachment }),
             notifySend: (content, attachment) => onSend(content, attachment),
             notifyUploadChange: (change) => uploadProps?.onChange?.(change),
+            notifyBeforeRemove: (file, attachment) => uploadProps?.beforeRemove?.(file, attachment),
+            notifyRemove: (fileInstance, attachment, file) => uploadProps?.onRemove?.(fileInstance, attachment, file),
             manualUpload: (files) => upload?.insert(files),
         })
     );
