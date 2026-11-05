@@ -24,7 +24,7 @@ jobs:
               env:
                   GH_TOKEN: ${{ github.token }}
               run: |
-                  passed=$(gh run list --workflow "$GITHUB_WORKFLOW" --branch "$GITHUB_REF_NAME" --status success --limit 1 --json headSha --jq '.[0].headSha // empty')
+                  passed=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow "$GITHUB_WORKFLOW" --branch "$GITHUB_REF_NAME" --status success --limit 1 --json headSha --jq '.[0].headSha // empty')
                   if [ -z "$passed" ]; then
                       count=all
                   else
