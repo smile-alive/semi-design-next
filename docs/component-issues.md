@@ -176,7 +176,7 @@
 - Solid：AvatarGroup 在首帧与服务端还不知道子节点的位置，按 Avatar 的创建顺序计数 `maxCount`，挂载后才按子节点位置计数：子节点之间夹有文字或包装元素（`<Tooltip><Avatar /></Tooltip>`、`<div>`）时，首帧可能隐藏包装元素里的头像，包装元素收到 token 后显示为空（在数组中显示为「[object Object]」），挂载后恢复；超出 `maxCount` 的包装元素整体交给 `renderMore`，默认 `+N` 的名称不含其中头像的 `alt`；新增的头像在列表协调前先创建，协调后超出 `maxCount` 的再释放。已知限制（升级条件：包装元素里的头像需要在服务端正确渲染时，让包装元素也向组登记）。
 - Solid：默认 `+N` 头像的名称只列被隐藏头像的 `alt`，因为隐藏头像不创建，读取子节点会创建它们。保持原样（需要名称时给头像传 `alt`）。
 - Solid、Vue：图片在 hydration 前已加载失败时，Avatar 只靠 `onError` 切换，hydration 后不显示回退态（Solid 实测；Vue 依源码，UNKNOWN）。待处理（同 React 的 `_base/use-replay-image-events.ts`，hydration 时按 `img.complete` 与 `naturalWidth` 补发事件）。
-- Svelte：AvatarGroup 按创建顺序给头像编号，在列表中间插入或重排时，重叠类和 `maxCount` 隐藏的对象与 DOM 顺序不一致（删除正确）。已知限制（升级条件：改为数据 prop 或按 DOM 顺序重新编号，见 docs/audit/svelte.md 待决）。
+- Svelte：AvatarGroup 按创建顺序给头像编号，在列表中间插入或重排时，重叠类和 `maxCount` 隐藏的对象与 DOM 顺序不一致（删除正确）。已知限制（升级条件：改为数据 prop 或按 DOM 顺序重新编号）。
 - Svelte：AvatarGroup 的 `more` snippet 参数 `restAvatars` 只含被隐藏头像的 `alt`、`src`，拿不到文字内容与颜色（头像内容是不透明的 snippet）。已知限制。
 - Svelte：服务端首帧的文字头像没有 `aria-label` 与缩放，挂载后补上；元素内容的头像首帧先套文字结构再切换。已知限制。
 
@@ -365,7 +365,7 @@
 
 ### Tabs、TabBar、TabPane、TabItem
 
-- 保持原样：`handleArrowClick` 改写传入数组；非受控 key 回落 `panes[0]` 不跳过 disabled；TabPane 脱离 Tabs 或 `more` 非法值抛错。
+- 保持原样：`handleArrowClick` 改写传入数组；TabPane 脱离 Tabs 或 `more` 非法值抛错。
 - Vue：`tab-bar` 在 `onUpdated` 重测溢出，`collapsible="auto"` 可能折叠振荡。UNKNOWN（未复现；构造临界宽度用例）。
 - Solid：TabPane 的内容按 Tabs 中的渲染位置查找 context，夹在 Tabs 与 TabPane 之间的 Provider 不生效；非 TabPane 的内容子节点读不到 TabsContext。保持原样（同 Solid 的 Switch、Match；升级条件：token 记下 `getOwner()`，父组件通过 `createRoot((dispose) => { onCleanup(dispose); ... }, owner)` 读取）。
 - Solid：`tabBarExtraContent` 的 `float` 只在内容解析时从元素 `style` 读取一次。已知限制（升级条件：有需求时改为响应式读取）。
@@ -536,7 +536,7 @@
 - 保持原样：`isRenderInTag: false` 时无 key 告警；`#isLoadControlled` 把空数组视为非受控；点击标签后移除焦点落 body。
 - Vue、Solid：`defaultOpen` 的 TreeSelect 挂载后才打开，服务端 HTML 中触发器 `aria-expanded="false"`。已知限制（见 Select）。
 - `deriveState` 在 `treeData` 键集合变化、受控 `expandedKeys` 变化时按 `motion` 判断是否处理展开动画状态，但树的展开动画由 `motionExpand` 控制（三端共用 foundation）。待处理。
-- Svelte：不绑定也不传 `value` 的 TreeSelect、Tree 放在展开 props（`{...props}`）的包装组件里时，父级 props 变化会把 `value` 重置为 `undefined`，选中项被清空，绑定或显式传 `value` 可避免。待决（见 docs/audit/svelte.md Y-Q54，同 Y-Q25）。
+- Svelte：不绑定也不传 `value` 的 TreeSelect、Tree 放在展开 props（`{...props}`）的包装组件里时，父级 props 变化会把 `value` 重置为 `undefined`，选中项被清空，绑定或显式传 `value` 可避免。待决。
 - Svelte：`expandedKeys`、`loadedKeys` 被组件写出后再被父级改回 `undefined`，不会同步清空。已知限制。
 
 ### DatePicker、DateInput、MonthsGrid、Month、Navigation、YearAndMonth、QuickControl
@@ -547,7 +547,7 @@
 - 保持原样：autoSwitchDate 对范围无效；`onFocus` 打开面板的页面键盘选择或 Esc 后会重新打开；左面板键盘移出本月时焦点不跨到右面板。
 - Svelte：自定义 `trigger` 内是否有焦点目标只在挂载时测量一次（同 TimePicker）。已知限制。
 - Svelte：没有 KeepAlive，停用时关闭面板的行为没有移植。已知限制。
-- Svelte：指针清除后焦点落在 trigger 外壳，父级清空值导致清除按钮消失时焦点掉到 body；Vue 都交给起始输入框。待决（见 docs/audit/svelte.md Y-Q51）。
+- Svelte：指针清除后焦点落在 trigger 外壳，父级清空值导致清除按钮消失时焦点掉到 body；Vue 都交给起始输入框。待决。
 - 保持原样：实例方法 `open()`、`close()` 不调用 `onOpenChange`，只有用户操作开合面板时通知（各框架与原 Semi 一致；Svelte 另写回可绑定的 `open`）。
 - 保持原样：Svelte 自定义 trigger 的 `inputValue` 在合法日期提交后变回 null（写回 `value` 触发 `syncFoundation` 重置）；合法输入重新格式化后与键入文本逐字相同，显示不受影响，其他框架受控回写时同样清空。键入 `2021-6-1` 这类非补零文本不会被改写。
 
@@ -559,7 +559,7 @@
 - 保持原样：不改 ESM 命名空间（2026-10-09，摇树不生效）；挂载 Field 不触发 `onChange`；`CommonexcludeType` 命名。
 - Svelte：用 `setValue` 删除 keyed 数组中间行时，Svelte 先注销被移除行的字段（删掉其值），再创建接管该路径的新字段；Vue 的 Debug-SetValuesDemo 场景无法复现，用例已移除。已知限制。
 - Svelte：Form 设置 `labelCol`、`wrapperCol` 时，InputGroup 的标签落在 wrapper 列而不在 label 列。已知限制（升级条件：InputGroup 能由外部标签命名时改）。
-- Svelte：Select、Cascader、TreeSelect、AutoComplete、DatePicker 字段无法传 `trigger` snippet（与校验时机 `trigger` 同名）。待决（见 docs/audit/svelte.md Y-Q55）。
+- Svelte：Select、Cascader、TreeSelect、AutoComplete、DatePicker 字段无法传 `trigger` snippet（与校验时机 `trigger` 同名）。待决。
 
 ### AIChatInput、Configure
 
