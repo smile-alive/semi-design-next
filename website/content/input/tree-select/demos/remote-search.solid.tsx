@@ -5,13 +5,19 @@ export default function TreeSelectDemo() {
     const [value, setValue] = createSignal<string | number>();
     const [treeData, setTreeData] = createSignal<TreeNodeData[]>([]);
 
+    let latestInput = '';
+
     const handleSearch = (inputValue: string) => {
+        latestInput = inputValue;
         if (!inputValue) {
             setTreeData([]);
             return;
         }
 
         setTimeout(() => {
+            if (latestInput !== inputValue) {
+                return;
+            }
             const mockData = [
                 { label: `${inputValue} - 结果1`, value: `${inputValue}-1`, key: `${inputValue}-1` },
                 { label: `${inputValue} - 结果2`, value: `${inputValue}-2`, key: `${inputValue}-2` },

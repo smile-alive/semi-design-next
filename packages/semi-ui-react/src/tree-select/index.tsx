@@ -355,7 +355,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     const deferredView = useDeferredValue(view);
     const listView = deferredView.inputValue === view.inputValue ? view : deferredView;
     const { isOpen, isFocus } = view;
-    const { inputValue, inputTriggerFocus, keyEntities, disabledKeys, checkedKeys } = view;
+    const { inputValue, inputTriggerFocus, keyEntities, disabledKeys } = view;
     const { flattenNodes, filteredKeys, motionKeys, motionType, inputValue: listInputValue } = listView;
     const realLabelName = keyMaps?.label ?? treeNodeLabelProp;
     const isTriggerPositionSearch = Boolean(filterTreeNode) && searchPosition === strings.SEARCH_POSITION_TRIGGER;
@@ -767,8 +767,8 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
 
     const renderSelection = () => {
         const useCustomTrigger = typeof triggerRender === 'function';
-        const isEmptyTriggerSearch = isTriggerPositionSearch && checkedKeys.size === 0;
-        const isValueTriggerSearch = isTriggerPositionSearch && checkedKeys.size > 0;
+        const isEmptyTriggerSearch = isTriggerPositionSearch && !hasValue;
+        const isValueTriggerSearch = isTriggerPositionSearch && hasValue;
         const classNames = useCustomTrigger
             ? clsx(className)
             : clsx(

@@ -1,17 +1,23 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { TreeSelect, type TreeNodeData } from '@fibrae/semi-ui-react';
 
 export default function TreeSelectDemo() {
     const [value, setValue] = useState<string>();
     const [treeData, setTreeData] = useState<TreeNodeData[]>([]);
 
+    const latestInput = useRef('');
+
     const handleSearch = useCallback((inputValue: string) => {
+        latestInput.current = inputValue;
         if (!inputValue) {
             setTreeData([]);
             return;
         }
 
         setTimeout(() => {
+            if (latestInput.current !== inputValue) {
+                return;
+            }
             const mockData = [
                 { label: `${inputValue} - 结果1`, value: `${inputValue}-1`, key: `${inputValue}-1` },
                 { label: `${inputValue} - 结果2`, value: `${inputValue}-2`, key: `${inputValue}-2` },

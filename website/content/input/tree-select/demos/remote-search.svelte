@@ -4,13 +4,19 @@
     let value = $state<TreeSelectValue | undefined>();
     let treeData = $state.raw<TreeNodeData[]>([]);
 
+    let latestInput = '';
+
     const onSearch = (input: string) => {
+        latestInput = input;
         if (!input) {
             treeData = [];
             return;
         }
 
         setTimeout(() => {
+            if (latestInput !== input) {
+                return;
+            }
             treeData = [
                 { label: `${input} - 结果1`, value: `${input}-1`, key: `${input}-1` },
                 { label: `${input} - 结果2`, value: `${input}-2`, key: `${input}-2` },
