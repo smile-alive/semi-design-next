@@ -79,7 +79,6 @@
 
 ### Timeline
 
-- 保持原样：`extra` 为 0 渲染数字 0。
 - Svelte：提供 `dot` snippet 后所有项都带 `head-custom` 类，提供 `time`、`extra` snippet 后所有项都渲染对应容器（Svelte 读不到 snippet 对某项是否有输出）。已知限制（升级条件：需要逐项 dot 时改 API）。
 
 ### BackTop
