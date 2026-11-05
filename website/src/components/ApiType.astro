@@ -11,9 +11,26 @@ const id = `api-type-${(Astro.locals.apiTypeCount = (Astro.locals.apiTypeCount ?
 
 <span class="api-type" tabindex="0" aria-describedby={id}><code><slot /></code><span class="api-type-detail" id={id} role="tooltip">{detail}</span></span>
 
+<script>
+    import { computePosition, flip, offset, shift } from '@floating-ui/dom';
+
+    function placeShownDetails() {
+        document.querySelectorAll('.api-type:is(:hover, :focus)').forEach(async (trigger) => {
+            const detail = trigger.querySelector<HTMLElement>('.api-type-detail') as HTMLElement;
+            const { x, y } = await computePosition(trigger, detail, { strategy: 'fixed', placement: 'bottom-start', middleware: [offset(4), flip(), shift({ padding: 8 })] });
+            detail.style.left = `${x}px`;
+            detail.style.top = `${y}px`;
+        });
+    }
+
+    document.addEventListener('mouseover', placeShownDetails);
+    document.addEventListener('focusin', placeShownDetails);
+    window.addEventListener('scroll', placeShownDetails, { capture: true, passive: true });
+    window.addEventListener('resize', placeShownDetails);
+</script>
+
 <style>
     .api-type {
-        position: relative;
         cursor: help;
     }
 
@@ -23,13 +40,14 @@ const id = `api-type-${(Astro.locals.apiTypeCount = (Astro.locals.apiTypeCount ?
         background: var(--semi-color-warning-light-default);
     }
 
+    /* Fixed, because the scrolling table wrapper clips an absolute detail on every side */
     .api-type-detail {
-        position: absolute;
-        top: calc(100% + 4px);
+        position: fixed;
+        top: 0;
         left: 0;
         z-index: 20;
         width: max-content;
-        max-width: 650px;
+        max-width: min(650px, calc(100vw - 16px));
         padding: var(--semi-spacing-tight) var(--semi-spacing-base-tight);
         font-family: var(--site-mono);
         font-size: 13px;
