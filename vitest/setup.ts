@@ -1,4 +1,6 @@
 import { beforeEach, vi } from 'vite-plus/test';
+// TZDate copies its getters from Date.prototype on first evaluation, which a mocked Date has none of: load it before freezeDate
+import '@fibrae/semi-foundation/utils/date-fns-extra';
 
 class ResizeObserver {
     observe() {}

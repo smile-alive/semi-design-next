@@ -264,9 +264,6 @@
                     // so the value is written on confirm and cancel can restore the old one in every binding mode.
                     if (!confirmNeeded) {
                         value = next;
-                        // A written `value` makes the picker controlled, so the foundation state follows only on sync;
-                        // one action may notify twice (toYearMonth with autoSwitchDate), and the second must see this one.
-                        syncFoundation();
                     }
                     onChange?.(next, dateString);
                 },

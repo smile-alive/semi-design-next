@@ -295,6 +295,7 @@ export default function DateInput(rawProps: DateInputProps) {
             defaultPickerValue,
             showClearIgnoreDisabled,
             locale: _locale,
+            format: _format,
             ...rest
         } = props;
         const suffix = type.includes('Time') ? <IconCalendarClock /> : <IconCalendar />;

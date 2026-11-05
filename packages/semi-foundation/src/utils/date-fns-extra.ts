@@ -1,4 +1,4 @@
-import { tzOffset } from '@date-fns/tz';
+import { TZDate, tzOffset } from '@date-fns/tz';
 import { parseISO, toDate } from 'date-fns';
 
 const GMTStringReg = /[-+]\d{2}:\d{2}/;
@@ -31,6 +31,7 @@ export function isValidTimezoneIANAString(timeZoneString: string) {
 }
 
 const MILLISECONDS_IN_MINUTE = 60000;
+const MILLISECONDS_IN_HOUR = 3600000;
 const MILLISECONDS_IN_DAY = 86400000;
 
 /** UTC offset of `timeZone` (IANA name or ±HH[:MM]) at the instant `time` in milliseconds, positive east of UTC */
@@ -82,14 +83,20 @@ function toDateValue(date: string | number | Date) {
  * ```
  *
  * Both instants of a repeated hour show the same wall time. A wall time that the system time zone skips for DST
- * cannot be held by a system-local Date; like the Date constructor, it moves forward by the system zone's gap.
+ * cannot be held by a system-local Date, so it comes as a TZDate fixed at the system offset before the gap. Its getters
+ * show the wall time, and its getTime is what the Date constructor gives for that wall time, so it still orders with
+ * system-local Dates; it shares that getTime with the wall time one gap later.
  */
 export function utcToZonedTime(date: string | number | Date, timeZone: string | number) {
     const utcDate = toDateValue(date);
-    const shifted = new Date(utcDate.getTime() + zoneOffset(toIANA(timeZone), utcDate.getTime()));
+    const wallTime = utcDate.getTime() + zoneOffset(toIANA(timeZone), utcDate.getTime());
+    const shifted = new Date(wallTime);
     const zonedDate = new Date(0);
     zonedDate.setFullYear(shifted.getUTCFullYear(), shifted.getUTCMonth(), shifted.getUTCDate());
     zonedDate.setHours(shifted.getUTCHours(), shifted.getUTCMinutes(), shifted.getUTCSeconds(), shifted.getUTCMilliseconds());
+    if (wallTimeAsUtc(zonedDate) > wallTime) {
+        return new TZDate(zonedDate.getTime(), toIANA((wallTime - zonedDate.getTime()) / MILLISECONDS_IN_HOUR));
+    }
     return zonedDate;
 }
 
