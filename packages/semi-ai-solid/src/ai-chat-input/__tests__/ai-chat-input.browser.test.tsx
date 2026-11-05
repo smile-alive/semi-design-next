@@ -9,7 +9,7 @@ import AIChatInput from '../index';
 const prefix = 'semi-aiChatInput';
 
 // composites a computed color over an opaque background and returns its relative luminance; Chrome serializes
-// relative color syntax as color(srgb ...) with 0-1 channels instead of rgb()/rgba() with 0-255 channels
+// color-mix() as color(srgb ...) with 0-1 channels instead of rgb()/rgba() with 0-255 channels
 function luminance(color: string, backdrop = [0, 0, 0]) {
     const scale = color.startsWith('color(srgb') ? 255 : 1;
     const [r, g, b, a = 1] = (color.match(/[\d.]+/g) ?? []).map(Number);

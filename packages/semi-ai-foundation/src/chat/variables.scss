@@ -45,7 +45,7 @@ $color-chat_chatBox_code_topSlot-bg: var(--semi-grey-4); //代码块顶部背景
 $color-chat_chatBox_code_topSlot_toCopy-bg-hover: var(--semi-grey-5); // 代码块顶部复制按钮hover背景色
 $color-chat_chatBox_code_content: var(--semi-color-bg-0); // 代码块内容背景色
 $color-chat_action_content-bg-hover: var(--semi-color-tertiary-light-hover); // 返回按钮/停止生成按钮hover背景颜色
-$color-chat_dropArea-bg: rgb(from var(--semi-grey-2) r g b / 0.9); // 拖拽区域文字颜色
+$color-chat_dropArea-bg: color-mix(in srgb, var(--semi-grey-2) 90%, transparent); // 拖拽区域文字颜色
 $color-chat_dropArea-border: var(--semi-color-border); // 拖拽区域边框颜色
 
 $spacing-chat_paddingY: 12px; // chat组件上下内边距

@@ -12,7 +12,7 @@
     - 每个变量都要被某个样式表读到，`pnpm lint:scss-variables`（`scripts/lint-scss-variables.ts`，在 `pnpm lint` 中运行）检查，未读取的变量是死代码，直接删除；注意 Sass 把标识符里的 `-` 和 `_` 视为同一个字符。
     - 需要给使用方定制的值，做成 `--semi-*` CSS 变量。
 - 组件级 CSS 变量只读：组件不在自己的类上声明变量，默认值写在 `var(--semi-x, 默认值)` 的回退里，同一默认值多处使用时由 Sass 变量提供；需要随主题变化的值做成声明在 body 的全局 token。理由：元素自身的声明总是压过继承值（与选择器权重无关，`:where` 也不能解决），组件类上声明的变量会让使用方在 body 或祖先上的覆盖失效；只读写法在 body、子树、组件类三处覆盖都生效。例：Button 的 `--semi-button-colorful-*`，默认值在 `icon-button/index.tsx` 的回退里。
-- 值优先用主题的 CSS 变量（`var(--semi-color-*)`）和已有 token，不写死颜色。颜色不用颜色名，十六进制用小写、能短写则短写；字重用数字。无回退值的 `var(--semi-*)` 引用必须在 foundation（含 `theme/`）或图标包的样式表里有声明，`pnpm lint:scss-variables` 检查；带回退值的引用视为刻意只读。调色板 token（`--semi-blue-5` 等）是完整颜色：不透明直接写 `var(--semi-x)`，带透明度写 `rgb(from var(--semi-x) r g b / 0.5)`，混色用 `color-mix()`；不写 `rgba(var(--semi-x), a)`，它对完整颜色无效。
+- 值优先用主题的 CSS 变量（`var(--semi-color-*)`）和已有 token，不写死颜色。颜色不用颜色名，十六进制用小写、能短写则短写；字重用数字。无回退值的 `var(--semi-*)` 引用必须在 foundation（含 `theme/`）或图标包的样式表里有声明，`pnpm lint:scss-variables` 检查；带回退值的引用视为刻意只读。调色板 token（`--semi-blue-5` 等）是完整颜色：不透明直接写 `var(--semi-x)`，带透明度写 `color-mix(in srgb, var(--semi-x) 50%, transparent)`，混色也用 `color-mix()`；不写 `rgba(var(--semi-x), a)`，它对完整颜色无效；不写 `rgb(from var(--semi-x) r g b / a)`，Firefox 128 才支持，低于 D15 的下限。
 - Sass 的弃用写法（`@import`、全局内置函数、`if()` 函数等）会让编译直接失败：`compileSemiScss` 把当前 Sass 全部 active 弃用项设为 fatal。升级 sass 带来的新弃用项同样生效，先改源码再升级。`theme/` 经 importer 加载时弃用写法只告警，由 `semi-theme-shared` 的测试把它的入口直接编译来拦截。
 - 盒模型：带 `semi-` 前缀类名的元素及其伪元素统一是 `border-box`（`base/base.scss` 的 `@layer semi-base`；`cssLayer: true` 时嵌套层名是 `semi.semi-base`，`cssLayer: false` 时是顶层 `semi-base`，不用 `base` 以免并入 Tailwind 的 base 层），不依赖宿主页面。尺寸变量写外框尺寸（含 padding 与 border）；能由内容决定的高度不写死，由 padding 和内容撑开。组件里不再重复写 `box-sizing: border-box`。
 

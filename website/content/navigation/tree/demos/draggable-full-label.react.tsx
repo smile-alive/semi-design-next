@@ -131,7 +131,7 @@ export default function TreeDemo() {
         const { label, icon, key } = data;
         const isLeaf = !(data.children && data.children.length);
         const style = {
-            backgroundColor: selected.has(key) ? 'var(--semi-blue-0)' : selectedThroughParent.has(key) ? 'rgb(from var(--semi-blue-0) r g b / .5)' : 'transparent',
+            backgroundColor: selected.has(key) ? 'var(--semi-blue-0)' : selectedThroughParent.has(key) ? 'color-mix(in srgb, var(--semi-blue-0) 50%, transparent)' : 'transparent',
         };
         return (
             <li className={className} role="treeitem" onClick={onClick} style={style}>

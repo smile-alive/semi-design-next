@@ -6,7 +6,7 @@ $color-tag_avatar-border-default: var(--semi-color-border); // 头像标签描�
 $color-tag_avatar-text-default: var(--semi-color-text-0); // 头像标签文字颜色 - 默认
 
 $color-tag_white-bg-default: var(--semi-color-bg-4); // 白色标签背景颜色 - 默认
-$color-tag_white-border-default: rgb(from var(--semi-grey-2) r g b / 0.7); // 白色标签描边颜色 - 默认
+$color-tag_white-border-default: color-mix(in srgb, var(--semi-grey-2) 70%, transparent); // 白色标签描边颜色 - 默认
 $color-tag_white-text-default: var(--semi-color-text-0); // 白色标签文字颜色 - 默认
 $color-tag_white-icon-default: var(--semi-color-text-2); // 白色标签图标颜色 - 默认
 

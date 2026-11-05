@@ -46,8 +46,8 @@ $color-table-bg-default: var(--semi-color-bg-1); // 表格固定列及吸顶表�
 $color-table-text-default: var(--semi-color-text-0); // 单元格默认文字颜色
 
 $color-table-border-default: var(--semi-color-border); // 表格描边颜色
-$color-table_shadow-bg-default: rgb(from var(--semi-black) r g b / 0.08); // 表格滚动后阴影颜色
-$color-table_shadow-bg-dark: rgb(from var(--semi-black) r g b / 0.4); // 表格滚动后阴影颜色 - 暗色模式
+$color-table_shadow-bg-default: color-mix(in srgb, var(--semi-black) 8%, transparent); // 表格滚动后阴影颜色
+$color-table_shadow-bg-dark: color-mix(in srgb, var(--semi-black) 40%, transparent); // 表格滚动后阴影颜色 - 暗色模式
 $color-table_shadow-border-default: var(--semi-color-border); // 表格拟阴影 描边颜色
 $color-table_th-bg-default: var(--semi-color-bg-1); // 表头背景底色，须不透明以遮住滚动到固定列和吸顶表头下的内容
 $color-table_th-fill-default: var(--semi-color-fill-0); // 表头背景叠加的填充色

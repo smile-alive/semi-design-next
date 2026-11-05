@@ -131,7 +131,7 @@
 
     const rowBackground = (key: string | undefined) => {
         if (selected.has(key)) return 'var(--semi-blue-0)';
-        if (selectedThroughParent.has(key)) return 'rgb(from var(--semi-blue-0) r g b / .5)';
+        if (selectedThroughParent.has(key)) return 'color-mix(in srgb, var(--semi-blue-0) 50%, transparent)';
         return 'transparent';
     };
 
