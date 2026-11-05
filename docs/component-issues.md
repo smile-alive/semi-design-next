@@ -360,8 +360,6 @@
 
 - `target` 解析为 null 的步骤静默不显示。待处理（开发环境告警）。
 - 保持原样：Vue 受控 `current` 的 watch 为 `flush: 'post'`，一次 flush 渲染两次。
-- Solid：目标自行移动或晚于显示挂载时，聚光区域要等下一次缩放或滚动才更新。已知限制（升级条件：有实际需求时对目标加 ResizeObserver）。
-- Svelte：目标自行移动或晚于显示挂载、且 `steps` 与 `spotlightPadding` 没变时，聚光区域要等下一次缩放或滚动才更新。已知限制（升级条件：同 Solid，有实际需求时加 ResizeObserver 或 MutationObserver）。
 - Svelte：运行中动态改 `theme` 时，popup 的 `style` 变化疑似让 Tooltip 丢掉定位声明（jsdom 下卡片变得不可访问，浏览器未实测；每步换卡片时 `{#key}` 会重建 Popover，通常碰不到）。UNKNOWN（影响：动态切主题时卡片可能错位；解决条件：浏览器用例实测）。
 
 ### Tabs、TabBar、TabPane、TabItem

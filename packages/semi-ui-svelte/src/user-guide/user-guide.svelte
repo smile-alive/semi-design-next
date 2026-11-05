@@ -181,15 +181,9 @@
         if (measuring) untrack(() => measure(true));
     });
 
-    // shortcut: a target that moves or appears with no change to steps or spotlightPadding is not noticed until the next
-    // scroll or resize, upgrade to a ResizeObserver or MutationObserver when a real use needs it.
     $effect(() => {
-        for (const item of steps) {
-            void item.target;
-            void item.spotlightPadding;
-        }
-        void spotlightPadding;
-        if (measuring) untrack(() => measure(false));
+        if (!measuring) return;
+        return UserGuideFoundation.trackFrames(() => untrack(() => measure(false)));
     });
 
     $effect(() => {

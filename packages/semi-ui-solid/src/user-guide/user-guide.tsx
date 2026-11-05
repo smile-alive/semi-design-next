@@ -134,8 +134,6 @@ export default function UserGuide(rawProps: UserGuideProps) {
     const visible = createMemo(() => Boolean(local.visible));
     const mode = createMemo(() => local.mode);
     const current = createMemo(() => UserGuideFoundation.deriveCurrent(props, state()));
-    const steps = createMemo(() => local.steps);
-    const spotlightPadding = createMemo(() => props.spotlightPadding);
     const step = createMemo(() => local.steps[current()] as StepItem | undefined);
 
     // nothing rendered (popup target not measured yet) must not lock the page or take focus
@@ -383,20 +381,11 @@ export default function UserGuide(rawProps: UserGuideProps) {
         })
     );
 
-    // shortcut: a target that moves with no reactive change here is not noticed until the next scroll or resize, upgrade
-    // to a ResizeObserver on the target when a real use needs it. Deferred: the effect above already measures with the
-    // steps of its first run
-    createEffect(
-        on(
-            [steps, spotlightPadding],
-            () => {
-                if (measuring()) {
-                    measure(false);
-                }
-            },
-            { defer: true }
-        )
-    );
+    createEffect(() => {
+        if (measuring()) {
+            onCleanup(UserGuideFoundation.trackFrames(remeasure));
+        }
+    });
 
     return (
         <Show when={visible() && step()}>

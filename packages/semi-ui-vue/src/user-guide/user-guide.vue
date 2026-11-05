@@ -186,9 +186,13 @@
             },
             { immediate: true, flush: 'post' }
         );
-        // shortcut: a target that appears later with no reactive change is not noticed, upgrade to a MutationObserver
-        // when a real use needs it.
-        watch([() => props.steps, () => props.spotlightPadding], remeasure, { deep: true, flush: 'post' });
+        watch(
+            measuring,
+            (on, _, onCleanup) => {
+                if (on) onCleanup(UserGuideFoundation.trackFrames(remeasure));
+            },
+            { immediate: true, flush: 'post' }
+        );
         watch(
             () => [shown.value, showMask.value, props.mode] as const,
             ([isShown], _, onCleanup) => {
