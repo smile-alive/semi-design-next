@@ -793,6 +793,7 @@
 - Svelte：省略截断时，完整文本留在 DOM 中并设 `hidden`，根元素的 `textContent` 含全文；Numeral 格式化与图标 small 尺寸在挂载后才应用，服务端输出原始文本与默认图标尺寸。
 - Svelte：ScrollList 的 `header`、`footer` 接受字符串或 snippet，传了就渲染；ScrollItem 的 `selectedIndex` 可绑定，配 `onSelect(data)`；`ScrollList.Item` 与具名导出 `ScrollItem` 是同一组件；`scrollToIndex` 经 `bind:this` 调用。
 - 破坏性（Solid）：Carousel 给每张幻灯片外包一层 `div.semi-carousel-content-item`，class、`role`、`aria-*`、`id`、`inert` 与切换动画写在包装元素上，使用方的幻灯片元素原样保留，要撑满轮播区域需自己设置 `height: 100%`（同 Svelte）；按幻灯片元素写的 `.semi-carousel-content-item` 选择器改为选包装元素；幻灯片自带的 `id`、`aria-label` 不再用作 tab 的 `aria-controls` 目标与幻灯片名称。服务端 HTML 已带这些 class 与属性。
+- Typography（React）：`showTooltip.type` 显式为 `undefined` 时按默认 Tooltip 渲染，不再抛错。
 
 ### AutoComplete、TagInput、Avatar、PinCode
 
