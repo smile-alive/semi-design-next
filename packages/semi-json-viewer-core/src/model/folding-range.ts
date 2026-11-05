@@ -24,10 +24,7 @@ export interface FoldRange {
     source: FoldSource;
 }
 
-export const MAX_FOLDING_REGIONS = 0xffff;
 export const MAX_LINE_NUMBER = 0xffffff;
-
-const MASK_INDENT = 0xff000000;
 
 class BitField {
     readonly #states: Uint32Array;
@@ -60,11 +57,12 @@ export class FoldingRegions {
     readonly #collapseStates: BitField;
     readonly #userDefinedStates: BitField;
     readonly #recoveredStates: BitField;
+    readonly #parentIndexes: Int32Array;
     #parentsComputed: boolean;
     readonly #types: Array<string | undefined> | undefined;
 
     constructor(startIndexes: Uint32Array, endIndexes: Uint32Array, types?: Array<string | undefined>) {
-        if (startIndexes.length !== endIndexes.length || startIndexes.length > MAX_FOLDING_REGIONS) {
+        if (startIndexes.length !== endIndexes.length) {
             throw new Error('invalid startIndexes or endIndexes size');
         }
         this.#startIndexes = startIndexes;
@@ -72,6 +70,7 @@ export class FoldingRegions {
         this.#collapseStates = new BitField(startIndexes.length);
         this.#userDefinedStates = new BitField(startIndexes.length);
         this.#recoveredStates = new BitField(startIndexes.length);
+        this.#parentIndexes = new Int32Array(startIndexes.length);
         this.#types = types;
         this.#parentsComputed = false;
     }
@@ -95,8 +94,7 @@ export class FoldingRegions {
                 }
                 const parentIndex = parentIndexes.length > 0 ? parentIndexes[parentIndexes.length - 1] : -1;
                 parentIndexes.push(i);
-                this.#startIndexes[i] = startLineNumber + ((parentIndex & 0xff) << 24);
-                this.#endIndexes[i] = endLineNumber + ((parentIndex & 0xff00) << 16);
+                this.#parentIndexes[i] = parentIndex;
             }
         }
     }
@@ -322,11 +320,7 @@ export class FoldingRegions {
 
     getParentIndex(index: number) {
         this.#ensureParentIndices();
-        const parent = ((this.#startIndexes[index] & MASK_INDENT) >>> 24) + ((this.#endIndexes[index] & MASK_INDENT) >>> 16);
-        if (parent === MAX_FOLDING_REGIONS) {
-            return -1;
-        }
-        return parent;
+        return this.#parentIndexes[index];
     }
 
     contains(index: number, line: number) {

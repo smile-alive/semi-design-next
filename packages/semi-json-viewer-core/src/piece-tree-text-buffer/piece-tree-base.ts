@@ -1,7 +1,7 @@
 /** reference from https://github.com/microsoft/vscode */
 
 import { CharCode } from '../common/char-code';
-import { type ITextSnapshot, type SearchData, FindMatch } from '../common/model';
+import { type SearchData, FindMatch } from '../common/model';
 import { Position } from '../common/position';
 import { type IRange, Range } from '../common/range';
 import { Searcher, createFindMatch, isValidMatch } from '../model/text-model-search';
@@ -132,48 +132,6 @@ export class StringBuffer {
     constructor(buffer: string, lineStarts: Uint32Array | Uint16Array | number[]) {
         this.buffer = buffer;
         this.lineStarts = lineStarts;
-    }
-}
-
-class PieceTreeSnapshot implements ITextSnapshot {
-    readonly #pieces: Piece[];
-    #index: number;
-    readonly #tree: PieceTreeBase;
-    readonly #BOM: string;
-
-    constructor(tree: PieceTreeBase, BOM: string) {
-        this.#pieces = [];
-        this.#tree = tree;
-        this.#BOM = BOM;
-        this.#index = 0;
-        if (tree.root !== SENTINEL) {
-            tree.iterate(tree.root, (node) => {
-                if (node !== SENTINEL) {
-                    this.#pieces.push(node.piece);
-                }
-                return true;
-            });
-        }
-    }
-
-    read() {
-        if (this.#pieces.length === 0) {
-            if (this.#index === 0) {
-                this.#index++;
-                return this.#BOM;
-            } else {
-                return null;
-            }
-        }
-
-        if (this.#index > this.#pieces.length - 1) {
-            return null;
-        }
-
-        if (this.#index === 0) {
-            return this.#BOM + this.#tree.getPieceContent(this.#pieces[this.#index++]);
-        }
-        return this.#tree.getPieceContent(this.#pieces[this.#index++]);
     }
 }
 
@@ -923,18 +881,6 @@ export class PieceTreeBase {
         return false;
     }
 
-    #getNodeContent(node: TreeNode) {
-        if (node === SENTINEL) {
-            return '';
-        }
-        const buffer = this.buffers[node.piece.bufferIndex];
-        const piece = node.piece;
-        const startOffset = this.#offsetInBuffer(piece.bufferIndex, piece.start);
-        const endOffset = this.#offsetInBuffer(piece.bufferIndex, piece.end);
-        const currentContent = buffer.buffer.substring(startOffset, endOffset);
-        return currentContent;
-    }
-
     /**
      *      node              node
      *     /  \              /  \
@@ -998,17 +944,6 @@ export class PieceTreeBase {
         return z;
     }
 
-    #getContentOfSubTree(node: TreeNode) {
-        let str = '';
-
-        this.iterate(node, (node) => {
-            str += this.#getNodeContent(node);
-            return true;
-        });
-
-        return str;
-    }
-
     create(chunks: StringBuffer[], eol: '\r\n' | '\n', eolNormalized: boolean) {
         this.buffers = [new StringBuffer('', [0])];
         this.#lastChangeBufferPos = { line: 0, column: 0 };
@@ -1046,77 +981,8 @@ export class PieceTreeBase {
         this.#computeBufferMetadata();
     }
 
-    normalizeEOL(eol: '\r\n' | '\n') {
-        const averageBufferSize = AverageBufferSize;
-        const min = averageBufferSize - Math.floor(averageBufferSize / 3);
-        const max = min * 2;
-
-        let tempChunk = '';
-        let tempChunkLen = 0;
-        const chunks: StringBuffer[] = [];
-
-        this.iterate(this.root, (node) => {
-            const str = this.#getNodeContent(node);
-            const len = str.length;
-            if (tempChunkLen <= min || tempChunkLen + len < max) {
-                tempChunk += str;
-                tempChunkLen += len;
-                return true;
-            }
-
-            const text = tempChunk.replace(/\r\n|\r|\n/g, eol);
-            chunks.push(new StringBuffer(text, createLineStartsFast(text)));
-            tempChunk = str;
-            tempChunkLen = len;
-            return true;
-        });
-
-        if (tempChunkLen > 0) {
-            const text = tempChunk.replace(/\r\n|\r|\n/g, eol);
-            chunks.push(new StringBuffer(text, createLineStartsFast(text)));
-        }
-
-        this.create(chunks, eol, true);
-    }
-
     getEOL() {
         return this.EOL;
-    }
-
-    setEOL(newEOL: '\r\n' | '\n') {
-        this.EOL = newEOL;
-        this.EOLLength = this.EOL.length;
-        this.normalizeEOL(newEOL);
-    }
-
-    createSnapshot(BOM: string): ITextSnapshot {
-        return new PieceTreeSnapshot(this, BOM);
-    }
-
-    equal(other: PieceTreeBase): boolean {
-        if (this.getLength() !== other.getLength()) {
-            return false;
-        }
-        if (this.getLineCount() !== other.getLineCount()) {
-            return false;
-        }
-
-        let offset = 0;
-        const ret = this.iterate(this.root, (node) => {
-            if (node === SENTINEL) {
-                return true;
-            }
-            const str = this.#getNodeContent(node);
-            const len = str.length;
-            const startPosition = other.#nodeAt(offset);
-            const endPosition = other.#nodeAt(offset + len);
-            const val = other.getValueInRange2(startPosition, endPosition);
-
-            offset += len;
-            return str === val;
-        });
-
-        return ret;
     }
 
     getOffsetAt(lineNumber: number, column: number) {
@@ -1232,85 +1098,6 @@ export class PieceTreeBase {
         }
 
         return ret;
-    }
-
-    getLinesContent() {
-        const lines: string[] = [];
-        let linesLength = 0;
-        let currentLine = '';
-        let danglingCR = false;
-
-        this.iterate(this.root, (node) => {
-            if (node === SENTINEL) {
-                return true;
-            }
-
-            const piece = node.piece;
-            let pieceLength = piece.length;
-            if (pieceLength === 0) {
-                return true;
-            }
-
-            const buffer = this.buffers[piece.bufferIndex].buffer;
-            const lineStarts = this.buffers[piece.bufferIndex].lineStarts;
-
-            const pieceStartLine = piece.start.line;
-            const pieceEndLine = piece.end.line;
-            let pieceStartOffset = lineStarts[pieceStartLine] + piece.start.column;
-
-            if (danglingCR) {
-                if (buffer.charCodeAt(pieceStartOffset) === CharCode.LineFeed) {
-                    pieceStartOffset++;
-                    pieceLength--;
-                }
-                lines[linesLength++] = currentLine;
-                currentLine = '';
-                danglingCR = false;
-                if (pieceLength === 0) {
-                    return true;
-                }
-            }
-
-            if (pieceStartLine === pieceEndLine) {
-                if (!this.EOLNormalized && buffer.charCodeAt(pieceStartOffset + pieceLength - 1) === CharCode.CarriageReturn) {
-                    danglingCR = true;
-                    currentLine += buffer.slice(pieceStartOffset, pieceStartOffset + pieceLength - 1);
-                } else {
-                    currentLine += buffer.slice(pieceStartOffset, pieceStartOffset + pieceLength);
-                }
-                return true;
-            }
-
-            currentLine += this.EOLNormalized ? buffer.substring(pieceStartOffset, Math.max(pieceStartOffset, lineStarts[pieceStartLine + 1] - this.EOLLength)) : buffer.substring(pieceStartOffset, lineStarts[pieceStartLine + 1]).replace(/(\r\n|\r|\n)$/, '');
-            lines[linesLength++] = currentLine;
-
-            for (let line = pieceStartLine + 1; line < pieceEndLine; line++) {
-                currentLine = this.EOLNormalized ? buffer.substring(lineStarts[line], lineStarts[line + 1] - this.EOLLength) : buffer.substring(lineStarts[line], lineStarts[line + 1]).replace(/(\r\n|\r|\n)$/, '');
-                lines[linesLength++] = currentLine;
-            }
-
-            if (!this.EOLNormalized && buffer.charCodeAt(lineStarts[pieceEndLine] + piece.end.column - 1) === CharCode.CarriageReturn) {
-                danglingCR = true;
-                if (piece.end.column === 0) {
-                    // the last line ended with \r: undo the push, the next iteration pushes it
-                    linesLength--;
-                } else {
-                    currentLine = buffer.slice(lineStarts[pieceEndLine], lineStarts[pieceEndLine] + piece.end.column - 1);
-                }
-            } else {
-                currentLine = buffer.slice(lineStarts[pieceEndLine], lineStarts[pieceEndLine] + piece.end.column);
-            }
-
-            return true;
-        });
-
-        if (danglingCR) {
-            lines[linesLength++] = currentLine;
-            currentLine = '';
-        }
-
-        lines[linesLength++] = currentLine;
-        return lines;
     }
 
     getLength() {
@@ -1645,10 +1432,6 @@ export class PieceTreeBase {
         this.#computeBufferMetadata();
     }
 
-    getLinesRawContent() {
-        return this.#getContentOfSubTree(this.root);
-    }
-
     getLineRawContent(lineNumber: number, endOffset: number = 0) {
         let x = this.root;
 
@@ -1718,26 +1501,5 @@ export class PieceTreeBase {
         }
 
         return ret;
-    }
-
-    iterate(node: TreeNode, callback: (node: TreeNode) => boolean): boolean {
-        if (node === SENTINEL) {
-            return callback(SENTINEL);
-        }
-
-        const leftRet = this.iterate(node.left, callback);
-        if (!leftRet) {
-            return leftRet;
-        }
-
-        return callback(node) && this.iterate(node.right, callback);
-    }
-
-    getPieceContent(piece: Piece) {
-        const buffer = this.buffers[piece.bufferIndex];
-        const startOffset = this.#offsetInBuffer(piece.bufferIndex, piece.start);
-        const endOffset = this.#offsetInBuffer(piece.bufferIndex, piece.end);
-        const currentContent = buffer.buffer.substring(startOffset, endOffset);
-        return currentContent;
     }
 }
