@@ -81,9 +81,8 @@
     // a cycled column also renders copies of it, and the copy in view can change while the value stays.
     const optionId = (index: number) => `${listId}-option-${index}`;
 
-    // One flat v-for: the foundation moves the li of a cycled column outside the render, which one Fragment tolerates
-    // best. The copies only fill the wheel, so they are hidden from assistive technology: the listbox has one option per
-    // item and one selected option.
+    // The copies only fill the wheel, so they are hidden from assistive technology: the listbox has one option per item
+    // and one selected option.
     const options = computed(() => {
         const items = (keyPrefix: string) =>
             list.value.map((item, index) => {

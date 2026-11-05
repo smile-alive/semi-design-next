@@ -71,8 +71,8 @@
     // aria-label, aria-labelledby and aria-describedby name the listbox, not the role-less root
     const attrs = $derived(splitControlAttrs(rest, (key) => key === 'aria-label' || key === 'aria-labelledby' || key === 'aria-describedby'));
 
-    // One flat list: the foundation moves the li of a cycled column outside the render. The copies only fill the wheel,
-    // so they are hidden from assistive technology and carry no id: the listbox has one option per item.
+    // The copies only fill the wheel, so they are hidden from assistive technology and carry no id: the listbox has one
+    // option per item.
     const options = $derived.by(() => {
         const items = (keyPrefix: string) =>
             list.map((item, index) => {

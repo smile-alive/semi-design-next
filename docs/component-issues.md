@@ -247,10 +247,9 @@
 
 - wheel 受控键盘选择偶发多通知一次 `6`（序列 `6, 5, 6`）。UNKNOWN（来源未定位；在真实浏览器观察）。
 - 保持原样：首项 offsetTop 为 0 被当作未知；`scrollToIndex` 的 `selectedIndex` 参数不被使用。
-- cycled 模式在 React 之外 `prepend`、`append` 重排 `<li>`。待决（改为渲染期由 state 决定顺序）。
-- wheel 模式高亮类由 foundation 直写 `classList`，重写 className 的渲染会抹掉它。待决（随 cycled 重排一起改）。
+- cycled wheel 滚动时按整段副本跳转 `scrollTop`，真实触控板与 iOS Safari 的惯性滚动可能被打断。UNKNOWN（影响：滚动手感；解决条件：真机验证，受影响时改为滚动停止后再跳转）。
+- wheel 模式高亮类由 foundation 直写 `classList`，重写 className 的渲染会抹掉它。待决（改为用 state 保存高亮行）。
 - `ScrollItemProps.transform` 的 `value` 为 any（改为 `T['value']`）；Vue ScrollItem 的 `defineExpose` 成员提取不到，Methods 表手写。待处理。
-- Solid：cycled 模式下 foundation 在渲染之外移动 `<li>`，选项按字符串 key 渲染以保住被缓存的选中节点；移动之后列表长度再变化时，数组对账可能错位。已知限制（升级条件：随 cycled 重排改为渲染期决定顺序一起改）。
 
 ### OverflowList
 

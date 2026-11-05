@@ -794,6 +794,7 @@
 - Svelte：ScrollList 的 `header`、`footer` 接受字符串或 snippet，传了就渲染；ScrollItem 的 `selectedIndex` 可绑定，配 `onSelect(data)`；`ScrollList.Item` 与具名导出 `ScrollItem` 是同一组件；`scrollToIndex` 经 `bind:this` 调用。
 - 破坏性（Solid）：Carousel 给每张幻灯片外包一层 `div.semi-carousel-content-item`，class、`role`、`aria-*`、`id`、`inert` 与切换动画写在包装元素上，使用方的幻灯片元素原样保留，要撑满轮播区域需自己设置 `height: 100%`（同 Svelte）；按幻灯片元素写的 `.semi-carousel-content-item` 选择器改为选包装元素；幻灯片自带的 `id`、`aria-label` 不再用作 tab 的 `aria-controls` 目标与幻灯片名称。服务端 HTML 已带这些 class 与属性。
 - Typography（React）：`showTooltip.type` 显式为 `undefined` 时按默认 Tooltip 渲染，不再抛错。
+- ScrollList：cycled wheel 不再移动 `<li>`，DOM 顺序就是渲染顺序，列表长度变化后顺序、选中定位与点击回调值都正确，选中项立即定位且无动画。隐藏状态下挂载或隐藏后再显示的列，显示时定位到选中项，不触发 `onSelect`。任何定位都取消进行中的滚动动画，包括 `scrollToIndex(_, 0)`。删除 `ItemFoundation` 的 `shouldAppend`、`shouldPrepend`。
 
 ### AutoComplete、TagInput、Avatar、PinCode
 

@@ -1,4 +1,4 @@
-import { debounce, throttle } from 'es-toolkit';
+import { debounce } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import { getListTargetIndex, Typeahead } from '../utils/a11y';
 import isElement from '../utils/is-element';
@@ -45,11 +45,16 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     #cancelScroll: (() => void) | null = null;
     #selectedNode: HTMLElement | null = null;
     #willSelectNode: HTMLElement | null = null;
+    #resizeObserver: ResizeObserver | null = null;
     readonly #select = debounce((node: HTMLElement) => {
         this.#cacheSelectedNode(node);
         this.#selectNode(node);
     }, msPerFrame * 2);
-    readonly #adjustList = throttle(() => this.#adjustInfiniteList(), msPerFrame);
+
+    get #isCycledWheel() {
+        const { cycled, mode } = this.getProps();
+        return cycled && mode === wheelMode;
+    }
 
     #cacheSelectedNode(node?: Element | null) {
         if (node) {
@@ -75,13 +80,13 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     // Stays in the copy `refNode` is in, so a cycled column does not jump to another copy. A cycled wheel moves by the
     // shorter way round (11 -> 0 of 12 is one row down, not eleven up), which the copies on both sides make reachable.
     #getNodeByOffset(refNode: HTMLElement | null, offset: number) {
-        const { list, cycled, mode } = this.getProps();
+        const { list } = this.getProps();
         const listNode = this.adapter.getListNode();
         if (isElement(refNode) && isElement(listNode) && Array.isArray(list) && list.length) {
             const sameCopyStep = offset % list.length;
             if (sameCopyStep) {
                 const wrapped = ((offset % list.length) + list.length) % list.length;
-                const steps = cycled && mode === wheelMode ? [wrapped > list.length / 2 ? wrapped - list.length : wrapped, sameCopyStep] : [sameCopyStep];
+                const steps = this.#isCycledWheel ? [wrapped > list.length / 2 ? wrapped - list.length : wrapped, sameCopyStep] : [sameCopyStep];
                 for (const step of steps) {
                     let targetIndex = this.#indexOf(refNode) + step;
                     while (targetIndex < 0) {
@@ -99,7 +104,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     }
 
     // Known limit: the class is set outside the host's render, so a re-render rewriting className drops it until the
-    // next scroll; upgrade with the infinite list rewrite, when the highlighted index can be state.
+    // next scroll; upgrade by making the highlighted row state.
     #highlightNearestNode() {
         if (this.getProps().mode !== wheelMode) {
             return;
@@ -128,8 +133,8 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         const wrapper = this.adapter.getScrollNode();
         // a selection queued by an earlier scroll is stale once the column is moved on purpose
         this.#select.cancel();
+        this.#stopScroll();
         if (duration && this.getProps().motion) {
-            this.#stopScroll();
             if (wrapper.scrollTop === targetTop) {
                 this.#highlightNearestNode();
             } else {
@@ -163,16 +168,34 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         }
     }
 
-    // cycled wheel columns are skipped: their copies shift the index and are rearranged outside the host
+    // the node in the list itself, which the copies rendered before it push back
+    #getSelectedIndexNode() {
+        const { list, selectedIndex } = this.getProps();
+        return this.adapter.getListNode().children[this.getState('prependCount') * list.length + (selectedIndex > -1 ? selectedIndex : 0)] as HTMLElement | undefined;
+    }
+
     #recoverSelectedNode() {
-        const { cycled, mode, selectedIndex } = this.getProps();
-        if ((cycled && mode === wheelMode) || this.#selectedNode?.isConnected) {
+        if (this.#selectedNode?.isConnected) {
             return false;
         }
-        const node = this.adapter.getListNode().children[selectedIndex > -1 ? selectedIndex : 0] as HTMLElement | undefined;
+        const node = this.#getSelectedIndexNode();
         this.#cacheSelectedNode(node);
         this.#cacheWillSelectNode(node);
         return Boolean(node);
+    }
+
+    // A hidden column has no layout, so this also runs when it shows. The position is absolute: copies added or removed,
+    // or a list of another length, leave scrollTop on another row.
+    #locateSelected() {
+        const locate = () => {
+            this.#recoverSelectedNode();
+            this.#scrollToNode(this.#selectedNode, 0);
+        };
+        if (this.#isCycledWheel) {
+            this.#renderCopies(locate);
+        } else {
+            locate();
+        }
     }
 
     #selectNode(node: HTMLElement) {
@@ -200,43 +223,39 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         }
     }
 
-    #initWheelList(callback: () => void) {
+    // #wrapCycledScroll keeps the row under the selector in the list itself. From there two scroller heights of copies on
+    // each side cover half a scroller of rows in view, half a list of the shorter way round, and room to scroll into.
+    #renderCopies(callback: () => void) {
         const { list } = this.getProps();
-        const listNode = this.adapter.getListNode();
-        const wrapper = this.adapter.getScrollNode();
-        if (isElement(wrapper) && isElement(listNode) && list && list.length) {
-            const prependCount = this.shouldPrepend(listNode, wrapper);
-            const appendCount = this.shouldAppend(listNode, wrapper);
-
-            this.setState({ prependCount, appendCount }, callback);
-        }
+        const rowHeight = this.adapter.getListNode().children[0]?.getBoundingClientRect().height ?? 0;
+        const copies = rowHeight > 0 && list.length ? Math.ceil((this.adapter.getScrollNode().getBoundingClientRect().height * 2) / (rowHeight * list.length)) : 0;
+        this.setState({ prependCount: copies, appendCount: copies }, callback);
     }
 
-    #adjustInfiniteList() {
+    // The rows repeat, so moving the view by whole copies shows the same rows: scrolling never reaches an end. No <li> is
+    // moved, the order stays the one the host rendered. The cached nodes move along, as the next offset counts from them.
+    #wrapCycledScroll() {
         const { list } = this.getProps();
         const listNode = this.adapter.getListNode();
         const wrapper = this.adapter.getScrollNode();
-        const nodeTag = 'li';
-        if (isElement(wrapper) && isElement(listNode) && list && list.length) {
-            const allNodes = listNode.querySelectorAll(nodeTag);
-            const total = allNodes.length;
-            const ratio = 1;
-
-            const prependCount = this.shouldPrepend(listNode, wrapper, ratio);
-            const appendCount = this.shouldAppend(listNode, wrapper, ratio);
-
-            if (prependCount) {
-                for (let i = 0; i < prependCount; i++) {
-                    const nodes = Array.from(allNodes).slice(total - list.length * (i + 1), total - list.length * i);
-                    listNode.prepend(...nodes);
-                }
-            }
-
-            if (appendCount) {
-                for (let i = 0; i < appendCount; i++) {
-                    const nodes = Array.from(allNodes).slice(i * list.length, (i + 1) * list.length);
-                    listNode.append(...nodes);
-                }
+        const { children } = listNode;
+        const start = this.getState('prependCount') * list.length;
+        const first = children[start] as HTMLElement | undefined;
+        const next = children[start + list.length] as HTMLElement | undefined;
+        const copyHeight = first && next ? next.offsetTop - first.offsetTop : 0;
+        if (copyHeight <= 0) {
+            return;
+        }
+        const copies = Math.floor((wrapper.scrollTop + wrapper.offsetHeight / 2 - first.offsetTop) / copyHeight);
+        if (copies) {
+            const moved = (node: Element | null) => (children[this.#indexOf(node) - copies * list.length] ?? node) as HTMLElement | null;
+            wrapper.scrollTop -= copies * copyHeight;
+            this.#selectedNode = moved(this.#selectedNode);
+            this.#willSelectNode = moved(this.#willSelectNode);
+            const highlighted = listNode.querySelector(`.${cssClasses.SELECTED}`);
+            if (highlighted) {
+                highlighted.classList.remove(cssClasses.SELECTED);
+                moved(highlighted).classList.add(cssClasses.SELECTED);
             }
         }
     }
@@ -308,84 +327,28 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         return null;
     }
 
-    protected shouldAppend(listWrapper: HTMLElement, scrollWrapper: HTMLElement, ratio = 2) {
-        const tag = 'li';
-        if (isElement(listWrapper) && isElement(scrollWrapper)) {
-            const itemNodes = listWrapper.querySelectorAll(tag);
-            const lastNode = itemNodes[itemNodes.length - 1];
-            const { list } = this.getProps();
-
-            if (lastNode) {
-                const scrollRect = scrollWrapper.getBoundingClientRect();
-                const lastRect = lastNode.getBoundingClientRect();
-
-                const listHeight = lastRect.height * list.length;
-                // without layout (jsdom) `baseTop += listHeight` never advances and the loop would not end
-                if (listHeight <= 0) {
-                    return 0;
-                }
-                let baseTop = lastRect.top;
-                let count = 0;
-
-                while (baseTop <= scrollRect.top + scrollRect.height * ratio) {
-                    count += 1;
-                    baseTop += listHeight;
-                }
-
-                return count;
-            }
-        }
-
-        return 0;
-    }
-
-    protected shouldPrepend(listWrapper: HTMLElement, scrollWrapper: HTMLElement, ratio = 2) {
-        const tag = 'li';
-
-        if (isElement(listWrapper) && isElement(scrollWrapper)) {
-            const itemNodes = listWrapper.querySelectorAll(tag);
-            const firstNode = itemNodes[0];
-            const { list } = this.getProps();
-
-            if (firstNode) {
-                const scrollRect = scrollWrapper.getBoundingClientRect();
-                const firstRect = firstNode.getBoundingClientRect();
-
-                const listHeight = firstRect.height * list.length;
-                if (listHeight <= 0) {
-                    return 0;
-                }
-
-                let baseTop = firstRect.top;
-                let count = 0;
-
-                while (baseTop + firstRect.height >= scrollRect.top - scrollRect.height * ratio) {
-                    count += 1;
-                    baseTop -= listHeight;
-                }
-
-                return count;
-            }
-        }
-
-        return 0;
-    }
-
     override init() {
-        const { mode, cycled, selectedIndex } = this.getProps();
-        const selectedNode = this.adapter.getListNode().children[typeof selectedIndex === 'number' && selectedIndex > -1 ? selectedIndex : 0] as HTMLElement | undefined;
+        const selectedNode = this.#getSelectedIndexNode();
         this.#cacheSelectedNode(selectedNode);
         this.#cacheWillSelectNode(selectedNode);
-        if (mode === wheelMode && cycled) {
-            this.#initWheelList(() => this.#scrollToNode(selectedNode, 0));
-        } else {
-            this.#scrollToNode(selectedNode, 0);
-        }
+        this.#locateSelected();
+
+        const wrapper = this.adapter.getScrollNode();
+        let hidden = wrapper.offsetHeight === 0;
+        // Only on showing: TimePicker and DatePicker re-centre their columns on a resize, and the user may have scrolled
+        this.#resizeObserver = new ResizeObserver(() => {
+            const wasHidden = hidden;
+            hidden = wrapper.offsetHeight === 0;
+            if (wasHidden && !hidden) {
+                this.#locateSelected();
+            }
+        });
+        this.#resizeObserver.observe(wrapper);
     }
 
     override destroy() {
+        this.#resizeObserver?.disconnect();
         this.#select.cancel();
-        this.#adjustList.cancel();
         this.#stopScroll();
     }
 
@@ -444,22 +407,21 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
 
     /** Scroll of the column: in wheel mode the item at the selector is selected once scrolling settles */
     handleScroll = () => {
-        const info = this.#getNearestNodeInfo();
-        // unmounted before a queued scroll event arrived
-        if (!info) {
+        // no selector: unmounted before a queued scroll event arrived
+        if (this.#isAnimating || !isElement(this.adapter.getSelectorNode())) {
             return;
         }
-        if (this.getProps().cycled) {
-            this.#adjustList();
+        if (this.#isCycledWheel) {
+            this.#wrapCycledScroll();
         }
-        if (!this.#isAnimating) {
-            this.#select(info.nearestNode);
-        }
+        this.#select(this.#getNearestNodeInfo().nearestNode);
     };
 
     /** The list length changed */
     syncList = () => {
-        if (this.#recoverSelectedNode()) {
+        if (this.#isCycledWheel) {
+            this.#locateSelected();
+        } else if (this.#recoverSelectedNode()) {
             this.scrollToSelected();
         }
     };
@@ -469,6 +431,11 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         if (this.#recoverSelectedNode()) {
             this.scrollToSelected();
             return;
+        }
+        // Key repeat restarts the self-scroll before it ends, and handleScroll does not wrap during one
+        if (this.#isCycledWheel) {
+            this.#stopScroll();
+            this.#wrapCycledScroll();
         }
         const { list } = this.getProps();
         const willSelectIndex = this.#indexOf(this.#willSelectNode);
