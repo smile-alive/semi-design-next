@@ -1,11 +1,11 @@
 import type { ComputedRef } from 'vue';
 import type { FieldBridge, FormState } from '@fibrae/semi-foundation/form/interface';
 import { createContext } from '../_base/create-context';
-import type { FormApi, FormProps } from './interface';
+import type { AllFormProps, FormApi } from './interface';
 
 export interface FormContextValue {
     formState: ComputedRef<FormState>;
-    formProps: ComputedRef<FormProps>;
+    formProps: ComputedRef<AllFormProps>;
     formApi: FormApi;
     bridge: FieldBridge;
 }

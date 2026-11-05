@@ -1,8 +1,9 @@
 import scrollIntoView from 'scroll-into-view-if-needed';
 import { describe, expect, it, vi } from 'vite-plus/test';
+import * as z from 'zod';
 import FieldStore from '../field-store';
 import FormFoundation from '../foundation';
-import type { BaseFormAdapter, FieldRegistration } from '../interface';
+import type { BaseFormAdapter, FieldRegistration, StandardSchemaIssue, StandardSchemaResult } from '../interface';
 
 vi.mock('scroll-into-view-if-needed', () => ({ default: vi.fn<() => void>() }));
 
@@ -30,11 +31,11 @@ function createHost(props: Record<string, unknown> = {}) {
     const api = foundation.getFormApi();
 
     // The host creates an instance snapshot before mounting, then registers it after committing.
-    const addField = (field: string, validation: Partial<ReturnType<FieldRegistration['getValidateOptions']>> = {}) => {
+    const addField = (field: string, validation: Partial<ReturnType<FieldRegistration['getValidateOptions']>> = {}, keepState = false) => {
         const registration: FieldRegistration = {
             id: field,
             field,
-            keepState: false,
+            keepState,
             allowEmpty: false,
             getValidateOptions: () => validation,
             getChangeOptions: () => ({}),
@@ -466,5 +467,221 @@ describe('FormFoundation 校验结算', () => {
         addField('name');
         api.setError('name', '');
         await expect(api.validate()).resolves.toEqual({});
+    });
+});
+
+describe('FormFoundation schema', () => {
+    const settle = () => new Promise((resolve) => setTimeout(resolve));
+    const schemaOf = (validate: (value: unknown) => StandardSchemaResult<unknown> | Promise<StandardSchemaResult<unknown>>) => ({ '~standard': { version: 1, vendor: 'test', validate: vi.fn<typeof validate>(validate) } }) as const;
+    const failing = (...issues: StandardSchemaIssue[]) => schemaOf(() => ({ issues }));
+    const changeTo = (host: ReturnType<typeof createHost>, registration: FieldRegistration, value: unknown) => host.fieldBridge.changeFieldValue(registration, value, { validate: true, onChange: () => {} });
+
+    it('一轮校验只调用一次 schema，错误落到各字段，没有字段的路径留在 formState', async () => {
+        const schema = failing({ message: '姓名必填', path: ['name'] }, { message: '年龄必填', path: ['age'] });
+        const { api, addField } = createHost({ schema });
+        const name = addField('name');
+        addField('city');
+
+        await expect(api.validate()).rejects.toEqual({ name: '姓名必填', age: '年龄必填' });
+        expect(schema['~standard'].validate).toHaveBeenCalledTimes(1);
+        expect(name.store.getSnapshot()).toMatchObject({ error: '姓名必填', status: 'error', touched: true });
+        expect(api.getFormState().errors).toEqual({ name: '姓名必填', age: '年龄必填' });
+    });
+
+    it('同一轮挂载校验的多个字段共用一次异步 schema 调用', async () => {
+        const schema = schemaOf(async () => ({ issues: [{ message: 'a 错', path: ['a'] }] }));
+        const { fieldBridge, api, addField } = createHost({ schema });
+        await Promise.all([fieldBridge.validateField(addField('a'), undefined), fieldBridge.validateField(addField('b'), undefined)]);
+        expect(schema['~standard'].validate).toHaveBeenCalledTimes(1);
+        expect(api.getError('a')).toBe('a 错');
+    });
+
+    it('校验全部字段时 resolve 与 onSubmit 取 schema 的输出，只校验部分路径时取原值', async () => {
+        const schema = z.object({ age: z.coerce.number() });
+        const { adapter, api, addField } = createHost({ schema, initValues: { extra: 1 } });
+        addField('age');
+        api.setValue('age', '12');
+
+        await expect(api.validate()).resolves.toEqual({ age: 12 });
+        await expect(api.validate(['age'])).resolves.toEqual({ age: '12', extra: 1 });
+        api.submitForm();
+        await vi.waitFor(() => expect(adapter.notifySubmit).toHaveBeenCalledWith({ age: 12 }, undefined));
+    });
+
+    it('issue 路径的下标、{ key } 片段与含路径语法的键都落到对应位置', async () => {
+        const schema = failing({ message: '行错误', path: ['items', 0, { key: 'q' }] }, { message: '字符串下标', path: ['items', '1', 'q'] }, { message: '带点的键', path: ['a.b', 'c'] }, { message: '整体错误' });
+        const { api, addField } = createHost({ schema });
+        const row = addField('items[0].q');
+        const stringIndexRow = addField('items[1].q');
+
+        await expect(api.validate()).rejects.toEqual({ '': '整体错误', 'a.b': { c: '带点的键' }, items: [{ q: '行错误' }, { q: '字符串下标' }] });
+        expect(row.store.getSnapshot().error).toBe('行错误');
+        expect(stringIndexRow.store.getSnapshot().error).toBe('字符串下标');
+    });
+
+    it('父路径与子路径同时有错时子路径生效，只有父路径有错时子字段不读取父错误的字符', async () => {
+        const both = createHost({ schema: failing({ message: '至少两行', path: ['items'] }, { message: '行错误', path: ['items', 0] }) });
+        const row = both.addField('items[0]');
+        await expect(both.api.validate()).rejects.toEqual({ items: ['行错误'] });
+        expect(row.store.getSnapshot().error).toBe('行错误');
+
+        const onlyParent = createHost({ schema: failing({ message: '至少两行', path: ['items'] }) });
+        const passingRow = onlyParent.addField('items[0]');
+        await expect(onlyParent.api.validate()).rejects.toEqual({ items: '至少两行' });
+        expect(passingRow.store.getSnapshot().error).toBeUndefined();
+        expect(onlyParent.addField('items[1]').store.getSnapshot().error).toBeUndefined();
+    });
+
+    it('整体持有数组值的字段接收子路径的错误，多条错误是数组，stopValidateWithError 只留第一条', async () => {
+        const issues = [
+            { message: '第二项太短', path: ['tags', 1] },
+            { message: '太多', path: ['tags'] },
+        ];
+        const all = createHost({ schema: failing(...issues) });
+        all.addField('tags');
+        await expect(all.api.validate()).rejects.toEqual({ tags: ['太多', '第二项太短'] });
+
+        const first = createHost({ schema: failing(...issues) });
+        first.addField('tags', { stopValidateWithError: true });
+        await expect(first.api.validate()).rejects.toEqual({ tags: '太多' });
+    });
+
+    it('有 schema 时字段的 validator、rules 不运行，注册时警告', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        const validate = vi.fn<() => string>(() => 'validator 错');
+        const schema = failing({ message: 'schema 错', path: ['custom'] }, { message: 'schema 错', path: ['ruled'] });
+        const { api, addField } = createHost({ schema });
+        const custom = addField('custom', { validate });
+        const ruled = addField('ruled', { rules: [{ required: true, message: 'rules 错' }] });
+        addField('plain');
+
+        expect(warn).toHaveBeenCalledTimes(2);
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('"custom"'));
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('"ruled"'));
+        await expect(api.validate()).rejects.toEqual({ custom: 'schema 错', ruled: 'schema 错' });
+        expect(validate).not.toHaveBeenCalled();
+        expect(custom.store.getSnapshot().error).toBe('schema 错');
+        expect(ruled.store.getSnapshot().error).toBe('schema 错');
+        warn.mockRestore();
+    });
+
+    it('没有 schema 的字段照常运行 validator 和 rules，不警告', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        const { api, addField } = createHost();
+        addField('custom', { validate: () => 'validator 错' });
+        addField('ruled', { rules: [{ required: true, message: 'rules 错' }] });
+
+        await expect(api.validate()).rejects.toEqual({ custom: 'validator 错', ruled: 'rules 错' });
+        expect(warn).not.toHaveBeenCalledWith(expect.stringContaining('<Form schema>'));
+        warn.mockRestore();
+    });
+
+    it('字段值变化时写入本字段与已 touched 的字段，未 touched 的字段不显示错误', async () => {
+        const schema = z.object({ password: z.string(), confirm: z.string().optional(), other: z.string() }).refine((values) => values.password === values.confirm, { path: ['confirm'], message: '两次不一致' });
+        const host = createHost({ schema });
+        const password = host.addField('password');
+        const confirm = host.addField('confirm');
+        const other = host.addField('other');
+        host.api.setValues({ password: 'a', confirm: 'a', other: 'x' });
+        host.fieldBridge.setFieldTouched(confirm, true);
+        host.adapter.notifyErrorChange.mockClear();
+
+        changeTo(host, password, 'b');
+        await vi.waitFor(() => expect(confirm.store.getSnapshot().error).toBe('两次不一致'));
+        expect(other.store.getSnapshot().error).toBeUndefined();
+        expect(host.adapter.notifyErrorChange).toHaveBeenLastCalledWith({ confirm: '两次不一致' }, { confirm: '两次不一致' });
+    });
+
+    it('异步 schema 乱序返回时，先发起的结果不覆盖后发起的结果', async () => {
+        const resolvers: Array<(result: StandardSchemaResult<unknown>) => void> = [];
+        const schema = schemaOf(() => new Promise((resolve) => resolvers.push(resolve)));
+        const host = createHost({ schema });
+        const name = host.addField('name');
+
+        changeTo(host, name, 'a');
+        await settle();
+        changeTo(host, name, 'ab');
+        await settle();
+        resolvers[1]({ value: {} });
+        await settle();
+        resolvers[0]({ issues: [{ message: '旧结果', path: ['name'] }] });
+        await settle();
+        expect(name.store.getSnapshot().error).toBeUndefined();
+        expect(name.store.getSnapshot().status).toBe('success');
+    });
+
+    it('静默校验不写入错误，reject 的结果含没有字段的路径', async () => {
+        const { adapter, api, addField } = createHost({ schema: failing({ message: '姓名错', path: ['name'] }, { message: '年龄错', path: ['age'] }) });
+        const name = addField('name');
+        adapter.notifyChange.mockClear();
+
+        await expect(api.validate({ silent: true })).rejects.toEqual({ name: '姓名错', age: '年龄错' });
+        expect(api.getFormState().errors).toEqual({});
+        expect(name.store.getSnapshot().error).toBeUndefined();
+        expect(adapter.notifyChange).not.toHaveBeenCalled();
+    });
+
+    it('validate(fields) 只认这些路径下的 issue', async () => {
+        const { api, addField } = createHost({ schema: failing({ message: '姓名错', path: ['name'] }, { message: '年龄错', path: ['age'] }, { message: '城市错', path: ['address', 'city'] }) });
+        addField('name');
+
+        await expect(api.validate(['address'])).rejects.toEqual({ address: { city: '城市错' } });
+        expect(api.getFormState().errors).toEqual({ address: { city: '城市错' } });
+        await expect(api.validate(['missing'])).resolves.toEqual({});
+    });
+
+    it('字段首次挂载时显示校验已写入的错误；校验通过后清掉没有字段的错误并通知', async () => {
+        let issues: StandardSchemaIssue[] = [{ message: '年龄错', path: ['age'] }];
+        const { adapter, api, addField } = createHost({ schema: schemaOf(() => (issues.length ? { issues } : { value: {} })) });
+
+        await expect(api.validate()).rejects.toEqual({ age: '年龄错' });
+        expect(addField('age').store.getSnapshot()).toMatchObject({ error: '年龄错', status: 'error' });
+        issues = [{ message: '整体错', path: [] }];
+        await expect(api.validate()).rejects.toEqual({ '': '整体错' });
+
+        issues = [];
+        adapter.notifyErrorChange.mockClear();
+        await expect(api.validate()).resolves.toEqual({});
+        expect(api.getFormState().errors).toEqual({});
+        expect(adapter.notifyErrorChange).toHaveBeenCalledWith({}, { '': undefined });
+    });
+
+    it('校验全部字段时，已卸载的 keepState 字段的旧错误随结果更新；整表 reset 清掉没有字段的错误', async () => {
+        let passes = false;
+        const { fieldBridge, api, addField } = createHost({ schema: schemaOf(() => (passes ? { value: {} } : { issues: [{ message: '错', path: ['kept'] }] })) });
+        addField('kept', {}, true);
+        await expect(api.validate()).rejects.toEqual({ kept: '错' });
+        fieldBridge.unRegister('kept');
+        passes = true;
+        await expect(api.validate()).resolves.toEqual({});
+        expect(addField('kept', {}, true).store.getSnapshot().error).toBeUndefined();
+
+        passes = false;
+        fieldBridge.unRegister('kept');
+        await expect(api.validate()).rejects.toEqual({ kept: '错' });
+        api.reset();
+        expect(api.getFormState().errors).toEqual({});
+    });
+
+    it('schema 自身抛错时 validate 以该错误 reject', async () => {
+        const failure = new Error('schema 坏了');
+        const { api, addField } = createHost({
+            schema: schemaOf(() => {
+                throw failure;
+            }),
+        });
+        addField('name');
+        await expect(api.validate()).rejects.toBe(failure);
+    });
+
+    it('同时传 validator 时警告并只用 validator', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        const schema = failing({ message: 'schema 错', path: ['name'] });
+        const { api, addField } = createHost({ schema, validator: () => ({ name: 'validator 错' }) });
+        addField('name');
+
+        await expect(api.validate()).rejects.toEqual({ name: 'validator 错' });
+        expect(schema['~standard'].validate).not.toHaveBeenCalled();
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('<Form schema>'));
     });
 });

@@ -1,10 +1,10 @@
 import type { FieldBridge, FormState } from '@fibrae/semi-foundation/form/interface';
 import { createContext } from '../_base/create-context.js';
-import type { FormApi, FormProps } from './interface.js';
+import type { AllFormProps, FormApi } from './interface.js';
 
 export interface FormContextValue {
     readonly formState: FormState;
-    readonly formProps: FormProps;
+    readonly formProps: AllFormProps;
     formApi: FormApi;
     bridge: FieldBridge;
 }

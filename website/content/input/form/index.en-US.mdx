@@ -627,6 +627,32 @@ For asynchronous validation, you should return a promise. In promise.then() you 
 
 <Demo id="form-validate-async" />
 
+### Validate with a Schema
+
+`schema` accepts any validation library that implements [Standard Schema](https://standardschema.dev), such as [Zod](https://zod.dev), [Valibot](https://valibot.dev) and [ArkType](https://arktype.io). You install the library yourself; Semi does not depend on it.
+
+Fields validate on their own `trigger` as usual, and submit validates all of them. Once all fields pass, the submit callback and `formApi.validate()` receive the schema's output (trimmed or coerced values, for example) while `formState.values` keeps what the user typed. `formApi.validate(['fieldA'])` validates only some fields and resolves with the raw values.
+
+<Demo id="schema-validate" />
+
+Where validation comes from and where errors go:
+
+- A Form validates from one source. With a `schema`, the `validator` and `rules` of the fields no longer run, and the Form warns in development; a field sits on another component, so TypeScript cannot catch this combination. Passing both the Form `validator` and `schema` is a TypeScript error; past the types, the Form warns in development and uses only `validator`.
+- One validation round runs the schema once. The Form does not debounce, so asynchronous checks in the schema, such as a uniqueness request, run every round. To limit requests, set the field's `trigger` to `blur`.
+- Write errors returned by a server after submit with `formApi.setError`; the schema's result replaces them the next time that field validates.
+- Changing a field shows errors only on that field and on touched fields, so a cross-field error needs a `path` pointing at the field that shows it, like the password confirmation in the demo.
+- An error whose path points inside a field (`tags[0]` of a TagInput, for example) shows on the field holding that value. An error without a matching field is not displayed and stays in `formState.errors`; root-level schema errors go to `errors['']`.
+
+When using Zod:
+
+- With `allowEmpty` off, a field left blank or cleared holds `undefined`, not an empty string. Write a required field as `z.string({ error: 'Please enter a name' })`; `.min(1, '...')` alone shows Zod's type error.
+- While a field is blank, Zod does not run an object-level `refine`, so a cross-field error appears only after the related fields have values.
+- `z.object` drops undeclared keys by default, so those fields are missing from the values the submit callback receives. Use `z.looseObject` to keep them.
+- Zod decides the error language; Semi's locale does not affect it. Call `z.config(z.locales.en())`, or write your own messages as in the demo.
+- Write `import * as z from 'zod'` so the bundler can drop the parts you do not use.
+
+The required asterisk is not derived from the schema; set `required: true` in the field's `label` config. A field's `transform` does not change the value the schema receives.
+
 ### Custom Validate (Field Level)
 
 You can specify a custom validation function for a single Field with `validator`. Supports synchronous and asynchronous validation (by returning promises)
@@ -1304,7 +1330,7 @@ Semi will automatically execute deepClone once for input parameters of `formApi.
 | getFormState | Get FormState | formApi.getFormState() |
 | submitForm | Manually submit form operation | formApi.submitForm() |
 | reset | Reset the form manually | formApi.reset(fields?: Array \<string\>) |
-| validate | Manually trigger validation of the entire form. the verification of the entire Field will be triggered by default when no parameters are passed , if you want to trigger the verification of some fields, pass in the target field array <br/><br/> After the Form level validator is configured, the Field level validator will not be triggered again when submit or formApi.validate()<br/><br/>**Silent validation**: Pass `{ silent: true }` to get validation results without triggering UI updates (no error messages shown, no touched state set). You can also use `{ fields: ['fieldA'], silent: true }` to perform silent validation on specific fields. | formApi.validate() <br/>.then(values => \{\})<br/>.catch(errors => \{\})<br/>OR formApi.validate(['fieldA','fieldB'])<br/>OR formApi.validate(\{ silent: true \})<br/>OR formApi.validate(\{ fields: ['fieldA'], silent: true \})<br/> |
+| validate | Manually trigger validation of the entire form. the verification of the entire Field will be triggered by default when no parameters are passed , if you want to trigger the verification of some fields, pass in the target field array <br/><br/> After the Form level validator is configured, the Field level validator will not be triggered again when submit or formApi.validate()<br/><br/>**Silent validation**: Pass `{ silent: true }` to get validation results without triggering UI updates (no error messages shown, no touched state set). You can also use `{ fields: ['fieldA'], silent: true }` to perform silent validation on specific fields.<br/><br/>With a `schema`, validating all fields resolves with the schema's output, and validating some fields resolves with the raw values. | formApi.validate() <br/>.then(values => \{\})<br/>.catch(errors => \{\})<br/>OR formApi.validate(['fieldA','fieldB'])<br/>OR formApi.validate(\{ silent: true \})<br/>OR formApi.validate(\{ fields: ['fieldA'], silent: true \})<br/> |
 | setValues | Set the values of the entire form. The isOverride in the second parameter is false by default. <br/> **When isOverride is false**: Iterate through all registered fields in the Form, and update the values from `newValues` to `formState.values`. If a registered field is not included in `newValues`, that field will be set to undefined. <br/> **When isOverride is true**: Directly replace `formState.values` with `newValues`, including extra keys in `newValues` that don't have corresponding fields in the form. <br/><br/> **Recommended usage**: If you only need to update some fields, it's recommended to use `formApi.setValue(field, value)` for individual updates, or get current values first then merge: `formApi.setValues({ ...formApi.getValues(), name: newValue })` | formApi.setValues(newValues: object, \{isOverride: boolean\}) |
 | getValues | Get the values of all Field | formApi.getValues() |
 | setValue | provides direct modification of formState.values method.<br/>The difference from `setValues` is that it only modifies a single field. | formApi.setValue(field: string, newFieldValue: any) |

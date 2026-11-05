@@ -29,6 +29,7 @@ import ApiType from '#/components/ApiType.astro';
 | onValueChange | Called when a field value changes, with all values and the values that changed. | <ApiType detail={"(values: Values, changedValue: Partial\u003cValues>) => void"}>Type</ApiType> | - |
 | ref | Reference to the handle `{ formApi }`, whose formApi controls the form. | <ApiType detail={"React.Ref\u003cFormHandle\u003cValues>>"}>Type</ApiType> | - |
 | render | A function that declares the fields, called with `{ formState, values, formApi }`. Do not use it together with `component` or `children`. | <ApiType detail={"(internalProps: FormFCChild\u003cValues>) => React.ReactNode"}>Type</ApiType> | - |
+| schema | A Standard Schema object (Zod, Valibot, ArkType and so on), mutually exclusive with the validator and rules of the fields, which no longer run. Once all fields pass, `onSubmit` and `formApi.validate()` receive the schema's output. When `validator` is also set, only `validator` applies. | <ApiType detail={"StandardSchema\u003cValues>"}>Type</ApiType> | - |
 | showValidateIcon | Whether the validation message is preceded by an icon of its status. | `boolean` | `true` |
 | stopPropagation | Whether to stop the submit and reset events from bubbling, as `{ submit, reset }`, so that a nested Form does not trigger the events of the outer one. Events bubble when it is not set. | `{ submit?: boolean; reset?: boolean; }` | - |
 | stopValidateWithError | Whether to skip the remaining rules after the first rule fails. The same property on a field takes precedence. | `boolean` | - |

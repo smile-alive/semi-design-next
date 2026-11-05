@@ -66,6 +66,10 @@
                 "zh-CN": "统一应用在每个字段上的校验时机，可选 change、blur、mount、custom 或其数组。字段上的同名属性优先。",
                 "en-US": "When every field validates: change, blur, mount, custom, or an array of them. The same property on a field takes precedence."
             },
+            "schema": {
+                "zh-CN": "实现了 Standard Schema 的校验对象（如 Zod、Valibot、ArkType），与字段的 validator、rules 互斥，设置后它们不再运行。校验全部字段通过后，`submit` 事件与 formApi.validate 拿到 schema 的输出。同时传 `validator` 时只用 `validator`。",
+                "en-US": "A Standard Schema object (Zod, Valibot, ArkType and so on), mutually exclusive with the validator and rules of the fields, which no longer run. Once all fields pass, the `submit` event and formApi.validate receive the schema's output. When `validator` is also set, only `validator` applies."
+            },
             "validator": {
                 "zh-CN": "Form 级别的校验函数，submit 与 formApi.validate 时调用，支持返回 Promise。设置后字段自身的 validator 与 rules 不再生效。返回空字符串或空对象表示通过，失败时返回以字段名为 key 的错误对象。",
                 "en-US": "Form-level validation, called on submit and formApi.validate and allowed to return a Promise. When set, the validator and rules of the fields no longer apply. An empty string or object means valid; on failure return an object keyed by field name."

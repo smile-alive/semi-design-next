@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { AllErrors, BaseFormApi, BasicFieldError, FieldPath, FieldValidateOptions, FieldValidateTriggerType, FormState } from '@fibrae/semi-foundation/form/interface';
+import type { AllErrors, BaseFormApi, BasicFieldError, ExclusiveFormValidation, FieldPath, FieldValidateOptions, FieldValidateTriggerType, FormState, StandardSchema } from '@fibrae/semi-foundation/form/interface';
 import type { ElementProps } from '../_base/element-props';
 import type { ColProps } from '../grid';
 import type { LabelProps } from './label';
@@ -95,7 +95,9 @@ export type FormElement<Values extends Record<string, any> = any> = HTMLFormElem
 
 type FormValidateResult<Values> = string | Partial<AllErrors<Values>>;
 
-export interface FormProps<Values extends Record<string, any> = any> extends ElementProps<'form', 'children' | 'onChange' | 'onSubmit' | 'onReset' | 'ref'> {
+export type FormProps<Values extends Record<string, any> = any> = AllFormProps<Values> & ExclusiveFormValidation;
+
+interface AllFormProps<Values extends Record<string, any> = any> extends ElementProps<'form', 'children' | 'onChange' | 'onSubmit' | 'onReset' | 'ref'> {
     onSubmit?: (values: Values, e?: SubmitEvent) => void;
     /** `errors` is what failed the validation: the form validator's result, or the field errors */
     onSubmitFail?: (errors: FormValidateResult<Values>, values: Partial<Values>, e?: SubmitEvent) => void;
@@ -106,6 +108,8 @@ export interface FormProps<Values extends Record<string, any> = any> extends Ele
     allowEmpty?: boolean;
     /** Form-level validation; when set, it replaces the fields' own validation */
     validator?: (values: Values) => FormValidateResult<Values> | Promise<FormValidateResult<Values>>;
+    /** A Standard Schema (zod, valibot, arktype) that replaces the fields' `validator` and `rules`, run on their `trigger` and on submit; `onSubmit` receives its output */
+    schema?: StandardSchema<Values>;
     /** Initial values of the fields, copied once when the Form is created */
     initValues?: Values;
     /** Also written to `x-form-id`; generated when missing */

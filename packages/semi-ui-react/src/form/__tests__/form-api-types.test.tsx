@@ -1,5 +1,6 @@
 import type React from 'react';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
+import * as z from 'zod';
 import type { FieldPath, FieldPathValue, FormState } from '@fibrae/semi-foundation/form/interface';
 import type { FormUpload } from '../field';
 import type { BaseFormProps, FieldProps, FormApi, FormCheckboxProps, FormRadioProps } from '../interface';
@@ -133,6 +134,25 @@ describe('表单状态与校验结果类型', () => {
         type Result = Awaited<ReturnType<NonNullable<BaseFormProps<ArrayValues>['validator']>>>;
         expectTypeOf<{ users: [{ name: string }] }>().toExtend<Result>();
         expectTypeOf<{ users: { name: string } }>().not.toExtend<Result>();
+    });
+
+    it('schema 与 Form 的 validator 互斥，Values 从 schema 推断', () => {
+        type Props = BaseFormProps<{ name: string }>;
+        const schema = z.object({ name: z.string() });
+        const validator = () => '';
+        const inferValues = <Values extends Record<string, any>>(_props: BaseFormProps<Values>) => ({}) as Values;
+        expectTypeOf({ schema }).toExtend<Props>();
+        expectTypeOf({ validator }).toExtend<Props>();
+        expectTypeOf({ schema, validator }).not.toExtend<Props>();
+        expectTypeOf(inferValues({ schema })).toEqualTypeOf<{ name: string }>();
+    });
+
+    it('schema 的输出要与 values 一致', () => {
+        type Schema = NonNullable<BaseFormProps<{ name: string }>['schema']>;
+        const valid = z.object({ name: z.string() });
+        const invalid = z.object({ name: z.number() });
+        expectTypeOf(valid).toExtend<Schema>();
+        expectTypeOf(invalid).not.toExtend<Schema>();
     });
 
     it('onErrorChange 的 errors 与 formState.errors 同形，onSubmitFail 的 errors 是校验结果', () => {

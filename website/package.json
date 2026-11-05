@@ -72,7 +72,8 @@
         "react-infinite-scroller": "^1.2.6",
         "shiki": "catalog:",
         "solid-js": "catalog:",
-        "vue": "catalog:"
+        "vue": "catalog:",
+        "zod": "catalog:"
     },
     "devDependencies": {
         "@astrojs/check": "^0.9.12",

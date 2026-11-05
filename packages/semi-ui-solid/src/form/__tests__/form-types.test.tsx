@@ -1,5 +1,6 @@
 import type { Component } from 'solid-js';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
+import * as z from 'zod';
 import type { FieldPath, FieldPathValue, FormState } from '@fibrae/semi-foundation/form/interface';
 import {
     type ArrayFieldProps,
@@ -178,6 +179,25 @@ describe('Form Props 类型', () => {
         expectTypeOf<FormProps<Values>['form']>().not.toBeAny();
         expectTypeOf<ReturnType<typeof useForm<Values>>[0]>().toExtend<FormProps<Values>['form']>();
         expectTypeOf<{ getValue: () => string }>().not.toExtend<FormProps<Values>['form']>();
+    });
+
+    it('schema 与 Form 的 validator 互斥，Values 从 schema 推断', () => {
+        type Props = FormProps<{ name: string }>;
+        const schema = z.object({ name: z.string() });
+        const validator = () => '';
+        const inferValues = <Values extends Record<string, any>>(_props: FormProps<Values>) => ({}) as Values;
+        expectTypeOf({ schema }).toExtend<Props>();
+        expectTypeOf({ validator }).toExtend<Props>();
+        expectTypeOf({ schema, validator }).not.toExtend<Props>();
+        expectTypeOf(inferValues({ schema })).toEqualTypeOf<{ name: string }>();
+    });
+
+    it('schema 的输出要与 values 一致', () => {
+        type Schema = NonNullable<FormProps<{ name: string }>['schema']>;
+        const valid = z.object({ name: z.string() });
+        const invalid = z.object({ name: z.number() });
+        expectTypeOf(valid).toExtend<Schema>();
+        expectTypeOf(invalid).not.toExtend<Schema>();
     });
 
     it('表单级 validator 返回嵌套的错误，onErrorChange 的 errors 与 formState.errors 同形', () => {

@@ -13,7 +13,7 @@
     import { getFormContext, setFormInputGroupContext } from './context.js';
     import ErrorMessage from './error-message.svelte';
     import FieldGrid from './field-grid.svelte';
-    import type { FormProps, InputGroupProps } from './interface.js';
+    import type { AllFormProps, InputGroupProps } from './interface.js';
     import { isLabelConfig } from './utils.js';
 
     let { label, labelPosition, extraTextPosition = 'bottom', disabled, 'aria-labelledby': ariaLabelledby, 'aria-describedby': ariaDescribedby, 'aria-errormessage': _ariaErrormessage, fieldLabel, labelExtra, extraText, children, ...rest }: InputGroupProps = $props();
@@ -29,7 +29,7 @@
     const prefix = cssClasses.PREFIX;
     const errorMessageId = `${uid}-errormessage`;
     const extraTextId = `${uid}-extraText`;
-    const formProps = $derived<FormProps>(form?.formProps ?? {});
+    const formProps = $derived<AllFormProps>(form?.formProps ?? {});
     const shownLabelPosition = $derived(labelPosition || formProps.labelPosition);
     const labelConfig = $derived(isLabelConfig(label) ? label : { text: label });
     const labelId = $derived((isLabelConfig(label) ? label.id : undefined) ?? `${uid}-label`);

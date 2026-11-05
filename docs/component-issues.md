@@ -560,6 +560,9 @@
 - Svelte：用 `setValue` 删除 keyed 数组中间行时，Svelte 先注销被移除行的字段（删掉其值），再创建接管该路径的新字段；Vue 的 Debug-SetValuesDemo 场景无法复现，用例已移除。已知限制。
 - Svelte：Form 设置 `labelCol`、`wrapperCol` 时，InputGroup 的标签落在 wrapper 列而不在 label 列。已知限制（升级条件：InputGroup 能由外部标签命名时改）。
 - Svelte：Select、Cascader、TreeSelect、AutoComplete、DatePicker 字段无法传 `trigger` snippet（与校验时机 `trigger` 同名）。待决。
+- 配置 `schema` 后字段的 `rules` 不再校验，但必填星号与 `aria-required` 仍由四个框架的 `isRequired(rules)` 决定，开发模式只警告 `rules` 被忽略。待决（A 有 `schema` 时不读 `rules` 的必填，只认 `label.required`；B 保持，文档已引导用 `label.required`）。
+- Form 的 `Values` 取 schema 的输出类型：`z.coerce`、`transform` 让输入与输出类型不同时，`formState.values`、`formApi.getValues` 的类型是输出类型，运行时却是用户输入的原值。已知限制（升级条件：类型层区分 `InferInput` 与 `InferOutput`，值与字段路径用输入类型，提交回调用输出类型）。
+- `schema` 只用 Zod 跑过 Form 用例和 demo；Valibot、ArkType、yup 只核对了错误路径格式（`{ key }` 对象段、字符串下标、函数形式的 schema），都能由 `toPath` 归一化后匹配字段。UNKNOWN（影响：这些库的错误可能落不到字段上；解决条件：各补一条 Form 用例）。
 
 ### AIChatInput、Configure
 

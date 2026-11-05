@@ -69,6 +69,7 @@ function Form<Values extends Record<string, any> = any>(rawProps: FormProps<Valu
         'onValueChange',
         'ref',
         'render',
+        'schema',
         'showValidateIcon',
         'stopPropagation',
         'stopValidateWithError',
