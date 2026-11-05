@@ -89,6 +89,10 @@ export default function CSSAnimation({ startClassName, endClassName, children, o
                 if (e.target !== e.currentTarget) {
                     return;
                 }
+                // several animations on one element end separately; the run ends with the last one
+                if (e.currentTarget.getAnimations().some((animation) => 'animationName' in animation && animation.playState === 'running')) {
+                    return;
+                }
                 setRun((prev) => ({ ...prev, className: endClassName, isAnimating: false }));
                 onAnimationEnd?.(false);
             },

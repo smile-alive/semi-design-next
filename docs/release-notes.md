@@ -236,6 +236,7 @@
 - Svelte：SideSheet 的 `title`（字符串或 snippet）、`footer`、`closeIcon`、`children` 是 snippet；`bodyStyle`、`headerStyle`、`maskStyle`、`style` 只接受字符串；`aria-*` 与 `style` 落在 `role="dialog"` 元素，`class` 和其余属性落在外层 `.semi-sidesheet`；抽屉挂载后才渲染，服务端不输出；`visible` 不读全局默认值；`bind:this` 的实例提供 `getRoot()`。
 - Svelte：`Modal` 与 `Modal.info/success/error/warning/confirm`、`Modal.destroyAll`、`Modal.useModal` 随包提供；`useModal()` 返回 `{ info, success, error, warning, confirm }`，不返回 Holder，也没有 `install()`，确认框读调用组件所在处的 ConfigProvider 与 LocaleProvider；命令式确认框只能在浏览器调用，服务端调用抛出指明 API 名的错误。
 - Svelte：`visible` 用 `bind:visible`；`onCancel` 返回 Promise 时，兑现后才写回 `false`，拒绝则保持打开，原因由 foundation 重新抛出；`title`、`header`、`footer`、`icon`、`closeIcon`、`modal` 是 snippet，`title`、`content`、`closeIcon` 也接受字符串；尺寸类型导出名为 `ModalSize`；动画由 class 驱动，`keepDOM` 重开保留节点和内部状态。
+- 同一元素有多个退出动画时，等全部结束才卸载（React、Solid、Svelte）。
 
 ### Table
 
