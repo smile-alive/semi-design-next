@@ -41,7 +41,7 @@ export interface ResizableAdapter<P extends ResizableBaseProps = ResizableBasePr
 }
 
 type SizeProps = { size?: Size; defaultSize?: Size };
-type SizeState = { width?: number | string; height?: number | string; isResizing?: boolean };
+type SizeState = { width?: number | string; height?: number | string };
 
 export interface AriaRange {
     width: { now: number; min: number; max: number };
@@ -512,8 +512,8 @@ export class ResizableFoundation<P extends ResizableBaseProps = ResizableBasePro
             }
             return getStringSize(value);
         };
-        const width = size && typeof size.width !== 'undefined' && !state.isResizing ? getStringSize(size.width) : getSize('width');
-        const height = size && typeof size.height !== 'undefined' && !state.isResizing ? getStringSize(size.height) : getSize('height');
+        const width = size && typeof size.width !== 'undefined' ? getStringSize(size.width) : getSize('width');
+        const height = size && typeof size.height !== 'undefined' ? getStringSize(size.height) : getSize('height');
         return { width, height };
     }
 

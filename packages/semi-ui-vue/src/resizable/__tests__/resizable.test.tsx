@@ -243,14 +243,14 @@ describe('Resizable', () => {
         expect(sizeOf()).toEqual({ width: '200px', height: '150px' });
     });
 
-    it('v-model:size 拖动时受控尺寸比指针落后一次移动，结束后显示拖动结果并回写父级', async () => {
+    it('v-model:size 拖动时受控尺寸跟随指针，结束后显示拖动结果并回写父级', async () => {
         render(Controlled, { props: { mode: 'two-way' } });
         await nextTick();
         await down(getHandle('right'), [100, 100]);
         await move([150, 100]);
-        expect(sizeOf().width).toBe('200px');
-        await move([170, 100]);
         expect(sizeOf().width).toBe('250px');
+        await move([170, 100]);
+        expect(sizeOf().width).toBe('270px');
         await up();
         expect(sizeOf().width).toBe('270px');
         expect(screen.getByLabelText('size')).toHaveTextContent('270x100');

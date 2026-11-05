@@ -551,8 +551,9 @@
 - 破坏性（类型）：`onResizeStart`、`onChange`、`onResizeEnd` 的事件统一为 `PointerEvent`，键盘缩放时为 `KeyboardEvent`，读 `clientX` 等需先判断类型；`HandlerCallback` 改为 `PointerEvent`，删除 `ResizeEventType`、`ResizableState`、`ResizeGroupState`。
 - 拖拽条为 `role="separator"` 和 Tab 停靠点，方向键调整大小；ResizeItem 的 `min`、`max` 统一按 border-box px 计算，支持 `vw`、`vh`（`rem`、`em` 仍得 NaN）；`onResizeStart` 任一侧返回 `false` 取消调整；`size` 只传一个轴时另一轴用 `defaultSize`；ResizeGroup 中途插入的 ResizeItem、ResizeHandler 按 DOM 顺序参与拖动与键盘调整。
 - Vue：受控尺寸用 `v-model:size`；`onChange`、`onResizeEnd` 改为 `change`、`resizeEnd` 事件，`onResizeStart` 仍是函数 prop；`handleNode` 改为 `#handle="{ direction }"`；已知限制：ResizeItem 传字符串 style 会冲掉尺寸，请用对象 style。
-- Solid：受控 `size` 拖动时立即显示 `onChange` 中同步写回的尺寸，不落后一次指针移动；`style`、`handleStyle`、`handleWrapperStyle` 可以是对象或字符串，`minWidth` 等的数字仍按 px 处理；破坏性：`handleNode` 改为 `renderHandle(direction)`，只为启用的方向调用（同 Vue 的 `#handle="{ direction }"`），删除类型 `HandleComponent`；ResizeItem、ResizeHandler 在 ResizeGroup 内经 ref 回调登记，序号按 DOM 顺序计算。ResizeItem 的字符串 `style` 变化时会冲掉分组写入的尺寸，请用对象 style（同 Vue）。ResizeHandler 只有原生属性，不提供 `direction`、`onResizeStart`、`disabled`（React 声明而不生效，同 Vue）。
+- Solid：`style`、`handleStyle`、`handleWrapperStyle` 可以是对象或字符串，`minWidth` 等的数字仍按 px 处理；破坏性：`handleNode` 改为 `renderHandle(direction)`，只为启用的方向调用（同 Vue 的 `#handle="{ direction }"`），删除类型 `HandleComponent`；ResizeItem、ResizeHandler 在 ResizeGroup 内经 ref 回调登记，序号按 DOM 顺序计算。ResizeItem 的字符串 `style` 变化时会冲掉分组写入的尺寸，请用对象 style（同 Vue）。ResizeHandler 只有原生属性，不提供 `direction`、`onResizeStart`、`disabled`（React 声明而不生效，同 Vue）。
 - Svelte：`children` 与 `handle` snippet 对应 Vue 的默认插槽与 `handle` 插槽，`handle` 的参数是 `{ direction }`；回调为 `onChange`、`onResizeEnd`；`style`、`handleStyle` 只接受字符串；`size` 是单向 prop（按轴受控），不能 `bind:size`，`defaultSize` 保留为各轴的回退值。
+- 受控 `size` 拖动时立即显示 `onChange` 中同步写回的尺寸，不落后一次指针移动（四个框架）。
 
 ### CodeHighlight
 
