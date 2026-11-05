@@ -100,7 +100,7 @@ function getTooltipConfig({ showTooltip, expandable, expandText }: Pick<Ellipsis
             },
         };
     }
-    return { type: 'tooltip', ...showTooltip };
+    return { ...showTooltip, type: showTooltip.type ?? 'tooltip' };
 }
 
 function getCopyConfig(copyable: CopyableConfig | boolean, children: React.ReactNode) {
