@@ -316,6 +316,7 @@
 - Solid：`title`、`content`、`icon` 为 `NotificationNode`（节点或返回节点的函数），在事件处理函数里调用 hook 方法时写成函数才能读到 `contextHolder` 处的 context；`useNotification()` 返回 `[api, contextHolder]`，`contextHolder` 读调用 hook 处的 context，只放置一次；选项的 `dir`、`data-*`、`aria-*` 落在通知元素上，`ref` 拿到通知元素，不提供 `NoticeHandle`；静态方法只读全局默认值与默认语言包。
 - Svelte：提供静态 `Notification`（`open`、`info`、`success`、`warning`、`error`、`close`、`destroyAll`、`config`、`resetConfig`、`addNotice`、`removeNotice`）和 `Notification.useNotification()`，没有 Vue 的 `Notification.install(app)`；`title`、`content`、`icon` 接受字符串或 snippet，`onClick` 签名为 `(event: MouseEvent) => void`，落在通知元素上；没有 `type` 且自定义 `icon` 时，图标元素不再带 `-undefined` 类名。
 - Svelte：`Notification.useNotification()` 在组件初始化时调用，只返回 `api`，没有 Holder：通知挂在 `document.body`，读调用组件所在处的 context、ConfigProvider 与语言包，调用组件销毁时一并移除；容器带 `data-semi-keep-interactive`，模态层打开时仍可交互。
+- 同一批内更新一条通知再新增另一条时，被更新的通知仍重新计时。
 
 ### FloatButton、FloatButtonGroup
 
@@ -348,6 +349,7 @@
 - Solid：`content`、`icon` 为 `ToastNode`（节点或返回节点的函数），在事件处理函数里调用 hook 方法时写成函数才能读到 `contextHolder` 处的 context；`useToast()` 返回 `[api, contextHolder]`，`contextHolder` 读调用 hook 处的 context，只放置一次；选项的 `dir`、`data-*`、`aria-*` 落在 Toast 元素上，`ref` 拿到 Toast 元素，不提供 `ToastHandle`；静态方法只读全局默认值与默认语言包。
 - Svelte：提供静态 `Toast`（含 `ToastFactory`）和 `Toast.useToast()`；`useToast()` 在组件初始化时调用，只返回 `api`，没有 Holder：hook 的 Toast 挂在 `document.body`，读调用组件所在处的 context、ConfigProvider 与语言包，调用组件销毁时一并移除。`content`、`icon` 接受字符串或 snippet，静态 Toast 的 snippet 读不到调用方的 context；服务端调用静态方法或 hook 的 `api` 抛 "can only be called in the browser" 错误，`useToast()` 本身可在服务端调用。
 - Svelte：进场、离场由 store 持有离场状态，CSS 动画结束后才移除元素，不使用 Svelte 的 `in:`、`out:`。
+- 同一批内更新一条消息再新增另一条时，被更新的消息仍重新计时。
 
 ### ColorPicker
 

@@ -24,7 +24,7 @@ describe('ToastListStore', () => {
         expect(listener).toHaveBeenCalledTimes(2);
     });
 
-    it('同 id 原位更新并写入 updatedItems，之后的任何变化清空它', () => {
+    it('同 id 原位更新并写入 updatedItems，之后的任何变化清空它', async () => {
         const store = new ToastListStore();
         store.add({ id: 'a', content: 'a' });
         store.add({ id: 'b', content: 'b' });
@@ -34,6 +34,7 @@ describe('ToastListStore', () => {
         expect(ids(updatedItems)).toEqual(['a']);
         expect(order).toEqual(['a', 'b']);
 
+        await Promise.resolve();
         store.add({ id: 'c', content: 'c' });
         expect(store.getSnapshot().updatedItems).toEqual([]);
     });
