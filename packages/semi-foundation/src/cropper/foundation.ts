@@ -168,9 +168,11 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
             imgHeight = containerHeight;
         }
         this.#imgData.scale = scale;
+        // a replacement image keeps the current zoom, which syncRotateAndZoom would not re-apply
+        const { zoom } = this.getStates();
         const newImgDataState: ImageDataState = {
-            width: imgWidth,
-            height: imgHeight,
+            width: imgWidth * zoom,
+            height: imgHeight * zoom,
             centerPoint: { x: containerWidth / 2, y: containerHeight / 2 },
         };
         const { defaultAspectRatio, aspectRatio } = this.getProps();
@@ -676,6 +678,9 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
      * container shrinks. It stays centered, moved only as far as the container edges require.
      */
     applyAspectRatio = () => {
+        // the drag ranges were computed for the old ratio
+        this.handleCornerLostPointerCapture();
+        this.handleCropperBoxLostPointerCapture();
         const { aspectRatio } = this.getProps();
         const { cropperBox, loaded } = this.getStates();
         const { width: containerWidth, height: containerHeight } = this.#containerData;

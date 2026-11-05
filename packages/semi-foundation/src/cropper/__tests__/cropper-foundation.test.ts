@@ -5,7 +5,7 @@ import CropperFoundation, { type CropperFoundationProps, type CropperState } fro
 // Container 200x100 at the viewport origin; a 400x200 image fits it at scale 0.5
 function setup(props: CropperFoundationProps = {}) {
     const container = { clientWidth: 200, clientHeight: 100, clientLeft: 0, clientTop: 0 };
-    let state = {} as CropperState;
+    let state = { zoom: 1 } as CropperState;
     const adapter = {
         getContainer: () => ({
             ...container,
