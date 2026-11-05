@@ -705,6 +705,7 @@
 - Svelte：UserGuide 的 `visible`、`current` 可绑定（`bind:`、函数绑定、单向、不传四种写法）；回调是 `onChange`、`onNext`、`onPrev`、`onSkip`、`onFinish`；跳过、Escape、完成时先把 `visible` 写成 `false` 再调回调，`current` 变化先写回再调 `onChange`；单向传 `visible` 只作初值，点跳过会在本地关闭，要拒绝关闭请用函数绑定。
 - Svelte：`steps` 的 `title`、`description` 是字符串或 snippet，`cover` 是 snippet（参数 `{ item, index }`），没有 `cover` 的步骤没有封面区；按钮文字用组件级 `nextText`、`prevText` snippet，最后一步用 `finishText`。
 - Svelte：未绑定、未传 `current` 时关闭后重开从第一步开始，`current` 由父级传入时保持关闭前的步骤；没有 KeepAlive 对应物，不提供失活后释放滚动锁的行为；服务端和 hydration 首帧不输出内容（popup 要等目标挂载后测量，modal 经 Portal 挂载后才渲染）。
+- Vue、Solid、Svelte：显示期间逐帧跟随目标位置，目标自行移动或晚于显示挂载时聚光区域随之更新。
 
 ### OverflowList、Select
 

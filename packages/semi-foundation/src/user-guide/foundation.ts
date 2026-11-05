@@ -72,6 +72,17 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
         return a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height;
     }
 
+    // A target can move or appear with no event or reactive change here (sibling layout, transforms), so only polling every frame sees it
+    static trackFrames(callback: () => void) {
+        let id = 0;
+        const loop = () => {
+            callback();
+            id = requestAnimationFrame(loop);
+        };
+        id = requestAnimationFrame(loop);
+        return () => cancelAnimationFrame(id);
+    }
+
     override destroy() {
         this.adapter.enabledBodyScroll();
     }
