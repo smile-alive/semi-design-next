@@ -73,7 +73,7 @@ export default function DayCol(props: DayColProps) {
                                 style={{
                                     top: `${event().startPos * props.scrollHeight}px`,
                                     height: `${Math.max(minEventHeight(), (event().endPos - event().startPos) * props.scrollHeight)}px`,
-                                    left: toCssLength(event().left),
+                                    'inset-inline-start': toCssLength(event().left),
                                 }}
                             >
                                 <EventContent of={event().children} />

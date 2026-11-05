@@ -85,7 +85,7 @@
                     .map((item) => ({
                         item,
                         style: {
-                            left: toPercent(item.leftPos ?? 0),
+                            insetInlineStart: toPercent(item.leftPos ?? 0),
                             width: toPercent(item.width ?? 0),
                             top: `${item.topInd ?? 0}em`,
                         },

@@ -77,7 +77,7 @@
                     :style="{
                         top: `${layout.startPos * props.scrollHeight}px`,
                         height: `${Math.max(props.minEventHeight ?? Number.MIN_SAFE_INTEGER, (layout.endPos - layout.startPos) * props.scrollHeight)}px`,
-                        left: toCssLength(layout.left),
+                        insetInlineStart: toCssLength(layout.left),
                     }"
                 >
                     <slot :event="eventOf(layout)" name="event">{{ layout.children }}</slot>

@@ -69,15 +69,14 @@ export default function MonthCalendar(props: MonthViewProps) {
 
     const measureItemLimit = useCallback(() => {
         const cell = cellRef.current;
-        // the observer reports asynchronously, after a remount may have dropped the rows
+        // the observer reports asynchronously, after the rows may have been dropped
         if (!cell) {
             return;
         }
         foundation.setState({ itemLimit: CalendarFoundation.getItemLimit(cell.getBoundingClientRect().height) });
     }, [foundation]);
 
-    // a percentage height or a style.height follows the container, which no prop reports; the root remounts with each
-    // new limit, so the observer is tied to the grid node instead of this component
+    // a percentage height or a style.height follows the container, which no prop reports
     const observeGrid = useCallback(
         (node: HTMLDivElement | null) => {
             if (!node) {
@@ -214,7 +213,7 @@ export default function MonthCalendar(props: MonthViewProps) {
     }, [foundation, openCardStale, openCardKey]);
 
     return (
-        <div key={itemLimit} aria-label={format(displayValue, 'LLLL y', { locale: dateFnsLocale })} role="table" {...rest} ref={mergedRef} className={clsx(prefixCls, className)} style={{ height, width, ...style }}>
+        <div aria-label={format(displayValue, 'LLLL y', { locale: dateFnsLocale })} role="table" {...rest} ref={mergedRef} className={clsx(prefixCls, className)} style={{ height, width, ...style }}>
             <div className={`${prefixCls}-sticky-top`} role="rowgroup">
                 {Boolean(header) && (
                     <div role="row">
@@ -270,7 +269,7 @@ export default function MonthCalendar(props: MonthViewProps) {
                                                     key={key || `${ind}-monthevent`}
                                                     className={`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-month`}
                                                     style={{
-                                                        left: toPercent(leftPos),
+                                                        insetInlineStart: toPercent(leftPos),
                                                         width: toPercent(eventWidth),
                                                         top: `${topInd}em`,
                                                     }}

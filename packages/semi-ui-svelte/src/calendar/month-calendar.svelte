@@ -279,7 +279,7 @@
                         <!-- the overlay sits beside the row, where a list is not a valid child of the table -->
                         <div class={`${cssClasses.PREFIX}-event-items`}>
                             {#each withKeys(week.display, 'month') as { id, item } (id)}
-                                <div class={[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-month`]} style:left={toPercent(item.leftPos ?? 0)} style:top={`${item.topInd ?? 0}em`} style:width={toPercent(item.width ?? 0)}>
+                                <div class={[`${cssClasses.PREFIX}-event-item`, `${cssClasses.PREFIX}-event-month`]} style:inset-inline-start={toPercent(item.leftPos ?? 0)} style:top={`${item.topInd ?? 0}em`} style:width={toPercent(item.width ?? 0)}>
                                     {#if event}
                                         {@render event({ event: calendar.eventOf(item) })}
                                     {:else}

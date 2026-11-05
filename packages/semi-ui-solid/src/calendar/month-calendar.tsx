@@ -293,8 +293,8 @@ export default function MonthCalendar(props: DayCalendarProps) {
                                                     <div
                                                         class={`${cssClasses.PREFIX}-event-item ${cssClasses.PREFIX}-event-month`}
                                                         style={{
-                                                            left: toPercent(item().leftPos as number),
                                                             width: toPercent(item().width as number),
+                                                            'inset-inline-start': toPercent(item().leftPos as number),
                                                             top: `${item().topInd}em`,
                                                         }}
                                                     >
