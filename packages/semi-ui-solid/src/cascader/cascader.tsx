@@ -468,9 +468,7 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
         get value() {
             const entities = keyEntities();
             if (local.multiple) {
-                // the trigger gets positions; mergeType decides which checked set they come from, whatever checkRelation is
-                const keys = mergeType() === strings.NONE_MERGE_TYPE ? view.checkedKeys : view.resolvedCheckedKeys;
-                return new Set([...keys].map((key) => entities[key]?.pos));
+                return new Set([...realKeys()].map((key) => entities[key]?.pos));
             }
             return entities[[...view.selectedKeys][0]]?.pos;
         },

@@ -337,10 +337,8 @@
     });
 
     const triggerSnippetProps: CascaderTriggerSnippetProps = $derived.by(() => {
-        const { keyEntities, checkedKeys, resolvedCheckedKeys, selectedKeys } = view;
-        const keys = mergeType === strings.NONE_MERGE_TYPE ? checkedKeys : resolvedCheckedKeys;
         return {
-            value: multiple ? new Set([...keys].map((key) => keyEntities[key]?.pos)) : keyEntities[[...selectedKeys][0]]?.pos,
+            value: multiple ? new Set([...realKeys].map((key) => view.keyEntities[key]?.pos)) : view.keyEntities[[...view.selectedKeys][0]]?.pos,
             inputValue: view.inputValue,
             placeholder: inputPlaceholder,
             disabled,

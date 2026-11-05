@@ -805,6 +805,10 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             isSearching: Boolean(sugInput),
             filteredKeys: new Set(filteredKeys),
         };
+        // an explicit input is the user's search text, which updateSelectedKey may have cleared
+        if (input !== undefined) {
+            updateStates.inputValue = input;
+        }
         if (nextKeyEntities) {
             updateStates.keyEntities = nextKeyEntities;
         }

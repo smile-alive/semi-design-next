@@ -490,6 +490,7 @@
 - Solid：`triggerRender`、`filterRender` 只调用一次，参数为活对象；单选 `displayRender` 只在已选路径变化时调用，要跟随其他状态须在返回的 JSX 中读取，可搜索时其节点不写入搜索框；`onListScroll` 的 `e` 为原生 `Event`，`onFocus`、`onBlur` 收到的可能是原生 `FocusEvent`；搜索结果与关键字同步渲染。
 - Svelte：Cascader 的 `value` 可绑定，没有 `defaultValue`；单选多选靠 `multiple` 区分，没有 `Multiple` 泛型；回调同 React：`onChange`、`onChangeWithObject`、`onSelect`、`onSearch`、`onFocus`、`onBlur`、`onDropdownVisibleChange`、`onClear`、`onExceed`、`onLoad`、`onListScroll`、`onKeyDown`（每个按键只上报一次）。
 - Svelte：插槽改为同名 snippet：`prefix`、`suffix`、`insetLabel`、`topSlot`、`bottomSlot`、`label`、`display`、`tag`、`filterItem`、`trigger`、`expandIcon`、`clearIcon`、`arrowIcon`、`emptyContent`，`emptyContent`、`arrowIcon` 传 `null` 隐藏，空 snippet 不回落默认内容；`filterItem` 收到要展开到自定义行上的 `props`（含 `id`、`role`、`class`、`onclick`，虚拟搜索结果里还带定位用的 `style`，要一起展开到行上），没有 `componentProps`，`trigger` 参数也没有 `componentProps`；`treeData` 可以是 `$state`，就地修改会重新收集选项。
+- `checkRelation="unRelated"` 多选时，自定义触发器的 `value` 是已勾选项的位置集合，不再为空。`filterTreeNode` 加远程搜索时，`treeData` 更新不再清空搜索框。
 
 ### semi-foundation
 
