@@ -26,7 +26,7 @@ import ApiType from '#/components/ApiType.astro';
 | onCancel | Called when the user closes the sheet with the close button, the mask or `Esc`. The argument is the native `MouseEvent`, or the native `KeyboardEvent` for `Esc`. The sheet does not close by itself; set `visible` to `false` in the callback. | <ApiType detail={"(e: React.MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
 | placement | Edge the sheet slides in from: `top`, `bottom`, `left` or `right`. | `Placement` | `"right"` |
 | ref | Reference to the root element, the outermost `.semi-sidesheet` element inside the portal. It is `null` while nothing is rendered. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
-| size | Size: `small` (448px), `medium` (684px) or `large` (920px). Used only when `placement` is `left` or `right`; `width` takes precedence when set. | `'small' \| 'medium' \| 'large'` | `"small"` |
+| size | Size: `small` (448px), `medium` (684px) or `large` (920px). Used only when `placement` is `left` or `right`; `width` takes precedence when set. | `'large' \| 'medium' \| 'small'` | `"small"` |
 | style | Style of the dialog element (`.semi-sidesheet-inner`), merged with the computed width and height, which take precedence. | `CSSProperties` | - |
 | title | Title of the sheet. Nothing is rendered when it is empty, and it names the dialog. | `React.ReactNode` | - |
 | visible | Whether the sheet is visible. A controlled prop: set it to `false` in `onCancel` to close the sheet. | `boolean` | `false` |

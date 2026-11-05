@@ -6,7 +6,7 @@ import ApiType from '#/components/ApiType.astro';
 | --- | --- | --- | --- |
 | activeKey | The itemKey of the active tab, bound with `bind:activeKey`. `null` activates no tab and is still controlled; omitted or `undefined` means uncontrolled, with the first enabled tab selected. | `string \| null` | - |
 | arrow | Snippet that replaces each scroll arrow in collapsible mode, with `{ items, position, onClick, defaultNode }`: the scrolled-out tabs, the position, the click handler and the default arrow (render it with `{@render defaultNode()}`). | <ApiType detail={"Snippet\u003c[TabsArrowSnippetProps]>"}>Type</ApiType> | - |
-| arrowPosition | Position of the scroll arrows in collapsible mode. | `'both' \| 'start' \| 'end'` | `"both"` |
+| arrowPosition | Position of the scroll arrows in collapsible mode. | `'both' \| 'end' \| 'start'` | `"both"` |
 | children | The content area when there is no `panel`: the content of the active tab, one tabpanel labelled by the selected tab. | `Snippet` | - |
 | collapsible | Whether to collapse overflowing tabs into a scrollable bar (horizontal mode only). `'auto'` collapses when the tabs overflow or wrap and leaves the collapse once they fit. | `boolean \| 'auto'` | `false` |
 | contentStyle | Style string of the outer content area. | `string` | - |

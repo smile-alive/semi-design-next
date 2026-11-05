@@ -18,7 +18,7 @@ import ApiType from '#/components/ApiType.astro';
 | disabled | 是否禁用。 | `boolean` | `undefined` |
 | readonly | 是否只读。 | `boolean` | `semiGlobalDefault("TextArea", "readonly")` |
 | autofocus | 挂载时自动获取焦点。 | `boolean` | `semiGlobalDefault("TextArea", "autofocus")` |
-| validateStatus | 校验状态，可选 default、error、warning；error 时输出 aria-invalid。 | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("TextArea", "validateStatus")` |
+| validateStatus | 校验状态，可选 default、error、warning；error 时输出 aria-invalid。 | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("TextArea", "validateStatus")` |
 | composition | 是否开启输入法模式，开启后输入法组合期间不触发 change，组合结束后触发一次。 | `boolean` | `semiDefault("TextArea", "composition", false)` |
 | disabledEnterStartNewLine | 内部属性，供 Chat 使用：Enter 不换行，Shift + Enter 换行。 | `boolean` | `semiGlobalDefault("TextArea", "disabledEnterStartNewLine")` |
 | showLineNumber | 是否展示行号。 | `boolean` | `semiDefault("TextArea", "showLineNumber", false)` |
@@ -26,7 +26,7 @@ import ApiType from '#/components/ApiType.astro';
 | lineNumberClassName | 行号区域的类名。 | `string` | `semiGlobalDefault("TextArea", "lineNumberClassName")` |
 | lineNumberStyle | 行号区域的样式，数字需带单位。 | `StyleValue` | `semiGlobalDefault("TextArea", "lineNumberStyle")` |
 | textareaStyle | 内部 textarea 元素的样式，可设置高度等，数字需带单位。 | `StyleValue` | `semiGlobalDefault("TextArea", "textareaStyle")` |
-| resize | 是否允许拖拽调整尺寸及方向，可选 none、both、horizontal、vertical、block、inline；仅在显式传入时生效，autosize 开启时忽略。 | `"vertical" \| "block" \| "none" \| "both" \| "horizontal" \| "inline"` | `semiGlobalDefault("TextArea", "resize")` |
+| resize | 是否允许拖拽调整尺寸及方向，可选 none、both、horizontal、vertical、block、inline；仅在显式传入时生效，autosize 开启时忽略。 | `"block" \| "both" \| "horizontal" \| "inline" \| "none" \| "vertical"` | `semiGlobalDefault("TextArea", "resize")` |
 | maxlength | 最大长度。传入 getValueLength 时按它计算长度并截断，否则使用原生属性。 | `number` | `undefined` |
 | minlength | 最小长度。传入 getValueLength 时按它换算，否则使用原生属性。 | `number` | `undefined` |
 | getValueLength | 自定义计算字符串长度，搭配 maxlength、minlength、maxCount 使用。 | <ApiType detail={"((value: string) => number)"}>Type</ApiType> | `undefined` |
@@ -62,6 +62,6 @@ import ApiType from '#/components/ApiType.astro';
 | focus             | 聚焦原生 textarea。                      | <ApiType detail={"(options?: FocusOptions \u007c undefined) => void"}>Type</ApiType>                                                                                          |
 | blur              | 移出焦点。                               | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                 |
 | select            | 选中输入框中的全部文本。                 | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                                                 |
-| setSelectionRange | 设置选区，参数同原生 setSelectionRange。 | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: \"none\" \u007c \"forward\" \u007c \"backward\" \u007c undefined) => void"}>Type</ApiType> |
+| setSelectionRange | 设置选区，参数同原生 setSelectionRange。 | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: \"backward\" \u007c \"forward\" \u007c \"none\" \u007c undefined) => void"}>Type</ApiType> |
 | textarea          | 原生 textarea 元素，未渲染时为 null。    | `HTMLTextAreaElement \| null`                                                                                                                                                 |
 | nativeElement     | 组件根元素，未渲染时为 null。            | `HTMLElement \| null`                                                                                                                                                         |

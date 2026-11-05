@@ -5,7 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | action | Snippet for a custom action bar, with the default buttons `defaultActions`, the same buttons by name `defaultActionsObj`, the message and `class`. A key is missing when its button is not shown, for example while the message is unfinished. | <ApiType detail={"Snippet\u003c[AIChatDialogueActionSnippetProps]>"}>Type</ApiType> | - |
-| align | Conversation layout: leftRight or leftAlign. | `'leftRight' \| 'leftAlign'` | `"leftRight"` |
+| align | Conversation layout: leftRight or leftAlign. | `'leftAlign' \| 'leftRight'` | `"leftRight"` |
 | avatar | Snippet for a custom avatar, with the default avatar `defaultAvatar`, the message and the role. | <ApiType detail={"Snippet\u003c[AIChatDialogueAvatarSnippetProps]>"}>Type</ApiType> | - |
 | chats | List of conversation messages; bind it with `bind:chats`. Without a binding, changes made inside the component (such as deleting a message) stay local to it; `onChatsChange` is called once per change. | `Message[]` | - |
 | content | Snippet for a custom content area, with the default content `defaultContent`, the message, the role and `class`. `defaultContent` matches the default rendering, including the reference list and the loading indicator. | <ApiType detail={"Snippet\u003c[AIChatDialogueContentSnippetProps]>"}>Type</ApiType> | - |

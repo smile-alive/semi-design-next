@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | beforeCrop | Called before the crop modal opens, once with the first selected image; the result decides cropping for the whole batch. Return false to upload without cropping. May return a Promise. | <ApiType detail={"(file: File, fileList: File[]) => boolean \u007c Promise\u003cboolean>"}>Type</ApiType> | - |
 | beforeRemove | Called before a file is removed. Returning false, or a Promise that resolves to false or rejects, blocks the removal. | <ApiType detail={"(file: FileItem, fileList: FileItem[]) => boolean \u007c Promise\u003cboolean>"}>Type</ApiType> | - |
 | beforeUpload | Hook before a file is uploaded. The returned object updates the file status and decides whether to upload. A boolean means pass or fail; for a Promise, resolve passes and reject fails. | <ApiType detail={"(object: BeforeUploadProps) => BeforeUploadObjectResult \u007c Promise\u003cBeforeUploadObjectResult> \u007c boolean"}>Type</ApiType> | - |
-| capture | How media is captured: user or environment. true renders the attribute with an empty value, false omits it. | `boolean \| 'user' \| 'environment'` | - |
+| capture | How media is captured: user or environment. true renders the attribute with an empty value, false omits it. | `boolean \| 'environment' \| 'user'` | - |
 | children | Trigger content. In draggable mode it replaces the whole default drag area content. | `Snippet` | - |
 | crop | Enables image cropping. true uses the defaults, an object configures the cropper. Selecting, dragging, pasting and replacing all crop. | `boolean \| UploadCropProps` | `false` |
 | cropModalProps | Props of the crop Modal. visible, title, okText, cancelText, onOk, onCancel and children belong to Upload; style and bodyStyle are style strings. | `UploadCropModalProps` | - |
@@ -33,7 +33,7 @@ import ApiType from '#/components/ApiType.astro';
 | fileOperation | Custom operation area of a list item. | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType> | - |
 | fileValidateMessage | Custom validate message of a file card, which receives validateMessage. | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType> | - |
 | headers | Headers sent with the upload, or a function that returns them for a file. | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, string>)"}>Type</ApiType> | - |
-| hotSpotLocation | Position of the picture wall add button: start or end. | `'start' \| 'end'` | `"end"` |
+| hotSpotLocation | Position of the picture wall add button: start or end. | `'end' \| 'start'` | `"end"` |
 | itemStyle | Style string of the file cards. | `string` | - |
 | limit | Maximum number of files. With 1, the newest file always replaces the current one and onExceed is not called. | `number` | - |
 | listType | How the file list is displayed: list, picture or none. none renders no file list, only the trigger area. | `UploadListType` | `"list"` |

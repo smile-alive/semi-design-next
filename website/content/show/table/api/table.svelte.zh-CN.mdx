@@ -32,7 +32,7 @@ import ApiType from '#/components/ApiType.astro';
 | footer | 表格尾部，可以是纯文本，或带参数 pageData（当前页数据）的 snippet。 | <ApiType detail={"string \u007c Snippet\u003c[TableTitleSnippetProps\u003cR>]>"}>Type</ApiType> | - |
 | groupBy | 分组依据，可以是数据项中的字段名，或返回字符串、数字的函数。 | <ApiType detail={"TableGroupBy\u003cR>"}>Type</ApiType> | - |
 | groupSection | 分组行的内容，参数含 groupKey 与 group（该组的行 key）。 | <ApiType detail={"Snippet\u003c[TableGroupSectionSnippetProps]>"}>Type</ApiType> | - |
-| groupSectionColumn | 分组行唯一一列的列配置，返回值不含 title、children、dataIndex。 | <ApiType detail={"(groupKey: string \u007c number, group: (string \u007c number)[]) => Omit\u003cColumnProps\u003cR>, 'title' \u007c 'children' \u007c 'dataIndex'>"}>Type</ApiType> | - |
+| groupSectionColumn | 分组行唯一一列的列配置，返回值不含 title、children、dataIndex。 | <ApiType detail={"(groupKey: string \u007c number, group: (string \u007c number)[]) => Omit\u003cColumnProps\u003cR>, 'children' \u007c 'dataIndex' \u007c 'title'>"}>Type</ApiType> | - |
 | headerCell | 列标题的内容，参数含 column、title 与 sorter、filter、selection；不处理的列需要自己渲染 title。列设置 useFullRender 时 snippet 替换整个表头单元格，sorter、filter、selection 用于摆放排序、筛选与选择控件。 | <ApiType detail={"Snippet\u003c[TableHeaderCellSnippetProps\u003cR>]>"}>Type</ApiType> | - |
 | headerStyle | 所有表头单元格（包括固定表头）的内联样式字符串。 | `string` | - |
 | hideExpandedColumn | 表格可展开时，展开按钮默认与第一列内容渲染在同一个单元格；设为 false 时展开按钮单独占一列。 | `boolean` | `true` |

@@ -60,7 +60,7 @@ import ApiType from '#/components/ApiType.astro';
 | remote | Whether the search is remote. When on, the options are not filtered locally and the caller updates `optionList`. | `boolean` | `false` |
 | restTagsPopoverProps | Popover props of the +N popover. | `PopoverProps` | - |
 | searchPlaceholder | Placeholder of the search input when it is in the dropdown list (`searchPosition="dropdown"`). | `string` | - |
-| searchPosition | Where the search input sits: `trigger` or `dropdown`. | `'trigger' \| 'dropdown'` | `"trigger"` |
+| searchPosition | Where the search input sits: `trigger` or `dropdown`. | `'dropdown' \| 'trigger'` | `"trigger"` |
 | selectedItem | The selected content, a snippet with `{ option, index, disabled, onClose }`. In single mode it replaces the selection box content, in multiple mode the content of each tag. | <ApiType detail={"Snippet\u003c[SelectSelectedItemSnippetProps]>"}>Type</ApiType> | - |
 | showArrow | Whether to show the dropdown arrow. | `boolean` | `true` |
 | showClear | Whether to show the clear button. | `boolean` | `false` |

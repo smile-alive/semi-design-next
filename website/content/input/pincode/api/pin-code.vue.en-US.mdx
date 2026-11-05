@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus      | Whether to focus the first input on mount. Turn it on only when the user has just entered the code step: focus moving at page load makes screen readers skip the content before it. | `boolean`                                        | `semiDefault("PinCode", "autofocus", false)`     |
 | disabled       | Whether the input is disabled.                                                                                                                                                      | `boolean`                                        | `semiGlobalDefault("PinCode", "disabled")`       |
 | size           | Input size: large, default or small.                                                                                                                                                | `Size`                                           | `semiGlobalDefault("PinCode", "size")`           |
-| validateStatus | Validation status, passed to every input; error shows the error style.                                                                                                              | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("PinCode", "validateStatus")` |
+| validateStatus | Validation status, passed to every input; error shows the error style.                                                                                                              | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("PinCode", "validateStatus")` |
 
 **Events**
 

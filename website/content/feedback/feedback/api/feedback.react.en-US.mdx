@@ -33,7 +33,7 @@ import ApiType from '#/components/ApiType.astro';
 | style | Inline style, applied to the role="dialog" element in popup mode and to the `.semi-modal` dialog box in modal mode. | `CSSProperties` | - |
 | textAreaProps | Props of the multi-line input for the text and emoji types, written as the props of TextArea. Feedback takes over onChange, and your onChange is still called. | <ApiType detail={"Omit\u003cTextAreaProps, 'value'>"}>Type</ApiType> | - |
 | title | Title of the panel. | `ReactNode` | - |
-| type | Type of the feedback content: `emoji`, `text`, `radio`, `checkbox` or `custom`. For custom, the content goes in children or is produced by renderContent. | `'text' \| 'emoji' \| 'radio' \| 'checkbox' \| 'custom'` | `"emoji"` |
+| type | Type of the feedback content: `emoji`, `text`, `radio`, `checkbox` or `custom`. For custom, the content goes in children or is produced by renderContent. | `'checkbox' \| 'custom' \| 'emoji' \| 'radio' \| 'text'` | `"emoji"` |
 | visible | Whether the panel is shown. The component never closes itself; set it to false in onOk or onCancel. | `boolean` | - |
 | width | Width of the panel. Passed through to the Modal or SideSheet of the current mode. | `string \| number` | - |
 | zIndex | Stacking order of the panel. Passed through to the Modal or SideSheet of the current mode. | `number` | - |

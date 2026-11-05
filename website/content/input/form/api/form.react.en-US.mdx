@@ -11,14 +11,14 @@ import ApiType from '#/components/ApiType.astro';
 | className | Class name of the form element. | `string` | - |
 | component | A component that declares the fields, rendered with `formState`, `values` and `formApi` as its props. Do not use it together with `render` or `children`. | <ApiType detail={"React.ComponentType\u003cany>"}>Type</ApiType> | - |
 | disabled | The disabled state applied to every field. A field's own disabled takes precedence. | `boolean` | - |
-| extraTextPosition | Position of the extraText of every field: `middle` puts it between the label and the control, `bottom` after the control. Defaults to `bottom`. The same property on a field takes precedence. | `'middle' \| 'bottom'` | - |
+| extraTextPosition | Position of the extraText of every field: `middle` puts it between the label and the control, `bottom` after the control. Defaults to `bottom`. The same property on a field takes precedence. | `'bottom' \| 'middle'` | - |
 | form | The formApi returned by `Form.useForm()`, used to control the form from outside. | <ApiType detail={"ReturnType\u003ctypeof useForm\u003cValues>>[0]"}>Type</ApiType> | - |
 | getFormApi | Called once the Form has mounted, with the formApi. | <ApiType detail={"(formApi: FormApi\u003cValues>) => void"}>Type</ApiType> | - |
 | id | The id of the form element, also written to `x-form-id`. Generated when omitted. | `string` | - |
 | initValues | Initial values of the form, copied once when the Form is created. | `Values` | - |
 | labelAlign | Text alignment of the label of every field: `left` or `right`. Defaults to `left`. The same property on a field takes precedence. | `'left' \| 'right'` | - |
 | labelCol | Grid layout of the label of every field, with the properties of Col such as span and offset. Set it together with wrapperCol. | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType> | - |
-| labelPosition | Label position of every field: `top`, `left` or `inset`. `inset` is supported by some fields only; the others are laid out as `top`. The same property on a field takes precedence. | `'top' \| 'left' \| 'inset'` | `"top"` |
+| labelPosition | Label position of every field: `top`, `left` or `inset`. `inset` is supported by some fields only; the others are laid out as `top`. The same property on a field takes precedence. | `'inset' \| 'left' \| 'top'` | `"top"` |
 | labelWidth | Label width of every field. A number is in px. | `number \| string` | - |
 | layout | Direction in which the fields are arranged: `vertical` or `horizontal`. | `'horizontal' \| 'vertical'` | `"vertical"` |
 | onChange | Called when the form state changes: a field mounts, unmounts, changes its value, blurs, or changes its validation state or error. Receives formState. | <ApiType detail={"(formState: FormState\u003cValues>) => void"}>Type</ApiType> | - |

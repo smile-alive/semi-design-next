@@ -14,10 +14,10 @@ import ApiType from '#/components/ApiType.astro';
 | onChange | Called when the highlighted link changes, with the current and the previous link. | <ApiType detail={"(currentLink: string, previousLink: string) => void"}>Type</ApiType> | - |
 | onClick | Called when a link is clicked or activated with Enter, with the native MouseEvent or KeyboardEvent and the current link. Only called when a link is activated, not for a click elsewhere on the root. | <ApiType detail={"(event: AnchorClickEvent, currentLink: string) => void"}>Type</ApiType> | - |
 | position | Position of the Tooltip when showTooltip is on, with the same values as the Tooltip position. | `Position` | - |
-| railTheme | Theme of the rail: primary, tertiary or muted. | `'primary' \| 'tertiary' \| 'muted'` | `"primary"` |
+| railTheme | Theme of the rail: primary, tertiary or muted. | `'muted' \| 'primary' \| 'tertiary'` | `"primary"` |
 | scrollIntoViewOptions | Options passed to scroll-into-view-if-needed when a link is clicked, combined with scrollMotion and targetOffset. | `ScrollIntoViewOptions` | - |
 | scrollMotion | Whether scrolling after a click is animated. | `boolean` | `false` |
 | showTooltip | Whether a Tooltip shows when the text is truncated, with its options: type is the popup component, tooltip (default) or popover, and opts are passed to it. | `boolean \| ShowTooltip` | `false` |
-| size | Size of the anchor: small or default. | `'small' \| 'default'` | `"default"` |
+| size | Size of the anchor: small or default. | `'default' \| 'small'` | `"default"` |
 | targetOffset | Distance between the target and the top of the container when scrolling ends. | `number` | `0` |
 | title | Snippet that renders every link's title, with the parameter `{ item, level }`; `level` is the nesting depth, 1 at the top. It takes precedence over `title` in `links`. | <ApiType detail={"Snippet\u003c[AnchorTitleContext]>"}>Type</ApiType> | - |

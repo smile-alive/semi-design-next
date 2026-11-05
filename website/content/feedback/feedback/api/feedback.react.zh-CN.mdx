@@ -33,7 +33,7 @@ import ApiType from '#/components/ApiType.astro';
 | style | 内联样式，落点随模式不同：popup 模式在 `role="dialog"` 元素上，modal 模式在 `.semi-modal` 对话框盒子上。 | `CSSProperties` | - |
 | textAreaProps | type 为 text 与 emoji 时多行输入框的属性，写法同 TextArea 的属性。输入的 onChange 由 Feedback 接管，使用方的 onChange 仍会被调用。 | <ApiType detail={"Omit\u003cTextAreaProps, 'value'>"}>Type</ApiType> | - |
 | title | 弹层标题。 | `ReactNode` | - |
-| type | 反馈内容的类型，可选 `emoji`、`text`、`radio`、`checkbox` 或 `custom`。custom 时内容写在 children 中，或由 renderContent 生成。 | `'text' \| 'emoji' \| 'radio' \| 'checkbox' \| 'custom'` | `"emoji"` |
+| type | 反馈内容的类型，可选 `emoji`、`text`、`radio`、`checkbox` 或 `custom`。custom 时内容写在 children 中，或由 renderContent 生成。 | `'checkbox' \| 'custom' \| 'emoji' \| 'radio' \| 'text'` | `"emoji"` |
 | visible | 是否显示。组件不会自行关闭，由使用方在 onOk、onCancel 中把它设为 false。 | `boolean` | - |
 | width | 弹层宽度，透传给当前模式的 Modal 或 SideSheet。 | `string \| number` | - |
 | zIndex | 弹层的层级，透传给当前模式的 Modal 或 SideSheet。 | `number` | - |

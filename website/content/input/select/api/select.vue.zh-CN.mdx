@@ -27,10 +27,10 @@ import ApiType from '#/components/ApiType.astro';
 | size | 大小，可选 small、default、large。 | `Size` | `undefined` |
 | disabled | 是否禁用。 | `boolean` | `undefined` |
 | borderless | 是否使用无边框样式。 | `boolean` | `semiDefault("Select", "borderless", false)` |
-| validateStatus | 校验状态，可选 default、warning、error，只影响背景色等样式。 | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("Select", "validateStatus")` |
+| validateStatus | 校验状态，可选 default、warning、error，只影响背景色等样式。 | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("Select", "validateStatus")` |
 | placeholder | 选择框中没有选中值时显示的占位文字。 | `string` | `semiGlobalDefault("Select", "placeholder")` |
 | searchPlaceholder | 搜索框在下拉列表中（searchPosition 为 dropdown）时，搜索框的占位文字。 | `string` | `semiGlobalDefault("Select", "searchPlaceholder")` |
-| searchPosition | 开启搜索时搜索框的位置：trigger 在选择框内，dropdown 在下拉列表顶部。trigger 时点击选择框的清除按钮同时清空搜索文本，dropdown 时只清空已选项。 | `"trigger" \| "dropdown"` | `semiDefault("Select", "searchPosition", "trigger")` |
+| searchPosition | 开启搜索时搜索框的位置：trigger 在选择框内，dropdown 在下拉列表顶部。trigger 时点击选择框的清除按钮同时清空搜索文本，dropdown 时只清空已选项。 | `"dropdown" \| "trigger"` | `semiDefault("Select", "searchPosition", "trigger")` |
 | loading | 下拉列表是否显示加载动画。 | `boolean` | `semiDefault("Select", "loading", false)` |
 | showArrow | 是否显示右侧下拉箭头。 | `boolean` | `semiDefault("Select", "showArrow", true)` |
 | showClear | 是否显示清除按钮。有已选值或搜索文本且未禁用时，清除按钮出现在选择框内。 | `boolean` | `semiDefault("Select", "showClear", false)` |
@@ -39,7 +39,7 @@ import ApiType from '#/components/ApiType.astro';
 | dropdownClassName | 下拉弹出层的 class。 | `string` | `semiGlobalDefault("Select", "dropdownClassName")` |
 | dropdownStyle | 下拉弹出层的样式，例如设置 width。根元素上的 style 不会传给弹出层。 | `StyleValue` | `semiGlobalDefault("Select", "dropdownStyle")` |
 | dropdownMatchSelectWidth | 下拉弹出层的最小宽度是否等于选择框。 | `boolean` | `semiDefault("Select", "dropdownMatchSelectWidth", true)` |
-| position | 弹出层展开的位置，可选值同 Tooltip 的 position。 | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("Select", "position")` |
+| position | 弹出层展开的位置，可选值同 Tooltip 的 position。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("Select", "position")` |
 | spacing | 弹出层与选择框的距离，单位为像素。 | `number \| { x: number; y: number; }` | `semiGlobalDefault("Select", "spacing")` |
 | motion | 弹出层是否使用动画。 | `boolean` | `semiDefault("Select", "motion", true)` |
 | autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `semiDefault("Select", "autoAdjustOverflow", true)` |

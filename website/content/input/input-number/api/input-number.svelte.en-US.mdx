@@ -11,7 +11,7 @@ import ApiType from '#/components/ApiType.astro';
 | clearIcon | Snippet of the custom clear button icon; valid when showClear is true. | `Snippet` | - |
 | composition | Whether to enable composition mode. When enabled, onChange is not called during IME composition and is called once after it ends. | `boolean` | - |
 | currency | Currency, such as CNY, EUR or USD. When true, uses defaultCurrency, or the currency of the locale pack when that is not set; a bare currency attribute equals true. | `boolean \| string` | - |
-| currencyDisplay | How the currency is shown: symbol, code or name. | `'code' \| 'symbol' \| 'name'` | - |
+| currencyDisplay | How the currency is shown: symbol, code or name. | `'code' \| 'name' \| 'symbol'` | - |
 | defaultCurrency | Currency used when currency is true. Priority: own prop, global default, locale pack. | `string` | - |
 | disabled | Whether disabled. | `boolean` | - |
 | formatter | Format of the displayed value, usually set together with parser. Priority: own prop, global default. | <ApiType detail={"(value: number \u007c string) => string"}>Type</ApiType> | - |
@@ -71,4 +71,4 @@ import ApiType from '#/components/ApiType.astro';
 | getInput          | Returns the native input element; null after unmount.                                  | <ApiType detail={"() => any"}>Type</ApiType>                                                                                                           |
 | getNativeElement  | Returns the root element of the component; null after unmount.                         | <ApiType detail={"() => HTMLDivElement \u007c undefined"}>Type</ApiType>                                                                               |
 | select            | Selects all the text in the input.                                                     | <ApiType detail={"() => void"}>Type</ApiType>                                                                                                          |
-| setSelectionRange | Sets the selection, with the parameters of the native setSelectionRange.               | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: 'forward' \u007c 'backward' \u007c 'none') => void"}>Type</ApiType> |
+| setSelectionRange | Sets the selection, with the parameters of the native setSelectionRange.               | <ApiType detail={"(start: number \u007c null, end: number \u007c null, direction?: 'backward' \u007c 'forward' \u007c 'none') => void"}>Type</ApiType> |

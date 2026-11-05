@@ -38,7 +38,7 @@ import ApiType from '#/components/ApiType.astro';
 | onCancel | Called by the cancel button, the close button, the mask and Esc; the argument is a native KeyboardEvent for Esc. A returned Promise keeps the cancel button loading; visible is written back once it fulfills, and a rejection keeps the dialog open. visible is still true while the callback runs. | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent) => unknown"}>Type</ApiType> | - |
 | onOk | Called when the ok button is clicked. A returned Promise keeps the ok button loading until it settles. The component never closes itself on ok; the caller sets visible to false. | <ApiType detail={"(event: MouseEvent) => unknown"}>Type</ApiType> | - |
 | preventScroll | Whether the focus calls made by the component avoid scrolling the focused element into view. Focus calls made by the caller are not affected. | `boolean` | - |
-| role | role of the dialog element: dialog or alertdialog. | `'dialog' \| 'alertdialog'` | - |
+| role | role of the dialog element: dialog or alertdialog. | `'alertdialog' \| 'dialog'` | - |
 | size | Width preset of the dialog: small is 448px, medium 684px, large 920px, full-width 100vw - 64px. | `Size` | `"small"` |
 | title | Title, plain text or a snippet, which also names the dialog. It is a declared prop, so it never lands on an element as the native title attribute. | `string \| Snippet` | - |
 | visible | Whether the dialog is visible, used with bind:visible. The cancel button, the close button, the mask and Esc write false once onCancel returns; ok only calls onOk and the caller sets visible to false. | `boolean` | - |

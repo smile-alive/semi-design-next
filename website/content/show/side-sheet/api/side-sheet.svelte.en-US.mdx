@@ -23,7 +23,7 @@ import ApiType from '#/components/ApiType.astro';
 | motion | Whether animation is enabled. | `boolean` | `true` |
 | onCancel | Called when the user closes the sheet with the close button, the mask or Esc, after visible has been written back to false. The argument is the native MouseEvent, or the native KeyboardEvent for Esc. | <ApiType detail={"(event: MouseEvent \u007c KeyboardEvent) => void"}>Type</ApiType> | - |
 | placement | Edge the sheet slides in from. | `Placement` | `"right"` |
-| size | Size: small is 448px, medium 684px, large 920px. Used only when placement is left or right. | `'small' \| 'medium' \| 'large'` | `"small"` |
+| size | Size: small is 448px, medium 684px, large 920px. Used only when placement is left or right. | `'large' \| 'medium' \| 'small'` | `"small"` |
 | style | Style that lands on the role=dialog element, as a string. | `string` | - |
 | title | Title, plain text or a snippet, which also names the dialog. It is a declared prop, so it never lands on an element as the native title attribute. | `Snippet \| string` | - |
 | visible | Whether the sheet is visible, used with bind:visible. | `boolean` | - |

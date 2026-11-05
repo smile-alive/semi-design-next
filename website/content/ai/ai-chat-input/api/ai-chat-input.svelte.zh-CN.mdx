@@ -45,12 +45,12 @@ import ApiType from '#/components/ApiType.astro';
 | templatesCls | 模板面板的类名。 | `string` | - |
 | templatesStyle | 模板面板的样式字符串。 | `string` | - |
 | topSlot | 自定义顶部区域的 snippet，参数含引用、上传内容、输入内容和删除方法（`references`、`attachments`、`content`、`onUploadFileDelete`、`onReferenceDelete`）。位置由 topSlotPosition 决定。 | <ApiType detail={"Snippet\u003c[AIChatInputTopSlotSnippetProps]>"}>Type</ApiType> | - |
-| topSlotPosition | `topSlot` 的位置，相对于引用区域与上传文件区域。 | `'top' \| 'middle' \| 'bottom'` | `"top"` |
+| topSlotPosition | `topSlot` 的位置，相对于引用区域与上传文件区域。 | `'bottom' \| 'middle' \| 'top'` | `"top"` |
 | transformer | 自定义扩展的转换规则，键为节点名，值为把节点转换成 onContentChange 内容项的函数。 | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | - |
 | uploadButton | 自定义上传按钮内容的 snippet，上传与粘贴上传逻辑仍由组件托管；参数含 `defaultNode`（snippet）、`onOpenFileDialog`、`disabled`、`attachments`。 | <ApiType detail={"Snippet\u003c[AIChatInputUploadButtonSnippetProps]>"}>Type</ApiType> | - |
 | uploadProps | 上传文件相关配置，同 Upload，但不接受 fileList、listType 与 children；初始附件用 `defaultFileList`；onChange、onRemove 由 AIChatInput 自己调用，beforeRemove 支持 Promise。 | `AIChatInputUploadProps` | - |
 | uploadTip | 上传按钮提示内容的 snippet。 | `Snippet` | - |
-| uploadTipProps | 上传按钮提示的 Tooltip 配置，不含 content；提示内容使用 `uploadTip` snippet。 | <ApiType detail={"Omit\u003cTooltipProps, 'content' \u007c 'children' \u007c 'child' \u007c 'arrow'>"}>Type</ApiType> | - |
+| uploadTipProps | 上传按钮提示的 Tooltip 配置，不含 content；提示内容使用 `uploadTip` snippet。 | <ApiType detail={"Omit\u003cTooltipProps, 'arrow' \u007c 'child' \u007c 'children' \u007c 'content'>"}>Type</ApiType> | - |
 
 **Methods**
 

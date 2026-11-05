@@ -40,7 +40,7 @@ import ApiType from '#/components/ApiType.astro';
 | showClearContext | Whether to show the clear context button in the input box. | `boolean` | `false` |
 | showStopGenerate | Whether to show the stop button while the last message is generating. Sending is disabled meanwhile, and clicking the stop button calls `onStopGenerator`. | `boolean` | `false` |
 | topSlot | Node above the conversation area. | `JSX.Element` | - |
-| uploadProps | Props passed to Upload. Chat manages `fileList` and `defaultFileList`, and handles `onChange` itself, so it is not passed to Upload; `children` replaces the upload button as its trigger. | <ApiType detail={"Omit\u003cUploadProps, 'fileList' \u007c 'defaultFileList'>"}>Type</ApiType> | - |
+| uploadProps | Props passed to Upload. Chat manages `fileList` and `defaultFileList`, and handles `onChange` itself, so it is not passed to Upload; `children` replaces the upload button as its trigger. | <ApiType detail={"Omit\u003cUploadProps, 'defaultFileList' \u007c 'fileList'>"}>Type</ApiType> | - |
 | uploadTipProps | Props of the upload button's Tooltip; `content` is the tip text. | `TooltipProps` | - |
 
 **Methods**

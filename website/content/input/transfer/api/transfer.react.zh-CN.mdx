@@ -28,7 +28,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderSourcePanel | 完全自定义左侧候选面板，每次渲染时调用，参数为 SourcePanelProps。 | <ApiType detail={"(sourcePanelProps: SourcePanelProps) => React.ReactNode"}>Type</ApiType> | - |
 | showPath | 仅 `treeList` 有效，控制右侧已选项是否显示从根节点到自身的选择路径。 | `boolean` | `false` |
 | style | 根元素的内联样式。 | `React.CSSProperties` | - |
-| treeProps | 仅 `treeList` 有效，传给左侧 Tree 的属性，会覆盖默认的 `multiple`、`disableStrictly`、`leafOnly`、`filterTreeNode`、`defaultExpandAll` 与 `searchRender`（为 `false`）。`value`、`treeData`、`keyMaps`、`treeDataSimpleJson`、`onChangeWithObject`、`onChange` 与 `ref` 由 Transfer 决定，传入会被忽略。 | <ApiType detail={"Omit\u003cTreeProps, 'value' \u007c 'ref' \u007c 'onChange' \u007c 'keyMaps' \u007c 'treeData' \u007c 'treeDataSimpleJson' \u007c 'onChangeWithObject'>"}>Type</ApiType> | - |
+| treeProps | 仅 `treeList` 有效，传给左侧 Tree 的属性，会覆盖默认的 `multiple`、`disableStrictly`、`leafOnly`、`filterTreeNode`、`defaultExpandAll` 与 `searchRender`（为 `false`）。`value`、`treeData`、`keyMaps`、`treeDataSimpleJson`、`onChangeWithObject`、`onChange` 与 `ref` 由 Transfer 决定，传入会被忽略。 | <ApiType detail={"Omit\u003cTreeProps, 'keyMaps' \u007c 'onChange' \u007c 'onChangeWithObject' \u007c 'ref' \u007c 'treeData' \u007c 'treeDataSimpleJson' \u007c 'value'>"}>Type</ApiType> | - |
 | type | 穿梭框类型，可选 `list`、`groupList`、`treeList`。 | `Type` | `"list"` |
 | value | 已选中的 value 数组，传入后即为受控组件，数组顺序就是右侧的显示顺序；传入 `undefined` 回到非受控。 | <ApiType detail={"Array\u003cstring \u007c number>"}>Type</ApiType> | - |
 | virtualize | 右侧已选列表虚拟化，仅在默认右侧面板且 `draggable` 为 `false` 时生效。`height` 为数字时按像素生效，为其他值时按面板剩余高度测量；`itemSize` 为每行高度。 | `VirtualizeProps` | - |

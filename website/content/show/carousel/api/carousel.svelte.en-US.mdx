@@ -5,13 +5,13 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | activeIndex | Index of the slide being shown; bind it with `bind:activeIndex`. Passing undefined hands control back, continuing from the last controlled index. | `number` | - |
-| animation | Transition animation: slide or fade. | `'slide' \| 'fade'` | `"slide"` |
+| animation | Transition animation: slide or fade. | `'fade' \| 'slide'` | `"slide"` |
 | arrowProps | Data for the previous and next arrow buttons: `leftArrow.props` and `rightArrow.props` hold the button attributes. `onclick` and `class` are merged with the built-in handler and classes. Use the `leftArrow` and `rightArrow` snippets for the icons. | `ArrowProps` | - |
 | arrowType | When the arrows are shown: always or hover. | `'always' \| 'hover'` | `"always"` |
 | autoPlay | Whether to play automatically, or an object with interval (milliseconds between slides, default 2000) and hoverToPause (pause while hovered, default true). | `CarouselAutoPlay` | `true` |
-| indicatorPosition | Indicator position: left, center or right. | `'left' \| 'center' \| 'right'` | `"center"` |
-| indicatorSize | Indicator size: small or medium. | `'small' \| 'medium'` | `"small"` |
-| indicatorType | Indicator type: dot, line or columnar. | `'dot' \| 'line' \| 'columnar'` | `"dot"` |
+| indicatorPosition | Indicator position: left, center or right. | `'center' \| 'left' \| 'right'` | `"center"` |
+| indicatorSize | Indicator size: small or medium. | `'medium' \| 'small'` | `"small"` |
+| indicatorType | Indicator type: dot, line or columnar. | `'columnar' \| 'dot' \| 'line'` | `"dot"` |
 | items | Data for the slides, one per item, rendered by the `slide` snippet; the count is known before the first render. | `readonly T[]` | - |
 | leftArrow | Snippet for the icon of the previous arrow. An empty snippet leaves the button empty. | `Snippet` | - |
 | onChange | Called when the shown slide changes, with the new index and the previous index. | <ApiType detail={"(activeIndex: number, preIndex: number) => void"}>Type</ApiType> | - |
@@ -25,7 +25,7 @@ import ApiType from '#/components/ApiType.astro';
 | slide | Snippet for the content of one slide, with the parameter `{ item, index }`; the carousel wraps each slide in an element carrying the classes, role and `inert`. | <ApiType detail={"Snippet\u003c[CarouselSlideContext\u003cT>]>"}>Type</ApiType> | - |
 | slideDirection | Slide direction when the animation is slide: left or right. | `'left' \| 'right'` | `"left"` |
 | speed | Transition duration in milliseconds. | `number` | `300` |
-| theme | Theme of the indicator and arrows: primary, light or dark. | `'dark' \| 'primary' \| 'light'` | `"light"` |
+| theme | Theme of the indicator and arrows: primary, light or dark. | `'dark' \| 'light' \| 'primary'` | `"light"` |
 | trigger | How the indicator switches slides: click or hover. | `'click' \| 'hover'` | `"click"` |
 
 **Methods**

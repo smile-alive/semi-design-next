@@ -22,7 +22,7 @@ import ApiType from '#/components/ApiType.astro';
 | expandRowByClick | Whether clicking a row expands an expandable row. | `boolean` | `semiDefault("Table", "expandRowByClick", false)` |
 | footer | The table footer as plain text. The footer slot takes precedence. | `string` | `semiGlobalDefault("Table", "footer")` |
 | groupBy | The grouping rule: a record field name, or a function that returns a string or a number. | <ApiType detail={"TableGroupBy\u003cR>"}>Type</ApiType> | `undefined` |
-| groupSectionColumn | The column configuration of the single cell of a group row. The returned object has no title, children or dataIndex. | <ApiType detail={"((groupKey: string \u007c number, group: (string \u007c number)[]) => Omit\u003cColumnProps\u003cR>, \"title\" \u007c \"children\" \u007c \"dataIndex\">)"}>Type</ApiType> | `undefined` |
+| groupSectionColumn | The column configuration of the single cell of a group row. The returned object has no title, children or dataIndex. | <ApiType detail={"((groupKey: string \u007c number, group: (string \u007c number)[]) => Omit\u003cColumnProps\u003cR>, \"children\" \u007c \"dataIndex\" \u007c \"title\">)"}>Type</ApiType> | `undefined` |
 | headerStyle | Inline style of every header cell, fixed headers included. | `CSSProperties` | `semiGlobalDefault("Table", "headerStyle")` |
 | hideExpandedColumn | In an expandable table the expand button shares the first cell by default; set false to render it as its own column. | `boolean` | `semiDefault("Table", "hideExpandedColumn", true)` |
 | indentSize | The indent of each tree level, in pixels. | `number` | `semiDefault("Table", "indentSize", 20)` |
@@ -37,7 +37,7 @@ import ApiType from '#/components/ApiType.astro';
 | rowSpanHover | Hovering a cell with rowSpan highlights every row the cell spans. | `boolean` | `semiDefault("Table", "rowSpanHover", false)` |
 | scroll | The scroll area: x is the width and y the height, see scroll. | `TableScroll` | `semiGlobalDefault("Table", "scroll")` |
 | showHeader | Whether to show the header. | `boolean` | `semiDefault("Table", "showHeader", true)` |
-| size | The table size, which sets the padding of the cells. | `"small" \| "default" \| "middle"` | `semiDefault("Table", "size", "default")` |
+| size | The table size, which sets the padding of the cells. | `"default" \| "middle" \| "small"` | `semiDefault("Table", "size", "default")` |
 | sticky | Sticks the header to the top of the page. With an object, top is the distance from the scroll container. | `TableSticky` | `semiGlobalDefault("Table", "sticky")` |
 | title | The table title as plain text. The title slot takes precedence. | `string` | `semiGlobalDefault("Table", "title")` |
 | virtualized | Turns on virtualization, which needs scroll.y as a number. An object sets the row height itemSize and the extra rows overscanCount. | `TableVirtualized` | `semiGlobalDefault("Table", "virtualized")` |

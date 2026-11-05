@@ -63,7 +63,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderSelectedItem | 自定义选择框中已选项的渲染。单选时返回内容；多选时第二个参数含 index、disabled 与 onClose，返回 `{ isRenderInTag, content }`，isRenderInTag 为 true 时内容会包在 Tag 中。 | <ApiType detail={"ByMultiple\u003cMultiple, RenderSingleSelectedItemFn, RenderMultipleSelectedItemFn>"}>Type</ApiType> | - |
 | restTagsPopoverProps | 显示剩余标签的 Popover 的配置，可设置 position、trigger 等。 | `PopoverProps` | - |
 | searchPlaceholder | 搜索框在下拉列表中（searchPosition 为 dropdown）时，搜索框的占位文字。 | `string` | - |
-| searchPosition | 开启搜索时搜索框的位置：trigger 在选择框内，dropdown 在下拉列表顶部。trigger 时点击选择框的清除按钮同时清空搜索文本，dropdown 时只清空已选项。 | `'trigger' \| 'dropdown'` | `"trigger"` |
+| searchPosition | 开启搜索时搜索框的位置：trigger 在选择框内，dropdown 在下拉列表顶部。trigger 时点击选择框的清除按钮同时清空搜索文本，dropdown 时只清空已选项。 | `'dropdown' \| 'trigger'` | `"trigger"` |
 | showArrow | 是否显示右侧下拉箭头。 | `boolean` | `true` |
 | showClear | 是否显示清除按钮。有已选值或搜索文本且未禁用时，清除按钮出现在选择框内。 | `boolean` | `false` |
 | showRestTagsPopover | 超出 maxTagCount 后，hover 到 +N 时是否用 Popover 显示剩余的标签。 | `boolean` | `false` |

@@ -47,7 +47,7 @@ import ApiType from '#/components/ApiType.astro';
 | suggestions | Suggestion list, shown as the user types. | `Suggestion[]` | - |
 | templatesCls | Class name of the template panel. | `string` | - |
 | templatesStyle | Style of the template panel, merged over its default max height. Only an object is accepted. | `JSX.CSSProperties` | - |
-| topSlotPosition | Position of the top area relative to the reference area and the uploaded file area. | `'top' \| 'middle' \| 'bottom'` | `"top"` |
+| topSlotPosition | Position of the top area relative to the reference area and the uploaded file area. | `'bottom' \| 'middle' \| 'top'` | `"top"` |
 | transformer | Conversion rules of custom extensions, so that the node data received by onContentChange matches what is expected. | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | - |
 | uploadProps | Upload settings, the Upload props without fileList and listType. | <ApiType detail={"Omit\u003cUploadProps, 'fileList' \u007c 'listType'>"}>Type</ApiType> | - |
 | uploadTipProps | Tip of the upload button, with the Tooltip props. With renderUploadButton or uploadProps.children, the tip wraps the custom node in a span. | `TooltipProps` | - |

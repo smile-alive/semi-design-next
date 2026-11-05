@@ -66,7 +66,7 @@ import ApiType from '#/components/ApiType.astro';
 | renderSelectedItem | 自定义选择框中已选项标签的渲染。单选时入参为选项对象，返回 ReactNode；多选时入参为选项对象与 `{ index, disabled, onClose }`，返回 `{ isRenderInTag, content }`，`isRenderInTag` 为 `true` 时，`content` 会包在带背景色与关闭按钮的标签中。 | <ApiType detail={"ByMultiple\u003cMultiple, RenderSingleSelectedItemFn, RenderMultipleSelectedItemFn>"}>Type</ApiType> | - |
 | restTagsPopoverProps | `showRestTagsPopover` 开启时，超出标签的 Popover 配置，可设置 `position`、`trigger` 等，参考 Popover 组件。 | `PopoverProps` | `{}` |
 | searchPlaceholder | 搜索框位于下拉列表中（`searchPosition` 为 `dropdown`）时，搜索框的占位文字。 | `string` | - |
-| searchPosition | `filter` 开启时搜索框的位置。`trigger` 表示搜索框在选择框内，`dropdown` 表示搜索框在下拉列表顶部。搭配 `triggerRender` 使用可以实现更自由的交互。 | `'trigger' \| 'dropdown'` | `"trigger"` |
+| searchPosition | `filter` 开启时搜索框的位置。`trigger` 表示搜索框在选择框内，`dropdown` 表示搜索框在下拉列表顶部。搭配 `triggerRender` 使用可以实现更自由的交互。 | `'dropdown' \| 'trigger'` | `"trigger"` |
 | showArrow | 是否展示下拉箭头。 | `boolean` | `true` |
 | showClear | 是否展示清除按钮。 | `boolean` | `false` |
 | showRestTagsPopover | 超过 `maxTagCount` 后，悬停到 `+N` 上时是否通过 Popover 展示剩余内容。 | `boolean` | `false` |

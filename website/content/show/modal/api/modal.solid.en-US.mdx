@@ -42,7 +42,7 @@ import ApiType from '#/components/ApiType.astro';
 | onOk | Called when the ok button is clicked. A returned Promise keeps the ok button loading until it settles. The dialog never closes itself; the caller sets visible to false. | <ApiType detail={"(e: MouseEvent) => unknown"}>Type</ApiType> | - |
 | preventScroll | Whether the focus calls made by the component avoid scrolling the focused element into view. Focus calls made by the caller are not affected. | `boolean` | - |
 | ref | Receives the outermost element inside the portal. | <ApiType detail={"Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
-| role | Role of the dialog element. The imperative methods use `alertdialog`. | `'dialog' \| 'alertdialog'` | - |
+| role | Role of the dialog element. The imperative methods use `alertdialog`. | `'alertdialog' \| 'dialog'` | - |
 | size | Width preset of the dialog: small is 448px, medium 684px, large 920px, full-width 100vw - 64px. | `Size` | `"small"` |
 | style | Style of the `.semi-modal` dialog box, an object or a string. | `JSX.CSSProperties \| string` | - |
 | title | Title, which also names the dialog. | `JSX.Element` | - |

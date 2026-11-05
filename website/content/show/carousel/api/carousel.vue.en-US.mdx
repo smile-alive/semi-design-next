@@ -10,15 +10,15 @@ import ApiType from '#/components/ApiType.astro';
 | arrowType | When the arrows are shown: always or hover. | `"always" \| "hover"` | `semiDefault("Carousel", "arrowType", "always")` |
 | autoPlay | Whether to play automatically, or an object with interval (milliseconds between slides, default 2000) and hoverToPause (pause while hovered, default true). | `CarouselAutoPlay` | `semiDefault("Carousel", "autoPlay", true)` |
 | defaultActiveIndex | Index of the slide shown initially, used when uncontrolled. | `number` | <ApiType detail={"semiDefault(\"Carousel\", \"defaultActiveIndex\", numbers.DEFAULT_ACTIVE_INDEX)"}>Type</ApiType> |
-| indicatorPosition | Indicator position: left, center or right. | `"left" \| "right" \| "center"` | `semiDefault("Carousel", "indicatorPosition", "center")` |
-| indicatorSize | Indicator size: small or medium. | `"small" \| "medium"` | `semiDefault("Carousel", "indicatorSize", "small")` |
-| indicatorType | Indicator type: dot, line or columnar. | `"dot" \| "line" \| "columnar"` | `semiDefault("Carousel", "indicatorType", "dot")` |
+| indicatorPosition | Indicator position: left, center or right. | `"center" \| "left" \| "right"` | `semiDefault("Carousel", "indicatorPosition", "center")` |
+| indicatorSize | Indicator size: small or medium. | `"medium" \| "small"` | `semiDefault("Carousel", "indicatorSize", "small")` |
+| indicatorType | Indicator type: dot, line or columnar. | `"columnar" \| "dot" \| "line"` | `semiDefault("Carousel", "indicatorType", "dot")` |
 | showArrow | Whether to show the arrows. | `boolean` | `semiDefault("Carousel", "showArrow", true)` |
 | showIndicator | Whether to show the indicator. | `boolean` | `semiDefault("Carousel", "showIndicator", true)` |
 | slideDirection | Slide direction when the animation is slide: left or right. | `"left" \| "right"` | `semiDefault("Carousel", "slideDirection", "left")` |
 | speed | Transition duration in milliseconds. | `number` | `semiDefault("Carousel", "speed", numbers.DEFAULT_SPEED)` |
-| theme | Theme of the indicator and arrows: primary, light or dark. | `"dark" \| "primary" \| "light"` | `semiDefault("Carousel", "theme", "light")` |
-| trigger | How the indicator switches slides: click or hover. | `"hover" \| "click"` | `semiDefault("Carousel", "trigger", "click")` |
+| theme | Theme of the indicator and arrows: primary, light or dark. | `"dark" \| "light" \| "primary"` | `semiDefault("Carousel", "theme", "light")` |
+| trigger | How the indicator switches slides: click or hover. | `"click" \| "hover"` | `semiDefault("Carousel", "trigger", "click")` |
 
 **Events**
 

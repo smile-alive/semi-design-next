@@ -49,7 +49,7 @@ import ApiType from '#/components/ApiType.astro';
 | suggestions | 建议列表。列表变化且不为空时显示建议面板，为空时隐藏。 | `Suggestion[]` | - |
 | templatesCls | 模版面板的类名。 | `string` | - |
 | templatesStyle | 模版面板的样式，与默认的最大高度合并。 | `React.CSSProperties` | - |
-| topSlotPosition | 顶部区域相对于引用区域与上传文件区域的位置，可选 `top`、`middle` 或 `bottom`。 | `'top' \| 'middle' \| 'bottom'` | `"top"` |
+| topSlotPosition | 顶部区域相对于引用区域与上传文件区域的位置，可选 `top`、`middle` 或 `bottom`。 | `'bottom' \| 'middle' \| 'top'` | `"top"` |
 | transformer | 自定义扩展的转换规则，用于保证 onContentChange 得到的节点数据符合预期。 | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | - |
 | uploadProps | 上传文件相关配置，取值同 Upload 的属性，不含 fileList 与 listType。 | <ApiType detail={"Omit\u003cUploadProps, 'fileList' \u007c 'listType'>"}>Type</ApiType> | - |
 | uploadTipProps | 上传按钮的提示，取值同 Tooltip 的属性，包裹上传按钮节点（含 renderUploadButton 或 uploadProps.children 给出的节点）。 | `TooltipProps` | - |

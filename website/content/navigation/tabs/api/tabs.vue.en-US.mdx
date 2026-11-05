@@ -5,7 +5,7 @@ import ApiType from '#/components/ApiType.astro';
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | activeKey | The itemKey of the active tab, used with v-model:activeKey. null activates no tab and is still controlled; omitted or undefined means uncontrolled. | `string \| null` | `semiGlobalDefault("Tabs", "activeKey")` |
-| arrowPosition | Position of the scroll arrows in collapsible mode. | `"both" \| "start" \| "end"` | `semiDefault("Tabs", "arrowPosition", "both")` |
+| arrowPosition | Position of the scroll arrows in collapsible mode. | `"both" \| "end" \| "start"` | `semiDefault("Tabs", "arrowPosition", "both")` |
 | collapsible | Whether to collapse overflowing tabs into a scrollable bar (horizontal mode only). 'auto' collapses when the tabs overflow or wrap and leaves the collapse once they fit. | `boolean \| "auto"` | `semiDefault("Tabs", "collapsible", false)` |
 | contentStyle | Style of the outer content area. | `StyleValue` | `semiGlobalDefault("Tabs", "contentStyle")` |
 | defaultActiveKey | The itemKey selected initially when uncontrolled. Defaults to the first enabled tab that has an itemKey. | `string` | `semiGlobalDefault("Tabs", "defaultActiveKey")` |

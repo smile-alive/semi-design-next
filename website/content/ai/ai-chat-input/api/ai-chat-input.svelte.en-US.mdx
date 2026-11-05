@@ -45,12 +45,12 @@ import ApiType from '#/components/ApiType.astro';
 | templatesCls | Class name of the template panel. | `string` | - |
 | templatesStyle | Style string of the template panel. | `string` | - |
 | topSlot | Snippet for a custom top area, with the references, attachments, content and delete methods (`references`, `attachments`, `content`, `onUploadFileDelete`, `onReferenceDelete`) as parameters. Placed by topSlotPosition. | <ApiType detail={"Snippet\u003c[AIChatInputTopSlotSnippetProps]>"}>Type</ApiType> | - |
-| topSlotPosition | Position of `topSlot` relative to the reference area and the uploaded files area. | `'top' \| 'middle' \| 'bottom'` | `"top"` |
+| topSlotPosition | Position of `topSlot` relative to the reference area and the uploaded files area. | `'bottom' \| 'middle' \| 'top'` | `"top"` |
 | transformer | Transform rules of custom extensions: the key is the node name, the value turns the node into an onContentChange item. | <ApiType detail={"Map\u003cstring, (obj: any) => any>"}>Type</ApiType> | - |
 | uploadButton | Snippet that replaces the upload button content while Upload keeps handling uploads and pasted files. Parameters: `defaultNode` (a snippet), `onOpenFileDialog`, `disabled`, `attachments`. | <ApiType detail={"Snippet\u003c[AIChatInputUploadButtonSnippetProps]>"}>Type</ApiType> | - |
 | uploadProps | Upload settings, as Upload but without fileList, listType and children; seed the attachments with `defaultFileList`. AIChatInput calls onChange and onRemove itself; beforeRemove may return a Promise. | `AIChatInputUploadProps` | - |
 | uploadTip | Snippet for the content of the upload tip. | `Snippet` | - |
-| uploadTipProps | Tooltip props of the upload tip without content; the tip content goes through the `uploadTip` snippet. | <ApiType detail={"Omit\u003cTooltipProps, 'content' \u007c 'children' \u007c 'child' \u007c 'arrow'>"}>Type</ApiType> | - |
+| uploadTipProps | Tooltip props of the upload tip without content; the tip content goes through the `uploadTip` snippet. | <ApiType detail={"Omit\u003cTooltipProps, 'arrow' \u007c 'child' \u007c 'children' \u007c 'content'>"}>Type</ApiType> | - |
 
 **Methods**
 

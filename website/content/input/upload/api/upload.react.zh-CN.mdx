@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | beforeCrop | 图片裁切前的回调，只用第一张选中的图片调用一次，结果决定整批是否裁切。返回 `false` 跳过裁切直接上传，支持异步返回。 | <ApiType detail={"(file: File, fileList: File[]) => boolean \u007c Promise\u003cboolean>"}>Type</ApiType> | - |
 | beforeRemove | 移除文件前的回调，返回 `false`、resolve 为 `false` 的 Promise 或 reject 的 Promise 会阻止移除。 | <ApiType detail={"(file: FileItem, fileList: Array\u003cFileItem>) => boolean \u007c Promise\u003cboolean>"}>Type</ApiType> | <ApiType detail={"() => true"}>Type</ApiType> |
 | beforeUpload | 上传文件前的钩子，返回的对象用于更新文件状态并控制是否上传；返回 boolean 表示通过或失败，返回 Promise 时 resolve 为通过、reject 为失败。 | <ApiType detail={"(object: BeforeUploadProps) => BeforeUploadObjectResult \u007c Promise\u003cBeforeUploadObjectResult> \u007c boolean"}>Type</ApiType> | - |
-| capture | 媒体拍摄的方式，可选 `user`、`environment`；传 `true` 输出空值属性，传 `false` 不输出该属性。 | `boolean \| 'user' \| 'environment'` | - |
+| capture | 媒体拍摄的方式，可选 `user`、`environment`；传 `true` 输出空值属性，传 `false` 不输出该属性。 | `boolean \| 'environment' \| 'user'` | - |
 | children | 触发区内容。拖拽模式下替换整个默认拖拽区内容。 | `ReactNode` | - |
 | className | 根元素的类名。 | `string` | - |
 | crop | 启用图片裁切。传 `true` 使用默认配置，传对象自定义裁切参数；点击选择、拖拽、粘贴、替换都会裁切。 | `boolean \| CropProps` | - |
@@ -30,7 +30,7 @@ import ApiType from '#/components/ApiType.astro';
 | fileListTitle | 文件列表的标题区域。传入 ReactNode 时只替换标题文字，清空按钮保持默认；传入函数时可完全自定义标题区（含清空按钮），参数为 `fileList`、`onClear`、`clearText`。 | <ApiType detail={"ReactNode \u007c ((props: RenderFileListTitleProps) => ReactNode)"}>Type</ApiType> | - |
 | fileName | 作用与 name 相同，主要在 Form.Upload 中使用，避免与 Field 的 name 冲突。 | `string` | - |
 | headers | 上传时附带的 headers，或根据文件返回 headers 的函数。 | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, string>)"}>Type</ApiType> | - |
-| hotSpotLocation | 照片墙添加按钮的位置，可选 `start` 或 `end`。 | `'start' \| 'end'` | `"end"` |
+| hotSpotLocation | 照片墙添加按钮的位置，可选 `start` 或 `end`。 | `'end' \| 'start'` | `"end"` |
 | itemStyle | 文件卡片的内联样式。 | `CSSProperties` | - |
 | limit | 最多允许上传的文件个数。为 1 时始终用最新选择的文件替换当前文件，不触发 onExceed。 | `number` | - |
 | listType | 文件列表的展示类型，可选 `list`、`picture`、`none`；`none` 不渲染文件列表，只保留触发区。 | `UploadListType` | `"list"` |

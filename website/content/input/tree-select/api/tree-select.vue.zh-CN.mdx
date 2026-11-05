@@ -42,7 +42,7 @@ import ApiType from '#/components/ApiType.astro';
 | disabled | 是否禁用。 | `boolean` | `undefined` |
 | size | 选择框尺寸，可选 small、default、large。 | `Size` | `undefined` |
 | borderless | 无边框模式。 | `boolean` | `semiDefault("TreeSelect", "borderless", false)` |
-| validateStatus | 校验状态，只影响样式：default、warning 或 error。 | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("TreeSelect", "validateStatus")` |
+| validateStatus | 校验状态，只影响样式：default、warning 或 error。 | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("TreeSelect", "validateStatus")` |
 | insetLabelId | insetLabel 插槽外层元素的 id，供 aria-labelledby 引用；不传时使用内部生成的 id。 | `string` | `undefined` |
 | showClear | 有值时选择框是否显示清除按钮。 | `boolean` | `semiDefault("TreeSelect", "showClear", false)` |
 | clickToHide | 单选时选中节点后是否关闭下拉面板。 | `boolean` | `semiDefault("TreeSelect", "clickToHide", true)` |
@@ -50,7 +50,7 @@ import ApiType from '#/components/ApiType.astro';
 | defaultOpen | 默认展开下拉面板。 | `boolean` | `semiDefault("TreeSelect", "defaultOpen", false)` |
 | motion | 下拉面板是否有出现和消失的动画。 | `boolean` | `semiDefault("TreeSelect", "motion", true)` |
 | autoAdjustOverflow | 下拉面板被遮挡时是否自动调整方向。 | `boolean` | `semiDefault("TreeSelect", "autoAdjustOverflow", true)` |
-| position | 下拉面板的位置，可选值参考 Tooltip 的 position。 | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "position")` |
+| position | 下拉面板的位置，可选值参考 Tooltip 的 position。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("TreeSelect", "position")` |
 | stopPropagation | 是否阻止下拉面板上的点击事件冒泡；传入字符串时按布尔值处理。 | `string \| boolean` | `semiDefault("TreeSelect", "stopPropagation", true)` |
 | dropdownClassName | 下拉面板的类名。 | `string` | `semiGlobalDefault("TreeSelect", "dropdownClassName")` |
 | dropdownStyle | 下拉面板的样式。 | `StyleValue` | `semiGlobalDefault("TreeSelect", "dropdownStyle")` |

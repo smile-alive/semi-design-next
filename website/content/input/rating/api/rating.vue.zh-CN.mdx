@@ -10,7 +10,7 @@ import ApiType from '#/components/ApiType.astro';
 | allowHalf     | 是否允许半选。                                                                                     | `boolean`                        | `semiDefault("Rating", "allowHalf", false)`             |
 | allowClear    | 是否允许再次点击后清除。                                                                           | `boolean`                        | `semiDefault("Rating", "allowClear", true)`             |
 | disabled      | 只读，无法进行交互，也无法获得焦点。                                                               | `boolean`                        | `semiDefault("Rating", "disabled", false)`              |
-| size          | 尺寸，可选 default、small，也可传入 number 自定义尺寸。                                            | `number \| "small" \| "default"` | `semiDefault("Rating", "size", "default")`              |
+| size          | 尺寸，可选 default、small，也可传入 number 自定义尺寸。                                            | `number \| "default" \| "small"` | `semiDefault("Rating", "size", "default")`              |
 | tooltips      | 每一项的提示信息。                                                                                 | `string[]`                       | `semiGlobalDefault("Rating", "tooltips")`               |
 | prefixCls     | 组件的样式类名前缀。                                                                               | `string`                         | `semiDefault("Rating", "prefixCls", cssClasses.PREFIX)` |
 | autofocus     | 挂载时自动获取焦点。                                                                               | `boolean`                        | `semiGlobalDefault("Rating", "autofocus")`              |

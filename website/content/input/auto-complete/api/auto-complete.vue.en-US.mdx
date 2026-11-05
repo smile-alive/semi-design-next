@@ -22,12 +22,12 @@ import ApiType from '#/components/ApiType.astro';
 | motion | Whether the dropdown animates when it shows and hides. | `boolean` | `semiDefault("AutoComplete", "motion", true)` |
 | selectWithObject | A boolean attribute, not an event: when true, the select event receives the data item without internal fields instead of its value. | `boolean` | `semiDefault("AutoComplete", "selectWithObject", false)` |
 | placeholder | Placeholder of the input. | `string` | `semiGlobalDefault("AutoComplete", "placeholder")` |
-| position | Position of the dropdown; the values are those of the Tooltip position. Unset, it is bottomLeft, or bottomRight when the ConfigProvider direction is rtl. | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("AutoComplete", "position")` |
+| position | Position of the dropdown; the values are those of the Tooltip position. Unset, it is bottomLeft, or bottomRight when the ConfigProvider direction is rtl. | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("AutoComplete", "position")` |
 | renderSelectedItem | The text the input shows for a picked item; it must return a string. A string or number item receives `{ value, label }`, an object item the item itself. It stays a function prop because the foundation calls it outside rendering. | <ApiType detail={"((option: AutoCompleteSelectedItem\u003cT>) => string)"}>Type</ApiType> | `undefined` |
 | showClear | Whether to show the clear button when there is content. | `boolean` | `semiDefault("AutoComplete", "showClear", false)` |
 | size | Size of the input. | `Size` | `undefined` |
 | stopPropagation | Whether click, mousedown and focus in/out events on the dropdown stop propagating. | `string \| boolean` | `semiDefault("AutoComplete", "stopPropagation", true)` |
-| validateStatus | Validation status; it only affects the style. | `"default" \| "error" \| "warning" \| "success"` | `semiDefault("AutoComplete", "validateStatus", "default")` |
+| validateStatus | Validation status; it only affects the style. | `"default" \| "error" \| "success" \| "warning"` | `semiDefault("AutoComplete", "validateStatus", "default")` |
 
 **Events**
 

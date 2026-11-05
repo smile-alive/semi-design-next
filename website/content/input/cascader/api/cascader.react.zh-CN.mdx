@@ -59,7 +59,7 @@ import ApiType from '#/components/ApiType.astro';
 | remote | 是否开启远程搜索。开启后输入不再做本地过滤，只触发 `onSearch`，由使用方异步更新 `treeData`，行为与 Select 的 remote 一致。 | `boolean` | `false` |
 | restTagsPopoverProps | 剩余标签 Popover 的属性，如 `position`、`trigger`，类型同 PopoverProps。 | `PopoverProps` | `{}` |
 | searchPlaceholder | 搜索框的占位文字，未设置时使用 `placeholder`。 | `string` | - |
-| searchPosition | 搜索框的位置：`trigger` 在触发器内，`custom` 由使用方自定义，此时用 ref 的 `search` 方法传入搜索词。 | `'trigger' \| 'custom'` | `"trigger"` |
+| searchPosition | 搜索框的位置：`trigger` 在触发器内，`custom` 由使用方自定义，此时用 ref 的 `search` 方法传入搜索词。 | `'custom' \| 'trigger'` | `"trigger"` |
 | separator | 路径的分隔符，用于搜索结果，以及单选时回填到触发器的内容。 | `string` | `" / "` |
 | showClear | 是否展示清除按钮。 | `boolean` | `false` |
 | showNext | 展开子菜单的时机：`click` 或 `hover`。 | `ShowNextType` | `"click"` |

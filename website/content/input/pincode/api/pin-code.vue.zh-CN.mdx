@@ -12,7 +12,7 @@ import ApiType from '#/components/ApiType.astro';
 | autofocus      | 挂载时是否自动聚焦到第一个输入框。只在用户明确进入验证码输入步骤时开启，页面加载时自动聚焦会让读屏跳过之前的内容。 | `boolean`                                        | `semiDefault("PinCode", "autofocus", false)`     |
 | disabled       | 是否禁用。                                                                                                         | `boolean`                                        | `semiGlobalDefault("PinCode", "disabled")`       |
 | size           | 输入框大小，可选 large、default、small。                                                                           | `Size`                                           | `semiGlobalDefault("PinCode", "size")`           |
-| validateStatus | 校验状态，传给每个输入框；error 时显示错误样式。                                                                   | `"default" \| "error" \| "warning" \| "success"` | `semiGlobalDefault("PinCode", "validateStatus")` |
+| validateStatus | 校验状态，传给每个输入框；error 时显示错误样式。                                                                   | `"default" \| "error" \| "success" \| "warning"` | `semiGlobalDefault("PinCode", "validateStatus")` |
 
 **Events**
 

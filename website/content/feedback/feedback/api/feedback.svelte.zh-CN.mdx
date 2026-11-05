@@ -52,7 +52,7 @@ import ApiType from '#/components/ApiType.astro';
 | radioExtra | 自定义 radioGroupProps.options 中每一项辅助文本的 snippet，参数为 `{ option, index }`。 | <ApiType detail={"Snippet\u003c[FeedbackRadioSnippetProps]>"}>Type</ApiType> | - |
 | radioGroupProps | type 为 radio 时单选组的属性，写法同 RadioGroup 的属性。选项组默认没有可访问名称，请用 aria-label 命名。 | `FeedbackRadioGroupProps` | - |
 | radioLabel | 自定义 radioGroupProps.options 中每一项文本的 snippet，参数为 `{ option, index }`。 | <ApiType detail={"Snippet\u003c[FeedbackRadioSnippetProps]>"}>Type</ApiType> | - |
-| role | 仅 modal 模式：对话框的 role，可选 dialog 或 alertdialog。 | `'dialog' \| 'alertdialog'` | - |
+| role | 仅 modal 模式：对话框的 role，可选 dialog 或 alertdialog。 | `'alertdialog' \| 'dialog'` | - |
 | size | 宽度档位：small 为 448px，medium 为 684px，large 为 920px；popup 模式仅 placement 为 left、right 时生效。 | `Size` | - |
 | style | 样式字符串；落点见下方说明。 | `string` | - |
 | textAreaProps | type 为 text 与 emoji 时多行输入框的属性；其中的 onChange 照常调用，不会替换内置处理。 | `FeedbackTextAreaProps` | - |

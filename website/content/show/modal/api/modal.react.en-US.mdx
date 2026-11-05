@@ -42,7 +42,7 @@ import ApiType from '#/components/ApiType.astro';
 | onOk | Called when the ok button is clicked, with the click event. A returned Promise keeps the ok button loading until it settles. The dialog never closes itself; the caller sets `visible` to `false`. | <ApiType detail={"(e: React.MouseEvent) => void \u007c Promise\u003cany>"}>Type</ApiType> | - |
 | preventScroll | Whether the focus calls made by the component avoid scrolling the focused element into view. Focus calls made by the caller are not affected. Without it, the focused element is scrolled into view. | `boolean` | - |
 | ref | Reference to the outermost `div` element inside the portal; `null` while nothing is rendered. | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
-| role | `role` of the dialog element, `dialog` by default. The imperative methods use `alertdialog`. | `'dialog' \| 'alertdialog'` | - |
+| role | `role` of the dialog element, `dialog` by default. The imperative methods use `alertdialog`. | `'alertdialog' \| 'dialog'` | - |
 | size | Width preset of the dialog: `small` is 448px, `medium` 684px, `large` 920px, `full-width` `100vw - 64px`. | `Size` | `"small"` |
 | style | Style of the `.semi-modal` dialog box. | `CSSProperties` | - |
 | title | Title of the dialog. Without `aria-label` or a custom `header`, the title names the dialog. | `ReactNode` | - |

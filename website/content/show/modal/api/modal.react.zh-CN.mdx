@@ -42,7 +42,7 @@ import ApiType from '#/components/ApiType.astro';
 | onOk | 点击确认按钮时调用，参数是点击事件；返回 Promise 时确认按钮保持加载直到落定。对话框不会自行关闭，由使用方把 `visible` 设为 `false`。 | <ApiType detail={"(e: React.MouseEvent) => void \u007c Promise\u003cany>"}>Type</ApiType> | - |
 | preventScroll | 组件内部调用 focus 时是否阻止浏览器滚动到被聚焦元素，不影响使用方自己的 focus 调用；未设置时聚焦会滚动到该元素。 | `boolean` | - |
 | ref | 接收 portal 内最外层 `div` 元素的引用，没有渲染内容时为 `null`。 | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType> | - |
-| role | 对话框元素的 `role`，默认 `dialog`；命令式方法使用 `alertdialog`。 | `'dialog' \| 'alertdialog'` | - |
+| role | 对话框元素的 `role`，默认 `dialog`；命令式方法使用 `alertdialog`。 | `'alertdialog' \| 'dialog'` | - |
 | size | 对话框宽度档位：`small` 为 448px，`medium` 为 684px，`large` 为 920px，`full-width` 为 `100vw - 64px`。 | `Size` | `"small"` |
 | style | 落在 `.semi-modal` 对话框盒子上的样式。 | `CSSProperties` | - |
 | title | 对话框标题；未传入 `aria-label` 或自定义 `header` 时，标题用于命名对话框。 | `ReactNode` | - |

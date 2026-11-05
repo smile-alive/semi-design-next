@@ -22,11 +22,11 @@ import ApiType from '#/components/ApiType.astro';
 | role | 弹出层的 ARIA role，缺省为 dialog。 | `string` | `semiDefault("Popconfirm", "role", "dialog")` |
 | autoAdjustOverflow | 弹出层被遮挡时是否自动调整方向。 | `boolean` | `semiGlobalDefault("Popconfirm", "autoAdjustOverflow")` |
 | visible | 是否展示，配合 v-model:visible 使用；传入后由该值决定显示，trigger 保持原值，触发器事件仍然生效。 | `boolean` | `semiGlobalDefault("Popconfirm", "visible")` |
-| position | 弹出方向，缺省为 bottomLeft（RTL 下为 bottomRight）。 | <ApiType detail={"\"top\" \u007c \"bottom\" \u007c \"left\" \u007c \"right\" \u007c \"topLeft\" \u007c \"topRight\" \u007c \"leftTop\" \u007c \"leftBottom\" \u007c \"rightTop\" \u007c \"rightBottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"leftTopOver\" \u007c \"rightTopOver\" \u007c \"leftBottomOver\" \u007c \"rightBottomOver\""}>Type</ApiType> | `semiGlobalDefault("Popconfirm", "position")` |
+| position | 弹出方向，缺省为 bottomLeft（RTL 下为 bottomRight）。 | <ApiType detail={"\"bottom\" \u007c \"bottomLeft\" \u007c \"bottomRight\" \u007c \"left\" \u007c \"leftBottom\" \u007c \"leftBottomOver\" \u007c \"leftTop\" \u007c \"leftTopOver\" \u007c \"right\" \u007c \"rightBottom\" \u007c \"rightBottomOver\" \u007c \"rightTop\" \u007c \"rightTopOver\" \u007c \"top\" \u007c \"topLeft\" \u007c \"topRight\""}>Type</ApiType> | `semiGlobalDefault("Popconfirm", "position")` |
 | motion | 是否展示弹出动画。 | `boolean` | `semiGlobalDefault("Popconfirm", "motion")` |
 | mouseEnterDelay | 指针移入后延迟显示的毫秒数，仅 trigger 为 hover 或 focus 时生效。 | `number` | `semiGlobalDefault("Popconfirm", "mouseEnterDelay")` |
 | mouseLeaveDelay | 指针移出后延迟隐藏的毫秒数，仅 trigger 为 hover 或 focus 时生效。 | `number` | `semiGlobalDefault("Popconfirm", "mouseLeaveDelay")` |
-| trigger | 触发展示的时机，可选 hover、focus、click、contextMenu 或 custom。 | `"hover" \| "focus" \| "click" \| "custom" \| "contextMenu"` | `semiDefault("Popconfirm", "trigger", "click")` |
+| trigger | 触发展示的时机，可选 hover、focus、click、contextMenu 或 custom。 | `"click" \| "contextMenu" \| "custom" \| "focus" \| "hover"` | `semiDefault("Popconfirm", "trigger", "click")` |
 | contentClassName | 内容容器的类名。 | `string \| unknown[]` | `semiGlobalDefault("Popconfirm", "contentClassName")` |
 | showArrow | 是否显示箭头三角形。 | `boolean` | `semiGlobalDefault("Popconfirm", "showArrow")` |
 | spacing | 弹出层与触发元素的距离，单位为像素；对象形式分别设置水平与垂直方向。 | `number \| { x: number; y: number; }` | `semiGlobalDefault("Popconfirm", "spacing")` |

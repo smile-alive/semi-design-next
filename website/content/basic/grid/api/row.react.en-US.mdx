@@ -4,11 +4,11 @@ import ApiType from '#/components/ApiType.astro';
 
 | Property  | Description                                                                                                                    | Type                                                                | Default  |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- | -------- |
-| align     | Vertical alignment in flex layout: `top`, `middle` or `bottom`. Takes effect only when `type` is `flex`.                       | `'top' \| 'middle' \| 'bottom'`                                     | -        |
+| align     | Vertical alignment in flex layout: `top`, `middle` or `bottom`. Takes effect only when `type` is `flex`.                       | `'bottom' \| 'middle' \| 'top'`                                     | -        |
 | children  | The `Col` cells in the row.                                                                                                    | `React.ReactNode`                                                   | -        |
 | className | Class name of the root element.                                                                                                | `string`                                                            | -        |
 | gutter    | Grid gutter in pixels, a responsive object `{ xs, sm, md, lg, xl, xxl }`, or a `[horizontal, vertical]` pair. Defaults to `0`. | `Gutter \| [Gutter, Gutter]`                                        | -        |
-| justify   | Horizontal arrangement in flex layout: `start`, `end`, `center`, `space-around` or `space-between`. Defaults to `start`.       | `'start' \| 'end' \| 'center' \| 'space-around' \| 'space-between'` | -        |
+| justify   | Horizontal arrangement in flex layout: `start`, `end`, `center`, `space-around` or `space-between`. Defaults to `start`.       | `'center' \| 'end' \| 'space-around' \| 'space-between' \| 'start'` | -        |
 | prefixCls | CSS class name prefix.                                                                                                         | `string`                                                            | `"semi"` |
 | ref       | Reference to the root `div` element.                                                                                           | <ApiType detail={"React.Ref\u003cHTMLDivElement>"}>Type</ApiType>   | -        |
 | style     | Style of the root element.                                                                                                     | `React.CSSProperties`                                               | -        |
