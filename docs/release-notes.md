@@ -908,6 +908,7 @@
 - React、Solid：`keepDOM` 加 `lazyRender` 时，面板内容消失后「展开过」的记录随之复位，内容在收起状态下恢复时不渲染、头部不带 `aria-controls`，重新展开后才渲染（同 Vue）。
 - Solid：`Collapse.Panel` 按是否传入 children 判断有无内容，不对 children 求值，求值为空的 children（如 `{cond() && <X />}` 为 false）仍渲染空内容区并启用箭头。
 - Svelte：受控值用 `bind:activeKey`，没有 `defaultActiveKey`；`expandIcon`、`collapseIcon` 与 Panel 的 `header`、`extra` 是 snippet；`onMotionEnd` 是 Panel 与 Collapsible 的回调 prop；Panel 写在 Collapse 外抛错；导出为 `Collapse` 与 `CollapsePanel`，没有 `Collapse.Panel`；Panel 按是否传入 `children` 判断有无内容。
+- Collapsible：在 `display: none` 下切换时立即结束并触发 `onMotionEnd`。
 
 ### BackTop
 
