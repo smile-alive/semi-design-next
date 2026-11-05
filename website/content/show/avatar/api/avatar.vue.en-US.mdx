@@ -16,7 +16,7 @@ import ApiType from '#/components/ApiType.astro';
 | bottomSlot | Shape, background color, text color, class and style of the bottom badge; use the bottomSlotText slot for its content. | `AvatarBottomSlot` | `semiGlobalDefault("Avatar", "bottomSlot")` |
 | border | Additional border, with optional color and animation. | <ApiType detail={"boolean \u007c { color?: string \u007c undefined; motion?: boolean \u007c undefined; }"}>Type</ApiType> | `semiGlobalDefault("Avatar", "border")` |
 | contentMotion | Enables animation in the avatar content area. | `boolean` | `semiGlobalDefault("Avatar", "contentMotion")` |
-| onError | Called when the image fails to load. Return false to prevent the default fallback; this remains a function prop so its result can be read. | <ApiType detail={"(() => boolean \u007c void)"}>Type</ApiType> | `undefined` |
+| onError | Called when the image fails to load. Return false to prevent the default fallback; this remains a function prop so its result can be read. | <ApiType detail={"((event: Event) => boolean \u007c void)"}>Type</ApiType> | `undefined` |
 
 **Events**
 

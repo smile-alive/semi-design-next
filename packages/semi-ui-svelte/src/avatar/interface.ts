@@ -38,7 +38,7 @@ export interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'chil
     border?: boolean | { color?: string; motion?: boolean };
     contentMotion?: boolean;
     /** Returning `false` keeps the broken image instead of falling back to the content */
-    onError?: () => boolean | void;
+    onError?: (event: Event) => boolean | void;
     onMouseEnter?: (event: MouseEvent) => void;
     onMouseLeave?: (event: MouseEvent) => void;
     children?: Snippet;

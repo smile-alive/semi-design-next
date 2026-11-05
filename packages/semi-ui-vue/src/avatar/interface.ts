@@ -31,7 +31,8 @@ export interface AvatarProps {
     bottomSlot?: AvatarBottomSlot;
     border?: boolean | { color?: string; motion?: boolean };
     contentMotion?: boolean;
-    onError?: () => boolean | void;
+    /** Returning `false` keeps the broken image instead of falling back to the content */
+    onError?: (event: Event) => boolean | void;
 }
 export interface AvatarSlots {
     default?: () => VNode[];

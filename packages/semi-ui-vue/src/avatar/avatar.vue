@@ -20,8 +20,8 @@
         scale: number;
     }
 
-    type Foundation = AvatarFoundation<AvatarProps, AvatarState, MouseEvent>;
-    type Adapter = AvatarAdapter<AvatarProps, AvatarState, MouseEvent>;
+    type Foundation = AvatarFoundation<AvatarProps, AvatarState, MouseEvent, Event>;
+    type Adapter = AvatarAdapter<AvatarProps, AvatarState, MouseEvent, Event>;
 
     defineOptions({ name: 'Avatar', inheritAttrs: false });
 
@@ -71,7 +71,7 @@
         (base) => ({
             setImgExist: (isImgExist) => base.setState({ isImgExist }),
             setScale: (scale) => base.setState({ scale }),
-            notifyError: () => onError.value?.(),
+            notifyError: (event) => onError.value?.(event),
             notifyEnter: (event) => {
                 base.setState({ hovered: true });
                 emit('mouseEnter', event);
@@ -141,6 +141,7 @@
 
     watch(() => props.src, foundation.handleSrcChange);
     watch(content, foundation.changeScale, { flush: 'post' });
+    watch([size, () => props.gap], foundation.changeScale, { flush: 'post' });
 
     onUpdated(() => {
         const value = content.value?.getText();

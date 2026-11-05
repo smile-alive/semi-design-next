@@ -116,7 +116,7 @@ describe('Avatar', () => {
         expect(image).toHaveAttribute('draggable', 'false');
         expect(root(view.container)).toHaveClass(`${prefix}-img`);
         await fireEvent.error(image);
-        expect(onError).toHaveBeenCalledExactlyOnceWith();
+        expect(onError).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ type: 'error', target: image }));
         expect(view.container.querySelector('img')).toBeNull();
         expect(view.getByRole('img', { name: 'Bob' })).toHaveTextContent('B');
         expect(root(view.container)).toHaveClass(`${prefix}-red`);

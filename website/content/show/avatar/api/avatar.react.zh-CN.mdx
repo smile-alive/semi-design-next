@@ -15,7 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | hoverMask | 鼠标悬停时显示的覆盖层内容，覆盖层没有默认样式。 | `React.ReactNode` | - |
 | imgAttr | 传给内部 `img` 元素的原生属性，仅图片头像有效；其中的 `onError` 先于组件的 `onError` 调用。 | <ApiType detail={"React.ImgHTMLAttributes\u003cHTMLImageElement>"}>Type</ApiType> | - |
 | onClick | 单击头像时调用，参数为 React 鼠标事件。传入后头像可以聚焦，按 `Enter` 或空格键会触发点击。 | `React.MouseEventHandler` | - |
-| onError | 图片加载失败时调用，不传事件参数。返回 `false` 时保留损坏的图片，不切换为文字回退。 | `React.MouseEventHandler` | - |
+| onError | 图片加载失败时调用，参数是 error 事件。返回 `false` 时保留损坏的图片，不切换为文字回退。 | <ApiType detail={"(event: React.SyntheticEvent\u003cHTMLImageElement>) => boolean \u007c void"}>Type</ApiType> | - |
 | onMouseEnter | 鼠标移入时调用，参数为 React 鼠标事件。 | `React.MouseEventHandler` | - |
 | onMouseLeave | 鼠标移出时调用，参数为 React 鼠标事件。 | `React.MouseEventHandler` | - |
 | ref | 头像主体元素（`.semi-avatar`）的引用；使用额外边框或顶部、底部标记时，它不是外层包裹元素。 | <ApiType detail={"React.Ref\u003cHTMLSpanElement>"}>Type</ApiType> | - |

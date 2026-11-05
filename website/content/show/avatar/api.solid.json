@@ -39,8 +39,8 @@
                 "en-US": "Native attributes applied to the inner `img` element."
             },
             "onError": {
-                "zh-CN": "图片加载失败时调用，不传事件参数。返回 `false` 时保留损坏的图片，不切换为文字回退。",
-                "en-US": "Called when the image fails to load, without an event argument. Returning `false` keeps the broken image instead of switching to the text fallback."
+                "zh-CN": "图片加载失败时调用，参数是 error 事件。返回 `false` 时保留损坏的图片，不切换为文字回退。",
+                "en-US": "Called with the error event when the image fails to load. Returning `false` keeps the broken image instead of switching to the text fallback."
             },
             "shape": {
                 "zh-CN": "头像形状，可选 `circle` 或 `square`。",

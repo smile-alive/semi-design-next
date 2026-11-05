@@ -129,7 +129,7 @@ describe('Avatar', () => {
     });
 
     it('onError', () => {
-        const spyOnError = vi.fn<React.MouseEventHandler>();
+        const spyOnError = vi.fn<NonNullable<AvatarProps['onError']>>();
         const { container } = render(
             <Avatar src={src} onError={spyOnError}>
                 fallback
@@ -143,7 +143,7 @@ describe('Avatar', () => {
     });
 
     it('图片每次出错时 onError 调用一次', () => {
-        const spyOnError = vi.fn<React.MouseEventHandler>();
+        const spyOnError = vi.fn<NonNullable<AvatarProps['onError']>>();
         const { container } = render(<Avatar src={src} onError={spyOnError} />);
         fireEvent.error(container.querySelector('img'));
         expect(spyOnError).toHaveBeenCalledTimes(1);
@@ -642,7 +642,7 @@ describe('Avatar', () => {
         });
 
         it('新 src 再次加载失败时重新调用 onError', () => {
-            const onError = vi.fn<React.MouseEventHandler>();
+            const onError = vi.fn<NonNullable<AvatarProps['onError']>>();
             const { container, rerender } = render(
                 <Avatar src={src} onError={onError}>
                     B

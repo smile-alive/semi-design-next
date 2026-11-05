@@ -13,7 +13,7 @@ import ApiType from '#/components/ApiType.astro';
 | gap | 字符内容与头像左右两侧的间距，单位为像素。 | `number` | `3` |
 | hoverMask | 鼠标悬停时显示的覆盖层内容，覆盖层没有默认样式。 | `JSX.Element` | - |
 | imgAttr | 传给内部 `img` 元素的原生属性。 | <ApiType detail={"ElementProps\u003c'img'>"}>Type</ApiType> | - |
-| onError | 图片加载失败时调用，不传事件参数。返回 `false` 时保留损坏的图片，不切换为文字回退。 | <ApiType detail={"() => boolean \u007c void"}>Type</ApiType> | - |
+| onError | 图片加载失败时调用，参数是 error 事件。返回 `false` 时保留损坏的图片，不切换为文字回退。 | <ApiType detail={"(event: Event & { currentTarget: HTMLImageElement; target: Element }) => boolean \u007c void"}>Type</ApiType> | - |
 | shape | 头像形状，可选 `circle` 或 `square`。 | `AvatarShape` | `"circle"` |
 | size | 头像尺寸，支持预设名称或合法 CSS 尺寸。 | `string` | `"medium"` |
 | src | 图片头像的资源地址。 | `string` | - |
