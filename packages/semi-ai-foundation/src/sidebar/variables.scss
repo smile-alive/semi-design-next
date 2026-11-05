@@ -6,7 +6,7 @@ $color-sidebar_mcp_header_counter-text: var(--semi-color-text-2); // MCP 配置�
 $color-sidebar_mcp_item_label: var(--semi-color-text-0); // MCP 配置项标题颜色
 $color-sidebar_mcp_item_desc: var(--semi-color-text-0); // MCP 配置项描述颜色
 $color-sidebar_annotation_video-border: var(--semi-color-border); // 引用视频卡片边框颜色
-$color-sidebar_annotation_video_duration-bg: rgb(from var(--semi-grey-7) r g b / 0.7); // 引用视频时长背景颜色
+$color-sidebar_annotation_video_duration-bg: color-mix(in srgb, var(--semi-grey-7) 70%, transparent); // 引用视频时长背景颜色
 $color-sidebar_annotation_video_duration-text: var(--semi-color-bg-0); // 引用视频时长文本颜色
 $color-sidebar_annotation_video_title-text: var(--semi-color-text-0); // 引用视频标题文本颜色
 $color-sidebar_collapse_item-border: var(--semi-color-border); // 折叠项边框颜色

@@ -104,7 +104,7 @@ export function compileTailwindTheme({ foundationPath }: Required<Pick<Options, 
         }
         const rule = TAILWIND_NAMESPACES.find(([prefix]) => name.startsWith(prefix));
         if (rule) {
-            if (name.startsWith('--semi-color-') && !/^(#|var\(--semi-|rgba?\()/.test(value)) {
+            if (name.startsWith('--semi-color-') && !/^(#|var\(--semi-|rgba?\(|color-mix\()/.test(value)) {
                 throw new Error(`[semi] cannot map ${name}: unexpected color value "${value}"`);
             }
             mapped.set(rule[1] + name.slice(rule[0].length) + (rule[2] ?? ''), name);

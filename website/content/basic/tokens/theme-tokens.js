@@ -69,12 +69,12 @@ const paletteMaps = { light: resolveVars(palette.light), dark: resolveVars(palet
 // Excludes the --semi-ai-general-<n>-<stop> gradient stops
 export const paletteColors = Object.fromEntries(['light', 'dark'].map((mode) => [mode, Object.fromEntries(Object.entries(paletteMaps[mode]).filter(([key]) => !/-\d-\d$/.test(key)))]));
 
-// chroma-js does not parse relative color syntax (rgb(from <palette color> r g b / a)), so expand to rgba()
+// chroma-js does not parse color-mix(in srgb, <palette color> a%, transparent), so expand to rgba()
 const toRgba = (value) =>
-    value.replace(/rgb\(from #(\w+) r g b \/ ([\d.]+)\)/g, (_match, hex, alpha) => {
+    value.replace(/color-mix\(in srgb, #(\w+) ([\d.]+)%, transparent\)/g, (_match, hex, percent) => {
         const full = hex.length === 3 ? [...hex].map((c) => c + c).join('') : hex;
         const [r, g, b] = full.match(/../g).map((part) => parseInt(part, 16));
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        return `rgba(${r}, ${g}, ${b}, ${Number(percent) / 100})`;
     });
 
 export const functionalColors = Object.fromEntries(

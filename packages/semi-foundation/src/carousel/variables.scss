@@ -1,24 +1,24 @@
 @use 'semi:theme' as *;
 
-$color-carousel_indicator_theme_dark-bg-default: rgb(from var(--semi-black) r g b / 0.5);
-$color-carousel_indicator_theme_dark-bg-hover: rgb(from var(--semi-black) r g b / 0.7);
+$color-carousel_indicator_theme_dark-bg-default: color-mix(in srgb, var(--semi-black) 50%, transparent);
+$color-carousel_indicator_theme_dark-bg-hover: color-mix(in srgb, var(--semi-black) 70%, transparent);
 $color-carousel_indicator_theme_dark-bg-active: var(--semi-black);
 
-$color-carousel_indicator_theme_primary-bg-default: rgb(from var(--semi-blue-6) r g b / 0.4);
-$color-carousel_indicator_theme_primary-bg-hover: rgb(from var(--semi-blue-6) r g b / 0.7);
+$color-carousel_indicator_theme_primary-bg-default: color-mix(in srgb, var(--semi-blue-6) 40%, transparent);
+$color-carousel_indicator_theme_primary-bg-hover: color-mix(in srgb, var(--semi-blue-6) 70%, transparent);
 $color-carousel_indicator_theme_primary-bg-active: var(--semi-blue-6);
 
-$color-carousel_indicator_theme_light-bg-default: rgb(from var(--semi-white) r g b / 0.4);
-$color-carousel_indicator_theme_light-bg-hover: rgb(from var(--semi-white) r g b / 0.7);
+$color-carousel_indicator_theme_light-bg-default: color-mix(in srgb, var(--semi-white) 40%, transparent);
+$color-carousel_indicator_theme_light-bg-hover: color-mix(in srgb, var(--semi-white) 70%, transparent);
 $color-carousel_indicator_theme_light-bg-active: var(--semi-white);
 
-$color-carousel_arrow_theme_dark-bg-default: rgb(from var(--semi-black) r g b / 0.5);
+$color-carousel_arrow_theme_dark-bg-default: color-mix(in srgb, var(--semi-black) 50%, transparent);
 $color-carousel_arrow_theme_dark-bg-hover: var(--semi-black);
 
-$color-carousel_arrow_theme_primary-bg-default: rgb(from var(--semi-blue-6) r g b / 0.4);
+$color-carousel_arrow_theme_primary-bg-default: color-mix(in srgb, var(--semi-blue-6) 40%, transparent);
 $color-carousel_arrow_theme_primary-bg-hover: var(--semi-blue-6);
 
-$color-carousel_arrow_theme_light-bg-default: rgb(from var(--semi-white) r g b / 0.4);
+$color-carousel_arrow_theme_light-bg-default: color-mix(in srgb, var(--semi-white) 40%, transparent);
 $color-carousel_arrow_theme_light-bg-hover: var(--semi-white);
 
 $width-carousel_indicator_line: 240px;

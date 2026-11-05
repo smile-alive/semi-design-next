@@ -19,7 +19,7 @@ function tokenNames() {
     return [...names].toSorted();
 }
 
-// Chrome serializes computed colors as rgb()/rgba(), or color(srgb ...) for relative color syntax
+// Chrome serializes computed colors as rgb()/rgba(), or color(srgb ...) for color-mix()
 function channels(color: string) {
     const numbers = color.match(/-?[\d.]+/g)?.map(Number) ?? [];
     if (color.startsWith('color(srgb')) {

@@ -97,7 +97,7 @@
 - 破坏性：删除 `$z-popover`、`$z-dropdown`、`$z-tooltip` 等变量与 `--semi-z-popover`、`--semi-z-dropdown`、`--semi-z-tooltip` 等 CSS 变量：弹层在 top layer，z-index 不起作用（D5）。
 - base 层名由 `base` 改为 `semi-base`。与 Tailwind 同用时须先声明 `@layer theme, base, semi, components, utilities;` 并保持 `cssLayer` 为 `true`；新增 `@fibrae/semi-ui-react/tailwind.css`（Vue 包同名）映射 token，圆角工具类由 `rounded-semi-border-radius-*` 改为 `rounded-semi-*`。
 - 破坏性：token 落点由 `body` 改为 `:root`（暗色为 `[theme-mode='dark']`），`theme-mode` 仍写在 `body` 上；`:root` 上的未分层覆盖现在对浅色生效。
-- 破坏性：调色板 token 改为完整颜色（`--semi-blue-5: 0, 100, 250` 改为 `#0064fa`）；`rgba(var(--semi-x), a)` 须改为 `rgb(from var(--semi-x) r g b / a)`，不透明时直接写 `var(--semi-x)`。
+- 破坏性：调色板 token 改为完整颜色（`--semi-blue-5: 0, 100, 250` 改为 `#0064fa`）；`rgba(var(--semi-x), a)` 须改为 `color-mix(in srgb, var(--semi-x) A%, transparent)`，不透明时直接写 `var(--semi-x)`；`color-mix` 与 token 自身的透明度相乘，调色板 token 配成半透明时结果会更淡。
 - 改名：`--semi-transform-rotate-none` 改为 `--semi-transform_rotate-none`；重复声明的 `--semi-color-ai-background-top-hover`（激活态）改为 `--semi-color-ai-background-top-active`。暗色主题块设 `color-scheme: dark`。
 - 新增 `--semi-spacing-*`、`--semi-font-size-*`、`--semi-line-height-*`、`--semi-font-weight-*`、`--semi-z-*` 等尺寸类 CSS 变量与 `--semi-shadow-knob`；字号、字重、字体栈等在 `:root` 覆盖即运行时生效，间距、控件高度、描边宽度的变量只影响 Tailwind 原子类。
 

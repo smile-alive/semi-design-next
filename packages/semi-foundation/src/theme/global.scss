@@ -112,12 +112,12 @@
 
     --semi-color-focus-border: var(--semi-blue-5); // 多用于边框激活态颜色
 
-    --semi-color-disabled-text: rgb(from var(--semi-grey-9) r g b / 0.35); // 禁用态 - 文字
+    --semi-color-disabled-text: color-mix(in srgb, var(--semi-grey-9) 35%, transparent); // 禁用态 - 文字
     --semi-color-disabled-border: var(--semi-grey-1); // 禁用态 - 描边
     --semi-color-disabled-bg: var(--semi-grey-1); // 禁用态 - 背景
-    --semi-color-disabled-fill: rgb(from var(--semi-grey-8) r g b / 0.04); // 禁用态 - 填充
+    --semi-color-disabled-fill: color-mix(in srgb, var(--semi-grey-8) 4%, transparent); // 禁用态 - 填充
 
-    --semi-color-shadow: rgb(from var(--semi-black) r g b / 0.04); // 用于模拟描边的阴影颜色
+    --semi-color-shadow: color-mix(in srgb, var(--semi-black) 4%, transparent); // 用于模拟描边的阴影颜色
 
     --semi-color-link: var(--semi-blue-5); // 链接颜色
     --semi-color-link-hover: var(--semi-blue-6); // 链接颜色 - 悬浮态
@@ -125,8 +125,8 @@
     --semi-color-link-visited: var(--semi-blue-5); // 链接颜色 - 已访问
 
     --semi-color-text-0: var(--semi-grey-9); // 文本/图标颜色 - 最主要
-    --semi-color-text-1: rgb(from var(--semi-grey-9) r g b / 0.8); // 文本/图标颜色 - 稍次要
-    --semi-color-text-3: rgb(from var(--semi-grey-9) r g b / 0.35); // 文本/图标颜色 - 最次要
+    --semi-color-text-1: color-mix(in srgb, var(--semi-grey-9) 80%, transparent); // 文本/图标颜色 - 稍次要
+    --semi-color-text-3: color-mix(in srgb, var(--semi-grey-9) 35%, transparent); // 文本/图标颜色 - 最次要
 
     --semi-color-ai-general: var(--semi-ai-general-5); // AI 场景颜色
     --semi-color-ai-general-hover: var(--semi-ai-general-6); // AI 场景颜色 - 悬浮态
@@ -171,17 +171,17 @@
     --semi-color-warning-light-default: var(--semi-orange-0); // 浅版警示色（多用于背景），表示警告、不安全的状态
     --semi-color-warning-light-hover: var(--semi-orange-1); // 浅版警示色悬浮态
     --semi-color-warning-light-active: var(--semi-orange-2); // 浅版警示色激活态
-    --semi-color-border: rgb(from var(--semi-grey-9) r g b / 0.08); // 默认描边颜色
+    --semi-color-border: color-mix(in srgb, var(--semi-grey-9) 8%, transparent); // 默认描边颜色
     --semi-color-nav-bg: var(--semi-white); // 导航背景色
-    --semi-color-fill-0: rgb(from var(--semi-grey-8) r g b / 0.05); // 填充色 - 默认态
-    --semi-color-fill-1: rgb(from var(--semi-grey-8) r g b / 0.09); // 填充色 - 悬浮态
-    --semi-color-fill-2: rgb(from var(--semi-grey-8) r g b / 0.13); // 填充色 - 激活态
+    --semi-color-fill-0: color-mix(in srgb, var(--semi-grey-8) 5%, transparent); // 填充色 - 默认态
+    --semi-color-fill-1: color-mix(in srgb, var(--semi-grey-8) 9%, transparent); // 填充色 - 悬浮态
+    --semi-color-fill-2: color-mix(in srgb, var(--semi-grey-8) 13%, transparent); // 填充色 - 激活态
     --semi-color-bg-0: var(--semi-white); // 背景色 - 最下层（底部页面）
     --semi-color-bg-1: var(--semi-white); // 背景色 - 次下层（页面中需要提升的内容）
     --semi-color-bg-2: var(--semi-white); // 背景色 - 中间层（模态等容器）
     --semi-color-bg-3: var(--semi-white); // 背景色 - 次上层（通知，Toast等）
     --semi-color-bg-4: var(--semi-white); // 背景色 - 最上层（特殊）
-    --semi-color-text-2: rgb(from var(--semi-grey-9) r g b / 0.62); // 文本/图标颜色 - 次要
+    --semi-color-text-2: color-mix(in srgb, var(--semi-grey-9) 62%, transparent); // 文本/图标颜色 - 次要
     --semi-shadow-knob: 0 4px 6px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.3); // 用于 switch、slider 等滑块的阴影
     --semi-shadow-elevated: 0 0 1px rgba(0, 0, 0, 0.3), 0 4px 14px rgba(0, 0, 0, 0.1); // 用于toast, modal, popover等需要提升层级的界面元素
     --semi-color-highlight-bg: var(--semi-yellow-4); // 高亮文本背景色
@@ -219,40 +219,40 @@
 [theme-mode='dark'],
 :root .#{$prefix}-always-dark {
     --semi-color-white: rgba(228, 231, 245, 1);
-    --semi-color-primary-light-default: rgb(from var(--semi-blue-5) r g b / 0.2);
-    --semi-color-primary-light-hover: rgb(from var(--semi-blue-5) r g b / 0.3);
-    --semi-color-primary-light-active: rgb(from var(--semi-blue-5) r g b / 0.4);
-    --semi-color-secondary-light-default: rgb(from var(--semi-light-blue-5) r g b / 0.2);
-    --semi-color-secondary-light-hover: rgb(from var(--semi-light-blue-5) r g b / 0.3);
-    --semi-color-secondary-light-active: rgb(from var(--semi-light-blue-5) r g b / 0.4);
-    --semi-color-tertiary-light-default: rgb(from var(--semi-grey-5) r g b / 0.2);
-    --semi-color-tertiary-light-hover: rgb(from var(--semi-grey-5) r g b / 0.3);
-    --semi-color-tertiary-light-active: rgb(from var(--semi-grey-5) r g b / 0.4);
-    --semi-color-info-light-default: rgb(from var(--semi-blue-5) r g b / 0.2);
-    --semi-color-info-light-hover: rgb(from var(--semi-blue-5) r g b / 0.3);
-    --semi-color-info-light-active: rgb(from var(--semi-blue-5) r g b / 0.4);
-    --semi-color-success-light-default: rgb(from var(--semi-green-5) r g b / 0.2);
-    --semi-color-success-light-hover: rgb(from var(--semi-green-5) r g b / 0.3);
-    --semi-color-success-light-active: rgb(from var(--semi-green-5) r g b / 0.4);
-    --semi-color-danger-light-default: rgb(from var(--semi-red-5) r g b / 0.2);
-    --semi-color-danger-light-hover: rgb(from var(--semi-red-5) r g b / 0.3);
-    --semi-color-danger-light-active: rgb(from var(--semi-red-5) r g b / 0.4);
-    --semi-color-warning-light-default: rgb(from var(--semi-orange-5) r g b / 0.2);
-    --semi-color-warning-light-hover: rgb(from var(--semi-orange-5) r g b / 0.3);
-    --semi-color-warning-light-active: rgb(from var(--semi-orange-5) r g b / 0.4);
+    --semi-color-primary-light-default: color-mix(in srgb, var(--semi-blue-5) 20%, transparent);
+    --semi-color-primary-light-hover: color-mix(in srgb, var(--semi-blue-5) 30%, transparent);
+    --semi-color-primary-light-active: color-mix(in srgb, var(--semi-blue-5) 40%, transparent);
+    --semi-color-secondary-light-default: color-mix(in srgb, var(--semi-light-blue-5) 20%, transparent);
+    --semi-color-secondary-light-hover: color-mix(in srgb, var(--semi-light-blue-5) 30%, transparent);
+    --semi-color-secondary-light-active: color-mix(in srgb, var(--semi-light-blue-5) 40%, transparent);
+    --semi-color-tertiary-light-default: color-mix(in srgb, var(--semi-grey-5) 20%, transparent);
+    --semi-color-tertiary-light-hover: color-mix(in srgb, var(--semi-grey-5) 30%, transparent);
+    --semi-color-tertiary-light-active: color-mix(in srgb, var(--semi-grey-5) 40%, transparent);
+    --semi-color-info-light-default: color-mix(in srgb, var(--semi-blue-5) 20%, transparent);
+    --semi-color-info-light-hover: color-mix(in srgb, var(--semi-blue-5) 30%, transparent);
+    --semi-color-info-light-active: color-mix(in srgb, var(--semi-blue-5) 40%, transparent);
+    --semi-color-success-light-default: color-mix(in srgb, var(--semi-green-5) 20%, transparent);
+    --semi-color-success-light-hover: color-mix(in srgb, var(--semi-green-5) 30%, transparent);
+    --semi-color-success-light-active: color-mix(in srgb, var(--semi-green-5) 40%, transparent);
+    --semi-color-danger-light-default: color-mix(in srgb, var(--semi-red-5) 20%, transparent);
+    --semi-color-danger-light-hover: color-mix(in srgb, var(--semi-red-5) 30%, transparent);
+    --semi-color-danger-light-active: color-mix(in srgb, var(--semi-red-5) 40%, transparent);
+    --semi-color-warning-light-default: color-mix(in srgb, var(--semi-orange-5) 20%, transparent);
+    --semi-color-warning-light-hover: color-mix(in srgb, var(--semi-orange-5) 30%, transparent);
+    --semi-color-warning-light-active: color-mix(in srgb, var(--semi-orange-5) 40%, transparent);
     --semi-color-nav-bg: rgba(35, 36, 41, 1);
     --semi-shadow-knob: 0 4px 6px rgba(0, 0, 0, 0.4), 0 0 1px rgba(255, 255, 255, 0.3);
     --semi-shadow-elevated: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 4px 14px rgba(0, 0, 0, 0.25);
-    --semi-color-fill-0: rgb(from var(--semi-white) r g b / 0.12);
-    --semi-color-fill-1: rgb(from var(--semi-white) r g b / 0.16);
-    --semi-color-fill-2: rgb(from var(--semi-white) r g b / 0.2);
-    --semi-color-border: rgb(from var(--semi-white) r g b / 0.08);
+    --semi-color-fill-0: color-mix(in srgb, var(--semi-white) 12%, transparent);
+    --semi-color-fill-1: color-mix(in srgb, var(--semi-white) 16%, transparent);
+    --semi-color-fill-2: color-mix(in srgb, var(--semi-white) 20%, transparent);
+    --semi-color-border: color-mix(in srgb, var(--semi-white) 8%, transparent);
     --semi-color-bg-0: rgba(22, 22, 26, 1);
     --semi-color-bg-1: rgba(35, 36, 41, 1);
     --semi-color-bg-2: rgba(53, 54, 60, 1);
     --semi-color-bg-3: rgba(67, 68, 74, 1);
     --semi-color-bg-4: rgba(79, 81, 89, 1);
-    --semi-color-text-2: rgb(from var(--semi-grey-9) r g b / 0.6);
+    --semi-color-text-2: color-mix(in srgb, var(--semi-grey-9) 60%, transparent);
     --semi-color-highlight-bg: var(--semi-yellow-2); // 高亮文本背景色
     --semi-color-highlight: var(--semi-white); // 高亮文本色
     --semi-color-data-0: rgba(94, 109, 194, 1); //vchart 数据色板颜色 - 0

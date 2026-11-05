@@ -88,7 +88,7 @@ export default function TreeDemo() {
         setSelectedThroughParent(new Set(descendantKeys));
     };
 
-    const backgroundOf = (key?: string) => (selected().has(key) ? 'var(--semi-blue-0)' : selectedThroughParent().has(key) ? 'rgb(from var(--semi-blue-0) r g b / .5)' : 'transparent');
+    const backgroundOf = (key?: string) => (selected().has(key) ? 'var(--semi-blue-0)' : selectedThroughParent().has(key) ? 'color-mix(in srgb, var(--semi-blue-0) 50%, transparent)' : 'transparent');
 
     const renderLabel = (row: TreeRenderFullLabelProps) => (
         <div class={row.class} onClick={row.onClick} style={{ 'background-color': backgroundOf(row.data.key) }}>
