@@ -611,6 +611,7 @@
 - Vue：没有根元素，未声明属性全部丢弃（F11）；回调改为 `mouseDown`、`mouseMove`、`mouseUp`、`touchStart` 等事件，载荷 `PointerEvent`；默认插槽中每个顶层元素各自可拖动，文本与多根组件不可拖动。
 - Solid：children 中每个顶层元素各自可拖动（多根组件的每个根也是），文本节点不可拖动；`handler` 返回的元素需位于被拖元素内。
 - Svelte：没有 `DragMove` 组件，改为 attachment，写成 `<div {@attach dragMove(options)}>`，从 `@fibrae/semi-ui-svelte` 导入 `dragMove` 与 `DragMoveOptions`；Vue 的同名 props（`handler`、`constrainer`、`allowInputDrag`、`allowMove`、`customMove`、`positionStrategy`）变成同名 options，`handler` 可传函数或元素；7 个事件变成 `onMouseDown`、`onMouseMove`、`onMouseUp`、`onTouchStart`、`onTouchMove`、`onTouchEnd`、`onTouchCancel` 回调（参数为 `PointerEvent`）；不是组件，没有全局默认值。
+- 松手时先写入最后位置再触发结束回调，回调里设置的位置不再被覆盖；移动回调中卸载组件后不再调用 `customMove`。
 
 ### Slider
 
