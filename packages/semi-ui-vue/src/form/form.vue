@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="Values extends Record<string, any> = Record<string, any>">
-    import { computed, onBeforeUnmount, onMounted, shallowRef, useId, useTemplateRef, watch } from 'vue';
+    import { computed, onBeforeUnmount, onMounted, shallowRef, toRaw, useId, useTemplateRef, watch } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/form/constants';
     import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
     import FormFoundation from '@fibrae/semi-foundation/form/foundation';
@@ -11,14 +11,14 @@
     import useFoundation from '../_base/use-foundation';
     import Row from '../grid/row.vue';
     import { provideFormContext } from './context';
-    import type { FormApi, FormEmits, FormHandle, FormProps, FormSlots } from './interface';
+    import type { AllFormProps, FormApi, FormEmits, FormHandle, FormProps, FormSlots } from './interface';
     import { cloneDeep } from './utils';
 
     interface FormFoundationState {
         formState?: FormState;
     }
 
-    type Adapter = BaseFormAdapter<FormProps<Values>, FormFoundationState, Values, SubmitEvent>;
+    type Adapter = BaseFormAdapter<AllFormProps<Values>, FormFoundationState, Values, SubmitEvent>;
 
     // the root may be a Row, so attrs are bound to the form element explicitly
     defineOptions({ inheritAttrs: false });
@@ -39,6 +39,7 @@
         trigger: semiGlobalDefault('Form', 'trigger'),
         stopPropagation: semiGlobalDefault('Form', 'stopPropagation'),
         validator: undefined,
+        schema: undefined,
     });
 
     const emit = defineEmits<FormEmits<Values>>();
@@ -53,16 +54,18 @@
     const prefix = cssClasses.PREFIX;
     const formId = computed(() => props.id ?? generatedId);
 
-    const formProps = computed<FormProps<Values>>(() => ({
+    const formProps = computed<AllFormProps<Values>>(() => ({
         ...props,
         validator: props.validator ?? readSemiDefault(semi, 'Form', 'validator'),
+        // Zod keeps non-configurable properties a deep reactive proxy (ref, reactive, data) breaks, so validate runs on the raw schema
+        schema: toRaw(props.schema) ?? readSemiDefault(semi, 'Form', 'schema'),
     }));
 
     // Fields renamed by the render (shifted ArrayField rows) register in post-flush watchers that run after the Form's own,
     // so callbacks run in a post-flush watcher queued by the first one, in the next pass of the same flush.
     const afterUpdate: (() => void)[] = [];
 
-    const pickFormProps = (keys?: string[]) => (keys ? Object.fromEntries(keys.map((key) => [key, formProps.value[key as keyof FormProps]])) : formProps.value);
+    const pickFormProps = (keys?: string[]) => (keys ? Object.fromEntries(keys.map((key) => [key, formProps.value[key as keyof AllFormProps]])) : formProps.value);
 
     watch(
         afterUpdateTick,
@@ -72,7 +75,7 @@
         { flush: 'post' }
     );
 
-    const { foundation, state } = useFoundation<FormFoundation<SubmitEvent>, Adapter, FormProps<Values>, FormFoundationState>(
+    const { foundation, state } = useFoundation<FormFoundation<SubmitEvent>, Adapter, AllFormProps<Values>, FormFoundationState>(
         FormFoundation,
         props,
         () => ({}),
@@ -99,7 +102,7 @@
             getFormProps: pickFormProps,
             getFormElement: () => formElement.value,
         }),
-        { props: { validator: () => formProps.value.validator } }
+        { props: { validator: () => formProps.value.validator, schema: () => formProps.value.schema } }
     );
 
     const initialFormState = foundation.getFormState();

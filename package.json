@@ -98,7 +98,8 @@
         "vite-plus": "1.4.0",
         "vitest": "5.0.5",
         "vue": "catalog:",
-        "vue-tsc": "catalog:"
+        "vue-tsc": "catalog:",
+        "zod": "catalog:"
     },
     "packageManager": "pnpm@12.9.1"
 }

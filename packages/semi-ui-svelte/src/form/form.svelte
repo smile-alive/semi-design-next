@@ -9,14 +9,14 @@
     import useFoundation from '../_base/use-foundation.svelte.js';
     import Row from '../grid/row.svelte';
     import { setFormContext } from './context.js';
-    import type { FormApi, FormProps } from './interface.js';
+    import type { AllFormProps, FormApi, FormProps } from './interface.js';
     import { cloneDeep, untrackMethods } from './utils.js';
 
     interface FormFoundationState {
         formState?: FormState;
     }
 
-    type Adapter = BaseFormAdapter<FormProps<Values>, FormFoundationState, Values, SubmitEvent>;
+    type Adapter = BaseFormAdapter<AllFormProps<Values>, FormFoundationState, Values, SubmitEvent>;
 
     const defaults = useDefaultProps('Form');
 
@@ -36,7 +36,8 @@
         stopValidateWithError = defaults('stopValidateWithError'),
         trigger = defaults('trigger'),
         stopPropagation = defaults('stopPropagation'),
-        validator = defaults('validator') as FormProps<Values>['validator'],
+        validator = defaults('validator') as AllFormProps<Values>['validator'],
+        schema = defaults('schema') as AllFormProps<Values>['schema'],
         form,
         id,
         onSubmit,
@@ -53,7 +54,7 @@
     const uid = $props.id();
     let formElement = $state<HTMLFormElement>();
 
-    const formProps: FormProps<Values> = {
+    const formProps: AllFormProps<Values> = {
         get initValues() {
             return initValues;
         },
@@ -102,12 +103,15 @@
         get validator() {
             return validator;
         },
+        get schema() {
+            return schema;
+        },
         get id() {
             return id;
         },
     };
 
-    const { foundation, states } = useFoundation<FormFoundation<SubmitEvent>, Adapter, FormProps<Values>, FormFoundationState>(
+    const { foundation, states } = useFoundation<FormFoundation<SubmitEvent>, Adapter, AllFormProps<Values>, FormFoundationState>(
         FormFoundation,
         formProps,
         () => ({}),
@@ -124,7 +128,7 @@
             notifyErrorChange: (errors, changedError) => onErrorChange?.(errors, changedError),
             notifyReset: () => onReset?.(),
             getInitValues: () => initValues as Partial<Values>,
-            getFormProps: (keys) => (keys ? Object.fromEntries(keys.map((key) => [key, formProps[key as keyof FormProps]])) : formProps),
+            getFormProps: (keys) => (keys ? Object.fromEntries(keys.map((key) => [key, formProps[key as keyof AllFormProps]])) : formProps),
             getFormElement: () => formElement ?? null,
         })
     );

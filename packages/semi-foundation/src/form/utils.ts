@@ -4,13 +4,28 @@ import { joinIds } from '../utils/a11y';
 import { createId } from '../utils/uuid';
 import warning from '../utils/warning';
 import { strings } from './constants';
-import type { FieldValidateTriggerType, BasicTriggerType } from './interface';
+import type { FieldValidateTriggerType, BasicTriggerType, StandardSchemaIssue } from './interface';
 
 export function generateValidatesFromRules(field: string, rules: any[] = []) {
     const descriptor = {};
     descriptor[field] = rules;
     const validator = new AsyncValidator(descriptor);
     return validator;
+}
+
+/** `['a', 0, { key: 'b' }]` -> `a[0].b`, the form of the field paths; a key that holds path syntax is quoted */
+export function schemaIssuePath({ path = [] }: StandardSchemaIssue) {
+    return path.reduce<string>((joined, segment) => {
+        const key = typeof segment === 'object' ? segment.key : segment;
+        if (typeof key === 'number') {
+            return `${joined}[${key}]`;
+        }
+        const name = String(key);
+        if (/[.[\]]/.test(name)) {
+            return `${joined}[${JSON.stringify(name)}]`;
+        }
+        return joined ? `${joined}.${name}` : name;
+    }, '');
 }
 
 export function isRequired(rules: any[] | Record<string, any> = []) {

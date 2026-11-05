@@ -24,6 +24,7 @@ import ApiType from '#/components/ApiType.astro';
 | onSubmit | Called after the submit button or formApi.submitForm and a passing validation, with the values and the submit event. | <ApiType detail={"(values: Values, e?: SubmitEvent) => void"}>Type</ApiType> | - |
 | onSubmitFail | Called after the submit button or formApi.submitForm and a failing validation, with the errors, the values and the submit event. | <ApiType detail={"(errors: FormValidateResult\u003cValues>, values: Partial\u003cValues>, e?: SubmitEvent) => void"}>Type</ApiType> | - |
 | onValueChange | Called when a field value changes, with all values and the changed field values. | <ApiType detail={"(values: Values, changedValues: Partial\u003cValues>) => void"}>Type</ApiType> | - |
+| schema | A Standard Schema object (Zod, Valibot, ArkType and so on), mutually exclusive with the validator and rules of the fields, which no longer run. Once all fields pass, `onSubmit` and formApi.validate receive the schema's output. When `validator` is also set, only `validator` applies. | <ApiType detail={"StandardSchema\u003cValues>"}>Type</ApiType> | - |
 | showValidateIcon | Whether the icon of the status shows before the validation message. | `boolean` | `true` |
 | stopPropagation | Whether the submit and reset events stop bubbling, to keep a nested Form from triggering the outer Form. | `{ submit?: boolean; reset?: boolean }` | - |
 | stopValidateWithError | Whether validation with rules stops at the first failing rule. The same prop on a field takes precedence. | `boolean` | - |

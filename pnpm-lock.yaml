@@ -377,6 +377,9 @@ catalogs:
     webpack:
       specifier: ^5.112.2
       version: 5.112.2
+    zod:
+      specifier: ^4.6.7
+      version: 4.6.7
   peer:
     react:
       specifier: ^19.3.0
@@ -548,6 +551,9 @@ importers:
       vue-tsc:
         specifier: 'catalog:'
         version: 3.3.13(typescript@6.0.3)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
 
   packages/semi-ai-foundation:
     dependencies:
@@ -1527,6 +1533,9 @@ importers:
       vue:
         specifier: 'catalog:'
         version: 3.5.44(typescript@6.0.3)
+      zod:
+        specifier: 'catalog:'
+        version: 4.6.7
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.12

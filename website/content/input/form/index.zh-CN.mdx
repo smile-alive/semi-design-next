@@ -643,6 +643,32 @@ FormSlot 属性配置详见[FormSlot](#FormSlot)
 
 <Demo id="form-validate-async" />
 
+### 使用 Schema 校验
+
+`schema` 接受实现了 [Standard Schema](https://standardschema.dev) 的校验库，如 [Zod](https://zod.dev)、[Valibot](https://valibot.dev)、[ArkType](https://arktype.io)。这些库由你自己安装，Semi 不依赖它们。
+
+字段照常按自己的 `trigger` 校验，提交时校验全部字段。校验全部字段通过后，提交回调和 `formApi.validate()` 拿到 schema 的输出（如 trim、类型转换后的值），`formState.values` 仍是用户输入的原值；`formApi.validate(['fieldA'])` 只校验部分字段，拿到的也是原值。
+
+<Demo id="schema-validate" />
+
+校验的来源与错误的归属：
+
+- 一个 Form 只有一个校验来源。配置了 `schema` 后，字段的 `validator`、`rules` 不再运行，开发模式下警告；字段在另一个组件上，TypeScript 查不到这种组合。同时传 Form 的 `validator` 和 `schema` 时 TypeScript 报错，绕过类型时开发模式下警告，并且只用 `validator`。
+- 同一轮校验只运行一次 schema，Form 不做防抖，schema 里的异步校验（如查重）每轮都会运行。要控制请求次数，把字段的 `trigger` 设为 `blur`。
+- 提交后服务端返回的错误用 `formApi.setError` 写入，这个字段下一轮校验时错误会被 schema 的结果替换。
+- 修改某个字段时，只显示这个字段和已经 touched 的字段的错误，所以跨字段校验的错误要用 `path` 指向显示错误的字段，如示例中的确认密码。
+- 错误路径指向字段内部时（如 TagInput 的 `tags[0]`），错误显示在持有这个值的字段上。找不到对应字段的错误不显示，只留在 `formState.errors` 里，schema 根级的错误写在 `errors['']`。
+
+使用 Zod 时要注意：
+
+- `allowEmpty` 关闭时，没填或清空的字段值是 `undefined`，不是空字符串。必填要写 `z.string({ error: '请输入姓名' })`，只写 `.min(1, '...')` 时显示的是 Zod 的类型错误。
+- 有字段没填时，Zod 不运行 object 级的 `refine`，跨字段错误要等相关字段都有值才出现。
+- `z.object` 默认丢掉没有声明的键，这些字段不会出现在提交回调的值里。要保留它们就用 `z.looseObject`。
+- 错误语言由 Zod 决定，Semi 的语言包不影响它。可以调用 `z.config(z.locales.zhCN())`，或者像示例那样写自己的文案。
+- 写 `import * as z from 'zod'`，打包时才能摇掉用不到的部分。
+
+必填星号不从 schema 推导，要在字段的 `label` 配置里写 `required: true`。字段的 `transform` 不影响 schema 收到的值。
+
 ### 自定义校验(Field 级别)
 
 你可以通过 `validator` 指定单个表单控件的自定义校验函数，支持同步、异步校验（通过返回 promise）
@@ -1304,7 +1330,7 @@ FormState 存储了所有 Form 内部的状态值，包括各表单控件的值�
 | getFormState | 获取 FormState | formApi.getFormState() |
 | submitForm | 可手动触发 submit 提交操作 | formApi.submitForm() |
 | reset | 可手动对 form 进行重置 | formApi.reset(fields?: Array \<string\>) |
-| validate | 可手动触发对表单的校验，不传参时默认触发整全体Field的校验（配置Form级别校验器后，Field级别校验器在submit或formApi.validate()时不会再被触发），若想触发部分field的校验，将目标field数组传入即可<br/><br/>**支持静默校验**：传入 `{ silent: true }` 可在不触发 UI 更新（不显示错误提示、不设置 touched 状态）的情况下获取校验结果，也可通过 `{ fields: ['fieldA'], silent: true }` 对指定字段进行静默校验 | formApi.validate()<br/>.then(values=>\{\})<br/>.catch(errors=>\{\}) <br/>或 formApi.validate(\['fieldA','fieldB'\])<br/>或 formApi.validate(\{ silent: true \})<br/>或 formApi.validate(\{ fields: \['fieldA'\], silent: true \})<br/> |
+| validate | 可手动触发对表单的校验，不传参时默认触发整全体Field的校验（配置Form级别校验器后，Field级别校验器在submit或formApi.validate()时不会再被触发），若想触发部分field的校验，将目标field数组传入即可<br/><br/>**支持静默校验**：传入 `{ silent: true }` 可在不触发 UI 更新（不显示错误提示、不设置 touched 状态）的情况下获取校验结果，也可通过 `{ fields: ['fieldA'], silent: true }` 对指定字段进行静默校验<br/><br/>配置了 `schema` 时，校验全部 Field 通过后 resolve 的是 schema 的输出，校验部分 Field 时 resolve 的是原值 | formApi.validate()<br/>.then(values=>\{\})<br/>.catch(errors=>\{\}) <br/>或 formApi.validate(\['fieldA','fieldB'\])<br/>或 formApi.validate(\{ silent: true \})<br/>或 formApi.validate(\{ fields: \['fieldA'\], silent: true \})<br/> |
 | setValues | 设置整个表单的值。第二个参数中的 isOverride 默认为 false<br/>**isOverride 为 false 时**：遍历 Form 中所有已注册的 field，从 `newValues` 中取对应字段的值更新到 `formState.values` 中。如果 `newValues` 中不包含某个已注册 field 的值，该字段会被设置为 undefined。<br/>**isOverride 为 true 时**：直接用 `newValues` 整体替换 `formState.values`，包括 `newValues` 中存在但表单中没有对应 field 的额外 key 也会写入。<br/><br/>**推荐用法**：如果只需要更新部分字段，建议使用 `formApi.setValue(field, value)` 逐个更新，或者先获取当前值再合并：`formApi.setValues({ ...formApi.getValues(), name: newValue })` | formApi.setValues(newValues: object, \{ isOverride: boolean \}) |
 | setValue | 提供直接修改 formState.values 方法，与 setValues 的区别是它仅修改单个 field | formApi.setValue(field: string, newFieldValue: any) |
 | getValue | 获取 单个 Field 的值 | formApi.getValue() <br/>formApi.getValue(field: string) |

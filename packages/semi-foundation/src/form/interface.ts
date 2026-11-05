@@ -10,6 +10,28 @@ export type CommonFieldError = boolean | string | Array<any> | undefined | unkno
 
 export type BasicFieldError = Array<any>;
 
+export interface StandardSchemaIssue {
+    readonly message: string;
+    readonly path?: ReadonlyArray<PropertyKey | { readonly key: PropertyKey }>;
+}
+
+export type StandardSchemaResult<Output> = { readonly value: Output; readonly issues?: undefined } | { readonly value?: undefined; readonly issues: ReadonlyArray<StandardSchemaIssue> };
+
+/** The part of Standard Schema v1 (https://standardschema.dev) the Form calls; zod, valibot and arktype implement it */
+export interface StandardSchema<Output = any> {
+    readonly '~standard': {
+        readonly version: 1;
+        readonly vendor: string;
+        readonly validate: (value: unknown) => StandardSchemaResult<Output> | Promise<StandardSchemaResult<Output>>;
+    };
+}
+
+/**
+ * A Form validates from one source. The types catch `schema` with the Form `validator`; the `rules` and `validator` of
+ * a field sit on another component, out of their reach, so the foundation warns when such a field registers.
+ */
+export type ExclusiveFormValidation = { schema?: never } | { validator?: never };
+
 /** E is the host's submit event, which the foundation only passes through; a submit by API has none */
 export interface BaseFormAdapter<P = Record<string, any>, S = Record<string, any>, Values extends object = any, E = unknown> extends DefaultAdapter<P, S> {
     cloneDeep: (val: any, ...rest: any[]) => any;
@@ -95,7 +117,7 @@ export interface BaseFormApi<T extends object = any> {
     getFormProps: (keys?: Array<string>) => ComponentProps;
     submitForm: () => void;
     reset: (fields?: Array<string>) => void;
-    /** Resolves with the form values */
+    /** Resolves with the form values; validating all fields against a Form `schema` resolves with the schema's output */
     validate: <K extends FieldPath<T>>(fields?: Array<K> | ValidateOptions<K>) => Promise<T>;
     /** Without a field, returns all the initial values */
     getInitValue: <K extends FieldPath<T>>(field?: K) => any;

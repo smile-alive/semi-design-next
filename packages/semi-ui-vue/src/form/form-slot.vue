@@ -9,7 +9,7 @@
     import { useFormContext } from './context';
     import FormErrorMessage from './error-message.vue';
     import FieldGrid from './field-grid.vue';
-    import type { FormProps, FormSlotProps, FormSlotSlots } from './interface';
+    import type { AllFormProps, FormSlotProps, FormSlotSlots } from './interface';
     import FormLabel from './label.vue';
     import { isLabelConfig } from './utils';
 
@@ -31,7 +31,7 @@
 
     const prefix = cssClasses.PREFIX;
     const labelId = `${id}-label`;
-    const formProps = computed<FormProps>(() => form?.formProps.value ?? {});
+    const formProps = computed<AllFormProps>(() => form?.formProps.value ?? {});
     const labelPosition = computed(() => props.labelPosition || formProps.value.labelPosition || 'top');
     const labelConfig = computed(() => (isLabelConfig(props.label) ? props.label : { text: props.label }));
 

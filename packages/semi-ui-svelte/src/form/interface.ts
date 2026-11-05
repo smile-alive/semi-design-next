@@ -2,7 +2,7 @@ import type { Component, ComponentProps, Snippet } from 'svelte';
 import type { HTMLAttributes, HTMLFormAttributes, HTMLLabelAttributes } from 'svelte/elements';
 import type { RuleItem } from 'async-validator';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { AllErrors, BaseFormApi, FieldPath, FieldValidateTriggerType, FormState } from '@fibrae/semi-foundation/form/interface';
+import type { AllErrors, BaseFormApi, ExclusiveFormValidation, FieldPath, FieldValidateTriggerType, FormState, StandardSchema } from '@fibrae/semi-foundation/form/interface';
 import type { ColProps } from '../grid/interface.js';
 import type { InputGroupProps as BaseInputGroupProps, ValidateStatus } from '../input/interface.js';
 
@@ -52,7 +52,10 @@ export interface FormRenderProps<Values extends Record<string, any> = any> {
 
 type FormValidateResult<Values> = string | Partial<AllErrors<Values>>;
 
-export interface FormProps<Values extends Record<string, any> = any> extends Omit<HTMLFormAttributes, 'children' | 'onchange' | 'onsubmit' | 'onreset'> {
+export type FormProps<Values extends Record<string, any> = any> = AllFormProps<Values> & ExclusiveFormValidation;
+
+/** What the Form reads: global defaults can fill both exclusive sources, so the exclusion applies only to what callers pass */
+export interface AllFormProps<Values extends Record<string, any> = any> extends Omit<HTMLFormAttributes, 'children' | 'onchange' | 'onsubmit' | 'onreset'> {
     /** Initial values of the fields, copied once when the Form is created */
     initValues?: Values;
     layout?: 'horizontal' | 'vertical';
@@ -72,6 +75,8 @@ export interface FormProps<Values extends Record<string, any> = any> extends Omi
     stopPropagation?: { submit?: boolean; reset?: boolean };
     /** Form-level validation; when set, it replaces the fields' own validation */
     validator?: (values: Values) => FormValidateResult<Values> | Promise<FormValidateResult<Values>>;
+    /** A Standard Schema (zod, valibot, arktype) that replaces the fields' `validator` and `rules`, run on their `trigger` and on submit; `onSubmit` receives its output */
+    schema?: StandardSchema<Values>;
     form?: FormApi<Values>;
     /** Also written to `x-form-id`; generated when missing */
     id?: string;

@@ -6,7 +6,7 @@
     import { getFormContext } from './context.js';
     import ErrorMessage from './error-message.svelte';
     import FieldGrid from './field-grid.svelte';
-    import type { FormProps, SlotProps } from './interface.js';
+    import type { AllFormProps, SlotProps } from './interface.js';
     import Label from './label.svelte';
     import { isLabelConfig } from './utils.js';
 
@@ -18,7 +18,7 @@
 
     const prefix = cssClasses.PREFIX;
     const labelId = `${uid}-label`;
-    const formProps = $derived<FormProps>(form?.formProps ?? {});
+    const formProps = $derived<AllFormProps>(form?.formProps ?? {});
     const shownLabelPosition = $derived(labelPosition || formProps.labelPosition || 'top');
     const labelConfig = $derived(isLabelConfig(label) ? label : { text: label });
 

@@ -1,7 +1,7 @@
 import type * as React from 'react';
 import type { RuleItem } from 'async-validator';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { BaseFormApi as FormApi, FormState, AllErrors, FieldPath, FieldValidateTriggerType } from '@fibrae/semi-foundation/form/interface';
+import type { BaseFormApi as FormApi, ExclusiveFormValidation, FormState, AllErrors, FieldPath, FieldValidateTriggerType, StandardSchema } from '@fibrae/semi-foundation/form/interface';
 import type { CheckboxProps } from '../checkbox/index';
 import type { RadioProps } from '../radio/index';
 import type { BasicSelectValue, SelectProps } from '../select/index';
@@ -102,7 +102,9 @@ export interface FormHandle<Values extends Record<string, any> = any> {
     formApi: FormApi<Values>;
 }
 
-export interface BaseFormProps<Values extends Record<string, any> = any> extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'children' | 'onChange' | 'onSubmit' | 'onReset'> {
+export type BaseFormProps<Values extends Record<string, any> = any> = AllFormProps<Values> & ExclusiveFormValidation;
+
+interface AllFormProps<Values extends Record<string, any> = any> extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'children' | 'onChange' | 'onSubmit' | 'onReset'> {
     'aria-label'?: React.AriaAttributes['aria-label'];
     onSubmit?: (values: Values, e?: React.SubmitEvent<HTMLFormElement>) => void;
     /** `errors` is what failed the validation: the form validator's result, or the field errors */
@@ -114,6 +116,8 @@ export interface BaseFormProps<Values extends Record<string, any> = any> extends
     allowEmpty?: boolean;
     /** Returns errors nested like the values, an empty object or empty string for valid, or a Promise of either */
     validator?: (values: Values) => BatchValidateResult<Values> | Promise<BatchValidateResult<Values>>;
+    /** A Standard Schema (zod, valibot, arktype) that replaces the fields' `validator` and `rules`, run on their `trigger` and on submit; `onSubmit` receives its output */
+    schema?: StandardSchema<Values>;
     initValues?: Values;
     id?: string;
     /** Called once when the Form mounts, to save the formApi reference */

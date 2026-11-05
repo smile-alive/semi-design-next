@@ -13,7 +13,7 @@
     import { provideFormInputGroupContext, useFormContext } from './context';
     import FormErrorMessage from './error-message.vue';
     import FieldGrid from './field-grid.vue';
-    import type { FormInputGroupProps, FormInputGroupSlots, FormProps } from './interface';
+    import type { AllFormProps, FormInputGroupProps, FormInputGroupSlots } from './interface';
     import FormLabel from './label.vue';
     import { isLabelConfig } from './utils';
 
@@ -39,7 +39,7 @@
     const prefix = cssClasses.PREFIX;
     const errorMessageId = `${id}-errormessage`;
     const extraTextId = `${id}-extraText`;
-    const formProps = computed<FormProps>(() => form?.formProps.value ?? {});
+    const formProps = computed<AllFormProps>(() => form?.formProps.value ?? {});
     const labelPosition = computed(() => props.labelPosition || formProps.value.labelPosition);
     const labelConfig = computed(() => (isLabelConfig(props.label) ? props.label : { text: props.label }));
     const labelId = computed(() => labelConfig.value.id ?? `${id}-label`);

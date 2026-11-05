@@ -63,6 +63,7 @@ function Form<Values extends Record<string, any> = any>(rawProps: BaseFormProps<
         component,
         render,
         validator,
+        schema,
         initValues,
         layout,
         style,

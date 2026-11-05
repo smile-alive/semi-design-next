@@ -1,14 +1,15 @@
 import type { ValidateError } from 'async-validator';
-import { isPlainObject } from 'es-toolkit';
+import { isEqual, isPlainObject } from 'es-toolkit';
 import { toPath } from 'es-toolkit/compat';
 import scrollIntoViewIfNeeded, { type Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
 import BaseFoundation from '../base/foundation';
 import isPromise from '../utils/is-promise';
 import * as ObjectUtil from '../utils/object';
+import warning from '../utils/warning';
 import { cssClasses } from './constants';
 import type FieldStore from './field-store';
-import type { BaseFormAdapter, FormState, CallOpts, FieldRegistration, ComponentProps, setValuesConfig, ArrayFieldRegistration, ValidateOptions, ChangeFieldValueOptions, FieldSnapshot } from './interface';
-import { generateValidatesFromRules, isValid, nextUpdateKey } from './utils';
+import type { BaseFormAdapter, FormState, CallOpts, FieldRegistration, ComponentProps, setValuesConfig, ArrayFieldRegistration, ValidateOptions, ChangeFieldValueOptions, FieldSnapshot, StandardSchema, StandardSchemaIssue, StandardSchemaResult } from './interface';
+import { generateValidatesFromRules, isValid, nextUpdateKey, schemaIssuePath } from './utils';
 
 const SILENT: CallOpts = { skipNotify: true, skipRender: true };
 
@@ -35,6 +36,15 @@ function isPathWithin(path: string, ancestor: string) {
     return toPath(ancestor).every((segment, i) => segment === segments[i]);
 }
 
+/** One run of the Form's schema, its issues mapped onto the fields registered when it settled */
+interface SchemaRun {
+    result: StandardSchemaResult<unknown>;
+    /** By field path: an issue under a field holding the value as a whole belongs to that field */
+    fieldErrors: Map<string, unknown>;
+    /** By issue path, parents first: issues no registered field holds, such as those of an unmounted group */
+    detachedErrors: Map<string, unknown>;
+}
+
 type ScrollToErrorOpts = {
     field?: string;
     index?: number;
@@ -58,6 +68,12 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     #formValidation = 0;
     // Set from an unregister until the render after it, which reports the values once
     #unregisterNotifyPending = false;
+    // The run the validations requested in this tick share
+    #pendingSchemaRun?: Promise<SchemaRun>;
+    // The newest run with a non-silent request: only it writes, so an async schema settling out of order shows no older result
+    #latestSchemaRun?: Promise<SchemaRun>;
+    // Written by the last batch validation, so that the next one reports them to onErrorChange when they clear
+    #detachedErrorPaths: string[] = [];
 
     constructor(adapter: BaseFormAdapter<Record<string, any>, Record<string, any>, any, E>) {
         super(adapter);
@@ -215,6 +231,134 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         });
     }
 
+    /** The one check of the exclusive validation sources: a Form `validator` hides the schema, a schema hides field-level validation */
+    #getSchema(): StandardSchema | undefined {
+        const { schema, validator } = this.getProps();
+        return typeof validator === 'function' ? undefined : schema;
+    }
+
+    #mapSchemaIssues(issues: ReadonlyArray<StandardSchemaIssue>) {
+        const pathKey = (segments: string[]) => segments.join('\0');
+        const fields = new Map([...this.#fields.values()].map((registration) => [pathKey(toPath(registration.field)), registration]));
+        const targets = new Map<string, { registration?: FieldRegistration; messages: string[] }>();
+        const located = issues.map((issue) => {
+            const path = schemaIssuePath(issue);
+            return { message: issue.message, path, segments: toPath(path) };
+        });
+        // A child's error replaces its parent's where both exist: one position of the error tree holds one of them
+        located
+            .toSorted((a, b) => a.segments.length - b.segments.length)
+            .forEach(({ message, path, segments }) => {
+                let registration: FieldRegistration | undefined;
+                for (let i = segments.length; i > 0 && !registration; i--) {
+                    registration = fields.get(pathKey(segments.slice(0, i)));
+                }
+                const target = registration?.field ?? path;
+                const entry = targets.get(target) ?? { registration, messages: [] };
+                entry.messages.push(message);
+                targets.set(target, entry);
+            });
+        const fieldErrors = new Map<string, unknown>();
+        const detachedErrors = new Map<string, unknown>();
+        targets.forEach(({ registration, messages }, target) => {
+            const { stopValidateWithError } = registration ? registration.getValidateOptions() : this.getProps();
+            const error = stopValidateWithError || messages.length === 1 ? messages[0] : messages;
+            (registration ? fieldErrors : detachedErrors).set(target, error);
+        });
+        return { fieldErrors, detachedErrors };
+    }
+
+    /**
+     * Validations requested in one tick share a run: the fields of a batch validation, or those mounting together with
+     * trigger="mount", must not call an async schema once each. It reads the values when it starts.
+     */
+    #requestSchemaRun(schema: StandardSchema, silent: boolean) {
+        this.#pendingSchemaRun ??= Promise.resolve().then(async () => {
+            this.#pendingSchemaRun = undefined;
+            const result = await schema['~standard'].validate(this.#data.values);
+            return { result, ...this.#mapSchemaIssues(result.issues ?? []) };
+        });
+        if (!silent) {
+            this.#latestSchemaRun = this.#pendingSchemaRun;
+        }
+        return this.#pendingSchemaRun;
+    }
+
+    #validateSchema(registration: FieldRegistration, schema: StandardSchema, opts: CallOpts) {
+        const epoch = this.#epoch;
+        const silent = Boolean(opts.silent);
+        const run = this.#requestSchemaRun(schema, silent);
+        const validation = new Promise((resolve, reject) => {
+            run.then((schemaRun) => {
+                if (this.#isSuperseded(registration, validation, epoch, silent, resolve)) {
+                    return;
+                }
+                if (!silent && run !== this.#latestSchemaRun) {
+                    resolve(this.#latestSchemaRun.then(({ fieldErrors }) => fieldErrors.get(registration.field)));
+                    return;
+                }
+                const error = schemaRun.fieldErrors.get(registration.field);
+                this.#setFieldError(registration, error, { ...opts, status: error === undefined ? 'success' : 'error' });
+                // a batch validation writes every field and reports them together
+                if (!opts.skipNotify) {
+                    this.#refreshTouchedFields(schemaRun, registration);
+                }
+                resolve(error);
+            }, reject);
+        });
+        if (!silent) {
+            this.#validations.set(registration.field, validation);
+        }
+        return validation;
+    }
+
+    /** One field's value can fail another (a refine on two fields), so the fields the user already left follow the run */
+    #refreshTouchedFields({ fieldErrors }: SchemaRun, changed: FieldRegistration) {
+        const prevErrors = this.#data.errors;
+        const refreshed: string[] = [];
+        this.#batch(() => {
+            this.#fields.forEach((registration) => {
+                const { touched, error: prevError } = registration.store.getSnapshot();
+                const error = fieldErrors.get(registration.field);
+                if (registration !== changed && touched && !isEqual(error, prevError)) {
+                    this.#setFieldError(registration, error, { ...SILENT, status: error === undefined ? 'success' : 'error' });
+                    refreshed.push(registration.field);
+                }
+            });
+        });
+        if (refreshed.length) {
+            this.adapter.notifyChange(this.#data);
+            this.#notifyErrorChange(prevErrors, refreshed);
+            this.#forceUpdate();
+        }
+    }
+
+    /**
+     * Writes the issues no field holds. Validating everything replaces the errors as a whole, so an error kept for an
+     * unmounted field cannot outlive the run; validating some paths only touches those without a field under them.
+     */
+    #writeDetachedErrors(detached: Array<[string, unknown]>, fieldPaths: Array<string> | undefined, validatedPaths: Array<string>) {
+        const current = this.#data.errors;
+        let errors = fieldPaths ? current : {};
+        fieldPaths?.forEach((path) => {
+            if (!this.#getNestedField(path).size) {
+                errors = ObjectUtil.remove(errors, path);
+            }
+        });
+        detached.forEach(([path, error]) => {
+            errors = ObjectUtil.set(errors, path, error);
+        });
+        if (!fieldPaths) {
+            validatedPaths.forEach((path) => {
+                const error = ObjectUtil.get(current, path);
+                if (error !== undefined) {
+                    errors = ObjectUtil.set(errors, path, error);
+                }
+            });
+        }
+        this.#data = { ...this.#data, errors };
+    }
+
     #fieldsValidate(fieldPaths?: Array<string>, silent: boolean = false) {
         return new Promise((resolve, reject) => {
             let promiseSet: Promise<any>[] = [];
@@ -223,6 +367,8 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             const paths = [...targetFields.keys()];
             const epoch = this.#epoch;
             const prevErrors = this.#data.errors;
+            const schema = this.#getSchema();
+            const schemaRun = schema && this.#requestSchemaRun(schema, silent);
             targetFields.forEach((field, fieldPath) => {
                 const fieldValue = this.#getValue(fieldPath);
                 // Fields publish independently; the form snapshot and callbacks wait for every validation.
@@ -237,19 +383,26 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                     this.#setFieldTouched(field, true, { skipNotify: true, skipRender: true });
                 }
             });
-            void Promise.all(promiseSet).then((results) => {
+            void Promise.all([schemaRun, Promise.all(promiseSet)]).then(([settledRun, results]) => {
                 if (this.#isCancelled(epoch)) {
                     reject(this.#cancelError());
                     return;
                 }
+                const detached = [...(settledRun?.detachedErrors ?? [])].filter(([path]) => !fieldPaths || fieldPaths.some((target) => isPathWithin(path, target)));
+                if (settledRun && !silent) {
+                    this.#writeDetachedErrors(detached, fieldPaths, paths);
+                }
                 // A validated field fails on any error value but undefined, '' included: a rule with `message: ''`
                 // fails without a text. A field with nothing to validate (null result) keeps the error set on it.
                 let errors = this.#getError();
-                let valid = paths.every((path, i) => (results[i] === null ? isValid(ObjectUtil.get(errors, path)) : results[i] === undefined));
+                let valid = !detached.length && paths.every((path, i) => (results[i] === null ? isValid(ObjectUtil.get(errors, path)) : results[i] === undefined));
                 if (silent) {
                     // A silent validation writes nothing to formState, so its errors come from the settled results,
                     // which are each field's error value (undefined when valid, null without validation)
                     errors = {};
+                    detached.forEach(([path, error]) => {
+                        errors = ObjectUtil.set(errors, path, error);
+                    });
                     paths.forEach((fieldPath, i) => {
                         if (results[i] != null) {
                             errors = ObjectUtil.set(errors, fieldPath, results[i]);
@@ -258,17 +411,20 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                     valid = ObjectUtil.isEmpty(errors);
                 }
                 if (!silent) {
+                    const detachedPaths = detached.map(([path]) => path);
                     this.adapter.notifyChange(this.#data);
-                    this.#notifyErrorChange(prevErrors, paths);
+                    this.#notifyErrorChange(prevErrors, [...paths, ...detachedPaths, ...this.#detachedErrorPaths]);
+                    this.#detachedErrorPaths = detachedPaths;
                     this.#forceUpdate(valid ? undefined : () => this.#autoScroll());
                 }
                 if (valid) {
-                    const _values = this.adapter.cloneDeep(this.#data.values);
-                    resolve(_values);
+                    // Only a run of the whole form has an output; validating some paths passes on the values as they are
+                    const output = !fieldPaths && settledRun && !settledRun.result.issues ? settledRun.result.value : this.#data.values;
+                    resolve(this.adapter.cloneDeep(output));
                 } else {
                     reject(errors);
                 }
-            });
+            }, reject);
         });
     }
 
@@ -456,19 +612,20 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
 
     /**
      * The field passes its own registration: a wrapped component may report a change from its mount effect, which runs
-     * before the field registers. A field-level `validate` wins over `rules`; a field with neither has nothing to
-     * validate.
+     * before the field registers. The Form's `schema` excludes field-level validation; without it `validate` wins over
+     * `rules`, and a field with neither has nothing to validate.
      */
     #validateField = (registration: FieldRegistration, value: unknown, opts: CallOpts = {}): Promise<unknown> | null => {
+        const schema = this.#getSchema();
+        if (schema) {
+            return this.#validateSchema(registration, schema, opts);
+        }
         const { rules, validate, transform } = registration.getValidateOptions();
         const finalValue = transform ? transform(value) : value;
         if (validate) {
             return this.#validateCustom(registration, finalValue, opts);
         }
-        if (rules) {
-            return this.#validateRules(registration, finalValue, opts);
-        }
-        return null;
+        return rules ? this.#validateRules(registration, finalValue, opts) : null;
     };
 
     /**
@@ -510,6 +667,8 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         const fieldState = registration.store.getSnapshot();
         const registered = this.#registered[field];
         this.#registered[field] = true;
+        const { rules, validate } = registration.getValidateOptions();
+        warning(!registered && Boolean(this.#getSchema()) && Boolean(rules || validate), `[Semi Form] <Form schema> excludes field-level validation; the rules and validator of field "${field}" will be ignored`);
         this.#fields.set(field, registration);
         const allowEmpty = registration.allowEmpty || false;
         const opts: CallOpts = {
@@ -527,6 +686,14 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             this.#updateStateValue(field, fieldValue, opts);
             if (fieldState.error) {
                 this.#updateStateError(field, fieldState.error, opts);
+            } else if (!registered) {
+                // A validation may have written this path before its field first mounted. Under a string a path reads
+                // single characters, so an error on the parent (an array's minimum length) is not this field's.
+                const parentError = ObjectUtil.get(this.#data.errors, toPath(field).slice(0, -1));
+                const error = typeof parentError === 'string' ? undefined : ObjectUtil.get(this.#data.errors, field);
+                if (error !== undefined) {
+                    this.#setFieldError(registration, error, { ...opts, skipRender: true });
+                }
             }
             return;
         }
@@ -944,6 +1111,8 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     override init() {
         // StrictMode runs init -> destroy -> init on one instance
         this.#destroyed = false;
+        const { schema, validator } = this.getProps();
+        warning(Boolean(schema) && typeof validator === 'function', '[Semi Form] You should not use <Form schema> and <Form validator> at the same time; <Form schema> will be ignored');
     }
 
     override destroy() {
@@ -990,6 +1159,11 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                 this.#updateField(field.store, { status: 'default' });
             });
         });
+        // errors without a registered field: a validator's other keys, a schema's issues, a kept unmounted field
+        if (fieldPaths === undefined) {
+            this.#data = { ...this.#data, errors: {} };
+            this.#detachedErrorPaths = [];
+        }
 
         if (this.#registeredArrayField.size) {
             this.#resetArrayField(fieldPaths);

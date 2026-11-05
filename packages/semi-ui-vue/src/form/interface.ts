@@ -1,7 +1,7 @@
 import type { IntrinsicElementAttributes, StyleValue, VNode } from 'vue';
 import type { RuleItem } from 'async-validator';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { AllErrors, BaseFormApi, FieldPath, FieldValidateTriggerType, FormState } from '@fibrae/semi-foundation/form/interface';
+import type { AllErrors, BaseFormApi, ExclusiveFormValidation, FieldPath, FieldValidateTriggerType, FormState, StandardSchema } from '@fibrae/semi-foundation/form/interface';
 import type { ColProps } from '../grid/interface';
 import type { ValidateStatus } from '../input/interface';
 
@@ -42,7 +42,13 @@ export type FieldLabel = Omit<LabelProps, 'name'>;
 
 type FormValidateResult<Values> = string | Partial<AllErrors<Values>>;
 
-export interface FormProps<Values extends Record<string, any> = any> {
+/** The callable member is what makes Vue's compiled prop check accept arktype, whose schemas are functions */
+type FormSchema<Values> = StandardSchema<Values> | (StandardSchema<Values> & ((...args: any[]) => unknown));
+
+export type FormProps<Values extends Record<string, any> = any> = AllFormProps<Values> & ExclusiveFormValidation;
+
+/** What the Form reads: global defaults can fill both exclusive sources, so the exclusion applies only to what callers pass */
+export interface AllFormProps<Values extends Record<string, any> = any> {
     /** Initial values of the fields, copied once when the Form is created */
     initValues?: Values;
     layout?: 'horizontal' | 'vertical';
@@ -62,6 +68,8 @@ export interface FormProps<Values extends Record<string, any> = any> {
     stopPropagation?: { submit?: boolean; reset?: boolean };
     /** Form-level validation; when set, it replaces the fields' own validation */
     validator?: (values: Values) => FormValidateResult<Values> | Promise<FormValidateResult<Values>>;
+    /** A Standard Schema (zod, valibot, arktype) that replaces the fields' `validator` and `rules`, run on their `trigger` and on submit; `submit` receives its output */
+    schema?: FormSchema<Values>;
     form?: FormApi<Values>;
     /** Also written to `x-form-id`; generated when missing */
     id?: string;
