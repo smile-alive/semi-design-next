@@ -89,7 +89,8 @@ export default function useCSSAnimation(options: CSSAnimationOptions): CSSAnimat
         el.addEventListener(
             'animationend',
             (e) => {
-                if (e.target === el && run().motion) {
+                // several animations on one element end separately; the run ends with the last one
+                if (e.target === el && run().motion && !el.getAnimations().some((animation) => 'animationName' in animation && animation.playState === 'running')) {
                     end(run());
                 }
             },

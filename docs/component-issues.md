@@ -272,6 +272,7 @@
 ### CSSAnimation
 
 - 保持原样：animationend 每次触发都重复调用 `onAnimationEnd(false)`；`stoppedByAnother` 含义失真；`onAnimationStart` 调用两次；SubNav、Table 展开图标的 `isAnimating` 恒为 true。
+- Svelte 的 Toast、Notice、TabPane、自定义展开图标与 Solid 的 Tabs 在第一个 `animationend` 就结束离场，同一元素有多个动画时较长的动画被截断。待处理（同 Modal，确认 `getAnimations()` 中没有运行中的 CSS 动画再结束）。
 - React：Modal、SideSheet、Tabs 在 `animation: none` 页面上离场只靠 animationend，永不卸载。待处理（传入 `getElement` 并补浏览器用例）。Solid 的 `useCSSAnimation` 在没有运行中的动画时立即结束，不受影响。
 
 ### ConfigProvider、LocaleProvider、LocaleConsumer

@@ -37,7 +37,8 @@ export default function useShowHide({ visible, motion, showClass, hideClass, onH
         element.addEventListener(
             'animationend',
             (event) => {
-                if (event.target === element && animating) {
+                // several animations on one element end separately; the run ends with the last one
+                if (event.target === element && animating && !element.getAnimations().some((animation) => 'animationName' in animation && animation.playState === 'running')) {
                     finish();
                 }
             },
