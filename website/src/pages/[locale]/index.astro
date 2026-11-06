@@ -70,7 +70,7 @@ const samples = [
                         frameworks.map((framework, index) => (
                             <label class="hero-framework">
                                 <input type="radio" name="hero-framework" value={framework} checked={index === 0} />
-                                <FrameworkLogo framework={framework} class="landing-logo" brand />
+                                <FrameworkLogo framework={framework} class="landing-logo" />
                                 {heroFrameworks[framework]}
                             </label>
                         ))
@@ -126,7 +126,7 @@ const samples = [
                             {
                                 frameworks.map((framework) => (
                                     <li>
-                                        <FrameworkLogo framework={framework} class="landing-logo" brand />
+                                        <FrameworkLogo framework={framework} class="landing-logo" />
                                         {frameworkLabels[framework]}
                                     </li>
                                 ))
@@ -138,7 +138,7 @@ const samples = [
                             samples.map((sample) => (
                                 <article class="sample">
                                     <header class="sample-header">
-                                        <FrameworkLogo framework={sample.framework} class="landing-logo" brand />
+                                        <FrameworkLogo framework={sample.framework} class="landing-logo" />
                                         <span>
                                             <strong>{sample.name}</strong>
                                             {sample.brief}
@@ -426,12 +426,11 @@ const samples = [
         background: var(--semi-color-primary);
     }
 
-    /* FrameworkLogo renders the svg, so it has no scope marker from this page */
+    /* FrameworkLogo renders the img, so it has no scope marker from this page */
     :global(.landing-logo) {
         flex-shrink: 0;
         inline-size: 22px;
         block-size: 22px;
-        object-fit: contain;
     }
 
     /* Hero: the product window is cut off by the section and fades into the next one */
