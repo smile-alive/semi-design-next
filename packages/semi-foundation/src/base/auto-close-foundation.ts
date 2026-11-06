@@ -46,6 +46,31 @@ export default class AutoCloseFoundation<P extends AutoCloseBaseProps = AutoClos
         this.startCloseTimer();
     };
 
+    /** The list pauses the countdown while it is hovered or focused */
+    handleListPausedChange = (paused: boolean) => {
+        if (paused) {
+            this.pauseCloseTimer();
+        } else {
+            this.resumeCloseTimer();
+        }
+    };
+
+    /** The store removed this item from outside: the countdown must not call onClose during the leave */
+    handleListRemoved = (removedItems: readonly { id?: string }[]) => {
+        if (removedItems.some((item) => item.id === this.getProp('id'))) {
+            this.leave();
+        }
+    };
+
+    /** The store updated this item in place; resolves whether it was this item, so the host can follow up */
+    handleListUpdated = (updatedItems: readonly { id?: string }[]) => {
+        const updated = updatedItems.some((item) => item.id === this.getProp('id'));
+        if (updated) {
+            this.restartCloseTimer();
+        }
+        return updated;
+    };
+
     startCloseTimer() {
         this.clearCloseTimer();
         const duration = this.getProp('duration');

@@ -13,10 +13,7 @@ export const isNotClassOrStyle = (key: string) => key !== 'class' && key !== 'st
 /** A valueless template attribute (`<Input readOnly />`) arrives as an empty string, so Boolean() would read it as off */
 export const isBooleanAttrOn = (value: unknown) => value !== undefined && value !== null && value !== false;
 
-export const isAriaKey = (key: string) => key.startsWith('aria-');
-
-const NATIVE_INPUT_KEYS = new Set(['id', 'name', 'tabindex', 'tabIndex', 'autofocus', 'onFocus', 'onBlur']);
-export const isNativeInputKey = (key: string) => isAriaKey(key) || NATIVE_INPUT_KEYS.has(key);
+export { isAriaKey, isNativeInputKey } from '@fibrae/semi-foundation/utils/a11y';
 
 /** Vue appends Once, Capture and Passive to the listener key for those modifiers; .stop, .self and .prevent keep onClick */
 export const isClickListenerKey = (key: string) => /^onClick(Once|Capture|Passive)*$/.test(key);

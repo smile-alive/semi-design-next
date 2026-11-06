@@ -108,4 +108,34 @@ describe('AutoCloseFoundation', () => {
         expect(notifyWrapperToRemove).toHaveBeenCalledWith('x');
         expect(notifyClose).toHaveBeenCalledTimes(1);
     });
+
+    it('列表暂停时停止计时，恢复后重新计时', () => {
+        const { foundation, notifyClose } = setup(1);
+        foundation.handleListPausedChange(true);
+        vi.advanceTimersByTime(2000);
+        expect(notifyClose).not.toHaveBeenCalled();
+        foundation.handleListPausedChange(false);
+        vi.advanceTimersByTime(1000);
+        expect(notifyClose).toHaveBeenCalledTimes(1);
+    });
+
+    it('列表移除本条后不再倒计时关闭；移除其他条无影响', () => {
+        const { foundation, notifyClose } = setup(1);
+        foundation.handleListRemoved([{ id: 'other' }]);
+        vi.advanceTimersByTime(500);
+        foundation.handleListRemoved([{ id: 'x' }]);
+        vi.advanceTimersByTime(2000);
+        expect(notifyClose).not.toHaveBeenCalled();
+    });
+
+    it('列表就地更新本条时重启倒计时并返回 true', () => {
+        const { foundation, notifyClose } = setup(1);
+        vi.advanceTimersByTime(600);
+        expect(foundation.handleListUpdated([{ id: 'other' }])).toBe(false);
+        expect(foundation.handleListUpdated([{ id: 'x' }])).toBe(true);
+        vi.advanceTimersByTime(600);
+        expect(notifyClose).not.toHaveBeenCalled();
+        vi.advanceTimersByTime(400);
+        expect(notifyClose).toHaveBeenCalledTimes(1);
+    });
 });

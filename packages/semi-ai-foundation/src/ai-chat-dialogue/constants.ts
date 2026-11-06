@@ -1,5 +1,5 @@
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { IMAGE_SUFFIXES } from '../file-suffix';
+import { getFileKind } from '../file-suffix';
 
 export const cssClasses = {
     PREFIX: `${BASE_CLASS_PREFIX}-ai-chat-dialogue`,
@@ -88,25 +88,14 @@ const TEXT_TYPES = [MESSAGE_ITEM_TYPE.INPUT_TEXT, MESSAGE_ITEM_TYPE.OUTPUT_TEXT,
 
 const TOOL_CALL_TYPES = [MESSAGE_ITEM_TYPE.FUNCTION_CALL, MESSAGE_ITEM_TYPE.CUSTOM_TOOL_CALL, MESSAGE_ITEM_TYPE.MCP_CALL];
 
-const DOCUMENT_TYPES = ['doc', 'docx', 'txt', 'word'];
-const PDF_TYPES = ['pdf'];
-const EXCEL_TYPES = ['excel', 'xlsx', 'xls'];
-const CODE_TYPES = ['json', 'js', 'ts', 'jsx', 'tsx'];
-const VIDEO_TYPES = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'];
+// The kinds the dialogue has an icon for; ppt and audio files get the default icon
+const DIALOGUE_FILE_KINDS = ['word', 'image', 'pdf', 'excel', 'code', 'video'] as const;
 
-const FILE_KINDS = [
-    ['word', DOCUMENT_TYPES],
-    ['image', IMAGE_SUFFIXES],
-    ['pdf', PDF_TYPES],
-    ['excel', EXCEL_TYPES],
-    ['code', CODE_TYPES],
-    ['video', VIDEO_TYPES],
-] as const;
-
-export type DialogueFileKind = (typeof FILE_KINDS)[number][0];
+export type DialogueFileKind = (typeof DIALOGUE_FILE_KINDS)[number];
 
 export function getDialogueFileKind(type?: string): DialogueFileKind | undefined {
-    return FILE_KINDS.find(([, types]) => types.includes(type))?.[0];
+    const kind = getFileKind(type);
+    return DIALOGUE_FILE_KINDS.find((candidate) => candidate === kind);
 }
 
 export const strings = {

@@ -1,3 +1,4 @@
+import { popupTriggerSelector } from '../tooltip/constants';
 import { isDev } from './warning';
 
 export function handlePrevent(event: Pick<Event, 'stopPropagation' | 'preventDefault'>) {
@@ -11,6 +12,23 @@ export function handlePrevent(event: Pick<Event, 'stopPropagation' | 'preventDef
  */
 export function joinIds(...ids: unknown[]): string | undefined {
     return ids.filter((id) => typeof id === 'string' && id !== '').join(' ') || undefined;
+}
+
+/** An explicit role wins; otherwise a generic div given a name becomes a group, since a div without a role cannot carry one */
+export function namedRole(role?: string, ariaLabel?: string, ariaLabelledby?: string) {
+    return role ?? (ariaLabel || ariaLabelledby ? 'group' : undefined);
+}
+
+export const isAriaKey = (key: string): key is `aria-${string}` => key.startsWith('aria-');
+
+const NATIVE_INPUT_ATTRIBUTE_KEYS = new Set(['id', 'name', 'tabindex', 'tabIndex', 'autofocus']);
+
+/**
+ * What names, identifies and focuses a native input that sits inside a styled root. Svelte spells listener keys in
+ * lowercase (`onfocus`), every other framework in camelCase (`onFocus`).
+ */
+export function isNativeInputKey(key: string, lowercaseEvents = false) {
+    return isAriaKey(key) || NATIVE_INPUT_ATTRIBUTE_KEYS.has(key) || (lowercaseEvents ? key === 'onfocus' || key === 'onblur' : key === 'onFocus' || key === 'onBlur');
 }
 
 // the u flag makes one code point one character, so characters outside the BMP count too
@@ -210,9 +228,9 @@ export function warnIfDialogUnnamed(dialog: HTMLElement | null, component: strin
 }
 
 /**
- * `root`: the document or shadow root the popup lives in, which also holds its trigger (the popup is portaled into the
- * trigger's root). A token match: a trigger shared by nested popups lists every popup id.
+ * The trigger of the Tooltip-family popup `id`. `root`: the document or shadow root the popup lives in, which also
+ * holds its trigger (the popup is portaled into the trigger's root).
  */
-export function getMenuButton(id: string, root: ParentNode): HTMLElement | null {
-    return root.querySelector<HTMLElement>(`[data-popupid~="${CSS.escape(id)}"]`);
+export function getPopupTrigger(id: string, root: ParentNode): HTMLElement | null {
+    return root.querySelector<HTMLElement>(popupTriggerSelector(id));
 }

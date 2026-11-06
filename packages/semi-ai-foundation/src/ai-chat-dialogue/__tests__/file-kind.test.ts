@@ -10,6 +10,9 @@ describe('getDialogueFileKind', () => {
         ['xlsx', 'excel'],
         ['tsx', 'code'],
         ['mkv', 'video'],
+        ['webm', 'video'],
+        ['pptx', undefined],
+        ['mp3', undefined],
         ['zip', undefined],
         [undefined, undefined],
     ])('%s 归为 %s', (type, kind) => {

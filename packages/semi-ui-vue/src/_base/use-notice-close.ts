@@ -7,16 +7,16 @@ interface NoticeListState {
 }
 
 /**
- * Drives a Toast's or Notice's countdown from its list: paused while the list is, restarted when the store updates the
- * item in place. `onShow` runs when the item mounts and after each such update. Call it after useFoundation, so these
- * hooks run after init() has started the countdown; an item outside a list keeps its own countdown.
+ * Drives a Toast's or Notice's countdown from its list. `onShow` runs when the item mounts and after each in-place
+ * update. Call it after useFoundation, so these hooks run after init() has started the countdown; an item outside a
+ * list keeps its own countdown.
  */
-export default function useNoticeClose(foundation: Pick<AutoCloseFoundation, 'pauseCloseTimer' | 'resumeCloseTimer' | 'restartCloseTimer'>, list: ComputedRef<NoticeListState> | undefined, id: () => string | undefined, onShow: () => void) {
+export default function useNoticeClose(foundation: Pick<AutoCloseFoundation, 'pauseCloseTimer' | 'handleListPausedChange' | 'handleListUpdated'>, list: ComputedRef<NoticeListState> | undefined, onShow: () => void) {
     if (!list) return;
 
     watch(
         () => list.value.paused,
-        (paused) => (paused ? foundation.pauseCloseTimer() : foundation.resumeCloseTimer())
+        (paused) => foundation.handleListPausedChange(paused)
     );
 
     // Post flush: the updated duration has reached the props. Store changes keeping the same updatedItems (a finished
@@ -24,9 +24,7 @@ export default function useNoticeClose(foundation: Pick<AutoCloseFoundation, 'pa
     watch(
         () => list.value.updatedItems,
         (items) => {
-            if (!items.some((item) => item.id === id())) return;
-            foundation.restartCloseTimer();
-            onShow();
+            if (foundation.handleListUpdated(items)) onShow();
         },
         { flush: 'post' }
     );

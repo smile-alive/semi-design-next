@@ -1,4 +1,5 @@
 import { $PROXY } from 'solid-js';
+import { isNativeInputKey as isNativeInputKeyOf } from '@fibrae/semi-foundation/utils/a11y';
 
 /** Keys Form injects into every field component; none of them is a DOM attribute */
 const formInjectedKeys = new Set(['validateStatus', 'insetLabel', 'insetLabelId']);
@@ -8,12 +9,10 @@ export function omitFormInjected<P extends object>(props: P) {
     return view(props, (key) => !formInjectedKeys.has(key)) as P;
 }
 
-const nativeInputKeys = new Set(['id', 'name', 'tabIndex', 'tabindex', 'autofocus', 'onFocus', 'onBlur']);
-
 export type NativeInputKey = 'id' | 'name' | 'tabIndex' | 'tabindex' | 'autofocus' | 'onFocus' | 'onBlur' | `aria-${string}`;
 
-/** What names, identifies and focuses a native input that sits inside a styled root */
-export const isNativeInputKey = (key: string): key is NativeInputKey => key.startsWith('aria-') || nativeInputKeys.has(key);
+// narrows the key type so the root half of splitControlAttrs keeps the props type minus the control keys
+export const isNativeInputKey = (key: string): key is NativeInputKey => isNativeInputKeyOf(key);
 
 /**
  * Splits props into [control, root] by key predicate. Both halves are live views of `props`: a key that appears or

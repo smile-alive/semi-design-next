@@ -1,3 +1,5 @@
+import { isNativeInputKey as isNativeInputKeyOf } from '@fibrae/semi-foundation/utils/a11y';
+
 export function splitControlAttrs<T extends Record<string, unknown>>(attrs: T, isControlKey: (key: string) => boolean) {
     const root: Record<string, unknown> = {};
     const control: Record<string, unknown> = {};
@@ -13,8 +15,6 @@ export function splitControlAttrs<T extends Record<string, unknown>>(attrs: T, i
     return { root, control };
 }
 
-export const isAriaKey = (key: string) => key.startsWith('aria-');
+export { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 
-const NATIVE_INPUT_KEYS = new Set(['id', 'name', 'tabindex', 'autofocus', 'onfocus', 'onblur']);
-/** What names, identifies and focuses a native input hidden inside a styled root */
-export const isNativeInputKey = (key: string) => isAriaKey(key) || NATIVE_INPUT_KEYS.has(key);
+export const isNativeInputKey = (key: string) => isNativeInputKeyOf(key, true);

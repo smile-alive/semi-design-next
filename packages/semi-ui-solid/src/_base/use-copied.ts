@@ -1,5 +1,6 @@
 import { type Accessor, createSignal, onCleanup } from 'solid-js';
 import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
+import { ResetTimer } from '@fibrae/semi-foundation/utils/reset-timer';
 
 /**
  * `copy(text)` writes to the clipboard and resolves whether it succeeded; after a success `copied()` stays true for
@@ -7,20 +8,16 @@ import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
  */
 export default function useCopied(duration: Accessor<number>): [Accessor<boolean>, (text: string) => Promise<boolean>] {
     const [copied, setCopied] = createSignal(false);
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    let mounted = true;
+    const timer = new ResetTimer();
+    timer.mount();
 
-    onCleanup(() => {
-        mounted = false;
-        clearTimeout(timer);
-    });
+    onCleanup(() => timer.unmount());
 
     const copy = (text: string) =>
         copyText(text).then((res) => {
-            if (res && mounted) {
+            if (res && timer.isMounted) {
                 setCopied(true);
-                clearTimeout(timer);
-                timer = setTimeout(() => setCopied(false), duration());
+                timer.start(duration(), () => setCopied(false));
             }
             return res;
         });

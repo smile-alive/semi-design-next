@@ -1,11 +1,3 @@
-export function convertDOMRectToObject(domRect: DOMRect): DOMRectLikeType {
-    return domRect?.toJSON();
-}
-
-export type DOMRectLikeType = {
-    [key in 'left' | 'top' | 'right' | 'bottom' | 'width' | 'height']?: number;
-};
-
 /**
  * Whether the event passed through any of `nodes`. The composed path is fixed when dispatch starts, so it still
  * lists the old ancestors of a target that an earlier listener removed, and it crosses shadow roots.

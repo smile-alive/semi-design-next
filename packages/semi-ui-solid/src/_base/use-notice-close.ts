@@ -7,41 +7,36 @@ interface NoticeListValue {
 }
 
 /**
- * Drives a Toast's or Notice's countdown from its list: paused while the list is, stopped when the store removes the
- * item, restarted when the store updates it in place. An item outside a list keeps its own countdown.
+ * Drives a Toast's or Notice's countdown from its list. An item outside a list keeps its own countdown.
  * Call it after useFoundation: its onMount init starts the countdown without looking at the pause, so the paused
  * effect must run after it.
  */
-export default function useNoticeClose(foundation: Pick<AutoCloseFoundation, 'pauseCloseTimer' | 'resumeCloseTimer' | 'leave' | 'restartCloseTimer'>, list: NoticeListValue | undefined, id: () => string | undefined) {
+export default function useNoticeClose(foundation: Pick<AutoCloseFoundation, 'handleListPausedChange' | 'handleListRemoved' | 'handleListUpdated'>, list: NoticeListValue | undefined) {
     const paused = createMemo(() => list?.paused() ?? false);
-    const removed = createMemo(() => list?.state().removedItems.some((item) => item.id === id()) ?? false);
 
+    // `wasPaused` is undefined on the first run, which is no change: init() has already started the countdown
     createEffect(
         on(paused, (isPaused, wasPaused) => {
-            if (isPaused) {
-                foundation.pauseCloseTimer();
-            } else if (wasPaused) {
-                foundation.resumeCloseTimer();
-            }
-        })
-    );
-
-    // removed from outside: the countdown must not call onClose during the leave
-    createEffect(
-        on(removed, (isRemoved) => {
-            if (isRemoved) {
-                foundation.leave();
+            if (isPaused || wasPaused) {
+                foundation.handleListPausedChange(isPaused);
             }
         })
     );
 
     createEffect(
         on(
+            () => list?.state().removedItems,
+            (items) => {
+                if (items) foundation.handleListRemoved(items);
+            }
+        )
+    );
+
+    createEffect(
+        on(
             () => list?.state().updatedItems,
             (items) => {
-                if (items?.some((item) => item.id === id())) {
-                    foundation.restartCloseTimer();
-                }
+                if (items) foundation.handleListUpdated(items);
             },
             { defer: true }
         )
