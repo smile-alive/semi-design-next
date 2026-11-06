@@ -1,6 +1,7 @@
-import { isEqual, difference } from 'es-toolkit';
+import { isEqual } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
-import { findAncestorKeys, calcCheckedKeysForUnchecked, calcCheckedKeysForChecked, calcCheckedKeys, calcDisabledKeys, findDescendantKeys, normalizeKeyList, normalizedArr } from '../tree/tree-util';
+import { calcCheckedStatus, calcRelatedCheckedKeys } from '../tree/shared';
+import { findAncestorKeys, calcCheckedKeys, calcDisabledKeys, normalizeKeyList, normalizedArr } from '../tree/tree-util';
 import { strings } from './constants';
 import { type KeyMapProps, filter, getColumns, convertDataToEntities, calcMergeType, getKeyByValuePath, getKeysByValuePath, getKeyByPos, getValueOrKey } from './util';
 
@@ -179,7 +180,7 @@ export interface BasicCascaderInnerData {
     checkedEntities?: BasicEntities;
     loadedKeys: Set<string>;
     loadingKeys: Set<string>;
-    disabledKeys?: Set<string>;
+    disabledKeys: Set<string>;
     showInput?: boolean;
 }
 
@@ -197,16 +198,9 @@ export interface CascaderAdapter<E = unknown, LE = unknown> extends DefaultAdapt
     notifyFocus: (e: E | FocusEvent) => void;
     notifyBlur: (e?: E | MouseEvent | FocusEvent) => void;
     notifyDropdownVisibleChange: (visible: boolean) => void;
-    /**
-     * Calls `loadData`. `callback` must run after the treeData update it caused is applied, since that update keeps
-     * the selection and activeKeys only while the key is still in loadingKeys. `onReject` runs on rejection, which
-     * must still reach the caller.
-     */
-    notifyLoadData: (selectedOpt: BasicCascaderData[], callback: (data?: BasicEntities) => void, onReject: () => void) => void;
     notifyOnLoad: (newLoadedKeys: Set<string>, data: BasicCascaderData) => void;
     notifyListScroll: (e: LE, panel: BasicScrollPanelProps) => void;
     notifyOnExceed: (data: BasicEntity[]) => void;
-    toggleInputShow: (show: boolean, cb: () => void) => void;
     /** `index` is the option's place in its column or in the search results */
     scrollToOption: (key: string, index: number) => void;
 }
@@ -296,9 +290,12 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
 
     static #selectionFor(props: BasicCascaderProps, state: BasicCascaderInnerData, value: BasicValue, keyEntities: BasicEntities) {
         const { changeOnSelect, onChangeWithObject, keyMaps, loadData, multiple } = props;
-        const { activeKeys, loadingKeys, keyEntities: keyEntityState, selectedKeys: selectedKeysState } = state;
+        const { activeKeys, loadingKeys, loadedKeys, keyEntities: keyEntityState, selectedKeys: selectedKeysState } = state;
         const filterable = Boolean(props.filterTreeNode);
-        const loadingActive = [...activeKeys].filter((i) => loadingKeys.has(i));
+        // The treeData update a load causes keeps the selection and the open columns. It may land before the load
+        // settles (the key is still loading) or after it (the loaded key has just gained children), so both count
+        const isLoading = (key: string) => loadingKeys.has(key) || (loadedKeys.has(key) && !keyEntityState[key]?.children && Boolean(keyEntities[key]?.children));
+        const loadingActive = [...activeKeys].some(isLoading);
         const normalizedValue = normalizedArr(value);
         const valuePath = onChangeWithObject && isObject(normalizedValue[0]) ? getValueOrKey(normalizedValue, keyMaps) : normalizedValue;
         const selectedKeys = getKeysByValuePath(valuePath);
@@ -312,7 +309,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
              */
             if (changeOnSelect || CascaderFoundation.#isLeafData(selectedItem.data, loadData)) {
                 updateStates.selectedKeys = new Set([selectedKey]);
-                if (!loadingActive.length) {
+                if (!loadingActive) {
                     updateStates.activeKeys = new Set(selectedItem.path);
                 }
                 /**
@@ -339,7 +336,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             updateStates.selectedKeys = new Set([key]);
             // a copy: keyEntities may be the state's own object
             keyEntities = { ...keyEntities, [key]: optionNotExist };
-        } else if (loadingKeys.size) {
+        } else if ([...loadingKeys, ...loadedKeys].some(isLoading)) {
             // async loading updates treeData: keep the selection and merge, since overwriting the 'not-exist-*'
             // entities would empty selectionContent when a dropdown item is clicked
             updateStates.keyEntities = { ...keyEntityState, ...keyEntities };
@@ -367,6 +364,10 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             return Boolean(item.isLeaf);
         }
         return !item.children || !item.children.length;
+    }
+
+    static #resolveCheckedKeys(checkedKeys: Set<string>, keyEntities: BasicEntities, { autoMergeValue, leafOnly }: BasicCascaderProps) {
+        return new Set(normalizeKeyList(checkedKeys, keyEntities, calcMergeType(autoMergeValue, leafOnly) === strings.LEAF_ONLY_MERGE_TYPE));
     }
 
     #isDisabled() {
@@ -496,42 +497,21 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
     }
 
     #handleRelatedMultipleSelect({ key }: BasicEntity | BasicData) {
-        const { checkedKeys, keyEntities, resolvedCheckedKeys } = this.getStates();
-        const { autoMergeValue, max, disableStrictly, leafOnly } = this.getProps();
-        const missingCount = CascaderFoundation.#missingValuePaths(this.getProps(), keyEntities).length;
+        const props = this.getProps();
+        const states = this.getStates();
+        const { checkedKeys, keyEntities } = states;
+        const { max, disableStrictly } = props;
+        const missingCount = CascaderFoundation.#missingValuePaths(props, keyEntities).length;
         const prevCheckedStatus = checkedKeys.has(key);
-        const curCheckedStatus = disableStrictly ? this.calcCheckedStatus(!prevCheckedStatus, key) : !prevCheckedStatus;
-        const { checkedKeys: curCheckedKeys, halfCheckedKeys: curHalfCheckedKeys } = disableStrictly ? this.calcNonDisabledCheckedKeys(key, curCheckedStatus) : this.calcCheckedKeys(key, curCheckedStatus);
+        const curCheckedStatus = disableStrictly ? calcCheckedStatus(!prevCheckedStatus, key, states) : !prevCheckedStatus;
+        const { checkedKeys: curCheckedKeys, halfCheckedKeys: curHalfCheckedKeys } = calcRelatedCheckedKeys(key, curCheckedStatus, disableStrictly, states);
+        const curResolvedCheckedKeys = CascaderFoundation.#resolveCheckedKeys(curCheckedKeys, keyEntities, props);
+        const curRealCheckedKeys = CascaderFoundation.getTriggerKeys(props, { checkedKeys: curCheckedKeys, resolvedCheckedKeys: curResolvedCheckedKeys });
 
-        const mergeType = calcMergeType(autoMergeValue, leafOnly);
-        const isLeafOnlyMerge = mergeType === strings.LEAF_ONLY_MERGE_TYPE;
-        const isNoneMerge = mergeType === strings.NONE_MERGE_TYPE;
-
-        const curResolvedCheckedKeys = new Set(normalizeKeyList(curCheckedKeys, keyEntities, isLeafOnlyMerge));
-
-        const curRealCheckedKeys = isNoneMerge ? curCheckedKeys : curResolvedCheckedKeys;
-
-        if (typeof max === 'number') {
-            if (!isNoneMerge) {
-                // past max, the selection may shrink but not grow
-                if (resolvedCheckedKeys.size < curResolvedCheckedKeys.size && curResolvedCheckedKeys.size + missingCount > max) {
-                    const checkedEntities: BasicEntity[] = [];
-                    curResolvedCheckedKeys.forEach((itemKey) => {
-                        checkedEntities.push(keyEntities[itemKey]);
-                    });
-                    this.adapter.notifyOnExceed(checkedEntities);
-                    return;
-                }
-            } else {
-                if (checkedKeys.size < curCheckedKeys.size && curCheckedKeys.size + missingCount > max) {
-                    const checkedEntities: BasicEntity[] = [];
-                    curCheckedKeys.forEach((itemKey: string) => {
-                        checkedEntities.push(keyEntities[itemKey]);
-                    });
-                    this.adapter.notifyOnExceed(checkedEntities);
-                    return;
-                }
-            }
+        // past max, the selection may shrink but not grow
+        if (typeof max === 'number' && CascaderFoundation.getTriggerKeys(props, states).size < curRealCheckedKeys.size && curRealCheckedKeys.size + missingCount > max) {
+            this.adapter.notifyOnExceed([...curRealCheckedKeys].map((itemKey) => keyEntities[itemKey]));
+            return;
         }
         if (!this.isControlledComponent()) {
             this.setState({
@@ -600,11 +580,14 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
     }
 
     #toggle2SearchInput(isShow: boolean) {
-        if (isShow) {
-            this.adapter.toggleInputShow(isShow, () => this.focus());
-        } else {
-            this.adapter.toggleInputShow(isShow, () => undefined);
-        }
+        // read first: a pick reports the blur right after closing. Unmounting the focused search input would drop the
+        // focus to the body, so the trigger, the combobox again, takes it back
+        const focusInside = this.#blurPending;
+        this.setState({ showInput: isShow }, () => {
+            if (isShow || focusInside) {
+                this.focus();
+            }
+        });
     }
 
     #handleShowNextByHover(item: BasicEntity) {
@@ -635,22 +618,29 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
 
     #notifyIfLoadData(item: BasicEntity | BasicData) {
         const { data, key } = item;
-        if (!data.isLeaf && !data.children && this.getProp('loadData')) {
+        const { loadData } = this.getProps();
+        if (!data.isLeaf && !data.children && loadData) {
             const { loadedKeys, loadingKeys, keyEntities } = this.getStates();
             if (loadedKeys.has(key) || loadingKeys.has(key)) {
                 return;
             }
             const optionPath = this.getItemPropPath(key, [], keyEntities);
             this.setState({ loadingKeys: new Set(loadingKeys).add(key) });
-            this.adapter.notifyLoadData(optionPath, this.#handleNodeLoad.bind(this, item), this.#handleNodeLoadReject.bind(this, item));
+            // a thenable settles only through the callbacks its then is given
+            void Promise.resolve(loadData(optionPath))
+                .then(() => this.#handleNodeLoad(item))
+                // on rejection too, so the option can be retried; the rejection still reaches the caller
+                .finally(() => this.#clearLoading(key));
         }
     }
 
-    // clears the loading state so the option can be retried
-    #handleNodeLoadReject(item: BasicEntity | BasicData) {
-        const newLoadingKeys = new Set(this.getState('loadingKeys'));
-        newLoadingKeys.delete(item.key);
-        this.setState({ loadingKeys: newLoadingKeys });
+    #clearLoading(key: string) {
+        const loadingKeys = this.getState('loadingKeys');
+        if (loadingKeys.has(key)) {
+            const newLoadingKeys = new Set(loadingKeys);
+            newLoadingKeys.delete(key);
+            this.setState({ loadingKeys: newLoadingKeys });
+        }
     }
 
     #handleSingleSelect(e: E, item: BasicEntity | BasicData) {
@@ -840,42 +830,6 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         return this.#defaultRenderText(displayPath, renderFunc);
     }
 
-    protected calcNonDisabledCheckedKeys(eventKey: string, targetStatus: boolean) {
-        const { keyEntities, disabledKeys } = this.getStates();
-        const checkedKeys = new Set(this.getState('checkedKeys'));
-        const descendantKeys = normalizeKeyList(findDescendantKeys([eventKey], keyEntities, false), keyEntities, true);
-        const hasDisabled = descendantKeys.some((key) => disabledKeys.has(key));
-        if (!hasDisabled) {
-            return this.calcCheckedKeys(eventKey, targetStatus);
-        }
-
-        const nonDisabled = descendantKeys.filter((key) => !disabledKeys.has(key));
-        const newCheckedKeys = targetStatus ? [...nonDisabled, ...checkedKeys] : difference(normalizeKeyList([...checkedKeys], keyEntities, true), nonDisabled);
-        return calcCheckedKeys(newCheckedKeys, keyEntities);
-    }
-
-    protected calcCheckedStatus(targetStatus: boolean, eventKey: string) {
-        if (!targetStatus) {
-            return targetStatus;
-        }
-        const { checkedKeys, keyEntities, disabledKeys } = this.getStates();
-        const descendantKeys = normalizeKeyList(findDescendantKeys([eventKey], keyEntities, false), keyEntities, true);
-        const hasDisabled = descendantKeys.some((key) => disabledKeys.has(key));
-        if (!hasDisabled) {
-            return targetStatus;
-        }
-        const nonDisabledKeys = descendantKeys.filter((key) => !disabledKeys.has(key));
-        const allChecked = nonDisabledKeys.every((key) => checkedKeys.has(key));
-        return !allChecked;
-    }
-
-    protected calcCheckedKeys(key: string, curCheckedStatus: boolean) {
-        const { keyEntities } = this.getStates();
-        const checkedKeys = new Set(this.getState('checkedKeys'));
-        const halfCheckedKeys = new Set(this.getState('halfCheckedKeys'));
-        return curCheckedStatus ? calcCheckedKeysForChecked(key, keyEntities, checkedKeys, halfCheckedKeys) : calcCheckedKeysForUnchecked(key, keyEntities, checkedKeys, halfCheckedKeys);
-    }
-
     /** keyEntities of a treeData, shared while treeData keeps its identity and keyMaps stays equal */
     static getKeyEntities(treeData?: BasicCascaderData[], keyMaps?: KeyMapProps): BasicEntities {
         if (!treeData) {
@@ -908,12 +862,22 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         }
         const calRes = calcCheckedKeys(keys, keyEntities);
         const checkedKeys: Set<string> = new Set(calRes.checkedKeys);
-        const isLeafOnlyMerge = calcMergeType(autoMergeValue, leafOnly) === strings.LEAF_ONLY_MERGE_TYPE;
         return {
             checkedKeys,
             halfCheckedKeys: new Set(calRes.halfCheckedKeys),
-            resolvedCheckedKeys: new Set(normalizeKeyList(checkedKeys, keyEntities, isLeafOnlyMerge)),
+            resolvedCheckedKeys: CascaderFoundation.#resolveCheckedKeys(checkedKeys, keyEntities, { autoMergeValue, leafOnly }),
         };
+    }
+
+    /** The checked keys the trigger shows and onChange reports: merged unless checkRelation is unRelated or nothing merges */
+    static getTriggerKeys({ checkRelation, autoMergeValue, leafOnly }: BasicCascaderProps, { checkedKeys, resolvedCheckedKeys }: Pick<BasicCascaderInnerData, 'checkedKeys' | 'resolvedCheckedKeys'>) {
+        return checkRelation === strings.UN_RELATED || calcMergeType(autoMergeValue, leafOnly) === strings.NONE_MERGE_TYPE ? checkedKeys : resolvedCheckedKeys;
+    }
+
+    /** Whether a checked key's tag can be closed: not while the Cascader or its option is disabled, nor for a key in disabledKeys under disableStrictly */
+    static isTagClosable(key: string, { disabled, disableStrictly }: BasicCascaderProps, { keyEntities, disabledKeys }: Pick<BasicCascaderInnerData, 'keyEntities' | 'disabledKeys'>) {
+        const entity = keyEntities[key];
+        return Boolean(entity) && !disabled && !entity.data.disabled && !(disableStrictly && disabledKeys.has(key));
     }
 
     /**
@@ -1366,14 +1330,9 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
     };
 
     handleTagRemoveByKey = (key: string) => {
-        const { keyEntities } = this.getStates();
-        const { disabled } = this.getProps();
-        if (disabled) {
-            return;
-        }
-        const removedItem = keyEntities[key];
-        if (removedItem && !removedItem.data?.disabled) {
-            this.#handleMultipleSelect(removedItem);
+        const states = this.getStates();
+        if (CascaderFoundation.isTagClosable(key, this.getProps(), states)) {
+            this.#handleMultipleSelect(states.keyEntities[key]);
         }
     };
 

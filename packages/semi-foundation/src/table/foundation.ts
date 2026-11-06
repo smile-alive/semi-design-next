@@ -8,9 +8,9 @@ import { convertDataToEntities, calcCheckedKeysForChecked, calcCheckedKeysForChe
 import { differenceUnique, withOrderSort } from '../utils/array';
 import isObject from '../utils/is-object';
 import type { ArrayElement } from '../utils/type';
-import { isDev } from '../utils/warning';
+import warning, { isDev } from '../utils/warning';
 import { strings, numbers } from './constants';
-import { buildRecordsByKey, flattenBodyRows, getChangedRowKeys, mergeColumns } from './utils';
+import { buildRecordsByKey, flattenBodyRows, getChangedRowKeys, isMissingDataIndex, mergeColumns } from './utils';
 
 export interface BaseColumnProps<RecordType> {
     align?: BaseAlign;
@@ -65,11 +65,13 @@ export interface TableScrollableEdges {
 }
 
 export interface TableAdapter<RecordType, P extends TableBaseProps<RecordType> = TableBaseProps<RecordType>> extends DefaultAdapter<P, TableBaseState<RecordType>> {
-    resetScrollY: () => void;
-    /** The metrics of the body scroller, or null while it is not mounted */
-    getScrollMetrics: () => TableScrollMetrics | null;
-    setScrollableEdges: (edges: TableScrollableEdges) => void;
-    notifyFilterDropdownVisibleChange: (visible: boolean, dataIndex: string) => void;
+    /** The element wrapping the pagination, title, header, body and footer; null while it is not mounted */
+    getWrapper: () => HTMLElement | null | undefined;
+    /** The body scroller; null while it is not mounted */
+    getBodyWrapper: () => HTMLElement | null | undefined;
+    notifyFilterDropdownVisibleChange: (column: BaseColumnProps<RecordType>, visible: boolean) => void;
+    /** Calls pagination.onChange, which takes over paging from the table */
+    notifyPageChange: (currentPage: number, pageSize: number) => void;
     notifyChange: (changeInfo: { pagination: BasePagination; filters: BaseChangeInfoFilter<RecordType>[]; sorter: BaseChangeInfoSorter<RecordType>; extra: OnChangeExtra }) => void;
     notifyExpand: (expanded: boolean, record: BaseIncludeGroupRecord<RecordType>, mouseEvent: any) => void;
     /** expandedRowKeys is the next expansion, group keys included */
@@ -109,7 +111,7 @@ export interface TableBaseProps<RecordType> extends BaseTableDataProps<RecordTyp
     defaultExpandAllGroupRows?: boolean;
     expandAllGroupRows?: boolean;
     expandedRowRender?: (...args: any[]) => any;
-    scroll?: { scrollToFirstRowOnChange?: boolean };
+    scroll?: { y?: number | string; scrollToFirstRowOnChange?: boolean };
     /**
      * Not a user prop: the host passes the leaf columns it resolves from the columns prop or the child columns, the same
      * reference until they change, so a change reaches handlePropsChange like a prop's
@@ -166,6 +168,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     #rangeBase: Set<BaseRowKeyType> | null = null;
     #rangeResult: Set<BaseRowKeyType> | null = null;
     #spaceShiftKey = false;
+    #missingDataIndex = false;
     // every prop deriveState or handlePropsChange compares with its previous value; one missing here never updates
     static override readonly propKeys = ['flattenColumns', 'dataSource', 'rowSelection', 'pagination', 'expandedRowKeys', 'expandAllRows', 'expandAllGroupRows'];
 
@@ -188,6 +191,17 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         return a.size === b.size && [...a].every((key) => b.has(key));
     }
 
+    static #sortOrderIsControlled(column: { sortOrder?: unknown }) {
+        return column.sortOrder != null;
+    }
+
+    // a body scroller's metrics give the data-scrollable-* attributes on its parent, the container the header shares
+    static #syncScrollableEdges(body: HTMLElement) {
+        const { left, right } = TableFoundation.getScrollableEdges({ scrollLeft: body.scrollLeft, scrollWidth: body.scrollWidth, clientWidth: body.clientWidth, rtl: getComputedStyle(body).direction === 'rtl' });
+        body.parentElement?.toggleAttribute('data-scrollable-left', left);
+        body.parentElement?.toggleAttribute('data-scrollable-right', right);
+    }
+
     #addNoDuplicatedItemsToArr(srcArr: any[] = [], ...objArrs: any[][]) {
         for (const objArr of objArrs) {
             if (Array.isArray(objArr)) {
@@ -207,7 +221,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         filters = filters == null ? this.#getAllFilters() : filters;
         sorter = sorter == null ? (this.#getAllSorters()[0] as BaseChangeInfoSorter<RecordType>) : sorter;
         if (this.getProp('scroll')?.scrollToFirstRowOnChange) {
-            this.adapter.resetScrollY();
+            this.#resetScrollY();
         }
         this.adapter.notifyChange({
             pagination: { ...pagination },
@@ -215,6 +229,25 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             sorter,
             extra: { ...extra },
         });
+    }
+
+    // a body that scrolls on its own goes back to its top; otherwise the page scrolls to the table
+    #resetScrollY() {
+        if (this.getProp('scroll')?.y) {
+            const body = this.adapter.getBodyWrapper();
+            if (body) {
+                body.scrollTop = 0;
+            }
+        } else {
+            this.adapter.getWrapper()?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    // inline columns are new on every render, so it warns when a column starts missing one, not on every change
+    #warnMissingDataIndex() {
+        const missing = this.getProp('flattenColumns')?.some(isMissingDataIndex) ?? false;
+        warning(missing && !this.#missingDataIndex, `[Semi Table] The column with sorter or filter must pass the 'dataIndex' prop`);
+        this.#missingDataIndex = missing;
     }
 
     #rowExpansionIsControlled() {
@@ -229,7 +262,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     // judged from props columns, not cachedColumns
     #sorterIsControlled(dataIndex: string) {
         const query = dataIndex && this.getQuery(dataIndex, this.getState('flattenColumns'));
-        return Boolean(query && query.sortOrder != null);
+        return Boolean(query && TableFoundation.#sortOrderIsControlled(query));
     }
 
     #filterIsControlled(dataIndex: string) {
@@ -414,6 +447,15 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         }
     }
 
+    // each argument left out comes from the state
+    #getPageData(dataSource?: RecordType[], pagination?: BasePagination, queries?: BaseColumnProps<RecordType>[]) {
+        const filteredSortedDataSource = this.getState('filteredSortedDataSource') ?? [];
+        dataSource = dataSource == null ? [...filteredSortedDataSource] : dataSource;
+        pagination = pagination == null ? this.getState('pagination') && { ...this.getState('pagination') } : pagination;
+        queries = queries == null ? [...this.getState('queries')] : queries;
+        return TableFoundation.getPageData(this.getProps(), dataSource, pagination, queries);
+    }
+
     #setPageData({ pagination, dataSource, disabledRowKeys, allRowKeys, groups }: BasePageData<RecordType> = {}) {
         this.#setPageDisabledRowKeys(disabledRowKeys);
         this.setState({ allRowKeys, pagination, groups, dataSource });
@@ -430,7 +472,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         const allDataDisabledRowKeys = this.getAllDisabledRowKeys(sortedDataSource);
         this.#setCachedFilteredSortedDataSource(sortedDataSource);
         this.#setFilteredDisabledRowKeys(allDataDisabledRowKeys);
-        const pageData = this.getCurrentPageData(sortedDataSource);
+        const pageData = this.#getPageData(sortedDataSource);
         this.#setPageData(pageData);
     }
 
@@ -482,7 +524,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         }
 
         if (Object.keys(states).length) {
-            const pageData = this.getCurrentPageData(states.dataSource ?? null, states.pagination ?? (statePagination && { ...statePagination }), null);
+            const pageData = this.#getPageData(states.dataSource ?? null, states.pagination ?? (statePagination && { ...statePagination }), null);
 
             this.setState({ allRowKeys: pageData.allRowKeys });
             this.#setPageDisabledRowKeys(pageData.disabledRowKeys);
@@ -590,6 +632,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             this.initExpandedRowKeys({ groups });
         }
         this.#initSelectedRowKeys(this.getState('keyEntities'));
+        this.#warnMissingDataIndex();
     }
 
     static initColumnsFilteredValueAndSorterOrder<R, C extends BaseColumnProps<R> = BaseColumnProps<R>>(columns: C[]) {
@@ -924,17 +967,6 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         return { left: scrollLeft - min > 1, right: min + max - scrollLeft > 1 };
     }
 
-    static readScrollMetrics(body?: HTMLElement | null): TableScrollMetrics | null {
-        return body ? { scrollLeft: body.scrollLeft, scrollWidth: body.scrollWidth, clientWidth: body.clientWidth, rtl: getComputedStyle(body).direction === 'rtl' } : null;
-    }
-
-    /** The attributes sit on the container, the ancestor shared by the header and body scrollers */
-    static writeScrollableEdges(body: HTMLElement | null | undefined, { left, right }: TableScrollableEdges) {
-        const container = body?.parentElement;
-        container?.toggleAttribute('data-scrollable-left', left);
-        container?.toggleAttribute('data-scrollable-right', right);
-    }
-
     static hasRowSelected(selectedRowKeys: BaseRowKeyType[], allRowKeysSet: Set<BaseRowKeyType>) {
         return Boolean(Array.isArray(selectedRowKeys) && selectedRowKeys.length && allRowKeysSet instanceof Set && allRowKeysSet.size && selectedRowKeys.filter((key) => allRowKeysSet.has(key)).length);
     }
@@ -971,10 +1003,26 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         return (typeof sortOrder === 'string' && strings.SORT_DIRECTIONS.includes(sortOrder)) || sortOrder === false;
     }
 
-    static getColumnQueryState<Q extends { dataIndex?: unknown; sortOrder?: unknown; defaultSortOrder?: unknown; filteredValue?: unknown; defaultFilteredValue?: unknown }>(column: { dataIndex?: unknown }, queries?: Q[]): { query: Q | undefined; sortOrder: BaseSortOrder; filteredValue: Q['filteredValue'] } {
+    /**
+     * What a header cell shows for a column, from the column as given and its query (the state kept by dataIndex).
+     * @param hasFilterDropdown whether the column brings its own filter dropdown; the framework knows what counts as one
+     */
+    static getColumnFlags<Q extends { dataIndex?: unknown; sortOrder?: unknown; defaultSortOrder?: unknown; filteredValue?: unknown; defaultFilteredValue?: unknown }>(
+        column: { dataIndex?: unknown; sorter?: unknown; filters?: unknown; onFilter?: unknown; useFullRender?: boolean; renderFilterDropdown?: unknown; sortOrder?: unknown; showSortTip?: boolean },
+        queries: Q[] | undefined,
+        hasFilterDropdown: boolean
+    ): ColumnFlags<Q> {
+        const hasSorter = typeof column.sorter === 'function' || column.sorter === true;
+        const hasFilter = (Array.isArray(column.filters) && column.filters.length > 0) || hasFilterDropdown || typeof column.renderFilterDropdown === 'function';
         const query = column.dataIndex != null ? queries?.find((item) => item.dataIndex === column.dataIndex) : undefined;
         const stateSortOrder = query?.sortOrder as BaseSortOrder;
         return {
+            hasSorter,
+            hasFilter,
+            needsTitle: Boolean(column.sorter || column.filters || column.onFilter || column.useFullRender || hasFilter),
+            // a click on the whole header cell sorts: a filter or the useFullRender parts need their own targets
+            clickToSort: hasSorter && !hasFilter && !column.useFullRender,
+            showSortTip: !TableFoundation.#sortOrderIsControlled(column) && column.showSortTip === true,
             query,
             sortOrder: TableFoundation.isSortOrderValid(stateSortOrder) ? stateSortOrder : ((query?.defaultSortOrder ?? false) as BaseSortOrder),
             filteredValue: query?.filteredValue ? query.filteredValue : query?.defaultFilteredValue,
@@ -1101,9 +1149,9 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     syncScrollEdges = () => {
         // probed on first use, which hosts only reach after mount, so SSR never touches CSS
         this.#trackScrollEdges ??= !CSS.supports('container-type', 'scroll-state');
-        const metrics = this.#trackScrollEdges ? this.adapter.getScrollMetrics() : null;
-        if (metrics) {
-            this.adapter.setScrollableEdges(TableFoundation.getScrollableEdges(metrics));
+        const body = this.#trackScrollEdges ? this.adapter.getBodyWrapper() : null;
+        if (body) {
+            TableFoundation.#syncScrollableEdges(body);
         }
     };
 
@@ -1143,6 +1191,10 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             }
         }
 
+        if (props.flattenColumns !== prev.flattenColumns) {
+            this.#warnMissingDataIndex();
+        }
+
         if (props.expandAllRows !== prev.expandAllRows || props.expandAllGroupRows !== prev.expandAllGroupRows) {
             this.initExpandedRowKeys({ groups: this.getState('groups') });
         }
@@ -1174,23 +1226,28 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         this.setState({ expandedRowKeys });
     }
 
-    getCurrentPageData = (dataSource?: RecordType[], pagination?: BasePagination, queries?: BaseColumnProps<RecordType>[]) => {
-        const filteredSortedDataSource = this.getState('filteredSortedDataSource') ?? [];
-        dataSource = dataSource == null ? [...filteredSortedDataSource] : dataSource;
-        pagination = pagination == null ? this.getState('pagination') && { ...this.getState('pagination') } : pagination;
-        queries = queries == null ? [...this.getState('queries')] : queries;
-        return TableFoundation.getPageData(this.getProps(), dataSource, pagination, queries);
+    /** The rows and groups of the current page as the foundation keeps them; the host clones them before handing them out */
+    getCurrentPageData = (): Pick<BasePageData<RecordType>, 'dataSource' | 'groups'> => {
+        const { dataSource, groups } = this.#getPageData();
+        return { ...(dataSource && { dataSource }), ...(groups && { groups }) };
     };
 
-    /** Scrolls back to the first row; a pagination.onChange that takes over paging still gets the scroll */
-    resetScrollY = () => {
-        this.adapter.resetScrollY();
+    /** Pagination's onChange: a pagination.onChange of the user's takes over paging, still with the scrollToFirstRowOnChange scroll */
+    handlePageChange = (currentPage: number, pageSize: number) => {
+        if (typeof (this.getProp('pagination') as BasePagination)?.onChange !== 'function') {
+            this.setPage(currentPage, pageSize);
+            return;
+        }
+        if (this.getProp('scroll')?.scrollToFirstRowOnChange) {
+            this.#resetScrollY();
+        }
+        this.adapter.notifyPageChange(currentPage, pageSize);
     };
 
     setPage = (currentPage: number, currentPageSize: number) => {
         const currentPagination = this.getState('pagination');
         currentPage = currentPage || (currentPagination?.currentPage ?? 1);
-        const { dataSource, pagination, disabledRowKeys, allRowKeys } = this.getCurrentPageData(null, {
+        const { dataSource, pagination, disabledRowKeys, allRowKeys } = this.#getPageData(null, {
             ...currentPagination,
             currentPage,
             pageSize: currentPageSize,
@@ -1382,7 +1439,10 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     };
 
     toggleShowFilter = (dataIndex: string, visible: boolean) => {
-        this.adapter.notifyFilterDropdownVisibleChange(visible, dataIndex);
+        const column = dataIndex ? this.getQuery(dataIndex) : undefined;
+        if (column) {
+            this.adapter.notifyFilterDropdownVisibleChange(column, visible);
+        }
     };
 
     handleFilterSelect = (dataIndex: string, data: { filteredValue?: string[] } = {}) => {
@@ -1479,6 +1539,7 @@ export interface BasePagination {
     position?: ArrayElement<typeof strings.PAGINATION_POSITIONS>;
     defaultCurrentPage?: number;
     formatPageText?: any;
+    onChange?: (currentPage: number, pageSize: number) => void;
 }
 export interface BaseHeadWidth {
     width: number;
@@ -1537,6 +1598,18 @@ export interface BaseChangeInfoSorter<RecordType> {
     dataIndex: string;
     sortOrder: BaseSortOrder;
     sorter: BaseSorter<RecordType>;
+}
+
+export interface ColumnFlags<Q extends { filteredValue?: unknown }> {
+    hasSorter: boolean;
+    hasFilter: boolean;
+    /** The title gets the sorter, the filter or the useFullRender parts */
+    needsTitle: boolean;
+    clickToSort: boolean;
+    showSortTip: boolean;
+    query: Q | undefined;
+    sortOrder: BaseSortOrder;
+    filteredValue: Q['filteredValue'];
 }
 
 export type BaseIncludeGroupRecord<RecordType> = RecordType | { groupKey: string | number };

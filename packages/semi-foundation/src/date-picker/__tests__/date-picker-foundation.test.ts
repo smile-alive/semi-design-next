@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import DatePickerFoundation, { type DatePickerAdapter, type DatePickerFoundationProps, type DatePickerFoundationState } from '../foundation';
 
-// Only the adapter members the focus-record paths call; DOM focus is reduced to storing rangeInputFocus
+// Only the adapter members the focus-record paths call
 function createFoundation(props: DatePickerFoundationProps = { type: 'dateRange' }) {
     let state = {
         value: [],
@@ -17,9 +17,8 @@ function createFoundation(props: DatePickerFoundationProps = { type: 'dateRange'
         setState: (partial) => {
             state = { ...state, ...partial };
         },
-        setRangeInputFocus: (rangeInputFocus) => {
-            state = { ...state, rangeInputFocus };
-        },
+        focusRangeInput: vi.fn<DatePickerAdapter['focusRangeInput']>(),
+        switchPanels: vi.fn<DatePickerAdapter['switchPanels']>(),
         notifyFocus: vi.fn<DatePickerAdapter['notifyFocus']>(),
         notifyBlur: vi.fn<DatePickerAdapter['notifyBlur']>(),
         setInsetInputFocus: vi.fn<DatePickerAdapter['setInsetInputFocus']>(),
@@ -43,35 +42,58 @@ describe('DatePickerFoundation 范围输入框的聚焦记录', () => {
         vi.useRealTimers();
     });
 
-    it('聚焦范围输入框后在下一个任务里记录，并据此判断另一个输入框是否聚焦过', () => {
-        const { foundation, records } = createFoundation();
+    it('聚焦范围输入框时立即记录，并聚焦对应的 DOM 输入框', () => {
+        const { foundation, adapter, records } = createFoundation();
         foundation.handleInputFocus({}, 'rangeStart');
-        expect(records()).toEqual({ rangeStart: false, rangeEnd: false });
-        vi.runAllTimers();
         expect(records()).toEqual({ rangeStart: true, rangeEnd: false });
-        expect(foundation.hasOtherRangeInputBeenFocused('rangeEnd')).toBe(true);
-        expect(foundation.hasOtherRangeInputBeenFocused('rangeStart')).toBe(false);
+        expect(adapter.getState('rangeInputFocus')).toBe('rangeStart');
+        expect(adapter.focusRangeInput).toHaveBeenCalledWith('rangeStart');
     });
 
-    it('关闭面板清除记录，并丢弃关闭前尚未写入的记录', () => {
+    it('关闭面板清除记录，包括关闭前键盘归还焦点时写入的记录', () => {
         const { foundation, records } = createFoundation();
         foundation.handleInputFocus({}, 'rangeStart');
-        vi.runAllTimers();
         // a keyboard close returns the focus to an input before closing
         foundation.focus('rangeEnd');
         foundation.close();
-        vi.runAllTimers();
         expect(records()).toEqual({ rangeStart: false, rangeEnd: false });
     });
 
-    it('受控 open 变为 false 时同样清除记录与尚未写入的记录', () => {
+    it('受控 open 变为 false 时同样清除记录', () => {
         const { foundation, records } = createFoundation({ type: 'dateRange', open: false });
         foundation.handleInputFocus({}, 'rangeStart');
-        vi.runAllTimers();
-        foundation.handleSetRangeFocus('rangeEnd');
+        foundation.focus('rangeEnd');
         foundation.handlePropsChange({ open: true });
-        vi.runAllTimers();
         expect(records()).toEqual({ rangeStart: false, rangeEnd: false });
+    });
+
+    it('选完一端后焦点移到 nextRangeInputFocus；是否关闭面板按移动前的记录判断', () => {
+        const { foundation, adapter, records } = createFoundation({ type: 'dateRange', disabledDate: () => false });
+        foundation.handleInputFocus({}, 'rangeStart');
+        foundation.handleSelectedChange([new Date(2021, 5, 1), new Date(2021, 5, 2)], { nextRangeInputFocus: 'rangeEnd' });
+        expect(adapter.getState('rangeInputFocus')).toBe('rangeEnd');
+        expect(adapter.focusRangeInput).toHaveBeenLastCalledWith('rangeEnd');
+        expect(records()).toEqual({ rangeStart: true, rangeEnd: true });
+        expect(adapter.notifyOpenChange).not.toHaveBeenCalled();
+
+        foundation.handleSelectedChange([new Date(2021, 5, 1), new Date(2021, 5, 3)]);
+        expect(adapter.notifyOpenChange).toHaveBeenCalledWith(false);
+    });
+
+    it('插入式输入框聚焦时切换两侧面板的日期或时间视图', () => {
+        const { foundation, adapter } = createFoundation({ type: 'dateTimeRange', insetInput: true });
+        foundation.handleInsetTimeFocus();
+        expect(adapter.switchPanels).toHaveBeenLastCalledWith('time');
+        foundation.handleInsetDateFocus({}, 'rangeEnd');
+        expect(adapter.switchPanels).toHaveBeenLastCalledWith('date');
+        expect(adapter.getState('rangeInputFocus')).toBe('rangeEnd');
+    });
+
+    it('isSelectionControlled：有 value 且无确认步骤时选中的日期由 value 决定', () => {
+        expect(DatePickerFoundation.isSelectionControlled({ type: 'dateRange', value: [] })).toBe(true);
+        expect(DatePickerFoundation.isSelectionControlled({ type: 'dateRange' })).toBe(false);
+        expect(DatePickerFoundation.isSelectionControlled({ type: 'dateTime', value: null, needConfirm: true })).toBe(false);
+        expect(DatePickerFoundation.isSelectionControlled({ type: 'date', value: null, needConfirm: true })).toBe(true);
     });
 
     it('面板打开后立即关闭，触发框保持可用', () => {
@@ -82,21 +104,12 @@ describe('DatePickerFoundation 范围输入框的聚焦记录', () => {
         expect(adapter.getState('triggerDisabled')).toBe(false);
     });
 
-    it('点击范围触发器外层立即聚焦起始输入框，不留下卸载后才执行的定时器', () => {
-        const { foundation, adapter } = createFoundation({ type: 'dateRange' });
+    it('点击自定义范围触发器立即聚焦起始输入框，不留下定时器', () => {
+        const { foundation, adapter } = createFoundation({ type: 'dateRange', customTrigger: true });
         const event = { target: null, currentTarget: null, detail: 1 };
-        foundation.handleTriggerClick(event, true);
+        foundation.handleTriggerClick(event);
         expect(adapter.notifyFocus).toHaveBeenCalledWith(event, 'rangeStart');
-        foundation.destroy();
         expect(vi.getTimerCount()).toBe(0);
-    });
-
-    it('destroy 丢弃尚未写入的记录', () => {
-        const { foundation, records } = createFoundation();
-        foundation.handleSetRangeFocus('rangeEnd');
-        foundation.destroy();
-        vi.runAllTimers();
-        expect(records()).toEqual({ rangeStart: false, rangeEnd: false });
     });
 });
 
@@ -119,7 +132,7 @@ describe('DatePickerFoundation 范围值的完整性', () => {
 
     it('输入框只输入范围的一端时只更新输入框文本，不写入 value', () => {
         const { foundation, adapter } = createFoundation({ type: 'monthRange', format: 'yyyy-MM', disabledDate });
-        foundation.handleInputChange('2021-06', new Event('input'));
+        foundation.handleInputChange('2021-06');
         expect(adapter.getState('value')).toEqual([]);
         expect(adapter.notifyChange).not.toHaveBeenCalled();
     });
@@ -152,7 +165,7 @@ describe('DatePickerFoundation 面板打开时被禁用', () => {
         const { foundation, adapter } = createFoundation({ type: 'dateRange', disabled: true });
         vi.mocked(adapter.isKeyboardFocusInPanel).mockReturnValue(true);
         adapter.setState({ panelShow: true, inputValue: '2021-06' });
-        foundation.handleSetRangeFocus('rangeEnd');
+        foundation.focus('rangeEnd');
         foundation.handlePropsChange({ disabled: false });
         expect(adapter.getState('panelShow')).toBe(false);
         expect(adapter.notifyOpenChange).toHaveBeenCalledWith(false);

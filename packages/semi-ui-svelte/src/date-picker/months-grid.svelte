@@ -1,8 +1,8 @@
 <script lang="ts">
     import { tick, untrack } from 'svelte';
-    import { isRangeType } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
     import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
-    import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
+    import { isRangeType } from '@fibrae/semi-foundation/date-picker/foundation';
+    import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType, type PanelView } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
     import { IconCalendar, IconClock } from '@fibrae/semi-icons-svelte';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import Combobox from '../time-picker/combobox.svelte';
@@ -12,18 +12,13 @@
     import Navigation from './navigation.svelte';
     import YearAndMonth from './year-and-month.svelte';
 
-    type PanelSize = Record<PanelType, { minWidth: string; minHeight: string }>;
-
     const props: MonthsGridProps = $props();
 
     const titleId = $props.id();
-    let panelHeight = 0;
-    let previousCount: number | undefined;
-    let panelSize = $state.raw<PanelSize>({ left: { minWidth: '', minHeight: '' }, right: { minWidth: '', minHeight: '' } });
 
     // Element and instance references of each panel, read in handlers and untracked effects only. They are $state because
     // Svelte warns in development about bind:this on a property of a plain object
-    const nodes = $state<Record<'panel' | 'wrap' | 'switch', Record<PanelType, HTMLElement | undefined>>>({ panel: { left: undefined, right: undefined }, wrap: { left: undefined, right: undefined }, switch: { left: undefined, right: undefined } });
+    const nodes = $state<Record<PanelPart, Record<PanelType, HTMLElement | undefined>>>({ panel: { left: undefined, right: undefined }, wrap: { left: undefined, right: undefined }, switch: { left: undefined, right: undefined } });
     const timePickers = $state<Record<PanelType, ComboboxHandle | undefined>>({ left: undefined, right: undefined });
     const yearAndMonths = $state<Record<PanelType, YearAndMonth | undefined>>({ left: undefined, right: undefined });
 
@@ -34,8 +29,12 @@
         () => ({
             notifySelectedChange: (value, options) => props.onChange(value, options),
             notifyPanelChange: (date, dateString) => props.onPanelChange(date, dateString),
-            setRangeInputFocus: (rangeInputFocus) => props.onRangeInputFocus(rangeInputFocus),
-            hasOtherRangeInputBeenFocused: (currentRangeInput) => props.hasOtherRangeInputBeenFocused?.(currentRangeInput) ?? false,
+            getPanelNode: (part, panelType) => nodes[part][panelType],
+            reselectScrollLists: () => {
+                for (const handle of [timePickers.left, timePickers.right, yearAndMonths.left, yearAndMonths.right]) {
+                    handle?.reselect();
+                }
+            },
         })
     );
 
@@ -46,7 +45,6 @@
     const panelTypes = $derived<PanelType[]>(isRange ? [PANEL_TYPE_LEFT, PANEL_TYPE_RIGHT] : [PANEL_TYPE_LEFT]);
     const dateFormat = $derived(MonthsGridFoundation.getValidDateFormat(props));
     const hasTime = $derived(props.type.includes('Time'));
-    const scrollListCount = $derived(isRange ? Number(isYearOrTime(states().monthLeft)) + Number(isYearOrTime(states().monthRight)) : 0);
 
     const detailOf = (panelType: PanelType) => {
         return panelType === PANEL_TYPE_RIGHT ? states().monthRight : states().monthLeft;
@@ -66,59 +64,7 @@
         (nodes.panel[panelType]?.getRootNode() as Document | ShadowRoot | undefined)?.getElementById(`${titleId}-${panelType}-title`)?.focus();
     };
 
-    const scrollListHeight = () => {
-        const height = (panelType: PanelType) => (nodes.wrap[panelType]?.getBoundingClientRect().height || 0) + (nodes.switch[panelType]?.getBoundingClientRect().height || 0);
-        return Math.max(height(PANEL_TYPE_LEFT), height(PANEL_TYPE_RIGHT));
-    };
-
-    // Equal sizes keep the object, which ends the update cycle this write starts
-    const applyPanelSize = () => {
-        const size = MonthsGridFoundation.getPanelSizeStyle(states(), props.insetInput, {
-            monthWidth: (panelType) => nodes.wrap[panelType]?.getBoundingClientRect().width ?? null,
-            scrollListHeight: () => panelHeight || scrollListHeight(),
-        });
-        const same = (panelType: PanelType) => panelSize[panelType].minWidth === size[panelType].minWidth && panelSize[panelType].minHeight === size[panelType].minHeight;
-        if (!same(PANEL_TYPE_LEFT) || !same(PANEL_TYPE_RIGHT)) {
-            panelSize = size;
-        }
-    };
-
-    const reselect = () => {
-        for (const handle of [timePickers.left, timePickers.right, yearAndMonths.left, yearAndMonths.right]) {
-            handle?.reselect();
-        }
-    };
-
-    const syncScrollLists = async (previous: number | undefined, count: number) => {
-        if (previous === 1 && count === 2) {
-            panelHeight = scrollListHeight();
-            applyPanelSize();
-            // min-height reaches the DOM on the next flush; the lists centre against it
-            await tick();
-            reselect();
-        } else if (previous === 2 && count === 1) {
-            reselect();
-        }
-    };
-
-    const handleWeeksRowNumChange = () => {
-        if (isRange && !(isYearOrTime(states().monthLeft) && isYearOrTime(states().monthRight))) {
-            panelHeight = scrollListHeight();
-            // the month's height sets the height of the list beside it, moving the selected item off centre
-            reselect();
-        }
-    };
-
-    const timeOptions = (panelType: PanelType) => {
-        const options: Partial<ComboboxProps> = { ...props.timePickerOpts, hideDisabledOptions: props.hideDisabledOptions };
-        const disabled = MonthsGridFoundation.calcDisabledTime(props, states(), panelType);
-        for (const key of ['disabledHours', 'disabledMinutes', 'disabledSeconds'] as const) {
-            if (disabled?.[key]) {
-                Object.assign(options, { [key]: disabled[key] });
-            }
-        }
-        return options;
-    };
+    const timeOptions = (panelType: PanelType): Partial<ComboboxProps> => ({ ...props.timePickerOpts, hideDisabledOptions: props.hideDisabledOptions, ...MonthsGridFoundation.calcDisabledTime(props, states(), panelType) });
 
     const switchTexts = (panelType: PanelType) => {
         return MonthsGridFoundation.getSwitchTexts({
@@ -137,26 +83,15 @@
     };
 
     $effect(() => {
-        const count = scrollListCount;
-        const previous = previousCount;
-        previousCount = count;
-        untrack(() => void syncScrollLists(previous, count));
-    });
-
-    $effect(() => {
         void states().monthLeft;
         void states().monthRight;
         void props.insetInput;
         void props.type;
-        untrack(applyPanelSize);
+        untrack(foundation.applyPanelSize);
     });
 
-    export function showDatePanel(panelType: PanelType) {
-        foundation.showDatePanel(panelType);
-    }
-
-    export function showTimePicker(panelType: PanelType) {
-        foundation.showTimePicker(panelType);
+    export function switchPanels(view: PanelView) {
+        foundation.switchPanels(view);
     }
 </script>
 
@@ -177,7 +112,7 @@
         >
             {#each panelTypes as panelType (panelType)}
                 {@const detail = detailOf(panelType)}
-                <div bind:this={nodes.panel[panelType]} {...{ 'x-open-type': MonthsGridFoundation.getOpenType(detail) }} class={panelClass(panelType)} style:min-height={panelSize[panelType].minHeight || undefined} style:min-width={panelSize[panelType].minWidth || undefined}>
+                <div bind:this={nodes.panel[panelType]} {...{ 'x-open-type': MonthsGridFoundation.getOpenType(detail) }} class={panelClass(panelType)}>
                     {#if detail.isYearPickerOpen}
                         <div class={`${prefix}-yam`}>
                             <YearAndMonth
@@ -231,7 +166,7 @@
                                 onDayClick={(day) => foundation.handleDayClick(day, panelType)}
                                 onDayHover={foundation.handleDayHover}
                                 onMonthSwitch={(switchType) => foundation[switchType](panelType)}
-                                onWeeksRowNumChange={handleWeeksRowNumChange}
+                                onWeeksRowNumChange={foundation.handleWeeksRowNumChange}
                                 rangeEnd={states().rangeEnd}
                                 rangeInputFocus={props.rangeInputFocus ?? false}
                                 rangeStart={states().rangeStart}

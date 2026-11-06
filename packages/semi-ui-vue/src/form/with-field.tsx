@@ -1,9 +1,8 @@
 /** @jsxImportSource vue */
 // JSX because withField is a component factory: the wrapped component is a runtime argument, which a template cannot name.
 import { type Component, type IntrinsicElementAttributes, type PropType, type Slot, camelize, capitalize, createTextVNode, createVNode, defineComponent, mergeProps, shallowRef, toHandlerKey, watch } from 'vue';
-import { cssClasses } from '@fibrae/semi-foundation/form/constants';
+import { cssClasses, type FieldPropKey } from '@fibrae/semi-foundation/form/constants';
 import { errorMessages } from '@fibrae/semi-foundation/form/errors';
-import { isRequired } from '@fibrae/semi-foundation/form/rules';
 import { getFieldAriaProps } from '@fibrae/semi-foundation/form/utils';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import { handOn } from '../_base/hand-on';
@@ -19,6 +18,7 @@ const shellSlots = new Set(['fieldLabel', 'labelExtra', 'helpText', 'extraText',
 const optionalBoolean = { type: Boolean, default: undefined };
 type Listener = (...args: unknown[]) => void;
 
+// Every shared field prop but helpText and extraText, which are slots here
 const fieldProps = {
     field: String,
     label: [String, Number, Object] as PropType<CommonFieldProps['label']>,
@@ -48,7 +48,7 @@ const fieldProps = {
     id: String,
     fieldClassName: String,
     fieldStyle: [String, Object, Array] as PropType<CommonFieldProps['fieldStyle']>,
-} satisfies Record<keyof CommonFieldProps, unknown>;
+} satisfies Record<keyof CommonFieldProps | Exclude<FieldPropKey, 'helpText' | 'extraText'>, unknown>;
 
 /** Whether the component declares the prop; a string tag or a component without props declares none */
 function declaresProp(component: unknown, key: string) {
@@ -154,8 +154,7 @@ export default function withField(component: unknown, opts: WithFieldOptions<str
                 const labelPosition = insetFallback ? 'top' : merged.labelPosition;
                 const ownLayout = !state.inGroup && !props.pure;
                 const shellLabel = ownLayout && !props.noLabel && labelPosition !== 'inset';
-                // the Form schema ignores field rules, so only label.required marks the field
-                const rulesRequired = state.usesSchema() ? false : isRequired(props.rules);
+                const rulesRequired = state.rulesRequired.value;
 
                 const injected: Record<string, unknown> = {
                     [valueKey]: value,

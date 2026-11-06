@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { cloneFormValue, getFieldAriaProps, mergeFieldConfig, resolveFieldInitValue, type FieldAriaState } from '../utils';
+import FieldStore from '../field-store';
+import { cloneFormValue, createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue, resolveKeepState, type FieldAriaState, type FieldRegistrationView } from '../utils';
 
 describe('resolveFieldInitValue', () => {
     it.each([
@@ -42,6 +43,53 @@ describe('mergeFieldConfig', () => {
     it('字段自身的设置优先，stopValidateWithError 为 false 也覆盖 Form', () => {
         const merged = mergeFieldConfig({ labelPosition: 'top', extraTextPosition: 'bottom', stopValidateWithError: false, trigger: ['blur', 'mount'] }, { labelPosition: 'left', extraTextPosition: 'middle', stopValidateWithError: true, trigger: 'change' });
         expect(merged).toMatchObject({ labelPosition: 'top', extraTextPosition: 'bottom', stopValidateWithError: false, trigger: ['blur', 'mount'] });
+    });
+});
+
+describe('resolveKeepState', () => {
+    it.each([
+        [false, true, true, false],
+        [undefined, false, true, false],
+        [undefined, undefined, false, false],
+        [undefined, undefined, undefined, true],
+    ])('字段 %s、ArrayField %s、Form %s 时为 %s', (own, arrayField, form, expected) => {
+        expect(resolveKeepState(own, arrayField, form)).toBe(expected);
+    });
+});
+
+describe('createFieldRegistration', () => {
+    const identity = { id: 'f', field: 'name', store: new FieldStore({}), inArrayField: false };
+
+    it('每次读取都取最新的属性，字段自身的设置优先于 Form', () => {
+        const view: FieldRegistrationView = { props: {}, formProps: { allowEmpty: true, stopValidateWithError: true, trigger: 'blur' }, arrayFieldKeepState: false };
+        const registration = createFieldRegistration(identity, () => view);
+        expect(registration.keepState).toBe(false);
+        expect(registration.allowEmpty).toBe(true);
+        expect(registration.getValidateOptions()).toMatchObject({ stopValidateWithError: true, trigger: ['blur'] });
+        expect(registration.getChangeOptions()).toMatchObject({ allowEmpty: true, emptyValue: '' });
+
+        view.props = { keepState: true, stopValidateWithError: false, trigger: ['change', 'mount'], emptyValue: null };
+        view.formProps = {};
+        expect(registration.keepState).toBe(true);
+        expect(registration.allowEmpty).toBe(false);
+        expect(registration.getValidateOptions()).toMatchObject({ stopValidateWithError: false, trigger: ['change', 'mount'] });
+        expect(registration.getChangeOptions()).toMatchObject({ allowEmpty: false, emptyValue: null });
+    });
+
+    it('allowEmptyString 让注册时的空字符串留在表单值里', () => {
+        expect(createFieldRegistration(identity, () => ({ props: { allowEmptyString: true }, formProps: {} })).allowEmpty).toBe(true);
+    });
+});
+
+describe('isRequiredByRules', () => {
+    const rules = [{ required: true }];
+    const schema = { '~standard': { version: 1, vendor: 'test', validate: () => ({ value: {} }) } } as const;
+
+    it('有 schema 且没有 Form validator 时规则不算必填', () => {
+        expect(isRequiredByRules({}, rules)).toBe(true);
+        expect(isRequiredByRules({}, [{ min: 1 }])).toBe(false);
+        expect(isRequiredByRules({ schema }, rules)).toBe(false);
+        expect(isRequiredByRules({ schema, validator: () => ({}) }, rules)).toBe(true);
     });
 });
 

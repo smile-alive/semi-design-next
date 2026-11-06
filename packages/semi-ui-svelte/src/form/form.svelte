@@ -116,32 +116,29 @@
         get id() {
             return id;
         },
+        get form() {
+            return form;
+        },
     };
 
     const { foundation, states } = useFoundation<FormFoundation<SubmitEvent>, Adapter, AllFormProps<Values, Output>, FormFoundationState>(
         FormFoundation,
         formProps,
         (view) => FormFoundation.getInitialState(view),
-        (base) => ({
+        () => ({
             cloneDeep,
             getLocale: () => locale().locale,
             notifySubmit: (values, e) => onSubmit?.(values, e),
             notifySubmitFail: (errors, values, e) => onSubmitFail?.(errors, values, e),
-            forceUpdate: (formState, callback) => {
-                base.setState({ formState }, callback);
-                getFormApiProxyInternals(form)?.updateState(formState);
-            },
             notifyChange: (formState) => onChange?.(formState),
             notifyValueChange: (values, changedValues) => onValueChange?.(values, changedValues),
             notifyErrorChange: (errors, changedError) => onErrorChange?.(errors, changedError),
             notifyReset: () => onReset?.(),
-            getFormProps: (keys) => (keys ? Object.fromEntries(keys.map((key) => [key, formProps[key as keyof AllFormProps]])) : formProps),
             getFormElement: () => formElement ?? null,
         })
     );
 
     const formApi = untrackMethods(foundation.getFormApi()) as FormApi<Values, Output>;
-    const fieldBridge = foundation.getFieldBridge();
     const formId = $derived(id ?? uid);
     const formState = $derived(states().formState as FormState<Values>);
 
@@ -151,8 +148,7 @@
         },
         formProps,
         formApi,
-        // usesSchema reads only props, so a field's required mark follows a changed schema
-        bridge: { ...untrackMethods(fieldBridge), usesSchema: fieldBridge.usesSchema },
+        bridge: untrackMethods(foundation.getFieldBridge()),
     });
 
     const handleSubmit = (event: SubmitEvent) => {

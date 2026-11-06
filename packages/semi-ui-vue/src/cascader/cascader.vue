@@ -1,12 +1,10 @@
 <script setup lang="ts" generic="Multiple extends boolean | undefined = undefined">
-    import { computed, nextTick, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue';
+    import { computed, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue';
     import { isEqual } from 'es-toolkit';
     import { cssClasses, strings } from '@fibrae/semi-foundation/cascader/constants';
     import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type CascaderAdapter } from '@fibrae/semi-foundation/cascader/foundation';
-    import { calcMergeType } from '@fibrae/semi-foundation/cascader/util';
     import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
     import { isInnerControlKey, isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import '@fibrae/semi-foundation/cascader/cascader.scss';
     import { IconChevronDown, IconClear } from '@fibrae/semi-icons-vue';
     import { splitControlAttrs } from '../_base/control-attrs';
@@ -125,7 +123,6 @@
     const loadData = computed(() => props.loadData ?? readSemiDefault(semi, 'Cascader', 'loadData'));
     const filterTreeNode = computed(() => props.filterTreeNode ?? readSemiDefault(semi, 'Cascader', 'filterTreeNode', false));
     const filterSorter = computed(() => props.filterSorter ?? readSemiDefault(semi, 'Cascader', 'filterSorter'));
-    const mergeType = computed(() => calcMergeType(props.autoMergeValue, props.leafOnly));
     const triggerSearch = computed(() => Boolean(filterTreeNode.value) && props.searchPosition === strings.SEARCH_POSITION_TRIGGER);
     const position = computed(() => props.position ?? (config.value.direction === 'rtl' ? 'bottomRight' : 'bottomLeft'));
     const inputPlaceholder = computed(() => props.searchPlaceholder || props.placeholder);
@@ -195,7 +192,7 @@
         CascaderFoundation,
         props,
         (view) => CascaderFoundation.getInitialState(view),
-        (base) => ({
+        () => ({
             focusCombobox: () => {
                 const search = searchInputs.value?.[0];
                 const tags = tagInputs.value?.[0];
@@ -220,31 +217,10 @@
             notifyFocus: (event) => emit('focus', event),
             notifyBlur: (event) => emit('blur', event),
             notifyDropdownVisibleChange: (visible) => emit('dropdownVisibleChange', visible),
-            notifyLoadData: (selectedOpt, callback, onReject) => {
-                const load = loadData.value;
-                if (!load) {
-                    return;
-                }
-                const loading = load(selectedOpt as CascaderData[]);
-                loading.then(undefined, onReject);
-                // The rejection stays unhandled here so it reaches the caller; nextTick runs the callback after the
-                // treeData update, otherwise loadingKeys clears first and activeKeys shifts.
-                void loading.then(() => nextTick(() => callback()));
-            },
             notifyOnLoad: (newLoadedKeys, data) => emit('load', newLoadedKeys, data as CascaderData),
             notifyListScroll: (event, panel) => emit('listScroll', event, panel as CascaderScrollPanelProps),
             notifyOnExceed: (data) => emit('exceed', data as CascaderEntity[]),
             notifyClear: () => emit('clear'),
-            toggleInputShow: (showInput, callback) => {
-                const focusInTrigger = trigger.value?.contains(FocusTrapHandle.getActiveElement(trigger.value));
-                base.setState({ showInput }, () => {
-                    // unmounting the focused search input would drop focus to the body
-                    if (!showInput && focusInTrigger) {
-                        trigger.value?.focus({ preventScroll: true });
-                    }
-                    callback();
-                });
-            },
             scrollToOption: (key, index) => {
                 if (!item.value?.scrollToItem(index)) {
                     content.value?.querySelector(`#${CSS.escape(optionId(key))}`)?.scrollIntoView({ block: 'nearest' });
@@ -270,7 +246,7 @@
     const view = computed(() => (multiple.value ? { ...state.value, ...CascaderFoundation.deriveMultipleState(foundationProps.value, state.value) } : state.value));
     const renderData = computed(() => CascaderFoundation.getRenderData(foundationProps.value, view.value));
     const isEmpty = computed(() => !renderData.value.length);
-    const realKeys = computed(() => (mergeType.value === strings.NONE_MERGE_TYPE || props.checkRelation === strings.UN_RELATED ? view.value.checkedKeys : view.value.resolvedCheckedKeys));
+    const realKeys = computed(() => CascaderFoundation.getTriggerKeys(foundationProps.value, view.value));
     const keyboardKey = computed(() => (view.value.isOpen ? CascaderFoundation.getKeyboardKey(view.value) : null));
 
     // multiple mode keeps no selectedKeys beyond the one getInitialState writes; its value also holds controlled paths without tags
@@ -347,7 +323,7 @@
 
     const entityOf = (key: string) => view.value.keyEntities[key] as CascaderEntity | undefined;
 
-    const isTagDisabled = (key: string) => Boolean(looks.disabled || entityOf(key)?.data.disabled || (props.disableStrictly && view.value.disabledKeys?.has(key)));
+    const isTagDisabled = (key: string) => !CascaderFoundation.isTagClosable(key, foundationProps.value, view.value);
 
     const removeTag = (key: string, event?: TagCloseEvent) => {
         // when the value does not change, the tag must not hide itself

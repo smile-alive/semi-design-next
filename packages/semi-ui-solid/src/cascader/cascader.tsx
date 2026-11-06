@@ -2,10 +2,8 @@ import { type JSX, type Ref, For, Index, Show, batch, children, createMemo, crea
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/cascader/constants';
 import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicTriggerRenderProps, type BasicScrollPanelProps, type CascaderAdapter, type Virtualize } from '@fibrae/semi-foundation/cascader/foundation';
-import { calcMergeType } from '@fibrae/semi-foundation/cascader/util';
 import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
 import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/cascader/cascader.scss';
 import { IconChevronDown, IconClear } from '@fibrae/semi-icons-solid';
@@ -330,7 +328,7 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
         CascaderFoundation,
         foundationProps,
         (view) => CascaderFoundation.getInitialState(view),
-        (base) => ({
+        () => ({
             focusCombobox: () => focusCombobox(),
             blurCombobox: () => {
                 searchInput?.blur();
@@ -345,31 +343,10 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
             notifyFocus: (e) => props.onFocus?.(e),
             notifyBlur: (e) => props.onBlur?.(e as FoundationEvent | undefined),
             notifyDropdownVisibleChange: (visible) => props.onDropdownVisibleChange?.(visible),
-            notifyLoadData: (selectedOpt, callback, onReject) => {
-                const loading = props.loadData?.(selectedOpt as CascaderData[]);
-                if (!loading) {
-                    return;
-                }
-                loading.then(undefined, onReject);
-                // A treeData update applies synchronously, so loadData's own update is in place once it resolves. The
-                // rejection is left unhandled on this chain on purpose, so it still reaches the caller
-                void loading.then(() => callback());
-            },
             notifyOnLoad: (newLoadedKeys, data) => props.onLoad?.(newLoadedKeys, data as CascaderData),
             notifyListScroll: (e, panel) => props.onListScroll?.(e, panel as ScrollPanelProps),
             notifyOnExceed: (data) => props.onExceed?.(data as Entity[]),
             notifyClear: () => props.onClear?.(),
-            toggleInputShow: (showInput, cb) => {
-                const focusInTrigger = root?.contains(FocusTrapHandle.getActiveElement(root));
-                base.setState({ showInput }, () => {
-                    // unmounting the focused search input would drop focus to the body; the trigger is the
-                    // combobox again, so it takes focus back
-                    if (!showInput && focusInTrigger && root) {
-                        focusElement(root, { preventScroll: true });
-                    }
-                    cb();
-                });
-            },
             scrollToOption: (key, index) => {
                 if (virtualList) {
                     virtualList.scrollToItem(index);
@@ -413,15 +390,13 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
 
     const inputPlaceholder = () => local.searchPlaceholder || local.placeholder;
 
-    const mergeType = () => calcMergeType(local.autoMergeValue, local.leafOnly);
-
     const triggerSearch = () => Boolean(local.filterTreeNode) && local.searchPosition === strings.SEARCH_POSITION_TRIGGER;
 
     const position = () => local.position ?? (config().direction === 'rtl' ? 'bottomRight' : 'bottomLeft');
 
     const isEmpty = () => !renderData().length;
 
-    const realKeys = () => (mergeType() === strings.NONE_MERGE_TYPE || local.checkRelation === strings.UN_RELATED ? view.checkedKeys : view.resolvedCheckedKeys);
+    const realKeys = () => CascaderFoundation.getTriggerKeys(foundationProps, view);
 
     const keyEntities = () => view.keyEntities as Record<string, Entity>;
 
@@ -726,7 +701,7 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
 
     const SelectionTag = (tagProps: { nodeKey: string; index: number }) => {
         const entity = () => keyEntities()[tagProps.nodeKey];
-        const isDisabled = () => Boolean(local.disabled || entity()?.data.disabled || (local.disableStrictly && view.disabledKeys?.has(tagProps.nodeKey)));
+        const isDisabled = () => !CascaderFoundation.isTagClosable(tagProps.nodeKey, foundationProps, view);
         // not keyed by the entity: a treeData update rebuilds every entity, and the focused tag must stay in place
         return (
             <Show when={entity()}>

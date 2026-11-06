@@ -126,3 +126,88 @@ describe('MonthsGridFoundation getPanelSizeStyle', () => {
         expect(MonthsGridFoundation.getPanelSizeStyle(both, true, measure()).left.minHeight).toBe('');
     });
 });
+
+describe('MonthsGridFoundation 范围选择后的下一个输入框', () => {
+    const date = new Date(2021, 5, 1);
+    const day = (fullDate: string) => ({ fullDate }) as Parameters<MonthsGridFoundation['handleDayClick']>[0];
+
+    it('另一端没聚焦过或没有值时把它作为 nextRangeInputFocus，否则不移动', () => {
+        const props = { type: 'dateRange', insetInput: false, format: 'yyyy-MM-dd', rangeInputFocus: 'rangeStart', focusRecords: { rangeStart: true, rangeEnd: false } } as const;
+        const first = createFoundation(props, { rangeStart: '', rangeEnd: '', monthLeft: panel(date), monthRight: panel(date) });
+        first.foundation.handleDayClick(day('2021-06-01'), 'left');
+        expect(first.adapter.notifySelectedChange).toHaveBeenCalledWith(expect.arrayContaining([new Date(2021, 5, 1)]), { needCheckFocusRecord: true, nextRangeInputFocus: 'rangeEnd' });
+
+        const second = createFoundation({ ...props, focusRecords: { rangeStart: true, rangeEnd: true } }, { rangeStart: '', rangeEnd: '2021-06-10', monthLeft: panel(date), monthRight: panel(date) });
+        second.foundation.handleDayClick(day('2021-06-01'), 'left');
+        expect(second.adapter.notifySelectedChange).toHaveBeenCalledWith([new Date(2021, 5, 1), new Date(2021, 5, 10)], { needCheckFocusRecord: true, nextRangeInputFocus: undefined });
+    });
+});
+
+describe('MonthsGridFoundation 面板视图与尺寸', () => {
+    const date = new Date(2021, 5, 1);
+    const datePanel: PanelState = { ...panel(date), isTimePickerOpen: false };
+    const node = (width: number, height: number) => ({ style: { minWidth: '', minHeight: '' }, getBoundingClientRect: () => ({ width, height }) }) as unknown as HTMLElement;
+
+    // setState applies at once and runs its callback as the host does after the commit
+    const createStatefulFoundation = (props: Partial<MonthsGridFoundationProps>) => {
+        let state: Partial<MonthsGridFoundationState> = { monthLeft: datePanel, monthRight: datePanel };
+        const nodes = {
+            panel: { left: node(0, 0), right: node(0, 0) },
+            wrap: { left: node(280, 300), right: node(280, 260) },
+            switch: { left: node(280, 40), right: node(280, 40) },
+        };
+        const adapter = {
+            getProp: (key) => props[key],
+            getProps: () => props,
+            getState: (key) => state[key],
+            getStates: () => state,
+            setState: (partial, callback) => {
+                state = { ...state, ...partial };
+                callback?.();
+            },
+            getPanelNode: (part, panelType) => nodes[part][panelType],
+            reselectScrollLists: vi.fn<MonthsGridAdapter['reselectScrollLists']>(),
+        } as unknown as MonthsGridAdapter;
+        return { foundation: new MonthsGridFoundation(adapter), adapter, nodes, state: () => state };
+    };
+
+    it('switchPanels 切换两侧视图；第二个滚动列表出现时量高度、写尺寸并重新居中，减为一个时只重新居中', () => {
+        const { foundation, adapter, nodes, state } = createStatefulFoundation({ type: 'dateTimeRange', insetInput: false });
+        foundation.switchPanels('time');
+        expect(state().monthLeft.isTimePickerOpen && state().monthRight.isTimePickerOpen).toBe(true);
+        expect(adapter.reselectScrollLists).toHaveBeenCalledTimes(1);
+        expect(nodes.panel.left.style.minHeight).toBe('340px');
+        expect(nodes.panel.right.style.minWidth).toBe('280px');
+
+        foundation.showDatePanel('left');
+        expect(adapter.reselectScrollLists).toHaveBeenCalledTimes(2);
+        foundation.applyPanelSize();
+        expect(nodes.panel.left.style).toEqual({ minWidth: '', minHeight: '' });
+        expect(nodes.panel.right.style).toEqual({ minWidth: '280px', minHeight: '' });
+
+        foundation.switchPanels('date');
+        expect(state().monthRight.isTimePickerOpen).toBe(false);
+    });
+
+    it('handleWeeksRowNumChange 只在一侧显示滚动列表时重新量高度并居中', () => {
+        const { foundation, adapter } = createStatefulFoundation({ type: 'dateRange', insetInput: false });
+        foundation.handleWeeksRowNumChange();
+        expect(adapter.reselectScrollLists).not.toHaveBeenCalled();
+        foundation.showYearPicker('left');
+        foundation.handleWeeksRowNumChange();
+        expect(adapter.reselectScrollLists).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('MonthsGridFoundation calcDisabledTime', () => {
+    const date = new Date(2021, 5, 1);
+
+    it('只返回 disabledTime 设置了的选项，不是时间类型或没有 disabledTime 时为空对象', () => {
+        const disabledHours = () => [1];
+        const disabledTime = () => ({ disabledHours, disabledMinutes: undefined });
+        const state = { rangeStart: '', rangeEnd: '', monthLeft: panel(date) };
+        expect(MonthsGridFoundation.calcDisabledTime({ type: 'dateTime', disabledTime }, state, 'left')).toEqual({ disabledHours });
+        expect(MonthsGridFoundation.calcDisabledTime({ type: 'date', disabledTime }, state, 'left')).toEqual({});
+        expect(MonthsGridFoundation.calcDisabledTime({ type: 'dateTime' }, state, 'left')).toEqual({});
+    });
+});

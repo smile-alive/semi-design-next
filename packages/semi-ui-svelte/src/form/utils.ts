@@ -1,40 +1,10 @@
 import { untrack } from 'svelte';
+import { FIELD_PROP_KEYS } from '@fibrae/semi-foundation/form/constants';
 import { errorMessages } from '@fibrae/semi-foundation/form/errors';
 import { cloneFormValue } from '@fibrae/semi-foundation/form/utils';
 import type { CommonFieldProps, FieldLabel } from './interface.js';
 
-const fieldOnlyKeys = new Set<string>([
-    'allowEmpty',
-    'allowEmptyString',
-    'convert',
-    'emptyValue',
-    'error',
-    'extraText',
-    'extraTextPosition',
-    'field',
-    'fieldClassName',
-    'fieldLabel',
-    'fieldStyle',
-    'helpText',
-    'initValue',
-    'keepState',
-    'label',
-    'labelAlign',
-    'labelCol',
-    'labelExtra',
-    'labelPosition',
-    'labelWidth',
-    'noErrorMessage',
-    'noLabel',
-    'pure',
-    'rules',
-    'stopValidateWithError',
-    'transform',
-    'trigger',
-    'validateStatus',
-    'validator',
-    'wrapperCol',
-] satisfies (keyof CommonFieldProps)[]);
+const fieldOnlyKeys = new Set<string>([...FIELD_PROP_KEYS, 'error', 'fieldLabel', 'labelExtra'] satisfies (keyof CommonFieldProps)[]);
 
 export function omitFieldProps(props: Record<string, unknown>) {
     return Object.fromEntries(Object.entries(props).filter(([key]) => !fieldOnlyKeys.has(key)));

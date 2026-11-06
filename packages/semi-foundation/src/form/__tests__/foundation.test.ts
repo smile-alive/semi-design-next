@@ -3,8 +3,10 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
 import enUS from '../../locale/source/en_US';
 import FieldStore from '../field-store';
+import { createFormApiProxy } from '../form-api-proxy';
 import FormFoundation from '../foundation';
 import type { BaseFormAdapter, FieldRegistration, RuleItem, StandardSchemaIssue, StandardSchemaResult } from '../interface';
+import { createFieldRegistration } from '../utils';
 
 vi.mock('scroll-into-view-if-needed', () => ({ default: vi.fn<() => void>() }));
 
@@ -18,8 +20,6 @@ function createHost(props: Record<string, unknown> = {}) {
         // commits at once, so what waits for the Form's next commit (unregistering) settles before the call returns
         setState: vi.fn<(state: object, callback?: () => void) => void>((_state, callback) => callback?.()),
         cloneDeep: (value: unknown) => structuredClone(value),
-        getFormProps: () => props,
-        forceUpdate: vi.fn<Notify>(),
         notifyChange: vi.fn<Notify>(),
         notifyValueChange: vi.fn<Notify>(),
         notifyErrorChange: vi.fn<Notify>(),
@@ -42,7 +42,7 @@ function createHost(props: Record<string, unknown> = {}) {
             keepState,
             inArrayField,
             allowEmpty: false,
-            getValidateOptions: () => validation,
+            getValidateOptions: () => ({ trigger: ['change'], ...validation }),
             getChangeOptions: () => ({}),
             store,
         };
@@ -50,13 +50,16 @@ function createHost(props: Record<string, unknown> = {}) {
         return registration;
     };
 
-    return { adapter, foundation, fieldBridge, api, addField };
+    // the form renders by setting formState; registering and settling set other state
+    const renders = () => adapter.setState.mock.calls.filter(([state]) => 'formState' in state);
+
+    return { adapter, foundation, fieldBridge, api, addField, renders };
 }
 
 const settle = () => new Promise((resolve) => setTimeout(resolve));
 const schemaOf = (validate: (value: unknown) => StandardSchemaResult<unknown> | Promise<StandardSchemaResult<unknown>>) => ({ '~standard': { version: 1, vendor: 'test', validate: vi.fn<typeof validate>(validate) } }) as const;
 const failing = (...issues: StandardSchemaIssue[]) => schemaOf(() => ({ issues }));
-const changeTo = (host: ReturnType<typeof createHost>, registration: FieldRegistration, value: unknown) => host.fieldBridge.changeFieldValue(registration, value, { validate: true, onChange: () => {} });
+const changeTo = (host: ReturnType<typeof createHost>, registration: FieldRegistration, value: unknown) => host.fieldBridge.changeFieldValue(registration, value, { onChange: () => {} });
 
 describe('FormFoundation 契约', () => {
     it('字段初始快照在注册前稳定，注册后的空字符串只从整表值中省略', () => {
@@ -123,24 +126,24 @@ describe('FormFoundation 契约', () => {
         expect(api.getTouched('name')).toBeUndefined();
     });
 
-    it('字段订阅独立于整表发布，未变化的快照引用稳定，取消订阅不注销字段', () => {
-        const { api, adapter, fieldBridge, addField } = createHost();
+    it('字段失焦标记 touched，未变化的快照引用稳定，取消订阅不注销字段', () => {
+        const { api, adapter, fieldBridge, addField, renders } = createHost();
         const registration = addField('name');
         const store = registration.store;
         const onField = vi.fn<() => void>();
         const unsubscribeField = store.subscribe(onField);
-        adapter.forceUpdate.mockClear();
+        adapter.setState.mockClear();
         expect(store.getSnapshot()).toBe(store.getSnapshot());
-        fieldBridge.setFieldTouched(registration, true, { skipRender: true, skipNotify: true });
+        fieldBridge.blurField(registration);
         expect(store.getSnapshot().touched).toBe(true);
         expect(onField).toHaveBeenCalledTimes(1);
-        expect(adapter.forceUpdate).not.toHaveBeenCalled();
+        expect(renders()).toHaveLength(1);
         const fieldSnapshot = store.getSnapshot();
         api.setTouched('name', true);
         expect(store.getSnapshot()).toBe(fieldSnapshot);
         expect(onField).toHaveBeenCalledTimes(1);
-        expect(adapter.forceUpdate).toHaveBeenCalledTimes(1);
-        expect(adapter.forceUpdate.mock.lastCall?.[0]).toMatchObject({ touched: { name: true } });
+        expect(renders()).toHaveLength(2);
+        expect(renders().at(-1)?.[0]).toMatchObject({ formState: { touched: { name: true } } });
         unsubscribeField();
         api.setTouched('name', false);
         expect(onField).toHaveBeenCalledTimes(1);
@@ -158,6 +161,34 @@ describe('FormFoundation 契约', () => {
         expect(api.getFieldExist('name')).toBe(false);
         expect(api.getValues()).toEqual({});
         expect(registration.store.getSnapshot().error).toBeUndefined();
+    });
+
+    it('注册后切换的 keepState 在注销时生效', () => {
+        const { api, fieldBridge } = createHost();
+        const view = { props: { keepState: true }, formProps: {} };
+        const registration = createFieldRegistration({ id: 'name', field: 'name', store: new FieldStore({ value: 'a' }), inArrayField: false }, () => view);
+        fieldBridge.register('name', registration);
+        expect(api.getValues()).toEqual({ name: 'a' });
+
+        view.props = { keepState: false };
+        fieldBridge.unRegister(registration);
+        expect(api.getValues()).toEqual({});
+    });
+
+    it('失焦标记 touched，trigger 含 blur 时校验', async () => {
+        const { api, fieldBridge, addField } = createHost();
+        const registration = addField('name', { rules: [{ required: true, message: 'req' }], trigger: ['blur'] });
+        fieldBridge.blurField(registration);
+        expect(api.getTouched('name')).toBe(true);
+        await vi.waitFor(() => expect(api.getError('name')).toEqual(['req']));
+    });
+
+    it('每次渲染把 form state 推给 useForm 的 api', () => {
+        const pushed: unknown[] = [];
+        const { api, addField } = createHost({ form: createFormApiProxy((state) => pushed.push(state)) });
+        addField('name');
+        api.setValue('name', 'a');
+        expect(pushed.at(-1)).toMatchObject({ values: { name: 'a' } });
     });
 
     it.each([
@@ -247,14 +278,16 @@ describe('FormFoundation 契约', () => {
         vi.mocked(scrollIntoView).mockImplementationOnce(() => {
             throw new Error('scroll failed');
         });
-        const { adapter, api, addField } = createHost({ autoScrollToError: true });
+        const { adapter, api, addField, renders } = createHost({ autoScrollToError: true });
         const form = document.createElement('form');
         form.innerHTML = '<div class="semi-form-field" x-field-id="name"><div class="semi-form-field-error-message"></div></div>';
         Object.assign(adapter, { getFormElement: () => form });
         addField('name', { rules: [{ required: true, message: 'req' }] });
+        // the render commits later, where the host runs the callback
+        adapter.setState.mockImplementation(() => {});
 
         await expect(api.validate()).rejects.toEqual({ name: ['req'] });
-        const afterRender = adapter.forceUpdate.mock.lastCall[1] as () => void;
+        const afterRender = renders().at(-1)[1];
         expect(afterRender).toThrow('scroll failed');
     });
 
@@ -587,7 +620,7 @@ describe('FormFoundation schema', () => {
         const confirm = host.addField('confirm');
         const other = host.addField('other');
         host.api.setValues({ password: 'a', confirm: 'a', other: 'x' });
-        host.fieldBridge.setFieldTouched(confirm, true);
+        host.api.setTouched('confirm', true);
         host.adapter.notifyErrorChange.mockClear();
 
         changeTo(host, password, 'b');
@@ -688,15 +721,6 @@ describe('FormFoundation schema', () => {
         await expect(api.validate()).rejects.toEqual({ name: ['validator 错'] });
         expect(schema['~standard'].validate).not.toHaveBeenCalled();
         expect(warn).toHaveBeenCalledWith(expect.stringContaining('<Form schema>'));
-    });
-
-    it('usesSchema 只在有 schema 且没有 Form validator 时为 true', () => {
-        vi.spyOn(console, 'warn').mockImplementation(() => {});
-        const schema = failing();
-        expect(createHost().fieldBridge.usesSchema()).toBe(false);
-        expect(createHost({ schema }).fieldBridge.usesSchema()).toBe(true);
-        expect(createHost({ validator: () => ({}) }).fieldBridge.usesSchema()).toBe(false);
-        expect(createHost({ schema, validator: () => ({}) }).fieldBridge.usesSchema()).toBe(false);
     });
 });
 
@@ -838,13 +862,12 @@ describe('formApi.setError', () => {
     });
 
     it('没有字段的父路径按错误树写入：空串被丢弃，字符串转数组，下属字段取到自己的错误', () => {
-        const { adapter, api, addField } = createHost();
+        const { api, addField } = createHost();
         const city = addField('address.city');
         const tags = addField('address.tags');
 
         api.setError('address', { city: 'bad', zip: '', tags: ['x', 'y'] });
         expect(api.getError('address')).toEqual({ city: ['bad'], tags: ['x', 'y'] });
-        (adapter.forceUpdate.mock.lastCall[1] as () => void)();
         expect(city.store.getSnapshot().error).toEqual(['bad']);
         expect(tags.store.getSnapshot().error).toEqual(['x', 'y']);
 

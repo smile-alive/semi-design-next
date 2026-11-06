@@ -196,6 +196,29 @@ export function placeInnerColumns<T extends { key?: unknown; fixed?: unknown }>(
     return placed;
 }
 
+/** The selection column's framework-free fields, null when rowSelection is off or hidden; the host adds its class and cells */
+export function getSelectionColumn<O extends { hidden?: boolean; fixed?: unknown; width?: unknown; onCell?: unknown; onHeaderCell?: unknown }>(rowSelection: O | boolean | null | undefined) {
+    if (!rowSelection || (typeof rowSelection === 'object' && rowSelection.hidden)) {
+        return null;
+    }
+    const { fixed, width, onCell, onHeaderCell }: Partial<O> = typeof rowSelection === 'object' ? rowSelection : {};
+    return { key: strings.DEFAULT_KEY_COLUMN_SELECTION, fixed, width, onCell, onHeaderCell };
+}
+
+/** The expand column's framework-free fields, null when hideExpandedColumn; the host adds its class and cells */
+export function getExpandColumn<F>(hideExpandedColumn: boolean | undefined, expandCellFixed: F) {
+    return hideExpandedColumn ? null : { key: strings.DEFAULT_KEY_COLUMN_EXPAND, fixed: expandCellFixed };
+}
+
+type PartTags<K extends string> = Record<K, string>;
+
+/** The default element of each table part, as a new object for the host to merge the user's components into */
+export function getDefaultComponents(virtualized: boolean): { table: string; header: PartTags<'outer' | 'wrapper' | 'row' | 'cell'>; body: PartTags<'outer' | 'wrapper' | 'row' | 'cell'> & { colgroup: PartTags<'wrapper' | 'col'> } } {
+    const { table, header, body } = strings.DEFAULT_COMPONENTS;
+    const bodyTags = virtualized ? strings.DEFAULT_VIRTUALIZED_BODY_COMPONENTS : body;
+    return { table, header: { ...header }, body: { ...bodyTags, colgroup: { ...bodyTags.colgroup } } };
+}
+
 /** The measured widths of the columns in order; a column not measured yet is skipped */
 export function getCellWidths(headWidths?: BaseHeadWidth[][], columns?: { key?: unknown }[]) {
     if (!columns?.length || !headWidths?.length) {

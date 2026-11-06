@@ -36,18 +36,18 @@ function titleNode(title: ColumnProps['title'], parts: ColumnTitleProps): JSX.El
 function useColumnFlags(column: () => ColumnProps) {
     const table = useTableContext('Table.HeaderCell');
 
-    const hasSorter = () => typeof column().sorter === 'function' || column().sorter === true;
-    const hasFilter = () => (Array.isArray(column().filters) && (column().filters?.length ?? 0) > 0) || column().filterDropdown != null || typeof column().renderFilterDropdown === 'function';
-    const needsTitle = () => Boolean(column().sorter || column().filters || column().onFilter || column().useFullRender || hasFilter());
-    const queryState = createMemo(() => TableFoundation.getColumnQueryState(column(), table.state().queries));
-    const query = () => queryState().query;
-    const clickToSort = () => needsTitle() && hasSorter() && !hasFilter() && !column().useFullRender;
-    // the same test as the foundation's controlled sorter
-    const showSortTip = () => column().sortOrder == null && column().showSortTip === true;
-    const sortOrder = () => queryState().sortOrder;
-    const filteredValue = () => queryState().filteredValue;
+    const flags = createMemo(() => TableFoundation.getColumnFlags(column(), table.state().queries, column().filterDropdown != null));
 
-    return { hasSorter, hasFilter, needsTitle, query, clickToSort, showSortTip, sortOrder, filteredValue };
+    return {
+        hasSorter: () => flags().hasSorter,
+        hasFilter: () => flags().hasFilter,
+        needsTitle: () => flags().needsTitle,
+        query: () => flags().query,
+        clickToSort: () => flags().clickToSort,
+        showSortTip: () => flags().showSortTip,
+        sortOrder: () => flags().sortOrder,
+        filteredValue: () => flags().filteredValue,
+    };
 }
 
 function ColumnTitle(props: { column: ColumnProps; flags: ReturnType<typeof useColumnFlags> }) {

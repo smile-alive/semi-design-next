@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { tick, untrack } from 'svelte';
+    import { untrack } from 'svelte';
     import { isEqual } from 'es-toolkit';
     import { cssClasses, strings } from '@fibrae/semi-foundation/cascader/constants';
     import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicValue, type CascaderAdapter } from '@fibrae/semi-foundation/cascader/foundation';
-    import { calcMergeType } from '@fibrae/semi-foundation/cascader/util';
     import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
     import { isInnerControlKey, isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
@@ -220,7 +219,7 @@
         CascaderFoundation,
         foundationProps,
         (props) => CascaderFoundation.getInitialState(props),
-        (base) => ({
+        () => ({
             focusCombobox: () => {
                 if (searchInput) {
                     searchInput.focus({ preventScroll });
@@ -243,30 +242,10 @@
             notifyFocus: (event) => onFocus?.(event),
             notifyBlur: (event) => onBlur?.(event),
             notifyDropdownVisibleChange: (visible) => onDropdownVisibleChange?.(visible),
-            notifyLoadData: (selectedOpt, callback, onReject) => {
-                if (!loadData) {
-                    return;
-                }
-                const loading = loadData(selectedOpt as CascaderData[]);
-                loading.then(undefined, onReject);
-                // The rejection stays unhandled here so it reaches the caller; tick runs the callback after the treeData
-                // update, otherwise loadingKeys clears first and activeKeys shifts.
-                void loading.then(() => tick().then(() => callback()));
-            },
             notifyOnLoad: (newLoadedKeys, data) => onLoad?.(newLoadedKeys, data as CascaderData),
             notifyListScroll: (event, panel) => onListScroll?.(event, panel as CascaderScrollPanelProps),
             notifyOnExceed: (data) => onExceed?.(data as CascaderEntity[]),
             notifyClear: () => onClear?.(),
-            toggleInputShow: (showInput, callback) => {
-                const focusInTrigger = triggerEl?.contains(FocusTrapHandle.getActiveElement(triggerEl));
-                base.setState({ showInput }, () => {
-                    // unmounting the focused search input would drop focus to the body
-                    if (!showInput && focusInTrigger) {
-                        triggerEl?.focus({ preventScroll: true });
-                    }
-                    callback();
-                });
-            },
             scrollToOption: (key, index) => {
                 if (!item?.scrollToItem(index)) {
                     contentEl?.querySelector(`#${CSS.escape(optionId(key))}`)?.scrollIntoView({ block: 'nearest' });
@@ -278,8 +257,7 @@
     const view: BasicCascaderInnerData = $derived(multiple ? { ...states(), ...CascaderFoundation.deriveMultipleState(foundationProps, states()) } : states());
     const renderData = $derived(CascaderFoundation.getRenderData(foundationProps, view));
     const isEmpty = $derived(!renderData.length);
-    const mergeType = $derived(calcMergeType(autoMergeValue, leafOnly));
-    const realKeys = $derived(mergeType === strings.NONE_MERGE_TYPE || checkRelation === strings.UN_RELATED ? view.checkedKeys : view.resolvedCheckedKeys);
+    const realKeys = $derived(CascaderFoundation.getTriggerKeys(foundationProps, view));
     const keyboardKey = $derived(view.isOpen ? CascaderFoundation.getKeyboardKey(view) : null);
     const triggerSearch = $derived(Boolean(filterTreeNode) && searchPosition === strings.SEARCH_POSITION_TRIGGER);
     const resolvedPosition = $derived(position ?? (config.direction === 'rtl' ? 'bottomRight' : 'bottomLeft'));
@@ -356,7 +334,7 @@
     };
 
     const isTagDisabled = (key: string) => {
-        return Boolean(disabled || entityOf(key)?.data.disabled || (disableStrictly && view.disabledKeys?.has(key)));
+        return !CascaderFoundation.isTagClosable(key, foundationProps, view);
     };
 
     const removeTag = (key: string, event?: TagCloseEvent) => {

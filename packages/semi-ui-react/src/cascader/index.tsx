@@ -2,10 +2,8 @@ import React, { Fragment, useDeferredValue, useId, useImperativeHandle, useRef, 
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/cascader/constants';
 import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicTriggerRenderProps, type BasicScrollPanelProps, type CascaderAdapter } from '@fibrae/semi-foundation/cascader/foundation';
-import { calcMergeType } from '@fibrae/semi-foundation/cascader/util';
 import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
 import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import '@fibrae/semi-foundation/cascader/cascader.scss';
 import { IconClear, IconChevronDown } from '@fibrae/semi-icons-react';
 import type { Bivariant, ByMultiple, ElementProps } from '../_base/base';
@@ -269,7 +267,6 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     const tagInputRef = useRef<TagInputHandle>(null);
 
     const inputPlaceHolder = searchPlaceholder || placeholder;
-    const mergeType = calcMergeType(autoMergeValue, leafOnly);
     const triggerSearch = Boolean(filterTreeNode) && searchPosition === strings.SEARCH_POSITION_TRIGGER;
 
     // A rendered inset label names the combobox and the tree, so it needs an id even when the caller gives none
@@ -308,35 +305,10 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                 notifyFocus: (e) => base.getProps().onFocus?.(e),
                 notifyBlur: (e) => base.getProps().onBlur?.(e),
                 notifyDropdownVisibleChange: (visible) => base.getProps().onDropdownVisibleChange?.(visible),
-                notifyLoadData: (selectedOpt, callback, onReject) => {
-                    const { loadData } = base.getProps();
-                    if (loadData) {
-                        const loading = loadData(selectedOpt);
-                        loading.then(undefined, onReject);
-                        // the rejection is left unhandled on this chain on purpose, so it still reaches the caller
-                        void loading.then(() => {
-                            // loadData updates treeData, which can change selectedKeys and activeKeys. loadingKeys
-                            // and loadedKeys (set in callback) must land after that treeData update, otherwise
-                            // activeKeys shifts during async loading; setTimeout orders them under batching.
-                            setTimeout(callback);
-                        });
-                    }
-                },
                 notifyOnLoad: (newLoadedKeys, data) => base.getProps().onLoad?.(newLoadedKeys, data),
                 notifyListScroll: (e, panel) => base.getProps().onListScroll?.(e, panel),
                 notifyOnExceed: (data) => base.getProps().onExceed?.(data),
                 notifyClear: () => base.getProps().onClear?.(),
-                toggleInputShow: (showInput, cb) => {
-                    const focusInTrigger = triggerRef.current?.contains(FocusTrapHandle.getActiveElement(triggerRef.current));
-                    base.setState({ showInput }, () => {
-                        // unmounting the focused search input would drop focus to the body; the trigger is the
-                        // combobox again, so it takes focus back
-                        if (!showInput && focusInTrigger) {
-                            triggerRef.current?.focus({ preventScroll: true });
-                        }
-                        cb();
-                    });
-                },
                 scrollToOption: (key, index) => {
                     if (virtualListRef.current) {
                         virtualListRef.current.scrollToItem(index);
@@ -358,6 +330,9 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
         state.isOpen
     );
 
+    // Only a keyword change is deferred; clicks, expansion and arrow keys must paint with the live state
+    const deferredState = useDeferredValue(state);
+
     // focus enters the dropdown through a field in a slot, and the dropdown is not a DOM descendant of the trigger, so
     // containment is checked against its popup layer
     const handleFocusLeave = (e: React.FocusEvent) => {
@@ -371,16 +346,13 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     const deriveView = (s: BasicCascaderInnerData) => (multiple ? { ...s, ...CascaderFoundation.deriveMultipleState(props, s) } : s);
 
     const view = deriveView(state);
-
-    // Only a keyword change is deferred; clicks, expansion and arrow keys must paint with the live state
-    const deferredState = useDeferredValue(state);
     const listView = deferredState.inputValue === state.inputValue ? view : deriveView(deferredState);
     const keyEntities = view.keyEntities;
-    const { inputValue, selectedKeys, checkedKeys, resolvedCheckedKeys, disabledKeys, isOpen, showInput } = view;
+    const { inputValue, selectedKeys, checkedKeys, isOpen, showInput } = view;
     const { inputValue: listInputValue, isSearching, activeKeys, selectedKeys: listSelectedKeys, checkedKeys: listCheckedKeys, halfCheckedKeys, loadedKeys, loadingKeys } = listView;
     const renderData = CascaderFoundation.getRenderData(props, listView) as Array<Entity | Data>;
     const isEmpty = !renderData || !renderData.length;
-    const realKeys = mergeType === strings.NONE_MERGE_TYPE || checkRelation === strings.UN_RELATED ? checkedKeys : resolvedCheckedKeys;
+    const realKeys = CascaderFoundation.getTriggerKeys(props, view);
 
     // The keyboard row is the live one, which Enter acts on; while the list lags behind, it shows only when that list
     // renders it, so aria-activedescendant never points at an option Enter would not choose or that is not rendered
@@ -432,7 +404,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
 
     const renderTagItem = (nodeKey: string, idx: number) => {
         if (keyEntities[nodeKey]) {
-            const isDisabled = disabled || keyEntities[nodeKey].data.disabled || (disableStrictly && disabledKeys.has(nodeKey));
+            const isDisabled = !CascaderFoundation.isTagClosable(nodeKey, props, view);
             const tagCls = clsx(`${prefixcls}-selection-tag`, {
                 [`${prefixcls}-selection-tag-disabled`]: isDisabled,
             });

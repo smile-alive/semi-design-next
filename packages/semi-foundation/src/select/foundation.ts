@@ -628,7 +628,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
     }
 
     /** The rtl default of `position`; `direction` is read from the host's config */
-    static getPosition<P extends string>(position: P | undefined, direction?: string) {
+    static getPosition<P extends string>(position?: P, direction?: string) {
         return position ?? (direction === 'rtl' ? 'bottomRight' : 'bottomLeft');
     }
 

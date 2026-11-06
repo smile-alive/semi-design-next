@@ -1,9 +1,8 @@
 import { type JSX, type Ref, For, Show, createEffect, createMemo, createUniqueId, mergeProps, on, onCleanup, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { isRangeType } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
 import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/date-picker/constants';
-import type { DayStatusType } from '@fibrae/semi-foundation/date-picker/foundation';
-import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
+import { isRangeType, type DayStatusType } from '@fibrae/semi-foundation/date-picker/foundation';
+import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType, type PanelView } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { IconCalendar, IconClock } from '@fibrae/semi-icons-solid';
 import useFoundation from '../_base/use-foundation';
@@ -34,13 +33,11 @@ export interface MonthsGridProps extends Omit<MonthsGridFoundationProps, 'render
 
 /** Called by DatePicker when an inset input gets focus */
 export interface MonthsGridHandle {
-    showDatePanel: (panelType: PanelType) => void;
-    showTimePicker: (panelType: PanelType) => void;
+    switchPanels: (view: PanelView) => void;
 }
 
 type Foundation = MonthsGridFoundation;
 type Adapter = MonthsGridAdapter;
-type PanelPart = 'panel' | 'wrap' | 'switch';
 type Reselectable = ComboboxHandle | YearAndMonthHandle;
 
 const noFocusRecords = { rangeStart: false, rangeEnd: false };
@@ -58,8 +55,7 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
     const titleId = createUniqueId();
     const columns = new Set<Reselectable>();
 
-    // the cached height of both panels while they show a scroll list; 0 means measure it
-    let currentPanelHeight = 0;
+    const nodes: Record<PanelPart, Record<PanelType, HTMLDivElement | undefined>> = { panel: { left: undefined, right: undefined }, wrap: { left: undefined, right: undefined }, switch: { left: undefined, right: undefined } };
 
     const { foundation, state } = useFoundation<Foundation, Adapter, MonthsGridFoundationProps, MonthsGridFoundationState>(
         MonthsGridFoundation,
@@ -68,17 +64,18 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
         () => ({
             notifySelectedChange: (value, options) => props.onChange?.(value, options),
             notifyPanelChange: (date, dateString) => props.onPanelChange?.(date, dateString),
-            setRangeInputFocus: (rangeInputFocus) => props.setRangeInputFocus?.(rangeInputFocus),
-            hasOtherRangeInputBeenFocused: (currentRangeInput) => Boolean(props.hasOtherRangeInputBeenFocused?.(currentRangeInput)),
+            getPanelNode: (part, panelType) => nodes[part][panelType],
+            reselectScrollLists: () => {
+                for (const column of columns) {
+                    column.reselect();
+                }
+            },
         })
     );
 
     const ref = untrack(() => props.ref);
-    const nodes: Record<PanelPart, Record<PanelType, HTMLDivElement | undefined>> = { panel: { left: undefined, right: undefined }, wrap: { left: undefined, right: undefined }, switch: { left: undefined, right: undefined } };
 
     const isRange = () => isRangeType(props.type);
-
-    const yearOrTimePanels = createMemo(() => (isRange() ? Number(isYearOrTime(state().monthLeft)) + Number(isYearOrTime(state().monthRight)) : 0));
 
     const detailOf = (panelType: PanelType) => (panelType === PANEL_TYPE_RIGHT ? state().monthRight : state().monthLeft);
 
@@ -96,44 +93,6 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
     const registerColumn = (handle: Reselectable) => {
         columns.add(handle);
         onCleanup(() => columns.delete(handle));
-    };
-
-    const reselect = () => {
-        for (const column of columns) {
-            column.reselect();
-        }
-    };
-
-    const calcScrollListHeight = () => {
-        const height = (panelType: PanelType) => (nodes.wrap[panelType]?.getBoundingClientRect().height || 0) + (nodes.switch[panelType]?.getBoundingClientRect().height || 0);
-        return Math.max(height(PANEL_TYPE_LEFT), height(PANEL_TYPE_RIGHT));
-    };
-
-    const measurePanelHeight = () => {
-        currentPanelHeight = calcScrollListHeight();
-    };
-
-    const applyPanelSize = (panels: Pick<MonthsGridFoundationState, 'monthLeft' | 'monthRight'>, insetInput: MonthsGridProps['insetInput']) => {
-        const sizes = MonthsGridFoundation.getPanelSizeStyle(panels, insetInput, {
-            monthWidth: (panelType) => nodes.wrap[panelType]?.getBoundingClientRect().width ?? null,
-            scrollListHeight: () => currentPanelHeight || calcScrollListHeight(),
-        });
-        for (const panelType of [PANEL_TYPE_LEFT, PANEL_TYPE_RIGHT] as const) {
-            const panel = nodes.panel[panelType];
-            if (panel) {
-                panel.style.minWidth = sizes[panelType].minWidth;
-                panel.style.minHeight = sizes[panelType].minHeight;
-            }
-        }
-    };
-
-    // a scroll list beside a month keeps its own height; the panels share a minHeight only while both show lists
-    const handleWeeksRowNumChange = () => {
-        if (isRange() && untrack(yearOrTimePanels) < 2) {
-            measurePanelHeight();
-            // the month's height sets the height of the list beside it, moving the selected item off centre
-            reselect();
-        }
     };
 
     // the button that switches between the month and the year picker unmounts or hides under the focus, so the view it
@@ -189,7 +148,7 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
                     onDayClick={(day) => foundation.handleDayClick(day, panelType)}
                     onDayHover={foundation.handleDayHover}
                     onMonthSwitch={(switchType) => foundation[switchType](panelType)}
-                    onWeeksRowNumChange={handleWeeksRowNumChange}
+                    onWeeksRowNumChange={foundation.handleWeeksRowNumChange}
                 />
             </div>
         );
@@ -202,9 +161,9 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
                 <Combobox
                     ref={registerColumn}
                     defaultIsAM={props.timePickerOpts?.defaultIsAM}
-                    disabledHours={disabledOptions()?.disabledHours}
-                    disabledMinutes={disabledOptions()?.disabledMinutes}
-                    disabledSeconds={disabledOptions()?.disabledSeconds}
+                    disabledHours={disabledOptions().disabledHours}
+                    disabledMinutes={disabledOptions().disabledMinutes}
+                    disabledSeconds={disabledOptions().disabledSeconds}
                     format={props.format || strings.FORMAT_TIME_PICKER}
                     hideDisabledOptions={props.hideDisabledOptions}
                     hourStep={props.timePickerOpts?.hourStep}
@@ -294,30 +253,11 @@ export default function MonthsGrid(rawProps: MonthsGridProps) {
         );
     };
 
-    createEffect(() => applyPanelSize({ monthLeft: state().monthLeft, monthRight: state().monthRight }, props.insetInput));
-
-    createEffect(
-        on(
-            yearOrTimePanels,
-            (count, previous) => {
-                if (previous === 1 && count === 2) {
-                    measurePanelHeight();
-                    applyPanelSize(foundation.getStates(), foundation.getProp('insetInput'));
-                    reselect();
-                } else if (previous === 2 && count === 1) {
-                    reselect();
-                }
-            },
-            { defer: true }
-        )
-    );
+    createEffect(on([() => state().monthLeft, () => state().monthRight, () => props.insetInput], foundation.applyPanelSize));
 
     // delivered once while created, like an element ref
     if (typeof ref === 'function') {
-        ref({
-            showDatePanel: foundation.showDatePanel,
-            showTimePicker: foundation.showTimePicker,
-        });
+        ref({ switchPanels: foundation.switchPanels });
     }
 
     return (

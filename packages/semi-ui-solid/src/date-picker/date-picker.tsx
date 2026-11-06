@@ -1,9 +1,21 @@
 import { type JSX, type Ref, Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import getYearMonthFromValue from '@fibrae/semi-foundation/date-picker/_utils/get-year-month-from-value';
-import { isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
 import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/date-picker/constants';
-import DatePickerFoundation, { type DatePickerAdapter, type DatePickerFoundationProps, type DatePickerFoundationState, type DayStatusType, type DisabledDateOptions, type PresetType, type RangeInput, type Type } from '@fibrae/semi-foundation/date-picker/foundation';
+import DatePickerFoundation, {
+    getYearMonthFromValue,
+    isRangeType,
+    isRangeValueComplete,
+    isYearOrMonthType,
+    needConfirm,
+    type DatePickerAdapter,
+    type DatePickerFoundationProps,
+    type DatePickerFoundationState,
+    type DayStatusType,
+    type DisabledDateOptions,
+    type PresetType,
+    type RangeInput,
+    type Type,
+} from '@fibrae/semi-foundation/date-picker/foundation';
 import { isInnerControlKey, namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import '@fibrae/semi-foundation/date-picker/date-picker.scss';
@@ -41,7 +53,6 @@ type RedeclaredKeys =
     | 'topSlot'
     | 'renderDate'
     | 'renderFullDate'
-    | 'triggerRender'
     | 'rangeSeparatorNode'
     | 'timePickerOpts'
     | 'position'
@@ -283,6 +294,13 @@ export default function DatePicker(rawProps: DatePickerProps) {
     // a triggerRender that spreads componentProps must not grab the root element
     const [, componentProps] = splitProps(props, ['ref']);
 
+    // customTrigger stays out of props: they reach the root element and triggerRender's componentProps
+    const foundationProps = mergeProps(props as FoundationProps, {
+        get customTrigger() {
+            return typeof props.triggerRender === 'function';
+        },
+    });
+
     const registerTrigger = useSpecialTrigger(
         () => ({ disabled: local.disabled }),
         () => local.ref
@@ -295,7 +313,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
 
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, DatePickerState>(
         DatePickerFoundation,
-        props as FoundationProps,
+        foundationProps,
         // Solid names the prop `autofocus`, while the foundation reads `autoFocus`; a getter on the shared props would
         // reach the root element and triggerRender's componentProps
         (view) => DatePickerFoundation.getInitialState(mergeProps(view, { autoFocus: props.autofocus })),
@@ -309,18 +327,11 @@ export default function DatePicker(rawProps: DatePickerProps) {
             notifyOpenChange: (open) => props.onOpenChange?.(open),
             notifyClickOutSide: (e) => props.onClickOutSide?.(e),
             notifyPresetsClick: (item, e) => props.onPresetClick?.(item, e),
-            setRangeInputFocus: (rangeInputFocus) => {
-                const focusOptions = { preventScroll: props.preventScroll };
-                // focus first: its onFocus must still read the previous rangeInputFocus
-                if (rangeInputFocus === 'rangeStart') {
-                    (inputs.insetStart ?? inputs.triggerStart)?.focus(focusOptions);
-                } else if (rangeInputFocus === 'rangeEnd') {
-                    (inputs.insetEnd ?? inputs.triggerEnd)?.focus(focusOptions);
-                }
-                if (rangeInputFocus !== base.getState('rangeInputFocus')) {
-                    base.setState({ rangeInputFocus });
-                }
+            focusRangeInput: (rangeInput) => {
+                const input = rangeInput === 'rangeEnd' ? (inputs.insetEnd ?? inputs.triggerEnd) : (inputs.insetStart ?? inputs.triggerStart);
+                input?.focus({ preventScroll: props.preventScroll });
             },
+            switchPanels: (view) => monthGrid?.switchPanels(view),
             isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panel()),
             setInsetInputFocus: () => {
                 const input = base.getState('rangeInputFocus') === 'rangeEnd' ? inputs.insetEnd : inputs.insetStart;
@@ -408,7 +419,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
         get 'aria-haspopup'() {
             return isTriggerButton() ? ('dialog' as const) : null;
         },
-        onClick: (e: MouseEvent) => foundation.handleTriggerClick(e, typeof local.triggerRender === 'function'),
+        onClick: foundation.handleTriggerClick,
         // a control inside the trigger (the range clear button, a custom trigger's own) keeps its keys
         onKeyDown: (e: KeyboardEvent) => {
             if (!isInnerControlKey(e)) {
@@ -591,15 +602,8 @@ export default function DatePicker(rawProps: DatePickerProps) {
                 rangeInputStartRef={keepInput('insetStart')}
                 rangeSeparator={local.rangeSeparator}
                 rangeSeparatorNode={local.rangeSeparatorNode}
-                handleInsetDateFocus={(e, rangeType) => {
-                    monthGrid?.showDatePanel(strings.PANEL_TYPE_LEFT);
-                    monthGrid?.showDatePanel(strings.PANEL_TYPE_RIGHT);
-                    foundation.handleInputFocus(e, rangeType);
-                }}
-                handleInsetTimeFocus={() => {
-                    monthGrid?.showTimePicker(strings.PANEL_TYPE_LEFT);
-                    monthGrid?.showTimePicker(strings.PANEL_TYPE_RIGHT);
-                }}
+                handleInsetDateFocus={foundation.handleInsetDateFocus}
+                handleInsetTimeFocus={foundation.handleInsetTimeFocus}
                 onInsetInputChange={foundation.handleInsetInputChange}
             />
         </Show>
@@ -629,16 +633,14 @@ export default function DatePicker(rawProps: DatePickerProps) {
             endYear={local.endYear}
             focusRecords={state().focusRecords}
             format={local.format}
-            hasOtherRangeInputBeenFocused={foundation.hasOtherRangeInputBeenFocused}
             hasPresets={hasPresets()}
             hideDisabledOptions={local.hideDisabledOptions}
             insetInput={local.insetInput}
-            isControlledComponent={!isConfirmNeeded() && local.value !== undefined}
             locale={locale().locale}
             presetPosition={local.presetPosition}
             rangeInputFocus={state().rangeInputFocus}
             selectedValue={state().cachedSelectedValue}
-            setRangeInputFocus={foundation.handleSetRangeFocus}
+            selectionControlled={DatePickerFoundation.isSelectionControlled(props)}
             startDateOffset={local.startDateOffset}
             startYear={local.startYear}
             syncSwitchMonth={local.syncSwitchMonth}

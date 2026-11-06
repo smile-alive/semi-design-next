@@ -28,7 +28,7 @@ function stateAfterValueChange(props: DatePickerFoundationProps) {
         getState: (key) => state[key],
         getStates: () => state,
         setState: set,
-        setRangeInputFocus: vi.fn<DatePickerAdapter['setRangeInputFocus']>((rangeInputFocus) => set({ rangeInputFocus })),
+        focusRangeInput: vi.fn<DatePickerAdapter['focusRangeInput']>(),
     } as unknown as DatePickerAdapter;
     new DatePickerFoundation(adapter).handlePropsChange({ value: {} as DatePickerFoundationProps['value'], timeZone: current.timeZone, open: current.open, disabled: current.disabled });
     return Object.fromEntries(KEYS.map((key) => [key, state[key]]));
@@ -68,10 +68,10 @@ describe('DatePickerFoundation.getInitialState', () => {
     cases.push(['date 自定义 format 的字符串值', { type: 'date', value: '06/05/2024', format: 'dd/MM/yyyy' }]);
     cases.push(['dateTime 自定义 format 的字符串值加 timeZone', { type: 'dateTime', defaultValue: '2024-05-06 07:08', format: 'yyyy-MM-dd HH:mm', timeZone: 'Asia/Shanghai' }]);
     cases.push(['dateRange 自定义 format 的字符串值', { type: 'dateRange', value: ['2024-05-06', '2024-05-09'], format: 'yyyy-MM-dd' }]);
-    cases.push(['dateRange triggerRender 且值为空', { type: 'dateRange', value: [], triggerRender: () => null }]);
-    cases.push(['dateTimeRange triggerRender 且 defaultValue 为空', { type: 'dateTimeRange', defaultValue: [], triggerRender: () => null }]);
-    cases.push(['dateRange triggerRender 且有值', { type: 'dateRange', value: [START, END], triggerRender: () => null }]);
-    cases.push(['date triggerRender 且值为空', { type: 'date', value: [], triggerRender: () => null }]);
+    cases.push(['dateRange 自定义触发器且值为空', { type: 'dateRange', value: [], customTrigger: true }]);
+    cases.push(['dateTimeRange 自定义触发器且 defaultValue 为空', { type: 'dateTimeRange', defaultValue: [], customTrigger: true }]);
+    cases.push(['dateRange 自定义触发器且有值', { type: 'dateRange', value: [START, END], customTrigger: true }]);
+    cases.push(['date 自定义触发器且值为空', { type: 'date', value: [], customTrigger: true }]);
     cases.push(['dateTime needConfirm 受控 value', { type: 'dateTime', value: SINGLE, needConfirm: true }]);
     cases.push(['dateTime needConfirm defaultValue', { type: 'dateTime', defaultValue: SINGLE, needConfirm: true }]);
     cases.push(['dateTime needConfirm 无值', { type: 'dateTime', needConfirm: true }]);
@@ -84,10 +84,10 @@ describe('DatePickerFoundation.getInitialState', () => {
     });
 
     it('范围类型的自定义触发器在值为空时从 rangeStart 开始，完全没有值时不选范围输入框', () => {
-        const state = DatePickerFoundation.getInitialState({ type: 'dateRange', value: [], triggerRender: () => null });
+        const state = DatePickerFoundation.getInitialState({ type: 'dateRange', value: [], customTrigger: true });
         expect(state.rangeInputFocus).toBe('rangeStart');
         expect(state.value).toEqual([]);
-        expect(DatePickerFoundation.getInitialState({ type: 'dateRange', triggerRender: () => null }).rangeInputFocus).toBeUndefined();
+        expect(DatePickerFoundation.getInitialState({ type: 'dateRange', customTrigger: true }).rangeInputFocus).toBeUndefined();
     });
 
     it('受控的字符串 value 按 format 解析为对应的 Date', () => {

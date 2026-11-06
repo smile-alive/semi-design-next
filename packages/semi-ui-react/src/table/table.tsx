@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import { omit } from 'es-toolkit';
 import { get } from 'es-toolkit/compat';
 import { strings } from '@fibrae/semi-foundation/table/constants';
-import TableFoundation, { type TableAdapter, type TableBaseState, type BasePageData, type BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
-import { type FlattenData, type GroupFlattenData, amendTableWidth, assignColumnKeys, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, isMissingDataIndex, mergedRowExpandable, placeInnerColumns, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/table/utils';
+import TableFoundation, { type TableAdapter, type TableBaseState, type BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
+import { type FlattenData, type GroupFlattenData, amendTableWidth, assignColumnKeys, flattenColumns, flattenData, getCellWidths, getExpandColumn, getHeaderRowCount, getSelectionColumn, mergedRowExpandable, placeInnerColumns, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/table/utils';
 import isObject from '@fibrae/semi-foundation/utils/is-object';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/table/table.scss';
@@ -150,16 +150,10 @@ function renderExpandIcon(record: any = {}, isNested = false, groupKey: string |
  * A title function gets the sorter and filter nodes only with useFullRender; otherwise its result is the title
  */
 function addFnsInColumn(column: HeaderColumn = {}, queries: ColumnProps[], prefixCls: string, foundation: TableFoundation<any>) {
-    const hasFilter = (Array.isArray(column?.filters) && column.filters.length > 0) || isValidElement(column?.filterDropdown) || typeof column?.renderFilterDropdown === 'function';
-    if (column && (column.sorter || column.filters || column.onFilter || column.useFullRender || hasFilter)) {
-        const hasSorter = typeof column.sorter === 'function' || column.sorter === true;
+    const { needsTitle, hasSorter, hasFilter, clickToSort: clickColumnToSorter, showSortTip, query: curQuery, sortOrder, filteredValue } = TableFoundation.getColumnFlags(column, queries, isValidElement(column.filterDropdown));
+    if (needsTitle) {
         let hasSorterOrFilter = false;
-        // the same test as the foundation's controlled sorter
-        const sortOrderNotControlled = column.sortOrder == null;
-        const showSortTip = sortOrderNotControlled && column.showSortTip === true;
         const { dataIndex, title: rawTitle, useFullRender } = column;
-        const clickColumnToSorter = hasSorter && !hasFilter && !useFullRender;
-        const { query: curQuery, sortOrder, filteredValue } = TableFoundation.getColumnQueryState(column, queries);
         const titleMap: ColumnTitleProps = {};
         const titleArr = [];
 
@@ -346,24 +340,10 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
                 return typeof func === 'function' ? func : undefined;
             };
             return {
-                resetScrollY: () => {
-                    if (base.getProp('scroll')?.y) {
-                        if (bodyWrapRef.current) {
-                            bodyWrapRef.current.scrollTop = 0;
-                        }
-                    } else if (wrapRef.current) {
-                        wrapRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                },
-                getScrollMetrics: () => TableFoundation.readScrollMetrics(bodyWrapRef.current),
-                setScrollableEdges: (edges) => TableFoundation.writeScrollableEdges(bodyWrapRef.current, edges),
-                notifyFilterDropdownVisibleChange: (visible, dataIndex) => {
-                    const column = dataIndex && base.getState('queries')?.find((query) => query.dataIndex === dataIndex);
-                    const func = column?.onFilterDropdownVisibleChange;
-                    if (typeof func === 'function') {
-                        func(visible);
-                    }
-                },
+                getWrapper: () => wrapRef.current,
+                getBodyWrapper: () => bodyWrapRef.current,
+                notifyFilterDropdownVisibleChange: (column, visible) => column.onFilterDropdownVisibleChange?.(visible),
+                notifyPageChange: (currentPage, pageSize) => (base.getProp('pagination') as TablePaginationProps)?.onChange?.(currentPage, pageSize),
                 notifyChange: (changeInfo) => base.getProps().onChange?.(changeInfo),
                 notifyExpand: (expanded, record, mouseEvent) => base.getProps().onExpand?.(expanded, record, mouseEvent),
                 notifyExpandedRowsChange: (expandedRows) => base.getProps().onExpandedRowsChange?.(expandedRows),
@@ -380,19 +360,21 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
     const view: NormalTableState<RecordType> = derived ? { ...state, ...derived } : state;
     const { queries, rowSelection, pagination, expandedRowKeys, headWidths, bodyHasScrollBar } = view;
     const bothColumnsGiven = Boolean(propColumns && children);
-    const missingDataIndex = flattened.some(isMissingDataIndex);
 
     // the header renders as a separate table above the body
     const fixedHeader = Boolean(scroll?.y) || Boolean(sticky);
     const hasExpandIcon = expandIcon !== false;
-    const showSelection = Boolean(propRowSelection) && !(propRowSelection as RowSelectionProps<RecordType>)?.hidden;
-    const { className: selectionClassName, fixed: selectionFixed, width: selectionWidth, onCell: selectionOnCell, onHeaderCell: selectionOnHeaderCell, shouldCellUpdate: selectionShouldCellUpdate } = isObject(propRowSelection) ? propRowSelection : {};
+
+    // a new object on every render; the memo below follows its fields, so an inline rowSelection keeps the columns
+    const selectionFields = getSelectionColumn(propRowSelection as RowSelectionProps<RecordType> | boolean);
+    const { className: selectionClassName, shouldCellUpdate: selectionShouldCellUpdate } = isObject(propRowSelection) ? propRowSelection : {};
+    const { key: selectionKey, fixed: selectionFixed, width: selectionWidth, onCell: selectionOnCell, onHeaderCell: selectionOnHeaderCell } = selectionFields ?? {};
 
     const selectionColumn = useMemo<ColumnProps | null>(
         () =>
-            showSelection
+            selectionKey
                 ? {
-                      key: strings.DEFAULT_KEY_COLUMN_SELECTION,
+                      key: selectionKey,
                       fixed: selectionFixed,
                       width: selectionWidth,
                       onCell: selectionOnCell,
@@ -403,7 +385,7 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
                       render: (_text: any, record: RecordType, index: number) => renderSelection(record, false, index),
                   }
                 : null,
-        [showSelection, selectionFixed, selectionWidth, selectionOnCell, selectionOnHeaderCell, selectionShouldCellUpdate, selectionClassName, prefixCls]
+        [selectionKey, selectionFixed, selectionWidth, selectionOnCell, selectionOnHeaderCell, selectionShouldCellUpdate, selectionClassName, prefixCls]
     );
 
     // only whether virtualized is set picks the components; an inline virtualized object is new on every render
@@ -427,24 +409,7 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
         [ariaLabel, ariaLabelledby, ariaDescribedby, titleNamesTable, titleId]
     );
 
-    const mergedPagination = useMemo(() => {
-        if (!pagination) {
-            return null;
-        }
-        const userOnChange = (pagination as TablePaginationProps)?.onChange;
-        // the user's onChange replaces setPage, which resets the scroll itself; with scrollToFirstRowOnChange the
-        // replacement still resets it
-        if (scroll?.scrollToFirstRowOnChange && typeof userOnChange === 'function') {
-            return {
-                ...(pagination as TablePaginationProps),
-                onChange: (currentPage: number, pageSize: number) => {
-                    foundation.resetScrollY();
-                    userOnChange(currentPage, pageSize);
-                },
-            };
-        }
-        return { onChange: foundation.setPage, ...(pagination as TablePaginationProps) };
-    }, [pagination, scroll?.scrollToFirstRowOnChange, foundation]);
+    const mergedPagination = useMemo(() => (pagination ? { ...(pagination as TablePaginationProps), onChange: foundation.handlePageChange } : null), [pagination, foundation]);
 
     const rowStateContextValue = useMemo<TableRowStateContextValue>(
         () => ({
@@ -494,19 +459,17 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
 
     const rowExpandableOf = useCallback((record: RecordType) => mergedRowExpandable(record, { childrenRecordName, hasExpandedRow: typeof expandedRowRender === 'function', rowExpandable }), [childrenRecordName, expandedRowRender, rowExpandable]);
 
-    const expandColumn = useMemo<ColumnProps | null>(
-        () =>
-            hideExpandedColumn
-                ? null
-                : {
-                      fixed: expandCellFixed,
-                      key: strings.DEFAULT_KEY_COLUMN_EXPAND,
-                      className: clsx(`${prefixCls}-column-expand`),
-                      title: <TableExpandColumnTitle prefixCls={prefixCls} />,
-                      render: hasExpandIcon ? (_text: any, record: RecordType) => (rowExpandableOf(record) ? renderExpandIcon(record) : null) : () => null,
-                  },
-        [hideExpandedColumn, expandCellFixed, prefixCls, hasExpandIcon, rowExpandableOf]
-    );
+    const expandColumn = useMemo<ColumnProps | null>(() => {
+        const fields = getExpandColumn(hideExpandedColumn, expandCellFixed);
+        return (
+            fields && {
+                ...fields,
+                className: `${prefixCls}-column-expand`,
+                title: <TableExpandColumnTitle prefixCls={prefixCls} />,
+                render: hasExpandIcon ? (_text: any, record: RecordType) => (rowExpandableOf(record) ? renderExpandIcon(record) : null) : () => null,
+            }
+        );
+    }, [hideExpandedColumn, expandCellFixed, prefixCls, hasExpandIcon, rowExpandableOf]);
 
     /**
      * Recomputed when the queries change (sorting, filtering, new columns) or the expand and selection columns
@@ -564,10 +527,6 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
         warning(bothColumnsGiven, '[Semi Table] columns should not given by object and children at the same time');
     }, [bothColumnsGiven]);
 
-    useEffect(() => {
-        warning(missingDataIndex, `[Semi Table] The column with sorter or filter must pass the 'dataIndex' prop`);
-    }, [missingDataIndex]);
-
     // The wrapper size gives the width of section and expanded rows and the fixed column shadows. The width goes to a
     // CSS variable rather than state: a window drag resizes the table every frame, and a state update re-rendered every
     // cell each time
@@ -591,17 +550,7 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
     useImperativeHandle(
         ref,
         () => ({
-            getCurrentPageData: () => {
-                const pageData = foundation.getCurrentPageData();
-                const retObj: Pick<BasePageData<RecordType>, 'dataSource' | 'groups'> = {};
-                if (pageData.dataSource) {
-                    retObj.dataSource = pageData.dataSource;
-                }
-                if (pageData.groups) {
-                    retObj.groups = pageData.groups;
-                }
-                return cloneDeep(retObj);
-            },
+            getCurrentPageData: () => cloneDeep(foundation.getCurrentPageData()),
         }),
         [foundation]
     );

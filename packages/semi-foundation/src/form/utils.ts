@@ -4,7 +4,8 @@ import { createId } from '../utils/uuid';
 import warning from '../utils/warning';
 import { strings } from './constants';
 import { hasErrors } from './errors';
-import type { FieldValidateTriggerType, BasicTriggerType, StandardSchemaIssue } from './interface';
+import type { FieldValidateTriggerType, BasicTriggerType, StandardSchemaIssue, FieldRegistration, FieldValidator, RuleItem, StandardSchema } from './interface';
+import { isRequired } from './rules';
 
 /** `['a', 0, { key: 'b' }]` -> `a[0].b`, the form of the field paths; a key that holds path syntax is quoted */
 export function schemaIssuePath({ path = [] }: StandardSchemaIssue) {
@@ -98,6 +99,85 @@ export interface FieldConfig {
     stopValidateWithError?: boolean;
     trigger?: FieldValidateTriggerType;
     allowEmpty?: boolean;
+}
+
+/** F16: a field takes its own keepState, then its ArrayField's, then the Form's; an ArrayField takes an outer ArrayField's */
+export function resolveKeepState(own?: boolean, arrayField?: boolean, form?: boolean) {
+    return own ?? arrayField ?? form ?? true;
+}
+
+/** The props a field registration reads, the Form's for the keys a field falls back on */
+export interface FieldRegistrationProps {
+    keepState?: boolean;
+    allowEmpty?: boolean;
+    allowEmptyString?: boolean;
+    /** A changed value equal to it is stored as undefined; defaults to '' */
+    emptyValue?: unknown;
+    convert?: (value: any) => any;
+    rules?: RuleItem[];
+    validator?: FieldValidator;
+    transform?: (value: any) => any;
+    stopValidateWithError?: boolean;
+    trigger?: FieldValidateTriggerType;
+}
+
+export interface FieldRegistrationView {
+    props: FieldRegistrationProps;
+    formProps: Pick<FieldRegistrationProps, 'keepState' | 'allowEmpty' | 'stopValidateWithError' | 'trigger'>;
+    /** The resolved keepState of the ArrayField the field is a row of */
+    arrayFieldKeepState?: boolean;
+}
+
+/**
+ * The registration a field hands the Form. `read` runs on every access, so props changed after the field registered
+ * take effect, keepState at unregister included.
+ */
+export function createFieldRegistration(identity: Pick<FieldRegistration, 'id' | 'field' | 'store' | 'initValue' | 'valuePath' | 'inArrayField'>, read: () => FieldRegistrationView): FieldRegistration {
+    return {
+        ...identity,
+        get keepState() {
+            const { props, arrayFieldKeepState, formProps } = read();
+            return resolveKeepState(props.keepState, arrayFieldKeepState, formProps.keepState);
+        },
+        get allowEmpty() {
+            const { props, formProps } = read();
+            return Boolean(props.allowEmpty || formProps.allowEmpty || props.allowEmptyString);
+        },
+        getValidateOptions: () => {
+            const { props, formProps } = read();
+            return {
+                rules: props.rules,
+                validate: props.validator,
+                transform: props.transform,
+                stopValidateWithError: transformDefaultBooleanAPI(props.stopValidateWithError, formProps.stopValidateWithError, false),
+                trigger: transformTrigger(props.trigger, formProps.trigger),
+            };
+        },
+        getChangeOptions: () => {
+            const { props, formProps } = read();
+            return {
+                allowEmpty: Boolean(props.allowEmpty || formProps.allowEmpty),
+                allowEmptyString: props.allowEmptyString,
+                // null is an empty value of its own
+                emptyValue: props.emptyValue === undefined ? '' : props.emptyValue,
+                convert: props.convert,
+            };
+        },
+    };
+}
+
+/** The one check of the exclusive validation sources: a Form `validator` hides the schema */
+export function validationSchema({ schema, validator }: { schema?: StandardSchema; validator?: unknown }) {
+    return typeof validator === 'function' ? undefined : schema;
+}
+
+/** Whether a field's rules mark it required; a Form schema replaces the rules, so only `label.required` marks it then */
+export function isRequiredByRules(formProps: { schema?: StandardSchema; validator?: unknown }, rules?: readonly RuleItem[]) {
+    return !validationSchema(formProps) && isRequired(rules);
+}
+
+export function pickFormProps<P extends Record<string, any>>(props: P, keys?: Array<string>): Record<string, any> {
+    return keys ? Object.fromEntries(keys.map((key) => [key, props[key]])) : props;
 }
 
 export function mergeFieldConfig(field: FieldConfig, form: FieldConfig) {

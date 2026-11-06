@@ -1,11 +1,9 @@
 import type React from 'react';
-import { isValidElement, memo, useEffect, useState, useLayoutEffect, useRef, useEffectEvent, useId, useSyncExternalStore } from 'react';
+import { isValidElement, memo, useEffect, useState, useInsertionEffect, useLayoutEffect, useEffectEvent, useId, useSyncExternalStore } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/form/constants';
+import { cssClasses, FIELD_PROP_KEYS } from '@fibrae/semi-foundation/form/constants';
 import FieldStore from '@fibrae/semi-foundation/form/field-store';
-import type { FieldRegistration } from '@fibrae/semi-foundation/form/interface';
-import { isRequired } from '@fibrae/semi-foundation/form/rules';
-import { getFieldAriaProps, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
+import { type FieldRegistrationView, createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
 import warning from '@fibrae/semi-foundation/utils/warning';
@@ -72,82 +70,27 @@ function mergeOptions(opts: WithFieldOption | undefined, props: { field?: unknow
     return { options, shouldInject };
 }
 
-function mergeProps(props: any) {
-    const defaultProps = {
-        allowEmptyString: false,
-        allowEmpty: false,
-        emptyValue: '',
-        noLabel: false,
-        noErrorMessage: false,
-        isInInputGroup: false,
-    };
-    let {
-        field,
-        label,
-        labelPosition,
-        labelWidth,
-        labelAlign,
-        labelCol,
-        wrapperCol,
-        initValue,
-        validator,
-        validateStatus,
-        trigger,
-        allowEmptyString,
-        allowEmpty,
-        emptyValue,
-        rules,
-        onChange,
-        keepState,
-        transform,
-        name,
-        fieldClassName,
-        fieldStyle,
-        noLabel,
-        noErrorMessage,
-        isInInputGroup,
-        stopValidateWithError,
-        convert,
-        showValidateIcon,
-        helpText,
-        extraText,
-        extraTextPosition,
-        pure,
-        id,
-        ...rest
-    }: any = { ...defaultProps, ...props };
-    // The initial value of any field component comes in through initValue, so the props that would give the
-    // component a second source of truth are dropped before the rest reaches it
-    delete rest.defaultChecked;
-    delete rest.defaultValue;
-    delete rest.checked;
+// Besides the shared field props: id and name, which the field sets on the control itself, and the props that would
+// give the control a second source of truth, as its initial value comes in through initValue
+const fieldOwnKeys = new Set<string>([...FIELD_PROP_KEYS, 'id', 'name', 'onChange', 'isInInputGroup', 'showValidateIcon', 'checked', 'defaultChecked', 'defaultValue']);
 
-    emptyValue = typeof emptyValue !== 'undefined' ? emptyValue : '';
+function controlProps(props: Record<string, any>) {
+    return Object.fromEntries(Object.entries(props).filter(([key]) => !fieldOwnKeys.has(key)));
+}
 
-    return {
-        field,
-        label,
-        noLabel,
-        noErrorMessage,
-        isInInputGroup,
-        initValue,
-        validate: validator,
-        validateStatus,
-        allowEmptyString,
-        emptyValue,
-        rules,
-        keepState,
-        transform,
-        name,
-        fieldClassName,
-        fieldStyle,
-        convert,
-        helpText,
-        extraText,
-        pure,
-        rest,
-        id,
-    };
+// A plain object rather than a ref: the registration built in render keeps `read`, satisfying the Compiler `refs` rule
+class LatestView {
+    #view: FieldRegistrationView;
+
+    constructor(view: FieldRegistrationView) {
+        this.#view = view;
+    }
+
+    read = () => this.#view;
+
+    sync(view: FieldRegistrationView) {
+        this.#view = view;
+    }
 }
 
 function createField<C extends React.ElementType>(Component: C, opts: WithFieldOption | undefined, insetLabel: boolean): React.ComponentType<FieldProps<React.ComponentProps<C>>> {
@@ -155,7 +98,8 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
     const Control: React.ElementType = Component;
 
     function InjectedField(props: any) {
-        const { field, label, noLabel, noErrorMessage, isInInputGroup, initValue, validate, validateStatus, allowEmptyString, emptyValue, rules, keepState, transform, name, fieldClassName, fieldStyle, convert, helpText, extraText, pure, id, rest } = mergeProps(props);
+        const { field, label, noLabel, noErrorMessage, isInInputGroup, initValue, validateStatus, rules, name, fieldClassName, fieldStyle, helpText, extraText, pure, id } = props;
+        const rest = controlProps(props);
         const { options } = mergeOptions(opts, props);
 
         // two Forms on a page may share a field name, so the name cannot be the DOM id
@@ -166,10 +110,9 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
         const fieldBridge = useFieldBridge();
         const inForm = fieldBridge !== undefined;
 
-        const formProps = inForm ? fieldBridge.getFormProps(['labelPosition', 'labelWidth', 'labelAlign', 'labelCol', 'wrapperCol', 'disabled', 'showValidateIcon', 'extraTextPosition', 'stopValidateWithError', 'trigger', 'allowEmpty', 'keepState']) : {};
-        // the schema replaces the rules, so only `label.required` marks the field
-        const required = inForm && fieldBridge.usesSchema() ? false : isRequired(rules);
-        const { labelPosition: labelPos, labelWidth: mergeLabelWidth, labelAlign: mergeLabelAlign, labelCol: mergeLabelCol, wrapperCol: mergeWrapperCol, extraTextPosition: mergeExtraPos, stopValidateWithError: mergeStopValidateWithError, trigger: mergeTrigger, allowEmpty } = mergeFieldConfig(props, formProps);
+        const formProps = inForm ? fieldBridge.getFormProps(['labelPosition', 'labelWidth', 'labelAlign', 'labelCol', 'wrapperCol', 'disabled', 'showValidateIcon', 'extraTextPosition', 'stopValidateWithError', 'trigger', 'allowEmpty', 'keepState', 'schema', 'validator']) : {};
+        const required = inForm && isRequiredByRules(formProps, rules);
+        const { labelPosition: labelPos, labelWidth: mergeLabelWidth, labelAlign: mergeLabelAlign, labelCol: mergeLabelCol, wrapperCol: mergeWrapperCol, extraTextPosition: mergeExtraPos, trigger: mergeTrigger } = mergeFieldConfig(props, formProps);
         // The control would be unnamed without an inset label, so the label goes on top: when the component cannot
         // render one, or when a prefix or a custom trigger takes its place
         const insetUnsupported = !insetLabel && labelPos === 'inset';
@@ -192,45 +135,16 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
         const [store] = useState(() => new FieldStore({ value: cloneDeep(initVal) }));
         const { value, touched, error, status } = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
         const validateOnMount = mergeTrigger.includes('mount');
-        const mergeKeepState: boolean = keepState ?? arrayFieldState.keepState ?? formProps.keepState ?? true;
 
-        const rulesRef = useRef(rules);
-        const validateRef = useRef(validate);
-        const latestOptionsRef = useRef({
-            transform,
-            stopValidateWithError: mergeStopValidateWithError,
-            allowEmpty,
-        });
-
-        const registration: FieldRegistration = {
-            id: generatedId,
-            field,
-            store,
-            initValue: initVal,
-            valuePath: options.valuePath,
-            keepState: mergeKeepState,
-            inArrayField,
-            allowEmpty: allowEmpty || allowEmptyString,
-            getValidateOptions: () => ({
-                rules: rulesRef.current,
-                validate: validateRef.current,
-                transform: latestOptionsRef.current.transform,
-                stopValidateWithError: latestOptionsRef.current.stopValidateWithError,
-            }),
-            // API setters keep the registered closure; child layout effects need this render's conversion props.
-            getChangeOptions: () => ({
-                allowEmpty: latestOptionsRef.current.allowEmpty,
-                allowEmptyString,
-                emptyValue,
-                convert,
-            }),
-        };
+        // The registration reads the props of the latest commit: the Form keeps the one registered, and the insertion
+        // phase runs before the layout effects of the wrapped control, which may report a change with this render's props
+        const view: FieldRegistrationView = { props, formProps, arrayFieldKeepState: arrayFieldState.keepState };
+        const [latest] = useState(() => new LatestView(view));
+        const registration = createFieldRegistration({ id: generatedId, field, store, initValue: initVal, valuePath: options.valuePath, inArrayField }, latest.read);
 
         const handleChange = (newValue: any, e: unknown, ...other: unknown[]) => {
             const fnKey = options.onKeyChangeFnName;
             fieldBridge.changeFieldValue(registration, newValue, {
-                allowEmpty,
-                validate: mergeTrigger.includes('change'),
                 onChange: (latestValues) => {
                     if (fnKey in props && typeof props[fnKey] === 'function') {
                         props[fnKey](newValue, e, ...other, latestValues);
@@ -241,23 +155,12 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
 
         const handleBlur = (...e: any[]) => {
             props.onBlur?.(...e);
-            if (!touched) {
-                fieldBridge.setFieldTouched(registration, true);
-            }
-            if (mergeTrigger.includes('blur')) {
-                void fieldBridge.validateField(registration, store.getSnapshot().value);
-            }
+            fieldBridge.blurField(registration);
         };
 
-        useLayoutEffect(() => {
-            rulesRef.current = rules;
-            validateRef.current = validate;
-            latestOptionsRef.current = {
-                transform,
-                stopValidateWithError: mergeStopValidateWithError,
-                allowEmpty,
-            };
-        }, [rules, validate, transform, mergeStopValidateWithError, allowEmpty]);
+        useInsertionEffect(() => {
+            latest.sync(view);
+        });
 
         const registerField = useEffectEvent(() => {
             // StrictMode registers again after the mount validation set the error;
@@ -425,31 +328,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
             // a component with inner state must not be memoized, or it would miss its own state updates
             return renderField();
         }
-        return (
-            <MemoizedField
-                deps={[
-                    value,
-                    error,
-                    touched,
-                    status,
-                    field,
-                    mergeLabelPos,
-                    mergeLabelAlign,
-                    mergeLabelWidth,
-                    mergeLabelCol,
-                    mergeWrapperCol,
-                    mergeExtraPos,
-                    // transformTrigger returns a new array on every call
-                    mergeTrigger.join(','),
-                    mergeStopValidateWithError,
-                    allowEmpty,
-                    formProps.disabled,
-                    formProps.showValidateIcon,
-                ]}
-                fieldProps={props}
-                render={renderField}
-            />
-        );
+        return <MemoizedField deps={[value, error, touched, status, field, mergeLabelPos, mergeLabelAlign, mergeLabelWidth, mergeLabelCol, mergeWrapperCol, mergeExtraPos, formProps.disabled, formProps.showValidateIcon]} fieldProps={props} render={renderField} />;
     }
 
     function SemiField(props: any) {
@@ -462,7 +341,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
 
         if (!shouldInject) {
             // not a field: only the Form-specific props are dropped, the control's own ones pass through
-            return <Component {...mergeProps(props).rest} id={props.id} name={props.name} onChange={props.onChange} />;
+            return <Control {...controlProps(props)} id={props.id} name={props.name} onChange={props.onChange} />;
         }
         return <InjectedField {...props} />;
     }

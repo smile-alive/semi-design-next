@@ -1,9 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import getYearMonthFromValue from '@fibrae/semi-foundation/date-picker/_utils/get-year-month-from-value';
-    import { isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm as isConfirmNeeded } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/date-picker/constants';
-    import DatePickerFoundation, { type DatePickerAdapter, type DatePickerFoundationProps, type DatePickerFoundationState } from '@fibrae/semi-foundation/date-picker/foundation';
+    import DatePickerFoundation, { getYearMonthFromValue, isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm as isConfirmNeeded, type DatePickerAdapter, type DatePickerFoundationProps, type DatePickerFoundationState, type DisabledDateOptions } from '@fibrae/semi-foundation/date-picker/foundation';
     import type { RangeInput } from '@fibrae/semi-foundation/date-picker/input-foundation';
     import type { PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
     import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
@@ -148,8 +146,6 @@
 
     const shownDisabledTime = $derived(disabledTime ?? noDisabledTime);
 
-    const customTrigger = () => undefined;
-
     // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: DatePickerFoundationProps = {
         get value() {
@@ -197,8 +193,8 @@
         get autoFocus() {
             return autofocus;
         },
-        get triggerRender() {
-            return trigger ? customTrigger : undefined;
+        get customTrigger() {
+            return Boolean(trigger);
         },
         get dateFnsLocale() {
             return locale().dateFnsLocale;
@@ -221,17 +217,6 @@
         (base) => {
             // the inset inputs of the panel take the range focus while there are any
             const rangeInputs = () => insetDateInput ?? triggerInput;
-            const setRangeInputFocus: DatePickerAdapter['setRangeInputFocus'] = (rangeInputFocus) => {
-                // the focus comes first: the focus handler still reads the previous rangeInputFocus
-                if (rangeInputFocus === 'rangeStart') {
-                    rangeInputs()?.getRangeStart()?.focus({ preventScroll });
-                } else if (rangeInputFocus === 'rangeEnd') {
-                    rangeInputs()?.getRangeEnd()?.focus({ preventScroll });
-                }
-                if (rangeInputFocus !== base.getState('rangeInputFocus')) {
-                    base.setState({ rangeInputFocus });
-                }
-            };
 
             return {
                 notifyBlur: (event) => onBlur?.(event),
@@ -263,7 +248,8 @@
                 },
                 notifyClickOutSide: (event) => onClickOutSide?.(event),
                 notifyPresetsClick: (item, event) => onPresetClick?.(item, event),
-                setRangeInputFocus,
+                focusRangeInput: (rangeInput) => (rangeInput === 'rangeEnd' ? rangeInputs()?.getRangeEnd() : rangeInputs()?.getRangeStart())?.focus({ preventScroll }),
+                switchPanels: (view) => monthsGrid?.switchPanels(view),
                 isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panelElement),
                 setInsetInputFocus: () => {
                     const target = base.getState('rangeInputFocus') === 'rangeEnd' ? rangeInputs()?.getRangeEnd() : rangeInputs()?.getRangeStart();
@@ -359,21 +345,15 @@
             dropdownClassName,
             dropdownStyle,
         },
-        onChange: (inputValue) => foundation.handleInputChange(inputValue, undefined),
+        onChange: foundation.handleInputChange,
         onEnterPress: foundation.handleInputComplete,
         onClear: foundation.handleInputClear,
     });
 
-    const focusInsetDate = (event: FocusEvent, rangeType: RangeInput) => {
-        monthsGrid?.showDatePanel(strings.PANEL_TYPE_LEFT);
-        monthsGrid?.showDatePanel(strings.PANEL_TYPE_RIGHT);
-        foundation.handleInputFocus(event, rangeType);
-    };
+    // the panel calls them while rendering, so they read the current props: the foundation reads the last committed ones
+    const disabledDisposeDate = (date: Date, options?: DisabledDateOptions) => DatePickerFoundation.disposeDateFn(zone, shownDisabledDate, date, options);
 
-    const focusInsetTime = () => {
-        monthsGrid?.showTimePicker(strings.PANEL_TYPE_LEFT);
-        monthsGrid?.showTimePicker(strings.PANEL_TYPE_RIGHT);
-    };
+    const disabledDisposeTime = (date: Date | Date[], panelType: PanelType) => DatePickerFoundation.disposeDateFn(zone, shownDisabledTime, date, panelType);
 
     const handleTriggerKeyDown = (event: KeyboardEvent) => {
         // a control inside the trigger (the range clear button, a custom trigger's own) keeps its keys
@@ -427,9 +407,9 @@
         {format}
         {insetInput}
         insetInputValue={states().insetInputValue}
-        onInsetDateFocus={focusInsetDate}
+        onInsetDateFocus={foundation.handleInsetDateFocus}
         onInsetInputChange={foundation.handleInsetInputChange}
-        onInsetTimeFocus={focusInsetTime}
+        onInsetTimeFocus={foundation.handleInsetTimeFocus}
         {rangeSeparator}
         {type}
         value={states().value}
@@ -455,7 +435,7 @@
                         currentYear={yearMonth.year}
                         dateInput={insetInput ? insetDateInputSnippet : undefined}
                         {density}
-                        disabledDate={(day) => foundation.disabledDisposeDate(day)}
+                        disabledDate={(day) => disabledDisposeDate(day)}
                         {endYear}
                         locale={locale().locale}
                         monthCycled
@@ -476,29 +456,27 @@
                         dateInput={insetInput ? insetDateInputSnippet : undefined}
                         {defaultPickerValue}
                         {density}
-                        disabledDate={foundation.disabledDisposeDate}
-                        disabledTime={(day, panelType: PanelType) => foundation.disabledDisposeTime(day, panelType)}
+                        disabledDate={disabledDisposeDate}
+                        disabledTime={disabledDisposeTime}
                         {disabledTimePicker}
                         {endDateOffset}
                         {endYear}
                         focusRecords={states().focusRecords}
                         {format}
                         {fullDate}
-                        hasOtherRangeInputBeenFocused={foundation.hasOtherRangeInputBeenFocused}
                         {hasPresets}
                         {hideDisabledOptions}
                         {insetInput}
-                        isControlledComponent={!confirmNeeded && value !== undefined}
                         locale={locale().locale}
                         {max}
                         {multiple}
                         onChange={foundation.handleSelectedChange}
                         onPanelChange={(next, dateString) => onPanelChange?.(next, dateString)}
-                        onRangeInputFocus={foundation.handleSetRangeFocus}
                         {presetPosition}
                         quickControls={hasPresets ? quickControls : undefined}
                         rangeInputFocus={states().rangeInputFocus}
                         selectedValue={states().cachedSelectedValue}
+                        selectionControlled={DatePickerFoundation.isSelectionControlled({ type, needConfirm, value })}
                         {startDateOffset}
                         {startYear}
                         {syncSwitchMonth}
@@ -558,7 +536,7 @@
                 class={comboboxClass}
                 role={isTriggerButton ? 'button' : undefined}
                 tabindex={isTriggerButton && !disabled ? 0 : -1}
-                onclick={(event) => foundation.handleTriggerClick(event, Boolean(trigger))}
+                onclick={foundation.handleTriggerClick}
                 onkeydown={handleTriggerKeyDown}
             >
                 {#if trigger}

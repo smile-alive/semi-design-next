@@ -3,8 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/form/constants';
     import FieldStore from '@fibrae/semi-foundation/form/field-store';
     import type { FieldRegistration } from '@fibrae/semi-foundation/form/interface';
-    import { isRequired } from '@fibrae/semi-foundation/form/rules';
-    import { getFieldAriaProps, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
+    import { createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
     import warning from '@fibrae/semi-foundation/utils/warning';
@@ -88,10 +87,7 @@
     const errorMessageId = $derived(`${a11yId}-errormessage`);
     const labelConfig = $derived(isLabelConfig(label) ? label : undefined);
     const labelText = $derived((isLabelConfig(label) ? label.text : label) || field);
-    const resolvedKeepState = $derived(keepState ?? arrayField?.keepState ?? form.formProps.keepState ?? true);
-
-    // the schema decides what is required, so only label.required marks the field then
-    const rulesRequired = $derived(!form.bridge.usesSchema() && isRequired(rules));
+    const rulesRequired = $derived(isRequiredByRules(form.formProps, rules));
     const insetPosition = $derived(merged.labelPosition === 'inset');
 
     // a prefix or a custom trigger takes the inset label's place, so the label goes on top
@@ -155,32 +151,12 @@
         };
     });
 
-    const createRegistration = (path: string, value: unknown): FieldRegistration => ({
-        id: uid,
-        field: path,
-        store,
-        initValue: value,
-        valuePath: fieldOptions.valuePath ?? '',
-        get keepState() {
-            return resolvedKeepState;
-        },
-        inArrayField: Boolean(arrayField),
-        get allowEmpty() {
-            return merged.allowEmpty || Boolean(allowEmptyString);
-        },
-        getValidateOptions: () => ({
-            rules,
-            validate: validator,
-            transform,
-            stopValidateWithError: merged.stopValidateWithError,
-        }),
-        getChangeOptions: () => ({
-            allowEmpty: merged.allowEmpty,
-            allowEmptyString,
-            emptyValue: emptyValue === undefined ? '' : emptyValue,
-            convert,
-        }),
-    });
+    const createRegistration = (path: string, value: unknown): FieldRegistration =>
+        createFieldRegistration({ id: uid, field: path, store, initValue: value, valuePath: fieldOptions.valuePath ?? '', inArrayField: Boolean(arrayField) }, () => ({
+            props: { keepState, allowEmpty, allowEmptyString, emptyValue, convert, rules, validator, transform, stopValidateWithError, trigger },
+            formProps: form.formProps,
+            arrayFieldKeepState: arrayField?.keepState,
+        }));
 
     // a wrapped component may report a change before the field registers
     let registration = untrack(() => createRegistration(field ?? '', mountedInitValue));
@@ -204,22 +180,13 @@
     };
 
     const handleChange = (...args: unknown[]) => {
-        form.bridge.changeFieldValue(registration, args[0], {
-            allowEmpty: merged.allowEmpty,
-            validate: merged.trigger.includes('change'),
-            onChange: (latestValues) => (rest[changeKey] as Handler | undefined)?.(...args, latestValues),
-        });
+        form.bridge.changeFieldValue(registration, args[0], { onChange: (latestValues) => (rest[changeKey] as Handler | undefined)?.(...args, latestValues) });
     };
 
     // Cascader and TreeSelect report blur without a native event, so the event is not read
     const handleBlur = (...args: unknown[]) => {
         (rest[blurKey] as Handler | undefined)?.(...args);
-        if (!store.getSnapshot().touched) {
-            form.bridge.setFieldTouched(registration, true);
-        }
-        if (merged.trigger.includes('blur')) {
-            void form.bridge.validateField(registration, store.getSnapshot().value);
-        }
+        form.bridge.blurField(registration);
     };
 
     $effect(() => {

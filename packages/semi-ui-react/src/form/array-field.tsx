@@ -1,13 +1,12 @@
 import type React from 'react';
-import { useEffectEvent, useLayoutEffect, useState } from 'react';
-import type { ArrayFieldRegistration } from '@fibrae/semi-foundation/form/interface';
-import { generateKeys } from '@fibrae/semi-foundation/form/utils';
+import { useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
+import ArrayFieldRows from '@fibrae/semi-foundation/form/array-field-rows';
+import { generateKeys, resolveKeepState } from '@fibrae/semi-foundation/form/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
-import { createId } from '@fibrae/semi-foundation/utils/uuid';
 import useDefaultProps from '../_base/use-default-props';
 import { cloneDeep } from '../_utils/index';
 import { ArrayFieldContext, useArrayFieldContext, useFieldBridgeContext } from './context';
-import { useFormState, useStateWithGetter } from './hooks';
+import { useFormState } from './hooks';
 
 export interface ArrayFieldProps {
     initValue?: any[];
@@ -30,33 +29,6 @@ export interface ArrayFieldChildrenProps {
     move: (from: number, to: number) => void;
 }
 
-function filterArrayByIndex(array: any[], index: number) {
-    return array.filter((_item, i) => i !== index);
-}
-
-function getUpdateKey(arrayField: ArrayFieldRegistration): number | undefined {
-    return arrayField?.updateKey || undefined;
-}
-
-// a class, not a ref: add() reaches render through the children function
-class ArrayFieldRuntime {
-    #cacheUpdateKey: number | null | undefined = null;
-    #committed = false;
-
-    changeUpdateKey(updateKey?: number) {
-        const changed = updateKey !== this.#cacheUpdateKey;
-        this.#cacheUpdateKey = updateKey;
-        return changed;
-    }
-
-    /** True from the second commit on */
-    commit() {
-        const updated = this.#committed;
-        this.#committed = true;
-        return updated;
-    }
-}
-
 const defaultProps = {} satisfies Partial<ArrayFieldProps>;
 
 export default function ArrayField(rawProps: ArrayFieldProps) {
@@ -71,7 +43,7 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
 
     const parentArrayField = useArrayFieldContext();
 
-    const [runtime] = useState(() => new ArrayFieldRuntime());
+    const committed = useRef(false);
 
     const formState = useFormState();
 
@@ -93,11 +65,13 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
     });
 
     const [shouldUseInitValue, setShouldUseInitValue] = useState(mounted.shouldUseInitValue);
+    const [keys, setKeys] = useState(mounted.keys);
 
-    const [keys, setKeys, getKeys] = useStateWithGetter(mounted.keys);
+    // a class, not a ref: add() reaches render through the children function
+    const [rows] = useState(() => new ArrayFieldRows(fieldBridge, mounted.keys, { setKeys, setShouldUseInitValue }));
 
     const { resetValue } = mounted;
-    const keepState: boolean = props.keepState ?? parentArrayField.keepState ?? fieldBridge.getFormProps(['keepState']).keepState ?? true;
+    const keepState = resolveKeepState(props.keepState, parentArrayField.keepState, fieldBridge.getFormProps(['keepState']).keepState);
 
     // rows read the initial value from here until the mount write renders; a render may be discarded, so no write
     const rowValues = formState === mounted.formState ? ObjectUtil.set(formValues, field, mounted.initValue) : parentArrayField.values;
@@ -105,7 +79,7 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
     const arrayFields = keys.map((key, i) => ({
         key,
         field: `${field}[${i}]`,
-        remove: () => remove(i),
+        remove: () => rows.remove(field, i),
     }));
 
     const mountValue = useEffectEvent(() => fieldBridge.mountArrayField(field, resetValue));
@@ -122,52 +96,13 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
     // reads the latest keepState without re-running the registration effect, which would wipe the rows on a toggle
     const unRegister = useEffectEvent((registeredField: string) => fieldBridge.unRegisterArrayField(registeredField, keepState));
 
-    const syncKeys = useEffectEvent(() => {
-        const updateKey = getUpdateKey(fieldBridge.getArrayField(field));
-        if (runtime.changeUpdateKey(updateKey)) {
-            setKeys(generateKeys(fieldBridge.getValue(field), getKeys()));
-            setShouldUseInitValue(false);
-        }
-    });
+    const syncKeys = useEffectEvent(() => rows.sync(field));
 
-    const add = (index?: number | React.MouseEvent) => {
-        const newKeys = getKeys().slice();
-        const newKey = createId();
-        const safeIndex = typeof index === 'number' ? Math.max(0, Math.min(index, newKeys.length)) : undefined;
-        newKeys.splice(safeIndex ?? newKeys.length, 0, newKey);
+    const add = (index?: number | React.MouseEvent) => rows.add(field, index);
 
-        setShouldUseInitValue(true);
-        setKeys(newKeys);
-        runtime.changeUpdateKey(fieldBridge.addArrayFieldRow(field, safeIndex));
-        return newKey;
-    };
+    const addWithInitValue = (rowVal: Record<string, any> | string, index?: number) => rows.addWithInitValue(field, rowVal, index);
 
-    const addWithInitValue = (rowVal: Record<string, any> | string, index?: number) => {
-        const row = fieldBridge.addArrayFieldRowWithValue(field, rowVal, index);
-        if (typeof index === 'number') {
-            // a new key at the position: regenerating by position would keep the old keys, so fields keep stale values
-            setKeys(getKeys().toSpliced(row.index, 0, createId()));
-            runtime.changeUpdateKey(row.updateKey);
-            // the new row's fields take the given row value, as after syncKeys
-            setShouldUseInitValue(false);
-        }
-    };
-
-    const remove = (i: number) => {
-        fieldBridge.removeArrayFieldRow(field, i);
-        setKeys(filterArrayByIndex(getKeys(), i));
-    };
-
-    const move = (from: number, to: number) => {
-        const currentKeys = getKeys();
-        const clamp = (index: number) => Math.max(0, Math.min(index, currentKeys.length - 1));
-        const [source, target] = [clamp(from), clamp(to)];
-        if (source === target) {
-            return;
-        }
-        setKeys(currentKeys.toSpliced(source, 1).toSpliced(target, 0, currentKeys[source]));
-        runtime.changeUpdateKey(fieldBridge.moveArrayFieldRow(field, source, target));
-    };
+    const move = (from: number, to: number) => rows.move(field, from, to);
 
     useLayoutEffect(() => {
         mountValue();
@@ -178,10 +113,12 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
         return () => unRegister(field);
     }, [field]);
 
+    // from the second commit on
     useLayoutEffect(() => {
-        if (runtime.commit()) {
+        if (committed.current) {
             syncKeys();
         }
+        committed.current = true;
     });
 
     return <ArrayFieldContext value={{ shouldUseInitValue, inArrayField: true, keepState, values: rowValues }}>{children({ arrayFields, add, addWithInitValue, move })}</ArrayFieldContext>;

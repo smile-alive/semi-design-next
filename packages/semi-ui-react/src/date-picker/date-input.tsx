@@ -1,8 +1,8 @@
 import type React from 'react';
 import { useRef } from 'react';
 import clsx from 'clsx';
-import { isSplitRangeInputs } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
 import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
+import { isSplitRangeInputs } from '@fibrae/semi-foundation/date-picker/foundation';
 import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type RangeInput, type InsetInputChangeProps, type InsetInputChangeFoundationProps, type InsetInputProps } from '@fibrae/semi-foundation/date-picker/input-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { noop } from '@fibrae/semi-foundation/utils/function';

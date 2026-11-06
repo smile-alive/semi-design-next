@@ -1,9 +1,7 @@
 <script setup lang="ts">
     import { computed, onMounted, onUpdated, shallowRef, useId, useTemplateRef } from 'vue';
-    import getYearMonthFromValue from '@fibrae/semi-foundation/date-picker/_utils/get-year-month-from-value';
-    import { isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/date-picker/constants';
-    import DatePickerFoundation, { type DatePickerAdapter, type DatePickerFoundationProps, type DatePickerFoundationState } from '@fibrae/semi-foundation/date-picker/foundation';
+    import DatePickerFoundation, { getYearMonthFromValue, isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm, type DatePickerAdapter, type DatePickerFoundationProps, type DatePickerFoundationState, type DisabledDateOptions } from '@fibrae/semi-foundation/date-picker/foundation';
     import type { RangeInput } from '@fibrae/semi-foundation/date-picker/input-foundation';
     import type { PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
     import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
@@ -114,6 +112,7 @@
     const spacing = computed(() => normalized.value.spacing);
     const timeZone = computed(() => props.timeZone ?? config.value.timeZone ?? readSemiDefault(semi, 'DatePicker', 'timeZone'));
     const confirmNeeded = computed(() => needConfirm({ type: type.value, needConfirm: props.needConfirm }));
+    const selectionControlled = computed(() => DatePickerFoundation.isSelectionControlled({ type: type.value, needConfirm: props.needConfirm, value: props.modelValue }));
     const isYearOrMonth = computed(() => isYearOrMonthType(type.value));
 
     const placeholder = computed(() => {
@@ -146,8 +145,6 @@
 
     const disabledTime = computed(() => props.disabledTime ?? readSemiDefault(semi, 'DatePicker', 'disabledTime') ?? noDisabledTime);
 
-    const customTrigger = () => undefined;
-
     // Vue's StyleValue (dropdownStyle) is wider than the foundation's Record<string, any>, so the props type does not match.
     const { foundation, state } = useFoundation<DatePickerFoundation, DatePickerAdapter, DatePickerFoundationProps, DatePickerFoundationState>(
         DatePickerFoundation,
@@ -155,17 +152,6 @@
         (view) => DatePickerFoundation.getInitialState(view),
         (base) => {
             const rangeInputs = () => insetDateInput.value ?? triggerInput.value;
-            const setRangeInputFocus: DatePickerAdapter['setRangeInputFocus'] = (rangeInputFocus) => {
-                // the focus comes first: the focus handler still reads the previous rangeInputFocus
-                if (rangeInputFocus === 'rangeStart') {
-                    rangeInputs()?.rangeStart?.focus({ preventScroll: props.preventScroll });
-                } else if (rangeInputFocus === 'rangeEnd') {
-                    rangeInputs()?.rangeEnd?.focus({ preventScroll: props.preventScroll });
-                }
-                if (rangeInputFocus !== base.getState('rangeInputFocus')) {
-                    base.setState({ rangeInputFocus });
-                }
-            };
 
             return {
                 notifyBlur: (event) => emit('blur', event),
@@ -183,7 +169,8 @@
                 },
                 notifyClickOutSide: (event) => emit('clickOutSide', event),
                 notifyPresetsClick: (item, event) => emit('presetClick', item, event),
-                setRangeInputFocus,
+                focusRangeInput: (rangeInput) => rangeInputs()?.[rangeInput]?.focus({ preventScroll: props.preventScroll }),
+                switchPanels: (view) => monthsGrid.value?.switchPanels(view),
                 isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panel.value),
                 setInsetInputFocus: () => {
                     const target = base.getState('rangeInputFocus') === 'rangeEnd' ? rangeInputs()?.rangeEnd : rangeInputs()?.rangeStart;
@@ -214,7 +201,7 @@
                 startDateOffset: () => props.startDateOffset ?? readSemiDefault(semi, 'DatePicker', 'startDateOffset'),
                 endDateOffset: () => props.endDateOffset ?? readSemiDefault(semi, 'DatePicker', 'endDateOffset'),
                 autoFocus: () => props.autofocus,
-                triggerRender: () => (slots.trigger ? customTrigger : undefined),
+                customTrigger: () => Boolean(slots.trigger),
                 dateFnsLocale: () => locale.value.dateFnsLocale,
             },
         }
@@ -273,20 +260,10 @@
         ];
     };
 
-    const disabledDisposeDate = (date: Date, options?: unknown) => foundation.disabledDisposeDate(date, options);
+    // the panel calls them while rendering, so they read the current props: the foundation reads the last committed ones
+    const disabledDisposeDate = (date: Date, options?: DisabledDateOptions) => DatePickerFoundation.disposeDateFn(timeZone.value, disabledDate.value, date, options);
 
-    const disabledDisposeTime = (date: Date | Date[], panelType: PanelType) => foundation.disabledDisposeTime(date, panelType);
-
-    const focusInsetDate = (event: FocusEvent, rangeType: RangeInput) => {
-        monthsGrid.value?.showDatePanel(strings.PANEL_TYPE_LEFT);
-        monthsGrid.value?.showDatePanel(strings.PANEL_TYPE_RIGHT);
-        foundation.handleInputFocus(event, rangeType);
-    };
-
-    const focusInsetTime = () => {
-        monthsGrid.value?.showTimePicker(strings.PANEL_TYPE_LEFT);
-        monthsGrid.value?.showTimePicker(strings.PANEL_TYPE_RIGHT);
-    };
+    const disabledDisposeTime = (date: Date | Date[], panelType: PanelType) => DatePickerFoundation.disposeDateFn(timeZone.value, disabledTime.value, date, panelType);
 
     const onTriggerKeyDown = (event: KeyboardEvent) => {
         if (!isInnerControlKey(event)) {
@@ -307,7 +284,7 @@
         multiple: props.multiple,
         autofocus: state.value.autofocus,
         componentProps: { ...props, ...looks },
-        onChange: (inputValue) => foundation.handleInputChange(inputValue, undefined),
+        onChange: foundation.handleInputChange,
         onEnterPress: foundation.handleInputComplete,
         onClear: foundation.handleInputClear,
     });
@@ -369,7 +346,7 @@
                                 @select="foundation.handleYMSelectedChange"
                             >
                                 <template v-if="props.insetInput" #dateInput>
-                                    <DateInput ref="insetDateInput" v-bind="insetDateInputProps" @insetDateFocus="focusInsetDate" @insetInputChange="foundation.handleInsetInputChange" @insetTimeFocus="focusInsetTime" />
+                                    <DateInput ref="insetDateInput" v-bind="insetDateInputProps" @insetDateFocus="foundation.handleInsetDateFocus" @insetInputChange="foundation.handleInsetInputChange" @insetTimeFocus="foundation.handleInsetTimeFocus" />
                                 </template>
                                 <template v-if="hasPresets" #quickControls>
                                     <QuickControl v-bind="quickControlProps" @presetClick="foundation.handlePresetClick" />
@@ -389,17 +366,16 @@
                                 :endYear="props.endYear"
                                 :focusRecords="state.focusRecords"
                                 :format="props.format"
-                                :hasOtherRangeInputBeenFocused="foundation.hasOtherRangeInputBeenFocused"
                                 :hasPresets="hasPresets"
                                 :hideDisabledOptions="props.hideDisabledOptions"
                                 :insetInput="props.insetInput"
-                                :isControlledComponent="!confirmNeeded && props.modelValue !== undefined"
                                 :locale="locale.locale"
                                 :max="props.max"
                                 :multiple="props.multiple"
                                 :presetPosition="props.presetPosition"
                                 :rangeInputFocus="state.rangeInputFocus"
                                 :selectedValue="state.cachedSelectedValue"
+                                :selectionControlled="selectionControlled"
                                 :startDateOffset="props.startDateOffset ?? readSemiDefault(semi, 'DatePicker', 'startDateOffset')"
                                 :startYear="props.startYear"
                                 :syncSwitchMonth="props.syncSwitchMonth"
@@ -410,10 +386,9 @@
                                 :yearAndMonthOpts="props.yearAndMonthOpts"
                                 @change="foundation.handleSelectedChange"
                                 @panelChange="(...args) => emit('panelChange', ...args)"
-                                @rangeInputFocus="foundation.handleSetRangeFocus"
                             >
                                 <template v-if="props.insetInput" #dateInput>
-                                    <DateInput ref="insetDateInput" v-bind="insetDateInputProps" @insetDateFocus="focusInsetDate" @insetInputChange="foundation.handleInsetInputChange" @insetTimeFocus="focusInsetTime" />
+                                    <DateInput ref="insetDateInput" v-bind="insetDateInputProps" @insetDateFocus="foundation.handleInsetDateFocus" @insetInputChange="foundation.handleInsetInputChange" @insetTimeFocus="foundation.handleInsetTimeFocus" />
                                 </template>
                                 <template v-if="hasPresets" #quickControls>
                                     <QuickControl v-bind="quickControlProps" @presetClick="foundation.handlePresetClick" />
@@ -449,7 +424,7 @@
                 :class="comboboxClass()"
                 :role="isTriggerButton() ? 'button' : undefined"
                 :tabindex="isTriggerButton() && !looks.disabled ? 0 : -1"
-                @click="foundation.handleTriggerClick($event, Boolean($slots.trigger))"
+                @click="foundation.handleTriggerClick"
                 @keydown="onTriggerKeyDown"
             >
                 <slot v-if="$slots.trigger" name="trigger" v-bind="triggerSlotProps()" />

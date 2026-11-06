@@ -1,12 +1,11 @@
 import { type JSX, type ValidComponent, Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/form/constants';
+import { cssClasses, FIELD_PROP_KEYS } from '@fibrae/semi-foundation/form/constants';
 import { errorMessages } from '@fibrae/semi-foundation/form/errors';
 import FieldStore from '@fibrae/semi-foundation/form/field-store';
 import type { ExclusiveFieldValidation, FieldRegistration } from '@fibrae/semi-foundation/form/interface';
-import { isRequired } from '@fibrae/semi-foundation/form/rules';
-import { getFieldAriaProps, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
+import { createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import warning from '@fibrae/semi-foundation/utils/warning';
@@ -30,37 +29,8 @@ export interface WithFieldOption {
     shouldInject?: boolean;
 }
 
-const fieldKeys = [
-    'allowEmpty',
-    'allowEmptyString',
-    'convert',
-    'emptyValue',
-    'extraText',
-    'extraTextPosition',
-    'field',
-    'fieldClassName',
-    'fieldStyle',
-    'helpText',
-    'id',
-    'initValue',
-    'keepState',
-    'label',
-    'labelAlign',
-    'labelCol',
-    'labelPosition',
-    'labelWidth',
-    'name',
-    'noErrorMessage',
-    'noLabel',
-    'pure',
-    'rules',
-    'stopValidateWithError',
-    'transform',
-    'trigger',
-    'validateStatus',
-    'validator',
-    'wrapperCol',
-] as const satisfies readonly (keyof (CommonFieldProps & ExclusiveFieldValidation))[];
+// the field sets id and name on the control itself
+const fieldKeys = [...FIELD_PROP_KEYS, 'id', 'name'] as const satisfies readonly (keyof (CommonFieldProps & ExclusiveFieldValidation))[];
 
 // The value comes in through initValue only, so the props that would give the control a second source of truth are
 // dropped before the rest reaches it
@@ -121,32 +91,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
         const store = new FieldStore({ value: cloneDeep(mountedInitValue) });
         const [snapshot, setSnapshot] = createSignal(store.getSnapshot());
 
-        const createRegistration = (field: string, initValue: unknown): FieldRegistration => ({
-            id: generatedId,
-            field,
-            store,
-            initValue,
-            valuePath,
-            get keepState() {
-                return local.keepState ?? arrayField?.keepState() ?? form.formProps.keepState ?? true;
-            },
-            inArrayField: Boolean(arrayField),
-            get allowEmpty() {
-                return merged().allowEmpty || Boolean(local.allowEmptyString);
-            },
-            getValidateOptions: () => ({
-                rules: local.rules,
-                validate: local.validator,
-                transform: local.transform,
-                stopValidateWithError: merged().stopValidateWithError,
-            }),
-            getChangeOptions: () => ({
-                allowEmpty: merged().allowEmpty,
-                allowEmptyString: local.allowEmptyString,
-                emptyValue: local.emptyValue === undefined ? '' : local.emptyValue,
-                convert: local.convert,
-            }),
-        });
+        const createRegistration = (field: string, initValue: unknown) => createFieldRegistration({ id: generatedId, field, store, initValue, valuePath, inArrayField: Boolean(arrayField) }, () => ({ props: local, formProps: form.formProps, arrayFieldKeepState: arrayField?.keepState() }));
 
         // a wrapped component may report a change before the field registers
         let registration = untrack(() => createRegistration(local.field, mountedInitValue));
@@ -171,8 +116,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
         const labelPosition = () => (insetFallback() ? 'top' : merged().labelPosition);
         const insetShown = () => labelPosition() === 'inset' && !local.noLabel;
         const shownStatus = () => local.validateStatus || snapshot().status;
-        // with a Form schema the asterisk follows `label.required` only
-        const rulesRequired = () => !form.bridge.usesSchema() && isRequired(local.rules);
+        const rulesRequired = () => isRequiredByRules(form.formProps, local.rules);
 
         // A layout creates only the texts it renders: nodes created for a text left out have no server markup to hydrate
         const ownLayout = () => !group && !local.pure;
@@ -244,8 +188,6 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
 
         const handleChange = (...args: unknown[]) => {
             form.bridge.changeFieldValue(registration, args[0], {
-                allowEmpty: merged().allowEmpty,
-                validate: merged().trigger.includes('change'),
                 onChange: (latestValues) => {
                     const [value, event, ...other] = args;
                     invoke(local[changeKey], value, event, ...other, latestValues);
@@ -255,12 +197,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
 
         const handleBlur = (...args: unknown[]) => {
             invoke(local.onBlur, ...args);
-            if (!store.getSnapshot().touched) {
-                form.bridge.setFieldTouched(registration, true);
-            }
-            if (merged().trigger.includes('blur')) {
-                void form.bridge.validateField(registration, store.getSnapshot().value);
-            }
+            form.bridge.blurField(registration);
         };
 
         const controlProps = mergeProps(
@@ -408,7 +345,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
     }
 
     function SemiField(props: AnyProps) {
-        const [, bare] = splitProps(props, [...fieldKeys.filter((key) => key !== 'id' && key !== 'name'), ...valueKeys]);
+        const [, bare] = splitProps(props, [...FIELD_PROP_KEYS, ...valueKeys]);
 
         untrack(() => warning(props.field === undefined && shouldInject, "[Semi Form]: 'field' is required, please check your props of Field Component"));
 

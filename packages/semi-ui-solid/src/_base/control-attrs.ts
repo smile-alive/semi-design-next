@@ -1,8 +1,8 @@
 import { $PROXY } from 'solid-js';
+import { FORM_INJECTED_PROP_KEYS } from '@fibrae/semi-foundation/form/constants';
 import { isNativeInputKey as isNativeInputKeyOf } from '@fibrae/semi-foundation/utils/a11y';
 
-/** Keys Form injects into every field component; none of them is a DOM attribute */
-const formInjectedKeys = new Set(['validateStatus', 'insetLabel', 'insetLabelId']);
+const formInjectedKeys = new Set<string>(FORM_INJECTED_PROP_KEYS);
 
 /** Every field component wraps its props in this first, so the injected keys never reach `splitProps` or the DOM */
 export function omitFormInjected<P extends object>(props: P) {

@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import TableFoundation, { type BaseChangeInfoSorter, type BaseColumnProps, type BaseEntity, type BaseOnCellReturnObject, type BaseSorterInfo, type TableBaseState, type TableScrollableEdges, type TableScrollMetrics } from '../foundation';
+import TableFoundation, { type BaseChangeInfoSorter, type BaseColumnProps, type BaseEntity, type BaseOnCellReturnObject, type BaseSorterInfo, type TableBaseState } from '../foundation';
 
 const dataSource = [
     { key: '1', name: 'a' },
@@ -53,14 +53,59 @@ describe('TableFoundation.getInitialState', () => {
     });
 });
 
-describe('TableFoundation.getColumnQueryState', () => {
+describe('TableFoundation.getColumnFlags', () => {
     it('按 dataIndex 取列的查询，排序值无效时用 defaultSortOrder，筛选值缺省时用 defaultFilteredValue', () => {
         const query = { dataIndex: 'name', sortOrder: 'invalid', defaultSortOrder: 'descend', defaultFilteredValue: ['a'] };
-        expect(TableFoundation.getColumnQueryState({ dataIndex: 'name' }, [query])).toEqual({ query, sortOrder: 'descend', filteredValue: ['a'] });
+        expect(TableFoundation.getColumnFlags({ dataIndex: 'name' }, [query], false)).toMatchObject({ query, sortOrder: 'descend', filteredValue: ['a'] });
     });
 
     it('没有 dataIndex 的列没有查询，不排序也没有筛选值', () => {
-        expect(TableFoundation.getColumnQueryState({}, [{ dataIndex: 'name', sortOrder: 'ascend' }])).toEqual({ query: undefined, sortOrder: false, filteredValue: undefined });
+        expect(TableFoundation.getColumnFlags({}, [{ dataIndex: 'name', sortOrder: 'ascend' }], false)).toMatchObject({ query: undefined, sortOrder: false, filteredValue: undefined });
+    });
+
+    it('只有排序的列点整个表头排序；非受控排序才显示提示', () => {
+        expect(TableFoundation.getColumnFlags({ sorter: true, showSortTip: true }, [], false)).toMatchObject({ hasSorter: true, hasFilter: false, needsTitle: true, clickToSort: true, showSortTip: true });
+        expect(TableFoundation.getColumnFlags({ sorter: true, showSortTip: true, sortOrder: 'ascend' }, [], false)).toMatchObject({ clickToSort: true, showSortTip: false });
+        expect(TableFoundation.getColumnFlags({ sorter: true, useFullRender: true }, [], false)).toMatchObject({ clickToSort: false });
+    });
+
+    it('filters 非空、自带下拉或 renderFilterDropdown 才有筛选，有筛选时排序器自己接点击', () => {
+        expect(TableFoundation.getColumnFlags({ filters: [] }, [], false)).toMatchObject({ hasFilter: false, needsTitle: true });
+        expect(TableFoundation.getColumnFlags({ sorter: true }, [], true)).toMatchObject({ hasFilter: true, clickToSort: false });
+        expect(TableFoundation.getColumnFlags({ renderFilterDropdown: () => null }, [], false)).toMatchObject({ hasFilter: true, needsTitle: true });
+        expect(TableFoundation.getColumnFlags({ dataIndex: 'name' }, [], false)).toMatchObject({ hasSorter: false, hasFilter: false, needsTitle: false });
+    });
+});
+
+describe('TableFoundation.handlePageChange', () => {
+    const scrollAdapter = (props: Record<string, any>) => {
+        const body = document.createElement('div');
+        body.scrollTop = 50;
+        const adapter = {
+            getProp: (key: string) => props[key],
+            getProps: () => props,
+            getState: () => undefined,
+            getWrapper: () => document.createElement('div'),
+            getBodyWrapper: () => body,
+            notifyPageChange: vi.fn<(currentPage: number, pageSize: number) => void>(),
+        };
+        return { adapter, body, foundation: new TableFoundation<Row>(adapter as never) };
+    };
+
+    it('使用方的 pagination.onChange 接管翻页，scrollToFirstRowOnChange 时先复位滚动', () => {
+        const { adapter, body, foundation } = scrollAdapter({ pagination: { onChange: () => {} }, scroll: { y: 200, scrollToFirstRowOnChange: true } });
+        const setPage = vi.spyOn(foundation, 'setPage');
+        foundation.handlePageChange(2, 10);
+        expect(adapter.notifyPageChange).toHaveBeenCalledWith(2, 10);
+        expect(setPage).not.toHaveBeenCalled();
+        expect(body.scrollTop).toBe(0);
+    });
+
+    it('没有 scrollToFirstRowOnChange 时不复位滚动', () => {
+        const { adapter, body, foundation } = scrollAdapter({ pagination: { onChange: () => {} }, scroll: { y: 200 } });
+        foundation.handlePageChange(2, 10);
+        expect(adapter.notifyPageChange).toHaveBeenCalledWith(2, 10);
+        expect(body.scrollTop).toBe(50);
     });
 });
 
@@ -157,18 +202,23 @@ describe('TableFoundation 横向滚动边缘', () => {
         expect(TableFoundation.getScrollableEdges(input)).toEqual(expected);
     });
 
-    it('不支持 scroll-state 时 syncScrollEdges 按滚动位置写入，支持时不测量', () => {
+    it('不支持 scroll-state 时 syncScrollEdges 按滚动位置写到容器上，支持时不测量', () => {
         const supports = vi.spyOn(CSS, 'supports');
-        const adapter = { getScrollMetrics: vi.fn<() => TableScrollMetrics>(() => ({ ...metrics, scrollLeft: 0 })), setScrollableEdges: vi.fn<(edges: TableScrollableEdges) => void>() };
+        const container = document.createElement('div');
+        const body = container.appendChild(document.createElement('div'));
+        Object.defineProperties(body, { scrollWidth: { value: metrics.scrollWidth }, clientWidth: { value: metrics.clientWidth } });
+        const adapter = { getBodyWrapper: vi.fn<() => HTMLElement>(() => body) };
 
         supports.mockReturnValue(false);
         new TableFoundation<Row>(adapter as never).syncScrollEdges();
-        expect(adapter.setScrollableEdges).toHaveBeenCalledWith({ left: false, right: true });
+        expect(container.hasAttribute('data-scrollable-left')).toBe(false);
+        expect(container.hasAttribute('data-scrollable-right')).toBe(true);
 
-        adapter.getScrollMetrics.mockClear();
+        adapter.getBodyWrapper.mockClear();
         supports.mockReturnValue(true);
         new TableFoundation<Row>(adapter as never).syncScrollEdges();
-        expect(adapter.getScrollMetrics).not.toHaveBeenCalled();
+        expect(adapter.getBodyWrapper).not.toHaveBeenCalled();
+        supports.mockRestore();
     });
 });
 

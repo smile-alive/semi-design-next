@@ -4,6 +4,7 @@ import { cssClasses } from '@fibrae/semi-foundation/form/constants';
 import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
 import FormFoundation, { type BaseFormAdapter } from '@fibrae/semi-foundation/form/foundation';
 import type { AllErrors, FieldBridge, FormFoundationState } from '@fibrae/semi-foundation/form/interface';
+import { pickFormProps } from '@fibrae/semi-foundation/form/utils';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/form/form.scss';
 import useDefaultProps from '../_base/use-default-props';
@@ -24,13 +25,6 @@ const defaultProps = {
     keepState: true,
     schemaDebounce: 0,
 } satisfies Partial<BaseFormProps>;
-
-function pickFormProps(props: Record<string, any>, keys?: Array<string>) {
-    if (keys == null) {
-        return props;
-    }
-    return Object.fromEntries(keys.map((key) => [key, props[key]]));
-}
 
 export default function Form<Values extends Record<string, any> = any, Output = Values>(rawProps: BaseFormProps<Values, Output>) {
     const props = useDefaultProps('Form', rawProps, defaultProps);
@@ -89,15 +83,10 @@ export default function Form<Values extends Record<string, any> = any, Output = 
             // the type names the field errors; a thrown or non-object result of the Form validator passes through as it is
             notifySubmitFail: (errors, values, e) => base.getProps().onSubmitFail?.(errors as Partial<AllErrors<Values>>, values, e),
             getLocale: () => base.getContext('locale'),
-            forceUpdate: (formState, callback) => {
-                base.setState({ formState }, callback);
-                getFormApiProxyInternals(base.getProps().form)?.updateState(formState);
-            },
             notifyChange: (formState) => base.getProps().onChange?.(formState),
             notifyValueChange: (values, changedValues) => base.getProps().onValueChange?.(values, changedValues),
             notifyErrorChange: (errors, changedError) => base.getProps().onErrorChange?.(errors, changedError),
             notifyReset: () => base.getProps().onReset?.(),
-            getFormProps: (keys) => pickFormProps(base.getProps(), keys),
             getFormElement: () => formRef.current,
         }),
         { locale }
@@ -112,7 +101,6 @@ export default function Form<Values extends Record<string, any> = any, Output = 
     const fieldBridge: FieldBridge = {
         ...foundationBridge,
         getFormProps: (keys?: Array<string>) => pickFormProps(props, keys),
-        usesSchema: () => Boolean(props.schema) && typeof props.validator !== 'function',
     };
 
     const contentProps = { formState, formApi, values: formState.values };

@@ -1,7 +1,7 @@
 import { computed, onActivated, onBeforeUnmount, onDeactivated, onMounted, onScopeDispose, shallowRef, useId, watch } from 'vue';
 import FieldStore from '@fibrae/semi-foundation/form/field-store';
 import type { FieldRegistration } from '@fibrae/semi-foundation/form/interface';
-import { mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
+import { createFieldRegistration, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import { useArrayFieldContext, useFormContext, useFormInputGroupContext } from './context';
@@ -43,38 +43,16 @@ export default function useField(props: Readonly<Partial<CommonFieldProps>>, opt
         };
     });
 
+    // the Form schema ignores field rules, so only label.required marks the field then
+    const rulesRequired = computed(() => isRequiredByRules(formProps.value, props.rules));
+
     const readInitValue = (field: string) => resolveFieldInitValue(props.initValue, ObjectUtil.get(arrayField?.value.values ?? formState.value.values ?? {}, field), arrayField?.value.shouldUseInitValue ?? true);
 
     // validateStatus only overrides the shown status, so it does not seed the field's own one
     const store = new FieldStore({ value: cloneDeep(readInitValue(props.field ?? '')) });
     const snapshot = shallowRef(store.getSnapshot());
 
-    const createRegistration = (field: string): FieldRegistration => ({
-        id: generatedId,
-        field,
-        store,
-        initValue: readInitValue(field),
-        valuePath: options.valuePath,
-        get keepState() {
-            return props.keepState ?? arrayField?.value.keepState ?? formProps.value.keepState ?? true;
-        },
-        inArrayField: Boolean(arrayField),
-        get allowEmpty() {
-            return merged.value.allowEmpty || Boolean(props.allowEmptyString);
-        },
-        getValidateOptions: () => ({
-            rules: props.rules,
-            validate: props.validator,
-            transform: props.transform,
-            stopValidateWithError: merged.value.stopValidateWithError,
-        }),
-        getChangeOptions: () => ({
-            allowEmpty: merged.value.allowEmpty,
-            allowEmptyString: props.allowEmptyString,
-            emptyValue: props.emptyValue === undefined ? '' : props.emptyValue,
-            convert: props.convert,
-        }),
-    });
+    const createRegistration = (field: string) => createFieldRegistration({ id: generatedId, field, store, initValue: readInitValue(field), valuePath: options.valuePath, inArrayField: Boolean(arrayField) }, () => ({ props, formProps: formProps.value, arrayFieldKeepState: arrayField?.value.keepState }));
 
     // a wrapped component may report a change from its onMounted, before the field registers
     let registration = createRegistration(props.field ?? '');
@@ -94,22 +72,11 @@ export default function useField(props: Readonly<Partial<CommonFieldProps>>, opt
     };
 
     const handleChange = (...args: unknown[]) => {
-        bridge.changeFieldValue(registration, args[0], {
-            allowEmpty: merged.value.allowEmpty,
-            validate: merged.value.trigger.includes('change'),
-            onChange: (latestValues) => options.onChange(args, latestValues),
-        });
+        bridge.changeFieldValue(registration, args[0], { onChange: (latestValues) => options.onChange(args, latestValues) });
     };
 
     // Cascader and TreeSelect report blur without a native event, so the event is not read
-    const handleBlur = () => {
-        if (!store.getSnapshot().touched) {
-            bridge.setFieldTouched(registration, true);
-        }
-        if (merged.value.trigger.includes('blur')) {
-            void bridge.validateField(registration, store.getSnapshot().value);
-        }
-    };
+    const handleBlur = () => bridge.blurField(registration);
 
     watch(
         () => props.field,
@@ -147,5 +114,5 @@ export default function useField(props: Readonly<Partial<CommonFieldProps>>, opt
         }
     });
 
-    return { generatedId, snapshot, merged, inGroup: Boolean(group), usesSchema: bridge.usesSchema, handleChange, handleBlur };
+    return { generatedId, snapshot, merged, inGroup: Boolean(group), rulesRequired, handleChange, handleBlur };
 }
