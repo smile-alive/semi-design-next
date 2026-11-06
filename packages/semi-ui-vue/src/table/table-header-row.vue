@@ -50,8 +50,7 @@
         const HeaderCell = components.header.cell;
 
         return props.row.flatMap(({ column, ...cell }, cellIndex): HeaderCellView[] => {
-            const custom = { ...column.onHeaderCell?.(column, cellIndex, props.index) };
-            const { class: customClass, style: customStyle, onClick, ...customAttrs } = custom;
+            const { class: customClass, style: customStyle, onClick, ...customAttrs } = { ...column.onHeaderCell?.(column, cellIndex, props.index) };
             const flags = columnFlags(column, queries);
             const textAlign = column.align ? getRTLAlign(column.align, direction) : undefined;
 

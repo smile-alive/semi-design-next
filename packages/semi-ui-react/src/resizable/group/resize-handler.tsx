@@ -25,10 +25,8 @@ export interface ResizeHandlerProps extends ElementProps<'div'> {
 }
 
 export default function ResizeHandler(rawProps: ResizeHandlerProps) {
-    const props = useDefaultProps('ResizeHandler', rawProps, {});
-
     // direction, onResizeStart and disabled are declared but ignored: the group's direction applies
-    const { ref, style, className, children, direction: directionProp, onResizeStart, disabled, ...rest } = props;
+    const { ref, style, className, children, direction: directionProp, onResizeStart, disabled, ...rest } = useDefaultProps('ResizeHandler', rawProps, {});
 
     const { direction, registerHandler, notifyResizeStart, notifyResizing, notifyResizeEnd, notifyKeyDown } = useResizeContext('ResizeHandler');
     const { locale } = useLocale('Resizable');

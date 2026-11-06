@@ -12,10 +12,8 @@ const prefixCls = `${cssClasses.FILE}-image-slot`;
 export function ImageUploadNodeComponent(props: NodeViewProps) {
     const [status, setStatus] = useState<string>();
 
-    const options: ImageUploadNodeOptions & { type: string } = props.extension.options;
-
     // HTMLAttributes and type configure the tiptap node; Upload passes unknown props to its root div
-    const { onChange, onSuccess, getUploadImageSrc, className, HTMLAttributes, type, ...rest } = options;
+    const { onChange, onSuccess, getUploadImageSrc, className, HTMLAttributes, type, ...rest }: ImageUploadNodeOptions & { type: string } = props.extension.options;
 
     const handleChange = (innerProps: any) => {
         const file = innerProps.fileList[0];

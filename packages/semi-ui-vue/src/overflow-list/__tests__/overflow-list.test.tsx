@@ -158,8 +158,7 @@ describe('OverflowList', () => {
     it('collapse: 容器变窄或变宽时，放不下的 items 在 overflow 与可见区之间移动', async () => {
         const resize = stubResizeObserver();
         const onOverflow = vi.fn<OverflowHandler>();
-        const view = renderList({ onOverflow }, { overflow: plus });
-        const { container } = view;
+        const { container } = renderList({ onOverflow }, { overflow: plus });
         await measure(resize, container, 300);
         expect(getList(container)).toHaveStyle({ visibility: 'visible' });
         expect(getList(container)).toHaveTextContent(keys.join(''));
@@ -187,8 +186,7 @@ describe('OverflowList', () => {
 
     it('collapse: 放宽后刚好放下全部 items 时不再计入已卸载的 overflow 节点宽度', async () => {
         const resize = stubResizeObserver();
-        const view = renderList({}, { overflow: plus });
-        const { container } = view;
+        const { container } = renderList({}, { overflow: plus });
         await measure(resize, container, 120);
         await resize(container.querySelector(`.${prefixCls}-overflow`), 30);
         await resize(getList(container), 300);

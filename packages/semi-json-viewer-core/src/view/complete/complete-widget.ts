@@ -189,8 +189,7 @@ export class CompleteWidget {
     }
 
     complete() {
-        const selectedItem = this.#suggestions[this.#selectedIndex];
-        const { textEdit } = selectedItem;
+        const { textEdit } = this.#suggestions[this.#selectedIndex];
         if (!textEdit) {
             return;
         }

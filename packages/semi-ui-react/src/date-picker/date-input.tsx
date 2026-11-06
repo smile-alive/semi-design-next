@@ -145,8 +145,7 @@ export default function DateInput(rawProps: DateInputProps) {
 
         const [rangeStart, rangeEnd = ''] = text.split(rangeSeparator) || [];
         const rangeSize = size === 'large' ? 'default' : 'small';
-        const rangePlaceholder = Array.isArray(placeholder) ? placeholder : [placeholder, placeholder];
-        const [rangeStartPlaceholder, rangeEndPlaceholder] = rangePlaceholder;
+        const [rangeStartPlaceholder, rangeEndPlaceholder] = Array.isArray(placeholder) ? placeholder : [placeholder, placeholder];
         const labelNode = hasContent(prefix) ? prefix : insetLabel;
         const inputLeftWrapperCls = clsx(`${prefixCls}-range-input-wrapper-start`, `${prefixCls}-range-input-wrapper`, {
             [`${prefixCls}-range-input-wrapper-active`]: rangeInputFocus === 'rangeStart' && !disabled,

@@ -31,8 +31,7 @@ const defaultProps = {
 } satisfies Partial<SpaceProps>;
 
 function Space(rawProps: SpaceProps) {
-    const props = useDefaultProps('Space', rawProps, defaultProps);
-    const { ref, children = null, style, className, spacing, wrap, align, vertical, ...rest } = props;
+    const { ref, children = null, style, className, spacing, wrap, align, vertical, ...rest } = useDefaultProps('Space', rawProps, defaultProps);
 
     let spacingHorizontalType = '';
     let spacingVerticalType = '';

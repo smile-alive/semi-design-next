@@ -32,8 +32,7 @@ export interface ColProps extends ElementProps<'div'> {
 const defaultProps = { prefixCls: cssClasses.PREFIX } satisfies Partial<ColProps>;
 
 export default function Col(rawProps: ColProps) {
-    const props = useDefaultProps('Col', rawProps, defaultProps);
-    const { ref, prefixCls, span, order, offset, push, pull, className, style, children, xs, sm, md, lg, xl, xxl, ...rest } = props;
+    const { ref, prefixCls, span, order, offset, push, pull, className, style, children, xs, sm, md, lg, xl, xxl, ...rest } = useDefaultProps('Col', rawProps, defaultProps);
 
     const classes = getColClassName(prefixCls, { span, order, offset, push, pull, xs, sm, md, lg, xl, xxl }, className);
 

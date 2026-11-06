@@ -292,8 +292,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         const { monthLeft, monthRight } = this.getStates();
         const isRange = isRangeType(datePanelType);
         const isLeftPanelInRange = isRange && panelType === strings.PANEL_TYPE_LEFT;
-        const panelDetail = this.#getPanelDetail(panelType);
-        const { pickerDate } = panelDetail;
+        const { pickerDate } = this.#getPanelDetail(panelType);
         const fn = dateCalcFns[type];
         const targetMonth = fn(pickerDate, step);
         const panelDateHasUpdate = (panelType === strings.PANEL_TYPE_LEFT && !isEqual(targetMonth, monthLeft.pickerDate)) || (panelType === strings.PANEL_TYPE_RIGHT && !isEqual(targetMonth, monthRight.pickerDate));

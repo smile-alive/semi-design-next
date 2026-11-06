@@ -29,8 +29,7 @@ export interface DividerProps extends ElementProps<'div'> {
 const defaultProps = { layout: 'horizontal', align: 'center' } satisfies Partial<DividerProps>;
 
 export default function Divider(rawProps: DividerProps) {
-    const props = useDefaultProps('Divider', rawProps, defaultProps);
-    const { layout, dashed, align, className, margin, style, children, ...rest } = props;
+    const { layout, dashed, align, className, margin, style, children, ...rest } = useDefaultProps('Divider', rawProps, defaultProps);
 
     let overrideDefaultStyle: CSSProperties = {};
 

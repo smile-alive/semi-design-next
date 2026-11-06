@@ -18,8 +18,7 @@ export interface SplitButtonGroupProps extends BaseProps, ElementProps<'div'> {
 }
 
 export default function SplitButtonGroup(rawProps: SplitButtonGroupProps) {
-    const props = useDefaultProps('SplitButtonGroup', rawProps, {});
-    const { ref, children, style, className, ...rest } = props;
+    const { ref, children, style, className, ...rest } = useDefaultProps('SplitButtonGroup', rawProps, {});
 
     const containerRef = useRef<HTMLDivElement>(null);
 

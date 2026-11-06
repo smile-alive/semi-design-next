@@ -43,9 +43,6 @@
         };
     });
 
-    // The a11y lint only counts a keydown bound to a bare identifier, not to `item.onKeydown`
-    const { onKeydown } = item;
-
     const change = (event: MouseEvent) => {
         // a click on a control inside title or description is that control's own, not a step switch
         if (view.value && (event.target as Element).closest(focusableSelector) === event.currentTarget) steps?.change(view.value.stepNumber);
@@ -76,7 +73,7 @@
         :role="item.role()"
         :tabindex="item.tabindex()"
         @click="change"
-        @keydown="onKeydown"
+        @keydown="item.onKeydown($event)"
     >
         <div
             v-if="showIcon()"
@@ -122,7 +119,7 @@
         :role="item.role()"
         :tabindex="item.tabindex()"
         @click="change"
-        @keydown="onKeydown"
+        @keydown="item.onKeydown($event)"
     >
         <div :class="`${prefixCls}-container`">
             <div :class="`${prefixCls}-left`">
@@ -153,7 +150,7 @@
             </div>
         </div>
     </div>
-    <div v-else-if="view?.type === 'nav'" :aria-current="view.active ? 'step' : undefined" :class="[prefixCls, { [`${prefixCls}-active`]: view.active }]" :role="item.role()" :tabindex="item.tabindex()" @click="change" @keydown="onKeydown">
+    <div v-else-if="view?.type === 'nav'" :aria-current="view.active ? 'step' : undefined" :class="[prefixCls, { [`${prefixCls}-active`]: view.active }]" :role="item.role()" :tabindex="item.tabindex()" @click="change" @keydown="item.onKeydown($event)">
         <div :class="`${prefixCls}-container`">
             <div :class="`${prefixCls}-content`">
                 <div :class="`${prefixCls}-title`">
