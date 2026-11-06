@@ -12,8 +12,8 @@ export default function FormDemo() {
                 显示条件字段
             </span>
             <Show when={show()}>
-                <FormInput field="conditionalField" label="条件字段（keepState）" keepState />
-                <FormInput field="noKeepState" label="条件字段（无 keepState）" />
+                <FormInput field="kept" label="条件字段（默认保留状态）" rules={[{ required: true, message: '必填' }]} />
+                <FormInput field="reset" initValue="初始值" label="条件字段（keepState={false}）" keepState={false} />
             </Show>
             <Button htmlType="submit">提交</Button>
         </Form>

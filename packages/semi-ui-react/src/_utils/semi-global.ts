@@ -30,6 +30,8 @@ import type { FloatButtonGroupProps } from '../float-button/float-button-group';
 import type { FloatButtonProps } from '../float-button/interface';
 import type { ArrayFieldProps } from '../form/array-field';
 import type { BaseFormProps } from '../form/interface';
+import type { SchemaFieldProps } from '../form/schema-field';
+import type { SchemaFormProps } from '../form/schema-form';
 import type { ColProps } from '../grid/col';
 import type { RowProps } from '../grid/row';
 import type { HighlightProps } from '../highlight';
@@ -152,6 +154,8 @@ export interface OverrideDefaultProps {
     ResizeGroup?: GlobalDefaults<ResizeGroupProps>;
     ResizeHandler?: GlobalDefaults<ResizeHandlerProps>;
     ResizeItem?: GlobalDefaults<ResizeItemProps>;
+    SchemaField?: GlobalDefaults<SchemaFieldProps>;
+    SchemaForm?: GlobalDefaults<SchemaFormProps>;
     ScrollItem?: GlobalDefaults<ScrollItemProps<any>>;
     ScrollList?: GlobalDefaults<ScrollListProps>;
     Select?: GlobalDefaults<SelectProps<any, boolean>>;

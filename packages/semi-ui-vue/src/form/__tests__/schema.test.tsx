@@ -47,7 +47,7 @@ describe('Form schema', () => {
     it('从 semiGlobal overrideDefaultProps 读取 schema', async () => {
         semiGlobal.config.overrideDefaultProps = { Form: { schema: nameSchema } };
         const { api, container } = renderForm({}, nameInput);
-        await expect(api().validate()).rejects.toEqual({ name: 'required' });
+        await expect(api().validate()).rejects.toEqual({ name: ['required'] });
         await vi.waitFor(() => expect(container.querySelector(errorSelector)).toHaveTextContent('required'));
     });
 
@@ -55,7 +55,7 @@ describe('Form schema', () => {
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const schema = Object.assign(() => undefined, { '~standard': { version: 1, vendor: 'test', validate: () => ({ issues: [{ message: 'invalid', path: ['name'] }] }) } });
         const { api } = renderForm({ schema }, nameInput);
-        await expect(api().validate()).rejects.toEqual({ name: 'invalid' });
+        await expect(api().validate()).rejects.toEqual({ name: ['invalid'] });
         expect(warn).not.toHaveBeenCalled();
         warn.mockRestore();
     });

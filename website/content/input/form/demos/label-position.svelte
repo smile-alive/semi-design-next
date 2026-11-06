@@ -8,7 +8,7 @@
     const rules: RuleItem[] = [
         { required: true, message: 'required error' },
         { type: 'string', message: 'type error' },
-        { validator: (_rule, value) => value === 'semi', message: 'should be semi' },
+        { validator: (value) => value === 'semi', message: 'should be semi' },
     ];
     const positionOptions = [
         { label: 'top', value: 'top' },

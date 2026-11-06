@@ -18,18 +18,6 @@ export function cloneDeep<T>(value: T) {
     return cloneFormValue(value, (item) => !isServer && item instanceof Node);
 }
 
-/** Whether an error has content ErrorMessage renders; a number or a boolean does not */
-export function hasErrorContent(error: unknown) {
-    // JSX compiled to an accessor (Show, For) is a function, read as insert() reads function children
-    if (typeof error === 'function') {
-        return hasErrorContent((error as () => unknown)());
-    }
-    if (Array.isArray(error)) {
-        return error.some(Boolean);
-    }
-    return (typeof error === 'string' && error !== '') || isMarkup(error);
-}
-
 export function isLabelConfig(label: unknown): label is LabelProps {
     return typeof label === 'object' && label !== null && !Array.isArray(label) && !isMarkup(label);
 }

@@ -13,23 +13,26 @@
 
     const props = withDefaults(defineProps<ArrayFieldProps>(), {
         initValue: semiGlobalDefault('ArrayField', 'initValue'),
+        keepState: semiGlobalDefault('ArrayField', 'keepState'),
     });
 
     defineSlots<ArrayFieldSlots>();
 
-    const { bridge, formState } = requireFormContext('ArrayField');
+    const { bridge, formState, formProps } = requireFormContext('ArrayField');
     const parent = useArrayFieldContext();
 
-    // an existing entry means a remount by setValues: its fields must not consume initValue
+    // an existing entry means a remount: by setValues, or after an unmount that kept its state
     const shouldUseInitValue = shallowRef(!bridge.getArrayField(props.field));
     let cachedUpdateKey: number | undefined | null = null;
 
     const mountedField = props.field;
     const mountedFormState = formState.value;
+    const keepState = computed(() => props.keepState ?? parent?.value.keepState ?? formProps.value.keepState ?? true);
 
     const formValues = () => parent?.value.values ?? formState.value.values ?? {};
 
-    const initValue = props.initValue || ObjectUtil.get(formValues(), props.field);
+    // a remount shows the rows the form holds; the mount write must not replace them with initValue
+    const initValue = (shouldUseInitValue.value ? props.initValue : undefined) || ObjectUtil.get(formValues(), props.field);
 
     const keys = shallowRef(generateKeys(initValue));
 
@@ -40,6 +43,7 @@
     provideArrayFieldContext(
         computed(() => ({
             shouldUseInitValue: shouldUseInitValue.value,
+            keepState: keepState.value,
             values: formState.value === mountedFormState ? ObjectUtil.set(formValues(), props.field, mountedInitValue) : parent?.value.values,
         }))
     );
@@ -71,6 +75,16 @@
         }
     };
 
+    const onMove = (from: number, to: number) => {
+        const clamp = (index: number) => Math.max(0, Math.min(index, keys.value.length - 1));
+        const source = clamp(from);
+        const target = clamp(to);
+        if (source === target) return;
+        const moved = keys.value.toSpliced(source, 1);
+        keys.value = moved.toSpliced(target, 0, keys.value[source]);
+        cachedUpdateKey = bridge.moveArrayFieldRow(props.field, source, target);
+    };
+
     const remove = (index: number) => {
         bridge.removeArrayFieldRow(props.field, index);
         keys.value = keys.value.toSpliced(index, 1);
@@ -81,7 +95,7 @@
     watch(
         () => props.field,
         (field, previous) => {
-            bridge.unRegisterArrayField(previous);
+            bridge.unRegisterArrayField(previous, keepState.value);
             if (!bridge.getArrayField(field)) {
                 // a changed field resets to its own initial value; its current value may hold rows the rename carried over
                 bridge.registerArrayField(field, field === mountedField ? resetValue : cloneDeep(props.initValue || bridge.getInitValue(field)));
@@ -95,9 +109,9 @@
     watch(formState, syncKeys);
 
     onMounted(() => bridge.mountArrayField(props.field, resetValue));
-    onBeforeUnmount(() => bridge.unRegisterArrayField(props.field));
+    onBeforeUnmount(() => bridge.unRegisterArrayField(props.field, keepState.value));
 </script>
 
 <template>
-    <slot :arrayFields="arrayFields" :onAdd="onAdd" :onAddWithInitValue="onAddWithInitValue" />
+    <slot :arrayFields="arrayFields" :onAdd="onAdd" :onAddWithInitValue="onAddWithInitValue" :onMove="onMove" />
 </template>

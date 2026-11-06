@@ -4,7 +4,8 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
 import FieldStore from '@fibrae/semi-foundation/form/field-store';
 import type { FieldRegistration } from '@fibrae/semi-foundation/form/interface';
-import { getFieldAriaProps, isRequired, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
+import { isRequired } from '@fibrae/semi-foundation/form/rules';
+import { getFieldAriaProps, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
 import warning from '@fibrae/semi-foundation/utils/warning';
@@ -121,8 +122,6 @@ function mergeProps(props: any) {
     delete rest.defaultValue;
     delete rest.checked;
 
-    const required = isRequired(rules);
-
     emptyValue = typeof emptyValue !== 'undefined' ? emptyValue : '';
 
     return {
@@ -137,7 +136,6 @@ function mergeProps(props: any) {
         allowEmptyString,
         emptyValue,
         rules,
-        required,
         keepState,
         transform,
         name,
@@ -157,7 +155,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
     const Control: React.ElementType = Component;
 
     function InjectedField(props: any) {
-        let { field, label, noLabel, noErrorMessage, isInInputGroup, initValue, validate, validateStatus, allowEmptyString, emptyValue, rules, required, keepState, transform, name, fieldClassName, fieldStyle, convert, helpText, extraText, pure, id, rest } = mergeProps(props);
+        const { field, label, noLabel, noErrorMessage, isInInputGroup, initValue, validate, validateStatus, allowEmptyString, emptyValue, rules, keepState, transform, name, fieldClassName, fieldStyle, convert, helpText, extraText, pure, id, rest } = mergeProps(props);
         const { options } = mergeOptions(opts, props);
 
         // two Forms on a page may share a field name, so the name cannot be the DOM id
@@ -168,7 +166,9 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
         const fieldBridge = useFieldBridge();
         const inForm = fieldBridge !== undefined;
 
-        const formProps = inForm ? fieldBridge.getFormProps(['labelPosition', 'labelWidth', 'labelAlign', 'labelCol', 'wrapperCol', 'disabled', 'showValidateIcon', 'extraTextPosition', 'stopValidateWithError', 'trigger', 'allowEmpty']) : {};
+        const formProps = inForm ? fieldBridge.getFormProps(['labelPosition', 'labelWidth', 'labelAlign', 'labelCol', 'wrapperCol', 'disabled', 'showValidateIcon', 'extraTextPosition', 'stopValidateWithError', 'trigger', 'allowEmpty', 'keepState']) : {};
+        // the schema replaces the rules, so only `label.required` marks the field
+        const required = inForm && fieldBridge.usesSchema() ? false : isRequired(rules);
         const { labelPosition: labelPos, labelWidth: mergeLabelWidth, labelAlign: mergeLabelAlign, labelCol: mergeLabelCol, wrapperCol: mergeWrapperCol, extraTextPosition: mergeExtraPos, stopValidateWithError: mergeStopValidateWithError, trigger: mergeTrigger, allowEmpty } = mergeFieldConfig(props, formProps);
         // The control would be unnamed without an inset label, so the label goes on top: when the component cannot
         // render one, or when a prefix or a custom trigger takes its place
@@ -192,15 +192,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
         const [store] = useState(() => new FieldStore({ value: cloneDeep(initVal) }));
         const { value, touched, error, status } = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
         const validateOnMount = mergeTrigger.includes('mount');
-
-        // removing a row shifts the paths of later rows, so restoring by path would surface stale state
-        const keepStateInArray = Boolean(keepState && inArrayField);
-        useEffect(() => {
-            warning(keepStateInArray, `[Semi Form]: 'keepState' is not supported on Field "${field}" inside <ArrayField/>. It will be ignored. Use add/remove on the ArrayField to manage array items instead.`);
-        }, [keepStateInArray, field]);
-        if (keepStateInArray) {
-            keepState = false;
-        }
+        const mergeKeepState: boolean = keepState ?? arrayFieldState.keepState ?? formProps.keepState ?? true;
 
         const rulesRef = useRef(rules);
         const validateRef = useRef(validate);
@@ -216,7 +208,8 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
             store,
             initValue: initVal,
             valuePath: options.valuePath,
-            keepState,
+            keepState: mergeKeepState,
+            inArrayField,
             allowEmpty: allowEmpty || allowEmptyString,
             getValidateOptions: () => ({
                 rules: rulesRef.current,
@@ -247,9 +240,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
         };
 
         const handleBlur = (...e: any[]) => {
-            if (props.onBlur) {
-                props.onBlur(...e);
-            }
+            props.onBlur?.(...e);
             if (!touched) {
                 fieldBridge.setFieldTouched(registration, true);
             }
@@ -308,7 +299,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
         const errorMessageId = `${a11yId}-errormessage`;
 
         const renderField = () => {
-            const blockStatus = validateStatus ? validateStatus : status;
+            const blockStatus = validateStatus || status;
 
             const extraCls = clsx(`${prefix}-field-extra`, {
                 [`${prefix}-field-extra-string`]: typeof extraText === 'string',
@@ -354,7 +345,7 @@ function createField<C extends React.ElementType>(Component: C, opts: WithFieldO
             }
 
             if (name) {
-                newProps['name'] = name;
+                newProps.name = name;
             }
 
             const fieldCls = clsx({

@@ -28,7 +28,7 @@
     const srcRules = [
         { required: true, message: '请输入 MCP 图标 URL' },
         {
-            validator: (_rule: unknown, value: string) => /^(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+(?::\d+)?(?:\/[^\s]*)?$/i.test(value),
+            validator: (value: string) => /^(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+(?::\d+)?(?:\/[^\s]*)?$/i.test(value),
             message: '请输入有效的 MCP 图标 URL',
         },
     ];

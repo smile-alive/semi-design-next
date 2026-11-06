@@ -2,9 +2,11 @@ import { type JSX, type ValidComponent, Show, children, createComputed, createEf
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
+import { errorMessages } from '@fibrae/semi-foundation/form/errors';
 import FieldStore from '@fibrae/semi-foundation/form/field-store';
-import type { FieldRegistration } from '@fibrae/semi-foundation/form/interface';
-import { getFieldAriaProps, isRequired, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
+import type { ExclusiveFieldValidation, FieldRegistration } from '@fibrae/semi-foundation/form/interface';
+import { isRequired } from '@fibrae/semi-foundation/form/rules';
+import { getFieldAriaProps, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import warning from '@fibrae/semi-foundation/utils/warning';
@@ -14,7 +16,7 @@ import ErrorMessage from './error-message';
 import FieldGrid from './field-grid';
 import type { CommonFieldProps, FieldProps } from './interface';
 import Label from './label';
-import { cloneDeep, hasErrorContent, invoke, isLabelConfig } from './utils';
+import { cloneDeep, invoke, isLabelConfig } from './utils';
 
 const prefix = cssClasses.PREFIX;
 
@@ -57,7 +59,7 @@ const fieldKeys = [
     'validateStatus',
     'validator',
     'wrapperCol',
-] as const satisfies readonly (keyof CommonFieldProps)[];
+] as const satisfies readonly (keyof (CommonFieldProps & ExclusiveFieldValidation))[];
 
 // The value comes in through initValue only, so the props that would give the control a second source of truth are
 // dropped before the rest reaches it
@@ -99,8 +101,6 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
         // two Forms on a page may share a field name, so the name cannot be the DOM id
         const generatedId = createUniqueId();
 
-        untrack(() => warning(Boolean(local.keepState && arrayField), `[Semi Form]: 'keepState' is not supported on Field "${local.field}" inside <ArrayField/>. It will be ignored. Use add/remove on the ArrayField to manage array items instead.`));
-
         const merged = createMemo(() => mergeFieldConfig(local, form.formProps));
         const fieldPath = createMemo(() => local.field as string | undefined);
         const warnInsetFallback = createMemo(() => !insetLabel && merged().labelPosition === 'inset' && !local.noLabel);
@@ -126,10 +126,10 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
             store,
             initValue,
             valuePath,
-            // removing a row shifts the paths of later rows, so restoring by path would surface stale state
             get keepState() {
-                return Boolean(local.keepState) && !arrayField;
+                return local.keepState ?? arrayField?.keepState() ?? form.formProps.keepState ?? true;
             },
+            inArrayField: Boolean(arrayField),
             get allowEmpty() {
                 return merged().allowEmpty || Boolean(local.allowEmptyString);
             },
@@ -170,14 +170,13 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
         const labelPosition = () => (insetFallback() ? 'top' : merged().labelPosition);
         const insetShown = () => labelPosition() === 'inset' && !local.noLabel;
         const shownStatus = () => local.validateStatus || snapshot().status;
+        // with a Form schema the asterisk follows `label.required` only
+        const rulesRequired = () => !form.bridge.usesSchema() && isRequired(local.rules);
 
         // A layout creates only the texts it renders: nodes created for a text left out have no server markup to hydrate
         const ownLayout = () => !group && !local.pure;
-        // an error replaces the help text, and so does a blank failed message
-        const errorReplacesHelp = createMemo(() => {
-            const { error } = snapshot();
-            return Boolean(error) || (error === '' && shownStatus() === 'error');
-        });
+        // an error replaces the help text, `['']` (failed without a text) included
+        const errorReplacesHelp = createMemo(() => Boolean(snapshot().error));
         const extraTextShown = () => merged().extraTextPosition === 'middle' || merged().extraTextPosition === 'bottom';
         const label = children(() => (!local.noLabel && (labelPosition() === 'inset' || ownLayout()) ? (local.label as JSX.Element) : undefined));
         const helpText = children(() => (ownLayout() && !local.noErrorMessage && !errorReplacesHelp() ? (local.helpText as JSX.Element) : undefined));
@@ -206,7 +205,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
                 ...getFieldAriaProps({
                     own,
                     ids: { label: labelId(), helpText: helpTextId(), extraText: extraTextId(), errorMessage: errorMessageId() },
-                    rulesRequired: isRequired(local.rules),
+                    rulesRequired: rulesRequired(),
                     label: labelConfig(),
                     labelPosition: labelPosition(),
                     noLabel: local.noLabel,
@@ -216,7 +215,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
                     hasHelpText: hasContent(helpText()),
                     hasExtraText: hasContent(extraText()),
                     error,
-                    errorHasContent: hasErrorContent(error),
+                    errorHasContent: errorMessages(error).length > 0,
                     status,
                     shownStatus: shownStatus(),
                 }),
@@ -225,7 +224,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
 
         const register = (initValue: unknown) => {
             const field = fieldPath();
-            if (field === undefined) {
+            if (field == null) {
                 return;
             }
             registration = createRegistration(field, initValue);
@@ -340,7 +339,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
         const labelProps = mergeProps(
             {
                 get required() {
-                    return isRequired(local.rules);
+                    return rulesRequired();
                 },
                 get align() {
                     return merged().labelAlign;

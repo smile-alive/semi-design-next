@@ -29,7 +29,7 @@ const cases: [string, () => ReactElement, string][] = [
     ['Form.Slot', () => <Form.Slot id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'form-slot'],
     ['Form.Label', () => <Form.Label id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'form-field-label'],
     ['Form.Section', () => <Form.Section id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'form-section'],
-    ['Form.ErrorMessage', () => <Form.ErrorMessage id="probe" data-probe="" title="t" error="e" onKeyDown={onKeyDown} />, 'form-field-error-message'],
+    ['Form.ErrorMessage', () => <Form.ErrorMessage id="probe" data-probe="" title="t" error={['e']} onKeyDown={onKeyDown} />, 'form-field-error-message'],
     ['Select.OptGroup', () => <Select.OptGroup id="probe" data-probe="" title="t" label="g" onKeyDown={onKeyDown} />, 'select-group'],
 ];
 
@@ -50,7 +50,7 @@ describe('未声明属性落在接收它的元素上，且 Props 类型接受', 
         expect(onKeyDown).toHaveBeenCalledTimes(1);
     });
 
-    it('TimePicker', () => {
+    it('TimePicker 的 id、data-* 与 onKeyDown 落在 input 上', () => {
         onKeyDown.mockClear();
         const { container } = render(<TimePicker id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />);
         const input = container.querySelector<HTMLInputElement>('[data-probe]');

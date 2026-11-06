@@ -55,7 +55,7 @@
                 {#snippet text()}基本信息{/snippet}
                 <FormInput field="name" label="名称" />
             </Section>
-            <Slot error="说明有误" label="说明">
+            <Slot error={['说明有误']} label="说明">
                 <span>只读内容</span>
             </Slot>
         {/if}

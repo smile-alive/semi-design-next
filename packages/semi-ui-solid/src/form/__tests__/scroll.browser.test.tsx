@@ -111,7 +111,7 @@ describe('Form 滚动', () => {
                 {spacer()}
             </>
         ));
-        await expect(api().validate()).rejects.toEqual({ b: 'form error' });
+        await expect(api().validate()).rejects.toEqual({ b: ['form error'] });
         await expect.poll(() => Math.abs(topOf(fieldDOM('b')))).toBeLessThan(2);
     });
 

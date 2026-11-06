@@ -1,7 +1,7 @@
 import { type ComputedRef, type MaybeRefOrGetter, computed, toValue } from 'vue';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import { type ArrayFieldContextValue, useArrayFieldContext, useFormContext } from './context';
-import type { FieldError, FormApi, FormState } from './interface';
+import type { FieldError, FieldErrorInput, FormApi, FormState } from './interface';
 
 export function requireFormContext(caller: string) {
     const context = useFormContext();
@@ -24,7 +24,7 @@ export function useFieldApi(field: MaybeRefOrGetter<string>) {
 
     return {
         getError: () => formApi.getError(toValue(field)),
-        setError: (error: FieldError) => formApi.setError(toValue(field), error),
+        setError: (error: FieldErrorInput) => formApi.setError(toValue(field), error),
         getTouched: () => formApi.getTouched(toValue(field)),
         setTouched: (isTouched: boolean) => formApi.setTouched(toValue(field), isTouched),
         getValue: () => formApi.getValue(toValue(field)),
@@ -34,8 +34,8 @@ export function useFieldApi(field: MaybeRefOrGetter<string>) {
 
 export function useFieldState(field: MaybeRefOrGetter<string>): ComputedRef<{
     value: any;
-    error: FieldError;
-    touched: boolean | undefined;
+    error?: FieldError;
+    touched?: boolean;
 }> {
     const { formState } = requireFormContext('useFieldState');
 
@@ -50,7 +50,7 @@ export function useFieldState(field: MaybeRefOrGetter<string>): ComputedRef<{
 }
 
 /** Internal: whether the caller renders inside an ArrayField, and the values its rows start from */
-export function useArrayFieldState(): ComputedRef<ArrayFieldContextValue & { inArrayField: boolean }> {
+export function useArrayFieldState(): ComputedRef<Omit<ArrayFieldContextValue, 'keepState'> & { keepState?: boolean; inArrayField: boolean }> {
     const context = useArrayFieldContext();
 
     return computed(() => (context ? { ...context.value, inArrayField: true } : { shouldUseInitValue: true, inArrayField: false }));

@@ -87,7 +87,7 @@ describe('Form 滚动', () => {
                 <Form.Input field="b" />
             </Form>
         );
-        await act(() => expect(formApi.validate()).rejects.toEqual({ b: 'form error' }));
+        await act(() => expect(formApi.validate()).rejects.toEqual({ b: ['form error'] }));
         expect(scrollIntoView).toHaveBeenCalledWith(fieldDOM('b'), { behavior: 'smooth', block: 'start' });
     });
 

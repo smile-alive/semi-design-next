@@ -30,12 +30,12 @@ describe('Svelte Form-baseForm', () => {
         expect(container.querySelector(`.${prefix}-vertical`)).toBeNull();
     });
 
-    it('labelPosition', () => {
+    it('labelPosition 决定字段的 x-label-pos', () => {
         const { container } = renderForm({ labelPosition: 'left' }, nameInput());
         expect(container.querySelector(fieldSelector)).toHaveAttribute('x-label-pos', 'left');
     });
 
-    it('labelWidth', () => {
+    it('labelWidth 设置所有标签宽度，并随 Form 属性更新', () => {
         const { container, store, unmount } = renderForm({ labelWidth: 200 }, fields());
         let labels = container.querySelectorAll(labelSelector);
         expect(labels).toHaveLength(2);
@@ -107,7 +107,7 @@ describe('Svelte Form-baseForm', () => {
         expect(onSubmit.mock.calls[0][0]).toEqual({ UserName: 'semi', Password: 'design' });
     });
 
-    it('submitFail', async () => {
+    it('校验失败时调用 onSubmitFail 而不调用 onSubmit，并显示各字段错误', async () => {
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         const onSubmitFail = vi.fn<(...args: unknown[]) => void>();
         const emptyTips = "can't be empty";
@@ -116,7 +116,7 @@ describe('Svelte Form-baseForm', () => {
         api().submitForm();
         await waitFor(() => expect(onSubmitFail).toHaveBeenCalledTimes(1));
         expect(onSubmit).not.toHaveBeenCalled();
-        expect(onSubmitFail.mock.calls[0][0]).toEqual({ name: emptyTips, name2: emptyTips });
+        expect(onSubmitFail.mock.calls[0][0]).toEqual({ name: [emptyTips], name2: [emptyTips] });
         await waitFor(() => expect(container.querySelectorAll(errorSelector)).toHaveLength(2));
         expect(container.querySelector(errorSelector)).toHaveTextContent(emptyTips);
     });
@@ -144,7 +144,7 @@ describe('Svelte Form-baseForm', () => {
         expect(api().getValues()).toEqual({ name: 'init' });
     });
 
-    it('allowEmpty', async () => {
+    it('allowEmpty 为 true 时，提交的值保留值为 undefined 的 key', async () => {
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         const { api } = renderForm({ allowEmpty: true, onSubmit }, fields());
         api().submitForm();
@@ -167,7 +167,7 @@ describe('Svelte Form-baseForm', () => {
         expect('dropped' in values).toBe(false);
     });
 
-    it('valueChange', async () => {
+    it('输入后触发 onValueChange 与 onChange，并带上最新值', async () => {
         const onValueChange = vi.fn<(...args: unknown[]) => void>();
         const onChange = vi.fn<(state: { values: unknown }) => void>();
         renderForm({ onValueChange, onChange }, nameInput());
@@ -177,13 +177,13 @@ describe('Svelte Form-baseForm', () => {
         expect(onChange.mock.lastCall?.[0].values).toEqual({ name: 'semi' });
     });
 
-    it('initValues', () => {
+    it('initValues 为各字段设置初始值', () => {
         const { container } = renderForm({ initValues: { name: 'semi', business: 'abc' } }, fields());
         expect(container.querySelector('.semi-select-selection-text')).toHaveTextContent(/^Abc$/);
         expect(getInput()).toHaveValue('semi');
     });
 
-    it('labelAlign', () => {
+    it('labelAlign 默认为 left，设为 right 时标签右对齐', () => {
         const { container, unmount } = renderForm({}, fields());
         expect(container.querySelectorAll(`.${prefix}-field-label-right`)).toHaveLength(0);
         expect(container.querySelectorAll(`.${prefix}-field-label-left`)).toHaveLength(2);
@@ -193,7 +193,7 @@ describe('Svelte Form-baseForm', () => {
         expect(second.container.querySelectorAll(`.${prefix}-field-label-left`)).toHaveLength(0);
     });
 
-    it('labelCol/wrapperCol', () => {
+    it('labelCol 与 wrapperCol 用栅格布局标签和控件', () => {
         const { container } = renderForm({ wrapperCol: { span: 20 }, labelCol: { span: 2 } }, fields());
         const fieldsDom = container.querySelectorAll(fieldSelector);
         expect(fieldsDom).toHaveLength(2);
@@ -227,7 +227,7 @@ describe('Svelte Form-baseForm', () => {
         expect(lastValues()).toEqual('{}');
     });
 
-    it('disabled', () => {
+    it('disabled 使所有字段控件禁用', () => {
         const { container } = renderForm({ disabled: true }, fields());
         expect(container.querySelector('.semi-select-disabled')).not.toBeNull();
         expect(container.querySelector('.semi-input-disabled')).not.toBeNull();
@@ -244,9 +244,9 @@ describe('Svelte Form-baseForm', () => {
     it('validateFields：同步校验失败', async () => {
         const err = 'ab not valid';
         const { api } = renderForm({ validator: () => ({ a: { b: err } }) }, pathFields());
-        await expect(api().validate()).rejects.toEqual({ a: { b: err } });
+        await expect(api().validate()).rejects.toEqual({ a: { b: [err] } });
         await settle();
-        expect(api().getError('a.b')).toEqual(err);
+        expect(api().getError('a.b')).toEqual([err]);
         expect(document.querySelector(`[x-field-id="a.b"] .${prefix}-field-error-message`)).toHaveTextContent(err);
     });
 
@@ -259,8 +259,8 @@ describe('Svelte Form-baseForm', () => {
     it('validateFields：异步 Promise 返回错误，校验失败', async () => {
         const err = 'ab not valid';
         const { api } = renderForm({ validator: () => sleep(200).then(() => ({ a: { b: err } })) }, pathFields());
-        await expect(api().validate()).rejects.toEqual({ a: { b: err } });
-        expect(api().getError('a.b')).toEqual(err);
+        await expect(api().validate()).rejects.toEqual({ a: { b: [err] } });
+        expect(api().getError('a.b')).toEqual([err]);
     });
 
     it('validateFields：异步 Promise resolve，校验通过', async () => {
@@ -373,17 +373,17 @@ describe('Svelte Form-baseForm 行为', () => {
         const onErrorChange = vi.fn<(...args: unknown[]) => void>();
         renderForm({ onErrorChange }, [input('name', { validator: (value: unknown) => (value === 'ok' ? '' : 'bad') })]);
         await typeInto(getInput(), 'x');
-        await waitFor(() => expect(onErrorChange).toHaveBeenLastCalledWith({ name: 'bad' }, { name: 'bad' }));
+        await waitFor(() => expect(onErrorChange).toHaveBeenLastCalledWith({ name: ['bad'] }, { name: ['bad'] }));
     });
 
     it('trigger 为 custom 时跳过变化校验，mount 时挂载即校验', async () => {
         const { api } = renderForm({}, [input('a', { trigger: 'custom', validator: () => 'a-err' }), input('b', { trigger: 'mount', validator: () => 'b-err' })]);
-        await waitFor(() => expect(api().getError('b')).toBe('b-err'));
+        await waitFor(() => expect(api().getError('b')).toEqual(['b-err']));
         await typeInto(document.querySelector('[x-field-id="a"] input') as HTMLInputElement, 'x');
         await sleep(10);
         expect(api().getError('a')).toBeUndefined();
-        await expect(api().validate(['a'])).rejects.toEqual({ a: 'a-err', b: 'b-err' });
-        expect(api().getError('a')).toBe('a-err');
+        await expect(api().validate(['a'])).rejects.toEqual({ a: ['a-err'], b: ['b-err'] });
+        expect(api().getError('a')).toEqual(['a-err']);
     });
 
     it('stopValidateWithError 在第一条失败规则处停止', async () => {
@@ -394,7 +394,7 @@ describe('Svelte Form-baseForm 行为', () => {
         const { api } = renderForm({}, [input('all', { rules }), input('first', { rules, stopValidateWithError: true })]);
         await expect(api().validate()).rejects.toBeDefined();
         expect(api().getError('all')).toEqual(['required', 'second']);
-        expect(api().getError('first')).toBe('required');
+        expect(api().getError('first')).toEqual(['required']);
     });
 
     it('keepState 在字段重新挂载时恢复其值', async () => {
@@ -424,9 +424,9 @@ describe('Svelte Form-baseForm 行为', () => {
         expect(form).not.toHaveAttribute('stoppropagation');
     });
 
-    it('每个字段只注册一次，卸载时注销', async () => {
+    it('每个字段只注册一次，keepState 为 false 时卸载即注销并移除值', async () => {
         const onValueChange = vi.fn<(...args: unknown[]) => void>();
-        const { api, store } = renderForm({ onValueChange }, [input('name', { initValue: 'semi' })]);
+        const { api, store } = renderForm({ onValueChange, keepState: false }, [input('name', { initValue: 'semi' })]);
         expect(api().getFieldExist('name')).toBe(true);
         expect(api().getValues()).toEqual({ name: 'semi' });
         await typeInto(getInput(), 'design');

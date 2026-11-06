@@ -3,7 +3,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/form/constants';
     import FieldStore from '@fibrae/semi-foundation/form/field-store';
     import type { FieldRegistration } from '@fibrae/semi-foundation/form/interface';
-    import { getFieldAriaProps, isRequired, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
+    import { isRequired } from '@fibrae/semi-foundation/form/rules';
+    import { getFieldAriaProps, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
     import warning from '@fibrae/semi-foundation/utils/warning';
@@ -87,7 +88,10 @@
     const errorMessageId = $derived(`${a11yId}-errormessage`);
     const labelConfig = $derived(isLabelConfig(label) ? label : undefined);
     const labelText = $derived((isLabelConfig(label) ? label.text : label) || field);
-    const rulesRequired = $derived(isRequired(rules));
+    const resolvedKeepState = $derived(keepState ?? arrayField?.keepState ?? form.formProps.keepState ?? true);
+
+    // the schema decides what is required, so only label.required marks the field then
+    const rulesRequired = $derived(!form.bridge.usesSchema() && isRequired(rules));
     const insetPosition = $derived(merged.labelPosition === 'inset');
 
     // a prefix or a custom trigger takes the inset label's place, so the label goes on top
@@ -157,10 +161,10 @@
         store,
         initValue: value,
         valuePath: fieldOptions.valuePath ?? '',
-        // removing a row shifts the paths of later rows, so restoring by path would surface stale state
         get keepState() {
-            return Boolean(keepState) && !arrayField;
+            return resolvedKeepState;
         },
+        inArrayField: Boolean(arrayField),
         get allowEmpty() {
             return merged.allowEmpty || Boolean(allowEmptyString);
         },
@@ -224,11 +228,6 @@
     $effect(() => {
         const warn = insetPosition && !noLabel && fieldOptions.insetLabel === false;
         untrack(() => warning(warn, `[Semi Form]: the component has no inset label, so Field "${field}" is laid out with labelPosition 'top'`));
-    });
-
-    $effect(() => {
-        const warn = Boolean(keepState && arrayField);
-        untrack(() => warning(warn, `[Semi Form]: 'keepState' is not supported on Field "${field}" inside <ArrayField/>. It will be ignored. Use add/remove on the ArrayField to manage array items instead.`));
     });
 
     // A renamed field (a shifted ArrayField row) moves its registration; the first run is the mount below

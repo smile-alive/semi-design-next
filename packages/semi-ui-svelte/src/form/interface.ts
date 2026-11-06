@@ -1,23 +1,22 @@
 import type { Component, ComponentProps, Snippet } from 'svelte';
-import type { HTMLAttributes, HTMLFormAttributes, HTMLLabelAttributes } from 'svelte/elements';
-import type { RuleItem } from 'async-validator';
+import type { HTMLAttributes, HTMLFieldsetAttributes, HTMLFormAttributes, HTMLLabelAttributes } from 'svelte/elements';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { AllErrors, BaseFormApi, ExclusiveFormValidation, FieldPath, FieldValidateTriggerType, FormState, StandardSchema } from '@fibrae/semi-foundation/form/interface';
+import type { FieldError } from '@fibrae/semi-foundation/form/errors';
+import type { AllErrors, BaseFormApi, ExclusiveFieldValidation, ExclusiveFormValidation, FieldPath, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, StandardSchema } from '@fibrae/semi-foundation/form/interface';
+import type { JsonSchema, SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
+import type { RuleItem } from '@fibrae/semi-foundation/form/rules';
 import type { ColProps } from '../grid/interface.js';
 import type { InputGroupProps as BaseInputGroupProps, ValidateStatus } from '../input/interface.js';
 
-export type { FieldValidateTriggerType, FormState } from '@fibrae/semi-foundation/form/interface';
-export type { RuleItem } from 'async-validator';
+export type { FieldError, FieldErrorInput } from '@fibrae/semi-foundation/form/errors';
+export type { FieldValidateTriggerType, FieldValidator, FormState } from '@fibrae/semi-foundation/form/interface';
+export type { JsonSchema, SchemaFieldKind, SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
+export type { RuleItem, RuleType } from '@fibrae/semi-foundation/form/rules';
 
-export type FormApi<Values extends Record<string, any> = any> = BaseFormApi<Values>;
+/** Values is what the form edits, Output what a validation of the whole form resolves with (a schema's output) */
+export type FormApi<Values extends Record<string, any> = any, Output = Values> = BaseFormApi<Values, Output>;
 
 export type ScrollOptions = ScrollIntoViewOptions;
-
-/** A field error is data; render it differently with the `error` snippet */
-export type FieldError = string | string[] | boolean | undefined;
-
-/** Any non-empty result is an error; an empty string or undefined means valid */
-export type FieldValidateResult = FieldError;
 
 export interface LabelProps extends Omit<HTMLLabelAttributes, 'children'> {
     /** Content of the label; the `children` snippet takes precedence */
@@ -44,18 +43,16 @@ export interface FieldLabel {
     width?: number | string;
 }
 
-export interface FormRenderProps<Values extends Record<string, any> = any> {
+export interface FormRenderProps<Values extends Record<string, any> = any, Output = Values> {
     formState: FormState<Values>;
     values: Values;
-    formApi: FormApi<Values>;
+    formApi: FormApi<Values, Output>;
 }
 
-type FormValidateResult<Values> = string | Partial<AllErrors<Values>>;
-
-export type FormProps<Values extends Record<string, any> = any> = AllFormProps<Values> & ExclusiveFormValidation;
+export type FormProps<Values extends Record<string, any> = any, Output = Values> = AllFormProps<Values, Output> & ExclusiveFormValidation;
 
 /** What the Form reads: global defaults can fill both exclusive sources, so the exclusion applies only to what callers pass */
-export interface AllFormProps<Values extends Record<string, any> = any> extends Omit<HTMLFormAttributes, 'children' | 'onchange' | 'onsubmit' | 'onreset'> {
+export interface AllFormProps<Values extends Record<string, any> = any, Output = Values> extends Omit<HTMLFormAttributes, 'children' | 'onchange' | 'onsubmit' | 'onreset'> {
     /** Initial values of the fields, copied once when the Form is created */
     initValues?: Values;
     layout?: 'horizontal' | 'vertical';
@@ -73,25 +70,30 @@ export interface AllFormProps<Values extends Record<string, any> = any> extends 
     stopValidateWithError?: boolean;
     trigger?: FieldValidateTriggerType;
     stopPropagation?: { submit?: boolean; reset?: boolean };
-    /** Form-level validation; when set, it replaces the fields' own validation */
-    validator?: (values: Values) => FormValidateResult<Values> | Promise<FormValidateResult<Values>>;
+    /** Form-level validation returning errors nested like the values; when set, it replaces the fields' own validation */
+    validator?: FormValidator<Values>;
     /** A Standard Schema (zod, valibot, arktype) that replaces the fields' `validator` and `rules`, run on their `trigger` and on submit; `onSubmit` receives its output */
-    schema?: StandardSchema<Values>;
-    form?: FormApi<Values>;
+    schema?: StandardSchema<Values, Output>;
+    /** Milliseconds a change waits before the schema validates; submit, `validate()`, blur and mount validate at once */
+    schemaDebounce?: number;
+    /** Whether an unmounted field or ArrayField keeps its value, error and touched state; a field's own `keepState` wins */
+    keepState?: boolean;
+    form?: FormApi<Values, Output>;
     /** Also written to `x-form-id`; generated when missing */
     id?: string;
-    onSubmit?: (values: Values, e?: SubmitEvent) => void;
-    /** `errors` is what failed the validation: the form validator's result, or the field errors */
-    onSubmitFail?: (errors: FormValidateResult<Values>, values: Partial<Values>, e?: SubmitEvent) => void;
+    onSubmit?: (values: Output, e?: SubmitEvent) => void;
+    /** `errors` is the error tree of the failed fields, or what the Form validator threw */
+    onSubmitFail?: (errors: Partial<AllErrors<Values>> | unknown, values: Partial<Values>, e?: SubmitEvent) => void;
     onReset?: () => void;
     onChange?: (formState: FormState<Values>) => void;
     onValueChange?: (values: Values, changedValues: Partial<Values>) => void;
     onErrorChange?: (errors: AllErrors<Values>, changedError?: Partial<Record<FieldPath<Values>, FieldError>>) => void;
     /** Called once when the Form mounts, to save the formApi reference */
-    getFormApi?: (formApi: FormApi<Values>) => void;
-    children?: Snippet<[FormRenderProps<Values>]>;
+    getFormApi?: (formApi: FormApi<Values, Output>) => void;
+    children?: Snippet<[FormRenderProps<Values, Output>]>;
 }
 
+/** What a field reads; callers pass `rules` or `validator`, not both (`FieldProps` applies ExclusiveFieldValidation) */
 export interface CommonFieldProps {
     /** Path of the field's value in the form values; required except on a Checkbox or Radio inside its group */
     field: string;
@@ -106,7 +108,7 @@ export interface CommonFieldProps {
     noErrorMessage?: boolean;
     /** Takes over only the data flow: no Label, ErrorMessage or extra text, the DOM of the bare component */
     pure?: boolean;
-    /** Keeps the value, error and touched state while the field is unmounted, and restores them on remount */
+    /** Keeps the value, error and touched state while the field is unmounted; unset follows the ArrayField, then the Form */
     keepState?: boolean;
     allowEmptyString?: boolean;
     /** Keep the key in the form values when the value becomes undefined; falls back to the Form's `allowEmpty` */
@@ -115,7 +117,8 @@ export interface CommonFieldProps {
     emptyValue?: unknown;
     initValue?: unknown;
     rules?: RuleItem[];
-    validator?: (fieldValue: any, values: Record<string, any>) => FieldValidateResult | Promise<FieldValidateResult>;
+    /** A function returning the errors, or a Standard Schema run on the field value */
+    validator?: FieldValidator;
     /** Converts the value before validation */
     transform?: (fieldValue: any) => any;
     /** Converts the value before it is stored and shown */
@@ -171,14 +174,14 @@ type AppendLatest<P> = 'onChange' extends keyof P ? (NonNullable<P['onChange']> 
 /** The field's own `trigger` is the validation timing, so a control's `trigger` snippet is passed as `triggerContent` */
 type TriggerContent<P> = 'trigger' extends keyof P ? { triggerContent?: P['trigger'] } : object;
 
-/** Props of a field made from a component with props `P` */
-export type FieldProps<P> = Omit<P, keyof CommonFieldProps | ValueKeys | 'onChange' | 'insetLabel' | 'insetLabelId'> & AppendLatest<P> & TriggerContent<P> & CommonFieldProps;
+/** Props of a field made from a component with props `P`; the exclusion stays outside Omit, which does not distribute over a union */
+export type FieldProps<P> = Omit<P, keyof CommonFieldProps | ValueKeys | 'onChange' | 'insetLabel' | 'insetLabelId'> & AppendLatest<P> & TriggerContent<P> & Omit<CommonFieldProps, 'rules' | 'validator'> & ExclusiveFieldValidation;
 
 /**
  * A Checkbox or Radio field: without `field` it is the bare control, as inside its group. `value` stays the option value
  * and `onChange` the control's own, since the field value goes through `checked`.
  */
-export type OptionalFieldProps<P> = Omit<FieldProps<P>, 'field' | 'onChange'> & Pick<P, Extract<keyof P, 'value' | 'onChange'>> & { field?: string };
+export type OptionalFieldProps<P> = Omit<FieldProps<P>, 'field' | 'onChange'> & Pick<P, Extract<keyof P, 'value' | 'onChange'>> & { field?: string } & ExclusiveFieldValidation;
 
 /** Props of `FormField`: a field around any component */
 export type FormFieldProps<C extends Component<any, any, any>> = FieldProps<ComponentProps<C>> & {
@@ -197,15 +200,20 @@ export interface ArrayFieldSnippetProps {
     /** Inserts an empty row before `index`, or appends one; an event argument appends */
     onAdd: (index?: number | Event) => void;
     onAddWithInitValue: (row: unknown, index?: number) => void;
+    /** Moves the row at `from` to `to`, its key with it; indexes out of range are clamped */
+    onMove: (from: number, to: number) => void;
 }
 
 export interface ArrayFieldProps {
     field: string;
     initValue?: unknown[];
+    /** Keeps the rows in the form values while the ArrayField is unmounted; unset follows the Form */
+    keepState?: boolean;
     children?: Snippet<[ArrayFieldSnippetProps]>;
 }
 
 export interface ErrorMessageProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+    /** The messages, joined with commas; `['']` fails without a text, and hides the help text too */
     error?: FieldError;
     showValidateIcon?: boolean;
     validateStatus?: ValidateStatus;
@@ -218,7 +226,7 @@ export interface ErrorMessageProps extends Omit<HTMLAttributes<HTMLDivElement>, 
     errorContent?: Snippet<[{ error: FieldError }]>;
 }
 
-export interface SectionProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
+export interface SectionProps extends Omit<HTMLFieldsetAttributes, 'children'> {
     text?: Snippet;
     children?: Snippet;
 }
@@ -239,3 +247,24 @@ export interface InputGroupProps extends Omit<BaseInputGroupProps, 'label'> {
     extraTextPosition?: 'bottom' | 'middle';
     extraText?: Snippet;
 }
+
+export interface SchemaFieldRenderProps {
+    node: SchemaFieldNode;
+    field: string;
+}
+
+export interface SchemaFieldProps {
+    /** Path of the node to render; the root by default, which renders without a Section */
+    field?: string;
+    /** Takes precedence over the JSON Schema exported from the Form's `schema` */
+    jsonSchema?: JsonSchema;
+    /**
+     * Field components by `format`, then by kind (`input`, `number`, `select` ...); they receive the props of the built-in
+     * control they replace
+     */
+    widgets?: Record<string, Component<any, any, any>>;
+    /** Snippets by node pattern (`contacts[].email`); one renders the node and everything under it */
+    renderField?: Record<string, Snippet<[SchemaFieldRenderProps]>>;
+}
+
+export type SchemaFormProps<Values extends Record<string, any> = any, Output = Values> = FormProps<Values, Output> & Omit<SchemaFieldProps, 'field'>;

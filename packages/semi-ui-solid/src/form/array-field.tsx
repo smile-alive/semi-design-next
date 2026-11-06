@@ -20,11 +20,18 @@ export interface ArrayFieldChildrenProps {
     // a click event is accepted so `add` works as an onClick handler; non-number arguments are ignored
     add: (index?: number | MouseEvent) => void;
     addWithInitValue: (lineObject: Record<string, any> | string, index?: number) => void;
+    /** Moves the row at `from` to `to`, with its key, value, errors and touched; indexes out of range are clamped */
+    move: (from: number, to: number) => void;
 }
 
 export interface ArrayFieldProps {
     initValue?: any[];
     field: string;
+    /**
+     * Whether the rows' values, errors and touched stay in the form while the ArrayField is unmounted; a remounted
+     * one shows the kept rows. Unset, it follows the Form; the rows' fields without their own follow it
+     */
+    keepState?: boolean;
     /** Called once; read `arrayFields` in the returned JSX to follow the rows */
     children: (props: ArrayFieldChildrenProps) => JSX.Element;
 }
@@ -61,7 +68,8 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
 
     const formValues = () => parent?.values() ?? form.formState().values ?? {};
 
-    const initValue = props.initValue || ObjectUtil.get(formValues(), mountedField);
+    // an entry left by an unmount with keepState: the rows show the values kept in the form, not initValue
+    const initValue = bridge.getArrayField(mountedField) ? ObjectUtil.get(formValues(), mountedField) : (props.initValue ?? ObjectUtil.get(formValues(), mountedField));
 
     const [keys, setKeys] = createSignal(generateKeys(initValue));
 
@@ -92,8 +100,11 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
         });
     });
 
+    const keepState = () => props.keepState ?? form.formProps.keepState ?? true;
+
     const context: ArrayFieldContextValue = {
         shouldUseInitValue,
+        keepState,
         // rows read the initial value from here until the mount write renders
         values: () => (form.formState() === mountedFormState ? ObjectUtil.set(formValues(), mountedField, mountedInitValue) : parent?.values()),
     };
@@ -141,12 +152,27 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
         });
     };
 
+    const move = (from: number, to: number) => {
+        const current = keys();
+        const last = current.length - 1;
+        const source = Math.max(0, Math.min(from, last));
+        const target = Math.max(0, Math.min(to, last));
+        if (source === target) {
+            return;
+        }
+        batch(() => {
+            cachedUpdateKey = bridge.moveArrayFieldRow(field(), source, target);
+            setKeys(current.toSpliced(source, 1).toSpliced(target, 0, current[source]));
+        });
+    };
+
     const childrenProps: ArrayFieldChildrenProps = {
         get arrayFields() {
             return arrayFields();
         },
         add,
         addWithInitValue,
+        move,
     };
 
     // Built before the onMount below: the rows register in their own onMount first, and the mount write lays their
@@ -157,15 +183,18 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
 
     onMount(() => {
         bridge.mountArrayField(mountedField, resetValue);
-        onCleanup(() => bridge.unRegisterArrayField(field()));
+        // Disposed before the rows: a later computation of the same owner is cleaned first, so the array goes as a
+        // whole and the rows' fields find their paths removed already
+        onCleanup(() => bridge.unRegisterArrayField(field(), keepState()));
     });
 
+    // a rename leaves the old path as an unmount does
     useWatch(field, (current) => {
-        bridge.unRegisterArrayField(registeredField);
+        bridge.unRegisterArrayField(registeredField, keepState());
         registeredField = current;
         if (!bridge.getArrayField(current)) {
             // a changed field resets to its own initial value; its current value may hold rows the rename carried over
-            bridge.registerArrayField(current, current === mountedField ? resetValue : cloneDeep(props.initValue || bridge.getInitValue(current)));
+            bridge.registerArrayField(current, current === mountedField ? resetValue : cloneDeep(props.initValue ?? bridge.getInitValue(current)));
         }
         // registering does not update the form state, so the rows follow the new field here
         syncKeys();

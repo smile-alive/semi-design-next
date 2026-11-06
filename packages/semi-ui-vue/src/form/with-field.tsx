@@ -2,14 +2,17 @@
 // JSX because withField is a component factory: the wrapped component is a runtime argument, which a template cannot name.
 import { type Component, type IntrinsicElementAttributes, type PropType, type Slot, camelize, capitalize, createTextVNode, createVNode, defineComponent, mergeProps, shallowRef, toHandlerKey, watch } from 'vue';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-import { getFieldAriaProps, isRequired } from '@fibrae/semi-foundation/form/utils';
+import { errorMessages } from '@fibrae/semi-foundation/form/errors';
+import { isRequired } from '@fibrae/semi-foundation/form/rules';
+import { getFieldAriaProps } from '@fibrae/semi-foundation/form/utils';
 import warning from '@fibrae/semi-foundation/utils/warning';
+import { handOn } from '../_base/hand-on';
 import { hasSlotContent } from '../_base/slot-nodes';
 import type { ValidateStatus } from '../input/interface';
 import FieldLayout from './field-layout.vue';
 import type { CommonFieldProps, FieldComponent, FieldHandle, WithFieldOptions } from './interface';
 import useField from './use-field';
-import { hasErrorContent, isLabelConfig } from './utils';
+import { isLabelConfig } from './utils';
 
 const prefix = cssClasses.PREFIX;
 const shellSlots = new Set(['fieldLabel', 'labelExtra', 'helpText', 'extraText', 'error']);
@@ -33,7 +36,8 @@ const fieldProps = {
     emptyValue: null,
     initValue: null,
     rules: Array as PropType<CommonFieldProps['rules']>,
-    validator: Function as PropType<CommonFieldProps['validator']>,
+    // a Standard Schema is an object (zod, valibot) or a function (arktype)
+    validator: [Function, Object] as PropType<CommonFieldProps['validator']>,
     transform: Function as PropType<CommonFieldProps['transform']>,
     convert: Function as PropType<CommonFieldProps['convert']>,
     trigger: [String, Array] as PropType<CommonFieldProps['trigger']>,
@@ -100,15 +104,20 @@ export default function withField(component: unknown, opts: WithFieldOptions<str
 
             const controlAttrs = () => Object.fromEntries(Object.entries(attrs).filter(([key]) => !isValueKey(key)));
 
-            const forwardedSlots = (shell: boolean): Record<string, Slot | undefined> => Object.fromEntries(Object.entries(slots).filter(([key]) => !key.startsWith('_') && !(shell && shellSlots.has(key))));
+            const forwardedSlots = (shell: boolean): Record<string, Slot | undefined> =>
+                Object.fromEntries(
+                    Object.entries(slots)
+                        .filter(([key]) => !key.startsWith('_') && !(shell && shellSlots.has(key)))
+                        .map(([key, slot]) => [key, handOn(slot)])
+                );
 
             const reemit = (...args: unknown[]) => listeners().forEach((listener) => listener(...args));
 
-            if (props.field === undefined && !shouldInject) {
+            if (props.field == null && !shouldInject) {
                 return () => createVNode(type, { ...controlAttrs(), id: props.id, name: props.name, [handlerKey]: reemit, ref: control }, forwardedSlots(false));
             }
 
-            warning(props.field === undefined, "[Semi Form]: 'field' is required, please check your props of Field Component");
+            warning(props.field == null, "[Semi Form]: 'field' is required, please check your props of Field Component");
 
             const state = useField(props, {
                 valuePath,
@@ -145,7 +154,8 @@ export default function withField(component: unknown, opts: WithFieldOptions<str
                 const labelPosition = insetFallback ? 'top' : merged.labelPosition;
                 const ownLayout = !state.inGroup && !props.pure;
                 const shellLabel = ownLayout && !props.noLabel && labelPosition !== 'inset';
-                const rulesRequired = isRequired(props.rules);
+                // the Form schema ignores field rules, so only label.required marks the field
+                const rulesRequired = state.usesSchema() ? false : isRequired(props.rules);
 
                 const injected: Record<string, unknown> = {
                     [valueKey]: value,
@@ -164,7 +174,7 @@ export default function withField(component: unknown, opts: WithFieldOptions<str
                         hasHelpText: hasSlotContent(slots.helpText),
                         hasExtraText: hasSlotContent(slots.extraText),
                         error,
-                        errorHasContent: hasErrorContent(error),
+                        errorHasContent: errorMessages(error).length > 0,
                         status,
                         shownStatus: blockStatus,
                     }),
@@ -222,11 +232,11 @@ export default function withField(component: unknown, opts: WithFieldOptions<str
                     >
                         {{
                             default: renderControl,
-                            label: slots.fieldLabel,
-                            labelExtra: slots.labelExtra,
-                            helpText: slots.helpText,
-                            extraText: slots.extraText,
-                            error: slots.error,
+                            label: handOn(slots.fieldLabel),
+                            labelExtra: handOn(slots.labelExtra),
+                            helpText: handOn(slots.helpText),
+                            extraText: handOn(slots.extraText),
+                            error: handOn(slots.error),
                         }}
                     </FieldLayout>
                 );

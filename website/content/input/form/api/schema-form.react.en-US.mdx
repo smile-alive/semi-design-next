@@ -1,0 +1,48 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| allowEmpty | Whether a field whose value becomes empty keeps its key in values. Setting it to `true` on either the Form or the field takes effect. | `boolean` | - |
+| aria-label | Accessible name of the form, set on the form element. | `React.AriaAttributes['aria-label']` | - |
+| autoScrollToError | Whether to scroll to the first invalid field when submit or `formApi.validate()` fails. An object is passed to scroll-into-view-if-needed as its options. | `boolean \| ScrollIntoViewOptions` | - |
+| children | Content rendered after the fields, such as a submit button. | `React.ReactNode` | - |
+| className | Class name of the form element. | `string` | - |
+| disabled | The disabled state applied to every field. A field's own disabled takes precedence. | `boolean` | - |
+| extraTextPosition | Position of the extraText of every field: `middle` puts it between the label and the control, `bottom` after the control. Defaults to `bottom`. The same property on a field takes precedence. | `'bottom' \| 'middle'` | - |
+| form | The formApi returned by `Form.useForm()`, used to control the form from outside. | <ApiType detail={"ReturnType\u003ctypeof useForm\u003cValues, Output>>[0]"}>Type</ApiType> | - |
+| getFormApi | Called once the Form has mounted, with the formApi. | <ApiType detail={"(formApi: FormApi\u003cValues, Output>) => void"}>Type</ApiType> | - |
+| id | The id of the form element, also written to `x-form-id`. Generated when omitted. | `string` | - |
+| initValues | Initial values of the form, copied once when the Form is created. | `Values` | - |
+| jsonSchema | The JSON Schema to render. It takes precedence over the JSON Schema exported from `schema`; with neither, no field renders and a warning is logged in development. | `JsonSchema` | - |
+| keepState | Whether an unmounted field keeps its value, error and touched state, restored by path when it mounts again. Fields and ArrayFields without their own setting use this value. Defaults to `true`. | `boolean` | - |
+| labelAlign | Text alignment of the label of every field: `left` or `right`. Defaults to `left`. The same property on a field takes precedence. | `'left' \| 'right'` | - |
+| labelCol | Grid layout of the label of every field, with the properties of Col such as span and offset. Set it together with wrapperCol. | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType> | - |
+| labelPosition | Label position of every field: `top`, `left` or `inset`. `inset` is supported by some fields only; the others are laid out as `top`. The same property on a field takes precedence. | `'inset' \| 'left' \| 'top'` | - |
+| labelWidth | Label width of every field. A number is in px. | `number \| string` | - |
+| layout | Direction in which the fields are arranged: `vertical` or `horizontal`. | `'horizontal' \| 'vertical'` | - |
+| onChange | Called when the form state changes: a field mounts, unmounts, changes its value, blurs, or changes its validation state or error. Receives formState. | <ApiType detail={"(formState: FormState\u003cValues>) => void"}>Type</ApiType> | - |
+| onErrorChange | Called when validation state changes, with all errors and the errors that changed. Batch operations such as `validate`, `submit` and `reset` call it once; silent validation does not. | <ApiType detail={"(errors: AllErrors\u003cValues>, changedError?: Partial\u003cRecord\u003cFieldPath\u003cValues>, FieldError>>) => void"}>Type</ApiType> | - |
+| onReset | Called when a reset button is clicked or `formApi.reset()` is called. | <ApiType detail={"() => void"}>Type</ApiType> | - |
+| onSubmit | Called when a submit button is clicked or `formApi.submitForm()` is called and validation passes, with the values (the schema's output when `schema` is set) and the submit event. | <ApiType detail={"(values: Output, e?: React.SubmitEvent\u003cHTMLFormElement>) => void"}>Type</ApiType> | - |
+| onSubmitFail | Called when a submit button is clicked or `formApi.submitForm()` is called and validation fails, with errors, values and the submit event. Each error in errors is a string array; what the Form `validator` throws, or returns when it is not an object, is passed as is. | <ApiType detail={"(errors: Partial\u003cAllErrors\u003cValues>>, values: Partial\u003cValues>, e?: React.SubmitEvent\u003cHTMLFormElement>) => void"}>Type</ApiType> | - |
+| onValueChange | Called when a field value changes, with all values and the values that changed. | <ApiType detail={"(values: Values, changedValue: Partial\u003cValues>) => void"}>Type</ApiType> | - |
+| ref | Reference to the handle `{ formApi }`, whose formApi controls the form. | <ApiType detail={"React.Ref\u003cFormHandle\u003cValues, Output>>"}>Type</ApiType> | - |
+| renderField | Same as the `renderField` of SchemaField: renderers by node path, with array rows written as `[]`, called with `{ node, field }`. | <ApiType detail={"Record\u003cstring, SchemaFieldRenderer>"}>Type</ApiType> | - |
+| schema | A Standard Schema object (Zod, Valibot, ArkType and so on); the fields render from the JSON Schema it exports. Once all fields pass, `onSubmit` and `formApi.validate()` receive the schema's output. It excludes `validator`. | <ApiType detail={"StandardSchema\u003cValues, Output>"}>Type</ApiType> | - |
+| schemaDebounce | With `schema`, how many milliseconds of pause in input a change-triggered validation waits for. Validation on submit, `formApi.validate()` and blur does not wait. Defaults to 0, no wait. | `number` | - |
+| showValidateIcon | Whether the validation message is preceded by an icon of its status. | `boolean` | - |
+| stopPropagation | Whether to stop the submit and reset events from bubbling, as `{ submit, reset }`, so that a nested Form does not trigger the events of the outer one. Events bubble when it is not set. | `{ submit?: boolean; reset?: boolean; }` | - |
+| stopValidateWithError | Whether to skip the remaining rules after the first rule fails. The same property on a field takes precedence. | `boolean` | - |
+| style | Inline style of the form element. | `React.CSSProperties` | - |
+| trigger | When every field validates: `change`, `blur`, `mount`, `custom`, or an array of them. The same property on a field takes precedence. | `FieldValidateTriggerType` | - |
+| validator | Form-level validation, called on submit and `formApi.validate()`, and allowed to return a Promise. It excludes `schema`. An empty value or object means valid; on failure return an error object shaped like the values, each error a string or a string array. | <ApiType detail={"FormValidator\u003cValues>"}>Type</ApiType> | - |
+| widgets | Same as the `widgets` of SchemaField: field components in place of the built-in controls, keyed by the JSON Schema `format` or by kind. | <ApiType detail={"Record\u003cstring, React.ComponentType\u003cany>>"}>Type</ApiType> | - |
+| wrapperCol | Grid layout of the control of every field, with the properties of Col such as span and offset. Set it together with labelCol. | <ApiType detail={"Record\u003cstring, any>"}>Type</ApiType> | - |
+
+**Methods**
+
+| Method  | Description                                                                      | Type                                                            |
+| ------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| formApi | The formApi of the form, used to read and change its state, validate and submit. | <ApiType detail={"FormApi\u003cValues, Output>"}>Type</ApiType> |

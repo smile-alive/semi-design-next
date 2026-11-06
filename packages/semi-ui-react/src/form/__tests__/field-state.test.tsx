@@ -114,7 +114,7 @@ describe('ArrayField 行操作', () => {
     it('首次渲染被 Suspense 丢弃后重新挂载，行内 initValue 仍生效', async () => {
         let resolved = false;
         let pending: Promise<void> | undefined;
-        const Suspender = () => {
+        function Suspender() {
             if (!resolved) {
                 pending ??= sleep(10).then(() => {
                     resolved = true;
@@ -122,7 +122,7 @@ describe('ArrayField 行操作', () => {
                 throw pending;
             }
             return null;
-        };
+        }
         let api: FormApi;
         render(
             <Form getFormApi={(formApi) => (api = formApi)}>
@@ -154,7 +154,7 @@ describe('Form StrictMode', () => {
         changeInput(container.querySelector('input'), 'a');
         expect(validate).toHaveBeenCalledTimes(1);
         expect(onErrorChange).toHaveBeenCalledTimes(1);
-        expect(api.getError('name')).toBe('err');
+        expect(api.getError('name')).toEqual(['err']);
     });
 
     it('挂载校验的错误在表单状态与界面上一致', async () => {
@@ -167,7 +167,7 @@ describe('Form StrictMode', () => {
             </StrictMode>
         );
         await waitFor(() => expect(container.querySelector('.semi-form-field-error-message')).toHaveTextContent('mount-err'));
-        expect(api.getError('name')).toBe('mount-err');
+        expect(api.getError('name')).toEqual(['mount-err']);
     });
 
     it('ArrayField 挂载只写入一次初始值', () => {

@@ -1,17 +1,10 @@
-import AsyncValidator from 'async-validator';
 import { cloneDeepWith } from 'es-toolkit';
 import { joinIds } from '../utils/a11y';
 import { createId } from '../utils/uuid';
 import warning from '../utils/warning';
 import { strings } from './constants';
+import { hasErrors } from './errors';
 import type { FieldValidateTriggerType, BasicTriggerType, StandardSchemaIssue } from './interface';
-
-export function generateValidatesFromRules(field: string, rules: any[] = []) {
-    const descriptor = {};
-    descriptor[field] = rules;
-    const validator = new AsyncValidator(descriptor);
-    return validator;
-}
 
 /** `['a', 0, { key: 'b' }]` -> `a[0].b`, the form of the field paths; a key that holds path syntax is quoted */
 export function schemaIssuePath({ path = [] }: StandardSchemaIssue) {
@@ -28,33 +21,8 @@ export function schemaIssuePath({ path = [] }: StandardSchemaIssue) {
     }, '');
 }
 
-export function isRequired(rules: any[] | Record<string, any> = []) {
-    let required = false;
-    if (typeof rules === 'object' && 'required' in rules) {
-        required = rules.required;
-    } else if (Array.isArray(rules) && rules.length) {
-        rules.forEach((rule) => {
-            if (rule.required) {
-                required = true;
-            }
-        });
-    }
-    return required;
-}
-
-export function isValid(errors: any): boolean {
-    if (typeof errors === 'string') {
-        return !errors.length;
-    }
-    if (Array.isArray(errors)) {
-        return errors.every((error) => isValid(error));
-    }
-    if (typeof errors === 'boolean') {
-        return errors;
-    }
-    // Any object or function counts as an error: render nodes (React element, Vue VNode, JSX compiled to an accessor)
-    // need no per-framework detection
-    return errors === null || (typeof errors !== 'object' && typeof errors !== 'function');
+export function isValid(errors: unknown) {
+    return !hasErrors(errors);
 }
 
 /** One stable key per ArrayField row: rows that already have a key keep it, new rows get a fresh one */
@@ -63,7 +31,8 @@ export function generateKeys(value: unknown, oldKeys: string[] = []) {
         warning(value !== undefined, '[Semi Form ArrayField] initValue of ArrayField must be an array. Please check the type of your props');
         return [];
     }
-    return value.map((_, i) => oldKeys[i] ?? createId());
+    // a row whose only field emptied leaves a hole, which map would skip and so drop the row
+    return Array.from(value, (_, i) => oldKeys[i] ?? createId());
 }
 
 export function transformTrigger(fieldTrigger: FieldValidateTriggerType, formTrigger: FieldValidateTriggerType): Array<BasicTriggerType> {
@@ -182,7 +151,7 @@ export function getFieldAriaProps(state: FieldAriaState) {
     const ownErrorMessage = ownLayout && !state.noErrorMessage;
     // the inset label renders in every layout, the Label only in the field's own one
     const labelRendered = !state.noLabel && (state.labelPosition === 'inset' || ownLayout);
-    const helpTextRendered = ownErrorMessage && state.hasHelpText && !error && !(error === '' && shownStatus === 'error');
+    const helpTextRendered = ownErrorMessage && state.hasHelpText && !error;
     const aria: FieldAriaProps = {
         // the same condition as the Label's asterisk
         'aria-required': own['aria-required'] ?? (state.rulesRequired || Boolean(label?.required && !label.optional)),

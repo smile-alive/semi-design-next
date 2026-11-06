@@ -12,6 +12,8 @@ export interface FormContextValue {
 
 export interface ArrayFieldContextValue {
     shouldUseInitValue: Accessor<boolean>;
+    /** What the rows' fields without their own `keepState` follow */
+    keepState: Accessor<boolean>;
     /** The values the rows read their initial values from until the ArrayField's own mount write is rendered */
     values: Accessor<Record<string, any> | undefined>;
 }

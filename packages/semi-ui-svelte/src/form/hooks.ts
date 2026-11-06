@@ -1,6 +1,6 @@
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import { getFormContext } from './context.js';
-import type { FieldError, FormApi, FormState } from './interface.js';
+import type { FieldError, FieldErrorInput, FormApi, FormState } from './interface.js';
 
 type FieldPath = string | (() => string);
 
@@ -22,7 +22,7 @@ export function useFieldApi(field: FieldPath) {
 
     return {
         getError: () => formApi.getError(readPath(field)),
-        setError: (error: FieldError) => formApi.setError(readPath(field), error),
+        setError: (error: FieldErrorInput) => formApi.setError(readPath(field), error),
         getTouched: () => formApi.getTouched(readPath(field)),
         setTouched: (isTouched: boolean) => formApi.setTouched(readPath(field), isTouched),
         getValue: () => formApi.getValue(readPath(field)),
@@ -30,7 +30,7 @@ export function useFieldApi(field: FieldPath) {
     };
 }
 
-export function useFieldState(field: FieldPath): () => { value: any; error: FieldError; touched: boolean | undefined } {
+export function useFieldState(field: FieldPath): () => { value: any; error: FieldError | undefined; touched: boolean | undefined } {
     const formState = useFormState();
 
     return () => {

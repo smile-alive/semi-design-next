@@ -37,17 +37,17 @@ describe('Form-slot', () => {
         expect(screen.getByTestId('node-label')).toHaveTextContent(/^hahaha$/);
     });
 
-    it('error：字符串、布尔值与 #error 插槽', () => {
+    it("error：消息数组、[''] 与 #error 插槽", () => {
         const errorText = (props: Record<string, unknown>, selector: string) => {
             const view = renderSlot(props);
             const text = view.container.querySelector(selector)?.textContent;
             view.unmount();
             return text;
         };
-        expect(errorText({ error: 'semi' }, `${errorSelector} span`)).toEqual('semi');
-        expect(errorText({ error: true }, errorSelector)).toEqual('');
+        expect(errorText({ error: ['semi'] }, `${errorSelector} span`)).toEqual('semi');
+        expect(errorText({ error: [''] }, errorSelector)).toBeUndefined();
 
-        renderSlot({ error: 'help' }, {}, { error: ({ error }) => <div data-testid="node-error">{`${error}!`}</div> });
+        renderSlot({ error: ['help'] }, {}, { error: ({ error }) => <div data-testid="node-error">{`${error.join()}!`}</div> });
         expect(document.querySelector(errorSelector)).toContainElement(screen.getByTestId('node-error'));
         expect(screen.getByTestId('node-error')).toHaveTextContent(/^help!$/);
     });

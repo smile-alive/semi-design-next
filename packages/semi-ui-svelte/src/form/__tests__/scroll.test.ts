@@ -59,7 +59,7 @@ describe('Svelte Form 滚动', () => {
 
     it('表单级 validator 失败后，错误渲染完成即滚动，不等定时器', async () => {
         const { api } = renderForm({ autoScrollToError: true, validator: () => ({ b: 'form error' }) }, [input('b')]);
-        await expect(api().validate()).rejects.toEqual({ b: 'form error' });
+        await expect(api().validate()).rejects.toEqual({ b: ['form error'] });
         flushSync();
         await Promise.resolve();
         expect(scrollIntoView).toHaveBeenCalledWith(fieldDOM('b'), smooth);

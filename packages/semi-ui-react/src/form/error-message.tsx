@@ -1,16 +1,16 @@
-import React, { memo } from 'react';
+import type React from 'react';
+import { memo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-import type { BasicFieldError } from '@fibrae/semi-foundation/form/interface';
+import { errorMessages, type FieldError } from '@fibrae/semi-foundation/form/errors';
 import { IconAlertTriangle, IconAlertCircle } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 
 const prefix = cssClasses.PREFIX;
 
-export type ReactFieldError = BasicFieldError | React.ReactNode;
-
 export interface ErrorMessageProps extends ElementProps<'div'> {
-    error?: ReactFieldError;
+    /** The messages are joined with `, `; `['']` fails without a text and renders nothing */
+    error?: FieldError;
     className?: string;
     style?: React.CSSProperties;
     showValidateIcon?: boolean;
@@ -23,73 +23,36 @@ export interface ErrorMessageProps extends ElementProps<'div'> {
     ref?: React.Ref<HTMLDivElement>;
 }
 
-/** Whether an error has content ErrorMessage renders; a number or a boolean does not */
-export function hasErrorContent(error: ReactFieldError) {
-    if (Array.isArray(error)) {
-        return error.some(Boolean);
-    }
-    return (typeof error === 'string' && error !== '') || React.isValidElement(error);
-}
-
-// the span id is the target of aria-errormessage and aria-describedby
-function generatorText(content: ReactFieldError, id: string) {
-    if (!hasErrorContent(content)) {
-        return null;
-    }
-    if (Array.isArray(content)) {
-        return (
-            <span id={id}>
-                {content.filter(Boolean).map((item: React.ReactNode, i) => (
-                    <React.Fragment key={i}>
-                        {i > 0 && ', '}
-                        {item}
-                    </React.Fragment>
-                ))}
-            </span>
-        );
-    }
-    return <span id={id}>{content}</span>;
+/** Whether an error has a message ErrorMessage renders */
+export function hasErrorContent(error?: FieldError) {
+    return errorMessages(error).length > 0;
 }
 
 function ErrorMessage({ error, className, style, validateStatus, helpText, showValidateIcon, isInInputGroup, errorMessageId, helpTextId, ref, ...rest }: ErrorMessageProps) {
+    const messages = errorMessages(error);
+    const failed = Boolean(error?.length);
+
     const cls = clsx(
         {
-            [prefix + '-field-error-message']: Boolean(error),
+            [prefix + '-field-error-message']: failed,
             [prefix + '-field-help-text']: Boolean(helpText),
         },
         className
     );
 
-    if (!error && !helpText) {
-        return null;
-    }
-
-    // async-validator's `message: ''` means "failed, hide the text"; helpText would look like success
-    if (error === '' && validateStatus === 'error') {
-        return null;
-    }
-
-    const id = error ? errorMessageId : helpTextId;
-    const text = generatorText(error ? error : helpText, id);
-
-    // only an array error without content (e.g. InputGroup collecting [false, false]) renders nothing
-    if (Array.isArray(error) && !text && !helpText) {
-        return null;
-    }
-
-    let icon = null;
-
+    // the span id is the target of aria-errormessage and aria-describedby
+    const text = failed ? <span id={errorMessageId}>{messages.join(', ')}</span> : <span id={helpTextId}>{helpText}</span>;
     const iconCls = `${prefix}-field-validate-status-icon`;
+    const icon = isInInputGroup || validateStatus === 'error' ? <IconAlertCircle className={iconCls} /> : validateStatus === 'warning' && <IconAlertTriangle className={iconCls} />;
 
-    if (isInInputGroup || validateStatus === 'error') {
-        icon = <IconAlertCircle className={iconCls} />;
-    } else if (validateStatus === 'warning') {
-        icon = <IconAlertTriangle className={iconCls} />;
+    // an error without a text (a rule with `message: ''`) hides the helpText too, which would read as a passed check
+    if (failed ? !messages.length : !helpText) {
+        return null;
     }
 
     return (
         <div {...rest} ref={ref} className={cls} style={style}>
-            {showValidateIcon && text && icon}
+            {showValidateIcon && icon}
             {text}
         </div>
     );

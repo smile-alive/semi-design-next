@@ -1,6 +1,7 @@
 import { untrack } from 'svelte';
+import { errorMessages } from '@fibrae/semi-foundation/form/errors';
 import { cloneFormValue } from '@fibrae/semi-foundation/form/utils';
-import type { CommonFieldProps, FieldError, FieldLabel } from './interface.js';
+import type { CommonFieldProps, FieldLabel } from './interface.js';
 
 const fieldOnlyKeys = new Set<string>([
     'allowEmpty',
@@ -45,14 +46,7 @@ export function cloneDeep<T>(value: T) {
 }
 
 export function hasErrorContent(error: unknown) {
-    if (Array.isArray(error)) {
-        return error.some(Boolean);
-    }
-    return typeof error === 'string' && error !== '';
-}
-
-export function errorText(error: FieldError) {
-    return Array.isArray(error) ? error.filter(Boolean).join(', ') : String(error);
+    return errorMessages(error).length > 0;
 }
 
 export function isLabelConfig<L extends FieldLabel>(label?: string | number | L): label is L {

@@ -10,7 +10,7 @@
     import { cloneDeep } from './utils.js';
 
     const defaults = useDefaultProps('ArrayField');
-    let { field, initValue = defaults('initValue'), children }: ArrayFieldProps = $props();
+    let { field, initValue = defaults('initValue'), keepState = defaults('keepState'), children }: ArrayFieldProps = $props();
 
     const form = getFormContext();
     const parent = getArrayFieldContext();
@@ -24,15 +24,16 @@
     const { bridge } = form;
     const mountedField = untrack(() => field);
 
-    // an existing entry means a remount by setValues: its fields must not consume initValue
+    // an existing entry is a remount after keepState or setValues: the rows are the ones in the form values
     let shouldUseInitValue = $state(!bridge.getArrayField(mountedField));
     let registeredField = mountedField;
 
     const mountedFormState = form.formState;
+    const resolvedKeepState = $derived(keepState ?? form.formProps.keepState ?? true);
 
     const formValues = () => parent?.values ?? form.formState.values ?? {};
 
-    const mountedValue = untrack(() => initValue || ObjectUtil.get(formValues(), mountedField));
+    const mountedValue = untrack(() => (bridge.getArrayField(mountedField) ? ObjectUtil.get(formValues(), mountedField) : initValue || ObjectUtil.get(formValues(), mountedField)));
 
     let keys = $state.raw(generateKeys(mountedValue));
 
@@ -44,6 +45,9 @@
     setArrayFieldContext({
         get shouldUseInitValue() {
             return shouldUseInitValue;
+        },
+        get keepState() {
+            return resolvedKeepState;
         },
         // rows read the initial value from here until the mount write renders
         get values() {
@@ -83,6 +87,18 @@
         keys = keys.toSpliced(index, 1);
     };
 
+    const onMove = (from: number, to: number) => {
+        const last = keys.length - 1;
+        const source = Math.max(0, Math.min(from, last));
+        const target = Math.max(0, Math.min(to, last));
+        if (source === target) {
+            return;
+        }
+        const moved = keys.toSpliced(source, 1);
+        keys = moved.toSpliced(target, 0, keys[source]);
+        cachedUpdateKey = bridge.moveArrayFieldRow(field, source, target);
+    };
+
     watch(
         () => form.formState,
         () => syncKeys()
@@ -91,7 +107,8 @@
     watch(
         () => field,
         (current) => {
-            bridge.unRegisterArrayField(registeredField);
+            // the old path may now hold the rows of another ArrayField (moved rows), so its values stay
+            bridge.unRegisterArrayField(registeredField, true);
             registeredField = current;
             if (!bridge.getArrayField(current)) {
                 // a changed field resets to its own initial value; its current value may hold rows the rename carried over
@@ -104,8 +121,8 @@
 
     onMount(() => {
         bridge.mountArrayField(mountedField, resetValue);
-        return () => bridge.unRegisterArrayField(registeredField);
+        return () => bridge.unRegisterArrayField(registeredField, resolvedKeepState);
     });
 </script>
 
-{@render children?.({ arrayFields, onAdd, onAddWithInitValue })}
+{@render children?.({ arrayFields, onAdd, onAddWithInitValue, onMove })}

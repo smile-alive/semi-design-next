@@ -90,7 +90,7 @@ describe('Form 字段状态与发布时机', () => {
         });
         expect(screen.getByText('fast-error')).toBeInTheDocument();
         expect(screen.queryByText('slow-error')).toBeNull();
-        expect(api.getError('fast')).toBe('fast-error');
+        expect(api.getError('fast')).toEqual(['fast-error']);
         expect(screen.getByTestId('form-state')).toHaveTextContent('{"values":{},"errors":{},"touched":{}}');
         expect(screen.getByTestId('field-state')).toHaveTextContent('{}');
         expect(onChange).not.toHaveBeenCalled();
@@ -102,11 +102,11 @@ describe('Form 字段状态与发布时机', () => {
         expect(screen.getByText('slow-error')).toBeInTheDocument();
         expect(JSON.parse(screen.getByTestId('form-state').textContent)).toEqual({
             values: {},
-            errors: { fast: 'fast-error', slow: 'slow-error' },
+            errors: { fast: ['fast-error'], slow: ['slow-error'] },
             touched: { fast: true, slow: true },
         });
         expect(JSON.parse(screen.getByTestId('field-state').textContent)).toEqual({
-            error: 'fast-error',
+            error: ['fast-error'],
             touched: true,
         });
         expect(onChange).toHaveBeenCalledTimes(1);
@@ -164,7 +164,7 @@ describe('Form 字段状态与发布时机', () => {
         );
         act(() => api.setError('name', 'bad'));
         expect(screen.getByRole('textbox')).toHaveAttribute('data-status', 'warning');
-        expect(api.getFormState()).toEqual({ values: {}, errors: { name: 'bad' }, touched: {} });
+        expect(api.getFormState()).toEqual({ values: {}, errors: { name: ['bad'] }, touched: {} });
     });
 
     it('reset 使用最近一次注册时的 initValue，普通 props 更新不替换初值，null 重置为 undefined', () => {
@@ -172,7 +172,7 @@ describe('Form 字段状态与发布时机', () => {
         const onValueChange = vi.fn<NonNullable<Parameters<typeof Form>[0]['onValueChange']>>();
         const onReset = vi.fn<NonNullable<Parameters<typeof Form>[0]['onReset']>>();
         const content = (field: string, initValue: string | null) => (
-            <Form getFormApi={(value) => (api = value)} onReset={onReset} onValueChange={onValueChange}>
+            <Form getFormApi={(value) => (api = value)} keepState={false} onReset={onReset} onValueChange={onValueChange}>
                 <Field field={field} initValue={initValue} />
             </Form>
         );
@@ -205,10 +205,10 @@ describe('Form 字段状态与发布时机', () => {
         expect(api.getFormState()).toEqual({ values: {}, errors: {}, touched: { after: true } });
     });
 
-    it('字段改名携带值、错误和控件 status，已有 touched 不在新路径重新写入', () => {
+    it('字段改名携带值、错误、touched 和控件 status', () => {
         let api: FormApi;
         const content = (field: string) => (
-            <Form getFormApi={(value) => (api = value)}>
+            <Form getFormApi={(value) => (api = value)} keepState={false}>
                 <Field field={field} initValue="init" />
             </Form>
         );
@@ -224,14 +224,12 @@ describe('Form 字段状态与发布时机', () => {
         expect(input).toHaveAttribute('data-status', 'error');
         expect(api.getFormState()).toEqual({
             values: { after: 'changed' },
-            errors: { after: 'carried-error' },
-            touched: {},
+            errors: { after: ['carried-error'] },
+            touched: { after: true },
         });
-        fireEvent.blur(input);
-        expect(api.getTouched('after')).toBeUndefined();
     });
 
-    it('ArrayField 删除前行后，后行携带值、错误和控件 status，blur 不重写 touched', () => {
+    it('ArrayField 删除前行后，后行携带值、错误、touched 和控件 status', () => {
         let api: FormApi;
         let removeFirst: () => void;
         render(
@@ -254,16 +252,14 @@ describe('Form 字段状态与发布时机', () => {
         expect(input).toHaveValue('changed');
         expect(input).toHaveAttribute('data-status', 'error');
         expect(api.getValue('rows')).toEqual([{ name: 'changed' }]);
-        expect(api.getError('rows[0].name')).toBe('row-error');
-        expect(api.getTouched('rows[0].name')).toBeUndefined();
-        fireEvent.blur(input);
-        expect(api.getTouched('rows[0].name')).toBeUndefined();
+        expect(api.getError('rows[0].name')).toEqual(['row-error']);
+        expect(api.getTouched('rows[0].name')).toBe(true);
     });
 
     it('Activity 隐藏会注销字段，再显示携带值、错误和控件 status', () => {
         let api: FormApi;
         const content = (mode: 'visible' | 'hidden') => (
-            <Form getFormApi={(value) => (api = value)}>
+            <Form getFormApi={(value) => (api = value)} keepState={false}>
                 <Activity mode={mode}>
                     <Field field="name" initValue="init" />
                 </Activity>
@@ -284,11 +280,9 @@ describe('Form 字段状态与发布时机', () => {
         expect(input).toHaveAttribute('data-status', 'error');
         expect(api.getFormState()).toEqual({
             values: { name: 'changed' },
-            errors: { name: 'activity-error' },
-            touched: {},
+            errors: { name: ['activity-error'] },
+            touched: { name: true },
         });
-        fireEvent.blur(input);
-        expect(api.getTouched('name')).toBeUndefined();
     });
 
     it.each([false, true])('嵌套 setValue 保留控件渲染阶段，shouldMemo=%s', (shouldMemo) => {

@@ -357,6 +357,24 @@ export interface Locale {
     };
     Form: {
         optional: string;
+        /** Default rule messages; `${len}`, `${min}`, `${max}` are the rule's bounds */
+        required: string;
+        invalid: string;
+        stringLen: string;
+        stringMin: string;
+        stringMax: string;
+        numberLen: string;
+        numberMin: string;
+        numberMax: string;
+        arrayLen: string;
+        arrayMin: string;
+        arrayMax: string;
+        /** SchemaField array rows; `${index}` is the row number, starting from 1 */
+        addItem: string;
+        removeItem: string;
+        moveUpItem: string;
+        moveDownItem: string;
+        item: string;
     };
     Image: {
         preview: string;

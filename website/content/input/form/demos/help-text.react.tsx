@@ -9,7 +9,7 @@ export default function FormDemo() {
     const validator: CommonFieldProps['validator'] = (val) => {
         if (!val) {
             setValidateStatus('error');
-            return <span>密码不能为空</span>;
+            return '密码不能为空';
         } else if (val.length <= 3) {
             setValidateStatus('warning');
             setHelpText(<span style={{ color: 'var(--semi-color-warning)' }}>密码强度：弱</span>); // 展示 helpText
@@ -22,7 +22,7 @@ export default function FormDemo() {
     };
 
     const random = () => {
-        let pw = (Math.random() * 100000).toString().slice(0, 5);
+        const pw = (Math.random() * 100000).toString().slice(0, 5);
         formRef.current?.formApi.setValue('Password', pw);
         formRef.current?.formApi.setError('Password', '');
         setHelpText('');

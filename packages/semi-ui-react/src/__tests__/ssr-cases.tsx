@@ -77,6 +77,8 @@ import {
     ResizeHandler,
     ResizeItem,
     Row,
+    SchemaField,
+    SchemaForm,
     ScrollItem,
     ScrollList,
     Select,
@@ -384,6 +386,22 @@ export const ssrCases: SsrCase[] = [
             </Form>
         ),
         html: ['value="r1"'],
+    },
+    {
+        name: 'form/SchemaField',
+        covers: ['SchemaField'],
+        element: () => (
+            <Form initValues={{ tags: ['t1'] }}>
+                <SchemaField jsonSchema={{ type: 'object', properties: { tags: { type: 'array', items: { type: 'string' } } } }} />
+            </Form>
+        ),
+        html: ['value="t1"'],
+    },
+    {
+        name: 'form/SchemaForm',
+        covers: ['SchemaForm'],
+        element: () => <SchemaForm initValues={{ name: 'semi' }} jsonSchema={{ type: 'object', properties: { name: { type: 'string', title: 'Name' } } }} />,
+        html: ['value="semi"', 'Name'],
     },
     {
         name: 'grid/默认',

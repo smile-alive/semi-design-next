@@ -1,4 +1,4 @@
-import { render } from '@solidjs/testing-library';
+import { fireEvent, render } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
@@ -66,7 +66,78 @@ describe('Form schema', () => {
                 <FormInput field="name" />
             </Form>
         ));
-        await expect(api?.validate()).rejects.toEqual({ name: 'required' });
+        await expect(api?.validate()).rejects.toEqual({ name: ['required'] });
         await vi.waitFor(() => expect(container.querySelector(errorSelector)).toHaveTextContent('required'));
+    });
+
+    it('schemaDebounce 期间连续输入不校验，停顿到时后只按最后的值校验一次', async () => {
+        vi.useFakeTimers();
+        try {
+            const { container } = render(() => (
+                <Form schema={nameSchema} schemaDebounce={300}>
+                    <FormInput field="name" />
+                </Form>
+            ));
+            const input = container.querySelector('input') as HTMLInputElement;
+            fireEvent.input(input, { target: { value: 'a' } });
+            await vi.advanceTimersByTimeAsync(200);
+            fireEvent.input(input, { target: { value: 'b' } });
+            await vi.advanceTimersByTimeAsync(299);
+            expect(container.querySelector(errorSelector)).toBeNull();
+            await vi.advanceTimersByTimeAsync(1);
+            expect(container.querySelector(errorSelector)).toHaveTextContent('too short');
+            fireEvent.input(input, { target: { value: 'bc' } });
+            await vi.advanceTimersByTimeAsync(300);
+            expect(container.querySelector(errorSelector)).toBeNull();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it('有 schema 时必填星号只跟随 label.required，rules 不再决定星号', () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const { container } = render(() => (
+            <Form schema={nameSchema}>
+                <FormInput field="name" label="Name" rules={[{ required: true }]} />
+                <FormInput field="other" label={{ text: 'Other', required: true }} />
+            </Form>
+        ));
+        const labels = container.querySelectorAll('label');
+        expect(labels[0]).not.toHaveClass('semi-form-field-label-required');
+        expect(labels[1]).toHaveClass('semi-form-field-label-required');
+        warn.mockRestore();
+    });
+
+    it('字段 validator 可以直接传 schema，错误来自 schema 的 issue', async () => {
+        const { container } = render(() => (
+            <Form>
+                <FormInput field="name" validator={z.string().min(3, 'too short')} />
+            </Form>
+        ));
+        const input = container.querySelector('input') as HTMLInputElement;
+        await userEvent.type(input, 'ab');
+        await vi.waitFor(() => expect(container.querySelector(errorSelector)).toHaveTextContent('too short'));
+        await userEvent.type(input, 'c');
+        await vi.waitFor(() => expect(container.querySelector(errorSelector)).toBeNull());
+    });
+
+    it('rules 与 validator 同时传入时警告并使用 validator，Form 有 schema 时警告字段级校验被忽略', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const both = { rules: [{ required: true, message: 'from-rules' }], validator: () => 'from-validator' } as object;
+        let api: FormApi | undefined;
+        render(() => (
+            <Form getFormApi={(formApi) => (api = formApi)}>
+                <FormInput field="both" {...both} />
+            </Form>
+        ));
+        await expect(api?.validate()).rejects.toEqual({ both: ['from-validator'] });
+        expect(warn.mock.calls.some(([message]) => String(message).includes('the rules and validator of field "both" are exclusive'))).toBe(true);
+        render(() => (
+            <Form schema={nameSchema}>
+                <FormInput field="name" rules={[{ required: true }]} />
+            </Form>
+        ));
+        expect(warn.mock.calls.some(([message]) => String(message).includes('<Form schema> excludes field-level validation'))).toBe(true);
+        warn.mockRestore();
     });
 });

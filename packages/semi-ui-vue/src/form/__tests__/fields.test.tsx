@@ -504,7 +504,7 @@ describe('Form 字段', () => {
         await act(() => timeInput.focus());
         await act(() => fireEvent.mouseDown(document.body));
         const fields = ['input', 'time', 'checkbox', 'switch'];
-        expect(fields.map((field) => [field, api().getTouched(field), api().getError(field)])).toEqual(fields.map((field) => [field, true, 'required']));
+        expect(fields.map((field) => [field, api().getTouched(field), api().getError(field)])).toEqual(fields.map((field) => [field, true, ['required']]));
     });
 
     it('字段在 KeepAlive 停用时注销，再激活时带回值；keepState 的字段经 v-if 重新挂载后恢复值', async () => {

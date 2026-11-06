@@ -1,14 +1,16 @@
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
 import type { DefaultAdapter } from '../base/foundation';
+import type { Locale } from '../locale/interface';
+import type { FieldError, FieldErrorInput } from './errors';
 import type FieldStore from './field-store';
+import type { RuleItem } from './rules';
+
+export type { FieldError, FieldErrorInput } from './errors';
+export type { RuleItem, RuleType } from './rules';
 
 export type BasicTriggerType = 'blur' | 'change' | 'custom' | 'mount';
 
 export type FieldValidateTriggerType = BasicTriggerType | Array<BasicTriggerType>;
-
-export type CommonFieldError = boolean | string | Array<any> | undefined | unknown;
-
-export type BasicFieldError = Array<any>;
 
 export interface StandardSchemaIssue {
     readonly message: string;
@@ -17,12 +19,21 @@ export interface StandardSchemaIssue {
 
 export type StandardSchemaResult<Output> = { readonly value: Output; readonly issues?: undefined } | { readonly value?: undefined; readonly issues: ReadonlyArray<StandardSchemaIssue> };
 
+/** Standard JSON Schema (https://standardschema.dev/json-schema): zod 4.2+, arktype 2.1.28+, valibot through toStandardJsonSchema */
+export interface StandardJsonSchemaConverter {
+    readonly input: (options: { readonly target: string }) => Record<string, unknown>;
+    readonly output: (options: { readonly target: string }) => Record<string, unknown>;
+}
+
 /** The part of Standard Schema v1 (https://standardschema.dev) the Form calls; zod, valibot and arktype implement it */
-export interface StandardSchema<Output = any> {
+export interface StandardSchema<Input = any, Output = Input> {
     readonly '~standard': {
         readonly version: 1;
         readonly vendor: string;
         readonly validate: (value: unknown) => StandardSchemaResult<Output> | Promise<StandardSchemaResult<Output>>;
+        /** Only read for type inference: the values a form edits and what it submits */
+        readonly types?: { readonly input: Input; readonly output: Output };
+        readonly jsonSchema?: StandardJsonSchemaConverter;
     };
 }
 
@@ -32,11 +43,20 @@ export interface StandardSchema<Output = any> {
  */
 export type ExclusiveFormValidation = { schema?: never } | { validator?: never };
 
+/** A field validator: a function returning the errors (empty for valid), or a Standard Schema run on the field value */
+export type FieldValidator = ((fieldValue: any, values: Record<string, any>) => FieldErrorInput | Promise<FieldErrorInput>) | StandardSchema;
+
+/** A field validates by `rules` or by `validator`, not both; with both, the foundation warns and uses `validator` */
+export type ExclusiveFieldValidation = { rules?: RuleItem[]; validator?: never } | { rules?: never; validator?: FieldValidator };
+
 /** E is the host's submit event, which the foundation only passes through; a submit by API has none */
 export interface BaseFormAdapter<P = Record<string, any>, S = Record<string, any>, Values extends object = any, E = unknown> extends DefaultAdapter<P, S> {
     cloneDeep: (val: any, ...rest: any[]) => any;
     notifySubmit: (values: any, e?: E) => void;
-    notifySubmitFail: (errors: string | Partial<AllErrors<Values>>, values: Partial<Values>, e?: E) => void;
+    /** `errors` is the error tree of a failed field validation, or what a Form validator threw or returned when it is not an object */
+    notifySubmitFail: (errors: Partial<AllErrors<Values>> | unknown, values: Partial<Values>, e?: E) => void;
+    /** The Form slice of the current locale: the default rule messages */
+    getLocale: () => Locale['Form'];
     /** Renders the form again from `formState`; `callback` runs once that render is committed */
     forceUpdate: (formState: FormState, callback?: () => void) => void;
     notifyChange: (formState: FormState) => void;
@@ -59,7 +79,12 @@ type FieldStateTree<T, Leaf> = { [K in keyof T]?: Leaf | NestedFieldState<T[K], 
 
 type NestedFieldState<V, Leaf> = 0 extends 1 & V ? any : V extends OpaqueValue ? never : V extends readonly (infer E)[] ? Array<Leaf | NestedFieldState<E, Leaf> | undefined> : V extends object ? FieldStateTree<V, Leaf> : never;
 
-export type AllErrors<T> = T extends Record<string, any> ? FieldStateTree<T, string> : Record<string, any>;
+export type AllErrors<T> = T extends Record<string, any> ? FieldStateTree<T, FieldError> : Record<string, any>;
+
+/** What a Form validator returns: errors nested like the values, each a message or messages; empty for valid */
+export type FormErrorsInput<T> = (T extends Record<string, any> ? FieldStateTree<T, string | readonly string[]> : Record<string, any>) | undefined | null | void;
+
+export type FormValidator<T> = (values: T) => FormErrorsInput<T> | Promise<FormErrorsInput<T>>;
 
 export interface FormState<T extends Record<string, any> = any> {
     values?: T extends Record<string, any> ? T : Record<string, any>;
@@ -104,12 +129,18 @@ export interface ValidateOptions<K extends keyof any = keyof any> {
     silent?: boolean;
 }
 
-export interface BaseFormApi<T extends object = any> {
+// A path holding an object or array may hold the errors of the fields under it
+type ErrorAt<V> = 0 extends 1 & V ? any : FieldError | NestedFieldState<V, FieldError>;
+
+/** T is the type of the values the form edits, O what a validation of the whole form resolves with (a schema's output) */
+export interface BaseFormApi<T extends object = any, O = T> {
     getValue: <P extends FieldPath<T>>(field?: P) => FieldPathValue<T, P>;
     setValue: <K extends FieldPath<T>>(field: K, newFieldValue: any) => void;
-    getError: <K extends FieldPath<T>>(field: K) => any;
-    setError: <K extends FieldPath<T>>(field: K, fieldError: any) => void;
-    getTouched: <K extends FieldPath<T>>(field: K) => boolean;
+    getError: <K extends FieldPath<T>>(field: K) => ErrorAt<FieldPathValue<T, K>> | undefined;
+    /** A message or messages; undefined, '' or [] clears. A parent path takes errors nested like the values */
+    setError: <K extends FieldPath<T>>(field: K, fieldError: FieldErrorInput | Record<string, any> | unknown[]) => void;
+    /** Without a field, returns the touched state of the whole form */
+    getTouched: <K extends FieldPath<T>>(field?: K) => boolean | Record<string, any> | undefined;
     /** A parent path takes the nested touched object of its fields */
     setTouched: <K extends FieldPath<T>>(field: K, fieldTouch: boolean | Record<string, any>) => void;
     getFieldExist: <K extends FieldPath<T>>(field: K) => boolean;
@@ -117,8 +148,12 @@ export interface BaseFormApi<T extends object = any> {
     getFormProps: (keys?: Array<string>) => ComponentProps;
     submitForm: () => void;
     reset: (fields?: Array<string>) => void;
-    /** Resolves with the form values; validating all fields against a Form `schema` resolves with the schema's output */
-    validate: <K extends FieldPath<T>>(fields?: Array<K> | ValidateOptions<K>) => Promise<T>;
+    validate: {
+        /** All fields: resolves with the schema's output when the Form has a `schema`, otherwise with the values */
+        (options?: Omit<ValidateOptions, 'fields'>): Promise<O>;
+        /** Some fields: resolves with the values as they are */
+        <K extends FieldPath<T>>(fields: Array<K> | (ValidateOptions<K> & { fields: Array<K> })): Promise<T>;
+    };
     /** Without a field, returns all the initial values */
     getInitValue: <K extends FieldPath<T>>(field?: K) => any;
     getInitValues: () => any;
@@ -146,15 +181,15 @@ export interface ComponentProps {
 
 export interface FieldSnapshot {
     value?: any;
-    error?: any;
+    error?: FieldError;
     touched?: boolean;
     status?: 'default' | 'error' | 'success' | 'warning' | 'validating';
 }
 
 /** The validation props of a field, as of its latest render */
 export interface FieldValidateOptions {
-    rules?: Array<any>;
-    validate?: (value: any, values: any) => unknown;
+    rules?: RuleItem[];
+    validate?: FieldValidator;
     transform?: (value: any) => any;
     stopValidateWithError?: boolean;
 }
@@ -166,7 +201,13 @@ export interface FieldRegistration {
     store: FieldStore;
     initValue?: any;
     valuePath?: string;
+    /** Keep the value, error and touched in the form state after the field unregisters */
     keepState: boolean;
+    /**
+     * A row field of an ArrayField. Its path moves with the rows and the ArrayField moves the row data, so registering
+     * writes what the field's store holds instead of restoring the state kept at the path.
+     */
+    inArrayField: boolean;
     allowEmpty: boolean;
     getValidateOptions: () => FieldValidateOptions;
     getChangeOptions: () => FieldChangeOptions;
@@ -205,11 +246,19 @@ export interface FieldBridge {
     getInitValue: (field?: string) => any;
     getFormProps: (keys?: Array<string>) => ComponentProps;
     getField: (field: string) => FieldRegistration | undefined;
+    /** Whether the Form validates by its `schema`: field rules are then ignored, the required mark included */
+    usesSchema: () => boolean;
     registerArrayField: (arrayFieldPath: string, val: any) => void;
     mountArrayField: (arrayFieldPath: string, val: any) => void;
-    unRegisterArrayField: (arrayField: string) => void;
-    getArrayField: (arrayField: string) => ArrayFieldRegistration;
+    /**
+     * Without keepState, removes the ArrayField's value, errors and touched with its registration. With keepState the
+     * registration stays: a remounted ArrayField finds it and reads the rows kept in the form state.
+     */
+    unRegisterArrayField: (arrayField: string, keepState: boolean) => void;
+    getArrayField: (arrayField: string) => ArrayFieldRegistration | undefined;
     addArrayFieldRow: (arrayField: string, index?: number) => number;
     addArrayFieldRowWithValue: (arrayField: string, rowValue: unknown, index?: number) => { index: number; updateKey: number };
     removeArrayFieldRow: (arrayField: string, index: number) => void;
+    /** Moves a row's value, errors and touched from `from` to `to`; returns the ArrayField's new updateKey */
+    moveArrayFieldRow: (arrayField: string, from: number, to: number) => number;
 }

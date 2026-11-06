@@ -96,6 +96,7 @@ import {
     ResizeHandler,
     ResizeItem,
     Row,
+    SchemaForm,
     ScrollItem,
     ScrollList,
     Select,
@@ -690,6 +691,29 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
         text: ['rules[0].name'],
     },
     {
+        name: 'form/SchemaForm',
+        covers: ['SchemaForm', 'SchemaField'],
+        render: () => (
+            <SchemaForm
+                initValues={{ contacts: [{ email: 'a@semi.design' }] }}
+                jsonSchema={{
+                    type: 'object',
+                    required: ['name'],
+                    properties: {
+                        name: { type: 'string', title: 'Name' },
+                        age: { type: 'integer', minimum: 0 },
+                        role: { enum: ['admin', 'user'] },
+                        address: { type: 'object', properties: { city: { type: 'string' } } },
+                        contacts: { type: 'array', title: 'Contacts', items: { type: 'object', properties: { email: { type: 'string' } } } },
+                    },
+                }}
+            >
+                <Button htmlType="submit">Submit</Button>
+            </SchemaForm>
+        ),
+        text: ['Name', 'Contacts', 'Submit'],
+    },
+    {
         name: 'grid/默认',
         covers: ['Row', 'Col'],
         render: () => (
@@ -769,7 +793,9 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
         name: 'layout/has-sider 被包装组件包住的 Sider',
         covers: ['Layout'],
         render: () => {
-            const Wrapped = (props: { children: JSX.Element }) => <div>{props.children}</div>;
+            function Wrapped(props: { children: JSX.Element }) {
+                return <div>{props.children}</div>;
+            }
             return (
                 <Layout>
                     <Wrapped>

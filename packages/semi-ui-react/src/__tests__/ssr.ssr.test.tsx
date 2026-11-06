@@ -62,6 +62,10 @@ describe('服务端渲染', () => {
         expect(semi.TypographyNumeral).toBe(semi.Typography.Numeral);
     });
 
+    it('Form.SchemaField 与命名导出 SchemaField 是同一组件', () => {
+        expect(semi.SchemaField).toBe(semi.Form.SchemaField);
+    });
+
     it('全部图标导出', () => {
         const entries = Object.entries(icons).filter(([name]) => /^Icon./.test(name));
         expect(entries.length).toBeGreaterThan(500);

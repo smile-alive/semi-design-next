@@ -29,7 +29,7 @@ describe('Form 字段规则', () => {
             </Form>
         ));
         await expect(formApi?.validate()).rejects.toBeDefined();
-        expect(formApi?.getError('inherit')).toBe('required');
+        expect(formApi?.getError('inherit')).toEqual(['required']);
         expect(formApi?.getError('own')).toEqual(['required', 'second']);
     });
 
@@ -43,10 +43,10 @@ describe('Form 字段规则', () => {
         ));
         fireEvent.input(screen.getByRole('textbox', { name: 'Inherit' }), { target: { value: 'x' } });
         fireEvent.input(screen.getByRole('textbox', { name: 'Own' }), { target: { value: 'x' } });
-        await waitFor(() => expect(formApi?.getError('own')).toBe('own-err'));
+        await waitFor(() => expect(formApi?.getError('own')).toEqual(['own-err']));
         expect(formApi?.getError('inherit')).toBeUndefined();
         fireEvent.focusOut(screen.getByRole('textbox', { name: 'Inherit' }));
-        await waitFor(() => expect(formApi?.getError('inherit')).toBe('inherit-err'));
+        await waitFor(() => expect(formApi?.getError('inherit')).toEqual(['inherit-err']));
     });
 
     it('Form 的 extraTextPosition 是字段的默认值，字段自身的设置优先', () => {

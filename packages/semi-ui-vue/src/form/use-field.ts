@@ -26,6 +26,11 @@ export default function useField(props: Readonly<Partial<CommonFieldProps>>, opt
         return undefined;
     }
 
+    let registered: { field: string; registration: FieldRegistration; leaveGroup?: () => void } | undefined;
+
+    // onActivated also runs after the first mount; only a return from the cache sets up again
+    let deactivated = false;
+
     const { formState, formProps, bridge } = form;
 
     const merged = computed(() => {
@@ -37,14 +42,6 @@ export default function useField(props: Readonly<Partial<CommonFieldProps>>, opt
             showValidateIcon: formView.showValidateIcon,
         };
     });
-
-    // keepState restores by path, and removing an ArrayField row shifts the paths of later rows (stale state)
-    warning(Boolean(props.keepState && arrayField), `[Semi Form]: 'keepState' is not supported on Field "${props.field}" inside <ArrayField/>. It will be ignored. Use add/remove on the ArrayField to manage array items instead.`);
-
-    let registered: { field: string; registration: FieldRegistration; leaveGroup?: () => void } | undefined;
-
-    // onActivated also runs after the first mount; only a return from the cache sets up again
-    let deactivated = false;
 
     const readInitValue = (field: string) => resolveFieldInitValue(props.initValue, ObjectUtil.get(arrayField?.value.values ?? formState.value.values ?? {}, field), arrayField?.value.shouldUseInitValue ?? true);
 
@@ -59,8 +56,9 @@ export default function useField(props: Readonly<Partial<CommonFieldProps>>, opt
         initValue: readInitValue(field),
         valuePath: options.valuePath,
         get keepState() {
-            return Boolean(props.keepState) && !arrayField;
+            return props.keepState ?? arrayField?.value.keepState ?? formProps.value.keepState ?? true;
         },
+        inArrayField: Boolean(arrayField),
         get allowEmpty() {
             return merged.value.allowEmpty || Boolean(props.allowEmptyString);
         },
@@ -82,7 +80,7 @@ export default function useField(props: Readonly<Partial<CommonFieldProps>>, opt
     let registration = createRegistration(props.field ?? '');
 
     const register = () => {
-        if (props.field === undefined) return;
+        if (props.field == null) return;
         registration = createRegistration(props.field);
         bridge.register(props.field, registration);
         registered = { field: props.field, registration, leaveGroup: group?.registerField(props.field) };
@@ -152,5 +150,5 @@ export default function useField(props: Readonly<Partial<CommonFieldProps>>, opt
         }
     });
 
-    return { generatedId, snapshot, merged, inGroup: Boolean(group), handleChange, handleBlur };
+    return { generatedId, snapshot, merged, inGroup: Boolean(group), usesSchema: bridge.usesSchema, handleChange, handleBlur };
 }

@@ -1,6 +1,7 @@
 import React, { useId } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
+import { normalizeFieldError } from '@fibrae/semi-foundation/form/errors';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import type { ElementProps } from '../_base/base';
 import { namedRole } from '../_base/named-role';
@@ -18,7 +19,8 @@ export interface SlotProps extends ElementProps<'div'> {
     label?: LabelProps | React.ReactNode;
     noLabel?: boolean;
     labelPosition?: 'top' | 'left';
-    error?: ErrorMessageProps | React.ReactNode;
+    /** A message, messages, or the props of the ErrorMessage */
+    error?: ErrorMessageProps | string | string[];
     children?: React.ReactNode;
     /** Attached to the root div */
     ref?: React.Ref<HTMLDivElement>;
@@ -49,8 +51,8 @@ export default function FormSlot({ children, label, className, style, error, noL
 
     const labelColCls = labelAlign ? `${prefix}-col-${labelAlign}` : '';
 
-    if (typeof error !== 'undefined') {
-        const emProps: object = isConfig(error) ? error : { error };
+    if (error != null) {
+        const emProps: ErrorMessageProps = typeof error === 'string' || Array.isArray(error) ? { error: normalizeFieldError(error) } : error;
         slotError = <ErrorMessage {...emProps} />;
     }
 

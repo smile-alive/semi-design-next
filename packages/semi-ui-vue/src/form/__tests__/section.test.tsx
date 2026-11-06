@@ -11,32 +11,33 @@ const textSelector = `.${BASE_CLASS_PREFIX}-form-section-text`;
 describe('Form.Section', () => {
     it('class 与 style', () => {
         const { container } = render(FormSection, { props: { class: 'sec-test', style: { color: 'red' } } });
-        const section = container.querySelector('section.sec-test');
+        const section = container.querySelector('fieldset.sec-test');
         expect(section).not.toBeNull();
         expect(section).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
     it('默认插槽', () => {
         const { container } = render(() => <Form>{() => <FormSection>{() => <FormInput class="test" field="test" />}</FormSection>}</Form>);
-        expect(container.querySelector('section .test')).not.toBeNull();
+        expect(container.querySelector('fieldset .test')).not.toBeNull();
     });
 
     it('#text 插槽', () => {
         const view = render(FormSection, { slots: { text: () => 'semi' } });
         expect(view.container.querySelector(textSelector)).toHaveTextContent(/^semi$/);
+        expect(screen.getByRole('group', { name: 'semi' })).toBe(view.container.querySelector('fieldset'));
         view.unmount();
         render(FormSection, { slots: { text: () => <div data-testid="node-text">semi</div> } });
         expect(document.querySelector(textSelector)).toContainElement(screen.getByTestId('node-text'));
     });
 
-    it('其他属性透传到 section 元素', () => {
+    it('其他属性透传到 fieldset 元素', () => {
         const { container } = render(FormSection, { attrs: { 'data-testid': 'sec' } });
-        expect(container.querySelector('section')).toHaveAttribute('data-testid', 'sec');
+        expect(container.querySelector('fieldset')).toHaveAttribute('data-testid', 'sec');
     });
 
-    it('没有 #text 时不渲染空的 h5 标题', () => {
+    it('没有 #text 时不渲染空的 legend', () => {
         const { container } = render(FormSection, { slots: { default: () => 'content' } });
-        expect(container.querySelector('h5')).toBeNull();
-        expect(container.querySelector('section')).toHaveTextContent('content');
+        expect(container.querySelector('legend')).toBeNull();
+        expect(container.querySelector('fieldset')).toHaveTextContent('content');
     });
 });

@@ -5,18 +5,18 @@
     import { hasSlotContent } from '../_base/slot-nodes';
     import type { FormSectionSlots } from './interface';
 
-    defineProps</* @vue-ignore */ ElementProps<'section'>>();
+    defineProps</* @vue-ignore */ ElementProps<'fieldset'>>();
     defineSlots<FormSectionSlots>();
 
     const prefix = cssClasses.PREFIX;
 </script>
 
 <template>
-    <section :class="`${prefix}-section`">
-        <!-- an empty heading would still be announced as one -->
-        <h5 v-if="hasSlotContent($slots.text)" :class="`${prefix}-section-text`">
+    <fieldset :class="`${prefix}-section`">
+        <!-- an empty legend would still draw its divider -->
+        <legend v-if="hasSlotContent($slots.text)" :class="`${prefix}-section-text`">
             <slot name="text" />
-        </h5>
+        </legend>
         <slot />
-    </section>
+    </fieldset>
 </template>

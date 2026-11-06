@@ -79,13 +79,13 @@ describe('Svelte Form 注册与校验次数', () => {
         await typeInto(getInput(), 'a');
         await waitFor(() => expect(onErrorChange).toHaveBeenCalledTimes(1));
         expect(validator).toHaveBeenCalledTimes(1);
-        expect(api().getError('name')).toBe('err');
+        expect(api().getError('name')).toEqual(['err']);
     });
 
     it('挂载校验的错误在表单状态与界面上一致', async () => {
         const { api, container } = renderForm({}, [input('name', { trigger: 'mount', validator: () => 'mount-err' })]);
         await waitFor(() => expect(container.querySelector('.semi-form-field-error-message')).toHaveTextContent('mount-err'));
-        expect(api().getError('name')).toBe('mount-err');
+        expect(api().getError('name')).toEqual(['mount-err']);
     });
 
     it('ArrayField 挂载只写入一次初始值', () => {

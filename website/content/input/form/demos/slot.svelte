@@ -6,7 +6,7 @@
 
 <Form labelPosition="left" labelWidth={100} onChange={log} onSubmit={log} style="width: 600px">
     <FormInput field="特效名称" style="width: 250px" />
-    <FormSlot error="我是SlotA的ErrorMessage" label={{ text: 'SlotA' }}>
+    <FormSlot error={['我是SlotA的ErrorMessage']} label={{ text: 'SlotA' }}>
         <div style="display: flex; align-items: center; height: 32px; margin-top: 8px">我是Semi Form SlotA, 我是自定义的节点</div>
     </FormSlot>
     <FormSlot label={{ text: 'SlotB', width: 160, align: 'right' }}>

@@ -1,4 +1,4 @@
-<script lang="ts" generics="Values extends Record<string, any> = any">
+<script lang="ts" generics="Values extends Record<string, any> = any, Output = Values">
     import { onMount } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/form/constants';
     import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
@@ -8,6 +8,7 @@
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import Row from '../grid/row.svelte';
+    import useLocale from '../locale/use-locale.svelte.js';
     import { setFormContext } from './context.js';
     import type { AllFormProps, FormApi, FormProps } from './interface.js';
     import { cloneDeep, untrackMethods } from './utils.js';
@@ -16,7 +17,7 @@
         formState?: FormState;
     }
 
-    type Adapter = BaseFormAdapter<AllFormProps<Values>, FormFoundationState, Values, SubmitEvent>;
+    type Adapter = BaseFormAdapter<AllFormProps<Values, Output>, FormFoundationState, Values, SubmitEvent>;
 
     const defaults = useDefaultProps('Form');
 
@@ -36,8 +37,10 @@
         stopValidateWithError = defaults('stopValidateWithError'),
         trigger = defaults('trigger'),
         stopPropagation = defaults('stopPropagation'),
-        validator = defaults('validator') as AllFormProps<Values>['validator'],
-        schema = defaults('schema') as AllFormProps<Values>['schema'],
+        validator = defaults('validator') as AllFormProps<Values, Output>['validator'],
+        schema = defaults('schema') as AllFormProps<Values, Output>['schema'],
+        schemaDebounce = defaults('schemaDebounce', 0),
+        keepState = defaults('keepState', true),
         form,
         id,
         onSubmit,
@@ -49,12 +52,14 @@
         getFormApi: notifyFormApi,
         children,
         ...rest
-    }: FormProps<Values> = $props();
+    }: FormProps<Values, Output> = $props();
+
+    const locale = useLocale('Form');
 
     const uid = $props.id();
     let formElement = $state<HTMLFormElement>();
 
-    const formProps: AllFormProps<Values> = {
+    const formProps: AllFormProps<Values, Output> = {
         get initValues() {
             return initValues;
         },
@@ -106,17 +111,24 @@
         get schema() {
             return schema;
         },
+        get schemaDebounce() {
+            return schemaDebounce;
+        },
+        get keepState() {
+            return keepState;
+        },
         get id() {
             return id;
         },
     };
 
-    const { foundation, states } = useFoundation<FormFoundation<SubmitEvent>, Adapter, AllFormProps<Values>, FormFoundationState>(
+    const { foundation, states } = useFoundation<FormFoundation<SubmitEvent>, Adapter, AllFormProps<Values, Output>, FormFoundationState>(
         FormFoundation,
         formProps,
         () => ({}),
         (base) => ({
             cloneDeep,
+            getLocale: () => locale().locale,
             notifySubmit: (values, e) => onSubmit?.(values, e),
             notifySubmitFail: (errors, values, e) => onSubmitFail?.(errors, values, e),
             forceUpdate: (formState, callback) => {
@@ -134,7 +146,8 @@
     );
 
     const initialFormState = foundation.getFormState();
-    const formApi = untrackMethods(foundation.getFormApi()) as FormApi<Values>;
+    const formApi = untrackMethods(foundation.getFormApi()) as FormApi<Values, Output>;
+    const fieldBridge = foundation.getFieldBridge();
     const formId = $derived(id ?? uid);
     const formState = $derived((states().formState ?? initialFormState) as FormState<Values>);
 
@@ -144,7 +157,8 @@
         },
         formProps,
         formApi,
-        bridge: untrackMethods(foundation.getFieldBridge()),
+        // usesSchema reads only props, so a field's required mark follows a changed schema
+        bridge: { ...untrackMethods(fieldBridge), usesSchema: fieldBridge.usesSchema },
     });
 
     const handleSubmit = (event: SubmitEvent) => {

@@ -1,9 +1,10 @@
 **Props**
 
-| Property  | Description                                                                                              | Type        | Default                                        |
-| --------- | -------------------------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------- |
-| field     | Required. Path of the array in formState.values. For rows with fields a[0].name and a[1].name pass a.    | `string`    | `undefined`                                    |
-| initValue | Initial value of the array, which must be an array. It takes precedence over the initValues of the Form. | `unknown[]` | `semiGlobalDefault("ArrayField", "initValue")` |
+| Property  | Description                                                                                                                                                                                                                            | Type        | Default                                        |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------- |
+| field     | Required. Path of the array in formState.values. For rows with fields a[0].name and a[1].name pass a.                                                                                                                                  | `string`    | `undefined`                                    |
+| initValue | Initial value of the array, which must be an array. It takes precedence over the initValues of the Form.                                                                                                                               | `unknown[]` | `semiGlobalDefault("ArrayField", "initValue")` |
+| keepState | Whether the whole array keeps its data when unmounted, and the default keepState of the fields in its rows. Defaults to the keepState of the outer ArrayField or the Form. When kept, the rows render from the kept values on remount. | `boolean`   | `semiGlobalDefault("ArrayField", "keepState")` |
 
 **Events**
 
@@ -13,9 +14,9 @@
 
 **Slots**
 
-| Slot    | Description                                                             | Scope parameters      |
-| ------- | ----------------------------------------------------------------------- | --------------------- |
-| default | The rows. The scope provides arrayFields, onAdd and onAddWithInitValue. | `ArrayFieldSlotProps` |
+| Slot    | Description                                                                                                                                                                              | Scope parameters      |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| default | The rows. The scope provides arrayFields, onAdd, onAddWithInitValue and onMove. `onMove(from, to)` moves a row with its values, errors and touched state, clamping indexes out of range. | `ArrayFieldSlotProps` |
 
 **Exposes**
 

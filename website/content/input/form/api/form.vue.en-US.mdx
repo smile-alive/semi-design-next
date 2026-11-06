@@ -19,28 +19,30 @@ import ApiType from '#/components/ApiType.astro';
 | stopValidateWithError | Whether validation by rules stops at the first failing rule. The same property on a field takes precedence. | `boolean` | `semiGlobalDefault("Form", "stopValidateWithError")` |
 | trigger | When every field validates: change, blur, mount, custom, or an array of them. The same property on a field takes precedence. | `FieldValidateTriggerType` | `semiGlobalDefault("Form", "trigger")` |
 | stopPropagation | Whether to stop the submit and reset events from bubbling, so that a nested Form does not trigger the events of the outer one. | `{ submit?: boolean \| undefined; reset?: boolean \| undefined; }` | `semiGlobalDefault("Form", "stopPropagation")` |
-| validator | Form-level validation, called on submit and formApi.validate and allowed to return a Promise. When set, the validator and rules of the fields no longer apply. An empty string or object means valid; on failure return an object keyed by field name. | <ApiType detail={"((values: Values) => FormValidateResult\u003cValues> \u007c Promise\u003cFormValidateResult\u003cValues>>)"}>Type</ApiType> | `undefined` |
-| schema | A Standard Schema object (Zod, Valibot, ArkType and so on), mutually exclusive with the validator and rules of the fields, which no longer run. Once all fields pass, the `submit` event and formApi.validate receive the schema's output. When `validator` is also set, only `validator` applies. | <ApiType detail={"FormSchema\u003cValues>"}>Type</ApiType> | `undefined` |
-| form | The formApi returned by useForm, used to control the form from outside. | <ApiType detail={"FormApi\u003cValues>"}>Type</ApiType> | `undefined` |
+| validator | Form-level validation, called on submit and formApi.validate and allowed to return a Promise. It excludes `schema`. When set, the validator and rules of the fields no longer apply. An empty value or object means valid; on failure return an error object shaped like the values, each error a string or a string array. | <ApiType detail={"FormValidator\u003cValues>"}>Type</ApiType> | `undefined` |
+| schema | A Standard Schema object (Zod, Valibot, ArkType and so on), mutually exclusive with the validator and rules of the fields, which no longer run. Once all fields pass, the `submit` event and formApi.validate receive the schema's output. When `validator` is also set, only `validator` applies. | <ApiType detail={"FormSchema\u003cValues, Output>"}>Type</ApiType> | `undefined` |
+| schemaDebounce | With `schema`, how many milliseconds of pause in input a change-triggered validation waits for. Validation on submit, formApi.validate and blur does not wait. | `number` | `semiGlobalDefault("Form", "schemaDebounce")` |
+| keepState | Whether an unmounted field keeps its value, error and touched state, restored by path when it mounts again. Fields and ArrayFields without their own setting use this value. | `boolean` | `semiDefault("Form", "keepState", true)` |
+| form | The formApi returned by useForm, used to control the form from outside. | <ApiType detail={"FormApi\u003cValues, Output>"}>Type</ApiType> | `undefined` |
 | id | The id of the form element, also written to x-form-id. Generated when omitted. | `string` | `undefined` |
 
 **Events**
 
 | Event | Description | Callback parameters |
 | --- | --- | --- |
-| submit | Emitted when a submit button is clicked or formApi.submitForm is called and validation passes. Receives values and the submit event. It has the name of the native submit event and hides it. | `[values: Values, e?: SubmitEvent \| undefined]` |
-| submitFail | Emitted when a submit button is clicked or formApi.submitForm is called and validation fails. Receives errors, values and the submit event. | <ApiType detail={"[errors: FormValidateResult\u003cValues>, values: Partial\u003cValues>, e?: SubmitEvent \u007c undefined]"}>Type</ApiType> |
+| submit | Emitted when a submit button is clicked or formApi.submitForm is called and validation passes. Receives values and the submit event; with `schema`, values are the schema's output. It has the name of the native submit event and hides it. | `[values: Output, e?: SubmitEvent \| undefined]` |
+| submitFail | Emitted when a submit button is clicked or formApi.submitForm is called and validation fails. Receives errors, values and the submit event. Each error in errors is a string array; an exception thrown by a validator is passed as is. | <ApiType detail={"[errors: Partial\u003cAllErrors\u003cValues>>, values: Partial\u003cValues>, e?: SubmitEvent \u007c undefined]"}>Type</ApiType> |
 | reset | Emitted when a reset button is clicked or formApi.reset is called. It has the name of the native reset event and hides it. | `[]` |
 | change | Emitted when the form state changes: a field mounts, unmounts, changes its value, blurs, or changes its validation state or error. Receives formState. It has the name of the native change event and hides it. | <ApiType detail={"[formState: FormState\u003cValues>]"}>Type</ApiType> |
 | valueChange | Emitted when a field value changes. Receives all values and the values that changed. | <ApiType detail={"[values: Values, changedValues: Partial\u003cValues>]"}>Type</ApiType> |
-| errorChange | Emitted when validation state changes. Receives all errors and the errors that changed. Batch operations such as validate, submit and reset emit once; silent validation does not emit. | <ApiType detail={"[errors: AllErrors\u003cValues>, changedError?: Partial\u003cRecord\u003cFieldPath\u003cValues, 5>, FieldError>> \u007c undefined]"}>Type</ApiType> |
-| getFormApi | Emitted after the Form mounts. Receives formApi. | <ApiType detail={"[formApi: FormApi\u003cValues>]"}>Type</ApiType> |
+| errorChange | Emitted when validation state changes. Receives all errors and the errors that changed, each error a string array. Batch operations such as validate, submit and reset emit once; silent validation and a repeated validation with the same errors do not emit. | <ApiType detail={"[errors: AllErrors\u003cValues>, changedError?: Partial\u003cRecord\u003cFieldPath\u003cValues, 5>, FieldError \u007c undefined>> \u007c undefined]"}>Type</ApiType> |
+| getFormApi | Emitted after the Form mounts. Receives formApi. | <ApiType detail={"[formApi: FormApi\u003cValues, Output>]"}>Type</ApiType> |
 
 **Slots**
 
-| Slot    | Description                                                                                                         | Scope parameters                                                     |
-| ------- | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| default | Form content. The scope provides formState, formApi and values; read them only and change the form through formApi. | <ApiType detail={"FormDefaultSlotProps\u003cValues>"}>Type</ApiType> |
+| Slot    | Description                                                                                                         | Scope parameters                                                             |
+| ------- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| default | Form content. The scope provides formState, formApi and values; read them only and change the form through formApi. | <ApiType detail={"FormDefaultSlotProps\u003cValues, Output>"}>Type</ApiType> |
 
 **Exposes**
 

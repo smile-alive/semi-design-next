@@ -1,0 +1,10 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| 属性        | 说明                                                                                                                                                                   | 类型                                                                                  | 默认值 |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------ |
+| field       | 要渲染的节点路径，默认为根；根对象不包 Section，其他对象与数组渲染为以 title 为标题的 Section。                                                                        | `string`                                                                              | `""`   |
+| jsonSchema  | 要渲染的 JSON Schema，优先于从 Form 的 `schema` 导出的 JSON Schema；两者都没有时不渲染，开发模式下警告。                                                               | `JsonSchema`                                                                          | -      |
+| renderField | 按节点路径接管渲染，数组的行写作 `[]`（如 `contacts[].email`），参数为 `{ node, field }`；命中时由它渲染这个节点和它的子节点。                                         | <ApiType detail={"Record\u003cstring, SchemaFieldRenderer>"}>Type</ApiType>           | -      |
+| widgets     | 替换内置控件的字段组件，键是 JSON Schema 的 `format` 或控件种类（input、textarea、number、switch、select），先按 `format` 再按种类查找；组件收到与内置控件相同的属性。 | <ApiType detail={"Record\u003cstring, React.ComponentType\u003cany>>"}>Type</ApiType> | -      |

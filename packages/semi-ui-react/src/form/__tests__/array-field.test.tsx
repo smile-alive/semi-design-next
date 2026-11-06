@@ -105,7 +105,7 @@ describe('Form.ArrayField', () => {
         expect(getFieldInput('data[1][name]')).toHaveValue(data[1].name);
     });
 
-    it('addWithInitValue', async () => {
+    it('addWithInitValue 新增的行取传入的初值', async () => {
         renderForm({ formProps: { initValues: { data } } });
         // ArrayField re-renders its lines when updateKey (a Date.now() value) changes, and Date is frozen in tests
         vi.setSystemTime(Date.now() + 1);
@@ -295,27 +295,18 @@ describe('Form.ArrayField', () => {
     it('field 改名后 reset 恢复新字段的初值', () => {
         let formApi: FormApi = null;
         const initValues = { a: [{ name: 'a0' }], b: [{ name: 'b0' }, { name: 'b1' }] };
-        const Demo = ({ field }: { field: string }) => (
-            <Form getFormApi={(api) => (formApi = api)} initValues={initValues}>
-                <ArrayField field={field}>{({ arrayFields }) => arrayFields.map(({ field: row, key }) => <Form.Input key={key} field={`${row}[name]`} />)}</ArrayField>
-            </Form>
-        );
+        function Demo({ field }: { field: string }) {
+            return (
+                <Form getFormApi={(api) => (formApi = api)} initValues={initValues}>
+                    <ArrayField field={field}>{({ arrayFields }) => arrayFields.map(({ field: row, key }) => <Form.Input key={key} field={`${row}[name]`} />)}</ArrayField>
+                </Form>
+            );
+        }
         const { rerender } = render(<Demo field="a" />);
         rerender(<Demo field="b" />);
         act(() => formApi.reset());
         expect(formApi.getValue('b')).toEqual(initValues.b);
         expect(getFieldInput('b[1][name]')).toHaveValue('b1');
-    });
-
-    it('ArrayField 内的 keepState 警告每个字段只打印一次，Form 更新时不重复', () => {
-        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-        const keepStateWarnings = () => warn.mock.calls.filter(([message]) => String(message).includes("'keepState' is not supported")).length;
-        let formApi: FormApi = null;
-        renderForm({ formProps: { initValues: { data: [data[0]] }, getFormApi: (api) => (formApi = api) }, fieldProps: { keepState: true } });
-        expect(keepStateWarnings()).toBe(2);
-        act(() => formApi.setValue('other', 1));
-        act(() => formApi.setValue('other', 2));
-        expect(keepStateWarnings()).toBe(2);
     });
 
     it('同一事件中连续调用两次 add 会新增两行', () => {

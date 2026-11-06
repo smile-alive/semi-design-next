@@ -1,25 +1,18 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { generateKeys, isValid } from '../utils';
 
-// foundation must not import react, so a React 19 element is spelled out by its shape
-const element = { $$typeof: Symbol.for('react.transitional.element'), type: 'span', props: {} };
-
 describe('form 工具 isValid', () => {
     it.each([
         [undefined, true],
         [null, true],
-        ['', true],
-        ['required', false],
         [[], true],
-        [['', undefined], true],
-        [['', 'required'], false],
-        [true, true],
-        [false, false],
-        [{}, false],
-        [element, false],
-        [[element], false],
-        // JSX compiled to an accessor is a function that returns the node
-        [() => element, false],
+        [{}, true],
+        [{ a: undefined, b: [undefined] }, true],
+        [['required'], false],
+        [[''], false],
+        [{ a: ['required'] }, false],
+        [{ rows: [undefined, { q: ['required'] }] }, false],
+        [[['required']], false],
     ])('isValid(%o) 结果为 %s', (errors, expected) => {
         expect(isValid(errors)).toBe(expected);
     });
@@ -48,6 +41,5 @@ describe('form 工具 generateKeys', () => {
         expect(warn).not.toHaveBeenCalled();
         expect(generateKeys('x')).toEqual([]);
         expect(warn).toHaveBeenCalledTimes(1);
-        warn.mockRestore();
     });
 });

@@ -1,4 +1,4 @@
-import { type JSX, For, Show, createRoot, createSignal } from 'solid-js';
+import { type JSX, For, createSignal } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
@@ -40,7 +40,6 @@ function renderForm(children: () => JSX.Element, props: FormProps = {}) {
     return { container, getApi: () => api as FormApi };
 }
 
-// every id an input points to through aria-errormessage / aria-describedby / aria-labelledby must exist
 function expectReferencesExist(input: Element) {
     for (const attr of ['aria-errormessage', 'aria-describedby', 'aria-labelledby']) {
         const ids = input.getAttribute(attr)?.split(/\s+/).filter(Boolean) ?? [];
@@ -112,41 +111,23 @@ describe('Form 属性变化', () => {
 });
 
 describe('Form 字段的 aria 引用', () => {
-    it('错误是节点时，aria-errormessage 指向已渲染的元素', () => {
+    it('错误是多条消息时，aria-errormessage 指向渲染出的全部消息', () => {
         const { container, getApi } = renderForm(() => <FormInput field="name" />);
-        const node = document.createElement('b');
-        node.dataset.testid = 'node-error';
-        node.textContent = 'bad';
-        getApi().setError('name', node);
-        const input = container.querySelector('input') as HTMLInputElement;
-        expect(input).toHaveAttribute('aria-errormessage');
-        expectReferencesExist(input);
-        expect(document.getElementById(input.getAttribute('aria-errormessage') ?? '')).toContainElement(screen.getByTestId('node-error'));
-    });
-
-    it('错误是编译为访问器的 JSX（Show）时，字段标为错误，aria-errormessage 指向已渲染的元素', () => {
-        const { container, getApi } = renderForm(() => <FormInput field="name" />);
-        const error = createRoot(() => (
-            <Show when>
-                <b data-testid="accessor-error">bad</b>
-            </Show>
-        ));
-        getApi().setError('name', error);
+        getApi().setError('name', ['first', 'second']);
         const input = container.querySelector('input') as HTMLInputElement;
         expect(input).toHaveAttribute('aria-invalid', 'true');
-        expect(input).toHaveAttribute('aria-errormessage');
-        expect(document.getElementById(input.getAttribute('aria-errormessage') ?? '')).toContainElement(screen.getByTestId('accessor-error'));
+        expectReferencesExist(input);
+        expect(document.getElementById(input.getAttribute('aria-errormessage') ?? '')).toHaveTextContent('first, second');
     });
 
-    it('错误是节点数组时，逐项渲染而不是 [object Object]', () => {
-        const { container, getApi } = renderForm(() => <FormInput field="name" />);
-        const first = document.createElement('b');
-        first.textContent = 'first';
-        const second = document.createElement('i');
-        second.textContent = 'second';
-        getApi().setError('name', [first, second]);
-        expect(container.querySelector('.semi-form-field-error-message')).toHaveTextContent('first, second');
-        expectReferencesExist(container.querySelector('input') as HTMLInputElement);
+    it("错误是 [''] 时字段标为错误，但不设置 aria-errormessage", () => {
+        const { container, getApi } = renderForm(() => <FormInput field="name" helpText="help" />);
+        getApi().setError('name', ['']);
+        const input = container.querySelector('input') as HTMLInputElement;
+        expect(input).toHaveAttribute('aria-invalid', 'true');
+        expect(input).not.toHaveAttribute('aria-errormessage');
+        expect(screen.queryByText('help')).toBeNull();
+        expectReferencesExist(input);
     });
 
     it('错误态下带 helpText，aria-describedby 不引用未渲染的 helpText', () => {

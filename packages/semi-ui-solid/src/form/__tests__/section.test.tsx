@@ -10,7 +10,7 @@ const textSelector = `.${BASE_CLASS_PREFIX}-form-section-text`;
 describe('Form.Section', () => {
     it('class 与 style', () => {
         const { container } = render(() => <Section class="sec-test" style={{ color: 'red' }} />);
-        const section = container.querySelector('section.sec-test');
+        const section = container.querySelector('fieldset.sec-test');
         expect(section).not.toBeNull();
         expect(section).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
@@ -23,13 +23,14 @@ describe('Form.Section', () => {
                 </Section>
             </Form>
         ));
-        expect(container.querySelector('section .test')).not.toBeNull();
+        expect(container.querySelector('fieldset .test')).not.toBeNull();
     });
 
     it('text', () => {
         const [text, setText] = createSignal<JSX.Element>('semi');
         const { container } = render(() => <Section text={text()} />);
         expect(container.querySelector(textSelector)).toHaveTextContent(/^semi$/);
+        expect(screen.getByRole('group', { name: 'semi' })).toBe(container.querySelector('fieldset'));
 
         setText(0);
         expect(container.querySelector(textSelector)).toHaveTextContent(/^0$/);
@@ -40,13 +41,13 @@ describe('Form.Section', () => {
 
     it('没有 text 时不渲染空标题', () => {
         const { container } = render(() => <Section />);
-        expect(container.querySelector('h5')).toBeNull();
+        expect(container.querySelector('legend')).toBeNull();
     });
 
-    it('其他属性与 ref 透传到 section 元素', () => {
-        let ref: HTMLElement | undefined;
+    it('其他属性与 ref 透传到 fieldset 元素', () => {
+        let ref: HTMLFieldSetElement | undefined;
         const { container } = render(() => <Section ref={(el) => (ref = el)} data-testid="sec" />);
-        expect(ref).toBe(container.querySelector('section'));
+        expect(ref).toBe(container.querySelector('fieldset'));
         expect(ref).toHaveAttribute('data-testid', 'sec');
     });
 });

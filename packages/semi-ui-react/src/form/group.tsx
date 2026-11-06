@@ -1,7 +1,7 @@
 import React, { isValidElement, useEffect, useId } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-import { isValid } from '@fibrae/semi-foundation/form/utils';
+import { isErrorLeaf } from '@fibrae/semi-foundation/form/errors';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import warning from '@fibrae/semi-foundation/utils/warning';
@@ -9,14 +9,13 @@ import flattenChildren from '../_base/flatten-children';
 import { Col } from '../grid/index';
 import InputGroup, { type InputGroupProps as BacisInputGroupProps } from '../input/input-group';
 import { useFieldBridgeContext } from './context';
-import ErrorMessage, { type ReactFieldError } from './error-message';
+import ErrorMessage from './error-message';
 import { useFormState } from './hooks/index';
 import type { FormState } from './interface';
 import Label, { type LabelProps } from './label';
 interface GroupErrorProps {
     showValidateIcon?: boolean;
     isInInputGroup?: boolean;
-    error?: ReactFieldError;
     fieldSet?: string[];
     errorMessageId?: string;
 }
@@ -34,9 +33,12 @@ function GroupError(props: GroupErrorProps) {
 
     const formState: FormState = useFormState();
 
-    const error = fieldSet.map((field: string) => ObjectUtil.get(formState.errors, field));
+    const error = fieldSet.flatMap((field) => {
+        const fieldError = ObjectUtil.get(formState.errors, field);
+        return isErrorLeaf(fieldError) ? fieldError : [];
+    });
 
-    if (isValid(error)) {
+    if (!error.length) {
         return null;
     }
 
@@ -78,7 +80,7 @@ export default function FormInputGroup(props: InputGroupProps) {
     const groupFieldSet: Array<string> = [];
 
     const inner = flattenChildren(children).map((child: any) => {
-        if (child && child.props && child.props.field) {
+        if (child?.props?.field) {
             groupFieldSet.push(child.props.field);
             // merged per child: InputGroup would overwrite each field's own references with the group's
             return React.cloneElement(child, {

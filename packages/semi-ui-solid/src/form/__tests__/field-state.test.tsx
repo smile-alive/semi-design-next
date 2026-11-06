@@ -140,7 +140,7 @@ describe('Form 校验与挂载次数', () => {
         changeInput(container.querySelector('input') as HTMLInputElement, 'a');
         expect(validate).toHaveBeenCalledTimes(1);
         expect(onErrorChange).toHaveBeenCalledTimes(1);
-        expect(api?.getError('name')).toBe('err');
+        expect(api?.getError('name')).toEqual(['err']);
     });
 
     it('挂载校验的错误在表单状态与界面上一致', async () => {
@@ -151,7 +151,7 @@ describe('Form 校验与挂载次数', () => {
             </Form>
         ));
         await waitFor(() => expect(container.querySelector('.semi-form-field-error-message')).toHaveTextContent('mount-err'));
-        expect(api?.getError('name')).toBe('mount-err');
+        expect(api?.getError('name')).toEqual(['mount-err']);
     });
 
     it('ArrayField 挂载只写入一次初始值', () => {

@@ -12,8 +12,9 @@ export const [FieldBridgeContext, useFieldBridgeContext] = createContext<FieldBr
 export const [ArrayFieldContext, useArrayFieldContext] = createContext('ArrayField', {
     defaultValue: {
         shouldUseInitValue: true,
-        // withField ignores `keepState` inside an ArrayField: positional paths shift on remove
         inArrayField: false,
+        // the ArrayField's resolved keepState, the default of its row fields
+        keepState: undefined as boolean | undefined,
         // the values rows read initial values from until a mounting ArrayField's own initial value is in the form state
         values: undefined as Record<string, any> | undefined,
     },

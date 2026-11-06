@@ -445,6 +445,6 @@ describe('Svelte Form 全部字段', () => {
         await act(() => timeInput.focus());
         await act(() => fireEvent.mouseDown(document.body));
         const fields = ['input', 'time', 'checkbox', 'switch'];
-        expect(fields.map((field) => [field, api().getTouched(field), api().getError(field)])).toEqual(fields.map((field) => [field, true, 'required']));
+        expect(fields.map((field) => [field, api().getTouched(field), api().getError(field)])).toEqual(fields.map((field) => [field, true, ['required']]));
     });
 });

@@ -342,7 +342,7 @@ export type { LocaleConsumerProps } from './locale/locale-consumer';
 export type { LocaleComponentName } from './locale/use-locale';
 export type { Locale } from '@fibrae/semi-foundation/locale/interface';
 
-export { Form, useFormApi, useFormState, useFieldApi, useFieldState, withFormState, withFormApi, withField, ArrayField } from './form';
+export { Form, useFormApi, useFormState, useFieldApi, useFieldState, withFormState, withFormApi, withField, ArrayField, SchemaField, SchemaForm } from './form';
 export type {
     BaseFormProps as FormProps,
     FormApi,
@@ -351,19 +351,29 @@ export type {
     FormFCChild,
     WithFieldOption,
     RuleItem,
+    RuleType,
     CommonFieldProps,
     FieldProps,
-    FieldValidateResult,
+    FieldError,
+    FieldErrorInput,
+    FieldValidator,
+    FormValidator,
     FormSelectProps,
     FormCheckboxProps,
     FormRadioProps,
     ArrayFieldProps,
-    ReactFieldError,
+    ArrayFieldChildrenProps,
     ErrorMessageProps,
     LabelProps as FormLabelProps,
     SectionProps as FormSectionProps,
     SlotProps as FormSlotProps,
     InputGroupProps as FormInputGroupProps,
+    SchemaFieldProps,
+    SchemaFieldRenderer,
+    SchemaFieldNode,
+    SchemaFieldKind,
+    JsonSchema,
+    SchemaFormProps,
 } from './form';
 
 export { default as Image } from './image';

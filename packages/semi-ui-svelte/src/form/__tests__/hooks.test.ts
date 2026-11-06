@@ -52,9 +52,9 @@ describe('Svelte Form hooks', () => {
         fieldApi.setError('bad');
         fieldApi.setTouched(true);
         await settle();
-        expect(fieldApi.getError()).toBe('bad');
+        expect(fieldApi.getError()).toEqual(['bad']);
         expect(fieldApi.getTouched()).toBe(true);
-        expect(stateOf('field-state')).toEqual({ value: 'semi', error: 'bad', touched: true });
+        expect(stateOf('field-state')).toEqual({ value: 'semi', error: ['bad'], touched: true });
     });
 
     it('useFieldState 与 useFieldApi 跟随返回字段名的函数', async () => {

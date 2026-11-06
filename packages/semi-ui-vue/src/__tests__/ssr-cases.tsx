@@ -110,6 +110,8 @@ import {
     ResizeHandler,
     ResizeItem,
     Row,
+    SchemaField,
+    SchemaForm,
     ScrollItem,
     ScrollList,
     Select,
@@ -274,7 +276,13 @@ export const ssrCases: SsrCase[] = [
         covers: ['Form', 'FormInput', 'FormLabel', 'FormErrorMessage', 'FormSection', 'FormSlot', 'FormInputGroup'],
         render: () => (
             <Form>
-                {() => [<FormSection>{{ text: () => 's', default: () => <FormInput field="a" label="A" /> }}</FormSection>, <FormSlot label="slot">{() => 'x'}</FormSlot>, <FormInputGroup label="g">{() => <FormInput field="g1" noLabel />}</FormInputGroup>, <FormLabel text="label" />, <FormErrorMessage error="err" />]}
+                {() => [
+                    <FormSection>{{ text: () => 's', default: () => <FormInput field="a" label="A" /> }}</FormSection>,
+                    <FormSlot label="slot">{() => 'x'}</FormSlot>,
+                    <FormInputGroup label="g">{() => <FormInput field="g1" noLabel />}</FormInputGroup>,
+                    <FormLabel text="label" />,
+                    <FormErrorMessage error={['err']} />,
+                ]}
             </Form>
         ),
     },
@@ -337,6 +345,12 @@ export const ssrCases: SsrCase[] = [
         covers: ['ArrayField'],
         render: () => <Form initValues={{ rows: [{ v: 'a' }, { v: 'b' }] }}>{() => <ArrayField field="rows">{{ default: ({ arrayFields }: { arrayFields: { key: string; field: string }[] }) => arrayFields.map(({ key, field }) => <FormInput key={key} field={`${field}[v]`} />) }}</ArrayField>}</Form>,
     },
+    {
+        name: 'form/SchemaForm',
+        covers: ['SchemaForm'],
+        render: () => <SchemaForm initValues={{ tags: ['a'] }} jsonSchema={{ type: 'object', properties: { name: { type: 'string', title: '姓名' }, tags: { type: 'array', items: { type: 'string' } } }, required: ['name'] }} />,
+    },
+    { name: 'form/SchemaField', covers: ['SchemaField'], render: () => <Form initValues={{ age: 3 }}>{() => <SchemaField jsonSchema={{ type: 'object', properties: { age: { type: 'integer', minimum: 0 }, agree: { type: 'boolean' } } }} />}</Form> },
     { name: 'breadcrumb/基本', covers: ['Breadcrumb', 'BreadcrumbItem'], render: () => <Breadcrumb>{() => [<BreadcrumbItem>{() => 'a'}</BreadcrumbItem>, <BreadcrumbItem>{() => 'b'}</BreadcrumbItem>]}</Breadcrumb> },
     { name: 'anchor/基本', covers: ['Anchor', 'AnchorLink'], render: () => <Anchor>{() => <AnchorLink href="#a" title="a" />}</Anchor> },
     {

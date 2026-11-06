@@ -4,7 +4,7 @@
     const nickNameRules: RuleItem[] = [
         { required: true, message: 'required error' },
         { type: 'string', message: 'type error' },
-        { validator: (_rule, value) => value === 'semi', message: 'should be semi' },
+        { validator: (value) => value === 'semi', message: 'should be semi' },
     ];
     const businessOptions = [
         { label: 'Semi', value: 'abc' },

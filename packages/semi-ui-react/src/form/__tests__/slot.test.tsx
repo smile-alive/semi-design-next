@@ -31,7 +31,7 @@ describe('Form-slot', () => {
         expect(slot).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
-    it('label：objLabel、stringLabel、numberLabel、reactNodeLabel', () => {
+    it('label 支持对象、字符串、数字与 React 节点', () => {
         const labelText = (props) => {
             const { container, unmount } = renderSlot(props);
             const text = container.querySelector(labelTextSelector).textContent;
@@ -47,23 +47,19 @@ describe('Form-slot', () => {
         expect(screen.getByTestId('node-label')).toHaveTextContent(/^hahaha$/);
     });
 
-    it('error：objError、stringError、numberError、reactNodeError', () => {
-        const errorText = (props, selector) => {
+    it('error：ErrorMessage 的属性、字符串、字符串数组', () => {
+        const errorText = (props) => {
             const { container, unmount } = renderSlot(props);
-            const text = container.querySelector(selector).textContent;
+            const text = container.querySelector(`${emSelector} span`).textContent;
             unmount();
             return text;
         };
-        expect(errorText({ error: { error: 'semi' } }, `${emSelector} span`)).toEqual('semi');
-        expect(errorText({ error: 'semi' }, `${emSelector} span`)).toEqual('semi');
-        expect(errorText({ error: 888 }, emSelector)).toEqual('');
-
-        renderSlot({ error: <div data-testid="node-error">hahaha</div> });
-        expect(document.querySelector(emSelector)).toContainElement(screen.getByTestId('node-error'));
-        expect(screen.getByTestId('node-error')).toHaveTextContent(/^hahaha$/);
+        expect(errorText({ error: { error: ['semi'] } })).toEqual('semi');
+        expect(errorText({ error: 'semi' })).toEqual('semi');
+        expect(errorText({ error: ['a', 'b'] })).toEqual('a, b');
     });
 
-    it('children', () => {
+    it('children 渲染在 slot 内容区', () => {
         const { container } = renderSlot({ children: <div className="slot-child">semi</div> });
         const child = container.querySelector(`${slotSelector} .slot-child`);
         expect(child).not.toBeNull();

@@ -30,7 +30,7 @@ describe('Svelte Form 静默校验', () => {
     it('静默校验不写 formState.errors，也不触发 onErrorChange', async () => {
         const onErrorChange = vi.fn<(...args: unknown[]) => void>();
         const { api } = renderNameForm({ onErrorChange });
-        await expect(api().validate({ silent: true })).rejects.toEqual({ name: 'req' });
+        await expect(api().validate({ silent: true })).rejects.toEqual({ name: ['req'] });
         expect(api().getFormState().errors).toEqual({});
         expect(onErrorChange).not.toHaveBeenCalled();
     });
@@ -83,7 +83,7 @@ describe('Svelte Form 表单级 validator', () => {
             .validate()
             .catch(() => undefined);
         await settle();
-        expect(errorsShown()).toEqual({ name: 'x', orphan: 'y' });
+        expect(errorsShown()).toEqual({ name: ['x'], orphan: ['y'] });
         const changeCount = onChange.mock.calls.length;
         await api().validate();
         await settle();
@@ -145,7 +145,7 @@ describe('Svelte Form 提交', () => {
         const { api } = renderNameForm({ onSubmit, onSubmitFail }, { rules: undefined, validator: () => Promise.reject('async-err') });
         api().submitForm();
         await vi.waitFor(() => expect(onSubmitFail).toHaveBeenCalledTimes(1));
-        expect(onSubmitFail.mock.calls[0][0]).toEqual({ name: 'async-err' });
+        expect(onSubmitFail.mock.calls[0][0]).toEqual({ name: ['async-err'] });
         expect(onSubmit).not.toHaveBeenCalled();
     });
 
@@ -163,9 +163,9 @@ describe('Svelte Form onErrorChange 触发次数', () => {
     it('两个字段校验失败与 reset 各触发一次，第二个参数带上全部变化的字段', async () => {
         const onErrorChange = vi.fn<(...args: unknown[]) => void>();
         const { api } = renderForm({ onErrorChange }, [input('a', { rules: [{ required: true, message: 'a-req' }] }), input('b', { rules: [{ required: true, message: 'b-req' }] })]);
-        await expect(api().validate()).rejects.toEqual({ a: 'a-req', b: 'b-req' });
+        await expect(api().validate()).rejects.toEqual({ a: ['a-req'], b: ['b-req'] });
         expect(onErrorChange).toHaveBeenCalledTimes(1);
-        expect(onErrorChange).toHaveBeenLastCalledWith({ a: 'a-req', b: 'b-req' }, { a: 'a-req', b: 'b-req' });
+        expect(onErrorChange).toHaveBeenLastCalledWith({ a: ['a-req'], b: ['b-req'] }, { a: ['a-req'], b: ['b-req'] });
         api().reset();
         expect(onErrorChange).toHaveBeenCalledTimes(2);
         expect(onErrorChange).toHaveBeenLastCalledWith({}, { a: undefined, b: undefined });

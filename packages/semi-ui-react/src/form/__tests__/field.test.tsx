@@ -51,7 +51,7 @@ describe('Form-field', () => {
         expect(wrapper).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-form-field.field-test-b`)).toHaveLength(1);
     });
-    it('label', () => {
+    it('label 显示为标签文本', () => {
         const { container } = renderForm({
             children: getInput({
                 label: 'Company',
@@ -78,7 +78,7 @@ describe('Form-field', () => {
         );
         expect(getByRole('textbox', { name: 'empty' })).toBeInTheDocument();
     });
-    it('labelPosition', () => {
+    it('字段的 labelPosition 优先于 Form 的设置', () => {
         const { container } = renderForm({
             labelPosition: 'top',
             children: (
@@ -91,7 +91,7 @@ describe('Form-field', () => {
         expect(container.querySelector('.left-input')).toHaveAttribute('x-label-pos', 'left');
         expect(container.querySelector('.top-input')).toHaveAttribute('x-label-pos', 'top');
     });
-    it('labelAlign', () => {
+    it('字段的 labelAlign 优先于 Form 的设置', () => {
         const { container } = renderForm({
             labelAlign: 'right',
             children: (
@@ -104,7 +104,7 @@ describe('Form-field', () => {
         expect(container.querySelector(`.left-input .${BASE_CLASS_PREFIX}-form-field-label-left`)).not.toBeNull();
         expect(container.querySelector(`.right-input .${BASE_CLASS_PREFIX}-form-field-label-right`)).not.toBeNull();
     });
-    it('noLabel', () => {
+    it('noLabel 时不渲染标签', () => {
         const { container } = renderForm({ children: getInput({ noLabel: true, field: 'name' }) });
         expect(container.querySelector(inputSelector)).not.toBeNull();
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-form-field-label`)).toBeNull();
@@ -121,11 +121,11 @@ describe('Form-field', () => {
         expect(document.getElementById('pure')).not.toHaveAttribute('aria-labelledby');
         expect(getByRole('textbox', { name: 'Inset' })).toHaveAttribute('aria-labelledby', 'inset-label');
     });
-    it('name', () => {
+    it('name 给字段根元素加上对应的类名', () => {
         const { container } = renderForm({ children: getInput({ field: 'name', name: 'company' }) });
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-form-field.${BASE_CLASS_PREFIX}-form-field-company`)).not.toBeNull();
     });
-    it('initValue', () => {
+    it('字段的 initValue 优先于 Form 的 initValues', () => {
         renderForm({
             children: getInput({ initValue: 'b', field: 'name' }),
             initValues: {
@@ -134,7 +134,7 @@ describe('Form-field', () => {
         });
         expect(getInputDOM()).toHaveValue('b');
     });
-    it('onChange', () => {
+    it('值变化时调用 onChange，参数为新值、事件与全部值', () => {
         const onChange = vi.fn<(...args: unknown[]) => void>();
         renderForm({ children: getInput({ onChange, field: 'name' }) });
         fireEvent.change(getInputDOM(), { target: { value: 'semi' } });
@@ -151,7 +151,7 @@ describe('Form-field', () => {
                 // rules are invalidated when validator is also declared
                 rules: [
                     { type: 'string', message: 'rules error1' },
-                    { validator: (_rule, value) => value === 'muji', message: 'rules error2' },
+                    { validator: (value) => value === 'muji', message: 'rules error2' },
                 ],
             }),
         });
@@ -173,13 +173,13 @@ describe('Form-field', () => {
         fireEvent.change(getInputDOM(), { target: { value: 'milk' } });
         expect(validate).toHaveBeenNthCalledWith(1, 'milk', { name: 'milk' });
         await waitFor(() => expect(getErrorMessage()).toHaveTextContent(/^invalid$/));
-        expect(formApi.getError('name')).toEqual('invalid');
+        expect(formApi.getError('name')).toEqual(['invalid']);
         fireEvent.change(getInputDOM(), { target: { value: 'semi' } });
         expect(validate).toHaveBeenNthCalledWith(2, 'semi', { name: 'semi' });
         await waitFor(() => expect(getErrorMessage()).toBeNull());
         expect(formApi.getError('name')).toEqual(undefined);
     });
-    it('rules', async () => {
+    it('rules 的多条规则按序校验并合并错误信息', async () => {
         let formApi = null;
         renderForm({
             getFormApi: (api) => {
@@ -190,7 +190,7 @@ describe('Form-field', () => {
                 trigger: 'change',
                 rules: [
                     { type: 'string', message: 'type error' },
-                    { validator: (_rule, value) => value === 'muji', message: 'not muji' },
+                    { validator: (value) => value === 'muji', message: 'not muji' },
                 ],
             }),
         });
@@ -202,7 +202,7 @@ describe('Form-field', () => {
         fireEvent.change(getInputDOM(), { target: { value: 'semi' } });
         await waitFor(() => expect(getErrorMessage()).toHaveTextContent(/^not muji$/));
     });
-    it('transform', () => {
+    it('transform 只改变校验时的值，不改动表单中的值', () => {
         const validate = vi.fn<(value: unknown) => string>((value) => (value !== 5 ? 'invalid' : ''));
         let formApi = null;
         renderForm({
@@ -217,7 +217,7 @@ describe('Form-field', () => {
         expect(formApi.getValue('count')).toEqual('5');
         expect(getInputDOM()).toHaveValue('5');
     });
-    it('convert', () => {
+    it('convert 转换后的值写入表单', () => {
         const convert = vi.fn<(stringVal: unknown) => number>((stringVal) => Number(stringVal));
         let formApi = null;
         renderForm({
@@ -231,7 +231,7 @@ describe('Form-field', () => {
         expect(formApi.getValue('count')).toEqual(5);
     });
 
-    it('trigger：mounted / change / blur', async () => {
+    it('trigger 为 change 时值变化即校验，为 blur 时失焦才校验', async () => {
         const validate = (val) => (val !== 'semi' ? 'invalid' : '');
         const propsChange = {
             trigger: 'change',
@@ -282,7 +282,7 @@ describe('Form-field', () => {
         await waitFor(() => expect(getErrorMessage('.a')).toHaveTextContent(/^blurError$/));
     });
 
-    it('field', () => {
+    it('field 支持点号、下标与引号形式的路径', () => {
         const fields = ['username', 'user[0]', 'siblings.1', 'siblings[2]', 'parents[0].name', "parents[1]['name']"];
 
         const { container } = renderForm({
@@ -301,7 +301,7 @@ describe('Form-field', () => {
 
     it('validate 竞态条件', async () => {
         let formApi = null;
-        let asyncValidatorCallback = null;
+        let release: (() => void) | null = null;
 
         renderForm({
             getFormApi(api) {
@@ -312,21 +312,22 @@ describe('Form-field', () => {
                 rules: [
                     { type: 'string', max: 10 },
                     {
-                        asyncValidator(_rule, _value, callback) {
-                            if (!asyncValidatorCallback) {
-                                asyncValidatorCallback = callback;
-                            } else {
-                                callback();
+                        validator: () => {
+                            if (release) {
+                                return undefined;
                             }
+                            return new Promise<undefined>((resolve) => {
+                                release = () => resolve(undefined);
+                            });
                         },
                     },
                 ],
             }),
         });
 
-        // the first validation hangs until its callback is called by hand
+        // the first validation hangs until it is released by hand
         fireEvent.change(getInputDOM(), { target: { value: 'semi' } });
-        await waitFor(() => expect(asyncValidatorCallback).not.toBeNull());
+        await waitFor(() => expect(release).not.toBeNull());
         expect(formApi.getError('text')).toBeUndefined();
 
         fireEvent.change(getInputDOM(), {
@@ -336,13 +337,13 @@ describe('Form-field', () => {
 
         // finishing the outdated validation must not clear the newer error; nothing signals that it was dropped,
         // so give its promise chain a moment to settle
-        void act(() => asyncValidatorCallback());
+        act(() => release());
         await act(() => sleep(50));
         expect(formApi.getError('text')).not.toBeUndefined();
         expect(getErrorMessage()).not.toBeNull();
     });
 
-    it('Debug-数组类fieldPath: unmounting value[0].name leaves the other array items at their index', () => {
+    it('卸载 value[0].name 时，其余数组项保持在原下标', () => {
         let formApi = null;
         const props = {
             getFormApi(api) {
@@ -350,7 +351,7 @@ describe('Form-field', () => {
             },
             initValues: { value: [{ name: 'kkk' }, { name: 'ccc' }, { name: 'ddd' }] },
         };
-        const { rerender } = renderForm({ ...props, children: getInput({ field: 'value[0].name' }) });
+        const { rerender } = renderForm({ ...props, children: getInput({ field: 'value[0].name', keepState: false }) });
         expect(getInputDOM()).toHaveValue('kkk');
 
         rerender(<Form {...props} />);
@@ -408,7 +409,7 @@ describe('Form-field', () => {
         const pure = container.querySelector('.pure');
         expect(pure).toHaveClass(`${BASE_CLASS_PREFIX}-form-field-pure`);
         expect(pure.closest(`.${BASE_CLASS_PREFIX}-form-field`)).toBeNull();
-        await act(() => expect(formApi.validate(['quiet'])).rejects.toEqual({ quiet: 'quiet-err' }));
+        await act(() => expect(formApi.validate(['quiet'])).rejects.toEqual({ quiet: ['quiet-err'] }));
         expect(getErrorMessage('[x-field-id="quiet"]')).toBeNull();
         expect(getInputDOM('[x-field-id="quiet"]')).toHaveAttribute('aria-invalid', 'true');
     });
@@ -428,7 +429,7 @@ describe('Form-field', () => {
             getFormApi: (api) => (formApi = api),
             children: <Form.Input field="name" validateStatus="warning" validator={() => 'err'} />,
         });
-        await act(() => expect(formApi.validate()).rejects.toEqual({ name: 'err' }));
+        await act(() => expect(formApi.validate()).rejects.toEqual({ name: ['err'] }));
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-input-wrapper-warning`)).not.toBeNull();
     });
 
