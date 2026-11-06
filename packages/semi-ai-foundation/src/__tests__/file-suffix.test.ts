@@ -1,5 +1,21 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { getFileSuffix, getFileType, isImageFile } from '../file-suffix';
+import { getFileKind, getFileSuffix, getFileType, isImageFile } from '../file-suffix';
+
+describe('getFileKind', () => {
+    it.each([
+        ['docx', 'word'],
+        ['rs', 'code'],
+        ['pptx', 'ppt'],
+        ['3gp', 'video'],
+        ['midi', 'audio'],
+        ['webp', 'image'],
+        ['pdf', 'pdf'],
+        ['zip', undefined],
+        [undefined, undefined],
+    ])('%s 归为 %s', (suffix, kind) => {
+        expect(getFileKind(suffix)).toBe(kind);
+    });
+});
 
 describe('getFileSuffix', () => {
     it.each([

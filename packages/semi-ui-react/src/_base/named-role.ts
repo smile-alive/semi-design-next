@@ -1,6 +1,6 @@
 import type React from 'react';
+import { namedRole as namedRoleOf } from '@fibrae/semi-foundation/utils/a11y';
 
-/** An explicit role wins; otherwise a generic div given a name becomes a group, since a div without a role cannot carry one */
 export function namedRole(props: Pick<React.HTMLAttributes<HTMLElement>, 'role' | 'aria-label' | 'aria-labelledby'>): React.AriaRole | undefined {
-    return props.role ?? (props['aria-label'] || props['aria-labelledby'] ? 'group' : undefined);
+    return namedRoleOf(props.role, props['aria-label'], props['aria-labelledby']);
 }

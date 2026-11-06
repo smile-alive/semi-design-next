@@ -1,8 +1,6 @@
-/** A generic div cannot carry a name, so a labelled one becomes a group */
-export function isLabelled(attrs: Record<string, unknown>) {
-    return Boolean(attrs['aria-label'] || attrs['aria-labelledby']);
-}
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 
+/** attrs are not reactive, so call this while rendering */
 export function groupRole(attrs: Record<string, unknown>) {
-    return (attrs.role as string | undefined) ?? (isLabelled(attrs) ? 'group' : undefined);
+    return namedRole(attrs.role as string | undefined, attrs['aria-label'] as string | undefined, attrs['aria-labelledby'] as string | undefined);
 }

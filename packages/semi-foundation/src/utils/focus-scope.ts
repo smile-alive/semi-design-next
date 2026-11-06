@@ -1,10 +1,11 @@
-import { getMenuButton } from './a11y';
+import { POPUP_SELECTOR } from '../tooltip/constants';
+import { getPopupTrigger } from './a11y';
 import FocusTrapHandle from './focus-handle';
 
 // the element may sit in a shadow root inside the popup (a third-party control), which closest() does not leave
 function closestPopup(element: Element | null) {
     for (let current = element; current; current = (current.getRootNode() as Partial<ShadowRoot>).host ?? null) {
-        const popup = current.closest('[popover][id]');
+        const popup = current.closest(`${POPUP_SELECTOR}[id]`);
         if (popup) {
             return popup;
         }
@@ -12,14 +13,11 @@ function closestPopup(element: Element | null) {
     return null;
 }
 
-/**
- * The triggers of the Tooltip-family popups around `element`, innermost first. Relies on the D5 markup: the popup is a
- * `[popover]` whose id its trigger names in `data-popupid`.
- */
+/** The triggers of the Tooltip-family popups around `element`, innermost first (D5 markup, see tooltip constants) */
 function popupTriggers(element: Element | null) {
     const triggers: HTMLElement[] = [];
     for (let popup = closestPopup(element); popup;) {
-        const trigger = getMenuButton(popup.id, popup.getRootNode() as ParentNode);
+        const trigger = getPopupTrigger(popup.id, popup.getRootNode() as ParentNode);
         if (!trigger) {
             break;
         }

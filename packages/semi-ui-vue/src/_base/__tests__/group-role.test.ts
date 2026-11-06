@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { groupRole, isLabelled } from '../group-role';
+import { groupRole } from '../group-role';
 
 describe('groupRole', () => {
     it('只有 aria-label 时为 group', () => {
@@ -16,6 +16,6 @@ describe('groupRole', () => {
 
     it('没有可访问名称时无 role', () => {
         expect(groupRole({})).toBeUndefined();
-        expect(isLabelled({ 'aria-label': '' })).toBe(false);
+        expect(groupRole({ 'aria-label': '' })).toBeUndefined();
     });
 });

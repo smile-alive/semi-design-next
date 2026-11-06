@@ -1,5 +1,17 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { isUploadProgressVisible } from '../upload-status';
+import { isUploadFailed, isUploadProgressVisible } from '../upload-status';
+
+describe('isUploadFailed', () => {
+    it.each([
+        ['uploadFail', true],
+        ['validateFail', true],
+        ['success', false],
+        ['uploading', false],
+        [undefined, false],
+    ])('status %s 时为 %s', (status, failed) => {
+        expect(isUploadFailed(status)).toBe(failed);
+    });
+});
 
 describe('isUploadProgressVisible', () => {
     it.each([
