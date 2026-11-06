@@ -21,9 +21,7 @@
 - TagGroup 中文字相同的标签移除前一个时，后一个错位到前一个实例上。已知限制（调用方需提供 `tagKey`）。
 - 可点击 Tag 作触发器时，Modal 内按 Escape 关闭弹层后的焦点落点未验证。UNKNOWN（补 Modal 内的浏览器用例）。
 - Solid：TagGroup 折叠（`maxTagCount`）后，标签在可见区与 +N 弹层之间移动时重新挂载，已关闭状态不保留（`renderTag` 重新调用）。已知限制（升级条件：需跨折叠边界保留状态时，把关闭状态提升到 TagGroup）。
-- Solid：TagGroup 与 TagInput 的 +N 浮层是没有名称的 `role="dialog"`，打开时告警。待处理（按 locale-text 补一条「其余标签」文案作默认 `aria-label`，57 个语言包一起补；调用方可经 `popoverProps`、`restTagsPopoverProps` 传 `aria-label`）。
 - Svelte：可点击 Tag 的 aria-label 在服务端首帧缺失，hydrate 后补上（`children` 是不透明 snippet，服务端读不到文本；role="button" 的名称本来来自内容，首帧仍可读）。已知限制（升级条件：Tag 增加显式 `label` prop，或 Svelte 提供读取 snippet 文本的办法）。
-- Svelte：与 Solid 相同，`+N` 弹层的 `role="dialog"` 没有名称（同本节已有条目）。保持原样（调用方可经 `popoverProps['aria-label']` 传入）。
 
 ### Tooltip（及 Popover、Dropdown）
 
@@ -37,24 +35,21 @@
 - 保持原样：Vue 内层 click 加 `stopPropagation` 时焦点仍转发到外层；Slider、Rating 传 `closeOnEsc={false}`；React 直接嵌套 Tooltip 家族不转交外层注入值。
 - Vue：hover、focus 触发的弹层内打开 Modal、SideSheet 或图片预览后，指针移入该层会关闭外层。已知限制（升级条件：`use-tooltip.ts` 检查已登记后代）。
 - React、Vue：在外部元素的 mousedown 处理中打开受控弹层或启用 `useClickOutside` 时，同一次按下是否被判为点击外部未验证（React 18 起离散事件的 effect 同步刷新）。UNKNOWN（影响：弹层一打开就被 `onClickOutSide` 关闭；解决条件：补真实浏览器用例，成立则忽略启用监听时正在派发的事件 `window.event`）。
-- React `TooltipRuntime` 的 WeakRef 回收用例未写。UNKNOWN（嵌套弹层关闭后元素是否及时回收；开启 `--expose-gc` 后补用例）。
-- Solid：触发器内部的非 Tooltip 家族组件渲染的弹层（未登记到 `TooltipPopupsContext`）算作外部，在其中按下鼠标会关闭 Tooltip，除非该弹层自己 `stopPropagation`。已知限制（升级条件：这类 Solid 组件落地时经 `useTooltipPopups()?.register` 登记自己的弹层）。
-- Solid：原生 `<button disabled>` 与尚未移植的带 `disabled` 的组件不被识别为特殊触发器，内部设置 `role` 的组件作触发器时要在 `own` 中传 `role`。已知限制（升级条件：这些 Solid 组件落地时登记到 `SpecialTriggerContext`；多处需要 `role` 时改为在 effect 中读 DOM）。
+- Solid：触发器内部既不是 Tooltip 家族、也不经 `PopupPortal` 渲染的弹层（未登记到 `TooltipPopupsContext`）算作外部，在其中按下鼠标会关闭 Tooltip，除非该弹层自己 `stopPropagation`。已知限制（Modal、SideSheet、图片预览已经 `PopupPortal` 登记；升级条件：出现这类组件时经 `useTooltipPopups()?.register` 登记自己的弹层）。
+- Solid：原生 `<button disabled>` 与没有调用 `useSpecialTrigger` 登记的带 `disabled` 的组件不被识别为特殊触发器，内部设置 `role` 的组件作触发器时要在 `own` 中传 `role`。已知限制（升级条件：这些组件需要时登记到 `SpecialTriggerContext`；多处需要 `role` 时改为在 effect 中读 DOM）。
 - Solid：触发元素的字符串 `style` 在两次打开之间被重写时冲掉 `pointer-events`。已知限制（升级条件：有需求时监听 `style` 属性变化并补写）。
 - Solid：非函数 children 的特殊触发器（disabled、loading 的 Button、Input 等）在 ref 回调中登记，服务端认不出，包裹 span 的 `cursor`、`width` 挂载后才补上（函数 children 展开 `getTriggerProps` 时，组件体内按其 ref 登记，服务端首帧已正确）。已知限制（升级条件：需要首帧样式时，服务端改为按 Tooltip 解析的子项身份查找登记）。
 - Solid：非函数 children 的 span 在 `onMount` 中才确定 `tabindex`，首帧是否短暂出现两个 Tab 停靠点未验证。UNKNOWN（浏览器用例在首个 `requestAnimationFrame` 内断言 `tabindex`）。
-- Solid：与 Popover、Dropdown、Typography 组件的集成用例未移植。UNKNOWN（影响：Tooltip 与这些组件嵌套时的行为未经用例覆盖；解决条件：补 Solid 集成用例）。
-- React、Vue、Solid：默认打开（如 `visible` 或 `defaultVisible`）的弹层不进服务端 HTML，触发器的 `aria-expanded`、`aria-controls`、`aria-describedby` 要到挂载后才与弹层一致。已知限制（升级条件：需要首帧即带这些属性时，按 props 在服务端推算）。
-- React、Solid：竖向三角箭头的 svg 没有 `viewBox`（Vue 为 `0 0 7 24`）。UNKNOWN（影响：三个框架的箭头渲染可能不一致；解决条件：浏览器截图对比，不一致则补 `viewBox`）。
-- React：Next App Router 的 Server Component 里 Tooltip 包着 Button 时，dev 下浏览器端收到的 Button 是 lazy 形态的 RSC 元素，`isValidElement()` 不认，`tooltip/index.tsx` 的 `wrapSpan` 在客户端多包了一层 `semi-tooltip-trigger-wrapper`，服务端没有，hydration 报 `Hydration failed because the server rendered HTML didn't match the client`。待处理（宿主夹具 `next-app` 的 `rsc/dev/rsc/console`，附录 A 的 next-app/N7；prod 同一页面通过，dev 下元素为什么以 lazy 形态到达浏览器 UNKNOWN，解决条件：在 dev 中打印该元素确认；修法是识别 lazy 元素或不依赖 `isValidElement()`）。
-- Svelte：未受控时首次打开后 `visible` 变成本地布尔值，foundation 之后按受控处理（Popover、Dropdown 继承）。已知限制。
-- Svelte：打开期间改变 `style` 会整体重写 style 属性，丢掉 foundation 写入的定位，直到下次重新定位。已知限制（升级条件：有使用方在打开期间改 style 时改成逐属性设置）。
+- Solid：与 Popover、Dropdown 的集成用例未移植。UNKNOWN（影响：Tooltip 与这两个组件嵌套时的行为未经用例覆盖；解决条件：补 Solid 集成用例）。
+- 默认打开（如 `visible` 或 `defaultVisible`）的弹层不进服务端 HTML，触发器的 `aria-expanded`、`aria-controls`、`aria-describedby` 要到挂载后才与弹层一致。已知限制（升级条件：需要首帧即带这些属性时，按 props 在服务端推算）。
+- React、Solid：竖向三角箭头的 svg 没有 `viewBox`（Vue、Svelte 为 `0 0 7 24`）。UNKNOWN（影响：框架间的箭头渲染可能不一致；解决条件：浏览器截图对比，不一致则补 `viewBox`）。
+- React：Next App Router 的 Server Component 里 Tooltip 包着 Button 时，dev 下浏览器端收到的 Button 是 lazy 形态的 RSC 元素，`isValidElement()` 不认，`tooltip/index.tsx` 的 `wrapSpan` 在客户端多包了一层 `semi-tooltip-trigger-wrapper`，服务端没有，hydration 报 `Hydration failed because the server rendered HTML didn't match the client`。待处理（宿主夹具 `next-app` 的 `rsc/dev/rsc/console`，已登记为 `expectedFailures`；prod 同一页面通过，dev 下元素为什么以 lazy 形态到达浏览器 UNKNOWN，解决条件：在 dev 中打印该元素确认；修法是识别 lazy 元素或不依赖 `isValidElement()`）。
 - Svelte：`child` snippet 里的 disabled、loading Button 不包裹，原生 `<button disabled>` 不识别，首帧与服务端不识别特殊状态。已知限制（升级条件：`child` 路径需要包裹时用 teleport 搬节点，避免 `{#if}` 切换让 Button 重建丢焦点；首帧需要时让 Button 在服务端登记）。
 
 ### Button、IconButton、ButtonGroup、SplitButtonGroup
 
 - Vue：被 ButtonGroup 禁用的按钮外包 click 或 `contextMenu` 的 Tooltip 时打不开。待处理（`trigger.ts` 同时读 ButtonGroup 的 `disabled`，与 React 一致；Svelte 不受影响）。
-- 保持原样：非元素的 `icon` 不渲染（Vue 渲染任意 `#icon` 插槽）。
+- React：非元素的 `icon` 不渲染。保持原样（Vue 渲染任意 `#icon` 插槽，Solid 渲染任意 JSX，Svelte 的 `icon` 是 snippet）。
 - Svelte：ButtonGroup 分隔线服务端首帧缺失。已知限制（升级条件：改为 CSS 由末项隐藏分隔线，需改 foundation SCSS）。
 - loading 的 Button 鼠标点击因 `pointer-events: none` 穿透到外层元素。待决（需删除该样式，有视觉变化）。
 
@@ -64,22 +59,22 @@
 
 ### Badge、Space、Skeleton
 
-- Badge 的 `style` 落在计数 span 并替换 `countStyle`，`className` 落根元素。待处理（React 按 F2 把 `style` 落根元素，与 Vue 一致）。
+- React：Badge 的 `style` 落在计数 span 并替换 `countStyle`，`className` 落根元素。待处理（按 F2 把 `style` 落根元素，与 Vue、Solid、Svelte 一致）。
 - Badge 字符串计数在窄子元素上按字换行。待决（加 `white-space: nowrap` 后计数框可能超出子元素）。
 - 保持原样：字符串 `count='5'` 不受 `overflowCount` 截断；Vue Skeleton `loading` 为 false 时 ref 的 `$el` 是 Fragment 锚点。
 
 ### Divider
 
-- `cssClasses.PREFIX` 是 `semi` 而非 `semi-divider`，React 每处手拼 `-divider`。待处理（改 `PREFIX`，删手拼）。
+- `cssClasses.PREFIX` 是 `semi` 而非 `semi-divider`，React、Solid 每处手拼 `-divider`，Vue、Svelte 在组件内拼成一个常量。待处理（改 `PREFIX`，删手拼）。
 - 保持原样：Vue render 期两次调用默认插槽。
 
 ### Empty
 
-- 保持原样：Vue、Solid 每个实例各挂一个 MutationObserver（Svelte 只有传了 `darkModeImage` 的实例才观察 body，不受影响）。
+- 保持原样：Vue、Solid 每个实例各挂一个 MutationObserver（React、Svelte 只有传了 `darkModeImage` 的实例才观察 body，不受影响）。
 
 ### Timeline
 
-- Svelte：提供 `dot` snippet 后所有项都带 `head-custom` 类，提供 `time`、`extra` snippet 后所有项都渲染对应容器（Svelte 读不到 snippet 对某项是否有输出）。已知限制（升级条件：需要逐项 dot 时改 API）。
+- Svelte：提供 `time`、`extra` snippet 后所有项都渲染对应容器（Svelte 读不到 snippet 对某项是否有输出）。已知限制（升级条件：需要逐项隐藏容器时改 API）。
 
 ### BackTop
 
@@ -110,7 +105,6 @@
 ### Grid（Row、Col）
 
 - 保持原样：float 与 clearfix 样式生成 70 KB CSS。
-- 文档 React Col 表的 `offset`、`pull`、`push` 写「左侧」「向左」「向右」，实现为逻辑属性。待处理（改为起始侧、末尾侧）。
 
 ### Collapsible
 
@@ -175,8 +169,6 @@
 - Solid：AvatarGroup 在首帧与服务端还不知道子节点的位置，按 Avatar 的创建顺序计数 `maxCount`，挂载后才按子节点位置计数：子节点之间夹有文字或包装元素（`<Tooltip><Avatar /></Tooltip>`、`<div>`）时，首帧可能隐藏包装元素里的头像，包装元素收到 token 后显示为空（在数组中显示为「[object Object]」），挂载后恢复；超出 `maxCount` 的包装元素整体交给 `renderMore`，默认 `+N` 的名称不含其中头像的 `alt`；新增的头像在列表协调前先创建，协调后超出 `maxCount` 的再释放。已知限制（升级条件：包装元素里的头像需要在服务端正确渲染时，让包装元素也向组登记）。
 - Solid：默认 `+N` 头像的名称只列被隐藏头像的 `alt`，因为隐藏头像不创建，读取子节点会创建它们。保持原样（需要名称时给头像传 `alt`）。
 - Solid、Vue：图片在 hydration 前已加载失败时，Avatar 只靠 `onError` 切换，hydration 后不显示回退态（Solid 实测；Vue 依源码，UNKNOWN）。待处理（同 React 的 `_base/use-replay-image-events.ts`，hydration 时按 `img.complete` 与 `naturalWidth` 补发事件）。
-- Svelte：AvatarGroup 按创建顺序给头像编号，在列表中间插入或重排时，重叠类和 `maxCount` 隐藏的对象与 DOM 顺序不一致（删除正确）。已知限制（升级条件：改为数据 prop 或按 DOM 顺序重新编号）。
-- Svelte：AvatarGroup 的 `more` snippet 参数 `restAvatars` 只含被隐藏头像的 `alt`、`src`，拿不到文字内容与颜色（头像内容是不透明的 snippet）。已知限制。
 - Svelte：服务端首帧的文字头像没有 `aria-label` 与缩放，挂载后补上；元素内容的头像首帧先套文字结构再切换。已知限制。
 
 ### Breadcrumb、Breadcrumb.Item
@@ -189,7 +181,7 @@
 ### JsonViewer
 
 - 保持原样：`options` 含内联 `customRenderRule` 时每次父级渲染都重建编辑器。
-- Solid：`getSearchResults` 的返回类型写作 `ReturnType<JsonViewerFoundation['getSearchResults']>`，API 表显示内部类型。待处理（foundation 导出搜索结果类型后改用它）。
+- `getSearchResults` 的返回类型写作 `ReturnType<JsonViewerFoundation['getSearchResults']>`，API 表显示内部类型。待处理（foundation 导出搜索结果类型后改用它）。
 - 浏览器用例「编辑」在覆盖率与站点扫描同跑时偶发 15s 超时。待处理。
 - `staticCompletions` 条件疑似写反。待处理（确认原意后修内核）。
 - 内核 `#hiddenRangeModel` 在 worker 首次回复前编辑抛 TypeError，`#selectedIndex` 不复位导致建议变少时 `complete()` 抛错。待处理。
@@ -201,7 +193,7 @@
 
 ### Carousel
 
-- 保持原样：`autoPlay`、interval 变化等下次切换；不经 onChange 改 `activeIndex` 无动画；`arrowProps.*.props` 替换内置 `onClick`；`defaultActiveIndex` 未使用；`goTo` 不重置计时。
+- 保持原样：`autoPlay`、interval 变化等下次切换；不经 onChange 改 `activeIndex` 无动画；`arrowProps.*.props` 替换内置 `onClick`；`goTo` 不重置计时。
 - Svelte：自定义箭头是否有可访问名称只在挂载时读一次 DOM，之后 snippet 文本变化不重新判断。已知限制（升级条件：出现动态文本箭头的需求）。
 - Svelte：幻灯片的 `id`、`aria-label` 由 Carousel 在包装元素上生成，使用方不能单独指定。已知限制。
 
@@ -221,7 +213,7 @@
 
 ### Steps
 
-- 保持原样：Step 在 Steps 外使用抛错；basicSteps 单独使用产生空后缀类名；React、Solid 的 Step 在展开属性之后设置 `tabIndex`，传入的值被可点击状态覆盖（Vue 未核对）。
+- 保持原样：Step 在 Steps 外使用抛错；basicSteps 单独使用产生空后缀类名；React、Solid、Svelte 的 Step 在展开属性之后设置 `tabIndex`，传入的值被可点击状态覆盖（Vue 未核对）。
 - 可点击 Step 的 `role="button"` 包住内容，构成嵌套交互元素。待决（读屏行为不确定；是否改为非嵌套结构）。
 
 ### Radio、RadioGroup
@@ -238,7 +230,7 @@
 ### Anchor、Anchor.Link
 
 - 保持原样：只滚动最近的可纵向滚动容器；原生平滑滚动卸载时无法取消。
-- Link 靠元素树遍历确定层级，`defaultAnchor` 指向 autoCollapse 折叠子项时展不开。待决（是否改为 Link 经 context 注册，Vue 一并设计；Svelte 的层级来自 `links` 数据，不受影响）。
+- React、Vue：Link 靠元素树遍历确定层级，经自定义组件渲染出来的 Link 不参与展开判断，`defaultAnchor` 指向其中的折叠子项时展不开（直接嵌套的子项已能展开）。待决（是否改为 Link 经 context 注册；Solid 解析实际渲染结果、Svelte 的层级来自 `links` 数据，不受影响）。
 - `autoCollapse` 下滚动进入未展开的折叠分支时，高亮不落到子项。UNKNOWN（未复现；补浏览器用例）。
 - React：被 Activity 隐藏再显示时 `init` 重放 `defaultAnchor`，把用户位置拉回。UNKNOWN（推断自代码；补 Activity 用例）。
 
@@ -248,12 +240,12 @@
 - 保持原样：首项 offsetTop 为 0 被当作未知；`scrollToIndex` 的 `selectedIndex` 参数不被使用。
 - cycled wheel 滚动时按整段副本跳转 `scrollTop`，真实触控板与 iOS Safari 的惯性滚动可能被打断。UNKNOWN（影响：滚动手感；解决条件：真机验证，受影响时改为滚动停止后再跳转）。
 - wheel 模式高亮类由 foundation 直写 `classList`，重写 className 的渲染会抹掉它。待决（改为用 state 保存高亮行）。
-- `ScrollItemProps.transform` 的 `value` 为 any（改为 `T['value']`）；Vue ScrollItem 的 `defineExpose` 成员提取不到，Methods 表手写。待处理。
+- React、Solid：`ScrollItemProps.transform` 的 `value` 为 any（改为 `T['value']`，Vue、Svelte 已是）。Vue：ScrollItem 的 `defineExpose` 成员提取不到，文档 Exposes 表为「无」、缺 `scrollToIndex`（Methods 表手写）。待处理。
 
 ### OverflowList
 
 - 保持原样：切换 renderMode 不重置派生的 visible。
-- React、Solid：测量完成前根元素带 `visibility: hidden`，服务端 HTML 与 hydration 前整个列表不可见，由 ResizeObserver 测量后显示。已知限制（升级条件：需要无 JS 或 hydration 前可见时，首帧改为全部渲染再由测量收起）。
+- 测量完成前根元素带 `visibility: hidden`，服务端 HTML 与 hydration 前整个列表不可见，由 ResizeObserver 测量后显示。已知限制（升级条件：需要无 JS 或 hydration 前可见时，首帧改为全部渲染再由测量收起）。
 
 ### Resizable、ResizeGroup、ResizeItem、ResizeHandler
 
@@ -270,7 +262,7 @@
 ### CSSAnimation
 
 - 保持原样：animationend 每次触发都重复调用 `onAnimationEnd(false)`；`stoppedByAnother` 含义失真；`onAnimationStart` 调用两次；SubNav、Table 展开图标的 `isAnimating` 恒为 true。
-- Svelte 的 Toast、Notice、TabPane、自定义展开图标与 Solid 的 Tabs 在第一个 `animationend` 就结束离场，同一元素有多个动画时较长的动画被截断。待处理（同 Modal，确认 `getAnimations()` 中没有运行中的 CSS 动画再结束）。
+- Svelte 的 Toast、Notice 在第一个名称匹配离场动画的 `animationend` 就结束离场，Svelte 的 TabPane 与 Solid 的 Tabs 在第一个 `animationend` 就结束滑动动画，同一元素有多个动画时较长的动画被截断。待处理（同 Modal，确认 `getAnimations()` 中没有运行中的 CSS 动画再结束）。
 - React：Modal、SideSheet、Tabs 在 `animation: none` 页面上离场只靠 animationend，永不卸载。待处理（传入 `getElement` 并补浏览器用例）。Solid 的 `useCSSAnimation` 在没有运行中的动画时立即结束，不受影响。
 
 ### ConfigProvider、LocaleProvider、LocaleConsumer
@@ -289,8 +281,8 @@
 ### Popover、Popconfirm、Trigger
 
 - 保持原样：Popconfirm 的 `onConfirm`、`onCancel` 实际收到 `e.nativeEvent`。
-- React、Vue：Popover 箭头的 svg 缺 `aria-hidden="true"`（Solid 与三个框架的 Tooltip 箭头都有）。待处理（补上，装饰性箭头不进可访问树）。
-- React Tooltip、Popover 无 `aria-describedby` 通道，Popconfirm 直接改弹层元素。待决（加公开 `ariaDescribedby` 属公开 API 变化，Vue 已有）。
+- React、Vue：Popover 箭头的 svg 缺 `aria-hidden="true"`（Solid、Svelte 的 Popover 箭头与四个框架的 Tooltip 箭头都有）。待处理（补上，装饰性箭头不进可访问树）。
+- React、Solid：Tooltip、Popover 无给弹层 `aria-describedby` 的通道，Popconfirm 直接改弹层元素。待决（加公开 `ariaDescribedby` 属公开 API 变化，Vue、Svelte 已有）。
 - Solid：与 Input（经 InputHandle 设置初始焦点）的集成用例未移植。UNKNOWN（影响：Popover 初始焦点交给 Input 的路径未经用例覆盖；解决条件：补 Solid 集成用例）。
 - Solid：Popconfirm 卡片的 click 用 `stopImmediatePropagation` 对 document 监听隐藏，同一次点击不再到达 Tooltip 容器与外层的委托处理函数（`clickToHide` 在卡片内不生效）。已知限制（升级条件：出现需要 `clickToHide` 的 Popconfirm 用法，或 Tooltip 提供卡片内点击的统一出口）。
 - Vue、Solid、Svelte：`disabled` 的 Popconfirm 直接渲染触发器，与启用之间切换时触发器重新挂载，焦点与内部状态丢失（React 已始终渲染弹层包裹层）。待处理。
@@ -298,7 +290,7 @@
 ### Dropdown、Dropdown.Menu、Dropdown.Item、Dropdown.Title、Dropdown.Divider
 
 - 保持原样：Item 自己的 `showTick` 不生效；Vue Item 的 `@click.once`、`@click.capture` 不走顶层分流；Vue 挂起的打开请求期间设 `visible` 为 true 不触发 `visibleChange`；DropdownDivider 不读 `overrideDefaultProps`。
-- React：`DropdownProps` 继承 Tooltip 的 `disableArrowKeyDown`，但 Dropdown 总是向 Tooltip 传 true，调用方的值不生效（Vue、Solid 已从类型中去掉）。待处理（`DropdownProps` 改为 `Omit<TooltipProps, 'disableArrowKeyDown'>`）。
+- React：`DropdownProps` 继承 Tooltip 的 `disableArrowKeyDown`，但 Dropdown 总是向 Tooltip 传 true，调用方的值不生效（Vue、Solid、Svelte 已从类型中去掉）。待处理（`DropdownProps` 改为 `Omit<TooltipProps, 'disableArrowKeyDown'>`）。
 - React、Solid：浏览器用例「悬停子菜单被 … 关闭后，父项上按 ArrowRight 再次打开」在三个框架的浏览器全量测试同跑时偶发失败：子菜单已打开（父项 `aria-expanded="true"`），但首项没在 `waitFor` 时限内获得焦点；单独重跑通过。待处理（根因 UNKNOWN，先确认打开后聚焦首项依赖的时序）。
 - Svelte：`icon` 和 `menuIcon` 的容器在 snippet 输出为空时也会渲染，Vue 版会隐藏。已知限制（升级条件：Svelte 能在渲染前判断 snippet 是否有输出）。
 - Svelte：`visible` 未绑定时，首次打开关闭后 foundation 走受控路径，限制继承自 Tooltip。已知限制。
@@ -307,7 +299,7 @@
 
 ### ColorPicker
 
-- 保持原样：AlphaSlider 忽略 `className`；两个 SliderWrapper 无样式；`isHandleGrabbing` 不参与渲染；`@ts-ignore` 访问 `EyeDropper`；`children` 只在 `usePopover` 时生效；`width`、`height` 为 null 回退 280。
+- 保持原样：AlphaSlider 忽略 `className`；两个 SliderWrapper 无样式；`isHandleGrabbing` 不参与渲染；`children` 只在 `usePopover` 时生效；`width`、`height` 为 null 回退 280。
 - 语言包键 `ColorPicker.hue`、`saturation`、`brightness` 的 55 个非 zh_CN、en_US 译文为机译。待母语者复核（ceb_PH、fil_PH 沿用英文，ur 的 saturation 为音译；hue 重点 bn_IN、fa_IR、km_KH、my_MM、sw、uz、is、ga、ur）。
 - 语言包键 `Upload.cropTitle` 的 54 个非 zh_CN、en_US、ja_JP 译文、th_TH 月名、kk `Form.optional`、nl_NL `Transfer.selected`、sq `Table.resetFilter`、ca 与 fa_IR 的占位符句子、nl_NL、pl_PL、sv_SE 的 AM、PM、year、month、day、sv_SE 与 fr_CA 的 `Calendar.AM`、`PM` 均为机译。待母语者复核。
 - 语言包中 fi_FI、hi_IN、ro、sw、et、vi_VN、ms_MY、ko_KR 的同名文案、ru_RU `remaining`（「ещё N」），以及 `Sidebar.mcpServers`、`DatePicker.yearText` 的非 zh_CN、en_US 译文只按词义推断。待母语者复核。
@@ -320,7 +312,7 @@
 
 ### Notification、Notice
 
-- 保持原样：直接渲染 `<Notice>` 不传 `type` 带 `-undefined` class；`useNotification` 不支持传 `id` 原地更新；根元素 `onClick` 无键盘方式。
+- 保持原样：React、Solid 直接渲染 `<Notice>` 不传 `type` 带 `-undefined` class（Vue、Svelte 已判空）；`useNotification` 不支持传 `id` 原地更新；根元素 `onClick` 无键盘方式。
 - 浏览器用例「指针在列表上时暂停…」在 `test:coverage` 下偶发 hover 超时。待处理（等进场动画结束）。
 - Svelte：进场离场是手写的 CSS 动画模型，不走 Svelte transition；主题或用户 CSS 取消动画时，靠 `getAnimations()` 判断并立即结束，不触发 `animationend`。保持原样。
 
@@ -335,24 +327,22 @@
 ### AudioPlayer、VideoPlayer
 
 - 保持原样：语言包键 `locale.AudioPlayer.loop` 无使用方；文档 `playbackRateList` 说明与实际不符。
-- `AudioPlayerState` 在 React、Solid 包中各声明一份；VideoProgress 手柄位置中的 `- 8px` 依赖样式里手柄宽度的一半。待处理（类型移入 foundation；手柄改用 `translate(-50%)` 定位）。
+- `AudioPlayerState` 在 React、Solid、Vue 包中各声明一份；VideoProgress 手柄位置中的 `- 8px` 依赖样式里手柄宽度的一半。待处理（类型移入 foundation；手柄改用 `translate(-50%)` 定位）。
 - 保持原样：VideoPlayer 进度条悬浮提示在没有 markers 时渲染一个空的标记标题 div（`markersList` 至少有一项；Vue、Svelte 相同）。
 
 ### Toast
 
 - 保持原样：`close(id)`、`destroyAll` 不调用 `onClose`；`destroyAll` 无离场动画；`getPopupContainer` 返回 null 抛错；useToast 的 `defaultOpts` 忽略 `Toast.config()`；无 `type` 带 `-undefined` class；`getWrapperId()` 公开；Vue 多 app 共用只继承最后安装的上下文。
-- 两个形状不同的 `ToastReactProps` 同名。待处理（`toast/toast.tsx` 的改名 `ToastItemProps`）。
-- 静态选项类型不含 `dir`，`Toast.info({ dir })` 运行时可用但 TS 不接受。待处理（按 F6 并入根元素原生属性）。
-- `useToast` 每次返回新对象，ChatBox 的 memo 失效。待处理（有实测收益再固定引用）。
+- React：两个形状不同的 `ToastReactProps` 同名。待处理（`toast/toast.tsx` 的改名 `ToastItemProps`）。
+- React、Vue：静态选项类型不含 `dir`，`Toast.info({ dir })` 运行时可用但 TS 不接受。待处理（按 F6 并入根元素原生属性）。
 - ToastList `onMouseLeave` 里高度守卫原因不明。UNKNOWN（查清后补注释或删除）。
-- 进场动画未结束时关闭，Toast 直接消失无离场动画。待处理（先查 `_cssAnimation` 时序）。
 - `ToastInstance.id` 可选却写进 `order: string[]`，`base/auto-close-foundation.ts` 同类。待处理（`id` 改必填或在 `add` 中断言）。
 - 静态容器固定挂在 body，全屏期间 Toast 不可见（Notification 同）。待处理（add 时按 `fullscreenElement` 选挂载点）。
-- React 静态方法与 hook 选项类型仍声明运行时会被覆盖的 `id`、`zIndex`、`getPopupContainer`、`close`、`ref`、`onAnimationEnd`、`onAnimationStart`（含 Notification）。待决（收紧属破坏性类型变更）。
 - 播报区在真实读屏器中未验证（相同文本 1 秒内连播可能不播报），折叠堆叠下 Tab 聚焦展开只由单测间接覆盖。UNKNOWN（实机核对并补浏览器用例）。
 - Vue：`rootAppContext()` 复制 config 的修复未在 runtime-only 开发构建实测。UNKNOWN（静态调用可能仍有 `[Vue warn]`；调用一次静态 Toast 确认）。
 - Solid：`useToast`、`useNotification` 的 `contextHolder` 在调用 hook 时创建，只读调用处的 context，放置处外层的 Provider 不生效。已知限制（升级条件：需要按放置位置读 context 时，改为像 Vue 那样返回 Holder 组件）。
-- Solid：指针或焦点在 hook 列表上时把 `contextHolder` 移出文档再放回，列表仍按悬停或聚焦暂停，直到指针再次进出（Notification 同）。UNKNOWN（由代码推断，未实测；升级条件：有低成本的 DOM 脱离信号后在脱离时清除暂停）。- Svelte：进场离场是手写的 CSS 动画模型，不走 Svelte transition；主题或用户 CSS 取消动画时，靠 `getAnimations()` 判断并立即结束，不触发 `animationend`。保持原样。
+- Solid：指针或焦点在 hook 列表上时把 `contextHolder` 移出文档再放回，列表仍按悬停或聚焦暂停，直到指针再次进出（Notification 同）。UNKNOWN（由代码推断，未实测；升级条件：有低成本的 DOM 脱离信号后在脱离时清除暂停）。
+- Svelte：进场离场是手写的 CSS 动画模型，不走 Svelte transition；主题或用户 CSS 取消动画时，靠 `getAnimations()` 判断并立即结束，不触发 `animationend`。保持原样。
 
 ### UserGuide
 
@@ -376,8 +366,8 @@
 
 - adapter 方法 `disabledBodyScroll`、`enabledBodyScroll` 读作状态，四处同名。待处理（改为 `lockBodyScroll`、`unlockBodyScroll`）。
 - 保持原样：onOk、onCancel 返回被拒绝的 Promise 时 foundation 再次抛出；显示期间副作用绑在「打开到离场动画结束」上；React、Solid 组件版 Modal 的 Props 类型含 foundation 的 `content`（供命令式方法使用），组件版不渲染，API 表已注明。
-- Vue Modal 动画时长为 0 时两帧内连续关、开、关会丢失第二次 after-leave，焦点陷阱与滚动锁不释放。待处理（默认主题不触发；检查残留 `_isLeaving`）。
-- Vue：Modal 与 ImagePreview 用 `resolvePopupContainer(...) === document.body` 判断是否覆盖页面，React、Solid 用 `coversPage`；`getPopupContainer` 返回 `null` 时 Vue 在这一判断处就抛错（另两个框架在 Portal 处抛）。待处理（改用 `coversPage`）。
+- Vue：Modal 动画时长为 0 时两帧内连续关、开、关会丢失第二次 after-leave，焦点陷阱与滚动锁不释放。待处理（默认主题不触发；检查 `modal.vue` 中 `displayNone`、`closePending` 在动画时长为 0 时的复位）。
+- Vue：Modal 与 ImagePreview 用 `resolvePopupContainer(...) === document.body` 判断是否覆盖页面，React、Solid、Svelte 用 `coversPage`；`getPopupContainer` 返回 `null` 时 Vue 在这一判断处就抛错（其余框架在 Portal 处抛）。待处理（改用 `coversPage`）。
 - `aria-modal` 对话框外 Portal 到 body 的下拉 listbox 是否被读屏视为不可达，未在 VoiceOver 与 NVDA 验证（含 SideSheet、Image 预览）。UNKNOWN（需实机核对）。
 - Svelte：`keepDOM` 加 `lazyRender={false}` 且一开始隐藏时，挂载时的 autofocus 在 `display:none` 下失败，默认按钮获得焦点。已知限制。
 
@@ -400,10 +390,10 @@
 
 ### Typography（Text、Title、Paragraph、Numeral、Copyable）
 
-- Numeral 的 `ellipsis` 文档有、类型无、运行时生效。待处理（删文档行或补回类型，由维护者决定）。
+- Numeral 的 `ellipsis` 类型与文档都未声明，运行时仍经透传生效。待处理（在 Numeral 里挡掉该属性，或补回类型与文档，由维护者决定）。
 - 复制成功后读屏播报因读屏而异；文档站重载后偶发省略测量偏差；不可收起的展开按钮激活后焦点环未确认。UNKNOWN（分别需实机读屏、冷启动 Chrome、目视检查 `:focus-visible`）。
 - 省略加 `showTooltip` 且含复制按钮时描述挂载位置未定；只设 `expandText` 不设 `expandable`（`collapseText` 同）时按钮无效果。待决。
-- Vue：`showTooltip.type` 区分大小写，写成 `'Popover'` 时渲染 Tooltip（React、Solid 不区分）；展开、收起后的焦点转移三个框架不一致（React、Solid 在可展开且无 `collapseText` 时同步聚焦根节点，Vue 只在按钮仍持有焦点时于 nextTick 后聚焦）。待处理（判断移入 foundation 统一）。
+- Vue、Svelte：`showTooltip.type` 区分大小写，写成 `'Popover'` 时渲染 Tooltip（React、Solid 不区分）；展开、收起后的焦点转移在四个框架间不一致（React、Solid 在可展开且无 `collapseText` 时同步聚焦根节点，Vue、Svelte 只在按钮仍持有焦点时于 nextTick 后聚焦）。待处理（判断移入 foundation 统一）。
 - Solid：`ellipsis` 截断后插入的是字符串 `ellipsisContent`，children 的解析结果仍被创建而不插入（截断只在客户端发生，不影响 hydration）。已知限制（升级条件：截断文本改为从非 JSX 来源派生时，只在未截断分支里解析 children）。
 - 保持原样：Solid 的 `link`、`delete`、`strong`、`underline`、`code`、`mark` 与 `ellipsis` 的有无在运行时变化时增删包裹元素，children 重新创建（子组件状态丢失），与 React 换包裹元素时子树重新挂载一致；省略、展开、收起不变更包裹层，不受影响。
 - 保持原样：Numeral `bytes-*` 浮点误差；Vue Numeral 整段格式化。
@@ -443,23 +433,22 @@
 
 ### TagInput
 
-- React 外部点击未接入 `useClickOutside`，`suffix` 内 Popover 等按下会结束激活（Vue 不会）。待处理。
+- React 外部点击未接入 `useClickOutside`，`suffix` 内 Popover 等按下会结束激活（Vue、Solid、Svelte 不会）。待处理。
 - 公开事件别名 `TagInputCursorEvent` 等为 `any`。待处理（需维护者决定）。
-- 保持原样：`setFocusing` 与 `toggleFocusing` 职责重叠；React、Solid 的 `restTagsPopoverProps.content` 替换 +N 浮层里的剩余标签（Vue 的 Popover 没有 `content` 属性）。
+- 保持原样：`setFocusing` 与 `toggleFocusing` 职责重叠；React、Solid 的 `restTagsPopoverProps.content` 替换 +N 浮层里的剩余标签（Vue 的 Popover 没有 `content` 属性，Svelte 的 `content` 写在展开之后，不会被替换）。
 - `maxTagCount` 折叠时在 `+N` 浮层中点击标签：焦点进入浮层会激活 TagInput 并展开全部标签，浮层随之消失，这次点击关不掉那个标签（React、Solid 相同）。待处理。
 - Solid：上一次放下的动画未结束时立即开始键盘拖拽，方向键不移动项。UNKNOWN（影响：连续快速键盘排序；解决条件：确认是否为 dnd-kit 行为，React、Vue 是否相同）。
 - Solid：拖拽中途 Sortable 被卸载（受控 value 清空、`draggable` 变 false）时 `onDraggingChange(false)` 可能不触发，之后失焦不结束激活（React 相同）。UNKNOWN（解决条件：确认 dnd-kit 卸载时是否补发 dragend）。
 - Svelte：拖拽排序（内部模块 `_sortable`，Transfer 同样适用）的 `items` 变序时，Svelte 会移动被重排项的节点，浏览器让持有焦点的手柄失焦（Vue 版保留焦点）。已知限制（升级条件：改成只移动没有焦点的节点）。
 - Svelte：拖拽排序所用的 `@dnd-kit/svelte` 没有 `OptimisticSortingPlugin`，拖动中的视觉顺序由组件自己的预览列表驱动，松手后清除。已知限制。
 - Svelte：prefix、suffix 是文本还是图标要挂载后才知道，服务端首帧不带 `-prefix-text`、`-prefix-icon` 类。已知限制。
-- Svelte：拖拽排序时跟随指针的浮层是空白框，原因是内部 `_sortable` 的 `DragOverlay` 没有渲染内容。待处理。
 
 ### AutoComplete
 
-- `#backwardLabelInValue` 名不副实，`#getRenderSelectedItem` 留空 `else if`；数据项带 `show: false` 时高亮与 Enter 选中项错位。待处理。
+- `#backwardLabelInValue` 名不副实；数据项带 `show: false` 时高亮与 Enter 选中项错位。待处理。
 - 浏览器用例「下拉宽度不小于触发器宽度」连跑时偶发 109px。UNKNOWN（复现时记录弹层的 `--semi-tooltip-trigger-width` 与触发器宽度）。
 - 只用 `<label for>` 命名时 listbox 无名称。已知限制（传 `aria-label` 或 `aria-labelledby`）。
-- 对象数据项缺 `label` 时候选行为空（React、Solid；Vue 显示 `value`，各自文档与代码一致）。待决（三端统一）。
+- 对象数据项缺 `label` 时候选行为空（React、Solid；Vue、Svelte 显示 `value`，各自文档与代码一致）。待决（四端统一）。
 - 保持原样：`onChangeWithObject` 声明未读取；`loading` 时方向键、Enter 仍打开面板。
 - Vue、Solid、Svelte：`defaultOpen` 的 AutoComplete 挂载后才打开，服务端 HTML 中触发器 `aria-expanded="false"`。已知限制（见 Select）。
 - 保持原样：Svelte 传了 `renderSelectedItem` 时，输入框显示的是 `value` 本身，`value` 要用 `renderSelectedItem` 的返回值（Vue 的 `modelValue` 相同）。
@@ -480,7 +469,7 @@
 - 未设 `ellipsis`、`fixed`、固定表头时表格为 `table-layout: auto`，各列数值 `width` 之和超过容器时，Chrome、Firefox 加宽表格并横向滚动，WebKit 把表格限在容器宽度并按比例压缩各列（1000px 容器中 364、400、100、100 渲染为 343、378、99、99），`resizable` 拖到的宽度随之不准。待决（影响：Safari 中列宽小于声明值，拖动时手柄落后于指针；解决条件：决定是否在列宽之和超出时改用 `fixed` 布局或给表格写 `min-width`）。
 - 不做：列宽拖动手柄的键盘操作（APG 无对应模式；升级条件：出现需求时按 Resizable 的 separator 模式实现）。
 - 保持原样：根类名 `semi-table-wrapper-undefined`；只应用第一个排序器；受控 currentPage 不调用 onChange；RTL 虚拟化与表头阴影；`OnHeaderCell<R>` 使 `ColumnProps` 对 R 不变；`rowSelection.disabled` 阻止 `clickRow`；`handlerClassName` 默认 `'resizing'`。
-- Svelte：虚拟化只支持固定行高，`itemSize` 函数不测量实际高度。已知限制（升级条件：`_base/virtual-list.svelte` 提供测量接口后支持动态行高）。
+- Svelte：虚拟化的行高只取自 `itemSize`（数值或按行返回数值的函数），不测量实际高度。已知限制（升级条件：`_base/virtual-list.svelte` 提供测量接口后支持动态行高）。
 - Vue、Svelte：列宽拖拽的覆盖值按生成的 key 存，列既无 `key` 也无 `dataIndex` 时 key 是 `${level}-${index}`，列顺序变化后覆盖值错位。待处理。
 - Svelte：`table.svelte` 不是泛型组件，`ColumnProps`、`TableProps` 的行类型为 `Record<string, any>`，snippet 与回调里需 `as` 收窄。已知限制。
 - Svelte：`components` 只接受标签名字符串，不能换成组件（可排序行等做不了）。已知限制。
@@ -488,8 +477,8 @@
 
 ### Tree、TreeNode、NodeList、AutoSizer
 
-- tree 与 tree-select foundation 仍各写一份成段逻辑；非受控 `defaultValue` 在 `treeData` 稍后到达时丢失（沿用 TreeSelect 的 `keepUncontrolledKeys`）；Vue drop 节流用例的 spy 不生效。待处理。
-- 拖拽向 body 追加透明元素；Vue `prevProps` 存放在 foundation state。待决。
+- tree 与 tree-select foundation 仍各写一份成段逻辑；非受控 `defaultValue` 在 `treeData` 稍后到达时丢失（沿用 TreeSelect 的 `keepUncontrolledKeys`）。待处理。
+- 拖拽向 body 追加透明元素；`prevProps` 存放在 foundation state。待决。
 - 键盘模型用 `aria-activedescendant` 而非 roving tabindex。UNKNOWN（VoiceOver、NVDA 实机验证）。
 - 保持原样：动画中 treeData 变化 NodeList 停在旧节点；Tree 不支持 children 写法；行内按钮 click 冒泡触发 `onSelect`；Enter、Space 不随 `expandAction` 展开。
 - Solid：Tooltip 包 Tree 只能用元素 children，外面多一层 `tabindex="-1"` 的 span，`aria-describedby` 不落在 `role="tree"` 上；函数 children 的元素 `ref` 与 Tree 交出 `TreeHandle` 的 `ref` 冲突。已知限制（升级条件：有需求时给 Tree 加元素 ref prop）。
@@ -501,16 +490,16 @@
 - 每个选项 Item 收到内联回调，悬停或展开时整列重渲染。待处理。
 - 受控单选 `filterLeafOnly=false` 搜索选中分支后受控与非受控显示不一致。待决。
 - 保持原样：不用 `aria-owns`；点击标签后移除焦点落 body；多选搜索无当前项时 Enter 仍建新标签；受控 `value` 中不在 `treeData` 的路径无占位标签。
-- `highlightParts`、`getColumns` 在 React 内联、Vue `cascader/utils.ts`、Solid `cascader/item.tsx` 各有一份。待处理（下沉到 semi-foundation/cascader）。
+- React：`item.tsx` 的 `renderItem` 递归渲染各列，没有用 `semi-foundation/cascader/util` 的 `getColumns`（Vue、Solid、Svelte 已共用）。待处理（改用 `getColumns`）。
 - Svelte：就地修改 `$state` 的 `treeData` 时每次都用 `$state.snapshot` 遍历整棵树比较，树很大时应替换整个 `treeData`；节点上放函数或 DOM 节点时 dev 下可能告警。已知限制（升级条件：出现大树性能问题时改用显式版本号或替换式更新）。
 
 ### TimePicker、TimeInput、Combobox
 
-- `combox-foundation.ts` 文件名拼错且只有静态函数；Vue `setTriggerFocus` 用 `as HTMLElement` 去 null。待处理（改为模块级函数，改名 `combobox-options.ts`）。
+- `combox-foundation.ts` 文件名拼错且只有静态函数。待处理（改为模块级函数，改名 `combobox-options.ts`）。
 - 保持原样：设 timeZone 时 `onChange` 按宿主时区格式化；`invalid` 恒 false；`onBlur` 只在点击外部关闭时触发。
-- 用自定义触发器时未声明的属性（`id`、`aria-*`、`data-*`、原生事件）不落到任何元素（React、Solid；Vue 落在根元素）。待决（统一落点）。
-- `disabledTime` 与 `triggerRender` 的 `value` 声明为 `Date[]`，未选的一侧实际为 `undefined`（foundation、React、Solid；Vue 已声明为 `(Date | undefined)[]`）。待处理（改类型，属公开类型）。
-- Solid：自定义触发器内有没有可聚焦元素，只在触发器挂载时测量一次，之后内容增删可聚焦元素，包裹 div 的 button 语义不跟着切换。已知限制（升级条件：需要动态切换时，用 MutationObserver 监听触发器子树后重新测量）。
+- 用自定义触发器时未声明的属性（`id`、`aria-*`、`data-*`、原生事件）不落到任何元素（React、Solid；Vue、Svelte 落在根元素）。待决（统一落点）。
+- `disabledTime` 与 `triggerRender` 的 `value` 声明为 `Date[]`，未选的一侧实际为 `undefined`（foundation、React、Solid；Vue、Svelte 已声明为 `(Date | undefined)[]`）。待处理（改类型，属公开类型）。
+- 自定义触发器内有没有可聚焦元素，只在触发器挂载时（React、Solid 另在换新 `triggerRender` 时）测量，之后内容增删可聚焦元素，包裹 div 的 button 语义不跟着切换。已知限制（升级条件：需要动态切换时，用 MutationObserver 监听触发器子树后重新测量）。
 
 ### Select、Option、OptGroup
 
@@ -523,35 +512,34 @@
 - 保持原样：分组标题使 `:nth-child` 偏移；自定义创建项不可聚焦；重开下拉保留上次高亮；`prefix` 与 `insetLabelId` 同传时 prefix 不作名称来源。
 - Solid：`OptionGroupProps` 用索引签名，没有原生属性的类型提示；`inputProps` 内含 JSX 时每次读取都新建节点。待处理。
 - Vue、Solid：选项数据上仍挂框架层的 `_slot`（Vue 的分组另有 `_labelSlot`），Vue 的 `optionItem`、`selectedItem` 插槽参数会带出 `_slot`。待处理（与 foundation 的选项记录一样，移到包装记录的字段上）。
-- Vue、Solid、Svelte：`defaultOpen` 的 Select 服务端 HTML 中触发器 `aria-expanded="false"`，挂载后才打开。已知限制（升级条件：弹层进入服务端 HTML 时一并处理，TreeSelect、AutoComplete 相同）。
+- `defaultOpen` 的 Select 服务端 HTML 中触发器 `aria-expanded="false"`，挂载后才打开。已知限制（升级条件：弹层进入服务端 HTML 时一并处理，TreeSelect、AutoComplete 相同）。
 - Svelte：`optionList` 里属于同一分组的条目必须相邻，不相邻的同 `key` 条目渲染成两个分组；虚拟列表下不显示分组标题。已知限制。
 - Svelte：`prefix`、`suffix` 的 text 或 icon 类名挂载后才补上，服务端 HTML 缺这两个类（同 Input）。已知限制。
 
 ### TreeSelect
 
 - `expandAction` 为 click 加 `loadData` 时点击 `isLeaf` 叶子仍调用 `loadData`（加 `isTreeNodeLeaf` 判断）；搜索中 `treeData` 只换引用时收起的祖先被重新展开（传 `prevState.filteredKeys`）。待处理。
-- Vue `prevProps` 存放在 foundation state（见 Tree）。待决。
+- `prevProps` 存放在 foundation state（见 Tree）。待决。
 - 窗口失焦（`relatedTarget` 为 null）时下拉保持打开，只有 Tab 到外部可聚焦元素或点击外部才关闭。已知限制。
 - 保持原样：`isRenderInTag: false` 时无 key 告警；`#isLoadControlled` 把空数组视为非受控；点击标签后移除焦点落 body。
-- Vue、Solid：`defaultOpen` 的 TreeSelect 挂载后才打开，服务端 HTML 中触发器 `aria-expanded="false"`。已知限制（见 Select）。
-- `deriveState` 在 `treeData` 键集合变化、受控 `expandedKeys` 变化时按 `motion` 判断是否处理展开动画状态，但树的展开动画由 `motionExpand` 控制（三端共用 foundation）。待处理。
+- `defaultOpen` 的 TreeSelect 挂载后才打开，服务端 HTML 中触发器 `aria-expanded="false"`。已知限制（见 Select）。
+- `deriveState` 在 `treeData` 键集合变化、受控 `expandedKeys` 变化时按 `motion` 判断是否处理展开动画状态，但树的展开动画由 `motionExpand` 控制（四个框架共用 foundation）。待处理。
 - Svelte：不绑定也不传 `value` 的 TreeSelect、Tree 放在展开 props（`{...props}`）的包装组件里时，父级 props 变化会把 `value` 重置为 `undefined`，选中项被清空，绑定或显式传 `value` 可避免。待决。
 - Svelte：`expandedKeys`、`loadedKeys` 被组件写出后再被父级改回 `undefined`，不会同步清空。已知限制。
 
 ### DatePicker、DateInput、MonthsGrid、Month、Navigation、YearAndMonth、QuickControl
 
-- month、monthRange 带 disabledDate 且当前月被禁用时 onChange 收到两次且第一次是禁用日期；`DatePickerFoundation.init` 仍解析初始值，靠 `#initialized` 只执行一次（移入静态 `getInitialState`）。待处理。
+- month、monthRange 带 disabledDate 且当前月被禁用时 onChange 收到两次且第一次是禁用日期；四个框架已用静态 `DatePickerFoundation.getInitialState` 创建初始状态，但 `init` 仍解析初始值，靠 `#initialized` 只执行一次。待处理（`init` 去掉解析初始值的部分）。
 - 受控 `open` 改 false 关闭且 `insetInput` 时焦点归还未验证。UNKNOWN（补浏览器用例）。
 - `InsetTimeInput` 的可访问名称无专用语言包键。UNKNOWN（确认是否需要，需要则按 locale-text 补齐 57 个语言包）。
 - 设置 `timeZone` 后，系统时区夏令时跳过的时刻在面板时间列表里选不到（选 02 时变成 03:30，值为 02:30 时列表高亮 03），只能输入；这类时刻与一小时后的时刻 `getTime` 相同，`disabledDate` 判定与多值去重按同一时刻处理。已知限制（升级条件：时间列表改为按 `timeZone` 取值）。
 - 保持原样：autoSwitchDate 对范围无效；`onFocus` 打开面板的页面键盘选择或 Esc 后会重新打开；左面板键盘移出本月时焦点不跨到右面板。
 - Svelte：自定义 `trigger` 内是否有焦点目标只在挂载时测量一次（同 TimePicker）。已知限制。
 - Svelte：没有 KeepAlive，停用时关闭面板的行为没有移植。已知限制。
-- Svelte：指针清除后焦点落在 trigger 外壳，父级清空值导致清除按钮消失时焦点掉到 body；Vue 都交给起始输入框。待决。
 - 保持原样：实例方法 `open()`、`close()` 不调用 `onOpenChange`，只有用户操作开合面板时通知（各框架与原 Semi 一致；Svelte 另写回可绑定的 `open`）。
 - 保持原样：Svelte 自定义 trigger 的 `inputValue` 在合法日期提交后变回 null（写回 `value` 触发 `syncFoundation` 重置）；合法输入重新格式化后与键入文本逐字相同，显示不受影响，其他框架受控回写时同样清空。键入 `2021-6-1` 这类非补零文本不会被改写。
 
-### Form、ArrayField、withField、Label、ErrorMessage、Section、Slot、InputGroup
+### Form、ArrayField、withField、FormLabel、FormErrorMessage、FormSection、FormSlot、FormInputGroup、SchemaField、SchemaForm
 
 - React `form/label.tsx` 不导入 `form.scss`；字段状态由 withField 多个 useState 与 foundation 两处保存（随 Form 重写）；每次 Form 更新重渲染全部字段。待处理。
 - Vue `FieldLabel` 无 `id`；React FormCheckbox、FormRadio 的 onChange 类型读不到 `latestValues`。待决（均属公开类型变化，需批准）。
@@ -560,7 +548,7 @@
 - `onSubmitFail` 的 `errors` 类型为错误树，Form `validator` 抛出或返回非对象时收到的是原值，类型覆盖不到。已知限制。
 - 以 keepState 卸载的 ArrayField 重新挂载后，`reset()` 恢复的是最初的 `initValue`，不是卸载前最后一次挂载时的 `initValue`。已知限制（升级条件：有使用方需要按再挂载时的 `initValue` 重置）。
 - 字段无初值时 `onChange` 抛错后子组件仍显示被拒绝输入（需回滚设 `initValue`）；`reset(fields)` 作废进行中的校验时 submit 以未校验初值调用 `onSubmit`。已知限制。
-- 保持原样：不改 ESM 命名空间（2026-10-09，摇树不生效）；挂载 Field 不触发 `onChange`；`CommonexcludeType` 命名。
+- 保持原样：挂载 Field 不触发 `onChange`；`CommonexcludeType` 命名。
 - Svelte：用 `setValue` 删除 keyed 数组中间行时，Svelte 先注销被移除行的字段（删掉其值），再创建接管该路径的新字段；Vue 的 Debug-SetValuesDemo 场景无法复现，用例已移除。已知限制。
 - Svelte：Form 设置 `labelCol`、`wrapperCol` 时，InputGroup 的标签落在 wrapper 列而不在 label 列。已知限制（升级条件：InputGroup 能由外部标签命名时改）。
 - Svelte：Select、Cascader、TreeSelect、AutoComplete、DatePicker 字段无法传 `trigger` snippet（与校验时机 `trigger` 同名）。待决。
@@ -573,7 +561,6 @@
 - `LeftMenuChangeProps` 与 `Setup` 是同一类型的两个名字；编辑器 `injectCSS: false`，传入 Gapcursor、Dropcursor 时无样式。待处理。
 - 浏览器用例「方向键移到长列表末项时面板滚动」在全量 coverage 中失败过一次。UNKNOWN（失败时记录面板 `clientHeight`、`scrollHeight`）。
 - Chrome on macOS 从 Finder 复制文件后粘贴，剪贴板是否同时带文件名和文件未验证。UNKNOWN（影响：只插入文件名不上传，需维护者知情）。
-- `sendHotKey` 为 `shift+enter` 时换行分支不看 `allowHotKeySend`；React `uploadProps` 类型仍接受 `fileList`、`listType`（Vue 已 Omit，属破坏性类型变化）。待决。
 - 保持原样：inputSlot 空槽 placeholder 宽度晚一帧；Configure 的 `value`、`field` 只在挂载时读；`skillHotKey` 无默认值。
 - foundation 的方向键与 Enter 分支不判断 `templateVisible`，而 `getListbox` 在 `templateVisible` 为真时返回 `undefined`。UNKNOWN（影响：`templateVisible` 与 `skillVisible` 同时为真时高亮仍移动，`aria-activedescendant` 却被撤掉；解决条件：核实两者能否同时为真，能则在这些分支先判断 `templateVisible`）。
 - Solid：父组件在挂载期间（渲染中或 `onMount`）把 `generating` 设为 true 时不清空内容与附件（React 会清空），编辑器要到 RichTextInput 的 `onMount` 才创建。已知限制（升级条件：清空请求在编辑器就绪前排队，`onReady` 后执行）。
@@ -589,10 +576,10 @@
 ### AIChatDialogue、Dialogue、DialogueAction
 
 - 两个流式适配器返回形状不一致；`URLCitation`、`ImageGenerationCall` 各有两份定义。待处理（统一并显式注解，合并或改名 `Wire*`）。
-- 代码块子节点被 rehype 拆成元素时 React 无复制按钮，Vue 仍显示。待决（A 对齐 React，推荐；B 保留）。
+- 代码块子节点被 rehype 拆成元素时 React、Solid 无复制按钮，Vue、Svelte 仍显示。待决（A Vue、Svelte 对齐 React、Solid，推荐；B 保留）。
 - 消息列表 `role="log"` 带 `tabIndex=-1`，程序化聚焦可能显示焦点环。UNKNOWN（目视检查 `:focus-visible`）。
 - 保持原样：onChatsChange 调两次；`resetMessage` 忽略传入 message；`continueSend` 写死 false；`hideMoreDropdown` 定时器卸载不清理；Action 的 className、role、messageEditRender 不消费；文件卡片引用图标冒泡。
-- React 的带语言代码块把 `.semi-ai-chat-dialogue-code` 的 div 放在 markdown 的 `pre` 内（div 不是 `pre` 允许的内容），因为 `pre` 只认 MarkdownRender 自带的 `code`。待处理。
+- React、Vue、Svelte 的带语言代码块把 `.semi-ai-chat-dialogue-code` 的 div 放在 markdown 的 `pre` 内（div 不是 `pre` 允许的内容），因为 `pre` 只认 MarkdownRender 自带的 `code`；Solid 的 `pre` 由内层 `code` 运行时登记，不受影响。待处理。
 - Svelte：`bind:chats={get, set}` 的 setter 改写组件写入的列表时，改写后的列表不经 `onChatsChange` 上报（组件用写入标记跳过自身写入引起的重复上报）。待处理。
 
 ### Chat
@@ -605,13 +592,13 @@
 
 - `Locale.Calendar.AM`、`PM` 与 `TimePicker.AM`、`PM` 同名异义。待处理（加 JSDoc）。
 - 时间槽与日期格的点击没有键盘方式。保持原样（每格加 button 会多出 42 或 336 个 Tab 停靠点；升级条件：需要时视图改为 ARIA grid 加 `aria-activedescendant`，复用 DatePicker 的网格模式）。
-- `dateGridRender` 的两个参数声明为可选，各视图总是传入。待处理（改为必填，属公开类型）。
+- React、Solid：`dateGridRender` 的两个参数声明为可选，各视图总是传入。待处理（改为必填，属公开类型）。
 - Solid：月视图首帧显示全部事件，测量行高后才折叠为「N 更多」，服务端 HTML 是未折叠的。已知限制（升级条件：行高可在服务端预知时，按行高推算初值）。
 - Solid：周视图与日视图在挂载后才知道哪一列是今天，该列随之重建以启动当前时间线，hydration 后的 DOM 结构与服务端不同；今天标记（`aria-current`、`-today`）与时间线只在挂载后出现，是为了服务端与浏览器处于不同日期时不错位。已知限制（升级条件：需要首帧即带时间线时，服务端按请求时间输出且客户端读同一时间）。
 
 ### InputNumber
 
-- 保持原样：数值为 0 时无 `aria-valuenow`；`pressInterval` 默认 250ms；小写 `autofocus` 落 DOM；挂载后 `localeCode`、`currency` 变化不重新格式化。
+- 保持原样：`pressInterval` 默认 250ms；小写 `autofocus` 落 DOM；挂载后 `localeCode`、`currency` 变化不重新格式化。
 
 ### Upload、FileCard
 
@@ -621,34 +608,34 @@
 - 添加区的 MutationObserver 的 `attributeFilter` 只含 `addAreaControlAttributes`，子元素在挂载后增删 `aria-label`、`aria-labelledby`、`alt` 时不重算是否已有名称，兜底的 `aria-label` 可能多出或缺失。待处理（`attributeFilter` 补上这三个属性）。
 - Vue：添加区是否已含可聚焦控件要挂载后才判定，服务端 HTML 中触发区带 `role="button"`、`tabindex="0"` 并包着内部按钮（嵌套交互元素），挂载后才去掉。已知限制（升级条件：需要 hydration 前无嵌套交互元素时，首帧按 `children` 是否为元素判断）。
 - Solid：只有 Semi 的 Button、IconButton 与 AIChatInput 的默认上传按钮在组件体内向添加区登记，首帧即判定；原生 `button`、`a[href]` 等其他可聚焦控件仍在挂载后由 MutationObserver 判定，服务端 HTML 中触发区同样带 `role="button"`、`tabindex="0"` 并包着该控件。已知限制（升级条件：需要其他 Semi 控件首帧即判定时，在其组件体内调用 `upload/context.ts` 的 `useAddAreaControl`）。
-- 保持原样：部分示例 img 无 alt；`timeout`、`FileCardProps.className` 未使用。
+- 保持原样：React、Solid 的 `timeout` 与 React 的 `FileCardProps.className` 未使用。
 - Solid、React、Vue：FileCard 的图片预览只靠 `onError` 切到回退图，图片在 hydration 前已加载失败时不显示回退图（Solid 实测；React、Vue 依源码，UNKNOWN）。待处理（同 Avatar 的补发事件）。
 - Svelte：上传区域的 `role="button"` 在首帧（含服务端）靠挂载后的 MutationObserver 判断内部是否含 Semi 控件，首帧可能多一个按钮语义。已知限制（升级条件：Semi 控件初始化时向上传区域登记，Solid 的做法）。
 - Svelte：没有接入 Tooltip 的特殊触发器协议，外包 Tooltip 时 `tabindex` 落在上传区域。已知限制。
 
 ### Transfer
 
-- foundation 类型不完整，`PaginationProps` 与 Pagination 同名异义，`HeaderConfig.type` 实为 `'left' | 'right'` 却声明 string。待处理（改名 `TransferPaginationProps`、`side`，需维护者决定）。
-- 保持原样：`onClear` 在 defaultProps 但未声明；`draggable` 时忽略 `virtualize`。
-- React：搜索框的 `inputProps` 展开在 Transfer 传入的 `value`、`onChange` 之后，传入同名属性会接管搜索框，Transfer 的筛选不再跟随输入。待处理（展开前去掉 `value`、`onChange`；其他框架未核对）。
+- React：`HeaderConfig.type` 实为 `'left' | 'right'` 却声明 string。React、Solid：公开类型 `PaginationProps` 与 Pagination 同名异义。待处理（改名 `TransferPaginationProps`、`side`，需维护者决定）。
+- 保持原样：`draggable` 时忽略 `virtualize`。
+- React、Solid：搜索框的 `inputProps` 展开在 Transfer 传入的 `value`、`onChange` 之后，传入同名属性会接管搜索框，Transfer 的筛选不再跟随输入。待处理（展开前去掉 `value`、`onChange`；Svelte 的类型已排除 `value`、`onChange` 且 `onChange` 写在展开之后，不受影响；Vue 未核对）。
 - blur 按 `focusout` 的 `relatedTarget` 是否在根元素内判断：点击 Transfer 内不可聚焦的区域时焦点落到 body，也会触发一次 blur（窗口失焦同样触发，与 TreeSelect 一致）。已知限制（升级条件：需要区分时在根元素上记录内部 mousedown，跳过随后的那次 focusout）。
 
 ### 跨组件命名
 
 - 公开类型小写开头或拼错（`customRequestArgs`、`optionRenderProps`、`virtualListProps`、`showToolTipProps`、`weekStartsOnEnum`、`stepSizeMapIconSize`、`DropDownMenuItemItem`）。待处理（涉及公开 API，需维护者决定）。
-- `_base/base-component.ts` 只剩类型，文件名过时；`button-group.tsx`、`layout/index.tsx`、`tooltip/index.tsx` 未用 `_base/element-type.ts`。待处理（改名 `base-props.ts`，收口）。
+- React：`_base/base-component.ts` 只剩类型，文件名过时；`button-group.tsx`、`layout/index.tsx`、`tooltip/index.tsx` 未用 `_base/element-type.ts`。待处理（改名 `base-props.ts`，收口）。
 
 ## 2 已知未处理的类型与工具链问题
 
 - json-viewer-core：`View.#customRenderRule` 类型漏 `| null`。待处理。
 - coding-style 导出规则的例外：Svelte `button/context.ts` 在末尾汇总导出（在解构行加 `export` 会连带导出 `getEnclosingGroup`）；React、Solid 的 `typography/copyable.tsx` 同时有具名导出和默认导出，默认导出写不到声明处。待决（是否放宽规则或调整导出）。
-- 写成 `p: T | undefined` 的属性没有改成 `p?: T`：Svelte 的 `RadioChangeEventTarget.value`（foundation 的 `RadioChangeEvent` 要求必填）与 `ImagePreviewTitleSnippetProps.title`、`SideBarMainContentSnippetProps.activeKey`、`CascaderTriggerSnippetProps.value`（组件总会传出这个键；改可选后，测试夹具里手写成必填的参数类型报错，夹具改为导入导出的类型即可，但使用方同样手写的代码也会报错）；React `tooltip.test.tsx` 的 `vi.fn<(name: string, layer: symbol | undefined) => void>()`（改可选后 `new Map(mock.calls)` 推断不出键值对）；Vue checkbox、radio 的接口（测试用 `toEqualTypeOf` 锁定字面量）、`semi-ui-vue/src/form/hooks.ts` 的返回类型、`semi-ui-svelte/src/table/context.ts` 的一处。待决（coding-style 是否为「值总存在」的属性开例外）。
-- 依赖替换未做：semi-ui-react 与 semi-ui-solid `table/utils.ts` 的 compat `merge`（三参数，source 可为 undefined）；`tree/tree-util.ts` 与 React `tabs/tab-bar.tsx` 的 compat `pick`（会读继承属性）；Solid `navigation/item.tsx` 的 `isPlainObject`（只认纯对象，换成 foundation 的 `isObject` 会扩大 `cloneDeep` 的范围）；Svelte 测试里对 `$state` 代理的 JSON 深拷贝（`structuredClone` 会抛错）。待决。
+- 写成 `p: T | undefined` 的属性没有改成 `p?: T`：Svelte 的 `RadioChangeEventTarget.value`（foundation 的 `RadioChangeEvent` 要求必填）与 `ImagePreviewTitleSnippetProps.title`、`SideBarMainContentSnippetProps.activeKey`、`CascaderTriggerSnippetProps.value`（组件总会传出这个键；改可选后，测试夹具里手写成必填的参数类型报错，夹具改为导入导出的类型即可，但使用方同样手写的代码也会报错）；React `tooltip.test.tsx` 的 `vi.fn<(name: string, layer: symbol | undefined) => void>()`（改可选后 `new Map(mock.calls)` 推断不出键值对）；Vue checkbox、radio 的接口（测试用 `toEqualTypeOf` 锁定字面量）、`semi-ui-svelte/src/table/context.ts` 的一处。待决（coding-style 是否为「值总存在」的属性开例外）。
+- 依赖替换未做：semi-ui-react 与 semi-ui-solid `table/utils.ts` 的 compat `merge`（三参数，source 可为 undefined）；semi-foundation 的 `tree/tree-util.ts`、`tree/foundation.ts` 与 semi-ui-react `tabs/tab-bar.tsx` 的 compat `pick`（会读继承属性、解析深路径）；Solid `navigation/item.tsx` 的 `isPlainObject`（只认纯对象，换成 foundation 的 `isObject` 会扩大 `cloneDeep` 的范围）；Svelte 测试里对 `$state` 代理的 JSON 深拷贝（`structuredClone` 会抛错）。待决。
 - Svelte：`drag-move/drag-move.ts` 的 `options` 在 attachment 闭包内解构，移到形参会提前读取、改变响应式追踪。保持原样。
 - semi-animation 的 `styles/viewTransition.scss` 不是 kebab-case，但它是发布路径 `@fibrae/semi-animation/styles/viewTransition.css`。待决（改名属公开路径变化）。
 - 测试里 `fireEvent.keyDown` 约 20 处同时传 `keyCode`。待决（是否全部删去）。
 - semi-ui-react：多数回调 prop 仍以 `noop` 为默认值，显式传 `null` 时抛 TypeError。待处理（逐个改为 `?.()`）。
-- Table：`VirtualizedOnScrollArgs.scrollOffset` 仍声明可选。待决（改必填属公开类型收紧）。
+- React、Solid 的 Table：`VirtualizedOnScrollArgs.scrollOffset` 仍声明可选。待决（改必填属公开类型收紧）。
 - 公开 Props 类型含内部属性：TextArea 的 `disabledEnterStartNewLine`，Input 的 `showClearIgnoreDisabled`、`onlyBorder`（InputNumber 经继承带上），OverflowList 的 `overflowRenderDirection`，ScrollItem 与 Layout 基础组件的 `type`，各框架范围不一；React 另有 Breadcrumb.Item 的 `active`、`shouldRenderSeparator`、`route`，TabItem 的 `handleKeyDown`、`deleteTabItem`、`selected`，Option 的 `current`，FormErrorMessage 的 `errorMessageId`、`helpTextId`、`isInInputGroup`，以及多数组件的 `prefixCls`，生成的 API 表如实列出并注明内部用途。待处理（拆出内部 Props 类型）。
 - React：Cascader、Image、UserGuide 的 Props 类型声明 `children` 但不渲染，API 表已注明。待处理（从公开类型去掉）。
 - React：`hydrateFromServer` 渲染服务端 HTML 时只移走 `document`，`window` 与其他 jsdom 全局仍在，按 `typeof window` 分支的依赖在服务端与客户端都走浏览器分支，由此造成的 hydration 不一致在 `hydration.test.tsx` 中发现不了。UNKNOWN（影响：这类不一致只由 check-pages 的 SSR 验收覆盖）。解决条件：hydration 用例改为读取 `react-ssr` 项目在 Node 中产出的 HTML。
@@ -657,7 +644,6 @@
 - `vp pack` 的 d.ts 打包丢失经组件模块再导出的类型（semi-ai-react、semi-ai-vue）。已知限制（升级条件：打包工具修复）。
 - Chat、AIChatDialogue：`escapeHtmlInMarkdown` 不识别 4 空格缩进代码块。已知限制（升级条件：改为 remark 插件）。
 - `pnpm build:icon` 不幂等：生成器输出单行对象，已提交的 semi-icons-core 数据文件是多行，两种写法都能通过 `vp fmt --check`，重新生成产生约 357 个纯格式差异。待处理（让生成器输出与已提交文件一致，或按生成器输出重新提交一次）。
-- semi-ui-vue 的 CodeHighlight、MarkdownRender 测试直接导入 `shiki/langs/*`、`shiki/themes/*`，但 semi-ui-vue 没有声明 shiki 依赖：全新安装后这 3 个测试文件与 `vitest/vue/tsconfig.vue.json` 的类型检查失败，现有工作区靠残留的 `packages/semi-ui-vue/node_modules/shiki` 链接才通过。待处理（在 semi-ui-vue 的 devDependencies 声明 shiki）。
 - Solid：webpack、rspack 插件的规则不覆盖 Solid 包，`packages/semi-webpack/src/semi-webpack-plugin.ts` 的 `SEMI_DIST_JS_RE`、`SEMI_DIST_SCSS_RE` 与 `packages/semi-rspack/src/rule.ts` 的三个 `test` 只列了 react 与 vue 的包；Solid 包在 webpack、rspack 下使用插件时 `prefixCls` 不生效（实测 `prefixCls: 'my'` 时按钮背景为 `rgb(239, 239, 239)`）。待处理（正则补 `ui-solid`、`ai-solid`、`icons-solid` 等 Solid 包，并加带 `prefixCls` 的 `solid-webpack`、`solid-rspack` 宿主变体守护；入门页 Solid 块的说明随之更新）。
 - Solid：SolidStart 2.1.0（solid-js 1.9.17、@solidjs/router 1.0.0、nitro 3.0.260903-beta、vite 8.3.5）中，root 用 `ErrorBoundary` 包 `Suspense` 时，模块导入阶段就抛错的路由（顶层 `throw`）在 dev 与 prod 下都返回 200 且响应流永不结束，只收到约 1.2 KB 的 shell，服务端日志无该错误，页面请求挂起而不是显示错误边界；渲染时抛错的路由能正常结束并输出 fallback。不含 Semi 的最小复现（只依赖上述五个包）证实与 Semi 无关；症状同 https://github.com/solidjs/solid-start/issues/2260（该问题已随 solid-js 1.9.15 的 lazy 拒绝修复关闭，导入期抛错仍复现）。已知限制（上游问题；升级条件：上游修复后升级 `@solidjs/start` 并删去本条）。
 - 浏览器测试输出 `ResizeObserver loop completed with undelivered notifications`：Vue、Solid 的 Select，Vue、Solid、Svelte 的 OverflowList，Solid 的 TextArea autosize 回退，semi-ai-react 的 AIChatInput。保持原样（观察回调改变了布局时浏览器按规范把剩余通知推迟到下一帧并报告此错误，通知不丢、结果不变；不屏蔽，出现在别的组件或伴随断言失败时再排查）。
@@ -672,8 +658,8 @@
 - `packages/semi-foundation/src/locale/source/bn_IN.ts`：混用预组合 U+09DF（27 处）与分解形式 U+09AF U+09BC（44 处）。待母语者复核（统一为一种 Unicode 形式）。
 - `packages/semi-foundation/src/locale/source/ar.ts`：`Sidebar.defaultMcpInfo` 译文为机译。待母语者复核。
 - `website/scripts/gen-vue-api.ts`：经符号链接路径运行时脚本直接以 0 退出。待处理（改为 `import.meta.main`）。
-- Table 页「固定表头」一节的示意图只有 React 实现，Vue、Solid 页显示的也是 React 渲染。已知限制（升级条件：各框架各写一份示意）。
-- Vue API 片段的默认值列对经 `semiDefault` 读取的属性显示整段表达式（如 `semiDefault("TreeSelect", "treeNodeLabelProp", "label")`，85 个片段共 603 处），看不出实际值。待决（是否只显示第三个参数）。
+- Table 页「固定表头」一节的示意图只有 React 实现，只在 React 页显示，Vue、Solid、Svelte 页没有示意图。已知限制（升级条件：各框架各写一份示意）。
+- Vue API 片段的默认值列对经 `semiDefault` 读取的属性显示整段表达式（如 `semiDefault("TreeSelect", "treeNodeLabelProp", "label")`，85 个片段共 609 处），看不出实际值。待决（是否只显示第三个参数）。
 - `theme-tokens.browser.test.tsx`：用例标题「尺寸 token 声明在 body 上」已过时。待处理（只改标题）。
-- `website/content/ai` 的 AIChatDialogue demo：`roleConfig`、`customRender` 在组件内定义使 memo 失效。待处理（提到模块级或 `useMemo`）。
+- React：`website/content/ai/ai-component/demos/chat-with-dialogue.react.tsx` 的 `customRender` 在组件内定义使 memo 失效。待处理（提到模块级或 `useMemo`）。
 - 保持原样：主题 token 对比度低于 4.5:1（2026-10-13 决定不调整）。2026-10-25 评估过 DSM 的 `@semi-bot/semi-theme-a11y` 色板：React 中文页的 color-contrast 问题从 73 个 demo 增至 237 个（其 blue-5 `#1273ea` 在 Button light 的 `#f5f5f5` 填充上只有 4.12:1），warning 与黄色系仍不达标，不采用。
