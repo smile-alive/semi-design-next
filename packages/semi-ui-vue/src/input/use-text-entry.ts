@@ -4,7 +4,7 @@ import type { ModelModifiers } from './interface';
 import { keepsTypedValue } from './model-modifiers';
 
 interface TextEntry {
-    handleCompositionEnd(event: CompositionEvent): void;
+    handleCompositionEnd(event: CompositionEvent): boolean;
     handleFocus(event: FocusEvent): void;
     handleBlur(event: FocusEvent): void;
 }
@@ -55,8 +55,10 @@ export default function useTextEntry({ element, draft, props, shown, foundation,
     };
 
     const handleCompositionEnd = (event: CompositionEvent) => {
-        foundation.handleCompositionEnd(event);
-        void restoreShownValue();
+        // false: Firefox reports the committed text in the input event after this one, which restores instead
+        if (foundation.handleCompositionEnd(event)) {
+            void restoreShownValue();
+        }
     };
 
     // Native change fires on blur with an edit and on Enter, before focusout.

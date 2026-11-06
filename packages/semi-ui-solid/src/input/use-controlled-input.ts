@@ -2,10 +2,9 @@ import type { Accessor } from 'solid-js';
 
 interface TextEntry {
     handleChange(value: string, e: unknown): void;
-    handleCompositionEnd(e: unknown): void;
+    handleCompositionEnd(e: unknown): boolean;
     handleFocus(e: unknown): void;
     handleBlur(e: unknown): void;
-    getProp(key: 'composition'): unknown;
 }
 
 interface Options {
@@ -30,11 +29,8 @@ export default function useControlledInput({ element, text, foundation, state, a
         }
     };
 
-    let reported: string | undefined;
-
     /** The host notifies its own input listeners before this */
     const handleInput = (e: InputEvent & { currentTarget: HTMLInputElement | HTMLTextAreaElement }) => {
-        reported = e.currentTarget.value;
         try {
             foundation.handleChange(e.currentTarget.value, e);
         } finally {
@@ -46,11 +42,8 @@ export default function useControlledInput({ element, text, foundation, state, a
     };
 
     const handleCompositionEnd = (e: CompositionEvent) => {
-        foundation.handleCompositionEnd(e);
-        // Firefox fires compositionend before the input event that reports the committed text; writing back now would
-        // replace it with the stale controlled text, so that input event writes back instead. `composition` reports
-        // the text here
-        if (foundation.getProp('composition') || element()?.value === reported) {
+        // false: Firefox reports the committed text in the input event after this one, which writes back instead
+        if (foundation.handleCompositionEnd(e)) {
             syncValue();
         }
     };
