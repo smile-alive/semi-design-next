@@ -1,5 +1,16 @@
 # @fibrae/semi-foundation
 
+## 0.4.0
+
+### Minor Changes
+
+- 7cd2518: Form 新增 `schema` 属性，接受 Zod、Valibot、ArkType 等实现了 Standard Schema 的校验对象，与字段的 `validator`、`rules` 及 Form 的 `validator` 互斥；字段首次挂载时显示已有的错误，整表 `reset()` 清空全部错误
+- d1cdb20: Form 校验升级（破坏性）：错误一律为 `string[]`；删除 async-validator，`rules` 由自带规则引擎执行，默认文案来自语言包；字段 `rules` 与 `validator` 互斥，`validator` 可传 Standard Schema；`keepState` 默认开启并支持 ArrayField；有 `schema` 时必填星号只看 `label.required`；`FormApi` 区分输入与输出类型。新增 `schemaDebounce`、ArrayField 的 `move`、SchemaField 与 SchemaForm
+
+### Patch Changes
+
+- @fibrae/semi-json-viewer-core@0.4.0
+
 ## 0.3.1
 
 ### Patch Changes

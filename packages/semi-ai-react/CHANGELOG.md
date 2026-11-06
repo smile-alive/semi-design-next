@@ -1,5 +1,18 @@
 # @fibrae/semi-ai-react
 
+## 0.4.0
+
+### Patch Changes
+
+- Updated dependencies [cc2514e]
+- Updated dependencies [7cd2518]
+- Updated dependencies [d1cdb20]
+    - @fibrae/semi-ui-react@0.4.0
+    - @fibrae/semi-foundation@0.4.0
+    - @fibrae/semi-ai-foundation@0.4.0
+    - @fibrae/semi-icons-react@0.4.0
+    - @fibrae/semi-illustrations-react@0.4.0
+
 ## 0.3.1
 
 ### Patch Changes
