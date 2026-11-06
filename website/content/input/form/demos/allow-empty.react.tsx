@@ -1,4 +1,6 @@
-import { Form } from '@fibrae/semi-ui-react';
+import { Form, FormSelect } from '@fibrae/semi-ui-react';
+
+const initValues = { keep: 'admin', drop: 'admin' };
 
 const roleOptions = [
     { label: '管理员', value: 'admin' },
@@ -7,12 +9,12 @@ const roleOptions = [
 
 export default function FormDemo() {
     return (
-        <Form initValues={{ keep: 'admin', drop: 'admin' }}>
-            {({ values }) => (
+        <Form initValues={initValues}>
+            {(form) => (
                 <>
-                    <Form.Select field="keep" label="设置了 allowEmpty" allowEmpty showClear optionList={roleOptions} style={{ width: 176 }} />
-                    <Form.Select field="drop" label="未设置" showClear optionList={roleOptions} style={{ width: 176 }} />
-                    <code>{JSON.stringify(Object.keys(values))}</code>
+                    <FormSelect field="keep" label="设置了 allowEmpty" allowEmpty showClear optionList={roleOptions} style={{ width: 176 }} />
+                    <FormSelect field="drop" label="未设置" showClear optionList={roleOptions} style={{ width: 176 }} />
+                    <code>{JSON.stringify(Object.keys(form.values))}</code>
                 </>
             )}
         </Form>

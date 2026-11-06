@@ -1,4 +1,4 @@
-import { withFormApi, Form, Button, type FormApi } from '@fibrae/semi-ui-react';
+import { withFormApi, Form, FormInput, Button, type FormApi } from '@fibrae/semi-ui-react';
 
 function SomeComponetInsideForm(props: { formApi: FormApi }) {
     return (
@@ -16,9 +16,9 @@ const ComponentWithFormApi = withFormApi(SomeComponetInsideForm);
 export default function FormDemo() {
     return (
         <Form>
-            <Form.Input field="name" initValue="semi" />
-            <Form.Input field="familyName" initValue="design" />
-            <Button htmlType="submit" style={{ marginRight: 4 }}>
+            <FormInput field="name" initValue="semi" />
+            <FormInput field="familyName" initValue="design" />
+            <Button htmlType="submit" style={{ marginInlineEnd: 4 }}>
                 submit
             </Button>
             <ComponentWithFormApi />

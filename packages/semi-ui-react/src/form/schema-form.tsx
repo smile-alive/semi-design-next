@@ -5,7 +5,9 @@ import Form from './base-form';
 import type { AllFormProps } from './interface';
 import SchemaField, { type SchemaFieldProps } from './schema-field';
 
-export interface SchemaFormOwnProps extends React.PropsWithChildren<Pick<SchemaFieldProps, 'jsonSchema' | 'widgets' | 'renderField'>> {}
+export interface SchemaFormOwnProps extends Pick<SchemaFieldProps, 'jsonSchema' | 'widgets' | 'renderField'> {
+    children?: React.ReactNode;
+}
 
 /** The Form props, except the ones that would replace the fields (`render`, `component`, a children function) */
 export type SchemaFormProps<Values extends Record<string, any> = any, Output = Values> = Omit<AllFormProps<Values, Output>, 'children' | 'render' | 'component'> & SchemaFormOwnProps & ExclusiveFormValidation;

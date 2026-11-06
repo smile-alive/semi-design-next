@@ -1,16 +1,16 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { Form } from '@fibrae/semi-ui-react';
+import { Form, FormInput, FormInputGroup } from '@fibrae/semi-ui-react';
 
 function renderFormGroup(props: Record<string, Record<string, unknown>> = {}) {
     let { inputGroupProps = {}, fieldAProps = {}, fieldBProps = {}, formProps = {} } = props;
 
     return render(
         <Form {...formProps}>
-            <Form.InputGroup {...inputGroupProps}>
-                <Form.Input field="a" {...fieldAProps} />
-                <Form.Input field="b" {...fieldBProps} />
-            </Form.InputGroup>
+            <FormInputGroup {...inputGroupProps}>
+                <FormInput field="a" {...fieldAProps} />
+                <FormInput field="b" {...fieldBProps} />
+            </FormInputGroup>
         </Form>
     );
 }
@@ -108,9 +108,9 @@ describe('Form-group', () => {
     it('Form 外渲染时警告且不渲染', () => {
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
         const { container } = render(
-            <Form.InputGroup label="G">
-                <Form.Input field="a" />
-            </Form.InputGroup>
+            <FormInputGroup label="G">
+                <FormInput field="a" />
+            </FormInputGroup>
         );
         expect(container).toBeEmptyDOMElement();
         expect(warn).toHaveBeenCalledWith(expect.stringContaining('[Semi Form]'));
@@ -130,9 +130,9 @@ describe('Form-group', () => {
                 <span id="own-name">Own</span>
                 <span id="own-desc">Note</span>
                 <Form>
-                    <Form.InputGroup aria-describedby="own-desc" aria-errormessage="own-desc" aria-labelledby="own-name" extraText="hint" label="Full name">
-                        <Form.Input field="a" trigger="mount" validator={() => 'bad'} />
-                    </Form.InputGroup>
+                    <FormInputGroup aria-describedby="own-desc" aria-errormessage="own-desc" aria-labelledby="own-name" extraText="hint" label="Full name">
+                        <FormInput field="a" trigger="mount" validator={() => 'bad'} />
+                    </FormInputGroup>
                 </Form>
             </>
         );
@@ -149,9 +149,9 @@ describe('Form-group', () => {
                 <span id="own-name">Own</span>
                 <span id="phone-hint">Hint</span>
                 <Form>
-                    <Form.InputGroup label="手机">
-                        <Form.Input aria-describedby="phone-hint" aria-labelledby="own-name" field="phone" />
-                    </Form.InputGroup>
+                    <FormInputGroup label="手机">
+                        <FormInput aria-describedby="phone-hint" aria-labelledby="own-name" field="phone" />
+                    </FormInputGroup>
                 </Form>
             </>
         );
@@ -180,12 +180,12 @@ describe('Form-group', () => {
     it('Fragment 包住的字段照常挂载', () => {
         render(
             <Form>
-                <Form.InputGroup>
+                <FormInputGroup>
                     <>
-                        <Form.Input field="a" />
-                        <Form.Input field="b" />
+                        <FormInput field="a" />
+                        <FormInput field="b" />
                     </>
-                </Form.InputGroup>
+                </FormInputGroup>
             </Form>
         );
         expect(screen.getAllByRole('textbox')).toHaveLength(2);

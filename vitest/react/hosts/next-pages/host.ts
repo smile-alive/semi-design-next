@@ -108,7 +108,7 @@ export default function App({ Component, pageProps }: AppProps) {
 }
 `,
         'pages/index.tsx': `import { useState } from 'react';
-import { Button, Checkbox, ConfigProvider, DatePicker, Form, Input, Modal, Select, Table, Tabs, Toast, Tooltip, Typography } from '@fibrae/semi-ui-react';
+import { Button, Checkbox, ConfigProvider, DatePicker, Form, FormCheckbox, FormInput, FormSelect, Input, Modal, Select, Table, Tabs, Toast, Tooltip, Typography } from '@fibrae/semi-ui-react';
 import { IconHome } from '@fibrae/semi-icons-react';
 import en_US from '@fibrae/semi-ui-react/locale/source/en_US';
 
@@ -162,9 +162,9 @@ export default function Home() {
                 <Table columns={columns} dataSource={data} pagination={false} />
                 <DatePicker value={new Date(2026, 9, 1)} />
                 <Form>
-                    <Form.Input field="name" label="Name" initValue="form-name" />
-                    <Form.Select field="pick" label="Pick" optionList={options} style={{ width: 200 }} />
-                    <Form.Checkbox field="agree">Agree</Form.Checkbox>
+                    <FormInput field="name" label="Name" initValue="form-name" />
+                    <FormSelect field="pick" label="Pick" optionList={options} style={{ width: 200 }} />
+                    <FormCheckbox field="agree">Agree</FormCheckbox>
                 </Form>
                 <Checkbox>Standalone checkbox</Checkbox>
                 <Tabs

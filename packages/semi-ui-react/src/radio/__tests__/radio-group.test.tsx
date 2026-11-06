@@ -3,7 +3,7 @@ import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { Form, Popover } from '@fibrae/semi-ui-react';
+import { Form, FormRadioGroup, Popover } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import { RadioWithGroup as Radio, type RadioChangeEvent, type RadioGroupProps } from '../index';
 import RadioGroup, { type OptionItem } from '../radio-group';
@@ -510,14 +510,14 @@ describe('RadioGroup', () => {
         expect(root).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
-    it('Form.RadioGroup 的 reset 清空选中项', async () => {
+    it('FormRadioGroup 的 reset 清空选中项', async () => {
         let formApi;
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.RadioGroup field="g" initValue="A">
+                <FormRadioGroup field="g" initValue="A">
                     <Radio value="A">A</Radio>
                     <Radio value="B">B</Radio>
-                </Form.RadioGroup>
+                </FormRadioGroup>
             </Form>
         );
         expect(getRadio('A')).toBeChecked();
@@ -559,14 +559,14 @@ describe('RadioGroup', () => {
         expect(onClick).toHaveBeenCalled();
     });
 
-    it('Form.RadioGroup 在 blur 时校验，且不把 Form 属性泄漏到 DOM', async () => {
+    it('FormRadioGroup 在 blur 时校验，且不把 Form 属性泄漏到 DOM', async () => {
         const validate = vi.fn<() => string>(() => '');
         const { container } = render(
             <Form>
-                <Form.RadioGroup field="g" trigger="blur" validator={validate}>
+                <FormRadioGroup field="g" trigger="blur" validator={validate}>
                     <Radio value="A">A</Radio>
                     <Radio value="B">B</Radio>
-                </Form.RadioGroup>
+                </FormRadioGroup>
             </Form>
         );
         act(() => getRadio('A').focus());
@@ -579,16 +579,16 @@ describe('RadioGroup', () => {
         expect(root).not.toHaveAttribute('validateStatus');
     });
 
-    it('Form.RadioGroup 把 required 与错误信息放在 radiogroup 上，而非各个 radio 上', async () => {
+    it('FormRadioGroup 把 required 与错误信息放在 radiogroup 上，而非各个 radio 上', async () => {
         let formApi;
-        // `required` is not a declared Form.RadioGroup prop; the test checks it still reaches the radiogroup role
+        // `required` is not a declared FormRadioGroup prop; the test checks it still reaches the radiogroup role
         const requiredProp = { required: true };
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.RadioGroup {...requiredProp} field="g" label="Pick" rules={[{ required: true, message: 'pick one' }]}>
+                <FormRadioGroup {...requiredProp} field="g" label="Pick" rules={[{ required: true, message: 'pick one' }]}>
                     <Radio value="A">A</Radio>
                     <Radio value="B">B</Radio>
-                </Form.RadioGroup>
+                </FormRadioGroup>
             </Form>
         );
         const group = screen.getByRole('radiogroup');

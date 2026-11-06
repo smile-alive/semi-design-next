@@ -4,7 +4,7 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { Form, Select, Button } from '@fibrae/semi-ui-react';
+import { Form, FormInput, FormSelect, Button } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import type { FormApi, FormHandle } from '@fibrae/semi-ui-react/form/interface';
 import { sleep } from '@test/utils/react';
@@ -14,16 +14,15 @@ function renderForm(props) {
     return { ...result, rerender: (nextProps) => result.rerender(<Form {...nextProps} />) };
 }
 
-const Option = Select.Option;
-const FormSelect = (
-    <Form.Select style={{ width: 200 }} field="business" label="business">
-        <Option value="abc">Abc</Option>
-        <Option value="hotsoon">Hotsoon</Option>
-        <Option value="topbuzz">TopBuzz</Option>
-    </Form.Select>
+const selectField = (
+    <FormSelect style={{ width: 200 }} field="business" label="business">
+        <FormSelect.Option value="abc">Abc</FormSelect.Option>
+        <FormSelect.Option value="hotsoon">Hotsoon</FormSelect.Option>
+        <FormSelect.Option value="topbuzz">TopBuzz</FormSelect.Option>
+    </FormSelect>
 );
 
-const FormInput = <Form.Input field="name" />;
+const inputField = <FormInput field="name" />;
 
 const FieldCls = `.${BASE_CLASS_PREFIX}-form-field`;
 const labelSelector = `.${BASE_CLASS_PREFIX}-form-field-label`;
@@ -31,8 +30,8 @@ const getInput = (scope = '') => document.querySelector(`${scope} .${BASE_CLASS_
 
 const fields = (
     <>
-        {FormInput}
-        {FormSelect}
+        {inputField}
+        {selectField}
     </>
 );
 
@@ -53,7 +52,7 @@ describe('Form-baseForm', () => {
     });
 
     it('labelPosition 决定字段的标签位置', () => {
-        const { container } = renderForm({ labelPosition: 'left', children: FormInput });
+        const { container } = renderForm({ labelPosition: 'left', children: inputField });
         expect(container.querySelector(FieldCls)).toHaveAttribute('x-label-pos', 'left');
     });
 
@@ -74,8 +73,8 @@ describe('Form-baseForm', () => {
     it('通过 component 声明字段', () => {
         const fields = () => (
             <>
-                <Form.Input fieldClassName="role" field="Role" />
-                <Form.Input fieldClassName="userName" field="UserName" />
+                <FormInput fieldClassName="role" field="Role" />
+                <FormInput fieldClassName="userName" field="UserName" />
             </>
         );
         const { container } = renderForm({ component: fields });
@@ -86,13 +85,13 @@ describe('Form-baseForm', () => {
     it('通过 render 声明字段', () => {
         const render = ({ formState }) => (
             <>
-                <Form.Select fieldClassName="role" style={{ width: 120 }} field="Role" label="角色">
-                    <Option value="admin">管理员</Option>
-                    <Option value="user">普通用户</Option>
-                    <Option value="guest">访客</Option>
-                </Form.Select>
-                <Form.Input fieldClassName="userName" field="UserName" label="用户名" />
-                <Form.Input fieldClassName="password" field="Password" label="密码" />
+                <FormSelect fieldClassName="role" style={{ width: 120 }} field="Role" label="角色">
+                    <FormSelect.Option value="admin">管理员</FormSelect.Option>
+                    <FormSelect.Option value="user">普通用户</FormSelect.Option>
+                    <FormSelect.Option value="guest">访客</FormSelect.Option>
+                </FormSelect>
+                <FormInput fieldClassName="userName" field="UserName" label="用户名" />
+                <FormInput fieldClassName="password" field="Password" label="密码" />
                 <code style={{ marginTop: 30 }}>{JSON.stringify(formState)}</code>
             </>
         );
@@ -105,7 +104,7 @@ describe('Form-baseForm', () => {
     });
 
     it('通过 children 声明字段', () => {
-        const { container } = renderForm({ children: <Form.Input fieldClassName="name" field="name" /> });
+        const { container } = renderForm({ children: <FormInput fieldClassName="name" field="name" /> });
         expect(container.querySelector('.name')).not.toBeNull();
     });
 
@@ -114,7 +113,7 @@ describe('Form-baseForm', () => {
         const getFormApi = vi.fn<(formApi: FormApi) => void>((formApi) => {
             api = formApi;
         });
-        renderForm({ getFormApi, children: FormInput });
+        renderForm({ getFormApi, children: inputField });
         expect(getFormApi).toHaveBeenCalledTimes(1);
         const formApis = ['setValue', 'setValues', 'setError', 'setTouched', 'submitForm', 'reset', 'getInitValue', 'getFieldExist', 'getFormState', 'getTouched', 'getValue', 'getError', 'validate'];
         for (const apiName of formApis) {
@@ -132,7 +131,7 @@ describe('Form-baseForm', () => {
             onSubmit,
             children: (
                 <>
-                    <Form.Input field="input" />
+                    <FormInput field="input" />
                 </>
             ),
         });
@@ -148,7 +147,7 @@ describe('Form-baseForm', () => {
             onSubmit,
             children: (
                 <>
-                    <Form.Input field="input" />
+                    <FormInput field="input" />
                 </>
             ),
         });
@@ -166,7 +165,7 @@ describe('Form-baseForm', () => {
             onSubmit,
             children: (
                 <>
-                    <Form.Input
+                    <FormInput
                         field="UserName"
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
@@ -174,7 +173,7 @@ describe('Form-baseForm', () => {
                             }
                         }}
                     />
-                    <Form.Input field="Password" />
+                    <FormInput field="Password" />
                     <Button htmlType="submit">submit</Button>
                 </>
             ),
@@ -205,8 +204,8 @@ describe('Form-baseForm', () => {
             onSubmitFail,
             children: (
                 <>
-                    <Form.Input field="name" validator={validateName} />
-                    <Form.Input field="name2" validator={validateName} />
+                    <FormInput field="name" validator={validateName} />
+                    <FormInput field="name2" validator={validateName} />
                 </>
             ),
         });
@@ -225,7 +224,7 @@ describe('Form-baseForm', () => {
         const onReset = vi.fn<(...args: unknown[]) => void>();
         renderForm({
             onReset,
-            children: FormInput,
+            children: inputField,
             getFormApi: (formApi) => {
                 api = formApi;
             },
@@ -268,8 +267,8 @@ describe('Form-baseForm', () => {
             },
             children: (
                 <>
-                    <Form.Input allowEmpty convert={toUndefined} field="kept" />
-                    <Form.Input convert={toUndefined} field="dropped" />
+                    <FormInput allowEmpty convert={toUndefined} field="kept" />
+                    <FormInput convert={toUndefined} field="dropped" />
                 </>
             ),
         });
@@ -291,7 +290,7 @@ describe('Form-baseForm', () => {
             onValueChange,
             children: (
                 <>
-                    <Form.Input field="name" />
+                    <FormInput field="name" />
                 </>
             ),
         });
@@ -345,8 +344,8 @@ describe('Form-baseForm', () => {
             onValueChange,
             children: (
                 <>
-                    <Form.Input className="ab" field="a.b" />
-                    <Form.Input className="arr" field="arr[1]" />
+                    <FormInput className="ab" field="a.b" />
+                    <FormInput className="arr" field="arr[1]" />
                 </>
             ),
         });
@@ -381,8 +380,8 @@ describe('Form-baseForm', () => {
         renderForm({
             children: (
                 <>
-                    <Form.Input className="ab" field="a.b" />
-                    <Form.Input className="arr" field="arr[1]" />
+                    <FormInput className="ab" field="a.b" />
+                    <FormInput className="arr" field="arr[1]" />
                 </>
             ),
             validator: () => ({ a: { b: err } }),
@@ -401,8 +400,8 @@ describe('Form-baseForm', () => {
         renderForm({
             children: (
                 <>
-                    <Form.Input className="ab" field="a.b" />
-                    <Form.Input className="arr" field="arr[1]" />
+                    <FormInput className="ab" field="a.b" />
+                    <FormInput className="arr" field="arr[1]" />
                 </>
             ),
             validator: () => '',
@@ -424,8 +423,8 @@ describe('Form-baseForm', () => {
         renderForm({
             children: (
                 <>
-                    <Form.Input className="ab" field="a.b" />
-                    <Form.Input className="arr" field="arr[1]" />
+                    <FormInput className="ab" field="a.b" />
+                    <FormInput className="arr" field="arr[1]" />
                 </>
             ),
             validator: () => sleep(200).then(() => ({ a: { b: err } })),
@@ -442,8 +441,8 @@ describe('Form-baseForm', () => {
         renderForm({
             children: (
                 <>
-                    <Form.Input className="ab" field="a.b" />
-                    <Form.Input className="arr" field="arr[1]" />
+                    <FormInput className="ab" field="a.b" />
+                    <FormInput className="arr" field="arr[1]" />
                 </>
             ),
             validator: () => sleep(200).then(() => ''),
@@ -466,7 +465,7 @@ describe('Form-baseForm', () => {
             onSubmit,
             onSubmitFail,
             validator: () => ({}),
-            children: <Form.Input field="input" />,
+            children: <FormInput field="input" />,
         });
         fireEvent.submit(container.querySelector('form'));
         await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
@@ -477,7 +476,7 @@ describe('Form-baseForm', () => {
         let formApi = null;
         renderForm({
             validator: () => Promise.resolve({}),
-            children: <Form.Input field="input" />,
+            children: <FormInput field="input" />,
             getFormApi: (api) => {
                 formApi = api;
             },
@@ -493,7 +492,7 @@ describe('Form-baseForm', () => {
             validator: () => {
                 throw error;
             },
-            children: <Form.Input field="input" />,
+            children: <FormInput field="input" />,
             getFormApi: (api) => {
                 formApi = api;
             },
@@ -504,9 +503,9 @@ describe('Form-baseForm', () => {
 
 describe('Form-baseForm 行为', () => {
     it('form 元素默认带 noValidate，可通过 noValidate={false} 关闭', () => {
-        const { container, rerender } = renderForm({ children: FormInput });
+        const { container, rerender } = renderForm({ children: inputField });
         expect(container.querySelector('form')).toHaveAttribute('novalidate');
-        rerender({ noValidate: false, children: FormInput });
+        rerender({ noValidate: false, children: inputField });
         expect(container.querySelector('form')).not.toHaveAttribute('novalidate');
     });
 
@@ -518,7 +517,7 @@ describe('Form-baseForm 行为', () => {
         const ref = createRef<FormHandle>();
         render(
             <Form ref={ref}>
-                <Form.Input field="name" />
+                <FormInput field="name" />
             </Form>
         );
         act(() => ref.current?.formApi.setValue('name', 'semi'));
@@ -544,15 +543,15 @@ describe('Form-baseForm 行为', () => {
 
     it('Form 从 semiGlobal overrideDefaultProps 读取默认值', () => {
         semiGlobal.config.overrideDefaultProps = { Form: { labelPosition: 'left', layout: 'horizontal' } };
-        const { container } = renderForm({ children: FormInput });
+        const { container } = renderForm({ children: inputField });
         expect(container.querySelector(FieldCls)).toHaveAttribute('x-label-pos', 'left');
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-form-horizontal`)).not.toBeNull();
     });
 
     it('字段在同一次渲染中获取到变化后的 Form 属性', () => {
-        const { container, rerender } = renderForm({ children: FormInput });
+        const { container, rerender } = renderForm({ children: inputField });
         expect(getInput()).not.toBeDisabled();
-        rerender({ children: FormInput, disabled: true, labelPosition: 'left' });
+        rerender({ children: inputField, disabled: true, labelPosition: 'left' });
         expect(getInput()).toBeDisabled();
         expect(container.querySelector(FieldCls)).toHaveAttribute('x-label-pos', 'left');
     });
@@ -562,7 +561,7 @@ describe('Form-baseForm 行为', () => {
         renderForm({
             children: (props) => {
                 received = props;
-                return <Form.Input field="name" />;
+                return <FormInput field="name" />;
             },
         });
         fireEvent.change(getInput(), { target: { value: 'semi' } });
@@ -590,7 +589,7 @@ describe('Form-baseForm 行为', () => {
         const onErrorChange = vi.fn<(...args: unknown[]) => void>();
         renderForm({
             onErrorChange,
-            children: <Form.Input field="name" validator={(val) => (val === 'ok' ? '' : 'bad')} />,
+            children: <FormInput field="name" validator={(val) => (val === 'ok' ? '' : 'bad')} />,
         });
         fireEvent.change(getInput(), { target: { value: 'x' } });
         await waitFor(() => expect(onErrorChange).toHaveBeenLastCalledWith({ name: ['bad'] }, { name: ['bad'] }));
@@ -602,8 +601,8 @@ describe('Form-baseForm 行为', () => {
             getFormApi: (api) => (formApi = api),
             children: (
                 <>
-                    <Form.Input field="a" trigger="custom" validator={() => 'a-err'} />
-                    <Form.Input field="b" trigger="mount" validator={() => 'b-err'} />
+                    <FormInput field="a" trigger="custom" validator={() => 'a-err'} />
+                    <FormInput field="b" trigger="mount" validator={() => 'b-err'} />
                 </>
             ),
         });
@@ -625,8 +624,8 @@ describe('Form-baseForm 行为', () => {
             getFormApi: (api) => (formApi = api),
             children: (
                 <>
-                    <Form.Input field="all" rules={rules} />
-                    <Form.Input field="first" rules={rules} stopValidateWithError />
+                    <FormInput field="all" rules={rules} />
+                    <FormInput field="first" rules={rules} stopValidateWithError />
                 </>
             ),
         });
@@ -638,7 +637,7 @@ describe('Form-baseForm 行为', () => {
     it('字段默认保留状态，重新挂载时恢复其值', () => {
         let formApi;
         function Demo({ show }) {
-            return <Form getFormApi={(api) => (formApi = api)}>{show ? <Form.Input field="name" /> : null}</Form>;
+            return <Form getFormApi={(api) => (formApi = api)}>{show ? <FormInput field="name" /> : null}</Form>;
         }
         const { rerender } = render(<Demo show />);
         fireEvent.change(getInput(), { target: { value: 'semi' } });
@@ -653,7 +652,7 @@ describe('Form-baseForm 行为', () => {
         function Demo({ show, formKeep, fieldKeep }: { show: boolean; formKeep?: boolean; fieldKeep?: boolean }) {
             return (
                 <Form getFormApi={(api) => (formApi = api)} keepState={formKeep}>
-                    {show ? <Form.Input field="name" keepState={fieldKeep} /> : null}
+                    {show ? <FormInput field="name" keepState={fieldKeep} /> : null}
                 </Form>
             );
         }
@@ -672,12 +671,12 @@ describe('Form-baseForm 行为', () => {
 
     it('挂载且字段注册完成后调用一次 getFormApi', () => {
         const getFormApi = vi.fn<(api: FormApi) => void>((api) => expect(api.getFieldExist('name')).toBe(true));
-        renderForm({ getFormApi, children: FormInput });
+        renderForm({ getFormApi, children: inputField });
         expect(getFormApi).toHaveBeenCalledTimes(1);
     });
 
     it('服务端渲染时在 form 元素上输出生成的 id', () => {
-        const html = renderToString(<Form>{FormInput}</Form>);
+        const html = renderToString(<Form>{inputField}</Form>);
         const id = /<form[^>]* id="([^"]+)"/.exec(html)?.[1];
         expect(id).toBeTruthy();
         expect(html).toContain(`x-form-id="${id}"`);
@@ -697,7 +696,7 @@ describe('Form-baseForm 行为', () => {
             const [show, setShow] = useState(true);
             return (
                 <Form getFormApi={(api) => (formApi = api)} onValueChange={onValueChange}>
-                    {show ? <Form.Input field="name" initValue="semi" keepState={false} /> : null}
+                    {show ? <FormInput field="name" initValue="semi" keepState={false} /> : null}
                     <Button onClick={() => setShow(false)}>hide</Button>
                 </Form>
             );

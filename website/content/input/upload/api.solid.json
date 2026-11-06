@@ -83,8 +83,8 @@
                 "en-US": "Title area of the file list. A JSX element replaces only the title text and keeps the default clear button. A function replaces the whole title area including the clear button, with `fileList`, `onClear` and `clearText`."
             },
             "fileName": {
-                "zh-CN": "作用与 name 相同，主要在 Form.Upload 中使用，避免与 Field 的 name 冲突。",
-                "en-US": "Same as name. Mainly used in Form.Upload to avoid clashing with the name of Field."
+                "zh-CN": "作用与 name 相同，主要在 FormUpload 中使用，避免与 Field 的 name 冲突。",
+                "en-US": "Same as name. Mainly used in FormUpload to avoid clashing with the name of Field."
             },
             "headers": {
                 "zh-CN": "上传时附带的 headers，或根据文件返回 headers 的函数。",

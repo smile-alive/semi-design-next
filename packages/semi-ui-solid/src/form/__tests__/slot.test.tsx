@@ -1,9 +1,9 @@
 import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { type FormProps, type SlotProps, Form } from '..';
+import { type FormProps, type SlotProps, Form, FormSlot } from '..';
 
-const Slot = Form.Slot;
+const Slot = FormSlot;
 const slotSelector = `.${BASE_CLASS_PREFIX}-form-slot`;
 const labelTextSelector = `.${BASE_CLASS_PREFIX}-form-field-label-text`;
 const emSelector = `.${BASE_CLASS_PREFIX}-form-field-error-message`;

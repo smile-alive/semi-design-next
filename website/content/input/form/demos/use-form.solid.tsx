@@ -1,7 +1,7 @@
-import { Button, Form, FormInput } from '@fibrae/semi-ui-solid';
+import { Button, Form, useForm, FormInput } from '@fibrae/semi-ui-solid';
 
 export default function FormDemo() {
-    const [formApi, formState, formValues] = Form.useForm();
+    const [formApi, formState, formValues] = useForm();
 
     const handleClick = () => {
         formApi.setValue('username', 'semi');
@@ -18,7 +18,7 @@ export default function FormDemo() {
                 <FormInput field="email" label="邮箱" />
             </Form>
 
-            <div style={{ 'margin-top': '16px' }}>
+            <div style={{ 'margin-block-start': '16px' }}>
                 <div>表单值：{JSON.stringify(formValues())}</div>
                 <div>touched 状态：{JSON.stringify(formState().touched)}</div>
             </div>

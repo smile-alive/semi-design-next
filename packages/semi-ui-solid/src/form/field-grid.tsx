@@ -18,7 +18,7 @@ interface FieldGridProps {
 }
 
 /**
- * The label and main content of a field, Form.Slot or Form.InputGroup, in columns when both cols are set. Each layout
+ * The label and main content of a field, FormSlot or FormInputGroup, in columns when both cols are set. Each layout
  * reads `label` and `children` itself, so switching layouts mounts the content again, as the changed tree does in React.
  */
 export default function FieldGrid(props: FieldGridProps) {

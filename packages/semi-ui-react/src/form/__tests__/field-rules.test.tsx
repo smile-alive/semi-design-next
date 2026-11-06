@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { Form } from '@fibrae/semi-ui-react';
+import { Form, FormInput } from '@fibrae/semi-ui-react';
 import type { FormApi } from '../interface';
 
 const rules = [
@@ -13,8 +13,8 @@ describe('Form 字段规则', () => {
     it('rules 含 required 时控件带 aria-required', () => {
         render(
             <Form>
-                <Form.Input field="a" label="A" rules={[{ required: true }]} />
-                <Form.Input field="b" label="B" rules={[{ max: 3 }]} />
+                <FormInput field="a" label="A" rules={[{ required: true }]} />
+                <FormInput field="b" label="B" rules={[{ max: 3 }]} />
             </Form>
         );
         expect(screen.getByRole('textbox', { name: 'A' })).toHaveAttribute('aria-required', 'true');
@@ -25,8 +25,8 @@ describe('Form 字段规则', () => {
         let formApi: FormApi;
         render(
             <Form getFormApi={(api) => (formApi = api)} stopValidateWithError>
-                <Form.Input field="inherit" rules={rules} />
-                <Form.Input field="own" rules={rules} stopValidateWithError={false} />
+                <FormInput field="inherit" rules={rules} />
+                <FormInput field="own" rules={rules} stopValidateWithError={false} />
             </Form>
         );
         await act(() => expect(formApi.validate()).rejects.toBeDefined());
@@ -38,8 +38,8 @@ describe('Form 字段规则', () => {
         let formApi: FormApi;
         render(
             <Form getFormApi={(api) => (formApi = api)} trigger="blur">
-                <Form.Input field="inherit" label="Inherit" validator={() => 'inherit-err'} />
-                <Form.Input field="own" label="Own" trigger="change" validator={() => 'own-err'} />
+                <FormInput field="inherit" label="Inherit" validator={() => 'inherit-err'} />
+                <FormInput field="own" label="Own" trigger="change" validator={() => 'own-err'} />
             </Form>
         );
         await act(async () => {
@@ -57,8 +57,8 @@ describe('Form 字段规则', () => {
     it('Form 的 extraTextPosition 是字段的默认值，字段自身的设置优先', () => {
         const { container } = render(
             <Form extraTextPosition="middle">
-                <Form.Input extraText="inherit" field="inherit" />
-                <Form.Input extraText="own" extraTextPosition="bottom" field="own" />
+                <FormInput extraText="inherit" field="inherit" />
+                <FormInput extraText="own" extraTextPosition="bottom" field="own" />
             </Form>
         );
         expect(container.querySelector(`[x-field-id="inherit"] .${BASE_CLASS_PREFIX}-form-field-extra-middle`)).toHaveTextContent('inherit');
@@ -68,7 +68,7 @@ describe('Form 字段规则', () => {
     it('ArrayField 之外字段的 initValue 优先于 Form 的 initValues', () => {
         render(
             <Form initValues={{ name: 'form' }}>
-                <Form.Input field="name" initValue="field" label="Name" />
+                <FormInput field="name" initValue="field" label="Name" />
             </Form>
         );
         expect(screen.getByRole('textbox', { name: 'Name' })).toHaveValue('field');

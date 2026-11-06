@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { render, fireEvent, cleanup } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
-import { Form, ArrayField } from '@fibrae/semi-ui-react';
+import { Form, FormInput, ArrayField } from '@fibrae/semi-ui-react';
 import type { FormApi } from '../interface';
 
 describe('ArrayField 索引插入', () => {
@@ -55,7 +55,7 @@ describe('ArrayField 索引插入', () => {
                             </button>
                             {arrayFields.map(({ field, key, remove }, index) => (
                                 <div key={key} data-testid={`task-${index}`}>
-                                    <Form.Input field={`${field}[name]`} noLabel />
+                                    <FormInput field={`${field}[name]`} noLabel />
                                     <button data-testid={`remove-${index}`} onClick={remove}>
                                         remove
                                     </button>

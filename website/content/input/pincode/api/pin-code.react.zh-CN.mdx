@@ -15,7 +15,7 @@ import ApiType from '#/components/ApiType.astro';
 | ref            | 句柄的引用，通过它调用下方 Methods 中的方法。                                                                             | <ApiType detail={"React.Ref\u003cPinCodeHandle>"}>Type</ApiType>                                             | -          |
 | size           | 输入框大小，可选 `large`、`default` 或 `small`。未设置时使用 Input 的默认尺寸。                                           | `InputProps['size']`                                                                                         | -          |
 | style          | 根元素的样式。                                                                                                            | `React.CSSProperties`                                                                                        | -          |
-| validateStatus | 校验状态，传给每个输入框；`error` 时显示错误样式。`Form.PinCode` 会自动注入。                                             | `InputProps['validateStatus']`                                                                               | -          |
+| validateStatus | 校验状态，传给每个输入框；`error` 时显示错误样式。`FormPinCode` 会自动注入。                                              | `InputProps['validateStatus']`                                                                               | -          |
 | value          | 输入框内容。传入即为受控，需配合 onChange 更新。                                                                          | `string`                                                                                                     | -          |
 
 **Methods**

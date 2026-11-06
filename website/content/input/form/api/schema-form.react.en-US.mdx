@@ -11,7 +11,7 @@ import ApiType from '#/components/ApiType.astro';
 | className | Class name of the form element. | `string` | - |
 | disabled | The disabled state applied to every field. A field's own disabled takes precedence. | `boolean` | - |
 | extraTextPosition | Position of the extraText of every field: `middle` puts it between the label and the control, `bottom` after the control. Defaults to `bottom`. The same property on a field takes precedence. | `'bottom' \| 'middle'` | - |
-| form | The formApi returned by `Form.useForm()`, used to control the form from outside. | <ApiType detail={"ReturnType\u003ctypeof useForm\u003cValues, Output>>[0]"}>Type</ApiType> | - |
+| form | The formApi returned by `useForm()`, used to control the form from outside. | <ApiType detail={"ReturnType\u003ctypeof useForm\u003cValues, Output>>[0]"}>Type</ApiType> | - |
 | getFormApi | Called once the Form has mounted, with the formApi. | <ApiType detail={"(formApi: FormApi\u003cValues, Output>) => void"}>Type</ApiType> | - |
 | id | The id of the form element, also written to `x-form-id`. Generated when omitted. | `string` | - |
 | initValues | Initial values of the form, copied once when the Form is created. | `Values` | - |

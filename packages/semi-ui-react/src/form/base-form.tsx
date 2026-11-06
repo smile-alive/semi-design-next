@@ -13,15 +13,7 @@ import { cloneDeep } from '../_utils/index';
 import Row from '../grid/row';
 import useLocale from '../locale/use-locale';
 import { FormStateContext, FormApiContext, FieldBridgeContext } from './context';
-import ErrorMessage from './error-message';
-import { FormInput, FormInputNumber, FormTextArea, FormSelect, FormCheckboxGroup, FormCheckbox, FormRadioGroup, FormRadio, FormDatePicker, FormSwitch, FormSlider, FormTimePicker, FormTreeSelect, FormCascader, FormTransfer, FormRating, FormAutoComplete, FormUpload, FormTagInput, FormPinCode } from './field';
-import FormInputGroup from './group';
-import useForm from './hooks/use-form';
 import type { BaseFormProps, FormState, FormApi } from './interface';
-import Label from './label';
-import SchemaField from './schema-field';
-import Section from './section';
-import Slot from './slot';
 const prefix = cssClasses.PREFIX;
 
 interface BaseFormState {
@@ -51,7 +43,7 @@ function pickFormProps(props: Record<string, any>, keys?: Array<string>) {
     return Object.fromEntries(keys.map((key) => [key, props[key]]));
 }
 
-function Form<Values extends Record<string, any> = any, Output = Values>(rawProps: BaseFormProps<Values, Output>) {
+export default function Form<Values extends Record<string, any> = any, Output = Values>(rawProps: BaseFormProps<Values, Output>) {
     const props = useDefaultProps('Form', rawProps, defaultProps);
 
     const {
@@ -202,33 +194,3 @@ function Form<Values extends Record<string, any> = any, Output = Values>(rawProp
         </FieldBridgeContext>
     );
 }
-
-export default Object.assign(Form, {
-    Input: FormInput,
-    TextArea: FormTextArea,
-    InputNumber: FormInputNumber,
-    Select: FormSelect,
-    Checkbox: FormCheckbox,
-    CheckboxGroup: FormCheckboxGroup,
-    Radio: FormRadio,
-    RadioGroup: FormRadioGroup,
-    DatePicker: FormDatePicker,
-    TimePicker: FormTimePicker,
-    Switch: FormSwitch,
-    Slider: FormSlider,
-    TreeSelect: FormTreeSelect,
-    Cascader: FormCascader,
-    Transfer: FormTransfer,
-    Rating: FormRating,
-    AutoComplete: FormAutoComplete,
-    Upload: FormUpload,
-    TagInput: FormTagInput,
-    PinCode: FormPinCode,
-    Slot,
-    ErrorMessage,
-    InputGroup: FormInputGroup,
-    Label,
-    Section,
-    SchemaField,
-    useForm,
-});

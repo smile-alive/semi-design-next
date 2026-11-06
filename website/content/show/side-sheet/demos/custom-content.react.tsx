@@ -1,5 +1,12 @@
 import { useState } from 'react';
-import { SideSheet, Form, Button, Typography, Banner } from '@fibrae/semi-ui-react';
+import { SideSheet, Form, FormDatePicker, FormRadio, FormRadioGroup, FormSelect, Button, Typography, Banner } from '@fibrae/semi-ui-react';
+
+const footer = (
+    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button style={{ marginInlineEnd: 8 }}>重置</Button>
+        <Button theme="solid">提交</Button>
+    </div>
+);
 
 export default function SideSheetDemo() {
     const [visible, setVisible] = useState(false);
@@ -13,31 +20,22 @@ export default function SideSheetDemo() {
         setVisible(false);
     };
 
-    const { DatePicker, Select, Radio, RadioGroup } = Form;
-
-    const footer = (
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button style={{ marginRight: 8 }}>重置</Button>
-            <Button theme="solid">提交</Button>
-        </div>
-    );
-
     return (
         <>
             <Button onClick={show}>More Information</Button>
             <SideSheet title="创建资源包" headerStyle={{ borderBottom: '1px solid var(--semi-color-border)' }} bodyStyle={{ borderBottom: '1px solid var(--semi-color-border)' }} visible={visible} footer={footer} closable={false} onCancel={handleCancel}>
                 <Form>
-                    <DatePicker field="date" type="dateTime" initValue={createTime} style={{ width: 272 }} label={{ text: '创建时间', required: true }} />
-                    <RadioGroup field="type" label="目标操作系统" direction="horizontal" initValue="all">
-                        <Radio value="all">全平台</Radio>
-                        <Radio value="ios">iOS</Radio>
-                        <Radio value="android">Android</Radio>
-                        <Radio value="web">Web</Radio>
-                    </RadioGroup>
-                    <RadioGroup field="origin" label="资源包来源" direction="horizontal" initValue="scm">
-                        <Radio value="scm">从SCM上传</Radio>
-                        <Radio value="manual">手动上传</Radio>
-                    </RadioGroup>
+                    <FormDatePicker field="date" type="dateTime" initValue={createTime} style={{ width: 272 }} label={{ text: '创建时间', required: true }} />
+                    <FormRadioGroup field="type" label="目标操作系统" direction="horizontal" initValue="all">
+                        <FormRadio value="all">全平台</FormRadio>
+                        <FormRadio value="ios">iOS</FormRadio>
+                        <FormRadio value="android">Android</FormRadio>
+                        <FormRadio value="web">Web</FormRadio>
+                    </FormRadioGroup>
+                    <FormRadioGroup field="origin" label="资源包来源" direction="horizontal" initValue="scm">
+                        <FormRadio value="scm">从SCM上传</FormRadio>
+                        <FormRadio value="manual">手动上传</FormRadio>
+                    </FormRadioGroup>
                     <Banner
                         fullMode={false}
                         icon={null}
@@ -52,12 +50,12 @@ export default function SideSheetDemo() {
                         }
                     />
                     <br />
-                    <Select field="users" label={{ text: '创建用户', required: true }} style={{ width: 560 }} multiple initValue={['1', '2', '3', '4']}>
-                        <Select.Option value="1">曲晨一</Select.Option>
-                        <Select.Option value="2">夏可曼</Select.Option>
-                        <Select.Option value="3">曲晨三</Select.Option>
-                        <Select.Option value="4">蔡妍</Select.Option>
-                    </Select>
+                    <FormSelect field="users" label={{ text: '创建用户', required: true }} style={{ width: 560 }} multiple initValue={['1', '2', '3', '4']}>
+                        <FormSelect.Option value="1">曲晨一</FormSelect.Option>
+                        <FormSelect.Option value="2">夏可曼</FormSelect.Option>
+                        <FormSelect.Option value="3">曲晨三</FormSelect.Option>
+                        <FormSelect.Option value="4">蔡妍</FormSelect.Option>
+                    </FormSelect>
                 </Form>
             </SideSheet>
         </>

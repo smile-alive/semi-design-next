@@ -8,7 +8,7 @@ import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import SliderFoundation, { type HandleDot } from '@fibrae/semi-foundation/slider/foundation';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import ConfigProvider from '@fibrae/semi-ui-react/config-provider';
-import { Form } from '@fibrae/semi-ui-react/form';
+import { Form, FormSlider } from '@fibrae/semi-ui-react/form';
 import Slider, { type SliderProps } from '..';
 
 const mouse = { pointerId: 1, pointerType: 'mouse' };
@@ -1163,11 +1163,11 @@ describe('Slider', () => {
         expectValues(50);
     });
 
-    it('Form.Slider 写入表单值，重置时恢复为 initValue', async () => {
+    it('FormSlider 写入表单值，重置时恢复为 initValue', async () => {
         let formApi;
         const { container } = render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.Slider field="volume" initValue={30} label="Volume" />
+                <FormSlider field="volume" initValue={30} label="Volume" />
             </Form>
         );
         expectValues(30);
@@ -1261,11 +1261,11 @@ describe('Slider', () => {
         expect(onMouseUp).toHaveBeenCalledTimes(1);
     });
 
-    it('焦点离开两个滑块后，Form.Slider 在 blur 时校验', () => {
+    it('焦点离开两个滑块后，FormSlider 在 blur 时校验', () => {
         const validate = vi.fn<(value: unknown) => string>(() => '');
         render(
             <Form>
-                <Form.Slider field="price" initValue={[20, 60]} range trigger="blur" validator={validate} />
+                <FormSlider field="price" initValue={[20, 60]} range trigger="blur" validator={validate} />
             </Form>
         );
         const [minInput, maxInput] = getInputs();
@@ -1276,11 +1276,11 @@ describe('Slider', () => {
         expect(validate).toHaveBeenCalledTimes(1);
     });
 
-    it('Form.Slider 把 aria 描述和错误状态传给滑块输入框', async () => {
+    it('FormSlider 把 aria 描述和错误状态传给滑块输入框', async () => {
         let formApi;
         const { container } = render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.Slider field="volume" helpText="Pick a volume" rules={[{ required: true }]} />
+                <FormSlider field="volume" helpText="Pick a volume" rules={[{ required: true }]} />
             </Form>
         );
         const hint = screen.getByText('Pick a volume');
@@ -1322,10 +1322,10 @@ describe('Slider', () => {
         expect(maxInput).not.toHaveAttribute('id');
     });
 
-    it('Form.Slider 注入的 id 落在其 label 指向的滑块输入框上', () => {
+    it('FormSlider 注入的 id 落在其 label 指向的滑块输入框上', () => {
         const { container } = render(
             <Form>
-                <Form.Slider field="volume" initValue={30} label="Volume" />
+                <FormSlider field="volume" initValue={30} label="Volume" />
             </Form>
         );
         const label = container.querySelector('label');
@@ -1334,12 +1334,12 @@ describe('Slider', () => {
         expect(query(container, 'wrapper')).not.toHaveAttribute('id');
     });
 
-    it('没有 initValue 的 Form.Slider 重置时回到最小值，且重置不报告变化', async () => {
+    it('没有 initValue 的 FormSlider 重置时回到最小值，且重置不报告变化', async () => {
         let formApi;
         const onAfterChange = vi.fn<OnChange>();
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.Slider min={10} field="volume" onAfterChange={onAfterChange} />
+                <FormSlider min={10} field="volume" onAfterChange={onAfterChange} />
             </Form>
         );
         changeTo(getInput(), 100);
@@ -1454,11 +1454,11 @@ describe('Slider', () => {
         expect([minInput.value, maxInput.value]).toEqual(['40', '40']);
     });
 
-    it('Form.Slider 把 id、name 和 aria-* 放在 label 指向的原生 range 输入框上', async () => {
+    it('FormSlider 把 id、name 和 aria-* 放在 label 指向的原生 range 输入框上', async () => {
         let formApi;
         const { container } = render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.Slider name="volume-field" field="volume" helpText="Pick a volume" label="Volume" rules={[{ required: true }]} />
+                <FormSlider name="volume-field" field="volume" helpText="Pick a volume" label="Volume" rules={[{ required: true }]} />
             </Form>
         );
         const input = container.querySelector('input[type="range"]');

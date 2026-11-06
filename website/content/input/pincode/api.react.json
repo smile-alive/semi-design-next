@@ -47,8 +47,8 @@
                 "en-US": "Style of the root element."
             },
             "validateStatus": {
-                "zh-CN": "校验状态，传给每个输入框；`error` 时显示错误样式。`Form.PinCode` 会自动注入。",
-                "en-US": "Validation status, passed to every input; `error` shows the error style. `Form.PinCode` injects it automatically."
+                "zh-CN": "校验状态，传给每个输入框；`error` 时显示错误样式。`FormPinCode` 会自动注入。",
+                "en-US": "Validation status, passed to every input; `error` shows the error style. `FormPinCode` injects it automatically."
             },
             "value": {
                 "zh-CN": "输入框内容。传入即为受控，需配合 onChange 更新。",

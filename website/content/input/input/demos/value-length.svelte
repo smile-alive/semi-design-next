@@ -33,7 +33,7 @@
     {/if}
     <br />
     <br />
-    <h4 id="input-value-length-min-length">Form.Input + minLength=4</h4>
+    <h4 id="input-value-length-min-length">FormInput + minLength=4</h4>
     <Form layout="horizontal">
         <FormInput aria-labelledby="input-value-length-min-length" field="username" {getValueLength} minlength={4} noLabel style="width: 200px" />
         <Button htmlType="submit" type="primary">提交</Button>

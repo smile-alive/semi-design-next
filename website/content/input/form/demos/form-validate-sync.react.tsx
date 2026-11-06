@@ -1,4 +1,4 @@
-import { Form, Button } from '@fibrae/semi-ui-react';
+import { Form, FormInput, Button } from '@fibrae/semi-ui-react';
 
 interface FormValues {
     name?: string;
@@ -20,10 +20,10 @@ function syncValidate(values: FormValues) {
 export default function FormDemo() {
     return (
         <Form validator={syncValidate} layout="horizontal">
-            <Form.Input field="name" trigger="blur" />
-            <Form.Input field="familyName[0].before" trigger="blur" />
-            <Form.Input field="familyName[0].after" trigger="blur" />
-            <Form.Input field="familyName[1]" trigger="blur" />
+            <FormInput field="name" trigger="blur" />
+            <FormInput field="familyName[0].before" trigger="blur" />
+            <FormInput field="familyName[0].after" trigger="blur" />
+            <FormInput field="familyName[1]" trigger="blur" />
             <div style={{ display: 'flex', alignItems: 'flex-end' }}>
                 <Button type="primary" htmlType="submit" className="btn-margin-right">
                     Submit

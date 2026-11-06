@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { Form } from '@fibrae/semi-ui-react';
+import { Form, FormTransfer } from '@fibrae/semi-ui-react';
 import type { FormApi } from '../interface';
 
 const dataSource = [
@@ -19,13 +19,13 @@ function renderTransfer(fieldProps: Record<string, unknown> = {}, formProps: Rec
     let api: FormApi;
     render(
         <Form getFormApi={(formApi) => (api = formApi)} {...formProps}>
-            <Form.Transfer dataSource={dataSource} field="members" label="Members" {...fieldProps} />
+            <FormTransfer dataSource={dataSource} field="members" label="Members" {...fieldProps} />
         </Form>
     );
     return { api: () => api };
 }
 
-describe('Form.Transfer', () => {
+describe('FormTransfer', () => {
     it('显示 initValue 对应的已选项，并以 label 命名', () => {
         renderTransfer({ initValue: ['b'] });
         expect(selectedTexts()).toEqual(['Bob']);

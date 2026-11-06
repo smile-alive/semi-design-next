@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { Checkbox, Popover } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
-import { Form } from '@fibrae/semi-ui-react/form';
+import { Form, FormCheckbox, FormCheckboxGroup } from '@fibrae/semi-ui-react/form';
 import Tooltip from '@fibrae/semi-ui-react/tooltip';
 import type { CheckboxEvent, CheckboxGroupProps, CheckboxHandle, CheckboxProps } from '../index';
 
@@ -404,9 +404,9 @@ describe('checkbox 行为基线', () => {
     it('Form 标签通过 aria-labelledby 传到原生 input', () => {
         render(
             <Form>
-                <Form.Checkbox field="agree" label="Terms">
+                <FormCheckbox field="agree" label="Terms">
                     accept
-                </Form.Checkbox>
+                </FormCheckbox>
             </Form>
         );
         const input = getInput();
@@ -477,13 +477,13 @@ describe('checkbox 行为基线', () => {
         expect(getInput()).toHaveFocus();
     });
 
-    it('formApi.reset 后 Form.Checkbox 恢复未选中', async () => {
+    it('formApi.reset 后 FormCheckbox 恢复未选中', async () => {
         let formApi;
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.Checkbox field="agree" noLabel>
+                <FormCheckbox field="agree" noLabel>
                     agree
-                </Form.Checkbox>
+                </FormCheckbox>
             </Form>
         );
         await userEvent.click(getWrapper());
@@ -494,11 +494,11 @@ describe('checkbox 行为基线', () => {
         expect(getWrapper()).toHaveClass(`${prefixCls}-unChecked`);
     });
 
-    it('formApi.reset 后 Form.CheckboxGroup 被清空', async () => {
+    it('formApi.reset 后 FormCheckboxGroup 被清空', async () => {
         let formApi;
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.CheckboxGroup field="fruits" noLabel options={['apple', 'pear']} />
+                <FormCheckboxGroup field="fruits" noLabel options={['apple', 'pear']} />
             </Form>
         );
         await userEvent.click(screen.getByRole('checkbox', { name: 'apple' }));
@@ -755,13 +755,13 @@ describe('checkbox 函数组件', () => {
         expect(document.body).toHaveFocus();
     });
 
-    it('Form.Checkbox 在 blur 时校验，且不把 Form 属性泄漏到 DOM', () => {
+    it('FormCheckbox 在 blur 时校验，且不把 Form 属性泄漏到 DOM', () => {
         const validate = vi.fn<() => string>(() => '');
         render(
             <Form>
-                <Form.Checkbox field="agree" trigger="blur" validator={validate}>
+                <FormCheckbox field="agree" trigger="blur" validator={validate}>
                     agree
-                </Form.Checkbox>
+                </FormCheckbox>
             </Form>
         );
         act(() => getInput().focus());
@@ -771,11 +771,11 @@ describe('checkbox 函数组件', () => {
         expect(getWrapper()).not.toHaveAttribute('validateStatus');
     });
 
-    it('Form.CheckboxGroup 在 blur 时校验，且不把 Form 属性泄漏到 DOM', () => {
+    it('FormCheckboxGroup 在 blur 时校验，且不把 Form 属性泄漏到 DOM', () => {
         const validate = vi.fn<() => string>(() => '');
         render(
             <Form>
-                <Form.CheckboxGroup field="fruits" options={['apple', 'pear']} trigger="blur" validator={validate} />
+                <FormCheckboxGroup field="fruits" options={['apple', 'pear']} trigger="blur" validator={validate} />
             </Form>
         );
         const [apple, pear] = screen.getAllByRole('checkbox');
@@ -885,12 +885,12 @@ describe('checkbox 审计修复', () => {
         expect(new FormData(screen.getByTestId('form') as HTMLFormElement).get('fruit')).toBe('apple');
     });
 
-    it('Form.Checkbox 的 helpText 与 extra 同时出现在描述中', () => {
+    it('FormCheckbox 的 helpText 与 extra 同时出现在描述中', () => {
         render(
             <Form>
-                <Form.Checkbox field="agree" helpText="help" extra="more">
+                <FormCheckbox field="agree" helpText="help" extra="more">
                     accept
-                </Form.Checkbox>
+                </FormCheckbox>
             </Form>
         );
         expect(getInput()).toHaveAccessibleDescription(expect.stringContaining('help'));

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { AutoComplete, ConfigProvider, Form, Popover, Select, Tag } from '@fibrae/semi-ui-react';
+import { AutoComplete, ConfigProvider, Form, FormAutoComplete, Popover, Select, Tag } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import { countLiveListeners } from '@test/utils/react';
 import type { AutoCompleteProps, BaseDataItem } from '../index';
@@ -654,7 +654,7 @@ describe('AutoComplete', () => {
     it('【id】Form label 可聚焦并命名 input', async () => {
         render(
             <Form>
-                <Form.AutoComplete data={stringData} field="city" label="City" />
+                <FormAutoComplete data={stringData} field="city" label="City" />
             </Form>
         );
         expect(screen.getByRole('combobox', { name: 'City' })).toBeInTheDocument();
@@ -1390,11 +1390,11 @@ describe('AutoComplete 行为基线', () => {
         }
     });
 
-    it('formApi.reset 后 Form.AutoComplete 再次为空', async () => {
+    it('formApi.reset 后 FormAutoComplete 再次为空', async () => {
         let formApi;
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.AutoComplete data={stringData} field="name" {...commonProps} />
+                <FormAutoComplete data={stringData} field="name" {...commonProps} />
             </Form>
         );
         fireEvent.change(getInput(), { target: { value: 'semi' } });
@@ -1446,7 +1446,7 @@ describe('AutoComplete 函数组件', () => {
     it('未声明的属性落到根 div 上；Form 属性不进入 DOM，name 传给 input', () => {
         render(
             <Form labelPosition="inset">
-                <Form.AutoComplete name="city-name" title="tip" data={stringData} field="city" {...commonProps} />
+                <FormAutoComplete name="city-name" title="tip" data={stringData} field="city" {...commonProps} />
             </Form>
         );
         expect(getRoot()).toHaveAttribute('title', 'tip');

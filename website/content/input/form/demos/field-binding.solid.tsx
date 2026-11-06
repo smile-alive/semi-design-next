@@ -1,4 +1,4 @@
-import { Col, Form, FormInput, Row, TextArea, Toast } from '@fibrae/semi-ui-solid';
+import { Col, Form, FormLabel, FormInput, Row, TextArea, Toast } from '@fibrae/semi-ui-solid';
 
 export default function FormDemo() {
     return (
@@ -13,8 +13,8 @@ export default function FormDemo() {
                         <FormInput field="parents[0].name" aria-label="parents[0].name" placeholder="请尝试输入值" />
                         <FormInput field="parents[1]['name']" aria-label="parents[1]['name']" placeholder="请尝试输入值" />
                     </Col>
-                    <Col span={10} offset={1} style={{ 'margin-top': '12px' }}>
-                        <Form.Label text="FormState实时映射值：" />
+                    <Col span={10} offset={1} style={{ 'margin-block-start': '12px' }}>
+                        <FormLabel text="FormState实时映射值：" />
                         <TextArea aria-label="FormState实时映射值" value={JSON.stringify(form.formState.values)} />
                     </Col>
                 </Row>

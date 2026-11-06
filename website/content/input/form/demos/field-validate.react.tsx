@@ -1,4 +1,4 @@
-import { Form, Button } from '@fibrae/semi-ui-react';
+import { Form, FormInput, Button } from '@fibrae/semi-ui-react';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -25,8 +25,8 @@ const asyncValidate = (val?: string) =>
 export default function FormDemo() {
     return (
         <Form>
-            <Form.Input field="name" label="【name】asyncValidate after 2s" validator={asyncValidate} trigger="blur" />
-            <Form.Input field="familyName" label="【familyName】syncValidate" validator={validateName} trigger="blur" />
+            <FormInput field="name" label="【name】asyncValidate after 2s" validator={asyncValidate} trigger="blur" />
+            <FormInput field="familyName" label="【familyName】syncValidate" validator={validateName} trigger="blur" />
             <Button htmlType="reset">reset</Button>
         </Form>
     );

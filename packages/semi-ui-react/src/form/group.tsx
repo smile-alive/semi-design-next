@@ -53,7 +53,7 @@ export default function FormInputGroup(props: InputGroupProps) {
     const generatedId = useId();
 
     useEffect(() => {
-        warning(!fieldBridge, '[Semi Form]: Form.InputGroup must be used inside the Form, please check your dom declaration');
+        warning(!fieldBridge, '[Semi Form]: FormInputGroup must be used inside the Form, please check your dom declaration');
     }, [fieldBridge]);
 
     if (!fieldBridge) {

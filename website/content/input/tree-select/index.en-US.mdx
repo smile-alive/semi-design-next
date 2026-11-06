@@ -643,7 +643,7 @@ TreeSelect exposes the `search(value)` and `close()` methods through `bind:this`
 - Following the ARIA 1.2 combobox pattern, exactly one element is the combobox. Its name comes from, in order of priority: `aria-labelledby`, `aria-label`, the rendered insetLabel (`#insetLabel` in Vue; without `insetLabelId` the component generates the id; with a prefix the insetLabel is not rendered and does not name it), and otherwise the name in the locale:
     - Without search, or with `searchPosition="dropdown"`, the trigger is a select-only combobox. The search input in the dropdown stays a text box with `aria-controls`, `aria-autocomplete` and `aria-activedescendant`
     - With `searchPosition="trigger"`, the search input is the combobox and the only Tab stop, with `aria-autocomplete="list"`; the trigger has no role. In single mode the input is empty until the user types, so the selected text is linked to it as its description (`aria-describedby`). Clicking anywhere on the trigger moves focus to the input;
-- TreeSelect allows users to set `aria-describedby`, `aria-errormessage`, `aria-invalid`, `aria-labelledby`, `aria-required`, in addition, Form will automatically set these properties for Form.TreeSelect;
+- TreeSelect allows users to set `aria-describedby`, `aria-errormessage`, `aria-invalid`, `aria-labelledby`, `aria-required`, in addition, Form will automatically set these properties for FormTreeSelect;
 - The `role="tree"` list in the dropdown uses the same name source as the combobox: the same `aria-labelledby` ids, the same `aria-label` or the same insetLabel; with none of them it takes the name in the locale, like the combobox;
 
 <Framework only="react">

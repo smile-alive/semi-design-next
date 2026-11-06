@@ -2,7 +2,7 @@ import type { ReactElement } from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { AutoComplete, Cascader, Checkbox, ColorPicker, Cropper, DatePicker, Form, InputGroup, PinCode, Radio, Rating, Select, Slider, Switch, TagInput, TimePicker, Transfer, TreeSelect, Upload } from '@fibrae/semi-ui-react';
+import { AutoComplete, Cascader, Checkbox, ColorPicker, Cropper, DatePicker, FormErrorMessage, FormLabel, FormSection, FormSlot, InputGroup, PinCode, Radio, Rating, Select, Slider, Switch, TagInput, TimePicker, Transfer, TreeSelect, Upload } from '@fibrae/semi-ui-react';
 
 // Literal JSX attributes on purpose: spread props skip the excess-property check (F6 type half); runtime checks F2.
 const onKeyDown = vi.fn<() => void>();
@@ -26,10 +26,10 @@ const cases: [string, () => ReactElement, string][] = [
     ['TreeSelect', () => <TreeSelect id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'tree-select'],
     ['Upload', () => <Upload id="probe" data-probe="" title="t" action="/upload" onKeyDown={onKeyDown} />, 'upload'],
     ['Slider', () => <Slider id="probe" data-probe="" title="t" onKeyUp={onKeyDown} />, 'slider-wrapper'],
-    ['Form.Slot', () => <Form.Slot id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'form-slot'],
-    ['Form.Label', () => <Form.Label id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'form-field-label'],
-    ['Form.Section', () => <Form.Section id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'form-section'],
-    ['Form.ErrorMessage', () => <Form.ErrorMessage id="probe" data-probe="" title="t" error={['e']} onKeyDown={onKeyDown} />, 'form-field-error-message'],
+    ['FormSlot', () => <FormSlot id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'form-slot'],
+    ['FormLabel', () => <FormLabel id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'form-field-label'],
+    ['FormSection', () => <FormSection id="probe" data-probe="" title="t" onKeyDown={onKeyDown} />, 'form-section'],
+    ['FormErrorMessage', () => <FormErrorMessage id="probe" data-probe="" title="t" error={['e']} onKeyDown={onKeyDown} />, 'form-field-error-message'],
     ['Select.OptGroup', () => <Select.OptGroup id="probe" data-probe="" title="t" label="g" onKeyDown={onKeyDown} />, 'select-group'],
 ];
 

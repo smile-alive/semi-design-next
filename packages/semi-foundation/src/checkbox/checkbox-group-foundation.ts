@@ -49,7 +49,7 @@ export default class CheckboxGroupFoundation<P extends CheckboxGroupBaseProps = 
         if (Array.isArray(newPropValue)) {
             this.adapter.updateGroupValue(newPropValue);
         } else {
-            // Form.CheckboxGroup reset
+            // FormCheckboxGroup reset
             if (typeof newPropValue === 'undefined') {
                 this.adapter.updateGroupValue([]);
             }

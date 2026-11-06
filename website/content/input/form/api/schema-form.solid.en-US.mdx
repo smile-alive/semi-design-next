@@ -9,7 +9,7 @@ import ApiType from '#/components/ApiType.astro';
 | children | Content rendered after the fields, such as a submit button. | `JSX.Element` | - |
 | disabled | The disabled state applied to every field. A field's own disabled takes precedence. | `boolean` | - |
 | extraTextPosition | Position of the extra text of every field: middle puts it between the label and the control, bottom after the control. The same property on a field takes precedence. | `'bottom' \| 'middle'` | - |
-| form | The formApi returned by `Form.useForm()`, used to control the form from outside. | <ApiType detail={"FormApi\u003cValues, Output>"}>Type</ApiType> | - |
+| form | The formApi returned by `useForm()`, used to control the form from outside. | <ApiType detail={"FormApi\u003cValues, Output>"}>Type</ApiType> | - |
 | getFormApi | Called once the Form has mounted, with the formApi. | <ApiType detail={"(formApi: FormApi\u003cValues, Output>) => void"}>Type</ApiType> | - |
 | id | The id of the form element, also written to x-form-id. Generated when omitted. | `string` | - |
 | initValues | Initial values of the form, copied once when the Form is created. | `Values` | - |

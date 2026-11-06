@@ -1,18 +1,18 @@
-import { Form } from '@fibrae/semi-ui-react';
+import { Form, FormInput, FormSelect } from '@fibrae/semi-ui-react';
 
 export default function FormDemo() {
     return (
         <Form layout="horizontal" onValueChange={(values) => console.log(values)}>
-            {({ formState }) => (
+            {(form) => (
                 <>
-                    <Form.Select field="Role" label="角色" style={{ width: 176 }}>
-                        <Form.Select.Option value="admin">管理员</Form.Select.Option>
-                        <Form.Select.Option value="user">普通用户</Form.Select.Option>
-                        <Form.Select.Option value="guest">访客</Form.Select.Option>
-                    </Form.Select>
-                    <Form.Input field="UserName" label="用户名" style={{ width: 80 }} />
-                    <Form.Input field="Password" label="密码" style={{ width: 176 }} />
-                    <code style={{ marginTop: 24 }}>{JSON.stringify(formState)}</code>
+                    <FormSelect field="Role" label="角色" style={{ width: 176 }}>
+                        <FormSelect.Option value="admin">管理员</FormSelect.Option>
+                        <FormSelect.Option value="user">普通用户</FormSelect.Option>
+                        <FormSelect.Option value="guest">访客</FormSelect.Option>
+                    </FormSelect>
+                    <FormInput field="UserName" label="用户名" style={{ width: 80 }} />
+                    <FormInput field="Password" label="密码" style={{ width: 176 }} />
+                    <code style={{ marginBlockStart: 24 }}>{JSON.stringify(form.formState)}</code>
                 </>
             )}
         </Form>

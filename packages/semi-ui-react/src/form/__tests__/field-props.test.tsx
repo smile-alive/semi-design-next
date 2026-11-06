@@ -84,14 +84,14 @@ describe('Field Props 类型', () => {
         expectTypeOf<PropsOf<typeof FormUpload>>().toHaveProperty('field').toEqualTypeOf<string>();
     });
 
-    it('Form.Select 接受 multiple，且不接受 defaultValue', () => {
+    it('FormSelect 接受 multiple，且不接受 defaultValue', () => {
         type SelectFieldProps = PropsOf<typeof FormSelect>;
         expectTypeOf<{ field: string; multiple: true }>().toExtend<SelectFieldProps>();
         expectTypeOf<{ field: string; multiple: false }>().toExtend<SelectFieldProps>();
         expectTypeOf<SelectFieldProps>().not.toHaveProperty('defaultValue');
     });
 
-    it('Form.Select、Form.TreeSelect、Form.Cascader 的行内 onChange 按 multiple 与 onChangeWithObject 推断', () => {
+    it('FormSelect、FormTreeSelect、FormCascader 的行内 onChange 按 multiple 与 onChangeWithObject 推断', () => {
         // JSX infers the mode from the `multiple` and `onChangeWithObject` attributes, as on the bare components
         const elements = (
             <>

@@ -1,4 +1,4 @@
-import { useFormState, Form } from '@fibrae/semi-ui-react';
+import { useFormState, Form, FormInput } from '@fibrae/semi-ui-react';
 
 function ComponentUsingFormState() {
     const formState = useFormState();
@@ -12,7 +12,7 @@ function ComponentUsingFormState() {
 export default function FormDemo() {
     return (
         <Form>
-            <Form.Input field="name" initValue="mike" />
+            <FormInput field="name" initValue="mike" />
             <h5>FormState read by 【useFormState】：</h5>
             <ComponentUsingFormState />
         </Form>

@@ -35,8 +35,8 @@
                 "en-US": "Position of the extraText of every field: `middle` puts it between the label and the control, `bottom` after the control. Defaults to `bottom`. The same property on a field takes precedence."
             },
             "form": {
-                "zh-CN": "`Form.useForm()` 返回的 formApi，用于在 Form 外部控制表单。",
-                "en-US": "The formApi returned by `Form.useForm()`, used to control the form from outside."
+                "zh-CN": "`useForm()` 返回的 formApi，用于在 Form 外部控制表单。",
+                "en-US": "The formApi returned by `useForm()`, used to control the form from outside."
             },
             "getFormApi": {
                 "zh-CN": "Form 挂载后调用，参数为 formApi。",
@@ -310,8 +310,8 @@
                 "en-US": "The error, rendered after the content: an object is the props of ErrorMessage, and a string or string array is the error. Nothing shows when omitted."
             },
             "label": {
-                "zh-CN": "Label 配置：对象作为 Form.Label 的属性，可配置 `text`、`extra`、`align`、`width`、`required`、`optional` 等；其他内容作为 Label 文本。",
-                "en-US": "Label configuration: an object is the props of Form.Label, with `text`, `extra`, `align`, `width`, `required`, `optional` and so on; any other content is the label text."
+                "zh-CN": "Label 配置：对象作为 FormLabel 的属性，可配置 `text`、`extra`、`align`、`width`、`required`、`optional` 等；其他内容作为 Label 文本。",
+                "en-US": "Label configuration: an object is the props of FormLabel, with `text`, `extra`, `align`, `width`, `required`, `optional` and so on; any other content is the label text."
             },
             "labelPosition": {
                 "zh-CN": "slot 的 Label 位置，默认取自 Form，可选 `top` 或 `left`。",
@@ -429,8 +429,8 @@
                 "en-US": "Position of the extraText of every field: `middle` puts it between the label and the control, `bottom` after the control. Defaults to `bottom`. The same property on a field takes precedence."
             },
             "form": {
-                "zh-CN": "`Form.useForm()` 返回的 formApi，用于在 Form 外部控制表单。",
-                "en-US": "The formApi returned by `Form.useForm()`, used to control the form from outside."
+                "zh-CN": "`useForm()` 返回的 formApi，用于在 Form 外部控制表单。",
+                "en-US": "The formApi returned by `useForm()`, used to control the form from outside."
             },
             "getFormApi": {
                 "zh-CN": "Form 挂载后调用，参数为 formApi。",

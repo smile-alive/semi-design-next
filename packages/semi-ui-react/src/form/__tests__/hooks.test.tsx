@@ -1,7 +1,7 @@
 import { Component, useEffect, useRef, type Ref } from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { Form, ArrayField, useFormApi, useFormState, useFieldApi, useFieldState, withFormApi, withFormState, withField } from '@fibrae/semi-ui-react';
+import { Form, FormInput, useForm, ArrayField, useFormApi, useFormState, useFieldApi, useFieldState, withFormApi, withFormState, withField } from '@fibrae/semi-ui-react';
 import { useArrayFieldState } from '../hooks/index';
 import type { FormApi, FormState } from '../interface';
 
@@ -17,7 +17,7 @@ describe('Form hooks 与 HOC', () => {
         }
         render(
             <Form getFormApi={(api) => (fromCallback = api)}>
-                <Form.Input field="name" />
+                <FormInput field="name" />
                 <Probe />
             </Form>
         );
@@ -34,7 +34,7 @@ describe('Form hooks 与 HOC', () => {
         }
         render(
             <Form>
-                <Form.Input field="name" />
+                <FormInput field="name" />
                 <Probe />
             </Form>
         );
@@ -58,7 +58,7 @@ describe('Form hooks 与 HOC', () => {
         }
         render(
             <Form>
-                <Form.Input field="name" />
+                <FormInput field="name" />
                 <Probe />
             </Form>
         );
@@ -105,7 +105,7 @@ describe('Form hooks 与 HOC', () => {
         let instance;
         render(
             <Form>
-                <Form.Input field="name" />
+                <FormInput field="name" />
                 <WithApi
                     ref={(node) => {
                         instance = node;
@@ -142,7 +142,7 @@ describe('Form hooks 与 HOC', () => {
         let node;
         render(
             <Form>
-                <Form.Input field="name" />
+                <FormInput field="name" />
                 <WithState
                     ref={(el) => {
                         node = el;
@@ -182,11 +182,11 @@ describe('Form hooks 与 HOC', () => {
     });
 });
 
-describe('Form.useForm 挂载前的 formApi', () => {
+describe('useForm 挂载前的 formApi', () => {
     const renderUnbound = () => {
-        let api: ReturnType<typeof Form.useForm>[0];
+        let api: ReturnType<typeof useForm>[0];
         function Demo() {
-            const [formApi] = Form.useForm();
+            const [formApi] = useForm();
             useEffect(() => {
                 api = formApi;
             }, [formApi]);

@@ -8,7 +8,7 @@ import { Form, FormUpload } from '..';
 const prefixCls = `${BASE_CLASS_PREFIX}-upload`;
 
 describe('Form 字段（浏览器）', () => {
-    // fix #2448: inside Form.Upload the error outline of a failed picture card was hidden, so the card also draws
+    // fix #2448: inside FormUpload the error outline of a failed picture card was hidden, so the card also draws
     // the error color as a border, kept inside its 96px box
     it('修复 #2448：FormUpload 中上传失败的图片卡片在卡片内显示错误边框', () => {
         const { container } = render(() => (

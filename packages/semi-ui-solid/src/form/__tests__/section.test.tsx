@@ -2,12 +2,12 @@ import { type JSX, createSignal } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { Form, FormInput } from '..';
+import { Form, FormSection, FormInput } from '..';
 
-const Section = Form.Section;
+const Section = FormSection;
 const textSelector = `.${BASE_CLASS_PREFIX}-form-section-text`;
 
-describe('Form.Section', () => {
+describe('FormSection', () => {
     it('class 与 style', () => {
         const { container } = render(() => <Section class="sec-test" style={{ color: 'red' }} />);
         const section = container.querySelector('fieldset.sec-test');

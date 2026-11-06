@@ -6,7 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import type { BasicTreeNodeData } from '@fibrae/semi-foundation/tree/foundation';
-import { CheckboxGroup, ConfigProvider, Form, Popover, Tag, TreeSelect } from '@fibrae/semi-ui-react';
+import { CheckboxGroup, ConfigProvider, Form, FormTreeSelect, Popover, Tag, TreeSelect } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import type { TreeNodeData } from '@fibrae/semi-ui-react/tree/interface';
 import { countLiveListeners } from '@test/utils/react';
@@ -3851,7 +3851,7 @@ describe('TreeSelect 行为', () => {
         let formApi;
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.TreeSelect {...commonProps} defaultExpandAll field="region" rules={[{ required: true, message: 'required' }]} treeData={treeData} trigger="blur" />
+                <FormTreeSelect {...commonProps} defaultExpandAll field="region" rules={[{ required: true, message: 'required' }]} treeData={treeData} trigger="blur" />
             </Form>
         );
         await userEvent.click(getTrigger());

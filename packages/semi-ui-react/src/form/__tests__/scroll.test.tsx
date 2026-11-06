@@ -1,7 +1,7 @@
 import { render, act } from '@testing-library/react';
 import scrollIntoView, { type Options } from 'scroll-into-view-if-needed';
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { Form } from '@fibrae/semi-ui-react';
+import { Form, FormInput } from '@fibrae/semi-ui-react';
 
 vi.mock('scroll-into-view-if-needed', () => ({ default: vi.fn<() => void>() }));
 
@@ -14,8 +14,8 @@ describe('Form 滚动', () => {
         let formApi;
         render(
             <Form autoScrollToError getFormApi={(api) => (formApi = api)}>
-                <Form.Input field="a" />
-                <Form.Input field="b" rules={[{ required: true, message: 'required' }]} />
+                <FormInput field="a" />
+                <FormInput field="b" rules={[{ required: true, message: 'required' }]} />
             </Form>
         );
         await act(() => expect(formApi.validate()).rejects.toBeDefined());
@@ -27,7 +27,7 @@ describe('Form 滚动', () => {
         const options: Options = { behavior: 'auto', block: 'center' };
         render(
             <Form autoScrollToError={options} getFormApi={(api) => (formApi = api)}>
-                <Form.Input field="b" rules={[{ required: true, message: 'required' }]} />
+                <FormInput field="b" rules={[{ required: true, message: 'required' }]} />
             </Form>
         );
         await act(() => expect(formApi.validate()).rejects.toBeDefined());
@@ -38,7 +38,7 @@ describe('Form 滚动', () => {
         let formApi;
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.Input field="b" rules={[{ required: true, message: 'required' }]} />
+                <FormInput field="b" rules={[{ required: true, message: 'required' }]} />
             </Form>
         );
         await act(() => expect(formApi.validate()).rejects.toBeDefined());
@@ -50,10 +50,10 @@ describe('Form 滚动', () => {
         render(
             <>
                 <Form id="other">
-                    <Form.Input field="b" />
+                    <FormInput field="b" />
                 </Form>
                 <Form getFormApi={(api) => (formApi = api)}>
-                    <Form.Input field="b" rules={[{ required: true, message: 'required' }]} />
+                    <FormInput field="b" rules={[{ required: true, message: 'required' }]} />
                 </Form>
             </>
         );
@@ -71,7 +71,7 @@ describe('Form 滚动', () => {
         let formApi;
         render(
             <Form autoScrollToError getFormApi={(api) => (formApi = api)} labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>
-                <Form.Input field="b" rules={[{ required: true, message: 'required' }]} />
+                <FormInput field="b" rules={[{ required: true, message: 'required' }]} />
             </Form>
         );
         await act(() => expect(formApi.validate()).rejects.toBeDefined());
@@ -84,7 +84,7 @@ describe('Form 滚动', () => {
         let formApi;
         render(
             <Form autoScrollToError getFormApi={(api) => (formApi = api)} validator={() => ({ b: 'form error' })}>
-                <Form.Input field="b" />
+                <FormInput field="b" />
             </Form>
         );
         await act(() => expect(formApi.validate()).rejects.toEqual({ b: ['form error'] }));
@@ -96,7 +96,7 @@ describe('Form 滚动', () => {
         const field = 'a["b"]';
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.Input field={field} rules={[{ required: true, message: 'required' }]} />
+                <FormInput field={field} rules={[{ required: true, message: 'required' }]} />
             </Form>
         );
         const target = document.querySelector('.semi-form-field');

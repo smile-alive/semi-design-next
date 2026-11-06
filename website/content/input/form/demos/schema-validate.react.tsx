@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { Button, Form, Toast } from '@fibrae/semi-ui-react';
+import { Button, Form, FormInput, Toast } from '@fibrae/semi-ui-react';
 
 const schema = z
     .object({
@@ -13,10 +13,10 @@ const schema = z
 export default function FormDemo() {
     return (
         <Form schema={schema} onSubmit={(values) => Toast.success(`姓名：${values.name}，明年 ${values.age + 1} 岁`)}>
-            <Form.Input field="name" label={{ text: '姓名', required: true }} />
-            <Form.Input field="age" label={{ text: '年龄', required: true }} />
-            <Form.Input field="password" type="password" label={{ text: '密码', required: true }} />
-            <Form.Input field="confirm" type="password" label={{ text: '确认密码', required: true }} />
+            <FormInput field="name" label={{ text: '姓名', required: true }} />
+            <FormInput field="age" label={{ text: '年龄', required: true }} />
+            <FormInput field="password" type="password" label={{ text: '密码', required: true }} />
+            <FormInput field="confirm" type="password" label={{ text: '确认密码', required: true }} />
             <Button type="primary" htmlType="submit">
                 提交
             </Button>

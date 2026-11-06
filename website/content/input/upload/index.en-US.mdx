@@ -1401,8 +1401,8 @@ The Upload component is an interactive control that can trigger file selection w
     - When `showReplace` is true and the current file status is uploaded, the replace button will be displayed.
 - Where did Semi save the pictures?
     - Semi is not responsible for the preservation of the image, you need to customize the action when you use the Upload component. You can choose to set action as your own server address or image service address.
-- Form.Upload props.name does not work?
-    - Form.Field has props.name and so does Upload, so the two clash. With Form.Upload, use props.fileName instead to avoid the clash
+- FormUpload props.name does not work?
+    - Field components have props.name and so does Upload, so the two clash. With FormUpload, use props.fileName instead to avoid the clash
 - Didn't call the XXX method after uploading the picture?
     - If you set `accept`, you can try to remove the accept attribute, and then see if the modified method is called. After removing it, the method is called to explain that the file type obtained by accept in the current environment does not match the set accept, and the upload behavior is terminated early. You can make a breakpoint to upload/foundation.js checkFileFormat function to see if the actual value of file.type obtained meets expectations.
 

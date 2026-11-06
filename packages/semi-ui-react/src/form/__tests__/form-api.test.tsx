@@ -2,28 +2,27 @@ import { StrictMode, useEffect, useState } from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { Form, Select, Button } from '@fibrae/semi-ui-react';
+import { Form, FormInput, FormSelect, useForm, Button } from '@fibrae/semi-ui-react';
 import type { FormApi } from '../interface';
 
 function renderForm(props) {
     return render(<Form {...props} />);
 }
 
-const Option = Select.Option;
-const FormSelect = (
-    <Form.Select style={{ width: 200 }} field="business" label="business">
-        <Option value="abc">Abc</Option>
-        <Option value="hotsoon">Hotsoon</Option>
-        <Option value="topbuzz">TopBuzz</Option>
-    </Form.Select>
+const selectField = (
+    <FormSelect style={{ width: 200 }} field="business" label="business">
+        <FormSelect.Option value="abc">Abc</FormSelect.Option>
+        <FormSelect.Option value="hotsoon">Hotsoon</FormSelect.Option>
+        <FormSelect.Option value="topbuzz">TopBuzz</FormSelect.Option>
+    </FormSelect>
 );
 
-const FormInput = <Form.Input field="name" />;
+const inputField = <FormInput field="name" />;
 
 const fields = (
     <>
-        {FormInput}
-        {FormSelect}
+        {inputField}
+        {selectField}
     </>
 );
 
@@ -36,7 +35,7 @@ describe('Form-formApi', () => {
         let formApi;
         let formValues;
         function HookForm() {
-            const [api, , values] = Form.useForm();
+            const [api, , values] = useForm();
             // handed to the test from an effect, so render never writes outer variables
             useEffect(() => {
                 formApi = api;
@@ -44,7 +43,7 @@ describe('Form-formApi', () => {
             });
             return (
                 <Form form={api} initValues={{ name: 'semi' }}>
-                    <Form.Input field="name" />
+                    <FormInput field="name" />
                 </Form>
             );
         }
@@ -65,7 +64,7 @@ describe('Form-formApi', () => {
         render(
             <StrictMode>
                 <Form getFormApi={(api) => (formApi = api)} initValues={{ name: 'semi' }}>
-                    <Form.Input field="name" />
+                    <FormInput field="name" />
                 </Form>
             </StrictMode>
         );
@@ -77,7 +76,7 @@ describe('Form-formApi', () => {
     it('Form 卸载后再次挂载时，重新绑定 useForm api', async () => {
         let formApi;
         function HookForm() {
-            const [api] = Form.useForm();
+            const [api] = useForm();
             const [show, setShow] = useState(true);
             useEffect(() => {
                 formApi = api;
@@ -87,7 +86,7 @@ describe('Form-formApi', () => {
                     <Button onClick={() => setShow((s) => !s)}>toggle</Button>
                     {show ? (
                         <Form form={api} initValues={{ name: 'semi' }}>
-                            <Form.Input field="name" />
+                            <FormInput field="name" />
                         </Form>
                     ) : null}
                 </>
@@ -113,7 +112,7 @@ describe('Form-formApi', () => {
         const getFormApi = vi.fn<(api: FormApi) => void>((api) => {
             formApi = api;
         });
-        renderForm({ getFormApi, children: FormInput });
+        renderForm({ getFormApi, children: inputField });
         expect(getFormApi).toHaveBeenCalledTimes(1);
         expect(formApi.getFieldExist('name')).toEqual(true);
         expect(formApi.getFieldExist('business')).toEqual(false);
@@ -169,7 +168,7 @@ describe('Form-formApi', () => {
         let errorMessage = 'not muji';
         renderForm({
             getFormApi,
-            children: <Form.Input field="name" rules={[{ validator: (value) => value === 'muji', message: errorMessage }]} trigger="change" />,
+            children: <FormInput field="name" rules={[{ validator: (value) => value === 'muji', message: errorMessage }]} trigger="change" />,
         });
         fireEvent.change(getInput('name'), { target: { value: 'semi' } });
         await waitFor(() => expect(formApi.getError('name')).toEqual([errorMessage]));
@@ -183,7 +182,7 @@ describe('Form-formApi', () => {
         };
         renderForm({
             getFormApi,
-            children: <Form.Input field="name" rules={[{ validator: (value) => value === 'muji', message: 'not muji' }]} trigger="change" />,
+            children: <FormInput field="name" rules={[{ validator: (value) => value === 'muji', message: 'not muji' }]} trigger="change" />,
         });
         fireEvent.change(getInput('name'), { target: { value: 'semi' } });
         let expectFormState = {
@@ -201,7 +200,7 @@ describe('Form-formApi', () => {
         };
         const { container } = renderForm({
             getFormApi,
-            children: <Form.Input fieldClassName="test" field="name" trigger="change" />,
+            children: <FormInput fieldClassName="test" field="name" trigger="change" />,
         });
         let errorMessage = 'not muji';
         void act(() => formApi.setError('name', errorMessage));
@@ -312,8 +311,8 @@ describe('Form-formApi', () => {
     it('formApi-validate：校验所有字段与特殊字段', async () => {
         let fields = (
             <>
-                <Form.Input className="ab" field="a.b" validator={(val) => (val ? '' : 'ab-err')} />
-                <Form.Input className="ac" field="a.c" validator={(val) => (val ? '' : 'ac-err')} />
+                <FormInput className="ab" field="a.b" validator={(val) => (val ? '' : 'ab-err')} />
+                <FormInput className="ac" field="a.c" validator={(val) => (val ? '' : 'ac-err')} />
             </>
         );
         let formApi = null;
@@ -337,9 +336,9 @@ describe('Form-formApi', () => {
     it('formApi-validate：嵌套字段', async () => {
         let fields = (
             <>
-                <Form.Input className="ab" field="a.b" validator={(val) => (val ? '' : 'ab-err')} />
-                <Form.Input className="ac" field="a.c" validator={(val) => (val ? '' : 'ac-err')} />
-                <Form.Input className="e" field="e" validator={(val) => (val ? '' : 'e-err')} />
+                <FormInput className="ab" field="a.b" validator={(val) => (val ? '' : 'ab-err')} />
+                <FormInput className="ac" field="a.c" validator={(val) => (val ? '' : 'ac-err')} />
+                <FormInput className="e" field="e" validator={(val) => (val ? '' : 'e-err')} />
             </>
         );
         let formApi = null;
@@ -357,9 +356,9 @@ describe('Form-formApi', () => {
     it('formApi-setValue：包含嵌套字段时', () => {
         let fields = (
             <>
-                <Form.Input className="ab" field="a.b" validator={(val) => (val ? '' : 'ab-err')} />
-                <Form.Input className="ac" field="a.c" validator={(val) => (val ? '' : 'ac-err')} />
-                <Form.Input className="e" field="e" validator={(val) => (val ? '' : 'e-err')} />
+                <FormInput className="ab" field="a.b" validator={(val) => (val ? '' : 'ab-err')} />
+                <FormInput className="ac" field="a.c" validator={(val) => (val ? '' : 'ac-err')} />
+                <FormInput className="e" field="e" validator={(val) => (val ? '' : 'e-err')} />
             </>
         );
         let formApi = null;
@@ -379,9 +378,9 @@ describe('Form-formApi', () => {
     it('formApi-setEror：包含嵌套字段时', () => {
         let fields = (
             <>
-                <Form.Input className="ab" field="a.b" validator={(val) => (val ? '' : 'ab-err')} />
-                <Form.Input className="ac" field="a.c" validator={(val) => (val ? '' : 'ac-err')} />
-                <Form.Input className="e" field="e" validator={(val) => (val ? '' : 'e-err')} />
+                <FormInput className="ab" field="a.b" validator={(val) => (val ? '' : 'ab-err')} />
+                <FormInput className="ac" field="a.c" validator={(val) => (val ? '' : 'ac-err')} />
+                <FormInput className="e" field="e" validator={(val) => (val ? '' : 'e-err')} />
             </>
         );
         let formApi = null;
@@ -401,9 +400,9 @@ describe('Form-formApi', () => {
     it('formApi-setTouched：包含嵌套字段时', () => {
         let fields = (
             <>
-                <Form.Input className="ab" field="a.b" validator={(val) => (val ? '' : 'ab-err')} />
-                <Form.Input className="ac" field="a.c" validator={(val) => (val ? '' : 'ac-err')} />
-                <Form.Input className="e" field="e" validator={(val) => (val ? '' : 'e-err')} />
+                <FormInput className="ab" field="a.b" validator={(val) => (val ? '' : 'ab-err')} />
+                <FormInput className="ac" field="a.c" validator={(val) => (val ? '' : 'ac-err')} />
+                <FormInput className="e" field="e" validator={(val) => (val ? '' : 'e-err')} />
             </>
         );
         let formApi!: FormApi;
@@ -421,9 +420,9 @@ describe('Form-formApi', () => {
         let formApi = null;
         const fields = (
             <>
-                <Form.Input field="a.b" />
-                <Form.Input field="a.c" />
-                <Form.Input field="a.d" />
+                <FormInput field="a.b" />
+                <FormInput field="a.c" />
+                <FormInput field="a.d" />
             </>
         );
         renderForm({
@@ -443,9 +442,9 @@ describe('Form-formApi', () => {
         let formApi = null;
         const fields = (
             <>
-                <Form.Input field="a.b" />
-                <Form.Input field="a.c" />
-                <Form.Input field="a.d" />
+                <FormInput field="a.b" />
+                <FormInput field="a.c" />
+                <FormInput field="a.d" />
             </>
         );
         renderForm({
@@ -469,8 +468,8 @@ describe('Form-formApi', () => {
                 values.a &&
                 values.a.map((effect, i) => (
                     <div key={effect.key}>
-                        <Form.Input field={`a[${i}].name`} />
-                        <Form.Input field={`a[${i}].type`} />
+                        <FormInput field={`a[${i}].name`} />
+                        <FormInput field={`a[${i}].type`} />
                     </div>
                 ))
             );
@@ -502,8 +501,8 @@ describe('Form-formApi', () => {
                 values.a &&
                 values.a.map((effect, i) => (
                     <div key={effect.key}>
-                        <Form.Input field={`a[${i}].name`} />
-                        <Form.Input field={`a[${i}].type`} />
+                        <FormInput field={`a[${i}].name`} />
+                        <FormInput field={`a[${i}].type`} />
                     </div>
                 ))
             );
@@ -539,7 +538,7 @@ describe('Form-formApi', () => {
 
         let formApi = null;
         renderForm({
-            children: <Form.Input field="name" />,
+            children: <FormInput field="name" />,
             getFormApi: (api) => {
                 formApi = api;
             },
@@ -559,7 +558,7 @@ describe('Form-formApi', () => {
             children: (
                 <>
                     {paths.map((path) => (
-                        <Form.Input key={path} field={path} rules={rules} />
+                        <FormInput key={path} field={path} rules={rules} />
                     ))}
                 </>
             ),
@@ -584,7 +583,7 @@ describe('Form-formApi', () => {
             values.effects &&
             values.effects.map((effect, i) => (
                 <div key={effect.key}>
-                    <Form.Input key={`effects[${i}].name`} field={`effects[${i}].name`} />
+                    <FormInput key={`effects[${i}].name`} field={`effects[${i}].name`} />
                 </div>
             ));
         let formApi = null;

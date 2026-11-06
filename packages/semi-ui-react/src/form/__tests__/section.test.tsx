@@ -2,12 +2,12 @@ import { createRef } from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { Form } from '@fibrae/semi-ui-react';
+import { Form, FormInput, FormSection } from '@fibrae/semi-ui-react';
 
-const Section = Form.Section;
+const Section = FormSection;
 const textSelector = `.${BASE_CLASS_PREFIX}-form-section-text`;
 
-describe('Form.Section', () => {
+describe('FormSection', () => {
     it('className 与 style', () => {
         const { container } = render(<Section className="sec-test" style={{ color: 'red' }} />);
         const section = container.querySelector('fieldset.sec-test');
@@ -19,7 +19,7 @@ describe('Form.Section', () => {
         const { container } = render(
             <Form>
                 <Section>
-                    <Form.Input className="test" field="test" />
+                    <FormInput className="test" field="test" />
                 </Section>
             </Form>
         );

@@ -1,7 +1,7 @@
 import { StrictMode, Suspense } from 'react';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { Form, ArrayField, withField } from '@fibrae/semi-ui-react';
+import { Form, FormInput, ArrayField, withField } from '@fibrae/semi-ui-react';
 import { sleep } from '@test/utils/react';
 import type { FormApi } from '../interface';
 
@@ -16,7 +16,7 @@ describe('Form 字段校验竞态', () => {
         let api: FormApi;
         const { container } = render(
             <Form getFormApi={(formApi) => (api = formApi)} onErrorChange={onErrorChange}>
-                <Form.Input field="name" validator={validate} />
+                <FormInput field="name" validator={validate} />
             </Form>
         );
         const input = container.querySelector('input');
@@ -38,7 +38,7 @@ describe('Form 字段提交回滚', () => {
         let api: FormApi;
         const { container } = render(
             <Form getFormApi={(formApi) => (api = formApi)} initValues={{ name: 'init' }} onChange={onFormChange} onValueChange={onValueChange}>
-                <Form.Input
+                <FormInput
                     field="name"
                     validator={validate}
                     onChange={() => {
@@ -77,7 +77,7 @@ describe('ArrayField 行操作', () => {
                     {({ add, addWithInitValue, arrayFields }) => {
                         ops = { add, addWithInitValue };
                         removers = arrayFields.map(({ remove }) => remove);
-                        return arrayFields.map(({ field, key }) => <Form.Input key={key} field={`${field}.name`} />);
+                        return arrayFields.map(({ field, key }) => <FormInput key={key} field={`${field}.name`} />);
                     }}
                 </ArrayField>
             </Form>
@@ -103,7 +103,7 @@ describe('ArrayField 行操作', () => {
         const { container } = render(
             <Form getFormApi={(formApi) => (api = formApi)}>
                 <ArrayField field="people" initValue={[{ name: 'a', id: 1 }]}>
-                    {({ arrayFields }) => arrayFields.map(({ field, key }) => <Form.Input key={key} field={`${field}.name`} initValue="row-init" />)}
+                    {({ arrayFields }) => arrayFields.map(({ field, key }) => <FormInput key={key} field={`${field}.name`} initValue="row-init" />)}
                 </ArrayField>
             </Form>
         );
@@ -128,7 +128,7 @@ describe('ArrayField 行操作', () => {
             <Form getFormApi={(formApi) => (api = formApi)}>
                 <Suspense fallback={<span>loading</span>}>
                     <ArrayField field="people" initValue={[{ name: 'a' }]}>
-                        {({ arrayFields }) => arrayFields.map(({ field, key }) => <Form.Input key={key} field={`${field}.name`} initValue="row-init" />)}
+                        {({ arrayFields }) => arrayFields.map(({ field, key }) => <FormInput key={key} field={`${field}.name`} initValue="row-init" />)}
                     </ArrayField>
                     <Suspender />
                 </Suspense>
@@ -147,7 +147,7 @@ describe('Form StrictMode', () => {
         const { container } = render(
             <StrictMode>
                 <Form getFormApi={(formApi) => (api = formApi)} onErrorChange={onErrorChange}>
-                    <Form.Input field="name" validator={validate} />
+                    <FormInput field="name" validator={validate} />
                 </Form>
             </StrictMode>
         );
@@ -162,7 +162,7 @@ describe('Form StrictMode', () => {
         const { container } = render(
             <StrictMode>
                 <Form getFormApi={(formApi) => (api = formApi)}>
-                    <Form.Input field="name" trigger="mount" validator={() => 'mount-err'} />
+                    <FormInput field="name" trigger="mount" validator={() => 'mount-err'} />
                 </Form>
             </StrictMode>
         );
@@ -177,7 +177,7 @@ describe('Form StrictMode', () => {
             <StrictMode>
                 <Form getFormApi={(formApi) => (api = formApi)} onValueChange={onValueChange}>
                     <ArrayField field="people" initValue={[{ name: 'a' }, { name: 'b' }]}>
-                        {({ arrayFields }) => arrayFields.map(({ field, key }) => <Form.Input key={key} field={`${field}.name`} />)}
+                        {({ arrayFields }) => arrayFields.map(({ field, key }) => <FormInput key={key} field={`${field}.name`} />)}
                     </ArrayField>
                 </Form>
             </StrictMode>
@@ -202,7 +202,7 @@ describe('Form 字段 initValue 拷贝', () => {
         const { container } = render(
             <Form>
                 <ObjectField field="obj" initValue={initValue} />
-                <Form.Input field="other" />
+                <FormInput field="other" />
             </Form>
         );
         const readsAfterMount = reads;
@@ -219,7 +219,7 @@ describe('Form 字段 initValue 拷贝', () => {
         const { container } = render(
             <Form getFormApi={(formApi) => (api = formApi)} onChange={(formState) => (latest = formState.values)}>
                 <ObjectField field="obj" initValue={{ name: 'init' }} />
-                <Form.Input field="other" />
+                <FormInput field="other" />
             </Form>
         );
         changeInput(container.querySelector('input'), 'a');

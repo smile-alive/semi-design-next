@@ -25,7 +25,7 @@ export default function InputDemo() {
                     <Typography.Text copyable>👨‍👩‍👧‍👦</Typography.Text>
                 </div>
             </div>
-            <Input aria-labelledby="input-value-length-max-length" maxLength={10} getValueLength={getValueLength} onChange={(next) => setValue(next)} style={{ width: '200px', 'margin-top': '12px', 'margin-bottom': '12px' }} />
+            <Input aria-labelledby="input-value-length-max-length" maxLength={10} getValueLength={getValueLength} onChange={(next) => setValue(next)} style={{ width: '200px', 'margin-block': '12px' }} />
             <Show when={value()}>
                 <div>
                     <div>
@@ -38,7 +38,7 @@ export default function InputDemo() {
             </Show>
             <br />
             <br />
-            <h4 id="input-value-length-min-length">Form.Input + minLength=4</h4>
+            <h4 id="input-value-length-min-length">FormInput + minLength=4</h4>
             <Form layout="horizontal">
                 <FormInput noLabel aria-labelledby="input-value-length-min-length" field="username" minLength={4} getValueLength={getValueLength} style={{ width: '200px' }} />
                 <Button type="primary" htmlType="submit">

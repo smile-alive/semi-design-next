@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { Form, TagInput, Tooltip } from '@fibrae/semi-ui-react';
+import { Form, FormTagInput, TagInput, Tooltip } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import { countLiveListeners } from '@test/utils/react';
 import type { TagInputHandle, TagInputProps } from '../index';
@@ -1051,12 +1051,12 @@ describe('TagInput 行为基线', () => {
         expect(getRoot()).toHaveAttribute('data-foo', 'bar');
     });
 
-    it('Form.TagInput 在 formApi.reset 后清空，并在 blur 时校验', async () => {
+    it('FormTagInput 在 formApi.reset 后清空，并在 blur 时校验', async () => {
         let formApi;
         const validate = vi.fn<() => string>(() => '');
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.TagInput field="tags" label="Tags" trigger="blur" validator={validate} />
+                <FormTagInput field="tags" label="Tags" trigger="blur" validator={validate} />
                 <button type="button">outside</button>
             </Form>
         );
@@ -1121,7 +1121,7 @@ describe('TagInput 函数组件', () => {
 
         render(
             <Form>
-                <Form.TagInput id="tags" field="tags" label="Tags" rules={[{ required: true, message: 'need tags' }]} />
+                <FormTagInput id="tags" field="tags" label="Tags" rules={[{ required: true, message: 'need tags' }]} />
             </Form>
         );
         const input = document.querySelector(`.${tagInputCls} input`);

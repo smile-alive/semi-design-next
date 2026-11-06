@@ -1,38 +1,35 @@
+import type { ComponentProps } from 'react';
 import * as z from 'zod';
-import { Button, Form, Input, SchemaField, Typography, withField } from '@fibrae/semi-ui-react';
+import { IconLink } from '@fibrae/semi-icons-react';
+import { Button, Form, FormInput, FormRating, type SchemaFieldRenderer, SchemaField, Toast } from '@fibrae/semi-ui-react';
 
 const schema = z.object({
-    title: z.string().min(2, '标题至少 2 个字符').meta({ title: '标题' }),
+    title: z.string().min(2, '标题至少 2 个字符'),
     profile: z
         .object({
-            homepage: z.url('请输入网址').meta({ title: '主页' }),
-            level: z.number().min(1).max(5).meta({ title: '等级' }),
-            note: z.string().optional().meta({ title: '备注' }),
+            homepage: z.url('请输入完整的网址').meta({ title: '主页' }),
+            score: z.int().min(1).max(5).meta({ title: '评分' }),
+            intro: z.string().optional().meta({ title: '介绍' }),
         })
         .meta({ title: '资料' }),
 });
 
-function LinkInput({ value, onChange }: { value?: string; onChange?: (value: string) => void }) {
-    return (
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <Input aria-label="主页地址" value={value} onChange={(next) => onChange?.(next)} style={{ flex: 1 }} />
-            {value && (
-                <Typography.Text link={{ href: value, target: '_blank' }} size="small">
-                    打开
-                </Typography.Text>
-            )}
-        </div>
-    );
+function UrlInput(props: ComponentProps<typeof FormInput>) {
+    return <FormInput {...props} placeholder="https://" prefix={<IconLink />} />;
 }
 
-const FormLinkInput = withField(LinkInput);
+const renderField: Record<string, SchemaFieldRenderer> = {
+    'profile.score': (context) => <FormRating field={context.field} label={{ text: context.node.title, required: context.node.required }} />,
+};
 
 export default function FormDemo() {
     return (
-        <Form schema={schema} style={{ width: 480 }} onSubmit={(values) => console.log(values)}>
-            <Form.Input field="title" label={{ text: '标题', required: true }} />
-            <SchemaField field="profile" renderField={{ 'profile.note': ({ field }) => <Form.TextArea field={field} label="备注（renderField 覆盖）" autosize /> }} widgets={{ uri: FormLinkInput }} />
-            <Button htmlType="submit">提交</Button>
+        <Form schema={schema} style={{ width: 480 }} onSubmit={(values) => Toast.success(JSON.stringify(values))}>
+            <FormInput field="title" label={{ text: '标题', required: true }} />
+            <SchemaField field="profile" renderField={renderField} widgets={{ uri: UrlInput }} />
+            <Button type="primary" htmlType="submit">
+                提交
+            </Button>
         </Form>
     );
 }

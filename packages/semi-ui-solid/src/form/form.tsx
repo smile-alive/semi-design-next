@@ -12,14 +12,7 @@ import useFoundation from '../_base/use-foundation';
 import { Row } from '../grid';
 import useLocale from '../locale/use-locale';
 import { type FormContextValue, FormContext } from './context';
-import ErrorMessage from './error-message';
-import FormInputGroup from './input-group';
 import type { FormApi, FormElement, FormProps, FormRenderProps, FormState } from './interface';
-import Label from './label';
-import SchemaField from './schema-field';
-import Section from './section';
-import Slot from './slot';
-import useForm from './use-form';
 import { batchMethods, cloneDeep } from './utils';
 
 const prefix = cssClasses.PREFIX;
@@ -42,7 +35,7 @@ function pickFormProps(props: Record<string, any>, keys?: string[]) {
     return keys ? Object.fromEntries(keys.map((key) => [key, props[key]])) : props;
 }
 
-function Form<Values extends Record<string, any> = any, Output = Values>(rawProps: FormProps<Values, Output>) {
+export default function Form<Values extends Record<string, any> = any, Output = Values>(rawProps: FormProps<Values, Output>) {
     type Foundation = FormFoundation<SubmitEvent>;
     type Adapter = BaseFormAdapter<FormProps<Values, Output>, FormFoundationState, Values, SubmitEvent>;
 
@@ -207,13 +200,3 @@ function Form<Values extends Record<string, any> = any, Output = Values>(rawProp
 
     return view;
 }
-
-export default Object.assign(Form, {
-    Section,
-    Label,
-    ErrorMessage,
-    Slot,
-    InputGroup: FormInputGroup,
-    SchemaField,
-    useForm,
-});

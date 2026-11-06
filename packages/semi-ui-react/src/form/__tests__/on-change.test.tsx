@@ -1,24 +1,23 @@
 import { render, fireEvent, waitFor, act } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { Form, Select } from '@fibrae/semi-ui-react';
+import { Form, FormInput, FormSelect } from '@fibrae/semi-ui-react';
 import type { FormState } from '@fibrae/semi-ui-react/form/interface';
 
-const Option = Select.Option;
-const FormSelect = (
-    <Form.Select style={{ width: 200 }} field="business" label="business">
-        <Option value="abc">Abc</Option>
-        <Option value="hotsoon">Hotsoon</Option>
-        <Option value="topbuzz">TopBuzz</Option>
-    </Form.Select>
+const selectField = (
+    <FormSelect style={{ width: 200 }} field="business" label="business">
+        <FormSelect.Option value="abc">Abc</FormSelect.Option>
+        <FormSelect.Option value="hotsoon">Hotsoon</FormSelect.Option>
+        <FormSelect.Option value="topbuzz">TopBuzz</FormSelect.Option>
+    </FormSelect>
 );
 
-const FormInput = <Form.Input field="name" />;
+const inputField = <FormInput field="name" />;
 
 const fields = (
     <>
-        {FormInput}
-        {FormSelect}
+        {inputField}
+        {selectField}
     </>
 );
 
@@ -39,7 +38,7 @@ describe('Form-onChange', () => {
         const onChange = vi.fn<(...args: unknown[]) => void>();
         render(
             <Form onChange={onChange}>
-                <Form.Input field="name" />
+                <FormInput field="name" />
             </Form>
         );
         fireEvent.change(getInput(), { target: { value: 'semi' } });
@@ -56,7 +55,7 @@ describe('Form-onChange', () => {
         const onChange = vi.fn<(...args: unknown[]) => void>();
         render(
             <Form onChange={onChange}>
-                <Form.Input field="name" rules={[{ validator: (value) => value === 'muji', message: 'not muji' }]} trigger="change" />
+                <FormInput field="name" rules={[{ validator: (value) => value === 'muji', message: 'not muji' }]} trigger="change" />
             </Form>
         );
         fireEvent.change(getInput(), { target: { value: 'semi' } });
@@ -74,7 +73,7 @@ describe('Form-onChange', () => {
         const onChange = vi.fn<(...args: unknown[]) => void>();
         render(
             <Form onChange={onChange}>
-                <Form.Input field="name" />
+                <FormInput field="name" />
             </Form>
         );
         fireEvent.blur(getInput());
@@ -93,8 +92,8 @@ describe('Form 状态快照', () => {
         let formApi;
         render(
             <Form getFormApi={(api) => (formApi = api)} initValues={{ user: { name: 'a' }, address: { city: 'x' } }} {...props}>
-                <Form.Input field="user.name" />
-                <Form.Input field="address.city" />
+                <FormInput field="user.name" />
+                <FormInput field="address.city" />
             </Form>
         );
         return formApi;

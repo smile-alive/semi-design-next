@@ -18,7 +18,7 @@ export interface ArrayFieldContextValue {
     values: Accessor<Record<string, any> | undefined>;
 }
 
-/** The ids Form.InputGroup adds to each field's own aria references */
+/** The ids FormInputGroup adds to each field's own aria references */
 export interface FormInputGroupAria {
     labelledby?: string;
     describedby?: string;
@@ -31,7 +31,7 @@ export interface FormInputGroupContextValue {
     aria: Accessor<FormInputGroupAria>;
 }
 
-// optional: fields, Form.Slot and Form.InputGroup also render outside a Form
+// optional: fields, FormSlot and FormInputGroup also render outside a Form
 export const [FormContext, useFormContext] = createContext<FormContextValue>('Form', { optional: true });
 export const [ArrayFieldContext, useArrayFieldContext] = createContext<ArrayFieldContextValue>('ArrayField', { optional: true });
 export const [FormInputGroupContext, useFormInputGroupContext] = createContext<FormInputGroupContextValue>('FormInputGroup', { optional: true });

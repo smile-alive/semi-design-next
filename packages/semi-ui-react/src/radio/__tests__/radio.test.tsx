@@ -4,7 +4,7 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { Form, Tooltip } from '@fibrae/semi-ui-react';
+import { Form, FormRadio, Tooltip } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import { RadioWithGroup as Radio, type RadioChangeEvent, type RadioHandle } from '../index';
 
@@ -395,11 +395,11 @@ describe('radio', () => {
         expect(container.querySelector(`.${prefixCls}-addon`).id).toBeTruthy();
     });
 
-    it('Form.Radio 在 formApi.reset 后取消选中，并跟随 setValue', async () => {
+    it('FormRadio 在 formApi.reset 后取消选中，并跟随 setValue', async () => {
         let formApi;
         const { unmount } = render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.Radio field="agree">Agree</Form.Radio>
+                <FormRadio field="agree">Agree</FormRadio>
             </Form>
         );
         await userEvent.click(screen.getByRole('radio'));
@@ -411,7 +411,7 @@ describe('radio', () => {
 
         render(
             <Form getFormApi={(api) => (formApi = api)} initValues={{ agree: true }}>
-                <Form.Radio field="agree">Agree</Form.Radio>
+                <FormRadio field="agree">Agree</FormRadio>
             </Form>
         );
         expect(screen.getByRole('radio')).toBeChecked();
@@ -453,14 +453,14 @@ describe('radio', () => {
         expect(screen.getByRole('radio')).toHaveAccessibleDescription('tip');
     });
 
-    it('带 field 的 Form.Radio 用错误信息描述 input，并且不把不支持的 aria 与 Form 属性放到 DOM 上', async () => {
-        // `required` is not a declared Form.Radio prop; it is passed on purpose to check it stays off the DOM
+    it('带 field 的 FormRadio 用错误信息描述 input，并且不把不支持的 aria 与 Form 属性放到 DOM 上', async () => {
+        // `required` is not a declared FormRadio prop; it is passed on purpose to check it stays off the DOM
         const requiredProp = { required: true };
         render(
             <Form>
-                <Form.Radio {...requiredProp} field="agree" rules={[{ validator: () => false, message: 'must be off' }]}>
+                <FormRadio {...requiredProp} field="agree" rules={[{ validator: () => false, message: 'must be off' }]}>
                     Agree
-                </Form.Radio>
+                </FormRadio>
             </Form>
         );
         await userEvent.click(screen.getByRole('radio'));
@@ -473,13 +473,13 @@ describe('radio', () => {
         expect(label).not.toHaveAttribute('aria-invalid');
     });
 
-    it('带 field 的 Form.Radio 在 blur 时校验', () => {
+    it('带 field 的 FormRadio 在 blur 时校验', () => {
         const validate = vi.fn<() => string>(() => '');
         render(
             <Form>
-                <Form.Radio field="agree" trigger="blur" validator={validate}>
+                <FormRadio field="agree" trigger="blur" validator={validate}>
                     Agree
-                </Form.Radio>
+                </FormRadio>
             </Form>
         );
         act(() => screen.getByRole('radio').focus());
@@ -487,15 +487,15 @@ describe('radio', () => {
         expect(validate).toHaveBeenCalled();
     });
 
-    // Form.Radio without a field prop renders a plain Radio, which must keep the ref Tooltip relies on
-    it('fix #384: 不带 field 的 Form.Radio 转发 ref', () => {
+    // FormRadio without a field prop renders a plain Radio, which must keep the ref Tooltip relies on
+    it('fix #384: 不带 field 的 FormRadio 转发 ref', () => {
         const ref = createRef<RadioHandle>();
         render(
             <Form>
                 <Tooltip content="hi bytedance" trigger="custom" visible>
-                    <Form.Radio>Semi</Form.Radio>
+                    <FormRadio>Semi</FormRadio>
                 </Tooltip>
-                <Form.Radio ref={ref}>Design</Form.Radio>
+                <FormRadio ref={ref}>Design</FormRadio>
             </Form>
         );
         expect(screen.getByText('hi bytedance')).toBeInTheDocument();
@@ -529,12 +529,12 @@ describe('radio 审计修复', () => {
         expect(screen.getByRole('radio')).not.toBeChecked();
     });
 
-    it('Form.Radio 的 helpText 与 extra 同时出现在描述中', () => {
+    it('FormRadio 的 helpText 与 extra 同时出现在描述中', () => {
         render(
             <Form>
-                <Form.Radio field="agree" helpText="help" extra="more">
+                <FormRadio field="agree" helpText="help" extra="more">
                     accept
-                </Form.Radio>
+                </FormRadio>
             </Form>
         );
         const input = screen.getByRole('radio');
@@ -613,12 +613,12 @@ describe('radio 审计修复', () => {
         expect(new FormData(screen.getByTestId('form') as HTMLFormElement).get('fruit')).toBe('apple');
     });
 
-    it('Form.Radio 的标签与 addon 都在可访问名称中', () => {
+    it('FormRadio 的标签与 addon 都在可访问名称中', () => {
         render(
             <Form>
-                <Form.Radio field="agree" label="Terms">
+                <FormRadio field="agree" label="Terms">
                     accept
-                </Form.Radio>
+                </FormRadio>
             </Form>
         );
         const input = screen.getByRole('radio');

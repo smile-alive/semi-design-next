@@ -1,8 +1,8 @@
-import { useState, useRef, type ReactNode } from 'react';
-import { Form, type CommonFieldProps, type FormHandle, type InputValidateStatus as ValidateStatus } from '@fibrae/semi-ui-react';
+import { useState, useRef } from 'react';
+import { Form, FormInput, type CommonFieldProps, type FormHandle, type InputValidateStatus as ValidateStatus } from '@fibrae/semi-ui-react';
 
 export default function FormDemo() {
-    const [helpText, setHelpText] = useState<ReactNode>('');
+    const [helpText, setHelpText] = useState('');
     const [validateStatus, setValidateStatus] = useState<ValidateStatus>('default');
     const formRef = useRef<FormHandle>(null);
 
@@ -12,7 +12,7 @@ export default function FormDemo() {
             return '密码不能为空';
         } else if (val.length <= 3) {
             setValidateStatus('warning');
-            setHelpText(<span style={{ color: 'var(--semi-color-warning)' }}>密码强度：弱</span>); // 展示 helpText
+            setHelpText('密码强度：弱'); // 展示 helpText
             return ''; // 校验通过
         } else {
             setHelpText('');
@@ -31,11 +31,11 @@ export default function FormDemo() {
 
     return (
         <Form showValidateIcon ref={formRef} onSubmit={() => console.log('submit success')} onSubmitFail={(errors) => console.log(errors)}>
-            <Form.Input
+            <FormInput
                 validator={validator}
                 field="Password"
                 validateStatus={validateStatus}
-                helpText={helpText}
+                helpText={helpText ? <span style={{ color: 'var(--semi-color-warning)' }}>{helpText}</span> : ''}
                 extraText={
                     <button
                         type="button"

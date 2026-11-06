@@ -1,7 +1,7 @@
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconUser, IconSemiLogo, IconStar } from '@fibrae/semi-icons-react';
-import { LocaleProvider, ConfigProvider, Pagination, Modal, Button, Select, Cascader, DatePicker, TreeSelect, Table, TimePicker, List, Calendar, Typography, Transfer, ImagePreview, Image, Form, Nav } from '@fibrae/semi-ui-react';
+import { LocaleProvider, ConfigProvider, Pagination, Modal, Button, Select, Cascader, DatePicker, TreeSelect, Table, TimePicker, List, Calendar, Typography, Transfer, ImagePreview, Image, Form, FormInput, Nav } from '@fibrae/semi-ui-react';
 
 // A pack loads when it is picked, so the page does not bundle every language up front
 const loaders = {
@@ -88,51 +88,43 @@ const treeData = [
         ],
     },
 ];
+const columns = [
+    {
+        title: 'Name',
+        width: 250,
+        dataIndex: 'name',
+    },
+    {
+        title: 'Age',
+        width: 150,
+        dataIndex: 'age',
+    },
+    {
+        title: 'Address',
+        dataIndex: 'address',
+    },
+];
+
+const dataSource = Array.from({ length: 46 }, (_, i) => ({
+    key: String(i),
+    name: `Bytedance ${i}`,
+    age: 32,
+    address: `Beijing, Haidian. Zhichun Road ${i}`,
+}));
+
+const transferData = Array.from({ length: 100 }, (_, i) => ({
+    label: `选项名称 ${i}`,
+    value: i,
+    disabled: false,
+    key: i,
+}));
+
+const srcList = ['/assets/root-web-sites/abstract.jpg', '/assets/root-web-sites/sky.jpg', '/assets/root-web-sites/greenleaf.jpg', '/assets/root-web-sites/colorful.jpg'];
+
+const style = { margin: 10 };
+
 function I18nComponent() {
     const [modalVisible, setModalVisible] = useState(false);
-    const columns = useMemo(
-        () => [
-            {
-                title: 'Name',
-                width: 250,
-                dataIndex: 'name',
-            },
-            {
-                title: 'Age',
-                width: 150,
-                dataIndex: 'age',
-            },
-            {
-                title: 'Address',
-                dataIndex: 'address',
-            },
-        ],
-        []
-    );
-    const dataSource = useMemo(() => {
-        const data = [];
-        for (let i = 0; i < 46; i++) {
-            data.push({
-                key: '' + i,
-                name: `Bytedance ${i}`,
-                age: 32,
-                address: `Beijing, Haidian. Zhichun Road ${i}`,
-            });
-        }
-        return data;
-    }, []);
-    const transferData = useMemo(() => {
-        return Array.from({ length: 100 }, (_v, i) => {
-            return {
-                label: `选项名称 ${i}`,
-                value: i,
-                disabled: false,
-                key: i,
-            };
-        });
-    }, []);
-    const srcList = useMemo(() => ['/assets/root-web-sites/abstract.jpg', '/assets/root-web-sites/sky.jpg', '/assets/root-web-sites/greenleaf.jpg', '/assets/root-web-sites/colorful.jpg'], []);
-    const style = { margin: 10 };
     return (
         <>
             <h5>Pagination</h5>
@@ -176,7 +168,7 @@ function I18nComponent() {
             <h5>List - Empty</h5>
             <List header={<div>List</div>} dataSource={[]} />
             <h5>Calendar</h5>
-            <Calendar mode="month" displayValue={new Date(2019, 6, 23)} />
+            <Calendar mode="month" displayValue={new Date(2024, 4, 6, 12)} />
             <h5>Typography - Copyable</h5>
             <Typography.Paragraph copyable>Click to copy text.</Typography.Paragraph>
             <h5>Typography - Collapsible</h5>
@@ -188,12 +180,12 @@ function I18nComponent() {
             <h5>Image</h5>
             <ImagePreview showTooltip>
                 {srcList.map((src, index) => {
-                    return <Image key={index} src={src} width={200} alt={`lamp${index + 1}`} style={{ marginRight: 5 }} />;
+                    return <Image key={index} src={src} width={200} alt={`lamp${index + 1}`} style={{ marginInlineEnd: 5 }} />;
                 })}
             </ImagePreview>
             <h5>Form</h5>
             <Form layout="horizontal" onValueChange={(values) => console.log(values)}>
-                <Form.Input field="UserName" label={{ text: '角色', optional: true }} style={{ width: 200 }} />
+                <FormInput field="UserName" label={{ text: '角色', optional: true }} style={{ width: 200 }} />
             </Form>
             <h5>Navigation</h5>
             <Nav
@@ -230,7 +222,7 @@ export default function LocaleDemo() {
 
     return (
         <>
-            <div style={{ borderBottom: '1px solid var(--semi-color-border)', paddingBottom: 20 }}>
+            <div style={{ borderBlockEnd: '1px solid var(--semi-color-border)', paddingBlockEnd: 20 }}>
                 <Select aria-label="切换语言" onChange={onLanguageChange} prefix="切换语言" style={{ width: 250 }} defaultValue="zh_CN">
                     <Select.Option value="zh_CN">简体中文</Select.Option>
                     <Select.Option value="en_US">英语（美）</Select.Option>

@@ -2,7 +2,7 @@ import { StrictMode, useEffect } from 'react';
 import { act, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { Form } from '@fibrae/semi-ui-react';
+import { Form, FormInput, useForm } from '@fibrae/semi-ui-react';
 import type { FormApi } from '../interface';
 
 function renderNameForm(props: Record<string, unknown> = {}, fieldProps: Record<string, unknown> = {}) {
@@ -14,7 +14,7 @@ function renderNameForm(props: Record<string, unknown> = {}, fieldProps: Record<
             }}
             {...props}
         >
-            <Form.Input field="name" rules={[{ required: true, message: 'req' }]} {...fieldProps} />
+            <FormInput field="name" rules={[{ required: true, message: 'req' }]} {...fieldProps} />
         </Form>
     );
     return { ...utils, getApi: () => api };
@@ -102,7 +102,7 @@ describe('Form 字段校验读取最新属性', () => {
                     api = formApi;
                 }}
             >
-                <Form.Input
+                <FormInput
                     field="name"
                     initValue="a"
                     transform={(value: string) => `${value}-${suffix}`}
@@ -137,7 +137,7 @@ describe('Form 表单级 validator', () => {
             >
                 {({ formState }) => (
                     <>
-                        <Form.Input field="name" />
+                        <FormInput field="name" />
                         <output>{JSON.stringify(formState.errors)}</output>
                     </>
                 )}
@@ -162,8 +162,8 @@ describe('Form 卸载', () => {
         const onChange = vi.fn<(...args: unknown[]) => void>();
         const { unmount } = render(
             <Form onChange={onChange}>
-                <Form.Input field="a" />
-                <Form.Input field="b" />
+                <FormInput field="a" />
+                <FormInput field="b" />
             </Form>
         );
         unmount();
@@ -182,7 +182,7 @@ describe('Form 卸载', () => {
                     initValues={{ a: '1' }}
                     onChange={onChange}
                 >
-                    <Form.Input field="a" />
+                    <FormInput field="a" />
                 </Form>
             </StrictMode>
         );
@@ -195,13 +195,13 @@ describe('Form 卸载', () => {
     it('useForm 搭配 keepState 字段，Form 卸载后 formState 为空', () => {
         let latest: { values?: unknown };
         function Host({ show }: { show: boolean }) {
-            const [api, formState] = Form.useForm();
+            const [api, formState] = useForm();
             useEffect(() => {
                 latest = formState;
             });
             return show ? (
                 <Form form={api} initValues={{ a: '1' }}>
-                    <Form.Input field="a" keepState />
+                    <FormInput field="a" keepState />
                 </Form>
             ) : null;
         }
@@ -251,7 +251,7 @@ describe('Form 提交', () => {
                 onSubmit={onSubmit}
                 onSubmitFail={onSubmitFail}
             >
-                <Form.Input field="a" />
+                <FormInput field="a" />
             </Form>
         );
         // The thrown error surfaces as an unhandled rejection by design; the runner's own listener would fail the run
@@ -280,8 +280,8 @@ describe('Form onErrorChange 触发次数', () => {
         let api: FormApi;
         render(
             <Form getFormApi={(formApi) => (api = formApi)} onErrorChange={onErrorChange}>
-                <Form.Input field="a" rules={[{ required: true, message: 'a-req' }]} />
-                <Form.Input field="b" rules={[{ required: true, message: 'b-req' }]} />
+                <FormInput field="a" rules={[{ required: true, message: 'a-req' }]} />
+                <FormInput field="b" rules={[{ required: true, message: 'b-req' }]} />
             </Form>
         );
         await act(() => expect(api.validate()).rejects.toEqual({ a: ['a-req'], b: ['b-req'] }));

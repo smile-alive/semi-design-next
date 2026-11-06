@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vite-plus/test';
 import { renderServer } from '@test/solid/ssr.solid';
-import { Form, FormInput } from '..';
+import { Form, FormErrorMessage, FormInput } from '..';
 
 function counter(text: string) {
     const state = { created: 0 };
@@ -14,7 +14,7 @@ function counter(text: string) {
 describe('不创建未插入的 JSX', () => {
     it('ErrorMessage 有 error 时不创建 helpText', async () => {
         const help = counter('help text');
-        const { html, errors } = await renderServer({ render: () => <Form.ErrorMessage error={['bad']} helpText={<help.Counted />} /> });
+        const { html, errors } = await renderServer({ render: () => <FormErrorMessage error={['bad']} helpText={<help.Counted />} /> });
         expect(errors).toEqual([]);
         expect(html).toContain('bad');
         expect(html).not.toContain('help text');
@@ -23,7 +23,7 @@ describe('不创建未插入的 JSX', () => {
 
     it("ErrorMessage 的 error 为 [''] 时不创建 helpText", async () => {
         const help = counter('help text');
-        const { errors } = await renderServer({ render: () => <Form.ErrorMessage error={['']} helpText={<help.Counted />} /> });
+        const { errors } = await renderServer({ render: () => <FormErrorMessage error={['']} helpText={<help.Counted />} /> });
         expect(errors).toEqual([]);
         expect(help.state.created).toBe(0);
     });

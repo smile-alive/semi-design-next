@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { Button, Form, Input, TextArea, TimePicker } from '@fibrae/semi-ui-react';
+import { Button, Form, FormInput, Input, TextArea, TimePicker } from '@fibrae/semi-ui-react';
 import { clickOutside, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
 import type { InputHandle } from '../index';
 
@@ -427,12 +427,12 @@ describe.each([
     });
 });
 
-it('由 blur 触发的 Form.Input 在焦点离开后才校验一次，而非在移向清除按钮的途中校验', async () => {
+it('由 blur 触发的 FormInput 在焦点离开后才校验一次，而非在移向清除按钮的途中校验', async () => {
     const validator = vi.fn<() => boolean>(() => true);
     render(
         <>
             <Form>
-                <Form.Input field="name" initValue="semi" rules={[{ validator }]} showClear trigger="blur" />
+                <FormInput field="name" initValue="semi" rules={[{ validator }]} showClear trigger="blur" />
             </Form>
             <Button>after</Button>
         </>

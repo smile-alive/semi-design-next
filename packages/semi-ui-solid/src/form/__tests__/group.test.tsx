@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { type FormProps, type InputGroupProps, Form, FormInput } from '..';
+import { type FormProps, type InputGroupProps, Form, FormInputGroup, FormInput } from '..';
 
 interface GroupOptions {
     inputGroupProps?: Partial<InputGroupProps>;
@@ -12,10 +12,10 @@ interface GroupOptions {
 function renderFormGroup({ inputGroupProps = {}, fieldAProps = {}, fieldBProps = {}, formProps = {} }: GroupOptions = {}) {
     return render(() => (
         <Form {...formProps}>
-            <Form.InputGroup {...inputGroupProps}>
+            <FormInputGroup {...inputGroupProps}>
                 <FormInput field="a" {...fieldAProps} />
                 <FormInput field="b" {...fieldBProps} />
-            </Form.InputGroup>
+            </FormInputGroup>
         </Form>
     ));
 }
@@ -88,9 +88,9 @@ describe('Form-group', () => {
     it('Form 外渲染时警告且不渲染', () => {
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const { container } = render(() => (
-            <Form.InputGroup label="G">
+            <FormInputGroup label="G">
                 <FormInput field="a" />
-            </Form.InputGroup>
+            </FormInputGroup>
         ));
         expect(container).toBeEmptyDOMElement();
         expect(warn).toHaveBeenCalledWith(expect.stringContaining('[Semi Form]'));
@@ -111,9 +111,9 @@ describe('Form-group', () => {
                 <span id="own-name">Own</span>
                 <span id="own-desc">Note</span>
                 <Form>
-                    <Form.InputGroup aria-describedby="own-desc" aria-errormessage="own-desc" aria-labelledby="own-name" extraText="hint" label="Full name">
+                    <FormInputGroup aria-describedby="own-desc" aria-errormessage="own-desc" aria-labelledby="own-name" extraText="hint" label="Full name">
                         <FormInput field="a" trigger="mount" validator={() => 'bad'} />
-                    </Form.InputGroup>
+                    </FormInputGroup>
                 </Form>
             </>
         ));
@@ -130,9 +130,9 @@ describe('Form-group', () => {
                 <span id="own-name">Own</span>
                 <span id="phone-hint">Hint</span>
                 <Form>
-                    <Form.InputGroup label="手机">
+                    <FormInputGroup label="手机">
                         <FormInput aria-describedby="phone-hint" aria-labelledby="own-name" field="phone" />
-                    </Form.InputGroup>
+                    </FormInputGroup>
                 </Form>
             </>
         ));
@@ -153,10 +153,10 @@ describe('Form-group', () => {
     it('组内不是字段的子元素照常渲染', () => {
         render(() => (
             <Form>
-                <Form.InputGroup label="G">
+                <FormInputGroup label="G">
                     <FormInput field="a" />
                     <span data-testid="unit">kg</span>
-                </Form.InputGroup>
+                </FormInputGroup>
             </Form>
         ));
         expect(screen.getByTestId('unit')).toHaveTextContent('kg');

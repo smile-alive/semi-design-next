@@ -2,7 +2,7 @@ import { createRef, type ComponentProps } from 'react';
 import { render, fireEvent, waitFor, act } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { Form } from '@fibrae/semi-ui-react';
+import { Form, FormInput, FormSelect } from '@fibrae/semi-ui-react';
 import type { InputHandle } from '@fibrae/semi-ui-react/input';
 import { sleep } from '@test/utils/react';
 import type { FormApi } from '../interface';
@@ -13,7 +13,7 @@ function renderForm(props: Record<string, unknown>) {
 
 // Cases pass loosely typed prop bags (some intentionally invalid), so the bag is cast to the real props
 function getInput({ key, ...props }: Record<string, unknown>) {
-    return <Form.Input key={key as string} {...(props as unknown as ComponentProps<typeof Form.Input>)} />;
+    return <FormInput key={key as string} {...(props as unknown as ComponentProps<typeof FormInput>)} />;
 }
 
 const inputSelector = `.${BASE_CLASS_PREFIX}-input`;
@@ -22,15 +22,15 @@ const getInputDOM = (scope = '') => document.querySelector(`${scope} ${inputSele
 const getErrorMessage = (scope = '') => document.querySelector(`${scope} ${emSelector}`);
 
 describe('Form-field', () => {
-    it('Form.Select 承接 Select 的 Option 与 OptGroup', () => {
+    it('FormSelect 承接 Select 的 Option 与 OptGroup', () => {
         const formApi: { current: FormApi | null } = { current: null };
         render(
             <Form getFormApi={(api) => (formApi.current = api)} initValues={{ city: 'sh' }}>
-                <Form.Select field="city">
-                    <Form.Select.OptGroup label="cn">
-                        <Form.Select.Option value="sh">Shanghai</Form.Select.Option>
-                    </Form.Select.OptGroup>
-                </Form.Select>
+                <FormSelect field="city">
+                    <FormSelect.OptGroup label="cn">
+                        <FormSelect.Option value="sh">Shanghai</FormSelect.Option>
+                    </FormSelect.OptGroup>
+                </FormSelect>
             </Form>
         );
         expect(formApi.current?.getValue('city')).toBe('sh');
@@ -63,8 +63,8 @@ describe('Form-field', () => {
     it('数组形式的 label 是标签内容，不当作 Label 属性', () => {
         const { container, getByRole } = render(
             <Form>
-                <Form.Input field="top" label={['A', 'b']} />
-                <Form.Input field="inset" label={['C', 'd']} labelPosition="inset" />
+                <FormInput field="top" label={['A', 'b']} />
+                <FormInput field="inset" label={['C', 'd']} labelPosition="inset" />
             </Form>
         );
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-form-field-label-text`)).toHaveTextContent(/^Ab$/);
@@ -73,7 +73,7 @@ describe('Form-field', () => {
     it('inset 布局下 label 为 null 时以 field 为标签', () => {
         const { getByRole } = render(
             <Form>
-                <Form.Input field="empty" label={null} labelPosition="inset" />
+                <FormInput field="empty" label={null} labelPosition="inset" />
             </Form>
         );
         expect(getByRole('textbox', { name: 'empty' })).toBeInTheDocument();
@@ -112,9 +112,9 @@ describe('Form-field', () => {
     it('未渲染 label 时，控件不引用不存在的 id 作为标签', () => {
         const { getByRole } = render(
             <Form>
-                <Form.Input aria-label="Name" field="name" noLabel />
-                <Form.Input id="pure" field="pure" pure />
-                <Form.Input id="inset" field="inset" label="Inset" labelPosition="inset" pure />
+                <FormInput aria-label="Name" field="name" noLabel />
+                <FormInput id="pure" field="pure" pure />
+                <FormInput id="inset" field="inset" label="Inset" labelPosition="inset" pure />
             </Form>
         );
         expect(getByRole('textbox', { name: 'Name' })).not.toHaveAttribute('aria-labelledby');
@@ -364,7 +364,7 @@ describe('Form-field', () => {
     it('字段带自身 labelCol 与 wrapperCol 时，在自己的 Row 中布局', () => {
         const { container } = render(
             <Form>
-                <Form.Input field="name" label="Name" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} />
+                <FormInput field="name" label="Name" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} />
             </Form>
         );
         const field = container.querySelector(`.${BASE_CLASS_PREFIX}-form-field`);
@@ -377,7 +377,7 @@ describe('Form-field', () => {
     it('Form 同时设置两列时，保留单个表单级 Row', () => {
         const { container } = render(
             <Form labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>
-                <Form.Input field="name" label="Name" />
+                <FormInput field="name" label="Name" />
             </Form>
         );
         expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-row`)).toHaveLength(1);
@@ -389,7 +389,7 @@ describe('Form-field', () => {
         const ref = createRef<InputHandle>();
         render(
             <Form>
-                <Form.Input ref={ref} field="name" />
+                <FormInput ref={ref} field="name" />
             </Form>
         );
         expect(ref.current?.input).toBe(getInputDOM());
@@ -401,8 +401,8 @@ describe('Form-field', () => {
             getFormApi: (api) => (formApi = api),
             children: (
                 <>
-                    <Form.Input className="pure" field="pure" pure />
-                    <Form.Input field="quiet" noErrorMessage validator={() => 'quiet-err'} />
+                    <FormInput className="pure" field="pure" pure />
+                    <FormInput field="quiet" noErrorMessage validator={() => 'quiet-err'} />
                 </>
             ),
         });
@@ -416,7 +416,7 @@ describe('Form-field', () => {
 
     it('helpText 与 extraText 描述控件', () => {
         const { container } = renderForm({
-            children: <Form.Input id="name" extraText="extra" extraTextPosition="middle" field="name" helpText="help" />,
+            children: <FormInput id="name" extraText="extra" extraTextPosition="middle" field="name" helpText="help" />,
         });
         expect(getInputDOM()).toHaveAttribute('aria-describedby', 'name-helpText name-extraText');
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-form-field-extra-middle`)).toHaveTextContent('extra');
@@ -427,7 +427,7 @@ describe('Form-field', () => {
         let formApi;
         const { container } = renderForm({
             getFormApi: (api) => (formApi = api),
-            children: <Form.Input field="name" validateStatus="warning" validator={() => 'err'} />,
+            children: <FormInput field="name" validateStatus="warning" validator={() => 'err'} />,
         });
         await act(() => expect(formApi.validate()).rejects.toEqual({ name: ['err'] }));
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-input-wrapper-warning`)).not.toBeNull();

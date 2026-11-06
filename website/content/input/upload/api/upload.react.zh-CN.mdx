@@ -28,7 +28,7 @@ import ApiType from '#/components/ApiType.astro';
 | dragSubText | 拖拽区的帮助文本。 | `ReactNode` | - |
 | fileList | 受控的文件列表。传入后 Upload 即为受控组件，需在 onChange 中回写新数组。每项的 `uid` 必填且不能重复。 | <ApiType detail={"Array\u003cFileItem>"}>Type</ApiType> | - |
 | fileListTitle | 文件列表的标题区域。传入 ReactNode 时只替换标题文字，清空按钮保持默认；传入函数时可完全自定义标题区（含清空按钮），参数为 `fileList`、`onClear`、`clearText`。 | <ApiType detail={"ReactNode \u007c ((props: RenderFileListTitleProps) => ReactNode)"}>Type</ApiType> | - |
-| fileName | 作用与 name 相同，主要在 Form.Upload 中使用，避免与 Field 的 name 冲突。 | `string` | - |
+| fileName | 作用与 name 相同，主要在 FormUpload 中使用，避免与 Field 的 name 冲突。 | `string` | - |
 | headers | 上传时附带的 headers，或根据文件返回 headers 的函数。 | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, string>)"}>Type</ApiType> | - |
 | hotSpotLocation | 照片墙添加按钮的位置，可选 `start` 或 `end`。 | `'end' \| 'start'` | `"end"` |
 | itemStyle | 文件卡片的内联样式。 | `CSSProperties` | - |

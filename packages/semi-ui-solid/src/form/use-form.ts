@@ -3,7 +3,7 @@ import { createFormApiProxy, EMPTY_FORM_STATE } from '@fibrae/semi-foundation/fo
 import type { FormState } from './interface';
 
 /**
- * A formApi usable outside the Form: `const [formApi, formState, values] = Form.useForm()`, then
+ * A formApi usable outside the Form: `const [formApi, formState, values] = useForm()`, then
  * `<Form form={formApi}>`. The Form binds it on mount and pushes every form state into `formState`.
  */
 export default function useForm<Values extends Record<string, any> = any, Output = Values>() {

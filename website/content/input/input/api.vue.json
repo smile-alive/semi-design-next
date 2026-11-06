@@ -309,8 +309,8 @@
                 "en-US": "Whether the group is disabled; controls at any depth in the group take it, and a disabled a control sets itself takes precedence."
             },
             "label": {
-                "zh-CN": "组的标签配置（Form.Label 的属性，另可设 id、class、style）；text、extra 只接受字符串或数字，节点内容使用 label、labelExtra 插槽。",
-                "en-US": "Label configuration of the group (Form.Label props, plus id, class and style); text and extra accept only strings or numbers, use the label and labelExtra slots for nodes."
+                "zh-CN": "组的标签配置（FormLabel 的属性，另可设 id、class、style）；text、extra 只接受字符串或数字，节点内容使用 label、labelExtra 插槽。",
+                "en-US": "Label configuration of the group (FormLabel props, plus id, class and style); text and extra accept only strings or numbers, use the label and labelExtra slots for nodes."
             },
             "labelPosition": {
                 "zh-CN": "标签位置，可选 top 或 left。",

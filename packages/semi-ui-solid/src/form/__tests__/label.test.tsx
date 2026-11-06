@@ -2,12 +2,12 @@ import { type JSX, createSignal } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { type LabelProps, Form } from '..';
+import { type LabelProps, FormLabel } from '..';
 
-const Label = Form.Label;
+const Label = FormLabel;
 const labelSelector = `.${BASE_CLASS_PREFIX}-form-field-label`;
 
-describe('Form.Label', () => {
+describe('FormLabel', () => {
     it('class 与 style', () => {
         const { container } = render(() => <Label class="label-test" style={{ color: 'red' }} />);
         const label = container.querySelector('label.label-test');

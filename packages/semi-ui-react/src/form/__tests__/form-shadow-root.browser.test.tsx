@@ -1,6 +1,6 @@
 import { act, render } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
-import { Form } from '@fibrae/semi-ui-react';
+import { Form, FormInput } from '@fibrae/semi-ui-react';
 import type { FormApi } from '../interface';
 
 const toTop = { behavior: 'auto', block: 'start' } as const;
@@ -22,7 +22,7 @@ describe('Form（ShadowRoot）', () => {
         const view = render(
             <Form autoScrollToError={toTop} getFormApi={(formApi) => (api = formApi)}>
                 <div style={{ height: '300vh' }} />
-                <Form.Input field="b" rules={[{ required: true, message: 'required' }]} />
+                <FormInput field="b" rules={[{ required: true, message: 'required' }]} />
             </Form>,
             { container: mount }
         );

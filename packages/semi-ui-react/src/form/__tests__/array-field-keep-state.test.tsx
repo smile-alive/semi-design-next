@@ -1,7 +1,7 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vite-plus/test';
-import { ArrayField, Button, Form } from '@fibrae/semi-ui-react';
+import { ArrayField, Button, Form, FormInput } from '@fibrae/semi-ui-react';
 import type { FormApi } from '../interface';
 
 interface Row {
@@ -20,7 +20,7 @@ function Rows({ show = true, keepState, initValue }: { show?: boolean; keepState
                 <>
                     {arrayFields.map(({ key, field, remove }, index) => (
                         <div key={key}>
-                            <Form.Input field={`${field}.name`} label={`row ${index}`} rules={rules} />
+                            <FormInput field={`${field}.name`} label={`row ${index}`} rules={rules} />
                             <Button onClick={remove}>{`remove ${index}`}</Button>
                         </div>
                     ))}

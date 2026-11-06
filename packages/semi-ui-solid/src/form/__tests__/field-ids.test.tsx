@@ -8,6 +8,7 @@ import {
     type FormProps,
     type RuleItem,
     Form,
+    FormInputGroup,
     FormAutoComplete,
     FormCascader,
     FormCheckbox,
@@ -149,10 +150,10 @@ describe('Form 字段的 aria 引用', () => {
 
     it('InputGroup 内的字段出错，aria-errormessage 指向组级错误信息', () => {
         const { container, getApi } = renderForm(() => (
-            <Form.InputGroup label={{ text: 'group' }}>
+            <FormInputGroup label={{ text: 'group' }}>
                 <FormInput field="a" />
                 <FormInput field="b" />
-            </Form.InputGroup>
+            </FormInputGroup>
         ));
         getApi().setError('a', 'bad');
         const [first, second] = container.querySelectorAll('input');
@@ -376,9 +377,9 @@ describe('Form 字段的注入属性', () => {
 
     it('InputGroup 内字段的错误为空串时不设置 aria-errormessage', async () => {
         const { container, getApi } = renderForm(() => (
-            <Form.InputGroup label="G">
+            <FormInputGroup label="G">
                 <FormInput field="a" rules={[{ required: true, message: '' }]} />
-            </Form.InputGroup>
+            </FormInputGroup>
         ));
         await getApi()
             .validate()

@@ -6,7 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { numbers } from '@fibrae/semi-foundation/input-number/constants';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import de from '@fibrae/semi-foundation/locale/source/de';
-import { Form, withField } from '@fibrae/semi-ui-react';
+import { Form, FormInputNumber, withField } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
 import { default as InputNumber, type InputNumberHandle, type InputNumberProps } from '../index';
@@ -365,7 +365,7 @@ describe(`InputNumber`, () => {
         };
         render(
             <Form getFormApi={getFormApi} initValues={{ minControlled: 0 }}>
-                <Form.InputNumber min={1} field="minControlled" onChange={spyChange} />
+                <FormInputNumber min={1} field="minControlled" onChange={spyChange} />
             </Form>
         );
         expect(spyChange).not.toHaveBeenCalled();
@@ -945,12 +945,12 @@ describe(`InputNumber`, () => {
         expect(onChange).not.toHaveBeenCalled();
     });
 
-    it('Form.InputNumber 带 precision 与 initValue 挂载后，不被标记为 touched，也不运行校验', async () => {
+    it('FormInputNumber 带 precision 与 initValue 挂载后，不被标记为 touched，也不运行校验', async () => {
         const validate = vi.fn<(value: unknown) => string | undefined>();
         let formApi;
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.InputNumber field="n" initValue={100} precision={2} validator={validate} />
+                <FormInputNumber field="n" initValue={100} precision={2} validator={validate} />
             </Form>
         );
         expect(getInput()).toHaveValue('100.00');
@@ -1397,11 +1397,11 @@ describe(`InputNumber`, () => {
         expect(onChange).not.toHaveBeenCalledWith(0, expect.anything());
     });
 
-    it('FixFormValidate（#873）：表单挂载时未校验必填的 Form.InputNumber', async () => {
+    it('FixFormValidate（#873）：表单挂载时未校验必填的 FormInputNumber', async () => {
         const onChange = vi.fn<InputNumberCallback<'onChange'>>();
         const { container } = render(
             <Form>
-                <Form.InputNumber field="inputnumber" label="inputnumber" rules={[{ required: true }]} onChange={onChange} />
+                <FormInputNumber field="inputnumber" label="inputnumber" rules={[{ required: true }]} onChange={onChange} />
             </Form>
         );
         // validation is asynchronous, give a mount-time validation the chance to land
@@ -1727,7 +1727,7 @@ describe(`InputNumber`, () => {
             let formApi;
             render(
                 <Form getFormApi={(api) => (formApi = api)} initValues={{ amount: 5 }}>
-                    <Form.InputNumber field="amount" />
+                    <FormInputNumber field="amount" />
                 </Form>
             );
             expect(getInput()).toHaveValue('5');
@@ -1788,7 +1788,7 @@ describe(`InputNumber`, () => {
             const ref = createRef<InputNumberHandle>();
             render(
                 <Form>
-                    <Form.InputNumber ref={ref} field="amount" label="Amount" />
+                    <FormInputNumber ref={ref} field="amount" label="Amount" />
                 </Form>
             );
             expect(ref.current?.input).toBe(getInput());
