@@ -13,29 +13,35 @@ export function getMessageText(message?: Message): string | undefined {
     return typeof text === 'string' && text !== '' ? text : undefined;
 }
 
-export interface ChatBoxActionAdapter<P extends ChatBoxActionBaseProps = ChatBoxActionBaseProps, S extends object = object> extends DefaultAdapter<P, S> {
+export interface ChatBoxActionState {
+    visible: boolean;
+    showAction: boolean;
+}
+
+export interface ChatBoxActionAdapter<P extends ChatBoxActionBaseProps = ChatBoxActionBaseProps> extends DefaultAdapter<P, ChatBoxActionState> {
     notifyDeleteMessage: () => void;
     notifyMessageCopy: () => void;
     toastCopySuccess: () => void;
     notifyLikeMessage: () => void;
     notifyDislikeMessage: () => void;
     notifyResetMessage: () => void;
-    setVisible: (visible: boolean) => void;
-    setShowAction: (showAction: boolean) => void;
 }
 
-export default class ChatBoxActionFoundation<P extends ChatBoxActionBaseProps = ChatBoxActionBaseProps, S extends object = object> extends BaseFoundation<ChatBoxActionAdapter<P, S>, P, S> {
+export default class ChatBoxActionFoundation<P extends ChatBoxActionBaseProps = ChatBoxActionBaseProps> extends BaseFoundation<ChatBoxActionAdapter<P>, P, ChatBoxActionState> {
+    static getInitialState(): ChatBoxActionState {
+        return { visible: false, showAction: false };
+    }
+
     showDeletePopup = () => {
-        this.adapter.setVisible(true);
-        this.adapter.setShowAction(true);
+        this.setState({ visible: true, showAction: true });
     };
 
     /** Closes the delete popConfirm: from its buttons, or on a mousedown outside its trigger while it is open */
     hideDeletePopup = () => {
         // The delay keeps the action bar from flickering when the popConfirm closes through its cancel button
-        this.adapter.setVisible(false);
+        this.setState({ visible: false });
         setTimeout(() => {
-            this.adapter.setShowAction(false);
+            this.setState({ showAction: false });
         }, 150);
     };
 

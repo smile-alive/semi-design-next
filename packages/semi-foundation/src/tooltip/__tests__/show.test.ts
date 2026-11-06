@@ -3,18 +3,16 @@ import TooltipFoundation, { type TooltipAdapter, type TooltipBaseProps, type Too
 
 function createFoundation(initialProps: TooltipBaseProps = {}) {
     const props: TooltipBaseProps = { trigger: 'click', ...initialProps };
-    let state: TooltipBaseState = { isInsert: false, transitionState: '', triggerEventSet: {}, visible: false };
+    let state = TooltipFoundation.getInitialState();
     let clickOutsideHandler: ((e: MouseEvent) => void) | undefined;
     const adapter = {
         getProp: (key: string) => props[key],
         getProps: () => props,
         getState: (key: string) => state[key],
         getStates: () => state,
-        setState: (partial: Partial<TooltipBaseState>) => {
+        setState: vi.fn<(partial: Partial<TooltipBaseState>) => void>((partial) => {
             state = { ...state, ...partial };
-        },
-        registerTriggerEvent: () => {},
-        registerPortalEvent: () => {},
+        }),
         registerClickOutsideHandler: (handler: (e: MouseEvent) => void) => {
             clickOutsideHandler = handler;
         },
@@ -24,9 +22,8 @@ function createFoundation(initialProps: TooltipBaseProps = {}) {
         isEventInTrigger: () => false,
         isEventInPopup: () => false,
         notifyClickOutSide: vi.fn<(e: MouseEvent) => void>(),
-        insertPortal: vi.fn<() => void>(() => adapter.setState({ isInsert: true, visible: true })),
-        removePortal: vi.fn<() => void>(() => adapter.setState({ isInsert: false })),
-        closePopup: vi.fn<() => void>(() => adapter.setState({ visible: false })),
+        insertPortal: vi.fn<() => void>(() => adapter.setState({ isInsert: true, transitionState: 'enter', visible: true })),
+        removePortal: vi.fn<() => void>(() => adapter.setState({ isInsert: false, transitionState: '' })),
         getPopupId: () => 'popup',
         getPortalContainer: (): HTMLElement | null => null,
         getTriggerNode: () => null,
@@ -38,15 +35,18 @@ function createFoundation(initialProps: TooltipBaseProps = {}) {
     const foundation = new TooltipFoundation(adapter as unknown as TooltipAdapter);
     foundation.init();
     const setVisible = (visible?: boolean) => {
+        const prev = { ...props };
         props.visible = visible;
-        foundation.handleVisiblePropChange();
+        foundation.handlePropsChange(prev);
     };
     const pressOutside = () => {
         const event = new MouseEvent('mousedown');
         clickOutsideHandler?.(event);
         return event;
     };
-    return { foundation, adapter, setVisible, pressOutside };
+    // closing marks the popup as leaving
+    const closes = () => adapter.setState.mock.calls.filter(([partial]) => partial.transitionState === 'leave').length;
+    return { foundation, adapter, setVisible, pressOutside, closes };
 }
 
 describe('show', () => {
@@ -60,25 +60,33 @@ describe('show', () => {
     });
 
     it('hide 之后再次 show 会重新打开', () => {
-        const { foundation, adapter } = createFoundation();
+        const { foundation, adapter, closes } = createFoundation();
 
         foundation.show();
         foundation.hide();
         foundation.show();
 
         expect(adapter.insertPortal).toHaveBeenCalledTimes(2);
-        expect(adapter.closePopup).toHaveBeenCalledTimes(1);
+        expect(closes()).toBe(1);
     });
 
-    it('destroy 之后 init 重新打开不受上一次状态影响', () => {
-        const { foundation, adapter } = createFoundation();
+    it('destroy 与 init 之间保持打开：不重复打开，点击外部仍能关闭', () => {
+        const { foundation, adapter, pressOutside, closes } = createFoundation();
+        adapter.getPortalContainer = () => document.createElement('div');
 
         foundation.show();
+        foundation.handleOpened();
         foundation.destroy();
+        expect(closes()).toBe(0);
         foundation.init();
         foundation.show();
+        foundation.handleOpened();
+        expect(adapter.insertPortal).toHaveBeenCalledTimes(1);
+        expect(adapter.notifyOpen).toHaveBeenCalledTimes(1);
+        expect(adapter.notifyVisibleChange.mock.calls).toEqual([[true]]);
 
-        expect(adapter.insertPortal).toHaveBeenCalledTimes(2);
+        pressOutside();
+        expect(closes()).toBe(1);
     });
 
     it('受控 visible 为 false 时 show 只请求打开，使用方回写后打开且不重复报告', () => {
@@ -95,32 +103,32 @@ describe('show', () => {
     });
 
     it('受控 visible 为 true 时 hide 只请求关闭，使用方回写后关闭且不重复报告', () => {
-        const { foundation, adapter, setVisible } = createFoundation({ visible: true });
+        const { foundation, adapter, setVisible, closes } = createFoundation({ visible: true });
         foundation.handleOpened();
         expect(adapter.notifyVisibleChange).not.toHaveBeenCalled();
         foundation.hide();
         foundation.hide();
-        expect(adapter.closePopup).not.toHaveBeenCalled();
+        expect(closes()).toBe(0);
         expect(adapter.notifyVisibleChange.mock.calls).toEqual([[false], [false]]);
 
         setVisible(false);
-        expect(adapter.closePopup).toHaveBeenCalledTimes(1);
+        expect(closes()).toBe(1);
         expect(adapter.notifyVisibleChange).toHaveBeenCalledTimes(2);
     });
 
     it('受控时使用方自行打开和关闭都不报告', () => {
-        const { foundation, adapter, setVisible } = createFoundation({ visible: false });
+        const { foundation, adapter, setVisible, closes } = createFoundation({ visible: false });
 
         setVisible(true);
         foundation.handleOpened();
         expect(adapter.insertPortal).toHaveBeenCalledTimes(1);
         setVisible(false);
-        expect(adapter.closePopup).toHaveBeenCalledTimes(1);
+        expect(closes()).toBe(1);
         expect(adapter.notifyVisibleChange).not.toHaveBeenCalled();
     });
 
     it('使用方拒绝打开请求后自行打开再关闭，弹层照常开合且都不报告', () => {
-        const { foundation, adapter, setVisible } = createFoundation({ visible: false });
+        const { foundation, adapter, setVisible, closes } = createFoundation({ visible: false });
         foundation.show();
         adapter.notifyVisibleChange.mockClear();
 
@@ -129,24 +137,24 @@ describe('show', () => {
         foundation.handleOpened();
         expect(adapter.insertPortal).toHaveBeenCalledTimes(1);
         setVisible(false);
-        expect(adapter.closePopup).toHaveBeenCalledTimes(1);
+        expect(closes()).toBe(1);
         expect(adapter.notifyVisibleChange).not.toHaveBeenCalled();
     });
 
     it('非受控时 show 与 hide 直接开关并报告', () => {
-        const { foundation, adapter } = createFoundation();
+        const { foundation, adapter, closes } = createFoundation();
         foundation.show();
         foundation.handleOpened();
         foundation.hide();
         expect(adapter.insertPortal).toHaveBeenCalledTimes(1);
-        expect(adapter.closePopup).toHaveBeenCalledTimes(1);
+        expect(closes()).toBe(1);
         expect(adapter.notifyVisibleChange.mock.calls).toEqual([[true], [false]]);
     });
 
     it.each<TooltipBaseProps>([{}, { visible: false }])('尚未打开时 hide 不关闭弹层也不发送关闭请求：%o', (props) => {
-        const { foundation, adapter } = createFoundation(props);
+        const { foundation, adapter, closes } = createFoundation(props);
         foundation.hide();
-        expect(adapter.closePopup).not.toHaveBeenCalled();
+        expect(closes()).toBe(0);
         expect(adapter.notifyVisibleChange).not.toHaveBeenCalled();
     });
 });
@@ -160,18 +168,18 @@ describe('handleClickOutside', () => {
     };
 
     it.each<TooltipBaseProps>([{ trigger: 'click' }, { trigger: 'contextMenu' }, { trigger: 'hover', clickTriggerToHide: true }, { trigger: 'custom', clickTriggerToHide: true }])('%o 时在外部按下先报告再关闭', (props) => {
-        const { adapter, pressOutside } = openPopup(props);
+        const { adapter, pressOutside, closes } = openPopup(props);
         const event = pressOutside();
         expect(adapter.notifyClickOutSide).toHaveBeenCalledWith(event);
-        expect(adapter.closePopup).toHaveBeenCalledTimes(1);
+        expect(closes()).toBe(1);
         expect(adapter.notifyClickOutSide.mock.invocationCallOrder[0]).toBeLessThan(adapter.notifyVisibleChange.mock.invocationCallOrder[0]);
     });
 
     it('trigger 为 custom 时只报告不关闭', () => {
-        const { adapter, pressOutside } = openPopup({ trigger: 'custom' });
+        const { adapter, pressOutside, closes } = openPopup({ trigger: 'custom' });
         pressOutside();
         expect(adapter.notifyClickOutSide).toHaveBeenCalledTimes(1);
-        expect(adapter.closePopup).not.toHaveBeenCalled();
+        expect(closes()).toBe(0);
     });
 
     it('trigger 为 hover 时不监听外部按下', () => {
@@ -181,11 +189,11 @@ describe('handleClickOutside', () => {
     });
 
     it.each(['isEventInTrigger', 'isEventInPopup'] as const)('%s 为 true 时不算外部', (query) => {
-        const { adapter, pressOutside } = openPopup({ trigger: 'click' });
+        const { adapter, pressOutside, closes } = openPopup({ trigger: 'click' });
         adapter[query] = () => true;
         pressOutside();
         expect(adapter.notifyClickOutSide).not.toHaveBeenCalled();
-        expect(adapter.closePopup).not.toHaveBeenCalled();
+        expect(closes()).toBe(0);
     });
 
     it('弹层不在文档中时不算外部', () => {
@@ -213,11 +221,11 @@ describe('handleOpened', () => {
         trigger.dataset.popupid = popupIds;
         document.body.append(trigger);
         trigger.focus();
-        const { foundation, adapter } = createFoundation({ trigger: 'hover' });
+        const { foundation, adapter, closes } = createFoundation({ trigger: 'hover' });
         adapter.isTriggerHovered = () => false;
         foundation.show();
         foundation.handleOpened();
         trigger.remove();
-        expect(adapter.closePopup).toHaveBeenCalledTimes(kept ? 0 : 1);
+        expect(closes()).toBe(kept ? 0 : 1);
     });
 });

@@ -1,23 +1,26 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/time-picker/constants';
-    import TimeInputFoundation, { type TimeInputAdapter } from '@fibrae/semi-foundation/time-picker/input-foundation';
+    import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/time-picker/input-foundation';
     import { IconClock } from '@fibrae/semi-icons-svelte';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import { Input } from '../input/index.js';
     import type { TimeInputProps } from './interface.js';
 
-    type Foundation = TimeInputFoundation<TimeInputProps, Record<string, never>, FocusEvent>;
-    type Adapter = TimeInputAdapter<TimeInputProps, Record<string, never>, FocusEvent>;
+    type Foundation = TimeInputFoundation<TimeInputProps, FocusEvent>;
+    type Adapter = TimeInputAdapter<TimeInputProps, FocusEvent>;
 
     let { value, inputReadOnly = false, invalid = false, validateStatus, focusOnOpen = false, preventScroll, onChange, onFocus, onBlur, ...rest }: TimeInputProps = $props();
 
     let input = $state<Input>();
 
-    const { foundation } = useFoundation<Foundation, Adapter, TimeInputProps, Record<string, never>>(
+    const { foundation } = useFoundation<Foundation, Adapter, TimeInputProps, TimeInputState>(
         TimeInputFoundation,
-        {},
+        {
+            get value() {
+                return value;
+            },
+        },
         () => ({}),
         () => ({
             notifyChange: (next) => onChange?.(next),
@@ -28,9 +31,6 @@
     );
 
     const prefix = cssClasses.PREFIX;
-
-    // Re-formatting moves the caret to the end; watch runs after the Input wrote the new text
-    watch(() => value, foundation.restoreCursor);
 
     onMount(() => {
         const frame = requestAnimationFrame(() => {

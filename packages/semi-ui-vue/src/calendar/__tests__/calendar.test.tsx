@@ -1468,17 +1468,23 @@ describe('Calendar（Vue）', () => {
         await waitFor(() => expect(screen.getByRole('button', { name: ja_JP.Calendar.close })).toBeInTheDocument());
     });
 
-    it('KeepAlive 切走再切回后卡片已关闭', async () => {
+    it('KeepAlive 切走期间卡片离开文档，切回后卡片仍打开，隐藏与显示都不发 close，外部按下能关闭', async () => {
         const onClose = vi.fn<CloseHandler>();
         const props = { displayValue: today, events: [event('a', new Date(2019, 7, 8, 9))], onClose };
         const view = render(CachedMonth, { props: { ...props, active: true } });
         await userEvent.click(screen.getByRole('button', { name: '还有1项' }));
         await waitFor(() => expect(card()).not.toBeNull());
         await view.rerender({ ...props, active: false });
+        expect(card()).toBeNull();
+        await view.rerender({ ...props, active: true });
+        await waitFor(() => expect(card()).toBeVisible());
+        expect(screen.getByRole('button', { name: '还有1项' })).toHaveAttribute('aria-expanded', 'true');
+        expect(onClose).not.toHaveBeenCalled();
+
+        await fireEvent.mouseDown(document.body);
+        await waitForCardClosed();
         expect(onClose).toHaveBeenCalledTimes(1);
         expect(onClose.mock.calls[0][0]).toBeNull();
-        await view.rerender({ ...props, active: true });
-        await waitForCardClosed();
         expect(screen.getByRole('button', { name: '还有1项' })).toHaveAttribute('aria-expanded', 'false');
     });
 });

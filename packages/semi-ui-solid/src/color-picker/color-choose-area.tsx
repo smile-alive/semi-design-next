@@ -20,7 +20,7 @@ export default function ColorChooseArea(props: ColorChooseAreaProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, ColorChooseAreaBaseProps, ColorChooseAreaBaseState>(
         ColorChooseAreaFoundation,
         props,
-        () => ({ isHandleGrabbing: false }),
+        () => ColorChooseAreaFoundation.getInitialState(),
         () => ({
             getDOM: () => dom as HTMLDivElement,
             notifyChange: (newColor) => props.onChange(newColor),

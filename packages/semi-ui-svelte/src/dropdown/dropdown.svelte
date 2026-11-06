@@ -20,8 +20,8 @@
     import DropdownTitle from './dropdown-title.svelte';
     import type { DropDownMenuItem, DropdownProps, DropdownTriggerProps } from './interface.js';
 
-    type Foundation = DropdownFoundation<DropdownBaseProps, DropdownBaseState>;
-    type Adapter = DropdownAdapter<DropdownBaseProps, DropdownBaseState>;
+    type Foundation = DropdownFoundation<DropdownBaseProps>;
+    type Adapter = DropdownAdapter<DropdownBaseProps>;
 
     const defaults = useDefaultProps('Dropdown');
 
@@ -95,9 +95,8 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, DropdownBaseProps, DropdownBaseState>(
         DropdownFoundation,
         foundationProps,
-        () => ({ popVisible: false }),
-        (base) => ({
-            setPopVisible: (popVisible) => base.setState({ popVisible }),
+        () => DropdownFoundation.getInitialState(),
+        () => ({
             notifyVisibleChange: (next) => onVisibleChange?.(next),
             getPopup: () => popupElement?.closest<HTMLElement>('[popover]') ?? null,
             hidePopup: () => tooltip?.hide(),

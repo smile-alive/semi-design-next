@@ -99,7 +99,7 @@
     const { foundation } = useFoundation<Foundation, Adapter, SideSheetBaseProps, SideSheetState>(
         SideSheetFoundation,
         foundationProps,
-        () => ({}),
+        () => SideSheetFoundation.getInitialState(),
         () => ({
             disabledBodyScroll: () => (isModal() ? scroll.hold(lockBodyScroll) : scroll.release()),
             enabledBodyScroll: () => scroll.release(),

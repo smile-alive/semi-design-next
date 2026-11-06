@@ -3,23 +3,44 @@ import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 export type ImageLoadStatus = 'loading' | 'success' | 'error';
 
 export interface ImageBaseProps {
+    src?: string;
     preview?: boolean | { visible?: boolean };
 }
 
-export interface ImageBaseState {}
+export interface ImageState {
+    loadStatus: ImageLoadStatus;
+    /** Its own value while `preview.visible` is unset, and the last controlled value after that */
+    previewVisible: boolean;
+}
 
-export interface ImageAdapter<P extends ImageBaseProps = ImageBaseProps, S extends ImageBaseState = ImageBaseState> extends DefaultAdapter<P, S> {
+export interface ImageAdapter<P extends ImageBaseProps = ImageBaseProps> extends DefaultAdapter<P, ImageState> {
     getIsInGroup: () => boolean;
     openGroupPreview: () => void;
-    setLoadStatus: (status: ImageLoadStatus) => void;
-    setPreviewVisible: (visible: boolean) => void;
     notifyLoad: (e: any) => void;
     notifyError: (e: any) => void;
     notifyPreviewVisibleChange: (visible: boolean) => void;
 }
 
-export default class ImageFoundation<P extends ImageBaseProps = ImageBaseProps, S extends ImageBaseState = ImageBaseState> extends BaseFoundation<ImageAdapter<P, S>, P, S> {
+function getControlledVisible(preview: ImageBaseProps['preview']) {
+    return typeof preview === 'object' && preview !== null && preview.visible !== undefined ? Boolean(preview.visible) : undefined;
+}
+
+export default class ImageFoundation<P extends ImageBaseProps = ImageBaseProps> extends BaseFoundation<ImageAdapter<P>, P, ImageState> {
+    static override readonly propKeys = ['src', 'preview'];
+
+    // `preview` is usually a new object every render; only its controlled visible matters
+    static override readonly propEquals = { preview: (a: ImageBaseProps['preview'], b: ImageBaseProps['preview']) => getControlledVisible(a) === getControlledVisible(b) };
+
     // static: render derives these, and a foundation method must not run during render
+    static getInitialState(props: ImageBaseProps): ImageState {
+        return { loadStatus: 'loading', previewVisible: getControlledVisible(props.preview) ?? false };
+    }
+
+    /** The controlled visible wins in the commit it arrives in, before `handlePropsChange` stores it */
+    static getPreviewVisible(preview: ImageBaseProps['preview'], state: ImageState) {
+        return getControlledVisible(preview) ?? state.previewVisible;
+    }
+
     /** A lone image opens only once loaded; a group's preview does not wait for the thumbnail */
     static canOpen(preview: ImageBaseProps['preview'], loadStatus: ImageLoadStatus, isInGroup: boolean) {
         return Boolean(preview) && (loadStatus === 'success' || isInGroup);
@@ -28,6 +49,16 @@ export default class ImageFoundation<P extends ImageBaseProps = ImageBaseProps, 
     /** The lone image's own preview stays mounted while the thumbnail loads, so an open preview survives a reload, a controlled visible need not wait for it, and closing it can restore focus */
     static canPreview(preview: ImageBaseProps['preview'], isInGroup: boolean) {
         return Boolean(preview) && !isInGroup;
+    }
+
+    override handlePropsChange(prev: Partial<P>) {
+        if (prev.src !== this.getProp('src')) {
+            this.setState({ loadStatus: 'loading' });
+        }
+        const visible = getControlledVisible(this.getProp('preview'));
+        if (visible !== undefined && visible !== this.getState('previewVisible')) {
+            this.setState({ previewVisible: visible });
+        }
     }
 
     handleClick = (_e: unknown) => {
@@ -53,12 +84,12 @@ export default class ImageFoundation<P extends ImageBaseProps = ImageBaseProps, 
 
     handleLoaded = (e: unknown) => {
         this.adapter.notifyLoad(e);
-        this.adapter.setLoadStatus('success');
+        this.setState({ loadStatus: 'success' });
     };
 
     handleError = (e: unknown) => {
         this.adapter.notifyError(e);
-        this.adapter.setLoadStatus('error');
+        this.setState({ loadStatus: 'error' });
     };
 
     handlePreviewVisibleChange = (newVisible: boolean) => {
@@ -66,10 +97,10 @@ export default class ImageFoundation<P extends ImageBaseProps = ImageBaseProps, 
         if (typeof preview === 'object' && preview !== null) {
             this.adapter.notifyPreviewVisibleChange(newVisible);
             if (preview.visible === undefined) {
-                this.adapter.setPreviewVisible(newVisible);
+                this.setState({ previewVisible: newVisible });
             }
         } else {
-            this.adapter.setPreviewVisible(newVisible);
+            this.setState({ previewVisible: newVisible });
         }
     };
 }

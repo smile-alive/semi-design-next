@@ -13,6 +13,9 @@ import { useNavContext } from './nav-context';
 import { fitNavIcon } from './nav-icon';
 import type { SubNavProps } from './sub-nav';
 
+type Foundation = ItemFoundation;
+type Adapter = ItemAdapter<NavItemProps>;
+
 const clsPrefix = `${cssClasses.PREFIX}-item`;
 export interface NavItemProps extends ItemProps, Omit<BaseProps, 'children'>, ElementProps<'li', 'onClick' | 'children'> {
     disabled?: boolean;
@@ -58,7 +61,7 @@ export function NavItemShell({ ref, itemContent, wrapperProps, ...props }: NavIt
     let itemChildren: React.ReactNode = null;
 
     // ref stays out of the props the foundation reads: onSelect reports a deep clone of them as selectedItems
-    const [foundation] = useFoundation<ItemFoundation, ItemAdapter<NavItemProps>, NavItemProps, object>(
+    const [foundation] = useFoundation<Foundation, Adapter, NavItemProps, object>(
         ItemFoundation,
         props,
         () => ({}),

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-    import { computed, h, onBeforeUpdate, onDeactivated, onUpdated, shallowRef, useId, useTemplateRef, watch, type Component, type ComponentPublicInstance } from 'vue';
+    import { computed, h, onBeforeUpdate, onUpdated, shallowRef, useId, useTemplateRef, type Component, type ComponentPublicInstance } from 'vue';
     import type { Editor, FocusPosition, Content as TiptapContent } from '@tiptap/core';
-    import { isEqual } from 'es-toolkit';
     import { cssClasses, numbers } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
-    import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputBaseState } from '@fibrae/semi-ai-foundation/ai-chat-input/foundation';
+    import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputState } from '@fibrae/semi-ai-foundation/ai-chat-input/foundation';
     import type { Attachment, Content, Reference, Suggestion } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
     import { getAttachmentType, getContentType, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/ai-chat-input/utils';
     import { isImageFile } from '@fibrae/semi-ai-foundation/file-suffix';
@@ -18,7 +17,7 @@
     import useFoundation from '@fibrae/semi-ui-vue/_base/use-foundation';
     import Button from '@fibrae/semi-ui-vue/button/index';
     import useConfig from '@fibrae/semi-ui-vue/config-provider/use-config';
-    import { useDidUpdate, useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
     import Popover from '@fibrae/semi-ui-vue/popover/index';
     import Progress from '@fibrae/semi-ui-vue/progress/index';
     import Configure from './configure';
@@ -28,8 +27,8 @@
     import SendButton from './send-button.vue';
     import UploadButton from './upload-button.vue';
 
-    type Foundation = AIChatInputFoundation<AIChatInputProps, AIChatInputBaseState>;
-    type Adapter = AIChatInputAdapter<AIChatInputProps, AIChatInputBaseState>;
+    type Foundation = AIChatInputFoundation<AIChatInputProps>;
+    type Adapter = AIChatInputAdapter<AIChatInputProps>;
 
     defineOptions({ name: 'AIChatInput', inheritAttrs: false });
 
@@ -115,23 +114,13 @@
     // null and false are tiptap positions (keep the selection, do nothing), so only undefined falls back
     const focusEditor = (pos?: FocusPosition) => editor?.commands.focus(pos ?? 'end');
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, AIChatInputProps, AIChatInputBaseState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, AIChatInputProps, AIChatInputState>(
         AIChatInputFoundation,
         props,
-        () => ({
-            templateVisible: false,
-            skillVisible: false,
-            suggestionVisible: false,
-            attachments: props.uploadProps?.defaultFileList ?? [],
-            content: undefined,
-            skill: undefined,
-            activeSkillIndex: 0,
-            activeSuggestionIndex: 0,
-        }),
+        (view) => AIChatInputFoundation.getInitialState(view),
         (base) => ({
             setContent,
             clearContent: () => setContent(''),
-            clearAttachments: () => base.setState({ attachments: [] }),
             focusEditor,
             getEditor: () => editor,
             // the panel may render in a shadow root, out of reach of document queries
@@ -231,31 +220,6 @@
         // the slots interface has no index signature, so h() takes a plain-object copy
         return [h(UploadButton, { ...uploadButtonProps(), ref: 'upload', onChange: foundation.onUploadChange }, { ...slots }), send];
     };
-
-    useDidUpdate(
-        () => props.suggestions,
-        (current) => {
-            if (current && current.length > 0) {
-                foundation.showSuggestionPanel();
-            } else {
-                foundation.hideSuggestionPanel();
-            }
-        },
-        isEqual
-    );
-
-    watch(
-        () => props.generating,
-        (isGenerating) => {
-            if (isGenerating) {
-                foundation.handleGeneratingStart();
-            }
-        },
-        { flush: 'post' }
-    );
-
-    // a cached instance would otherwise come back with a panel open over whatever replaced it
-    onDeactivated(() => foundation.setState({ templateVisible: false, skillVisible: false, suggestionVisible: false }));
 
     onBeforeUpdate(() => {
         const active = FocusTrapHandle.getActiveElement(trigger.value);

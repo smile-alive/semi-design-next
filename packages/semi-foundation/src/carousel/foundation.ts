@@ -2,13 +2,8 @@ import { debounce } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../base/foundation';
 import { numbers } from './constants';
 
-export interface CarouselAdapter<P extends CarouselBaseProps = CarouselBaseProps, S extends CarouselBaseState = CarouselBaseState> extends DefaultAdapter<P, S, DirectionContext> {
+export interface CarouselAdapter<P extends CarouselBaseProps = CarouselBaseProps> extends DefaultAdapter<P, CarouselState, DirectionContext> {
     notifyChange: (activeIndex: number, preIndex: number) => void;
-    setNewActiveIndex: (activeIndex: number) => void;
-    setPreActiveIndex: (activeIndex: number) => void;
-    setIsReverse: (isReverse: boolean) => void;
-    setIsInit: (isInit: boolean) => void;
-    setRotating: (rotating: boolean) => void;
     getSlideCount: () => number;
 }
 
@@ -20,12 +15,15 @@ export interface CarouselBaseProps {
     speed?: number;
 }
 
-export interface CarouselBaseState {
+export interface CarouselState {
     activeIndex: number;
+    preIndex: number;
+    isReverse: boolean;
     isInit: boolean;
+    rotating: boolean;
 }
 
-export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBaseProps, S extends CarouselBaseState = CarouselBaseState> extends BaseFoundation<CarouselAdapter<P, S>, P, S> {
+export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBaseProps> extends BaseFoundation<CarouselAdapter<P>, P, CarouselState> {
     #interval = null;
     #forcePlay = false;
     #pausedByHover = false;
@@ -34,6 +32,11 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
     // set by the consumer's ref.stop(), so only ref.play() starts playback again
     #stoppedByUser = false;
     #pointerInside = false;
+
+    static override readonly propKeys = ['activeIndex', 'autoPlay'];
+    // autoPlay is often a fresh object literal on every render; only switching it on or off matters
+    static override readonly propEquals = { autoPlay: (a: CarouselAutoPlay, b: CarouselAutoPlay) => CarouselFoundation.isAutoPlayOn(a) === CarouselFoundation.isAutoPlayOn(b) };
+
     // debounced so a pointer crossing between slides and arrows does not flicker the pause
     readonly #hoverEnter = debounce(() => this.#pauseForHover(), numbers.HOVER_DELAY);
     readonly #hoverLeave = debounce(() => this.#resumeAfterHover(), numbers.HOVER_DELAY);
@@ -42,7 +45,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         if (this.#interval) {
             clearInterval(this.#interval);
             this.#interval = null;
-            this.adapter.setRotating(false);
+            this.setState({ rotating: false });
         }
     }
 
@@ -62,9 +65,9 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         if (stateActiveIndex !== activeIndex) {
             // a switch to the current index must not animate, so isInit stays until the index changes
             if (isInit) {
-                this.adapter.setIsInit(false);
+                this.setState({ isInit: false });
             }
-            this.adapter.setPreActiveIndex(stateActiveIndex);
+            this.setState({ preIndex: stateActiveIndex });
             this.adapter.notifyChange(activeIndex, stateActiveIndex);
         }
     }
@@ -76,7 +79,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         this.#interval = setInterval(() => {
             this.next();
         }, interval);
-        this.adapter.setRotating(true);
+        this.setState({ rotating: true });
     }
 
     // only playback paused by hover resumes on leave, so a hover never starts a stopped carousel
@@ -118,7 +121,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
 
     protected handleNewActiveIndex(activeIndex: number) {
         if (this.#getActiveIndex() !== activeIndex) {
-            this.adapter.setNewActiveIndex(activeIndex);
+            this.setState({ activeIndex });
         }
     }
 
@@ -128,6 +131,11 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
 
     static getDefaultActiveIndex(props: { activeIndex?: number; defaultActiveIndex?: number }) {
         return props.activeIndex === undefined ? props.defaultActiveIndex : props.activeIndex;
+    }
+
+    static getInitialState(props: { activeIndex?: number; defaultActiveIndex?: number }): CarouselState {
+        const activeIndex = CarouselFoundation.getDefaultActiveIndex(props) ?? numbers.DEFAULT_ACTIVE_INDEX;
+        return { activeIndex, preIndex: activeIndex, isReverse: false, isInit: true, rotating: false };
     }
 
     // clamps to the last slide when slides are fewer than the index; state is left alone so a controlled index stays
@@ -142,11 +150,11 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         }
     }
 
-    setForcePlay = (forcePlay: boolean) => {
-        this.#forcePlay = forcePlay;
-        if (forcePlay) {
-            this.#stoppedByUser = false;
-        }
+    // the consumer's ref.play(): starts rotation even with autoPlay off or reduced motion
+    play = () => {
+        this.#forcePlay = true;
+        this.#stoppedByUser = false;
+        this.handleAutoPlay();
     };
 
     stopByUser = () => {
@@ -159,12 +167,6 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         this.#pausedByHover = false;
         this.#resumeOnFocusLeave = false;
         this.#unregisterInterval();
-    };
-
-    handleAutoPlayChange = (autoPlayOn: boolean) => {
-        if (!autoPlayOn && !this.#forcePlay) {
-            this.stop();
-        }
     };
 
     handlePointerEnter = () => {
@@ -216,7 +218,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
     goTo = (activeIndex: number) => {
         const stateActiveIndex = this.#getActiveIndex();
         const targetIndex = this.getValidIndex(activeIndex);
-        this.adapter.setIsReverse(stateActiveIndex > targetIndex);
+        this.setState({ isReverse: stateActiveIndex > targetIndex });
         this.#notifyChange(targetIndex);
         if (!this.getIsControlledComponent()) {
             this.handleNewActiveIndex(targetIndex);
@@ -226,7 +228,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
     next = () => {
         this.#unregisterInterval();
         const targetIndex = this.getValidIndex(this.#getActiveIndex() + 1);
-        this.adapter.setIsReverse(false);
+        this.setState({ isReverse: false });
         this.#notifyChange(targetIndex);
         if (!this.getIsControlledComponent()) {
             this.handleNewActiveIndex(targetIndex);
@@ -237,7 +239,7 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
     prev = () => {
         this.#unregisterInterval();
         const targetIndex = this.getValidIndex(this.#getActiveIndex() - 1);
-        this.adapter.setIsReverse(true);
+        this.setState({ isReverse: true });
         this.#notifyChange(targetIndex);
         if (!this.getIsControlledComponent()) {
             this.handleNewActiveIndex(targetIndex);
@@ -245,12 +247,12 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         this.#restartAfterManualSwitch();
     };
 
-    // the debounces are only cancelled: React StrictMode runs init -> destroy -> init on one instance
+    // A hidden carousel is out of the page, so it must not keep switching slides, and mouseleave and focusout never
+    // reach it: the hover and focus pauses are dropped and init restarts the configured autoplay.
     override destroy() {
-        this.#hoverEnter.cancel();
-        this.#hoverLeave.cancel();
-        clearInterval(this.#interval);
-        this.#interval = null;
+        this.resetPointer();
+        this.#keyboardFocusWithin = false;
+        this.stop();
     }
 
     handleAutoPlay = () => {
@@ -300,17 +302,21 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
     };
 
     onIndicatorChange = (activeIndex: number) => {
-        this.adapter.setIsReverse(this.#getActiveIndex() > activeIndex);
+        this.setState({ isReverse: this.#getActiveIndex() > activeIndex });
         this.#notifyChange(activeIndex);
         if (!this.getIsControlledComponent()) {
             this.handleNewActiveIndex(activeIndex);
         }
     };
 
-    // dropping the prop later continues from the last controlled index
-    syncActiveIndex = (activeIndex: number) => {
-        if (activeIndex !== undefined && activeIndex !== this.getStates().activeIndex) {
-            this.adapter.setNewActiveIndex(activeIndex);
+    override handlePropsChange(prev: Partial<P>) {
+        const { activeIndex, autoPlay } = this.getProps();
+        // an activeIndex that goes back to undefined keeps the last controlled index, which later switches continue from
+        if (prev.activeIndex !== activeIndex && activeIndex !== undefined && activeIndex !== this.getState('activeIndex')) {
+            this.setState({ activeIndex });
         }
-    };
+        if (!CarouselFoundation.isAutoPlayOn(autoPlay) && CarouselFoundation.isAutoPlayOn(prev.autoPlay) && !this.#forcePlay) {
+            this.stop();
+        }
+    }
 }

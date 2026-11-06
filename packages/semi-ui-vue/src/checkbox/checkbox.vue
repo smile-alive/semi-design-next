@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, useAttrs, useId, useTemplateRef, watch, type ComputedRef, type InputHTMLAttributes } from 'vue';
+    import { computed, useAttrs, useId, useTemplateRef, type ComputedRef, type InputHTMLAttributes } from 'vue';
     import CheckboxFoundation, { type BasicCheckboxEvent, type CheckboxAdapter, type CheckboxBaseState, type CheckboxView } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
     import { checkboxClasses } from '@fibrae/semi-foundation/checkbox/constants';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
@@ -19,8 +19,8 @@
         name?: string;
     }
 
-    type Foundation = CheckboxFoundation<FoundationProps, CheckboxBaseState>;
-    type Adapter = CheckboxAdapter<FoundationProps, CheckboxBaseState>;
+    type Foundation = CheckboxFoundation<FoundationProps>;
+    type Adapter = CheckboxAdapter<FoundationProps>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -57,9 +57,8 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, CheckboxBaseState>(
         CheckboxFoundation,
         props,
-        (view) => ({ checked: Boolean(view.checked ?? view.defaultChecked) }),
-        (base) => ({
-            setChecked: (checked) => base.setState({ checked }),
+        (view) => CheckboxFoundation.getInitialState(view),
+        () => ({
             notifyChange: (event: BasicCheckboxEvent) => {
                 emit('update:modelValue', event.target.checked);
                 emit('change', event as CheckboxEvent);
@@ -121,11 +120,6 @@
         input.checked = checked.value;
         input.indeterminate = showMixed.value;
     };
-
-    watch(
-        () => props.modelValue,
-        (value) => foundation.setChecked(Boolean(value))
-    );
 
     defineExpose<CheckboxHandle>({
         focus: () => inputRef.value?.focus({ preventScroll: props.preventScroll }),

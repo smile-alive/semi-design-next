@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { onMount, untrack } from 'svelte';
-    import { on } from 'svelte/events';
+    import { untrack } from 'svelte';
     import { omit } from 'es-toolkit';
     import { cssClasses, strings } from '@fibrae/semi-foundation/upload/constants';
     import UploadFoundation, { type UploadAdapter, type UploadBaseProps, type UploadBaseState } from '@fibrae/semi-foundation/upload/foundation';
@@ -11,7 +10,6 @@
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import Cropper from '../cropper/cropper.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import Modal from '../modal/modal.svelte';
@@ -20,7 +18,6 @@
     import type { CustomFile, FileItem, UploadCropProps, UploadFileItemSlotProps, UploadProps } from './interface.js';
 
     interface UploadState extends UploadBaseState {
-        dragAreaStatus: 'default' | 'legal';
         fileList: FileItem[];
         inputKey: number;
         replaceInputKey: number;
@@ -118,13 +115,13 @@
     let fileListRoot = $state<HTMLDivElement>();
     const listFocus = new ListFocusTracker();
 
-    // A request outlives the component (its upload is not aborted), but its results are no longer reported once unmounted
-    let alive = true;
-
     // $bindable needs destructuring, so the foundation reads the props through getters
     const foundationProps: UploadBaseProps = {
         get accept() {
             return accept;
+        },
+        get addOnPasting() {
+            return addOnPasting;
         },
         get action() {
             return action;
@@ -188,60 +185,33 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, UploadBaseProps, UploadState>(
         UploadFoundation,
         foundationProps,
-        () => ({
-            fileList: [],
-            replaceUid: '',
-            inputKey: 0,
-            replaceInputKey: 0,
-            dragAreaStatus: 'default',
-            cropperVisible: false,
-            cropperFile: null,
-            cropperSrc: '',
-            pendingImageFiles: [],
-            nonImageFiles: [],
-            croppedFiles: [],
-            isReplaceOperation: false,
-        }),
+        (view) => ({ ...UploadFoundation.getInitialState(view), inputKey: 0, replaceInputKey: 0 }),
         (base) => ({
-            notifyFileSelect: (files) => alive && onFileChange?.(files),
-            notifyError: (error, fileInstance, list, xhr) => alive && onError?.(error, fileInstance, list as FileItem[], xhr),
-            notifySuccess: (body, file, list) => alive && onSuccess?.(body, file, list as FileItem[]),
-            notifyProgress: (percent, file, list) => alive && onProgress?.(percent, file, list as FileItem[]),
-            notifyRemove: (file, list, item) => alive && onRemove?.(file, list as FileItem[], item as FileItem),
-            notifySizeError: (file, list) => alive && onSizeError?.(file, list as FileItem[]),
-            notifyExceed: (files) => alive && onExceed?.(files),
-            // after the commit the prop shows what the parent kept, which a parent that refused the write leaves unchanged
-            updateFileList: (list, callback) =>
-                base.setState({ fileList: list as FileItem[] }, () => {
-                    if (fileList !== undefined) {
-                        foundation.syncLatestFileList(fileList);
-                    }
-                    callback?.();
-                }),
+            notifyFileSelect: (files) => onFileChange?.(files),
+            notifyError: (error, fileInstance, list, xhr) => onError?.(error, fileInstance, list as FileItem[], xhr),
+            notifySuccess: (body, file, list) => onSuccess?.(body, file, list as FileItem[]),
+            notifyProgress: (percent, file, list) => onProgress?.(percent, file, list as FileItem[]),
+            notifyRemove: (file, list, item) => onRemove?.(file, list as FileItem[], item as FileItem),
+            notifySizeError: (file, list) => onSizeError?.(file, list as FileItem[]),
+            notifyExceed: (files) => onExceed?.(files),
             notifyBeforeUpload: (object) => (beforeUpload as NonNullable<UploadProps['beforeUpload']>)(object),
             notifyAfterUpload: (object) => (afterUpload as NonNullable<UploadProps['afterUpload']>)(object),
             resetInput: () => base.setState({ inputKey: base.getState('inputKey') + 1 }),
             resetReplaceInput: () => base.setState({ replaceInputKey: base.getState('replaceInputKey') + 1 }),
-            updateDragAreaStatus: (status) => base.setState({ dragAreaStatus: status as UploadState['dragAreaStatus'] }),
             notifyBeforeRemove: (file, list) => beforeRemove?.(file as FileItem, list as FileItem[]) ?? true,
             notifyBeforeClear: (list) => beforeClear?.(list as FileItem[]) ?? true,
             notifyChange: ({ currentFile, fileList: next }) => {
-                if (!alive) {
-                    return;
-                }
                 // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 fileList = next as FileItem[];
                 onChange?.({ currentFile: currentFile as FileItem | null | undefined, fileList: next as FileItem[] });
             },
-            // the foundation's own url map is the source of truth
-            updateLocalUrls: () => {},
-            notifyClear: () => alive && onClear?.(),
+            notifyClear: () => onClear?.(),
             notifyPreviewClick: (file) => onPreviewClick?.(file as FileItem),
-            notifyRetry: (item) => alive && onRetry?.(item as FileItem),
-            notifyDrop: (event, files, list) => alive && onDrop?.(event, files, list as FileItem[]),
-            notifyAcceptInvalid: (files) => alive && onAcceptInvalid?.(files),
-            notifyPastingError: (error) => alive && onPastingError?.(error),
-            notifyCropError: (error) => alive && onCropError?.(error),
+            notifyRetry: (item) => onRetry?.(item as FileItem),
+            notifyDrop: (event, files, list) => onDrop?.(event, files, list as FileItem[]),
+            notifyAcceptInvalid: (files) => onAcceptInvalid?.(files),
+            notifyPastingError: (error) => onPastingError?.(error),
+            notifyCropError: (error) => onCropError?.(error),
             getCropperCanvas: () => cropper?.getCropperCanvas() ?? null,
         })
     );
@@ -327,32 +297,10 @@
         };
     };
 
-    watch(
-        () => fileList,
-        (value) => {
-            if (value === undefined) {
-                foundation.handleFileListPropChange(value);
-            } else {
-                foundation.syncLatestFileList(value);
-            }
-        }
-    );
-
     $effect(() => {
         void shownFiles;
         void disabled;
         untrack(() => listFocus.restore(cardsOf(), root?.querySelector<HTMLElement>(`.${prefix}-add, .${dragArea}`) ?? null));
-    });
-
-    $effect(() => {
-        if (!addOnPasting || disabled) {
-            return;
-        }
-        return on(document.body, 'paste', foundation.handlePasting);
-    });
-
-    onMount(() => () => {
-        alive = false;
     });
 
     export function insert(files: CustomFile[], index?: number) {

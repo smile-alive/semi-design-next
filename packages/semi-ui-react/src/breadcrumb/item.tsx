@@ -9,6 +9,9 @@ import { fitNavIcon } from '../navigation/nav-icon';
 import Typography, { type ShowTooltip } from '../typography';
 import { useBreadContext } from './bread-context';
 
+type Foundation = BreadcrumbItemFoundation<BreadcrumbItemProps, React.MouseEvent>;
+type Adapter = BreadcrumbItemAdapter<BreadcrumbItemProps, React.MouseEvent>;
+
 const clsPrefix = cssClasses.PREFIX;
 
 /** What a click on an item written as children reports: the children become `name` */
@@ -32,8 +35,6 @@ export interface BreadcrumbItemProps extends BaseProps, ElementProps<'span', 'on
     ref?: React.Ref<HTMLSpanElement>;
 }
 
-type BreadcrumbItemState = Record<string, never>;
-
 function BreadcrumbItem(props: BreadcrumbItemProps) {
     const { ref, onClick, icon, href, separator, noLink, active, shouldRenderSeparator = true, route, children, className, ...rest } = props;
 
@@ -41,7 +42,7 @@ function BreadcrumbItem(props: BreadcrumbItemProps) {
 
     let inner: React.ReactNode;
 
-    const [foundation] = useFoundation<BreadcrumbItemFoundation<BreadcrumbItemProps, BreadcrumbItemState, React.MouseEvent>, BreadcrumbItemAdapter<BreadcrumbItemProps, BreadcrumbItemState, React.MouseEvent>, BreadcrumbItemProps, BreadcrumbItemState>(
+    const [foundation] = useFoundation<Foundation, Adapter, BreadcrumbItemProps, object>(
         BreadcrumbItemFoundation,
         props,
         () => ({}),

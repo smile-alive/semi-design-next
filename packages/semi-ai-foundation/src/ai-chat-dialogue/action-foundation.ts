@@ -25,7 +25,12 @@ export interface DialogueActionBaseProps {
     message?: Message;
 }
 
-export interface DialogueActionAdapter<P extends DialogueActionBaseProps = DialogueActionBaseProps, S extends object = object> extends DefaultAdapter<P, S> {
+export interface DialogueActionState {
+    visible: boolean;
+    showAction: boolean;
+}
+
+export interface DialogueActionAdapter<P extends DialogueActionBaseProps = DialogueActionBaseProps> extends DefaultAdapter<P, DialogueActionState> {
     notifyDeleteMessage: () => void;
     notifyMessageCopy: () => void;
     toastCopySuccess: () => void;
@@ -34,11 +39,13 @@ export interface DialogueActionAdapter<P extends DialogueActionBaseProps = Dialo
     notifyResetMessage: () => void;
     notifyShareMessage: () => void;
     notifyEditMessage: () => void;
-    setVisible: (visible: boolean) => void;
-    setShowAction: (showAction: boolean) => void;
 }
 
-export default class DialogueActionFoundation<P extends DialogueActionBaseProps = DialogueActionBaseProps, S extends object = object> extends BaseFoundation<DialogueActionAdapter<P, S>, P, S> {
+export default class DialogueActionFoundation<P extends DialogueActionBaseProps = DialogueActionBaseProps> extends BaseFoundation<DialogueActionAdapter<P>, P, DialogueActionState> {
+    static getInitialState(): DialogueActionState {
+        return { visible: false, showAction: false };
+    }
+
     copyMessage = () => {
         const text = getMessageText(this.getProps().message);
         if (text === undefined) {
@@ -78,15 +85,14 @@ export default class DialogueActionFoundation<P extends DialogueActionBaseProps 
     };
 
     showMoreDropdown = () => {
-        this.adapter.setVisible(true);
-        this.adapter.setShowAction(true);
+        this.setState({ visible: true, showAction: true });
     };
 
     /** Closes the more menu: after a delete, or on a mousedown outside its trigger while it is open */
     hideMoreDropdown = () => {
-        this.adapter.setVisible(false);
+        this.setState({ visible: false });
         setTimeout(() => {
-            this.adapter.setShowAction(false);
+            this.setState({ showAction: false });
         }, 150);
     };
 }

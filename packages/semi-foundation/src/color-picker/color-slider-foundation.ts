@@ -16,17 +16,11 @@ export interface ColorSliderBaseState {
     isHandleGrabbing: boolean;
 }
 
-export interface ColorSliderAdapter<P extends ColorSliderBaseProps = ColorSliderBaseProps, S extends ColorSliderBaseState = ColorSliderBaseState> extends DefaultAdapter<P, S> {
+export interface ColorSliderAdapter<P extends ColorSliderBaseProps = ColorSliderBaseProps> extends DefaultAdapter<P, ColorSliderBaseState> {
     getDOM: () => HTMLDivElement;
 }
 
-export default class ColorSliderFoundation<P extends ColorSliderBaseProps = ColorSliderBaseProps, S extends ColorSliderBaseState = ColorSliderBaseState> extends BaseFoundation<ColorSliderAdapter<P, S>, P, S> {
-    constructor(adapter: ColorSliderAdapter<P, S>) {
-        super({
-            ...adapter,
-        });
-    }
-
+export default class ColorSliderFoundation<P extends ColorSliderBaseProps = ColorSliderBaseProps> extends BaseFoundation<ColorSliderAdapter<P>, P, ColorSliderBaseState> {
     #pickByPointer(e: { clientX: number }) {
         const rect = this.adapter.getDOM()?.getBoundingClientRect();
         if (!rect) {
@@ -36,6 +30,10 @@ export default class ColorSliderFoundation<P extends ColorSliderBaseProps = Colo
         foundation.handleColorChangeByHandle({
             h: Math.round(clamp((e.clientX - rect.x) / width, 0, 1) * 360),
         });
+    }
+
+    static getInitialState(): ColorSliderBaseState {
+        return { isHandleGrabbing: false };
     }
 
     /** Captures the pointer from the press, so moves and release arrive outside the slider too */

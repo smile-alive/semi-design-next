@@ -14,6 +14,9 @@ import useLocale from '../locale/use-locale';
 import Tooltip from '../tooltip';
 import Item, { type RatingItemHandle } from './item';
 
+type Foundation = RatingFoundation<RatingProps, RatingClickEvent, React.FocusEvent, React.KeyboardEvent>;
+type Adapter = RatingAdapter<RatingProps, RatingClickEvent, React.FocusEvent, React.KeyboardEvent>;
+
 export type { RatingItemProps, RatingItemHandle } from './item';
 export type { RatingState } from '@fibrae/semi-foundation/rating/foundation';
 
@@ -119,7 +122,7 @@ export default function Rating(rawProps: RatingProps) {
     const [stars] = useState(() => new Map<number, RatingItemHandle>());
     const listRef = useRef<HTMLUListElement>(null);
 
-    const [foundation, state] = useFoundation<RatingFoundation<RatingProps, RatingClickEvent, React.FocusEvent, React.KeyboardEvent>, RatingAdapter<RatingProps, RatingClickEvent, React.FocusEvent, React.KeyboardEvent>, RatingProps, RatingState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, RatingProps, RatingState>(
         RatingFoundation,
         props,
         () => RatingFoundation.getInitialState(props),

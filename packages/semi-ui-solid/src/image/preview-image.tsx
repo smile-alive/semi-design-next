@@ -1,6 +1,6 @@
-import { type JSX, For, Show, createEffect, on } from 'solid-js';
+import { type JSX, For, Show } from 'solid-js';
 import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageBaseState } from '@fibrae/semi-foundation/image/preview-image-foundation';
+import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageState } from '@fibrae/semi-foundation/image/preview-image-foundation';
 import useEventListener from '../_base/use-event-listener';
 import useFoundation from '../_base/use-foundation';
 import Spin from '../spin';
@@ -16,14 +16,13 @@ export default function PreviewImage(props: Props) {
     let container: HTMLDivElement | undefined;
     let image: HTMLImageElement | undefined;
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, Props, PreviewImageBaseState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, Props, PreviewImageState>(
         PreviewImageFoundation,
         props,
-        () => ({ width: 0, height: 0, loading: true, translate: { x: 0, y: 0 } }),
+        () => PreviewImageFoundation.getInitialState(),
         (base) => ({
             getContainer: () => container as HTMLDivElement,
             getImage: () => image as HTMLImageElement,
-            setLoading: (loading) => base.setState({ loading }),
             setImageCursor: (canDrag) => {
                 const style = (image as HTMLImageElement).style;
                 style.cursor = canDrag ? 'grab' : 'default';
@@ -44,19 +43,6 @@ export default function PreviewImage(props: Props) {
         width: `${state().width}px`,
         height: `${state().height}px`,
     });
-
-    // not deferred: a deferred on skips recording the first input, and the first update would then see a new src
-    createEffect(
-        on(
-            () => [props.src, props.ratio, props.rotation, props.zoom] as const,
-            (_, previous) => {
-                if (previous) {
-                    const [src, ratio, rotation, zoom] = previous;
-                    foundation.handlePropsUpdate({ src, ratio, rotation, zoom }, props.zoomEvent);
-                }
-            }
-        )
-    );
 
     useEventListener(() => window, 'resize', foundation.handleWindowResize);
 

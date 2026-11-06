@@ -4,6 +4,7 @@ import TextEntryFoundation, { type TextEntryAdapter, type TextEntryBaseProps, ty
 
 export interface TextAreaBaseProps extends TextEntryBaseProps {
     value?: string;
+    defaultValue?: string;
     disabled?: boolean;
     readonly?: boolean;
     disabledEnterStartNewLine?: boolean;
@@ -13,7 +14,7 @@ export interface TextAreaBaseProps extends TextEntryBaseProps {
 export interface TextAreaBaseState extends TextEntryBaseState {
     value?: string;
     cachedValue?: string;
-    isFocus?: boolean;
+    isFocus: boolean;
 }
 
 /** The members of a keyboard event the foundation reads; DOM events and React synthetic events both satisfy it */
@@ -23,7 +24,7 @@ export type TextAreaKeyEvent = Pick<KeyboardEvent, 'key' | 'shiftKey' | 'prevent
  * The host's event types: KE for keydown and Enter, CE for composition. Blur and clear stay untyped: their callbacks
  * declare a React event of the textarea.
  */
-export interface TextAreaAdapter<P extends TextAreaBaseProps = TextAreaBaseProps, S extends TextAreaBaseState = TextAreaBaseState, KE = unknown, CE = unknown> extends TextEntryAdapter<P, S, CE> {
+export interface TextAreaAdapter<P extends TextAreaBaseProps = TextAreaBaseProps, KE = unknown, CE = unknown> extends TextEntryAdapter<P, TextAreaBaseState, CE> {
     notifyBlur(value: string, e: any): void;
     notifyKeyDown(e: KE): void;
     notifyClear(e: any): void;
@@ -36,7 +37,7 @@ export interface TextAreaAdapter<P extends TextAreaBaseProps = TextAreaBaseProps
     getTextarea(): HTMLTextAreaElement | null;
 }
 
-export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBaseProps, S extends TextAreaBaseState = TextAreaBaseState, KE extends TextAreaKeyEvent = TextAreaKeyEvent, CE = unknown> extends TextEntryFoundation<TextAreaAdapter<P, S, KE, CE>, P, S, CE> {
+export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBaseProps, KE extends TextAreaKeyEvent = TextAreaKeyEvent, CE = unknown> extends TextEntryFoundation<TextAreaAdapter<P, KE, CE>, P, TextAreaBaseState, CE> {
     #resizeObserved = false;
     #lastSize: { width: number; height: number } | null = null;
     // the browser lacks CSS field-sizing, so the height is written inline
@@ -46,8 +47,24 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
     #observed: HTMLTextAreaElement | null = null;
     #lastWidth = NaN;
 
+    static override readonly propKeys = ['value'];
+
     static isAllowClear(props: { showClear?: boolean; disabled?: boolean; readonly?: boolean }, value?: string) {
         return Boolean(value && props.showClear && !props.disabled && !props.readonly);
+    }
+
+    static getInitialState(props: Pick<TextAreaBaseProps, 'value' | 'defaultValue'>): TextAreaBaseState {
+        return {
+            value: props.value === undefined ? props.defaultValue : props.value,
+            cachedValue: props.value,
+            isFocus: false,
+        };
+    }
+
+    // `value` going back to undefined (a form reset) empties the text
+    override handlePropsChange() {
+        const value = this.getProp('value');
+        this.setState({ value, cachedValue: value });
     }
 
     override init() {
@@ -97,10 +114,6 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
         }
     };
 
-    handleValueChange = (value: string) => {
-        this.adapter.setState({ value, cachedValue: value });
-    };
-
     handleBlur = (e: unknown) => {
         const { value } = this.getStates();
         let realValue = value;
@@ -110,12 +123,12 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
             realValue = this.handleVisibleMaxLength(value);
             if (realValue !== value) {
                 if (!this.isControlledComponent()) {
-                    this.adapter.setValue(realValue);
+                    this.setState({ value: realValue });
                 }
                 this.adapter.notifyChange(realValue, e);
             }
         }
-        this.adapter.toggleFocusing(false);
+        this.setState({ isFocus: false });
         this.adapter.notifyBlur(realValue, e);
     };
 
@@ -160,7 +173,7 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
 
     handleClear = (e: Pick<Event, 'stopPropagation'>) => {
         if (!this.isControlledComponent('value')) {
-            this.adapter.setValue('');
+            this.setState({ value: '' });
         }
         this.adapter.notifyChange('', e);
         this.adapter.notifyClear(e);
@@ -168,24 +181,24 @@ export default class TextAreaFoundation<P extends TextAreaBaseProps = TextAreaBa
     };
 
     handleClick = (e: Pick<Event, 'target' | 'currentTarget'>) => {
-        const { disabled, readonly } = this.adapter.getProps();
-        const { isFocus } = this.adapter.getStates();
+        const { disabled, readonly } = this.getProps();
+        const { isFocus } = this.getStates();
         if (disabled || readonly || isFocus) {
             return;
         }
         if (this.adapter.isEventTarget(e)) {
             this.adapter.focusInput();
-            this.adapter.toggleFocusing(true);
+            this.setState({ isFocus: true });
         }
     };
 
     handleCounterClick = () => {
-        const { disabled, readonly } = this.adapter.getProps();
-        const { isFocus } = this.adapter.getStates();
+        const { disabled, readonly } = this.getProps();
+        const { isFocus } = this.getStates();
         if (disabled || readonly || isFocus) {
             return;
         }
         this.adapter.focusInput();
-        this.adapter.toggleFocusing(true);
+        this.setState({ isFocus: true });
     };
 }

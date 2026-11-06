@@ -1,6 +1,5 @@
 import { Suspense, lazy, memo } from 'react';
 import { strings, cssClasses, numbers } from '@fibrae/semi-foundation/table/constants';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import useDefaultProps from '../_base/use-default-props';
 import useIsServerRender from '../_base/use-is-server-render';
 import { useConfigContext } from '../config-provider/context';
@@ -23,7 +22,6 @@ const defaultProps = {
     hideExpandedColumn: true,
     showHeader: true,
     indentSize: numbers.DEFAULT_INDENT_WIDTH,
-    onChange: noop,
     pagination: true,
     rowKey: 'key',
     defaultExpandedRowKeys: [],
@@ -31,8 +29,6 @@ const defaultProps = {
     defaultExpandAllGroupRows: false,
     expandAllRows: false,
     expandAllGroupRows: false,
-    onExpand: noop,
-    onExpandedRowsChange: noop,
     expandRowByClick: false,
 } satisfies Partial<TableProps>;
 

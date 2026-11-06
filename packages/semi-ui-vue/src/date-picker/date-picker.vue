@@ -1,6 +1,5 @@
 <script setup lang="ts">
-    import { computed, onDeactivated, onMounted, onUpdated, shallowRef, useId, useTemplateRef, watch } from 'vue';
-    import { isEqual } from 'es-toolkit';
+    import { computed, onMounted, onUpdated, shallowRef, useId, useTemplateRef } from 'vue';
     import getYearMonthFromValue from '@fibrae/semi-foundation/date-picker/_utils/get-year-month-from-value';
     import { isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/date-picker/constants';
@@ -14,8 +13,8 @@
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import useClickOutside from '../_base/use-click-outside';
-    import useDidUpdate from '../_base/use-did-update';
     import useFoundation from '../_base/use-foundation';
+    import useKeepAliveFoundation from '../_base/use-keep-alive-foundation';
     import useConfig from '../config-provider/use-config';
     import { provideInputGroupContext } from '../input/context';
     import useGroupLooks from '../input/use-group-looks';
@@ -153,16 +152,7 @@
     const { foundation, state } = useFoundation<DatePickerFoundation, DatePickerAdapter, DatePickerFoundationProps, DatePickerFoundationState>(
         DatePickerFoundation,
         props as unknown as Readonly<Partial<DatePickerFoundationProps>>,
-        (view) => ({
-            panelShow: Boolean(view.open || view.defaultOpen),
-            isRange: false,
-            // the value the first render shows, so the server HTML and hydration agree without waiting for init
-            ...DatePickerFoundation.getInitialState(view),
-            autofocus: Boolean(view.autoFocus || (isRangeType(view.type) && !slots.trigger && (view.open || view.defaultOpen))),
-            insetInputValue: null,
-            triggerDisabled: null,
-            focusRecords: { rangeStart: false, rangeEnd: false },
-        }),
+        (view) => DatePickerFoundation.getInitialState(view),
         (base) => {
             const rangeInputs = () => insetDateInput.value ?? triggerInput.value;
             const setRangeInputFocus: DatePickerAdapter['setRangeInputFocus'] = (rangeInputFocus) => {
@@ -178,7 +168,6 @@
             };
 
             return {
-                togglePanel: (panelShow, callback) => base.setState({ panelShow }, callback),
                 notifyBlur: (event) => emit('blur', event),
                 notifyFocus: (event, rangeType) => emit('focus', event, rangeType || undefined),
                 notifyClear: (event) => emit('clear', event),
@@ -194,18 +183,8 @@
                 },
                 notifyClickOutSide: (event) => emit('clickOutSide', event),
                 notifyPresetsClick: (item, event) => emit('presetClick', item, event),
-                updateValue: (value) => base.setState({ value }),
-                updatePrevTimezone: (prevTimeZone) => base.setState({ prevTimeZone }),
-                updateCachedSelectedValue: (cachedSelectedValue) => base.setState({ cachedSelectedValue }),
-                updateInputValue: (inputValue) => base.setState({ inputValue }),
-                updateInsetInputValue: (insetInputValue) => {
-                    if (props.insetInput && !isEqual(insetInputValue, base.getState('insetInputValue'))) {
-                        base.setState({ insetInputValue });
-                    }
-                },
                 setRangeInputFocus,
                 isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panel.value),
-                isEventTarget: (event) => Boolean(event && event.target === event.currentTarget),
                 setInsetInputFocus: () => {
                     const target = base.getState('rangeInputFocus') === 'rangeEnd' ? rangeInputs()?.rangeEnd : rangeInputs()?.rangeStart;
                     if (target && FocusTrapHandle.getActiveElement(target.input) !== target.input) {
@@ -220,7 +199,6 @@
                         active.blur();
                     }
                 },
-                setTriggerDisabled: (triggerDisabled, callback) => base.setState({ triggerDisabled }, callback),
             };
         },
         {
@@ -334,53 +312,8 @@
         onClear: foundation.handleInputClear,
     });
 
+    useKeepAliveFoundation(foundation);
     useClickOutside([root, panel], foundation.handleClickOutside, panelShow, useNestedPopups());
-
-    useDidUpdate(
-        () => ({ value: props.modelValue, timeZone: timeZone.value }),
-        (current, previous) => {
-            if (!isEqual(current.value, previous.value)) {
-                foundation.initFromProps({ value: current.value, timeZone: current.timeZone });
-            } else {
-                foundation.initFromProps({
-                    value: foundation.getState('value'),
-                    timeZone: current.timeZone,
-                    prevTimeZone: previous.timeZone,
-                });
-            }
-        },
-        (a, b) => isEqual(a.value, b.value) && a.timeZone === b.timeZone,
-        'pre'
-    );
-
-    watch(
-        () => props.open,
-        (open) => {
-            if (open) {
-                foundation.handleControlledOpen();
-            } else {
-                foundation.handleControlledClose();
-            }
-        }
-    );
-
-    // isPanelShown is already false for a disabled picker, so the check passes `disabled: false`
-    watch(
-        () => looks.disabled,
-        (disabled) => {
-            if (disabled && DatePickerFoundation.isPanelShown({ open: props.open, disabled: false }, state.value)) {
-                foundation.deactivate();
-            }
-        }
-    );
-
-    // The panel follows the foundation state, which a cached KeepAlive subtree would keep open. Closing it here is not
-    // the user leaving the picker, so it fires no blur and returns no focus.
-    onDeactivated(() => {
-        if (panelShow.value) {
-            foundation.deactivate();
-        }
-    });
 
     onMounted(measureCustomTrigger);
     onUpdated(measureCustomTrigger);

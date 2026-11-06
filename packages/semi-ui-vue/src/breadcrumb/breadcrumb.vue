@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, h, useTemplateRef, type VNode } from 'vue';
     import { DEFAULT_TOOLTIP, cssClasses } from '@fibrae/semi-foundation/breadcrumb/constants';
-    import BreadcrumbFoundation, { type BreadcrumbAdapter } from '@fibrae/semi-foundation/breadcrumb/foundation';
+    import BreadcrumbFoundation, { type BreadcrumbAdapter, type BreadcrumbState } from '@fibrae/semi-foundation/breadcrumb/foundation';
     import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
     import '@fibrae/semi-foundation/breadcrumb/breadcrumb.scss';
     import { IconMore } from '@fibrae/semi-icons-vue';
@@ -17,10 +17,6 @@
     import { provideBreadcrumbContext } from './context';
     import type { BreadcrumbProps, BreadcrumbSlots, Route } from './interface';
 
-    interface BreadcrumbState {
-        isCollapsed: boolean;
-    }
-
     type RouteEntry = { kind: 'route'; key: string; index: number; route: Route & { _origin: Route } };
     type NodeEntry = { kind: 'node'; key: string; index: number; node: VNode };
     type Entry = RouteEntry | NodeEntry;
@@ -34,8 +30,8 @@
         rest: Entry[];
     }
 
-    type Foundation = BreadcrumbFoundation<BreadcrumbProps, BreadcrumbState, MouseEvent>;
-    type Adapter = BreadcrumbAdapter<BreadcrumbProps, BreadcrumbState, MouseEvent>;
+    type Foundation = BreadcrumbFoundation<BreadcrumbProps, MouseEvent>;
+    type Adapter = BreadcrumbAdapter<BreadcrumbProps, MouseEvent>;
 
     defineOptions({ name: 'Breadcrumb' });
 
@@ -61,10 +57,9 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, BreadcrumbProps, BreadcrumbState>(
         BreadcrumbFoundation,
         props,
-        () => ({ isCollapsed: true }),
-        (base) => ({
+        () => BreadcrumbFoundation.getInitialState(),
+        () => ({
             notifyClick: (info, e) => props.onClick?.(info, e),
-            expandCollapsed: () => base.setState({ isCollapsed: false }),
         })
     );
 

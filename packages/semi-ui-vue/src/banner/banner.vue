@@ -14,8 +14,8 @@
     import { TypographyParagraph, TypographyTitle } from '../typography';
     import type { BannerEmits, BannerProps, BannerSlots, BannerState } from './interface';
 
-    type Foundation = BannerFoundation<BannerProps, BannerState, MouseEvent>;
-    type Adapter = BannerAdapter<BannerProps, BannerState, MouseEvent>;
+    type Foundation = BannerFoundation<BannerProps, MouseEvent>;
+    type Adapter = BannerAdapter<BannerProps, MouseEvent>;
 
     // Bound by hand: the root is behind v-if, and Vue warns about inherited attrs once it is gone.
     defineOptions({ inheritAttrs: false });
@@ -38,9 +38,8 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, BannerProps, BannerState>(
         BannerFoundation,
         props,
-        () => ({ visible: true }),
-        (base) => ({
-            hide: () => base.setState({ visible: false }),
+        () => BannerFoundation.getInitialState(),
+        () => ({
             notifyClose: (event) => emit('close', event),
         })
     );

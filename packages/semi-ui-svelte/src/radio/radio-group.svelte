@@ -5,13 +5,12 @@
     import '@fibrae/semi-foundation/radio/radio.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import { setRadioGroupContext } from './context.js';
     import type { RadioGroupProps, RadioOptionItem, RadioValue } from './interface.js';
     import Radio from './radio.svelte';
 
-    type Foundation = RadioGroupFoundation<RadioGroupBaseProps, RadioGroupBaseState>;
-    type Adapter = RadioGroupAdapter<RadioGroupBaseProps, RadioGroupBaseState>;
+    type Foundation = RadioGroupFoundation<RadioGroupBaseProps>;
+    type Adapter = RadioGroupAdapter<RadioGroupBaseProps>;
 
     const defaults = useDefaultProps('RadioGroup');
 
@@ -50,9 +49,8 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, RadioGroupBaseProps, RadioGroupBaseState>(
         RadioGroupFoundation,
         foundationProps,
-        (view) => ({ value: view.value }),
+        (view) => RadioGroupFoundation.getInitialState(view),
         (base) => ({
-            setValue: (next) => base.setState({ value: next }),
             notifyChange: (event) => {
                 // a value written locally makes the group read as controlled, so the state follows it for a later write of `undefined`
                 base.setState({ value: event.target.value });
@@ -115,11 +113,6 @@
             onBlur?.(event);
         }
     };
-
-    watch(
-        () => value,
-        (next) => foundation.handlePropValueChange(next as RadioValue)
-    );
 </script>
 
 <div

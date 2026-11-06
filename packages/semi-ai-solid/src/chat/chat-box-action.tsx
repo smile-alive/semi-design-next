@@ -1,6 +1,6 @@
 import { type JSX, Show, createMemo, onCleanup, untrack } from 'solid-js';
 import clsx from 'clsx';
-import ChatBoxActionFoundation, { type ChatBoxActionAdapter } from '@fibrae/semi-ai-foundation/chat/chat-box-action-foundation';
+import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionState } from '@fibrae/semi-ai-foundation/chat/chat-box-action-foundation';
 import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
 import { IconCopyStroked, IconDeleteStroked, IconLikeThumb, IconRedoStroked, IconThumbUpStroked } from '@fibrae/semi-icons-solid';
@@ -20,13 +20,8 @@ interface ChatBoxActionProps {
     customRenderFunc?: (props: RenderActionProps) => JSX.Element;
 }
 
-interface ChatBoxActionState {
-    visible: boolean;
-    showAction: boolean;
-}
-
-type Foundation = ChatBoxActionFoundation<ChatBoxActionProps, ChatBoxActionState>;
-type Adapter = ChatBoxActionAdapter<ChatBoxActionProps, ChatBoxActionState>;
+type Foundation = ChatBoxActionFoundation<ChatBoxActionProps>;
+type Adapter = ChatBoxActionAdapter<ChatBoxActionProps>;
 
 type ActionKey = keyof DefaultActionNodeObj;
 
@@ -40,16 +35,14 @@ export default function ChatBoxAction(props: ChatBoxActionProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, ChatBoxActionProps, ChatBoxActionState>(
         ChatBoxActionFoundation,
         props,
-        () => ({ visible: false, showAction: false }),
-        (base) => ({
+        () => ChatBoxActionFoundation.getInitialState(),
+        () => ({
             notifyDeleteMessage: () => chat.deleteMessage(props.message),
             notifyMessageCopy: () => chat.copyMessage(props.message),
             toastCopySuccess: () => chat.toast.success({ content: locale().locale.copySuccess }),
             notifyLikeMessage: () => chat.likeMessage(props.message),
             notifyDislikeMessage: () => chat.dislikeMessage(props.message),
             notifyResetMessage: () => chat.resetMessage(props.message),
-            setVisible: (visible) => base.setState({ visible }),
-            setShowAction: (showAction) => base.setState({ showAction }),
         })
     );
 

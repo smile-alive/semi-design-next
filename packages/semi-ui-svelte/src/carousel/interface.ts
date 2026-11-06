@@ -41,11 +41,3 @@ export interface CarouselProps<T = unknown> extends Omit<HTMLAttributes<HTMLDivE
     leftArrow?: Snippet;
     rightArrow?: Snippet;
 }
-
-export interface CarouselState {
-    activeIndex: number;
-    preIndex: number;
-    isReverse: boolean;
-    isInit: boolean;
-    rotating: boolean;
-}

@@ -12,7 +12,6 @@ import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import Spin from '../spin';
 import { useSpecialTrigger } from '../tooltip/context';
 
@@ -37,8 +36,8 @@ export interface SwitchProps extends ElementProps<'div', 'onChange' | 'onFocus' 
 
 export type { SwitchState };
 
-type Foundation = SwitchFoundation<SwitchProps, SwitchState, SwitchChangeEvent>;
-type Adapter = SwitchAdapter<SwitchProps, SwitchState, SwitchChangeEvent>;
+type Foundation = SwitchFoundation<SwitchProps, SwitchChangeEvent>;
+type Adapter = SwitchAdapter<SwitchProps, SwitchChangeEvent>;
 
 const defaultProps = {
     disabled: false,
@@ -65,7 +64,6 @@ export default function Switch(rawProps: SwitchProps) {
         props,
         (view) => SwitchFoundation.getInitialState(view),
         (base) => ({
-            setChecked: (checked) => base.setState({ checked }),
             notifyChange: (checked, event) => base.getProps().onChange?.(checked, event),
         })
     );
@@ -85,8 +83,6 @@ export default function Switch(rawProps: SwitchProps) {
         // Solid does not re-apply an unchanged controlled value after the browser toggles the checkbox
         event.currentTarget.checked = checked();
     };
-
-    useWatch(() => local.checked, foundation.setChecked);
 
     onMount(() => autofocus(control.autofocus, input));
 

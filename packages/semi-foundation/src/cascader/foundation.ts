@@ -191,7 +191,6 @@ export interface CascaderAdapter<E = unknown, LE = unknown> extends DefaultAdapt
     notifyClear: () => void;
     focusCombobox: () => void;
     blurCombobox: () => void;
-    updateStates: (states: Partial<BasicCascaderInnerData>) => void;
     notifyChange: (value: BasicValue) => void;
     notifySelect: (selected: string | number | Array<string | number>) => void;
     notifyOnSearch: (input: string) => void;
@@ -220,7 +219,6 @@ const checkedStateCache = new WeakMap<BasicEntities, { inputs: unknown[]; result
 
 type MultipleView = Pick<BasicCascaderInnerData, 'keyEntities' | 'checkedKeys' | 'halfCheckedKeys' | 'resolvedCheckedKeys' | 'disabledKeys'>;
 const DERIVED_STATE_KEYS = new Set<keyof BasicCascaderInnerData>(['keyEntities', 'checkedKeys', 'halfCheckedKeys', 'resolvedCheckedKeys', 'disabledKeys']);
-const DERIVE_PROP_KEYS = ['treeData', 'keyMaps', 'checkRelation', 'disableStrictly', 'autoMergeValue', 'leafOnly', 'onChangeWithObject', 'value'] as const satisfies readonly (keyof BasicCascaderProps)[];
 
 interface TreeItemState {
     selected: boolean;
@@ -239,12 +237,12 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
     // Entities standing in for a selected value treeData lacks: their path holds values, not keys. Kept by identity,
     // since the hosts store keyEntities without copying entities, so that Entity carries no flag of its own
     static readonly #missingEntities = new WeakSet<BasicEntity>();
-    // StrictMode and React Activity replay init on this instance after destroy, over a dropdown the user may have
-    // closed since: defaultOpen belongs to the first mount
-    #initialized = false;
     // whether onBlur is owed for the focus now inside the component
     #blurPending = false;
     readonly #typeahead = new Typeahead();
+    // by content: an inline treeData or value is a new array on every parent render, and each change resets the search
+    static override readonly propKeys = ['treeData', 'keyMaps', 'value'] as const satisfies readonly (keyof BasicCascaderProps)[];
+    static override readonly propEquals = { treeData: isEqual, keyMaps: isEqual, value: isEqual };
 
     static #getFilteredData({ treeNodeFilterProp, filterSorter, keyMaps }: BasicCascaderProps, { filteredKeys, keyEntities, inputValue }: BasicCascaderInnerData) {
         const realFilterProp = treeNodeFilterProp !== 'label' ? treeNodeFilterProp : (keyMaps?.label ?? 'label');
@@ -396,7 +394,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
     }
 
     #clearInput() {
-        this.adapter.updateStates({ inputValue: '' });
+        this.setState({ inputValue: '' });
     }
 
     #notifyBlur(e?: E | MouseEvent | FocusEvent) {
@@ -415,7 +413,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
 
     #close(key?: string) {
         const { multiple } = this.getProps();
-        this.adapter.updateStates({ isOpen: false, keyboardKey: null });
+        this.setState({ isOpen: false, keyboardKey: null });
         this.adapter.notifyDropdownVisibleChange(false);
         if (this.#isFilterable()) {
             const { selectedKeys } = this.getStates();
@@ -426,7 +424,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                 inputValue = this.renderDisplayText([...selectedKeys][0]);
             }
             // reset isSearching here, not in afterClose: open() clears inputValue while isSearching could still be true
-            this.adapter.updateStates({ inputValue, isSearching: false });
+            this.setState({ inputValue, isSearching: false });
             if (!multiple) {
                 this.#toggle2SearchInput(false);
             }
@@ -536,7 +534,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             }
         }
         if (!this.isControlledComponent()) {
-            this.adapter.updateStates({
+            this.setState({
                 checkedKeys: curCheckedKeys,
                 halfCheckedKeys: curHalfCheckedKeys,
                 resolvedCheckedKeys: curResolvedCheckedKeys,
@@ -575,7 +573,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             targetStatus = true;
         }
         if (!this.isControlledComponent()) {
-            this.adapter.updateStates({
+            this.setState({
                 checkedKeys: newCheckedKeys,
                 checkedEntities: keyEntities,
             });
@@ -614,7 +612,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         const { data, key } = item;
         const isLeaf = this.#isLeaf(data);
         const activeKeys = keyEntities[key].path;
-        this.adapter.updateStates({
+        this.setState({
             activeKeys: new Set(activeKeys),
         });
         if (!isLeaf) {
@@ -629,7 +627,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
 
         // onLoad before the internal setState, or loadData triggers twice
         this.adapter.notifyOnLoad(newLoadedKeys, data);
-        this.adapter.updateStates({
+        this.setState({
             loadingKeys: newLoadingKeys,
             loadedKeys: newLoadedKeys,
         });
@@ -643,7 +641,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                 return;
             }
             const optionPath = this.getItemPropPath(key, [], keyEntities);
-            this.adapter.updateStates({ loadingKeys: new Set(loadingKeys).add(key) });
+            this.setState({ loadingKeys: new Set(loadingKeys).add(key) });
             this.adapter.notifyLoadData(optionPath, this.#handleNodeLoad.bind(this, item), this.#handleNodeLoadReject.bind(this, item));
         }
     }
@@ -652,7 +650,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
     #handleNodeLoadReject(item: BasicEntity | BasicData) {
         const newLoadingKeys = new Set(this.getState('loadingKeys'));
         newLoadingKeys.delete(item.key);
-        this.adapter.updateStates({ loadingKeys: newLoadingKeys });
+        this.setState({ loadingKeys: newLoadingKeys });
     }
 
     #handleSingleSelect(e: E, item: BasicEntity | BasicData) {
@@ -667,12 +665,12 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         const hasChanged = key !== [...selectedKeys][0];
 
         if (!isLeaf && !allowChange && !isSearching && !(multiple && clickToSelect)) {
-            this.adapter.updateStates({ activeKeys: new Set(activeKeys) });
+            this.setState({ activeKeys: new Set(activeKeys) });
             this.#notifyIfLoadData(item);
             return;
         }
         if (multiple) {
-            this.adapter.updateStates({ activeKeys: new Set(activeKeys) });
+            this.setState({ activeKeys: new Set(activeKeys) });
             if (clickToSelect || (isLeaf && enableLeafClick)) {
                 this.onItemCheckboxClick(item);
             }
@@ -682,14 +680,14 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                 this.#notifySingleChange(item);
                 this.#notifyIfLoadData(item);
                 if (this.isControlledComponent()) {
-                    this.adapter.updateStates({ activeKeys: new Set(activeKeys) });
+                    this.setState({ activeKeys: new Set(activeKeys) });
                     if (isLeaf || (!filterLeafOnly && isSearching)) {
                         this.#closeAfterPick(e);
                     }
                     return;
                 }
 
-                this.adapter.updateStates({
+                this.setState({
                     activeKeys: new Set(activeKeys),
                     selectedKeys: new Set(selectedKey),
                 });
@@ -705,7 +703,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
 
     #updateSelectedKey(value: BasicValue, keyEntities: BasicEntities) {
         const selection = CascaderFoundation.#selectionFor(this.getProps(), this.getStates(), value, keyEntities);
-        this.adapter.updateStates(selection.updateStates);
+        this.setState(selection.updateStates as BasicCascaderInnerData);
         return selection.keyEntities;
     }
 
@@ -718,7 +716,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         }
         const newActiveKeys: Set<string> = new Set(selectedItem.path);
         if (!isEqual(newActiveKeys, activeKeys)) {
-            this.adapter.updateStates({
+            this.setState({
                 activeKeys: newActiveKeys,
             });
         }
@@ -737,7 +735,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
                 this.#moveTo(option.children[0].key, 0);
             }
         } else if (isOpen) {
-            this.adapter.updateStates({ activeKeys: new Set(option.path.slice(0, -1)) });
+            this.setState({ activeKeys: new Set(option.path.slice(0, -1)) });
         } else if (option.parent) {
             const { parent } = option;
             const column = parent.parent ? parent.parent.children : CascaderFoundation.getRenderData(this.getProps(), this.getStates());
@@ -749,7 +747,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
     }
 
     #moveTo(key: string, index: number) {
-        this.adapter.updateStates({ keyboardKey: key });
+        this.setState({ keyboardKey: key });
         this.adapter.scrollToOption(key, index);
     }
 
@@ -777,7 +775,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         if (selectedValue != null) {
             keyEntities = this.#updateSelectedKey(selectedValue, keyEntities);
         } else {
-            this.adapter.updateStates({ keyEntities });
+            this.setState({ keyEntities });
         }
 
         // treeData may update while searching (remote search); stale filteredKeys would render an empty list
@@ -812,7 +810,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         if (nextKeyEntities) {
             updateStates.keyEntities = nextKeyEntities;
         }
-        this.adapter.updateStates(updateStates);
+        this.setState(updateStates as BasicCascaderInnerData);
     }
 
     #handleValueChange(value: BasicValue) {
@@ -821,7 +819,13 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         // a controlled pick closes before the parent writes the value back, so the closed input text follows it here
         const { isOpen, selectedKeys } = this.getStates();
         if (this.#isFilterable() && !this.getProp('multiple') && !isOpen && selectedKeys.size) {
-            this.adapter.updateStates({ inputValue: this.renderDisplayText([...selectedKeys][0]) });
+            this.setState({ inputValue: this.renderDisplayText([...selectedKeys][0]) });
+        }
+    }
+
+    protected override initOnce() {
+        if (this.getProp('defaultOpen') && !this.#isDisabled()) {
+            this.open();
         }
     }
 
@@ -1048,26 +1052,11 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         if (!this.getProp('multiple')) {
             return state;
         }
-        // Read only what deriveMultipleState, getRealKeys and calcCheckedState use: a Vue getProps() copies every prop
-        const props = {} as BasicCascaderProps;
-        for (const key of DERIVE_PROP_KEYS) {
-            (props as Record<string, unknown>)[key] = this.getProp(key);
-        }
-        return { ...state, ...CascaderFoundation.deriveMultipleState(props, state) };
+        return { ...state, ...CascaderFoundation.deriveMultipleState(this.getProps(), state) };
     }
 
     override getState<K extends keyof BasicCascaderInnerData>(key: K): BasicCascaderInnerData[K] {
         return DERIVED_STATE_KEYS.has(key) ? this.getStates()[key] : super.getState(key);
-    }
-
-    override init() {
-        if (this.#initialized) {
-            return;
-        }
-        this.#initialized = true;
-        if (this.getProp('defaultOpen') && !this.#isDisabled()) {
-            this.open();
-        }
     }
 
     handleKeyDown = (e: E & Pick<KeyboardEvent, 'key' | 'preventDefault'>) => {
@@ -1146,22 +1135,26 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         return true;
     };
 
+    /** Re-collecting the options also re-resolves the value */
+    override handlePropsChange(prev: Partial<BasicCascaderProps>) {
+        const { treeData, keyMaps, value } = this.getProps();
+        if (!isEqual(prev.treeData, treeData) || !isEqual(prev.keyMaps, keyMaps)) {
+            this.handleTreeDataMutation();
+        } else if (!this.getProp('multiple')) {
+            this.#handleValueChange(value);
+        }
+    }
+
     /**
-     * After an update, the host reports whether the options (treeData or keyMaps) and value changed by its own change
-     * detection. Re-collecting the options also re-resolves the value.
+     * The host's treeData was changed in place (Vue, Svelte): the previous and current props share the node objects,
+     * so `handlePropsChange` cannot see it.
      */
-    handleInputsChange = ({ optionsChanged, valueChanged }: { optionsChanged: boolean; valueChanged: boolean }, value: BasicValue) => {
+    handleTreeDataMutation = () => {
         if (this.getProp('multiple')) {
             // the multiple-mode keyEntities follow treeData during render; filteredKeys are state
-            if (optionsChanged) {
-                this.#recalculateFilteredKeys();
-            }
-            return;
-        }
-        if (optionsChanged) {
+            this.#recalculateFilteredKeys();
+        } else {
             this.#collectOptions();
-        } else if (valueChanged) {
-            this.#handleValueChange(value);
         }
     };
 
@@ -1169,11 +1162,11 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         const filterable = this.#isFilterable();
         const { multiple } = this.getProps();
         const { isSearching } = this.getStates();
-        this.adapter.updateStates({ isOpen: true });
+        this.setState({ isOpen: true });
         if (filterable) {
             // text typed while closed does not open the popup; opening starts from the columns, and onSearch hears
             // the keyword go
-            this.adapter.updateStates({ inputValue: '', isSearching: false, filteredKeys: new Set() });
+            this.setState({ inputValue: '', isSearching: false, filteredKeys: new Set() });
             if (isSearching) {
                 this.adapter.notifyOnSearch('');
             }
@@ -1215,11 +1208,6 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
         this.#close();
     };
 
-    /** Closes without a blur; called when Vue KeepAlive deactivates the host */
-    deactivate = () => {
-        this.#close();
-    };
-
     focus = () => {
         this.adapter.focusCombobox();
     };
@@ -1230,7 +1218,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
 
     /** Leaves search mode after the closed dropdown finishes its exit */
     endSearching = () => {
-        this.adapter.updateStates({ isSearching: false });
+        this.setState({ isSearching: false });
     };
 
     /** A key that opens the dropdown sets the current option before the list mounts; it is scrolled to once shown */
@@ -1314,7 +1302,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
 
     handleInputChange = (sugInput: string) => {
         const filteredKeys = this.#calcFilteredKeys(sugInput);
-        this.adapter.updateStates({
+        this.setState({
             inputValue: sugInput,
             isSearching: Boolean(sugInput),
             filteredKeys: new Set(filteredKeys),
@@ -1366,7 +1354,7 @@ export default class CascaderFoundation<E = unknown, LE = unknown> extends BaseF
             }
         }
 
-        this.adapter.updateStates(newState);
+        this.setState(newState as BasicCascaderInnerData);
         this.adapter.notifyClear();
     };
 

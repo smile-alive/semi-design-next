@@ -2,7 +2,7 @@ import { children, Show, splitProps, type JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/banner/constants';
-import BannerFoundation, { type BannerAdapter } from '@fibrae/semi-foundation/banner/foundation';
+import BannerFoundation, { type BannerAdapter, type BannerState } from '@fibrae/semi-foundation/banner/foundation';
 import { findFocusAfter } from '@fibrae/semi-foundation/utils/focus-handover';
 import '@fibrae/semi-foundation/banner/banner.scss';
 import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-solid';
@@ -32,12 +32,8 @@ export interface BannerProps extends ElementProps<'div', 'title' | 'onClose'> {
     onClose?(e: MouseEvent): void;
 }
 
-interface BannerState {
-    visible: boolean;
-}
-
-type Foundation = BannerFoundation<BannerProps, BannerState, MouseEvent>;
-type Adapter = BannerAdapter<BannerProps, BannerState, MouseEvent>;
+type Foundation = BannerFoundation<BannerProps, MouseEvent>;
+type Adapter = BannerAdapter<BannerProps, MouseEvent>;
 
 const defaultProps = {
     type: 'info',
@@ -63,9 +59,8 @@ export default function Banner(rawProps: BannerProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, BannerProps, BannerState>(
         BannerFoundation,
         props,
-        () => ({ visible: true }),
+        () => BannerFoundation.getInitialState(),
         (base) => ({
-            hide: () => base.setState({ visible: false }),
             notifyClose: (e) => base.getProps().onClose?.(e),
         })
     );

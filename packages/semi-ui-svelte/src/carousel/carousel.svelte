@@ -1,7 +1,7 @@
 <script lang="ts" generics="T">
     import { onMount } from 'svelte';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/carousel/constants';
-    import CarouselFoundation, { type CarouselAdapter, type CarouselBaseProps } from '@fibrae/semi-foundation/carousel/foundation';
+    import CarouselFoundation, { type CarouselAdapter, type CarouselBaseProps, type CarouselState } from '@fibrae/semi-foundation/carousel/foundation';
     import '@fibrae/semi-foundation/carousel/carousel.scss';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../_base/use-default-props.js';
@@ -9,10 +9,10 @@
     import watch from '../_base/watch.svelte.js';
     import { getConfigContext } from '../config-provider/context.js';
     import useLocale from '../locale/use-locale.svelte.js';
-    import type { CarouselProps, CarouselState } from './interface.js';
+    import type { CarouselProps } from './interface.js';
 
-    type Foundation = CarouselFoundation<CarouselBaseProps, CarouselState>;
-    type Adapter = CarouselAdapter<CarouselBaseProps, CarouselState>;
+    type Foundation = CarouselFoundation<CarouselBaseProps>;
+    type Adapter = CarouselAdapter<CarouselBaseProps>;
 
     const defaults = useDefaultProps('Carousel');
 
@@ -75,20 +75,12 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, CarouselBaseProps, CarouselState>(
         CarouselFoundation,
         foundationProps,
-        (view) => {
-            const initial = view.activeIndex ?? numbers.DEFAULT_ACTIVE_INDEX;
-            return { activeIndex: initial, preIndex: initial, isReverse: false, isInit: true, rotating: false };
-        },
-        (base) => ({
+        (view) => CarouselFoundation.getInitialState(view),
+        () => ({
             notifyChange: (next, preIndex) => {
                 activeIndex = next;
                 onChange?.(next, preIndex);
             },
-            setNewActiveIndex: (next) => base.setState({ activeIndex: next }),
-            setPreActiveIndex: (preIndex) => base.setState({ preIndex }),
-            setIsReverse: (isReverse) => base.setState({ isReverse }),
-            setIsInit: (isInit) => base.setState({ isInit }),
-            setRotating: (rotating) => base.setState({ rotating }),
             getSlideCount: () => items.length,
         }),
         { context: () => config }
@@ -173,14 +165,6 @@
     };
 
     watch(
-        () => activeIndex,
-        (value) => foundation.syncActiveIndex(value as number)
-    );
-
-    // a boolean, since autoPlay is often a fresh object literal on every render
-    watch(() => CarouselFoundation.isAutoPlayOn(autoPlay), foundation.handleAutoPlayChange);
-
-    watch(
         () => items.length,
         (count) => {
             const previous = renderedCount;
@@ -204,8 +188,7 @@
     });
 
     export function play() {
-        foundation.setForcePlay(true);
-        foundation.handleAutoPlay();
+        foundation.play();
     }
 
     export function stop() {

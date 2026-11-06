@@ -16,8 +16,8 @@
     type CancelEvent = MouseEvent | KeyboardEvent;
     type ButtonClickEvent = MouseEvent & { currentTarget: EventTarget & HTMLButtonElement };
     type TextAreaEvent = Parameters<NonNullable<NonNullable<FeedbackProps['textAreaProps']>['onChange']>>[1];
-    type Foundation = FeedbackFoundation<object, FeedbackBaseState, CancelEvent, MouseEvent, TextAreaEvent>;
-    type Adapter = FeedbackAdapter<object, FeedbackBaseState, CancelEvent, MouseEvent, TextAreaEvent>;
+    type Foundation = FeedbackFoundation<object, CancelEvent, MouseEvent, TextAreaEvent>;
+    type Adapter = FeedbackAdapter<object, CancelEvent, MouseEvent, TextAreaEvent>;
 
     const defaults = useDefaultProps('Feedback');
 
@@ -82,9 +82,8 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, object, FeedbackBaseState>(
         FeedbackFoundation,
         {},
-        () => ({ value: null, onOKReturnPromiseStatus: 'fulfilled', onCancelReturnPromiseStatus: 'fulfilled' }),
-        (base) => ({
-            setValue: (value) => base.setState({ value }),
+        () => FeedbackFoundation.getInitialState(),
+        () => ({
             notifyValueChange: (value) => onValueChange?.(value),
             notifyCancel: (event) => {
                 const result = onCancel?.(event);

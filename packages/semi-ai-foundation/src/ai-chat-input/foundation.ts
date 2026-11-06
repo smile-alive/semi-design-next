@@ -1,3 +1,4 @@
+import { isEqual } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
 import { centerInScroller } from '@fibrae/semi-foundation/utils/dom';
 import { isComposing } from '@fibrae/semi-foundation/utils/key-code';
@@ -8,6 +9,7 @@ import { findSkillSlot, getSkillSlotString, transformJSONResult } from './utils'
 export interface AIChatInputBaseProps {
     uploadProps?: {
         disabled?: boolean;
+        defaultFileList?: Attachment[];
         beforeRemove?: (file: Attachment, fileList: Attachment[]) => boolean | Promise<boolean>;
     };
     skills?: BaseSkill[];
@@ -22,18 +24,19 @@ export interface AIChatInputBaseProps {
     references?: Reference[];
 }
 
-export interface AIChatInputBaseState {
+export interface AIChatInputState {
     templateVisible: boolean;
     skillVisible: boolean;
     suggestionVisible: boolean;
-    attachments?: Attachment[];
-    skill?: BaseSkill;
-    activeSkillIndex?: number;
-    activeSuggestionIndex?: number;
-    content?: RichTextJSON;
+    attachments: Attachment[];
+    skill: BaseSkill | undefined;
+    activeSkillIndex: number;
+    activeSuggestionIndex: number;
+    /** The editor JSON; undefined until the editor has created it */
+    content: RichTextJSON | undefined;
 }
 
-export interface AIChatInputAdapter<P extends AIChatInputBaseProps = AIChatInputBaseProps, S extends AIChatInputBaseState = AIChatInputBaseState> extends DefaultAdapter<P, S> {
+export interface AIChatInputAdapter<P extends AIChatInputBaseProps = AIChatInputBaseProps> extends DefaultAdapter<P, AIChatInputState> {
     setContent: (content: string) => void;
     focusEditor: (pos?: any) => void;
     getEditor: () => any;
@@ -50,7 +53,6 @@ export interface AIChatInputAdapter<P extends AIChatInputBaseProps = AIChatInput
     /** `skill` is undefined when the skill is removed */
     notifySkillChange: (skill?: BaseSkill) => void;
     clearContent: () => void;
-    clearAttachments: () => void;
     getRichTextDiv: () => HTMLDivElement | null;
     notifyReferenceClick: (reference: Reference) => void;
     notifyFocus: (event: any) => void;
@@ -62,8 +64,12 @@ export interface AIChatInputAdapter<P extends AIChatInputBaseProps = AIChatInput
     getConfigureValue: () => any;
 }
 
-export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AIChatInputBaseProps, S extends AIChatInputBaseState = AIChatInputBaseState> extends BaseFoundation<AIChatInputAdapter<P, S>, P, S> {
+export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AIChatInputBaseProps> extends BaseFoundation<AIChatInputAdapter<P>, P, AIChatInputState> {
     #mouseDownTarget: EventTarget | null = null;
+
+    static override readonly propKeys = ['suggestions', 'generating'];
+    // callers often pass a new array with the same items
+    static override readonly propEquals = { suggestions: isEqual };
 
     #updateScrollTop(kind: 'skill' | 'suggestion', index: number) {
         const destNode = this.adapter.getOptionNode(kind, index);
@@ -92,7 +98,32 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         return validRichText || validAttachment;
     }
 
-    override init() {}
+    static getInitialState(props: AIChatInputBaseProps): AIChatInputState {
+        return {
+            templateVisible: false,
+            skillVisible: false,
+            suggestionVisible: false,
+            attachments: props.uploadProps?.defaultFileList ?? [],
+            skill: undefined,
+            activeSkillIndex: 0,
+            activeSuggestionIndex: 0,
+            content: undefined,
+        };
+    }
+
+    override handlePropsChange(prev: Partial<P>) {
+        const { suggestions, generating } = this.getProps();
+        if (!isEqual(prev.suggestions, suggestions)) {
+            if (suggestions && suggestions.length > 0) {
+                this.showSuggestionPanel();
+            } else {
+                this.hideSuggestionPanel();
+            }
+        }
+        if (generating && prev.generating !== generating) {
+            this.handleGeneratingStart();
+        }
+    }
 
     handleSkillSelect = (skill: BaseSkill) => {
         this.setState({
@@ -296,7 +327,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         } else {
             this.adapter.clearContent();
         }
-        this.adapter.clearAttachments();
+        this.setState({ attachments: [] });
     };
 
     handleStopGenerate = () => {

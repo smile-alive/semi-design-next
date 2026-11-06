@@ -699,16 +699,23 @@ describe('Chat', () => {
             expect(onMessageDelete).not.toHaveBeenCalled();
         });
 
-        it('KeepAlive 缓存的 Chat 失活时关闭删除确认框', async () => {
+        it('KeepAlive 缓存的 Chat 失活后删除确认框保持打开，重新激活后原样出现，外部按下能关闭', async () => {
             const { container } = render(KeepAliveHost);
             await waitFor(() => expect(screen.getByText('answer')).toBeInTheDocument());
             await fireEvent.click(actionButtons(boxes(container)[0])[1]);
             expect(boxes(container)[0].querySelector('.semi-chat-chatBox-action-show')).not.toBeNull();
+            expect(await screen.findByRole('dialog')).toBeVisible();
             await fireEvent.click(screen.getByText('toggle'));
             expect(screen.getByText('away')).toBeInTheDocument();
+            expect(screen.queryByRole('dialog')).toBeNull();
             await fireEvent.click(screen.getByText('toggle'));
-            expect(actionButtons(boxes(container)[0])[1]).toHaveAttribute('aria-expanded', 'false');
+            expect(actionButtons(boxes(container)[0])[1]).toHaveAttribute('aria-expanded', 'true');
+            expect(boxes(container)[0].querySelector('.semi-chat-chatBox-action-show')).not.toBeNull();
+            expect(await screen.findByRole('dialog')).toBeVisible();
+
+            await fireEvent.mouseDown(document.body);
             await waitFor(() => expect(boxes(container)[0].querySelector('.semi-chat-chatBox-action-show')).toBeNull());
+            await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
         });
     });
 

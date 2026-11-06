@@ -6045,7 +6045,7 @@ describe('DatePicker Vue 写法', () => {
         });
     });
 
-    it('KeepAlive 切走再切回后面板关闭，aria-expanded 为 false，不发 blur', async () => {
+    it('KeepAlive 缓存期间弹层不在页面上、外部按下不关闭，切回后面板照旧打开，不再发 openChange 与 blur', async () => {
         const show = ref(true);
         const onOpenChange = vi.fn<(open: boolean) => void>();
         const onBlur = vi.fn<EmitFn<'blur'>>();
@@ -6063,11 +6063,13 @@ describe('DatePicker Vue 写法', () => {
 
         show.value = false;
         await settle();
+        expect(getPopup()).toBeNull();
+        await fireEvent.mouseDown(document.body);
         show.value = true;
         await settle();
-        await waitForClosed();
-        expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'false');
-        expect(onOpenChange.mock.calls).toEqual([[true], [false]]);
+        expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'true');
+        expect(getPopup()).not.toBeNull();
+        expect(onOpenChange.mock.calls).toEqual([[true]]);
         expect(onBlur).not.toHaveBeenCalled();
     });
 

@@ -13,6 +13,9 @@ import { useConfigContext } from '../config-provider/context';
 import Button from '../icon-button/index';
 import useLocale from '../locale/use-locale';
 
+type Foundation = ToastFoundation<ToastInstance>;
+type Adapter = ToastAdapter<ToastInstance>;
+
 const prefixCls = cssClasses.PREFIX;
 
 export interface ToastHandle {
@@ -73,7 +76,7 @@ export default function Toast(rawProps: ToastReactProps) {
     const toastRef = useRef<HTMLDivElement>(null);
     let iconNode: React.ReactNode = null;
 
-    const [foundation] = useFoundation<ToastFoundation<ToastInstance>, ToastAdapter<ToastInstance>, ToastInstance, ToastState>(
+    const [foundation] = useFoundation<Foundation, Adapter, ToastInstance, ToastState>(
         ToastFoundation,
         props,
         () => ({}),

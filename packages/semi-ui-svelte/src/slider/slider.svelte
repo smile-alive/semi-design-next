@@ -73,7 +73,6 @@
 
     // A defined value makes the slider follow it; an undefined one (or a write of the slider's own) leaves the handles to the foundation
     let controlled = untrack(() => value !== undefined);
-    let seen = untrack(() => value);
     let written: number | number[] | undefined;
 
     const foundationProps: BasicSliderProps = {
@@ -99,7 +98,14 @@
             return tooltipVisible;
         },
         get value() {
-            return controlled ? value : undefined;
+            // read first: the foundation's reaction subscribes to every change of the bindable, also while uncontrolled
+            const current = value;
+            if (current === undefined) {
+                controlled = false;
+            } else if (controlled || !isEqual(current, written)) {
+                controlled = true;
+            }
+            return controlled ? current : undefined;
         },
         get vertical() {
             return vertical;
@@ -131,8 +137,9 @@
     const stylePos = $derived(vertical ? 'top' : isRTL ? 'right' : 'left');
     const reverse = $derived(vertical && verticalReverse ? '-reverse' : '');
     const handles = $derived<Handle[]>(range ? ['min', 'max'] : ['min']);
-    const percent = $derived(SliderFoundation.getMinAndMaxPercent({ range, min, max }, states().currentValue));
-    const tips = $derived(SliderFoundation.computeHandleVisibleVal({ tooltipVisible, tipFormatter, range, step, min }, states()));
+    const currentValue = $derived(SliderFoundation.deriveValue(foundationProps, states()));
+    const percent = $derived(SliderFoundation.getMinAndMaxPercent({ range, min, max }, currentValue));
+    const tips = $derived(SliderFoundation.computeHandleVisibleVal({ tooltipVisible, tipFormatter, range, step, min }, { ...states(), currentValue }));
 
     const trackStyle = $derived.by(() => {
         if (!included) {
@@ -146,7 +153,7 @@
     const markList = $derived<MarkItem[]>(
         Object.entries(marks ?? {}).map(([key, label]) => {
             const markValue = Number(key);
-            return { key, value: markValue, label, active: SliderFoundation.isMarkActive({ min, max, range, included }, states().currentValue, markValue) };
+            return { key, value: markValue, label, active: SliderFoundation.isMarkActive({ min, max, range, included }, currentValue, markValue) };
         })
     );
 
@@ -162,7 +169,6 @@
     const handleIndex = (pos: Handle) => (pos === 'min' ? 0 : 1);
 
     const handleValue = (pos: Handle) => {
-        const { currentValue } = states();
         return Array.isArray(currentValue) ? currentValue[handleIndex(pos)] : currentValue;
     };
 
@@ -214,25 +220,13 @@
         }
     };
 
-    // A literal array is a new value on every render, so values are compared deeply.
+    // The bindable write-back reads as undefined to the foundation, so a later reset to undefined is no prop change there.
     watch(
         () => value,
         (next) => {
-            if (isEqual(next, seen)) {
-                return;
-            }
-            seen = next;
             if (next === undefined) {
-                controlled = false;
                 foundation.resetValue();
-                return;
             }
-            if (!controlled && isEqual(next, written)) {
-                return;
-            }
-            controlled = true;
-            foundation.handleValueChange(next);
-            onAfterChange?.(next);
         }
     );
 </script>

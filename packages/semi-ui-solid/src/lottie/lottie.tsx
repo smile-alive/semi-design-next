@@ -1,6 +1,5 @@
 import { Show, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/lottie/constants';
 import LottieFoundation, { type LottieAdapter, type LottieBaseProps, type LottieBaseState } from '@fibrae/semi-foundation/lottie/foundation';
 import { isDev } from '@fibrae/semi-foundation/utils/warning';
@@ -8,7 +7,6 @@ import type { ElementProps } from '../_base/element-props';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 
 export interface LottieProps extends LottieBaseProps, ElementProps<'div'> {}
 
@@ -21,14 +19,15 @@ function Lottie(rawProps: LottieProps) {
     const [local, rest] = splitProps(props, ['params', 'width', 'height', 'getAnimationInstance', 'getLottie', 'class', 'style', 'ref']);
 
     let wrapper: HTMLDivElement | undefined;
-    let committedParams = props.params;
 
-    const { foundation } = useFoundation<LottieFoundation<LottieProps, LottieState>, LottieAdapter<LottieProps, LottieState>, LottieProps, LottieState>(
+    useFoundation<LottieFoundation<LottieProps>, LottieAdapter<LottieProps>, LottieProps, LottieState>(
         LottieFoundation,
         props,
         () => ({}),
-        () => ({
+        (base) => ({
             getContainer: () => wrapper ?? null,
+            notifyAnimationInstance: (animation) => base.getProps().getAnimationInstance?.(animation),
+            notifyLottie: (lottie) => base.getProps().getLottie?.(lottie),
             notifyLoadError: (error) => {
                 if (isDev()) {
                     console.error(error);
@@ -46,16 +45,6 @@ function Lottie(rawProps: LottieProps) {
         }
         return { width: local.width, height: local.height, ...own };
     };
-
-    useWatch(
-        () => local.params,
-        (params) => {
-            if (!isEqual(committedParams, params)) {
-                committedParams = params;
-                foundation.handleParamsUpdate();
-            }
-        }
-    );
 
     return (
         <Show when={!local.params.container}>

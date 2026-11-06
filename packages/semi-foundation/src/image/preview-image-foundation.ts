@@ -3,10 +3,9 @@ import { isSecondaryPress } from '../utils/pointer';
 import type { RatioType } from './preview-inner-foundation';
 import { clampZoom } from './utils';
 
-export interface PreviewImageAdapter<P extends PreviewImageBaseProps = PreviewImageBaseProps, S extends PreviewImageBaseState = PreviewImageBaseState> extends DefaultAdapter<P, S> {
+export interface PreviewImageAdapter<P extends PreviewImageBaseProps = PreviewImageBaseProps> extends DefaultAdapter<P, PreviewImageState> {
     getContainer: () => HTMLDivElement;
     getImage: () => HTMLImageElement;
-    setLoading: (loading: boolean) => void;
     setImageCursor: (canDrag: boolean) => void;
     capturePointer: (pointerId: number) => void;
     /** Asks the owner of the zoom to set it; `reportToUser` decides whether onZoomIn / onZoomOut are called */
@@ -37,18 +36,20 @@ export interface PreviewImageBaseProps {
     maxZoom?: number;
     minZoom?: number;
     zoom?: number;
+    /** The wheel event that set `zoom`, which the zoom centers on */
+    zoomEvent?: WheelEvent;
     ratio?: RatioType;
     initialZoom?: number;
 }
 
-export interface PreviewImageBaseState {
+export interface PreviewImageState {
     loading: boolean;
     width: number;
     height: number;
     translate: Translate;
 }
 
-export default class PreviewImageFoundation<P extends PreviewImageBaseProps = PreviewImageBaseProps, S extends PreviewImageBaseState = PreviewImageBaseState> extends BaseFoundation<PreviewImageAdapter<P, S>, P, S> {
+export default class PreviewImageFoundation<P extends PreviewImageBaseProps = PreviewImageBaseProps> extends BaseFoundation<PreviewImageAdapter<P>, P, PreviewImageState> {
     #initialZoomApplied = false;
     #initialZoomAppliedSrc: any = undefined;
     #startMouseClientPosition = { x: 0, y: 0 };
@@ -56,6 +57,8 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
     #originImageHeight = null;
     #containerWidth = 0;
     #containerHeight = 0;
+
+    static override readonly propKeys = ['src', 'ratio', 'rotation', 'zoom'];
 
     #syncInitialZoomFlagWithSrc() {
         const src = this.getProp('src');
@@ -111,21 +114,13 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
         return this.#clampZoom(_zoom);
     }
 
-    #setLoading(loading: boolean) {
-        this.adapter.setLoading(loading);
-    }
-
-    #handleRatioChange() {
-        this.#initializeImage();
-    }
-
     #initializeImageZoom(reportToUser = true) {
         const { zoom } = this.getProps();
 
         const _zoom = this.#getInitialZoom();
 
         if (zoom !== _zoom) {
-            // the new zoom comes back as a prop, and handlePropsUpdate applies it
+            // the new zoom comes back as a prop, and handlePropsChange applies it
             this.adapter.requestZoom(_zoom, reportToUser);
         } else {
             this.#applyZoom(zoom);
@@ -278,6 +273,10 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
         };
     }
 
+    static getInitialState(): PreviewImageState {
+        return { width: 0, height: 0, loading: true, translate: { x: 0, y: 0 } };
+    }
+
     override init() {
         this.#getContainerBoundingRectSize();
     }
@@ -309,25 +308,25 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
     };
 
     // A new src re-initializes on load, so a ratio or rotation reset arriving with it must not re-initialize (and
-    // report a zoom) for the outgoing image. `zoomEvent` is the wheel event that set the zoom, if any.
-    handlePropsUpdate = (prevProps: { src?: string; ratio?: string; rotation?: number; zoom?: number }, zoomEvent?: WheelEvent) => {
-        const { zoom, src, ratio, rotation } = this.getProps();
-        const srcChange = src && src !== prevProps.src;
+    // report a zoom) for the outgoing image.
+    override handlePropsChange(prev: Partial<P>) {
+        const { zoom, src, ratio, rotation, zoomEvent } = this.getProps();
+        const srcChange = src && src !== prev.src;
         if (srcChange) {
-            this.#setLoading(true);
+            this.setState({ loading: true });
         }
-        if (zoom !== prevProps.zoom) {
-            this.#applyZoom(prevProps.zoom, zoomEvent);
+        if (zoom !== prev.zoom) {
+            this.#applyZoom(prev.zoom, zoomEvent);
         }
         if (!srcChange) {
-            if (ratio !== prevProps.ratio) {
-                this.#handleRatioChange();
+            if (ratio !== prev.ratio) {
+                this.#initializeImage();
             }
-            if (rotation !== prevProps.rotation) {
+            if (rotation !== prev.rotation) {
                 this.handleWindowResize();
             }
         }
-    };
+    }
 
     handleRightClickImage = (e: Pick<Event, 'preventDefault' | 'stopPropagation'>) => {
         const { disableDownload } = this.getProps();

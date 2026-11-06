@@ -42,6 +42,7 @@ function transitionEntry(style: CSSStyleDeclaration, longhand: 'transitionTiming
 
 export default class CollapsibleFoundation<P extends CollapsibleBaseProps = CollapsibleBaseProps> extends BaseFoundation<CollapsibleAdapter<P>, P, object> {
     #heightAnimation: Animation | null = null;
+    static override readonly propKeys = ['isOpen'];
 
     static getInitialView(props: Pick<CollapsibleBaseProps, 'isOpen'>): CollapsibleView {
         return { isOpen: props.isOpen, visible: props.isOpen, isTransitioning: false, rendered: false };
@@ -112,12 +113,12 @@ export default class CollapsibleFoundation<P extends CollapsibleBaseProps = Coll
     }
 
     /**
-     * Hosts call this after committing an `isOpen` change. Without calc-size() (Firefox, Safari) the open height is
-     * `auto`, which a transition cannot interpolate, so no transition runs and no transitionend ends the motion; the
-     * height animates between measured lengths instead and its end stands in for the transitionend. Removable, with
-     * the max-height rule of collapsible.scss, once Firefox and Safari support calc-size().
+     * Runs after an `isOpen` change is committed. Without calc-size() (Firefox, Safari) the open height is `auto`,
+     * which a transition cannot interpolate, so no transition runs and no transitionend ends the motion; the height
+     * animates between measured lengths instead and its end stands in for the transitionend. Removable, with the
+     * max-height rule of collapsible.scss, once Firefox and Safari support calc-size().
      */
-    handleOpenChange = () => {
+    override handlePropsChange() {
         const { isOpen, duration, collapseHeight, collapseHeightAdaptive } = this.getProps();
         const wrapper = this.adapter.getWrapper();
         if (!wrapper || !CollapsibleFoundation.hasMotion(this.getProps())) {
@@ -164,7 +165,7 @@ export default class CollapsibleFoundation<P extends CollapsibleBaseProps = Coll
             // cancelled by a reversal or unmount, which take over
             () => undefined
         );
-    };
+    }
 
     /**
      * `isSelf`: the event comes from the wrapper, not bubbling from the content. Only `height` is awaited: toggling

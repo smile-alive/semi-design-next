@@ -15,8 +15,8 @@
         [data: `data-${string}`]: string | undefined;
     }
 
-    type Foundation = BreadcrumbItemFoundation<Pick<ItemProps, 'route'>, object, MouseEvent>;
-    type Adapter = BreadcrumbItemAdapter<Pick<ItemProps, 'route'>, object, MouseEvent>;
+    type Foundation = BreadcrumbItemFoundation<Pick<ItemProps, 'route'>, MouseEvent>;
+    type Adapter = BreadcrumbItemAdapter<Pick<ItemProps, 'route'>, MouseEvent>;
 
     const { route, index, active, shouldRenderSeparator, ...rest }: ItemProps = $props();
 

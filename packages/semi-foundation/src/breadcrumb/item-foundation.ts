@@ -18,7 +18,7 @@ export interface Route {
 }
 
 /** E is the host's click event, which the foundation only passes through */
-export interface BreadcrumbItemAdapter<P extends object = object, S extends object = object, E = unknown> extends DefaultAdapter<P, S> {
+export interface BreadcrumbItemAdapter<P extends object = object, E = unknown> extends DefaultAdapter<P, object> {
     notifyClick: (item: BreadcrumbItemInfo, e: E) => void;
     notifyParent: (item: BreadcrumbItemInfo, e: E) => void;
 }
@@ -29,7 +29,7 @@ export interface BreadcrumbTooltipConfig {
     opts?: object;
 }
 
-export default class BreadcrumbItemFoundation<P extends object = object, S extends object = object, E = unknown> extends BaseFoundation<BreadcrumbItemAdapter<P, S, E>, P, S> {
+export default class BreadcrumbItemFoundation<P extends object = object, E = unknown> extends BaseFoundation<BreadcrumbItemAdapter<P, E>, P, object> {
     /** The title's ellipsis config: `false` keeps the width and position without a tooltip, `true` and objects add one */
     static getTooltipConfig(showTooltip?: boolean | BreadcrumbTooltipConfig): BreadcrumbTooltipConfig {
         if (!showTooltip) {

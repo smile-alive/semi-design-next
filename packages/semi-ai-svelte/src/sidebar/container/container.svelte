@@ -27,10 +27,6 @@
     // Kept by the transition events: true once the element has entered, false once its leave has ended. It starts at
     // visible so an initially visible container reports no change.
     let displayed = $state(untrack(() => Boolean(visible)));
-
-    // True from the focus record on until the close has handed focus back, so a container hidden in the tick it
-    // mounted, before its element ever existed, still returns focus
-    let recorded = false;
     const layer = new ReleaseHolder();
     const focusScope = new FocusScope();
 
@@ -79,10 +75,7 @@
     // Before the DOM updates, so the focus is recorded ahead of anything in the container taking it
     $effect.pre(() => {
         if (visible) {
-            untrack(() => {
-                recorded = true;
-                focusScope.record();
-            });
+            untrack(() => focusScope.record());
         }
     });
 
@@ -93,17 +86,6 @@
         }
         untrack(foundation.beforeShow);
         return foundation.afterHide;
-    });
-
-    // afterHide is not enough: a container hidden in the tick it mounted never ran beforeShow, yet focus may already
-    // be inside it and would drop to the body on unmount
-    $effect(() => {
-        if (!visible && recorded) {
-            untrack(() => {
-                recorded = false;
-                foundation.restoreFocus();
-            });
-        }
     });
 
     watch(() => displayed, foundation.onVisibleChange);

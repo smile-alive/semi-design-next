@@ -48,12 +48,14 @@ export interface CalendarBaseProps {
     showCurrTime?: boolean;
 }
 
-export interface CalendarAdapter<P extends CalendarBaseProps = CalendarBaseProps, S extends object = object> extends DefaultAdapter<P, S> {
-    updateCurrPos: (currPos: number) => void;
-    setShowCurrTime: (show: boolean) => void;
+export interface CalendarBaseState {
+    currPos: number;
+    showCurrTime: boolean;
 }
 
-export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBaseProps, S extends object = object> extends BaseFoundation<CalendarAdapter<P, S>, P, S> {
+export type CalendarAdapter<P extends CalendarBaseProps = CalendarBaseProps> = DefaultAdapter<P, CalendarBaseState>;
+
+export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBaseProps> extends BaseFoundation<CalendarAdapter<P>, P, CalendarBaseState> {
     #currTimeTimer: ReturnType<typeof setInterval>;
 
     static #parseEvents(events: EventObject[]) {
@@ -99,14 +101,18 @@ export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBa
             if (!isSameDay(this.getProp('displayValue'), getCurrDate())) {
                 // getPos reads only the time of day: the line would restart at 00:00 on a past column
                 clearInterval(this.#currTimeTimer);
-                this.adapter.setShowCurrTime(false);
+                this.setState({ showCurrTime: false });
                 return;
             }
-            this.adapter.updateCurrPos(round(getPos(getCurrDate())));
+            this.setState({ currPos: round(getPos(getCurrDate())) });
         };
         update();
         clearInterval(this.#currTimeTimer);
         this.#currTimeTimer = setInterval(update, 30000);
+    }
+
+    static getInitialState(): CalendarBaseState {
+        return { currPos: 0, showCurrTime: false };
     }
 
     static formatCbValue([date, ...time]: [Date, number, number, number] | [Date]) {
@@ -266,7 +272,7 @@ export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBa
     override init() {
         const { showCurrTime, displayValue } = this.getProps();
         if (showCurrTime && isSameDay(displayValue, getCurrDate())) {
-            this.adapter.setShowCurrTime(true);
+            this.setState({ showCurrTime: true });
             this.#startCurrentTimeTicker();
         }
     }

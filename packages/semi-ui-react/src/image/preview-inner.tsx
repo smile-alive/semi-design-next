@@ -1,8 +1,7 @@
 import { type CSSProperties, isValidElement, type RefObject, useId, useInsertionEffect, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/image/constants';
-import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseState, type RatioType } from '@fibrae/semi-foundation/image/preview-inner-foundation';
+import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerState, type RatioType } from '@fibrae/semi-foundation/image/preview-inner-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
@@ -21,6 +20,9 @@ import { usePreviewContext } from './preview-context';
 import Footer from './preview-footer';
 import Header from './preview-header';
 import PreviewImage from './preview-image';
+
+type Foundation = PreviewInnerFoundation<PreviewInnerProps>;
+type Adapter = PreviewInnerAdapter<PreviewInnerProps>;
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -172,17 +174,10 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
     const popupContainer = props.getPopupContainer ?? config.getPopupContainer;
     const context = { ...previewContext, direction: config.direction, popupContainer };
 
-    const [foundation, state] = useFoundation<PreviewInnerFoundation<PreviewInnerProps>, PreviewInnerAdapter<PreviewInnerProps>, PreviewInnerProps, PreviewInnerBaseState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, PreviewInnerProps, PreviewInnerState>(
         PreviewInnerFoundation,
         props,
-        () => ({
-            imgLoadStatus: {},
-            zoom: 0.1,
-            currentIndex: props.defaultCurrentIndex ?? 0,
-            rotation: 0,
-            viewerVisible: true,
-            preloadAfterVisibleChange: true,
-        }),
+        () => PreviewInnerFoundation.getInitialState(props),
         (base) => ({
             getIsInGroup: () => Boolean(base.getContexts()?.isGroup),
             disabledBodyScroll: () => runtime.disableBodyScroll(coversPage(base.getContext('popupContainer'))),
@@ -248,9 +243,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
             runtime.focusScope.restore(true);
         }
     });
-
-    // by content: a group builds a new list every render, which must not restart the delay
-    useDidUpdate(src, foundation.updateTimer, isEqual);
 
     // a focused prev or next button disappears at the first or last image; focus stays in the dialog. Focus the user
     // moved elsewhere is left alone.

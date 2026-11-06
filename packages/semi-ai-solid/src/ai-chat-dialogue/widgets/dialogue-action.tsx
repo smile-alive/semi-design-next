@@ -1,6 +1,6 @@
 import { Show, createMemo, createSignal } from 'solid-js';
 import clsx from 'clsx';
-import DialogueActionFoundation, { type DialogueActionAdapter, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/action-foundation';
+import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionState, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/action-foundation';
 import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
 import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
@@ -19,13 +19,8 @@ interface DialogueActionProps {
     isLastChat: boolean;
 }
 
-interface DialogueActionState {
-    visible: boolean;
-    showAction: boolean;
-}
-
-type Foundation = DialogueActionFoundation<DialogueActionProps, DialogueActionState>;
-type Adapter = DialogueActionAdapter<DialogueActionProps, DialogueActionState>;
+type Foundation = DialogueActionFoundation<DialogueActionProps>;
+type Adapter = DialogueActionAdapter<DialogueActionProps>;
 
 const prefix = cssClasses.PREFIX;
 const { PREFIX_ACTION } = cssClasses;
@@ -39,8 +34,8 @@ export default function DialogueAction(props: DialogueActionProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, DialogueActionProps, DialogueActionState>(
         DialogueActionFoundation,
         props,
-        () => ({ visible: false, showAction: false }),
-        (base) => ({
+        () => DialogueActionFoundation.getInitialState(),
+        () => ({
             notifyMessageCopy: () => context.messageCopy(props.message),
             // the toast renders outside this tree, so its text comes from this component's locale
             toastCopySuccess: () => Toast.success({ content: locale().locale.copySuccess }),
@@ -50,8 +45,6 @@ export default function DialogueAction(props: DialogueActionProps) {
             notifyShareMessage: () => context.messageShare(props.message),
             notifyEditMessage: () => context.messageEdit(props.message),
             notifyDeleteMessage: () => context.messageDelete(props.message),
-            setVisible: (visible) => base.setState({ visible }),
-            setShowAction: (showAction) => base.setState({ showAction }),
         })
     );
 

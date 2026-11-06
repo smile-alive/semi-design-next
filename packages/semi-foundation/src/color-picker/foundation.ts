@@ -26,21 +26,17 @@ export interface ColorPickerState {
     currentColor: ColorValue;
 }
 
-export interface ColorPickerAdapter<P extends ColorPickerProps = ColorPickerProps, S extends ColorPickerState = ColorPickerState> extends DefaultAdapter<P, S> {
+export interface ColorPickerAdapter<P extends ColorPickerProps = ColorPickerProps> extends DefaultAdapter<P, ColorPickerState> {
     notifyChange: (value: ColorValue) => void;
 }
 
-export default class ColorPickerFoundation<P extends ColorPickerProps = ColorPickerProps, S extends ColorPickerState = ColorPickerState> extends BaseFoundation<ColorPickerAdapter<P, S>, P, S> {
-    constructor(adapter: ColorPickerAdapter<P, S>) {
-        super({
-            ...adapter,
-        });
-    }
+export default class ColorPickerFoundation<P extends ColorPickerProps = ColorPickerProps> extends BaseFoundation<ColorPickerAdapter<P>, P, ColorPickerState> {
+    static override readonly propKeys = ['value'];
 
     #commit(color: ColorValue) {
         this.adapter.notifyChange(color);
         if (!this.isControlledComponent('value')) {
-            this.adapter.setState({ currentColor: color });
+            this.setState({ currentColor: color });
         }
     }
 
@@ -57,6 +53,10 @@ export default class ColorPickerFoundation<P extends ColorPickerProps = ColorPic
 
     protected getCurrentColor(): ColorValue {
         return this.isControlledComponent('value') ? (this.getProp('value') ?? this.getProp('defaultValue')) : this.getState('currentColor');
+    }
+
+    static getInitialState(props: Pick<ColorPickerProps, 'value' | 'defaultValue'>): ColorPickerState {
+        return { currentColor: props.value ?? props.defaultValue };
     }
 
     /** The full color of a value given in `format`; without alpha support the opacity is dropped */
@@ -127,9 +127,11 @@ export default class ColorPickerFoundation<P extends ColorPickerProps = ColorPic
     }
 
     /** After a controlled `value` is dropped, the uncontrolled state restarts from `defaultValue` */
-    resetToDefault = () => {
-        this.adapter.setState({ currentColor: this.getProp('defaultValue') });
-    };
+    override handlePropsChange() {
+        if (this.getProp('value') === undefined) {
+            this.setState({ currentColor: this.getProp('defaultValue') });
+        }
+    }
 
     handleChange = (color: HsvaColor | RgbaColor | string, format: ColorFormat) => {
         this.#commit(ColorPickerFoundation.getColorValue(color, format, Boolean(this.getProp('alpha'))));

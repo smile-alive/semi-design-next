@@ -1897,7 +1897,7 @@ describe('TimePicker Vue 写法', () => {
         expect(getInput()).toHaveValue('02:00:00');
     });
 
-    it('KeepAlive 切走再切回后 aria-expanded 为 false，弹层不在页面上，不发 blur', async () => {
+    it('KeepAlive 缓存期间弹层不在页面上、外部按下不关闭，切回后面板照旧打开，不发 openChange 与 blur', async () => {
         const shown = ref(true);
         const onOpenChange = vi.fn<OpenChangeFn>();
         const onBlur = vi.fn<BlurFn>();
@@ -1912,12 +1912,13 @@ describe('TimePicker Vue 写法', () => {
         expect(getPanels()).toHaveLength(1);
         shown.value = false;
         await settle();
-        console.log('PROBE cached panels', getPanels().length, document.body.innerHTML.length);
+        expect(getPanels()).toHaveLength(0);
         await fireEvent.mouseDown(document.body);
-        expect(onOpenChange).not.toHaveBeenCalled();
         shown.value = true;
         await settle();
-        console.log('PROBE back panels', getPanels().length, screen.getByRole('combobox').getAttribute('aria-expanded'));
+        expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'true');
+        expect(getPanels()).toHaveLength(1);
+        expect(onOpenChange).not.toHaveBeenCalled();
         expect(onBlur).not.toHaveBeenCalled();
         expect(document.activeElement).not.toBe(getInput());
     });

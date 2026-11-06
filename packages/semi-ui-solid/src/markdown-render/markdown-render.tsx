@@ -1,4 +1,4 @@
-import { type Component, createEffect, createMemo, For, type JSX, on, splitProps } from 'solid-js';
+import { type Component, createMemo, For, type JSX, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { omitBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
@@ -40,10 +40,10 @@ function MarkdownRender(rawProps: MarkdownRenderProps) {
     const props = useDefaultProps('MarkdownRender', rawProps, defaultProps);
     const [local, rest] = splitProps(props, ['raw', 'components', 'format', 'remarkPlugins', 'rehypePlugins', 'remarkGfm', 'class']);
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, MarkdownRenderProps, MarkdownRenderBaseState>(
+    const { state } = useFoundation<Foundation, Adapter, MarkdownRenderProps, MarkdownRenderBaseState>(
         MarkdownRenderFoundation,
         props,
-        (p) => ({ renderContent: MarkdownRenderFoundation.compileMdSync(p, runtime) }),
+        (p) => MarkdownRenderFoundation.getInitialState(p, runtime),
         () => ({
             getRuntime: () => runtime,
             notifyCompileError: (error) => {
@@ -56,11 +56,6 @@ function MarkdownRender(rawProps: MarkdownRenderProps) {
 
     // an explicit undefined would replace a default, and the runtime takes it for an element type
     const components = createMemo(() => ({ ...defaultComponents, ...omitBy(local.components ?? {}, (component) => component === undefined) }));
-
-    // only what changes the compiled tree compiles again; plugin arrays are usually literals, so entries are compared
-    const source = createMemo(() => ({ raw: local.raw, format: local.format, remarkGfm: local.remarkGfm, remarkPlugins: local.remarkPlugins, rehypePlugins: local.rehypePlugins }), undefined, {
-        equals: (a, b) => a.raw === b.raw && a.format === b.format && a.remarkGfm === b.remarkGfm && MarkdownRenderFoundation.isSamePluginList(a.remarkPlugins, b.remarkPlugins) && MarkdownRenderFoundation.isSamePluginList(a.rehypePlugins, b.rehypePlugins),
-    });
 
     // Each compile or components change yields new elements throughout. A top-level block equal to one of the last
     // render keeps its block, and For keeps its DOM, so streamed content re-creates only the blocks that changed.
@@ -81,8 +76,6 @@ function MarkdownRender(rawProps: MarkdownRenderProps) {
             return (key === undefined ? undefined : reusable.get(key)?.shift()) ?? { key, node };
         });
     }, []);
-
-    createEffect(on(source, () => void foundation.updateContent()));
 
     return (
         <div {...rest} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']} class={clsx(cssClasses.PREFIX, local.class)}>

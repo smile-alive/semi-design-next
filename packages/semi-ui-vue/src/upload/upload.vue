@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, onActivated, onBeforeUpdate, onDeactivated, onUpdated, shallowRef, useAttrs, useTemplateRef, watch, type InputHTMLAttributes } from 'vue';
+    import { computed, onUpdated, useAttrs, useTemplateRef, type InputHTMLAttributes } from 'vue';
     import { omit } from 'es-toolkit';
     import { cssClasses, strings } from '@fibrae/semi-foundation/upload/constants';
     import UploadFoundation, { type UploadAdapter, type UploadBaseState } from '@fibrae/semi-foundation/upload/foundation';
@@ -12,8 +12,8 @@
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import SlotFragment from '../_base/slot-fragment';
     import slotNodes, { hasSlotContent } from '../_base/slot-nodes';
-    import useEventListener, { getBody } from '../_base/use-event-listener';
     import useFoundation from '../_base/use-foundation';
+    import useKeepAliveFoundation from '../_base/use-keep-alive-foundation';
     import Cropper, { type CropperHandle } from '../cropper';
     import useLocale from '../locale/use-locale';
     import Modal from '../modal';
@@ -23,7 +23,6 @@
     import type { FileItem, UploadCropModalProps, UploadCropProps, UploadEmits, UploadFileItemSlotProps, UploadHandle, UploadProps, UploadSlots } from './interface';
 
     interface UploadState extends UploadBaseState {
-        dragAreaStatus: 'default' | 'legal';
         fileList: FileItem[];
         inputKey: number;
         replaceInputKey: number;
@@ -96,9 +95,6 @@
     const fileListRoot = useTemplateRef('fileListRoot');
     const listFocus = new ListFocusTracker();
 
-    // A cached (KeepAlive) instance stays mounted, so its body listener would keep adding pasted files.
-    const active = shallowRef(true);
-
     // role="group" supports no aria-required, and the tabindex a Tooltip around the Upload injects would add a Tab stop
     // beside the add button, so it goes to the add button instead. blur does not bubble, so a form's blur handler is
     // called from focusout instead.
@@ -116,20 +112,7 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, UploadProps, UploadState>(
         UploadFoundation,
         props,
-        () => ({
-            fileList: props.defaultFileList ?? [],
-            replaceUid: '',
-            inputKey: 0,
-            replaceInputKey: 0,
-            dragAreaStatus: 'default',
-            cropperVisible: false,
-            cropperFile: null,
-            cropperSrc: '',
-            pendingImageFiles: [],
-            nonImageFiles: [],
-            croppedFiles: [],
-            isReplaceOperation: false,
-        }),
+        (view) => ({ ...UploadFoundation.getInitialState(view), inputKey: 0, replaceInputKey: 0 }),
         (base) => ({
             notifyFileSelect: (files) => emit('fileChange', files),
             notifyError: (error, fileInstance, fileList, xhr) => emit('error', error, fileInstance, fileList, xhr),
@@ -138,20 +121,16 @@
             notifyRemove: (file, fileList, fileItem) => emit('remove', file, fileList, fileItem),
             notifySizeError: (file, fileList) => emit('sizeError', file, fileList),
             notifyExceed: (files) => emit('exceed', files),
-            updateFileList: (fileList, cb) => base.setState({ fileList }, cb),
             notifyBeforeUpload: (object) => (fnProp('beforeUpload') as NonNullable<UploadProps['beforeUpload']>)(object),
             notifyAfterUpload: (object) => (fnProp('afterUpload') as NonNullable<UploadProps['afterUpload']>)(object),
             resetInput: () => base.setState({ inputKey: base.getState('inputKey') + 1 }),
             resetReplaceInput: () => base.setState({ replaceInputKey: base.getState('replaceInputKey') + 1 }),
-            updateDragAreaStatus: (status) => base.setState({ dragAreaStatus: status as UploadState['dragAreaStatus'] }),
             notifyBeforeRemove: (file, fileList) => fnProp('beforeRemove')?.(file, fileList) ?? true,
             notifyBeforeClear: (fileList) => fnProp('beforeClear')?.(fileList) ?? true,
             notifyChange: ({ currentFile, fileList }) => {
                 emit('update:fileList', fileList);
                 emit('change', { currentFile, fileList });
             },
-            // the foundation's own url map is the source of truth
-            updateLocalUrls: () => {},
             notifyClear: () => emit('clear'),
             notifyPreviewClick: (file) => fnProp('onPreviewClick')?.(file),
             notifyRetry: (fileItem) => emit('retry', fileItem),
@@ -265,27 +244,9 @@
     // v-bind of an object merges listeners with the explicit ones, so keys Upload owns are dropped first
     const cropModalRest = () => omit((props.cropModalProps ?? {}) as ModalProps & UploadCropModalProps, ['style', 'bodyStyle', 'width', 'visible', 'title', 'okText', 'cancelText', 'onOk', 'onCancel']);
 
-    watch(() => props.fileList, foundation.handleFileListPropChange);
-
     onUpdated(() => listFocus.restore(cardsOf(), root.value?.querySelector<HTMLElement>(`.${prefix}-add, .${dragArea}`) ?? null));
 
-    // Sync on every update like React; a watch on the prop would miss a parent that refuses the update and keeps the array
-    onBeforeUpdate(() => {
-        if (props.fileList !== undefined) foundation.syncLatestFileList(props.fileList ?? []);
-    });
-
-    onActivated(() => {
-        active.value = true;
-    });
-
-    onDeactivated(() => {
-        active.value = false;
-        if (state.value.cropperVisible) foundation.cancelCrop();
-    });
-
-    useEventListener(getBody, 'paste', foundation.handlePasting, {
-        enabled: () => props.addOnPasting && !props.disabled && active.value,
-    });
+    useKeepAliveFoundation(foundation);
 
     defineExpose<UploadHandle>({
         insert: foundation.insertFileToList,

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    import { computed, nextTick, useId, watch } from 'vue';
+    import { computed, nextTick, useId } from 'vue';
     import { radioGroupClasses, strings } from '@fibrae/semi-foundation/radio/constants';
-    import RadioGroupFoundation, { type RadioGroupAdapter } from '@fibrae/semi-foundation/radio/radio-group-foundation';
+    import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/radio/radio-group-foundation';
     import '@fibrae/semi-foundation/radio/radio.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
@@ -14,12 +14,8 @@
         value?: RadioValue;
     }
 
-    interface GroupState {
-        value?: RadioValue;
-    }
-
-    type Foundation = RadioGroupFoundation<FoundationProps, GroupState>;
-    type Adapter = RadioGroupAdapter<FoundationProps, GroupState>;
+    type Foundation = RadioGroupFoundation<FoundationProps>;
+    type Adapter = RadioGroupAdapter<FoundationProps>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -46,12 +42,11 @@
     // A radiogroup supports none of these; Tooltip injects them for a dialog trigger and tabindex adds a stray Tab stop.
     const DROPPED_ATTRS = new Set(['aria-expanded', 'aria-haspopup', 'aria-controls', 'tabindex', 'tabIndex']);
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, GroupState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, RadioGroupBaseState>(
         RadioGroupFoundation,
         props,
-        (view) => ({ value: view.value === undefined ? view.defaultValue : view.value }),
-        (base) => ({
-            setValue: (value) => base.setState({ value }),
+        (view) => RadioGroupFoundation.getInitialState(view),
+        () => ({
             notifyChange: (event) => {
                 emit('update:modelValue', event.target.value as RadioValue | undefined);
                 emit('change', event as RadioChangeEvent);
@@ -94,12 +89,6 @@
             emit('blur', event);
         }
     };
-
-    // Object.is treats NaN as unchanged, so a NaN value does not loop.
-    watch(
-        () => props.modelValue,
-        (value) => foundation.handlePropValueChange(value as RadioValue)
-    );
 </script>
 
 <template>

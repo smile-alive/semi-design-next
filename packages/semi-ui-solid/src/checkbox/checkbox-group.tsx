@@ -1,14 +1,12 @@
 import { createMemo, createUniqueId, Index, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
-import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxValue } from '@fibrae/semi-foundation/checkbox/checkbox-group-foundation';
+import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxGroupBaseState, type CheckboxValue } from '@fibrae/semi-foundation/checkbox/checkbox-group-foundation';
 import { checkboxGroupClasses as css, strings } from '@fibrae/semi-foundation/checkbox/constants';
 import callHandler from '../_base/call-handler';
 import { omitFormInjected } from '../_base/control-attrs';
 import type { ElementProps } from '../_base/element-props';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import Checkbox, { type CheckboxProps } from './checkbox';
 import { CheckboxGroupContext, type CheckboxGroupContextValue } from './context';
 
@@ -39,12 +37,10 @@ export interface CheckboxGroupProps extends ElementProps<'div', 'onChange' | 'de
     type?: CheckboxType;
 }
 
-export type CheckboxGroupState = {
-    value?: CheckboxValue[];
-};
+export type CheckboxGroupState = CheckboxGroupBaseState;
 
-type Foundation = CheckboxGroupFoundation<CheckboxGroupProps, CheckboxGroupState>;
-type Adapter = CheckboxGroupAdapter<CheckboxGroupProps, CheckboxGroupState>;
+type Foundation = CheckboxGroupFoundation<CheckboxGroupProps>;
+type Adapter = CheckboxGroupAdapter<CheckboxGroupProps>;
 
 const defaultProps = {
     disabled: false,
@@ -88,10 +84,8 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, CheckboxGroupProps, CheckboxGroupState>(
         CheckboxGroupFoundation,
         props,
-        // only the initial value is wanted: later changes of `value` arrive through the effect below
-        (view) => ({ value: view.value || view.defaultValue }),
+        (view) => CheckboxGroupFoundation.getInitialState(view),
         (base) => ({
-            updateGroupValue: (value) => base.setState({ value }),
             notifyChange: (value) => base.getProps().onChange?.(value),
         })
     );
@@ -124,12 +118,6 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
             callHandler(local.onBlur, event);
         }
     };
-
-    // deep comparison: Tree and TreeSelect pass a new array on every render
-    useWatch(
-        createMemo(() => local.value, undefined, { equals: isEqual }),
-        foundation.handlePropValueChange
-    );
 
     return (
         <div

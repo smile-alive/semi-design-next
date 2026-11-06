@@ -1,8 +1,7 @@
 import { type JSX, type Ref, For, Index, Show, batch, children, createMemo, createUniqueId, mergeProps, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/cascader/constants';
-import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicTriggerRenderProps, type BasicScrollPanelProps, type BasicValue, type CascaderAdapter, type Virtualize } from '@fibrae/semi-foundation/cascader/foundation';
+import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicTriggerRenderProps, type BasicScrollPanelProps, type CascaderAdapter, type Virtualize } from '@fibrae/semi-foundation/cascader/foundation';
 import { calcMergeType } from '@fibrae/semi-foundation/cascader/util';
 import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
 import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
@@ -21,7 +20,6 @@ import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
 import useFocusHandover from '../_base/use-focus-handover';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import type { VirtualListHandle } from '../_base/virtual-list';
 import useConfig from '../config-provider/use-config';
 import type { InputGroupContextValue } from '../input/context';
@@ -341,7 +339,6 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
                     HTMLElement.prototype.blur.call(root);
                 }
             },
-            updateStates: (states) => base.setState(states as BasicCascaderInnerData),
             notifyChange: (value) => props.onChange?.(value as Value),
             notifySelect: (selected) => props.onSelect?.(selected),
             notifyOnSearch: (input) => props.onSearch?.(input),
@@ -944,14 +941,6 @@ function CascaderControl(all: CascaderBodyProps & { inGroup?: InputGroupContextV
             {local.bottomSlot}
         </div>
     );
-
-    const inputs = () => [local.treeData, local.keyMaps, local.value] as const;
-
-    useWatch(inputs, ([treeData, keyMaps, value], [prevTreeData, prevKeyMaps, prevValue]) => {
-        const optionsChanged = !isEqual(prevTreeData, treeData) || !isEqual(prevKeyMaps, keyMaps);
-        // by content: an inline value is a new array on every parent render, and each change resets the search
-        foundation.handleInputsChange({ optionsChanged, valueChanged: !isEqual(prevValue, value) }, value as BasicValue);
-    });
 
     return (
         <Popover

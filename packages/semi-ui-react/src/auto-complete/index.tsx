@@ -7,7 +7,6 @@ import AutoCompleteFoundation, { type AutoCompleteAdapter, type StateOptionItem,
 import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
 import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
 import { centerInScroller } from '@fibrae/semi-foundation/utils/dom';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/auto-complete/auto-complete.scss';
@@ -105,14 +104,7 @@ const defaultProps = {
     data: [],
     showClear: false,
     size: 'default',
-    onFocus: noop,
-    onSearch: noop,
-    onClear: noop,
-    onBlur: noop,
-    onSelect: noop,
-    onChange: noop,
     onSelectWithObject: false,
-    onDropdownVisibleChange: noop,
     defaultActiveFirstOption: false,
     dropdownMatchSelectWidth: true,
     loading: false,
@@ -120,7 +112,6 @@ const defaultProps = {
     validateStatus: 'default',
     autoFocus: false,
     emptyContent: null,
-    onKeyDown: noop,
 } satisfies Partial<AutoCompleteProps<any>>;
 
 export default function AutoComplete<T extends AutoCompleteItems>(rawProps: AutoCompleteProps<T>) {
@@ -192,25 +183,20 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
         props,
         () => AutoCompleteFoundation.getInitialState(props),
         (base) => ({
-            updateFocusIndex: (focusIndex) => base.setState({ focusIndex }),
             updateScrollTop: (index) => {
                 const destNode = optionContainerEl.current?.querySelector<HTMLDivElement>(`.${prefixCls}-option:nth-child(${index + 1})`);
                 if (destNode) {
                     centerInScroller(destNode, destNode.parentNode as HTMLDivElement);
                 }
             },
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            toggleListVisible: (isShow) => base.setState({ visible: isShow }),
-            updateOptionList: (optionList) => base.setState({ options: optionList }),
-            updateSelection: (selection) => base.setState({ selection }),
-            notifySearch: (inputValue) => base.getProps().onSearch(inputValue),
-            notifyChange: (value) => base.getProps().onChange(value),
-            notifySelect: (option) => base.getProps().onSelect(option),
-            notifyDropdownVisibleChange: (isVisible) => base.getProps().onDropdownVisibleChange(isVisible),
-            notifyClear: () => base.getProps().onClear(),
-            notifyFocus: (event) => base.getProps().onFocus(event),
-            notifyBlur: (event) => base.getProps().onBlur(event),
-            notifyKeyDown: (e) => base.getProps().onKeyDown(e),
+            notifySearch: (inputValue) => base.getProps().onSearch?.(inputValue),
+            notifyChange: (value) => base.getProps().onChange?.(value),
+            notifySelect: (option) => base.getProps().onSelect?.(option),
+            notifyDropdownVisibleChange: (isVisible) => base.getProps().onDropdownVisibleChange?.(isVisible),
+            notifyClear: () => base.getProps().onClear?.(),
+            notifyFocus: (event) => base.getProps().onFocus?.(event),
+            notifyBlur: (event) => base.getProps().onBlur?.(event),
+            notifyKeyDown: (e) => base.getProps().onKeyDown?.(e),
         })
     );
 
@@ -264,8 +250,6 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
         }
     });
 
-    useDidUpdate(props.value, foundation.handleValueChange);
-
     useImperativeHandle(props.ref, () => triggerRef.current, []);
 
     delete componentProps.ref;
@@ -294,7 +278,7 @@ export default function AutoComplete<T extends AutoCompleteItems>(rawProps: Auto
             onKeyDown={(e) => {
                 // a control inside the trigger (the clear button, a custom trigger's button) keeps its own keys
                 if (isInnerControlKey(e)) {
-                    onKeyDown(e);
+                    onKeyDown?.(e);
                 } else {
                     foundation.handleKeyDown(e);
                 }

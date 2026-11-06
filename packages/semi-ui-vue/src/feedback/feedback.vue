@@ -17,8 +17,8 @@
 
     type CancelEvent = MouseEvent | KeyboardEvent;
     type TextAreaEvent = Parameters<NonNullable<FeedbackTextAreaProps['onChange']>>[1];
-    type Foundation = FeedbackFoundation<FeedbackProps, FeedbackBaseState, CancelEvent, MouseEvent, TextAreaEvent>;
-    type Adapter = FeedbackAdapter<FeedbackProps, FeedbackBaseState, CancelEvent, MouseEvent, TextAreaEvent>;
+    type Foundation = FeedbackFoundation<FeedbackProps, CancelEvent, MouseEvent, TextAreaEvent>;
+    type Adapter = FeedbackAdapter<FeedbackProps, CancelEvent, MouseEvent, TextAreaEvent>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -72,9 +72,8 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, FeedbackProps, FeedbackBaseState>(
         FeedbackFoundation,
         props,
-        () => ({ value: null, onOKReturnPromiseStatus: 'fulfilled', onCancelReturnPromiseStatus: 'fulfilled' }),
-        (base) => ({
-            setValue: (value) => base.setState({ value }),
+        () => FeedbackFoundation.getInitialState(),
+        () => ({
             notifyValueChange: (value) => emit('valueChange', value),
             notifyCancel: (event) => {
                 const result = cancelFn.value?.(event);

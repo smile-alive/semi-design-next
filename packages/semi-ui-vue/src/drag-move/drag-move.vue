@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { onBeforeUnmount, watch, type ComponentPublicInstance } from 'vue';
+    import { onBeforeUnmount, type ComponentPublicInstance } from 'vue';
     import DragMoveFoundation, { type DragMoveAdapter } from '@fibrae/semi-foundation/drag-move/foundation';
     import semiDefault, { readSemiDefault, useSemiGlobal } from '../_base/semi-default';
     import slotNodes from '../_base/slot-nodes';
@@ -77,8 +77,6 @@
     };
 
     const trackRef = (key: string) => (ref: Element | ComponentPublicInstance | null) => track(key, ref);
-
-    watch(() => props.positionStrategy, foundation.updatePositionStrategy, { flush: 'post' });
 
     onBeforeUnmount(() => observer?.disconnect());
 </script>

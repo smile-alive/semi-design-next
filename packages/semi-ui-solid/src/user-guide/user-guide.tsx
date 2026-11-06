@@ -1,7 +1,7 @@
 import { type JSX, For, Show, children, createEffect, createMemo, createUniqueId, on, onCleanup, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
-import UserGuideFoundation, { type UserGuideAdapter } from '@fibrae/semi-foundation/user-guide/foundation';
+import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
@@ -14,7 +14,6 @@ import useDefaultProps from '../_base/use-default-props';
 import useEventListener from '../_base/use-event-listener';
 import useFoundation from '../_base/use-foundation';
 import useMounted from '../_base/use-mounted';
-import useWatch from '../_base/use-watch';
 import Button, { type ButtonProps } from '../button';
 import useConfig from '../config-provider/use-config';
 import useLocale from '../locale/use-locale';
@@ -80,13 +79,10 @@ export interface StepRenderProps {
     index: number;
 }
 
-export interface UserGuideState {
-    current: number;
-    spotlightRect: DOMRect | null;
-}
+export type { UserGuideBaseState as UserGuideState };
 
-type Foundation = UserGuideFoundation<UserGuideProps, UserGuideState>;
-type Adapter = UserGuideAdapter<UserGuideProps, UserGuideState>;
+type Foundation = UserGuideFoundation<UserGuideProps>;
+type Adapter = UserGuideAdapter<UserGuideProps>;
 
 const defaultProps = {
     mask: true,
@@ -112,10 +108,10 @@ export default function UserGuide(rawProps: UserGuideProps) {
 
     const mounted = useMounted();
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, UserGuideProps, UserGuideState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, UserGuideProps, UserGuideBaseState>(
         UserGuideFoundation,
         props,
-        () => ({ current: props.current || numbers.DEFAULT_CURRENT, spotlightRect: null }),
+        () => UserGuideFoundation.getInitialState(props),
         (base) => ({
             disabledBodyScroll: () => (coversPage(base.getProp('getPopupContainer') ?? config().getPopupContainer) ? scroll.hold(lockBodyScroll) : scroll.release()),
             // hiding and unmounting both call it; release is idempotent
@@ -125,7 +121,6 @@ export default function UserGuide(rawProps: UserGuideProps) {
             notifyNext: (current) => base.getProps().onNext?.(current),
             notifyPrev: (current) => base.getProps().onPrev?.(current),
             notifySkip: () => base.getProps().onSkip?.(),
-            setCurrent: (current) => base.setState({ current }),
         })
     );
 
@@ -156,26 +151,12 @@ export default function UserGuide(rawProps: UserGuideProps) {
 
     const rect = () => state().spotlightRect as DOMRect;
 
-    // only a step change scrolls, so a user scroll is followed, not fought
-    const measure = (scrollIntoView: boolean) => {
-        const next = UserGuideFoundation.measure(local.steps[current()], props.spotlightPadding, scrollIntoView);
-        if (!UserGuideFoundation.isSameRect(state().spotlightRect, next)) {
-            foundation.setState({ spotlightRect: next });
-        }
-    };
-
-    const remeasure = () => measure(false);
+    const remeasure = () => foundation.measureSpotlight(false);
 
     // a user who clicked elsewhere keeps their focus
     const restoreFocus = (target?: Element) => {
         // closest() stops at a shadow boundary, so the card is looked up from the focus as the card's tree sees it
         focusScope.restoreIfAllowed(FocusTrapHandle.getActiveElement(target)?.closest<HTMLElement>(`.${prefixCls}-popover`), false, true);
-    };
-
-    const syncCurrent = () => {
-        if (props.current !== undefined) {
-            foundation.setState({ current: props.current });
-        }
     };
 
     const prevText = () => local.prevButtonProps?.children || locale().locale.prev;
@@ -351,11 +332,6 @@ export default function UserGuide(rawProps: UserGuideProps) {
         })
     );
 
-    // Mirrored into state so going uncontrolled continues from the last controlled step; after the hide effect, so a
-    // hide keeps the controlled step
-    useWatch(() => props.current, syncCurrent);
-    useWatch(visible, syncCurrent);
-
     createEffect(
         on(popupShown, (isShown) => {
             if (!isShown) {
@@ -376,7 +352,7 @@ export default function UserGuide(rawProps: UserGuideProps) {
     createEffect(
         on([measuring, current], ([isMeasuring]) => {
             if (isMeasuring) {
-                measure(true);
+                foundation.measureSpotlight(true);
             }
         })
     );

@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterBaseProps, type PreviewFooterBaseState } from '@fibrae/semi-foundation/image/preview-footer-foundation';
+    import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterBaseProps, type PreviewFooterState } from '@fibrae/semi-foundation/image/preview-footer-foundation';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import { Divider } from '../divider/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
@@ -49,7 +49,7 @@
 
     let root = $state.raw<HTMLElement | null>(null);
 
-    const { foundation } = useFoundation<Foundation, Adapter, PreviewFooterBaseProps, PreviewFooterBaseState>(
+    const { foundation } = useFoundation<Foundation, Adapter, PreviewFooterBaseProps, PreviewFooterState>(
         PreviewFooterFoundation,
         {
             get zoom() {

@@ -16,8 +16,8 @@
     import type { VideoControl, VideoPlayerProps, VideoPlayerState } from './interface.js';
     import VideoProgress from './video-progress.svelte';
 
-    type Foundation = VideoPlayerFoundation<VideoPlayerBaseProps, VideoPlayerState>;
-    type Adapter = VideoPlayerAdapter<VideoPlayerBaseProps, VideoPlayerState>;
+    type Foundation = VideoPlayerFoundation<VideoPlayerBaseProps>;
+    type Adapter = VideoPlayerAdapter<VideoPlayerBaseProps>;
 
     const defaults = useDefaultProps('VideoPlayer');
 
@@ -63,6 +63,15 @@
 
     // the state props are read once, when the player mounts
     const foundationProps: VideoPlayerBaseProps = {
+        get defaultPlaybackRate() {
+            return defaultPlaybackRate;
+        },
+        get defaultQuality() {
+            return defaultQuality;
+        },
+        get defaultRoute() {
+            return defaultRoute;
+        },
         get muted() {
             return muted;
         },
@@ -77,24 +86,8 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, VideoPlayerBaseProps, VideoPlayerState>(
         VideoPlayerFoundation,
         foundationProps,
+        (view) => VideoPlayerFoundation.getInitialState(view),
         () => ({
-            bufferedValue: 0,
-            currentQuality: defaultQuality || '',
-            currentRoute: defaultRoute || '',
-            currentTime: 0,
-            isError: false,
-            isFullScreen: false,
-            isMirror: false,
-            isPlaying: false,
-            muted,
-            notificationContent: '',
-            playbackRate: defaultPlaybackRate || 1,
-            showNotification: false,
-            showControls: true,
-            totalTime: 0,
-            volume,
-        }),
-        (base) => ({
             getVideo: () => video ?? null,
             getVideoWrapper: () => root ?? null,
             notifyPause: () => onPause?.(),
@@ -103,21 +96,6 @@
             notifyRateChange: (rate) => onRateChange?.(rate),
             notifyRouteChange: (route) => onRouteChange?.(route),
             notifyVolumeChange: (next) => onVolumeChange?.(next),
-            setBufferedValue: (bufferedValue) => base.setState({ bufferedValue }),
-            setCurrentTime: (currentTime) => base.setState({ currentTime }),
-            setIsError: (isError) => base.setState({ isError }),
-            setIsFullScreen: (isFullScreen) => base.setState({ isFullScreen }),
-            setIsMirror: (isMirror) => base.setState({ isMirror }),
-            setIsPlaying: (isPlaying) => base.setState({ isPlaying }),
-            setMuted: (nextMuted) => base.setState({ muted: nextMuted }),
-            setNotificationContent: (notificationContent) => base.setState({ notificationContent }),
-            setPlaybackRate: (playbackRate) => base.setState({ playbackRate }),
-            setQuality: (currentQuality) => base.setState({ currentQuality }),
-            setRoute: (currentRoute) => base.setState({ currentRoute }),
-            setShowControls: (showControls) => base.setState({ showControls }),
-            setShowNotification: (showNotification) => base.setState({ showNotification }),
-            setTotalTime: (totalTime) => base.setState({ totalTime }),
-            setVolume: (nextVolume) => base.setState({ volume: nextVolume }),
         })
     );
 

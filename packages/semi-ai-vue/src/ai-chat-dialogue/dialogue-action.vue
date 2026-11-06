@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, h, normalizeClass } from 'vue';
-    import DialogueActionFoundation, { type DialogueActionAdapter, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/action-foundation';
+    import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionState, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/action-foundation';
     import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
     import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
@@ -19,14 +19,8 @@
     }
 
     type ActionKind = InstanceType<typeof DialogueActionButton>['$props']['kind'];
-
-    interface DialogueActionState {
-        visible: boolean;
-        showAction: boolean;
-    }
-
-    type Foundation = DialogueActionFoundation<DialogueActionProps, DialogueActionState>;
-    type Adapter = DialogueActionAdapter<DialogueActionProps, DialogueActionState>;
+    type Foundation = DialogueActionFoundation<DialogueActionProps>;
+    type Adapter = DialogueActionAdapter<DialogueActionProps>;
 
     const props = defineProps<DialogueActionProps>();
     defineSlots<Pick<AIChatDialogueSlots, 'action'>>();
@@ -37,8 +31,8 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, DialogueActionProps, DialogueActionState>(
         DialogueActionFoundation,
         props,
-        () => ({ visible: false, showAction: false }),
-        (base) => ({
+        () => DialogueActionFoundation.getInitialState(),
+        () => ({
             notifyMessageCopy: () => context.messageCopy(props.message),
             toastCopySuccess: () => Toast.success({ content: locale.value.locale.copySuccess }),
             notifyLikeMessage: () => context.messageGoodFeedback(props.message),
@@ -47,8 +41,6 @@
             notifyShareMessage: () => context.messageShare(props.message),
             notifyEditMessage: () => context.messageEdit(props.message),
             notifyDeleteMessage: () => context.messageDelete(props.message),
-            setVisible: (visible: boolean) => base.setState({ visible }),
-            setShowAction: (showAction: boolean) => base.setState({ showAction }),
         })
     );
 

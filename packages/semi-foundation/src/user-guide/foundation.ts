@@ -1,33 +1,45 @@
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import { numbers } from './constants';
 
-export interface UserGuideAdapter<P extends UserGuideBaseProps = UserGuideBaseProps, S extends UserGuideBaseState = UserGuideBaseState> extends DefaultAdapter<P, S> {
+export interface UserGuideAdapter<P extends UserGuideBaseProps = UserGuideBaseProps> extends DefaultAdapter<P, UserGuideBaseState> {
     notifyChange: (current: number) => void;
     notifyPrev: (current: number) => void;
     notifyNext: (current: number) => void;
     notifySkip: () => void;
     notifyFinish: () => void;
-    setCurrent: (current: number) => void;
     disabledBodyScroll: () => void;
     enabledBodyScroll: () => void;
 }
 
+export interface UserGuideStepBase {
+    target?: Element | (() => Element | null | undefined) | null;
+    spotlightPadding?: number;
+}
+
 export interface UserGuideBaseProps {
     current?: number;
-    steps: unknown[];
+    spotlightPadding?: number;
+    steps: UserGuideStepBase[];
 }
 
 export interface UserGuideBaseState {
     current: number;
+    spotlightRect: DOMRect | null;
 }
 
-export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuideBaseProps, S extends UserGuideBaseState = UserGuideBaseState> extends BaseFoundation<UserGuideAdapter<P, S>, P, S> {
+export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuideBaseProps> extends BaseFoundation<UserGuideAdapter<P>, P, UserGuideBaseState> {
+    static override readonly propKeys = ['current'];
+
     #getCurrent() {
         return UserGuideFoundation.deriveCurrent(this.getProps(), this.getStates());
     }
 
     protected getIsControlledComponent() {
         return this.isControlledComponent('current');
+    }
+
+    static getInitialState({ current }: Pick<UserGuideBaseProps, 'current'>): UserGuideBaseState {
+        return { current: current ?? numbers.DEFAULT_CURRENT, spotlightRect: null };
     }
 
     static deriveCurrent(props: { current?: number }, state: { current: number }) {
@@ -87,6 +99,23 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
         this.adapter.enabledBodyScroll();
     }
 
+    // state mirrors a controlled current, so going uncontrolled continues from the last controlled step
+    override handlePropsChange() {
+        const { current } = this.getProps();
+        if (current !== undefined) {
+            this.setState({ current });
+        }
+    }
+
+    /** Measures the current step's target; unchanged rects set no state. Only a step change scrolls, so a user scroll is followed, not fought */
+    measureSpotlight = (scrollIntoView: boolean) => {
+        const { steps, spotlightPadding } = this.getProps();
+        const next = UserGuideFoundation.measure(steps[this.#getCurrent()], spotlightPadding, scrollIntoView);
+        if (!UserGuideFoundation.isSameRect(this.getState('spotlightRect'), next)) {
+            this.setState({ spotlightRect: next });
+        }
+    };
+
     beforeShow = () => {
         this.adapter.disabledBodyScroll();
     };
@@ -98,7 +127,8 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
 
     afterHide = () => {
         this.releaseScroll();
-        this.adapter.setCurrent(numbers.DEFAULT_CURRENT);
+        // a controlled current stays: the parent decides where the next show starts
+        this.setState({ current: this.getProp('current') ?? numbers.DEFAULT_CURRENT });
     };
 
     handlePrev = () => {
@@ -106,7 +136,7 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
         this.adapter.notifyChange(newCurrent);
         this.adapter.notifyPrev(newCurrent);
         if (!this.getIsControlledComponent()) {
-            this.adapter.setCurrent(newCurrent);
+            this.setState({ current: newCurrent });
         }
     };
 
@@ -120,7 +150,7 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
             this.adapter.notifyChange(newCurrent);
             this.adapter.notifyNext(newCurrent);
             if (!this.getIsControlledComponent()) {
-                this.adapter.setCurrent(newCurrent);
+                this.setState({ current: newCurrent });
             }
         }
     };

@@ -3,6 +3,7 @@ import truncateValue from './util/truncate-value';
 
 export interface TextEntryBaseProps {
     value?: string | number;
+    defaultValue?: string | number;
     composition?: boolean;
     minLength?: number;
     maxLength?: number;
@@ -12,6 +13,7 @@ export interface TextEntryBaseProps {
 export interface TextEntryBaseState {
     value?: string | number;
     cachedValue?: string | number;
+    isFocus?: boolean;
 }
 
 /**
@@ -19,9 +21,7 @@ export interface TextEntryBaseState {
  * composition and clear events, and focus is reported from the wrapper element.
  */
 export interface TextEntryAdapter<P extends TextEntryBaseProps, S extends TextEntryBaseState, CE = unknown> extends DefaultAdapter<P, S> {
-    setValue(value: any): void;
     notifyChange(value: string, e: any): void;
-    toggleFocusing(focused: boolean): void;
     notifyFocus(value: string | number, e: any): void;
     notifyCompositionStart(e: CE): void;
     notifyCompositionEnd(e: CE): void;
@@ -47,9 +47,14 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
         return this.handleVisibleMaxLength(value);
     }
 
+    // S is any state extending TextEntryBaseState, which TypeScript cannot match against a write of the shared keys
+    protected setEntryState(states: TextEntryBaseState) {
+        this.setState(states as Pick<S, keyof S>);
+    }
+
     protected changeValue(value: string, e: unknown) {
         if (!this.isControlledComponent()) {
-            this.adapter.setValue(value);
+            this.setEntryState({ value });
         }
         this.adapter.notifyChange(value, e);
     }
@@ -94,7 +99,7 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
         let nextValue = value;
         // composing: state must still follow, controlled or not, so the element shows the composing text
         if (composition && this.#compositionEnter) {
-            this.adapter.setValue(nextValue);
+            this.setEntryState({ value: nextValue });
             return;
         }
         if (!this.#compositionEnter) {
@@ -120,7 +125,7 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
             if (this.isControlledComponent()) {
                 // the parent may reject the result; the value prop then does not change
                 // and nothing else resets the text
-                this.adapter.setValue(this.getProp('value'));
+                this.setEntryState({ value: this.getProp('value') });
             }
             return;
         }
@@ -140,7 +145,7 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
     handleFocus = (e: unknown) => {
         const { value } = this.getStates();
         this.#composedSinceFocus = false;
-        this.adapter.toggleFocusing(true);
+        this.setEntryState({ isFocus: true });
         this.adapter.notifyFocus(value, e);
     };
 }

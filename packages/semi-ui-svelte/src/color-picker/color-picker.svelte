@@ -6,7 +6,6 @@
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { Popover } from '../popover/index.js';
     import type { TooltipTriggerProps } from '../tooltip/index.js';
@@ -69,7 +68,7 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, FoundationProps, ColorPickerState>(
         ColorPickerFoundation,
         foundationProps,
-        (view) => ({ currentColor: view.value ?? DEFAULT_COLOR }),
+        (view) => ColorPickerFoundation.getInitialState(view),
         () => ({
             notifyChange: (next) => {
                 // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
@@ -94,15 +93,6 @@
         const { h, a } = currentColor.hsva;
         foundation.handleChange({ s, v, a, h }, 'hsva');
     };
-
-    watch(
-        () => value,
-        (next) => {
-            if (next === undefined) {
-                foundation.resetToDefault();
-            }
-        }
-    );
 
     /** The picker div: inside the popover when `usePopover`, so null while the popover is closed */
     export function getRoot() {

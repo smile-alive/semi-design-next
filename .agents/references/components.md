@@ -2,6 +2,10 @@
 
 本文是各框架共用的组件写法。框架专属写法（声明、hook、属性落点、子项、测试）在各框架目录（`.agents/references/<框架>/`）的 `components.md` 中，每个框架文件开头的「硬性规则」优先。可以参照的现有组件见各框架文件。函数、导出、memo 的通用写法见 [coding-style](coding-style.md)，无障碍见 [a11y](a11y.md)。
 
+## 目录
+
+- 组件目录里的文件平铺，文件名就是它导出的组件或 hook（`chat-box-action.tsx`、`use-form-api.tsx`）。不建只放一个 `index` 的子目录，也不建 `hooks/`、`hoc/` 这类按种类分的子目录，相关文件用名字前缀归组。确实需要子目录时（Sidebar 的 `container/`、`annotation/`），四个框架用同样的子目录。`__tests__/` 与 `_` 开头的内部目录不受此限。
+
 ## 组件内语句顺序
 
 各框架的组件体按同一套分组排列，由 `pnpm lint:component-order` 检查，`pnpm lint:component-order --fix` 自动排序。每组包含哪些框架调用，以本框架 `lint/<框架>/component-order.ts` 的 `calls` 为准：
@@ -31,12 +35,13 @@
 - 默认值只填 `undefined`。回调 prop 不设 `noop` 默认值，调用处一律 `?.()`：默认值不覆盖使用方显式传入的 `null`，直接调用会抛 TypeError。判断使用方是否给了回调写 `Boolean(onX)`，不和 `noop` 比较。
 - foundation 拥有自己的 state：静态 `getInitialState(props)` 返回全部 state 键，foundation 用 `this.setState` 写入，需要等提交的写入用 `this.commitState(partial)`（返回提交后兑现的 Promise）。adapter 只写框架才做得到的事：读写 DOM、测量、聚焦、`notify*`、框架渲染的元素句柄、Svelte 的 bindable 回写；不写只转发 `setState` 或只读 state、prop 的方法。`getProps`、`setState` 等由 `base` 提供；adapter 接口用完整的 `DefaultAdapter<P, S>` 泛型（`Partial<DefaultAdapter>` 不满足约束）。组件不直接写 foundation 的 state 键，改调 foundation 方法。`setState` 后立即能读到新值，所以 foundation 里需要旧值做比较或通知时，要先读或先通知，再写。
 - prop 变化的反应写在 foundation：静态 `propKeys` 列出要响应的 prop（按内容比较的键在静态 `propEquals` 里给比较函数），宿主在其中任一键变化的那次提交后调用一次 `handlePropsChange(prev)`，`prev` 是这些键的旧值，`getProp` 读新值；挂载时不调用。组件不再为这些 prop 写 `useDidUpdate`、`watch`、`useWatch`。
-- 每个实例只做一次的副作用（autofocus、`defaultOpen`、默认展开与选中）写在 `initOnce()`，不在 `init()` 里加 `#initialized` 标志。`init()` 只建立挂载期的订阅，`destroy()` 撤销 `init()` 建立的全部内容：隐藏（React StrictMode 重放、`<Activity>`、经 `useKeepAliveFoundation` 接入的 Vue `<KeepAlive>`）就是 `destroy()`，重新显示就是 `init()`，foundation 不另写 `deactivate` 一类方法。
+- 每个实例只做一次的副作用（autofocus、`defaultOpen`、默认展开与选中）写在 `initOnce()`，不在 `init()` 里加 `#initialized` 标志。`init()` 只建立挂载期的订阅，`destroy()` 撤销 `init()` 建立的全部内容：隐藏（React StrictMode 重放、`<Activity>`、经 `useKeepAliveFoundation` 接入的 Vue `<KeepAlive>`）就是 `destroy()`，重新显示就是 `init()`，foundation 不另写 `deactivate` 一类方法。`destroy()` 不写 state，打开的面板隐藏后仍是打开的：React 的 `<Activity>` 连 portal 一起隐藏，Vue 的 `_base/portal.vue` 与 Tooltip 在缓存期间把 Teleport 移回缓存子树，`useClickOutside` 在缓存期间不响应；`init()` 发现面板仍打开时重新挂上它需要的监听。组件不在 `onDeactivated` 里关面板。
 - foundation 不直接调用 props 上的事件回调，统一经 adapter 的 `notify*` 方法发出（如 `this.adapter.notifyChange(value)`），由 adapter 负责调用 props 回调，写法参照同组件已有的 `notify*`（`base.getProps().onX?.(...)`）；回调的返回值被 foundation 使用时（Promise、boolean），`notify*` 原样返回。布尔和配置型 props（`onChangeWithObject`）与参与计算的数据函数（`loadData`、`column.onFilter`）不在此列。
 - 必须和 props 在同一次提交里生效的派生状态（如 Collapsible 的高度与过渡 class；分两次提交会让过渡以 0ms 生效），用渲染期比较加条件 setState：新值和旧值不同时才调用，下一轮就收敛。
 - 渲染期要用的 foundation 逻辑写成静态纯函数直接调用（如 `DescriptionsFoundation.getHorizontalList(columns, column)`、`Foundation.getInitialState`），不经过 foundation 实例：渲染期从实例上读到的 props 可能是上一轮的值。只有无状态计算、不需要 adapter 的逻辑写成 foundation 里的普通函数，不继承 `BaseFoundation`，组件直接调用（Highlight 的 `findAll`）。
 - render 中不能有副作用，定时器等放到事件处理或值变化的回调里。
 - foundation 的公开 API 有变化时，写进提交说明和 `docs/release-notes.md`。
+- `useFoundation` 推断不出泛型（F 会退化为 `Lifecycle`，adapter 回调参数变成隐式 any），四个框架都显式写出。类型实参里有带参数的泛型时，先在模块顶层声明局部别名 `type Foundation = XxxFoundation<...>; type Adapter = XxxAdapter<...>;`，调用写 `useFoundation<Foundation, Adapter, P, S>(`；没有嵌套泛型的短调用可以内联，别名依赖组件自身的泛型参数时也只能内联。
 - 组件对 foundation 的 props 同步、默认值填充与 ref 合并写法，见各框架文件。
 
 ## 无 foundation

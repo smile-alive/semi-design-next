@@ -9,8 +9,8 @@ import useLocale from '../locale/use-locale';
 import Tooltip from '../tooltip';
 import type { VideoProgressProps, VideoProgressState } from './interface';
 
-type Foundation = VideoProgressFoundation<VideoProgressProps, VideoProgressState>;
-type Adapter = VideoProgressAdapter<VideoProgressProps, VideoProgressState>;
+type Foundation = VideoProgressFoundation<VideoProgressProps>;
+type Adapter = VideoProgressAdapter<VideoProgressProps>;
 
 const prefixCls = cssClasses.PREFIX_PROGRESS;
 
@@ -22,17 +22,9 @@ export default function VideoProgress(props: VideoProgressProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, VideoProgressProps, VideoProgressState>(
         VideoProgressFoundation,
         props,
-        () => ({
-            isDragging: false,
-            movingInfo: null,
-            activeIndex: -1,
-        }),
+        (view) => VideoProgressFoundation.getInitialState(view),
         (base) => ({
             getSliderRef: () => slider ?? null,
-            getMarkersList: () => VideoProgressFoundation.getMarkersList(base.getProps().markers, base.getProps().max),
-            setIsDragging: (isDragging) => base.setState({ isDragging }),
-            setActiveIndex: (activeIndex) => base.setState({ activeIndex }),
-            setMovingInfo: (movingInfo) => base.setState({ movingInfo }),
             notifyChange: (value) => base.getProps().onChange(value),
         })
     );

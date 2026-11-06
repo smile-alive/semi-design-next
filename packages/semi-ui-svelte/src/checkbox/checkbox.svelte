@@ -8,13 +8,12 @@
     import { isNativeInputKey, splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import useTrigger, { attachmentProps } from '../tooltip/use-trigger.svelte.js';
     import { getCheckboxGroupContext } from './context.js';
     import type { CheckboxEvent, CheckboxProps } from './interface.js';
 
-    type Foundation = CheckboxFoundation<BaseCheckboxProps, CheckboxBaseState>;
-    type Adapter = CheckboxAdapter<BaseCheckboxProps, CheckboxBaseState>;
+    type Foundation = CheckboxFoundation<BaseCheckboxProps>;
+    type Adapter = CheckboxAdapter<BaseCheckboxProps>;
 
     const defaults = useDefaultProps('Checkbox');
 
@@ -58,9 +57,8 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, BaseCheckboxProps, CheckboxBaseState>(
         CheckboxFoundation,
         foundationProps,
-        (props) => ({ checked: Boolean(props.checked) }),
-        (base) => ({
-            setChecked: (next) => base.setState({ checked: next }),
+        (props) => CheckboxFoundation.getInitialState(props),
+        () => ({
             notifyChange: (event) => {
                 checked = event.target.checked;
                 onChange?.(event as CheckboxEvent);
@@ -123,11 +121,6 @@
         event.currentTarget.checked = view.checked;
         event.currentTarget.indeterminate = showMixed;
     };
-
-    watch(
-        () => checked,
-        (next) => foundation.setChecked(Boolean(next))
-    );
 
     export function focus() {
         input?.focus({ preventScroll });

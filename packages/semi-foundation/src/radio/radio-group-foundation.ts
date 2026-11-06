@@ -1,12 +1,12 @@
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import type { RadioChangeEvent } from './radio-foundation';
 
-export interface RadioGroupAdapter<P extends RadioGroupBaseProps = RadioGroupBaseProps, S extends RadioGroupBaseState = RadioGroupBaseState> extends DefaultAdapter<P, S> {
+export interface RadioGroupAdapter<P extends RadioGroupBaseProps = RadioGroupBaseProps> extends DefaultAdapter<P, RadioGroupBaseState> {
     notifyChange: (e: RadioChangeEvent) => void;
-    setValue: (value: any) => void;
 }
 
 export interface RadioGroupBaseProps {
+    defaultValue?: unknown;
     mode?: string;
     value?: unknown;
 }
@@ -15,7 +15,17 @@ export interface RadioGroupBaseState {
     value?: any;
 }
 
-export default class RadioGroupFoundation<P extends RadioGroupBaseProps = RadioGroupBaseProps, S extends RadioGroupBaseState = RadioGroupBaseState> extends BaseFoundation<RadioGroupAdapter<P, S>, P, S> {
+export default class RadioGroupFoundation<P extends RadioGroupBaseProps = RadioGroupBaseProps> extends BaseFoundation<RadioGroupAdapter<P>, P, RadioGroupBaseState> {
+    static override readonly propKeys = ['value'];
+
+    static getInitialState({ value, defaultValue }: RadioGroupBaseProps): RadioGroupBaseState {
+        return { value: value === undefined ? defaultValue : value };
+    }
+
+    override handlePropsChange() {
+        this.setState({ value: this.getProp('value') });
+    }
+
     handleChange = (evt: RadioChangeEvent) => {
         const mode = this.getProp('mode');
         const lastValue = this.getState('value');
@@ -36,18 +46,14 @@ export default class RadioGroupFoundation<P extends RadioGroupBaseProps = RadioG
 
         if (!isControlledComponent) {
             if (mode === 'advanced' && !checked) {
-                this.adapter.setValue(undefined);
+                this.setState({ value: undefined });
             } else {
-                this.adapter.setValue(value);
+                this.setState({ value });
             }
         }
 
         if (mode === 'advanced' || lastValue !== value) {
             this.adapter.notifyChange(cbValue);
         }
-    };
-
-    handlePropValueChange = (propValue: string | number | boolean) => {
-        this.adapter.setValue(propValue);
     };
 }

@@ -26,8 +26,8 @@
         value?: string[] | null;
     }
 
-    type Foundation = TagInputFoundation<FoundationProps, TagInputBaseState, Event>;
-    type Adapter = TagInputAdapter<FoundationProps, TagInputBaseState, Event>;
+    type Foundation = TagInputFoundation<FoundationProps, Event>;
+    type Adapter = TagInputAdapter<FoundationProps, Event>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -100,27 +100,9 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, TagInputBaseState>(
         TagInputFoundation,
         props,
-        (view) => ({
-            tagsArray: view.defaultValue ?? [],
-            inputValue: '',
-            focusing: false,
-            active: false,
-            entering: false,
-        }),
-        (base) => ({
-            setInputValue: (inputValue) => base.setState({ inputValue }),
-            setTagsArray: (tagsArray) => base.setState({ tagsArray }),
-            setFocusing: (focusing) => base.setState({ focusing }),
-            toggleFocusing: (isFocus) => {
-                if (isFocus) {
-                    focusInput();
-                } else {
-                    inputRef.value?.input?.blur();
-                }
-                base.setState({ focusing: isFocus });
-            },
-            setActive: (active) => base.setState({ active }),
-            setEntering: (entering) => base.setState({ entering }),
+        (view) => TagInputFoundation.getInitialState(view),
+        () => ({
+            focusInput,
             notifyBlur: (event) => emit('blur', event),
             notifyFocus: (event) => emit('focus', event),
             notifyInputChange: (value, event) => {
@@ -142,10 +124,10 @@
     );
 
     const tags = computed(() => TagInputFoundation.getTagsArray({ value: props.modelValue }, state.value));
-    const inputValue = computed(() => TagInputFoundation.getInputValue(props, state.value));
 
     const sortIds = shallowRef(TagInputFoundation.getSortIds(tags.value));
 
+    const inputValue = computed(() => TagInputFoundation.getInputValue(props, state.value));
     const draggableActive = computed(() => Boolean(state.value.active && props.draggable));
     const sorting = computed(() => draggableActive.value && tags.value.length > 0);
     const restCount = computed(() => (!sorting.value && (!state.value.active || !props.expandRestTagsOnClick) && props.maxTagCount && props.maxTagCount < tags.value.length ? tags.value.length - props.maxTagCount : 0));
@@ -220,26 +202,6 @@
             [`${prefix}-with-suffix`]: Boolean(k.suffix),
         },
     ];
-
-    // a value that goes back to undefined clears the tags (a form reset) and leaves them uncontrolled
-    watch(
-        () => props.modelValue,
-        (value) => {
-            if (value === undefined) {
-                foundation.setState({ tagsArray: [] });
-            }
-        }
-    );
-
-    // the state keeps what was typed under control; leaving control must not bring it back
-    watch(
-        () => props.inputValue,
-        (value) => {
-            if (value === undefined) {
-                foundation.setState({ inputValue: '' });
-            }
-        }
-    );
 
     watch(tags, (value) => {
         sortIds.value = TagInputFoundation.getSortIds(value, sortIds.value);

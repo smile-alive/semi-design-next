@@ -3,10 +3,9 @@ import { Fragment, cloneElement, isValidElement, useCallback, useEffect, useEffe
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 import { strings, cssClasses, numbers, TRIGGER_EVENT_NAMES, COLOR_SCHEME_SELECTOR, canRoleCarryPopupState, colorSchemeOf, isBlockDisplay, popupTarget, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
-import TooltipFoundation, { type TooltipAdapter, type Position } from '@fibrae/semi-foundation/tooltip/foundation';
+import TooltipFoundation, { type TooltipAdapter, type TooltipBaseState, type Position } from '@fibrae/semi-foundation/tooltip/foundation';
 import { joinIds, warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import { openLayer } from '@fibrae/semi-foundation/utils/layer';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import warning from '@fibrae/semi-foundation/utils/warning';
@@ -14,7 +13,6 @@ import '@fibrae/semi-foundation/tooltip/tooltip.scss';
 import type { BaseProps } from '../_base/base-component';
 import { PopupLayerContext } from '../_base/popup-layer';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import useRealUnmount from '../_base/use-real-unmount';
 import { stopPropagation } from '../_utils';
@@ -23,6 +21,9 @@ import { useConfigContext } from '../config-provider/context';
 import { TooltipDescriptionContext } from './context';
 import TriangleArrow from './triangle-arrow';
 import TriangleArrowVertical from './triangle-arrow-vertical';
+
+type Foundation = TooltipFoundation<TooltipProps>;
+type Adapter = TooltipAdapter<TooltipProps>;
 
 export type Trigger = ArrayElement<typeof strings.TRIGGER_SET>;
 export type { Position } from '@fibrae/semi-foundation/tooltip/foundation';
@@ -94,16 +95,6 @@ export interface TooltipProps extends BaseProps {
     condition?: boolean;
 }
 
-interface TooltipState {
-    visible: boolean;
-    transitionState: 'enter' | 'leave' | '';
-    triggerEventSet: Record<string, any>;
-    portalEventSet: Record<string, any>;
-    isInsert: boolean;
-    portalTarget: HTMLElement | ShadowRoot | null;
-    colorScheme?: string;
-}
-
 const prefix = cssClasses.PREFIX;
 const popupIdOf = (wrapperId: string | undefined, generatedId: string) => wrapperId || `${prefix}-${generatedId}`;
 
@@ -133,15 +124,12 @@ const defaultProps = {
     mouseEnterDelay: numbers.MOUSE_ENTER_DELAY,
     mouseLeaveDelay: numbers.MOUSE_LEAVE_DELAY,
     motion: true,
-    onVisibleChange: noop,
-    onClickOutSide: noop,
     spacing: numbers.SPACING,
     showArrow: true,
     wrapWhenSpecial: true,
     closeOnEsc: true,
     guardFocus: false,
     returnFocusOnClose: false,
-    onEscKeyDown: noop,
     disableFocusListener: false,
     disableArrowKeyDown: false,
     keepDOM: false,
@@ -159,6 +147,7 @@ class TooltipRuntime {
     readonly initialFocus: { current: { focus?: (options?: FocusOptions) => void } | null } = { current: null };
     trigger: FragmentInstance | null = null;
     container: HTMLDivElement | null = null;
+    lastContainer: HTMLDivElement | null = null;
     clickOutsideHandler: ((e: MouseEvent) => void) | null = null;
     // last mousedown through the popup in the React tree, nested popups' portals included
     pressedInside: Event | null = null;
@@ -227,6 +216,14 @@ class TooltipRuntime {
 
     setContainer(node: HTMLDivElement | null) {
         this.container = node;
+        if (node) {
+            this.lastContainer = node;
+        }
+    }
+
+    // Activity hides the popup but keeps it in the document; only a real unmount removes it
+    isPopupRemoved() {
+        return !this.lastContainer?.isConnected;
     }
 
     markOpened() {
@@ -330,20 +327,12 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
 
     const generatedId = useId();
 
-    const [foundation, state] = useFoundation<TooltipFoundation<TooltipProps, TooltipState>, TooltipAdapter<TooltipProps, TooltipState>, TooltipProps, TooltipState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, TooltipProps, TooltipBaseState>(
         TooltipFoundation,
         props,
-        () => ({
-            visible: false,
-            transitionState: '',
-            triggerEventSet: {},
-            portalEventSet: {},
-            isInsert: false,
-            portalTarget: null,
-            colorScheme: undefined,
-        }),
+        () => TooltipFoundation.getInitialState(),
         (base) => {
-            const adapter: Omit<TooltipAdapter<TooltipProps, TooltipState>, keyof typeof base> = {
+            const adapter: Omit<TooltipAdapter<TooltipProps>, keyof typeof base> = {
                 insertPortal: () => {
                     runtime.markOpened();
                     base.setState({
@@ -354,16 +343,11 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
                         colorScheme: runtime.getColorScheme(),
                     });
                 },
-                closePopup: () => {
-                    base.setState({ transitionState: 'leave', visible: false });
-                },
                 removePortal: () => {
                     setContentShown(false);
                     base.setState({ isInsert: false, transitionState: '' });
                 },
-                registerTriggerEvent: (triggerEventSet) => base.setState({ triggerEventSet }),
-                registerPortalEvent: (portalEventSet) => base.setState({ portalEventSet }),
-                notifyVisibleChange: (visible) => base.getProps().onVisibleChange(visible),
+                notifyVisibleChange: (visible) => base.getProps().onVisibleChange?.(visible),
                 registerClickOutsideHandler: (handler) => {
                     adapter.unregisterClickOutsideHandler();
                     runtime.clickOutsideHandler = handler;
@@ -378,7 +362,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
                 isEventInTrigger: (e) => runtime.isInTrigger(e.composedPath()[0] as Node),
                 // a nested popup is portaled outside this DOM, but onMouseDownCapture sees it first
                 isEventInPopup: (e) => isEventInside(e, runtime.container) || runtime.pressedInside === e,
-                notifyClickOutSide: (e) => base.getProps().onClickOutSide(e),
+                notifyClickOutSide: (e) => base.getProps().onClickOutSide?.(e),
                 getPortalContainer: () => runtime.container,
                 getTriggerNode: () => runtime.trigger,
                 isTriggerHovered: () => runtime.isTriggerHovered(),
@@ -393,7 +377,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
                     }
                 },
                 notifyOpen: () => base.getProps().onOpen?.(),
-                notifyEscKeydown: (event) => base.getProps().onEscKeyDown(event),
+                notifyEscKeydown: (event) => base.getProps().onEscKeyDown?.(event),
                 getPopupId: () => popupIdOf(base.getProps().wrapperId, generatedId),
             };
             return adapter;
@@ -600,8 +584,8 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
         // Read right after the commit that dropped the show class; cancelled ones settle too.
         const exits = el.getAnimations();
         if (!exits.length) {
-            // An Activity reveal commits the 'leave' rendered while hidden, after useFoundation's effect has already
-            // run init -> show; that popup is opening, not closing
+            // useFoundation's layout effects run first and may have reopened it in this commit (a controlled `visible`
+            // back to true); that popup is opening, not closing
             if (foundation.getState('transitionState') === 'leave') {
                 el.hidePopover();
                 didLeave();
@@ -652,20 +636,8 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
         warning(mouseLeaveDelay < mouseEnterDelay, strings.LEAVE_DELAY_WARNING);
     }, [mouseEnterDelay, mouseLeaveDelay]);
 
-    useDidUpdate(props.trigger, foundation.rebindEvents);
-    useDidUpdate(props.clickToHide, foundation.rebindEvents);
-    useDidUpdate(props.visible, foundation.handleVisiblePropChange);
-    useDidUpdate(props.position, foundation.calcPosition);
-
-    // triggers check `condition` only before opening, so an open or pending popup is closed here
-    useDidUpdate(props.condition, (condition) => {
-        if (condition === false) {
-            foundation.hide();
-        }
-    });
-
     useRealUnmount(() => {
-        if (runtime.takePendingClose()) {
+        if (runtime.isPopupRemoved() && runtime.takePendingClose()) {
             props.afterClose?.();
         }
     });

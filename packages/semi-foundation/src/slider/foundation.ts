@@ -67,7 +67,7 @@ interface SliderLengths {
     sliderHeight: number;
 }
 
-export interface SliderAdapter<P extends SliderProps = SliderProps, S extends SliderState = SliderState> extends DefaultAdapter<P, S, DirectionContext> {
+export interface SliderAdapter<P extends SliderProps = SliderProps> extends DefaultAdapter<P, SliderState, DirectionContext> {
     getSliderNode: () => HTMLElement | null | undefined;
     notifyChange: (value: number | number[]) => void;
     notifyMouseUp: (e: any) => void;
@@ -81,14 +81,21 @@ const hasModifier = (event: Pick<KeyboardEvent, KeyModifiers>) => event.altKey |
 
 const VALUE_KEYS = ['ArrowLeft', 'ArrowDown', 'ArrowRight', 'ArrowUp', 'PageUp', 'PageDown', 'Home', 'End'];
 
-export default class SliderFoundation<P extends SliderProps = SliderProps, S extends SliderState = SliderState> extends BaseFoundation<SliderAdapter<P, S>, P, S> {
+const isValidValue = (value: SliderProps['value']) => (Array.isArray(value) ? typeof value[0] === 'number' && typeof value[1] === 'number' : typeof value === 'number');
+
+const clampValue = (value: number | number[], min: number, max: number) => (Array.isArray(value) ? [clamp(value[0], min, max), clamp(value[1], min, max)] : clamp(value, min, max));
+
+export default class SliderFoundation<P extends SliderProps = SliderProps> extends BaseFoundation<SliderAdapter<P>, P, SliderState> {
     #dragOffset = 0;
     #dragController: AbortController | null = null;
     #pointerId: number;
+    static override readonly propKeys = ['value'];
+    // a literal array is a new value on every render, so values compare by content
+    static override readonly propEquals = { value: isEqual };
 
     #clampToRange(value: number | number[]) {
         const { min, max } = this.getProps();
-        return Array.isArray(value) ? [clamp(value[0], min, max), clamp(value[1], min, max)] : clamp(value, min, max);
+        return clampValue(value, min, max);
     }
 
     #checkCurrentValue() {
@@ -218,11 +225,7 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
     };
 
     protected valueFormatIsCorrect(value: SliderProps['value']) {
-        if (Array.isArray(value)) {
-            return typeof value[0] === 'number' && typeof value[1] === 'number';
-        } else {
-            return typeof value === 'number';
-        }
+        return isValidValue(value);
     }
 
     protected handleMousePos(clientX: number, clientY: number) {
@@ -373,6 +376,11 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
         };
     }
 
+    // a controlled `value` wins on the render it arrives in; state catches up after commit. A malformed value keeps the last position
+    static deriveValue({ value, min, max }: SliderProps, state: Pick<SliderState, 'currentValue'>) {
+        return value !== undefined && isValidValue(value) ? clampValue(value, min, max) : state.currentValue;
+    }
+
     /** The percentages increase with value whatever the visual direction. */
     static getMinAndMaxPercent({ range, min, max }: SliderProps, value: SliderState['currentValue']) {
         const minPercent = range ? (value[0] - min) / (max - min) : ((value as number) - min) / (max - min);
@@ -471,6 +479,17 @@ export default class SliderFoundation<P extends SliderProps = SliderProps, S ext
             this.setState({ isInRenderTree });
         }
     };
+
+    override handlePropsChange() {
+        const value = this.getProp('value');
+        if (value === undefined) {
+            this.resetValue();
+            return;
+        }
+        this.handleValueChange(value);
+        // a controlled value change ends a change too
+        this.adapter.notifyAfterChange(value);
+    }
 
     handleValueChange = (nextValue: SliderProps['value']) => {
         if (!this.valueFormatIsCorrect(nextValue)) {

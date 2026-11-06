@@ -285,12 +285,9 @@
         TreeSelectFoundation,
         foundationProps,
         (initialProps) => TreeSelectFoundation.getInitialState(initialProps),
-        (base) => ({
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            updateState: (partial) => base.setState(partial as BasicTreeSelectInnerData),
+        () => ({
             notifySelect: (selectedKey, selected, node) => onSelect?.(selectedKey, selected, node as TreeNodeData),
             notifySearch: (input, filteredExpandedKeys, filteredNodes) => onSearch?.(input, filteredExpandedKeys, filteredNodes as TreeNodeData[]),
-            setCachedFlattenNodes: (cachedFlattenNodes) => base.setState({ cachedFlattenNodes }),
             notifyLoad: (keys, node) => {
                 const next = [...keys];
                 echo('loadedKeys', next);
@@ -298,12 +295,12 @@
                 onLoad?.(keys, node as TreeNodeData);
             },
             notifyClear: (event) => onClear?.(event as TreeSelectChangeEvent),
-            openMenu: () => base.setState({ isOpen: true }),
-            closeMenu: () => {
-                keyboard.reset();
-                base.setState({ isOpen: false });
+            notifyVisibleChange: (visible) => {
+                if (!visible) {
+                    keyboard.reset();
+                }
+                onVisibleChange?.(visible);
             },
-            notifyVisibleChange: (visible) => onVisibleChange?.(visible),
             notifyChange: (next, node, event) => {
                 echo('value', next);
                 value = next as TreeSelectValue;
@@ -333,7 +330,6 @@
                     (searchField() ?? tagInput)?.focus();
                 }
             },
-            updateIsFocus: (isFocus) => base.setState({ isFocus }),
             isInTrigger: (node) => node instanceof Node && Boolean(root?.contains(node)),
         })
     );

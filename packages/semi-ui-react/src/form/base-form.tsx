@@ -3,8 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
 import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
 import FormFoundation, { type BaseFormAdapter } from '@fibrae/semi-foundation/form/foundation';
-import type { AllErrors, FieldBridge } from '@fibrae/semi-foundation/form/interface';
-import { noop } from '@fibrae/semi-foundation/utils/function';
+import type { AllErrors, FieldBridge, FormFoundationState } from '@fibrae/semi-foundation/form/interface';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/form/form.scss';
 import useDefaultProps from '../_base/use-default-props';
@@ -13,20 +12,10 @@ import { cloneDeep } from '../_utils/index';
 import Row from '../grid/row';
 import useLocale from '../locale/use-locale';
 import { FormStateContext, FormApiContext, FieldBridgeContext } from './context';
-import type { BaseFormProps, FormState, FormApi } from './interface';
+import type { BaseFormProps, FormApi } from './interface';
 const prefix = cssClasses.PREFIX;
 
-interface BaseFormState {
-    formState?: FormState;
-}
-
 const defaultProps = {
-    onChange: noop,
-    onSubmitFail: noop,
-    onSubmit: noop,
-    onReset: noop,
-    onValueChange: noop,
-    onErrorChange: noop,
     layout: 'vertical',
     labelPosition: 'top',
     allowEmpty: false,
@@ -90,36 +79,34 @@ export default function Form<Values extends Record<string, any> = any, Output = 
     const formRef = useRef<HTMLFormElement>(null);
     let content = children as React.ReactNode;
 
-    const [foundation, state] = useFoundation<FormFoundation<React.SubmitEvent<HTMLFormElement>>, BaseFormAdapter<BaseFormProps<Values, Output>, BaseFormState, Values, React.SubmitEvent<HTMLFormElement>>, BaseFormProps<Values, Output>, BaseFormState>(
+    const [foundation, state] = useFoundation<FormFoundation<React.SubmitEvent<HTMLFormElement>>, BaseFormAdapter<BaseFormProps<Values, Output>, Values, React.SubmitEvent<HTMLFormElement>>, BaseFormProps<Values, Output>, FormFoundationState>(
         FormFoundation,
         props,
-        () => ({}),
+        () => FormFoundation.getInitialState(props),
         (base) => ({
             cloneDeep,
-            notifySubmit: (values, e) => base.getProps().onSubmit(values, e),
+            notifySubmit: (values, e) => base.getProps().onSubmit?.(values, e),
             // the type names the field errors; a thrown or non-object result of the Form validator passes through as it is
-            notifySubmitFail: (errors, values, e) => base.getProps().onSubmitFail(errors as Partial<AllErrors<Values>>, values, e),
+            notifySubmitFail: (errors, values, e) => base.getProps().onSubmitFail?.(errors as Partial<AllErrors<Values>>, values, e),
             getLocale: () => base.getContext('locale'),
             forceUpdate: (formState, callback) => {
                 base.setState({ formState }, callback);
                 getFormApiProxyInternals(base.getProps().form)?.updateState(formState);
             },
-            notifyChange: (formState) => base.getProps().onChange(formState),
-            notifyValueChange: (values, changedValues) => base.getProps().onValueChange(values, changedValues),
-            notifyErrorChange: (errors, changedError) => base.getProps().onErrorChange(errors, changedError),
-            notifyReset: () => base.getProps().onReset(),
-            getInitValues: () => base.getProp('initValues'),
+            notifyChange: (formState) => base.getProps().onChange?.(formState),
+            notifyValueChange: (values, changedValues) => base.getProps().onValueChange?.(values, changedValues),
+            notifyErrorChange: (errors, changedError) => base.getProps().onErrorChange?.(errors, changedError),
+            notifyReset: () => base.getProps().onReset?.(),
             getFormProps: (keys) => pickFormProps(base.getProps(), keys),
             getFormElement: () => formRef.current,
         }),
         { locale }
     );
 
-    const [initialFormState] = useState(() => foundation.getFormState());
     const [formApi] = useState(() => foundation.getFormApi() as FormApi<Values, Output>);
     const [foundationBridge] = useState(foundation.getFieldBridge);
 
-    const formState = state.formState ?? initialFormState;
+    const { formState } = state;
 
     // fields read this render's props; the foundation only sees them after commit
     const fieldBridge: FieldBridge = {

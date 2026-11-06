@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, onDeactivated, onMounted, onUpdated, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue';
+    import { computed, onMounted, onUpdated, shallowRef, useAttrs, useId, useTemplateRef } from 'vue';
     import type { Locale } from 'date-fns';
     import ComboboxFoundation from '@fibrae/semi-foundation/time-picker/combox-foundation';
     import { cssClasses, strings } from '@fibrae/semi-foundation/time-picker/constants';
@@ -11,8 +11,8 @@
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import { hasSlotContent } from '../_base/slot-nodes';
     import useClickOutside from '../_base/use-click-outside';
-    import useDidUpdate from '../_base/use-did-update';
     import useFoundation from '../_base/use-foundation';
+    import useKeepAliveFoundation from '../_base/use-keep-alive-foundation';
     import useConfig from '../config-provider/use-config';
     import { provideInputGroupContext } from '../input/context';
     import useGroupLooks from '../input/use-group-looks';
@@ -30,9 +30,6 @@
 
     type Foundation = TimePickerFoundation<FoundationProps, FocusEvent>;
     type Adapter = TimePickerAdapter<FoundationProps, FocusEvent>;
-
-    // Compared by time, so a new Date of the same time does not overwrite the text being typed.
-    type Value = TimePickerProps['modelValue'];
 
     defineOptions({ inheritAttrs: false });
 
@@ -134,10 +131,8 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, TimePickerState>(
         TimePickerFoundation,
         props,
-        (view) => ({ open: Boolean((view.open || view.defaultOpen) && !view.disabled), ...TimePickerFoundation.getInitialState(view) }),
-        (base) => ({
-            setPanelOpen: (open) => base.setState({ open }),
-            setInputValue: (inputValue) => base.setState({ inputValue }),
+        (view) => TimePickerFoundation.getInitialState(view),
+        () => ({
             notifyOpenChange: (open) => {
                 emit('update:open', open);
                 emit('openChange', open);
@@ -148,7 +143,6 @@
             },
             notifyFocus: (event) => emit('focus', event),
             notifyBlur: (event) => emit('blur', event),
-            isRangePicker: () => props.type === strings.TYPE_TIME_RANGE_PICKER,
             isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panel.value),
             setTriggerFocus: () => FocusTrapHandle.focusFirstOrSelf(root.value, { preventScroll: props.preventScroll }),
         }),
@@ -168,10 +162,6 @@
     );
 
     const open = computed(() => TimePickerFoundation.isPanelShown({ ...props, disabled: looks.disabled }, state.value));
-
-    const sameTime = (a: unknown, b: unknown) => (a instanceof Date && b instanceof Date ? a.getTime() === b.getTime() : Object.is(a, b));
-
-    const sameValue = (a: Value, b: Value) => (Array.isArray(a) && Array.isArray(b) ? a.length === b.length && a.every((item, index) => sameTime(item, b[index])) : sameTime(a, b));
 
     const panelFns = (index: number) => TimePickerFoundation.getDisabledTimeFns(disabledFns(), state.value.value, index === 1 ? 'right' : 'left', isRange.value);
 
@@ -210,43 +200,8 @@
         onChange: foundation.handleInputChange,
     });
 
+    useKeepAliveFoundation(foundation);
     useClickOutside([root, panel], foundation.handleClickOutside, open, useNestedPopups());
-
-    // A cached KeepAlive subtree would keep the panel open; just close it, with no blur or focus return.
-    onDeactivated(() => {
-        if (open.value) {
-            foundation.close();
-        }
-    });
-
-    useDidUpdate(
-        () => ({ value: props.modelValue, timeZone: timeZone.value }),
-        (current, previous) => {
-            if (!sameValue(current.value, previous.value)) {
-                foundation.syncValueFromProps({ value: current.value ?? [], timeZone: current.timeZone });
-            } else {
-                foundation.syncValueFromProps({
-                    value: foundation.getState('value'),
-                    timeZone: current.timeZone,
-                    prevTimeZone: previous.timeZone,
-                });
-            }
-        },
-        (a, b) => sameValue(a.value, b.value) && a.timeZone === b.timeZone,
-        'pre'
-    );
-
-    // only the text changes: syncing the value again would re-zone it a second time
-    watch(() => [TimePickerFoundation.getValidFormat(props), locale.value.dateFnsLocale, props.rangeSeparator], foundation.refreshInputValue);
-
-    watch(
-        () => looks.disabled,
-        (disabled) => {
-            if (disabled && TimePickerFoundation.isPanelShown({ open: props.open }, state.value)) {
-                foundation.close();
-            }
-        }
-    );
 
     onMounted(measureCustomTrigger);
     onUpdated(measureCustomTrigger);

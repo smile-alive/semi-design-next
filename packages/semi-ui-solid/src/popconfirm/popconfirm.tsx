@@ -1,7 +1,7 @@
 import { type JSX, type Ref, Show, children, createEffect, createMemo, createRenderEffect, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/popconfirm/constants';
-import PopconfirmFoundation, { type PopconfirmAdapter } from '@fibrae/semi-foundation/popconfirm/popconfirm-foundation';
+import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/popconfirm/popconfirm-foundation';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import '@fibrae/semi-foundation/popconfirm/popconfirm.scss';
 import { IconAlertTriangle, IconClose } from '@fibrae/semi-icons-solid';
@@ -9,7 +9,6 @@ import callHandler from '../_base/call-handler';
 import hasContent from '../_base/has-content';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import Button, { type ButtonProps, type Type as ButtonType } from '../button';
 import useConfig from '../config-provider/use-config';
 import useLocale from '../locale/use-locale';
@@ -50,14 +49,10 @@ export interface PopconfirmHandle {
     focusTrigger: () => void;
 }
 
-export interface PopconfirmState {
-    visible: boolean;
-    cancelLoading: boolean;
-    confirmLoading: boolean;
-}
+export type PopconfirmState = PopconfirmBaseState;
 
-type Foundation = PopconfirmFoundation<PopconfirmProps, PopconfirmState>;
-type Adapter = PopconfirmAdapter<PopconfirmProps, PopconfirmState>;
+type Foundation = PopconfirmFoundation<PopconfirmProps>;
+type Adapter = PopconfirmAdapter<PopconfirmProps>;
 
 const defaultProps = {
     // a confirmation is a dialog whatever opens it, hover and focus included, unlike a plain Popover (F12)
@@ -163,11 +158,8 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
     const { foundation, state } = useFoundation<Foundation, Adapter, PopconfirmProps, PopconfirmState>(
         PopconfirmFoundation,
         props,
-        () => ({ cancelLoading: false, confirmLoading: false, visible: props.defaultVisible || false }),
-        (base) => ({
-            setVisible: (visible) => base.setState({ visible }),
-            updateConfirmLoading: (confirmLoading) => base.setState({ confirmLoading }),
-            updateCancelLoading: (cancelLoading) => base.setState({ cancelLoading }),
+        (view) => PopconfirmFoundation.getInitialState(view),
+        () => ({
             notifyConfirm: (event) => props.onConfirm?.(event),
             notifyCancel: (event) => props.onCancel?.(event),
             notifyVisibleChange: (visible) => props.onVisibleChange?.(visible),
@@ -311,16 +303,6 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
             },
             { defer: true }
         )
-    );
-
-    // a disabled Popconfirm renders no popup, so an open one reports the close instead of reopening when re-enabled
-    useWatch(
-        () => local.disabled,
-        (disabled) => {
-            if (disabled && open()) {
-                foundation.handleVisibleChange(false);
-            }
-        }
     );
 
     if (typeof ref === 'function') {

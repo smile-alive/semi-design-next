@@ -107,18 +107,7 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, ResizableBaseProps, ResizableBaseState>(
         ResizableFoundation,
         foundationProps,
-        (view) => {
-            const propSize = ResizableFoundation.getPropSize(view);
-            return {
-                isResizing: false,
-                width: propSize.width ?? 'auto',
-                height: propSize.height ?? 'auto',
-                direction: 'right',
-                original: { x: 0, y: 0, width: 0, height: 0 },
-                backgroundStyle: { cursor: 'auto' },
-                flexBasis: undefined,
-            };
-        },
+        (view) => ResizableFoundation.getInitialState(view),
         () => ({
             getResizable: () => root ?? null,
             notifyResizeStart: (e, direction) => onResizeStart?.(e, direction),

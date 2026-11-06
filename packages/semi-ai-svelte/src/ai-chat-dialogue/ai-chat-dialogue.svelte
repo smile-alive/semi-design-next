@@ -1,24 +1,21 @@
 <script lang="ts" module>
     import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
 
-    // shared, so a dialogue without chats or hints compares its list as unchanged
+    // shared, so a dialogue without chats or hints keeps the same lists between renders
     const EMPTY_CHATS: Message[] = [];
     const EMPTY_HINTS: string[] = [];
-    // listKey() holds the chats entries first, then the hints entries
-    const CHATS_PART = 5;
 </script>
 
 <script lang="ts">
-    import { tick, untrack } from 'svelte';
+    import { tick } from 'svelte';
     import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import DialogueFoundation, { type DialogueAdapter, type DialogueBaseProps } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+    import DialogueFoundation, { type DialogueAdapter, type DialogueBaseProps, type DialogueState } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import '@fibrae/semi-ai-foundation/ai-chat-dialogue/ai-chat-dialogue.scss';
     import { IconChevronDown } from '@fibrae/semi-icons-svelte';
     import { groupRole } from '@fibrae/semi-ui-svelte/_base/group-role';
     import useDefaultProps from '@fibrae/semi-ui-svelte/_base/use-default-props';
     import useFoundation from '@fibrae/semi-ui-svelte/_base/use-foundation.svelte.js';
-    import watch from '@fibrae/semi-ui-svelte/_base/watch.svelte.js';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import { setAIChatDialogueContext } from './context.js';
@@ -26,13 +23,8 @@
     import Dialogue from './dialogue.svelte';
     import type { AIChatDialogueProps } from './interface.js';
 
-    interface AIChatDialogueStates {
-        selectedIds: Set<string>;
-        backBottomVisible: boolean;
-    }
-
-    type Foundation = DialogueFoundation<DialogueBaseProps, AIChatDialogueStates>;
-    type Adapter = DialogueAdapter<DialogueBaseProps, AIChatDialogueStates>;
+    type Foundation = DialogueFoundation<DialogueBaseProps>;
+    type Adapter = DialogueAdapter<DialogueBaseProps>;
 
     const defaults = useDefaultProps('AIChatDialogue');
 
@@ -79,28 +71,43 @@
     const locale = useLocale('AIChatDialogue');
 
     let list: HTMLDivElement | undefined = $state();
-    let snapshot = untrack(() => ({ chats: [...(chats ?? EMPTY_CHATS)], hints: [...(hints ?? EMPTY_HINTS)] }));
-    let listUpdating = false;
 
     // set by a list the dialogue writes itself, so the update that write causes does not report it again
     let ownWrite = false;
 
-    const { foundation, states } = useFoundation<Foundation, Adapter, DialogueBaseProps, AIChatDialogueStates>(
+    // A caller may push messages into a $state list and append to the last message's text in place, which keeps the
+    // list's identity, so the foundation is handed a copy rebuilt by those edits. Known limitation: other in-place
+    // edits (deep content text, a lone status flip) render but are not followed; upgrade when such an edit needs following.
+    const followedChats = $derived.by(() => {
+        const all = chats ?? EMPTY_CHATS;
+        const text = all.at(-1)?.content;
+        void (typeof text === 'string' || Array.isArray(text) ? text.length : text);
+        return [...all];
+    });
+
+    const followedHints = $derived([...(hints ?? EMPTY_HINTS)]);
+
+    const { foundation, states } = useFoundation<Foundation, Adapter, DialogueBaseProps, DialogueState>(
         DialogueFoundation,
         {
             get chats() {
-                return chats;
+                return followedChats;
+            },
+            get hints() {
+                return followedHints;
             },
         },
-        () => ({ selectedIds: new Set<string>(), backBottomVisible: false }),
-        (base) => ({
+        () => DialogueFoundation.getInitialState(),
+        () => ({
             getContainerRef: () => list as HTMLDivElement,
-            updateSelected: (ids) => base.setState({ selectedIds: ids }),
             notifySelect: (ids) => onSelect?.(ids),
             notifyChatsChange: (next) => {
-                if (listUpdating) {
-                    if (!ownWrite) {
-                        onChatsChange?.(next);
+                // the followed copy: the update a write of ours caused, or one the parent made, reported as the list itself
+                if (next === followedChats) {
+                    if (ownWrite) {
+                        ownWrite = false;
+                    } else {
+                        onChatsChange?.(currentChats);
                     }
                     return;
                 }
@@ -118,7 +125,6 @@
             notifyMessageDelete: (message) => onMessageDelete?.(message),
             notifyMessageReset: (message) => onMessageReset?.(message),
             notifyHintClick: (hint) => onHintClick?.(hint),
-            setBackBottomVisible: (visible) => base.setState({ backBottomVisible: visible }),
         })
     );
 
@@ -196,44 +202,8 @@
         messageDelete: foundation.deleteMessage,
     });
 
-    // A caller may push messages into a $state list and append to the last message's text in place, so the list is
-    // compared by what those edits change. Known limitation: other in-place edits (deep content text, a lone status
-    // flip) re-render but are not reported or followed, as the snapshot shares message objects; upgrade when such an
-    // edit needs following.
-    const listKey = () => {
-        const all = chats ?? EMPTY_CHATS;
-        const allHints = hints ?? EMPTY_HINTS;
-        const last = all.at(-1);
-        const text = last?.content;
-        return [all, all.length, last?.id, text, text?.length, allHints, allHints.length] as const;
-    };
-
-    let previousKey = untrack(() => listKey());
-
     // the button unmounts once the list is at the bottom; focus moves to the list instead of falling to the body
     const handoverBackBottomFocus = (element: HTMLElement) => () => handoverFocus(element, list);
-
-    watch(listKey, (next) => {
-        const previous = previousKey;
-        previousKey = next;
-        const changed = (from: number, to: number) => next.slice(from, to).some((value, index) => value !== previous[from + index]);
-        if (!changed(0, next.length)) {
-            return;
-        }
-        const current = { chats: chats ?? EMPTY_CHATS, hints: hints ?? EMPTY_HINTS };
-        listUpdating = true;
-        // an unchanged part is passed as the same array, so the foundation does not report it as new
-        foundation.handleListUpdate(
-            {
-                chats: changed(0, CHATS_PART) ? snapshot.chats : current.chats,
-                hints: changed(CHATS_PART, next.length) ? snapshot.hints : current.hints,
-            },
-            current
-        );
-        listUpdating = false;
-        ownWrite = false;
-        snapshot = { chats: [...current.chats], hints: [...current.hints] };
-    });
 
     export function selectAll() {
         foundation.handleSelectAll();

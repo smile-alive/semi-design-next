@@ -1,15 +1,14 @@
 <script setup lang="ts">
-    import { computed, onMounted, shallowRef, useTemplateRef, watch, type StyleValue } from 'vue';
+    import { computed, onMounted, useTemplateRef, watch, type StyleValue } from 'vue';
     import { isEqual, omit } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import ImageFoundation, { type ImageAdapter, type ImageLoadStatus } from '@fibrae/semi-foundation/image/image-foundation';
+    import ImageFoundation, { type ImageAdapter, type ImageState } from '@fibrae/semi-foundation/image/image-foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/image/image.scss';
     import { IconUploadError } from '@fibrae/semi-icons-vue';
     import { isNotClassOrStyle, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
-    import useControllable from '../_base/use-controllable';
     import useFoundation from '../_base/use-foundation';
     import useLocale from '../locale/use-locale';
     import { SkeletonImage } from '../skeleton';
@@ -17,8 +16,8 @@
     import type { ImageEmits, ImageProps, ImageSlots } from './interface';
     import PreviewInner from './preview-inner.vue';
 
-    type Foundation = ImageFoundation<ImageProps, Record<string, never>>;
-    type Adapter = ImageAdapter<ImageProps, Record<string, never>>;
+    type Foundation = ImageFoundation<ImageProps>;
+    type Adapter = ImageAdapter<ImageProps>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -43,24 +42,15 @@
     const semi = useSemiGlobal();
 
     const root = useTemplateRef('root');
-    const load = shallowRef<{ src?: string; status: ImageLoadStatus }>({ src: props.src, status: 'loading' });
 
     const prefixCls = cssClasses.PREFIX;
     const statusCls = `${prefixCls}-status`;
-    const loadStatus = computed(() => (load.value.src === props.src ? load.value.status : 'loading'));
     const previewObject = computed(() => (typeof props.preview === 'object' && props.preview !== null ? props.preview : null));
 
-    const [previewVisible, setPreviewVisible] = useControllable<boolean>(
-        () => (previewObject.value?.visible === undefined ? undefined : Boolean(previewObject.value.visible)),
-        () => false,
-        () => {},
-        { keepLastControlled: true }
-    );
-
-    const { foundation } = useFoundation<Foundation, Adapter, ImageProps, Record<string, never>>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, ImageProps, ImageState>(
         ImageFoundation,
         props,
-        () => ({}),
+        (view) => ImageFoundation.getInitialState(view),
         () => ({
             getIsInGroup: () => Boolean(group),
             openGroupPreview: () => {
@@ -68,16 +58,14 @@
                     group.openImage(root.value);
                 }
             },
-            setLoadStatus: (status) => {
-                load.value = { src: props.src, status };
-            },
-            setPreviewVisible,
             notifyLoad: (e) => emit('load', e),
             notifyError: (e) => emit('error', e),
             notifyPreviewVisibleChange: (visible) => previewObject.value?.onVisibleChange?.(visible),
         })
     );
 
+    const loadStatus = computed(() => state.value.loadStatus);
+    const previewVisible = computed(() => ImageFoundation.getPreviewVisible(props.preview, state.value));
     const setDownloadName = computed(() => props.setDownloadName ?? previewObject.value?.setDownloadName ?? readSemiDefault(semi, 'Image', 'setDownloadName'));
     const canOpen = computed(() => ImageFoundation.canOpen(props.preview, loadStatus.value, Boolean(group)));
     const canPreview = computed(() => ImageFoundation.canPreview(props.preview, Boolean(group)));

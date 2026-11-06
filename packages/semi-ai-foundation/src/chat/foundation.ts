@@ -41,7 +41,7 @@ export interface EnableUploadProps {
     clickUpload?: boolean;
 }
 
-export interface ChatAdapter<P = Record<string, any>, S = Record<string, any>> extends DefaultAdapter<P, S> {
+export interface ChatAdapter<P extends ChatBaseProps = ChatBaseProps> extends DefaultAdapter<P, ChatState> {
     getContainerRef: () => HTMLDivElement;
     notifyChatsChange: (chats: Message[]) => void;
     notifyLikeMessage: (message: Message) => void;
@@ -51,23 +51,23 @@ export interface ChatAdapter<P = Record<string, any>, S = Record<string, any>> e
     notifyClearContext: () => void;
     notifyMessageSend: (content: string, attachment: any[]) => void;
     notifyInputChange: (props: { inputValue: string; attachment: any[] }) => void;
-    setBackBottomVisible: (visible: boolean) => void;
     notifyStopGenerate: (e: any) => void;
     notifyHintClick: (hint: string) => void;
-    setUploadAreaVisible: (visible: boolean) => void;
     manualUpload: (files: File[]) => void;
     getDropAreaElement: () => HTMLDivElement;
 }
 
 export interface ChatBaseProps {
     chats?: Message[];
+    hints?: string[];
 }
 
-export interface ChatBaseState {
-    backBottomVisible?: boolean;
+export interface ChatState {
+    backBottomVisible: boolean;
+    uploadAreaVisible: boolean;
 }
 
-export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S extends ChatBaseState = ChatBaseState> extends BaseFoundation<ChatAdapter<P, S>, P, S> {
+export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps> extends BaseFoundation<ChatAdapter<P>, P, ChatState> {
     #cancelAnimation?: () => void;
     #scrollFrame?: number;
     /** Whether new content scrolls into view: stops when the user scrolls up, resumes on return or on send */
@@ -76,6 +76,8 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
     #position = { top: 0, height: 0 };
     /** A drag that started inside the chat moves page content, not files to upload */
     #dragStartedInside = false;
+
+    static override readonly propKeys = ['chats', 'hints'];
 
     #getChats(): Message[] {
         return this.getProp('chats') ?? [];
@@ -121,16 +123,20 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         const { backBottomVisible } = this.getStates();
         if (scrollHeight - scrollTop - clientHeight <= SHOW_SCROLL_GAP) {
             if (backBottomVisible) {
-                this.adapter.setBackBottomVisible(false);
+                this.setState({ backBottomVisible: false });
             }
         } else {
             if (!backBottomVisible) {
-                this.adapter.setBackBottomVisible(true);
+                this.setState({ backBottomVisible: true });
             }
         }
     }
 
     #updateBackBottomVisible = debounce((target: Pick<HTMLElement, 'scrollHeight' | 'clientHeight' | 'scrollTop'>) => this.#syncBackBottomVisible(target), 100);
+
+    static getInitialState(): ChatState {
+        return { backBottomVisible: false, uploadAreaVisible: false };
+    }
 
     /** What the content class names depend on; `bubble` also covers the user's own message in userBubble mode */
     static getContentFlags(role?: string, status?: string, mode?: string) {
@@ -167,6 +173,16 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         this.#cancelAnimation?.();
         cancelAnimationFrame(this.#scrollFrame);
         this.#updateBackBottomVisible.cancel();
+    }
+
+    override handlePropsChange(prev: Partial<P>) {
+        const { chats, hints } = this.getProps();
+        if (prev.chats !== chats) {
+            this.handleChatsChange(chats ?? [], prev.chats ?? []);
+        }
+        if (prev.hints !== hints) {
+            this.handleHintsChange(hints ?? [], prev.hints ?? []);
+        }
     }
 
     /** Follows a new or still generating last message */
@@ -380,7 +396,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         if (this.#dragStartedInside || !e.dataTransfer?.types.includes('Files')) {
             return;
         }
-        this.adapter.setUploadAreaVisible(true);
+        this.setState({ uploadAreaVisible: true });
     };
 
     handleDragStart = () => {
@@ -396,7 +412,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
     };
 
     handleContainerDrop = (e: Pick<DragEvent, 'dataTransfer' | 'stopPropagation' | 'preventDefault'>) => {
-        this.adapter.setUploadAreaVisible(false);
+        this.setState({ uploadAreaVisible: false });
         const files = e.dataTransfer?.files;
         if (files?.length) {
             this.adapter.manualUpload(Array.from(files));
@@ -413,7 +429,7 @@ export default class ChatFoundation<P extends ChatBaseProps = ChatBaseProps, S e
         }
         // deferred so the parent's mouseOver cannot fire in between and keep the area visible
         setTimeout(() => {
-            this.adapter.setUploadAreaVisible(false);
+            this.setState({ uploadAreaVisible: false });
         });
     };
 }

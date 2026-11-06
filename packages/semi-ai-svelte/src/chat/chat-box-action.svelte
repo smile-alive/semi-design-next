@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import ChatBoxActionFoundation, { type ChatBoxActionAdapter } from '@fibrae/semi-ai-foundation/chat/chat-box-action-foundation';
+    import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionState } from '@fibrae/semi-ai-foundation/chat/chat-box-action-foundation';
     import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
     import useFoundation from '@fibrae/semi-ui-svelte/_base/use-foundation.svelte.js';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
@@ -14,14 +14,9 @@
         isLast: boolean;
     }
 
-    interface ChatBoxActionState {
-        visible: boolean;
-        showAction: boolean;
-    }
-
     type ActionName = 'copy' | 'like' | 'dislike' | 'reset' | 'delete';
-    type Foundation = ChatBoxActionFoundation<ChatBoxActionProps, ChatBoxActionState>;
-    type Adapter = ChatBoxActionAdapter<ChatBoxActionProps, ChatBoxActionState>;
+    type Foundation = ChatBoxActionFoundation<ChatBoxActionProps>;
+    type Adapter = ChatBoxActionAdapter<ChatBoxActionProps>;
 
     let { message, isLast }: ChatBoxActionProps = $props();
 
@@ -38,8 +33,8 @@
                 return isLast;
             },
         },
-        () => ({ visible: false, showAction: false }),
-        (base) => ({
+        () => ChatBoxActionFoundation.getInitialState(),
+        () => ({
             notifyDeleteMessage: () => context.deleteMessage(message),
             notifyMessageCopy: () => context.copyMessage(message),
             // the toast renders in the chat, but its text is read once: a locale change while it shows is not followed
@@ -47,8 +42,6 @@
             notifyLikeMessage: () => context.likeMessage(message),
             notifyDislikeMessage: () => context.dislikeMessage(message),
             notifyResetMessage: () => context.resetMessage(message),
-            setVisible: (visible) => base.setState({ visible }),
-            setShowAction: (showAction) => base.setState({ showAction }),
         })
     );
 

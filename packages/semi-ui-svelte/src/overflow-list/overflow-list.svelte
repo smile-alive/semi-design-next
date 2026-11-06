@@ -10,8 +10,8 @@
     import type { OverflowListItem, OverflowListKey, OverflowListProps } from './interface.js';
     import { markScrollItem, observeSize } from './observers.js';
 
-    type Foundation = OverflowListFoundation<OverflowListBaseProps, OverflowListBaseState>;
-    type Adapter = OverflowListAdapter<OverflowListBaseProps, OverflowListBaseState>;
+    type Foundation = OverflowListFoundation<OverflowListBaseProps>;
+    type Adapter = OverflowListAdapter<OverflowListBaseProps>;
 
     const defaults = useDefaultProps('OverflowList');
 
@@ -112,9 +112,9 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, OverflowListBaseProps, OverflowListBaseState>(
         OverflowListFoundation,
         foundationProps,
-        () => ({ containerWidth: 0, overflowWidth: 0, visibleState: new Map() }),
-        (base) => ({
-            updateVisibleState: (visibleState) => base.setState({ visibleState }, () => onVisibleStateChange?.(visibleState)),
+        () => OverflowListFoundation.getInitialState(),
+        () => ({
+            notifyVisibleStateChange: (visibleState) => onVisibleStateChange?.(visibleState),
             updateView: (partial) => writeView({ ...view, ...partial }),
             notifyIntersect: (res) => onIntersect?.(res),
             notifyOverflow: (overflowItems) => onOverflow?.(overflowItems as T[]),

@@ -16,6 +16,9 @@ import Radio from '@fibrae/semi-ui-react/radio/index';
 import RadioGroup from '@fibrae/semi-ui-react/radio/radio-group';
 import Tooltip from '@fibrae/semi-ui-react/tooltip/index';
 
+type Foundation = MCPConfigureContentFoundation<React.MouseEvent<HTMLButtonElement>>;
+type Adapter = MCPConfigureContentAdapter<React.MouseEvent<HTMLButtonElement>>;
+
 const prefixCls = cssClasses.MCP_CONFIGURE_CONTENT;
 const buttonCls = buttonClasses.PREFIX;
 
@@ -41,10 +44,10 @@ export default function MCPConfigureContent(props: MCPConfigureContentReactProps
 
     const { locale } = useLocale('Sidebar');
 
-    const [foundation, state] = useFoundation<MCPConfigureContentFoundation<React.MouseEvent<HTMLButtonElement>>, MCPConfigureContentAdapter<React.MouseEvent<HTMLButtonElement>>, MCPConfigureContentProps, MCPConfigureContentState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, MCPConfigureContentProps, MCPConfigureContentState>(
         MCPConfigureContentFoundation,
         props,
-        () => ({ mode: strings.MCP_MODE.INNER, inputValue: '', query: '' }),
+        () => MCPConfigureContentFoundation.getInitialState(),
         (base) => ({
             notifyConfigureClick: (e, option) => base.getProps().onConfigureClick?.(e, option),
             notifyEditClick: (e, option) => base.getProps().onEditClick?.(e, option),

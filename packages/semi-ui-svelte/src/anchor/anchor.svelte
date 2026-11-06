@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { cssClasses, strings } from '@fibrae/semi-foundation/anchor/constants';
-    import AnchorFoundation, { type AnchorAdapter } from '@fibrae/semi-foundation/anchor/foundation';
+    import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/anchor/foundation';
     import { findAnchorTarget } from '@fibrae/semi-foundation/anchor/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/anchor/anchor.scss';
@@ -10,12 +10,12 @@
     import watch from '../_base/watch.svelte.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { setAnchorContext } from './context.js';
-    import type { AnchorClickEvent, AnchorProps, AnchorState } from './interface.js';
+    import type { AnchorClickEvent, AnchorProps } from './interface.js';
     import LinkItem from './link-item.svelte';
     import { hrefsOf, nodesOf } from './links.js';
 
-    type Foundation = AnchorFoundation<AnchorProps, AnchorState, AnchorClickEvent>;
-    type Adapter = AnchorAdapter<AnchorProps, AnchorState, AnchorClickEvent>;
+    type Foundation = AnchorFoundation<AnchorProps, AnchorClickEvent>;
+    type Adapter = AnchorAdapter<AnchorProps, AnchorClickEvent>;
 
     const defaults = useDefaultProps('Anchor');
 
@@ -68,22 +68,17 @@
         },
     };
 
-    let setLinks: (next: string[]) => void = () => {};
-
-    const { foundation, states } = useFoundation<Foundation, Adapter, AnchorProps, AnchorState>(
+    const { foundation, states } = useFoundation<Foundation, Adapter, AnchorProps, AnchorBaseState>(
         AnchorFoundation,
         foundationProps,
-        () => ({ activeLink: '', links: hrefs, clickLink: false, slideBarTop: '0' }),
-        (base) => {
-            setLinks = (next) => base.setState({ links: next });
-            return {
-                getContainer: () => (getContainer ?? (() => window))() || window,
-                getAnchorNode: (selector) => root?.querySelector<HTMLElement>(selector) ?? null,
-                getContentNode: (link) => findAnchorTarget(root, link),
-                notifyChange: (currentLink, previousLink) => onChange?.(currentLink, previousLink),
-                notifyClick: (event, link) => onClick?.(event, link),
-            };
-        }
+        () => ({ ...AnchorFoundation.getInitialState(), links: hrefs }),
+        () => ({
+            getContainer: () => (getContainer ?? (() => window))() || window,
+            getAnchorNode: (selector) => root?.querySelector<HTMLElement>(selector) ?? null,
+            getContentNode: (link) => findAnchorTarget(root, link),
+            notifyChange: (currentLink, previousLink) => onChange?.(currentLink, previousLink),
+            notifyClick: (event, link) => onClick?.(event, link),
+        })
     );
 
     setAnchorContext({
@@ -113,7 +108,7 @@
 
     watch(
         () => hrefs,
-        (next) => setLinks(next)
+        (next) => foundation.setLinks(next)
     );
 
     // getContainer may return a later node: the effect tracks the signals it reads, and runs again when the links change

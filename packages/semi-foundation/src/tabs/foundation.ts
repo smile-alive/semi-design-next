@@ -34,10 +34,9 @@ export interface PaneMotionInput {
 }
 
 /** E is the host's click event type, which the foundation only passes through */
-export interface TabsAdapter<P extends TabsBaseProps = TabsBaseProps, S extends TabsBaseState = TabsBaseState, E = unknown> extends DefaultAdapter<P, S, DirectionContext> {
+export interface TabsAdapter<P extends TabsBaseProps = TabsBaseProps, E = unknown> extends DefaultAdapter<P, TabsState, DirectionContext> {
     notifyTabClick: (activeKey: string, event: E) => void;
     notifyChange: (activeKey: string) => void;
-    setNewActiveKey: (activeKey: string | null) => void;
     notifyTabDelete: (tabKey: string) => void;
 }
 
@@ -52,11 +51,13 @@ export interface TabsBaseProps {
     preventScroll?: boolean;
 }
 
-export interface TabsBaseState {
+export interface TabsState {
     activeKey: string | null;
 }
 
-export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S extends TabsBaseState = TabsBaseState, E = unknown> extends BaseFoundation<TabsAdapter<P, S, E>, P, S> {
+export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, E = unknown> extends BaseFoundation<TabsAdapter<P, E>, P, TabsState> {
+    static override readonly propKeys = ['activeKey'];
+
     #notifyChange(activeKey: string) {
         const { activeKey: stateActiveKey } = this.getStates();
         if (stateActiveKey !== activeKey) {
@@ -118,8 +119,13 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
     protected handleNewActiveKey(activeKey: string | null) {
         const { activeKey: stateActiveKey } = this.getStates();
         if (stateActiveKey !== activeKey) {
-            this.adapter.setNewActiveKey(activeKey);
+            this.setState({ activeKey });
         }
+    }
+
+    /** `list` is the panes the initial key may pick from, which only the host can read */
+    static getInitialState(props: { activeKey?: string | null; defaultActiveKey?: string }, list: ReadonlyArray<TabEntry | null>): TabsState {
+        return { activeKey: TabsFoundation.getDefaultActiveKey(props, list) };
     }
 
     static getDefaultActiveKey(props: { activeKey?: string | null; defaultActiveKey?: string }, list: ReadonlyArray<TabEntry | null>): string | null {
@@ -213,12 +219,13 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, S e
         this.adapter.notifyTabClick(activeKey, event);
     };
 
-    // dropping a controlled activeKey later continues from the synced state
-    syncActiveKey = (activeKey?: string | null) => {
+    // an activeKey that goes back to undefined keeps the last controlled key, which later uncontrolled clicks continue from
+    override handlePropsChange() {
+        const { activeKey } = this.getProps();
         if (activeKey !== undefined) {
             this.handleNewActiveKey(activeKey);
         }
-    };
+    }
 
     // panes can leave after mount: an uncontrolled key no longer among them moves to the first enabled one
     handleTabPanesChange = (panes: ReadonlyArray<TabEntry>) => {

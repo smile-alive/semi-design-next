@@ -28,9 +28,3 @@ export interface PopconfirmProps extends Omit<PopoverProps, 'content'> {
     onCancel?: (event: MouseEvent) => Promise<unknown> | void;
     onConfirm?: (event: MouseEvent) => Promise<unknown> | void;
 }
-
-export interface PopconfirmState {
-    visible: boolean;
-    cancelLoading: boolean;
-    confirmLoading: boolean;
-}

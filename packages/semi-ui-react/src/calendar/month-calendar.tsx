@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
 import { toPercent, type DateObj } from '@fibrae/semi-foundation/calendar/event-util';
 import CalendarFoundation, { type ParsedRangeEvent } from '@fibrae/semi-foundation/calendar/foundation';
-import CalendarMonthFoundation, { type CalendarMonthAdapter } from '@fibrae/semi-foundation/calendar/month-foundation';
+import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/calendar/month-foundation';
 import '@fibrae/semi-foundation/calendar/calendar.scss';
 import { IconClose } from '@fibrae/semi-icons-react';
 import useClickOutside from '../_base/use-click-outside';
@@ -18,13 +18,11 @@ import type { RenderContentProps } from '../tooltip';
 import type { CalendarProps, MonthCalendarProps } from './interface';
 import useToday from './use-today';
 
+type Foundation = CalendarMonthFoundation<MonthViewProps>;
+type Adapter = CalendarMonthAdapter<MonthViewProps>;
+
 const prefixCls = `${cssClasses.PREFIX}-month`;
 const cardCls = `${prefixCls}-event-card`;
-
-export interface MonthCalendarState {
-    itemLimit: number;
-    showCard: Record<string, boolean>;
-}
 
 type MonthViewProps = MonthCalendarProps & Pick<CalendarProps, 'range' | 'showCurrTime' | 'scrollTop' | 'renderTimeDisplay'>;
 
@@ -40,18 +38,15 @@ export default function MonthCalendar(props: MonthViewProps) {
     const rootRef = useRef<HTMLDivElement>(null);
     const cellRef = useRef<HTMLDivElement>(null);
 
-    const [foundation, { itemLimit, showCard }] = useFoundation<CalendarMonthFoundation<MonthViewProps, MonthCalendarState>, CalendarMonthAdapter<MonthViewProps, MonthCalendarState>, MonthViewProps, MonthCalendarState>(
+    // the row height is only known once mounted, so the first frame limits to 0
+    const [itemLimit, setItemLimit] = useState(0);
+
+    const [foundation, { showCard }] = useFoundation<Foundation, Adapter, MonthViewProps, CalendarMonthBaseState>(
         CalendarMonthFoundation,
         props,
-        () => ({ itemLimit: 0, showCard: {} }),
+        () => CalendarMonthFoundation.getInitialState(),
         (base) => ({
-            notifyClose: (e, key) => {
-                base.setState({ showCard: { ...base.getState('showCard'), [key]: false } });
-                base.getProps().onClose?.(e);
-            },
-            openCard: (key) => {
-                base.setState({ showCard: { [key]: true } });
-            },
+            notifyClose: (e) => base.getProps().onClose?.(e),
         })
     );
 
@@ -73,8 +68,8 @@ export default function MonthCalendar(props: MonthViewProps) {
         if (!cell) {
             return;
         }
-        foundation.setState({ itemLimit: CalendarFoundation.getItemLimit(cell.getBoundingClientRect().height) });
-    }, [foundation]);
+        setItemLimit(CalendarFoundation.getItemLimit(cell.getBoundingClientRect().height));
+    }, []);
 
     // a percentage height or a style.height follows the container, which no prop reports
     const observeGrid = useCallback(

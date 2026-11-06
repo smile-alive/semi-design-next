@@ -43,9 +43,3 @@ export interface PopconfirmHandle {
     /** Focuses the trigger (only with returnFocusOnClose and a non-custom trigger) */
     focusTrigger: () => void;
 }
-
-export interface PopconfirmState {
-    visible: boolean;
-    cancelLoading: boolean;
-    confirmLoading: boolean;
-}

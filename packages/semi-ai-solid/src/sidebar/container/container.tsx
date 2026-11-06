@@ -124,12 +124,6 @@ export default function Container(rawProps: ContainerSolidProps) {
         onCleanup(foundation.closeLayer);
     });
 
-    useWatch(visible, (isVisible) => {
-        if (!isVisible) {
-            foundation.restoreFocus();
-        }
-    });
-
     useWatch(displayNone, (isHidden) => foundation.onVisibleChange(!isHidden));
 
     // focused content unmounts with the sidebar and would leave focus on the body; registered on mount, since a server

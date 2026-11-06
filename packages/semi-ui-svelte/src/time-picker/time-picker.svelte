@@ -10,7 +10,6 @@
     import useClickOutside from '../_base/use-click-outside.svelte.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import { useConfig } from '../config-provider/index.js';
     import { getInputGroupInScope, setInputGroupContext } from '../input/context.js';
     import { useLocale } from '../locale/index.js';
@@ -27,7 +26,6 @@
 
     type Foundation = TimePickerFoundation<FoundationProps, FocusEvent>;
     type Adapter = TimePickerAdapter<FoundationProps, FocusEvent>;
-    type Value = TimePickerProps['value'];
 
     const defaults = useDefaultProps('TimePicker');
 
@@ -95,9 +93,6 @@
     // measurement stale. Upgrade to a MutationObserver on the wrapper if such triggers need support.
     let customTriggerFocusable = $state(false);
 
-    // The value and timeZone the foundation last synced from, to tell a new value from an equal one written back
-    let synced: { value: Value; timeZone?: string | number } | undefined;
-
     // an InputGroup supplies size and disabled when the control is given none; the controls inside this one must not read it again
     const group = getInputGroupInScope();
     const disabled = $derived(disabledProp ?? group?.disabled ?? defaults('disabled') ?? false);
@@ -150,10 +145,8 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, FoundationProps, TimePickerState>(
         TimePickerFoundation,
         foundationProps,
-        (view) => ({ open: Boolean(view.open && !view.disabled), ...TimePickerFoundation.getInitialState(view) }),
-        (base) => ({
-            setPanelOpen: (next) => base.setState({ open: next }),
-            setInputValue: (inputValue) => base.setState({ inputValue }),
+        (view) => TimePickerFoundation.getInitialState(view),
+        () => ({
             notifyOpenChange: (next) => {
                 open = next;
                 onOpenChange?.(next);
@@ -164,7 +157,6 @@
             },
             notifyFocus: (event) => onFocus?.(event),
             notifyBlur: (event) => onBlur?.(event),
-            isRangePicker: () => type === strings.TYPE_TIME_RANGE_PICKER,
             isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panelElement),
             setTriggerFocus: () => FocusTrapHandle.focusFirstOrSelf(root, { preventScroll }),
         })
@@ -247,14 +239,6 @@
 
     setInputGroupContext(undefined);
 
-    const sameTime = (a: unknown, b: unknown) => {
-        return a instanceof Date && b instanceof Date ? a.getTime() === b.getTime() : Object.is(a, b);
-    };
-
-    const sameValue = (a: Value, b: Value) => {
-        return Array.isArray(a) && Array.isArray(b) ? a.length === b.length && a.every((item, index) => sameTime(item, b[index])) : sameTime(a, b);
-    };
-
     const panelFns = (index: number) => {
         return TimePickerFoundation.getDisabledTimeFns(foundationProps, states().value, index === 1 ? 'right' : 'left', isRange);
     };
@@ -272,33 +256,6 @@
     };
 
     useClickOutside([() => root, () => panelElement], foundation.handleClickOutside, () => shown, useNestedPopups());
-
-    $effect(() => {
-        const next = { value, timeZone: zone };
-        const previous = synced;
-        synced = next;
-        if (!previous) {
-            return;
-        }
-        if (!sameValue(next.value, previous.value)) {
-            foundation.syncValueFromProps({ value: (next.value ?? []) as Parameters<Foundation['syncValueFromProps']>[0]['value'], timeZone: next.timeZone });
-        } else if (next.timeZone !== previous.timeZone) {
-            foundation.syncValueFromProps({ value: foundation.getState('value'), timeZone: next.timeZone, prevTimeZone: previous.timeZone });
-        }
-    });
-
-    // only the text changes: syncing the value again would re-zone it a second time
-    watch(() => [validFormat, locale().dateFnsLocale, rangeSeparator], foundation.refreshInputValue);
-
-    // isPanelShown is already false for a disabled picker, so the check leaves `disabled` out
-    watch(
-        () => disabled,
-        (next) => {
-            if (next && TimePickerFoundation.isPanelShown({ open }, states())) {
-                foundation.close();
-            }
-        }
-    );
 
     onMount(() => {
         if (trigger && triggerWrapper) {

@@ -5,8 +5,7 @@ import { strings } from './constants';
 import type { DropdownContextAdapter } from './menu-foundation';
 
 /** The context is the one around the Dropdown: a Dropdown inside a menu reads that menu's DropdownMenuContext */
-export interface DropdownAdapter<P extends DropdownBaseProps = DropdownBaseProps, S extends DropdownBaseState = DropdownBaseState> extends DropdownContextAdapter<P, S> {
-    setPopVisible(visible: boolean): void;
+export interface DropdownAdapter<P extends DropdownBaseProps = DropdownBaseProps> extends DropdownContextAdapter<P, DropdownBaseState> {
     notifyVisibleChange(visible: boolean): void;
     /** The Tooltip popup element (`[popover]`), null while it is not in the document */
     getPopup(): HTMLElement | null;
@@ -30,7 +29,7 @@ export interface DropdownBaseState {
     popVisible: boolean;
 }
 
-export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBaseProps, S extends DropdownBaseState = DropdownBaseState> extends BaseFoundation<DropdownAdapter<P, S>, P, S> {
+export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBaseProps> extends BaseFoundation<DropdownAdapter<P>, P, DropdownBaseState> {
     #focusOnOpen: 'first' | 'last' | null = null;
 
     #focusEdgeItem(popup: HTMLElement | null, edge: 'first' | 'last') {
@@ -87,10 +86,8 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
         }
     }
 
-    // Tooltip.destroy closes the popup without reporting it, as on unmount, so the trigger's open state is reset here;
-    // otherwise a React Activity hide leaves aria-expanded="true" on a closed menu
-    override destroy() {
-        this.adapter.setPopVisible(false);
+    static getInitialState(): DropdownBaseState {
+        return { popVisible: false };
     }
 
     /** Closes the menu without moving focus */
@@ -101,7 +98,7 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
     /** Tooltip's onVisibleChange: an actual change when uncontrolled, only a request to the owner when controlled */
     handleVisibleChange = (visible: boolean) => {
         if (this.getProp('visible') === undefined) {
-            this.adapter.setPopVisible(visible);
+            this.setState({ popVisible: visible });
         }
         if (!visible) {
             this.#focusOnOpen = null;

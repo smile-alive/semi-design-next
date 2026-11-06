@@ -1,8 +1,7 @@
 <script lang="ts">
     import { untrack } from 'svelte';
-    import { isEqual } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerBaseState } from '@fibrae/semi-foundation/image/preview-inner-foundation';
+    import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/image/preview-inner-foundation';
     import { coversPage } from '@fibrae/semi-foundation/utils/dom';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
@@ -99,7 +98,6 @@
     // The index a ratio was set at: an index change brings the ratio back to fit in the same render as the new src, so
     // the image leaving is not re-fitted
     let ratioState = $state.raw<{ index: number; ratio: RatioType }>({ index: -1, ratio: 'adaptation' });
-    let previousList = untrack(() => PreviewInnerFoundation.getSrcList(src as string | string[]));
     const scroll = new ReleaseHolder();
     const layer = new ReleaseHolder();
     const focusScope = new FocusScope();
@@ -108,7 +106,7 @@
     // focus return)
     let modal = false;
 
-    const { foundation, states } = useFoundation<Foundation, Adapter, PreviewInnerBaseProps, PreviewInnerBaseState>(
+    const { foundation, states } = useFoundation<Foundation, Adapter, PreviewInnerBaseProps, PreviewInnerState>(
         PreviewInnerFoundation,
         {
             get closeOnEsc() {
@@ -148,7 +146,7 @@
                 return controlledIndex;
             },
         },
-        () => ({ imgLoadStatus: {}, zoom: 0.1, currentIndex: 0, rotation: 0, viewerVisible: true, preloadAfterVisibleChange: true }),
+        (view) => PreviewInnerFoundation.getInitialState(view),
         (base) => ({
             getIsInGroup: () => Boolean(setCurrentIndex),
             disabledBodyScroll: () => (modal ? scroll.hold(lockBodyScroll) : scroll.release()),
@@ -240,17 +238,6 @@
             if (!shown && (modal || !active || active === document.body)) {
                 focusScope.restore(true);
             }
-        }
-    );
-
-    // by content: a group builds a new list on every change, which must not restart the delay
-    watch(
-        () => srcList,
-        (next) => {
-            if (!isEqual(previousList, next)) {
-                foundation.updateTimer();
-            }
-            previousList = next;
         }
     );
 

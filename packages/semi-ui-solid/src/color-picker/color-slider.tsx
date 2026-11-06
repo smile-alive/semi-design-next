@@ -20,7 +20,7 @@ export default function ColorSlider(props: ColorSliderProps) {
     const { foundation } = useFoundation<Foundation, Adapter, ColorSliderBaseProps, ColorSliderBaseState>(
         ColorSliderFoundation,
         props,
-        () => ({ isHandleGrabbing: false }),
+        () => ColorSliderFoundation.getInitialState(),
         () => ({ getDOM: () => dom as HTMLDivElement })
     );
 

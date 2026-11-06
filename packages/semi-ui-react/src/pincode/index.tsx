@@ -6,10 +6,12 @@ import PinCodeFoundation, { type PinCodeAdapter, type PinCodeBaseProps, type Pin
 import '@fibrae/semi-foundation/pincode/pincode.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import Input, { type InputProps, type InputHandle } from '../input';
 import useLocale from '../locale/use-locale';
+
+type Foundation = PinCodeFoundation<PinCodeProps>;
+type Adapter = PinCodeAdapter<PinCodeProps>;
 
 export interface PinCodeHandle {
     /** Focuses the input at `index` (0-based) with the caret after its character */
@@ -81,13 +83,11 @@ export default function PinCode(rawProps: PinCodeProps) {
 
     const [inputs] = useState<InputHandle[]>(() => []);
 
-    const [foundation, state] = useFoundation<PinCodeFoundation<PinCodeProps, PinCodeState>, PinCodeAdapter<PinCodeProps, PinCodeState>, PinCodeProps, PinCodeState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, PinCodeProps, PinCodeState>(
         PinCodeFoundation,
         props,
-        () => ({ valueList: Array.from(props.value ?? props.defaultValue ?? ''), currentActiveIndex: 0 }),
+        () => PinCodeFoundation.getInitialState(props),
         (base) => ({
-            // resolves after commit: a controlled paste awaits the parent's new value
-            onCurrentActiveIndexChange: (currentActiveIndex) => new Promise<void>((resolve) => base.setState({ currentActiveIndex }, resolve)),
             notifyValueChange: (values) => base.getProps().onChange?.(values.join('')),
             notifyComplete: (value) => base.getProps().onComplete?.(value),
             changeSpecificInputFocusState: (index, focusState) => {
@@ -97,11 +97,8 @@ export default function PinCode(rawProps: PinCodeProps) {
                     inputs[index]?.blur();
                 }
             },
-            updateValueList: (valueList) => new Promise<void>((resolve) => base.setState({ valueList }, resolve)),
         })
     );
-
-    useDidUpdate(props.value, (value) => foundation.updateValueList(Array.from(value || '')));
 
     useImperativeHandle(
         ref,

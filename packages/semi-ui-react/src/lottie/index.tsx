@@ -1,7 +1,6 @@
 import type React from 'react';
-import { useLayoutEffect, useRef } from 'react';
+import { useRef } from 'react';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/lottie/constants';
 import LottieFoundation, { type LottieAdapter, type LottieBaseProps, type LottieBaseState } from '@fibrae/semi-foundation/lottie/foundation';
 import { isDev } from '@fibrae/semi-foundation/utils/warning';
@@ -9,6 +8,9 @@ import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import useMergedRef from '../_base/use-merged-ref';
+
+type Foundation = LottieFoundation<LottieProps>;
+type Adapter = LottieAdapter<LottieProps>;
 
 export interface LottieProps extends LottieBaseProps, ElementProps<'div'> {
     className?: string;
@@ -27,15 +29,14 @@ function Lottie(rawProps: LottieProps) {
 
     const wrapperRef = useRef<HTMLDivElement>(null);
 
-    // params is usually a fresh literal, so compare deeply
-    const committedParams = useRef(params);
-
-    const [foundation] = useFoundation<LottieFoundation<LottieProps, LottieState>, LottieAdapter<LottieProps, LottieState>, LottieProps, LottieState>(
+    useFoundation<Foundation, Adapter, LottieProps, LottieState>(
         LottieFoundation,
         props,
         () => ({}),
-        () => ({
+        (base) => ({
             getContainer: () => wrapperRef.current,
+            notifyAnimationInstance: (animation) => base.getProps().getAnimationInstance?.(animation),
+            notifyLottie: (lottie) => base.getProps().getLottie?.(lottie),
             notifyLoadError: (error) => {
                 if (isDev()) {
                     console.error(error);
@@ -45,13 +46,6 @@ function Lottie(rawProps: LottieProps) {
     );
 
     const mergedRef = useMergedRef(ref, wrapperRef);
-
-    useLayoutEffect(() => {
-        if (!isEqual(committedParams.current, params)) {
-            committedParams.current = params;
-            foundation.handleParamsUpdate();
-        }
-    });
 
     if (params.container) {
         return null;

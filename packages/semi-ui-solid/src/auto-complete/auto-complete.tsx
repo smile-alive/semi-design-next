@@ -226,18 +226,13 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
         AutoCompleteFoundation,
         props as AutoCompleteBaseProps,
         (view) => AutoCompleteFoundation.getInitialState(view) as AutoCompleteState,
-        (base) => ({
-            updateFocusIndex: (focusIndex) => base.setState({ focusIndex }),
+        () => ({
             updateScrollTop: (index) => {
                 const destNode = listbox?.children[index] as HTMLElement | undefined;
                 if (listbox && destNode) {
                     centerInScroller(destNode, listbox);
                 }
             },
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            toggleListVisible: (visible) => base.setState({ visible }),
-            updateOptionList: (options) => base.setState({ options }),
-            updateSelection: (selection) => base.setState({ selection }),
             notifySearch: (inputValue) => local.onSearch?.(inputValue),
             notifyChange: (value) => local.onChange?.(value),
             notifySelect: (option) => local.onSelect?.(option as string | number | BaseDataItem),
@@ -498,7 +493,6 @@ function AutoCompleteControl<T extends AutoCompleteItems = AutoCompleteItems>(al
     );
 
     useWatch(data, (next) => foundation.handleDataChange(next ?? []));
-    useWatch(() => local.value, foundation.handleValueChange);
 
     return (
         <Popover

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { tick } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/banner/constants';
-    import BannerFoundation, { type BannerAdapter } from '@fibrae/semi-foundation/banner/foundation';
+    import BannerFoundation, { type BannerAdapter, type BannerState } from '@fibrae/semi-foundation/banner/foundation';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import { findFocusAfter, handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import '@fibrae/semi-foundation/banner/banner.scss';
@@ -13,12 +13,8 @@
     import { TypographyParagraph, TypographyTitle } from '../typography/index.js';
     import type { BannerProps } from './interface.js';
 
-    interface BannerState {
-        visible: boolean;
-    }
-
-    type Foundation = BannerFoundation<object, BannerState, MouseEvent>;
-    type Adapter = BannerAdapter<object, BannerState, MouseEvent>;
+    type Foundation = BannerFoundation<object, MouseEvent>;
+    type Adapter = BannerAdapter<object, MouseEvent>;
 
     const defaults = useDefaultProps('Banner');
     const { bordered = defaults('bordered', false), fullMode = defaults('fullMode', true), title = defaults('title'), type = defaults('type', 'info'), onClose, description, icon, closeIcon, children, ...rest }: BannerProps = $props();
@@ -28,9 +24,8 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, object, BannerState>(
         BannerFoundation,
         {},
-        () => ({ visible: true }),
-        (base) => ({
-            hide: () => base.setState({ visible: false }),
+        () => BannerFoundation.getInitialState(),
+        () => ({
             notifyClose: (event) => onClose?.(event),
         })
     );

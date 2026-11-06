@@ -1,5 +1,4 @@
 import type React from 'react';
-import { useEffect, useState } from 'react';
 import * as runtime from 'react/jsx-runtime';
 import clsx from 'clsx';
 import { omitBy } from 'es-toolkit';
@@ -12,6 +11,9 @@ import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import * as SemiMarkdownComponents from './components';
+
+type Foundation = MarkdownRenderFoundation<MarkdownRenderProps>;
+type Adapter = MarkdownRenderAdapter<MarkdownRenderProps>;
 
 // the index signature also admits tag names: without it an intrinsic key could not keep its own tag name, nor could
 // a spread of this type be assigned back to it
@@ -33,25 +35,15 @@ export interface MarkdownRenderState extends MarkdownRenderBaseState {}
 
 const defaultProps = { format: 'mdx', remarkGfm: true } satisfies Partial<MarkdownRenderProps>;
 
-// plugin arrays are usually literals: keep the previous array while the entries are the same
-function usePluginList(plugins: MarkdownRenderProps['remarkPlugins']) {
-    const [stable, setStable] = useState(plugins);
-    if (!MarkdownRenderFoundation.isSamePluginList(stable, plugins)) {
-        setStable(plugins);
-        return plugins;
-    }
-    return stable;
-}
-
 function MarkdownRender(rawProps: MarkdownRenderProps) {
     const props = useDefaultProps('MarkdownRender', rawProps, defaultProps);
     const { ref, raw, components, format, remarkPlugins, rehypePlugins, remarkGfm, className, ...rest } = props;
 
-    const [foundation, { renderContent }] = useFoundation<MarkdownRenderFoundation<MarkdownRenderProps, MarkdownRenderState>, MarkdownRenderAdapter<MarkdownRenderProps, MarkdownRenderState>, MarkdownRenderProps, MarkdownRenderState>(
+    const [, { renderContent }] = useFoundation<Foundation, Adapter, MarkdownRenderProps, MarkdownRenderState>(
         MarkdownRenderFoundation,
         props,
         // effects do not run on the server, so md is compiled here for the server HTML and the hydrating render
-        () => ({ renderContent: MarkdownRenderFoundation.compileMdSync(props, runtime) }),
+        () => MarkdownRenderFoundation.getInitialState(props, runtime),
         () => ({
             getRuntime: () => runtime,
             notifyCompileError: (error) => {
@@ -61,13 +53,6 @@ function MarkdownRender(rawProps: MarkdownRenderProps) {
             },
         })
     );
-
-    const remarkPluginList = usePluginList(remarkPlugins);
-    const rehypePluginList = usePluginList(rehypePlugins);
-
-    useEffect(() => {
-        void foundation.updateContent();
-    }, [foundation, raw, format, remarkGfm, remarkPluginList, rehypePluginList]);
 
     return (
         <div role={namedRole(rest)} {...rest} ref={ref} className={clsx(cssClasses.PREFIX, className)}>

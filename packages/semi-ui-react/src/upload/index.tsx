@@ -1,17 +1,14 @@
-import { useCallback, useImperativeHandle, useInsertionEffect, useLayoutEffect, useRef, useState, type ReactNode, type CSSProperties, type ChangeEvent, type DragEvent, type FocusEvent, type KeyboardEvent } from 'react';
+import { useCallback, useImperativeHandle, useLayoutEffect, useRef, useState, type ReactNode, type CSSProperties, type ChangeEvent, type DragEvent, type FocusEvent, type KeyboardEvent } from 'react';
 import clsx from 'clsx';
 import { strings, cssClasses } from '@fibrae/semi-foundation/upload/constants';
 import UploadFoundation, { type CustomFile, type UploadAdapter, type UploadBaseState, type BeforeUploadObjectResult, type AfterUploadResult, type FileItemStatus } from '@fibrae/semi-foundation/upload/foundation';
 import { addAreaControlAttributes, containsControl, containsName, ListFocusTracker } from '@fibrae/semi-foundation/upload/utils';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/upload/upload.scss';
 import { IconUpload } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import type { ValidateStatus } from '../_base/base-component';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
-import useEventListener, { getBody } from '../_base/use-event-listener';
 import useFoundation from '../_base/use-foundation';
 import Cropper, { type CropperHandle } from '../cropper';
 import useLocale from '../locale/use-locale';
@@ -118,14 +115,13 @@ export interface UploadProps extends ElementProps<'div', 'onChange' | 'onDrop' |
 }
 
 export interface UploadState extends UploadBaseState {
-    dragAreaStatus: 'default' | 'legal';
     fileList: Array<FileItem>;
     inputKey: number;
-    localUrls: Array<string>;
     replaceInputKey: number;
 }
 
 type Foundation = UploadFoundation<UploadProps, UploadState, DragEvent<HTMLDivElement>>;
+type Adapter = UploadAdapter<UploadProps, UploadState, DragEvent<HTMLDivElement>>;
 
 const defaultProps = {
     defaultFileList: [],
@@ -133,22 +129,6 @@ const defaultProps = {
     listType: 'list',
     hotSpotLocation: 'end',
     multiple: false,
-    onAcceptInvalid: noop,
-    onChange: noop,
-    beforeRemove: () => true,
-    beforeClear: () => true,
-    onClear: noop,
-    onDrop: noop,
-    onError: noop,
-    onExceed: noop,
-    onFileChange: noop,
-    onOpenFileDialog: noop,
-    onProgress: noop,
-    onRemove: noop,
-    onRetry: noop,
-    onSizeError: noop,
-    onSuccess: noop,
-    onPastingError: noop,
     promptPosition: 'right',
     showClear: true,
     showPicInfo: false,
@@ -353,49 +333,32 @@ function Upload(rawProps: UploadProps) {
 
     useLayoutEffect(() => runtime.handoverFocus());
 
-    const [foundation, state] = useFoundation<Foundation, UploadAdapter<UploadProps, UploadState, DragEvent<HTMLDivElement>>, UploadProps, UploadState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, UploadProps, UploadState>(
         UploadFoundation,
         props,
-        () => ({
-            fileList: props.defaultFileList || [],
-            replaceUid: '',
-            inputKey: 0,
-            replaceInputKey: 0,
-            dragAreaStatus: 'default',
-            localUrls: [],
-            cropperVisible: false,
-            cropperFile: null,
-            cropperSrc: '',
-            pendingImageFiles: [],
-            nonImageFiles: [],
-            croppedFiles: [],
-            isReplaceOperation: false,
-        }),
+        () => ({ ...UploadFoundation.getInitialState(props), inputKey: 0, replaceInputKey: 0 }),
         (base) => ({
-            notifyFileSelect: (files) => base.getProps().onFileChange(files),
-            notifyError: (error, fileInstance, fileList, xhr) => base.getProps().onError(error, fileInstance, fileList, xhr),
-            notifySuccess: (responseBody, file, fileList) => base.getProps().onSuccess(responseBody, file, fileList),
-            notifyProgress: (percent, file, fileList) => base.getProps().onProgress(percent, file, fileList),
-            notifyRemove: (file, fileList, fileItem) => base.getProps().onRemove(file, fileList, fileItem),
-            notifySizeError: (file, fileList) => base.getProps().onSizeError(file, fileList),
-            notifyExceed: (fileList) => base.getProps().onExceed(fileList),
-            updateFileList: (fileList, cb) => base.setState({ fileList }, cb),
+            notifyFileSelect: (files) => base.getProps().onFileChange?.(files),
+            notifyError: (error, fileInstance, fileList, xhr) => base.getProps().onError?.(error, fileInstance, fileList, xhr),
+            notifySuccess: (responseBody, file, fileList) => base.getProps().onSuccess?.(responseBody, file, fileList),
+            notifyProgress: (percent, file, fileList) => base.getProps().onProgress?.(percent, file, fileList),
+            notifyRemove: (file, fileList, fileItem) => base.getProps().onRemove?.(file, fileList, fileItem),
+            notifySizeError: (file, fileList) => base.getProps().onSizeError?.(file, fileList),
+            notifyExceed: (fileList) => base.getProps().onExceed?.(fileList),
             notifyBeforeUpload: ({ file, fileList }) => base.getProps().beforeUpload({ file, fileList }),
             notifyAfterUpload: ({ response, file, fileList }) => base.getProps().afterUpload({ response, file, fileList }),
             resetInput: () => base.setState({ inputKey: base.getState('inputKey') + 1 }),
             resetReplaceInput: () => base.setState({ replaceInputKey: base.getState('replaceInputKey') + 1 }),
-            notifyPastingError: (error) => base.getProps().onPastingError(error),
+            notifyPastingError: (error) => base.getProps().onPastingError?.(error),
             notifyCropError: (error) => base.getProps().onCropError?.(error),
-            updateDragAreaStatus: (dragAreaStatus) => base.setState({ dragAreaStatus: dragAreaStatus as UploadState['dragAreaStatus'] }),
-            notifyChange: ({ currentFile, fileList }) => base.getProps().onChange({ currentFile, fileList }),
-            updateLocalUrls: (localUrls) => base.setState({ localUrls }),
-            notifyClear: () => base.getProps().onClear(),
-            notifyPreviewClick: (file) => base.getProps().onPreviewClick(file),
+            notifyChange: ({ currentFile, fileList }) => base.getProps().onChange?.({ currentFile, fileList }),
+            notifyClear: () => base.getProps().onClear?.(),
+            notifyPreviewClick: (file) => base.getProps().onPreviewClick?.(file),
             notifyRetry: (fileItem) => base.getProps().onRetry?.(fileItem),
-            notifyDrop: (e, files, fileList) => base.getProps().onDrop(e.nativeEvent, files, fileList),
-            notifyAcceptInvalid: (invalidFiles) => base.getProps().onAcceptInvalid(invalidFiles),
-            notifyBeforeRemove: (file, fileList) => base.getProps().beforeRemove(file, fileList),
-            notifyBeforeClear: (fileList) => base.getProps().beforeClear(fileList),
+            notifyDrop: (e, files, fileList) => base.getProps().onDrop?.(e.nativeEvent, files, fileList),
+            notifyAcceptInvalid: (invalidFiles) => base.getProps().onAcceptInvalid?.(invalidFiles),
+            notifyBeforeRemove: (file, fileList) => base.getProps().beforeRemove?.(file, fileList) ?? true,
+            notifyBeforeClear: (fileList) => base.getProps().beforeClear?.(fileList) ?? true,
             getCropperCanvas: () => cropperRef.current?.getCropperCanvas() ?? null,
         })
     );
@@ -590,16 +553,6 @@ function Upload(rawProps: UploadProps) {
             </div>
         );
     };
-
-    // insertion phase runs before useFoundation's setState callbacks, so an upload started from one sees the new list
-    useInsertionEffect(() => {
-        if (props.fileList !== undefined) {
-            foundation.syncLatestFileList(props.fileList || []);
-        }
-    });
-
-    useDidUpdate(props.fileList, foundation.handleFileListPropChange);
-    useEventListener(getBody, 'paste', foundation.handlePasting, { enabled: addOnPasting && !disabled });
 
     useImperativeHandle(
         props.ref,

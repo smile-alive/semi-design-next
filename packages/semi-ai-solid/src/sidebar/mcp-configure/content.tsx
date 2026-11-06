@@ -51,7 +51,7 @@ export default function MCPConfigureContent(props: MCPConfigureContentSolidProps
     const { foundation, state } = useFoundation<MCPConfigureContentFoundation<MouseEvent>, MCPConfigureContentAdapter<MouseEvent>, MCPConfigureContentProps, MCPConfigureContentState>(
         MCPConfigureContentFoundation,
         props as MCPConfigureContentProps,
-        () => ({ mode: strings.MCP_MODE.INNER, inputValue: '', query: '' }),
+        () => MCPConfigureContentFoundation.getInitialState(),
         () => ({
             notifyConfigureClick: (e, option) => props.onConfigureClick?.(e, option),
             notifyEditClick: (e, option) => props.onEditClick?.(e, option),

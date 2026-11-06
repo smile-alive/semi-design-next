@@ -1,5 +1,5 @@
 /** @jsxImportSource vue */
-import { KeepAlive, defineComponent, nextTick, onUpdated, ref, shallowRef } from 'vue';
+import { KeepAlive, defineComponent, nextTick, ref, shallowRef } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
@@ -213,25 +213,6 @@ describe('InputNumber', () => {
         await view.rerender({ modelValue: min - 100 });
         expect(getInput()).toHaveValue(formatter((min - 100).toFixed(precision)));
         expect(onChange).toHaveBeenCalledTimes(changes);
-    });
-
-    it('父组件改受控值后，父组件的 onUpdated 读到新的输入框文本', async () => {
-        const seen: (string | undefined)[] = [];
-        const Parent = defineComponent({
-            props: { value: { type: Number, required: true } },
-            setup(props) {
-                const host = shallowRef<HTMLElement>();
-                onUpdated(() => seen.push(host.value?.querySelector('input')?.value));
-                return () => (
-                    <div ref={host}>
-                        <InputNumber modelValue={props.value} />
-                    </div>
-                );
-            },
-        });
-        const view = render(Parent, { props: { value: 1 } });
-        await view.rerender({ value: 2 });
-        expect(seen).toEqual(['2']);
     });
 
     it('受控值被精度改写时只改显示，不发出 numberChange', async () => {

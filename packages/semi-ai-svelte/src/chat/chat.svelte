@@ -1,15 +1,14 @@
 <script lang="ts" module>
     import type { ChatMessage } from './interface.js';
 
-    // shared, so a chat without chats or hints compares its list as unchanged
+    // shared, so a chat without chats keeps the same list between renders
     const EMPTY_CHATS: ChatMessage[] = [];
     const EMPTY_HINTS: string[] = [];
 </script>
 
 <script lang="ts">
-    import { untrack } from 'svelte';
     import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
-    import ChatFoundation, { type ChatAdapter } from '@fibrae/semi-ai-foundation/chat/foundation';
+    import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/chat/foundation';
     import { cssClasses as toastCssClasses } from '@fibrae/semi-foundation/toast/constants';
     import ToastListStore from '@fibrae/semi-foundation/toast/toast-list-foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
@@ -19,7 +18,6 @@
     import { groupRole } from '@fibrae/semi-ui-svelte/_base/group-role';
     import useDefaultProps from '@fibrae/semi-ui-svelte/_base/use-default-props';
     import useFoundation from '@fibrae/semi-ui-svelte/_base/use-foundation.svelte.js';
-    import watch from '@fibrae/semi-ui-svelte/_base/watch.svelte.js';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import Divider from '@fibrae/semi-ui-svelte/divider/divider.svelte';
     import { observeResize, useLocale } from '@fibrae/semi-ui-svelte/hooks';
@@ -32,13 +30,8 @@
     import InputBox from './input-box.svelte';
     import type { ChatProps } from './interface.js';
 
-    interface ChatState {
-        backBottomVisible: boolean;
-        uploadAreaVisible: boolean;
-    }
-
-    type Foundation = ChatFoundation<ChatProps, ChatState>;
-    type Adapter = ChatAdapter<ChatProps, ChatState>;
+    type Foundation = ChatFoundation<ChatProps>;
+    type Adapter = ChatAdapter<ChatProps>;
     type DragEventOnRoot = DragEvent & { currentTarget: EventTarget & HTMLDivElement };
 
     const defaults = useDefaultProps('Chat');
@@ -96,21 +89,32 @@
     let container: HTMLDivElement | undefined = $state();
     let dropArea: HTMLDivElement | undefined = $state();
     let inputBox = $state<ReturnType<typeof InputBox>>();
-
-    // what the last report compared against; a shallow copy, so an in-place push is told from the list before it
-    let previousChats = untrack(() => [...(chats ?? EMPTY_CHATS)]);
-    let previousHints = untrack(() => [...(hints ?? EMPTY_HINTS)]);
     const toastStore = new ToastListStore();
+
+    // A caller may push messages into a $state list and append to the last message's text in place, which keeps the
+    // list's identity, so the foundation is handed a copy rebuilt by those edits. Known limitation: other in-place
+    // edits (a deep content edit, a lone status flip) render but are not followed; upgrade when such an edit needs following.
+    const followedChats = $derived.by(() => {
+        const all = chats ?? EMPTY_CHATS;
+        const text = all.at(-1)?.content;
+        void (typeof text === 'string' || Array.isArray(text) ? text.length : text);
+        return [...all];
+    });
+
+    const followedHints = $derived([...(hints ?? EMPTY_HINTS)]);
 
     const { foundation, states } = useFoundation<Foundation, Adapter, ChatProps, ChatState>(
         ChatFoundation,
         {
             get chats() {
-                return chats;
+                return followedChats;
+            },
+            get hints() {
+                return followedHints;
             },
         },
-        () => ({ backBottomVisible: false, uploadAreaVisible: false }),
-        (base) => ({
+        () => ChatFoundation.getInitialState(),
+        () => ({
             getContainerRef: () => container as HTMLDivElement,
             notifyChatsChange: (next) => {
                 chats = next;
@@ -123,14 +127,8 @@
             notifyClearContext: () => onClear?.(),
             notifyMessageSend: (text, attachment) => onMessageSend?.(text, attachment),
             notifyInputChange: (value) => onInputChange?.(value),
-            setBackBottomVisible: (visible) => {
-                if (base.getState('backBottomVisible') !== visible) {
-                    base.setState({ backBottomVisible: visible });
-                }
-            },
             notifyStopGenerate: (event) => onStopGenerator?.(event),
             notifyHintClick: (hint) => onHintClick?.(hint),
-            setUploadAreaVisible: (visible) => base.setState({ uploadAreaVisible: visible }),
             manualUpload: (files) => inputBox?.insertFiles(files),
             getDropAreaElement: () => dropArea as HTMLDivElement,
         })
@@ -220,32 +218,6 @@
 
     // the stop and back-to-bottom buttons go away on their own; focus moves to the input instead of falling to the body
     const handoverToInput = (element: HTMLElement) => () => handoverFocus(element, inputBox?.getTextarea());
-
-    // Known limitation: the list is compared by its reference, length, last message and that message's text length, so
-    // a push and a text appended in place are followed; other in-place edits (a deep content edit, a lone status flip)
-    // render but are not followed, as the snapshot shares message objects.
-    watch(
-        () => {
-            const all = chats ?? EMPTY_CHATS;
-            const last = all.at(-1);
-            const text = last?.content;
-            return [all, all.length, last?.id, last?.status, typeof text === 'string' || Array.isArray(text) ? text.length : text] as const;
-        },
-        () => {
-            const next = chats ?? EMPTY_CHATS;
-            foundation.handleChatsChange(next, previousChats);
-            previousChats = [...next];
-        }
-    );
-
-    watch(
-        () => hints?.length,
-        () => {
-            const next = hints ?? EMPTY_HINTS;
-            foundation.handleHintsChange(next, previousHints);
-            previousHints = [...next];
-        }
-    );
 
     export function resetMessage() {
         // no message started this reset, so onMessageReset reports null

@@ -45,16 +45,16 @@ describe('ChatFoundation 上传禁用', () => {
 
 describe('ChatFoundation 拖拽', () => {
     const create = () => {
-        const adapter = { setUploadAreaVisible: vi.fn<() => void>(), manualUpload: vi.fn<() => void>() };
+        const adapter = { setState: vi.fn<(state: object) => void>(), manualUpload: vi.fn<() => void>() };
         return { adapter, foundation: new ChatFoundation(adapter as unknown as ChatAdapter) };
     };
 
     it('只在拖入文件时显示放置区', () => {
         const { adapter, foundation } = create();
         foundation.handleDragOver({ dataTransfer: { types: ['text/plain'] } as unknown as DataTransfer });
-        expect(adapter.setUploadAreaVisible).not.toHaveBeenCalled();
+        expect(adapter.setState).not.toHaveBeenCalled();
         foundation.handleDragOver({ dataTransfer: { types: ['Files'] } as unknown as DataTransfer });
-        expect(adapter.setUploadAreaVisible).toHaveBeenCalledWith(true);
+        expect(adapter.setState).toHaveBeenCalledWith({ uploadAreaVisible: true }, undefined);
     });
 
     it('放下的内容不含文件时不触发上传', () => {
@@ -80,8 +80,8 @@ describe('ChatFoundation 回到底部', () => {
         const adapter = {
             getContainerRef: () => element,
             getStates: () => ({ backBottomVisible }),
-            setBackBottomVisible: vi.fn<(visible: boolean) => void>((visible) => {
-                backBottomVisible = visible;
+            setState: vi.fn<(state: { backBottomVisible: boolean }) => void>((state) => {
+                backBottomVisible = state.backBottomVisible;
             }),
         };
         return { adapter, element, foundation: new ChatFoundation(adapter as unknown as ChatAdapter) };
@@ -112,15 +112,15 @@ describe('ChatFoundation 回到底部', () => {
             scrollTo(900);
             scrollTo(850);
             vi.advanceTimersByTime(200);
-            adapter.setBackBottomVisible.mockClear();
+            adapter.setState.mockClear();
             element.scrollHeight = 1200;
             foundation.handleChatsChange([{ id: '1', status: 'complete', content: 'more' }], [{ id: '1', status: 'complete' }]);
             vi.advanceTimersByTime(200);
-            expect(adapter.setBackBottomVisible).toHaveBeenCalledWith(true);
+            expect(adapter.setState).toHaveBeenCalledWith({ backBottomVisible: true }, undefined);
             element.scrollHeight = 100;
             foundation.handleHintsChange(['a'], []);
             vi.advanceTimersByTime(200);
-            expect(adapter.setBackBottomVisible).toHaveBeenLastCalledWith(false);
+            expect(adapter.setState).toHaveBeenLastCalledWith({ backBottomVisible: false }, undefined);
         } finally {
             vi.useRealTimers();
         }
@@ -160,7 +160,7 @@ describe('InputBoxFoundation.getDisableSend', () => {
 describe('ChatFoundation 自动滚动', () => {
     const create = () => {
         const element = { scrollTop: 0, scrollHeight: 500, clientHeight: 100 };
-        const foundation = new ChatFoundation({ getContainerRef: () => element, getStates: () => ({}), setBackBottomVisible: () => {} } as unknown as ChatAdapter);
+        const foundation = new ChatFoundation({ getContainerRef: () => element, getStates: () => ({}), setState: () => {} } as unknown as ChatAdapter);
         return { element, foundation };
     };
 
@@ -223,7 +223,7 @@ describe('ChatFoundation 自动滚动', () => {
         const foundation = new ChatFoundation({
             getContainerRef: () => element,
             getStates: () => ({}),
-            setBackBottomVisible: () => {},
+            setState: () => {},
             getProp: () => [],
             notifyChatsChange: () => {},
             notifyHintClick: () => {},

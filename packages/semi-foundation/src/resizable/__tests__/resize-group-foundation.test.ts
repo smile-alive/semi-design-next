@@ -42,7 +42,7 @@ const makeEl = (size: number) => ({
     ownerDocument: { defaultView: { getComputedStyle: () => noBox } },
 });
 
-describe('ResizeGroupFoundation.handleDirectionChange', () => {
+describe('ResizeGroupFoundation.handlePropsChange', () => {
     it('把项的尺寸移到新轴，并按手柄在新轴上的长度重新扣除手柄占用的空间', () => {
         const style = () => {
             const values: Record<string, string> = { width: 'calc(50% - 4px)' };
@@ -64,7 +64,7 @@ describe('ResizeGroupFoundation.handleDirectionChange', () => {
         expect(itemEls[0].style.width).toBe('calc(50% - 4px)');
 
         adapter.getProp = (() => 'vertical') as ResizeGroupAdapter['getProp'];
-        foundation.handleDirectionChange();
+        foundation.handlePropsChange();
 
         expect(itemEls.map((item) => item.style.height)).toEqual(['calc(50% - 10px)', 'calc(50% - 10px)']);
         expect(itemEls.map((item) => item.style.width)).toEqual([undefined, undefined]);

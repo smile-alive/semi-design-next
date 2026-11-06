@@ -4,7 +4,6 @@
     import '@fibrae/semi-foundation/collapse/collapse.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import { setCollapseContext } from './context.js';
     import type { CollapseProps } from './interface.js';
 
@@ -43,12 +42,11 @@
         CollapseFoundation,
         foundationProps,
         (view) => CollapseFoundation.getInitialState(view),
-        (base) => ({
+        () => ({
             notifyChange: (next, event) => {
                 activeKey = next;
                 onChange?.(next, event);
             },
-            setActiveSet: (activeSet) => base.setState({ activeSet }),
         })
     );
 
@@ -81,9 +79,6 @@
         },
         onClick: foundation.handleChange,
     });
-
-    // the foundation skips a value equal to its state, so a new array with the same keys changes nothing
-    watch(() => activeKey, foundation.syncActiveKey);
 </script>
 
 <div {...rest} class={[cssClasses.PREFIX, rest.class]}>

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/spin/constants';
-    import SpinFoundation, { type SpinAdapter } from '@fibrae/semi-foundation/spin/foundation';
+    import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/spin/foundation';
     import '@fibrae/semi-foundation/spin/spin.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
@@ -9,12 +9,8 @@
     import SpinIcon from './icon.svelte';
     import type { SpinProps } from './interface.js';
 
-    interface SpinState {
-        loading?: boolean;
-    }
-
-    type Foundation = SpinFoundation<SpinProps, SpinState>;
-    type Adapter = SpinAdapter<SpinProps, SpinState>;
+    type Foundation = SpinFoundation<SpinProps>;
+    type Adapter = SpinAdapter<SpinProps>;
 
     const defaults = useDefaultProps('Spin');
     let { size = defaults('size', 'middle'), spinning = defaults('spinning', true), delay = defaults('delay', 0), wrapperClassName = defaults('wrapperClassName'), childStyle = defaults('childStyle'), indicator = defaults('indicator'), tip = defaults('tip'), children, ...rest }: SpinProps = $props();
@@ -29,21 +25,17 @@
             get delay() {
                 return delay;
             },
+            get spinning() {
+                return spinning;
+            },
         },
-        () => ({ loading: spinning }),
-        (base) => ({
-            setLoading: (loading) => base.setState({ loading }),
-        })
+        (view) => SpinFoundation.getInitialState(view),
+        () => ({})
     );
 
     const prefixCls = cssClasses.PREFIX;
     const loading = $derived(delay ? states().loading : spinning);
     const blocked = $derived(Boolean(loading && children));
-
-    watch(
-        () => spinning,
-        (value) => foundation.handleSpinningChange(Boolean(value))
-    );
 
     watch(
         () => blocked,

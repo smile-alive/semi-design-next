@@ -2,15 +2,17 @@ import type React from 'react';
 import { useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { type strings, radioClasses as css } from '@fibrae/semi-foundation/radio/constants';
-import RadioFoundation, { type RadioAdapter, type RadioChangeEvent } from '@fibrae/semi-foundation/radio/radio-foundation';
+import RadioFoundation, { type RadioAdapter, type RadioBaseState, type RadioChangeEvent } from '@fibrae/semi-foundation/radio/radio-foundation';
 import '@fibrae/semi-foundation/radio/radio.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import { hasContent } from '../_utils';
 import { type RadioMode, useRadioGroupContext } from './context';
 import RadioInner from './radio-inner';
+
+type Foundation = RadioFoundation<RadioProps>;
+type Adapter = RadioAdapter<RadioProps>;
 
 export type RadioDisplayMode = 'vertical' | '';
 export type RadioType = typeof strings.TYPE_DEFAULT | typeof strings.TYPE_BUTTON | typeof strings.TYPE_CARD | typeof strings.TYPE_PURECARD;
@@ -44,9 +46,7 @@ export interface RadioProps extends ElementProps<'label', 'onChange'> {
     ref?: React.Ref<RadioHandle>;
 }
 
-export interface RadioState {
-    checked?: boolean;
-}
+export type RadioState = RadioBaseState;
 
 export type { RadioChangeEvent };
 
@@ -101,12 +101,11 @@ export default function Radio(rawProps: RadioProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const generatedId = useId();
 
-    const [foundation, state] = useFoundation<RadioFoundation<RadioProps, RadioState>, RadioAdapter<RadioProps, RadioState>, RadioProps, RadioState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, RadioProps, RadioState>(
         RadioFoundation,
         props,
         () => RadioFoundation.getInitialState(props),
         (base) => ({
-            setChecked: (checked) => base.setState({ checked }),
             notifyGroupChange: (e) => base.getContexts()?.radioGroup?.onChange?.(e),
             notifyChange: (e) => base.getProps().onChange?.(e),
             getInput: () => inputRef.current,
@@ -164,15 +163,6 @@ export default function Radio(rawProps: RadioProps) {
                 )}
             </div>
         ) : null;
-
-    // `checked` going back to undefined (a Form reset) unchecks; other non-boolean values are ignored
-    useDidUpdate(props.checked, (checked) => {
-        if (checked === undefined) {
-            foundation.setChecked(false);
-        } else if (typeof checked === 'boolean') {
-            foundation.setChecked(checked);
-        }
-    });
 
     useImperativeHandle(
         ref,

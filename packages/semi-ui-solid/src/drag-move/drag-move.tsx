@@ -2,7 +2,6 @@ import { type JSX, children, createEffect, onCleanup } from 'solid-js';
 import DragMoveFoundation, { type DragMoveAdapter } from '@fibrae/semi-foundation/drag-move/foundation';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 
 export interface DragMoveProps {
     handler?: () => HTMLElement | null;
@@ -80,8 +79,6 @@ export default function DragMove(rawProps: DragMoveProps) {
             }
         }
     });
-
-    useWatch(() => props.positionStrategy, foundation.updatePositionStrategy);
 
     onCleanup(() => {
         for (const element of bound) {

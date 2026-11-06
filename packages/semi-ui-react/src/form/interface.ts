@@ -4,11 +4,11 @@ import type { BaseFormApi as FormApi, ExclusiveFieldValidation, ExclusiveFormVal
 import type { CheckboxProps } from '../checkbox/index';
 import type { RadioProps } from '../radio/index';
 import type { BasicSelectValue, SelectProps } from '../select/index';
-import type useForm from './hooks/use-form';
 import type { LabelProps } from './label';
+import type useForm from './use-form';
 
 export type { BaseFormApi as FormApi, FieldError, FieldErrorInput, FieldValidator, FormState, FormValidator, RuleItem, RuleType } from '@fibrae/semi-foundation/form/interface';
-export type { WithFieldOption } from './hoc/with-field';
+export type { WithFieldOption } from './with-field';
 
 export type CommonFieldProps = {
     /** Field is required (except Form. Checkbox within the Group, Form. Radio) */

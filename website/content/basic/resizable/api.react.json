@@ -1,6 +1,6 @@
 {
     "resizable": {
-        "source": "packages/semi-ui-react/src/resizable/single/resizable.tsx",
+        "source": "packages/semi-ui-react/src/resizable/resizable.tsx",
         "props": {
             "boundElement": {
                 "zh-CN": "限制宽高的元素：`parent`、`window` 或一个 HTMLElement。",
@@ -82,7 +82,7 @@
         }
     },
     "resize-group": {
-        "source": "packages/semi-ui-react/src/resizable/group/resize-group.tsx",
+        "source": "packages/semi-ui-react/src/resizable/resize-group.tsx",
         "props": {
             "children": {
                 "zh-CN": "组内的 `ResizeItem` 与 `ResizeHandler`。",
@@ -97,7 +97,7 @@
         }
     },
     "resize-item": {
-        "source": "packages/semi-ui-react/src/resizable/group/resize-item.tsx",
+        "source": "packages/semi-ui-react/src/resizable/resize-item.tsx",
         "props": {
             "children": { "zh-CN": "项的内容。", "en-US": "Content of the item." },
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
@@ -124,7 +124,7 @@
         }
     },
     "resize-handler": {
-        "source": "packages/semi-ui-react/src/resizable/group/resize-handler.tsx",
+        "source": "packages/semi-ui-react/src/resizable/resize-handler.tsx",
         "props": {
             "children": { "zh-CN": "替换默认握把图标的内容。", "en-US": "Content that replaces the default grip icon." },
             "className": { "zh-CN": "手柄的类名。", "en-US": "Class name of the handle." },

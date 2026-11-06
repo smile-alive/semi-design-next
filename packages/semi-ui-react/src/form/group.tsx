@@ -10,7 +10,7 @@ import { Col } from '../grid/index';
 import InputGroup, { type InputGroupProps as BacisInputGroupProps } from '../input/input-group';
 import { useFieldBridgeContext } from './context';
 import ErrorMessage from './error-message';
-import { useFormState } from './hooks/index';
+import { useFormState } from './hooks';
 import type { FormState } from './interface';
 import Label, { type LabelProps } from './label';
 interface GroupErrorProps {

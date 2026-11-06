@@ -72,8 +72,8 @@ export interface DropdownHandle {
     rePosition: () => void;
 }
 
-type Foundation = DropdownFoundation<DropdownProps, DropdownBaseState>;
-type Adapter = DropdownAdapter<DropdownProps, DropdownBaseState>;
+type Foundation = DropdownFoundation<DropdownProps>;
+type Adapter = DropdownAdapter<DropdownProps>;
 
 const defaultProps = {
     prefixCls: cssClasses.PREFIX,
@@ -117,9 +117,8 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
     const { foundation, state } = useFoundation<Foundation, Adapter, DropdownProps, DropdownBaseState>(
         DropdownFoundation,
         props,
-        () => ({ popVisible: false }),
-        (base) => ({
-            setPopVisible: (popVisible) => base.setState({ popVisible }),
+        () => DropdownFoundation.getInitialState(),
+        () => ({
             notifyVisibleChange: (visible) => props.onVisibleChange?.(visible),
             getPopup: () => menuContainer?.closest<HTMLElement>('[popover]') ?? null,
             hidePopup: () => tooltip?.hide(),

@@ -1,20 +1,17 @@
 import React, { Fragment, useDeferredValue, useId, useImperativeHandle, useRef, type ReactNode, type CSSProperties, type MouseEvent } from 'react';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/cascader/constants';
 import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicTriggerRenderProps, type BasicScrollPanelProps, type CascaderAdapter } from '@fibrae/semi-foundation/cascader/foundation';
 import { calcMergeType } from '@fibrae/semi-foundation/cascader/util';
 import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
 import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/cascader/cascader.scss';
 import { IconClear, IconChevronDown } from '@fibrae/semi-icons-react';
 import type { Bivariant, ByMultiple, ElementProps } from '../_base/base';
 import type { ValidateStatus } from '../_base/base-component';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFocusHandover from '../_base/use-focus-handover';
 import useFoundation from '../_base/use-foundation';
 import type { VirtualListHandle } from '../_base/virtual-list';
@@ -29,6 +26,9 @@ import TagInput, { type TagInputHandle } from '../tag-input';
 import type { Position } from '../tooltip/index';
 import Trigger from '../trigger';
 import Item, { type CascaderData, type Entities, type Entity, type Data, type FilterRenderProps } from './item';
+
+type Foundation = CascaderFoundation<MouseEvent | React.KeyboardEvent, React.UIEvent<HTMLUListElement>>;
+type Adapter = CascaderAdapter<MouseEvent | React.KeyboardEvent, React.UIEvent<HTMLUListElement>>;
 
 export type { CascaderType, ShowNextType, KeyMapProps } from '@fibrae/semi-foundation/cascader/foundation';
 export type { CascaderData, Entity, Data, CascaderItemProps, FilterRenderProps } from './item';
@@ -165,10 +165,6 @@ const defaultProps = {
     displayProp: 'label',
     treeData: [],
     showNext: strings.SHOW_NEXT_BY_CLICK,
-    onExceed: noop,
-    onClear: noop,
-    onDropdownVisibleChange: noop,
-    onListScroll: noop,
     enableLeafClick: false,
     clickToSelect: false,
     searchPosition: strings.SEARCH_POSITION_TRIGGER,
@@ -285,7 +281,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     // ids are IDREFs for aria-activedescendant, so a key with spaces is encoded
     const optionId = (key: string) => `${popupId}-option-${encodeURIComponent(key)}`;
 
-    const [foundation, state] = useFoundation<CascaderFoundation<MouseEvent | React.KeyboardEvent, React.UIEvent<HTMLUListElement>>, CascaderAdapter<MouseEvent | React.KeyboardEvent, React.UIEvent<HTMLUListElement>>, BasicCascaderProps, BasicCascaderInnerData>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, BasicCascaderProps, BasicCascaderInnerData>(
         CascaderFoundation,
         props,
         () => CascaderFoundation.getInitialState(props),
@@ -306,13 +302,12 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                     tagInputRef.current?.blur();
                     triggerRef.current?.blur();
                 },
-                updateStates: (states) => base.setState(states as BasicCascaderInnerData),
                 notifyChange: (value) => base.getProps().onChange?.(value),
                 notifySelect: (selected) => base.getProps().onSelect?.(selected),
                 notifyOnSearch: (input) => base.getProps().onSearch?.(input),
                 notifyFocus: (e) => base.getProps().onFocus?.(e),
                 notifyBlur: (e) => base.getProps().onBlur?.(e),
-                notifyDropdownVisibleChange: (visible) => base.getProps().onDropdownVisibleChange(visible),
+                notifyDropdownVisibleChange: (visible) => base.getProps().onDropdownVisibleChange?.(visible),
                 notifyLoadData: (selectedOpt, callback, onReject) => {
                     const { loadData } = base.getProps();
                     if (loadData) {
@@ -328,9 +323,9 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                     }
                 },
                 notifyOnLoad: (newLoadedKeys, data) => base.getProps().onLoad?.(newLoadedKeys, data),
-                notifyListScroll: (e, panel) => base.getProps().onListScroll(e, panel),
-                notifyOnExceed: (data) => base.getProps().onExceed(data),
-                notifyClear: () => base.getProps().onClear(),
+                notifyListScroll: (e, panel) => base.getProps().onListScroll?.(e, panel),
+                notifyOnExceed: (data) => base.getProps().onExceed?.(data),
+                notifyClear: () => base.getProps().onClear?.(),
                 toggleInputShow: (showInput, cb) => {
                     const focusInTrigger = triggerRef.current?.contains(FocusTrapHandle.getActiveElement(triggerRef.current));
                     base.setState({ showInput }, () => {
@@ -395,6 +390,9 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
     // ARIA 1.2: the search input is the combobox while mounted (only when searching), else the trigger is a
     // select-only combobox exposing the selected path as its value. A triggerRender replaces the input
     const inputIsCombobox = triggerSearch && typeof triggerRender !== 'function' && (multiple || showInput);
+
+    // the owner may clear the value while the clear button holds focus; the combobox takes it back
+    const clearHandover = useFocusHandover<HTMLButtonElement>(() => (inputIsCombobox ? triggerRef.current?.querySelector('input') : triggerRef.current));
 
     const comboboxProps = {
         role: 'combobox',
@@ -679,15 +677,6 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
             </div>
         );
     };
-
-    useDidUpdate(props, (current, previous) => {
-        const optionsChanged = !isEqual(previous.treeData, current.treeData) || !isEqual(previous.keyMaps, current.keyMaps);
-        // by content: an inline value is a new array on every parent render, and each change resets the search
-        foundation.handleInputsChange({ optionsChanged, valueChanged: !isEqual(previous.value, current.value) }, current.value);
-    });
-
-    // the owner may clear the value while the clear button holds focus; the combobox takes it back
-    const clearHandover = useFocusHandover<HTMLButtonElement>(() => (inputIsCombobox ? triggerRef.current?.querySelector('input') : triggerRef.current));
 
     const renderClearBtn = () => {
         if (!clearable) {

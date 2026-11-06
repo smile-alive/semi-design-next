@@ -1,11 +1,9 @@
 <script setup lang="ts">
     import { computed, nextTick, onMounted, onUpdated, shallowRef, useId, watch } from 'vue';
-    import { isEqual } from 'es-toolkit';
     import { isRangeType } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
     import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
     import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
     import { IconCalendar, IconClock } from '@fibrae/semi-icons-vue';
-    import useDidUpdate from '../_base/use-did-update';
     import useFoundation from '../_base/use-foundation';
     import Combobox from '../time-picker/combobox.vue';
     import type { ComboboxHandle, ComboboxProps } from '../time-picker/interface';
@@ -53,15 +51,7 @@
         MonthsGridFoundation,
         props,
         (view) => MonthsGridFoundation.getInitialState(view),
-        (base) => ({
-            updateDaySelected: (selected) => base.setState({ selected }),
-            setRangeStart: (rangeStart) => base.setState({ rangeStart }),
-            setRangeEnd: (rangeEnd) => base.setState({ rangeEnd }),
-            setHoverDay: (hoverDay) => base.setState({ hoverDay }),
-            setOffsetRangeStart: (offsetRangeStart) => base.setState({ offsetRangeStart }),
-            setOffsetRangeEnd: (offsetRangeEnd) => base.setState({ offsetRangeEnd }),
-            updateMonthOnLeft: (monthLeft) => base.setState({ monthLeft }),
-            updateMonthOnRight: (monthRight) => base.setState({ monthRight }),
+        () => ({
             notifySelectedChange: (value, options) => emit('change', value, options),
             notifyPanelChange: (date, dateString) => emit('panelChange', date, dateString),
             setRangeInputFocus: (rangeInputFocus) => emit('rangeInputFocus', rangeInputFocus),
@@ -164,14 +154,6 @@
         const detail = detailOf(panelType);
         return [`${prefix}-month-grid-${panelType}`, { [`${prefix}-yam-showing`]: !isRange.value && (detail.isTimePickerOpen || detail.isYearPickerOpen) }];
     };
-
-    watch(
-        () => props.selectedValue,
-        (value) => foundation.updateSelectedFromProps(value as (Date | null)[])
-    );
-
-    // by content: a parent rendering `new Date(...)` each time must not pull the panel back
-    useDidUpdate(() => props.defaultPickerValue, foundation.initDefaultPickerValue, isEqual, 'pre');
 
     watch(
         () => (isRange.value ? Number(isYearOrTime(state.value.monthLeft)) + Number(isYearOrTime(state.value.monthRight)) : 0),

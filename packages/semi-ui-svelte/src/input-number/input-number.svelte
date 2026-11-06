@@ -16,8 +16,8 @@
         autofocus?: boolean;
     }
 
-    type Foundation = InputNumberFoundation<FoundationProps, InputNumberState, FocusEvent, KeyboardEvent>;
-    type Adapter = InputNumberAdapter<FoundationProps, InputNumberState, FocusEvent, KeyboardEvent>;
+    type Foundation = InputNumberFoundation<FoundationProps, FocusEvent, KeyboardEvent>;
+    type Adapter = InputNumberAdapter<FoundationProps, FocusEvent, KeyboardEvent>;
 
     const defaults = useDefaultProps('InputNumber');
 
@@ -171,11 +171,7 @@
         InputNumberFoundation,
         foundationProps,
         (view) => InputNumberFoundation.getInitialState(view),
-        (base) => ({
-            setValue: (text, cb) => base.setState({ value: text }, cb),
-            setNumber: (number, cb) => base.setState({ number }, cb),
-            setFocusing: (focusing, cb) => base.setState({ focusing }, cb),
-            setHovering: (hovering) => base.setState({ hovering }),
+        () => ({
             notifyChange: (next, event) => {
                 // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 ownWrite = foundationProps.value === undefined;
@@ -207,14 +203,18 @@
 
     setInputGroupContext(undefined);
 
+    // The host's tracker sees the masked value: after an own write, a parent setting `undefined` (Form reset) reads
+    // undefined before and after, so the change is reported here; any other parent value already differs.
     watch(
         () => value,
         (next) => {
-            if (ownWrite && next === lastWritten) {
+            if (!ownWrite || next === lastWritten) {
                 return;
             }
             ownWrite = false;
-            foundation.handleValueChange(next as number | string);
+            if (next === undefined) {
+                foundation.handlePropsChange();
+            }
         }
     );
 

@@ -8,11 +8,13 @@ import '@fibrae/semi-foundation/cropper/cropper.scss';
 import type { ElementProps } from '../_base/base';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useEventListener from '../_base/use-event-listener';
 import useFoundation from '../_base/use-foundation';
 import useResizeObserver from '../_base/use-resize-observer';
 import useLocale from '../locale/use-locale';
+
+type Foundation = CropperFoundation;
+type Adapter = CropperAdapter<CropperFoundationProps>;
 
 export interface CropperHandle {
     /** Draws the area inside the cropper box, at the image's own resolution, onto a new canvas */
@@ -64,16 +66,10 @@ export default function Cropper(rawProps: CropperProps) {
     const imgRef = useRef<HTMLImageElement>(null);
     const helpId = useId();
 
-    const [foundation, state] = useFoundation<CropperFoundation, CropperAdapter<CropperFoundationProps>, CropperFoundationProps, CropperState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, CropperFoundationProps, CropperState>(
         CropperFoundation,
         props,
-        () => ({
-            imgData: { width: 0, height: 0, centerPoint: { x: 0, y: 0 } },
-            cropperBox: { width: 0, height: 0, centerPoint: { x: 0, y: 0 } },
-            zoom: 1,
-            rotate: 0,
-            loaded: false,
-        }),
+        () => CropperFoundation.getInitialState(),
         (base) => ({
             getContainer: () => containerRef.current,
             notifyZoomChange: (zoom) => base.getProps().onZoomChange?.(zoom),
@@ -91,16 +87,6 @@ export default function Cropper(rawProps: CropperProps) {
     // every commit: wheel zoom and image load change the state too; an extra render lands before paint
     useLayoutEffect(() => {
         foundation.syncRotateAndZoom();
-    });
-
-    useDidUpdate(props.aspectRatio, foundation.applyAspectRatio);
-
-    useDidUpdate(props.zoom, (zoom) => {
-        if (zoom === undefined) foundation.syncRotateAndZoom({ zoom: 1 });
-    });
-
-    useDidUpdate(props.rotate, (rotate) => {
-        if (rotate === undefined) foundation.syncRotateAndZoom({ rotate: 0 });
     });
 
     useLayoutEffect(() => {

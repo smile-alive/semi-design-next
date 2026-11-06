@@ -6,7 +6,6 @@ import CollapsibleFoundation, { type CollapsibleAdapter, type CollapsibleFoundat
 import '@fibrae/semi-foundation/collapsible/collapsible.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import useMergedRef from '../_base/use-merged-ref';
 
@@ -66,8 +65,6 @@ export default function Collapsible(rawProps: CollapsibleProps) {
     }
 
     const transitioning = CollapsibleFoundation.isInTransition(props, next);
-
-    useDidUpdate(isOpen, foundation.handleOpenChange);
 
     return (
         <div

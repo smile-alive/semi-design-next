@@ -8,9 +8,12 @@ import type { ResponseError } from './data-adapter/interface';
 
 export type { Reference };
 
-export interface DialogueAdapter<P extends DialogueBaseProps = DialogueBaseProps, S extends DialogueBaseState = DialogueBaseState> extends DefaultAdapter<P, S> {
+// shared, so a dialogue without chats or hints compares its list as unchanged
+const EMPTY_CHATS: Message[] = [];
+const EMPTY_HINTS: string[] = [];
+
+export interface DialogueAdapter<P extends DialogueBaseProps = DialogueBaseProps> extends DefaultAdapter<P, DialogueState> {
     getContainerRef: () => HTMLDivElement;
-    updateSelected: (selectedIds: Set<string>) => void;
     notifySelect: (selectedIds: string[]) => void;
     notifyChatsChange: (chats: Message[]) => void;
     notifyLikeMessage: (message: Message) => void;
@@ -19,19 +22,19 @@ export interface DialogueAdapter<P extends DialogueBaseProps = DialogueBaseProps
     notifyMessageDelete: (message: Message) => void;
     notifyMessageReset: (message: Message) => void;
     notifyHintClick: (hint: string) => void;
-    setBackBottomVisible: (visible: boolean) => void;
 }
 
 export interface DialogueBaseProps {
     chats?: Message[];
+    hints?: string[];
 }
 
-export interface DialogueBaseState {
-    backBottomVisible?: boolean;
-    selectedIds?: Set<string>;
+export interface DialogueState {
+    backBottomVisible: boolean;
+    selectedIds: Set<string>;
 }
 
-export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBaseProps, S extends DialogueBaseState = DialogueBaseState> extends BaseFoundation<DialogueAdapter<P, S>, P, S> {
+export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBaseProps> extends BaseFoundation<DialogueAdapter<P>, P, DialogueState> {
     #cancelAnimation?: () => void;
     #scrollFrame?: number;
     /** Whether new content scrolls into view: stops when the user scrolls up, resumes on return or on a new message */
@@ -43,14 +46,16 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
      */
     #position = { top: 0, height: 0 };
 
+    static override readonly propKeys = ['chats', 'hints'];
+
     #syncBackBottomVisible({ scrollHeight, clientHeight, scrollTop }: HTMLElement) {
         const { backBottomVisible } = this.getStates();
         if (scrollHeight - scrollTop - clientHeight <= strings.SHOW_SCROLL_GAP) {
             if (backBottomVisible) {
-                this.adapter.setBackBottomVisible(false);
+                this.setState({ backBottomVisible: false });
             }
         } else if (!backBottomVisible) {
-            this.adapter.setBackBottomVisible(true);
+            this.setState({ backBottomVisible: true });
         }
     }
 
@@ -96,6 +101,10 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         }
     }
 
+    static getInitialState(): DialogueState {
+        return { backBottomVisible: false, selectedIds: new Set() };
+    }
+
     static getContentFlags(role?: string, status?: string, mode?: string) {
         const user = role === strings.ROLE.USER;
         const bubble = mode === strings.MODE.BUBBLE || (mode === strings.MODE.USER_BUBBLE && user);
@@ -111,6 +120,11 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         this.#cancelAnimation?.();
         cancelAnimationFrame(this.#scrollFrame);
         this.#updateBackBottomVisible.cancel();
+    }
+
+    override handlePropsChange(prev: Partial<P>) {
+        const { chats, hints } = this.getProps();
+        this.handleListUpdate({ chats: prev.chats ?? EMPTY_CHATS, hints: prev.hints ?? EMPTY_HINTS }, { chats: chats ?? EMPTY_CHATS, hints: hints ?? EMPTY_HINTS });
     }
 
     /**
@@ -152,12 +166,12 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
 
     handleSelectAll = () => {
         const selectedSet = new Set<string>(this.#getChats().map((chat) => chat.id));
-        this.adapter.updateSelected(selectedSet);
+        this.setState({ selectedIds: selectedSet });
         this.adapter.notifySelect(Array.from(selectedSet));
     };
 
     handleDeselectAll = () => {
-        this.adapter.updateSelected(new Set());
+        this.setState({ selectedIds: new Set() });
         this.adapter.notifySelect([]);
     };
 
@@ -170,7 +184,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         } else {
             newSelectedSet.delete(id);
         }
-        this.adapter.updateSelected(newSelectedSet);
+        this.setState({ selectedIds: newSelectedSet });
         this.adapter.notifySelect(Array.from(newSelectedSet));
     };
 

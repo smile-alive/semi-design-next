@@ -133,7 +133,7 @@ export default function SideSheet(rawProps: SideSheetProps) {
     const { foundation } = useFoundation<Foundation, Adapter, FoundationProps, SideSheetState>(
         SideSheetFoundation,
         props,
-        () => ({}),
+        () => SideSheetFoundation.getInitialState(),
         (base) => {
             // a mask confined to a custom popup container leaves the rest of the page usable
             const isModal = () => Boolean(base.getProp('mask')) && coversPage(base.getProp('getPopupContainer') ?? config().getPopupContainer);

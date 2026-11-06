@@ -4002,7 +4002,7 @@ describe('TreeSelect Vue', () => {
         expect(getSelectedLabels()).toEqual(['北京']);
     });
 
-    it('V7 KeepAlive 切走再切回后弹层关闭，发 dropdownVisibleChange(false)，不发 blur', async () => {
+    it('V7 KeepAlive 切走再切回后弹层仍打开，不发 dropdownVisibleChange(false)，不发 blur', async () => {
         const shown = ref(true);
         const onBlur = spy<'blur'>();
         const onDropdownVisibleChange = spy<'dropdownVisibleChange'>();
@@ -4022,11 +4022,12 @@ describe('TreeSelect Vue', () => {
         expect(getPopover()).not.toBeNull();
         shown.value = false;
         await settle();
-        expect(onDropdownVisibleChange).toHaveBeenLastCalledWith(false);
         shown.value = true;
         await settle();
-        expect(getTrigger()).toHaveAttribute('aria-expanded', 'false');
-        expect(getPopover()).toBeNull();
+        expect(getTrigger()).toHaveAttribute('aria-expanded', 'true');
+        expect(getPopover()).not.toBeNull();
+        expect(onDropdownVisibleChange).toHaveBeenCalledTimes(1);
+        expect(onDropdownVisibleChange).toHaveBeenLastCalledWith(true);
         expect(onBlur).not.toHaveBeenCalled();
     });
 

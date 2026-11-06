@@ -13,6 +13,7 @@
 - 破坏性：AI 组件拆为独立包（D9）：AIChatInput、AIChatDialogue、Chat、Sidebar、Annotation、MCPConfigure 与 `getConfigureItem`、`chatCompletionToMessage` 等改从 `@fibrae/semi-ai-react` 导入。深路径 `@fibrae/semi-ui-react/{ai-chat-input,ai-chat-dialogue,chat,sidebar}/...` 改为 `@fibrae/semi-ai-react/...`，`@fibrae/semi-foundation/{同上}/...` 改为 `@fibrae/semi-ai-foundation/...`。
 - 破坏性：`@fibrae/semi-ui-react/styles.css` 不含 AI 样式，整包加载时在其后引入 `@fibrae/semi-ai-react/styles.css`（自定义前缀用 `semi-build-scss --ai <semi-ai-foundation>`）；`OverrideDefaultProps` 引入 AI 包后才含 AI 组件名。新增对应的 `@fibrae/semi-ai-vue`、`@fibrae/semi-ai-solid`、`@fibrae/semi-ai-svelte`，样式在对应 UI 包的 `styles.css` 之后引入各自的 `styles.css`（如 `@fibrae/semi-ui-vue/styles.css` 之后引入 `@fibrae/semi-ai-vue/styles.css`）。
 - 破坏性：目录与文件名统一为 kebab-case（D4）：`@fibrae/semi-ui-react/iconButton/index` 改为 `@fibrae/semi-ui-react/icon-button/index`，`@fibrae/semi-foundation/datePicker/datePicker.scss` 改为 `@fibrae/semi-foundation/date-picker/date-picker.scss`，`@fibrae/semi-ui-react/table/Table` 改为 `@fibrae/semi-ui-react/table/table`；导出名、类名、Sass 变量名与语言包文件名不变。文档站页面路径同样改为 kebab-case，如 `/input/datepicker` 改为 `/input/date-picker`。
+- 破坏性（深路径）：semi-ui-react、semi-ai-react 的子目录平铺，只导出一个模块的目录改为同名文件。semi-ui-react：`color-picker/{alpha-slider,color-choose-area,color-slider,data-part}/index` 改为 `color-picker/<名>`；`form/hoc/with-*` 改为 `form/with-*`，`form/hooks/use-*` 改为 `form/use-*`，`form/hooks/index` 改为 `form/hooks`；`resizable/group/resize-context` 改为 `resizable/context`，`resizable/group/<名>`、`resizable/single/<名>` 改为 `resizable/<名>`；`toast/use-toast/index`、`modal/use-modal/index`、`notification/use-notification/index` 改为 `toast/use-toast`、`modal/use-modal`、`notification/use-notification`，`modal/use-modal/hook-modal` 改为 `modal/hook-modal`。semi-ai-react：`chat/chat-box/index` 改为 `chat/chat-box`，`chat/chat-box/<名>` 改为 `chat/<名>`，`chat/input-box/index` 改为 `chat/input-box`，`ai-chat-input/extension/<名>-slot/index` 改为 `ai-chat-input/extension/<名>-slot`，`ai-chat-input/extension/input-slot/component` 改为 `ai-chat-input/extension/input-slot-component`。
 - 破坏性：发布产物合并为单一 `dist/`（只含 ESM、类型与 CSS），删除 `lib/`、`dist/css/`、`./dist/*` 与 foundation 的 `./lib/*` 子路径。`@fibrae/semi-ui/dist/css/semi.min.css` 改为 `@fibrae/semi-ui-react/styles.css`，`dist/css/semi-tailwind.css` 改为 `@fibrae/semi-ui-react/tailwind.css`，`dist/css/semi-ai.min.css` 改为 `@fibrae/semi-ai-react/styles.css`，其余框架包同理。
 - `semi-scss-compile` 的 `foundationPath`、`aiFoundationPath`（`-f`、`--ai`）指向包内 `dist/`，`iconPath`（`-i`）改为 `node_modules/@fibrae/semi-icons-core/dist`；构建插件只能与本版本的 Semi 包搭配。
 - 新增 hooks 入口 `@fibrae/semi-ui-react/hooks`、`@fibrae/semi-ui-vue/hooks`，导出 `useLocale`、`useClickOutside`、`useCopied`、`useDidUpdate`、`useEventListener`（及 `getWindow`、`getDocument`、`getBody`）、`useFocusHandover`、`useResizeObserver`，React 另有 `useMergedRef`。Vue 另有 `useMounted`（服务端与 hydration 期间为 `false`，挂载后为 `true`）与 `useRecordFocus(scope, visible)`（在 `visible` 变为 `true` 时记录焦点，首帧可见时在 `onBeforeMount` 记录，服务端不执行）。React 的 `useResizeObserver(target, onResize, { enabled })` 接受 ref、元素或 `null`，为空或 `enabled` 为 false 时不观察。
@@ -48,6 +49,10 @@
 - Svelte：`@fibrae/semi-ui-svelte` 根导出的类型名都带组件前缀（如 `ButtonProps`、`ResizableSize`、`SpaceAlign`、`CardMetaProps`、`GridGutter`、`ModalSize`、`TypographyTextProps`），`Size`、`Type`、`Direction` 这类通用名不从包根导出。
 - Vue：空插槽三种语义：`#closeIcon` 为空回落默认图标（隐藏用 `closable=false`），Modal 的 `#header`、`#footer` 为空则隐藏，Carousel 的 `#leftArrow`、`#rightArrow` 为空不回落。原生属性只在类型中，运行时经 attrs 透传。
 - 服务端渲染：默认打开的弹层不进服务端 HTML，hydration 后才打开。Toast、Notification、Modal 的命令式 API 只在客户端调用，在服务端调用抛带说明的错误。Calendar 在服务端渲染时需传 `displayValue`，「今天」标记只在挂载后出现；服务端与客户端时区须一致，否则给 DatePicker、TimePicker 传 `timeZone`（可经 ConfigProvider）。`semiGlobal` 只在应用启动时设置，按请求变化的配置用 ConfigProvider。
+- 行为变化：组件被隐藏而不卸载（React StrictMode 重放、`<Activity>`、Vue `<KeepAlive>`）时，已打开的面板、弹层、卡片、确认框、裁剪弹窗保持打开，随子树隐藏，重新显示后原样出现，隐藏与显示都不发 `onVisibleChange` 等可见性通知。原来 Vue 版在 KeepAlive 失活时关闭这些弹层（部分还会发 `visibleChange(false)` 或写回 `v-model`），React 的 Tooltip 系在 Activity 隐藏时关闭。涉及 Tooltip、Popover、Dropdown、Popconfirm、Select、AutoComplete、TreeSelect、Cascader、DatePicker、TimePicker、Calendar 的事件卡片、Chat 的删除确认、AIChatInput 面板、Upload 裁剪弹窗、Navigation 子菜单。Vue 的 `useClickOutside` 与 HotKeys 在 KeepAlive 缓存期间不响应。
+- Vue：多个组件对受控 prop 的反应改在 DOM 更新之后执行，父组件在自己的 `onUpdated` 里第一次读子组件 DOM 可能仍是旧值，下一轮才是新值，同一次提交内用户看不到闪烁。涉及 Pagination（`currentPage`、`total`、`pageSize`）、InputNumber、Input、TextArea、TagInput、PinCode 的受控值，DatePicker（`value`、`timeZone`、`defaultPickerValue`）、Cascader（`treeData`、`keyMaps`、`modelValue`），Table 的 `dataSource` 变化后多渲染一轮。
+- React：多数组件的回调 prop 不再有 `noop` 默认值，改以 `?.()` 调用，显式传 `null` 不再抛错；读取组件 `defaultProps` 取回调的外部代码会看到 `undefined`。
+- 公开类型：React 的 `JsonViewerState`、`DayColState`、`MonthCalendarState` 移除；`OverflowListState`、`UserGuideState`、`AnchorState`、`PopconfirmState` 改为 foundation 类型的别名；Vue、Svelte 的 `UserGuideState`、`AnchorState` 改为从 foundation 再导出。
 - Svelte：RadioGroup、PinCode、Slider、InputGroup、TagInput 上传的 `onfocusin`、`onfocusout`、`onmouseenter`、`onmouseleave` 与组件自身的处理同时生效，不再被覆盖。
 
 ### 构建与宿主
@@ -189,6 +194,7 @@
 - `multiple` 只对 `type="date"` 生效；支持 `type="year"`，选中值为该年 1 月 1 日。`onOpenChange` 只在由关到开时上报一次，`needConfirm` 时 Esc 关闭会调用 `onCancel`，键入无法解析的日期按 Enter 不再以今天提交。
 - `month`、`monthRange` 的预设与回落值取当月 1 日 00:00，`disabledDate` 以每月 1 日 00:00 调用，`rangeStart`、`rangeEnd` 无值时为 `''`。`timeZone` 取值顺序为 prop、ConfigProvider、全局默认值。
 - 范围类型（`dateRange`、`dateTimeRange`、`monthRange`）只提交两端都是有效日期的值：只选或只输入一端时不写入 `value`，不触发 `onChange`、`onConfirm`，确认按钮禁用，输入框保留已输入的文字；清空仍触发 `onChange([], [])`。
+- `open` 或 `defaultOpen` 为 true 且 `disabled` 时，初始不显示面板。
 - 首次渲染即由 `value`、`defaultValue` 算出选中值，服务端 HTML 的输入框带格式化后的日期（原来挂载后才填入）。
 - 面板的「今天」标记在服务端渲染与 hydration 期间不出现，hydration 后再标出，并在跨日时更新（原来在面板挂载时固定）。
 - Vue：`v-model` 与 `v-model:open`；`triggerRender`、`renderDate`、`renderFullDate` 改为插槽 `#trigger`、`#date`、`#fullDate`；`topSlot`、`bottomSlot`、`leftSlot`、`rightSlot`、`prefix`、`insetLabel`、`clearIcon` 改为同名插槽，`rangeSeparatorNode` 改为 `#rangeSeparator`；`autoFocus` 改为 `autofocus`。
@@ -211,6 +217,7 @@
 - 行为变化：`closeOnEsc` 默认 `true`（Modal 内的提示先按 Esc 只关提示，旧行为传 `closeOnEsc={false}`）；Popover 的 `disableFocusListener` 默认改为 `false`；新增 `afterOpen`（Vue `afterOpen` 事件，进场动画结束后调用）与 `onOpen`（Vue `open` 事件，弹层显示时调用，早于 `afterOpen`），Popover、Popconfirm、Dropdown 一并转发；受控 `visible` 只报告请求，触发器操作只报告 `onVisibleChange(true)`、关闭类操作只报告 `(false)`，React 在 `visible={false}` 时须在回调中回写才会打开。
 - 行为变化：进出场改为 keyframes 动画（`semi-tooltip-zoom-in`、`semi-tooltip-zoom-out`），Popover、Dropdown 同样适用；关闭时弹层在出场动画期间仍为 `:popover-open`，动画结束才隐藏，出场中重新打开从头播放进场。覆盖过弹层 `transition` 的自定义样式改为覆盖 `animation`。
 - 行为变化：React 中触发元素卸载后仍显示的弹层，在外部按下时照常通知 `onClickOutSide` 并按触发方式关闭，与 Vue 一致。
+- 行为变化：hover 触发的弹层在隐藏后重新显示时，若指针与焦点都已离开触发器与弹层则关闭；隐藏期间受控 `visible` 变为 false 或 `condition` 变为 false，重新显示时关闭。React 的 `<Activity>` 隐藏不再误发 `afterClose`；Svelte 无出场动画的关闭，`afterClose` 推迟一个微任务。
 - Vue：内容用 `#content="{ initialFocusRef }"`，触发器用默认插槽，可见性用 `visible`、`update:visible`、`visibleChange`；`class`、`style` 落在弹层，其他未声明属性丢弃；可访问名称键为 `ariaLabel`、`ariaLabelledby`，另有 `ariaDescribedby`（React 无）。
 - Solid：触发器写成函数 children `(getTriggerProps) => JSX`，把 `getTriggerProps(own)` 的结果展开到触发元素上；要与注入值合并的 `ref`、`tabIndex`、`aria-*`、`data-popupid` 作为 `own` 传入，写在展开之后会整体覆盖。退出描述写 `getTriggerProps({ 'aria-describedby': null })`，后代经 `useTooltipDescription()` 取弹层 id。
 - Solid：非函数 children 一律包进 Tooltip 自己的 span，Button、Input、链接这类可聚焦触发器要用函数形式；禁用、加载中的特殊触发器只识别 Semi Button、IconButton、Input、TextArea、InputNumber、PinCode、TagInput、Switch、Checkbox、Radio、Rating、Slider、Select、TreeSelect、Cascader、AutoComplete、TimePicker、DatePicker、Upload、Pagination、Transfer，不识别原生 `<button disabled>`。`role="dialog"` 时按渲染出的元素（`own.role`、`role` 属性、button、带 href 的 a）决定是否输出 `aria-haspopup`、`aria-expanded`、`aria-controls`。
@@ -229,6 +236,7 @@
 ### Modal、SideSheet
 
 - 破坏性：`Modal.info`、`success`、`error`、`warning`、`confirm`、`useModal`、`destroyAll` 改由 `modal/index` 挂载，深导入 `modal/modal` 的组件不再带这些静态方法；`cancelButtonProps.onClick`、`okButtonProps.onClick` 不再替换内置处理，先于 `onCancel`、`onOk` 调用，需替换的改在这两个回调里处理。
+- 行为变化：SideSheet 的 `visible` 变为 false 时把焦点还给打开前的元素（四个框架一致）。
 - 破坏性（类型）：`onCancel` 参数为 `React.MouseEvent | KeyboardEvent`（Esc 传原生事件）；Modal 的 `direction` 收窄为 `'ltr' | 'rtl'`，删除深路径导出的 `ConfirmType`、`Directions`；`Modal.useModal` 返回 `[ModalHookApi, ReactElement]`；`SideSheetState` 删除 `displayNone`；深路径 `side-sheet/index` 导出的 `SideSheetContentProps` 以 `sheetSize` 代替 `width`、`height`。
 - 行为变化：Modal 的 `footer={undefined}`、`header={undefined}` 与不传相同，隐藏传 `null`；SideSheet 隐藏关闭按钮用 `closable={false}`；Modal 新增 `role?: 'dialog' | 'alertdialog'`（确认框默认 `alertdialog`），组件版不再默认设 `aria-describedby`；模态判断统一为 Modal `mask && (容器在 body 内 || maskFixed)`、SideSheet `mask && 容器在 body 内`，`mask={false}` 时不再锁 body 滚动、不拦截页面点击，非模态不再把 Tab 锁在层内。
 - Vue：Modal 用 `v-model:visible`，仅取消路径更新，确定按钮只调 `onOk`；`title`、`header`、`footer`、`icon`、`closeIcon`、`modalRender` 改为 `#title`、`#header`、`#footer`、`#icon`、`#closeIcon`、`#modal="{ modal }"`；`useModal` 返回 `[api, Holder]` 并须渲染 `<Holder />`，静态方法读应用上下文时先 `app.use(Modal)`。SideSheet 的 `title`、`footer`、`closeIcon` 改同名插槽，`onCancel` 改 `cancel` 事件，`afterVisibleChange` 改同名事件，新增 `update:visible`，无 `defaultVisible`。
@@ -263,6 +271,7 @@
 - Svelte：`components` 只接受字符串标签；`onRow`、`onCell`、`onHeaderRow` 返回 Svelte 小写属性（`onclick`、`colspan`）；受控 `pagination.currentPage` 表示远程分页，Table 不再切片 `dataSource`。
 - `virtualized.itemSize` 可以是函数 `(index, { sectionRow, expandedRow }) => number`，返回空值时用默认行高；`virtualizedData`、`itemSize` 或 `size` 变化时重新计算行偏移。
 - Vue：`Table.Column` 子列的 `defaultSortOrder`、`defaultFilteredValue` 在服务端渲染的首帧已生效。
+- 服务端渲染的首帧已带筛选排序后的行键、行 key 映射与禁用行键，表头全选框在服务端 HTML 中的勾选状态可能与原来不同；隐藏再显示不重算分页；缺少 `rowKey` 的开发模式警告只在相关 prop 变化时触发。Solid：`pagination.pageSize` 变化的比较错误已修正。
 - 只改 `pagination.pageSize` 时行数随之更新。合并表头中 `colSpan`、`rowSpan` 为 0 的列不再让后面列的固定偏移错位。
 
 ### Checkbox、Switch
@@ -467,7 +476,7 @@
 - 破坏性：删除 `getPopupContainer`、`zIndex`、`dropdownMargin`；`dropdownMatchSelectWidth` 让下拉最小宽度跟随触发器的当前宽度（`--semi-tooltip-trigger-width`），`style.width` 不再复制到下拉。删除从未生效的 SCSS 变量 `$font-treeSelect_default-fontSize` 等，`$height-treeSelect_popover`（300px）开始生效。
 - 破坏性（类型）：`TreeSelectProps` 改为泛型 `TreeSelectProps<T, Multiple, WithObject>`，`onChange` 参数随 `multiple` 与 `onChangeWithObject` 区分，`OnChange` 接口改为 `OnChangeArgs`（FormTreeSelect 的行内 `onChange` 参数推断不出来）；`onClear` 参数改为 `React.MouseEvent`；删除 `mouseEnterDelay`、`mouseLeaveDelay`；`searchPosition` 收窄为 `'dropdown' | 'trigger'`；`TreeSelectTriggerRenderProps` 删除索引签名。
 - 破坏性：`onFocus`、`onBlur` 跟随 DOM 焦点，以整个组件（触发器、搜索框、标签、清除按钮与下拉）为界成对触发，Tab 进入也触发 `onFocus`，组件内部移动不触发。`searchRender` 参数新增 `ref` 需写到输入框上，`autofocus` 键改为 `autoFocus`；清除按钮改为带名称的原生 `button`；键盘按 APG combobox，`aria-activedescendant` 指向当前节点。
-- Vue：`v-model` 与 `v-model:expandedKeys`，`loadedKeys` 配 `update:loadedKeys`；回调改为事件 `change`（`(value, node, event)`）、`expand`、`load`、`select`、`search`、`dropdownVisibleChange`（对应 `onVisibleChange`）、`focus`、`blur`、`clear`、`keydown`；render 属性改为 `#label`、`#icon`、`#selectedItem`、`#tag`、`#trigger`、`#search`（空插槽隐藏搜索框，不提供 `searchRender`）等插槽；`treeData` 只在整体替换时生效；`multiple` 默认 `undefined`，不能经全局默认值设置；`<KeepAlive>` 失活关闭下拉。
+- Vue：`v-model` 与 `v-model:expandedKeys`，`loadedKeys` 配 `update:loadedKeys`；回调改为事件 `change`（`(value, node, event)`）、`expand`、`load`、`select`、`search`、`dropdownVisibleChange`（对应 `onVisibleChange`）、`focus`、`blur`、`clear`、`keydown`；render 属性改为 `#label`、`#icon`、`#selectedItem`、`#tag`、`#trigger`、`#search`（空插槽隐藏搜索框，不提供 `searchRender`）等插槽；`treeData` 只在整体替换时生效；`multiple` 默认 `undefined`，不能经全局默认值设置。
 - Solid：`ref` 是触发器根元素 `TreeSelectElement`（外层 Tooltip 以它为锚点，另带 `search`、`close`），`focus()` 只聚焦 combobox（搜索框在触发器上时聚焦该搜索框，含 `searchRender` 返回的 textarea），不打开下拉，`blur()` 释放组件内持有的焦点；`class` 代替 `className`，`style`、`dropdownStyle` 用 CSS 对象；`onFocus`、`onBlur` 收到原生事件。
 - Solid：`triggerRender`、`searchRender` 只调用一次，参数为活对象，字段要在返回的 JSX 中读取；`searchRender` 参数的 `ref` 是回调，要写到文本框上，自动聚焦键为 `autofocus`；搜索结果不延后渲染；下拉打开后方向键由 combobox 处理，焦点不移入下拉搜索框；下拉树的行写法同 Tree 的 Solid 说明。
 - Solid 破坏性（类型）：`treeData` 同 Tree 收紧，`label` 只接受 `string | number`，节点数据不带 `icon`；新增 `icon` 属性（元素或 `(row: TreeRowProps) => JSX.Element`），用法同 Tree 的 `icon`。单选的 `renderSelectedItem` 只在内置触发器显示已选内容时调用，传 `triggerRender` 时不调用。
@@ -478,6 +487,7 @@
 - Svelte：设置 `trigger` snippet 后根元素不带 `semi-tree-select` 类，只保留传入的 `class`、`style`、`data-*`。
 - Svelte：`value` 被父级设为 `undefined` 时，选择框清空显示。
 - `checkRelation="unRelated"` 多选加触发器内搜索时，已有标签后不再带 `tagInput-empty` 类，左侧间距恢复正常。
+- `expandedKeys={null}`、`loadedKeys={null}` 按受控处理（同 `value={null}`）。
 
 ### Cascader
 
@@ -485,18 +495,19 @@
 - 行为变化：`onFocus`、`onBlur` 与 TreeSelect 一致，成对且以整个组件（触发器、其中的搜索框与标签、下拉）为界。焦点从组件外进入时触发一次 `onFocus`（Tab、点击、脚本 `focus()` 都算，原来只有点击或按键打开下拉才触发），组件内移动不重复触发；之后每次 focus 只触发一次 `onBlur`：焦点离开到外部元素、在组件外按下鼠标、单选选中后关闭下拉（让 Form 的 `trigger="blur"` 立即校验）。Esc、多选选中、点击触发器收起下拉时焦点仍在组件内，不再触发 `onBlur`（原来关闭下拉就触发）；`ref.close()` 同样不触发。打开时按 Tab 离开还会关闭下拉（APG combobox 模式）。`onFocus` 的参数可能是 `FocusEvent`，`onBlur` 的参数可能是 `FocusEvent`（Vue 为 `focus`、`blur` 事件）。
 - 破坏性（类型）：`Entity` 删除 `_notExist`。treeData 中没有的选中值仍以占位实体保存在 `keyEntities` 中，由 foundation 内部标记，`displayRender`、`onExceed` 收到的实体不再带该字段。
 - 选项角色由 `menuitem` 改为 `treeitem`（搜索结果为 `listbox` + `option`），按 `menuitem` 查询的测试需调整；键盘按 APG combobox，焦点留在触发器或搜索框，选项 id 不再是 `cascaderItem-${key}`。清除按钮改为带名称的原生 `button`；ref 改为 `CascaderHandle { open, close, focus, blur, search }`，`ref.focus()`、`ref.blur()` 真正移动 DOM 焦点。
-- Vue：`v-model` 受控；回调改为事件 `change`、`select`、`search`、`focus`、`blur`、`keydown`、`dropdownVisibleChange`、`clear`、`exceed`、`load`、`listScroll`，`focus`、`blur` 按上条语义触发，参数可能是 `FocusEvent`；`displayRender`、`filterRender`、`triggerRender` 改为 `#display`、`#tag`、`#filterItem`、`#trigger`，节点属性（`arrowIcon`、`clearIcon`、`prefix`、`suffix` 等）只用插槽；`multiple` 默认 `undefined`，不能经全局默认值设置；`<KeepAlive>` 失活关闭下拉；不提供 `Trigger` 组件。
+- Vue：`v-model` 受控；回调改为事件 `change`、`select`、`search`、`focus`、`blur`、`keydown`、`dropdownVisibleChange`、`clear`、`exceed`、`load`、`listScroll`，`focus`、`blur` 按上条语义触发，参数可能是 `FocusEvent`；`displayRender`、`filterRender`、`triggerRender` 改为 `#display`、`#tag`、`#filterItem`、`#trigger`，节点属性（`arrowIcon`、`clearIcon`、`prefix`、`suffix` 等）只用插槽；`multiple` 默认 `undefined`，不能经全局默认值设置；不提供 `Trigger` 组件。
 - Solid：`ref` 是触发器根元素 `CascaderElement`（带 `open`、`close`、`focus`、`blur`、`search`），`focus()` 不打开下拉；破坏性（类型）：`CascaderData.label` 收窄为 `string | number`，删除 `CascaderLabel`，单选 `displayRender` 的参数为 `Array<string | number>`；新增 `renderLabel(item)` 自定义列中选项的内容（同 Vue 的 `#label`），搜索结果、回显与标签显示 label 文本；`expandIcon` 要内联书写；`FilterRenderProps` 的类名字段为 `class`，`filterRender` 返回单个元素时选项属性直接写到该元素上；不接受 `children`（React 声明而不渲染）。
 - Solid：`triggerRender`、`filterRender` 只调用一次，参数为活对象；单选 `displayRender` 只在已选路径变化时调用，要跟随其他状态须在返回的 JSX 中读取，可搜索时其节点不写入搜索框；`onListScroll` 的 `e` 为原生 `Event`，`onFocus`、`onBlur` 收到的可能是原生 `FocusEvent`；搜索结果与关键字同步渲染。
 - Svelte：Cascader 的 `value` 可绑定，没有 `defaultValue`；单选多选靠 `multiple` 区分，没有 `Multiple` 泛型；回调同 React：`onChange`、`onChangeWithObject`、`onSelect`、`onSearch`、`onFocus`、`onBlur`、`onDropdownVisibleChange`、`onClear`、`onExceed`、`onLoad`、`onListScroll`、`onKeyDown`（每个按键只上报一次）。
 - Svelte：插槽改为同名 snippet：`prefix`、`suffix`、`insetLabel`、`topSlot`、`bottomSlot`、`label`、`display`、`tag`、`filterItem`、`trigger`、`expandIcon`、`clearIcon`、`arrowIcon`、`emptyContent`，`emptyContent`、`arrowIcon` 传 `null` 隐藏，空 snippet 不回落默认内容；`filterItem` 收到要展开到自定义行上的 `props`（含 `id`、`role`、`class`、`onclick`，虚拟搜索结果里还带定位用的 `style`，要一起展开到行上），没有 `componentProps`，`trigger` 参数也没有 `componentProps`；`treeData` 可以是 `$state`，就地修改会重新收集选项。
 - `checkRelation="unRelated"` 多选时，自定义触发器的 `value` 是已勾选项的位置集合，不再为空。`filterTreeNode` 加远程搜索时，`treeData` 更新不再清空搜索框。
+- Svelte：不再检测绑定的 `value` 与 `keyMaps` 的原地修改，需替换整个对象；`treeData` 的原地修改仍会重新收集选项。
 
 ### semi-foundation
 
 - Foundation、Adapter 的方法与 state 属内部实现，直接继承或实现它们的代码不保证兼容。深路径导入有大量删除与改名，如删除 `utils/index`（改为导入具体模块）、`pullAll` 改名 `differenceUnique`、`empty` 改名 `isEmpty`、各组件 `constants` 中无导入方的取值表。
 - 移到 semi-foundation：`registerMediaQuery`、`coversPage` 到 `@fibrae/semi-foundation/utils/dom`，`measureScrollbar`、`amendTableWidth` 到 `.../table/utils`，Tree 静态方法到 `.../tree/shared`；`highlight/foundation` 改为具名导出 `findAll`；`FieldState` 改名 `FieldSnapshot`。
-- `base/foundation` 的宿主契约：foundation 以静态 `propKeys`（可配 `propEquals`）声明要响应的 prop，宿主在这些 prop 变化的那次提交后调用 `handlePropsChange(prev)`，挂载时不调用；一次性副作用写在 `initOnce()`，每个实例只在第一次 `init()` 前执行一次；`commitState(partial)` 返回在提交后兑现的 Promise；`Lifecycle` 接口从 `base/foundation` 导出。隐藏（React StrictMode 重放、`<Activity>`、经 `useKeepAliveFoundation` 接入的 Vue `<KeepAlive>`）等同 `destroy()`，重新显示等同 `init()`。Vue 的 `useKeepAliveFoundation` 删除 `reactivate` 选项。
+- `base/foundation` 的宿主契约：foundation 以静态 `propKeys`（可配 `propEquals`）声明要响应的 prop，宿主在这些 prop 变化的那次提交后调用 `handlePropsChange(prev)`，挂载时不调用；一次性副作用写在 `initOnce()`，每个实例只在第一次 `init()` 前执行一次；`commitState(partial)` 返回在提交后兑现的 Promise；`Lifecycle` 接口从 `base/foundation` 导出。隐藏（React StrictMode 重放、`<Activity>`、经 `useKeepAliveFoundation` 接入的 Vue `<KeepAlive>`）等同 `destroy()`，重新显示等同 `init()`；`destroy()` 只撤销 `init()` 建立的监听、计时器与页面级占用，不写 state，也不关闭已打开的面板与弹层。state 由 foundation 持有，各组件新增静态 `getInitialState(props)`；原来只转发 `setState` 或只读 state、prop 的 adapter 方法已删除，state 泛型参数 `S` 多数已去掉，自定义 adapter 与继承 foundation 的代码需同步。Tree 的 `treeDerivedPropKeys`、TreeSelect 的 `treeSelectDerivedPropKeys` 导出删除，改为各自的 `static propKeys`；MonthsGrid 的 `MonthsGridDateAdapter`、`MonthsGridRangeAdapter` 类型导出删除。Vue 的 `useKeepAliveFoundation` 删除 `reactivate` 选项。
 
 ### AudioPlayer、VideoPlayer
 
@@ -505,6 +516,7 @@
 - VideoPlayer 新增 `onNext`，「下一个」按钮只在传了 `onNext` 且 `controlsList` 允许时显示（原来默认显示）；静音改由 `muted` 承载，不再把音量写成 0；`onVolumeChange` 在拖动音量或切换静音时触发。AudioPlayer 时间统一为 `mm:ss`，超 1 小时为 `h:mm:ss`（原 `75:00`），封面不再可预览。AudioPlayer 挂载前音频元数据已加载完（服务端渲染后 hydration、缓存命中）时，挂载时直接读出时长，进度条可拖动、可点击跳转（原来时长停在 0，拖到哪里都跳回开头）。
 - AudioPlayer 进度条圆点与 VideoPlayer 一致，中心对准进度末端，两端时盖住轨道圆角（原来圆点限制在轨道内），进度条两侧留出半个圆点的间距，圆点不压住时间文字；指针按下进度条不再显示键盘焦点环。VideoPlayer 音量与菜单弹层改为不透明深灰底，音量弹层底部增加 12px 留白（高度 160px 改为 168px）；两者的弹层与菜单项样式不再依赖样式表加载顺序（原来可能被 Dropdown、Popover 的默认底色与文字色覆盖）。
 - VideoPlayer 进度条圆点在悬停、键盘聚焦或拖动时显示，与轨道同心，进度为 0 时也显示（原来只在悬停播放头所在分段时显示，进度为 0 时不显示，拖动后移出可能一直残留）；轨道悬停变粗改为以中心线上下对称的高度过渡；时间预览 Tooltip 不再拦截指针（原来箭头伸进进度条热区，指针移到箭头下时悬停中断，轨道粗细闪烁）。
+- VideoPlayer 的初始 `volume` 取整并夹到不小于 0，音量为 0 时同时静音；销毁时清除计时器，重新显示时按当前状态重新应用音量与倍速。
 - VideoPlayer 传了 `captionsSrc` 时 Safari 也默认显示字幕（原来 Safari 按系统字幕偏好不启用 `default` 字幕轨，播放器又没有字幕开关，字幕始终不显示）。
 - Vue：不转发原生媒体事件；VideoPlayer 回调改为事件 `play`、`pause`、`qualityChange`、`rateChange`、`routeChange`、`volumeChange`，`onNext` 仍是函数 prop。
 - Solid：AudioPlayer 的 `ref` 与未声明属性落在根 div；VideoPlayer 的 `ref` 指向原生 video 元素，未声明属性落在根 div；两者的 `style` 都接受对象或字符串；Props 也不接受媒体事件的小写（`ontimeupdate`）与 `on:` 写法；进度与音量滑块的 range input 用 `input` 事件上报。
@@ -527,7 +539,7 @@
 
 - 破坏性：`limit` 为 1 时选择文件不再调用 `onExceed`；`onDrop` 第一个参数改为原生 `DragEvent`；`accept` 中点开头的扩展名按完整后缀匹配（`.tar.gz` 要求以其结尾）；`addOnPasting` 只响应原生 `paste` 事件，`onPastingError` 改为粘贴文件读取失败时触发，参数收窄为 `Error`。
 - 破坏性（类型）：`FileItem`、`BaseFileItem` 删除 `[key: string]: any`（Chat 的 `attachment`、AIChatInput 的 `Attachment` 随之变化）；`RenderFileItemProps` 不再含 `key`；`transformFile` 改为 `(file: File) => File`；`cropModalProps` 收窄为 `UploadCropModalProps`；ref 为 `UploadHandle { insert, upload, openFileDialog }`。
-- 上传事件不再原地改写文件项，每次生成新对象，用 `===` 比较旧文件项需改为比较 `uid`；卸载、隐藏或缓存时进行中的上传不再中止（需要中止的用 `customRequest`）。
+- 上传事件不再原地改写文件项，每次生成新对象，用 `===` 比较旧文件项需改为比较 `uid`；卸载、隐藏或缓存时进行中的上传不再中止（需要中止的用 `customRequest`），卸载后请求结果仍会回调 `onChange`、`onSuccess`、`onError` 等（Vue 的事件卸载后不再发出）。
 - DOM 变化：图片墙空列表也渲染 `.semi-upload-file-list`（依赖 `.semi-upload > .semi-upload-add` 的样式需调整）；`tabIndex` 落在添加按钮上，根元素不再输出 `aria-required`、`tabIndex`；列表缩略图 `alt` 为空，卡片操作与「清空」改为原生 `button`。
 - Vue：受控列表用 `v-model:fileList`；回调改为事件 `change`、`success`、`error`、`progress`、`remove`、`retry`、`exceed`、`drop`、`clear`、`pastingError`、`cropError` 等，`onPreviewClick` 仍是函数 prop；卸载后不再发出这些事件。
 - Vue：节点与 render props 改为插槽，如 `#dragIcon`、`#dragMainText`、`#prompt`、`#fileItem`、`#thumbnail`、`#picClose`、`#fileOperation`、`#fileListHeader`；`validateMessage` 只收字符串，节点用 `#fileValidateMessage`；逐文件插槽的文件数据在 `file` 字段。
@@ -536,7 +548,7 @@
 - Solid：添加区含 Semi 的 Button、IconButton 或 AIChatInput 的默认上传按钮时，首帧（含服务端 HTML）即不带 `role="button"`、`tabindex`；其他可聚焦控件（原生 `button`、链接等）挂载后才判定，挂载前添加区仍是按钮。
 - Svelte：`fileList` 可绑定（`bind:`、函数绑定、单向、不传四种写法），没有 `defaultFileList`，绑定成 `undefined` 时清空（表单重置）；事件是 `onX` 回调；插槽改为同名 snippet：`dragIcon`、`dragMainText`、`dragSubText`、`prompt`、`validateMessage`、`fileListTitle`、`fileListHeader`、`fileItem`、`previewFile`、`thumbnail`、`picInfo`、`picPreviewIcon`、`picClose`、`fileOperation`、`fileValidateMessage`、`ellipsisTooltip`，空 snippet 不回落默认内容。
 - Svelte：`itemStyle`、`cropModalProps.style`、`bodyStyle` 只接受字符串；图片墙的校验图标只在 `validateMessage` 为字符串时出现；经 `bind:this` 调用 `insert`、`upload`、`openFileDialog`（类型 `UploadHandle`）；`Upload.FileCard` 与 `UploadFileCard` 两种导出都有。
-- Svelte：卸载后不再上报请求结果（请求本身不中止），没有 KeepAlive 行为；有 `aria-label` 时根元素为 `role="group"`；`tabindex` 交给上传区域，`onblur` 只在焦点离开整个组件时触发。
+- Svelte：没有 KeepAlive 行为；有 `aria-label` 时根元素为 `role="group"`；`tabindex` 交给上传区域，`onblur` 只在焦点离开整个组件时触发。
 
 ### Cropper
 
@@ -705,6 +717,7 @@
 - Svelte：UserGuide 的 `visible`、`current` 可绑定（`bind:`、函数绑定、单向、不传四种写法）；回调是 `onChange`、`onNext`、`onPrev`、`onSkip`、`onFinish`；跳过、Escape、完成时先把 `visible` 写成 `false` 再调回调，`current` 变化先写回再调 `onChange`；单向传 `visible` 只作初值，点跳过会在本地关闭，要拒绝关闭请用函数绑定。
 - Svelte：`steps` 的 `title`、`description` 是字符串或 snippet，`cover` 是 snippet（参数 `{ item, index }`），没有 `cover` 的步骤没有封面区；按钮文字用组件级 `nextText`、`prevText` snippet，最后一步用 `finishText`。
 - Svelte：未绑定、未传 `current` 时关闭后重开从第一步开始，`current` 由父级传入时保持关闭前的步骤；没有 KeepAlive 对应物，不提供失活后释放滚动锁的行为；服务端和 hydration 首帧不输出内容（popup 要等目标挂载后测量，modal 经 Portal 挂载后才渲染）。
+- 引导隐藏结束后 `current` 回到受控值，未受控时回到第一步。
 - Vue、Solid、Svelte：显示期间逐帧跟随目标位置，目标自行移动或晚于显示挂载时聚光区域随之更新。
 
 ### OverflowList、Select
@@ -754,6 +767,7 @@
 - ArrayField 的 children 参数新增 `move(from, to)`（Vue 插槽、Svelte snippet 为 `onMove`）：移动一行的值、错误与 touched，行的 key 随行移动；下标越界时钳制到首尾，`from === to` 不做事。删除行时 touched 随值一起左移。行内字段的值全为空（如唯一字段为 `''`）时，该行不再从渲染和校验中消失。
 - 破坏性（类型）：`FormApi<Values, Output = Values>` 区分输入与输出类型：`formState`、`getValues` 与字段路径用输入类型，`onSubmit` 与不带字段的 `validate()` 用输出类型（`schema` 的 `InferOutput`），带字段的 `validate(fields)` 仍为输入类型；`getTouched(field?)` 返回 `boolean | Record<string, any> | undefined`，不传字段时返回整棵 touched 树，与 `setTouched` 一致；`getError` 返回 `string[]`（父路径为错误树）或 `undefined`；删除类型 `CommonFieldError`、`BasicFieldError`、`FieldValidateResult`（React 另删 `ErrorMsg`、`ReactFieldError`，Vue 另删 `FormValidateResult`），改用 `FieldError`、`FieldErrorInput`，并新增导出 `FieldValidator`、`FormValidator`、`RuleType`、`JsonSchema`、`SchemaFieldKind`、`SchemaFieldNode`、`SchemaFieldProps`、`SchemaFormProps`；React、Solid 的 FormSlot 的 `error` 只接受 ErrorMessage 的属性对象、字符串或字符串数组，不再接受 ReactNode（Solid 为 JSX）；FormInputGroup 把组内各字段的错误摊平后合并显示；`StandardSchema` 的类型参数改为 `<Input, Output>`，并带可选的 `types` 与 `jsonSchema`。
 - 新增 SchemaField 与 SchemaForm：SchemaField 在 Form 内按 JSON Schema 渲染某个路径（`field`，默认根）下的字段，JSON Schema 取显式传入的 `jsonSchema`，否则由 Form `schema` 的 `~standard.jsonSchema` 导出（Zod 4 等实现了 Standard JSON Schema 的库）。字符串、长文本（`maxLength` 大于 160）、数字、布尔、枚举分别渲染为 Input、TextArea、InputNumber、Switch、Select，对象渲染为 Section，选项数组渲染为多选 Select，对象数组渲染为可增删、上下移动的 ArrayField（`minItems` 等于 `maxItems` 时行数固定），无法映射的节点不渲染并在开发模式警告。`widgets` 按 `format` 或控件种类替换控件，`renderField` 按路径（数组项写作 `[]`，如 `contacts[].email`）接管一个节点的渲染；标签取 `title`，说明取 `description`，初值取 `default`，必填取 `required`。SchemaForm 是 Form 加根 SchemaField 的封装，children 渲染在字段之后，不接受 `render`、`component` 与函数形式的 children；它的全局默认值只覆盖 `jsonSchema`、`widgets`、`renderField`，内部 Form 读 Form 的全局默认值。两者读全局默认值（F7）。Svelte 的 SchemaForm 经 `bind:this` 调用 `getFormApi()`。语言包 `Form` 新增 `addItem`、`removeItem`、`moveUpItem`、`moveDownItem`、`item`，用作数组行按钮的可访问名称与行标签。
+- 行为变化：字段卸载造成的值删除与 `onChange` 推迟到 Form 的下一次提交时发出，删除中间一行时 `onChange` 只发一次完整值；卸载整个 Form 不再逐字段触发 `onChange` 与更新。首帧 `formState.values` 是传入的 `initValues` 对象本身，不再是它的克隆。
 - 字段首次挂载时显示 `formState.errors` 里已有的错误；整表 `reset()` 清空全部错误，包括没有对应字段的错误。
 - 破坏性：FormSection 的根元素由 `section` 改为 `fieldset`，标题由 `h5` 改为 `legend`：分组以标题为可访问名称（`role="group"`），不再向页面插入固定层级的标题，外观不变。`ref` 类型改为 `HTMLFieldSetElement`，Props 的原生属性改为 fieldset 的属性；传入原生 `disabled` 时浏览器禁用其中全部表单控件，Form 的 `disabled` 状态不随之变化。
 - Vue：不提供 `withFormApi`、`withFormState`；api 经 `getFormApi` 事件或模板 ref 的 `formApi` 取得，默认作用域插槽 `{ formState, formApi, values }` 替代 `render`、`children`；字段值只由 Form 管理，不支持 `v-model`，字段 `@change` 末参追加 `latestValues`；字段壳插槽为 `#fieldLabel`、`#labelExtra`、`#helpText`、`#extraText`、`#error="{ error }"`（`error` 为 `string[]`）；ArrayField 插槽为 `{ arrayFields, onAdd, onAddWithInitValue, onMove }`。
@@ -816,6 +830,7 @@
 - Avatar：可点击头像的焦点目标为 `role="button"`（按 `img` 查询的测试需改为 button），不再加语言包 `Avatar.clickable` 前缀（键已删除）；AvatarGroup 未声明属性落在根 div，`size`、`shape` 经 context 下发到被 Tooltip、Popover 包住的头像。PinCode：`autoFocus` 默认值由 `true` 改为 `false`，需要时显式传 `autoFocus` 或用 `PinCodeHandle.focus(0)`。
 - Avatar：`border.motion` 的外圈动画只放大并淡出，边框粗细不再随动画变细到 0（原来每帧触发布局与重绘）；删除 Sass 变量 `$animation_width-additionalBorder-end`。
 - React：服务端渲染的 Avatar 图片在 hydration 前已加载失败时，hydration 提交后调用 `onError` 并显示文字（原来保留破图）。
+- AutoComplete：受控值回显但没有匹配项时保留已输入的文本（四个框架一致）。
 - AutoComplete：下拉中有可聚焦元素（`renderItem`、`emptyContent` 里的按钮或链接）时，方向键只移动高亮，焦点不再移入下拉。
 - Vue：AutoComplete、PinCode、TagInput 用 `v-model`（`modelValue`，TagInput 另有 `v-model:inputValue`），回调为同名事件，`autoFocus` 写作 `autofocus`；AutoComplete 的 `renderItem`、`triggerRender` 为 `#item`、`#trigger`，`prefix`、`suffix`、`insetLabel`、`clearIcon`、`emptyContent` 只有插槽，ref 为 `{ nativeElement }`；TagInput 插槽 `#prefix`、`#suffix`、`#insetLabel`、`#clearIcon`、`#tag`；PinCode 新增按整组计的 `focus`、`blur` 事件。
 - Solid：AvatarGroup 只给 Avatar 加重叠类（经 context，包括被 Tooltip 包住的头像），其他子元素不加。
@@ -910,6 +925,7 @@
 - Svelte：`value` 可绑定（`bind:`、函数绑定、单向、不传），变化同时触发 `onChange`；`customRender`、`searchButton` 为同名 snippet，参数分别是 `{ item, index, content }` 与 `{ defaultButton, showSearchBar, onToggleSearchBar, onSearch, onPrevSearch, onNextSearch, onReplace, onReplaceAll }`，`defaultButton` 是 snippet，用 `{@render}` 渲染。
 - Svelte：实例方法 `getValue`、`format`、`search`、`getSearchResults`、`prevSearch`、`nextSearch`、`replace`、`replaceAll`、`getStyle` 经 `bind:this` 调用。
 - 折叠区域超过 65535 个时不再抛错。
+- `options` 按内容比较，内容未变且 `value` 与编辑器文本一致时不重建编辑器。
 
 ### Collapse
 

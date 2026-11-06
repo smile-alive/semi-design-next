@@ -8,8 +8,8 @@
     import { Tooltip, type TooltipTriggerProps } from '../tooltip/index.js';
     import type { VideoProgressProps, VideoProgressState } from './interface.js';
 
-    type Foundation = VideoProgressFoundation<VideoProgressBaseProps, VideoProgressState>;
-    type Adapter = VideoProgressAdapter<VideoProgressBaseProps, VideoProgressState>;
+    type Foundation = VideoProgressFoundation<VideoProgressBaseProps>;
+    type Adapter = VideoProgressAdapter<VideoProgressBaseProps>;
 
     let { value, max, step, bufferedValue, markers, showTooltip = true, onChange }: VideoProgressProps = $props();
 
@@ -30,22 +30,17 @@
         get step() {
             return step;
         },
+        get markers() {
+            return markers;
+        },
     };
 
     const { foundation, states } = useFoundation<Foundation, Adapter, VideoProgressBaseProps, VideoProgressState>(
         VideoProgressFoundation,
         foundationProps,
+        (view) => VideoProgressFoundation.getInitialState(view),
         () => ({
-            isDragging: false,
-            movingInfo: null,
-            activeIndex: -1,
-        }),
-        (base) => ({
             getSliderRef: () => slider ?? null,
-            getMarkersList: () => markersList,
-            setIsDragging: (isDragging) => base.setState({ isDragging }),
-            setActiveIndex: (activeIndex) => base.setState({ activeIndex }),
-            setMovingInfo: (movingInfo) => base.setState({ movingInfo }),
             notifyChange: (next) => onChange?.(next),
         })
     );

@@ -1,14 +1,13 @@
 import { children, createEffect, on, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/spin/constants';
-import SpinFoundation, { type SpinAdapter } from '@fibrae/semi-foundation/spin/foundation';
+import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/spin/foundation';
 import '@fibrae/semi-foundation/spin/spin.scss';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import useLocale from '../locale/use-locale';
 import SpinIcon from './icon';
 
@@ -26,12 +25,8 @@ export interface SpinProps extends ElementProps<'div'> {
     childStyle?: JSX.CSSProperties | string;
 }
 
-interface SpinState {
-    loading: boolean;
-}
-
-type Foundation = SpinFoundation<SpinProps, SpinState>;
-type Adapter = SpinAdapter<SpinProps, SpinState>;
+type Foundation = SpinFoundation<SpinProps>;
+type Adapter = SpinAdapter<SpinProps>;
 
 const defaultProps = {
     size: 'middle',
@@ -50,10 +45,8 @@ export default function Spin(rawProps: SpinProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, SpinProps, SpinState>(
         SpinFoundation,
         props,
-        () => ({ loading: props.spinning }),
-        (base) => ({
-            setLoading: (loading) => base.setState({ loading }),
-        })
+        (view) => SpinFoundation.getInitialState(view),
+        () => ({})
     );
 
     const content = children(() => local.children);
@@ -65,7 +58,6 @@ export default function Spin(rawProps: SpinProps) {
 
     const blocked = () => loading() && hasContent(content());
 
-    useWatch(() => local.spinning, foundation.handleSpinningChange);
     createEffect(on(blocked, (isBlocked) => foundation.handleBlockedChange(root, isBlocked)));
 
     return (

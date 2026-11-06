@@ -2,47 +2,56 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import UploadFoundation, { type BaseFileItem, type UploadAdapter } from '../foundation';
 
 /**
- * Drives the foundation with a mock adapter that batches setState: updateFileList is not visible via getState
- * until the synchronous batch finishes.
+ * Drives the foundation with a controlled fileList whose parent writes back on commit: the prop keeps the old list
+ * until `flush()` runs the setState callbacks, so steps of one synchronous batch must build on the latest list.
  */
 describe('Upload foundation 批量 autoRemove (#3335)', () => {
     const createFoundation = ({ initialFileList, beforeUpload, ...uploadProps }) => {
-        let committedFileList = initialFileList.slice();
-        let pendingFileList = null;
+        const state = { fileList: initialFileList.slice() };
+        let controlledList = initialFileList.slice();
+        let pendingWrite = null;
+        const callbacks: Array<() => void> = [];
         const changes = [];
 
+        const getProps = () => ({ beforeUpload, ...uploadProps, fileList: controlledList });
         const adapter = {
             getContext: () => undefined,
             getContexts: () => ({}),
-            getProp: (key) => ({ beforeUpload, ...uploadProps })[key],
-            getProps: () => ({ beforeUpload, ...uploadProps }),
-            getState: (key) => ({ fileList: committedFileList })[key],
-            getStates: () => ({ fileList: committedFileList, replaceUid: 'a' }),
-            updateFileList: (fileList, callback) => {
-                pendingFileList = fileList;
+            getProp: (key) => getProps()[key],
+            getProps,
+            getState: (key) => state[key],
+            getStates: () => ({ ...state, replaceUid: 'a' }),
+            setState: (next, callback) => {
+                Object.assign(state, next);
                 if (callback) {
-                    callback();
+                    callbacks.push(callback);
                 }
             },
             notifyFileSelect: () => {},
             resetReplaceInput: () => {},
-            notifyChange: ({ fileList }) => changes.push(fileList),
+            notifyChange: ({ fileList }) => {
+                changes.push(fileList);
+                pendingWrite = fileList;
+            },
             notifyProgress: () => {},
-            updateLocalUrls: () => {},
             notifyBeforeUpload: ({ file, fileList }) => beforeUpload({ file, fileList }),
         } as unknown as UploadAdapter;
 
         const foundation = new UploadFoundation(adapter);
         const flush = () => {
-            if (pendingFileList !== null) {
-                committedFileList = pendingFileList;
-                pendingFileList = null;
+            while (pendingWrite !== null || callbacks.length > 0) {
+                if (pendingWrite !== null) {
+                    controlledList = pendingWrite;
+                    pendingWrite = null;
+                }
+                callbacks.splice(0).forEach((callback) => callback());
             }
-            return committedFileList;
+            return state.fileList;
         };
         const setCommittedFileList = (fileList) => {
-            committedFileList = fileList.slice();
-            pendingFileList = null;
+            controlledList = fileList.slice();
+            state.fileList = fileList.slice();
+            pendingWrite = null;
         };
         return { foundation, flush, setCommittedFileList, getChanges: () => changes };
     };
@@ -52,7 +61,6 @@ describe('Upload foundation 批量 autoRemove (#3335)', () => {
     const expectNoStaleBatch = ({ foundation, flush, setCommittedFileList }) => {
         const fileX = makeFile('x');
         setCommittedFileList([fileX]);
-        foundation.syncLatestFileList([fileX]);
         foundation.manualUpload();
         expect(flush()).toEqual([]);
     };
@@ -149,10 +157,8 @@ describe('Upload foundation 批量 autoRemove (#3335)', () => {
         foundation.manualUpload();
         expect(flush().map((f) => f.uid)).toEqual(['b']);
 
-        // Simulate getDerivedStateFromProps + componentDidUpdate after the parent
-        // replaces the controlled list while file B's beforeUpload is pending.
+        // the parent replaces the controlled list while file B's beforeUpload is pending
         setCommittedFileList([externalFile]);
-        foundation.syncLatestFileList([externalFile]);
         resolveFileB({ shouldUpload: false, status: 'uploadFail' });
         await Promise.resolve();
         await Promise.resolve();

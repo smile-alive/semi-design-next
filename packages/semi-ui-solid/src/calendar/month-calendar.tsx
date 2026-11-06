@@ -4,7 +4,7 @@ import { format, isSameDay } from 'date-fns';
 import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
 import { type DateObj, toPercent } from '@fibrae/semi-foundation/calendar/event-util';
 import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
-import CalendarMonthFoundation, { type CalendarMonthAdapter } from '@fibrae/semi-foundation/calendar/month-foundation';
+import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/calendar/month-foundation';
 import '@fibrae/semi-foundation/calendar/calendar.scss';
 import { IconClose } from '@fibrae/semi-icons-solid';
 import hasContent from '../_base/has-content';
@@ -25,12 +25,8 @@ import { rootStyle, viewPropKeys } from './view-props';
 const prefixCls = `${cssClasses.PREFIX}-month`;
 const cardCls = `${prefixCls}-event-card`;
 
-interface MonthCalendarState {
-    showCard: Record<string, boolean>;
-}
-
-type Foundation = CalendarMonthFoundation<DayCalendarProps, MonthCalendarState>;
-type Adapter = CalendarMonthAdapter<DayCalendarProps, MonthCalendarState>;
+type Foundation = CalendarMonthFoundation<DayCalendarProps>;
+type Adapter = CalendarMonthAdapter<DayCalendarProps>;
 
 export default function MonthCalendar(props: DayCalendarProps) {
     const [local, rest] = splitProps(props, viewPropKeys);
@@ -45,18 +41,12 @@ export default function MonthCalendar(props: DayCalendarProps) {
     // the row height is measured after mount; until then every event shows, so the server HTML carries them
     const [itemLimit, setItemLimit] = createSignal(Infinity);
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, DayCalendarProps, MonthCalendarState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, DayCalendarProps, CalendarMonthBaseState>(
         CalendarMonthFoundation,
         props,
-        () => ({ showCard: {} }),
+        () => CalendarMonthFoundation.getInitialState(),
         (base) => ({
-            notifyClose: (e, key) => {
-                base.setState({ showCard: { ...base.getState('showCard'), [key]: false } });
-                base.getProps().onClose?.(e);
-            },
-            openCard: (key) => {
-                base.setState({ showCard: { [key]: true } });
-            },
+            notifyClose: (e) => base.getProps().onClose?.(e),
         })
     );
 

@@ -1,3 +1,4 @@
+import { isEqual } from 'es-toolkit';
 import { type JsonViewerOptions, type CustomRenderRule, type TokenRenderType, JsonViewer } from '@fibrae/semi-json-viewer-core';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import { cssClasses } from './constants';
@@ -22,22 +23,30 @@ export interface JsonViewerBaseState {
     showSearchBar: boolean;
 }
 
-export interface JsonViewerAdapter<P extends JsonViewerBaseProps = JsonViewerBaseProps, S extends JsonViewerBaseState = JsonViewerBaseState> extends DefaultAdapter<P, S> {
+export interface JsonViewerAdapter<P extends JsonViewerBaseProps = JsonViewerBaseProps> extends DefaultAdapter<P, JsonViewerBaseState> {
     getEditorRef: () => HTMLElement;
     notifyChange: (value: string) => void;
-    toggleSearchOption: (key: keyof SearchOptions) => void;
-    /** Shows or hides the search bar and resets the search options */
-    toggleSearchBar: () => void;
+    /** Turns the `options` prop into what the editor takes: a host draws a custom render rule's result its own way */
+    toCoreOptions: (options: JsonViewerOptions) => JsonViewerOptions;
     setCustomRenderMap: (customRenderMap: Map<HTMLElement, any>) => void;
 }
 
-export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonViewerBaseProps, S extends JsonViewerBaseState = JsonViewerBaseState> extends BaseFoundation<JsonViewerAdapter<P, S>, P, S> {
+const defaultSearchOptions: SearchOptions = { caseSensitive: false, wholeWord: false, regex: false };
+
+export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonViewerBaseProps> extends BaseFoundation<JsonViewerAdapter<P>, P, JsonViewerBaseState> {
     #resizeObserver: ResizeObserver | null = null;
     #resizeRafId: number | null = null;
     #lastObservedSize = { width: 0, height: 0 };
     // a width change and a height change coalesced into one frame still reset the measured heights
     #resetMeasuredHeights = false;
     #lastSearch: { text: string; caseSensitive: boolean; wholeWord: boolean; regex: boolean } | null = null;
+    #appliedOptions: JsonViewerOptions | undefined;
+
+    static override readonly propKeys = ['value', 'options'];
+
+    // options is usually a fresh literal, so compare deeply
+    static override readonly propEquals = { options: isEqual };
+
     jsonViewer: JsonViewer | null = null;
 
     #observeResize() {
@@ -80,12 +89,17 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
         }
     }
 
+    static getInitialState(): JsonViewerBaseState {
+        return { searchOptions: defaultSearchOptions, showSearchBar: false };
+    }
+
     override init() {
         const props = this.getProps();
         const editorRef = this.adapter.getEditorRef();
+        this.#appliedOptions = props.options;
         this.jsonViewer = new JsonViewer(editorRef, props.value, {
             prefixCls: cssClasses.PREFIX,
-            ...props.options,
+            ...this.adapter.toCoreOptions(props.options),
         });
         this.jsonViewer.emitter.on('customRender', (e) => {
             this.adapter.setCustomRenderMap(e.customRenderMap);
@@ -114,6 +128,26 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
         // a re-created editor without rules never emits customRender, so the stale spans must be cleared here
         this.adapter.setCustomRenderMap(new Map());
     }
+
+    override handlePropsChange() {
+        this.syncEditor();
+    }
+
+    /**
+     * Re-creates the editor unless it already shows `value` under the applied `options`. A value equal to the editor's
+     * own text is the echo of an onChange write-back: re-creating would drop the caret, focus, undo stack and scroll
+     * position. Does nothing while there is no editor.
+     */
+    syncEditor = () => {
+        if (!this.jsonViewer) {
+            return;
+        }
+        if (isEqual(this.getProp('options'), this.#appliedOptions) && this.getProp('value') === this.jsonViewer.getModel().getValue()) {
+            return;
+        }
+        this.destroy();
+        this.init();
+    };
 
     search = (searchText: string, caseSensitive?: boolean, wholeWord?: boolean, regex?: boolean) => {
         let options;
@@ -162,15 +196,17 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
     };
 
     toggleSearchOption = (key: keyof SearchOptions) => {
-        this.adapter.toggleSearchOption(key);
+        const searchOptions = this.getState('searchOptions');
+        this.setState({ searchOptions: { ...searchOptions, [key]: !searchOptions[key] } });
         this.search(this.#lastSearch?.text ?? '');
     };
 
+    /** Shows or hides the search bar and resets the search options */
     toggleSearchBar = () => {
         // a reopened bar starts with an empty input, so old results and highlights go too
         this.#lastSearch = null;
         this.jsonViewer?.getSearchWidget().clear();
-        this.adapter.toggleSearchBar();
+        this.setState({ showSearchBar: !this.getState('showSearchBar'), searchOptions: defaultSearchOptions });
     };
 
     /** `null` when nothing was searched (or the bar was closed), `undefined` while there is no editor */

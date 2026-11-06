@@ -610,7 +610,7 @@ describe('Tooltip 浏览器', () => {
         expect(onVisibleChange).not.toHaveBeenCalled();
     });
 
-    it('KeepAlive 失活时 v-model:visible 的弹层随回写关闭，激活后保持关闭并能再次打开', async () => {
+    it('KeepAlive 失活时 v-model:visible 的弹层关闭但不回写，激活后按 visible 重新打开并能点击外部关闭', async () => {
         const shown = ref(false);
         const onVisibleChange = vi.fn<(visible: boolean) => void>();
         const Cached = defineComponent({
@@ -639,18 +639,16 @@ describe('Tooltip 浏览器', () => {
 
         cached.value = false;
         await screen.findByText('other view');
-        await waitFor(() => expect(onVisibleChange).toHaveBeenLastCalledWith(false));
-        expect(shown.value).toBe(false);
         await waitFor(() => expect(screen.queryByText('cached content')).toBeNull());
+        expect(shown.value).toBe(true);
 
         cached.value = true;
-        const trigger = await screen.findByRole('button', { name: 'trigger' });
-        await new Promise((resolve) => setTimeout(resolve, 50));
-        expect(screen.queryByText('cached content')).toBeNull();
-
-        await userEvent.click(trigger);
         await waitFor(() => expect(screen.getByText('cached content')).toBeVisible());
-        expect(shown.value).toBe(true);
+        expect(onVisibleChange.mock.calls).toEqual([[true]]);
+
+        await userEvent.click(document.body);
+        await waitFor(() => expect(screen.queryByText('cached content')).toBeNull());
+        expect(shown.value).toBe(false);
     });
 });
 

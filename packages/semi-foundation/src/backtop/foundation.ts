@@ -12,19 +12,22 @@ export interface BackTopBaseProps {
     duration?: number;
 }
 
-export interface BackTopBaseState {
-    visible?: boolean;
+export interface BackTopState {
+    visible: boolean;
 }
 
-export interface BackTopAdapter<P = BackTopBaseProps, S = BackTopBaseState, E = unknown> extends DefaultAdapter<P, S> {
-    updateVisible: (visible: boolean) => void;
+export interface BackTopAdapter<P = BackTopBaseProps, E = unknown> extends DefaultAdapter<P, BackTopState> {
     notifyClick: (e: E) => void;
 }
 
-export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseProps, S extends BackTopBaseState = BackTopBaseState, E = unknown> extends BaseFoundation<BackTopAdapter<P, S, E>, P, S> {
+export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseProps, E = unknown> extends BaseFoundation<BackTopAdapter<P, E>, P, BackTopState> {
+    // a target change while hidden must wait for init, which binds the current target
+    #active = false;
     #targetNode: Target = null;
     #frame: number;
     #cancelAnimation?: () => void;
+
+    static override readonly propKeys = ['target'];
 
     #bind() {
         const targetNode = this.getProps().target();
@@ -52,11 +55,15 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
             const { visibilityHeight } = this.getProps();
             const visible = this.#getScroll(this.#targetNode) > visibilityHeight;
             // every adapter write re-renders; scroll events outnumber visibility changes
-            if (visible !== Boolean(this.getStates().visible)) {
-                this.adapter.updateVisible(visible);
+            if (visible !== this.getState('visible')) {
+                this.setState({ visible });
             }
         });
     };
+
+    static getInitialState(): BackTopState {
+        return { visible: false };
+    }
 
     /** Children sit inside a native button, so interactive ones would nest; development only */
     static warnInteractiveChildren(button?: Element | null) {
@@ -66,7 +73,14 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
     }
 
     override init() {
+        this.#active = true;
         this.#bind();
+    }
+
+    override handlePropsChange() {
+        if (this.#active) {
+            this.handleTargetChange();
+        }
     }
 
     handleTargetChange = () => {
@@ -77,6 +91,7 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
     };
 
     override destroy() {
+        this.#active = false;
         this.#unbind();
         this.#cancelAnimation?.();
     }

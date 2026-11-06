@@ -2,7 +2,7 @@ import { Component, useEffect, useRef, type Ref } from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { Form, FormInput, useForm, ArrayField, useFormApi, useFormState, useFieldApi, useFieldState, withFormApi, withFormState, withField } from '@fibrae/semi-ui-react';
-import { useArrayFieldState } from '../hooks/index';
+import { useArrayFieldState } from '../hooks';
 import type { FormApi, FormState } from '../interface';
 
 const getInput = (field) => document.querySelector(`[x-field-id="${field}"] input`);

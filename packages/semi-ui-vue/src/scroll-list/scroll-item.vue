@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends ScrollListItem = ScrollListItem">
-    import { computed, useId, useTemplateRef, watch } from 'vue';
+    import { computed, useId, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
-    import ItemFoundation, { type ScrollItemAdapter } from '@fibrae/semi-foundation/scroll-list/item-foundation';
+    import ItemFoundation, { type ScrollItemAdapter, type ScrollItemBaseState } from '@fibrae/semi-foundation/scroll-list/item-foundation';
     import '@fibrae/semi-foundation/scroll-list/scroll-list.scss';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
@@ -10,13 +10,8 @@
     import useFoundation from '../_base/use-foundation';
     import type { ScrollItemEmits, ScrollItemHandle, ScrollItemProps, ScrollItemSelectData, ScrollListItem } from './interface';
 
-    interface ScrollItemState {
-        prependCount: number;
-        appendCount: number;
-    }
-
-    type Foundation = ItemFoundation<T, ScrollItemProps<T>, ScrollItemState>;
-    type Adapter = ScrollItemAdapter<T, ScrollItemProps<T>, ScrollItemState>;
+    type Foundation = ItemFoundation<T, ScrollItemProps<T>>;
+    type Adapter = ScrollItemAdapter<T, ScrollItemProps<T>>;
 
     // The listbox, not the root, is what a name describes, so the naming attributes go to the ul.
     defineOptions({ name: 'ScrollItem', inheritAttrs: false });
@@ -49,10 +44,10 @@
     const transform = computed(() => props.transform ?? readSemiDefault(semi, 'ScrollItem', 'transform'));
     const isWheel = computed(() => props.mode === 'wheel');
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, ScrollItemProps<T>, ScrollItemState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, ScrollItemProps<T>, ScrollItemBaseState>(
         ItemFoundation,
         props,
-        () => ({ prependCount: 0, appendCount: 0 }),
+        () => ItemFoundation.getInitialState(),
         () => ({
             getListNode: () => listbox.value,
             getScrollNode: () => (isWheel.value ? outer.value : root.value),
@@ -117,9 +112,6 @@
             foundation.handleWheelClick(event);
         }
     };
-
-    watch(() => selectedIndex.value, foundation.syncSelectedIndex, { flush: 'post' });
-    watch(() => list.value.length, foundation.syncList, { flush: 'post' });
 
     defineExpose<ScrollItemHandle>({ scrollToIndex: (_index, duration) => foundation.scrollToSelected(duration) });
 </script>

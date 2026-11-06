@@ -1,8 +1,8 @@
 <script setup lang="ts">
-    import { computed, h, onMounted, useAttrs, useId, watch } from 'vue';
+    import { computed, h, onMounted, useAttrs, useId } from 'vue';
     import { isEqual } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/tabs/constants';
-    import TabsFoundation, { type MotionView, type TabsAdapter } from '@fibrae/semi-foundation/tabs/foundation';
+    import TabsFoundation, { type MotionView, type TabsAdapter, type TabsState } from '@fibrae/semi-foundation/tabs/foundation';
     import '@fibrae/semi-foundation/tabs/tabs.scss';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
@@ -18,12 +18,8 @@
     import { isTabPane, paneKey, readPanes, type TabEntry } from './read-panes';
     import TabBar from './tab-bar.vue';
 
-    interface TabsState {
-        activeKey: string | null;
-    }
-
-    type Foundation = TabsFoundation<TabsProps, TabsState, MouseEvent | KeyboardEvent>;
-    type Adapter = TabsAdapter<TabsProps, TabsState, MouseEvent | KeyboardEvent>;
+    type Foundation = TabsFoundation<TabsProps, MouseEvent | KeyboardEvent>;
+    type Adapter = TabsAdapter<TabsProps, MouseEvent | KeyboardEvent>;
 
     // aria-label and aria-labelledby name the tablist; a generic root cannot be named (ARIA 1.2)
     defineOptions({ name: 'Tabs', inheritAttrs: false });
@@ -80,21 +76,20 @@
         props,
         (setupProps) => {
             // The default key depends on the slot tabs, which are only readable during render, so derive it lazily
-            let initial: { key: string | null } | undefined;
+            let initial: TabsState | undefined;
             return {
                 get activeKey() {
-                    initial ??= { key: TabsFoundation.getDefaultActiveKey(setupProps, entries.value) };
-                    return initial.key;
+                    initial ??= TabsFoundation.getInitialState(setupProps, entries.value);
+                    return initial.activeKey;
                 },
             };
         },
-        (base) => ({
+        () => ({
             notifyTabClick: (activeKey, event) => emit('tabClick', activeKey, event),
             notifyChange: (activeKey) => {
                 emit('update:activeKey', activeKey);
                 emit('change', activeKey);
             },
-            setNewActiveKey: (activeKey) => base.setState({ activeKey }),
             notifyTabDelete: (tabKey) => emit('tabClose', tabKey),
         }),
         { context: () => config.value }
@@ -166,8 +161,6 @@
         const key = activeKey.value;
         return Array.isArray(props.tabList) && key !== null && props.tabList.some((item) => item.itemKey === key) ? { role: 'tabpanel', id: getPanelId(tabsId, key), 'aria-labelledby': getTabId(tabsId, key) } : {};
     };
-
-    watch(() => props.activeKey, foundation.syncActiveKey);
 
     onMounted(() => {
         // Registered after the first render so no slot is read outside render

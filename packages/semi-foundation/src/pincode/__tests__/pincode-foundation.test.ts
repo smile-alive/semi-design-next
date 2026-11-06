@@ -9,10 +9,10 @@ function createFoundation(format: PinCodeBaseProps['format'] = 'mixed', initialV
         getProp: (key: keyof PinCodeBaseProps) => props[key],
         getProps: () => props,
         getState: () => valueList,
-        updateValueList: (next: string[]) => {
-            valueList = next;
+        setState: (next: { valueList?: string[] }, callback?: () => void) => {
+            valueList = next.valueList ?? valueList;
+            callback?.();
         },
-        onCurrentActiveIndexChange: () => {},
         changeSpecificInputFocusState: () => {},
         notifyValueChange,
         notifyComplete: () => {},

@@ -65,7 +65,4 @@ export interface UserGuideProps {
     prevText?: Snippet;
 }
 
-export interface UserGuideState {
-    current: number;
-    spotlightRect: DOMRect | null;
-}
+export type { UserGuideBaseState as UserGuideState } from '@fibrae/semi-foundation/user-guide/foundation';

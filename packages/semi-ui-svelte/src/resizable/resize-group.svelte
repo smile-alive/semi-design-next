@@ -6,7 +6,6 @@
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import { setResizeGroupContext, type ResizeItemEntry } from './context.js';
     import type { ResizeGroupProps } from './interface.js';
     import { joinStyle } from './style.js';
@@ -36,12 +35,7 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, ResizeGroupBaseProps, ResizeGroupBaseState>(
         ResizeGroupFoundation,
         foundationProps,
-        () => ({
-            isResizing: false,
-            originalPosition: { x: 0, y: 0, lastItemSize: 0, nextItemSize: 0 },
-            backgroundStyle: { cursor: 'auto' },
-            curHandler: null,
-        }),
+        () => ResizeGroupFoundation.getInitialState(),
         () => ({
             getGroupRef: () => group ?? null,
             getItem: (index) => orderedItems()[index].el,
@@ -119,8 +113,6 @@
         observer.observe(node);
         return () => observer.disconnect();
     };
-
-    watch(() => direction, foundation.handleDirectionChange);
 
     // vw and vh limits change with the window even when the group keeps its size
     $effect(() => on(window, 'resize', () => foundation.ensureConstraint()));

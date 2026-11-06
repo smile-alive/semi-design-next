@@ -21,6 +21,9 @@ import { useConfigContext } from '../config-provider/context';
 import useLocale from '../locale/use-locale';
 import ModalContent from './modal-content';
 
+type Foundation = ModalFoundation<ModalReactProps, React.MouseEvent | KeyboardEvent, React.MouseEvent>;
+type Adapter = ModalAdapter<ModalReactProps, React.MouseEvent | KeyboardEvent, React.MouseEvent>;
+
 export type { ModalState } from '@fibrae/semi-foundation/modal/modal-foundation';
 export interface ModalReactProps extends ModalProps {
     cancelButtonProps?: ButtonProps;
@@ -157,10 +160,10 @@ export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTML
 
     const isServerRender = useIsServerRender();
 
-    const [foundation, state] = useFoundation<ModalFoundation<ModalReactProps, ModalState, React.MouseEvent | KeyboardEvent, React.MouseEvent>, ModalAdapter<ModalReactProps, ModalState, React.MouseEvent | KeyboardEvent, React.MouseEvent>, ModalReactProps, ModalState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, ModalReactProps, ModalState>(
         ModalFoundation,
         props,
-        () => ({}),
+        () => ModalFoundation.getInitialState(),
         (base) => ({
             disabledBodyScroll: () =>
                 runtime.disableBodyScroll(

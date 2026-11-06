@@ -9,7 +9,7 @@ export interface AnchorNode {
 }
 
 /** `E` is the framework's click or key event that activated a link */
-export interface AnchorAdapter<P extends AnchorBaseProps = AnchorBaseProps, S extends AnchorBaseState = AnchorBaseState, E = unknown> extends DefaultAdapter<P, S> {
+export interface AnchorAdapter<P extends AnchorBaseProps = AnchorBaseProps, E = unknown> extends DefaultAdapter<P, AnchorBaseState> {
     getContainer: () => HTMLElement | Window;
     getAnchorNode: (selector: string) => HTMLElement | null;
     getContentNode: (selector: string) => HTMLElement | null;
@@ -32,7 +32,7 @@ export interface AnchorBaseState {
     slideBarTop: string;
 }
 
-export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProps, S extends AnchorBaseState = AnchorBaseState, E = unknown> extends BaseFoundation<AnchorAdapter<P, S, E>, P, S> {
+export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProps, E = unknown> extends BaseFoundation<AnchorAdapter<P, E>, P, AnchorBaseState> {
     #container: HTMLElement | Window | null = null;
     #slideBarTop: number | null = null;
     #throttledScroll = throttle(() => this.handleScroll(), 100);
@@ -81,15 +81,15 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
     }
 
     #handleClickLink() {
-        this.adapter.setState({ clickLink: false } as Pick<S, 'clickLink'>);
+        this.setState({ clickLink: false });
     }
 
     #goToLink(link: string, shouldNotify: boolean) {
         const destNode = this.adapter.getContentNode(link);
-        const prevLink = this.adapter.getState('activeLink');
+        const prevLink = this.getState('activeLink');
         this.setActiveLink(link, prevLink, shouldNotify);
         if (destNode) {
-            this.adapter.setState({ clickLink: true } as Pick<S, 'clickLink'>, () => {
+            this.setState({ clickLink: true }, () => {
                 this.#scrollIntoView(link);
                 // no scroll event fires when already in place, so end the click by time too
                 this.#debouncedScrollEnd();
@@ -106,9 +106,9 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
     }
 
     protected setActiveLink(link: string, prevLink: string, shouldNotify = true) {
-        const activeLink = this.adapter.getState('activeLink');
+        const activeLink = this.getState('activeLink');
         if (activeLink !== link) {
-            this.adapter.setState({ activeLink: link } as Pick<S, 'activeLink'>, this.syncSlideBar);
+            this.setState({ activeLink: link }, this.syncSlideBar);
             if (shouldNotify) {
                 this.adapter.notifyChange(link, prevLink);
             }
@@ -142,6 +142,10 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
         }
         // no section above the top: '' is the "no active link" value, undefined would differ from it
         this.setActiveLink(links[lastNegativeIndex] ?? '', prevActiveLink);
+    }
+
+    static getInitialState(): AnchorBaseState {
+        return { activeLink: '', links: [], clickLink: false, slideBarTop: '0' };
     }
 
     /**
@@ -193,19 +197,24 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
         const linkNode = this.adapter.getAnchorNode(`.${cssClasses.PREFIX}-link-title-active`);
         if (linkNode && linkNode.offsetTop !== this.#slideBarTop) {
             this.#slideBarTop = linkNode.offsetTop;
-            this.adapter.setState({ slideBarTop: `${this.#slideBarTop}px` } as Pick<S, 'slideBarTop'>);
+            this.setState({ slideBarTop: `${this.#slideBarTop}px` });
         }
     };
 
+    /** For hosts that know their links up front, instead of addLink and removeLink */
+    setLinks = (links: string[]) => {
+        this.setState({ links });
+    };
+
     addLink = (link: string) => {
-        this.adapter.setState({ links: [...this.getState('links'), link] } as Pick<S, 'links'>);
+        this.setState({ links: [...this.getState('links'), link] });
     };
 
     removeLink = (link: string) => {
         const links = this.getState('links');
         const index = links.indexOf(link);
         if (index !== -1) {
-            this.adapter.setState({ links: links.toSpliced(index, 1) } as Pick<S, 'links'>);
+            this.setState({ links: links.toSpliced(index, 1) });
         }
     };
 

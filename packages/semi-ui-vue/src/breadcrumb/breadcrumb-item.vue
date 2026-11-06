@@ -12,9 +12,8 @@
     import { useBreadcrumbContext } from './context';
     import type { BreadcrumbItemProps, BreadcrumbItemSlots, ShowTooltipProps } from './interface';
 
-    type ItemState = Record<string, never>;
-    type Foundation = BreadcrumbItemFoundation<BreadcrumbItemProps, ItemState, MouseEvent>;
-    type Adapter = BreadcrumbItemAdapter<BreadcrumbItemProps, ItemState, MouseEvent>;
+    type Foundation = BreadcrumbItemFoundation<BreadcrumbItemProps, MouseEvent>;
+    type Adapter = BreadcrumbItemAdapter<BreadcrumbItemProps, MouseEvent>;
 
     // A static subcomponent: it reads no global defaults, as in React.
     defineOptions({ name: 'BreadcrumbItem', elementType: 'Breadcrumb.Item' });
@@ -33,7 +32,7 @@
 
     const context = useBreadcrumbContext();
 
-    const { foundation } = useFoundation<Foundation, Adapter, BreadcrumbItemProps, ItemState>(
+    const { foundation } = useFoundation<Foundation, Adapter, BreadcrumbItemProps, object>(
         BreadcrumbItemFoundation,
         props,
         () => ({}),

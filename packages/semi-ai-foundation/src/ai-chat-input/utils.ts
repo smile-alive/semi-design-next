@@ -1,6 +1,6 @@
 import { getFileType } from '../file-suffix';
 import { strings } from './constants';
-import type { AIChatInputBaseProps, AIChatInputBaseState } from './foundation';
+import type { AIChatInputBaseProps, AIChatInputState } from './foundation';
 import type { Attachment, BaseSkill, Reference } from './interface';
 
 export function getAttachmentType(item: Attachment | Reference) {
@@ -20,7 +20,7 @@ export function getOptionId(listId: string, index: number) {
  * template, then skills, then suggestions.
  */
 export function getListbox(
-    { templateVisible, skillVisible, suggestionVisible, activeSkillIndex, activeSuggestionIndex }: Pick<AIChatInputBaseState, 'templateVisible' | 'skillVisible' | 'suggestionVisible' | 'activeSkillIndex' | 'activeSuggestionIndex'>,
+    { templateVisible, skillVisible, suggestionVisible, activeSkillIndex, activeSuggestionIndex }: Pick<AIChatInputState, 'templateVisible' | 'skillVisible' | 'suggestionVisible' | 'activeSkillIndex' | 'activeSuggestionIndex'>,
     { skills, suggestions }: Pick<AIChatInputBaseProps, 'skills' | 'suggestions'>,
     { skillListId, suggestionListId }: { skillListId: string; suggestionListId: string }
 ): { id: string; activeId: string } | undefined {

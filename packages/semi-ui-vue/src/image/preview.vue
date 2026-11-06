@@ -15,8 +15,6 @@
     import PreviewInner from './preview-inner.vue';
 
     interface PreviewState extends PreviewBaseState {
-        visible: boolean;
-        currentIndex: number;
         images: GroupImage[];
     }
 
@@ -71,11 +69,7 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, ImagePreviewComponentProps, PreviewState>(
         PreviewFoundation,
         props,
-        (view) => ({
-            currentIndex: view.currentIndex || view.defaultCurrentIndex || 0,
-            visible: view.visible || view.defaultVisible || false,
-            images: [],
-        }),
+        (view) => PreviewFoundation.getInitialState(view),
         () => ({
             notifyVisibleChange: (visible) => {
                 emit('update:visible', visible);

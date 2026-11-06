@@ -1,8 +1,8 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-import ImageFoundation, { type ImageAdapter, type ImageLoadStatus } from '@fibrae/semi-foundation/image/image-foundation';
+import ImageFoundation, { type ImageAdapter, type ImageState } from '@fibrae/semi-foundation/image/image-foundation';
 import '@fibrae/semi-foundation/image/image.scss';
 import { IconUploadError } from '@fibrae/semi-icons-react';
 import useDefaultProps from '../_base/use-default-props';
@@ -14,6 +14,9 @@ import Skeleton from '../skeleton';
 import type { ImageProps } from './interface';
 import { usePreviewContext } from './preview-context';
 import PreviewInner from './preview-inner';
+
+type Foundation = ImageFoundation<ImageProps>;
+type Adapter = ImageAdapter<ImageProps>;
 
 const prefixCls = cssClasses.PREFIX;
 const statusCls = `${prefixCls}-status`;
@@ -29,24 +32,17 @@ export default function Image(rawProps: ImageProps) {
     const context = usePreviewContext();
     const { locale } = useLocale('Image');
 
-    const [load, setLoad] = useState<{ src: string; status: ImageLoadStatus }>(() => ({
-        src: props.src,
-        status: 'loading',
-    }));
-
-    const [previewVisibleState, setPreviewVisible] = useState(false);
+    let extra = null;
     const thumbRef = useRef<HTMLDivElement>(null);
     const imgRef = useRef<HTMLImageElement>(null);
 
-    const [foundation] = useFoundation<ImageFoundation<ImageProps, Record<string, never>>, ImageAdapter<ImageProps, Record<string, never>>, ImageProps, Record<string, never>>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, ImageProps, ImageState>(
         ImageFoundation,
         props,
-        () => ({}),
+        () => ImageFoundation.getInitialState(props),
         (base) => ({
             getIsInGroup: () => Boolean(base.getContexts()?.isGroup),
             openGroupPreview: () => base.getContexts().openImage(thumbRef.current),
-            setLoadStatus: (status) => setLoad((prev) => ({ ...prev, status })),
-            setPreviewVisible,
             notifyLoad: (e) => base.getProps().onLoad?.(e),
             notifyError: (e) => base.getProps().onError?.(e),
             notifyPreviewVisibleChange: (visible) => {
@@ -60,25 +56,9 @@ export default function Image(rawProps: ImageProps) {
     );
 
     const mergedImgRef = useMergedRef(ref, imgRef);
-
-    useReplayImageEvents(imgRef);
-
-    if (load.src !== src) {
-        setLoad({ src, status: 'loading' });
-    }
-
-    const loadStatus = load.src === src ? load.status : 'loading';
+    const { loadStatus } = state;
     const previewObject = typeof preview === 'object' && preview !== null ? preview : null;
-    const isVisibleControlled = previewObject?.visible !== undefined;
-    const controlledVisible = Boolean(previewObject?.visible);
-
-    if (isVisibleControlled && controlledVisible !== previewVisibleState) {
-        setPreviewVisible(controlledVisible);
-    }
-
-    let extra = null;
-
-    const previewVisible = isVisibleControlled ? controlledVisible : previewVisibleState;
+    const previewVisible = ImageFoundation.getPreviewVisible(preview, state);
     const isInGroup = Boolean(context?.isGroup);
     const outerStyle = { width, height, ...style };
     const canPreview = ImageFoundation.canPreview(preview, isInGroup);
@@ -99,6 +79,8 @@ export default function Image(rawProps: ImageProps) {
                   style: previewObject.previewStyle,
               }
             : {};
+
+    useReplayImageEvents(imgRef);
 
     useLayoutEffect(() => {
         if (!isInGroup) {

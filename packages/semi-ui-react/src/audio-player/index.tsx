@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useRef } from 'react';
 import clsx from 'clsx';
-import { DEFAULT_RATE, RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
+import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
 import AudioPlayerFoundation, { type AudioPlayerAdapter } from '@fibrae/semi-foundation/audio-player/foundation';
 import { getCurrentTrack } from '@fibrae/semi-foundation/audio-player/utils';
 import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
@@ -19,6 +19,9 @@ import useLocale from '../locale/use-locale';
 import Popover from '../popover';
 import Tooltip from '../tooltip';
 import AudioSlider from './audio-slider';
+
+type Foundation = AudioPlayerFoundation<AudioPlayerProps>;
+type Adapter = AudioPlayerAdapter<AudioPlayerProps>;
 
 export interface AudioInfo {
     title?: string;
@@ -73,18 +76,10 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
 
     const audioRef = useRef<HTMLAudioElement>(null);
 
-    const [foundation, state] = useFoundation<AudioPlayerFoundation<AudioPlayerProps, AudioPlayerState>, AudioPlayerAdapter<AudioPlayerProps, AudioPlayerState>, AudioPlayerProps, AudioPlayerState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, AudioPlayerProps, AudioPlayerState>(
         AudioPlayerFoundation,
         props,
-        () => ({
-            isPlaying: false,
-            currentIndex: 0,
-            totalTime: 0,
-            currentTime: 0,
-            currentRate: DEFAULT_RATE,
-            volume: 100,
-            error: false,
-        }),
+        () => AudioPlayerFoundation.getInitialState(props),
         () => ({ getAudioRef: () => audioRef.current })
     );
 

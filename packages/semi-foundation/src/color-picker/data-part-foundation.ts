@@ -19,18 +19,31 @@ export interface DataPartBaseState {
     inputValue: string;
 }
 
-export type DataPartAdapter<P extends DataPartBaseProps = DataPartBaseProps, S extends DataPartBaseState = DataPartBaseState> = DefaultAdapter<P, S>;
+export type DataPartAdapter<P extends DataPartBaseProps = DataPartBaseProps> = DefaultAdapter<P, DataPartBaseState>;
 
-export default class DataPartFoundation<P extends DataPartBaseProps = DataPartBaseProps, S extends DataPartBaseState = DataPartBaseState> extends BaseFoundation<DataPartAdapter<P, S>, P, S> {
-    constructor(adapter: DataPartAdapter<P, S>) {
-        super({
-            ...adapter,
-        });
-    }
+export default class DataPartFoundation<P extends DataPartBaseProps = DataPartBaseProps> extends BaseFoundation<DataPartAdapter<P>, P, DataPartBaseState> {
+    // an equal color object, such as a fresh controlled value, keeps what is being typed
+    static override readonly propKeys = ['currentColor'];
+    static override readonly propEquals = { currentColor: isEqual };
 
     /** A text box shows no opacity, so a value typed without one keeps the opacity of the current color */
     #hexWithCurrentAlpha(hex: string) {
         return rgbaToHex({ ...hexToRgba(hex), a: this.getProp('currentColor').rgba.a });
+    }
+
+    /** Whether the text box already says `color`, so it must not overwrite what is being typed */
+    #isInputValueOf(color: ColorValue) {
+        const { format, inputValue } = this.getStates();
+        const parsed = this.getValueByInputValue(inputValue);
+        // a hex typed without '#' is not a match, so the sync completes it
+        if (!parsed || (format === 'hex' && !inputValue.startsWith('#'))) {
+            return false;
+        }
+        return isEqual(ColorPickerFoundation.getColorValue(parsed, format, Boolean(this.getProp('alpha'))), color);
+    }
+
+    static getInitialState(props: Pick<DataPartBaseProps, 'currentColor' | 'defaultFormat'>): DataPartBaseState {
+        return { format: props.defaultFormat, inputValue: DataPartFoundation.getInputValue(props.currentColor, props.defaultFormat) };
     }
 
     static getInputValue(currentColor: ColorValue, format: ColorFormat) {
@@ -46,22 +59,13 @@ export default class DataPartFoundation<P extends DataPartBaseProps = DataPartBa
         }
     }
 
-    syncInputValue = () => {
-        this.setState({
-            inputValue: DataPartFoundation.getInputValue(this.getProp('currentColor'), this.getState('format')),
-        });
-    };
-
-    /** Whether the text box already says `color`, so it must not overwrite what is being typed */
-    isInputValueOf = (color: ColorValue) => {
-        const { format, inputValue } = this.getStates();
-        const parsed = this.getValueByInputValue(inputValue);
-        // a hex typed without '#' is not a match, so the sync completes it
-        if (!parsed || (format === 'hex' && !inputValue.startsWith('#'))) {
-            return false;
+    // the color the typed text produced must not rewrite the input, or its canonical text (no alpha, 6 digits) erases the next keystrokes
+    override handlePropsChange() {
+        const currentColor = this.getProp('currentColor');
+        if (!this.#isInputValueOf(currentColor)) {
+            this.setState({ inputValue: DataPartFoundation.getInputValue(currentColor, this.getState('format')) });
         }
-        return isEqual(ColorPickerFoundation.getColorValue(parsed, format, Boolean(this.getProp('alpha'))), color);
-    };
+    }
 
     getValueByInputValue = (value: string) => {
         const { format } = this.getStates();
@@ -107,7 +111,7 @@ export default class DataPartFoundation<P extends DataPartBaseProps = DataPartBa
     };
 
     handleInputValueChange = (value: string) => {
-        this.adapter.setState({ inputValue: value });
+        this.setState({ inputValue: value });
     };
 
     handleFormatChange = (format: ColorFormat) => {

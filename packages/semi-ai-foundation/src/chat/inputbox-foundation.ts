@@ -4,10 +4,8 @@ import { strings, type SendHotKey } from './constants';
 
 const { SEND_HOT_KEY } = strings;
 
-export interface InputBoxAdapter<P = Record<string, any>, S = Record<string, any>> extends DefaultAdapter<P, S> {
+export interface InputBoxAdapter<P extends InputBoxBaseProps = InputBoxBaseProps> extends DefaultAdapter<P, InputBoxState> {
     notifyInputChange: (props: { inputValue: string; attachment: any[] }) => void;
-    setInputValue: (value: string) => void;
-    setAttachment: (attachment: any[]) => void;
     notifySend: (content: string, attachment: any[]) => void;
     notifyUploadChange: (props: any) => void;
     /** Resolves to false to keep the attachment, like Upload's beforeRemove */
@@ -24,12 +22,16 @@ export interface InputBoxBaseProps {
     pasteUpload?: boolean;
 }
 
-export interface InputBoxBaseState {
+export interface InputBoxState {
     content: string;
     attachment: any[];
 }
 
-export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBaseProps, S extends InputBoxBaseState = InputBoxBaseState> extends BaseFoundation<InputBoxAdapter<P, S>, P, S> {
+export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBaseProps> extends BaseFoundation<InputBoxAdapter<P>, P, InputBoxState> {
+    static getInitialState(): InputBoxState {
+        return { content: '', attachment: [] };
+    }
+
     /** Static so render can call it with this render's props */
     static getDisableSend(content: string, attachment: any[], disableSend?: boolean, canSend?: boolean) {
         if (typeof canSend === 'boolean') {
@@ -40,7 +42,7 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
 
     onInputAreaChange = (value: string) => {
         const attachment = this.getState('attachment');
-        this.adapter.setInputValue(value);
+        this.setState({ content: value });
         this.adapter.notifyInputChange({ inputValue: value, attachment });
     };
 
@@ -49,7 +51,7 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
         this.adapter.notifyUploadChange(props);
         const { content } = this.getStates();
         let newFileList = [...fileList];
-        this.adapter.setAttachment(newFileList);
+        this.setState({ attachment: newFileList });
         this.adapter.notifyInputChange({
             inputValue: content,
             attachment: newFileList,
@@ -67,7 +69,7 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
             if (newAttachMent.length === attachment.length) {
                 return;
             }
-            this.adapter.setAttachment(newAttachMent);
+            this.setState({ attachment: newAttachMent });
             this.adapter.notifyRemove(props.fileInstance, newAttachMent, props);
             this.adapter.notifyUploadChange({ fileList: newAttachMent, currentFile: props });
             this.adapter.notifyInputChange({
@@ -90,8 +92,7 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
         if (InputBoxFoundation.getDisableSend(content, attachment, disableSend, canSend)) {
             return;
         }
-        this.adapter.setInputValue('');
-        this.adapter.setAttachment([]);
+        this.setState({ content: '', attachment: [] });
         this.adapter.notifySend(content, attachment);
     };
 

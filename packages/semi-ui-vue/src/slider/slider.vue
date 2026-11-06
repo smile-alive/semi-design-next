@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import { computed, useAttrs, useId, useTemplateRef, type CSSProperties } from 'vue';
-    import { isEqual } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/slider/constants';
     import SliderFoundation, { type HandleDot, type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/slider/foundation';
     import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
@@ -10,7 +9,6 @@
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import SlotFragment from '../_base/slot-fragment';
-    import useDidUpdate from '../_base/use-did-update';
     import useFoundation from '../_base/use-foundation';
     import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';
@@ -101,7 +99,8 @@
         { context: () => config.value, props: { value: () => props.modelValue, tipFormatter } }
     );
 
-    const percent = computed(() => SliderFoundation.getMinAndMaxPercent({ range: props.range, min: props.min, max: props.max }, state.value.currentValue));
+    const currentValue = computed(() => SliderFoundation.deriveValue({ value: props.modelValue, min: props.min, max: props.max }, state.value));
+    const percent = computed(() => SliderFoundation.getMinAndMaxPercent({ range: props.range, min: props.min, max: props.max }, currentValue.value));
 
     const tips = computed(() =>
         SliderFoundation.computeHandleVisibleVal(
@@ -112,7 +111,7 @@
                 step: props.step,
                 min: props.min,
             },
-            state.value
+            { ...state.value, currentValue: currentValue.value }
         )
     );
 
@@ -129,7 +128,7 @@
     const marks = computed(() =>
         Object.entries(props.marks ?? {}).map(([key, label]) => {
             const value = Number(key);
-            const active = SliderFoundation.isMarkActive({ min: props.min, max: props.max, range: props.range, included: props.included }, state.value.currentValue, value);
+            const active = SliderFoundation.isMarkActive({ min: props.min, max: props.max, range: props.range, included: props.included }, currentValue.value, value);
             return { key, value, label, active };
         })
     );
@@ -143,8 +142,7 @@
     const handleIndex = (pos: Handle) => (pos === 'min' ? 0 : 1);
 
     const handleValue = (pos: Handle) => {
-        const { currentValue } = state.value;
-        return Array.isArray(currentValue) ? currentValue[handleIndex(pos)] : currentValue;
+        return Array.isArray(currentValue.value) ? currentValue.value[handleIndex(pos)] : currentValue.value;
     };
 
     const handleStyle = (pos: Handle) => {
@@ -219,22 +217,6 @@
             emit('blur', event);
         }
     };
-
-    // A literal array in the template is a new value on every render, so values are compared deeply.
-    useDidUpdate(
-        () => props.modelValue,
-        (value) => {
-            if (value === undefined) {
-                foundation.resetValue();
-                return;
-            }
-            foundation.handleValueChange(value);
-            // a controlled value change ends a change too
-            emit('afterChange', value);
-        },
-        isEqual,
-        'pre'
-    );
 </script>
 
 <template>

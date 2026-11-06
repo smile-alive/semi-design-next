@@ -2,7 +2,7 @@ import { type Accessor, type JSX, type Ref, Show, batch, children, createEffect,
 import { Portal, isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { COLOR_SCHEME_SELECTOR, TRIGGER_EVENT_NAMES, canRoleCarryPopupState, colorSchemeOf, cssClasses, isBlockDisplay, numbers, popupTarget, strings, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
-import TooltipFoundation, { type Position, type TooltipAdapter, type TooltipBaseProps } from '@fibrae/semi-foundation/tooltip/foundation';
+import TooltipFoundation, { type Position, type TooltipAdapter, type TooltipBaseProps, type TooltipBaseState } from '@fibrae/semi-foundation/tooltip/foundation';
 import { joinIds, warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
@@ -14,7 +14,6 @@ import autofocus from '../_base/autofocus';
 import { PopupLayerContext } from '../_base/popup-layer';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import useConfig from '../config-provider/use-config';
 import { SpecialTriggerContext, type SpecialTriggerState, TooltipDescriptionContext, type TooltipPopups, TooltipPopupsContext, useSpecialTriggers, useTooltipPopups } from './context';
 import TriangleArrow from './triangle-arrow';
@@ -117,18 +116,8 @@ export interface TooltipProps extends TooltipBaseProps {
     afterClose?: () => void;
 }
 
-interface TooltipState {
-    visible: boolean;
-    transitionState: 'enter' | 'leave' | '';
-    triggerEventSet: Record<string, (event: Event) => void>;
-    portalEventSet: Record<string, (event: Event) => void>;
-    isInsert: boolean;
-    portalTarget: HTMLElement | ShadowRoot | null;
-    colorScheme?: string;
-}
-
-type Foundation = TooltipFoundation<TooltipProps, TooltipState>;
-type Adapter = TooltipAdapter<TooltipProps, TooltipState>;
+type Foundation = TooltipFoundation<TooltipProps>;
+type Adapter = TooltipAdapter<TooltipProps>;
 type SpecialStatus = typeof strings.STATUS_DISABLED | typeof strings.STATUS_LOADING | false;
 
 const defaultProps = {
@@ -251,18 +240,10 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
         },
     }) as TooltipProps;
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, TooltipProps, TooltipState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, TooltipProps, TooltipBaseState>(
         TooltipFoundation,
         foundationProps,
-        () => ({
-            visible: false,
-            transitionState: '',
-            triggerEventSet: {},
-            portalEventSet: {},
-            isInsert: false,
-            portalTarget: null,
-            colorScheme: undefined,
-        }),
+        () => TooltipFoundation.getInitialState(),
         (base) => {
             const adapter: Omit<Adapter, keyof typeof base> = {
                 insertPortal: () => {
@@ -277,14 +258,11 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                         colorScheme: colorSchemeOf(el?.closest(COLOR_SCHEME_SELECTOR)),
                     });
                 },
-                closePopup: () => base.setState({ transitionState: 'leave', visible: false }),
                 removePortal: () =>
                     batch(() => {
                         setContentShown(false);
                         base.setState({ isInsert: false, transitionState: '' });
                     }),
-                registerTriggerEvent: (triggerEventSet) => base.setState({ triggerEventSet }),
-                registerPortalEvent: (portalEventSet) => base.setState({ portalEventSet }),
                 notifyVisibleChange: (visible) => props.onVisibleChange?.(visible),
                 registerClickOutsideHandler: (handler) => {
                     adapter.unregisterClickOutsideHandler();
@@ -627,46 +605,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
             createMemo(() => props.mouseLeaveDelay < props.mouseEnterDelay),
             (leavesFirst) => warning(leavesFirst, strings.LEAVE_DELAY_WARNING)
         )
-    );
-
-    // init reads trigger, clickToHide and visible in onMount, earlier in the same flush, and no effect between writes a
-    // prop, so the deferred baseline is the value init read; a `previous === undefined` first-run check would also
-    // skip a real change from undefined
-    createEffect(
-        on(
-            createMemo(() => props.trigger),
-            foundation.rebindEvents,
-            { defer: true }
-        )
-    );
-
-    createEffect(
-        on(
-            createMemo(() => props.clickToHide),
-            foundation.rebindEvents,
-            { defer: true }
-        )
-    );
-
-    createEffect(
-        on(
-            createMemo(() => props.visible),
-            foundation.handleVisiblePropChange,
-            { defer: true }
-        )
-    );
-
-    useWatch(() => props.position, foundation.calcPosition);
-
-    // triggers check `condition` only before opening, so an open or pending popup is closed here; init opens a
-    // controlled popup without checking it, so a change made before init counts too
-    useWatch(
-        () => props.condition,
-        (condition) => {
-            if (condition === false) {
-                foundation.hide();
-            }
-        }
     );
 
     onMount(() => {

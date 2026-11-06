@@ -16,12 +16,7 @@ function createFoundation(props: Partial<MonthsGridFoundationProps>, state: Part
         getProps: () => props,
         getState: (key) => state[key],
         getStates: () => state,
-        updateMonthOnLeft: vi.fn<MonthsGridAdapter['updateMonthOnLeft']>(),
-        updateMonthOnRight: vi.fn<MonthsGridAdapter['updateMonthOnRight']>(),
-        updateDaySelected: vi.fn<MonthsGridAdapter['updateDaySelected']>(),
-        setRangeStart: vi.fn<MonthsGridAdapter['setRangeStart']>(),
-        setRangeEnd: vi.fn<MonthsGridAdapter['setRangeEnd']>(),
-        setHoverDay: vi.fn<MonthsGridAdapter['setHoverDay']>(),
+        setState: vi.fn<MonthsGridAdapter['setState']>(),
         notifySelectedChange: vi.fn<MonthsGridAdapter['notifySelectedChange']>(),
     };
     const foundation = new MonthsGridFoundation(adapter as unknown as MonthsGridAdapter);
@@ -51,13 +46,18 @@ describe('MonthsGridFoundation handleTimeChange', () => {
         const { foundation, adapter } = createFoundation({ type: 'dateTime', insetInput: false }, { selected: new Set(), monthLeft: panel(showDate) });
         foundation.handleTimeChange({ timeStampValue: new Date(2000, 0, 1, 14, 30, 15, 500).getTime() }, 'left');
         const merged = new Date(2019, 8, 8, 14, 30, 15, 500);
-        expect(adapter.updateDaySelected).toHaveBeenCalledWith(new Set(['2019-09-08']));
+        expect(adapter.setState).toHaveBeenCalledWith({ selected: new Set(['2019-09-08']) }, undefined);
         expect(adapter.notifySelectedChange).toHaveBeenCalledWith([merged]);
-        expect(adapter.updateMonthOnLeft).toHaveBeenLastCalledWith({
-            ...panel(showDate),
-            pickerDate: merged,
-            showDate: merged,
-        });
+        expect(adapter.setState).toHaveBeenCalledWith(
+            {
+                monthLeft: {
+                    ...panel(showDate),
+                    pickerDate: merged,
+                    showDate: merged,
+                },
+            },
+            undefined
+        );
     });
 
     it('dateTimeRange 把新时间合并到对应端点的日期上', () => {
@@ -72,11 +72,8 @@ describe('MonthsGridFoundation handleTimeChange', () => {
         );
         foundation.handleTimeChange({ timeStampValue: new Date(2000, 0, 1, 20, 5).getTime() }, 'right');
         const merged = new Date(2021, 5, 15, 20, 5);
-        expect(adapter.updateMonthOnRight).toHaveBeenCalledWith({
-            ...panel(new Date(2021, 6, 1, 18)),
-            pickerDate: merged,
-        });
-        expect(adapter.setRangeEnd).toHaveBeenCalledWith('2021-06-15 20:05:00');
+        expect(adapter.setState).toHaveBeenCalledWith({ monthRight: { ...panel(new Date(2021, 6, 1, 18)), pickerDate: merged } }, undefined);
+        expect(adapter.setState).toHaveBeenCalledWith({ rangeEnd: '2021-06-15 20:05:00' }, undefined);
         expect(adapter.notifySelectedChange).toHaveBeenCalledWith([new Date(2021, 5, 1, 10), merged]);
     });
 
@@ -84,10 +81,7 @@ describe('MonthsGridFoundation handleTimeChange', () => {
         const showDate = new Date(2021, 6, 3, 9);
         const { foundation, adapter } = createFoundation({ type: 'dateTimeRange', insetInput: false }, { rangeStart: '2021-06-01 10:00:00', rangeEnd: '', monthLeft: panel(showDate), monthRight: panel(showDate) });
         foundation.handleTimeChange({ timeStampValue: new Date(2000, 0, 1, 7, 45, 30).getTime() }, 'right');
-        expect(adapter.updateMonthOnRight).toHaveBeenCalledWith({
-            ...panel(showDate),
-            pickerDate: new Date(2021, 6, 3, 7, 45, 30),
-        });
+        expect(adapter.setState).toHaveBeenCalledWith({ monthRight: { ...panel(showDate), pickerDate: new Date(2021, 6, 3, 7, 45, 30) } }, undefined);
         expect(adapter.notifySelectedChange).not.toHaveBeenCalled();
     });
 });
@@ -96,13 +90,10 @@ describe('MonthsGridFoundation 范围端点', () => {
     it('没有端点时 rangeStart 与 rangeEnd 为空串', () => {
         expect(MonthsGridFoundation.getInitialState({ type: 'dateRange', insetInput: false }).rangeStart).toBe('');
         const date = new Date(2021, 5, 1);
-        for (const values of [[date], [null, date]]) {
-            const { foundation, adapter } = createFoundation({ type: 'dateRange', insetInput: false }, { monthLeft: panel(date), monthRight: panel(new Date(2021, 6, 1)) });
-            foundation.updateSelectedFromProps(values);
-            expect([...adapter.setRangeStart.mock.calls, ...adapter.setRangeEnd.mock.calls]).toContainEqual(['']);
-            for (const [endpoint] of [...adapter.setRangeStart.mock.calls, ...adapter.setRangeEnd.mock.calls]) {
-                expect(typeof endpoint).toBe('string');
-            }
+        for (const selectedValue of [[date], [null, date]]) {
+            const { rangeStart, rangeEnd } = MonthsGridFoundation.getInitialState({ type: 'dateRange', insetInput: false, selectedValue });
+            expect([rangeStart, rangeEnd]).toContain('');
+            expect([rangeStart, rangeEnd]).toContain('2021-06-01');
         }
     });
 });

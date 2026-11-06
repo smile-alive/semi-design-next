@@ -1,17 +1,17 @@
 import type React from 'react';
 import { useId } from 'react';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
-import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxValue } from '@fibrae/semi-foundation/checkbox/checkbox-group-foundation';
+import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxGroupBaseState, type CheckboxValue } from '@fibrae/semi-foundation/checkbox/checkbox-group-foundation';
 import { checkboxGroupClasses as css, strings } from '@fibrae/semi-foundation/checkbox/constants';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import type { ArrayElement, ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import { hasContent } from '../_utils';
 import Checkbox, { type CheckboxProps } from './checkbox';
 import { CheckboxGroupContext } from './context';
+
+type Foundation = CheckboxGroupFoundation<CheckboxGroupProps>;
+type Adapter = CheckboxGroupAdapter<CheckboxGroupProps>;
 
 export type CheckboxDirection = ArrayElement<typeof strings.DIRECTION_SET>;
 export type CheckboxType = typeof strings.TYPE_DEFAULT | typeof strings.TYPE_CARD | typeof strings.TYPE_PURECARD;
@@ -46,13 +46,10 @@ export interface CheckboxGroupProps extends ElementProps<'div', 'onChange' | 'de
     ref?: React.Ref<HTMLDivElement>;
 }
 
-export type CheckboxGroupState = {
-    value?: CheckboxValue[];
-};
+export type CheckboxGroupState = CheckboxGroupBaseState;
 
 const defaultProps = {
     disabled: false,
-    onChange: noop,
     type: strings.TYPE_DEFAULT,
     defaultValue: [],
     direction: strings.DEFAULT_DIRECTION,
@@ -103,12 +100,11 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
     const generatedName = useId();
     let inner: React.ReactNode;
 
-    const [foundation, state] = useFoundation<CheckboxGroupFoundation<CheckboxGroupProps, CheckboxGroupState>, CheckboxGroupAdapter<CheckboxGroupProps, CheckboxGroupState>, CheckboxGroupProps, CheckboxGroupState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, CheckboxGroupProps, CheckboxGroupState>(
         CheckboxGroupFoundation,
         props,
-        () => ({ value: props.value || props.defaultValue }),
+        () => CheckboxGroupFoundation.getInitialState(props),
         (base) => ({
-            updateGroupValue: (value) => base.setState({ value }),
             notifyChange: (value) => base.getProps().onChange?.(value),
         })
     );
@@ -127,13 +123,6 @@ export default function CheckboxGroup(rawProps: CheckboxGroupProps) {
         },
         className
     );
-
-    // deep comparison: Tree and TreeSelect pass a new array on every render
-    useDidUpdate(props.value, (value, previous) => {
-        if (!isEqual(previous, value)) {
-            foundation.handlePropValueChange(value);
-        }
-    });
 
     if (options) {
         inner = options.map((option, index) =>

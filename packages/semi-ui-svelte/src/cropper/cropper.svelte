@@ -7,7 +7,6 @@
     import '@fibrae/semi-foundation/cropper/cropper.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { CropperProps } from './interface.js';
 
@@ -82,13 +81,7 @@
     const { foundation, states } = useFoundation<CropperFoundation, Adapter, CropperFoundationProps, CropperState>(
         CropperFoundation,
         foundationProps,
-        () => ({
-            imgData: { width: 0, height: 0, centerPoint: { x: 0, y: 0 } },
-            cropperBox: { width: 0, height: 0, centerPoint: { x: 0, y: 0 } },
-            zoom: 1,
-            rotate: 0,
-            loaded: false,
-        }),
+        () => CropperFoundation.getInitialState(),
         () => ({
             getContainer: () => root as HTMLDivElement,
             getImg: () => img as HTMLImageElement,
@@ -134,22 +127,6 @@
         foundation.syncRotateAndZoom();
         foundation.updatePreview();
     });
-
-    watch(() => aspectRatio, foundation.applyAspectRatio);
-
-    watch(
-        () => zoom,
-        (value) => {
-            if (value === undefined) foundation.syncRotateAndZoom({ zoom: 1 });
-        }
-    );
-
-    watch(
-        () => rotate,
-        (value) => {
-            if (value === undefined) foundation.syncRotateAndZoom({ rotate: 0 });
-        }
-    );
 
     /** Draws the area inside the cropper box, at the image's own resolution, onto a new canvas */
     export function getCropperCanvas() {

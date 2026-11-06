@@ -2,7 +2,7 @@ import type React from 'react';
 import { useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/avatar/constants';
-import AvatarFoundation, { type AvatarAdapter } from '@fibrae/semi-foundation/avatar/foundation';
+import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/avatar/foundation';
 import '@fibrae/semi-foundation/avatar/avatar.scss';
 import { usePopupLayer } from '../_base/popup-layer';
 import useDefaultProps from '../_base/use-default-props';
@@ -15,16 +15,15 @@ import type { AvatarProps } from './interface';
 import { getAvatarText } from './text';
 import TopSlotSvg from './top-slot-svg';
 
+type Foundation = AvatarFoundation<AvatarProps, React.MouseEvent, React.SyntheticEvent<HTMLImageElement>>;
+type Adapter = AvatarAdapter<AvatarProps, React.MouseEvent, React.SyntheticEvent<HTMLImageElement>>;
+
 const prefixCls = cssClasses.PREFIX;
 const slotSizes = ['extra-small', 'small', 'default', 'medium', 'large', 'extra-large'];
 
 export * from './interface';
 
-export interface AvatarState {
-    isImgExist: boolean;
-    hovered: boolean;
-    scale: number;
-}
+export type { AvatarState };
 
 const defaultProps = {
     size: 'medium',
@@ -60,22 +59,14 @@ export default function Avatar(rawProps: AvatarProps) {
     const contentRef = useRef<HTMLSpanElement>(null);
     const imgRef = useRef<HTMLImageElement>(null);
 
-    const [foundation, state] = useFoundation<AvatarFoundation<AvatarProps, AvatarState, React.MouseEvent, React.SyntheticEvent<HTMLImageElement>>, AvatarAdapter<AvatarProps, AvatarState, React.MouseEvent, React.SyntheticEvent<HTMLImageElement>>, AvatarProps, AvatarState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, AvatarProps, AvatarState>(
         AvatarFoundation,
         props,
-        () => ({ isImgExist: true, hovered: false, scale: 1 }),
+        () => AvatarFoundation.getInitialState(),
         (base) => ({
-            setImgExist: (isImgExist) => base.setState({ isImgExist }),
-            notifyEnter: (e) => {
-                base.setState({ hovered: true });
-                base.getProp('onMouseEnter')?.(e);
-            },
+            notifyEnter: (e) => base.getProp('onMouseEnter')?.(e),
             notifyError: (e) => base.getProps().onError?.(e),
-            notifyLeave: (e) => {
-                base.setState({ hovered: false });
-                base.getProp('onMouseLeave')?.(e);
-            },
-            setScale: (scale) => base.setState({ scale }),
+            notifyLeave: (e) => base.getProp('onMouseLeave')?.(e),
             getTextWidths: () => {
                 const text = contentRef.current;
                 return text ? { container: text.parentElement?.offsetWidth ?? 0, text: text.offsetWidth } : null;
@@ -109,7 +100,6 @@ export default function Avatar(rawProps: AvatarProps) {
     };
 
     useReplayImageEvents(imgRef);
-    useDidUpdate(src, foundation.handleSrcChange);
 
     // mount is measured by foundation.init; the text also appears when the image fails
     useDidUpdate(text, (value) => {
@@ -118,8 +108,8 @@ export default function Avatar(rawProps: AvatarProps) {
         }
     });
 
+    // size is resolved from the group context, so it is not a prop of the foundation
     useDidUpdate(size, foundation.changeScale);
-    useDidUpdate(gap, foundation.changeScale);
 
     for (const [key, value] of Object.entries(rest)) {
         (hasFocusTarget && (key === 'tabIndex' || key.startsWith('aria-')) ? controlProps : rootProps)[key] = value;

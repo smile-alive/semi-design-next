@@ -8,7 +8,7 @@ import warning from '../utils/warning';
 import { cssClasses } from './constants';
 import { type FieldError, hasErrors, isErrorLeaf, normalizeFieldError, normalizeFormErrors } from './errors';
 import type FieldStore from './field-store';
-import type { BaseFormAdapter, FormState, CallOpts, FieldRegistration, ComponentProps, setValuesConfig, ArrayFieldRegistration, ValidateOptions, ChangeFieldValueOptions, FieldSnapshot, StandardSchema, StandardSchemaIssue, StandardSchemaResult } from './interface';
+import type { BaseFormAdapter, FormState, FormFoundationState, CallOpts, FieldRegistration, ComponentProps, setValuesConfig, ArrayFieldRegistration, ValidateOptions, ChangeFieldValueOptions, FieldSnapshot, StandardSchema, StandardSchemaIssue, StandardSchemaResult } from './interface';
 import { validateRules } from './rules';
 import { isValid, nextUpdateKey, schemaIssuePath } from './utils';
 
@@ -68,7 +68,7 @@ type ScrollToErrorOpts = {
     index?: number;
     scrollOpts?: ScrollIntoViewOptions;
 };
-export default class FormFoundation<E = unknown> extends BaseFoundation<BaseFormAdapter<Record<string, any>, Record<string, any>, any, E>> {
+export default class FormFoundation<E = unknown> extends BaseFoundation<BaseFormAdapter<Record<string, any>, any, E>, Record<string, any>, FormFoundationState> {
     #data: FormState;
     #batchDepth = 0;
     #pendingFields = new Set<FieldStore>();
@@ -79,15 +79,18 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     #validations = new Map<string, Promise<unknown>>();
     #debounceTimer?: ReturnType<typeof setTimeout>;
     #debouncedFields = new Set<string>();
-    // The Form's own cleanup runs before its fields' (React unmounts a parent's layout effects first)
     #destroyed = false;
     // reset() of the whole Form starts a new epoch: a validation started in an older one settles without writing or
     // reporting
     #epoch = 0;
     // The newest non-silent form-level validation; an older one still settles with its own result but writes nothing
     #formValidation = 0;
-    // Set from an unregister until the render after it, which reports the values once
-    #unregisterNotifyPending = false;
+    // Hosts unmount a Form and its fields, and mount an ArrayField and its rows, in different orders: what depends on
+    // all of them waits for the Form's next commit, when every field of the current one has registered or unregistered
+    #settleScheduled = false;
+    #unregistered: Array<{ field: string; keepState: boolean }> = [];
+    // ArrayFields mounted in this commit: a row registering after its ArrayField adds its value to what reset() restores
+    #mountedArrayFields: string[] = [];
     // The run the validations requested in this tick share
     #pendingSchemaRun?: Promise<SchemaRun>;
     // The newest run with a non-silent request: only it writes, so an async schema settling out of order shows no older result
@@ -95,7 +98,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     // Written by the last batch validation, so that the next one reports them to onErrorChange when they clear
     #detachedErrorPaths: string[] = [];
 
-    constructor(adapter: BaseFormAdapter<Record<string, any>, Record<string, any>, any, E>) {
+    constructor(adapter: BaseFormAdapter<Record<string, any>, any, E>) {
         super(adapter);
         // initValues is read here too: a field set on the Form may have no Field entity,
         // so the initial value cannot rely on the register moment alone
@@ -118,6 +121,39 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     #forceUpdate(callback?: () => void) {
         this.adapter.forceUpdate(this.getFormState(), callback);
     }
+
+    // An empty setState, not a forceUpdate: a Form unmounting after this must not have pushed a snapshot to its useForm api
+    #scheduleSettle() {
+        if (!this.#settleScheduled) {
+            this.#settleScheduled = true;
+            this.setState({}, this.#settle);
+        }
+    }
+
+    #settle = () => {
+        this.#settleScheduled = false;
+        // rows of a hidden Form (StrictMode, Activity) register again before it shows, into the same ArrayField snapshots
+        if (this.#destroyed) {
+            return;
+        }
+        this.#mountedArrayFields = [];
+        const unregistered = this.#unregistered.splice(0);
+        if (!unregistered.length) {
+            return;
+        }
+        unregistered.forEach(({ field, keepState }) => {
+            // a field registered at the path since (a shifted ArrayField row) holds its state now
+            if (!keepState && !this.#fields.has(field)) {
+                this.#data = {
+                    values: ObjectUtil.remove(this.#data.values, field),
+                    errors: ObjectUtil.remove(this.#data.errors, field),
+                    touched: ObjectUtil.remove(this.#data.touched, field),
+                };
+            }
+        });
+        this.adapter.notifyChange(this.#data);
+        this.#forceUpdate();
+    };
 
     #updateField(store: FieldStore, snapshot: Partial<FieldSnapshot>) {
         if (!store.update(snapshot)) {
@@ -732,6 +768,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             } else if (registration.keepState && ObjectUtil.get(this.#data.touched, field) === true) {
                 this.#setFieldTouched(registration, true, { ...opts, skipRender: true });
             }
+            this.#addToMountedArrayFields(field, allowEmpty);
             return;
         }
 
@@ -759,32 +796,22 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         }
     };
 
-    #unRegister = (field: string) => {
-        if (!this.#fields.get(field).keepState) {
-            this.#data = {
-                values: ObjectUtil.remove(this.#data.values, field),
-                errors: ObjectUtil.remove(this.#data.errors, field),
-                touched: ObjectUtil.remove(this.#data.touched, field),
-            };
+    /**
+     * A renamed field (a shifted ArrayField row) may register its new path before or after the field there leaves
+     * it, so the state goes and onChange reports once the commit settles, with every row in place
+     */
+    #unRegister = ({ id, field }: FieldRegistration) => {
+        const current = this.#fields.get(field);
+        if (current?.id !== id) {
+            return;
         }
         this.#fields.delete(field);
-        // Unmounting the whole Form unregisters every field; reporting each one would call onChange once per field
-        // and write a non-empty snapshot back to a useForm api that was already unbound
+        // the whole Form is unmounting, which settles nothing
         if (this.#destroyed) {
             return;
         }
-        // A renamed field (a shifted ArrayField row) unregisters its old path and registers the new one in the same
-        // commit, after the other rows unregistered theirs: reporting here would hand onChange values with rows
-        // missing. The render after the commit reports the values once.
-        if (this.#unregisterNotifyPending) {
-            this.#forceUpdate();
-            return;
-        }
-        this.#unregisterNotifyPending = true;
-        this.#forceUpdate(() => {
-            this.#unregisterNotifyPending = false;
-            this.adapter.notifyChange(this.#data);
-        });
+        this.#unregistered.push({ field, keepState: current.keepState });
+        this.#scheduleSettle();
     };
 
     #registerArrayField = (arrayFieldPath: string, val: any) => {
@@ -795,9 +822,10 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     };
 
     /**
-     * Registers a mounting ArrayField and writes its initial value. Its rows register first (React runs a child's
-     * layout effects before its parent's) and have written their own values already, so the values of the fields and
-     * ArrayFields registered under it are laid over the array again, outer paths first.
+     * Registers a mounting ArrayField and writes its initial value. Rows that registered before it have written their
+     * own values already, so the values of the fields and ArrayFields registered under it are laid over the array
+     * again, outer paths first; rows registering after it, until the commit settles, write theirs over the array
+     * themselves and add them to what reset() restores.
      */
     #mountArrayField = (arrayFieldPath: string, val: any) => {
         const target = toPath(arrayFieldPath);
@@ -826,9 +854,12 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         nestedValues.forEach(({ path, allowEmpty, value }) => {
             this.#updateStateValue(path, value, { ...SILENT, allowEmpty });
         });
+        this.#addToMountedArrayFields(arrayFieldPath, false);
         if (!kept) {
             // reset() restores what the rows show now, their own initValue included
             this.#updateArrayField(arrayFieldPath, { initValue: this.adapter.cloneDeep(this.#getValue(arrayFieldPath)) });
+            this.#mountedArrayFields.push(arrayFieldPath);
+            this.#scheduleSettle();
         }
         this.#forceUpdate();
     };
@@ -885,6 +916,20 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         this.#updateArrayField(arrayFieldPath, { updateKey });
         return updateKey;
     };
+
+    /**
+     * A row or nested ArrayField registering after its ArrayField mounted in this commit: reset() restores the value it
+     * registered with too
+     */
+    #addToMountedArrayFields(field: string, allowEmpty: boolean) {
+        this.#mountedArrayFields.forEach((arrayFieldPath) => {
+            const arrayField = this.#registeredArrayField.get(arrayFieldPath);
+            if (arrayField && field !== arrayFieldPath && isPathWithin(field, arrayFieldPath)) {
+                const values = ObjectUtil.set(ObjectUtil.set({}, arrayFieldPath, arrayField.initValue), field, this.adapter.cloneDeep(this.#getValue(field)), allowEmpty);
+                this.#updateArrayField(arrayFieldPath, { initValue: ObjectUtil.get(values, arrayFieldPath) });
+            }
+        });
+    }
 
     #unRegisterArrayField = (arrayField: string, keepState: boolean) => {
         if (keepState) {
@@ -1164,30 +1209,38 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     }
 
     protected getInitValues(): any {
-        return this.adapter.getInitValues();
+        return this.getProp('initValues');
     }
 
     protected getInitValue(field?: string) {
         if (typeof field === 'undefined') {
-            return this.adapter.getInitValues();
+            return this.getInitValues();
         }
-        return ObjectUtil.get(this.adapter.getInitValues(), field);
+        return ObjectUtil.get(this.getInitValues(), field);
     }
 
     protected getFormProps(keys?: Array<string>): ComponentProps {
         return this.adapter.getFormProps(keys);
     }
 
-    override init() {
-        // StrictMode runs init -> destroy -> init on one instance
-        this.#destroyed = false;
+    protected override initOnce() {
         const { schema, validator } = this.getProps();
         warning(Boolean(schema) && typeof validator === 'function', '[Semi Form] You should not use <Form schema> and <Form validator> at the same time; <Form schema> will be ignored');
+    }
+
+    /** The rendered form state starts from the initValues as given; the foundation's own copy is a clone */
+    static getInitialState(props: { initValues?: Record<string, any> }): FormFoundationState {
+        return { formState: { values: props.initValues ?? {}, errors: {}, touched: {} } };
+    }
+
+    override init() {
+        this.#destroyed = false;
     }
 
     override destroy() {
         this.#destroyed = true;
         this.#cancelDebouncedValidation();
+        this.#unregistered = [];
     }
 
     submit = (e?: E) => {

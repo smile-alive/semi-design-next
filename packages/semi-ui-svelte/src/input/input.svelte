@@ -9,14 +9,13 @@
     import { type SlotKind, trackSlotKind } from '../_base/slot-kind.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { getInputGroupInScope } from './context.js';
     import { isNotClassOrStyle } from './control-attrs.js';
     import type { InputProps, InputState } from './interface.js';
 
-    type Foundation = InputFoundation<InputBaseProps, InputState, KeyboardEvent, CompositionEvent, Event>;
-    type Adapter = InputAdapter<InputBaseProps, InputState, KeyboardEvent, CompositionEvent, Event>;
+    type Foundation = InputFoundation<InputBaseProps, KeyboardEvent, CompositionEvent, Event>;
+    type Adapter = InputAdapter<InputBaseProps, KeyboardEvent, CompositionEvent, Event>;
 
     const defaults = useDefaultProps('Input');
 
@@ -102,6 +101,9 @@
         get autofocus() {
             return autofocus;
         },
+        get mode() {
+            return mode;
+        },
     };
 
     const prefixCls = cssClasses.PREFIX;
@@ -123,16 +125,8 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, InputBaseProps, InputState>(
         InputFoundation,
         foundationProps,
-        (view) => ({
-            value: view.value,
-            cachedValue: view.value,
-            isFocus: false,
-            eyeClosed: mode === 'password',
-        }),
-        (base) => ({
-            setValue: (next) => base.setState({ value: next }),
-            setEyeClosed: (eyeClosed) => base.setState({ eyeClosed }),
-            toggleFocusing: (isFocus) => base.setState({ isFocus }),
+        (view) => InputFoundation.getInitialState(view),
+        () => ({
             focusInput,
             notifyChange: (next, event) => {
                 // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
@@ -219,16 +213,6 @@
     };
 
     const keepFocus = (event: MouseEvent) => event.preventDefault();
-
-    watch(
-        () => value,
-        (next) => foundation.handleValueChange(next as string | number)
-    );
-
-    watch(
-        () => mode,
-        (next) => foundation.handleModeChange(next as string)
-    );
 
     // A removed node fires no blur, so a focused clear button would drop focus to the body; this pre-flush effect runs
     // before the DOM patch removes it.

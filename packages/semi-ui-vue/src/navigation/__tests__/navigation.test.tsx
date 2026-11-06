@@ -1789,7 +1789,7 @@ describe('Navigation 的 Vue 用法', () => {
         expect(html).toContain('任务查询');
     });
 
-    it('KeepAlive 切走再切回后 popup 已关闭', async () => {
+    it('KeepAlive 切走期间 popup 离开文档，切回后指针已离开的 hover popup 随即关闭', async () => {
         useFakeTimers();
         const Cached = defineComponent({
             name: 'Cached',
@@ -1812,8 +1812,10 @@ describe('Navigation 的 Vue 用法', () => {
         await unhover(getSubTitle('用户'));
         cached.value = false;
         await nextTick();
+        expect(screen.queryByRole('menu')).toBeNull();
         cached.value = true;
         await nextTick();
+        await vi.advanceTimersByTimeAsync(200);
         expect(screen.queryByRole('menu')).toBeNull();
         expect(getSubTitle('用户')).toHaveAttribute('aria-expanded', 'false');
     });

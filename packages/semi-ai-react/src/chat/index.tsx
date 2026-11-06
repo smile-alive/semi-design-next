@@ -1,7 +1,7 @@
 import { type DragEvent, useCallback, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses, isUnfinishedMessageStatus } from '@fibrae/semi-ai-foundation/chat/constants';
-import ChatFoundation, { type ChatAdapter } from '@fibrae/semi-ai-foundation/chat/foundation';
+import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/chat/foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import '@fibrae/semi-ai-foundation/chat/chat.scss';
@@ -10,7 +10,7 @@ import { namedRole } from '@fibrae/semi-ui-react/_base/named-role';
 import useDefaultProps from '@fibrae/semi-ui-react/_base/use-default-props';
 import useFoundation from '@fibrae/semi-ui-react/_base/use-foundation';
 import Button from '@fibrae/semi-ui-react/button/index';
-import { useDidUpdate, useLocale } from '@fibrae/semi-ui-react/hooks';
+import { useLocale } from '@fibrae/semi-ui-react/hooks';
 import LocaleConsumer from '@fibrae/semi-ui-react/locale/locale-consumer';
 import ReactResizeObserver from '@fibrae/semi-ui-react/resize-observer/index';
 import Toast from '@fibrae/semi-ui-react/toast/index';
@@ -18,7 +18,10 @@ import type { UploadHandle } from '@fibrae/semi-ui-react/upload/index';
 import ChatContent from './chat-content';
 import Hint from './hint';
 import InputBox from './input-box';
-import type { ChatProps, ChatState, InputBoxHandle } from './interface';
+import type { ChatProps, InputBoxHandle } from './interface';
+
+type Foundation = ChatFoundation;
+type Adapter = ChatAdapter<ChatProps>;
 
 export type { ChatHandle } from './interface';
 
@@ -92,10 +95,10 @@ export default function Chat(rawProps: ChatProps) {
 
     const [toast, toastHolder] = Toast.useToast();
 
-    const [foundation, state] = useFoundation<ChatFoundation, ChatAdapter<ChatProps, ChatState>, ChatProps, ChatState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, ChatProps, ChatState>(
         ChatFoundation,
         props,
-        () => ({ backBottomVisible: false, uploadAreaVisible: false }),
+        () => ChatFoundation.getInitialState(),
         (base) => ({
             getContainerRef: () => containerRef.current,
             notifyChatsChange: (chats) => base.getProps().onChatsChange?.(chats),
@@ -106,14 +109,8 @@ export default function Chat(rawProps: ChatProps) {
             notifyClearContext: () => base.getProps().onClear?.(),
             notifyMessageSend: (content, attachment) => base.getProps().onMessageSend?.(content, attachment),
             notifyInputChange: (value) => base.getProps().onInputChange?.(value),
-            setBackBottomVisible: (visible) => {
-                if (base.getState('backBottomVisible') !== visible) {
-                    base.setState({ backBottomVisible: visible });
-                }
-            },
             notifyStopGenerate: (e) => base.getProps().onStopGenerator?.(e),
             notifyHintClick: (hint) => base.getProps().onHintClick?.(hint),
-            setUploadAreaVisible: (visible) => base.setState({ uploadAreaVisible: visible }),
             manualUpload: (files) => uploadRef.current?.insert(files),
             getDropAreaElement: () => dropAreaRef.current,
         })
@@ -158,9 +155,6 @@ export default function Chat(rawProps: ChatProps) {
         }
         onDragEnd?.(e);
     };
-
-    useDidUpdate(props.chats, foundation.handleChatsChange);
-    useDidUpdate(props.hints, foundation.handleHintsChange);
 
     useImperativeHandle(
         props.ref,

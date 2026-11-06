@@ -29,7 +29,7 @@ export interface RadioContextView {
 }
 
 export interface RadioBaseProps {
-    checked?: boolean;
+    checked?: boolean | null;
     defaultChecked?: boolean;
     disabled?: boolean;
     mode?: string;
@@ -40,11 +40,10 @@ export interface RadioBaseProps {
 }
 
 export interface RadioBaseState {
-    checked?: boolean;
+    checked: boolean;
 }
 
-export interface RadioAdapter<P extends RadioBaseProps = RadioBaseProps, S extends RadioBaseState = RadioBaseState> extends DefaultAdapter<P, S, RadioContextView | null | undefined> {
-    setChecked: (checked: boolean) => void;
+export interface RadioAdapter<P extends RadioBaseProps = RadioBaseProps> extends DefaultAdapter<P, RadioBaseState, RadioContextView | null | undefined> {
     notifyGroupChange: (e: RadioChangeEvent) => void;
     notifyChange: (e: RadioChangeEvent) => void;
     getInput: () => HTMLInputElement | null;
@@ -67,10 +66,11 @@ interface RadioSourceEvent {
     preventDefault: () => void;
 }
 
-export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps, S extends RadioBaseState = RadioBaseState> extends BaseFoundation<RadioAdapter<P, S>, P, S> {
+export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps> extends BaseFoundation<RadioAdapter<P>, P, RadioBaseState> {
     // Radios outside a group that keep their own state: the native input unchecks its same-name peers, but their
     // state would still say checked
-    static #standalone = new Set<RadioFoundation<any, any>>();
+    static #standalone = new Set<RadioFoundation<any>>();
+    static override readonly propKeys = ['checked'];
 
     #getView() {
         return RadioFoundation.deriveView(this.getProps(), this.getStates(), this.getContexts());
@@ -89,14 +89,14 @@ export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps, 
         for (const peer of RadioFoundation.#standalone) {
             const peerInput = peer.adapter.getInput();
             if (peer !== this && peer.#isStandalone() && peerInput?.name === input.name && peerInput.form === input.form && peerInput.getRootNode() === input.getRootNode() && peer.getState('checked')) {
-                peer.setChecked(false);
+                peer.setState({ checked: false });
             }
         }
     }
 
-    // a boolean `checked` is controlled and `defaultChecked` only seeds the uncontrolled state
+    // `checked` is controlled whenever it is not undefined, so null reads as unchecked; `defaultChecked` only seeds the uncontrolled state
     static getInitialState(props: Pick<RadioBaseProps, 'checked' | 'defaultChecked'>): RadioBaseState {
-        return { checked: typeof props.checked === 'boolean' ? props.checked : Boolean(props.defaultChecked) };
+        return { checked: props.checked !== undefined ? Boolean(props.checked) : Boolean(props.defaultChecked) };
     }
 
     static deriveView(props: RadioBaseProps, state: RadioBaseState, context?: RadioContextView | null): RadioView {
@@ -117,7 +117,7 @@ export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps, 
         const isPureCardRadio = props.type === strings.TYPE_PURECARD;
         return {
             inGroup: false,
-            checked: typeof props.checked === 'boolean' ? props.checked : Boolean(state.checked),
+            checked: props.checked !== undefined ? Boolean(props.checked) : Boolean(state.checked),
             disabled: Boolean(props.disabled),
             mode: props.mode,
             isButtonRadio: props.type === strings.TYPE_BUTTON,
@@ -136,9 +136,10 @@ export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps, 
         RadioFoundation.#standalone.delete(this);
     }
 
-    setChecked = (checked: boolean) => {
-        this.adapter.setChecked(checked);
-    };
+    // state mirrors `checked`, so a form reset to undefined unchecks the radio
+    override handlePropsChange() {
+        this.setState({ checked: Boolean(this.getProp('checked')) });
+    }
 
     /** `checked` is the value the native input reports, or false for the uncheck of advanced mode */
     handleChange = (checked: boolean, e: RadioSourceEvent) => {
@@ -160,7 +161,7 @@ export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps, 
             if (checked) {
                 this.#uncheckPeers();
             }
-            this.setChecked(checked);
+            this.setState({ checked });
         }
         this.adapter.notifyChange(event);
     };

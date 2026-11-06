@@ -16,23 +16,30 @@ export interface PinCodeBaseState {
     currentActiveIndex: number;
 }
 
-export interface PinCodeAdapter<P extends PinCodeBaseProps = PinCodeBaseProps, S extends PinCodeBaseState = PinCodeBaseState> extends DefaultAdapter<P, S> {
-    // the Promise must resolve after the commit and after a controlled parent wrote its value back:
-    // completeSingleInput awaits it before reading valueList, so a controlled paste sees the previous cell's character
-    onCurrentActiveIndexChange: (index: number) => Promise<void> | void;
+export interface PinCodeAdapter<P extends PinCodeBaseProps = PinCodeBaseProps> extends DefaultAdapter<P, PinCodeBaseState> {
     notifyValueChange: (values: string[]) => void;
     notifyComplete: (value: string) => void;
     changeSpecificInputFocusState: (index: number, state: 'blur' | 'focus') => void;
-    updateValueList: (newValueList: PinCodeBaseState['valueList']) => Promise<void> | void;
 }
 
-export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseProps, S extends PinCodeBaseState = PinCodeBaseState> extends BaseFoundation<PinCodeAdapter<P, S>, P, S> {
+export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseProps> extends BaseFoundation<PinCodeAdapter<P>, P, PinCodeBaseState> {
     static numberReg = /^\d*$/;
     static mixedReg = /^[0-9a-zA-Z]$/;
+    static override readonly propKeys = ['value'];
+
+    /** By code point, so a character outside the BMP is not split into two lone surrogates */
+    static getInitialState(props: Pick<PinCodeBaseProps, 'value' | 'defaultValue'>): PinCodeBaseState {
+        return { valueList: Array.from(props.value ?? props.defaultValue ?? ''), currentActiveIndex: 0 };
+    }
+
+    /** A value prop that goes back to undefined (a form reset) empties the cells */
+    override handlePropsChange() {
+        this.setState({ valueList: Array.from(this.getProp('value') ?? '') });
+    }
 
     handleCurrentActiveIndexChange = (index: number, state: 'focus' | 'blur') => {
         if (state === 'focus') {
-            void this.adapter.onCurrentActiveIndexChange(index);
+            this.setState({ currentActiveIndex: index });
         }
     };
 
@@ -41,12 +48,13 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
         // filled cells stay a prefix (the value is reported joined, so a gap would shift characters), hence typing
         // past its end lands on the first empty cell
         const index = Math.min(i, this.getState('valueList').length);
-        await this.adapter.onCurrentActiveIndexChange(index + 1);
+        // awaited after the commit, so a controlled paste reads the previous cell's character once the parent wrote it back
+        await this.commitState({ currentActiveIndex: index + 1 });
         const valueList = [...this.getState('valueList')];
         valueList[index] = singleInputValue;
         this.adapter.notifyValueChange(valueList);
         if (!isControlledComponent) {
-            await this.updateValueList(valueList);
+            await this.commitState({ valueList });
         }
 
         const count = this.getProp('count');
@@ -96,10 +104,6 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
         return validateFunction(value);
     }
 
-    updateValueList = async (newValueList: PinCodeBaseState['valueList']) => {
-        await this.adapter.updateValueList(newValueList);
-    };
-
     handlePaste = async (e: ClipboardEvent, startInputIndex: number) => {
         // before anything else, or the browser may paste first and write twice
         e.preventDefault();
@@ -120,7 +124,7 @@ export default class PinCodeFoundation<P extends PinCodeBaseProps = PinCodeBaseP
     /** Also covers a cell emptied without Backspace or Delete (cut, a virtual keyboard's delete). */
     removeCell(index: number) {
         const valueList = this.getState('valueList').toSpliced(index, 1);
-        void this.updateValueList(valueList);
+        this.setState({ valueList });
         this.adapter.notifyValueChange(valueList);
     }
 

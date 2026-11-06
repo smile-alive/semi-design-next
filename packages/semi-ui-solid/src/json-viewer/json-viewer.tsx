@@ -86,8 +86,6 @@ type FoundationProps = Omit<JsonViewerProps, 'options'> & JsonViewerBaseProps;
 type Foundation = JsonViewerFoundation<FoundationProps>;
 type Adapter = JsonViewerAdapter<FoundationProps>;
 
-const defaultSearchOptions: SearchOptions = { caseSensitive: false, wholeWord: false, regex: false };
-
 const searchOptionItems = [
     { key: 'caseSensitive', icon: IconCaseSensitive },
     { key: 'regex', icon: IconRegExp },
@@ -137,7 +135,11 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
         { equals: isEqual }
     );
 
-    const editorInput = createMemo(() => ({ value: local.value, options: mergedOptions() }), undefined, { equals: isEqual });
+    const foundationProps = mergeProps(props, {
+        get options() {
+            return mergedOptions() as CoreOptions;
+        },
+    }) as FoundationProps;
 
     // The editor calls `render` while laying out and keeps what it returns, so each result gets its own root; the
     // owner's context reaches it, and the root is released when the editor lays out again
@@ -164,24 +166,17 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
             };
         }, owner ?? undefined);
 
-    const coreOptions = (): CoreOptions => {
-        const { customRenderRule, ...options } = mergedOptions();
-        return { ...options, ...(customRenderRule && { customRenderRule: customRenderRule.map((rule) => ({ match: rule.match, render: (content: string) => renderCustom(rule, content) })) }) };
-    };
-
-    const foundationProps = mergeProps(props, {
-        get options() {
-            return coreOptions();
-        },
-    }) as FoundationProps;
-
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, JsonViewerBaseState>(
         JsonViewerFoundation,
         foundationProps,
-        () => ({ searchOptions: defaultSearchOptions, showSearchBar: false }),
-        (base) => ({
+        () => JsonViewerFoundation.getInitialState(),
+        () => ({
             getEditorRef: () => editor as HTMLDivElement,
             notifyChange: (value) => local.onChange?.(value),
+            toCoreOptions: (options) => {
+                const { customRenderRule, ...rest } = options as JsonViewerOptions;
+                return { ...rest, ...(customRenderRule && { customRenderRule: customRenderRule.map((rule) => ({ match: rule.match, render: (content: string) => renderCustom(rule, content) })) }) };
+            },
             setCustomRenderMap: (map: Map<HTMLElement, CustomRenderEntry>) => {
                 for (const entry of mountedEntries) {
                     entry.dispose();
@@ -191,13 +186,6 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
                     entry.mount(element);
                     mountedEntries.push(entry);
                 }
-            },
-            toggleSearchOption: (key) => {
-                const { searchOptions } = base.getStates();
-                base.setState({ searchOptions: { ...searchOptions, [key]: !searchOptions[key] } });
-            },
-            toggleSearchBar: () => {
-                base.setState({ showSearchBar: !base.getStates().showSearchBar, searchOptions: defaultSearchOptions });
             },
         })
     );
@@ -369,21 +357,6 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
                 </Show>
             </div>
         </DragMove>
-    );
-
-    createEffect(
-        on(editorInput, (next, previous) => {
-            if (!previous) {
-                return;
-            }
-            // a value equal to the editor's own text is the echo of an onChange write-back: re-creating would drop the
-            // caret, focus, undo stack and scroll position
-            if (isEqual(next.options, previous.options) && next.value === foundation.jsonViewer?.getModel().getValue()) {
-                return;
-            }
-            foundation.destroy();
-            foundation.init();
-        })
     );
 
     createEffect(

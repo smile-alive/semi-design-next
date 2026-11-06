@@ -5,13 +5,12 @@
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import { Input, type InputChangeEvent } from '../input/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { PinCodeProps, PinCodeState } from './interface.js';
 
-    type Foundation = PinCodeFoundation<PinCodeBaseProps, PinCodeState>;
-    type Adapter = PinCodeAdapter<PinCodeBaseProps, PinCodeState>;
+    type Foundation = PinCodeFoundation<PinCodeBaseProps>;
+    type Adapter = PinCodeAdapter<PinCodeBaseProps>;
 
     const defaults = useDefaultProps('PinCode');
 
@@ -47,12 +46,8 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, PinCodeBaseProps, PinCodeState>(
         PinCodeFoundation,
         foundationProps,
-        // by code point, so a character outside the BMP is not split into two lone surrogates
-        (view) => ({ valueList: Array.from(view.value ?? ''), currentActiveIndex: 0 }),
-        (base) => ({
-            // resolve after the commit: a controlled paste awaits the parent's new value before the next character
-            onCurrentActiveIndexChange: (currentActiveIndex) => new Promise<void>((resolve) => base.setState({ currentActiveIndex }, resolve)),
-            updateValueList: (valueList) => new Promise<void>((resolve) => base.setState({ valueList }, resolve)),
+        (view) => PinCodeFoundation.getInitialState(view),
+        () => ({
             notifyValueChange: (values) => {
                 const next = values.join('');
                 // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
@@ -99,11 +94,6 @@
             onBlur?.(event);
         }
     };
-
-    watch(
-        () => value,
-        (next) => foundation.updateValueList(Array.from(next || ''))
-    );
 
     export function focus(index: number) {
         inputs[index]?.focus();

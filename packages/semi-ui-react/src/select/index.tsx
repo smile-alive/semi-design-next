@@ -1,7 +1,7 @@
 import type React from 'react';
 import { type CSSProperties, type MouseEvent, type ReactNode, Children, Fragment, useCallback, useDeferredValue, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import { isEqual, isEqualWith } from 'es-toolkit';
+import { isEqualWith } from 'es-toolkit';
 import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
 import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/select/constants';
 import SelectFoundation, { type SelectAdapter } from '@fibrae/semi-foundation/select/foundation';
@@ -10,7 +10,6 @@ import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/tag/constan
 import { isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
 import { centerInScroller } from '@fibrae/semi-foundation/utils/dom';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/select/select.scss';
 import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-react';
@@ -245,20 +244,7 @@ const defaultProps = {
     defaultOpen: false,
     allowCreate: false,
     placeholder: '',
-    onDropdownVisibleChange: noop,
     onChangeWithObject: false,
-    onChange: noop,
-    onSearch: noop,
-    onMouseEnter: noop,
-    onMouseLeave: noop,
-    onDeselect: noop,
-    onSelect: noop,
-    onCreate: noop,
-    onExceed: noop,
-    onFocus: noop,
-    onBlur: noop,
-    onClear: noop,
-    onListScroll: noop,
     maxHeight: numbers.LIST_HEIGHT,
     dropdownMatchSelectWidth: true,
     defaultActiveFirstOption: true,
@@ -383,7 +369,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     const selectOptionListID = useId();
     const generatedId = useId();
     const selectionTextId = useId();
-    const prevInputsRef = useRef<{ children: ReactNode[]; optionList: OptionProps[]; value: unknown }>(null);
+    const prevInputsRef = useRef<{ children: ReactNode[]; optionList: OptionProps[] }>(null);
     let position = positionProp;
 
     const [foundation, state] = useFoundation<SelectFoundation<SelectBodyProps<T>, SelectState, React.UIEvent<HTMLDivElement>>, SelectAdapter<SelectBodyProps<T>, SelectState, React.UIEvent<HTMLDivElement>>, SelectBodyProps<T>, SelectState>(
@@ -391,49 +377,27 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
         props,
         () => {
             const initial = SelectFoundation.getInitialState(props, collectOptions(props));
-            return {
-                isOpen: false,
-                isFocus: false,
-                inputValue: '',
-                showInput: false,
-                isFocusInContainer: false,
-                isFullTags: false,
-                ...initial,
-                options: initial.options as OptionRow[],
-            };
+            return { ...initial, options: initial.options as OptionRow[] };
         },
         (base) => ({
-            updateFocusIndex: (focusIndex) => base.setState({ focusIndex }),
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            toggleInputShow: (showInput, cb) => base.setState({ showInput }, cb),
             focusInput: () => inputRef.current?.focus({ preventScroll: base.getProp('preventScroll') }),
             focusDropdownInput: () => dropdownInputRef.current?.focus({ preventScroll: base.getProp('preventScroll') }),
-            notifyMaxLimit: (option) => base.getProps().onExceed(option as OptionProps),
-            getMaxLimit: () => base.getProp('max'),
-            notifyDeselect: (value, option) => base.getProps().onDeselect(value, option),
+            notifyMaxLimit: (option) => base.getProps().onExceed?.(option as OptionProps),
+            notifyDeselect: (value, option) => base.getProps().onDeselect?.(value, option),
             getOptionsFromChildren: () => collectOptions(base.getProps()),
-            updateOptions: (options) => base.setState({ options: options as OptionRow[] }),
-            openMenu: (cb) => base.setState({ isOpen: true }, cb),
-            closeMenu: () => base.setState({ isOpen: false }),
-            updateSelection: (selections) => base.setState({ selections }),
-            getSelections: () => new Map(base.getState('selections')),
-            notifyChange: (value: OnChangeValueType | OnChangeValueType[]) => base.getProps().onChange(value as T | T[]),
-            notifySelect: (value, option) => base.getProps().onSelect(value, option),
-            notifyDropdownVisibleChange: (visible) => base.getProps().onDropdownVisibleChange(visible),
-            notifySearch: (input, event) => base.getProps().onSearch(input, event),
-            notifyCreate: (input) => base.getProps().onCreate(input as OptionProps),
-            notifyMouseEnter: (e) => base.getProps().onMouseEnter(e),
-            notifyMouseLeave: (e) => base.getProps().onMouseLeave(e),
-            notifyFocus: (event) => base.getProps().onFocus(event),
-            notifyBlur: (event) => base.getProps().onBlur(event),
-            notifyClear: () => base.getProps().onClear(),
-            notifyListScroll: (e) => base.getProps().onListScroll(e),
-            updateFocusState: (isFocus) => base.setState({ isFocus }),
-            updateOverflowItemCount: (overflowItemCount) => base.setState({ overflowItemCount }),
+            notifyChange: (value: OnChangeValueType | OnChangeValueType[]) => base.getProps().onChange?.(value as T | T[]),
+            notifySelect: (value, option) => base.getProps().onSelect?.(value, option),
+            notifyDropdownVisibleChange: (visible) => base.getProps().onDropdownVisibleChange?.(visible),
+            notifySearch: (input, event) => base.getProps().onSearch?.(input, event),
+            notifyCreate: (input) => base.getProps().onCreate?.(input as OptionProps),
+            notifyMouseEnter: (e) => base.getProps().onMouseEnter?.(e),
+            notifyMouseLeave: (e) => base.getProps().onMouseLeave?.(e),
+            notifyFocus: (event) => base.getProps().onFocus?.(event),
+            notifyBlur: (event) => base.getProps().onBlur?.(event),
+            notifyClear: () => base.getProps().onClear?.(),
+            notifyListScroll: (e) => base.getProps().onListScroll?.(e),
             focusTrigger: () => triggerRef.current?.focus({ preventScroll: base.getProp('preventScroll') }),
             getOptionList: () => optionContainerEl.current,
-            setIsFocusInContainer: (isFocusInContainer) => base.setState({ isFocusInContainer }),
-            getIsFocusInContainer: () => base.getState('isFocusInContainer'),
             updateScrollTop: (index) => {
                 if (index !== undefined && virtualizeListRef.current) {
                     virtualizeListRef.current.scrollToItem(index);
@@ -488,12 +452,10 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     useLayoutEffect(() => {
         const prev = prevInputsRef.current;
         const children = Children.toArray(props.children);
-        prevInputsRef.current = { children, optionList: props.optionList, value: props.value };
-        if (!prev) {
-            return;
+        prevInputsRef.current = { children, optionList: props.optionList };
+        if (prev && (!isEqualWith(prev.children, children, isSameNode) || !isEqualWith(prev.optionList, props.optionList, isSameNode))) {
+            foundation.handleOptionsChange();
         }
-        const optionsChanged = !isEqualWith(prev.children, children, isSameNode) || !isEqualWith(prev.optionList, props.optionList, isSameNode);
-        foundation.handleInputsChange({ optionsChanged, valueChanged: !isEqual(prev.value, props.value) }, props.value);
     });
 
     const markPressInside = useClickOutside([triggerRef, optionContainerEl], foundation.handleClickOutside, isOpen);

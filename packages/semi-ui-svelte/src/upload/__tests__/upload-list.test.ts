@@ -318,15 +318,13 @@ describe('Upload 根元素', () => {
         expect(onblur).toHaveBeenCalledTimes(1);
     });
 
-    it('卸载后不再上报请求结果', async () => {
+    it('卸载后进行中的上传继续完成，照常上报成功', async () => {
         const onSuccess = fn();
-        const onChange = fn();
-        const view = renderUpload({ onSuccess, onChange });
+        const view = renderUpload({ onSuccess });
         await selectFiles([createFile(10, 'late.png')]);
-        onChange.mockClear();
         view.unmount();
         await requests[0].respond(200, '{}');
-        expect(onSuccess).not.toHaveBeenCalled();
-        expect(onChange).not.toHaveBeenCalled();
+        expect(requests[0].aborted).toBe(false);
+        expect(onSuccess).toHaveBeenCalledTimes(1);
     });
 });

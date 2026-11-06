@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { Text, computed, watch } from 'vue';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/pagination/constants';
-    import PaginationFoundation, { type PaginationAdapter, type PaginationBaseState } from '@fibrae/semi-foundation/pagination/foundation';
+    import PaginationFoundation, { type PaginationAdapter, type PaginationState } from '@fibrae/semi-foundation/pagination/foundation';
     import { ENTER_KEY, isComposing } from '@fibrae/semi-foundation/utils/key-code';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/pagination/pagination.scss';
@@ -19,8 +19,8 @@
     import type { PaginationEmits, PaginationProps, PaginationSlots } from './interface';
     import RestPages from './rest-pages.vue';
 
-    type Foundation = PaginationFoundation<PaginationProps, PaginationBaseState>;
-    type Adapter = PaginationAdapter<PaginationProps, PaginationBaseState>;
+    type Foundation = PaginationFoundation<PaginationProps>;
+    type Adapter = PaginationAdapter<PaginationProps>;
 
     const props = withDefaults(defineProps<PaginationProps & /* @vue-ignore */ ElementProps<'ul', keyof PaginationProps | EmitHandlers<PaginationEmits>>>(), {
         total: () => semiDefault('Pagination', 'total', 1),
@@ -45,14 +45,11 @@
     const config = useConfig();
     const locale = useLocale('Pagination');
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, PaginationProps, PaginationBaseState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, PaginationProps, PaginationState>(
         PaginationFoundation,
         props,
         (view) => PaginationFoundation.getInitialState(view),
-        (base) => ({
-            updatePageSize: (pageSize) => base.setState({ pageSize }),
-            updateQuickJumpPage: (quickJumpPage) => base.setState({ quickJumpPage }),
-            setCurrentPage: (currentPage) => base.setState({ currentPage }),
+        () => ({
             notifyPageChange: (pageIndex) => {
                 emit('update:currentPage', pageIndex);
                 emit('pageChange', pageIndex);
@@ -111,29 +108,6 @@
             foundation.handleQuickJumpEnterPress((event.target as HTMLInputElement).value);
         }
     };
-
-    // Only the pageSize prop itself may overwrite the page size: the size changer writes state alone, and a total change
-    // must not revert that choice.
-    watch(
-        () => props.currentPage,
-        (page) => foundation.updatePage(page)
-    );
-
-    watch(
-        () => props.total,
-        () => foundation.updatePage(props.currentPage)
-    );
-
-    watch(
-        () => props.pageSize,
-        (size) => {
-            // v-model:pageSize writes back the size the changer just chose; restarting at page 1 would undo the page the
-            // changer recomputed
-            if (size !== state.value.pageSize) {
-                foundation.updatePage(props.currentPage, size);
-            }
-        }
-    );
 
     watch(
         () => sizeChangerShown.value && props.hideOnSinglePage,

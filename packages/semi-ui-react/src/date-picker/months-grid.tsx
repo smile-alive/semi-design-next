@@ -1,6 +1,5 @@
 import React, { useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
 import { isRangeType } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
 import { strings, numbers, cssClasses } from '@fibrae/semi-foundation/date-picker/constants';
 import MonthsGridFoundation, { type PanelState, type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
@@ -88,7 +87,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         disabledDate: rawProps.disabledDate ?? noDisabledDate,
     };
 
-    const { type, insetInput, selectedValue, defaultPickerValue } = props;
+    const { type, insetInput } = props;
 
     const { weekStartsOn, disabledDate, locale, renderDate, renderFullDate, density, rangeInputFocus, syncSwitchMonth, multiple, focusRecords, format, hideDisabledOptions, timePickerOpts, dateFnsLocale, yearAndMonthOpts, startYear, endYear, disabledTimePicker, presetPosition, renderQuickControls, renderDateInput } =
         props;
@@ -132,16 +131,8 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         props,
         () => MonthsGridFoundation.getInitialState(props),
         (base) => ({
-            updateDaySelected: (selected) => base.setState({ selected }),
-            setRangeStart: (rangeStart) => base.setState({ rangeStart }),
-            setRangeEnd: (rangeEnd) => base.setState({ rangeEnd }),
-            setHoverDay: (hoverDay) => base.setState({ hoverDay }),
-            setOffsetRangeStart: (offsetRangeStart) => base.setState({ offsetRangeStart }),
-            setOffsetRangeEnd: (offsetRangeEnd) => base.setState({ offsetRangeEnd }),
-            updateMonthOnLeft: (monthLeft) => base.setState({ monthLeft }),
-            updateMonthOnRight: (monthRight) => base.setState({ monthRight }),
-            notifySelectedChange: (value, options) => base.getProps().onChange(value, options),
-            notifyPanelChange: (date, dateString) => base.getProps().onPanelChange(date, dateString),
+            notifySelectedChange: (value, options) => base.getProps().onChange?.(value, options),
+            notifyPanelChange: (date, dateString) => base.getProps().onPanelChange?.(date, dateString),
             setRangeInputFocus: (rangeInputFocus) => base.getProps().setRangeInputFocus(rangeInputFocus),
             hasOtherRangeInputBeenFocused: (currentRangeInput) => base.getProps().hasOtherRangeInputBeenFocused(currentRangeInput),
         })
@@ -314,11 +305,6 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     };
 
     const content = isRange ? [renderPanel(PANEL_TYPE_LEFT), renderPanel(PANEL_TYPE_RIGHT)] : renderPanel(PANEL_TYPE_LEFT);
-
-    useDidUpdate(selectedValue, (value) => foundation.updateSelectedFromProps(value));
-
-    // by content: a parent rendering `new Date(...)` each time must not pull the panel back
-    useDidUpdate(defaultPickerValue, foundation.initDefaultPickerValue, isEqual);
 
     useLayoutEffect(() => {
         nodes.applyPanelSize(state, insetInput);

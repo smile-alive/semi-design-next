@@ -1,19 +1,20 @@
 <script setup lang="ts">
-    import { Comment, Text, computed, isVNode, onActivated, onDeactivated, onMounted, onUpdated, useId, useTemplateRef, watch, type VNode } from 'vue';
+    import { Comment, Text, computed, isVNode, onMounted, onUpdated, useId, useTemplateRef, watch, type VNode } from 'vue';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/carousel/constants';
-    import CarouselFoundation, { type CarouselAdapter } from '@fibrae/semi-foundation/carousel/foundation';
+    import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/carousel/foundation';
     import '@fibrae/semi-foundation/carousel/carousel.scss';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import slotNodes, { type KeyedNode } from '../_base/slot-nodes';
     import useFoundation from '../_base/use-foundation';
+    import useKeepAliveFoundation from '../_base/use-keep-alive-foundation';
     import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';
-    import type { CarouselEmits, CarouselHandle, CarouselProps, CarouselSlots, CarouselState } from './interface';
+    import type { CarouselEmits, CarouselHandle, CarouselProps, CarouselSlots } from './interface';
 
-    type Foundation = CarouselFoundation<CarouselProps, CarouselState>;
-    type Adapter = CarouselAdapter<CarouselProps, CarouselState>;
+    type Foundation = CarouselFoundation<CarouselProps>;
+    type Adapter = CarouselAdapter<CarouselProps>;
 
     defineOptions({ name: 'Carousel' });
 
@@ -50,9 +51,6 @@
     // nothing. Rendering writes it instead: the value is derived from the slot, so the write is idempotent.
     // Limit: the count is only as fresh as the last render, which is when the slides could have changed anyway.
     let slideCount = 0;
-
-    // onActivated also runs after the first mount; only a return from the cache sets up again
-    let deactivated = false;
     let focusPending = false;
 
     // Slides that arrive after mount (data still loading) start the configured autoplay, as mounting with them would.
@@ -62,20 +60,12 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, CarouselProps, CarouselState>(
         CarouselFoundation,
         props,
-        (view) => {
-            const activeIndex = CarouselFoundation.getDefaultActiveIndex(view);
-            return { activeIndex, preIndex: activeIndex, isReverse: false, isInit: true, rotating: false };
-        },
-        (base) => ({
+        (view) => CarouselFoundation.getInitialState(view),
+        () => ({
             notifyChange: (activeIndex, preIndex) => {
                 emit('update:activeIndex', activeIndex);
                 emit('change', activeIndex, preIndex);
             },
-            setNewActiveIndex: (activeIndex) => base.setState({ activeIndex }),
-            setPreActiveIndex: (preIndex) => base.setState({ preIndex }),
-            setIsReverse: (isReverse) => base.setState({ isReverse }),
-            setIsInit: (isInit) => base.setState({ isInit }),
-            setRotating: (rotating) => base.setState({ rotating }),
             getSlideCount: () => slideCount,
         }),
         { context: () => config.value }
@@ -177,13 +167,6 @@
     const arrowLabel = (slot: (() => VNode[]) | undefined, fallback: string) => (hasReadableText(slot?.()) ? undefined : fallback);
 
     watch(
-        () => props.activeIndex,
-        (activeIndex) => foundation.syncActiveIndex(activeIndex as number)
-    );
-
-    watch(() => CarouselFoundation.isAutoPlayOn(props.autoPlay), foundation.handleAutoPlayChange);
-
-    watch(
         () => CarouselFoundation.deriveActiveIndex(props, state.value, slideCount),
         () => {
             if (focusPending) {
@@ -195,21 +178,7 @@
         { flush: 'post' }
     );
 
-    // A cached carousel is out of the page, so it must not keep switching slides. mouseleave and focusout do not reach
-    // it there, so the hover and focus pauses are dropped here and the configured autoplay restarts on activation.
-    onDeactivated(() => {
-        deactivated = true;
-        foundation.resetPointer();
-        foundation.stop();
-        foundation.handleFocusLeave();
-    });
-
-    onActivated(() => {
-        if (deactivated) {
-            deactivated = false;
-            foundation.init();
-        }
-    });
+    useKeepAliveFoundation(foundation);
 
     onMounted(() => {
         renderedCount = slideCount;
@@ -222,10 +191,7 @@
     });
 
     defineExpose<CarouselHandle>({
-        play: () => {
-            foundation.setForcePlay(true);
-            foundation.handleAutoPlay();
-        },
+        play: foundation.play,
         stop: () => {
             foundation.stopByUser();
         },

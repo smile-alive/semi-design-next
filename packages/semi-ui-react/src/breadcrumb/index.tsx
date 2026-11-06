@@ -1,7 +1,7 @@
 import React, { cloneElement, isValidElement, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { DEFAULT_TOOLTIP, cssClasses } from '@fibrae/semi-foundation/breadcrumb/constants';
-import BreadcrumbFoundation, { type BreadcrumbAdapter } from '@fibrae/semi-foundation/breadcrumb/foundation';
+import BreadcrumbFoundation, { type BreadcrumbAdapter, type BreadcrumbState } from '@fibrae/semi-foundation/breadcrumb/foundation';
 import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/breadcrumb/breadcrumb.scss';
@@ -19,6 +19,9 @@ import Popover from '../popover';
 import type { TooltipProps } from '../tooltip';
 import { BreadContext, type BreadContextType } from './bread-context';
 import BreadcrumbItem, { type BreadcrumbItemInfo, type BreadcrumbItemProps, type RouteProps } from './item';
+
+type Foundation = BreadcrumbFoundation<BreadcrumbProps, React.MouseEvent>;
+type Adapter = BreadcrumbAdapter<BreadcrumbProps, React.MouseEvent>;
 
 const clsPrefix = cssClasses.PREFIX;
 
@@ -51,10 +54,6 @@ export interface BreadcrumbProps extends BaseProps, ElementProps<'nav', 'onClick
     ref?: React.Ref<HTMLElement>;
 }
 
-interface BreadcrumbState {
-    isCollapsed: boolean;
-}
-
 const defaultProps = {
     routes: [],
     separator: '/',
@@ -74,14 +73,13 @@ function Breadcrumb(rawProps: BreadcrumbProps) {
     const navRef = useRef<HTMLElement>(null);
     let template: React.ReactNode[];
 
-    const [foundation, state] = useFoundation<BreadcrumbFoundation<BreadcrumbProps, BreadcrumbState, React.MouseEvent>, BreadcrumbAdapter<BreadcrumbProps, BreadcrumbState, React.MouseEvent>, BreadcrumbProps, BreadcrumbState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, BreadcrumbProps, BreadcrumbState>(
         BreadcrumbFoundation,
         props,
-        () => ({ isCollapsed: true }),
+        () => BreadcrumbFoundation.getInitialState(),
         (base) => ({
             // named parameters: a rest parameter makes the Oxc React Compiler skip the whole component
             notifyClick: (info, e) => base.getProps().onClick?.(info, e),
-            expandCollapsed: () => base.setState({ isCollapsed: false }),
         })
     );
 

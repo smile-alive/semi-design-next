@@ -32,7 +32,7 @@ export interface ResizableBaseState {
     ariaRange?: AriaRange;
 }
 
-export interface ResizableAdapter<P extends ResizableBaseProps = ResizableBaseProps, S extends ResizableBaseState = ResizableBaseState> extends DefaultAdapter<P, S> {
+export interface ResizableAdapter<P extends ResizableBaseProps = ResizableBaseProps> extends DefaultAdapter<P, ResizableBaseState> {
     getResizable: () => HTMLDivElement | null;
     /** Returns what the callback returned: `false` cancels the resize */
     notifyResizeStart: ResizeStartCallback;
@@ -48,7 +48,7 @@ export interface AriaRange {
     height: { now: number; min: number; max: number };
 }
 
-export class ResizableFoundation<P extends ResizableBaseProps = ResizableBaseProps, S extends ResizableBaseState = ResizableBaseState> extends BaseFoundation<ResizableAdapter<P, S>, P, S> {
+export class ResizableFoundation<P extends ResizableBaseProps = ResizableBaseProps> extends BaseFoundation<ResizableAdapter<P>, P, ResizableBaseState> {
     #flexDirection?: 'row' | 'column';
     #lockAspectRatio = 1;
     // a key press ends before the host lays out the new size, so the end callback cannot read the DOM
@@ -495,6 +495,20 @@ export class ResizableFoundation<P extends ResizableBaseProps = ResizableBasePro
 
         this.setState(state);
         return true;
+    }
+
+    static getInitialState(props: SizeProps): ResizableBaseState {
+        const { width, height } = ResizableFoundation.getPropSize(props);
+        return {
+            isResizing: false,
+            width: width ?? 'auto',
+            height: height ?? 'auto',
+            direction: 'right',
+            original: { x: 0, y: 0, width: 0, height: 0 },
+            backgroundStyle: { cursor: 'auto' },
+            flexBasis: undefined,
+            ariaRange: undefined,
+        };
     }
 
     static getPropSize({ size, defaultSize }: SizeProps): Size {

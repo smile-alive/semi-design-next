@@ -1,11 +1,14 @@
 import type React from 'react';
-import { useLayoutEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageBaseState } from '@fibrae/semi-foundation/image/preview-image-foundation';
+import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageState } from '@fibrae/semi-foundation/image/preview-image-foundation';
 import useEventListener, { getWindow } from '../_base/use-event-listener';
 import useFoundation from '../_base/use-foundation';
 import Spin from '../spin';
 import type { PreviewImageProps } from './interface';
+
+type Foundation = PreviewImageFoundation<PreviewImageProps>;
+type Adapter = PreviewImageAdapter<PreviewImageProps>;
 
 const prefixCls = cssClasses.PREFIX;
 const preViewImgPrefixCls = `${prefixCls}-preview-image`;
@@ -15,20 +18,18 @@ function preventDefault(e: React.DragEvent) {
 }
 
 export default function PreviewImage(props: PreviewImageProps & { zoomEvent?: WheelEvent }) {
-    const { src, alt = '', rotation, ratio, zoom, zoomEvent, crossOrigin } = props;
+    const { src, alt = '', rotation, crossOrigin } = props;
 
     const containerRef = useRef<HTMLDivElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
-    const committed = useRef({ src, ratio, rotation, zoom });
 
-    const [foundation, state] = useFoundation<PreviewImageFoundation<PreviewImageProps>, PreviewImageAdapter<PreviewImageProps>, PreviewImageProps, PreviewImageBaseState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, PreviewImageProps, PreviewImageState>(
         PreviewImageFoundation,
         props,
-        () => ({ width: 0, height: 0, loading: true, translate: { x: 0, y: 0 } }),
+        () => PreviewImageFoundation.getInitialState(),
         (base) => ({
             getContainer: () => containerRef.current,
             getImage: () => imageRef.current,
-            setLoading: (loading) => base.setState({ loading }),
             setImageCursor: (canDrag) => {
                 imageRef.current.style.cursor = canDrag ? 'grab' : 'default';
                 // a touch drag pans only a draggable image; otherwise the page keeps scrolling and pinch-zooming
@@ -52,12 +53,6 @@ export default function PreviewImage(props: PreviewImageProps & { zoomEvent?: Wh
     };
 
     useEventListener(getWindow, 'resize', foundation.handleWindowResize);
-
-    useLayoutEffect(() => {
-        const prevProps = committed.current;
-        committed.current = { src, ratio, rotation, zoom };
-        foundation.handlePropsUpdate(prevProps, zoomEvent);
-    });
 
     return (
         <div ref={containerRef} className={`${preViewImgPrefixCls}`}>

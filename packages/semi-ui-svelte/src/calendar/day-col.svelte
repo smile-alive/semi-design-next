@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
     import type { DailyEventLayout } from '@fibrae/semi-foundation/calendar/event-util';
-    import CalendarFoundation, { type CalendarAdapter, type CalendarBaseProps } from '@fibrae/semi-foundation/calendar/foundation';
+    import CalendarFoundation, { type CalendarAdapter, type CalendarBaseProps, type CalendarBaseState } from '@fibrae/semi-foundation/calendar/foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import { getCalendarContext } from './context.js';
@@ -18,14 +18,9 @@
         onSlotClick: (event: MouseEvent, value: Date) => void;
     }
 
-    interface DayColState {
-        currPos: number;
-        showCurrTime: boolean;
-    }
-
     // decided on mount; views key the column by date and showCurrTime so a change remounts it
-    type Foundation = CalendarFoundation<CalendarBaseProps, DayColState>;
-    type Adapter = CalendarAdapter<CalendarBaseProps, DayColState>;
+    type Foundation = CalendarFoundation<CalendarBaseProps>;
+    type Adapter = CalendarAdapter<CalendarBaseProps>;
 
     let { displayValue, events, scrollHeight, isWeekend, minEventHeight, showCurrTime, onSlotClick, event, dateGrid }: Props = $props();
 
@@ -40,14 +35,11 @@
         },
     };
 
-    const { states } = useFoundation<Foundation, Adapter, CalendarBaseProps, DayColState>(
+    const { states } = useFoundation<Foundation, Adapter, CalendarBaseProps, CalendarBaseState>(
         CalendarFoundation,
         foundationProps,
-        () => ({ currPos: 0, showCurrTime: false }),
-        (base) => ({
-            updateCurrPos: (currPos) => base.setState({ currPos }),
-            setShowCurrTime: (show) => base.setState({ showCurrTime: show }),
-        })
+        () => CalendarFoundation.getInitialState(),
+        () => ({})
     );
 
     const prefixCls = `${cssClasses.PREFIX}-grid`;

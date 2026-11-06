@@ -21,12 +21,11 @@ export interface CheckboxSourceEvent {
     preventDefault: () => void;
     nativeEvent?: { stopImmediatePropagation?: () => void };
 }
-export interface CheckboxAdapter<P extends BaseCheckboxProps = BaseCheckboxProps, S extends CheckboxBaseState = CheckboxBaseState> extends DefaultAdapter<P, S> {
+export interface CheckboxAdapter<P extends BaseCheckboxProps = BaseCheckboxProps> extends DefaultAdapter<P, CheckboxBaseState> {
     getIsInGroup: () => boolean;
     getGroupValue: () => CheckboxValue[];
     notifyGroupChange: (e: BasicCheckboxEvent) => void;
     getGroupDisabled: () => boolean;
-    setChecked: (checked: boolean) => void;
     notifyChange: (e: BasicCheckboxEvent) => void;
     focusCheckboxEntity: () => void;
     /** Returns the event object passed to onChange, with `target.checked` set to `checked` */
@@ -74,7 +73,9 @@ export interface CheckboxView {
 /** A click on these inside the content belongs to them, not to the checkbox */
 const INTERACTIVE_SELECTOR = 'a, button, input, select, textarea, [contenteditable]:not([contenteditable="false"])';
 
-export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckboxProps, S extends CheckboxBaseState = CheckboxBaseState> extends BaseFoundation<CheckboxAdapter<P, S>, P, S> {
+export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckboxProps> extends BaseFoundation<CheckboxAdapter<P>, P, CheckboxBaseState> {
+    static override readonly propKeys = ['checked'];
+
     #notifyChange(checked: boolean, e: CheckboxSourceEvent) {
         const cbValue = this.adapter.generateEvent(checked, e);
         this.adapter.notifyChange(cbValue);
@@ -88,6 +89,11 @@ export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckb
         const event = this.adapter.generateEvent(newChecked, e);
         this.adapter.notifyChange(event);
         this.adapter.notifyGroupChange(event);
+    }
+
+    // `checked` is controlled whenever it is not undefined, so null reads as unchecked
+    static getInitialState(props: Pick<CheckboxViewProps, 'checked'> & Pick<BaseCheckboxProps, 'defaultChecked'>): CheckboxBaseState {
+        return { checked: props.checked !== undefined ? Boolean(props.checked) : Boolean(props.defaultChecked) };
     }
 
     static deriveView(props: CheckboxViewProps, state: CheckboxBaseState, group?: CheckboxGroupView | null): CheckboxView {
@@ -106,7 +112,7 @@ export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckb
         const isPureCardType = props.type === strings.TYPE_PURECARD;
         return {
             inGroup: false,
-            checked: typeof props.checked === 'boolean' ? props.checked : state.checked,
+            checked: props.checked !== undefined ? Boolean(props.checked) : state.checked,
             disabled: Boolean(props.disabled),
             name: props.name,
             isCardType: props.type === strings.TYPE_CARD || isPureCardType,
@@ -119,6 +125,11 @@ export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckb
     static isInnerInteractiveClick(target: Element, root: Element, input?: Element | null) {
         const interactive = target.closest(INTERACTIVE_SELECTOR);
         return Boolean(interactive && interactive !== input && root.contains(interactive));
+    }
+
+    // state mirrors `checked`, so a form reset to undefined leaves the box unchecked
+    override handlePropsChange() {
+        this.setState({ checked: Boolean(this.getProp('checked')) });
     }
 
     handleChange = (e: CheckboxSourceEvent) => {
@@ -143,16 +154,10 @@ export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckb
         const checked = this.getState('checked');
 
         const newChecked = !checked;
-        if (this.isControlledComponent('checked')) {
-            this.#notifyChange(newChecked, e);
-        } else {
-            this.setChecked(newChecked);
-            this.#notifyChange(newChecked, e);
+        if (!this.isControlledComponent('checked')) {
+            this.setState({ checked: newChecked });
         }
-    };
-
-    setChecked = (checked: boolean) => {
-        this.adapter.setChecked(checked);
+        this.#notifyChange(newChecked, e);
     };
 }
 

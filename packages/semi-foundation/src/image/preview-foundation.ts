@@ -13,14 +13,16 @@ export interface PreviewGroupImage {
 export interface PreviewBaseProps {
     src?: string | string[];
     visible?: boolean;
+    defaultVisible?: boolean;
     currentIndex?: number;
+    defaultCurrentIndex?: number;
 }
 
 export interface PreviewBaseState {
-    visible?: boolean;
-    currentIndex?: number;
+    visible: boolean;
+    currentIndex: number;
     /** The registered images in document order */
-    images?: PreviewGroupImage[];
+    images: PreviewGroupImage[];
 }
 
 export interface PreviewAdapter<P extends PreviewBaseProps = PreviewBaseProps, S extends PreviewBaseState = PreviewBaseState> extends DefaultAdapter<P, S> {
@@ -64,18 +66,27 @@ export function loadLazyImages(entries: IntersectionObserverEntry[], observer: I
 }
 
 export default class PreviewFoundation<P extends PreviewBaseProps = PreviewBaseProps, S extends PreviewBaseState = PreviewBaseState> extends BaseFoundation<PreviewAdapter<P, S>, P, S> {
-    #images = new Map<Element, NonNullable<S['images']>[number]>();
+    #images = new Map<Element, S['images'][number]>();
 
     #syncImages() {
         const images = [...this.#images.values()].toSorted(byDocumentOrder);
-        const current = this.getState('images') ?? [];
+        const current = this.getState('images');
         if (images.length !== current.length || images.some((image, i) => image !== current[i])) {
             this.setState({ images });
         }
         return images;
     }
 
-    registerImage = (image: NonNullable<S['images']>[number]) => {
+    /** `I` is the framework's image type, which hosts register through `registerImage` */
+    static getInitialState<I extends PreviewGroupImage = PreviewGroupImage>(props: PreviewBaseProps): PreviewBaseState & { images: I[] } {
+        return {
+            currentIndex: props.currentIndex || props.defaultCurrentIndex || 0,
+            visible: props.visible || props.defaultVisible || false,
+            images: [],
+        };
+    }
+
+    registerImage = (image: S['images'][number]) => {
         this.#images.set(image.node, image);
         this.#syncImages();
     };

@@ -2,7 +2,7 @@ import { children, createEffect, createMemo, type JSX, onCleanup, Show, splitPro
 import clsx from 'clsx';
 import { throttle } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/backtop/constants';
-import BackTopFoundation, { type BackTopAdapter, type Target } from '@fibrae/semi-foundation/backtop/foundation';
+import BackTopFoundation, { type BackTopAdapter, type BackTopState, type Target } from '@fibrae/semi-foundation/backtop/foundation';
 import '@fibrae/semi-foundation/backtop/backtop.scss';
 import { IconBackTop } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';
@@ -11,7 +11,6 @@ import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import FloatButton, { type FloatButtonElement, type FloatButtonProps } from '../float-button';
 import type { FloatButtonOmittedKeys } from '../float-button/interface';
 import useLocale from '../locale/use-locale';
@@ -32,13 +31,11 @@ export interface BackTopProps extends ElementProps<'button', FloatButtonOmittedK
     'aria-label'?: string;
 }
 
-export interface BackTopState {
-    visible?: boolean;
-}
+export type { BackTopState };
 
 type ClickEvent = MouseEvent & { currentTarget: FloatButtonElement; target: Element };
-type Foundation = BackTopFoundation<BackTopProps, BackTopState, ClickEvent>;
-type Adapter = BackTopAdapter<BackTopProps, BackTopState, ClickEvent>;
+type Foundation = BackTopFoundation<BackTopProps, ClickEvent>;
+type Adapter = BackTopAdapter<BackTopProps, ClickEvent>;
 
 const defaultProps = {
     visibilityHeight: 400,
@@ -57,9 +54,8 @@ export default function BackTop(rawProps: BackTopProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, BackTopProps, BackTopState>(
         BackTopFoundation,
         props,
-        () => ({ visible: false }),
+        () => BackTopFoundation.getInitialState(),
         (base) => ({
-            updateVisible: (visible) => base.setState({ visible }),
             notifyClick: (event) => callHandler(base.getProps().onClick, event),
         })
     );
@@ -75,8 +71,6 @@ export default function BackTop(rawProps: BackTopProps) {
     });
 
     const hasChildren = () => hasContent(content());
-
-    useWatch(() => local.target, foundation.handleTargetChange);
 
     createEffect(() => {
         if (hasChildren() && state().visible) {

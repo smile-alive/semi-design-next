@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import clsx from 'clsx';
-import DialogueActionFoundation, { type DialogueActionAdapter, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/action-foundation';
+import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionState, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/action-foundation';
 import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
 import { IconThumbUpStroked, IconDeleteStroked, IconShareStroked, IconCopyStroked, IconLikeThumb, IconRedoStroked, IconEditStroked, IconMoreStroked } from '@fibrae/semi-icons-react';
@@ -12,13 +12,11 @@ import Modal from '@fibrae/semi-ui-react/modal/index';
 import Toast from '@fibrae/semi-ui-react/toast/index';
 import type { AIChatDialogueActionProps, DefaultActionNodeObj } from '../interface';
 
+type Foundation = DialogueActionFoundation;
+type Adapter = DialogueActionAdapter<AIChatDialogueActionProps>;
+
 const prefix = cssClasses.PREFIX;
 const { PREFIX_ACTION } = cssClasses;
-
-interface AIChatDialogueActionState {
-    visible: boolean;
-    showAction: boolean;
-}
 
 export default function DialogueAction(props: AIChatDialogueActionProps) {
     const { message, isLastChat, customRenderFunc, showReset: showResetProp = true } = props;
@@ -27,10 +25,10 @@ export default function DialogueAction(props: AIChatDialogueActionProps) {
 
     const triggerRef = useRef<HTMLButtonElement>(null);
 
-    const [foundation, { visible, showAction }] = useFoundation<DialogueActionFoundation, DialogueActionAdapter<AIChatDialogueActionProps, AIChatDialogueActionState>, AIChatDialogueActionProps, AIChatDialogueActionState>(
+    const [foundation, { visible, showAction }] = useFoundation<Foundation, Adapter, AIChatDialogueActionProps, DialogueActionState>(
         DialogueActionFoundation,
         props,
-        () => ({ visible: false, showAction: false }),
+        () => DialogueActionFoundation.getInitialState(),
         (base) => ({
             notifyMessageCopy: () => {
                 const { message, onMessageCopy } = base.getProps();
@@ -62,8 +60,6 @@ export default function DialogueAction(props: AIChatDialogueActionProps) {
                 const { message, onMessageDelete } = base.getProps();
                 onMessageDelete?.(message);
             },
-            setVisible: (isVisible: boolean) => base.setState({ visible: isVisible }),
-            setShowAction: (isShown: boolean) => base.setState({ showAction: isShown }),
         }),
         { locale }
     );

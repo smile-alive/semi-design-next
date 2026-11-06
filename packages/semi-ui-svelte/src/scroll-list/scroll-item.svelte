@@ -1,5 +1,4 @@
 <script lang="ts" generics="T extends ScrollListItem = ScrollListItem">
-    import { untrack } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
     import { on } from 'svelte/events';
     import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
@@ -8,11 +7,10 @@
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import type { ScrollItemProps, ScrollItemSelectData, ScrollListItem } from './interface.js';
 
-    type Foundation = ItemFoundation<T, ScrollItemBaseProps<T>, ScrollItemBaseState>;
-    type Adapter = ScrollItemAdapter<T, ScrollItemBaseProps<T>, ScrollItemBaseState>;
+    type Foundation = ItemFoundation<T, ScrollItemBaseProps<T>>;
+    type Adapter = ScrollItemAdapter<T, ScrollItemBaseProps<T>>;
 
     const defaults = useDefaultProps('ScrollItem');
 
@@ -24,7 +22,6 @@
     let outer = $state<HTMLDivElement>();
     let listbox = $state<HTMLUListElement>();
     let selector = $state<HTMLDivElement>();
-    let previousIndex: number | undefined;
 
     const list = $derived(listProp ?? []);
     const current = $derived(selectedIndex ?? defaults('selectedIndex', 0));
@@ -54,7 +51,7 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, ScrollItemBaseProps<T>, ScrollItemBaseState>(
         ItemFoundation,
         foundationProps,
-        () => ({ prependCount: 0, appendCount: 0 }),
+        () => ItemFoundation.getInitialState(),
         () => ({
             getListNode: () => listbox ?? null,
             getScrollNode: () => (isWheel ? outer : root) ?? null,
@@ -113,17 +110,6 @@
                 foundation.handleWheelClick(event);
             }
         });
-
-    $effect(() => {
-        const next = current;
-        const previous = previousIndex;
-        previousIndex = next;
-        if (previous !== undefined && previous !== next) {
-            untrack(() => foundation.syncSelectedIndex(next, previous));
-        }
-    });
-
-    watch(() => list.length, foundation.syncList);
 
     export function scrollToIndex(_selectedIndex?: number, duration?: number) {
         foundation.scrollToSelected(duration);

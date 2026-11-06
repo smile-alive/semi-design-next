@@ -17,8 +17,8 @@
     import { isNotClassOrStyle } from './control-attrs.js';
     import type { TextAreaProps, TextAreaState } from './interface.js';
 
-    type Foundation = TextAreaFoundation<TextAreaBaseProps, TextAreaState, KeyboardEvent, CompositionEvent>;
-    type Adapter = TextAreaAdapter<TextAreaBaseProps, TextAreaState, KeyboardEvent, CompositionEvent>;
+    type Foundation = TextAreaFoundation<TextAreaBaseProps, KeyboardEvent, CompositionEvent>;
+    type Adapter = TextAreaAdapter<TextAreaBaseProps, KeyboardEvent, CompositionEvent>;
 
     const defaults = useDefaultProps('TextArea');
 
@@ -129,10 +129,8 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, TextAreaBaseProps, TextAreaState>(
         TextAreaFoundation,
         foundationProps,
-        (view) => ({ value: view.value, cachedValue: view.value, isFocus: false }),
-        (base) => ({
-            setValue: (next) => base.setState({ value: next }),
-            toggleFocusing: (isFocus) => base.setState({ isFocus }),
+        (view) => TextAreaFoundation.getInitialState(view),
+        () => ({
             notifyChange: (next, event) => {
                 // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 value = next;
@@ -223,11 +221,6 @@
     const isResizable = (directions: string[]) => !autosize && resize !== undefined && directions.includes(resize);
 
     const keepFocus = (event: MouseEvent) => event.preventDefault();
-
-    watch(
-        () => value,
-        (next) => foundation.handleValueChange(next as string)
-    );
 
     // the line number panel remounts the textarea
     watch(() => [shown, Boolean(autosize), showLineNumber], foundation.fitAutosize);

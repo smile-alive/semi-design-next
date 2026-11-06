@@ -1,20 +1,20 @@
 import type React from 'react';
 import { useId, useRef } from 'react';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/slider/constants';
 import SliderFoundation, { type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/slider/foundation';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
 import '@fibrae/semi-foundation/slider/slider.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import useMergedRef from '../_base/use-merged-ref';
 import { useConfigContext } from '../config-provider/context';
 import useLocale from '../locale/use-locale';
 import Tooltip from '../tooltip/index';
+
+type Foundation = SliderFoundation<BasicSliderProps>;
+type Adapter = SliderAdapter<BasicSliderProps>;
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -48,8 +48,6 @@ const defaultProps = {
     tipFormatter: (value: number) => value,
     vertical: false,
     showBoundary: false,
-    onAfterChange: noop,
-    onChange: noop,
     verticalReverse: false,
 } satisfies Partial<SliderProps>;
 
@@ -118,25 +116,26 @@ export default function Slider(rawProps: SliderProps) {
     const minInputRef = useRef<HTMLInputElement>(null);
     const maxInputRef = useRef<HTMLInputElement>(null);
 
-    const [foundation, state] = useFoundation<SliderFoundation<BasicSliderProps>, SliderAdapter<BasicSliderProps>, BasicSliderProps, SliderState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, BasicSliderProps, SliderState>(
         SliderFoundation,
         props,
         () => SliderFoundation.getInitialState(props),
         (base) => ({
             getSliderNode: () => sliderRef.current,
-            notifyChange: (value) => base.getProps().onChange(value),
-            notifyAfterChange: (value) => base.getProps().onAfterChange(value),
+            notifyChange: (value) => base.getProps().onChange?.(value),
+            notifyAfterChange: (value) => base.getProps().onAfterChange?.(value),
             notifyMouseUp: (e) => base.getProps().onMouseUp?.(e),
         }),
         context
     );
 
     const mergedRef = useMergedRef(ref, sliderRef);
-    const { currentValue, chooseMovePos, isDrag, isInRenderTree, focusVisibleHandle } = state;
+    const { chooseMovePos, isDrag, isInRenderTree, focusVisibleHandle } = state;
+    const currentValue = SliderFoundation.deriveValue(props, state);
     const isRTL = context.direction === 'rtl' && !vertical;
     const stylePos = vertical ? 'top' : isRTL ? 'right' : 'left';
     const { min: minPercent, max: maxPercent } = SliderFoundation.getMinAndMaxPercent(props, currentValue);
-    const { tipVisible, tipChildren } = SliderFoundation.computeHandleVisibleVal(props, state);
+    const { tipVisible, tipChildren } = SliderFoundation.computeHandleVisibleVal(props, { ...state, currentValue });
     const markKeys = marks ? Object.keys(marks) : [];
     const reverse = vertical && verticalReverse ? '-reverse' : '';
     const trackSize = range ? `${Math.abs(maxPercent - minPercent) * 100}%` : `${minPercent * 100}%`;
@@ -305,21 +304,6 @@ export default function Slider(rawProps: SliderProps) {
                 <span className={`${prefixCls}-boundary-max`}>{max}</span>
             </div>
         </div>
-    );
-
-    // deep comparison: a literal array is a new value on every render
-    useDidUpdate(
-        props.value,
-        (value) => {
-            // a Form reset: back to the default position, nothing to report
-            if (value === undefined) {
-                foundation.resetValue();
-                return;
-            }
-            foundation.handleValueChange(value);
-            props.onAfterChange(value);
-        },
-        isEqual
     );
 
     return vertical ? slider : <div className={prefixCls}>{slider}</div>;

@@ -7,7 +7,7 @@ import { createId } from '@fibrae/semi-foundation/utils/uuid';
 import useDefaultProps from '../_base/use-default-props';
 import { cloneDeep } from '../_utils/index';
 import { ArrayFieldContext, useArrayFieldContext, useFieldBridgeContext } from './context';
-import { useFormState, useStateWithGetter } from './hooks/index';
+import { useFormState, useStateWithGetter } from './hooks';
 
 export interface ArrayFieldProps {
     initValue?: any[];

@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends AutoCompleteItems = AutoCompleteItems">
-    import { computed, onDeactivated, useAttrs, useId, useTemplateRef, watch } from 'vue';
+    import { computed, useAttrs, useId, useTemplateRef } from 'vue';
     import { isEqual } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/auto-complete/constants';
     import AutoCompleteFoundation, { type AutoCompleteAdapter, type AutoCompleteBaseProps, type StateOptionItem } from '@fibrae/semi-foundation/auto-complete/foundation';
@@ -90,8 +90,7 @@
         AutoCompleteFoundation,
         props as AutoCompleteBaseProps,
         (view) => AutoCompleteFoundation.getInitialState(view),
-        (base) => ({
-            updateFocusIndex: (focusIndex) => base.setState({ focusIndex }),
+        () => ({
             updateScrollTop: (index) => {
                 const list = listbox.value;
                 const destNode = list?.children[index] as HTMLElement | undefined;
@@ -99,10 +98,6 @@
                     centerInScroller(destNode, list);
                 }
             },
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            toggleListVisible: (visible) => base.setState({ visible }),
-            updateOptionList: (options) => base.setState({ options }),
-            updateSelection: (selection) => base.setState({ selection }),
             notifySearch: (inputValue) => emit('search', inputValue),
             notifyChange: (value) => {
                 emit('update:modelValue', value);
@@ -212,8 +207,6 @@
         'pre'
     );
 
-    watch(() => props.modelValue, foundation.handleValueChange);
-
     useClickOutside(
         [root, listbox],
         (event) => {
@@ -224,9 +217,6 @@
         () => state.value.visible,
         useNestedPopups()
     );
-
-    // The list follows the foundation state, which a cached KeepAlive subtree would keep open
-    onDeactivated(foundation.close);
 
     defineExpose<AutoCompleteHandle>({
         get nativeElement() {

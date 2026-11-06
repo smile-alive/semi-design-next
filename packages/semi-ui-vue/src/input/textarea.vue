@@ -25,8 +25,8 @@
         maxLength?: number;
     }
 
-    type Foundation = TextAreaFoundation<FoundationProps, TextAreaState, KeyboardEvent, CompositionEvent>;
-    type Adapter = TextAreaAdapter<FoundationProps, TextAreaState, KeyboardEvent, CompositionEvent>;
+    type Foundation = TextAreaFoundation<FoundationProps, KeyboardEvent, CompositionEvent>;
+    type Adapter = TextAreaAdapter<FoundationProps, KeyboardEvent, CompositionEvent>;
 
     defineOptions({ name: 'TextArea', inheritAttrs: false });
 
@@ -101,14 +101,8 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, TextAreaState>(
         TextAreaFoundation,
         props,
-        (view) => ({
-            value: view.value === undefined ? view.defaultValue : view.value,
-            isFocus: false,
-            cachedValue: view.value,
-        }),
-        (base) => ({
-            setValue: (value) => base.setState({ value }),
-            toggleFocusing: (isFocus) => base.setState({ isFocus }),
+        (view) => TextAreaFoundation.getInitialState(view),
+        () => ({
             notifyChange: (value, event) => {
                 if (defersUpdate(event, props.modelModifiers)) {
                     draft.value = value;
@@ -178,9 +172,8 @@
 
     watch(
         () => props.modelValue,
-        (value) => {
+        () => {
             draft.value = undefined;
-            foundation.handleValueChange(value as string);
         }
     );
 

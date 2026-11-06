@@ -14,7 +14,7 @@ const menu = (
 );
 
 describe('Activity 隐藏打开中的 Dropdown', () => {
-    it('非受控时重新显示后菜单关闭，触发器复位 aria-expanded，ArrowDown 能再次打开', async () => {
+    it('非受控时隐藏期间菜单不可见，重新显示后菜单仍打开，触发器保持 aria-expanded，点击外部能关闭', async () => {
         const view = (mode: 'visible' | 'hidden') => (
             <Activity mode={mode}>
                 <Dropdown motion={false} render={menu} trigger="click">
@@ -27,15 +27,17 @@ describe('Activity 隐藏打开中的 Dropdown', () => {
         await waitFor(() => expect(screen.getByRole('menu')).toBeVisible());
 
         rerender(view('hidden'));
+        await act(async () => {});
+        expect(screen.queryByRole('menu')).toBeNull();
         rerender(view('visible'));
         await act(async () => {});
         const trigger = screen.getByRole('button', { name: 'trigger' });
-        expect(screen.queryByRole('menu')).toBeNull();
-        expect(trigger).toHaveAttribute('aria-expanded', 'false');
-        expect(trigger).not.toHaveClass(`${BASE_CLASS_PREFIX}-dropdown-showing`);
+        expect(screen.getByRole('menu')).toBeVisible();
+        expect(trigger).toHaveAttribute('aria-expanded', 'true');
+        expect(trigger).toHaveClass(`${BASE_CLASS_PREFIX}-dropdown-showing`);
 
-        trigger.focus();
-        await userEvent.keyboard('{ArrowDown}');
-        await waitFor(() => expect(screen.getByRole('menuitem', { name: 'first' })).toHaveFocus());
+        await userEvent.click(document.body);
+        await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
+        expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 });

@@ -3,12 +3,13 @@ import { useEffect, type ReactNode } from 'react';
 import clsx from 'clsx';
 import { cssClasses, Keys } from '@fibrae/semi-foundation/hot-keys/constants';
 import HotKeysFoundation, { type HotKeysAdapter } from '@fibrae/semi-foundation/hot-keys/foundation';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/hot-keys/hot-keys.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
+
+type Foundation = HotKeysFoundation;
+type Adapter = HotKeysAdapter<HotKeysProps>;
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -35,7 +36,6 @@ function getDefaultTarget() {
 const defaultProps = {
     preventDefault: false,
     content: null,
-    onHotKey: noop,
     getListenerTarget: getDefaultTarget,
     className: '',
     style: null,
@@ -45,7 +45,7 @@ function HotKeys(rawProps: HotKeysProps) {
     const props = useDefaultProps('HotKeys', rawProps, defaultProps);
     const { ref, hotKeys, content, onHotKey, preventDefault, render, getListenerTarget, className, style, ...rest } = props;
 
-    const [foundation] = useFoundation<HotKeysFoundation, HotKeysAdapter<HotKeysProps, HotKeysState>, HotKeysProps, HotKeysState>(
+    const [foundation] = useFoundation<Foundation, Adapter, HotKeysProps, HotKeysState>(
         HotKeysFoundation,
         props,
         () => ({}),
@@ -60,9 +60,6 @@ function HotKeys(rawProps: HotKeysProps) {
     useEffect(() => {
         foundation.handleTargetChange();
     }, [foundation]);
-
-    useDidUpdate(props.getListenerTarget, foundation.handleTargetChange);
-    useDidUpdate(props.hotKeys, foundation.handleHotKeysChange);
 
     if (render !== undefined && custom === null) {
         return null;

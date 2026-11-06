@@ -2,9 +2,8 @@
     import { type Component, untrack } from 'svelte';
     import { SvelteSet } from 'svelte/reactivity';
     import type { Editor, FocusPosition, Content as TiptapContent } from '@tiptap/core';
-    import { isEqual } from 'es-toolkit';
     import { cssClasses, numbers } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
-    import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputBaseProps, type AIChatInputBaseState } from '@fibrae/semi-ai-foundation/ai-chat-input/foundation';
+    import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputBaseProps, type AIChatInputState } from '@fibrae/semi-ai-foundation/ai-chat-input/foundation';
     import type { Attachment, Content, Reference, Suggestion } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
     import { getAttachmentType, getContentType, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/ai-chat-input/utils';
     import { isImageFile } from '@fibrae/semi-ai-foundation/file-suffix';
@@ -16,7 +15,6 @@
     import { groupRole } from '@fibrae/semi-ui-svelte/_base/group-role';
     import useDefaultProps from '@fibrae/semi-ui-svelte/_base/use-default-props';
     import useFoundation from '@fibrae/semi-ui-svelte/_base/use-foundation.svelte.js';
-    import watch from '@fibrae/semi-ui-svelte/_base/watch.svelte.js';
     import { Button } from '@fibrae/semi-ui-svelte/button/index';
     import { useConfig } from '@fibrae/semi-ui-svelte/config-provider/index';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
@@ -30,8 +28,8 @@
     import SendButton from './send-button.svelte';
     import UploadButton from './upload-button.svelte';
 
-    type Foundation = AIChatInputFoundation<AIChatInputBaseProps, AIChatInputBaseState>;
-    type Adapter = AIChatInputAdapter<AIChatInputBaseProps, AIChatInputBaseState>;
+    type Foundation = AIChatInputFoundation<AIChatInputBaseProps>;
+    type Adapter = AIChatInputAdapter<AIChatInputBaseProps>;
 
     const defaults = useDefaultProps('AIChatInput');
 
@@ -102,7 +100,6 @@
 
     // A delete button leaves with its item while it holds focus; the editor is where typing continues
     let focusedBeforeUpdate: Element | null = null;
-    let previousSuggestions = untrack(() => $state.snapshot(suggestions));
 
     const prefix = cssClasses.PREFIX;
 
@@ -129,8 +126,9 @@
         get skills() {
             return skills;
         },
+        // a snapshot, so a mutation of a proxied array keeps being followed although its identity stays
         get suggestions() {
-            return suggestions;
+            return $state.snapshot(suggestions);
         },
         get skillHotKey() {
             return skillHotKey;
@@ -158,23 +156,13 @@
         },
     };
 
-    const { foundation, states } = useFoundation<Foundation, Adapter, AIChatInputBaseProps, AIChatInputBaseState>(
+    const { foundation, states } = useFoundation<Foundation, Adapter, AIChatInputBaseProps, AIChatInputState>(
         AIChatInputFoundation,
         foundationProps,
+        () => AIChatInputFoundation.getInitialState(foundationProps),
         () => ({
-            templateVisible: false,
-            skillVisible: false,
-            suggestionVisible: false,
-            attachments: uploadProps?.defaultFileList ?? [],
-            content: undefined,
-            skill: undefined,
-            activeSkillIndex: 0,
-            activeSuggestionIndex: 0,
-        }),
-        (base) => ({
             setContent,
             clearContent: () => setContent(''),
-            clearAttachments: () => base.setState({ attachments: [] }),
             focusEditor,
             getEditor: () => editor,
             // the panel may render in a shadow root, out of reach of document queries
@@ -268,31 +256,6 @@
     });
 
     const onSendClick = () => (generating ? foundation.handleStopGenerate() : foundation.handleSend());
-
-    // compared deeply: callers often pass a new array with the same items, and a mutation of a proxied array keeps its identity
-    watch(
-        () => $state.snapshot(suggestions),
-        (current) => {
-            if (isEqual(current, previousSuggestions)) {
-                return;
-            }
-            previousSuggestions = current;
-            if (current && current.length > 0) {
-                foundation.showSuggestionPanel();
-            } else {
-                foundation.hideSuggestionPanel();
-            }
-        }
-    );
-
-    watch(
-        () => generating,
-        (isGenerating) => {
-            if (isGenerating) {
-                foundation.handleGeneratingStart();
-            }
-        }
-    );
 
     $effect.pre(() => {
         void states().attachments;

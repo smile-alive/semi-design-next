@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, useAttrs, watch } from 'vue';
+    import { computed, useAttrs } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/pincode/constants';
     import PinCodeFoundation, { type PinCodeAdapter } from '@fibrae/semi-foundation/pincode/foundation';
     import '@fibrae/semi-foundation/pincode/pincode.scss';
@@ -16,8 +16,8 @@
         format: PinCodeFormat;
     }
 
-    type Foundation = PinCodeFoundation<FoundationProps, PinCodeState>;
-    type Adapter = PinCodeAdapter<FoundationProps, PinCodeState>;
+    type Foundation = PinCodeFoundation<FoundationProps>;
+    type Adapter = PinCodeAdapter<FoundationProps>;
 
     defineOptions({ name: 'PinCode', inheritAttrs: false });
 
@@ -51,12 +51,8 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, PinCodeState>(
         PinCodeFoundation,
         props,
-        // by code point, so a character outside the BMP is not split into two lone surrogates
-        (view) => ({ valueList: Array.from(view.value ?? view.defaultValue ?? ''), currentActiveIndex: 0 }),
-        (base) => ({
-            // resolve after the commit: a controlled paste awaits the parent's new value before the next character
-            onCurrentActiveIndexChange: (currentActiveIndex) => new Promise<void>((resolve) => base.setState({ currentActiveIndex }, resolve)),
-            updateValueList: (valueList) => new Promise<void>((resolve) => base.setState({ valueList }, resolve)),
+        (view) => PinCodeFoundation.getInitialState(view),
+        () => ({
             notifyValueChange: (values) => {
                 const value = values.join('');
                 emit('update:modelValue', value);
@@ -110,11 +106,6 @@
     };
 
     const digitLabel = (index: number) => locale.value.locale.digit.replace('${index}', String(index + 1)).replace('${count}', String(props.count));
-
-    watch(
-        () => props.modelValue,
-        (value) => foundation.updateValueList(Array.from(value || ''))
-    );
 
     defineExpose<PinCodeHandle>({
         focus: (index) => {

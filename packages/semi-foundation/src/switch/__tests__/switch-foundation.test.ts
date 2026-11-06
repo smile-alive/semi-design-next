@@ -2,15 +2,15 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import SwitchFoundation, { type SwitchAdapter, type SwitchBaseProps } from '../foundation';
 
 function createFoundation(props: SwitchBaseProps) {
-    const setChecked = vi.fn<SwitchAdapter['setChecked']>();
+    const setState = vi.fn<(state: object) => void>();
     const notifyChange = vi.fn<SwitchAdapter['notifyChange']>();
     const adapter = {
         getProp: (key: keyof SwitchBaseProps) => props[key],
         getProps: () => props,
-        setChecked,
+        setState,
         notifyChange,
     } as unknown as SwitchAdapter;
-    return { foundation: new SwitchFoundation(adapter), setChecked, notifyChange };
+    return { foundation: new SwitchFoundation(adapter), setState, notifyChange };
 }
 
 describe('SwitchFoundation 初始状态', () => {
@@ -25,23 +25,23 @@ describe('SwitchFoundation 初始状态', () => {
 
 describe('SwitchFoundation.handleChange', () => {
     it('非受控时写入状态并通知', () => {
-        const { foundation, setChecked, notifyChange } = createFoundation({});
+        const { foundation, setState, notifyChange } = createFoundation({});
         foundation.handleChange(true, 'event');
-        expect(setChecked).toHaveBeenCalledWith(true);
+        expect(setState).toHaveBeenCalledWith({ checked: true }, undefined);
         expect(notifyChange).toHaveBeenCalledWith(true, 'event');
     });
 
     it('受控时只通知，不写入状态', () => {
-        const { foundation, setChecked, notifyChange } = createFoundation({ checked: false });
+        const { foundation, setState, notifyChange } = createFoundation({ checked: false });
         foundation.handleChange(true, 'event');
-        expect(setChecked).not.toHaveBeenCalled();
+        expect(setState).not.toHaveBeenCalled();
         expect(notifyChange).toHaveBeenCalledWith(true, 'event');
     });
 
     it('loading 时忽略变化', () => {
-        const { foundation, setChecked, notifyChange } = createFoundation({ loading: true });
+        const { foundation, setState, notifyChange } = createFoundation({ loading: true });
         foundation.handleChange(true, 'event');
-        expect(setChecked).not.toHaveBeenCalled();
+        expect(setState).not.toHaveBeenCalled();
         expect(notifyChange).not.toHaveBeenCalled();
     });
 });

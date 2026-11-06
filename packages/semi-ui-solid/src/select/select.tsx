@@ -218,14 +218,9 @@ interface SelectBodyProps extends Omit<SelectProps<unknown, boolean>, 'onChange'
     renderSelectedItem?: RenderSelectedItemFn;
 }
 
-interface SelectState extends SelectBaseState {
-    isFocusInContainer: boolean;
-    overflowItemCount: number;
-}
-
-type FoundationProps = SelectBaseProps & { preventScroll?: boolean; max?: number };
-type Foundation = SelectFoundation<FoundationProps, SelectState, Event>;
-type Adapter = SelectAdapter<FoundationProps, SelectState, Event>;
+type FoundationProps = SelectBaseProps & { preventScroll?: boolean };
+type Foundation = SelectFoundation<FoundationProps, SelectBaseState, Event>;
+type Adapter = SelectAdapter<FoundationProps, SelectBaseState, Event>;
 
 type RenderCreateItem = NonNullable<SelectProps['renderCreateItem']>;
 
@@ -411,33 +406,16 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
     const options = children(() => local.children);
     const records = createMemo(() => readOptions(options.toArray(), local.optionList));
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, SelectState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, SelectBaseState>(
         SelectFoundation,
         foundationProps,
-        (view) => ({
-            isOpen: false,
-            isFocus: false,
-            inputValue: '',
-            showInput: false,
-            isFocusInContainer: false,
-            isFullTags: false,
-            ...SelectFoundation.getInitialState(view, untrack(records) as BaseOptionRecord[]),
-        }),
-        (base) => ({
-            updateFocusIndex: (focusIndex) => base.setState({ focusIndex }),
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            toggleInputShow: (showInput, cb) => base.setState({ showInput }, cb),
+        (view) => SelectFoundation.getInitialState(view, untrack(records) as BaseOptionRecord[]),
+        () => ({
             focusInput: () => triggerInput?.focus({ preventScroll: props.preventScroll }),
             focusDropdownInput: () => dropdownInput?.focus({ preventScroll: props.preventScroll }),
             notifyMaxLimit: (option) => props.onExceed?.(plain(option as OptionData)),
-            getMaxLimit: () => props.max as number,
             notifyDeselect: (value, option) => props.onDeselect?.(value, plain(option as OptionData)),
             getOptionsFromChildren: () => records() as BaseOptionRecord[],
-            updateOptions: (next) => base.setState({ options: next }),
-            openMenu: (cb) => base.setState({ isOpen: true }, cb),
-            closeMenu: () => base.setState({ isOpen: false }),
-            updateSelection: (selections) => base.setState({ selections }),
-            getSelections: () => new Map(base.getState('selections')),
             notifyChange: (value) => {
                 const object = (item: unknown) => (typeof item === 'object' && item !== null ? plain(item as OptionData) : item);
                 props.onChange?.(props.onChangeWithObject ? (Array.isArray(value) ? value.map(object) : object(value)) : value);
@@ -453,12 +431,8 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
             notifyBlur: (event: FocusEvent | MouseEvent) => props.onBlur?.(event),
             notifyClear: () => props.onClear?.(),
             notifyListScroll: (event) => props.onListScroll?.(event),
-            updateFocusState: (isFocus) => base.setState({ isFocus }),
-            updateOverflowItemCount: (overflowItemCount) => base.setState({ overflowItemCount }),
             focusTrigger: () => root && focusElement(root, { preventScroll: props.preventScroll }),
             getOptionList: () => optionContainer,
-            setIsFocusInContainer: (isFocusInContainer) => base.setState({ isFocusInContainer }),
-            getIsFocusInContainer: () => base.getState('isFocusInContainer'),
             updateScrollTop: (index) => {
                 if (index !== undefined && virtualList) {
                     // only the rows in view are rendered, so the target may not be in the DOM yet
@@ -1240,11 +1214,11 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         );
     };
 
-    const inputs = () => [records(), local.value] as const;
-
     // The selection keeps labels of earlier options, so it is not derived in render
-    useWatch(inputs, ([next, value], [prevOptions, prevValue]) => {
-        foundation.handleInputsChange({ optionsChanged: !isEqual(prevOptions, next), valueChanged: !isEqual(prevValue, value) }, value as Parameters<Foundation['handleInputsChange']>[1]);
+    useWatch(records, (next, prev) => {
+        if (!isEqual(prev, next)) {
+            foundation.handleOptionsChange();
+        }
     });
 
     return (

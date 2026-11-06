@@ -2,14 +2,13 @@ import { children, createMemo, createUniqueId, Index, Show, splitProps, type JSX
 import clsx from 'clsx';
 import { radioGroupClasses as css, strings } from '@fibrae/semi-foundation/radio/constants';
 import type { RadioChangeEvent } from '@fibrae/semi-foundation/radio/radio-foundation';
-import RadioGroupFoundation, { type RadioGroupAdapter } from '@fibrae/semi-foundation/radio/radio-group-foundation';
+import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/radio/radio-group-foundation';
 import callHandler from '../_base/call-handler';
 import { omitFormInjected } from '../_base/control-attrs';
 import type { ElementProps } from '../_base/element-props';
 import isMarkup from '../_base/is-markup';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import { RadioGroupContext, type RadioGroupButtonSize, type RadioGroupContextValue, type RadioMode } from './context';
 import Radio, { type RadioType } from './radio';
 
@@ -44,12 +43,10 @@ export interface RadioGroupProps extends ElementProps<'div', 'onChange' | 'defau
     prefixCls?: string;
 }
 
-export interface RadioGroupState {
-    value?: any;
-}
+export type RadioGroupState = RadioGroupBaseState;
 
-type Foundation = RadioGroupFoundation<RadioGroupProps, RadioGroupState>;
-type Adapter = RadioGroupAdapter<RadioGroupProps, RadioGroupState>;
+type Foundation = RadioGroupFoundation<RadioGroupProps>;
+type Adapter = RadioGroupAdapter<RadioGroupProps>;
 
 const defaultProps = {
     disabled: false,
@@ -102,10 +99,8 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, RadioGroupProps, RadioGroupState>(
         RadioGroupFoundation,
         props,
-        // only the initial value is wanted: later changes of `value` arrive through the effect below
-        (view) => ({ value: view.value === undefined ? view.defaultValue : view.value }),
+        (view) => RadioGroupFoundation.getInitialState(view),
         (base) => ({
-            setValue: (value) => base.setState({ value }),
             notifyChange: (event) => base.getProps().onChange?.(event),
         })
     );
@@ -151,11 +146,6 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
             callHandler(local.onBlur, event);
         }
     };
-
-    useWatch(
-        () => local.value,
-        (value) => foundation.handlePropValueChange(value as string | number | boolean)
-    );
 
     return (
         <div

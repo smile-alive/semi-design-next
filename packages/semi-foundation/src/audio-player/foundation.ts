@@ -23,11 +23,11 @@ export interface AudioPlayerBaseState {
     error: boolean;
 }
 
-export interface AudioPlayerAdapter<P extends AudioPlayerBaseProps = AudioPlayerBaseProps, S extends AudioPlayerBaseState = AudioPlayerBaseState> extends DefaultAdapter<P, S> {
+export interface AudioPlayerAdapter<P extends AudioPlayerBaseProps = AudioPlayerBaseProps> extends DefaultAdapter<P, AudioPlayerBaseState> {
     getAudioRef: () => HTMLAudioElement | null;
 }
 
-export default class AudioPlayerFoundation<P extends AudioPlayerBaseProps = AudioPlayerBaseProps, S extends AudioPlayerBaseState = AudioPlayerBaseState> extends BaseFoundation<AudioPlayerAdapter<P, S>, P, S> {
+export default class AudioPlayerFoundation<P extends AudioPlayerBaseProps = AudioPlayerBaseProps> extends BaseFoundation<AudioPlayerAdapter<P>, P, AudioPlayerBaseState> {
     #initAudioState() {
         const audioElement = this.#getAudioRef();
 
@@ -64,6 +64,18 @@ export default class AudioPlayerFoundation<P extends AudioPlayerBaseProps = Audi
                 void ignoreExpectedMediaErrors(audio.play());
             }
         });
+    }
+
+    static getInitialState(_props: AudioPlayerBaseProps): AudioPlayerBaseState {
+        return {
+            isPlaying: false,
+            currentIndex: 0,
+            totalTime: 0,
+            currentTime: 0,
+            currentRate: DEFAULT_RATE,
+            volume: 100,
+            error: false,
+        };
     }
 
     override init() {

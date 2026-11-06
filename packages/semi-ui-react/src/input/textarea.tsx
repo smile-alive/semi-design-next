@@ -3,21 +3,22 @@ import { useCallback, useEffect, useImperativeHandle, useId, useLayoutEffect, us
 import clsx from 'clsx';
 import { throttle } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/input/constants';
-import TextAreaFoundation, { type TextAreaAdapter } from '@fibrae/semi-foundation/input/textarea-foundation';
+import TextAreaFoundation, { type TextAreaAdapter, type TextAreaBaseState } from '@fibrae/semi-foundation/input/textarea-foundation';
 import { syncLineNumberHeights } from '@fibrae/semi-foundation/input/util/line-number';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/input/textarea.scss';
 import { IconClear } from '@fibrae/semi-icons-react';
 import type { ValidateStatus } from '../_base/base-component';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import useResizeObserver from '../_base/use-resize-observer';
 import useLocale from '../locale/use-locale';
 import ReactResizeObserver from '../resize-observer';
 import { useInputGroupInScope, withInputGroupDisabled } from './context';
+
+type Foundation = TextAreaFoundation<TextAreaProps, React.KeyboardEvent<HTMLTextAreaElement>, React.CompositionEvent<HTMLTextAreaElement>>;
+type Adapter = TextAreaAdapter<TextAreaProps, React.KeyboardEvent<HTMLTextAreaElement>, React.CompositionEvent<HTMLTextAreaElement>>;
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -90,11 +91,7 @@ export interface TextAreaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
     ref?: React.Ref<TextAreaHandle>;
 }
 
-export interface TextAreaState {
-    value: string;
-    isFocus: boolean;
-    cachedValue?: string;
-}
+export interface TextAreaState extends TextAreaBaseState {}
 
 const defaultProps = {
     autosize: false,
@@ -103,16 +100,6 @@ const defaultProps = {
     cols: 20,
     showCounter: false,
     showClear: false,
-    onEnterPress: noop,
-    onChange: noop,
-    onBlur: noop,
-    onFocus: noop,
-    onKeyDown: noop,
-    onResize: noop,
-    onClear: noop,
-    onCompositionStart: noop,
-    onCompositionEnd: noop,
-    onCompositionUpdate: noop,
     composition: false,
     showLineNumber: false,
     lineNumberStart: 1,
@@ -189,32 +176,21 @@ export default function TextArea(rawProps: TextAreaProps) {
     const lineNumberRef = useRef<HTMLDivElement>(null);
     let lineNumbers: React.ReactNode = null;
 
-    const [foundation, state] = useFoundation<
-        TextAreaFoundation<TextAreaProps, TextAreaState, React.KeyboardEvent<HTMLTextAreaElement>, React.CompositionEvent<HTMLTextAreaElement>>,
-        TextAreaAdapter<TextAreaProps, TextAreaState, React.KeyboardEvent<HTMLTextAreaElement>, React.CompositionEvent<HTMLTextAreaElement>>,
-        TextAreaProps,
-        TextAreaState
-    >(
+    const [foundation, state] = useFoundation<Foundation, Adapter, TextAreaProps, TextAreaState>(
         TextAreaFoundation,
         props,
-        () => ({
-            value: props.value === undefined ? props.defaultValue : props.value,
-            isFocus: false,
-            cachedValue: props.value,
-        }),
+        () => TextAreaFoundation.getInitialState(props),
         (base) => ({
-            setValue: (value) => base.setState({ value }),
-            toggleFocusing: (isFocus) => base.setState({ isFocus }),
-            notifyChange: (value, e: TextAreaChangeEvent) => base.getProps().onChange(value, e),
-            notifyClear: (e) => base.getProps().onClear(e),
-            notifyBlur: (_value, e) => base.getProps().onBlur(e),
-            notifyFocus: (_value, e) => base.getProps().onFocus(e),
-            notifyKeyDown: (e) => base.getProps().onKeyDown(e),
-            notifyResize: (size) => base.getProps().onResize(size),
+            notifyChange: (value, e: TextAreaChangeEvent) => base.getProps().onChange?.(value, e),
+            notifyClear: (e) => base.getProps().onClear?.(e),
+            notifyBlur: (_value, e) => base.getProps().onBlur?.(e),
+            notifyFocus: (_value, e) => base.getProps().onFocus?.(e),
+            notifyKeyDown: (e) => base.getProps().onKeyDown?.(e),
+            notifyResize: (size) => base.getProps().onResize?.(size),
             notifyEnterPress: (e) => base.getProps().onEnterPress?.(e),
-            notifyCompositionStart: (e) => base.getProps().onCompositionStart(e),
-            notifyCompositionEnd: (e) => base.getProps().onCompositionEnd(e),
-            notifyCompositionUpdate: (e) => base.getProps().onCompositionUpdate(e),
+            notifyCompositionStart: (e) => base.getProps().onCompositionStart?.(e),
+            notifyCompositionEnd: (e) => base.getProps().onCompositionEnd?.(e),
+            notifyCompositionUpdate: (e) => base.getProps().onCompositionUpdate?.(e),
             focusInput: () => textareaRef.current?.focus(),
             isEventTarget: (e) => e && e.target === e.currentTarget,
             getTextarea: () => textareaRef.current,
@@ -249,7 +225,6 @@ export default function TextArea(rawProps: TextAreaProps) {
     };
 
     useEffect(() => () => throttledResize.cancel(), [throttledResize]);
-    useDidUpdate(props.value, foundation.handleValueChange);
 
     useResizeObserver(
         textareaRef,

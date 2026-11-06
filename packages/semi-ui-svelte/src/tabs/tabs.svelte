@@ -1,7 +1,7 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import { cssClasses, getPanelId, getTabId } from '@fibrae/semi-foundation/tabs/constants';
-    import TabsFoundation, { type MotionView, type TabsAdapter, type TabsBaseProps, type TabsBaseState } from '@fibrae/semi-foundation/tabs/foundation';
+    import TabsFoundation, { type MotionView, type TabsAdapter, type TabsBaseProps, type TabsState } from '@fibrae/semi-foundation/tabs/foundation';
     import '@fibrae/semi-foundation/tabs/tabs.scss';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';
@@ -13,8 +13,8 @@
     import TabBar from './tab-bar.svelte';
     import TabPane from './tab-pane.svelte';
 
-    type Foundation = TabsFoundation<TabsBaseProps, TabsBaseState, MouseEvent | KeyboardEvent>;
-    type Adapter = TabsAdapter<TabsBaseProps, TabsBaseState, MouseEvent | KeyboardEvent>;
+    type Foundation = TabsFoundation<TabsBaseProps, MouseEvent | KeyboardEvent>;
+    type Adapter = TabsAdapter<TabsBaseProps, MouseEvent | KeyboardEvent>;
 
     const defaults = useDefaultProps('Tabs');
 
@@ -89,18 +89,17 @@
         },
     };
 
-    const { foundation, states } = useFoundation<Foundation, Adapter, TabsBaseProps, TabsBaseState>(
+    const { foundation, states } = useFoundation<Foundation, Adapter, TabsBaseProps, TabsState>(
         TabsFoundation,
         foundationProps,
-        (view) => ({ activeKey: TabsFoundation.getDefaultActiveKey(view, tabList) }),
-        (base) => ({
+        (view) => TabsFoundation.getInitialState(view, tabList),
+        () => ({
             notifyTabClick: (key, event) => onTabClick?.(key, event),
             notifyChange: (next) => {
                 written = next;
                 activeKey = next;
                 onChange?.(next);
             },
-            setNewActiveKey: (next) => base.setState({ activeKey: next }),
             notifyTabDelete: (key) => onTabClose?.(key),
         }),
         { context: () => config }
@@ -163,8 +162,6 @@
             motion = TabsFoundation.getMotionView(motion, input);
         });
     });
-
-    watch(() => activeKey, foundation.syncActiveKey);
 
     watch(
         () => paneSignature,

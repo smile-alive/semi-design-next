@@ -1,12 +1,11 @@
 import type React from 'react';
-import { type ReactNode, useEffectEvent, useId, useLayoutEffect, useRef, useState } from 'react';
+import { type ReactNode, useId, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
-import UserGuideFoundation, { type UserGuideAdapter } from '@fibrae/semi-foundation/user-guide/foundation';
+import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
 import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
 import '@fibrae/semi-foundation/user-guide/user-guide.scss';
@@ -19,6 +18,9 @@ import useLocale from '../locale/use-locale';
 import Modal from '../modal';
 import Popover from '../popover';
 import type { Position } from '../tooltip/index';
+
+type Foundation = UserGuideFoundation<UserGuideProps>;
+type Adapter = UserGuideAdapter<UserGuideProps>;
 
 const prefixCls = cssClasses.PREFIX;
 const modalPrefixCls = cssClasses.PREFIX_MODAL;
@@ -61,20 +63,12 @@ export interface StepItem {
     position?: Position;
 }
 
-export interface UserGuideState {
-    current: number;
-    spotlightRect: DOMRect | null;
-}
+export type { UserGuideBaseState as UserGuideState };
 
 const defaultProps = {
     mask: true,
     mode: 'popup',
     nextButtonProps: {},
-    onChange: noop,
-    onFinish: noop,
-    onNext: noop,
-    onPrev: noop,
-    onSkip: noop,
     position: 'bottom',
     prevButtonProps: {},
     showPrevButton: true,
@@ -135,19 +129,18 @@ export default function UserGuide(rawProps: UserGuideProps) {
     const [runtime] = useState(() => new UserGuideRuntime());
     const anchorRef = useRef<HTMLDivElement>(null);
 
-    const [foundation, state] = useFoundation<UserGuideFoundation<UserGuideProps, UserGuideState>, UserGuideAdapter<UserGuideProps, UserGuideState>, UserGuideProps, UserGuideState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, UserGuideProps, UserGuideBaseState>(
         UserGuideFoundation,
         props,
-        () => ({ current: props.current || numbers.DEFAULT_CURRENT, spotlightRect: null }),
+        () => UserGuideFoundation.getInitialState(props),
         (base) => ({
             disabledBodyScroll: () => runtime.disableBodyScroll(coversPage(base.getProp('getPopupContainer') ?? base.getContext('getPopupContainer'))),
             enabledBodyScroll: () => runtime.enableBodyScroll(),
-            notifyChange: (current) => base.getProps().onChange(current),
-            notifyFinish: () => base.getProps().onFinish(),
-            notifyNext: (current) => base.getProps().onNext(current),
-            notifyPrev: (current) => base.getProps().onPrev(current),
-            notifySkip: () => base.getProps().onSkip(),
-            setCurrent: (current) => base.setState({ current }),
+            notifyChange: (current) => base.getProps().onChange?.(current),
+            notifyFinish: () => base.getProps().onFinish?.(),
+            notifyNext: (current) => base.getProps().onNext?.(current),
+            notifyPrev: (current) => base.getProps().onPrev?.(current),
+            notifySkip: () => base.getProps().onSkip?.(),
         }),
         useConfigContext()
     );
@@ -158,26 +151,10 @@ export default function UserGuide(rawProps: UserGuideProps) {
     const current = UserGuideFoundation.deriveCurrent(props, state);
     const step = steps[current];
     const showMask = step?.mask ?? mask;
-    const controlledCurrent = props.current;
 
     // nothing rendered (popup target not measured yet) must not lock the page or take focus
     const shown = Boolean(visible && step && (mode === 'modal' || spotlightRect));
     const locksScroll = shown && mode === 'popup' && showMask;
-
-    // only a step change scrolls, so a user scroll is followed, not fought
-    const measureSpotlight = useEffectEvent((scrollIntoView: boolean) => {
-        const next = UserGuideFoundation.measure(props.steps[current], props.spotlightPadding, scrollIntoView);
-        if (!UserGuideFoundation.isSameRect(foundation.getState('spotlightRect'), next)) {
-            foundation.setState({ spotlightRect: next });
-        }
-    });
-
-    // mirrored into state so going uncontrolled continues from the last controlled step
-    useLayoutEffect(() => {
-        if (controlledCurrent !== undefined) {
-            foundation.setState({ current: controlledCurrent });
-        }
-    }, [controlledCurrent, visible, foundation]);
 
     useLayoutEffect(() => {
         if (!locksScroll) {
@@ -209,8 +186,8 @@ export default function UserGuide(rawProps: UserGuideProps) {
         if (!visible || mode !== 'popup') {
             return undefined;
         }
-        measureSpotlight(true);
-        const remeasure = () => measureSpotlight(false);
+        foundation.measureSpotlight(true);
+        const remeasure = () => foundation.measureSpotlight(false);
         window.addEventListener('resize', remeasure);
         // capture: a scroll inside any container can move the target
         window.addEventListener('scroll', remeasure, true);
@@ -218,12 +195,12 @@ export default function UserGuide(rawProps: UserGuideProps) {
             window.removeEventListener('resize', remeasure);
             window.removeEventListener('scroll', remeasure, true);
         };
-    }, [visible, mode, current]);
+    }, [visible, mode, current, foundation]);
 
     // steps, padding and the target can change without current moving; an unchanged rect sets no state
     useLayoutEffect(() => {
         if (visible && mode === 'popup') {
-            measureSpotlight(false);
+            foundation.measureSpotlight(false);
         }
     });
 

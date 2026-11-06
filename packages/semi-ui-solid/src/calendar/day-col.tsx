@@ -1,7 +1,7 @@
 import { For, Show, createMemo } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
-import CalendarFoundation, { type CalendarAdapter } from '@fibrae/semi-foundation/calendar/foundation';
+import CalendarFoundation, { type CalendarAdapter, type CalendarBaseState } from '@fibrae/semi-foundation/calendar/foundation';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import '@fibrae/semi-foundation/calendar/calendar.scss';
 import useFoundation from '../_base/use-foundation';
@@ -14,23 +14,15 @@ const hours = Array.from({ length: 25 }, (_, hour) => hour);
 
 const pad = (d: number) => String(d).padStart(2, '0');
 
-interface DayColState {
-    currPos: number;
-    showCurrTime: boolean;
-}
-
-type Foundation = CalendarFoundation<DayColProps, DayColState>;
-type Adapter = CalendarAdapter<DayColProps, DayColState>;
+type Foundation = CalendarFoundation<DayColProps>;
+type Adapter = CalendarAdapter<DayColProps>;
 
 export default function DayCol(props: DayColProps) {
-    const { state } = useFoundation<Foundation, Adapter, DayColProps, DayColState>(
+    const { state } = useFoundation<Foundation, Adapter, DayColProps, CalendarBaseState>(
         CalendarFoundation,
         props,
-        () => ({ currPos: 0, showCurrTime: false }),
-        (base) => ({
-            updateCurrPos: (currPos) => base.setState({ currPos }),
-            setShowCurrTime: (showCurrTime) => base.setState({ showCurrTime }),
-        })
+        () => CalendarFoundation.getInitialState(),
+        () => ({})
     );
 
     // a new position restarts the line

@@ -22,8 +22,8 @@
         minLength?: number;
     }
 
-    type Foundation = InputFoundation<FoundationProps, InputState, KeyboardEvent, CompositionEvent, Event>;
-    type Adapter = InputAdapter<FoundationProps, InputState, KeyboardEvent, CompositionEvent, Event>;
+    type Foundation = InputFoundation<FoundationProps, KeyboardEvent, CompositionEvent, Event>;
+    type Adapter = InputAdapter<FoundationProps, KeyboardEvent, CompositionEvent, Event>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -76,16 +76,8 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, InputState>(
         InputFoundation,
         props,
-        (view) => ({
-            value: view.value === undefined ? view.defaultValue : view.value,
-            cachedValue: view.value,
-            isFocus: false,
-            eyeClosed: view.mode === 'password',
-        }),
-        (base) => ({
-            setValue: (value) => base.setState({ value }),
-            setEyeClosed: (eyeClosed) => base.setState({ eyeClosed }),
-            toggleFocusing: (isFocus) => base.setState({ isFocus }),
+        (view) => InputFoundation.getInitialState(view),
+        () => ({
             focusInput,
             notifyChange: (value, event) => {
                 if (defersUpdate(event, props.modelModifiers)) {
@@ -196,15 +188,9 @@
 
     watch(
         () => props.modelValue,
-        (value) => {
+        () => {
             draft.value = undefined;
-            foundation.handleValueChange(value as string | number);
         }
-    );
-
-    watch(
-        () => props.mode,
-        (mode) => foundation.handleModeChange(mode as string)
     );
 
     // A removed node fires no blur, so a focused clear button would drop focus to the body; this pre-flush watcher runs

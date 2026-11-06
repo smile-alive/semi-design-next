@@ -15,8 +15,8 @@
     import useLocale from '../locale/use-locale';
     import type { BackTopEmits, BackTopProps, BackTopSlots, BackTopState } from './interface';
 
-    type Foundation = BackTopFoundation<BackTopProps, BackTopState, MouseEvent>;
-    type Adapter = BackTopAdapter<BackTopProps, BackTopState, MouseEvent>;
+    type Foundation = BackTopFoundation<BackTopProps, MouseEvent>;
+    type Adapter = BackTopAdapter<BackTopProps, MouseEvent>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -48,15 +48,12 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, BackTopProps, BackTopState>(
         BackTopFoundation,
         props,
-        () => ({ visible: false }),
-        (base) => ({
-            updateVisible: (visible) => base.setState({ visible }),
+        () => BackTopFoundation.getInitialState(),
+        () => ({
             notifyClick: (event) => emit('click', event),
         }),
         { props: { target: () => target.value } }
     );
-
-    const { isDeactivated } = useKeepAliveFoundation(foundation);
 
     const throttledClick = computed(() => throttle((event: MouseEvent) => foundation.onClick(event), props.duration));
 
@@ -68,17 +65,7 @@
     // and badge contain nothing interactive
     const warnInteractive = () => BackTopFoundation.warnInteractiveChildren(button.value?.$el);
 
-    // The function itself is the source: calling it here would read the window during setup, which SSR does not have.
-    watch(
-        () => target.value,
-        () => {
-            if (!isDeactivated()) {
-                foundation.handleTargetChange();
-            }
-        },
-        { flush: 'post' }
-    );
-
+    useKeepAliveFoundation(foundation);
     watch(throttledClick, (_next, previous) => previous.cancel());
 
     onBeforeUnmount(() => throttledClick.value.cancel());

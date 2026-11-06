@@ -139,30 +139,30 @@ describe('TabsFoundation.handleKeyDown', () => {
 
 describe('TabsFoundation.handleTabPanesChange', () => {
     const create = (props: Record<string, any>, activeKey: string) => {
-        const setNewActiveKey = vi.fn<TabsAdapter['setNewActiveKey']>();
+        const setState = vi.fn<TabsAdapter['setState']>();
         const foundation = new TabsFoundation({
             getProp: (key: string) => props[key],
             getProps: () => props,
             getStates: () => ({ activeKey }),
-            setNewActiveKey,
+            setState,
         } as unknown as TabsAdapter<TabsBaseProps>);
-        return { foundation, setNewActiveKey };
+        return { foundation, setState };
     };
 
     it('非受控键离开面板后，移到第一个启用的面板', () => {
-        const { foundation, setNewActiveKey } = create({}, 'gone');
+        const { foundation, setState } = create({}, 'gone');
         foundation.handleTabPanesChange([{ itemKey: 'a', disabled: true }, { itemKey: 'b' }]);
-        expect(setNewActiveKey).toHaveBeenCalledExactlyOnceWith('b');
+        expect(setState).toHaveBeenCalledExactlyOnceWith({ activeKey: 'b' }, undefined);
         foundation.handleTabPanesChange([]);
-        expect(setNewActiveKey).toHaveBeenLastCalledWith('');
+        expect(setState).toHaveBeenLastCalledWith({ activeKey: '' }, undefined);
     });
 
     it('保留仍存在的键，且从不改动受控键', () => {
         const kept = create({}, 'b');
         kept.foundation.handleTabPanesChange([{ itemKey: 'a' }, { itemKey: 'b' }]);
-        expect(kept.setNewActiveKey).not.toHaveBeenCalled();
+        expect(kept.setState).not.toHaveBeenCalled();
         const controlled = create({ activeKey: 'gone' }, 'gone');
         controlled.foundation.handleTabPanesChange([{ itemKey: 'a' }]);
-        expect(controlled.setNewActiveKey).not.toHaveBeenCalled();
+        expect(controlled.setState).not.toHaveBeenCalled();
     });
 });

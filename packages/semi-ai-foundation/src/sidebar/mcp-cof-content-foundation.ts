@@ -53,6 +53,10 @@ export default class MCPConfigureContentFoundation<E = unknown> extends BaseFoun
 
     #updateQuery = throttle((value: string) => this.#setQuery(value), 300);
 
+    static getInitialState(): MCPConfigureContentState {
+        return { mode: strings.MCP_MODE.INNER, inputValue: '', query: '' };
+    }
+
     override destroy() {
         this.#updateQuery.cancel();
     }

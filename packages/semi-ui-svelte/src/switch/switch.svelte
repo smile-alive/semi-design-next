@@ -6,13 +6,12 @@
     import { isNativeInputKey, splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import Spin from '../spin/spin.svelte';
     import useTrigger, { attachmentProps } from '../tooltip/use-trigger.svelte.js';
     import type { SwitchProps } from './interface.js';
 
-    type Foundation = SwitchFoundation<SwitchBaseProps, SwitchState, Event>;
-    type Adapter = SwitchAdapter<SwitchBaseProps, SwitchState, Event>;
+    type Foundation = SwitchFoundation<SwitchBaseProps, Event>;
+    type Adapter = SwitchAdapter<SwitchBaseProps, Event>;
 
     const defaults = useDefaultProps('Switch');
 
@@ -34,8 +33,7 @@
         SwitchFoundation,
         foundationProps,
         (view) => SwitchFoundation.getInitialState(view),
-        (base) => ({
-            setChecked: (next) => base.setState({ checked: next }),
+        () => ({
             notifyChange: (next, event) => {
                 checked = next;
                 onChange?.(next, event);
@@ -62,8 +60,6 @@
         // a rejected change leaves `shown` as it was, so Svelte does not patch the box the browser already toggled
         input.checked = shown;
     };
-
-    watch(() => checked, foundation.setChecked);
 </script>
 
 <div

@@ -16,18 +16,12 @@ export interface ColorChooseAreaBaseState {
     isHandleGrabbing: boolean;
 }
 
-export interface ColorChooseAreaAdapter<P extends ColorChooseAreaBaseProps = ColorChooseAreaBaseProps, S extends ColorChooseAreaBaseState = ColorChooseAreaBaseState> extends DefaultAdapter<P, S> {
+export interface ColorChooseAreaAdapter<P extends ColorChooseAreaBaseProps = ColorChooseAreaBaseProps> extends DefaultAdapter<P, ColorChooseAreaBaseState> {
     getDOM: () => HTMLDivElement;
     notifyChange: (newColor: { s: number; v: number }) => void;
 }
 
-export default class ColorChooseAreaFoundation<P extends ColorChooseAreaBaseProps = ColorChooseAreaBaseProps, S extends ColorChooseAreaBaseState = ColorChooseAreaBaseState> extends BaseFoundation<ColorChooseAreaAdapter<P, S>, P, S> {
-    constructor(adapter: ColorChooseAreaAdapter<P, S>) {
-        super({
-            ...adapter,
-        });
-    }
-
+export default class ColorChooseAreaFoundation<P extends ColorChooseAreaBaseProps = ColorChooseAreaBaseProps> extends BaseFoundation<ColorChooseAreaAdapter<P>, P, ColorChooseAreaBaseState> {
     #pickByPointer(e: { clientX: number; clientY: number }) {
         const rect = this.adapter.getDOM()?.getBoundingClientRect();
         if (!rect) {
@@ -38,6 +32,10 @@ export default class ColorChooseAreaFoundation<P extends ColorChooseAreaBaseProp
             s: Math.round(clamp((e.clientX - rect.x) / width, 0, 1) * 100),
             v: Math.round(100 - clamp((e.clientY - rect.y) / height, 0, 1) * 100),
         });
+    }
+
+    static getInitialState(): ColorChooseAreaBaseState {
+        return { isHandleGrabbing: false };
     }
 
     // assistive-technology increments arrive as input events on the range

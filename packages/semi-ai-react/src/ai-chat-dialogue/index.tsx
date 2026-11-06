@@ -1,8 +1,8 @@
 import type React from 'react';
-import { useImperativeHandle, useLayoutEffect, useRef } from 'react';
+import { useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-import DialogueFoundation, { type DialogueAdapter, type Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
 import '@fibrae/semi-ai-foundation/ai-chat-dialogue/ai-chat-dialogue.scss';
 import { IconChevronDown } from '@fibrae/semi-icons-react';
 import { namedRole } from '@fibrae/semi-ui-react/_base/named-role';
@@ -18,13 +18,11 @@ import { DialogueStepWidget } from './widgets/content-item/dialogue-step';
 import { ReasoningWidget } from './widgets/content-item/reasoning';
 import Hint from './widgets/dialogue-hint';
 
+type Foundation = DialogueFoundation;
+type Adapter = DialogueAdapter<AIChatDialogueProps>;
+
 export * from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
 export * from './interface';
-
-export interface AIChatDialogueStates {
-    selectedIds: Set<string>;
-    backBottomVisible: boolean;
-}
 
 const prefix = cssClasses.PREFIX;
 
@@ -87,13 +85,12 @@ function AIChatDialogue(rawProps: AIChatDialogueProps & { ref?: React.Ref<AIChat
 
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const [foundation, { selectedIds, backBottomVisible }] = useFoundation<DialogueFoundation, DialogueAdapter<AIChatDialogueProps, AIChatDialogueStates>, AIChatDialogueProps, AIChatDialogueStates>(
+    const [foundation, { selectedIds, backBottomVisible }] = useFoundation<Foundation, Adapter, AIChatDialogueProps, DialogueState>(
         DialogueFoundation,
         props,
-        () => ({ selectedIds: new Set<string>(), backBottomVisible: false }),
+        () => DialogueFoundation.getInitialState(),
         (base) => ({
             getContainerRef: () => containerRef.current,
-            updateSelected: (ids: Set<string>) => base.setState({ selectedIds: ids }),
             notifySelect: (ids: string[]) => base.getProps().onSelect?.(ids),
             notifyChatsChange: (chats: Message[]) => base.getProps().onChatsChange?.(chats),
             notifyLikeMessage: (message: Message) => base.getProps().onMessageGoodFeedback?.(message),
@@ -102,7 +99,6 @@ function AIChatDialogue(rawProps: AIChatDialogueProps & { ref?: React.Ref<AIChat
             notifyMessageDelete: (message: Message) => base.getProps().onMessageDelete?.(message),
             notifyMessageReset: (message: Message) => base.getProps().onMessageReset?.(message),
             notifyHintClick: (hint: string) => base.getProps().onHintClick?.(hint),
-            setBackBottomVisible: (visible: boolean) => base.setState({ backBottomVisible: visible }),
         })
     );
 
@@ -112,18 +108,8 @@ function AIChatDialogue(rawProps: AIChatDialogueProps & { ref?: React.Ref<AIChat
     const chats = chatsProp ?? EMPTY_CHATS;
     const hints = hintsProp ?? EMPTY_HINTS;
 
-    const committedList = useRef({ chats, hints });
-
     // a busy log defers announcements, so a streamed reply is read once it settles, not chunk by chunk
     const streaming = isUnfinishedStatus(chats.at(-1)?.status);
-
-    useLayoutEffect(() => {
-        const prev = committedList.current;
-        if (prev.chats !== chats || prev.hints !== hints) {
-            committedList.current = { chats, hints };
-            foundation.handleListUpdate(prev, { chats, hints });
-        }
-    });
 
     useImperativeHandle(
         ref,

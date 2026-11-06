@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, onActivated, onBeforeUnmount, onDeactivated, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
+    import { computed, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
     import { isModal } from '@fibrae/semi-foundation/modal/modal-content-foundation';
     import ModalFoundation, { type ModalAdapter } from '@fibrae/semi-foundation/modal/modal-foundation';
@@ -11,6 +11,7 @@
     import Portal from '../_base/portal.vue';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import useFoundation from '../_base/use-foundation';
+    import useKeepAliveFoundation from '../_base/use-keep-alive-foundation';
     import Button from '../button';
     import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';
@@ -18,8 +19,8 @@
     import ModalContent from './modal-content.vue';
 
     type FoundationProps = Omit<ModalProps, 'bodyStyle' | 'maskStyle'>;
-    type Foundation = ModalFoundation<FoundationProps, ModalState, MouseEvent | KeyboardEvent, MouseEvent>;
-    type Adapter = ModalAdapter<FoundationProps, ModalState, MouseEvent | KeyboardEvent, MouseEvent>;
+    type Foundation = ModalFoundation<FoundationProps, MouseEvent | KeyboardEvent, MouseEvent>;
+    type Adapter = ModalAdapter<FoundationProps, MouseEvent | KeyboardEvent, MouseEvent>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -73,7 +74,6 @@
     // Starts true for a modal mounted visible: inside a post flush its mount hook runs late, and a close before then must
     // still report afterClose.
     let closePending = props.visible;
-    const active = shallowRef(true);
 
     const prefix = cssClasses.DIALOG;
     const okFn = computed(() => props.onOk ?? readSemiDefault(semi, 'Modal', 'onOk'));
@@ -101,7 +101,7 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, ModalState>(
         ModalFoundation,
         props,
-        () => ({}),
+        () => ModalFoundation.getInitialState(),
         () => ({
             // the page keeps scrolling behind a non-modal dialog (no mask, or a mask confined to a custom container)
             disabledBodyScroll: () => {
@@ -182,18 +182,13 @@
         { flush: 'post' }
     );
 
-    onDeactivated(() => {
-        active.value = false;
-    });
-
-    onActivated(() => {
-        active.value = true;
-    });
+    // A deactivated KeepAlive subtree releases the body scroll lock without reporting a close.
+    useKeepAliveFoundation(foundation);
 
     // Created once mounted: the immediate run resolves getPopupContainer, whose in-tree target exists only then.
     onMounted(() =>
         watch(
-            () => !hidden.value && active.value,
+            () => !hidden.value,
             (shown, _, onCleanup) => {
                 if (!shown) return;
                 closePending = true;

@@ -14,6 +14,9 @@ import type { PreviewProps, PreviewState } from './interface';
 import { PreviewContext } from './preview-context';
 import PreviewInner from './preview-inner';
 
+type Foundation = PreviewFoundation<PreviewProps, PreviewState>;
+type Adapter = PreviewAdapter<PreviewProps, PreviewState>;
+
 const prefixCls = cssClasses.PREFIX;
 
 const defaultProps = {
@@ -91,14 +94,10 @@ export default function ImagePreview(rawProps: PreviewProps & { ref?: React.Ref<
 
     const groupRef = useRef<HTMLDivElement>(null);
 
-    const [foundation, state] = useFoundation<PreviewFoundation<PreviewProps, PreviewState>, PreviewAdapter<PreviewProps, PreviewState>, PreviewProps, PreviewState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, PreviewProps, PreviewState>(
         PreviewFoundation,
         props,
-        () => ({
-            currentIndex: props.currentIndex || props.defaultCurrentIndex || 0,
-            visible: props.visible || props.defaultVisible || false,
-            images: [],
-        }),
+        () => PreviewFoundation.getInitialState(props),
         (base) => ({
             notifyVisibleChange: (visible) => base.getProps().onVisibleChange?.(visible),
             notifyChange: (index) => base.getProps().onChange?.(index),

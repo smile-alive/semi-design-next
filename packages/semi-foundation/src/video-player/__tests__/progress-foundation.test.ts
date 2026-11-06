@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
-import VideoProgressFoundation, { type VideoProgressAdapter } from '../progress-foundation';
+import VideoProgressFoundation, { type VideoProgressAdapter, type VideoProgressBaseState } from '../progress-foundation';
 
 const { getMarkersList, getValueWidth } = VideoProgressFoundation;
 
@@ -62,47 +62,51 @@ describe('VideoProgressFoundation.getMarkersList 的起点', () => {
 
 describe('VideoProgressFoundation 的按键过滤', () => {
     const setup = () => {
-        const setIsDragging = vi.fn<VideoProgressAdapter['setIsDragging']>();
         const notifyChange = vi.fn<VideoProgressAdapter['notifyChange']>();
-        const setMovingInfo = vi.fn<VideoProgressAdapter['setMovingInfo']>();
         const setPointerCapture = vi.fn<(pointerId: number) => void>();
         const slider = { getBoundingClientRect: () => ({ left: 0, bottom: 10, width: 100, height: 10 }) } as HTMLDivElement;
+        const state = VideoProgressFoundation.getInitialState({ max: 60, value: 0, step: 5 });
+        const setState = vi.fn<(next: Partial<VideoProgressBaseState>) => void>((next) => {
+            Object.assign(state, next);
+        });
         const adapter = {
             getProps: () => ({ max: 60, value: 0, step: 5 }),
-            getStates: () => ({ isDragging: false }),
+            getState: (key: keyof VideoProgressBaseState) => state[key],
+            getStates: () => state,
             getSliderRef: () => slider,
-            getMarkersList: () => [],
-            setIsDragging,
+            setState,
             notifyChange,
-            setMovingInfo,
         } as unknown as VideoProgressAdapter;
-        return { foundation: new VideoProgressFoundation(adapter), setIsDragging, notifyChange, setMovingInfo, setPointerCapture };
+        return { foundation: new VideoProgressFoundation(adapter), state, setState, notifyChange, setPointerCapture };
     };
-    const pointerDown = (button: number, setPointerCapture: (pointerId: number) => void) => ({ button, clientX: 50, clientY: 0, type: 'pointerdown', pointerId: 1, currentTarget: { setPointerCapture } as unknown as Element });
+    const pointerDown = (button: number, setPointerCapture: (pointerId: number) => void) => ({ button, clientX: 50, clientY: 0, pointerId: 1, currentTarget: { setPointerCapture } as unknown as Element });
 
     it('只有主键按下才捕获指针并跳转', () => {
-        const { foundation, setIsDragging, notifyChange, setPointerCapture } = setup();
+        const { foundation, state, notifyChange, setPointerCapture } = setup();
         foundation.handlePointerDown(pointerDown(2, setPointerCapture));
         foundation.handlePointerDown(pointerDown(1, setPointerCapture));
         expect(setPointerCapture).not.toHaveBeenCalled();
-        expect(setIsDragging).not.toHaveBeenCalled();
+        expect(state.isDragging).toBe(false);
         expect(notifyChange).not.toHaveBeenCalled();
         foundation.handlePointerDown(pointerDown(0, setPointerCapture));
         expect(notifyChange).toHaveBeenCalledWith(30);
     });
 
     it('键盘操作清除悬停预览', () => {
-        const { foundation, setMovingInfo } = setup();
+        const { foundation, state } = setup();
+        state.movingInfo = { progress: 0.5, offset: 0, value: 30 };
         foundation.handleKeyDown({ key: 'ArrowRight', altKey: false, ctrlKey: false, metaKey: false, preventDefault: () => {} });
-        expect(setMovingInfo).toHaveBeenCalledWith(null);
+        expect(state.movingInfo).toBeNull();
     });
 
     it('键盘聚焦清除悬停预览，鼠标聚焦不清除', () => {
-        const { foundation, setMovingInfo } = setup();
+        const { foundation, state } = setup();
+        const movingInfo = { progress: 0.5, offset: 0, value: 30 };
+        state.movingInfo = movingInfo;
         foundation.handleFocus({ currentTarget: { matches: () => false } as unknown as Element });
-        expect(setMovingInfo).not.toHaveBeenCalled();
+        expect(state.movingInfo).toBe(movingInfo);
         foundation.handleFocus({ currentTarget: { matches: (selector: string) => selector === ':focus-visible' } as unknown as Element });
-        expect(setMovingInfo).toHaveBeenCalledWith(null);
+        expect(state.movingInfo).toBeNull();
     });
 });
 

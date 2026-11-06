@@ -3,23 +3,19 @@ import zh_CN from '../../locale/source/zh_CN';
 import VideoPlayerFoundation, { type VideoPlayerAdapter, type VideoPlayerBaseState } from '../foundation';
 
 function setup() {
-    const setNotificationContent = vi.fn<VideoPlayerAdapter['setNotificationContent']>();
+    const state = { currentQuality: 'sd', currentRoute: 'a', notificationContent: '' };
     const adapter = {
         getVideo: () => ({ paused: true, currentTime: 0, addEventListener: vi.fn<HTMLVideoElement['addEventListener']>() }),
-        getStates: () => ({ currentQuality: 'sd', currentRoute: 'a' }),
-        setPlaybackRate: vi.fn<VideoPlayerAdapter['setPlaybackRate']>(),
+        getState: (key: keyof typeof state) => state[key],
+        setState: (next: Partial<typeof state>) => Object.assign(state, next),
         notifyRateChange: vi.fn<VideoPlayerAdapter['notifyRateChange']>(),
-        setQuality: vi.fn<VideoPlayerAdapter['setQuality']>(),
         notifyQualityChange: vi.fn<VideoPlayerAdapter['notifyQualityChange']>(),
-        setRoute: vi.fn<VideoPlayerAdapter['setRoute']>(),
         notifyRouteChange: vi.fn<VideoPlayerAdapter['notifyRouteChange']>(),
-        setShowNotification: vi.fn<VideoPlayerAdapter['setShowNotification']>(),
-        setNotificationContent,
     } as unknown as VideoPlayerAdapter;
     const foundation = new VideoPlayerFoundation(adapter);
     foundation.connect();
     onTestFinished(() => foundation.disconnect());
-    return { foundation, setNotificationContent };
+    return { foundation, state };
 }
 
 class FakeVideo extends EventTarget {
@@ -47,31 +43,22 @@ class FakeVideo extends EventTarget {
     }
 }
 
-function createPlayer(initial: Partial<VideoPlayerBaseState> & { currentQuality?: string; currentRoute?: string } = {}) {
+function createPlayer(initial: Partial<VideoPlayerBaseState> = {}) {
     const video = new FakeVideo();
     const wrapper = document.createElement('div');
-    const state = { currentTime: 0, isMirror: false, isPlaying: false, isFullScreen: false, muted: false, playbackRate: 1, volume: 100, currentQuality: 'sd', currentRoute: 'a', ...initial };
+    const state: VideoPlayerBaseState = { ...VideoPlayerFoundation.getInitialState({ volume: 100, defaultQuality: 'sd', defaultRoute: 'a' }), ...initial };
+    const setState = vi.fn<(next: Partial<VideoPlayerBaseState>) => void>((next) => {
+        Object.assign(state, next);
+    });
     const adapter = {
         getVideo: () => video,
         getVideoWrapper: () => wrapper,
         getProps: () => ({ muted: false, seekTime: 10, volume: 100 }),
+        getState: (key: keyof VideoPlayerBaseState) => state[key],
         getStates: () => state,
-        setTotalTime: vi.fn<VideoPlayerAdapter['setTotalTime']>(),
-        setVolume: vi.fn<VideoPlayerAdapter['setVolume']>(),
-        setMuted: vi.fn<VideoPlayerAdapter['setMuted']>(),
-        setCurrentTime: vi.fn<VideoPlayerAdapter['setCurrentTime']>(),
-        setIsPlaying: vi.fn<VideoPlayerAdapter['setIsPlaying']>(),
-        setIsError: vi.fn<VideoPlayerAdapter['setIsError']>(),
-        setIsFullScreen: vi.fn<VideoPlayerAdapter['setIsFullScreen']>(),
-        setBufferedValue: vi.fn<VideoPlayerAdapter['setBufferedValue']>(),
-        setShowControls: vi.fn<VideoPlayerAdapter['setShowControls']>(),
-        setShowNotification: vi.fn<VideoPlayerAdapter['setShowNotification']>(),
-        setNotificationContent: vi.fn<VideoPlayerAdapter['setNotificationContent']>(),
-        setQuality: vi.fn<VideoPlayerAdapter['setQuality']>(),
+        setState,
         notifyQualityChange: vi.fn<VideoPlayerAdapter['notifyQualityChange']>(),
-        setRoute: vi.fn<VideoPlayerAdapter['setRoute']>(),
         notifyRouteChange: vi.fn<VideoPlayerAdapter['notifyRouteChange']>(),
-        setPlaybackRate: vi.fn<VideoPlayerAdapter['setPlaybackRate']>(),
         notifyRateChange: vi.fn<VideoPlayerAdapter['notifyRateChange']>(),
         notifyPlay: vi.fn<VideoPlayerAdapter['notifyPlay']>(),
         notifyPause: vi.fn<VideoPlayerAdapter['notifyPause']>(),
@@ -79,17 +66,17 @@ function createPlayer(initial: Partial<VideoPlayerBaseState> & { currentQuality?
     const foundation = new VideoPlayerFoundation(adapter);
     foundation.connect();
     onTestFinished(() => foundation.disconnect());
-    return { foundation, video, state, adapter, wrapper };
+    return { foundation, video, state, adapter, setState, wrapper };
 }
 
 describe('VideoPlayerFoundation 的直播流', () => {
     it('时长为 Infinity 时跳转到非有限值不写 currentTime', () => {
-        const { foundation, video, adapter } = createPlayer();
+        const { foundation, video, setState } = createPlayer();
         video.duration = Number.POSITIVE_INFINITY;
         expect(() => foundation.handleTimeChange(Number.POSITIVE_INFINITY)).not.toThrow();
         expect(() => foundation.handleTimeChange(Number.NaN)).not.toThrow();
         expect(video.writes).toEqual([]);
-        expect(adapter.setCurrentTime).not.toHaveBeenCalled();
+        expect(setState).not.toHaveBeenCalled();
         foundation.handleTimeChange(30);
         expect(video.writes).toEqual([30]);
     });
@@ -97,14 +84,12 @@ describe('VideoPlayerFoundation 的直播流', () => {
 
 describe('VideoPlayerFoundation 换源后的播放状态', () => {
     it('loadstart 时按元素的 paused 同步 isPlaying，并清空缓冲进度', () => {
-        const { foundation, video, adapter } = createPlayer({ isPlaying: true });
+        const { foundation, video, state } = createPlayer({ isPlaying: true, isError: true, bufferedValue: 20 });
         foundation.handleLoadStart();
-        expect(adapter.setIsPlaying).toHaveBeenLastCalledWith(false);
-        expect(adapter.setBufferedValue).toHaveBeenLastCalledWith(0);
-        expect(adapter.setIsError).toHaveBeenLastCalledWith(false);
+        expect(state).toMatchObject({ isPlaying: false, bufferedValue: 0, isError: false });
         video.paused = false;
         foundation.handleLoadStart();
-        expect(adapter.setIsPlaying).toHaveBeenLastCalledWith(true);
+        expect(state.isPlaying).toBe(true);
     });
 });
 
@@ -168,11 +153,11 @@ describe('VideoPlayerFoundation 的卡顿通知', () => {
     const locale = zh_CN.VideoPlayer;
 
     it('stalled 之后收到 progress 就关闭通知', () => {
-        const { foundation, adapter } = createPlayer();
+        const { foundation, state } = createPlayer();
         foundation.handleStalled(locale);
-        expect(adapter.setShowNotification).toHaveBeenLastCalledWith(true);
+        expect(state.showNotification).toBe(true);
         foundation.handleProgress();
-        expect(adapter.setShowNotification).toHaveBeenLastCalledWith(false);
+        expect(state.showNotification).toBe(false);
     });
 
     it('没有卡顿时 progress 不动通知，例如不打断切换提示', () => {
@@ -180,11 +165,11 @@ describe('VideoPlayerFoundation 的卡顿通知', () => {
         onTestFinished(() => {
             vi.useRealTimers();
         });
-        const { foundation, adapter } = createPlayer();
+        const { foundation, setState } = createPlayer();
         foundation.handleRateChange({ label: '2.0x', value: 2 }, locale);
-        vi.mocked(adapter.setShowNotification).mockClear();
+        setState.mockClear();
         foundation.handleProgress();
-        expect(adapter.setShowNotification).not.toHaveBeenCalled();
+        expect(setState).not.toHaveBeenCalled();
     });
 
     it('waiting 或临时通知覆盖卡顿提示后，progress 不再关闭通知', () => {
@@ -192,12 +177,12 @@ describe('VideoPlayerFoundation 的卡顿通知', () => {
         onTestFinished(() => {
             vi.useRealTimers();
         });
-        const { foundation, adapter } = createPlayer();
+        const { foundation, setState } = createPlayer();
         foundation.handleStalled(locale);
         foundation.handleRateChange({ label: '2.0x', value: 2 }, locale);
-        vi.mocked(adapter.setShowNotification).mockClear();
+        setState.mockClear();
         foundation.handleProgress();
-        expect(adapter.setShowNotification).not.toHaveBeenCalled();
+        expect(setState).not.toHaveBeenCalled();
     });
 });
 
@@ -207,22 +192,22 @@ describe('VideoPlayerFoundation 的控制栏显隐', () => {
         onTestFinished(() => {
             vi.useRealTimers();
         });
-        const { foundation, adapter, state, wrapper } = createPlayer();
+        const { foundation, state, wrapper } = createPlayer({ showControls: false });
         foundation.init();
         // jsdom has no fullscreen API
         Object.defineProperty(document, 'fullscreenElement', { configurable: true, get: () => wrapper });
         onTestFinished(() => void Reflect.deleteProperty(document, 'fullscreenElement'));
         document.dispatchEvent(new Event('fullscreenchange'));
-        state.isFullScreen = true;
-        vi.mocked(adapter.setShowControls).mockClear();
+        expect(state.isFullScreen).toBe(true);
+        state.showControls = false;
         document.dispatchEvent(new MouseEvent('mousemove'));
-        expect(adapter.setShowControls).toHaveBeenLastCalledWith(true);
+        expect(state.showControls).toBe(true);
         vi.advanceTimersByTime(3000);
-        expect(adapter.setShowControls).toHaveBeenLastCalledWith(true);
+        expect(state.showControls).toBe(true);
         state.isPlaying = true;
         document.dispatchEvent(new MouseEvent('mousemove'));
         vi.advanceTimersByTime(3000);
-        expect(adapter.setShowControls).toHaveBeenLastCalledWith(false);
+        expect(state.showControls).toBe(false);
     });
 
     it('全屏下控制栏被隐藏后暂停（空格或点击画面），控制栏重新显示', () => {
@@ -230,10 +215,9 @@ describe('VideoPlayerFoundation 的控制栏显隐', () => {
         onTestFinished(() => {
             vi.useRealTimers();
         });
-        const { foundation, adapter, state } = createPlayer({ isFullScreen: true, isPlaying: true });
-        vi.mocked(adapter.setShowControls).mockClear();
+        const { foundation, state } = createPlayer({ isFullScreen: true, isPlaying: true, showControls: false });
         foundation.handleVideoPause();
-        expect(adapter.setShowControls).toHaveBeenLastCalledWith(true);
+        expect(state.showControls).toBe(true);
         expect(state.isFullScreen).toBe(true);
     });
 
@@ -242,21 +226,19 @@ describe('VideoPlayerFoundation 的控制栏显隐', () => {
         onTestFinished(() => {
             vi.useRealTimers();
         });
-        const { foundation, adapter, state } = createPlayer({ isFullScreen: true });
-        vi.mocked(adapter.setShowControls).mockClear();
+        const { foundation, state } = createPlayer({ isFullScreen: true });
         state.isPlaying = true;
         foundation.handleVideoPlay();
         vi.advanceTimersByTime(3000);
-        expect(adapter.setShowControls).toHaveBeenLastCalledWith(false);
+        expect(state.showControls).toBe(false);
     });
 
     it('其他元素进出全屏不改变本播放器的全屏状态与控制栏', () => {
-        const { foundation, adapter } = createPlayer({ isFullScreen: false });
+        const { foundation, setState } = createPlayer({ isFullScreen: false });
         foundation.init();
-        vi.mocked(adapter.setIsFullScreen).mockClear();
+        setState.mockClear();
         document.dispatchEvent(new Event('fullscreenchange'));
-        expect(adapter.setIsFullScreen).not.toHaveBeenCalled();
-        expect(adapter.setShowControls).not.toHaveBeenCalled();
+        expect(setState).not.toHaveBeenCalled();
     });
 });
 
@@ -267,13 +249,13 @@ describe('VideoPlayerFoundation 的切换通知', () => {
 
     it('选项名称里的 $&、$$ 按原文写入通知，不当作替换模式', () => {
         vi.useFakeTimers();
-        const { foundation, setNotificationContent } = setup();
+        const { foundation, state } = setup();
         const locale = zh_CN.VideoPlayer;
         foundation.handleRateChange({ label: '$&x', value: 2 }, locale);
-        expect(setNotificationContent).toHaveBeenLastCalledWith('切换速率至 $&x');
+        expect(state.notificationContent).toBe('切换速率至 $&x');
         foundation.handleQualityChange({ label: '$$HD', value: 'hd' }, locale);
-        expect(setNotificationContent).toHaveBeenLastCalledWith('切换清晰度至$$HD');
+        expect(state.notificationContent).toBe('切换清晰度至$$HD');
         foundation.handleRouteChange({ label: "$'line", value: 'a' }, locale);
-        expect(setNotificationContent).toHaveBeenLastCalledWith("切换线路至$'line");
+        expect(state.notificationContent).toBe("切换线路至$'line");
     });
 });

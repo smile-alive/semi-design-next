@@ -1530,7 +1530,7 @@ describe('ColorPicker 的 Vue 用法', () => {
         expect(onChange).not.toHaveBeenCalled();
     });
 
-    it('KeepAlive 切走再切回后，弹层已关闭', async () => {
+    it('KeepAlive 切走时弹层随子树隐藏，切回后仍打开', async () => {
         const shown = ref(true);
         const Other = defineComponent({ render: () => <div>other</div> });
         render(() => (
@@ -1554,8 +1554,8 @@ describe('ColorPicker 的 Vue 用法', () => {
         expect(screen.queryByRole('dialog')).toBeNull();
         shown.value = true;
         await settle();
-        expect(screen.getByRole('button', { name: text.color })).toHaveAttribute('aria-expanded', 'false');
-        expect(screen.queryByRole('dialog')).toBeNull();
+        expect(screen.getByRole('button', { name: text.color })).toHaveAttribute('aria-expanded', 'true');
+        expect(screen.getByRole('dialog')).toBeVisible();
     });
 
     it('一个非受控实例改色后，后挂载的实例仍从默认颜色开始', async () => {

@@ -1,17 +1,16 @@
 import type React from 'react';
-import { useEffect, useImperativeHandle, useRef } from 'react';
+import { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
-import { isEqual, omitBy } from 'es-toolkit';
+import { omitBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/json-viewer/constants';
-import JsonViewerFoundation, { type JsonViewerOptions, type JsonViewerAdapter, type SearchOptions } from '@fibrae/semi-foundation/json-viewer/foundation';
+import JsonViewerFoundation, { type JsonViewerOptions, type JsonViewerAdapter, type JsonViewerBaseState, type SearchOptions } from '@fibrae/semi-foundation/json-viewer/foundation';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import '@fibrae/semi-foundation/json-viewer/json-viewer.scss';
 import { IconCaseSensitive, IconChevronLeft, IconChevronRight, IconClose, IconRegExp, IconSearch, IconWholeWord } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import Button from '../button';
 import ButtonGroup from '../button/button-group';
@@ -61,15 +60,7 @@ export interface JsonViewerHandle {
     getStyle: () => { width: number | string; height: number | string };
 }
 
-export interface JsonViewerState {
-    searchOptions: SearchOptions;
-    showSearchBar: boolean;
-    customRenderMap: Map<HTMLElement, React.ReactNode>;
-}
-
 export type { SearchOptions };
-
-const defaultSearchOptions: SearchOptions = { caseSensitive: false, wholeWord: false, regex: false };
 
 const searchOptionItems = [
     { key: 'caseSensitive', icon: IconCaseSensitive },
@@ -105,26 +96,21 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
     const triggerRef = useRef<HTMLButtonElement>(null);
     const isComposingRef = useRef(false);
     const draggedRef = useRef(false);
+    const [customRenderMap, setCustomRenderMap] = useState<Map<HTMLElement, React.ReactNode>>(() => new Map());
 
     // a close from inside the bar unmounts the focused control, so focus returns to the trigger
     const returnFocusRef = useRef(false);
 
-    const [foundation, state] = useFoundation<JsonViewerFoundation<typeof props, JsonViewerState>, JsonViewerAdapter<typeof props, JsonViewerState>, typeof props, JsonViewerState>(
+    const [foundation, state] = useFoundation<JsonViewerFoundation<typeof props>, JsonViewerAdapter<typeof props>, typeof props, JsonViewerBaseState>(
         JsonViewerFoundation,
         props,
-        () => ({ searchOptions: defaultSearchOptions, showSearchBar: false, customRenderMap: new Map() }),
+        () => JsonViewerFoundation.getInitialState(),
         (base) => ({
             getEditorRef: () => editorRef.current,
             notifyChange: (value) => base.getProps().onChange?.(value),
+            toCoreOptions: (coreOptions) => coreOptions,
             // the editor refills one Map in place; a copy lets a memoized render see the change
-            setCustomRenderMap: (customRenderMap) => base.setState({ customRenderMap: new Map(customRenderMap) }),
-            toggleSearchOption: (key) => {
-                const { searchOptions } = base.getStates();
-                base.setState({ searchOptions: { ...searchOptions, [key]: !searchOptions[key] } });
-            },
-            toggleSearchBar: () => {
-                base.setState({ showSearchBar: !base.getStates().showSearchBar, searchOptions: defaultSearchOptions });
-            },
+            setCustomRenderMap: (map) => setCustomRenderMap(new Map(map)),
         })
     );
 
@@ -291,21 +277,6 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
         </DragMove>
     );
 
-    // options is usually a fresh literal, so compare deeply
-    useDidUpdate(
-        { value, options },
-        (next, previous) => {
-            // a value equal to the editor's own text is the echo of an onChange write-back: re-creating would drop the
-            // caret, focus, undo stack and scroll position
-            if (isEqual(next.options, previous.options) && next.value === foundation.jsonViewer?.getModel().getValue()) {
-                return;
-            }
-            foundation.destroy();
-            foundation.init();
-        },
-        isEqual
-    );
-
     useEffect(() => {
         if (state.showSearchBar) {
             searchInputRef.current?.focus();
@@ -337,7 +308,7 @@ export default function JsonViewer(rawProps: JsonViewerProps) {
                 <div ref={editorRef} className={clsx(prefixCls, `${prefixCls}-background`)} style={{ width, height }} />
                 {showSearch && (renderSearchButton ? renderSearchButton(defaultSearchButton, searchControls) : defaultSearchButton)}
             </div>
-            {Array.from(state.customRenderMap, ([el, node]) => createPortal(node, el))}
+            {Array.from(customRenderMap, ([el, node]) => createPortal(node, el))}
         </>
     );
 }

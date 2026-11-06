@@ -36,18 +36,15 @@ export interface AutoCompleteBaseState {
     focusIndex: number;
     inputValue?: string | number;
     options: StateOptionItem[];
+    /** The selected option's data by label; the custom trigger receives its values */
+    selection: Map<any, DataItem>;
     visible: boolean;
 }
 
 /** FE is the host's focus and blur event, which the foundation only passes through */
 export interface AutoCompleteAdapter<P extends AutoCompleteBaseProps = AutoCompleteBaseProps, S extends AutoCompleteBaseState = AutoCompleteBaseState, FE = unknown> extends DefaultAdapter<P, S> {
-    updateFocusIndex: (focusIndex: number) => void;
     notifyKeyDown: (e: any) => void;
-    updateInputValue: (inputValue: string | number) => void;
-    toggleListVisible: (isShow: boolean) => void;
-    updateOptionList: (optionList: Array<StateOptionItem>) => void;
     updateScrollTop: (index: number) => void;
-    updateSelection: (selection: Map<any, any>) => void;
     notifySearch: (inputValue: string) => void;
     notifyChange: (value: string | number) => void;
     notifySelect: (option: StateOptionItem | string | number) => void;
@@ -58,9 +55,8 @@ export interface AutoCompleteAdapter<P extends AutoCompleteBaseProps = AutoCompl
 }
 
 export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = AutoCompleteBaseProps, S extends AutoCompleteBaseState = AutoCompleteBaseState, FE = unknown> extends BaseFoundation<AutoCompleteAdapter<P, S, FE>, P, S> {
-    // StrictMode and React Activity replay init on this instance after destroy, over a dropdown the user may have
-    // closed since: defaultOpen belongs to the first mount
-    #initialized = false;
+    // data is compared by each host (React nodes in labels, Vue and Svelte arrays changed in place), which calls handleDataChange
+    static override readonly propKeys = ['value'];
 
     static #generateList(data: AutoCompleteData) {
         const options: Array<StateOptionItem> = [];
@@ -85,7 +81,7 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         return renderSelectedItem ?? ((option: DataItem) => option?.value);
     }
 
-    static #valueStates(props: AutoCompleteBaseProps, selectedValue: AutoCompleteBaseProps['value']) {
+    static #valueStates(props: AutoCompleteBaseProps, selectedValue: AutoCompleteBaseProps['value'], typed?: string | number) {
         // a controlled value set back to undefined empties the input; there is no option to render it from
         if (selectedValue === undefined) {
             return { inputValue: '', selection: new Map<any, DataItem>(), focusIndex: props.defaultActiveFirstOption ? 0 : -1 };
@@ -95,11 +91,19 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         const selectedOptionIndex = options.findIndex((option) => renderSelectedItem(option) === selectedValue);
         const selectedOption = options[selectedOptionIndex];
         const selection = new Map<any, DataItem>();
+        let inputValue: string | number;
         if (selectedOption) {
             selection.set(selectedOption.label, selectedOption);
+            inputValue = renderSelectedItem(selectedOption);
+        } else if (Object.is(selectedValue, typed)) {
+            // Typing notifies the text, which a controlled parent or Svelte's bound value echoes back; renderSelectedItem
+            // expects a data item, so passing the text through it would rewrite what the user typed
+            inputValue = typed;
+        } else {
+            inputValue = renderSelectedItem({ label: selectedValue, value: selectedValue });
         }
         return {
-            inputValue: selectedOption ? renderSelectedItem(selectedOption) : renderSelectedItem({ label: selectedValue, value: selectedValue }),
+            inputValue,
             selection,
             focusIndex: selectedOptionIndex === -1 && props.defaultActiveFirstOption ? 0 : selectedOptionIndex,
         };
@@ -126,11 +130,11 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
 
         if (selectedOptionIndex === -1 && defaultActiveFirstOption) {
             if (focusIndex !== 0) {
-                this.adapter.updateFocusIndex(0);
+                this.setState({ focusIndex: 0 });
             }
         } else {
             if (selectedOptionIndex !== focusIndex) {
-                this.adapter.updateFocusIndex(selectedOptionIndex);
+                this.setState({ focusIndex: selectedOptionIndex });
             }
         }
     }
@@ -144,7 +148,7 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         const { focusIndex, options } = this.getStates();
         const visibleOptions = options.filter((item: StateOptionItem) => item.show);
         const index = getEnabledStepIndex(offset, focusIndex, visibleOptions.length, (i) => visibleOptions[i].disabled);
-        this.adapter.updateFocusIndex(index);
+        this.setState({ focusIndex: index });
         if (index !== -1) {
             this.adapter.updateScrollTop(index);
         }
@@ -178,7 +182,7 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
     }
 
     #openDropdown() {
-        this.adapter.toggleListVisible(true);
+        this.setState({ visible: true });
         this.adapter.notifyDropdownVisibleChange(true);
         this.#modifyFocusIndexOnPanelOpen();
     }
@@ -188,16 +192,16 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         if (!this.getState('visible')) {
             return;
         }
-        this.adapter.toggleListVisible(false);
+        this.setState({ visible: false });
         this.adapter.notifyDropdownVisibleChange(false);
     }
 
     #updateSelection(option: DataItem) {
-        const selection = new Map();
+        const selection = new Map<any, DataItem>();
         if (option) {
             selection.set(option.label, option);
         }
-        this.adapter.updateSelection(selection);
+        this.setState({ selection });
     }
 
     #notifySelect(option: DataItem) {
@@ -208,7 +212,14 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         }
     }
 
-    static getInitialState(props: AutoCompleteBaseProps) {
+    protected override initOnce() {
+        // a disabled input cannot pick from the list or close it
+        if (this.getProp('defaultOpen') && !this.getProp('disabled')) {
+            this.#openDropdown();
+        }
+    }
+
+    static getInitialState(props: AutoCompleteBaseProps): AutoCompleteBaseState {
         const value = props.value !== undefined ? props.value : props.defaultValue;
         return {
             options: AutoCompleteFoundation.#generateList(props.data),
@@ -217,15 +228,8 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
         };
     }
 
-    override init() {
-        if (this.#initialized) {
-            return;
-        }
-        this.#initialized = true;
-        // a disabled input cannot pick from the list or close it
-        if (this.getProp('defaultOpen') && !this.getProp('disabled')) {
-            this.#openDropdown();
-        }
+    override handlePropsChange() {
+        this.setState(AutoCompleteFoundation.#valueStates(this.getProps(), this.getProp('value'), this.getState('inputValue')));
     }
 
     handleKeyDown = (event: Pick<KeyboardEvent, 'key' | 'preventDefault'> & Parameters<typeof isComposing>[0]) => {
@@ -294,7 +298,7 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
     };
 
     handleSearch = (inputValue: string) => {
-        this.adapter.updateInputValue(inputValue);
+        this.setState({ inputValue });
         this.adapter.notifySearch(inputValue);
         this.adapter.notifyChange(inputValue);
         this.#modifyFocusIndex(inputValue);
@@ -319,27 +323,19 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
             this.#closeDropdown();
             this.#notifySelect(option);
         } else {
-            this.adapter.updateInputValue(newInputValue);
+            this.setState({ inputValue: newInputValue });
             this.#updateSelection(option);
             this.#notifySelect(option);
             this.#closeDropdown();
         }
         this.adapter.notifyChange(newInputValue);
-        this.adapter.updateFocusIndex(optionIndex);
+        this.setState({ focusIndex: optionIndex });
     };
 
     handleDataChange = (newData: any[]) => {
-        const options = AutoCompleteFoundation.#generateList(newData);
-        this.adapter.updateOptionList(options);
+        this.setState({ options: AutoCompleteFoundation.#generateList(newData) });
         let { inputValue } = this.getStates();
         this.#modifyFocusIndex(inputValue);
-    };
-
-    handleValueChange = (selectedValue: AutoCompleteBaseProps['value']) => {
-        const { inputValue, selection, focusIndex } = AutoCompleteFoundation.#valueStates(this.getProps(), selectedValue);
-        this.adapter.updateInputValue(inputValue);
-        this.adapter.updateSelection(selection);
-        this.adapter.updateFocusIndex(focusIndex);
     };
 
     handleClear = () => {
@@ -347,7 +343,7 @@ export default class AutoCompleteFoundation<P extends AutoCompleteBaseProps = Au
     };
 
     handleOptionMouseEnter = (optionIndex: number) => {
-        this.adapter.updateFocusIndex(optionIndex);
+        this.setState({ focusIndex: optionIndex });
     };
 
     handleFocus = (e: FE) => {

@@ -2,7 +2,7 @@ import { type JSX, For, Match, Show, Switch, children, createMemo, splitProps, u
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { DEFAULT_TOOLTIP, cssClasses } from '@fibrae/semi-foundation/breadcrumb/constants';
-import BreadcrumbFoundation, { type BreadcrumbAdapter } from '@fibrae/semi-foundation/breadcrumb/foundation';
+import BreadcrumbFoundation, { type BreadcrumbAdapter, type BreadcrumbState } from '@fibrae/semi-foundation/breadcrumb/foundation';
 import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/breadcrumb/breadcrumb.scss';
@@ -21,12 +21,8 @@ import { BREADCRUMB_ITEM, ItemView } from './item';
 
 const clsPrefix = cssClasses.PREFIX;
 
-interface BreadcrumbState {
-    isCollapsed: boolean;
-}
-
-type Foundation = BreadcrumbFoundation<BreadcrumbProps, BreadcrumbState, MouseEvent>;
-type Adapter = BreadcrumbAdapter<BreadcrumbProps, BreadcrumbState, MouseEvent>;
+type Foundation = BreadcrumbFoundation<BreadcrumbProps, MouseEvent>;
+type Adapter = BreadcrumbAdapter<BreadcrumbProps, MouseEvent>;
 type RouteEntry = ReturnType<typeof BreadcrumbFoundation.genRoutes>[number];
 
 const defaultProps = {
@@ -54,10 +50,9 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, BreadcrumbProps, BreadcrumbState>(
         BreadcrumbFoundation,
         props,
-        () => ({ isCollapsed: true }),
+        () => BreadcrumbFoundation.getInitialState(),
         (base) => ({
             notifyClick: (info, e) => base.getProps().onClick?.(info, e),
-            expandCollapsed: () => base.setState({ isCollapsed: false }),
         })
     );
 

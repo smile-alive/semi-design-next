@@ -2,16 +2,18 @@ import type React from 'react';
 import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses as css } from '@fibrae/semi-foundation/spin/constants';
-import SpinFoundation, { type SpinAdapter } from '@fibrae/semi-foundation/spin/foundation';
+import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/spin/foundation';
 import '@fibrae/semi-foundation/spin/spin.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import useMergedRef from '../_base/use-merged-ref';
 import { hasContent } from '../_utils';
 import useLocale from '../locale/use-locale';
 import SpinIcon from './icon';
+
+type Foundation = SpinFoundation<SpinProps>;
+type Adapter = SpinAdapter<SpinProps>;
 
 const prefixCls = css.PREFIX;
 
@@ -31,10 +33,6 @@ export interface SpinProps extends ElementProps<'div'> {
     ref?: React.Ref<HTMLDivElement>;
 }
 
-interface SpinState {
-    loading: boolean;
-}
-
 const defaultProps = {
     size: 'middle',
     spinning: true,
@@ -49,20 +47,17 @@ export default function Spin(rawProps: SpinProps) {
 
     const rootRef = useRef<HTMLDivElement>(null);
 
-    const [foundation, state] = useFoundation<SpinFoundation<SpinProps, SpinState>, SpinAdapter<SpinProps, SpinState>, SpinProps, SpinState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, SpinProps, SpinState>(
         SpinFoundation,
         props,
-        () => ({ loading: props.spinning }),
-        (base) => ({
-            setLoading: (loading) => base.setState({ loading }),
-        })
+        () => SpinFoundation.getInitialState(props),
+        () => ({})
     );
 
     const loading = delay ? state.loading : spinning;
     const blocked = loading && hasContent(children);
     const mergedRef = useMergedRef(ref, rootRef);
 
-    useDidUpdate(props.spinning, foundation.handleSpinningChange);
     useLayoutEffect(() => foundation.handleBlockedChange(rootRef.current, blocked), [blocked, foundation]);
 
     return (

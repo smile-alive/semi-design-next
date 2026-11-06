@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
 import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
 import FormFoundation from '@fibrae/semi-foundation/form/foundation';
-import type { AllErrors, BaseFormAdapter } from '@fibrae/semi-foundation/form/interface';
+import type { AllErrors, BaseFormAdapter, FormFoundationState } from '@fibrae/semi-foundation/form/interface';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/form/form.scss';
 import useDefaultProps from '../_base/use-default-props';
@@ -16,10 +16,6 @@ import type { FormApi, FormElement, FormProps, FormRenderProps, FormState } from
 import { batchMethods, cloneDeep } from './utils';
 
 const prefix = cssClasses.PREFIX;
-
-interface FormFoundationState {
-    formState?: FormState;
-}
 
 const defaultProps = {
     layout: 'vertical',
@@ -37,7 +33,7 @@ function pickFormProps(props: Record<string, any>, keys?: string[]) {
 
 export default function Form<Values extends Record<string, any> = any, Output = Values>(rawProps: FormProps<Values, Output>) {
     type Foundation = FormFoundation<SubmitEvent>;
-    type Adapter = BaseFormAdapter<FormProps<Values, Output>, FormFoundationState, Values, SubmitEvent>;
+    type Adapter = BaseFormAdapter<FormProps<Values, Output>, Values, SubmitEvent>;
 
     const props = useDefaultProps('Form', rawProps, defaultProps);
 
@@ -85,7 +81,7 @@ export default function Form<Values extends Record<string, any> = any, Output = 
     const { foundation, state } = useFoundation<Foundation, Adapter, FormProps<Values, Output>, FormFoundationState>(
         FormFoundation,
         props,
-        () => ({}),
+        (view) => FormFoundation.getInitialState(view),
         (base) => ({
             cloneDeep,
             getLocale: () => locale().locale,
@@ -99,18 +95,16 @@ export default function Form<Values extends Record<string, any> = any, Output = 
             notifyValueChange: (values, changedValues) => local.onValueChange?.(values, changedValues),
             notifyErrorChange: (errors, changedError) => local.onErrorChange?.(errors, changedError),
             notifyReset: () => local.onReset?.(),
-            getInitValues: () => local.initValues as Partial<Values>,
             getFormProps: (keys) => pickFormProps(props, keys),
             getFormElement: () => formElement ?? null,
         })
     );
 
-    const initialFormState = foundation.getFormState();
     const formApi = batchMethods(foundation.getFormApi()) as FormApi<Values, Output>;
 
     const formId = () => local.id ?? generatedId;
 
-    const formState = () => state().formState ?? initialFormState;
+    const formState = () => state().formState;
 
     // read lazily, so a render function or component that reads them in its JSX follows the form state
     const renderProps: FormRenderProps<Values, Output> = {
@@ -175,8 +169,7 @@ export default function Form<Values extends Record<string, any> = any, Output = 
         </form>
     );
 
-    // Built before the onMount below: the fields inside register in their own onMount first, as the foundation
-    // expects, and the cleanup registered there runs before theirs, so the destroyed Form skips one onChange per field.
+    // Built before the onMount below, so getFormApi and the useForm api bind with the fields inside registered
     const view = (
         <FormContext.Provider value={context}>
             <Show when={local.labelCol && local.wrapperCol} fallback={formView()}>
@@ -193,6 +186,8 @@ export default function Form<Values extends Record<string, any> = any, Output = 
         local.getFormApi?.(formApi);
         getFormApiProxyInternals(local.form)?.bind(formApi);
         onCleanup(() => {
+            // Solid disposes the fields before the host destroys the foundation, and a field's cleanup batches, which
+            // flushes the commit queue at once: without this the unregistering would settle as if the Form stayed
             foundation.destroy();
             getFormApiProxyInternals(local.form)?.unbind();
         });
