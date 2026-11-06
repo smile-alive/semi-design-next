@@ -9,23 +9,23 @@
 1. 查看 `git status --short`，读目标文件、调用方和测试。工作区常有其他人未提交的改动：不覆盖、不回退，同一文件里只动本任务的部分。不用 `git stash`（所有 worktree 共用一个 stash 栈）。
 2. 按任务先读：
 
-| 任务                                                                       | 先读                                                                                                                  |
-| -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| 目录结构、支持环境、常用命令、分支与发布                                   | [CONTRIBUTING.md](CONTRIBUTING.md)                                                                                    |
-| 已定决策（D、S、C、F 系列）与未完成事项                                    | [decisions](docs/decisions.md) 第 1、2 节；依赖现状看各 `package.json` 与 `pnpm-workspace.yaml` 的 catalog            |
-| 某组件未结的问题、已知限制与保持原样的决定                                 | [component-issues](docs/component-issues.md)                                                                          |
-| 相对原 Semi 的破坏性变化与行为变化                                         | [release-notes](docs/release-notes.md)                                                                                |
-| TS/TSX 写法：导出、函数、类成员、依赖与工具函数、Node 脚本                 | [coding-style](.agents/references/coding-style.md)                                                                    |
-| lint 目录隔离、作用域、导入边界与豁免                                      | [lint](.agents/references/lint.md)                                                                                    |
-| 组件的跨框架协议：语句顺序、foundation 与 adapter、属性透传与 ref、context | [components](.agents/references/components.md)                                                                        |
-| 角色、键盘、可访问名称、jsx-a11y 豁免                                      | [a11y](.agents/references/a11y.md)                                                                                    |
-| 组件 SCSS、主题 token、逻辑属性、`@layer`                                  | [styles](.agents/references/styles.md)；主题插件协议见 styles 的「Sass 模块与 semi: importer」「主题 token 协议」两节 |
-| 测试写法、浏览器测试的坑、验证范围                                         | [testing](.agents/references/testing.md)                                                                              |
-| 文档站内容、demo、MDX、dev server                                          | [website](.agents/references/website.md)                                                                              |
-| 解析源码做统计、检查或 codemod                                             | [ast](.agents/references/ast.md)                                                                                      |
-| 修组件 bug                                                                 | [fix-component-bug](.agents/skills/fix-component-bug/SKILL.md)                                                        |
-| 新增或修改可访问名称、内置文案                                             | [locale-text](.agents/skills/locale-text/SKILL.md)                                                                    |
-| 扫描文档站页面、维护 a11y 基线                                             | [check-pages](.agents/skills/check-pages/SKILL.md)                                                                    |
+| 任务                                                                       | 先读                                                                                                                        |
+| -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| 目录结构、支持环境、常用命令、分支与发布                                   | [CONTRIBUTING.md](CONTRIBUTING.md)                                                                                          |
+| 已定决策（D、S、C、F、A 系列，Solid 的 X 系列）与未完成事项                | [decisions](docs/decisions.md) 第 1、2 节，Solid 见第 3 节；依赖现状看各 `package.json` 与 `pnpm-workspace.yaml` 的 catalog |
+| 某组件未结的问题、已知限制与保持原样的决定                                 | [component-issues](docs/component-issues.md)                                                                                |
+| 相对原 Semi 的破坏性变化与行为变化                                         | [release-notes](docs/release-notes.md)                                                                                      |
+| TS/TSX 写法：导出、函数、类成员、依赖与工具函数、Node 脚本                 | [coding-style](.agents/references/coding-style.md)                                                                          |
+| lint 目录隔离、作用域、导入边界与豁免                                      | [lint](.agents/references/lint.md)                                                                                          |
+| 组件的跨框架协议：语句顺序、foundation 与 adapter、属性透传与 ref、context | [components](.agents/references/components.md)                                                                              |
+| 角色、键盘、可访问名称、jsx-a11y 豁免                                      | [a11y](.agents/references/a11y.md)                                                                                          |
+| 组件 SCSS、主题 token、逻辑属性、`@layer`                                  | [styles](.agents/references/styles.md)；主题插件协议见 styles 的「Sass 模块与 semi: importer」「主题 token 协议」两节       |
+| 测试写法、浏览器测试的坑、验证范围                                         | [testing](.agents/references/testing.md)                                                                                    |
+| 文档站内容、demo、MDX、dev server                                          | [website](.agents/references/website.md)                                                                                    |
+| 解析源码做统计、检查或 codemod                                             | [ast](.agents/references/ast.md)                                                                                            |
+| 修组件 bug                                                                 | [fix-component-bug](.agents/skills/fix-component-bug/SKILL.md)                                                              |
+| 新增或修改可访问名称、内置文案                                             | [locale-text](.agents/skills/locale-text/SKILL.md)                                                                          |
+| 扫描文档站页面、维护 a11y 基线                                             | [check-pages](.agents/skills/check-pages/SKILL.md)                                                                          |
 
 改哪个框架的包或文件，就先读该框架目录下全部文件；改框架无关代码，只读共享文件。新增框架只加一行，并按 [lint](.agents/references/lint.md) 的步骤登记。
 
