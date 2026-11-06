@@ -124,6 +124,12 @@ const t = translate(locale);
         cursor: default;
     }
 
+    /* The framework marks are full-colour images, so they do not follow the disabled text colour */
+    .more-menu-item[aria-disabled='true'] :global(.more-menu-icon) {
+        opacity: 0.5;
+        filter: grayscale(1);
+    }
+
     /* Icons are rendered by React components and FrameworkLogo, so they have no scope marker */
     .more-menu-item :global(.more-menu-tick) {
         flex-shrink: 0;
