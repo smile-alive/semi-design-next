@@ -24,6 +24,8 @@ import FormUpload from './form-upload.svelte';
 import FormBase from './form.svelte';
 import FormInputGroup from './input-group.svelte';
 import FormLabel from './label.svelte';
+import SchemaField from './schema-field.svelte';
+import SchemaForm from './schema-form.svelte';
 import FormSection from './section.svelte';
 import FormSlot from './slot.svelte';
 import useForm from './use-form.svelte.js';
@@ -113,6 +115,8 @@ export {
     FormTransfer,
     FormTreeSelect,
     FormUpload,
+    SchemaField,
+    SchemaForm,
     useForm,
 };
 export { useFieldApi, useFieldState, useFormApi, useFormState } from './hooks.js';
@@ -123,19 +127,27 @@ export type {
     CommonFieldProps,
     ErrorMessageProps,
     FieldError,
+    FieldErrorInput,
     FieldLabel,
     FieldProps,
-    FieldValidateResult,
     FieldValidateTriggerType,
+    FieldValidator,
     FormApi,
     FormFieldProps,
     FormProps,
     FormRenderProps,
     FormState,
     InputGroupProps as FormInputGroupProps,
+    JsonSchema,
     LabelProps as FormLabelProps,
     OptionalFieldProps,
     RuleItem,
+    RuleType,
+    SchemaFieldKind,
+    SchemaFieldNode,
+    SchemaFieldProps,
+    SchemaFieldRenderProps,
+    SchemaFormProps,
     ScrollOptions,
     SectionProps as FormSectionProps,
     SlotProps as FormSlotProps,

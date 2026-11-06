@@ -6,10 +6,10 @@ import type { FormState } from './interface';
  * A formApi usable outside the Form: `const { formApi, values } = useForm()`, then `<Form :form="formApi">`.
  * The Form binds it on mount and pushes every form state into `formState`.
  */
-export default function useForm<Values extends Record<string, any> = any>() {
+export default function useForm<Values extends Record<string, any> = any, Output = Values>() {
     const formState = shallowRef(EMPTY_FORM_STATE as FormState<Values>);
 
-    const formApi = createFormApiProxy<Values>((state) => {
+    const formApi = createFormApiProxy<Values, Output>((state) => {
         formState.value = state;
     });
 

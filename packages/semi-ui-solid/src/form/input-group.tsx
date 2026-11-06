@@ -1,7 +1,7 @@
 import { type JSX, Show, children, createMemo, createSignal, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-import { isValid } from '@fibrae/semi-foundation/form/utils';
+import { isErrorLeaf } from '@fibrae/semi-foundation/form/errors';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import warning from '@fibrae/semi-foundation/utils/warning';
@@ -37,7 +37,13 @@ export default function FormInputGroup(props: InputGroupProps) {
     const extraText = children(() => local.extraText);
     const errorMessageId = `${generatedId}-errormessage`;
     const extraTextId = `${generatedId}-extraText`;
-    const groupError = createMemo(() => fields().map((field) => ObjectUtil.get(form?.formState().errors ?? {}, field)));
+
+    const groupError = createMemo(() =>
+        fields().flatMap((field) => {
+            const error: unknown = ObjectUtil.get(form?.formState().errors ?? {}, field);
+            return isErrorLeaf(error) ? error : [];
+        })
+    );
 
     const formProps = () => form?.formProps;
 
@@ -110,7 +116,7 @@ export default function FormInputGroup(props: InputGroupProps) {
                         <FormInputGroupContext.Provider value={context}>{local.children}</FormInputGroupContext.Provider>
                     </InputGroup>
                     <Show when={extraTextPosition() === 'bottom'}>{extraContent()}</Show>
-                    <Show when={!isValid(groupError())}>
+                    <Show when={groupError().length > 0}>
                         <ErrorMessage error={groupError()} errorMessageId={errorMessageId} isInInputGroup showValidateIcon={formProps()?.showValidateIcon} />
                     </Show>
                 </FieldGrid>

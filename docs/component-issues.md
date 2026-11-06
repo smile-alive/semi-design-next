@@ -553,15 +553,17 @@
 
 ### Form、ArrayField、withField、Label、ErrorMessage、Section、Slot、InputGroup
 
-- React `form/label.tsx` 不导入 `form.scss`；字段状态由 withField 多个 useState 与 foundation 两处保存（随 Form 重写）；`BaseFormApi.getTouched` 返回类型与 `setTouched` 不一致；每次 Form 更新重渲染全部字段。待处理。
-- 错误叶子类型为 `string` 而多条失败时运行时为 `string[]`；Vue `FieldLabel` 无 `id`；React Form.Checkbox、Form.Radio 的 onChange 类型读不到 `latestValues`。待决（均属公开类型变化，需批准）。
+- React `form/label.tsx` 不导入 `form.scss`；字段状态由 withField 多个 useState 与 foundation 两处保存（随 Form 重写）；每次 Form 更新重渲染全部字段。待处理。
+- Vue `FieldLabel` 无 `id`；React Form.Checkbox、Form.Radio 的 onChange 类型读不到 `latestValues`。待决（均属公开类型变化，需批准）。
+- 语言包 `Form` 的 16 个校验与数组行文案（`required` 至 `item`）在 zh_CN、en_US 以外为机译。待母语者复核（km_KH、my_MM 全部偏低；he_IL、jv_ID 全部中等；ar、fa_IR、bn_IN、sw、uz、ur 的长度类句式；ceb_PH、fil_PH 偏直译；az、hu_HU 的 `stringLen`、`arrayLen`；kk、is、lt、lv、hi_IN 的 `numberLen` 与序号写法；sq 的 `*Max` 说法不统一；tr_TR 的行序号未经读屏验证）。
+- `initValues` 的类型是完整的 `Values`：Values 由 `schema` 推导时（SchemaForm、带 `schema` 的 Form），只传部分初值会类型报错。待决（改为深层 Partial 会削弱从 `initValues` 推导 Values 的能力，需权衡）。
+- `onSubmitFail` 的 `errors` 类型为错误树，Form `validator` 抛出或返回非对象时收到的是原值，类型覆盖不到。已知限制。
+- 以 keepState 卸载的 ArrayField 重新挂载后，`reset()` 恢复的是最初的 `initValue`，不是卸载前最后一次挂载时的 `initValue`。已知限制（升级条件：有使用方需要按再挂载时的 `initValue` 重置）。
 - 字段无初值时 `onChange` 抛错后子组件仍显示被拒绝输入（需回滚设 `initValue`）；`reset(fields)` 作废进行中的校验时 submit 以未校验初值调用 `onSubmit`。已知限制。
 - 保持原样：不改 ESM 命名空间（2026-10-09，摇树不生效）；挂载 Field 不触发 `onChange`；`CommonexcludeType` 命名。
 - Svelte：用 `setValue` 删除 keyed 数组中间行时，Svelte 先注销被移除行的字段（删掉其值），再创建接管该路径的新字段；Vue 的 Debug-SetValuesDemo 场景无法复现，用例已移除。已知限制。
 - Svelte：Form 设置 `labelCol`、`wrapperCol` 时，InputGroup 的标签落在 wrapper 列而不在 label 列。已知限制（升级条件：InputGroup 能由外部标签命名时改）。
 - Svelte：Select、Cascader、TreeSelect、AutoComplete、DatePicker 字段无法传 `trigger` snippet（与校验时机 `trigger` 同名）。待决。
-- 配置 `schema` 后字段的 `rules` 不再校验，但必填星号与 `aria-required` 仍由四个框架的 `isRequired(rules)` 决定，开发模式只警告 `rules` 被忽略。待决（A 有 `schema` 时不读 `rules` 的必填，只认 `label.required`；B 保持，文档已引导用 `label.required`）。
-- Form 的 `Values` 取 schema 的输出类型：`z.coerce`、`transform` 让输入与输出类型不同时，`formState.values`、`formApi.getValues` 的类型是输出类型，运行时却是用户输入的原值。已知限制（升级条件：类型层区分 `InferInput` 与 `InferOutput`，值与字段路径用输入类型，提交回调用输出类型）。
 - `schema` 只用 Zod 跑过 Form 用例和 demo；Valibot、ArkType、yup 只核对了错误路径格式（`{ key }` 对象段、字符串下标、函数形式的 schema），都能由 `toPath` 归一化后匹配字段。UNKNOWN（影响：这些库的错误可能落不到字段上；解决条件：各补一条 Form 用例）。
 
 ### AIChatInput、Configure
@@ -659,6 +661,7 @@
 - Solid：webpack、rspack 插件的规则不覆盖 Solid 包，`packages/semi-webpack/src/semi-webpack-plugin.ts` 的 `SEMI_DIST_JS_RE`、`SEMI_DIST_SCSS_RE` 与 `packages/semi-rspack/src/rule.ts` 的三个 `test` 只列了 react 与 vue 的包；Solid 包在 webpack、rspack 下使用插件时 `prefixCls` 不生效（实测 `prefixCls: 'my'` 时按钮背景为 `rgb(239, 239, 239)`）。待处理（正则补 `ui-solid`、`ai-solid`、`icons-solid` 等 Solid 包，并加带 `prefixCls` 的 `solid-webpack`、`solid-rspack` 宿主变体守护；入门页 Solid 块的说明随之更新）。
 - Solid：SolidStart 2.1.0（solid-js 1.9.17、@solidjs/router 1.0.0、nitro 3.0.260903-beta、vite 8.3.5）中，root 用 `ErrorBoundary` 包 `Suspense` 时，模块导入阶段就抛错的路由（顶层 `throw`）在 dev 与 prod 下都返回 200 且响应流永不结束，只收到约 1.2 KB 的 shell，服务端日志无该错误，页面请求挂起而不是显示错误边界；渲染时抛错的路由能正常结束并输出 fallback。不含 Semi 的最小复现（只依赖上述五个包）证实与 Semi 无关；症状同 https://github.com/solidjs/solid-start/issues/2260（该问题已随 solid-js 1.9.15 的 lazy 拒绝修复关闭，导入期抛错仍复现）。已知限制（上游问题；升级条件：上游修复后升级 `@solidjs/start` 并删去本条）。
 - 浏览器测试输出 `ResizeObserver loop completed with undelivered notifications`：Vue、Solid 的 Select，Vue、Solid、Svelte 的 OverflowList，Solid 的 TextArea autosize 回退，semi-ai-react 的 AIChatInput。保持原样（观察回调改变了布局时浏览器按规范把剩余通知推迟到下一帧并报告此错误，通知不丢、结果不变；不屏蔽，出现在别的组件或伴随断言失败时再排查）。
+- Vue：渲染函数用新对象把插槽转交给子组件（`{ ...slots }`）时，使用方在 SFC 模板顶层写的条件插槽（`<template v-if #x>`）在服务端渲染中丢失输出（`createSlots` 产出的插槽不带已规范化标记，被子组件再次规范化后，直接写进 SSR 缓冲区的内容被丢弃；上游 issue https://github.com/vuejs/core/issues/16159 ，修复 PR https://github.com/vuejs/core/pull/16160 ）。withField、AIChatDialogue、Chat 经 `packages/semi-ui-vue/src/_base/hand-on.ts` 只带 props 调用转交的插槽，条件插槽的服务端 HTML 与静态写法一致。ModalContent、Feedback、AIChatInput 仍用 `{ ...slots }`，实测不受影响：Modal、Feedback 的内容在 Portal 里，挂载前不渲染；AIChatInput 的 UploadButton 在渲染函数里直接调用 `uploadButton` 插槽，`uploadTip` 在 Tooltip 弹层里，UploadButton 改用模板 `<slot>` 渲染服务端可见的插槽时要改用 `handOnSlots`。已知限制（升级条件：上游修复发布后升级 Vue，删除 `hand-on.ts`，各处恢复直接转交）。
 - 工具链 `@vue/language-core` 3.3.12 起 URL 属性在作用域插槽内报 TS6133、TS2304。已知限制（升级条件：上游修复 https://github.com/vuejs/language-tools/pull/6241 发布后升级 vue-tsc）。
 
 ## 3 主题与站点

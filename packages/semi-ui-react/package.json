@@ -32,7 +32,6 @@
         "@fibrae/semi-icons-react": "workspace:*",
         "@fibrae/semi-illustrations-react": "workspace:*",
         "@tanstack/react-virtual": "catalog:",
-        "async-validator": "catalog:",
         "clsx": "catalog:",
         "date-fns": "catalog:",
         "es-toolkit": "catalog:",

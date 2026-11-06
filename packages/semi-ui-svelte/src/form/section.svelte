@@ -6,10 +6,10 @@
     let { text, children, ...rest }: SectionProps = $props();
 </script>
 
-<section {...rest} class={[`${cssClasses.PREFIX}-section`, rest.class]}>
-    <!-- an empty heading would still be announced as one -->
+<fieldset {...rest} class={[`${cssClasses.PREFIX}-section`, rest.class]}>
+    <!-- an empty legend would still draw its divider -->
     {#if text}
-        <h5 class={`${cssClasses.PREFIX}-section-text`}>{@render text()}</h5>
+        <legend class={`${cssClasses.PREFIX}-section-text`}>{@render text()}</legend>
     {/if}
     {@render children?.()}
-</section>
+</fieldset>

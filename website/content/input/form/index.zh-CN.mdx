@@ -33,6 +33,14 @@ import FormLabelSvelteApi from './api/form-label.svelte.zh-CN.mdx';
 import FormInputGroupSvelteApi from './api/form-input-group.svelte.zh-CN.mdx';
 import FormSlotSvelteApi from './api/form-slot.svelte.zh-CN.mdx';
 import FormErrorMessageSvelteApi from './api/form-error-message.svelte.zh-CN.mdx';
+import SchemaFieldReactApi from './api/schema-field.react.zh-CN.mdx';
+import SchemaFormReactApi from './api/schema-form.react.zh-CN.mdx';
+import SchemaFieldVueApi from './api/schema-field.vue.zh-CN.mdx';
+import SchemaFormVueApi from './api/schema-form.vue.zh-CN.mdx';
+import SchemaFieldSolidApi from './api/schema-field.solid.zh-CN.mdx';
+import SchemaFormSolidApi from './api/schema-form.solid.zh-CN.mdx';
+import SchemaFieldSvelteApi from './api/schema-field.svelte.zh-CN.mdx';
+import SchemaFormSvelteApi from './api/schema-form.svelte.zh-CN.mdx';
 
 ## 表单(Form)
 
@@ -616,13 +624,27 @@ FormSlot 属性配置详见[FormSlot](#FormSlot)
 
 ### 配置初始值与校验规则
 
-- 你可以通过`rules`为每个 Field 表单控件配置校验规则  
-  Form 内部的校验库基于 async-validator，更多配置规则可查阅其[官方文档](https://github.com/yiminghe/async-validator)
+- 你可以通过`rules`为每个 Field 表单控件配置校验规则，规则由 Semi 自带的规则引擎执行，见下表
 - 你可以通过 form 的`initValues`为整个表单统一设置初始值，也可以在每个 field 中通过`initValue`设置初始值（后者优先级更高）
 - 可以通过 trigger 为每个 Field 配置不同的校验触发时机，默认为 change（即值变化时，自动进行校验）。还支持 change、blur、mount、custom 或以上的组合。也支持通过 FormProps 统一配置，若都配置时，以 FieldProps 为准
 - 可以通过 stopValidateWithError 开关，决定使用 rules 校验时，当碰到第一个检验不通过的 rules 后，是否继续触发后续 rules 的校验。也支持通过 FormProps 统一配置，若都配置时，以 FieldProps 为准
 
 <Demo id="rules" />
+
+每条规则（`RuleItem`）按下表从上到下检查，遇到第一个失败的检查就以它的文案作为这条规则的错误。值为空（`undefined`、`null`、`''`、`[]`）且不要求必填时，跳过内置检查，只运行 `validator`。
+
+| 属性          | 说明                                                                                                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| transform     | `(value) => any`，校验前转换值，只影响本条规则                                                                                                                            |
+| required      | 值为空时失败；`whitespace: true` 时只含空白的字符串也算空                                                                                                                 |
+| type          | 值的类型：`string`、`number`、`integer`、`float`、`boolean`、`array`、`object`、`date`、`email`、`url`、`regexp`、`method`                                                |
+| len、min、max | 字符串比较字符数，数字比较数值，数组比较项数                                                                                                                              |
+| pattern       | 正则或正则字符串，只检查字符串                                                                                                                                            |
+| enum          | 值必须是数组中的一项                                                                                                                                                      |
+| validator     | `(value, values) => string \| string[] \| boolean \| Promise<...>`，内置检查通过后运行；返回 `false` 或抛错时失败，返回非空字符串或字符串数组时作为错误信息，其余视为通过 |
+| message       | 替换本条规则任一检查的默认文案；传 `''` 时失败但不显示文字                                                                                                                |
+
+默认文案来自语言包的 `Form` 部分（如「此项为必填项」「至少 3 个字符」），随 LocaleProvider 切换语言。
 
 ### 自定义校验(Form 级别)
 
@@ -632,8 +654,8 @@ FormSlot 属性配置详见[FormSlot](#FormSlot)
 
 #### 同步校验
 
-校验通过时，你应该返回一个空字符串；  
-校验失败时，你应该返回错误信息(Object，key 为 fieldName，value 为对应的错误信息）
+校验通过时，返回空值或 `{}`；  
+校验失败时，返回与值结构相同的错误对象，叶子是错误信息（字符串或字符串数组），空字符串表示该字段通过。错误在 `formState.errors` 中统一为字符串数组，如返回 `{ name: '必填' }` 后 `formApi.getError('name')` 得到 `['必填']`
 
 <Demo id="form-validate-sync" />
 
@@ -654,7 +676,7 @@ FormSlot 属性配置详见[FormSlot](#FormSlot)
 校验的来源与错误的归属：
 
 - 一个 Form 只有一个校验来源。配置了 `schema` 后，字段的 `validator`、`rules` 不再运行，开发模式下警告；字段在另一个组件上，TypeScript 查不到这种组合。同时传 Form 的 `validator` 和 `schema` 时 TypeScript 报错，绕过类型时开发模式下警告，并且只用 `validator`。
-- 同一轮校验只运行一次 schema，Form 不做防抖，schema 里的异步校验（如查重）每轮都会运行。要控制请求次数，把字段的 `trigger` 设为 `blur`。
+- 同一轮校验只运行一次 schema，schema 里的异步校验（如查重）每轮都会运行。要控制请求次数，可以给 Form 设置 `schemaDebounce`（毫秒），值变化触发的校验等输入停顿后才运行；submit、`formApi.validate()`、blur 触发的校验不等待。也可以把字段的 `trigger` 设为 `blur`。
 - 提交后服务端返回的错误用 `formApi.setError` 写入，这个字段下一轮校验时错误会被 schema 的结果替换。
 - 修改某个字段时，只显示这个字段和已经 touched 的字段的错误，所以跨字段校验的错误要用 `path` 指向显示错误的字段，如示例中的确认密码。
 - 错误路径指向字段内部时（如 TagInput 的 `tags[0]`），错误显示在持有这个值的字段上。找不到对应字段的错误不显示，只留在 `formState.errors` 里，schema 根级的错误写在 `errors['']`。
@@ -667,24 +689,26 @@ FormSlot 属性配置详见[FormSlot](#FormSlot)
 - 错误语言由 Zod 决定，Semi 的语言包不影响它。可以调用 `z.config(z.locales.zhCN())`，或者像示例那样写自己的文案。
 - 写 `import * as z from 'zod'`，打包时才能摇掉用不到的部分。
 
-必填星号不从 schema 推导，要在字段的 `label` 配置里写 `required: true`。字段的 `transform` 不影响 schema 收到的值。
+配置了 `schema` 后，必填星号和 `aria-required` 只由字段 `label` 配置里的 `required: true` 决定，不读 `rules`，也不从 schema 推导。字段的 `transform` 不影响 schema 收到的值。
 
 ### 自定义校验(Field 级别)
 
-你可以通过 `validator` 指定单个表单控件的自定义校验函数，支持同步、异步校验（通过返回 promise）
+你可以通过 `validator` 指定单个表单控件的自定义校验，支持同步、异步校验（通过返回 promise）
 
-<Notice title='关于 validator 与 rules[].validator'>
+- 传函数时签名为 `(fieldValue, values) => string | string[] | Promise<string | string[]>`，返回空字符串、空数组或空值表示通过，否则作为错误信息。
+- 也可以传一个 Standard Schema 对象（如 `z.string().min(3)`），错误信息取 schema 的 issue 文案。
 
-Field 上的 `validator` 和 `rules[]` 数组里的 `validator`（基于 async-validator）是两个不同的 API：
+<Notice title='validator 与 rules 互斥'>
 
-- Field `validator`：签名为 `(fieldValue, values) => string | Promise<string>`，整字段级别的自定义校验，返回错误信息字符串。
-- `rules[].validator`：签名为 `(rule, value, callback) => void | Promise<void>`，基于 [async-validator](https://github.com/yiminghe/async-validator) 的单条规则级校验，由 callback 或 reject 上报错误。
-
-两者**互斥**：只要设置了 Field 的 `validator`，`rules` 就不会再被触发。如果只需要简单的整字段自定义判断，建议使用 Field `validator`；如果需要多条规则、复用 async-validator 内置规则（如 required / type / pattern），请使用 `rules`。
+Field 的 `validator` 和 `rules` 只能二选一，同时传入时 TypeScript 报错，绕过类型时开发模式下警告，并且只运行 `validator`。整字段的自定义判断用 `validator`；需要多条规则、复用内置的 required、type、pattern 等检查时用 `rules`，单条规则里的自定义判断写在 `rules[].validator`。
 
 </Notice>
 
 <Demo id="field-validate" />
+
+字段 `validator` 传 schema 与 `rules` 的对比：
+
+<Demo id="field-schema-validator" />
 
 ### 手动触发指定 Field 校验
 
@@ -740,62 +764,15 @@ Field 上的 `validator` 和 `rules[]` 数组里的 `validator`（基于 async-v
 
 #### 动态表单保留状态（keepState）
 
-默认情况下，当 Field 组件卸载后，其对应的值（value）、校验信息（error）、交互状态（touched）都会被重置。如果你希望 Field 卸载后保留这些状态（例如在条件渲染的场景中），可以使用 `keepState` 属性。
+Field 卸载后默认保留它的值（value）、校验信息（error）和交互状态（touched），重新挂载时按字段路径恢复，适合条件渲染、分步表单等场景。希望字段卸载后重置时，把 `keepState` 设为 `false`。
+
+`keepState` 可以设在 Form、ArrayField 和 Field 上，字段未设置时依次取所在 ArrayField、Form 的值，都没有设置时为 `true`。
 
 <Demo id="keep-state" />
 
-在上面的示例中：
+在上面的示例中，`keepState` 为 `false` 的字段在隐藏再显示后回到初始值，其余字段保留之前的输入和校验状态。
 
-- 设置了 `keepState` 的字段在隐藏再显示后，之前输入的值、校验状态等会被保留
-- 未设置 `keepState` 的字段在隐藏再显示后，状态会被重置
-
-<Framework only="react">
-
-<Notice type="primary" title="注意事项">
-
-- `keepState` 仅适用于「条件渲染卸载/重挂」的场景，并以 field 字段路径作为恢复依据。
-- 在 `ArrayField` 内部的 Field 不支持 `keepState`：调用 `remove(i)` 会让后续行的字段路径整体前移（例如 `people[1].name` 变为 `people[0].name`），按路径恢复的语义不再匹配，容易出现已被删除的状态被「复活」等问题。
-- 在 `ArrayField` 中传入 `keepState` 将被忽略并打印 warning，请通过 `ArrayField` 自身的 `add`、`remove`、`addWithInitValue` 管理数组项。
-
-</Notice>
-
-</Framework>
-
-<Framework only="vue">
-
-<Notice type="primary" title="注意事项">
-
-- `keepState` 仅适用于「条件渲染卸载/重挂」的场景，并以 field 字段路径作为恢复依据。
-- 在 `ArrayField` 内部的 Field 不支持 `keepState`：调用 `onRemove` 会让后续行的字段路径整体前移（例如 `people[1].name` 变为 `people[0].name`），按路径恢复的语义不再匹配，容易出现已被删除的状态被「复活」等问题。
-- 在 `ArrayField` 中传入 `keepState` 将被忽略并打印 warning，请通过 `ArrayField` 插槽提供的 `onAdd`、`onAddWithInitValue` 与各行的 `onRemove` 管理数组项。
-
-</Notice>
-
-</Framework>
-
-<Framework only="solid">
-
-<Notice type="primary" title="注意事项">
-
-- `keepState` 仅适用于「条件渲染卸载/重挂」的场景，并以 field 字段路径作为恢复依据。
-- 在 `ArrayField` 内部的 Field 不支持 `keepState`：调用 `remove` 会让后续行的字段路径整体前移（例如 `people[1].name` 变为 `people[0].name`），按路径恢复的语义不再匹配，容易出现已被删除的状态被「复活」等问题。
-- 在 `ArrayField` 中传入 `keepState` 将被忽略并打印 warning，请通过 `ArrayField` 自身的 `add`、`addWithInitValue` 与各行的 `remove` 管理数组项。
-
-</Notice>
-
-</Framework>
-
-<Framework only="svelte">
-
-<Notice type="primary" title="注意事项">
-
-- `keepState` 仅适用于「条件渲染卸载/重挂」的场景，并以 field 字段路径作为恢复依据。
-- 在 `ArrayField` 内部的 Field 不支持 `keepState`：调用 `onRemove` 会让后续行的字段路径整体前移（例如 `people[1].name` 变为 `people[0].name`），按路径恢复的语义不再匹配，容易出现已被删除的状态被「复活」等问题。
-- 在 `ArrayField` 中传入 `keepState` 将被忽略并打印 warning，请通过 `ArrayField` 的 `onAdd`、`onAddWithInitValue` 与各行的 `onRemove` 管理数组项。
-
-</Notice>
-
-</Framework>
+ArrayField 卸载时按自己的 `keepState` 处理整组数据：保留时，重新挂载按保留的值渲染各行，`reset()` 仍恢复到最初的 `initValue`；不保留时删除整组的值、错误和 touched。ArrayField 内删除、移动行时，行的状态随行移动，被删除行的状态不会被新行继承。
 
 ### 使用 ArrayField
 
@@ -834,6 +811,34 @@ ArrayField 详细的 API请查阅下方 [ArrayField](#arrayfield) 注意：Array
 
 <Demo id="array-field" />
 
+#### 移动行
+
+<Framework only="react">
+
+children 参数中的 `move(from, to)` 把第 `from` 行移到 `to`，该行的值、校验信息、touched 和 key 随行移动；下标越界时按首尾处理。
+
+</Framework>
+
+<Framework only="vue">
+
+默认作用域插槽中的 `onMove(from, to)` 把第 `from` 行移到 `to`，该行的值、校验信息、touched 和 key 随行移动；下标越界时按首尾处理。
+
+</Framework>
+
+<Framework only="solid">
+
+children 参数中的 `move(from, to)` 把第 `from` 行移到 `to`，该行的值、校验信息、touched 随行移动，行对象保持同一引用；下标越界时按首尾处理。
+
+</Framework>
+
+<Framework only="svelte">
+
+`children` snippet 中的 `onMove(from, to)` 把第 `from` 行移到 `to`，该行的值、校验信息、touched 和 key 随行移动；下标越界时按首尾处理。
+
+</Framework>
+
+<Demo id="array-field-move" />
+
 #### 嵌套 ArrayField
 
 ArrayField 支持多级嵌套，如下是一个两级嵌套的例子
@@ -845,6 +850,33 @@ ArrayField 支持多级嵌套，如下是一个两级嵌套的例子
 如果不使用 ArrayField，也可以通过 Form 提供的 formApi，手动增删 formState 中的数据。
 
 <Demo id="dynamic-form-api" />
+
+### 按 Schema 渲染表单
+
+SchemaForm 按 schema 直接渲染整个表单。传入 Form 的 `schema` 后，SchemaForm 从中导出 JSON Schema，按属性顺序为每个属性渲染字段。导出要求校验库实现了 [Standard JSON Schema](https://standardschema.dev/json-schema)（如 Zod 4）；其他来源的 JSON Schema 可以直接传给 `jsonSchema`，它优先于导出的结果。SchemaForm 接受 Form 的全部属性，children 渲染在字段之后，适合放提交按钮。
+
+<Demo id="schema-form" />
+
+JSON Schema 与控件的对应：
+
+| JSON Schema                                      | 控件                                                                                              |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| `string`                                         | Input；`maxLength` 大于 160 时为 TextArea                                                         |
+| `number`、`integer`                              | InputNumber；`integer` 时只能输入整数                                                             |
+| `boolean`                                        | Switch                                                                                            |
+| `enum`，或 `oneOf`、`anyOf` 的每一项都有 `const` | Select，选项文字取各项的 `title`                                                                  |
+| 元素是选项的 `array`                             | 多选 Select                                                                                       |
+| 带 `properties` 的 `object`                      | Section，标题取 `title`                                                                           |
+| 其他 `array`                                     | ArrayField，每行有上移、下移、删除按钮，列表下方有添加按钮；`minItems` 等于 `maxItems` 时行数固定 |
+
+标签取 `title`（没有时取属性名），说明文字取 `description`，初值取 `default`，列在 `required` 中的属性显示必填星号。对应不上控件的节点不渲染，开发模式下警告。
+
+SchemaField 在已有的 Form 里渲染 schema 的一部分：`field` 指定路径（默认为根），可以和手写的字段混用。两者都可以用 `widgets` 和 `renderField` 定制：
+
+- `widgets`：键是 JSON Schema 的 `format`（如 `uri`、`email`）或控件种类（`input`、`textarea`、`number`、`switch`、`select`），值是字段组件（如 Form.Input 或用 withField 包装的组件）。先按 `format` 查找，再按种类查找。
+- `renderField`：键是字段路径，数组的行写作 `[]`（如 `contacts[].email`），命中时由它渲染这个节点和它的子节点。
+
+<Demo id="schema-field" />
 
 ### Hooks 的使用
 
@@ -1271,11 +1303,11 @@ import { Form } from '@fibrae/semi-ui-solid';
 FormState 存储了所有 Form 内部的状态值，包括各表单控件的值，错误信息、touched 状态  
 进行表单提交时，实际提交的就是 formState.values
 
-| Name    | 说明                                                                | 初始值 | 示例                              |
-| ------- | ------------------------------------------------------------------- | ------ | --------------------------------- |
-| values  | 表单的值                                                            | \{\}   | \{ fieldA: 'str', fieldB: true \} |
-| errors  | 表单错误信息集合,你可以通过判断是否有错误信息来决定是否允许用户提交 | \{\}   | \{ fieldA: 'length not valid'\}   |
-| touched | 用户点击过的 field 集合                                             | \{\}   | \{ fieldA: true \}                |
+| Name    | 说明                                                         | 初始值 | 示例                                 |
+| ------- | ------------------------------------------------------------ | ------ | ------------------------------------ |
+| values  | 表单的值                                                     | \{\}   | \{ fieldA: 'str', fieldB: true \}    |
+| errors  | 表单错误信息集合，与 values 同构，每个字段的错误是字符串数组 | \{\}   | \{ fieldA: \['length not valid'\] \} |
+| touched | 用户点击过的 field 集合                                      | \{\}   | \{ fieldA: true \}                   |
 
 ### 如何访问 formState
 
@@ -1336,9 +1368,9 @@ FormState 存储了所有 Form 内部的状态值，包括各表单控件的值�
 | getValue | 获取 单个 Field 的值 | formApi.getValue() <br/>formApi.getValue(field: string) |
 | getValues | 获取 所有 Field 的值 | formApi.getValues() |
 | setTouched | 修改 formState.touched | formApi.setTouched(field: string, isTouched: boolean) <br/> |
-| getTouched | 获取 Field 的 touched 状态 | formApi.getTouched(field: string) |
-| setError | 修改 某个 field 的 error 信息 | formApi.setError(field: string, fieldErrorMessage: string) |
-| getError | 获取 Field 的 error 状态 | formApi.getError(field: string) |
+| getTouched | 获取 Field 的 touched 状态；不传 field 时返回整个 touched 对象 | formApi.getTouched(field?: string) |
+| setError | 修改某个 field 的错误信息。传字符串时转为单元素数组，传空字符串、空数组或 undefined 时清除错误；给父路径传对象或数组时按结构写入各子字段 | formApi.setError(field: string, error: string \| string[]) |
+| getError | 获取 Field 的错误信息（字符串数组），父路径返回子字段的错误对象，没有错误时为 undefined | formApi.getError(field: string) |
 | getFieldExist | 获取 Form 中是否存在对应的 field | formApi.getFieldExist(field: string) |
 | scrollToField | 滚动至指定的 field, 第二个入参将透传至scroll-into-view-if-needed | formApi.scrollToField(field: string, scrollOpts: [ScrollIntoViewOptions](https://github.com/stipsan/scroll-into-view-if-needed#options)) |
 | scrollToError | 滚动至校验错误的field，可传指定 field 或者 index，传入 index 则滚动到第 index 个错误的 DOM，若不传参则滚动到DOM树中第一个校验出错的位置。 | formApi.scrollToError(<ApiType detail='{field?: string; index?: number; scrollOpts?: ScrollIntoViewOptions }'>ScrollToErrorOptions</ApiType>) |
@@ -1679,8 +1711,8 @@ function FormApiDemo() {
 | fieldClassName | 整个 fieldWrapper 的 className，作用与 name 参数一致，区别是不会自动追加前缀 | string |  |
 | fieldStyle | 整个 fieldWrapper 的 内联样式 | object |  |
 | initValue | 该表单控件的初始值（仅在 Field mounted 时消费一次，后续更新无效），相比 Form 的 initValues 中的值，它的优先级更高 | any（类型取决于当前组件，详细见各组件的 api） |  |
-| validator | 该表单控件的自定义校验函数。支持同步、异步校验（通过返回 promise）。<br/>设置了 validator 时，rules 不会生效<br/>使用示例：(fieldValue, values) => fieldValue >= 5 ? 'value not valid' : '' | function(fieldValue, values) |  |
-| rules | 校验规则，校验库基于[async-validator](https://github.com/yiminghe/async-validator) <br/> 使用示例：const rules=\[\{ required: true, message: 'can't be null ' \},<br/>\{ max: 10, message: 'can't more than 10 word' \}\] | array |  |
+| validator | 该表单控件的自定义校验，传函数或 Standard Schema 对象（如 `z.string().min(3)`）。函数支持同步、异步校验（通过返回 promise），返回空字符串、空数组或空值表示通过，字符串或字符串数组为错误信息。与 rules 互斥<br/>使用示例：(fieldValue, values) => fieldValue >= 5 ? 'value not valid' : '' | `(fieldValue, values) => string \| string[] \| undefined \| Promise<...>` 或 `StandardSchema` |  |
+| rules | 校验规则，由 Semi 自带的规则引擎执行，规则属性见[配置初始值与校验规则](#配置初始值与校验规则)。与 validator 互斥<br/> 使用示例：const rules=\[\{ required: true, message: 'can't be null ' \},<br/>\{ max: 10, message: 'can't more than 10 word' \}\] | `RuleItem[]` |  |
 | validateStatus | 该表单控件的校验结果状态（仅影响样式），可选值:`success`/`error`/`warning`/`default` | string | 'default' |
 | trigger | 触发校验的时机，可选值:`blur`/`change`/`custom`/`mount`，或以上值的组合\[`'blur'`,`'change'`\]<br/>1、设置为 custom 时，仅会由 formApi/fieldApi 触发校验时被触发<br/>2、mount（挂载时即触发一次校验） | 'blur' \| 'change' \| 'custom' \| 'mount'，或其数组 | 'change' |
 | onChange | 值变化时触发的回调。回调函数的最后一个参数为最新的表单值 `latestValues`，可用于解决 React 闭包陷阱问题。<br/>使用示例：`onChange={(value, e, ...other) => { const latestValues = other[other.length - 1]; }}` | function(fieldValue: any \| ev: \{ target: \{ value: any \}\}, ...args: any[], latestValues?: object) <br/>（具体参见各组件的 onChange 方法） |  |
@@ -1689,7 +1721,7 @@ function FormApiDemo() {
 | allowEmpty | 值为空时是否在 values 中保留该 field 的 key（值为 undefined）。Field 与 Form 任一设置即生效 | boolean | false |
 | allowEmptyString | 是否允许值为空字符串。默认情况下值为''时，该 field 对应的 key 会从 values 中移除，如果你希望保留该 key，那么需要将 allowEmptyString 设为 true | boolean | false |
 | emptyValue | 被视为空值的值。值变化为它时，该 field 的 key 会从 values 中移除（`allowEmpty` 为 true 时保留为 undefined） | any | '' |
-| keepState | 是否在 Field 卸载后保留其状态（value、error、touched）。为 true 时，Field 卸载后其值、校验信息、交互状态不会丢失，再次挂载时会自动恢复 | boolean | false |
+| keepState | Field 卸载后是否保留其状态（value、error、touched），保留时再次挂载会自动恢复。不设置时依次取所在 ArrayField、Form 的 keepState | boolean | true |
 | stopValidateWithError | 为 true 时，使用 rules 校验，碰到第一个检验不通过的 rules 后，将不再触发后续 rules 的校验 | boolean | false |
 | helpText | 自定义提示信息，与校验信息公用同一区块展示，两者均有值时，优先展示校验信息 | ReactNode |  |
 | extraText | 额外的提示信息，当需要错误信息和提示文案同时出现时，可以使用这个，位于 helpText/errorMessage 后 | ReactNode |  |
@@ -1722,15 +1754,15 @@ Field 是 withField 生成的组件，不是单文件组件。字段通过模板
 | fieldClassName | 整个 fieldWrapper 的 className，作用与 name 参数一致，区别是不会自动追加前缀 | `string` |  |
 | fieldStyle | 整个 fieldWrapper 的内联样式 | `StyleValue` |  |
 | initValue | 该表单控件的初始值（仅在 Field mounted 时消费一次，后续更新无效），相比 Form 的 initValues 中的值，它的优先级更高 | `unknown`（类型取决于当前组件，详细见各组件的 api） |  |
-| validator | 该表单控件的自定义校验函数。支持同步、异步校验（通过返回 promise）。返回空字符串或 `undefined` 表示通过，其他结果为错误信息，只能是数据，自定义渲染错误信息使用 `#error` 插槽。设置了 validator 时，rules 不会生效 | `(fieldValue, values) => string \| string[] \| boolean \| undefined \| Promise` |  |
-| rules | 校验规则，校验库基于[async-validator](https://github.com/yiminghe/async-validator)，`message` 只收字符串 | `RuleItem[]` |  |
+| validator | 该表单控件的自定义校验，传函数或 Standard Schema 对象（如 `z.string().min(3)`）。函数支持同步、异步校验（通过返回 promise），返回空字符串、空数组或空值表示通过，字符串或字符串数组为错误信息，自定义渲染错误信息使用 `#error` 插槽。与 rules 互斥 | `(fieldValue, values) => string \| string[] \| undefined \| Promise<...>` 或 `StandardSchema` |  |
+| rules | 校验规则，由 Semi 自带的规则引擎执行，规则属性见[配置初始值与校验规则](#配置初始值与校验规则)。与 validator 互斥 | `RuleItem[]` |  |
 | validateStatus | 该表单控件的校验结果状态（仅影响样式），可选值:`success`/`error`/`warning`/`default`，不传时取 Field 自身的校验状态 | `string` |  |
 | trigger | 触发校验的时机，可选值:`blur`/`change`/`custom`/`mount`，或以上值的组合<br/>1、设置为 custom 时，仅会由 formApi/fieldApi 触发校验时被触发<br/>2、mount（挂载时即触发一次校验） | `FieldValidateTriggerType` | `'change'` |
 | transform | 校验前转换字段值，转换后的值仅会在校验时被消费，对 formState 无影响 | `(fieldValue) => any` |  |
 | allowEmpty | 值为空时是否在 values 中保留该 field 的 key（值为 undefined）。Field 与 Form 任一设置即生效 | `boolean` | `false` |
 | allowEmptyString | 是否允许值为空字符串。默认情况下值为''时，该 field 对应的 key 会从 values 中移除，如果你希望保留该 key，那么需要将 allowEmptyString 设为 true | `boolean` | `false` |
 | emptyValue | 被视为空值的值。值变化为它时，该 field 的 key 会从 values 中移除（`allowEmpty` 为 true 时保留为 undefined） | `unknown` | `''` |
-| keepState | 是否在 Field 卸载后保留其状态（value、error、touched）。为 true 时，Field 卸载后其值、校验信息、交互状态不会丢失，再次挂载时会自动恢复 | `boolean` | `false` |
+| keepState | Field 卸载后是否保留其状态（value、error、touched），保留时再次挂载会自动恢复。不设置时依次取所在 ArrayField、Form 的 keepState | `boolean` | `true` |
 | stopValidateWithError | 为 true 时，使用 rules 校验，碰到第一个检验不通过的 rules 后，将不再触发后续 rules 的校验 | `boolean` | `false` |
 | pure | 是否仅接管数据流，为 true 时不会自动插入 ErrorMessage、Label、extraText 等模块，样式、DOM 结构与原始的组件保持一致 | `boolean` | `false` |
 | extraTextPosition | 控制extraText的显示位置，可选`middle`（垂直方向以Label、extraText、Field主体的顺序显示）、`bottom` (垂直方向以Label、Field主体、extraText的顺序显示)；在Form与Field上同时传入时，以Field props为准 | `'middle' \| 'bottom'` | `'bottom'` |
@@ -1777,8 +1809,8 @@ Field 是 withField 生成的组件，下表列出 Field 自有的属性。
 | fieldClassName | 整个 fieldWrapper 的 className，作用与 name 参数一致，区别是不会自动追加前缀 | `string` |  |
 | fieldStyle | 整个 fieldWrapper 的内联样式 | `JSX.CSSProperties \| string` |  |
 | initValue | 该表单控件的初始值（仅在 Field mounted 时消费一次，后续更新无效），相比 Form 的 initValues 中的值，它的优先级更高 | `any`（类型取决于当前组件，详细见各组件的 api） |  |
-| validator | 该表单控件的自定义校验函数。支持同步、异步校验（通过返回 promise）。返回空字符串或 `undefined` 表示通过，其他结果（字符串、JSX、数组）为错误信息。设置了 validator 时，rules 不会生效 | `(fieldValue, values) => FieldValidateResult \| Promise<FieldValidateResult>` |  |
-| rules | 校验规则，校验库基于[async-validator](https://github.com/yiminghe/async-validator) | `RuleItem[]` |  |
+| validator | 该表单控件的自定义校验，传函数或 Standard Schema 对象（如 `z.string().min(3)`）。函数支持同步、异步校验（通过返回 promise），返回空字符串、空数组或空值表示通过，字符串或字符串数组为错误信息。与 rules 互斥 | `(fieldValue, values) => string \| string[] \| undefined \| Promise<...>` 或 `StandardSchema` |  |
+| rules | 校验规则，由 Semi 自带的规则引擎执行，规则属性见[配置初始值与校验规则](#配置初始值与校验规则)。与 validator 互斥 | `RuleItem[]` |  |
 | validateStatus | 该表单控件的校验结果状态（仅影响样式），可选值:`success`/`error`/`warning`/`default`，不传时取 Field 自身的校验状态 | `string` |  |
 | trigger | 触发校验的时机，可选值:`blur`/`change`/`custom`/`mount`，或以上值的组合<br/>1、设置为 custom 时，仅会由 formApi/fieldApi 触发校验时被触发<br/>2、mount（挂载时即触发一次校验） | `FieldValidateTriggerType` | `'change'` |
 | onChange | 值变化时调用的回调，参数是被包装组件该回调的原始参数，最后追加最新的表单值 `latestValues`；不传 `field` 的 FormCheckbox、FormRadio 只是普通控件，没有 `latestValues`（具体参见各组件的 onChange） | `(...args, latestValues) => void` |  |
@@ -1787,7 +1819,7 @@ Field 是 withField 生成的组件，下表列出 Field 自有的属性。
 | allowEmpty | 值为空时是否在 values 中保留该 field 的 key（值为 undefined）。Field 与 Form 任一设置即生效 | `boolean` | `false` |
 | allowEmptyString | 是否允许值为空字符串。默认情况下值为''时，该 field 对应的 key 会从 values 中移除，如果你希望保留该 key，那么需要将 allowEmptyString 设为 true | `boolean` | `false` |
 | emptyValue | 被视为空值的值。值变化为它时，该 field 的 key 会从 values 中移除（`allowEmpty` 为 true 时保留为 undefined） | `unknown` | `''` |
-| keepState | 是否在 Field 卸载后保留其状态（value、error、touched）。为 true 时，Field 卸载后其值、校验信息、交互状态不会丢失，再次挂载时会自动恢复 | `boolean` | `false` |
+| keepState | Field 卸载后是否保留其状态（value、error、touched），保留时再次挂载会自动恢复。不设置时依次取所在 ArrayField、Form 的 keepState | `boolean` | `true` |
 | stopValidateWithError | 为 true 时，使用 rules 校验，碰到第一个检验不通过的 rules 后，将不再触发后续 rules 的校验 | `boolean` | `false` |
 | helpText | 自定义提示信息，与校验信息公用同一区块展示，两者均有值时，优先展示校验信息 | `JSX.Element` |  |
 | extraText | 额外的提示信息，当需要错误信息和提示文案同时出现时，可以使用这个，位于 helpText/errorMessage 后 | `JSX.Element` |  |
@@ -1822,8 +1854,8 @@ Field 是 `FormInput`、`FormSelect` 等以 Form 开头的组件，以及 `FormF
 | fieldClassName | 整个 fieldWrapper 的 className，作用与 name 参数一致，区别是不会自动追加前缀 | `string` |  |
 | fieldStyle | 整个 fieldWrapper 的内联样式 | `string` |  |
 | initValue | 该表单控件的初始值（仅在 Field mounted 时消费一次，后续更新无效），相比 Form 的 initValues 中的值，它的优先级更高 | `unknown`（类型取决于当前组件，详细见各组件的 api） |  |
-| validator | 该表单控件的自定义校验函数。支持同步、异步校验（通过返回 promise）。返回空字符串或 `undefined` 表示通过，其他结果为错误信息，只能是数据，自定义渲染错误信息使用 `error` snippet。设置了 validator 时，rules 不会生效 | `(fieldValue, values) => string \| string[] \| boolean \| undefined \| Promise` |  |
-| rules | 校验规则，校验库基于[async-validator](https://github.com/yiminghe/async-validator) | `RuleItem[]` |  |
+| validator | 该表单控件的自定义校验，传函数或 Standard Schema 对象（如 `z.string().min(3)`）。函数支持同步、异步校验（通过返回 promise），返回空字符串、空数组或空值表示通过，字符串或字符串数组为错误信息，自定义渲染错误信息使用 `error` snippet。与 rules 互斥 | `(fieldValue, values) => string \| string[] \| undefined \| Promise<...>` 或 `StandardSchema` |  |
+| rules | 校验规则，由 Semi 自带的规则引擎执行，规则属性见[配置初始值与校验规则](#配置初始值与校验规则)。与 validator 互斥 | `RuleItem[]` |  |
 | validateStatus | 该表单控件的校验结果状态（仅影响样式），可选值:`success`/`error`/`warning`/`default`，不传时取 Field 自身的校验状态 | `string` |  |
 | trigger | 触发校验的时机，可选值:`blur`/`change`/`custom`/`mount`，或以上值的组合<br/>1、设置为 custom 时，仅会由 formApi/fieldApi 触发校验时被触发<br/>2、mount（挂载时即触发一次校验） | `FieldValidateTriggerType` | `'change'` |
 | onChange | 值变化时调用的回调，参数是被包装组件该回调的原始参数，最后追加最新的表单值 `latestValues`，用于避免读到闭包里的旧值；不传 `field` 的 FormCheckbox、FormRadio 只是普通控件，没有 `latestValues`（具体参见各组件的 onChange） | `(...args, latestValues) => void` |  |
@@ -1831,7 +1863,7 @@ Field 是 `FormInput`、`FormSelect` 等以 Form 开头的组件，以及 `FormF
 | allowEmpty | 值为空时是否在 values 中保留该 field 的 key（值为 undefined）。Field 与 Form 任一设置即生效 | `boolean` | `false` |
 | allowEmptyString | 是否允许值为空字符串。默认情况下值为''时，该 field 对应的 key 会从 values 中移除，如果你希望保留该 key，那么需要将 allowEmptyString 设为 true | `boolean` | `false` |
 | emptyValue | 被视为空值的值。值变化为它时，该 field 的 key 会从 values 中移除（`allowEmpty` 为 true 时保留为 undefined） | `unknown` | `''` |
-| keepState | 是否在 Field 卸载后保留其状态（value、error、touched）。为 true 时，Field 卸载后其值、校验信息、交互状态不会丢失，再次挂载时会自动恢复 | `boolean` | `false` |
+| keepState | Field 卸载后是否保留其状态（value、error、touched），保留时再次挂载会自动恢复。不设置时依次取所在 ArrayField、Form 的 keepState | `boolean` | `true` |
 | stopValidateWithError | 为 true 时，使用 rules 校验，碰到第一个检验不通过的 rules 后，将不再触发后续 rules 的校验 | `boolean` | `false` |
 | pure | 是否仅接管数据流，为 true 时不会自动插入 ErrorMessage、Label、extraText 等模块，样式、DOM 结构与原始的组件保持一致 | `boolean` | `false` |
 | extraTextPosition | 控制extraText的显示位置，可选`middle`（垂直方向以Label、extraText、Field主体的顺序显示）、`bottom` (垂直方向以Label、Field主体、extraText的顺序显示)；在Form与Field上同时传入时，以Field props为准 | `'middle' \| 'bottom'` | `'bottom'` |
@@ -1856,14 +1888,14 @@ FormSelect、FormCascader、FormTreeSelect、FormAutoComplete、FormDatePicker�
 
 我们同样提供了 `fieldApi`，其功能与 `formApi` 大部分相似，区别在于 fieldApi 限定了修改的范围，它只能修改所绑定的 field。通过 [useFieldApi](#useFieldApi) 获取
 
-| Function   | 说明                      | example                                    |
-| ---------- | ------------------------- | ------------------------------------------ |
-| setValue   | 修改当前 Field 的值       | fieldApi.setValue(newValue: any)           |
-| getValue   | 获取当前 Field 的值       | fieldApi.getValue()                        |
-| setTouched | 修改当前 Field 的 touched | fieldApi.setTouched(true)                  |
-| getTouched | 获取当前 Field 的 touched | fieldApi.getTouched()                      |
-| setError   | 修改当前 Field 的错误信息 | fieldApi.setError(newErrorMessage: string) |
-| getError   | 获取当前 Field 的错误信息 | fieldApi.getError()                        |
+| Function   | 说明                      | example                                      |
+| ---------- | ------------------------- | -------------------------------------------- |
+| setValue   | 修改当前 Field 的值       | fieldApi.setValue(newValue: any)             |
+| getValue   | 获取当前 Field 的值       | fieldApi.getValue()                          |
+| setTouched | 修改当前 Field 的 touched | fieldApi.setTouched(true)                    |
+| getTouched | 获取当前 Field 的 touched | fieldApi.getTouched()                        |
+| setError   | 修改当前 Field 的错误信息 | fieldApi.setError(error: string \| string[]) |
+| getError   | 获取当前 Field 的错误信息 | fieldApi.getError()                          |
 
 <Framework only="react">
 
@@ -1880,6 +1912,7 @@ interface ArrayFieldChildrenProps {
     arrayFields: ArrayFieldItem<>;                               // 当前数组表单，可以用来执行map操作渲染出每一行
     add: (index?: number | React.MouseEvent) => void;                         // 新增空白行；传入数字时插入到该位置，传入事件时被忽略，因此可直接用作 onClick
     addWithInitValue: (lineObject: Record<string, any>, index?: number) => void; // 新增一个带初始值的行，index 为插入位置
+    move: (from: number, to: number) => void;                                   // 把第 from 行移到 to，值、错误、touched 与 key 随行移动；越界下标按首尾处理
 }
 
 interface ArrayFieldItem {
@@ -1906,6 +1939,7 @@ interface ArrayFieldSlotProps {
     arrayFields: ArrayFieldItem[]; // 当前数组表单，可以用来执行 v-for 渲染出每一行
     onAdd: (index?: number | Event) => void; // 新增空白行；传入数字时插入到该位置，传入事件时被忽略，因此可直接写成 @click="onAdd"
     onAddWithInitValue: (row: unknown, index?: number) => void; // 新增一个带初始值的行，index 为插入位置
+    onMove: (from: number, to: number) => void; // 把第 from 行移到 to，值、错误、touched 与 key 随行移动；越界下标按首尾处理
 }
 
 interface ArrayFieldItem {
@@ -1936,6 +1970,7 @@ interface ArrayFieldChildrenProps {
     readonly arrayFields: ArrayFieldRow[]; // 当前数组表单，可以用来渲染出每一行
     add: (index?: number | MouseEvent) => void; // 新增空白行；传入数字时插入到该位置，传入事件时被忽略，因此可直接用作 onClick
     addWithInitValue: (lineObject: Record<string, any> | string, index?: number) => void; // 新增一个带初始值的行，index 为插入位置
+    move: (from: number, to: number) => void; // 把第 from 行移到 to，值、错误、touched 与 key 随行移动；越界下标按首尾处理
 }
 
 interface ArrayFieldRow {
@@ -1966,6 +2001,7 @@ interface ArrayFieldSnippetProps {
     arrayFields: ArrayFieldItem[]; // 当前数组表单，可以用来执行 {#each} 渲染出每一行
     onAdd: (index?: number | Event) => void; // 新增空白行；传入数字时插入到该位置，传入事件时被忽略，因此可直接写成 onclick={onAdd}
     onAddWithInitValue: (row: unknown, index?: number) => void; // 新增一个带初始值的行，index 为插入位置
+    onMove: (from: number, to: number) => void; // 把第 from 行移到 to，值、错误、touched 与 key 随行移动；越界下标按首尾处理
 }
 
 interface ArrayFieldItem {
@@ -1974,6 +2010,88 @@ interface ArrayFieldItem {
     onRemove: () => void; // 移除本行的操作函数，调用时将直接删除本行
 }
 ```
+
+</Framework>
+
+<Framework only="react">
+
+## SchemaField
+
+```jsx
+import { SchemaField } from '@fibrae/semi-ui-react';
+// 也可以写作 Form.SchemaField
+```
+
+<SchemaFieldReactApi />
+
+## SchemaForm
+
+```jsx
+import { SchemaForm } from '@fibrae/semi-ui-react';
+```
+
+<SchemaFormReactApi />
+
+</Framework>
+
+<Framework only="vue">
+
+## SchemaField
+
+```ts
+import { SchemaField } from '@fibrae/semi-ui-vue';
+```
+
+<SchemaFieldVueApi />
+
+## SchemaForm
+
+```ts
+import { SchemaForm } from '@fibrae/semi-ui-vue';
+```
+
+<SchemaFormVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+## SchemaField
+
+```jsx
+import { SchemaField } from '@fibrae/semi-ui-solid';
+// 也可以写作 Form.SchemaField
+```
+
+<SchemaFieldSolidApi />
+
+## SchemaForm
+
+```jsx
+import { SchemaForm } from '@fibrae/semi-ui-solid';
+```
+
+<SchemaFormSolidApi />
+
+</Framework>
+
+<Framework only="svelte">
+
+## SchemaField
+
+```ts
+import { SchemaField } from '@fibrae/semi-ui-svelte';
+```
+
+<SchemaFieldSvelteApi />
+
+## SchemaForm
+
+```ts
+import { SchemaForm } from '@fibrae/semi-ui-svelte';
+```
+
+<SchemaFormSvelteApi />
 
 </Framework>
 
@@ -1988,7 +2106,7 @@ const { Section } = Form;
 
 <FormSectionReactApi />
 
-`aria-*` 等原生属性落在 `section` 元素上。
+`aria-*` 等原生属性落在 `fieldset` 元素上。
 
 </Framework>
 
@@ -2002,7 +2120,7 @@ import { FormSection } from '@fibrae/semi-ui-vue';
 
 <FormSectionVueApi />
 
-`class`、`style` 与原生属性经 attrs 落在 `section` 元素上。
+`class`、`style` 与原生属性经 attrs 落在 `fieldset` 元素上。
 
 </Framework>
 
@@ -2017,7 +2135,7 @@ const { Section } = Form;
 
 <FormSectionSolidApi />
 
-`class`、`style`、`ref` 与原生属性落在 `section` 元素上。
+`class`、`style`、`ref` 与原生属性落在 `fieldset` 元素上。
 
 </Framework>
 
@@ -2031,7 +2149,7 @@ import { FormSection } from '@fibrae/semi-ui-svelte';
 
 <FormSectionSvelteApi />
 
-`class`、`style` 与原生属性落在 `section` 元素上。
+`class`、`style` 与原生属性落在 `fieldset` 元素上。
 
 </Framework>
 
@@ -2229,8 +2347,8 @@ import { Form } from '@fibrae/semi-ui-react';
 const { ErrorMessage } = Form;
 ```
 
-- 当 error 为 ReactNode、String 时，直接渲染；为 true 时只渲染错误态容器，不显示文本；为 false 时不渲染
-- 当 error 为数组时，会自动执行 join 操作聚合数组内的错误信息
+- error 是字符串数组，多条错误用逗号聚合显示
+- error 为 `['']` 时只渲染错误态容器，不显示文本；为空时不渲染
 
 <FormErrorMessageReactApi />
 
@@ -2246,8 +2364,8 @@ const { ErrorMessage } = Form;
 import { FormErrorMessage } from '@fibrae/semi-ui-vue';
 ```
 
-- 当 error 为字符串时，直接渲染；为 true 时只渲染错误态容器，不显示文本；为 false 时不渲染
-- 当 error 为数组时，会自动执行 join 操作聚合数组内的错误信息；错误只能是数据，自定义渲染使用 `#error` 插槽
+- error 是字符串数组，多条错误用逗号聚合显示；自定义渲染使用 Field 的 `#error` 插槽
+- error 为 `['']` 时只渲染错误态容器，不显示文本；为空时不渲染
 
 <FormErrorMessageVueApi />
 
@@ -2264,8 +2382,8 @@ import { Form } from '@fibrae/semi-ui-solid';
 const { ErrorMessage } = Form;
 ```
 
-- 当 error 为字符串、JSX 时，直接渲染；为 true 时只渲染错误态容器，不显示文本；为 false 时不渲染
-- 当 error 为数组时，会自动用逗号聚合数组内的错误信息
+- error 是字符串数组，多条错误用逗号聚合显示
+- error 为 `['']` 时只渲染错误态容器，不显示文本；为空时不渲染
 
 <FormErrorMessageSolidApi />
 
@@ -2281,8 +2399,8 @@ const { ErrorMessage } = Form;
 import { FormErrorMessage } from '@fibrae/semi-ui-svelte';
 ```
 
-- 当 error 为字符串时，直接渲染；为 true 时只渲染错误态容器，不显示文本；为 false 时不渲染
-- 当 error 为数组时，会自动用逗号聚合数组内的错误信息；错误只能是数据，自定义渲染使用 `errorContent` snippet
+- error 是字符串数组，多条错误用逗号聚合显示；自定义渲染使用 `errorContent` snippet
+- error 为 `['']` 时只渲染错误态容器，不显示文本；为空时不渲染
 
 <FormErrorMessageSvelteApi />
 
@@ -2355,7 +2473,7 @@ import { FormErrorMessage } from '@fibrae/semi-ui-svelte';
     - 当 Form 或者 Field 的 props.labelPosition 设置为 inset时，此时不存在 label 标签，而是 div 标签。insetLabel 对应的 div 标签会被自动追加 id，值与上述 label 的 id 相同，对应 Field 组件的 `aria-labelledby`。不支持内嵌标签的字段按 top 布局，`aria-labelledby` 指向实际渲染的 label
     - Field 组件会被自动追加 `aria-labelledby`，值与上述 label 的id 相同；使用方传入的 `aria-labelledby` 排在前面，两者合并而不是覆盖
 - [aria-required](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-required_attribute)
-    - 当 Field 配置了必填时（即 props.rules中包含 require: true 或 props.label配置了required: true 且没有 optional: true），Field 组件会被自动追加 aria-required = true（CheckboxGroup、Slider、Upload 和单个 Radio 除外）；字段上显式传入的 aria-required 优先
+    - 当 Field 配置了必填时（即 props.rules 中包含 required: true 或 props.label 配置了 required: true 且没有 optional: true；Form 配置了 schema 时只看 label），Field 组件会被自动追加 aria-required = true（CheckboxGroup、Slider、Upload 和单个 Radio 除外）；字段上显式传入的 aria-required 优先
 - [aria-invalid](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-invalid_attribute) 、[aria-errormessage](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-errormessage)
     - 当 Field 校验未通过，或 validateStatus 为 error 时，Field 组件会被自动添加 `aria-invalid` = true 属性。
     - 当 Field 校验未通过时，Field 组件会被自动追加 `aria-errormessage` 属性，值为 errorMessage 所对应DOM元素的 id （格式: `${控件 id}-errormessage`）；CheckboxGroup 落在组内每个 checkbox 上。
@@ -2405,7 +2523,7 @@ import { FormErrorMessage } from '@fibrae/semi-ui-svelte';
 
 - **为什么 rules 中的 validator 校验失败，但是对应的错误信息没有被展示？**
 
-    async-validator 的自定义 validator 返回值必须是 boolean 类型，否则它不执行任何回调，semi 后续的钩子也不会被调用。建议通过加 !! 或者 Boolean() 强制转换返回类型
+    `rules[].validator` 返回 `false` 或抛错时失败，显示规则的 `message`（没有时显示默认文案或错误的 message）；返回字符串或字符串数组时直接作为错误信息。返回 `true`、`undefined`、空字符串等其他值都视为通过。另外 `message` 为空字符串时只标红、不显示文字。
 
 - **为什么 getValues 拿不到某个 field？**
 

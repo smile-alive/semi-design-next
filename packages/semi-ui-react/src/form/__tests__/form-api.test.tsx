@@ -35,7 +35,7 @@ describe('Form-formApi', () => {
         // StrictMode unmounts and mounts the same Form instance again, which unbinds and rebinds the useForm api
         let formApi;
         let formValues;
-        const HookForm = () => {
+        function HookForm() {
             const [api, , values] = Form.useForm();
             // handed to the test from an effect, so render never writes outer variables
             useEffect(() => {
@@ -47,7 +47,7 @@ describe('Form-formApi', () => {
                     <Form.Input field="name" />
                 </Form>
             );
-        };
+        }
         render(
             <StrictMode>
                 <HookForm />
@@ -76,7 +76,7 @@ describe('Form-formApi', () => {
 
     it('Form 卸载后再次挂载时，重新绑定 useForm api', async () => {
         let formApi;
-        const HookForm = () => {
+        function HookForm() {
             const [api] = Form.useForm();
             const [show, setShow] = useState(true);
             useEffect(() => {
@@ -92,7 +92,7 @@ describe('Form-formApi', () => {
                     ) : null}
                 </>
             );
-        };
+        }
         render(<HookForm />);
         expect(formApi.getValues()).toEqual({ name: 'semi' });
 
@@ -108,7 +108,7 @@ describe('Form-formApi', () => {
         expect(getInput('name')).toHaveValue('design');
     });
 
-    it('formApi-getFieldExist', () => {
+    it('formApi.getFieldExist 判断字段是否已注册', () => {
         let formApi = null;
         const getFormApi = vi.fn<(api: FormApi) => void>((api) => {
             formApi = api;
@@ -119,7 +119,7 @@ describe('Form-formApi', () => {
         expect(formApi.getFieldExist('business')).toEqual(false);
     });
 
-    it('formApi-getInitValue / getInitValues', () => {
+    it('formApi.getInitValue 与 getInitValues 返回字段初值与全部初值', () => {
         let formApi!: FormApi;
         let getFormApi = (api: FormApi) => {
             formApi = api;
@@ -137,7 +137,7 @@ describe('Form-formApi', () => {
         expect(getInput('name')).toHaveValue('semi');
     });
 
-    it('formApi-getTouched', () => {
+    it('formApi.getTouched 在字段失焦后返回 true', () => {
         let formApi = null;
         let getFormApi = (api) => {
             formApi = api;
@@ -148,7 +148,7 @@ describe('Form-formApi', () => {
         expect(!formApi.getTouched('business')).toEqual(true);
     });
 
-    it('formApi-getValue', async () => {
+    it('formApi.getValue 按路径取值，不传路径时返回全部值', async () => {
         let formApi = null;
         let getFormApi = (api) => {
             formApi = api;
@@ -161,7 +161,7 @@ describe('Form-formApi', () => {
         expect(formApi.getValues()).toEqual({ name: 'semi' });
     });
 
-    it('formApi-getError', async () => {
+    it('formApi.getError 返回校验失败的错误数组', async () => {
         let formApi = null;
         let getFormApi = (api) => {
             formApi = api;
@@ -169,32 +169,32 @@ describe('Form-formApi', () => {
         let errorMessage = 'not muji';
         renderForm({
             getFormApi,
-            children: <Form.Input field="name" rules={[{ validator: (_rule, value) => value === 'muji', message: errorMessage }]} trigger="change" />,
+            children: <Form.Input field="name" rules={[{ validator: (value) => value === 'muji', message: errorMessage }]} trigger="change" />,
         });
         fireEvent.change(getInput('name'), { target: { value: 'semi' } });
-        await waitFor(() => expect(formApi.getError('name')).toEqual(errorMessage));
+        await waitFor(() => expect(formApi.getError('name')).toEqual([errorMessage]));
         expect(getErrorMessage('name')).toHaveTextContent(errorMessage);
     });
 
-    it('formApi-getFormState', async () => {
+    it('formApi.getFormState 返回 values、errors 与 touched', async () => {
         let formApi = null;
         let getFormApi = (api) => {
             formApi = api;
         };
         renderForm({
             getFormApi,
-            children: <Form.Input field="name" rules={[{ validator: (_rule, value) => value === 'muji', message: 'not muji' }]} trigger="change" />,
+            children: <Form.Input field="name" rules={[{ validator: (value) => value === 'muji', message: 'not muji' }]} trigger="change" />,
         });
         fireEvent.change(getInput('name'), { target: { value: 'semi' } });
         let expectFormState = {
             values: { name: 'semi' },
-            errors: { name: 'not muji' },
+            errors: { name: ['not muji'] },
             touched: { name: true },
         };
         await waitFor(() => expect(formApi.getFormState()).toEqual(expectFormState));
     });
 
-    it('formApi-setError', () => {
+    it('formApi.setError 设置字段错误并显示错误信息', () => {
         let formApi = null;
         let getFormApi = (api) => {
             formApi = api;
@@ -207,14 +207,14 @@ describe('Form-formApi', () => {
         void act(() => formApi.setError('name', errorMessage));
         let expectFormState = {
             values: {},
-            errors: { name: errorMessage },
+            errors: { name: [errorMessage] },
             touched: {},
         };
         expect(formApi.getFormState()).toEqual(expectFormState);
         expect(container.querySelector(`.test .semi-form-field-error-message`)).toHaveTextContent(new RegExp(`^${errorMessage}$`));
     });
 
-    it('formApi-setTouched', () => {
+    it('formApi.setTouched 设置与取消字段的 touched 状态', () => {
         let formApi = null;
         let getFormApi = (api) => {
             formApi = api;
@@ -227,7 +227,7 @@ describe('Form-formApi', () => {
         expect(formApi.getTouched('business')).toEqual(false);
     });
 
-    it('formApi-setValue', () => {
+    it('formApi.setValue 设置字段值并同步到输入框', () => {
         let formApi = null;
         let getFormApi = (api) => {
             formApi = api;
@@ -240,7 +240,7 @@ describe('Form-formApi', () => {
         expect(getInput('name')).toHaveValue(expectVal);
     });
 
-    it('formApi-reset', async () => {
+    it('formApi.reset 恢复初值并清除状态', async () => {
         let formApi = null;
         renderForm({
             children: fields,
@@ -324,12 +324,12 @@ describe('Form-formApi', () => {
             },
         });
         // React 19's act does not flush the render when its callback rejects, so the rejection is asserted inside it
-        await act(() => expect(formApi.validate()).rejects.toEqual({ a: { b: 'ab-err', c: 'ac-err' } }));
-        expect(formApi.getFormState().errors).toEqual({ a: { b: 'ab-err', c: 'ac-err' } });
+        await act(() => expect(formApi.validate()).rejects.toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } }));
+        expect(formApi.getFormState().errors).toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } });
         expect(getErrorMessage('a.b')).toHaveTextContent('ab-err');
         void act(() => formApi.reset());
-        await act(() => expect(formApi.validate(['a.c'])).rejects.toEqual({ a: { c: 'ac-err' } }));
-        expect(formApi.getFormState().errors).toEqual({ a: { c: 'ac-err' } });
+        await act(() => expect(formApi.validate(['a.c'])).rejects.toEqual({ a: { c: ['ac-err'] } }));
+        expect(formApi.getFormState().errors).toEqual({ a: { c: ['ac-err'] } });
         expect(getErrorMessage('a.b')).toBeNull();
         expect(getErrorMessage('a.c')).toHaveTextContent('ac-err');
     });
@@ -349,8 +349,8 @@ describe('Form-formApi', () => {
                 formApi = api;
             },
         });
-        await expect(act(() => formApi.validate(['a']))).rejects.toEqual({ a: { b: 'ab-err', c: 'ac-err' } });
-        expect(formApi.getFormState().errors).toEqual({ a: { b: 'ab-err', c: 'ac-err' } });
+        await expect(act(() => formApi.validate(['a']))).rejects.toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } });
+        expect(formApi.getFormState().errors).toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } });
         expect(getErrorMessage('e')).toBeNull();
     });
 
@@ -392,7 +392,7 @@ describe('Form-formApi', () => {
             },
         });
         void act(() => formApi.setError('a', { b: 'ab-err', c: 'ac-err' }));
-        expect(formApi.getFormState().errors).toEqual({ a: { b: 'ab-err', c: 'ac-err' } });
+        expect(formApi.getFormState().errors).toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } });
         expect(getErrorMessage('a.b')).toHaveTextContent(/^ab-err$/);
         expect(getErrorMessage('a.c')).toHaveTextContent(/^ac-err$/);
         expect(getErrorMessage('e')).toBeNull();
@@ -545,26 +545,10 @@ describe('Form-formApi', () => {
             },
             validator: validatorSpy,
         });
-        await act(() => expect(formApi.validate()).rejects.toEqual({ name: 'from-validator' }));
+        await act(() => expect(formApi.validate()).rejects.toEqual({ name: ['from-validator'] }));
         expect(validatorSpy).toHaveBeenCalled();
-        expect(formApi.getFormState().errors).toEqual({ name: 'from-validator' });
+        expect(formApi.getFormState().errors).toEqual({ name: ['from-validator'] });
         expect(getErrorMessage('name')).toHaveTextContent('from-validator');
-    });
-
-    it('formApi-validate：字段校验器返回的 ReactNode 错误会阻止提交', async () => {
-        const onSubmit = vi.fn<(...args: unknown[]) => void>();
-        let formApi = null;
-        renderForm({
-            onSubmit,
-            children: <Form.Input field="a" validator={() => <span>jsx-error</span>} />,
-            getFormApi: (api) => {
-                formApi = api;
-            },
-        });
-        await expect(act(() => formApi.validate())).rejects.toHaveProperty('a');
-        void act(() => formApi.submitForm());
-        await screen.findByText('jsx-error');
-        expect(onSubmit).not.toHaveBeenCalled();
     });
 
     it('Debug-SetBugDemo：validate 上报稀疏数组字段路径上的错误，reset 清除这些错误', async () => {
@@ -585,7 +569,7 @@ describe('Form-formApi', () => {
         });
         await act(() => expect(formApi.validate()).rejects.toBeDefined());
         paths.forEach((path) => {
-            expect(formApi.getError(path)).toBe('required');
+            expect(formApi.getError(path)).toEqual(['required']);
             expect(getErrorMessage(path)).toHaveTextContent('required');
         });
         void act(() => formApi.reset());

@@ -84,7 +84,7 @@ describe('Svelte Form 组合组件', () => {
 
     it('FormSection 渲染标题，FormSlot 用标签命名分组并显示错误', () => {
         const { container } = renderComposite('layout');
-        expect(container.querySelector(`section.${prefix}-section h5`)).toHaveTextContent('基本信息');
+        expect(screen.getByRole('group', { name: '基本信息' })).toHaveClass(`${prefix}-section`);
         expect(screen.getByRole('group', { name: '说明' })).toHaveTextContent('只读内容');
         expect(container.querySelector(errorSelector)).toHaveTextContent('说明有误');
     });
@@ -101,7 +101,7 @@ describe('Svelte Form hooks', () => {
         expect(screen.getByRole('textbox', { name: '名称' })).toHaveValue('hooked');
         await fireEvent.click(screen.getByRole('button', { name: '字段报错' }));
         await settle();
-        expect(read().field.error).toBe('出错');
+        expect(read().field.error).toEqual(['出错']);
         await fireEvent.click(screen.getByRole('button', { name: '表单写入' }));
         await settle();
         expect(read().field.value).toBe('form');

@@ -11,10 +11,10 @@ describe('Form hooks 与 HOC', () => {
     it('useFormApi 返回 getFormApi 交出的 api', () => {
         let fromHook;
         let fromCallback;
-        const Probe = () => {
+        function Probe() {
             const api = useFormApi();
             return <button onClick={() => (fromHook = api)}>probe</button>;
-        };
+        }
         render(
             <Form getFormApi={(api) => (fromCallback = api)}>
                 <Form.Input field="name" />
@@ -28,10 +28,10 @@ describe('Form hooks 与 HOC', () => {
     });
 
     it('useFormState 以最新的 values、errors 与 touched 重新渲染', () => {
-        const Probe = () => {
+        function Probe() {
             const formState = useFormState();
             return <pre data-testid="state">{JSON.stringify(formState)}</pre>;
-        };
+        }
         render(
             <Form>
                 <Form.Input field="name" />
@@ -48,14 +48,14 @@ describe('Form hooks 与 HOC', () => {
 
     it('useFieldState 读取单个字段，useFieldApi 写入该字段', async () => {
         let fieldApi;
-        const Probe = () => {
+        function Probe() {
             const { value, error, touched } = useFieldState('name');
             const api = useFieldApi('name');
             useEffect(() => {
                 fieldApi = api;
             });
             return <span data-testid="field">{JSON.stringify({ value, error, touched })}</span>;
-        };
+        }
         render(
             <Form>
                 <Form.Input field="name" />
@@ -67,22 +67,22 @@ describe('Form hooks 与 HOC', () => {
         expect(fieldApi.getValue()).toBe('semi');
         void act(() => fieldApi.setError('bad'));
         void act(() => fieldApi.setTouched(true));
-        expect(fieldApi.getError()).toBe('bad');
+        expect(fieldApi.getError()).toEqual(['bad']);
         expect(fieldApi.getTouched()).toBe(true);
         expect(JSON.parse(screen.getByTestId('field').textContent)).toEqual({
             value: 'semi',
-            error: 'bad',
+            error: ['bad'],
             touched: true,
         });
     });
 
     it('useArrayFieldState 判断子树是否位于 ArrayField 内', () => {
         const seen = [];
-        const Probe = ({ label }) => {
+        function Probe({ label }) {
             const state = useArrayFieldState();
             seen.push([label, state.inArrayField]);
             return null;
-        };
+        }
         render(
             <Form>
                 <Probe label="outside" />
@@ -131,11 +131,13 @@ describe('Form hooks 与 HOC', () => {
     });
 
     it('withFormState 注入最新的 formState 并转发 ref', () => {
-        const Inner = ({ formState, ref }: { formState: FormState; ref?: Ref<HTMLSpanElement> }) => (
-            <span ref={ref} data-testid="values">
-                {JSON.stringify(formState.values)}
-            </span>
-        );
+        function Inner({ formState, ref }: { formState: FormState; ref?: Ref<HTMLSpanElement> }) {
+            return (
+                <span ref={ref} data-testid="values">
+                    {JSON.stringify(formState.values)}
+                </span>
+            );
+        }
         const WithState = withFormState(Inner);
         let node;
         render(
@@ -154,10 +156,12 @@ describe('Form hooks 与 HOC', () => {
     });
 
     it('withField 向自定义控件注入 value 与 onChange，并把 ref 转发给它', () => {
-        const Control = ({ value, onChange, ref, validateStatus, ...rest }) => <input {...rest} ref={ref} data-status={validateStatus} value={value ?? ''} onChange={(e) => onChange(e.target.value)} />;
+        function Control({ value, onChange, ref, validateStatus, ...rest }) {
+            return <input {...rest} ref={ref} data-status={validateStatus} value={value ?? ''} onChange={(e) => onChange(e.target.value)} />;
+        }
         const FormControl = withField(Control);
         let api;
-        const Demo = () => {
+        function Demo() {
             const inputRef = useRef(null);
             return (
                 <Form getFormApi={(formApi) => (api = formApi)}>
@@ -165,7 +169,7 @@ describe('Form hooks 与 HOC', () => {
                     <button onClick={() => inputRef.current.focus()}>focus</button>
                 </Form>
             );
-        };
+        }
         render(<Demo />);
         const input = screen.getByTestId('custom');
         fireEvent.change(input, { target: { value: 'semi' } });

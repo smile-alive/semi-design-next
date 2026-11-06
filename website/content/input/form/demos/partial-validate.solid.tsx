@@ -7,7 +7,7 @@ function validate(val?: string) {
     if (!val) {
         return "can't be empty";
     } else if (val.length <= 5) {
-        return <span>我是传入的节点</span>;
+        return 'must more than 5';
     }
     return;
 }

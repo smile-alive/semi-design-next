@@ -87,7 +87,7 @@ describe('Form.ArrayField', () => {
         expect(getFieldInput('data[1][name]')).toHaveValue(data[1].name);
     });
 
-    it('addWithInitValue', async () => {
+    it('addWithInitValue 新增一行并带上指定初始值', async () => {
         renderForm({ formProps: { initValues: { data } } });
         await userEvent.click(screen.getByRole('button', { name: 'Add line with setting value' }));
         expect(getFieldInput('data[2][name]')).toHaveValue(newLine.name);
@@ -255,30 +255,18 @@ describe('Form.ArrayField', () => {
         let formApi: FormApi | undefined;
         const initValues = { a: [{ name: 'a0' }], b: [{ name: 'b0' }, { name: 'b1' }] };
         const [field, setField] = createSignal('a');
-        const Demo = () => {
+        function Demo() {
             onMount(() => setField('b'));
             return (
                 <Form getFormApi={(api) => (formApi = api)} initValues={initValues}>
                     <ArrayField field={field()}>{(props) => <For each={props.arrayFields}>{(row) => <FormInput field={`${row.field}[name]`} />}</For>}</ArrayField>
                 </Form>
             );
-        };
+        }
         render(() => <Demo />);
         expect(getFieldInput('b[1][name]')).toHaveValue('b1');
         formApi?.reset();
         expect(formApi?.getValue('b')).toEqual(initValues.b);
-    });
-
-    it('ArrayField 内的 keepState 警告每个字段只打印一次，Form 更新时不重复', () => {
-        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-        const keepStateWarnings = () => warn.mock.calls.filter(([message]) => String(message).includes("'keepState' is not supported")).length;
-        let formApi: FormApi | undefined;
-        renderForm({ formProps: { initValues: { data: [data[0]] }, getFormApi: (api) => (formApi = api) }, fieldProps: { keepState: true } });
-        expect(keepStateWarnings()).toBe(2);
-        formApi?.setValue('other', 1);
-        formApi?.setValue('other', 2);
-        expect(keepStateWarnings()).toBe(2);
-        warn.mockRestore();
     });
 
     it('连续调用两次 add 会新增两行', () => {

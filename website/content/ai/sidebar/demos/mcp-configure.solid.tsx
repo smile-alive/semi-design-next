@@ -112,7 +112,7 @@ export default function SidebarDemo() {
                         rules={[
                             { required: true, message: '请输入 MCP 图标 URL' },
                             {
-                                validator: (_rule: unknown, value: string) => {
+                                validator: (value: string) => {
                                     const urlRegex = /^(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+(?::\d+)?(?:\/[^\s]*)?$/i;
                                     return urlRegex.test(value);
                                 },

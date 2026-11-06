@@ -42,7 +42,7 @@ function CustomOptionCreateModel({ visible, handleOk, handleCancel, formRef }: C
                     rules={[
                         { required: true, message: '请输入 MCP 图标 URL' },
                         {
-                            validator: (_rule, value) => {
+                            validator: (value) => {
                                 const urlRegex = /^(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+(?::\d+)?(?:\/[^\s]*)?$/i;
                                 return urlRegex.test(value);
                             },

@@ -58,7 +58,6 @@
         "@fibrae/semi-foundation": "workspace:*",
         "@fibrae/semi-icons-svelte": "workspace:*",
         "@tanstack/svelte-virtual": "catalog:",
-        "async-validator": "catalog:",
         "date-fns": "catalog:",
         "es-toolkit": "catalog:",
         "scroll-into-view-if-needed": "catalog:",

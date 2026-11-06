@@ -9,8 +9,8 @@
     <Switch aria-labelledby="form-keep-state-toggle" bind:checked={show} style="margin-bottom: 12px" />
     <span id="form-keep-state-toggle" style="margin-left: 8px; color: var(--semi-color-text-2)"> 显示条件字段 </span>
     {#if show}
-        <FormInput field="conditionalField" keepState label="条件字段（keepState）" />
-        <FormInput field="noKeepState" label="条件字段（无 keepState）" />
+        <FormInput field="conditionalField" label="条件字段（默认保留）" />
+        <FormInput field="noKeepState" keepState={false} label="条件字段（keepState 为 false）" />
     {/if}
     <Button htmlType="submit">提交</Button>
 </Form>

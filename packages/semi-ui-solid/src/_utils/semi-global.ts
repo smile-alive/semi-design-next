@@ -28,7 +28,7 @@ import type { DropdownProps } from '../dropdown';
 import type { EmptyProps } from '../empty';
 import type { FeedbackProps } from '../feedback';
 import type { FloatButtonGroupProps, FloatButtonProps } from '../float-button';
-import type { ArrayFieldProps, FormProps } from '../form';
+import type { ArrayFieldProps, FormProps, SchemaFieldProps, SchemaFormProps } from '../form';
 import type { ColProps, RowProps } from '../grid';
 import type { HighlightProps } from '../highlight';
 import type { HotKeysProps } from '../hot-keys';
@@ -147,6 +147,8 @@ export interface OverrideDefaultProps {
     ResizeHandler?: GlobalDefaults<ResizeHandlerProps>;
     ResizeItem?: GlobalDefaults<ResizeItemProps>;
     Row?: GlobalDefaults<RowProps>;
+    SchemaField?: GlobalDefaults<SchemaFieldProps>;
+    SchemaForm?: GlobalDefaults<SchemaFormProps>;
     ScrollItem?: GlobalDefaults<ScrollItemProps>;
     ScrollList?: GlobalDefaults<ScrollListProps>;
     Select?: GlobalDefaults<SelectProps>;

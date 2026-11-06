@@ -6,38 +6,45 @@ import { errorSelector } from './helpers';
 
 describe('FormErrorMessage', () => {
     it('class 与 style', () => {
-        const { container } = render(FormErrorMessage, { props: { class: 'test', style: 'color: red', error: 'semi error' } });
+        const { container } = render(FormErrorMessage, { props: { class: 'test', style: 'color: red', error: ['semi error'] } });
         const em = container.querySelector('.test');
         expect(em).not.toBeNull();
         expect(em).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
-    it('error：字符串', () => {
-        const { container } = render(FormErrorMessage, { props: { error: 'semi error' } });
+    it('error：单条消息', () => {
+        const { container } = render(FormErrorMessage, { props: { error: ['semi error'] } });
         expect(container.querySelector(`${errorSelector} span`)).toHaveTextContent('semi error');
     });
 
-    it('error：字符串数组', () => {
-        const { container } = render(FormErrorMessage, { props: { error: ['length error', 'size error'] } });
+    it('error：多条消息用逗号连接，空消息不显示', () => {
+        const { container } = render(FormErrorMessage, { props: { error: ['length error', '', 'size error'] } });
         expect(container.querySelector(`${errorSelector} span`)).toHaveTextContent('length error, size error');
     });
 
-    it('errorContent snippet 自定义错误的渲染', () => {
-        const errorContent = createRawSnippet<[{ error: unknown }]>((arg) => ({
-            render: () => `<div data-testid="node-error">go ${String(arg().error)}</div>`,
-        }));
-        const { container } = render(FormErrorMessage, { props: { error: 'need-help', errorMessageId: 'em', errorContent } });
-        expect(container.querySelector(errorSelector)).toContainElement(container.querySelector('[data-testid="node-error"]'));
-        expect(container.querySelector('#em')).toHaveTextContent('go need-help');
+    it("error 为 [''] 时校验失败但不渲染文本，也不渲染 helpText", () => {
+        const helpText = createRawSnippet(() => ({ render: () => '<span>help</span>' }));
+        const { container } = render(FormErrorMessage, { props: { error: [''], helpText, validateStatus: 'error' } });
+        expect(container.querySelector('div')).toBeNull();
+        expect(container).not.toHaveTextContent('help');
     });
 
-    it('error：undefined', () => {
+    it('errorContent snippet 自定义错误的渲染', () => {
+        const errorContent = createRawSnippet<[{ error: string[] }]>((arg) => ({
+            render: () => `<div data-testid="node-error">go ${arg().error.join('|')}</div>`,
+        }));
+        const { container } = render(FormErrorMessage, { props: { error: ['need', 'help'], errorMessageId: 'em', errorContent } });
+        expect(container.querySelector(errorSelector)).toContainElement(container.querySelector('[data-testid="node-error"]'));
+        expect(container.querySelector('#em')).toHaveTextContent('go need|help');
+    });
+
+    it('error 为 undefined 时不渲染错误信息', () => {
         const { container } = render(FormErrorMessage, { props: { error: undefined } });
         expect(container.querySelector(errorSelector)).toBeNull();
     });
 
     it('showValidateIcon 显示 validateStatus 对应的图标', () => {
-        const { container } = render(FormErrorMessage, { props: { error: 'bad', errorMessageId: 'em', showValidateIcon: true, validateStatus: 'warning' } });
+        const { container } = render(FormErrorMessage, { props: { error: ['bad'], errorMessageId: 'em', showValidateIcon: true, validateStatus: 'warning' } });
         expect(container.querySelector('.semi-icon-alert_triangle')).not.toBeNull();
         expect(container.querySelector('#em')).toHaveTextContent('bad');
     });
@@ -50,7 +57,7 @@ describe('FormErrorMessage', () => {
     });
 
     it('其他属性透传到根 div', () => {
-        const { container } = render(FormErrorMessage, { props: { error: 'bad', 'data-testid': 'em' } });
+        const { container } = render(FormErrorMessage, { props: { error: ['bad'], 'data-testid': 'em' } });
         expect(container.querySelector(errorSelector)).toHaveAttribute('data-testid', 'em');
     });
 });

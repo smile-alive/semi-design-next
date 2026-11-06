@@ -2,8 +2,9 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| 属性      | 说明                                                                                         | 类型                                                                                   | 默认值 |
-| --------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ------ |
-| children  | 每一行的渲染函数，必填，参数为 `{ arrayFields, add, addWithInitValue }`，返回 ReactNode。    | <ApiType detail={"(props: ArrayFieldChildrenProps) => React.ReactNode"}>Type</ApiType> | -      |
-| field     | 数组在 formState.values 中的路径，必填。例如各行字段为 `a[0].name`、`a[1].name` 时应传 `a`。 | `string`                                                                               | -      |
-| initValue | 数组的初始值，必须是数组；与 Form 的 `initValues` 同时配置时优先。                           | `any[]`                                                                                | -      |
+| 属性      | 说明                                                                                                                                                                                  | 类型                                                                                   | 默认值 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ------ |
+| children  | 每一行的渲染函数，必填，参数为 `{ arrayFields, add, addWithInitValue, move }`，返回 ReactNode。`move(from, to)` 把一行连同它的值、错误和 touched 移到目标位置，越界的下标按首尾处理。 | <ApiType detail={"(props: ArrayFieldChildrenProps) => React.ReactNode"}>Type</ApiType> | -      |
+| field     | 数组在 formState.values 中的路径，必填。例如各行字段为 `a[0].name`、`a[1].name` 时应传 `a`。                                                                                          | `string`                                                                               | -      |
+| initValue | 数组的初始值，必须是数组；与 Form 的 `initValues` 同时配置时优先。                                                                                                                    | `any[]`                                                                                | -      |
+| keepState | 卸载时是否保留整组数据，也是行内字段未设置 keepState 时的默认值；未设置时取 Form 的 keepState。保留时重新挂载按保留的值渲染各行。                                                     | `boolean`                                                                              | -      |

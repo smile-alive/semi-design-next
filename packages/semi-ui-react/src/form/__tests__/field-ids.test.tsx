@@ -104,21 +104,12 @@ describe('Form 字段 memo', () => {
 });
 
 describe('Form 字段的 aria 引用', () => {
-    it('错误是 React 元素时，aria-errormessage 指向已渲染的元素', () => {
+    it('多条错误用逗号连接，aria-errormessage 指向已渲染的元素', () => {
         const { container, getApi } = renderForm(<Form.Input field="name" />);
-        act(() => getApi().setError('name', <b data-testid="jsx-error">bad</b>));
+        act(() => getApi().setError('name', ['first', 'second']));
         const input = container.querySelector('input');
-        expect(input).toHaveAttribute('aria-errormessage');
         expectReferencesExist(input);
-        expect(document.getElementById(input.getAttribute('aria-errormessage'))).toContainElement(screen.getByTestId('jsx-error'));
-    });
-
-    it('错误是元素数组时，逐项渲染而不是 [object Object]', () => {
-        const { container, getApi } = renderForm(<Form.Input field="name" />);
-        act(() => getApi().setError('name', [<b key="a">first</b>, <i key="b">second</i>]));
-        const message = container.querySelector('.semi-form-field-error-message');
-        expect(message).toHaveTextContent('first, second');
-        expectReferencesExist(container.querySelector('input'));
+        expect(document.getElementById(input.getAttribute('aria-errormessage'))).toHaveTextContent('first, second');
     });
 
     it('错误态下带 helpText，aria-describedby 不引用未渲染的 helpText', () => {

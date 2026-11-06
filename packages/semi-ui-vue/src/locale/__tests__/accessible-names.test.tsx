@@ -13,6 +13,7 @@ import AvatarGroup from '../../avatar/avatar-group.vue';
 import Breadcrumb from '../../breadcrumb';
 import Cascader from '../../cascader';
 import Feedback from '../../feedback';
+import { Form, SchemaField } from '../../form';
 import JsonViewer from '../../json-viewer';
 import Table from '../../table';
 import Transfer from '../../transfer';
@@ -319,6 +320,21 @@ describe('可访问名称跟随语言包', () => {
         expectNames(ja_JP);
         await view.rerender({ locale: en_US });
         expectNames(en_US);
+    });
+
+    it('SchemaField 的数组行标签、行按钮与添加按钮使用日语文案', () => {
+        const jsonSchema = { type: 'object', properties: { tags: { type: 'array', items: { type: 'string' } } } };
+        const nth = (template: string) => template.replace('${index}', '1');
+        render(LocaleProvider, {
+            props: { locale: ja_JP },
+            slots: { default: () => <Form initValues={{ tags: ['a'] }}>{() => <SchemaField jsonSchema={jsonSchema} />}</Form> },
+        });
+        expect(ja_JP.Form.addItem).not.toBe(en_US.Form.addItem);
+        expect(screen.getByRole('textbox', { name: nth(ja_JP.Form.item) })).toHaveValue('a');
+        expect(screen.getByRole('button', { name: nth(ja_JP.Form.moveUpItem) })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: nth(ja_JP.Form.moveDownItem) })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: nth(ja_JP.Form.removeItem) })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: ja_JP.Form.addItem })).toBeInTheDocument();
     });
 
     it('Feedback 的 emoji 评分组与选项使用日语名称', async () => {

@@ -40,23 +40,20 @@ describe('Form-slot', () => {
         expect(screen.getByTestId('node-label')).toHaveTextContent(/^hahaha$/);
     });
 
-    it('error：对象、字符串、数字、节点', () => {
-        const errorText = (props: SlotProps, selector: string) => {
+    it('error：ErrorMessage 的属性、一条或多条消息', () => {
+        const errorText = (props: SlotProps) => {
             const { container, unmount } = renderSlot(props);
-            const text = container.querySelector(selector)?.textContent;
+            const text = container.querySelector(`${emSelector} span`)?.textContent;
             unmount();
             return text;
         };
-        expect(errorText({ error: { error: 'semi' } }, `${emSelector} span`)).toEqual('semi');
-        expect(errorText({ error: 'semi' }, `${emSelector} span`)).toEqual('semi');
-        expect(errorText({ error: 888 }, emSelector)).toEqual('');
-
-        renderSlot({ error: <div data-testid="node-error">hahaha</div> });
-        expect(document.querySelector(emSelector)).toContainElement(screen.getByTestId('node-error'));
-        expect(screen.getByTestId('node-error')).toHaveTextContent(/^hahaha$/);
+        expect(errorText({ error: { error: ['semi'] } })).toEqual('semi');
+        expect(errorText({ error: 'semi' })).toEqual('semi');
+        expect(errorText({ error: ['a', 'b'] })).toEqual('a, b');
+        expect(errorText({ error: '' })).toBeUndefined();
     });
 
-    it('children', () => {
+    it('渲染 children', () => {
         const { container } = renderSlot({ children: <div class="slot-child">semi</div> });
         const child = container.querySelector(`${slotSelector} .slot-child`);
         expect(child).not.toBeNull();

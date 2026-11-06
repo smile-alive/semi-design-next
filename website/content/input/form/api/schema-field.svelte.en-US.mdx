@@ -1,0 +1,10 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property    | Description                                                                                                                                                                             | Type                                                                                           | Default |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------- |
+| field       | Path of the subtree to render; the root by default.                                                                                                                                     | `string`                                                                                       | `""`    |
+| jsonSchema  | The JSON Schema to render, which takes precedence over the one exported from the enclosing Form's `schema`. With neither, nothing renders and a development warning is logged.          | `JsonSchema`                                                                                   | -       |
+| renderField | Snippets that take over rendering by field path, with array rows written as `[]` (such as `contacts[].email`), receiving `{ node, field }`; a match renders the node and its children.  | <ApiType detail={"Record\u003cstring, Snippet\u003c[SchemaFieldRenderProps]>>"}>Type</ApiType> | -       |
+| widgets     | Field components that replace controls, keyed by JSON Schema `format` (such as `uri`) or control kind (`input`, `textarea`, `number`, `switch`, `select`); `format` is looked up first. | <ApiType detail={"Record\u003cstring, Component\u003cany, any, any>>"}>Type</ApiType>          | -       |

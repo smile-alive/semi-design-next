@@ -35,7 +35,7 @@ describe('Form 静默校验', () => {
     it('静默校验不写 formState.errors，也不触发 errorChange', async () => {
         const onErrorChange = vi.fn<(...args: unknown[]) => void>();
         const { api } = renderNameForm({ onErrorChange });
-        await expect(api().validate({ silent: true })).rejects.toEqual({ name: 'req' });
+        await expect(api().validate({ silent: true })).rejects.toEqual({ name: ['req'] });
         expect(api().getFormState().errors).toEqual({});
         expect(onErrorChange).not.toHaveBeenCalled();
     });
@@ -104,7 +104,7 @@ describe('Form 表单级 validator', () => {
             .validate()
             .catch(() => undefined);
         await nextTick();
-        expect(container.querySelector('output')).toHaveTextContent('{"name":"x","orphan":"y"}');
+        expect(container.querySelector('output')).toHaveTextContent('{"name":["x"],"orphan":["y"]}');
         const changeCount = onChange.mock.calls.length;
         await api().validate();
         await nextTick();
@@ -178,7 +178,7 @@ describe('Form 提交', () => {
         const { api } = renderNameForm({ onSubmit, onSubmitFail }, { rules: undefined, validator: () => Promise.reject('async-err') });
         api().submitForm();
         await vi.waitFor(() => expect(onSubmitFail).toHaveBeenCalledTimes(1));
-        expect(onSubmitFail.mock.calls[0][0]).toEqual({ name: 'async-err' });
+        expect(onSubmitFail.mock.calls[0][0]).toEqual({ name: ['async-err'] });
         expect(onSubmit).not.toHaveBeenCalled();
     });
 
@@ -225,9 +225,9 @@ describe('Form errorChange 触发次数', () => {
                 <FormInput field="b" rules={[{ required: true, message: 'b-req' }]} />
             </>
         ));
-        await expect(api().validate()).rejects.toEqual({ a: 'a-req', b: 'b-req' });
+        await expect(api().validate()).rejects.toEqual({ a: ['a-req'], b: ['b-req'] });
         expect(onErrorChange).toHaveBeenCalledTimes(1);
-        expect(onErrorChange).toHaveBeenLastCalledWith({ a: 'a-req', b: 'b-req' }, { a: 'a-req', b: 'b-req' });
+        expect(onErrorChange).toHaveBeenLastCalledWith({ a: ['a-req'], b: ['b-req'] }, { a: ['a-req'], b: ['b-req'] });
 
         api().reset();
         expect(onErrorChange).toHaveBeenCalledTimes(2);

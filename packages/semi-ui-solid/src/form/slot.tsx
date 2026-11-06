@@ -1,6 +1,8 @@
 import { type JSX, type ResolvedChildren, Show, children, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
+import { normalizeFieldError } from '@fibrae/semi-foundation/form/errors';
+import type { FieldErrorInput } from '@fibrae/semi-foundation/form/interface';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/form/form.scss';
 import type { ElementProps } from '../_base/element-props';
@@ -18,7 +20,8 @@ export interface SlotProps extends ElementProps<'div'> {
     label?: LabelProps | JSX.Element;
     noLabel?: boolean;
     labelPosition?: 'top' | 'left';
-    error?: ErrorMessageProps | JSX.Element;
+    /** The props of the ErrorMessage, or its `error`: a message or messages */
+    error?: ErrorMessageProps | FieldErrorInput;
 }
 
 export default function Slot(props: SlotProps) {
@@ -28,9 +31,8 @@ export default function Slot(props: SlotProps) {
 
     const generatedId = createUniqueId();
 
-    // each read of a JSX prop creates its nodes again, so both are read once
+    // each read of a JSX prop creates its nodes again, so it is read once
     const label = children(() => local.label as JSX.Element);
-    const error = children(() => local.error as JSX.Element);
 
     const formProps = () => form?.formProps;
 
@@ -49,9 +51,9 @@ export default function Slot(props: SlotProps) {
 
     const ariaLabelledby = () => joinIds(rest['aria-labelledby'], labelId());
 
-    const errorProps = () => {
-        const value = error();
-        return isLabelConfig(value) ? (value as ErrorMessageProps) : { error: value };
+    const errorProps = (): ErrorMessageProps => {
+        const value = local.error;
+        return isLabelConfig(value) ? (value as ErrorMessageProps) : { error: normalizeFieldError(value) };
     };
 
     return (
@@ -69,7 +71,7 @@ export default function Slot(props: SlotProps) {
                 wrapperCol={formProps()?.wrapperCol}
             >
                 {local.children}
-                <Show when={error() !== undefined}>
+                <Show when={local.error !== undefined}>
                     <ErrorMessage {...errorProps()} />
                 </Show>
             </FieldGrid>

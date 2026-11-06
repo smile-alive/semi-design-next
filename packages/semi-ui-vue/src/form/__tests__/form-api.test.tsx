@@ -66,7 +66,7 @@ describe('Form-formApi', () => {
         expect(getInput('name')).toHaveValue('design');
     });
 
-    it('formApi-getFieldExist', () => {
+    it('formApi.getFieldExist 判断字段是否已注册', () => {
         const onGetFormApi = vi.fn<(api: FormApi) => void>();
         const { api } = renderForm({ onGetFormApi }, () => <FormInput field="name" />);
         expect(onGetFormApi).toHaveBeenCalledTimes(1);
@@ -74,7 +74,7 @@ describe('Form-formApi', () => {
         expect(api().getFieldExist('business')).toEqual(false);
     });
 
-    it('formApi-getInitValue / getInitValues', () => {
+    it('formApi.getInitValue 与 getInitValues 返回初始值', () => {
         const initValues = { name: 'semi', business: 'abc' };
         const { api } = renderForm({ initValues }, fields);
         expect(api().getInitValue('name')).toEqual('semi');
@@ -85,14 +85,14 @@ describe('Form-formApi', () => {
         expect(getInput('name')).toHaveValue('semi');
     });
 
-    it('formApi-getTouched', async () => {
+    it('formApi.getTouched 在字段失焦后返回 true', async () => {
         const { api } = renderForm({}, fields);
         await fireEvent.focusOut(getInput('name') as HTMLInputElement);
         expect(api().getTouched('name')).toEqual(true);
         expect(!api().getTouched('business')).toEqual(true);
     });
 
-    it('formApi-getValue', async () => {
+    it('formApi.getValue 按路径取值，不传路径时返回全部值', async () => {
         const { api } = renderForm({}, fields);
         expect(api().getValue('name')).toEqual(undefined);
         await fireEvent.update(getInput('name') as HTMLInputElement, 'semi');
@@ -101,36 +101,36 @@ describe('Form-formApi', () => {
         expect(api().getValues()).toEqual({ name: 'semi' });
     });
 
-    it('formApi-getError', async () => {
+    it('formApi.getError 返回字段的校验错误并显示在界面上', async () => {
         const errorMessage = 'not muji';
-        const { api } = renderForm({}, () => <FormInput field="name" rules={[{ validator: (_rule: unknown, value: unknown) => value === 'muji', message: errorMessage }]} trigger="change" />);
+        const { api } = renderForm({}, () => <FormInput field="name" rules={[{ validator: (value: unknown) => value === 'muji', message: errorMessage }]} trigger="change" />);
         await fireEvent.update(getInput('name') as HTMLInputElement, 'semi');
-        await waitFor(() => expect(api().getError('name')).toEqual(errorMessage));
+        await waitFor(() => expect(api().getError('name')).toEqual([errorMessage]));
         expect(getErrorMessage('name')).toHaveTextContent(errorMessage);
     });
 
-    it('formApi-getFormState', async () => {
-        const { api } = renderForm({}, () => <FormInput field="name" rules={[{ validator: (_rule: unknown, value: unknown) => value === 'muji', message: 'not muji' }]} trigger="change" />);
+    it('formApi.getFormState 返回 values、errors 和 touched', async () => {
+        const { api } = renderForm({}, () => <FormInput field="name" rules={[{ validator: (value: unknown) => value === 'muji', message: 'not muji' }]} trigger="change" />);
         await fireEvent.update(getInput('name') as HTMLInputElement, 'semi');
         await waitFor(() =>
             expect(api().getFormState()).toEqual({
                 values: { name: 'semi' },
-                errors: { name: 'not muji' },
+                errors: { name: ['not muji'] },
                 touched: { name: true },
             })
         );
     });
 
-    it('formApi-setError', async () => {
+    it('formApi.setError 设置字段错误并显示在界面上', async () => {
         const errorMessage = 'not muji';
         const { api, container } = renderForm({}, () => <FormInput fieldClassName="test" field="name" trigger="change" />);
         api().setError('name', errorMessage);
         await nextTick();
-        expect(api().getFormState()).toEqual({ values: {}, errors: { name: errorMessage }, touched: {} });
+        expect(api().getFormState()).toEqual({ values: {}, errors: { name: [errorMessage] }, touched: {} });
         expect(container.querySelector('.test .semi-form-field-error-message')).toHaveTextContent(/^not muji$/);
     });
 
-    it('formApi-setTouched', () => {
+    it('formApi.setTouched 设置字段的 touched 状态', () => {
         const { api } = renderForm({}, fields);
         api().setTouched('business', true);
         expect(api().getTouched('business')).toEqual(true);
@@ -139,7 +139,7 @@ describe('Form-formApi', () => {
         expect(api().getTouched('business')).toEqual(false);
     });
 
-    it('formApi-setValue', async () => {
+    it('formApi.setValue 设置字段值并同步到控件', async () => {
         const { api } = renderForm({}, fields);
         api().setValue('name', 'semi');
         await nextTick();
@@ -147,7 +147,7 @@ describe('Form-formApi', () => {
         expect(getInput('name')).toHaveValue('semi');
     });
 
-    it('formApi-reset', async () => {
+    it('formApi.reset 把值恢复为初始值并清空 errors 和 touched', async () => {
         const { api } = renderForm({ initValues: { name: 'a' } }, fields);
         await fireEvent.update(getInput('name') as HTMLInputElement, 'b');
         expect(getInput('name')).toHaveValue('b');
@@ -182,23 +182,23 @@ describe('Form-formApi', () => {
                 {nestedAC()}
             </>
         ));
-        await expect(api().validate()).rejects.toEqual({ a: { b: 'ab-err', c: 'ac-err' } });
+        await expect(api().validate()).rejects.toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } });
         await nextTick();
-        expect(api().getFormState().errors).toEqual({ a: { b: 'ab-err', c: 'ac-err' } });
+        expect(api().getFormState().errors).toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } });
         expect(getErrorMessage('a.b')).toHaveTextContent('ab-err');
         api().reset();
-        await expect(api().validate(['a.c'])).rejects.toEqual({ a: { c: 'ac-err' } });
+        await expect(api().validate(['a.c'])).rejects.toEqual({ a: { c: ['ac-err'] } });
         await nextTick();
-        expect(api().getFormState().errors).toEqual({ a: { c: 'ac-err' } });
+        expect(api().getFormState().errors).toEqual({ a: { c: ['ac-err'] } });
         expect(getErrorMessage('a.b')).toBeNull();
         expect(getErrorMessage('a.c')).toHaveTextContent('ac-err');
     });
 
     it('formApi-validate：嵌套字段', async () => {
         const { api } = renderForm({}, nestedFields);
-        await expect(api().validate(['a'])).rejects.toEqual({ a: { b: 'ab-err', c: 'ac-err' } });
+        await expect(api().validate(['a'])).rejects.toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } });
         await nextTick();
-        expect(api().getFormState().errors).toEqual({ a: { b: 'ab-err', c: 'ac-err' } });
+        expect(api().getFormState().errors).toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } });
         expect(getErrorMessage('e')).toBeNull();
     });
 
@@ -216,7 +216,7 @@ describe('Form-formApi', () => {
         const { api } = renderForm({}, nestedFields);
         api().setError('a', { b: 'ab-err', c: 'ac-err' });
         await nextTick();
-        expect(api().getFormState().errors).toEqual({ a: { b: 'ab-err', c: 'ac-err' } });
+        expect(api().getFormState().errors).toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } });
         expect(getErrorMessage('a.b')).toHaveTextContent(/^ab-err$/);
         expect(getErrorMessage('a.c')).toHaveTextContent(/^ac-err$/);
         expect(getErrorMessage('e')).toBeNull();
@@ -281,10 +281,10 @@ describe('Form-formApi', () => {
     it('formApi-validate：表单级校验器', async () => {
         const validatorSpy = vi.fn<() => { name: string }>(() => ({ name: 'from-validator' }));
         const { api } = renderForm({ validator: validatorSpy }, () => <FormInput field="name" />);
-        await expect(api().validate()).rejects.toEqual({ name: 'from-validator' });
+        await expect(api().validate()).rejects.toEqual({ name: ['from-validator'] });
         await nextTick();
         expect(validatorSpy).toHaveBeenCalled();
-        expect(api().getFormState().errors).toEqual({ name: 'from-validator' });
+        expect(api().getFormState().errors).toEqual({ name: ['from-validator'] });
         expect(getErrorMessage('name')).toHaveTextContent('from-validator');
     });
 
@@ -304,7 +304,7 @@ describe('Form-formApi', () => {
         await expect(api().validate()).rejects.toBeDefined();
         await nextTick();
         paths.forEach((path) => {
-            expect(api().getError(path)).toBe('required');
+            expect(api().getError(path)).toEqual(['required']);
             expect(getErrorMessage(path)).toHaveTextContent('required');
         });
         api().reset();

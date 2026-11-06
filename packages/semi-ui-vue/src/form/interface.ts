@@ -1,12 +1,12 @@
-import type { IntrinsicElementAttributes, StyleValue, VNode } from 'vue';
-import type { RuleItem } from 'async-validator';
+import type { Component, IntrinsicElementAttributes, StyleValue, VNode, VNodeChild } from 'vue';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { AllErrors, BaseFormApi, ExclusiveFormValidation, FieldPath, FieldValidateTriggerType, FormState, StandardSchema } from '@fibrae/semi-foundation/form/interface';
+import type { AllErrors, BaseFormApi, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldPath, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, RuleItem, StandardSchema } from '@fibrae/semi-foundation/form/interface';
+import type { JsonSchema, SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
 import type { ColProps } from '../grid/interface';
 import type { ValidateStatus } from '../input/interface';
 
-export type { FieldValidateTriggerType, FormState } from '@fibrae/semi-foundation/form/interface';
-export type { RuleItem } from 'async-validator';
+export type { FieldError, FieldErrorInput, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, RuleItem, RuleType } from '@fibrae/semi-foundation/form/interface';
+export type { JsonSchema, SchemaFieldKind, SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
 
 export interface LabelProps {
     /** Content of the label; the default slot takes precedence */
@@ -29,26 +29,19 @@ export interface LabelSlots {
     extra?: () => VNode[];
 }
 
-export type FormApi<Values extends Record<string, any> = any> = BaseFormApi<Values>;
-
-/** A field error is data; render it differently with the `#error="{ error }"` slot */
-export type FieldError = string | string[] | boolean | undefined;
-
-/** Any non-empty result is an error; an empty string or undefined means valid */
-export type FieldValidateResult = FieldError;
+/** Values is what the fields edit, Output what a validation of the whole form resolves with (a schema's output) */
+export type FormApi<Values extends Record<string, any> = any, Output = Values> = BaseFormApi<Values, Output>;
 
 /** A label configured by data; nodes go in the `#fieldLabel` and `#labelExtra` slots */
 export type FieldLabel = Omit<LabelProps, 'name'>;
 
-type FormValidateResult<Values> = string | Partial<AllErrors<Values>>;
-
 /** The callable member is what makes Vue's compiled prop check accept arktype, whose schemas are functions */
-type FormSchema<Values> = StandardSchema<Values> | (StandardSchema<Values> & ((...args: any[]) => unknown));
+export type FormSchema<Values, Output = Values> = StandardSchema<Values, Output> | (StandardSchema<Values, Output> & ((...args: any[]) => unknown));
 
-export type FormProps<Values extends Record<string, any> = any> = AllFormProps<Values> & ExclusiveFormValidation;
+export type FormProps<Values extends Record<string, any> = any, Output = Values> = AllFormProps<Values, Output> & ExclusiveFormValidation;
 
 /** What the Form reads: global defaults can fill both exclusive sources, so the exclusion applies only to what callers pass */
-export interface AllFormProps<Values extends Record<string, any> = any> {
+export interface AllFormProps<Values extends Record<string, any> = any, Output = Values> {
     /** Initial values of the fields, copied once when the Form is created */
     initValues?: Values;
     layout?: 'horizontal' | 'vertical';
@@ -67,37 +60,41 @@ export interface AllFormProps<Values extends Record<string, any> = any> {
     trigger?: FieldValidateTriggerType;
     stopPropagation?: { submit?: boolean; reset?: boolean };
     /** Form-level validation; when set, it replaces the fields' own validation */
-    validator?: (values: Values) => FormValidateResult<Values> | Promise<FormValidateResult<Values>>;
+    validator?: FormValidator<Values>;
     /** A Standard Schema (zod, valibot, arktype) that replaces the fields' `validator` and `rules`, run on their `trigger` and on submit; `submit` receives its output */
-    schema?: FormSchema<Values>;
-    form?: FormApi<Values>;
+    schema?: FormSchema<Values, Output>;
+    /** Milliseconds a change waits before the `schema` validates; submit, `validate()`, blur and mount validate at once */
+    schemaDebounce?: number;
+    /** Whether an unmounted field keeps its value, error and touched state; a Field or ArrayField `keepState` overrides it */
+    keepState?: boolean;
+    form?: FormApi<Values, Output>;
     /** Also written to `x-form-id`; generated when missing */
     id?: string;
 }
 
-export interface FormEmits<Values extends Record<string, any> = any> {
-    submit: [values: Values, e?: SubmitEvent];
-    /** `errors` is what failed the validation: the form validator's result, or the field errors */
-    submitFail: [errors: FormValidateResult<Values>, values: Partial<Values>, e?: SubmitEvent];
+export interface FormEmits<Values extends Record<string, any> = any, Output = Values> {
+    submit: [values: Output, e?: SubmitEvent];
+    /** `errors` is the error tree of the failed fields, or what the Form `validator` threw */
+    submitFail: [errors: Partial<AllErrors<Values>>, values: Partial<Values>, e?: SubmitEvent];
     reset: [];
     change: [formState: FormState<Values>];
     valueChange: [values: Values, changedValues: Partial<Values>];
-    errorChange: [errors: AllErrors<Values>, changedError?: Partial<Record<FieldPath<Values>, FieldError>>];
-    getFormApi: [formApi: FormApi<Values>];
+    errorChange: [errors: AllErrors<Values>, changedError?: Partial<Record<FieldPath<Values>, FieldError | undefined>>];
+    getFormApi: [formApi: FormApi<Values, Output>];
 }
 
-export interface FormDefaultSlotProps<Values extends Record<string, any> = any> {
+export interface FormDefaultSlotProps<Values extends Record<string, any> = any, Output = Values> {
     formState: FormState<Values>;
-    formApi: FormApi<Values>;
+    formApi: FormApi<Values, Output>;
     values: Values;
 }
 
-export interface FormSlots<Values extends Record<string, any> = any> {
-    default?: (props: FormDefaultSlotProps<Values>) => VNode[];
+export interface FormSlots<Values extends Record<string, any> = any, Output = Values> {
+    default?: (props: FormDefaultSlotProps<Values, Output>) => VNode[];
 }
 
-export interface FormHandle<Values extends Record<string, any> = any> {
-    formApi: FormApi<Values>;
+export interface FormHandle<Values extends Record<string, any> = any, Output = Values> {
+    formApi: FormApi<Values, Output>;
 }
 
 export interface CommonFieldProps {
@@ -114,7 +111,7 @@ export interface CommonFieldProps {
     noErrorMessage?: boolean;
     /** Takes over only the data flow: no Label, ErrorMessage or extra text, the DOM of the bare component */
     pure?: boolean;
-    /** Keeps the value, error and touched state while the field is unmounted, and restores them on remount */
+    /** Keeps the value, error and touched state while the field is unmounted, and restores them on remount; unset follows the ArrayField, then the Form */
     keepState?: boolean;
     allowEmptyString?: boolean;
     /** Keep the key in the form values when the value becomes undefined; falls back to the Form's `allowEmpty` */
@@ -122,8 +119,10 @@ export interface CommonFieldProps {
     /** A changed value equal to it is stored as undefined, unless empty values are allowed; defaults to '' */
     emptyValue?: unknown;
     initValue?: unknown;
+    /** Exclusive with `validator` at call sites (`FieldProps`) */
     rules?: RuleItem[];
-    validator?: (fieldValue: any, values: Record<string, any>) => FieldValidateResult | Promise<FieldValidateResult>;
+    /** A function returning the errors, or a Standard Schema run on the field value */
+    validator?: FieldValidator;
     transform?: (fieldValue: any) => any;
     convert?: (fieldValue: any) => any;
     trigger?: FieldValidateTriggerType;
@@ -166,7 +165,8 @@ type HandlerKey<E extends string> = `on${Capitalize<Camelize<E>>}`;
 
 type AppendLatest<P, H extends string> = P extends unknown ? (H extends keyof P ? (NonNullable<P[H]> extends (...args: infer A) => any ? { [Key in H]?: (...args: [...A, latestValues: Record<string, any>]) => void } : object) : object) : never;
 
-export type FieldProps<P, K extends string = 'modelValue', E extends string = 'change'> = Omit<P, keyof CommonFieldProps | ValueKeys<K> | HandlerKey<E> | 'insetLabelId'> & AppendLatest<P, HandlerKey<E>> & CommonFieldProps & { [V in ValueKeys<K>]?: never };
+// ExclusiveFieldValidation stays outside every Omit: Omit does not distribute over a union and would merge the two sides
+export type FieldProps<P, K extends string = 'modelValue', E extends string = 'change'> = Omit<P, keyof CommonFieldProps | ValueKeys<K> | HandlerKey<E> | 'insetLabelId'> & AppendLatest<P, HandlerKey<E>> & CommonFieldProps & ExclusiveFieldValidation & { [V in ValueKeys<K>]?: never };
 
 /** A field's template ref; `control` is the wrapped component's own handle */
 export interface FieldHandle<H = unknown> {
@@ -187,6 +187,8 @@ export type FieldComponent<C, K extends string = 'modelValue', E extends string 
 export interface ArrayFieldProps {
     field: string;
     initValue?: unknown[];
+    /** Keeps the rows in the form values while the ArrayField is unmounted, and shows them again on remount; unset follows an outer ArrayField, then the Form. The row fields follow it */
+    keepState?: boolean;
 }
 
 export interface ArrayFieldItem {
@@ -200,6 +202,8 @@ export interface ArrayFieldSlotProps {
     /** Inserts an empty row before `index`, or appends one; an event argument appends */
     onAdd: (index?: number | Event) => void;
     onAddWithInitValue: (row: unknown, index?: number) => void;
+    /** Moves the row at `from` to `to` with its key, values, errors and touched; indexes are clamped to the rows */
+    onMove: (from: number, to: number) => void;
 }
 
 export interface ArrayFieldSlots {
@@ -207,6 +211,7 @@ export interface ArrayFieldSlots {
 }
 
 export interface FormErrorMessageProps {
+    /** The messages are joined by ', '; `['']` is an error without a text, which renders nothing */
     error?: FieldError;
     showValidateIcon?: boolean;
     validateStatus?: ValidateStatus;
@@ -254,3 +259,28 @@ export interface FormInputGroupSlots {
     labelExtra?: () => VNode[];
     extraText?: () => VNode[];
 }
+
+export interface SchemaFieldRenderContext {
+    node: SchemaFieldNode;
+    field: string;
+}
+
+/** Renders a schema node in place of the built-in control, its subtree included */
+export type SchemaFieldRenderer = (context: SchemaFieldRenderContext) => VNodeChild;
+
+/** The props SchemaForm passes on to its SchemaField */
+export interface SchemaFieldSharedProps {
+    /** Takes precedence over the JSON Schema exported from the Form `schema` */
+    jsonSchema?: JsonSchema;
+    /** Field components by `format`, then by `SchemaFieldKind`; they receive the props of the built-in control */
+    widgets?: Record<string, Component>;
+    /** Renderers by node pattern, array items as `[]`: `contacts[].email` */
+    renderField?: Record<string, SchemaFieldRenderer>;
+}
+
+export interface SchemaFieldProps extends SchemaFieldSharedProps {
+    /** Path of the node to render; the root by default */
+    field?: string;
+}
+
+export type SchemaFormProps<Values extends Record<string, any> = any, Output = Values> = SchemaFieldSharedProps & FormProps<Values, Output>;

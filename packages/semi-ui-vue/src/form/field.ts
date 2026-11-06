@@ -1,4 +1,5 @@
 import type { VNode } from 'vue';
+import type { ExclusiveFieldValidation } from '@fibrae/semi-foundation/form/interface';
 import type { ElementProps, EmitHandlers, EmitProps } from '../_base/element-props';
 import AutoComplete, { type AutoCompleteEmits, type AutoCompleteHandle, type AutoCompleteItems, type AutoCompleteProps, type AutoCompleteSlots } from '../auto-complete';
 import Cascader, { type CascaderEmits, type CascaderHandle, type CascaderProps, type CascaderSlots } from '../cascader';
@@ -61,7 +62,7 @@ type FieldPropsOf<C> = InstanceType<FieldComponent<C>>['$props'];
 // change is not split into one signature per case: a template types its listener from the props' onChange alone, so a
 // union of the two would leave the listener's parameters untyped.
 type OptionalFieldComponent<C> = new () => Omit<InstanceType<FieldComponent<C>>, '$props'> & {
-    $props: Omit<FieldPropsOf<C>, 'field' | 'onChange'> & { field?: string; onChange?: OptionalLatestValues<FieldPropsOf<C>> };
+    $props: Omit<FieldPropsOf<C>, 'field' | 'onChange'> & ExclusiveFieldValidation & { field?: string; onChange?: OptionalLatestValues<FieldPropsOf<C>> };
 };
 
 export const FormInput: FieldComponent<typeof Input> = withField(Input);

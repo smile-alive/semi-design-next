@@ -4,26 +4,26 @@ import { Form, FormInput } from '..';
 
 function counter(text: string) {
     const state = { created: 0 };
-    const Counted = () => {
+    function Counted() {
         state.created += 1;
         return text;
-    };
+    }
     return { state, Counted };
 }
 
 describe('不创建未插入的 JSX', () => {
     it('ErrorMessage 有 error 时不创建 helpText', async () => {
         const help = counter('help text');
-        const { html, errors } = await renderServer({ render: () => <Form.ErrorMessage error="bad" helpText={<help.Counted />} /> });
+        const { html, errors } = await renderServer({ render: () => <Form.ErrorMessage error={['bad']} helpText={<help.Counted />} /> });
         expect(errors).toEqual([]);
         expect(html).toContain('bad');
         expect(html).not.toContain('help text');
         expect(help.state.created).toBe(0);
     });
 
-    it('ErrorMessage 的空数组 error 不创建 helpText', async () => {
+    it("ErrorMessage 的 error 为 [''] 时不创建 helpText", async () => {
         const help = counter('help text');
-        const { errors } = await renderServer({ render: () => <Form.ErrorMessage error={[false, false] as never} helpText={<help.Counted />} /> });
+        const { errors } = await renderServer({ render: () => <Form.ErrorMessage error={['']} helpText={<help.Counted />} /> });
         expect(errors).toEqual([]);
         expect(help.state.created).toBe(0);
     });

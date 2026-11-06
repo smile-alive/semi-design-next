@@ -27,7 +27,7 @@ import type { DropdownProps } from '../dropdown/interface';
 import type { EmptyProps } from '../empty/interface';
 import type { FeedbackProps } from '../feedback/interface';
 import type { FloatButtonProps, FloatButtonGroupProps } from '../float-button/interface';
-import type { ArrayFieldProps, FormProps } from '../form/interface';
+import type { ArrayFieldProps, FormProps, SchemaFieldProps, SchemaFieldSharedProps } from '../form/interface';
 import type { ColProps, RowProps } from '../grid/interface';
 import type { HighlightProps } from '../highlight/interface';
 import type { HotKeysProps } from '../hot-keys/interface';
@@ -172,6 +172,9 @@ export interface OverrideDefaultProps {
     MarkdownRender?: GlobalDefaults<MarkdownRenderProps>;
     Form?: GlobalDefaults<FormProps>;
     ArrayField?: GlobalDefaults<ArrayFieldProps>;
+    SchemaField?: GlobalDefaults<SchemaFieldProps>;
+    /** The Form props of a SchemaForm read the Form defaults */
+    SchemaForm?: GlobalDefaults<SchemaFieldSharedProps>;
 }
 
 export interface SemiGlobalConfig {

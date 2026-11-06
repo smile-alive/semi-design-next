@@ -5,6 +5,8 @@ export { default as FormErrorMessage } from './error-message.vue';
 export { default as FormSection } from './section.vue';
 export { default as FormSlot } from './form-slot.vue';
 export { default as FormInputGroup } from './input-group.vue';
+export { default as SchemaField } from './schema-field.vue';
+export { default as SchemaForm } from './schema-form.vue';
 
 export { default as withField } from './with-field';
 export { default as useForm } from './use-form';
@@ -21,12 +23,13 @@ export type {
     CommonFieldProps,
     FieldComponent,
     FieldError,
+    FieldErrorInput,
     FieldHandle,
     FieldLabel,
     FieldProps,
     FieldShellSlots,
-    FieldValidateResult,
     FieldValidateTriggerType,
+    FieldValidator,
     FormApi,
     FormDefaultSlotProps,
     FormEmits,
@@ -42,8 +45,17 @@ export type {
     FormSlotSlots,
     FormSlots,
     FormState,
+    FormValidator,
+    JsonSchema,
     LabelProps as FormLabelProps,
     LabelSlots as FormLabelSlots,
     RuleItem,
+    RuleType,
+    SchemaFieldKind,
+    SchemaFieldNode,
+    SchemaFieldProps,
+    SchemaFieldRenderContext,
+    SchemaFieldRenderer,
+    SchemaFormProps,
     WithFieldOptions,
 } from './interface';

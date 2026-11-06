@@ -79,14 +79,14 @@ describe('getFieldAriaProps', () => {
     it('helpText 只在没有错误且渲染 ErrorMessage 时描述控件，extraText 只在自身布局中描述控件', () => {
         const withTexts = { ...base, hasHelpText: true, hasExtraText: true, own: { 'aria-describedby': 'mine' } };
         expect(getFieldAriaProps(withTexts)['aria-describedby']).toBe('mine f-helpText f-extraText');
-        expect(getFieldAriaProps({ ...withTexts, error: 'err' })['aria-describedby']).toBe('mine f-extraText');
-        expect(getFieldAriaProps({ ...withTexts, error: '', shownStatus: 'error' })['aria-describedby']).toBe('mine f-extraText');
+        expect(getFieldAriaProps({ ...withTexts, error: ['err'] })['aria-describedby']).toBe('mine f-extraText');
+        expect(getFieldAriaProps({ ...withTexts, error: [''], shownStatus: 'error' })['aria-describedby']).toBe('mine f-extraText');
         expect(getFieldAriaProps({ ...withTexts, noErrorMessage: true })['aria-describedby']).toBe('mine f-extraText');
         expect(getFieldAriaProps({ ...withTexts, inGroup: true })['aria-describedby']).toBe('mine');
     });
 
     it('校验失败或 validateStatus 为 error 时带 aria-invalid；有内容的错误由自身 ErrorMessage 渲染时带 aria-errormessage', () => {
-        const failed = { ...base, status: 'error', shownStatus: 'error', error: 'err', errorHasContent: true };
+        const failed = { ...base, status: 'error', shownStatus: 'error', error: ['err'], errorHasContent: true };
         expect(getFieldAriaProps(failed)).toMatchObject({ 'aria-invalid': true, 'aria-errormessage': 'f-errormessage' });
         expect(getFieldAriaProps({ ...failed, shownStatus: 'warning' })).toMatchObject({ 'aria-invalid': true, 'aria-errormessage': 'f-errormessage' });
         expect(getFieldAriaProps({ ...base, shownStatus: 'error' })).toMatchObject({ 'aria-invalid': true });
@@ -138,6 +138,5 @@ describe('cloneFormValue', () => {
         expect(Array.isArray(copy)).toBe(true);
         expect(copy['4294967295']).toBe('x');
         expect(warn).toHaveBeenCalledOnce();
-        warn.mockRestore();
     });
 });

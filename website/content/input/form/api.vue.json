@@ -30,6 +30,10 @@
                 "zh-CN": "表单的初始值，仅在 Form 创建时复制一次。",
                 "en-US": "Initial values of the form, copied once when the Form is created."
             },
+            "keepState": {
+                "zh-CN": "字段卸载后是否保留它的值、错误和 touched，重新挂载时按路径恢复。字段、ArrayField 未设置时取这里的值。",
+                "en-US": "Whether an unmounted field keeps its value, error and touched state, restored by path when it mounts again. Fields and ArrayFields without their own setting use this value."
+            },
             "labelAlign": {
                 "zh-CN": "统一应用在每个字段上的 label 文本对齐方式，字段上的同名属性优先。",
                 "en-US": "Text alignment of the label of every field. The same property on a field takes precedence."
@@ -66,13 +70,17 @@
                 "zh-CN": "统一应用在每个字段上的校验时机，可选 change、blur、mount、custom 或其数组。字段上的同名属性优先。",
                 "en-US": "When every field validates: change, blur, mount, custom, or an array of them. The same property on a field takes precedence."
             },
+            "schemaDebounce": {
+                "zh-CN": "配置了 `schema` 时，值变化触发的校验在输入停顿多少毫秒后才运行；submit、formApi.validate 与 blur 触发的校验不等待。",
+                "en-US": "With `schema`, how many milliseconds of pause in input a change-triggered validation waits for. Validation on submit, formApi.validate and blur does not wait."
+            },
             "schema": {
                 "zh-CN": "实现了 Standard Schema 的校验对象（如 Zod、Valibot、ArkType），与字段的 validator、rules 互斥，设置后它们不再运行。校验全部字段通过后，`submit` 事件与 formApi.validate 拿到 schema 的输出。同时传 `validator` 时只用 `validator`。",
                 "en-US": "A Standard Schema object (Zod, Valibot, ArkType and so on), mutually exclusive with the validator and rules of the fields, which no longer run. Once all fields pass, the `submit` event and formApi.validate receive the schema's output. When `validator` is also set, only `validator` applies."
             },
             "validator": {
-                "zh-CN": "Form 级别的校验函数，submit 与 formApi.validate 时调用，支持返回 Promise。设置后字段自身的 validator 与 rules 不再生效。返回空字符串或空对象表示通过，失败时返回以字段名为 key 的错误对象。",
-                "en-US": "Form-level validation, called on submit and formApi.validate and allowed to return a Promise. When set, the validator and rules of the fields no longer apply. An empty string or object means valid; on failure return an object keyed by field name."
+                "zh-CN": "Form 级别的校验函数，submit 与 formApi.validate 时调用，支持返回 Promise，与 `schema` 互斥。设置后字段自身的 validator 与 rules 不再生效。返回空值或空对象表示通过，失败时返回与 values 结构相同的错误对象，每个错误是字符串或字符串数组。",
+                "en-US": "Form-level validation, called on submit and formApi.validate and allowed to return a Promise. It excludes `schema`. When set, the validator and rules of the fields no longer apply. An empty value or object means valid; on failure return an error object shaped like the values, each error a string or a string array."
             },
             "wrapperCol": {
                 "zh-CN": "统一应用在每个字段上的控件栅格布局，同 Col 的 span、offset 等属性，需与 labelCol 一起设置。",
@@ -85,8 +93,8 @@
                 "en-US": "Emitted when the form state changes: a field mounts, unmounts, changes its value, blurs, or changes its validation state or error. Receives formState. It has the name of the native change event and hides it."
             },
             "errorChange": {
-                "zh-CN": "校验状态更新时触发，参数为全部错误和本次变化的字段错误。validate、submit、reset 等批量操作只触发一次，静默校验不触发。",
-                "en-US": "Emitted when validation state changes. Receives all errors and the errors that changed. Batch operations such as validate, submit and reset emit once; silent validation does not emit."
+                "zh-CN": "校验状态更新时触发，参数为全部错误和本次变化的字段错误，每个错误是字符串数组。validate、submit、reset 等批量操作只触发一次，静默校验与内容相同的重复校验不触发。",
+                "en-US": "Emitted when validation state changes. Receives all errors and the errors that changed, each error a string array. Batch operations such as validate, submit and reset emit once; silent validation and a repeated validation with the same errors do not emit."
             },
             "getFormApi": {
                 "zh-CN": "Form 挂载后触发，参数为 formApi。",
@@ -97,12 +105,12 @@
                 "en-US": "Emitted when a reset button is clicked or formApi.reset is called. It has the name of the native reset event and hides it."
             },
             "submit": {
-                "zh-CN": "点击提交按钮或调用 formApi.submitForm 且校验通过后触发，参数为 values 与提交事件。与原生 submit 事件同名，会遮住原生事件。",
-                "en-US": "Emitted when a submit button is clicked or formApi.submitForm is called and validation passes. Receives values and the submit event. It has the name of the native submit event and hides it."
+                "zh-CN": "点击提交按钮或调用 formApi.submitForm 且校验通过后触发，参数为 values 与提交事件；配置了 `schema` 时 values 是 schema 的输出。与原生 submit 事件同名，会遮住原生事件。",
+                "en-US": "Emitted when a submit button is clicked or formApi.submitForm is called and validation passes. Receives values and the submit event; with `schema`, values are the schema's output. It has the name of the native submit event and hides it."
             },
             "submitFail": {
-                "zh-CN": "点击提交按钮或调用 formApi.submitForm 且校验失败后触发，参数为 errors、values 与提交事件。",
-                "en-US": "Emitted when a submit button is clicked or formApi.submitForm is called and validation fails. Receives errors, values and the submit event."
+                "zh-CN": "点击提交按钮或调用 formApi.submitForm 且校验失败后触发，参数为 errors、values 与提交事件。errors 的每个错误是字符串数组；校验函数抛出的异常原样传入。",
+                "en-US": "Emitted when a submit button is clicked or formApi.submitForm is called and validation fails. Receives errors, values and the submit event. Each error in errors is a string array; an exception thrown by a validator is passed as is."
             },
             "valueChange": {
                 "zh-CN": "字段的值变化时触发，参数为全部 values 与本次变化的字段值。",
@@ -127,13 +135,17 @@
             "initValue": {
                 "zh-CN": "数组的初始值，必须是数组；与 Form 的 initValues 同时配置时优先。",
                 "en-US": "Initial value of the array, which must be an array. It takes precedence over the initValues of the Form."
+            },
+            "keepState": {
+                "zh-CN": "卸载时是否保留整组数据，也是行内字段未设置 keepState 时的默认值；未设置时取外层 ArrayField 或 Form 的 keepState。保留时重新挂载按保留的值渲染各行。",
+                "en-US": "Whether the whole array keeps its data when unmounted, and the default keepState of the fields in its rows. Defaults to the keepState of the outer ArrayField or the Form. When kept, the rows render from the kept values on remount."
             }
         },
         "events": {},
         "slots": {
             "default": {
-                "zh-CN": "各行内容，作用域参数为 arrayFields、onAdd 与 onAddWithInitValue。",
-                "en-US": "The rows. The scope provides arrayFields, onAdd and onAddWithInitValue."
+                "zh-CN": "各行内容，作用域参数为 arrayFields、onAdd、onAddWithInitValue 与 onMove。`onMove(from, to)` 把一行连同它的值、错误和 touched 移到目标位置，越界的下标按首尾处理。",
+                "en-US": "The rows. The scope provides arrayFields, onAdd, onAddWithInitValue and onMove. `onMove(from, to)` moves a row with its values, errors and touched state, clamping indexes out of range."
             }
         },
         "exposed": {}
@@ -191,8 +203,8 @@
         "source": "packages/semi-ui-vue/src/form/error-message.vue",
         "props": {
             "error": {
-                "zh-CN": "错误信息。字符串直接显示，数组会合并其中的错误；true 只显示错误态容器，没有文本；false 与空值不渲染。",
-                "en-US": "The error. A string is shown as is and an array is joined. true shows the error container without text; false and empty values render nothing."
+                "zh-CN": "错误信息，字符串数组，多条以逗号连接显示。有错误时不显示 helpText；`['']` 表示校验失败但没有文本，不渲染内容；空数组与空值视为没有错误。",
+                "en-US": "The error, a string array whose messages are joined with commas. helpText is hidden while there is an error; `['']` means failed without text and renders nothing; an empty array or empty value means no error."
             },
             "errorMessageId": {
                 "zh-CN": "错误文本元素的 id，供 aria-errormessage 引用。",
@@ -248,8 +260,8 @@
         "source": "packages/semi-ui-vue/src/form/form-slot.vue",
         "props": {
             "error": {
-                "zh-CN": "错误信息，渲染在内容之后；不传则不显示。",
-                "en-US": "The error, rendered after the content. Nothing shows when omitted."
+                "zh-CN": "错误信息，字符串数组，渲染在内容之后；不传则不显示。",
+                "en-US": "The error, a string array rendered after the content. Nothing shows when omitted."
             },
             "label": {
                 "zh-CN": "Label 的文本，或 text、extra、align、width、required、optional 等 Label 配置；label 插槽优先。",
@@ -322,6 +334,82 @@
             "labelExtra": {
                 "zh-CN": "跟随在 Group Label 文本后的内容。",
                 "en-US": "Content after the group label text."
+            }
+        },
+        "exposed": {}
+    },
+    "schema-field": {
+        "source": "packages/semi-ui-vue/src/form/schema-field.vue",
+        "props": {
+            "field": {
+                "zh-CN": "要渲染的节点路径，默认为根；根对象不包 Section，其他对象渲染为以 title 为标题的 Section。",
+                "en-US": "Path of the node to render, the root by default. The root object renders without a Section; other objects render as a Section titled by their title."
+            },
+            "jsonSchema": {
+                "zh-CN": "要渲染的 JSON Schema，优先于从 Form 的 `schema` 导出的 JSON Schema；两者都没有时不渲染，开发模式下警告。",
+                "en-US": "The JSON Schema to render. It takes precedence over the JSON Schema exported from the Form's `schema`; with neither, nothing renders and a warning is logged in development."
+            },
+            "renderField": {
+                "zh-CN": "按节点路径接管渲染，数组的行写作 `[]`（如 `contacts[].email`），参数为 `{ node, field }`，返回 VNode；命中时由它渲染这个节点和它的子节点。",
+                "en-US": "Renderers by node path, with array rows written as `[]` (such as `contacts[].email`), called with `{ node, field }` and returning VNodes. A match renders the node and its subtree."
+            },
+            "widgets": {
+                "zh-CN": "替换内置控件的字段组件，键是 JSON Schema 的 `format` 或控件种类（input、textarea、number、switch、select），先按 `format` 再按种类查找；组件收到与内置控件相同的属性。",
+                "en-US": "Field components in place of the built-in controls, keyed by the JSON Schema `format` or by kind (input, textarea, number, switch, select), looked up by `format` first. A component receives the props of the built-in control."
+            }
+        },
+        "events": {},
+        "slots": {},
+        "exposed": {}
+    },
+    "schema-form": {
+        "source": "packages/semi-ui-vue/src/form/schema-form.vue",
+        "props": {
+            "allowEmpty": { "zh-CN": "同 Form 的 allowEmpty。", "en-US": "The allowEmpty of Form." },
+            "autoScrollToError": { "zh-CN": "同 Form 的 autoScrollToError。", "en-US": "The autoScrollToError of Form." },
+            "disabled": { "zh-CN": "同 Form 的 disabled。", "en-US": "The disabled of Form." },
+            "extraTextPosition": { "zh-CN": "同 Form 的 extraTextPosition。", "en-US": "The extraTextPosition of Form." },
+            "form": { "zh-CN": "同 Form 的 form。", "en-US": "The form of Form." },
+            "id": { "zh-CN": "同 Form 的 id。", "en-US": "The id of Form." },
+            "initValues": { "zh-CN": "同 Form 的 initValues。", "en-US": "The initValues of Form." },
+            "jsonSchema": {
+                "zh-CN": "要渲染的 JSON Schema，优先于从 `schema` 导出的 JSON Schema。Form 的事件原样传给内部的 Form。",
+                "en-US": "The JSON Schema to render. It takes precedence over the JSON Schema exported from `schema`. The events of Form pass through to the inner Form."
+            },
+            "keepState": { "zh-CN": "同 Form 的 keepState。", "en-US": "The keepState of Form." },
+            "labelAlign": { "zh-CN": "同 Form 的 labelAlign。", "en-US": "The labelAlign of Form." },
+            "labelCol": { "zh-CN": "同 Form 的 labelCol。", "en-US": "The labelCol of Form." },
+            "labelPosition": { "zh-CN": "同 Form 的 labelPosition。", "en-US": "The labelPosition of Form." },
+            "labelWidth": { "zh-CN": "同 Form 的 labelWidth。", "en-US": "The labelWidth of Form." },
+            "layout": { "zh-CN": "同 Form 的 layout。", "en-US": "The layout of Form." },
+            "renderField": {
+                "zh-CN": "同 SchemaField 的 renderField。",
+                "en-US": "The renderField of SchemaField."
+            },
+            "schema": {
+                "zh-CN": "实现了 Standard Schema 的校验对象（如 Zod、Valibot、ArkType），用于校验，并在实现了 Standard JSON Schema 时导出要渲染的 JSON Schema。校验全部字段通过后，`submit` 事件拿到 schema 的输出。",
+                "en-US": "A Standard Schema object (Zod, Valibot, ArkType and so on) that validates the form and, when it implements Standard JSON Schema, gives the JSON Schema to render. Once all fields pass, the `submit` event receives the schema's output."
+            },
+            "schemaDebounce": { "zh-CN": "同 Form 的 schemaDebounce。", "en-US": "The schemaDebounce of Form." },
+            "showValidateIcon": { "zh-CN": "同 Form 的 showValidateIcon。", "en-US": "The showValidateIcon of Form." },
+            "stopPropagation": { "zh-CN": "同 Form 的 stopPropagation。", "en-US": "The stopPropagation of Form." },
+            "stopValidateWithError": { "zh-CN": "同 Form 的 stopValidateWithError。", "en-US": "The stopValidateWithError of Form." },
+            "trigger": { "zh-CN": "同 Form 的 trigger。", "en-US": "The trigger of Form." },
+            "validator": {
+                "zh-CN": "Form 级别的校验函数，与 `schema` 互斥，用法同 Form 的 validator。",
+                "en-US": "Form-level validation, exclusive with `schema`; works as the validator of Form."
+            },
+            "widgets": {
+                "zh-CN": "同 SchemaField 的 widgets。",
+                "en-US": "The widgets of SchemaField."
+            },
+            "wrapperCol": { "zh-CN": "同 Form 的 wrapperCol。", "en-US": "The wrapperCol of Form." }
+        },
+        "events": {},
+        "slots": {
+            "default": {
+                "zh-CN": "渲染在字段之后的内容，适合放提交按钮；作用域参数同 Form 的默认插槽。",
+                "en-US": "Content rendered after the fields, such as a submit button. The scope is that of the Form's default slot."
             }
         },
         "exposed": {}

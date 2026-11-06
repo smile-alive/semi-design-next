@@ -2,8 +2,9 @@ import ApiType from '#/components/ApiType.astro';
 
 **Props**
 
-| Property  | Description                                                                                                               | Type                                                                                   | Default |
-| --------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ------- |
-| children  | Required. A function that renders the rows. It receives `{ arrayFields, add, addWithInitValue }` and returns a ReactNode. | <ApiType detail={"(props: ArrayFieldChildrenProps) => React.ReactNode"}>Type</ApiType> | -       |
-| field     | Required. Path of the array in formState.values. For rows with fields `a[0].name` and `a[1].name`, pass `a`.              | `string`                                                                               | -       |
-| initValue | Initial value of the array, which must be an array. It takes precedence over the initValues of the Form.                  | `any[]`                                                                                | -       |
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| children | Required. A function that renders the rows. It receives `{ arrayFields, add, addWithInitValue, move }` and returns a ReactNode. `move(from, to)` moves a row with its values, errors and touched state, clamping indexes out of range. | <ApiType detail={"(props: ArrayFieldChildrenProps) => React.ReactNode"}>Type</ApiType> | - |
+| field | Required. Path of the array in formState.values. For rows with fields `a[0].name` and `a[1].name`, pass `a`. | `string` | - |
+| initValue | Initial value of the array, which must be an array. It takes precedence over the initValues of the Form. | `any[]` | - |
+| keepState | Whether the whole array keeps its data when unmounted, and the default keepState of the fields in its rows. Defaults to the Form's keepState. When kept, the rows render from the kept values on remount. | `boolean` | - |

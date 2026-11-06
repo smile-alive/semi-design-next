@@ -80,11 +80,11 @@ describe('Form hooks', () => {
         fieldApi?.setError('bad');
         fieldApi?.setTouched(true);
         await nextTick();
-        expect(fieldApi?.getError()).toBe('bad');
+        expect(fieldApi?.getError()).toEqual(['bad']);
         expect(fieldApi?.getTouched()).toBe(true);
         expect(JSON.parse(screen.getByTestId('field').textContent ?? '')).toEqual({
             value: 'semi',
-            error: 'bad',
+            error: ['bad'],
             touched: true,
         });
     });

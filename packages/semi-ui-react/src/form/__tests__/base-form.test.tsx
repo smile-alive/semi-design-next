@@ -52,12 +52,12 @@ describe('Form-baseForm', () => {
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-form-vertical`)).toBeNull();
     });
 
-    it('labelPosition', () => {
+    it('labelPosition 决定字段的标签位置', () => {
         const { container } = renderForm({ labelPosition: 'left', children: FormInput });
         expect(container.querySelector(FieldCls)).toHaveAttribute('x-label-pos', 'left');
     });
 
-    it('labelWidth', () => {
+    it('labelWidth 设置所有标签的宽度，支持数字与字符串', () => {
         const { container, unmount } = renderForm({ labelWidth: 200, children: fields });
         let labels = container.querySelectorAll(labelSelector);
         expect(labels).toHaveLength(2);
@@ -186,7 +186,7 @@ describe('Form-baseForm', () => {
         expect(onSubmit.mock.calls[0][0]).toEqual({ UserName: 'semi', Password: 'design' });
     });
 
-    it('onSubmitFail', async () => {
+    it('校验失败时调用 onSubmitFail 并交出各字段错误，不调用 onSubmit', async () => {
         let api = null;
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         const onSubmitFail = vi.fn<(...args: unknown[]) => void>();
@@ -214,13 +214,13 @@ describe('Form-baseForm', () => {
         await waitFor(() => expect(onSubmitFail).toHaveBeenCalledTimes(1));
         expect(onSubmit).not.toHaveBeenCalled();
         expect(onSubmitFail.mock.calls[0][0]).toEqual({
-            name: emptyTips,
-            name2: emptyTips,
+            name: [emptyTips],
+            name2: [emptyTips],
         });
         expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-form-field-error-message`)).toHaveLength(2);
     });
 
-    it('onReset', () => {
+    it('reset 时调用 onReset 一次并恢复初值', () => {
         let api = null;
         const onReset = vi.fn<(...args: unknown[]) => void>();
         renderForm({
@@ -240,7 +240,7 @@ describe('Form-baseForm', () => {
         expect(getInput()).toHaveValue('a');
     });
 
-    it('allowEmpty', async () => {
+    it('allowEmpty 时提交值保留未填字段的 undefined', async () => {
         let api = null;
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         renderForm({
@@ -285,7 +285,7 @@ describe('Form-baseForm', () => {
         expect('dropped' in values).toBe(false);
     });
 
-    it('onValueChange', () => {
+    it('字段值变化时调用 onValueChange 并交出全部值', () => {
         const onValueChange = vi.fn<(...args: unknown[]) => void>();
         renderForm({
             onValueChange,
@@ -300,7 +300,7 @@ describe('Form-baseForm', () => {
         expect(onValueChange.mock.calls[0][0]).toEqual({ name: 'semi' });
     });
 
-    it('initValues', () => {
+    it('initValues 填入各字段的初值', () => {
         const { container } = renderForm({
             initValues: {
                 name: 'semi',
@@ -312,7 +312,7 @@ describe('Form-baseForm', () => {
         expect(getInput()).toHaveValue('semi');
     });
 
-    it('labelAlign', () => {
+    it('labelAlign 决定标签文字的对齐方向，默认靠左', () => {
         const { container, unmount } = renderForm({ children: fields });
         expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-form-field-label-right`)).toHaveLength(0);
         expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-form-field-label-left`)).toHaveLength(2);
@@ -321,7 +321,7 @@ describe('Form-baseForm', () => {
         expect(container2.querySelectorAll(`.${BASE_CLASS_PREFIX}-form-field-label-right`)).toHaveLength(2);
         expect(container2.querySelectorAll(`.${BASE_CLASS_PREFIX}-form-field-label-left`)).toHaveLength(0);
     });
-    it('labelCol/wrapperCol', () => {
+    it('labelCol 与 wrapperCol 把标签与控件放进对应栅格列', () => {
         const { container } = renderForm({
             wrapperCol: { span: 20 },
             labelCol: { span: 2 },
@@ -368,7 +368,7 @@ describe('Form-baseForm', () => {
         expect(lastValues()).toEqual('{}');
     });
 
-    it('disabled', () => {
+    it('disabled 禁用所有字段控件', () => {
         const { container } = renderForm({ disabled: true, children: fields });
         expect(container.querySelector('.semi-select-disabled')).not.toBeNull();
         expect(container.querySelector('.semi-input-disabled')).not.toBeNull();
@@ -391,8 +391,8 @@ describe('Form-baseForm', () => {
             },
         });
         // React 19's act does not flush the render when its callback rejects, so the rejection is asserted inside it
-        await act(() => expect(formApi.validate()).rejects.toEqual({ a: { b: err } }));
-        expect(formApi.getError('a.b')).toEqual(err);
+        await act(() => expect(formApi.validate()).rejects.toEqual({ a: { b: [err] } }));
+        expect(formApi.getError('a.b')).toEqual([err]);
         expect(document.querySelector(`[x-field-id="a.b"] .${BASE_CLASS_PREFIX}-form-field-error-message`)).toHaveTextContent(err);
     });
 
@@ -433,8 +433,8 @@ describe('Form-baseForm', () => {
                 formApi = api;
             },
         });
-        await expect(act(() => formApi.validate())).rejects.toEqual({ a: { b: err } });
-        expect(formApi.getError('a.b')).toEqual(err);
+        await expect(act(() => formApi.validate())).rejects.toEqual({ a: { b: [err] } });
+        expect(formApi.getError('a.b')).toEqual([err]);
     });
 
     it('validteFields：异步 Promise resolve，校验通过', async () => {
@@ -593,7 +593,7 @@ describe('Form-baseForm 行为', () => {
             children: <Form.Input field="name" validator={(val) => (val === 'ok' ? '' : 'bad')} />,
         });
         fireEvent.change(getInput(), { target: { value: 'x' } });
-        await waitFor(() => expect(onErrorChange).toHaveBeenLastCalledWith({ name: 'bad' }, { name: 'bad' }));
+        await waitFor(() => expect(onErrorChange).toHaveBeenLastCalledWith({ name: ['bad'] }, { name: ['bad'] }));
     });
 
     it('trigger 为 custom 时跳过变化校验，挂载时校验', async () => {
@@ -607,12 +607,12 @@ describe('Form-baseForm 行为', () => {
                 </>
             ),
         });
-        await waitFor(() => expect(formApi.getError('b')).toBe('b-err'));
+        await waitFor(() => expect(formApi.getError('b')).toEqual(['b-err']));
         fireEvent.change(document.querySelector('[x-field-id="a"] input'), { target: { value: 'x' } });
         await sleep(10);
         expect(formApi.getError('a')).toBeUndefined();
-        await act(() => expect(formApi.validate(['a'])).rejects.toEqual({ a: 'a-err', b: 'b-err' }));
-        expect(formApi.getError('a')).toBe('a-err');
+        await act(() => expect(formApi.validate(['a'])).rejects.toEqual({ a: ['a-err'], b: ['b-err'] }));
+        expect(formApi.getError('a')).toEqual(['a-err']);
     });
 
     it('stopValidateWithError 在第一条失败规则处停止', async () => {
@@ -632,18 +632,42 @@ describe('Form-baseForm 行为', () => {
         });
         await act(() => expect(formApi.validate()).rejects.toBeDefined());
         expect(formApi.getError('all')).toEqual(['required', 'second']);
-        expect(formApi.getError('first')).toBe('required');
+        expect(formApi.getError('first')).toEqual(['required']);
     });
 
-    it('keepState 在字段重新挂载时恢复其值', () => {
+    it('字段默认保留状态，重新挂载时恢复其值', () => {
         let formApi;
-        const Demo = ({ show }) => <Form getFormApi={(api) => (formApi = api)}>{show ? <Form.Input field="name" keepState /> : null}</Form>;
+        function Demo({ show }) {
+            return <Form getFormApi={(api) => (formApi = api)}>{show ? <Form.Input field="name" /> : null}</Form>;
+        }
         const { rerender } = render(<Demo show />);
         fireEvent.change(getInput(), { target: { value: 'semi' } });
         rerender(<Demo show={false} />);
         expect(formApi.getValue('name')).toBe('semi');
         rerender(<Demo show />);
         expect(getInput()).toHaveValue('semi');
+    });
+
+    it('keepState={false} 的字段卸载时清除状态，Form 的 keepState 是字段的默认值', () => {
+        let formApi;
+        function Demo({ show, formKeep, fieldKeep }: { show: boolean; formKeep?: boolean; fieldKeep?: boolean }) {
+            return (
+                <Form getFormApi={(api) => (formApi = api)} keepState={formKeep}>
+                    {show ? <Form.Input field="name" keepState={fieldKeep} /> : null}
+                </Form>
+            );
+        }
+        const { rerender } = render(<Demo fieldKeep={false} show />);
+        fireEvent.change(getInput(), { target: { value: 'semi' } });
+        rerender(<Demo fieldKeep={false} show={false} />);
+        expect(formApi.getValues()).toEqual({});
+        rerender(<Demo fieldKeep={false} show />);
+        expect(getInput()).toHaveValue('');
+
+        rerender(<Demo formKeep={false} show />);
+        fireEvent.change(getInput(), { target: { value: 'semi' } });
+        rerender(<Demo formKeep={false} show={false} />);
+        expect(formApi.getValues()).toEqual({});
     });
 
     it('挂载且字段注册完成后调用一次 getFormApi', () => {
@@ -669,15 +693,15 @@ describe('Form-baseForm 行为', () => {
     it('StrictMode 下每个字段只注册一次，卸载时注销', () => {
         let formApi;
         const onValueChange = vi.fn<(...args: unknown[]) => void>();
-        const Demo = () => {
+        function Demo() {
             const [show, setShow] = useState(true);
             return (
                 <Form getFormApi={(api) => (formApi = api)} onValueChange={onValueChange}>
-                    {show ? <Form.Input field="name" initValue="semi" /> : null}
+                    {show ? <Form.Input field="name" initValue="semi" keepState={false} /> : null}
                     <Button onClick={() => setShow(false)}>hide</Button>
                 </Form>
             );
-        };
+        }
         render(
             <StrictMode>
                 <Demo />

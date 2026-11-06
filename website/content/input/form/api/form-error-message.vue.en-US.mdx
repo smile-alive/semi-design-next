@@ -1,13 +1,13 @@
 **Props**
 
-| Property         | Description                                                                                                                                    | Type                                             | Default     |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ----------- |
-| error            | The error. A string is shown as is and an array is joined. true shows the error container without text; false and empty values render nothing. | `FieldError`                                     | `undefined` |
-| showValidateIcon | Whether to show the icon of validateStatus.                                                                                                    | `boolean`                                        | `undefined` |
-| validateStatus   | Validation status of the message: default, error, warning or success.                                                                          | `"default" \| "error" \| "success" \| "warning"` | `undefined` |
-| isInInputGroup   | Whether it is inside an InputGroup. When it and showValidateIcon are true, the error icon shows whatever validateStatus is.                    | `boolean`                                        | `undefined` |
-| errorMessageId   | The id of the error text element, referenced by aria-errormessage.                                                                             | `string`                                         | `undefined` |
-| helpTextId       | The id of the help text element, referenced by aria-describedby.                                                                               | `string`                                         | `undefined` |
+| Property         | Description                                                                                                                                                                                                      | Type                                             | Default     |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ----------- |
+| error            | The error, a string array whose messages are joined with commas. helpText is hidden while there is an error; `['']` means failed without text and renders nothing; an empty array or empty value means no error. | `FieldError`                                     | `undefined` |
+| showValidateIcon | Whether to show the icon of validateStatus.                                                                                                                                                                      | `boolean`                                        | `undefined` |
+| validateStatus   | Validation status of the message: default, error, warning or success.                                                                                                                                            | `"default" \| "error" \| "success" \| "warning"` | `undefined` |
+| isInInputGroup   | Whether it is inside an InputGroup. When it and showValidateIcon are true, the error icon shows whatever validateStatus is.                                                                                      | `boolean`                                        | `undefined` |
+| errorMessageId   | The id of the error text element, referenced by aria-errormessage.                                                                                                                                               | `string`                                         | `undefined` |
+| helpTextId       | The id of the help text element, referenced by aria-describedby.                                                                                                                                                 | `string`                                         | `undefined` |
 
 **Events**
 

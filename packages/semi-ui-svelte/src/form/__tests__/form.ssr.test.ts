@@ -1,8 +1,11 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vite-plus/test';
+import * as z from 'zod';
+import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import { createStore } from '../../_base/__tests__/store.svelte';
 import CompositeFixture from './composite-fixture.svelte';
 import FormFixture, { type FieldSpec, type FormFixtureStore } from './form-fixture.svelte';
+import SchemaFixture, { type SchemaFixtureStore } from './schema-fixture.svelte';
 
 function renderForm(form: Record<string, unknown>, fields: FieldSpec[]) {
     const store = createStore<FormFixtureStore>({ form, fields });
@@ -39,5 +42,15 @@ describe('Svelte Form 服务端首帧', () => {
         expect(array.match(/data-testid="row"/g)).toHaveLength(2);
         expect(array).toMatch(/<input[^>]*value="a"/);
         expect(array).toMatch(/<input[^>]*value="b"/);
+    });
+
+    it('SchemaField 首帧按 schema 渲染字段、初值与数组行，必填来自 schema', () => {
+        const schema = z.object({ name: z.string().meta({ title: '名称' }), items: z.array(z.object({ title: z.string() })) });
+        const store = createStore<SchemaFixtureStore>({ formProps: { schema, initValues: { name: 'semi', items: [{ title: 'a' }] } } });
+        const body = render(SchemaFixture, { props: { store } }).body;
+        expect(body).toMatch(/<input[^>]*value="semi"/);
+        expect(body).toMatch(/<input[^>]*value="a"/);
+        expect(body).toContain('semi-form-field-label-required');
+        expect(body).toContain(ja_JP.Form.addItem);
     });
 });

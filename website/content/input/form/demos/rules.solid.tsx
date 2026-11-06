@@ -10,9 +10,9 @@ const style = { width: '100%' };
 const rules = [
     { required: true, message: 'required error' },
     { type: 'string' as const, message: 'type error' },
-    { validator: (_rule: unknown, value: unknown) => value === 'semi', message: 'should be semi' },
+    { validator: (value: unknown) => value === 'semi', message: 'should be semi' },
     {
-        validator: (_rule: unknown, value: unknown) => Boolean(typeof value === 'string' && value.startsWith('se')),
+        validator: (value: unknown) => Boolean(typeof value === 'string' && value.startsWith('se')),
         message: 'should startsWith se',
     },
 ];

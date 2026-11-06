@@ -222,3 +222,88 @@ describe('Svelte Form ArrayField 行为', () => {
         expect(getFieldInput('b[1][name]')).toHaveValue('b1');
     });
 });
+
+describe('Svelte Form ArrayField keepState 与 onMove', () => {
+    const rows = [
+        { name: 'a', type: '1' },
+        { name: 'b', type: '2' },
+        { name: 'c', type: '3' },
+    ];
+
+    it('整体卸载默认保留行，再挂载读取保留的行，reset 仍恢复最初的 initValue', async () => {
+        const { api, store } = renderArrayForm({ arrayInitValue: data });
+        await clickAddEmptyLine();
+        await typeInto(getFieldInput('data[2][name]') as HTMLInputElement, 'kept');
+        store.showArray = false;
+        await settle();
+        expect(api().getValue('data')).toEqual([...data, { name: 'kept' }]);
+        store.showArray = true;
+        await settle();
+        expect(screen.getAllByTestId('row')).toHaveLength(3);
+        expect(getFieldInput('data[2][name]')).toHaveValue('kept');
+        expect(api().getValue('data')).toEqual([...data, { name: 'kept' }]);
+        api().reset();
+        await settle();
+        expect(api().getValue('data')).toEqual(data);
+        expect(screen.getAllByTestId('row')).toHaveLength(2);
+    });
+
+    it('ArrayField 的 keepState={false} 卸载即移除行，再挂载回到 initValue', async () => {
+        const { api, store } = renderArrayForm({ arrayInitValue: data, arrayKeepState: false });
+        await typeInto(getFieldInput('data[0][name]') as HTMLInputElement, 'changed');
+        store.showArray = false;
+        await settle();
+        expect(api().getValue('data')).toBeUndefined();
+        store.showArray = true;
+        await settle();
+        expect(getFieldInput('data[0][name]')).toHaveValue(data[0].name);
+    });
+
+    it('Form 的 keepState={false} 是 ArrayField 的默认值', async () => {
+        const { api, store } = renderArrayForm({ arrayInitValue: data, formProps: { keepState: false } });
+        store.showArray = false;
+        await settle();
+        expect(api().getValue('data')).toBeUndefined();
+    });
+
+    it('删除中间行后再新增，新行为空，不复活被删行或后行的状态', async () => {
+        const { api } = renderArrayForm({ formProps: { initValues: { data: rows } } });
+        api().setError('data[1].name', 'b-error');
+        await settle();
+        await click('Remove', 1);
+        expect(api().getValue('data')).toEqual([rows[0], rows[2]]);
+        expect(getFieldInput('data[1][name]')).toHaveValue('c');
+        expect(api().getError('data[1].name')).toBeUndefined();
+        await clickAddEmptyLine();
+        expect(getFieldInput('data[2][name]')).toHaveValue('');
+        expect(getFieldInput('data[2][type]')).toHaveValue('');
+        expect(api().getValue('data')).toEqual([rows[0], rows[2]]);
+        expect(api().getError('data[1].name')).toBeUndefined();
+        expect(api().getError('data[2].name')).toBeUndefined();
+    });
+
+    it('onMove 移动行的值、错误与 key，越界索引钳制，原地移动不做事', async () => {
+        const onChange = vi.fn<(formState: FormState) => void>();
+        const { api } = renderArrayForm({ formProps: { initValues: { data: rows }, onChange } });
+        api().setError('data[0].name', 'a-error');
+        await settle();
+        const firstInput = getFieldInput('data[0][name]');
+        await click('Move down', 0);
+        expect(api().getValue('data')).toEqual([rows[1], rows[0], rows[2]]);
+        expect(getFieldInput('data[1][name]')).toBe(firstInput);
+        expect(getFieldInput('data[1][name]')).toHaveValue('a');
+        expect(api().getError('data[1].name')).toEqual(['a-error']);
+        expect(api().getError('data[0].name')).toBeUndefined();
+        await click('Move down', 1);
+        expect(api().getValue('data')).toEqual([rows[1], rows[2], rows[0]]);
+        expect(api().getError('data[2].name')).toEqual(['a-error']);
+        await click('Move out of range');
+        expect(api().getValue('data')).toEqual([rows[2], rows[0], rows[1]]);
+        expect(getFieldInput('data[1][name]')).toBe(firstInput);
+        expect(api().getError('data[1].name')).toEqual(['a-error']);
+        const calls = onChange.mock.calls.length;
+        await click('Stay', 1);
+        expect(api().getValue('data')).toEqual([rows[2], rows[0], rows[1]]);
+        expect(onChange).toHaveBeenCalledTimes(calls);
+    });
+});

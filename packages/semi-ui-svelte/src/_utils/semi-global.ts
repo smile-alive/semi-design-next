@@ -25,7 +25,7 @@ import type { DropdownProps } from '../dropdown/interface.js';
 import type { EmptyProps } from '../empty/interface.js';
 import type { FeedbackProps } from '../feedback/interface.js';
 import type { FloatButtonGroupProps, FloatButtonProps } from '../float-button/interface.js';
-import type { ArrayFieldProps, FormProps } from '../form/interface.js';
+import type { ArrayFieldProps, FormProps, SchemaFieldProps } from '../form/interface.js';
 import type { ColProps, RowProps } from '../grid/interface.js';
 import type { HighlightProps } from '../highlight/interface.js';
 import type { HotKeysProps } from '../hot-keys/interface.js';
@@ -141,6 +141,9 @@ export interface OverrideDefaultProps {
     ResizeGroup?: GlobalDefaults<ResizeGroupProps>;
     ResizeItem?: GlobalDefaults<ResizeItemProps>;
     Row?: GlobalDefaults<RowProps>;
+    SchemaField?: GlobalDefaults<SchemaFieldProps>;
+    /** Only its own props: the Form it renders reads the `Form` defaults */
+    SchemaForm?: GlobalDefaults<Omit<SchemaFieldProps, 'field'>>;
     ScrollItem?: GlobalDefaults<ScrollItemProps>;
     ScrollList?: GlobalDefaults<ScrollListProps>;
     Select?: GlobalDefaults<SelectProps>;

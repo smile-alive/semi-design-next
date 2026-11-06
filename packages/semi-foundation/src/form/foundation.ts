@@ -1,4 +1,3 @@
-import type { ValidateError } from 'async-validator';
 import { isEqual, isPlainObject } from 'es-toolkit';
 import { toPath } from 'es-toolkit/compat';
 import scrollIntoViewIfNeeded, { type Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
@@ -7,9 +6,11 @@ import isPromise from '../utils/is-promise';
 import * as ObjectUtil from '../utils/object';
 import warning from '../utils/warning';
 import { cssClasses } from './constants';
+import { type FieldError, hasErrors, isErrorLeaf, normalizeFieldError, normalizeFormErrors } from './errors';
 import type FieldStore from './field-store';
 import type { BaseFormAdapter, FormState, CallOpts, FieldRegistration, ComponentProps, setValuesConfig, ArrayFieldRegistration, ValidateOptions, ChangeFieldValueOptions, FieldSnapshot, StandardSchema, StandardSchemaIssue, StandardSchemaResult } from './interface';
-import { generateValidatesFromRules, isValid, nextUpdateKey, schemaIssuePath } from './utils';
+import { validateRules } from './rules';
+import { isValid, nextUpdateKey, schemaIssuePath } from './utils';
 
 const SILENT: CallOpts = { skipNotify: true, skipRender: true };
 
@@ -21,13 +22,31 @@ const scrollIntoView = scrollIntoViewIfNeeded as (target: Element, options: Scro
 
 export type { BaseFormAdapter } from './interface';
 
-// Same as Formik: falsy or a plain object without own keys passes. Error instances and Promises have no own keys but
-// are not plain objects, so a thrown Error still fails.
+// Falsy, or a plain object holding no error, passes. Error instances and Promises are not plain objects, so a thrown
+// Error still fails.
 function isFormValidatorPassed(result: unknown) {
     if (!result) {
         return true;
     }
-    return Object.getPrototypeOf(result) === Object.prototype && Object.keys(result).length === 0;
+    return isPlainObject(result) && !hasErrors(normalizeFormErrors(result));
+}
+
+function isStandardSchema(value: unknown): value is StandardSchema {
+    return value !== null && (typeof value === 'object' || typeof value === 'function') && '~standard' in value;
+}
+
+function issueMessages(issues: ReadonlyArray<StandardSchemaIssue>, first: boolean) {
+    const messages = issues.map((issue) => issue.message);
+    return first ? messages.slice(0, 1) : messages;
+}
+
+function moveItem<T>(items: T[], from: number, to: number) {
+    const moved = items.slice();
+    // errors and touched can be shorter than the rows; splice past the end would insert at the end instead of `to`
+    moved.length = Math.max(moved.length, from + 1, to + 1);
+    const [item] = moved.splice(from, 1);
+    moved.splice(to, 0, item);
+    return moved;
 }
 
 /** Whether `path` is `ancestor` or a path under it, compared by segment: `a[1]` is under `a`, `ab` is not */
@@ -36,13 +55,12 @@ function isPathWithin(path: string, ancestor: string) {
     return toPath(ancestor).every((segment, i) => segment === segments[i]);
 }
 
-/** One run of the Form's schema, its issues mapped onto the fields registered when it settled */
 interface SchemaRun {
     result: StandardSchemaResult<unknown>;
     /** By field path: an issue under a field holding the value as a whole belongs to that field */
-    fieldErrors: Map<string, unknown>;
+    fieldErrors: Map<string, FieldError>;
     /** By issue path, parents first: issues no registered field holds, such as those of an unmounted group */
-    detachedErrors: Map<string, unknown>;
+    detachedErrors: Map<string, FieldError>;
 }
 
 type ScrollToErrorOpts = {
@@ -59,6 +77,8 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     #registeredArrayField: Map<string, ArrayFieldRegistration>;
     // The newest non-silent validation of each field: an older one settles with it instead of writing its own result
     #validations = new Map<string, Promise<unknown>>();
+    #debounceTimer?: ReturnType<typeof setTimeout>;
+    #debouncedFields = new Set<string>();
     // The Form's own cleanup runs before its fields' (React unmounts a parent's layout effects first)
     #destroyed = false;
     // reset() of the whole Form starts a new epoch: a validation started in an older one settles without writing or
@@ -83,7 +103,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         initValues = this.adapter.cloneDeep(initValues);
 
         this.#data = {
-            values: initValues ? initValues : {},
+            values: initValues ?? {},
             errors: {},
             touched: {},
         };
@@ -135,11 +155,8 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         this.#forceUpdate();
     }
 
-    // A failed form-level validator replaces formState.errors as a whole, keys without a Field included. Only an object
-    // maps errors to paths: another result (a string) still reaches the caller through the rejection, but writing it
-    // would make later field errors spread its characters into keys.
-    #setFormErrors(errors: unknown) {
-        const formErrors = isPlainObject(errors) ? errors : {};
+    // A failed form-level validator replaces formState.errors as a whole, keys without a Field included.
+    #setFormErrors(formErrors: Record<string, any>) {
         const prevErrors = this.#data.errors;
         this.#data = { ...this.#data, errors: formErrors };
         this.#injectErrorToField(formErrors);
@@ -157,7 +174,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         const changedError: Record<string, unknown> = {};
         for (const path of fieldPaths) {
             const error = ObjectUtil.get(this.#data.errors, path);
-            if (error !== ObjectUtil.get(prevErrors, path)) {
+            if (!isEqual(error, ObjectUtil.get(prevErrors, path))) {
                 changedError[path] = error;
             }
         }
@@ -190,10 +207,13 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                 }
             };
             const fail = (errors: unknown) => {
+                // Only an object maps errors to paths: another result (a string) still reaches the caller through the
+                // rejection, but writing it would make later field errors spread its characters into keys.
+                const formErrors = isPlainObject(errors) ? normalizeFormErrors(errors) : undefined;
                 if (writes()) {
-                    this.#setFormErrors(errors);
+                    this.#setFormErrors(formErrors ?? {});
                 }
-                reject(errors);
+                reject(formErrors ?? errors);
             };
             let maybePromisedErrors;
             try {
@@ -258,12 +278,11 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                 entry.messages.push(message);
                 targets.set(target, entry);
             });
-        const fieldErrors = new Map<string, unknown>();
-        const detachedErrors = new Map<string, unknown>();
+        const fieldErrors = new Map<string, FieldError>();
+        const detachedErrors = new Map<string, FieldError>();
         targets.forEach(({ registration, messages }, target) => {
             const { stopValidateWithError } = registration ? registration.getValidateOptions() : this.getProps();
-            const error = stopValidateWithError || messages.length === 1 ? messages[0] : messages;
-            (registration ? fieldErrors : detachedErrors).set(target, error);
+            (registration ? fieldErrors : detachedErrors).set(target, stopValidateWithError ? messages.slice(0, 1) : messages);
         });
         return { fieldErrors, detachedErrors };
     }
@@ -392,7 +411,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                 if (settledRun && !silent) {
                     this.#writeDetachedErrors(detached, fieldPaths, paths);
                 }
-                // A validated field fails on any error value but undefined, '' included: a rule with `message: ''`
+                // A validated field fails on any error value but undefined, [''] included: a rule with `message: ''`
                 // fails without a text. A field with nothing to validate (null result) keeps the error set on it.
                 let errors = this.#getError();
                 let valid = !detached.length && paths.every((path, i) => (results[i] === null ? isValid(ObjectUtil.get(errors, path)) : results[i] === undefined));
@@ -499,9 +518,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         }
     }
 
-    #getField = (field: string) => {
-        return this.#fields.get(field);
-    };
+    #getField = (field: string) => this.#fields.get(field);
 
     /**
      * Settles an outdated validation without writing its result. It follows the newest one, as the Form waits on every
@@ -527,48 +544,21 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         return false;
     }
 
-    /** Resolves with the field's error value, undefined when valid */
+    /** Resolves with the field's errors, undefined when valid; a rule that throws (a bad transform) rejects */
     #validateRules(registration: FieldRegistration, value: unknown, opts: CallOpts) {
         const { field } = registration;
         const { rules, stopValidateWithError } = registration.getValidateOptions();
-        const validator = generateValidatesFromRules(field, rules);
         const epoch = this.#epoch;
         const silent = Boolean(opts.silent);
-        const validation = new Promise((resolve) => {
-            validator
-                .validate({ [field]: value }, { first: stopValidateWithError }, () => {})
-                .then(() => {
-                    if (this.#isSuperseded(registration, validation, epoch, silent, resolve)) {
-                        return;
-                    }
-                    this.#setFieldError(registration, undefined, { ...opts, status: 'success' });
-                    resolve(undefined);
-                })
-                .catch((err) => {
-                    if (this.#isSuperseded(registration, validation, epoch, silent, resolve)) {
-                        return;
-                    }
-                    const { errors, fields } = err;
-                    if (errors && fields) {
-                        let messages = errors.map((e: ValidateError) => e.message);
-                        if (messages.length === 1) {
-                            messages = messages[0];
-                        }
-                        // `message: ''` in async-validator means "fail, but hide the text". `messages` is then '' and
-                        // isValid('') is true, so an isValid check would never resolve and submit() / validate() would
-                        // hang. The error is decided by errors.length instead, and '' stays the field error value so
-                        // getError(field) === '' still detects "invalid without text".
-                        if (Array.isArray(errors) && errors.length > 0) {
-                            this.#setFieldError(registration, messages, { ...opts, status: 'error' });
-                            resolve(messages);
-                        }
-                    } else {
-                        // not a validation failure: the rules themselves are malformed
-                        this.#setFieldError(registration, err.message, { ...opts, status: 'error' });
-                        resolve(err.message);
-                        throw err;
-                    }
-                });
+        const validation = new Promise((resolve, reject) => {
+            validateRules(rules, value, this.#getValue(), { messages: this.adapter.getLocale(), first: stopValidateWithError }).then((error) => {
+                if (this.#isSuperseded(registration, validation, epoch, silent, resolve)) {
+                    return;
+                }
+                // [''] fails without a text, so the result decides the status, not whether it has messages
+                this.#setFieldError(registration, error, { ...opts, status: error ? 'error' : 'success' });
+                resolve(error);
+            }, reject);
         });
         if (!silent) {
             this.#validations.set(field, validation);
@@ -576,19 +566,28 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         return validation;
     }
 
+    #runFieldValidator(registration: FieldRegistration, value: unknown) {
+        const { validate, stopValidateWithError } = registration.getValidateOptions();
+        if (isStandardSchema(validate)) {
+            const toError = (result: StandardSchemaResult<unknown>) => (result.issues ? issueMessages(result.issues, Boolean(stopValidateWithError)) : undefined);
+            const result = validate['~standard'].validate(value);
+            return isPromise(result) ? result.then(toError) : toError(result);
+        }
+        return validate(value, this.#getValue());
+    }
+
     #validateCustom(registration: FieldRegistration, value: unknown, opts: CallOpts) {
-        const { validate } = registration.getValidateOptions();
         const epoch = this.#epoch;
         const silent = Boolean(opts.silent);
         const validation = new Promise((resolve) => {
             let maybePromisedErrors;
             try {
-                maybePromisedErrors = validate(value, this.#getValue());
+                maybePromisedErrors = this.#runFieldValidator(registration, value);
             } catch (err) {
                 maybePromisedErrors = err;
             }
             const settle = (result: unknown) => {
-                const error = isValid(result) ? undefined : result;
+                const error = normalizeFieldError(result);
                 this.#setFieldError(registration, error, opts);
                 resolve(error);
             };
@@ -613,7 +612,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     /**
      * The field passes its own registration: a wrapped component may report a change from its mount effect, which runs
      * before the field registers. The Form's `schema` excludes field-level validation; without it `validate` wins over
-     * `rules`, and a field with neither has nothing to validate.
+     * `rules` (the two are exclusive, #register warns), and a field with neither has nothing to validate.
      */
     #validateField = (registration: FieldRegistration, value: unknown, opts: CallOpts = {}): Promise<unknown> | null => {
         const schema = this.#getSchema();
@@ -653,7 +652,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                 this.#setFieldTouched(registration, true, SILENT);
                 this.#updateStateValue(field, nextValue, { allowEmpty });
                 if (opts.validate) {
-                    void this.#validateField(registration, nextValue);
+                    this.#validateOnChange(registration, nextValue);
                 }
             } catch (err) {
                 this.#setFieldValue(registration, prevValue, SILENT);
@@ -662,6 +661,36 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         });
     };
 
+    /**
+     * With `schemaDebounce`, change validations against the schema wait until the user pauses: each run validates the
+     * whole form. No promise exists until the timer fires, so nothing waits on a cancelled one.
+     */
+    #validateOnChange(registration: FieldRegistration, value: unknown) {
+        const { schemaDebounce } = this.getProps();
+        if (!(schemaDebounce > 0) || !this.#getSchema()) {
+            void this.#validateField(registration, value);
+            return;
+        }
+        this.#debouncedFields.add(registration.field);
+        clearTimeout(this.#debounceTimer);
+        this.#debounceTimer = setTimeout(() => {
+            const fields = [...this.#debouncedFields];
+            this.#cancelDebouncedValidation();
+            fields.forEach((field) => {
+                const current = this.#fields.get(field);
+                if (current) {
+                    void this.#validateField(current, this.#getValue(field));
+                }
+            });
+        }, schemaDebounce);
+    }
+
+    #cancelDebouncedValidation() {
+        clearTimeout(this.#debounceTimer);
+        this.#debounceTimer = undefined;
+        this.#debouncedFields.clear();
+    }
+
     // The field's store carries its state across re-registration (rename, ArrayField row removal, Activity).
     #register = (field: string, registration: FieldRegistration) => {
         const fieldState = registration.store.getSnapshot();
@@ -669,8 +698,9 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         this.#registered[field] = true;
         const { rules, validate } = registration.getValidateOptions();
         warning(!registered && Boolean(this.#getSchema()) && Boolean(rules || validate), `[Semi Form] <Form schema> excludes field-level validation; the rules and validator of field "${field}" will be ignored`);
+        warning(!registered && Boolean(rules && validate), `[Semi Form] the rules and validator of field "${field}" are exclusive; validator is used`);
         this.#fields.set(field, registration);
-        const allowEmpty = registration.allowEmpty || false;
+        const allowEmpty = registration.allowEmpty ?? false;
         const opts: CallOpts = {
             skipNotify: true,
             skipRender: false,
@@ -682,18 +712,25 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             fieldValue = undefined;
         }
 
-        if (!(registration.keepState && registered)) {
+        if (!(registration.keepState && registered && !registration.inArrayField)) {
             this.#updateStateValue(field, fieldValue, opts);
             if (fieldState.error) {
                 this.#updateStateError(field, fieldState.error, opts);
-            } else if (!registered) {
-                // A validation may have written this path before its field first mounted. Under a string a path reads
-                // single characters, so an error on the parent (an array's minimum length) is not this field's.
+            } else if (!registered || registration.keepState) {
+                // A validation may have written this path before its field first mounted, or a kept ArrayField left it
+                // for its remounting rows. Under a leaf a path reads single messages, so an error on the parent (an
+                // array's minimum length) is not this field's.
                 const parentError = ObjectUtil.get(this.#data.errors, toPath(field).slice(0, -1));
-                const error = typeof parentError === 'string' ? undefined : ObjectUtil.get(this.#data.errors, field);
-                if (error !== undefined) {
+                const error = isErrorLeaf(parentError) ? undefined : ObjectUtil.get(this.#data.errors, field);
+                if (isErrorLeaf(error)) {
                     this.#setFieldError(registration, error, { ...opts, skipRender: true });
                 }
+            }
+            // a renamed row field carries its touched to the new path, as the rows' paths moved under it
+            if (fieldState.touched) {
+                this.#updateStateTouched(field, fieldState.touched, opts);
+            } else if (registration.keepState && ObjectUtil.get(this.#data.touched, field) === true) {
+                this.#setFieldTouched(registration, true, { ...opts, skipRender: true });
             }
             return;
         }
@@ -770,35 +807,55 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         };
         const nestedArrayFields = [...this.#registeredArrayField.keys()]
             .filter(isNested)
-            .sort((a, b) => toPath(a).length - toPath(b).length)
+            .toSorted((a, b) => toPath(a).length - toPath(b).length)
             .map((path) => ({ path, allowEmpty: false }));
         const nestedFields = [...this.#fields.values()].filter((registration) => isNested(registration.field)).map((registration) => ({ path: registration.field, allowEmpty: registration.allowEmpty }));
         const nestedValues = [...nestedArrayFields, ...nestedFields].map((item) => ({
             ...item,
             value: this.#getValue(item.path),
         }));
+        // An ArrayField that unmounted with keepState left its registration: reset() still restores the first initValue
+        const kept = this.#registeredArrayField.get(arrayFieldPath);
 
-        this.#registerArrayField(arrayFieldPath, val);
+        if (kept) {
+            this.#updateArrayField(arrayFieldPath, { updateKey: nextUpdateKey() });
+        } else {
+            this.#registerArrayField(arrayFieldPath, val);
+        }
         this.#updateStateValue(arrayFieldPath, this.adapter.cloneDeep(val), SILENT);
         nestedValues.forEach(({ path, allowEmpty, value }) => {
             this.#updateStateValue(path, value, { ...SILENT, allowEmpty });
         });
-        // reset() restores what the rows show now, their own initValue included
-        this.#updateArrayField(arrayFieldPath, { initValue: this.adapter.cloneDeep(this.#getValue(arrayFieldPath)) });
+        if (!kept) {
+            // reset() restores what the rows show now, their own initValue included
+            this.#updateArrayField(arrayFieldPath, { initValue: this.adapter.cloneDeep(this.#getValue(arrayFieldPath)) });
+        }
         this.#forceUpdate();
     };
+
+    /**
+     * Applies one row edit to the ArrayField's values, and to its errors and touched where they hold rows: an error
+     * leaf at the array path (a schema's minItems) belongs to the array itself and stays.
+     */
+    #editRows(arrayFieldPath: string, edit: <T>(rows: T[]) => T[], valueOpts: CallOpts) {
+        const errors = this.#getError(arrayFieldPath);
+        if (Array.isArray(errors) && !isErrorLeaf(errors)) {
+            this.#updateStateError(arrayFieldPath, edit(errors), SILENT);
+        }
+        const touched = this.#getTouched(arrayFieldPath);
+        if (Array.isArray(touched)) {
+            this.#updateStateTouched(arrayFieldPath, edit(touched) as any, SILENT);
+        }
+        const values = this.#getValue(arrayFieldPath);
+        if (Array.isArray(values)) {
+            this.#updateStateValue(arrayFieldPath, edit(values), valueOpts);
+        }
+    }
 
     /** Inserts an empty row before `index`, or appends one without it; returns the ArrayField's new updateKey */
     #addArrayFieldRow = (arrayFieldPath: string, index?: number) => {
         if (typeof index === 'number') {
-            const values = this.#getValue(arrayFieldPath);
-            if (Array.isArray(values)) {
-                this.#updateStateValue(arrayFieldPath, values.toSpliced(index, 0, undefined), SILENT);
-            }
-            const errors = this.#getError(arrayFieldPath);
-            if (Array.isArray(errors)) {
-                this.#updateStateError(arrayFieldPath, errors.toSpliced(index, 0, undefined), SILENT);
-            }
+            this.#editRows(arrayFieldPath, (rows) => rows.toSpliced(index, 0, undefined), SILENT);
         }
         const updateKey = nextUpdateKey();
         this.#updateArrayField(arrayFieldPath, { updateKey });
@@ -819,23 +876,29 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
 
     /** Every key of the row is removed too: some keys are set only in initValue and never taken over by a field */
     #removeArrayFieldRow = (arrayFieldPath: string, index: number) => {
-        const errors = this.#getError(arrayFieldPath);
-        if (Array.isArray(errors)) {
-            this.#updateStateError(arrayFieldPath, errors.toSpliced(index, 1), SILENT);
-        }
-        const values = this.#getValue(arrayFieldPath);
-        if (Array.isArray(values)) {
-            this.#updateStateValue(arrayFieldPath, values.toSpliced(index, 1), {});
-        }
+        this.#editRows(arrayFieldPath, (rows) => rows.toSpliced(index, 1), {});
     };
 
-    #unRegisterArrayField = (arrayField: string) => {
+    #moveArrayFieldRow = (arrayFieldPath: string, from: number, to: number) => {
+        this.#editRows(arrayFieldPath, (rows) => moveItem(rows, from, to), {});
+        const updateKey = nextUpdateKey();
+        this.#updateArrayField(arrayFieldPath, { updateKey });
+        return updateKey;
+    };
+
+    #unRegisterArrayField = (arrayField: string, keepState: boolean) => {
+        if (keepState) {
+            return;
+        }
         this.#registeredArrayField.delete(arrayField);
+        this.#data = {
+            values: ObjectUtil.remove(this.#data.values, arrayField),
+            errors: ObjectUtil.remove(this.#data.errors, arrayField),
+            touched: ObjectUtil.remove(this.#data.touched, arrayField),
+        };
     };
 
-    #getArrayField = (arrayField: string) => {
-        return this.#registeredArrayField.get(arrayField);
-    };
+    #getArrayField = (arrayField: string) => this.#registeredArrayField.get(arrayField);
 
     #updateArrayField(arrayField: string, updateValue: any) {
         const mergeVal = { ...this.#registeredArrayField.get(arrayField), ...updateValue };
@@ -851,7 +914,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         if (fieldPaths && !Array.isArray(fieldPaths)) {
             const options = fieldPaths;
             fields = options.fields as Array<string> | undefined;
-            silent = options.silent || false;
+            silent = options.silent ?? false;
         } else {
             fields = fieldPaths as Array<string> | undefined;
         }
@@ -909,10 +972,10 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     }
 
     #updateStateValue = (field: string, value: any, opts: CallOpts, callback?: () => void) => {
-        const skipNotify = opts && opts.skipNotify;
-        const skipRender = opts && opts.skipRender;
+        const skipNotify = opts?.skipNotify;
+        const skipRender = opts?.skipRender;
 
-        const allowEmpty = (opts && opts.allowEmpty) || this.getProp('allowEmpty');
+        const allowEmpty = opts?.allowEmpty || this.getProp('allowEmpty');
 
         this.#data = { ...this.#data, values: ObjectUtil.set(this.#data.values, field, value, allowEmpty) };
         // Registering syncs a Field's initValue into FormState without notify, but still needs a forceUpdate:
@@ -935,8 +998,8 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     };
 
     #updateStateTouched = (field: string, isTouched: boolean, opts?: CallOpts, callback?: () => void) => {
-        const skipNotify = opts && opts.skipNotify;
-        const skipRender = opts && opts.skipRender;
+        const skipNotify = opts?.skipNotify;
+        const skipRender = opts?.skipRender;
         this.#data = { ...this.#data, touched: ObjectUtil.set(this.#data.touched, field, isTouched) };
 
         if (!skipNotify) {
@@ -955,8 +1018,8 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     };
 
     #updateStateError = (field: string, error: any, opts: CallOpts, callback?: () => void) => {
-        const skipNotify = opts && opts.skipNotify;
-        const skipRender = opts && opts.skipRender;
+        const skipNotify = opts?.skipNotify;
+        const skipRender = opts?.skipRender;
         this.#data = { ...this.#data, errors: ObjectUtil.set(this.#data.errors, field, error) };
 
         // Batch operations skip notify here and report once when done; they would otherwise fire once per field
@@ -979,7 +1042,8 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             if (opts?.status) {
                 this.#updateField(store, { status: opts.status });
             }
-            if (error === store.getSnapshot().error) {
+            // Every validation returns a new array, so equal messages compare by value
+            if (isEqual(error, store.getSnapshot().error)) {
                 return;
             }
             this.#updateField(store, { error, status: opts?.status ?? (isValid(error) ? 'success' : 'error') });
@@ -1044,7 +1108,13 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                 this.#getOperateFieldMap([field]).forEach((_, path) => this.#validations.delete(path));
                 this.#setByPath('values', field, this.adapter.cloneDeep(value), opts);
             },
-            setError: (field: string, error: any, opts?: CallOpts) => this.#setByPath('errors', field, this.adapter.cloneDeep(error), opts),
+            setError: (field: string, error: unknown, opts?: CallOpts) => {
+                // a field holds one leaf; a path without a field may take the nested errors of the fields under it
+                const nested = !this.#fields.has(field) && (isPlainObject(error) || (Array.isArray(error) && error.length > 0 && !isErrorLeaf(error)));
+                const tree = nested ? normalizeFormErrors(error) : undefined;
+                const normalized = nested ? (hasErrors(tree) ? tree : undefined) : normalizeFieldError(error);
+                this.#setByPath('errors', field, normalized, opts);
+            },
             setTouched: (field: string, isTouched: boolean | Record<string, any>, opts?: CallOpts) => this.#setByPath('touched', field, isTouched, opts),
         };
     }
@@ -1117,6 +1187,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
 
     override destroy() {
         this.#destroyed = true;
+        this.#cancelDebouncedValidation();
     }
 
     submit = (e?: E) => {
@@ -1146,6 +1217,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         const targetFields = this.#getOperateFieldMap(fieldPaths);
         if (fieldPaths === undefined) {
             this.#epoch += 1;
+            this.#cancelDebouncedValidation();
         } else {
             // only the target fields' validations are outdated; one pending inside validate() or submit settles as passed
             targetFields.forEach((_, path) => this.#validations.delete(path));
@@ -1189,6 +1261,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             getInitValue: (field?: string) => this.getInitValue(field),
             getFormProps: (keys?: Array<string>) => this.getFormProps(keys),
             getField: this.#getField,
+            usesSchema: () => Boolean(this.#getSchema()),
             registerArrayField: this.#registerArrayField,
             mountArrayField: this.#mountArrayField,
             unRegisterArrayField: this.#unRegisterArrayField,
@@ -1196,6 +1269,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             addArrayFieldRow: this.#addArrayFieldRow,
             addArrayFieldRowWithValue: this.#addArrayFieldRowWithValue,
             removeArrayFieldRow: this.#removeArrayFieldRow,
+            moveArrayFieldRow: this.#moveArrayFieldRow,
         };
     };
 
@@ -1213,7 +1287,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             getInitValues: () => this.getInitValues(),
             getTouched: (field?: string) => this.#getTouched(field),
             getError: (field?: string) => this.#getError(field),
-            setValues: (values: any, opts?: setValuesConfig) => this.#setValues(values, opts || { isOverride: false }),
+            setValues: (values: any, opts?: setValuesConfig) => this.#setValues(values, opts ?? { isOverride: false }),
             submitForm: () => this.submit(),
             getFieldExist: (field: string) => this.#getFieldExist(field),
             scrollToField: (field: string, scrollOpts?: ScrollIntoViewOptions) => this.#scrollToField(field, scrollOpts),

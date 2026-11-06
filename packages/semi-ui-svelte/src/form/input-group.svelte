@@ -2,7 +2,7 @@
     import { untrack } from 'svelte';
     import { SvelteSet } from 'svelte/reactivity';
     import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-    import { isValid } from '@fibrae/semi-foundation/form/utils';
+    import { isErrorLeaf } from '@fibrae/semi-foundation/form/errors';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
     import warning from '@fibrae/semi-foundation/utils/warning';
@@ -34,7 +34,13 @@
     const labelConfig = $derived(isLabelConfig(label) ? label : { text: label });
     const labelId = $derived((isLabelConfig(label) ? label.id : undefined) ?? `${uid}-label`);
     const hasLabel = $derived(Boolean(label) || Boolean(fieldLabel));
-    const groupError = $derived([...fields].map((path) => ObjectUtil.get(form?.formState.errors ?? {}, path)));
+
+    const groupError = $derived(
+        [...fields].flatMap((path) => {
+            const error: unknown = ObjectUtil.get(form?.formState.errors ?? {}, path);
+            return isErrorLeaf(error) ? error : [];
+        })
+    );
 
     setFormInputGroupContext({
         registerField: (path) => {
@@ -87,7 +93,7 @@
             {#if extraText && extraTextPosition === 'bottom'}
                 {@render extraView()}
             {/if}
-            {#if !isValid(groupError)}
+            {#if groupError.length}
                 <ErrorMessage error={groupError} {errorMessageId} isInInputGroup showValidateIcon={formProps.showValidateIcon} />
             {/if}
         </FieldGrid>

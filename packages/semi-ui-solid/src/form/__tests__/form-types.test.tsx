@@ -3,8 +3,13 @@ import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import * as z from 'zod';
 import type { FieldPath, FieldPathValue, FormState } from '@fibrae/semi-foundation/form/interface';
 import {
+    type ArrayFieldChildrenProps,
     type ArrayFieldProps,
     type FieldProps,
+    type RuleItem,
+    type SchemaFieldNode,
+    type SchemaFieldProps,
+    type SchemaFormProps,
     type FormApi,
     type FormCheckboxProps,
     type FormProps,
@@ -127,6 +132,16 @@ describe('字段 Props 类型', () => {
         expect(CustomField).toBeTypeOf('function');
     });
 
+    it('rules 与 validator 互斥，validator 接受函数或 Standard Schema，错误为字符串或字符串数组', () => {
+        expectTypeOf<{ field: 'a'; rules: [{ required: true }] }>().toExtend<InputFieldProps>();
+        expectTypeOf<{ field: 'a'; validator: () => string[] }>().toExtend<InputFieldProps>();
+        expectTypeOf<{ field: 'a'; validator: z.ZodString }>().toExtend<InputFieldProps>();
+        expectTypeOf<{ field: 'a'; rules: [{ required: true }]; validator: () => undefined }>().not.toExtend<InputFieldProps>();
+        expectTypeOf<{ field: 'a'; validator: () => number }>().not.toExtend<InputFieldProps>();
+        expectTypeOf<{ field: 'a'; rules: [{ type: 'email'; min: 2; message: '' }] }>().toExtend<PropsOf<typeof FormCheckbox>>();
+        expectTypeOf<{ type: 'any' }>().not.toExtend<RuleItem>();
+    });
+
     it('trigger 只接受校验时机及其数组，公共 Props 声明 emptyValue', () => {
         expectTypeOf<['blur', 'change']>().toExtend<InputFieldProps['trigger']>();
         expectTypeOf<'mount'>().toExtend<InputFieldProps['trigger']>();
@@ -184,7 +199,7 @@ describe('Form Props 类型', () => {
     it('schema 与 Form 的 validator 互斥，Values 从 schema 推断', () => {
         type Props = FormProps<{ name: string }>;
         const schema = z.object({ name: z.string() });
-        const validator = () => '';
+        const validator = () => undefined;
         const inferValues = <Values extends Record<string, any>>(_props: FormProps<Values>) => ({}) as Values;
         expectTypeOf({ schema }).toExtend<Props>();
         expectTypeOf({ validator }).toExtend<Props>();
@@ -192,7 +207,7 @@ describe('Form Props 类型', () => {
         expectTypeOf(inferValues({ schema })).toEqualTypeOf<{ name: string }>();
     });
 
-    it('schema 的输出要与 values 一致', () => {
+    it('schema 的输入要与 values 一致', () => {
         type Schema = NonNullable<FormProps<{ name: string }>['schema']>;
         const valid = z.object({ name: z.string() });
         const invalid = z.object({ name: z.number() });
@@ -200,12 +215,37 @@ describe('Form Props 类型', () => {
         expectTypeOf(invalid).not.toExtend<Schema>();
     });
 
-    it('表单级 validator 返回嵌套的错误，onErrorChange 的 errors 与 formState.errors 同形', () => {
+    it('Values 取 schema 的输入，onSubmit 与不带字段的 validate() 取 schema 的输出', () => {
+        const schema = z.object({ age: z.string().transform(Number) });
+        const infer = <Values extends Record<string, any>, Output>(_props: FormProps<Values, Output>) => ({}) as { values: Values; output: Output; api: FormApi<Values, Output> };
+        // type-only: the api below is a cast stub and must not be called
+        const check = () => {
+            const result = infer({ schema, onSubmit: (values) => expectTypeOf(values).toEqualTypeOf<{ age: number }>() });
+            expectTypeOf(result.values).toEqualTypeOf<{ age: string }>();
+            expectTypeOf(result.output).toEqualTypeOf<{ age: number }>();
+            expectTypeOf(result.api.validate()).toEqualTypeOf<Promise<{ age: number }>>();
+            expectTypeOf(result.api.validate(['age'])).toEqualTypeOf<Promise<{ age: string }>>();
+            expectTypeOf(result.api.getValues()).toEqualTypeOf<{ age: string }>();
+        };
+        expect(check).toBeTypeOf('function');
+        expectTypeOf<ReturnType<typeof useForm<{ age: string }, { age: number }>>[0]>().toEqualTypeOf<FormApi<{ age: string }, { age: number }>>();
+    });
+
+    it('表单级 validator 返回嵌套的错误，错误叶子是字符串数组', () => {
         type Result = Awaited<ReturnType<NonNullable<FormProps<ArrayValues>['validator']>>>;
         expectTypeOf<{ users: [{ name: string }] }>().toExtend<Result>();
+        expectTypeOf<{ users: [{ name: ['a', 'b'] }] }>().toExtend<Result>();
         expectTypeOf<{ users: { name: string } }>().not.toExtend<Result>();
+        expectTypeOf<'form invalid'>().not.toExtend<Result>();
         expectTypeOf<Parameters<NonNullable<FormProps<ArrayValues>['onErrorChange']>>[0]>().toEqualTypeOf<Errors>();
-        expectTypeOf<'form invalid'>().toExtend<Parameters<NonNullable<FormProps<ArrayValues>['onSubmitFail']>>[0]>();
+        expectTypeOf<Parameters<NonNullable<FormProps<ArrayValues>['onSubmitFail']>>[0]>().toEqualTypeOf<Partial<Errors>>();
+        expectTypeOf<NonNullable<Errors['tags']>>().toExtend<string[] | Array<string[] | undefined>>();
+    });
+
+    it('getTouched 与 setTouched 的类型一致', () => {
+        type Api = FormApi<Values>;
+        expectTypeOf<ReturnType<Api['getTouched']>>().toEqualTypeOf<boolean | Record<string, any> | undefined>();
+        expectTypeOf<ReturnType<Api['getTouched']>>().toExtend<Parameters<Api['setTouched']>[1] | undefined>();
     });
 
     it('ArrayField 的 field 与 children 必填，InputGroup 的 label 接受文本', () => {
@@ -214,5 +254,27 @@ describe('Form Props 类型', () => {
         expectTypeOf<{ field: string; children: () => null }>().toExtend<ArrayFieldProps>();
         expectTypeOf<'Name'>().toExtend<InputGroupProps['label']>();
         expectTypeOf<{ text: string; required: boolean }>().toExtend<InputGroupProps['label']>();
+    });
+
+    it('Form 与 ArrayField 接受 keepState，Form 接受 schemaDebounce，ArrayField 的 children 参数带 move', () => {
+        expectTypeOf<{ keepState: false; schemaDebounce: 300 }>().toExtend<FormProps>();
+        expectTypeOf<{ field: string; keepState: false; children: () => null }>().toExtend<ArrayFieldProps>();
+        expectTypeOf<ArrayFieldChildrenProps['move']>().toEqualTypeOf<(from: number, to: number) => void>();
+    });
+});
+
+describe('SchemaField 与 SchemaForm Props 类型', () => {
+    it('widgets 的值是字段组件，renderField 收到节点与路径', () => {
+        expectTypeOf<{ widgets: { uri: typeof FormInput } }>().toExtend<SchemaFieldProps>();
+        expectTypeOf<NonNullable<SchemaFieldProps['renderField']>[string]>().parameter(0).toEqualTypeOf<{ node: SchemaFieldNode; field: string }>();
+        expectTypeOf<SchemaFieldProps>().toHaveProperty('field').toEqualTypeOf<string | undefined>();
+    });
+
+    it('SchemaForm 接受 Form 的属性与 jsonSchema，schema 与 validator 仍互斥，不接受 render', () => {
+        expectTypeOf<{ jsonSchema: { type: 'object' }; keepState: false; labelPosition: 'left' }>().toExtend<SchemaFormProps>();
+        expectTypeOf<{ schema: z.ZodString; validator: () => undefined }>().not.toExtend<SchemaFormProps>();
+        expectTypeOf<'render'>().not.toExtend<keyof SchemaFormProps>();
+        const infer = <Values extends Record<string, any>, Output>(_props: SchemaFormProps<Values, Output>) => ({}) as Output;
+        expectTypeOf(infer({ schema: z.object({ n: z.string().transform(Number) }) })).toEqualTypeOf<{ n: number }>();
     });
 });

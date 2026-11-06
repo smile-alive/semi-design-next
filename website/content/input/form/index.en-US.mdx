@@ -33,6 +33,14 @@ import FormLabelSvelteApi from './api/form-label.svelte.en-US.mdx';
 import FormInputGroupSvelteApi from './api/form-input-group.svelte.en-US.mdx';
 import FormSlotSvelteApi from './api/form-slot.svelte.en-US.mdx';
 import FormErrorMessageSvelteApi from './api/form-error-message.svelte.en-US.mdx';
+import SchemaFieldReactApi from './api/schema-field.react.en-US.mdx';
+import SchemaFormReactApi from './api/schema-form.react.en-US.mdx';
+import SchemaFieldVueApi from './api/schema-field.vue.en-US.mdx';
+import SchemaFormVueApi from './api/schema-form.vue.en-US.mdx';
+import SchemaFieldSolidApi from './api/schema-field.solid.en-US.mdx';
+import SchemaFormSolidApi from './api/schema-form.solid.en-US.mdx';
+import SchemaFieldSvelteApi from './api/schema-field.svelte.en-US.mdx';
+import SchemaFormSvelteApi from './api/schema-form.svelte.en-US.mdx';
 
 ## Form
 
@@ -600,13 +608,27 @@ When submitting, use `formApi.validate()` to centrally verify the Field
 
 ### Configure initial values and verification rules
 
-- You can configure check rules for each Field through `rules`  
-   The verification library inside the Form is based on `async-validator`, and more configuration rules can be found in its [official documentation](https://github.com/yiminghe/async-validator)
+- You can configure check rules for each Field through `rules`. Rules are run by Semi's built-in rule engine, see the table below
 - You can uniformly set the initial value for the entire form through the `initValues` of form, or you can set the initial value through `initValue` in each field (the latter has a higher priority)
 - You can configure different verification trigger timings for each Field through `trigger`, and the default is `change` (that is, the verification is performed automatically when the value changes). Also supports `change`, `blur`, `mount`, `custom` or a combination of the above. It also supports unified configuration through FormProps. If both are configured, FieldProps shall prevail
 - You can use the `stopValidateWithError` switch to decide whether to continue to trigger the validation of subsequent rules when the first rule that fails the validation is encountered. Unified configuration through FormProps is also supported. If both are configured, FieldProps shall prevail
 
 <Demo id="rules" />
+
+Each rule (`RuleItem`) is checked from top to bottom in the table below, and the message of the first failing check becomes the error of that rule. When the value is empty (`undefined`, `null`, `''`, `[]`) and not required, the built-in checks are skipped and only `validator` runs.
+
+| Property      | Description                                                                                                                                                                                                                                          |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| transform     | `(value) => any`, converts the value before validation, affecting this rule only                                                                                                                                                                     |
+| required      | Fails when the value is empty; with `whitespace: true`, a string containing only whitespace also counts as empty                                                                                                                                     |
+| type          | Value type: `string`, `number`, `integer`, `float`, `boolean`, `array`, `object`, `date`, `email`, `url`, `regexp`, `method`                                                                                                                         |
+| len, min, max | Compares the character count of a string, the value of a number, and the item count of an array                                                                                                                                                      |
+| pattern       | A RegExp or a regex string; only checks strings                                                                                                                                                                                                      |
+| enum          | The value must be one of the items in the array                                                                                                                                                                                                      |
+| validator     | `(value, values) => string \| string[] \| boolean \| Promise<...>`, runs after the built-in checks pass. Fails when it returns `false` or throws; a non-empty string or string array is used as the error message; any other result counts as passed |
+| message       | Replaces the default message of any check in this rule; pass `''` to fail without showing text                                                                                                                                                       |
+
+Default messages come from the `Form` section of the locale and follow LocaleProvider (for example "This field is required" and "At least 3 characters").
 
 ### Custom Validate (Form Level)
 
@@ -616,8 +638,8 @@ You can set a custom validation function for the `Form` as a whole with `validat
 
 #### Synchronous Validate
 
-When validate success, you should return an empty string.  
-When validate fails, you should return the error message (Object, key is fieldName, value is the corresponding error message)
+When validation passes, return an empty value or `{}`.  
+When validation fails, return an error object with the same shape as the values, whose leaves are error messages (a string or an array of strings); an empty string means that field passes. Errors in `formState.errors` are always arrays of strings: after returning `{ name: 'Required' }`, `formApi.getError('name')` gives `['Required']`
 
 <Demo id="form-validate-sync" />
 
@@ -638,7 +660,7 @@ Fields validate on their own `trigger` as usual, and submit validates all of the
 Where validation comes from and where errors go:
 
 - A Form validates from one source. With a `schema`, the `validator` and `rules` of the fields no longer run, and the Form warns in development; a field sits on another component, so TypeScript cannot catch this combination. Passing both the Form `validator` and `schema` is a TypeScript error; past the types, the Form warns in development and uses only `validator`.
-- One validation round runs the schema once. The Form does not debounce, so asynchronous checks in the schema, such as a uniqueness request, run every round. To limit requests, set the field's `trigger` to `blur`.
+- One validation round runs the schema once. Asynchronous checks in the schema, such as a uniqueness request, run every round. To limit requests, set `schemaDebounce` (in milliseconds) on the Form: validation triggered by a value change waits until input pauses, while validation triggered by submit, `formApi.validate()` or blur does not wait. You can also set the field's `trigger` to `blur`.
 - Write errors returned by a server after submit with `formApi.setError`; the schema's result replaces them the next time that field validates.
 - Changing a field shows errors only on that field and on touched fields, so a cross-field error needs a `path` pointing at the field that shows it, like the password confirmation in the demo.
 - An error whose path points inside a field (`tags[0]` of a TagInput, for example) shows on the field holding that value. An error without a matching field is not displayed and stays in `formState.errors`; root-level schema errors go to `errors['']`.
@@ -651,24 +673,26 @@ When using Zod:
 - Zod decides the error language; Semi's locale does not affect it. Call `z.config(z.locales.en())`, or write your own messages as in the demo.
 - Write `import * as z from 'zod'` so the bundler can drop the parts you do not use.
 
-The required asterisk is not derived from the schema; set `required: true` in the field's `label` config. A field's `transform` does not change the value the schema receives.
+With a `schema`, the required asterisk and `aria-required` are decided only by `required: true` in the field's `label` config; they do not read `rules` and are not derived from the schema. A field's `transform` does not change the value the schema receives.
 
 ### Custom Validate (Field Level)
 
-You can specify a custom validation function for a single Field with `validator`. Supports synchronous and asynchronous validation (by returning promises)
+You can specify custom validation for a single Field with `validator`. Supports synchronous and asynchronous validation (by returning promises)
 
-<Notice title='Field validator vs rules[].validator'>
+- When a function is passed, its signature is `(fieldValue, values) => string | string[] | Promise<string | string[]>`. An empty string, an empty array or an empty value means passed; anything else is used as the error message.
+- You can also pass a Standard Schema object (such as `z.string().min(3)`); the error message comes from the issues of the schema.
 
-The Field-level `validator` prop and the `validator` field inside `rules[]` (powered by async-validator) are two different APIs:
+<Notice title='validator and rules are mutually exclusive'>
 
-- Field `validator`: signature is `(fieldValue, values) => string | Promise<string>`; whole-field custom validation that returns the error message directly.
-- `rules[].validator`: signature is `(rule, value, callback) => void | Promise<void>`; per-rule validation in the [async-validator](https://github.com/yiminghe/async-validator) style, where errors are reported via `callback` or rejection.
-
-The two are **mutually exclusive**: if a Field `validator` is set, the `rules` array will not be evaluated. Use the Field `validator` for simple whole-field custom checks; use `rules` when you need multiple rules or want to reuse built-in async-validator rules (required / type / pattern, etc.).
+A Field takes either `validator` or `rules`, not both. Passing both is a TypeScript error; past the types, it warns in development and only `validator` runs. Use `validator` for whole-field custom checks; use `rules` when you need multiple rules or want to reuse built-in checks such as required, type and pattern. Custom checks inside a single rule go in `rules[].validator`.
 
 </Notice>
 
 <Demo id="field-validate" />
+
+Passing a schema to the field `validator`, compared with `rules`:
+
+<Demo id="field-schema-validator" />
 
 ### Manually Trigger specified validation
 
@@ -725,62 +749,15 @@ By default a field whose value becomes empty is removed from `values`. Set `allo
 
 #### Keep field state on unmount (keepState)
 
-By default, when a Field component is unmounted, its value, error, and touched state are all reset. If you want to preserve these states after the field is unmounted (for example, in conditional rendering scenarios), you can use the `keepState` property.
+By default, a Field keeps its value, error and touched state after it is unmounted, and restores them by field path when it mounts again. This suits conditional rendering, step-by-step forms and similar scenarios. To reset the field after it is unmounted, set `keepState` to `false`.
+
+`keepState` can be set on Form, ArrayField and Field. A field that does not set it takes the value of its ArrayField, then of its Form, and defaults to `true` when none is set.
 
 <Demo id="keep-state" />
 
-In the example above:
+In the example above, a field whose `keepState` is `false` returns to its initial value after being hidden and shown again, while the other fields keep their previous input and validation state.
 
-- The field with `keepState` will retain its previously entered value, validation state, etc. after being hidden and then shown again
-- The field without `keepState` will have its state reset after being hidden and then shown again
-
-<Framework only="react">
-
-<Notice type="primary" title="Notes">
-
-- `keepState` is designed for the "conditional unmount/remount" scenario and restores state by the field path.
-- Fields inside an `ArrayField` do NOT support `keepState`: calling `remove(i)` shifts the positional field paths of the following rows (for example `people[1].name` becomes `people[0].name`), so "restore by path" no longer matches the user intent and easily revives state of removed rows.
-- Passing `keepState` on a Field inside an `ArrayField` will be ignored and a warning will be printed. Manage array items via the `ArrayField`'s own `add`, `remove`, `addWithInitValue` instead.
-
-</Notice>
-
-</Framework>
-
-<Framework only="vue">
-
-<Notice type="primary" title="Notes">
-
-- `keepState` is designed for the "conditional unmount/remount" scenario and restores state by the field path.
-- Fields inside an `ArrayField` do NOT support `keepState`: calling `onRemove` shifts the positional field paths of the following rows (for example `people[1].name` becomes `people[0].name`), so "restore by path" no longer matches the user intent and easily revives state of removed rows.
-- Passing `keepState` on a Field inside an `ArrayField` will be ignored and a warning will be printed. Manage array items via the `onAdd` and `onAddWithInitValue` provided by the `ArrayField` slot and the `onRemove` of each row instead.
-
-</Notice>
-
-</Framework>
-
-<Framework only="solid">
-
-<Notice type="primary" title="Notes">
-
-- `keepState` is designed for the "conditional unmount/remount" scenario and restores state by the field path.
-- Fields inside an `ArrayField` do NOT support `keepState`: calling `remove` shifts the positional field paths of the following rows (for example `people[1].name` becomes `people[0].name`), so "restore by path" no longer matches the user intent and easily causes problems such as removed state being "resurrected".
-- Passing `keepState` on a Field inside an `ArrayField` will be ignored and a warning will be printed. Manage array items via the `add` and `addWithInitValue` of the `ArrayField` and the `remove` of each row instead.
-
-</Notice>
-
-</Framework>
-
-<Framework only="svelte">
-
-<Notice type="primary" title="Notes">
-
-- `keepState` is designed for the "conditional unmount/remount" scenario and restores state by the field path.
-- Fields inside an `ArrayField` do NOT support `keepState`: calling `onRemove` shifts the positional field paths of the following rows (for example `people[1].name` becomes `people[0].name`), so "restore by path" no longer matches the user intent and easily causes problems such as removed state being "resurrected".
-- Passing `keepState` on a Field inside an `ArrayField` will be ignored and a warning will be printed. Manage array items via the `onAdd` and `onAddWithInitValue` of the `ArrayField` and the `onRemove` of each row instead.
-
-</Notice>
-
-</Framework>
+When an ArrayField is unmounted, it handles the whole group by its own `keepState`: when kept, mounting again renders the rows from the kept values, and `reset()` still restores the original `initValue`; when not kept, the value, errors and touched state of the whole group are deleted. When rows are removed or moved inside an ArrayField, the state of a row moves with it, and a new row does not inherit the state of a removed row.
 
 ### ArrayField Usage
 
@@ -828,6 +805,34 @@ For the detailed API of ArrayField, please refer to [ArrayField](#arrayfield) be
 
 <Demo id="array-field" />
 
+#### Moving rows
+
+<Framework only="react">
+
+`move(from, to)` in the children arguments moves row `from` to `to`. The row's value, validation error, touched state and key move with it; out-of-range indexes are clamped to the first or last row.
+
+</Framework>
+
+<Framework only="vue">
+
+`onMove(from, to)` in the default scoped slot moves row `from` to `to`. The row's value, validation error, touched state and key move with it; out-of-range indexes are clamped to the first or last row.
+
+</Framework>
+
+<Framework only="solid">
+
+`move(from, to)` in the children arguments moves row `from` to `to`. The row's value, validation error and touched state move with it and the row object keeps its identity; out-of-range indexes are clamped to the first or last row.
+
+</Framework>
+
+<Framework only="svelte">
+
+`onMove(from, to)` in the `children` snippet moves row `from` to `to`. The row's value, validation error, touched state and key move with it; out-of-range indexes are clamped to the first or last row.
+
+</Framework>
+
+<Demo id="array-field-move" />
+
 #### Nesting ArrayField
 
 ArrayField supports multi-level nesting. The following is an example of two-level nesting.
@@ -839,6 +844,33 @@ ArrayField supports multi-level nesting. The following is an example of two-leve
 If you don't use ArrayField, you can use the provided formApi to manually add or delete formState.
 
 <Demo id="dynamic-form-api" />
+
+### Render a form from a Schema
+
+SchemaForm renders a whole form directly from a schema. With the Form `schema` passed in, SchemaForm derives a JSON Schema from it and renders a field for each property in property order. Deriving requires the validation library to implement [Standard JSON Schema](https://standardschema.dev/json-schema) (such as Zod 4); a JSON Schema from any other source can be passed directly to `jsonSchema`, which takes precedence over the derived result. SchemaForm accepts all Form props, and renders children after the fields, which suits a submit button.
+
+<Demo id="schema-form" />
+
+How JSON Schema maps to controls:
+
+| JSON Schema                                                 | Control                                                                                                                                                     |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `string`                                                    | Input; TextArea when `maxLength` is greater than 160                                                                                                        |
+| `number`, `integer`                                         | InputNumber; only integers can be entered for `integer`                                                                                                     |
+| `boolean`                                                   | Switch                                                                                                                                                      |
+| `enum`, or `oneOf` / `anyOf` where every item has a `const` | Select; option text comes from the `title` of each item                                                                                                     |
+| `array` whose items are options                             | Multi-select Select                                                                                                                                         |
+| `object` with `properties`                                  | Section; the heading comes from `title`                                                                                                                     |
+| Any other `array`                                           | ArrayField; each row has move up, move down and remove buttons, with an add button below the list; the row count is fixed when `minItems` equals `maxItems` |
+
+The label comes from `title` (the property name when absent), the help text from `description`, the initial value from `default`, and properties listed in `required` show the required asterisk. A node that maps to no control is not rendered, and a warning is shown in development.
+
+SchemaField renders part of a schema inside an existing Form: `field` sets the path (the root by default), and it can be mixed with hand-written fields. Both can be customized with `widgets` and `renderField`:
+
+- `widgets`: the key is a JSON Schema `format` (such as `uri`, `email`) or a control kind (`input`, `textarea`, `number`, `switch`, `select`), and the value is a field component (such as Form.Input, or a component wrapped with withField). `format` is looked up first, then the control kind.
+- `renderField`: the key is a field path, with array rows written as `[]` (such as `contacts[].email`); when it matches, it renders that node and its children.
+
+<Demo id="schema-field" />
 
 ### Use of Hook
 
@@ -1265,11 +1297,11 @@ After getting the Form instance through `bind:this`, call its `getFormApi()` to 
 
 FormState stores all the state values within the Form, including the values of each field, error information, touched status
 
-| Name    | Instructions                                                                                                                     | Initial value | Example                         |
-| ------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------------------- |
-| values  | Value Collection of the form                                                                                                     | \{\}          | \{fieldA: 'str', fieldB: true\} |
-| errors  | Form error information collection, you can decide whether to allow users to submit by judging whether there is error information | \{\}          | \{fieldA: 'length not valid'\}  |
-| touched | The collection of fields the user has clicked on                                                                                 | \{\}          | \{fieldA: true\}                |
+| Name    | Instructions                                                                                                     | Initial value | Example                            |
+| ------- | ---------------------------------------------------------------------------------------------------------------- | ------------- | ---------------------------------- |
+| values  | Value Collection of the form                                                                                     | \{\}          | \{fieldA: 'str', fieldB: true\}    |
+| errors  | Form error information collection, with the same shape as values; the error of each field is an array of strings | \{\}          | \{fieldA: \['length not valid'\]\} |
+| touched | The collection of fields the user has clicked on                                                                 | \{\}          | \{fieldA: true\}                   |
 
 ### How to access the form state
 
@@ -1336,9 +1368,9 @@ Semi will automatically execute deepClone once for input parameters of `formApi.
 | setValue | provides direct modification of formState.values method.<br/>The difference from `setValues` is that it only modifies a single field. | formApi.setValue(field: string, newFieldValue: any) |
 | getValue | Get the value of all / single Field | formApi.getValue()<br/>formApi.getValue(field: string) |
 | setTouched | Modify formState.touched | formApi.setTouched(field: string, isTouched: boolean)<br/> |
-| getTouched | Get the touched state of the Field | formApi.getTouched(field: string) |
-| setError | Modify the error information of a field | formApi.setError(field: string, fieldErrorMessage: string) |
-| getError | Get Error Status of Field | formApi.getError(field: string) |
+| getTouched | Get the touched state of the Field; returns the whole touched object when field is not passed | formApi.getTouched(field?: string) |
+| setError | Modify the error information of a field. A string is converted to a single-item array; an empty string, an empty array or undefined clears the error; passing an object or array to a parent path writes the errors of its child fields by structure | formApi.setError(field: string, error: string \| string[]) |
+| getError | Get the error information of a Field (an array of strings); a parent path returns an object of the errors of its child fields, and undefined when there is no error | formApi.getError(field: string) |
 | getFieldExist | Get whether the field exists in the Form | formApi.getFieldExist(field: string) |
 | scrollToField | Scroll to the specified field, the second input parameter will be passed to scroll-into-view-if-needed | formApi.scrollToField(field: string, scrollOpts: [ScrollIntoViewOptions](https://github.com/stipsan/scroll-into-view-if-needed#options)) |
 | scrollToError | Scroll to the field with validation error. You can pass a specified field or index. If you pass index, scroll to the index-th error DOM. If you do not pass any parameters, scroll to the first validation error position in the DOM tree. | formApi.scrollToError(<ApiType detail='{field?: string; index?: number; scrollOpts?: ScrollIntoViewOptions }'>ScrollToErrorOptions</ApiType>) |
@@ -1673,8 +1705,8 @@ function FormApiDemo() {
 | fieldClassName | The className of the entire fieldWrapper is the same as the name parameter, except that the prefix is not automatically appended | string |  |  |
 | fieldStyle | The inline style of the entire fieldWrapper | object |  |  |
 | initValue | The initial value of the field (consumed only once when Field mounted, subsequent updates are invalid), it has higher priority than the values in Form's initValues | any(type depends on current component) |  |  |
-| validator | The custom validation function for this form control. Supports synchronous and asynchronous validation. <br/>Rules does not take effect when validator is set | function(fieldValue, values) |  | (fieldValue) => fieldValue.length>5? 'error balabala': '' |
-| rules | validation rules, validation library based on [async-validator](https://github.com/yiminghe/async-validator) | array |  | const rules = \[\{type:' string ', message:' invalidate string'\} \] |
+| validator | The custom validation of this form control: a function or a Standard Schema object (such as `z.string().min(3)`). A function supports synchronous and asynchronous validation (by returning a promise); an empty string, an empty array or an empty value means valid, and a string or an array of strings is the error message. Mutually exclusive with rules | `(fieldValue, values) => string \| string[] \| undefined \| Promise<...>` or `StandardSchema` |  | (fieldValue) => fieldValue.length>5? 'error balabala': '' |
+| rules | validation rules, run by Semi's built-in rule engine; see [Configure initial values and verification rules](#configure-initial-values-and-verification-rules) for the rule properties. Mutually exclusive with validator | `RuleItem[]` |  | const rules = \[\{type:' string ', message:' invalidate string'\} \] |
 | validateStatus | The validation result status of this form control, optional: `success` / `error` / `warning` / `default` | string | 'default' |  |
 | trigger | The timing of triggering the verification, optional: `blur` / `change` / `custom` / `mount` <br/> 1. When set to custom, only formApi will trigger the verification <br/> 2.mount (triggered once when mounting) | 'blur' \| 'change' \| 'custom' \| 'mount', or an array of them | 'change' |  |
 | onChange | Callback invoked when this field value changes. The last parameter of the callback is the latest form values `latestValues`, which can be used to solve the React closure trap problem.<br/>Usage example: `onChange={(value, e, ...other) => { const latestValues = other[other.length - 1]; }}` | function(fieldValue: any \| ev: \{ target: \{ value: any \}\}, ...args: any[], latestValues?: object) <br/>(see each component's onChange method) |  |  |
@@ -1683,7 +1715,7 @@ function FormApiDemo() {
 | allowEmpty | Whether to keep the key of this field in `values` (as `undefined`) when its value is empty. Setting it on either the Field or the Form takes effect | boolean |  | false |
 | allowEmptyString | Whether to allow values to be empty strings. <br/>When the value is '' by default, the key corresponding to this field will be removed from `values`. <br/>If you want to keep the key, you need to set allowEmptyString to true | boolean |  | false |
 | emptyValue | The value that counts as empty. When the value changes to it, the key of this field is removed from `values` (kept as `undefined` when `allowEmpty` is true) | any | '' |  |
-| keepState | Whether to retain the field state (value, error, touched) after the field is unmounted. When true, the field's value, validation message, and interaction state are preserved after unmounting, and will be automatically restored upon remounting | boolean |  | false |
+| keepState | Whether to retain the field state (value, error, touched) after the field is unmounted; retained state is restored automatically on remount. When not set, it takes the keepState of the enclosing ArrayField, then of the Form | boolean |  | true |
 | convert | After the field value changes, before rerender, update the value of filed | function(fieldValue) |  | (value) => newValue |
 | stopValidateWithError | When it is true, the rules check is used. After encountering the first rule that fails the check, it will no longer trigger the check of subsequent rules | boolean |  | false |
 | helpText | Custom prompt information, which is displayed in the same block as the verification information. When both have values, the verification information is displayed first | ReactNode |  |  |
@@ -1717,15 +1749,15 @@ A Field is a component made by withField, not a single-file component. The templ
 | fieldClassName | The className of the entire fieldWrapper is the same as the name parameter, except that the prefix is not automatically appended | `string` |  |
 | fieldStyle | The inline style of the entire fieldWrapper | `StyleValue` |  |
 | initValue | The initial value of the field (consumed only once when Field mounted, subsequent updates are invalid), it has higher priority than the values in Form's initValues | `unknown` (type depends on current component) |  |
-| validator | The custom validation function for this form control. Supports synchronous and asynchronous validation (by returning a promise). An empty string or `undefined` means valid; any other result is the error, which is data only. Use the `#error` slot to render an error differently. Rules does not take effect when validator is set | `(fieldValue, values) => string \| string[] \| boolean \| undefined \| Promise` |  |
-| rules | validation rules, validation library based on [async-validator](https://github.com/yiminghe/async-validator); `message` takes strings only | `RuleItem[]` |  |
+| validator | The custom validation of this form control: a function or a Standard Schema object (such as `z.string().min(3)`). A function supports synchronous and asynchronous validation (by returning a promise); an empty string, an empty array or an empty value means valid, and a string or an array of strings is the error message. Use the `#error` slot to render an error differently. Mutually exclusive with rules | `(fieldValue, values) => string \| string[] \| undefined \| Promise<...>` or `StandardSchema` |  |
+| rules | validation rules, run by Semi's built-in rule engine; see [Configure initial values and verification rules](#configure-initial-values-and-verification-rules) for the rule properties. Mutually exclusive with validator | `RuleItem[]` |  |
 | validateStatus | The validation result status of this form control, which only affects the style, optional: `success` / `error` / `warning` / `default`. When omitted, the Field's own validation status is used | `string` |  |
 | trigger | The timing of triggering the verification, optional: `blur` / `change` / `custom` / `mount`, or an array of them <br/> 1. When set to custom, only formApi will trigger the verification <br/> 2.mount (triggered once when mounting) | `FieldValidateTriggerType` | `'change'` |
 | transform | transform field values before validation. The transformed value is only used for validation and does not affect formState | `(fieldValue) => any` |  |
 | allowEmpty | Whether to keep the key of this field in `values` (as `undefined`) when its value is empty. Setting it on either the Field or the Form takes effect | `boolean` | `false` |
 | allowEmptyString | Whether to allow values to be empty strings. <br/>When the value is '' by default, the key corresponding to this field will be removed from `values`. <br/>If you want to keep the key, you need to set allowEmptyString to true | `boolean` | `false` |
 | emptyValue | The value that counts as empty. When the value changes to it, the key of this field is removed from `values` (kept as `undefined` when `allowEmpty` is true) | `unknown` | `''` |
-| keepState | Whether to retain the field state (value, error, touched) after the field is unmounted. When true, the field's value, validation message, and interaction state are preserved after unmounting, and will be automatically restored upon remounting | `boolean` | `false` |
+| keepState | Whether to retain the field state (value, error, touched) after the field is unmounted; retained state is restored automatically on remount. When not set, it takes the keepState of the enclosing ArrayField, then of the Form | `boolean` | `true` |
 | stopValidateWithError | When it is true, the rules check is used. After encountering the first rule that fails the check, it will no longer trigger the check of subsequent rules | `boolean` | `false` |
 | pure | Whether to only take over the data stream, when true, it will not automatically insert modules such as ErrorMessage, Label, extraText, etc. The style and DOM structure are consistent with the original components | `boolean` | `false` |
 | extraTextPosition | controls the display position of extraText. Middle (the vertical direction is displayed in the order of Label, extraText, and Field), bottom (the vertical direction is displayed in the order of Label, Field, and extraText); when passed on both Form and Field, the Field props prevail | `'middle' \| 'bottom'` | `'bottom'` |
@@ -1772,8 +1804,8 @@ A Field is a component made by withField; the table below lists its own properti
 | fieldClassName | The className of the entire fieldWrapper is the same as the name parameter, except that the prefix is not automatically appended | `string` |  |
 | fieldStyle | The inline style of the entire fieldWrapper | `JSX.CSSProperties \| string` |  |
 | initValue | The initial value of the field (consumed only once when Field mounted, subsequent updates are invalid), it has higher priority than the values in Form's initValues | `any` (type depends on current component) |  |
-| validator | The custom validation function for this form control. Supports synchronous and asynchronous validation (by returning a promise). An empty string or `undefined` means valid; any other result (a string, JSX or an array) is the error. When validator is set, rules will not take effect | `(fieldValue, values) => FieldValidateResult \| Promise<FieldValidateResult>` |  |
-| rules | validation rules, validation library based on [async-validator](https://github.com/yiminghe/async-validator) | `RuleItem[]` |  |
+| validator | The custom validation of this form control: a function or a Standard Schema object (such as `z.string().min(3)`). A function supports synchronous and asynchronous validation (by returning a promise); an empty string, an empty array or an empty value means valid, and a string or an array of strings is the error message. Mutually exclusive with rules | `(fieldValue, values) => string \| string[] \| undefined \| Promise<...>` or `StandardSchema` |  |
+| rules | validation rules, run by Semi's built-in rule engine; see [Configure initial values and verification rules](#configure-initial-values-and-verification-rules) for the rule properties. Mutually exclusive with validator | `RuleItem[]` |  |
 | validateStatus | The validation result status of this form control, which only affects the style, optional: `success` / `error` / `warning` / `default`. When omitted, the Field's own validation status is used | `string` |  |
 | trigger | The timing of triggering the verification, optional: `blur` / `change` / `custom` / `mount`, or an array of them <br/> 1. When set to custom, only formApi will trigger the verification <br/> 2.mount (triggered once when mounting) | `FieldValidateTriggerType` | `'change'` |
 | onChange | Callback when the value changes. The parameters are those of the callback of the wrapped component, followed by the latest form values `latestValues`; a FormCheckbox or FormRadio without `field` is a plain control and has no `latestValues` (see the onChange of each component) | `(...args, latestValues) => void` |  |
@@ -1782,7 +1814,7 @@ A Field is a component made by withField; the table below lists its own properti
 | allowEmpty | Whether to keep the key of this field in `values` (as `undefined`) when its value is empty. Setting it on either the Field or the Form takes effect | `boolean` | `false` |
 | allowEmptyString | Whether to allow values to be empty strings. <br/>When the value is '' by default, the key corresponding to this field will be removed from `values`. <br/>If you want to keep the key, you need to set allowEmptyString to true | `boolean` | `false` |
 | emptyValue | The value that counts as empty. When the value changes to it, the key of this field is removed from `values` (kept as `undefined` when `allowEmpty` is true) | `unknown` | `''` |
-| keepState | Whether to retain the field state (value, error, touched) after the field is unmounted. When true, the field's value, validation message, and interaction state are preserved after unmounting, and will be automatically restored upon remounting | `boolean` | `false` |
+| keepState | Whether to retain the field state (value, error, touched) after the field is unmounted; retained state is restored automatically on remount. When not set, it takes the keepState of the enclosing ArrayField, then of the Form | `boolean` | `true` |
 | stopValidateWithError | When it is true, the rules check is used. After encountering the first rule that fails the check, it will no longer trigger the check of subsequent rules | `boolean` | `false` |
 | helpText | Custom prompt information, which is displayed in the same block as the verification information. When both have values, the verification information is displayed first | `JSX.Element` |  |
 | extraText | Additional prompt information, you can use this when both error information and prompt copy are required, after helpText/errorMessage | `JSX.Element` |  |
@@ -1817,8 +1849,8 @@ A Field is a component whose name starts with Form, such as `FormInput` and `For
 | fieldClassName | The className of the entire fieldWrapper is the same as the name parameter, except that the prefix is not automatically appended | `string` |  |
 | fieldStyle | The inline style of the entire fieldWrapper | `string` |  |
 | initValue | The initial value of the field (consumed only once when Field mounted, subsequent updates are invalid), it has higher priority than the values in Form's initValues | `unknown` (type depends on current component) |  |
-| validator | The custom validation function for this form control. Supports synchronous and asynchronous validation (by returning a promise). An empty string or `undefined` means valid; any other result is the error, and it can only be data: use the `error` snippet to render the error differently. When validator is set, rules will not take effect | `(fieldValue, values) => string \| string[] \| boolean \| undefined \| Promise` |  |
-| rules | validation rules, validation library based on [async-validator](https://github.com/yiminghe/async-validator) | `RuleItem[]` |  |
+| validator | The custom validation of this form control: a function or a Standard Schema object (such as `z.string().min(3)`). A function supports synchronous and asynchronous validation (by returning a promise); an empty string, an empty array or an empty value means valid, and a string or an array of strings is the error message. Use the `error` snippet to render an error differently. Mutually exclusive with rules | `(fieldValue, values) => string \| string[] \| undefined \| Promise<...>` or `StandardSchema` |  |
+| rules | validation rules, run by Semi's built-in rule engine; see [Configure initial values and verification rules](#configure-initial-values-and-verification-rules) for the rule properties. Mutually exclusive with validator | `RuleItem[]` |  |
 | validateStatus | The validation result status of this form control, which only affects the style, optional: `success` / `error` / `warning` / `default`. When omitted, the Field's own validation status is used | `string` |  |
 | trigger | The timing of triggering the verification, optional: `blur` / `change` / `custom` / `mount`, or an array of them <br/> 1. When set to custom, only formApi will trigger the verification <br/> 2.mount (triggered once when mounting) | `FieldValidateTriggerType` | `'change'` |
 | onChange | Callback when the value changes. The parameters are those of the callback of the wrapped component, followed by the latest form values `latestValues`, so you never read a stale value from a closure; a FormCheckbox or FormRadio without `field` is a plain control and has no `latestValues` (see the onChange of each component) | `(...args, latestValues) => void` |  |
@@ -1826,7 +1858,7 @@ A Field is a component whose name starts with Form, such as `FormInput` and `For
 | allowEmpty | Whether to keep the key of this field in `values` (as `undefined`) when its value is empty. Setting it on either the Field or the Form takes effect | `boolean` | `false` |
 | allowEmptyString | Whether to allow values to be empty strings. <br/>When the value is '' by default, the key corresponding to this field will be removed from `values`. <br/>If you want to keep the key, you need to set allowEmptyString to true | `boolean` | `false` |
 | emptyValue | The value that counts as empty. When the value changes to it, the key of this field is removed from `values` (kept as `undefined` when `allowEmpty` is true) | `unknown` | `''` |
-| keepState | Whether to retain the field state (value, error, touched) after the field is unmounted. When true, the field's value, validation message, and interaction state are preserved after unmounting, and will be automatically restored upon remounting | `boolean` | `false` |
+| keepState | Whether to retain the field state (value, error, touched) after the field is unmounted; retained state is restored automatically on remount. When not set, it takes the keepState of the enclosing ArrayField, then of the Form | `boolean` | `true` |
 | stopValidateWithError | When it is true, the rules check is used. After encountering the first rule that fails the check, it will no longer trigger the check of subsequent rules | `boolean` | `false` |
 | pure | Whether to only take over the data stream, when true, it will not automatically insert modules such as ErrorMessage, Label, extraText, etc. The style and DOM structure are consistent with the original components | `boolean` | `false` |
 | extraTextPosition | controls the display position of extraText. Middle (the vertical direction is displayed in the order of Label, extraText, and Field), bottom (the vertical direction is displayed in the order of Label, Field, and extraText); when passed on both Form and Field, the Field props prevail | `'middle' \| 'bottom'` | `'bottom'` |
@@ -1851,14 +1883,14 @@ The custom trigger snippet of FormSelect, FormCascader, FormTreeSelect, FormAuto
 
 We also provide `fieldApi`, most of which is similar to `formApi`, with the difference that fieldApi limits the scope of modification, and it can only modify the bound field. Get it through [useFieldApi](#useFieldApi)
 
-| Function   | Instructions                                      | example                                    |
-| ---------- | ------------------------------------------------- | ------------------------------------------ |
-| setValue   | Modify the value of the current Field             | fieldApi.setValue(newValue: any)           |
-| getValue   | Gets the value of the current Field               | fieldApi.getValue()                        |
-| setTouched | Modify the touched state of the current Field     | fieldApi.setTouched(true)                  |
-| getTouched | Get the touched state of the current Field        | fieldApi.getTouched()                      |
-| setError   | Modify the error information of the current Field | fieldApi.setError(newErrorMessage: string) |
-| getError   | Gets field's error status                         | fieldApi.getError()                        |
+| Function   | Instructions                                      | example                                      |
+| ---------- | ------------------------------------------------- | -------------------------------------------- |
+| setValue   | Modify the value of the current Field             | fieldApi.setValue(newValue: any)             |
+| getValue   | Gets the value of the current Field               | fieldApi.getValue()                          |
+| setTouched | Modify the touched state of the current Field     | fieldApi.setTouched(true)                    |
+| getTouched | Get the touched state of the current Field        | fieldApi.getTouched()                        |
+| setError   | Modify the error information of the current Field | fieldApi.setError(error: string \| string[]) |
+| getError   | Gets field's error status                         | fieldApi.getError()                          |
 
 <Framework only="react">
 
@@ -1875,6 +1907,7 @@ interface ArrayFieldChildrenProps {
     arrayFields: ArrayFieldItem<>;                               // The current array form, which can be used to perform map operations to render each row
     add: (index?: number | React.MouseEvent) => void;                         // Add a blank line; a number inserts it at that position, an event is ignored so it can be used as onClick
     addWithInitValue: (lineObject: Record<string, any>, index?: number) => void; // Add a new row with an initial value, index is the insert position
+    move: (from: number, to: number) => void; // Move row `from` to `to`; its value, error, touched and key move with it, out-of-range indexes are clamped
 }
 
 interface ArrayFieldItem {
@@ -1901,6 +1934,7 @@ interface ArrayFieldSlotProps {
     arrayFields: ArrayFieldItem[]; // The current array form, which can be used to render each row with v-for
     onAdd: (index?: number | Event) => void; // Add a blank line; a number inserts it at that position, an event is ignored so it can be written as @click="onAdd"
     onAddWithInitValue: (row: unknown, index?: number) => void; // Add a new row with an initial value, index is the insert position
+    onMove: (from: number, to: number) => void; // Move row `from` to `to`; its value, error, touched and key move with it, out-of-range indexes are clamped
 }
 
 interface ArrayFieldItem {
@@ -1931,6 +1965,7 @@ interface ArrayFieldChildrenProps {
     readonly arrayFields: ArrayFieldRow[]; // The current array form, which can be used to render each row
     add: (index?: number | MouseEvent) => void; // Add a blank line; a number inserts it at that position, an event is ignored so it can be used directly as onClick
     addWithInitValue: (lineObject: Record<string, any> | string, index?: number) => void; // Add a new row with an initial value, index is the insert position
+    move: (from: number, to: number) => void; // Move row `from` to `to`; its value, error and touched move with it, out-of-range indexes are clamped
 }
 
 interface ArrayFieldRow {
@@ -1961,6 +1996,7 @@ interface ArrayFieldSnippetProps {
     arrayFields: ArrayFieldItem[]; // The current array form, which can be used to render each row with {#each}
     onAdd: (index?: number | Event) => void; // Add a blank line; a number inserts it at that position, an event is ignored so it can be used directly as onclick={onAdd}
     onAddWithInitValue: (row: unknown, index?: number) => void; // Add a new row with an initial value, index is the insert position
+    onMove: (from: number, to: number) => void; // Move row `from` to `to`; its value, error, touched and key move with it, out-of-range indexes are clamped
 }
 
 interface ArrayFieldItem {
@@ -1969,6 +2005,88 @@ interface ArrayFieldItem {
     onRemove: () => void; // Remove operation function of this line, when called, this line will be deleted directly
 }
 ```
+
+</Framework>
+
+<Framework only="react">
+
+## SchemaField
+
+```jsx
+import { SchemaField } from '@fibrae/semi-ui-react';
+// or Form.SchemaField
+```
+
+<SchemaFieldReactApi />
+
+## SchemaForm
+
+```jsx
+import { SchemaForm } from '@fibrae/semi-ui-react';
+```
+
+<SchemaFormReactApi />
+
+</Framework>
+
+<Framework only="vue">
+
+## SchemaField
+
+```ts
+import { SchemaField } from '@fibrae/semi-ui-vue';
+```
+
+<SchemaFieldVueApi />
+
+## SchemaForm
+
+```ts
+import { SchemaForm } from '@fibrae/semi-ui-vue';
+```
+
+<SchemaFormVueApi />
+
+</Framework>
+
+<Framework only="solid">
+
+## SchemaField
+
+```jsx
+import { SchemaField } from '@fibrae/semi-ui-solid';
+// or Form.SchemaField
+```
+
+<SchemaFieldSolidApi />
+
+## SchemaForm
+
+```jsx
+import { SchemaForm } from '@fibrae/semi-ui-solid';
+```
+
+<SchemaFormSolidApi />
+
+</Framework>
+
+<Framework only="svelte">
+
+## SchemaField
+
+```ts
+import { SchemaField } from '@fibrae/semi-ui-svelte';
+```
+
+<SchemaFieldSvelteApi />
+
+## SchemaForm
+
+```ts
+import { SchemaForm } from '@fibrae/semi-ui-svelte';
+```
+
+<SchemaFormSvelteApi />
 
 </Framework>
 
@@ -1983,7 +2101,7 @@ const { Section } = Form;
 
 <FormSectionReactApi />
 
-Native attributes such as `aria-*` land on the `section` element.
+Native attributes such as `aria-*` land on the `fieldset` element.
 
 </Framework>
 
@@ -1997,7 +2115,7 @@ import { FormSection } from '@fibrae/semi-ui-vue';
 
 <FormSectionVueApi />
 
-`class`, `style` and native attributes fall through attrs to the `section` element.
+`class`, `style` and native attributes fall through attrs to the `fieldset` element.
 
 </Framework>
 
@@ -2012,7 +2130,7 @@ const { Section } = Form;
 
 <FormSectionSolidApi />
 
-`class`, `style`, `ref` and native attributes land on the `section` element.
+`class`, `style`, `ref` and native attributes land on the `fieldset` element.
 
 </Framework>
 
@@ -2026,7 +2144,7 @@ import { FormSection } from '@fibrae/semi-ui-svelte';
 
 <FormSectionSvelteApi />
 
-`class`, `style` and native attributes land on the `section` element.
+`class`, `style` and native attributes land on the `fieldset` element.
 
 </Framework>
 
@@ -2228,8 +2346,8 @@ import { Form } from '@fibrae/semi-ui-react';
 const { ErrorMessage } = Form;
 ```
 
-- When the error is React Node or String, render directly; when it is true, only the error container is rendered, without text; when it is false, nothing is rendered
-- When the error is an array, the join operation is automatically performed to aggregate the error information in the array
+- The error is an array of strings; multiple errors are joined with commas
+- When the error is `['']`, only the error container is rendered, without text; when it is empty, nothing is rendered
 
 <FormErrorMessageReactApi />
 
@@ -2245,8 +2363,8 @@ Native attributes such as `aria-*` land on the root div.
 import { FormErrorMessage } from '@fibrae/semi-ui-vue';
 ```
 
-- When the error is a string, render directly; when it is true, only the error container is rendered, without text; when it is false, nothing is rendered
-- When the error is an array, the join operation is automatically performed to aggregate the error information in the array. An error is data only; use the `#error` slot to render it differently
+- The error is an array of strings; multiple errors are joined with commas; use the `#error` slot of the Field to render it differently
+- When the error is `['']`, only the error container is rendered, without text; when it is empty, nothing is rendered
 
 <FormErrorMessageVueApi />
 
@@ -2263,8 +2381,8 @@ import { Form } from '@fibrae/semi-ui-solid';
 const { ErrorMessage } = Form;
 ```
 
-- When the error is a string or JSX, render directly; when it is true, only the error container is rendered, without text; when it is false, nothing is rendered
-- When the error is an array, the errors in the array are aggregated and joined with commas
+- The error is an array of strings; multiple errors are joined with commas
+- When the error is `['']`, only the error container is rendered, without text; when it is empty, nothing is rendered
 
 <FormErrorMessageSolidApi />
 
@@ -2280,8 +2398,8 @@ const { ErrorMessage } = Form;
 import { FormErrorMessage } from '@fibrae/semi-ui-svelte';
 ```
 
-- When the error is a string, render directly; when it is true, only the error container is rendered without text; when it is false, nothing is rendered
-- When the error is an array, the errors in the array are aggregated and joined with commas; an error can only be data, use the `errorContent` snippet to render it differently
+- The error is an array of strings; multiple errors are joined with commas; use the `errorContent` snippet to render it differently
+- When the error is `['']`, only the error container is rendered, without text; when it is empty, nothing is rendered
 
 <FormErrorMessageSvelteApi />
 
@@ -2354,7 +2472,7 @@ The `fieldOptions` property of `FormField`, which describes how it takes over th
     - When the props.labelPosition of the Form or Field is set to `inset`, there is no label tag at this time, but a div tag. The div tag corresponding to insetLabel will be automatically appended with `id`, the value is the same as the id of the above label, corresponding to the `aria-labelledby` of the Field component. A field that does not support the inset label is laid out as `top`, and its `aria-labelledby` points to the label actually rendered
     - The Field component will be automatically appended with `aria-labelledby`, the value is the same as the id of the above label; the `aria-labelledby` passed by the caller comes first and the two are merged instead of overwritten
 - [aria-required](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-required_attribute)
-    - When the Field is configured with required fields (that is, props.rules contains require: true or props.label is configured with required: true without optional: true), the Field component will be automatically appended with `aria-required = true` (except CheckboxGroup, Slider, Upload and a single Radio); an aria-required passed on the Field takes precedence
+    - When the Field is configured with required fields (that is, props.rules contains required: true or props.label is configured with required: true without optional: true; with a Form `schema`, only label is read), the Field component will be automatically appended with `aria-required = true` (except CheckboxGroup, Slider, Upload and a single Radio); an aria-required passed on the Field takes precedence
 - [aria-invalid](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_aria-invalid_attribute) 、[aria-errormessage](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-errormessage)
     - When the Field check fails, or validateStatus is error, the Field component will be automatically added with the `aria-invalid` = true attribute.
     - When the Field check fails, the Field component will be automatically appended with the `aria-errormessage` attribute, the value of which is the id of the DOM element corresponding to the errorMessage (format like: `${control id}-errormessage`); for CheckboxGroup it is set on every checkbox in the group.
@@ -2392,6 +2510,10 @@ The `fieldOptions` property of `FormField`, which describes how it takes over th
   `initValue`, `initValues` are only consumed once when Field and Form mount, and subsequent asynchronous updates will not take effect.  
   If your initial value needs to be taken remotely, you can update it using `formApi.setValue / setValues` after you get the value  
   Or send a new `key` directly to Form or Field to force it to remount.
+
+- **Why is the error message not shown when the validator in rules fails?**
+
+    `rules[].validator` fails when it returns `false` or throws, and shows the `message` of the rule (the default message or the message of the error when there is none); when it returns a string or an array of strings, that is used directly as the error message. Any other return value, such as `true`, `undefined` or an empty string, counts as passed. Also, when `message` is an empty string, the field is only marked red and no text is shown.
 
 - **Why can't getValues get a certain field?**
 

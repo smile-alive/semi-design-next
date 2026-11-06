@@ -117,8 +117,8 @@ describe('Svelte Form 字段', () => {
         await typeInto(container.querySelectorAll('input')[0], 'ab');
         await typeInto(container.querySelectorAll('input')[1], 'ab');
         await settle();
-        expect(api().getError('a')).toBe('至少 5 位');
-        expect(api().getError('b')).toBe('至少 5 位');
+        expect(api().getError('a')).toEqual(['至少 5 位']);
+        expect(api().getError('b')).toEqual(['至少 5 位']);
     });
 
     it('trigger="blur" 时变化不校验，失焦后校验并标记 touched', async () => {
@@ -202,19 +202,32 @@ describe('Svelte Form 字段', () => {
         expect(container.querySelector(`.${prefix}-field-pure.${prefix}-field-n`)).not.toBeNull();
     });
 
-    it('字段卸载时从表单值中移除，keepState 的字段保留值并在重新挂载后恢复', async () => {
-        const { store, api } = renderForm({}, [input('a'), input('b', { keepState: true })]);
+    it('keepState 默认保留卸载字段的值、错误与 touched，重新挂载后恢复；keepState={false} 的字段卸载即移除', async () => {
+        const { store, api } = renderForm({}, [input('a', { keepState: false }), input('b', { validator: () => 'b-err' })]);
+        const inputs = document.querySelectorAll('input');
+        await typeInto(inputs[0], 'x');
+        await typeInto(inputs[1], 'y');
+        await settle();
+        store.fields[0].shown = false;
+        store.fields[1].shown = false;
+        flushSync();
+        expect(api().getFieldExist('a')).toBe(false);
+        expect(api().getFormState()).toEqual({ values: { b: 'y' }, errors: { b: ['b-err'] }, touched: { b: true } });
+        store.fields[1].shown = true;
+        flushSync();
+        expect(getInput()).toHaveValue('y');
+        expect(document.querySelector(errorSelector)).toHaveTextContent('b-err');
+        expect(api().getValues()).toEqual({ b: 'y' });
+    });
+
+    it('Form 的 keepState={false} 是字段的默认值，字段自身的设置优先', async () => {
+        const { store, api } = renderForm({ keepState: false }, [input('a'), input('b', { keepState: true })]);
         const inputs = document.querySelectorAll('input');
         await typeInto(inputs[0], 'x');
         await typeInto(inputs[1], 'y');
         store.fields[0].shown = false;
         store.fields[1].shown = false;
         flushSync();
-        expect(api().getFieldExist('a')).toBe(false);
-        expect(api().getValues()).toEqual({ b: 'y' });
-        store.fields[1].shown = true;
-        flushSync();
-        expect(getInput()).toHaveValue('y');
         expect(api().getValues()).toEqual({ b: 'y' });
     });
 
@@ -311,7 +324,7 @@ describe('Svelte Form 字段：标签与布局', () => {
     });
 
     it('数组路径字段 value[0].name 卸载后，其他数组项保持原索引', async () => {
-        const { store, api } = renderForm({ initValues: { value: [{ name: 'kkk' }, { name: 'ccc' }, { name: 'ddd' }] } }, [input('value[0].name')]);
+        const { store, api } = renderForm({ initValues: { value: [{ name: 'kkk' }, { name: 'ccc' }, { name: 'ddd' }] } }, [input('value[0].name', { keepState: false })]);
         expect(getInput()).toHaveValue('kkk');
         store.fields[0].shown = false;
         flushSync();
@@ -323,7 +336,8 @@ describe('Svelte Form 字段：标签与布局', () => {
 });
 
 describe('Svelte Form 字段：校验', () => {
-    it('validator 与 rules 一起校验，validator 收到转换后的值与全部表单值', async () => {
+    it('validator 与 rules 同时传入时警告一次，只按 validator 校验，validator 收到值与全部表单值', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const validate = vi.fn<(value: unknown, values: unknown) => string>((value) => (value !== 'semi' ? 'invalid' : ''));
         const { api } = renderForm({}, [
             input('name', {
@@ -331,10 +345,11 @@ describe('Svelte Form 字段：校验', () => {
                 validator: validate,
                 rules: [
                     { type: 'string', message: 'rules error1' },
-                    { validator: (_rule: unknown, value: unknown) => value === 'muji', message: 'rules error2' },
+                    { validator: (value: unknown) => value === 'muji', message: 'rules error2' },
                 ],
             }),
         ]);
+        expect(warn.mock.calls.flat().filter((message) => String(message).includes('the rules and validator of field "name" are exclusive; validator is used'))).toHaveLength(1);
         await typeInto(getInput(), 'milk');
         await settle();
         expect(validate).toHaveBeenCalledWith('milk', { name: 'milk' });
@@ -354,7 +369,7 @@ describe('Svelte Form 字段：校验', () => {
         await new Promise((resolve) => setTimeout(resolve, 60));
         await settle();
         expect(errorOf('name')?.textContent?.trim()).toBe('invalid');
-        expect(api().getError('name')).toBe('invalid');
+        expect(api().getError('name')).toEqual(['invalid']);
         await typeInto(getInput(), 'semi');
         expect(validate).toHaveBeenNthCalledWith(2, 'semi', { name: 'semi' });
         await new Promise((resolve) => setTimeout(resolve, 60));
@@ -369,7 +384,7 @@ describe('Svelte Form 字段：校验', () => {
                 trigger: 'change',
                 rules: [
                     { type: 'string', message: 'type error' },
-                    { validator: (_rule: unknown, value: unknown) => value === 'muji', message: 'not muji' },
+                    { validator: (value: unknown) => value === 'muji', message: 'not muji' },
                 ],
             }),
         ]);
@@ -424,13 +439,14 @@ describe('Svelte Form 字段：校验', () => {
                 rules: [
                     { type: 'string', max: 10 },
                     {
-                        asyncValidator(_rule: unknown, _value: unknown, callback: () => void) {
-                            if (!outdated) {
-                                outdated = callback;
-                            } else {
-                                callback();
-                            }
-                        },
+                        validator: () =>
+                            new Promise<undefined>((resolve) => {
+                                if (!outdated) {
+                                    outdated = () => resolve(undefined);
+                                } else {
+                                    resolve(undefined);
+                                }
+                            }),
                     },
                 ],
             }),
@@ -452,7 +468,7 @@ describe('Svelte Form 字段：校验', () => {
 
     it('validateStatus 属性优先于校验状态，错误信息照常显示', async () => {
         const { api, container } = renderForm({}, [input('name', { validateStatus: 'warning', validator: () => 'err' })]);
-        await expect(api().validate()).rejects.toEqual({ name: 'err' });
+        await expect(api().validate()).rejects.toEqual({ name: ['err'] });
         await settle();
         expect(container.querySelector('.semi-input-wrapper-warning')).not.toBeNull();
         expect(container.querySelector('.semi-input-wrapper-error')).toBeNull();

@@ -11,8 +11,8 @@ export default function FormDemo() {
             <span id="form-keep-state-toggle" style={{ marginLeft: 8, color: 'var(--semi-color-text-2)' }}>
                 显示条件字段
             </span>
-            {show && <Form.Input field="conditionalField" label="条件字段（keepState）" keepState />}
-            {show && <Form.Input field="noKeepState" label="条件字段（无 keepState）" />}
+            {show && <Form.Input field="conditionalField" label="条件字段（默认保留）" />}
+            {show && <Form.Input field="noKeepState" label="条件字段（keepState={false}）" keepState={false} />}
             <Button htmlType="submit">提交</Button>
         </Form>
     );

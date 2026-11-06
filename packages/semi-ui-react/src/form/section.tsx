@@ -6,21 +6,21 @@ import type { ElementProps } from '../_base/base';
 
 const prefix = cssClasses.PREFIX;
 
-export interface SectionProps extends ElementProps<'section'> {
+export interface SectionProps extends ElementProps<'fieldset'> {
     className?: string;
     style?: React.CSSProperties;
     text?: React.ReactNode;
     children?: React.ReactNode;
-    /** Attached to the section element */
-    ref?: React.Ref<HTMLElement>;
+    /** Attached to the fieldset element */
+    ref?: React.Ref<HTMLFieldSetElement>;
 }
 
 function Section({ text, className, style, children, ref, ...rest }: SectionProps) {
     return (
-        <section {...rest} ref={ref} className={clsx(prefix + '-section', className)} style={style}>
-            {(text || text === 0) && <h5 className={prefix + '-section-text'}>{text}</h5>}
+        <fieldset {...rest} ref={ref} className={clsx(prefix + '-section', className)} style={style}>
+            {(text || text === 0) && <legend className={prefix + '-section-text'}>{text}</legend>}
             {children}
-        </section>
+        </fieldset>
     );
 }
 

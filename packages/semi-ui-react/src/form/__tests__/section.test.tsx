@@ -7,10 +7,10 @@ import { Form } from '@fibrae/semi-ui-react';
 const Section = Form.Section;
 const textSelector = `.${BASE_CLASS_PREFIX}-form-section-text`;
 
-describe('Form.Label', () => {
+describe('Form.Section', () => {
     it('className 与 style', () => {
         const { container } = render(<Section className="sec-test" style={{ color: 'red' }} />);
-        const section = container.querySelector('section.sec-test');
+        const section = container.querySelector('fieldset.sec-test');
         expect(section).not.toBeNull();
         expect(section).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
@@ -23,12 +23,13 @@ describe('Form.Label', () => {
                 </Section>
             </Form>
         );
-        expect(container.querySelector('section .test')).not.toBeNull();
+        expect(container.querySelector('fieldset .test')).not.toBeNull();
     });
 
     it('text', () => {
         const { container, rerender } = render(<Section text="semi" />);
         expect(container.querySelector(textSelector)).toHaveTextContent(/^semi$/);
+        expect(screen.getByRole('group', { name: 'semi' })).toBe(container.querySelector('fieldset'));
 
         rerender(<Section text={0} />);
         expect(container.querySelector(textSelector)).toHaveTextContent(/^0$/);
@@ -39,13 +40,13 @@ describe('Form.Label', () => {
 
     it('没有 text 时不渲染空标题', () => {
         const { container } = render(<Section />);
-        expect(container.querySelector('h5')).toBeNull();
+        expect(container.querySelector('legend')).toBeNull();
     });
 
-    it('其他属性与 ref 透传到 section 元素', () => {
-        const ref = createRef<HTMLElement>();
+    it('其他属性与 ref 透传到 fieldset 元素', () => {
+        const ref = createRef<HTMLFieldSetElement>();
         const { container } = render(<Section ref={ref} data-testid="sec" />);
-        expect(ref.current).toBe(container.querySelector('section'));
+        expect(ref.current).toBe(container.querySelector('fieldset'));
         expect(ref.current).toHaveAttribute('data-testid', 'sec');
     });
 });

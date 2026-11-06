@@ -1,4 +1,4 @@
-import type { Component, ComponentProps } from 'svelte';
+import type { Component, ComponentProps, Snippet } from 'svelte';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import * as z from 'zod';
 import type { FieldPath, FieldPathValue, FormState } from '@fibrae/semi-foundation/form/interface';
@@ -23,7 +23,13 @@ import {
     type FormTransfer,
     type FormTreeSelect,
     type FormUpload,
+    type SchemaField,
     type ArrayFieldProps,
+    type ArrayFieldSnippetProps,
+    type JsonSchema,
+    type SchemaFieldProps,
+    type SchemaFieldRenderProps,
+    type SchemaFormProps,
     type CommonFieldProps,
     type FieldProps,
     type FormApi,
@@ -225,26 +231,28 @@ describe('Svelte 表单状态与校验结果类型', () => {
     type Errors = NonNullable<FormState<ArrayValues>['errors']>;
     type Touched = NonNullable<FormState<ArrayValues>['touched']>;
 
-    it('errors、touched 按值的嵌套结构，整体作为字段的对象或数组也可以有自己的一项', () => {
-        expectTypeOf<{ tags: [undefined, string]; matrix: [[string]]; users: [{ name: string; roles: [undefined, { id: string }] }] }>().toExtend<Errors>();
-        expectTypeOf<{ tags: string; users: [{ roles: string }] }>().toExtend<Errors>();
-        expectTypeOf<{ users: { name: string } }>().not.toExtend<Errors>();
+    it('errors、touched 按值的嵌套结构，叶子是消息数组，整体作为字段的对象或数组也可以有自己的一项', () => {
+        expectTypeOf<{ tags: [undefined, string[]]; matrix: [[string[]]]; users: [{ name: string[]; roles: [undefined, { id: string[] }] }] }>().toExtend<Errors>();
+        expectTypeOf<{ tags: string[]; users: [{ roles: string[] }] }>().toExtend<Errors>();
+        expectTypeOf<{ users: [{ name: string }] }>().not.toExtend<Errors>();
+        expectTypeOf<{ users: { name: string[] } }>().not.toExtend<Errors>();
         expectTypeOf<{ users: [{ name: true }]; tags: [true] }>().toExtend<Touched>();
         expectTypeOf<{ users: [{ name: string }] }>().not.toExtend<Touched>();
-        expectTypeOf<{ profile: { address: { city: string } } }>().toExtend<NonNullable<FormState<Values>['errors']>>();
-        expectTypeOf<{ children: [{ children: [{ label: string }] }] }>().toExtend<NonNullable<FormState<TreeNode>['errors']>>();
+        expectTypeOf<{ profile: { address: { city: string[] } } }>().toExtend<NonNullable<FormState<Values>['errors']>>();
+        expectTypeOf<{ children: [{ children: [{ label: string[] }] }] }>().toExtend<NonNullable<FormState<TreeNode>['errors']>>();
     });
 
-    it('表单级 validator 返回嵌套的错误', () => {
+    it('表单级 validator 返回嵌套的错误，叶子是消息或消息数组', () => {
         type Result = Awaited<ReturnType<NonNullable<FormProps<ArrayValues>['validator']>>>;
-        expectTypeOf<{ users: [{ name: string }] }>().toExtend<Result>();
+        expectTypeOf<{ users: [{ name: string }]; tags: string[] }>().toExtend<Result>();
         expectTypeOf<{ users: { name: string } }>().not.toExtend<Result>();
+        expectTypeOf<'form invalid'>().not.toExtend<Result>();
     });
 
     it('schema 与 Form 的 validator 互斥，Values 从 schema 推断', () => {
         type Props = FormProps<{ name: string }>;
         const schema = z.object({ name: z.string() });
-        const validator = () => '';
+        const validator = () => undefined;
         const inferValues = <Values extends Record<string, any>>(_props: FormProps<Values>) => ({}) as Values;
         expectTypeOf({ schema }).toExtend<Props>();
         expectTypeOf({ validator }).toExtend<Props>();
@@ -252,7 +260,7 @@ describe('Svelte 表单状态与校验结果类型', () => {
         expectTypeOf(inferValues({ schema })).toEqualTypeOf<{ name: string }>();
     });
 
-    it('schema 的输出要与 values 一致', () => {
+    it('schema 的输入要与 values 一致', () => {
         type Schema = NonNullable<FormProps<{ name: string }>['schema']>;
         const valid = z.object({ name: z.string() });
         const invalid = z.object({ name: z.number() });
@@ -260,11 +268,51 @@ describe('Svelte 表单状态与校验结果类型', () => {
         expectTypeOf(invalid).not.toExtend<Schema>();
     });
 
-    it('onErrorChange 的 errors 与 formState.errors 同形，onSubmitFail 的 errors 是校验结果', () => {
+    it('schema 的输入是 values，输出交给 onSubmit 与整表 validate', () => {
+        const schema = z.object({ age: z.string().transform(Number) });
+        const infer = <Values extends Record<string, any>, Output>(_props: FormProps<Values, Output>) => ({}) as { values: Values; output: Output };
+        expectTypeOf(infer({ schema }).values).toEqualTypeOf<{ age: string }>();
+        expectTypeOf(infer({ schema }).output).toEqualTypeOf<{ age: number }>();
+        expectTypeOf<Parameters<NonNullable<FormProps<{ age: string }, { age: number }>['onSubmit']>>[0]>().toEqualTypeOf<{ age: number }>();
+        const check = (api: FormApi<{ age: string }, { age: number }>) => {
+            expectTypeOf(api.validate()).toEqualTypeOf<Promise<{ age: number }>>();
+            expectTypeOf(api.validate(['age'])).toEqualTypeOf<Promise<{ age: string }>>();
+            expectTypeOf(api.getTouched()).toEqualTypeOf<boolean | Record<string, any> | undefined>();
+        };
+        expect(check).toBeTypeOf('function');
+    });
+
+    it('onErrorChange 的 errors 与 formState.errors 同形，onSubmitFail 的 errors 是错误树或 validator 抛出的值', () => {
         expectTypeOf<Parameters<NonNullable<FormProps<ArrayValues>['onErrorChange']>>[0]>().toEqualTypeOf<Errors>();
         type SubmitErrors = Parameters<NonNullable<FormProps<ArrayValues>['onSubmitFail']>>[0];
-        expectTypeOf<{ users: [{ name: string }] }>().toExtend<SubmitErrors>();
-        expectTypeOf<'form invalid'>().toExtend<SubmitErrors>();
-        expectTypeOf<{ users: { name: string } }>().not.toExtend<SubmitErrors>();
+        expectTypeOf<{ users: [{ name: string[] }] }>().toExtend<SubmitErrors>();
+        expectTypeOf<Error>().toExtend<SubmitErrors>();
+    });
+});
+
+describe('Svelte 字段校验与新组件类型', () => {
+    it('字段的 rules 与 validator 互斥，validator 接受函数或 Standard Schema', () => {
+        type InputFieldProps = ComponentProps<typeof FormInput>;
+        const rules = [{ required: true }];
+        const validator = (value: unknown) => (value ? undefined : ['required']);
+        expectTypeOf({ field: 'a', rules }).toExtend<InputFieldProps>();
+        expectTypeOf({ field: 'a', validator }).toExtend<InputFieldProps>();
+        expectTypeOf({ field: 'a', validator: z.string().min(3) }).toExtend<InputFieldProps>();
+        expectTypeOf({ field: 'a', rules, validator }).not.toExtend<InputFieldProps>();
+        expectTypeOf({ field: 'a', rules, validator }).not.toExtend<ComponentProps<typeof FormCheckbox>>();
+        expectTypeOf({ field: 'a', validator: () => true }).not.toExtend<InputFieldProps>();
+    });
+
+    it('ArrayField 的 children 收到 onMove，Form 与 ArrayField 接受 keepState', () => {
+        expectTypeOf<ArrayFieldSnippetProps['onMove']>().toEqualTypeOf<(from: number, to: number) => void>();
+        expectTypeOf<{ field: string; keepState: false }>().toExtend<ArrayFieldProps>();
+        expectTypeOf<{ keepState: false; schemaDebounce: 300 }>().toExtend<FormProps>();
+    });
+
+    it('SchemaField 的 renderField 是按路径的 snippet，SchemaForm 接受 Form 与 SchemaField 的属性', () => {
+        expectTypeOf<NonNullable<SchemaFieldProps['renderField']>[string]>().toEqualTypeOf<Snippet<[SchemaFieldRenderProps]>>();
+        expectTypeOf<{ field: 'contacts'; widgets: { uri: typeof FormInput } }>().toExtend<SchemaFieldProps>();
+        expectTypeOf<{ jsonSchema: JsonSchema; labelPosition: 'left'; keepState: false }>().toExtend<SchemaFormProps>();
+        expectTypeOf<ComponentProps<typeof SchemaField>>().toEqualTypeOf<SchemaFieldProps>();
     });
 });

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { type VNode, computed, shallowReactive, useAttrs, useId } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-    import { isValid } from '@fibrae/semi-foundation/form/utils';
+    import { isErrorLeaf } from '@fibrae/semi-foundation/form/errors';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
     import warning from '@fibrae/semi-foundation/utils/warning';
@@ -43,7 +43,13 @@
     const labelPosition = computed(() => props.labelPosition || formProps.value.labelPosition);
     const labelConfig = computed(() => (isLabelConfig(props.label) ? props.label : { text: props.label }));
     const labelId = computed(() => labelConfig.value.id ?? `${id}-label`);
-    const groupError = computed(() => fields.map((field) => ObjectUtil.get(form?.formState.value.errors ?? {}, field)));
+
+    const groupError = computed(() =>
+        fields.flatMap((field) => {
+            const error = ObjectUtil.get(form?.formState.value.errors ?? {}, field);
+            return isErrorLeaf(error) ? error : [];
+        })
+    );
 
     provideFormInputGroupContext({
         registerField: (field) => {
@@ -104,7 +110,7 @@
             <div v-if="extraShown('bottom')" :id="extraTextId" :class="extraClass()" x-semi-prop="extraText">
                 <slot name="extraText" />
             </div>
-            <FormErrorMessage v-if="!isValid(groupError)" :error="groupError" :errorMessageId="errorMessageId" isInInputGroup :showValidateIcon="formProps.showValidateIcon" />
+            <FormErrorMessage v-if="groupError.length" :error="groupError" :errorMessageId="errorMessageId" isInInputGroup :showValidateIcon="formProps.showValidateIcon" />
         </FieldGrid>
     </div>
 </template>

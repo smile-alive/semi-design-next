@@ -299,9 +299,6 @@ catalogs:
     '@vitejs/plugin-vue':
       specifier: ^6.0.10
       version: 6.0.10
-    async-validator:
-      specifier: ^4.2.5
-      version: 4.2.5
     clsx:
       specifier: ^2.1.1
       version: 2.1.1
@@ -856,9 +853,6 @@ importers:
       '@shikijs/core':
         specifier: 'catalog:'
         version: 4.5.0
-      async-validator:
-        specifier: 'catalog:'
-        version: 4.2.5
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
@@ -1170,9 +1164,6 @@ importers:
       '@tanstack/react-virtual':
         specifier: 'catalog:'
         version: 3.14.22(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      async-validator:
-        specifier: 'catalog:'
-        version: 4.2.5
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
@@ -1256,9 +1247,6 @@ importers:
       '@tanstack/svelte-virtual':
         specifier: 'catalog:'
         version: 3.13.49(svelte@5.57.3(@typescript-eslint/types@8.72.0))
-      async-validator:
-        specifier: 'catalog:'
-        version: 4.2.5
       date-fns:
         specifier: 'catalog:'
         version: 4.4.0
@@ -1308,9 +1296,6 @@ importers:
       '@tanstack/vue-virtual':
         specifier: 'catalog:'
         version: 3.13.48(vue@3.5.44(typescript@6.0.3))
-      async-validator:
-        specifier: 'catalog:'
-        version: 4.2.5
       date-fns:
         specifier: 'catalog:'
         version: 4.4.0
@@ -5091,9 +5076,6 @@ packages:
 
   async-sema@3.1.1:
     resolution: {integrity: sha512-tLRNUXati5MFePdAk8dw7Qt7DpxPB60ofAgn8WRhW6a2rcimZnYBP9oxHiv0OHy+Wz7kPMG+t4LGdt31+4EmGg==}
-
-  async-validator@4.2.5:
-    resolution: {integrity: sha512-7HhHjtERjqlNbZtqNqy2rckN/SpOOlmDliet+lP7k+eKZEjPk3DgyeU9lIXLdeLz0uBbbVp+9Qdow9wJWgwwfg==}
 
   async@3.2.6:
     resolution: {integrity: sha512-htCUDlxyyCLMgaM3xXg0C0LW2xqfuQ6p05pCEIsXuyQ+a1koYKTuBMzRNwmybfLgvJDMd0r1LTn4+E0Ti6C2AA==}
@@ -13183,8 +13165,6 @@ snapshots:
       - yaml
 
   async-sema@3.1.1: {}
-
-  async-validator@4.2.5: {}
 
   async@3.2.6: {}
 

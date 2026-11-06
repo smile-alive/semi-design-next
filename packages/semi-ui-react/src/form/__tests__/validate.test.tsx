@@ -44,7 +44,7 @@ describe('Form 静默校验', () => {
     it('静默校验不写 formState.errors，也不触发 onErrorChange', async () => {
         const onErrorChange = vi.fn<(...args: unknown[]) => void>();
         const { getApi } = renderNameForm({ onErrorChange });
-        await expect(getApi().validate({ silent: true })).rejects.toEqual({ name: 'req' });
+        await expect(getApi().validate({ silent: true })).rejects.toEqual({ name: ['req'] });
         expect(getApi().getFormState().errors).toEqual({});
         expect(onErrorChange).not.toHaveBeenCalled();
     });
@@ -146,7 +146,7 @@ describe('Form 表单级 validator', () => {
         await act(async () => {
             await api.validate().catch(() => undefined);
         });
-        expect(container.querySelector('output')).toHaveTextContent('{"name":"x","orphan":"y"}');
+        expect(container.querySelector('output')).toHaveTextContent('{"name":["x"],"orphan":["y"]}');
         const changeCount = onChange.mock.calls.length;
         await act(async () => {
             await api.validate();
@@ -194,7 +194,7 @@ describe('Form 卸载', () => {
 
     it('useForm 搭配 keepState 字段，Form 卸载后 formState 为空', () => {
         let latest: { values?: unknown };
-        const Host = ({ show }: { show: boolean }) => {
+        function Host({ show }: { show: boolean }) {
             const [api, formState] = Form.useForm();
             useEffect(() => {
                 latest = formState;
@@ -204,7 +204,7 @@ describe('Form 卸载', () => {
                     <Form.Input field="a" keepState />
                 </Form>
             ) : null;
-        };
+        }
         const { rerender } = render(<Host show />);
         expect(latest.values).toEqual({ a: '1' });
         rerender(<Host show={false} />);
@@ -221,7 +221,7 @@ describe('Form 提交', () => {
             getApi().submitForm();
         });
         await vi.waitFor(() => expect(onSubmitFail).toHaveBeenCalledTimes(1));
-        expect(onSubmitFail.mock.calls[0][0]).toEqual({ name: 'async-err' });
+        expect(onSubmitFail.mock.calls[0][0]).toEqual({ name: ['async-err'] });
         expect(onSubmit).not.toHaveBeenCalled();
     });
 
@@ -284,9 +284,9 @@ describe('Form onErrorChange 触发次数', () => {
                 <Form.Input field="b" rules={[{ required: true, message: 'b-req' }]} />
             </Form>
         );
-        await act(() => expect(api.validate()).rejects.toEqual({ a: 'a-req', b: 'b-req' }));
+        await act(() => expect(api.validate()).rejects.toEqual({ a: ['a-req'], b: ['b-req'] }));
         expect(onErrorChange).toHaveBeenCalledTimes(1);
-        expect(onErrorChange).toHaveBeenLastCalledWith({ a: 'a-req', b: 'b-req' }, { a: 'a-req', b: 'b-req' });
+        expect(onErrorChange).toHaveBeenLastCalledWith({ a: ['a-req'], b: ['b-req'] }, { a: ['a-req'], b: ['b-req'] });
 
         act(() => api.reset());
         expect(onErrorChange).toHaveBeenCalledTimes(2);

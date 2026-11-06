@@ -13,6 +13,7 @@ import {
     type FormProps,
     type FormRadioProps,
     type FormSelectProps,
+    type RuleItem,
     type useForm,
     type FormAutoComplete,
     type FormCascader,
@@ -233,26 +234,55 @@ describe('表单状态与校验结果类型', () => {
     type Errors = NonNullable<FormState<ArrayValues>['errors']>;
     type Touched = NonNullable<FormState<ArrayValues>['touched']>;
 
-    it('errors、touched 按值的嵌套结构，整体作为字段的对象或数组也可以有自己的一项', () => {
-        expectTypeOf<{ tags: [undefined, string]; matrix: [[string]]; users: [{ name: string; roles: [undefined, { id: string }] }] }>().toExtend<Errors>();
-        expectTypeOf<{ tags: string; users: [{ roles: string }] }>().toExtend<Errors>();
-        expectTypeOf<{ users: { name: string } }>().not.toExtend<Errors>();
+    it('errors、touched 按值的嵌套结构，叶子是消息数组，整体作为字段的对象或数组也可以有自己的一项', () => {
+        expectTypeOf<{ tags: [undefined, string[]]; matrix: [[string[]]]; users: [{ name: string[]; roles: [undefined, { id: string[] }] }] }>().toExtend<Errors>();
+        expectTypeOf<{ tags: string[]; users: [{ roles: string[] }] }>().toExtend<Errors>();
+        expectTypeOf<{ tags: [undefined, string] }>().not.toExtend<Errors>();
+        expectTypeOf<{ users: { name: string[] } }>().not.toExtend<Errors>();
         expectTypeOf<{ users: [{ name: true }]; tags: [true] }>().toExtend<Touched>();
         expectTypeOf<{ users: [{ name: string }] }>().not.toExtend<Touched>();
-        expectTypeOf<{ profile: { address: { city: string } } }>().toExtend<NonNullable<FormState<Values>['errors']>>();
-        expectTypeOf<{ children: [{ children: [{ label: string }] }] }>().toExtend<NonNullable<FormState<TreeNode>['errors']>>();
+        expectTypeOf<{ profile: { address: { city: string[] } } }>().toExtend<NonNullable<FormState<Values>['errors']>>();
+        expectTypeOf<{ children: [{ children: [{ label: string[] }] }] }>().toExtend<NonNullable<FormState<TreeNode>['errors']>>();
     });
 
-    it('表单级 validator 返回嵌套的错误', () => {
+    it('表单级 validator 返回嵌套的错误，叶子是消息或消息数组', () => {
         type Result = Awaited<ReturnType<NonNullable<FormProps<ArrayValues>['validator']>>>;
         expectTypeOf<{ users: [{ name: string }] }>().toExtend<Result>();
+        expectTypeOf<{ users: [{ name: string[] }] }>().toExtend<Result>();
+        expectTypeOf<undefined>().toExtend<Result>();
+        expectTypeOf<'form invalid'>().not.toExtend<Result>();
         expectTypeOf<{ users: { name: string } }>().not.toExtend<Result>();
+    });
+
+    it('getError 返回消息数组，getTouched 与 setTouched 同形', () => {
+        const check = (api: FormApi<ArrayValues>) => {
+            expectTypeOf(api.getError('tags[0]')).toEqualTypeOf<string[] | undefined>();
+            expectTypeOf(api.getTouched()).toEqualTypeOf<boolean | Record<string, any> | undefined>();
+            api.setError('tags[0]', ['a', 'b']);
+            api.setError('users', { 0: { name: 'bad' } });
+        };
+        expect(check).toBeTypeOf('function');
+    });
+
+    it('Values 与 Output 分离：submit 与不带字段的 validate 得到 schema 的输出', () => {
+        const schema = z.object({ age: z.string().transform(Number) });
+        type Output = z.output<typeof schema>;
+        type Input = z.input<typeof schema>;
+        const inferApi = <Values extends Record<string, any>, Output>(_props: FormProps<Values, Output>) => ({}) as FormApi<Values, Output>;
+        const check = () => {
+            const api = inferApi({ schema });
+            expectTypeOf(api.validate()).toEqualTypeOf<Promise<Output>>();
+            expectTypeOf(api.validate(['age'])).toEqualTypeOf<Promise<Input>>();
+            expectTypeOf(api.getValue('age')).toEqualTypeOf<string>();
+        };
+        expect(check).toBeTypeOf('function');
+        expectTypeOf<FormEmits<Input, Output>['submit'][0]>().toEqualTypeOf<{ age: number }>();
     });
 
     it('schema 与 Form 的 validator 互斥，Values 从 schema 推断', () => {
         type Props = FormProps<{ name: string }>;
         const schema = z.object({ name: z.string() });
-        const validator = () => '';
+        const validator = () => undefined;
         const inferValues = <Values extends Record<string, any>>(_props: FormProps<Values>) => ({}) as Values;
         expectTypeOf({ schema }).toExtend<Props>();
         expectTypeOf({ validator }).toExtend<Props>();
@@ -268,11 +298,30 @@ describe('表单状态与校验结果类型', () => {
         expectTypeOf(invalid).not.toExtend<Schema>();
     });
 
-    it('errorChange 的 errors 与 formState.errors 同形，submitFail 的 errors 是校验结果', () => {
+    it('errorChange 的 errors 与 formState.errors 同形，submitFail 的 errors 是错误树', () => {
         expectTypeOf<FormEmits<ArrayValues>['errorChange'][0]>().toEqualTypeOf<Errors>();
         type SubmitErrors = FormEmits<ArrayValues>['submitFail'][0];
-        expectTypeOf<{ users: [{ name: string }] }>().toExtend<SubmitErrors>();
-        expectTypeOf<'form invalid'>().toExtend<SubmitErrors>();
-        expectTypeOf<{ users: { name: string } }>().not.toExtend<SubmitErrors>();
+        expectTypeOf<{ users: [{ name: string[] }] }>().toExtend<SubmitErrors>();
+        expectTypeOf<{ users: [{ name: string }] }>().not.toExtend<SubmitErrors>();
+        expectTypeOf<{ users: { name: string[] } }>().not.toExtend<SubmitErrors>();
+    });
+});
+
+describe('字段校验类型', () => {
+    it('rules 与 validator 互斥，validator 接受函数或 Standard Schema', () => {
+        const rules = [{ required: true }];
+        const validator = () => 'bad';
+        expectTypeOf({ field: 'a', rules }).toExtend<InputFieldProps>();
+        expectTypeOf({ field: 'a', validator }).toExtend<InputFieldProps>();
+        expectTypeOf({ field: 'a', validator: z.string().min(3) }).toExtend<InputFieldProps>();
+        expectTypeOf({ field: 'a', rules, validator }).not.toExtend<InputFieldProps>();
+        expectTypeOf({ field: 'a', rules, validator }).not.toExtend<FormCheckboxProps>();
+        expectTypeOf({ field: 'a', validator: () => 1 }).not.toExtend<InputFieldProps>();
+    });
+
+    it('RuleItem 是 Semi 自己的规则：type 只接受内置类型，validator 收到值与全部值', () => {
+        expectTypeOf<{ type: 'email'; message: string }>().toExtend<RuleItem>();
+        expectTypeOf<{ type: 'hex' }>().not.toExtend<RuleItem>();
+        expectTypeOf<Parameters<NonNullable<RuleItem['validator']>>>().toEqualTypeOf<[value: any, values: Record<string, any>]>();
     });
 });

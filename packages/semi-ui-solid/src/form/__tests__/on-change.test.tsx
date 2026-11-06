@@ -44,12 +44,12 @@ describe('Form-onChange', () => {
         const onChange = vi.fn<(...args: unknown[]) => void>();
         render(() => (
             <Form onChange={onChange}>
-                <FormInput field="name" rules={[{ validator: (_rule: unknown, value: unknown) => value === 'muji', message: 'not muji' }]} trigger="change" />
+                <FormInput field="name" rules={[{ validator: (value: unknown) => value === 'muji', message: 'not muji' }]} trigger="change" />
             </Form>
         ));
         fireEvent.input(getInput(), { target: { value: 'semi' } });
         await waitFor(() => expect(onChange).toHaveBeenCalledTimes(2));
-        expect(onChange).toHaveBeenLastCalledWith({ values: { name: 'semi' }, errors: { name: 'not muji' }, touched: { name: true } });
+        expect(onChange).toHaveBeenLastCalledWith({ values: { name: 'semi' }, errors: { name: ['not muji'] }, touched: { name: true } });
     });
 
     it('onChange：字段内部 touched 状态更新时触发', () => {
@@ -108,7 +108,7 @@ describe('Form 状态快照', () => {
         const states = onChange.mock.calls.map(([formState]) => formState);
         expect(states).toHaveLength(4);
         expect(states[1].errors).not.toBe(states[0].errors);
-        expect(states[0].errors).toEqual({ user: { name: 'e1' } });
+        expect(states[0].errors).toEqual({ user: { name: ['e1'] } });
         expect(states[1].errors?.user).toBe(states[0].errors?.user);
         expect(states[3].touched).not.toBe(states[2].touched);
         expect(states[2].touched).toEqual({ user: { name: true } });

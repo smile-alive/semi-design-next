@@ -270,16 +270,21 @@ $rating: #{$prefix}-rating;
 }
 
 .#{$form}-section {
+    // fieldset defaults to a border, padding, inline margins and min-inline-size: min-content, which lets wide fields
+    // overflow their grid or flex track
+    min-inline-size: 0;
     width: 100%;
+    padding: 0;
+    margin-inline: 0;
     margin-top: $spacing-form_section-marginTop;
+    border: 0;
 
     &-text {
         @include font-size-header-5;
         width: 100%;
+        padding-inline: 0;
         padding-top: $spacing-form_section_text-paddingTop;
         padding-bottom: $spacing-form_section_text-paddingBottom;
-        margin-block-start: 0;
-        margin-block-end: 0;
         margin-top: $spacing-form_section_text-marginTop;
         margin-bottom: $spacing-form_section_text-marginBottom;
         font-weight: $font-weight-bold;
@@ -290,6 +295,25 @@ $rating: #{$prefix}-rating;
     &:nth-of-type(1) {
         margin-top: 0;
     }
+}
+
+.#{$form}-schema-array-row {
+    display: flex;
+    gap: $spacing-form_schema_array_row-gap;
+    align-items: flex-end;
+}
+
+.#{$form}-schema-array-row-content {
+    flex: 1;
+    min-inline-size: 0;
+}
+
+.#{$form}-schema-array-row-actions {
+    display: flex;
+    flex-shrink: 0;
+    gap: $spacing-form_schema_array_row_actions-gap;
+    // aligns the buttons with the control of the row's last field, not with the field's bottom padding
+    padding-block-end: $spacing-form_field_vertical-paddingBottom;
 }
 
 @include meta.load-css('rtl');

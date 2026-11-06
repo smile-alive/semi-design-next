@@ -53,6 +53,7 @@
 | F13 | 组件能否在 Shadow DOM 内使用 | 已定（2026-10-21）：支持 open ShadowRoot。弹层 Portal 到所在根节点；焦点查询经 `FocusTrapHandle.getActiveElement`、`getDeepActiveElement`，按所在根节点进行；id 查询在组件容器或所在根节点内进行。不提供 Web Component 构建工具，组件样式由应用加入 ShadowRoot |
 | F14 | React 收集子组件时如何处理 Fragment 与子组件识别 | 已定（2026-10-21）：展开 Fragment，与 Vue 的 `slotNodes` 一致；子组件用静态 `elementType` 识别，经 `elementTypeOf` 读取，不设 `isXxx` 标记 |
 | F15 | RTL 方向由什么决定 | 已定（2026-10-21）：由 `dir` 属性决定，样式用 `:dir(rtl)`，挂在组件自己的类上，不写 `.semi-rtl`、`.semi-portal-rtl` 等祖先类和组件级 `-rtl` 类。ConfigProvider 在显式传入的 `direction` 与外层不同时（含最外层）输出带 `dir` 的包裹 div；Portal 根元素、Tooltip 弹层 wrapper、Toast、Notification、Table wrapper、ModalContent 根元素输出 `dir`，方向为 undefined 时不输出、继承祖先；Table、Toast、Notification、ModalContent 根元素上，使用方传入的原生 `dir` 优先（F2）。有 ConfigProvider 而未传 `direction` 时 context 的 `direction` 解析为 `ltr`，见 2.1 L8。依赖方向的 JS 逻辑（键盘方向、默认 position、Table 对齐等）读组件自身的 `direction` 属性或 ConfigProvider 的 `direction`，不读 DOM 上的 `dir` |
+| F16 | Form 的校验模型 | 已定（2026-11-05）：错误一律为 `string[]`，不支持 ReactNode 与布尔错误；自带规则引擎替换 async-validator，`RuleItem` 为 Semi 自己的类型，默认文案来自语言包 `Form`；字段 `rules` 与 `validator` 互斥（同传时 `validator` 生效并警告），`validator` 接受函数或 Standard Schema；Form `schema` 排除字段的 `rules`、`validator` 与 Form 的 `validator`，有 `schema` 时必填星号只看 `label.required`；`schemaDebounce` 只作用于值变化触发的 schema 校验；`keepState` 默认 true，按字段、ArrayField、Form 的顺序取值，ArrayField 保留整组；值类型区分输入与输出，`onSubmit` 与不带字段的 `validate()` 用输出类型。SchemaField 是 Form 内按 JSON Schema 渲染某个路径的组件，SchemaForm 是 Form 加根 SchemaField 的封装；JSON Schema 显式传入优先，否则由 `schema` 的 Standard JSON Schema 导出；定制只用 `widgets`（按 `format` 或控件种类）与 `renderField`（按路径），不做 uiSchema 与 `x-` 扩展 |
 
 服务端渲染（SSR）决策，除注明日期的条目外均为 2026-10-25 已定。Solid 的 A9 至 A11 与 A20 见第 3.1 节：
 
@@ -93,7 +94,6 @@
 
 ### 2.2 依赖
 
-- `async-validator`：4.2.5 起停更，`RuleItem` 类型对外暴露；替换属 Form API 决策，另立。
 - `lottie-web`：Lottie 已改为首次使用时动态导入（`semi-foundation/src/lottie/foundation.ts`），渲染器仍是完整版，轻量入口待评估。
 
 ### 2.3 体积

@@ -39,7 +39,7 @@ describe('Form-field', () => {
         expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-form-field.field-test-b`)).toHaveLength(1);
     });
 
-    it('label', () => {
+    it('label 为字符串时渲染标签文本', () => {
         const { container } = renderForm({}, () => <FormInput label="Company" field="name" />);
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-form-field-label`)).toHaveTextContent(/^Company$/);
     });
@@ -77,7 +77,7 @@ describe('Form-field', () => {
         expect(screen.getByRole('textbox', { name: 'empty' })).toBeInTheDocument();
     });
 
-    it('labelPosition', () => {
+    it('Field 的 labelPosition 优先于 Form 的 labelPosition', () => {
         const { container } = renderForm({ labelPosition: 'top' }, () => (
             <>
                 <FormInput field="a" labelPosition="left" fieldClassName="left-input" />
@@ -88,7 +88,7 @@ describe('Form-field', () => {
         expect(container.querySelector('.top-input')).toHaveAttribute('x-label-pos', 'top');
     });
 
-    it('labelAlign', () => {
+    it('Field 的 labelAlign 优先于 Form 的 labelAlign', () => {
         const { container } = renderForm({ labelAlign: 'right' }, () => (
             <>
                 <FormInput field="a" labelAlign="left" fieldClassName="left-input" />
@@ -99,7 +99,7 @@ describe('Form-field', () => {
         expect(container.querySelector(`.right-input .${BASE_CLASS_PREFIX}-form-field-label-right`)).not.toBeNull();
     });
 
-    it('noLabel', () => {
+    it('noLabel 时不渲染标签', () => {
         const { container } = renderForm({}, () => <FormInput noLabel field="name" />);
         expect(container.querySelector(inputSelector)).not.toBeNull();
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-form-field-label`)).toBeNull();
@@ -118,18 +118,18 @@ describe('Form-field', () => {
         expect(screen.getByRole('textbox', { name: 'Inset' })).toHaveAttribute('aria-labelledby', 'inset-label');
     });
 
-    it('name', () => {
+    it('name 写入 Field 的类名和控件的 name 属性', () => {
         const { container } = renderForm({}, () => <FormInput field="name" name="company" />);
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-form-field.${BASE_CLASS_PREFIX}-form-field-company`)).not.toBeNull();
         expect(getInputDOM()).toHaveAttribute('name', 'company');
     });
 
-    it('initValue', () => {
+    it('Field 的 initValue 优先于 Form 的 initValues', () => {
         renderForm({ initValues: { name: 'a' } }, () => <FormInput initValue="b" field="name" />);
         expect(getInputDOM()).toHaveValue('b');
     });
 
-    it('onChange', () => {
+    it('输入时调用 onChange，参数为新值、事件和全部表单值', () => {
         const onChange = vi.fn<(...args: unknown[]) => void>();
         renderForm({}, () => <FormInput onChange={onChange} field="name" />);
         type(getInputDOM(), 'semi');
@@ -139,18 +139,7 @@ describe('Form-field', () => {
 
     it('validate-sync 同步校验', async () => {
         const validate = vi.fn<(value: unknown) => string>((value) => (value !== 'semi' ? 'invalid' : ''));
-        renderForm({}, () => (
-            <FormInput
-                field="name"
-                trigger="change"
-                validator={validate}
-                // rules are invalidated when validator is also declared
-                rules={[
-                    { type: 'string', message: 'rules error1' },
-                    { validator: (_rule: unknown, value: unknown) => value === 'muji', message: 'rules error2' },
-                ]}
-            />
-        ));
+        renderForm({}, () => <FormInput field="name" trigger="change" validator={validate} />);
         type(getInputDOM(), 'milk');
         expect(validate).toHaveBeenCalledWith('milk', { name: 'milk' });
         await waitFor(() => expect(getErrorMessage()).toHaveTextContent(/^invalid$/));
@@ -165,14 +154,14 @@ describe('Form-field', () => {
         type(getInputDOM(), 'milk');
         expect(validate).toHaveBeenNthCalledWith(1, 'milk', { name: 'milk' });
         await waitFor(() => expect(getErrorMessage()).toHaveTextContent(/^invalid$/));
-        expect(formApi?.getError('name')).toEqual('invalid');
+        expect(formApi?.getError('name')).toEqual(['invalid']);
         type(getInputDOM(), 'semi');
         expect(validate).toHaveBeenNthCalledWith(2, 'semi', { name: 'semi' });
         await waitFor(() => expect(getErrorMessage()).toBeNull());
         expect(formApi?.getError('name')).toEqual(undefined);
     });
 
-    it('rules', async () => {
+    it('rules 按顺序校验并合并错误信息，修正后只剩未通过的规则', async () => {
         let formApi: FormApi | undefined;
         renderForm({ getFormApi: (api) => (formApi = api) }, () => (
             <FormInput
@@ -180,7 +169,7 @@ describe('Form-field', () => {
                 trigger="change"
                 rules={[
                     { type: 'string', message: 'type error' },
-                    { validator: (_rule: unknown, value: unknown) => value === 'muji', message: 'not muji' },
+                    { validator: (value: unknown) => value === 'muji', message: 'not muji' },
                 ]}
             />
         ));
@@ -193,7 +182,7 @@ describe('Form-field', () => {
         await waitFor(() => expect(getErrorMessage()).toHaveTextContent(/^not muji$/));
     });
 
-    it('transform', () => {
+    it('transform 只改变传给校验器的值，不改变表单状态', () => {
         const validate = vi.fn<(value: unknown) => string>((value) => (value !== 5 ? 'invalid' : ''));
         let formApi: FormApi | undefined;
         renderForm({ getFormApi: (api) => (formApi = api) }, () => <FormInput transform={(stringVal) => Number(stringVal)} validator={validate} field="count" />);
@@ -204,7 +193,7 @@ describe('Form-field', () => {
         expect(getInputDOM()).toHaveValue('5');
     });
 
-    it('convert', () => {
+    it('convert 转换后的值写入表单状态', () => {
         const convert = vi.fn<(stringVal: unknown) => number>((stringVal) => Number(stringVal));
         let formApi: FormApi | undefined;
         renderForm({ getFormApi: (api) => (formApi = api) }, () => <FormInput convert={convert} field="count" />);
@@ -213,7 +202,7 @@ describe('Form-field', () => {
         expect(formApi?.getValue('count')).toEqual(5);
     });
 
-    it('trigger：mounted / change / blur', async () => {
+    it('trigger 为 change 时输入即校验，为 blur 时失焦才校验', async () => {
         const validate = (val: unknown) => (val !== 'semi' ? 'invalid' : '');
         renderForm({}, () => (
             <>
@@ -253,7 +242,7 @@ describe('Form-field', () => {
         expect(formApi?.getTouched('name')).toBe(true);
     });
 
-    it('field', () => {
+    it('field 支持点号、方括号等路径写法读取嵌套值', () => {
         const fields = ['username', 'user[0]', 'siblings.1', 'siblings[2]', 'parents[0].name', "parents[1]['name']"];
         const { container } = renderForm(
             {
@@ -280,12 +269,13 @@ describe('Form-field', () => {
                 rules={[
                     { type: 'string', max: 10 },
                     {
-                        asyncValidator(_rule: unknown, _value: unknown, callback: () => void) {
-                            if (!asyncValidatorCallback) {
-                                asyncValidatorCallback = callback;
-                            } else {
-                                callback();
+                        validator: () => {
+                            if (asyncValidatorCallback) {
+                                return true;
                             }
+                            return new Promise<boolean>((resolve) => {
+                                asyncValidatorCallback = () => resolve(true);
+                            });
                         },
                     },
                 ]}
@@ -314,7 +304,7 @@ describe('Form-field', () => {
         render(() => (
             <Form getFormApi={(api) => (formApi = api)} initValues={{ value: [{ name: 'kkk' }, { name: 'ccc' }, { name: 'ddd' }] }}>
                 <Show when={show()}>
-                    <FormInput field="value[0].name" />
+                    <FormInput field="value[0].name" keepState={false} />
                 </Show>
             </Form>
         ));
@@ -383,7 +373,7 @@ describe('Form-field', () => {
         const pure = container.querySelector('.pure');
         expect(pure).toHaveClass(`${BASE_CLASS_PREFIX}-form-field-pure`, `${BASE_CLASS_PREFIX}-form-field-p`, 'pure-field');
         expect(pure?.closest(`.${BASE_CLASS_PREFIX}-form-field`)).toBeNull();
-        await expect(formApi?.validate(['quiet'])).rejects.toEqual({ quiet: 'quiet-err' });
+        await expect(formApi?.validate(['quiet'])).rejects.toEqual({ quiet: ['quiet-err'] });
         expect(getErrorMessage('[x-field-id="quiet"]')).toBeNull();
         expect(getInputDOM('[x-field-id="quiet"]')).toHaveAttribute('aria-invalid', 'true');
     });
@@ -407,7 +397,7 @@ describe('Form-field', () => {
     it('属性中的 validateStatus 优先于校验状态', async () => {
         let formApi: FormApi | undefined;
         const { container } = renderForm({ getFormApi: (api) => (formApi = api) }, () => <FormInput field="name" validateStatus="warning" validator={() => 'err'} />);
-        await expect(formApi?.validate()).rejects.toEqual({ name: 'err' });
+        await expect(formApi?.validate()).rejects.toEqual({ name: ['err'] });
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-input-wrapper-warning`)).not.toBeNull();
     });
 

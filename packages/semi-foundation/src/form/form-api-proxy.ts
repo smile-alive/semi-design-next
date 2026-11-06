@@ -7,7 +7,7 @@ export const EMPTY_FORM_STATE: FormState = {
 };
 
 export interface FormApiProxyInternals<T extends Record<string, any> = any> {
-    bind: (api: BaseFormApi<T>) => void;
+    bind: (api: BaseFormApi<T, any>) => void;
     unbind: () => void;
     updateState: (state: FormState<T>) => void;
 }
@@ -24,8 +24,8 @@ export function getFormApiProxyInternals<T extends Record<string, any> = any>(pr
  * A FormApi that exists before its Form mounts: the Form binds the real api through `bind` and pushes every
  * form state through `updateState`, which the framework hook stores in its own state.
  */
-export function createFormApiProxy<T extends Record<string, any>>(setFormState: (state: FormState<T>) => void) {
-    let realApi: BaseFormApi<T> | null = null;
+export function createFormApiProxy<T extends Record<string, any>, O = T>(setFormState: (state: FormState<T>) => void) {
+    let realApi: BaseFormApi<T, O> | null = null;
 
     const proxy = new Proxy(
         {},
@@ -55,7 +55,7 @@ export function createFormApiProxy<T extends Record<string, any>>(setFormState: 
                 return false;
             },
         }
-    ) as BaseFormApi<T>;
+    ) as BaseFormApi<T, O>;
 
     internalsOf.set(proxy, {
         bind: (api) => {

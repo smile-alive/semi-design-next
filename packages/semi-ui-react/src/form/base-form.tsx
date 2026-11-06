@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
 import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
 import FormFoundation, { type BaseFormAdapter } from '@fibrae/semi-foundation/form/foundation';
-import type { FieldBridge } from '@fibrae/semi-foundation/form/interface';
+import type { AllErrors, FieldBridge } from '@fibrae/semi-foundation/form/interface';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/form/form.scss';
@@ -11,6 +11,7 @@ import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import { cloneDeep } from '../_utils/index';
 import Row from '../grid/row';
+import useLocale from '../locale/use-locale';
 import { FormStateContext, FormApiContext, FieldBridgeContext } from './context';
 import ErrorMessage from './error-message';
 import { FormInput, FormInputNumber, FormTextArea, FormSelect, FormCheckboxGroup, FormCheckbox, FormRadioGroup, FormRadio, FormDatePicker, FormSwitch, FormSlider, FormTimePicker, FormTreeSelect, FormCascader, FormTransfer, FormRating, FormAutoComplete, FormUpload, FormTagInput, FormPinCode } from './field';
@@ -18,6 +19,7 @@ import FormInputGroup from './group';
 import useForm from './hooks/use-form';
 import type { BaseFormProps, FormState, FormApi } from './interface';
 import Label from './label';
+import SchemaField from './schema-field';
 import Section from './section';
 import Slot from './slot';
 const prefix = cssClasses.PREFIX;
@@ -38,16 +40,18 @@ const defaultProps = {
     allowEmpty: false,
     autoScrollToError: false,
     showValidateIcon: true,
+    keepState: true,
+    schemaDebounce: 0,
 } satisfies Partial<BaseFormProps>;
 
 function pickFormProps(props: Record<string, any>, keys?: Array<string>) {
-    if (typeof keys === 'undefined') {
+    if (keys == null) {
         return props;
     }
     return Object.fromEntries(keys.map((key) => [key, props[key]]));
 }
 
-function Form<Values extends Record<string, any> = any>(rawProps: BaseFormProps<Values>) {
+function Form<Values extends Record<string, any> = any, Output = Values>(rawProps: BaseFormProps<Values, Output>) {
     const props = useDefaultProps('Form', rawProps, defaultProps);
 
     const {
@@ -64,6 +68,8 @@ function Form<Values extends Record<string, any> = any>(rawProps: BaseFormProps<
         render,
         validator,
         schema,
+        schemaDebounce,
+        keepState,
         initValues,
         layout,
         style,
@@ -86,18 +92,22 @@ function Form<Values extends Record<string, any> = any>(rawProps: BaseFormProps<
         ...rest
     } = props;
 
+    const { locale } = useLocale('Form');
+
     const generatedId = useId();
     const formRef = useRef<HTMLFormElement>(null);
     let content = children as React.ReactNode;
 
-    const [foundation, state] = useFoundation<FormFoundation<React.SubmitEvent<HTMLFormElement>>, BaseFormAdapter<BaseFormProps<Values>, BaseFormState, Values, React.SubmitEvent<HTMLFormElement>>, BaseFormProps<Values>, BaseFormState>(
+    const [foundation, state] = useFoundation<FormFoundation<React.SubmitEvent<HTMLFormElement>>, BaseFormAdapter<BaseFormProps<Values, Output>, BaseFormState, Values, React.SubmitEvent<HTMLFormElement>>, BaseFormProps<Values, Output>, BaseFormState>(
         FormFoundation,
         props,
         () => ({}),
         (base) => ({
             cloneDeep,
             notifySubmit: (values, e) => base.getProps().onSubmit(values, e),
-            notifySubmitFail: (errors, values, e) => base.getProps().onSubmitFail(errors, values, e),
+            // the type names the field errors; a thrown or non-object result of the Form validator passes through as it is
+            notifySubmitFail: (errors, values, e) => base.getProps().onSubmitFail(errors as Partial<AllErrors<Values>>, values, e),
+            getLocale: () => base.getContext('locale'),
             forceUpdate: (formState, callback) => {
                 base.setState({ formState }, callback);
                 getFormApiProxyInternals(base.getProps().form)?.updateState(formState);
@@ -109,11 +119,12 @@ function Form<Values extends Record<string, any> = any>(rawProps: BaseFormProps<
             getInitValues: () => base.getProp('initValues'),
             getFormProps: (keys) => pickFormProps(base.getProps(), keys),
             getFormElement: () => formRef.current,
-        })
+        }),
+        { locale }
     );
 
     const [initialFormState] = useState(() => foundation.getFormState());
-    const [formApi] = useState(() => foundation.getFormApi() as FormApi<Values>);
+    const [formApi] = useState(() => foundation.getFormApi() as FormApi<Values, Output>);
     const [foundationBridge] = useState(foundation.getFieldBridge);
 
     const formState = state.formState ?? initialFormState;
@@ -122,6 +133,7 @@ function Form<Values extends Record<string, any> = any>(rawProps: BaseFormProps<
     const fieldBridge: FieldBridge = {
         ...foundationBridge,
         getFormProps: (keys?: Array<string>) => pickFormProps(props, keys),
+        usesSchema: () => Boolean(props.schema) && typeof props.validator !== 'function',
     };
 
     const contentProps = { formState, formApi, values: formState.values };
@@ -130,9 +142,7 @@ function Form<Values extends Record<string, any> = any>(rawProps: BaseFormProps<
         warning(Boolean(props.component && props.render), '[Semi Form] You should not use <Form component> and <Form render> in ths same time; <Form render> will be ignored');
         warning(Boolean(props.component) && React.Children.count(props.children) > 0, '[Semi Form] You should not use <Form component> and <Form>{children}</Form> in ths same time; <Form>{children}</Form> will be ignored');
         warning(Boolean(props.render) && React.Children.count(props.children) > 0, '[Semi Form] You should not use <Form render> and <Form>{children}</Form> in ths same time; <Form>{children}</Form> will be ignored');
-        if (props.getFormApi) {
-            props.getFormApi(formApi);
-        }
+        props.getFormApi?.(formApi);
         getFormApiProxyInternals(props.form)?.bind(formApi);
     });
 
@@ -142,7 +152,7 @@ function Form<Values extends Record<string, any> = any>(rawProps: BaseFormProps<
 
     const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (props.stopPropagation && props.stopPropagation.submit) {
+        if (props.stopPropagation?.submit) {
             e.stopPropagation();
         }
         foundation.submit(e);
@@ -150,7 +160,7 @@ function Form<Values extends Record<string, any> = any>(rawProps: BaseFormProps<
 
     const handleReset = (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (props.stopPropagation && props.stopPropagation.reset) {
+        if (props.stopPropagation?.reset) {
             e.stopPropagation();
         }
         foundation.reset();
@@ -176,7 +186,7 @@ function Form<Values extends Record<string, any> = any>(rawProps: BaseFormProps<
         [prefix + '-horizontal']: layout === 'horizontal',
     });
 
-    const xId = id ? id : generatedId;
+    const xId = id || generatedId;
 
     const formContent = (
         <form style={style} noValidate {...rest} ref={formRef} id={xId} className={formCls} x-form-id={xId} onReset={handleReset} onSubmit={handleSubmit}>
@@ -219,5 +229,6 @@ export default Object.assign(Form, {
     InputGroup: FormInputGroup,
     Label,
     Section,
+    SchemaField,
     useForm,
 });

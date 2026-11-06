@@ -4,17 +4,19 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
 import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
 import FormFoundation from '@fibrae/semi-foundation/form/foundation';
-import type { BaseFormAdapter } from '@fibrae/semi-foundation/form/interface';
+import type { AllErrors, BaseFormAdapter } from '@fibrae/semi-foundation/form/interface';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/form/form.scss';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import { Row } from '../grid';
+import useLocale from '../locale/use-locale';
 import { type FormContextValue, FormContext } from './context';
 import ErrorMessage from './error-message';
 import FormInputGroup from './input-group';
 import type { FormApi, FormElement, FormProps, FormRenderProps, FormState } from './interface';
 import Label from './label';
+import SchemaField from './schema-field';
 import Section from './section';
 import Slot from './slot';
 import useForm from './use-form';
@@ -31,6 +33,8 @@ const defaultProps = {
     labelPosition: 'top',
     allowEmpty: false,
     autoScrollToError: false,
+    keepState: true,
+    schemaDebounce: 0,
     showValidateIcon: true,
 } satisfies Partial<FormProps>;
 
@@ -38,9 +42,9 @@ function pickFormProps(props: Record<string, any>, keys?: string[]) {
     return keys ? Object.fromEntries(keys.map((key) => [key, props[key]])) : props;
 }
 
-function Form<Values extends Record<string, any> = any>(rawProps: FormProps<Values>) {
+function Form<Values extends Record<string, any> = any, Output = Values>(rawProps: FormProps<Values, Output>) {
     type Foundation = FormFoundation<SubmitEvent>;
-    type Adapter = BaseFormAdapter<FormProps<Values>, FormFoundationState, Values, SubmitEvent>;
+    type Adapter = BaseFormAdapter<FormProps<Values, Output>, FormFoundationState, Values, SubmitEvent>;
 
     const props = useDefaultProps('Form', rawProps, defaultProps);
 
@@ -56,6 +60,7 @@ function Form<Values extends Record<string, any> = any>(rawProps: FormProps<Valu
         'getFormApi',
         'id',
         'initValues',
+        'keepState',
         'labelAlign',
         'labelCol',
         'labelPosition',
@@ -70,6 +75,7 @@ function Form<Values extends Record<string, any> = any>(rawProps: FormProps<Valu
         'ref',
         'render',
         'schema',
+        'schemaDebounce',
         'showValidateIcon',
         'stopPropagation',
         'stopValidateWithError',
@@ -78,17 +84,20 @@ function Form<Values extends Record<string, any> = any>(rawProps: FormProps<Valu
         'wrapperCol',
     ]);
 
+    const locale = useLocale('Form');
+
     const generatedId = createUniqueId();
     let formElement: HTMLFormElement | undefined;
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, FormProps<Values>, FormFoundationState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, FormProps<Values, Output>, FormFoundationState>(
         FormFoundation,
         props,
         () => ({}),
         (base) => ({
             cloneDeep,
+            getLocale: () => locale().locale,
             notifySubmit: (values, e) => local.onSubmit?.(values, e),
-            notifySubmitFail: (errors, values, e) => local.onSubmitFail?.(errors, values, e),
+            notifySubmitFail: (errors, values, e) => local.onSubmitFail?.(errors as Partial<AllErrors<Values>>, values, e),
             forceUpdate: (formState, callback) => {
                 base.setState({ formState }, callback);
                 getFormApiProxyInternals(local.form)?.updateState(formState);
@@ -104,14 +113,14 @@ function Form<Values extends Record<string, any> = any>(rawProps: FormProps<Valu
     );
 
     const initialFormState = foundation.getFormState();
-    const formApi = batchMethods(foundation.getFormApi()) as FormApi<Values>;
+    const formApi = batchMethods(foundation.getFormApi()) as FormApi<Values, Output>;
 
     const formId = () => local.id ?? generatedId;
 
     const formState = () => state().formState ?? initialFormState;
 
     // read lazily, so a render function or component that reads them in its JSX follows the form state
-    const renderProps: FormRenderProps<Values> = {
+    const renderProps: FormRenderProps<Values, Output> = {
         get formState() {
             return formState() as FormState<Values>;
         },
@@ -151,7 +160,7 @@ function Form<Values extends Record<string, any> = any>(rawProps: FormProps<Valu
             {...rest}
             ref={(node) => {
                 formElement = Object.assign(node, { formApi });
-                local.ref?.(formElement as FormElement<Values>);
+                local.ref?.(formElement as FormElement<Values, Output>);
             }}
             id={formId()}
             class={clsx(prefix, local.class, {
@@ -205,5 +214,6 @@ export default Object.assign(Form, {
     ErrorMessage,
     Slot,
     InputGroup: FormInputGroup,
+    SchemaField,
     useForm,
 });

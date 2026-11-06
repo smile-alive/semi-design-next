@@ -55,12 +55,12 @@ describe('Form-baseForm', () => {
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-form-vertical`)).toBeNull();
     });
 
-    it('labelPosition', () => {
+    it('Form 的 labelPosition 作用于其下的 Field', () => {
         const { container } = renderForm({ labelPosition: 'left' }, nameInput);
         expect(container.querySelector(fieldCls)).toHaveAttribute('x-label-pos', 'left');
     });
 
-    it('labelWidth', () => {
+    it('labelWidth 支持数字和带单位的字符串', () => {
         const { container, unmount } = renderForm({ labelWidth: 200 }, fields);
         let labels = container.querySelectorAll(labelSelector);
         expect(labels).toHaveLength(2);
@@ -206,7 +206,7 @@ describe('Form-baseForm', () => {
         expect(onSubmit.mock.calls[0][0]).toEqual({ UserName: 'semi', Password: 'design' });
     });
 
-    it('onSubmitFail', async () => {
+    it('校验失败时调用 onSubmitFail 而不调用 onSubmit', async () => {
         let api: FormApi | undefined;
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         const onSubmitFail = vi.fn<(...args: unknown[]) => void>();
@@ -230,11 +230,11 @@ describe('Form-baseForm', () => {
         api?.submitForm();
         await waitFor(() => expect(onSubmitFail).toHaveBeenCalledTimes(1));
         expect(onSubmit).not.toHaveBeenCalled();
-        expect(onSubmitFail.mock.calls[0][0]).toEqual({ name: emptyTips, name2: emptyTips });
+        expect(onSubmitFail.mock.calls[0][0]).toEqual({ name: [emptyTips], name2: [emptyTips] });
         expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-form-field-error-message`)).toHaveLength(2);
     });
 
-    it('onReset', () => {
+    it('重置表单时调用 onReset 并恢复初始值', () => {
         let api: FormApi | undefined;
         const onReset = vi.fn<(...args: unknown[]) => void>();
         renderForm(
@@ -254,7 +254,7 @@ describe('Form-baseForm', () => {
         expect(getInput()).toHaveValue('a');
     });
 
-    it('allowEmpty', async () => {
+    it('Form 设置 allowEmpty 时提交值保留值为 undefined 的 key', async () => {
         let api: FormApi | undefined;
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         renderForm(
@@ -300,7 +300,7 @@ describe('Form-baseForm', () => {
         expect('dropped' in values).toBe(false);
     });
 
-    it('onValueChange', () => {
+    it('值变化时调用 onValueChange，参数为全部表单值', () => {
         const onValueChange = vi.fn<(...args: unknown[]) => void>();
         renderForm({ onValueChange }, nameInput);
         type(getInput(), 'semi');
@@ -308,13 +308,13 @@ describe('Form-baseForm', () => {
         expect(onValueChange.mock.calls[0][0]).toEqual({ name: 'semi' });
     });
 
-    it('initValues', () => {
+    it('initValues 填充各 Field 的初始值', () => {
         const { container } = renderForm({ initValues: { name: 'semi', business: 'abc' } }, fields);
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-select-selection-text`)).toHaveTextContent(/^Abc$/);
         expect(getInput()).toHaveValue('semi');
     });
 
-    it('labelAlign', () => {
+    it('labelAlign 默认靠左，设为 right 时靠右', () => {
         const { container, unmount } = renderForm({}, fields);
         expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-form-field-label-right`)).toHaveLength(0);
         expect(container.querySelectorAll(`.${BASE_CLASS_PREFIX}-form-field-label-left`)).toHaveLength(2);
@@ -324,7 +324,7 @@ describe('Form-baseForm', () => {
         expect(container2.querySelectorAll(`.${BASE_CLASS_PREFIX}-form-field-label-left`)).toHaveLength(0);
     });
 
-    it('labelCol/wrapperCol', () => {
+    it('labelCol 与 wrapperCol 按栅格划分标签和控件区域', () => {
         const { container } = renderForm({ wrapperCol: { span: 20 }, labelCol: { span: 2 } }, fields);
         const fieldsDom = container.querySelectorAll(fieldCls);
         expect(fieldsDom).toHaveLength(2);
@@ -361,7 +361,7 @@ describe('Form-baseForm', () => {
         expect(lastValues()).toEqual('{}');
     });
 
-    it('disabled', () => {
+    it('Form 设置 disabled 时其下控件全部禁用', () => {
         const { container } = renderForm({ disabled: true }, fields);
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-select-disabled`)).not.toBeNull();
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-input-disabled`)).not.toBeNull();
@@ -380,8 +380,8 @@ describe('Form-baseForm', () => {
             },
             nestedFields
         );
-        await expect(formApi?.validate()).rejects.toEqual({ a: { b: err } });
-        expect(formApi?.getError('a.b')).toEqual(err);
+        await expect(formApi?.validate()).rejects.toEqual({ a: { b: [err] } });
+        expect(formApi?.getError('a.b')).toEqual([err]);
         expect(document.querySelector(`[x-field-id="a.b"] .${BASE_CLASS_PREFIX}-form-field-error-message`)).toHaveTextContent(err);
     });
 
@@ -389,7 +389,7 @@ describe('Form-baseForm', () => {
         let formApi: FormApi | undefined;
         renderForm(
             {
-                validator: () => '',
+                validator: () => undefined,
                 getFormApi: (api) => {
                     formApi = api;
                 },
@@ -412,8 +412,8 @@ describe('Form-baseForm', () => {
             },
             nestedFields
         );
-        await expect(formApi?.validate()).rejects.toEqual({ a: { b: err } });
-        expect(formApi?.getError('a.b')).toEqual(err);
+        await expect(formApi?.validate()).rejects.toEqual({ a: { b: [err] } });
+        expect(formApi?.getError('a.b')).toEqual([err]);
     });
 
     it('validteFields：异步 Promise resolve，校验通过', async () => {
@@ -574,7 +574,7 @@ describe('Form-baseForm 行为', () => {
         const onErrorChange = vi.fn<(...args: unknown[]) => void>();
         renderForm({ onErrorChange }, () => <FormInput field="name" validator={(val) => (val === 'ok' ? '' : 'bad')} />);
         type(getInput(), 'x');
-        await waitFor(() => expect(onErrorChange).toHaveBeenLastCalledWith({ name: 'bad' }, { name: 'bad' }));
+        await waitFor(() => expect(onErrorChange).toHaveBeenLastCalledWith({ name: ['bad'] }, { name: ['bad'] }));
     });
 
     it('trigger 为 custom 时跳过变化校验，挂载时校验', async () => {
@@ -585,12 +585,12 @@ describe('Form-baseForm 行为', () => {
                 <FormInput field="b" trigger="mount" validator={() => 'b-err'} />
             </>
         ));
-        await waitFor(() => expect(formApi?.getError('b')).toBe('b-err'));
+        await waitFor(() => expect(formApi?.getError('b')).toEqual(['b-err']));
         type(document.querySelector('[x-field-id="a"] input') as HTMLInputElement, 'x');
         await sleep(10);
         expect(formApi?.getError('a')).toBeUndefined();
-        await expect(formApi?.validate(['a'])).rejects.toEqual({ a: 'a-err', b: 'b-err' });
-        expect(formApi?.getError('a')).toBe('a-err');
+        await expect(formApi?.validate(['a'])).rejects.toEqual({ a: ['a-err'], b: ['b-err'] });
+        expect(formApi?.getError('a')).toEqual(['a-err']);
     });
 
     it('stopValidateWithError 在第一条失败规则处停止', async () => {
@@ -607,7 +607,7 @@ describe('Form-baseForm 行为', () => {
         ));
         await expect(formApi?.validate()).rejects.toBeDefined();
         expect(formApi?.getError('all')).toEqual(['required', 'second']);
-        expect(formApi?.getError('first')).toBe('required');
+        expect(formApi?.getError('first')).toEqual(['required']);
     });
 
     it('keepState 在字段重新挂载时恢复其值', () => {
@@ -647,7 +647,7 @@ describe('Form-baseForm 行为', () => {
         render(() => (
             <Form getFormApi={(api) => (formApi = api)} onValueChange={onValueChange}>
                 <Show when={show()}>
-                    <FormInput field="name" initValue="semi" />
+                    <FormInput field="name" initValue="semi" keepState={false} />
                 </Show>
                 <Button onClick={() => setShow(false)}>hide</Button>
             </Form>

@@ -14,6 +14,7 @@ import Cascader from '@fibrae/semi-ui-react/cascader';
 import ColorPicker from '@fibrae/semi-ui-react/color-picker';
 import Cropper from '@fibrae/semi-ui-react/cropper';
 import DatePicker from '@fibrae/semi-ui-react/date-picker';
+import { Form, SchemaField } from '@fibrae/semi-ui-react/form';
 import Image from '@fibrae/semi-ui-react/image';
 import Input from '@fibrae/semi-ui-react/input';
 import InputGroup from '@fibrae/semi-ui-react/input/input-group';
@@ -100,6 +101,19 @@ describe('可访问名称跟随语言包', () => {
             inJapanese(<Cascader multiple filterTreeNode treeData={treeData} />);
             expect(screen.getByRole('combobox', { name: ja.Cascader.label }).tagName).toBe('INPUT');
         });
+    });
+
+    it('SchemaField 为数组行的移动、删除按钮与行标签命名，添加按钮文字本地化', () => {
+        inJapanese(
+            <Form initValues={{ tags: ['a', 'b'] }}>
+                <SchemaField jsonSchema={{ type: 'object', properties: { tags: { type: 'array', items: { type: 'string' } } } }} />
+            </Form>
+        );
+        expect(screen.getByRole('textbox', { name: ja.Form.item.replace('${index}', '1') })).toHaveValue('a');
+        expect(screen.getByRole('button', { name: ja.Form.moveUpItem.replace('${index}', '2') })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: ja.Form.moveDownItem.replace('${index}', '1') })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: ja.Form.removeItem.replace('${index}', '2') })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: ja.Form.addItem })).toBeInTheDocument();
     });
 
     it('Pagination 为上一页与下一页按钮命名', () => {

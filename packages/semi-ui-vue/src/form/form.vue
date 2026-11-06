@@ -1,15 +1,16 @@
-<script setup lang="ts" generic="Values extends Record<string, any> = Record<string, any>">
+<script setup lang="ts" generic="Values extends Record<string, any> = Record<string, any>, Output = Values">
     import { computed, onBeforeUnmount, onMounted, shallowRef, toRaw, useId, useTemplateRef, watch } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/form/constants';
     import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
     import FormFoundation from '@fibrae/semi-foundation/form/foundation';
-    import type { BaseFormAdapter, FormState } from '@fibrae/semi-foundation/form/interface';
+    import type { AllErrors, BaseFormAdapter, FormState } from '@fibrae/semi-foundation/form/interface';
     import '@fibrae/semi-foundation/form/form.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import SlotFragment from '../_base/slot-fragment';
     import useFoundation from '../_base/use-foundation';
     import Row from '../grid/row.vue';
+    import useLocale from '../locale/use-locale';
     import { provideFormContext } from './context';
     import type { AllFormProps, FormApi, FormEmits, FormHandle, FormProps, FormSlots } from './interface';
     import { cloneDeep } from './utils';
@@ -18,12 +19,12 @@
         formState?: FormState;
     }
 
-    type Adapter = BaseFormAdapter<AllFormProps<Values>, FormFoundationState, Values, SubmitEvent>;
+    type Adapter = BaseFormAdapter<AllFormProps<Values, Output>, FormFoundationState, Values, SubmitEvent>;
 
     // the root may be a Row, so attrs are bound to the form element explicitly
     defineOptions({ inheritAttrs: false });
 
-    const props = withDefaults(defineProps<FormProps<Values> & /* @vue-ignore */ ElementProps<'form', keyof FormProps<Values> | EmitHandlers<FormEmits<Values>>>>(), {
+    const props = withDefaults(defineProps<FormProps<Values, Output> & /* @vue-ignore */ ElementProps<'form', keyof FormProps<Values, Output> | EmitHandlers<FormEmits<Values, Output>>>>(), {
         layout: () => semiDefault('Form', 'layout', 'vertical'),
         labelPosition: () => semiDefault('Form', 'labelPosition', 'top'),
         labelWidth: semiGlobalDefault('Form', 'labelWidth'),
@@ -40,12 +41,15 @@
         stopPropagation: semiGlobalDefault('Form', 'stopPropagation'),
         validator: undefined,
         schema: undefined,
+        schemaDebounce: semiGlobalDefault('Form', 'schemaDebounce'),
+        keepState: () => semiDefault('Form', 'keepState', true),
     });
 
-    const emit = defineEmits<FormEmits<Values>>();
-    defineSlots<FormSlots<Values>>();
+    const emit = defineEmits<FormEmits<Values, Output>>();
+    defineSlots<FormSlots<Values, Output>>();
 
     const semi = useSemiGlobal();
+    const locale = useLocale('Form');
 
     const generatedId = useId();
     const afterUpdateTick = shallowRef(0);
@@ -54,7 +58,7 @@
     const prefix = cssClasses.PREFIX;
     const formId = computed(() => props.id ?? generatedId);
 
-    const formProps = computed<AllFormProps<Values>>(() => ({
+    const formProps = computed<AllFormProps<Values, Output>>(() => ({
         ...props,
         validator: props.validator ?? readSemiDefault(semi, 'Form', 'validator'),
         // Zod keeps non-configurable properties a deep reactive proxy (ref, reactive, data) breaks, so validate runs on the raw schema
@@ -75,14 +79,15 @@
         { flush: 'post' }
     );
 
-    const { foundation, state } = useFoundation<FormFoundation<SubmitEvent>, Adapter, AllFormProps<Values>, FormFoundationState>(
+    const { foundation, state } = useFoundation<FormFoundation<SubmitEvent>, Adapter, AllFormProps<Values, Output>, FormFoundationState>(
         FormFoundation,
         props,
         () => ({}),
         (base) => ({
             cloneDeep,
-            notifySubmit: (values, e) => emit('submit', values, e),
-            notifySubmitFail: (errors, values, e) => emit('submitFail', errors, values, e),
+            notifySubmit: (values, e) => emit('submit', values as Output, e),
+            notifySubmitFail: (errors, values, e) => emit('submitFail', errors as Partial<AllErrors<Values>>, values, e),
+            getLocale: () => locale.value.locale,
             forceUpdate: (formState, callback) => {
                 base.setState(
                     { formState },
@@ -108,7 +113,7 @@
     const initialFormState = foundation.getFormState();
     const formState = computed<FormState<Values>>(() => state.value.formState ?? initialFormState);
     const values = computed(() => formState.value.values as Values);
-    const formApi = foundation.getFormApi() as FormApi<Values>;
+    const formApi = foundation.getFormApi() as FormApi<Values, Output>;
 
     provideFormContext({ formState, formProps, formApi, bridge: foundation.getFieldBridge() });
 
@@ -133,7 +138,7 @@
 
     onBeforeUnmount(() => getFormApiProxyInternals(props.form)?.unbind());
 
-    defineExpose<FormHandle<Values>>({ formApi });
+    defineExpose<FormHandle<Values, Output>>({ formApi });
 </script>
 
 <template>

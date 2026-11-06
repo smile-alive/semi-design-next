@@ -19,9 +19,9 @@ export default function FormDemo() {
                 rules={[
                     { required: true, message: 'required error' },
                     { type: 'string', message: 'type error' },
-                    { validator: (_rule, value) => value === 'semi', message: 'should be semi' },
+                    { validator: (value) => value === 'semi', message: 'should be semi' },
                     {
-                        validator: (_rule, value) => Boolean(value && value.startsWith('se')),
+                        validator: (value) => Boolean(value && value.startsWith('se')),
                         message: 'should startsWith se',
                     },
                 ]}
@@ -33,9 +33,9 @@ export default function FormDemo() {
                 rules={[
                     { required: true, message: 'required error' },
                     { type: 'string', message: 'type error' },
-                    { validator: (_rule, value) => value === 'semi', message: 'should be semi' },
+                    { validator: (value) => value === 'semi', message: 'should be semi' },
                     {
-                        validator: (_rule, value) => Boolean(value && value.startsWith('se')),
+                        validator: (value) => Boolean(value && value.startsWith('se')),
                         message: 'should startsWith se',
                     },
                 ]}

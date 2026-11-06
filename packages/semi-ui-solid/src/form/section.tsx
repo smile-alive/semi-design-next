@@ -7,7 +7,7 @@ import hasContent from '../_base/has-content';
 
 const prefix = cssClasses.PREFIX;
 
-export interface SectionProps extends ElementProps<'section'> {
+export interface SectionProps extends ElementProps<'fieldset'> {
     text?: JSX.Element;
 }
 
@@ -17,12 +17,12 @@ export default function Section(props: SectionProps) {
     const text = children(() => local.text);
 
     return (
-        <section {...rest} class={clsx(`${prefix}-section`, local.class)}>
-            {/* an empty heading would still be announced as one */}
+        <fieldset {...rest} class={clsx(`${prefix}-section`, local.class)}>
+            {/* an empty legend would still draw its divider */}
             <Show when={hasContent(text())}>
-                <h5 class={`${prefix}-section-text`}>{text()}</h5>
+                <legend class={`${prefix}-section-text`}>{text()}</legend>
             </Show>
             {local.children}
-        </section>
+        </fieldset>
     );
 }

@@ -111,7 +111,7 @@ describe('Form 字段状态与发布时机', () => {
         await nextTick();
         expect(screen.getByText('fast-error')).toBeInTheDocument();
         expect(screen.queryByText('slow-error')).toBeNull();
-        expect(api().getError('fast')).toBe('fast-error');
+        expect(api().getError('fast')).toEqual(['fast-error']);
         expect(screen.getByTestId('form-state')).toHaveTextContent('{"values":{},"errors":{},"touched":{}}');
         expect(screen.getByTestId('field-state')).toHaveTextContent('{}');
         expect(onChange).not.toHaveBeenCalled();
@@ -122,11 +122,11 @@ describe('Form 字段状态与发布时机', () => {
         expect(screen.getByText('slow-error')).toBeInTheDocument();
         expect(JSON.parse(screen.getByTestId('form-state').textContent ?? '')).toEqual({
             values: {},
-            errors: { fast: 'fast-error', slow: 'slow-error' },
+            errors: { fast: ['fast-error'], slow: ['slow-error'] },
             touched: { fast: true, slow: true },
         });
         expect(JSON.parse(screen.getByTestId('field-state').textContent ?? '')).toEqual({
-            error: 'fast-error',
+            error: ['fast-error'],
             touched: true,
         });
         expect(onChange).toHaveBeenCalledTimes(1);
@@ -183,13 +183,13 @@ describe('Form 字段状态与发布时机', () => {
         api().setError('name', 'bad');
         await nextTick();
         expect(textbox()).toHaveAttribute('data-status', 'warning');
-        expect(api().getFormState()).toEqual({ values: {}, errors: { name: 'bad' }, touched: {} });
+        expect(api().getFormState()).toEqual({ values: {}, errors: { name: ['bad'] }, touched: {} });
     });
 
     it('reset 使用最近一次注册时的 initValue，普通属性更新不替换初值，null 重置为 undefined', async () => {
         const onValueChange = vi.fn<(...args: unknown[]) => void>();
         const onReset = vi.fn<() => void>();
-        const { api, rerender } = renderFieldWithProps({ field: 'before', initValue: 'first' }, { onReset, onValueChange }, Field);
+        const { api, rerender } = renderFieldWithProps({ field: 'before', initValue: 'first' }, { onReset, onValueChange, keepState: false }, Field);
         await rerender({ field: 'before', initValue: 'ignored' });
         api().reset();
         await nextTick();
@@ -215,8 +215,8 @@ describe('Form 字段状态与发布时机', () => {
         expect(api().getFormState()).toEqual({ values: {}, errors: {}, touched: { after: true } });
     });
 
-    it('字段改名携带值、错误和控件 status，已有 touched 不在新路径重新写入', async () => {
-        const { api, rerender } = renderFieldWithProps({ field: 'before', initValue: 'init' }, {}, Field);
+    it('字段改名携带值、错误、touched 和控件 status', async () => {
+        const { api, rerender } = renderFieldWithProps({ field: 'before', initValue: 'init' }, { keepState: false }, Field);
         api().setValue('before', 'changed');
         api().setError('before', 'carried-error');
         api().setTouched('before', true);
@@ -226,14 +226,12 @@ describe('Form 字段状态与发布时机', () => {
         expect(input).toHaveAttribute('data-status', 'error');
         expect(api().getFormState()).toEqual({
             values: { after: 'changed' },
-            errors: { after: 'carried-error' },
-            touched: {},
+            errors: { after: ['carried-error'] },
+            touched: { after: true },
         });
-        await fireEvent.blur(input);
-        expect(api().getTouched('after')).toBeUndefined();
     });
 
-    it('ArrayField 删除前行后，后行携带值、错误和控件 status，blur 不重写 touched', async () => {
+    it('ArrayField 删除前行后，后行携带值、错误、touched 和控件 status', async () => {
         let scope: ArrayFieldSlotProps | undefined;
         const { api } = renderForm({ initValues: { rows: [{ name: 'first' }, { name: 'second' }] } }, () => (
             <ArrayField field="rows">
@@ -255,18 +253,20 @@ describe('Form 字段状态与发布时机', () => {
         expect(input).toHaveValue('changed');
         expect(input).toHaveAttribute('data-status', 'error');
         expect(api().getValue('rows')).toEqual([{ name: 'changed' }]);
-        expect(api().getError('rows[0].name')).toBe('row-error');
-        expect(api().getTouched('rows[0].name')).toBeUndefined();
-        await fireEvent.blur(input);
-        expect(api().getTouched('rows[0].name')).toBeUndefined();
+        expect(api().getError('rows[0].name')).toEqual(['row-error']);
+        expect(api().getTouched('rows[0].name')).toBe(true);
     });
 
-    it('KeepAlive 停用会注销字段，再激活携带值、错误和控件 status', async () => {
+    it('KeepAlive 停用会注销字段，再激活携带值、错误、touched 和控件 status', async () => {
         let api: FormApi | undefined;
         const visible = ref(true);
         const Other = defineComponent(() => () => <span>other</span>);
         const Wrapped = defineComponent(() => () => <Field field="name" initValue="init" />);
-        render(() => <Form onGetFormApi={(formApi: FormApi) => (api = formApi)}>{() => <KeepAlive>{() => (visible.value ? <Wrapped key="field" /> : <Other key="other" />)}</KeepAlive>}</Form>);
+        render(() => (
+            <Form keepState={false} onGetFormApi={(formApi: FormApi) => (api = formApi)}>
+                {() => <KeepAlive>{() => (visible.value ? <Wrapped key="field" /> : <Other key="other" />)}</KeepAlive>}
+            </Form>
+        ));
         api?.setValue('name', 'changed');
         api?.setError('name', 'keep-alive-error');
         api?.setTouched('name', true);
@@ -281,11 +281,9 @@ describe('Form 字段状态与发布时机', () => {
         expect(input).toHaveAttribute('data-status', 'error');
         expect(api?.getFormState()).toEqual({
             values: { name: 'changed' },
-            errors: { name: 'keep-alive-error' },
-            touched: {},
+            errors: { name: ['keep-alive-error'] },
+            touched: { name: true },
         });
-        await fireEvent.blur(input);
-        expect(api?.getTouched('name')).toBeUndefined();
     });
 
     it('嵌套 setValue 后控件只以新值渲染一次', async () => {

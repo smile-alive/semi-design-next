@@ -2,7 +2,8 @@ import type React from 'react';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import * as z from 'zod';
 import type { FieldPath, FieldPathValue, FormState } from '@fibrae/semi-foundation/form/interface';
-import type { FormUpload } from '../field';
+import Form from '../base-form';
+import { FormInput, type FormUpload } from '../field';
 import type { BaseFormProps, FieldProps, FormApi, FormCheckboxProps, FormRadioProps } from '../interface';
 
 interface Values {
@@ -121,13 +122,14 @@ describe('表单状态与校验结果类型', () => {
     type Touched = NonNullable<FormState<ArrayValues>['touched']>;
 
     it('errors、touched 按值的嵌套结构，整体作为字段的对象或数组也可以有自己的一项', () => {
-        expectTypeOf<{ tags: [undefined, string]; matrix: [[string]]; users: [{ name: string; roles: [undefined, { id: string }] }] }>().toExtend<Errors>();
-        expectTypeOf<{ tags: string; users: [{ roles: string }] }>().toExtend<Errors>();
-        expectTypeOf<{ users: { name: string } }>().not.toExtend<Errors>();
+        expectTypeOf<{ tags: [undefined, string[]]; matrix: [[string[]]]; users: [{ name: string[]; roles: [undefined, { id: string[] }] }] }>().toExtend<Errors>();
+        expectTypeOf<{ tags: string[]; users: [{ roles: string[] }] }>().toExtend<Errors>();
+        expectTypeOf<{ users: { name: string[] } }>().not.toExtend<Errors>();
+        expectTypeOf<{ users: [{ name: string }] }>().not.toExtend<Errors>();
         expectTypeOf<{ users: [{ name: true }]; tags: [true] }>().toExtend<Touched>();
         expectTypeOf<{ users: [{ name: string }] }>().not.toExtend<Touched>();
-        expectTypeOf<{ profile: { address: { city: string } } }>().toExtend<NonNullable<FormState<Values>['errors']>>();
-        expectTypeOf<{ children: [{ children: [{ label: string }] }] }>().toExtend<NonNullable<FormState<TreeNode>['errors']>>();
+        expectTypeOf<{ profile: { address: { city: string[] } } }>().toExtend<NonNullable<FormState<Values>['errors']>>();
+        expectTypeOf<{ children: [{ children: [{ label: string[] }] }] }>().toExtend<NonNullable<FormState<TreeNode>['errors']>>();
     });
 
     it('表单级 validator 返回嵌套的错误', () => {
@@ -139,7 +141,7 @@ describe('表单状态与校验结果类型', () => {
     it('schema 与 Form 的 validator 互斥，Values 从 schema 推断', () => {
         type Props = BaseFormProps<{ name: string }>;
         const schema = z.object({ name: z.string() });
-        const validator = () => '';
+        const validator = () => ({ name: 'required' });
         const inferValues = <Values extends Record<string, any>>(_props: BaseFormProps<Values>) => ({}) as Values;
         expectTypeOf({ schema }).toExtend<Props>();
         expectTypeOf({ validator }).toExtend<Props>();
@@ -159,8 +161,39 @@ describe('表单状态与校验结果类型', () => {
         type Props = BaseFormProps<ArrayValues>;
         expectTypeOf<Parameters<NonNullable<Props['onErrorChange']>>[0]>().toEqualTypeOf<Errors>();
         type SubmitErrors = Parameters<NonNullable<Props['onSubmitFail']>>[0];
-        expectTypeOf<{ users: [{ name: string }] }>().toExtend<SubmitErrors>();
-        expectTypeOf<'form invalid'>().toExtend<SubmitErrors>();
-        expectTypeOf<{ users: { name: string } }>().not.toExtend<SubmitErrors>();
+        expectTypeOf<{ users: [{ name: string[] }] }>().toExtend<SubmitErrors>();
+        expectTypeOf<{ users: { name: string[] } }>().not.toExtend<SubmitErrors>();
+    });
+
+    it('schema 的输入与输出分开推断：字段值按输入，onSubmit 按输出', () => {
+        const schema = z.object({ age: z.number().default(18) });
+        const element = (
+            <Form
+                getFormApi={(api) => {
+                    expectTypeOf(api.getValue('age')).toEqualTypeOf<number | undefined>();
+                    // @ts-expect-error field paths follow the schema input
+                    api.getValue('height');
+                }}
+                schema={schema}
+                onSubmit={(values) => expectTypeOf(values).toEqualTypeOf<{ age: number }>()}
+            />
+        );
+        expect(element).toBeTruthy();
+        const infer = <V extends Record<string, any>, O>(_props: BaseFormProps<V, O>) => ({}) as { values: V; output: O };
+        expectTypeOf(infer({ schema }).values).toEqualTypeOf<{ age?: number | undefined }>();
+        expectTypeOf(infer({ schema }).output).toEqualTypeOf<{ age: number }>();
+        // @ts-expect-error onSubmit receives the schema output, not the input
+        const wrong = <Form schema={schema} onSubmit={(values: { age: string }) => values} />;
+        expect(wrong).toBeTruthy();
+    });
+});
+
+describe('字段 rules 与 validator 类型互斥', () => {
+    it('只传 rules 或只传 validator 可以通过编译，两者同时传入无法通过编译', () => {
+        const schema = z.string().min(2);
+        const ok = [<FormInput key="rules" field="a" rules={[{ required: true }]} />, <FormInput key="fn" field="b" validator={(value) => (value ? undefined : 'required')} />, <FormInput key="schema" field="c" validator={schema} />];
+        // @ts-expect-error rules and validator are exclusive
+        const both = <FormInput field="d" rules={[{ required: true }]} validator={schema} />;
+        expect([...ok, both]).toHaveLength(4);
     });
 });

@@ -11,6 +11,8 @@ export interface FormContextValue {
 
 export interface ArrayFieldContextValue {
     readonly shouldUseInitValue: boolean;
+    /** What the rows' fields keep when their own keepState is unset */
+    readonly keepState: boolean;
     /** The values the rows read their initial values from until the ArrayField's own mount write is rendered */
     readonly values?: Record<string, any>;
 }

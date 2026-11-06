@@ -9,10 +9,10 @@ describe('Form hooks', () => {
     it('useFormApi 返回 getFormApi 交出的 api', () => {
         let fromHook: FormApi | undefined;
         let fromCallback: FormApi | undefined;
-        const Probe = () => {
+        function Probe() {
             fromHook = useFormApi();
             return null;
-        };
+        }
         render(() => (
             <Form getFormApi={(api) => (fromCallback = api)}>
                 <FormInput field="name" />
@@ -27,21 +27,21 @@ describe('Form hooks', () => {
     it('Form 之外 useFormApi 与 useFormState 返回空对象', () => {
         let api: FormApi | undefined;
         let state: unknown;
-        const Probe = () => {
+        function Probe() {
             api = useFormApi();
             state = useFormState()();
             return null;
-        };
+        }
         render(() => <Probe />);
         expect(api).toEqual({});
         expect(state).toEqual({});
     });
 
     it('useFormState 跟随最新的 values、errors 与 touched', () => {
-        const Probe = () => {
+        function Probe() {
             const formState = useFormState();
             return <pre data-testid="state">{JSON.stringify(formState())}</pre>;
-        };
+        }
         render(() => (
             <Form>
                 <FormInput field="name" />
@@ -54,11 +54,11 @@ describe('Form hooks', () => {
 
     it('useFieldState 读取单个字段，useFieldApi 写入该字段', () => {
         let fieldApi: ReturnType<typeof useFieldApi> | undefined;
-        const Probe = () => {
+        function Probe() {
             const fieldState = useFieldState('name');
             fieldApi = useFieldApi('name');
             return <span data-testid="field">{JSON.stringify(fieldState())}</span>;
-        };
+        }
         render(() => (
             <Form>
                 <FormInput field="name" />
@@ -70,9 +70,9 @@ describe('Form hooks', () => {
         expect(fieldApi?.getValue()).toBe('semi');
         fieldApi?.setError('bad');
         fieldApi?.setTouched(true);
-        expect(fieldApi?.getError()).toBe('bad');
+        expect(fieldApi?.getError()).toEqual(['bad']);
         expect(fieldApi?.getTouched()).toBe(true);
-        expect(JSON.parse(screen.getByTestId('field').textContent ?? '')).toEqual({ value: 'semi', error: 'bad', touched: true });
+        expect(JSON.parse(screen.getByTestId('field').textContent ?? '')).toEqual({ value: 'semi', error: ['bad'], touched: true });
     });
 
     it('withField 向自定义控件注入 value 与 onChange，并把 ref 转发给它', () => {
@@ -81,10 +81,10 @@ describe('Form hooks', () => {
             onChange?: (value: string) => void;
             validateStatus?: string;
         }
-        const Control = (props: ControlProps) => {
+        function Control(props: ControlProps) {
             const [local, rest] = splitProps(props, ['value', 'onChange', 'validateStatus']);
             return <input {...rest} data-status={local.validateStatus} value={local.value ?? ''} onInput={(e) => local.onChange?.(e.currentTarget.value)} />;
-        };
+        }
         const FormControl = withField(Control);
         let api: FormApi | undefined;
         let inputRef: HTMLInputElement | undefined;
@@ -106,7 +106,7 @@ describe('Form hooks', () => {
 describe('Form.useForm', () => {
     it('绑定到 Form 后 formState 与 values 跟随表单', () => {
         let state: ReturnType<typeof useForm> | undefined;
-        const Demo = () => {
+        function Demo() {
             state = useForm();
             const [formApi, , values] = state;
             return (
@@ -115,7 +115,7 @@ describe('Form.useForm', () => {
                     <span data-testid="values">{JSON.stringify(values())}</span>
                 </Form>
             );
-        };
+        }
         render(() => <Demo />);
         fireEvent.input(getInput('name'), { target: { value: 'semi' } });
         expect(screen.getByTestId('values')).toHaveTextContent('{"name":"semi"}');

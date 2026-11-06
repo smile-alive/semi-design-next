@@ -4,7 +4,7 @@ import { Form, FormCheckbox, FormCheckboxGroup, FormInput, FormInputNumber, Form
 const rules = [
     { required: true, message: 'required error' },
     { type: 'string' as const, message: 'type error' },
-    { validator: (_rule: unknown, value: unknown) => value === 'semi', message: 'should be semi' },
+    { validator: (value: unknown) => value === 'semi', message: 'should be semi' },
 ];
 
 export default function FormDemo() {

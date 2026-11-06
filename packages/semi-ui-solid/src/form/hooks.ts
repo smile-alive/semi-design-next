@@ -1,7 +1,7 @@
 import type { Accessor } from 'solid-js';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import { useFormContext } from './context';
-import type { FieldError, FormApi, FormState } from './interface';
+import type { FieldError, FieldErrorInput, FormApi, FormState } from './interface';
 
 type FieldPath = string | Accessor<string>;
 
@@ -24,7 +24,7 @@ export function useFieldApi(field: FieldPath) {
 
     return {
         getError: () => formApi.getError(readPath(field)),
-        setError: (error: FieldError) => formApi.setError(readPath(field), error),
+        setError: (error: FieldErrorInput) => formApi.setError(readPath(field), error),
         getTouched: () => formApi.getTouched(readPath(field)),
         setTouched: (isTouched: boolean) => formApi.setTouched(readPath(field), isTouched),
         getValue: () => formApi.getValue(readPath(field)),
@@ -32,7 +32,7 @@ export function useFieldApi(field: FieldPath) {
     };
 }
 
-export function useFieldState(field: FieldPath): Accessor<{ value: any; error: FieldError; touched: boolean | undefined }> {
+export function useFieldState(field: FieldPath): Accessor<{ value: any; error: FieldError | undefined; touched: boolean | undefined }> {
     const formState = useFormState();
 
     return () => {

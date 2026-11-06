@@ -1,0 +1,10 @@
+import ApiType from '#/components/ApiType.astro';
+
+**Props**
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| field | Path of the node to render, the root by default. The root object renders without a Section; other objects and arrays render as a Section titled by their title. | `string` | `""` |
+| jsonSchema | The JSON Schema to render. It takes precedence over the JSON Schema exported from the Form's `schema`; with neither, nothing renders and a warning is logged in development. | `JsonSchema` | - |
+| renderField | Renderers by node path, with array rows written as `[]` (such as `contacts[].email`), called with `{ node, field }`. A match renders the node and its subtree. | <ApiType detail={"Record\u003cstring, SchemaFieldRenderer>"}>Type</ApiType> | - |
+| widgets | Field components in place of the built-in controls, keyed by the JSON Schema `format` or by kind (input, textarea, number, switch, select), looked up by `format` first. A component receives the props of the built-in control. | <ApiType detail={"Record\u003cstring, React.ComponentType\u003cany>>"}>Type</ApiType> | - |

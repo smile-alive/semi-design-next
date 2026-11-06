@@ -60,7 +60,7 @@ describe('Svelte Form 字段状态与发布时机', () => {
         flushSync();
         expect(screen.getByText('fast-error')).toBeInTheDocument();
         expect(screen.queryByText('slow-error')).toBeNull();
-        expect(api().getError('fast')).toBe('fast-error');
+        expect(api().getError('fast')).toEqual(['fast-error']);
         expect(screen.getByTestId('form-state')).toHaveTextContent('{"values":{},"errors":{},"touched":{}}');
         expect(screen.getByTestId('field-state')).toHaveTextContent('{}');
         expect(onChange).not.toHaveBeenCalled();
@@ -70,10 +70,10 @@ describe('Svelte Form 字段状态与发布时机', () => {
         expect(screen.getByText('slow-error')).toBeInTheDocument();
         expect(JSON.parse(screen.getByTestId('form-state').textContent ?? '')).toEqual({
             values: {},
-            errors: { fast: 'fast-error', slow: 'slow-error' },
+            errors: { fast: ['fast-error'], slow: ['slow-error'] },
             touched: { fast: true, slow: true },
         });
-        expect(JSON.parse(screen.getByTestId('field-state').textContent ?? '')).toEqual({ error: 'fast-error', touched: true });
+        expect(JSON.parse(screen.getByTestId('field-state').textContent ?? '')).toEqual({ error: ['fast-error'], touched: true });
         expect(onChange).toHaveBeenCalledTimes(1);
     });
 
@@ -117,13 +117,13 @@ describe('Svelte Form 字段状态与发布时机', () => {
         api().setError('name', 'bad');
         await settle();
         expect(textbox()).toHaveAttribute('data-status', 'warning');
-        expect(api().getFormState()).toEqual({ values: {}, errors: { name: 'bad' }, touched: {} });
+        expect(api().getFormState()).toEqual({ values: {}, errors: { name: ['bad'] }, touched: {} });
     });
 
     it('reset 使用最近一次注册时的 initValue，普通属性更新不替换初值，null 重置为 undefined', async () => {
         const onValueChange = vi.fn<(...args: unknown[]) => void>();
         const onReset = vi.fn<() => void>();
-        const { api, rerender } = renderField({ field: 'before', initValue: 'first' }, { onReset, onValueChange }, ProbeControl);
+        const { api, rerender } = renderField({ field: 'before', initValue: 'first' }, { onReset, onValueChange, keepState: false }, ProbeControl);
         await rerender({ field: 'before', initValue: 'ignored' });
         api().reset();
         await settle();
@@ -149,8 +149,8 @@ describe('Svelte Form 字段状态与发布时机', () => {
         expect(api().getFormState()).toEqual({ values: {}, errors: {}, touched: { after: true } });
     });
 
-    it('字段改名携带值、错误和控件 status，已有 touched 不在新路径重新写入', async () => {
-        const { api, rerender } = renderField({ field: 'before', initValue: 'init' }, {}, ProbeControl);
+    it('字段改名携带值、错误、touched 和控件 status', async () => {
+        const { api, rerender } = renderField({ field: 'before', initValue: 'init' }, { keepState: false }, ProbeControl);
         api().setValue('before', 'changed');
         api().setError('before', 'carried-error');
         api().setTouched('before', true);
@@ -158,12 +158,10 @@ describe('Svelte Form 字段状态与发布时机', () => {
         const input = textbox();
         expect(input).toHaveValue('changed');
         expect(input).toHaveAttribute('data-status', 'error');
-        expect(api().getFormState()).toEqual({ values: { after: 'changed' }, errors: { after: 'carried-error' }, touched: {} });
-        await fireEvent.blur(input);
-        expect(api().getTouched('after')).toBeUndefined();
+        expect(api().getFormState()).toEqual({ values: { after: 'changed' }, errors: { after: ['carried-error'] }, touched: { after: true } });
     });
 
-    it('ArrayField 删除前行后，后行携带值、错误和控件 status，blur 不重写 touched', async () => {
+    it('ArrayField 删除前行后，后行携带值、错误、touched 和控件 status', async () => {
         const { api } = renderForm({ initValues: { rows: [{ name: 'first' }, { name: 'second' }] } }, [{ type: 'arrayRows', props: { field: 'rows', probe: true } }]);
         api().setValue('rows[1].name', 'changed');
         api().setError('rows[1].name', 'row-error');
@@ -175,10 +173,8 @@ describe('Svelte Form 字段状态与发布时机', () => {
         expect(input).toHaveValue('changed');
         expect(input).toHaveAttribute('data-status', 'error');
         expect(api().getValue('rows')).toEqual([{ name: 'changed' }]);
-        expect(api().getError('rows[0].name')).toBe('row-error');
-        expect(api().getTouched('rows[0].name')).toBeUndefined();
-        await fireEvent.blur(input);
-        expect(api().getTouched('rows[0].name')).toBeUndefined();
+        expect(api().getError('rows[0].name')).toEqual(['row-error']);
+        expect(api().getTouched('rows[0].name')).toBe(true);
     });
 
     it('嵌套 setValue 后控件只以新值渲染一次', async () => {

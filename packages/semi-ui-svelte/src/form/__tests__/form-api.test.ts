@@ -12,7 +12,7 @@ const nestedAB = () => input('a.b', { class: 'ab', validator: required('ab-err')
 const nestedAC = () => input('a.c', { class: 'ac', validator: required('ac-err') });
 const nestedFields = () => [nestedAB(), nestedAC(), input('e', { class: 'e', validator: required('e-err') })];
 const rowValues = (count: number) => Array.from({ length: count }, (_, i) => ({ name: `${i}-name`, type: `${i}-type` }));
-const muji = [{ validator: (_rule: unknown, value: unknown) => value === 'muji', message: 'not muji' }];
+const muji = [{ validator: (value: unknown) => value === 'muji', message: 'not muji' }];
 
 describe('Svelte Form-formApi', () => {
     it('Form 卸载后再次挂载时，重新绑定 useForm api', async () => {
@@ -33,14 +33,14 @@ describe('Svelte Form-formApi', () => {
         expect(fieldInput('name')).toHaveValue('design');
     });
 
-    it('formApi-getFieldExist', () => {
+    it('formApi.getFieldExist 判断字段是否已注册', () => {
         const { api, onGetFormApi } = renderForm({}, [input('name')]);
         expect(onGetFormApi).toHaveBeenCalledTimes(1);
         expect(api().getFieldExist('name')).toEqual(true);
         expect(api().getFieldExist('business')).toEqual(false);
     });
 
-    it('formApi-getInitValue / getInitValues', () => {
+    it('formApi.getInitValue 与 getInitValues 返回初始值', () => {
         const initValues = { name: 'semi', business: 'abc' };
         const { api } = renderForm({ initValues }, fields());
         expect(api().getInitValue('name')).toEqual('semi');
@@ -51,14 +51,14 @@ describe('Svelte Form-formApi', () => {
         expect(fieldInput('name')).toHaveValue('semi');
     });
 
-    it('formApi-getTouched', async () => {
+    it('formApi.getTouched 在字段失焦后返回 true', async () => {
         const { api } = renderForm({}, fields());
         await fireEvent.focusOut(fieldInput('name') as HTMLInputElement);
         expect(api().getTouched('name')).toEqual(true);
         expect(!api().getTouched('business')).toEqual(true);
     });
 
-    it('formApi-getValue', async () => {
+    it('formApi.getValue 按路径取值，不传路径时返回全部值', async () => {
         const { api } = renderForm({}, fields());
         expect(api().getValue('name')).toEqual(undefined);
         await typeInto(fieldInput('name') as HTMLInputElement, 'semi');
@@ -67,28 +67,28 @@ describe('Svelte Form-formApi', () => {
         expect(api().getValues()).toEqual({ name: 'semi' });
     });
 
-    it('formApi-getError', async () => {
+    it('formApi.getError 返回字段校验失败的错误', async () => {
         const { api } = renderForm({}, [input('name', { rules: muji, trigger: 'change' })]);
         await typeInto(fieldInput('name') as HTMLInputElement, 'semi');
-        await waitFor(() => expect(api().getError('name')).toEqual('not muji'));
+        await waitFor(() => expect(api().getError('name')).toEqual(['not muji']));
         expect(errorOf('name')).toHaveTextContent('not muji');
     });
 
-    it('formApi-getFormState', async () => {
+    it('formApi.getFormState 返回 values、errors 与 touched', async () => {
         const { api } = renderForm({}, [input('name', { rules: muji, trigger: 'change' })]);
         await typeInto(fieldInput('name') as HTMLInputElement, 'semi');
-        await waitFor(() => expect(api().getFormState()).toEqual({ values: { name: 'semi' }, errors: { name: 'not muji' }, touched: { name: true } }));
+        await waitFor(() => expect(api().getFormState()).toEqual({ values: { name: 'semi' }, errors: { name: ['not muji'] }, touched: { name: true } }));
     });
 
-    it('formApi-setError', async () => {
+    it('formApi.setError 设置字段错误并渲染错误信息', async () => {
         const { api, container } = renderForm({}, [input('name', { fieldClassName: 'test', trigger: 'change' })]);
         api().setError('name', 'not muji');
         await settle();
-        expect(api().getFormState()).toEqual({ values: {}, errors: { name: 'not muji' }, touched: {} });
+        expect(api().getFormState()).toEqual({ values: {}, errors: { name: ['not muji'] }, touched: {} });
         expect(container.querySelector('.test .semi-form-field-error-message')).toHaveTextContent(/^not muji$/);
     });
 
-    it('formApi-setTouched', () => {
+    it('formApi.setTouched 设置字段的 touched 状态', () => {
         const { api } = renderForm({}, fields());
         api().setTouched('business', true);
         expect(api().getTouched('business')).toEqual(true);
@@ -97,7 +97,7 @@ describe('Svelte Form-formApi', () => {
         expect(api().getTouched('business')).toEqual(false);
     });
 
-    it('formApi-setValue', async () => {
+    it('formApi.setValue 设置字段值并同步到输入框', async () => {
         const { api } = renderForm({}, fields());
         api().setValue('name', 'semi');
         await settle();
@@ -105,7 +105,7 @@ describe('Svelte Form-formApi', () => {
         expect(fieldInput('name')).toHaveValue('semi');
     });
 
-    it('formApi-reset', async () => {
+    it('formApi.reset 将值恢复为初始值并清空错误与 touched', async () => {
         const { api } = renderForm({ initValues: { name: 'a' } }, fields());
         await typeInto(fieldInput('name') as HTMLInputElement, 'b');
         expect(fieldInput('name')).toHaveValue('b');
@@ -135,23 +135,23 @@ describe('Svelte Form-formApi', () => {
 
     it('formApi-validate：校验所有字段与指定字段', async () => {
         const { api } = renderForm({}, [nestedAB(), nestedAC()]);
-        await expect(api().validate()).rejects.toEqual({ a: { b: 'ab-err', c: 'ac-err' } });
+        await expect(api().validate()).rejects.toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } });
         await settle();
-        expect(api().getFormState().errors).toEqual({ a: { b: 'ab-err', c: 'ac-err' } });
+        expect(api().getFormState().errors).toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } });
         expect(errorOf('a.b')).toHaveTextContent('ab-err');
         api().reset();
-        await expect(api().validate(['a.c'])).rejects.toEqual({ a: { c: 'ac-err' } });
+        await expect(api().validate(['a.c'])).rejects.toEqual({ a: { c: ['ac-err'] } });
         await settle();
-        expect(api().getFormState().errors).toEqual({ a: { c: 'ac-err' } });
+        expect(api().getFormState().errors).toEqual({ a: { c: ['ac-err'] } });
         expect(errorOf('a.b')).toBeNull();
         expect(errorOf('a.c')).toHaveTextContent('ac-err');
     });
 
     it('formApi-validate：嵌套字段', async () => {
         const { api } = renderForm({}, nestedFields());
-        await expect(api().validate(['a'])).rejects.toEqual({ a: { b: 'ab-err', c: 'ac-err' } });
+        await expect(api().validate(['a'])).rejects.toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } });
         await settle();
-        expect(api().getFormState().errors).toEqual({ a: { b: 'ab-err', c: 'ac-err' } });
+        expect(api().getFormState().errors).toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } });
         expect(errorOf('e')).toBeNull();
     });
 
@@ -169,7 +169,7 @@ describe('Svelte Form-formApi', () => {
         const { api } = renderForm({}, nestedFields());
         api().setError('a', { b: 'ab-err', c: 'ac-err' });
         await settle();
-        expect(api().getFormState().errors).toEqual({ a: { b: 'ab-err', c: 'ac-err' } });
+        expect(api().getFormState().errors).toEqual({ a: { b: ['ab-err'], c: ['ac-err'] } });
         expect(errorOf('a.b')).toHaveTextContent(/^ab-err$/);
         expect(errorOf('a.c')).toHaveTextContent(/^ac-err$/);
         expect(errorOf('e')).toBeNull();
@@ -232,10 +232,10 @@ describe('Svelte Form-formApi', () => {
     it('formApi-validate：表单级校验器', async () => {
         const validator = vi.fn<() => { name: string }>(() => ({ name: 'from-validator' }));
         const { api } = renderForm({ validator }, [input('name')]);
-        await expect(api().validate()).rejects.toEqual({ name: 'from-validator' });
+        await expect(api().validate()).rejects.toEqual({ name: ['from-validator'] });
         await settle();
         expect(validator).toHaveBeenCalled();
-        expect(api().getFormState().errors).toEqual({ name: 'from-validator' });
+        expect(api().getFormState().errors).toEqual({ name: ['from-validator'] });
         expect(errorOf('name')).toHaveTextContent('from-validator');
     });
 
@@ -258,7 +258,7 @@ describe('Svelte Form-formApi', () => {
         await expect(api().validate()).rejects.toBeDefined();
         await settle();
         for (const path of paths) {
-            expect(api().getError(path)).toBe('required');
+            expect(api().getError(path)).toEqual(['required']);
             expect(errorOf(path)).toHaveTextContent('required');
         }
         api().reset();

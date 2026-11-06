@@ -1,15 +1,15 @@
 import { createSignal } from 'solid-js';
-import { Form, FormInput, type CommonFieldProps, type FormElement, type InputValidateStatus as ValidateStatus } from '@fibrae/semi-ui-solid';
+import { Form, FormInput, type FormElement, type InputValidateStatus as ValidateStatus } from '@fibrae/semi-ui-solid';
 
 export default function FormDemo() {
     const [weak, setWeak] = createSignal(false);
     const [validateStatus, setValidateStatus] = createSignal<ValidateStatus>('default');
     let form: FormElement | undefined;
 
-    const validator: CommonFieldProps['validator'] = (val) => {
+    const validator = (val?: string) => {
         if (!val) {
             setValidateStatus('error');
-            return <span>密码不能为空</span>;
+            return '密码不能为空';
         } else if (val.length <= 3) {
             setValidateStatus('warning');
             setWeak(true); // 展示 helpText
