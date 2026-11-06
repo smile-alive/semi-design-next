@@ -7,6 +7,7 @@
     import { IconChevronDown, IconDisc } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';
     import { groupRole } from '@fibrae/semi-ui-vue/_base/group-role';
+    import { handOnSlots } from '@fibrae/semi-ui-vue/_base/hand-on';
     import semiDefault, { semiGlobalDefault } from '@fibrae/semi-ui-vue/_base/semi-default';
     import useFoundation from '@fibrae/semi-ui-vue/_base/use-foundation';
     import Button from '@fibrae/semi-ui-vue/button/index';
@@ -107,7 +108,7 @@
 
     // ChatBox reads only its own slot names. Passing the slots object forwards every given slot without the ref_for that a
     // dynamic slot outlet inside the message v-for compiles to.
-    const chatBoxNode = (item: ChatMessage, index: number) => h(ChatBox, { continueSend: index > 0 && item.role === chats.value[index - 1].role, isLast: index === chats.value.length - 1, message: item }, { ...slots });
+    const chatBoxNode = (item: ChatMessage, index: number) => h(ChatBox, { continueSend: index > 0 && item.role === chats.value[index - 1].role, isLast: index === chats.value.length - 1, message: item }, handOnSlots(slots));
 
     const onDragOver = (e: DragEvent) => {
         if (upload.value.dragUpload) {
