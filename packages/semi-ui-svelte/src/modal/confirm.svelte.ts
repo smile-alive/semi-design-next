@@ -1,16 +1,13 @@
 import { mount, unmount } from 'svelte';
 import { resolveConfirmProps } from '@fibrae/semi-foundation/modal/confirm';
+import ConfirmRegistry from '@fibrae/semi-foundation/modal/confirm-registry';
 import { assertClient } from '../_base/client-only.js';
 import ConfirmModal from './confirm-modal.svelte';
 import type { ConfirmProps, ModalConfirmProps, ModalHookRef } from './interface.js';
 
-const destroyFns: Array<() => void> = [];
+const registry = new ConfirmRegistry();
 
-export function destroyAll() {
-    for (const close of destroyFns.splice(0)) {
-        close();
-    }
-}
+export const destroyAll = registry.destroyAll;
 
 /**
  * Mounts a confirm dialog into the body and returns its handle plus `dispose`, which removes it at once without its
@@ -41,10 +38,6 @@ export function openConfirm({ afterClose, ...others }: ConfirmProps, { context, 
     const release = () => {
         if (destroyed) return;
         destroyed = true;
-        const index = destroyFns.indexOf(destroy);
-        if (index !== -1) {
-            destroyFns.splice(index, 1);
-        }
         onClosed?.();
     };
 
@@ -70,8 +63,8 @@ export function openConfirm({ afterClose, ...others }: ConfirmProps, { context, 
 }
 
 export default function confirm(props: ConfirmProps): ModalHookRef {
-    const { ref, close } = openConfirm(props);
-    destroyFns.push(close);
+    const { ref, close } = openConfirm(props, { onClosed: () => unregister() });
+    const unregister = registry.register(close);
     return ref;
 }
 

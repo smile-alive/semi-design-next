@@ -1,9 +1,7 @@
 import type { JSX } from 'solid-js';
-import { omitBy } from 'es-toolkit';
 import type { NoticeInstance, NoticeType } from '@fibrae/semi-foundation/notification/notification-foundation';
 import NotificationListStore from '@fibrae/semi-foundation/notification/notification-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
-import { createId } from '@fibrae/semi-foundation/utils/uuid';
 import { readGlobalDefaults } from '../_utils/semi-global';
 import type { NotificationOptions } from './notice';
 import NotificationList from './notification-list';
@@ -27,11 +25,7 @@ export interface NotificationHookApi {
 export default function useNotification(): [NotificationHookApi, JSX.Element] {
     const store = new NotificationListStore();
 
-    const addNotice = (config: NotificationHookOptions, type: NoticeType) => {
-        const id = createId('semi_notice_');
-        store.add({ ...store.defaults, ...readGlobalDefaults('Notification'), ...omitBy(config, (value) => value === undefined), type, id } as NoticeInstance);
-        return id;
-    };
+    const addNotice = (config: NotificationHookOptions, type: NoticeType) => store.open({ ...config, type } as NoticeInstance, readGlobalDefaults('Notification'));
 
     // keep-interactive: a modal layer must not make the live region inert; contents: no stacking context for the lists
     const contextHolder = (

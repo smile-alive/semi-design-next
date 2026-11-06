@@ -1,12 +1,13 @@
 /** @jsxImportSource vue */
 
 import type { Component } from 'vue';
+import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
 import { cssClasses } from '@fibrae/semi-foundation/notification/constants';
-import type { NoticeType } from '@fibrae/semi-foundation/notification/notification-foundation';
+import type { NoticeInstance, NoticeType } from '@fibrae/semi-foundation/notification/notification-foundation';
 import NotificationListStore from '@fibrae/semi-foundation/notification/notification-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
-import { createId } from '@fibrae/semi-foundation/utils/uuid';
 import { createHolder } from '../_base/holder';
+import { useSemiGlobal } from '../_base/semi-default';
 import type { NotificationHookApi, NotificationHookOptions } from './interface';
 import NotificationList from './notification-list.vue';
 
@@ -15,6 +16,8 @@ import NotificationList from './notification-list.vue';
  * placed. Each call owns one store; it registers no lifecycle hooks, and unmounting the Holder clears the timers.
  */
 export default function useNotification(): [NotificationHookApi, Component] {
+    const semi = useSemiGlobal();
+
     const store = new NotificationListStore();
 
     // keep-interactive stops a modal layer from making the live region inert; display: contents keeps the fixed lists
@@ -25,11 +28,7 @@ export default function useNotification(): [NotificationHookApi, Component] {
         </div>
     ));
 
-    const add = (config: NotificationHookOptions, type: NoticeType) => {
-        const id = createId('semi_notice_');
-        store.add({ ...config, type, id });
-        return id;
-    };
+    const add = (config: NotificationHookOptions, type: NoticeType) => store.open({ ...config, type } as NoticeInstance, omitInstanceIds(semi.config.overrideDefaultProps?.Notification));
 
     return [
         {

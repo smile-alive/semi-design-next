@@ -34,7 +34,20 @@ export type NoticeInstance = NoticeProps;
 export type NoticeBaseProps = AutoCloseBaseProps;
 export type NoticeBaseState = NoticeState;
 
-export type NoticeAdapter<P extends NoticeBaseProps = NoticeBaseProps, S extends NoticeBaseState = NoticeBaseState> = AutoCloseAdapter<P, S>;
+export interface NoticeAdapter<P extends NoticeBaseProps = NoticeBaseProps, S extends NoticeBaseState = NoticeBaseState> extends AutoCloseAdapter<P, S> {
+    /** The click on the close button, reported ahead of the close itself */
+    notifyCloseClick: (id: string) => void;
+}
 
-/** Auto close shared with Toast */
-export default class NotificationFoundation<P extends NoticeBaseProps = NoticeBaseProps, S extends NoticeBaseState = NoticeBaseState> extends AutoCloseFoundation<P, S> {}
+/** Auto close shared with Toast, plus the close button's own report */
+export default class NotificationFoundation<P extends NoticeBaseProps = NoticeBaseProps, S extends NoticeBaseState = NoticeBaseState> extends AutoCloseFoundation<P, S, NoticeAdapter<P, S>> {
+    clickClose = (e: { stopPropagation: () => void }) => {
+        // the click must not reach the notice's own handler, also when it is ignored
+        e.stopPropagation();
+        if (this.isLeaving()) {
+            return;
+        }
+        this.adapter.notifyCloseClick(this.getProp('id'));
+        this.close();
+    };
+}

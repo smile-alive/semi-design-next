@@ -1,12 +1,13 @@
 /** @jsxImportSource vue */
 
 import type { Component } from 'vue';
+import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
 import { cssClasses } from '@fibrae/semi-foundation/toast/constants';
 import type { ToastInstance, ToastType } from '@fibrae/semi-foundation/toast/toast-foundation';
 import ToastListStore from '@fibrae/semi-foundation/toast/toast-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
-import { createId } from '@fibrae/semi-foundation/utils/uuid';
 import { createHolder } from '../_base/holder';
+import { useSemiGlobal } from '../_base/semi-default';
 import type { ToastHookApi, ToastHookOptions } from './interface';
 import ToastList from './toast-list.vue';
 
@@ -15,6 +16,8 @@ import ToastList from './toast-list.vue';
  * placed. Each call owns one store; it registers no lifecycle hooks, and unmounting the Holder clears the timers.
  */
 export default function useToast(): [ToastHookApi, Component] {
+    const semi = useSemiGlobal();
+
     const store = new ToastListStore();
 
     const Holder = createHolder('ToastHolder', () => (
@@ -23,12 +26,7 @@ export default function useToast(): [ToastHookApi, Component] {
         </div>
     ));
 
-    const add = (config: ToastHookOptions, type: ToastType) => {
-        const id = createId('toast');
-        store.setStack(config.stack);
-        store.add({ ...config, type, id } as ToastInstance);
-        return id;
-    };
+    const add = (config: ToastHookOptions, type: ToastType) => store.open({ ...config, type } as ToastInstance, omitInstanceIds(semi.config.overrideDefaultProps?.Toast) as Partial<ToastInstance>);
 
     return [
         {

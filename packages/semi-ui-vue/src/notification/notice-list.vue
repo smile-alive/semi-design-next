@@ -7,7 +7,6 @@
     import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import { readSemiDefault, useSemiGlobal } from '../_base/semi-default';
     import { provideNoticeListContext, type ListedNotice } from './context';
     import Notice from './notice.vue';
 
@@ -26,8 +25,6 @@
     defineOptions({ inheritAttrs: false });
     const props = defineProps<NoticeListProps>();
 
-    const semi = useSemiGlobal();
-
     const listEl = useTemplateRef('listEl');
     const pointerInside = shallowRef(false);
     const focusInside = shallowRef(false);
@@ -44,17 +41,8 @@
     const offsets = ['top', 'bottom', 'left', 'right'] as const;
 
     // The newest notice decides the list's offsets.
-    const listStyle = computed(() => {
-        const newest = props.items[0];
-        return Object.fromEntries(
-            offsets.map((key) => {
-                const value = newest[key] ?? readSemiDefault(semi, 'Notification', key);
-                return [key, toCssLength(value)];
-            })
-        );
-    });
-
-    const threshold = computed(() => getStackThreshold(props.items[0].stack ?? readSemiDefault(semi, 'Notification', 'stack')));
+    const listStyle = computed(() => Object.fromEntries(offsets.map((key) => [key, toCssLength(props.items[0][key])])));
+    const threshold = computed(() => getStackThreshold(props.items[0].stack));
     const shown = computed(() => props.items.filter((item) => !props.removedIds.includes(item.id)));
     const expanded = computed(() => paused.value || shown.value.length <= threshold.value);
     const rows = computed(() => shown.value.map((item, index) => ({ item, depth: index, layer: shown.value.length - index })));

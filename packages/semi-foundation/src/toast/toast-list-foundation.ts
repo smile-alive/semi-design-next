@@ -1,5 +1,7 @@
+import { omitBy } from 'es-toolkit';
 import ListStore, { type ListStoreState } from '../base/list-store';
 import type { ConfigProps, ToastInstance } from '../toast/toast-foundation';
+import { createId } from '../utils/uuid';
 import { builtInOpts, numbers, positions, strings } from './constants';
 
 export interface ToastListState extends ListStoreState<ToastInstance> {
@@ -31,6 +33,20 @@ export default class ToastListStore {
     /** Shows a toast at the end, or updates the shown one with the same id in place */
     add = (toast: ToastInstance) => {
         this.#items.add(toast);
+    };
+
+    /**
+     * Shows a toast with `opts` over the list's defaults and the global defaults, which is where the global defaults
+     * take effect: an explicit undefined replaces nothing. `beforeShow` gets the merged options before the toast is
+     * added, so a static API can place its wrapper by them. Returns the id.
+     */
+    open = (opts: ToastInstance, globalDefaults: Partial<ToastInstance>, beforeShow?: (merged: ToastInstance) => void) => {
+        const merged: ToastInstance = { ...this.defaults, ...globalDefaults, ...omitBy(opts, (value) => value === undefined) };
+        const id = merged.id ?? createId('toast');
+        beforeShow?.(merged);
+        this.setStack(merged.stack);
+        this.add({ ...merged, id });
+        return id;
     };
 
     remove = (id: string) => {

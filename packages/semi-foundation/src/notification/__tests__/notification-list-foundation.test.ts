@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
-import NotificationListStore from '../notification-list-foundation';
+import NotificationListStore, { groupNoticesByPosition } from '../notification-list-foundation';
 
 const ids = (items) => items.map(({ id }) => id);
 
@@ -110,6 +110,30 @@ describe('NotificationListStore', () => {
         idle.add({ id: 'a' });
         idle.remove('a');
         expect(idle.getSnapshot().order).toEqual([]);
+    });
+
+    it('groupNoticesByPosition 按 order 分到各方位，离场中的通知留在原位', () => {
+        const store = new NotificationListStore();
+        store.subscribe(() => {});
+        store.add({ id: 'a', position: 'bottom' });
+        store.add({ id: 'b', position: 'bottom' });
+        store.add({ id: 'c' });
+        store.remove('b');
+        const grouped = groupNoticesByPosition(store.getSnapshot());
+        expect(grouped.bottom.map(({ id }) => id)).toEqual(['b', 'a']);
+        expect(grouped.topRight.map(({ id }) => id)).toEqual(['c']);
+        expect(grouped.topLeft).toEqual([]);
+    });
+
+    it('groupNoticesByPosition 未指定方位时，rtl 去左上角，通知自己的 direction 优先于列表的', () => {
+        const store = new NotificationListStore();
+        store.add({ id: 'a' });
+        store.add({ id: 'b', direction: 'ltr' });
+        store.add({ id: 'c', direction: 'rtl' });
+        const rtl = groupNoticesByPosition(store.getSnapshot(), 'rtl');
+        expect(rtl.topLeft.map(({ id }) => id)).toEqual(['c', 'a']);
+        expect(rtl.topRight.map(({ id }) => id)).toEqual(['b']);
+        expect(groupNoticesByPosition(store.getSnapshot()).topRight.map(({ id }) => id)).toEqual(['b', 'a']);
     });
 
     it('config 修改默认值，resetConfig 恢复内置默认值', () => {

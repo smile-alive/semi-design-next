@@ -1,9 +1,8 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/notification/constants';
-    import type { NoticePosition } from '@fibrae/semi-foundation/notification/notification-foundation';
+    import { groupNoticesByPosition, noticePositions } from '@fibrae/semi-foundation/notification/notification-list-foundation';
     import '@fibrae/semi-foundation/notification/notification.scss';
     import useAnnouncer from '../_base/use-announcer.svelte.js';
-    import useDefaultProps from '../_base/use-default-props.js';
     import useStoreSnapshot from '../_base/use-store-snapshot.svelte.js';
     import { getConfigContext } from '../config-provider/context.js';
     import type { ListedNotice } from './context.js';
@@ -11,33 +10,18 @@
     import NoticeList from './notice-list.svelte';
 
     let { store }: NotificationListProps = $props();
-    const defaults = useDefaultProps('Notification');
 
     const config = getConfigContext();
 
     const snapshot = useStoreSnapshot(store);
     const { text: announcement, announcer } = useAnnouncer();
 
-    const positions: NoticePosition[] = ['top', 'topLeft', 'topRight', 'bottom', 'bottomLeft', 'bottomRight'];
     const view = $derived(snapshot());
 
     const groups = $derived.by(() => {
-        const { notices, removedItems, order } = view;
         // The store's add() always has an id, which the foundation's optional field does not say.
-        const byId = new Map([...notices, ...removedItems].map((item) => [item.id, item as ListedNotice]));
-        const grouped = new Map<NoticePosition, ListedNotice[]>(positions.map((position) => [position, []]));
-        for (const id of order) {
-            const item = byId.get(id);
-            if (!item) continue;
-            const rtl = (item.direction || config.direction) === 'rtl';
-            // A hook's notice carries no merged defaults, so the global default position is read here.
-            const position = item.position || defaults('position') || (rtl ? 'topLeft' : 'topRight');
-            grouped.get(position)?.push(item);
-        }
-        return positions.flatMap((placement) => {
-            const items = grouped.get(placement) ?? [];
-            return items.length ? [{ placement, items }] : [];
-        });
+        const grouped = groupNoticesByPosition(view as { notices: ListedNotice[]; removedItems: ListedNotice[]; order: string[] }, config.direction);
+        return noticePositions.flatMap((placement) => (grouped[placement].length ? [{ placement, items: grouped[placement] }] : []));
     });
 </script>
 

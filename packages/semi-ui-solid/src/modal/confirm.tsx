@@ -1,5 +1,6 @@
 import { createSignal } from 'solid-js';
 import { resolveConfirmProps } from '@fibrae/semi-foundation/modal/confirm';
+import ConfirmRegistry from '@fibrae/semi-foundation/modal/confirm-registry';
 import renderDetached from '../_base/detached-render';
 import ConfirmModal, { type ConfirmProps } from './confirm-modal';
 import type { ModalProps } from './modal';
@@ -11,13 +12,9 @@ export interface ModalHookRef {
     update: (config: ModalProps) => void;
 }
 
-const destroyFns: Array<() => void> = [];
+const registry = new ConfirmRegistry();
 
-export function destroyAll() {
-    for (const close of destroyFns.splice(0)) {
-        close();
-    }
-}
+export const destroyAll = registry.destroyAll;
 
 /** Renders a confirm dialog outside the app, so it reads global defaults and the default locale */
 export default function confirm(props: ConfirmProps): ModalHookRef {
@@ -39,16 +36,13 @@ export default function confirm(props: ConfirmProps): ModalHookRef {
             afterClose={() => {
                 closed = true;
                 config().afterClose?.();
-                const index = destroyFns.indexOf(close);
-                if (index !== -1) {
-                    destroyFns.splice(index, 1);
-                }
+                unregister();
                 dispose();
             }}
         />
     ));
 
-    destroyFns.push(close);
+    const unregister = registry.register(close);
     return { destroy: close, update };
 }
 

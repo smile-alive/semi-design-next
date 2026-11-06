@@ -1,7 +1,7 @@
 import { createEffect, createMemo, createSignal, For, type JSX, on, onCleanup, onMount, Show, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, getStackItemTransform, getStackThreshold, numbers } from '@fibrae/semi-foundation/notification/constants';
-import type { NotificationListProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
+import { groupNoticesByPosition, noticePositions, type NotificationListProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
 import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
 import { pickFreshAnnouncements, readNoticeText } from '@fibrae/semi-foundation/utils/announcer';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
@@ -16,9 +16,7 @@ import Notice, { type NoticeProps } from './notice';
 
 const prefixCls = cssClasses.NOTICE;
 
-const positions = ['top', 'topLeft', 'topRight', 'bottom', 'bottomLeft', 'bottomRight'] as const;
-
-type Position = (typeof positions)[number];
+type Position = (typeof noticePositions)[number];
 
 function positionStyle(notice: NoticeProps) {
     const style: JSX.CSSProperties = {};
@@ -54,15 +52,8 @@ export default function NotificationList(props: NotificationListProps) {
 
     // keyed by id: an update in place replaces the notice object, and the notice must keep its element and countdown
     const idsInPosition = createMemo(() => {
-        const groups = Object.fromEntries(positions.map((position) => [position, [] as string[]])) as Record<Position, string[]>;
-        for (const id of state().order) {
-            const notice = byId().get(id);
-            if (notice) {
-                const defaultPosition = (notice.direction || config().direction) === 'rtl' ? 'topLeft' : 'topRight';
-                groups[notice.position || defaultPosition].push(id);
-            }
-        }
-        return groups;
+        const grouped = groupNoticesByPosition(state(), config().direction);
+        return Object.fromEntries(noticePositions.map((position) => [position, grouped[position].map((notice) => notice.id as string)])) as Record<Position, string[]>;
     });
 
     const releaseFocus = () => setFocusedPosition(null);
@@ -187,7 +178,7 @@ export default function NotificationList(props: NotificationListProps) {
             <div class={`${prefixCls}-announcer`} aria-atomic="true" aria-live="polite">
                 {announcement()}
             </div>
-            <For each={positions}>{(position) => <Show when={idsInPosition()[position].length}>{renderList(position)}</Show>}</For>
+            <For each={noticePositions}>{(position) => <Show when={idsInPosition()[position].length}>{renderList(position)}</Show>}</For>
         </>
     );
 }
