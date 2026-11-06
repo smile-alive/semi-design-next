@@ -255,6 +255,7 @@ describe('Svelte Tooltip', () => {
         await click();
         expect(api().getPopupId()).toBe('tip-id');
         expect(popup()?.id).toBe('tip-id');
+        expect(api().getPopup()).toBe(popup());
         api().hide();
         await settle();
         expect(popup()).toBe(null);

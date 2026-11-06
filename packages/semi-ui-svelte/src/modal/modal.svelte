@@ -114,9 +114,6 @@
             },
             notifyOk: (event) => onOk?.(event),
             notifyClose: () => afterClose?.(),
-            toggleDisplayNone: (value) => {
-                displayNone = value;
-            },
         })
     );
 
@@ -243,7 +240,7 @@
                 {maskStyle}
                 {modal}
                 {motion}
-                onAfterLeave={() => foundation.toggleDisplayNone(true)}
+                onAfterLeave={() => (displayNone = true)}
                 onClose={cancel}
                 {preventScroll}
                 {size}

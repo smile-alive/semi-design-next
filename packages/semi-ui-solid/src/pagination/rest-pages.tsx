@@ -1,4 +1,5 @@
 import { createMemo } from 'solid-js';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { cssClasses } from '@fibrae/semi-foundation/pagination/constants';
 import VirtualList, { type VirtualListRowProps } from '../_base/virtual-list';
 import useConfig from '../config-provider/use-config';
@@ -30,7 +31,7 @@ export default function RestPages(props: RestPagesProps) {
     const RestPageItem = (row: VirtualListRowProps<RestPagesData>) => {
         const page = () => row.data.start + row.index;
         return (
-            <button type="button" class={`${prefixCls}-rest-item`} style={row.style} aria-label={locale().locale.pageN.replace('${page}', String(page()))} onClick={() => row.data.goPage(page())}>
+            <button type="button" class={`${prefixCls}-rest-item`} style={row.style} aria-label={formatLocale(locale().locale.pageN, { page: page() })} onClick={() => row.data.goPage(page())}>
                 {page()}
             </button>
         );

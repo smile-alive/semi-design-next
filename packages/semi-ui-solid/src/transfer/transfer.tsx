@@ -1,15 +1,16 @@
 import { type JSX, type Ref, For, Match, Show, Suspense, Switch, children, createEffect, createMemo, createSignal, createUniqueId, lazy, on, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { cssClasses, strings } from '@fibrae/semi-foundation/transfer/constants';
 import TransferFoundation, { type TransferAdapter } from '@fibrae/semi-foundation/transfer/foundation';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/transfer/transfer.scss';
 import { IconClose, IconHandle, IconSearch } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
 import mergeStyles from '../_base/merge-styles';
-import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import VirtualList from '../_base/virtual-list';
@@ -127,23 +128,11 @@ export default function Transfer(rawProps: TransferProps) {
     const pageSize = createMemo(() => TransferFoundation.getPageSize(local.pagination));
     const totalPage = createMemo(() => TransferFoundation.getTotalPage(local.pagination, filterData().length));
     const currentPage = createMemo(() => TransferFoundation.getCurrentPage(local.pagination, state().leftCurrentPage, filterData().length));
+    const visibleData = createMemo(() => TransferFoundation.getVisibleData(filterData(), local.pagination, currentPage()));
+    const groups = createMemo(() => TransferFoundation.getGroups(visibleData(), data()));
 
-    const visibleData = createMemo(() => {
-        if (!local.pagination) {
-            return filterData();
-        }
-        const start = (currentPage() - 1) * pageSize();
-        return filterData().slice(start, start + pageSize());
-    });
-
-    const groupIndexes = createMemo(() => TransferFoundation.getGroupIndexes(data()));
-
-    // the group objects of the shown items: stable across search and paging, so a group row keeps its DOM
-    const visibleGroups = createMemo(() => {
-        const shown = new Set(visibleData().map((item) => item._parent));
-        return [...groupIndexes().keys()].filter((group) => shown.has(group));
-    });
-
+    // the group indexes are stable across search and paging, so a group row keeps its DOM
+    const groupIndexes = createMemo(() => groups().map((group) => group.index));
     const treeRest = createMemo(() => omit((local.treeProps ?? {}) as TreeProps, TRANSFER_OWNED_TREE_PROPS));
     const noMatch = createMemo(() => searchResult()?.size === 0);
     const showNumber = createMemo(() => searchResult()?.size ?? data().length);
@@ -262,14 +251,14 @@ export default function Transfer(rawProps: TransferProps) {
         <Show
             keyed
             when={local.renderSourceHeader}
-            fallback={<Header side="left" total={locale().locale.total.replace('${total}', String(showNumber()))} action={leftContainsNotInSelected() ? locale().locale.selectAll : locale().locale.clearSelectAll} showButton={sourceHeaderProps.showButton} onClick={sourceHeaderProps.onAllClick} />}
+            fallback={<Header side="left" total={formatLocale(locale().locale.total, { total: showNumber() })} action={leftContainsNotInSelected() ? locale().locale.selectAll : locale().locale.clearSelectAll} showButton={sourceHeaderProps.showButton} onClick={sourceHeaderProps.onAllClick} />}
         >
             {(render) => render(sourceHeaderProps)}
         </Show>
     );
 
     const SelectedHeader = () => (
-        <Show keyed when={local.renderSelectedHeader} fallback={<Header side="right" total={locale().locale.selected.replace('${total}', String(selectedList().length))} action={locale().locale.clear} showButton={selectedHeaderProps.showButton} onClick={selectedHeaderProps.onClear} />}>
+        <Show keyed when={local.renderSelectedHeader} fallback={<Header side="right" total={formatLocale(locale().locale.selected, { total: selectedList().length })} action={locale().locale.clear} showButton={selectedHeaderProps.showButton} onClick={selectedHeaderProps.onClear} />}>
             {(render) => render(selectedHeaderProps)}
         </Show>
     );
@@ -323,16 +312,17 @@ export default function Transfer(rawProps: TransferProps) {
             tabIndex={local.disabled ? 0 : undefined}
         >
             <Show when={local.type === strings.TYPE_GROUP_LIST} fallback={<For each={visibleData()}>{(item, index) => <SourceItem item={item} index={index()} />}</For>}>
-                <For each={visibleGroups()}>
-                    {(group) => {
-                        const titleId = () => `${idPrefix}-group-${groupIndexes().get(group)}`;
+                <For each={groupIndexes()}>
+                    {(groupIndex) => {
+                        const group = () => groups().find((candidate) => candidate.index === groupIndex);
+                        const titleId = `${idPrefix}-group-${groupIndex}`;
                         return (
                             <div role="listitem">
-                                <div id={titleId()} class={`${prefixCls}-group-title`}>
-                                    {group?.title}
+                                <div id={titleId} class={`${prefixCls}-group-title`}>
+                                    {group()?.title}
                                 </div>
-                                <div aria-labelledby={titleId()} role="list">
-                                    <For each={visibleData().filter((item) => item._parent === group)}>{(item) => <SourceItem item={item} index={visibleData().indexOf(item)} />}</For>
+                                <div aria-labelledby={titleId} role="list">
+                                    <For each={group()?.items.map(({ item }) => item)}>{(item) => <SourceItem item={item} index={visibleData().indexOf(item)} />}</For>
                                 </div>
                             </div>
                         );
@@ -420,7 +410,7 @@ export default function Transfer(rawProps: TransferProps) {
                 {DragHandle && <DragHandle />}
                 <div class={`${prefixCls}-right-item-text`}>
                     <Show when={isTree() && local.showPath} fallback={<Label item={itemProps.item} />}>
-                        {itemProps.item._path?.map((pathItem) => pathItem.label).join(' > ')}
+                        {TransferFoundation.generatePath(itemProps.item)}
                     </Show>
                 </div>
                 <button type="button" class={clsx(`${prefixCls}-item-close-icon`, { [`${prefixCls}-item-close-icon-disabled`]: itemProps.item.disabled })} aria-label={locale().locale.remove} disabled={itemProps.item.disabled || local.disabled} onClick={onRemove}>

@@ -1,6 +1,7 @@
 import type React from 'react';
 import { useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { type strings, cssClasses } from '@fibrae/semi-foundation/rating/constants';
 import RatingFoundation from '@fibrae/semi-foundation/rating/foundation';
 import '@fibrae/semi-foundation/rating/rating.scss';
@@ -64,8 +65,7 @@ export default function Item(props: RatingItemProps) {
     const isEmpty = index === count;
     const starWrapCls = clsx(`${prefixCls}-wrapper`, { [`${prefixCls}-disabled`]: disabled });
 
-    // a function replacer keeps `$&` and `$$` in a custom unit literal
-    const itemName = (n: number) => locale.itemLabel.replace('${value}', String(n)).replace('${unit}', () => unitOf(n));
+    const itemName = (n: number) => formatLocale(locale.itemLabel, { value: n, unit: unitOf(n) });
 
     const handleFocus = (e: React.FocusEvent) => onFocus?.(e, index);
 

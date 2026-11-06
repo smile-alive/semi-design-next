@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/carousel/constants';
     import CarouselFoundation, { type CarouselAdapter, type CarouselBaseProps, type CarouselState } from '@fibrae/semi-foundation/carousel/foundation';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import '@fibrae/semi-foundation/carousel/carousel.scss';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../_base/use-default-props.js';
@@ -100,7 +101,7 @@
 
     const slideId = (index: number) => `${uid}-slide-${index}`;
 
-    const slideNumber = (index: number) => locale().locale.slideN.replace('${index}', String(index + 1));
+    const slideNumber = (index: number) => formatLocale(locale().locale.slideN, { index: index + 1 });
 
     // arrowProps goes first so that its aria-label wins; custom content with readable text names the button itself
     const arrowLabel = (props: { 'aria-label'?: string | null }, custom: boolean, named: boolean, fallback: string) => props['aria-label'] ?? (custom && named ? undefined : fallback);
@@ -117,18 +118,13 @@
         onmouseleave?.(event);
     };
 
-    // Only keyboard focus pauses: a mouse click on an arrow focuses it too.
     const handleFocusIn = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
-        if (event.target instanceof Element && event.target.matches(':focus-visible')) {
-            foundation.handleKeyboardFocus();
-        }
+        foundation.handleFocusIn(event);
         onfocusin?.(event);
     };
 
     const handleFocusOut = (event: FocusEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
-        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-            foundation.handleFocusLeave();
-        }
+        foundation.handleFocusOut(event);
         onfocusout?.(event);
     };
 

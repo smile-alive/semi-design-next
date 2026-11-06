@@ -210,7 +210,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
     const [customTriggerFocusable, setCustomTriggerFocusable] = useState(false);
 
     const isConfirmNeeded = needConfirm(props);
-    const position = positionProp === undefined ? (direction === 'rtl' ? 'bottomRight' : 'bottomLeft') : positionProp;
+    const position = DatePickerFoundation.getPosition(positionProp, direction);
     const isYearOrMonth = isYearOrMonthType(type);
     const isRange = hasRangeInputs(type, triggerRender);
 

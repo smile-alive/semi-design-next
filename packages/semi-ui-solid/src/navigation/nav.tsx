@@ -263,15 +263,13 @@ export default function Nav(rawProps: NavProps) {
 
     const handleTransitionEnd = (event: TransitionEvent & { currentTarget: HTMLElement; target: Element }) => {
         callHandler(local.onTransitionEnd, event);
-        if (event.target === event.currentTarget && event.propertyName === 'width') {
+        if (NavigationFoundation.isWidthTransitionEnd(event)) {
             setSettledCollapsed(isCollapsed());
         }
     };
 
-    // no transitionend comes when the width does not animate; getAnimations flushes style, so it lists this update's transition
     useWatch(isCollapsed, (collapsed) => {
-        const animatesWidth = navElement?.getAnimations().some((animation) => animation instanceof CSSTransition && animation.transitionProperty === 'width');
-        if (!animatesWidth) {
+        if (!NavigationFoundation.isWidthAnimating(navElement)) {
             setSettledCollapsed(collapsed);
         }
     });

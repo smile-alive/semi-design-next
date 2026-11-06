@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/avatar/constants';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import flattenChildren from '../_base/flatten-children';
 import { usePopupLayer } from '../_base/popup-layer';
 import useDefaultProps from '../_base/use-default-props';
@@ -70,7 +71,7 @@ function AvatarGroup(rawProps: AvatarGroupProps) {
             </AvatarGroupContext>
         ));
         if (hasMore) {
-            items.push(renderMoreAvatar(avatars.length - maxCount, avatars.slice(maxCount), renderMore, locale.more.replace('${count}', String(avatars.length - maxCount)), { size, shape, className: overlapClassName(maxCount) }, layer));
+            items.push(renderMoreAvatar(avatars.length - maxCount, avatars.slice(maxCount), renderMore, formatLocale(locale.more, { count: avatars.length - maxCount }), { size, shape, className: overlapClassName(maxCount) }, layer));
         }
         inner = items;
     }

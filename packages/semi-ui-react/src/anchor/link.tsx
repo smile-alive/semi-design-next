@@ -67,7 +67,7 @@ export default function Link({ ref, href = '#', title = '', className, children,
         <div {...rest} ref={ref} className={clsx(`${prefixCls}-link`, className)} style={style} role="listitem">
             <div
                 className={clsx(`${prefixCls}-link-title`, {
-                    [`${prefixCls}-link-title-active`]: active,
+                    [cssClasses.LINK_TITLE_ACTIVE]: active,
                     [`${prefixCls}-link-title-disabled`]: disabled,
                 })}
                 style={{ paddingInlineStart: 8 * level }}

@@ -5,7 +5,7 @@
     import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
     import '@fibrae/semi-foundation/slider/slider.scss';
     import { hasAutofocus, vAutofocus } from '../_base/autofocus';
-    import { splitControlAttrs } from '../_base/control-attrs';
+    import { isAriaKey, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import SlotFragment from '../_base/slot-fragment';
@@ -180,7 +180,7 @@
     };
 
     // onKeydown goes to the inputs: the handler sees value keys, which never reach the root, and runs before the foundation's
-    const isControlKey = (key: string) => key.startsWith('aria-') || ['name', 'tabindex', 'tabIndex', 'autofocus', 'onKeydown'].includes(key);
+    const isControlKey = (key: string) => isAriaKey(key) || ['name', 'tabindex', 'tabIndex', 'autofocus', 'onKeydown'].includes(key);
 
     // autofocus belongs to the start handle alone: the slider has one Tab stop to land on first
     const inputAttrs = (pos: Handle) => Object.fromEntries(Object.entries(splitControlAttrs(attrs, isControlKey).control).filter(([key]) => !DROPPED_INPUT_ATTRS.has(key) && (key !== 'autofocus' || pos === 'min')));

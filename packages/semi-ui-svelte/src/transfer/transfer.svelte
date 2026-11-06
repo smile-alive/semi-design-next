@@ -1,6 +1,7 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import { noop, omit } from 'es-toolkit';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses, strings } from '@fibrae/semi-foundation/transfer/constants';
     import TransferFoundation, { type BasicResolvedDataItem, type TransferAdapter, type TransferBaseProps, type TransferBaseState } from '@fibrae/semi-foundation/transfer/foundation';
     import '@fibrae/semi-foundation/transfer/transfer.scss';
@@ -20,18 +21,11 @@
     import AutoSizer from '../tree/auto-sizer.svelte';
     import { Tree } from '../tree/index.js';
     import type { TreeHandle, TreeNodeData, TreeValue } from '../tree/interface.js';
-    import type { TransferDataItem, TransferGroupItem, TransferOnSortEnd, TransferProps, TransferSelectedPanelSnippetProps, TransferSourcePanelSnippetProps, TransferValue } from './interface.js';
+    import type { TransferDataItem, TransferOnSortEnd, TransferProps, TransferSelectedPanelSnippetProps, TransferSourcePanelSnippetProps, TransferValue } from './interface.js';
     import TransferSelectedItem from './transfer-selected-item.svelte';
 
     type ResolvedItem = BasicResolvedDataItem & TransferDataItem;
-
-    interface LeftGroup {
-        /** The group's position among the non-empty groups of the dataSource, which search and paging keep */
-        index: number;
-        parent?: Omit<TransferGroupItem, 'children'>;
-        items: { item: ResolvedItem; index: number }[];
-    }
-
+    type LeftGroup = ReturnType<typeof TransferFoundation.getGroups<ResolvedItem>>[number];
     type Foundation = TransferFoundation<TransferBaseProps>;
     type Adapter = TransferAdapter<TransferBaseProps>;
 
@@ -138,26 +132,7 @@
     const pageSize = $derived(TransferFoundation.getPageSize(pagination));
     const totalPage = $derived(TransferFoundation.getTotalPage(pagination, filterData.length));
     const currentPage = $derived(TransferFoundation.getCurrentPage(pagination, states().leftCurrentPage, filterData.length));
-
-    const leftGroups = $derived.by(() => {
-        const start = (currentPage - 1) * pageSize;
-        const visible = pagination ? filterData.slice(start, start + pageSize) : filterData;
-        const groupIndexes = TransferFoundation.getGroupIndexes(data);
-        const groups: LeftGroup[] = [];
-        visible.forEach((item, index) => {
-            const last = groups.at(-1);
-            if (last && last.parent === item._parent) {
-                last.items.push({ item, index });
-            } else {
-                groups.push({
-                    index: groupIndexes.get(item._parent) ?? 0,
-                    parent: item._parent,
-                    items: [{ item, index }],
-                });
-            }
-        });
-        return groups;
-    });
+    const leftGroups = $derived(TransferFoundation.getGroups(TransferFoundation.getVisibleData(filterData, pagination, currentPage), data));
 
     const selectedData = $derived(
         [...selectedItems.values()].map((item): ResolvedItem => ({
@@ -328,7 +303,7 @@
                     {@render sourceHeader({ allChecked: !leftContainsNotInSelected, leafOnlyNum, num: showNumber, onAllClick, showButton: showAllButton })}
                 {:else}
                     <div class={[`${prefixCls}-header`, `${prefixCls}-left-header`]}>
-                        <span class={`${prefixCls}-header-total`}>{locale().locale.total.replace('${total}', String(showNumber))}</span>
+                        <span class={`${prefixCls}-header-total`}>{formatLocale(locale().locale.total, { total: showNumber })}</span>
                         {#if showAllButton}
                             <Button class={`${prefixCls}-header-all`} {disabled} size="small" theme="borderless" type="tertiary" onclick={onAllClick}>
                                 {leftContainsNotInSelected ? locale().locale.selectAll : locale().locale.clearSelectAll}
@@ -362,10 +337,10 @@
                     <!-- checkboxes are disabled with the transfer, so the keyboard can only scroll the list -->
                     <div aria-label={locale().locale.optionList} class={`${prefixCls}-left-list`} role="list" tabindex={disabled ? 0 : undefined}>
                         {#each leftGroups as group (group.index)}
-                            {#if group.parent}
+                            {#if group.grouped}
                                 <div role="listitem">
                                     <div class={`${prefixCls}-group-title`} id={groupTitleId(group.index)}>
-                                        {group.parent.title}
+                                        {group.title}
                                     </div>
                                     <div aria-labelledby={groupTitleId(group.index)} role="list">
                                         {@render sourceItems(group)}
@@ -393,7 +368,7 @@
                 {@render selectedHeader({ num: selectedData.length, onClear, showButton: hasSelectable })}
             {:else}
                 <div class={[`${prefixCls}-header`, `${prefixCls}-right-header`]}>
-                    <span class={`${prefixCls}-header-total`}>{locale().locale.selected.replace('${total}', String(selectedData.length))}</span>
+                    <span class={`${prefixCls}-header-total`}>{formatLocale(locale().locale.selected, { total: selectedData.length })}</span>
                     {#if hasSelectable}
                         <Button class={`${prefixCls}-header-all`} {disabled} size="small" theme="borderless" type="tertiary" onclick={onClear}>{locale().locale.clear}</Button>
                     {/if}

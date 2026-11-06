@@ -161,13 +161,12 @@ export default function Modal(rawProps: ModalProps) {
             notifyCancel: (e) => base.getProps().onCancel?.(e),
             notifyOk: (e) => base.getProps().onOk?.(e),
             notifyClose: () => base.getProps().afterClose?.(),
-            toggleDisplayNone: (hidden) => setDisplayNone(hidden),
         })
     );
 
     const shouldRender = () => visible() || (local.keepDOM && (!local.lazyRender || everShown())) || (local.motion && !hidden());
 
-    const updateState = () => foundation.toggleDisplayNone(!local.visible);
+    const updateState = () => setDisplayNone(!local.visible);
 
     // the mask and the content animate separately and either duration may be customized, so both report
     const content = useCSSAnimation({

@@ -80,7 +80,7 @@
 
     const close = (event: MouseEvent) => foundation.close(event);
 
-    useNoticeClose(foundation, list, () => props.id, announce);
+    useNoticeClose(foundation, list, announce);
 
     defineExpose<ToastHandle>({
         restartCloseTimer: foundation.restartCloseTimer,

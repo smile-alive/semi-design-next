@@ -1,6 +1,7 @@
 import type React from 'react';
 import { useImperativeHandle, useRef, useState } from 'react';
 import clsx from 'clsx';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { cssClasses } from '@fibrae/semi-foundation/rating/constants';
 import RatingFoundation, { type RatingAdapter, type RatingState } from '@fibrae/semi-foundation/rating/foundation';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
@@ -155,13 +156,7 @@ export default function Rating(rawProps: RatingProps) {
 
     const unitOf = (n: number) => customUnit ?? (n === 1 ? locale.star : locale.stars);
 
-    // a function replacer keeps `$&` and `$$` in a custom unit literal
-    const ariaLabel =
-        ariaLabelProp ||
-        locale.label
-            .replace('${value}', String(value))
-            .replace('${count}', String(count))
-            .replace('${unit}', () => unitOf(value));
+    const ariaLabel = ariaLabelProp || formatLocale(locale.label, { value, count, unit: unitOf(value) });
 
     const itemList = Array.from({ length: count + 1 }, (_, ind) => {
         const content = (

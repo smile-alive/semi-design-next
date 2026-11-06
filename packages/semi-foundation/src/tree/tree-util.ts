@@ -14,7 +14,7 @@ export interface KeyEntities {
     [x: string]: any;
 }
 
-export interface TreeDataSimpleJson {
+interface TreeDataSimpleJson {
     [x: string]: string | TreeDataSimpleJson;
 }
 

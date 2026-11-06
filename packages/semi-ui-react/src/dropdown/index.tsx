@@ -127,7 +127,6 @@ function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> })
     const { direction } = useConfigContext();
 
     const tooltipRef = useRef<TooltipHandle>(null);
-    const popRef = useRef<HTMLDivElement>(null);
 
     const [foundation, state] = useFoundation<Foundation, Adapter, DropdownProps, DropdownBaseState>(
         DropdownFoundation,
@@ -135,7 +134,7 @@ function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> })
         () => DropdownFoundation.getInitialState(),
         (base) => ({
             notifyVisibleChange: (visible) => base.getProps().onVisibleChange?.(visible),
-            getPopup: () => popRef.current?.closest<HTMLElement>('[popover]') ?? null,
+            getPopup: () => tooltipRef.current?.getPopup() ?? null,
             hidePopup: () => tooltipRef.current?.hide(),
         }),
         { ...parentContext, direction }
@@ -186,7 +185,6 @@ function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> })
         <DropdownContext value={contextValue}>
             <div
                 ref={(node) => {
-                    popRef.current = node;
                     initialFocusRef.current = node && focusTarget;
                 }}
                 className={clsx(prefixCls, contentClassName)}

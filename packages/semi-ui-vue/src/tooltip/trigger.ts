@@ -1,5 +1,5 @@
 import { type CSSProperties, type VNode, Text, normalizeStyle } from 'vue';
-import { cssClasses, canRoleCarryPopupState, isBlockDisplay, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
+import { POPUP_ID_ATTRIBUTE, cssClasses, canRoleCarryPopupState, isBlockDisplay, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
 import elementType from '../_base/element-type';
 import type { TooltipProps } from './interface';
 
@@ -48,7 +48,7 @@ function joinedDescription(aria: Attrs, own?: Attrs | null): Attrs {
 function triggerAttrs(aria: Attrs, popupId: string, keydown: EventListener | undefined, own: Attrs | null): Attrs {
     const defaults: Attrs = { ...aria, tabindex: own?.tabIndex ?? 0 };
     const attrs = Object.fromEntries(Object.entries(defaults).filter(([key]) => own?.[key] === undefined));
-    return { ...attrs, ...joinedDescription(aria, own), 'data-popupid': popupId, onKeydownCapture: keydown };
+    return { ...attrs, ...joinedDescription(aria, own), [POPUP_ID_ATTRIBUTE]: popupId, onKeydownCapture: keydown };
 }
 
 export default function bindTrigger(nodes: VNode[], props: TooltipProps, popupId: string, popup: PopupState, keydown?: EventListener): TriggerBinding {

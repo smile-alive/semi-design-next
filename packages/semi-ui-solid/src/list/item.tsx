@@ -3,6 +3,7 @@ import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/list/constants';
+import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import { splitControlAttrs } from '../_base/control-attrs';
 import type { ElementProps } from '../_base/element-props';
 import forwardFocus from '../_base/forward-focus';
@@ -27,7 +28,7 @@ export interface ListItemProps extends ElementProps<'li', 'onClick'> {
 const extraClicks = new WeakMap<Event, Element | null>();
 
 // The button is the only tab stop, so what a Tooltip injects for focus and naming belongs there, not on the li
-const isControlKey = (key: string): key is 'tabIndex' | 'tabindex' | `aria-${string}` => key === 'tabIndex' || key === 'tabindex' || key.startsWith('aria-');
+const isControlKey = (key: string): key is 'tabIndex' | 'tabindex' | `aria-${string}` => key === 'tabIndex' || key === 'tabindex' || isAriaKey(key);
 
 export default function ListItem(props: ListItemProps) {
     const [local, rest] = splitProps(props, ['align', 'children', 'class', 'extra', 'header', 'main', 'onClick', 'onRightClick', 'ref']);

@@ -68,7 +68,7 @@ export default class CollapsibleFoundation<P extends CollapsibleBaseProps = Coll
         return next;
     }
 
-    static shouldRender({ keepDOM, lazyRender, collapseHeight, isOpen }: CollapsibleBaseProps, view: CollapsibleView) {
+    static shouldRender({ keepDOM, lazyRender, collapseHeight, isOpen }: Pick<CollapsibleBaseProps, 'keepDOM' | 'lazyRender' | 'collapseHeight' | 'isOpen'>, view: Pick<CollapsibleView, 'visible' | 'rendered'>) {
         return (keepDOM && (lazyRender ? view.rendered : true)) || collapseHeight !== 0 || view.visible || isOpen;
     }
 

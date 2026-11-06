@@ -1,6 +1,7 @@
 import type React from 'react';
 import { Children, useState } from 'react';
 import clsx from 'clsx';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { cssClasses, strings } from '@fibrae/semi-foundation/tag/constants';
 import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/tag/focus';
 import { handlePrevent } from '@fibrae/semi-foundation/utils/a11y';
@@ -54,7 +55,7 @@ export default function Tag(rawProps: TagProps) {
 
     // only the button role takes a name; a static tag is text and speaks for itself. The replacer is a function so the
     // text's `$&` and `$$` stay literal instead of acting as replacement patterns
-    const ariaLabel = props['aria-label'] || (text === undefined ? undefined : (closable ? locale.closableTag : locale.tag).replace('${tag}', () => text));
+    const ariaLabel = props['aria-label'] || (text === undefined ? undefined : formatLocale(closable ? locale.closableTag : locale.tag, { tag: text }));
 
     const tagCls = clsx(
         prefixCls,

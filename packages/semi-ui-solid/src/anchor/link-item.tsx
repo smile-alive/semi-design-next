@@ -63,7 +63,7 @@ export default function LinkItem(props: LinkItemProps) {
         <div {...rest} class={clsx(`${prefixCls}-link`, local.class)} role="listitem">
             <div
                 class={clsx(`${prefixCls}-link-title`, {
-                    [`${prefixCls}-link-title-active`]: active(),
+                    [cssClasses.LINK_TITLE_ACTIVE]: active(),
                     [`${prefixCls}-link-title-disabled`]: local.disabled,
                 })}
                 style={{ 'padding-inline-start': `${8 * props.level}px` }}

@@ -1,6 +1,7 @@
 import { type Component, type JSX, Match, Show, Switch, type ValidComponent, children, createEffect, createMemo, createSignal, mergeProps, onCleanup, splitProps, untrack } from 'solid-js';
 import { Dynamic, isServer } from 'solid-js/web';
 import clsx from 'clsx';
+import { POPUP_ID_ATTRIBUTE } from '@fibrae/semi-foundation/tooltip/constants';
 import { cssClasses } from '@fibrae/semi-foundation/typography/constants';
 import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getRenderText, isInsideWidgetItem, isOverflowing } from '@fibrae/semi-foundation/typography/ellipsis';
 import warning from '@fibrae/semi-foundation/utils/warning';
@@ -30,7 +31,7 @@ export interface BaseTypographyProps extends ElementProps<'article', OmitTypogra
     tabIndex?: number;
     /** A method, so the ref of Text, Title and Paragraph (a more specific element type) is accepted */
     ref?(element: HTMLElement): void;
-    'data-popupid'?: string;
+    [POPUP_ID_ATTRIBUTE]?: string;
 }
 
 /** Ellipsis state; `source` is the text it was derived from, a view of another text is stale */
@@ -137,7 +138,7 @@ function BaseContent(props: BaseTypographyProps & Required<Pick<BaseTypographyPr
     const [local, attrs] = splitProps(props, ['ref', 'component', 'children', 'class', 'type', 'spacing', 'disabled', 'style', 'ellipsis', 'icon', 'size', 'link', 'headingTag', 'weight', 'tabIndex', 'copyable', 'strong', 'mark', 'underline', 'code', 'delete']);
 
     // the attributes a Tooltip trigger merges instead of just passing on
-    const [own, rest] = splitProps(attrs, ['aria-describedby', 'aria-expanded', 'aria-haspopup', 'aria-controls', 'data-popupid', 'tabindex']);
+    const [own, rest] = splitProps(attrs, ['aria-describedby', 'aria-expanded', 'aria-haspopup', 'aria-controls', POPUP_ID_ATTRIBUTE, 'tabindex']);
 
     const realSize = useSizeContext();
     const locale = useLocale('Typography');

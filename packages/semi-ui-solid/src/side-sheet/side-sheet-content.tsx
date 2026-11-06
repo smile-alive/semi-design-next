@@ -2,6 +2,7 @@ import { type JSX, Show, children, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/side-sheet/constants';
 import type { SheetSize } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
+import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import { IconClose } from '@fibrae/semi-icons-solid';
 import { splitControlAttrs } from '../_base/control-attrs';
@@ -39,8 +40,6 @@ export interface SideSheetContentProps extends ElementProps<'div', 'onClose' | '
     /** Attached to the role="dialog" element */
     dialogRef?: (element: HTMLDivElement) => void;
 }
-
-const isAriaKey = (key: string): key is `aria-${string}` => key.startsWith('aria-');
 
 export default function SideSheetContent(props: SideSheetContentProps) {
     const [local, others] = splitProps(props, ['bodyStyle', 'children', 'class', 'closable', 'closeIcon', 'dialogClass', 'dialogRef', 'footer', 'headerStyle', 'mask', 'maskClass', 'maskClosable', 'maskRef', 'maskStyle', 'modal', 'onClose', 'ref', 'sheetSize', 'size', 'style', 'title']);

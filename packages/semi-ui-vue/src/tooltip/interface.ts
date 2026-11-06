@@ -53,6 +53,8 @@ export interface TooltipEmits {
 export interface TooltipHandle {
     focusTrigger: () => void;
     getPopupId: () => string;
+    /** The popup element, null while it is not in the document */
+    getPopup: () => HTMLElement | null;
     hide: () => void;
     rePosition: () => void;
 }

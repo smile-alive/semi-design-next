@@ -2,7 +2,6 @@ import { createEffect, createMemo, createSignal, on, splitProps, untrack } from 
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/anchor/constants';
 import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/anchor/foundation';
-import { findAnchorTarget } from '@fibrae/semi-foundation/anchor/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
 import '@fibrae/semi-foundation/anchor/anchor.scss';
@@ -50,9 +49,8 @@ export default function Anchor(rawProps: AnchorProps) {
         props,
         () => AnchorFoundation.getInitialState(),
         (base) => ({
-            getContainer: () => props.getContainer() || window,
-            getAnchorNode: (selector) => root?.querySelector<HTMLElement>(selector) ?? null,
-            getContentNode: (link) => findAnchorTarget(root, link),
+            getContainer: () => props.getContainer(),
+            getRoot: () => root ?? null,
             notifyChange: (currentLink, previousLink) => base.getProps().onChange?.(currentLink, previousLink),
             notifyClick: (e, link) => base.getProps().onClick?.(e, link),
         })

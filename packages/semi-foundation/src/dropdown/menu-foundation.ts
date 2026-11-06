@@ -1,5 +1,6 @@
 import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../base/foundation';
-import { handlePrevent, getListTargetIndex, getMenuButton, setFocusToItem, Typeahead } from '../utils/a11y';
+import { POPUP_SELECTOR } from '../tooltip/constants';
+import { handlePrevent, getListTargetIndex, getPopupTrigger, setFocusToItem, Typeahead } from '../utils/a11y';
 import { strings } from './constants';
 
 const { ITEM_SELECTOR } = strings;
@@ -32,7 +33,7 @@ export interface DropdownMenuContext extends DirectionContext {
     close?: () => void;
     /** Closes that popup and the popups of every enclosing menu */
     closeAll?: () => void;
-    /** Id of the popup that renders the menu; its trigger carries it as data-popupid */
+    /** Id of the popup that renders the menu; its trigger lists it in `POPUP_ID_ATTRIBUTE` */
     getPopupId?: () => string;
 }
 
@@ -47,7 +48,7 @@ export default class DropdownMenuFoundation<P extends object = object, S extends
     readonly #typeahead = new Typeahead();
 
     #focusMenuButton(menu: Element) {
-        getMenuButton(this.adapter.getContext('getPopupId')?.() ?? '', menu.getRootNode() as ParentNode)?.focus();
+        getPopupTrigger(this.adapter.getContext('getPopupId')?.() ?? '', menu.getRootNode() as ParentNode)?.focus();
     }
 
     // read on every keydown: items may be added, removed or disabled while the menu is open
@@ -117,9 +118,9 @@ export default class DropdownMenuFoundation<P extends object = object, S extends
                 // of the body, so the browser has to start from that trigger. A submenu's trigger is an item of the
                 // parent menu, whose own trigger is looked up in turn.
                 const root = menu.getRootNode() as ParentNode;
-                let button = getMenuButton(this.adapter.getContext('getPopupId')?.() ?? '', root);
+                let button = getPopupTrigger(this.adapter.getContext('getPopupId')?.() ?? '', root);
                 while (button?.matches(ITEM_SELECTOR)) {
-                    button = getMenuButton(button.closest('[popover]')?.id ?? '', root);
+                    button = getPopupTrigger(button.closest(POPUP_SELECTOR)?.id ?? '', root);
                 }
                 button?.focus();
                 this.adapter.getContext('closeAll')?.();

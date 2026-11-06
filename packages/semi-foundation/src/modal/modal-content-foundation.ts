@@ -59,7 +59,7 @@ export default class ModalContentFoundation<P extends ModalContentProps = ModalC
         this.adapter.releaseFocus();
         clearTimeout(this.#mouseUpTimer);
         this.#dialogMouseDown = false;
-        this.restoreFocus();
+        this.adapter.restoreFocus();
     };
 
     handleDialogMouseDown = () => {
@@ -83,9 +83,5 @@ export default class ModalContentFoundation<P extends ModalContentProps = ModalC
 
     close = (e: E | KeyboardEvent) => {
         this.adapter.notifyClose(e);
-    };
-
-    restoreFocus = () => {
-        this.adapter.restoreFocus();
     };
 }

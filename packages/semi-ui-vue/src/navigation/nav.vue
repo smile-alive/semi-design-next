@@ -139,7 +139,7 @@
     });
 
     const onTransitionEnd = (event: TransitionEvent) => {
-        if (event.propertyName === 'width') collapseAnimating.value = false;
+        if (NavigationFoundation.isWidthTransitionEnd(event)) collapseAnimating.value = false;
     };
 
     const layout = () => {
@@ -164,12 +164,10 @@
         collapseAnimating.value = true;
     });
 
-    // No transitionend when the width does not animate (transition off, fixed width, hidden); getAnimations flushes style.
     watch(
         collapseAnimating,
         (animating) => {
-            const animatesWidth = navEl.value?.getAnimations().some((animation) => animation instanceof CSSTransition && animation.transitionProperty === 'width');
-            if (animating && !animatesWidth) collapseAnimating.value = false;
+            if (animating && !NavigationFoundation.isWidthAnimating(navEl.value)) collapseAnimating.value = false;
         },
         { flush: 'post' }
     );
@@ -192,7 +190,7 @@
                 [`${prefix}-vertical`]: props.mode === 'vertical',
             },
         ]"
-        @transitionend.self="onTransitionEnd"
+        @transitionend="onTransitionEnd"
     >
         <div v-for="(parts, i) in [layout()]" :key="i" :class="`${prefix}-inner`">
             <div :class="[`${prefix}-header-list-outer`, { [`${prefix}-header-list-outer-collapsed`]: isCollapsed }]">

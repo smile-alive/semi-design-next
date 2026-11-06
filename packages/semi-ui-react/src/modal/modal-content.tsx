@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { omitBy, pickBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
 import ModalContentFoundation, { type ModalContentAdapter, type ModalContentProps, isModal } from '@fibrae/semi-foundation/modal/modal-content-foundation';
-import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
+import { isAriaKey, warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
 import { openLayer } from '@fibrae/semi-foundation/utils/layer';
@@ -148,7 +148,7 @@ export default function ModalContent(props: ModalContentReactProps) {
     const hasHeaderProp = header !== undefined;
     const hasTitle = title != null;
 
-    const isAria = (_: unknown, key: string) => key.startsWith('aria-');
+    const isAria = (_: unknown, key: string) => isAriaKey(key);
 
     const dialogAria = pickBy(others, isAria);
     const rest = omitBy(others, isAria);
@@ -173,7 +173,7 @@ export default function ModalContent(props: ModalContentReactProps) {
     // (a keepDOM dialog's button), so restore again in the layout phase
     useDidUpdate(open, (isOpen) => {
         if (!isOpen) {
-            foundation.restoreFocus();
+            runtime.focusScope.restoreIfAllowed(runtime.dialog, isModal({ mask, maskFixed, inBody }), preventScroll);
         }
     });
 

@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { CalendarTimeDisplayArgs } from './interface.js';
 
@@ -16,7 +17,7 @@
     const prefixCls = `${cssClasses.PREFIX}-time`;
     const hours = Array.from({ length: 24 }, (_, hour) => hour);
 
-    const label = (hour: number) => (hour < 12 ? locale().locale.AM.replace('${time}', String(hour)) : locale().locale.PM.replace('${time}', String(hour === 12 ? hour : hour - 12)));
+    const label = (hour: number) => formatLocale(hour < 12 ? locale().locale.AM : locale().locale.PM, { time: hour <= 12 ? hour : hour - 12 });
 </script>
 
 <div class={[prefixCls, className]} role="cell">

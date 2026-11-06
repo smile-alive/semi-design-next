@@ -1,7 +1,7 @@
 import { children, createMemo, For, Index, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/descriptions/constants';
-import DescriptionsFoundation from '@fibrae/semi-foundation/descriptions/foundation';
+import { getHorizontalList } from '@fibrae/semi-foundation/descriptions/foundation';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/descriptions/descriptions.scss';
 import hasContent from '../_base/has-content';
@@ -47,7 +47,7 @@ function Descriptions(rawProps: DescriptionsProps) {
         }
         const list = local.data;
         const columns: Column[] = list?.length ? list.map((data, index) => ({ hidden: data.hidden, span: data.span, data, index })) : tokens().map(({ props: item }) => ({ hidden: item.hidden, span: item.span, item }));
-        return DescriptionsFoundation.getHorizontalList(columns, local.column);
+        return getHorizontalList(columns, local.column);
     });
 
     // the item view reads key and value only when the item is shown, so a hidden item never calls the render functions

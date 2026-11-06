@@ -1,5 +1,6 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { Button } from '@fibrae/semi-ui-svelte/button/index';
     import { Dropdown, DropdownItem, DropdownMenu } from '@fibrae/semi-ui-svelte/dropdown/index';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
@@ -16,7 +17,7 @@
 {#snippet content()}
     <div class={`${prefix}-footer-configure-mcp-header`}>
         <span class={`${prefix}-footer-configure-mcp-header-title`}>
-            {locale().locale.selected.replace('${count}', String(count))}
+            {formatLocale(locale().locale.selected, { count })}
         </span>
         {#if showConfigure}
             <Button class={`${prefix}-footer-configure-mcp-header-config`} theme="outline" onclick={() => onConfigureButtonClick?.()}>

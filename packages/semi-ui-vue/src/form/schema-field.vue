@@ -2,6 +2,7 @@
     import { type Component, computed, h, watch } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/form/constants';
     import { blankRow, describeSchemaField, resolveJsonSchema, type SchemaFieldKind, type SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import { IconArrowDown, IconArrowUp, IconDelete, IconPlus } from '@fibrae/semi-icons-vue';
     import { semiGlobalDefault } from '../_base/semi-default';
@@ -44,7 +45,7 @@
 
     const widget = (target: SchemaFieldNode) => (target.format && props.widgets?.[target.format]) || props.widgets?.[target.kind] || builtins[target.kind];
 
-    const indexText = (template: string, index: number) => template.replace('${index}', String(index + 1));
+    const indexText = (template: string, index: number) => formatLocale(template, { index: index + 1 });
 
     const labelText = (target: SchemaFieldNode) => target.title ?? indexText(locale.value.locale.item, Number(target.key));
 

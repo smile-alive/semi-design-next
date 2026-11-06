@@ -2,7 +2,7 @@
     import type { Attachment } from 'svelte/attachments';
     import { on } from 'svelte/events';
     import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
-    import ItemFoundation, { type ScrollItemAdapter, type ScrollItemBaseProps, type ScrollItemBaseState } from '@fibrae/semi-foundation/scroll-list/item-foundation';
+    import ItemFoundation, { type ScrollItemAdapter, type ScrollItemBaseProps, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/scroll-list/item-foundation';
     import '@fibrae/semi-foundation/scroll-list/scroll-list.scss';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';
@@ -15,7 +15,7 @@
     const defaults = useDefaultProps('ScrollItem');
 
     // No fallback on `selectedIndex`: it is bindable, see Switch
-    let { cycled = defaults('cycled', false), list: listProp = defaults('list') as T[] | undefined, mode = defaults('mode', 'wheel'), motion = defaults('motion', true), selectedIndex = $bindable(), transform = defaults('transform'), type = defaults('type'), onSelect, ...rest }: ScrollItemProps<T> = $props();
+    let { cycled = defaults('cycled', false), list: listProp = defaults('list') as T[] | undefined, mode = defaults('mode', wheelMode), motion = defaults('motion', true), selectedIndex = $bindable(), transform = defaults('transform'), type = defaults('type'), onSelect, ...rest }: ScrollItemProps<T> = $props();
 
     const uid = $props.id();
     let root = $state<HTMLDivElement>();
@@ -25,7 +25,7 @@
 
     const list = $derived(listProp ?? []);
     const current = $derived(selectedIndex ?? defaults('selectedIndex', 0));
-    const isWheel = $derived(mode === 'wheel');
+    const isWheel = $derived(mode === wheelMode);
 
     const foundationProps: ScrollItemBaseProps<T> = {
         get cycled() {
@@ -74,7 +74,6 @@
         const items = (keyPrefix: string) =>
             list.map((item, index) => {
                 const selected = current === index;
-                const itemTransform = typeof item.transform === 'function' ? item.transform : transform;
                 return {
                     key: `${keyPrefix}${index}`,
                     id: keyPrefix ? undefined : optionId(index),
@@ -87,7 +86,7 @@
                         [`${prefix}-item-sel`]: selected && !isWheel,
                         [`${prefix}-item-disabled`]: Boolean(item.disabled),
                     },
-                    text: selected && typeof itemTransform === 'function' ? itemTransform(item.value, item.text) : (item.text ?? item.value),
+                    text: ItemFoundation.getItemText(item, selected, transform),
                 };
             });
         if (!isWheel) {

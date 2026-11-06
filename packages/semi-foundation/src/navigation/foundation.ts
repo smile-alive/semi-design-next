@@ -200,6 +200,20 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
     }
 
     // a popup list is driven by its Dropdown, not by openKeys
+    /** The nav's own `width` transition ended; transitions of its descendants bubble up here too */
+    static isWidthTransitionEnd({ target, currentTarget, propertyName }: Pick<TransitionEvent, 'target' | 'currentTarget' | 'propertyName'>) {
+        return target === currentTarget && propertyName === 'width';
+    }
+
+    /**
+     * Whether the nav is running a `width` transition. No transitionend comes when the width does not animate
+     * (transition off, fixed width, hidden); `getAnimations` flushes style, so right after a commit it lists that
+     * commit's transition.
+     */
+    static isWidthAnimating(nav: Element | null | undefined) {
+        return Boolean(nav?.getAnimations().some((animation) => animation instanceof CSSTransition && animation.transitionProperty === 'width'));
+    }
+
     static isOpenKeysControlled(props: NavigationBaseProps, isCollapsed: boolean) {
         return props.openKeys !== undefined && props.mode === strings.MODE_VERTICAL && !isCollapsed;
     }

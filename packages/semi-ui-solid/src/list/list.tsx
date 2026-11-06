@@ -2,12 +2,12 @@ import { children, createMemo, For, Show, splitProps, untrack, type JSX } from '
 import clsx from 'clsx';
 import { pick } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/list/constants';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/list/list.scss';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
-import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
 import { Row } from '../grid';
 import useLocale from '../locale/use-locale';

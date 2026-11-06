@@ -1,10 +1,10 @@
 import { type JSX, Show, children, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/scroll-list/scroll-list.scss';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
-import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
 import ScrollItem from './scroll-item';
 

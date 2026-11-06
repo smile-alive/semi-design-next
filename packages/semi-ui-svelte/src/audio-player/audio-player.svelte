@@ -2,6 +2,7 @@
     import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
     import AudioPlayerFoundation, { type AudioPlayerAdapter, type AudioPlayerBaseProps, type AudioPlayerBaseState } from '@fibrae/semi-foundation/audio-player/foundation';
     import { getCurrentTrack } from '@fibrae/semi-foundation/audio-player/utils';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
     import '@fibrae/semi-foundation/audio-player/audio-player.scss';
     import { IconAlertCircle, IconBackward, IconFastForward, IconPause, IconPlay, IconRefresh, IconRestart, IconVolume2, IconVolumnSilent } from '@fibrae/semi-icons-svelte';
@@ -52,8 +53,8 @@
     const info = $derived(getCurrentTrack(audioUrl, states().currentIndex));
 
     // the Tooltip text only describes the icon-only button, so the same text is also its name
-    const backwardLabel = $derived(texts.backward.replace('${skipDuration}', String(skipDuration)));
-    const forwardLabel = $derived(texts.forward.replace('${skipDuration}', String(skipDuration)));
+    const backwardLabel = $derived(formatLocale(texts.backward, { skipDuration }));
+    const forwardLabel = $derived(formatLocale(texts.forward, { skipDuration }));
     const speedLabel = $derived([texts.playbackRate, states().currentRate.label].join(' '));
 
     const changeTrack = (direction: 'next' | 'prev') => {

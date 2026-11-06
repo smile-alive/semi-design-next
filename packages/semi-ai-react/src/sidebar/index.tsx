@@ -79,7 +79,7 @@ function Sidebar(rawProps: SideBarProps) {
     const renderDetailHeaderNode = () =>
         renderDetailHeader?.(mode, detailContent) || (
             <div className={`${prefixCls}-detail-header`}>
-                <span className={`${prefixCls}-detail-header-left`}>
+                <span className={cssClasses.DETAIL_HEADER_LEFT}>
                     <Button type="tertiary" aria-label={locale.close} theme="borderless" icon={<IconClose />} onClick={(e) => onBackWard?.(e, strings.MODE.MAIN)} />
                     <span className={`${prefixCls}-detail-header-title`}>{detailContent?.name}</span>
                 </span>

@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { cloneDeep, isPlainObject } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/navigation/constants';
 import ItemFoundation, { type ItemAdapter, countPlaceholderIcons } from '@fibrae/semi-foundation/navigation/item-foundation';
+import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/navigation/navigation.scss';
 import callHandler from '../_base/call-handler';
 import { splitControlAttrs } from '../_base/control-attrs';
@@ -30,8 +31,6 @@ export default function NavItem(props: NavItemProps) {
 export function iconSlotClass(toggle: boolean, toggleIconPosition: 'left' | 'right') {
     return clsx(`${itemPrefix}-icon`, toggle ? `${itemPrefix}-icon-toggle-${toggleIconPosition}` : `${itemPrefix}-icon-info`);
 }
-
-export const isAriaKey = (key: string): key is `aria-${string}` => key.startsWith('aria-');
 
 export const plainTrigger: GetTriggerProps = (own = {} as never) => own as never;
 

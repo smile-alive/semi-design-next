@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { Text, useAttrs } from 'vue';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses } from '@fibrae/semi-foundation/tag/constants';
     import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/tag/focus';
     import '@fibrae/semi-foundation/tag/tag.scss';
@@ -53,8 +54,7 @@
     const ariaLabel = () => {
         if (typeof attrs['aria-label'] === 'string') return attrs['aria-label'];
         const text = interactive() ? stringContent() : undefined;
-        // a function replacer keeps `$&` and `$$` in the text literal
-        return text === undefined ? undefined : (props.closable ? locale.value.locale.closableTag : locale.value.locale.tag).replace('${tag}', () => text);
+        return text === undefined ? undefined : formatLocale(props.closable ? locale.value.locale.closableTag : locale.value.locale.tag, { tag: text });
     };
 
     const close = (event: TagCloseEvent) => {

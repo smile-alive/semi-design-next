@@ -516,6 +516,29 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     }
 
     /**
+     * Non-range triggers are native inputs that already handle focus. A click on the input wrapper itself is told from
+     * one bubbled up from a child, which already handled focus.
+     */
+    #handleTriggerWrapperClick(e: Pick<Event, 'target' | 'currentTarget'>) {
+        const { disabled, triggerRender } = this.adapter.getProps();
+        const { rangeInputFocus } = this.adapter.getStates();
+        if (disabled) {
+            return;
+        }
+        if (this.#isRangeType() && !rangeInputFocus) {
+            if (e.target === e.currentTarget) {
+                this.handleInputFocus(e, 'rangeStart');
+            } else if (typeof triggerRender === 'function') {
+                // triggerRender has no input, so rangeStart is focused by default when the panel opens
+                this.#setRangeInputFocus('rangeStart');
+            }
+            this.#openPanel();
+        } else {
+            this.#openPanel();
+        }
+    }
+
+    /**
      * `value` is either a UTC value (the controlled prop) or a zoned value (state.value, the date picked in the
      * computer's time zone).
      * When the time zone changes, pass prevTimeZone to convert the old zoned value into the new zone.
@@ -743,7 +766,11 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         return (props.open !== undefined ? Boolean(props.open) : Boolean(state.panelShow)) && !props.disabled;
     }
 
-    /** The rtl default of `position` stays with the frameworks, which read the direction from their config. */
+    /** The rtl default of `position`, for the position `normalizeProps` left unset; `direction` is read from the host's config */
+    static getPosition<P extends string>(position: P | undefined, direction?: string) {
+        return position ?? (direction === 'rtl' ? 'bottomRight' : 'bottomLeft');
+    }
+
     static normalizeProps<P extends string = Position>({
         type,
         format,
@@ -1161,38 +1188,15 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
     };
 
     /**
-     * Non-range triggers are native inputs that already handle focus. A click on the input wrapper itself is told from
-     * one bubbled up from a child, which already handled focus.
-     */
-    handleTriggerWrapperClick(e: Pick<Event, 'target' | 'currentTarget'>) {
-        const { disabled, triggerRender } = this.adapter.getProps();
-        const { rangeInputFocus } = this.adapter.getStates();
-        if (disabled) {
-            return;
-        }
-        if (this.#isRangeType() && !rangeInputFocus) {
-            if (e.target === e.currentTarget) {
-                this.handleInputFocus(e, 'rangeStart');
-            } else if (typeof triggerRender === 'function') {
-                // triggerRender has no input, so rangeStart is focused by default when the panel opens
-                this.#setRangeInputFocus('rangeStart');
-            }
-            this.#openPanel();
-        } else {
-            this.#openPanel();
-        }
-    }
-
-    /**
      * The trigger's click handler. Enter and Space on an inner control of the default trigger (its clear button) click
      * it, and that click must not open the panel too; a pointer click on it still does. A custom trigger skips the
      * check: its focusable element is the Tab stop and the opener, so its keyboard click has to open the panel (a
-     * control that must not open it stops propagation itself). Keys reach handleTriggerWrapperClick through
+     * control that must not open it stops propagation itself). Keys reach #handleTriggerWrapperClick through
      * handleTriggerKeyDown instead, so the check stays out of it.
      */
     handleTriggerClick = (e: Pick<MouseEvent, 'detail' | 'target' | 'currentTarget'>, isCustomTrigger: boolean) => {
         if (isCustomTrigger || !isInnerControlActivation(e)) {
-            this.handleTriggerWrapperClick(e);
+            this.#handleTriggerWrapperClick(e);
         }
     };
 
@@ -1205,7 +1209,7 @@ export default class DatePickerFoundation extends BaseFoundation<DatePickerAdapt
         const opens = e.key === 'ArrowDown' || (isTriggerButton && (e.key === 'Enter' || e.key === ' '));
         if (!open && opens) {
             e.preventDefault();
-            this.handleTriggerWrapperClick(e);
+            this.#handleTriggerWrapperClick(e);
         }
     };
 

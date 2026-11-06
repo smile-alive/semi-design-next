@@ -1,12 +1,13 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import AvatarFoundation, { type AvatarAdapter, type AvatarBaseProps } from '../foundation';
 
-function createFoundation(props: AvatarBaseProps, widths: ReturnType<AvatarAdapter['getTextWidths']>) {
+function createFoundation(props: AvatarBaseProps, widths: { container: number; text: number } | null) {
     const setState = vi.fn<(state: object) => void>();
     const adapter = {
         getProp: (key: keyof AvatarBaseProps) => props[key],
         getProps: () => props,
-        getTextWidths: () => widths,
+        getAvatarElement: () => (widths ? ({ offsetWidth: widths.container } as HTMLElement) : null),
+        getTextElement: () => (widths ? ({ offsetWidth: widths.text } as HTMLElement) : null),
         setState,
     } as unknown as AvatarAdapter;
     return { foundation: new AvatarFoundation(adapter), setState };

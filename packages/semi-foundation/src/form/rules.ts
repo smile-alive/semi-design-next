@@ -1,3 +1,4 @@
+import { formatLocale } from '../locale/format';
 import { normalizeFieldError, type FieldError, type FieldErrorInput } from './errors';
 
 export type RuleType = 'string' | 'number' | 'integer' | 'float' | 'boolean' | 'array' | 'object' | 'date' | 'email' | 'url' | 'regexp' | 'method';
@@ -86,7 +87,7 @@ function measure(value: unknown) {
 }
 
 function fillPlaceholders(text: string, rule: RuleItem) {
-    return text.replaceAll('${len}', String(rule.len)).replaceAll('${min}', String(rule.min)).replaceAll('${max}', String(rule.max));
+    return formatLocale(text, { len: String(rule.len), min: String(rule.min), max: String(rule.max) });
 }
 
 async function validateRule(rule: RuleItem, rawValue: unknown, values: Record<string, any>, messages: RuleMessages): Promise<FieldError | undefined> {

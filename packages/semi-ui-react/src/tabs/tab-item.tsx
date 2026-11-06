@@ -1,7 +1,7 @@
 import type React from 'react';
 import type { MouseEvent, ReactNode } from 'react';
 import clsx from 'clsx';
-import { cssClasses, getTabDataKey } from '@fibrae/semi-foundation/tabs/constants';
+import { cssClasses, getTabKeyAttrs } from '@fibrae/semi-foundation/tabs/constants';
 import { IconClose } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import useLocale from '../locale/use-locale';
@@ -65,9 +65,9 @@ export default function TabItem({ ref, tab, size, type, icon, selected, closable
             {...restProps}
             role="tab"
             {...ids}
+            {...getTabKeyAttrs(itemKey)}
             ref={ref}
             className={className}
-            data-tabkey={getTabDataKey(itemKey)}
             aria-disabled={disabled ? 'true' : 'false'}
             aria-selected={selected ? 'true' : 'false'}
             tabIndex={selected || itemKey === tabbableKey ? 0 : -1}

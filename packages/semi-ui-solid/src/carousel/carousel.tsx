@@ -3,6 +3,7 @@ import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/carousel/constants';
 import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/carousel/foundation';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import '@fibrae/semi-foundation/carousel/carousel.scss';
 import callHandler from '../_base/call-handler';
 import isMarkup from '../_base/is-markup';
@@ -113,17 +114,12 @@ export default function Carousel(rawProps: CarouselProps) {
 
     const handleFocusIn = (event: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onFocusIn, event);
-        // only keyboard focus pauses: a mouse click on an arrow focuses it too
-        if (event.target.matches(':focus-visible')) {
-            foundation.handleKeyboardFocus();
-        }
+        foundation.handleFocusIn(event);
     };
 
     const handleFocusOut = (event: FocusEvent & { currentTarget: HTMLDivElement; target: Element }) => {
         callHandler(local.onFocusOut, event);
-        if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) {
-            foundation.handleFocusLeave();
-        }
+        foundation.handleFocusOut(event);
     };
 
     const handleMouseEnter = (event: MouseEvent & { currentTarget: HTMLDivElement; target: Element }) => {
@@ -185,7 +181,7 @@ export default function Carousel(rawProps: CarouselProps) {
                         return (
                             // with indicators the slides are the panels of their tabs (APG tabbed carousel), otherwise named groups
                             <div
-                                aria-label={hasIndicator() ? undefined : locale().locale.slideN.replace('${index}', String(index() + 1))}
+                                aria-label={hasIndicator() ? undefined : formatLocale(locale().locale.slideN, { index: index() + 1 })}
                                 aria-labelledby={hasIndicator() ? getTabId(index()) : undefined}
                                 aria-roledescription={hasIndicator() ? undefined : locale().locale.slide}
                                 class={clsx(`${content}-item`, {

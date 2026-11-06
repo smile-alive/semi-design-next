@@ -2,7 +2,7 @@ import type React from 'react';
 import { isValidElement, useMemo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/descriptions/constants';
-import DescriptionsFoundation from '@fibrae/semi-foundation/descriptions/foundation';
+import { getHorizontalList } from '@fibrae/semi-foundation/descriptions/foundation';
 import '@fibrae/semi-foundation/descriptions/descriptions.scss';
 import type { ElementProps } from '../_base/base';
 import flattenChildren from '../_base/flatten-children';
@@ -69,7 +69,7 @@ function Descriptions(rawProps: DescriptionsProps) {
     const { ref, align, row, size, className, children, data, layout, column, ...rest } = useDefaultProps('Descriptions', rawProps, defaultProps);
 
     const contextValue = useMemo(() => ({ align, layout }), [align, layout]);
-    const body = layout === 'horizontal' ? DescriptionsFoundation.getHorizontalList(getColumns(data, children), column).map((items, index) => <tr key={index}>{items.map((item, itemIndex) => renderItem(item, `${index}-${itemIndex}`))}</tr>) : data?.length ? data.map(renderItem) : children;
+    const body = layout === 'horizontal' ? getHorizontalList(getColumns(data, children), column).map((items, index) => <tr key={index}>{items.map((item, itemIndex) => renderItem(item, `${index}-${itemIndex}`))}</tr>) : data?.length ? data.map(renderItem) : children;
 
     return (
         <div

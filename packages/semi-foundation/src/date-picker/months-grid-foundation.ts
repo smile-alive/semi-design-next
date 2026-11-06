@@ -1,6 +1,7 @@
 import { format, set, addMonths, subMonths, subYears, addYears, differenceInCalendarMonths, isSameDay, parseISO } from 'date-fns';
 import { isEqual } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
+import { formatLocale } from '../locale/format';
 import type { Locale } from '../locale/interface';
 import type { ArrayElement } from '../utils/type';
 import { getDefaultFormatTokenByType } from './_utils/get-default-format-token';
@@ -111,6 +112,22 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
     static override readonly propKeys = ['selectedValue', 'defaultPickerValue'];
     // a parent rendering `new Date(...)` each time must not pull the panel back
     static override readonly propEquals = { defaultPickerValue: isEqual };
+
+    /** The time part of `format`, in the tokens the time panel uses */
+    static #getValidTimeFormat(format?: string) {
+        const formatProp = format || strings.FORMAT_TIME_PICKER;
+        const timeFormatTokens = [];
+        if (formatProp.includes('h') || formatProp.includes('H')) {
+            timeFormatTokens.push('HH');
+        }
+        if (formatProp.includes('m')) {
+            timeFormatTokens.push('mm');
+        }
+        if (formatProp.includes('s')) {
+            timeFormatTokens.push('ss');
+        }
+        return timeFormatTokens.join(':');
+    }
 
     #initDatePickerFromValue(values: Date[], refreshPicker = true) {
         const { monthLeft } = this.adapter.getStates();
@@ -562,22 +579,6 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         return state;
     }
 
-    /** The time part of `format`, in the tokens the time panel uses */
-    static getValidTimeFormat(format?: string) {
-        const formatProp = format || strings.FORMAT_TIME_PICKER;
-        const timeFormatTokens = [];
-        if (formatProp.includes('h') || formatProp.includes('H')) {
-            timeFormatTokens.push('HH');
-        }
-        if (formatProp.includes('m')) {
-            timeFormatTokens.push('mm');
-        }
-        if (formatProp.includes('s')) {
-            timeFormatTokens.push('ss');
-        }
-        return timeFormatTokens.join(':');
-    }
-
     static getValidDateFormat(props: Pick<MonthsGridFoundationProps, 'format' | 'type'>) {
         // shortcut: without `format` this is the whole token map, which compatibleParse stringifies and so falls back
         // to parseISO; the parsing has always relied on it, fix both together
@@ -635,7 +636,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             return '';
         }
         const monthName = locale.months[(month.getMonth() + 1) as keyof Locale['DatePicker']['months']];
-        return locale.monthText.replace('${year}', format(month, 'yyyy')).replace('${month}', monthName);
+        return formatLocale(locale.monthText, { year: format(month, 'yyyy'), month: monthName });
     }
 
     /** The texts of a panel's date and time switch; the date is the picked range endpoint, else the shown date */
@@ -644,7 +645,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         const endpointText = rangeEndpoint ? format(toDateArg(compatibleParse(rangeEndpoint, dateFormat, undefined, dateFnsLocale)), token) : '';
         return {
             date: endpointText || (showDate ? format(showDate, token) : ''),
-            time: showDate ? format(showDate, MonthsGridFoundation.getValidTimeFormat(formatProp)) : '',
+            time: showDate ? format(showDate, MonthsGridFoundation.#getValidTimeFormat(formatProp)) : '',
         };
     }
 

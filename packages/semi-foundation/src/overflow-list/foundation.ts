@@ -1,7 +1,7 @@
 import { isEqual } from 'es-toolkit';
 import { get } from 'es-toolkit/compat';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
-import { numbers, strings } from './constants';
+import { numbers, SCROLL_KEY_ATTRIBUTE, strings } from './constants';
 
 const Boundary = strings.BOUNDARY_MAP;
 const RenderMode = strings.MODE_MAP;
@@ -108,7 +108,7 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
         return { containerWidth: 0, overflowWidth: 0, visibleState: new Map() };
     }
 
-    /** The visibleState table is keyed by the stringified item key, the form data-scrollkey carries */
+    /** The visibleState table is keyed by the stringified item key, the form SCROLL_KEY_ATTRIBUTE carries */
     static getItemKey(itemKey: ItemKeyOption, item: Record<string, any>, defaultKey?: ItemKey): ItemKey {
         if (typeof itemKey === 'function') {
             return itemKey(item);
@@ -191,7 +191,7 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
 
         const res: Record<string, IntersectionObserverEntry> = {};
         entries.forEach((entry) => {
-            const itemKey: string = entry?.target?.getAttribute('data-scrollkey') ?? undefined;
+            const itemKey: string = entry?.target?.getAttribute(SCROLL_KEY_ATTRIBUTE) ?? undefined;
             const visible = entry.isIntersecting;
             res[itemKey] = entry;
             visibleState.set(itemKey, visible);

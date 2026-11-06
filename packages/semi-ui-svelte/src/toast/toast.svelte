@@ -104,7 +104,7 @@
         }
     };
 
-    useNoticeClose(foundation, list, () => id, announce);
+    useNoticeClose(foundation, list, announce);
 
     $effect.pre(() => {
         if (leaving) entered = false;

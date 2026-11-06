@@ -168,7 +168,7 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
             focusPrevFocusElement: () => {
                 pendingFocus = null;
                 // focus that already left the card (Tab away from a focus trigger) stays where it went
-                if (FocusTrapHandle.shouldRestoreFocus(footer?.closest('[popover]'), false)) {
+                if (FocusTrapHandle.shouldRestoreFocus(popover?.getPopup(), false)) {
                     popover?.focusTrigger();
                 }
             },
@@ -200,7 +200,6 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
     };
 
     const renderCard = (renderProps: RenderContentProps) => {
-        let card: HTMLDivElement | undefined;
         const icon = children(() => {
             const value = local.icon;
             return value === undefined ? <IconAlertTriangle size="extra-large" /> : value;
@@ -224,7 +223,7 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
 
         // Tooltip owns the dialog element and has no describedby prop; without a title the content already names it
         createEffect(() => {
-            const dialog = card?.closest('[popover]');
+            const dialog = popover?.getPopup();
             if (!dialog || !showTitle() || !showContent()) {
                 return;
             }
@@ -246,7 +245,7 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
 
         return (
             // hides in-card clicks from document click listeners whatever stopPropagation says; Tooltip uses mousedown
-            <div ref={(node) => (card = node)} class={clsx(local.prefixCls, local.class)} style={local.style} onClick={(event) => event.stopImmediatePropagation()}>
+            <div class={clsx(local.prefixCls, local.class)} style={local.style} onClick={(event) => event.stopImmediatePropagation()}>
                 <div class={`${local.prefixCls}-inner`}>
                     <div class={`${local.prefixCls}-header`}>
                         <Show when={hasIcon()}>

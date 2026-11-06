@@ -1,6 +1,7 @@
 import type React from 'react';
 import { Fragment, lazy, Suspense, useCallback, useId, useImperativeHandle, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { type strings, cssClasses } from '@fibrae/semi-foundation/tag-input/constants';
 import TagInputFoundation, { type TagInputAdapter, type TagInputBaseState } from '@fibrae/semi-foundation/tag-input/foundation';
 import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/tag-input/utils/tag-focus';
@@ -339,8 +340,7 @@ export default function TagInput(rawProps: TagInputProps) {
                 type="light"
                 className={tagCls}
                 // only the closable tag is a button that takes a name; a disabled one is static text
-                // a function replacer keeps `$&` and `$$` in the value literal
-                aria-label={disabled ? undefined : tagLocale.closableTag.replace('${tag}', () => String(tagValue))}
+                aria-label={disabled ? undefined : formatLocale(tagLocale.closableTag, { tag: String(tagValue) })}
                 closable={!disabled}
                 color="white"
                 size={size === 'small' ? 'small' : 'large'}

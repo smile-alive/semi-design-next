@@ -1,6 +1,7 @@
 import { Accessibility } from '@dnd-kit/dom';
 import { isSortable } from '@dnd-kit/dom/sortable';
 import { BASE_CLASS_PREFIX } from '../base/constants';
+import { formatLocale } from '../locale/format';
 import type { Locale } from '../locale/interface';
 
 type SortableLocale = Locale['Sortable'];
@@ -32,13 +33,13 @@ export class SortableAnnouncer {
             idPrefix: { description: descriptionPrefix },
             screenReaderInstructions: this.#instructions,
             announcements: {
-                dragstart: ({ operation: { source } }) => (isSortable(source) ? this.#locale.pickedUp.replace('${index}', position(source.initialIndex)).replace('${total}', String(this.#total)) : undefined),
-                dragover: ({ operation: { source, target } }) => (isSortable(source) && isSortable(target) && source.id !== target.id ? this.#locale.movedTo.replace('${index}', position(target.index)) : undefined),
+                dragstart: ({ operation: { source } }) => (isSortable(source) ? formatLocale(this.#locale.pickedUp, { index: position(source.initialIndex), total: this.#total }) : undefined),
+                dragover: ({ operation: { source, target } }) => (isSortable(source) && isSortable(target) && source.id !== target.id ? formatLocale(this.#locale.movedTo, { index: position(target.index) }) : undefined),
                 dragend: ({ operation: { source }, canceled }) => {
                     if (!isSortable(source)) {
                         return undefined;
                     }
-                    return canceled ? this.#locale.canceled.replace('${index}', position(source.initialIndex)) : this.#locale.dropped.replace('${index}', position(source.index));
+                    return canceled ? formatLocale(this.#locale.canceled, { index: position(source.initialIndex) }) : formatLocale(this.#locale.dropped, { index: position(source.index) });
                 },
             },
         });

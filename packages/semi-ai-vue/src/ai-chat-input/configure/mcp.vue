@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
     import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import Button from '@fibrae/semi-ui-vue/button/index';
     import Dropdown, { DropdownItem, DropdownMenu } from '@fibrae/semi-ui-vue/dropdown/index';
     import { useLocale } from '@fibrae/semi-ui-vue/hooks';
@@ -24,7 +25,7 @@
         <template #content>
             <div :class="`${prefix}-footer-configure-mcp-header`">
                 <span :class="`${prefix}-footer-configure-mcp-header-title`">
-                    {{ i18n.locale.selected.replace('${count}', String(count)) }}
+                    {{ formatLocale(i18n.locale.selected, { count }) }}
                 </span>
                 <Button v-if="props.showConfigure" :class="`${prefix}-footer-configure-mcp-header-config`" theme="outline" @click="emit('configureButtonClick')">
                     {{ i18n.locale.configure }}

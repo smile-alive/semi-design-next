@@ -1,4 +1,5 @@
 import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
+import { strings as uploadStrings } from '@fibrae/semi-foundation/upload/constants';
 import { handlePrevent } from '@fibrae/semi-foundation/utils/a11y';
 import { strings, type SendHotKey } from './constants';
 
@@ -37,7 +38,7 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
         if (typeof canSend === 'boolean') {
             return !canSend;
         }
-        return Boolean(disableSend) || (content.length === 0 && attachment.length === 0) || attachment.some((item) => item.status !== strings.FILE_STATUS.SUCCESS);
+        return Boolean(disableSend) || (content.length === 0 && attachment.length === 0) || attachment.some((item) => item.status !== uploadStrings.FILE_STATUS_SUCCESS);
     }
 
     onInputAreaChange = (value: string) => {

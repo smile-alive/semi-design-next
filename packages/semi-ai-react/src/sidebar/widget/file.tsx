@@ -4,6 +4,7 @@ import { type Editor, EditorContent, useEditor, useEditorState } from '@tiptap/r
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
 import { type TextRange, canUploadImage, clearSelectionHighlight, confirmLink, getEditorAttributes, getFileEditorExtensions, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/sidebar/file-extensions';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import {
     IconH1,
     IconHn,
@@ -132,22 +133,22 @@ function MenuBar({ editor, className, canUpload }: { editor: Editor; className: 
             <Dropdown
                 render={
                     <Dropdown.Menu>
-                        <ConfigureDropdownItem aria-label={menuLocale.headingLevel.replace('${level}', '1')} active={editorState.headingLevel === 1} onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>
+                        <ConfigureDropdownItem aria-label={formatLocale(menuLocale.headingLevel, { level: 1 })} active={editorState.headingLevel === 1} onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>
                             <IconH1 />
                         </ConfigureDropdownItem>
-                        <ConfigureDropdownItem aria-label={menuLocale.headingLevel.replace('${level}', '2')} active={editorState.headingLevel === 2} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
+                        <ConfigureDropdownItem aria-label={formatLocale(menuLocale.headingLevel, { level: 2 })} active={editorState.headingLevel === 2} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
                             <IconH2 />
                         </ConfigureDropdownItem>
-                        <ConfigureDropdownItem aria-label={menuLocale.headingLevel.replace('${level}', '3')} active={editorState.headingLevel === 3} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}>
+                        <ConfigureDropdownItem aria-label={formatLocale(menuLocale.headingLevel, { level: 3 })} active={editorState.headingLevel === 3} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}>
                             <IconH3 />
                         </ConfigureDropdownItem>
-                        <ConfigureDropdownItem aria-label={menuLocale.headingLevel.replace('${level}', '4')} active={editorState.headingLevel === 4} onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}>
+                        <ConfigureDropdownItem aria-label={formatLocale(menuLocale.headingLevel, { level: 4 })} active={editorState.headingLevel === 4} onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}>
                             <IconH4 />
                         </ConfigureDropdownItem>
-                        <ConfigureDropdownItem aria-label={menuLocale.headingLevel.replace('${level}', '5')} active={editorState.headingLevel === 5} onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}>
+                        <ConfigureDropdownItem aria-label={formatLocale(menuLocale.headingLevel, { level: 5 })} active={editorState.headingLevel === 5} onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}>
                             <IconH5 />
                         </ConfigureDropdownItem>
-                        <ConfigureDropdownItem aria-label={menuLocale.headingLevel.replace('${level}', '6')} active={editorState.headingLevel === 6} onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}>
+                        <ConfigureDropdownItem aria-label={formatLocale(menuLocale.headingLevel, { level: 6 })} active={editorState.headingLevel === 6} onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}>
                             <IconH6 />
                         </ConfigureDropdownItem>
                     </Dropdown.Menu>

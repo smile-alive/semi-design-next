@@ -52,15 +52,6 @@ export type ChatMode = (typeof MODE)[keyof typeof MODE];
 export type MessageStatus = (typeof MESSAGE_STATUS)[keyof typeof MESSAGE_STATUS];
 export type SendHotKey = (typeof SEND_HOT_KEY)[keyof typeof SEND_HOT_KEY];
 
-const FILE_STATUS = {
-    UPLOADING: 'uploading',
-    SUCCESS: 'success',
-    UPLOAD_FAIL: 'uploadFail',
-    VALIDATING: 'validating',
-    VALID_FAIL: 'validateFail',
-    WAIT_UPLOAD: 'wait',
-};
-
 export const strings = {
     ROLE,
     CHAT_ALIGN,
@@ -69,5 +60,4 @@ export const strings = {
     SHOW_SCROLL_GAP,
     MODE,
     SEND_HOT_KEY,
-    FILE_STATUS,
 };

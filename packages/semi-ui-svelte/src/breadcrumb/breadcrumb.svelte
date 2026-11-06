@@ -13,8 +13,8 @@
     import { setBreadcrumbContext } from './context.js';
     import type { BreadcrumbProps, BreadcrumbRoute } from './interface.js';
 
-    type Foundation = BreadcrumbFoundation<BreadcrumbProps, MouseEvent>;
-    type Adapter = BreadcrumbAdapter<BreadcrumbProps, MouseEvent>;
+    type Foundation = BreadcrumbFoundation<BreadcrumbProps>;
+    type Adapter = BreadcrumbAdapter<BreadcrumbProps>;
 
     const defaults = useDefaultProps('Breadcrumb');
 
@@ -52,7 +52,6 @@
         foundationProps,
         () => BreadcrumbFoundation.getInitialState(),
         () => ({
-            notifyClick: (info, event) => onClick?.(info as BreadcrumbRoute, event),
             // Expanding removes the more button, which held focus: the first item it hid takes over, else the nav itself
             holdFocus: () => {
                 const from = moreArea?.contains(document.activeElement) ? moreArea : undefined;
@@ -81,7 +80,7 @@
 
     const total = $derived(entries.length);
     const range = $derived(BreadcrumbFoundation.getCollapseRange(total, maxItemCount, activeIndex));
-    const collapsed = $derived(autoCollapse && range.end >= range.start && states().isCollapsed);
+    const collapsed = $derived(BreadcrumbFoundation.shouldCollapse(autoCollapse, range, states().isCollapsed));
     const before = $derived(collapsed ? entries.slice(0, range.start) : entries);
     const after = $derived(collapsed ? entries.slice(range.end + 1) : []);
     const hidden = $derived(collapsed ? entries.slice(range.start, range.end + 1) : []);
@@ -105,7 +104,7 @@
         get icon() {
             return icon;
         },
-        onClick: foundation.handleClick,
+        onClick: (info, event) => onClick?.(info as BreadcrumbRoute, event),
     });
 
     const itemProps = (entry: (typeof entries)[number]) => ({

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
     import { getFileType, isImageFile } from '@fibrae/semi-ai-foundation/file-suffix';
-    import { isUploadProgressVisible } from '@fibrae/semi-ai-foundation/upload-status';
+    import { isUploadFailed, isUploadProgressVisible } from '@fibrae/semi-ai-foundation/upload-status';
     import { IconAlertCircle, IconClear } from '@fibrae/semi-icons-vue';
     import { useLocale } from '@fibrae/semi-ui-vue/hooks';
     import Progress from '@fibrae/semi-ui-vue/progress/index';
@@ -15,8 +15,6 @@
     const i18n = useLocale('Chat');
 
     const { PREFIX_ATTACHMENT } = cssClasses;
-    const { FILE_STATUS } = strings;
-    const failed: string[] = [FILE_STATUS.UPLOAD_FAIL, FILE_STATUS.VALID_FAIL];
 
     const mimeOf = (item: FileItem) => item.fileInstance?.type;
 </script>
@@ -30,7 +28,7 @@
                 <IconClear size="large" />
             </button>
             <Progress v-if="isUploadProgressVisible(item)" :aria-label="i18n.locale.uploadProgress" :class="`${PREFIX_ATTACHMENT}-process`" :percent="item.percent" size="small" type="circle" :width="30" />
-            <IconAlertCircle v-if="failed.includes(item.status)" :class="`${PREFIX_ATTACHMENT}-fail`" />
+            <IconAlertCircle v-if="isUploadFailed(item.status)" :class="`${PREFIX_ATTACHMENT}-fail`" />
         </div>
     </div>
 </template>

@@ -1,6 +1,7 @@
 import { Index } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/carousel/constants';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import useLocale from '../locale/use-locale';
 import type { CarouselIndicatorProps } from './interface';
 
@@ -31,7 +32,7 @@ export default function CarouselIndicator(props: CarouselIndicatorProps) {
                         })}
                         data-index={i}
                         aria-controls={props.getSlideId(i)}
-                        aria-label={locale().locale.slideN.replace('${index}', String(i + 1))}
+                        aria-label={formatLocale(locale().locale.slideN, { index: i + 1 })}
                         aria-selected={i === props.activeIndex}
                         role="tab"
                         tabIndex={i === props.activeIndex ? 0 : -1}

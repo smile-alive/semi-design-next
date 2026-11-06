@@ -30,8 +30,8 @@
         rest: Entry[];
     }
 
-    type Foundation = BreadcrumbFoundation<BreadcrumbProps, MouseEvent>;
-    type Adapter = BreadcrumbAdapter<BreadcrumbProps, MouseEvent>;
+    type Foundation = BreadcrumbFoundation<BreadcrumbProps>;
+    type Adapter = BreadcrumbAdapter<BreadcrumbProps>;
 
     defineOptions({ name: 'Breadcrumb' });
 
@@ -58,9 +58,7 @@
         BreadcrumbFoundation,
         props,
         () => BreadcrumbFoundation.getInitialState(),
-        () => ({
-            notifyClick: (info, e) => props.onClick?.(info, e),
-        })
+        () => ({})
     );
 
     const prefix = cssClasses.PREFIX;
@@ -72,7 +70,7 @@
             separator: props.separator,
             hasOnClick: Boolean(props.onClick),
         })),
-        onClick: foundation.handleClick,
+        onClick: (info, e) => props.onClick?.(info, e),
         separatorSlot: () => slots.separator?.(),
     });
 
@@ -88,7 +86,7 @@
             : slotNodes(slots.default?.() ?? []).map(([node, key], index) => ({ kind: 'node', index, node, key }));
         const total = entries.length;
         const { start, end } = BreadcrumbFoundation.getCollapseRange(total, props.maxItemCount, props.activeIndex);
-        const collapsed = props.autoCollapse && end >= start && state.value.isCollapsed;
+        const collapsed = BreadcrumbFoundation.shouldCollapse(props.autoCollapse, { start, end }, state.value.isCollapsed);
         return {
             total,
             collapsed,

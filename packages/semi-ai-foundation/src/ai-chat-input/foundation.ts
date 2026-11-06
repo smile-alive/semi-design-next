@@ -390,7 +390,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         }
         // A control that took focus on mousedown (a Configure.Select) keeps it, or its open list would lose the keyboard
         const active = this.adapter.getActiveElement();
-        if (active?.closest(`.${cssClasses.PREFIX}-footer-configure`)) {
+        if (active?.closest(`.${cssClasses.FOOTER_CONFIGURE}`)) {
             return;
         }
         this.adapter.focusEditor();
@@ -406,7 +406,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
             return true;
         }
         const editor = this.adapter.getEditor() ?? {};
-        const allowHotKeySend = editor.storage?.SemiAIChatInput?.allowHotKeySend;
+        const allowHotKeySend = editor.storage?.[strings.STATUS_EXTENSION_NAME]?.allowHotKeySend;
         if (event.key === 'Enter' && (sendHotKey === strings.SEND_HOTKEY.ENTER ? !event.shiftKey : event.shiftKey) && allowHotKeySend) {
             this.handleSend();
             return true;

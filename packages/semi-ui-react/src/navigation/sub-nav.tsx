@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { strings, cssClasses } from '@fibrae/semi-foundation/navigation/constants';
 import { countPlaceholderIcons } from '@fibrae/semi-foundation/navigation/item-foundation';
 import SubNavFoundation, { type SubNavAdapter } from '@fibrae/semi-foundation/navigation/sub-nav-foundation';
+import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/navigation/navigation.scss';
 import { IconChevronDown, IconChevronRight } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
@@ -80,7 +81,7 @@ export default function SubNav({ ref, ...props }: SubNavProps) {
     const rest: Record<string, any> = {};
 
     for (const [key, value] of Object.entries(restProps)) {
-        (key.startsWith('aria-') ? ariaProps : rest)[key] = value;
+        (isAriaKey(key) ? ariaProps : rest)[key] = value;
     }
 
     let withTransition = false;

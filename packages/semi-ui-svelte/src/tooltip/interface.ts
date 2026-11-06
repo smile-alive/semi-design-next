@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { Attachment } from 'svelte/attachments';
-import type { strings } from '@fibrae/semi-foundation/tooltip/constants';
+import type { POPUP_ID_ATTRIBUTE, strings } from '@fibrae/semi-foundation/tooltip/constants';
 import type { Position, TooltipBaseProps } from '@fibrae/semi-foundation/tooltip/foundation';
 
 export type { Position } from '@fibrae/semi-foundation/tooltip/foundation';
@@ -20,7 +20,7 @@ export interface RenderContentProps {
  * override it; the attachment under a symbol key hands the element to Tooltip and must survive the spread.
  */
 export interface TooltipTriggerProps {
-    'data-popupid': string;
+    [POPUP_ID_ATTRIBUTE]: string;
     tabindex?: number;
     'aria-describedby'?: string;
     'aria-expanded'?: 'true' | 'false';

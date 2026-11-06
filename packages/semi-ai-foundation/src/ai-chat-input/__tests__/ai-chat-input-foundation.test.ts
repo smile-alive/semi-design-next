@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
+import { cssClasses } from '../constants';
 import { createEditorHandlers, getEditorAttributes } from '../extension/editor-config';
 import { isSelectionInsideNode } from '../extension/input-slot';
 import AIChatInputFoundation, { type AIChatInputAdapter } from '../foundation';
@@ -365,7 +366,7 @@ describe('AIChatInputFoundation', () => {
         const click = (focus: 'control' | 'send' | 'root' | 'outside') => {
             const root = document.createElement('div');
             const configure = document.createElement('div');
-            configure.className = 'semi-aiChatInput-footer-configure';
+            configure.className = cssClasses.FOOTER_CONFIGURE;
             const select = document.createElement('button');
             configure.append(select);
             const send = document.createElement('button');

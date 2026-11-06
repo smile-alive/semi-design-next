@@ -105,7 +105,7 @@
 
     const close = (event: MouseEvent) => foundation.clickClose(event);
 
-    useNoticeClose(foundation, list, () => props.id, announce);
+    useNoticeClose(foundation, list, announce);
 
     defineExpose<NoticeHandle>({
         restartCloseTimer: foundation.restartCloseTimer,

@@ -4,6 +4,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { strings } from '@fibrae/semi-foundation/date-picker/constants';
 import type { PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
 import YearAndMonthFoundation, { type YearAndMonthAdapter, type YearAndMonthFoundationProps } from '@fibrae/semi-foundation/date-picker/year-and-month-foundation';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import { IconChevronLeft } from '@fibrae/semi-icons-react';
@@ -69,7 +70,7 @@ export default function YearAndMonth({ ref, ...rawProps }: YearAndMonthProps) {
                     list={yearList}
                     mode="normal"
                     selectedIndex={yearList.findIndex((item) => item.value === currentYear[panelType])}
-                    transform={(val: number) => locale.yearText.replace('${year}', String(val))}
+                    transform={(val: number) => formatLocale(locale.yearText, { year: val })}
                     onSelect={(item) => foundation.selectYear(item, panelType)}
                     {...yearAndMonthOpts}
                 />

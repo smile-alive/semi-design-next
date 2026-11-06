@@ -1,5 +1,6 @@
 import { isEqual } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
+import CollapsibleFoundation from '../collapsible/foundation';
 
 export interface CollapseProps {
     /** '' and null are the controlled "nothing open" values */
@@ -53,15 +54,15 @@ export default class CollapseFoundation<E = unknown> extends BaseFoundation<Coll
 
     /**
      * Whether the panel has been open since its body appeared. It resets with the body because Collapsible unmounts
-     * with it and loses its own rendered latch, whose lazyRender rule isContentMounted mirrors.
+     * with it and loses its own rendered latch, which this value stands in for in isContentMounted.
      */
     static isEverOpened({ hasBody, active, everOpened }: { hasBody: boolean; active: boolean; everOpened: boolean }) {
         return hasBody && (everOpened || active);
     }
 
-    /** Whether the body is in the DOM, which aria-controls must not point past */
+    /** Whether the body is in the DOM, which aria-controls must not point past; it is Collapsible's own rule */
     static isContentMounted({ hasBody, active, keepDOM, lazyRender, everOpened }: { hasBody: boolean; active: boolean; keepDOM: boolean; lazyRender: boolean; everOpened: boolean }) {
-        return hasBody && (active || (keepDOM && (!lazyRender || everOpened)));
+        return hasBody && CollapsibleFoundation.shouldRender({ keepDOM, lazyRender, collapseHeight: 0, isOpen: active }, { visible: active, rendered: everOpened });
     }
 
     // an activeKey that goes back to undefined keeps the last controlled panels, which a later uncontrolled click continues from

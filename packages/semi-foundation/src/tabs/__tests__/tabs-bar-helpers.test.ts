@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { scrollIntoViewWithin } from '../../utils/supports';
-import { getBarItemKey, getItemKeyByBarItemKey, getTabDataKey } from '../constants';
+import { getBarItemKey, getItemKeyByBarItemKey, getTabKeyAttrs } from '../constants';
 import TabsFoundation, { type MotionView } from '../foundation';
 
 vi.mock('../../utils/supports', () => ({ scrollIntoViewWithin: vi.fn<() => void>() }));
@@ -113,6 +113,6 @@ describe('TabsFoundation.readVisibleState', () => {
 describe('Tabs 的 key 约定', () => {
     it('bar 项 key 可还原，data-tabkey 带固定前缀', () => {
         expect(getItemKeyByBarItemKey(getBarItemKey('a-bar'))).toBe('a-bar');
-        expect(getTabDataKey('a')).toBe('semiTaba');
+        expect(getTabKeyAttrs('a')).toEqual({ 'data-tabkey': 'semiTaba' });
     });
 });

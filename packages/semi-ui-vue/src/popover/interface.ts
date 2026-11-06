@@ -51,6 +51,8 @@ export interface PopoverEmits extends TooltipEmits {}
 
 export interface PopoverHandle {
     focusTrigger: () => void;
+    /** The popup element, null while it is not in the document */
+    getPopup: () => HTMLElement | null;
     /** Repositions the open popup at once; it already follows scrolling, resizing and trigger moves, a move a frame late */
     rePosition: () => void;
 }

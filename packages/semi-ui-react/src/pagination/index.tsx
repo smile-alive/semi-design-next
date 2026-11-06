@@ -1,6 +1,7 @@
 import type React from 'react';
 import { useEffect } from 'react';
 import clsx from 'clsx';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/pagination/constants';
 import PaginationFoundation, { type PageList, type PageRange, type PaginationAdapter, type PaginationState } from '@fibrae/semi-foundation/pagination/foundation';
@@ -195,7 +196,7 @@ export default function Pagination(rawProps: PaginationProps) {
                 itemData={{
                     start,
                     goPage: (page: number) => foundation.goPage(page),
-                    pageLabel: (page: number) => locale.pageN.replace('${page}', String(page)),
+                    pageLabel: (page: number) => formatLocale(locale.pageN, { page }),
                 }}
                 itemSize={itemHeight}
                 width={78}
@@ -272,7 +273,7 @@ export default function Pagination(rawProps: PaginationProps) {
                 <Select dropdownClassName={`${prefixCls}-select-dropdown`} aria-label={locale.pageSizeSelector} disabled={disabled} value={pageSize} clickToHide position={switchPosition || 'bottomRight'} onChange={foundation.changePageSize}>
                     {PaginationFoundation.getPageSizeOpts(pageSizeOpts, pageSize).map((option) => (
                         <Option key={option} value={option}>
-                            <span>{pageSizeToken.replace('${pageSize}', option.toString())}</span>
+                            <span>{formatLocale(pageSizeToken, { pageSize: option })}</span>
                         </Option>
                     ))}
                 </Select>
@@ -293,7 +294,7 @@ export default function Pagination(rawProps: PaginationProps) {
                         [`${prefixCls}-item-all-disabled-active`]: isActive && disabled,
                     })}
                     aria-current={isActive ? 'page' : undefined}
-                    aria-label={page === '...' ? locale.more : locale.pageN.replace('${page}', String(page))}
+                    aria-label={page === '...' ? locale.more : formatLocale(locale.pageN, { page })}
                     disabled={disabled}
                     onClick={() => foundation.goPage(page)}
                 >
@@ -318,7 +319,7 @@ export default function Pagination(rawProps: PaginationProps) {
 
     const renderDefaultPage = (locale: PaginationLocale) => (
         <ul {...rest} ref={ref} className={clsx(className, prefixCls, { [`${prefixCls}-disabled`]: disabled })} style={style}>
-            {showTotal && <li className={`${prefixCls}-total`}>{locale.total.replace('${total}', totalPageNum.toString())}</li>}
+            {showTotal && <li className={`${prefixCls}-total`}>{formatLocale(locale.total, { total: totalPageNum })}</li>}
             {renderPrevBtn(locale)}
             {renderPageList(locale)}
             {renderNextBtn(locale)}

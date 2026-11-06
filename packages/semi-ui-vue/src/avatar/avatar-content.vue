@@ -15,6 +15,7 @@
 
     defineSlots<{ default?: () => VNode[]; hoverMask?: () => VNode[] }>();
 
+    const root = useTemplateRef('root');
     const content = useTemplateRef('content');
 
     const prefix = cssClasses.PREFIX;
@@ -40,12 +41,13 @@
 
     defineExpose({
         getText: (): string | undefined => content.value?.textContent ?? undefined,
-        getTextWidths: () => (content.value ? { container: content.value.parentElement?.offsetWidth ?? 0, text: content.value.offsetWidth } : null),
+        getAvatarElement: () => root.value,
+        getTextElement: () => content.value,
     });
 </script>
 
 <template>
-    <span>
+    <span ref="root">
         <img v-if="props.image" :alt="props.image.alt" v-bind="mergeProps({ ...props.image }, focusAttrs)" />
         <span v-else-if="props.text !== undefined" ref="content" :class="`${prefix}-content`" :style="{ transform: `scale(${props.scale})` }">
             <span :aria-label="props.alt ?? props.text" :class="`${prefix}-label`" role="img" v-bind="focusAttrs">{{ props.text }}</span>

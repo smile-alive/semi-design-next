@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses, getPanelId, getTabDataKey, getTabId } from '@fibrae/semi-foundation/tabs/constants';
+    import { cssClasses, getPanelId, getTabId, getTabKeyAttrs } from '@fibrae/semi-foundation/tabs/constants';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import { getTabsContext } from './context.js';
@@ -49,10 +49,10 @@
 <div
     {...rest}
     {...ids}
+    {...getTabKeyAttrs(itemKey)}
     aria-disabled={disabled ? 'true' : 'false'}
     aria-selected={selected ? 'true' : 'false'}
     class={[prefix, `${prefix}-${resolvedType}`, `${prefix}-${resolvedPosition}`, `${prefix}-single`, rest.class, { [cssClasses.TABS_TAB_ACTIVE]: selected, [cssClasses.TABS_TAB_DISABLED]: disabled, [`${prefix}-small`]: resolvedSize === 'small', [`${prefix}-medium`]: resolvedSize === 'medium' }]}
-    data-tabkey={getTabDataKey(itemKey)}
     role="tab"
     tabindex={selected || itemKey === ctx?.view.tabbableKey ? 0 : -1}
     onclick={handleClick}

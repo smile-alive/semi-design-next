@@ -3,6 +3,7 @@
     import { strings } from '@fibrae/semi-foundation/date-picker/constants';
     import type { PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
     import YearAndMonthFoundation, { type MonthScrollItem, type YearAndMonthAdapter, type YearAndMonthFoundationProps, type YearScrollItem } from '@fibrae/semi-foundation/date-picker/year-and-month-foundation';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { IconChevronLeft } from '@fibrae/semi-icons-svelte';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import { IconButton } from '../icon-button/index.js';
@@ -74,7 +75,7 @@
     };
 
     const yearText = (value: number | string) => {
-        return props.locale.yearText.replace('${year}', String(value));
+        return formatLocale(props.locale.yearText, { year: value });
     };
 
     // The selected index follows the props only; a selection is reported through onSelect

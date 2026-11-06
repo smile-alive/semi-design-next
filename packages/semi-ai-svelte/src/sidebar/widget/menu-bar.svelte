@@ -3,6 +3,7 @@
     import type { ChainedCommands, Editor } from '@tiptap/core';
     import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
     import { type Level, type TextRange, clearSelectionHighlight, confirmLink, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/sidebar/file-extensions';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import {
         IconAlignCenter,
         IconAlignJustify,
@@ -119,7 +120,7 @@
                 {#each headingIcons as HeadingIcon, index (index)}
                     <DropdownItem
                         active={menu.headingLevel === index + 1}
-                        aria-label={text.headingLevel.replace('${level}', String(index + 1))}
+                        aria-label={formatLocale(text.headingLevel, { level: index + 1 })}
                         class={[`${prefix}-menu-bar-dropdown-item`, { [`${prefix}-menu-bar-dropdown-item-active`]: menu.headingLevel === index + 1 }]}
                         onclick={() => run((chain) => chain.toggleHeading({ level: (index + 1) as Level }))}
                     >

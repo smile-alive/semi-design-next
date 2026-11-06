@@ -68,6 +68,37 @@ export interface TransferAdapter<P extends TransferBaseProps = TransferBaseProps
 export default class TransferFoundation<P extends TransferBaseProps = TransferBaseProps, E = FocusEvent> extends BaseFoundation<TransferAdapter<P, E>, P, TransferBaseState> {
     static override readonly propKeys = ['value'];
 
+    /**
+     * Each groupList group's position among the groups of `getData`'s result. Search and paging leave it unchanged,
+     * so it keys and names the group rows; titles cannot, as they may repeat, be absent or hold spaces.
+     */
+    static #getGroupIndexes(data: Array<BasicResolvedDataItem>): Map<BasicResolvedDataItem['_parent'], number> {
+        const indexes = new Map<BasicResolvedDataItem['_parent'], number>();
+        for (const { _parent } of data) {
+            if (!indexes.has(_parent)) {
+                indexes.set(_parent, indexes.size);
+            }
+        }
+        return indexes;
+    }
+
+    /** The page the left list is on before clamping: the controlled `currentPage`, else the internal one */
+    static #getPageNumber(pagination: { currentPage?: number } | undefined, statePage: number) {
+        return typeof pagination?.currentPage === 'number' ? pagination.currentPage : statePage;
+    }
+
+    /** The item as handed to callbacks: internal fields (`_parent`, `_path`, `_isLeaf`) removed, `fullPath` added */
+    static #toPublicItem(item: BasicResolvedDataItem, type: string, showPath: boolean) {
+        let publicItem = item;
+        if (type === strings.TYPE_GROUP_LIST) {
+            publicItem = omit(item, ['_parent']) as BasicResolvedDataItem;
+        } else if (type === strings.TYPE_TREE_TO_LIST) {
+            publicItem = omit(item, ['_path', '_isLeaf']) as BasicResolvedDataItem;
+        }
+        const fullPath = TransferFoundation.getFullPath(item, type, showPath);
+        return fullPath ? { ...publicItem, fullPath } : publicItem;
+    }
+
     #getData() {
         const { dataSource, type } = this.getProps();
         return TransferFoundation.getData(dataSource, type);
@@ -79,7 +110,7 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
 
     #injectFullPath(item: BasicResolvedDataItem) {
         const { type, showPath } = this.getProps();
-        return TransferFoundation.toPublicItem(item, type, showPath);
+        return TransferFoundation.#toPublicItem(item, type, showPath);
     }
 
     #getValuesAndItems(selectedItems: DataItemMap) {
@@ -107,20 +138,6 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
     /** The flat item list of a dataSource: groupList items carry `_parent`, treeList nodes carry `_path` */
     static getData(dataSource: unknown, type: string): Array<BasicResolvedDataItem> {
         return Array.isArray(dataSource) ? _generateDataByType(dataSource, type) : [];
-    }
-
-    /**
-     * Each groupList group's position among the groups of `getData`'s result. Search and paging leave it unchanged,
-     * so it keys and names the group rows; titles cannot, as they may repeat, be absent or hold spaces.
-     */
-    static getGroupIndexes(data: Array<BasicResolvedDataItem>): Map<BasicResolvedDataItem['_parent'], number> {
-        const indexes = new Map<BasicResolvedDataItem['_parent'], number>();
-        for (const { _parent } of data) {
-            if (!indexes.has(_parent)) {
-                indexes.set(_parent, indexes.size);
-            }
-        }
-        return indexes;
     }
 
     /**
@@ -165,15 +182,43 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
         return Math.ceil(total / TransferFoundation.getPageSize(pagination));
     }
 
-    /** The page the left list is on before clamping: the controlled `currentPage`, else the internal one */
-    static getPageNumber(pagination: { currentPage?: number } | undefined, statePage: number) {
-        return typeof pagination?.currentPage === 'number' ? pagination.currentPage : statePage;
+    /** The items of the page shown on the left; all of them without pagination */
+    static getVisibleData<T extends BasicResolvedDataItem>(filterData: Array<T>, pagination: { pageSize?: number } | undefined, currentPage: number) {
+        const pageSize = TransferFoundation.getPageSize(pagination);
+        const start = (currentPage - 1) * pageSize;
+        return pagination ? filterData.slice(start, start + pageSize) : filterData;
+    }
+
+    /**
+     * The shown items in runs of one group, each item with its position among the shown items. Items outside a
+     * groupList have no group and form one run with `grouped` false. `index` is the group's position in `data`, the
+     * full list, so it stays the same through search and paging.
+     */
+    static getGroups<T extends BasicResolvedDataItem>(visibleData: Array<T>, data: Array<BasicResolvedDataItem>) {
+        const groupIndexes = TransferFoundation.#getGroupIndexes(data);
+        const groups: Array<{ index: number; grouped: boolean; title?: string; items: Array<{ item: T; index: number }> }> = [];
+        let lastParent: BasicResolvedDataItem['_parent'];
+        visibleData.forEach((item, index) => {
+            const last = groups.at(-1);
+            if (last && lastParent === item._parent) {
+                last.items.push({ item, index });
+            } else {
+                lastParent = item._parent;
+                groups.push({ index: groupIndexes.get(item._parent) ?? 0, grouped: Boolean(item._parent), title: item._parent?.title, items: [{ item, index }] });
+            }
+        });
+        return groups;
+    }
+
+    /** The treeList nodes from the root to the item, the item itself last; empty for the other types */
+    static getPath({ _path = [] }: BasicResolvedDataItem) {
+        return _path;
     }
 
     /** The left page clamped into the page count, so a search or a shrinking dataSource never leaves it past the end */
     static getCurrentPage(pagination: { currentPage?: number; pageSize?: number } | undefined, statePage: number, total: number) {
         const totalPage = TransferFoundation.getTotalPage(pagination, total);
-        return Math.min(TransferFoundation.getPageNumber(pagination, statePage), Math.max(totalPage, 1));
+        return Math.min(TransferFoundation.#getPageNumber(pagination, statePage), Math.max(totalPage, 1));
     }
 
     static getFullPath(item: BasicResolvedDataItem, type: string, showPath: boolean): Array<BasicDataItem> | undefined {
@@ -187,23 +232,11 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
         const items: Array<BasicResolvedDataItem> = [];
         const values: Array<number | string> = [];
         for (const selected of selectedItems.values()) {
-            const result = TransferFoundation.toPublicItem(selected as BasicResolvedDataItem, type, showPath);
+            const result = TransferFoundation.#toPublicItem(selected as BasicResolvedDataItem, type, showPath);
             items.push(result);
             values.push(result.value);
         }
         return { items, values };
-    }
-
-    /** The item as handed to callbacks: internal fields (`_parent`, `_path`, `_isLeaf`) removed, `fullPath` added */
-    static toPublicItem(item: BasicResolvedDataItem, type: string, showPath: boolean) {
-        let publicItem = item;
-        if (type === strings.TYPE_GROUP_LIST) {
-            publicItem = omit(item, ['_parent']) as BasicResolvedDataItem;
-        } else if (type === strings.TYPE_TREE_TO_LIST) {
-            publicItem = omit(item, ['_path', '_isLeaf']) as BasicResolvedDataItem;
-        }
-        const fullPath = TransferFoundation.getFullPath(item, type, showPath);
-        return fullPath ? { ...publicItem, fullPath } : publicItem;
     }
 
     static generatePath({ _path = [] }: BasicResolvedDataItem) {
@@ -219,7 +252,7 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
         }
         this.setState({ inputValue: inputVal });
         // via handlePageChange so a controlled caller is told to move
-        if (TransferFoundation.getPageNumber(this.getProp('pagination'), this.getState('leftCurrentPage')) !== 1) {
+        if (TransferFoundation.#getPageNumber(this.getProp('pagination'), this.getState('leftCurrentPage')) !== 1) {
             this.handlePageChange(1);
         }
     };

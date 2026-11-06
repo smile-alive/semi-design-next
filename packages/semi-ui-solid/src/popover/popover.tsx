@@ -8,6 +8,8 @@ import Arrow, { type ArrowStyle } from './arrow';
 
 export interface PopoverHandle {
     focusTrigger: () => void;
+    /** The popup element, null while it is not in the document */
+    getPopup: () => HTMLElement | null;
     /** Repositions the open popup at once; it already follows scrolling, resizing and trigger moves, a move a frame late */
     rePosition: () => void;
 }
@@ -99,7 +101,7 @@ export default function Popover(rawProps: PopoverProps & { ref?: Ref<PopoverHand
 
     // delivered once while created, like an element ref
     if (typeof ref === 'function') {
-        ref({ focusTrigger: () => tooltip?.focusTrigger(), rePosition: () => tooltip?.rePosition() });
+        ref({ focusTrigger: () => tooltip?.focusTrigger(), getPopup: () => tooltip?.getPopup() ?? null, rePosition: () => tooltip?.rePosition() });
     }
 
     return (

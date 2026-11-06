@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { computed, useAttrs } from 'vue';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses } from '@fibrae/semi-foundation/pincode/constants';
     import PinCodeFoundation, { type PinCodeAdapter } from '@fibrae/semi-foundation/pincode/foundation';
     import '@fibrae/semi-foundation/pincode/pincode.scss';
@@ -105,7 +106,7 @@
         return control;
     };
 
-    const digitLabel = (index: number) => locale.value.locale.digit.replace('${index}', String(index + 1)).replace('${count}', String(props.count));
+    const digitLabel = (index: number) => formatLocale(locale.value.locale.digit, { index: index + 1, count: props.count });
 
     defineExpose<PinCodeHandle>({
         focus: (index) => {

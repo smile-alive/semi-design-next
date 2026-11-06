@@ -50,7 +50,7 @@
     <div
         aria-current={active ? 'location' : undefined}
         aria-disabled={Boolean(item.disabled)}
-        class={[`${prefixCls}-link-title`, { [`${prefixCls}-link-title-active`]: active, [`${prefixCls}-link-title-disabled`]: item.disabled }]}
+        class={[`${prefixCls}-link-title`, { [cssClasses.LINK_TITLE_ACTIVE]: active, [`${prefixCls}-link-title-disabled`]: item.disabled }]}
         role="link"
         style={`padding-inline-start: ${8 * level}px`}
         tabindex="0"

@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { omitBy, pickBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/side-sheet/constants';
 import type { SheetSize, SideSheetProps } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
+import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import { IconClose } from '@fibrae/semi-icons-react';
 import { hasContent } from '../_utils';
 import Button from '../icon-button';
@@ -77,7 +78,7 @@ export default function SideSheetContent({
     const hasFooter = hasContent(footer);
     const dialogStyle: CSSProperties = { ...(sheetSize.dialogWidth ? { width: sheetSize.dialogWidth } : {}), height: sheetSize.dialogHeight };
 
-    const isAria = (_: unknown, key: string) => key.startsWith('aria-');
+    const isAria = (_: unknown, key: string) => isAriaKey(key);
 
     const dialogAria = pickBy(others, isAria);
     const rest = omitBy(others, isAria);

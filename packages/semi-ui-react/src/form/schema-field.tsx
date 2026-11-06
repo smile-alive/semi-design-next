@@ -3,6 +3,7 @@ import { Fragment, useEffect, useMemo } from 'react';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
 import type { StandardSchema } from '@fibrae/semi-foundation/form/interface';
 import { blankRow, describeSchemaField, resolveJsonSchema, type JsonSchema, type SchemaFieldKind, type SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import { IconArrowDown, IconArrowUp, IconDelete, IconPlus } from '@fibrae/semi-icons-react';
 import useDefaultProps from '../_base/use-default-props';
@@ -78,7 +79,7 @@ export default function SchemaField(rawProps: SchemaFieldProps) {
     const node = useMemo(() => root && describeSchemaField(root, field), [root, field]);
     const missing = !root;
 
-    const withIndex = (text: string, index: number) => text.replace('${index}', String(index + 1));
+    const withIndex = (text: string, index: number) => formatLocale(text, { index: index + 1 });
 
     const titleOf = (target: SchemaFieldNode) => target.title ?? withIndex(locale.item, Number(target.key));
 

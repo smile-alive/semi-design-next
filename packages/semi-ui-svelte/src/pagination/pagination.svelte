@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/pagination/constants';
     import PaginationFoundation, { type PaginationAdapter, type PaginationBaseProps, type PaginationState } from '@fibrae/semi-foundation/pagination/foundation';
     import { ENTER_KEY, isComposing } from '@fibrae/semi-foundation/utils/key-code';
@@ -110,11 +111,11 @@
     const sizeOptions = $derived(
         PaginationFoundation.getPageSizeOpts(pageSizeOpts, states().pageSize).map((option) => ({
             value: option,
-            label: text.pageSize.replace('${pageSize}', String(option)),
+            label: formatLocale(text.pageSize, { pageSize: option }),
         }))
     );
 
-    const pageLabel = (page: number) => text.pageN.replace('${page}', String(page));
+    const pageLabel = (page: number) => formatLocale(text.pageN, { page });
 
     const isRest = (page: number | '...') => page === '...' && !disabled;
 
@@ -160,7 +161,7 @@
 {#if !hidden}
     <ul {...rest} class={[prefix, rest.class, { [`${prefix}-small`]: size === 'small', [`${prefix}-disabled`]: disabled }]}>
         {#if showTotal && size !== 'small'}
-            <li class={`${prefix}-total`}>{text.total.replace('${total}', totalPageNum.toString())}</li>
+            <li class={`${prefix}-total`}>{formatLocale(text.total, { total: totalPageNum })}</li>
         {/if}
         <li>
             <StepButton disabled={disabledState.prevDisabled || disabled} kind="prev" label={text.prev} text={prevText} onclick={foundation.goPrev} />

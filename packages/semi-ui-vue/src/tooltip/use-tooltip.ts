@@ -158,6 +158,7 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
     const handle: TooltipHandle = {
         focusTrigger: foundation.focusTrigger,
         getPopupId: () => popupId.value,
+        getPopup: () => container.value,
         hide: foundation.hide,
         rePosition: foundation.calcPosition,
     };

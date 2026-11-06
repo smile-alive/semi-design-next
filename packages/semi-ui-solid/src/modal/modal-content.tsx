@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
 import ModalContentFoundation, { type ModalContentAdapter, isModal } from '@fibrae/semi-foundation/modal/modal-content-foundation';
 import type { Size } from '@fibrae/semi-foundation/modal/modal-foundation';
-import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
+import { isAriaKey, warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
@@ -67,7 +67,6 @@ type Foundation = ModalContentFoundation<FoundationProps, MouseEvent>;
 type Adapter = ModalContentAdapter<FoundationProps, MouseEvent>;
 
 const prefix = cssClasses.DIALOG;
-const isAriaKey = (key: string): key is `aria-${string}` => key.startsWith('aria-');
 
 export default function ModalContent(props: ModalContentProps) {
     const [local, others] = splitProps(props, [

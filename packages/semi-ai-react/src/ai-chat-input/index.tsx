@@ -85,9 +85,6 @@ class AIChatInputRuntime {
 
 function getIconByType(type: string, size: IconSize = 'small') {
     switch (type) {
-        case 'text':
-            return null;
-        case 'file':
         case 'word':
             return <IconWord size={size} />;
         case 'code':
@@ -226,7 +223,7 @@ function AIChatInput(rawProps: AIChatInputProps) {
     const { hasTemplate } = skill ?? {};
 
     const configureNode = (
-        <div className={`${prefixCls}-footer-configure`}>
+        <div className={cssClasses.FOOTER_CONFIGURE}>
             <Configure ref={configureRef} onChange={foundation.onConfigureChange}>
                 {renderConfigureArea?.()}
             </Configure>

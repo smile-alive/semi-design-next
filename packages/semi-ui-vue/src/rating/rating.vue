@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { Text, computed, useTemplateRef, type ComponentPublicInstance } from 'vue';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses } from '@fibrae/semi-foundation/rating/constants';
     import RatingFoundation, { type RatingAdapter, type RatingFocusEvent, type RatingState } from '@fibrae/semi-foundation/rating/foundation';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
@@ -104,14 +105,7 @@
 
     const groupLabel = (unit?: string) => {
         const { label, star, stars: plural } = locale.value.locale;
-        return (
-            props.ariaLabel ||
-            label
-                .replace('${value}', String(value.value))
-                .replace('${count}', String(props.count))
-                // a function replacer keeps `$&` and `$$` in a custom unit literal
-                .replace('${unit}', () => unit ?? (value.value === 1 ? star : plural))
-        );
+        return props.ariaLabel || formatLocale(label, { value: value.value, count: props.count, unit: unit ?? (value.value === 1 ? star : plural) });
     };
 
     const tipVisible = (index: number) => RatingFoundation.isTipVisible(index, state.value.hoverValue, state.value.focusVisibleStar, props.tooltips?.[index]);

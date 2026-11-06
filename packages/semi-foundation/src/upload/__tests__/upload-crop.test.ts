@@ -35,7 +35,6 @@ function createFoundation(props: Partial<UploadBaseProps> = {}, fileList: BaseFi
         notifyChange: () => {},
         notifySizeError: () => {},
         notifyAcceptInvalid: () => {},
-        updateLocalUrls: () => {},
         resetInput: vi.fn<UploadAdapter['resetInput']>(),
         resetReplaceInput: vi.fn<UploadAdapter['resetReplaceInput']>(),
         getCropperCanvas: vi.fn<UploadAdapter['getCropperCanvas']>(() => canvas),

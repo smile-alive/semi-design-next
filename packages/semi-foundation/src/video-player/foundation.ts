@@ -1,5 +1,6 @@
 import { clamp, throttle } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
+import { formatLocale } from '../locale/format';
 import FocusTrapHandle from '../utils/focus-handle';
 import { ignoreExpectedMediaErrors } from './utils';
 
@@ -404,15 +405,14 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
         video.defaultPlaybackRate = video.playbackRate = rate.value;
         this.setState({ playbackRate: rate.value });
         this.adapter.notifyRateChange(rate.value);
-        // function replacers keep `$&` and `$$` in the option labels literal
-        this.#handleTemporaryNotification(locale.rateChange.replace('${rate}', () => rate.label));
+        this.#handleTemporaryNotification(formatLocale(locale.rateChange, { rate: rate.label }));
     };
 
     handleQualityChange = (quality: { label: string; value: string }, locale: VideoPlayerNotificationLocale) => {
         const changed = quality.value !== this.getState('currentQuality');
         this.setState({ currentQuality: quality.value });
         this.adapter.notifyQualityChange(quality.value);
-        this.#handleTemporaryNotification(locale.qualityChange.replace('${quality}', () => quality.label));
+        this.#handleTemporaryNotification(formatLocale(locale.qualityChange, { quality: quality.label }));
         // choosing the current item loads nothing, so a listener would wait for an unrelated load
         if (changed) {
             this.#restorePlayPosition();
@@ -423,7 +423,7 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
         const changed = route.value !== this.getState('currentRoute');
         this.setState({ currentRoute: route.value });
         this.adapter.notifyRouteChange(route.value);
-        this.#handleTemporaryNotification(locale.routeChange.replace('${route}', () => route.label));
+        this.#handleTemporaryNotification(formatLocale(locale.routeChange, { route: route.label }));
         if (changed) {
             this.#restorePlayPosition();
         }

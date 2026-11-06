@@ -2,7 +2,7 @@ import type React from 'react';
 import { Fragment, cloneElement, isValidElement, useCallback, useEffect, useEffectEvent, useId, useImperativeHandle, useLayoutEffect, useState, type CSSProperties, type FragmentInstance } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
-import { strings, cssClasses, numbers, TRIGGER_EVENT_NAMES, COLOR_SCHEME_SELECTOR, canRoleCarryPopupState, colorSchemeOf, isBlockDisplay, popupTarget, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
+import { strings, cssClasses, numbers, POPUP_ID_ATTRIBUTE, TRIGGER_EVENT_NAMES, COLOR_SCHEME_SELECTOR, canRoleCarryPopupState, colorSchemeOf, isBlockDisplay, popupTarget, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
 import TooltipFoundation, { type TooltipAdapter, type TooltipBaseState, type Position } from '@fibrae/semi-foundation/tooltip/foundation';
 import { joinIds, warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
@@ -39,6 +39,8 @@ export interface TooltipHandle {
     /** Focuses the trigger (only with returnFocusOnClose and a non-custom trigger) */
     focusTrigger: () => void;
     getPopupId: () => string;
+    /** The popup element, null while it is not in the document */
+    getPopup: () => HTMLElement | null;
     /** Hides the popup now without moving focus and reports onVisibleChange(false); with `visible` controlled it only reports, and the popup closes once the owner sets `visible` to false */
     hide: () => void;
     /** Repositions the open popup at once; it already follows scrolling, resizing and trigger moves, a move a frame late */
@@ -65,9 +67,10 @@ export interface TooltipProps extends BaseProps {
     spacing?: number | { x: number; y: number };
     showArrow?: boolean | React.ReactNode;
     role?: string;
-    /** Name of a role="dialog" popup (F12); ignored for other roles */
+    /** Name and description of a role="dialog" popup (F12); ignored for other roles */
     'aria-label'?: string;
     'aria-labelledby'?: string;
+    'aria-describedby'?: string;
     arrowPointAtCenter?: boolean;
     wrapWhenSpecial?: boolean;
     stopPropagation?: boolean;
@@ -448,6 +451,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
                 ref={setContainer}
                 className={className}
                 style={style}
+                aria-describedby={role === 'dialog' ? props['aria-describedby'] : undefined}
                 aria-label={role === 'dialog' ? props['aria-label'] : undefined}
                 aria-labelledby={role === 'dialog' ? props['aria-labelledby'] : undefined}
                 dir={context.direction}
@@ -647,10 +651,11 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
         () => ({
             focusTrigger: foundation.focusTrigger,
             getPopupId: () => popupId,
+            getPopup: () => runtime.container,
             hide: foundation.hide,
             rePosition: foundation.calcPosition,
         }),
-        [foundation, popupId]
+        [foundation, popupId, runtime]
     );
 
     if (wrapWhenSpecial) {
@@ -699,7 +704,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
         className: clsx(child.props.className),
         // some triggers such as Select set -1 or 0 themselves
         tabIndex: child.props.tabIndex || 0,
-        'data-popupid': popupId,
+        [POPUP_ID_ATTRIBUTE]: popupId,
     });
 
     const describedInside = role === 'tooltip' && state.isInsert && 'aria-describedby' in child.props && child.props['aria-describedby'] === undefined;

@@ -4,7 +4,6 @@
     import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
     import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
     import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
     import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
     import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
@@ -63,6 +62,7 @@
     let written: number | undefined;
     const scroll = new ReleaseHolder();
     const focusScope = new FocusScope();
+    let popover = $state<Popover>();
     const uid = $props.id();
 
     const prefix = cssClasses.PREFIX;
@@ -142,10 +142,7 @@
 
     // Restore focus only if it is still on the card (or lost with it), so a user who clicked elsewhere stays there. A
     // modal guide gets this from its Modal.
-    const restoreFocus = () => {
-        // closest() stops at a shadow boundary, so the card is looked up from the focus as the card's tree sees it
-        focusScope.restoreIfAllowed(FocusTrapHandle.getActiveElement(UserGuideFoundation.getTarget(step))?.closest<HTMLElement>(`.${prefix}-popover`), false, true);
-    };
+    const restoreFocus = () => focusScope.restoreIfAllowed(popover?.getPopup(), false, true);
 
     watch(
         () => current,
@@ -305,7 +302,7 @@
             </div>
         {/snippet}
         {#key currentIndex}
-            <Popover aria-labelledby={hasTitle ? titleId : undefined} bind:visible={() => true, () => {}} class={cardClass} content={card} onEscKeyDown={foundation.handleSkip} position={item.position || position} showArrow={item.showArrow !== false} style={cardStyle} trigger="custom">
+            <Popover aria-labelledby={hasTitle ? titleId : undefined} bind:this={popover} bind:visible={() => true, () => {}} class={cardClass} content={card} onEscKeyDown={foundation.handleSkip} position={item.position || position} showArrow={item.showArrow !== false} style={cardStyle} trigger="custom">
                 <!-- tabindex: Tooltip would add 0, an invisible Tab stop -->
                 {#snippet child({ props })}
                     <div {...props} style={anchorStyle(rect)} tabindex="-1"></div>

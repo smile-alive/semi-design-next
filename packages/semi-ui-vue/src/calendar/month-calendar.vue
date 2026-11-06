@@ -5,6 +5,7 @@
     import { toPercent } from '@fibrae/semi-foundation/calendar/event-util';
     import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
     import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/calendar/month-foundation';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { IconClose } from '@fibrae/semi-icons-vue';
     import SlotFragment from '../_base/slot-fragment';
     import { hasSlotContent } from '../_base/slot-nodes';
@@ -112,7 +113,7 @@
 
     const setCard = (key: string, el: Element | ComponentPublicInstance | null) => cards.set(key, el as HTMLElement | null);
 
-    const remaining = (count: number) => i18n.value.locale.remaining.replace('${remained}', String(count));
+    const remaining = (count: number) => formatLocale(i18n.value.locale.remaining, { remained: count });
 
     // APG dialog: Esc and the close button hand focus back to "more" instead of dropping it with the card
     const closeCardToMore = (event: MouseEvent | KeyboardEvent, key: string) => {

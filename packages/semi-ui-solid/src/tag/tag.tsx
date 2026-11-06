@@ -1,5 +1,6 @@
 import { batch, children, createMemo, createSignal, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { cssClasses, strings } from '@fibrae/semi-foundation/tag/constants';
 import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/tag/focus';
 import { handlePrevent } from '@fibrae/semi-foundation/utils/a11y';
@@ -53,7 +54,7 @@ export default function Tag(rawProps: TagProps) {
     // text's `$&` and `$$` stay literal instead of acting as replacement patterns
     const ariaLabel = () => {
         const label = text();
-        return props['aria-label'] || (label === undefined ? undefined : (local.closable ? locale().locale.closableTag : locale().locale.tag).replace('${tag}', () => label));
+        return props['aria-label'] || (label === undefined ? undefined : formatLocale(local.closable ? locale().locale.closableTag : locale().locale.tag, { tag: label }));
     };
 
     // batched so that a handler which removes this tag does not detach it before the focus has moved to a neighbour

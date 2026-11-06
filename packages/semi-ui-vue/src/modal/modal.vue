@@ -120,9 +120,6 @@
             },
             notifyOk: (event) => okFn.value?.(event),
             notifyClose: () => emit('afterClose'),
-            toggleDisplayNone: (hidden) => {
-                displayNone.value = hidden;
-            },
         })
     );
 
@@ -232,7 +229,7 @@
                 :maskFixed="props.maskFixed"
                 :maskStyle="props.maskStyle"
                 :motion="props.motion"
-                :onAfterLeave="() => foundation.toggleDisplayNone(true)"
+                :onAfterLeave="() => (displayNone = true)"
                 :onClose="cancel"
                 :preventScroll="props.preventScroll"
                 :size="props.size"

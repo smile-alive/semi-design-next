@@ -17,14 +17,17 @@ declare interface ArrowStyle {
 export interface PopoverHandle {
     /** Focuses the trigger (only with returnFocusOnClose and a non-custom trigger) */
     focusTrigger: () => void;
+    /** The popup element, null while it is not in the document */
+    getPopup: () => HTMLElement | null;
     /** Repositions the open popup at once; it already follows scrolling, resizing and trigger moves, a move a frame late */
     rePosition: () => void;
 }
 
 export interface PopoverProps extends BaseProps {
-    /** Names the popup when it is a dialog (click, contextMenu or custom trigger) */
+    /** Names and describes the popup when it is a dialog (click, contextMenu or custom trigger) */
     'aria-label'?: string;
     'aria-labelledby'?: string;
+    'aria-describedby'?: string;
     /**
      * Role of the popup; dialog with a click, contextMenu or custom trigger, tooltip otherwise.
      * A combobox passes presentation because it points at the inner listbox itself
@@ -98,7 +101,7 @@ function Popover(rawProps: PopoverProps & { ref?: React.Ref<PopoverHandle> }) {
         );
     };
 
-    useImperativeHandle(ref, () => ({ focusTrigger: () => tooltipRef.current?.focusTrigger(), rePosition: () => tooltipRef.current?.rePosition() }), []);
+    useImperativeHandle(ref, () => ({ focusTrigger: () => tooltipRef.current?.focusTrigger(), getPopup: () => tooltipRef.current?.getPopup() ?? null, rePosition: () => tooltipRef.current?.rePosition() }), []);
 
     return (
         <Tooltip ref={tooltipRef} guardFocus {...(attr as TooltipProps)} style={style} role={role} content={renderPopCard} position={position} prefixCls={prefixCls} showArrow={arrow} spacing={spacing} trigger={trigger}>

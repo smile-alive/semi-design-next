@@ -2,6 +2,7 @@ import { type Accessor, type Component, type JSX, For, Index, Match, Show, Switc
 import { Dynamic } from 'solid-js/web';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
 import { type JsonSchema, type SchemaFieldKind, type SchemaFieldNode, blankRow, describeSchemaField, resolveJsonSchema } from '@fibrae/semi-foundation/form/json-schema';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import { IconArrowDown, IconArrowUp, IconDelete, IconPlus } from '@fibrae/semi-icons-solid';
@@ -51,7 +52,7 @@ const builtins: Partial<Record<SchemaFieldKind, Component<any>>> = {
 
 const rowClass = `${cssClasses.PREFIX}-schema-array-row`;
 
-const withIndex = (template: string, index: number) => template.replace('${index}', String(index + 1));
+const withIndex = (template: string, index: number) => formatLocale(template, { index: index + 1 });
 
 function controlProps(node: SchemaFieldNode) {
     switch (node.kind) {

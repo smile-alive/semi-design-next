@@ -152,7 +152,7 @@
     );
 
     const filterable = computed(() => Boolean(filter.value));
-    const position = computed(() => props.position ?? (config.value.direction === 'rtl' ? 'bottomRight' : 'bottomLeft'));
+    const position = computed(() => SelectFoundation.getPosition(props.position, config.value.direction));
     const searchInTrigger = computed(() => props.searchPosition === strings.SEARCH_POSITION_TRIGGER);
 
     // the Inputs inside are parts of this control, not members of the group
@@ -183,15 +183,16 @@
 
     const optionId = (index: number) => `${selectId()}-option-${index}`;
 
-    const visibleOptions = computed(() => (state.value.options as OptionRecord[]).filter((option) => option.show));
+    const visibleOptions = computed(() => SelectFoundation.getVisibleOptions(state.value.options as OptionRecord[]));
     const selectedItems = computed((): OptionData[] => [...state.value.selections.values()]);
 
     const activeDescendant = computed(() => {
         const { isOpen, focusIndex } = state.value;
-        return isOpen && !props.loading && focusIndex !== -1 && focusIndex < visibleOptions.value.length ? optionId(focusIndex) : undefined;
+        const index = SelectFoundation.getActiveOptionIndex({ isOpen, loading: props.loading, focusIndex, visibleCount: visibleOptions.value.length });
+        return index === undefined ? undefined : optionId(index);
     });
 
-    const clearable = computed(() => props.showClear && Boolean(state.value.selections.size || state.value.inputValue) && !looks.disabled);
+    const clearable = computed(() => SelectFoundation.isClearable({ showClear: props.showClear, disabled: looks.disabled }, state.value));
     const optionRuns = computed(() => getOptionRuns(visibleOptions.value));
 
     const inputId = () => (props.inputProps?.id as string | undefined) ?? `${selectId()}-input`;
@@ -200,7 +201,7 @@
 
     // ARIA 1.2: while the search input is in the trigger it is the combobox, otherwise the trigger is a select-only
     // combobox. The single-select input mounts only while searching, so the closed trigger exposes the selected text
-    const inputIsCombobox = () => filterable.value && searchInTrigger.value && !slots.trigger && (Boolean(props.multiple) || state.value.showInput);
+    const inputIsCombobox = () => SelectFoundation.isInputCombobox({ filter: filter.value, searchPosition: props.searchPosition, multiple: props.multiple }, state.value.showInput, Boolean(slots.trigger));
 
     // A rendered inset label names the combobox and the listbox, so it needs an id even when the caller gives none
     const insetLabelShown = () => !slots.trigger && !slotKind(slots.prefix) && Boolean(slotKind(slots.insetLabel));

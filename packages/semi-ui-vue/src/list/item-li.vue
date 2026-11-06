@@ -2,7 +2,7 @@
     import { computed, useAttrs } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/list/constants';
     import '@fibrae/semi-foundation/list/list.scss';
-    import { splitControlAttrs } from '../_base/control-attrs';
+    import { isAriaKey, splitControlAttrs } from '../_base/control-attrs';
     import { hasSlotContent } from '../_base/slot-nodes';
     import { useListContext } from './context';
     import type { ListItemProps, ListItemSlots } from './interface';
@@ -45,7 +45,7 @@
     const liListeners = () => (clickable.value ? { click: handleLiClick, contextmenu: handleRightClick.value } : {});
 
     // The button is the only tab stop, so tabindex and aria-* belong there, not on the li.
-    const attrParts = () => splitControlAttrs(attrs, (key) => clickable.value && (key.toLowerCase() === 'tabindex' || key.startsWith('aria-')));
+    const attrParts = () => splitControlAttrs(attrs, (key) => clickable.value && (key.toLowerCase() === 'tabindex' || isAriaKey(key)));
 </script>
 
 <template>

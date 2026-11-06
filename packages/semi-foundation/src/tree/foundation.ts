@@ -529,6 +529,47 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         });
     }
 
+    /** Loads a node's children once; `key` is the node's entity key, which keyMaps may take from another field */
+    #handleNodeLoad(key: string, data: BasicTreeNodeData) {
+        const { loadData } = this.getProps();
+        const { loadedKeys = new Set<string>(), loadingKeys = new Set<string>() } = this.getStates();
+        if (!loadData || loadedKeys.has(key) || loadingKeys.has(key)) {
+            return;
+        }
+
+        void loadData(data)
+            .then(() => {
+                const prevLoadedKeys = new Set(this.getState('loadedKeys'));
+                const prevLoadingKeys = new Set(this.getState('loadingKeys'));
+                const newLoadedKeys = prevLoadedKeys.add(key);
+                const newLoadingKeys = new Set(prevLoadingKeys);
+                newLoadingKeys.delete(key);
+
+                // onLoad should be triggered before internal setState to avoid `loadData` being triggered twice
+                this.adapter.notifyLoad(newLoadedKeys, data);
+
+                if (!this.#isLoadControlled()) {
+                    this.setState({
+                        loadedKeys: newLoadedKeys,
+                    });
+                }
+                this.setState({
+                    loadingKeys: newLoadingKeys,
+                });
+            })
+            .finally(() => {
+                // on rejection too, so the node can be retried
+                const currentLoadingKeys = this.getState('loadingKeys');
+                if (currentLoadingKeys.has(key)) {
+                    const newLoadingKeys = new Set(currentLoadingKeys);
+                    newLoadingKeys.delete(key);
+                    this.setState({ loadingKeys: newLoadingKeys });
+                }
+            });
+
+        this.setState({ loadingKeys: new Set<string>(loadingKeys).add(key) });
+    }
+
     protected getDragEventNodeData(node: BasicTreeNodeProps) {
         return {
             ...node.data,
@@ -818,50 +859,9 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
             node: data,
         });
         if (expanded && loadData) {
-            this.handleNodeLoad(treeNode.eventKey, data);
+            this.#handleNodeLoad(treeNode.eventKey, data);
         }
     };
-
-    /** Loads a node's children once; `key` is the node's entity key, which keyMaps may take from another field */
-    handleNodeLoad(key: string, data: BasicTreeNodeData) {
-        const { loadData } = this.getProps();
-        const { loadedKeys = new Set<string>(), loadingKeys = new Set<string>() } = this.getStates();
-        if (!loadData || loadedKeys.has(key) || loadingKeys.has(key)) {
-            return;
-        }
-
-        void loadData(data)
-            .then(() => {
-                const prevLoadedKeys = new Set(this.getState('loadedKeys'));
-                const prevLoadingKeys = new Set(this.getState('loadingKeys'));
-                const newLoadedKeys = prevLoadedKeys.add(key);
-                const newLoadingKeys = new Set(prevLoadingKeys);
-                newLoadingKeys.delete(key);
-
-                // onLoad should be triggered before internal setState to avoid `loadData` being triggered twice
-                this.adapter.notifyLoad(newLoadedKeys, data);
-
-                if (!this.#isLoadControlled()) {
-                    this.setState({
-                        loadedKeys: newLoadedKeys,
-                    });
-                }
-                this.setState({
-                    loadingKeys: newLoadingKeys,
-                });
-            })
-            .finally(() => {
-                // on rejection too, so the node can be retried
-                const currentLoadingKeys = this.getState('loadingKeys');
-                if (currentLoadingKeys.has(key)) {
-                    const newLoadingKeys = new Set(currentLoadingKeys);
-                    newLoadingKeys.delete(key);
-                    this.setState({ loadingKeys: newLoadingKeys });
-                }
-            });
-
-        this.setState({ loadingKeys: new Set<string>(loadingKeys).add(key) });
-    }
 
     handleNodeDragStart = (e: TreeDragEvent, treeNode: BasicTreeNodeProps) => {
         const { keyEntities } = this.getStates();

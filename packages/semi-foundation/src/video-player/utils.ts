@@ -1,4 +1,5 @@
 import { clamp } from 'es-toolkit';
+import { formatLocale } from '../locale/format';
 
 /** The clock form of a time: mm:ss, and h:mm:ss from one hour on. A non-finite time (an unknown duration) reads 00:00. */
 export function formatTime(time: number) {
@@ -26,12 +27,12 @@ export function formatTimeText(time: number, texts: TimeTexts) {
     const seconds = total % 60;
     const padded = String(seconds).padStart(2, '0');
     if (hours > 0) {
-        return texts.timeHms.replace('${hours}', String(hours)).replace('${minutes}', String(minutes)).replace('${seconds}', padded);
+        return formatLocale(texts.timeHms, { hours, minutes, seconds: padded });
     }
     if (minutes > 0) {
-        return texts.timeMs.replace('${minutes}', String(minutes)).replace('${seconds}', padded);
+        return formatLocale(texts.timeMs, { minutes, seconds: padded });
     }
-    return texts.timeS.replace('${seconds}', String(seconds));
+    return formatLocale(texts.timeS, { seconds });
 }
 
 // play() rejects when interrupted by pause() or a new load, or blocked by autoplay policy; fullscreen and

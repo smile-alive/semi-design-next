@@ -1,6 +1,6 @@
 import { children, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, getPanelId, getTabDataKey, getTabId } from '@fibrae/semi-foundation/tabs/constants';
+import { cssClasses, getPanelId, getTabId, getTabKeyAttrs } from '@fibrae/semi-foundation/tabs/constants';
 import { IconClose } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';
 import hasContent from '../_base/has-content';
@@ -45,6 +45,8 @@ export default function TabItem(props: TabItemProps) {
     return (
         <div
             {...rest}
+            // the foundation finds the sibling tabs through the closest role="tablist" and this attribute
+            {...getTabKeyAttrs(itemKey())}
             role="tab"
             id={ctx ? getTabId(ctx.view().tabsId, itemKey()) : undefined}
             aria-controls={controls()}
@@ -63,8 +65,6 @@ export default function TabItem(props: TabItemProps) {
                 },
                 local.class
             )}
-            // the foundation finds the sibling tabs through the closest role="tablist" and this attribute
-            data-tabkey={getTabDataKey(itemKey())}
             tabIndex={local.selected || itemKey() === ctx?.view().tabbableKey ? 0 : -1}
             onClick={handleClick}
             onKeyDown={handleKeyDown}

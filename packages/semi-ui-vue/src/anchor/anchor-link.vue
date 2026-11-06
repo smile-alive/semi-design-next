@@ -93,7 +93,7 @@
             :class="[
                 `${prefix}-link-title`,
                 {
-                    [`${prefix}-link-title-active`]: active,
+                    [cssClasses.LINK_TITLE_ACTIVE]: active,
                     [`${prefix}-link-title-disabled`]: props.disabled,
                 },
             ]"

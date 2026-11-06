@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses } from '@fibrae/semi-foundation/pagination/constants';
     import VirtualList from '../_base/virtual-list.svelte';
     import { getConfigContext } from '../config-provider/context.js';
@@ -16,7 +17,7 @@
     // Equals $height-pagination_item in pagination.scss
     const itemHeight = 32;
 
-    const pageLabel = (page: number) => locale().locale.pageN.replace('${page}', String(page));
+    const pageLabel = (page: number) => formatLocale(locale().locale.pageN, { page });
 </script>
 
 <VirtualList class={`${prefix}-rest-list`} height={itemHeight * Math.min(count, 5)} itemCount={count} itemSize={itemHeight} style="direction: {config.direction ?? 'ltr'}" width={78}>

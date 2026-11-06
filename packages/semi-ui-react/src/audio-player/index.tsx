@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
 import AudioPlayerFoundation, { type AudioPlayerAdapter } from '@fibrae/semi-foundation/audio-player/foundation';
 import { getCurrentTrack } from '@fibrae/semi-foundation/audio-player/utils';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
 import '@fibrae/semi-foundation/audio-player/audio-player.scss';
 import { IconAlertCircle, IconBackward, IconFastForward, IconPause, IconPlay, IconRefresh, IconRestart, IconVolume2, IconVolumnSilent } from '@fibrae/semi-icons-react';
@@ -88,8 +89,8 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
     const isAudioUrlArray = Array.isArray(audioUrl);
 
     // the Tooltip text only describes the icon-only buttons, so the same text is also their name
-    const backwardLabel = locale.backward.replace('${skipDuration}', String(skipDuration));
-    const forwardLabel = locale.forward.replace('${skipDuration}', String(skipDuration));
+    const backwardLabel = formatLocale(locale.backward, { skipDuration });
+    const forwardLabel = formatLocale(locale.forward, { skipDuration });
     const refreshButton = <Button style={transparentStyle} aria-label={locale.refresh} icon={<IconRefresh className={iconClass} style={{ transform: 'rotateY(180deg)' }} />} onClick={foundation.handleRefresh} />;
 
     const renderControl = () => (

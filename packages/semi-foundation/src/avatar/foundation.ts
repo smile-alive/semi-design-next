@@ -17,8 +17,10 @@ export interface AvatarAdapter<P = AvatarBaseProps, E = unknown, ErrorEvent = un
     /** Returns what the callback returned: `false` keeps the broken image instead of falling back */
     notifyError(event: ErrorEvent): boolean | void;
     notifyEnter(event: E): void;
-    /** Widths of the avatar and of its text content; null while no text is rendered */
-    getTextWidths: () => { container: number; text: number } | null;
+    /** The avatar element, whose width bounds the text */
+    getAvatarElement: () => HTMLElement | null;
+    /** The element that holds the text and is scaled to fit; null while no text is rendered */
+    getTextElement: () => HTMLElement | null;
 }
 
 export default class AvatarFoundation<P extends AvatarBaseProps = AvatarBaseProps, E = unknown, ErrorEvent = unknown> extends BaseFoundation<AvatarAdapter<P, E, ErrorEvent>, P, AvatarState> {
@@ -60,11 +62,13 @@ export default class AvatarFoundation<P extends AvatarBaseProps = AvatarBaseProp
 
     changeScale = () => {
         const { gap } = this.getProps();
-        const widths = this.adapter.getTextWidths();
-        if (!widths) {
+        const avatar = this.adapter.getAvatarElement();
+        const text = this.adapter.getTextElement();
+        if (!avatar || !text) {
             return;
         }
-        const { container: nodeWidth, text: stringNodeWidth } = widths;
+        const nodeWidth = avatar.offsetWidth;
+        const stringNodeWidth = text.offsetWidth;
         if (nodeWidth !== 0 && stringNodeWidth !== 0 && gap * 2 < nodeWidth) {
             const scale = nodeWidth - gap * 2 > stringNodeWidth ? 1 : (nodeWidth - gap * 2) / stringNodeWidth;
             this.setState({ scale });

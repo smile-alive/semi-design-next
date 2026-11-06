@@ -4642,17 +4642,17 @@ describe('DatePicker 日历网格键盘操作', () => {
         ['PageDown', true, false, '2020-09-11'],
         ['a', false, false, null],
     ])('%s（shift：%s，rtl：%s）将活动日期移动到 %s', (key, shiftKey, rtl, expected) => {
-        const target = MonthFoundation.getKeyboardTargetDate({ key, shiftKey }, new Date(2019, 8, 11), 1, rtl);
-        expect(target && format(target, 'yyyy-MM-dd')).toBe(expected);
+        const action = MonthFoundation.getKeyAction({ key, shiftKey }, { activeDate: '2019-09-11', month: new Date(2019, 8, 1), weekStartsOn: 1, rtl });
+        expect(action && 'date' in action ? action.date : null).toBe(expected);
     });
 
     it.each([
-        ['Home', new Date(2019, 8, 1), '2019-09-01'],
-        ['End', new Date(2019, 8, 30), '2019-09-30'],
-        ['PageDown', new Date(2019, 0, 31), '2019-02-28'],
-    ])('%s 从 %s 出发时保持在 %s', (key, active, expected) => {
-        const target = MonthFoundation.getKeyboardTargetDate({ key, shiftKey: false }, active, 1);
-        expect(format(target, 'yyyy-MM-dd')).toBe(expected);
+        ['Home', '2019-09-01', '2019-09-01'],
+        ['End', '2019-09-30', '2019-09-30'],
+        ['PageDown', '2019-01-31', '2019-02-28'],
+    ])('%s 从 %s 出发时保持在 %s', (key, activeDate, expected) => {
+        const action = MonthFoundation.getKeyAction({ key, shiftKey: false }, { activeDate, month: new Date(2019, 8, 1), weekStartsOn: 1 });
+        expect(action).toMatchObject({ type: 'move', date: expected });
     });
 
     const activeDay = () => {

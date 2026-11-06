@@ -89,7 +89,6 @@
     // button is handed to Tooltip too; the content's target is used only when no button wins
     let tooltipFocus: ((target: FocusTarget) => void) | undefined;
     let contentFocus: FocusTarget | undefined;
-    let popupNode: HTMLElement | null = null;
 
     const titleId = `${uid}-title`;
     const contentId = `${titleId}-content`;
@@ -141,7 +140,7 @@
             focusPrevFocusElement: () => {
                 pendingFocus = null;
                 // focus that already left the card (Tab away from a focus trigger) stays where it went
-                if (FocusTrapHandle.shouldRestoreFocus(popupNode, false)) popover?.focusTrigger();
+                if (FocusTrapHandle.shouldRestoreFocus(popover?.getPopup(), false)) popover?.focusTrigger();
             },
         })
     );
@@ -173,7 +172,6 @@
         if (!footer) {
             return;
         }
-        popupNode = footer.closest('[popover]');
         if (pendingFocus) {
             const button = footer.querySelector<HTMLElement>(`[data-type=${pendingFocus}]`);
             button?.focus({ preventScroll: true });

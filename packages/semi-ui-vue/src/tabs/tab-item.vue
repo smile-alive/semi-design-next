@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses, getTabDataKey } from '@fibrae/semi-foundation/tabs/constants';
+    import { cssClasses, getTabKeyAttrs } from '@fibrae/semi-foundation/tabs/constants';
     import { IconClose } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { hasSlotContent } from '../_base/slot-nodes';
@@ -57,11 +57,10 @@
 
 <template>
     <div
-        v-bind="{ ...$attrs, ...ids }"
+        v-bind="{ ...$attrs, ...ids, ...getTabKeyAttrs(props.itemKey) }"
         :aria-disabled="props.disabled ? 'true' : 'false'"
         :aria-selected="props.selected ? 'true' : 'false'"
         :class="[prefix, `${prefix}-${type}`, `${prefix}-${tabPosition}`, `${prefix}-single`, { [cssClasses.TABS_TAB_ACTIVE]: props.selected, [cssClasses.TABS_TAB_DISABLED]: props.disabled, [`${prefix}-small`]: size === 'small', [`${prefix}-medium`]: size === 'medium' }]"
-        :data-tabkey="getTabDataKey(props.itemKey)"
         role="tab"
         :tabindex="props.selected || props.itemKey === ctx?.view.value.tabbableKey ? 0 : -1"
         @click="onClick"

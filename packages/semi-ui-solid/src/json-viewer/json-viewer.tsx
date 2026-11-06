@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { isEqual, omitBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/json-viewer/constants';
 import JsonViewerFoundation, { type CustomRenderRule, type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions, type SearchOptions } from '@fibrae/semi-foundation/json-viewer/foundation';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import '@fibrae/semi-foundation/json-viewer/json-viewer.scss';
@@ -11,7 +12,6 @@ import { IconCaseSensitive, IconChevronLeft, IconChevronRight, IconClose, IconRe
 import type { ElementProps } from '../_base/element-props';
 import mergeRefs from '../_base/merge-refs';
 import mergeStyles from '../_base/merge-styles';
-import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import Button, { ButtonGroup } from '../button';

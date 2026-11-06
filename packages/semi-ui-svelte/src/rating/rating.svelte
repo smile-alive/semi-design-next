@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses } from '@fibrae/semi-foundation/rating/constants';
     import RatingFoundation, { type RatingAdapter, type RatingBaseProps, type RatingFocusEvent, type RatingState } from '@fibrae/semi-foundation/rating/foundation';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
@@ -109,16 +110,9 @@
     const customUnit = $derived(typeof character === 'string' ? character : undefined);
     const rootAttrs = $derived(Object.fromEntries(Object.entries(rest).filter(([key]) => !DROPPED_ATTRS.has(key))));
 
-    // a function replacer keeps `$&` and `$$` in a custom unit literal
     const groupLabel = $derived.by(() => {
         const { label, star, stars: plural } = locale().locale;
-        return (
-            rest['aria-label'] ||
-            label
-                .replace('${value}', String(shown))
-                .replace('${count}', String(count))
-                .replace('${unit}', () => customUnit ?? (shown === 1 ? star : plural))
-        );
+        return rest['aria-label'] || formatLocale(label, { value: shown, count, unit: customUnit ?? (shown === 1 ? star : plural) });
     });
 
     const tipVisible = (index: number) => RatingFoundation.isTipVisible(index, states().hoverValue, states().focusVisibleStar, tooltips?.[index]);

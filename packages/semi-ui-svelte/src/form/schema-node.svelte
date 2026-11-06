@@ -2,6 +2,7 @@
     import { type Component, untrack } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/form/constants';
     import { blankRow, describeSchemaField, type JsonSchema, type SchemaFieldKind, type SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import { IconArrowDown, IconArrowUp, IconDelete, IconPlus } from '@fibrae/semi-icons-svelte';
     import Button from '../button/button.svelte';
@@ -47,7 +48,7 @@
     });
 
     function itemText(key: 'item' | 'removeItem' | 'moveUpItem' | 'moveDownItem', index: number) {
-        return locale().locale[key].replace('${index}', String(index + 1));
+        return formatLocale(locale().locale[key], { index: index + 1 });
     }
 
     untrack(() => warning(node.kind === 'unsupported' && !renderer && !Control, `[Semi Form] SchemaField cannot render "${node.field}": its JSON Schema maps to no control; give it a renderField entry or a widget`));

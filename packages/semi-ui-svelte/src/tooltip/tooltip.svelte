@@ -3,7 +3,7 @@
     import { type Attachment, createAttachmentKey } from 'svelte/attachments';
     import { SvelteMap, SvelteSet } from 'svelte/reactivity';
     import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/button/constants';
-    import { COLOR_SCHEME_SELECTOR, canRoleCarryPopupState, colorSchemeOf, cssClasses, isBlockDisplay, numbers, popupTarget, strings, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
+    import { COLOR_SCHEME_SELECTOR, POPUP_ID_ATTRIBUTE, canRoleCarryPopupState, colorSchemeOf, cssClasses, isBlockDisplay, numbers, popupTarget, strings, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
     import TooltipFoundation, { type TooltipAdapter, type TooltipBaseProps, type TooltipBaseState } from '@fibrae/semi-foundation/tooltip/foundation';
     import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
     import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
@@ -330,7 +330,7 @@
     };
 
     const triggerProps: TooltipTriggerProps = $derived({
-        'data-popupid': popupId,
+        [POPUP_ID_ATTRIBUTE]: popupId,
         tabindex: 0,
         'aria-describedby': describedBy,
         ...(role === 'dialog' && carriesPopupState
@@ -567,6 +567,11 @@
         return popupId;
     }
 
+    /** The popup element, null while it is not in the document */
+    export function getPopup() {
+        return container;
+    }
+
     /** Hides now and reports onVisibleChange(false); under a controlled `visible` it only reports */
     export function hide() {
         foundation.hide();
@@ -583,9 +588,9 @@
 {:else}
     <span
         {@attach attachTrigger}
+        {...{ [POPUP_ID_ATTRIBUTE]: popupId }}
         aria-describedby={describes ? undefined : describedBy}
         class={[`${cssClasses.PREFIX}-trigger-wrapper`, wrapperClassName]}
-        data-popupid={popupId}
         style:cursor={status === strings.STATUS_DISABLED && wrapsSpecial ? 'not-allowed' : undefined}
         style:display={textOnly ? undefined : 'inline-block'}
         style:width={blockTrigger ? '100%' : undefined}

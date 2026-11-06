@@ -1,7 +1,7 @@
 import type { JSX } from 'solid-js';
 import { focusableSelector } from '@fibrae/semi-foundation/steps/constants';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import callHandler from '../_base/call-handler';
-import { namedRole } from '../_base/named-role';
 
 // namedRole yields a plain string, which the typed role attribute does not accept
 export type Role = JSX.HTMLAttributes<HTMLDivElement>['role'];

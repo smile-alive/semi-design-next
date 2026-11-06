@@ -93,7 +93,6 @@
                 emit('update:visible', false);
                 emit('cancel', event);
             },
-            notifyVisibleChange: (visible) => emit('afterVisibleChange', visible),
             openLayer: (onEscape) => layer.hold(() => openLayer({ element: root.value as HTMLElement, modal: isModal(), onEscape })),
             closeLayer: () => layer.release(),
             // Neither the browser nor Vue focuses an inserted autofocus element, so the sheet picks it before the default
@@ -112,9 +111,6 @@
             // A user who moved on to the page next to a non-modal sheet keeps that focus. Unlike React, Vue does not
             // refocus the pre-update element after the update, so restoring once in afterHide is enough.
             restoreFocus: () => focusScope.restoreIfAllowed(dialog.value, isModal(), true),
-            toggleDisplayNone: (displayNone) => {
-                displayed.value = !displayNone;
-            },
         })
     );
 
@@ -128,9 +124,13 @@
         destroy: () => foundation.destroy(),
     });
 
-    const onEnter = () => foundation.toggleDisplayNone(false);
+    const onEnter = () => {
+        displayed.value = true;
+    };
 
-    const onAfterLeave = () => foundation.toggleDisplayNone(true);
+    const onAfterLeave = () => {
+        displayed.value = false;
+    };
 
     const onMaskClick = (event: MouseEvent) => {
         if (props.maskClosable) foundation.handleCancel(event);
@@ -194,13 +194,13 @@
 
     watch(
         () => hidden.value,
-        (isHidden) => foundation.onVisibleChange(!isHidden),
+        (isHidden) => emit('afterVisibleChange', !isHidden),
         { flush: 'post' }
     );
 
     // Unmounting while shown or leaving counts as hiding; emitted before unmount, since Vue drops emits after it.
     onBeforeUnmount(() => {
-        if (!hidden.value) foundation.onVisibleChange(false);
+        if (!hidden.value) emit('afterVisibleChange', false);
     });
 
     defineExpose<SideSheetHandle>({

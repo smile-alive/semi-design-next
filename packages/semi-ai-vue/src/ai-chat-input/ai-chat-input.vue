@@ -90,7 +90,6 @@
     const prefix = cssClasses.PREFIX;
 
     const FILE_ICONS: Record<string, Component> = {
-        file: IconWord,
         word: IconWord,
         code: IconCode,
         excel: IconExcel,
@@ -260,7 +259,7 @@
                             <template v-if="item.type !== 'text'">
                                 <img v-if="isImageFile(item.name, item.fileInstance?.type)" alt="" :class="`${prefix}-reference-img`" :src="item.url" />
                                 <span v-else :class="[`${prefix}-ref-icon`, `${prefix}-ref-icon-${iconType(item)}`, `${prefix}-reference-icon`]">
-                                    <component :is="fileIcon(iconType(item))" v-if="iconType(item) !== 'text'" size="small" />
+                                    <component :is="fileIcon(iconType(item))" size="small" />
                                 </span>
                             </template>
                             <span :class="`${prefix}-reference-name`">
@@ -279,7 +278,7 @@
                 <div v-for="item in state.attachments" :key="item.uid" :class="`${prefix}-attachment`">
                     <img v-if="isImageFile(item.name, item.fileInstance?.type)" alt="" :class="`${prefix}-attachment-img`" :src="item.url" />
                     <span v-else :class="[`${prefix}-attachment-icon`, `${prefix}-ref-icon`, `${prefix}-ref-icon-${iconType(item)}`]">
-                        <component :is="fileIcon(iconType(item))" v-if="iconType(item) !== 'text'" size="large" />
+                        <component :is="fileIcon(iconType(item))" size="large" />
                     </span>
                     <div :class="`${prefix}-attachment-content`">
                         <div :class="`${prefix}-attachment-content-name`">{{ item.name }}</div>
@@ -314,7 +313,7 @@
                 @ready="onEditorReady"
             />
             <div :class="[`${prefix}-footer`, { [`${prefix}-footer-round`]: props.round }]">
-                <div :class="`${prefix}-footer-configure`">
+                <div :class="cssClasses.FOOTER_CONFIGURE">
                     <Configure ref="configure" @change="foundation.onConfigureChange">
                         <slot name="configureArea" />
                     </Configure>

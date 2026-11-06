@@ -2,6 +2,7 @@
     import { Comment, Text, computed, isVNode, onMounted, onUpdated, useId, useTemplateRef, watch, type VNode } from 'vue';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/carousel/constants';
     import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/carousel/foundation';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import '@fibrae/semi-foundation/carousel/carousel.scss';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
@@ -84,19 +85,6 @@
 
     const tabId = (index: number) => `${baseId}-tab-${index}`;
 
-    // Only keyboard focus pauses: a mouse click on an arrow focuses it too.
-    const onFocusin = (event: FocusEvent) => {
-        if ((event.target as Element).matches(':focus-visible')) {
-            foundation.handleKeyboardFocus();
-        }
-    };
-
-    const onFocusout = (event: FocusEvent) => {
-        if (!(event.currentTarget as Node).contains(event.relatedTarget as Node | null)) {
-            foundation.handleFocusLeave();
-        }
-    };
-
     const onKeydown = (event: KeyboardEvent) => {
         if (foundation.handleKeyDown(event)) {
             focusPending = true;
@@ -132,7 +120,7 @@
             : {
                   role: 'group',
                   'aria-roledescription': i18n.value.locale.slide,
-                  'aria-label': (slides[index][0].props?.['aria-label'] as string | undefined) ?? i18n.value.locale.slideN.replace('${index}', String(index + 1)),
+                  'aria-label': (slides[index][0].props?.['aria-label'] as string | undefined) ?? formatLocale(i18n.value.locale.slideN, { index: index + 1 }),
               };
         return {
             ...a11y,
@@ -202,7 +190,7 @@
 </script>
 
 <template>
-    <div ref="root" :aria-roledescription="i18n.locale.carousel" :class="cssClasses.CAROUSEL" role="region" @focusin="onFocusin" @focusout="onFocusout" @mouseenter="foundation.handlePointerEnter" @mouseleave="foundation.handlePointerLeave">
+    <div ref="root" :aria-roledescription="i18n.locale.carousel" :class="cssClasses.CAROUSEL" role="region" @focusin="foundation.handleFocusIn" @focusout="foundation.handleFocusOut" @mouseenter="foundation.handlePointerEnter" @mouseleave="foundation.handlePointerLeave">
         <template v-for="(slides, n) in [collectSlides()]" :key="n">
             <!-- announce a slide the user switched to, never one that rotation brought -->
             <div :aria-live="state.rotating ? 'off' : 'polite'" :class="[`${content}-${props.animation}`, content, { [`${content}-reverse`]: props.slideDirection === 'left' ? state.isReverse : !state.isReverse }]" x-semi-prop="children">
@@ -215,7 +203,7 @@
                         :id="tabId(i)"
                         :key="i"
                         :aria-controls="slideId(slides, i)"
-                        :aria-label="i18n.locale.slideN.replace('${index}', String(i + 1))"
+                        :aria-label="formatLocale(i18n.locale.slideN, { index: i + 1 })"
                         :aria-selected="i === currentIndex(slides.length)"
                         :class="[`${indicator}-item`, { [`${indicator}-item-active`]: i === currentIndex(slides.length), [`${indicator}-item-${props.theme}`]: props.theme, [`${indicator}-item-${props.indicatorSize}`]: props.indicatorSize }]"
                         :data-index="i"

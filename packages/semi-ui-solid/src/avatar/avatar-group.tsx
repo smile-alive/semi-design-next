@@ -1,6 +1,7 @@
 import { type Accessor, children, createEffect, createMemo, createSignal, type JSX, onCleanup, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/avatar/constants';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import '@fibrae/semi-foundation/avatar/avatar.scss';
 import { usePopupLayer } from '../_base/popup-layer';
 import { isToken } from '../_base/token';
@@ -50,7 +51,7 @@ function GroupItems(props: GroupItemsProps) {
     const [hidden, setHidden] = createSignal(split().rest);
 
     const moreLabel = () => {
-        const label = locale().locale.more.replace('${count}', String(hidden().length));
+        const label = formatLocale(locale().locale.more, { count: hidden().length });
         const names = hidden()
             .map((entry) => entry.name())
             .filter((name) => name.length > 0)

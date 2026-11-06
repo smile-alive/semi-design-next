@@ -62,7 +62,7 @@
         };
     };
 
-    defineExpose<PopoverHandle>({ focusTrigger: () => tooltip.value?.focusTrigger(), rePosition: () => tooltip.value?.rePosition() });
+    defineExpose<PopoverHandle>({ focusTrigger: () => tooltip.value?.focusTrigger(), getPopup: () => tooltip.value?.getPopup() ?? null, rePosition: () => tooltip.value?.rePosition() });
 </script>
 
 <template>

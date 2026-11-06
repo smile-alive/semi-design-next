@@ -128,7 +128,7 @@
 
     // tabindex, which Tooltip adds to its child, belongs to the input, the Tab stop
     const controlKeys = ['aria-labelledby', 'aria-describedby', 'aria-errormessage', 'aria-invalid', 'aria-required', 'tabindex'];
-    const position = $derived(normalized.position ?? (config.direction === 'rtl' ? 'bottomRight' : 'bottomLeft'));
+    const position = $derived(DatePickerFoundation.getPosition(normalized.position, config.direction));
     const confirmNeeded = $derived(isConfirmNeeded({ type, needConfirm }));
     const isYearOrMonth = $derived(isYearOrMonthType(type));
     const shownPlaceholder = $derived(placeholder || (locale().locale.placeholder as Record<string, string | string[] | undefined>)[type] || '');

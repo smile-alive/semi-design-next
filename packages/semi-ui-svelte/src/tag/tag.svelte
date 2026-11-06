@@ -1,6 +1,7 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses } from '@fibrae/semi-foundation/tag/constants';
     import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/tag/focus';
     import '@fibrae/semi-foundation/tag/tag.scss';
@@ -51,8 +52,7 @@
             return rest['aria-label'];
         }
         const content = interactive ? text : undefined;
-        // a function replacer keeps `$&` and `$$` in the text literal
-        return content === undefined ? undefined : (closable ? locale().locale.closableTag : locale().locale.tag).replace('${tag}', () => content);
+        return content === undefined ? undefined : formatLocale(closable ? locale().locale.closableTag : locale().locale.tag, { tag: content });
     });
 
     const close = (event: TagCloseEvent) => {

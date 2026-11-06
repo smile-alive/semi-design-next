@@ -165,17 +165,15 @@
 
     const handleTransitionEnd = (event: TransitionEvent & { currentTarget: HTMLElement }) => {
         rest.ontransitionend?.(event);
-        if (event.target === event.currentTarget && event.propertyName === 'width') {
+        if (NavigationFoundation.isWidthTransitionEnd(event)) {
             settledCollapsed = collapsed;
         }
     };
 
-    // no transitionend comes when the width does not animate; getAnimations flushes style, so it lists this update's transition
     watch(
         () => collapsed,
         (next) => {
-            const animatesWidth = navElement?.getAnimations().some((animation) => animation instanceof CSSTransition && animation.transitionProperty === 'width');
-            if (!animatesWidth) {
+            if (!NavigationFoundation.isWidthAnimating(navElement)) {
                 settledCollapsed = next;
             }
         }

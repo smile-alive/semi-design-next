@@ -2,7 +2,6 @@
     import { computed, onUpdated, useTemplateRef, watch } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-foundation/anchor/constants';
     import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/anchor/foundation';
-    import { findAnchorTarget } from '@fibrae/semi-foundation/anchor/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/anchor/anchor.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
@@ -53,9 +52,8 @@
         props,
         () => AnchorFoundation.getInitialState(),
         () => ({
-            getContainer: () => getContainer.value() || window,
-            getAnchorNode: (selector) => root.value?.querySelector<HTMLElement>(selector) ?? null,
-            getContentNode: (link) => findAnchorTarget(root.value, link),
+            getContainer: () => getContainer.value(),
+            getRoot: () => root.value,
             notifyChange: (currentLink, previousLink) => emit('change', currentLink, previousLink),
             notifyClick: (e, link) => emit('click', e, link),
         })

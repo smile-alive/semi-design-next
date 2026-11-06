@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/descriptions/constants';
-    import DescriptionsFoundation from '@fibrae/semi-foundation/descriptions/foundation';
+    import { getHorizontalList } from '@fibrae/semi-foundation/descriptions/foundation';
     import '@fibrae/semi-foundation/descriptions/descriptions.scss';
     import type { ElementProps } from '../_base/element-props';
     import elementType from '../_base/element-type';
@@ -52,7 +52,7 @@
                       hidden: isTrue(node.props?.hidden),
                       span: toSpan(node.props?.span),
                   }));
-        return DescriptionsFoundation.getHorizontalList(columns, props.column);
+        return getHorizontalList(columns, props.column);
     };
 </script>
 

@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
 import { cssClasses, strings } from '@fibrae/semi-foundation/anchor/constants';
 import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState, type AnchorNode } from '@fibrae/semi-foundation/anchor/foundation';
-import { findAnchorTarget } from '@fibrae/semi-foundation/anchor/utils';
 import '@fibrae/semi-foundation/anchor/anchor.scss';
 import type { ArrayElement, ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
@@ -90,9 +89,8 @@ function Anchor(rawProps: AnchorProps) {
         props,
         () => AnchorFoundation.getInitialState(),
         (base) => ({
-            getContainer: () => base.getProps().getContainer() || window,
-            getAnchorNode: (selector) => rootRef.current?.querySelector<HTMLElement>(selector) ?? null,
-            getContentNode: (link) => findAnchorTarget(rootRef.current, link),
+            getContainer: () => base.getProps().getContainer(),
+            getRoot: () => rootRef.current,
             notifyChange: (currentLink, previousLink) => base.getProps().onChange?.(currentLink, previousLink),
             notifyClick: (e, link) => base.getProps().onClick?.(e, link),
         })

@@ -235,6 +235,7 @@ describe(`Tooltip`, () => {
         expect(button).toHaveFocus();
         await userEvent.click(button);
         await waitFor(() => expect(document.querySelector(shownWrapperSelector)).not.toBeNull());
+        expect(ref.current.getPopup()).toBe(document.querySelector(shownWrapperSelector));
         expect(() => act(() => ref.current.rePosition())).not.toThrow();
     });
 
