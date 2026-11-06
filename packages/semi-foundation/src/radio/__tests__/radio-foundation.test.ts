@@ -91,19 +91,13 @@ describe('RadioFoundation', () => {
             expect(adapter.notifyChange).toHaveBeenCalledTimes(1);
         });
 
-        it('事件的 target 带上全部 props，名称与禁用状态取组的决定', () => {
+        it('事件的 target 只有 checked、value、name、disabled，名称与禁用状态取组的决定', () => {
             const context = { radioGroup: { value: 'x', disabled: true, name: 'g' } };
             const { adapter, foundation } = setup({ value: 'a', prefixCls: 'p' }, context);
             const e = source();
             foundation.handleChange(true, e);
             const event = adapter.notifyChange.mock.calls[0][0];
-            expect(event.target).toMatchObject({
-                value: 'a',
-                checked: true,
-                name: 'g',
-                disabled: true,
-                prefixCls: 'p',
-            });
+            expect(event.target).toEqual({ checked: true, value: 'a', name: 'g', disabled: true });
             event.stopPropagation();
             event.preventDefault();
             expect(e.stopPropagation).toHaveBeenCalled();

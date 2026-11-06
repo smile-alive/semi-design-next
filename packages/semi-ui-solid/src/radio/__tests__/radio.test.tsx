@@ -263,7 +263,7 @@ describe('Radio', () => {
         expect(parentChange).not.toHaveBeenCalled();
     });
 
-    it('onChange 事件的 target 不含 children、extra 与 ref', async () => {
+    it('onChange 事件的 target 只有 checked、value、name、disabled', async () => {
         const onChange = vi.fn<Change>();
         render(() => (
             <Radio value="v" extra="more" onChange={onChange}>
@@ -272,10 +272,7 @@ describe('Radio', () => {
         ));
         await userEvent.click(screen.getByRole('radio'));
         const { target } = onChange.mock.calls[0][0];
-        expect(target).toMatchObject({ value: 'v', checked: true, disabled: false });
-        for (const key of ['children', 'extra', 'ref']) {
-            expect(target).not.toHaveProperty(key);
-        }
+        expect(target).toStrictEqual({ checked: true, value: 'v', name: undefined, disabled: false });
     });
 
     it('禁用时不改变状态', async () => {

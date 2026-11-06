@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { computed, useAttrs, useId, useTemplateRef, type ComputedRef, type InputHTMLAttributes } from 'vue';
-    import CheckboxFoundation, { type BasicCheckboxEvent, type CheckboxAdapter, type CheckboxBaseState, type CheckboxView } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
+    import { computed, useAttrs, useId, useTemplateRef, type InputHTMLAttributes } from 'vue';
+    import CheckboxFoundation, { type CheckboxAdapter, type CheckboxBaseState, type CheckboxView } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
     import { checkboxClasses } from '@fibrae/semi-foundation/checkbox/constants';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
@@ -48,31 +48,16 @@
     const inputRef = useTemplateRef('input');
     const uid = useId();
 
-    const prefix = computed(() => props.prefixCls || checkboxClasses.PREFIX);
-    const addonId = computed(() => props.addonId || `addon-${uid}`);
-    const extraId = computed(() => props.extraId || `extra-${uid}`);
-
-    const inputName = () => (view.value.inGroup ? view.value.name : (attrs.name as string | undefined)) || undefined;
-
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, CheckboxBaseState>(
         CheckboxFoundation,
         props,
         (view) => CheckboxFoundation.getInitialState(view),
         () => ({
-            notifyChange: (event: BasicCheckboxEvent) => {
+            notifyChange: (event) => {
                 emit('update:modelValue', event.target.checked);
                 emit('change', event as CheckboxEvent);
             },
-            generateEvent: (checked, event) => ({
-                target: { checked, value: props.value, name: inputName(), disabled: view.value.disabled },
-                stopPropagation: () => event.stopPropagation(),
-                preventDefault: () => event.preventDefault(),
-                nativeEvent: event as MouseEvent,
-            }),
-            getIsInGroup: () => view.value.inGroup,
-            getGroupValue: () => group?.view.value.value ?? [],
             notifyGroupChange: (event) => group?.onChange(event),
-            getGroupDisabled: () => Boolean(group?.view.value.disabled),
             // A click on the text lands on the wrapper, not the input. Script focus matches :focus-visible when nothing
             // was focused before, so the focus a click moves in must say it is not keyboard focus.
             focusCheckboxEntity: () => {
@@ -82,12 +67,18 @@
                 }
             },
         }),
-        { props: { checked: () => props.modelValue, name: () => attrs.name as string | undefined } }
+        {
+            props: { checked: () => props.modelValue, name: () => attrs.name as string | undefined },
+            context: () => (group ? { checkboxGroup: group.view.value } : null),
+        }
     );
 
+    const prefix = computed(() => props.prefixCls || checkboxClasses.PREFIX);
+    const addonId = computed(() => props.addonId || `addon-${uid}`);
+    const extraId = computed(() => props.extraId || `extra-${uid}`);
+
     // name and the aria attributes are read from the attrs at render time: attrs are not reactive, so a cached view would go stale
-    // annotated because the adapter above reads it: inferring it would be circular
-    const view: ComputedRef<CheckboxView> = computed(() => CheckboxFoundation.deriveView({ checked: props.modelValue, disabled: props.disabled, type: props.type, value: props.value }, state.value, group?.view.value));
+    const view = computed(() => CheckboxFoundation.deriveView({ checked: props.modelValue, disabled: props.disabled, type: props.type, value: props.value }, state.value, group?.view.value));
     const checked = computed(() => view.value.checked);
     const disabled = computed(() => view.value.disabled);
     const isCardType = computed(() => view.value.isCardType);
@@ -95,6 +86,8 @@
 
     // The native flag is what assistive technology reads as "mixed"; a checked box is never mixed.
     const showMixed = computed(() => props.indeterminate && !checked.value);
+
+    const inputName = () => (view.value.inGroup ? view.value.name : (attrs.name as string | undefined)) || undefined;
 
     const labelledby = (a: Record<string, unknown>) => joinIds(a['aria-labelledby'], slots.default ? addonId.value : undefined);
 

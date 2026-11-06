@@ -2,9 +2,12 @@ import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import type { CheckboxValue } from './checkbox-group-foundation';
 import { strings } from './constants';
 
+/** `checked` is the new state; `name` and `disabled` are the resolved values, group included */
 export interface BasicTargetObject {
-    [x: string]: any;
     checked: boolean;
+    value: CheckboxValue | undefined;
+    name: string | undefined;
+    disabled: boolean;
 }
 export interface BasicCheckboxEvent {
     target: BasicTargetObject;
@@ -13,7 +16,6 @@ export interface BasicCheckboxEvent {
     nativeEvent: {
         stopImmediatePropagation: () => void;
     };
-    [x: string]: any;
 }
 
 export interface CheckboxSourceEvent {
@@ -21,15 +23,15 @@ export interface CheckboxSourceEvent {
     preventDefault: () => void;
     nativeEvent?: { stopImmediatePropagation?: () => void };
 }
-export interface CheckboxAdapter<P extends BaseCheckboxProps = BaseCheckboxProps> extends DefaultAdapter<P, CheckboxBaseState> {
-    getIsInGroup: () => boolean;
-    getGroupValue: () => CheckboxValue[];
+/** The host's context: `checkboxGroup` is set inside a CheckboxGroup */
+export interface CheckboxContextView {
+    checkboxGroup?: CheckboxGroupView;
+}
+
+export interface CheckboxAdapter<P extends BaseCheckboxProps = BaseCheckboxProps> extends DefaultAdapter<P, CheckboxBaseState, CheckboxContextView | null | undefined> {
     notifyGroupChange: (e: BasicCheckboxEvent) => void;
-    getGroupDisabled: () => boolean;
     notifyChange: (e: BasicCheckboxEvent) => void;
     focusCheckboxEntity: () => void;
-    /** Returns the event object passed to onChange, with `target.checked` set to `checked` */
-    generateEvent: (checked: boolean, e: CheckboxSourceEvent) => BasicCheckboxEvent;
 }
 
 export interface CheckboxBaseState {
@@ -46,6 +48,8 @@ export interface CheckboxGroupView {
     isPureCardType: boolean;
     ariaInvalid?: AriaInvalid;
     ariaErrormessage?: string;
+    /** For a host whose adapter reaches the group through the context */
+    onChange?: (e: BasicCheckboxEvent) => void;
 }
 
 /** `checked` is the controlled value */
@@ -76,19 +80,18 @@ const INTERACTIVE_SELECTOR = 'a, button, input, select, textarea, [contenteditab
 export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckboxProps> extends BaseFoundation<CheckboxAdapter<P>, P, CheckboxBaseState> {
     static override readonly propKeys = ['checked'];
 
-    #notifyChange(checked: boolean, e: CheckboxSourceEvent) {
-        const cbValue = this.adapter.generateEvent(checked, e);
-        this.adapter.notifyChange(cbValue);
+    #getView() {
+        return CheckboxFoundation.deriveView(this.getProps(), this.getStates(), this.getContexts()?.checkboxGroup);
     }
 
-    #handleChangeInGroup(e: CheckboxSourceEvent) {
-        const { value } = this.getProps();
-        const groupValue = this.adapter.getGroupValue();
-        const checked = groupValue.includes(value);
-        const newChecked = !checked;
-        const event = this.adapter.generateEvent(newChecked, e);
-        this.adapter.notifyChange(event);
-        this.adapter.notifyGroupChange(event);
+    #createEvent(checked: boolean, view: CheckboxView, e: CheckboxSourceEvent): BasicCheckboxEvent {
+        return {
+            target: { checked, value: this.getProp('value'), name: view.name, disabled: view.disabled },
+            stopPropagation: () => e.stopPropagation(),
+            preventDefault: () => e.preventDefault(),
+            // React hands the synthetic event, which carries the native one; the other hosts hand the native event
+            nativeEvent: (e.nativeEvent ?? e) as BasicCheckboxEvent['nativeEvent'],
+        };
     }
 
     // `checked` is controlled whenever it is not undefined, so null reads as unchecked
@@ -141,23 +144,22 @@ export default class CheckboxFoundation<P extends BaseCheckboxProps = BaseCheckb
 
         this.adapter.focusCheckboxEntity();
 
-        const isInGroup = this.adapter.getIsInGroup();
+        const view = this.#getView();
 
-        if (isInGroup) {
-            const groupDisabled = this.adapter.getGroupDisabled();
-            if (!groupDisabled) {
-                this.#handleChangeInGroup(e);
+        if (view.inGroup) {
+            if (!view.disabled) {
+                const event = this.#createEvent(!view.checked, view, e);
+                this.adapter.notifyChange(event);
+                this.adapter.notifyGroupChange(event);
             }
             return;
         }
 
-        const checked = this.getState('checked');
-
-        const newChecked = !checked;
+        const newChecked = !this.getState('checked');
         if (!this.isControlledComponent('checked')) {
             this.setState({ checked: newChecked });
         }
-        this.#notifyChange(newChecked, e);
+        this.adapter.notifyChange(this.#createEvent(newChecked, view, e));
     };
 }
 
@@ -170,6 +172,8 @@ export interface BaseCheckboxProps {
     indeterminate?: boolean;
     onChange?: (e: any) => any;
     value?: any;
+    name?: string;
+    type?: (typeof strings)['TYPE_DEFAULT' | 'TYPE_CARD' | 'TYPE_PURECARD'];
     style?: Record<string, any>;
     className?: string;
     prefixCls?: string;

@@ -2,10 +2,12 @@ import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import { strings } from './constants';
 
 export interface RadioChangeEvent {
+    /** `checked` is the new state; `name` and `disabled` are the resolved values, group included */
     target: {
-        [x: string]: any;
         checked: boolean;
         value: any;
+        name: string | undefined;
+        disabled: boolean;
     };
     stopPropagation: () => void;
     preventDefault: () => void;
@@ -144,14 +146,12 @@ export default class RadioFoundation<P extends RadioBaseProps = RadioBaseProps> 
     /** `checked` is the value the native input reports, or false for the uncheck of advanced mode */
     handleChange = (checked: boolean, e: RadioSourceEvent) => {
         const props = this.getProps();
-        const group = this.getContexts()?.radioGroup;
         const event: RadioChangeEvent = {
             target: {
-                ...props,
-                name: props.name ?? group?.name,
-                disabled: this.#getView().disabled,
-                value: props.value,
                 checked,
+                value: props.value,
+                name: props.name ?? this.getContexts()?.radioGroup?.name,
+                disabled: this.#getView().disabled,
             },
             stopPropagation: () => e.stopPropagation(),
             preventDefault: () => e.preventDefault(),

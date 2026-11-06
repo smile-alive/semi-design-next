@@ -662,11 +662,6 @@ export function normalizeValue(value: BasicValue, withObject: boolean, keyMaps?:
     }
 }
 
-export function keepExistingKeys(keySet: Set<string> | string[], keyEntities: KeyEntities) {
-    const keyArr = [...keySet];
-    return keyArr.filter((key) => key in keyEntities);
-}
-
 export function calcDisabledKeys(keyEntities: KeyEntities, keyMaps?: KeyMapProps) {
     const disabledName = keyMaps?.disabled ?? 'disabled';
     const disabledKeys = Object.keys(keyEntities).filter((key) => keyEntities[key].data[disabledName]);

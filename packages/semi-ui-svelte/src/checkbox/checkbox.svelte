@@ -1,5 +1,5 @@
 <script lang="ts">
-    import CheckboxFoundation, { type BaseCheckboxProps, type CheckboxAdapter, type CheckboxBaseState, type CheckboxView } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
+    import CheckboxFoundation, { type BaseCheckboxProps, type CheckboxAdapter, type CheckboxBaseState } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
     import { checkboxClasses } from '@fibrae/semi-foundation/checkbox/constants';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
@@ -52,6 +52,12 @@
         get value() {
             return value;
         },
+        get name() {
+            return name ?? undefined;
+        },
+        get type() {
+            return type;
+        },
     };
 
     const { foundation, states } = useFoundation<Foundation, Adapter, BaseCheckboxProps, CheckboxBaseState>(
@@ -61,19 +67,10 @@
         () => ({
             notifyChange: (event) => {
                 checked = event.target.checked;
+                // only a click reaches the foundation, which types its source event structurally
                 onChange?.(event as CheckboxEvent);
             },
-            generateEvent: (next, event) => ({
-                target: { checked: next, value, name: inputName, disabled: view.disabled },
-                stopPropagation: () => event.stopPropagation(),
-                preventDefault: () => event.preventDefault(),
-                // only a click reaches the foundation, which types its source event structurally
-                nativeEvent: event as MouseEvent,
-            }),
-            getIsInGroup: () => view.inGroup,
-            getGroupValue: () => group?.view.value ?? [],
             notifyGroupChange: (event) => group?.onChange(event),
-            getGroupDisabled: () => Boolean(group?.view.disabled),
             // A click on the text lands on the wrapper, not the input. Script focus matches :focus-visible when nothing
             // was focused before, so the focus a click moves in must say it is not keyboard focus.
             focusCheckboxEntity: () => {
@@ -81,7 +78,8 @@
                     focusWithoutRing(input, { preventScroll });
                 }
             },
-        })
+        }),
+        { context: () => (group ? { checkboxGroup: group.view } : null) }
     );
 
     // Told by an enclosing Tooltip whose span wraps this checkbox: the input, not the span, takes the description, so
@@ -91,8 +89,7 @@
         () => ({ disabled: view.disabled, loading: false, block: false, describes: true })
     );
 
-    // annotated because the adapter above reads it: inferring it would be circular
-    const view: CheckboxView = $derived(CheckboxFoundation.deriveView({ checked, disabled, name: name ?? undefined, type, value, 'aria-invalid': rest['aria-invalid'] ?? undefined, 'aria-errormessage': rest['aria-errormessage'] ?? undefined }, states(), group?.view));
+    const view = $derived(CheckboxFoundation.deriveView({ checked, disabled, name: name ?? undefined, type, value, 'aria-invalid': rest['aria-invalid'] ?? undefined, 'aria-errormessage': rest['aria-errormessage'] ?? undefined }, states(), group?.view));
     const prefix = $derived(prefixCls || checkboxClasses.PREFIX);
     const addonDomId = $derived(addonId || `addon-${uid}`);
     const extraDomId = $derived(extraId || `extra-${uid}`);

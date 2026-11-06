@@ -67,9 +67,7 @@ export default function Radio(rawProps: RadioProps) {
 
     // The radio role supports no aria-invalid, aria-errormessage or aria-required (radiogroup does): the error goes in the description
     const [unsupported, inputAttrs] = splitProps(control, ['aria-invalid', 'aria-errormessage', 'aria-required']);
-
-    // children and extra are JSX: spreading them into the onChange event would build their nodes again
-    const [, eventProps] = splitProps(omitFormInjected(props), ['children', 'extra', 'ref']);
+    const foundationProps = omitFormInjected(props);
 
     const group = useRadioGroupContext();
 
@@ -83,7 +81,7 @@ export default function Radio(rawProps: RadioProps) {
 
     const { foundation, state } = useFoundation<Foundation, Adapter, RadioProps, RadioState>(
         RadioFoundation,
-        eventProps,
+        foundationProps,
         (view) => RadioFoundation.getInitialState(view),
         (base) => ({
             notifyGroupChange: (event) => group?.onChange(event),
@@ -93,7 +91,7 @@ export default function Radio(rawProps: RadioProps) {
         { context: () => group?.view() }
     );
 
-    const view = createMemo(() => RadioFoundation.deriveView(eventProps, state(), group?.view()));
+    const view = createMemo(() => RadioFoundation.deriveView(foundationProps, state(), group?.view()));
     const content = children(() => local.children);
 
     // a button radio is only its label, so its extra is not created either

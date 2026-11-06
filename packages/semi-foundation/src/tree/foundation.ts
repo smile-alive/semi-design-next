@@ -3,38 +3,13 @@
  * https://github.com/react-component/tree
  */
 
-import { isEqual, throttle } from 'es-toolkit';
+import { throttle } from 'es-toolkit';
 // compat pick resolves deep paths (treeDataSimpleJson)
 import { get, pick } from 'es-toolkit/compat';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import { strings } from './constants';
-import { getDataForKeyNotInKeyEntities, getMultipleSelectResult, isTreeNodeLeaf } from './shared';
-import {
-    flattenTreeData,
-    findDescendantKeys,
-    findAncestorKeys,
-    matchTreeNode,
-    normalizedArr,
-    normalizeKeyList,
-    getMotionKeys,
-    calcCheckedKeys,
-    getValueOrKey,
-    getDragNodesKeys,
-    calcDropRelativePosition,
-    calcDropActualPosition,
-    convertDataToEntities,
-    convertJsonToData,
-    calcExpandedKeys,
-    calcExpandedKeysForValues,
-    calcMotionKeys,
-    findKeysForValues,
-    normalizeValue,
-    keepExistingKeys,
-    calcDisabledKeys,
-    filterTreeData,
-    getFilterProp,
-    type KeyMapProps,
-} from './tree-util';
+import { deriveTreeState, getMultipleChange, getMultipleSelectResult, getSearchState, isTreeNodeLeaf, loadTreeNode } from './shared';
+import { flattenTreeData, normalizedArr, getMotionKeys, getValueOrKey, getDragNodesKeys, calcDropRelativePosition, calcDropActualPosition, type KeyMapProps } from './tree-util';
 export type { KeyMapProps };
 
 export interface BasicTreeNodeProps {
@@ -309,26 +284,6 @@ export interface TreeAdapter<E = unknown> extends DefaultAdapter<BasicTreeProps,
     scrollToNode: (key: string, align: ScrollAlign) => void;
 }
 
-/** Compares key/value/children only: a label that is a ReactNode is a new object on every render */
-function isTreeDataStructureEqual(prevTreeData: any[], nextTreeData: any[], keyMaps?: KeyMapProps) {
-    if (prevTreeData === nextTreeData) {
-        return true;
-    }
-    if (!prevTreeData || !nextTreeData) {
-        return false;
-    }
-    const realKeyName = keyMaps?.key ?? 'key';
-    const realValueName = keyMaps?.value ?? 'value';
-    const realChildrenName = keyMaps?.children ?? 'children';
-    const compareNodes = (nodesA: any[], nodesB: any[]): boolean =>
-        nodesA.length === nodesB.length &&
-        nodesA.every((nodeA, i) => {
-            const nodeB = nodesB[i];
-            return nodeA[realKeyName] === nodeB[realKeyName] && nodeA[realValueName] === nodeB[realValueName] && compareNodes(nodeA[realChildrenName] || [], nodeB[realChildrenName] || []);
-        });
-    return compareNodes(prevTreeData, nextTreeData);
-}
-
 export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdapter<E>, BasicTreeProps, BasicTreeInnerData> {
     #dragNode: BasicTreeNodeProps | null = null;
     #dragEnterTimers = new Set<ReturnType<typeof setTimeout>>();
@@ -348,7 +303,6 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         'expandedKeys',
         'filterTreeNode',
         'keyMaps',
-        'loadData',
         'loadedKeys',
         'motion',
         'multiple',
@@ -381,10 +335,6 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         return this.getProp('expandedKeys') !== undefined;
     }
 
-    #isLoadControlled() {
-        return this.getProp('loadedKeys') !== undefined;
-    }
-
     #showFilteredOnly() {
         const { inputValue } = this.getStates();
         const { showFilteredOnly } = this.getProps();
@@ -400,24 +350,8 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
     }
 
     #notifyMultipleChange(key: string[]) {
-        const { keyEntities } = this.getStates();
-        const props = this.getProps();
-        const { leafOnly, checkRelation, keyMaps, autoMergeValue } = props;
-        let value;
-        let keyList = [];
-        if (checkRelation === 'related') {
-            // leafOnly takes precedence over autoMergeValue={false}
-            keyList = autoMergeValue || leafOnly ? normalizeKeyList(key, keyEntities, leafOnly, true) : key;
-        } else if (checkRelation === 'unRelated') {
-            keyList = key;
-        }
-        const nodes = keyList.map((key) => (keyEntities[key] ? keyEntities[key].data : getDataForKeyNotInKeyEntities(key, props)));
-        if (this.getProp('onChangeWithObject')) {
-            value = nodes;
-        } else {
-            value = getValueOrKey(nodes, keyMaps);
-        }
-        this.adapter.notifyChange(value);
+        const { nodes, value } = getMultipleChange(key, this.getProps(), this.getState('keyEntities'));
+        this.adapter.notifyChange(this.getProp('onChangeWithObject') ? nodes : value);
     }
 
     #notifyChange(key: string[] | string) {
@@ -529,47 +463,6 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         });
     }
 
-    /** Loads a node's children once; `key` is the node's entity key, which keyMaps may take from another field */
-    #handleNodeLoad(key: string, data: BasicTreeNodeData) {
-        const { loadData } = this.getProps();
-        const { loadedKeys = new Set<string>(), loadingKeys = new Set<string>() } = this.getStates();
-        if (!loadData || loadedKeys.has(key) || loadingKeys.has(key)) {
-            return;
-        }
-
-        void loadData(data)
-            .then(() => {
-                const prevLoadedKeys = new Set(this.getState('loadedKeys'));
-                const prevLoadingKeys = new Set(this.getState('loadingKeys'));
-                const newLoadedKeys = prevLoadedKeys.add(key);
-                const newLoadingKeys = new Set(prevLoadingKeys);
-                newLoadingKeys.delete(key);
-
-                // onLoad should be triggered before internal setState to avoid `loadData` being triggered twice
-                this.adapter.notifyLoad(newLoadedKeys, data);
-
-                if (!this.#isLoadControlled()) {
-                    this.setState({
-                        loadedKeys: newLoadedKeys,
-                    });
-                }
-                this.setState({
-                    loadingKeys: newLoadingKeys,
-                });
-            })
-            .finally(() => {
-                // on rejection too, so the node can be retried
-                const currentLoadingKeys = this.getState('loadingKeys');
-                if (currentLoadingKeys.has(key)) {
-                    const newLoadingKeys = new Set(currentLoadingKeys);
-                    newLoadingKeys.delete(key);
-                    this.setState({ loadingKeys: newLoadingKeys });
-                }
-            });
-
-        this.setState({ loadingKeys: new Set<string>(loadingKeys).add(key) });
-    }
-
     protected getDragEventNodeData(node: BasicTreeNodeProps) {
         return {
             ...node.data,
@@ -577,165 +470,9 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         };
     }
 
-    /**
-     * The state that props imply, given the previous state (modeled on rc-tree's getDerivedStateFromProps,
-     * https://github.com/react-component/tree). `prevState.prevProps` holds the props of the last derivation.
-     * Returns null when nothing changed, so a host that writes the result back settles.
-     */
+    /** The state that props imply, given the previous state; null when nothing changed (see `deriveTreeState`) */
     static deriveState(props: BasicTreeProps, prevState: BasicTreeInnerData): Partial<BasicTreeInnerData> | null {
-        const { prevProps } = prevState;
-        const { keyMaps } = props;
-        let treeData: BasicTreeNodeData[];
-        let keyEntities = prevState.keyEntities || {};
-        let valueEntities = prevState.cachedKeyValuePairs || {};
-        const isSearching = Boolean(props.filterTreeNode && prevState.inputValue && prevState.inputValue.length);
-        const newState: Partial<BasicTreeInnerData> = {};
-        const isExpandControlled = props.expandedKeys !== undefined;
-
-        const needUpdate = (name: string) => (prevProps ? !isEqual(prevProps[name], props[name]) : props[name] !== undefined);
-
-        const needUpdateSimpleJson = needUpdate('treeDataSimpleJson');
-        // a new reference rebuilds entities (label/icon/disabled may change); only a structural change resets expansion
-        const treeDataRefUpdated = prevProps ? prevProps.treeData !== props.treeData : props.treeData !== undefined;
-        const treeDataStructureUpdated = prevProps ? !isTreeDataStructureEqual(prevProps.treeData, props.treeData, keyMaps) : props.treeData !== undefined;
-
-        if (treeDataRefUpdated || needUpdateSimpleJson) {
-            treeData = treeDataRefUpdated ? props.treeData : convertJsonToData(props.treeDataSimpleJson);
-            newState.treeData = treeData;
-            const entitiesMap = convertDataToEntities(treeData, keyMaps);
-            newState.keyEntities = { ...entitiesMap.keyEntities };
-            keyEntities = newState.keyEntities;
-            newState.cachedKeyValuePairs = { ...entitiesMap.valueEntities };
-            valueEntities = newState.cachedKeyValuePairs;
-        }
-
-        const dataUpdated = needUpdateSimpleJson || treeDataStructureUpdated;
-        if (dataUpdated && props.motion && prevProps) {
-            newState.motionKeys = new Set([]);
-            newState.motionType = null;
-        }
-        const expandAllWhenDataChange = dataUpdated && props.expandAll;
-        if (!isSearching) {
-            if (needUpdate('expandedKeys') || (prevProps && needUpdate('autoExpandParent'))) {
-                newState.expandedKeys = calcExpandedKeys(props.expandedKeys, keyEntities, props.autoExpandParent || !prevProps);
-                if (prevProps && props.motion && !treeData) {
-                    const { motionKeys, motionType } = calcMotionKeys(prevState.expandedKeys, newState.expandedKeys, keyEntities);
-                    newState.motionKeys = new Set(motionKeys);
-                    newState.motionType = motionType;
-                    if (motionType === 'hide') {
-                        // keeps collapsing rows rendered; a controlled change may not come from interaction
-                        newState.cachedFlattenNodes = prevState.flattenNodes;
-                    }
-                }
-            } else if ((!prevProps && (props.defaultExpandAll || props.expandAll)) || expandAllWhenDataChange) {
-                newState.expandedKeys = new Set(Object.keys(keyEntities));
-            } else if (!prevProps && props.defaultExpandedKeys) {
-                newState.expandedKeys = calcExpandedKeys(props.defaultExpandedKeys, keyEntities);
-            } else if (!prevProps && props.defaultValue !== undefined) {
-                newState.expandedKeys = calcExpandedKeysForValues(props.defaultValue, keyEntities, props.multiple, valueEntities);
-            } else if (!prevProps && props.value !== undefined) {
-                newState.expandedKeys = calcExpandedKeysForValues(props.value, keyEntities, props.multiple, valueEntities);
-            } else if (!isExpandControlled && dataUpdated && props.value !== undefined) {
-                // with loadData a treeData change is a load; recalculating from value would collapse unselected nodes
-                if (!(prevState.treeData && prevState.treeData?.length > 0 && props.loadData)) {
-                    newState.expandedKeys = calcExpandedKeysForValues(props.value, keyEntities, props.multiple, valueEntities);
-                }
-            }
-
-            if (treeData || newState.expandedKeys) {
-                newState.flattenNodes = flattenTreeData(treeData || prevState.treeData, newState.expandedKeys || prevState.expandedKeys, keyMaps);
-            }
-        } else {
-            if (treeData) {
-                const filteredState = filterTreeData({
-                    treeData,
-                    inputValue: prevState.inputValue,
-                    filterTreeNode: props.filterTreeNode,
-                    filterProps: getFilterProp(props.treeNodeFilterProp, keyMaps),
-                    showFilteredOnly: props.showFilteredOnly,
-                    keyEntities: newState.keyEntities,
-                    prevExpandedKeys: [...prevState.filteredExpandedKeys],
-                    // the same structure under a new reference keeps the ancestors collapsed during the search
-                    prevFilteredKeys: dataUpdated ? undefined : prevState.filteredKeys,
-                    keyMaps: keyMaps,
-                });
-                newState.flattenNodes = filteredState.flattenNodes;
-                newState.motionKeys = new Set([]);
-                newState.filteredKeys = filteredState.filteredKeys;
-                newState.filteredShownKeys = filteredState.filteredShownKeys;
-                newState.filteredExpandedKeys = filteredState.filteredExpandedKeys;
-            }
-
-            if (props.expandedKeys) {
-                const filteredExpandedKeys = calcExpandedKeys(props.expandedKeys, keyEntities, props.autoExpandParent || !prevProps);
-                const unchanged = prevProps && !treeData && prevProps.showFilteredOnly === props.showFilteredOnly && filteredExpandedKeys.size === prevState.filteredExpandedKeys.size && [...filteredExpandedKeys].every((key) => prevState.filteredExpandedKeys.has(key));
-                if (!unchanged) {
-                    newState.filteredExpandedKeys = filteredExpandedKeys;
-                    if (prevProps && props.motion && !treeData) {
-                        const motionResult = calcMotionKeys(prevState.filteredExpandedKeys, filteredExpandedKeys, keyEntities);
-                        let { motionKeys } = motionResult;
-                        const { motionType } = motionResult;
-                        if (props.showFilteredOnly) {
-                            motionKeys = motionKeys.filter((key) => prevState.filteredShownKeys.has(key));
-                        }
-                        if (motionType === 'hide') {
-                            newState.cachedFlattenNodes = prevState.flattenNodes;
-                        }
-                        newState.motionKeys = new Set(motionKeys);
-                        newState.motionType = motionType;
-                    }
-                    newState.flattenNodes = flattenTreeData(treeData || prevState.treeData, filteredExpandedKeys, keyMaps, props.showFilteredOnly && (newState.filteredShownKeys ?? prevState.filteredShownKeys));
-                }
-            }
-        }
-
-        const withObject = props.onChangeWithObject;
-        const isMultiple = props.multiple;
-        if (!isMultiple) {
-            if (needUpdate('value')) {
-                newState.selectedKeys = findKeysForValues(normalizeValue(props.value, withObject, keyMaps), valueEntities, isMultiple);
-            } else if (!prevProps && props.defaultValue !== undefined) {
-                newState.selectedKeys = findKeysForValues(normalizeValue(props.defaultValue, withObject, keyMaps), valueEntities, isMultiple);
-            } else if (treeData && props.value !== undefined) {
-                newState.selectedKeys = findKeysForValues(normalizeValue(props.value, withObject, keyMaps), valueEntities, isMultiple);
-            }
-        } else {
-            let checkedKeyValues;
-            if (needUpdate('value')) {
-                checkedKeyValues = findKeysForValues(normalizeValue(props.value, withObject, keyMaps), valueEntities, isMultiple);
-            } else if (!prevProps && props.defaultValue !== undefined) {
-                checkedKeyValues = findKeysForValues(normalizeValue(props.defaultValue, withObject, keyMaps), valueEntities, isMultiple);
-            } else if (treeData) {
-                checkedKeyValues = props.value !== undefined ? findKeysForValues(normalizeValue(props.value, withObject, keyMaps), valueEntities, isMultiple) : keepExistingKeys(props.checkRelation === 'related' ? prevState.checkedKeys : prevState.realCheckedKeys, keyEntities);
-            }
-
-            if (checkedKeyValues) {
-                if (props.checkRelation === 'unRelated') {
-                    newState.realCheckedKeys = new Set(checkedKeyValues);
-                } else if (props.checkRelation === 'related') {
-                    const { checkedKeys, halfCheckedKeys } = calcCheckedKeys(checkedKeyValues, keyEntities);
-                    newState.checkedKeys = checkedKeys;
-                    newState.halfCheckedKeys = halfCheckedKeys;
-                }
-            }
-        }
-
-        if (needUpdate('loadedKeys')) {
-            newState.loadedKeys = new Set(props.loadedKeys);
-        }
-
-        if (treeData && props.disableStrictly && props.checkRelation === 'related') {
-            newState.disabledKeys = calcDisabledKeys(keyEntities, keyMaps);
-        }
-
-        // a changed compared prop must still move prevProps, or a later render sees it as new
-        const comparedPropChanged = ['expandedKeys', 'autoExpandParent', 'value', 'showFilteredOnly'].some(needUpdate);
-        if (prevProps && Object.keys(newState).length === 0 && !comparedPropChanged) {
-            return null;
-        }
-        // a snapshot: a host may pass the same live props object every time
-        newState.prevProps = pick(props, TreeFoundation.propKeys);
-        return newState;
+        return deriveTreeState(props, prevState, TreeFoundation.propKeys);
     }
 
     static getInitialState(props: BasicTreeProps): BasicTreeInnerData {
@@ -787,40 +524,9 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
 
     handleInputChange = (sugInput: string) => {
         this.setState({ inputValue: sugInput });
-        const { selectedKeys, keyEntities, treeData } = this.getStates();
-        const expandedKeys = new Set(this.getState('expandedKeys'));
-        const { showFilteredOnly, filterTreeNode, treeNodeFilterProp, keyMaps } = this.getProps();
-        const realFilterProp = getFilterProp(treeNodeFilterProp, keyMaps);
-        let filteredOptsKeys: string[] = [];
-        let expandedOptsKeys: string[] = [];
-        let flattenNodes: BasicFlattenNode[] = [];
-        let filteredShownKeys = new Set([]);
-
-        if (!sugInput) {
-            if (!this.#isExpandControlled()) {
-                expandedOptsKeys = findAncestorKeys(selectedKeys, keyEntities, false);
-                expandedOptsKeys.forEach((item) => expandedKeys.add(item));
-            }
-            flattenNodes = flattenTreeData(treeData, expandedKeys, keyMaps);
-        } else {
-            filteredOptsKeys = Object.values(keyEntities)
-                .filter((item: BasicKeyEntity) => matchTreeNode(sugInput, item.data, filterTreeNode, realFilterProp))
-                .map((item: BasicKeyEntity) => item.key);
-            expandedOptsKeys = findAncestorKeys(filteredOptsKeys, keyEntities, false);
-            const shownChildKeys = findDescendantKeys(filteredOptsKeys, keyEntities, true);
-            filteredShownKeys = new Set([...shownChildKeys, ...expandedOptsKeys]);
-            flattenNodes = flattenTreeData(treeData, new Set(expandedOptsKeys), keyMaps, showFilteredOnly && filteredShownKeys);
-        }
-        const newFilteredExpandedKeys = new Set(expandedOptsKeys);
-        this.adapter.notifySearch(sugInput, Array.from(newFilteredExpandedKeys));
-        this.setState({
-            expandedKeys,
-            flattenNodes,
-            motionKeys: new Set([]),
-            filteredKeys: new Set(filteredOptsKeys),
-            filteredExpandedKeys: newFilteredExpandedKeys,
-            filteredShownKeys,
-        });
+        const { state } = getSearchState(sugInput, this.getProps(), this.getStates());
+        this.adapter.notifySearch(sugInput, [...state.filteredExpandedKeys]);
+        this.setState(state);
     };
 
     handleNodeSelect = (e: unknown, treeNode: BasicTreeNodeProps) => {
@@ -858,8 +564,8 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
             expanded,
             node: data,
         });
-        if (expanded && loadData) {
-            this.#handleNodeLoad(treeNode.eventKey, data);
+        if (expanded) {
+            loadTreeNode(this, treeNode.eventKey, data, (loadedKeys, node) => this.adapter.notifyLoad(loadedKeys, node));
         }
     };
 

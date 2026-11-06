@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
+import type { BasicKeyEntities } from '../../tree/foundation';
 import { convertDataToEntities } from '../../tree/tree-util';
 import TreeSelectFoundation from '../foundation';
 
@@ -7,8 +8,8 @@ const { keyEntities } = convertDataToEntities([
         key: 'p',
         label: 'P',
         children: [
-            { key: 'a', label: 'A' },
-            { key: 'b', label: 'B' },
+            { key: 'a', label: 'A', name: 'Name A' },
+            { key: 'b', label: 'B', disabled: true },
         ],
     },
 ]);
@@ -31,5 +32,24 @@ describe('TreeSelect 触发器的选中值', () => {
         expect(TreeSelectFoundation.hasValue({ multiple: true }, { ...empty, checkedKeys: state.checkedKeys })).toBe(true);
         expect(TreeSelectFoundation.hasValue({ multiple: true, checkRelation: 'unRelated' }, { ...empty, checkedKeys: state.checkedKeys })).toBe(false);
         expect(TreeSelectFoundation.hasValue({ multiple: true, checkRelation: 'unRelated' }, { ...empty, realCheckedKeys: state.realCheckedKeys })).toBe(true);
+    });
+});
+
+describe('TreeSelect 标签', () => {
+    it('getNodeLabel 依次读 keyMaps.label 与 treeNodeLabelProp', () => {
+        const item = (keyEntities as BasicKeyEntities).a.data;
+        expect(TreeSelectFoundation.getNodeLabel(item, { treeNodeLabelProp: 'label' })).toBe('A');
+        expect(TreeSelectFoundation.getNodeLabel(item, { treeNodeLabelProp: 'label', keyMaps: { label: 'name' } })).toBe('Name A');
+        expect(TreeSelectFoundation.getNodeLabel(item, { treeNodeLabelProp: 'title' })).toBeNull();
+    });
+
+    it('isTagClosable 在组件禁用、节点禁用、disableStrictly 下的禁用键上为 false', () => {
+        const tagState = { keyEntities, disabledKeys: new Set(['p']) };
+        expect(TreeSelectFoundation.isTagClosable('a', {}, tagState)).toBe(true);
+        expect(TreeSelectFoundation.isTagClosable('x', {}, tagState)).toBe(true);
+        expect(TreeSelectFoundation.isTagClosable('a', { disabled: true }, tagState)).toBe(false);
+        expect(TreeSelectFoundation.isTagClosable('b', {}, tagState)).toBe(false);
+        expect(TreeSelectFoundation.isTagClosable('p', {}, tagState)).toBe(true);
+        expect(TreeSelectFoundation.isTagClosable('p', { disableStrictly: true }, tagState)).toBe(false);
     });
 });

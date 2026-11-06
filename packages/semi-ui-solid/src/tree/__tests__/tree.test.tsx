@@ -839,9 +839,10 @@ describe('Tree', () => {
         expect(getLevelNodes(2)[0]).toHaveClass(collapsedCls);
         expect(getLevelNodes(1)[1]).toHaveClass(collapsedCls);
         await userEvent.click(screen.getByRole('button', { name: 'update treeData' }));
-        expect(getLevelNodes(2)[0]).toHaveTextContent(/^Updated Child Node0-0$/);
-        expect(getLevelNodes(2)[0]).not.toHaveClass(collapsedCls);
-        expect(getLevelNodes(3)[0]).toHaveTextContent(/^Updated Child Node0-0-0$/);
+        // new data keeps the expanded keys, and expansion is not inferred from value again
+        expect(getLevelNodes(1)[0]).toHaveTextContent(/^Updated Node0$/);
+        expect(getLevelNodes(1)[0]).toHaveClass(collapsedCls);
+        expect(getLevelNodes(2)).toHaveLength(0);
         await userEvent.click(screen.getByRole('button', { name: 'update treeData' }));
         expect(getLevelNodes(2)[0]).toHaveTextContent(/^Child Node0-0$/);
     });

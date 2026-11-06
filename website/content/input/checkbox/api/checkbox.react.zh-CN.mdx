@@ -16,7 +16,7 @@ import ApiType from '#/components/ApiType.astro';
 | id             | 原生 input 的 id。                                                                                       | `string`                                                          | -           |
 | indeterminate  | 半选状态，只影响外观与原生 input 的 `indeterminate`，不改变选中值。                                      | `boolean`                                                         | `false`     |
 | name           | 原生 input 的 `name`；在设置了 `value` 的 CheckboxGroup 中以组的 `name` 为准。                           | `string`                                                          | -           |
-| onChange       | 选中状态变化时调用，`e.target` 为组件的属性加上 `checked`，`checked` 为变化后的选中状态。                | <ApiType detail={"(e: CheckboxEvent) => any"}>Type</ApiType>      | -           |
+| onChange       | 选中状态变化时调用，`e.target` 包含 `checked`、`value`、`name` 和 `disabled`。                           | <ApiType detail={"(e: CheckboxEvent) => any"}>Type</ApiType>      | -           |
 | onMouseEnter   | 鼠标移入时调用。                                                                                         | <ApiType detail={"(e: any) => void"}>Type</ApiType>               | -           |
 | onMouseLeave   | 鼠标移出时调用。                                                                                         | <ApiType detail={"(e: any) => void"}>Type</ApiType>               | -           |
 | prefixCls      | CSS 类名前缀。                                                                                           | `string`                                                          | -           |
