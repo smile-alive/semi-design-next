@@ -1,29 +1,10 @@
-import { isEqual } from 'es-toolkit';
-import { get, pick } from 'es-toolkit/compat';
+import { get } from 'es-toolkit/compat';
 import type { VALIDATE_STATUS } from '../base/constants';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import { strings } from '../tree-select/constants';
-import type { BasicTreeInnerData, BasicTreeProps, BasicTreeNodeData, BasicTreeNodeProps, BasicKeyEntity, BasicExpandedOtherProps, TreeMotionType } from '../tree/foundation';
-import { calcRelatedCheckedKeys, getDataForKeyNotInKeyEntities, getMultipleSelectResult } from '../tree/shared';
-import {
-    flattenTreeData,
-    findDescendantKeys,
-    findAncestorKeys,
-    matchTreeNode,
-    normalizeKeyList,
-    getMotionKeys,
-    calcCheckedKeys,
-    getValueOrKey,
-    convertDataToEntities,
-    calcExpandedKeysForValues,
-    calcMotionKeys,
-    findKeysForValues,
-    calcExpandedKeys,
-    calcDisabledKeys,
-    normalizeValue,
-    filterTreeData,
-    getFilterProp,
-} from '../tree/tree-util';
+import type { BasicTreeInnerData, BasicTreeProps, BasicTreeNodeData, BasicTreeNodeProps, BasicExpandedOtherProps, TreeMotionType } from '../tree/foundation';
+import { calcRelatedCheckedKeys, deriveTreeState, getClearedSelection, getMultipleChange, getMultipleSelectResult, getNodeData, getSearchState, loadTreeNode } from '../tree/shared';
+import { flattenTreeData, findAncestorKeys, normalizeKeyList, getMotionKeys, getValueOrKey } from '../tree/tree-util';
 import { isInnerControlActivation, isTextEditor } from '../utils/a11y';
 import isEnterPress from '../utils/is-enter-press';
 import { ESC_KEY } from '../utils/key-code';
@@ -190,19 +171,6 @@ export interface TreeSelectAdapter<P extends BasicTreeSelectProps = BasicTreeSel
     isInTrigger: (node?: EventTarget | null) => boolean;
 }
 
-/**
- * The uncontrolled selection across a treeData change. A key the previous treeData did not have is a defaultValue
- * placeholder that holds the value, so it becomes the key of the node with that value once such a node arrives
- */
-function keepUncontrolledKeys(keys: Iterable<string>, prevState: BasicTreeSelectInnerData, keyEntities: BasicTreeSelectInnerData['keyEntities'], valueEntities: BasicTreeSelectInnerData['cachedKeyValuePairs']) {
-    return [...keys].flatMap((key) => {
-        if (!(key in prevState.keyEntities)) {
-            return [valueEntities[key] ?? key];
-        }
-        return key in keyEntities ? [key] : [];
-    });
-}
-
 export default class TreeSelectFoundation<P extends BasicTreeSelectProps = BasicTreeSelectProps, S extends BasicTreeSelectInnerData = BasicTreeSelectInnerData, E = unknown> extends BaseFoundation<TreeSelectAdapter<P, S, E>, P, S> {
     // whether onBlur is owed for the focus now inside; isFocus cannot tell (a Tab in does not set it)
     #blurPending = false;
@@ -253,10 +221,6 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         return !this.getProp('expandAction');
     }
 
-    #isLoadControlled() {
-        return this.getProp('loadedKeys') !== undefined;
-    }
-
     #showFilteredOnly() {
         const { inputValue } = this.getStates();
         const { showFilteredOnly } = this.getProps();
@@ -264,21 +228,10 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     }
 
     #notifyMultipleChange(key: string[], e?: E) {
-        const { keyEntities } = this.getStates();
-        const { leafOnly, checkRelation, keyMaps, autoMergeValue } = this.getProps();
-        let keyList = [];
-        if (checkRelation === 'related') {
-            // leafOnly takes precedence over autoMergeValue={false}
-            keyList = autoMergeValue || leafOnly ? normalizeKeyList(key, keyEntities, leafOnly, true) : key;
-        } else if (checkRelation === 'unRelated') {
-            keyList = key;
-        }
-        const props = this.getProps();
-        const nodes = keyList.map((key) => TreeSelectFoundation.getNodeData(key, keyEntities, props));
+        const { nodes, value } = getMultipleChange(key, this.getProps(), this.getState('keyEntities'));
         if (this.getProp('onChangeWithObject')) {
             this.adapter.notifyChangeWithObject(nodes, e);
         } else {
-            const value = getValueOrKey(nodes, keyMaps);
             this.adapter.notifyChange(value, nodes, e);
         }
     }
@@ -312,32 +265,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     }
 
     #handleNodeLoad(key: string, data: BasicTreeNodeData) {
-        const { loadData } = this.getProps();
-        const { loadedKeys, loadingKeys } = this.getStates();
-        if (!loadData || loadedKeys.has(key) || loadingKeys.has(key)) {
-            return;
-        }
-        void loadData(data)
-            .then(() => {
-                const newLoadedKeys = new Set(this.getState('loadedKeys') as Set<string>).add(key);
-                const newLoadingKeys = new Set(this.getState('loadingKeys') as Set<string>);
-                newLoadingKeys.delete(key);
-                this.adapter.notifyLoad(newLoadedKeys, data);
-                if (!this.#isLoadControlled()) {
-                    this.setState({ loadedKeys: newLoadedKeys });
-                }
-                this.setState({ loadingKeys: newLoadingKeys });
-            })
-            .finally(() => {
-                // on rejection too, so the node can be retried
-                const currentLoadingKeys = this.getState('loadingKeys') as Set<string>;
-                if (currentLoadingKeys.has(key)) {
-                    const newLoadingKeys = new Set(currentLoadingKeys);
-                    newLoadingKeys.delete(key);
-                    this.setState({ loadingKeys: newLoadingKeys });
-                }
-            });
-        this.setState({ loadingKeys: new Set<string>(loadingKeys).add(key) });
+        loadTreeNode(this, key, data, (loadedKeys, node) => this.adapter.notifyLoad(loadedKeys, node));
     }
 
     #focusInput() {
@@ -379,48 +307,13 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
 
     #handleInputChange(searchValue: string) {
         this.setState({ inputValue: searchValue });
-        const { expandedKeys, selectedKeys, keyEntities, treeData } = this.getStates();
-        const { showFilteredOnly, filterTreeNode, treeNodeFilterProp, keyMaps, remote } = this.getProps();
-
-        if (remote) {
+        if (this.getProp('remote')) {
             this.adapter.notifySearch(searchValue, [], []);
             return;
         }
-
-        const realFilterProp = getFilterProp(treeNodeFilterProp, keyMaps);
-        const newExpandedKeys: Set<string> = new Set(expandedKeys);
-        let filteredNodes: BasicTreeNodeData[] = [];
-        let filteredOptsKeys: string[] = [];
-        let expandedOptsKeys = [];
-        let newFlattenNodes = [];
-        let filteredShownKeys = new Set([]);
-        if (!searchValue) {
-            if (!this.#isExpandControlled()) {
-                expandedOptsKeys = findAncestorKeys(selectedKeys, keyEntities, false);
-                expandedOptsKeys.forEach((item) => newExpandedKeys.add(item));
-            }
-            newFlattenNodes = flattenTreeData(treeData, newExpandedKeys, keyMaps);
-        } else {
-            const filteredOpts = Object.values(keyEntities).filter(({ data }: BasicKeyEntity) => {
-                return matchTreeNode(searchValue, data, filterTreeNode, realFilterProp);
-            });
-            filteredNodes = filteredOpts.map((item: BasicKeyEntity) => item.data);
-            filteredOptsKeys = filteredOpts.map((item: BasicKeyEntity) => item.key);
-            expandedOptsKeys = findAncestorKeys(filteredOptsKeys, keyEntities, false);
-            const shownChildKeys = findDescendantKeys(filteredOptsKeys, keyEntities, true);
-            filteredShownKeys = new Set([...shownChildKeys, ...expandedOptsKeys]);
-            newFlattenNodes = flattenTreeData(treeData, new Set(expandedOptsKeys), keyMaps, showFilteredOnly && filteredShownKeys);
-        }
-        const newFilteredExpandedKeys = new Set(expandedOptsKeys);
-        this.adapter.notifySearch(searchValue, Array.from(newFilteredExpandedKeys), filteredNodes);
-        this.setState({
-            expandedKeys: newExpandedKeys,
-            flattenNodes: newFlattenNodes,
-            motionKeys: new Set([]),
-            filteredKeys: new Set(filteredOptsKeys),
-            filteredExpandedKeys: newFilteredExpandedKeys,
-            filteredShownKeys,
-        });
+        const { filteredNodes, state } = getSearchState(searchValue, this.getProps(), this.getStates());
+        this.adapter.notifySearch(searchValue, [...state.filteredExpandedKeys], filteredNodes);
+        this.setState(state as S);
     }
 
     #handleSingleSelect(e: E, { selected, eventKey, data, children }: BasicTreeNodeProps) {
@@ -531,152 +424,9 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         }
     }
 
-    /**
-     * The state that props imply, given the previous state: the class component's getDerivedStateFromProps.
-     * `prevState.prevProps` holds the props of the last derivation. Returns null when nothing changed, so a host
-     * that writes the result back settles.
-     */
+    /** The state that props imply, given the previous state; null when nothing changed (see `deriveTreeState`) */
     static deriveState(props: BasicTreeSelectProps, prevState: BasicTreeSelectInnerData): Partial<BasicTreeSelectInnerData> | null {
-        const { prevProps } = prevState;
-        const { keyMaps } = props;
-        const needUpdate = (name: string) => (prevProps ? !isEqual(prevProps[name], props[name]) : props[name] !== undefined);
-
-        let treeData: BasicTreeNodeData[];
-        const withObject = props.onChangeWithObject;
-        let keyEntities = prevState.keyEntities || {};
-        let valueEntities = prevState.cachedKeyValuePairs || {};
-        const newState: Partial<BasicTreeSelectInnerData> = {};
-        const needUpdateTreeData = needUpdate('treeData');
-        const needUpdateExpandedKeys = needUpdate('expandedKeys');
-        const isSearching = Boolean(props.filterTreeNode && !props.remote && prevState.inputValue && prevState.inputValue.length);
-        if (needUpdateTreeData) {
-            treeData = props.treeData;
-            newState.treeData = treeData;
-            const entitiesMap = convertDataToEntities(treeData, keyMaps);
-            newState.keyEntities = { ...entitiesMap.keyEntities };
-            keyEntities = newState.keyEntities;
-            newState.cachedKeyValuePairs = { ...entitiesMap.valueEntities };
-            valueEntities = newState.cachedKeyValuePairs;
-        }
-
-        if (treeData && props.motion && prevProps && !isEqual(Object.keys(newState.keyEntities), Object.keys(prevState.keyEntities))) {
-            newState.motionKeys = new Set([]);
-            newState.motionType = null;
-        }
-        const expandAllWhenDataChange = needUpdateTreeData && props.expandAll;
-        if (!isSearching) {
-            if (needUpdateExpandedKeys || (prevProps && needUpdate('autoExpandParent'))) {
-                newState.expandedKeys = calcExpandedKeys(props.expandedKeys, keyEntities, props.autoExpandParent || !prevProps);
-                if (prevProps && props.motion && !treeData) {
-                    const { motionKeys, motionType } = calcMotionKeys(prevState.expandedKeys, newState.expandedKeys, keyEntities);
-                    newState.motionKeys = new Set(motionKeys);
-                    newState.motionType = motionType;
-                    if (motionType === 'hide') {
-                        // keeps collapsing rows rendered; a controlled change may not come from interaction
-                        newState.cachedFlattenNodes = prevState.flattenNodes;
-                    }
-                }
-            } else if ((!prevProps && (props.defaultExpandAll || props.expandAll)) || expandAllWhenDataChange) {
-                newState.expandedKeys = new Set(Object.keys(keyEntities));
-            } else if (!prevProps && props.defaultExpandedKeys) {
-                newState.expandedKeys = calcExpandedKeys(props.defaultExpandedKeys, keyEntities);
-            } else if (!prevProps && props.defaultValue !== undefined) {
-                newState.expandedKeys = calcExpandedKeysForValues(normalizeValue(props.defaultValue, withObject, keyMaps), keyEntities, props.multiple, valueEntities);
-            } else if (!prevProps && props.value !== undefined) {
-                newState.expandedKeys = calcExpandedKeysForValues(normalizeValue(props.value, withObject, keyMaps), keyEntities, props.multiple, valueEntities);
-            }
-
-            if (treeData || newState.expandedKeys) {
-                newState.flattenNodes = flattenTreeData(treeData || prevState.treeData, newState.expandedKeys || prevState.expandedKeys, keyMaps);
-            }
-        } else {
-            if (treeData) {
-                const filteredState = filterTreeData({
-                    treeData,
-                    inputValue: prevState.inputValue,
-                    filterTreeNode: props.filterTreeNode,
-                    filterProps: getFilterProp(props.treeNodeFilterProp, keyMaps),
-                    showFilteredOnly: props.showFilteredOnly,
-                    keyEntities: newState.keyEntities,
-                    prevExpandedKeys: [...prevState.filteredExpandedKeys],
-                    keyMaps: keyMaps,
-                });
-                newState.flattenNodes = filteredState.flattenNodes;
-                newState.motionKeys = new Set([]);
-                newState.filteredKeys = filteredState.filteredKeys;
-                newState.filteredShownKeys = filteredState.filteredShownKeys;
-                newState.filteredExpandedKeys = filteredState.filteredExpandedKeys;
-            }
-
-            if (props.expandedKeys) {
-                const filteredExpandedKeys = calcExpandedKeys(props.expandedKeys, keyEntities, props.autoExpandParent || !prevProps);
-                const unchanged = prevProps && !treeData && prevProps.showFilteredOnly === props.showFilteredOnly && filteredExpandedKeys.size === prevState.filteredExpandedKeys.size && [...filteredExpandedKeys].every((key) => prevState.filteredExpandedKeys.has(key));
-                if (!unchanged) {
-                    newState.filteredExpandedKeys = filteredExpandedKeys;
-                    if (prevProps && props.motion && !treeData) {
-                        const motionResult = calcMotionKeys(prevState.filteredExpandedKeys, filteredExpandedKeys, keyEntities);
-                        let { motionKeys } = motionResult;
-                        const { motionType } = motionResult;
-                        if (props.showFilteredOnly) {
-                            motionKeys = motionKeys.filter((key) => prevState.filteredShownKeys.has(key));
-                        }
-                        if (motionType === 'hide') {
-                            newState.cachedFlattenNodes = prevState.flattenNodes;
-                        }
-                        newState.motionKeys = new Set(motionKeys);
-                        newState.motionType = motionType;
-                    }
-                    newState.flattenNodes = flattenTreeData(treeData || prevState.treeData, filteredExpandedKeys, keyMaps, props.showFilteredOnly && (newState.filteredShownKeys ?? prevState.filteredShownKeys));
-                }
-            }
-        }
-
-        const isMultiple = props.multiple;
-        if (!isMultiple) {
-            if (needUpdate('value')) {
-                newState.selectedKeys = findKeysForValues(normalizeValue(props.value, withObject, keyMaps), valueEntities, isMultiple);
-            } else if (!prevProps && props.defaultValue !== undefined) {
-                newState.selectedKeys = findKeysForValues(normalizeValue(props.defaultValue, withObject, keyMaps), valueEntities, isMultiple);
-            } else if (treeData) {
-                newState.selectedKeys = props.value !== undefined ? findKeysForValues(normalizeValue(props.value, withObject, keyMaps), valueEntities, isMultiple) : keepUncontrolledKeys(prevState.selectedKeys, prevState, keyEntities, valueEntities);
-            }
-        } else {
-            let checkedKeyValues;
-            if (needUpdate('value')) {
-                checkedKeyValues = findKeysForValues(normalizeValue(props.value, withObject, keyMaps), valueEntities, isMultiple);
-            } else if (!prevProps && props.defaultValue !== undefined) {
-                checkedKeyValues = findKeysForValues(normalizeValue(props.defaultValue, withObject, keyMaps), valueEntities, isMultiple);
-            } else if (treeData) {
-                checkedKeyValues = props.value !== undefined ? findKeysForValues(normalizeValue(props.value, withObject, keyMaps), valueEntities, isMultiple) : keepUncontrolledKeys(props.checkRelation === 'related' ? prevState.checkedKeys : prevState.realCheckedKeys, prevState, keyEntities, valueEntities);
-            }
-
-            if (checkedKeyValues) {
-                if (props.checkRelation === 'unRelated') {
-                    newState.realCheckedKeys = new Set(checkedKeyValues);
-                } else if (props.checkRelation === 'related') {
-                    const { checkedKeys, halfCheckedKeys } = calcCheckedKeys(checkedKeyValues, keyEntities);
-                    newState.checkedKeys = checkedKeys;
-                    newState.halfCheckedKeys = halfCheckedKeys;
-                }
-            }
-        }
-
-        if (needUpdate('loadedKeys')) {
-            newState.loadedKeys = new Set(props.loadedKeys);
-        }
-
-        if (treeData && props.disableStrictly && props.checkRelation === 'related') {
-            newState.disabledKeys = calcDisabledKeys(keyEntities, keyMaps);
-        }
-
-        // a changed compared prop must still move prevProps, or a later render sees it as new
-        const comparedPropChanged = needUpdateTreeData || needUpdateExpandedKeys || ['autoExpandParent', 'value', 'loadedKeys', 'showFilteredOnly'].some(needUpdate);
-        if (prevProps && Object.keys(newState).length === 0 && !comparedPropChanged) {
-            return null;
-        }
-        // a snapshot: a host may pass the same live props object every time
-        newState.prevProps = pick(props, TreeSelectFoundation.propKeys);
-        return newState;
+        return deriveTreeState(props, prevState, TreeSelectFoundation.propKeys);
     }
 
     static getInitialState(props: BasicTreeSelectProps): BasicTreeSelectInnerData {
@@ -729,21 +479,25 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         return props.checkRelation === 'unRelated' ? realCheckedKeys.size > 0 : checkedKeys.size > 0;
     }
 
-    /** What the trigger shows for the single selection; pure, so render can call it */
-    static getRenderTextInSingle(props: Record<string, any>, { selectedKeys, keyEntities }: Pick<BasicTreeSelectInnerData, 'selectedKeys' | 'keyEntities'>) {
-        const { renderSelectedItem: propRenderSelectedItem, treeNodeLabelProp, keyMaps } = props;
-        const realLabelName = keyMaps?.label ?? treeNodeLabelProp;
-        const renderSelectedItem = typeof propRenderSelectedItem === 'function' ? propRenderSelectedItem : (item: BasicTreeNodeData) => get(item, realLabelName, null);
-        const item = selectedKeys.length ? TreeSelectFoundation.getNodeData(selectedKeys[0], keyEntities, props) : null;
-        return item ? renderSelectedItem(item) : null;
+    /** The label a node shows as the selection or as a tag: the field keyMaps.label, else treeNodeLabelProp, names */
+    static getNodeLabel(item: BasicTreeNodeData, { treeNodeLabelProp, keyMaps }: Pick<BasicTreeSelectProps, 'treeNodeLabelProp' | 'keyMaps'>): unknown {
+        return get(item, keyMaps?.label ?? treeNodeLabelProp, null);
     }
 
-    /**
-     * The data of the node with `key`. A key missing from treeData gets a placeholder node, or under
-     * onChangeWithObject the matching object of `value`/`defaultValue`, undefined when none matches
-     */
-    static getNodeData(key: string, keyEntities: BasicTreeSelectInnerData['keyEntities'], props: Parameters<typeof getDataForKeyNotInKeyEntities>[1]): BasicTreeNodeData | undefined {
-        return keyEntities[key] && keyEntities[key].key === key ? keyEntities[key].data : getDataForKeyNotInKeyEntities(key, props);
+    /** What the trigger shows for the single selection; pure, so render can call it */
+    static getRenderTextInSingle(props: Record<string, any>, { selectedKeys, keyEntities }: Pick<BasicTreeSelectInnerData, 'selectedKeys' | 'keyEntities'>) {
+        const { renderSelectedItem } = props;
+        const item = selectedKeys.length ? getNodeData(selectedKeys[0], keyEntities, props) : null;
+        if (!item) {
+            return null;
+        }
+        return typeof renderSelectedItem === 'function' ? renderSelectedItem(item) : TreeSelectFoundation.getNodeLabel(item, props);
+    }
+
+    /** Whether a selected key's tag can be closed: not while the TreeSelect or its node is disabled, nor for a key in disabledKeys under disableStrictly */
+    static isTagClosable(key: string, props: Pick<BasicTreeSelectProps, 'disabled' | 'disableStrictly' | 'keyMaps' | 'onChangeWithObject' | 'value' | 'defaultValue' | 'treeNodeLabelProp'>, { keyEntities, disabledKeys }: Pick<BasicTreeSelectInnerData, 'keyEntities' | 'disabledKeys'>) {
+        const item = getNodeData(key, keyEntities, props);
+        return Boolean(item) && !props.disabled && !item[props.keyMaps?.disabled ?? 'disabled'] && !(props.disableStrictly && disabledKeys.has(key));
     }
 
     /** Writes the state derived from new props back, so handlers read what was rendered */
@@ -862,12 +616,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
             this.#notifyChange(value, e);
         }
         if (hasValue && !isControlled) {
-            this.setState({
-                selectedKeys: [],
-                checkedKeys: new Set(),
-                halfCheckedKeys: new Set(),
-                realCheckedKeys: new Set([]),
-            });
+            this.setState(getClearedSelection() as S);
         }
         if (filterTreeNode && searchPosition === strings.SEARCH_POSITION_TRIGGER) {
             if (inputValue !== '') {
@@ -883,14 +632,13 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
 
     removeTag = (eventKey: BasicTreeNodeData['key']) => {
         const props = this.getProps();
-        const { disableStrictly, checkRelation, keyMaps } = props;
+        const { disableStrictly, checkRelation } = props;
         const state = this.getStates();
-        const { keyEntities, disabledKeys, realCheckedKeys } = state;
-        const item = TreeSelectFoundation.getNodeData(eventKey, keyEntities, props);
-        const disabledName = keyMaps?.disabled ?? 'disabled';
-        if (item[disabledName] || (disableStrictly && disabledKeys.has(eventKey))) {
+        const { keyEntities, realCheckedKeys } = state;
+        if (!TreeSelectFoundation.isTagClosable(eventKey, props, state)) {
             return;
         }
+        const item = getNodeData(eventKey, keyEntities, props);
         if (checkRelation === 'unRelated') {
             const newRealCheckedKeys = new Set(realCheckedKeys);
             newRealCheckedKeys.delete(eventKey);

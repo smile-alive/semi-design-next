@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { radioClasses } from '@fibrae/semi-foundation/radio/constants';
-    import RadioFoundation, { type RadioAdapter, type RadioBaseProps, type RadioBaseState, type RadioChangeEvent as FoundationRadioChangeEvent } from '@fibrae/semi-foundation/radio/radio-foundation';
+    import RadioFoundation, { type RadioAdapter, type RadioBaseProps, type RadioBaseState } from '@fibrae/semi-foundation/radio/radio-foundation';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/radio/radio.scss';
     import { IconRadio } from '@fibrae/semi-icons-svelte';
@@ -9,7 +9,7 @@
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import { getRadioGroupContext } from './context.js';
-    import type { RadioChangeEvent, RadioProps, RadioValue } from './interface.js';
+    import type { RadioProps } from './interface.js';
 
     type Foundation = RadioFoundation<RadioBaseProps>;
     type Adapter = RadioAdapter<RadioBaseProps>;
@@ -104,13 +104,12 @@
         foundationProps,
         (view) => RadioFoundation.getInitialState(view),
         () => ({
-            notifyGroupChange: (event) => group?.handleChange(pick(event)),
+            notifyGroupChange: (event) => group?.handleChange(event),
             notifyChange: (event) => {
-                const picked = pick(event);
                 // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
-                echoed = foundationProps.checked === undefined ? picked.target.checked : undefined;
-                checked = picked.target.checked;
-                onChange?.(picked);
+                echoed = foundationProps.checked === undefined ? event.target.checked : undefined;
+                checked = event.target.checked;
+                onChange?.(event);
             },
             getInput: () => input ?? null,
         }),
@@ -121,19 +120,6 @@
     const prefix = $derived(view.prefixCls || radioClasses.PREFIX);
     const hasExtra = $derived(Boolean(extra) && !view.isButtonRadio);
     const describedby = $derived(joinIds(rest['aria-describedby'], hasExtra ? extraDomId : undefined, rest['aria-invalid'] ? rest['aria-errormessage'] : undefined));
-
-    const pick = (event: FoundationRadioChangeEvent): RadioChangeEvent => {
-        return {
-            target: {
-                checked: event.target.checked,
-                value: event.target.value as RadioValue | undefined,
-                name: event.target.name as string | undefined,
-                disabled: Boolean(event.target.disabled),
-            },
-            stopPropagation: event.stopPropagation,
-            preventDefault: event.preventDefault,
-        };
-    };
 
     // A native radio checks itself and unchecks its same-name siblings on click. Svelte does not patch a value that did
     // not change, so when the owner refuses the change the DOM is written back by hand.

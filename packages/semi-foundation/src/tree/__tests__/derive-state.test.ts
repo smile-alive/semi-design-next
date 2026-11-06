@@ -49,6 +49,7 @@ describe('Tree deriveState 的搜索与展开', () => {
     const initial = {
         prevProps: null,
         inputValue: '',
+        selectedKeys: [],
         expandedKeys: new Set<string>(),
         filteredExpandedKeys: new Set<string>(),
         filteredShownKeys: new Set<string>(),

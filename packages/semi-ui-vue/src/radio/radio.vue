@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, nextTick, onBeforeUnmount, onMounted, useAttrs, useId, useTemplateRef, type InputHTMLAttributes } from 'vue';
     import { radioClasses } from '@fibrae/semi-foundation/radio/constants';
-    import RadioFoundation, { type RadioAdapter, type RadioBaseState, type RadioChangeEvent as FoundationRadioChangeEvent } from '@fibrae/semi-foundation/radio/radio-foundation';
+    import RadioFoundation, { type RadioAdapter, type RadioBaseState } from '@fibrae/semi-foundation/radio/radio-foundation';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/radio/radio.scss';
     import { IconRadio } from '@fibrae/semi-icons-vue';
@@ -11,7 +11,7 @@
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import useFoundation from '../_base/use-foundation';
     import { useRadioGroupContext } from './context';
-    import type { RadioChangeEvent, RadioEmits, RadioHandle, RadioProps, RadioSlots, RadioValue } from './interface';
+    import type { RadioEmits, RadioHandle, RadioProps, RadioSlots } from './interface';
 
     interface FoundationProps extends RadioProps {
         checked?: boolean;
@@ -53,32 +53,15 @@
     const uid = useId();
     const UNSUPPORTED_ARIA = new Set(['aria-invalid', 'aria-errormessage', 'aria-required']);
 
-    const ownPrefixCls = computed(() => props.prefixCls ?? readSemiDefault(semi, 'Radio', 'prefixCls'));
-    const innerPrefix = computed(() => ownPrefixCls.value || radioClasses.PREFIX);
-    const addonId = computed(() => props.addonId || `addon-${uid}`);
-    const extraId = computed(() => props.extraId || `extra-${uid}`);
-
-    const pick = (event: FoundationRadioChangeEvent): RadioChangeEvent => ({
-        target: {
-            checked: event.target.checked,
-            value: event.target.value as RadioValue | undefined,
-            name: event.target.name as string | undefined,
-            disabled: Boolean(event.target.disabled),
-        },
-        stopPropagation: event.stopPropagation,
-        preventDefault: event.preventDefault,
-    });
-
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, RadioBaseState>(
         RadioFoundation,
         props,
         (view) => RadioFoundation.getInitialState(view),
         () => ({
-            notifyGroupChange: (event) => group?.onChange(pick(event)),
+            notifyGroupChange: (event) => group?.onChange(event),
             notifyChange: (event) => {
-                const picked = pick(event);
-                emit('update:modelValue', picked.target.checked);
-                emit('change', picked);
+                emit('update:modelValue', event.target.checked);
+                emit('change', event);
             },
             getInput: () => inputRef.value,
         }),
@@ -87,6 +70,11 @@
             context: () => (group ? { mode: group.view.value.mode, radioGroup: group.view.value } : null),
         }
     );
+
+    const ownPrefixCls = computed(() => props.prefixCls ?? readSemiDefault(semi, 'Radio', 'prefixCls'));
+    const innerPrefix = computed(() => ownPrefixCls.value || radioClasses.PREFIX);
+    const addonId = computed(() => props.addonId || `addon-${uid}`);
+    const extraId = computed(() => props.extraId || `extra-${uid}`);
 
     const view = computed(() =>
         RadioFoundation.deriveView(

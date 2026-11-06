@@ -1240,7 +1240,7 @@ describe('TreeSelect', () => {
         expect(getSelectedLabels()).toEqual(['Beijing']);
     });
 
-    it('foundation handleNodeLoad 配合 loadData', async () => {
+    it('展开节点时通过 loadData 加载子节点并触发 onLoad', async () => {
         const loadData = vi.fn<LoadData>().mockResolvedValue(undefined);
         const onLoad = vi.fn<NonNullable<TreeSelectProps['onLoad']>>();
         renderTreeSelect({
@@ -1642,7 +1642,7 @@ describe('TreeSelect', () => {
         expect(isChecked('Child 1')).toEqual(false);
     });
 
-    it('calcNonDisabledCheckedKeys 所有后代都禁用', async () => {
+    it('所有后代都禁用时点击父节点不触发 onChange', async () => {
         const onChange = vi.fn<ChangeSpy>();
         renderTreeSelect({
             multiple: true,
@@ -2697,7 +2697,7 @@ describe('TreeSelect', () => {
         ]);
     });
 
-    it('foundation handleNodeLoad 配合 loadData 与 defaultExpandAll', async () => {
+    it('defaultExpandAll 时收起后再展开才通过 loadData 加载', async () => {
         const loadData = vi.fn<LoadData>().mockResolvedValue(undefined);
         const onLoad = vi.fn<NonNullable<TreeSelectProps['onLoad']>>();
         renderTreeSelect({
@@ -2936,7 +2936,7 @@ describe('TreeSelect', () => {
         expect(getHighlights()).toHaveLength(0);
     });
 
-    it('foundation handleTriggerBlur 未聚焦时', async () => {
+    it('未聚焦时点击外部不触发 onBlur', async () => {
         const onBlur = vi.fn<NonNullable<TreeSelectProps['onBlur']>>();
         renderTreeSelect({
             treeData: treeDataEn,
@@ -3027,7 +3027,7 @@ describe('TreeSelect', () => {
         expect(getSelectedLabels()).toEqual([]);
     });
 
-    it('foundation handleNodeLoad 异步回调', async () => {
+    it('异步 loadData 完成后才触发 onLoad', async () => {
         let resolveLoad = () => {};
         const loadData = vi.fn<LoadData>(
             () =>
@@ -3047,7 +3047,7 @@ describe('TreeSelect', () => {
         await waitFor(() => expect(onLoad).toHaveBeenCalledWith(new Set(['node1']), treeDataWithLoad[0]));
     });
 
-    it('foundation handleNodeLoad 配合受控 loadedKeys', async () => {
+    it('受控 loadedKeys 下重复展开会再次加载', async () => {
         const loadData = vi.fn<LoadData>().mockResolvedValue(undefined);
         const onLoad = vi.fn<NonNullable<TreeSelectProps['onLoad']>>();
         renderTreeSelect({
@@ -3064,7 +3064,7 @@ describe('TreeSelect', () => {
         await waitFor(() => expect(onLoad).toHaveBeenCalledTimes(2));
     });
 
-    it('foundation handleNodeLoad 在 key 已加载时返回空', async () => {
+    it('key 已在 loadedKeys 中时不再调用 loadData', async () => {
         const loadData = vi.fn<LoadData>().mockResolvedValue(undefined);
         renderTreeSelect({
             treeData: treeDataWithLoad,
@@ -3078,7 +3078,7 @@ describe('TreeSelect', () => {
         expect(getNode('Node 1').querySelector(`.${BASE_CLASS_PREFIX}-tree-option-spin-icon`)).toBeNull();
     });
 
-    it('foundation calcCheckedKeys 取消勾选', async () => {
+    it('多选时取消勾选已选节点', async () => {
         const onChange = vi.fn<ChangeSpy>();
         renderTreeSelect({
             multiple: true,
@@ -3230,7 +3230,7 @@ describe('TreeSelect', () => {
         expect(getTagTexts()).toEqual(['Beijing']);
     });
 
-    it('foundation calcNonDisabledCheckedKeys 有禁用后代时勾选父节点', async () => {
+    it('有禁用后代时勾选父节点只选中未禁用后代', async () => {
         const onChange = vi.fn<ChangeSpy>();
         renderTreeSelect({
             multiple: true,
@@ -3514,7 +3514,7 @@ describe('TreeSelect', () => {
         expect(getNode('Beijing')).toBeUndefined();
     });
 
-    it('foundation calcNonDisabledCheckedKeys 有禁用后代时取消勾选', async () => {
+    it('有禁用后代时取消勾选父节点会清空已选', async () => {
         const onChange = vi.fn<ChangeSpy>();
         renderTreeSelect({
             multiple: true,
@@ -3532,7 +3532,7 @@ describe('TreeSelect', () => {
         expect(isChecked('Beijing')).toEqual(false);
     });
 
-    it('foundation calcNonDisabledCheckedKeys 所有后代都已勾选', async () => {
+    it('所有后代都已勾选且部分禁用时点击父节点', async () => {
         const onChange = vi.fn<ChangeSpy>();
         renderTreeSelect({
             multiple: true,
@@ -3608,7 +3608,7 @@ describe('TreeSelect', () => {
         expect(getNodeLabels()).toEqual(['Asia', 'North America']);
     });
 
-    it('foundation calcNonDisabledCheckedKeys 在 targetStatus 为 false 时返回 false', async () => {
+    it('取消勾选父节点时清空其所有已选后代', async () => {
         const onChange = vi.fn<ChangeSpy>();
         renderTreeSelect({
             multiple: true,
@@ -3625,7 +3625,7 @@ describe('TreeSelect', () => {
         expect(isChecked('Beijing')).toEqual(false);
     });
 
-    it('foundation calcNonDisabledCheckedKeys 无禁用后代', async () => {
+    it('无禁用后代时勾选父节点选中全部后代', async () => {
         const onChange = vi.fn<ChangeSpy>();
         renderTreeSelect({
             multiple: true,
@@ -3671,7 +3671,7 @@ describe('TreeSelect', () => {
         expect(getTriggerInput()).toHaveFocus();
     });
 
-    it('foundation calcCheckedKeys 有禁用后代且 targetStatus 为 false', async () => {
+    it('有禁用后代时取消勾选子节点', async () => {
         const onChange = vi.fn<ChangeSpy>();
         renderTreeSelect({
             multiple: true,
@@ -3687,7 +3687,7 @@ describe('TreeSelect', () => {
         expect(isChecked('Shanghai')).toEqual(false);
     });
 
-    it('foundation calcCheckedKeys 无禁用后代', async () => {
+    it('无禁用后代时勾选并取消勾选父节点', async () => {
         const onChange = vi.fn<ChangeSpy>();
         renderTreeSelect({
             multiple: true,

@@ -1,6 +1,28 @@
 import { describe, expect, it } from 'vite-plus/test';
-import type { CheckRelation } from '../foundation';
-import { buildRowProps, calcCheckedStatus, calcRelatedCheckedKeys, getDataForKeyNotInKeyEntities, getMultipleSelectResult, getTransitionNodes, getTreeLabelClassMap, getTreeNodeProps, getTreeRowAria, getTreeRowClassMap, nodeId, sameKeys } from '../shared';
+import type { BasicKeyEntities, CheckRelation } from '../foundation';
+import {
+    buildRowProps,
+    calcCheckedStatus,
+    calcRelatedCheckedKeys,
+    deriveExpandedKeys,
+    deriveSearchingState,
+    deriveTreeState,
+    getCheckedState,
+    getClearedSelection,
+    getDataForKeyNotInKeyEntities,
+    getMultipleChange,
+    getMultipleSelectResult,
+    getNodeData,
+    getSearchState,
+    getTransitionNodes,
+    getTreeLabelClassMap,
+    getTreeNodeProps,
+    getTreeRowAria,
+    getTreeRowClassMap,
+    loadTreeNode,
+    nodeId,
+    sameKeys,
+} from '../shared';
 import { convertDataToEntities, flattenTreeData } from '../tree-util';
 
 const treeData = [
@@ -15,6 +37,7 @@ const treeData = [
     },
 ];
 const { keyEntities } = convertDataToEntities(treeData);
+const nodeData = (key: string) => (keyEntities as BasicKeyEntities)[key].data;
 const state = (checked: string[] = [], realChecked: string[] = []) => ({
     keyEntities,
     checkedKeys: new Set(checked),
@@ -163,5 +186,140 @@ describe('tree 共享逻辑', () => {
         expect(sameKeys([{ key: 'a' }, { key: 'b' }], [{ key: 'a' }, { key: 'b' }])).toBe(true);
         expect(sameKeys([{ key: 'a' }], [{ key: 'a' }, { key: 'b' }])).toBe(false);
         expect(sameKeys([{ key: 'a' }, { key: 'b' }], [{ key: 'b' }, { key: 'a' }])).toBe(false);
+    });
+});
+
+describe('tree 共享的值与派生状态', () => {
+    const sorted = (keys: Iterable<string>) => [...keys].toSorted();
+
+    it('getNodeData 只认自身的键，原型上的名字也走占位数据', () => {
+        expect(getNodeData('a', keyEntities, {})).toBe(nodeData('a'));
+        expect(getNodeData('x', keyEntities, {})).toEqual({ key: 'x', label: 'x' });
+        expect(getNodeData('constructor', keyEntities, {})).toEqual({ key: 'constructor', label: 'constructor' });
+    });
+
+    it('getMultipleChange 按 checkRelation、leafOnly 与 autoMergeValue 收拢键', () => {
+        const all = ['p', 'a', 'b', 'c'];
+        expect(getMultipleChange(all, { checkRelation: 'related', autoMergeValue: true }, keyEntities).value).toEqual(['p']);
+        expect(sorted(getMultipleChange(all, { checkRelation: 'related', autoMergeValue: false, leafOnly: true }, keyEntities).value as string[])).toEqual(['a', 'b', 'c']);
+        expect(getMultipleChange(all, { checkRelation: 'related', autoMergeValue: false }, keyEntities).value).toEqual(all);
+        const unRelated = getMultipleChange(['a', 'x'], { checkRelation: 'unRelated' }, keyEntities);
+        expect(unRelated.value).toEqual(['a', 'x']);
+        expect(unRelated.nodes[0]).toBe(nodeData('a'));
+        expect(getMultipleChange(all, {}, keyEntities)).toEqual({ nodes: [], value: [] });
+    });
+
+    it('getClearedSelection 每次返回新的空集合', () => {
+        const first = getClearedSelection();
+        expect(first).toEqual({ selectedKeys: [], checkedKeys: new Set(), halfCheckedKeys: new Set(), realCheckedKeys: new Set() });
+        expect(getClearedSelection().checkedKeys).not.toBe(first.checkedKeys);
+    });
+
+    it('getCheckedState 在 related 下推算父子勾选，unRelated 下原样记入 realCheckedKeys', () => {
+        const related = getCheckedState(['a', 'b', 'c'], 'related', keyEntities);
+        expect(sorted(related.checkedKeys)).toEqual(['a', 'b', 'c', 'p']);
+        expect(related.halfCheckedKeys.size).toBe(0);
+        expect(sorted(getCheckedState(['a'], 'related', keyEntities).halfCheckedKeys)).toEqual(['p']);
+        expect(getCheckedState(['p'], 'unRelated', keyEntities)).toEqual({ realCheckedKeys: new Set(['p']) });
+        expect(getCheckedState(['p'], undefined, keyEntities)).toEqual({});
+    });
+
+    it('getSearchState 展开匹配项的祖先；空关键字在 expandedKeys 非受控时展开选中项的祖先', () => {
+        const base = { expandedKeys: new Set<string>(), selectedKeys: ['a'], keyEntities, treeData };
+        const searched = getSearchState('C', { filterTreeNode: true, treeNodeFilterProp: 'label' }, base);
+        expect(searched.filteredNodes).toEqual([nodeData('c')]);
+        expect(sorted(searched.state.filteredExpandedKeys)).toEqual(['p']);
+        expect(sorted(searched.state.filteredShownKeys)).toEqual(['c', 'p']);
+        expect(sorted(getSearchState('', {}, base).state.expandedKeys)).toEqual(['p']);
+        expect(getSearchState('', { expandedKeys: [] }, base).state.expandedKeys.size).toBe(0);
+    });
+
+    it('loadTreeNode 只加载一次，loadedKeys 受控时不写 loadedKeys', async () => {
+        const run = async (loadedKeysProp?: string[]) => {
+            const state = { loadedKeys: new Set<string>(), loadingKeys: new Set<string>() };
+            const notified: Set<string>[] = [];
+            let calls = 0;
+            const host = {
+                getProps: () => ({ loadedKeys: loadedKeysProp, loadData: () => (calls++, Promise.resolve()) }),
+                getState: (key: 'loadedKeys' | 'loadingKeys') => state[key],
+                setState: (next: Partial<typeof state>) => Object.assign(state, next),
+            };
+            loadTreeNode(host, 'p', nodeData('p'), (loadedKeys) => notified.push(loadedKeys));
+            loadTreeNode(host, 'p', nodeData('p'), (loadedKeys) => notified.push(loadedKeys));
+            expect(sorted(state.loadingKeys)).toEqual(['p']);
+            await Promise.resolve();
+            await Promise.resolve();
+            return { state, notified, calls };
+        };
+        const uncontrolled = await run();
+        expect(uncontrolled.calls).toBe(1);
+        expect(uncontrolled.notified.map(sorted)).toEqual([['p']]);
+        expect(sorted(uncontrolled.state.loadedKeys)).toEqual(['p']);
+        expect(uncontrolled.state.loadingKeys.size).toBe(0);
+        const controlled = await run([]);
+        expect(controlled.state.loadedKeys.size).toBe(0);
+        expect(controlled.state.loadingKeys.size).toBe(0);
+    });
+
+    it('deriveExpandedKeys 首次只算展开键，之后按展开与收起给出动画键', () => {
+        const flattenNodes = flattenTreeData(treeData, new Set(['p']), undefined);
+        expect(deriveExpandedKeys({ expandedKeys: ['p'], motion: true }, { expandedKeys: new Set(), flattenNodes: [], prevProps: null }, keyEntities, false)).toEqual({ expandedKeys: new Set(['p']) });
+        const shown = deriveExpandedKeys({ expandedKeys: ['p'], motion: true }, { expandedKeys: new Set(), flattenNodes: [], prevProps: {} }, keyEntities, false);
+        expect(shown.motionType).toBe('show');
+        expect(sorted(shown.motionKeys)).toEqual(['a', 'b', 'c']);
+        const hidden = deriveExpandedKeys({ expandedKeys: [], motion: true }, { expandedKeys: new Set(['p']), flattenNodes, prevProps: {} }, keyEntities, false);
+        expect(hidden.motionType).toBe('hide');
+        expect(hidden.cachedFlattenNodes).toBe(flattenNodes);
+        expect(deriveExpandedKeys({ expandedKeys: [], motion: true }, { expandedKeys: new Set(['p']), flattenNodes, prevProps: {} }, keyEntities, true)).toEqual({ expandedKeys: new Set() });
+    });
+
+    it('deriveSearchingState 对新 treeData 重新过滤，受控 expandedKeys 未变时不写状态', () => {
+        const prevState = { inputValue: 'C', treeData, flattenNodes: [], filteredExpandedKeys: new Set(['p']), filteredShownKeys: new Set(['c', 'p']), prevProps: { showFilteredOnly: false } };
+        const refiltered = deriveSearchingState({ filterTreeNode: true, treeNodeFilterProp: 'label' }, prevState, { treeData, structureChanged: true, keyEntities });
+        expect(sorted(refiltered.filteredKeys)).toEqual(['c']);
+        expect(sorted(refiltered.filteredExpandedKeys)).toEqual(['p']);
+        expect(deriveSearchingState({ expandedKeys: ['p'], showFilteredOnly: false }, prevState, { structureChanged: false, keyEntities })).toEqual({});
+        const collapsed = deriveSearchingState({ expandedKeys: [], showFilteredOnly: false }, prevState, { structureChanged: false, keyEntities });
+        expect(collapsed.filteredExpandedKeys.size).toBe(0);
+        expect(collapsed.flattenNodes.map(({ key }) => key)).toEqual(['p']);
+    });
+});
+
+describe('deriveTreeState', () => {
+    const propKeys = ['treeData', 'value', 'defaultValue', 'expandAll', 'multiple', 'onChangeWithObject', 'filterTreeNode', 'remote'] as const;
+    type State = Parameters<typeof deriveTreeState>[1];
+    const empty = { ...getClearedSelection(), prevProps: null, inputValue: '', keyEntities: {}, treeData: [], flattenNodes: [], expandedKeys: new Set(), cachedKeyValuePairs: {}, filteredExpandedKeys: new Set(), filteredShownKeys: new Set() } as unknown as State;
+    const derive = (props: Parameters<typeof deriveTreeState>[0], prev: State = empty): State => ({ ...prev, ...deriveTreeState(props, prev, propKeys) });
+    const rows = (s: State) => s.flattenNodes.map(({ key }) => key);
+
+    it('treeData 换引用但结构不变时重建实体、保留展开，结构变化才按 expandAll 重新展开', () => {
+        const first = derive({ treeData, expandAll: true });
+        const collapsed = { ...first, expandedKeys: new Set<string>() };
+        const relabeled = treeData.map((node) => ({ ...node, label: 'Q' }));
+        const sameShape = derive({ treeData: relabeled, expandAll: true }, collapsed);
+        expect(sameShape.keyEntities.p.data.label).toBe('Q');
+        expect(rows(sameShape)).toEqual(['p']);
+        expect(rows(derive({ treeData: [...relabeled, { key: 'q', label: 'Q' }], expandAll: true }, collapsed))).toEqual(['p', 'a', 'b', 'c', 'q']);
+    });
+
+    it('非受控单选：treeData 晚到时 defaultValue 解析为节点 key，节点删除后不再残留', () => {
+        const data = [{ key: 'k', label: 'K', value: 'v' }];
+        const first = derive({ defaultValue: 'v' });
+        const loaded = derive({ defaultValue: 'v', treeData: data }, first);
+        expect(loaded.selectedKeys).toEqual(['k']);
+        expect(derive({ defaultValue: 'v', treeData: [] }, loaded).selectedKeys).toEqual([]);
+    });
+
+    it('onChangeWithObject 的对象值按 value 展开祖先，受控 value 在 treeData 变化时不再推断展开', () => {
+        const data = [{ key: 'p', label: 'P', value: 'vp', children: [{ key: 'a', label: 'A', value: 'va' }] }];
+        expect(rows(derive({ treeData: data, defaultValue: { key: 'a', value: 'va' }, onChangeWithObject: true }))).toEqual(['p', 'a']);
+        const first = derive({ value: 'va' });
+        expect(rows(derive({ value: 'va', treeData: data }, first))).toEqual(['p']);
+    });
+
+    it('remote 时关键词不过滤 treeData', () => {
+        const props = { treeData, filterTreeNode: true, remote: true, expandAll: true };
+        const searching = { ...derive(props), inputValue: 'zzz' };
+        expect(rows(derive({ ...props, treeData: [...treeData] }, searching))).toEqual(['p', 'a', 'b', 'c']);
     });
 });

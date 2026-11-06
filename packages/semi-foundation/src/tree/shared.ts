@@ -1,13 +1,35 @@
 /**
- * Pure functions shared by the Tree and TreeSelect foundations. They take props and state and return results;
- * notifying callbacks and writing state stay in each foundation. Only types come from ./foundation, so TreeSelect
- * does not bundle the Tree foundation.
+ * Logic shared by the Tree and TreeSelect foundations. Apart from `loadTreeNode`, which drives a load through the
+ * foundation it is given, these are pure: they take props and state and return results, and notifying callbacks and
+ * writing state stay in each foundation. Only types come from ./foundation, so TreeSelect does not bundle the Tree
+ * foundation.
  */
-import { difference, pick } from 'es-toolkit';
+import { difference, isEqual, pick } from 'es-toolkit';
 import { getListTargetIndex, type Typeahead } from '../utils/a11y';
 import { cssClasses } from './constants';
-import type { BasicFlattenNode, BasicKeyEntities, BasicKeyEntity, BasicTreeInnerData, BasicTreeNodeProps, BasicTreeProps, TreeMotionType } from './foundation';
-import { calcCheckedKeys, calcCheckedKeysForChecked, calcCheckedKeysForUnchecked, findDescendantKeys, normalizeKeyList } from './tree-util';
+import type { BasicFlattenNode, BasicKeyEntities, BasicKeyEntity, BasicTreeInnerData, BasicTreeNodeData, BasicTreeNodeProps, BasicTreeProps, TreeMotionType } from './foundation';
+import {
+    calcCheckedKeys,
+    calcCheckedKeysForChecked,
+    calcCheckedKeysForUnchecked,
+    calcDisabledKeys,
+    calcExpandedKeys,
+    calcExpandedKeysForValues,
+    calcMotionKeys,
+    convertDataToEntities,
+    convertJsonToData,
+    filterTreeData,
+    findAncestorKeys,
+    findDescendantKeys,
+    findKeysForValues,
+    flattenTreeData,
+    getFilterProp,
+    getValueOrKey,
+    matchTreeNode,
+    normalizeKeyList,
+    normalizeValue,
+    type KeyMapProps,
+} from './tree-util';
 
 type CheckState = Pick<BasicTreeInnerData, 'keyEntities' | 'checkedKeys' | 'halfCheckedKeys' | 'disabledKeys'>;
 
@@ -337,6 +359,362 @@ export function getDataForKeyNotInKeyEntities(
         valueArr = Array.isArray(defaultValue) ? defaultValue : [defaultValue];
     }
     return valueArr.find((item) => item[realValueName] === key || item[realKeyName] === key);
+}
+
+/**
+ * The data of the node with `key`. A key missing from treeData gets a placeholder node, or under onChangeWithObject
+ * the matching object of `value`/`defaultValue`, undefined when none matches. The key check keeps an inherited
+ * property name (`constructor`) from passing for a node.
+ */
+export function getNodeData(key: string, keyEntities: BasicKeyEntities, props: Parameters<typeof getDataForKeyNotInKeyEntities>[1]): BasicTreeNodeData | undefined {
+    return keyEntities[key] && keyEntities[key].key === key ? keyEntities[key].data : getDataForKeyNotInKeyEntities(key, props);
+}
+
+/** The nodes and values onChange reports for checked keys, merged as leafOnly and autoMergeValue ask under checkRelation="related" */
+export function getMultipleChange(keys: string[], props: Pick<BasicTreeProps, 'leafOnly' | 'checkRelation' | 'keyMaps' | 'autoMergeValue'> & Parameters<typeof getNodeData>[2], keyEntities: BasicKeyEntities) {
+    const { leafOnly, checkRelation, keyMaps, autoMergeValue } = props;
+    let keyList: string[] = [];
+    if (checkRelation === 'related') {
+        // leafOnly takes precedence over autoMergeValue={false}
+        keyList = autoMergeValue || leafOnly ? normalizeKeyList(keys, keyEntities, leafOnly, true) : keys;
+    } else if (checkRelation === 'unRelated') {
+        keyList = keys;
+    }
+    const nodes = keyList.map((key) => getNodeData(key, keyEntities, props));
+    return { nodes, value: getValueOrKey(nodes, keyMaps) };
+}
+
+/** The state of an empty selection in every mode, also what a value cleared back to undefined leaves */
+export function getClearedSelection(): Pick<BasicTreeInnerData, 'selectedKeys' | 'checkedKeys' | 'halfCheckedKeys' | 'realCheckedKeys'> {
+    return { selectedKeys: [], checkedKeys: new Set(), halfCheckedKeys: new Set(), realCheckedKeys: new Set() };
+}
+
+/** The checked state of the keys a multiple value resolves to; empty when checkRelation is neither 'related' nor 'unRelated' */
+export function getCheckedState(keys: string[], checkRelation: BasicTreeProps['checkRelation'], keyEntities: BasicKeyEntities): Partial<Pick<BasicTreeInnerData, 'checkedKeys' | 'halfCheckedKeys' | 'realCheckedKeys'>> {
+    if (checkRelation === 'unRelated') {
+        return { realCheckedKeys: new Set(keys) };
+    }
+    if (checkRelation === 'related') {
+        const { checkedKeys, halfCheckedKeys } = calcCheckedKeys(keys, keyEntities);
+        return { checkedKeys, halfCheckedKeys };
+    }
+    return {};
+}
+
+/**
+ * What a search keyword leaves on screen: the matches, their ancestors expanded, and under showFilteredOnly only
+ * them and their descendants. An empty keyword expands the ancestors of the selection, unless expandedKeys is
+ * controlled. `filteredNodes` is the data of the matches.
+ */
+export function getSearchState(
+    searchValue: string,
+    { showFilteredOnly, filterTreeNode, treeNodeFilterProp, keyMaps, expandedKeys: expandedKeysProp }: Pick<BasicTreeProps, 'showFilteredOnly' | 'filterTreeNode' | 'treeNodeFilterProp' | 'keyMaps' | 'expandedKeys'>,
+    { expandedKeys: prevExpandedKeys, selectedKeys, keyEntities, treeData }: Pick<BasicTreeInnerData, 'expandedKeys' | 'selectedKeys' | 'keyEntities' | 'treeData'>
+) {
+    const expandedKeys = new Set(prevExpandedKeys);
+    let filteredOpts: BasicKeyEntity[] = [];
+    let expandedOptsKeys: string[] = [];
+    let flattenNodes: BasicFlattenNode[];
+    let filteredShownKeys = new Set<string>();
+    if (!searchValue) {
+        if (expandedKeysProp === undefined) {
+            expandedOptsKeys = findAncestorKeys(selectedKeys, keyEntities, false);
+            expandedOptsKeys.forEach((item) => expandedKeys.add(item));
+        }
+        flattenNodes = flattenTreeData(treeData, expandedKeys, keyMaps);
+    } else {
+        const realFilterProp = getFilterProp(treeNodeFilterProp, keyMaps);
+        filteredOpts = Object.values(keyEntities).filter(({ data }) => matchTreeNode(searchValue, data, filterTreeNode, realFilterProp));
+        const filteredOptsKeys = filteredOpts.map(({ key }) => key);
+        expandedOptsKeys = findAncestorKeys(filteredOptsKeys, keyEntities, false);
+        filteredShownKeys = new Set([...findDescendantKeys(filteredOptsKeys, keyEntities, true), ...expandedOptsKeys]);
+        flattenNodes = flattenTreeData(treeData, new Set(expandedOptsKeys), keyMaps, showFilteredOnly && filteredShownKeys);
+    }
+    return {
+        filteredNodes: filteredOpts.map(({ data }) => data),
+        state: {
+            expandedKeys,
+            flattenNodes,
+            motionKeys: new Set<string>(),
+            filteredKeys: new Set(filteredOpts.map(({ key }) => key)),
+            filteredExpandedKeys: new Set(expandedOptsKeys),
+            filteredShownKeys,
+        },
+    };
+}
+
+/** The foundation `loadTreeNode` loads through: Tree or TreeSelect */
+interface TreeLoadHost {
+    getProps(): { loadData?: (data?: BasicTreeNodeData) => Promise<void>; loadedKeys?: string[] };
+    getState(key: 'loadedKeys' | 'loadingKeys'): Set<string>;
+    setState(state: Partial<Pick<BasicTreeInnerData, 'loadedKeys' | 'loadingKeys'>>): void;
+}
+
+/**
+ * Loads a node's children once through `loadData`; `key` is the node's entity key, which keyMaps may take from
+ * another field. A rejection clears the loading state, so the node can be retried, and still reaches the caller.
+ */
+export function loadTreeNode(host: TreeLoadHost, key: string, data: BasicTreeNodeData, notifyLoad: (loadedKeys: Set<string>, data: BasicTreeNodeData) => void) {
+    const { loadData } = host.getProps();
+    const loadingKeys = host.getState('loadingKeys');
+    if (!loadData || host.getState('loadedKeys').has(key) || loadingKeys.has(key)) {
+        return;
+    }
+    void loadData(data)
+        .then(() => {
+            const newLoadedKeys = new Set(host.getState('loadedKeys')).add(key);
+            const newLoadingKeys = new Set(host.getState('loadingKeys'));
+            newLoadingKeys.delete(key);
+            // before the state is written, or loadData triggers twice
+            notifyLoad(newLoadedKeys, data);
+            if (host.getProps().loadedKeys === undefined) {
+                host.setState({ loadedKeys: newLoadedKeys });
+            }
+            host.setState({ loadingKeys: newLoadingKeys });
+        })
+        .finally(() => {
+            const currentLoadingKeys = host.getState('loadingKeys');
+            if (currentLoadingKeys.has(key)) {
+                const newLoadingKeys = new Set(currentLoadingKeys);
+                newLoadingKeys.delete(key);
+                host.setState({ loadingKeys: newLoadingKeys });
+            }
+        });
+    host.setState({ loadingKeys: new Set(loadingKeys).add(key) });
+}
+
+/**
+ * deriveState for a controlled expandedKeys, or an autoExpandParent change: the expanded keys, and when one row opens
+ * or closes without a treeData change, the rows that animate
+ */
+export function deriveExpandedKeys(
+    props: Pick<BasicTreeProps, 'expandedKeys' | 'autoExpandParent' | 'motion'>,
+    prevState: Pick<BasicTreeInnerData, 'expandedKeys' | 'flattenNodes'> & { prevProps: object | null },
+    keyEntities: BasicKeyEntities,
+    treeDataChanged: boolean
+): Partial<Pick<BasicTreeInnerData, 'expandedKeys' | 'motionKeys' | 'motionType' | 'cachedFlattenNodes'>> {
+    const { prevProps } = prevState;
+    const expandedKeys = calcExpandedKeys(props.expandedKeys, keyEntities, props.autoExpandParent || !prevProps);
+    if (!prevProps || !props.motion || treeDataChanged) {
+        return { expandedKeys };
+    }
+    const { motionKeys, motionType } = calcMotionKeys(prevState.expandedKeys, expandedKeys, keyEntities);
+    const newState: ReturnType<typeof deriveExpandedKeys> = { expandedKeys, motionKeys: new Set(motionKeys), motionType };
+    if (motionType === 'hide') {
+        // keeps collapsing rows rendered; a controlled change may not come from interaction
+        newState.cachedFlattenNodes = prevState.flattenNodes;
+    }
+    return newState;
+}
+
+/**
+ * deriveState while a search is on: new treeData is filtered again, and a controlled expandedKeys expands within the
+ * result. `treeData` is set only when its reference changed, `structureChanged` only when its rows did, which alone
+ * stops animations; `keyEntities` are the current ones. `prevFilteredKeys` holds the matches of the previous pass over
+ * the same structure, whose ancestors stay as the user left them.
+ */
+export function deriveSearchingState(
+    props: Pick<BasicTreeProps, 'filterTreeNode' | 'treeNodeFilterProp' | 'showFilteredOnly' | 'keyMaps' | 'expandedKeys' | 'autoExpandParent' | 'motion'>,
+    prevState: Pick<BasicTreeInnerData, 'inputValue' | 'treeData' | 'flattenNodes' | 'filteredExpandedKeys' | 'filteredShownKeys'> & { prevProps: Pick<BasicTreeProps, 'showFilteredOnly'> | null },
+    { treeData, structureChanged, keyEntities, prevFilteredKeys }: { treeData?: BasicTreeNodeData[]; structureChanged: boolean; keyEntities: BasicKeyEntities; prevFilteredKeys?: Set<string> }
+): Partial<BasicTreeInnerData> {
+    const { prevProps } = prevState;
+    const { keyMaps } = props;
+    const newState: Partial<BasicTreeInnerData> = {};
+    if (treeData) {
+        const filteredState = filterTreeData({
+            treeData,
+            inputValue: prevState.inputValue,
+            filterTreeNode: props.filterTreeNode,
+            filterProps: getFilterProp(props.treeNodeFilterProp, keyMaps),
+            showFilteredOnly: props.showFilteredOnly,
+            keyEntities,
+            prevExpandedKeys: [...prevState.filteredExpandedKeys],
+            prevFilteredKeys,
+            keyMaps,
+        });
+        newState.flattenNodes = filteredState.flattenNodes;
+        if (structureChanged) {
+            newState.motionKeys = new Set([]);
+        }
+        newState.filteredKeys = filteredState.filteredKeys;
+        newState.filteredShownKeys = filteredState.filteredShownKeys;
+        newState.filteredExpandedKeys = filteredState.filteredExpandedKeys;
+    }
+    if (props.expandedKeys) {
+        const filteredExpandedKeys = calcExpandedKeys(props.expandedKeys, keyEntities, props.autoExpandParent || !prevProps);
+        const unchanged = prevProps && !treeData && prevProps.showFilteredOnly === props.showFilteredOnly && filteredExpandedKeys.size === prevState.filteredExpandedKeys.size && [...filteredExpandedKeys].every((key) => prevState.filteredExpandedKeys.has(key));
+        if (!unchanged) {
+            newState.filteredExpandedKeys = filteredExpandedKeys;
+            if (prevProps && props.motion && !structureChanged) {
+                const motionResult = calcMotionKeys(prevState.filteredExpandedKeys, filteredExpandedKeys, keyEntities);
+                let { motionKeys } = motionResult;
+                const { motionType } = motionResult;
+                if (props.showFilteredOnly) {
+                    motionKeys = motionKeys.filter((key) => prevState.filteredShownKeys.has(key));
+                }
+                if (motionType === 'hide') {
+                    newState.cachedFlattenNodes = prevState.flattenNodes;
+                }
+                newState.motionKeys = new Set(motionKeys);
+                newState.motionType = motionType;
+            }
+            newState.flattenNodes = flattenTreeData(treeData || prevState.treeData, filteredExpandedKeys, keyMaps, props.showFilteredOnly && (newState.filteredShownKeys ?? prevState.filteredShownKeys));
+        }
+    }
+    return newState;
+}
+
+/** Compares key/value/children only: a label that is a ReactNode is a new object on every render */
+function isTreeDataStructureEqual(prevTreeData: any[], nextTreeData: any[], keyMaps?: KeyMapProps) {
+    if (prevTreeData === nextTreeData) {
+        return true;
+    }
+    if (!prevTreeData || !nextTreeData) {
+        return false;
+    }
+    const realKeyName = keyMaps?.key ?? 'key';
+    const realValueName = keyMaps?.value ?? 'value';
+    const realChildrenName = keyMaps?.children ?? 'children';
+    const compareNodes = (nodesA: any[], nodesB: any[]): boolean =>
+        nodesA.length === nodesB.length &&
+        nodesA.every((nodeA, i) => {
+            const nodeB = nodesB[i];
+            return nodeA[realKeyName] === nodeB[realKeyName] && nodeA[realValueName] === nodeB[realValueName] && compareNodes(nodeA[realChildrenName] || [], nodeB[realChildrenName] || []);
+        });
+    return compareNodes(prevTreeData, nextTreeData);
+}
+
+/**
+ * The uncontrolled selection across a treeData change. A key the previous treeData did not have is a defaultValue
+ * placeholder that holds the value, so it becomes the key of the node with that value once such a node arrives
+ */
+function keepUncontrolledKeys(keys: Iterable<string>, prevKeyEntities: BasicKeyEntities, keyEntities: BasicKeyEntities, valueEntities: Record<string, string>) {
+    return [...keys].flatMap((key) => {
+        if (!(key in prevKeyEntities)) {
+            return [valueEntities[key] ?? key];
+        }
+        return key in keyEntities ? [key] : [];
+    });
+}
+
+type DerivedTreeStateKey = Exclude<keyof BasicTreeInnerData, 'prevProps' | 'dragging' | 'dragNodesKeys' | 'dragOverNodeKey' | 'dropPosition'>;
+
+/** The props deriveTreeState reads; `remote` is TreeSelect's, whose search the user runs, so the tree is never filtered */
+export type DeriveTreeProps = Pick<
+    BasicTreeProps,
+    | 'autoExpandParent'
+    | 'checkRelation'
+    | 'defaultExpandAll'
+    | 'defaultExpandedKeys'
+    | 'defaultValue'
+    | 'disableStrictly'
+    | 'expandAll'
+    | 'expandedKeys'
+    | 'filterTreeNode'
+    | 'keyMaps'
+    | 'loadedKeys'
+    | 'motion'
+    | 'multiple'
+    | 'onChangeWithObject'
+    | 'showFilteredOnly'
+    | 'treeData'
+    | 'treeDataSimpleJson'
+    | 'treeNodeFilterProp'
+    | 'value'
+> & { remote?: boolean };
+
+/**
+ * The state that props imply for Tree and TreeSelect, given the previous state (modeled on rc-tree's
+ * getDerivedStateFromProps, https://github.com/react-component/tree). `prevState.prevProps` holds the props of the
+ * last derivation, and the result keeps the `propKeys` of these props as the next one. Returns null when nothing
+ * changed, so a host that writes the result back settles.
+ */
+export function deriveTreeState(props: DeriveTreeProps, prevState: Pick<BasicTreeInnerData, DerivedTreeStateKey> & { prevProps: DeriveTreeProps | null }, propKeys: readonly (keyof DeriveTreeProps)[]): (Partial<Pick<BasicTreeInnerData, DerivedTreeStateKey>> & { prevProps?: DeriveTreeProps }) | null {
+    const { prevProps } = prevState;
+    const { keyMaps, onChangeWithObject: withObject, multiple: isMultiple } = props;
+    let treeData: BasicTreeNodeData[];
+    let keyEntities = prevState.keyEntities ?? {};
+    let valueEntities = prevState.cachedKeyValuePairs ?? {};
+    const isSearching = Boolean(props.filterTreeNode && !props.remote && prevState.inputValue);
+    const newState: ReturnType<typeof deriveTreeState> = {};
+
+    const needUpdate = (name: keyof DeriveTreeProps) => (prevProps ? !isEqual(prevProps[name], props[name]) : props[name] !== undefined);
+    const findKeys = (value: BasicTreeProps['value']) => findKeysForValues(normalizeValue(value, withObject, keyMaps), valueEntities, isMultiple);
+    const expandedKeysFor = (value: BasicTreeProps['value']) => calcExpandedKeysForValues(normalizeValue(value, withObject, keyMaps), keyEntities, isMultiple, valueEntities);
+
+    const needUpdateSimpleJson = needUpdate('treeDataSimpleJson');
+    // a new reference rebuilds entities (label/icon/disabled may change); only a structural change resets expansion
+    const treeDataRefUpdated = prevProps ? prevProps.treeData !== props.treeData : props.treeData !== undefined;
+    const treeDataStructureUpdated = prevProps ? !isTreeDataStructureEqual(prevProps.treeData, props.treeData, keyMaps) : props.treeData !== undefined;
+
+    if (treeDataRefUpdated || needUpdateSimpleJson) {
+        treeData = treeDataRefUpdated ? props.treeData : convertJsonToData(props.treeDataSimpleJson);
+        newState.treeData = treeData;
+        const entitiesMap = convertDataToEntities(treeData, keyMaps);
+        newState.keyEntities = { ...entitiesMap.keyEntities };
+        keyEntities = newState.keyEntities;
+        newState.cachedKeyValuePairs = { ...entitiesMap.valueEntities };
+        valueEntities = newState.cachedKeyValuePairs;
+    }
+
+    const dataUpdated = needUpdateSimpleJson || treeDataStructureUpdated;
+    if (dataUpdated && props.motion && prevProps) {
+        newState.motionKeys = new Set([]);
+        newState.motionType = null;
+    }
+    if (!isSearching) {
+        if (needUpdate('expandedKeys') || (prevProps && needUpdate('autoExpandParent'))) {
+            Object.assign(newState, deriveExpandedKeys(props, prevState, keyEntities, dataUpdated));
+        } else if ((!prevProps && (props.defaultExpandAll || props.expandAll)) || (dataUpdated && props.expandAll)) {
+            newState.expandedKeys = new Set(Object.keys(keyEntities));
+        } else if (!prevProps && props.defaultExpandedKeys) {
+            newState.expandedKeys = calcExpandedKeys(props.defaultExpandedKeys, keyEntities);
+        } else if (!prevProps && props.defaultValue !== undefined) {
+            newState.expandedKeys = expandedKeysFor(props.defaultValue);
+        } else if (!prevProps && props.value !== undefined) {
+            newState.expandedKeys = expandedKeysFor(props.value);
+        }
+
+        if (treeData || newState.expandedKeys) {
+            newState.flattenNodes = flattenTreeData(treeData || prevState.treeData, newState.expandedKeys || prevState.expandedKeys, keyMaps);
+        }
+    } else {
+        // the same structure under a new reference keeps the ancestors as the user left them during the search
+        Object.assign(newState, deriveSearchingState(props, prevState, { treeData, structureChanged: dataUpdated, keyEntities, prevFilteredKeys: dataUpdated ? undefined : prevState.filteredKeys }));
+    }
+
+    let selectedKeys: string[] | undefined;
+    if (needUpdate('value')) {
+        selectedKeys = findKeys(props.value);
+    } else if (!prevProps && props.defaultValue !== undefined) {
+        selectedKeys = findKeys(props.defaultValue);
+    } else if (treeData) {
+        const prevKeys = !isMultiple ? prevState.selectedKeys : props.checkRelation === 'related' ? prevState.checkedKeys : prevState.realCheckedKeys;
+        selectedKeys = props.value !== undefined ? findKeys(props.value) : keepUncontrolledKeys(prevKeys, prevState.keyEntities, keyEntities, valueEntities);
+    }
+    if (selectedKeys && !isMultiple) {
+        newState.selectedKeys = selectedKeys;
+    } else if (selectedKeys) {
+        Object.assign(newState, getCheckedState(selectedKeys, props.checkRelation, keyEntities));
+    }
+
+    if (needUpdate('loadedKeys')) {
+        newState.loadedKeys = new Set(props.loadedKeys);
+    }
+
+    if (treeData && props.disableStrictly && props.checkRelation === 'related') {
+        newState.disabledKeys = calcDisabledKeys(keyEntities, keyMaps);
+    }
+
+    // a changed compared prop must still move prevProps, or a later render sees it as new
+    const comparedPropChanged = (['expandedKeys', 'autoExpandParent', 'value', 'showFilteredOnly'] as const).some(needUpdate);
+    if (prevProps && Object.keys(newState).length === 0 && !comparedPropChanged) {
+        return null;
+    }
+    // a snapshot: a host may pass the same live props object every time
+    newState.prevProps = pick(props, propKeys);
+    return newState;
 }
 
 /**

@@ -1,12 +1,9 @@
 import { type Accessor, type JSX, type Ref, Show, batch, children, createComputed, createMemo, createSelector, createUniqueId, mergeProps, on, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-// compat get: the label prop name comes from keyMaps/treeNodeLabelProp and is resolved as a path
-import { get } from 'es-toolkit/compat';
 import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
 import { cssClasses, strings } from '@fibrae/semi-foundation/tree-select/constants';
 import TreeSelectFoundation, { type BasicTreeSelectInnerData, type BasicTreeSelectProps, type TreeSelectAdapter } from '@fibrae/semi-foundation/tree-select/foundation';
-import { buildRowProps, nodeId } from '@fibrae/semi-foundation/tree/shared';
-import { normalizeKeyList } from '@fibrae/semi-foundation/tree/tree-util';
+import { buildRowProps, getNodeData as getTreeNodeData, nodeId } from '@fibrae/semi-foundation/tree/shared';
 import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/tree/tree.scss';
@@ -538,9 +535,9 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
         },
     } as const;
 
-    const getNodeData = (key: string) => TreeSelectFoundation.getNodeData(key, state().keyEntities, props) as TreeNodeData | undefined;
+    const getNodeData = (key: string) => getTreeNodeData(key, state().keyEntities, props) as TreeNodeData | undefined;
 
-    const defaultRenderSelectedItem: RenderSelectedItemInMultiple = (item) => ({ isRenderInTag: true, content: get(item, local.keyMaps?.label ?? local.treeNodeLabelProp, null) as JSX.Element });
+    const defaultRenderSelectedItem: RenderSelectedItemInMultiple = (item) => ({ isRenderInTag: true, content: TreeSelectFoundation.getNodeLabel(item, props) as JSX.Element });
 
     const renderSelectedItem = () => (typeof local.renderSelectedItem === 'function' ? (local.renderSelectedItem as RenderSelectedItemInMultiple) : defaultRenderSelectedItem);
 
@@ -905,13 +902,8 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
     );
 
     const TagItem = (itemProps: { itemKey: string; index: number }) => {
-        const item = createMemo(() => (normalizeKeyList([itemProps.itemKey], state().keyEntities, local.leafOnly, true).length ? getNodeData(itemProps.itemKey) : undefined));
-        const closable = () => {
-            const data = item();
-            const hasData = Boolean(data) && Object.keys(data as object).length > 0;
-            const strictlyDisabled = local.disableStrictly && hasData && state().disabledKeys.has(itemProps.itemKey);
-            return hasData && !(data as TreeNodeData)[local.keyMaps?.disabled ?? 'disabled'] && !local.disabled && !strictlyDisabled;
-        };
+        const item = createMemo(() => getNodeData(itemProps.itemKey));
+        const closable = () => TreeSelectFoundation.isTagClosable(itemProps.itemKey, props, state());
         const rendered = createMemo(() => {
             const data = item();
             return data ? renderSelectedItem()(data, { index: itemProps.index, onClose: closeTag(itemProps.itemKey) }) : undefined;
@@ -942,9 +934,8 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
         if (content == null) {
             return undefined;
         }
-        const tagDisabled = local.disabled || item[local.keyMaps?.disabled ?? 'disabled'] || (local.disableStrictly && state().disabledKeys.has(key));
         return isRenderInTag ? (
-            <Tag closable={!tagDisabled} color="white" visible size={tagSize()} onClose={onClose}>
+            <Tag closable={TreeSelectFoundation.isTagClosable(key, props, state())} color="white" visible size={tagSize()} onClose={onClose}>
                 {content}
             </Tag>
         ) : (

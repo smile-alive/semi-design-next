@@ -8,11 +8,10 @@ export type RadioDisplayMode = 'vertical' | '';
 export type RadioGroupButtonSize = 'middle' | 'small' | 'large';
 export type RadioDirection = 'horizontal' | 'vertical';
 
-// A type alias rather than an interface: the foundation reads the event through an index signature.
 export type RadioChangeEventTarget = {
     checked: boolean;
     value: RadioValue | undefined;
-    name?: string;
+    name: string | undefined;
     disabled: boolean;
 };
 

@@ -127,7 +127,7 @@
 | A11 | Solid 行为取舍 | 已定（2026-10-25）：Typography 去掉 `LateNodes` 时包裹层不变、只切换属性；`copyable`、Numeral 只认字符串内容；Upload 不加新 prop，按 Button 在组件体内的登记决定 `.semi-upload-add` 的角色。变化见 `docs/release-notes.md` | 服务端无法检查子节点的 DOM 类型，以首帧可确定的输入决定结构 |
 | A20 | Solid 数据数组里的节点 | 已定（2026-10-26）：数据只放数据。Table `columns`、Select `optionList`、Tree `treeData`、Tabs `tabList` 等数据项只收 `string`、`number` 等值，节点交给组件的 `renderXxx` 或列的 `render`；涉及的组件见 `docs/release-notes.md` 各节的「Solid 破坏性」条目 | JSX 在读取处立即创建 DOM 节点（A9），放在数据里的节点在服务端与客户端的创建时机和插入位置无法一致；与 Vue 的 D12 同向 |
 
-Solid 同样遵守：X2 受控 `visible` 双向拦截；X21 宿主不统一做失活（Solid 没有保活原语）；X28 只按子项身份识别，非子项不渲染并告警；X31 Checkbox 事件载荷按 Vue 的 `CheckboxEventTarget` 构造。
+Solid 同样遵守：X2 受控 `visible` 双向拦截；X21 宿主不统一做失活（Solid 没有保活原语）；X28 只按子项身份识别，非子项不渲染并告警；X31 Checkbox、Radio 事件的 `target` 由 foundation 构造为 `{ checked, value, name, disabled }`，四个框架相同。
 
 ### 3.2 Solid 1.9 原语实测
 

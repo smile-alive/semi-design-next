@@ -1,10 +1,9 @@
 <script setup lang="ts" generic="T = TreeSelectValue, Multiple extends boolean | undefined = undefined">
     import { computed, shallowRef, useAttrs, useId, useTemplateRef, watch, type ComponentPublicInstance } from 'vue';
-    import { get } from 'es-toolkit/compat';
     import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
     import { cssClasses } from '@fibrae/semi-foundation/tree-select/constants';
     import TreeSelectFoundation, { type BasicTreeSelectInnerData, type BasicTreeSelectProps, type TreeSelectAdapter } from '@fibrae/semi-foundation/tree-select/foundation';
-    import { buildRowProps, nodeId } from '@fibrae/semi-foundation/tree/shared';
+    import { buildRowProps, getNodeData as getTreeNodeData, nodeId } from '@fibrae/semi-foundation/tree/shared';
     import { isInnerControlKey, isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/tree/tree.scss';
     import '@fibrae/semi-foundation/tree-select/tree-select.scss';
@@ -290,9 +289,9 @@
 
     const search = (value: string) => foundation.search(value);
 
-    const getNodeData = (key: string) => TreeSelectFoundation.getNodeData(key, view.value.keyEntities, foundationProps.value) as TreeNodeData | undefined;
+    const getNodeData = (key: string) => getTreeNodeData(key, view.value.keyEntities, foundationProps.value) as TreeNodeData | undefined;
 
-    const labelOf = (item: TreeNodeData): unknown => get(item, props.keyMaps?.label ?? props.treeNodeLabelProp, null);
+    const labelOf = (item: TreeNodeData) => TreeSelectFoundation.getNodeLabel(item, foundationProps.value);
 
     const isComboboxKey = (key: string) => comboboxKeys.has(key);
 
@@ -436,8 +435,6 @@
 
     const tagSize = () => (looks.size === 'small' ? 'small' : 'large');
 
-    const isTagDisabled = (key: string, item: TreeNodeData) => Boolean(looks.disabled || item[props.keyMaps?.disabled ?? 'disabled'] || (props.disableStrictly && view.value.disabledKeys.has(key)));
-
     const removeTag = (key: string, event?: TagCloseEvent) => {
         // when the value does not change, the tag must not hide itself
         event?.preventDefault();
@@ -452,7 +449,7 @@
         const slotProps: TreeSelectSelectedItemSlotProps = {
             item,
             index,
-            disabled: isTagDisabled(key, item),
+            disabled: !TreeSelectFoundation.isTagClosable(key, foundationProps.value, view.value),
             onClose: (event) => removeTag(key, event),
         };
         const slot = slots.tag ?? slots.selectedItem;

@@ -57,7 +57,9 @@ export default class CheckboxGroupFoundation<P extends CheckboxGroupBaseProps = 
 
     handleChange = (evt: BasicCheckboxEvent) => {
         const prevValue = CheckboxGroupFoundation.deriveValue(this.getProps(), this.getStates());
-        const { checked, value } = evt.target;
+        const { checked } = evt.target;
+        // a checkbox joins the group only with a value
+        const value = evt.target.value as CheckboxValue;
         const newValue = checked ? [...prevValue, value] : prevValue.filter((item) => item !== value);
 
         if (!this.isControlledComponent()) {

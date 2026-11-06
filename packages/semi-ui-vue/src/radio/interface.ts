@@ -24,7 +24,6 @@ export interface RadioProps {
     preventScroll?: boolean;
 }
 
-// A type alias rather than an interface: the foundation reads the event through an index signature.
 export type RadioChangeEventTarget = {
     checked: boolean;
     value: RadioValue | undefined;

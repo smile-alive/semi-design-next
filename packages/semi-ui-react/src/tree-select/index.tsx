@@ -1,12 +1,10 @@
 import React, { Fragment, useDeferredValue, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
-// compat get: the label prop name comes from keyMaps/treeNodeLabelProp and is resolved as a path
-import { get } from 'es-toolkit/compat';
 import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
 import { cssClasses, strings } from '@fibrae/semi-foundation/tree-select/constants';
 import TreeSelectFoundation, { type Size, type BasicTriggerRenderProps, type BasicTreeSelectProps, type BasicTreeSelectInnerData, type TreeSelectAdapter } from '@fibrae/semi-foundation/tree-select/foundation';
-import { buildRowProps, nodeId } from '@fibrae/semi-foundation/tree/shared';
-import { getValueOrKey, normalizeKeyList } from '@fibrae/semi-foundation/tree/tree-util';
+import { buildRowProps, getNodeData as getTreeNodeData, nodeId } from '@fibrae/semi-foundation/tree/shared';
+import { getValueOrKey } from '@fibrae/semi-foundation/tree/tree-util';
 import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/tree/tree.scss';
@@ -351,9 +349,8 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     const deferredView = useDeferredValue(view);
     const listView = deferredView.inputValue === view.inputValue ? view : deferredView;
     const { isOpen, isFocus } = view;
-    const { inputValue, inputTriggerFocus, keyEntities, disabledKeys } = view;
+    const { inputValue, inputTriggerFocus, keyEntities } = view;
     const { flattenNodes, filteredKeys, motionKeys, motionType, inputValue: listInputValue } = listView;
-    const realLabelName = keyMaps?.label ?? treeNodeLabelProp;
     const isTriggerPositionSearch = Boolean(filterTreeNode) && searchPosition === strings.SEARCH_POSITION_TRIGGER;
     const isDropdownPositionSearch = searchPosition === strings.SEARCH_POSITION_DROPDOWN;
 
@@ -461,7 +458,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
             ? propRenderSelectedItem
             : (item: TreeNodeData) => ({
                   isRenderInTag: true,
-                  content: get(item, realLabelName, null),
+                  content: TreeSelectFoundation.getNodeLabel(item, props) as React.ReactNode,
               });
 
     const hasValue = TreeSelectFoundation.hasValue(props, view);
@@ -497,7 +494,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     /** Tree keys of the open popup (APG combobox with tree popup); returns whether the key was handled */
     const handleTreeKeyDown = (event: React.KeyboardEvent) => isOpen && handleRowKeyDown(event);
 
-    const getNodeData = (key: string) => TreeSelectFoundation.getNodeData(key, keyEntities, props);
+    const getNodeData = (key: string) => getTreeNodeData(key, keyEntities, props);
 
     const getRenderTextInSingle = () => TreeSelectFoundation.getRenderTextInSingle(props, view);
 
@@ -542,9 +539,8 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
             if (content == null) {
                 return;
             }
-            const isDisabled = disabled || item[keyMaps?.disabled ?? 'disabled'] || (disableStrictly && disabledKeys.has(key));
             const tag: Partial<TagProps> = {
-                closable: !isDisabled,
+                closable: TreeSelectFoundation.isTagClosable(key, props, view),
                 color: 'white',
                 visible: true,
                 onClose,
@@ -564,15 +560,13 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     };
 
     const renderTagItem = (key: string, idx: number) => {
-        const keyList = normalizeKeyList([key], keyEntities, leafOnly, true);
-        const nodes = keyList.map(() => getNodeData(key));
-        const nodeValue = getValueOrKey(nodes, keyMaps);
+        const item = getNodeData(key);
+        if (!item) {
+            return null;
+        }
         const tagCls = clsx(`${prefixcls}-selection-tag`, {
             [`${prefixcls}-selection-tag-disabled`]: disabled,
         });
-        const nodeHaveData = nodes.length > 0 && Boolean(nodes[0]) && Object.keys(nodes[0]).length > 0;
-        const isDisableStrictlyNode = disableStrictly && nodeHaveData && disabledKeys.has(key);
-        const closable = nodeHaveData && !nodes[0][keyMaps?.disabled ?? 'disabled'] && !disabled && !isDisableStrictlyNode;
         const onClose = (_tagChildren: React.ReactNode, e: React.MouseEvent | React.KeyboardEvent) => {
             e.preventDefault();
             removeTag(key);
@@ -581,20 +575,16 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
             size: size === 'small' ? 'small' : 'large',
             color: 'white',
             className: tagCls,
-            closable,
+            closable: TreeSelectFoundation.isTagClosable(key, props, view),
             onClose,
         };
-        const item = nodes[0];
-        if (!item) {
-            return null;
-        }
         const { content, isRenderInTag } = (renderSelectedItem as RenderSelectedItemInMultiple)(item, {
             index: idx,
             onClose,
         });
         if (isRenderInTag) {
             return (
-                <Tag key={`tag-${nodeValue}-${idx}`} {...tagProps}>
+                <Tag key={`tag-${getValueOrKey(item, keyMaps)}-${idx}`} {...tagProps}>
                     {content}
                 </Tag>
             );

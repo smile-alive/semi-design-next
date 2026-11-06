@@ -1,6 +1,6 @@
-import { children, createEffect, createMemo, createUniqueId, Match, onMount, Show, splitProps, Switch, type Accessor, type JSX } from 'solid-js';
+import { children, createEffect, createMemo, createUniqueId, Match, onMount, Show, splitProps, Switch, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import CheckboxFoundation, { type CheckboxAdapter, type CheckboxBaseState, type CheckboxView } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
+import CheckboxFoundation, { type CheckboxAdapter, type CheckboxBaseState } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
 import type { CheckboxValue } from '@fibrae/semi-foundation/checkbox/checkbox-group-foundation';
 import { checkboxClasses as css } from '@fibrae/semi-foundation/checkbox/constants';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
@@ -20,11 +20,10 @@ import { useSpecialTrigger } from '../tooltip/context';
 import type { CheckboxType } from './checkbox-group';
 import { useCheckboxGroupContext } from './context';
 
-// Type aliases rather than interfaces: the foundation reads the event through an index signature
 export type CheckboxEventTarget = {
     checked: boolean;
-    value?: CheckboxValue;
-    name?: string;
+    value: CheckboxValue | undefined;
+    name: string | undefined;
     disabled: boolean;
 };
 
@@ -58,7 +57,7 @@ export interface CheckboxProps extends ElementProps<'span', 'onChange' | 'onFocu
     'x-semi-children-alias'?: string;
 }
 
-type FoundationProps = Pick<CheckboxProps, 'checked' | 'defaultChecked' | 'disabled' | 'value' | 'onChange' | 'preventScroll'>;
+type FoundationProps = Pick<CheckboxProps, 'checked' | 'defaultChecked' | 'disabled' | 'name' | 'type' | 'value' | 'onChange' | 'preventScroll'>;
 type Foundation = CheckboxFoundation<FoundationProps>;
 type Adapter = CheckboxAdapter<FoundationProps>;
 
@@ -74,6 +73,7 @@ export default function Checkbox(rawProps: CheckboxProps) {
 
     // The root is a span, so what names, identifies and focuses the checkbox belongs on the native input
     const [control, rest] = splitControlAttrs(attrs, isNativeInputKey);
+    const foundationProps = omitFormInjected(props);
 
     const group = useCheckboxGroupContext();
 
@@ -87,34 +87,25 @@ export default function Checkbox(rawProps: CheckboxProps) {
 
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, CheckboxBaseState>(
         CheckboxFoundation,
-        props,
+        foundationProps,
         (view) => CheckboxFoundation.getInitialState(view),
         (base) => ({
             notifyChange: (event) => base.getProps().onChange?.(event as CheckboxEvent),
-            generateEvent: (checked, event) => ({
-                target: { checked, value: local.value, name: name(), disabled: disabled() },
-                stopPropagation: () => event.stopPropagation(),
-                preventDefault: () => event.preventDefault(),
-                nativeEvent: event as MouseEvent,
-            }),
-            getIsInGroup: () => view().inGroup,
-            getGroupValue: () => group?.view().value ?? [],
             notifyGroupChange: (event) => group?.onChange(event),
-            getGroupDisabled: () => group?.view().disabled ?? false,
             // script focus matches :focus-visible when nothing was focused; a click must not look like keyboard focus
             focusCheckboxEntity: () => {
                 if (input !== input.ownerDocument.activeElement) {
                     focusWithoutRing(input, { preventScroll: base.getProps().preventScroll });
                 }
             },
-        })
+        }),
+        { context: () => (group ? { checkboxGroup: group.view() } : null) }
     );
 
     const content = children(() => local.children);
     const extra = children(() => local.extra);
 
-    // annotated because the adapter above reads it: inferring it would be circular
-    const view: Accessor<CheckboxView> = createMemo(() =>
+    const view = createMemo(() =>
         CheckboxFoundation.deriveView(
             {
                 checked: local.checked,

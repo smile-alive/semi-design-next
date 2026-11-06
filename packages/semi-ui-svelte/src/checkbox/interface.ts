@@ -5,11 +5,10 @@ export type CheckboxValue = string | number | boolean;
 export type CheckboxType = 'default' | 'card' | 'pureCard';
 export type CheckboxDirection = 'horizontal' | 'vertical';
 
-// A type alias rather than an interface: the foundation reads the event through an index signature.
 export type CheckboxEventTarget = {
     checked: boolean;
-    value?: CheckboxValue;
-    name?: string;
+    value: CheckboxValue | undefined;
+    name: string | undefined;
     disabled: boolean;
 };
 

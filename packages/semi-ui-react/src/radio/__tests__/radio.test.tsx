@@ -270,9 +270,7 @@ describe('radio', () => {
         );
         await userEvent.click(screen.getByRole('radio'));
         const e = onChange.mock.calls[0][0];
-        expect(e.target.checked).toBe(true);
-        expect(e.target.value).toBe('v1');
-        expect(e.target.name).toBe('n1');
+        expect(e.target).toEqual({ checked: true, value: 'v1', name: 'n1', disabled: false });
         expect(typeof e.preventDefault).toBe('function');
         expect(parentChange).not.toHaveBeenCalled();
     });

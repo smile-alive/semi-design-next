@@ -51,8 +51,8 @@
                 "en-US": "The `name` of the native input. Inside a CheckboxGroup that sets `value`, the group's `name` applies."
             },
             "onChange": {
-                "zh-CN": "选中状态变化时调用，`e.target` 为组件的属性加上 `checked`，`checked` 为变化后的选中状态。",
-                "en-US": "Called when the checked state changes. `e.target` holds the component's props plus `checked`, the new checked state."
+                "zh-CN": "选中状态变化时调用，`e.target` 包含 `checked`、`value`、`name` 和 `disabled`。",
+                "en-US": "Called when the checked state changes. `e.target` contains `checked`, `value`, `name` and `disabled`."
             },
             "onMouseEnter": {
                 "zh-CN": "鼠标移入时调用。",

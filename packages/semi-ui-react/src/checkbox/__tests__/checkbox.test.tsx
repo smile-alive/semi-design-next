@@ -315,7 +315,7 @@ describe('CheckboxGroup', () => {
 });
 
 describe('checkbox 行为基线', () => {
-    it('onChange 接收由 props 构造的事件对象', async () => {
+    it('onChange 接收事件对象，target 只有 checked、value、name、disabled', async () => {
         const onChange = vi.fn<(e: CheckboxEvent) => void>();
         render(
             <Checkbox value="v" extra="e" onChange={onChange}>
@@ -324,7 +324,7 @@ describe('checkbox 行为基线', () => {
         );
         await userEvent.click(getWrapper());
         const [event] = onChange.mock.calls[0];
-        expect(event.target).toMatchObject({ checked: true, value: 'v', extra: 'e', children: 'label' });
+        expect(event.target).toEqual({ checked: true, value: 'v', name: undefined, disabled: false });
         expect(typeof event.stopPropagation).toBe('function');
         expect(typeof event.preventDefault).toBe('function');
         expect(typeof event.nativeEvent.stopImmediatePropagation).toBe('function');
@@ -712,13 +712,6 @@ describe('checkbox 函数组件', () => {
         const ref = createRef<CheckboxHandle>();
         renderCb({ ref });
         expect(Object.keys(ref.current).sort()).toEqual(['blur', 'focus']);
-    });
-
-    it('onChange 的 target 不携带 ref', async () => {
-        const onChange = vi.fn<(e: CheckboxEvent) => void>();
-        render(<Checkbox ref={createRef<CheckboxHandle>()} onChange={onChange} />);
-        await userEvent.click(getWrapper());
-        expect(onChange.mock.calls[0][0].target).not.toHaveProperty('ref');
     });
 
     it('服务端渲染的 HTML 包含 addon 与 extra 的 id', () => {

@@ -3,7 +3,7 @@
     import { isEqual } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
     import TreeFoundation, { type BasicTreeInnerData, type BasicTreeNodeData, type BasicTreeProps, type TreeAdapter } from '@fibrae/semi-foundation/tree/foundation';
-    import { buildRowProps, nodeId } from '@fibrae/semi-foundation/tree/shared';
+    import { buildRowProps, getClearedSelection, nodeId } from '@fibrae/semi-foundation/tree/shared';
     import '@fibrae/semi-foundation/tree/tree.scss';
     import { IconSearch } from '@fibrae/semi-icons-svelte';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs.js';
@@ -379,7 +379,7 @@
             // The foundation never saw its own echo as the prop, so clearing the prop back to undefined is no change to
             // it: the selection is emptied here
             if (current[0] === undefined && echoes.value && echoes.value.value !== undefined) {
-                foundation.syncDerivedState({ selectedKeys: [], checkedKeys: new Set(), halfCheckedKeys: new Set(), realCheckedKeys: new Set() });
+                foundation.syncDerivedState(getClearedSelection());
             }
             (['value', 'expandedKeys', 'loadedKeys'] as const).forEach((name, i) => {
                 if (echoes[name] && !isEqual(current[i], echoes[name].value)) {

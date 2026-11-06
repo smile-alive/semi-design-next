@@ -57,10 +57,9 @@ type InjectedProps = {
 };
 
 export default function Checkbox(rawProps: CheckboxProps) {
-    const props = useDefaultProps('Checkbox', rawProps, defaultProps);
+    const { ref, ...props } = useDefaultProps('Checkbox', rawProps, defaultProps);
 
     const {
-        ref,
         disabled: disabledProp,
         style,
         prefixCls,
@@ -95,7 +94,7 @@ export default function Checkbox(rawProps: CheckboxProps) {
         insetLabel,
         insetLabelId,
         ...rest
-    } = props as CheckboxProps & InjectedProps;
+    } = props as Omit<CheckboxProps, 'ref'> & InjectedProps;
 
     const context = useCheckboxGroupContext();
 
@@ -108,20 +107,7 @@ export default function Checkbox(rawProps: CheckboxProps) {
         () => CheckboxFoundation.getInitialState(props),
         (base) => ({
             notifyChange: (event) => base.getProps().onChange?.(event as CheckboxEvent),
-            generateEvent: (checked, e) => {
-                const { ref, ...target } = base.getProps();
-                return {
-                    target: { ...target, checked },
-                    stopPropagation: () => e.stopPropagation(),
-                    preventDefault: () => e.preventDefault(),
-                    // handleChange gets the click on the root span
-                    nativeEvent: (e as React.MouseEvent).nativeEvent,
-                };
-            },
-            getIsInGroup: () => Boolean(base.getContexts()?.checkboxGroup && base.getProps().value !== undefined),
-            getGroupValue: () => base.getContexts()?.checkboxGroup?.value || [],
-            notifyGroupChange: (event) => base.getContexts().checkboxGroup.onChange(event),
-            getGroupDisabled: () => base.getContexts()?.checkboxGroup?.disabled,
+            notifyGroupChange: (event) => base.getContexts()?.checkboxGroup?.onChange?.(event),
             // script focus matches :focus-visible when nothing was focused; a click must not look like keyboard focus
             focusCheckboxEntity: () => {
                 const input = inputRef.current;
@@ -159,7 +145,7 @@ export default function Checkbox(rawProps: CheckboxProps) {
     const extraId = extraIdProp || `extra-${uid}`;
 
     useImperativeHandle(
-        props.ref,
+        ref,
         () => ({
             focus: () => inputRef.current?.focus({ preventScroll: props.preventScroll }),
             blur: () => inputRef.current?.blur(),

@@ -1,10 +1,9 @@
 <script lang="ts">
     import { isEqual } from 'es-toolkit';
-    import { get } from 'es-toolkit/compat';
     import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
     import { cssClasses } from '@fibrae/semi-foundation/tree-select/constants';
     import TreeSelectFoundation, { type BasicTreeSelectInnerData, type BasicTreeSelectProps, type TreeSelectAdapter } from '@fibrae/semi-foundation/tree-select/foundation';
-    import { buildRowProps, nodeId } from '@fibrae/semi-foundation/tree/shared';
+    import { buildRowProps, getClearedSelection, getNodeData as getTreeNodeData, nodeId } from '@fibrae/semi-foundation/tree/shared';
     import { isInnerControlKey, isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import '@fibrae/semi-foundation/tree/tree.scss';
@@ -449,7 +448,7 @@
         },
     });
 
-    const getNodeData = (key: string) => TreeSelectFoundation.getNodeData(key, view.keyEntities, foundationProps) as TreeNodeData | undefined;
+    const getNodeData = (key: string) => getTreeNodeData(key, view.keyEntities, foundationProps) as TreeNodeData | undefined;
 
     const singleItem = $derived(singleKey === undefined ? undefined : getNodeData(singleKey));
 
@@ -464,9 +463,7 @@
         onRemove: foundation.removeTag,
     });
 
-    const labelOf = (item: TreeNodeData): unknown => get(item, keyMaps?.label ?? treeNodeLabelProp, null);
-
-    const singleText = $derived(singleItem ? labelOf(singleItem) : undefined);
+    const singleText = $derived(TreeSelectFoundation.getRenderTextInSingle(foundationProps, view));
 
     // a number label 0 is text too
     const singleShown = $derived(Boolean(singleItem) && (Boolean(selectedItem) || (singleText != null && singleText !== '')));
@@ -479,10 +476,6 @@
     // the search box is whatever the `search` snippet renders, so the text field is found by its tag
     const searchField = () => {
         return searchWrapper?.querySelector<HTMLElement>('input, textarea, [contenteditable="true"]');
-    };
-
-    const isTagDisabled = (key: string, item: TreeNodeData) => {
-        return Boolean(disabled || item[keyMaps?.disabled ?? 'disabled'] || (disableStrictly && view.disabledKeys.has(key)));
     };
 
     const removeTag = (key: string, event?: TagCloseEvent) => {
@@ -499,13 +492,13 @@
         const props: TreeSelectSelectedItemSnippetProps = {
             item,
             index,
-            disabled: isTagDisabled(key, item),
+            disabled: !TreeSelectFoundation.isTagClosable(key, foundationProps, view),
             onClose: (event) => removeTag(key, event),
         };
         if (tag || selectedItem) {
             return { key, props };
         }
-        const text = labelOf(item);
+        const text = TreeSelectFoundation.getNodeLabel(item, foundationProps);
         return text == null ? null : { key, props, text };
     };
 
@@ -617,7 +610,7 @@
             // The foundation never saw its own echo as the prop, so clearing the prop back to undefined is no change to
             // it: the selection is emptied here, as handleClear does
             if (current[0] === undefined && echoes.value && echoes.value.value !== undefined) {
-                foundation.syncDerivedState({ selectedKeys: [], checkedKeys: new Set(), halfCheckedKeys: new Set(), realCheckedKeys: new Set() });
+                foundation.syncDerivedState(getClearedSelection());
             }
             (['value', 'expandedKeys', 'loadedKeys'] as const).forEach((name, i) => {
                 if (echoes[name] && !isEqual(current[i], echoes[name].value)) {
