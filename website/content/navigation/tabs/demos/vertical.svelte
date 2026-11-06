@@ -25,17 +25,17 @@
 <br />
 <br />
 <Tabs {tabList} tabPosition="left" {type}>
-    {#snippet tab({ item })}
-        {@const Icon = icons[item.itemKey as keyof typeof icons]}
-        <span><Icon />{item.tab}</span>
+    {#snippet tab(tabItem)}
+        {@const Icon = icons[tabItem.item.itemKey as keyof typeof icons]}
+        <span><Icon />{tabItem.item.tab}</span>
     {/snippet}
-    {#snippet panel({ itemKey })}
+    {#snippet panel(pane)}
         <div style={contentStyle}>
-            {#if itemKey === '1'}
+            {#if pane.itemKey === '1'}
                 <h3>文档</h3>
                 <p style={paragraphStyle}>Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。</p>
                 <p style={paragraphStyle}>区别于其他的设计系统而言，Semi Design 以用户中心、内容优先、设计人性化为设计理念，具有以下优势：</p>
-            {:else if itemKey === '2'}
+            {:else if pane.itemKey === '2'}
                 <h3>快速起步</h3>
                 <pre style={codeStyle}><code>yarn add @fibrae/semi-ui-svelte</code></pre>
             {:else}

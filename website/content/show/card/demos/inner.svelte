@@ -1,17 +1,17 @@
 <script lang="ts">
-    import { Card, TypographyText } from '@fibrae/semi-ui-svelte';
+    import { Card, Typography } from '@fibrae/semi-ui-svelte';
 </script>
 
 <Card title="Card title">
     <Card style="margin-bottom: 20px" title="Inner Card title">
         {#snippet headerExtraContent()}
-            <TypographyText link>More</TypographyText>
+            <Typography.Text link>More</Typography.Text>
         {/snippet}
         Inner Card content
     </Card>
     <Card title="Inner Card title">
         {#snippet headerExtraContent()}
-            <TypographyText link>More</TypographyText>
+            <Typography.Text link>More</Typography.Text>
         {/snippet}
         Inner Card content
     </Card>

@@ -53,7 +53,7 @@ const uploadProps = { action: 'https://api.semi.design/upload' };
 const uploadTipProps = { content: '自定义上传按钮提示信息' };
 
 export default function ChatDemo() {
-    const [chats, setChats] = createSignal<Message[]>(defaultMessage);
+    const [message, setMessage] = createSignal<Message[]>(defaultMessage);
 
     const onMessageSend = () => {
         const newAssistantMessage: Message = {
@@ -63,13 +63,13 @@ export default function ChatDemo() {
             content: '这是一条 mock 回复信息',
         };
         setTimeout(() => {
-            setChats((list) => [...list, newAssistantMessage]);
+            setMessage((list) => [...list, newAssistantMessage]);
         }, 200);
     };
 
     const onMessageReset = () => {
         setTimeout(() => {
-            setChats((list) => {
+            setMessage((list) => {
                 const lastMessage = list[list.length - 1];
                 const newLastMessage: Message = {
                     ...lastMessage,
@@ -81,5 +81,5 @@ export default function ChatDemo() {
         }, 200);
     };
 
-    return <Chat uploadProps={uploadProps} style={commonOuterStyle} chats={chats()} roleConfig={roleInfo} onChatsChange={(next) => setChats(next)} onMessageSend={onMessageSend} onMessageReset={onMessageReset} uploadTipProps={uploadTipProps} showClearContext />;
+    return <Chat uploadProps={uploadProps} style={commonOuterStyle} chats={message()} roleConfig={roleInfo} onChatsChange={(next) => setMessage(next)} onMessageSend={onMessageSend} onMessageReset={onMessageReset} uploadTipProps={uploadTipProps} showClearContext />;
 }

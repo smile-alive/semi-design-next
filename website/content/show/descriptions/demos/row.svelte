@@ -7,26 +7,46 @@
         { key: '7天留存', value: '98%' },
         { key: '安全等级', value: '3级' },
     ];
-    const sizes = ['small', 'medium', 'large'] as const;
-    const style = 'box-shadow: var(--semi-shadow-elevated); background-color: var(--semi-color-bg-2); border-radius: 4px; padding: 10px; margin-right: 20px; width: 600px';
+    const style = 'box-shadow: var(--semi-shadow-elevated); background-color: var(--semi-color-bg-2); border-radius: 4px; padding: 10px; margin-inline-end: 20px; width: 600px';
 </script>
 
 <div>
-    {#each sizes as size (size)}
-        <Descriptions {data} row {size} {style}>
-            {#snippet value({ item, index })}
-                {#if index === 1}
-                    <span>
-                        98%
-                        <IconArrowUp size="small" style="color: red; margin-left: 4px" />
-                    </span>
-                {:else}
-                    {item.value}
-                {/if}
-            {/snippet}
-        </Descriptions>
-        {#if size !== 'large'}
-            <br />
-        {/if}
-    {/each}
+    <Descriptions {data} row size="small" {style}>
+        {#snippet value({ item, index })}
+            {#if index === 1}
+                <span>
+                    98%
+                    <IconArrowUp size="small" style="color: red; margin-inline-start: 4px" />
+                </span>
+            {:else}
+                {item.value}
+            {/if}
+        {/snippet}
+    </Descriptions>
+    <br />
+    <Descriptions {data} row {style}>
+        {#snippet value({ item, index })}
+            {#if index === 1}
+                <span>
+                    98%
+                    <IconArrowUp size="small" style="color: red; margin-inline-start: 4px" />
+                </span>
+            {:else}
+                {item.value}
+            {/if}
+        {/snippet}
+    </Descriptions>
+    <br />
+    <Descriptions {data} row size="large" {style}>
+        {#snippet value({ item, index })}
+            {#if index === 1}
+                <span>
+                    98%
+                    <IconArrowUp size="small" style="color: red; margin-inline-start: 4px" />
+                </span>
+            {:else}
+                {item.value}
+            {/if}
+        {/snippet}
+    </Descriptions>
 </div>

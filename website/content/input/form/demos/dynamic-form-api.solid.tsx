@@ -42,7 +42,7 @@ export default function FormDemo() {
                         <Index each={form.values.effects}>
                             {(effect, i) => (
                                 <div style={{ width: '1000px', display: 'flex' }}>
-                                    <FormInput field={`effects[${i}].name`} aria-label={`特效 ${i + 1} 名称`} style={{ width: '200px', 'margin-right': '12px' }} />
+                                    <FormInput field={`effects[${i}].name`} aria-label={`特效 ${i + 1} 名称`} style={{ width: '200px', 'margin-inline-end': '12px' }} />
                                     <FormSelect field={`effects[${i}].type`} style={{ width: '90px' }}>
                                         <FormSelect.Option value="2D">2D</FormSelect.Option>
                                         <FormSelect.Option value="3D">3D</FormSelect.Option>
@@ -54,7 +54,7 @@ export default function FormDemo() {
                             )}
                         </Index>
                     </Show>
-                    <TextArea aria-label="表单值" style={{ 'margin-top': '10px' }} value={JSON.stringify(form.formState.values)} />
+                    <TextArea aria-label="表单值" style={{ 'margin-block-start': '10px' }} value={JSON.stringify(form.formState.values)} />
                 </>
             )}
         </Form>

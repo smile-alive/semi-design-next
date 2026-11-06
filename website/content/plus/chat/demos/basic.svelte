@@ -2,7 +2,7 @@
     import { Chat, type ChatAlign, type ChatMessage, type ChatMode } from '@fibrae/semi-ai-svelte';
     import { Radio, RadioGroup, type RadioValue } from '@fibrae/semi-ui-svelte';
 
-    const roleConfig = {
+    const roleInfo = {
         user: {
             name: 'User',
             avatar: '/assets/docs-icon.png',
@@ -17,12 +17,14 @@
         },
     };
 
+    const commonOuterStyle = 'border: 1px solid var(--semi-color-border); border-radius: 16px; margin: 8px 16px; height: 550px';
+
     const uploadProps = { action: 'https://api.semi.design/upload' };
 
     let id = 0;
     const getId = () => `id-${id++}`;
 
-    let messages = $state<ChatMessage[]>([
+    let message = $state<ChatMessage[]>([
         {
             role: 'system',
             id: '1',
@@ -39,7 +41,7 @@
             role: 'assistant',
             id: '3',
             createAt: 1715676751919,
-            content: '以下是一个 Semi 代码的使用示例：\n```svelte \n<Button>Click me</Button>\n```\n',
+            content: "以下是一个 Semi 代码的使用示例：\n```jsx \nimport React from 'react';\nimport { Button } from '@fibrae/semi-ui-react';\n\nconst MyComponent = () => {\n  return (\n    <Button>Click me</Button>\n );\n};\nexport default MyComponent;\n```\n",
         },
     ]);
     let mode = $state<RadioValue | undefined>('bubble');
@@ -53,19 +55,19 @@
             content: '这是一条 mock 回复信息',
         };
         setTimeout(() => {
-            messages = [...messages, newAssistantMessage];
+            message = [...message, newAssistantMessage];
         }, 200);
     };
 
     const onMessageReset = () => {
         setTimeout(() => {
-            const lastMessage = messages[messages.length - 1];
+            const lastMessage = message[message.length - 1];
             const newLastMessage: ChatMessage = {
                 ...lastMessage,
                 status: 'complete',
                 content: 'This is a mock reset message.',
             };
-            messages = [...messages.slice(0, -1), newLastMessage];
+            message = [...message.slice(0, -1), newLastMessage];
         }, 200);
     };
 </script>
@@ -88,7 +90,7 @@
     </span>
 </span>
 {#key `${align}${mode}`}
-    <Chat align={align as ChatAlign} bind:chats={messages} mode={mode as ChatMode} {onMessageReset} {onMessageSend} {roleConfig} style="border: 1px solid var(--semi-color-border); border-radius: 16px; margin: 8px 16px; height: 550px" {uploadProps}>
+    <Chat align={align as ChatAlign} bind:chats={message} mode={mode as ChatMode} {onMessageReset} {onMessageSend} roleConfig={roleInfo} style={commonOuterStyle} {uploadProps}>
         {#snippet uploadTip()}自定义上传按钮提示信息{/snippet}
     </Chat>
 {/key}

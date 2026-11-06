@@ -21,7 +21,7 @@
 </script>
 
 <template>
-    <RadioGroup :modelValue="hotSpotLocation" type="button" @update:modelValue="hotSpotLocation = $event as UploadProps['hotSpotLocation']">
+    <RadioGroup aria-label="添加按钮位置" :modelValue="hotSpotLocation" type="button" @update:modelValue="hotSpotLocation = $event as UploadProps['hotSpotLocation']">
         <Radio value="start">start</Radio>
         <Radio value="end">end</Radio>
     </RadioGroup>

@@ -47,19 +47,19 @@
 {/snippet}
 
 <Cascader placeholder="Custom Trigger" {treeData}>
-    {#snippet trigger({ value, placeholder, onClear })}
+    {#snippet trigger(trigger)}
         <!-- The clear button is a sibling of the trigger button: buttons cannot nest -->
         <ButtonGroup theme="light">
             <Button icon={chevron} iconPosition="right">
-                {value ? getLabelFromValue(value as string) : placeholder}
+                {trigger.value ? getLabelFromValue(trigger.value as string) : trigger.placeholder}
             </Button>
-            {#if value}
+            {#if trigger.value}
                 <Button
                     aria-label="清除"
                     icon={close}
                     onclick={(event) => {
                         event.stopPropagation();
-                        onClear(event);
+                        trigger.onClear(event);
                     }}
                 />
             {/if}
@@ -68,19 +68,11 @@
 </Cascader>
 <br />
 <Cascader filterTreeNode multiple placeholder="Custom Trigger" style="width: 300px" {treeData}>
-    {#snippet trigger({ value, onSearch, onRemove })}
-        <TagInput onInputChange={onSearch} value={Array.from(value as Set<string>)}>
-            {#snippet tag({ value: pos })}
-                <Tag
-                    closable
-                    onClose={(event) => {
-                        event.preventDefault();
-                        onRemove(pos);
-                    }}
-                    style="margin-left: 2px"
-                    tagKey={pos}
-                >
-                    {getLabelFromValue(pos)}
+    {#snippet trigger(trigger)}
+        <TagInput onInputChange={trigger.onSearch} value={Array.from(trigger.value as Set<string>)}>
+            {#snippet tag(tag)}
+                <Tag closable onClose={() => trigger.onRemove(tag.value)} style="margin-inline-start: 2px" tagKey={tag.value}>
+                    {getLabelFromValue(tag.value)}
                 </Tag>
             {/snippet}
         </TagInput>

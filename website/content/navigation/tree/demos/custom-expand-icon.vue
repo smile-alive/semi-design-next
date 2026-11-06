@@ -49,9 +49,9 @@
     <br />
     <p>expandIcon 随展开状态变化</p>
     <Tree :defaultExpandedKeys="['yazhou']" multiple :style="style" :treeData="treeData">
-        <template #expandIcon="{ expanded, onClick, class: className }">
-            <IconMinus v-if="expanded" :class="className" size="small" @click="onClick" />
-            <IconPlus v-else :class="className" size="small" @click="onClick" />
+        <template #expandIcon="iconProps">
+            <IconMinus v-if="iconProps.expanded" :class="iconProps.class" size="small" @click="iconProps.onClick" />
+            <IconPlus v-else :class="iconProps.class" size="small" @click="iconProps.onClick" />
         </template>
     </Tree>
 </template>

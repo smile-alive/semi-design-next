@@ -13,7 +13,7 @@
     const provinceList = provinces.map((item) => ({ value: item, label: item }));
     const cityList = $derived(maps[province].map((item) => ({ value: item, label: item })));
 
-    const changeProvince = (next: SelectValue) => {
+    const provinceChange = (next: SelectValue) => {
         if (typeof next !== 'string') {
             return;
         }
@@ -22,5 +22,5 @@
     };
 </script>
 
-<Select aria-label="省份" onChange={changeProvince} optionList={provinceList} style="width: 150px; margin: 10px" value={province} />
+<Select aria-label="省份" onChange={provinceChange} optionList={provinceList} style="width: 150px; margin: 10px" value={province} />
 <Select aria-label="城市" bind:value={city} optionList={cityList} style="width: 150px; margin: 10px" />

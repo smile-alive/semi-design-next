@@ -1,11 +1,9 @@
 <script lang="ts">
     import { Col, Form, FormInput, FormLabel, Row, TextArea, Toast } from '@fibrae/semi-ui-svelte';
-
-    const onSubmit = (values: Record<string, unknown>) => Toast.info({ content: JSON.stringify(values) });
 </script>
 
-<Form {onSubmit}>
-    {#snippet children({ formState })}
+<Form onSubmit={(values) => Toast.info({ content: JSON.stringify(values) })}>
+    {#snippet children(form)}
         <Row>
             <Col span={12}>
                 <FormInput aria-label="username" field="username" placeholder="请尝试输入值" />
@@ -15,9 +13,9 @@
                 <FormInput aria-label="parents[0].name" field="parents[0].name" placeholder="请尝试输入值" />
                 <FormInput aria-label="parents[1]['name']" field="parents[1]['name']" placeholder="请尝试输入值" />
             </Col>
-            <Col offset={1} span={10} style="margin-top: 12px">
+            <Col offset={1} span={10} style="margin-block-start: 12px">
                 <FormLabel text="FormState实时映射值：" />
-                <TextArea aria-label="FormState实时映射值" value={JSON.stringify(formState.values)} />
+                <TextArea aria-label="FormState实时映射值" value={JSON.stringify(form.formState.values)} />
             </Col>
         </Row>
     {/snippet}

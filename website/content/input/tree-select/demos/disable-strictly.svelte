@@ -38,10 +38,8 @@
             key: '1',
         },
     ];
-    const style = 'width: 300px';
-    const dropdownStyle = 'max-height: 400px; overflow: auto';
 </script>
 
 <div>
-    <TreeSelect disableStrictly {dropdownStyle} multiple {style} {treeData} value={['Shanghai']} />
+    <TreeSelect disableStrictly dropdownStyle="max-height: 400px; overflow: auto" multiple style="width: 300px" {treeData} value={['Shanghai']} />
 </div>

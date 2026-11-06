@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { Select, Button } from '@fibrae/semi-ui-react';
 
 export default function SelectDemo() {
-    let [options, setOptions] = useState([1, 2, 3, 4]);
+    const [options, setOptions] = useState([1, 2, 3, 4]);
     const add = () => {
-        let length = Math.ceil(Math.random() * 10);
-        let newOptions = Array.from({ length }, (_v, i) => i + 1);
-        setOptions(newOptions);
+        const length = Math.ceil(Math.random() * 10);
+        setOptions(Array.from({ length }, (_v, i) => i + 1));
     };
     return (
         <>

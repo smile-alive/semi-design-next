@@ -2,26 +2,20 @@ import { useState } from 'react';
 import { IconSearch } from '@fibrae/semi-icons-react';
 import { List, Input } from '@fibrae/semi-ui-react';
 
-export default function ListDemo() {
-    const data = ['围城', '平凡的世界（全三册）', '三体（全集）', '雪中悍刀行（全集）', '撒哈拉的故事', '明朝那些事', '一禅小和尚', '沙丘', '被讨厌的勇气', '罪与罚'];
+const data = ['围城', '平凡的世界（全三册）', '三体（全集）', '雪中悍刀行（全集）', '撒哈拉的故事', '明朝那些事', '一禅小和尚', '沙丘', '被讨厌的勇气', '罪与罚'];
 
+export default function ListDemo() {
     const [list, setList] = useState(data);
 
-    const onSearch = (string?: string) => {
-        let newList: string[];
-        if (string) {
-            newList = data.filter((item) => item.includes(string));
-        } else {
-            newList = data;
-        }
-        setList(newList);
+    const onSearch = (keyword?: string) => {
+        setList(keyword ? data.filter((item) => item.includes(keyword)) : data);
     };
 
     return (
         <div>
             <div
                 style={{
-                    marginRight: 16,
+                    marginInlineEnd: 16,
                     width: 280,
                     display: 'flex',
                     flexWrap: 'wrap',

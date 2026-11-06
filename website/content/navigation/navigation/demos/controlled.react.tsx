@@ -1,7 +1,14 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { IconSemiLogo } from '@fibrae/semi-icons-react';
 import { IconForm, IconBadge, IconBanner, IconTree } from '@fibrae/semi-icons-react/lab';
 import { Nav, type NavItemKey as ItemKey, type NavProps } from '@fibrae/semi-ui-react';
+
+const items = [
+    { itemKey: 'user', text: '用户管理', icon: <IconBadge /> },
+    { itemKey: 'union', text: '活动管理', icon: <IconBanner /> },
+    { itemKey: 'union-management', text: '任务管理', icon: <IconForm />, items: ['公告设置', '任务查询', '信息录入'] },
+    { itemKey: 'job', text: '任务平台', icon: <IconTree />, items: ['任务管理', '用户任务查询'] },
+];
 
 export default function NavigationDemo() {
     const [openKeys, setOpenKeys] = useState<ItemKey[]>(['union-management', 'job']);
@@ -20,26 +27,6 @@ export default function NavigationDemo() {
     const onCollapseChange = (isCollapsed: boolean) => {
         setIsCollapsed(isCollapsed);
     };
-
-    const items = useMemo(
-        () => [
-            { itemKey: 'user', text: '用户管理', icon: <IconBadge /> },
-            { itemKey: 'union', text: '活动管理', icon: <IconBanner /> },
-            {
-                itemKey: 'union-management',
-                text: '任务管理',
-                icon: <IconForm />,
-                items: ['公告设置', '任务查询', '信息录入'],
-            },
-            {
-                text: '任务平台',
-                icon: <IconTree />,
-                itemKey: 'job',
-                items: ['任务管理', '用户任务查询'],
-            },
-        ],
-        []
-    );
 
     return (
         <Nav

@@ -12,24 +12,41 @@
         backgroundColor: 'var(--semi-color-bg-2)',
         borderRadius: '4px',
         padding: '10px',
-        marginRight: '20px',
+        marginInlineEnd: '20px',
         width: '600px',
     };
 </script>
 
 <template>
     <div>
-        <template v-for="size in ['small', 'medium', 'large'] as const" :key="size">
-            <Descriptions :data="data" row :size="size" :style="style">
-                <template #value="{ item, index }">
-                    <span v-if="index === 1">
-                        98%
-                        <IconArrowUp size="small" :style="{ color: 'red', marginLeft: '4px' }" />
-                    </span>
-                    <template v-else>{{ item.value }}</template>
-                </template>
-            </Descriptions>
-            <br v-if="size !== 'large'" />
-        </template>
+        <Descriptions :data="data" row size="small" :style="style">
+            <template #value="{ item, index }">
+                <span v-if="index === 1">
+                    98%
+                    <IconArrowUp size="small" :style="{ color: 'red', marginInlineStart: '4px' }" />
+                </span>
+                <template v-else>{{ item.value }}</template>
+            </template>
+        </Descriptions>
+        <br />
+        <Descriptions :data="data" row :style="style">
+            <template #value="{ item, index }">
+                <span v-if="index === 1">
+                    98%
+                    <IconArrowUp size="small" :style="{ color: 'red', marginInlineStart: '4px' }" />
+                </span>
+                <template v-else>{{ item.value }}</template>
+            </template>
+        </Descriptions>
+        <br />
+        <Descriptions :data="data" row size="large" :style="style">
+            <template #value="{ item, index }">
+                <span v-if="index === 1">
+                    98%
+                    <IconArrowUp size="small" :style="{ color: 'red', marginInlineStart: '4px' }" />
+                </span>
+                <template v-else>{{ item.value }}</template>
+            </template>
+        </Descriptions>
     </div>
 </template>

@@ -2,7 +2,7 @@ import { createSignal } from 'solid-js';
 import { Input, TextArea } from '@fibrae/semi-ui-solid';
 
 const style = { width: '300px' };
-const counterStyle = { 'margin-top': '8px', color: 'var(--semi-color-text-2)', 'font-size': '12px' };
+const counterStyle = { 'margin-block-start': '8px', color: 'var(--semi-color-text-2)', 'font-size': '12px' };
 
 export default function InputDemo() {
     const [inputValue, setInputValue] = createSignal('');

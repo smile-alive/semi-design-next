@@ -24,8 +24,8 @@
 </script>
 
 <template>
-    <div class="tag-margin-right" :style="{ paddingLeft: '40px' }">
-        <div :style="{ marginLeft: '40px', whiteSpace: 'nowrap' }">
+    <div class="tag-margin-right" :style="{ paddingInlineStart: '40px' }">
+        <div :style="{ marginInlineStart: '40px', whiteSpace: 'nowrap' }">
             <Popover v-for="[position, label] in tops" :key="position" arrowPointAtCenter :position="position" showArrow>
                 <Tag>{{ label }}</Tag>
                 <template #content>
@@ -49,7 +49,7 @@
                 </template>
             </Popover>
         </div>
-        <div :style="{ width: '40px', marginLeft: '180px' }">
+        <div :style="{ width: '40px', marginInlineStart: '180px' }">
             <Popover v-for="[position, label] in rights" :key="position" arrowPointAtCenter :position="position" showArrow>
                 <Tag>{{ label }}</Tag>
                 <template #content>
@@ -61,7 +61,7 @@
                 </template>
             </Popover>
         </div>
-        <div :style="{ marginLeft: '40px', clear: 'both', whiteSpace: 'nowrap' }">
+        <div :style="{ marginInlineStart: '40px', clear: 'both', whiteSpace: 'nowrap' }">
             <Popover v-for="[position, label] in bottoms" :key="position" arrowPointAtCenter :position="position" showArrow>
                 <Tag>{{ label }}</Tag>
                 <template #content>

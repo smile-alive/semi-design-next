@@ -30,17 +30,18 @@
         Timeline,
         Toast,
         Tooltip,
-        TypographyText,
+        Typography,
         type NavItems,
         type TimelineData,
     } from '@fibrae/semi-ui-svelte';
 
     let direction = $state<'ltr' | 'rtl'>();
-    const flexStyle = 'display: flex; margin-bottom: 32px; flex-wrap: wrap';
+    const flexStyle = 'display: flex; margin-block-end: 32px; flex-wrap: wrap';
     const titleStyle = 'margin: 50px 0 16px 0';
     const rowStyle = 'margin: 16px 10px';
     const badgeStyle = 'width: 42px; height: 42px; border-radius: 4px; display: inline-block';
-    const tagStyle = 'margin-right: 8px; margin-bottom: 8px';
+    const tagStyle = 'margin-inline-end: 8px; margin-block-end: 8px';
+    const buttonStyle = tagStyle;
     const opts = () => ({
         title: 'Hi,Bytedance',
         content: 'ies dance dance dance',
@@ -94,20 +95,13 @@
         { type: 'success', time: '2019-06-13 16:17', content: '发布成功' },
         { type: 'error', time: '2019-05-14 18:34', content: '审核失败' },
     ];
-    const badges = [
-        { props: { count: 5, theme: 'solid' }, color: 'blue', text: 'XZ' },
-        { props: { count: 5, theme: 'light' }, color: 'cyan', text: 'YB' },
-        { props: { count: 5, theme: 'inverted' }, color: 'indigo', text: 'LX' },
-        { props: { dot: true, theme: 'solid' }, color: 'light-blue', text: 'YZ' },
-        { props: { dot: true, theme: 'light' }, color: 'teal', text: 'HW' },
-    ] as const;
 </script>
 
 {#snippet vigo()}<IconVigoLogo />{/snippet}
 {#snippet pinkVigo()}<IconVigoLogo style="color: pink" />{/snippet}
 
 <div>
-    <div style="margin-bottom: 20px">
+    <div style="margin-block-end: 20px">
         <ButtonGroup>
             <Button onclick={() => (direction = 'ltr')}>LTR</Button>
             <Button onclick={() => (direction = 'rtl')}>RTL</Button>
@@ -118,14 +112,14 @@
             <h3 style={titleStyle}>Buttons</h3>
         </Row>
         <Row style={rowStyle}>
-            <Button loading style="margin-right: 8px" theme="solid">加载</Button>
-            <Button style="margin-right: 8px" theme="solid">
+            <Button loading style="margin-inline-end: 8px" theme="solid">加载</Button>
+            <Button style="margin-inline-end: 8px" theme="solid">
                 {#snippet icon()}
                     <IconSidebar />
                 {/snippet}
                 收起
             </Button>
-            <Button iconPosition="right" style="margin-right: 8px" theme="solid">
+            <Button iconPosition="right" style="margin-inline-end: 8px" theme="solid">
                 {#snippet icon()}
                     <IconChevronDown />
                 {/snippet}
@@ -157,7 +151,7 @@
                 <br />
                 <Input aria-label="带后缀的输入框" showClear>
                     {#snippet suffix()}
-                        <TypographyText strong style="margin: 0 8px" type="secondary">Suffix</TypographyText>
+                        <Typography.Text strong style="margin: 0 8px" type="secondary">Suffix</Typography.Text>
                     {/snippet}
                 </Input>
                 <br />
@@ -166,19 +160,19 @@
                 <br />
                 <br />
                 <div style={flexStyle}>
-                    <Switch aria-label="已开启的开关" checked style="margin-right: 8px" />
-                    <Switch aria-label="已关闭的开关" style="margin-right: 8px" />
-                    <Switch aria-label="禁用的开关" checked disabled style="margin-right: 8px" />
+                    <Switch aria-label="已开启的开关" checked style="margin-inline-end: 8px" />
+                    <Switch aria-label="已关闭的开关" style="margin-inline-end: 8px" />
+                    <Switch aria-label="禁用的开关" checked disabled style="margin-inline-end: 8px" />
                 </div>
                 <div style={flexStyle}>
-                    <Checkbox checked style="margin-right: 8px">多选框</Checkbox>
-                    <Checkbox checked disabled style="margin-right: 8px">禁用的多选框</Checkbox>
-                    <Checkbox disabled style="margin-right: 8px">禁用的多选框</Checkbox>
+                    <Checkbox checked style="margin-inline-end: 8px">多选框</Checkbox>
+                    <Checkbox checked disabled style="margin-inline-end: 8px">禁用的多选框</Checkbox>
+                    <Checkbox disabled style="margin-inline-end: 8px">禁用的多选框</Checkbox>
                 </div>
-                <div style="{flexStyle}; margin-bottom: 0">
-                    <Radio checked style="margin-right: 8px">单选框</Radio>
-                    <Radio checked disabled style="margin-right: 8px">禁用的单选框</Radio>
-                    <Radio disabled style="margin-right: 8px">禁用的单选框</Radio>
+                <div style="{flexStyle}; margin-block-end: 0">
+                    <Radio checked style="margin-inline-end: 8px">单选框</Radio>
+                    <Radio checked disabled style="margin-inline-end: 8px">禁用的单选框</Radio>
+                    <Radio disabled style="margin-inline-end: 8px">禁用的单选框</Radio>
                 </div>
             </Col>
             <Col span={12}>
@@ -217,22 +211,40 @@
             <br />
             <Pagination showSizeChanger total={80} />
             <br />
-            <Steps current={1} dataSource={steps} type="basic" />
+            <Steps current={1} dataSource={steps} />
             <br />
-            <Steps current={1} dataSource={steps} status="error" type="basic" />
+            <Steps current={1} dataSource={steps} status="error" />
         </Row>
         <Row>
             <h3 style={titleStyle}>Display</h3>
         </Row>
         <Row style={rowStyle}>
             <div style="display: flex">
-                {#each badges as badge (badge.text)}
-                    <div style="padding: 8px">
-                        <Badge {...badge.props}>
-                            <Avatar color={badge.color} shape="square" style={badgeStyle}>{badge.text}</Avatar>
-                        </Badge>
-                    </div>
-                {/each}
+                <div style="padding: 8px">
+                    <Badge count={5} theme="solid">
+                        <Avatar color="blue" shape="square" style={badgeStyle}>XZ</Avatar>
+                    </Badge>
+                </div>
+                <div style="padding: 8px">
+                    <Badge count={5} theme="light">
+                        <Avatar color="cyan" shape="square" style={badgeStyle}>YB</Avatar>
+                    </Badge>
+                </div>
+                <div style="padding: 8px">
+                    <Badge count={5} theme="inverted">
+                        <Avatar color="indigo" shape="square" style={badgeStyle}>LX</Avatar>
+                    </Badge>
+                </div>
+                <div style="padding: 8px">
+                    <Badge dot theme="solid">
+                        <Avatar color="light-blue" shape="square" style={badgeStyle}>YZ</Avatar>
+                    </Badge>
+                </div>
+                <div style="padding: 8px">
+                    <Badge dot theme="light">
+                        <Avatar color="teal" shape="square" style={badgeStyle}>HW</Avatar>
+                    </Badge>
+                </div>
                 <div style="padding: 8px; border-radius: 4px; background-color: var(--semi-color-fill-0)">
                     <Badge dot theme="inverted">
                         <Avatar color="green" shape="square" style={badgeStyle}>XM</Avatar>
@@ -256,13 +268,13 @@
             <div style="display: flex; align-items: center">
                 <Popover style="padding: 8px">
                     {#snippet content()}hi semi-design{/snippet}
-                    <Tag style="margin-right: 8px">I am Popover</Tag>
+                    <Tag style="margin-inline-end: 8px">I am Popover</Tag>
                 </Popover>
                 <Tooltip>
                     {#snippet content()}hi semi-design{/snippet}
-                    <Tag style="margin-right: 8px">I am Tooltip</Tag>
+                    <Tag style="margin-inline-end: 8px">I am Tooltip</Tag>
                 </Tooltip>
-                <Rating size="small" style="margin-right: 8px" value={3} />
+                <Rating size="small" style="margin-inline-end: 8px" value={3} />
             </div>
             <br />
             <Timeline dataSource={timeline} />
@@ -271,30 +283,30 @@
             <h3 style={titleStyle}>Feedback</h3>
         </Row>
         <Row style={rowStyle}>
-            <Button style={tagStyle} type="primary" onclick={() => Notification.success(opts())}>成功信息的通知</Button>
-            <Button style={tagStyle} onclick={() => Notification.info(opts())}>提示信息的通知</Button>
-            <Button style={tagStyle} type="warning" onclick={() => Notification.warning(opts())}>警告信息的通知</Button>
-            <Button style={tagStyle} type="danger" onclick={() => Notification.error(opts())}>失败信息的通知</Button>
-            <Button aria-label="Vigo 图标通知" style={tagStyle} onclick={() => Notification.info({ ...opts(), icon: vigo })}>
+            <Button style={buttonStyle} type="primary" onclick={() => Notification.success(opts())}>成功信息的通知</Button>
+            <Button style={buttonStyle} onclick={() => Notification.info(opts())}>提示信息的通知</Button>
+            <Button style={buttonStyle} type="warning" onclick={() => Notification.warning(opts())}>警告信息的通知</Button>
+            <Button style={buttonStyle} type="danger" onclick={() => Notification.error(opts())}>失败信息的通知</Button>
+            <Button aria-label="Vigo 图标通知" style={buttonStyle} onclick={() => Notification.info({ ...opts(), icon: vigo })}>
                 {#snippet icon()}
                     <IconVigoLogo />
                 {/snippet}
             </Button>
-            <Button aria-label="粉色 Vigo 图标通知" style={tagStyle} onclick={() => Notification.info({ ...opts(), icon: pinkVigo })}>
+            <Button aria-label="粉色 Vigo 图标通知" style={buttonStyle} onclick={() => Notification.info({ ...opts(), icon: pinkVigo })}>
                 {#snippet icon()}
                     <IconVigoLogo />
                 {/snippet}
             </Button>
             <br />
-            <Button style={tagStyle} type="primary" onclick={() => Modal.success(opts())}>成功信息的弹窗</Button>
-            <Button style={tagStyle} onclick={() => Modal.info(opts())}>提示信息的弹窗</Button>
-            <Button style={tagStyle} type="warning" onclick={() => Modal.warning(opts())}>警告信息的弹窗</Button>
-            <Button style={tagStyle} type="danger" onclick={() => Modal.error(opts())}>失败信息的弹窗</Button>
+            <Button style={buttonStyle} type="primary" onclick={() => Modal.success(opts())}>成功信息的弹窗</Button>
+            <Button style={buttonStyle} onclick={() => Modal.info(opts())}>提示信息的弹窗</Button>
+            <Button style={buttonStyle} type="warning" onclick={() => Modal.warning(opts())}>警告信息的弹窗</Button>
+            <Button style={buttonStyle} type="danger" onclick={() => Modal.error(opts())}>失败信息的弹窗</Button>
             <br />
-            <Button style={tagStyle} type="primary" onclick={() => Toast.success(opts())}>成功信息的提示</Button>
-            <Button style={tagStyle} onclick={() => Toast.info(opts())}>提示信息的提示</Button>
-            <Button style={tagStyle} type="warning" onclick={() => Toast.warning(opts())}>警告信息的提示</Button>
-            <Button style={tagStyle} type="danger" onclick={() => Toast.error(opts())}>失败信息的提示</Button>
+            <Button style={buttonStyle} type="primary" onclick={() => Toast.success(opts())}>成功信息的提示</Button>
+            <Button style={buttonStyle} onclick={() => Toast.info(opts())}>提示信息的提示</Button>
+            <Button style={buttonStyle} type="warning" onclick={() => Toast.warning(opts())}>警告信息的提示</Button>
+            <Button style={buttonStyle} type="danger" onclick={() => Toast.error(opts())}>失败信息的提示</Button>
             <br />
             <br />
             <Spin>

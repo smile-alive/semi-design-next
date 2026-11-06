@@ -23,16 +23,16 @@ const audioUrlArrObj = [
 export default function AudioPlayerDemo() {
     return (
         <div style={{ width: '100%' }}>
-            <div style={{ 'margin-top': '10px' }}>
+            <div style={{ 'margin-block-start': '10px' }}>
                 <AudioPlayer autoPlay={false} audioUrl={audioUrl} />
             </div>
-            <div style={{ 'margin-top': '10px' }}>
+            <div style={{ 'margin-block-start': '10px' }}>
                 <AudioPlayer autoPlay={false} audioUrl={audioUrlObj} />
             </div>
-            <div style={{ 'margin-top': '10px' }}>
+            <div style={{ 'margin-block-start': '10px' }}>
                 <AudioPlayer autoPlay={false} audioUrl={audioUrlArr} />
             </div>
-            <div style={{ 'margin-top': '10px' }}>
+            <div style={{ 'margin-block-start': '10px' }}>
                 <AudioPlayer autoPlay={false} audioUrl={audioUrlArrObj} />
             </div>
         </div>

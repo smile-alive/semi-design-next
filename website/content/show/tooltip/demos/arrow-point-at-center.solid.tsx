@@ -6,17 +6,17 @@ export default function TooltipDemo() {
             <div>
                 <Tooltip position="topLeft" content="semi design tooltip">
                     {(trigger) => (
-                        <Button type="secondary" style={{ 'margin-right': '8px' }} {...trigger()}>
+                        <Button type="secondary" style={{ 'margin-inline-end': '8px' }} {...trigger()}>
                             指向元素中心
                         </Button>
                     )}
                 </Tooltip>
             </div>
 
-            <div style={{ 'margin-top': '20px' }}>
+            <div style={{ 'margin-block-start': '20px' }}>
                 <Tooltip content="semi design tooltip" arrowPointAtCenter={false} position="topLeft">
                     {(trigger) => (
-                        <Button type="secondary" style={{ 'margin-right': '8px', width: '120px' }} {...trigger()}>
+                        <Button type="secondary" style={{ 'margin-inline-end': '8px', width: '120px' }} {...trigger()}>
                             边缘对齐
                         </Button>
                     )}

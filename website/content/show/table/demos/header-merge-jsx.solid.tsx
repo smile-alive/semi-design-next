@@ -31,7 +31,11 @@ function getData(total: number) {
     return data;
 }
 
-const dataSource = getData(46);
+const data = getData(46);
+
+const rowSelection = { fixed: true };
+
+const scroll = { x: 1000, y: 400 };
 
 const nameFilters = [
     {
@@ -47,7 +51,7 @@ const nameFilters = [
 function renderName(text: string) {
     return (
         <span>
-            <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-right': '12px' }} />
+            <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-inline-end': '12px' }} />
             {text}
         </span>
     );
@@ -56,7 +60,7 @@ function renderName(text: string) {
 function renderOwner(text: string, record: Row) {
     return (
         <div>
-            <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
+            <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
                 {typeof text === 'string' && text.slice(0, 1)}
             </Avatar>
             {text}
@@ -66,7 +70,7 @@ function renderOwner(text: string, record: Row) {
 
 export default function TableDemo() {
     return (
-        <Table rowSelection={{ fixed: true }} expandedRowRender={(record) => <article>{record.name}</article>} dataSource={dataSource} scroll={{ x: 1000, y: 400 }} onChange={(changeInfo) => console.log(changeInfo)}>
+        <Table rowSelection={rowSelection} expandedRowRender={(record) => <article>{record.name}</article>} dataSource={data} scroll={scroll} onChange={(changeInfo) => console.log(changeInfo)}>
             <Table.Column title="基本信息" fixed="left">
                 <Table.Column title="标题" dataIndex="name" width={300} fixed render={renderName} filters={nameFilters} onFilter={(value, record) => (record as Row).name.includes(value)} />
                 <Table.Column title="大小" dataIndex="size" width={100} fixed render={(text) => `${text} KB`} sorter={(a, b) => ((a as Row).size - (b as Row).size > 0 ? 1 : -1)} />

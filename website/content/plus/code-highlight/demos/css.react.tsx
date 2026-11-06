@@ -1,10 +1,6 @@
 import { CodeHighlight } from '@fibrae/semi-ui-react';
 
-export default function CodeHighlightDemo() {
-    return (
-        <CodeHighlight
-            language="css"
-            code={`.grid {
+const code = `.grid {
     .semi-row,
     .semi-row-flex {
         text-align: center;
@@ -16,7 +12,8 @@ export default function CodeHighlightDemo() {
         }
     }
 }
-`}
-        />
-    );
+`;
+
+export default function CodeHighlightDemo() {
+    return <CodeHighlight code={code} language="css" />;
 }

@@ -47,7 +47,7 @@
         <br />
         <br />
         <strong>更改主题：</strong>
-        <Button aria-label="截屏" :style="{ marginRight: '10px' }" theme="solid">
+        <Button aria-label="截屏" :style="{ marginInlineEnd: '10px' }" theme="solid">
             <template #icon>
                 <IconCamera />
             </template>
@@ -60,7 +60,7 @@
         <br />
         <br />
         <strong>更改图标位置：</strong>
-        <Button :style="{ marginRight: '10px' }" theme="solid">
+        <Button :style="{ marginInlineEnd: '10px' }" theme="solid">
             <template #icon>
                 <IconSidebar />
             </template>

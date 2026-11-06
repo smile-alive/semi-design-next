@@ -25,7 +25,7 @@ export default function UploadDemo() {
                 action={action}
                 defaultFileList={defaultFileList}
                 style={{ 'margin-bottom': '20px' }}
-                fileListTitle={({ fileList, onClear, clearText }) => (
+                fileListTitle={(title) => (
                     <div
                         style={{
                             display: 'flex',
@@ -34,9 +34,9 @@ export default function UploadDemo() {
                             width: '100%',
                         }}
                     >
-                        <span style={{ color: 'var(--semi-color-primary)' }}>📂 共 {fileList.length} 个文件</span>
-                        <Button size="small" type="danger" icon={<IconClose />} onClick={onClear}>
-                            {clearText}
+                        <span style={{ color: 'var(--semi-color-primary)' }}>📂 共 {title.fileList.length} 个文件</span>
+                        <Button size="small" type="danger" icon={<IconClose />} onClick={title.onClear}>
+                            {title.clearText}
                         </Button>
                     </div>
                 )}
@@ -48,7 +48,7 @@ export default function UploadDemo() {
             <Upload
                 action={action}
                 defaultFileList={defaultFileList}
-                fileListTitle={({ fileList, onClear }) => (
+                fileListTitle={(title) => (
                     <div
                         style={{
                             display: 'flex',
@@ -58,11 +58,11 @@ export default function UploadDemo() {
                         }}
                     >
                         <span>
-                            已选择 <strong style={{ color: 'var(--semi-color-danger)' }}>{fileList.length}</strong> 个文件
+                            已选择 <strong style={{ color: 'var(--semi-color-danger)' }}>{title.fileList.length}</strong> 个文件
                         </span>
                         <button
                             type="button"
-                            onClick={onClear}
+                            onClick={title.onClear}
                             style={{
                                 padding: '0',
                                 border: 'none',

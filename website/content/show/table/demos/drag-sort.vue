@@ -125,12 +125,12 @@
         <Table :columns="columns" :components="components" :dataSource="pageData" :pagination="{ currentPage: pageNum, pageSize, total: dataSource.length }" rowKey="key" @change="handleChange">
             <template #cell="{ column, record, text }">
                 <div v-if="column.dataIndex === 'name'">
-                    <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginRight: '12px' }" />
+                    <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginInlineEnd: '12px' }" />
                     {{ text }}
                 </div>
                 <template v-else-if="column.dataIndex === 'size'">{{ text }} KB</template>
                 <div v-else-if="column.dataIndex === 'owner'">
-                    <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
+                    <Avatar :color="record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
                         {{ typeof text === 'string' && text.slice(0, 1) }}
                     </Avatar>
                     {{ text }}

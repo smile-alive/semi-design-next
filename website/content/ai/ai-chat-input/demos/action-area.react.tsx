@@ -7,14 +7,14 @@ const uploadProps = { action: 'https://api.semi.design/upload' };
 const outerStyle = { margin: 12 };
 
 export default function AIChatInputDemo() {
-    const renderActionArea = useCallback((props: ActionAreaProps) => {
+    const renderActionArea = useCallback((actionArea: ActionAreaProps) => {
         return (
-            <div className={props.className}>
+            <div className={actionArea.className}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Button aria-label="清空内容" type="tertiary" style={{ borderRadius: '50%' }} icon={<IconDeleteStroked />} />
-                    <Divider layout="vertical" style={{ marginLeft: 8 }} />
+                    <Divider layout="vertical" style={{ marginInlineStart: 8 }} />
                 </div>
-                {props.menuItem}
+                {actionArea.menuItem}
             </div>
         );
     }, []);

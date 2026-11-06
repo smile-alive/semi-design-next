@@ -1,8 +1,6 @@
 <script lang="ts">
     import { Sidebar } from '@fibrae/semi-ai-svelte';
 
-    const { CodeContent } = Sidebar;
-
     const defaultCodes = [
         {
             name: 'Component.js',
@@ -145,5 +143,5 @@ import { IconSearch } from '@fibrae/semi-icons-react';
 </script>
 
 <div class="semi-sidebar-main">
-    <CodeContent bind:activeKey codes={defaultCodes} style="width: 600px" />
+    <Sidebar.CodeContent bind:activeKey codes={defaultCodes} style="width: 600px" />
 </div>

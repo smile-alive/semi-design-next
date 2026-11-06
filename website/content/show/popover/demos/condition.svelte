@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Button, Popover, Space, Switch, TypographyText } from '@fibrae/semi-ui-svelte';
+    import { Button, Popover, Space, Switch, Typography } from '@fibrae/semi-ui-svelte';
 
     let enabled = $state(true);
     const text = $derived(`condition is ${enabled ? 'true' : 'false'}`);
@@ -8,7 +8,7 @@
 {#snippet content()}{text}{/snippet}
 
 <Space align="center">
-    <TypographyText id="popover-condition-label">condition</TypographyText>
+    <Typography.Text id="popover-condition-label">condition</Typography.Text>
     <Switch aria-labelledby="popover-condition-label" bind:checked={enabled} />
     <Popover condition={enabled} {content}>
         {#snippet child({ props })}

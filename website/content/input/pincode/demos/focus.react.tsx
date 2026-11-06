@@ -13,11 +13,11 @@ export default function PinCodeDemo() {
                 aria-label="Verification code"
                 format="mixed"
                 ref={ref}
-                onComplete={(value) => console.log('pincode: ', value)}
+                onComplete={(code) => console.log('pincode: ', code)}
                 value={value}
-                onChange={(v) => {
-                    console.log(v);
-                    setValue(v);
+                onChange={(code) => {
+                    console.log(code);
+                    setValue(code);
                 }}
             />
         </>

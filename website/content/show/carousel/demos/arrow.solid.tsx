@@ -52,14 +52,14 @@ export default function CarouselDemo() {
             <Space vertical align="start">
                 <Space>
                     <div>展示箭头</div>
-                    <RadioGroup onChange={(e) => setShow(e.target.value)} value={show()} type="button">
+                    <RadioGroup aria-label="展示箭头" onChange={(e) => setShow(e.target.value)} value={show()} type="button">
                         <Radio value>show</Radio>
                         <Radio value={false}>hide</Radio>
                     </RadioGroup>
                 </Space>
                 <Space>
                     <div>展示时机</div>
-                    <RadioGroup onChange={(e) => setArrowType(e.target.value)} value={arrowType()} type="button">
+                    <RadioGroup aria-label="展示时机" onChange={(e) => setArrowType(e.target.value)} value={arrowType()} type="button">
                         <Radio value="always">always</Radio>
                         <Radio value="hover">hover</Radio>
                     </RadioGroup>

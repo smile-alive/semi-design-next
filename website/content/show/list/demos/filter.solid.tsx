@@ -7,13 +7,13 @@ const data = ['围城', '平凡的世界（全三册）', '三体（全集）', 
 export default function ListDemo() {
     const [list, setList] = createSignal(data);
 
-    const onSearch = (string?: string) => {
-        setList(string ? data.filter((item) => item.includes(string)) : data);
+    const onSearch = (keyword?: string) => {
+        setList(keyword ? data.filter((item) => item.includes(keyword)) : data);
     };
 
     return (
         <div>
-            <div style={{ 'margin-right': '16px', width: '280px', display: 'flex', 'flex-wrap': 'wrap', border: '1px solid var(--semi-color-border)' }}>
+            <div style={{ 'margin-inline-end': '16px', width: '280px', display: 'flex', 'flex-wrap': 'wrap', border: '1px solid var(--semi-color-border)' }}>
                 <List
                     class="component-list-demo-booklist"
                     dataSource={list()}

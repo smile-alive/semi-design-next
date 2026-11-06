@@ -47,7 +47,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}

@@ -53,30 +53,30 @@ function getLabelFromValue(value: string) {
 }
 
 // The clear button is a sibling of the trigger button: buttons cannot nest
-const triggerRenderSingle = (props: CascaderTriggerRenderProps) => (
+const triggerRenderSingle = (trigger: CascaderTriggerRenderProps) => (
     <ButtonGroup theme="light">
         <Button icon={<IconChevronDown />} iconPosition="right">
-            {props.value ? getLabelFromValue(props.value) : props.placeholder}
+            {trigger.value ? getLabelFromValue(trigger.value) : trigger.placeholder}
         </Button>
-        <Show when={props.value}>
+        <Show when={trigger.value}>
             <Button
                 icon={<IconClose />}
                 aria-label="清除"
                 onClick={(e) => {
                     e.stopPropagation();
-                    props.onClear(e);
+                    trigger.onClear(e);
                 }}
             />
         </Show>
     </ButtonGroup>
 );
 
-const triggerRenderMultiple = (props: CascaderTriggerRenderProps<true>) => (
+const triggerRenderMultiple = (trigger: CascaderTriggerRenderProps<true>) => (
     <TagInput
-        value={[...props.value]}
-        onInputChange={(value) => props.onSearch(value)}
+        value={[...trigger.value]}
+        onInputChange={(value) => trigger.onSearch(value)}
         renderTagItem={(value) => (
-            <Tag tagKey={value} closable onClose={() => props.onRemove(value)} style={{ 'margin-left': '2px' }}>
+            <Tag tagKey={value} closable onClose={() => trigger.onRemove(value)} style={{ 'margin-inline-start': '2px' }}>
                 {getLabelFromValue(value)}
             </Tag>
         )}

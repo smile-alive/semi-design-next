@@ -9,16 +9,16 @@
 
 <template>
     <Form :style="{ width: '400px' }" @submit="handleSubmit">
-        <template #default="{ values }">
+        <template #default="form">
             <FormInput field="phone" label="PhoneNumber" placeholder="Enter your phone number" :style="{ width: '100%' }" />
             <FormInput field="password" label="Password" placeholder="Enter your password" :style="{ width: '100%' }" />
             <FormCheckbox field="agree" noLabel>I have read and agree to the terms of service</FormCheckbox>
             <div :style="{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }">
                 <p>
                     <span>Or</span>
-                    <Button :style="{ color: 'var(--semi-color-primary)', marginLeft: '10px', cursor: 'pointer' }" theme="borderless"> Sign up </Button>
+                    <Button :style="{ color: 'var(--semi-color-primary)', marginInlineStart: '10px', cursor: 'pointer' }" theme="borderless"> Sign up </Button>
                 </p>
-                <Button :disabled="!values.agree" htmlType="submit" type="tertiary">Log in</Button>
+                <Button :disabled="!form.values.agree" htmlType="submit" type="tertiary">Log in</Button>
             </div>
         </template>
     </Form>

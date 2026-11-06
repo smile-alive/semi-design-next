@@ -28,7 +28,7 @@
     let id = 0;
     const getId = () => `id-${id++}`;
 
-    const messages = ref<Message[]>([
+    const message = ref<Message[]>([
         {
             role: 'system',
             id: '1',
@@ -65,55 +65,69 @@ Learn more:
         },
     ]);
 
-    let timer: ReturnType<typeof setInterval> | null = null;
-
-    const stopTimer = () => {
-        if (timer) {
-            clearInterval(timer);
-            timer = null;
-        }
-    };
-
-    const replaceLast = (update: (last: Message) => Message) => {
-        messages.value = [...messages.value.slice(0, -1), update(messages.value[messages.value.length - 1])];
-    };
+    let intervalId: ReturnType<typeof setInterval> | null = null;
 
     const generateMockResponse = (content: string) => {
-        timer = setInterval(() => {
-            const last = messages.value[messages.value.length - 1];
-            if (last.status === 'loading') {
-                replaceLast((m) => ({ ...m, content: `mock Response for ${content} \n`, status: 'incomplete' }));
-            } else if (last.status === 'incomplete') {
-                const next = `${last.content} mock stream message`;
-                if ((last.content?.length ?? 0) > 200) {
-                    stopTimer();
-                    replaceLast((m) => ({ ...m, content: next, status: 'complete' }));
+        const id = setInterval(() => {
+            const lastMessage = message.value[message.value.length - 1];
+            let newMessage: Message = { ...lastMessage };
+            if (lastMessage.status === 'loading') {
+                newMessage = {
+                    ...newMessage,
+                    content: `mock Response for ${content} \n`,
+                    status: 'incomplete',
+                };
+            } else if (lastMessage.status === 'incomplete') {
+                if ((lastMessage.content?.length ?? 0) > 200) {
+                    clearInterval(id);
+                    intervalId = null;
+                    newMessage = {
+                        ...newMessage,
+                        content: `${lastMessage.content} mock stream message`,
+                        status: 'complete',
+                    };
                 } else {
-                    replaceLast((m) => ({ ...m, content: next }));
+                    newMessage = {
+                        ...newMessage,
+                        content: `${lastMessage.content} mock stream message`,
+                    };
                 }
             }
+            message.value = [...message.value.slice(0, -1), newMessage];
         }, 400);
+        intervalId = id;
     };
 
     const onMessageSend = (content: string) => {
-        messages.value = [...messages.value, { role: 'assistant', status: 'loading', createAt: Date.now(), id: getId() }];
+        message.value = [
+            ...message.value,
+            {
+                role: 'assistant',
+                status: 'loading',
+                createAt: Date.now(),
+                id: getId(),
+            },
+        ];
         generateMockResponse(content);
     };
 
     const onStopGenerator = () => {
-        if (!timer) {
-            return;
-        }
-        stopTimer();
-        const last = messages.value[messages.value.length - 1];
-        if (last.status && last.status !== 'complete') {
-            replaceLast((m) => ({ ...m, status: 'complete' }));
+        if (intervalId) {
+            clearInterval(intervalId);
+            const lastMessage = message.value[message.value.length - 1];
+            if (lastMessage.status && lastMessage.status !== 'complete') {
+                let newMessage: Message = { ...lastMessage };
+                newMessage.status = 'complete';
+                message.value = [...message.value.slice(0, -1), newMessage];
+            }
         }
     };
 
-    onBeforeUnmount(stopTimer);
+    onBeforeUnmount(() => {
+        if (intervalId) clearInterval(intervalId);
+    });
 </script>
 
 <template>
-    <Chat v-model:chats="messages" :roleConfig="roleInfo" showStopGenerate :style="commonOuterStyle" :uploadProps="uploadProps" @messageSend="onMessageSend" @stopGenerator="onStopGenerator" />
+    <Chat v-model:chats="message" :roleConfig="roleInfo" showStopGenerate :style="commonOuterStyle" :uploadProps="uploadProps" @messageSend="onMessageSend" @stopGenerator="onStopGenerator" />
 </template>

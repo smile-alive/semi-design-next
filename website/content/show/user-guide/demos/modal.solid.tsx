@@ -26,9 +26,9 @@ export default function UserGuideDemo() {
                 mask
                 visible={visible()}
                 steps={steps}
-                renderCover={({ index }) => <Image width="600px" height="100%" src={covers[index]} />}
-                renderDescription={({ index }) =>
-                    index === 0 ? (
+                renderCover={(renderProps) => <Image width="600px" height="100%" src={covers[renderProps.index]} />}
+                renderDescription={(renderProps) =>
+                    renderProps.index === 0 ? (
                         <div>
                             你可以从已发布的主题出发，或者选择<Typography.Text strong>立即创造</Typography.Text>
                             来创造一个新的主题

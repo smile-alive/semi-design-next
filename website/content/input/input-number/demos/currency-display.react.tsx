@@ -1,7 +1,8 @@
 import { InputNumber } from '@fibrae/semi-ui-react';
 
+const defaultValue = 123456.78;
+
 export default function InputNumberDemo() {
-    const defaultValue = 123456.78;
     return (
         <div>
             <div id="inputnumber-currency-display-code">🇨🇳 CNY ➕ code</div>

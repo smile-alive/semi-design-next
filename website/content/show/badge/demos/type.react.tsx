@@ -1,14 +1,16 @@
 import { Badge, Avatar } from '@fibrae/semi-ui-react';
 
+const bgStyle = {
+    padding: '8px 8px 3px 8px',
+};
+
+const style = {
+    width: '42px',
+    height: '42px',
+    borderRadius: '4px',
+};
+
 export default function BadgeDemo() {
-    const bgStyle = {
-        padding: '8px 8px 3px 8px',
-    };
-    const style = {
-        width: '42px',
-        height: '42px',
-        borderRadius: '4px',
-    };
     return (
         <div style={{ display: 'flex' }}>
             <div style={bgStyle}>

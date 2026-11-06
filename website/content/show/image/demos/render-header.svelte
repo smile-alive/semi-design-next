@@ -13,7 +13,7 @@
     {/snippet}
     <div>
         {#each srcList as src, index (src)}
-            <Image alt={titles[index]} {src} style="margin-right: 5px" width={200} />
+            <Image alt={titles[index]} {src} style="margin-inline-end: 5px" width={200} />
         {/each}
     </div>
 </ImagePreview>

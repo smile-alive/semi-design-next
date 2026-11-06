@@ -2,6 +2,7 @@ import { createSignal } from 'solid-js';
 import { Button, Col, Form, FormInput, FormSelect, Modal, Row, type FormApi } from '@fibrae/semi-ui-solid';
 
 const message = '该项为必填项';
+const rules = [{ required: true, message }];
 
 export default function FormDemo() {
     const [visible, setVisible] = createSignal(false);
@@ -25,7 +26,7 @@ export default function FormDemo() {
                 <Form getFormApi={(api) => (formApi = api)}>
                     <Row>
                         <Col span={5}>
-                            <FormSelect field="region" label="国家/地区" placeholder="请选择" style={{ width: '100%' }} rules={[{ required: true, message }]}>
+                            <FormSelect field="region" label="国家/地区" placeholder="请选择" style={{ width: '100%' }} rules={rules}>
                                 <FormSelect.Option value="China">中国</FormSelect.Option>
                                 <FormSelect.Option value="US">美国</FormSelect.Option>
                                 <FormSelect.Option value="Europe">欧洲</FormSelect.Option>
@@ -33,12 +34,12 @@ export default function FormDemo() {
                             </FormSelect>
                         </Col>
                         <Col span={15} offset={2}>
-                            <FormInput field="owner" label="业务执行人" trigger="blur" rules={[{ required: true, message }]} />
+                            <FormInput field="owner" label="业务执行人" trigger="blur" rules={rules} />
                         </Col>
                     </Row>
                     <Row>
                         <Col span={5}>
-                            <FormSelect field="area" label="投放区域" placeholder="请选择" style={{ width: '100%' }} rules={[{ required: true, message }]}>
+                            <FormSelect field="area" label="投放区域" placeholder="请选择" style={{ width: '100%' }} rules={rules}>
                                 <FormSelect.Option value="China">中国</FormSelect.Option>
                                 <FormSelect.Option value="US">美国</FormSelect.Option>
                                 <FormSelect.Option value="Europe">欧洲</FormSelect.Option>
@@ -46,7 +47,7 @@ export default function FormDemo() {
                             </FormSelect>
                         </Col>
                         <Col span={15} offset={2}>
-                            <FormInput field="department" label="业务执行部门" trigger="blur" rules={[{ required: true, message }]} />
+                            <FormInput field="department" label="业务执行部门" trigger="blur" rules={rules} />
                         </Col>
                     </Row>
                 </Form>

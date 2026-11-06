@@ -76,37 +76,38 @@
 
 <template>
     <Table :columns="columns" :dataSource="dataSource" :pagination="pagination" :rowSelection="rowSelection" @change="onChange">
-        <template #headerCell="{ column, title, sorter, filter, selection }">
-            <span v-if="column.dataIndex === 'name'" :style="{ display: 'inline-flex', alignItems: 'center', paddingLeft: '20px' }">
-                <component :is="selection" />
-                <span :style="{ marginLeft: '8px' }">{{ title }}</span>
-                <component :is="sorter" />
-                <component :is="filter" />
+        <template #headerCell="headerProps">
+            <span v-if="headerProps.column.dataIndex === 'name'" :style="{ display: 'inline-flex', alignItems: 'center', paddingInlineStart: '20px' }">
+                <component :is="headerProps.selection" />
+                <span :style="{ marginInlineStart: '8px' }">{{ headerProps.title }}</span>
+                <component :is="headerProps.sorter" />
+                <component :is="headerProps.filter" />
             </span>
+            <template v-else>{{ headerProps.title }}</template>
         </template>
-        <template #cell="{ column, text, record, expandIcon, selection, indentText }">
-            <span v-if="column.dataIndex === 'name'" :style="{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }">
-                <component :is="indentText" />
-                <component :is="expandIcon" />
-                <component :is="selection" />
-                <span :style="{ marginLeft: '8px' }">
-                    <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginRight: '12px' }" />
-                    {{ text }}
+        <template #cell="cellProps">
+            <span v-if="cellProps.column.dataIndex === 'name'" :style="{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }">
+                <component :is="cellProps.indentText" />
+                <component :is="cellProps.expandIcon" />
+                <component :is="cellProps.selection" />
+                <span :style="{ marginInlineStart: '8px' }">
+                    <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginInlineEnd: '12px' }" />
+                    {{ cellProps.text }}
                 </span>
             </span>
-            <template v-else-if="column.dataIndex === 'size'">{{ text }} KB</template>
-            <div v-else-if="column.dataIndex === 'owner'">
-                <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
-                    {{ typeof text === 'string' && text.slice(0, 1) }}
+            <template v-else-if="cellProps.column.dataIndex === 'size'">{{ cellProps.text }} KB</template>
+            <div v-else-if="cellProps.column.dataIndex === 'owner'">
+                <Avatar :color="cellProps.record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
+                    {{ typeof cellProps.text === 'string' && cellProps.text.slice(0, 1) }}
                 </Avatar>
-                {{ text }}
+                {{ cellProps.text }}
             </div>
-            <template v-else-if="column.dataIndex === 'updateTime'">
-                {{ dateFns.format(new Date(text), 'yyyy-MM-dd') }}
+            <template v-else-if="cellProps.column.dataIndex === 'updateTime'">
+                {{ dateFns.format(new Date(cellProps.text), 'yyyy-MM-dd') }}
             </template>
         </template>
-        <template #expandedRow="{ record }">
-            <article>{{ record.name }}</article>
+        <template #expandedRow="expandedProps">
+            <article>{{ expandedProps.record.name }}</article>
         </template>
     </Table>
 </template>

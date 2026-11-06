@@ -2,8 +2,8 @@ import { Spin } from '@fibrae/semi-ui-react';
 
 export default function SpinDemo() {
     return (
-        <div style={{ marginLeft: 30 }}>
-            <div style={{ marginBottom: 10 }}>A basic spin.</div>
+        <div style={{ marginInlineStart: 30 }}>
+            <div style={{ marginBlockEnd: 10 }}>基本的加载器</div>
             <Spin />
         </div>
     );

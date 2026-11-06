@@ -21,7 +21,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text) => {
             return (
                 <div>
-                    <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-right': '12px' }} />
+                    <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-inline-end': '12px' }} />
                     {text}
                 </div>
             );
@@ -50,7 +50,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}
@@ -85,7 +85,7 @@ function getData() {
     return data;
 }
 
-const dataSource = getData();
+const data = getData();
 
 const rowKey = (record: Row) => `${record.owner.toLowerCase()}-${record.name.toLowerCase()}`;
 
@@ -101,7 +101,7 @@ export default function TableDemo() {
     return (
         <div style={{ padding: '20px 0px' }}>
             <Table
-                dataSource={dataSource}
+                dataSource={data}
                 rowKey={rowKey}
                 groupBy="size"
                 columns={columns}

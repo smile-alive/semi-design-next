@@ -1,8 +1,8 @@
-import { useState, type ComponentProps } from 'react';
+import { useState } from 'react';
 import { IconArrowUp, IconArrowDown } from '@fibrae/semi-icons-react';
 import { Table, Button, type ColumnProps } from '@fibrae/semi-ui-react';
 
-type TreeRow = {
+interface TreeRow {
     key?: number;
     dataKey: string;
     name: string;
@@ -10,7 +10,7 @@ type TreeRow = {
     description: string;
     default: string;
     children?: TreeRow[];
-};
+}
 
 const raw: TreeRow[] = [
     {
@@ -79,77 +79,45 @@ const raw: TreeRow[] = [
 const rowKey = 'key';
 const childrenRecordName = 'children';
 
+const getSameLevelRecords = (key: number | undefined, rows: TreeRow[]): TreeRow[] => {
+    if (key == null) {
+        return [];
+    }
+    if (rows.some((item) => item[rowKey] === key)) {
+        return rows;
+    }
+    for (const item of rows) {
+        const records = getSameLevelRecords(key, item[childrenRecordName] ?? []);
+        if (records.length) {
+            return records;
+        }
+    }
+    return [];
+};
+
+// Returns a copy of the tree in which the record swaps places with its sibling `offset` rows away.
+const moveRecord = (rows: TreeRow[], key: number | undefined, offset: -1 | 1): TreeRow[] => {
+    const index = rows.findIndex((item) => item[rowKey] === key);
+    if (index === -1) {
+        return rows.map((item) => (item[childrenRecordName] ? { ...item, children: moveRecord(item[childrenRecordName], key, offset) } : item));
+    }
+    const next = [...rows];
+    [next[index], next[index + offset]] = [next[index + offset], next[index]];
+    return next;
+};
+
 export default function TableDemo() {
-    const [expandedRowKeys, setExpandedRowKeys] = useState([1, 2]);
+    const [expandedRowKeys, setExpandedRowKeys] = useState<(string | number)[]>([1, 2]);
     const [data, setData] = useState(raw);
 
-    const switchRecord = (key1?: number, key2?: number) => {
-        const newData = [...data];
-
-        if (key1 != null && key2 != null) {
-            const item1 = findRecordByKey(key1, newData);
-            const item2 = findRecordByKey(key2, newData);
-
-            const copiedItem1 = { ...item1 };
-            const copiedItem2 = { ...item2 };
-
-            coverRecord(item1, copiedItem2);
-            coverRecord(item2, copiedItem1);
-
-            setData(newData);
-        }
+    const canMove = (record: TreeRow, offset: -1 | 1) => {
+        const records = getSameLevelRecords(record[rowKey], data);
+        const index = records.findIndex((item) => item[rowKey] === record[rowKey]);
+        return index >= 0 && index + offset >= 0 && index + offset < records.length;
     };
 
-    const findRecordByKey = (key: number, data: TreeRow[]): TreeRow | undefined => {
-        if (Array.isArray(data) && data.length && key != null) {
-            for (let item of data) {
-                if (item[rowKey] === key) {
-                    return item;
-                }
-
-                const children = item[childrenRecordName];
-                if (Array.isArray(children) && children.length) {
-                    const item = findRecordByKey(key, children);
-
-                    if (item != null) {
-                        return item;
-                    }
-                }
-            }
-        }
-    };
-
-    const coverRecord = (obj?: Record<string, unknown>, srcObj?: Record<string, unknown>) => {
-        if (obj && typeof obj === 'object' && srcObj && typeof srcObj === 'object') {
-            const srcKeys = Object.keys(srcObj);
-            const copied = { ...srcObj };
-
-            Object.assign(obj, copied);
-
-            Object.keys(obj).forEach((key) => {
-                if (!srcKeys.includes(key)) {
-                    delete obj[key];
-                }
-            });
-        }
-
-        return obj;
-    };
-
-    const getSameLevelRecords = (key?: number, data: TreeRow[] = []): TreeRow[] => {
-        if (key != null && Array.isArray(data) && data.length) {
-            if (data.find((item) => item[rowKey] === key)) {
-                return data;
-            }
-            for (let item of data) {
-                const records = getSameLevelRecords(key, item[childrenRecordName]);
-
-                if (records.length) {
-                    return records;
-                }
-            }
-        }
-        return [];
+    const move = (record: TreeRow, offset: -1 | 1) => {
+        setData(moveRecord(data, record[rowKey], offset));
     };
 
     const columns: ColumnProps<TreeRow>[] = [
@@ -182,33 +150,12 @@ export default function TableDemo() {
         },
         {
             key: 'operation',
-            render: (record: TreeRow) => {
-                const records = getSameLevelRecords(record[rowKey], data);
-                const index = records.findIndex((item) => item[rowKey] === record[rowKey]);
-                const upProps: ComponentProps<typeof Button> = {};
-                const downProps: ComponentProps<typeof Button> = {};
-
-                if (index > 0) {
-                    const upRow = records[index - 1];
-                    upProps.onClick = () => switchRecord(record[rowKey], upRow[rowKey]);
-                } else {
-                    upProps.disabled = true;
-                }
-
-                if (index < records.length - 1) {
-                    const downRow = records[index + 1];
-                    downProps.onClick = () => switchRecord(record[rowKey], downRow[rowKey]);
-                } else {
-                    downProps.disabled = true;
-                }
-
-                return (
-                    <>
-                        <Button aria-label="上移" icon={<IconArrowUp />} {...upProps} />
-                        <Button aria-label="下移" icon={<IconArrowDown />} {...downProps} />
-                    </>
-                );
-            },
+            render: (record: TreeRow) => (
+                <>
+                    <Button aria-label="上移" disabled={!canMove(record, -1)} icon={<IconArrowUp />} onClick={() => move(record, -1)} />
+                    <Button aria-label="下移" disabled={!canMove(record, 1)} icon={<IconArrowDown />} onClick={() => move(record, 1)} />
+                </>
+            ),
         },
     ];
 

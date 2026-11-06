@@ -1,5 +1,7 @@
 import { CheckboxGroup, type CheckboxValue } from '@fibrae/semi-ui-solid';
 
+const onChange = (checkedValues: CheckboxValue[]) => console.log('checked = ', checkedValues);
+
 const plainOptions = ['Semi UI', 'Semi DSM', 'Semi D2C'];
 
 const optionsWithExtra = [
@@ -16,10 +18,6 @@ const optionsWithDisabled = [
     { label: 'Movies', value: 'Movies' },
     { label: 'Running', value: 'Running', disabled: false },
 ];
-
-function onChange(checkedValues: CheckboxValue[]) {
-    console.log('checked = ', checkedValues);
-}
 
 export default function CheckboxDemo() {
     return (

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { IconMore } from '@fibrae/semi-icons-vue';
-    import { Avatar, Table, TableColumn as Column, type AvatarProps } from '@fibrae/semi-ui-vue';
+    import { Avatar, Table, type AvatarProps } from '@fibrae/semi-ui-vue';
 
     interface Row {
         key: string;
@@ -49,30 +49,30 @@
 
 <template>
     <Table :dataSource="data" :pagination="false">
-        <Column key="name" dataIndex="name" title="标题">
-            <template #cell="{ text, record }">
+        <Table.Column key="name" dataIndex="name" title="标题">
+            <template #cell="cellProps">
                 <div>
-                    <Avatar alt="" shape="square" size="small" :src="record.nameIconSrc" :style="{ marginRight: '12px' }" />
-                    {{ text }}
+                    <Avatar alt="" shape="square" size="small" :src="cellProps.record.nameIconSrc" :style="{ marginInlineEnd: '12px' }" />
+                    {{ cellProps.text }}
                 </div>
             </template>
-        </Column>
-        <Column key="size" dataIndex="size" title="大小" />
-        <Column key="owner" dataIndex="owner" title="所有者">
-            <template #cell="{ text, record }">
+        </Table.Column>
+        <Table.Column key="size" dataIndex="size" title="大小" />
+        <Table.Column key="owner" dataIndex="owner" title="所有者">
+            <template #cell="cellProps">
                 <div>
-                    <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
-                        {{ typeof text === 'string' && text.slice(0, 1) }}
+                    <Avatar :color="cellProps.record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
+                        {{ typeof cellProps.text === 'string' && cellProps.text.slice(0, 1) }}
                     </Avatar>
-                    {{ text }}
+                    {{ cellProps.text }}
                 </div>
             </template>
-        </Column>
-        <Column key="updateTime" dataIndex="updateTime" title="更新时间" />
-        <Column key="operate" dataIndex="operate" title="">
+        </Table.Column>
+        <Table.Column key="updateTime" dataIndex="updateTime" title="更新时间" />
+        <Table.Column key="operate" dataIndex="operate" title="">
             <template #cell>
                 <IconMore />
             </template>
-        </Column>
+        </Table.Column>
     </Table>
 </template>

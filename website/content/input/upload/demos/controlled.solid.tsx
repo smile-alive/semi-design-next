@@ -30,8 +30,8 @@ export default function UploadDemo() {
         console.log('onChange');
         console.log(fileList);
         console.log(currentFile);
-        // 展开得到新数组
-        updateList([...fileList]);
+        const newFileList = [...fileList]; // 展开得到新数组
+        updateList(newFileList);
     };
 
     return (

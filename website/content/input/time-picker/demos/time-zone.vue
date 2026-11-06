@@ -2,7 +2,6 @@
     import { ref } from 'vue';
     import { ConfigProvider, Select, TimePicker } from '@fibrae/semi-ui-vue';
 
-    const timeZone = ref('GMT+08:00');
     const defaultTimestamp = 1581599305265;
     const gmtList: string[] = [];
     for (let hourOffset = -11; hourOffset <= 14; hourOffset++) {
@@ -10,7 +9,7 @@
         gmtList.push(`GMT${prefix}${String(Math.abs(hourOffset)).padStart(2, '0')}:00`);
     }
 
-    const onChange = (date: unknown, dateString: string | string[]) => console.log('DatePicker changed: ', date, dateString);
+    const timeZone = ref('GMT+08:00');
 </script>
 
 <template>
@@ -23,7 +22,7 @@
             <br />
             <br />
             <h5 :style="{ margin: '10px' }">TimePicker:</h5>
-            <TimePicker :defaultValue="defaultTimestamp" @change="onChange" />
+            <TimePicker :defaultValue="defaultTimestamp" @change="(date, dateString) => console.log('DatePicker changed: ', date, dateString)" />
         </div>
     </ConfigProvider>
 </template>

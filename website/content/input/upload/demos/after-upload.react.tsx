@@ -11,9 +11,8 @@ export default function UploadDemo() {
                 name: 'RenameByServer.jpg',
                 url: '/assets/root-web-sites/edit-bag.jpeg',
             };
-        } else {
-            return {};
         }
+        return {};
     };
 
     return (

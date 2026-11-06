@@ -1,8 +1,6 @@
 <script setup lang="ts">
     import { Typography } from '@fibrae/semi-ui-vue';
 
-    const { Numeral } = Typography;
-
     const parserTCH = (oldVal: string) => {
         return oldVal
             .split(' ')
@@ -20,13 +18,13 @@
 
 <template>
     <div>
-        <Numeral component="div" :parser="parserTCH">
+        <Typography.Numeral component="div" :parser="parserTCH">
             Semi Design 重视我们的用户，加入并助力我们不断完善
             <p v-for="item in infos" :key="item.min">
                 {{ item.type }}：<b style="color: var(--semi-violet-5)">{{ item.min }}</b>
             </p>
-        </Numeral>
+        </Typography.Numeral>
         <br />
-        <Numeral :link="{ href: 'https://semi.design', target: '_blank' }" :parser="parserTCH"> 现已服务 {{ 1e5 }} 用户，前往官网 &gt;&gt; </Numeral>
+        <Typography.Numeral :link="{ href: 'https://semi.design', target: '_blank' }" :parser="parserTCH"> 现已服务 {{ 1e5 }} 用户，前往官网 &gt;&gt; </Typography.Numeral>
     </div>
 </template>

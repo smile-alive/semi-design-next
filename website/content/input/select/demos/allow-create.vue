@@ -14,8 +14,8 @@
     <br />
     <br />
     <Select allowCreate aria-label="业务线" defaultActiveFirstOption filter multiple :optionList="optionList" placeholder="With renderCreateItem" style="width: 400px" @change="(value) => console.log(value)">
-        <template #createItem="{ inputValue, style }">
-            <div :style="[{ padding: '10px' }, style]">Create Item：{{ inputValue }}</div>
+        <template #createItem="create">
+            <div :style="[{ padding: '10px' }, create.style]">Create Item：{{ create.inputValue }}</div>
         </template>
     </Select>
 </template>

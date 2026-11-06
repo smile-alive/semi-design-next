@@ -4,11 +4,11 @@
 
 <Popover trigger="click">
     <Button>click me</Button>
-    {#snippet content({ initialFocusRef })}
+    {#snippet content(contentProps)}
         <div style="padding: 12px">
             <Space>
                 <Button>first focusable element</Button>
-                <Input {@attach initialFocusRef} placeholder="focus here" />
+                <Input {@attach contentProps.initialFocusRef} placeholder="focus here" />
             </Space>
         </div>
     {/snippet}

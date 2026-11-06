@@ -13,10 +13,10 @@
         </Button>
         <template #content>
             <Dropdown.Menu>
-                <Dropdown.Item @click="Toast.info('You clicked me!')">1: click me!</Dropdown.Item>
-                <Dropdown.Item @mouseenter="Toast.info('Nice to meet you!')">2: mouse enter</Dropdown.Item>
-                <Dropdown.Item @mouseleave="Toast.info('See ya!')">3: mouse leave</Dropdown.Item>
-                <Dropdown.Item @contextmenu="Toast.info('Right clicked!')">4: right click</Dropdown.Item>
+                <Dropdown.Item @click="Toast.info({ content: 'You clicked me!' })">1: click me!</Dropdown.Item>
+                <Dropdown.Item @mouseenter="Toast.info({ content: 'Nice to meet you!' })">2: mouse enter</Dropdown.Item>
+                <Dropdown.Item @mouseleave="Toast.info({ content: 'See ya!' })">3: mouse leave</Dropdown.Item>
+                <Dropdown.Item @contextmenu="Toast.info({ content: 'Right clicked!' })">4: right click</Dropdown.Item>
             </Dropdown.Menu>
         </template>
     </Dropdown>

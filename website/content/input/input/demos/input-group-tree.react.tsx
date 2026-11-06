@@ -1,25 +1,26 @@
 import { InputGroup, Select, Cascader, TreeSelect } from '@fibrae/semi-ui-react';
 
+const treeData = [
+    {
+        label: 'Asia',
+        value: 'Asia',
+        key: '0',
+        children: [
+            {
+                label: 'China',
+                value: 'China',
+                key: '0-0',
+                children: [
+                    { label: 'Beijing', value: 'Beijing', key: '0-0-0' },
+                    { label: 'Shanghai', value: 'Shanghai', key: '0-0-1' },
+                ],
+            },
+        ],
+    },
+    { label: 'North America', value: 'North America', key: '1' },
+];
+
 export default function InputDemo() {
-    const treeData = [
-        {
-            label: 'Asia',
-            value: 'Asia',
-            key: '0',
-            children: [
-                {
-                    label: 'China',
-                    value: 'China',
-                    key: '0-0',
-                    children: [
-                        { label: 'Beijing', value: 'Beijing', key: '0-0-0' },
-                        { label: 'Shanghai', value: 'Shanghai', key: '0-0-1' },
-                    ],
-                },
-            ],
-        },
-        { label: 'North America', value: 'North America', key: '1' },
-    ];
     return (
         <>
             <InputGroup>

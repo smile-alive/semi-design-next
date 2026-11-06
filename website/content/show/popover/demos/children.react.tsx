@@ -1,27 +1,7 @@
-import React from 'react';
 import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-react';
-import { Popover, Space, Empty } from '@fibrae/semi-ui-react';
+import { Popover, Space, Empty, Tag } from '@fibrae/semi-ui-react';
 
-const style = { border: '2px solid var(--semi-color-border)', paddingLeft: 4, paddingRight: 4, borderRadius: 4 };
-
-// Pass props to the underlying DOM and bind the ref (a plain prop in React 19)
-function FCChildren({ ref, ...props }: React.ComponentProps<'span'>) {
-    return (
-        <span {...props} ref={ref} style={style}>
-            Functional Component
-        </span>
-    );
-}
-
-class MyComponent extends React.Component {
-    render() {
-        return (
-            <span {...this.props} style={style}>
-                ClassComponent
-            </span>
-        );
-    }
-}
+const style = { border: '2px solid var(--semi-color-border)', paddingInlineStart: 4, paddingInlineEnd: 4, borderRadius: 4 };
 
 const content = (
     <Empty
@@ -37,11 +17,9 @@ export default function PopoverDemo() {
     return (
         <Space>
             <Popover content={content}>
-                <FCChildren />
+                <Tag style={style}>Component</Tag>
             </Popover>
-            <Popover content={content}>
-                <MyComponent />
-            </Popover>
+            <Popover content={content}>Text</Popover>
             <Popover content={content}>
                 <span style={style}>DOM</span>
             </Popover>

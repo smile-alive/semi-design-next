@@ -27,7 +27,7 @@
                 shouldUpload: false,
             };
         }
-        count += 1;
+        count = count + 1;
         return result;
     };
 </script>

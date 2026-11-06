@@ -6,8 +6,6 @@
     const createState = () => reactive({ visible: false, value: '', showThanks: false });
     const popup = createState();
     const modal = createState();
-    const emptyStyle = { padding: '30px' };
-    const imageStyle = { width: '150px', height: '150px' };
 
     // The thanks view stays 200ms past the close so the exit animation still shows it.
     const handleOk = (state: ReturnType<typeof createState>) => {
@@ -26,12 +24,12 @@
         <Button @click="popup.visible = !popup.visible">Open Feedback: Popup, Custom</Button>
         <Feedback v-model:visible="popup.visible" :okButtonProps="{ disabled: !popup.value }" :title="popup.showThanks ? ' ' : 'What is your feedback on this product?'" type="custom" @ok="handleOk(popup)">
             <template v-if="popup.showThanks" #footer />
-            <Empty v-if="popup.showThanks" :style="emptyStyle">
+            <Empty v-if="popup.showThanks" style="padding: 30px">
                 <template #image>
-                    <IllustrationSuccess :style="imageStyle" />
+                    <IllustrationSuccess style="width: 150px; height: 150px" />
                 </template>
                 <template #darkModeImage>
-                    <IllustrationSuccessDark :style="imageStyle" />
+                    <IllustrationSuccessDark style="width: 150px; height: 150px" />
                 </template>
                 <template #description>感谢您的反馈</template>
             </Empty>
@@ -45,12 +43,12 @@
         <Button @click="modal.visible = !modal.visible">Open Feedback: Modal, Custom</Button>
         <Feedback v-model:visible="modal.visible" mode="modal" :okButtonProps="{ disabled: !modal.value }" :title="modal.showThanks ? ' ' : 'What is your feedback on this product?'" type="custom" @ok="handleOk(modal)">
             <template v-if="modal.showThanks" #footer />
-            <Empty v-if="modal.showThanks" :style="emptyStyle">
+            <Empty v-if="modal.showThanks" style="padding: 30px">
                 <template #image>
-                    <IllustrationSuccess :style="imageStyle" />
+                    <IllustrationSuccess style="width: 150px; height: 150px" />
                 </template>
                 <template #darkModeImage>
-                    <IllustrationSuccessDark :style="imageStyle" />
+                    <IllustrationSuccessDark style="width: 150px; height: 150px" />
                 </template>
                 <template #description>感谢您的反馈</template>
             </Empty>

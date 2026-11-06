@@ -3,5 +3,5 @@
 </script>
 
 <template>
-    <Pagination disabled :style="{ marginBottom: '12px' }" :total="30" />
+    <Pagination disabled :style="{ marginBlockEnd: '12px' }" :total="30" />
 </template>

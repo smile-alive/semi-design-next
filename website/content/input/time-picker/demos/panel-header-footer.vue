@@ -9,7 +9,6 @@
     const onOpenChange = (value: boolean) => {
         console.log(value);
     };
-    const logFooter = (text: string) => console.log(text);
 </script>
 
 <template>
@@ -25,8 +24,8 @@
         <TimePicker type="timeRange">
             <template #panelHeader="{ index }">{{ index === 0 ? 'start header' : 'end header' }}</template>
             <template #panelFooter="{ index }">
-                <Button v-if="index === 0" @click="logFooter('start footer')">start footer</Button>
-                <Button v-else @click="logFooter('end footer')">end footer</Button>
+                <Button v-if="index === 0" @click="() => console.log('start footer')">start footer</Button>
+                <Button v-else @click="() => console.log('end footer')">end footer</Button>
             </template>
         </TimePicker>
     </div>

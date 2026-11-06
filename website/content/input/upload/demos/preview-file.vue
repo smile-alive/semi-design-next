@@ -2,10 +2,21 @@
     import { IconFile, IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Image, Upload, type FileItem } from '@fibrae/semi-ui-vue';
 
-    const url = '/assets/root-web-sites/edit-bag.jpeg';
     const defaultFileList: FileItem[] = [
-        { uid: '1', name: 'dyBag.png', status: 'success', size: '130KB', url },
-        { uid: '2', name: 'dyBag2.png', status: 'success', size: '130KB', url },
+        {
+            uid: '1',
+            name: 'dyBag.png',
+            status: 'success',
+            size: '130KB',
+            url: '/assets/root-web-sites/edit-bag.jpeg',
+        },
+        {
+            uid: '2',
+            name: 'dyBag2.png',
+            status: 'success',
+            size: '130KB',
+            url: '/assets/root-web-sites/edit-bag.jpeg',
+        },
     ];
 </script>
 

@@ -1,18 +1,23 @@
 import { useState } from 'react';
 import { ResizeItem, ResizeHandler, ResizeGroup, Toast } from '@fibrae/semi-ui-react';
 
+const opts_1 = {
+    content: 'resize start',
+    duration: 1,
+    stack: true,
+};
+const opts = {
+    content: 'resize end',
+    duration: 1,
+    stack: true,
+};
+const itemStyle = {
+    backgroundColor: 'var(--semi-grey-1)',
+    border: 'var(--semi-color-border) 1px solid',
+};
+
 export default function ResizableDemo() {
     const [text, setText] = useState('Drag to resize');
-    const opts_1 = {
-        content: 'resize start',
-        duration: 1,
-        stack: true,
-    };
-    const opts = {
-        content: 'resize end',
-        duration: 1,
-        stack: true,
-    };
     return (
         <div style={{ width: '1000px', height: '600px' }}>
             <ResizeGroup direction="vertical">
@@ -30,7 +35,7 @@ export default function ResizableDemo() {
                         setText('Drag to resize');
                     }}
                 >
-                    <div style={{ marginLeft: '20%' }}>header</div>
+                    <div style={{ marginInlineStart: '20%' }}>header</div>
                 </ResizeItem>
                 <ResizeHandler />
                 <ResizeItem
@@ -41,10 +46,7 @@ export default function ResizableDemo() {
                 >
                     <ResizeGroup direction="horizontal">
                         <ResizeItem
-                            style={{
-                                backgroundColor: 'var(--semi-grey-1)',
-                                border: 'var(--semi-color-border) 1px solid',
-                            }}
+                            style={itemStyle}
                             defaultSize="25%"
                             onChange={() => {
                                 setText('resizing');
@@ -57,20 +59,17 @@ export default function ResizableDemo() {
                                 setText('Drag to resize');
                             }}
                         >
-                            <div style={{ marginLeft: '20%' }}>tab</div>
+                            <div style={{ marginInlineStart: '20%' }}>tab</div>
                         </ResizeItem>
                         <ResizeHandler />
                         <ResizeItem
-                            style={{
-                                backgroundColor: 'var(--semi-grey-1)',
-                                border: 'var(--semi-color-border) 1px solid',
-                            }}
+                            style={itemStyle}
                             defaultSize="75%"
                             onChange={() => {
                                 setText('resizing');
                             }}
                         >
-                            <div style={{ marginLeft: '20%' }}>{text}</div>
+                            <div style={{ marginInlineStart: '20%' }}>{text}</div>
                         </ResizeItem>
                     </ResizeGroup>
                 </ResizeItem>

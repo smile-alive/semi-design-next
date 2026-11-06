@@ -12,7 +12,7 @@ export default function ListDemo() {
 
     return (
         <div>
-            <div style={{ 'margin-right': '16px', width: '280px', display: 'flex', 'flex-wrap': 'wrap' }}>
+            <div style={{ 'margin-inline-end': '16px', width: '280px', display: 'flex', 'flex-wrap': 'wrap' }}>
                 <List dataSource={getData(page())} split={false} size="small" class="component-list-demo-booklist" style={{ border: '1px solid var(--semi-color-border)', 'flex-basis': '100%', 'flex-shrink': '0' }} renderItem={(item) => <List.Item class="list-item">{item}</List.Item>} />
                 <Pagination size="small" style={{ width: '100%', 'flex-basis': '100%', 'justify-content': 'center' }} pageSize={pageSize} total={data.length} currentPage={page()} onPageChange={(cPage) => setPage(cPage)} />
             </div>

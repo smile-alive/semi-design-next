@@ -5,10 +5,10 @@
 <template>
     <div>
         <Spin>
-            <template #tip>I am loading...</template>
-            <div style="border: 1px solid var(--semi-color-primary); border-radius: 4px; padding-left: 8px">
-                <p>Here are some texts.</p>
-                <p>And more texts on the way.</p>
+            <template #tip>加载中...</template>
+            <div style="border: 1px solid var(--semi-color-primary); border-radius: 4px; padding-inline-start: 8px">
+                <p>这里是一些文字。</p>
+                <p>还有更多文字正在路上。</p>
             </div>
         </Spin>
     </div>

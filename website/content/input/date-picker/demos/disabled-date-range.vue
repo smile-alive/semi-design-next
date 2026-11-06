@@ -6,7 +6,8 @@
         if (!date || !options?.rangeStart) {
             return false;
         }
-        return dateFns.isBefore(date, dateFns.parseISO(options.rangeStart));
+        const startDate = dateFns.parseISO(options.rangeStart);
+        return dateFns.isBefore(date, startDate);
     };
 </script>
 

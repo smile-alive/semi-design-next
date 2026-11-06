@@ -3,7 +3,7 @@ import { Dynamic } from 'solid-js/web';
 import { IconCamera, IconChevronDown, IconEdit, IconList, IconSidebar, IconVigoLogo } from '@fibrae/semi-icons-solid';
 import { ConfigProvider, ButtonGroup, Button, Row, Col, Notification, DatePicker, TimePicker, Timeline, Popover, Tag, Tooltip, Badge, Avatar, Steps, Pagination, Modal, Breadcrumb, Rating, Nav, Spin, Cascader, Radio, Select, Input, Typography, TextArea, Checkbox, Switch, Toast } from '@fibrae/semi-ui-solid';
 
-const flexStyle: JSX.CSSProperties = { display: 'flex', 'margin-bottom': '32px', 'flex-wrap': 'wrap' };
+const flexStyle: JSX.CSSProperties = { display: 'flex', 'margin-block-end': '32px', 'flex-wrap': 'wrap' };
 const titleStyle: JSX.CSSProperties = { margin: '50px 0 16px 0' };
 const rowStyle: JSX.CSSProperties = { margin: '16px 10px' };
 const badgeStyle: JSX.CSSProperties = {
@@ -12,7 +12,7 @@ const badgeStyle: JSX.CSSProperties = {
     'border-radius': '4px',
     display: 'inline-block',
 };
-const tagStyle: JSX.CSSProperties = { 'margin-right': '8px', 'margin-bottom': '8px' };
+const tagStyle: JSX.CSSProperties = { 'margin-inline-end': '8px', 'margin-block-end': '8px' };
 const buttonStyle: JSX.CSSProperties = { ...tagStyle };
 
 const treeData = [
@@ -41,6 +41,17 @@ const treeData = [
     },
 ];
 
+const navItems = [
+    { itemKey: 'user', text: 'Option1' },
+    { itemKey: 'union', text: 'Option2' },
+    {
+        itemKey: 'approve-management',
+        text: 'Group3',
+        items: ['3-1', '3-2'],
+    },
+];
+const navIcons: Record<string, typeof IconEdit> = { user: IconEdit, union: IconCamera, 'approve-management': IconList };
+
 export default function ConfigProviderDemo() {
     const [direction, setDirection] = createSignal<'ltr' | 'rtl'>();
     // Read at each call so a notification shows the direction selected at the time it is opened
@@ -50,20 +61,10 @@ export default function ConfigProviderDemo() {
         duration: 3,
         direction: direction(),
     });
-    const navItems = [
-        { itemKey: 'user', text: 'Option1' },
-        { itemKey: 'union', text: 'Option2' },
-        {
-            itemKey: 'approve-management',
-            text: 'Group3',
-            items: ['3-1', '3-2'],
-        },
-    ];
-    const navIcons: Record<string, typeof IconEdit> = { user: IconEdit, union: IconCamera, 'approve-management': IconList };
 
     return (
         <div>
-            <div style={{ 'margin-bottom': '20px' }}>
+            <div style={{ 'margin-block-end': '20px' }}>
                 <ButtonGroup>
                     <Button onClick={() => setDirection('ltr')}>LTR</Button>
                     <Button onClick={() => setDirection('rtl')}>RTL</Button>
@@ -74,13 +75,13 @@ export default function ConfigProviderDemo() {
                     <h3 style={titleStyle}>Buttons</h3>
                 </Row>
                 <Row style={rowStyle}>
-                    <Button loading theme="solid" style={{ 'margin-right': '8px' }}>
+                    <Button loading theme="solid" style={{ 'margin-inline-end': '8px' }}>
                         加载
                     </Button>
-                    <Button icon={<IconSidebar />} theme="solid" style={{ 'margin-right': '8px' }}>
+                    <Button icon={<IconSidebar />} theme="solid" style={{ 'margin-inline-end': '8px' }}>
                         收起
                     </Button>
-                    <Button icon={<IconChevronDown />} theme="solid" iconPosition="right" style={{ 'margin-right': '8px' }}>
+                    <Button icon={<IconChevronDown />} theme="solid" iconPosition="right" style={{ 'margin-inline-end': '8px' }}>
                         展开选项
                     </Button>
                     <br />
@@ -120,29 +121,29 @@ export default function ConfigProviderDemo() {
                         <br />
                         <br />
                         <div style={flexStyle}>
-                            <Switch aria-label="已开启的开关" style={{ 'margin-right': '8px' }} defaultChecked />
-                            <Switch aria-label="已关闭的开关" style={{ 'margin-right': '8px' }} />
-                            <Switch aria-label="禁用的开关" disabled defaultChecked style={{ 'margin-right': '8px' }} />
+                            <Switch aria-label="已开启的开关" style={{ 'margin-inline-end': '8px' }} defaultChecked />
+                            <Switch aria-label="已关闭的开关" style={{ 'margin-inline-end': '8px' }} />
+                            <Switch aria-label="禁用的开关" disabled defaultChecked style={{ 'margin-inline-end': '8px' }} />
                         </div>
                         <div style={flexStyle}>
-                            <Checkbox style={{ 'margin-right': '8px' }} defaultChecked>
+                            <Checkbox style={{ 'margin-inline-end': '8px' }} defaultChecked>
                                 多选框
                             </Checkbox>
-                            <Checkbox style={{ 'margin-right': '8px' }} disabled defaultChecked>
+                            <Checkbox style={{ 'margin-inline-end': '8px' }} disabled defaultChecked>
                                 禁用的多选框
                             </Checkbox>
-                            <Checkbox style={{ 'margin-right': '8px' }} disabled>
+                            <Checkbox style={{ 'margin-inline-end': '8px' }} disabled>
                                 禁用的多选框
                             </Checkbox>
                         </div>
-                        <div style={{ ...flexStyle, 'margin-bottom': '0' }}>
-                            <Radio style={{ 'margin-right': '8px' }} defaultChecked>
+                        <div style={{ ...flexStyle, 'margin-block-end': '0' }}>
+                            <Radio style={{ 'margin-inline-end': '8px' }} defaultChecked>
                                 单选框
                             </Radio>
-                            <Radio style={{ 'margin-right': '8px' }} disabled defaultChecked>
+                            <Radio style={{ 'margin-inline-end': '8px' }} disabled defaultChecked>
                                 禁用的单选框
                             </Radio>
-                            <Radio style={{ 'margin-right': '8px' }} disabled>
+                            <Radio style={{ 'margin-inline-end': '8px' }} disabled>
                                 禁用的单选框
                             </Radio>
                         </div>
@@ -298,19 +299,19 @@ export default function ConfigProviderDemo() {
                     <div style={{ display: 'flex', 'align-items': 'center' }}>
                         <Popover content="hi semi-design" style={{ padding: '8px' }}>
                             {(trigger) => (
-                                <Tag {...trigger()} style={{ 'margin-right': '8px' }}>
+                                <Tag {...trigger()} style={{ 'margin-inline-end': '8px' }}>
                                     I am Popover
                                 </Tag>
                             )}
                         </Popover>
                         <Tooltip content="hi semi-design">
                             {(trigger) => (
-                                <Tag {...trigger()} style={{ 'margin-right': '8px' }}>
+                                <Tag {...trigger()} style={{ 'margin-inline-end': '8px' }}>
                                     I am Tooltip
                                 </Tag>
                             )}
                         </Tooltip>
-                        <Rating defaultValue={3} size="small" style={{ 'margin-right': '8px' }} />
+                        <Rating defaultValue={3} size="small" style={{ 'margin-inline-end': '8px' }} />
                     </div>
                     <br />
                     <Timeline>

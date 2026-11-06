@@ -13,8 +13,6 @@ import {
 import { IconFeishuLogo, IconBookOpenStroked, IconGit, IconFigma, IconWord, IconClose, IconTemplateStroked, IconSearch } from '@fibrae/semi-icons-react';
 import { Typography, Button } from '@fibrae/semi-ui-react';
 
-const { Configure } = AIChatInput;
-
 type SideBarContent = { type?: undefined; value?: undefined } | { type: 'annotation'; value: AnnotationItemProps[] } | { type: 'resource'; value: { name: string } };
 
 function simpleIsEqual(a: unknown, b: unknown) {
@@ -62,12 +60,12 @@ export default function AIComponentDemo() {
     const renderLeftMenu = useCallback(
         () => (
             <>
-                <Configure.Select optionList={modelOptions} field="model" initValue="GPT-4o" />
-                <Configure.Button icon={<IconBookOpenStroked />} field="onlineSearch">
+                <AIChatInput.Configure.Select optionList={modelOptions} field="model" initValue="GPT-4o" />
+                <AIChatInput.Configure.Button icon={<IconBookOpenStroked />} field="onlineSearch">
                     联网搜索
-                </Configure.Button>
-                <Configure.Mcp options={mcpOptions} />
-                <Configure.RadioButton options={radioButtonProps} field="thinkType" initValue="think" />
+                </AIChatInput.Configure.Button>
+                <AIChatInput.Configure.Mcp options={mcpOptions} />
+                <AIChatInput.Configure.RadioButton options={radioButtonProps} field="thinkType" initValue="think" />
             </>
         ),
         []
@@ -189,7 +187,7 @@ export default function AIComponentDemo() {
                 <div
                     style={{
                         display: 'flex',
-                        alignItems: 'center ',
+                        alignItems: 'center',
                         justifyContent: 'space-between',
                         padding: 12,
                         color: 'var(--semi-color-text)',
@@ -210,7 +208,7 @@ export default function AIComponentDemo() {
                 <div style={{ display: 'flex', flexDirection: 'column', rowGap: '12px', padding: '12px' }}>
                     {content.value.map((item, index) => (
                         <div key={index} style={{ display: 'flex', flexDirection: 'column', rowGap: '8px' }}>
-                            <span style={{ display: 'flex', alignItems: 'center ', columnGap: 4 }}>
+                            <span style={{ display: 'flex', alignItems: 'center', columnGap: 4 }}>
                                 <img style={{ width: 20, height: 20, borderRadius: '50%' }} src={item.logo} alt="" />
                                 <span
                                     style={{

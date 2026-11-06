@@ -14,16 +14,16 @@
 
 <template>
     <DatePicker v-model="date" type="dateTimeRange" @change="onChange">
-        <template #trigger="{ value }">
+        <template #trigger="triggerProps">
             <!-- The clear button is a sibling of the trigger button: buttons cannot nest -->
             <ButtonGroup theme="light">
                 <Button iconPosition="right">
                     <template #icon>
                         <IconChevronDown />
                     </template>
-                    {{ value.length ? `${dateFns.format(value[0], formatToken)} ~ ${dateFns.format(value[1], formatToken)}` : '请选择日期时间范围' }}
+                    {{ triggerProps.value.length ? `${dateFns.format(triggerProps.value[0], formatToken)} ~ ${dateFns.format(triggerProps.value[1], formatToken)}` : '请选择日期时间范围' }}
                 </Button>
-                <Button v-if="value.length" aria-label="清除" @click.stop="date = undefined">
+                <Button v-if="triggerProps.value.length" aria-label="清除" @click.stop="date = undefined">
                     <template #icon>
                         <IconClose />
                     </template>

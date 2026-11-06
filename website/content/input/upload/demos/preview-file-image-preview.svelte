@@ -3,7 +3,7 @@
     import { Button, ImagePreview, Upload, type FileItem } from '@fibrae/semi-ui-svelte';
 
     let visible = $state(false);
-    const fileList: FileItem[] = [
+    const defaultFileList: FileItem[] = [
         {
             uid: '1',
             name: 'dyBag.png',
@@ -15,8 +15,8 @@
     ];
 </script>
 
-<Upload action="https://api.semi.design/upload" {fileList} itemStyle="width: 300px">
-    {#snippet fileOperation({ file, onRemove })}
+<Upload action="https://api.semi.design/upload" fileList={defaultFileList} itemStyle="width: 300px">
+    {#snippet fileOperation(fileItem)}
         <div style="display: flex; column-gap: 8px; padding: 0 8px">
             <Button aria-label="预览" size="small" theme="borderless" type="tertiary" onclick={() => (visible = true)}>
                 {#snippet icon()}<IconExpand />{/snippet}
@@ -24,10 +24,10 @@
             <Button aria-label="下载" size="small" theme="borderless" type="tertiary">
                 {#snippet icon()}<IconDownload />{/snippet}
             </Button>
-            <Button aria-label="删除" size="small" theme="borderless" type="tertiary" onclick={() => onRemove()}>
+            <Button aria-label="删除" size="small" theme="borderless" type="tertiary" onclick={() => fileItem.onRemove()}>
                 {#snippet icon()}<IconDelete />{/snippet}
             </Button>
-            <ImagePreview bind:visible src={file.url} />
+            <ImagePreview bind:visible src={fileItem.file.url} />
         </div>
     {/snippet}
     <Button theme="light">

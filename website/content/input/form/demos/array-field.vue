@@ -14,23 +14,23 @@
 
 <template>
     <Form allowEmpty labelPosition="left" labelWidth="100px" :style="{ width: '800px' }">
-        <template #default="{ formState }">
+        <template #default="form">
             <ArrayField field="rules" :initValue="data">
-                <template #default="{ arrayFields, onAdd, onAddWithInitValue }">
-                    <Button theme="light" @click="onAdd">
+                <template #default="arrayField">
+                    <Button theme="light" @click="arrayField.onAdd">
                         <template #icon>
                             <IconPlusCircle />
                         </template>
                         Add new line
                     </Button>
-                    <Button :style="{ marginLeft: '8px' }" @click="onAddWithInitValue({ name: 'Semi DSM', role: 'Designer' })">
+                    <Button :style="{ marginInlineStart: '8px' }" @click="arrayField.onAddWithInitValue({ name: 'Semi DSM', role: 'Designer' })">
                         <template #icon>
                             <IconPlusCircle />
                         </template>
                         Add new line with init value
                     </Button>
-                    <div v-for="item in arrayFields" :key="item.key" :style="{ width: '1000px', display: 'flex' }">
-                        <FormInput :field="`${item.field}[name]`" :label="`${item.field}.name`" :style="{ width: '200px', marginRight: '16px' }" />
+                    <div v-for="item in arrayField.arrayFields" :key="item.key" :style="{ width: '1000px', display: 'flex' }">
+                        <FormInput :field="`${item.field}[name]`" :label="`${item.field}.name`" :style="{ width: '200px', marginInlineEnd: '16px' }" />
                         <FormSelect :field="`${item.field}[role]`" :label="`${item.field}.role`" :optionList="roleOptions" :style="{ width: '120px' }" />
                         <Button aria-label="Delete" :style="{ margin: '12px' }" theme="borderless" type="danger" @click="item.onRemove">
                             <template #icon>
@@ -40,7 +40,7 @@
                     </div>
                 </template>
             </ArrayField>
-            <TextArea aria-label="Form state" :modelValue="JSON.stringify(formState)" :style="{ marginTop: '10px' }" />
+            <TextArea aria-label="Form state" :modelValue="JSON.stringify(form.formState)" :style="{ marginBlockStart: '10px' }" />
         </template>
     </Form>
 </template>

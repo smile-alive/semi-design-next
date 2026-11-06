@@ -7,7 +7,7 @@
 
     let latestInput = '';
 
-    const onSearch = (inputValue: string) => {
+    const handleSearch = (inputValue: string) => {
         latestInput = inputValue;
         if (!inputValue) {
             treeData.value = [];
@@ -18,15 +18,16 @@
             if (latestInput !== inputValue) {
                 return;
             }
-            treeData.value = [
+            const mockData = [
                 { label: `${inputValue} - 结果1`, value: `${inputValue}-1`, key: `${inputValue}-1` },
                 { label: `${inputValue} - 结果2`, value: `${inputValue}-2`, key: `${inputValue}-2` },
                 { label: `${inputValue} - 结果3`, value: `${inputValue}-3`, key: `${inputValue}-3` },
             ];
+            treeData.value = mockData;
         }, 500);
     };
 </script>
 
 <template>
-    <TreeSelect v-model="value" filterTreeNode placeholder="请输入关键字进行远程搜索" remote style="width: 300px" :treeData="treeData" @search="onSearch" />
+    <TreeSelect v-model="value" filterTreeNode placeholder="请输入关键字进行远程搜索" remote style="width: 300px" :treeData="treeData" @search="handleSearch" />
 </template>

@@ -26,17 +26,10 @@
         filters: ColumnProps[];
     }
 
-    interface SwitchItem {
-        text: string;
-        /** Absent: the switch keeps its own state */
-        checked?: () => boolean;
-        onChange: (checked: boolean) => void;
-    }
-
     const DAY = 24 * 60 * 60 * 1000;
     const figmaIconUrl = '/assets/placeholder/app.svg';
     const dataTotalSize = 46;
-    const wrapStyle = 'margin-bottom: 15px; display: flex; justify-content: space-around; flex-wrap: wrap';
+    const wrapStyle = 'margin-block-end: 15px; display: flex; justify-content: space-around; flex-wrap: wrap';
     const switchStyle = 'display: inline-flex; align-items: center; margin: 5px';
 
     const initialColumns: ColumnProps[] = [
@@ -307,68 +300,17 @@
     const switchPagination = (position: TablePaginationPosition | false) => {
         pagination = position ? { ...defaultPagination, ...pagination, position } : false;
     };
-
-    const switches: SwitchItem[] = [
-        { text: '固定表头：', checked: () => !!scroll.y, onChange: toggleFixHeader },
-        {
-            text: '隐藏表头：',
-            onChange: (checked) => {
-                showHeader = !checked;
-            },
-        },
-        {
-            text: '显示标题：',
-            onChange: (checked) => {
-                showTitle = checked;
-            },
-        },
-        {
-            text: '显示底部：',
-            onChange: (checked) => {
-                showFooter = checked;
-            },
-        },
-        { text: '固定列：', onChange: toggleFixColumns },
-        { text: '显示选择列：', onChange: toggleRowSelection },
-        {
-            text: '显示加载状态：',
-            checked: () => loading,
-            onChange: (checked) => {
-                loading = checked;
-            },
-        },
-        { text: '无数据：', checked: () => !dataSource.length, onChange: toggleDataSource },
-        {
-            text: '开启排序功能：',
-            checked: () => columns.some((column) => column.sorter),
-            onChange: toggleShowSorter,
-        },
-        {
-            text: '开启过滤功能：',
-            checked: () => columns.some((column) => column.filters),
-            onChange: toggleShowFilter,
-        },
-        {
-            text: '开启行展开功能：',
-            checked: () => expandable,
-            onChange: (checked) => {
-                expandable = checked;
-            },
-        },
-        { text: '展开当前所有行：', onChange: toggleExpandedRowKeys },
-        {
-            text: '显示边框：',
-            checked: () => bordered,
-            onChange: (checked) => {
-                bordered = checked;
-            },
-        },
-        { text: '开启列伸缩功能：', onChange: toggleResizable },
-    ];
 </script>
 
 {#snippet expandedRow({ record }: { record: Record<string, any> })}
     <p>{record.description}</p>
+{/snippet}
+
+{#snippet tableSwitch(text: string, onChange: (checked: boolean) => void, checked?: boolean)}
+    <span style={switchStyle}>
+        <span>{text}</span>
+        <Switch aria-label={text} {checked} {onChange} size="small" />
+    </span>
 {/snippet}
 
 {#snippet footer()}
@@ -377,12 +319,28 @@
 
 <div>
     <div style={wrapStyle}>
-        {#each switches as item (item.text)}
-            <span style={switchStyle}>
-                <span>{item.text}</span>
-                <Switch aria-label={item.text} checked={item.checked?.()} onChange={item.onChange} size="small" />
-            </span>
-        {/each}
+        {@render tableSwitch('固定表头：', toggleFixHeader, !!scroll.y)}
+        {@render tableSwitch('隐藏表头：', (checked) => (showHeader = !checked))}
+        {@render tableSwitch('显示标题：', (checked) => (showTitle = checked))}
+        {@render tableSwitch('显示底部：', (checked) => (showFooter = checked))}
+        {@render tableSwitch('固定列：', toggleFixColumns)}
+        {@render tableSwitch('显示选择列：', toggleRowSelection)}
+        {@render tableSwitch('显示加载状态：', (checked) => (loading = checked), loading)}
+        {@render tableSwitch('无数据：', toggleDataSource, !dataSource.length)}
+        {@render tableSwitch(
+            '开启排序功能：',
+            toggleShowSorter,
+            columns.some((column) => column.sorter)
+        )}
+        {@render tableSwitch(
+            '开启过滤功能：',
+            toggleShowFilter,
+            columns.some((column) => column.filters)
+        )}
+        {@render tableSwitch('开启行展开功能：', (checked) => (expandable = checked), expandable)}
+        {@render tableSwitch('展开当前所有行：', toggleExpandedRowKeys)}
+        {@render tableSwitch('显示边框：', (checked) => (bordered = checked), bordered)}
+        {@render tableSwitch('开启列伸缩功能：', toggleResizable)}
         <span style={switchStyle}>
             <span>分页控件：</span>
             <ButtonGroup>
@@ -413,14 +371,14 @@
         {#snippet cell({ column, record, text })}
             {#if column.dataIndex === 'name'}
                 <span>
-                    <Avatar alt="" shape="square" size="small" src={figmaIconUrl} style="margin-right: 12px" />
+                    <Avatar alt="" shape="square" size="small" src={figmaIconUrl} style="margin-inline-end: 12px" />
                     {text}
                 </span>
             {:else if column.dataIndex === 'size'}
                 {text} KB
             {:else if column.dataIndex === 'owner'}
                 <div>
-                    <Avatar color={record.avatarBg} size="small" style="margin-right: 4px">
+                    <Avatar color={record.avatarBg} size="small" style="margin-inline-end: 4px">
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}

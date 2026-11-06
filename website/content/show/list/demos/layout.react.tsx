@@ -5,22 +5,22 @@ interface Item {
     color: AvatarColor;
 }
 
-export default function ListDemo() {
-    const data: Item[] = [
-        {
-            title: 'Semi Design Title 1',
-            color: 'light-blue',
-        },
-        {
-            title: 'Semi Design Title 2',
-            color: 'grey',
-        },
-        {
-            title: 'Semi Design Title 3',
-            color: 'light-green',
-        },
-    ];
+const data: Item[] = [
+    {
+        title: 'Semi Design Title 1',
+        color: 'light-blue',
+    },
+    {
+        title: 'Semi Design Title 2',
+        color: 'grey',
+    },
+    {
+        title: 'Semi Design Title 3',
+        color: 'light-green',
+    },
+];
 
+export default function ListDemo() {
     return (
         <div style={{ padding: 12, border: '1px solid var(--semi-color-border)', margin: 12 }}>
             <List

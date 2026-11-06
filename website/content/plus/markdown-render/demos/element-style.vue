@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { h, type FunctionalComponent } from 'vue';
-    import { MarkdownRender, TypographyTitle, type MarkdownRenderComponents } from '@fibrae/semi-ui-vue';
+    import { MarkdownRender, Typography, type MarkdownRenderComponents } from '@fibrae/semi-ui-vue';
 
     // `components` takes component objects, which a template cannot define inline.
-    const PrimaryTitle: FunctionalComponent = (_, { slots }) => h(TypographyTitle, { heading: 2, style: { color: 'var(--semi-color-primary)' } }, () => slots.default?.());
+    const PrimaryTitle: FunctionalComponent = (_, { slots }) => h(Typography.Title, { heading: 2, style: { color: 'var(--semi-color-primary)' } }, () => slots.default?.());
 
     const components: MarkdownRenderComponents = { h2: PrimaryTitle };
 </script>

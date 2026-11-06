@@ -1,24 +1,40 @@
 <script lang="ts">
-    import { Dropdown, DropdownItem, DropdownMenu, Tag } from '@fibrae/semi-ui-svelte';
-
-    const positions = ['bottom', 'bottomLeft', 'bottomRight'] as const;
+    import { Dropdown, Tag } from '@fibrae/semi-ui-svelte';
 </script>
 
 <div>
-    {#each positions as position, index (position)}
-        {#if index > 0}
-            <br />
-            <br />
-        {/if}
-        <Dropdown {position}>
-            <Tag>{position === 'bottom' ? 'Bottom' : position}</Tag>
-            {#snippet content()}
-                <DropdownMenu>
-                    <DropdownItem>Menu Item 1</DropdownItem>
-                    <DropdownItem>Menu Item 2</DropdownItem>
-                    <DropdownItem>Menu Item 3</DropdownItem>
-                </DropdownMenu>
-            {/snippet}
-        </Dropdown>
-    {/each}
+    <Dropdown position="bottom">
+        <Tag>Bottom</Tag>
+        {#snippet content()}
+            <Dropdown.Menu>
+                <Dropdown.Item>Menu Item 1</Dropdown.Item>
+                <Dropdown.Item>Menu Item 2</Dropdown.Item>
+                <Dropdown.Item>Menu Item 3</Dropdown.Item>
+            </Dropdown.Menu>
+        {/snippet}
+    </Dropdown>
+    <br />
+    <br />
+    <Dropdown position="bottomLeft">
+        <Tag>bottomLeft</Tag>
+        {#snippet content()}
+            <Dropdown.Menu>
+                <Dropdown.Item>Menu Item 1</Dropdown.Item>
+                <Dropdown.Item>Menu Item 2</Dropdown.Item>
+                <Dropdown.Item>Menu Item 3</Dropdown.Item>
+            </Dropdown.Menu>
+        {/snippet}
+    </Dropdown>
+    <br />
+    <br />
+    <Dropdown position="bottomRight">
+        <Tag>bottomRight</Tag>
+        {#snippet content()}
+            <Dropdown.Menu>
+                <Dropdown.Item>Menu Item 1</Dropdown.Item>
+                <Dropdown.Item>Menu Item 2</Dropdown.Item>
+                <Dropdown.Item>Menu Item 3</Dropdown.Item>
+            </Dropdown.Menu>
+        {/snippet}
+    </Dropdown>
 </div>

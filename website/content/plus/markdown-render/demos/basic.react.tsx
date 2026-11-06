@@ -1,9 +1,6 @@
 import { MarkdownRender } from '@fibrae/semi-ui-react';
 
-export default function MarkdownRenderDemo() {
-    return (
-        <MarkdownRender
-            raw={`
+const raw = `
 正文内容是普通的文本，也可以**加粗**~~删除线~~和<u>下划线</u> [超链接](https://semi.design) 等 Markdown 与 HTML 的基本语法所支持的富文本，也支持 emoji 🍰
 
 
@@ -53,7 +50,8 @@ export default function MarkdownRenderDemo() {
 | 31 | 32 | 33 | 34 |
 | 41 | 42 | 43 | 44 |
 
-    `}
-        />
-    );
+    `;
+
+export default function MarkdownRenderDemo() {
+    return <MarkdownRender raw={raw} />;
 }

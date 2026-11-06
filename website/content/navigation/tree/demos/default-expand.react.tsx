@@ -1,29 +1,32 @@
 import { useState } from 'react';
 import { Tree, Button, type TreeProps } from '@fibrae/semi-ui-react';
 
+const json = {
+    Node1: {
+        'Child Node1': '0-0-1',
+        'Child Node2': '0-0-2',
+    },
+    Node2: '0-1',
+};
+
+const json2 = {
+    Node3: {
+        'Child Node1': '0-0-1',
+        'Child Node2': '0-0-2',
+        'Child Node3': '0-0-3',
+        'Child Node4': '0-0-4',
+    },
+    Node2: '0-1',
+};
+
+const style = {
+    marginRight: 20,
+    width: 260,
+    height: 420,
+    border: '1px solid var(--semi-color-border)',
+};
+
 export default function TreeDemo() {
-    const json = {
-        Node1: {
-            'Child Node1': '0-0-1',
-            'Child Node2': '0-0-2',
-        },
-        Node2: '0-1',
-    };
-    const json2 = {
-        Node3: {
-            'Child Node1': '0-0-1',
-            'Child Node2': '0-0-2',
-            'Child Node3': '0-0-3',
-            'Child Node4': '0-0-4',
-        },
-        Node2: '0-1',
-    };
-    const style = {
-        marginRight: 20,
-        width: 260,
-        height: 420,
-        border: '1px solid var(--semi-color-border)',
-    };
     const [tree, setTree] = useState<TreeProps['treeDataSimpleJson']>(json);
     const handleClick = () => {
         setTree(json2);

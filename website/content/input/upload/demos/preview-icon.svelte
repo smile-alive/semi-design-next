@@ -2,7 +2,7 @@
     import { IconEyeOpened, IconPlus } from '@fibrae/semi-icons-svelte';
     import { Upload, type FileItem } from '@fibrae/semi-ui-svelte';
 
-    const fileList: FileItem[] = [
+    const defaultFileList: FileItem[] = [
         {
             uid: '1',
             name: 'resso.png',
@@ -18,7 +18,7 @@
     };
 </script>
 
-<Upload accept="image/*" action="https://api.semi.design/upload" {fileList} listType="picture" multiple onPreviewClick={handlePreview} showPicInfo>
+<Upload accept="image/*" action="https://api.semi.design/upload" fileList={defaultFileList} listType="picture" multiple onPreviewClick={handlePreview} showPicInfo>
     {#snippet picPreviewIcon()}
         <IconEyeOpened style="color: var(--semi-color-white); font-size: 24px" />
     {/snippet}

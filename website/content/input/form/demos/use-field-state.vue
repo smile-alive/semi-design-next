@@ -18,7 +18,7 @@
             <FormInput field="name" initValue="mike" />
             <FormInput field="country" initValue="china" />
         </div>
-        <div style="width: 500px; margin-top: 30px">
+        <div style="width: 500px; margin-block-start: 30px">
             <ComponentUsingFieldState field="name" />
             <ComponentUsingFieldState field="country" />
         </div>

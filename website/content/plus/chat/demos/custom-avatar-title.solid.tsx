@@ -1,4 +1,4 @@
-import { createMemo, createSignal } from 'solid-js';
+import { Show, createMemo, createSignal } from 'solid-js';
 import { Chat, type ChatMessage as Message, type ChatRenderAvatarProps as RenderAvatarProps, type ChatRenderTitleProps as RenderTitleProps } from '@fibrae/semi-ai-solid';
 import { Avatar, Radio, RadioGroup } from '@fibrae/semi-ui-solid';
 
@@ -71,7 +71,7 @@ function formatTime(createAt?: number) {
 export default function ChatDemo() {
     const [title, setTitle] = createSignal('null');
     const [avatar, setAvatar] = createSignal('null');
-    const [chats, setChats] = createSignal<Message[]>(defaultMessage);
+    const [message, setMessage] = createSignal<Message[]>(defaultMessage);
 
     const customRenderAvatar = createMemo(() => {
         if (avatar() === 'custom') {
@@ -109,7 +109,7 @@ export default function ChatDemo() {
             content: `This is a mock response`,
         };
         setTimeout(() => {
-            setChats((list) => [...list, newAssistantMessage]);
+            setMessage((list) => [...list, newAssistantMessage]);
         }, 200);
     };
 
@@ -118,7 +118,7 @@ export default function ChatDemo() {
             <span style={{ display: 'flex', 'flex-direction': 'column', 'row-gap': '8px', 'margin-bottom': '5px' }}>
                 <span style={{ display: 'flex', 'align-items': 'center', 'column-gap': '10px' }}>
                     头像渲染模式
-                    <RadioGroup onChange={(e) => setAvatar(e.target.value)} value={avatar()} type="button">
+                    <RadioGroup aria-label="头像渲染模式" onChange={(e) => setAvatar(e.target.value)} value={avatar()} type="button">
                         <Radio value="default">默认头像</Radio>
                         <Radio value="null">无头像</Radio>
                         <Radio value="custom">自定义头像</Radio>
@@ -126,26 +126,28 @@ export default function ChatDemo() {
                 </span>
                 <span style={{ display: 'flex', 'align-items': 'center', 'column-gap': '10px' }}>
                     标题渲染模式
-                    <RadioGroup onChange={(e) => setTitle(e.target.value)} value={title()} type="button">
+                    <RadioGroup aria-label="标题渲染模式" onChange={(e) => setTitle(e.target.value)} value={title()} type="button">
                         <Radio value="default">默认标题</Radio>
                         <Radio value="null">无标题</Radio>
                         <Radio value="custom">自定义标题</Radio>
                     </RadioGroup>
                 </span>
             </span>
-            <Chat
-                chatBoxRenderConfig={{
-                    renderChatBoxTitle: customRenderTitle(),
-                    renderChatBoxAvatar: customRenderAvatar(),
-                }}
-                style={commonOuterStyle}
-                class="component-chat-demo-custom-render"
-                chats={chats()}
-                onChatsChange={(next) => setChats(next)}
-                onMessageSend={onMessageSend}
-                roleConfig={roleInfo}
-                uploadProps={uploadProps}
-            />
+            <Show when={`${avatar()}${title()}`} keyed>
+                <Chat
+                    chatBoxRenderConfig={{
+                        renderChatBoxTitle: customRenderTitle(),
+                        renderChatBoxAvatar: customRenderAvatar(),
+                    }}
+                    style={commonOuterStyle}
+                    class="component-chat-demo-custom-render"
+                    chats={message()}
+                    onChatsChange={(next) => setMessage(next)}
+                    onMessageSend={onMessageSend}
+                    roleConfig={roleInfo}
+                    uploadProps={uploadProps}
+                />
+            </Show>
         </>
     );
 }

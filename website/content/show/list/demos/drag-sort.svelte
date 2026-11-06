@@ -4,9 +4,9 @@
     import { Accessibility, DragDropManager } from '@dnd-kit/dom';
     import { isSortable, OptimisticSortingPlugin, Sortable } from '@dnd-kit/dom/sortable';
     import { DragDropProvider } from '@dnd-kit/svelte';
-    import { Avatar, List, ListItem, type AvatarColor } from '@fibrae/semi-ui-svelte';
+    import { Avatar, List, type AvatarColor } from '@fibrae/semi-ui-svelte';
 
-    interface Entry {
+    interface Item {
         id: number;
         title: string;
         color: AvatarColor;
@@ -14,7 +14,7 @@
 
     type ProviderProps = ComponentProps<typeof DragDropProvider>;
 
-    const data: Entry[] = [
+    const data: Item[] = [
         { id: 1, title: 'Semi Design Title 1', color: 'red' },
         { id: 2, title: 'Semi Design Title 2', color: 'grey' },
         { id: 3, title: 'Semi Design Title 3', color: 'light-green' },
@@ -24,7 +24,7 @@
 
     let listItems = $state.raw(data);
     // The order shown while dragging; cleared on drop, so `listItems` stays the only truth
-    let preview = $state.raw<Entry[] | null>(null);
+    let preview = $state.raw<Item[] | null>(null);
     let draggingId = $state<number | string>();
     const ordered = $derived(preview ?? listItems);
 
@@ -70,7 +70,7 @@
             <!-- Keyed by id: dnd-kit reorders li nodes mid-drag, and the keyed each moves them with their data -->
             {#each ordered as entry, position (entry.id)}
                 {@const dragging = draggingId === entry.id}
-                <ListItem {@attach sortable(entry.id, () => position)} class={dragging ? 'isDragging' : undefined} style="border: 1px solid var(--semi-color-border); margin-bottom: 12px; cursor: grabbing{dragging ? '; z-index: 999; position: relative; background-color: var(--semi-color-bg-0)' : ''}">
+                <List.Item {@attach sortable(entry.id, () => position)} class={dragging ? 'isDragging' : undefined} style="border: 1px solid var(--semi-color-border); margin-bottom: 12px; cursor: grabbing{dragging ? '; z-index: 999; position: relative; background-color: var(--semi-color-bg-0)' : ''}">
                     {#snippet header()}
                         <Avatar color={entry.color}>SE</Avatar>
                     {/snippet}
@@ -80,7 +80,7 @@
                             <p style="color: var(--semi-color-text-2); margin: 4px 0">Semi Design 设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。</p>
                         </div>
                     {/snippet}
-                </ListItem>
+                </List.Item>
             {/each}
         </List>
     </DragDropProvider>

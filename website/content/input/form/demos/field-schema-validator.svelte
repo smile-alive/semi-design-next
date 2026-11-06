@@ -1,16 +1,17 @@
 <script lang="ts">
     import * as z from 'zod';
-    import { Button, Form, FormInput, type RuleItem } from '@fibrae/semi-ui-svelte';
+    import { Button, Form, FormInput } from '@fibrae/semi-ui-svelte';
 
-    const validator = z.string({ error: '请输入用户名' }).min(3, '用户名至少 3 个字符');
-    const rules: RuleItem[] = [
+    const nickname = z.string('请输入昵称').min(3, '昵称至少 3 个字符').max(12, '昵称最多 12 个字符');
+
+    const usernameRules = [
         { required: true, message: '请输入用户名' },
-        { min: 3, message: '用户名至少 3 个字符' },
+        { pattern: /^[a-z0-9_]+$/, message: '只能包含小写字母、数字和下划线' },
     ];
 </script>
 
 <Form style="width: 400px">
-    <FormInput field="bySchema" label={{ text: 'validator 传 z.string().min(3)', required: true }} {validator} />
-    <FormInput field="byRules" label="rules 传 required 与 min" {rules} />
+    <FormInput field="nickname" label="昵称（validator 传 schema）" validator={nickname} />
+    <FormInput field="username" label="用户名（rules）" rules={usernameRules} />
     <Button htmlType="submit">提交</Button>
 </Form>

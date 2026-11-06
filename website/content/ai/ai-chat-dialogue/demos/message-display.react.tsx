@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { AIChatDialogue, type AIChatDialogueMessage as Message, type DialogueContentItemRendererMap } from '@fibrae/semi-ai-react';
 import { IconSearchStroked, IconCodeStroked, IconBriefStroked } from '@fibrae/semi-icons-react';
 
@@ -162,53 +162,50 @@ const roleConfig = {
     },
 };
 
+function mapStep(steps?: PlanStep[]) {
+    if (!steps) {
+        return [];
+    }
+    return steps.map((item) => {
+        let icon = null;
+        switch (item.type) {
+            case 'search':
+                icon = <IconSearchStroked />;
+                break;
+            case 'docs':
+                icon = <IconBriefStroked />;
+                break;
+            case 'code':
+                icon = <IconCodeStroked />;
+                break;
+        }
+        return {
+            summary: item.summary,
+            description: item.description,
+            icon: icon,
+        };
+    });
+}
+
+const customRender: DialogueContentItemRendererMap = {
+    plan: (item) => {
+        const steps = item.content.map((item: { summary: string; steps?: PlanStep[] }) => {
+            return {
+                summary: item.summary,
+                actions: mapStep(item.steps),
+                status: 'completed',
+            };
+        });
+        return <AIChatDialogue.Step steps={steps} />;
+    },
+};
+
 export default function AIChatDialogueDemo() {
     const [messages, setMessage] = useState(defaultMessages);
 
     const onChatsChange = useCallback((chats: Message[]) => {
         setMessage(chats);
     }, []);
-
-    const mapStep = useCallback((steps?: PlanStep[]) => {
-        if (!steps) {
-            return [];
-        }
-        return steps.map((item) => {
-            let icon = null;
-            switch (item.type) {
-                case 'search':
-                    icon = <IconSearchStroked />;
-                    break;
-                case 'docs':
-                    icon = <IconBriefStroked />;
-                    break;
-                case 'code':
-                    icon = <IconCodeStroked />;
-                    break;
-            }
-            return {
-                summary: item.summary,
-                description: item.description,
-                icon: icon,
-            };
-        });
-    }, []);
-
-    const customRender = useMemo<DialogueContentItemRendererMap>(
-        () => ({
-            plan: (item) => {
-                let steps = item.content.map((item: { summary: string; steps?: PlanStep[] }) => {
-                    return {
-                        summary: item.summary,
-                        actions: mapStep(item.steps),
-                        status: 'completed',
-                    };
-                });
-                return <AIChatDialogue.Step steps={steps} />;
-            },
-        }),
-        [mapStep]
-    );
 
     return <AIChatDialogue chats={messages} roleConfig={roleConfig} onChatsChange={onChatsChange} renderDialogueContentItem={customRender} />;
 }

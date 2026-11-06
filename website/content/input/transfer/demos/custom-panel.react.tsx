@@ -24,24 +24,24 @@ function renderItem(type: 'source' | 'selected', item: TransferDataItem, onItemA
     );
 }
 
-function renderSourcePanel({ loading, noMatch, filterData, selectedItems, allChecked, onAllClick, inputValue, onSearch, onSelectOrRemove }: SourcePanelProps) {
+function renderSourcePanel(panel: SourcePanelProps) {
     let content: ReactNode;
-    if (loading) {
+    if (panel.loading) {
         content = <Spin />;
-    } else if (noMatch) {
-        content = <div className="empty sp-font">{inputValue ? '无搜索结果' : '暂无内容'}</div>;
+    } else if (panel.noMatch) {
+        content = <div className="empty sp-font">{panel.inputValue ? '无搜索结果' : '暂无内容'}</div>;
     } else {
-        content = filterData.map((item) => renderItem('source', item, onSelectOrRemove, selectedItems));
+        content = panel.filterData.map((item) => renderItem('source', item, panel.onSelectOrRemove, panel.selectedItems));
     }
     return (
         <section className="source-panel">
             <div className="panel-header sp-font">门店列表</div>
             <div className="panel-main">
-                <Input aria-label="搜索门店" style={{ width: 454, margin: '12px 14px' }} prefix={<IconSearch />} onChange={onSearch} showClear />
+                <Input aria-label="搜索门店" style={{ width: 454, margin: '12px 14px' }} prefix={<IconSearch />} onChange={panel.onSearch} showClear />
                 <div className="panel-controls sp-font">
-                    <span>待选门店: {filterData.length}</span>
-                    <Button onClick={onAllClick} theme="borderless" size="small">
-                        {allChecked ? '取消全选' : '全选'}
+                    <span>待选门店: {panel.filterData.length}</span>
+                    <Button onClick={panel.onAllClick} theme="borderless" size="small">
+                        {panel.allChecked ? '取消全选' : '全选'}
                     </Button>
                 </div>
                 <div className="panel-list">{content}</div>
@@ -50,18 +50,18 @@ function renderSourcePanel({ loading, noMatch, filterData, selectedItems, allChe
     );
 }
 
-function renderSelectedPanel({ selectedData, onClear, onRemove }: SelectedPanelProps) {
-    let mainContent: ReactNode = selectedData.map((item) => renderItem('selected', item, onRemove));
+function renderSelectedPanel(panel: SelectedPanelProps) {
+    let mainContent: ReactNode = panel.selectedData.map((item) => renderItem('selected', item, panel.onRemove));
 
-    if (!selectedData.length) {
+    if (!panel.selectedData.length) {
         mainContent = <div className="empty sp-font">暂无数据，请从左侧筛选</div>;
     }
 
     return (
         <section className="selected-panel">
             <div className="panel-header sp-font">
-                <div>已选同步门店: {selectedData.length}</div>
-                <Button theme="borderless" type="primary" onClick={onClear} size="small">
+                <div>已选同步门店: {panel.selectedData.length}</div>
+                <Button theme="borderless" type="primary" onClick={panel.onClear} size="small">
                     清空
                 </Button>
             </div>

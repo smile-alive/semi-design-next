@@ -23,8 +23,8 @@
 {#each locales as locale (`semi-${locale.code}`)}
     <LocaleProvider {locale}>
         <LocaleConsumer componentName="TimePicker">
-            {#snippet children({ locale: timePicker, localeCode })}
-                <div>{localeCode} : {timePicker.begin}</div>
+            {#snippet children(consumer)}
+                <div>{consumer.localeCode} : {consumer.locale.begin}</div>
             {/snippet}
         </LocaleConsumer>
     </LocaleProvider>
@@ -32,8 +32,8 @@
 {#each locales as locale (`custom-${locale.code}`)}
     <LocaleProvider {locale}>
         <LocaleConsumer componentName="ComponentA">
-            {#snippet children({ locale: componentA })}
-                <div>{componentA.customKey}</div>
+            {#snippet children(consumer)}
+                <div>{consumer.locale.customKey}</div>
             {/snippet}
         </LocaleConsumer>
     </LocaleProvider>

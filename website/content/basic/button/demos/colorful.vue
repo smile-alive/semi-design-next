@@ -14,7 +14,7 @@
 <!-- The text goes in an explicit #default: after a sibling #icon template, a bare {{ content }} gets a leading space,
      which would count as text and break the icon-only layout. -->
 <template>
-    <div v-for="content in contents" :key="content ?? 'icon-only'" :style="{ display: 'flex', rowGap: '16px', marginTop: '20px', marginLeft: '10px', flexDirection: 'column' }">
+    <div v-for="content in contents" :key="content ?? 'icon-only'" :style="{ display: 'flex', rowGap: '16px', marginBlockStart: '20px', marginInlineStart: '10px', flexDirection: 'column' }">
         <div v-for="row in rows" :key="row.theme" :style="{ display: 'flex', columnGap: '16px' }">
             <Button :aria-label="content ? undefined : 'AI'" colorful :theme="row.theme" type="primary">
                 <template #icon>

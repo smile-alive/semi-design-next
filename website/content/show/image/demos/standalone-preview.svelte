@@ -10,5 +10,5 @@
 <Button onclick={() => (visible1 = true)}>Preview single Image</Button>
 <ImagePreview bind:visible={visible1} src="/assets/root-web-sites/sky.jpg" />
 <br />
-<Button style="margin-top: 20px" onclick={() => (visible2 = true)}>Preview multiple Images</Button>
+<Button style="margin-block-start: 20px" onclick={() => (visible2 = true)}>Preview multiple Images</Button>
 <ImagePreview bind:visible={visible2} previewTitle="Scenery" src={srcList} />

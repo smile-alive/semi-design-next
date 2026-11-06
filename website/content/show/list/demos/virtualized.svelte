@@ -2,7 +2,7 @@
     import { untrack } from 'svelte';
     import { SvelteSet } from 'svelte/reactivity';
     import { createVirtualizer } from '@tanstack/svelte-virtual';
-    import { Avatar, List, ListItem, Spin } from '@fibrae/semi-ui-svelte';
+    import { Avatar, List, Spin } from '@fibrae/semi-ui-svelte';
 
     interface Book {
         title: string;
@@ -59,18 +59,18 @@
             {#snippet emptyContent()}
                 <Spin />
             {/snippet}
-            {#snippet item({ item: index })}
-                <ListItem style="position: absolute; inset-inline: 0; top: {index * rowHeight}px; height: {rowHeight}px">
+            {#snippet item(row)}
+                <List.Item style="position: absolute; inset-inline: 0; top: {row.item * rowHeight}px; height: {rowHeight}px">
                     {#snippet header()}
                         <Avatar color="grey">SE</Avatar>
                     {/snippet}
                     {#snippet main()}
                         <div>
-                            <span style="color: var(--semi-color-text-0); font-weight: 500">{dataList[index].title}</span>
+                            <span style="color: var(--semi-color-text-0); font-weight: 500">{dataList[row.item].title}</span>
                             <p style="color: var(--semi-color-text-2); margin: 4px 0">Semi Design 设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。</p>
                         </div>
                     {/snippet}
-                </ListItem>
+                </List.Item>
             {/snippet}
         </List>
     </section>

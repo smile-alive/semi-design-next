@@ -27,11 +27,11 @@
 </script>
 
 <TreeSelect filterTreeNode multiple {onChange} placeholder="Custom Trigger" searchPosition="trigger" style="width: 300px" {treeData}>
-    {#snippet trigger({ value, inputValue, onSearch, onRemove })}
-        <TagInput {inputValue} onInputChange={onSearch} value={value.flatMap((item) => item.key ?? [])}>
-            {#snippet tag({ value: key })}
-                <Tag closable onClose={() => onRemove(key)} style="margin-inline-start: 2px" tagKey={key}>
-                    {value.find((item) => item.key === key)?.label}
+    {#snippet trigger(triggerState)}
+        <TagInput inputValue={triggerState.inputValue} onInputChange={triggerState.onSearch} value={triggerState.value.flatMap((item) => item.key ?? [])}>
+            {#snippet tag(tagItem)}
+                <Tag closable onClose={() => triggerState.onRemove(tagItem.value)} style="margin-inline-start: 2px" tagKey={tagItem.value}>
+                    {triggerState.value.find((item) => item.key === tagItem.value)?.label}
                 </Tag>
             {/snippet}
         </TagInput>

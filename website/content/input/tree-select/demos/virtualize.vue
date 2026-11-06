@@ -2,9 +2,6 @@
     import { ref, shallowRef } from 'vue';
     import { Button, TreeSelect, type TreeNodeData } from '@fibrae/semi-ui-vue';
 
-    const treeData = shallowRef<TreeNodeData[]>([]);
-    const total = ref(0);
-
     // x: nodes per level. y: nodes with children per level. z: depth (0 is one level).
     const generateData = (x = 5, y = 4, z = 3) => {
         const data: TreeNodeData[] = [];
@@ -29,22 +26,21 @@
         };
         fill(z, '0', data);
 
-        let count = 0;
+        let total = 0;
         for (let n = z + 1; n >= 0; n--) {
-            count += x * y ** n;
+            total += x * y ** n;
         }
-        return { data, count };
+        return { gData: data, total };
     };
+
+    const gData = shallowRef<TreeNodeData[]>([]);
+    const total = ref(0);
 
     const onGen = () => {
-        const { data, count } = generateData();
-        treeData.value = data;
-        total.value = count;
+        const generated = generateData();
+        gData.value = generated.gData;
+        total.value = generated.total;
     };
-
-    const dropdownStyle = { overflow: 'hidden' };
-    // Dropdown height 300 minus the search box, minus the 8 * 2 padding; a set dropdown height fills the remaining space.
-    const virtualize = { itemSize: 28, height: 236 };
 </script>
 
 <template>
@@ -53,6 +49,7 @@
         <span>共 {{ total }} 个节点</span>
         <br />
         <br />
-        <TreeSelect v-if="treeData.length" :dropdownStyle="dropdownStyle" filterTreeNode placeholder="Please select" showFilteredOnly style="width: 300px" :treeData="treeData" :virtualize="virtualize" />
+        <!-- Dropdown height 300 minus the search box and 8 * 2 padding; a set height fills the rest -->
+        <TreeSelect v-if="gData.length > 0" :dropdownStyle="{ overflow: 'hidden' }" filterTreeNode placeholder="Please select" showFilteredOnly style="width: 300px" :treeData="gData" :virtualize="{ itemSize: 28, height: 236 }" />
     </div>
 </template>

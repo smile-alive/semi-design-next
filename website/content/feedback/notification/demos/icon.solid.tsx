@@ -27,7 +27,7 @@ export default function NotificationDemo() {
             <Button
                 aria-label="Toutiao 图标通知"
                 icon={<IconToutiaoLogo />}
-                style={{ 'margin-right': '5px' }}
+                style={{ 'margin-inline-end': '5px' }}
                 onClick={() =>
                     Notification.info({
                         ...opts,
@@ -35,7 +35,7 @@ export default function NotificationDemo() {
                     })
                 }
             />
-            <Button aria-label="Vigo 图标通知" icon={<IconVigoLogo />} style={{ 'margin-right': '5px' }} onClick={() => Notification.info({ ...opts, icon: <IconVigoLogo /> })} />
+            <Button aria-label="Vigo 图标通知" icon={<IconVigoLogo />} style={{ 'margin-inline-end': '5px' }} onClick={() => Notification.info({ ...opts, icon: <IconVigoLogo /> })} />
             <Button aria-label="粉色 Vigo 图标通知" icon={<IconVigoLogo />} onClick={() => Notification.info({ ...opts, icon: <IconVigoLogo style={{ color: 'pink' }} /> })} />
         </>
     );

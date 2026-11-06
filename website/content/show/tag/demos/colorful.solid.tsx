@@ -1,10 +1,13 @@
+import type { JSX } from 'solid-js';
 import { IconAIFilledLevel1, IconAIFilledLevel3 } from '@fibrae/semi-icons-solid';
 import { Tag } from '@fibrae/semi-ui-solid';
+
+const grid: JSX.CSSProperties = { display: 'grid', 'grid-template-columns': 'repeat(3,1fr)', 'grid-gap': '10px', width: 'fit-content' };
 
 export default function TagDemo() {
     return (
         <div style={{ display: 'flex', 'flex-direction': 'column', 'row-gap': '30px' }}>
-            <div style={{ display: 'grid', 'grid-template-columns': 'repeat(3,1fr)', gap: '10px', width: 'fit-content' }}>
+            <div style={grid}>
                 <Tag colorful prefixIcon={<IconAIFilledLevel1 size="small" />} type="solid" shape="circle" gradient>
                     AI
                 </Tag>
@@ -24,7 +27,7 @@ export default function TagDemo() {
                     AI
                 </Tag>
             </div>
-            <div style={{ display: 'grid', 'grid-template-columns': 'repeat(3,1fr)', gap: '10px', width: 'fit-content' }}>
+            <div style={grid}>
                 <Tag colorful prefixIcon={<IconAIFilledLevel1 size="small" />} type="solid" gradient>
                     AI
                 </Tag>

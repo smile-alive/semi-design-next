@@ -1,11 +1,17 @@
 import { useState } from 'react';
 import { VideoPlayer, Select } from '@fibrae/semi-ui-react';
 
+const src = '/assets/video/vchart-show-video.mp4';
+const poster = '/assets/poster2.jpeg';
+const optionList = [
+    { label: '5s', value: 5 },
+    { label: '10s', value: 10 },
+    { label: '15s', value: 15 },
+];
+
 export default function VideoPlayerDemo() {
     const [seekTime, setSeekTime] = useState(5);
 
-    const src = '/assets/video/vchart-show-video.mp4';
-    const poster = '/assets/poster2.jpeg';
     return (
         <div>
             <div>
@@ -15,13 +21,9 @@ export default function VideoPlayerDemo() {
                     value={seekTime}
                     style={{ width: 100, marginLeft: 10 }}
                     onChange={(value) => {
-                        if (value !== undefined) setSeekTime(value);
+                        if (typeof value === 'number') setSeekTime(value);
                     }}
-                    optionList={[
-                        { label: '5s', value: 5 },
-                        { label: '10s', value: 10 },
-                        { label: '15s', value: 15 },
-                    ]}
+                    optionList={optionList}
                     placeholder="请选择快进快退时间"
                 />
             </div>

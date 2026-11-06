@@ -3,11 +3,13 @@
     import { IconSearch } from '@fibrae/semi-icons-vue';
     import { AutoComplete } from '@fibrae/semi-ui-vue';
 
+    const domains = ['gmail.com', '163.com', 'qq.com'];
+
     const stringData = ref<string[]>([]);
     const value = ref<string | number>('');
 
     const handleStringSearch = (input: string) => {
-        stringData.value = input ? ['gmail.com', '163.com', 'qq.com'].map((domain) => `${input}@${domain}`) : [];
+        stringData.value = input ? domains.map((domain) => `${input}@${domain}`) : [];
     };
 
     const handleChange = (input: string | number) => {

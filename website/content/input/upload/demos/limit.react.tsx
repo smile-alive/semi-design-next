@@ -1,14 +1,14 @@
 import { IconUpload } from '@fibrae/semi-icons-react';
 import { Upload, Button, type UploadOnChangeProps } from '@fibrae/semi-ui-react';
 
+const limit = 1;
+
 export default function UploadDemo() {
-    let action = 'https://api.semi.design/upload';
-    let limit = 1;
-    let onChange = (props: UploadOnChangeProps) => {
+    const onChange = (props: UploadOnChangeProps) => {
         console.log(props.fileList);
     };
     return (
-        <Upload action={action} limit={limit} onChange={onChange}>
+        <Upload action="https://api.semi.design/upload" limit={limit} onChange={onChange}>
             <Button icon={<IconUpload />} theme="light">
                 点击上传（最多{limit}项）
             </Button>

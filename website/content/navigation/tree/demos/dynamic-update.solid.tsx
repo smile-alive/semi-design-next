@@ -18,25 +18,22 @@ export default function TreeDemo() {
 
     const add = () => {
         const itemLength = Math.floor(Math.random() * 5) + 1;
-        const nextTreeData = Array.from({ length: itemLength }).map((_, i) => {
-            const length = Math.floor(Math.random() * 3);
-            const children = Array.from({ length }).map((_child, ci) => {
-                const child = {
+        setTreeData(
+            Array.from({ length: itemLength }).map((_, i) => {
+                const length = Math.floor(Math.random() * 3);
+                const children = Array.from({ length }).map((_, ci) => ({
                     key: `${i}-${ci}`,
                     label: `Leaf-${i}-${ci}`,
                     value: `${i}-${ci}`,
+                }));
+                return {
+                    key: `${i}`,
+                    label: `Item-${i}`,
+                    value: `${i}`,
+                    children,
                 };
-                return child;
-            });
-            const item = {
-                key: `${i}`,
-                label: `Item-${i}`,
-                value: `${i}`,
-                children,
-            };
-            return item;
-        });
-        setTreeData(nextTreeData);
+            })
+        );
     };
 
     return (

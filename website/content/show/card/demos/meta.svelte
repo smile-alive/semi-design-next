@@ -1,17 +1,17 @@
 <script lang="ts">
-    import { Avatar, Button, Card, CardMeta, Space, TypographyText } from '@fibrae/semi-ui-svelte';
+    import { Avatar, Button, Card, Space, Typography } from '@fibrae/semi-ui-svelte';
 </script>
 
 {#snippet title()}
-    <CardMeta title="Semi Doc">
+    <Card.Meta title="Semi Doc">
         {#snippet description()}全面、易用、优质{/snippet}
         {#snippet avatar()}
             <Avatar alt="Card meta img" size="default" src="/assets/placeholder/logo.svg" />
         {/snippet}
-    </CardMeta>
+    </Card.Meta>
 {/snippet}
 {#snippet headerExtraContent()}
-    <TypographyText link>More</TypographyText>
+    <Typography.Text link>More</Typography.Text>
 {/snippet}
 {#snippet cover()}
     <img alt="example" src="/assets/root-web-sites/card-cover-docs-demo.jpeg" />

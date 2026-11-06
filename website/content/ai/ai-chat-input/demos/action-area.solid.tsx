@@ -5,13 +5,13 @@ import { Button, Divider } from '@fibrae/semi-ui-solid';
 const uploadProps = { action: 'https://api.semi.design/upload' };
 const outerStyle = { margin: '12px' };
 
-const renderActionArea = (props: ActionAreaProps) => (
-    <div class={props.class}>
+const renderActionArea = (actionArea: ActionAreaProps) => (
+    <div class={actionArea.class}>
         <div style={{ display: 'flex', 'align-items': 'center' }}>
             <Button aria-label="清空内容" type="tertiary" style={{ 'border-radius': '50%' }} icon={<IconDeleteStroked />} />
-            <Divider layout="vertical" style={{ 'margin-left': '8px' }} />
+            <Divider layout="vertical" style={{ 'margin-inline-start': '8px' }} />
         </div>
-        {props.menuItem}
+        {actionArea.menuItem}
     </div>
 );
 

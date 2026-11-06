@@ -55,9 +55,9 @@ export default function TreeSelectDemo() {
                 treeData={treeData}
                 multiple
                 maxTagCount={2}
-                renderSelectedItem={(item, { onClose }) => ({
+                renderSelectedItem={(item, selected) => ({
                     content: (
-                        <Tag color="white" closable onClose={onClose}>
+                        <Tag color="white" closable onClose={selected.onClose}>
                             {item.value}
                         </Tag>
                     ),

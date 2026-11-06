@@ -62,14 +62,14 @@
 
 <Tree leafOnly multiple style={treeStyle} {treeData}>
     <!-- Focus stays on the tree (arrows expand, Enter/Space check), so the inline checkbox is display-only -->
-    {#snippet fullLabel({ class: cls, data, checkStatus, expandIcon, onCheck, onExpand })}
-        <div class={cls} role="presentation" onclick={data.children?.length ? onExpand : onCheck}>
-            {#if data.children?.length}
-                {@render expandIcon()}
+    {#snippet fullLabel(row)}
+        <div class={row.class} role="presentation" onclick={row.data.children?.length ? row.onExpand : row.onCheck}>
+            {#if row.data.children?.length}
+                {@render row.expandIcon()}
             {:else}
-                <Checkbox aria-hidden="true" checked={checkStatus.checked} indeterminate={checkStatus.halfChecked} style="margin-right: 8px" tabindex={-1} />
+                <Checkbox aria-hidden="true" checked={row.checkStatus.checked} indeterminate={row.checkStatus.halfChecked} style="margin-right: 8px" tabindex={-1} />
             {/if}
-            <span>{data.label}</span>
+            <span>{row.data.label}</span>
         </div>
     {/snippet}
 </Tree>

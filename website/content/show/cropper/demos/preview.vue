@@ -9,7 +9,7 @@
     };
 
     const actionStyle = {
-        marginTop: '20px',
+        marginBlockStart: '20px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -54,9 +54,9 @@
         <div :style="{ display: 'flex' }">
             <div :style="{ width: '50%', flexGrow: 1 }">
                 <strong>实时预览</strong>
-                <div ref="previewWrapper" :style="{ height: '300px', marginTop: '8px' }" />
+                <div ref="previewWrapper" :style="{ height: '300px', marginBlockStart: '8px' }" />
             </div>
-            <div :style="{ width: '50%', flexGrow: 1, paddingLeft: '10px' }">
+            <div :style="{ width: '50%', flexGrow: 1, paddingInlineStart: '10px' }">
                 <Button @click="onButtonClick">裁切</Button>
                 <br />
                 <br />

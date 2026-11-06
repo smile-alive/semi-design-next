@@ -1,7 +1,6 @@
 <script setup lang="ts">
     import { CodeHighlight } from '@fibrae/semi-ui-vue';
 
-    // declared at the top level so the array is not new on every render, which would highlight again
     const languages = [() => import('shiki/langs/vala.mjs')];
 
     const code = `public class ExampleApp : Gtk.Application {

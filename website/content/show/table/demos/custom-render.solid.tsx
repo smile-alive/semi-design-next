@@ -2,7 +2,6 @@ import { createSignal } from 'solid-js';
 import { IconTickCircle, IconComment, IconClear, IconDelete } from '@fibrae/semi-icons-solid';
 import { IllustrationNoResult, IllustrationNoResultDark } from '@fibrae/semi-illustrations-solid';
 import { Table, Avatar, Button, Empty, Typography, Tag, type ColumnProps } from '@fibrae/semi-ui-solid';
-const { Text } = Typography;
 
 interface Row {
     key: string;
@@ -76,11 +75,11 @@ export default function TableDemo() {
             render: (text, record) => {
                 return (
                     <span style={{ display: 'flex', 'align-items': 'center' }}>
-                        <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ 'margin-right': '12px' }} />
+                        <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ 'margin-inline-end': '12px' }} />
                         {/* 宽度 = 单元格设定宽度 − 非文本内容宽度 */}
-                        <Text ellipsis={{ showTooltip: true }} style={{ width: 'calc(400px - 76px)' }}>
+                        <Typography.Text ellipsis={{ showTooltip: true }} style={{ width: 'calc(400px - 76px)' }}>
                             {text}
-                        </Text>
+                        </Typography.Text>
                     </span>
                 );
             },
@@ -133,7 +132,7 @@ export default function TableDemo() {
             render: (text, record) => {
                 return (
                     <div>
-                        <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
+                        <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
                             {typeof text === 'string' && text.slice(0, 1)}
                         </Avatar>
                         {text}
@@ -155,7 +154,7 @@ export default function TableDemo() {
 
     return (
         <>
-            <Button onClick={resetData} style={{ 'margin-bottom': '10px' }}>
+            <Button onClick={resetData} style={{ 'margin-block-end': '10px' }}>
                 重置
             </Button>
             <Table style={{ 'min-height': '350px' }} columns={columns} dataSource={dataSource()} pagination={false} empty={<Empty image={<IllustrationNoResult />} darkModeImage={<IllustrationNoResultDark />} description="搜索无结果" />} />

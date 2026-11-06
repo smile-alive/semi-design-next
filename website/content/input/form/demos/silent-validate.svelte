@@ -40,7 +40,7 @@
 <Form getFormApi={(api) => (formApi = api)} layout="horizontal">
     <FormInput field="username" label="用户名" rules={usernameRules} />
     <FormInput field="email" label="邮箱" rules={emailRules} />
-    <div style="display: flex; gap: 12px; margin-top: 12px">
+    <div style="display: flex; gap: 12px; margin-block-start: 12px">
         <Button type="primary" onclick={handleSilentValidate}>静默校验（不显示错误）</Button>
         <Button onclick={handleNormalValidate}>普通校验（显示错误）</Button>
     </div>

@@ -12,8 +12,8 @@ export default function UploadDemo() {
 
     return (
         <div>
-            <Upload accept="image/gif, image/png, image/jpeg, image/bmp, image/webp" action={action} uploadTrigger="custom" ref={(element) => (uploadRef = element)} onSuccess={(response, file) => console.log(response, file)} onError={(error, file) => console.log(error, file)}>
-                <Button icon={<IconPlus />} theme="light" style={{ 'margin-right': '8px' }}>
+            <Upload accept="image/gif, image/png, image/jpeg, image/bmp, image/webp" action={action} uploadTrigger="custom" ref={(element) => (uploadRef = element)} onSuccess={(...v) => console.log(...v)} onError={(...v) => console.log(...v)}>
+                <Button icon={<IconPlus />} theme="light" style={{ 'margin-inline-end': '8px' }}>
                     选择文件
                 </Button>
             </Upload>

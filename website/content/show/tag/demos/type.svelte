@@ -1,27 +1,43 @@
 <script lang="ts">
     import { IconGithubLogo, IconSemiLogo } from '@fibrae/semi-icons-svelte';
-    import { Space, Tag, type TagType } from '@fibrae/semi-ui-svelte';
-
-    const types: [TagType, string][] = [
-        ['light', 'Light'],
-        ['ghost', 'Ghost'],
-        ['solid', 'Solid'],
-    ];
+    import { Space, Tag } from '@fibrae/semi-ui-svelte';
 </script>
 
 <Space wrap>
-    {#each types as [type, label] (type)}
-        <Tag color="light-blue" shape="circle" size="large" {type}>
-            {#snippet prefixIcon()}
-                <IconGithubLogo />
-            {/snippet}
-            Semi Design {label} Tag
-        </Tag>
-        <Tag color="cyan" shape="circle" size="large" {type}>
-            D2C: figma to code in one click
-            {#snippet suffixIcon()}
-                <IconSemiLogo />
-            {/snippet}
-        </Tag>
-    {/each}
+    <Tag color="light-blue" shape="circle" size="large" type="light">
+        {#snippet prefixIcon()}
+            <IconGithubLogo />
+        {/snippet}
+        Semi Design Light Tag
+    </Tag>
+    <Tag color="cyan" shape="circle" size="large" type="light">
+        D2C: figma to code in one click
+        {#snippet suffixIcon()}
+            <IconSemiLogo />
+        {/snippet}
+    </Tag>
+    <Tag color="light-blue" shape="circle" size="large" type="ghost">
+        {#snippet prefixIcon()}
+            <IconGithubLogo />
+        {/snippet}
+        Semi Design Ghost Tag
+    </Tag>
+    <Tag color="cyan" shape="circle" size="large" type="ghost">
+        D2C: figma to code in one click
+        {#snippet suffixIcon()}
+            <IconSemiLogo />
+        {/snippet}
+    </Tag>
+    <Tag color="light-blue" shape="circle" size="large" type="solid">
+        {#snippet prefixIcon()}
+            <IconGithubLogo />
+        {/snippet}
+        Semi Design Solid Tag
+    </Tag>
+    <Tag color="cyan" shape="circle" size="large" type="solid">
+        D2C: figma to code in one click
+        {#snippet suffixIcon()}
+            <IconSemiLogo />
+        {/snippet}
+    </Tag>
 </Space>

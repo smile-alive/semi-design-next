@@ -36,9 +36,6 @@
             ],
         },
     ];
-
-    const initialValue = ['Beijing', 'Shanghai', 'Shenzhen', 'Guangzhou'];
-    const dropdownStyle = 'max-height: 400px; overflow: auto';
 </script>
 
-<TreeSelect {dropdownStyle} filterTreeNode multiple placeholder="请选择多个选项或输入长文本" searchPosition="trigger" style="width: 260px" {treeData} triggerTagWrap value={initialValue} />
+<TreeSelect dropdownStyle="max-height: 400px; overflow: auto" filterTreeNode multiple placeholder="请选择多个选项或输入长文本" searchPosition="trigger" style="width: 260px" {treeData} triggerTagWrap value={['Beijing', 'Shanghai', 'Shenzhen', 'Guangzhou']} />

@@ -83,7 +83,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ 'margin-right': '12px' }} />
+                    <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ 'margin-inline-end': '12px' }} />
                     {text}
                 </div>
             );
@@ -135,7 +135,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}

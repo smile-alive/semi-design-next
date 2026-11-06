@@ -3,7 +3,9 @@
 </script>
 
 <div>
-    {#each [1, 2, 3] as index (index)}
-        <Avatar border color="amber" style="margin-right: 8px">T</Avatar>
-    {/each}
+    <Avatar border color="amber" style="margin-inline-end: 8px">T</Avatar>
+
+    <Avatar border color="amber" style="margin-inline-end: 8px">T</Avatar>
+
+    <Avatar border color="amber" style="margin-inline-end: 8px">T</Avatar>
 </div>

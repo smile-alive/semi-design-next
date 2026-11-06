@@ -9,7 +9,7 @@ export default function AnchorDemo() {
             <Anchor getContainer={() => document.getElementById('scroll-box')} scrollMotion scrollIntoViewOptions={{ block: 'center' }} style={{ width: '160px' }}>
                 <For each={sections}>{(id, index) => <Anchor.Link href={`#${id}`} title={`章节 ${index() + 1}`} />}</For>
             </Anchor>
-            {/* 可聚焦，键盘也能滚动这个容器 */}
+            {/* Focusable so the keyboard can scroll this container */}
             <section id="scroll-box" aria-label="章节" tabIndex={0} style={{ height: '240px', width: '320px', overflow: 'auto', border: '1px solid #ddd' }}>
                 <For each={sections}>
                     {(id, index) => (

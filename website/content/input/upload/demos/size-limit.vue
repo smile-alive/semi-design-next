@@ -2,6 +2,7 @@
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Toast, Upload, type CustomFile } from '@fibrae/semi-ui-vue';
 
+    // Declared here, not inline: vue-tsc types an import used inside a template arrow function as a ref (`Toast.value`)
     const onSizeError = (file: CustomFile) => Toast.error(`${file.name} size invalid`);
 </script>
 

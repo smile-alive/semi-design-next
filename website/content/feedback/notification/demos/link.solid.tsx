@@ -1,7 +1,5 @@
 import { Button, Notification, Typography } from '@fibrae/semi-ui-solid';
 
-const { Text } = Typography;
-
 export default function NotificationDemo() {
     // content is JSX built inside the handler: a static notification renders it once, so each click needs a new node
     return (
@@ -12,11 +10,11 @@ export default function NotificationDemo() {
                     content: (
                         <>
                             <div>Hi, Bytedance dance dance</div>
-                            <div style={{ 'margin-top': '8px' }}>
-                                <Text link>查看详情</Text>
-                                <Text link style={{ 'margin-left': '20px' }}>
+                            <div style={{ 'margin-block-start': '8px' }}>
+                                <Typography.Text link>查看详情</Typography.Text>
+                                <Typography.Text link style={{ 'margin-inline-start': '20px' }}>
                                     一会再看
-                                </Text>
+                                </Typography.Text>
                             </div>
                         </>
                     ),

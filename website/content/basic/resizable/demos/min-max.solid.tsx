@@ -14,7 +14,7 @@ export default function ResizableDemo() {
                     height: 100,
                 }}
             >
-                <div style={{ 'margin-left': '20%' }}>width在50到200之间，height在50到300之间</div>
+                <div style={{ 'margin-inline-start': '20%' }}>width在50到200之间，height在50到300之间</div>
             </Resizable>
         </div>
     );

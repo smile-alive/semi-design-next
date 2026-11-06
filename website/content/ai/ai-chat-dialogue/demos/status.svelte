@@ -16,7 +16,7 @@
         },
     };
 
-    let messages = $state<Message[]>([
+    const defaultMessages: Message[] = [
         {
             role: 'assistant',
             id: '1',
@@ -34,7 +34,9 @@
             content: '请求错误',
             status: 'failed', // renders like cancelled
         },
-    ]);
+    ];
+
+    let messages = $state(defaultMessages);
 </script>
 
 <AIChatDialogue bind:chats={messages} {roleConfig} />

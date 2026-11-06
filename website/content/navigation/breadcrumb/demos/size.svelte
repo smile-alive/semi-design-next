@@ -5,9 +5,9 @@
     const routes = ['', 'Breadcrumb', 'Loose'];
 </script>
 
-{#snippet icon({ class: className, index, size }: BreadcrumbIconContext)}
-    {#if index === 0}
-        <IconHome aria-label="Home" class={className} {size} />
+{#snippet icon(iconContext: BreadcrumbIconContext)}
+    {#if iconContext.index === 0}
+        <IconHome aria-label="Home" class={iconContext.class} size={iconContext.size} />
     {/if}
 {/snippet}
 

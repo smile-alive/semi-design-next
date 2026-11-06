@@ -17,8 +17,8 @@
         <Popconfirm>
             <Button>内容聚焦</Button>
             <template #title>确定是否要保存此修改？</template>
-            <template #content="{ initialFocusRef }">
-                <input :ref="initialFocusRef" placeholder="focus here" />
+            <template #content="focus">
+                <input :ref="focus.initialFocusRef" placeholder="focus here" />
             </template>
         </Popconfirm>
     </Space>

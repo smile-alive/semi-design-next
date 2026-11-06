@@ -1,6 +1,6 @@
 <script lang="ts">
     import { format } from 'date-fns';
-    import { Avatar, DropdownItem, Table, type ColumnProps, type RowSelectionProps } from '@fibrae/semi-ui-svelte';
+    import { Avatar, Dropdown, Table, type ColumnProps, type RowSelectionProps } from '@fibrae/semi-ui-svelte';
 
     const DAY = 24 * 60 * 60 * 1000;
     const figmaIconUrl = '/assets/placeholder/app.svg';
@@ -87,15 +87,15 @@
     {#snippet cell({ column, text, record })}
         {#if column.dataIndex === 'name'}
             <div>
-                <Avatar alt="" shape="square" size="small" src={figmaIconUrl} style="margin-right: 12px" />
+                <Avatar alt="" shape="square" size="small" src={figmaIconUrl} style="margin-inline-end: 12px" />
                 {text}
             </div>
         {:else if column.dataIndex === 'size'}
             {text} KB
         {:else if column.dataIndex === 'owner'}
             <div>
-                <Avatar color={record.avatarBg} size="small" style="margin-right: 4px">
-                    {text.slice(0, 1)}
+                <Avatar color={record.avatarBg} size="small" style="margin-inline-end: 4px">
+                    {typeof text === 'string' && text.slice(0, 1)}
                 </Avatar>
                 {text}
             </div>
@@ -105,7 +105,7 @@
             {text}
         {/if}
     {/snippet}
-    {#snippet filterDropdownItem({ text, checked, onChange })}
-        <DropdownItem active={checked} onclick={onChange}>{text}</DropdownItem>
+    {#snippet filterDropdownItem(itemInfo)}
+        <Dropdown.Item active={itemInfo.checked} onclick={itemInfo.onChange}>{itemInfo.text}</Dropdown.Item>
     {/snippet}
 </Table>

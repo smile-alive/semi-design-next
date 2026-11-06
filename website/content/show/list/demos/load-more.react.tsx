@@ -57,7 +57,7 @@ export default function ListDemo() {
             <div
                 style={{
                     textAlign: 'center',
-                    marginTop: 12,
+                    marginBlockStart: 12,
                     height: 32,
                     lineHeight: '32px',
                 }}
@@ -66,29 +66,31 @@ export default function ListDemo() {
             </div>
         ) : null;
 
-    const placeholder = (
-        <div
-            style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                padding: 12,
-                borderBottom: '1px solid var(--semi-color-border)',
-            }}
-        >
-            <Skeleton.Avatar style={{ marginRight: 12 }} />
-            <div>
-                <Skeleton.Title style={{ width: 120, marginBottom: 12, marginTop: 12 }} />
-                <Skeleton.Paragraph style={{ width: 600 }} rows={2} />
-            </div>
-        </div>
-    );
     return (
         <List
             loading={loading}
             loadMore={loadMore}
             dataSource={list}
             renderItem={(item) => (
-                <Skeleton placeholder={placeholder} loading={item.loading}>
+                <Skeleton
+                    placeholder={
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'flex-start',
+                                padding: 12,
+                                borderBottom: '1px solid var(--semi-color-border)',
+                            }}
+                        >
+                            <Skeleton.Avatar style={{ marginInlineEnd: 12 }} />
+                            <div>
+                                <Skeleton.Title style={{ width: 120, marginBlockEnd: 12, marginBlockStart: 12 }} />
+                                <Skeleton.Paragraph style={{ width: 600 }} rows={2} />
+                            </div>
+                        </div>
+                    }
+                    loading={item.loading}
+                >
                     <List.Item
                         header={<Avatar color={item.color}>SE</Avatar>}
                         main={

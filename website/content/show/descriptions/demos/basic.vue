@@ -16,7 +16,7 @@
         <template #value="{ item, index }">
             <div v-if="index === 1">
                 98%
-                <IconArrowUp size="small" :style="{ color: 'var(--semi-color-success)', marginLeft: '2px' }" />
+                <IconArrowUp size="small" :style="{ color: 'var(--semi-color-success)', marginInlineStart: '2px' }" />
             </div>
             <Tag v-else-if="index === 3" :style="{ margin: 0 }">电商</Tag>
             <template v-else>{{ item.value }}</template>

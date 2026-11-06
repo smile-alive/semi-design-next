@@ -14,7 +14,7 @@ function renderValue(item: DescriptionsData, index: number) {
         return (
             <div>
                 {item.value}
-                <IconArrowUp size="small" style={{ color: 'var(--semi-color-success)', 'margin-left': '2px' }} />
+                <IconArrowUp size="small" style={{ color: 'var(--semi-color-success)', 'margin-inline-start': '2px' }} />
             </div>
         );
     }

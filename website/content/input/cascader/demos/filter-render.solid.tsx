@@ -29,19 +29,19 @@ const treeData = [
     },
 ];
 
-const renderSearchOptionSingle = (props: CascaderFilterRenderProps) => (
-    <li class={props.class} style={{ 'justify-content': 'flex-start' }} role="option" aria-selected={props.selected} onClick={(e) => props.onClick(e)}>
-        <Typography.Text ellipsis={{ showTooltip: { opts: { style: { 'word-break': 'break-all' } } } }} style={{ width: '270px', color: props.selected ? 'var(--semi-color-primary)' : undefined }}>
-            {props.data.map((item) => item.label).join(' / ')}
+const renderSearchOptionSingle = (item: CascaderFilterRenderProps) => (
+    <li class={item.class} style={{ 'justify-content': 'flex-start' }} role="option" aria-selected={item.selected} onClick={(e) => item.onClick(e)}>
+        <Typography.Text ellipsis={{ showTooltip: { opts: { style: { 'word-break': 'break-all' } } } }} style={{ width: '270px', color: item.selected ? 'var(--semi-color-primary)' : undefined }}>
+            {item.data.map((option) => option.label).join(' / ')}
         </Typography.Text>
     </li>
 );
 
-function renderSearchOptionMultiple(props: CascaderFilterRenderProps) {
-    const label = () => props.data.map((item) => item.label).join(' / ');
+function renderSearchOptionMultiple(item: CascaderFilterRenderProps) {
+    const label = () => item.data.map((option) => option.label).join(' / ');
     return (
-        <li class={props.class} style={{ 'justify-content': 'flex-start' }} role="option" aria-label={label()} aria-selected={props.checkStatus.checked}>
-            <Checkbox tabIndex={-1} onChange={props.onCheck} indeterminate={props.checkStatus.halfChecked} checked={props.checkStatus.checked}>
+        <li class={item.class} style={{ 'justify-content': 'flex-start' }} role="option" aria-label={label()} aria-selected={item.checkStatus.checked}>
+            <Checkbox tabIndex={-1} onChange={item.onCheck} indeterminate={item.checkStatus.halfChecked} checked={item.checkStatus.checked}>
                 <Typography.Text ellipsis={{ showTooltip: { opts: { style: { 'word-break': 'break-all' } } } }} style={{ width: '250px' }}>
                     {label()}
                 </Typography.Text>
@@ -57,7 +57,7 @@ export default function CascaderDemo() {
             <br />
             <Cascader style={{ width: '320px' }} treeData={treeData} placeholder="单选，输入 s 自定义搜索选项渲染结果" filterTreeNode filterRender={renderSearchOptionSingle} />
             <br />
-            <Cascader multiple style={{ width: '320px', 'margin-top': '20px' }} treeData={treeData} placeholder="多选，输入 s 自定义搜索选项渲染结果" filterTreeNode filterRender={renderSearchOptionMultiple} />
+            <Cascader multiple style={{ width: '320px', 'margin-block-start': '20px' }} treeData={treeData} placeholder="多选，输入 s 自定义搜索选项渲染结果" filterTreeNode filterRender={renderSearchOptionMultiple} />
         </div>
     );
 }

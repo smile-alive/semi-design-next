@@ -1,10 +1,13 @@
+import type { CSSProperties } from 'react';
 import { IconAIFilledLevel1, IconAIFilledLevel3 } from '@fibrae/semi-icons-react';
 import { Tag } from '@fibrae/semi-ui-react';
+
+const grid: CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gridGap: '10px', width: 'fit-content' };
 
 export default function TagDemo() {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', rowGap: 30 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gridGap: '10px', width: 'fit-content' }}>
+            <div style={grid}>
                 <Tag colorful prefixIcon={<IconAIFilledLevel1 size="small" />} type="solid" shape="circle" gradient>
                     AI
                 </Tag>
@@ -24,7 +27,7 @@ export default function TagDemo() {
                     AI
                 </Tag>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gridGap: '10px', width: 'fit-content' }}>
+            <div style={grid}>
                 <Tag colorful prefixIcon={<IconAIFilledLevel1 size="small" />} type="solid" gradient>
                     AI
                 </Tag>

@@ -9,10 +9,10 @@
 
 <Card title="Card title">
     <Tabs style="margin-top: -20px; margin-bottom: -20px" {tabList} type="line">
-        {#snippet panel({ itemKey })}
-            <p>content{itemKey}</p>
-            <p>content{itemKey}</p>
-            <p>content{itemKey}</p>
+        {#snippet panel(tab)}
+            <p>content{tab.itemKey}</p>
+            <p>content{tab.itemKey}</p>
+            <p>content{tab.itemKey}</p>
         {/snippet}
     </Tabs>
 </Card>

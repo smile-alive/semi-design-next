@@ -1,8 +1,6 @@
 <script setup lang="ts">
     import { Carousel, Space, Typography } from '@fibrae/semi-ui-vue';
 
-    const { Title, Paragraph } = Typography;
-
     const logo = '/assets/placeholder/logo.svg';
     const slides = [
         {
@@ -27,12 +25,13 @@
 
 <template>
     <Carousel :style="{ width: '100%', height: '400px' }" theme="dark">
-        <div v-for="slide in slides" :key="slide.src" :style="{ backgroundSize: 'cover', backgroundImage: `url('${slide.src}')` }">
+        <div v-for="slide in slides" :key="slide.src" :style="{ height: '100%', backgroundSize: 'cover', backgroundImage: `url('${slide.src}')` }">
             <Space align="start" spacing="medium" :style="titleStyle" vertical>
                 <img alt="semi_logo" :src="logo" :style="{ width: '87px', height: '31px' }" />
-                <Title :heading="2" :style="colorStyle">{{ slide.title }}</Title>
+                <Typography.Title :heading="2" :style="colorStyle">{{ slide.title }}</Typography.Title>
                 <Space align="start" vertical>
-                    <Paragraph v-for="line in slide.lines" :key="line" :style="colorStyle">{{ line }}</Paragraph>
+                    <Typography.Paragraph :style="colorStyle">{{ slide.lines[0] }}</Typography.Paragraph>
+                    <Typography.Paragraph :style="colorStyle">{{ slide.lines[1] }}</Typography.Paragraph>
                 </Space>
             </Space>
         </div>

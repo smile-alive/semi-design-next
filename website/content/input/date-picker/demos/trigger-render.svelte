@@ -8,12 +8,12 @@
 </script>
 
 <DatePicker bind:value={date} format={formatToken}>
-    {#snippet trigger({ value, placeholder })}
+    {#snippet trigger(triggerProps)}
         <!-- The clear button is a sibling of the trigger button: buttons cannot nest -->
         <ButtonGroup theme="light">
             <Button iconPosition="right">
                 {#snippet icon()}<IconChevronDown />{/snippet}
-                {value.length ? dateFns.format(value[0], formatToken) : placeholder}
+                {triggerProps.value.length ? dateFns.format(triggerProps.value[0], formatToken) : triggerProps.placeholder}
             </Button>
             {#if date}
                 <Button

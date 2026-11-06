@@ -60,9 +60,11 @@ export default function DatePickerDemo() {
         setDate(value);
     };
 
+    const disabledDate = () => (activeTab() === '1' ? uedDisabledDate : testDisabledDate);
+
     return (
         <div>
-            <DatePicker topSlot={<TopSlot activeKey={activeTab()} onChange={handleTabChange} />} disabledDate={activeTab() === '1' ? uedDisabledDate : testDisabledDate} value={date()} onChange={handleDateChange} dropdownClassName="components-datepicker-demo-slot" placeholder="请选择排期" />
+            <DatePicker topSlot={<TopSlot activeKey={activeTab()} onChange={handleTabChange} />} disabledDate={disabledDate()} value={date()} onChange={handleDateChange} dropdownClassName="components-datepicker-demo-slot" placeholder="请选择排期" />
             <br />
             <br />
             <DatePicker bottomSlot={<BottomSlot />} placeholder="请选择发版时间" />

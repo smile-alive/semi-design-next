@@ -1,43 +1,43 @@
 <script lang="ts">
-    import { TypographyText } from '@fibrae/semi-ui-svelte';
+    import { Typography } from '@fibrae/semi-ui-svelte';
 </script>
 
 <div>
-    <TypographyText>Text</TypographyText>
+    <Typography.Text>Text</Typography.Text>
     <br />
     <br />
-    <TypographyText type="secondary">Secondary</TypographyText>
+    <Typography.Text type="secondary">Secondary</Typography.Text>
     <br />
     <br />
-    <TypographyText type="tertiary">Tertiary v>=1.2.0</TypographyText>
+    <Typography.Text type="tertiary">Tertiary v>=1.2.0</Typography.Text>
     <br />
     <br />
-    <TypographyText type="quaternary">Quaternary v>=1.2.0</TypographyText>
+    <Typography.Text type="quaternary">Quaternary v>=1.2.0</Typography.Text>
     <br />
     <br />
-    <TypographyText type="warning">Warning</TypographyText>
+    <Typography.Text type="warning">Warning</Typography.Text>
     <br />
     <br />
-    <TypographyText type="danger">Danger</TypographyText>
+    <Typography.Text type="danger">Danger</Typography.Text>
     <br />
     <br />
-    <TypographyText type="success">Success v>=1.7.0</TypographyText>
+    <Typography.Text type="success">Success v>=1.7.0</Typography.Text>
     <br />
     <br />
-    <TypographyText disabled>Disabled</TypographyText>
+    <Typography.Text disabled>Disabled</Typography.Text>
     <br />
     <br />
-    <TypographyText mark>Default Mark</TypographyText>
+    <Typography.Text mark>Default Mark</Typography.Text>
     <br />
     <br />
-    <TypographyText code>Example Code</TypographyText>
+    <Typography.Text code>Example Code</Typography.Text>
     <br />
     <br />
-    <TypographyText underline>Underline</TypographyText>
+    <Typography.Text underline>Underline</Typography.Text>
     <br />
     <br />
-    <TypographyText delete>Deleted</TypographyText>
+    <Typography.Text delete>Deleted</Typography.Text>
     <br />
     <br />
-    <TypographyText strong>Strong</TypographyText>
+    <Typography.Text strong>Strong</Typography.Text>
 </div>

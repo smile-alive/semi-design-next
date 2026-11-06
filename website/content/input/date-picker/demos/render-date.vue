@@ -13,12 +13,12 @@
 
 <template>
     <DatePicker>
-        <template #date="{ dayNumber }">
-            <Tooltip v-if="dayNumber === 1">
-                <div :style="dateStyle">{{ dayNumber }}</div>
+        <template #date="dateProps">
+            <Tooltip v-if="dateProps.dayNumber === 1">
+                <div :style="dateStyle">{{ dateProps.dayNumber }}</div>
                 <template #content>Always Day 1</template>
             </Tooltip>
-            <template v-else>{{ dayNumber }}</template>
+            <template v-else>{{ dateProps.dayNumber }}</template>
         </template>
     </DatePicker>
 </template>

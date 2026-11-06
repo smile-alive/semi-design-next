@@ -1,47 +1,45 @@
 <script setup lang="ts">
     import { Typography } from '@fibrae/semi-ui-vue';
-
-    const { Text } = Typography;
 </script>
 
 <template>
     <div>
-        <Text>Text</Text>
+        <Typography.Text>Text</Typography.Text>
         <br />
         <br />
-        <Text type="secondary">Secondary</Text>
+        <Typography.Text type="secondary">Secondary</Typography.Text>
         <br />
         <br />
-        <Text type="tertiary">Tertiary v>=1.2.0</Text>
+        <Typography.Text type="tertiary">Tertiary v>=1.2.0</Typography.Text>
         <br />
         <br />
-        <Text type="quaternary">Quaternary v>=1.2.0</Text>
+        <Typography.Text type="quaternary">Quaternary v>=1.2.0</Typography.Text>
         <br />
         <br />
-        <Text type="warning">Warning</Text>
+        <Typography.Text type="warning">Warning</Typography.Text>
         <br />
         <br />
-        <Text type="danger">Danger</Text>
+        <Typography.Text type="danger">Danger</Typography.Text>
         <br />
         <br />
-        <Text type="success">Success v>=1.7.0</Text>
+        <Typography.Text type="success">Success v>=1.7.0</Typography.Text>
         <br />
         <br />
-        <Text disabled>Disabled</Text>
+        <Typography.Text disabled>Disabled</Typography.Text>
         <br />
         <br />
-        <Text mark>Default Mark</Text>
+        <Typography.Text mark>Default Mark</Typography.Text>
         <br />
         <br />
-        <Text code>Example Code</Text>
+        <Typography.Text code>Example Code</Typography.Text>
         <br />
         <br />
-        <Text underline>Underline</Text>
+        <Typography.Text underline>Underline</Typography.Text>
         <br />
         <br />
-        <Text delete>Deleted</Text>
+        <Typography.Text delete>Deleted</Typography.Text>
         <br />
         <br />
-        <Text strong>Strong</Text>
+        <Typography.Text strong>Strong</Typography.Text>
     </div>
 </template>

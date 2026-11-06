@@ -2,8 +2,6 @@
     import { shallowRef } from 'vue';
     import { Sidebar } from '@fibrae/semi-ai-vue';
 
-    const { FileContent } = Sidebar;
-
     const defaultFiles = [
         {
             key: 'file1',
@@ -116,6 +114,6 @@ If your project is using React v19, please use @fibrae/semi-ui-19. For React ver
 
 <template>
     <div class="semi-sidebar-main">
-        <FileContent v-model:activeKey="activeKey" :files="defaultFiles" :style="{ width: '600px' }" />
+        <Sidebar.FileContent v-model:activeKey="activeKey" :files="defaultFiles" :style="{ width: '600px' }" />
     </div>
 </template>

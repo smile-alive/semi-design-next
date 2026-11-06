@@ -3,7 +3,7 @@
     import { Spin } from '@fibrae/semi-ui-svelte';
 </script>
 
-<div style="margin-left: 30px">
+<div style="margin-inline-start: 30px">
     <div>自定义指示符的加载器</div>
     <Spin>
         {#snippet indicator()}

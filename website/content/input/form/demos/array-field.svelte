@@ -21,20 +21,20 @@
 {/snippet}
 
 <Form allowEmpty labelPosition="left" labelWidth="100px" style="width: 800px">
-    {#snippet children({ formState })}
+    {#snippet children(form)}
         <ArrayField field="rules" initValue={data}>
-            {#snippet children({ arrayFields, onAdd, onAddWithInitValue })}
-                <Button icon={plus} theme="light" onclick={onAdd}>Add new line</Button>
-                <Button icon={plus} style="margin-left: 8px" onclick={() => onAddWithInitValue({ name: 'Semi DSM', role: 'Designer' })}>Add new line with init value</Button>
-                {#each arrayFields as item (item.key)}
+            {#snippet children(arrayField)}
+                <Button icon={plus} theme="light" onclick={arrayField.onAdd}>Add new line</Button>
+                <Button icon={plus} style="margin-inline-start: 8px" onclick={() => arrayField.onAddWithInitValue({ name: 'Semi DSM', role: 'Designer' })}>Add new line with init value</Button>
+                {#each arrayField.arrayFields as item (item.key)}
                     <div style="width: 1000px; display: flex">
-                        <FormInput field={`${item.field}[name]`} label={`${item.field}.name`} style="width: 200px; margin-right: 16px" />
+                        <FormInput field={`${item.field}[name]`} label={`${item.field}.name`} style="width: 200px; margin-inline-end: 16px" />
                         <FormSelect field={`${item.field}[role]`} label={`${item.field}.role`} optionList={roleOptions} style="width: 120px" />
                         <Button aria-label="Delete" icon={minus} style="margin: 12px" theme="borderless" type="danger" onclick={item.onRemove} />
                     </div>
                 {/each}
             {/snippet}
         </ArrayField>
-        <TextArea aria-label="Form state" style="margin-top: 10px" value={JSON.stringify(formState)} />
+        <TextArea aria-label="Form state" style="margin-block-start: 10px" value={JSON.stringify(form.formState)} />
     {/snippet}
 </Form>

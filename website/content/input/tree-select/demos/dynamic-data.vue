@@ -2,8 +2,6 @@
     import { shallowRef } from 'vue';
     import { Button, TreeSelect, type TreeNodeData } from '@fibrae/semi-ui-vue';
 
-    const style = { width: '300px' };
-    const dropdownStyle = { maxHeight: '400px', overflow: 'auto' };
     const treeData = shallowRef<TreeNodeData[]>([]);
 
     const add = () => {
@@ -26,7 +24,7 @@
 </script>
 
 <template>
-    <TreeSelect :dropdownStyle="dropdownStyle" placeholder="请选择" :style="style" :treeData="treeData" />
+    <TreeSelect :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" placeholder="请选择" style="width: 300px" :treeData="treeData" />
     <br />
     <br />
     <Button @click="add">动态改变数据</Button>

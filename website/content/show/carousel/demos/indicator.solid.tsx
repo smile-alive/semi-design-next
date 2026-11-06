@@ -53,7 +53,7 @@ export default function CarouselDemo() {
             <Space vertical align="start">
                 <Space>
                     <div>类型</div>
-                    <RadioGroup onChange={(e) => setType(e.target.value)} value={type()} type="button">
+                    <RadioGroup aria-label="指示器类型" onChange={(e) => setType(e.target.value)} value={type()} type="button">
                         <Radio value="dot">dot</Radio>
                         <Radio value="line">line</Radio>
                         <Radio value="columnar">columnar</Radio>
@@ -61,7 +61,7 @@ export default function CarouselDemo() {
                 </Space>
                 <Space>
                     <div>位置</div>
-                    <RadioGroup onChange={(e) => setPosition(e.target.value)} value={position()} type="button">
+                    <RadioGroup aria-label="指示器位置" onChange={(e) => setPosition(e.target.value)} value={position()} type="button">
                         <Radio value="left">left</Radio>
                         <Radio value="center">center</Radio>
                         <Radio value="right">right</Radio>
@@ -69,7 +69,7 @@ export default function CarouselDemo() {
                 </Space>
                 <Space>
                     <div>尺寸</div>
-                    <RadioGroup onChange={(e) => setSize(e.target.value)} value={size()} type="button">
+                    <RadioGroup aria-label="指示器尺寸" onChange={(e) => setSize(e.target.value)} value={size()} type="button">
                         <Radio value="small">small</Radio>
                         <Radio value="medium">medium</Radio>
                     </RadioGroup>

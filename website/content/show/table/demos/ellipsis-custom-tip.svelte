@@ -1,6 +1,6 @@
 <script lang="ts">
     import { IconMore } from '@fibrae/semi-icons-svelte';
-    import { Table, TypographyText, type ColumnProps } from '@fibrae/semi-ui-svelte';
+    import { Table, Typography, type ColumnProps } from '@fibrae/semi-ui-svelte';
 
     const columns: ColumnProps[] = [
         {
@@ -93,9 +93,9 @@
 <Table {columns} dataSource={data} pagination={false} {scroll}>
     {#snippet cell({ column, text })}
         {#if column.dataIndex === 'name' || column.dataIndex === 'owner'}
-            <TypographyText ellipsis={{ showTooltip: true }}>
+            <Typography.Text ellipsis={{ showTooltip: true }}>
                 {text}
-            </TypographyText>
+            </Typography.Text>
         {:else if column.dataIndex === 'operate'}
             <IconMore />
         {:else}

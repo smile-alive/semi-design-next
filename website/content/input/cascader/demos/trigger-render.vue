@@ -40,16 +40,16 @@
 
 <template>
     <Cascader placeholder="Custom Trigger" :treeData="treeData">
-        <template #trigger="{ value, placeholder, onClear }">
+        <template #trigger="trigger">
             <!-- The clear button is a sibling of the trigger button: buttons cannot nest -->
             <ButtonGroup theme="light">
                 <Button iconPosition="right">
                     <template #icon>
                         <IconChevronDown />
                     </template>
-                    {{ value ? getLabelFromValue(value) : placeholder }}
+                    {{ trigger.value ? getLabelFromValue(trigger.value) : trigger.placeholder }}
                 </Button>
-                <Button v-if="value" aria-label="清除" @click.stop="onClear($event)">
+                <Button v-if="trigger.value" aria-label="清除" @click.stop="trigger.onClear($event)">
                     <template #icon>
                         <IconClose />
                     </template>
@@ -59,11 +59,11 @@
     </Cascader>
     <br />
     <Cascader filterTreeNode multiple placeholder="Custom Trigger" style="width: 300px" :treeData="treeData">
-        <template #trigger="{ value, onSearch, onRemove }">
-            <TagInput :modelValue="Array.from(value)" @inputChange="onSearch">
-                <template #tag="{ value: pos }">
-                    <Tag closable :style="{ marginLeft: '2px' }" :tagKey="pos" @close="onRemove(pos)">
-                        {{ getLabelFromValue(pos) }}
+        <template #trigger="trigger">
+            <TagInput :modelValue="Array.from(trigger.value)" @inputChange="trigger.onSearch">
+                <template #tag="tag">
+                    <Tag closable :style="{ marginInlineStart: '2px' }" :tagKey="tag.value" @close="trigger.onRemove(tag.value)">
+                        {{ getLabelFromValue(tag.value) }}
                     </Tag>
                 </template>
             </TagInput>

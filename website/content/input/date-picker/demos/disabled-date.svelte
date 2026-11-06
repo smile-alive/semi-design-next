@@ -3,7 +3,8 @@
     import { range } from 'es-toolkit';
     import { DatePicker, type DatePickerDisabledDateType, type DatePickerDisabledTimeType } from '@fibrae/semi-ui-svelte';
 
-    const nextValidMonth = dateFns.addMonths(Date.now(), 1);
+    const nextValidMonth = new Date();
+    nextValidMonth.setMonth((nextValidMonth.getMonth() + 1) % 12);
 
     const disabledTime: DatePickerDisabledTimeType = (date) =>
         // With type dateTime, date is a single Date
@@ -15,10 +16,18 @@
               }
             : {};
 
-    const disabledTime2: DatePickerDisabledTimeType = (_date, panelType) => (panelType === 'left' ? { disabledHours: () => [17, 18] } : { disabledHours: () => [12, 13, 14, 15, 16, 17, 18] });
+    const disabledTime2: DatePickerDisabledTimeType = (_date, panelType) => {
+        if (panelType === 'left') {
+            return { disabledHours: () => [17, 18] };
+        }
+        return { disabledHours: () => [12, 13, 14, 15, 16, 17, 18] };
+    };
 
     const disabledDate: DatePickerDisabledDateType = (date) => {
-        const deadDate = dateFns.setDate(dateFns.addMonths(Date.now(), 1), 28);
+        const deadDate = new Date();
+        const month = deadDate.getMonth();
+        deadDate.setDate(28);
+        deadDate.setMonth((month + 1) % 12);
         return !!date && date.getTime() < deadDate.getTime();
     };
 </script>

@@ -3,6 +3,9 @@
     import { Cascader, type CascaderSimpleValue } from '@fibrae/semi-ui-vue';
 
     const value = ref<CascaderSimpleValue[][]>([]);
+    const onChange = (v: CascaderSimpleValue[][]) => {
+        console.log(v);
+    };
     const treeData = [
         {
             label: '浙江省',
@@ -47,5 +50,5 @@
 </script>
 
 <template>
-    <Cascader v-model="value" :autoMergeValue="false" multiple placeholder="autoMergeValue 为 false" :style="style" :treeData="treeData" />
+    <Cascader v-model="value" :autoMergeValue="false" multiple placeholder="autoMergeValue 为 false" :style="style" :treeData="treeData" @change="onChange" />
 </template>

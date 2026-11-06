@@ -4,11 +4,11 @@
 </script>
 
 <Breadcrumb routes={['', 'Breadcrumb', 'With Icon']}>
-    {#snippet icon({ class: className, index, size })}
-        {#if index === 0}
-            <IconHome aria-label="Home" class={className} {size} />
-        {:else if index === 1}
-            <IconArticle class={className} {size} />
+    {#snippet icon(iconContext)}
+        {#if iconContext.index === 0}
+            <IconHome aria-label="Home" class={iconContext.class} size={iconContext.size} />
+        {:else if iconContext.index === 1}
+            <IconArticle class={iconContext.class} size={iconContext.size} />
         {/if}
     {/snippet}
 </Breadcrumb>

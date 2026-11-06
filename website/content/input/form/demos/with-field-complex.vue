@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { defineComponent, h, type PropType } from 'vue';
-    import { Form, Input, Select, withField } from '@fibrae/semi-ui-vue';
+    import { Form, Input, Select, useFormState, withField } from '@fibrae/semi-ui-vue';
 
     interface BaseInfo {
         name?: string;
@@ -48,13 +48,17 @@
         },
     });
     const CustomField = withField(MyComponent);
+
+    // useFormState reads the Form from provide/inject, so it has to run in a component rendered inside the Form
+    const ComponentUsingFormState = defineComponent(() => {
+        const formState = useFormState();
+        return () => h('pre', h('code', JSON.stringify(formState.value)));
+    });
 </script>
 
 <template>
     <Form>
-        <template #default="{ formState }">
-            <CustomField field="baseInfo" :label="{ text: '基本信息', required: true }" />
-            <pre><code>{{ JSON.stringify(formState) }}</code></pre>
-        </template>
+        <CustomField field="baseInfo" :label="{ text: '基本信息', required: true }" />
+        <ComponentUsingFormState />
     </Form>
 </template>

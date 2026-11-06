@@ -1,13 +1,13 @@
 import { IconToutiaoLogo, IconVigoLogo } from '@fibrae/semi-icons-react';
 import { Notification, Button } from '@fibrae/semi-ui-react';
 
-export default function NotificationDemo() {
-    let opts = {
-        title: 'Hi, Bytedance',
-        content: 'ies dance dance dance',
-        duration: 3,
-    };
+const opts = {
+    title: 'Hi, Bytedance',
+    content: 'ies dance dance dance',
+    duration: 3,
+};
 
+export default function NotificationDemo() {
     return (
         <>
             <h5>默认的图标</h5>
@@ -27,7 +27,7 @@ export default function NotificationDemo() {
             <Button
                 aria-label="Toutiao 图标通知"
                 icon={<IconToutiaoLogo />}
-                style={{ marginRight: 5 }}
+                style={{ marginInlineEnd: 5 }}
                 onClick={() =>
                     Notification.info({
                         ...opts,
@@ -35,7 +35,7 @@ export default function NotificationDemo() {
                     })
                 }
             />
-            <Button aria-label="Vigo 图标通知" icon={<IconVigoLogo />} style={{ marginRight: 5 }} onClick={() => Notification.info({ ...opts, icon: <IconVigoLogo /> })} />
+            <Button aria-label="Vigo 图标通知" icon={<IconVigoLogo />} style={{ marginInlineEnd: 5 }} onClick={() => Notification.info({ ...opts, icon: <IconVigoLogo /> })} />
             <Button aria-label="粉色 Vigo 图标通知" icon={<IconVigoLogo />} onClick={() => Notification.info({ ...opts, icon: <IconVigoLogo style={{ color: 'pink' }} /> })} />
         </>
     );

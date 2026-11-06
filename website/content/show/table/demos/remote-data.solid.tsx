@@ -25,7 +25,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text) => {
             return (
                 <div>
-                    <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-right': '12px' }} />
+                    <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-inline-end': '12px' }} />
                     {text}
                 </div>
             );
@@ -90,7 +90,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}
@@ -147,7 +147,7 @@ export default function TableDemo() {
             dataSource={pageData() ?? []}
             pagination={{
                 currentPage: currentPage(),
-                pageSize: 5,
+                pageSize,
                 total: data.length,
                 onPageChange: setPage,
             }}

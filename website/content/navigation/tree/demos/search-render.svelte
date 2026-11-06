@@ -37,8 +37,8 @@
 </script>
 
 <Tree filterTreeNode {treeData}>
-    {#snippet search({ class: searchClass, value, placeholder, showClear, onChange })}
-        <Input class={searchClass} {onChange} {placeholder} {showClear} {value}>
+    {#snippet search(searchProps)}
+        <Input class={searchProps.class} onChange={searchProps.onChange} placeholder={searchProps.placeholder} showClear={searchProps.showClear} value={searchProps.value}>
             {#snippet prefix()}Search{/snippet}
         </Input>
     {/snippet}

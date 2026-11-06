@@ -3,9 +3,6 @@ import { Dynamic } from 'solid-js/web';
 import { Annotation, Sidebar, type AnnotationInfo, type ImageUploadNodeOptions, type SideBarDetailContent, type SideBarOption } from '@fibrae/semi-ai-solid';
 import { IconBriefStroked, IconCodeStroked, IconModalStroked, IconSearch } from '@fibrae/semi-icons-solid';
 
-const { FileContent, CodeContent } = Sidebar;
-const { AnnotationContent } = Annotation;
-
 const containerStyle: JSX.CSSProperties = {
     display: 'flex',
     height: '800px',
@@ -338,6 +335,8 @@ const imgUploadProps: ImageUploadNodeOptions = {
     },
 };
 
+const defaultSize = { width: '60%' };
+
 export default function SidebarDemo() {
     const [mode, setMode] = createSignal('main');
     const [activeKey, setActiveKey] = createSignal('codePreview');
@@ -360,7 +359,7 @@ export default function SidebarDemo() {
                 motion={false}
                 title="Agent 的工作空间"
                 mode={mode()}
-                defaultSize={{ width: '60%' }}
+                defaultSize={defaultSize}
                 onActiveOptionChange={(_e, key) => setActiveKey(key)}
                 activeKey={activeKey()}
                 options={optionList}
@@ -371,13 +370,13 @@ export default function SidebarDemo() {
                 renderMainContent={(key) => (
                     <Switch>
                         <Match when={key === 'searchResult'}>
-                            <AnnotationContent activeKey={activeReferKey()} info={defaultInfoList} onChange={setActiveReferKey} />
+                            <Annotation.AnnotationContent activeKey={activeReferKey()} info={defaultInfoList} onChange={setActiveReferKey} />
                         </Match>
                         <Match when={key === 'filePreview'}>
-                            <FileContent activeKey={activeFileKey()} files={defaultFiles} onExpand={onExpand} onChange={setActiveFileKey} />
+                            <Sidebar.FileContent activeKey={activeFileKey()} files={defaultFiles} onExpand={onExpand} onChange={setActiveFileKey} />
                         </Match>
                         <Match when={key === 'codePreview'}>
-                            <CodeContent activeKey={activeCodeKey()} codes={defaultCodes} onExpand={onExpand} onChange={setActiveCodeKey} />
+                            <Sidebar.CodeContent activeKey={activeCodeKey()} codes={defaultCodes} onExpand={onExpand} onChange={setActiveCodeKey} />
                         </Match>
                         <Match when={key === 'network'}>
                             <img alt="network" src="/assets/root-web-sites/test.jpg" style={{ width: '100%' }} />

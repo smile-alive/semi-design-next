@@ -1,8 +1,6 @@
 <script setup lang="ts">
     import { Tree, Typography } from '@fibrae/semi-ui-vue';
 
-    const { Text } = Typography;
-
     const treeData = [
         {
             label: '亚洲亚洲亚洲亚洲亚洲亚洲亚洲亚洲亚洲亚洲亚洲亚洲',
@@ -31,8 +29,8 @@
 
 <template>
     <Tree :style="treeStyle" :treeData="treeData">
-        <template #label="{ label }">
-            <Text :ellipsis="{ showTooltip: true }" :style="{ width: '100%' }">{{ label }}</Text>
+        <template #label="labelProps">
+            <Typography.Text :ellipsis="{ showTooltip: true }" :style="{ width: '100%' }">{{ labelProps.label }}</Typography.Text>
         </template>
     </Tree>
 </template>

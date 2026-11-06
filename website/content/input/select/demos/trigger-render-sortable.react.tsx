@@ -1,39 +1,37 @@
 import { useState } from 'react';
 import { Select, TagInput, type SelectTriggerRenderProps } from '@fibrae/semi-ui-react';
 
+const list = [
+    { value: 'douyin', label: '抖音' },
+    { value: 'ulikecam', label: '轻颜相机' },
+    { value: 'jianying', label: '剪映' },
+    { value: 'toutiao', label: '今日头条' },
+];
+
 export default function SelectDemo() {
     const [valList, setValList] = useState(['douyin', 'ulikecam']);
     const [inputVal, setInputVal] = useState('');
-    const list = [
-        { value: 'douyin', label: '抖音' },
-        { value: 'ulikecam', label: '轻颜相机' },
-        { value: 'jianying', label: '剪映' },
-        { value: 'toutiao', label: '今日头条' },
-    ];
 
     const handleSort = (currentLabels: string[]) => {
-        const newValue = currentLabels.flatMap((item) => list.find((i) => i.label === item)?.value ?? []);
-        setValList(newValue);
+        setValList(currentLabels.flatMap((item) => list.find((i) => i.label === item)?.value ?? []));
     };
 
-    const triggerRender = ({ value, onSearch }: SelectTriggerRenderProps) => {
-        return (
-            <div role="presentation" onKeyDown={(e) => e.stopPropagation()}>
-                <TagInput
-                    draggable
-                    allowDuplicates={false}
-                    value={value.map((item) => String(item.label))}
-                    inputValue={inputVal}
-                    onInputChange={(word) => {
-                        onSearch(word);
-                        setInputVal(word);
-                    }}
-                    onChange={handleSort}
-                    showClear
-                />
-            </div>
-        );
-    };
+    const triggerRender = (selectState: SelectTriggerRenderProps) => (
+        <div role="presentation" onKeyDown={(e) => e.stopPropagation()}>
+            <TagInput
+                draggable
+                allowDuplicates={false}
+                value={selectState.value.map((item) => String(item.label))}
+                inputValue={inputVal}
+                onInputChange={(word) => {
+                    selectState.onSearch(word);
+                    setInputVal(word);
+                }}
+                onChange={handleSort}
+                showClear
+            />
+        </div>
+    );
 
     return (
         <>

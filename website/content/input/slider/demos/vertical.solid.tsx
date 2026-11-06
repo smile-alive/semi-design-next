@@ -2,9 +2,9 @@ import { Slider } from '@fibrae/semi-ui-solid';
 
 const boxStyle = {
     height: '300px',
-    'margin-left': '30px',
-    'margin-top': '10px',
-    'padding-right': '30px',
+    'margin-inline-start': '30px',
+    'margin-block-start': '10px',
+    'padding-inline-end': '30px',
     display: 'inline-block',
 };
 

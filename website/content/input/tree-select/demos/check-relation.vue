@@ -32,10 +32,8 @@
             key: '1',
         },
     ];
-    const style = { width: '300px' };
-    const dropdownStyle = { maxHeight: '400px', overflow: 'auto' };
 </script>
 
 <template>
-    <TreeSelect checkRelation="unRelated" :defaultValue="['Asia']" :dropdownStyle="dropdownStyle" multiple :style="style" :treeData="treeData" />
+    <TreeSelect checkRelation="unRelated" :defaultValue="['Asia']" :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" multiple style="width: 300px" :treeData="treeData" />
 </template>

@@ -10,36 +10,32 @@
         { value: 'signup', label: 'Sign Up' },
         { value: 'signin', label: 'Sign In' },
     ];
-    const nameStyle = 'width: 100px';
-    const scoreStyle = 'width: 140px';
-    const selectStyle = 'width: 100px';
-    const wideStyle = 'width: 180px';
 </script>
 
 <div>
     <InputGroup>
-        <Input placeholder="Name" style={nameStyle} />
-        <InputNumber placeholder="Score" style={scoreStyle} />
+        <Input placeholder="Name" style="width: 100px" />
+        <InputNumber placeholder="Score" style="width: 140px" />
     </InputGroup>
     <br />
     <br />
     <br />
     <InputGroup size="small">
-        <Select aria-label="Address type" optionList={addressTypes} style={selectStyle} value="home" />
-        <AutoComplete data={addressData} placeholder="Address: " style={wideStyle} />
+        <Select aria-label="Address type" optionList={addressTypes} style="width: 100px" value="home" />
+        <AutoComplete data={addressData} placeholder="Address: " style="width: 180px" />
     </InputGroup>
     <br />
     <br />
     <br />
     <InputGroup size="small">
-        <Select aria-label="Account action" optionList={accountActions} style={selectStyle} value="signup" />
-        <Input placeholder="Email" style={wideStyle} />
+        <Select aria-label="Account action" optionList={accountActions} style="width: 100px" value="signup" />
+        <Input placeholder="Email" style="width: 180px" />
     </InputGroup>
     <br />
     <br />
     <br />
     <InputGroup size="small">
-        <Input placeholder="Name" style={nameStyle} />
+        <Input placeholder="Name" style="width: 100px" />
         <DatePicker placeholder="Birthday" />
     </InputGroup>
 </div>

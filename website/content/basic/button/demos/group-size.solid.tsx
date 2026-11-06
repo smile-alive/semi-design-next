@@ -8,7 +8,7 @@ export default function ButtonDemo() {
         <div style={{ display: 'flex' }}>
             <For each={sizes}>
                 {(size) => (
-                    <div style={{ 'margin-right': '10px' }}>
+                    <div style={{ 'margin-inline-end': '10px' }}>
                         <ButtonGroup size={size} aria-label="操作按钮组">
                             <Button>拷贝</Button>
                             <Button>查询</Button>

@@ -10,11 +10,11 @@
     <Breadcrumb aria-label="字符串路由" routes={['Semi-ui', 'Breadcrumb', 'Default']} />
     <br />
     <Breadcrumb aria-label="带图标的路由" routes={iconRoutes}>
-        {#snippet icon({ class: className, index, size })}
-            {#if index === 0}
-                <IconHome aria-label="首页" class={className} {size} />
-            {:else if index === 1}
-                <IconArticle class={className} {size} />
+        {#snippet icon(iconContext)}
+            {#if iconContext.index === 0}
+                <IconHome aria-label="首页" class={iconContext.class} size={iconContext.size} />
+            {:else if iconContext.index === 1}
+                <IconArticle class={iconContext.class} size={iconContext.size} />
             {/if}
         {/snippet}
     </Breadcrumb>

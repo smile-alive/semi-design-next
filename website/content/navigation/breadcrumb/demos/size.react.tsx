@@ -6,13 +6,13 @@ export default function BreadcrumbDemo() {
     return (
         <div>
             <Breadcrumb compact aria-label="紧凑面包屑">
-                <Breadcrumb.Item icon={<IconHome size="small" />} />
+                <Breadcrumb.Item icon={<IconHome aria-label="Home" size="small" />} />
                 <Breadcrumb.Item>Breadcrumb</Breadcrumb.Item>
                 <Breadcrumb.Item>Loose</Breadcrumb.Item>
             </Breadcrumb>
             <br />
             <Breadcrumb compact={false} aria-label="宽松面包屑">
-                <Breadcrumb.Item icon={<IconHome size="small" />} />
+                <Breadcrumb.Item icon={<IconHome aria-label="Home" size="small" />} />
                 <Breadcrumb.Item>Breadcrumb</Breadcrumb.Item>
                 <Breadcrumb.Item>Loose</Breadcrumb.Item>
             </Breadcrumb>

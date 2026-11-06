@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref } from 'vue';
-    import { Banner, Button, FormDatePicker, FormRadio, FormRadioGroup, FormSelect, Form, SideSheet, TypographyText } from '@fibrae/semi-ui-vue';
+    import { Banner, Button, FormDatePicker, FormRadio, FormRadioGroup, FormSelect, Form, SideSheet, Typography } from '@fibrae/semi-ui-vue';
 
     const visible = ref(false);
     const createTime = new Date();
@@ -12,7 +12,7 @@
     <SideSheet v-model:visible="visible" :bodyStyle="border" :closable="false" :headerStyle="border" title="创建资源包">
         <template #footer>
             <div style="display: flex; justify-content: flex-end">
-                <Button style="margin-right: 8px">重置</Button>
+                <Button style="margin-inline-end: 8px">重置</Button>
                 <Button theme="solid">提交</Button>
             </div>
         </template>
@@ -31,9 +31,9 @@
             <Banner bordered :fullMode="false" type="warning">
                 <template #icon />
                 <template #description>
-                    <TypographyText strong>当前部署环境：线上部署</TypographyText>
+                    <Typography.Text strong>当前部署环境：线上部署</Typography.Text>
                     <br />
-                    <TypographyText>请选择正确的SCM构建产物，防止出现不符合预期的发布操作。</TypographyText>
+                    <Typography.Text>请选择正确的SCM构建产物，防止出现不符合预期的发布操作。</Typography.Text>
                 </template>
             </Banner>
             <br />

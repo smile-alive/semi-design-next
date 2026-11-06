@@ -1,10 +1,10 @@
 import { InputNumber } from '@fibrae/semi-ui-react';
 
-export default function InputNumberDemo() {
-    const log = (v: number | string) => {
-        console.log(`Changed to: [${typeof v}] ${v}`);
-    };
+const log = (v: number | string) => {
+    console.log(`Changed to: [${typeof v}] ${v}`);
+};
 
+export default function InputNumberDemo() {
     return (
         <div style={{ width: 180 }}>
             <span id="inputnumber-formatter-rmb">人民币</span>

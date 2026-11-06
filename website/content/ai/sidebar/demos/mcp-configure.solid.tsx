@@ -32,6 +32,14 @@ const defaultOptions: MCPOption[] = [
     },
 ];
 
+const srcRules = [
+    { required: true, message: '请输入 MCP 图标 URL' },
+    {
+        validator: (value: string) => /^(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+(?::\d+)?(?:\/[^\s]*)?$/i.test(value),
+        message: '请输入有效的 MCP 图标 URL',
+    },
+];
+
 let index = 1;
 
 const containerStyle: JSX.CSSProperties = {
@@ -106,24 +114,9 @@ export default function SidebarDemo() {
             />
             <Modal title="自定义 MCP" visible={mVisible()} onOk={handleOk} onCancel={() => setMVisible(false)} closeOnEsc>
                 <Form ref={(node) => (form = node)} layout="vertical" onValueChange={(values) => console.log(values)}>
-                    <FormInput rules={[{ required: true, message: '请输入 MCP 名称' }]} field="name" label="MCP 名称" style={{ width: '100%' }} />
-                    <FormInput
-                        initValue="/assets/placeholder/avatar-a.svg"
-                        rules={[
-                            { required: true, message: '请输入 MCP 图标 URL' },
-                            {
-                                validator: (value: string) => {
-                                    const urlRegex = /^(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+(?::\d+)?(?:\/[^\s]*)?$/i;
-                                    return urlRegex.test(value);
-                                },
-                                message: '请输入有效的 MCP 图标 URL',
-                            },
-                        ]}
-                        field="src"
-                        label="MCP 图标 URL"
-                        style={{ width: '100%' }}
-                    />
-                    <FormTextArea rules={[{ required: true, message: '请输入 MCP 介绍' }]} field="desc" label="MCP 介绍" style={{ width: '100%' }} />
+                    <FormInput field="name" rules={[{ required: true, message: '请输入 MCP 名称' }]} label="MCP 名称" style={{ width: '100%' }} />
+                    <FormInput field="src" initValue="/assets/placeholder/avatar-a.svg" rules={srcRules} label="MCP 图标 URL" style={{ width: '100%' }} />
+                    <FormTextArea field="desc" rules={[{ required: true, message: '请输入 MCP 介绍' }]} label="MCP 介绍" style={{ width: '100%' }} />
                 </Form>
             </Modal>
         </div>

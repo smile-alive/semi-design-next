@@ -31,12 +31,12 @@
         Timeline,
         Toast,
         Tooltip,
-        TypographyText,
+        Typography,
         type NavItemConfig,
     } from '@fibrae/semi-ui-vue';
 
     const direction = ref<'ltr' | 'rtl'>();
-    const flexStyle: CSSProperties = { display: 'flex', marginBottom: '32px', flexWrap: 'wrap' };
+    const flexStyle: CSSProperties = { display: 'flex', marginBlockEnd: '32px', flexWrap: 'wrap' };
     const titleStyle = { margin: '50px 0 16px 0' };
     const rowStyle = { margin: '16px 10px' };
     const badgeStyle = {
@@ -45,7 +45,7 @@
         borderRadius: '4px',
         display: 'inline-block',
     };
-    const tagStyle = { marginRight: '8px', marginBottom: '8px' };
+    const tagStyle = { marginInlineEnd: '8px', marginBlockEnd: '8px' };
     const buttonStyle = { ...tagStyle };
     const opts = () => ({
         title: 'Hi,Bytedance',
@@ -90,7 +90,7 @@
 
 <template>
     <div>
-        <div :style="{ marginBottom: '20px' }">
+        <div :style="{ marginBlockEnd: '20px' }">
             <ButtonGroup>
                 <Button @click="direction = 'ltr'">LTR</Button>
                 <Button @click="direction = 'rtl'">RTL</Button>
@@ -101,14 +101,14 @@
                 <h3 :style="titleStyle">Buttons</h3>
             </Row>
             <Row :style="rowStyle">
-                <Button loading :style="{ marginRight: '8px' }" theme="solid">加载</Button>
-                <Button :style="{ marginRight: '8px' }" theme="solid">
+                <Button loading :style="{ marginInlineEnd: '8px' }" theme="solid">加载</Button>
+                <Button :style="{ marginInlineEnd: '8px' }" theme="solid">
                     <template #icon>
                         <IconSidebar />
                     </template>
                     收起
                 </Button>
-                <Button iconPosition="right" :style="{ marginRight: '8px' }" theme="solid">
+                <Button iconPosition="right" :style="{ marginInlineEnd: '8px' }" theme="solid">
                     <template #icon>
                         <IconChevronDown />
                     </template>
@@ -140,7 +140,7 @@
                     <br />
                     <Input aria-label="带后缀的输入框" showClear>
                         <template #suffix>
-                            <TypographyText strong :style="{ margin: '0 8px' }" type="secondary">Suffix</TypographyText>
+                            <Typography.Text strong :style="{ margin: '0 8px' }" type="secondary">Suffix</Typography.Text>
                         </template>
                     </Input>
                     <br />
@@ -149,19 +149,19 @@
                     <br />
                     <br />
                     <div :style="flexStyle">
-                        <Switch aria-label="已开启的开关" defaultChecked :style="{ marginRight: '8px' }" />
-                        <Switch aria-label="已关闭的开关" :style="{ marginRight: '8px' }" />
-                        <Switch aria-label="禁用的开关" defaultChecked disabled :style="{ marginRight: '8px' }" />
+                        <Switch aria-label="已开启的开关" defaultChecked :style="{ marginInlineEnd: '8px' }" />
+                        <Switch aria-label="已关闭的开关" :style="{ marginInlineEnd: '8px' }" />
+                        <Switch aria-label="禁用的开关" defaultChecked disabled :style="{ marginInlineEnd: '8px' }" />
                     </div>
                     <div :style="flexStyle">
-                        <Checkbox defaultChecked :style="{ marginRight: '8px' }">多选框</Checkbox>
-                        <Checkbox defaultChecked disabled :style="{ marginRight: '8px' }">禁用的多选框</Checkbox>
-                        <Checkbox disabled :style="{ marginRight: '8px' }">禁用的多选框</Checkbox>
+                        <Checkbox defaultChecked :style="{ marginInlineEnd: '8px' }">多选框</Checkbox>
+                        <Checkbox defaultChecked disabled :style="{ marginInlineEnd: '8px' }">禁用的多选框</Checkbox>
+                        <Checkbox disabled :style="{ marginInlineEnd: '8px' }">禁用的多选框</Checkbox>
                     </div>
-                    <div :style="{ ...flexStyle, marginBottom: 0 }">
-                        <Radio defaultChecked :style="{ marginRight: '8px' }">单选框</Radio>
-                        <Radio defaultChecked disabled :style="{ marginRight: '8px' }">禁用的单选框</Radio>
-                        <Radio disabled :style="{ marginRight: '8px' }">禁用的单选框</Radio>
+                    <div :style="{ ...flexStyle, marginBlockEnd: 0 }">
+                        <Radio defaultChecked :style="{ marginInlineEnd: '8px' }">单选框</Radio>
+                        <Radio defaultChecked disabled :style="{ marginInlineEnd: '8px' }">禁用的单选框</Radio>
+                        <Radio disabled :style="{ marginInlineEnd: '8px' }">禁用的单选框</Radio>
                     </div>
                 </Col>
                 <Col :span="12">
@@ -298,14 +298,14 @@
                 <br />
                 <div :style="{ display: 'flex', alignItems: 'center' }">
                     <Popover :style="{ padding: '8px' }">
-                        <Tag :style="{ marginRight: '8px' }">I am Popover</Tag>
+                        <Tag :style="{ marginInlineEnd: '8px' }">I am Popover</Tag>
                         <template #content>hi semi-design</template>
                     </Popover>
                     <Tooltip>
-                        <Tag :style="{ marginRight: '8px' }">I am Tooltip</Tag>
+                        <Tag :style="{ marginInlineEnd: '8px' }">I am Tooltip</Tag>
                         <template #content>hi semi-design</template>
                     </Tooltip>
-                    <Rating :defaultValue="3" size="small" :style="{ marginRight: '8px' }" />
+                    <Rating :defaultValue="3" size="small" :style="{ marginInlineEnd: '8px' }" />
                 </div>
                 <br />
                 <Timeline>

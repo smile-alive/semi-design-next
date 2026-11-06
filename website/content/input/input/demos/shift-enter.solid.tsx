@@ -14,7 +14,7 @@ export default function InputDemo() {
         <>
             <div id="input-shift-enter-hint" style={{ display: 'flex' }}>
                 使用
-                <HotKeys hotKeys={['shift', 'enter']} style={{ 'margin-bottom': '12px', 'margin-left': '4px', 'margin-right': '4px' }} />
+                <HotKeys hotKeys={['shift', 'enter']} style={{ 'margin-block-end': '12px', 'margin-inline': '4px' }} />
                 换行的 TextArea
             </div>
             <TextArea aria-labelledby="input-shift-enter-hint" value={text()} onChange={(value) => setText(value)} onKeyDown={handleKeyDown} />

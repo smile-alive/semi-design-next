@@ -17,14 +17,14 @@
 <template>
     <div>
         <div>
-            <div class="btn-margin-right" :style="{ display: 'inline-flex', alignItems: 'center', paddingBottom: '14px' }">
+            <div class="btn-margin-right" :style="{ display: 'inline-flex', alignItems: 'center', paddingBlockEnd: '14px' }">
                 <Button @click="reset(false)">关闭加载态</Button>
                 <Button @click="reset(true)">开启加载态</Button>
             </div>
         </div>
         <hr />
-        <Button :loading="saveLoading" :style="{ marginRight: '14px' }" @click="saveLoading = true">保存</Button>
-        <Button :loading="delLoading" :style="{ marginRight: '14px' }" type="danger" @click="delLoading = true">
+        <Button :loading="saveLoading" :style="{ marginInlineEnd: '14px' }" @click="saveLoading = true">保存</Button>
+        <Button :loading="delLoading" :style="{ marginInlineEnd: '14px' }" type="danger" @click="delLoading = true">
             <template #icon>
                 <IconDelete />
             </template>

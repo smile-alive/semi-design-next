@@ -2,7 +2,7 @@
     import { Button, Cropper, Slider } from '@fibrae/semi-ui-svelte';
 
     const containerStyle = 'width: 550px; height: 300px; margin: 20px';
-    const actionStyle = 'margin-top: 20px; display: flex; align-items: center; justify-content: center; width: fit-content';
+    const actionStyle = 'margin-block-start: 20px; display: flex; align-items: center; justify-content: center; width: fit-content';
 
     let rotate = $state(0);
     let zoom = $state(1);
@@ -41,9 +41,9 @@
     <div style="display: flex">
         <div style="width: 50%; flex-grow: 1">
             <strong>实时预览</strong>
-            <div bind:this={previewWrapper} style="height: 300px; margin-top: 8px"></div>
+            <div bind:this={previewWrapper} style="height: 300px; margin-block-start: 8px"></div>
         </div>
-        <div style="width: 50%; flex-grow: 1; padding-left: 10px">
+        <div style="width: 50%; flex-grow: 1; padding-inline-start: 10px">
             <Button onclick={onButtonClick}>裁切</Button>
             <br />
             <br />

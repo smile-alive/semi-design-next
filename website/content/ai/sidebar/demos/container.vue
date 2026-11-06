@@ -3,8 +3,6 @@
     import { Sidebar } from '@fibrae/semi-ai-vue';
     import { Button, Switch } from '@fibrae/semi-ui-vue';
 
-    const { Container } = Sidebar;
-
     const containerStyle = {
         display: 'flex',
         height: '500px',
@@ -34,6 +32,6 @@
                 </div>
             </div>
         </div>
-        <Container v-model:visible="visible" maxWidth="60%" :minWidth="250" :motion="motion" :resizable="resizable" :style="resizable ? undefined : { width: '200px' }" title="基础容器示例" />
+        <Sidebar.Container v-model:visible="visible" maxWidth="60%" :minWidth="250" :motion="motion" :resizable="resizable" :style="resizable ? undefined : { width: '200px' }" title="基础容器示例" />
     </div>
 </template>

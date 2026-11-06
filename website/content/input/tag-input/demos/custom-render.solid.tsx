@@ -34,17 +34,17 @@ function renderTagItem(value: string, _index: number, onClose: () => void) {
                 display: 'flex',
                 'align-items': 'center',
                 'font-size': '14px',
-                'margin-right': '10px',
+                'margin-inline-end': '10px',
             }}
         >
             <Avatar alt="avatar" src={data ? data.avatar : fallbackAvatar} size="extra-small" />
-            <span style={{ 'margin-left': '8px' }}>{`${value}@semi.com`}</span>
+            <span style={{ 'margin-inline-start': '8px' }}>{`${value}@semi.com`}</span>
             <Button theme="borderless" type="tertiary" size="small" icon={<IconClose size="small" />} aria-label={`移除 ${value}`} onClick={onClose} />
         </div>
     );
 }
 
 export default function TagInputDemo() {
-    const [tags, setTags] = createSignal(['夏可漫']);
-    return <TagInput value={tags()} onChange={(v) => setTags(v)} renderTagItem={renderTagItem} />;
+    const [value, setValue] = createSignal(['夏可漫']);
+    return <TagInput value={value()} onChange={(v) => setValue(v)} renderTagItem={renderTagItem} />;
 }

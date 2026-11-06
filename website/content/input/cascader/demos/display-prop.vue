@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { Cascader, TypographyTitle } from '@fibrae/semi-ui-vue';
+    import { Cascader, Typography } from '@fibrae/semi-ui-vue';
 
     const treeData = [
         {
@@ -46,10 +46,10 @@
 </script>
 
 <template>
-    <TypographyTitle :heading="6">单选</TypographyTitle>
+    <Typography.Title :heading="6">单选</Typography.Title>
     <Cascader :defaultValue="defaultValue" displayProp="value" placeholder="回填时显示数据的value值" :style="style" :treeData="treeData" />
     <br />
     <br />
-    <TypographyTitle :heading="6">多选</TypographyTitle>
+    <Typography.Title :heading="6">多选</Typography.Title>
     <Cascader :defaultValue="defaultValue" displayProp="value" multiple placeholder="回填时显示数据的value值" :style="style" :treeData="treeData" />
 </template>

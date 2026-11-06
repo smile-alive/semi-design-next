@@ -16,12 +16,12 @@ interface Row {
 const columns: ColumnProps<Row>[] = [
     {
         // Each part is a render function: call it where the button is inserted
-        title: (props) => (
-            <span style={{ display: 'inline-flex', 'align-items': 'center', 'padding-left': '20px' }}>
-                {props.selection?.()}
-                <span style={{ 'margin-left': '8px' }}>Name</span>
-                {props.sorter?.()}
-                {props.filter?.()}
+        title: (parts) => (
+            <span style={{ display: 'inline-flex', 'align-items': 'center', 'padding-inline-start': '20px' }}>
+                {parts.selection?.()}
+                <span style={{ 'margin-inline-start': '8px' }}>Name</span>
+                {parts.sorter?.()}
+                {parts.filter?.()}
             </span>
         ),
         dataIndex: 'name',
@@ -39,14 +39,14 @@ const columns: ColumnProps<Row>[] = [
         onFilter: (value, record) => record.name.includes(value),
         useFullRender: true,
         // The fourth render parameter holds the expand button, selection button and text
-        render: (text, _record, _index, options) => {
+        render: (text, _record, _index, parts) => {
             return (
                 <span style={{ display: 'inline-flex', 'align-items': 'center', 'justify-content': 'center' }}>
-                    {options.indentText?.()}
-                    {options.expandIcon?.()}
-                    {options.selection?.()}
-                    <span style={{ 'margin-left': '8px' }}>
-                        <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-right': '12px' }} />
+                    {parts.indentText?.()}
+                    {parts.expandIcon?.()}
+                    {parts.selection?.()}
+                    <span style={{ 'margin-inline-start': '8px' }}>
+                        <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-inline-end': '12px' }} />
                         {text}
                     </span>
                 </span>
@@ -65,7 +65,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}

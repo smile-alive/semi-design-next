@@ -4,14 +4,6 @@
     import { IconChevronUp } from '@fibrae/semi-icons-vue';
     import { Avatar, AvatarGroup, MarkdownRender } from '@fibrae/semi-ui-vue';
 
-    interface Source {
-        avatar: string;
-        url: string;
-        title: string;
-        subTitle: string;
-        content: string;
-    }
-
     const roleInfo = {
         user: {
             name: 'User',
@@ -37,8 +29,6 @@
 
     let id = 0;
     const getId = () => `id-${id++}`;
-
-    const sourcesOf = (item: ChatMessage): Source[] | undefined => item.source;
 
     const message = ref<ChatMessage[]>([
         {
@@ -84,22 +74,14 @@
             message.value = [...message.value, newAssistantMessage];
         }, 200);
     };
-
-    const buttonReset = {
-        border: 'none',
-        background: 'var(--semi-color-tertiary-light-hover)',
-        borderRadius: '16px',
-        fontFamily: 'inherit',
-        lineHeight: 'inherit',
-    };
 </script>
 
 <template>
     <Chat v-model:chats="message" :roleConfig="roleInfo" :style="commonOuterStyle" :uploadProps="uploadProps" @messageSend="onMessageSend">
-        <template #content="{ message: item, class: contentClass }">
-            <div :class="contentClass">
+        <template #content="props">
+            <div :class="props.class">
                 <div
-                    v-if="sourcesOf(item)"
+                    v-if="props.message.source"
                     :style="{
                         transition: collapsed ? 'height 0.4s ease, width 0.4s ease' : 'height 0.4s ease',
                         height: collapsed ? '30px' : '200px',
@@ -113,35 +95,43 @@
                     <button
                         v-show="collapsed"
                         :style="{
-                            ...buttonReset,
                             display: 'flex',
                             width: 'fit-content',
                             columnGap: '10px',
+                            border: 'none',
+                            background: 'var(--semi-color-tertiary-light-hover)',
+                            borderRadius: '16px',
                             padding: '5px 10px',
                             cursor: 'pointer',
+                            fontFamily: 'inherit',
                             fontSize: '14px',
+                            lineHeight: 'inherit',
                             color: 'var(--semi-color-text-1)',
                         }"
                         type="button"
                         @click="collapsed = false"
                     >
-                        <span>基于{{ sourcesOf(item)?.length }}个搜索来源</span>
+                        <span>基于{{ props.message.source.length }}个搜索来源</span>
                         <AvatarGroup size="extra-extra-small">
-                            <Avatar v-for="(s, index) in sourcesOf(item)" :key="index" alt="" :src="s.avatar" />
+                            <Avatar v-for="(s, index) in props.message.source" :key="index" alt="" :src="s.avatar" />
                         </AvatarGroup>
                     </button>
                     <button
                         v-show="!collapsed"
                         :style="{
-                            ...buttonReset,
                             width: '100%',
                             height: '100%',
                             boxSizing: 'border-box',
                             display: 'flex',
                             flexDirection: 'column',
+                            border: 'none',
+                            background: 'var(--semi-color-tertiary-light-hover)',
+                            borderRadius: '16px',
                             padding: '12px',
-                            textAlign: 'start',
+                            textAlign: 'left',
+                            fontFamily: 'inherit',
                             fontSize: 'inherit',
+                            lineHeight: 'inherit',
                             color: 'inherit',
                         }"
                         type="button"
@@ -152,7 +142,7 @@
                             <IconChevronUp />
                         </span>
                         <span style="display: flex; flex-wrap: wrap; gap: 10px; overflow: scroll; padding: 5px 10px">
-                            <span v-for="s in sourcesOf(item)" :key="s.url" style="display: flex; flex-direction: column; row-gap: 5px; flex-basis: 150px; flex-grow: 1; border: 1px solid var(--semi-color-border); border-radius: 12px; padding: 12px; font-size: 12px">
+                            <span v-for="s in props.message.source" :key="s.url" style="display: flex; flex-direction: column; row-gap: 5px; flex-basis: 150px; flex-grow: 1; border: 1px solid var(--semi-color-border); border-radius: 12px; padding: 12px; font-size: 12px">
                                 <span style="display: flex; column-gap: 5px; align-items: center">
                                     <Avatar alt="" shape="square" :src="s.avatar" style="width: 16px; height: 16px; flex-shrink: 0" />
                                     <span style="color: var(--semi-color-text-2); text-overflow: ellipsis">
@@ -167,7 +157,7 @@
                         </span>
                     </button>
                 </div>
-                <MarkdownRender :raw="typeof item.content === 'string' ? item.content : ''" />
+                <MarkdownRender :raw="typeof props.message.content === 'string' ? props.message.content : ''" />
             </div>
         </template>
     </Chat>

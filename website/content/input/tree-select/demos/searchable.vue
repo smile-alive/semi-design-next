@@ -38,8 +38,6 @@
         },
     ];
 
-    const dropdownStyle = { maxHeight: '400px', overflow: 'auto' };
-
     const onSearch = (inputValue: string, filteredExpandedKeys: string[], filteredNodes: TreeNodeData[]) => {
         console.log('onSearch', inputValue, filteredExpandedKeys, filteredNodes);
     };
@@ -50,11 +48,11 @@
     <Switch v-model="showFilteredOnly" aria-labelledby="treeselect-searchable-filtered-only" size="small" />
     <br />
     <br />
-    <TreeSelect :dropdownStyle="dropdownStyle" filterTreeNode placeholder="单选可搜索的" :showFilteredOnly="showFilteredOnly" style="width: 300px" :treeData="treeData" @search="onSearch" />
+    <TreeSelect :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" filterTreeNode placeholder="单选可搜索的" :showFilteredOnly="showFilteredOnly" style="width: 300px" :treeData="treeData" @search="onSearch" />
     <br />
     <br />
-    <TreeSelect :dropdownStyle="dropdownStyle" filterTreeNode :maxTagCount="2" multiple placeholder="多选可搜索的" searchPlaceholder="请输入关键字开始搜索" :showFilteredOnly="showFilteredOnly" style="width: 300px" :treeData="treeData" @search="onSearch" />
+    <TreeSelect :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" filterTreeNode :maxTagCount="2" multiple placeholder="多选可搜索的" searchPlaceholder="请输入关键字开始搜索" :showFilteredOnly="showFilteredOnly" style="width: 300px" :treeData="treeData" @search="onSearch" />
     <br />
     <br />
-    <TreeSelect :dropdownStyle="dropdownStyle" filterTreeNode :maxTagCount="2" multiple placeholder="搜索框autofocus" searchAutoFocus searchPlaceholder="autofocus" :showFilteredOnly="showFilteredOnly" style="width: 300px" :treeData="treeData" @search="onSearch" />
+    <TreeSelect :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" filterTreeNode :maxTagCount="2" multiple placeholder="搜索框autofocus" searchAutoFocus searchPlaceholder="autofocus" :showFilteredOnly="showFilteredOnly" style="width: 300px" :treeData="treeData" @search="onSearch" />
 </template>

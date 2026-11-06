@@ -1,31 +1,31 @@
 import { IconUpload, IconClose } from '@fibrae/semi-icons-react';
 import { Upload, Button, type FileItem } from '@fibrae/semi-ui-react';
 
+const action = 'https://api.semi.design/upload';
+
+const defaultFileList: FileItem[] = [
+    {
+        uid: '1',
+        name: 'document.pdf',
+        status: 'success',
+        size: '130KB',
+    },
+    {
+        uid: '2',
+        name: 'report.xlsx',
+        status: 'success',
+        size: '222KB',
+    },
+];
+
 export default function UploadDemo() {
-    let action = 'https://api.semi.design/upload';
-
-    const defaultFileList: FileItem[] = [
-        {
-            uid: '1',
-            name: 'document.pdf',
-            status: 'success',
-            size: '130KB',
-        },
-        {
-            uid: '2',
-            name: 'report.xlsx',
-            status: 'success',
-            size: '222KB',
-        },
-    ];
-
     return (
         <>
             <Upload
                 action={action}
                 defaultFileList={defaultFileList}
                 style={{ marginBottom: 20 }}
-                fileListTitle={({ fileList, onClear, clearText }) => (
+                fileListTitle={(title) => (
                     <div
                         style={{
                             display: 'flex',
@@ -34,9 +34,9 @@ export default function UploadDemo() {
                             width: '100%',
                         }}
                     >
-                        <span style={{ color: 'var(--semi-color-primary)' }}>📂 共 {fileList.length} 个文件</span>
-                        <Button size="small" type="danger" icon={<IconClose />} onClick={onClear}>
-                            {clearText}
+                        <span style={{ color: 'var(--semi-color-primary)' }}>📂 共 {title.fileList.length} 个文件</span>
+                        <Button size="small" type="danger" icon={<IconClose />} onClick={title.onClear}>
+                            {title.clearText}
                         </Button>
                     </div>
                 )}
@@ -48,7 +48,7 @@ export default function UploadDemo() {
             <Upload
                 action={action}
                 defaultFileList={defaultFileList}
-                fileListTitle={({ fileList, onClear }) => (
+                fileListTitle={(title) => (
                     <div
                         style={{
                             display: 'flex',
@@ -58,11 +58,11 @@ export default function UploadDemo() {
                         }}
                     >
                         <span>
-                            已选择 <strong style={{ color: 'var(--semi-color-danger)' }}>{fileList.length}</strong> 个文件
+                            已选择 <strong style={{ color: 'var(--semi-color-danger)' }}>{title.fileList.length}</strong> 个文件
                         </span>
                         <button
                             type="button"
-                            onClick={onClear}
+                            onClick={title.onClear}
                             style={{
                                 padding: 0,
                                 border: 'none',

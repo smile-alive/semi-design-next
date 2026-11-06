@@ -4,18 +4,26 @@ import { Button, Toast } from '@fibrae/semi-ui-solid';
 export default function ToastDemo() {
     const [toastId, setToastId] = createSignal<string | null>(null);
 
+    const destroy = () => setToastId(null);
+
+    const opts = {
+        content: 'Not auto close',
+        duration: 0,
+        onClose: destroy,
+    };
+
     const show = () => {
         if (toastId()) {
             return;
         }
-        setToastId(Toast.info({ content: 'Not auto close', duration: 0, onClose: () => setToastId(null) }));
+        setToastId(Toast.info(opts));
     };
     const hide = () => {
         const id = toastId();
         if (id) {
             Toast.close(id);
         }
-        setToastId(null);
+        destroy();
     };
 
     return (

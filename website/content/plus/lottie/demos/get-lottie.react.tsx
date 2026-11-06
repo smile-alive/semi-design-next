@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { Lottie } from '@fibrae/semi-ui-react';
 
-export default function LottieDemo() {
-    const jsonURL = '/assets/root-web-sites/lottie_demo.json';
+const jsonURL = '/assets/root-web-sites/lottie_demo.json';
 
+export default function LottieDemo() {
     useEffect(() => {
         void Lottie.getLottie().then((lottie) => console.log('lottie', lottie));
     }, []);

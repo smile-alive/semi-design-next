@@ -29,10 +29,12 @@
     let id = 0;
     const getId = () => `id-${id++}`;
 
-    const formatTime = (createAt = Date.now()) => {
-        const date = new Date(createAt);
-        return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-    };
+    function formatTime(createAt?: number) {
+        const date = new Date(createAt ?? Date.now());
+        const hours = ('0' + date.getHours()).slice(-2);
+        const minutes = ('0' + date.getMinutes()).slice(-2);
+        return `${hours}:${minutes}`;
+    }
 
     const message = ref<ChatMessage[]>([
         {
@@ -84,7 +86,7 @@
     <span style="display: flex; flex-direction: column; row-gap: 8px; margin-bottom: 5px">
         <span style="display: flex; align-items: center; column-gap: 10px">
             头像渲染模式
-            <RadioGroup v-model="avatar" type="button">
+            <RadioGroup v-model="avatar" aria-label="头像渲染模式" type="button">
                 <Radio value="default">默认头像</Radio>
                 <Radio value="null">无头像</Radio>
                 <Radio value="custom">自定义头像</Radio>
@@ -92,7 +94,7 @@
         </span>
         <span style="display: flex; align-items: center; column-gap: 10px">
             标题渲染模式
-            <RadioGroup v-model="title" type="button">
+            <RadioGroup v-model="title" aria-label="标题渲染模式" type="button">
                 <Radio value="default">默认标题</Radio>
                 <Radio value="null">无标题</Radio>
                 <Radio value="custom">自定义标题</Radio>
@@ -100,14 +102,14 @@
         </span>
     </span>
     <Chat :key="`${avatar}${title}`" v-model:chats="message" class="component-chat-demo-custom-render" :roleConfig="roleInfo" :style="commonOuterStyle" :uploadProps="uploadProps" @messageSend="onMessageSend">
-        <template v-if="avatar === 'custom'" #avatar="{ role }">
-            <Avatar shape="square" size="extra-small" style="flex-shrink: 0">{{ role.name }}</Avatar>
+        <template v-if="avatar === 'custom'" #avatar="props">
+            <Avatar shape="square" size="extra-small" style="flex-shrink: 0">{{ props.role.name }}</Avatar>
         </template>
         <template v-else-if="avatar === 'null'" #avatar />
-        <template v-if="title === 'custom'" #title="{ role, message: item }">
+        <template v-if="title === 'custom'" #title="props">
             <span class="title">
-                {{ role.name }}
-                <span class="time">{{ formatTime(item.createAt) }}</span>
+                {{ props.role.name }}
+                <span class="time">{{ formatTime(props.message.createAt) }}</span>
             </span>
         </template>
         <template v-else-if="title === 'null'" #title />

@@ -11,11 +11,11 @@ export default function PinCodeDemo() {
             <PinCode
                 aria-label="Verification code"
                 format="mixed"
-                onComplete={(value) => console.log('pincode: ', value)}
+                onComplete={(code) => console.log('pincode: ', code)}
                 value={value}
-                onChange={(v) => {
-                    console.log(v);
-                    setValue(v);
+                onChange={(code) => {
+                    console.log(code);
+                    setValue(code);
                 }}
             />
         </>

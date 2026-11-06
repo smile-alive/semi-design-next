@@ -1,8 +1,6 @@
 import { createSignal } from 'solid-js';
 import { Sidebar } from '@fibrae/semi-ai-solid';
 
-const { CodeContent } = Sidebar;
-
 const defaultCodes = [
     {
         name: 'Component.js',
@@ -146,7 +144,7 @@ export default function SidebarDemo() {
 
     return (
         <div class="semi-sidebar-main">
-            <CodeContent style={{ width: '600px' }} activeKey={activeKey()} codes={defaultCodes} onChange={setActiveKey} />
+            <Sidebar.CodeContent style={{ width: '600px' }} activeKey={activeKey()} codes={defaultCodes} onChange={setActiveKey} />
         </div>
     );
 }

@@ -17,7 +17,7 @@
 </script>
 
 <div>
-    <RadioGroup bind:value style="margin-top: 14px; margin-bottom: 14px" type="button">
+    <RadioGroup bind:value style="margin-block-start: 14px; margin-block-end: 14px" type="button">
         {#each keys as key (key)}
             <Radio value={key}>
                 <span style={`color: var(--semi-color-${key === 'default' ? 'primary' : key})`}>{key}</span>

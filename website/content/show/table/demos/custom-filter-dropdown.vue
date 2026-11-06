@@ -44,8 +44,20 @@
     const dataSource = getData();
     const filteredValue = ref<string[]>([]);
 
-    // composition makes the Input report the value once an IME composition ends
+    let isComposition = false;
+
     const handleChange = (value: string) => {
+        if (isComposition) {
+            return;
+        }
+        filteredValue.value = value ? [value] : [];
+    };
+    const handleCompositionStart = () => {
+        isComposition = true;
+    };
+    const handleCompositionEnd = (event: CompositionEvent) => {
+        isComposition = false;
+        const value = event.target instanceof HTMLInputElement ? event.target.value : '';
         filteredValue.value = value ? [value] : [];
     };
 
@@ -83,12 +95,12 @@
         <template #headerCell="{ column, title }">
             <Space v-if="column.dataIndex === 'name'">
                 <span>{{ title }}</span>
-                <Input composition placeholder="请输入筛选值" showClear :style="{ width: '200px' }" @change="handleChange" />
+                <Input placeholder="请输入筛选值" showClear :style="{ width: '200px' }" @change="handleChange" @compositionend="handleCompositionEnd" @compositionstart="handleCompositionStart" />
             </Space>
         </template>
         <template #cell="{ column, record, text }">
             <div v-if="column.dataIndex === 'name'">
-                <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginRight: '12px' }" />
+                <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginInlineEnd: '12px' }" />
                 {{ text }}
             </div>
             <template v-else-if="column.dataIndex === 'size'">{{ text }} KB</template>
@@ -99,7 +111,7 @@
                 {{ tagConfig[text as Row['status']].text }}
             </Tag>
             <div v-else-if="column.dataIndex === 'owner'">
-                <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
+                <Avatar :color="record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
                     {{ typeof text === 'string' && text.slice(0, 1) }}
                 </Avatar>
                 {{ text }}

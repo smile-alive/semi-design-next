@@ -1,7 +1,7 @@
 import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-solid';
 import { Popover, Space, Empty, Tag } from '@fibrae/semi-ui-solid';
 
-const style = { border: '2px solid var(--semi-color-border)', 'padding-left': '4px', 'padding-right': '4px', 'border-radius': '4px' };
+const style = { border: '2px solid var(--semi-color-border)', 'padding-inline-start': '4px', 'padding-inline-end': '4px', 'border-radius': '4px' };
 
 const content = () => (
     <Empty
@@ -17,15 +17,9 @@ export default function PopoverDemo() {
     return (
         <Space>
             <Popover content={content}>
-                {(trigger) => (
-                    <span {...trigger()} style={style}>
-                        Function
-                    </span>
-                )}
-            </Popover>
-            <Popover content={content}>
                 <Tag style={style}>Component</Tag>
             </Popover>
+            <Popover content={content}>Text</Popover>
             <Popover content={content}>
                 <span style={style}>DOM</span>
             </Popover>

@@ -37,15 +37,15 @@
 </script>
 
 <Form getFormApi={(api) => (formApi = api)} {initValues} labelPosition="left" labelWidth="180px" style="width: 500px">
-    {#snippet children({ values })}
+    {#snippet children(form)}
         <Button onclick={add}>添加</Button>
-        {#each values.effects ?? [] as effect, i (effect.key)}
+        {#each form.values.effects ?? [] as effect, i (effect.key)}
             <div style="width: 1000px; display: flex">
-                <FormInput aria-label={`特效 ${i + 1} 名称`} field={`effects[${i}].name`} style="width: 200px; margin-right: 12px" />
+                <FormInput aria-label={`特效 ${i + 1} 名称`} field={`effects[${i}].name`} style="width: 200px; margin-inline-end: 12px" />
                 <FormSelect field={`effects[${i}].type`} optionList={typeOptions} style="width: 90px" />
                 <Button style="margin: 12px" type="danger" onclick={() => remove(effect.key)}>删除</Button>
             </div>
         {/each}
-        <TextArea aria-label="表单值" style="margin-top: 10px" value={JSON.stringify(values)} />
+        <TextArea aria-label="表单值" style="margin-block-start: 10px" value={JSON.stringify(form.formState.values)} />
     {/snippet}
 </Form>

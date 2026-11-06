@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Chat, type ChatMessage } from '@fibrae/semi-ai-svelte';
 
-    const roleConfig = {
+    const roleInfo = {
         user: {
             name: 'User',
             avatar: '/assets/docs-icon.png',
@@ -16,12 +16,13 @@
         },
     };
 
+    const commonOuterStyle = 'border: 1px solid var(--semi-color-border); border-radius: 16px; height: 400px';
     const uploadProps = { action: 'https://api.semi.design/upload' };
 
     let id = 0;
     const getId = () => `id-${id++}`;
 
-    let messages = $state<ChatMessage[]>([
+    let message = $state<ChatMessage[]>([
         {
             role: 'assistant',
             id: '1',
@@ -49,9 +50,9 @@
             content: '这是一条 mock 回复信息',
         };
         setTimeout(() => {
-            messages = [...messages, newAssistantMessage];
+            message = [...message, newAssistantMessage];
         }, 200);
     };
 </script>
 
-<Chat bind:chats={messages} {onMessageSend} {roleConfig} style="border: 1px solid var(--semi-color-border); border-radius: 16px; height: 400px" {uploadProps} />
+<Chat bind:chats={message} {onMessageSend} roleConfig={roleInfo} style={commonOuterStyle} {uploadProps} />

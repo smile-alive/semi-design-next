@@ -4,7 +4,7 @@ import { Upload, Button, type UploadCustomRequestArgs } from '@fibrae/semi-ui-re
 export default function UploadDemo() {
     const mockRequest = ({ onProgress, onSuccess }: UploadCustomRequestArgs) => {
         let count = 0;
-        let interval = setInterval(() => {
+        const interval = setInterval(() => {
             if (count === 100) {
                 clearInterval(interval);
                 onSuccess({});

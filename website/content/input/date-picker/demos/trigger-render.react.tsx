@@ -4,7 +4,7 @@ import { IconClose, IconChevronDown } from '@fibrae/semi-icons-react';
 import { DatePicker, Button, ButtonGroup } from '@fibrae/semi-ui-react';
 
 export default function DatePickerDemo() {
-    const [date, setDate] = useState<Date | null>(() => new Date(2019, 6, 23, 12));
+    const [date, setDate] = useState<Date | null>(() => new Date(2024, 4, 6, 10, 30, 0));
     const formatToken = 'yyyy-MM-dd';
     const onChange = useCallback((date: Date | Date[]) => {
         setDate(date as Date);
@@ -19,11 +19,11 @@ export default function DatePickerDemo() {
             onChange={onChange}
             value={date}
             format={formatToken}
-            triggerRender={({ placeholder }) => (
+            triggerRender={(triggerProps) => (
                 // The clear button is a sibling of the trigger button: buttons cannot nest
                 <ButtonGroup theme="light">
                     <Button icon={<IconChevronDown />} iconPosition="right">
-                        {(date && dateFns.format(date, formatToken)) || placeholder}
+                        {Array.isArray(triggerProps.value) && triggerProps.value.length ? dateFns.format(triggerProps.value[0], formatToken) : triggerProps.placeholder}
                     </Button>
                     {date && <Button icon={<IconClose />} aria-label="清除" onClick={onClear} />}
                 </ButtonGroup>

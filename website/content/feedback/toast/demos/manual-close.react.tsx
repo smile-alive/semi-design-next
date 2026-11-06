@@ -3,24 +3,23 @@ import { Toast, Button } from '@fibrae/semi-ui-react';
 
 export default function ToastDemo() {
     const [toastId, setToastId] = useState<string | null>(null);
+    const destroy = () => setToastId(null);
+    const opts = {
+        content: 'Not auto close',
+        duration: 0,
+        onClose: destroy,
+    };
     const show = () => {
         if (toastId) {
             return;
         }
-        let id = Toast.info(opts);
-        setToastId(id);
+        setToastId(Toast.info(opts));
     };
     const hide = () => {
         if (toastId) {
             Toast.close(toastId);
         }
         destroy();
-    };
-    const destroy = () => setToastId(null);
-    let opts = {
-        content: 'Not auto close',
-        duration: 0,
-        onClose: destroy,
     };
     return (
         <>

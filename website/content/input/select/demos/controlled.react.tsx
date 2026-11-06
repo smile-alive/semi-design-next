@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Select } from '@fibrae/semi-ui-react';
 
 export default function SelectDemo() {
-    let [value, setValue] = useState<string | undefined>('xigua');
+    const [value, setValue] = useState<string | undefined>('xigua');
     return (
         <>
             <Select aria-label="业务线" value={value} style={{ width: '300px' }} onChange={setValue} placeholder="受控的Select">

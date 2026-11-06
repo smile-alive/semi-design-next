@@ -2,14 +2,25 @@
     import { IconFile, IconUpload } from '@fibrae/semi-icons-svelte';
     import { Button, Image, Upload, type FileItem } from '@fibrae/semi-ui-svelte';
 
-    const url = '/assets/root-web-sites/edit-bag.jpeg';
-    const fileList: FileItem[] = [
-        { uid: '1', name: 'dyBag.png', status: 'success', size: '130KB', url },
-        { uid: '2', name: 'dyBag2.png', status: 'success', size: '130KB', url },
+    const defaultFileList: FileItem[] = [
+        {
+            uid: '1',
+            name: 'dyBag.png',
+            status: 'success',
+            size: '130KB',
+            url: '/assets/root-web-sites/edit-bag.jpeg',
+        },
+        {
+            uid: '2',
+            name: 'dyBag2.png',
+            status: 'success',
+            size: '130KB',
+            url: '/assets/root-web-sites/edit-bag.jpeg',
+        },
     ];
 </script>
 
-<Upload action="https://api.semi.design/upload" {fileList}>
+<Upload action="https://api.semi.design/upload" fileList={defaultFileList}>
     {#snippet previewFile({ file })}
         {#if file.uid === '1'}
             <IconFile size="large" />

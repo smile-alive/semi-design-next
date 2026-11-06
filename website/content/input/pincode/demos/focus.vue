@@ -4,9 +4,6 @@
 
     const value = ref('69af41');
     const pinCode = useTemplateRef<PinCodeHandle>('pinCode');
-
-    const onComplete = (code: string) => console.log('pincode: ', code);
-    const onChange = (code: string) => console.log(code);
 </script>
 
 <template>
@@ -14,6 +11,6 @@
         <Button @click="pinCode?.focus(2)">Focus Third Input</Button>
         <br />
         <br />
-        <PinCode ref="pinCode" v-model="value" aria-label="Verification code" format="mixed" @change="onChange" @complete="onComplete" />
+        <PinCode ref="pinCode" v-model="value" aria-label="Verification code" format="mixed" @change="(code: string) => console.log(code)" @complete="(code: string) => console.log('pincode: ', code)" />
     </div>
 </template>

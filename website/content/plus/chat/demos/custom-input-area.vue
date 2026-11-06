@@ -44,7 +44,7 @@
     let id = 0;
     const getId = () => `id-${id++}`;
 
-    const messages = ref<Message[]>([
+    const message = ref<Message[]>([
         {
             role: 'system',
             id: '1',
@@ -66,7 +66,7 @@
             content: `This is a mock response`,
         };
         setTimeout(() => {
-            messages.value = [...messages.value, newAssistantMessage];
+            message.value = [...message.value, newAssistantMessage];
         }, 200);
     };
 
@@ -76,7 +76,7 @@
             return;
         }
         const values = api.getValues();
-        if (values.name?.length || values.file?.length) {
+        if ((values.name && values.name.length !== 0) || (values.file && values.file.length !== 0)) {
             onSend(values.name, values.file);
             api.reset();
         }
@@ -84,8 +84,8 @@
 </script>
 
 <template>
-    <Chat v-model:chats="messages" :roleConfig="roleInfo" :style="commonOuterStyle" :uploadProps="uploadProps" @messageSend="onMessageSend">
-        <template #inputArea="area">
+    <Chat v-model:chats="message" :roleConfig="roleInfo" :style="commonOuterStyle" :uploadProps="uploadProps" @messageSend="onMessageSend">
+        <template #inputArea="props">
             <div :style="inputStyle">
                 <Form @getFormApi="setFormApi">
                     <strong>输入信息</strong>
@@ -99,7 +99,7 @@
                         </Button>
                     </FormUpload>
                 </Form>
-                <Button :style="{ width: 'fit-content' }" @click="submit(area.onSend)">提交</Button>
+                <Button :style="{ width: 'fit-content' }" @click="submit(props.onSend)">提交</Button>
             </div>
         </template>
     </Chat>

@@ -1,16 +1,16 @@
 import { Table, type ColumnProps } from '@fibrae/semi-ui-solid';
 
-interface Row {
+interface TreeRow {
     key?: number;
     dataKey: string;
     name: string;
     type: string;
     description: string;
     default: string;
-    children?: Row[];
+    children?: TreeRow[];
 }
 
-const columns: ColumnProps<Row>[] = [
+const columns: ColumnProps<TreeRow>[] = [
     {
         title: 'Key',
         dataIndex: 'dataKey',
@@ -41,7 +41,7 @@ const columns: ColumnProps<Row>[] = [
     },
 ];
 
-const data: Row[] = [
+const data: TreeRow[] = [
     {
         key: 1,
         dataKey: 'videos_info',

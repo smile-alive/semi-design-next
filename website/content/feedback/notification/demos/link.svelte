@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { Button, Notification, TypographyText } from '@fibrae/semi-ui-svelte';
+    import { Button, Notification, Typography } from '@fibrae/semi-ui-svelte';
 </script>
 
 {#snippet content()}
     <div>Hi, Bytedance dance dance</div>
-    <div style="margin-top: 8px">
-        <TypographyText link>查看详情</TypographyText>
-        <TypographyText link style="margin-left: 20px">一会再看</TypographyText>
+    <div style="margin-block-start: 8px">
+        <Typography.Text link>查看详情</Typography.Text>
+        <Typography.Text link style="margin-inline-start: 20px">一会再看</Typography.Text>
     </div>
 {/snippet}
 

@@ -1,11 +1,13 @@
-import { Tag, Space } from '@fibrae/semi-ui-react';
+import { Space, Tag, type TagColor } from '@fibrae/semi-ui-react';
+
+const colors: TagColor[] = ['amber', 'blue', 'cyan', 'green', 'grey', 'indigo', 'light-blue', 'light-green', 'lime', 'orange', 'pink', 'purple', 'red', 'teal', 'violet', 'yellow', 'white'];
 
 export default function TagDemo() {
     return (
         <Space wrap>
-            {(['amber', 'blue', 'cyan', 'green', 'grey', 'indigo', 'light-blue', 'light-green', 'lime', 'orange', 'pink', 'purple', 'red', 'teal', 'violet', 'yellow', 'white'] as const).map((item) => (
-                <Tag color={item} key={item}>
-                    {item}
+            {colors.map((color) => (
+                <Tag color={color} key={color}>
+                    {color}
                 </Tag>
             ))}
         </Space>

@@ -39,7 +39,7 @@
     };
 </script>
 
-<Button disabled={streaming} style="margin-bottom: 12px" onclick={send}>发送消息</Button>
+<Button disabled={streaming} style="margin-block-end: 12px" onclick={send}>发送消息</Button>
 <div style="height: 320px">
     <AIChatDialogue bind:chats={messages} {roleConfig} />
 </div>

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { TreeSelect, type TreeNodeData } from '@fibrae/semi-ui-svelte';
 
-    let treeData = $state.raw<TreeNodeData[]>([
+    const initialData: TreeNodeData[] = [
         {
             label: 'Expand to load',
             value: '0',
@@ -18,10 +18,10 @@
             key: '2',
             isLeaf: true,
         },
-    ]);
+    ];
 
-    const updateTreeData = (list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] =>
-        list.map((node) => {
+    const updateTreeData = (list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] => {
+        return list.map((node) => {
             if (node.key === key) {
                 return { ...node, children };
             }
@@ -30,9 +30,12 @@
             }
             return node;
         });
+    };
 
-    const loadData = ({ key, children }: TreeNodeData) =>
-        new Promise<void>((resolve) => {
+    let treeData = $state.raw(initialData);
+
+    const onLoadData = ({ key, children }: TreeNodeData) => {
+        return new Promise<void>((resolve) => {
             if (children) {
                 resolve();
                 return;
@@ -51,6 +54,7 @@
                 resolve();
             }, 1000);
         });
+    };
 </script>
 
-<TreeSelect {loadData} placeholder="请选择" style="width: 300px" {treeData} />
+<TreeSelect loadData={onLoadData} placeholder="请选择" style="width: 300px" {treeData} />

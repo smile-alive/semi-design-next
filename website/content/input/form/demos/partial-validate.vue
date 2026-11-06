@@ -9,7 +9,7 @@
         if (!val) {
             return "can't be empty";
         } else if (val.length <= 5) {
-            return '我是传入的节点';
+            return '长度需大于 5';
         }
         return undefined;
     };
@@ -37,7 +37,7 @@
 
 <template>
     <Form autoScrollToError layout="horizontal" @getFormApi="(api) => (formApi = api)">
-        <template #default="{ values }">
+        <template #default="form">
             <div>
                 <FormInput field="a[1]" trigger="blur" :validator="validate" />
                 <FormInput field="a[0]" trigger="blur" :validator="validate" />
@@ -53,7 +53,7 @@
                 <Space>
                     <Button htmlType="reset">reset</Button>
                     <Button @click="validatePartial('all')">all validate</Button>
-                    <Button @click="validatePartial()">partial validate {{ JSON.stringify(values.validateScope) }}</Button>
+                    <Button @click="validatePartial()">partial validate {{ JSON.stringify(form.values.validateScope) }}</Button>
                     <Button @click="resetPartial">partial reset</Button>
                 </Space>
             </div>

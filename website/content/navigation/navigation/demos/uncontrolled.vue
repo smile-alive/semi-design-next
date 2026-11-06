@@ -15,8 +15,8 @@
 
 <template>
     <Nav :bodyStyle="{ height: '300px' }" :defaultOpenKeys="['job']" :defaultSelectedKeys="['信息录入']" defaultIsCollapsed :footer="{ collapseButton: true }" :items="items">
-        <template #icon="{ item }">
-            <component :is="iconOf(item)" />
+        <template #icon="renderProps">
+            <component :is="iconOf(renderProps.item)" />
         </template>
         <Nav.Header text="Semi 运营后台">
             <template #logo>

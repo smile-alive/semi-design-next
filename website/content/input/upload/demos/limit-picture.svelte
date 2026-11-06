@@ -2,7 +2,7 @@
     import { IconPlus } from '@fibrae/semi-icons-svelte';
     import { Toast, Upload, type FileItem } from '@fibrae/semi-ui-svelte';
 
-    const fileList: FileItem[] = [
+    const defaultFileList: FileItem[] = [
         {
             uid: '1',
             name: 'dyBag.png',
@@ -23,6 +23,6 @@
     ];
 </script>
 
-<Upload accept="image/*" action="https://api.semi.design/upload" {fileList} limit={2} listType="picture" onExceed={() => Toast.warning('最多只允许上传2个文件')}>
+<Upload accept="image/*" action="https://api.semi.design/upload" fileList={defaultFileList} limit={2} listType="picture" onExceed={() => Toast.warning('最多只允许上传2个文件')}>
     <IconPlus aria-label="上传图片" size="extra-large" />
 </Upload>

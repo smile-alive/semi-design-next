@@ -1,6 +1,6 @@
 import { Tree, Typography, type TreeNodeData } from '@fibrae/semi-ui-solid';
 
-const treeDataWithNode: TreeNodeData[] = [
+const treeData: TreeNodeData[] = [
     {
         label: '亚洲亚洲亚洲亚洲亚洲亚洲亚洲亚洲亚洲亚洲亚洲亚洲',
         value: 'yazhou',
@@ -33,5 +33,5 @@ const renderLabel = (label?: string | number) => (
 );
 
 export default function TreeDemo() {
-    return <Tree treeData={treeDataWithNode} renderLabel={renderLabel} style={treeStyle} />;
+    return <Tree treeData={treeData} renderLabel={renderLabel} style={treeStyle} />;
 }

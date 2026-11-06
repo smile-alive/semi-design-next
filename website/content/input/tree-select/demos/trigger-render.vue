@@ -28,11 +28,11 @@
 
 <template>
     <TreeSelect filterTreeNode multiple placeholder="Custom Trigger" searchPosition="trigger" style="width: 300px" :treeData="treeData" @change="onChange">
-        <template #trigger="{ value, inputValue, onSearch, onRemove }">
-            <TagInput :inputValue="inputValue" :modelValue="value.flatMap((item) => item.key ?? [])" @inputChange="onSearch">
-                <template #tag="{ value: key }">
-                    <Tag :key="key" closable style="margin-inline-start: 2px" :tagKey="key" @close="onRemove(key)">
-                        {{ value.find((item) => item.key === key)?.label }}
+        <template #trigger="triggerState">
+            <TagInput :inputValue="triggerState.inputValue" :modelValue="triggerState.value.flatMap((item) => item.key ?? [])" @inputChange="triggerState.onSearch">
+                <template #tag="tagItem">
+                    <Tag closable style="margin-inline-start: 2px" :tagKey="tagItem.value" @close="triggerState.onRemove(tagItem.value)">
+                        {{ triggerState.value.find((item) => item.key === tagItem.value)?.label }}
                     </Tag>
                 </template>
             </TagInput>

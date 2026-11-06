@@ -12,8 +12,8 @@
 
 <div>
     <AvatarGroup {items} maxCount={3}>
-        {#snippet item({ item })}
-            {initials(item.alt)}
+        {#snippet item(context)}
+            {initials(context.item.alt)}
         {/snippet}
     </AvatarGroup>
 </div>

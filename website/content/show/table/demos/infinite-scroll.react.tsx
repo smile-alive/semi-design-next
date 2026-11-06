@@ -47,7 +47,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ marginRight: 4 }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ marginInlineEnd: 4 }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}
@@ -79,24 +79,24 @@ function getPage(start: number) {
             name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
             owner: isSemiDesign ? '姜鹏志' : '郝宣',
             size: randomNumber,
-            updateTime: new Date(2019, 6, 23, 12).valueOf() + randomNumber * DAY,
+            updateTime: new Date(2024, 4, 6, 12).valueOf() + randomNumber * DAY,
             avatarBg: isSemiDesign ? 'grey' : 'red',
         });
     }
     return page;
 }
 
+const scroll = { y: 600, x: 1000 };
+const style = { width: 750, margin: '0 auto' };
+const itemSize = 56;
+
 export default function TableDemo() {
     const [data, setData] = useState(() => getPage(0));
-
-    const scroll = { y: 600, x: 1000 };
-    const style = { width: 750, margin: '0 auto' };
 
     const loadMore = () => {
         setData([...data, ...getPage(data.length)]);
     };
 
-    const itemSize = 56;
     const virtualized: TableVirtualizedProps = {
         itemSize,
         onScroll: ({ scrollDirection, scrollOffset = 0, scrollUpdateWasRequested }) => {

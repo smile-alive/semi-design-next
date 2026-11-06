@@ -2,7 +2,7 @@
     import { shallowRef } from 'vue';
     import { TreeSelect, type TreeNodeData } from '@fibrae/semi-ui-vue';
 
-    const treeData = shallowRef<TreeNodeData[]>([
+    const initialData: TreeNodeData[] = [
         {
             label: 'Expand to load',
             value: '0',
@@ -19,7 +19,7 @@
             key: '2',
             isLeaf: true,
         },
-    ]);
+    ];
 
     const updateTreeData = (list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] => {
         return list.map((node) => {
@@ -33,7 +33,9 @@
         });
     };
 
-    const loadData = ({ key, children }: TreeNodeData) => {
+    const treeData = shallowRef(initialData);
+
+    const onLoadData = ({ key, children }: TreeNodeData) => {
         return new Promise<void>((resolve) => {
             if (children) {
                 resolve();
@@ -57,5 +59,5 @@
 </script>
 
 <template>
-    <TreeSelect :loadData="loadData" placeholder="请选择" style="width: 300px" :treeData="treeData" />
+    <TreeSelect :loadData="onLoadData" placeholder="请选择" style="width: 300px" :treeData="treeData" />
 </template>

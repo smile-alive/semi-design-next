@@ -33,6 +33,6 @@
 <template>
     <SchemaForm :schema="schema" :style="{ width: '480px' }" @submit="(values: z.output<typeof schema>) => (output = values)">
         <Button htmlType="submit" type="primary">提交</Button>
-        <pre v-if="output" :style="{ marginTop: '12px' }">{{ JSON.stringify(output, null, 2) }}</pre>
+        <pre v-if="output" :style="{ marginBlockStart: '12px' }">{{ JSON.stringify(output, null, 2) }}</pre>
     </SchemaForm>
 </template>

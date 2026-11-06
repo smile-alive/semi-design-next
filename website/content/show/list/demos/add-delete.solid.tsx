@@ -17,7 +17,7 @@ export default function ListDemo() {
 
     return (
         <div>
-            <div style={{ 'margin-right': '16px', width: '280px', display: 'flex', 'flex-wrap': 'wrap', border: '1px solid var(--semi-color-border)' }}>
+            <div style={{ 'margin-inline-end': '16px', width: '280px', display: 'flex', 'flex-wrap': 'wrap', border: '1px solid var(--semi-color-border)' }}>
                 <List
                     class="component-list-demo-booklist"
                     dataSource={list()}
@@ -26,13 +26,13 @@ export default function ListDemo() {
                     style={{ 'flex-basis': '100%', 'flex-shrink': '0', 'border-bottom': '1px solid var(--semi-color-border)' }}
                     renderItem={(item) => (
                         <li style={{ margin: '4px' }} class="list-item">
-                            <Button type="danger" theme="borderless" aria-label={`删除${item}`} icon={<IconMinusCircle />} onClick={() => updateList(item)} style={{ 'margin-right': '4px' }} />
+                            <Button type="danger" theme="borderless" aria-label={`删除${item}`} icon={<IconMinusCircle />} onClick={() => updateList(item)} style={{ 'margin-inline-end': '4px' }} />
                             {item}
                         </li>
                     )}
                 />
                 <div style={{ margin: '4px', 'font-size': '14px' }}>
-                    <Button theme="borderless" aria-label="新增书籍" icon={<IconPlusCircle />} onClick={() => updateList()} style={{ 'margin-right': '4px', color: 'var(--semi-color-info)' }} />
+                    <Button theme="borderless" aria-label="新增书籍" icon={<IconPlusCircle />} onClick={() => updateList()} style={{ 'margin-inline-end': '4px', color: 'var(--semi-color-info)' }} />
                     新增书籍
                 </div>
             </div>

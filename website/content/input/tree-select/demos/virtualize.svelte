@@ -1,9 +1,6 @@
 <script lang="ts">
     import { Button, TreeSelect, type TreeNodeData } from '@fibrae/semi-ui-svelte';
 
-    let treeData = $state.raw<TreeNodeData[]>([]);
-    let total = $state(0);
-
     // x: nodes per level. y: nodes with children per level. z: depth (0 is one level).
     const generateData = (x = 5, y = 4, z = 3) => {
         const data: TreeNodeData[] = [];
@@ -28,22 +25,21 @@
         };
         fill(z, '0', data);
 
-        let count = 0;
+        let total = 0;
         for (let n = z + 1; n >= 0; n--) {
-            count += x * y ** n;
+            total += x * y ** n;
         }
-        return { data, count };
+        return { gData: data, total };
     };
+
+    let gData = $state.raw<TreeNodeData[]>([]);
+    let total = $state(0);
 
     const onGen = () => {
         const generated = generateData();
-        treeData = generated.data;
-        total = generated.count;
+        gData = generated.gData;
+        total = generated.total;
     };
-
-    const dropdownStyle = 'overflow: hidden';
-    // Dropdown height 300 minus the search box, minus the 8 * 2 padding; a set dropdown height fills the remaining space.
-    const virtualize = { itemSize: 28, height: 236 };
 </script>
 
 <div style="padding: 0 20px">
@@ -51,7 +47,8 @@
     <span>共 {total} 个节点</span>
     <br />
     <br />
-    {#if treeData.length}
-        <TreeSelect {dropdownStyle} filterTreeNode placeholder="Please select" showFilteredOnly style="width: 300px" {treeData} {virtualize} />
+    {#if gData.length > 0}
+        <!-- Dropdown height 300 minus the search box and 8 * 2 padding; a set height fills the rest -->
+        <TreeSelect dropdownStyle="overflow: hidden" filterTreeNode placeholder="Please select" showFilteredOnly style="width: 300px" treeData={gData} virtualize={{ itemSize: 28, height: 236 }} />
     {/if}
 </div>

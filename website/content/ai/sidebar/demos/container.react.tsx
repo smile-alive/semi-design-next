@@ -2,7 +2,6 @@ import { useState, useCallback, type CSSProperties } from 'react';
 import { Sidebar } from '@fibrae/semi-ai-react';
 import { Button, Switch } from '@fibrae/semi-ui-react';
 
-const { Container } = Sidebar;
 const containerStyle: CSSProperties = {
     display: 'flex',
     height: '500px',
@@ -44,7 +43,7 @@ export default function SidebarDemo() {
                     </div>
                 </div>
             </div>
-            <Container motion={motion} resizable={resizable} minWidth={250} maxWidth="60%" visible={visible} title="基础容器示例" style={resizable ? {} : { width: 200 }} onCancel={toggleVisible} />
+            <Sidebar.Container motion={motion} resizable={resizable} minWidth={250} maxWidth="60%" visible={visible} title="基础容器示例" style={resizable ? {} : { width: 200 }} onCancel={toggleVisible} />
         </div>
     );
 }

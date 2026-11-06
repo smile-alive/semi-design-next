@@ -1,10 +1,10 @@
 import { Toast, Button } from '@fibrae/semi-ui-react';
 
-export default function ToastDemo() {
-    let opts = {
-        content: 'Hi, Bytedance dance dance',
-        duration: 10,
-    };
+const opts = {
+    content: 'Hi, Bytedance dance dance',
+    duration: 10,
+};
 
+export default function ToastDemo() {
     return <Button onClick={() => Toast.info(opts)}>Close After 10s</Button>;
 }

@@ -4,8 +4,6 @@
     import { IllustrationNoResult, IllustrationNoResultDark } from '@fibrae/semi-illustrations-vue';
     import { Avatar, Button, Empty, Table, Tag, Typography, type ColumnProps } from '@fibrae/semi-ui-vue';
 
-    const { Text } = Typography;
-
     interface Row {
         key: string;
         name: string;
@@ -109,13 +107,13 @@
 
 <template>
     <div>
-        <Button :style="{ marginBottom: '10px' }" @click="resetData">重置</Button>
+        <Button :style="{ marginBlockEnd: '10px' }" @click="resetData">重置</Button>
         <Table :columns="columns" :dataSource="dataSource" :pagination="false" :style="{ minHeight: '350px' }">
             <template #cell="{ column, record, text }">
                 <span v-if="column.dataIndex === 'name'" :style="{ display: 'flex', alignItems: 'center' }">
-                    <Avatar alt="" shape="square" size="small" :src="record.nameIconSrc" :style="{ marginRight: '12px' }" />
-                    <!-- Width = the cell's 400px minus the non-text content -->
-                    <Text :ellipsis="{ showTooltip: true }" :style="{ width: 'calc(400px - 76px)' }">{{ text }}</Text>
+                    <Avatar alt="" shape="square" size="small" :src="record.nameIconSrc" :style="{ marginInlineEnd: '12px' }" />
+                    <!-- 宽度 = 单元格设定宽度 − 非文本内容宽度 -->
+                    <Typography.Text :ellipsis="{ showTooltip: true }" :style="{ width: 'calc(400px - 76px)' }">{{ text }}</Typography.Text>
                 </span>
                 <Tag v-else-if="column.dataIndex === 'status'" :color="tagConfig[text as Row['status']].color" shape="circle" :style="{ userSelect: 'text' }">
                     <template #prefixIcon>
@@ -124,7 +122,7 @@
                     {{ tagConfig[text as Row['status']].text }}
                 </Tag>
                 <div v-else-if="column.dataIndex === 'owner'">
-                    <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
+                    <Avatar :color="record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
                         {{ typeof text === 'string' && text.slice(0, 1) }}
                     </Avatar>
                     {{ text }}

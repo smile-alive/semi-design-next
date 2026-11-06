@@ -11,11 +11,16 @@
         const rangeInputFocus = options?.rangeInputFocus;
         const baseDate = dateFns.set(today, { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 });
         if (rangeInputFocus === 'rangeStart') {
-            return dateFns.subDays(baseDate, 2) <= date && date <= dateFns.addDays(baseDate, 2);
+            const disabledStart = dateFns.subDays(baseDate, 2);
+            const disabledEnd = dateFns.addDays(baseDate, 2);
+            return disabledStart <= date && date <= disabledEnd;
         } else if (rangeInputFocus === 'rangeEnd') {
-            return dateFns.subDays(baseDate, 3) <= date && date <= dateFns.addDays(baseDate, 3);
+            const disabledStart = dateFns.subDays(baseDate, 3);
+            const disabledEnd = dateFns.addDays(baseDate, 3);
+            return disabledStart <= date && date <= disabledEnd;
+        } else {
+            return false;
         }
-        return false;
     };
 </script>
 

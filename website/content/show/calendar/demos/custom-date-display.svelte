@@ -6,9 +6,9 @@
 </script>
 
 <Calendar {displayValue} height={400} mode="week">
-    {#snippet dateDisplay({ date })}
+    {#snippet dateDisplay(display)}
         <div style="padding-block: 6px">
-            <Avatar color={colors[date.getDay()]} size="small">{date.getDate()}</Avatar>
+            <Avatar color={colors[display.date.getDay()]} size="small">{display.date.getDate()}</Avatar>
         </div>
     {/snippet}
 </Calendar>

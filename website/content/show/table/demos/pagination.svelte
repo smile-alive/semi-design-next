@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { format } from 'date-fns';
+    import * as dateFns from 'date-fns';
     import { IconClear, IconComment, IconTickCircle } from '@fibrae/semi-icons-svelte';
     import { Avatar, Table, Tag, type ColumnProps, type RowSelectionProps } from '@fibrae/semi-ui-svelte';
 
@@ -93,33 +93,33 @@
 </script>
 
 <Table {columns} {dataSource} {rowSelection} {scroll}>
-    {#snippet cell({ column, text, record })}
-        {#if column.dataIndex === 'name'}
+    {#snippet cell(cellProps)}
+        {#if cellProps.column.dataIndex === 'name'}
             <div>
-                <Avatar alt="" shape="square" size="small" src={figmaIconUrl} style="margin-right: 12px" />
-                {text}
+                <Avatar alt="" shape="square" size="small" src={figmaIconUrl} style="margin-inline-end: 12px" />
+                {cellProps.text}
             </div>
-        {:else if column.dataIndex === 'size'}
-            {text} KB
-        {:else if column.dataIndex === 'status'}
-            {@const config = tagConfig[text as Row['status']]}
+        {:else if cellProps.column.dataIndex === 'size'}
+            {cellProps.text} KB
+        {:else if cellProps.column.dataIndex === 'status'}
+            {@const config = tagConfig[cellProps.text as Row['status']]}
             <Tag color={config.color} shape="circle" style="user-select: text">
                 {#snippet prefixIcon()}
                     <config.icon />
                 {/snippet}
                 {config.text}
             </Tag>
-        {:else if column.dataIndex === 'owner'}
+        {:else if cellProps.column.dataIndex === 'owner'}
             <div>
-                <Avatar color={record.avatarBg} size="small" style="margin-right: 4px">
-                    {typeof text === 'string' && text.slice(0, 1)}
+                <Avatar color={cellProps.record.avatarBg} size="small" style="margin-inline-end: 4px">
+                    {typeof cellProps.text === 'string' && cellProps.text.slice(0, 1)}
                 </Avatar>
-                {text}
+                {cellProps.text}
             </div>
-        {:else if column.dataIndex === 'updateTime'}
-            {format(new Date(text), 'yyyy-MM-dd')}
+        {:else if cellProps.column.dataIndex === 'updateTime'}
+            {dateFns.format(new Date(cellProps.text), 'yyyy-MM-dd')}
         {:else}
-            {text}
+            {cellProps.text}
         {/if}
     {/snippet}
 </Table>

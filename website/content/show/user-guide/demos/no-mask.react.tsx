@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import { UserGuide, Button } from '@fibrae/semi-ui-react';
+import { UserGuide, Button, type UserGuideStepItem } from '@fibrae/semi-ui-react';
+
+const steps: UserGuideStepItem[] = [
+    {
+        target: () => document.querySelector('#mask-demo'),
+        title: 'No Mask',
+        description: 'Hello ByteDancer!',
+    },
+];
 
 export default function UserGuideDemo() {
     const [visible, setVisible] = useState(false);
@@ -15,13 +23,7 @@ export default function UserGuideDemo() {
                 mode="popup"
                 mask={false}
                 visible={visible}
-                steps={[
-                    {
-                        target: () => document.querySelector('#mask-demo'),
-                        title: 'No Mask',
-                        description: 'Hello ByteDancer!',
-                    },
-                ]}
+                steps={steps}
                 onFinish={() => {
                     setVisible(false);
                     console.log('引导完成');

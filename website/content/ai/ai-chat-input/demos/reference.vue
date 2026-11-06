@@ -3,7 +3,7 @@
     import { AIChatInput, type AIChatInputReference as Reference } from '@fibrae/semi-ai-vue';
 
     const uploadProps = { action: 'https://api.semi.design/upload' };
-    const references = ref<Reference[]>([
+    const referenceTemp: Reference[] = [
         {
             id: '1',
             type: 'text',
@@ -30,7 +30,9 @@
             id: '6',
             name: 'code.json',
         },
-    ]);
+    ];
+
+    const references = ref(referenceTemp);
 
     const handleReferenceDelete = (item: Reference) => {
         references.value = references.value.filter((ref) => ref.id !== item.id);

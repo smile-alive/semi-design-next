@@ -13,7 +13,7 @@ export default function ImageDemo() {
                 }}
                 style={{ height: '100%', display: 'flex', 'align-items': 'center', 'justify-content': 'center' }}
             >
-                <Index each={srcList}>{(src, index) => <Image src={src()} width={200} alt={`lamp${index + 1}`} style={{ 'margin-right': '5px' }} />}</Index>
+                <Index each={srcList}>{(src, index) => <Image src={src()} width={200} alt={`lamp${index + 1}`} style={{ 'margin-inline-end': '5px' }} />}</Index>
             </ImagePreview>
         </div>
     );

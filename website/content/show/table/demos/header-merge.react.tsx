@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import * as dateFns from 'date-fns';
 import { IconMore } from '@fibrae/semi-icons-react';
 import { Table, Avatar, type ColumnProps } from '@fibrae/semi-ui-react';
@@ -28,7 +27,7 @@ const columns: ColumnProps<Row>[] = [
                 render: (text) => {
                     return (
                         <span>
-                            <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ marginRight: 12 }} />
+                            <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ marginInlineEnd: 12 }} />
                             {text}
                         </span>
                     );
@@ -64,7 +63,7 @@ const columns: ColumnProps<Row>[] = [
                 render: (text, record) => {
                     return (
                         <div>
-                            <Avatar size="small" color={record.avatarBg} style={{ marginRight: 4 }}>
+                            <Avatar size="small" color={record.avatarBg} style={{ marginInlineEnd: 4 }}>
                                 {typeof text === 'string' && text.slice(0, 1)}
                             </Avatar>
                             {text}
@@ -104,18 +103,19 @@ function getData(total: number) {
             name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
             owner: isSemiDesign ? '姜鹏志' : '郝宣',
             size: randomNumber,
-            updateTime: new Date(2019, 6, 23, 12).valueOf() + randomNumber * DAY,
+            updateTime: new Date(2024, 4, 6, 12).valueOf() + randomNumber * DAY,
             avatarBg: isSemiDesign ? 'grey' : 'red',
         });
     }
     return data;
 }
 
-export default function TableDemo() {
-    const data = useMemo(() => {
-        const _data = getData(46);
-        return _data;
-    }, []);
+const data = getData(46);
 
-    return <Table rowSelection={{ fixed: true }} expandedRowRender={(record) => <article>{record.name}</article>} dataSource={data} scroll={{ x: 1000, y: 400 }} onChange={(...args) => console.log(...args)} columns={columns} />;
+const rowSelection = { fixed: true };
+
+const scroll = { x: 1000, y: 400 };
+
+export default function TableDemo() {
+    return <Table rowSelection={rowSelection} expandedRowRender={(record) => <article>{record.name}</article>} dataSource={data} scroll={scroll} onChange={(changeInfo) => console.log(changeInfo)} columns={columns} />;
 }

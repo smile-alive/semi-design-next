@@ -17,7 +17,7 @@ export default function FormDemo() {
                     <div style={{ display: 'flex', 'justify-content': 'space-between', 'align-items': 'center' }}>
                         <p>
                             <span>Or</span>
-                            <Button theme="borderless" style={{ color: 'var(--semi-color-primary)', 'margin-left': '10px', cursor: 'pointer' }}>
+                            <Button theme="borderless" style={{ color: 'var(--semi-color-primary)', 'margin-inline-start': '10px', cursor: 'pointer' }}>
                                 Sign up
                             </Button>
                         </p>

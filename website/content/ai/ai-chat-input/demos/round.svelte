@@ -4,7 +4,6 @@
     import { IconBookOpenStroked, IconFeishuLogo, IconFigma, IconGit } from '@fibrae/semi-icons-svelte';
     import { Radio, RadioGroup, type RadioValue } from '@fibrae/semi-ui-svelte';
 
-    const { Configure } = AIChatInput;
     const uploadProps = { action: 'https://api.semi.design/upload' };
     const modelOptions = [
         { value: 'GPT-5', label: 'GPT-5' },
@@ -25,28 +24,28 @@
         { label: '超能', value: 'super' },
     ];
 
-    let shape = $state<RadioValue | undefined>('square');
+    let round = $state<RadioValue | undefined>(false);
 </script>
 
-<RadioGroup aria-label="单选组合示例" bind:value={shape} name="demo-radio-group">
-    <Radio value="round">圆形</Radio>
-    <Radio value="square">方形</Radio>
+<RadioGroup aria-label="单选组合示例" bind:value={round} name="demo-radio-group">
+    <Radio value={true}>圆形</Radio>
+    <Radio value={false}>方形</Radio>
 </RadioGroup>
-<AIChatInput placeholder="下方按钮为方形的用例" round={shape === 'round'} style="margin: 12px" {uploadProps}>
+<AIChatInput placeholder="下方按钮为方形的用例" round={round === true} style="margin: 12px" {uploadProps}>
     {#snippet configureArea()}
-        <Configure.Select field="model" initValue="GPT-4o" optionList={modelOptions} />
-        <Configure.Button field="onlineSearch">
+        <AIChatInput.Configure.Select field="model" initValue="GPT-4o" optionList={modelOptions} />
+        <AIChatInput.Configure.Button field="onlineSearch">
             {#snippet icon()}
                 <IconBookOpenStroked />
             {/snippet}
             联网搜索
-        </Configure.Button>
-        <Configure.Mcp options={mcpOptions}>
-            {#snippet optionIcon({ item })}
-                {@const Icon = mcpIcons[item.value]}
+        </AIChatInput.Configure.Button>
+        <AIChatInput.Configure.Mcp options={mcpOptions}>
+            {#snippet optionIcon(optionIcon)}
+                {@const Icon = mcpIcons[optionIcon.item.value]}
                 <Icon />
             {/snippet}
-        </Configure.Mcp>
-        <Configure.RadioButton field="mode" initValue="fast" options={radioButtonProps} />
+        </AIChatInput.Configure.Mcp>
+        <AIChatInput.Configure.RadioButton field="mode" initValue="fast" options={radioButtonProps} />
     {/snippet}
 </AIChatInput>

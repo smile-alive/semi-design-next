@@ -1,46 +1,46 @@
 import { List, Descriptions, Rating, Button, ButtonGroup } from '@fibrae/semi-ui-react';
 
+const data = [
+    {
+        title: '审核管理平台',
+        rating: 4.5,
+        feedbacks: 124,
+    },
+    {
+        title: '扁鹊',
+        rating: 4,
+        feedbacks: 108,
+    },
+    {
+        title: '直播审核平台',
+        rating: 3.5,
+        feedbacks: 244,
+    },
+    {
+        title: '抖音安全测试',
+        feedbacks: 189,
+    },
+    {
+        title: '内容平台',
+        rating: 3,
+        feedbacks: 128,
+    },
+    {
+        title: '策略平台',
+        rating: 4,
+        feedbacks: 156,
+    },
+];
+
+const style = {
+    border: '1px solid var(--semi-color-border)',
+    backgroundColor: 'var(--semi-color-bg-2)',
+    borderRadius: '3px',
+    paddingInlineStart: '20px',
+    margin: '8px 2px',
+};
+
 export default function ListDemo() {
-    const data = [
-        {
-            title: '审核管理平台',
-            rating: 4.5,
-            feedbacks: 124,
-        },
-        {
-            title: '扁鹊',
-            rating: 4,
-            feedbacks: 108,
-        },
-        {
-            title: '直播审核平台',
-            rating: 3.5,
-            feedbacks: 244,
-        },
-        {
-            title: '抖音安全测试',
-            feedbacks: 189,
-        },
-        {
-            title: '内容平台',
-            rating: 3,
-            feedbacks: 128,
-        },
-        {
-            title: '策略平台',
-            rating: 4,
-            feedbacks: 156,
-        },
-    ];
-
-    const style = {
-        border: '1px solid var(--semi-color-border)',
-        backgroundColor: 'var(--semi-color-bg-2)',
-        borderRadius: '3px',
-        paddingLeft: '20px',
-        margin: '8px 2px',
-    };
-
     return (
         <div>
             <List
@@ -68,7 +68,7 @@ export default function ListDemo() {
                                 ]}
                             />
                             <div style={{ margin: '12px 0', display: 'flex', justifyContent: 'flex-end' }}>
-                                <ButtonGroup theme="borderless" style={{ marginTop: 8 }}>
+                                <ButtonGroup theme="borderless" style={{ marginBlockStart: 8 }}>
                                     <Button>编辑</Button>
                                     <Button>更多</Button>
                                 </ButtonGroup>

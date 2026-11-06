@@ -13,14 +13,14 @@ const renderValue = (item: DescriptionsData, index: number) => (index === 3 ? <T
 
 const aligns: DescriptionsAlign[] = ['center', 'justify', 'left', 'plain'];
 
-const cardStyle = { margin: '10px' };
+const style = { margin: '10px' };
 
 export default function DescriptionsDemo() {
     return (
         <div style={{ display: 'flex', 'flex-wrap': 'wrap' }}>
             <For each={aligns}>
                 {(align) => (
-                    <Card shadows="always" style={cardStyle}>
+                    <Card shadows="always" style={style}>
                         <Descriptions align={align} data={data} renderValue={renderValue} />
                     </Card>
                 )}

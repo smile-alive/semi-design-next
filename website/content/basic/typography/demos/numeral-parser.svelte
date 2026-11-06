@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TypographyNumeral } from '@fibrae/semi-ui-svelte';
+    import { Typography } from '@fibrae/semi-ui-svelte';
 
     const parserTCH = (oldVal: string) => {
         return oldVal
@@ -17,14 +17,14 @@
 </script>
 
 <div>
-    <TypographyNumeral component="div" parser={parserTCH}>
+    <Typography.Numeral component="div" parser={parserTCH}>
         Semi Design 重视我们的用户，加入并助力我们不断完善
         {#each infos as item (item.min)}
             <p>
                 {item.type}：<b style="color: var(--semi-violet-5)">{item.min}</b>
             </p>
         {/each}
-    </TypographyNumeral>
+    </Typography.Numeral>
     <br />
-    <TypographyNumeral link={{ href: 'https://semi.design', target: '_blank' }} parser={parserTCH}>现已服务 {1e5} 用户，前往官网 &gt;&gt;</TypographyNumeral>
+    <Typography.Numeral link={{ href: 'https://semi.design', target: '_blank' }} parser={parserTCH}>现已服务 {1e5} 用户，前往官网 &gt;&gt;</Typography.Numeral>
 </div>

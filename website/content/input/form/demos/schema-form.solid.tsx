@@ -34,7 +34,7 @@ export default function FormDemo() {
             <Button type="primary" htmlType="submit">
                 提交
             </Button>
-            <Show when={output()}>{(values) => <pre style={{ 'margin-top': '12px' }}>{JSON.stringify(values(), null, 2)}</pre>}</Show>
+            <Show when={output()}>{(values) => <pre style={{ 'margin-block-start': '12px' }}>{JSON.stringify(values(), null, 2)}</pre>}</Show>
         </SchemaForm>
     );
 }

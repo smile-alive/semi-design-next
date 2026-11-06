@@ -10,12 +10,6 @@ const style = {
     'border-radius': '4px',
 };
 
-const invertedBgStyle = {
-    padding: '8px',
-    'border-radius': '4px',
-    'background-color': 'var(--semi-color-fill-0)',
-};
-
 export default function BadgeDemo() {
     return (
         <div style={{ display: 'flex' }}>
@@ -55,7 +49,7 @@ export default function BadgeDemo() {
                     </Avatar>
                 </Badge>
             </div>
-            <div style={invertedBgStyle}>
+            <div style={{ padding: '8px', 'border-radius': '4px', 'background-color': 'var(--semi-color-fill-0)' }}>
                 <Badge dot theme="inverted">
                     <Avatar color="lime" shape="square" style={style}>
                         XM

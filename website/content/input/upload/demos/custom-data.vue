@@ -2,6 +2,7 @@
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Upload } from '@fibrae/semi-ui-vue';
 
+    const action = 'https://api.semi.design/upload';
     // A data function is evaluated per upload, so time is the upload moment
     const data = () => ({
         role: 'ies',
@@ -13,7 +14,7 @@
 </script>
 
 <template>
-    <Upload action="https://api.semi.design/upload" :data="data" :headers="headers">
+    <Upload :action="action" :data="data" :headers="headers">
         <Button theme="light">
             <template #icon>
                 <IconUpload />

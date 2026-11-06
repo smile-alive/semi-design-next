@@ -5,6 +5,8 @@ import { Table, Avatar, Input, Space, Tag, type ColumnProps } from '@fibrae/semi
 
 const DAY = 24 * 60 * 60 * 1000;
 
+const figmaIconUrl = '/assets/placeholder/app.svg';
+
 function getData() {
     const data = [];
     for (let i = 0; i < 46; i++) {
@@ -27,8 +29,6 @@ export default function TableDemo() {
     const [dataSource] = useState(getData);
     const [filteredValue, setFilteredValue] = useState<string[]>([]);
     const compositionRef = useRef({ isComposition: false });
-
-    const figmaIconUrl = '/assets/placeholder/app.svg';
 
     const handleChange = (value: string) => {
         if (compositionRef.current.isComposition) {
@@ -61,7 +61,7 @@ export default function TableDemo() {
             render: (text) => {
                 return (
                     <div>
-                        <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ marginRight: 12 }} />
+                        <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ marginInlineEnd: 12 }} />
                         {text}
                     </div>
                 );
@@ -98,7 +98,7 @@ export default function TableDemo() {
             render: (text, record) => {
                 return (
                     <div>
-                        <Avatar size="small" color={record.avatarBg} style={{ marginRight: 4 }}>
+                        <Avatar size="small" color={record.avatarBg} style={{ marginInlineEnd: 4 }}>
                             {typeof text === 'string' && text.slice(0, 1)}
                         </Avatar>
                         {text}

@@ -1,25 +1,19 @@
 import { createSignal } from 'solid-js';
 import { ResizeGroup, ResizeHandler, ResizeItem, Toast } from '@fibrae/semi-ui-solid';
 
-const boxStyle = {
-    'background-color': 'var(--semi-grey-1)',
-    border: 'var(--semi-color-border) 1px solid',
-};
-
-const textStyle = {
-    'margin-left': '20%',
-};
-
-const startToast = {
+const opts_1 = {
     content: 'resize start',
     duration: 1,
     stack: true,
 };
-
-const endToast = {
+const opts = {
     content: 'resize end',
     duration: 1,
     stack: true,
+};
+const itemStyle = {
+    'background-color': 'var(--semi-grey-1)',
+    border: 'var(--semi-color-border) 1px solid',
 };
 
 export default function ResizableDemo() {
@@ -34,14 +28,14 @@ export default function ResizableDemo() {
                         setText('resizing');
                     }}
                     onResizeStart={() => {
-                        Toast.info(startToast);
+                        Toast.info(opts_1);
                     }}
                     onResizeEnd={() => {
-                        Toast.info(endToast);
+                        Toast.info(opts);
                         setText('Drag to resize');
                     }}
                 >
-                    <div style={textStyle}>header</div>
+                    <div style={{ 'margin-inline-start': '20%' }}>header</div>
                 </ResizeItem>
                 <ResizeHandler />
                 <ResizeItem
@@ -52,30 +46,30 @@ export default function ResizableDemo() {
                 >
                     <ResizeGroup direction="horizontal">
                         <ResizeItem
-                            style={boxStyle}
+                            style={itemStyle}
                             defaultSize="25%"
                             onChange={() => {
                                 setText('resizing');
                             }}
                             onResizeStart={() => {
-                                Toast.info(startToast);
+                                Toast.info(opts_1);
                             }}
                             onResizeEnd={() => {
-                                Toast.info(endToast);
+                                Toast.info(opts);
                                 setText('Drag to resize');
                             }}
                         >
-                            <div style={textStyle}>tab</div>
+                            <div style={{ 'margin-inline-start': '20%' }}>tab</div>
                         </ResizeItem>
                         <ResizeHandler />
                         <ResizeItem
-                            style={boxStyle}
+                            style={itemStyle}
                             defaultSize="75%"
                             onChange={() => {
                                 setText('resizing');
                             }}
                         >
-                            <div style={textStyle}>{text()}</div>
+                            <div style={{ 'margin-inline-start': '20%' }}>{text()}</div>
                         </ResizeItem>
                     </ResizeGroup>
                 </ResizeItem>

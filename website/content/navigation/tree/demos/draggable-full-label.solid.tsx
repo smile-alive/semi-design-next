@@ -14,7 +14,50 @@ const icons: Record<string, typeof IconFixedStroked> = {
     'cus-0': IconComponentStroked,
 };
 
+const iconStyle = { 'margin-right': '8px', color: 'var(--semi-color-text-2)' };
+
 type LoopCallback = (item: TreeNodeData, ind: number, arr: TreeNodeData[]) => void;
+
+const defaultTreeData: TreeNodeData[] = [
+    {
+        label: '黑色固定按钮',
+        key: 'fix-btn-0',
+    },
+    {
+        label: '模块',
+        key: 'module-0',
+        children: [
+            {
+                label: '可自由摆放的组件',
+                key: 'free-compo-0',
+            },
+            {
+                label: '分栏容器',
+                key: 'split-col-0',
+                children: [
+                    {
+                        label: '按钮组件',
+                        key: 'btn-0',
+                    },
+                    {
+                        label: '按钮组件',
+                        key: 'btn-1',
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        label: '模块',
+        key: 'module-1',
+        children: [
+            {
+                label: '自定义组件',
+                key: 'cus-0',
+            },
+        ],
+    },
+];
 
 function findDescendantKeys(node: TreeNodeData) {
     const res = [node.key];
@@ -42,47 +85,6 @@ const treeStyle = {
 export default function TreeDemo() {
     const [selected, setSelected] = createSignal(new Set<string | undefined>());
     const [selectedThroughParent, setSelectedThroughParent] = createSignal(new Set<string | undefined>());
-    const iconStyle = { 'margin-right': '8px', color: 'var(--semi-color-text-2)' };
-    const defaultTreeData: TreeNodeData[] = [
-        {
-            label: '黑色固定按钮',
-            key: 'fix-btn-0',
-        },
-        {
-            label: '模块',
-            key: 'module-0',
-            children: [
-                {
-                    label: '可自由摆放的组件',
-                    key: 'free-compo-0',
-                },
-                {
-                    label: '分栏容器',
-                    key: 'split-col-0',
-                    children: [
-                        {
-                            label: '按钮组件',
-                            key: 'btn-0',
-                        },
-                        {
-                            label: '按钮组件',
-                            key: 'btn-1',
-                        },
-                    ],
-                },
-            ],
-        },
-        {
-            label: '模块',
-            key: 'module-1',
-            children: [
-                {
-                    label: '自定义组件',
-                    key: 'cus-0',
-                },
-            ],
-        },
-    ];
     const [treeData, setTreeData] = createSignal<TreeNodeData[]>(defaultTreeData);
 
     const onDrop = (info: TreeOnDragProps) => {
@@ -134,14 +136,17 @@ export default function TreeDemo() {
 
     const handleSelect = (key: string, _bool: boolean, node: TreeNodeData) => {
         setSelected(new Set([key]));
-        const descendantKeys = findDescendantKeys(node);
-        setSelectedThroughParent(new Set(descendantKeys));
+        setSelectedThroughParent(new Set(findDescendantKeys(node)));
     };
 
-    const backgroundOf = (key?: string) => (selected().has(key) ? 'var(--semi-blue-0)' : selectedThroughParent().has(key) ? 'color-mix(in srgb, var(--semi-blue-0) 50%, transparent)' : 'transparent');
+    const rowBackground = (key: string | undefined) => {
+        if (selected().has(key)) return 'var(--semi-blue-0)';
+        if (selectedThroughParent().has(key)) return 'color-mix(in srgb, var(--semi-blue-0) 50%, transparent)';
+        return 'transparent';
+    };
 
     const renderLabel = (row: TreeRenderFullLabelProps) => (
-        <div class={row.class} onClick={row.onClick} style={{ 'background-color': backgroundOf(row.data.key) }}>
+        <div class={row.class} onClick={row.onClick} style={{ 'background-color': rowBackground(row.data.key) }}>
             {row.data.children && row.data.children.length ? row.expandIcon() : <span style={{ width: '24px' }} />}
             <Dynamic component={icons[row.data.key ?? '']} style={iconStyle} />
             <span>{row.data.label}</span>

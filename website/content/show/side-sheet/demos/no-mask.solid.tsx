@@ -7,7 +7,7 @@ export default function SideSheetDemo() {
     return (
         <>
             <Button onClick={() => setVisible(true)}>Open SideSheet</Button>
-            <TextArea placeholder="Please enter something" onChange={(value) => setValue(value)} style={{ 'margin-top': '12px' }} />
+            <TextArea placeholder="Please enter something" onChange={(value) => setValue(value)} style={{ 'margin-block-start': '12px' }} />
             <SideSheet title="可操作外部的侧边栏" visible={visible()} onCancel={() => setVisible(false)} mask={false} disableScroll={false}>
                 <p>这里是输入的内容：</p>
                 <p>{value()}</p>

@@ -1,6 +1,26 @@
 import { Tag, Tree, type TreeNodeData } from '@fibrae/semi-ui-solid';
 
-const rowStyle = {
+const treeData: TreeNodeData[] = [
+    {
+        label: '亚洲',
+        value: 'yazhou',
+        key: 'yazhou',
+        children: [
+            {
+                label: '中国',
+                value: 'zhongguo',
+                key: 'zhongguo',
+            },
+            {
+                label: '日本',
+                value: 'riben',
+                key: 'riben',
+            },
+        ],
+    },
+];
+
+const labelStyle = {
     display: 'flex',
     'justify-content': 'space-between',
     'align-items': 'center',
@@ -13,33 +33,13 @@ const treeStyle = {
 };
 
 export default function TreeDemo() {
-    const treeData: TreeNodeData[] = [
-        {
-            label: '亚洲',
-            value: 'yazhou',
-            key: 'yazhou',
-            children: [
-                {
-                    label: '中国',
-                    value: 'zhongguo',
-                    key: 'zhongguo',
-                },
-                {
-                    label: '日本',
-                    value: 'riben',
-                    key: 'riben',
-                },
-            ],
-        },
-    ];
-
     // Node content is display-only: focus stays on the tree, so buttons and links inside are keyboard-unreachable
     return (
         <Tree
             treeData={treeData}
             style={treeStyle}
             renderLabel={(label, node) => (
-                <div style={rowStyle}>
+                <div style={labelStyle}>
                     <span>{label}</span>
                     <Tag size="small">{node?.children ? '大洲' : '国家'}</Tag>
                 </div>

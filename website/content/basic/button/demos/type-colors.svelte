@@ -10,7 +10,7 @@
 
 <article>
     {#each types as [type, label] (type)}
-        <strong style={`color: var(--semi-color-${type}); margin-right: 10px`}>
+        <strong style={`color: var(--semi-color-${type}); margin-inline-end: 10px`}>
             {label}
         </strong>
     {/each}

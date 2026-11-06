@@ -9,7 +9,7 @@
     };
 
     const actionStyle = {
-        marginTop: '20px',
+        marginBlockStart: '20px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

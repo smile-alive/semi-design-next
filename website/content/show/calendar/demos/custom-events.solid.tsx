@@ -3,8 +3,7 @@ import { Calendar } from '@fibrae/semi-ui-solid';
 
 const dailyEventStyle: JSX.CSSProperties = {
     position: 'absolute',
-    left: '0',
-    right: '0',
+    'inset-inline': '0',
     'border-radius': '3px',
     'box-sizing': 'border-box',
     border: 'var(--semi-color-primary) 1px solid',

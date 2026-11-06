@@ -2,7 +2,7 @@ import React from 'react';
 import { DragMove } from '@fibrae/semi-ui-react';
 
 export default function DragMoveDemo() {
-    const containerRef = React.useRef<HTMLDivElement>(null);
+    const container = React.useRef<HTMLDivElement>(null);
 
     return (
         <div
@@ -15,10 +15,10 @@ export default function DragMoveDemo() {
                 color: 'var(--semi-white)',
                 fontWeight: 500,
             }}
-            ref={containerRef}
+            ref={container}
         >
             <span style={{ color: 'var(--semi-color-text-0)' }}>Constrainer</span>
-            <DragMove constrainer={() => containerRef.current}>
+            <DragMove constrainer={() => container.current}>
                 <div
                     style={{
                         backgroundColor: 'var(--semi-color-primary)',

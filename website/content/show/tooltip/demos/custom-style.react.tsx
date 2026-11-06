@@ -10,7 +10,7 @@ export default function TooltipDemo() {
                 className="another-classname"
                 content="hi semi semi semi semi semi semi semi"
             >
-                <Tag style={{ marginRight: '8px' }}>Custom Style And ClassName</Tag>
+                <Tag style={{ marginInlineEnd: '8px' }}>Custom Style And ClassName</Tag>
             </Tooltip>
         </div>
     );

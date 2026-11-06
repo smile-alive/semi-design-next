@@ -17,7 +17,7 @@
     <br />
     <br />
     <strong>复合类型：</strong>
-    <span class="btn-margin-right">
+    <span class="btn-margin-inline-end">
         <Button aria-label="截屏" icon={camera} type="primary" />
         <Button aria-label="截屏" icon={camera} type="secondary" />
         <Button aria-label="截屏" icon={camera} type="warning" />
@@ -26,12 +26,12 @@
     <br />
     <br />
     <strong>更改主题：</strong>
-    <Button aria-label="截屏" icon={camera} style="margin-right: 10px" theme="solid" />
+    <Button aria-label="截屏" icon={camera} style="margin-inline-end: 10px" theme="solid" />
     <Button aria-label="截屏" icon={camera} theme="light" />
     <br />
     <br />
     <strong>更改图标位置：</strong>
-    <Button style="margin-right: 10px" theme="solid">
+    <Button style="margin-inline-end: 10px" theme="solid">
         {#snippet icon()}
             <IconSidebar />
         {/snippet}

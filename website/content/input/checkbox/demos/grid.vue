@@ -1,14 +1,24 @@
 <script setup lang="ts">
     import { Checkbox, CheckboxGroup, Col, Row } from '@fibrae/semi-ui-vue';
-
-    const values = ['A', 'B', 'C', 'D', 'E'];
 </script>
 
 <template>
-    <CheckboxGroup aria-label="CheckboxGroup 示例" :style="{ width: '100%' }">
+    <CheckboxGroup aria-label="CheckboxGroup 示例" style="width: 100%">
         <Row>
-            <Col v-for="value in values" :key="value" :span="8">
-                <Checkbox :value="value">{{ value }}</Checkbox>
+            <Col :span="8">
+                <Checkbox value="A">A</Checkbox>
+            </Col>
+            <Col :span="8">
+                <Checkbox value="B">B</Checkbox>
+            </Col>
+            <Col :span="8">
+                <Checkbox value="C">C</Checkbox>
+            </Col>
+            <Col :span="8">
+                <Checkbox value="D">D</Checkbox>
+            </Col>
+            <Col :span="8">
+                <Checkbox value="E">E</Checkbox>
             </Col>
         </Row>
     </CheckboxGroup>

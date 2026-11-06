@@ -3,7 +3,7 @@
     import { Radio, RadioGroup, Upload, type FileItem, type UploadProps } from '@fibrae/semi-ui-svelte';
 
     const action = 'https://api.semi.design/upload';
-    const fileList: FileItem[] = [
+    const defaultFileList: FileItem[] = [
         {
             uid: '1',
             name: 'resso.png',
@@ -24,6 +24,6 @@
     <Radio value="end">end</Radio>
 </RadioGroup>
 <hr />
-<Upload accept="image/*" {action} {fileList} {hotSpotLocation} listType="picture" multiple onPreviewClick={handlePreview} showPicInfo>
+<Upload accept="image/*" {action} fileList={defaultFileList} {hotSpotLocation} listType="picture" multiple onPreviewClick={handlePreview} showPicInfo>
     <IconPlus aria-label="上传图片" size="extra-large" />
 </Upload>

@@ -12,6 +12,6 @@
     <Button @click="visible1 = true">Preview single Image</Button>
     <ImagePreview v-model:visible="visible1" src="/assets/root-web-sites/sky.jpg" />
     <br />
-    <Button :style="{ marginTop: '20px' }" @click="visible2 = true">Preview multiple Images</Button>
+    <Button :style="{ marginBlockStart: '20px' }" @click="visible2 = true">Preview multiple Images</Button>
     <ImagePreview v-model:visible="visible2" previewTitle="Scenery" :src="srcList" />
 </template>

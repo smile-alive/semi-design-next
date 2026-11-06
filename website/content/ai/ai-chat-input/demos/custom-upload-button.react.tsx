@@ -9,15 +9,15 @@ export default function AIChatInputDemo() {
         <AIChatInput
             placeholder="自定义上传按钮（仍支持粘贴上传）"
             uploadProps={uploadProps}
-            renderUploadButton={({ openFileDialog, disabled }) => (
+            renderUploadButton={(uploadButton) => (
                 <button
                     type="button"
                     aria-label="上传"
-                    disabled={disabled}
+                    disabled={uploadButton.disabled}
                     className="semi-button semi-button-borderless"
                     onClick={(e) => {
                         e.stopPropagation();
-                        openFileDialog();
+                        uploadButton.openFileDialog();
                     }}
                 >
                     <IconUpload />

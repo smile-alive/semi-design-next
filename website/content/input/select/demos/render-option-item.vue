@@ -19,28 +19,28 @@
             params; bind onMouseenter and class on the outer DOM or arrow keys display wrongly; put id there so screen
             readers announce the option the arrow keys reach
         -->
-        <template #optionItem="{ id, disabled, selected, label, focused, class: className, style, onClick, onMouseenter }">
+        <template #optionItem="item">
             <div
-                :id="id"
-                :aria-disabled="disabled"
-                :aria-selected="selected"
+                :id="item.id"
+                :aria-disabled="item.disabled"
+                :aria-selected="item.selected"
                 :class="[
                     'custom-option-render',
                     {
-                        'custom-option-render-focused': focused,
-                        'custom-option-render-disabled': disabled,
-                        'custom-option-render-selected': selected,
+                        'custom-option-render-focused': item.focused,
+                        'custom-option-render-disabled': item.disabled,
+                        'custom-option-render-selected': item.selected,
                     },
-                    className,
+                    item.class,
                 ]"
                 role="option"
-                :style="style"
-                @click="onClick"
-                @mouseenter="onMouseenter"
+                :style="item.style"
+                @click="item.onClick"
+                @mouseenter="item.onMouseenter"
             >
-                <Checkbox :modelValue="selected" />
+                <Checkbox :modelValue="item.selected" />
                 <div class="option-right">
-                    <Highlight :searchWords="[inputValue]" :sourceString="String(label)" />
+                    <Highlight :searchWords="[inputValue]" :sourceString="String(item.label)" />
                 </div>
             </div>
         </template>
@@ -48,28 +48,28 @@
     <br />
     <br />
     <Select aria-label="多选" dropdownClassName="components-select-demo-renderOptionItem" filter multiple :optionList="optionList" placeholder="多选" style="width: 320px" @search="inputValue = $event">
-        <template #optionItem="{ id, disabled, selected, label, focused, class: className, style, onClick, onMouseenter }">
+        <template #optionItem="item">
             <div
-                :id="id"
-                :aria-disabled="disabled"
-                :aria-selected="selected"
+                :id="item.id"
+                :aria-disabled="item.disabled"
+                :aria-selected="item.selected"
                 :class="[
                     'custom-option-render',
                     {
-                        'custom-option-render-focused': focused,
-                        'custom-option-render-disabled': disabled,
-                        'custom-option-render-selected': selected,
+                        'custom-option-render-focused': item.focused,
+                        'custom-option-render-disabled': item.disabled,
+                        'custom-option-render-selected': item.selected,
                     },
-                    className,
+                    item.class,
                 ]"
                 role="option"
-                :style="style"
-                @click="onClick"
-                @mouseenter="onMouseenter"
+                :style="item.style"
+                @click="item.onClick"
+                @mouseenter="item.onMouseenter"
             >
-                <Checkbox :modelValue="selected" />
+                <Checkbox :modelValue="item.selected" />
                 <div class="option-right">
-                    <Highlight :searchWords="[inputValue]" :sourceString="String(label)" />
+                    <Highlight :searchWords="[inputValue]" :sourceString="String(item.label)" />
                 </div>
             </div>
         </template>

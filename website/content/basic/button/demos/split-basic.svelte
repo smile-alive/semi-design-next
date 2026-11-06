@@ -12,13 +12,17 @@
         { node: 'item', name: '删除项目', type: 'danger' },
     ];
 
-    let btnVisible = $state<Record<number, boolean>>({ 1: false, 2: false, 3: false });
+    const btnVisible = $state<Record<number, boolean>>({ 1: false, 2: false, 3: false });
+
+    const handleVisibleChange = (key: number, visible: boolean) => {
+        btnVisible[key] = visible;
+    };
 </script>
 
 <div>
-    <SplitButtonGroup aria-label="项目操作按钮组" style="margin-right: 10px">
+    <SplitButtonGroup aria-label="项目操作按钮组" style="margin-inline-end: 10px">
         <Button theme="solid" type="primary">分裂按钮</Button>
-        <Dropdown {menu} onVisibleChange={(visible) => (btnVisible[1] = visible)} position="bottomRight" trigger="click">
+        <Dropdown {menu} onVisibleChange={(visible) => handleVisibleChange(1, visible)} position="bottomRight" trigger="click">
             {#snippet child({ props })}
                 <Button {...props} aria-label="更多操作" style={`${btnVisible[1] ? 'background: var(--semi-color-primary-hover); ' : ''}padding: 8px 4px`} theme="solid" type="primary">
                     {#snippet icon()}
@@ -28,9 +32,9 @@
             {/snippet}
         </Dropdown>
     </SplitButtonGroup>
-    <SplitButtonGroup aria-label="项目操作按钮组" style="margin-right: 10px">
+    <SplitButtonGroup aria-label="项目操作按钮组" style="margin-inline-end: 10px">
         <Button theme="light" type="primary">分裂按钮</Button>
-        <Dropdown {menu} onVisibleChange={(visible) => (btnVisible[2] = visible)} position="bottomRight" trigger="click">
+        <Dropdown {menu} onVisibleChange={(visible) => handleVisibleChange(2, visible)} position="bottomRight" trigger="click">
             {#snippet child({ props })}
                 <Button {...props} aria-label="更多操作" style={`${btnVisible[2] ? 'background: var(--semi-color-fill-1); ' : ''}padding: 8px 4px`} theme="light" type="primary">
                     {#snippet icon()}
@@ -42,7 +46,7 @@
     </SplitButtonGroup>
     <SplitButtonGroup aria-label="项目操作按钮组">
         <Button style={btnVisible[3] ? 'background: var(--semi-color-fill-0)' : undefined} theme="borderless" type="primary">分裂按钮</Button>
-        <Dropdown {menu} onVisibleChange={(visible) => (btnVisible[3] = visible)} position="bottomRight" trigger="click">
+        <Dropdown {menu} onVisibleChange={(visible) => handleVisibleChange(3, visible)} position="bottomRight" trigger="click">
             {#snippet child({ props })}
                 <Button {...props} aria-label="更多操作" style={`${btnVisible[3] ? 'background: var(--semi-color-fill-1); ' : ''}padding: 8px 4px`} theme="borderless" type="primary">
                     {#snippet icon()}

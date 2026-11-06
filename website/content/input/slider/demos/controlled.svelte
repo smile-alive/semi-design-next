@@ -9,7 +9,7 @@
 </script>
 
 <div>
-    <Button style="margin-right: 20px" onclick={changeValue}>点击改变value值</Button>
+    <Button style="margin-inline-end: 20px" onclick={changeValue}>点击改变value值</Button>
     <br />
     <br />
     <Slider aria-label="受控滑块" bind:value />

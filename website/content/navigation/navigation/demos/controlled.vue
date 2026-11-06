@@ -20,8 +20,8 @@
 
 <template>
     <Nav v-model:isCollapsed="isCollapsed" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" :bodyStyle="{ height: '300px' }" :footer="{ collapseButton: true }" :items="items" @openChange="(data) => console.log('trigger onOpenChange: ', data)" @select="(data) => console.log('trigger onSelect: ', data)">
-        <template #icon="{ item }">
-            <component :is="iconOf(item)" />
+        <template #icon="renderProps">
+            <component :is="iconOf(renderProps.item)" />
         </template>
         <Nav.Header text="Semi 运营后台">
             <template #logo>

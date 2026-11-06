@@ -20,7 +20,7 @@
         },
     };
 
-    let messages = $state<Message[]>([
+    const defaultMessages: Message[] = [
         {
             role: 'system',
             id: '1',
@@ -39,7 +39,9 @@
             createdAt: 1715676751919,
             content: "以下是一个 Semi 代码的使用示例：\n```jsx \nimport React from 'react';\nimport { Button } from '@fibrae/semi-ui-react';\n\nconst MyComponent = () => {\n  return (\n    <Button>Click me</Button>\n );\n};\nexport default MyComponent;\n```\n",
         },
-    ]);
+    ];
+
+    let messages = $state(defaultMessages);
     let mode = $state<Mode>('bubble');
     let align = $state<Align>('leftRight');
 
@@ -68,6 +70,8 @@
         </RadioGroup>
     </span>
 </span>
-<div style="border: 1px solid var(--semi-color-border); border-radius: 12px; margin-top: 10px; padding: 20px">
-    <AIChatDialogue {align} bind:chats={messages} {mode} {roleConfig} />
+<div style="border: 1px solid var(--semi-color-border); border-radius: 12px; margin-block-start: 10px; padding: 20px">
+    {#key align + mode}
+        <AIChatDialogue {align} bind:chats={messages} {mode} {roleConfig} />
+    {/key}
 </div>

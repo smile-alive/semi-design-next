@@ -7,11 +7,14 @@
 
     const list = shallowRef(data.slice(0, 8));
 
-    const removeItem = (item: string) => {
-        list.value = list.value.filter((book) => book !== item);
-    };
-    const addItem = () => {
-        list.value = list.value.concat(data.slice(list.value.length, list.value.length + 1));
+    const updateList = (item?: string) => {
+        let newList: string[];
+        if (item) {
+            newList = list.value.filter((i) => item !== i);
+        } else {
+            newList = list.value.concat(data.slice(list.value.length, list.value.length + 1));
+        }
+        list.value = newList;
     };
 </script>
 
@@ -19,7 +22,7 @@
     <div>
         <div
             :style="{
-                marginRight: '16px',
+                marginInlineEnd: '16px',
                 width: '280px',
                 display: 'flex',
                 flexWrap: 'wrap',
@@ -27,19 +30,19 @@
             }"
         >
             <List class="component-list-demo-booklist" :dataSource="list" size="small" :split="false" :style="{ flexBasis: '100%', flexShrink: 0, borderBottom: '1px solid var(--semi-color-border)' }">
-                <template #item="{ item }">
-                    <li :key="item" class="list-item" :style="{ margin: '4px' }">
-                        <Button :aria-label="`删除${item}`" :style="{ marginRight: '4px' }" theme="borderless" type="danger" @click="removeItem(item)">
+                <template #item="row">
+                    <li :key="row.item" class="list-item" :style="{ margin: '4px' }">
+                        <Button :aria-label="`删除${row.item}`" :style="{ marginInlineEnd: '4px' }" theme="borderless" type="danger" @click="updateList(row.item)">
                             <template #icon>
                                 <IconMinusCircle />
                             </template>
                         </Button>
-                        {{ item }}
+                        {{ row.item }}
                     </li>
                 </template>
             </List>
             <div :style="{ margin: '4px', fontSize: '14px' }">
-                <Button aria-label="新增书籍" :style="{ marginRight: '4px', color: 'var(--semi-color-info)' }" theme="borderless" @click="addItem">
+                <Button aria-label="新增书籍" :style="{ marginInlineEnd: '4px', color: 'var(--semi-color-info)' }" theme="borderless" @click="updateList()">
                     <template #icon>
                         <IconPlusCircle />
                     </template>

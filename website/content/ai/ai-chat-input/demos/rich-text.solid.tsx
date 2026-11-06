@@ -8,7 +8,8 @@ const temp = {
     'select-slot': `我是<select-slot value="前端开发" options='["设计","前端开发","后端开发"]'></select-slot>，帮我完成...`,
     'skill-slot': `<skill-slot data-label="AI Coding" data-value="AI Coding" data-template=false></skill-slot> 帮我完成...`,
 };
-const tabs = Object.keys(temp) as Array<keyof typeof temp>;
+const names = Object.keys(temp);
+const contents = Object.values(temp);
 
 export default function AIChatInputDemo() {
     const [activeIndex, setActiveIndex] = createSignal(0);
@@ -16,14 +17,14 @@ export default function AIChatInputDemo() {
 
     const setTemplate = (index: number) => {
         setActiveIndex(index);
-        input?.setContent(temp[tabs[index]]);
+        input?.setContent(contents[index]);
         input?.focusEditor();
     };
 
     return (
         <>
             <div class="aiChatInput-radio" role="tablist">
-                <For each={tabs}>
+                <For each={names}>
                     {(item, index) => (
                         <div
                             class={`aiChatInput-radio-item ${index() === activeIndex() ? 'aiChatInput-radio-item-selected' : ''}`}

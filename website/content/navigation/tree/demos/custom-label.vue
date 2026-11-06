@@ -35,10 +35,10 @@
 
 <template>
     <Tree :style="treeStyle" :treeData="treeData">
-        <template #label="{ item, label }">
+        <template #label="labelProps">
             <div :style="labelStyle">
-                <span>{{ label }}</span>
-                <Tag size="small">{{ item.children ? '大洲' : '国家' }}</Tag>
+                <span>{{ labelProps.label }}</span>
+                <Tag size="small">{{ labelProps.item.children ? '大洲' : '国家' }}</Tag>
             </div>
         </template>
     </Tree>

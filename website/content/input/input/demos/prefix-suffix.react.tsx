@@ -16,7 +16,7 @@ export default function InputDemo() {
             <Input
                 aria-label="Input with text suffix"
                 suffix={
-                    <Typography.Text strong type="secondary" style={{ marginRight: 8 }}>
+                    <Typography.Text strong type="secondary" style={{ marginInlineEnd: 8 }}>
                         Suffix
                     </Typography.Text>
                 }

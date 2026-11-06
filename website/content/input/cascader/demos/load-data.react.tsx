@@ -1,35 +1,36 @@
 import { useState } from 'react';
 import { Cascader, type CascaderData } from '@fibrae/semi-ui-react';
 
-export default function CascaderDemo() {
-    const initialData: CascaderData[] = [
-        {
-            label: 'Node1',
-            value: '0-0',
-        },
-        {
-            label: 'Node2',
-            value: '0-1',
-        },
-        {
-            label: 'Node3',
-            value: '0-2',
-            isLeaf: true,
-        },
-    ];
-    const [data, setData] = useState(initialData);
+const initialData: CascaderData[] = [
+    {
+        label: 'Node1',
+        value: '0-0',
+    },
+    {
+        label: 'Node2',
+        value: '0-1',
+    },
+    {
+        label: 'Node3',
+        value: '0-2',
+        isLeaf: true,
+    },
+];
 
-    const updateTreeData = (list: CascaderData[], value: CascaderData['value'], children: CascaderData[]): CascaderData[] => {
-        return list.map((node) => {
-            if (node.value === value) {
-                return { ...node, children };
-            }
-            if (node.children) {
-                return { ...node, children: updateTreeData(node.children, value, children) };
-            }
-            return node;
-        });
-    };
+function updateTreeData(list: CascaderData[], value: CascaderData['value'], children: CascaderData[]): CascaderData[] {
+    return list.map((node) => {
+        if (node.value === value) {
+            return { ...node, children };
+        }
+        if (node.children) {
+            return { ...node, children: updateTreeData(node.children, value, children) };
+        }
+        return node;
+    });
+}
+
+export default function CascaderDemo() {
+    const [data, setData] = useState(initialData);
 
     const onLoadData = (selectedOpt: CascaderData[]) => {
         const targetOpt = selectedOpt[selectedOpt.length - 1];

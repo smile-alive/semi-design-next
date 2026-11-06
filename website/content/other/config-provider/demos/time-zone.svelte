@@ -11,8 +11,6 @@
     // fractional offsets stay fixed all year; an IANA name follows its daylight saving time
     gmtList.push('GMT-03:30', 'GMT+05:45', 'GMT+13:45', 'America/New_York');
     const optionList = gmtList.map((gmt) => ({ value: gmt, label: gmt }));
-
-    const onChange = (date: unknown, dateString: string | string[]) => console.log('changed: ', date, dateString);
 </script>
 
 <ConfigProvider {timeZone}>
@@ -21,9 +19,9 @@
         <Select aria-label="时区" onSelect={(value) => (timeZone = String(value))} {optionList} placeholder="请选择时区" showClear style="width: 300px" value={timeZone} />
         <br />
         <br />
-        <DatePicker {onChange} type="dateTime" value={defaultTimestamp} />
+        <DatePicker onChange={(date, dateString) => console.log('DatePicker changed: ', date, dateString)} type="dateTime" value={defaultTimestamp} />
         <br />
         <br />
-        <TimePicker {onChange} value={defaultTimestamp} />
+        <TimePicker onChange={(date, dateString) => console.log('DatePicker changed: ', date, dateString)} value={defaultTimestamp} />
     </div>
 </ConfigProvider>

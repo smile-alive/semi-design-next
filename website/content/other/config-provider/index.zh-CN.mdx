@@ -189,7 +189,7 @@ function Demo() {
 <!-- breakpoint-subscriber.vue -->
 <script setup lang="ts">
     import { onBeforeUnmount, onMounted, ref } from 'vue';
-    import { TypographyText, useConfig } from '@fibrae/semi-ui-vue';
+    import { Typography, useConfig } from '@fibrae/semi-ui-vue';
 
     const config = useConfig();
     const screens = ref(config.value.screens);
@@ -204,7 +204,7 @@ function Demo() {
 </script>
 
 <template>
-    <TypographyText>{{ JSON.stringify(screens) }}</TypographyText>
+    <Typography.Text>{{ JSON.stringify(screens) }}</Typography.Text>
 </template>
 ```
 
@@ -276,7 +276,7 @@ function Demo() {
 <!-- breakpoint-subscriber.svelte -->
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { TypographyText, useConfig } from '@fibrae/semi-ui-svelte';
+    import { Typography, useConfig } from '@fibrae/semi-ui-svelte';
 
     const config = useConfig();
     let screens = $state(config.screens);
@@ -284,7 +284,7 @@ function Demo() {
     onMount(() => config.onBreakpoint?.((next) => (screens = next)));
 </script>
 
-<TypographyText>{JSON.stringify(screens)}</TypographyText>
+<Typography.Text>{JSON.stringify(screens)}</Typography.Text>
 ```
 
 ```svelte

@@ -1,5 +1,24 @@
 import { useState } from 'react';
-import { UserGuide, Button, Space, Tag, Switch } from '@fibrae/semi-ui-react';
+import { UserGuide, Button, Space, Tag, Switch, type UserGuideStepItem } from '@fibrae/semi-ui-react';
+
+const steps: UserGuideStepItem[] = [
+    {
+        target: () => document.querySelector('#padding-demo-1'),
+        title: '新手引导',
+        description: 'Hello ByteDancer!',
+    },
+    {
+        target: () => document.querySelector('#padding-demo-2'),
+        title: 'New Padding',
+        description: 'This is 10px padding',
+    },
+    {
+        target: () => document.querySelector('#padding-demo-3'),
+        title: 'Change Padding',
+        spotlightPadding: 15,
+        description: 'We change the Padding to 15px',
+    },
+];
 
 export default function UserGuideDemo() {
     const [visible, setVisible] = useState(false);
@@ -21,24 +40,7 @@ export default function UserGuideDemo() {
                 mask
                 visible={visible}
                 spotlightPadding={10}
-                steps={[
-                    {
-                        target: () => document.querySelector('#padding-demo-1'),
-                        title: '新手引导',
-                        description: 'Hello ByteDancer!',
-                    },
-                    {
-                        target: () => document.querySelector('#padding-demo-2'),
-                        title: 'New Padding',
-                        description: 'This is 10px padding',
-                    },
-                    {
-                        target: () => document.querySelector('#padding-demo-3'),
-                        title: 'Change Padding',
-                        spotlightPadding: 15,
-                        description: 'We change the Padding to 15px',
-                    },
-                ]}
+                steps={steps}
                 onFinish={() => {
                     setVisible(false);
                     console.log('引导完成');

@@ -8,12 +8,12 @@
         <Resizable
             :defaultSize="{ width: '60%', height: 300 }"
             :style="{
-                marginLeft: '20%',
+                marginInlineStart: '20%',
                 backgroundColor: 'var(--semi-grey-1)',
                 border: 'var(--semi-color-border) 1px solid',
             }"
         >
-            <div :style="{ marginLeft: '20%' }">right</div>
+            <div :style="{ marginInlineStart: '20%' }">right</div>
             <template #handle="{ direction }">
                 <div v-if="direction === 'right'" :style="{ height: '100%', display: 'flex', alignItems: 'center', width: 'fit-content' }">
                     <IconTransfer />

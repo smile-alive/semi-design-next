@@ -3,8 +3,6 @@
     import { Sidebar } from '@fibrae/semi-ai-vue';
     import { Radio, RadioGroup, type RadioValue } from '@fibrae/semi-ui-vue';
 
-    const { CodeItem } = Sidebar;
-
     const code = `.semi-animation-react-demo-auto {
     button {
         height: 50px;
@@ -87,6 +85,6 @@
         <Radio value="css">CSS</Radio>
     </RadioGroup>
     <div :style="{ height: '200px', overflow: 'auto' }">
-        <CodeItem v-bind="itemProps" />
+        <Sidebar.CodeItem v-bind="itemProps" />
     </div>
 </template>

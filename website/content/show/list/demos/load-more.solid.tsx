@@ -26,25 +26,6 @@ function fetchData(page: number) {
     });
 }
 
-function Placeholder() {
-    return (
-        <div
-            style={{
-                display: 'flex',
-                'align-items': 'flex-start',
-                padding: '12px',
-                'border-bottom': '1px solid var(--semi-color-border)',
-            }}
-        >
-            <Skeleton.Avatar style={{ 'margin-right': '12px' }} />
-            <div>
-                <Skeleton.Title style={{ width: '120px', 'margin-bottom': '12px', 'margin-top': '12px' }} />
-                <Skeleton.Paragraph style={{ width: '600px' }} rows={2} />
-            </div>
-        </div>
-    );
-}
-
 export default function ListDemo() {
     let page = 0;
     const [loading, setLoading] = createSignal(true);
@@ -83,7 +64,7 @@ export default function ListDemo() {
                     <div
                         style={{
                             'text-align': 'center',
-                            'margin-top': '12px',
+                            'margin-block-start': '12px',
                             height: '32px',
                             'line-height': '32px',
                         }}
@@ -94,7 +75,25 @@ export default function ListDemo() {
             }
             dataSource={list()}
             renderItem={(item) => (
-                <Skeleton placeholder={<Placeholder />} loading={item.loading}>
+                <Skeleton
+                    placeholder={
+                        <div
+                            style={{
+                                display: 'flex',
+                                'align-items': 'flex-start',
+                                padding: '12px',
+                                'border-bottom': '1px solid var(--semi-color-border)',
+                            }}
+                        >
+                            <Skeleton.Avatar style={{ 'margin-inline-end': '12px' }} />
+                            <div>
+                                <Skeleton.Title style={{ width: '120px', 'margin-block-end': '12px', 'margin-block-start': '12px' }} />
+                                <Skeleton.Paragraph style={{ width: '600px' }} rows={2} />
+                            </div>
+                        </div>
+                    }
+                    loading={item.loading}
+                >
                     <List.Item
                         header={<Avatar color={item.color}>SE</Avatar>}
                         main={

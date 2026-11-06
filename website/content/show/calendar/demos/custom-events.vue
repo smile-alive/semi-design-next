@@ -4,8 +4,7 @@
 
     const dailyEventStyle: CSSProperties = {
         position: 'absolute',
-        left: '0',
-        right: '0',
+        insetInline: '0',
         borderRadius: '3px',
         boxSizing: 'border-box',
         border: 'var(--semi-color-primary) 1px solid',
@@ -19,8 +18,8 @@
 
 <template>
     <Calendar :displayValue="displayValue" :height="700" mode="week">
-        <template #dateGrid="{ dateString }">
-            <template v-if="dateString === targetDateString">
+        <template #dateGrid="cell">
+            <template v-if="cell.dateString === targetDateString">
                 <div :style="{ ...dailyEventStyle, top: '500px', height: '50px' }">吃饭 🍰</div>
                 <div :style="{ ...dailyEventStyle, top: '0', height: '400px' }">睡觉 😪</div>
                 <div :style="{ ...dailyEventStyle, top: '700px', height: '100px' }">打豆豆 🎮</div>

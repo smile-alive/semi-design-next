@@ -27,9 +27,13 @@ const colorStyle: JSX.CSSProperties = { color: '#1C1F23' };
 export default function CarouselDemo() {
     const [activeIndex, setActiveIndex] = createSignal(0);
 
+    const onChange = (newActiveIndex: number) => {
+        setActiveIndex(newActiveIndex);
+    };
+
     return (
         <div>
-            <Carousel style={{ width: '100%', height: '400px' }} activeIndex={activeIndex()} autoPlay={false} theme="dark" onChange={(index) => setActiveIndex(index)}>
+            <Carousel style={{ width: '100%', height: '400px' }} activeIndex={activeIndex()} autoPlay={false} theme="dark" onChange={onChange}>
                 <For each={slides}>
                     {(slide) => (
                         <div style={{ height: '100%', 'background-size': 'cover', 'background-image': `url('${slide.src}')` }}>

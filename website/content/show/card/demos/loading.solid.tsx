@@ -6,7 +6,7 @@ export default function CardDemo() {
 
     return (
         <>
-            <Switch aria-label="显示内容" onChange={(checked) => setLoading(!checked)} />
+            <Switch aria-label="显示内容" onChange={(v) => setLoading(!v)} />
             <br />
             <br />
             <Card style={{ 'max-width': '360px' }} loading={loading()}>

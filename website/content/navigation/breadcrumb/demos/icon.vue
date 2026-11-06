@@ -7,7 +7,7 @@
     <Breadcrumb>
         <Breadcrumb.Item>
             <template #icon>
-                <IconHome size="small" />
+                <IconHome aria-label="Home" size="small" />
             </template>
         </Breadcrumb.Item>
         <Breadcrumb.Item>

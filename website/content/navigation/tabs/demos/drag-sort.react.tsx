@@ -22,7 +22,7 @@ function SortableTabItem({ item, index, selected, size, type, tabPosition, onCli
         opacity: isDragging ? 0.5 : 1,
         display: 'inline-flex',
     };
-    return <Tabs.TabItem ref={ref} style={style} itemKey={item.itemKey} tab={item.tab} icon={item.icon} disabled={item.disabled} selected={selected} size={size} type={type} tabPosition={tabPosition} onClick={onClick} />;
+    return <Tabs.TabItem ref={ref} style={style} itemKey={item.itemKey} tab={item.tab} disabled={item.disabled} selected={selected} size={size} type={type} tabPosition={tabPosition} onClick={onClick} />;
 }
 
 export default function TabsDemo() {
@@ -41,18 +41,15 @@ export default function TabsDemo() {
         }
     };
 
-    const renderTabBar: TabsProps['renderTabBar'] = ({ type = 'line', size = 'medium', tabPosition = 'top' }) => {
-        const barCls = `semi-tabs-bar semi-tabs-bar-${type} semi-tabs-bar-${tabPosition}`;
-        return (
-            <DragDropProvider plugins={(defaults) => defaults.filter((plugin) => plugin !== Accessibility)} onDragEnd={handleDragEnd}>
-                <div className={barCls} role="tablist">
-                    {items.map((item, index) => (
-                        <SortableTabItem key={item.itemKey} item={item} index={index} selected={activeKey === item.itemKey} size={size} type={type} tabPosition={tabPosition} onClick={(key) => setActiveKey(key)} />
-                    ))}
-                </div>
-            </DragDropProvider>
-        );
-    };
+    const renderTabBar: TabsProps['renderTabBar'] = (tabBarProps) => (
+        <DragDropProvider plugins={(defaults) => defaults.filter((plugin) => plugin !== Accessibility)} onDragEnd={handleDragEnd}>
+            <div className={`semi-tabs-bar semi-tabs-bar-${tabBarProps.type} semi-tabs-bar-${tabBarProps.tabPosition}`} role="tablist">
+                {items.map((item, index) => (
+                    <SortableTabItem key={item.itemKey} item={item} index={index} selected={activeKey === item.itemKey} size={tabBarProps.size} type={tabBarProps.type} tabPosition={tabBarProps.tabPosition} onClick={(key) => setActiveKey(key)} />
+                ))}
+            </div>
+        </DragDropProvider>
+    );
 
     return (
         <Tabs type="line" activeKey={activeKey} onChange={setActiveKey} renderTabBar={renderTabBar}>

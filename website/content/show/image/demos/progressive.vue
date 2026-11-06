@@ -12,5 +12,5 @@
         </template>
     </Image>
     <br />
-    <Button :style="{ marginTop: '10px' }" theme="solid" @click="timestamp = String(Date.now())">Reload</Button>
+    <Button :style="{ marginBlockStart: '10px' }" theme="solid" @click="timestamp = String(Date.now())">Reload</Button>
 </template>

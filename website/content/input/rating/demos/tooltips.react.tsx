@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Rating } from '@fibrae/semi-ui-react';
 
+const desc = ['极差', '较差', '一般', '满意', '非常满意'];
+
 export default function RatingDemo() {
     const [value, setValue] = useState(0);
     const change = (val: number) => setValue(val);
-    const desc = ['极差', '较差', '一般', '满意', '非常满意'];
     return (
         <div>
             <span>

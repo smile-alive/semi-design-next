@@ -11,9 +11,9 @@
 </script>
 
 <Tabs {tabList}>
-    {#snippet tab({ item })}
-        {@const Icon = icons[item.itemKey as keyof typeof icons]}
-        <span><Icon />{item.tab}</span>
+    {#snippet tab(tabItem)}
+        {@const Icon = icons[tabItem.item.itemKey as keyof typeof icons]}
+        <span><Icon />{tabItem.item.tab}</span>
     {/snippet}
-    {#snippet panel({ item })}{item.tab}{/snippet}
+    {#snippet panel(pane)}{pane.item.tab}{/snippet}
 </Tabs>

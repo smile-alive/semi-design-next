@@ -31,7 +31,7 @@
         padding: '10px',
         borderRadius: '10px',
         background: 'none',
-        color: 'var( --semi-color-text-1)',
+        color: 'var(--semi-color-text-1)',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -47,7 +47,7 @@
     let id = 0;
     const getId = () => `id-${id++}`;
 
-    const messages = ref<Message[]>([
+    const message = ref<Message[]>([
         {
             role: 'assistant',
             id: '1',
@@ -65,18 +65,18 @@
             content: '这是一条 mock 回复信息',
         };
         setTimeout(() => {
-            messages.value = [...messages.value, newAssistantMessage];
+            message.value = [...message.value, newAssistantMessage];
         }, 200);
         hints.value = [];
     };
 </script>
 
 <template>
-    <Chat v-model:chats="messages" :hints="hints" :roleConfig="roleInfo" :style="commonOuterStyle" :uploadProps="uploadProps" @clear="hints = []" @hintClick="hints = []" @messageSend="onMessageSend">
-        <template #hintBox="{ content, onHintClick }">
-            <button :style="commonHintStyle" type="button" @click="onHintClick">
-                {{ content }}
-                <IconArrowRight :style="{ marginLeft: '10px' }" />
+    <Chat v-model:chats="message" :hints="hints" :roleConfig="roleInfo" :style="commonOuterStyle" :uploadProps="uploadProps" @clear="hints = []" @hintClick="hints = []" @messageSend="onMessageSend">
+        <template #hintBox="props">
+            <button :style="commonHintStyle" type="button" @click="props.onHintClick">
+                {{ props.content }}
+                <IconArrowRight :style="{ marginInlineStart: '10px' }" />
             </button>
         </template>
     </Chat>

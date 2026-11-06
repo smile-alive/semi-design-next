@@ -5,11 +5,16 @@ type Selected = Item & { type?: string | number; index: number };
 
 const minutes = Array.from({ length: 60 }, (_, index) => ({
     value: index,
-    disabled: index % 2 === 0,
+    disabled: index % 3 === 0,
 }));
 
 const ampms = [{ value: '上午' }, { value: '下午' }];
 const hours = Array.from({ length: 12 }, (_, index) => ({ value: index + 1 }));
+
+const scrollStyle = {
+    border: 'unset',
+    'box-shadow': 'unset',
+};
 
 export default function ScrollListDemo() {
     const [selectIndex1, setSelectIndex1] = createSignal(1);
@@ -32,11 +37,6 @@ export default function ScrollListDemo() {
 
     const handleClose = () => {
         console.log('close');
-    };
-
-    const scrollStyle = {
-        border: 'unset',
-        'box-shadow': 'unset',
     };
 
     return (

@@ -9,10 +9,12 @@ const data = Array.from({ length: 30 }, (_, i) => {
     };
 });
 
+const headerStyle = { margin: '10px 0 0 10px', height: '24px', display: 'flex', 'align-items': 'center' };
+
 // the headers read their live objects in the JSX, so each renders once and follows the state
 function renderSourceHeader(header: TransferSourceHeaderProps) {
     return (
-        <div style={{ margin: '10px 0 0 10px', height: '24px', display: 'flex', 'align-items': 'center' }}>
+        <div style={headerStyle}>
             <span>共 {header.num} 项</span>
             {header.showButton && (
                 <Button theme="borderless" type="tertiary" size="small" onClick={() => header.onAllClick()}>
@@ -25,7 +27,7 @@ function renderSourceHeader(header: TransferSourceHeaderProps) {
 
 function renderSelectedHeader(header: TransferSelectedHeaderProps) {
     return (
-        <div style={{ margin: '10px 0 0 10px', height: '24px', display: 'flex', 'align-items': 'center' }}>
+        <div style={headerStyle}>
             <span>{header.num} 项已选</span>
             {header.showButton && (
                 <Button theme="borderless" type="tertiary" size="small" onClick={() => header.onClear()}>

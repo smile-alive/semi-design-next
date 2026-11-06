@@ -3,7 +3,7 @@ import { ButtonGroup, Button } from '@fibrae/semi-ui-react';
 export default function ButtonDemo() {
     return (
         <div style={{ display: 'flex' }}>
-            <div style={{ marginRight: 10 }}>
+            <div style={{ marginInlineEnd: 10 }}>
                 <ButtonGroup disabled>
                     <Button>拷贝</Button>
                     <Button>查询</Button>

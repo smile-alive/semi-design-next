@@ -68,7 +68,7 @@ export default function DropdownDemo() {
                     </Dropdown.Menu>
                 }
             >
-                <Button theme="solid" type="secondary" style={{ marginBottom: 20 }}>
+                <Button theme="solid" type="secondary" style={{ marginBlockEnd: 20 }}>
                     Right click (ContextMenu)
                 </Button>
             </Dropdown>

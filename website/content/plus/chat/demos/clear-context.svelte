@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Chat, type ChatMessage } from '@fibrae/semi-ai-svelte';
 
-    const roleConfig = {
+    const roleInfo = {
         user: {
             name: 'User',
             avatar: '/assets/docs-icon.png',
@@ -16,12 +16,14 @@
         },
     };
 
+    const commonOuterStyle = 'border: 1px solid var(--semi-color-border); border-radius: 16px; margin: 8px 16px; height: 550px';
+
     const uploadProps = { action: 'https://api.semi.design/upload' };
 
     let id = 0;
     const getId = () => `id-${id++}`;
 
-    let messages = $state<ChatMessage[]>([
+    let message = $state<ChatMessage[]>([
         {
             role: 'system',
             id: '1',
@@ -50,23 +52,23 @@
             content: '这是一条 mock 回复信息',
         };
         setTimeout(() => {
-            messages = [...messages, newAssistantMessage];
+            message = [...message, newAssistantMessage];
         }, 200);
     };
 
     const onMessageReset = () => {
         setTimeout(() => {
-            const lastMessage = messages[messages.length - 1];
+            const lastMessage = message[message.length - 1];
             const newLastMessage: ChatMessage = {
                 ...lastMessage,
                 status: 'complete',
                 content: 'This is a mock reset message.',
             };
-            messages = [...messages.slice(0, -1), newLastMessage];
+            message = [...message.slice(0, -1), newLastMessage];
         }, 200);
     };
 </script>
 
-<Chat bind:chats={messages} {onMessageReset} {onMessageSend} {roleConfig} showClearContext style="border: 1px solid var(--semi-color-border); border-radius: 16px; margin: 8px 16px; height: 550px" {uploadProps}>
+<Chat bind:chats={message} {onMessageReset} {onMessageSend} roleConfig={roleInfo} showClearContext style={commonOuterStyle} {uploadProps}>
     {#snippet uploadTip()}自定义上传按钮提示信息{/snippet}
 </Chat>

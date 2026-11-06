@@ -5,5 +5,5 @@
 </script>
 
 <Tabs collapsible style="width: 60%; margin: 20px" {tabList} type="card">
-    {#snippet panel({ index })}Content of card tab {index}{/snippet}
+    {#snippet panel(pane)}Content of card tab {pane.index}{/snippet}
 </Tabs>

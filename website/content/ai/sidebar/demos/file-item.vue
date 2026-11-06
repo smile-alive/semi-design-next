@@ -3,9 +3,7 @@
     import { Sidebar, type ImageUploadNodeOptions } from '@fibrae/semi-ai-vue';
     import { Button } from '@fibrae/semi-ui-vue';
 
-    const { FileItem } = Sidebar;
-
-    const content = `<h2>
+    const defaultFileContent = `<h2>
   Semi Design 介绍
 </h2>
 <p>
@@ -47,5 +45,5 @@
     <Button :aria-pressed="editable" @click="editable = !editable">可编辑</Button>
     <br />
     <br />
-    <FileItem :content="content" :editable="editable" :imgUploadProps="imgUploadProps" name="Semi Design 介绍" :style="{ border: '1px solid var(--semi-color-border)', padding: '12px' }" />
+    <Sidebar.FileItem :content="defaultFileContent" :editable="editable" :imgUploadProps="imgUploadProps" name="Semi Design 介绍" :style="{ border: '1px solid var(--semi-color-border)', padding: '12px' }" />
 </template>

@@ -91,7 +91,7 @@
 </script>
 
 <template>
-    <RadioGroup v-model="mode" type="button">
+    <RadioGroup v-model="mode" aria-label="视图模式" type="button">
         <Radio value="day">日视图</Radio>
         <Radio value="week">周视图</Radio>
         <Radio value="month">月视图</Radio>
@@ -103,8 +103,8 @@
     <br />
     <br />
     <Calendar :displayValue="displayValue" :events="events" :height="400" :minEventHeight="40" :mode="mode as CalendarMode" :range="range">
-        <template #event="{ event }">
-            <div :style="event.daily && mode !== 'month' ? dailyEventStyle : allDayStyle">{{ event.children }}</div>
+        <template #event="eventData">
+            <div :style="eventData.event.daily && mode !== 'month' ? dailyEventStyle : allDayStyle">{{ eventData.event.children }}</div>
         </template>
     </Calendar>
 </template>

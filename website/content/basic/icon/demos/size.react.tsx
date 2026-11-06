@@ -1,15 +1,18 @@
-import React from 'react';
-import { IconSearch, IconHelpCircle, IconAlertCircle, IconMinusCircle, IconPlusCircle, IconPlus, IconRefresh } from '@fibrae/semi-icons-react';
+import { IconSearch, IconHelpCircle, IconAlertCircle, IconMinusCircle, IconPlusCircle, IconPlus, IconRefresh, type IconSize } from '@fibrae/semi-icons-react';
+
+const icons = [IconSearch, IconHelpCircle, IconAlertCircle, IconMinusCircle, IconPlusCircle, IconPlus, IconRefresh];
+const sizes: IconSize[] = ['extra-small', 'small', 'default', 'large', 'extra-large'];
 
 export default function IconDemo() {
-    const types = [<IconSearch key="search" />, <IconHelpCircle key="help-circle" />, <IconAlertCircle key="alert-circle" />, <IconMinusCircle key="minus-circle" />, <IconPlusCircle key="plus-circle" />, <IconPlus key="plus" />, <IconRefresh key="refresh" />];
-    const sizes = ['extra-small', 'small', 'default', 'large', 'extra-large'];
-    let icons = types.map((type, i) => {
-        return (
-            <div key={i} style={{ marginBottom: 4 }}>
-                {sizes.map((size) => React.cloneElement(type, { size, key: size }))}
-            </div>
-        );
-    });
-    return <>{icons}</>;
+    return (
+        <>
+            {icons.map((Icon, index) => (
+                <div key={index} style={{ marginBlockEnd: 4 }}>
+                    {sizes.map((size) => (
+                        <Icon key={size} size={size} />
+                    ))}
+                </div>
+            ))}
+        </>
+    );
 }

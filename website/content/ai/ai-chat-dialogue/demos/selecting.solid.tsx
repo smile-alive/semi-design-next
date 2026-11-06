@@ -38,10 +38,6 @@ const roleConfig = {
     },
 };
 
-const containerStyle = { display: 'flex', 'flex-direction': 'column', 'row-gap': '8px' } as const;
-const rowStyle = { display: 'flex', 'align-items': 'center', 'column-gap': '10px' } as const;
-const panelStyle = { border: '1px solid var(--semi-color-border)', 'border-radius': '12px', 'margin-top': '10px', padding: '20px' } as const;
-
 function onSelect(selectionIds: string[]) {
     console.log('onSelect', selectionIds);
 }
@@ -76,22 +72,22 @@ export default function AIChatDialogueDemo() {
 
     return (
         <div>
-            <span style={containerStyle}>
-                <span style={rowStyle}>
+            <span style={{ display: 'flex', 'flex-direction': 'column', 'row-gap': '8px' }}>
+                <span style={{ display: 'flex', 'align-items': 'center', 'column-gap': '10px' }}>
                     会话布局方式
                     <RadioGroup onChange={onAlignChange} value={align()} type="button">
                         <Radio value="leftRight">左右分布</Radio>
                         <Radio value="leftAlign">左对齐</Radio>
                     </RadioGroup>
                 </span>
-                <span style={rowStyle}>
+                <span style={{ display: 'flex', 'align-items': 'center', 'column-gap': '10px' }}>
                     是否开启选择
                     <RadioGroup onChange={onSelectChange} value={select()} type="button">
                         <Radio value={true}>开启</Radio>
                         <Radio value={false}>关闭</Radio>
                     </RadioGroup>
                 </span>
-                <span style={rowStyle}>
+                <span style={{ display: 'flex', 'align-items': 'center', 'column-gap': '10px' }}>
                     选择方式
                     <RadioGroup onChange={onSelectionChange} value={selection()} type="button">
                         <Radio value="allSelect">全选</Radio>
@@ -100,7 +96,7 @@ export default function AIChatDialogueDemo() {
                 </span>
             </span>
 
-            <div style={panelStyle}>
+            <div style={{ border: '1px solid var(--semi-color-border)', 'border-radius': '12px', 'margin-block-start': '10px', padding: '20px' }}>
                 <AIChatDialogue ref={(element) => (dialogue = element)} align={align()} mode="bubble" chats={messages()} selecting={select()} onSelect={onSelect} roleConfig={roleConfig} />
             </div>
         </div>

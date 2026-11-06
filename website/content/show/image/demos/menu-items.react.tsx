@@ -1,11 +1,12 @@
-import { useMemo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { IconInfoCircle } from '@fibrae/semi-icons-react';
 import { Image, ImagePreview, Divider, Tooltip, type ImagePreviewMenuProps } from '@fibrae/semi-ui-react';
 
-export default function ImageDemo() {
-    const srcList = useMemo(() => ['/assets/root-web-sites/abstract.jpg', '/assets/root-web-sites/sky.jpg', '/assets/root-web-sites/greenleaf.jpg'], []);
+const srcList = ['/assets/root-web-sites/abstract.jpg', '/assets/root-web-sites/sky.jpg', '/assets/root-web-sites/greenleaf.jpg'];
 
-    const renderPreviewMenu = useCallback(({ menuItems = [] }: ImagePreviewMenuProps) => {
+export default function ImageDemo() {
+    const renderPreviewMenu = useCallback((menu: ImagePreviewMenuProps) => {
+        const menuItems = menu.menuItems ?? [];
         const customNode = (
             <Tooltip content="我是一个自定义操作">
                 <IconInfoCircle size="large" />
@@ -33,12 +34,10 @@ export default function ImageDemo() {
     }, []);
 
     return (
-        <>
-            <ImagePreview renderPreviewMenu={renderPreviewMenu}>
-                {srcList.map((src, index) => (
-                    <Image key={index} src={src} width={200} alt={`lamp${index + 1}`} />
-                ))}
-            </ImagePreview>
-        </>
+        <ImagePreview renderPreviewMenu={renderPreviewMenu}>
+            {srcList.map((src, index) => (
+                <Image key={index} src={src} width={200} alt={`lamp${index + 1}`} />
+            ))}
+        </ImagePreview>
     );
 }

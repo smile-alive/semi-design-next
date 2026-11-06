@@ -29,7 +29,7 @@ const DAY = 24 * 60 * 60 * 1000;
 const figmaIconUrl = '/assets/placeholder/app.svg';
 const dataTotalSize = 46;
 const wrapStyle: CSSProperties = {
-    marginBottom: 15,
+    marginBlockEnd: 15,
     display: 'flex',
     justifyContent: 'space-around',
     flexWrap: 'wrap',
@@ -43,7 +43,7 @@ const initialColumns: ColumnProps[] = [
         render: (text) => {
             return (
                 <span>
-                    <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ marginRight: 12 }} />
+                    <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ marginInlineEnd: 12 }} />
                     {text}
                 </span>
             );
@@ -72,7 +72,7 @@ const initialColumns: ColumnProps[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ marginRight: 4 }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ marginInlineEnd: 4 }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}
@@ -98,7 +98,7 @@ const allData = Array.from({ length: dataTotalSize }, (_v, i): Row => {
         name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
         owner: isSemiDesign ? '姜鹏志' : '郝宣',
         size: randomNumber,
-        updateTime: new Date(2019, 6, 23, 12).valueOf() + randomNumber * DAY,
+        updateTime: new Date(2024, 4, 6, 12).valueOf() + randomNumber * DAY,
         avatarBg: isSemiDesign ? 'grey' : 'red',
         description: `这是第 ${i} 份设计稿的详细说明。`,
     };

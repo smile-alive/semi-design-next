@@ -1,15 +1,13 @@
 import { Button, Toast, Typography } from '@fibrae/semi-ui-solid';
 
-const { Text } = Typography;
-
 // content as a function: the toast creates it when shown, under its own root
 const opts = {
     content: () => (
         <span>
-            <Text>Hi, Bytedance dance dance</Text>
-            <Text link style={{ 'margin-left': '12px' }}>
+            <Typography.Text>Hi, Bytedance dance dance</Typography.Text>
+            <Typography.Text link style={{ 'margin-inline-start': '12px' }}>
                 更多
-            </Text>
+            </Typography.Text>
         </span>
     ),
     duration: 3,
@@ -19,11 +17,11 @@ const multiLineOpts = {
     content: () => (
         <>
             <div>Hi, Bytedance dance dance</div>
-            <div style={{ 'margin-top': '8px' }}>
-                <Text link>查看详情</Text>
-                <Text link style={{ 'margin-left': '20px' }}>
+            <div style={{ 'margin-block-start': '8px' }}>
+                <Typography.Text link>查看详情</Typography.Text>
+                <Typography.Text link style={{ 'margin-inline-start': '20px' }}>
                     一会再看
-                </Text>
+                </Typography.Text>
             </div>
         </>
     ),

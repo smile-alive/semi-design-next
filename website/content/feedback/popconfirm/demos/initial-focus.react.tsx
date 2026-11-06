@@ -22,12 +22,7 @@ export default function PopconfirmDemo() {
             >
                 <Button>取消聚焦</Button>
             </Popconfirm>
-            <Popconfirm
-                title="确定是否要保存此修改？"
-                content={({ initialFocusRef }) => {
-                    return <input ref={initialFocusRef} placeholder="focus here" />;
-                }}
-            >
+            <Popconfirm title="确定是否要保存此修改？" content={(focus) => <input ref={focus.initialFocusRef} placeholder="focus here" />}>
                 <Button>内容聚焦</Button>
             </Popconfirm>
         </Space>

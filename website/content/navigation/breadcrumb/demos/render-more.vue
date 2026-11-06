@@ -2,7 +2,7 @@
     import { IconMore } from '@fibrae/semi-icons-vue';
     import { Breadcrumb, Popover, type BreadcrumbItemInfo } from '@fibrae/semi-ui-vue';
 
-    const separator = '-'; // 拼接 restItems 用的分隔符
+    const separator = '-';
     const onClick = (item: BreadcrumbItemInfo, e: MouseEvent) => console.log(item, e);
 </script>
 
@@ -15,13 +15,13 @@
         <Breadcrumb.Item>上上一层</Breadcrumb.Item>
         <Breadcrumb.Item>上一层</Breadcrumb.Item>
         <Breadcrumb.Item>详情页</Breadcrumb.Item>
-        <template #more="{ restItems }">
+        <template #more="moreContext">
             <Popover showArrow :style="{ padding: '12px' }">
                 <IconMore tabindex="-1" />
                 <template #content>
-                    <template v-for="(item, idx) in restItems" :key="idx">
+                    <template v-for="(item, idx) in moreContext.restItems" :key="idx">
                         <component :is="item" />
-                        <span v-if="idx !== restItems.length - 1" :style="{ color: 'var(--semi-color-text-2)', marginRight: '6px' }">{{ separator }}</span>
+                        <span v-if="idx !== moreContext.restItems.length - 1" :style="{ color: 'var(--semi-color-text-2)', marginInlineEnd: '6px' }">{{ separator }}</span>
                     </template>
                 </template>
             </Popover>

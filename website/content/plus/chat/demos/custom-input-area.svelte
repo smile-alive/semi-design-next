@@ -8,7 +8,7 @@
         file?: FileItem[];
     }
 
-    const roleConfig = {
+    const roleInfo = {
         user: {
             name: 'User',
             avatar: '/assets/docs-icon.png',
@@ -23,12 +23,14 @@
         },
     };
 
+    const commonOuterStyle = 'border: 1px solid var(--semi-color-border); border-radius: 16px; height: 500px';
+    const inputStyle = 'display: flex; flex-direction: column; border: 1px solid var(--semi-color-border); margin: 8px 16px; border-radius: 8px; padding: 8px';
     const uploadProps = { action: 'https://api.semi.design/upload' };
 
     let id = 0;
     const getId = () => `id-${id++}`;
 
-    let messages = $state<ChatMessage[]>([
+    let message = $state<ChatMessage[]>([
         {
             role: 'system',
             id: '1',
@@ -48,7 +50,7 @@
             content: 'This is a mock response',
         };
         setTimeout(() => {
-            messages = [...messages, newAssistantMessage];
+            message = [...message, newAssistantMessage];
         }, 200);
     };
 
@@ -57,16 +59,16 @@
             return;
         }
         const values = formApi.getValues();
-        if (values.name?.length || values.file?.length) {
+        if ((values.name && values.name.length !== 0) || (values.file && values.file.length !== 0)) {
             onSend(values.name, values.file);
             formApi.reset();
         }
     };
 </script>
 
-<Chat bind:chats={messages} {onMessageSend} {roleConfig} style="border: 1px solid var(--semi-color-border); border-radius: 16px; height: 500px" {uploadProps}>
-    {#snippet inputArea({ onSend })}
-        <div style="display: flex; flex-direction: column; border: 1px solid var(--semi-color-border); margin: 8px 16px; border-radius: 8px; padding: 8px">
+<Chat bind:chats={message} {onMessageSend} roleConfig={roleInfo} style={commonOuterStyle} {uploadProps}>
+    {#snippet inputArea(props)}
+        <div style={inputStyle}>
             <Form getFormApi={(api) => (formApi = api)}>
                 <strong>输入信息</strong>
                 <FormInput field="name" label="名称（Input）" style="width: 250px" trigger="blur" />
@@ -79,7 +81,7 @@
                     </Button>
                 </FormUpload>
             </Form>
-            <Button style="width: fit-content" onclick={() => submit(onSend)}>提交</Button>
+            <Button style="width: fit-content" onclick={() => submit(props.onSend)}>提交</Button>
         </div>
     {/snippet}
 </Chat>

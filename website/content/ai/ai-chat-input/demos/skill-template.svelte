@@ -3,7 +3,6 @@
     import { AIChatInput } from '@fibrae/semi-ai-svelte';
     import { IconSearch, IconTemplateStroked } from '@fibrae/semi-icons-svelte';
 
-    const { Configure } = AIChatInput;
     const modelOptions = [
         { value: 'GPT-5', label: 'GPT-5' },
         { value: 'GPT-4o', label: 'GPT-4o' },
@@ -71,14 +70,14 @@
 
 <AIChatInput bind:this={input} placeholder="输入 / 唤起技能，选择技能后，点击模版按钮可查看模版，可通过鼠标上下按键切换侯选项" skillHotKey="/" {skills} style="margin: 12px" {uploadProps}>
     {#snippet configureArea()}
-        <Configure.Select field="model" initValue="GPT-4o" optionList={modelOptions} />
+        <AIChatInput.Configure.Select field="model" initValue="GPT-4o" optionList={modelOptions} />
     {/snippet}
-    {#snippet skillIcon({ item })}
-        {@const Icon = skillIcons[item.value ?? '']}
+    {#snippet skillIcon(skillIcon)}
+        {@const Icon = skillIcons[skillIcon.item.value ?? '']}
         <Icon />
     {/snippet}
-    {#snippet template({ skill })}
-        {#if skill?.value === 'writing'}
+    {#snippet template(templateSlot)}
+        {#if templateSlot.skill?.value === 'writing'}
             <div class="aiChatInput-template">
                 <div class="template-header">
                     {#each templates as item, index (item.group)}
@@ -89,7 +88,7 @@
                 </div>
                 <div class="template-content">
                     {#each templates[groupIndex].children as item (item.title)}
-                        <button class="template-content-item" style="font: inherit; text-align: left" type="button" onclick={() => setTemplate(item.content)}>
+                        <button class="template-content-item" style="font: inherit; text-align: start" type="button" onclick={() => setTemplate(item.content)}>
                             <span class="template-content-item-icon" style="background: {item.bg}">
                                 <IconTemplateStroked />
                             </span>

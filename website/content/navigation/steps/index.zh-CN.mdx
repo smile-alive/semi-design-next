@@ -21,7 +21,6 @@ import StepsSvelteApi from './api/steps.svelte.zh-CN.mdx';
 
 ```jsx
 import { Steps } from '@fibrae/semi-ui-react';
-const Step = Steps.Step;
 ```
 
 Steps 把每个子元素按顺序当作一个步骤位置（文本除外），fill 的列宽按它计数。自行封装的 Step 组件把属性透传给 Steps.Step 即可正常编号，不需要声明静态属性；原生元素只占序号、原样渲染。

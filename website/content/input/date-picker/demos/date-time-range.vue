@@ -5,6 +5,6 @@
 </script>
 
 <template>
-    <DatePicker :style="{ width: '400px', marginBottom: '8px' }" type="dateTimeRange" @change="console.log" />
+    <DatePicker :style="{ width: '400px', marginBlockEnd: '8px' }" type="dateTimeRange" @change="console.log" />
     <DatePicker :defaultPickerValue="defaultPickerValue" :style="{ width: '400px' }" type="dateTimeRange" @change="console.log" />
 </template>

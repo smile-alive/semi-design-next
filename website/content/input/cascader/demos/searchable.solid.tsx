@@ -1,7 +1,7 @@
 import { IconMapPinStroked } from '@fibrae/semi-icons-solid';
 import { Cascader, type CascaderData, Typography } from '@fibrae/semi-ui-solid';
 
-// The label inside an option must not be focusable, so the node only adds a decorative icon to the text
+// renderLabel adds a decorative icon in the columns; labelText holds the text that search matches
 const renderLabel = (item: CascaderData) => (
     <span style={{ display: 'inline-flex', 'align-items': 'center', 'column-gap': '4px' }}>
         <IconMapPinStroked />
@@ -50,6 +50,35 @@ const treeData = [
     },
 ];
 
+const labelNodeTreeData = [
+    {
+        label: '浙江省',
+        labelText: '浙江省',
+        value: 'zhejiang',
+        children: [
+            {
+                label: '杭州市',
+                labelText: '杭州市',
+                value: 'hangzhou',
+                children: [
+                    { label: '西湖区', labelText: '西湖区', value: 'xihu' },
+                    { label: '萧山区', labelText: '萧山区', value: 'xiaoshan' },
+                    { label: '临安区', labelText: '临安区', value: 'linan' },
+                ],
+            },
+            {
+                label: '宁波市',
+                labelText: '宁波市',
+                value: 'ningbo',
+                children: [
+                    { label: '海曙区', labelText: '海曙区', value: 'haishu' },
+                    { label: '江北区', labelText: '江北区', value: 'jiangbei' },
+                ],
+            },
+        ],
+    },
+];
+
 export default function CascaderDemo() {
     return (
         <div>
@@ -63,8 +92,8 @@ export default function CascaderDemo() {
             <Cascader style={{ width: '300px' }} treeData={treeData} placeholder="filterLeafOnly=false" filterTreeNode filterLeafOnly={false} />
             <br />
             <br />
-            <Typography.Title heading={6}>renderLabel 自定义选项内容，仍对 label 文本进行搜索</Typography.Title>
-            <Cascader style={{ width: '300px' }} treeData={treeData} placeholder="renderLabel" filterTreeNode renderLabel={renderLabel} />
+            <Typography.Title heading={6}>Label 为自定义节点，指定其他属性进行搜索</Typography.Title>
+            <Cascader style={{ width: '300px' }} treeData={labelNodeTreeData} placeholder="Search for labelText" filterTreeNode treeNodeFilterProp="labelText" displayProp="labelText" renderLabel={renderLabel} />
         </div>
     );
 }

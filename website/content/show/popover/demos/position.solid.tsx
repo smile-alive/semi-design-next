@@ -36,10 +36,10 @@ const article = () => (
 export default function PopoverDemo() {
     return (
         <div>
-            <div style={{ 'margin-left': '80px', 'white-space': 'nowrap' }}>
+            <div style={{ 'margin-inline-start': '80px', 'white-space': 'nowrap' }}>
                 <For each={tops}>
-                    {([pos, label]) => (
-                        <Popover content={article} position={pos}>
+                    {([position, label]) => (
+                        <Popover content={article} position={position}>
                             <Tag style={{ margin: '8px', padding: '20px' }}>{label}</Tag>
                         </Popover>
                     )}
@@ -47,26 +47,26 @@ export default function PopoverDemo() {
             </div>
             <div style={{ width: '80px', float: 'left' }}>
                 <For each={lefts}>
-                    {([pos, label]) => (
-                        <Popover content={article} position={pos}>
+                    {([position, label]) => (
+                        <Popover content={article} position={position}>
                             <Tag style={{ margin: '8px', padding: '20px', width: '60px' }}>{label}</Tag>
                         </Popover>
                     )}
                 </For>
             </div>
-            <div style={{ width: '40px', 'margin-left': '300px' }}>
+            <div style={{ width: '40px', 'margin-inline-start': '300px' }}>
                 <For each={rights}>
-                    {([pos, label]) => (
-                        <Popover content={article} position={pos}>
+                    {([position, label]) => (
+                        <Popover content={article} position={position}>
                             <Tag style={{ margin: '8px', padding: '20px', width: '60px' }}>{label}</Tag>
                         </Popover>
                     )}
                 </For>
             </div>
-            <div style={{ 'margin-left': '80px', clear: 'both', 'white-space': 'nowrap' }}>
+            <div style={{ 'margin-inline-start': '80px', clear: 'both', 'white-space': 'nowrap' }}>
                 <For each={bottoms}>
-                    {([pos, label]) => (
-                        <Popover content={article} position={pos}>
+                    {([position, label]) => (
+                        <Popover content={article} position={position}>
                             <Tag style={{ margin: '8px', padding: '20px', width: '60px' }}>{label}</Tag>
                         </Popover>
                     )}

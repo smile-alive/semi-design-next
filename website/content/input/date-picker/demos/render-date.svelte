@@ -5,14 +5,14 @@
 </script>
 
 <DatePicker>
-    {#snippet date({ dayNumber })}
-        {#if dayNumber === 1}
+    {#snippet date(dateProps)}
+        {#if dateProps.dayNumber === 1}
             <Tooltip>
                 {#snippet content()}Always Day 1{/snippet}
-                <div style={dateStyle}>{dayNumber}</div>
+                <div style={dateStyle}>{dateProps.dayNumber}</div>
             </Tooltip>
         {:else}
-            {dayNumber}
+            {dateProps.dayNumber}
         {/if}
     {/snippet}
 </DatePicker>

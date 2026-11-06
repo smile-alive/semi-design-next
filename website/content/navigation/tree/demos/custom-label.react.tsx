@@ -1,53 +1,49 @@
 import { Tree, Tag } from '@fibrae/semi-ui-react';
 
+const treeData = [
+    {
+        label: '亚洲',
+        value: 'yazhou',
+        key: 'yazhou',
+        children: [
+            {
+                label: '中国',
+                value: 'zhongguo',
+                key: 'zhongguo',
+            },
+            {
+                label: '日本',
+                value: 'riben',
+                key: 'riben',
+            },
+        ],
+    },
+];
+
+const labelStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+};
+
+const treeStyle = {
+    width: 260,
+    height: 420,
+    border: '1px solid var(--semi-color-border)',
+};
+
 export default function TreeDemo() {
     // Node content is display-only: focus stays on the tree, so buttons and links inside are keyboard-unreachable
-    const tag = (text: string) => <Tag size="small">{text}</Tag>;
-
-    const style = {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    };
-
-    const treeDataWithNode = [
-        {
-            label: (
-                <div style={style}>
-                    <span>亚洲</span>
-                    {tag('大洲')}
+    return (
+        <Tree
+            treeData={treeData}
+            style={treeStyle}
+            renderLabel={(label, node) => (
+                <div style={labelStyle}>
+                    <span>{label}</span>
+                    <Tag size="small">{node?.children ? '大洲' : '国家'}</Tag>
                 </div>
-            ),
-            value: 'yazhou',
-            key: 'yazhou',
-            children: [
-                {
-                    label: (
-                        <div style={style}>
-                            <span>中国</span>
-                            {tag('国家')}
-                        </div>
-                    ),
-                    value: 'zhongguo',
-                    key: 'zhongguo',
-                },
-                {
-                    label: (
-                        <div style={style}>
-                            <span>日本</span>
-                            {tag('国家')}
-                        </div>
-                    ),
-                    value: 'riben',
-                    key: 'riben',
-                },
-            ],
-        },
-    ];
-    const treeStyle = {
-        width: 260,
-        height: 420,
-        border: '1px solid var(--semi-color-border)',
-    };
-    return <Tree treeData={treeDataWithNode} style={treeStyle} />;
+            )}
+        />
+    );
 }

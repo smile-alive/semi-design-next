@@ -17,7 +17,7 @@
 
 <template>
     <span>页面右下方最后一行</span>
-    <FloatButtonGroup :items="items" style="inset-inline-end: 24px; bottom: 50px" @click="onClick">
+    <FloatButtonGroup :items="items" style="inset-inline-end: 24px; inset-block-end: 50px" @click="onClick">
         <template #icon="{ index }">
             <component :is="icons[index]" />
         </template>

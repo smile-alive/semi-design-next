@@ -18,7 +18,7 @@
         <FormInput field="email" label="邮箱" />
     </Form>
 
-    <div style="margin-top: 16px">
+    <div style="margin-block-start: 16px">
         <div>表单值：{{ JSON.stringify(values) }}</div>
         <div>touched 状态：{{ JSON.stringify(formState.touched) }}</div>
     </div>

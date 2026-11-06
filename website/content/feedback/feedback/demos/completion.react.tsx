@@ -1,6 +1,8 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-react';
 import { Feedback, Button, Empty, TextArea } from '@fibrae/semi-ui-react';
+
+const showThankProps = { title: ' ', footer: null };
 
 export default function FeedbackDemo() {
     const [visible1, setVisible1] = useState(false);
@@ -46,8 +48,6 @@ export default function FeedbackDemo() {
     const onTextAreaChange2 = useCallback((value: string) => {
         setValue2(value);
     }, []);
-
-    const showThankProps = useMemo(() => ({ title: ' ', footer: null }), []);
 
     return (
         <div>

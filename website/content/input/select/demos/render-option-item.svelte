@@ -16,28 +16,28 @@
     params; bind onmouseenter and class on the outer DOM or arrow keys display wrongly; put id there so screen
     readers announce the option the arrow keys reach
 -->
-{#snippet optionItem({ id, disabled, selected, label, focused, class: className, style, onclick, onmouseenter }: SelectOptionItemSnippetProps)}
+{#snippet optionItem(item: SelectOptionItemSnippetProps)}
     <div
-        aria-disabled={disabled}
-        aria-selected={selected}
+        aria-disabled={item.disabled}
+        aria-selected={item.selected}
         class={[
             'custom-option-render',
             {
-                'custom-option-render-focused': focused,
-                'custom-option-render-disabled': disabled,
-                'custom-option-render-selected': selected,
+                'custom-option-render-focused': item.focused,
+                'custom-option-render-disabled': item.disabled,
+                'custom-option-render-selected': item.selected,
             },
-            className,
+            item.class,
         ]}
-        {id}
+        id={item.id}
         role="option"
-        {style}
-        {onclick}
-        {onmouseenter}
+        style={item.style}
+        onclick={item.onclick}
+        onmouseenter={item.onmouseenter}
     >
-        <Checkbox checked={selected} />
+        <Checkbox checked={item.selected} />
         <div class="option-right">
-            <Highlight searchWords={[inputValue]} sourceString={String(label)} />
+            <Highlight searchWords={[inputValue]} sourceString={String(item.label)} />
         </div>
     </div>
 {/snippet}

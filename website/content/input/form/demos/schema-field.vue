@@ -25,7 +25,7 @@
     });
 
     const renderField: Record<string, SchemaFieldRenderer> = {
-        'profile.score': ({ field, node }) => h(FormRating, { field, label: { text: node.title, required: node.required } }),
+        'profile.score': (context) => h(FormRating, { field: context.field, label: { text: context.node.title, required: context.node.required } }),
     };
 
     const handleSubmit = (values: z.output<typeof schema>) => Toast.success(JSON.stringify(values));

@@ -11,7 +11,7 @@ const types = [
 export default function ButtonDemo() {
     return (
         <article>
-            <For each={types}>{([type, label]) => <strong style={{ color: `var(--semi-color-${type})`, 'margin-right': '10px' }}>{label}</strong>}</For>
+            <For each={types}>{([type, label]) => <strong style={{ color: `var(--semi-color-${type})`, 'margin-inline-end': '10px' }}>{label}</strong>}</For>
         </article>
     );
 }

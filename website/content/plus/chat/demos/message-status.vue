@@ -28,7 +28,7 @@
     let id = 0;
     const getId = () => `id-${id++}`;
 
-    const messages = ref<Message[]>([
+    const message = ref<Message[]>([
         {
             role: 'assistant',
             id: '1',
@@ -56,11 +56,11 @@
             content: '这是一条 mock 回复信息',
         };
         setTimeout(() => {
-            messages.value = [...messages.value, newAssistantMessage];
+            message.value = [...message.value, newAssistantMessage];
         }, 200);
     };
 </script>
 
 <template>
-    <Chat v-model:chats="messages" :roleConfig="roleInfo" :style="commonOuterStyle" :uploadProps="uploadProps" @messageSend="onMessageSend" />
+    <Chat v-model:chats="message" :roleConfig="roleInfo" :style="commonOuterStyle" :uploadProps="uploadProps" @messageSend="onMessageSend" />
 </template>

@@ -1,5 +1,26 @@
 import { useState } from 'react';
-import { UserGuide, Button, Space, Tag, Switch } from '@fibrae/semi-ui-react';
+import { UserGuide, Button, Space, Tag, Switch, type UserGuideStepItem } from '@fibrae/semi-ui-react';
+
+const steps: UserGuideStepItem[] = [
+    {
+        target: () => document.querySelector('#basic-demo-1'),
+        title: '新手引导',
+        description: 'Hello ByteDancer!',
+        position: 'bottom',
+    },
+    {
+        target: () => document.querySelector('#basic-demo-2'),
+        title: 'Switch',
+        description: 'This is a Semi Switch',
+        position: 'bottom',
+    },
+    {
+        target: () => document.querySelector('#basic-demo-3'),
+        title: 'Button',
+        description: 'This is a Semi Button',
+        position: 'bottom',
+    },
+];
 
 export default function UserGuideDemo() {
     const [visible, setVisible] = useState(false);
@@ -20,26 +41,7 @@ export default function UserGuideDemo() {
                 mode="popup"
                 mask
                 visible={visible}
-                steps={[
-                    {
-                        target: () => document.querySelector('#basic-demo-1'),
-                        title: '新手引导',
-                        description: 'Hello ByteDancer!',
-                        position: 'bottom',
-                    },
-                    {
-                        target: () => document.querySelector('#basic-demo-2'),
-                        title: 'Switch',
-                        description: 'This is a Semi Switch',
-                        position: 'bottom',
-                    },
-                    {
-                        target: () => document.querySelector('#basic-demo-3'),
-                        title: 'Button',
-                        description: 'This is a Semi Button',
-                        position: 'bottom',
-                    },
-                ]}
+                steps={steps}
                 onChange={(current) => {
                     console.log('当前引导步骤', current);
                 }}

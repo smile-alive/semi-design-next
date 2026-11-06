@@ -1,46 +1,12 @@
 <script lang="ts">
     import { IconBell, IconBytedanceLogo, IconCamera, IconEdit, IconHelpCircle, IconHistogram, IconHome, IconList, IconLive, IconSemiLogo, IconSetting } from '@fibrae/semi-icons-svelte';
-    import { Avatar, Badge, Breadcrumb, Button, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, Nav, NavFooter, NavHeader, Pagination, Popover, Rating, Row, Steps, Tag, Timeline, Tooltip, type NavItems, type StepData, type TimelineData } from '@fibrae/semi-ui-svelte';
-
-    let mode = $state('semi-always-dark');
-
-    const switchMode = () => {
-        mode = mode === 'semi-always-dark' ? 'semi-always-light' : 'semi-always-dark';
-    };
+    import { Avatar, Badge, Breadcrumb, Button, Layout, Nav, Pagination, Popover, Rating, Row, Steps, Tag, Timeline, Tooltip, type StepData, type TimelineData } from '@fibrae/semi-ui-svelte';
 
     const rowStyle = 'margin: 16px 10px';
     const badgeStyle = 'width: 42px; height: 42px; border-radius: 4px; display: inline-block';
-    const tagStyle = 'margin-inline-end: 8px; margin-bottom: 8px';
-    const headerButtonStyle = 'color: var(--semi-color-text-2); margin-inline-end: 12px';
-
-    const sideItems: NavItems = [
-        { itemKey: 'Home', text: '首页' },
-        { itemKey: 'Histogram', text: '基础数据' },
-        { itemKey: 'Live', text: '测试功能' },
-        { itemKey: 'Setting', text: '设置' },
-    ];
+    const tagStyle = 'margin-inline-end: 8px; margin-block-end: 8px';
     const sideIcons = { Home: IconHome, Histogram: IconHistogram, Live: IconLive, Setting: IconSetting };
-
-    const exampleItems: NavItems = [
-        { itemKey: 'user', text: 'Option1' },
-        { itemKey: 'union', text: 'Option2' },
-        { itemKey: 'approve-management', text: 'Group3', items: ['3-1', '3-2'] },
-    ];
     const exampleIcons = { user: IconEdit, union: IconCamera, 'approve-management': IconList };
-
-    const routes = ['首页', '当这个页面标题很长时需要省略', '上一页', '详情页'];
-    const tags = [
-        { color: 'grey', label: 'grey tag' },
-        { color: 'blue', label: 'blue tag' },
-        { color: 'blue', type: 'ghost', label: 'ghost tag' },
-        { color: 'blue', type: 'solid', label: 'solid tag' },
-        { color: 'red', label: 'red tag' },
-        { color: 'green', label: 'green tag' },
-        { color: 'orange', label: 'orange tag' },
-        { color: 'teal', label: 'teal tag' },
-        { color: 'violet', label: 'violet tag' },
-        { color: 'white', label: 'white tag' },
-    ] as const;
 
     const steps = (description: string): StepData[] => [
         { title: 'Finished', description },
@@ -52,31 +18,37 @@
         { time: '2019-06-13 16:17', content: '发布成功', type: 'success' },
         { time: '2019-05-14 18:34', content: '审核失败', type: 'error' },
     ];
+
+    let mode = $state('semi-always-dark');
+
+    const switchMode = () => {
+        mode = mode === 'semi-always-dark' ? 'semi-always-light' : 'semi-always-dark';
+    };
 </script>
 
 {#snippet topHeader()}
-    <NavHeader>
+    <Nav.Header>
         <IconSemiLogo style="width: 96px; height: 36px; font-size: 36px" />
-    </NavHeader>
+    </Nav.Header>
 {/snippet}
 
 {#snippet topFooter()}
-    <NavFooter>
-        <Button aria-label="通知" style={headerButtonStyle} theme="borderless">
+    <Nav.Footer>
+        <Button aria-label="通知" style="color: var(--semi-color-text-2); margin-inline-end: 12px" theme="borderless">
             {#snippet icon()}<IconBell size="large" />{/snippet}
         </Button>
-        <Button aria-label="帮助" style={headerButtonStyle} theme="borderless">
+        <Button aria-label="帮助" style="color: var(--semi-color-text-2); margin-inline-end: 12px" theme="borderless">
             {#snippet icon()}<IconHelpCircle size="large" />{/snippet}
         </Button>
         <Avatar color="orange" size="small">YJ</Avatar>
-    </NavFooter>
+    </Nav.Footer>
 {/snippet}
 
 {#snippet tipContent()}hi semi-design{/snippet}
 
-<Button style="margin-bottom: 4px" onclick={switchMode}>Switch Content Mode</Button>
+<Button style="margin-block-end: 4px" onclick={switchMode}>Switch Content Mode</Button>
 <Layout style="border: 1px solid var(--semi-color-border)">
-    <LayoutHeader style="background-color: var(--semi-color-bg-1)">
+    <Layout.Header style="background-color: var(--semi-color-bg-1)">
         <div>
             <Nav aria-label="顶部导航" footer={topFooter} header={topHeader} mode="horizontal" selectedKeys={['Home']}>
                 <!-- Nav renders its children straight into the list, so other content needs its own li -->
@@ -89,21 +61,40 @@
                 </li>
             </Nav>
         </div>
-    </LayoutHeader>
+    </Layout.Header>
     <Layout>
-        <LayoutSider style="background-color: var(--semi-color-bg-1)">
-            <Nav aria-label="侧边导航" footer={{ collapseButton: true }} items={sideItems} selectedKeys={['Home']} style="max-width: 220px; height: 100%">
+        <Layout.Sider style="background-color: var(--semi-color-bg-1)">
+            <Nav
+                aria-label="侧边导航"
+                footer={{ collapseButton: true }}
+                items={[
+                    { itemKey: 'Home', text: '首页' },
+                    { itemKey: 'Histogram', text: '基础数据' },
+                    { itemKey: 'Live', text: '测试功能' },
+                    { itemKey: 'Setting', text: '设置' },
+                ]}
+                selectedKeys={['Home']}
+                style="max-width: 220px; height: 100%"
+            >
                 {#snippet icon({ item })}
                     {@const Icon = sideIcons[item.itemKey as keyof typeof sideIcons]}
                     <Icon size="large" />
                 {/snippet}
             </Nav>
-        </LayoutSider>
-        <LayoutContent class={mode} style="padding: 24px; background-color: var(--semi-color-bg-1)">
-            <Breadcrumb {routes} style="margin-bottom: 24px" />
+        </Layout.Sider>
+        <Layout.Content class={mode} style="padding: 24px; background-color: var(--semi-color-bg-1)">
+            <Breadcrumb routes={['首页', '当这个页面标题很长时需要省略', '上一页', '详情页']} style="margin-block-end: 24px" />
             <div style="border-radius: 10px; border: 1px solid var(--semi-color-border); height: 700px; padding: 32px">
                 <Row style={rowStyle}>
-                    <Nav aria-label="示例导航" items={exampleItems} mode="horizontal">
+                    <Nav
+                        aria-label="示例导航"
+                        items={[
+                            { itemKey: 'user', text: 'Option1' },
+                            { itemKey: 'union', text: 'Option2' },
+                            { itemKey: 'approve-management', text: 'Group3', items: ['3-1', '3-2'] },
+                        ]}
+                        mode="horizontal"
+                    >
                         {#snippet icon({ item })}
                             {@const Icon = exampleIcons[item.itemKey as keyof typeof exampleIcons]}
                             <Icon />
@@ -152,11 +143,16 @@
                     </div>
                     <br />
                     <div>
-                        {#each tags as tag (tag.label)}
-                            <Tag color={tag.color} style={tagStyle} type={'type' in tag ? tag.type : undefined}>
-                                {tag.label}
-                            </Tag>
-                        {/each}
+                        <Tag color="grey" style={tagStyle}>grey tag</Tag>
+                        <Tag color="blue" style={tagStyle}>blue tag</Tag>
+                        <Tag color="blue" style={tagStyle} type="ghost">ghost tag</Tag>
+                        <Tag color="blue" style={tagStyle} type="solid">solid tag</Tag>
+                        <Tag color="red" style={tagStyle}>red tag</Tag>
+                        <Tag color="green" style={tagStyle}>green tag</Tag>
+                        <Tag color="orange" style={tagStyle}>orange tag</Tag>
+                        <Tag color="teal" style={tagStyle}>teal tag</Tag>
+                        <Tag color="violet" style={tagStyle}>violet tag</Tag>
+                        <Tag color="white" style={tagStyle}>white tag</Tag>
                     </div>
                     <br />
                     <div style="display: flex; align-items: center">
@@ -172,9 +168,9 @@
                     <Timeline dataSource={timeline} />
                 </Row>
             </div>
-        </LayoutContent>
+        </Layout.Content>
     </Layout>
-    <LayoutFooter style="display: flex; justify-content: space-between; padding: 20px; color: var(--semi-color-text-2); background-color: var(--semi-grey-0)">
+    <Layout.Footer style="display: flex; justify-content: space-between; padding: 20px; color: var(--semi-color-text-2); background-color: var(--semi-grey-0)">
         <span style="display: flex; align-items: center">
             <IconBytedanceLogo size="large" style="margin-inline-end: 8px" />
             <span>Copyright © 2019 ByteDance. All Rights Reserved. </span>
@@ -183,5 +179,5 @@
             <span style="margin-inline-end: 24px">平台客服</span>
             <span>反馈建议</span>
         </span>
-    </LayoutFooter>
+    </Layout.Footer>
 </Layout>

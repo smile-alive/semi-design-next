@@ -2,11 +2,26 @@
     import { Button, UserGuide, type UserGuideStepItem } from '@fibrae/semi-ui-svelte';
 
     let visible = $state(false);
-    const target = () => document.querySelector('#position-demo');
     const steps: UserGuideStepItem[] = [
-        { target, title: '新手引导', description: 'Hello ByteDancer!', position: 'top' },
-        { target, title: 'New Position', description: 'This is Right Position', position: 'right' },
-        { target, title: 'Hide Arrow', description: 'We hide the arrow', position: 'bottom', showArrow: false },
+        {
+            target: () => document.querySelector('#position-demo'),
+            title: '新手引导',
+            description: 'Hello ByteDancer!',
+            position: 'top',
+        },
+        {
+            target: () => document.querySelector('#position-demo'),
+            title: 'New Position',
+            description: 'This is Right Position',
+            position: 'right',
+        },
+        {
+            target: () => document.querySelector('#position-demo'),
+            title: 'Hide Arrow',
+            description: 'We hide the arrow',
+            position: 'bottom',
+            showArrow: false,
+        },
     ];
 </script>
 

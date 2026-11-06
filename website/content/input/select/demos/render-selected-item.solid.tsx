@@ -44,16 +44,23 @@ const renderSelectedItem: SelectRenderSingleSelectedItemFn = (optionNode) => (
     </div>
 );
 
-const renderMultipleWithTag =
-    (avatarShape: 'circle' | 'square'): SelectRenderMultipleSelectedItemFn =>
-    (optionNode, { onClose }) => ({
-        isRenderInTag: false,
-        content: (
-            <Tag avatarSrc={String(optionNode.avatar)} avatarShape={avatarShape} closable onClose={onClose} size="large">
-                {String(optionNode.name)}
-            </Tag>
-        ),
-    });
+const renderMultipleWithCustomTag: SelectRenderMultipleSelectedItemFn = (optionNode, { onClose }) => ({
+    isRenderInTag: false,
+    content: (
+        <Tag avatarSrc={String(optionNode.avatar)} avatarShape="circle" closable onClose={onClose} size="large">
+            {String(optionNode.name)}
+        </Tag>
+    ),
+});
+
+const renderMultipleWithCustomTag2: SelectRenderMultipleSelectedItemFn = (optionNode, { onClose }) => ({
+    isRenderInTag: false,
+    content: (
+        <Tag avatarSrc={String(optionNode.avatar)} avatarShape="square" closable onClose={onClose} size="large">
+            {String(optionNode.name)}
+        </Tag>
+    ),
+});
 
 const renderCustomOption = (item: ListItem) => (
     <Select.Option {...item} value={item.name} style={optionStyle} showTick>
@@ -68,13 +75,13 @@ const renderCustomOption = (item: ListItem) => (
 export default function SelectDemo() {
     return (
         <>
-            <Select placeholder="请选择" style={{ width: '280px', height: '40px' }} onChange={(v) => console.log(v)} defaultValue="申悦" renderSelectedItem={renderSelectedItem}>
+            <Select aria-label="单选" placeholder="请选择" style={{ width: '280px', height: '40px' }} onChange={(v) => console.log(v)} defaultValue="申悦" renderSelectedItem={renderSelectedItem}>
                 <For each={list}>{renderCustomOption}</For>
             </Select>
-            <Select placeholder="请选择" maxTagCount={2} style={{ width: '280px', 'margin-top': '20px' }} onChange={(v) => console.log(v)} defaultValue={['申悦', '曲晨一']} multiple renderSelectedItem={renderMultipleWithTag('circle')}>
+            <Select aria-label="多选圆形头像" placeholder="请选择" maxTagCount={2} style={{ width: '280px', 'margin-top': '20px' }} onChange={(v) => console.log(v)} defaultValue={['申悦', '曲晨一']} multiple renderSelectedItem={renderMultipleWithCustomTag}>
                 <For each={list}>{renderCustomOption}</For>
             </Select>
-            <Select placeholder="请选择" maxTagCount={2} style={{ width: '280px', 'margin-top': '20px' }} onChange={(v) => console.log(v)} defaultValue={['申悦', '曲晨一']} multiple renderSelectedItem={renderMultipleWithTag('square')}>
+            <Select aria-label="多选方形头像" placeholder="请选择" maxTagCount={2} style={{ width: '280px', 'margin-top': '20px' }} onChange={(v) => console.log(v)} defaultValue={['申悦', '曲晨一']} multiple renderSelectedItem={renderMultipleWithCustomTag2}>
                 <For each={list}>{renderCustomOption}</For>
             </Select>
         </>

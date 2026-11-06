@@ -6,18 +6,18 @@
 </script>
 
 <DatePicker style="width: 260px" type="dateRange">
-    {#snippet fullDate({ dayNumber, dayStatus })}
+    {#snippet fullDate(fullDateProps)}
         <div
             class={{
-                [`${prefix}-day-inrange`]: dayStatus.isInRange,
-                [`${prefix}-day-hover`]: dayStatus.isHover,
-                [`${prefix}-day-selected`]: dayStatus.isSelected,
-                [`${prefix}-day-selected-start`]: dayStatus.isSelectedStart,
-                [`${prefix}-day-selected-end`]: dayStatus.isSelectedEnd,
+                [`${prefix}-day-inrange`]: fullDateProps.dayStatus.isInRange,
+                [`${prefix}-day-hover`]: fullDateProps.dayStatus.isHover,
+                [`${prefix}-day-selected`]: fullDateProps.dayStatus.isSelected,
+                [`${prefix}-day-selected-start`]: fullDateProps.dayStatus.isSelectedStart,
+                [`${prefix}-day-selected-end`]: fullDateProps.dayStatus.isSelectedEnd,
             }}
             style={dayStyle}
         >
-            {dayNumber}
+            {fullDateProps.dayNumber}
         </div>
     {/snippet}
 </DatePicker>

@@ -3,7 +3,6 @@
     import { AIChatInput, type AIChatInputHandle } from '@fibrae/semi-ai-vue';
     import { IconTemplateStroked, IconSearch } from '@fibrae/semi-icons-vue';
 
-    const { Configure } = AIChatInput;
     const modelOptions = [
         { value: 'GPT-5', label: 'GPT-5' },
         { value: 'GPT-4o', label: 'GPT-4o' },
@@ -72,20 +71,20 @@
 <template>
     <AIChatInput ref="input" placeholder="输入 / 唤起技能，选择技能后，点击模版按钮可查看模版，可通过鼠标上下按键切换侯选项" skillHotKey="/" :skills="skills" style="margin: 12px" :uploadProps="uploadProps">
         <template #configureArea>
-            <Configure.Select field="model" initValue="GPT-4o" :optionList="modelOptions" />
+            <AIChatInput.Configure.Select field="model" initValue="GPT-4o" :optionList="modelOptions" />
         </template>
-        <template #skillIcon="{ item }">
-            <component :is="skillIcons[item.value ?? '']" />
+        <template #skillIcon="skillIcon">
+            <component :is="skillIcons[skillIcon.item.value ?? '']" />
         </template>
-        <template #template="{ skill }">
-            <div v-if="skill?.value === 'writing'" class="aiChatInput-template">
+        <template #template="templateSlot">
+            <div v-if="templateSlot.skill?.value === 'writing'" class="aiChatInput-template">
                 <div class="template-header">
                     <button v-for="(item, index) in templates" :key="item.group" :class="['template-header-item', { 'template-header-item-active': groupIndex === index }]" style="border: none; font-family: inherit" type="button" @click="groupIndex = index">
                         {{ item.group }}
                     </button>
                 </div>
                 <div class="template-content">
-                    <button v-for="item in templates[groupIndex].children" :key="item.title" class="template-content-item" style="font: inherit; text-align: left" type="button" @click="setTemplate(item.content)">
+                    <button v-for="item in templates[groupIndex].children" :key="item.title" class="template-content-item" style="font: inherit; text-align: start" type="button" @click="setTemplate(item.content)">
                         <span class="template-content-item-icon" :style="{ background: item.bg }">
                             <IconTemplateStroked />
                         </span>

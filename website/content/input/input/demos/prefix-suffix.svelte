@@ -1,6 +1,6 @@
 <script lang="ts">
     import { IconSearch } from '@fibrae/semi-icons-svelte';
-    import { Input, TypographyText } from '@fibrae/semi-ui-svelte';
+    import { Input, Typography } from '@fibrae/semi-ui-svelte';
 </script>
 
 <Input aria-label="Search" showClear>
@@ -24,6 +24,6 @@
 <br />
 <Input aria-label="Input with text suffix" showClear>
     {#snippet suffix()}
-        <TypographyText strong style="margin-inline-end: 8px" type="secondary">Suffix</TypographyText>
+        <Typography.Text strong style="margin-inline-end: 8px" type="secondary">Suffix</Typography.Text>
     {/snippet}
 </Input>

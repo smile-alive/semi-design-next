@@ -74,7 +74,7 @@ export default function AIChatDialogueDemo() {
                     </RadioGroup>
                 </span>
             </span>
-            <div style={{ border: '1px solid var(--semi-color-border)', borderRadius: 12, marginTop: 10, padding: 20 }}>
+            <div style={{ border: '1px solid var(--semi-color-border)', borderRadius: 12, marginBlockStart: 10, padding: 20 }}>
                 <AIChatDialogue key={align + mode} align={align} mode={mode} chats={messages} roleConfig={roleConfig} onChatsChange={onChatsChange} />
             </div>
         </>

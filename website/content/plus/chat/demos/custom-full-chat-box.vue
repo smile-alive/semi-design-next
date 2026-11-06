@@ -73,24 +73,24 @@
 
 <template>
     <Chat v-model:chats="message" :roleConfig="roleInfo" :style="commonOuterStyle" :uploadProps="uploadProps" @messageSend="onMessageSend">
-        <template #fullChatBox="{ role, message: item, defaultNodes, class: boxClass }">
-            <div :class="boxClass">
+        <template #fullChatBox="props">
+            <div :class="props.class">
                 <div
                     :style="{
                         display: 'flex',
                         flexDirection: 'column',
                         rowGap: '4px',
-                        alignItems: item.role === 'user' ? 'end' : undefined,
+                        alignItems: props.message.role === 'user' ? 'end' : undefined,
                     }"
                 >
-                    <span v-if="item.role !== 'user'" :style="titleStyle">
-                        <Avatar alt="" shape="square" size="extra-small" :src="role.avatar" />
-                        <component :is="defaultNodes.title" />
+                    <span v-if="props.message.role !== 'user'" :style="titleStyle">
+                        <Avatar alt="" shape="square" size="extra-small" :src="props.role.avatar" />
+                        <component :is="props.defaultNodes.title" />
                     </span>
                     <div style="width: fit-content">
-                        <component :is="defaultNodes.content" />
+                        <component :is="props.defaultNodes.content" />
                     </div>
-                    <component :is="defaultNodes.action" />
+                    <component :is="props.defaultNodes.action" />
                 </div>
             </div>
         </template>

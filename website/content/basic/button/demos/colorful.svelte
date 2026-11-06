@@ -22,7 +22,7 @@
 <!-- The text is the children snippet; leaving it out makes the button icon-only, so the label is passed or omitted as a whole. -->
 {#each contents as content (content ?? 'icon-only')}
     {#snippet text()}{content}{/snippet}
-    <div style="display: flex; row-gap: 16px; margin-top: 20px; margin-left: 10px; flex-direction: column">
+    <div style="display: flex; row-gap: 16px; margin-block-start: 20px; margin-inline-start: 10px; flex-direction: column">
         {#each rows as row (row.theme)}
             <div style="display: flex; column-gap: 16px">
                 {#each variants as variant (`${variant.type}-${variant.state}`)}

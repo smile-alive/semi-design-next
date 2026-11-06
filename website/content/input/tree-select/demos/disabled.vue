@@ -32,18 +32,16 @@
             key: '1',
         },
     ];
-    const style = { width: '300px' };
-    const dropdownStyle = { maxHeight: '400px', overflow: 'auto' };
 </script>
 
 <template>
     <div>
-        <TreeSelect disabled :dropdownStyle="dropdownStyle" placeholder="禁用下拉菜单" :style="style" :treeData="treeData" />
+        <TreeSelect disabled :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" placeholder="禁用下拉菜单" style="width: 300px" :treeData="treeData" />
         <br />
         <br />
-        <TreeSelect defaultValue="Shanghai" disabled :dropdownStyle="dropdownStyle" :style="style" :treeData="treeData" />
+        <TreeSelect defaultValue="Shanghai" disabled :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" style="width: 300px" :treeData="treeData" />
         <br />
         <br />
-        <TreeSelect :defaultValue="['Shanghai', 'North America']" disabled :dropdownStyle="dropdownStyle" multiple :style="style" :treeData="treeData" />
+        <TreeSelect :defaultValue="['Shanghai', 'North America']" disabled :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" multiple style="width: 300px" :treeData="treeData" />
     </div>
 </template>

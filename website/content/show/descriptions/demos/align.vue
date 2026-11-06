@@ -9,11 +9,12 @@
         { key: '认证状态', value: '未认证' },
     ];
     const aligns = ['center', 'justify', 'left', 'plain'] as const;
+    const style = { margin: '10px' };
 </script>
 
 <template>
     <div :style="{ display: 'flex', flexWrap: 'wrap' }">
-        <Card v-for="align in aligns" :key="align" shadows="always" :style="{ margin: '10px' }">
+        <Card v-for="align in aligns" :key="align" shadows="always" :style="style">
             <Descriptions :align="align" :data="data">
                 <template #value="{ item, index }">
                     <Tag v-if="index === 3" :style="{ margin: 0 }">电商</Tag>

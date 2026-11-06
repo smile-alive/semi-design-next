@@ -11,15 +11,15 @@
     <Skeleton active loading>
         <template #placeholder>
             <div :style="style">
-                <Skeleton.Avatar :style="{ marginRight: '12px' }" />
+                <Skeleton.Avatar :style="{ marginInlineEnd: '12px' }" />
                 <div>
-                    <Skeleton.Title :style="{ width: '120px', marginBottom: '12px', marginTop: '12px' }" />
+                    <Skeleton.Title :style="{ width: '120px', marginBlockEnd: '12px', marginBlockStart: '12px' }" />
                     <Skeleton.Paragraph :rows="3" :style="{ width: '240px' }" />
                 </div>
             </div>
         </template>
         <div :style="style">
-            <Avatar color="blue" :style="{ marginRight: '12px' }">UI</Avatar>
+            <Avatar color="blue" :style="{ marginInlineEnd: '12px' }">UI</Avatar>
             <div>
                 <h3>Semi UI</h3>
                 <p>Hi, Bytedance dance dance.</p>

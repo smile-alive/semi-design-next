@@ -4,7 +4,7 @@ export default function SkeletonDemo() {
     const placeholder = (
         <div>
             <Skeleton.Image style={{ width: 200, height: 150 }} />
-            <Skeleton.Title style={{ width: 120, marginTop: 10 }} />
+            <Skeleton.Title style={{ width: 120, marginBlockStart: 10 }} />
         </div>
     );
 

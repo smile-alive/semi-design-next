@@ -3,7 +3,6 @@
     import { AIChatInput, type AIChatInputAttachment as Attachment, type AIChatInputReference as Reference } from '@fibrae/semi-ai-svelte';
     import { IconBranch, IconClose, IconCode, IconConnectionPoint2, IconFile, IconFolder, IconGit, IconGlobeStroke, IconSearch, IconTemplateStroked, IconTerminal, IconUpload } from '@fibrae/semi-icons-svelte';
 
-    const { Configure } = AIChatInput;
     const radioButtonProps = [
         { label: '快速', value: 'fast' },
         { label: '深度思考', value: 'think' },
@@ -11,7 +10,7 @@
     const modeIcons: Record<string, Component> = { fast: IconTemplateStroked, think: IconSearch };
     const uploadProps = { action: 'https://api.semi.design/upload' };
 
-    let references = $state<Reference[]>([
+    const customReferences: Reference[] = [
         {
             type: 'file',
             id: '1',
@@ -49,7 +48,9 @@
             from: 1,
             to: 2,
         },
-    ]);
+    ];
+
+    let reference = $state(customReferences);
 
     const isImageType = ({ name = '', fileInstance }: Attachment) => {
         const PIC_PREFIX = 'image/';
@@ -76,22 +77,22 @@
         code: IconCode,
     };
 
-    const onReferenceDelete = (reference: Reference) => {
-        references = references.filter((item) => item.id !== reference.id);
+    const onReferenceDelete = (deleted: Reference) => {
+        reference = reference.filter((item) => item.id !== deleted.id);
     };
 </script>
 
-<AIChatInput class="aiChatInput-customTopSlot" {onReferenceDelete} placeholder="自定义渲染顶部内容，可用于渲染上传内容、引用内容" {references} showReference={false} showUploadFile={false} style="margin: 12px" {uploadProps}>
-    {#snippet topSlot({ attachments, references: items, onReferenceDelete: deleteReference, onUploadFileDelete })}
+<AIChatInput class="aiChatInput-customTopSlot" {onReferenceDelete} placeholder="自定义渲染顶部内容，可用于渲染上传内容、引用内容" references={reference} showReference={false} showUploadFile={false} style="margin: 12px" {uploadProps}>
+    {#snippet topSlot(topSlot)}
         <div class="ai-chat-input-topSlot">
-            {#each items as item (item.id)}
+            {#each topSlot.references as item (item.id)}
                 {@const Icon = refTypeToIconMap[item.type ?? '']}
                 <div class="item">
                     <span class="item-icon">
                         {#if Icon}
                             <Icon class="item-left item-icon" size="small" />
                         {/if}
-                        <button aria-label="删除" class="item-icon-delete" type="button" onclick={() => deleteReference(item)}>
+                        <button aria-label="删除" class="item-icon-delete" type="button" onclick={() => topSlot.onReferenceDelete(item)}>
                             <IconClose size="small" />
                         </button>
                     </span>
@@ -103,7 +104,7 @@
                     </span>
                 </div>
             {/each}
-            {#each attachments as item (item.uid)}
+            {#each topSlot.attachments as item (item.uid)}
                 <div class="item">
                     <span class="item-icon">
                         {#if isImageType(item)}
@@ -111,7 +112,7 @@
                         {:else}
                             <IconUpload class="item-left item-icon" size="small" />
                         {/if}
-                        <button aria-label="删除" class="item-icon-delete" type="button" onclick={() => onUploadFileDelete(item)}>
+                        <button aria-label="删除" class="item-icon-delete" type="button" onclick={() => topSlot.onUploadFileDelete(item)}>
                             <IconClose size="small" />
                         </button>
                     </span>
@@ -121,12 +122,12 @@
         </div>
     {/snippet}
     {#snippet configureArea()}
-        <Configure.RadioButton field="mode" initValue="fast" options={radioButtonProps}>
+        <AIChatInput.Configure.RadioButton field="mode" initValue="fast" options={radioButtonProps}>
             <!-- the icon is the only label, so it carries the name -->
-            {#snippet label({ option })}
-                {@const Icon = modeIcons[String(option.value)]}
-                <Icon aria-label={option.label} />
+            {#snippet label(label)}
+                {@const Icon = modeIcons[String(label.option.value)]}
+                <Icon aria-label={label.option.label} />
             {/snippet}
-        </Configure.RadioButton>
+        </AIChatInput.Configure.RadioButton>
     {/snippet}
 </AIChatInput>

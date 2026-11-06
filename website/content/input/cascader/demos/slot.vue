@@ -1,15 +1,13 @@
 <script setup lang="ts">
     import { Cascader, Typography } from '@fibrae/semi-ui-vue';
 
-    const { Text } = Typography;
-
     const slotStyle = {
         height: '36px',
         display: 'flex',
         padding: '0 32px',
         alignItems: 'center',
         cursor: 'pointer',
-        borderTop: '1px solid var(--semi-color-border)',
+        borderBlockStart: '1px solid var(--semi-color-border)',
     };
 
     const treeData = [
@@ -43,8 +41,8 @@
     <Cascader placeholder="请选择所在地区" style="width: 300px" :treeData="treeData">
         <template #bottomSlot>
             <div :style="slotStyle">
-                <Text>找不到相关选项？</Text>
-                <Text link>去新建</Text>
+                <Typography.Text>找不到相关选项？</Typography.Text>
+                <Typography.Text link>去新建</Typography.Text>
             </div>
         </template>
     </Cascader>

@@ -11,7 +11,7 @@ export default function ResizableDemo() {
                     height: 200,
                 }}
             >
-                <div style={{ 'margin-left': '20%' }}>ratio=2</div>
+                <div style={{ 'margin-inline-start': '20%' }}>ratio=2</div>
             </Resizable>
         </div>
     );

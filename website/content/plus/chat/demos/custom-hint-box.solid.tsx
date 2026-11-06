@@ -45,7 +45,7 @@ const commonHintStyle: JSX.CSSProperties = {
     padding: '10px',
     'border-radius': '10px',
     background: 'none',
-    color: 'var( --semi-color-text-1)',
+    color: 'var(--semi-color-text-1)',
     display: 'flex',
     'justify-content': 'space-between',
     'align-items': 'center',
@@ -59,12 +59,12 @@ const commonHintStyle: JSX.CSSProperties = {
 const renderHintBox = (props: RenderHintBoxProps) => (
     <button type="button" style={commonHintStyle} onClick={() => props.onHintClick()}>
         {props.content}
-        <IconArrowRight style={{ 'margin-left': '10px' }} />
+        <IconArrowRight style={{ 'margin-inline-start': '10px' }} />
     </button>
 );
 
 export default function ChatDemo() {
-    const [chats, setChats] = createSignal<Message[]>(defaultMessage);
+    const [message, setMessage] = createSignal<Message[]>(defaultMessage);
     const [hints, setHints] = createSignal(hintsExample);
 
     const onHintClick = () => {
@@ -79,10 +79,10 @@ export default function ChatDemo() {
             content: '这是一条 mock 回复信息',
         };
         setTimeout(() => {
-            setChats((list) => [...list, newAssistantMessage]);
+            setMessage((list) => [...list, newAssistantMessage]);
         }, 200);
         setHints([]);
     };
 
-    return <Chat renderHintBox={renderHintBox} hints={hints()} onHintClick={onHintClick} style={commonOuterStyle} chats={chats()} roleConfig={roleInfo} onChatsChange={(next) => setChats(next)} onMessageSend={onMessageSend} onClear={() => setHints([])} uploadProps={uploadProps} />;
+    return <Chat renderHintBox={renderHintBox} hints={hints()} onHintClick={onHintClick} style={commonOuterStyle} chats={message()} roleConfig={roleInfo} onChatsChange={(next) => setMessage(next)} onMessageSend={onMessageSend} onClear={() => setHints([])} uploadProps={uploadProps} />;
 }

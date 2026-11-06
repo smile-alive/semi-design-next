@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { Cascader, InputGroup, Select, SelectOption, TreeSelect } from '@fibrae/semi-ui-vue';
+    import { Cascader, InputGroup, Select, TreeSelect } from '@fibrae/semi-ui-vue';
 
     const treeData = [
         {
@@ -20,25 +20,23 @@
         },
         { label: 'North America', value: 'North America', key: '1' },
     ];
-    const selectStyle = { width: '100px' };
-    const treeStyle = { width: '220px' };
 </script>
 
 <template>
     <InputGroup>
-        <Select aria-label="From or to" defaultValue="from" :style="selectStyle">
-            <SelectOption value="from">From: </SelectOption>
-            <SelectOption value="to">To: </SelectOption>
+        <Select aria-label="From or to" defaultValue="from" :style="{ width: '100px' }">
+            <Select.Option value="from">From: </Select.Option>
+            <Select.Option value="to">To: </Select.Option>
         </Select>
-        <TreeSelect placeholder="Please select" :style="treeStyle" :treeData="treeData" />
+        <TreeSelect placeholder="Please select" :style="{ width: '220px' }" :treeData="treeData" />
     </InputGroup>
     <br />
     <br />
     <InputGroup>
-        <Select aria-label="From or to" defaultValue="from" :style="selectStyle">
-            <SelectOption value="from">From: </SelectOption>
-            <SelectOption value="to">To: </SelectOption>
+        <Select aria-label="From or to" defaultValue="from" :style="{ width: '100px' }">
+            <Select.Option value="from">From: </Select.Option>
+            <Select.Option value="to">To: </Select.Option>
         </Select>
-        <Cascader placeholder="Please select" :style="treeStyle" :treeData="treeData" />
+        <Cascader placeholder="Please select" :style="{ width: '220px' }" :treeData="treeData" />
     </InputGroup>
 </template>

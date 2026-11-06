@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Carousel, Radio, RadioGroup, Space, TypographyParagraph, TypographyTitle, type CarouselProps, type RadioValue } from '@fibrae/semi-ui-svelte';
+    import { Carousel, Radio, RadioGroup, Space, Typography, type CarouselProps, type RadioValue } from '@fibrae/semi-ui-svelte';
 
     let theme = $state<CarouselProps['theme']>('primary');
     const logo = '/assets/placeholder/logo.svg';
@@ -34,11 +34,10 @@
             <div style="height: 100%; background-size: cover; background-image: url('{item.src}')">
                 <Space align="start" spacing="medium" style={titleStyle} vertical>
                     <img alt="semi_logo" src={logo} style="width: 87px; height: 31px" />
-                    <TypographyTitle heading={2} style={colorStyle}>{item.title}</TypographyTitle>
+                    <Typography.Title heading={2} style={colorStyle}>{item.title}</Typography.Title>
                     <Space align="start" vertical>
-                        {#each item.lines as line (line)}
-                            <TypographyParagraph style={colorStyle}>{line}</TypographyParagraph>
-                        {/each}
+                        <Typography.Paragraph style={colorStyle}>{item.lines[0]}</Typography.Paragraph>
+                        <Typography.Paragraph style={colorStyle}>{item.lines[1]}</Typography.Paragraph>
                     </Space>
                 </Space>
             </div>

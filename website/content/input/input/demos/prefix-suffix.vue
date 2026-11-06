@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { IconSearch } from '@fibrae/semi-icons-vue';
-    import { Input, TypographyText } from '@fibrae/semi-ui-vue';
+    import { Input, Typography } from '@fibrae/semi-ui-vue';
 </script>
 
 <template>
@@ -25,7 +25,7 @@
     <br />
     <Input aria-label="Input with text suffix" showClear>
         <template #suffix>
-            <TypographyText strong style="margin-inline-end: 8px" type="secondary">Suffix</TypographyText>
+            <Typography.Text strong style="margin-inline-end: 8px" type="secondary">Suffix</Typography.Text>
         </template>
     </Input>
 </template>

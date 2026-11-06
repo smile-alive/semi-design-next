@@ -28,29 +28,29 @@
 
 <template>
     <Transfer :dataSource="data" :defaultValue="['xiakeman@example.com', 'shenyue@example.com']" :filter="customFilter" :inputProps="inputProps" :style="{ width: '568px' }" @change="onChange" @search="searchText = $event">
-        <template #sourceItem="{ item, checked, onChange: onItemChange }">
+        <template #sourceItem="source">
             <div class="components-transfer-demo-source-item">
-                <Checkbox :modelValue="checked" :style="{ height: '52px', alignItems: 'center' }" @change="onItemChange">
-                    <Avatar :color="(item as Person).color" size="small">{{ (item as Person).abbr }}</Avatar>
+                <Checkbox :modelValue="source.checked" :style="{ height: '52px', alignItems: 'center' }" @change="source.onChange">
+                    <Avatar :color="(source.item as Person).color" size="small">{{ (source.item as Person).abbr }}</Avatar>
                     <div class="info">
                         <div class="name">
-                            <Highlight :searchWords="[searchText]" :sourceString="String(item.label)" />
+                            <Highlight :searchWords="[searchText]" :sourceString="String(source.item.label)" />
                         </div>
                         <div class="email">
-                            <Highlight :searchWords="[searchText]" :sourceString="String(item.value)" />
+                            <Highlight :searchWords="[searchText]" :sourceString="String(source.item.value)" />
                         </div>
                     </div>
                 </Checkbox>
             </div>
         </template>
-        <template #selectedItem="{ item, onRemove }">
+        <template #selectedItem="selected">
             <div class="components-transfer-demo-selected-item">
-                <Avatar :color="(item as Person).color" size="small">{{ (item as Person).abbr }}</Avatar>
+                <Avatar :color="(selected.item as Person).color" size="small">{{ (selected.item as Person).abbr }}</Avatar>
                 <div class="info">
-                    <div class="name">{{ item.label }}</div>
-                    <div class="email">{{ item.value }}</div>
+                    <div class="name">{{ selected.item.label }}</div>
+                    <div class="email">{{ selected.item.value }}</div>
                 </div>
-                <Button :aria-label="`移除 ${item.label}`" class="remove" size="small" theme="borderless" type="tertiary" @click="onRemove">
+                <Button :aria-label="`移除 ${selected.item.label}`" class="remove" size="small" theme="borderless" type="tertiary" @click="selected.onRemove">
                     <template #icon>
                         <IconClose />
                     </template>

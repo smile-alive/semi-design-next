@@ -154,20 +154,20 @@
 </script>
 
 <Table bind:expandedRowKeys {childrenRecordName} {columns} dataSource={data} {rowKey}>
-    {#snippet cell({ column, record, text })}
-        {#if column.key === 'operation'}
-            <Button aria-label="上移" disabled={!canMove(record as TreeRow, -1)} onclick={() => move(record as TreeRow, -1)}>
+    {#snippet cell(cellProps)}
+        {#if cellProps.column.key === 'operation'}
+            <Button aria-label="上移" disabled={!canMove(cellProps.record as TreeRow, -1)} onclick={() => move(cellProps.record as TreeRow, -1)}>
                 {#snippet icon()}
                     <IconArrowUp />
                 {/snippet}
             </Button>
-            <Button aria-label="下移" disabled={!canMove(record as TreeRow, 1)} onclick={() => move(record as TreeRow, 1)}>
+            <Button aria-label="下移" disabled={!canMove(cellProps.record as TreeRow, 1)} onclick={() => move(cellProps.record as TreeRow, 1)}>
                 {#snippet icon()}
                     <IconArrowDown />
                 {/snippet}
             </Button>
         {:else}
-            {text}
+            {cellProps.text}
         {/if}
     {/snippet}
 </Table>

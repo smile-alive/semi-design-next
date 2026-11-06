@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Skeleton, SkeletonParagraph, SkeletonTitle, Table, type ColumnProps } from '@fibrae/semi-ui-svelte';
+    import { Skeleton, Table, type ColumnProps } from '@fibrae/semi-ui-svelte';
 
     const columns: ColumnProps[] = [
         {
@@ -52,10 +52,10 @@
         <div style="position: relative">
             <Table columns={placeholderColumns} dataSource={placeholderDataSource} pagination={false} style="background-color: var(--semi-color-bg-1)">
                 {#snippet headerCell()}
-                    <SkeletonTitle style="width: 0" />
+                    <Skeleton.Title style="width: 0" />
                 {/snippet}
                 {#snippet cell({ column })}
-                    <SkeletonParagraph rows={1} style="width: {50 * Number(column.dataIndex)}px" />
+                    <Skeleton.Paragraph rows={1} style="width: {50 * Number(column.dataIndex)}px" />
                 {/snippet}
             </Table>
             <div style="position: absolute; inset: 0"></div>

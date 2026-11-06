@@ -3,9 +3,9 @@
 
     const boxStyle = {
         height: '300px',
-        marginLeft: '30px',
-        marginTop: '10px',
-        paddingRight: '30px',
+        marginInlineStart: '30px',
+        marginBlockStart: '10px',
+        paddingInlineEnd: '30px',
         display: 'inline-block',
     };
     const marks = { 20: '20°C', 40: '40°C' };

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { IconSemiLogo, IconVigoLogo } from '@fibrae/semi-icons-svelte';
-    import { Button, List, ListItem, Modal } from '@fibrae/semi-ui-svelte';
+    import { Button, List, Modal } from '@fibrae/semi-ui-svelte';
 
     let visible = $state(false);
     const data = [
@@ -28,18 +28,18 @@
     {#snippet header()}{/snippet}
     <h3 style="text-align: center; font-size: 24px; margin: 40px">Semi Design New Features</h3>
     <List dataSource={data} split={false}>
-        {#snippet item({ item: entry })}
-            <ListItem>
+        {#snippet item(listItem)}
+            <List.Item>
                 {#snippet header()}
-                    <entry.icon style="font-size: 48px" />
+                    <listItem.item.icon style="font-size: 48px" />
                 {/snippet}
                 {#snippet main()}
                     <div>
-                        <h6 style="margin: 0; font-size: 16px">{entry.title}</h6>
-                        <p style="margin-top: 4px; color: var(--semi-color-text-1)">{entry.content}</p>
+                        <h6 style="margin: 0; font-size: 16px">{listItem.item.title}</h6>
+                        <p style="margin-block-start: 4px; color: var(--semi-color-text-1)">{listItem.item.content}</p>
                     </div>
                 {/snippet}
-            </ListItem>
+            </List.Item>
         {/snippet}
     </List>
     {#snippet footer()}

@@ -2,6 +2,8 @@
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Upload, type FileItem } from '@fibrae/semi-ui-vue';
 
+    const action = 'https://api.semi.design/upload';
+
     const defaultFileList: FileItem[] = [
         {
             uid: '1',
@@ -24,7 +26,7 @@
 </script>
 
 <template>
-    <Upload action="https://api.semi.design/upload" :defaultFileList="defaultFileList">
+    <Upload :action="action" :defaultFileList="defaultFileList">
         <Button theme="light">
             <template #icon>
                 <IconUpload />

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { Carousel, Radio, RadioGroup, Space, TypographyParagraph, TypographyTitle, type CarouselProps, type RadioValue } from '@fibrae/semi-ui-svelte';
+    import { Carousel, Radio, RadioGroup, Space, Typography, type CarouselProps, type RadioValue } from '@fibrae/semi-ui-svelte';
 
     let arrowType = $state<CarouselProps['arrowType']>('always');
-    let visibility = $state<'show' | 'hide'>('show');
+    let show = $state(true);
     const logo = '/assets/placeholder/logo.svg';
     const slides = [
         {
@@ -24,8 +24,8 @@
     const titleStyle = 'position: absolute; top: 100px; left: 100px';
     const colorStyle = 'color: #1C1F23';
 
-    const changeVisibility = (value: RadioValue | undefined) => {
-        if (value === 'show' || value === 'hide') visibility = value;
+    const changeShow = (value: RadioValue | undefined) => {
+        if (typeof value === 'boolean') show = value;
     };
     const changeArrowType = (value: RadioValue | undefined) => {
         if (value === 'always' || value === 'hover') arrowType = value;
@@ -33,16 +33,15 @@
 </script>
 
 <div>
-    <Carousel {arrowType} autoPlay={false} items={slides} showArrow={visibility === 'show'} style="width: 100%; height: 400px" theme="dark">
+    <Carousel {arrowType} autoPlay={false} items={slides} showArrow={show} style="width: 100%; height: 400px" theme="dark">
         {#snippet slide({ item })}
             <div style="height: 100%; background-size: cover; background-image: url('{item.src}')">
                 <Space align="start" spacing="medium" style={titleStyle} vertical>
                     <img alt="semi_logo" src={logo} style="width: 87px; height: 31px" />
-                    <TypographyTitle heading={2} style={colorStyle}>{item.title}</TypographyTitle>
+                    <Typography.Title heading={2} style={colorStyle}>{item.title}</Typography.Title>
                     <Space align="start" vertical>
-                        {#each item.lines as line (line)}
-                            <TypographyParagraph style={colorStyle}>{line}</TypographyParagraph>
-                        {/each}
+                        <Typography.Paragraph style={colorStyle}>{item.lines[0]}</Typography.Paragraph>
+                        <Typography.Paragraph style={colorStyle}>{item.lines[1]}</Typography.Paragraph>
                     </Space>
                 </Space>
             </div>
@@ -52,9 +51,9 @@
     <Space align="start" vertical>
         <Space>
             <div>展示箭头</div>
-            <RadioGroup aria-label="展示箭头" name="demo-carousel-visibility" onChange={(e) => changeVisibility(e.target.value)} type="button" value={visibility}>
-                <Radio value="show">show</Radio>
-                <Radio value="hide">hide</Radio>
+            <RadioGroup aria-label="展示箭头" name="demo-carousel-visibility" onChange={(e) => changeShow(e.target.value)} type="button" value={show}>
+                <Radio value>show</Radio>
+                <Radio value={false}>hide</Radio>
             </RadioGroup>
         </Space>
         <Space>

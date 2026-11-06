@@ -2,11 +2,40 @@
     import type { Component } from 'svelte';
     import { AIChatDialogue, AIChatInput, chatInputToMessage, type AIChatDialogueAnnotation as Annotation, type AIChatDialogueMessage as Message, type AIChatInputMessageContent as MessageContent, type AIChatInputReference as Reference, type AnnotationItemProps } from '@fibrae/semi-ai-svelte';
     import { IconBookOpenStroked, IconClose, IconFeishuLogo, IconFigma, IconGit, IconSearch, IconTemplateStroked, IconWord } from '@fibrae/semi-icons-svelte';
-    import { Button, TypographyParagraph } from '@fibrae/semi-ui-svelte';
-
-    const { Configure } = AIChatInput;
+    import { Button, Typography } from '@fibrae/semi-ui-svelte';
 
     type SideBarContent = { type?: undefined; value?: undefined } | { type: 'annotation'; value: AnnotationItemProps[] } | { type: 'resource'; value: { name: string } };
+
+    function simpleIsEqual(a: unknown, b: unknown) {
+        if (a === b) {
+            return true;
+        }
+        if (Number.isNaN(a) && Number.isNaN(b)) {
+            return true;
+        }
+        if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
+            return false;
+        }
+        const isArrayA = Array.isArray(a);
+        const isArrayB = Array.isArray(b);
+        if (isArrayA !== isArrayB) {
+            return false;
+        }
+        const keysA = Object.keys(a);
+        const keysB = Object.keys(b);
+        if (keysA.length !== keysB.length) {
+            return false;
+        }
+        for (const key of keysA) {
+            if (!Object.hasOwn(b, key)) {
+                return false;
+            }
+            if (!simpleIsEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key])) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     const defaultMessages: Message[] = [
         {
@@ -149,8 +178,6 @@
         action: 'https://api.semi.design/upload',
     };
 
-    const defaultInput = '我是一名<input-slot placeholder="[职业]">程序员</input-slot>，帮我实现<input-slot placeholder="[需求描述]">Multi Agent 场景下的聊天应用</input-slot>需求';
-
     const modelOptions = [
         {
             value: 'GPT-5',
@@ -190,15 +217,14 @@
         IconFigma,
     };
 
-    const radioOptions = [
+    const radioButtonProps = [
         { label: '快速', value: 'fast' },
         { label: '思考', value: 'think' },
     ];
 
+    const defaultInput = '我是一名<input-slot placeholder="[职业]">程序员</input-slot>，帮我实现<input-slot placeholder="[需求描述]">Multi Agent 场景下的聊天应用</input-slot>需求';
     const inputOuterStyle = 'margin: 12px; min-height: 150px; max-height: 300px; flex-shrink: 0';
     const editingInputOuterStyle = 'margin: 12px 0px; max-height: 300px; flex-shrink: 0';
-    const sideBarTitleStyle = 'font-size: 16px; line-height: 22px; font-weight: 600';
-    const resourceButtonStyle = 'display: flex; gap: 8px; width: 100%; background-color: var(--semi-color-fill-0); border: none; padding: 12px 16px; justify-content: center; align-items: center; border-radius: 12px; color: inherit; font: inherit; cursor: pointer';
 
     let sideBarVisible = $state(false);
     let messages = $state.raw(defaultMessages);
@@ -210,7 +236,7 @@
         references = [...references, { ...item, id: `reference-${Date.now()}` }];
     };
 
-    const onReferenceDelete = (item: Reference) => {
+    const handleReferenceDelete = (item: Reference) => {
         references = references.filter((ref) => ref.id !== item.id);
     };
 
@@ -239,12 +265,12 @@
         messages = [...messages.slice(0, index), { id: `message-${Date.now()}`, ...chatInputToMessage(content) }];
     };
 
-    const onEditingReferenceDelete = (item: Reference) => {
+    const handleEditingReferenceDelete = (item: Reference) => {
         messages = messages.map((message) => (message.editing ? { ...message, references: message.references?.filter((ref) => ref.id !== item.id) } : message));
     };
 
     const changeSideBarContent = (content: SideBarContent) => {
-        sideBarVisible = JSON.stringify(content) === JSON.stringify(sideBarContent) ? !sideBarVisible : true;
+        sideBarVisible = simpleIsEqual(content, sideBarContent) ? !sideBarVisible : true;
         sideBarContent = content;
     };
 
@@ -256,28 +282,28 @@
 </script>
 
 {#snippet configureArea()}
-    <Configure.Select field="model" initValue="GPT-4o" optionList={modelOptions} />
-    <Configure.Button field="onlineSearch">
+    <AIChatInput.Configure.Select field="model" initValue="GPT-4o" optionList={modelOptions} />
+    <AIChatInput.Configure.Button field="onlineSearch">
         {#snippet icon()}
             <IconBookOpenStroked />
         {/snippet}
         联网搜索
-    </Configure.Button>
-    <Configure.Mcp options={mcpOptions}>
-        {#snippet optionIcon({ item })}
-            {@const Icon = mcpIcons[item.value]}
+    </AIChatInput.Configure.Button>
+    <AIChatInput.Configure.Mcp options={mcpOptions}>
+        {#snippet optionIcon(iconArgs)}
+            {@const Icon = mcpIcons[iconArgs.item.value]}
             <Icon />
         {/snippet}
-    </Configure.Mcp>
-    <Configure.RadioButton field="thinkType" initValue="think" options={radioOptions}>
-        {#snippet label({ option })}
-            {#if option.value === 'fast'}
-                <IconTemplateStroked aria-label={String(option.label)} />
+    </AIChatInput.Configure.Mcp>
+    <AIChatInput.Configure.RadioButton field="thinkType" initValue="think" options={radioButtonProps}>
+        {#snippet label(labelArgs)}
+            {#if labelArgs.option.value === 'fast'}
+                <IconTemplateStroked aria-label={String(labelArgs.option.label)} />
             {:else}
-                <IconSearch aria-label={String(option.label)} />
+                <IconSearch aria-label={String(labelArgs.option.label)} />
             {/if}
         {/snippet}
-    </Configure.RadioButton>
+    </AIChatInput.Configure.RadioButton>
 {/snippet}
 
 <div style="display: flex; column-gap: 10px">
@@ -289,33 +315,37 @@
                     defaultContent={content.inputContents?.[0].text}
                     generating={false}
                     onMessageSend={onEditMessageSend}
-                    onReferenceDelete={onEditingReferenceDelete}
+                    onReferenceDelete={handleEditingReferenceDelete}
                     references={content.references}
                     style={editingInputOuterStyle}
                     uploadProps={{ ...uploadProps, defaultFileList: content.attachments }}
                 />
             {/snippet}
-            {#snippet contentItem({ item, type, defaultItem })}
-                {#if type === 'resource'}
-                    <button style={resourceButtonStyle} type="button" onclick={() => changeSideBarContent({ type: 'resource', value: resourceOf(item) })}>
+            {#snippet contentItem(dialogueItem)}
+                {#if dialogueItem.type === 'resource'}
+                    <button
+                        style="display: flex; gap: 8px; width: 100%; background-color: var(--semi-color-fill-0); border: none; padding: 12px 16px; justify-content: center; align-items: center; border-radius: 12px; color: inherit; font: inherit; cursor: pointer"
+                        type="button"
+                        onclick={() => changeSideBarContent({ type: 'resource', value: resourceOf(dialogueItem.item) })}
+                    >
                         <IconWord style="color: var(--semi-color-primary)" />
-                        {resourceOf(item).name}
+                        {resourceOf(dialogueItem.item).name}
                     </button>
                 {:else}
-                    {@render defaultItem()}
+                    {@render dialogueItem.defaultItem()}
                 {/if}
             {/snippet}
         </AIChatDialogue>
-        <AIChatInput {configureArea} defaultContent={defaultInput} {generating} {onMessageSend} {onReferenceDelete} onStopGenerate={() => (generating = false)} placeholder="输入内容或者上传内容" {references} style={inputOuterStyle} {uploadProps} />
+        <AIChatInput {configureArea} defaultContent={defaultInput} {generating} {onMessageSend} onReferenceDelete={handleReferenceDelete} onStopGenerate={() => (generating = false)} placeholder="输入内容或者上传内容" {references} style={inputOuterStyle} {uploadProps} />
     </div>
     {#if sideBarVisible}
         <div style="width: 300px; height: calc(100vh - 32px); border-radius: 12px; border: 1px solid var(--semi-color-border); flex-shrink: 0">
             <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; color: var(--semi-color-text)">
                 {#if sideBarContent.type === 'annotation'}
-                    <div style={sideBarTitleStyle}>参考资料</div>
+                    <div style="font-size: 16px; line-height: 22px; font-weight: 600">参考资料</div>
                 {/if}
                 {#if sideBarContent.type === 'resource'}
-                    <div style={sideBarTitleStyle}>产物列表</div>
+                    <div style="font-size: 16px; line-height: 22px; font-weight: 600">产物列表</div>
                 {/if}
                 <Button aria-label="关闭" style="padding: 0px; width: 24px; height: 24px" theme="borderless" type="tertiary" onclick={() => (sideBarVisible = !sideBarVisible)}>
                     {#snippet icon()}
@@ -333,9 +363,9 @@
                                     {item.title}
                                 </span>
                             </span>
-                            <TypographyParagraph ellipsis={{ rows: 3 }} style="font-size: 12px; line-height: 16px; color: var(--semi-color-text-1)">
+                            <Typography.Paragraph ellipsis={{ rows: 3 }} style="font-size: 12px; line-height: 16px; color: var(--semi-color-text-1)">
                                 {item.detail}
-                            </TypographyParagraph>
+                            </Typography.Paragraph>
                         </div>
                     {/each}
                 </div>

@@ -2,15 +2,16 @@ import React, { type ReactNode } from 'react';
 import { IconMore } from '@fibrae/semi-icons-react';
 import { Breadcrumb, Popover } from '@fibrae/semi-ui-react';
 
+const separator = '-';
+
 export default function BreadcrumbDemo() {
-    const separator = '-'; // 拼接 restItem 用的分隔符
-    const renderMore = (restItem: ReactNode[]) => {
+    const renderMore = (restItems: ReactNode[]) => {
         const content = (
             <>
-                {restItem.map((item: ReactNode, idx: number) => (
+                {restItems.map((item: ReactNode, idx: number) => (
                     <React.Fragment key={`restItem-${idx}`}>
                         {item}
-                        {idx !== restItem.length - 1 && <span style={{ color: 'var(--semi-color-text-2)', marginRight: '6px' }}>{separator}</span>}
+                        {idx !== restItems.length - 1 && <span style={{ color: 'var(--semi-color-text-2)', marginInlineEnd: '6px' }}>{separator}</span>}
                     </React.Fragment>
                 ))}
             </>

@@ -1,23 +1,23 @@
 import { useState } from 'react';
 import { Steps, Button } from '@fibrae/semi-ui-react';
 
+const steps = [
+    {
+        title: 'First',
+        content: 'First-content',
+    },
+    {
+        title: 'Second',
+        content: 'Second-content',
+    },
+    {
+        title: 'Last',
+        content: 'Last-content',
+    },
+];
+
 export default function StepsDemo() {
     const [current, setCurrent] = useState(0);
-    const { Step } = Steps;
-    const steps = [
-        {
-            title: 'First',
-            content: 'First-content',
-        },
-        {
-            title: 'Second',
-            content: 'Second-content',
-        },
-        {
-            title: 'Last',
-            content: 'Last-content',
-        },
-    ];
 
     const next = () => {
         setCurrent(current + 1);
@@ -31,10 +31,10 @@ export default function StepsDemo() {
         <div>
             <Steps type="basic" current={current} onChange={(i) => console.log(i)}>
                 {steps.map((item) => (
-                    <Step key={item.title} title={item.title} />
+                    <Steps.Step key={item.title} title={item.title} />
                 ))}
             </Steps>
-            <div className="steps-content" style={{ marginTop: 4, marginBottom: 4 }}>
+            <div className="steps-content" style={{ marginBlockStart: 4, marginBlockEnd: 4 }}>
                 {steps[current].content}
             </div>
             <div className="steps-action">
@@ -49,7 +49,7 @@ export default function StepsDemo() {
                     </Button>
                 )}
                 {current > 0 && (
-                    <Button style={{ marginLeft: 8 }} onClick={prev}>
+                    <Button style={{ marginInlineStart: 8 }} onClick={prev}>
                         Previous
                     </Button>
                 )}

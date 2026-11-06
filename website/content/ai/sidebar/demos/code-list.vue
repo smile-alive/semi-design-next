@@ -2,8 +2,6 @@
     import { shallowRef } from 'vue';
     import { Sidebar } from '@fibrae/semi-ai-vue';
 
-    const { CodeContent } = Sidebar;
-
     const defaultCodes = [
         {
             name: 'Component.js',
@@ -147,6 +145,6 @@ import { IconSearch } from '@fibrae/semi-icons-react';
 
 <template>
     <div class="semi-sidebar-main">
-        <CodeContent v-model:activeKey="activeKey" :codes="defaultCodes" :style="{ width: '600px' }" />
+        <Sidebar.CodeContent v-model:activeKey="activeKey" :codes="defaultCodes" :style="{ width: '600px' }" />
     </div>
 </template>

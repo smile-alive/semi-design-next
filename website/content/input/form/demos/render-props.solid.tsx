@@ -12,7 +12,7 @@ export default function FormDemo() {
                     </FormSelect>
                     <FormInput field="UserName" label="用户名" style={{ width: '80px' }} />
                     <FormInput field="Password" label="密码" style={{ width: '176px' }} />
-                    <code style={{ 'margin-top': '24px' }}>{JSON.stringify(form.formState)}</code>
+                    <code style={{ 'margin-block-start': '24px' }}>{JSON.stringify(form.formState)}</code>
                 </>
             )}
             layout="horizontal"

@@ -11,24 +11,22 @@
 </script>
 
 <AvatarGroup {items} maxCount={3}>
-    {#snippet item({ item })}
-        {initials(item.alt)}
+    {#snippet item(context)}
+        {initials(context.item.alt)}
     {/snippet}
-    {#snippet more({ restNumber, restAvatars })}
+    {#snippet more(context)}
         <Popover autoAdjustOverflow={false} position="bottomRight" style="padding: 12px 8px; padding-bottom: 0">
             <!-- the trigger props go on the avatar itself: a wrapper span would put a non-listitem tab stop inside the group's list -->
-            {#snippet child({ props })}
-                <Avatar {...props}>{`+${restNumber}`}</Avatar>
+            {#snippet child(trigger)}
+                <Avatar {...trigger.props}>{`+${context.restNumber}`}</Avatar>
             {/snippet}
             {#snippet content()}
-                <div>
-                    {#each restAvatars as avatar (avatar.alt)}
-                        <div style="padding-bottom: 12px">
-                            <Avatar {...avatar} size="extra-small">{initials(avatar.alt)}</Avatar>
-                            <span style="margin-left: 8px; font-size: 14px">这是段文字描述</span>
-                        </div>
-                    {/each}
-                </div>
+                {#each context.restAvatars as avatar (avatar.alt)}
+                    <div style="padding-bottom: 12px">
+                        <Avatar {...avatar} size="extra-small">{initials(avatar.alt)}</Avatar>
+                        <span style="margin-inline-start: 8px; font-size: 14px">这是段文字描述</span>
+                    </div>
+                {/each}
             {/snippet}
         </Popover>
     {/snippet}

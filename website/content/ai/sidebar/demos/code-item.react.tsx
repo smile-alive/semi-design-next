@@ -2,8 +2,6 @@ import { useState, useCallback } from 'react';
 import { Sidebar } from '@fibrae/semi-ai-react';
 import { RadioGroup, Radio, type RadioChangeEvent } from '@fibrae/semi-ui-react';
 
-const { CodeItem } = Sidebar;
-
 const code = `.semi-animation-react-demo-auto {
     button {
         height: 50px;
@@ -89,7 +87,7 @@ export default function SidebarDemo() {
                 <Radio value="css">CSS</Radio>
             </RadioGroup>
             <div style={{ height: 200, overflow: 'auto' }}>
-                <CodeItem {...(type === 'json' ? jsonProps : codeProps)} />
+                <Sidebar.CodeItem {...(type === 'json' ? jsonProps : codeProps)} />
             </div>
         </>
     );

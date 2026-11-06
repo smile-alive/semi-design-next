@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { Cascader, Checkbox, Typography, type Ellipsis } from '@fibrae/semi-ui-vue';
+    import { Cascader, Checkbox, Typography } from '@fibrae/semi-ui-vue';
 
     const treeData = ['通用', '场景'].map((label, m) => ({
         label,
@@ -20,16 +20,15 @@
         width: 320,
         itemSize: 36,
     };
-    const ellipsis: Ellipsis = { showTooltip: { opts: { style: { wordBreak: 'break-all' } } } };
 </script>
 
 <template>
     <Cascader filterTreeNode multiple placeholder="输入 通用 or 场景 进行搜索" style="width: 320px" :treeData="treeData" :virtualizeInSearch="virtualize">
-        <template #filterItem="{ class: className, data, onCheck, checkStatus }">
-            <div :class="className" :style="{ justifyContent: 'start', padding: '8px 16px 8px 12px', boxSizing: 'border-box' }">
-                <Checkbox :indeterminate="checkStatus.halfChecked" :modelValue="checkStatus.checked" :style="{ marginRight: '8px' }" @change="onCheck" />
-                <Typography.Text :ellipsis="ellipsis" :style="{ maxWidth: '260px' }">
-                    {{ data.map((item) => item.label).join(' | ') }}
+        <template #filterItem="item">
+            <div :class="item.class" :style="{ justifyContent: 'start', padding: '8px 16px 8px 12px', boxSizing: 'border-box' }">
+                <Checkbox :indeterminate="item.checkStatus.halfChecked" :modelValue="item.checkStatus.checked" :style="{ marginInlineEnd: '8px' }" @change="item.onCheck" />
+                <Typography.Text :ellipsis="{ showTooltip: { opts: { style: { wordBreak: 'break-all' } } } }" :style="{ maxWidth: '260px' }">
+                    {{ item.data.map((option) => option.label).join(' | ') }}
                 </Typography.Text>
             </div>
         </template>

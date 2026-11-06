@@ -9,7 +9,7 @@ const list = [
     { value: 'toutiao', label: '今日头条' },
 ];
 
-const triggerRender = (props: SelectTriggerRenderProps) => (
+const triggerRender = (selectState: SelectTriggerRenderProps) => (
     <div
         style={{
             'min-width': '112px',
@@ -32,13 +32,13 @@ const triggerRender = (props: SelectTriggerRenderProps) => (
                 overflow: 'hidden',
             }}
         >
-            {props.value.map((item) => item.label).join(' , ')}
+            {selectState.value.map((item) => item.label).join(' , ')}
         </div>
         <IconAppCenter style={{ 'margin-right': '8px', 'flex-shrink': 0 }} />
     </div>
 );
 
-const triggerRender2 = (props: SelectTriggerRenderProps) => (
+const triggerRender2 = (selectState: SelectTriggerRenderProps) => (
     <div
         style={{
             margin: '4px',
@@ -51,7 +51,7 @@ const triggerRender2 = (props: SelectTriggerRenderProps) => (
         }}
     >
         <Tag size="large" color="cyan" shape="circle" suffixIcon={<IconChevronDown />}>
-            {props.value.map((item) => item.label).join(' / ')}
+            {selectState.value.map((item) => item.label).join(' / ')}
         </Tag>
     </div>
 );

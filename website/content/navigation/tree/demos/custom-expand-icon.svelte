@@ -44,11 +44,11 @@
 <br />
 <p>expandIcon 随展开状态变化</p>
 <Tree expandedKeys={['yazhou']} multiple {style} {treeData}>
-    {#snippet expandIcon({ expanded, onClick, class: className })}
-        {#if expanded}
-            <IconMinus class={className} size="small" onclick={onClick} />
+    {#snippet expandIcon(iconProps)}
+        {#if iconProps.expanded}
+            <IconMinus class={iconProps.class} size="small" onclick={iconProps.onClick} />
         {:else}
-            <IconPlus class={className} size="small" onclick={onClick} />
+            <IconPlus class={iconProps.class} size="small" onclick={iconProps.onClick} />
         {/if}
     {/snippet}
 </Tree>

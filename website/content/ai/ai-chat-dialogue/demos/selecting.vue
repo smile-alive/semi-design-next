@@ -106,7 +106,7 @@
             :style="{
                 border: '1px solid var(--semi-color-border)',
                 borderRadius: '12px',
-                marginTop: '10px',
+                marginBlockStart: '10px',
                 padding: '20px',
             }"
         >

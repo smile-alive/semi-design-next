@@ -8,7 +8,7 @@ export default function TooltipDemo() {
     return (
         <Space align="center">
             <Typography.Text id="tooltip-condition-label">condition</Typography.Text>
-            <Switch aria-labelledby="tooltip-condition-label" checked={enabled()} onChange={setEnabled} />
+            <Switch aria-labelledby="tooltip-condition-label" checked={enabled()} onChange={(v) => setEnabled(v)} />
             <Tooltip content={content()} trigger="hover" condition={enabled()}>
                 {(trigger) => <Button {...trigger()}>Hover me</Button>}
             </Tooltip>

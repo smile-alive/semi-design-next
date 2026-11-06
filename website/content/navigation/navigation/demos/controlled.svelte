@@ -1,7 +1,7 @@
 <script lang="ts">
     import { IconSemiLogo } from '@fibrae/semi-icons-svelte';
     import { IconBadge, IconBanner, IconForm, IconTree } from '@fibrae/semi-icons-svelte/lab';
-    import { Nav, NavHeader, type NavItemKey, type NavItems } from '@fibrae/semi-ui-svelte';
+    import { Nav, type NavItemKey, type NavItems } from '@fibrae/semi-ui-svelte';
 
     let openKeys = $state<NavItemKey[]>(['union-management', 'job']);
     let selectedKeys = $state<NavItemKey[]>(['公告设置']);
@@ -17,18 +17,18 @@
 </script>
 
 {#snippet header()}
-    <NavHeader text="Semi 运营后台">
+    <Nav.Header text="Semi 运营后台">
         {#snippet logo()}
             <IconSemiLogo style="height: 36px; font-size: 36px" />
         {/snippet}
-    </NavHeader>
+    </Nav.Header>
 {/snippet}
 
 <Nav bind:isCollapsed bind:openKeys bind:selectedKeys bodyStyle="height: 300px" footer={{ collapseButton: true }} {header} {items} onOpenChange={(data) => console.log('trigger onOpenChange: ', data)} onSelect={(data) => console.log('trigger onSelect: ', data)}>
-    {#snippet icon({ item, size })}
-        {@const Icon = icons[item.itemKey as keyof typeof icons]}
+    {#snippet icon(renderProps)}
+        {@const Icon = icons[renderProps.item.itemKey as keyof typeof icons]}
         {#if Icon}
-            <Icon {size} />
+            <Icon size={renderProps.size} />
         {/if}
     {/snippet}
 </Nav>

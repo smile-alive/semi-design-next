@@ -6,9 +6,9 @@
 </script>
 
 <ImagePreview src={srcList}>
-    {#snippet previewMenu({ menuItems })}
+    {#snippet previewMenu(menu)}
         <div style="display: flex; background-color: rgba(0, 0, 0, 0.75); align-items: center; padding: 5px 16px; border-radius: 4px">
-            {@render menuItems()}
+            {@render menu.menuItems()}
             <Divider layout="vertical" />
             <Tooltip>
                 {#snippet content()}

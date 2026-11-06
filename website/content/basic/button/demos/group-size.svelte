@@ -6,7 +6,7 @@
 
 <div style="display: flex">
     {#each sizes as size (size)}
-        <div style="margin-right: 10px">
+        <div style="margin-inline-end: 10px">
             <ButtonGroup aria-label="操作按钮组" {size}>
                 <Button>拷贝</Button>
                 <Button>查询</Button>

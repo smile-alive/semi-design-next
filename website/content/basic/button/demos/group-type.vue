@@ -6,7 +6,7 @@
 
 <template>
     <div :style="{ display: 'flex' }">
-        <div v-for="type in types" :key="type" :style="{ marginRight: '10px' }">
+        <div v-for="type in types" :key="type" :style="{ marginInlineEnd: '10px' }">
             <ButtonGroup aria-label="操作按钮组" :type="type">
                 <Button>拷贝</Button>
                 <Button>查询</Button>

@@ -46,19 +46,19 @@
 
 <h4>单选</h4>
 <TreeSelect style="width: 300px" {treeData}>
-    {#snippet selectedItem({ item })}
-        {item.label}
+    {#snippet selectedItem(selected)}
+        {selected.item.label}
     {/snippet}
 </TreeSelect>
 <h4>多选 + 标签内渲染</h4>
 <TreeSelect multiple style="width: 300px" {treeData}>
-    {#snippet selectedItem({ item })}
-        {item.label}
+    {#snippet selectedItem(selected)}
+        {selected.item.label}
     {/snippet}
 </TreeSelect>
 <h4>多选 + 替换整个标签</h4>
 <TreeSelect maxTagCount={2} multiple style="width: 300px" {treeData}>
-    {#snippet tag({ item, onClose })}
-        <Tag closable color="white" onClose={(event) => onClose(event)}>{item.value}</Tag>
+    {#snippet tag(selected)}
+        <Tag closable color="white" onClose={selected.onClose}>{selected.item.value}</Tag>
     {/snippet}
 </TreeSelect>

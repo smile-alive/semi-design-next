@@ -4,7 +4,7 @@
 
     const action = 'https://api.semi.design/upload';
     const marginStyle: Partial<Record<PromptPositionType, string>> = {
-        right: 'margin-left: 10px',
+        right: 'margin-inline-start: 10px',
     };
     const promptStyle = (pos: PromptPositionType) => `display: flex; align-items: center; color: var(--semi-color-text-2); height: 100%; ${marginStyle[pos] ?? ''}`;
     const defaultFileList: FileItem[] = [
@@ -29,7 +29,7 @@
 
 <template>
     <template v-for="(pos, index) in positions" :key="pos">
-        <div v-if="index" style="margin-bottom: 12px; margin-top: 12px; border-bottom: 1px solid var(--semi-color-border)" />
+        <div v-if="index" style="margin-block-end: 12px; margin-block-start: 12px; border-block-end: 1px solid var(--semi-color-border)" />
         <Upload :action="action" :defaultFileList="defaultFileList" listType="picture" :promptPosition="pos">
             <template #prompt>
                 <div :style="promptStyle(pos)">请上传认证材料</div>

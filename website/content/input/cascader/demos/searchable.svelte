@@ -1,6 +1,6 @@
 <script lang="ts">
     import { IconMapPinStroked } from '@fibrae/semi-icons-svelte';
-    import { Cascader, TypographyTitle } from '@fibrae/semi-ui-svelte';
+    import { Cascader, Typography } from '@fibrae/semi-ui-svelte';
 
     const treeData = [
         {
@@ -66,16 +66,16 @@
     <Cascader filterTreeNode placeholder="对value值进行搜索" style="width: 300px" {treeData} treeNodeFilterProp="value" />
     <br />
     <br />
-    <TypographyTitle heading={6}>filterLeafOnly=false:</TypographyTitle>
+    <Typography.Title heading={6}>filterLeafOnly=false:</Typography.Title>
     <Cascader filterLeafOnly={false} filterTreeNode placeholder="filterLeafOnly=false" style="width: 300px" {treeData} />
     <br />
     <br />
-    <TypographyTitle heading={6}>Label 为自定义节点，指定其他属性进行搜索</TypographyTitle>
+    <Typography.Title heading={6}>Label 为自定义节点，指定其他属性进行搜索</Typography.Title>
     <Cascader displayProp="labelText" filterTreeNode placeholder="Search for labelText" style="width: 300px" treeData={labelNodeTreeData} treeNodeFilterProp="labelText">
-        {#snippet label({ item })}
+        {#snippet label(label)}
             <span style="display: inline-flex; align-items: center; column-gap: 4px">
                 <IconMapPinStroked />
-                {item.label}
+                {label.item.label}
             </span>
         {/snippet}
     </Cascader>

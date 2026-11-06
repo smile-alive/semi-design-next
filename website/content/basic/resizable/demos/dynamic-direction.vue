@@ -2,10 +2,11 @@
     import { ref } from 'vue';
     import { Button, ResizeGroup, ResizeHandler, ResizeItem } from '@fibrae/semi-ui-vue';
 
+    const itemStyle = { backgroundColor: 'var(--semi-grey-1)' };
+    const contentStyle = { marginInlineStart: '20%', padding: '5px' };
+
     const text = ref('drag to resize');
     const direction = ref<'horizontal' | 'vertical'>('horizontal');
-    const itemStyle = { backgroundColor: 'var(--semi-grey-1)' };
-    const contentStyle = { marginLeft: '20%', padding: '5px' };
 
     const changeDirection = () => {
         direction.value = direction.value === 'horizontal' ? 'vertical' : 'horizontal';

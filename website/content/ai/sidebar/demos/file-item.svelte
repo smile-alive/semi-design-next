@@ -2,9 +2,7 @@
     import { Sidebar, type ImageUploadNodeOptions } from '@fibrae/semi-ai-svelte';
     import { Button } from '@fibrae/semi-ui-svelte';
 
-    const { FileItem } = Sidebar;
-
-    const content = `<h2>
+    const defaultFileContent = `<h2>
   Semi Design 介绍
 </h2>
 <p>
@@ -45,4 +43,4 @@
 <Button aria-pressed={editable} onclick={() => (editable = !editable)}>可编辑</Button>
 <br />
 <br />
-<FileItem {content} {editable} {imgUploadProps} name="Semi Design 介绍" style="border: 1px solid var(--semi-color-border); padding: 12px" />
+<Sidebar.FileItem content={defaultFileContent} {editable} {imgUploadProps} name="Semi Design 介绍" style="border: 1px solid var(--semi-color-border); padding: 12px" />

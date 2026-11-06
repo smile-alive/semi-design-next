@@ -2,8 +2,6 @@
     import { Sidebar } from '@fibrae/semi-ai-svelte';
     import { Button, Switch } from '@fibrae/semi-ui-svelte';
 
-    const { Container } = Sidebar;
-
     const containerStyle = 'display: flex; height: 500px; border: 1px solid var(--semi-color-border); border-radius: 8px; overflow: hidden; box-sizing: border-box';
 
     let visible = $state(true);
@@ -25,5 +23,5 @@
             </div>
         </div>
     </div>
-    <Container bind:visible maxWidth="60%" minWidth={250} {motion} {resizable} style={resizable ? undefined : 'width: 200px'} title="基础容器示例" />
+    <Sidebar.Container bind:visible maxWidth="60%" minWidth={250} {motion} {resizable} style={resizable ? undefined : 'width: 200px'} title="基础容器示例" />
 </div>

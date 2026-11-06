@@ -1,68 +1,117 @@
 import { For } from 'solid-js';
-import { Tag, Tooltip, type TooltipPosition } from '@fibrae/semi-ui-solid';
+import { Tag, Tooltip, type TooltipPosition as Position } from '@fibrae/semi-ui-solid';
 
-type Item = [TooltipPosition, string];
-
-const tops: Item[] = [
+const tops: [Position, string][] = [
     ['topLeft', 'TL'],
     ['top', 'Top'],
     ['topRight', 'TR'],
 ];
-const lefts: Item[] = [
+const lefts: [Position, string][] = [
     ['leftTop', 'LT'],
     ['left', 'Left'],
     ['leftBottom', 'LB'],
 ];
-const rights: Item[] = [
+const rights: [Position, string][] = [
     ['rightTop', 'RT'],
     ['right', 'Right'],
     ['rightBottom', 'RB'],
 ];
-const bottoms: Item[] = [
+const bottoms: [Position, string][] = [
     ['bottomLeft', 'BL'],
     ['bottom', 'Bottom'],
     ['bottomRight', 'BR'],
 ];
 
-function Tips(props: { items: Item[]; width?: string }) {
-    return (
-        <For each={props.items}>
-            {([position, label]) => (
-                <Tooltip
-                    content={
-                        <article>
-                            <p>hi bytedance</p>
-                            <p>hi bytedance</p>
-                        </article>
-                    }
-                    arrowPointAtCenter={false}
-                    position={position}
-                >
-                    {(trigger) => (
-                        <Tag style={{ margin: '8px', padding: '20px', width: props.width }} {...trigger()}>
-                            {label}
-                        </Tag>
-                    )}
-                </Tooltip>
-            )}
-        </For>
-    );
-}
-
 export default function TooltipDemo() {
     return (
         <div>
-            <div style={{ 'margin-left': '80px', 'white-space': 'nowrap' }}>
-                <Tips items={tops} />
+            <div style={{ 'margin-inline-start': '80px', 'white-space': 'nowrap' }}>
+                <For each={tops}>
+                    {([position, label]) => (
+                        <Tooltip
+                            content={
+                                <article>
+                                    <p>hi bytedance</p>
+                                    <p>hi bytedance</p>
+                                </article>
+                            }
+                            arrowPointAtCenter={false}
+                            position={position}
+                        >
+                            {(trigger) => (
+                                <Tag style={{ margin: '8px', padding: '20px' }} {...trigger()}>
+                                    {label}
+                                </Tag>
+                            )}
+                        </Tooltip>
+                    )}
+                </For>
             </div>
             <div style={{ width: '80px', float: 'left' }}>
-                <Tips items={lefts} width="60px" />
+                <For each={lefts}>
+                    {([position, label]) => (
+                        <Tooltip
+                            content={
+                                <article>
+                                    <p>hi bytedance</p>
+                                    <p>hi bytedance</p>
+                                </article>
+                            }
+                            arrowPointAtCenter={false}
+                            position={position}
+                        >
+                            {(trigger) => (
+                                <Tag style={{ margin: '8px', padding: '20px', width: '60px' }} {...trigger()}>
+                                    {label}
+                                </Tag>
+                            )}
+                        </Tooltip>
+                    )}
+                </For>
             </div>
-            <div style={{ width: '40px', 'margin-left': '300px' }}>
-                <Tips items={rights} width="60px" />
+            <div style={{ width: '40px', 'margin-inline-start': '300px' }}>
+                <For each={rights}>
+                    {([position, label]) => (
+                        <Tooltip
+                            content={
+                                <article>
+                                    <p>hi bytedance</p>
+                                    <p>hi bytedance</p>
+                                </article>
+                            }
+                            arrowPointAtCenter={false}
+                            position={position}
+                        >
+                            {(trigger) => (
+                                <Tag style={{ margin: '8px', padding: '20px', width: '60px' }} {...trigger()}>
+                                    {label}
+                                </Tag>
+                            )}
+                        </Tooltip>
+                    )}
+                </For>
             </div>
-            <div style={{ 'margin-left': '80px', clear: 'both', 'white-space': 'nowrap' }}>
-                <Tips items={bottoms} width="60px" />
+            <div style={{ 'margin-inline-start': '80px', clear: 'both', 'white-space': 'nowrap' }}>
+                <For each={bottoms}>
+                    {([position, label]) => (
+                        <Tooltip
+                            content={
+                                <article>
+                                    <p>hi bytedance</p>
+                                    <p>hi bytedance</p>
+                                </article>
+                            }
+                            arrowPointAtCenter={false}
+                            position={position}
+                        >
+                            {(trigger) => (
+                                <Tag style={{ margin: '8px', padding: '20px', width: '60px' }} {...trigger()}>
+                                    {label}
+                                </Tag>
+                            )}
+                        </Tooltip>
+                    )}
+                </For>
             </div>
         </div>
     );

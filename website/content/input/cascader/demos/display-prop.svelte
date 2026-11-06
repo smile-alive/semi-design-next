@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Cascader, TypographyTitle, type CascaderValue } from '@fibrae/semi-ui-svelte';
+    import { Cascader, Typography, type CascaderValue } from '@fibrae/semi-ui-svelte';
 
     let single = $state<CascaderValue>(['zhejiang', 'ningbo', 'jiangbei']);
     let multiple = $state<CascaderValue>(['zhejiang', 'ningbo', 'jiangbei']);
@@ -31,9 +31,9 @@
     ];
 </script>
 
-<TypographyTitle heading={6}>单选</TypographyTitle>
+<Typography.Title heading={6}>单选</Typography.Title>
 <Cascader bind:value={single} displayProp="value" placeholder="回填时显示数据的value值" style="width: 300px" {treeData} />
 <br />
 <br />
-<TypographyTitle heading={6}>多选</TypographyTitle>
+<Typography.Title heading={6}>多选</Typography.Title>
 <Cascader bind:value={multiple} displayProp="value" multiple placeholder="回填时显示数据的value值" style="width: 300px" {treeData} />

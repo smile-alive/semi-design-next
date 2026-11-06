@@ -8,7 +8,7 @@
         if (!val) {
             return "can't be empty";
         } else if (val.length <= 5) {
-            return '我是传入的节点';
+            return '长度需大于 5';
         }
         return undefined;
     };
@@ -35,7 +35,7 @@
 </script>
 
 <Form autoScrollToError getFormApi={(api) => (formApi = api)} layout="horizontal">
-    {#snippet children({ values })}
+    {#snippet children(form)}
         <div>
             <FormInput field="a[1]" trigger="blur" validator={validate} />
             <FormInput field="a[0]" trigger="blur" validator={validate} />
@@ -51,7 +51,7 @@
             <Space>
                 <Button htmlType="reset">reset</Button>
                 <Button onclick={() => validatePartial('all')}>all validate</Button>
-                <Button onclick={() => validatePartial()}>partial validate {JSON.stringify(values.validateScope)}</Button>
+                <Button onclick={() => validatePartial()}>partial validate {JSON.stringify(form.values.validateScope)}</Button>
                 <Button onclick={resetPartial}>partial reset</Button>
             </Space>
         </div>

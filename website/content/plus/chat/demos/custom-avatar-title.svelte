@@ -2,7 +2,7 @@
     import { Chat, type ChatAvatarSnippetProps, type ChatMessage, type ChatTitleSnippetProps } from '@fibrae/semi-ai-svelte';
     import { Avatar, Radio, RadioGroup, type RadioValue } from '@fibrae/semi-ui-svelte';
 
-    const roleConfig = {
+    const roleInfo = {
         user: {
             name: 'User',
             avatar: '/assets/docs-icon.png',
@@ -17,17 +17,21 @@
         },
     };
 
+    const commonOuterStyle = 'border: 1px solid var(--semi-color-border); border-radius: 16px; height: 400px';
+
     const uploadProps = { action: 'https://api.semi.design/upload' };
 
     let id = 0;
     const getId = () => `id-${id++}`;
 
-    const formatTime = (createAt = Date.now()) => {
-        const date = new Date(createAt);
-        return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-    };
+    function formatTime(createAt?: number) {
+        const date = new Date(createAt ?? Date.now());
+        const hours = ('0' + date.getHours()).slice(-2);
+        const minutes = ('0' + date.getMinutes()).slice(-2);
+        return `${hours}:${minutes}`;
+    }
 
-    let messages = $state<ChatMessage[]>([
+    let message = $state<ChatMessage[]>([
         {
             role: 'system',
             id: '1',
@@ -58,8 +62,8 @@
             content: '图片中是一个有卡通画像装饰的黄色背包。',
         },
     ]);
-    let titleMode = $state<RadioValue | undefined>('null');
-    let avatarMode = $state<RadioValue | undefined>('null');
+    let title = $state<RadioValue | undefined>('null');
+    let avatar = $state<RadioValue | undefined>('null');
 
     const onMessageSend = () => {
         const newAssistantMessage: ChatMessage = {
@@ -68,19 +72,19 @@
             content: 'This is a mock response',
         };
         setTimeout(() => {
-            messages = [...messages, newAssistantMessage];
+            message = [...message, newAssistantMessage];
         }, 200);
     };
 </script>
 
-{#snippet customAvatar({ role }: ChatAvatarSnippetProps)}
-    <Avatar shape="square" size="extra-small" style="flex-shrink: 0">{role.name}</Avatar>
+{#snippet customAvatar(props: ChatAvatarSnippetProps)}
+    <Avatar shape="square" size="extra-small" style="flex-shrink: 0">{props.role.name}</Avatar>
 {/snippet}
 
-{#snippet customTitle({ role, message }: ChatTitleSnippetProps)}
+{#snippet customTitle(props: ChatTitleSnippetProps)}
     <span class="title">
-        {role.name}
-        <span class="time">{formatTime(message.createAt)}</span>
+        {props.role.name}
+        <span class="time">{formatTime(props.message.createAt)}</span>
     </span>
 {/snippet}
 
@@ -90,7 +94,7 @@
 <span style="display: flex; flex-direction: column; row-gap: 8px; margin-bottom: 5px">
     <span style="display: flex; align-items: center; column-gap: 10px">
         头像渲染模式
-        <RadioGroup aria-label="头像渲染模式" bind:value={avatarMode} type="button">
+        <RadioGroup aria-label="头像渲染模式" bind:value={avatar} type="button">
             <Radio value="default">默认头像</Radio>
             <Radio value="null">无头像</Radio>
             <Radio value="custom">自定义头像</Radio>
@@ -98,22 +102,13 @@
     </span>
     <span style="display: flex; align-items: center; column-gap: 10px">
         标题渲染模式
-        <RadioGroup aria-label="标题渲染模式" bind:value={titleMode} type="button">
+        <RadioGroup aria-label="标题渲染模式" bind:value={title} type="button">
             <Radio value="default">默认标题</Radio>
             <Radio value="null">无标题</Radio>
             <Radio value="custom">自定义标题</Radio>
         </RadioGroup>
     </span>
 </span>
-{#key `${avatarMode}${titleMode}`}
-    <Chat
-        avatar={avatarMode === 'custom' ? customAvatar : avatarMode === 'null' ? nothing : undefined}
-        bind:chats={messages}
-        class="component-chat-demo-custom-render"
-        {onMessageSend}
-        {roleConfig}
-        style="border: 1px solid var(--semi-color-border); border-radius: 16px; height: 400px"
-        title={titleMode === 'custom' ? customTitle : titleMode === 'null' ? nothing : undefined}
-        {uploadProps}
-    />
+{#key `${avatar}${title}`}
+    <Chat avatar={avatar === 'custom' ? customAvatar : avatar === 'null' ? nothing : undefined} bind:chats={message} class="component-chat-demo-custom-render" {onMessageSend} roleConfig={roleInfo} style={commonOuterStyle} title={title === 'custom' ? customTitle : title === 'null' ? nothing : undefined} {uploadProps} />
 {/key}

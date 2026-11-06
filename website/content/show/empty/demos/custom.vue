@@ -15,7 +15,7 @@
         </template>
         <template #description>开始创建你的第一个仪表盘吧！</template>
         <div>
-            <Button :style="{ padding: '6px 24px', marginRight: '12px' }" type="primary">二级按钮</Button>
+            <Button :style="{ padding: '6px 24px', marginInlineEnd: '12px' }" type="primary">二级按钮</Button>
             <Button :style="{ padding: '6px 24px' }" theme="solid" type="primary">一级按钮</Button>
         </div>
     </Empty>

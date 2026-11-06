@@ -1,14 +1,8 @@
 <script lang="ts">
-    import { ColorPicker, type ColorValue } from '@fibrae/semi-ui-svelte';
-
-    let hex = $state('');
-
-    const onChange = (value: ColorValue) => {
-        hex = value.hex;
-    };
+    import { ColorPicker } from '@fibrae/semi-ui-svelte';
 </script>
 
-<ColorPicker alpha {onChange}>
+<ColorPicker alpha onChange={(value) => console.log(value)}>
     {#snippet topSlot()}
         <div>TopSlot</div>
     {/snippet}
@@ -16,4 +10,3 @@
         <div>Bottom Slot</div>
     {/snippet}
 </ColorPicker>
-<p>当前颜色：{hex}</p>

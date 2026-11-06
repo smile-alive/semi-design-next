@@ -31,11 +31,11 @@ const article = () => (
 
 export default function PopoverDemo() {
     return (
-        <div style={{ 'padding-left': '40px' }} class="tag-margin-right">
-            <div style={{ 'margin-left': '40px', 'white-space': 'nowrap' }}>
+        <div style={{ 'padding-inline-start': '40px' }} class="tag-margin-right">
+            <div style={{ 'margin-inline-start': '40px', 'white-space': 'nowrap' }}>
                 <For each={tops}>
-                    {([pos, label]) => (
-                        <Popover showArrow arrowPointAtCenter content={article} position={pos}>
+                    {([position, label]) => (
+                        <Popover showArrow arrowPointAtCenter content={article} position={position}>
                             <Tag>{label}</Tag>
                         </Popover>
                     )}
@@ -43,26 +43,26 @@ export default function PopoverDemo() {
             </div>
             <div style={{ width: '40px', float: 'left' }}>
                 <For each={lefts}>
-                    {([pos, label]) => (
-                        <Popover showArrow arrowPointAtCenter content={article} position={pos}>
+                    {([position, label]) => (
+                        <Popover showArrow arrowPointAtCenter content={article} position={position}>
                             <Tag>{label}</Tag>
                         </Popover>
                     )}
                 </For>
             </div>
-            <div style={{ width: '40px', 'margin-left': '180px' }}>
+            <div style={{ width: '40px', 'margin-inline-start': '180px' }}>
                 <For each={rights}>
-                    {([pos, label]) => (
-                        <Popover showArrow arrowPointAtCenter content={article} position={pos}>
+                    {([position, label]) => (
+                        <Popover showArrow arrowPointAtCenter content={article} position={position}>
                             <Tag>{label}</Tag>
                         </Popover>
                     )}
                 </For>
             </div>
-            <div style={{ 'margin-left': '40px', clear: 'both', 'white-space': 'nowrap' }}>
+            <div style={{ 'margin-inline-start': '40px', clear: 'both', 'white-space': 'nowrap' }}>
                 <For each={bottoms}>
-                    {([pos, label]) => (
-                        <Popover showArrow arrowPointAtCenter content={article} position={pos}>
+                    {([position, label]) => (
+                        <Popover showArrow arrowPointAtCenter content={article} position={position}>
                             <Tag>{label}</Tag>
                         </Popover>
                     )}

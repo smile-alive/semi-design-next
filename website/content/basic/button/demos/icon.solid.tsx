@@ -22,12 +22,12 @@ export default function ButtonDemo() {
             <br />
             <br />
             <strong>更改主题：</strong>
-            <Button icon={<IconCamera />} theme="solid" style={{ 'margin-right': '10px' }} aria-label="截屏" />
+            <Button icon={<IconCamera />} theme="solid" style={{ 'margin-inline-end': '10px' }} aria-label="截屏" />
             <Button icon={<IconCamera />} theme="light" aria-label="截屏" />
             <br />
             <br />
             <strong>更改图标位置：</strong>
-            <Button icon={<IconSidebar />} theme="solid" style={{ 'margin-right': '10px' }}>
+            <Button icon={<IconSidebar />} theme="solid" style={{ 'margin-inline-end': '10px' }}>
                 收起
             </Button>
             <Button icon={<IconChevronDown />} theme="solid" iconPosition="right">

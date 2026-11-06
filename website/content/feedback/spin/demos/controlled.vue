@@ -7,7 +7,7 @@
 
 <template>
     <div>
-        <Button style="margin-right: 20px" @click="loading = !loading">受控的 Spin</Button>
+        <Button style="margin-inline-end: 20px" @click="loading = !loading">受控的 Spin</Button>
         <Spin :spinning="loading" />
     </div>
 </template>

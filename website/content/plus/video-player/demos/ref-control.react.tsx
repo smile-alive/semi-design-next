@@ -1,11 +1,12 @@
 import { useRef } from 'react';
 import { VideoPlayer, Button } from '@fibrae/semi-ui-react';
 
+const src = '/assets/video/vchart-show-video.mp4';
+const poster = '/assets/poster2.jpeg';
+
 export default function VideoPlayerDemo() {
     const videoRef1 = useRef<HTMLVideoElement>(null);
     const videoRef2 = useRef<HTMLVideoElement>(null);
-    const src = '/assets/video/vchart-show-video.mp4';
-    const poster = '/assets/poster2.jpeg';
 
     const handlePlayAll = () => {
         const v1 = videoRef1.current;

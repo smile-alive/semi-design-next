@@ -71,7 +71,7 @@ function CustomInputRender(props: RenderInputAreaProps) {
             <Form getFormApi={(formApi) => (api = formApi)}>
                 <strong>输入信息</strong>
                 <FormInput field="name" label="名称（Input）" style={{ width: '250px' }} trigger="blur" />
-                <FormUpload field="file" label="文档" action="https://api.semi.design/upload">
+                <FormUpload field="file" label="文档" action={uploadProps.action}>
                     <Button icon={<IconUpload />} theme="light">
                         点击上传
                     </Button>
@@ -85,7 +85,7 @@ function CustomInputRender(props: RenderInputAreaProps) {
 }
 
 export default function ChatDemo() {
-    const [chats, setChats] = createSignal<Message[]>(defaultMessage);
+    const [message, setMessage] = createSignal<Message[]>(defaultMessage);
 
     const onMessageSend = () => {
         const newAssistantMessage: Message = {
@@ -94,9 +94,9 @@ export default function ChatDemo() {
             content: `This is a mock response`,
         };
         setTimeout(() => {
-            setChats((list) => [...list, newAssistantMessage]);
+            setMessage((list) => [...list, newAssistantMessage]);
         }, 200);
     };
 
-    return <Chat renderInputArea={CustomInputRender} style={commonOuterStyle} chats={chats()} roleConfig={roleInfo} onChatsChange={(next) => setChats(next)} onMessageSend={onMessageSend} uploadProps={uploadProps} />;
+    return <Chat renderInputArea={CustomInputRender} style={commonOuterStyle} chats={message()} roleConfig={roleInfo} onChatsChange={(next) => setMessage(next)} onMessageSend={onMessageSend} uploadProps={uploadProps} />;
 }

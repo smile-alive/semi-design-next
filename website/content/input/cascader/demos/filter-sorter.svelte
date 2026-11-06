@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Cascader, type CascaderProps } from '@fibrae/semi-ui-svelte';
+    import { Cascader } from '@fibrae/semi-ui-svelte';
 
     const treeData = [
         {
@@ -14,21 +14,24 @@
             ],
         },
     ];
-
-    // The sorter receives the two result paths, so compare their last nodes
-    const filterSorter: CascaderProps['filterSorter'] = (first, second, inputValue) => {
-        const firstData = first[first.length - 1];
-        const lastData = second[second.length - 1];
-        if (firstData.label === inputValue) {
-            return -1;
-        } else if (lastData.label === inputValue) {
-            return 1;
-        } else {
-            return firstData.label < lastData.label ? -1 : 1;
-        }
-    };
 </script>
 
 <div>
-    <Cascader {filterSorter} filterTreeNode placeholder="输入 s 查看排序效果" style="width: 300px" {treeData} />
+    <Cascader
+        filterSorter={(first, second, inputValue) => {
+            const firstData = first[first.length - 1];
+            const lastData = second[second.length - 1];
+            if (firstData.label === inputValue) {
+                return -1;
+            } else if (lastData.label === inputValue) {
+                return 1;
+            } else {
+                return String(firstData.label) < String(lastData.label) ? -1 : 1;
+            }
+        }}
+        filterTreeNode
+        placeholder="输入 s 查看排序效果"
+        style="width: 300px"
+        {treeData}
+    />
 </div>

@@ -15,13 +15,13 @@
         <Avatar alt="Rafal Matin" color="amber">RM</Avatar>
         <Avatar alt="Zank Lance" :style="{ color: '#f56a00', backgroundColor: '#fde3cf' }">ZL</Avatar>
         <Avatar alt="Youself Zhang" :style="{ backgroundColor: '#87d068' }">YZ</Avatar>
-        <template #more="{ restNumber, restAvatars }">
+        <template #more="context">
             <Popover :autoAdjustOverflow="false" position="bottomRight" :style="{ padding: '12px 8px', paddingBottom: 0 }">
-                <Avatar>{{ `+${restNumber}` }}</Avatar>
+                <Avatar>{{ `+${context.restNumber}` }}</Avatar>
                 <template #content>
-                    <div v-for="(avatar, index) in restAvatars" :key="index" :style="{ paddingBottom: '12px' }">
+                    <div v-for="(avatar, index) in context.restAvatars" :key="index" :style="{ paddingBottom: '12px' }">
                         <SmallAvatar :avatar="avatar" />
-                        <span :style="{ marginLeft: '8px', fontSize: '14px' }">这是段文字描述</span>
+                        <span :style="{ marginInlineStart: '8px', fontSize: '14px' }">这是段文字描述</span>
                     </div>
                 </template>
             </Popover>

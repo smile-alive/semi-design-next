@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref } from 'vue';
-    import { Card, CardMeta, Switch } from '@fibrae/semi-ui-vue';
+    import { Card, Switch } from '@fibrae/semi-ui-vue';
 
     const loading = ref(true);
 </script>
@@ -10,8 +10,8 @@
     <br />
     <br />
     <Card :loading="loading" :style="{ maxWidth: '360px' }">
-        <CardMeta title="Semi Doc">
+        <Card.Meta title="Semi Doc">
             <template #description>全面、易用、优质</template>
-        </CardMeta>
+        </Card.Meta>
     </Card>
 </template>

@@ -1,18 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { ConfigProvider, Select, TimePicker } from '@fibrae/semi-ui-react';
+
+const defaultTimestamp = 1581599305265;
+const gmtList: string[] = [];
+for (let hourOffset = -11; hourOffset <= 14; hourOffset++) {
+    const prefix = hourOffset >= 0 ? '+' : '-';
+    gmtList.push(`GMT${prefix}${String(Math.abs(hourOffset)).padStart(2, '0')}:00`);
+}
 
 export default function TimePickerDemo() {
     const [timeZone, setTimeZone] = useState('GMT+08:00');
-    const defaultTimestamp = 1581599305265;
-    const gmtList = useMemo(() => {
-        const list: string[] = [];
-        for (let hourOffset = -11; hourOffset <= 14; hourOffset++) {
-            const prefix = hourOffset >= 0 ? '+' : '-';
-            const hOffset = Math.abs(hourOffset);
-            list.push(`GMT${prefix}${String(hOffset).padStart(2, '0')}:00`);
-        }
-        return list;
-    }, []);
 
     return (
         <ConfigProvider timeZone={timeZone}>

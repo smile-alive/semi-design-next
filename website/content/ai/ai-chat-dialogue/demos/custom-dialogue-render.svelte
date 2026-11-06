@@ -17,7 +17,7 @@
         },
     };
 
-    let messages = $state<Message[]>([
+    const defaultMessages: Message[] = [
         {
             role: 'system',
             id: '1',
@@ -36,19 +36,21 @@
             createdAt: 1715676751919,
             content: "以下是一个 Semi 代码的使用示例：\n```jsx \nimport React from 'react';\nimport { Button } from '@fibrae/semi-ui-react';\n\nconst MyComponent = () => {\n  return (\n    <Button>Click me</Button>\n );\n};\nexport default MyComponent;\n```\n",
         },
-    ]);
+    ];
+
+    let messages = $state<Message[]>(defaultMessages);
 </script>
 
 <AIChatDialogue align="leftRight" bind:chats={messages} mode="bubble" {roleConfig}>
-    {#snippet title({ role })}
-        <div class="semi-ai-chat-dialogue-title">My-{role?.name}</div>
+    {#snippet title(title)}
+        <div class="semi-ai-chat-dialogue-title">My-{title.role?.name}</div>
     {/snippet}
-    {#snippet avatar({ role })}
-        <Avatar alt="" shape="square" size="extra-small" src={role?.avatar} />
+    {#snippet avatar(avatar)}
+        <Avatar alt="" shape="square" size="extra-small" src={avatar.role?.avatar} />
     {/snippet}
-    {#snippet action({ defaultActions, class: className })}
-        <div class={className}>
-            {@render defaultActions[0]?.()}
+    {#snippet action(action)}
+        <div class={action.class}>
+            {@render action.defaultActions[0]?.()}
         </div>
     {/snippet}
 </AIChatDialogue>

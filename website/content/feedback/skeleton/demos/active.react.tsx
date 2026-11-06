@@ -1,16 +1,16 @@
 import { Skeleton, Avatar } from '@fibrae/semi-ui-react';
 
-export default function SkeletonDemo() {
-    const style = {
-        display: 'flex',
-        alignItems: 'flex-start',
-    };
+const style = {
+    display: 'flex',
+    alignItems: 'flex-start',
+};
 
+export default function SkeletonDemo() {
     const placeholder = (
         <div style={style}>
-            <Skeleton.Avatar style={{ marginRight: 12 }} />
+            <Skeleton.Avatar style={{ marginInlineEnd: 12 }} />
             <div>
-                <Skeleton.Title style={{ width: 120, marginBottom: 12, marginTop: 12 }} />
+                <Skeleton.Title style={{ width: 120, marginBlockEnd: 12, marginBlockStart: 12 }} />
                 <Skeleton.Paragraph style={{ width: 240 }} rows={3} />
             </div>
         </div>
@@ -19,7 +19,7 @@ export default function SkeletonDemo() {
     return (
         <Skeleton placeholder={placeholder} loading active>
             <div style={style}>
-                <Avatar color="blue" style={{ marginRight: 12 }}>
+                <Avatar color="blue" style={{ marginInlineEnd: 12 }}>
                     UI
                 </Avatar>
                 <div>

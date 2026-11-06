@@ -1,23 +1,23 @@
 import React, { type ReactNode } from 'react';
 import { AvatarGroup, Avatar, Popover, type AvatarProps } from '@fibrae/semi-ui-react';
 
-export default function AvatarDemo() {
-    const renderMore = (restNumber?: number, restAvatars: ReactNode[] = []) => {
-        const content = restAvatars.map((avatar, index) => {
-            return (
-                <div style={{ paddingBottom: '12px' }} key={index}>
-                    {React.isValidElement<AvatarProps>(avatar) && React.cloneElement(avatar, { size: 'extra-small' })}
-                    <span style={{ marginLeft: 8, fontSize: 14 }}>这是段文字描述</span>
-                </div>
-            );
-        });
+const renderMore = (restNumber?: number, restAvatars: ReactNode[] = []) => {
+    const content = restAvatars.map((avatar, index) => {
         return (
-            <Popover content={content} autoAdjustOverflow={false} position="bottomRight" style={{ padding: '12px 8px', paddingBottom: 0 }}>
-                <Avatar>{`+${restNumber}`}</Avatar>
-            </Popover>
+            <div style={{ paddingBottom: '12px' }} key={index}>
+                {React.isValidElement<AvatarProps>(avatar) && React.cloneElement(avatar, { size: 'extra-small' })}
+                <span style={{ marginInlineStart: '8px', fontSize: '14px' }}>这是段文字描述</span>
+            </div>
         );
-    };
+    });
+    return (
+        <Popover content={content} autoAdjustOverflow={false} position="bottomRight" style={{ padding: '12px 8px', paddingBottom: 0 }}>
+            <Avatar>{`+${restNumber}`}</Avatar>
+        </Popover>
+    );
+};
 
+export default function AvatarDemo() {
     return (
         <AvatarGroup maxCount={3} renderMore={renderMore}>
             <Avatar color="red" alt="Lisa LeBlanc">

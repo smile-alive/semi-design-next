@@ -16,7 +16,7 @@
         },
     };
 
-    let messages = $state<Message[]>([
+    const defaultMessages: Message[] = [
         {
             id: '1',
             role: 'user',
@@ -46,7 +46,9 @@
                 },
             ],
         },
-    ]);
+    ];
+
+    let messages = $state(defaultMessages);
 
     const onReferenceClick = () => {
         console.log('You click the reference button!');

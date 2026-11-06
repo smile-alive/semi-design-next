@@ -6,11 +6,11 @@
     <Skeleton loading>
         <template #placeholder>
             <div :style="{ display: 'flex', alignItems: 'center' }">
-                <Skeleton.Avatar :style="{ marginRight: '12px' }" />
+                <Skeleton.Avatar :style="{ marginInlineEnd: '12px' }" />
                 <Skeleton.Title :style="{ width: '120px' }" />
             </div>
         </template>
-        <Avatar color="blue" :style="{ marginRight: '12px' }">UI</Avatar>
+        <Avatar color="blue" :style="{ marginInlineEnd: '12px' }">UI</Avatar>
         <span>Semi UI</span>
     </Skeleton>
 </template>

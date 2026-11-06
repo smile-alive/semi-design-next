@@ -4,4 +4,4 @@
     let value = $state(['抖音', '火山', '西瓜视频']);
 </script>
 
-<TagInput allowDuplicates={false} bind:value draggable placeholder="请输入..." />
+<TagInput allowDuplicates={false} bind:value draggable onChange={(v) => console.log(v)} placeholder="请输入..." />

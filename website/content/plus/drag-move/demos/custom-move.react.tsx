@@ -1,56 +1,42 @@
-import React, { useCallback, type KeyboardEvent, type MouseEvent } from 'react';
+import React, { type KeyboardEvent, type MouseEvent } from 'react';
 import { DragMove } from '@fibrae/semi-ui-react';
 
 export default function DragMoveDemo() {
-    const containerRef = React.useRef<HTMLDivElement>(null);
-    const elementRef = React.useRef<HTMLButtonElement>(null);
+    const container = React.useRef<HTMLDivElement>(null);
     const startPoint = React.useRef<{ x: number; y: number } | null>(null);
 
-    const customMove = useCallback((element: HTMLElement, top: number, left: number) => {
-        const container = containerRef.current;
-        if (container && left + 100 > container.offsetWidth) {
-            element.style.right = `${container.offsetWidth - left - element.offsetWidth}px`;
+    const customMove = (element: HTMLElement, top: number, left: number) => {
+        const bounds = container.current;
+        if (bounds && left + 100 > bounds.offsetWidth) {
+            element.style.right = `${bounds.offsetWidth - left - element.offsetWidth}px`;
             element.style.left = 'auto';
         } else {
             element.style.left = left + 'px';
         }
         element.style.top = top + 'px';
-    }, []);
+    };
 
-    const onMouseDown = useCallback((e: MouseEvent) => {
-        startPoint.current = {
-            x: e.clientX,
-            y: e.clientY,
-        };
-    }, []);
-
-    const toggleWidth = useCallback(() => {
-        const element = elementRef.current;
-        if (!element) return;
+    const toggleWidth = (element: HTMLElement) => {
         element.style.width = element.style.width === '60px' ? '100px' : '60px';
-    }, []);
+    };
 
-    const onMouseUp = useCallback(
-        (e: MouseEvent) => {
-            if (startPoint.current) {
-                const { x, y } = startPoint.current;
-                if (Math.abs(e.clientX - x) < 5 && Math.abs(e.clientY - y) < 5) {
-                    toggleWidth();
-                }
-            }
-            startPoint.current = null;
-        },
-        [toggleWidth]
-    );
+    const onMouseDown = (e: MouseEvent<HTMLElement>) => {
+        startPoint.current = { x: e.clientX, y: e.clientY };
+    };
 
-    const onKeyDown = useCallback(
-        (e: KeyboardEvent) => {
-            if (e.key === 'Enter') {
-                toggleWidth();
-            }
-        },
-        [toggleWidth]
-    );
+    const onMouseUp = (e: MouseEvent<HTMLElement>) => {
+        const start = startPoint.current;
+        if (start && Math.abs(e.clientX - start.x) < 5 && Math.abs(e.clientY - start.y) < 5) {
+            toggleWidth(e.currentTarget);
+        }
+        startPoint.current = null;
+    };
+
+    const onKeyDown = (e: KeyboardEvent<HTMLElement>) => {
+        if (e.key === 'Enter') {
+            toggleWidth(e.currentTarget);
+        }
+    };
 
     return (
         <>
@@ -67,10 +53,10 @@ export default function DragMoveDemo() {
                     color: 'var(--semi-white)',
                     fontWeight: 500,
                 }}
-                ref={containerRef}
+                ref={container}
             >
                 <span style={{ color: 'var(--semi-color-text-0)' }}>Constrainer</span>
-                <DragMove constrainer={() => containerRef.current} customMove={customMove}>
+                <DragMove constrainer={() => container.current} customMove={customMove}>
                     <button
                         type="button"
                         style={{
@@ -93,7 +79,6 @@ export default function DragMoveDemo() {
                         onMouseDown={onMouseDown}
                         onMouseUp={onMouseUp}
                         onKeyDown={onKeyDown}
-                        ref={elementRef}
                     >
                         Drag me
                     </button>

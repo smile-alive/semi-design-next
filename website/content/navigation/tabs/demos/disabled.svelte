@@ -9,5 +9,5 @@
 </script>
 
 <Tabs activeKey="1" {tabList}>
-    {#snippet panel({ item })}{item.tab}{/snippet}
+    {#snippet panel(pane)}{pane.item.tab}{/snippet}
 </Tabs>

@@ -57,7 +57,7 @@ export default function CascaderDemo() {
                 defaultValue={['zhejiang', 'ningbo', 'jiangbei']}
                 placeholder="自定义回填时显示数据的格式"
                 displayRender={(item) => (
-                    <Tag style={{ 'margin-right': '4px' }} color="white">
+                    <Tag style={{ 'margin-inline-end': '4px' }} color="white">
                         {item.data.label as JSX.Element}
                     </Tag>
                 )}

@@ -3,8 +3,8 @@
 
     const style = {
         border: '2px solid var(--semi-color-border)',
-        paddingLeft: '4px',
-        paddingRight: '4px',
+        paddingInlineStart: '4px',
+        paddingInlineEnd: '4px',
         borderRadius: '4px',
     };
 </script>

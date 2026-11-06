@@ -61,6 +61,13 @@ function getId() {
 }
 const uploadProps = { action: 'https://api.semi.design/upload' };
 
+function formatTime(createAt?: number) {
+    const date = new Date(createAt ?? Date.now());
+    const hours = ('0' + date.getHours()).slice(-2);
+    const minutes = ('0' + date.getMinutes()).slice(-2);
+    return `${hours}:${minutes}`;
+}
+
 export default function ChatDemo() {
     const [title, setTitle] = useState('null');
     const [avatar, setAvatar] = useState('null');
@@ -73,10 +80,10 @@ export default function ChatDemo() {
     const customRenderAvatar = useMemo(() => {
         switch (avatar) {
             case 'custom':
-                return ({ role }: RenderAvatarProps) => {
+                return (props: RenderAvatarProps) => {
                     return (
                         <Avatar size="extra-small" shape="square" style={{ flexShrink: '0' }}>
-                            {role?.name}
+                            {props.role?.name}
                         </Avatar>
                     );
                 };
@@ -90,15 +97,11 @@ export default function ChatDemo() {
     const customRenderTitle = useMemo(() => {
         switch (title) {
             case 'custom':
-                return ({ role, message }: RenderTitleProps) => {
-                    const date = new Date(message?.createAt ?? Date.now());
-                    const hours = ('0' + date.getHours()).slice(-2);
-                    const minutes = ('0' + date.getMinutes()).slice(-2);
-                    const formatTime = `${hours}:${minutes}`;
+                return (props: RenderTitleProps) => {
                     return (
                         <span className="title">
-                            {role?.name}
-                            <span className="time">{formatTime}</span>
+                            {props.role?.name}
+                            <span className="time">{formatTime(props.message?.createAt)}</span>
                         </span>
                     );
                 };
@@ -132,7 +135,7 @@ export default function ChatDemo() {
             <span style={{ display: 'flex', flexDirection: 'column', rowGap: 8, marginBottom: 5 }}>
                 <span style={{ display: 'flex', alignItems: 'center', columnGap: 10 }}>
                     头像渲染模式
-                    <RadioGroup onChange={onAvatarChange} value={avatar} type="button">
+                    <RadioGroup aria-label="头像渲染模式" onChange={onAvatarChange} value={avatar} type="button">
                         <Radio value="default">默认头像</Radio>
                         <Radio value="null">无头像</Radio>
                         <Radio value="custom">自定义头像</Radio>
@@ -140,7 +143,7 @@ export default function ChatDemo() {
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', columnGap: 10 }}>
                     标题渲染模式
-                    <RadioGroup onChange={onTitleChange} value={title} type="button">
+                    <RadioGroup aria-label="标题渲染模式" onChange={onTitleChange} value={title} type="button">
                         <Radio value="default">默认标题</Radio>
                         <Radio value="null">无标题</Radio>
                         <Radio value="custom">自定义标题</Radio>

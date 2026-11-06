@@ -1,14 +1,14 @@
 <script lang="ts">
-    import { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider } from '@fibrae/semi-ui-svelte';
+    import { Layout } from '@fibrae/semi-ui-svelte';
 
     const commonStyle = 'height: 64px; line-height: 64px; background: var(--semi-color-fill-0)';
 </script>
 
 <Layout class="components-layout-demo">
-    <LayoutHeader style={commonStyle}>Header</LayoutHeader>
+    <Layout.Header style={commonStyle}>Header</Layout.Header>
     <Layout>
-        <LayoutSider breakpoint={['md']} onBreakpoint={(screen, matches) => console.log(screen, matches)} style="width: 120px; background: var(--semi-color-fill-2)">Sider</LayoutSider>
-        <LayoutContent style="height: 300px; line-height: 300px">Content</LayoutContent>
+        <Layout.Sider breakpoint={['md']} onBreakpoint={(screen, matches) => console.log(screen, matches)} style="width: 120px; background: var(--semi-color-fill-2)">Sider</Layout.Sider>
+        <Layout.Content style="height: 300px; line-height: 300px">Content</Layout.Content>
     </Layout>
-    <LayoutFooter style={commonStyle}>Footer</LayoutFooter>
+    <Layout.Footer style={commonStyle}>Footer</Layout.Footer>
 </Layout>

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { AIChatInput, type AIChatInputContent as Content, type AIChatInputReference as Reference, type AIChatInputUploadProps } from '@fibrae/semi-ai-svelte';
-    import type { UploadOnChangeProps } from '@fibrae/semi-ui-svelte';
+    import type { UploadOnChangeProps as OnChangeProps } from '@fibrae/semi-ui-svelte';
 
     const uploadProps: AIChatInputUploadProps = {
         action: 'https://api.semi.design/upload',
@@ -23,20 +23,22 @@
         ],
     };
 
-    let references = $state<Reference[]>([
+    const reference: Reference[] = [
         {
             id: '1',
             type: 'text',
             content: '测试文本，这里是一段很长的文字，这里是一段很长的文字，这里是一段很长的文字，这里是一段很长的文字，这里是一段很长的文字,这里是一段很长的文字，这里是一段很长的文字，这里是一段很长的文字，这里是一段很长的文字，这里是一段很长的文字',
         },
-    ]);
+    ];
+
+    let references = $state(reference);
     let generating = $state(false);
 
     const onContentChange = (content: Content[]) => {
         console.log('onContentChange', content);
     };
 
-    const onUploadChange = (fileList: UploadOnChangeProps) => {
+    const onUploadChange = (fileList: OnChangeProps) => {
         console.log('onUploadChange', fileList);
     };
 

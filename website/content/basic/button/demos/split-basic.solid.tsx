@@ -19,7 +19,7 @@ export default function ButtonDemo() {
 
     return (
         <div>
-            <SplitButtonGroup style={{ 'margin-right': '10px' }} aria-label="项目操作按钮组">
+            <SplitButtonGroup style={{ 'margin-inline-end': '10px' }} aria-label="项目操作按钮组">
                 <Button theme="solid" type="primary">
                     分裂按钮
                 </Button>
@@ -27,7 +27,7 @@ export default function ButtonDemo() {
                     {(trigger) => <Button {...trigger()} style={btnVisible()[1] ? { background: 'var(--semi-color-primary-hover)', padding: '8px 4px' } : { padding: '8px 4px' }} theme="solid" type="primary" aria-label="更多操作" icon={<IconTreeTriangleDown />} />}
                 </Dropdown>
             </SplitButtonGroup>
-            <SplitButtonGroup style={{ 'margin-right': '10px' }} aria-label="项目操作按钮组">
+            <SplitButtonGroup style={{ 'margin-inline-end': '10px' }} aria-label="项目操作按钮组">
                 <Button theme="light" type="primary">
                     分裂按钮
                 </Button>

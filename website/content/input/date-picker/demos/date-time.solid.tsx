@@ -8,12 +8,7 @@ export default function DatePickerDemo() {
             <br />
             <br />
             <h4>开启时间列表无限循环</h4>
-            <DatePicker
-                type="dateTime"
-                timePickerOpts={{
-                    scrollItemProps: { mode: 'wheel', cycled: true },
-                }}
-            />
+            <DatePicker type="dateTime" timePickerOpts={{ scrollItemProps: { mode: 'wheel', cycled: true } }} />
         </>
     );
 }

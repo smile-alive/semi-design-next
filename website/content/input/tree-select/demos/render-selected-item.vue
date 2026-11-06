@@ -47,16 +47,16 @@
 <template>
     <h4>单选</h4>
     <TreeSelect style="width: 300px" :treeData="treeData">
-        <template #selectedItem="{ item }">{{ item.label }}</template>
+        <template #selectedItem="selected">{{ selected.item.label }}</template>
     </TreeSelect>
     <h4>多选 + 标签内渲染</h4>
     <TreeSelect multiple style="width: 300px" :treeData="treeData">
-        <template #selectedItem="{ item }">{{ item.label }}</template>
+        <template #selectedItem="selected">{{ selected.item.label }}</template>
     </TreeSelect>
     <h4>多选 + 替换整个标签</h4>
     <TreeSelect :maxTagCount="2" multiple style="width: 300px" :treeData="treeData">
-        <template #tag="{ item, onClose }">
-            <Tag closable color="white" @close="onClose">{{ item.value }}</Tag>
+        <template #tag="selected">
+            <Tag closable color="white" @close="selected.onClose">{{ selected.item.value }}</Tag>
         </template>
     </TreeSelect>
 </template>

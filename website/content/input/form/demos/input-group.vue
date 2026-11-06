@@ -1,11 +1,9 @@
 <script setup lang="ts">
     import { Button, Form, FormInput, FormInputGroup, FormSelect } from '@fibrae/semi-ui-vue';
-
-    const onSubmit = (values: unknown) => console.log(values);
 </script>
 
 <template>
-    <Form labelPosition="top" :style="{ width: '400px' }" @submit="onSubmit">
+    <Form labelPosition="top" :style="{ width: '400px' }" @submit="(values) => console.log(values)">
         <FormInputGroup :label="{ text: '手机号码', required: true }" labelPosition="top">
             <FormSelect field="phonePrefix" initValue="+86" :rules="[{ required: true }]" showClear :style="{ width: '150px' }">
                 <FormSelect.Option value="+1">美国+1</FormSelect.Option>

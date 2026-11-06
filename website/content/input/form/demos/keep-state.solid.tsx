@@ -7,8 +7,8 @@ export default function FormDemo() {
     return (
         <Form style={{ width: '450px' }}>
             <FormSwitch field="alwaysShow" label="始终显示的字段" />
-            <Switch aria-labelledby="form-keep-state-toggle" checked={show()} onChange={(checked) => setShow(checked)} style={{ 'margin-bottom': '12px' }} />
-            <span id="form-keep-state-toggle" style={{ 'margin-left': '8px', color: 'var(--semi-color-text-2)' }}>
+            <Switch aria-labelledby="form-keep-state-toggle" checked={show()} onChange={(checked) => setShow(checked)} style={{ 'margin-block-end': '12px' }} />
+            <span id="form-keep-state-toggle" style={{ 'margin-inline-start': '8px', color: 'var(--semi-color-text-2)' }}>
                 显示条件字段
             </span>
             <Show when={show()}>

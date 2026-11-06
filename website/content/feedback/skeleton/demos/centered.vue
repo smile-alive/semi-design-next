@@ -7,7 +7,7 @@
         flexDirection: 'column',
         alignItems: 'center',
         width: '300px',
-        marginBottom: '10px',
+        marginBlockEnd: '10px',
     };
 </script>
 

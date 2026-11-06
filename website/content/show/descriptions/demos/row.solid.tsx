@@ -11,7 +11,7 @@ const renderValue = (item: DescriptionsData, index: number) =>
     index === 1 ? (
         <span>
             {item.value}
-            <IconArrowUp size="small" style={{ color: 'red', 'margin-left': '4px' }} />
+            <IconArrowUp size="small" style={{ color: 'red', 'margin-inline-start': '4px' }} />
         </span>
     ) : (
         item.value
@@ -22,7 +22,7 @@ const style = {
     'background-color': 'var(--semi-color-bg-2)',
     'border-radius': '4px',
     padding: '10px',
-    'margin-right': '20px',
+    'margin-inline-end': '20px',
     width: '600px',
 };
 

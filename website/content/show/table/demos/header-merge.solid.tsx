@@ -27,7 +27,7 @@ const columns: ColumnProps<Row>[] = [
                 render: (text) => {
                     return (
                         <span>
-                            <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-right': '12px' }} />
+                            <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-inline-end': '12px' }} />
                             {text}
                         </span>
                     );
@@ -63,7 +63,7 @@ const columns: ColumnProps<Row>[] = [
                 render: (text, record) => {
                     return (
                         <div>
-                            <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
+                            <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
                                 {typeof text === 'string' && text.slice(0, 1)}
                             </Avatar>
                             {text}
@@ -108,8 +108,12 @@ function getData(total: number) {
     return data;
 }
 
-const dataSource = getData(46);
+const data = getData(46);
+
+const rowSelection = { fixed: true };
+
+const scroll = { x: 1000, y: 400 };
 
 export default function TableDemo() {
-    return <Table rowSelection={{ fixed: true }} expandedRowRender={(record) => <article>{record.name}</article>} dataSource={dataSource} scroll={{ x: 1000, y: 400 }} onChange={(changeInfo) => console.log(changeInfo)} columns={columns} />;
+    return <Table rowSelection={rowSelection} expandedRowRender={(record) => <article>{record.name}</article>} dataSource={data} scroll={scroll} onChange={(changeInfo) => console.log(changeInfo)} columns={columns} />;
 }

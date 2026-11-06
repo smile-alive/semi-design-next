@@ -1,8 +1,8 @@
 import { createSignal } from 'solid-js';
-import { union, pull } from 'es-toolkit';
-import { Table, type ColumnProps } from '@fibrae/semi-ui-solid';
+import { pull, union } from 'es-toolkit';
+import { Table, type ColumnProps, type RowSelectionProps } from '@fibrae/semi-ui-solid';
 
-type TreeRow = {
+interface TreeRow {
     key: number;
     dataKey: string;
     name: string;
@@ -10,63 +10,34 @@ type TreeRow = {
     description: string;
     default: string;
     children?: TreeRow[];
-};
+}
 type RowKey = string | number;
 
-function traverse(data: TreeRow[], res: RowKey[]) {
-    for (const record of data) {
-        res.push(record.key);
-        if (Array.isArray(record.children)) {
-            traverse(record.children, res);
-        }
-    }
-}
-
-function getAllRowKeys(data: TreeRow[]) {
-    const allRowKeys: RowKey[] = [];
-    traverse(data, allRowKeys);
-    return allRowKeys;
-}
-
-function findShouldSelectRowKeys(record: TreeRow, selected: boolean, selectedRowKeys: RowKey[]) {
-    const childrenRowKeys: RowKey[] = [];
-    if (Array.isArray(record.children)) {
-        traverse(record.children, childrenRowKeys);
-    }
-
-    if (!selected) {
-        return pull([...selectedRowKeys], [record.key, ...childrenRowKeys]);
-    }
-    return union(selectedRowKeys, [record.key, ...childrenRowKeys]);
-}
+const childrenRecordName = 'children';
+const rowKey = 'key';
 
 const columns: ColumnProps<TreeRow>[] = [
     {
         title: 'Key',
         dataIndex: 'dataKey',
-        key: 'dataKey',
     },
     {
         title: '名称',
         dataIndex: 'name',
-        key: 'name',
         width: 200,
     },
     {
         title: '数据类型',
         dataIndex: 'type',
-        key: 'type',
         width: 400,
     },
     {
         title: '描述',
         dataIndex: 'description',
-        key: 'description',
     },
     {
         title: '默认值',
         dataIndex: 'default',
-        key: 'default',
         width: 100,
     },
 ];
@@ -136,31 +107,29 @@ const data: TreeRow[] = [
     },
 ];
 
+// Collects the keys of the rows and all their descendants.
+const collectKeys = (rows: TreeRow[]): RowKey[] => rows.flatMap((row) => [row.key, ...collectKeys(row.children ?? [])]);
+
 export default function TableDemo() {
     const [selectedRowKeys, setSelectedRowKeys] = createSignal<RowKey[]>([]);
 
+    // Selecting a row selects its descendants too, and clearing it clears them.
     const doSelect = (record: TreeRow, selected: boolean) => {
-        const rowKeys = findShouldSelectRowKeys(record, selected, selectedRowKeys());
-        setSelectedRowKeys(rowKeys);
-        console.log('select', record, rowKeys);
+        const keys = [record.key, ...collectKeys(record.children ?? [])];
+        setSelectedRowKeys(selected ? union(selectedRowKeys(), keys) : pull([...selectedRowKeys()], keys));
     };
 
     const doSelectAll = (selected: boolean) => {
-        setSelectedRowKeys(selected ? getAllRowKeys(data) : []);
+        setSelectedRowKeys(selected ? collectKeys(data) : []);
     };
 
-    return (
-        <Table
-            columns={columns}
-            rowKey="key"
-            childrenRecordName="children"
-            rowSelection={{
-                selectedRowKeys: selectedRowKeys(),
-                onSelect: doSelect,
-                onSelectAll: doSelectAll,
-            }}
-            dataSource={data}
-            pagination={false}
-        />
-    );
+    const rowSelection: RowSelectionProps<TreeRow> = {
+        get selectedRowKeys() {
+            return selectedRowKeys();
+        },
+        onSelect: doSelect,
+        onSelectAll: doSelectAll,
+    };
+
+    return <Table columns={columns} rowKey={rowKey} childrenRecordName={childrenRecordName} rowSelection={rowSelection} dataSource={data} pagination={false} />;
 }

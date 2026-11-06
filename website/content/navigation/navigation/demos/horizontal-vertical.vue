@@ -31,9 +31,9 @@
     <Layout :style="{ border: '1px solid var(--semi-color-border)' }">
         <Layout.Header :style="{ backgroundColor: 'var(--semi-color-bg-1)' }">
             <div>
-                <Nav aria-label="顶部导航" :items="topItems" mode="horizontal" @select="(data) => console.log(data)">
-                    <template #icon="{ item }">
-                        <component :is="iconOf(item)" />
+                <Nav aria-label="顶部导航" :items="topItems" mode="horizontal" @select="(key) => console.log(key)">
+                    <template #icon="renderProps">
+                        <component :is="iconOf(renderProps.item)" />
                     </template>
                     <template #footer>
                         <Dropdown position="bottomRight">
@@ -58,13 +58,13 @@
         <Layout>
             <Layout.Sider :style="{ backgroundColor: 'var(--semi-color-bg-1)' }">
                 <Nav aria-label="侧边导航" :footer="{ collapseButton: true }" :items="leftItems" :style="{ maxWidth: '220px', height: '100%' }">
-                    <template #icon="{ item }">
-                        <component :is="iconOf(item)" />
+                    <template #icon="renderProps">
+                        <component :is="iconOf(renderProps.item)" />
                     </template>
                 </Nav>
             </Layout.Sider>
             <Layout.Content :style="{ padding: '24px', backgroundColor: 'var(--semi-color-bg-0)' }">
-                <Breadcrumb :routes="routes" :style="{ marginBottom: '24px' }" />
+                <Breadcrumb :routes="routes" :style="{ marginBlockEnd: '24px' }" />
                 <div
                     :style="{
                         borderRadius: '10px',
@@ -93,11 +93,11 @@
             }"
         >
             <span :style="{ display: 'flex', alignItems: 'center' }">
-                <IconBytedanceLogo size="large" :style="{ marginRight: '8px' }" />
+                <IconBytedanceLogo size="large" :style="{ marginInlineEnd: '8px' }" />
                 <span>Copyright © {{ currentYear }} ByteDance. All Rights Reserved. </span>
             </span>
             <span>
-                <span :style="{ marginRight: '24px' }">平台客服</span>
+                <span :style="{ marginInlineEnd: '24px' }">平台客服</span>
                 <span>反馈建议</span>
             </span>
         </Layout.Footer>

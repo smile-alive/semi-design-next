@@ -1,7 +1,10 @@
 <script lang="ts">
-    import { Cascader, type CascaderValue } from '@fibrae/semi-ui-svelte';
+    import { Cascader, type CascaderChangeValue, type CascaderValue } from '@fibrae/semi-ui-svelte';
 
     let value = $state<CascaderValue>([]);
+    const onChange = (v: CascaderChangeValue) => {
+        console.log(v);
+    };
 
     const treeData = [
         {
@@ -30,4 +33,4 @@
     ];
 </script>
 
-<Cascader autoMergeValue={false} bind:value multiple placeholder="autoMergeValue 为 false" style="width: 300px" {treeData} />
+<Cascader autoMergeValue={false} bind:value multiple {onChange} placeholder="autoMergeValue 为 false" style="width: 300px" {treeData} />

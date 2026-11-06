@@ -39,9 +39,9 @@ export default function AutoCompleteDemo() {
                 <Avatar color={item.color} size="small">
                     {item.abbr}
                 </Avatar>
-                <div style={{ marginLeft: 4 }}>
-                    <div style={{ fontSize: 14, marginLeft: 4 }}>{item.name}</div>
-                    <div style={{ marginLeft: 4 }}>{item.email}</div>
+                <div style={{ marginInlineStart: 4 }}>
+                    <div style={{ fontSize: 14, marginInlineStart: 4 }}>{item.name}</div>
+                    <div style={{ marginInlineStart: 4 }}>{item.email}</div>
                 </div>
             </>
         );

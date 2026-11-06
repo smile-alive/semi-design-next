@@ -3,7 +3,6 @@ import { Dynamic } from 'solid-js/web';
 import { AIChatInput, type AIChatInputAttachment as Attachment, type AIChatInputElement, type AIChatInputReference as Reference, type AIChatInputRenderTopSlotProps as RenderTopSlotProps } from '@fibrae/semi-ai-solid';
 import { IconClose, IconUpload, IconFile, IconFolder, IconBranch, IconTerminal, IconGlobeStroke, IconConnectionPoint2, IconTemplateStroked, IconSearch, IconGit, IconCode, type IconProps } from '@fibrae/semi-icons-solid';
 
-const { Configure } = AIChatInput;
 const uploadProps = { action: 'https://api.semi.design/upload' };
 const outerStyle = { margin: '12px' };
 
@@ -90,13 +89,13 @@ export default function AIChatInputDemo() {
 
     const renderLeftMenu = () => (
         <>
-            <Configure.RadioButton options={radioButtonProps} renderLabel={(option) => <Dynamic component={radioIcons[String(option.value)]} aria-label={String(option.label)} />} initValue="fast" field="mode" />
+            <AIChatInput.Configure.RadioButton options={radioButtonProps} renderLabel={(option) => <Dynamic component={radioIcons[String(option.value)]} aria-label={String(option.label)} />} initValue="fast" field="mode" />
         </>
     );
 
-    const renderTopSlot = (slot: RenderTopSlotProps) => (
+    const renderTopSlot = (topSlot: RenderTopSlotProps) => (
         <div class="ai-chat-input-topSlot">
-            <For each={slot.references}>
+            <For each={topSlot.references}>
                 {(item) => (
                     <div class="item">
                         <span class="item-icon">
@@ -116,7 +115,7 @@ export default function AIChatInputDemo() {
                     </div>
                 )}
             </For>
-            <For each={slot.attachments}>
+            <For each={topSlot.attachments}>
                 {(item) => (
                     <div class="item">
                         <span class="item-icon">

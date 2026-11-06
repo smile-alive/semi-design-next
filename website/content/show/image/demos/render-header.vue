@@ -20,7 +20,7 @@
             </div>
         </template>
         <div>
-            <Image v-for="(src, index) in srcList" :key="src" :alt="`lamp${index + 1}`" :preview="{ previewTitle: `lamp${index + 1}` }" :src="src" :style="{ marginRight: '5px' }" :width="200" />
+            <Image v-for="(src, index) in srcList" :key="src" :alt="`lamp${index + 1}`" :preview="{ previewTitle: `lamp${index + 1}` }" :src="src" :style="{ marginInlineEnd: '5px' }" :width="200" />
         </div>
     </ImagePreview>
 </template>

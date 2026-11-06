@@ -41,7 +41,7 @@ export default function ListDemo() {
 
     return (
         <div>
-            <div style={{ 'margin-right': '16px', width: '280px', display: 'flex', 'flex-wrap': 'wrap', border: '1px solid var(--semi-color-border)' }}>
+            <div style={{ 'margin-inline-end': '16px', width: '280px', display: 'flex', 'flex-wrap': 'wrap', border: '1px solid var(--semi-color-border)' }}>
                 <List
                     class="component-list-demo-booklist"
                     dataSource={list}

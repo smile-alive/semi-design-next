@@ -1,8 +1,9 @@
 import { useState, useRef } from 'react';
 import { HotKeys, Input, Modal, type InputHandle } from '@fibrae/semi-ui-react';
 
+const hotKeys = ['Control', 'q'];
+
 export default function HotKeysDemo() {
-    const hotKeys = ['Control', 'q'];
     const [visible, setVisible] = useState(false);
     const showDialog = () => {
         setVisible(true);

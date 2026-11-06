@@ -3,8 +3,6 @@
     import { IconBulb } from '@fibrae/semi-icons-vue';
     import { DatePicker, Space, TabPane, Tabs, Typography, type DatePickerValueType } from '@fibrae/semi-ui-vue';
 
-    const { Text } = Typography;
-
     const uedDisabledDate = (currentDate?: Date) => !!currentDate && currentDate.getDate() > 10 && currentDate.getDate() < 15;
     const testDisabledDate = (currentDate?: Date) => !!currentDate && currentDate.getDate() > 15 && currentDate.getDate() < 25;
 
@@ -33,8 +31,8 @@
             <template #bottomSlot>
                 <Space :style="{ padding: '12px 20px' }">
                     <IconBulb :style="{ color: 'var(--semi-amber-5)' }" />
-                    <Text strong :style="{ color: 'var(--semi-color-text-2)' }">定版前请阅读</Text>
-                    <Text :link="{ href: 'https://semi.design/', target: '_blank' }">发版须知</Text>
+                    <Typography.Text strong :style="{ color: 'var(--semi-color-text-2)' }">定版前请阅读</Typography.Text>
+                    <Typography.Text :link="{ href: 'https://semi.design/', target: '_blank' }">发版须知</Typography.Text>
                 </Space>
             </template>
         </DatePicker>
@@ -44,8 +42,8 @@
             <template #bottomSlot>
                 <Space :style="{ padding: '12px 20px' }">
                     <IconBulb :style="{ color: 'var(--semi-amber-5)' }" />
-                    <Text strong :style="{ color: 'var(--semi-color-text-2)' }">请阅读</Text>
-                    <Text :link="{ href: 'https://semi.design/', target: '_blank' }">须知</Text>
+                    <Typography.Text strong :style="{ color: 'var(--semi-color-text-2)' }">请阅读</Typography.Text>
+                    <Typography.Text :link="{ href: 'https://semi.design/', target: '_blank' }">须知</Typography.Text>
                 </Space>
             </template>
         </DatePicker>
@@ -65,8 +63,8 @@
             <template #bottomSlot>
                 <Space :style="{ padding: '8px 12px' }">
                     <IconBulb :style="{ color: 'var(--semi-amber-5)' }" />
-                    <Text strong :style="{ color: 'var(--semi-color-text-2)' }">定版前请阅读</Text>
-                    <Text :link="{ href: 'https://semi.design/', target: '_blank' }">发版须知</Text>
+                    <Typography.Text strong :style="{ color: 'var(--semi-color-text-2)' }">定版前请阅读</Typography.Text>
+                    <Typography.Text :link="{ href: 'https://semi.design/', target: '_blank' }">发版须知</Typography.Text>
                 </Space>
             </template>
         </DatePicker>
@@ -76,8 +74,8 @@
             <template #bottomSlot>
                 <Space :style="{ padding: '12px 20px' }">
                     <IconBulb :style="{ color: 'var(--semi-amber-5)' }" />
-                    <Text strong :style="{ color: 'var(--semi-color-text-2)' }">定版前请阅读</Text>
-                    <Text :link="{ href: 'https://semi.design/', target: '_blank' }">发版须知</Text>
+                    <Typography.Text strong :style="{ color: 'var(--semi-color-text-2)' }">定版前请阅读</Typography.Text>
+                    <Typography.Text :link="{ href: 'https://semi.design/', target: '_blank' }">发版须知</Typography.Text>
                 </Space>
             </template>
         </DatePicker>

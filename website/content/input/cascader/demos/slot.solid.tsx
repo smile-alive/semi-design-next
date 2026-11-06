@@ -6,7 +6,7 @@ const slotStyle = {
     padding: '0 32px',
     'align-items': 'center',
     cursor: 'pointer',
-    'border-top': '1px solid var(--semi-color-border)',
+    'border-block-start': '1px solid var(--semi-color-border)',
 };
 
 const treeData = [

@@ -25,8 +25,4 @@
     const optionList = data.flatMap(({ label, children }) => children.map((option) => ({ ...option, group: { key: label, label } })));
 </script>
 
-<Select aria-label="地区" filter {optionList} placeholder="" style="width: 180px">
-    {#snippet groupLabel({ group })}
-        <strong>{group.label}</strong>
-    {/snippet}
-</Select>
+<Select aria-label="地区" filter {optionList} placeholder="" style="width: 180px" />

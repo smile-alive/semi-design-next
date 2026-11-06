@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import * as dateFns from 'date-fns';
-    import { Avatar, DropdownItem, Table, type ColumnProps, type RowSelectionProps } from '@fibrae/semi-ui-vue';
+    import { Avatar, Dropdown, Table, type ColumnProps, type RowSelectionProps } from '@fibrae/semi-ui-vue';
 
     const DAY = 24 * 60 * 60 * 1000;
     const figmaIconUrl = '/assets/placeholder/app.svg';
@@ -86,13 +86,13 @@
     <Table :columns="columns" :dataSource="dataSource" :rowSelection="rowSelection" :scroll="scroll">
         <template #cell="{ column, text, record }">
             <div v-if="column.dataIndex === 'name'">
-                <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginRight: '12px' }" />
+                <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginInlineEnd: '12px' }" />
                 {{ text }}
             </div>
             <template v-else-if="column.dataIndex === 'size'">{{ text }} KB</template>
             <div v-else-if="column.dataIndex === 'owner'">
-                <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
-                    {{ text.slice(0, 1) }}
+                <Avatar :color="record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
+                    {{ typeof text === 'string' && text.slice(0, 1) }}
                 </Avatar>
                 {{ text }}
             </div>
@@ -100,8 +100,8 @@
                 {{ dateFns.format(new Date(text), 'yyyy-MM-dd') }}
             </template>
         </template>
-        <template #filterDropdownItem="{ text, checked, onChange }">
-            <DropdownItem :active="checked" @click="onChange">{{ text }}</DropdownItem>
+        <template #filterDropdownItem="itemInfo">
+            <Dropdown.Item :active="itemInfo.checked" @click="itemInfo.onChange">{{ itemInfo.text }}</Dropdown.Item>
         </template>
     </Table>
 </template>

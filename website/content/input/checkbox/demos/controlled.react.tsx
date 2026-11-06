@@ -5,14 +5,6 @@ export default function CheckboxDemo() {
     const [checked, setChecked] = useState(true);
     const [disabled, setDisabled] = useState(false);
 
-    const toggleChecked = () => {
-        setChecked(!checked);
-    };
-
-    const toggleDisable = () => {
-        setDisabled(!disabled);
-    };
-
     const onChange = (e: CheckboxEvent) => {
         console.log('checked = ', e.target.checked);
         setChecked(e.target.checked);
@@ -27,10 +19,10 @@ export default function CheckboxDemo() {
                 </Checkbox>
             </div>
             <p>
-                <Button type="primary" size="small" onClick={toggleChecked}>
+                <Button type="primary" size="small" onClick={() => setChecked(!checked)}>
                     {!checked ? 'Check' : 'Uncheck'}
                 </Button>
-                <Button style={{ marginLeft: '10px' }} type="primary" size="small" onClick={toggleDisable}>
+                <Button style={{ marginLeft: '10px' }} type="primary" size="small" onClick={() => setDisabled(!disabled)}>
                     {!disabled ? 'Disable' : 'Enable'}
                 </Button>
             </p>

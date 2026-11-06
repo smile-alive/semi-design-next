@@ -17,13 +17,15 @@
         { label: 'Maintainer', value: 'Maintainer', disabled: true },
     ];
 
-    const log = (name: string, e: RadioChangeEvent) => console.log(`${name} checked`, e.target.value);
+    const onChange1 = (e: RadioChangeEvent) => console.log('radio1 checked', e.target.value);
+    const onChange2 = (e: RadioChangeEvent) => console.log('radio2 checked', e.target.value);
+    const onChange3 = (e: RadioChangeEvent) => console.log('radio3 checked', e.target.value);
 </script>
 
 <template>
     <Space align="start" spacing="loose" vertical>
-        <RadioGroup v-model="value1" aria-label="单选组合示例" name="demo-radio-group-1" :options="plainOptions" @change="log('radio1', $event)" />
-        <RadioGroup v-model="value2" aria-label="单选组合示例" name="demo-radio-group-2" :options="optionsWithDisabled" @change="log('radio2', $event)" />
-        <RadioGroup v-model="value3" aria-label="单选组合示例" name="demo-radio-group-3" :options="options" @change="log('radio3', $event)" />
+        <RadioGroup v-model="value1" aria-label="单选组合示例" name="demo-radio-group-1" :options="plainOptions" @change="onChange1" />
+        <RadioGroup v-model="value2" aria-label="单选组合示例" name="demo-radio-group-2" :options="optionsWithDisabled" @change="onChange2" />
+        <RadioGroup v-model="value3" aria-label="单选组合示例" name="demo-radio-group-3" :options="options" @change="onChange3" />
     </Space>
 </template>

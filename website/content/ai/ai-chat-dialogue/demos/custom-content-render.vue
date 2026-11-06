@@ -28,7 +28,7 @@
         },
     };
 
-    const messages = shallowRef<Message[]>([
+    const defaultMessages: Message[] = [
         {
             id: '1',
             role: 'user',
@@ -103,7 +103,9 @@
             ],
             status: 'completed',
         },
-    ]);
+    ];
+
+    const messages = shallowRef(defaultMessages);
 
     const userTextStyle = {
         backgroundColor: 'var(--semi-color-fill-1)',
@@ -133,26 +135,26 @@
 
 <template>
     <AIChatDialogue v-model:chats="messages" :roleConfig="roleConfig">
-        <template #contentItem="{ item, type, message }">
-            <div v-if="type === 'function_call' && fields(item).name === 'create_travel_guide'" :style="functionCallStyle">Function Tool Call: {{ fields(item).name }} {{ fields(item).arguments }}</div>
-            <template v-else-if="type === 'input_text'">
-                <div v-if="message.role === 'user'" class="userTextStyle" :style="userTextStyle">
-                    {{ fields(item).text }}
+        <template #contentItem="contentItem">
+            <div v-if="contentItem.type === 'function_call' && fields(contentItem.item).name === 'create_travel_guide'" :style="functionCallStyle">Function Tool Call: {{ fields(contentItem.item).name }} {{ fields(contentItem.item).arguments }}</div>
+            <template v-else-if="contentItem.type === 'input_text'">
+                <div v-if="contentItem.message.role === 'user'" class="userTextStyle" :style="userTextStyle">
+                    {{ fields(contentItem.item).text }}
                 </div>
-                <div v-else :style="assistantStyle">{{ fields(item).text }}</div>
+                <div v-else :style="assistantStyle">{{ fields(contentItem.item).text }}</div>
             </template>
-            <AIChatDialogue.Reasoning v-else-if="type === 'reasoning'" :status="fields(item).status" :summary="fields(item).summary">
-                <template #content="{ summary, markdownRenderProps }">
-                    <AIChatDialogue.Annotation :annotation="fields(item).annotations ?? []" description="参考资料" :maxCount="3" @click="onAnnotationClick" />
-                    <div :style="{ marginTop: '8px' }">
-                        <MarkdownRender format="md" v-bind="markdownRenderProps" :raw="summary?.[0]?.text ?? ''" />
+            <AIChatDialogue.Reasoning v-else-if="contentItem.type === 'reasoning'" :status="fields(contentItem.item).status" :summary="fields(contentItem.item).summary">
+                <template #content="reasoning">
+                    <AIChatDialogue.Annotation :annotation="fields(contentItem.item).annotations ?? []" description="参考资料" :maxCount="3" @click="onAnnotationClick" />
+                    <div :style="{ marginBlockStart: '8px' }">
+                        <MarkdownRender format="md" v-bind="reasoning.markdownRenderProps" :raw="reasoning.summary?.[0]?.text ?? ''" />
                     </div>
                 </template>
             </AIChatDialogue.Reasoning>
         </template>
-        <template #messageText="{ text, message }">
-            <div v-if="message.role === 'user'" class="userTextStyle" :style="userTextStyle">{{ text }}</div>
-            <div v-else :style="assistantStyle">{{ text }}</div>
+        <template #messageText="messageText">
+            <div v-if="messageText.message.role === 'user'" class="userTextStyle" :style="userTextStyle">{{ messageText.text }}</div>
+            <div v-else :style="assistantStyle">{{ messageText.text }}</div>
         </template>
     </AIChatDialogue>
 </template>

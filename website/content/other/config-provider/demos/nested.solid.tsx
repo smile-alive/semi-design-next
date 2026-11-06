@@ -1,7 +1,7 @@
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import { ConfigProvider, ConfigConsumer } from '@fibrae/semi-ui-solid';
 
-function ConfigSummary(props: { title: string }) {
+function Show(props: { title: string }) {
     return (
         <ConfigConsumer>
             {(config) => (
@@ -16,9 +16,9 @@ function ConfigSummary(props: { title: string }) {
 export default function ConfigProviderDemo() {
     return (
         <ConfigProvider locale={en_US} timeZone="Asia/Tokyo" direction="ltr">
-            <ConfigSummary title="外层" />
+            <Show title="外层" />
             <ConfigProvider timeZone={8}>
-                <ConfigSummary title="内层只传 timeZone，其余继承外层" />
+                <Show title="内层只传 timeZone，其余继承外层" />
             </ConfigProvider>
         </ConfigProvider>
     );

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { IconClear, IconComment, IconDelete, IconTickCircle } from '@fibrae/semi-icons-svelte';
     import { IllustrationNoResult, IllustrationNoResultDark } from '@fibrae/semi-illustrations-svelte';
-    import { Avatar, Button, Empty, Table, Tag, TypographyText, type ColumnProps } from '@fibrae/semi-ui-svelte';
+    import { Avatar, Button, Empty, Table, Tag, Typography, type ColumnProps } from '@fibrae/semi-ui-svelte';
 
     interface Row {
         key: string;
@@ -104,18 +104,18 @@
     ];
 </script>
 
-{#snippet image()}<IllustrationNoResult style="width: 150px; height: 150px" />{/snippet}
-{#snippet darkModeImage()}<IllustrationNoResultDark style="width: 150px; height: 150px" />{/snippet}
+{#snippet image()}<IllustrationNoResult />{/snippet}
+{#snippet darkModeImage()}<IllustrationNoResultDark />{/snippet}
 
 <div>
-    <Button style="margin-bottom: 10px" onclick={resetData}>重置</Button>
+    <Button style="margin-block-end: 10px" onclick={resetData}>重置</Button>
     <Table {columns} {dataSource} pagination={false} style="min-height: 350px">
         {#snippet cell({ column, record, text })}
             {#if column.dataIndex === 'name'}
                 <span style="display: flex; align-items: center">
-                    <Avatar alt="" shape="square" size="small" src={record.nameIconSrc} style="margin-right: 12px" />
-                    <!-- Width = the cell's 400px minus the non-text content -->
-                    <TypographyText ellipsis={{ showTooltip: true }} style="width: calc(400px - 76px)">{text}</TypographyText>
+                    <Avatar alt="" shape="square" size="small" src={record.nameIconSrc} style="margin-inline-end: 12px" />
+                    <!-- 宽度 = 单元格设定宽度 − 非文本内容宽度 -->
+                    <Typography.Text ellipsis={{ showTooltip: true }} style="width: calc(400px - 76px)">{text}</Typography.Text>
                 </span>
             {:else if column.dataIndex === 'status'}
                 {@const config = tagConfig[text as Row['status']]}
@@ -127,7 +127,7 @@
                 </Tag>
             {:else if column.dataIndex === 'owner'}
                 <div>
-                    <Avatar color={record.avatarBg} size="small" style="margin-right: 4px">
+                    <Avatar color={record.avatarBg} size="small" style="margin-inline-end: 4px">
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}

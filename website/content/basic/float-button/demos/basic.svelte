@@ -8,7 +8,7 @@
 </script>
 
 <span>基本使用：页面右下第三列 1 </span>
-<FloatButton aria-label="AI 编辑" style="bottom: 270px" {onclick}>
+<FloatButton aria-label="AI 编辑" style="inset-block-end: 270px" {onclick}>
     {#snippet icon()}
         <IconAIEditLevel1 />
     {/snippet}

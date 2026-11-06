@@ -6,6 +6,12 @@ const style = {
     border: '1px solid var(--semi-color-border)',
 };
 
+const virtualize = {
+    // A set Tree height fills the remaining space
+    height: 300,
+    itemSize: 28,
+};
+
 function generateData(x = 5, y = 4, z = 3, data: TreeNodeData[] = []) {
     // x: nodes per level. y: nodes with children per level. z: depth (0 is one level)
     const fill = (level: number, preKey: string, nodes: TreeNodeData[]) => {
@@ -52,17 +58,7 @@ export default function TreeDemo() {
             <br />
             <br />
             <Show when={gData().length}>
-                <Tree
-                    treeData={gData()}
-                    filterTreeNode
-                    showFilteredOnly
-                    style={style}
-                    virtualize={{
-                        // A set Tree height fills the remaining space
-                        height: 300,
-                        itemSize: 28,
-                    }}
-                />
+                <Tree treeData={gData()} filterTreeNode showFilteredOnly style={style} virtualize={virtualize} />
             </Show>
         </div>
     );

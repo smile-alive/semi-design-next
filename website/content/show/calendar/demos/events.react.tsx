@@ -1,6 +1,25 @@
 import { useState, type CSSProperties } from 'react';
 import { Calendar, DatePicker, RadioGroup, Radio, type CalendarProps, type RadioChangeEvent } from '@fibrae/semi-ui-react';
 
+const dailyEventStyle: CSSProperties = {
+    borderRadius: '3px',
+    boxSizing: 'border-box',
+    border: 'var(--semi-color-primary) 1px solid',
+    padding: '10px',
+    backgroundColor: 'var(--semi-color-primary-light-default)',
+    height: '100%',
+    overflow: 'hidden',
+};
+const allDayStyle: CSSProperties = {
+    borderRadius: '3px',
+    boxSizing: 'border-box',
+    border: 'var(--semi-color-bg-1) 1px solid',
+    padding: '2px 4px',
+    backgroundColor: 'var(--semi-color-primary-light-active)',
+    height: '100%',
+    overflow: 'hidden',
+};
+
 export default function CalendarDemo() {
     const [mode, setMode] = useState<CalendarProps['mode']>('week');
     const [displayValue, setDisplayValue] = useState(new Date(2019, 6, 23, 8, 32, 0));
@@ -14,24 +33,6 @@ export default function CalendarDemo() {
     };
 
     const isMonthView = mode === 'month';
-    const dailyEventStyle: CSSProperties = {
-        borderRadius: '3px',
-        boxSizing: 'border-box',
-        border: 'var(--semi-color-primary) 1px solid',
-        padding: '10px',
-        backgroundColor: 'var(--semi-color-primary-light-default)',
-        height: '100%',
-        overflow: 'hidden',
-    };
-    const allDayStyle: CSSProperties = {
-        borderRadius: '3px',
-        boxSizing: 'border-box',
-        border: 'var(--semi-color-bg-1) 1px solid',
-        padding: '2px 4px',
-        backgroundColor: 'var(--semi-color-primary-light-active)',
-        height: '100%',
-        overflow: 'hidden',
-    };
     const dailyStyle = isMonthView ? allDayStyle : dailyEventStyle;
     const events = [
         {
@@ -98,7 +99,7 @@ export default function CalendarDemo() {
 
     return (
         <>
-            <RadioGroup onChange={onSelect} value={mode} type="button">
+            <RadioGroup aria-label="视图模式" onChange={onSelect} value={mode} type="button">
                 <Radio value="day">日视图</Radio>
                 <Radio value="week">周视图</Radio>
                 <Radio value="month">月视图</Radio>

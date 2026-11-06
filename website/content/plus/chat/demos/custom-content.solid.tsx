@@ -71,14 +71,14 @@ function getId() {
 const uploadProps = { action: 'https://api.semi.design/upload' };
 
 function SourceCard(props: { source: Source[] }) {
-    const [open, setOpen] = createSignal(true);
+    const [collapsed, setCollapsed] = createSignal(true);
 
     return (
         <div
             style={{
-                transition: open() ? 'height 0.4s ease, width 0.4s ease' : 'height 0.4s ease',
-                height: open() ? '30px' : '200px',
-                width: open() ? '190px' : '100%',
+                transition: collapsed() ? 'height 0.4s ease, width 0.4s ease' : 'height 0.4s ease',
+                height: collapsed() ? '30px' : '200px',
+                width: collapsed() ? '190px' : '100%',
                 background: 'var(--semi-color-tertiary-light-hover)',
                 'border-radius': '16px',
                 'box-sizing': 'border-box',
@@ -88,7 +88,7 @@ function SourceCard(props: { source: Source[] }) {
             <button
                 type="button"
                 style={{
-                    display: open() ? 'flex' : 'none',
+                    display: collapsed() ? 'flex' : 'none',
                     width: 'fit-content',
                     'column-gap': '10px',
                     border: 'none',
@@ -101,7 +101,7 @@ function SourceCard(props: { source: Source[] }) {
                     'line-height': 'inherit',
                     color: 'var(--semi-color-text-1)',
                 }}
-                onClick={() => setOpen(false)}
+                onClick={() => setCollapsed(false)}
             >
                 <span>基于{props.source.length}个搜索来源</span>
                 <AvatarGroup size="extra-extra-small">
@@ -114,7 +114,7 @@ function SourceCard(props: { source: Source[] }) {
                     width: '100%',
                     height: '100%',
                     'box-sizing': 'border-box',
-                    display: open() ? 'none' : 'flex',
+                    display: collapsed() ? 'none' : 'flex',
                     'flex-direction': 'column',
                     border: 'none',
                     background: 'var(--semi-color-tertiary-light-hover)',
@@ -126,7 +126,7 @@ function SourceCard(props: { source: Source[] }) {
                     'line-height': 'inherit',
                     color: 'inherit',
                 }}
-                onClick={() => setOpen(true)}
+                onClick={() => setCollapsed(true)}
             >
                 <span
                     style={{
@@ -191,7 +191,7 @@ function SourceCard(props: { source: Source[] }) {
 }
 
 export default function ChatDemo() {
-    const [chats, setChats] = createSignal<Message[]>(defaultMessage);
+    const [message, setMessage] = createSignal<Message[]>(defaultMessage);
 
     const onMessageSend = () => {
         const newAssistantMessage: Message = {
@@ -200,7 +200,7 @@ export default function ChatDemo() {
             content: `This is a mock response`,
         };
         setTimeout(() => {
-            setChats((list) => [...list, newAssistantMessage]);
+            setMessage((list) => [...list, newAssistantMessage]);
         }, 200);
     };
 
@@ -213,5 +213,5 @@ export default function ChatDemo() {
         </div>
     );
 
-    return <Chat style={commonOuterStyle} chats={chats()} roleConfig={roleInfo} chatBoxRenderConfig={{ renderChatBoxContent }} onChatsChange={(next) => setChats(next)} onMessageSend={onMessageSend} uploadProps={uploadProps} />;
+    return <Chat style={commonOuterStyle} chats={message()} roleConfig={roleInfo} chatBoxRenderConfig={{ renderChatBoxContent }} onChatsChange={(next) => setMessage(next)} onMessageSend={onMessageSend} uploadProps={uploadProps} />;
 }

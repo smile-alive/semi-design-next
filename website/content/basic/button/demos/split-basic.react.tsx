@@ -2,17 +2,17 @@ import { useState } from 'react';
 import { IconTreeTriangleDown } from '@fibrae/semi-icons-react';
 import { SplitButtonGroup, Dropdown, Button, type DropDownMenuItem } from '@fibrae/semi-ui-react';
 
-export default function ButtonDemo() {
-    const menu: DropDownMenuItem[] = [
-        { node: 'item', name: '编辑项目', onClick: () => console.log('编辑项目点击') },
-        { node: 'item', name: '重置项目' },
-        { node: 'divider' },
-        { node: 'item', name: '复制项目' },
-        { node: 'item', name: '从项目创建模版' },
-        { node: 'divider' },
-        { node: 'item', name: '删除项目', type: 'danger' },
-    ];
+const menu: DropDownMenuItem[] = [
+    { node: 'item', name: '编辑项目', onClick: () => console.log('编辑项目点击') },
+    { node: 'item', name: '重置项目' },
+    { node: 'divider' },
+    { node: 'item', name: '复制项目' },
+    { node: 'item', name: '从项目创建模版' },
+    { node: 'divider' },
+    { node: 'item', name: '删除项目', type: 'danger' },
+];
 
+export default function ButtonDemo() {
     const [btnVisible, setBtnVisible] = useState<Record<number, boolean>>({
         1: false,
         2: false,
@@ -27,7 +27,7 @@ export default function ButtonDemo() {
 
     return (
         <div>
-            <SplitButtonGroup style={{ marginRight: 10 }} aria-label="项目操作按钮组">
+            <SplitButtonGroup style={{ marginInlineEnd: 10 }} aria-label="项目操作按钮组">
                 <Button theme="solid" type="primary">
                     分裂按钮
                 </Button>
@@ -35,7 +35,7 @@ export default function ButtonDemo() {
                     <Button style={btnVisible[1] ? { background: 'var(--semi-color-primary-hover)', padding: '8px 4px' } : { padding: '8px 4px' }} theme="solid" type="primary" aria-label="更多操作" icon={<IconTreeTriangleDown />} />
                 </Dropdown>
             </SplitButtonGroup>
-            <SplitButtonGroup style={{ marginRight: 10 }} aria-label="项目操作按钮组">
+            <SplitButtonGroup style={{ marginInlineEnd: 10 }} aria-label="项目操作按钮组">
                 <Button theme="light" type="primary">
                     分裂按钮
                 </Button>

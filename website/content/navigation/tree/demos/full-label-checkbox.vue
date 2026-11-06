@@ -67,11 +67,11 @@
 <template>
     <Tree leafOnly multiple :style="treeStyle" :treeData="treeData">
         <!-- Focus stays on the tree (arrows expand, Enter/Space check), so the inline checkbox is display-only -->
-        <template #fullLabel="{ class: cls, data, checkStatus, expandIcon, onCheck, onExpand }">
-            <div :class="cls" @click="data.children?.length ? onExpand($event) : onCheck($event)">
-                <component :is="expandIcon" v-if="data.children?.length" />
-                <Checkbox v-else aria-hidden="true" :indeterminate="checkStatus.halfChecked" :modelValue="checkStatus.checked" :style="{ marginRight: '8px' }" tabindex="-1" />
-                <span>{{ data.label }}</span>
+        <template #fullLabel="row">
+            <div :class="row.class" @click="row.data.children?.length ? row.onExpand($event) : row.onCheck($event)">
+                <component :is="row.expandIcon" v-if="row.data.children?.length" />
+                <Checkbox v-else aria-hidden="true" :indeterminate="row.checkStatus.halfChecked" :modelValue="row.checkStatus.checked" :style="{ marginRight: '8px' }" tabindex="-1" />
+                <span>{{ row.data.label }}</span>
             </div>
         </template>
     </Tree>

@@ -8,14 +8,14 @@
 <template>
     <span :style="{ display: 'flex', alignItems: 'center' }">
         <Switch aria-labelledby="skeleton-basic-toggle" @change="loading = !loading" />
-        <span id="skeleton-basic-toggle" :style="{ marginLeft: '10px' }">显示加载内容</span>
+        <span id="skeleton-basic-toggle" :style="{ marginInlineStart: '10px' }">显示加载内容</span>
     </span>
     <br />
     <Skeleton :loading="loading">
         <template #placeholder>
             <Skeleton.Avatar />
         </template>
-        <Avatar color="blue" :style="{ marginBottom: '10px' }">U</Avatar>
+        <Avatar color="blue" :style="{ marginBlockEnd: '10px' }">U</Avatar>
     </Skeleton>
     <br />
     <Skeleton :loading="loading" :style="{ width: '200px', height: '150px' }">
@@ -27,9 +27,9 @@
     <br />
     <Skeleton :loading="loading" :style="{ width: '80px' }">
         <template #placeholder>
-            <Skeleton.Title :style="{ marginBottom: '10px' }" />
+            <Skeleton.Title :style="{ marginBlockEnd: '10px' }" />
         </template>
-        <h4 :style="{ marginBottom: 0 }">Semi UI</h4>
+        <h4 :style="{ marginBlockEnd: 0 }">Semi UI</h4>
     </Skeleton>
     <Skeleton :loading="loading" :style="{ width: '240px' }">
         <template #placeholder>

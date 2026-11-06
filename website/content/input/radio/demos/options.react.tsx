@@ -1,21 +1,22 @@
 import { useState } from 'react';
 import { RadioGroup, Space, type RadioChangeEvent } from '@fibrae/semi-ui-react';
 
+const plainOptions = ['Guest', 'Developer', 'Maintainer'];
+const options = [
+    { label: 'Guest', value: 'Guest', extra: 'Semi Design', style: { width: 120 } },
+    { label: 'Developer', value: 'Developer', extra: 'Semi Design', style: { width: 120 } },
+    { label: 'Maintainer', value: 'Maintainer', extra: 'Semi Design', style: { width: 120 } },
+];
+const optionsWithDisabled = [
+    { label: 'Guest', value: 'Guest' },
+    { label: 'Developer', value: 'Developer' },
+    { label: 'Maintainer', value: 'Maintainer', disabled: true },
+];
+
 export default function RadioDemo() {
     const [value1, setValue1] = useState('Guest');
     const [value2, setValue2] = useState('Developer');
     const [value3, setValue3] = useState('Maintainer');
-    const plainOptions = ['Guest', 'Developer', 'Maintainer'];
-    const options = [
-        { label: 'Guest', value: 'Guest', extra: 'Semi Design', style: { width: 120 } },
-        { label: 'Developer', value: 'Developer', extra: 'Semi Design', style: { width: 120 } },
-        { label: 'Maintainer', value: 'Maintainer', extra: 'Semi Design', style: { width: 120 } },
-    ];
-    const optionsWithDisabled = [
-        { label: 'Guest', value: 'Guest' },
-        { label: 'Developer', value: 'Developer' },
-        { label: 'Maintainer', value: 'Maintainer', disabled: true },
-    ];
 
     const onChange1 = (e: RadioChangeEvent) => {
         console.log('radio1 checked', e.target.value);

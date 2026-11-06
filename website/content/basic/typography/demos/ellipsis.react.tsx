@@ -2,7 +2,6 @@ import { useCallback, type ReactNode } from 'react';
 import { Typography, Tooltip, type TooltipProps } from '@fibrae/semi-ui-react';
 
 export default function TypographyDemo() {
-    const { Paragraph, Title, Text } = Typography;
     const customRenderTooltip = useCallback((content: TooltipProps['content'], children: ReactNode) => {
         return (
             <Tooltip content={content} style={{ backgroundColor: 'var(--semi-color-primary)' }}>
@@ -13,11 +12,11 @@ export default function TypographyDemo() {
 
     return (
         <div>
-            <Title heading={5} ellipsis={{ showTooltip: true }} style={{ width: 250 }}>
+            <Typography.Title heading={5} ellipsis={{ showTooltip: true }} style={{ width: 250 }}>
                 是一个很长很长很长很长5号标题
-            </Title>
+            </Typography.Title>
             <br />
-            <Text
+            <Typography.Text
                 ellipsis={{
                     showTooltip: {
                         opts: { content: '这是自定义要展示的内容' },
@@ -26,26 +25,25 @@ export default function TypographyDemo() {
                 style={{ width: 150 }}
             >
                 可以自定义浮层里的展示内容试试看吧
-            </Text>
+            </Typography.Text>
             <br />
-            {/* link 也可以传对象，例如 link={{ href: 'https://semi.design/zh-CN/basic/typography', target: '_blank' }} */}
-            <Text link ellipsis={{ showTooltip: true, pos: 'middle' }} style={{ width: 150 }}>
+            <Typography.Text link ellipsis={{ showTooltip: true, pos: 'middle' }} style={{ width: 150 }}>
                 是一个很长很长很长很长的链接
-            </Text>
+            </Typography.Text>
             <br />
-            <Paragraph ellipsis={{ suffix: '小尾巴' }} style={{ width: 300 }}>
+            <Typography.Paragraph ellipsis={{ suffix: '小尾巴' }} style={{ width: 300 }}>
                 有后缀的情况：Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。
-            </Paragraph>
+            </Typography.Paragraph>
             <br />
-            <Paragraph ellipsis={{ rows: 3 }} style={{ width: 300 }}>
+            <Typography.Paragraph ellipsis={{ rows: 3 }} style={{ width: 300 }}>
                 这是一个多行截断的例子：Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。
-            </Paragraph>
+            </Typography.Paragraph>
             <br />
-            <Paragraph ellipsis={{ rows: 3, showTooltip: { type: 'popover', opts: { style: { width: 300 } } } }} style={{ width: 300 }}>
+            <Typography.Paragraph ellipsis={{ rows: 3, showTooltip: { type: 'popover', opts: { style: { width: 300 } } } }} style={{ width: 300 }}>
                 多行截断，展示 Popover：Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。
-            </Paragraph>
+            </Typography.Paragraph>
             <br />
-            <Paragraph
+            <Typography.Paragraph
                 ellipsis={{
                     rows: 3,
                     expandable: true,
@@ -56,9 +54,9 @@ export default function TypographyDemo() {
                 style={{ width: 300 }}
             >
                 支持展开和折叠：Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。
-            </Paragraph>
+            </Typography.Paragraph>
             <br />
-            <Text
+            <Typography.Text
                 ellipsis={{
                     showTooltip: {
                         opts: { content: '全英文设置了word-break' },
@@ -68,10 +66,10 @@ export default function TypographyDemo() {
                 style={{ width: 150, wordBreak: 'break-word' }}
             >
                 sssssssssssssssssssssssss
-            </Text>
+            </Typography.Text>
             <br />
             <br />
-            <Title
+            <Typography.Title
                 heading={5}
                 ellipsis={{
                     showTooltip: {
@@ -81,7 +79,7 @@ export default function TypographyDemo() {
                 style={{ width: 250 }}
             >
                 这是一个自定义弹出层组件的省略文本，背景色是蓝色
-            </Title>
+            </Typography.Title>
         </div>
     );
 }

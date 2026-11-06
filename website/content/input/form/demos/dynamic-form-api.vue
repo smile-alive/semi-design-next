@@ -39,17 +39,17 @@
 
 <template>
     <Form :initValues="initValues" labelPosition="left" labelWidth="180px" :style="{ width: '500px' }" @getFormApi="onGetFormApi">
-        <template #default="{ values }">
+        <template #default="form">
             <Button @click="add">添加</Button>
-            <div v-for="(effect, i) in values.effects" :key="effect.key" :style="{ width: '1000px', display: 'flex' }">
-                <FormInput :aria-label="`特效 ${i + 1} 名称`" :field="`effects[${i}].name`" :style="{ width: '200px', marginRight: '12px' }" />
+            <div v-for="(effect, i) in form.values.effects" :key="effect.key" :style="{ width: '1000px', display: 'flex' }">
+                <FormInput :aria-label="`特效 ${i + 1} 名称`" :field="`effects[${i}].name`" :style="{ width: '200px', marginInlineEnd: '12px' }" />
                 <FormSelect :field="`effects[${i}].type`" :style="{ width: '90px' }">
                     <FormSelect.Option value="2D">2D</FormSelect.Option>
                     <FormSelect.Option value="3D">3D</FormSelect.Option>
                 </FormSelect>
                 <Button :style="{ margin: '12px' }" type="danger" @click="remove(effect.key)">删除</Button>
             </div>
-            <TextArea aria-label="表单值" :modelValue="JSON.stringify(values)" :style="{ marginTop: '10px' }" />
+            <TextArea aria-label="表单值" :modelValue="JSON.stringify(form.formState.values)" :style="{ marginBlockStart: '10px' }" />
         </template>
     </Form>
 </template>

@@ -5,7 +5,7 @@
     import { move } from '@dnd-kit/helpers';
     import { DragDropProvider, type DragDropProviderProps, type DragEndEvent } from '@dnd-kit/vue';
     import { useSortable } from '@dnd-kit/vue/sortable';
-    import { Avatar, List, ListItem, type AvatarColor } from '@fibrae/semi-ui-vue';
+    import { Avatar, List, type AvatarColor } from '@fibrae/semi-ui-vue';
 
     interface Item {
         id: number;
@@ -34,7 +34,7 @@
             const { isDragging } = useSortable({ id: () => props.id, index: () => props.index, element });
             return () =>
                 h(
-                    ListItem,
+                    List.Item,
                     {
                         ref: (instance) => {
                             element.value = instance as ComponentPublicInstance | null;
@@ -67,16 +67,16 @@
     <div :style="{ padding: '12px', border: '1px solid var(--semi-color-border)', margin: '12px' }">
         <DragDropProvider :modifiers="modifiers" :plugins="plugins" @dragEnd="handleDragEnd">
             <List :dataSource="listItems">
-                <template #item="{ item, index }">
+                <template #item="row">
                     <!-- dnd-kit reorders li nodes mid-drag; an index key would hand a node another item's data -->
-                    <SortableListItem :id="item.id" :key="item.id" :index="index">
+                    <SortableListItem :id="row.item.id" :key="row.item.id" :index="row.index">
                         <template #header>
-                            <Avatar :color="item.color">SE</Avatar>
+                            <Avatar :color="row.item.color">SE</Avatar>
                         </template>
                         <template #main>
                             <div>
                                 <span :style="{ color: 'var(--semi-color-text-0)', fontWeight: 500 }">
-                                    {{ item.title }}
+                                    {{ row.item.title }}
                                 </span>
                                 <p :style="{ color: 'var(--semi-color-text-2)', margin: '4px 0' }">Semi Design 设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。</p>
                             </div>

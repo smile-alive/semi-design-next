@@ -3,8 +3,8 @@ import { IconAIBellLevel3, IconAIWandLevel3, IconAIFilledLevel3 } from '@fibrae/
 export default function IconDemo() {
     return (
         <div>
-            <IconAIBellLevel3 style={{ marginRight: 10 }} size="extra-large" />
-            <IconAIWandLevel3 fill={['var(--semi-color-danger)', 'var(--semi-color-success)', 'var(--semi-color-primary)', 'var(--semi-color-warning)']} style={{ marginRight: 10 }} size="extra-large" />
+            <IconAIBellLevel3 style={{ marginInlineEnd: 10 }} size="extra-large" />
+            <IconAIWandLevel3 fill={['var(--semi-color-danger)', 'var(--semi-color-success)', 'var(--semi-color-primary)', 'var(--semi-color-warning)']} style={{ marginInlineEnd: 10 }} size="extra-large" />
             <IconAIFilledLevel3 fill={['var(--semi-color-primary)', 'var(--semi-color-success)']} size="extra-large" />
         </div>
     );

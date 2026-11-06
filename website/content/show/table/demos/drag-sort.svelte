@@ -108,14 +108,14 @@
     {#snippet cell({ column, record, text })}
         {#if column.dataIndex === 'name'}
             <div>
-                <Avatar alt="" shape="square" size="small" src={figmaIconUrl} style="margin-right: 12px" />
+                <Avatar alt="" shape="square" size="small" src={figmaIconUrl} style="margin-inline-end: 12px" />
                 {text}
             </div>
         {:else if column.dataIndex === 'size'}
             {text} KB
         {:else if column.dataIndex === 'owner'}
             <div>
-                <Avatar color={record.avatarBg} size="small" style="margin-right: 4px">
+                <Avatar color={record.avatarBg} size="small" style="margin-inline-end: 4px">
                     {typeof text === 'string' && text.slice(0, 1)}
                 </Avatar>
                 {text}

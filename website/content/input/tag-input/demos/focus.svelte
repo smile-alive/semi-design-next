@@ -6,4 +6,4 @@
 </script>
 
 <TagInput bind:this={tagInput} bind:value />
-<Button style="margin-top: 10px" onclick={() => tagInput?.focus()}>点击按钮聚焦</Button>
+<Button style="margin-block-start: 10px" onclick={() => tagInput?.focus()}>点击按钮聚焦</Button>

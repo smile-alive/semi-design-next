@@ -17,7 +17,7 @@
 
 <template>
     <Upload :action="action" :defaultFileList="defaultFileList" :itemStyle="{ width: '300px' }">
-        <template #fileOperation="{ onRemove }">
+        <template #fileOperation="fileItem">
             <div style="display: flex; column-gap: 8px; padding: 0 8px">
                 <Button aria-label="预览" size="small" theme="borderless" type="tertiary">
                     <template #icon>
@@ -29,7 +29,7 @@
                         <IconDownload />
                     </template>
                 </Button>
-                <Button aria-label="删除" size="small" theme="borderless" type="tertiary" @click="onRemove">
+                <Button aria-label="删除" size="small" theme="borderless" type="tertiary" @click="fileItem.onRemove">
                     <template #icon>
                         <IconDelete />
                     </template>

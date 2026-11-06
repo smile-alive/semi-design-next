@@ -78,15 +78,15 @@
 <template>
     <Button @click="table?.scrollToItem(100)">Scroll to 100</Button>
     <Table ref="table" :columns="columns" :dataSource="data" :pagination="false" :scroll="scroll" :style="style" virtualized>
-        <template #cell="{ column, text, record }">
-            <template v-if="column.dataIndex === 'size'">{{ text }} KB</template>
-            <div v-else-if="column.dataIndex === 'owner'">
-                <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
-                    {{ typeof text === 'string' ? text.slice(0, 1) : '' }}
+        <template #cell="cellProps">
+            <template v-if="cellProps.column.dataIndex === 'size'">{{ cellProps.text }} KB</template>
+            <div v-else-if="cellProps.column.dataIndex === 'owner'">
+                <Avatar :color="cellProps.record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
+                    {{ typeof cellProps.text === 'string' && cellProps.text.slice(0, 1) }}
                 </Avatar>
-                {{ text }}
+                {{ cellProps.text }}
             </div>
-            <template v-else-if="column.dataIndex === 'updateTime'">{{ dateFns.format(new Date(text), 'yyyy-MM-dd') }}</template>
+            <template v-else-if="cellProps.column.dataIndex === 'updateTime'">{{ dateFns.format(new Date(cellProps.text), 'yyyy-MM-dd') }}</template>
         </template>
     </Table>
 </template>

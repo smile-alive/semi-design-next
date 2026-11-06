@@ -18,7 +18,7 @@
         },
     };
 
-    const messages = shallowRef<Message[]>([
+    const defaultMessages: Message[] = [
         {
             role: 'system',
             id: '1',
@@ -37,20 +37,22 @@
             createdAt: 1715676751919,
             content: "以下是一个 Semi 代码的使用示例：\n```jsx \nimport React from 'react';\nimport { Button } from '@fibrae/semi-ui-react';\n\nconst MyComponent = () => {\n  return (\n    <Button>Click me</Button>\n );\n};\nexport default MyComponent;\n```\n",
         },
-    ]);
+    ];
+
+    const messages = shallowRef<Message[]>(defaultMessages);
 </script>
 
 <template>
     <AIChatDialogue v-model:chats="messages" align="leftRight" mode="bubble" :roleConfig="roleConfig">
-        <template #title="{ role }">
-            <div class="semi-ai-chat-dialogue-title">My-{{ role?.name }}</div>
+        <template #title="title">
+            <div class="semi-ai-chat-dialogue-title">My-{{ title.role?.name }}</div>
         </template>
-        <template #avatar="{ role }">
-            <Avatar alt="" shape="square" size="extra-small" :src="role?.avatar" />
+        <template #avatar="avatar">
+            <Avatar alt="" shape="square" size="extra-small" :src="avatar.role?.avatar" />
         </template>
-        <template #action="{ defaultActions, class: className }">
-            <div :class="className">
-                <component :is="defaultActions[0]" />
+        <template #action="action">
+            <div :class="action.class">
+                <component :is="action.defaultActions[0]" />
             </div>
         </template>
     </AIChatDialogue>
