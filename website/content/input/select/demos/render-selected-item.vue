@@ -42,10 +42,10 @@
 
 <template>
     <Select aria-label="单选" defaultValue="申悦" placeholder="请选择" style="width: 280px; height: 40px" @change="onChange">
-        <template #selectedItem="{ option }">
+        <template #selectedItem="selected">
             <div style="display: flex; align-items: center">
-                <Avatar alt="" size="small" :src="option.avatar" />
-                <span style="margin-left: 8px">{{ option.email }}</span>
+                <Avatar alt="" size="small" :src="selected.option.avatar" />
+                <span style="margin-left: 8px">{{ selected.option.email }}</span>
             </div>
         </template>
         <Select.Option v-for="item in list" :key="item.email" v-bind="item" showTick :style="optionStyle" :value="item.name">
@@ -59,9 +59,9 @@
         </Select.Option>
     </Select>
     <Select aria-label="多选圆形头像" :defaultValue="['申悦', '曲晨一']" :maxTagCount="2" multiple placeholder="请选择" style="width: 280px; margin-top: 20px" @change="onChange">
-        <template #tag="{ option, onClose }">
-            <Tag :avatarSrc="option.avatar" avatarShape="circle" closable size="large" @close="onClose">
-                {{ option.name }}
+        <template #tag="tagItem">
+            <Tag :avatarSrc="tagItem.option.avatar" avatarShape="circle" closable size="large" @close="tagItem.onClose">
+                {{ tagItem.option.name }}
             </Tag>
         </template>
         <Select.Option v-for="item in list" :key="item.email" v-bind="item" showTick :style="optionStyle" :value="item.name">
@@ -75,9 +75,9 @@
         </Select.Option>
     </Select>
     <Select aria-label="多选方形头像" :defaultValue="['申悦', '曲晨一']" :maxTagCount="2" multiple placeholder="请选择" style="width: 280px; margin-top: 20px" @change="onChange">
-        <template #tag="{ option, onClose }">
-            <Tag :avatarSrc="option.avatar" avatarShape="square" closable size="large" @close="onClose">
-                {{ option.name }}
+        <template #tag="tagItem">
+            <Tag :avatarSrc="tagItem.option.avatar" avatarShape="square" closable size="large" @close="tagItem.onClose">
+                {{ tagItem.option.name }}
             </Tag>
         </template>
         <Select.Option v-for="item in list" :key="item.email" v-bind="item" showTick :style="optionStyle" :value="item.name">

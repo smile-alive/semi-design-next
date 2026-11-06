@@ -3,8 +3,8 @@ import { Spin } from '@fibrae/semi-ui-react';
 
 export default function SpinDemo() {
     return (
-        <div style={{ marginLeft: 30 }}>
-            <div>A spin with customized indicator.</div>
+        <div style={{ marginInlineStart: 30 }}>
+            <div>自定义指示符的加载器</div>
             <Spin indicator={<IconLoading />} />
         </div>
     );

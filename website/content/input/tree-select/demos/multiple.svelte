@@ -61,14 +61,13 @@
             ],
         },
     ];
-    const dropdownStyle = 'max-height: 400px; overflow: auto';
 </script>
 
 <div>
-    <TreeSelect {dropdownStyle} multiple placeholder="请选择" style="width: 300px" {treeData} />
+    <TreeSelect dropdownStyle="max-height: 400px; overflow: auto" multiple placeholder="请选择" style="width: 300px" {treeData} />
     <br />
     <br />
-    <TreeSelect {dropdownStyle} leafOnly multiple placeholder="只渲染叶子节点" style="width: 300px" {treeData} />
+    <TreeSelect dropdownStyle="max-height: 400px; overflow: auto" leafOnly multiple placeholder="只渲染叶子节点" style="width: 300px" {treeData} />
     <br />
     <br />
 </div>

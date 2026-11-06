@@ -1,11 +1,11 @@
 <script lang="ts">
     import { Checkbox, CheckboxGroup } from '@fibrae/semi-ui-svelte';
-
-    const values = ['A', 'B', 'C', 'D', 'E'];
 </script>
 
 <CheckboxGroup aria-label="CheckboxGroup 示例" style="width: 100%" value={['A', 'B']}>
-    {#each values as value (value)}
-        <Checkbox {value}>{value}</Checkbox>
-    {/each}
+    <Checkbox value="A">A</Checkbox>
+    <Checkbox value="B">B</Checkbox>
+    <Checkbox value="C">C</Checkbox>
+    <Checkbox value="D">D</Checkbox>
+    <Checkbox value="E">E</Checkbox>
 </CheckboxGroup>

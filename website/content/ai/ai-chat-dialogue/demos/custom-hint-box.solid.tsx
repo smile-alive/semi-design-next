@@ -7,7 +7,7 @@ const commonHintStyle: JSX.CSSProperties = {
     padding: '10px',
     'border-radius': '10px',
     'background-color': 'transparent',
-    color: 'var( --semi-color-text-1)',
+    color: 'var(--semi-color-text-1)',
     display: 'flex',
     'justify-content': 'space-between',
     'align-items': 'center',
@@ -63,10 +63,10 @@ export default function AIChatDialogueDemo() {
             onChatsChange={onChatsChange}
             hints={hints()}
             onHintClick={onHintClick}
-            renderHintBox={(props) => (
-                <button type="button" style={commonHintStyle} onClick={props.onHintClick}>
-                    {props.content}
-                    <IconArrowRight style={{ 'margin-left': '10px' }} />
+            renderHintBox={(hintBox) => (
+                <button type="button" style={commonHintStyle} onClick={hintBox.onHintClick}>
+                    {hintBox.content}
+                    <IconArrowRight style={{ 'margin-inline-start': '10px' }} />
                 </button>
             )}
         />

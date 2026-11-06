@@ -1,11 +1,12 @@
 import { IconTransfer } from '@fibrae/semi-icons-react/lab';
 import { Resizable } from '@fibrae/semi-ui-react';
+
 export default function ResizableDemo() {
     return (
         <div style={{ width: '500px', height: '60%' }}>
             <Resizable
                 style={{
-                    marginLeft: '20%',
+                    marginInlineStart: '20%',
                     backgroundColor: 'var(--semi-grey-1)',
                     border: 'var(--semi-color-border) 1px solid',
                 }}
@@ -28,7 +29,7 @@ export default function ResizableDemo() {
                     ),
                 }}
             >
-                <div style={{ marginLeft: '20%' }}>right</div>
+                <div style={{ marginInlineStart: '20%' }}>right</div>
             </Resizable>
         </div>
     );

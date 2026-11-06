@@ -10,7 +10,7 @@ export default function TagInputDemo() {
     return (
         <>
             <TagInput defaultValue={['抖音', '火山']} ref={ref} />
-            <Button style={{ marginTop: 10 }} onClick={handleTagInputFocus}>
+            <Button style={{ marginBlockStart: 10 }} onClick={handleTagInputFocus}>
                 点击按钮聚焦
             </Button>
         </>

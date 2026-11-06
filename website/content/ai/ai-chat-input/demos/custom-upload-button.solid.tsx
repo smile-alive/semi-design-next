@@ -4,15 +4,15 @@ import { IconUpload } from '@fibrae/semi-icons-solid';
 const uploadProps = { action: 'https://api.semi.design/upload' };
 const outerStyle = { margin: '12px' };
 
-const renderUploadButton = (props: RenderUploadButtonProps) => (
+const renderUploadButton = (uploadButton: RenderUploadButtonProps) => (
     <button
         type="button"
         aria-label="上传"
-        disabled={props.disabled}
+        disabled={uploadButton.disabled}
         class="semi-button semi-button-borderless"
         onClick={(e) => {
             e.stopPropagation();
-            props.openFileDialog();
+            uploadButton.openFileDialog();
         }}
     >
         <IconUpload />

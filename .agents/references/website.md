@@ -10,6 +10,7 @@
     - 某框架的 `mode` 改为 `visible` 前，不在 `except` 中的每个页面都要满足：该页本框架的全部 demo 服务端渲染不抛错（Solid 还要求释放根后无未捕获异常，构建在服务端渲染失败时即失败）；dev 构建下 hydration 无告警（React 的 `onRecoverableError` 与控制台 hydration 告警、Vue 的 `Hydration ... mismatch`、Solid 的 `Hydration Mismatch` 都算失败，生产构建会静默保留差异，不能用它判断）；依赖随机值、当前时间或自带 `Teleport` 的 demo 已改为固定值或挂载后计算，Calendar 的 demo 全部传 `displayValue`；首帧差异只限 component-issues 已登记的项；check-pages 无新增控制台错误和空 demo。不满足的页面放进 `except`。
     - 问题 demo 改 demo 本身（固定值、挂载后计算），不做单个 demo 的退出机制。
     - 每个 demo 每个框架一份，中英文档共用，界面文案统一用中文（D3）。
+    - 同一个 demo 的各框架版本内容与结构一致，只在框架写法上不同：数据、文案、变量名、元素顺序、常量位置、选用的组件都相同，改一个框架的 demo 时同步其他框架。render prop、children 函数、插槽与 snippet 的参数在各框架都不解构、参数名相同，因为 Solid 的这类参数是活 getter，解构后不再更新；例外是 Vue、Svelte 的插槽把其他框架直接收到的参数包进对象时，只解构出这些参数，让函数体用同样的名字（`(file) =>` 对应 `#thumbnail="{ file }"`，`(item, index) =>` 对应 `#value="{ item, index }"`）。子组件在使用处写点语法（`Select.Option`、`Typography.Text`），不起本地别名；框架没有的子组件（Svelte 不提供 `Select.Option`、`TabPane`、`Table.Column` 等）按该框架的 API 改用数据 prop。
     - 各框架的 demo 均纳入 `pnpm typecheck`，类型从对应框架包的公开导出取，只标注推断不出的地方，不写 `any`。demo 的文件形式见各框架目录的 `website.md`。
     - 正文里嵌入的非示例组件放在 `figures/` 下，在 mdx 中 import。
 - 文档中的 API 表、Methods 与键盘说明要和组件的实际行为一致，zh-CN 和 en-US 同步修改。

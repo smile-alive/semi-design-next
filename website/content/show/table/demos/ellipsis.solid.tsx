@@ -11,24 +11,22 @@ interface Row {
     avatarBg: 'grey' | 'red' | 'light-blue';
 }
 
-const filters = [
-    {
-        text: 'Semi Design 设计稿',
-        value: 'Semi Design 设计稿',
-    },
-    {
-        text: 'Semi D2C 设计稿',
-        value: 'Semi D2C 设计稿',
-    },
-];
-
 const columns: ColumnProps<Row>[] = [
     {
         title: '标题',
         dataIndex: 'name',
         fixed: true,
         width: 250,
-        filters,
+        filters: [
+            {
+                text: 'Semi Design 设计稿',
+                value: 'Semi Design 设计稿',
+            },
+            {
+                text: 'Semi D2C 设计稿',
+                value: 'Semi D2C 设计稿',
+            },
+        ],
         onFilter: (value, record) => record.name.includes(value),
         sorter: (a, b) => (a.name.length - b.name.length > 0 ? 1 : -1),
         ellipsis: true,

@@ -44,25 +44,25 @@ export default function TableDemo() {
             render: (text) => {
                 return (
                     <div>
-                        <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-right': '12px' }} />
+                        <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-inline-end': '12px' }} />
                         {text}
                     </div>
                 );
             },
             onFilter: (value, record) => record.name.includes(value),
-            renderFilterDropdown: (props) => {
+            renderFilterDropdown: (dropdown) => {
                 const handleChange = (value: string) => {
                     const filteredValue = value ? [value] : [];
-                    props.setTempFilteredValue(filteredValue);
+                    dropdown.setTempFilteredValue(filteredValue);
                 };
 
                 return (
                     <Space vertical align="start" style={{ padding: '8px' }}>
-                        <Input inputRef={(el) => (inputEl = el)} value={props.tempFilteredValue[0]} onChange={handleChange} />
+                        <Input inputRef={(el) => (inputEl = el)} value={dropdown.tempFilteredValue[0]} onChange={handleChange} />
                         <Space>
-                            <Button onClick={() => props.confirm({ closeDropdown: true })}>筛选 + 关闭</Button>
-                            <Button onClick={() => props.clear({ closeDropdown: true })}>清除 + 关闭</Button>
-                            <Button onClick={() => props.close()}>直接关闭</Button>
+                            <Button onClick={() => dropdown.confirm({ closeDropdown: true })}>筛选 + 关闭</Button>
+                            <Button onClick={() => dropdown.clear({ closeDropdown: true })}>清除 + 关闭</Button>
+                            <Button onClick={() => dropdown.close()}>直接关闭</Button>
                         </Space>
                     </Space>
                 );
@@ -83,7 +83,7 @@ export default function TableDemo() {
             render: (text, record) => {
                 return (
                     <div>
-                        <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
+                        <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
                             {typeof text === 'string' && text.slice(0, 1)}
                         </Avatar>
                         {text}
@@ -92,22 +92,22 @@ export default function TableDemo() {
             },
             onFilter: (value, record) => record.owner.includes(value),
             defaultFilteredValue: ['姜鹏志'],
-            renderFilterDropdown: (props) => {
+            renderFilterDropdown: (dropdown) => {
                 const handleChange = (value: string) => {
                     if (value) {
-                        props.setTempFilteredValue([value]);
+                        dropdown.setTempFilteredValue([value]);
                     } else {
-                        props.setTempFilteredValue([]);
+                        dropdown.setTempFilteredValue([]);
                     }
                 };
 
                 return (
                     <Space vertical align="start" style={{ padding: '8px' }}>
-                        <Input value={props.tempFilteredValue[0]} onChange={handleChange} />
+                        <Input value={dropdown.tempFilteredValue[0]} onChange={handleChange} />
                         <Space>
-                            <Button onClick={() => props.confirm({ closeDropdown: false })}>筛选后不关闭</Button>
-                            <Button onClick={() => props.clear({ closeDropdown: false })}>清除后不关闭</Button>
-                            <Button onClick={() => props.close()}>直接关闭</Button>
+                            <Button onClick={() => dropdown.confirm({ closeDropdown: false })}>筛选后不关闭</Button>
+                            <Button onClick={() => dropdown.clear({ closeDropdown: false })}>清除后不关闭</Button>
+                            <Button onClick={() => dropdown.close()}>直接关闭</Button>
                         </Space>
                     </Space>
                 );

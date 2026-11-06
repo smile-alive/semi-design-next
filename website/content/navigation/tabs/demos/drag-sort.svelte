@@ -47,7 +47,7 @@
             {/each}
         </div>
     {/snippet}
-    {#snippet panel({ itemKey })}
-        <div style="padding: 20px">{contents[itemKey]}</div>
+    {#snippet panel(pane)}
+        <div style="padding: 20px">{contents[pane.itemKey]}</div>
     {/snippet}
 </Tabs>

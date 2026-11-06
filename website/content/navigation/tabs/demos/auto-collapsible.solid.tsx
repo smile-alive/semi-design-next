@@ -1,6 +1,9 @@
 import { createSignal, For } from 'solid-js';
 import { Tabs, TabPane, Button } from '@fibrae/semi-ui-solid';
 
+const boxStyle = { border: '1px solid var(--semi-color-border)', padding: '12px' };
+const noteStyle = { 'margin-block-end': '8px', color: 'var(--semi-color-text-2)', 'font-size': '12px' };
+
 export default function TabsDemo() {
     const [count, setCount] = createSignal(8);
 
@@ -19,23 +22,23 @@ export default function TabsDemo() {
 
     return (
         <div>
-            <div style={{ 'margin-bottom': '12px' }}>
-                <Button onClick={() => setCount(Math.max(3, count() - 2))} style={{ 'margin-right': '8px' }}>
+            <div style={{ 'margin-block-end': '12px' }}>
+                <Button onClick={() => setCount(Math.max(3, count() - 2))} style={{ 'margin-inline-end': '8px' }}>
                     减少 Tab
                 </Button>
                 <Button onClick={() => setCount(Math.min(15, count() + 2))}>增加 Tab</Button>
-                <span style={{ 'margin-left': '12px' }}>当前 Tab 数量: {count()}</span>
+                <span style={{ 'margin-inline-start': '12px' }}>当前 Tab 数量: {count()}</span>
             </div>
 
-            <div style={{ border: '1px solid var(--semi-color-border)', padding: '12px', 'margin-bottom': '16px' }}>
-                <p style={{ 'margin-bottom': '8px', color: 'var(--semi-color-text-2)', 'font-size': '12px' }}>collapsible=&quot;auto&quot; - 自动检测溢出</p>
+            <div style={{ ...boxStyle, 'margin-block-end': '16px' }}>
+                <p style={noteStyle}>collapsible=&quot;auto&quot; - 自动检测溢出</p>
                 <Tabs type="card" collapsible="auto">
                     {panes()}
                 </Tabs>
             </div>
 
-            <div style={{ border: '1px solid var(--semi-color-border)', padding: '12px', 'max-width': '400px' }}>
-                <p style={{ 'margin-bottom': '8px', color: 'var(--semi-color-text-2)', 'font-size': '12px' }}>固定宽度 400px，测试较窄容器</p>
+            <div style={{ ...boxStyle, 'max-width': '400px' }}>
+                <p style={noteStyle}>固定宽度 400px，测试较窄容器</p>
                 <Tabs type="card" collapsible="auto">
                     {panes()}
                 </Tabs>

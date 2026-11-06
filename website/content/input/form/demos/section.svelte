@@ -29,7 +29,7 @@
             <FormInput field="time" initValue="60" label="考试时长" style="width: 176px">
                 {#snippet addonAfter()}分钟{/snippet}
             </FormInput>
-            <FormCheckbox field="auto" initValue noLabel style="padding-top: 30px; margin-inline-start: 12px">到时间自动交卷</FormCheckbox>
+            <FormCheckbox field="auto" initValue noLabel style="padding-block-start: 30px; margin-inline-start: 12px">到时间自动交卷</FormCheckbox>
         </div>
         <FormRadioGroup direction="vertical" field="type" initValue="always" label="有效时间">
             <FormRadio value="always">永久有效</FormRadio>
@@ -56,7 +56,7 @@
         <FormSelect field="users" initValue={['1', '2', '3', '4']} label={{ text: '考生', required: true }} multiple optionList={userOptions} style="width: 560px" />
     </FormSection>
     <Space>
-        <Button style="width: 120px; margin-top: 12px; margin-inline-end: 4px" theme="solid" type="primary">创建考试</Button>
-        <Button style="margin-top: 12px">预览</Button>
+        <Button style="width: 120px; margin-block-start: 12px; margin-inline-end: 4px" theme="solid" type="primary">创建考试</Button>
+        <Button style="margin-block-start: 12px">预览</Button>
     </Space>
 </Form>

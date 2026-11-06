@@ -33,11 +33,9 @@
             key: '1',
         },
     ];
-    const style = { width: '300px' };
-    const dropdownStyle = { maxHeight: '400px', overflow: 'auto' };
     const value = ref<string | undefined>('Shanghai');
 </script>
 
 <template>
-    <TreeSelect v-model="value" :dropdownStyle="dropdownStyle" placeholder="请选择" :style="style" :treeData="treeData" />
+    <TreeSelect v-model="value" :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }" placeholder="请选择" style="width: 300px" :treeData="treeData" />
 </template>

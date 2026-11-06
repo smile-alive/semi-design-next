@@ -53,66 +53,67 @@ function SortableRow(rawProps: SortableRowProps) {
     return <tr {...rest} classList={{ isDragging: isDragging() }} ref={(node) => ref(node)} style={{ cursor: 'grabbing', ...(isDragging() ? { 'z-index': 999, position: 'relative' } : {}) }} />;
 }
 
+const pageSize = 10;
+
+const columns: ColumnProps<DemoRow>[] = [
+    {
+        title: '标题',
+        dataIndex: 'name',
+        width: 400,
+        render: (text) => {
+            return (
+                <div>
+                    <Avatar size="small" shape="square" src="/assets/placeholder/app.svg" alt="" style={{ 'margin-inline-end': '12px' }} />
+                    {text}
+                </div>
+            );
+        },
+        filters: [
+            {
+                text: 'Semi Design 设计稿',
+                value: 'Semi Design 设计稿',
+            },
+            {
+                text: 'Semi D2C 设计稿',
+                value: 'Semi D2C 设计稿',
+            },
+        ],
+        onFilter: (value, record) => record.name.includes(value),
+    },
+    {
+        title: '大小',
+        dataIndex: 'size',
+        sorter: (a, b) => (a.size - b.size > 0 ? 1 : -1),
+        render: (text) => `${text} KB`,
+    },
+    {
+        title: '所有者',
+        dataIndex: 'owner',
+        render: (text, record) => {
+            return (
+                <div>
+                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
+                        {typeof text === 'string' && text.slice(0, 1)}
+                    </Avatar>
+                    {text}
+                </div>
+            );
+        },
+    },
+    {
+        title: '更新日期',
+        dataIndex: 'updateTime',
+        sorter: (a, b) => (a.updateTime - b.updateTime > 0 ? 1 : -1),
+        render: (value) => {
+            return dateFns.format(new Date(value), 'yyyy-MM-dd');
+        },
+    },
+];
+
 export default function TableDemo() {
-    const pageSize = 10;
     const [dataSource, setData] = createSignal(getData());
     const [pageNum, setPageNum] = createSignal(1);
     const pageData = createMemo(() => dataSource().slice((pageNum() - 1) * pageSize, pageNum() * pageSize));
-
-    const columns: ColumnProps<DemoRow>[] = [
-        {
-            title: '标题',
-            dataIndex: 'name',
-            width: 400,
-            render: (text) => {
-                return (
-                    <div>
-                        <Avatar size="small" shape="square" src="/assets/placeholder/app.svg" alt="" style={{ 'margin-right': '12px' }} />
-                        {text}
-                    </div>
-                );
-            },
-            filters: [
-                {
-                    text: 'Semi Design 设计稿',
-                    value: 'Semi Design 设计稿',
-                },
-                {
-                    text: 'Semi D2C 设计稿',
-                    value: 'Semi D2C 设计稿',
-                },
-            ],
-            onFilter: (value, record) => record.name.includes(value),
-        },
-        {
-            title: '大小',
-            dataIndex: 'size',
-            sorter: (a, b) => (a.size - b.size > 0 ? 1 : -1),
-            render: (text) => `${text} KB`,
-        },
-        {
-            title: '所有者',
-            dataIndex: 'owner',
-            render: (text, record) => {
-                return (
-                    <div>
-                        <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
-                            {typeof text === 'string' && text.slice(0, 1)}
-                        </Avatar>
-                        {text}
-                    </div>
-                );
-            },
-        },
-        {
-            title: '更新日期',
-            dataIndex: 'updateTime',
-            sorter: (a, b) => (a.updateTime - b.updateTime > 0 ? 1 : -1),
-            render: (value) => {
-                return dateFns.format(new Date(value), 'yyyy-MM-dd');
-            },
-        },
-    ];
 
     // Sortable indexes are relative to the current page
     const handleDragEnd: Parameters<typeof DragDropProvider>[0]['onDragEnd'] = (event) => {

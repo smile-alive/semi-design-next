@@ -32,16 +32,14 @@
             key: '1',
         },
     ];
-    const style = 'width: 300px';
-    const dropdownStyle = 'max-height: 400px; overflow: auto';
 </script>
 
 <div>
-    <TreeSelect disabled {dropdownStyle} placeholder="禁用下拉菜单" {style} {treeData} />
+    <TreeSelect disabled dropdownStyle="max-height: 400px; overflow: auto" placeholder="禁用下拉菜单" style="width: 300px" {treeData} />
     <br />
     <br />
-    <TreeSelect disabled {dropdownStyle} {style} {treeData} value="Shanghai" />
+    <TreeSelect disabled dropdownStyle="max-height: 400px; overflow: auto" style="width: 300px" {treeData} value="Shanghai" />
     <br />
     <br />
-    <TreeSelect disabled {dropdownStyle} multiple {style} {treeData} value={['Shanghai', 'North America']} />
+    <TreeSelect disabled dropdownStyle="max-height: 400px; overflow: auto" multiple style="width: 300px" {treeData} value={['Shanghai', 'North America']} />
 </div>

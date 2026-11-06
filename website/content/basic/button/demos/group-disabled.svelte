@@ -3,7 +3,7 @@
 </script>
 
 <div style="display: flex">
-    <div style="margin-right: 10px">
+    <div style="margin-inline-end: 10px">
         <ButtonGroup disabled>
             <Button>拷贝</Button>
             <Button>查询</Button>

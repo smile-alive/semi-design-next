@@ -26,10 +26,10 @@
 </script>
 
 <Tree style={treeStyle} {treeData}>
-    {#snippet label({ item, label })}
+    {#snippet label(labelProps)}
         <div style={labelStyle}>
-            <span>{label}</span>
-            <Tag size="small">{item.children ? '大洲' : '国家'}</Tag>
+            <span>{labelProps.label}</span>
+            <Tag size="small">{labelProps.item.children ? '大洲' : '国家'}</Tag>
         </div>
     {/snippet}
 </Tree>

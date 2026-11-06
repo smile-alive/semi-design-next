@@ -2,7 +2,7 @@
     import { Button, Cropper, Slider } from '@fibrae/semi-ui-svelte';
 
     const containerStyle = 'width: 550px; height: 300px; margin: 20px';
-    const actionStyle = 'margin-top: 20px; display: flex; align-items: center; justify-content: center; width: fit-content';
+    const actionStyle = 'margin-block-start: 20px; display: flex; align-items: center; justify-content: center; width: fit-content';
 
     let rotate = $state(0);
     let zoom = $state(1);

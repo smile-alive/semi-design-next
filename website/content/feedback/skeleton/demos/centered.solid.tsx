@@ -6,7 +6,7 @@ const style: JSX.CSSProperties = {
     'flex-direction': 'column',
     'align-items': 'center',
     width: '300px',
-    'margin-bottom': '10px',
+    'margin-block-end': '10px',
 };
 
 export default function SkeletonDemo() {

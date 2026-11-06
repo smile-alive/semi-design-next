@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Tree, TypographyText } from '@fibrae/semi-ui-svelte';
+    import { Tree, Typography } from '@fibrae/semi-ui-svelte';
 
     const treeData = [
         {
@@ -24,7 +24,7 @@
 </script>
 
 <Tree style={treeStyle} {treeData}>
-    {#snippet label({ label })}
-        <TypographyText ellipsis={{ showTooltip: true }} style="width: 100%">{label}</TypographyText>
+    {#snippet label(labelProps)}
+        <Typography.Text ellipsis={{ showTooltip: true }} style="width: 100%">{labelProps.label}</Typography.Text>
     {/snippet}
 </Tree>

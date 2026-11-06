@@ -298,7 +298,7 @@
         }),
     ];
 
-    const references = ref<Reference[]>([
+    const customReferences: Reference[] = [
         {
             type: 'file',
             id: '1',
@@ -336,7 +336,9 @@
             from: 1,
             to: 2,
         },
-    ]);
+    ];
+
+    const reference = ref(customReferences);
 
     const isImageType = ({ name = '', fileInstance }: Attachment) => {
         const PIC_PREFIX = 'image/';
@@ -367,8 +369,8 @@
 
     const richContent = (content: Content[]) => content.filter((item) => item.type !== 'text');
 
-    const onReferenceDelete = (reference: Reference) => {
-        references.value = references.value.filter((item) => item.id !== reference.id);
+    const onReferenceDelete = (deleted: Reference) => {
+        reference.value = reference.value.filter((item) => item.id !== deleted.id);
     };
 
     const onContentChange = (content: Content[]) => {
@@ -397,7 +399,7 @@
         class="aiChatInput-customTopSlot"
         :extensions="extensions"
         placeholder="使用 @ 触发"
-        :references="references"
+        :references="reference"
         :showReference="false"
         :showUploadFile="false"
         style="margin: 12px"
@@ -406,9 +408,9 @@
         @contentChange="onContentChange"
         @referenceDelete="onReferenceDelete"
     >
-        <template #topSlot="{ attachments, content, references: items, onReferenceDelete: deleteReference, onUploadFileDelete }">
+        <template #topSlot="topSlot">
             <div class="ai-chat-input-topSlot">
-                <div v-for="(item, index) in richContent(content)" :key="item.key ?? index" class="item">
+                <div v-for="(item, index) in richContent(topSlot.content)" :key="item.key ?? index" class="item">
                     <span class="item-icon">
                         <component :is="refTypeToIconMap[item.type]" v-if="refTypeToIconMap[item.type]" class="item-left item-icon" size="small" />
                         <button aria-label="删除" class="item-icon-delete" type="button" @click="input?.deleteContent(item)">
@@ -420,10 +422,10 @@
                         <span v-if="item.type === 'branch'" class="detail">{{ item.detail }}</span>
                     </span>
                 </div>
-                <div v-for="item in items" :key="item.id" class="item">
+                <div v-for="item in topSlot.references" :key="item.id" class="item">
                     <span class="item-icon">
                         <component :is="refTypeToIconMap[item.type ?? '']" v-if="item.type && refTypeToIconMap[item.type]" class="item-left item-icon" size="small" />
-                        <button aria-label="删除" class="item-icon-delete" type="button" @click="deleteReference(item)">
+                        <button aria-label="删除" class="item-icon-delete" type="button" @click="topSlot.onReferenceDelete(item)">
                             <IconClose size="small" />
                         </button>
                     </span>
@@ -432,11 +434,11 @@
                         <span v-if="item.type === 'branch'" class="detail">{{ item.detail }}</span>
                     </span>
                 </div>
-                <div v-for="item in attachments" :key="item.uid" class="item">
+                <div v-for="item in topSlot.attachments" :key="item.uid" class="item">
                     <span class="item-icon">
                         <img v-if="isImageType(item)" :alt="item.name" class="item-image item-left" :src="item.url" />
                         <IconUpload v-else class="item-left item-icon" size="small" />
-                        <button aria-label="删除" class="item-icon-delete" type="button" @click="onUploadFileDelete(item)">
+                        <button aria-label="删除" class="item-icon-delete" type="button" @click="topSlot.onUploadFileDelete(item)">
                             <IconClose size="small" />
                         </button>
                     </span>

@@ -26,7 +26,7 @@
 <template>
     <div :style="{ padding: '12px', border: '1px solid var(--semi-color-border)', margin: '12px' }">
         <List :dataSource="data">
-            <template #item="{ item }">
+            <template #item="row">
                 <List.Item>
                     <template #header>
                         <Avatar color="blue">SE</Avatar>
@@ -34,7 +34,7 @@
                     <template #main>
                         <div>
                             <span :style="{ color: 'var(--semi-color-text-0)', fontWeight: 500 }">示例标题</span>
-                            <p :style="item.style">{{ item.text }}</p>
+                            <p :style="row.item.style">{{ row.item.text }}</p>
                         </div>
                     </template>
                     <template #extra>

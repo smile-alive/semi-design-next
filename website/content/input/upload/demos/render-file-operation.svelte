@@ -3,7 +3,7 @@
     import { Button, Upload, type FileItem } from '@fibrae/semi-ui-svelte';
 
     const action = 'https://api.semi.design/upload';
-    const fileList: FileItem[] = [
+    const defaultFileList: FileItem[] = [
         {
             uid: '1',
             name: 'dyBag.png',
@@ -15,8 +15,8 @@
     ];
 </script>
 
-<Upload {action} {fileList} itemStyle="width: 300px">
-    {#snippet fileOperation({ onRemove })}
+<Upload {action} fileList={defaultFileList} itemStyle="width: 300px">
+    {#snippet fileOperation(fileItem)}
         <div style="display: flex; column-gap: 8px; padding: 0 8px">
             <Button aria-label="预览" size="small" theme="borderless" type="tertiary">
                 {#snippet icon()}<IconEyeOpened />{/snippet}
@@ -24,7 +24,7 @@
             <Button aria-label="下载" size="small" theme="borderless" type="tertiary">
                 {#snippet icon()}<IconDownload />{/snippet}
             </Button>
-            <Button aria-label="删除" size="small" theme="borderless" type="tertiary" onclick={() => onRemove()}>
+            <Button aria-label="删除" size="small" theme="borderless" type="tertiary" onclick={() => fileItem.onRemove()}>
                 {#snippet icon()}<IconDelete />{/snippet}
             </Button>
         </div>

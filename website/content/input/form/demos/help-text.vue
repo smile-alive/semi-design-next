@@ -20,9 +20,6 @@
         return '';
     };
 
-    const onSubmit = () => console.log('submit success');
-    const onSubmitFail = (errors: unknown) => console.log(errors);
-
     const random = () => {
         const pw = (Math.random() * 100000).toString().slice(0, 5);
         form.value?.formApi.setValue('Password', pw);
@@ -33,7 +30,7 @@
 </script>
 
 <template>
-    <Form ref="form" showValidateIcon @submit="onSubmit" @submitFail="onSubmitFail">
+    <Form ref="form" showValidateIcon @submit="() => console.log('submit success')" @submitFail="(errors) => console.log(errors)">
         <FormInput field="Password" :validateStatus="validateStatus" :validator="validator">
             <template v-if="helpText" #helpText>
                 <span :style="{ color: 'var(--semi-color-warning)' }">{{ helpText }}</span>

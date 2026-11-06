@@ -9,11 +9,11 @@
 </script>
 
 <Tabs activeKey="1" {tabList}>
-    {#snippet tabBar({ tabBarProps, tabBar })}
+    {#snippet tabBar(bar)}
         <div class="tab-bar-box">
-            这是二次封装的Tab Bar，当前ActiveKey：{tabBarProps.activeKey}
-            {@render tabBar()}
+            这是二次封装的Tab Bar，当前ActiveKey：{bar.tabBarProps.activeKey}
+            {@render bar.tabBar()}
         </div>
     {/snippet}
-    {#snippet panel({ item })}{item.tab}{/snippet}
+    {#snippet panel(pane)}{pane.item.tab}{/snippet}
 </Tabs>

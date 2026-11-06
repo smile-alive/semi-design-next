@@ -332,13 +332,14 @@ function MentionList(props: MentionListProps) {
                         <div
                             role="menuitem"
                             tabIndex={-1}
-                            class={index() === selectedIndex() ? 'is-selected optionItem' : 'optionItem '}
+                            class={index() === selectedIndex() ? 'is-selected optionItem' : 'optionItem'}
                             onClick={() => onItemClick(item)}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     onItemClick(item);
                                 }
                             }}
+                            onFocus={() => setSelectedIndex(index())}
                             onMouseEnter={() => setSelectedIndex(index())}
                         >
                             {typeof item === 'string' ? (
@@ -459,9 +460,9 @@ export default function AIChatInputDemo() {
     let input: AIChatInputElement | undefined;
     const [reference, setReference] = createSignal(customReferences);
 
-    const renderTopSlot = (slot: RenderTopSlotProps) => (
+    const renderTopSlot = (topSlot: RenderTopSlotProps) => (
         <div class="ai-chat-input-topSlot">
-            <For each={slot.content.filter((item) => item.type !== 'text')}>
+            <For each={topSlot.content.filter((item) => item.type !== 'text')}>
                 {(item) => (
                     <div class="item">
                         <span class="item-icon">
@@ -481,7 +482,7 @@ export default function AIChatInputDemo() {
                     </div>
                 )}
             </For>
-            <For each={slot.references}>
+            <For each={topSlot.references}>
                 {(item) => (
                     <div class="item">
                         <span class="item-icon">
@@ -501,7 +502,7 @@ export default function AIChatInputDemo() {
                     </div>
                 )}
             </For>
-            <For each={slot.attachments}>
+            <For each={topSlot.attachments}>
                 {(item) => (
                     <div class="item">
                         <span class="item-icon">

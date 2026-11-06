@@ -4,7 +4,7 @@ import { Avatar } from '@fibrae/semi-ui-solid';
 export default function AvatarDemo() {
     return (
         <Avatar
-            alt="beautiful cat"
+            alt="漂亮的猫咪"
             src="/assets/placeholder/avatar-a.svg"
             style={{ margin: '4px' }}
             size="large"

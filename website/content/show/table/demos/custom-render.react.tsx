@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { IconTickCircle, IconComment, IconClear, IconDelete } from '@fibrae/semi-icons-react';
 import { IllustrationNoResult, IllustrationNoResultDark } from '@fibrae/semi-illustrations-react';
 import { Table, Avatar, Button, Empty, Typography, Tag, type ColumnProps } from '@fibrae/semi-ui-react';
-const { Text } = Typography;
 
 const raw = [
     {
@@ -51,13 +50,7 @@ export default function TableDemo() {
     const [dataSource, setData] = useState(raw);
 
     const removeRecord = (key: string) => {
-        let newDataSource = [...dataSource];
-        let idx = newDataSource.findIndex((data) => data.key === key);
-
-        if (idx > -1) {
-            newDataSource.splice(idx, 1);
-            setData(newDataSource);
-        }
+        setData((list) => list.filter((data) => data.key !== key));
     };
     const resetData = () => {
         const newDataSource = [...raw];
@@ -72,11 +65,11 @@ export default function TableDemo() {
             render: (text, record) => {
                 return (
                     <span style={{ display: 'flex', alignItems: 'center' }}>
-                        <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ marginRight: 12 }} />
+                        <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ marginInlineEnd: 12 }} />
                         {/* 宽度 = 单元格设定宽度 − 非文本内容宽度 */}
-                        <Text ellipsis={{ showTooltip: true }} style={{ width: 'calc(400px - 76px)' }}>
+                        <Typography.Text ellipsis={{ showTooltip: true }} style={{ width: 'calc(400px - 76px)' }}>
                             {text}
-                        </Text>
+                        </Typography.Text>
                     </span>
                 );
             },
@@ -110,7 +103,7 @@ export default function TableDemo() {
             render: (text, record) => {
                 return (
                     <div>
-                        <Avatar size="small" color={record.avatarBg} style={{ marginRight: 4 }}>
+                        <Avatar size="small" color={record.avatarBg} style={{ marginInlineEnd: 4 }}>
                             {typeof text === 'string' && text.slice(0, 1)}
                         </Avatar>
                         {text}
@@ -130,14 +123,12 @@ export default function TableDemo() {
         },
     ];
 
-    const empty = <Empty image={<IllustrationNoResult />} darkModeImage={<IllustrationNoResultDark />} description="搜索无结果" />;
-
     return (
         <>
-            <Button onClick={resetData} style={{ marginBottom: 10 }}>
+            <Button onClick={resetData} style={{ marginBlockEnd: 10 }}>
                 重置
             </Button>
-            <Table style={{ minHeight: 350 }} columns={columns} dataSource={dataSource} pagination={false} empty={empty} />
+            <Table style={{ minHeight: 350 }} columns={columns} dataSource={dataSource} pagination={false} empty={<Empty image={<IllustrationNoResult />} darkModeImage={<IllustrationNoResultDark />} description="搜索无结果" />} />
         </>
     );
 }

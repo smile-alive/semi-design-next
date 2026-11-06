@@ -16,7 +16,12 @@
               }
             : {};
 
-    const disabledTime2: DatePickerDisabledTimeType = (_date, panelType) => (panelType === 'left' ? { disabledHours: () => [17, 18] } : { disabledHours: () => [12, 13, 14, 15, 16, 17, 18] });
+    const disabledTime2: DatePickerDisabledTimeType = (_date, panelType) => {
+        if (panelType === 'left') {
+            return { disabledHours: () => [17, 18] };
+        }
+        return { disabledHours: () => [12, 13, 14, 15, 16, 17, 18] };
+    };
 
     const disabledDate: DatePickerDisabledDateType = (date) => {
         const deadDate = new Date();

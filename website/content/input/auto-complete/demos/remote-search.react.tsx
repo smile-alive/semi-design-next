@@ -42,7 +42,7 @@ export default function AutoCompleteDemo() {
         return (
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{ fontSize: 32 }}>{item.icon}</div>
-                <div style={{ marginLeft: 12 }}>
+                <div style={{ marginInlineStart: 12 }}>
                     <p>{item.value}</p>
                     <p>{item.label}</p>
                 </div>

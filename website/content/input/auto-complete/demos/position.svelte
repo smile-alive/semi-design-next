@@ -1,10 +1,12 @@
 <script lang="ts">
     import { AutoComplete } from '@fibrae/semi-ui-svelte';
 
+    const domains = ['gmail.com', '163.com', 'qq.com'];
+
     let data = $state<string[]>([]);
 
     const change = (input: string) => {
-        data = input ? ['gmail.com', '163.com', 'qq.com'].map((domain) => `${input}@${domain}`) : [];
+        data = input ? domains.map((domain) => `${input}@${domain}`) : [];
     };
 </script>
 

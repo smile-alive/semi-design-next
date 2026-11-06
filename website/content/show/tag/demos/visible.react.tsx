@@ -8,7 +8,7 @@ export default function TagDemo() {
     };
     return (
         <div>
-            <RadioGroup type="button" defaultValue={0} onChange={toggleVisible}>
+            <RadioGroup aria-label="标签可见性" type="button" defaultValue={0} onChange={toggleVisible}>
                 <Radio value={1}>Show</Radio>
                 <Radio value={0}>Hide</Radio>
             </RadioGroup>

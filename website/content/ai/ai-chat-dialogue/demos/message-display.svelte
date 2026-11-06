@@ -14,7 +14,7 @@
         steps?: PlanStep[];
     }
 
-    let messages = $state<Message[]>([
+    const defaultMessages: Message[] = [
         {
             role: 'assistant',
             id: '1',
@@ -151,7 +151,7 @@
             ],
             status: 'completed',
         },
-    ]);
+    ];
 
     const roleConfig = {
         user: {
@@ -168,7 +168,8 @@
         },
     };
 
-    // plan is a user-defined content type; its icons come from the actionIcon snippet, so the steps carry data only
+    let messages = $state(defaultMessages);
+
     const toSteps = (item: unknown) =>
         (item as { content: PlanItem[] }).content.map((plan) => ({
             summary: plan.summary,
@@ -178,21 +179,21 @@
 </script>
 
 <AIChatDialogue bind:chats={messages} {roleConfig}>
-    {#snippet contentItem({ item, type, defaultItem })}
-        {#if type === 'plan'}
-            <AIChatDialogue.Step steps={toSteps(item)}>
-                {#snippet actionIcon({ item: action })}
-                    {#if action.type === 'search'}
+    {#snippet contentItem(contentItem)}
+        {#if contentItem.type === 'plan'}
+            <AIChatDialogue.Step steps={toSteps(contentItem.item)}>
+                {#snippet actionIcon(actionIcon)}
+                    {#if actionIcon.item.type === 'search'}
                         <IconSearchStroked />
-                    {:else if action.type === 'docs'}
+                    {:else if actionIcon.item.type === 'docs'}
                         <IconBriefStroked />
-                    {:else if action.type === 'code'}
+                    {:else if actionIcon.item.type === 'code'}
                         <IconCodeStroked />
                     {/if}
                 {/snippet}
             </AIChatDialogue.Step>
         {:else}
-            {@render defaultItem()}
+            {@render contentItem.defaultItem()}
         {/if}
     {/snippet}
 </AIChatDialogue>

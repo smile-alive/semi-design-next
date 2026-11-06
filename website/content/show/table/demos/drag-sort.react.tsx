@@ -18,7 +18,7 @@ function getData() {
             name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
             owner: isSemiDesign ? '姜鹏志' : '郝宣',
             size: randomNumber,
-            updateTime: new Date(2019, 6, 23, 12).valueOf() + randomNumber,
+            updateTime: new Date(2024, 4, 6, 12).valueOf() + randomNumber,
             avatarBg: isSemiDesign ? 'grey' : 'red',
         });
     }
@@ -44,69 +44,67 @@ function SortableRow(props: SortableRowProps) {
     return <tr {...rowProps} className={rowCls} ref={ref} style={style} />;
 }
 
+const pageSize = 10;
+
+const columns: ColumnProps[] = [
+    {
+        title: '标题',
+        dataIndex: 'name',
+        width: 400,
+        render: (text) => {
+            return (
+                <div>
+                    <Avatar size="small" shape="square" src="/assets/placeholder/app.svg" alt="" style={{ marginInlineEnd: 12 }} />
+                    {text}
+                </div>
+            );
+        },
+        filters: [
+            {
+                text: 'Semi Design 设计稿',
+                value: 'Semi Design 设计稿',
+            },
+            {
+                text: 'Semi D2C 设计稿',
+                value: 'Semi D2C 设计稿',
+            },
+        ],
+        onFilter: (value, record) => record.name.includes(value),
+    },
+    {
+        title: '大小',
+        dataIndex: 'size',
+        sorter: (a, b) => (a.size - b.size > 0 ? 1 : -1),
+        render: (text) => `${text} KB`,
+    },
+    {
+        title: '所有者',
+        dataIndex: 'owner',
+        render: (text, record) => {
+            return (
+                <div>
+                    <Avatar size="small" color={record.avatarBg} style={{ marginInlineEnd: 4 }}>
+                        {typeof text === 'string' && text.slice(0, 1)}
+                    </Avatar>
+                    {text}
+                </div>
+            );
+        },
+    },
+    {
+        title: '更新日期',
+        dataIndex: 'updateTime',
+        sorter: (a, b) => (a.updateTime - b.updateTime > 0 ? 1 : -1),
+        render: (value) => {
+            return dateFns.format(new Date(value), 'yyyy-MM-dd');
+        },
+    },
+];
+
 export default function TableDemo() {
-    const pageSize = 10;
     const [dataSource, setData] = useState(getData);
     const [pageNum, setPageNum] = useState(1);
     const pageData = useMemo(() => dataSource.slice((pageNum - 1) * pageSize, pageNum * pageSize), [dataSource, pageNum]);
-    const columns = useMemo(
-        (): ColumnProps[] => [
-            {
-                title: '标题',
-                dataIndex: 'name',
-                width: 400,
-                render: (text) => {
-                    return (
-                        <div>
-                            <Avatar size="small" shape="square" src="/assets/placeholder/app.svg" alt="" style={{ marginRight: 12 }} />
-                            {text}
-                        </div>
-                    );
-                },
-                filters: [
-                    {
-                        text: 'Semi Design 设计稿',
-                        value: 'Semi Design 设计稿',
-                    },
-                    {
-                        text: 'Semi D2C 设计稿',
-                        value: 'Semi D2C 设计稿',
-                    },
-                ],
-                onFilter: (value, record) => record.name.includes(value),
-            },
-            {
-                title: '大小',
-                dataIndex: 'size',
-                sorter: (a, b) => (a.size - b.size > 0 ? 1 : -1),
-                render: (text) => `${text} KB`,
-            },
-            {
-                title: '所有者',
-                dataIndex: 'owner',
-                render: (text, record) => {
-                    return (
-                        <div>
-                            <Avatar size="small" color={record.avatarBg} style={{ marginRight: 4 }}>
-                                {typeof text === 'string' && text.slice(0, 1)}
-                            </Avatar>
-                            {text}
-                        </div>
-                    );
-                },
-            },
-            {
-                title: '更新日期',
-                dataIndex: 'updateTime',
-                sorter: (a, b) => (a.updateTime - b.updateTime > 0 ? 1 : -1),
-                render: (value) => {
-                    return dateFns.format(new Date(value), 'yyyy-MM-dd');
-                },
-            },
-        ],
-        []
-    );
-
     // Sortable indexes are relative to the current page
     const handleDragEnd: ComponentProps<typeof DragDropProvider>['onDragEnd'] = (event) => {
         const { source } = event.operation;

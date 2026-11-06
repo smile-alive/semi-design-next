@@ -16,7 +16,7 @@
     <div>
         <h4>不同背景色的触发器</h4>
         <Select v-model="valList" aria-label="不同背景色的触发器" filter multiple :optionList="list" searchPosition="dropdown" :style="{ width: '240px' }">
-            <template #trigger="{ value }">
+            <template #trigger="selectState">
                 <div
                     :style="{
                         minWidth: '112px',
@@ -39,7 +39,7 @@
                             overflow: 'hidden',
                         }"
                     >
-                        {{ value.map((item) => item.label).join(' , ') }}
+                        {{ selectState.value.map((item) => item.label).join(' , ') }}
                     </div>
                     <IconAppCenter :style="{ marginRight: '8px', flexShrink: 0 }" />
                 </div>
@@ -49,7 +49,7 @@
         <br />
         <h4>使用 circle Tag 作为触发器</h4>
         <Select v-model="valList" aria-label="circle Tag 触发器" filter multiple :optionList="list" searchPosition="dropdown" :style="{ width: '240px', marginTop: '20px', outline: 0 }">
-            <template #trigger="{ value }">
+            <template #trigger="selectState">
                 <div
                     :style="{
                         margin: '4px',
@@ -62,7 +62,7 @@
                     }"
                 >
                     <Tag color="cyan" shape="circle" size="large">
-                        {{ value.map((item) => item.label).join(' / ') }}
+                        {{ selectState.value.map((item) => item.label).join(' / ') }}
                         <template #suffixIcon>
                             <IconChevronDown />
                         </template>

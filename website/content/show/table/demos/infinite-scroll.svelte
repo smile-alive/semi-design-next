@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { format } from 'date-fns';
+    import * as dateFns from 'date-fns';
     import { Avatar, Table, type ColumnProps, type TableVirtualizedProps, type TableVirtualizedScrollArgs } from '@fibrae/semi-ui-svelte';
 
     const DAY = 24 * 60 * 60 * 1000;
@@ -90,22 +90,22 @@
 </script>
 
 <Table {columns} dataSource={data} {onScroll} pagination={false} {scroll} {style} {virtualized}>
-    {#snippet cell({ column, text, record })}
-        {#if column.dataIndex === 'name'}
-            <div>{text}</div>
-        {:else if column.dataIndex === 'size'}
-            {text} KB
-        {:else if column.dataIndex === 'owner'}
+    {#snippet cell(cellProps)}
+        {#if cellProps.column.dataIndex === 'name'}
+            <div>{cellProps.text}</div>
+        {:else if cellProps.column.dataIndex === 'size'}
+            {cellProps.text} KB
+        {:else if cellProps.column.dataIndex === 'owner'}
             <div>
-                <Avatar color={record.avatarBg} size="small" style="margin-right: 4px">
-                    {typeof text === 'string' && text.slice(0, 1)}
+                <Avatar color={cellProps.record.avatarBg} size="small" style="margin-inline-end: 4px">
+                    {typeof cellProps.text === 'string' && cellProps.text.slice(0, 1)}
                 </Avatar>
-                {text}
+                {cellProps.text}
             </div>
-        {:else if column.dataIndex === 'updateTime'}
-            {format(new Date(text), 'yyyy-MM-dd')}
+        {:else if cellProps.column.dataIndex === 'updateTime'}
+            {dateFns.format(new Date(cellProps.text), 'yyyy-MM-dd')}
         {:else}
-            {text}
+            {cellProps.text}
         {/if}
     {/snippet}
 </Table>

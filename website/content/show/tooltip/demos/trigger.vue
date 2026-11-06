@@ -8,22 +8,22 @@
 <template>
     <div>
         <Tooltip>
-            <Button :style="{ marginBottom: '20px' }" theme="solid" type="tertiary">悬停显示</Button>
+            <Button :style="{ marginBlockEnd: '20px' }" theme="solid" type="tertiary">悬停显示</Button>
             <template #content>hi bytedance</template>
         </Tooltip>
         <br />
         <Tooltip trigger="click">
-            <Button :style="{ marginBottom: '20px' }">点击显示</Button>
+            <Button :style="{ marginBlockEnd: '20px' }">点击显示</Button>
             <template #content>hi bytedance</template>
         </Tooltip>
         <br />
         <Tooltip trigger="focus">
-            <Input aria-label="聚焦显示" placeholder="聚焦显示" :style="{ width: '100px', marginBottom: '20px' }" />
+            <Input aria-label="聚焦显示" placeholder="聚焦显示" :style="{ width: '100px', marginBlockEnd: '20px' }" />
             <template #content>hi bytedance</template>
         </Tooltip>
         <br />
         <Tooltip trigger="contextMenu">
-            <Button :style="{ marginBottom: '20px' }" theme="solid" type="secondary">右键点击展示</Button>
+            <Button :style="{ marginBlockEnd: '20px' }" theme="solid" type="secondary">右键点击展示</Button>
             <template #content>hi bytedance</template>
         </Tooltip>
         <br />

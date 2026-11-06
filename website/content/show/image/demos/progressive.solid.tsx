@@ -12,7 +12,7 @@ export default function ImageDemo() {
                 onClick={() => {
                     setTimestamp(String(Date.now()));
                 }}
-                style={{ 'margin-top': '10px' }}
+                style={{ 'margin-block-start': '10px' }}
             >
                 Reload
             </Button>

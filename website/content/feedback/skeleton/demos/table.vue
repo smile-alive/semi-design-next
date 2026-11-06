@@ -59,7 +59,7 @@
                         <Skeleton.Paragraph :rows="1" :style="{ width: `${50 * Number(column.dataIndex)}px` }" />
                     </template>
                 </Table>
-                <div :style="{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }" />
+                <div :style="{ position: 'absolute', inset: 0 }" />
             </div>
         </template>
         <div>

@@ -45,7 +45,7 @@ const commonHintStyle: CSSProperties = {
     padding: '10px',
     borderRadius: '10px',
     background: 'none',
-    color: 'var( --semi-color-text-1)',
+    color: 'var(--semi-color-text-1)',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -81,11 +81,11 @@ export default function ChatDemo() {
         setMessage(chats);
     }, []);
 
-    const renderHintBox = useCallback<NonNullable<ChatProps['renderHintBox']>>(({ content, onHintClick, index }) => {
+    const renderHintBox = useCallback<NonNullable<ChatProps['renderHintBox']>>((props) => {
         return (
-            <button type="button" style={commonHintStyle} onClick={onHintClick} key={index}>
-                {content}
-                <IconArrowRight style={{ marginLeft: 10 }} />
+            <button type="button" style={commonHintStyle} onClick={props.onHintClick} key={props.index}>
+                {props.content}
+                <IconArrowRight style={{ marginInlineStart: 10 }} />
             </button>
         );
     }, []);

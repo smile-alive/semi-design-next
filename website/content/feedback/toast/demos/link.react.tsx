@@ -1,35 +1,33 @@
 import { Toast, Typography, Button } from '@fibrae/semi-ui-react';
 
+const opts = {
+    content: (
+        <span>
+            <Typography.Text>Hi, Bytedance dance dance</Typography.Text>
+            <Typography.Text link style={{ marginInlineStart: 12 }}>
+                更多
+            </Typography.Text>
+        </span>
+    ),
+    duration: 3,
+};
+
+const multiLineOpts = {
+    content: (
+        <>
+            <div>Hi, Bytedance dance dance</div>
+            <div style={{ marginBlockStart: 8 }}>
+                <Typography.Text link>查看详情</Typography.Text>
+                <Typography.Text link style={{ marginInlineStart: 20 }}>
+                    一会再看
+                </Typography.Text>
+            </div>
+        </>
+    ),
+    duration: 3,
+};
+
 export default function ToastDemo() {
-    const { Text } = Typography;
-
-    let opts = {
-        content: (
-            <span>
-                <Text>Hi, Bytedance dance dance</Text>
-                <Text link style={{ marginLeft: 12 }}>
-                    更多
-                </Text>
-            </span>
-        ),
-        duration: 3,
-    };
-
-    let multiLineOpts = {
-        content: (
-            <>
-                <div>Hi, Bytedance dance dance</div>
-                <div style={{ marginTop: 8 }}>
-                    <Text link>查看详情</Text>
-                    <Text link style={{ marginLeft: 20 }}>
-                        一会再看
-                    </Text>
-                </div>
-            </>
-        ),
-        duration: 3,
-    };
-
     return (
         <>
             <Button onClick={() => Toast.info(opts)}>Display Toast</Button>

@@ -23,15 +23,15 @@
 <template>
     <LocaleProvider v-for="locale in locales" :key="`semi-${locale.code}`" :locale="locale">
         <LocaleConsumer componentName="TimePicker">
-            <template #default="{ locale: timePicker, localeCode }">
-                <div>{{ localeCode }} : {{ timePicker.begin }}</div>
+            <template #default="consumer">
+                <div>{{ consumer.localeCode }} : {{ consumer.locale.begin }}</div>
             </template>
         </LocaleConsumer>
     </LocaleProvider>
     <LocaleProvider v-for="locale in locales" :key="`custom-${locale.code}`" :locale="locale">
         <LocaleConsumer componentName="ComponentA">
-            <template #default="{ locale: componentA }">
-                <div>{{ componentA.customKey }}</div>
+            <template #default="consumer">
+                <div>{{ consumer.locale.customKey }}</div>
             </template>
         </LocaleConsumer>
     </LocaleProvider>

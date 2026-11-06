@@ -8,6 +8,12 @@
         { title: 'Last', content: 'Last-content' },
     ];
     const current = ref(0);
+    const next = () => {
+        current.value += 1;
+    };
+    const prev = () => {
+        current.value -= 1;
+    };
     const log = (i: number) => console.log(i);
     const done = () => console.log('Processing complete!');
 </script>
@@ -19,13 +25,13 @@
                 <template #title>{{ item.title }}</template>
             </Steps.Step>
         </Steps>
-        <div class="steps-content" :style="{ marginTop: '4px', marginBottom: '4px' }">
+        <div class="steps-content" :style="{ marginBlockStart: '4px', marginBlockEnd: '4px' }">
             {{ steps[current].content }}
         </div>
         <div class="steps-action">
-            <Button v-if="current < steps.length - 1" type="primary" @click="current += 1">Next</Button>
+            <Button v-if="current < steps.length - 1" type="primary" @click="next">Next</Button>
             <Button v-if="current === steps.length - 1" type="primary" @click="done">Done</Button>
-            <Button v-if="current > 0" :style="{ marginLeft: '8px' }" @click="current -= 1">Previous</Button>
+            <Button v-if="current > 0" :style="{ marginInlineStart: '8px' }" @click="prev">Previous</Button>
         </div>
     </div>
 </template>

@@ -9,5 +9,5 @@
     {#snippet moreTrigger()}
         <Button type="tertiary">Click to show More</Button>
     {/snippet}
-    {#snippet panel({ index })}Content of card tab {index}{/snippet}
+    {#snippet panel(pane)}Content of card tab {pane.index}{/snippet}
 </Tabs>

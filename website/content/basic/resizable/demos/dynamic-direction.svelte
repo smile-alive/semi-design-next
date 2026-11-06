@@ -1,10 +1,11 @@
 <script lang="ts">
     import { Button, ResizeGroup, ResizeHandler, ResizeItem } from '@fibrae/semi-ui-svelte';
 
+    const itemStyle = 'background-color: var(--semi-grey-1)';
+    const contentStyle = 'margin-inline-start: 20%; padding: 5px';
+
     let text = $state('drag to resize');
     let direction = $state<'horizontal' | 'vertical'>('horizontal');
-    const itemStyle = 'background-color: var(--semi-grey-1)';
-    const contentStyle = 'margin-left: 20%; padding: 5px';
 
     const changeDirection = () => {
         direction = direction === 'horizontal' ? 'vertical' : 'horizontal';

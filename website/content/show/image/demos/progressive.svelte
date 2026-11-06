@@ -10,4 +10,4 @@
     {/snippet}
 </Image>
 <br />
-<Button style="margin-top: 10px" theme="solid" onclick={() => (timestamp = String(Date.now()))}>Reload</Button>
+<Button style="margin-block-start: 10px" theme="solid" onclick={() => (timestamp = String(Date.now()))}>Reload</Button>

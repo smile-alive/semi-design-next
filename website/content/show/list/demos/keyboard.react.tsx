@@ -4,11 +4,11 @@ import { List } from '@fibrae/semi-ui-react';
 const list = ['围城', '平凡的世界（全三册）', '三体（全集）', '雪中悍刀行（全集）', '撒哈拉的故事', '明朝那些事', '一禅小和尚', '沙丘', '被讨厌的勇气', '罪与罚'];
 
 export default function ListDemo() {
-    const [hoverIndex, setHi] = useState(-1);
+    const [hoverIndex, setHoverIndex] = useState(-1);
 
     useEffect(() => {
-        let changeIndex = (offset: number) => {
-            setHi((currentIndex) => {
+        const changeIndex = (offset: number) => {
+            setHoverIndex((currentIndex) => {
                 let index = currentIndex + offset;
                 if (index < 0) {
                     index = list.length - 1;
@@ -19,7 +19,7 @@ export default function ListDemo() {
                 return index;
             });
         };
-        let keydownHandler = (event: KeyboardEvent) => {
+        const keydownHandler = (event: KeyboardEvent) => {
             switch (event.key) {
                 case 'ArrowUp':
                     event.preventDefault();
@@ -43,7 +43,7 @@ export default function ListDemo() {
         <div>
             <div
                 style={{
-                    marginRight: 16,
+                    marginInlineEnd: 16,
                     width: 280,
                     display: 'flex',
                     flexWrap: 'wrap',

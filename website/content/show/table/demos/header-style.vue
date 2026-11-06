@@ -78,18 +78,18 @@
 
 <template>
     <Table :columns="columns" :dataSource="data" :pagination="false">
-        <template #cell="{ column, text, record }">
-            <div v-if="column.dataIndex === 'name'">
-                <Avatar alt="" shape="square" size="small" :src="record.nameIconSrc" :style="{ marginRight: '12px' }" />
-                {{ text }}
+        <template #cell="cellProps">
+            <div v-if="cellProps.column.dataIndex === 'name'">
+                <Avatar alt="" shape="square" size="small" :src="cellProps.record.nameIconSrc" :style="{ marginInlineEnd: '12px' }" />
+                {{ cellProps.text }}
             </div>
-            <div v-else-if="column.dataIndex === 'owner'">
-                <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
-                    {{ typeof text === 'string' && text.slice(0, 1) }}
+            <div v-else-if="cellProps.column.dataIndex === 'owner'">
+                <Avatar :color="cellProps.record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
+                    {{ typeof cellProps.text === 'string' && cellProps.text.slice(0, 1) }}
                 </Avatar>
-                {{ text }}
+                {{ cellProps.text }}
             </div>
-            <IconMore v-else-if="column.dataIndex === 'operate'" />
+            <IconMore v-else-if="cellProps.column.dataIndex === 'operate'" />
         </template>
     </Table>
 </template>

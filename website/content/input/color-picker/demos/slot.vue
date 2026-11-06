@@ -1,13 +1,9 @@
 <script setup lang="ts">
-    import { ColorPicker, type ColorValue } from '@fibrae/semi-ui-vue';
-
-    const onChange = (value: ColorValue) => {
-        console.log(value);
-    };
+    import { ColorPicker } from '@fibrae/semi-ui-vue';
 </script>
 
 <template>
-    <ColorPicker alpha @change="onChange">
+    <ColorPicker alpha @change="(value) => console.log(value)">
         <template #topSlot>
             <div>TopSlot</div>
         </template>

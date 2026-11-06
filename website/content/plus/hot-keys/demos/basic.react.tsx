@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { HotKeys, Modal } from '@fibrae/semi-ui-react';
 
+const hotKeys = [HotKeys.Keys.Control, 'Shift', HotKeys.Keys.A];
+
 export default function HotKeysDemo() {
     const [visible, setVisible] = useState(false);
     const showDialog = () => {
@@ -12,7 +14,6 @@ export default function HotKeysDemo() {
     const handleCancel = () => {
         setVisible(false);
     };
-    const hotKeys = [HotKeys.Keys.Control, 'Shift', HotKeys.Keys.A];
 
     return (
         <div>

@@ -14,8 +14,6 @@ import {
 import { IconFeishuLogo, IconBookOpenStroked, IconGit, IconFigma, IconWord, IconClose, IconTemplateStroked, IconSearch, type IconProps } from '@fibrae/semi-icons-solid';
 import { Typography, Button } from '@fibrae/semi-ui-solid';
 
-const { Configure } = AIChatInput;
-
 type SideBarContent = { type?: undefined; value?: undefined } | { type: 'annotation'; value: AnnotationItemProps[] } | { type: 'resource'; value: { name: string } };
 
 function simpleIsEqual(a: unknown, b: unknown) {
@@ -86,12 +84,12 @@ export default function AIComponentDemo() {
     // Called for each input: the edit input renders this configure area beside the main input.
     const renderLeftMenu = () => (
         <>
-            <Configure.Select optionList={modelOptions} field="model" initValue="GPT-4o" />
-            <Configure.Button icon={<IconBookOpenStroked />} field="onlineSearch">
+            <AIChatInput.Configure.Select optionList={modelOptions} field="model" initValue="GPT-4o" />
+            <AIChatInput.Configure.Button icon={<IconBookOpenStroked />} field="onlineSearch">
                 联网搜索
-            </Configure.Button>
-            <Configure.Mcp options={mcpOptions} renderOptionIcon={(option) => <Dynamic component={mcpIcons[option.value]} />} />
-            <Configure.RadioButton options={radioButtonProps} renderLabel={(option) => <Dynamic component={radioIcons[String(option.value)]} aria-label={String(option.label)} />} field="thinkType" initValue="think" />
+            </AIChatInput.Configure.Button>
+            <AIChatInput.Configure.Mcp options={mcpOptions} renderOptionIcon={(option) => <Dynamic component={mcpIcons[option.value]} />} />
+            <AIChatInput.Configure.RadioButton options={radioButtonProps} renderLabel={(option) => <Dynamic component={radioIcons[String(option.value)]} aria-label={String(option.label)} />} field="thinkType" initValue="think" />
         </>
     );
 

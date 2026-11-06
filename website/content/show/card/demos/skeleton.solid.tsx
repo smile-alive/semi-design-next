@@ -1,15 +1,12 @@
 import { createSignal } from 'solid-js';
 import { Avatar, Card, Skeleton, Switch, Typography } from '@fibrae/semi-ui-solid';
 
-const avatarSrc = '/assets/placeholder/logo.svg';
-const coverSrc = '/assets/root-web-sites/card-cover-docs-demo.jpeg';
-
 export default function CardDemo() {
     const [loading, setLoading] = createSignal(true);
 
     return (
         <>
-            <Switch aria-label="显示内容" onChange={(checked) => setLoading(!checked)} />
+            <Switch aria-label="显示内容" onChange={(v) => setLoading(!v)} />
             <br />
             <br />
             <Card
@@ -28,7 +25,7 @@ export default function CardDemo() {
                         }
                         avatar={
                             <Skeleton placeholder={<Skeleton.Avatar />} loading={loading()}>
-                                <Avatar alt="Card meta img" size="default" src={avatarSrc} />
+                                <Avatar alt="Card meta img" size="default" src="/assets/placeholder/logo.svg" />
                             </Skeleton>
                         }
                     />
@@ -40,7 +37,7 @@ export default function CardDemo() {
                 }
                 cover={
                     <Skeleton style={{ 'max-width': '100%', height: '220px' }} placeholder={<Skeleton.Image />} loading={loading()}>
-                        <img alt="example" src={coverSrc} />
+                        <img alt="example" src="/assets/root-web-sites/card-cover-docs-demo.jpeg" />
                     </Skeleton>
                 }
             />

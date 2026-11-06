@@ -65,9 +65,9 @@
 
 <template>
     <Chat v-model:chats="message" :roleConfig="roleInfo" :style="commonOuterStyle" :uploadProps="uploadProps" @messageSend="onMessageSend">
-        <template #action="{ defaultActions, class: actionClass }">
-            <span :class="actionClass">
-                <component :is="action" v-for="(action, index) in defaultActions" :key="index" />
+        <template #action="props">
+            <span :class="props.class">
+                <component :is="action" v-for="(action, index) in props.defaultActions" :key="index" />
                 <Dropdown position="top" trigger="click">
                     <Button aria-label="更多" class="semi-chat-chatBox-action-btn" theme="borderless" type="tertiary">
                         <template #icon>

@@ -26,17 +26,10 @@
         filters: ColumnProps[];
     }
 
-    interface SwitchItem {
-        text: string;
-        /** Absent: the switch keeps its own state */
-        checked?: () => boolean;
-        onChange: (checked: boolean) => void;
-    }
-
     const DAY = 24 * 60 * 60 * 1000;
     const figmaIconUrl = '/assets/placeholder/app.svg';
     const dataTotalSize = 46;
-    const wrapStyle = { marginBottom: '15px', display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' } as const;
+    const wrapStyle = { marginBlockEnd: '15px', display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap' } as const;
     const switchStyle = { display: 'inline-flex', alignItems: 'center', margin: '5px' };
 
     const initialColumns: ColumnProps[] = [
@@ -318,71 +311,68 @@
         pagination.value = position ? { ...defaultPagination, ...pagination.value, position } : false;
     };
 
-    const switches: SwitchItem[] = [
-        { text: '固定表头：', checked: () => !!scroll.value.y, onChange: toggleFixHeader },
-        {
-            text: '隐藏表头：',
-            onChange: (checked) => {
-                showHeader.value = !checked;
-            },
-        },
-        {
-            text: '显示标题：',
-            onChange: (checked) => {
-                showTitle.value = checked;
-            },
-        },
-        {
-            text: '显示底部：',
-            onChange: (checked) => {
-                showFooter.value = checked;
-            },
-        },
-        { text: '固定列：', onChange: toggleFixColumns },
-        { text: '显示选择列：', onChange: toggleRowSelection },
-        {
-            text: '显示加载状态：',
-            checked: () => loading.value,
-            onChange: (checked) => {
-                loading.value = checked;
-            },
-        },
-        { text: '无数据：', checked: () => !dataSource.value.length, onChange: toggleDataSource },
-        {
-            text: '开启排序功能：',
-            checked: () => columns.value.some((column) => column.sorter),
-            onChange: toggleShowSorter,
-        },
-        {
-            text: '开启过滤功能：',
-            checked: () => columns.value.some((column) => column.filters),
-            onChange: toggleShowFilter,
-        },
-        {
-            text: '开启行展开功能：',
-            checked: () => expandable.value,
-            onChange: (checked) => {
-                expandable.value = checked;
-            },
-        },
-        { text: '展开当前所有行：', onChange: toggleExpandedRowKeys },
-        {
-            text: '显示边框：',
-            checked: () => bordered.value,
-            onChange: (checked) => {
-                bordered.value = checked;
-            },
-        },
-        { text: '开启列伸缩功能：', onChange: toggleResizable },
-    ];
+    const hasSorter = computed(() => columns.value.some((column) => column.sorter));
+    const hasFilters = computed(() => columns.value.some((column) => column.filters));
 </script>
 
 <template>
     <div>
         <div :style="wrapStyle">
-            <span v-for="item in switches" :key="item.text" :style="switchStyle">
-                <span>{{ item.text }}</span>
-                <Switch :aria-label="item.text" :modelValue="item.checked?.()" size="small" @change="item.onChange" />
+            <span :style="switchStyle">
+                <span>固定表头：</span>
+                <Switch aria-label="固定表头：" :modelValue="!!scroll.y" size="small" @change="toggleFixHeader" />
+            </span>
+            <span :style="switchStyle">
+                <span>隐藏表头：</span>
+                <Switch aria-label="隐藏表头：" size="small" @change="showHeader = !$event" />
+            </span>
+            <span :style="switchStyle">
+                <span>显示标题：</span>
+                <Switch aria-label="显示标题：" size="small" @change="showTitle = $event" />
+            </span>
+            <span :style="switchStyle">
+                <span>显示底部：</span>
+                <Switch aria-label="显示底部：" size="small" @change="showFooter = $event" />
+            </span>
+            <span :style="switchStyle">
+                <span>固定列：</span>
+                <Switch aria-label="固定列：" size="small" @change="toggleFixColumns" />
+            </span>
+            <span :style="switchStyle">
+                <span>显示选择列：</span>
+                <Switch aria-label="显示选择列：" size="small" @change="toggleRowSelection" />
+            </span>
+            <span :style="switchStyle">
+                <span>显示加载状态：</span>
+                <Switch aria-label="显示加载状态：" :modelValue="loading" size="small" @change="loading = $event" />
+            </span>
+            <span :style="switchStyle">
+                <span>无数据：</span>
+                <Switch aria-label="无数据：" :modelValue="!dataSource.length" size="small" @change="toggleDataSource" />
+            </span>
+            <span :style="switchStyle">
+                <span>开启排序功能：</span>
+                <Switch aria-label="开启排序功能：" :modelValue="hasSorter" size="small" @change="toggleShowSorter" />
+            </span>
+            <span :style="switchStyle">
+                <span>开启过滤功能：</span>
+                <Switch aria-label="开启过滤功能：" :modelValue="hasFilters" size="small" @change="toggleShowFilter" />
+            </span>
+            <span :style="switchStyle">
+                <span>开启行展开功能：</span>
+                <Switch aria-label="开启行展开功能：" :modelValue="expandable" size="small" @change="expandable = $event" />
+            </span>
+            <span :style="switchStyle">
+                <span>展开当前所有行：</span>
+                <Switch aria-label="展开当前所有行：" size="small" @change="toggleExpandedRowKeys" />
+            </span>
+            <span :style="switchStyle">
+                <span>显示边框：</span>
+                <Switch aria-label="显示边框：" :modelValue="bordered" size="small" @change="bordered = $event" />
+            </span>
+            <span :style="switchStyle">
+                <span>开启列伸缩功能：</span>
+                <Switch aria-label="开启列伸缩功能：" size="small" @change="toggleResizable" />
             </span>
             <span :style="switchStyle">
                 <span>分页控件：</span>
@@ -411,12 +401,12 @@
         >
             <template #cell="{ column, record, text }">
                 <span v-if="column.dataIndex === 'name'">
-                    <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginRight: '12px' }" />
+                    <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginInlineEnd: '12px' }" />
                     {{ text }}
                 </span>
                 <template v-else-if="column.dataIndex === 'size'">{{ text }} KB</template>
                 <div v-else-if="column.dataIndex === 'owner'">
-                    <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
+                    <Avatar :color="record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
                         {{ typeof text === 'string' && text.slice(0, 1) }}
                     </Avatar>
                     {{ text }}

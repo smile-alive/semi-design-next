@@ -2,12 +2,11 @@ import { createSignal, For } from 'solid-js';
 import { ConfigProvider, Select, TimePicker } from '@fibrae/semi-ui-solid';
 
 const defaultTimestamp = 1581599305265;
-
-const gmtList = Array.from({ length: 26 }, (_, i) => {
-    const hourOffset = i - 11;
+const gmtList: string[] = [];
+for (let hourOffset = -11; hourOffset <= 14; hourOffset++) {
     const prefix = hourOffset >= 0 ? '+' : '-';
-    return `GMT${prefix}${String(Math.abs(hourOffset)).padStart(2, '0')}:00`;
-});
+    gmtList.push(`GMT${prefix}${String(Math.abs(hourOffset)).padStart(2, '0')}:00`);
+}
 
 export default function TimePickerDemo() {
     const [timeZone, setTimeZone] = createSignal('GMT+08:00');

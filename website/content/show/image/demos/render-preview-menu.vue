@@ -7,7 +7,7 @@
 
 <template>
     <ImagePreview>
-        <template #previewMenu="{ ratio, disabledPrev, disabledNext, disabledZoomIn, disabledZoomOut, disableDownload, onDownload, onNext, onPrev, onRotateLeft, onRatioClick, onZoomIn, onZoomOut }">
+        <template #previewMenu="menu">
             <div
                 :style="{
                     background: 'grey',
@@ -19,44 +19,44 @@
                     borderRadius: '3px',
                 }"
             >
-                <Button aria-label="上一张" :disabled="disabledPrev" type="tertiary" @click="onPrev">
+                <Button aria-label="上一张" :disabled="menu.disabledPrev" type="tertiary" @click="menu.onPrev">
                     <template #icon>
                         <IconChevronLeft size="large" />
                     </template>
                 </Button>
-                <Button aria-label="下一张" :disabled="disabledNext" type="tertiary" @click="onNext">
+                <Button aria-label="下一张" :disabled="menu.disabledNext" type="tertiary" @click="menu.onNext">
                     <template #icon>
                         <IconChevronRight size="large" />
                     </template>
                 </Button>
-                <Button aria-label="缩小" :disabled="disabledZoomOut" type="tertiary" @click="onZoomOut">
+                <Button aria-label="缩小" :disabled="menu.disabledZoomOut" type="tertiary" @click="menu.onZoomOut">
                     <template #icon>
                         <IconMinus size="large" />
                     </template>
                 </Button>
-                <Button aria-label="放大" :disabled="disabledZoomIn" type="tertiary" @click="onZoomIn">
+                <Button aria-label="放大" :disabled="menu.disabledZoomIn" type="tertiary" @click="menu.onZoomIn">
                     <template #icon>
                         <IconPlus size="large" />
                     </template>
                 </Button>
-                <Button :aria-label="ratio === 'adaptation' ? '原始尺寸' : '适应页面'" type="tertiary" @click="onRatioClick">
+                <Button :aria-label="menu.ratio === 'adaptation' ? '原始尺寸' : '适应页面'" type="tertiary" @click="menu.onRatioClick">
                     <template #icon>
-                        <IconRealSizeStroked v-if="ratio === 'adaptation'" size="large" />
+                        <IconRealSizeStroked v-if="menu.ratio === 'adaptation'" size="large" />
                         <IconWindowAdaptionStroked v-else size="large" />
                     </template>
                 </Button>
-                <Button aria-label="旋转" type="tertiary" @click="onRotateLeft">
+                <Button aria-label="旋转" type="tertiary" @click="menu.onRotateLeft">
                     <template #icon>
                         <IconRotate size="large" />
                     </template>
                 </Button>
-                <Button aria-label="下载" :disabled="disableDownload" type="tertiary" @click="onDownload">
+                <Button aria-label="下载" :disabled="menu.disableDownload" type="tertiary" @click="menu.onDownload">
                     <template #icon>
                         <IconDownload size="large" />
                     </template>
                 </Button>
             </div>
         </template>
-        <Image v-for="(src, index) in srcList" :key="src" :alt="`lamp${index + 1}`" :src="src" :style="{ marginRight: '5px' }" :width="200" />
+        <Image v-for="(src, index) in srcList" :key="src" :alt="`lamp${index + 1}`" :src="src" :style="{ marginInlineEnd: '5px' }" :width="200" />
     </ImagePreview>
 </template>

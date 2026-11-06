@@ -7,28 +7,30 @@ interface Item {
     key: string;
 }
 
+const items: Item[] = [
+    { icon: <IconAlarm style={{ marginInlineEnd: 4 }} />, key: 'alarm' },
+    { icon: <IconBookmark style={{ marginInlineEnd: 4 }} />, key: 'bookmark' },
+    { icon: <IconCamera style={{ marginInlineEnd: 4 }} />, key: 'camera' },
+    { icon: <IconDuration style={{ marginInlineEnd: 4 }} />, key: 'duration' },
+    { icon: <IconEdit style={{ marginInlineEnd: 4 }} />, key: 'edit' },
+    { icon: <IconFolder style={{ marginInlineEnd: 4 }} />, key: 'folder' },
+];
+
+const renderOverflow = (overflowItems: Item[]) => {
+    return overflowItems.length ? <Tag style={{ flex: '0 0 auto', fontVariantNumeric: 'tabular-nums' }}>+{overflowItems.length}</Tag> : null;
+};
+
+const renderItem = (item: Item) => {
+    return (
+        <Tag color="blue" key={item.key} style={{ marginInlineEnd: 8, flex: '0 0 auto' }}>
+            {item.icon}
+            {item.key}
+        </Tag>
+    );
+};
+
 export default function OverflowListDemo() {
     const [width, setWidth] = useState(100);
-    const renderOverflow = (items: Item[]) => {
-        return items.length ? <Tag style={{ flex: '0 0 auto', fontVariantNumeric: 'tabular-nums' }}>+{items.length}</Tag> : null;
-    };
-    const renderItem = (item: Item) => {
-        return (
-            <Tag color="blue" key={item.key} style={{ marginRight: 8, flex: '0 0 auto' }}>
-                {item.icon}
-                {item.key}
-            </Tag>
-        );
-    };
-
-    const items: Item[] = [
-        { icon: <IconAlarm style={{ marginRight: 4 }} />, key: 'alarm' },
-        { icon: <IconBookmark style={{ marginRight: 4 }} />, key: 'bookmark' },
-        { icon: <IconCamera style={{ marginRight: 4 }} />, key: 'camera' },
-        { icon: <IconDuration style={{ marginRight: 4 }} />, key: 'duration' },
-        { icon: <IconEdit style={{ marginRight: 4 }} />, key: 'edit' },
-        { icon: <IconFolder style={{ marginRight: 4 }} />, key: 'folder' },
-    ];
 
     return (
         <div>

@@ -3,6 +3,9 @@
     import { IconCamera } from '@fibrae/semi-icons-vue';
     import { Avatar, Toast, Upload } from '@fibrae/semi-ui-vue';
 
+    const api = 'https://api.semi.design/upload';
+    const imageOnly = 'image/*';
+
     const url = ref('/assets/placeholder/avatar-a.svg');
 
     const onSuccess = () => {
@@ -22,7 +25,7 @@
 </script>
 
 <template>
-    <Upload accept="image/*" action="https://api.semi.design/upload" class="avatar-upload" :showUploadList="false" @error="Toast.error('上传失败')" @success="onSuccess">
+    <Upload :accept="imageOnly" :action="api" class="avatar-upload" :showUploadList="false" @error="Toast.error('上传失败')" @success="onSuccess">
         <!-- the avatar is the whole content of the upload button, so its alt names the button -->
         <Avatar alt="上传头像" :src="url" :style="{ margin: '4px' }">
             <template #hoverMask>

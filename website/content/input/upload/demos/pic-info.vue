@@ -2,10 +2,23 @@
     import { IconPlus } from '@fibrae/semi-icons-vue';
     import { Upload, type FileItem } from '@fibrae/semi-ui-vue';
 
-    const url = '/assets/placeholder/avatar-b.svg';
     const defaultFileList: FileItem[] = [
-        { uid: '1', name: 'music.png', status: 'success', size: '130KB', preview: true, url },
-        { uid: '2', name: 'brand.png', status: 'success', size: '130KB', preview: true, url },
+        {
+            uid: '1',
+            name: 'music.png',
+            status: 'success',
+            size: '130KB',
+            preview: true,
+            url: '/assets/placeholder/avatar-b.svg',
+        },
+        {
+            uid: '2',
+            name: 'brand.png',
+            status: 'success',
+            size: '130KB',
+            preview: true,
+            url: '/assets/placeholder/avatar-b.svg',
+        },
     ];
 </script>
 

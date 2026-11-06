@@ -8,7 +8,6 @@
     const onOpenChange = (value: boolean) => {
         console.log(value);
     };
-    const logFooter = (text: string) => console.log(text);
 </script>
 
 <div>
@@ -24,9 +23,9 @@
         {#snippet panelHeader({ index })}{index === 0 ? 'start header' : 'end header'}{/snippet}
         {#snippet panelFooter({ index })}
             {#if index === 0}
-                <Button onclick={() => logFooter('start footer')}>start footer</Button>
+                <Button onclick={() => console.log('start footer')}>start footer</Button>
             {:else}
-                <Button onclick={() => logFooter('end footer')}>end footer</Button>
+                <Button onclick={() => console.log('end footer')}>end footer</Button>
             {/if}
         {/snippet}
     </TimePicker>

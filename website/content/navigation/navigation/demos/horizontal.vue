@@ -19,9 +19,9 @@
 
 <template>
     <div :style="{ width: '100%' }">
-        <Nav :items="items" mode="horizontal" @select="(data) => console.log(data)">
-            <template #icon="{ item }">
-                <component :is="iconOf(item)" />
+        <Nav :items="items" mode="horizontal" @select="(key) => console.log(key)">
+            <template #icon="renderProps">
+                <component :is="iconOf(renderProps.item)" />
             </template>
             <template #footer>
                 <Dropdown position="bottomRight">

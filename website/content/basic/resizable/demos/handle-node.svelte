@@ -4,8 +4,8 @@
 </script>
 
 <div style="width: 500px; height: 60%">
-    <Resizable defaultSize={{ width: '60%', height: 300 }} style="margin-left: 20%; background-color: var(--semi-grey-1); border: var(--semi-color-border) 1px solid">
-        <div style="margin-left: 20%">right</div>
+    <Resizable defaultSize={{ width: '60%', height: 300 }} style="margin-inline-start: 20%; background-color: var(--semi-grey-1); border: var(--semi-color-border) 1px solid">
+        <div style="margin-inline-start: 20%">right</div>
         {#snippet handle({ direction })}
             {#if direction === 'right'}
                 <div style="height: 100%; display: flex; align-items: center; width: fit-content">

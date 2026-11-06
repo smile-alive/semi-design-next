@@ -17,13 +17,13 @@ const items: Item[] = [
     { icon: IconFolder, key: 'folder' },
 ];
 
-const renderHiddenCount = (hiddenItems: Item[]) => <Tag style={{ 'margin-right': '8px', 'margin-left': '8px', flex: '0 0 auto', 'font-variant-numeric': 'tabular-nums' }}>+{hiddenItems.length}</Tag>;
+const renderHiddenCount = (hiddenItems: Item[]) => <Tag style={{ 'margin-inline-end': '8px', 'margin-inline-start': '8px', flex: '0 0 auto', 'font-variant-numeric': 'tabular-nums' }}>+{hiddenItems.length}</Tag>;
 
 const renderOverflow = ([start, end]: [Item[], Item[]]): [JSX.Element, JSX.Element] => [renderHiddenCount(start), renderHiddenCount(end)];
 
 const renderItem = (item: Item) => (
-    <Tag color="blue" style={{ 'margin-right': '8px', flex: '0 0 auto' }}>
-        <Dynamic component={item.icon} style={{ 'margin-right': '4px' }} />
+    <Tag color="blue" style={{ 'margin-inline-end': '8px', flex: '0 0 auto' }}>
+        <Dynamic component={item.icon} style={{ 'margin-inline-end': '4px' }} />
         {item.key}
     </Tag>
 );

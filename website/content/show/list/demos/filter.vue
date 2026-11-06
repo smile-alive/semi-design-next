@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { shallowRef } from 'vue';
     import { IconSearch } from '@fibrae/semi-icons-vue';
-    import { Input, List, ListItem } from '@fibrae/semi-ui-vue';
+    import { Input, List } from '@fibrae/semi-ui-vue';
 
     const data = ['围城', '平凡的世界（全三册）', '三体（全集）', '雪中悍刀行（全集）', '撒哈拉的故事', '明朝那些事', '一禅小和尚', '沙丘', '被讨厌的勇气', '罪与罚'];
 
@@ -16,7 +16,7 @@
     <div>
         <div
             :style="{
-                marginRight: '16px',
+                marginInlineEnd: '16px',
                 width: '280px',
                 display: 'flex',
                 flexWrap: 'wrap',
@@ -31,8 +31,8 @@
                         </template>
                     </Input>
                 </template>
-                <template #item="{ item }">
-                    <ListItem class="list-item">{{ item }}</ListItem>
+                <template #item="row">
+                    <List.Item class="list-item">{{ row.item }}</List.Item>
                 </template>
             </List>
         </div>

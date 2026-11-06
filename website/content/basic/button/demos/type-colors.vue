@@ -10,7 +10,7 @@
 
 <template>
     <article>
-        <strong v-for="[type, label] in types" :key="type" :style="{ color: `var(--semi-color-${type})`, marginRight: '10px' }">
+        <strong v-for="[type, label] in types" :key="type" :style="{ color: `var(--semi-color-${type})`, marginInlineEnd: '10px' }">
             {{ label }}
         </strong>
     </article>

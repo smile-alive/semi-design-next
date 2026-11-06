@@ -36,18 +36,18 @@
 </script>
 
 <Transfer bind:value dataSource={treeData} style="width: 600px" type="treeList">
-    {#snippet sourceHeader({ num, leafOnlyNum, showButton, allChecked, onAllClick })}
+    {#snippet sourceHeader(header)}
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--semi-color-border)">
             <span>
                 <strong>文件总数：</strong>
-                {leafOnlyNum !== undefined ? leafOnlyNum : num} 个文件
-                {#if leafOnlyNum !== undefined}
-                    <span style="color: var(--semi-color-text-2); margin-inline-start: 8px; font-size: 12px"> （总节点数：{num}） </span>
+                {header.leafOnlyNum !== undefined ? header.leafOnlyNum : header.num} 个文件
+                {#if header.leafOnlyNum !== undefined}
+                    <span style="color: var(--semi-color-text-2); margin-inline-start: 8px; font-size: 12px"> （总节点数：{header.num}） </span>
                 {/if}
             </span>
-            {#if showButton}
-                <Button size="small" theme="borderless" type="tertiary" onclick={onAllClick}>
-                    {allChecked ? '取消全选' : '全选'}
+            {#if header.showButton}
+                <Button size="small" theme="borderless" type="tertiary" onclick={header.onAllClick}>
+                    {header.allChecked ? '取消全选' : '全选'}
                 </Button>
             {/if}
         </div>

@@ -82,7 +82,7 @@
     <span style="display: flex; flex-direction: column; row-gap: 8px">
         <span style="display: flex; align-items: center; column-gap: 10px">
             模式
-            <RadioGroup v-model="mode" type="button">
+            <RadioGroup v-model="mode" aria-label="模式" type="button">
                 <Radio value="bubble">气泡</Radio>
                 <Radio value="noBubble">非气泡</Radio>
                 <Radio value="userBubble">用户会话气泡</Radio>
@@ -90,7 +90,7 @@
         </span>
         <span style="display: flex; align-items: center; column-gap: 10px">
             会话布局方式
-            <RadioGroup v-model="align" type="button">
+            <RadioGroup v-model="align" aria-label="会话布局方式" type="button">
                 <Radio value="leftRight">左右分布</Radio>
                 <Radio value="leftAlign">左对齐</Radio>
             </RadioGroup>

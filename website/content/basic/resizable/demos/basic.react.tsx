@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { Resizable, Toast } from '@fibrae/semi-ui-react';
 
+const opts_1 = {
+    content: 'resize start',
+    duration: 1,
+    stack: true,
+};
+const opts_2 = {
+    content: 'resize end',
+    duration: 1,
+    stack: true,
+};
+
 export default function ResizableDemo() {
     const [text, setText] = useState('Drag edge to resize');
-    const opts_1 = {
-        content: 'resize start',
-        duration: 1,
-        stack: true,
-    };
-    const opts_2 = {
-        content: 'resize end',
-        duration: 1,
-        stack: true,
-    };
     return (
         <div style={{ width: '500px' }}>
             <Resizable
@@ -32,7 +33,7 @@ export default function ResizableDemo() {
                     setText('Drag edge to resize');
                 }}
             >
-                <div style={{ marginLeft: '20%' }}>{text}</div>
+                <div style={{ marginInlineStart: '20%' }}>{text}</div>
             </Resizable>
         </div>
     );

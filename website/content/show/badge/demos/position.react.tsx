@@ -1,11 +1,12 @@
 import { Badge, Avatar } from '@fibrae/semi-ui-react';
 
+const style = {
+    width: '42px',
+    height: '42px',
+    borderRadius: '4px',
+};
+
 export default function BadgeDemo() {
-    const style = {
-        width: '42px',
-        height: '42px',
-        borderRadius: '4px',
-    };
     return (
         <div>
             <Badge count="VIP" position="rightTop" type="danger">

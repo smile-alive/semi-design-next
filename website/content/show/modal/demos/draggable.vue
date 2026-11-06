@@ -9,9 +9,9 @@
     <div>
         <Button @click="visible = true">Open Modal</Button>
         <Modal v-model:visible="visible" centered title="可拖拽Modal">
-            <template #modal="{ modal }">
+            <template #modal="modalSlot">
                 <DragMove positionStrategy="relative">
-                    <component :is="modal" />
+                    <component :is="modalSlot.modal" />
                 </DragMove>
             </template>
             <p>This is the content of a basic sidesheet.</p>

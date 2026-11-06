@@ -1,7 +1,7 @@
 import { For } from 'solid-js';
 import { Button, Space } from '@fibrae/semi-ui-solid';
 
-const tenButtons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const tenButtons = Array.from({ length: 10 }, (_, index) => index);
 
 export default function SpaceDemo() {
     return (

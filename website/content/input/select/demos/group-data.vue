@@ -26,7 +26,7 @@
 <template>
     <Select aria-label="地区" filter placeholder="" style="width: 180px">
         <Select.OptGroup v-for="group in data" :key="group.label" :label="group.label">
-            <Select.Option v-for="option in group.children" :key="option.value" :label="option.label" :value="option.value" />
+            <Select.Option v-for="option in group.children" :key="option.value" :value="option.value">{{ option.label }}</Select.Option>
         </Select.OptGroup>
     </Select>
 </template>

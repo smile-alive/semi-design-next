@@ -4,10 +4,10 @@
 
 <template>
     <Tabs defaultActiveKey="1">
-        <template #tabBar="{ tabBarProps, tabBar }">
+        <template #tabBar="bar">
             <div class="tab-bar-box">
-                这是二次封装的Tab Bar，当前ActiveKey：{{ tabBarProps.activeKey }}
-                <component :is="tabBar" />
+                这是二次封装的Tab Bar，当前ActiveKey：{{ bar.tabBarProps.activeKey }}
+                <component :is="bar.tabBar" />
             </div>
         </template>
         <TabPane itemKey="1">

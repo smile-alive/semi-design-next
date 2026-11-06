@@ -60,7 +60,7 @@ export default function ListDemo() {
             <List
                 loadMore={
                     <Show when={!loading() && hasMore() && showLoadMore()}>
-                        <div style={{ 'text-align': 'center', 'margin-top': '12px', height: '32px', 'line-height': '32px' }}>
+                        <div style={{ 'text-align': 'center', 'margin-block-start': '12px', height: '32px', 'line-height': '32px' }}>
                             <Button onClick={onLoadMore}>显示更多</Button>
                         </div>
                     </Show>

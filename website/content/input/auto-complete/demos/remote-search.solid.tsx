@@ -40,7 +40,7 @@ export default function AutoCompleteDemo() {
             <div style={{ 'font-size': '32px' }}>
                 <Dynamic component={item.icon} />
             </div>
-            <div style={{ 'margin-left': '12px' }}>
+            <div style={{ 'margin-inline-start': '12px' }}>
                 <p>{item.value}</p>
                 <p>{item.label}</p>
             </div>

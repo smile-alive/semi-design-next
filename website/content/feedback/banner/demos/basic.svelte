@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Banner, Button, Layout, LayoutContent, LayoutFooter, LayoutHeader } from '@fibrae/semi-ui-svelte';
+    import { Banner, Button, Layout } from '@fibrae/semi-ui-svelte';
 
     let visible = $state(false);
     const toggle = () => {
@@ -10,14 +10,14 @@
 </script>
 
 <Layout class="components-layout-demo banner-basic">
-    <LayoutHeader style={commonStyle}>Header</LayoutHeader>
+    <Layout.Header style={commonStyle}>Header</Layout.Header>
     {#if visible}
         <Banner onClose={toggle}>
             {#snippet description()}Semi D2C 现已支持 Figma DevMode, 安装插件，随时查阅图层对应的前端代码{/snippet}
         </Banner>
     {/if}
-    <LayoutContent style="height: 300px; line-height: 300px">Content</LayoutContent>
-    <LayoutFooter style={commonStyle}>Footer</LayoutFooter>
+    <Layout.Content style="height: 300px; line-height: 300px">Content</Layout.Content>
+    <Layout.Footer style={commonStyle}>Footer</Layout.Footer>
 </Layout>
 <Button style="display: block; width: 120px; margin: 0 auto" onclick={toggle}>
     {visible ? 'Hide Banner' : 'Show Banner'}

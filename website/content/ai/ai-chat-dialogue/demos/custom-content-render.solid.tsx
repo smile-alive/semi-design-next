@@ -131,13 +131,12 @@ const customRender: DialogueContentItemRendererMap = {
             <div style={assistantStyle}>{item.text}</div>
         ),
     reasoning: (item) => {
-        // the widget takes its annotations from the item; the item is read here instead of spreading it into the props
         const annotations: Annotation[] = item.annotations ?? [];
         return (
             <AIChatDialogue.Reasoning
                 status={item.status}
                 summary={item.summary}
-                customRenderer={() => (
+                customRenderer={(reasoning) => (
                     <>
                         <AIChatDialogue.Annotation
                             annotation={annotations}
@@ -148,8 +147,8 @@ const customRender: DialogueContentItemRendererMap = {
                                 Toast.success('Ready to open the sidebar!');
                             }}
                         />
-                        <div style={{ 'margin-top': '8px' }}>
-                            <MarkdownRender format="md" raw={item.summary?.[0]?.text ?? ''} />
+                        <div style={{ 'margin-block-start': '8px' }}>
+                            <MarkdownRender format="md" raw={reasoning.summary?.[0]?.text ?? ''} {...reasoning.markdownRenderProps} />
                         </div>
                     </>
                 )}

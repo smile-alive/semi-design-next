@@ -20,7 +20,7 @@ const initialData: TreeNodeData[] = [
     },
 ];
 
-function updateTreeData(list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] {
+const updateTreeData = (list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] => {
     return list.map((node) => {
         if (node.key === key) {
             return { ...node, children };
@@ -30,7 +30,7 @@ function updateTreeData(list: TreeNodeData[], key: string | undefined, children:
         }
         return node;
     });
-}
+};
 
 export default function TreeSelectDemo() {
     const [treeData, setTreeData] = createSignal<TreeNodeData[]>(initialData);

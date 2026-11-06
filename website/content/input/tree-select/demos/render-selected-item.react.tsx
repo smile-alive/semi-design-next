@@ -1,4 +1,4 @@
-import { TreeSelect, Tag, type TreeNodeData } from '@fibrae/semi-ui-react';
+import { TreeSelect, Tag } from '@fibrae/semi-ui-react';
 
 const treeData = [
     {
@@ -46,7 +46,7 @@ export default function TreeSelectDemo() {
     return (
         <>
             <h4>单选</h4>
-            <TreeSelect style={{ width: 300 }} treeData={treeData} renderSelectedItem={(item: TreeNodeData) => item.label} />
+            <TreeSelect style={{ width: 300 }} treeData={treeData} renderSelectedItem={(item) => item.label} />
             <h4>多选+ isRenderInTag=true</h4>
             <TreeSelect style={{ width: 300 }} treeData={treeData} multiple renderSelectedItem={(item) => ({ content: item.label, isRenderInTag: true })} />
             <h4>多选 + isRenderInTag=false</h4>
@@ -55,16 +55,14 @@ export default function TreeSelectDemo() {
                 treeData={treeData}
                 multiple
                 maxTagCount={2}
-                renderSelectedItem={(item, { index, onClose }) => {
-                    return {
-                        content: (
-                            <Tag key={index} color="white" closable onClose={onClose}>
-                                {item.value}
-                            </Tag>
-                        ),
-                        isRenderInTag: false,
-                    };
-                }}
+                renderSelectedItem={(item, selected) => ({
+                    content: (
+                        <Tag color="white" closable onClose={selected.onClose}>
+                            {item.value}
+                        </Tag>
+                    ),
+                    isRenderInTag: false,
+                })}
             />
         </>
     );

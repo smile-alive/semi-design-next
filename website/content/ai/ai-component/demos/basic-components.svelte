@@ -1,11 +1,9 @@
 <script lang="ts">
     import { IconAIBellLevel1, IconAIEditLevel1, IconAIEditLevel2, IconAIFileLevel3, IconAIFilledLevel1, IconAIFilledLevel3, IconAIImageLevel3, IconAILoading, IconAISearchLevel3, IconAIStrokedLevel3, IconAIWandLevel3 } from '@fibrae/semi-icons-svelte';
-    import { Button, FloatButton, Tag, TypographyTitle } from '@fibrae/semi-ui-svelte';
+    import { Button, FloatButton, Tag, Typography } from '@fibrae/semi-ui-svelte';
 
+    const shades = Array.from({ length: 10 }, (_, index) => index);
     const wandFill = ['var(--semi-color-danger)', 'var(--semi-color-success)', 'var(--semi-color-primary)', 'var(--semi-color-warning)'];
-    const swatchCount = Array.from({ length: 10 }, (_, index) => index);
-    const colorStyle = (color: string) => `width: 40px; height: 40px; background: ${color}; border-radius: 50%`;
-    const grid = 'display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 10px; width: fit-content';
 </script>
 
 {#snippet level1()}
@@ -26,26 +24,26 @@
 
 <div style="display: flex; flex-direction: column; row-gap: 20px">
     <div style="display: flex; flex-direction: column; row-gap: 10px">
-        <TypographyTitle heading={5}>AI Token</TypographyTitle>
+        <Typography.Title heading={5}>AI Token</Typography.Title>
         <div style="display: flex; align-items: center; column-gap: 10px">
             <span>Purple</span>
             <div style="display: inline-flex; column-gap: 4px">
-                {#each swatchCount as index (index)}
-                    <div style={colorStyle(`var(--semi-ai-purple-${index})`)}></div>
+                {#each shades as index (index)}
+                    <div style="width: 40px; height: 40px; background: var(--semi-ai-purple-{index}); border-radius: 50%"></div>
                 {/each}
             </div>
         </div>
         <div style="display: flex; align-items: center; column-gap: 10px">
             <span>General</span>
             <div style="display: inline-flex; column-gap: 4px">
-                {#each swatchCount as index (index)}
-                    <div style={colorStyle(`var(--semi-ai-general-${index})`)}></div>
+                {#each shades as index (index)}
+                    <div style="width: 40px; height: 40px; background: var(--semi-ai-general-{index}); border-radius: 50%"></div>
                 {/each}
             </div>
         </div>
     </div>
     <div style="display: flex; flex-direction: column; row-gap: 10px">
-        <TypographyTitle heading={5}>AI Icon</TypographyTitle>
+        <Typography.Title heading={5}>AI Icon</Typography.Title>
         <div style="display: flex; column-gap: 10px">
             <IconAIBellLevel1 size="extra-large" />
             <IconAIEditLevel2 size="extra-large" />
@@ -59,7 +57,7 @@
         </div>
     </div>
     <div style="display: flex; flex-direction: column; row-gap: 10px">
-        <TypographyTitle heading={5}>AI Button</TypographyTitle>
+        <Typography.Title heading={5}>AI Button</Typography.Title>
         <div style="display: flex; row-gap: 16px; flex-direction: column">
             <div style="display: flex; column-gap: 16px">
                 <Button colorful icon={level1} theme="solid" type="primary">Colorful</Button>
@@ -82,8 +80,8 @@
         </div>
     </div>
     <div style="display: flex; flex-direction: column; row-gap: 10px">
-        <TypographyTitle heading={5} style="margin-top: 10px">AI Tag</TypographyTitle>
-        <div style={grid}>
+        <Typography.Title heading={5} style="margin-top: 10px">AI Tag</Typography.Title>
+        <div style="display: grid; grid-template-columns: repeat(3,1fr); grid-gap: 10px; width: fit-content">
             <Tag colorful gradient prefixIcon={tagLevel1} shape="circle" type="solid">AI</Tag>
             <Tag colorful gradient prefixIcon={tagLevel3} shape="circle" type="light">AI</Tag>
             <Tag colorful gradient prefixIcon={tagLevel3} shape="circle" type="ghost">AI</Tag>
@@ -93,8 +91,8 @@
         </div>
     </div>
     <div style="display: flex; flex-direction: column; row-gap: 10px">
-        <TypographyTitle heading={5} style="margin-top: 10px">AI FloatButton</TypographyTitle>
-        <div style={grid}>
+        <Typography.Title heading={5} style="margin-top: 10px">AI FloatButton</Typography.Title>
+        <div style="display: grid; grid-template-columns: repeat(3,1fr); grid-gap: 10px; width: fit-content">
             <FloatButton aria-label="AI edit, VIP" badge={{ count: 'VIP', type: 'danger' }} colorful icon={editLevel1} size="large" style="position: static" />
         </div>
     </div>

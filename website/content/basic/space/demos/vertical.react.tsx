@@ -1,20 +1,15 @@
 import { Space, Button } from '@fibrae/semi-ui-react';
 
+const fourButtons = [1, 2, 3, 4];
+
 export default function SpaceDemo() {
     return (
         <Space vertical>
-            <Button theme="solid" type="primary">
-                按钮
-            </Button>
-            <Button theme="solid" type="primary">
-                按钮
-            </Button>
-            <Button theme="solid" type="primary">
-                按钮
-            </Button>
-            <Button theme="solid" type="primary">
-                按钮
-            </Button>
+            {fourButtons.map((item) => (
+                <Button key={item} theme="solid" type="primary">
+                    按钮
+                </Button>
+            ))}
         </Space>
     );
 }

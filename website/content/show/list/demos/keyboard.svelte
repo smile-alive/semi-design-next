@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { List, ListItem } from '@fibrae/semi-ui-svelte';
+    import { List } from '@fibrae/semi-ui-svelte';
 
     const list = ['围城', '平凡的世界（全三册）', '三体（全集）', '雪中悍刀行（全集）', '撒哈拉的故事', '明朝那些事', '一禅小和尚', '沙丘', '被讨厌的勇气', '罪与罚'];
 
@@ -17,12 +17,17 @@
     };
 
     const onKeydown = (event: KeyboardEvent) => {
-        if (event.key === 'ArrowUp') {
-            event.preventDefault();
-            changeIndex(-1);
-        } else if (event.key === 'ArrowDown') {
-            event.preventDefault();
-            changeIndex(1);
+        switch (event.key) {
+            case 'ArrowUp':
+                event.preventDefault();
+                changeIndex(-1);
+                break;
+            case 'ArrowDown':
+                event.preventDefault();
+                changeIndex(1);
+                break;
+            default:
+                break;
         }
     };
 </script>
@@ -30,12 +35,12 @@
 <svelte:window onkeydown={onKeydown} />
 
 <div>
-    <div style="margin-right: 16px; width: 280px; display: flex; flex-wrap: wrap; border: 1px solid var(--semi-color-border)">
+    <div style="margin-inline-end: 16px; width: 280px; display: flex; flex-wrap: wrap; border: 1px solid var(--semi-color-border)">
         <List class="component-list-demo-booklist" dataSource={list} size="small" split={false} style="flex-basis: 100%; flex-shrink: 0; border-bottom: 1px solid var(--semi-color-border)">
-            {#snippet item({ item: book, index })}
-                <ListItem class={index === hoverIndex ? 'component-list-demo-booklist-active-item' : undefined}>
-                    {book}
-                </ListItem>
+            {#snippet item(row)}
+                <List.Item class={row.index === hoverIndex ? 'component-list-demo-booklist-active-item' : ''}>
+                    {row.item}
+                </List.Item>
             {/snippet}
         </List>
     </div>

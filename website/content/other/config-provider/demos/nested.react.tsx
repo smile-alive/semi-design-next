@@ -4,9 +4,9 @@ import { ConfigProvider, ConfigConsumer } from '@fibrae/semi-ui-react';
 function Show({ title }: { title: string }) {
     return (
         <ConfigConsumer>
-            {({ locale, timeZone, direction }) => (
+            {(config) => (
                 <div style={{ margin: 8 }}>
-                    {title}：locale = {locale?.code ?? '未设置'}，timeZone = {String(timeZone)}，direction = {direction}
+                    {title}：locale = {config.locale?.code ?? '未设置'}，timeZone = {String(config.timeZone)}，direction = {config.direction}
                 </div>
             )}
         </ConfigConsumer>

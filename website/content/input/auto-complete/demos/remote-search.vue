@@ -1,33 +1,22 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
+    import { shallowRef } from 'vue';
     import { debounce } from 'es-toolkit';
     import { IconSearch } from '@fibrae/semi-icons-vue';
     import { IconButton, IconForm, IconInput, IconSelect, IconTable } from '@fibrae/semi-icons-vue/lab';
     import { AutoComplete, type AutoCompleteDataItem } from '@fibrae/semi-ui-vue';
 
-    interface ListItem {
-        value: 'select' | 'input' | 'form' | 'button' | 'table';
-        label: string;
-    }
-
-    const icons = {
-        select: IconSelect,
-        input: IconInput,
-        form: IconForm,
-        button: IconButton,
-        table: IconTable,
-    };
-
-    const initList: ListItem[] = [
-        { value: 'select', label: '选择器' },
-        { value: 'input', label: '输入框' },
-        { value: 'form', label: '表单' },
-        { value: 'button', label: '按钮' },
-        { value: 'table', label: '表格' },
+    const initList = [
+        { value: 'select', label: '选择器', icon: IconSelect },
+        { value: 'input', label: '输入框', icon: IconInput },
+        { value: 'form', label: '表单', icon: IconForm },
+        { value: 'button', label: '按钮', icon: IconButton },
+        { value: 'table', label: '表格', icon: IconTable },
     ];
 
-    const loading = ref(false);
-    const list = ref(initList);
+    type ListItem = (typeof initList)[number];
+
+    const loading = shallowRef(false);
+    const list = shallowRef<ListItem[]>(initList);
 
     const handleSearch = (inputValue: string) => {
         loading.value = true;
@@ -53,14 +42,14 @@
         <template #prefix>
             <IconSearch />
         </template>
-        <template #item="{ item }">
+        <template #item="entry">
             <div style="display: flex; align-items: center">
                 <div style="font-size: 32px">
-                    <component :is="icons[item.value]" />
+                    <component :is="entry.item.icon" />
                 </div>
-                <div style="margin-left: 12px">
-                    <p>{{ item.value }}</p>
-                    <p>{{ item.label }}</p>
+                <div style="margin-inline-start: 12px">
+                    <p>{{ entry.item.value }}</p>
+                    <p>{{ entry.item.label }}</p>
                 </div>
             </div>
         </template>

@@ -6,7 +6,7 @@ function Fields(props: FormRenderProps) {
             <FormInput field="Role" style={{ width: '176px' }} />
             <FormInput field="UserName" style={{ width: '80px' }} />
             <FormInput field="Password" style={{ width: '176px' }} />
-            <code style={{ 'margin-top': '24px' }}>{JSON.stringify(props.formState)}</code>
+            <code style={{ 'margin-block-start': '24px' }}>{JSON.stringify(props.formState)}</code>
         </>
     );
 }

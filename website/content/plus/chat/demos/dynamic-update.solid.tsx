@@ -66,7 +66,7 @@ function getId() {
 const uploadProps = { action: 'https://api.semi.design/upload' };
 
 export default function ChatDemo() {
-    const [chats, setChats] = createSignal<Message[]>(defaultMessage);
+    const [message, setMessage] = createSignal<Message[]>(defaultMessage);
     // the interval outlives the send that started it, so it is cleared when the demo unmounts too
     let intervalId: number | undefined;
     // registered on mount: a server render disposes without mounting and has no window
@@ -74,7 +74,7 @@ export default function ChatDemo() {
 
     const generateMockResponse = (content: string) => {
         const id = window.setInterval(() => {
-            setChats((list) => {
+            setMessage((list) => {
                 const lastMessage = list[list.length - 1];
                 let newMessage: Message = { ...lastMessage };
                 if (lastMessage.status === 'loading') {
@@ -106,7 +106,7 @@ export default function ChatDemo() {
     };
 
     const onMessageSend = (content: string) => {
-        setChats((list) => [
+        setMessage((list) => [
             ...list,
             {
                 role: 'assistant',
@@ -121,7 +121,7 @@ export default function ChatDemo() {
     const onStopGenerator = () => {
         if (intervalId) {
             window.clearInterval(intervalId);
-            setChats((list) => {
+            setMessage((list) => {
                 const lastMessage = list[list.length - 1];
                 if (lastMessage.status && lastMessage.status !== 'complete') {
                     return [...list.slice(0, -1), { ...lastMessage, status: 'complete' }];
@@ -131,5 +131,5 @@ export default function ChatDemo() {
         }
     };
 
-    return <Chat chats={chats()} showStopGenerate style={commonOuterStyle} onStopGenerator={onStopGenerator} roleConfig={roleInfo} onChatsChange={(next) => setChats(next)} onMessageSend={onMessageSend} uploadProps={uploadProps} />;
+    return <Chat chats={message()} showStopGenerate style={commonOuterStyle} onStopGenerator={onStopGenerator} roleConfig={roleInfo} onChatsChange={(next) => setMessage(next)} onMessageSend={onMessageSend} uploadProps={uploadProps} />;
 }

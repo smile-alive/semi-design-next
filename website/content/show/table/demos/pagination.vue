@@ -95,26 +95,26 @@
 
 <template>
     <Table :columns="columns" :dataSource="dataSource" :rowSelection="rowSelection" :scroll="scroll">
-        <template #cell="{ column, text, record }">
-            <div v-if="column.dataIndex === 'name'">
-                <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginRight: '12px' }" />
-                {{ text }}
+        <template #cell="cellProps">
+            <div v-if="cellProps.column.dataIndex === 'name'">
+                <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginInlineEnd: '12px' }" />
+                {{ cellProps.text }}
             </div>
-            <template v-else-if="column.dataIndex === 'size'">{{ text }} KB</template>
-            <Tag v-else-if="column.dataIndex === 'status'" :color="getTag(text).color" shape="circle" :style="{ userSelect: 'text' }">
+            <template v-else-if="cellProps.column.dataIndex === 'size'">{{ cellProps.text }} KB</template>
+            <Tag v-else-if="cellProps.column.dataIndex === 'status'" :color="getTag(cellProps.text).color" shape="circle" :style="{ userSelect: 'text' }">
                 <template #prefixIcon>
-                    <component :is="getTag(text).icon" />
+                    <component :is="getTag(cellProps.text).icon" />
                 </template>
-                {{ getTag(text).text }}
+                {{ getTag(cellProps.text).text }}
             </Tag>
-            <div v-else-if="column.dataIndex === 'owner'">
-                <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
-                    {{ typeof text === 'string' && text.slice(0, 1) }}
+            <div v-else-if="cellProps.column.dataIndex === 'owner'">
+                <Avatar :color="cellProps.record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
+                    {{ typeof cellProps.text === 'string' && cellProps.text.slice(0, 1) }}
                 </Avatar>
-                {{ text }}
+                {{ cellProps.text }}
             </div>
-            <template v-else-if="column.dataIndex === 'updateTime'">
-                {{ dateFns.format(new Date(text), 'yyyy-MM-dd') }}
+            <template v-else-if="cellProps.column.dataIndex === 'updateTime'">
+                {{ dateFns.format(new Date(cellProps.text), 'yyyy-MM-dd') }}
             </template>
         </template>
     </Table>

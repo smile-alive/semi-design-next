@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { ResizeItem, ResizeHandler, ResizeGroup } from '@fibrae/semi-ui-react';
 
+const itemStyle = {
+    backgroundColor: 'var(--semi-grey-1)',
+    border: 'var(--semi-color-border) 1px solid',
+};
+
 export default function ResizableDemo() {
     const [text, setText] = useState('Drag to resize');
     return (
         <div style={{ width: '1000px', height: '100px' }}>
             <ResizeGroup direction="horizontal">
                 <ResizeItem
-                    style={{
-                        backgroundColor: 'var(--semi-grey-1)',
-                        border: 'var(--semi-color-border) 1px solid',
-                    }}
+                    style={itemStyle}
                     defaultSize="400px"
                     min="10%"
                     onChange={() => {
@@ -20,14 +22,11 @@ export default function ResizableDemo() {
                         setText('Drag to resize');
                     }}
                 >
-                    <div style={{ marginLeft: '20%' }}>{text + ' min:10%'}</div>
+                    <div style={{ marginInlineStart: '20%' }}>{text + ' min:10%'}</div>
                 </ResizeItem>
                 <ResizeHandler />
                 <ResizeItem
-                    style={{
-                        backgroundColor: 'var(--semi-grey-1)',
-                        border: 'var(--semi-color-border) 1px solid',
-                    }}
+                    style={itemStyle}
                     defaultSize="20%"
                     min="10%"
                     max="30%"
@@ -35,33 +34,27 @@ export default function ResizableDemo() {
                         setText('resizing');
                     }}
                 >
-                    <div style={{ marginLeft: '20%' }}>{text + ' min:10% max:30%'}</div>
+                    <div style={{ marginInlineStart: '20%' }}>{text + ' min:10% max:30%'}</div>
                 </ResizeItem>
                 <ResizeHandler />
                 <ResizeItem
-                    style={{
-                        backgroundColor: 'var(--semi-grey-1)',
-                        border: 'var(--semi-color-border) 1px solid',
-                    }}
+                    style={itemStyle}
                     defaultSize="0.5"
                     onChange={() => {
                         setText('resizing');
                     }}
                 >
-                    <div style={{ marginLeft: '20%' }}>{text}</div>
+                    <div style={{ marginInlineStart: '20%' }}>{text}</div>
                 </ResizeItem>
                 <ResizeHandler />
                 <ResizeItem
-                    style={{
-                        backgroundColor: 'var(--semi-grey-1)',
-                        border: 'var(--semi-color-border) 1px solid',
-                    }}
+                    style={itemStyle}
                     defaultSize={1}
                     onChange={() => {
                         setText('resizing');
                     }}
                 >
-                    <div style={{ marginLeft: '20%' }}>{text}</div>
+                    <div style={{ marginInlineStart: '20%' }}>{text}</div>
                 </ResizeItem>
             </ResizeGroup>
         </div>

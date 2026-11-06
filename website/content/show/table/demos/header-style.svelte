@@ -75,23 +75,23 @@
 </script>
 
 <Table {columns} dataSource={data} pagination={false}>
-    {#snippet cell({ column, text, record })}
-        {#if column.dataIndex === 'name'}
+    {#snippet cell(cellProps)}
+        {#if cellProps.column.dataIndex === 'name'}
             <div>
-                <Avatar alt="" shape="square" size="small" src={record.nameIconSrc} style="margin-right: 12px" />
-                {text}
+                <Avatar alt="" shape="square" size="small" src={cellProps.record.nameIconSrc} style="margin-inline-end: 12px" />
+                {cellProps.text}
             </div>
-        {:else if column.dataIndex === 'owner'}
+        {:else if cellProps.column.dataIndex === 'owner'}
             <div>
-                <Avatar color={record.avatarBg} size="small" style="margin-right: 4px">
-                    {typeof text === 'string' && text.slice(0, 1)}
+                <Avatar color={cellProps.record.avatarBg} size="small" style="margin-inline-end: 4px">
+                    {typeof cellProps.text === 'string' && cellProps.text.slice(0, 1)}
                 </Avatar>
-                {text}
+                {cellProps.text}
             </div>
-        {:else if column.dataIndex === 'operate'}
+        {:else if cellProps.column.dataIndex === 'operate'}
             <IconMore />
         {:else}
-            {text}
+            {cellProps.text}
         {/if}
     {/snippet}
 </Table>

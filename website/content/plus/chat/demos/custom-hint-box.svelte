@@ -2,7 +2,7 @@
     import { Chat, type ChatMessage } from '@fibrae/semi-ai-svelte';
     import { IconArrowRight } from '@fibrae/semi-icons-svelte';
 
-    const roleConfig = {
+    const roleInfo = {
         user: {
             name: 'User',
             avatar: '/assets/docs-icon.png',
@@ -17,13 +17,16 @@
         },
     };
 
-    const hintStyle = 'border: 1px solid var(--semi-color-border); padding: 10px; border-radius: 10px; background: none; color: var(--semi-color-text-1); display: flex; justify-content: space-between; align-items: center; text-align: left; cursor: pointer; font-family: inherit; font-size: 14px; line-height: inherit';
+    const commonOuterStyle = 'border: 1px solid var(--semi-color-border); border-radius: 16px; height: 400px';
+    const hintsExample = ['告诉我更多', 'Semi Design 的组件有哪些？', '我能够通过 DSM 定制自己的主题吗？'];
+    const commonHintStyle =
+        'border: 1px solid var(--semi-color-border); padding: 10px; border-radius: 10px; background: none; color: var(--semi-color-text-1); display: flex; justify-content: space-between; align-items: center; text-align: left; cursor: pointer; font-family: inherit; font-size: 14px; line-height: inherit';
     const uploadProps = { action: 'https://api.semi.design/upload' };
 
     let id = 0;
     const getId = () => `id-${id++}`;
 
-    let messages = $state<ChatMessage[]>([
+    let message = $state<ChatMessage[]>([
         {
             role: 'assistant',
             id: '1',
@@ -31,7 +34,7 @@
             content: 'Semi Design 是由抖音前端团队和MED产品设计团队设计、开发并维护的设计系统，你可以向我提问任何关于 Semi 的问题。',
         },
     ]);
-    let hints = $state(['告诉我更多', 'Semi Design 的组件有哪些？', '我能够通过 DSM 定制自己的主题吗？']);
+    let hints = $state(hintsExample);
 
     const onMessageSend = () => {
         const newAssistantMessage: ChatMessage = {
@@ -41,16 +44,16 @@
             content: '这是一条 mock 回复信息',
         };
         setTimeout(() => {
-            messages = [...messages, newAssistantMessage];
+            message = [...message, newAssistantMessage];
         }, 200);
         hints = [];
     };
 </script>
 
-<Chat bind:chats={messages} {hints} onClear={() => (hints = [])} onHintClick={() => (hints = [])} {onMessageSend} {roleConfig} style="border: 1px solid var(--semi-color-border); border-radius: 16px; height: 400px" {uploadProps}>
-    {#snippet hintBox({ content, onHintClick })}
-        <button style={hintStyle} type="button" onclick={onHintClick}>
-            {content}
+<Chat bind:chats={message} {hints} onClear={() => (hints = [])} onHintClick={() => (hints = [])} {onMessageSend} roleConfig={roleInfo} style={commonOuterStyle} {uploadProps}>
+    {#snippet hintBox(props)}
+        <button style={commonHintStyle} type="button" onclick={props.onHintClick}>
+            {props.content}
             <IconArrowRight style="margin-inline-start: 10px" />
         </button>
     {/snippet}

@@ -6,11 +6,12 @@
     setContext(reachableKey, 'Light');
 
     const toast = Toast.useToast();
+    const config = { duration: 0, content: reachable };
 </script>
 
 <!-- The snippet renders inside the toast list mounted with this component's contexts, so it reads the context set above -->
 {#snippet reachable()}ReachableContext: {getContext(reachableKey)}{/snippet}
 
 <div>
-    <Button onclick={() => toast.success({ duration: 0, content: reachable })}>Hook Toast</Button>
+    <Button onclick={() => toast.success(config)}>Hook Toast</Button>
 </div>

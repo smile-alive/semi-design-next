@@ -33,15 +33,15 @@
         <template #header />
         <h3 :style="{ textAlign: 'center', fontSize: '24px', margin: '40px' }">Semi Design New Features</h3>
         <List :dataSource="data" :split="false">
-            <template #item="{ item }">
+            <template #item="listItem">
                 <List.Item>
                     <template #header>
-                        <component :is="item.icon" :style="{ fontSize: '48px' }" />
+                        <component :is="listItem.item.icon" :style="{ fontSize: '48px' }" />
                     </template>
                     <template #main>
                         <div>
-                            <h6 :style="{ margin: 0, fontSize: '16px' }">{{ item.title }}</h6>
-                            <p :style="{ marginTop: '4px', color: 'var(--semi-color-text-1)' }">{{ item.content }}</p>
+                            <h6 :style="{ margin: 0, fontSize: '16px' }">{{ listItem.item.title }}</h6>
+                            <p :style="{ marginBlockStart: '4px', color: 'var(--semi-color-text-1)' }">{{ listItem.item.content }}</p>
                         </div>
                     </template>
                 </List.Item>

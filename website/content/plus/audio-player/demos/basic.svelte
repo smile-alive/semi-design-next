@@ -23,16 +23,16 @@
 </script>
 
 <div style="width: 100%">
-    <div style="margin-top: 10px">
+    <div style="margin-block-start: 10px">
         <AudioPlayer {audioUrl} autoPlay={false} />
     </div>
-    <div style="margin-top: 10px">
+    <div style="margin-block-start: 10px">
         <AudioPlayer audioUrl={audioUrlObj} autoPlay={false} />
     </div>
-    <div style="margin-top: 10px">
+    <div style="margin-block-start: 10px">
         <AudioPlayer audioUrl={audioUrlArr} autoPlay={false} />
     </div>
-    <div style="margin-top: 10px">
+    <div style="margin-block-start: 10px">
         <AudioPlayer audioUrl={audioUrlArrObj} autoPlay={false} />
     </div>
 </div>

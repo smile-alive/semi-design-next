@@ -2,9 +2,6 @@
     import { Annotation, Sidebar, type AnnotationInfo, type ImageUploadNodeOptions, type SideBarDetailContent } from '@fibrae/semi-ai-svelte';
     import { IconBriefStroked, IconCodeStroked, IconModalStroked, IconSearch } from '@fibrae/semi-icons-svelte';
 
-    const { FileContent, CodeContent } = Sidebar;
-    const { AnnotationContent } = Annotation;
-
     const containerStyle = 'display: flex; height: 800px; border: 1px solid var(--semi-color-border); border-radius: 8px; overflow: hidden; box-sizing: border-box';
 
     const optionList = [
@@ -171,7 +168,12 @@ import { IconSearch } from '@fibrae/semi-icons-react';
         },
     ];
 
-    const intro = `<h2>
+    const defaultFiles = [
+        {
+            key: 'file1',
+            name: 'Semi Design 介绍',
+            content: `
+<h2>
   Semi Design 介绍
 </h2>
 <p>
@@ -199,13 +201,57 @@ import { IconSearch } from '@fibrae/semi-icons-react';
   <br />
   — Semi Design
 </blockquote>
-`;
-
-    const defaultFiles = [
-        {
-            key: 'file1',
-            name: 'Semi Design 介绍',
-            content: `\n${intro}${intro}${intro}`,
+<p>
+  Semi Design 是由 <strong>抖音前端团队</strong>和MED产品设计团队设计、开发并维护的<em>设计系统</em>。作为一个全面、易用、优质的现代应用UI解决方案，Semi Design从字节跳动各业务线的复杂场景中提炼而来，目前已经支撑了近千个平台产品，服务了内外部超过10万用户，详情见https://semi.design/zh-CN/start/introduction。Semi Design的特点包括：
+</p>
+<ul>
+  <li>
+    设计简洁、现代化。
+  </li>
+  <li>
+    提供主题方案，可深度样式定制。
+  </li>
+</ul>
+<p>
+  国际化，覆盖了简/繁体中文、英语、日语、韩语、葡萄牙语等20+种语言，日期时间组件提供全球时区支持，全部组件可自动适配阿拉伯文RTL布局。
+</p>
+<pre><code class="language-css">body {
+  display: none;
+}</code></pre>
+<p>
+  采用 Foundation 和 Adapter 跨框架技术方案，方便扩展。
+</p>
+<blockquote>
+  Semi Design 是由抖音前端团队和MED产品设计团队设计、开发并维护的设计系统
+  <br />
+  — Semi Design
+</blockquote>
+<p>
+  Semi Design 是由 <strong>抖音前端团队</strong>和MED产品设计团队设计、开发并维护的<em>设计系统</em>。作为一个全面、易用、优质的现代应用UI解决方案，Semi Design从字节跳动各业务线的复杂场景中提炼而来，目前已经支撑了近千个平台产品，服务了内外部超过10万用户，详情见https://semi.design/zh-CN/start/introduction。Semi Design的特点包括：
+</p>
+<ul>
+  <li>
+    设计简洁、现代化。
+  </li>
+  <li>
+    提供主题方案，可深度样式定制。
+  </li>
+</ul>
+<p>
+  国际化，覆盖了简/繁体中文、英语、日语、韩语、葡萄牙语等20+种语言，日期时间组件提供全球时区支持，全部组件可自动适配阿拉伯文RTL布局。
+</p>
+<pre><code class="language-css">body {
+  display: none;
+}</code></pre>
+<p>
+  采用 Foundation 和 Adapter 跨框架技术方案，方便扩展。
+</p>
+<blockquote>
+  Semi Design 是由抖音前端团队和MED产品设计团队设计、开发并维护的设计系统
+  <br />
+  — Semi Design
+</blockquote>
+`,
         },
         {
             key: 'file2',
@@ -229,9 +275,6 @@ If your project is using React v19, please use @fibrae/semi-ui-19. For React ver
         },
     ];
 
-    const logo = '/assets/placeholder/avatar-a.svg';
-    const img = '/assets/root-web-sites/abstract.jpg';
-
     const defaultInfoList: AnnotationInfo[] = [
         {
             header: 'Semi design introduction',
@@ -243,10 +286,10 @@ If your project is using React v19, please use @fibrae/semi-ui-19. For React ver
                     duration: 4432,
                     title: 'Semi Design is a design system designed',
                     url: 'https://semi.design/',
-                    logo,
+                    logo: '/assets/placeholder/avatar-a.svg',
                     siteName: 'Semi Design',
                     detail: ' As a comprehensive, easy-to-use, and high-quality modern enterprise-level application UI solution',
-                    img,
+                    img: '/assets/root-web-sites/abstract.jpg',
                 },
                 {
                     order: 2,
@@ -255,9 +298,9 @@ If your project is using React v19, please use @fibrae/semi-ui-19. For React ver
                     duration: 56,
                     url: 'https://semi.design/',
                     detail: ' As a comprehensive, easy-to-use, and high-quality modern enterprise-level application UI solution',
-                    logo,
+                    logo: '/assets/placeholder/avatar-a.svg',
                     siteName: 'Semi Design',
-                    img,
+                    img: '/assets/root-web-sites/abstract.jpg',
                 },
                 {
                     order: 3,
@@ -265,9 +308,9 @@ If your project is using React v19, please use @fibrae/semi-ui-19. For React ver
                     url: 'https://semi.design/',
                     detail: `Semi provides esm format dist, and the css of the component is only imported by the corresponding js.
 When used in Webpack, Rspack, create-react-app or Vite projects, there is no need to configure any compilation items.`,
-                    logo,
+                    logo: '/assets/placeholder/avatar-a.svg',
                     siteName: 'Semi Design',
-                    img,
+                    img: '/assets/root-web-sites/abstract.jpg',
                 },
             ],
         },
@@ -280,9 +323,9 @@ When used in Webpack, Rspack, create-react-app or Vite projects, there is no nee
                     title: 'Semi Design resource',
                     url: 'https://semi.design/',
                     detail: 'Semi Design provides a wealth of design resources to help designers and developers collaborate efficiently. Whether you are a community user or a ByteDance internal designer, you can find UI Kit resource and Figma plug-ins that suit you here.',
-                    logo,
+                    logo: '/assets/placeholder/avatar-a.svg',
                     siteName: 'Semi Design resource',
-                    img,
+                    img: '/assets/root-web-sites/abstract.jpg',
                 },
             ],
         },
@@ -291,7 +334,7 @@ When used in Webpack, Rspack, create-react-app or Vite projects, there is no nee
     const imgUploadProps: ImageUploadNodeOptions = {
         action: 'https://api.semi.design/upload',
         // response is the action's result; real code reads the uploaded image URL from it
-        getUploadImageSrc: () => logo,
+        getUploadImageSrc: () => '/assets/placeholder/avatar-a.svg',
     };
 
     const defaultSize = { width: '60%' };
@@ -311,18 +354,18 @@ When used in Webpack, Rspack, create-react-app or Vite projects, there is no nee
 <div style={containerStyle}>
     <div style="flex-grow: 1; flex-shrink: 1; padding: 20px">工作区占位</div>
     <Sidebar bind:activeKey {defaultSize} detailContent={currentDetail} {imgUploadProps} {mode} motion={false} onBackWard={(_event, backMode) => (mode = backMode)} options={optionList} showClose={false} title="Agent 的工作空间" visible>
-        {#snippet optionIcon({ item })}
-            {@const Icon = optionIcons[item.key]}
+        {#snippet optionIcon(iconArgs)}
+            {@const Icon = optionIcons[iconArgs.item.key]}
             <Icon />
         {/snippet}
-        {#snippet mainContent({ activeKey: currentKey })}
-            {#if currentKey === 'searchResult'}
-                <AnnotationContent bind:activeKey={activeReferKey} info={defaultInfoList} />
-            {:else if currentKey === 'filePreview'}
-                <FileContent bind:activeKey={activeFileKey} files={defaultFiles} {onExpand} />
-            {:else if currentKey === 'codePreview'}
-                <CodeContent bind:activeKey={activeCodeKey} codes={defaultCodes} {onExpand} />
-            {:else if currentKey === 'network'}
+        {#snippet mainContent(mainArgs)}
+            {#if mainArgs.activeKey === 'searchResult'}
+                <Annotation.AnnotationContent bind:activeKey={activeReferKey} info={defaultInfoList} />
+            {:else if mainArgs.activeKey === 'filePreview'}
+                <Sidebar.FileContent bind:activeKey={activeFileKey} files={defaultFiles} {onExpand} />
+            {:else if mainArgs.activeKey === 'codePreview'}
+                <Sidebar.CodeContent bind:activeKey={activeCodeKey} codes={defaultCodes} {onExpand} />
+            {:else if mainArgs.activeKey === 'network'}
                 <img alt="network" src="/assets/root-web-sites/test.jpg" style="width: 100%" />
             {/if}
         {/snippet}

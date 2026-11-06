@@ -1,14 +1,8 @@
 import { CodeHighlight } from '@fibrae/semi-ui-react';
 
-// Outside the component so a new array per render does not re-highlight
 const languages = [() => import('shiki/langs/vala.mjs')];
 
-export default function CodeHighlightDemo() {
-    return (
-        <CodeHighlight
-            languages={languages}
-            language="vala"
-            code={`public class ExampleApp : Gtk.Application {
+const code = `public class ExampleApp : Gtk.Application {
     public ExampleApp () {
         Object (application_id: "com.example.App");
     }
@@ -28,7 +22,8 @@ export default function CodeHighlightDemo() {
         return app.run (args);
     }
 }
-`}
-        />
-    );
+`;
+
+export default function CodeHighlightDemo() {
+    return <CodeHighlight languages={languages} language="vala" code={code} />;
 }

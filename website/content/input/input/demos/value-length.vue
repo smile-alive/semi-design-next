@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref } from 'vue';
-    import { Button, Form, FormInput, Input, TextArea, TypographyText } from '@fibrae/semi-ui-vue';
+    import { Button, Form, FormInput, Input, TextArea, Typography } from '@fibrae/semi-ui-vue';
 
     const value = ref('');
 
@@ -14,21 +14,21 @@
     <div>
         <h4 id="input-value-length-max-length">maxLength=10</h4>
         <div>
-            <TypographyText>尝试输入以下字符</TypographyText>
+            <Typography.Text>尝试输入以下字符</Typography.Text>
             <div>
-                <TypographyText copyable>💖</TypographyText>
+                <Typography.Text copyable>💖</Typography.Text>
             </div>
             <div>
-                <TypographyText copyable>👨‍👩‍👧‍👦</TypographyText>
+                <Typography.Text copyable>👨‍👩‍👧‍👦</Typography.Text>
             </div>
         </div>
         <Input v-model="value" aria-labelledby="input-value-length-max-length" :getValueLength="getValueLength" :maxlength="10" style="width: 200px; margin-block: 12px" />
         <div v-if="value">
             <div>
-                <TypographyText type="tertiary">{{ `getValueLength=${getValueLength(value)}` }}</TypographyText>
+                <Typography.Text type="tertiary">{{ `getValueLength=${getValueLength(value)}` }}</Typography.Text>
             </div>
             <div>
-                <TypographyText type="tertiary">{{ `length=${value.length}` }}</TypographyText>
+                <Typography.Text type="tertiary">{{ `length=${value.length}` }}</Typography.Text>
             </div>
         </div>
         <br />

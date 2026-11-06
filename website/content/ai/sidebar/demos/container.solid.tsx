@@ -2,7 +2,6 @@ import { type JSX, createSignal } from 'solid-js';
 import { Sidebar } from '@fibrae/semi-ai-solid';
 import { Button, Switch } from '@fibrae/semi-ui-solid';
 
-const { Container } = Sidebar;
 const containerStyle: JSX.CSSProperties = {
     display: 'flex',
     height: '500px',
@@ -34,7 +33,7 @@ export default function SidebarDemo() {
                     </div>
                 </div>
             </div>
-            <Container motion={motion()} resizable={resizable()} minWidth={250} maxWidth="60%" visible={visible()} title="基础容器示例" style={resizable() ? {} : { width: '200px' }} onCancel={toggleVisible} />
+            <Sidebar.Container motion={motion()} resizable={resizable()} minWidth={250} maxWidth="60%" visible={visible()} title="基础容器示例" style={resizable() ? {} : { width: '200px' }} onCancel={toggleVisible} />
         </div>
     );
 }

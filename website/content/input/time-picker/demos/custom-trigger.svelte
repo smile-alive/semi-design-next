@@ -4,6 +4,7 @@
     import { Tag, TimePicker, type TimePickerBaseValueType } from '@fibrae/semi-ui-svelte';
 
     const formatToken = 'HH:mm:ss';
+
     let time = $state<TimePickerBaseValueType | TimePickerBaseValueType[] | null>(new Date(2024, 0, 1, 10, 30, 0));
 </script>
 

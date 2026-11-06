@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { Card, CardMeta, Rating } from '@fibrae/semi-ui-vue';
+    import { Card, Rating } from '@fibrae/semi-ui-vue';
 </script>
 
 <template>
@@ -10,8 +10,8 @@
         <template #actions>
             <Rating :defaultValue="4" size="small" />
         </template>
-        <CardMeta title="Semi Doc">
+        <Card.Meta title="Semi Doc">
             <template #description>全面、易用、优质</template>
-        </CardMeta>
+        </Card.Meta>
     </Card>
 </template>

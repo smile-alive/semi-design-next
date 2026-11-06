@@ -7,8 +7,8 @@
 
 <template>
     <AIChatInput placeholder="自定义上传按钮（仍支持粘贴上传）" style="margin: 12px" :uploadProps="uploadProps">
-        <template #uploadButton="{ onOpenFileDialog, disabled }">
-            <button aria-label="上传" class="semi-button semi-button-borderless" :disabled="disabled" type="button" @click.stop="onOpenFileDialog">
+        <template #uploadButton="uploadButton">
+            <button aria-label="上传" class="semi-button semi-button-borderless" :disabled="uploadButton.disabled" type="button" @click.stop="uploadButton.onOpenFileDialog">
                 <IconUpload />
             </button>
         </template>

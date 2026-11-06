@@ -4,7 +4,6 @@ import { AIChatInput } from '@fibrae/semi-ai-solid';
 import { IconBookOpenStroked, IconFeishuLogo, IconGit, IconFigma } from '@fibrae/semi-icons-solid';
 import { Radio, RadioGroup } from '@fibrae/semi-ui-solid';
 
-const { Configure } = AIChatInput;
 const uploadProps = { action: 'https://api.semi.design/upload' };
 const outerStyle = { margin: '12px' };
 const modelOptions = [
@@ -36,12 +35,12 @@ export default function AIChatInputDemo() {
 
     const renderLeftMenu = () => (
         <>
-            <Configure.Select optionList={modelOptions} field="model" initValue="GPT-4o" />
-            <Configure.Button icon={<IconBookOpenStroked />} field="onlineSearch">
+            <AIChatInput.Configure.Select optionList={modelOptions} field="model" initValue="GPT-4o" />
+            <AIChatInput.Configure.Button icon={<IconBookOpenStroked />} field="onlineSearch">
                 联网搜索
-            </Configure.Button>
-            <Configure.Mcp options={mcpOptions} renderOptionIcon={(option) => <Dynamic component={mcpIcons[option.value]} />} />
-            <Configure.RadioButton options={radioButtonProps} field="mode" initValue="fast" />
+            </AIChatInput.Configure.Button>
+            <AIChatInput.Configure.Mcp options={mcpOptions} renderOptionIcon={(option) => <Dynamic component={mcpIcons[option.value]} />} />
+            <AIChatInput.Configure.RadioButton options={radioButtonProps} field="mode" initValue="fast" />
         </>
     );
 

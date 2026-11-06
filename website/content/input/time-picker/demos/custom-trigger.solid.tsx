@@ -3,9 +3,10 @@ import * as dateFns from 'date-fns';
 import { IconTimePicker } from '@fibrae/semi-icons-solid/lab';
 import { Tag, TimePicker } from '@fibrae/semi-ui-solid';
 
+const formatToken = 'HH:mm:ss';
+
 export default function TimePickerDemo() {
-    const formatToken = 'HH:mm:ss';
-    const [time, setTime] = createSignal<Date | undefined>(new Date(2024, 4, 6, 12));
+    const [time, setTime] = createSignal<Date | undefined>(new Date(2024, 0, 1, 10, 30, 0));
 
     return (
         <TimePicker

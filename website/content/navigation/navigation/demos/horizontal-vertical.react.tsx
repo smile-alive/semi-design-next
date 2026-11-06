@@ -2,38 +2,35 @@ import { IconSemiLogo, IconBytedanceLogo } from '@fibrae/semi-icons-react';
 import { IconTreeSelect, IconBreadcrumb, IconBadge, IconSteps } from '@fibrae/semi-icons-react/lab';
 import { Nav, Avatar, Dropdown, Layout, Breadcrumb, Skeleton } from '@fibrae/semi-ui-react';
 
-const { Header, Footer, Sider, Content } = Layout;
+const currentYear = 2024;
+
+const operationItem = {
+    itemKey: 'operation-management',
+    text: '运营管理',
+    items: ['人员管理', '人员变更'],
+};
+const topItems = [
+    { itemKey: 'user', text: '用户管理', icon: <IconBadge /> },
+    { itemKey: 'union', text: '活动管理', icon: <IconTreeSelect /> },
+    { itemKey: 'approve-management', text: '审批管理', icon: <IconBreadcrumb />, items: ['入驻审核', operationItem] },
+    { itemKey: 'job', text: '任务平台', icon: <IconSteps />, items: ['任务管理', '用户任务查询'] },
+];
+const leftItems = [
+    { itemKey: 'approve-management', text: '审批管理', icon: <IconBreadcrumb />, items: ['入驻审核', operationItem] },
+    { itemKey: 'job', text: '任务平台', icon: <IconSteps />, items: ['任务管理', '用户任务查询'] },
+    { itemKey: 'user', text: '用户管理', icon: <IconBadge /> },
+    { itemKey: 'union', text: '活动管理', icon: <IconTreeSelect /> },
+];
+const routes = ['首页', '当这个页面标题很长时需要省略', '上一页', '详情页'];
 
 function TopHeader() {
     return (
-        <Header style={{ backgroundColor: 'var(--semi-color-bg-1)' }}>
+        <Layout.Header style={{ backgroundColor: 'var(--semi-color-bg-1)' }}>
             <div>
                 <Nav
                     aria-label="顶部导航"
                     mode="horizontal"
-                    items={[
-                        { itemKey: 'user', text: '用户管理', icon: <IconBadge /> },
-                        { itemKey: 'union', text: '活动管理', icon: <IconTreeSelect /> },
-                        {
-                            itemKey: 'approve-management',
-                            text: '审批管理',
-                            icon: <IconBreadcrumb />,
-                            items: [
-                                '入驻审核',
-                                {
-                                    itemKey: 'operation-management',
-                                    text: '运营管理',
-                                    items: ['人员管理', '人员变更'],
-                                },
-                            ],
-                        },
-                        {
-                            text: '任务平台',
-                            icon: <IconSteps />,
-                            itemKey: 'job',
-                            items: ['任务管理', '用户任务查询'],
-                        },
-                    ]}
+                    items={topItems}
                     onSelect={(key) => console.log(key)}
                     header={{
                         logo: <IconSemiLogo style={{ height: '36px', fontSize: 36 }} />,
@@ -57,7 +54,7 @@ function TopHeader() {
                     }
                 />
             </div>
-        </Header>
+        </Layout.Header>
     );
 }
 
@@ -66,29 +63,7 @@ function LeftNav() {
         <Nav
             aria-label="侧边导航"
             style={{ maxWidth: 220, height: '100%' }}
-            items={[
-                {
-                    itemKey: 'approve-management',
-                    text: '审批管理',
-                    icon: <IconBreadcrumb />,
-                    items: [
-                        '入驻审核',
-                        {
-                            itemKey: 'operation-management',
-                            text: '运营管理',
-                            items: ['人员管理', '人员变更'],
-                        },
-                    ],
-                },
-                {
-                    text: '任务平台',
-                    icon: <IconSteps />,
-                    itemKey: 'job',
-                    items: ['任务管理', '用户任务查询'],
-                },
-                { itemKey: 'user', text: '用户管理', icon: <IconBadge /> },
-                { itemKey: 'union', text: '活动管理', icon: <IconTreeSelect /> },
-            ]}
+            items={leftItems}
             footer={{
                 collapseButton: true,
             }}
@@ -105,11 +80,11 @@ function FooterContent() {
                     alignItems: 'center',
                 }}
             >
-                <IconBytedanceLogo size="large" style={{ marginRight: '8px' }} />
-                <span>Copyright © 2019 ByteDance. All Rights Reserved. </span>
+                <IconBytedanceLogo size="large" style={{ marginInlineEnd: '8px' }} />
+                <span>Copyright © {currentYear} ByteDance. All Rights Reserved. </span>
             </span>
             <span>
-                <span style={{ marginRight: '24px' }}>平台客服</span>
+                <span style={{ marginInlineEnd: '24px' }}>平台客服</span>
                 <span>反馈建议</span>
             </span>
         </>
@@ -121,10 +96,10 @@ export default function NavigationDemo() {
         <Layout style={{ border: '1px solid var(--semi-color-border)' }}>
             <TopHeader />
             <Layout>
-                <Sider style={{ backgroundColor: 'var(--semi-color-bg-1)' }}>
+                <Layout.Sider style={{ backgroundColor: 'var(--semi-color-bg-1)' }}>
                     <LeftNav />
-                </Sider>
-                <Content
+                </Layout.Sider>
+                <Layout.Content
                     style={{
                         padding: '24px',
                         backgroundColor: 'var(--semi-color-bg-0)',
@@ -132,9 +107,9 @@ export default function NavigationDemo() {
                 >
                     <Breadcrumb
                         style={{
-                            marginBottom: '24px',
+                            marginBlockEnd: '24px',
                         }}
-                        routes={['首页', '当这个页面标题很长时需要省略', '上一页', '详情页']}
+                        routes={routes}
                     />
                     <div
                         style={{
@@ -149,9 +124,9 @@ export default function NavigationDemo() {
                             <p>Hi, Bytedance dance dance.</p>
                         </Skeleton>
                     </div>
-                </Content>
+                </Layout.Content>
             </Layout>
-            <Footer
+            <Layout.Footer
                 style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -161,7 +136,7 @@ export default function NavigationDemo() {
                 }}
             >
                 <FooterContent />
-            </Footer>
+            </Layout.Footer>
         </Layout>
     );
 }

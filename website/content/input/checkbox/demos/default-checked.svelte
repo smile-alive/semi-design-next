@@ -1,7 +1,5 @@
 <script lang="ts">
-    import { Checkbox, type CheckboxEvent } from '@fibrae/semi-ui-svelte';
-
-    const onChange = (e: CheckboxEvent) => console.log(e);
+    import { Checkbox } from '@fibrae/semi-ui-svelte';
 </script>
 
-<Checkbox aria-label="Checkbox 示例" checked {onChange}>Semi Design</Checkbox>
+<Checkbox aria-label="Checkbox 示例" checked onChange={(e) => console.log(e)}>Semi Design</Checkbox>

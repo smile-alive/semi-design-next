@@ -4,7 +4,7 @@
     let weekStartsOn = $state(0);
     const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
     // A fixed date keeps the server render and the browser on the same first frame
-    const displayValue = new Date(2026, 9, 25);
+    const displayValue = new Date(2019, 6, 23);
 </script>
 
 <div>
@@ -13,5 +13,5 @@
             <Radio value={index}>{day}</Radio>
         {/each}
     </RadioGroup>
-    <Calendar {displayValue} mode="month" style="margin-top: 20px" weekStartsOn={weekStartsOn as WeekStartsOn} />
+    <Calendar {displayValue} mode="month" style="margin-block-start: 20px" weekStartsOn={weekStartsOn as WeekStartsOn} />
 </div>

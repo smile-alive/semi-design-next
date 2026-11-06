@@ -3,7 +3,7 @@
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import { Button, Upload, type FileItem, type UploadOnChangeProps } from '@fibrae/semi-ui-vue';
 
-    const list = ref<FileItem[]>([
+    const initList: FileItem[] = [
         {
             uid: '1',
             name: 'dyBag.jpeg',
@@ -22,10 +22,14 @@
             fileInstance: new File([new ArrayBuffer(2048)], 'dy.jpeg', { type: 'image/jpeg' }),
             url: '/assets/placeholder/avatar-a.svg',
         },
-    ]);
+    ];
+
+    const list = ref(initList);
 
     const onChange = ({ fileList, currentFile }: UploadOnChangeProps) => {
-        console.log('change', fileList, currentFile);
+        console.log('onChange');
+        console.log(fileList);
+        console.log(currentFile);
     };
 </script>
 

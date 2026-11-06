@@ -2,13 +2,8 @@ import * as dateFns from 'date-fns';
 import { range } from 'es-toolkit';
 import { DatePicker, type DatePickerDisabledDateType, type DatePickerDisabledTimeType } from '@fibrae/semi-ui-solid';
 
-const today = () => new Date();
-
-function nextValidMonth() {
-    const nextValidDate = today();
-    nextValidDate.setMonth((nextValidDate.getMonth() + 1) % 12);
-    return nextValidDate;
-}
+const nextValidMonth = new Date();
+nextValidMonth.setMonth((nextValidMonth.getMonth() + 1) % 12);
 
 const disabledTime: DatePickerDisabledTimeType = (date) =>
     // With type dateTime, date is a single Date
@@ -28,7 +23,7 @@ const disabledTime2: DatePickerDisabledTimeType = (_date, panelType) => {
 };
 
 const disabledDate: DatePickerDisabledDateType = (date) => {
-    const deadDate = today();
+    const deadDate = new Date();
     const month = deadDate.getMonth();
     deadDate.setDate(28);
     deadDate.setMonth((month + 1) % 12);
@@ -48,7 +43,7 @@ export default function DatePickerDemo() {
             </div>
             <div>
                 <h4>禁用日期：禁用下个月28号之前的所有日期</h4>
-                <DatePicker type="dateTimeRange" disabledDate={disabledDate} defaultPickerValue={nextValidMonth()} style={{ width: '400px' }} />
+                <DatePicker type="dateTimeRange" disabledDate={disabledDate} defaultPickerValue={nextValidMonth} style={{ width: '400px' }} />
             </div>
         </div>
     );

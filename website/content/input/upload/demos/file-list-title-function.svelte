@@ -4,7 +4,7 @@
 
     const action = 'https://api.semi.design/upload';
 
-    const initialList = (): FileItem[] => [
+    const defaultFileList: FileItem[] = [
         {
             uid: '1',
             name: 'document.pdf',
@@ -20,13 +20,13 @@
     ];
 </script>
 
-<Upload {action} fileList={initialList()} style="margin-bottom: 20px">
-    {#snippet fileListHeader({ fileList, onClear, clearText })}
+<Upload {action} fileList={defaultFileList} style="margin-bottom: 20px">
+    {#snippet fileListHeader(title)}
         <div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
-            <span style="color: var(--semi-color-primary)">📂 共 {fileList.length} 个文件</span>
-            <Button size="small" type="danger" onclick={onClear}>
+            <span style="color: var(--semi-color-primary)">📂 共 {title.fileList.length} 个文件</span>
+            <Button size="small" type="danger" onclick={title.onClear}>
                 {#snippet icon()}<IconClose />{/snippet}
-                {clearText}
+                {title.clearText}
             </Button>
         </div>
     {/snippet}
@@ -35,15 +35,15 @@
         自定义清空按钮样式
     </Button>
 </Upload>
-<Upload {action} fileList={initialList()}>
-    {#snippet fileListHeader({ fileList, onClear })}
+<Upload {action} fileList={defaultFileList}>
+    {#snippet fileListHeader(title)}
         <div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
             <span>
                 已选择
-                <strong style="color: var(--semi-color-danger)">{fileList.length}</strong>
+                <strong style="color: var(--semi-color-danger)">{title.fileList.length}</strong>
                 个文件
             </span>
-            <button style="padding: 0; border: none; background: none; font: inherit; cursor: pointer; color: var(--semi-color-link); font-size: 12px" type="button" onclick={onClear}>全部移除</button>
+            <button style="padding: 0; border: none; background: none; font: inherit; cursor: pointer; color: var(--semi-color-link); font-size: 12px" type="button" onclick={title.onClear}>全部移除</button>
         </div>
     {/snippet}
     <Button theme="light">

@@ -7,27 +7,30 @@ interface Item {
     key: string;
 }
 
+const items: Item[] = [
+    { icon: <IconAlarm style={{ marginInlineEnd: 4 }} />, key: 'alarm' },
+    { icon: <IconBookmark style={{ marginInlineEnd: 4 }} />, key: 'bookmark' },
+    { icon: <IconCamera style={{ marginInlineEnd: 4 }} />, key: 'camera' },
+    { icon: <IconDuration style={{ marginInlineEnd: 4 }} />, key: 'duration' },
+    { icon: <IconEdit style={{ marginInlineEnd: 4 }} />, key: 'edit' },
+    { icon: <IconFolder style={{ marginInlineEnd: 4 }} />, key: 'folder' },
+];
+
+const renderHiddenCount = (hiddenItems: Item[]) => <Tag style={{ marginInlineEnd: 8, marginInlineStart: 8, flex: '0 0 auto', fontVariantNumeric: 'tabular-nums' }}>+{hiddenItems.length}</Tag>;
+
+const renderOverflow = ([start, end]: [Item[], Item[]]): [ReactNode, ReactNode] => [renderHiddenCount(start), renderHiddenCount(end)];
+
+const renderItem = (item: Item) => {
+    return (
+        <Tag key={item.key} color="blue" style={{ marginInlineEnd: 8, flex: '0 0 auto' }}>
+            {item.icon}
+            {item.key}
+        </Tag>
+    );
+};
+
 export default function OverflowListDemo() {
     const [width, setWidth] = useState(100);
-    const renderHiddenCount = (hiddenItems: Item[]) => <Tag style={{ marginRight: 8, marginLeft: 8, flex: '0 0 auto', fontVariantNumeric: 'tabular-nums' }}>+{hiddenItems.length}</Tag>;
-    const renderOverflow = ([start, end]: [Item[], Item[]]): [ReactNode, ReactNode] => [renderHiddenCount(start), renderHiddenCount(end)];
-    const renderItem = (item: Item) => {
-        return (
-            <Tag key={item.key} color="blue" style={{ marginRight: 8, flex: '0 0 auto' }}>
-                {item.icon}
-                {item.key}
-            </Tag>
-        );
-    };
-
-    const items: Item[] = [
-        { icon: <IconAlarm style={{ marginRight: 4 }} />, key: 'alarm' },
-        { icon: <IconBookmark style={{ marginRight: 4 }} />, key: 'bookmark' },
-        { icon: <IconCamera style={{ marginRight: 4 }} />, key: 'camera' },
-        { icon: <IconDuration style={{ marginRight: 4 }} />, key: 'duration' },
-        { icon: <IconEdit style={{ marginRight: 4 }} />, key: 'edit' },
-        { icon: <IconFolder style={{ marginRight: 4 }} />, key: 'folder' },
-    ];
 
     return (
         <div>

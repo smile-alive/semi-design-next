@@ -7,6 +7,7 @@ interface MyButtonProps {
 }
 
 const components: MarkdownRenderComponents = {
+    ...MarkdownRender.defaultComponents,
     MyButton: (props: MyButtonProps) => (
         <Button type="primary" onClick={props.onClick} style={{ 'margin-bottom': '12px' }}>
             {' '}

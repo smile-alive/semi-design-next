@@ -32,9 +32,7 @@
             key: '1',
         },
     ];
-    const style = 'width: 300px';
-    const dropdownStyle = 'max-height: 400px; overflow: auto';
     let value = $state<TreeSelectValue | undefined>('Shanghai');
 </script>
 
-<TreeSelect bind:value {dropdownStyle} placeholder="请选择" {style} {treeData} />
+<TreeSelect bind:value dropdownStyle="max-height: 400px; overflow: auto" placeholder="请选择" style="width: 300px" {treeData} />

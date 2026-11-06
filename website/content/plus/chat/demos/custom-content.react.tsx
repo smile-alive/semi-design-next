@@ -71,21 +71,21 @@ function getId() {
 const uploadProps = { action: 'https://api.semi.design/upload' };
 
 function SourceCard({ source }: { source: Source[] }) {
-    const [open, setOpen] = useState(true);
+    const [collapsed, setCollapsed] = useState(true);
     const onOpen = useCallback(() => {
-        setOpen(false);
+        setCollapsed(false);
     }, []);
 
     const onClose = useCallback(() => {
-        setOpen(true);
+        setCollapsed(true);
     }, []);
 
     return (
         <div
             style={{
-                transition: open ? 'height 0.4s ease, width 0.4s ease' : 'height 0.4s ease',
-                height: open ? '30px' : '200px',
-                width: open ? '190px' : '100%',
+                transition: collapsed ? 'height 0.4s ease, width 0.4s ease' : 'height 0.4s ease',
+                height: collapsed ? '30px' : '200px',
+                width: collapsed ? '190px' : '100%',
                 background: 'var(--semi-color-tertiary-light-hover)',
                 borderRadius: 16,
                 boxSizing: 'border-box',
@@ -95,7 +95,7 @@ function SourceCard({ source }: { source: Source[] }) {
             <button
                 type="button"
                 style={{
-                    display: !open ? 'none' : 'flex',
+                    display: collapsed ? 'flex' : 'none',
                     width: 'fit-content',
                     columnGap: 10,
                     border: 'none',
@@ -123,7 +123,7 @@ function SourceCard({ source }: { source: Source[] }) {
                     width: '100%',
                     height: '100%',
                     boxSizing: 'border-box',
-                    display: !open ? 'flex' : 'none',
+                    display: collapsed ? 'none' : 'flex',
                     flexDirection: 'column',
                     border: 'none',
                     background: 'var(--semi-color-tertiary-light-hover)',
@@ -216,11 +216,11 @@ export default function ChatDemo() {
         }, 200);
     }, []);
 
-    const renderContent = useCallback(({ message, className }: RenderContentProps) => {
+    const renderContent = useCallback((props: RenderContentProps) => {
         return (
-            <div className={className}>
-                {message?.source && <SourceCard source={message.source} />}
-                <MarkdownRender raw={typeof message?.content === 'string' ? message.content : ''} />
+            <div className={props.className}>
+                {props.message?.source && <SourceCard source={props.message.source} />}
+                <MarkdownRender raw={typeof props.message?.content === 'string' ? props.message.content : ''} />
             </div>
         );
     }, []);

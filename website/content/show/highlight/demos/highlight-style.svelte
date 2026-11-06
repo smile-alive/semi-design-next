@@ -6,10 +6,8 @@
 
     const baseStyle = {
         borderRadius: '6px',
-        marginLeft: '4px',
-        marginRight: '4px',
-        paddingLeft: '4px',
-        paddingRight: '4px',
+        marginInline: '4px',
+        paddingInline: '4px',
         color: 'var(--semi-white)',
     };
     const tealStyle = { ...baseStyle, backgroundColor: 'var(--semi-teal-7)' };

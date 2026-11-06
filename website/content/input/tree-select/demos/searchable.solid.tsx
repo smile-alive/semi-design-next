@@ -57,9 +57,9 @@ const treeData = [
     },
 ];
 
-function onSearch(inputValue: string, filteredExpandedKeys: string[], filteredNodes: TreeNodeData[]) {
+const onSearch = (inputValue: string, filteredExpandedKeys: string[], filteredNodes: TreeNodeData[]) => {
     console.log('onSearch', inputValue, filteredExpandedKeys, filteredNodes);
-}
+};
 
 export default function TreeSelectDemo() {
     const [showFilteredOnly, setShowFilteredOnly] = createSignal(false);

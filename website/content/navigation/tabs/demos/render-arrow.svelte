@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Dropdown, DropdownItem, DropdownMenu, Tabs, type PlainTab } from '@fibrae/semi-ui-svelte';
+    import { Dropdown, Tabs, type PlainTab } from '@fibrae/semi-ui-svelte';
 
     let activeKey = $state<string | null | undefined>('Tab-0');
     const tabList: PlainTab[] = Array.from({ length: 10 }, (_, i) => ({ itemKey: `Tab-${i}`, tab: `Tab-${i}` }));
@@ -7,21 +7,21 @@
 </script>
 
 <Tabs bind:activeKey collapsible style="width: 50%; margin: 20px" {tabList} type="card">
-    {#snippet arrow({ items, position, onClick })}
+    {#snippet arrow(arrowProps)}
         <Dropdown>
-            {#snippet child({ props })}
-                <button {...props} style={arrowStyle} type="button" onclick={onClick}>
-                    {position === 'start' ? '←' : '→'}
+            {#snippet child(trigger)}
+                <button {...trigger.props} style={arrowStyle} type="button" onclick={arrowProps.onClick}>
+                    {arrowProps.position === 'start' ? '←' : '→'}
                 </button>
             {/snippet}
             {#snippet content()}
-                <DropdownMenu>
-                    {#each items as item (item.itemKey)}
-                        <DropdownItem onclick={() => (activeKey = item.itemKey)}>{item.itemKey}</DropdownItem>
+                <Dropdown.Menu>
+                    {#each arrowProps.items as item (item.itemKey)}
+                        <Dropdown.Item onclick={() => (activeKey = item.itemKey)}>{item.itemKey}</Dropdown.Item>
                     {/each}
-                </DropdownMenu>
+                </Dropdown.Menu>
             {/snippet}
         </Dropdown>
     {/snippet}
-    {#snippet panel({ index })}Content of card tab {index}{/snippet}
+    {#snippet panel(pane)}Content of card tab {pane.index}{/snippet}
 </Tabs>

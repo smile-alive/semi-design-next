@@ -23,7 +23,7 @@
 
 <template>
     <div>
-        <RadioGroup :modelValue="type" :style="{ marginTop: '14px', marginBottom: '14px' }" type="button" @update:modelValue="changeType">
+        <RadioGroup :modelValue="type" :style="{ marginBlockStart: '14px', marginBlockEnd: '14px' }" type="button" @update:modelValue="changeType">
             <Radio v-for="key in keys" :key="key" :value="key">
                 <span :style="{ color: `var(--semi-color-${key === 'default' ? 'primary' : key})` }">{{ key }}</span>
             </Radio>

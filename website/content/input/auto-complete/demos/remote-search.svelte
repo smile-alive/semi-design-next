@@ -4,30 +4,18 @@
     import { IconButton, IconForm, IconInput, IconSelect, IconTable } from '@fibrae/semi-icons-svelte/lab';
     import { AutoComplete, type AutoCompleteDataItem } from '@fibrae/semi-ui-svelte';
 
-    interface ListItem {
-        value: 'select' | 'input' | 'form' | 'button' | 'table';
-        label: string;
-    }
-
-    const icons = {
-        select: IconSelect,
-        input: IconInput,
-        form: IconForm,
-        button: IconButton,
-        table: IconTable,
-    };
-
-    const initList: ListItem[] = [
-        { value: 'select', label: '选择器' },
-        { value: 'input', label: '输入框' },
-        { value: 'form', label: '表单' },
-        { value: 'button', label: '按钮' },
-        { value: 'table', label: '表格' },
+    const initList = [
+        { value: 'select', label: '选择器', icon: IconSelect },
+        { value: 'input', label: '输入框', icon: IconInput },
+        { value: 'form', label: '表单', icon: IconForm },
+        { value: 'button', label: '按钮', icon: IconButton },
+        { value: 'table', label: '表格', icon: IconTable },
     ];
 
+    type ListItem = (typeof initList)[number];
+
     let loading = $state(false);
-    let list = $state(initList);
-    let selected = $state('');
+    let list = $state.raw<ListItem[]>(initList);
 
     const handleSearch = (inputValue: string) => {
         loading = true;
@@ -41,7 +29,7 @@
     const search = debounce(handleSearch, 200);
 
     const handleSelect = (value: string | number | AutoCompleteDataItem) => {
-        selected = String(value);
+        console.log(value);
     };
 
     // Unlike Select, this can return only a string, not a node
@@ -52,17 +40,16 @@
     {#snippet prefix()}
         <IconSearch />
     {/snippet}
-    {#snippet item({ item })}
-        {@const Icon = icons[item.value]}
+    {#snippet item(entry)}
+        {@const Icon = entry.item.icon}
         <div style="display: flex; align-items: center">
             <div style="font-size: 32px">
                 <Icon />
             </div>
-            <div style="margin-left: 12px">
-                <p>{item.value}</p>
-                <p>{item.label}</p>
+            <div style="margin-inline-start: 12px">
+                <p>{entry.item.value}</p>
+                <p>{entry.item.label}</p>
             </div>
         </div>
     {/snippet}
 </AutoComplete>
-<p>已选择：{selected}</p>

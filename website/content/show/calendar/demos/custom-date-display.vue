@@ -7,9 +7,9 @@
 
 <template>
     <Calendar :displayValue="displayValue" :height="400" mode="week">
-        <template #dateDisplay="{ date }">
+        <template #dateDisplay="display">
             <div :style="{ paddingBlock: '6px' }">
-                <Avatar :color="colors[date.getDay()]" size="small">{{ date.getDate() }}</Avatar>
+                <Avatar :color="colors[display.date.getDay()]" size="small">{{ display.date.getDate() }}</Avatar>
             </div>
         </template>
     </Calendar>

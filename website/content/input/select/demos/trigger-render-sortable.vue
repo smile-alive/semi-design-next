@@ -19,18 +19,18 @@
 <template>
     <h4>可对已选项拖拽重新排序的 Select</h4>
     <Select v-model="valList" aria-label="可拖拽排序的 Select" filter multiple :optionList="list" :style="{ width: '240px' }">
-        <template #trigger="{ value, onSearch }">
+        <template #trigger="selectState">
             <div role="presentation" @keydown.stop>
                 <TagInput
                     :allowDuplicates="false"
                     draggable
                     :inputValue="inputVal"
-                    :modelValue="value.map((item) => String(item.label))"
+                    :modelValue="selectState.value.map((item) => String(item.label))"
                     showClear
                     @change="handleSort"
                     @inputChange="
                         (word) => {
-                            onSearch(word);
+                            selectState.onSearch(word);
                             inputVal = word;
                         }
                     "

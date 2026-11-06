@@ -2,9 +2,6 @@ import { useState, useCallback, type ComponentProps, type CSSProperties, type Mo
 import { Sidebar, Annotation, type CodeItemProps, type FileItemProps, type ImageUploadNodeOptions } from '@fibrae/semi-ai-react';
 import { IconSearch, IconBriefStroked, IconCodeStroked, IconModalStroked } from '@fibrae/semi-icons-react';
 
-const { FileContent, CodeContent } = Sidebar;
-const { AnnotationContent } = Annotation;
-
 const containerStyle: CSSProperties = {
     display: 'flex',
     height: '800px',
@@ -282,7 +279,7 @@ If your project is using React v19, please use @fibrae/semi-ui-19. For React ver
     },
 ];
 
-const defaultInfoList: ComponentProps<typeof AnnotationContent>['info'] = [
+const defaultInfoList: ComponentProps<typeof Annotation.AnnotationContent>['info'] = [
     {
         header: 'Semi design introduction',
         key: '1',
@@ -346,6 +343,8 @@ const imgUploadProps: ImageUploadNodeOptions = {
     },
 };
 
+const defaultSize = { width: '60%' };
+
 export default function SidebarDemo() {
     const [mode, setMode] = useState('main');
     const [activeKey, setActiveKey] = useState('codePreview');
@@ -375,11 +374,11 @@ export default function SidebarDemo() {
         (activeKey: string) => {
             switch (activeKey) {
                 case 'searchResult':
-                    return <AnnotationContent activeKey={activeReferKey} info={defaultInfoList} onChange={onActiveReferKeyChange} />;
+                    return <Annotation.AnnotationContent activeKey={activeReferKey} info={defaultInfoList} onChange={onActiveReferKeyChange} />;
                 case 'filePreview':
-                    return <FileContent activeKey={activeFileKey} files={defaultFiles} onExpand={onExpand} onChange={onActiveFileKeyChange} />;
+                    return <Sidebar.FileContent activeKey={activeFileKey} files={defaultFiles} onExpand={onExpand} onChange={onActiveFileKeyChange} />;
                 case 'codePreview':
-                    return <CodeContent activeKey={activeCodeKey} codes={defaultCodes} onExpand={onExpand} onChange={onActiveCodeKeyChange} />;
+                    return <Sidebar.CodeContent activeKey={activeCodeKey} codes={defaultCodes} onExpand={onExpand} onChange={onActiveCodeKeyChange} />;
                 case 'network':
                     return <img alt="network" src="/assets/root-web-sites/test.jpg" style={{ width: '100%' }} />;
                 default:
@@ -406,7 +405,7 @@ export default function SidebarDemo() {
                 motion={false}
                 title="Agent 的工作空间"
                 mode={mode}
-                defaultSize={{ width: '60%' }}
+                defaultSize={defaultSize}
                 onActiveOptionChange={onActiveOptionChange}
                 activeKey={activeKey}
                 options={optionList}

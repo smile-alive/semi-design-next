@@ -76,7 +76,7 @@ function renderSourceHeader(header: TransferSourceHeaderProps) {
                 <strong>文件总数：</strong>
                 {header.leafOnlyNum !== undefined ? header.leafOnlyNum : header.num} 个文件
                 <Show when={header.leafOnlyNum !== undefined}>
-                    <span style={{ color: 'var(--semi-color-text-2)', 'margin-left': '8px', 'font-size': '12px' }}>（总节点数：{header.num}）</span>
+                    <span style={{ color: 'var(--semi-color-text-2)', 'margin-inline-start': '8px', 'font-size': '12px' }}>（总节点数：{header.num}）</span>
                 </Show>
             </span>
             <Show when={header.showButton}>

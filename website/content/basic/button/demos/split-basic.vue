@@ -14,13 +14,17 @@
     ];
 
     const btnVisible = reactive<Record<number, boolean>>({ 1: false, 2: false, 3: false });
+
+    const handleVisibleChange = (key: number, visible: boolean) => {
+        btnVisible[key] = visible;
+    };
 </script>
 
 <template>
     <div>
-        <SplitButtonGroup aria-label="项目操作按钮组" :style="{ marginRight: '10px' }">
+        <SplitButtonGroup aria-label="项目操作按钮组" :style="{ marginInlineEnd: '10px' }">
             <Button theme="solid" type="primary">分裂按钮</Button>
-            <Dropdown :menu="menu" position="bottomRight" trigger="click" @visibleChange="(v) => (btnVisible[1] = v)">
+            <Dropdown :menu="menu" position="bottomRight" trigger="click" @visibleChange="(v) => handleVisibleChange(1, v)">
                 <Button aria-label="更多操作" :style="btnVisible[1] ? { background: 'var(--semi-color-primary-hover)', padding: '8px 4px' } : { padding: '8px 4px' }" theme="solid" type="primary">
                     <template #icon>
                         <IconTreeTriangleDown />
@@ -28,9 +32,9 @@
                 </Button>
             </Dropdown>
         </SplitButtonGroup>
-        <SplitButtonGroup aria-label="项目操作按钮组" :style="{ marginRight: '10px' }">
+        <SplitButtonGroup aria-label="项目操作按钮组" :style="{ marginInlineEnd: '10px' }">
             <Button theme="light" type="primary">分裂按钮</Button>
-            <Dropdown :menu="menu" position="bottomRight" trigger="click" @visibleChange="(v) => (btnVisible[2] = v)">
+            <Dropdown :menu="menu" position="bottomRight" trigger="click" @visibleChange="(v) => handleVisibleChange(2, v)">
                 <Button aria-label="更多操作" :style="btnVisible[2] ? { background: 'var(--semi-color-fill-1)', padding: '8px 4px' } : { padding: '8px 4px' }" theme="light" type="primary">
                     <template #icon>
                         <IconTreeTriangleDown />
@@ -40,7 +44,7 @@
         </SplitButtonGroup>
         <SplitButtonGroup aria-label="项目操作按钮组">
             <Button :style="btnVisible[3] ? { background: 'var(--semi-color-fill-0)' } : {}" theme="borderless" type="primary"> 分裂按钮 </Button>
-            <Dropdown :menu="menu" position="bottomRight" trigger="click" @visibleChange="(v) => (btnVisible[3] = v)">
+            <Dropdown :menu="menu" position="bottomRight" trigger="click" @visibleChange="(v) => handleVisibleChange(3, v)">
                 <Button aria-label="更多操作" :style="btnVisible[3] ? { background: 'var(--semi-color-fill-1)', padding: '8px 4px' } : { padding: '8px 4px' }" theme="borderless" type="primary">
                     <template #icon>
                         <IconTreeTriangleDown />

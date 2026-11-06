@@ -1,19 +1,19 @@
 <script setup lang="ts">
-    import { Select, SelectOption } from '@fibrae/semi-ui-vue';
+    import { Select } from '@fibrae/semi-ui-vue';
 </script>
 
 <template>
     <Select aria-label="default" :style="{ width: '180px' }">
-        <SelectOption value="ulikecam">轻颜相机</SelectOption>
+        <Select.Option value="ulikecam">轻颜相机</Select.Option>
     </Select>
     <br />
     <br />
     <Select aria-label="warning" :style="{ width: '180px' }" validateStatus="warning">
-        <SelectOption value="ulikecam">轻颜相机</SelectOption>
+        <Select.Option value="ulikecam">轻颜相机</Select.Option>
     </Select>
     <br />
     <br />
     <Select aria-label="error" :style="{ width: '180px' }" validateStatus="error">
-        <SelectOption value="ulikecam">轻颜相机</SelectOption>
+        <Select.Option value="ulikecam">轻颜相机</Select.Option>
     </Select>
 </template>

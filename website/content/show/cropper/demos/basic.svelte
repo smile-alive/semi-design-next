@@ -13,7 +13,7 @@
     };
 </script>
 
-<RadioGroup aria-label="裁切框形状" bind:value={shape} name="demo-cropper-shape">
+<RadioGroup aria-label="裁切框形状" bind:value={shape}>
     <Radio value="rect">rect</Radio>
     <Radio value="round">round</Radio>
     <Radio value="roundRect">roundRect</Radio>

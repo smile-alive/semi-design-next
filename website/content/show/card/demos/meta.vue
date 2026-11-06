@@ -1,19 +1,19 @@
 <script setup lang="ts">
-    import { Avatar, Button, Card, CardMeta, Space, TypographyText } from '@fibrae/semi-ui-vue';
+    import { Avatar, Button, Card, Space, Typography } from '@fibrae/semi-ui-vue';
 </script>
 
 <template>
     <Card :footerStyle="{ display: 'flex', justifyContent: 'flex-end' }" footerLine :style="{ maxWidth: '340px' }">
         <template #title>
-            <CardMeta title="Semi Doc">
+            <Card.Meta title="Semi Doc">
                 <template #description>全面、易用、优质</template>
                 <template #avatar>
                     <Avatar alt="Card meta img" size="default" src="/assets/placeholder/logo.svg" />
                 </template>
-            </CardMeta>
+            </Card.Meta>
         </template>
         <template #headerExtraContent>
-            <TypographyText link>More</TypographyText>
+            <Typography.Text link>More</Typography.Text>
         </template>
         <template #cover>
             <img alt="example" src="/assets/root-web-sites/card-cover-docs-demo.jpeg" />

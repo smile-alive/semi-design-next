@@ -11,7 +11,9 @@ export default function AIChatInputDemo() {
     const onChange = (content: Content[]) => {
         const value = content.length && content[0].text ? content[0].text : undefined;
         if (value === undefined || value.includes('\n') || value.length >= 4) {
-            setSuggestion([]);
+            if (suggestion().length) {
+                setSuggestion([]);
+            }
             return;
         }
         setSuggestion(value.length ? suggestionTemplate.map((item) => `${value}，${item}`) : []);

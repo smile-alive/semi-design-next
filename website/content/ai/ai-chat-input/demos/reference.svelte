@@ -2,7 +2,7 @@
     import { AIChatInput, type AIChatInputReference as Reference } from '@fibrae/semi-ai-svelte';
 
     const uploadProps = { action: 'https://api.semi.design/upload' };
-    let references = $state<Reference[]>([
+    const referenceTemp: Reference[] = [
         {
             id: '1',
             type: 'text',
@@ -29,7 +29,9 @@
             id: '6',
             name: 'code.json',
         },
-    ]);
+    ];
+
+    let references = $state(referenceTemp);
 
     const handleReferenceDelete = (item: Reference) => {
         references = references.filter((ref) => ref.id !== item.id);

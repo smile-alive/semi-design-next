@@ -22,23 +22,22 @@
         ['bottom', 'Bottom'],
         ['bottomRight', 'BR'],
     ];
-    const imageStyle = 'width: 150px; height: 150px';
 </script>
 
 {#snippet content()}
     <Empty style="width: 400px; margin: 0 auto; display: flex; padding: 20px" title="先进的设计 / 研发协作方式">
         {#snippet image()}
-            <IllustrationSuccess style={imageStyle} />
+            <IllustrationSuccess style="width: 150px; height: 150px" />
         {/snippet}
         {#snippet darkModeImage()}
-            <IllustrationSuccessDark style={imageStyle} />
+            <IllustrationSuccessDark style="width: 150px; height: 150px" />
         {/snippet}
         {#snippet description()}使用 Semi D2C 快速还原 Figma 设计稿，一键转代码{/snippet}
     </Empty>
 {/snippet}
 
 <div>
-    <div style="margin-left: 80px; white-space: nowrap">
+    <div style="margin-inline-start: 80px; white-space: nowrap">
         {#each tops as [position, label] (position)}
             <Popover {content} {position}>
                 <Tag style="margin: 8px; padding: 20px">{label}</Tag>
@@ -52,14 +51,14 @@
             </Popover>
         {/each}
     </div>
-    <div style="width: 40px; margin-left: 300px">
+    <div style="width: 40px; margin-inline-start: 300px">
         {#each rights as [position, label] (position)}
             <Popover {content} {position}>
                 <Tag style="margin: 8px; padding: 20px; width: 60px">{label}</Tag>
             </Popover>
         {/each}
     </div>
-    <div style="margin-left: 80px; clear: both; white-space: nowrap">
+    <div style="margin-inline-start: 80px; clear: both; white-space: nowrap">
         {#each bottoms as [position, label] (position)}
             <Popover {content} {position}>
                 <Tag style="margin: 8px; padding: 20px; width: 60px">{label}</Tag>

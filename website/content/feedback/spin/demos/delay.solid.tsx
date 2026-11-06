@@ -10,7 +10,7 @@ export default function SpinDemo() {
 
     return (
         <div>
-            <Button onClick={toggle} style={{ 'margin-right': '20px' }}>
+            <Button onClick={toggle} style={{ 'margin-inline-end': '20px' }}>
                 延迟显示的spin
             </Button>
             <Spin delay={1000} spinning={loading()} />

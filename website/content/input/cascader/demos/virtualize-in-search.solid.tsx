@@ -20,11 +20,11 @@ const virtualize = {
     itemSize: 36,
 };
 
-const renderFilterItem = (props: CascaderFilterRenderProps) => (
-    <div class={props.class} style={{ 'justify-content': 'start', padding: '8px 16px 8px 12px', 'box-sizing': 'border-box' }}>
-        <Checkbox onChange={props.onCheck} indeterminate={props.checkStatus.halfChecked} checked={props.checkStatus.checked} style={{ 'margin-right': '8px' }} />
+const renderFilterItem = (item: CascaderFilterRenderProps) => (
+    <div class={item.class} style={{ 'justify-content': 'start', padding: '8px 16px 8px 12px', 'box-sizing': 'border-box' }}>
+        <Checkbox onChange={item.onCheck} indeterminate={item.checkStatus.halfChecked} checked={item.checkStatus.checked} style={{ 'margin-inline-end': '8px' }} />
         <Typography.Text ellipsis={{ showTooltip: { opts: { style: { 'word-break': 'break-all' } } } }} style={{ 'max-width': '260px' }}>
-            {props.data.map((item) => item.label).join(' | ')}
+            {item.data.map((option) => option.label).join(' | ')}
         </Typography.Text>
     </div>
 );

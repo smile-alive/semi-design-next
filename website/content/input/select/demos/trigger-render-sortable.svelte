@@ -18,7 +18,7 @@
 
 <h4>可对已选项拖拽重新排序的 Select</h4>
 <Select aria-label="可拖拽排序的 Select" bind:value={valList} filter multiple optionList={list} style="width: 240px">
-    {#snippet trigger({ value, onSearch })}
+    {#snippet trigger(selectState)}
         <div role="presentation" onkeydown={(event) => event.stopPropagation()}>
             <TagInput
                 allowDuplicates={false}
@@ -26,11 +26,11 @@
                 inputValue={inputVal}
                 onChange={handleSort}
                 onInputChange={(word) => {
-                    onSearch(word);
+                    selectState.onSearch(word);
                     inputVal = word;
                 }}
                 showClear
-                value={value.map((item) => String(item.label))}
+                value={selectState.value.map((item) => String(item.label))}
             />
         </div>
     {/snippet}

@@ -18,20 +18,20 @@ import {
 } from '@fibrae/semi-illustrations-react';
 import { Empty } from '@fibrae/semi-ui-react';
 
+const emptyStyle = { padding: 30 };
+const imageStyle = { width: 150, height: 150 };
+
 export default function EmptyDemo() {
-    const emptyStyle = {
-        padding: 30,
-    };
     return (
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            <Empty image={<IllustrationSuccess style={{ width: 150, height: 150 }} />} darkModeImage={<IllustrationSuccessDark style={{ width: 150, height: 150 }} />} description="创建成功" style={emptyStyle} />
-            <Empty image={<IllustrationFailure style={{ width: 150, height: 150 }} />} darkModeImage={<IllustrationFailureDark style={{ width: 150, height: 150 }} />} description="加载失败" style={emptyStyle} />
-            <Empty image={<IllustrationNoAccess style={{ width: 150, height: 150 }} />} darkModeImage={<IllustrationNoAccessDark style={{ width: 150, height: 150 }} />} description="没有权限" style={emptyStyle} />
-            <Empty image={<IllustrationNoContent style={{ width: 150, height: 150 }} />} darkModeImage={<IllustrationNoContentDark style={{ width: 150, height: 150 }} />} description="暂无内容，请添加" style={emptyStyle} />
-            <Empty image={<IllustrationNotFound style={{ width: 150, height: 150 }} />} darkModeImage={<IllustrationNotFoundDark style={{ width: 150, height: 150 }} />} description="页面404" style={emptyStyle} />
-            <Empty image={<IllustrationNoResult style={{ width: 150, height: 150 }} />} darkModeImage={<IllustrationNoResultDark style={{ width: 150, height: 150 }} />} description="搜索无结果" style={emptyStyle} />
-            <Empty image={<IllustrationConstruction style={{ width: 150, height: 150 }} />} darkModeImage={<IllustrationConstructionDark style={{ width: 150, height: 150 }} />} description="建设中" style={emptyStyle} />
-            <Empty image={<IllustrationIdle style={{ width: 150, height: 150 }} />} darkModeImage={<IllustrationIdleDark style={{ width: 150, height: 150 }} />} description="神游四方" style={emptyStyle} />
+            <Empty image={<IllustrationSuccess style={imageStyle} />} darkModeImage={<IllustrationSuccessDark style={imageStyle} />} description="创建成功" style={emptyStyle} />
+            <Empty image={<IllustrationFailure style={imageStyle} />} darkModeImage={<IllustrationFailureDark style={imageStyle} />} description="加载失败" style={emptyStyle} />
+            <Empty image={<IllustrationNoAccess style={imageStyle} />} darkModeImage={<IllustrationNoAccessDark style={imageStyle} />} description="没有权限" style={emptyStyle} />
+            <Empty image={<IllustrationNoContent style={imageStyle} />} darkModeImage={<IllustrationNoContentDark style={imageStyle} />} description="暂无内容，请添加" style={emptyStyle} />
+            <Empty image={<IllustrationNotFound style={imageStyle} />} darkModeImage={<IllustrationNotFoundDark style={imageStyle} />} description="页面404" style={emptyStyle} />
+            <Empty image={<IllustrationNoResult style={imageStyle} />} darkModeImage={<IllustrationNoResultDark style={imageStyle} />} description="搜索无结果" style={emptyStyle} />
+            <Empty image={<IllustrationConstruction style={imageStyle} />} darkModeImage={<IllustrationConstructionDark style={imageStyle} />} description="建设中" style={emptyStyle} />
+            <Empty image={<IllustrationIdle style={imageStyle} />} darkModeImage={<IllustrationIdleDark style={imageStyle} />} description="神游四方" style={emptyStyle} />
         </div>
     );
 }

@@ -1,8 +1,6 @@
 import { createSignal } from 'solid-js';
 import { Sidebar } from '@fibrae/semi-ai-solid';
 
-const { FileContent } = Sidebar;
-
 const defaultFiles = [
     {
         key: 'file1',
@@ -115,7 +113,7 @@ export default function SidebarDemo() {
 
     return (
         <div class="semi-sidebar-main">
-            <FileContent style={{ width: '600px' }} activeKey={activeKey()} files={defaultFiles} onChange={setActiveKey} />
+            <Sidebar.FileContent style={{ width: '600px' }} activeKey={activeKey()} files={defaultFiles} onChange={setActiveKey} />
         </div>
     );
 }

@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { Transfer, ButtonGroup, Button } from '@fibrae/semi-ui-react';
 
+const data = Array.from({ length: 100 }, (_v, i) => {
+    return {
+        label: `选项名称 ${i}`,
+        value: i,
+        disabled: false,
+        key: `key-${i}`,
+    };
+});
+
 export default function TransferDemo() {
     const [currentPage, setCurrentPage] = useState(1);
-    const data = Array.from({ length: 100 }, (_v, i) => {
-        return {
-            label: `选项名称 ${i}`,
-            value: i,
-            disabled: false,
-            key: `key-${i}`,
-        };
-    });
     return (
         <div>
             <ButtonGroup style={{ marginBottom: 12 }}>

@@ -40,7 +40,10 @@ const treeData = [
 
 export default function TreeSelectDemo() {
     const [expandedKeys, setExpandedKeys] = createSignal<string[]>([]);
-    return (
-        <TreeSelect style={{ width: '300px' }} dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} treeData={treeData} filterTreeNode expandedKeys={expandedKeys()} onExpand={(keys) => setExpandedKeys(keys)} onSearch={(_, filteredExpandedKeys) => setExpandedKeys([...filteredExpandedKeys, ...expandedKeys()])} />
-    );
+
+    const onSearch = (_inputValue: string, filteredExpandedKeys: string[]) => {
+        setExpandedKeys([...filteredExpandedKeys, ...expandedKeys()]);
+    };
+
+    return <TreeSelect style={{ width: '300px' }} dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} treeData={treeData} filterTreeNode expandedKeys={expandedKeys()} onExpand={(keys) => setExpandedKeys(keys)} onSearch={onSearch} />;
 }

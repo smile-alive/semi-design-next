@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { onBeforeUnmount, onMounted, shallowRef } from 'vue';
-    import { List, ListItem } from '@fibrae/semi-ui-vue';
+    import { List } from '@fibrae/semi-ui-vue';
 
     const list = ['围城', '平凡的世界（全三册）', '三体（全集）', '雪中悍刀行（全集）', '撒哈拉的故事', '明朝那些事', '一禅小和尚', '沙丘', '被讨厌的勇气', '罪与罚'];
 
@@ -18,12 +18,17 @@
     };
 
     const onKeydown = (event: KeyboardEvent) => {
-        if (event.key === 'ArrowUp') {
-            event.preventDefault();
-            changeIndex(-1);
-        } else if (event.key === 'ArrowDown') {
-            event.preventDefault();
-            changeIndex(1);
+        switch (event.key) {
+            case 'ArrowUp':
+                event.preventDefault();
+                changeIndex(-1);
+                break;
+            case 'ArrowDown':
+                event.preventDefault();
+                changeIndex(1);
+                break;
+            default:
+                break;
         }
     };
 
@@ -35,7 +40,7 @@
     <div>
         <div
             :style="{
-                marginRight: '16px',
+                marginInlineEnd: '16px',
                 width: '280px',
                 display: 'flex',
                 flexWrap: 'wrap',
@@ -43,10 +48,10 @@
             }"
         >
             <List class="component-list-demo-booklist" :dataSource="list" size="small" :split="false" :style="{ flexBasis: '100%', flexShrink: 0, borderBottom: '1px solid var(--semi-color-border)' }">
-                <template #item="{ item, index }">
-                    <ListItem :class="{ 'component-list-demo-booklist-active-item': index === hoverIndex }">
-                        {{ item }}
-                    </ListItem>
+                <template #item="row">
+                    <List.Item :class="{ 'component-list-demo-booklist-active-item': row.index === hoverIndex }">
+                        {{ row.item }}
+                    </List.Item>
                 </template>
             </List>
         </div>

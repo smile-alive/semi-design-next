@@ -23,7 +23,7 @@
     import zh_TW from '@fibrae/semi-foundation/locale/source/zh_TW';
     import { InputNumber, LocaleProvider, Select } from '@fibrae/semi-ui-svelte';
 
-    const languages = {
+    const language = {
         zh_CN,
         en_GB,
         en_US,
@@ -73,12 +73,12 @@
         { value: 'nl_NL', label: '荷兰语' },
     ];
 
-    let localeCode = $state<keyof typeof languages>('zh_CN');
-    const locale = $derived(languages[localeCode]);
+    let localeCode = $state<keyof typeof language>('zh_CN');
+    const locale = $derived(language[localeCode]);
 
     const onLanguageChange = (code: unknown) => {
-        if (typeof code === 'string' && code in languages) {
-            localeCode = code as keyof typeof languages;
+        if (typeof code === 'string' && code in language) {
+            localeCode = code as keyof typeof language;
         }
     };
 </script>

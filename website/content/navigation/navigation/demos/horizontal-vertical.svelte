@@ -1,7 +1,7 @@
 <script lang="ts">
     import { IconBytedanceLogo, IconSemiLogo } from '@fibrae/semi-icons-svelte';
     import { IconBadge, IconBreadcrumb, IconSteps, IconTreeSelect } from '@fibrae/semi-icons-svelte/lab';
-    import { Avatar, Breadcrumb, Dropdown, DropdownItem, DropdownMenu, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, Nav, NavFooter, NavHeader, Skeleton, SkeletonParagraph, type NavIconArgs, type NavItemConfig, type NavItemRenderProps, type NavItems } from '@fibrae/semi-ui-svelte';
+    import { Avatar, Breadcrumb, Dropdown, Layout, Nav, Skeleton, type NavIconArgs, type NavItemConfig, type NavItemRenderProps, type NavItems } from '@fibrae/semi-ui-svelte';
 
     const currentYear = 2024;
 
@@ -27,59 +27,59 @@
 </script>
 
 {#snippet header()}
-    <NavHeader text="Semi 运营后台">
+    <Nav.Header text="Semi 运营后台">
         {#snippet logo()}
             <IconSemiLogo style="height: 36px; font-size: 36px" />
         {/snippet}
-    </NavHeader>
+    </Nav.Header>
 {/snippet}
 
 {#snippet footer()}
-    <NavFooter>
+    <Nav.Footer>
         <Dropdown position="bottomRight">
             <Avatar color="light-blue" size="small" style="margin: 4px">BD</Avatar>
             <span>Bytedancer</span>
             {#snippet content()}
-                <DropdownMenu>
-                    <DropdownItem>详情</DropdownItem>
-                    <DropdownItem>退出</DropdownItem>
-                </DropdownMenu>
+                <Dropdown.Menu>
+                    <Dropdown.Item>详情</Dropdown.Item>
+                    <Dropdown.Item>退出</Dropdown.Item>
+                </Dropdown.Menu>
             {/snippet}
         </Dropdown>
-    </NavFooter>
+    </Nav.Footer>
 {/snippet}
 
-{#snippet icon({ item, size }: NavIconArgs & NavItemRenderProps)}
-    {@const Icon = icons[item.itemKey as keyof typeof icons]}
+{#snippet icon(renderProps: NavIconArgs & NavItemRenderProps)}
+    {@const Icon = icons[renderProps.item.itemKey as keyof typeof icons]}
     {#if Icon}
-        <Icon {size} />
+        <Icon size={renderProps.size} />
     {/if}
 {/snippet}
 
 <Layout style="border: 1px solid var(--semi-color-border)">
-    <LayoutHeader style="background-color: var(--semi-color-bg-1)">
+    <Layout.Header style="background-color: var(--semi-color-bg-1)">
         <div>
-            <Nav aria-label="顶部导航" {footer} {header} {icon} items={topItems} mode="horizontal" onSelect={(data) => console.log(data)} />
+            <Nav aria-label="顶部导航" {footer} {header} {icon} items={topItems} mode="horizontal" onSelect={(key) => console.log(key)} />
         </div>
-    </LayoutHeader>
+    </Layout.Header>
     <Layout>
-        <LayoutSider style="background-color: var(--semi-color-bg-1)">
+        <Layout.Sider style="background-color: var(--semi-color-bg-1)">
             <Nav aria-label="侧边导航" footer={{ collapseButton: true }} {icon} items={leftItems} style="max-width: 220px; height: 100%" />
-        </LayoutSider>
-        <LayoutContent style="padding: 24px; background-color: var(--semi-color-bg-0)">
-            <Breadcrumb {routes} style="margin-bottom: 24px" />
+        </Layout.Sider>
+        <Layout.Content style="padding: 24px; background-color: var(--semi-color-bg-0)">
+            <Breadcrumb {routes} style="margin-block-end: 24px" />
             <div style="border-radius: 10px; border: 1px solid var(--semi-color-border); height: 376px; padding: 32px">
                 <Skeleton loading>
                     {#snippet placeholder()}
-                        <SkeletonParagraph rows={2} />
+                        <Skeleton.Paragraph rows={2} />
                     {/snippet}
                     <p>Hi, Bytedance dance dance.</p>
                     <p>Hi, Bytedance dance dance.</p>
                 </Skeleton>
             </div>
-        </LayoutContent>
+        </Layout.Content>
     </Layout>
-    <LayoutFooter style="display: flex; justify-content: space-between; padding: 20px; color: var(--semi-color-text-2); background-color: var(--semi-grey-0)">
+    <Layout.Footer style="display: flex; justify-content: space-between; padding: 20px; color: var(--semi-color-text-2); background-color: var(--semi-grey-0)">
         <span style="display: flex; align-items: center">
             <IconBytedanceLogo size="large" style="margin-inline-end: 8px" />
             <span>Copyright © {currentYear} ByteDance. All Rights Reserved. </span>
@@ -88,5 +88,5 @@
             <span style="margin-inline-end: 24px">平台客服</span>
             <span>反馈建议</span>
         </span>
-    </LayoutFooter>
+    </Layout.Footer>
 </Layout>

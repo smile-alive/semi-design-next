@@ -15,24 +15,24 @@ export default function SelectDemo() {
     // Put style on the outer DOM or the virtual list breaks; add selected/focused/disabled styles from props;
     // bind onMouseEnter and class on the outer DOM or arrow keys display wrongly; put id there so screen
     // readers announce the option the arrow keys reach
-    const renderOptionItem = (props: SelectOptionRenderProps) => (
+    const renderOptionItem = (item: SelectOptionRenderProps) => (
         <div
-            id={props.id}
+            id={item.id}
             role="option"
-            aria-selected={props.selected}
-            aria-disabled={props.disabled}
-            style={props.style}
-            class={clsx(props.class, 'custom-option-render', {
-                'custom-option-render-focused': props.focused,
-                'custom-option-render-disabled': props.disabled,
-                'custom-option-render-selected': props.selected,
+            aria-selected={item.selected}
+            aria-disabled={item.disabled}
+            style={item.style}
+            class={clsx(item.class, 'custom-option-render', {
+                'custom-option-render-focused': item.focused,
+                'custom-option-render-disabled': item.disabled,
+                'custom-option-render-selected': item.selected,
             })}
-            onClick={(e) => props.onClick(e)}
-            onMouseEnter={(e) => props.onMouseEnter(e)}
+            onClick={(e) => item.onClick(e)}
+            onMouseEnter={(e) => item.onMouseEnter(e)}
         >
-            <Checkbox checked={props.selected} />
+            <Checkbox checked={item.selected} />
             <div class="option-right">
-                <Highlight sourceString={String(props.label)} searchWords={[inputValue()]} />
+                <Highlight sourceString={String(item.label)} searchWords={[inputValue()]} />
             </div>
         </div>
     );

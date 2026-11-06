@@ -21,7 +21,7 @@
         },
     };
 
-    const messages = shallowRef<Message[]>([
+    const defaultMessages: Message[] = [
         {
             role: 'system',
             id: '1',
@@ -40,7 +40,9 @@
             createdAt: 1715676751919,
             content: "以下是一个 Semi 代码的使用示例：\n```jsx \nimport React from 'react';\nimport { Button } from '@fibrae/semi-ui-react';\n\nconst MyComponent = () => {\n  return (\n    <Button>Click me</Button>\n );\n};\nexport default MyComponent;\n```\n",
         },
-    ]);
+    ];
+
+    const messages = shallowRef(defaultMessages);
     const mode = ref<Mode>('bubble');
     const align = ref<Align>('leftRight');
 
@@ -74,7 +76,7 @@
         :style="{
             border: '1px solid var(--semi-color-border)',
             borderRadius: '12px',
-            marginTop: '10px',
+            marginBlockStart: '10px',
             padding: '20px',
         }"
     >

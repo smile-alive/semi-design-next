@@ -13,7 +13,7 @@ export default function SliderDemo() {
 
     return (
         <div>
-            <div style={{ width: '320px', 'margin-right': '15px' }}>
+            <div style={{ width: '320px', 'margin-inline-end': '15px' }}>
                 <Slider aria-label="数值" step={1} value={value()} onChange={getSliderValue} />
             </div>
             <InputNumber aria-label="数值" onChange={getSliderValue} style={{ width: '100px' }} value={value()} min={0} max={100} />

@@ -9,7 +9,7 @@ export default function FloatButtonDemo() {
     return (
         <>
             <span>大尺寸：页面右下第三列 2</span>
-            <FloatButton aria-label="AI 编辑" size="large" icon={<IconAIEditLevel1 />} style={{ bottom: '200px' }} onClick={onClick} />
+            <FloatButton aria-label="AI 编辑" size="large" icon={<IconAIEditLevel1 />} style={{ 'inset-block-end': '200px' }} onClick={onClick} />
         </>
     );
 }

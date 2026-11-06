@@ -1,5 +1,7 @@
 import { Calendar } from '@fibrae/semi-ui-solid';
 
+const displayValue = new Date(2019, 6, 23);
+
 export default function CalendarDemo() {
-    return <Calendar mode="month" displayValue={new Date(2019, 6, 23)} />;
+    return <Calendar mode="month" displayValue={displayValue} />;
 }

@@ -6,24 +6,25 @@
 
     let latestInput = '';
 
-    const onSearch = (input: string) => {
-        latestInput = input;
-        if (!input) {
+    const handleSearch = (inputValue: string) => {
+        latestInput = inputValue;
+        if (!inputValue) {
             treeData = [];
             return;
         }
 
         setTimeout(() => {
-            if (latestInput !== input) {
+            if (latestInput !== inputValue) {
                 return;
             }
-            treeData = [
-                { label: `${input} - 结果1`, value: `${input}-1`, key: `${input}-1` },
-                { label: `${input} - 结果2`, value: `${input}-2`, key: `${input}-2` },
-                { label: `${input} - 结果3`, value: `${input}-3`, key: `${input}-3` },
+            const mockData = [
+                { label: `${inputValue} - 结果1`, value: `${inputValue}-1`, key: `${inputValue}-1` },
+                { label: `${inputValue} - 结果2`, value: `${inputValue}-2`, key: `${inputValue}-2` },
+                { label: `${inputValue} - 结果3`, value: `${inputValue}-3`, key: `${inputValue}-3` },
             ];
+            treeData = mockData;
         }, 500);
     };
 </script>
 
-<TreeSelect bind:value filterTreeNode {onSearch} placeholder="请输入关键字进行远程搜索" remote style="width: 300px" {treeData} />
+<TreeSelect bind:value filterTreeNode onSearch={handleSearch} placeholder="请输入关键字进行远程搜索" remote style="width: 300px" {treeData} />

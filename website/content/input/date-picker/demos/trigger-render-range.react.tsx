@@ -15,26 +15,18 @@ export default function DatePickerDemo() {
         setDate(undefined);
     }, []);
 
-    const triggerContent = () => {
-        if (Array.isArray(date) && date.length) {
-            return `${dateFns.format(date[0], formatToken)} ~ ${dateFns.format(date[1], formatToken)}`;
-        } else {
-            return '请选择日期时间范围';
-        }
-    };
-
     return (
         <DatePicker
             type="dateTimeRange"
             onChange={onChange}
             value={date}
-            triggerRender={() => (
+            triggerRender={(triggerProps) => (
                 // The clear button is a sibling of the trigger button: buttons cannot nest
                 <ButtonGroup theme="light">
                     <Button icon={<IconChevronDown />} iconPosition="right">
-                        {triggerContent()}
+                        {Array.isArray(triggerProps.value) && triggerProps.value.length ? `${dateFns.format(triggerProps.value[0], formatToken)} ~ ${dateFns.format(triggerProps.value[1], formatToken)}` : '请选择日期时间范围'}
                     </Button>
-                    {date && <Button icon={<IconClose />} aria-label="清除" onClick={onClear} />}
+                    {Array.isArray(triggerProps.value) && triggerProps.value.length ? <Button icon={<IconClose />} aria-label="清除" onClick={onClear} /> : null}
                 </ButtonGroup>
             )}
         />

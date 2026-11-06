@@ -1,14 +1,14 @@
 <script lang="ts">
-    import { Button, Skeleton, SkeletonButton, SkeletonParagraph } from '@fibrae/semi-ui-svelte';
+    import { Button, Skeleton } from '@fibrae/semi-ui-svelte';
 
-    const style = 'display: flex; flex-direction: column; align-items: center; width: 300px; margin-bottom: 10px';
+    const style = 'display: flex; flex-direction: column; align-items: center; width: 300px; margin-block-end: 10px';
 </script>
 
 <Skeleton loading style="text-align: center">
     {#snippet placeholder()}
         <div {style}>
-            <SkeletonParagraph rows={3} {style} />
-            <SkeletonButton />
+            <Skeleton.Paragraph rows={3} {style} />
+            <Skeleton.Button />
         </div>
     {/snippet}
     <div style="text-align: center">

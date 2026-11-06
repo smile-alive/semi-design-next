@@ -6,7 +6,7 @@ const srcList = ['/assets/root-web-sites/abstract.jpg', '/assets/root-web-sites/
 export default function ImageDemo() {
     return (
         <ImagePreview>
-            <Index each={srcList}>{(src, index) => <Image src={src()} width={200} alt={`lamp${index + 1}`} style={{ 'margin-right': '5px' }} />}</Index>
+            <Index each={srcList}>{(src, index) => <Image src={src()} width={200} alt={`lamp${index + 1}`} style={{ 'margin-inline-end': '5px' }} />}</Index>
         </ImagePreview>
     );
 }

@@ -12,7 +12,7 @@ export default function FloatButtonDemo() {
         <>
             <span>页面右下方最后一行</span>
             <FloatButtonGroup
-                style={{ 'inset-inline-end': '24px', bottom: '50px' }}
+                style={{ 'inset-inline-end': '24px', 'inset-block-end': '50px' }}
                 onClick={(value) => {
                     console.log('点击了 ', value);
                 }}

@@ -22,19 +22,19 @@
     const treeData = ref<CascaderData[]>([]);
     const loading = ref(false);
 
-    let latestToken = 0;
+    const latest = { token: 0 };
     const handleSearch = debounce((input: string) => {
         if (!input) {
             treeData.value = [];
             loading.value = false;
             return;
         }
-        latestToken += 1;
-        const token = latestToken;
+        latest.token += 1;
+        const token = latest.token;
         loading.value = true;
         void fetchByKeyword(input).then((next) => {
             // Drop stale results that arrive after a newer request
-            if (token !== latestToken) {
+            if (token !== latest.token) {
                 return;
             }
             treeData.value = next;

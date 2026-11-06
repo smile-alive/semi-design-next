@@ -2,7 +2,6 @@ import { For, createSignal } from 'solid-js';
 import { AIChatInput, type AIChatInputElement, type AIChatInputSkill as Skill } from '@fibrae/semi-ai-solid';
 import { IconTemplateStroked, IconSearch } from '@fibrae/semi-icons-solid';
 
-const { Configure } = AIChatInput;
 const modelOptions = [
     { value: 'GPT-5', label: 'GPT-5' },
     { value: 'GPT-4o', label: 'GPT-4o' },
@@ -10,6 +9,18 @@ const modelOptions = [
 ];
 const uploadProps = { action: 'https://api.semi.design/upload' };
 const outerStyle = { margin: '12px' };
+
+const skills: Skill[] = [
+    {
+        value: 'writing',
+        label: '帮我写作',
+        hasTemplate: true,
+    },
+    {
+        value: 'AI 编程',
+        label: 'AI coding',
+    },
+];
 
 const template = [
     {
@@ -69,7 +80,7 @@ function TemplateContent(props: TemplateContentProps) {
             <div class="template-content">
                 <For each={template[groupIndex()]?.children ?? []}>
                     {(item) => (
-                        <button type="button" class="template-content-item" style={{ font: 'inherit', 'text-align': 'left' }} onClick={() => props.onTemplateClick(item.content)}>
+                        <button type="button" class="template-content-item" style={{ font: 'inherit', 'text-align': 'start' }} onClick={() => props.onTemplateClick(item.content)}>
                             <span class="template-content-item-icon" style={{ background: item.bg }}>
                                 <IconTemplateStroked />
                             </span>
@@ -85,11 +96,6 @@ function TemplateContent(props: TemplateContentProps) {
 
 export default function AIChatInputDemo() {
     let input: AIChatInputElement | undefined;
-
-    const skills: Skill[] = [
-        { value: 'writing', label: '帮我写作', hasTemplate: true },
-        { value: 'AI 编程', label: 'AI coding' },
-    ];
 
     const renderSkillIcon = (skill: Skill) => (skill.value === 'writing' ? <IconTemplateStroked /> : <IconSearch />);
 
@@ -107,7 +113,7 @@ export default function AIChatInputDemo() {
 
     const renderLeftMenu = () => (
         <>
-            <Configure.Select optionList={modelOptions} field="model" initValue="GPT-4o" />
+            <AIChatInput.Configure.Select optionList={modelOptions} field="model" initValue="GPT-4o" />
         </>
     );
 

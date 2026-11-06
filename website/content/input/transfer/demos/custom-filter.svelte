@@ -26,31 +26,31 @@
 </script>
 
 <Transfer dataSource={data} filter={customFilter} {inputProps} {onChange} onSearch={(value) => (searchText = value)} style="width: 568px" value={['xiakeman@example.com', 'shenyue@example.com']}>
-    {#snippet sourceItem({ item, checked, onChange: onItemChange })}
-        {@const person = item as Person}
+    {#snippet sourceItem(source)}
+        {@const person = source.item as Person}
         <div class="components-transfer-demo-source-item">
-            <Checkbox {checked} onChange={onItemChange} style="height: 52px; align-items: center">
+            <Checkbox checked={source.checked} onChange={source.onChange} style="height: 52px; align-items: center">
                 <Avatar color={person.color} size="small">{person.abbr}</Avatar>
                 <div class="info">
                     <div class="name">
-                        <Highlight searchWords={[searchText]} sourceString={String(item.label)} />
+                        <Highlight searchWords={[searchText]} sourceString={String(source.item.label)} />
                     </div>
                     <div class="email">
-                        <Highlight searchWords={[searchText]} sourceString={String(item.value)} />
+                        <Highlight searchWords={[searchText]} sourceString={String(source.item.value)} />
                     </div>
                 </div>
             </Checkbox>
         </div>
     {/snippet}
-    {#snippet selectedItem({ item, onRemove })}
-        {@const person = item as Person}
+    {#snippet selectedItem(selected)}
+        {@const person = selected.item as Person}
         <div class="components-transfer-demo-selected-item">
             <Avatar color={person.color} size="small">{person.abbr}</Avatar>
             <div class="info">
-                <div class="name">{item.label}</div>
-                <div class="email">{item.value}</div>
+                <div class="name">{selected.item.label}</div>
+                <div class="email">{selected.item.value}</div>
             </div>
-            <Button aria-label={`移除 ${item.label}`} class="remove" size="small" theme="borderless" type="tertiary" onclick={onRemove}>
+            <Button aria-label={`移除 ${selected.item.label}`} class="remove" size="small" theme="borderless" type="tertiary" onclick={selected.onRemove}>
                 {#snippet icon()}<IconClose />{/snippet}
             </Button>
         </div>

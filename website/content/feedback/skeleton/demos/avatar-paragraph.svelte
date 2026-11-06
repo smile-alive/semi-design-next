@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Avatar, Skeleton, SkeletonAvatar, SkeletonParagraph, SkeletonTitle } from '@fibrae/semi-ui-svelte';
+    import { Avatar, Skeleton } from '@fibrae/semi-ui-svelte';
 
     const style = 'display: flex; align-items: flex-start';
 </script>
@@ -7,10 +7,10 @@
 <Skeleton loading>
     {#snippet placeholder()}
         <div {style}>
-            <SkeletonAvatar style="margin-inline-end: 12px" />
+            <Skeleton.Avatar style="margin-inline-end: 12px" />
             <div>
-                <SkeletonTitle style="width: 120px; margin-bottom: 12px; margin-top: 12px" />
-                <SkeletonParagraph rows={3} style="width: 240px" />
+                <Skeleton.Title style="width: 120px; margin-block-end: 12px; margin-block-start: 12px" />
+                <Skeleton.Paragraph rows={3} style="width: 240px" />
             </div>
         </div>
     {/snippet}

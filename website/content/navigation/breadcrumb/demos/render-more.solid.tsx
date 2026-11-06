@@ -2,7 +2,7 @@ import { For, Show } from 'solid-js';
 import { IconMore } from '@fibrae/semi-icons-solid';
 import { Breadcrumb, Popover, type BreadcrumbItemProps, type BreadcrumbRouteProps } from '@fibrae/semi-ui-solid';
 
-const separator = '-'; // 拼接 restItems 用的分隔符
+const separator = '-';
 
 // restItems holds the props of the hidden Breadcrumb.Items, whose children the popover reads only when it opens
 const renderMore = (restItems: Array<BreadcrumbRouteProps | BreadcrumbItemProps>) => (
@@ -13,7 +13,7 @@ const renderMore = (restItems: Array<BreadcrumbRouteProps | BreadcrumbItemProps>
                     <>
                         {(item as BreadcrumbItemProps).children}
                         <Show when={index() !== restItems.length - 1}>
-                            <span style={{ color: 'var(--semi-color-text-2)', 'margin-right': '6px' }}>{separator}</span>
+                            <span style={{ color: 'var(--semi-color-text-2)', 'margin-inline-end': '6px' }}>{separator}</span>
                         </Show>
                     </>
                 )}

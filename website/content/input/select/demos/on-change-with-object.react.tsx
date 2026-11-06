@@ -7,13 +7,14 @@ interface Item {
     type: number;
 }
 
+const list: Item[] = [
+    { value: 'douyin', label: '抖音', type: 1 },
+    { value: 'ulikecam', label: '轻颜相机', type: 2 },
+    { value: 'jianying', label: '剪映', type: 3 },
+    { value: 'toutiao', label: '今日头条', type: 4 },
+];
+
 export default function SelectDemo() {
-    const list: Item[] = [
-        { value: 'douyin', label: '抖音', type: 1 },
-        { value: 'ulikecam', label: '轻颜相机', type: 2 },
-        { value: 'jianying', label: '剪映', type: 3 },
-        { value: 'toutiao', label: '今日头条', type: 4 },
-    ];
     const [cbValue, setCbValue] = useState<Item>();
     const [multipleCbValue, setMultipleCbValue] = useState<Item[]>();
 

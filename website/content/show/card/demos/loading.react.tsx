@@ -3,7 +3,6 @@ import { Card, Switch } from '@fibrae/semi-ui-react';
 
 export default function CardDemo() {
     const [loading, setLoading] = useState(true);
-    const { Meta } = Card;
 
     return (
         <>
@@ -11,7 +10,7 @@ export default function CardDemo() {
             <br />
             <br />
             <Card style={{ maxWidth: 360 }} loading={loading}>
-                <Meta title="Semi Doc" description="全面、易用、优质" />
+                <Card.Meta title="Semi Doc" description="全面、易用、优质" />
             </Card>
         </>
     );

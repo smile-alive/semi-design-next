@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Carousel, Space, TypographyParagraph, TypographyTitle } from '@fibrae/semi-ui-svelte';
+    import { Carousel, Space, Typography } from '@fibrae/semi-ui-svelte';
 
     const logo = '/assets/placeholder/logo.svg';
     const slides = [
@@ -15,11 +15,11 @@
         },
         {
             src: '/assets/carousel/bg-3.png',
-            title: 'Semi Template',
+            title: 'Semi 设计/代码模板',
             lines: ['高效的 Design2Code 设计稿转代码', '海量 Figma 设计模板一键转为真实前端代码'],
         },
     ];
-    const titleStyle = 'position: absolute; top: 100px; left: 100px; color: #1C1F23';
+    const titleStyle = 'position: absolute; top: 100px; left: 100px';
     const colorStyle = 'color: #1C1F23';
 </script>
 
@@ -28,11 +28,10 @@
         <div style="height: 100%; background-size: cover; background-image: url('{item.src}')">
             <Space align="start" spacing="medium" style={titleStyle} vertical>
                 <img alt="semi_logo" src={logo} style="width: 87px; height: 31px" />
-                <TypographyTitle heading={2} style={colorStyle}>{item.title}</TypographyTitle>
+                <Typography.Title heading={2} style={colorStyle}>{item.title}</Typography.Title>
                 <Space align="start" vertical>
-                    {#each item.lines as line (line)}
-                        <TypographyParagraph style={colorStyle}>{line}</TypographyParagraph>
-                    {/each}
+                    <Typography.Paragraph style={colorStyle}>{item.lines[0]}</Typography.Paragraph>
+                    <Typography.Paragraph style={colorStyle}>{item.lines[1]}</Typography.Paragraph>
                 </Space>
             </Space>
         </div>

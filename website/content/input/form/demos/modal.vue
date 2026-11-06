@@ -4,12 +4,6 @@
 
     const message = '该项为必填项';
     const rules = [{ required: true, message }];
-    const regions = [
-        { value: 'China', label: '中国' },
-        { value: 'US', label: '美国' },
-        { value: 'Europe', label: '欧洲' },
-        { value: 'Japan', label: '日本' },
-    ];
 
     const visible = ref(false);
     let formApi: FormApi | undefined;
@@ -33,9 +27,10 @@
             <Row>
                 <Col :span="5">
                     <FormSelect field="region" label="国家/地区" placeholder="请选择" :rules="rules" :style="{ width: '100%' }">
-                        <FormSelect.Option v-for="item in regions" :key="item.value" :value="item.value">
-                            {{ item.label }}
-                        </FormSelect.Option>
+                        <FormSelect.Option value="China">中国</FormSelect.Option>
+                        <FormSelect.Option value="US">美国</FormSelect.Option>
+                        <FormSelect.Option value="Europe">欧洲</FormSelect.Option>
+                        <FormSelect.Option value="Japan">日本</FormSelect.Option>
                     </FormSelect>
                 </Col>
                 <Col :offset="2" :span="15">
@@ -45,9 +40,10 @@
             <Row>
                 <Col :span="5">
                     <FormSelect field="area" label="投放区域" placeholder="请选择" :rules="rules" :style="{ width: '100%' }">
-                        <FormSelect.Option v-for="item in regions" :key="item.value" :value="item.value">
-                            {{ item.label }}
-                        </FormSelect.Option>
+                        <FormSelect.Option value="China">中国</FormSelect.Option>
+                        <FormSelect.Option value="US">美国</FormSelect.Option>
+                        <FormSelect.Option value="Europe">欧洲</FormSelect.Option>
+                        <FormSelect.Option value="Japan">日本</FormSelect.Option>
                     </FormSelect>
                 </Col>
                 <Col :offset="2" :span="15">

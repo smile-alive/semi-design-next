@@ -1,38 +1,39 @@
 import { useState } from 'react';
 import { TreeSelect, type TreeNodeData } from '@fibrae/semi-ui-react';
 
-export default function TreeSelectDemo() {
-    const initialData: TreeNodeData[] = [
-        {
-            label: 'Expand to load',
-            value: '0',
-            key: '0',
-        },
-        {
-            label: 'Expand to load',
-            value: '1',
-            key: '1',
-        },
-        {
-            label: 'Leaf Node',
-            value: '2',
-            key: '2',
-            isLeaf: true,
-        },
-    ];
-    const [treeData, setTreeData] = useState(initialData);
+const initialData: TreeNodeData[] = [
+    {
+        label: 'Expand to load',
+        value: '0',
+        key: '0',
+    },
+    {
+        label: 'Expand to load',
+        value: '1',
+        key: '1',
+    },
+    {
+        label: 'Leaf Node',
+        value: '2',
+        key: '2',
+        isLeaf: true,
+    },
+];
 
-    const updateTreeData = (list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] => {
-        return list.map((node) => {
-            if (node.key === key) {
-                return { ...node, children };
-            }
-            if (node.children) {
-                return { ...node, children: updateTreeData(node.children, key, children) };
-            }
-            return node;
-        });
-    };
+const updateTreeData = (list: TreeNodeData[], key: string | undefined, children: TreeNodeData[]): TreeNodeData[] => {
+    return list.map((node) => {
+        if (node.key === key) {
+            return { ...node, children };
+        }
+        if (node.children) {
+            return { ...node, children: updateTreeData(node.children, key, children) };
+        }
+        return node;
+    });
+};
+
+export default function TreeSelectDemo() {
+    const [treeData, setTreeData] = useState(initialData);
 
     const onLoadData = ({ key, children }: TreeNodeData) => {
         return new Promise<void>((resolve) => {

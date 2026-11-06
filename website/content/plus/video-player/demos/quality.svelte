@@ -20,6 +20,7 @@
     let src = $state(playList[0].src);
 
     const onQualityChange = (quality: string) => {
+        console.log('quality change', quality);
         const source = playList.find((item) => item.quality === quality);
         if (source) src = source.src;
     };

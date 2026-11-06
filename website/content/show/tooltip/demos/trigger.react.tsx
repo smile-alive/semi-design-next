@@ -7,21 +7,21 @@ export default function TooltipDemo() {
     return (
         <div>
             <Tooltip content="hi bytedance">
-                <Button theme="solid" type="tertiary" style={{ marginBottom: 20 }}>
+                <Button theme="solid" type="tertiary" style={{ marginBlockEnd: 20 }}>
                     悬停显示
                 </Button>
             </Tooltip>
             <br />
             <Tooltip content="hi bytedance" trigger="click">
-                <Button style={{ marginBottom: 20 }}>点击显示</Button>
+                <Button style={{ marginBlockEnd: 20 }}>点击显示</Button>
             </Tooltip>
             <br />
             <Tooltip content="hi bytedance" trigger="focus">
-                <Input aria-label="聚焦显示" style={{ width: 100, marginBottom: 20 }} placeholder="聚焦显示" />
+                <Input aria-label="聚焦显示" style={{ width: 100, marginBlockEnd: 20 }} placeholder="聚焦显示" />
             </Tooltip>
             <br />
             <Tooltip content="hi bytedance" trigger="contextMenu">
-                <Button theme="solid" type="secondary" style={{ marginBottom: 20 }}>
+                <Button theme="solid" type="secondary" style={{ marginBlockEnd: 20 }}>
                     右键点击展示
                 </Button>
             </Tooltip>

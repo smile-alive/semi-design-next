@@ -22,14 +22,14 @@
 
 <template>
     <Upload :action="action" :defaultFileList="defaultFileList" style="margin-bottom: 20px">
-        <template #fileListHeader="{ fileList, onClear, clearText }">
+        <template #fileListHeader="title">
             <div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
-                <span style="color: var(--semi-color-primary)">📂 共 {{ fileList.length }} 个文件</span>
-                <Button size="small" type="danger" @click="onClear">
+                <span style="color: var(--semi-color-primary)">📂 共 {{ title.fileList.length }} 个文件</span>
+                <Button size="small" type="danger" @click="title.onClear">
                     <template #icon>
                         <IconClose />
                     </template>
-                    {{ clearText }}
+                    {{ title.clearText }}
                 </Button>
             </div>
         </template>
@@ -41,14 +41,14 @@
         </Button>
     </Upload>
     <Upload :action="action" :defaultFileList="defaultFileList">
-        <template #fileListHeader="{ fileList, onClear }">
+        <template #fileListHeader="title">
             <div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
                 <span>
                     已选择
-                    <strong style="color: var(--semi-color-danger)">{{ fileList.length }}</strong>
+                    <strong style="color: var(--semi-color-danger)">{{ title.fileList.length }}</strong>
                     个文件
                 </span>
-                <button style="padding: 0; border: none; background: none; font: inherit; cursor: pointer; color: var(--semi-color-link); font-size: 12px" type="button" @click="onClear">全部移除</button>
+                <button style="padding: 0; border: none; background: none; font: inherit; cursor: pointer; color: var(--semi-color-link); font-size: 12px" type="button" @click="title.onClear">全部移除</button>
             </div>
         </template>
         <Button theme="light">

@@ -8,17 +8,13 @@ const opts = {
 };
 
 export default function ToastDemo() {
-    const throttled = throttle(
-        () =>
-            Toast.info({
-                content: 'Hi, Bytedance dance dance',
-                duration: 10,
-                onClose: () => throttled.cancel(),
-                stack: true,
-            }),
-        10000,
-        { edges: ['leading'] }
-    );
+    const throttleOpts = {
+        content: 'Hi, Bytedance dance dance',
+        duration: 10,
+        onClose: () => throttled.cancel(),
+        stack: true,
+    };
+    const throttled = throttle(() => Toast.info(throttleOpts), 10000, { edges: ['leading'] });
 
     return (
         <div>

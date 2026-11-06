@@ -14,8 +14,8 @@
 
 <template>
     <Nav :bodyStyle="{ height: '320px' }" :footer="{ collapseButton: true }" :items="items" @click="(data) => console.log('trigger onClick: ', data)" @select="(data) => console.log('trigger onSelect: ', data)">
-        <template #icon="{ item }">
-            <component :is="iconOf(item)" />
+        <template #icon="renderProps">
+            <component :is="iconOf(renderProps.item)" />
         </template>
         <Nav.Header text="Semi 运营后台">
             <template #logo>

@@ -6,7 +6,7 @@
 
 <template>
     <div :style="{ display: 'flex' }">
-        <div v-for="size in sizes" :key="size" :style="{ marginRight: '10px' }">
+        <div v-for="size in sizes" :key="size" :style="{ marginInlineEnd: '10px' }">
             <ButtonGroup aria-label="操作按钮组" :size="size">
                 <Button>拷贝</Button>
                 <Button>查询</Button>

@@ -15,15 +15,16 @@ function mockSearch(inputValue: string) {
     });
 }
 
+const initialList: Item[] = [
+    { value: 'douyin', label: '抖音', type: 1 },
+    { value: 'xingtu', label: '醒图', type: 2 },
+    { value: 'jianying', label: '剪映', type: 3 },
+    { value: 'toutiao', label: '今日头条', type: 4 },
+];
+
 export default function SelectDemo() {
     const [loading, setLoading] = useState(false);
-    const optionList: Item[] = [
-        { value: 'douyin', label: '抖音', type: 1 },
-        { value: 'xingtu', label: '醒图', type: 2 },
-        { value: 'jianying', label: '剪映', type: 3 },
-        { value: 'toutiao', label: '今日头条', type: 4 },
-    ];
-    const [list, setList] = useState(optionList);
+    const [list, setList] = useState(initialList);
     const [value, setValue] = useState<Item[]>([]);
 
     const handleMultipleChange = (newValue: Item[]) => {

@@ -67,6 +67,8 @@ When used in Webpack, Rspack, create-react-app or Vite projects, there is no nee
     },
 ];
 
+const defaultSize = { width: 420 };
+
 export default function SidebarDemo() {
     const [visible, setVisible] = createSignal(true);
     const [activeKey, setActiveKey] = createSignal<string | string[]>('1');
@@ -89,7 +91,7 @@ export default function SidebarDemo() {
                     参考来源
                 </Button>
             </div>
-            <Annotation defaultSize={{ width: 420 }} visible={visible()} onCancel={toggleVisible} activeKey={activeKey()} info={defaultInfoList} onChange={onChange} onClick={onClick} />
+            <Annotation defaultSize={defaultSize} visible={visible()} onCancel={toggleVisible} activeKey={activeKey()} info={defaultInfoList} onChange={onChange} onClick={onClick} />
         </div>
     );
 }

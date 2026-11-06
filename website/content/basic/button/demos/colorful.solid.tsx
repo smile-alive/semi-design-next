@@ -2,6 +2,7 @@ import { For } from 'solid-js';
 import { IconAIFilledLevel1, IconAIFilledLevel2, IconAIFilledLevel3 } from '@fibrae/semi-icons-solid';
 import { Button } from '@fibrae/semi-ui-solid';
 
+const contents = ['Colorful', undefined];
 // Icons are passed as components: only a component receives the colorful fill
 const rows = [
     { theme: 'solid', primaryIcon: IconAIFilledLevel1, tertiaryIcon: IconAIFilledLevel3 },
@@ -12,27 +13,30 @@ const rows = [
 
 export default function ButtonDemo() {
     return (
-        <For each={['Colorful', undefined]}>
+        <For each={contents}>
             {(content) => (
-                <div style={{ display: 'flex', 'row-gap': '16px', 'margin-top': '20px', 'margin-left': '10px', 'flex-direction': 'column' }}>
+                <div style={{ display: 'flex', 'row-gap': '16px', 'margin-block-start': '20px', 'margin-inline-start': '10px', 'flex-direction': 'column' }}>
                     <For each={rows}>
                         {(row) => (
                             <div style={{ display: 'flex', 'column-gap': '16px' }}>
-                                <For each={[{ type: 'primary', icon: row.primaryIcon } as const, { type: 'tertiary', icon: row.tertiaryIcon } as const]}>
-                                    {(item) => (
-                                        <>
-                                            <Button colorful aria-label={content ? undefined : 'AI'} theme={row.theme} type={item.type} icon={item.icon}>
-                                                {content}
-                                            </Button>
-                                            <Button colorful aria-label={content ? undefined : 'AI'} theme={row.theme} type={item.type} loading>
-                                                {content}
-                                            </Button>
-                                            <Button colorful aria-label={content ? undefined : 'AI'} theme={row.theme} type={item.type} icon={item.icon} disabled>
-                                                {content}
-                                            </Button>
-                                        </>
-                                    )}
-                                </For>
+                                <Button colorful aria-label={content ? undefined : 'AI'} theme={row.theme} type="primary" icon={row.primaryIcon}>
+                                    {content}
+                                </Button>
+                                <Button colorful aria-label={content ? undefined : 'AI'} theme={row.theme} type="primary" loading>
+                                    {content}
+                                </Button>
+                                <Button colorful aria-label={content ? undefined : 'AI'} theme={row.theme} type="primary" icon={row.primaryIcon} disabled>
+                                    {content}
+                                </Button>
+                                <Button colorful aria-label={content ? undefined : 'AI'} theme={row.theme} type="tertiary" icon={row.tertiaryIcon}>
+                                    {content}
+                                </Button>
+                                <Button colorful aria-label={content ? undefined : 'AI'} theme={row.theme} type="tertiary" loading>
+                                    {content}
+                                </Button>
+                                <Button colorful aria-label={content ? undefined : 'AI'} theme={row.theme} type="tertiary" icon={row.tertiaryIcon} disabled>
+                                    {content}
+                                </Button>
                             </div>
                         )}
                     </For>

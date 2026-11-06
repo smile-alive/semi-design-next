@@ -1,23 +1,21 @@
 <script setup lang="ts">
     import { IconLink } from '@fibrae/semi-icons-vue';
     import { Typography } from '@fibrae/semi-ui-vue';
-
-    const { Text } = Typography;
 </script>
 
 <template>
     <div>
-        <Text :link="{ href: 'https://semi.design/' }">链接文本</Text>
+        <Typography.Text :link="{ href: 'https://semi.design/' }">链接文本</Typography.Text>
         <br />
         <br />
-        <Text :link="{ href: 'https://semi.design/' }">打开网站</Text>
+        <Typography.Text :link="{ href: 'https://semi.design/' }">打开网站</Typography.Text>
         <br />
         <br />
-        <Text link underline>
+        <Typography.Text link underline>
             带下划线的网页链接
             <template #icon>
                 <IconLink />
             </template>
-        </Text>
+        </Typography.Text>
     </div>
 </template>

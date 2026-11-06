@@ -1,13 +1,13 @@
 import { Notification, Button, ButtonGroup } from '@fibrae/semi-ui-react';
 
-export default function NotificationDemo() {
-    let opts = {
-        duration: 3,
-        position: 'topRight',
-        content: 'semi-ui-notification',
-        title: 'Hi bytedance',
-    } as const;
+const opts = {
+    duration: 3,
+    position: 'topRight',
+    content: 'semi-ui-notification',
+    title: 'Hi bytedance',
+} as const;
 
+export default function NotificationDemo() {
     return (
         <>
             <ButtonGroup>

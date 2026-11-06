@@ -1,11 +1,11 @@
 import { Button, Input, Popover, Space, type TooltipRenderContentProps } from '@fibrae/semi-ui-solid';
 
 export default function PopoverDemo() {
-    const renderContent = (props: TooltipRenderContentProps) => (
+    const renderContent = (contentProps: TooltipRenderContentProps) => (
         <div style={{ padding: '12px' }}>
             <Space>
                 <Button>first focusable element</Button>
-                <Input ref={props.initialFocusRef} placeholder="focus here" />
+                <Input ref={contentProps.initialFocusRef} placeholder="focus here" />
             </Space>
         </div>
     );

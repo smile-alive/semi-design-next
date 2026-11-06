@@ -1,5 +1,23 @@
 import { useState } from 'react';
-import { UserGuide, Button, Space, Tag, Switch } from '@fibrae/semi-ui-react';
+import { UserGuide, Button, Space, Tag, Switch, type UserGuideStepItem } from '@fibrae/semi-ui-react';
+
+const steps: UserGuideStepItem[] = [
+    {
+        target: () => document.querySelector('#button-demo-1'),
+        title: '新手引导',
+        description: 'Hello ByteDancer!',
+    },
+    {
+        target: () => document.querySelector('#button-demo-2'),
+        title: 'New Button Style',
+        description: 'Button text is Next',
+    },
+    {
+        target: () => document.querySelector('#button-demo-3'),
+        title: 'New finish button text',
+        description: 'Button text is I know',
+    },
+];
 
 export default function UserGuideDemo() {
     const [visible, setVisible] = useState(false);
@@ -28,23 +46,7 @@ export default function UserGuideDemo() {
                     theme: 'borderless',
                 }}
                 finishText="我知道啦！"
-                steps={[
-                    {
-                        target: () => document.querySelector('#button-demo-1'),
-                        title: '新手引导',
-                        description: 'Hello ByteDancer!',
-                    },
-                    {
-                        target: () => document.querySelector('#button-demo-2'),
-                        title: 'New Button Style',
-                        description: 'Button text is Next',
-                    },
-                    {
-                        target: () => document.querySelector('#button-demo-3'),
-                        title: 'New finish button text',
-                        description: 'Button text is I know',
-                    },
-                ]}
+                steps={steps}
                 onFinish={() => {
                     setVisible(false);
                     console.log('引导完成');

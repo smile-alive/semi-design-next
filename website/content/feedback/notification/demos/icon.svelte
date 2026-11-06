@@ -19,12 +19,12 @@
 <Button style="margin: 4px" type="warning" onclick={() => Notification.warning(opts)}>Warning</Button>
 <Button style="margin: 4px" type="danger" onclick={() => Notification.error(opts)}>Error</Button>
 <h5>自定义图标</h5>
-<Button aria-label="Toutiao 图标通知" style="margin-right: 5px" onclick={() => Notification.info({ ...opts, icon: toutiao })}>
+<Button aria-label="Toutiao 图标通知" style="margin-inline-end: 5px" onclick={() => Notification.info({ ...opts, icon: toutiao })}>
     {#snippet icon()}
         <IconToutiaoLogo />
     {/snippet}
 </Button>
-<Button aria-label="Vigo 图标通知" style="margin-right: 5px" onclick={() => Notification.info({ ...opts, icon: vigo })}>
+<Button aria-label="Vigo 图标通知" style="margin-inline-end: 5px" onclick={() => Notification.info({ ...opts, icon: vigo })}>
     {#snippet icon()}
         <IconVigoLogo />
     {/snippet}

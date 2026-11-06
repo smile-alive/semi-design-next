@@ -2,7 +2,7 @@
     import { IconUpload } from '@fibrae/semi-icons-svelte';
     import { Button, Upload, type FileItem, type UploadOnChangeProps } from '@fibrae/semi-ui-svelte';
 
-    let list = $state<FileItem[]>([
+    const initList: FileItem[] = [
         {
             uid: '1',
             name: 'dyBag.jpeg',
@@ -21,10 +21,14 @@
             fileInstance: new File([new ArrayBuffer(2048)], 'dy.jpeg', { type: 'image/jpeg' }),
             url: '/assets/placeholder/avatar-a.svg',
         },
-    ]);
+    ];
+
+    let list = $state(initList);
 
     const onChange = ({ fileList, currentFile }: UploadOnChangeProps) => {
-        console.log('change', fileList, currentFile);
+        console.log('onChange');
+        console.log(fileList);
+        console.log(currentFile);
     };
 </script>
 

@@ -31,8 +31,8 @@
     </article>
 {/snippet}
 
-<div class="tag-margin-right" style="padding-left: 40px">
-    <div style="margin-left: 40px; white-space: nowrap">
+<div class="tag-margin-right" style="padding-inline-start: 40px">
+    <div style="margin-inline-start: 40px; white-space: nowrap">
         {#each tops as [position, label] (position)}
             <Popover arrowPointAtCenter {content} {position} showArrow>
                 <Tag>{label}</Tag>
@@ -46,14 +46,14 @@
             </Popover>
         {/each}
     </div>
-    <div style="width: 40px; margin-left: 180px">
+    <div style="width: 40px; margin-inline-start: 180px">
         {#each rights as [position, label] (position)}
             <Popover arrowPointAtCenter {content} {position} showArrow>
                 <Tag>{label}</Tag>
             </Popover>
         {/each}
     </div>
-    <div style="margin-left: 40px; clear: both; white-space: nowrap">
+    <div style="margin-inline-start: 40px; clear: both; white-space: nowrap">
         {#each bottoms as [position, label] (position)}
             <Popover arrowPointAtCenter {content} {position} showArrow>
                 <Tag>{label}</Tag>

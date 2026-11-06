@@ -1,10 +1,13 @@
 <script setup lang="ts">
     import { useTemplateRef } from 'vue';
     import { IconPlus, IconUpload } from '@fibrae/semi-icons-vue';
-    import { Button, Upload } from '@fibrae/semi-ui-vue';
+    import { Button, Upload, type UploadHandle } from '@fibrae/semi-ui-vue';
 
-    const uploadRef = useTemplateRef('uploadRef');
     const action = 'https://api.semi.design/upload';
+    const uploadRef = useTemplateRef<UploadHandle>('uploadRef');
+    const manualUpload = () => {
+        uploadRef.value?.upload();
+    };
 </script>
 
 <template>
@@ -17,7 +20,7 @@
                 选择文件
             </Button>
         </Upload>
-        <Button theme="light" @click="uploadRef?.upload()">
+        <Button theme="light" @click="manualUpload">
             <template #icon>
                 <IconUpload />
             </template>

@@ -17,16 +17,15 @@ const onHeaderCell = () => ({
     },
 });
 
-const columns: ColumnProps<Row>[] = [
+const baseColumns: ColumnProps<Row>[] = [
     {
         title: '标题',
         dataIndex: 'name',
         width: 280,
-        onHeaderCell,
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ 'margin-right': '12px' }} />
+                    <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ 'margin-inline-end': '12px' }} />
                     {text}
                 </div>
             );
@@ -36,17 +35,15 @@ const columns: ColumnProps<Row>[] = [
         title: '大小',
         width: 100,
         dataIndex: 'size',
-        onHeaderCell,
     },
     {
         title: '所有者',
         dataIndex: 'owner',
         width: 200,
-        onHeaderCell,
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}
@@ -58,15 +55,15 @@ const columns: ColumnProps<Row>[] = [
         title: '更新日期',
         width: 300,
         dataIndex: 'updateTime',
-        onHeaderCell,
     },
     {
         title: '',
         dataIndex: 'operate',
-        onHeaderCell,
         render: () => <IconMore />,
     },
 ];
+
+const columns = baseColumns.map((column) => ({ ...column, onHeaderCell }));
 
 const data: Row[] = [
     {

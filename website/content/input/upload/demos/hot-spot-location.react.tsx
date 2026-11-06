@@ -2,26 +2,26 @@ import { useState } from 'react';
 import { IconPlus } from '@fibrae/semi-icons-react';
 import { Upload, RadioGroup, Radio, type FileItem, type UploadProps } from '@fibrae/semi-ui-react';
 
+const action = 'https://api.semi.design/upload';
+const defaultFileList: FileItem[] = [
+    {
+        uid: '1',
+        name: 'resso.png',
+        status: 'success',
+        size: '130KB',
+        preview: true,
+        url: '/assets/placeholder/avatar-b.svg',
+    },
+];
+const handlePreview = (file: FileItem) => {
+    window.open(file.url, 'imagePreview', 'width=300,height=300');
+};
+
 export default function UploadDemo() {
-    let action = 'https://api.semi.design/upload';
-    const defaultFileList: FileItem[] = [
-        {
-            uid: '1',
-            name: 'resso.png',
-            status: 'success',
-            size: '130KB',
-            preview: true,
-            url: '/assets/placeholder/avatar-b.svg',
-        },
-    ];
-    const handlePreview = (file: FileItem) => {
-        const feature = 'width=300,height=300';
-        window.open(file.url, 'imagePreview', feature);
-    };
     const [hotSpotLocation, setLocation] = useState<UploadProps['hotSpotLocation']>('end');
     return (
         <>
-            <RadioGroup value={hotSpotLocation} type="button" onChange={(e) => setLocation(e.target.value)}>
+            <RadioGroup aria-label="添加按钮位置" value={hotSpotLocation} type="button" onChange={(e) => setLocation(e.target.value)}>
                 <Radio value="start">start</Radio>
                 <Radio value="end">end</Radio>
             </RadioGroup>

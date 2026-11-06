@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Card, CardMeta } from '@fibrae/semi-ui-svelte';
+    import { Card } from '@fibrae/semi-ui-svelte';
 </script>
 
 {#snippet cover()}
@@ -7,5 +7,5 @@
 {/snippet}
 
 <Card {cover} style="max-width: 300px">
-    <CardMeta title="卡片封面" />
+    <Card.Meta title="卡片封面" />
 </Card>

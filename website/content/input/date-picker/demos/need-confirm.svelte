@@ -1,15 +1,5 @@
 <script lang="ts">
-    import { DatePicker, type DatePickerProps } from '@fibrae/semi-ui-svelte';
-
-    const onConfirm: DatePickerProps['onConfirm'] = (...args) => {
-        console.log('Confirmed: ', ...args);
-    };
-    const onCancel: DatePickerProps['onCancel'] = (...args) => {
-        console.log('Canceled: ', ...args);
-    };
-    const onChange: DatePickerProps['onChange'] = (...args) => {
-        console.log('Changed: ', ...args);
-    };
+    import { DatePicker } from '@fibrae/semi-ui-svelte';
 </script>
 
-<DatePicker needConfirm {onCancel} {onChange} {onConfirm} type="dateTime" />
+<DatePicker needConfirm onCancel={(...args) => console.log('Canceled: ', ...args)} onChange={(...args) => console.log('Changed: ', ...args)} onConfirm={(...args) => console.log('Confirmed: ', ...args)} type="dateTime" />

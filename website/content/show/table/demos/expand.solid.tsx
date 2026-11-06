@@ -19,7 +19,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <span>
-                    <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ 'margin-right': '12px' }} />
+                    <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ 'margin-inline-end': '12px' }} />
                     {text}
                 </span>
             );
@@ -35,7 +35,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}
@@ -100,29 +100,29 @@ const rowSelection: RowSelectionProps<Row> = {
     },
 };
 
-const expandData: DescriptionsData[][] = [
-    [
+const expandData: Record<number, DescriptionsData[]> = {
+    0: [
         { key: '实际用户数量', value: '1,480,000' },
         { key: '7 天留存', value: '98%' },
         { key: '安全等级', value: '3 级' },
         { key: '垂类标签', value: '设计' },
         { key: '认证状态', value: '未认证' },
     ],
-    [
+    1: [
         { key: '实际用户数量', value: '2,480,000' },
         { key: '7 天留存', value: '90%' },
         { key: '安全等级', value: '1 级' },
         { key: '垂类标签', value: '模板' },
         { key: '认证状态', value: '已认证' },
     ],
-    [
+    2: [
         { key: '实际用户数量', value: '2,920,000' },
         { key: '7 天留存', value: '98%' },
         { key: '安全等级', value: '2 级' },
         { key: '垂类标签', value: '文档' },
         { key: '认证状态', value: '已认证' },
     ],
-];
+};
 
 const renderValue = (item: DescriptionsData) => (item.key === '垂类标签' ? <Tag style={{ margin: '0px' }}>{item.value}</Tag> : item.value);
 

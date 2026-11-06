@@ -1,6 +1,26 @@
 import { IconMapPin } from '@fibrae/semi-icons-solid';
 import { Tree, type TreeNodeData } from '@fibrae/semi-ui-solid';
 
+const treeData: TreeNodeData[] = [
+    {
+        label: 'Asia',
+        value: 'Asia',
+        key: '0',
+        children: [
+            {
+                label: 'China',
+                value: 'China',
+                key: '0-0',
+            },
+            {
+                label: 'Japan',
+                value: 'Japan',
+                key: '0-1',
+            },
+        ],
+    },
+];
+
 const style = {
     width: '260px',
     height: '420px',
@@ -8,24 +28,5 @@ const style = {
 };
 
 export default function TreeDemo() {
-    const treeData: TreeNodeData[] = [
-        {
-            label: 'Asia',
-            value: 'Asia',
-            key: '0',
-            children: [
-                {
-                    label: 'China',
-                    value: 'China',
-                    key: '0-0',
-                },
-                {
-                    label: 'Japan',
-                    value: 'Japan',
-                    key: '0-1',
-                },
-            ],
-        },
-    ];
     return <Tree treeData={treeData} style={style} icon={<IconMapPin style={{ color: 'var(--semi-color-text-2)' }} />} />;
 }

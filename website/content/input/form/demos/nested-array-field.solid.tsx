@@ -32,73 +32,63 @@ const initValue = {
     ],
 };
 
-const rowStyle = {
-    'margin-top': '12px',
-    'margin-left': '12px',
+const newRule = {
+    name: '新规则名称',
+    rules: [
+        { ruleType: 'main', type: 'include', text: '' },
+        { ruleType: 'attachmentName', type: 'include', text: '' },
+    ],
 };
 
-function NestedField(props: { field: string }) {
-    return (
-        <ArrayField field={`${props.field}.rules`}>
-            {(rules) => (
-                <For each={rules.arrayFields}>
-                    {(row, i) => (
-                        <div style={{ display: 'flex' }}>
-                            <FormSelect field={`${row.field}[ruleType]`} label={`${row.field}.ruleType`} noLabel optionList={selectOption} style={{ width: '120px', 'margin-right': '12px' }} />
-                            <FormSelect field={`${row.field}[type]`} label={`${row.field}.type`} noLabel style={{ width: '100px', 'margin-right': '12px' }} optionList={typeOption} />
-                            <FormInput field={`${row.field}[text]`} label={`${row.field}.text`} aria-label="条件内容" noLabel style={{ width: '200px' }} />
-                            <Button type="danger" theme="borderless" style={rowStyle} aria-label="删除条件" icon={<IconMinusCircle />} onClick={row.remove} />
-                            <Button
-                                aria-label="新增条件"
-                                icon={<IconPlusCircle />}
-                                style={rowStyle}
-                                disabled={i() !== rules.arrayFields.length - 1}
-                                onClick={() =>
-                                    rules.addWithInitValue({
-                                        ruleType: `条件${rules.arrayFields.length + 1}`,
-                                        type: 'include',
-                                    })
-                                }
-                            />
-                        </div>
-                    )}
-                </For>
-            )}
-        </ArrayField>
-    );
-}
+const rowStyle = {
+    'margin-block-start': '12px',
+    'margin-inline-start': '12px',
+};
 
 export default function FormDemo() {
     return (
-        <Form onValueChange={(values) => console.log(values)} initValues={initValue} labelPosition="left" style={{ 'text-align': 'left' }} allowEmpty>
+        <Form onValueChange={(values) => console.log(values)} initValues={initValue} labelPosition="left" style={{ 'text-align': 'start' }} allowEmpty>
             <ArrayField field="group">
                 {(group) => (
                     <>
-                        <Button
-                            icon={<IconPlusCircle />}
-                            theme="solid"
-                            onClick={() =>
-                                group.addWithInitValue({
-                                    name: '新规则名称',
-                                    rules: [
-                                        { ruleType: 'main', type: 'include', text: '' },
-                                        { ruleType: 'attachmentName', type: 'include', text: '' },
-                                    ],
-                                })
-                            }
-                        >
+                        <Button icon={<IconPlusCircle />} theme="solid" onClick={() => group.addWithInitValue(newRule)}>
                             新增收信规则
                         </Button>
                         <For each={group.arrayFields}>
-                            {(row) => (
+                            {(item) => (
                                 <div style={{ width: '1000px', display: 'flex', 'flex-wrap': 'wrap' }}>
-                                    <FormInput field={`${row.field}[name]`} labelPosition="top" label="规则名称" style={{ width: '600px' }} />
-                                    <Button type="danger" style={{ margin: '36px 0 0 12px' }} aria-label="删除规则" icon={<IconMinusCircle />} onClick={row.remove} />
+                                    <FormInput field={`${item.field}[name]`} labelPosition="top" label="规则名称" style={{ width: '600px' }} />
+                                    <Button type="danger" style={{ 'margin-block-start': '36px', 'margin-inline-start': '12px' }} aria-label="删除规则" icon={<IconMinusCircle />} onClick={item.remove} />
                                     <Typography.Text strong style={{ 'flex-basis': '100%' }}>
                                         当邮件到达，满足以下条件时：
                                     </Typography.Text>
-                                    <Card shadows="hover" style={{ width: '620px', margin: '12px 0 0 24px' }}>
-                                        <NestedField field={row.field} />
+                                    <Card shadows="hover" style={{ width: '620px', 'margin-block-start': '12px', 'margin-inline-start': '24px' }}>
+                                        <ArrayField field={`${item.field}.rules`}>
+                                            {(rules) => (
+                                                <For each={rules.arrayFields}>
+                                                    {(rule, i) => (
+                                                        <div style={{ display: 'flex' }}>
+                                                            <FormSelect field={`${rule.field}[ruleType]`} label={`${rule.field}.ruleType`} noLabel optionList={selectOption} style={{ width: '120px', 'margin-inline-end': '12px' }} />
+                                                            <FormSelect field={`${rule.field}[type]`} label={`${rule.field}.type`} noLabel style={{ width: '100px', 'margin-inline-end': '12px' }} optionList={typeOption} />
+                                                            <FormInput field={`${rule.field}[text]`} label={`${rule.field}.text`} aria-label="条件内容" noLabel style={{ width: '200px' }} />
+                                                            <Button type="danger" theme="borderless" style={rowStyle} aria-label="删除条件" icon={<IconMinusCircle />} onClick={rule.remove} />
+                                                            <Button
+                                                                aria-label="新增条件"
+                                                                icon={<IconPlusCircle />}
+                                                                style={rowStyle}
+                                                                disabled={i() !== rules.arrayFields.length - 1}
+                                                                onClick={() =>
+                                                                    rules.addWithInitValue({
+                                                                        ruleType: `条件${rules.arrayFields.length + 1}`,
+                                                                        type: 'include',
+                                                                    })
+                                                                }
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </For>
+                                            )}
+                                        </ArrayField>
                                     </Card>
                                 </div>
                             )}

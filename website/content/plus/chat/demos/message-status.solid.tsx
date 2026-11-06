@@ -49,7 +49,7 @@ function getId() {
 const uploadProps = { action: 'https://api.semi.design/upload' };
 
 export default function ChatDemo() {
-    const [chats, setChats] = createSignal<Message[]>(defaultMessage);
+    const [message, setMessage] = createSignal<Message[]>(defaultMessage);
 
     const onMessageSend = () => {
         const newAssistantMessage: Message = {
@@ -59,9 +59,9 @@ export default function ChatDemo() {
             content: '这是一条 mock 回复信息',
         };
         setTimeout(() => {
-            setChats((list) => [...list, newAssistantMessage]);
+            setMessage((list) => [...list, newAssistantMessage]);
         }, 200);
     };
 
-    return <Chat style={commonOuterStyle} chats={chats()} roleConfig={roleInfo} onChatsChange={(next) => setChats(next)} onMessageSend={onMessageSend} uploadProps={uploadProps} />;
+    return <Chat style={commonOuterStyle} chats={message()} roleConfig={roleInfo} onChatsChange={(next) => setMessage(next)} onMessageSend={onMessageSend} uploadProps={uploadProps} />;
 }

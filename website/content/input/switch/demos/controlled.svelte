@@ -4,4 +4,4 @@
     let checked = $state(true);
 </script>
 
-<Switch aria-label="受控开关" bind:checked />
+<Switch aria-label="a switch for demo" bind:checked />

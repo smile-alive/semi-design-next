@@ -1,8 +1,6 @@
 <script lang="ts">
     import { Button, TreeSelect, type TreeNodeData } from '@fibrae/semi-ui-svelte';
 
-    const style = 'width: 300px';
-    const dropdownStyle = 'max-height: 400px; overflow: auto';
     // Only a new array updates the options, so the list is replaced as a whole.
     let treeData = $state.raw<TreeNodeData[]>([]);
 
@@ -25,7 +23,7 @@
     };
 </script>
 
-<TreeSelect {dropdownStyle} placeholder="请选择" {style} {treeData} />
+<TreeSelect dropdownStyle="max-height: 400px; overflow: auto" placeholder="请选择" style="width: 300px" {treeData} />
 <br />
 <br />
 <Button onclick={add}>动态改变数据</Button>

@@ -23,11 +23,6 @@
             position: 'bottom',
         },
     ];
-
-    const finish = (message: string) => {
-        current = 0;
-        console.log(message);
-    };
 </script>
 
 <div>
@@ -39,5 +34,19 @@
         <Tag id="controlled-demo-2">Default Tag</Tag>
         <Button id="controlled-demo-3">确定</Button>
     </Space>
-    <UserGuide bind:current bind:visible mask mode="popup" onFinish={() => finish('引导完成')} onSkip={() => finish('跳过引导')} {steps} />
+    <UserGuide
+        bind:current
+        bind:visible
+        mask
+        mode="popup"
+        onFinish={() => {
+            current = 0;
+            console.log('引导完成');
+        }}
+        onSkip={() => {
+            current = 0;
+            console.log('跳过引导');
+        }}
+        {steps}
+    />
 </div>

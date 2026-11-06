@@ -45,7 +45,7 @@ export default function AIChatDialogueDemo() {
 
     return (
         <>
-            <Button onClick={send} disabled={streaming} style={{ marginBottom: '12px' }}>
+            <Button onClick={send} disabled={streaming} style={{ marginBlockEnd: '12px' }}>
                 发送消息
             </Button>
             <div style={{ height: '320px' }}>

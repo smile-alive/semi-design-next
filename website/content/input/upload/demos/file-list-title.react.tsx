@@ -1,24 +1,24 @@
 import { IconUpload } from '@fibrae/semi-icons-react';
 import { Upload, Button, type FileItem } from '@fibrae/semi-ui-react';
 
+const action = 'https://api.semi.design/upload';
+
+const defaultFileList: FileItem[] = [
+    {
+        uid: '1',
+        name: 'document.pdf',
+        status: 'success',
+        size: '130KB',
+    },
+    {
+        uid: '2',
+        name: 'report.xlsx',
+        status: 'success',
+        size: '222KB',
+    },
+];
+
 export default function UploadDemo() {
-    let action = 'https://api.semi.design/upload';
-
-    const defaultFileList: FileItem[] = [
-        {
-            uid: '1',
-            name: 'document.pdf',
-            status: 'success',
-            size: '130KB',
-        },
-        {
-            uid: '2',
-            name: 'report.xlsx',
-            status: 'success',
-            size: '222KB',
-        },
-    ];
-
     return (
         <>
             <Upload action={action} defaultFileList={defaultFileList} fileListTitle="已上传文件" style={{ marginBottom: 20 }}>

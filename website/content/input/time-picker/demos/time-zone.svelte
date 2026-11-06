@@ -1,7 +1,6 @@
 <script lang="ts">
     import { ConfigProvider, Select, TimePicker } from '@fibrae/semi-ui-svelte';
 
-    let timeZone = $state('GMT+08:00');
     const defaultTimestamp = 1581599305265;
     const gmtList: string[] = [];
     for (let hourOffset = -11; hourOffset <= 14; hourOffset++) {
@@ -10,7 +9,7 @@
     }
     const optionList = gmtList.map((gmt) => ({ value: gmt, label: gmt }));
 
-    const onChange = (date: unknown, dateString: string | string[]) => console.log('DatePicker changed: ', date, dateString);
+    let timeZone = $state('GMT+08:00');
 </script>
 
 <ConfigProvider {timeZone}>
@@ -20,6 +19,6 @@
         <br />
         <br />
         <h5 style="margin: 10px">TimePicker:</h5>
-        <TimePicker {onChange} value={defaultTimestamp} />
+        <TimePicker onChange={(date, dateString) => console.log('DatePicker changed: ', date, dateString)} value={defaultTimestamp} />
     </div>
 </ConfigProvider>

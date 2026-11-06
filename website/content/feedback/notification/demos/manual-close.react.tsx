@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Notification, Button } from '@fibrae/semi-ui-react';
 
+const opts = {
+    content: 'Not auto close',
+    title: 'Hi',
+    duration: 0,
+};
+
 export default function NotificationDemo() {
-    let opts = {
-        content: 'Not auto close',
-        title: 'Hi',
-        duration: 0,
-    };
     const [ids, setIds] = useState<string[]>([]);
     const show = () => {
         let id = Notification.info(opts);

@@ -12,7 +12,7 @@ export default function ImageDemo() {
             <Button onClick={() => setVisible1(true)}>Preview single Image</Button>
             <ImagePreview src="/assets/root-web-sites/sky.jpg" visible={visible1()} onVisibleChange={(visible) => setVisible1(visible)} />
             <br />
-            <Button onClick={() => setVisible2(true)} style={{ 'margin-top': '20px' }}>
+            <Button onClick={() => setVisible2(true)} style={{ 'margin-block-start': '20px' }}>
                 Preview multiple Images
             </Button>
             <ImagePreview src={srcList} previewTitle="Scenery" visible={visible2()} onVisibleChange={(visible) => setVisible2(visible)} />

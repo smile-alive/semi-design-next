@@ -1,11 +1,12 @@
 import { IconUpload } from '@fibrae/semi-icons-react';
 import { Upload, Button } from '@fibrae/semi-ui-react';
 
+const action = 'https://api.semi.design/upload';
+const imageOnly = 'image/*';
+const videoOnly = 'video/*';
+const fileLimit = '.pdf,.png,.jpeg';
+
 export default function UploadDemo() {
-    let action = 'https://api.semi.design/upload';
-    let imageOnly = 'image/*';
-    let videoOnly = 'video/*';
-    let fileLimit = '.pdf,.png,.jpeg';
     return (
         <>
             <Upload action={action} accept={imageOnly} style={{ marginBottom: 12 }}>

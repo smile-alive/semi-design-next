@@ -15,5 +15,5 @@ const style = {
 };
 
 export default function TreeDemo() {
-    return <Tree treeDataSimpleJson={json} multiple onChange={(e) => console.log('当前所有选中项: ', e)} onSelect={(e) => console.log('当前选项: ', e)} style={style} />;
+    return <Tree treeDataSimpleJson={json} multiple onChange={(value) => console.log('当前所有选中项: ', value)} onSelect={(key) => console.log('当前选项: ', key)} style={style} />;
 }

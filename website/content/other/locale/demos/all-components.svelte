@@ -2,7 +2,7 @@
     import type { Locale } from '@fibrae/semi-foundation/locale/interface';
     import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
     import { IconSemiLogo, IconStar, IconUser } from '@fibrae/semi-icons-svelte';
-    import { Button, Calendar, Cascader, ConfigProvider, DatePicker, Form, FormInput, Image, ImagePreview, List, LocaleProvider, Modal, Nav, NavHeader, Pagination, Select, Table, TimePicker, Transfer, TreeSelect, TypographyParagraph, type ColumnProps, type NavItems } from '@fibrae/semi-ui-svelte';
+    import { Button, Calendar, Cascader, ConfigProvider, DatePicker, Form, FormInput, Image, ImagePreview, List, LocaleProvider, Modal, Nav, Pagination, Select, Table, TimePicker, Transfer, TreeSelect, Typography, type ColumnProps, type NavItems } from '@fibrae/semi-ui-svelte';
 
     const treeData = [
         {
@@ -193,7 +193,7 @@
 </script>
 
 <div>
-    <div style="border-bottom: 1px solid var(--semi-color-border); padding-bottom: 20px">
+    <div style="border-block-end: 1px solid var(--semi-color-border); padding-block-end: 20px">
         <Select aria-label="切换语言" onChange={(value) => onLanguageChange(value as LocaleCode)} optionList={languageOptions} style="width: 250px" value="zh_CN">
             {#snippet prefix()}切换语言{/snippet}
         </Select>
@@ -253,17 +253,17 @@
                     <h5>Calendar</h5>
                     <Calendar displayValue={new Date(2024, 4, 6, 12)} mode="month" />
                     <h5>Typography - Copyable</h5>
-                    <TypographyParagraph copyable>Click to copy text.</TypographyParagraph>
+                    <Typography.Paragraph copyable>Click to copy text.</Typography.Paragraph>
                     <h5>Typography - Collapsible</h5>
-                    <TypographyParagraph ellipsis={{ rows: 3, expandable: true, collapsible: true }} style="width: 300px">
+                    <Typography.Paragraph ellipsis={{ rows: 3, expandable: true, collapsible: true }} style="width: 300px">
                         支持展开和折叠：Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。
-                    </TypographyParagraph>
+                    </Typography.Paragraph>
                     <h5>Transfer</h5>
                     <Transfer dataSource={transferData} style="width: 568px; height: 416px" />
                     <h5>Image</h5>
                     <ImagePreview showTooltip src={srcList}>
                         {#each srcList as src, index (src)}
-                            <Image alt="lamp{index + 1}" {src} style="margin-right: 5px" width={200} />
+                            <Image alt="lamp{index + 1}" {src} style="margin-inline-end: 5px" width={200} />
                         {/each}
                     </ImagePreview>
                     <h5>Form</h5>
@@ -273,11 +273,11 @@
                     <h5>Navigation</h5>
                     <Nav bodyStyle="height: 320px" footer={{ collapseButton: true }} items={navItems}>
                         {#snippet header()}
-                            <NavHeader text="Semi 数据后台">
+                            <Nav.Header text="Semi 数据后台">
                                 {#snippet logo()}
                                     <IconSemiLogo style="height: 36px; font-size: 36px" />
                                 {/snippet}
-                            </NavHeader>
+                            </Nav.Header>
                         {/snippet}
                         {#snippet icon({ item, size })}
                             {@const Icon = navIcons[item.itemKey as keyof typeof navIcons]}

@@ -15,14 +15,14 @@
 
 <div>
     <div>
-        <div class="btn-margin-right" style="display: inline-flex; align-items: center; padding-bottom: 14px">
+        <div class="btn-margin-inline-end" style="display: inline-flex; align-items: center; padding-block-end: 14px">
             <Button onclick={() => reset(false)}>关闭加载态</Button>
             <Button onclick={() => reset(true)}>开启加载态</Button>
         </div>
     </div>
     <hr />
-    <Button loading={saveLoading} style="margin-right: 14px" onclick={() => (saveLoading = true)}>保存</Button>
-    <Button loading={delLoading} style="margin-right: 14px" type="danger" onclick={() => (delLoading = true)}>
+    <Button loading={saveLoading} style="margin-inline-end: 14px" onclick={() => (saveLoading = true)}>保存</Button>
+    <Button loading={delLoading} style="margin-inline-end: 14px" type="danger" onclick={() => (delLoading = true)}>
         {#snippet icon()}
             <IconDelete />
         {/snippet}

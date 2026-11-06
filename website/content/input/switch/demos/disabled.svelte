@@ -3,7 +3,7 @@
 </script>
 
 <div>
-    <Switch aria-label="不可用的开关" disabled />
+    <Switch aria-label="a switch for demo" disabled />
     <br />
-    <Switch aria-label="不可用的开关，已开启" checked disabled />
+    <Switch aria-label="a switch for demo" checked disabled />
 </div>

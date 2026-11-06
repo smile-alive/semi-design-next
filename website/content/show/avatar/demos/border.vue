@@ -3,5 +3,11 @@
 </script>
 
 <template>
-    <div><Avatar v-for="index in 3" :key="index" border color="amber" :style="{ marginRight: '8px' }">T</Avatar></div>
+    <div>
+        <Avatar border color="amber" :style="{ marginInlineEnd: '8px' }">T</Avatar>
+
+        <Avatar border color="amber" :style="{ marginInlineEnd: '8px' }">T</Avatar>
+
+        <Avatar border color="amber" :style="{ marginInlineEnd: '8px' }">T</Avatar>
+    </div>
 </template>

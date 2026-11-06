@@ -9,7 +9,7 @@ export default function PopconfirmDemo() {
             <Popconfirm title="确定是否要保存此修改？" content="此修改将不可逆" cancelButtonProps={{ autoFocus: true }}>
                 {(trigger) => <Button {...trigger()}>取消聚焦</Button>}
             </Popconfirm>
-            <Popconfirm title="确定是否要保存此修改？" content={(renderProps) => <input ref={renderProps.initialFocusRef} placeholder="focus here" />}>
+            <Popconfirm title="确定是否要保存此修改？" content={(focus) => <input ref={focus.initialFocusRef} placeholder="focus here" />}>
                 {(trigger) => <Button {...trigger()}>内容聚焦</Button>}
             </Popconfirm>
         </Space>

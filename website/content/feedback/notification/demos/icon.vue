@@ -20,12 +20,12 @@
     <Button :style="{ margin: '4px' }" type="warning" @click="Notification.warning(opts)">Warning</Button>
     <Button :style="{ margin: '4px' }" type="danger" @click="Notification.error(opts)">Error</Button>
     <h5>自定义图标</h5>
-    <Button aria-label="Toutiao 图标通知" :style="{ marginRight: '5px' }" @click="showIcon(IconToutiaoLogo, 'red')">
+    <Button aria-label="Toutiao 图标通知" :style="{ marginInlineEnd: '5px' }" @click="showIcon(IconToutiaoLogo, 'red')">
         <template #icon>
             <IconToutiaoLogo />
         </template>
     </Button>
-    <Button aria-label="Vigo 图标通知" :style="{ marginRight: '5px' }" @click="showIcon(IconVigoLogo)">
+    <Button aria-label="Vigo 图标通知" :style="{ marginInlineEnd: '5px' }" @click="showIcon(IconVigoLogo)">
         <template #icon>
             <IconVigoLogo />
         </template>

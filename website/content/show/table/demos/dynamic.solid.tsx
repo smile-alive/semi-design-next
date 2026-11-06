@@ -30,7 +30,7 @@ const figmaIconUrl = '/assets/placeholder/app.svg';
 const dataTotalSize = 46;
 
 const wrapStyle = {
-    'margin-bottom': '15px',
+    'margin-block-end': '15px',
     display: 'flex',
     'justify-content': 'space-around',
     'flex-wrap': 'wrap',
@@ -44,7 +44,7 @@ const initialColumns: ColumnProps<Row>[] = [
         render: (text) => {
             return (
                 <span>
-                    <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-right': '12px' }} />
+                    <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-inline-end': '12px' }} />
                     {text}
                 </span>
             );
@@ -73,7 +73,7 @@ const initialColumns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}

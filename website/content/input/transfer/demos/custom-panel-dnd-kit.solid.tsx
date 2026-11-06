@@ -110,7 +110,7 @@ function renderSelectedPanel(panel: SelectedPanelProps) {
     return (
         <section class="selected-panel">
             <div class="panel-header sp-font">
-                <div>已选同步门店: {panel.length}</div>
+                <div>已选同步门店: {panel.selectedData.length}</div>
                 <Button theme="borderless" type="primary" onClick={() => panel.onClear()} size="small">
                     清空
                 </Button>

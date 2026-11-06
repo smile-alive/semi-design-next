@@ -6,7 +6,7 @@
 
 <div style="display: flex">
     {#each types as type (type)}
-        <div style="margin-right: 10px">
+        <div style="margin-inline-end: 10px">
             <ButtonGroup aria-label="操作按钮组" {type}>
                 <Button>拷贝</Button>
                 <Button>查询</Button>

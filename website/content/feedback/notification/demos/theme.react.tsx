@@ -1,13 +1,13 @@
 import { Notification, Button } from '@fibrae/semi-ui-react';
 
-export default function NotificationDemo() {
-    let opts = {
-        title: 'Hi, Bytedance',
-        content: 'Hi, Bytedance dance dance',
-        duration: 3,
-        theme: 'light',
-    } as const;
+const opts = {
+    title: 'Hi, Bytedance',
+    content: 'Hi, Bytedance dance dance',
+    duration: 3,
+    theme: 'light',
+} as const;
 
+export default function NotificationDemo() {
     return (
         <>
             <Button onClick={() => Notification.info(opts)}>Info</Button>

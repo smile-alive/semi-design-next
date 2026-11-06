@@ -4,18 +4,18 @@
     import { OverflowList, Slider, Tag } from '@fibrae/semi-ui-svelte';
 
     interface Item {
+        icon: Component;
         key: string;
     }
 
-    const icons: Record<string, Component> = {
-        alarm: IconAlarm,
-        bookmark: IconBookmark,
-        camera: IconCamera,
-        duration: IconDuration,
-        edit: IconEdit,
-        folder: IconFolder,
-    };
-    const items: Item[] = Object.keys(icons).map((key) => ({ key }));
+    const items: Item[] = [
+        { icon: IconAlarm, key: 'alarm' },
+        { icon: IconBookmark, key: 'bookmark' },
+        { icon: IconCamera, key: 'camera' },
+        { icon: IconDuration, key: 'duration' },
+        { icon: IconEdit, key: 'edit' },
+        { icon: IconFolder, key: 'folder' },
+    ];
     let width = $state<number | number[]>(100);
 </script>
 
@@ -26,14 +26,13 @@
     <div style="width: {width}%">
         <OverflowList {items} renderMode="scroll">
             {#snippet item({ item })}
-                {@const Icon = icons[item.key]}
-                <Tag color="blue" style="margin-right: 8px; flex: 0 0 auto">
-                    <Icon style="margin-right: 4px" />
-                    <span>{item.key}</span>
+                <Tag color="blue" style="margin-inline-end: 8px; flex: 0 0 auto">
+                    <item.icon style="margin-inline-end: 4px" />
+                    {item.key}
                 </Tag>
             {/snippet}
             {#snippet overflow({ items: hidden })}
-                <Tag style="margin-right: 8px; margin-left: 8px; flex: 0 0 auto; font-variant-numeric: tabular-nums">+{hidden.length}</Tag>
+                <Tag style="margin-inline-end: 8px; margin-inline-start: 8px; flex: 0 0 auto; font-variant-numeric: tabular-nums">+{hidden.length}</Tag>
             {/snippet}
         </OverflowList>
     </div>

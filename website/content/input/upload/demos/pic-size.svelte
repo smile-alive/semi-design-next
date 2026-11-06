@@ -2,7 +2,7 @@
     import { IconPlus } from '@fibrae/semi-icons-svelte';
     import { Image, Upload, type FileItem } from '@fibrae/semi-ui-svelte';
 
-    const fileList: FileItem[] = [
+    const defaultFileList: FileItem[] = [
         {
             uid: '1',
             name: 'image-1.jpg',
@@ -14,7 +14,7 @@
     ];
 </script>
 
-<Upload accept="image/*" action="https://api.semi.design/upload" {fileList} listType="picture" multiple picHeight={110} picWidth={200}>
+<Upload accept="image/*" action="https://api.semi.design/upload" fileList={defaultFileList} listType="picture" multiple picHeight={110} picWidth={200}>
     {#snippet thumbnail({ file })}
         <Image alt={file.name} height={110} src={file.url} width={200} />
     {/snippet}

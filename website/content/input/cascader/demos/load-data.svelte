@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Cascader, type CascaderData } from '@fibrae/semi-ui-svelte';
 
-    let treeData = $state<CascaderData[]>([
+    let data = $state<CascaderData[]>([
         { label: 'Node1', value: '0-0' },
         { label: 'Node2', value: '0-1' },
         { label: 'Node3', value: '0-2', isLeaf: true },
@@ -18,7 +18,7 @@
             return node;
         });
 
-    const loadData = (selectedOpt: CascaderData[]) => {
+    const onLoadData = (selectedOpt: CascaderData[]) => {
         const targetOpt = selectedOpt[selectedOpt.length - 1];
         const { label, value } = targetOpt;
         return new Promise<void>((resolve) => {
@@ -28,7 +28,7 @@
             }
 
             setTimeout(() => {
-                treeData = updateTreeData(treeData, value, [
+                data = updateTreeData(data, value, [
                     {
                         label: `${label} - 1`,
                         value: `${label}-1`,
@@ -46,4 +46,4 @@
     };
 </script>
 
-<Cascader {loadData} placeholder="Please select" style="width: 300px" {treeData} />
+<Cascader loadData={onLoadData} placeholder="Please select" style="width: 300px" treeData={data} />

@@ -5,8 +5,9 @@
     let startPoint: { x: number; y: number } | null = null;
 
     const customMove = (element: HTMLElement, top: number, left: number) => {
-        if (container && left + 100 > container.offsetWidth) {
-            element.style.right = `${container.offsetWidth - left - element.offsetWidth}px`;
+        const bounds = container;
+        if (bounds && left + 100 > bounds.offsetWidth) {
+            element.style.right = `${bounds.offsetWidth - left - element.offsetWidth}px`;
             element.style.left = 'auto';
         } else {
             element.style.left = left + 'px';

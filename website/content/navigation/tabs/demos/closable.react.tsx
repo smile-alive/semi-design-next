@@ -5,7 +5,7 @@ export default function TabsDemo() {
     const [tabList, setTabList] = useState([
         { tab: '文档', itemKey: '1', text: '文档', closable: true },
         { tab: '快速起步', itemKey: '2', text: '快速起步', closable: true },
-        { tab: '帮助', itemKey: '3', text: '帮助' },
+        { tab: '帮助', itemKey: '3', text: '帮助', closable: false },
     ]);
 
     const close = (key: string) => {

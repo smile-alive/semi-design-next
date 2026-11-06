@@ -84,7 +84,7 @@
     <Table :columns="columns" :dataSource="data" :pagination="false">
         <template #cell="{ column, record, text }">
             <div v-if="column.dataIndex === 'name'">
-                <Avatar alt="" shape="square" size="small" :src="record.nameIconSrc" :style="{ marginRight: '12px' }" />
+                <Avatar alt="" shape="square" size="small" :src="record.nameIconSrc" :style="{ marginInlineEnd: '12px' }" />
                 {{ text }}
             </div>
             <Tag v-else-if="column.dataIndex === 'status'" :color="tagConfig[text as Row['status']].color" shape="circle" :style="{ userSelect: 'text' }">
@@ -94,7 +94,7 @@
                 {{ tagConfig[text as Row['status']].text }}
             </Tag>
             <div v-else-if="column.dataIndex === 'owner'">
-                <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
+                <Avatar :color="record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
                     {{ typeof text === 'string' && text.slice(0, 1) }}
                 </Avatar>
                 {{ text }}

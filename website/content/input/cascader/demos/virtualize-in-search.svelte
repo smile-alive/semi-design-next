@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Cascader, Checkbox, TypographyText, type TypographyEllipsis } from '@fibrae/semi-ui-svelte';
+    import { Cascader, Checkbox, Typography } from '@fibrae/semi-ui-svelte';
 
     const treeData = ['通用', '场景'].map((label, m) => ({
         label,
@@ -20,16 +20,15 @@
         width: 320,
         itemSize: 36,
     };
-    const ellipsis: TypographyEllipsis = { showTooltip: { opts: { style: 'word-break: break-all' } } };
 </script>
 
 <Cascader filterTreeNode multiple placeholder="输入 通用 or 场景 进行搜索" style="width: 320px" {treeData} virtualizeInSearch={virtualize}>
-    {#snippet filterItem({ props, data, onCheck, checkStatus })}
-        <div {...props} style={`${props.style ?? ''}; justify-content: start; padding: 8px 16px 8px 12px; box-sizing: border-box`}>
-            <Checkbox checked={checkStatus.checked} indeterminate={checkStatus.halfChecked} onChange={onCheck} style="margin-right: 8px" />
-            <TypographyText {ellipsis} style="max-width: 260px">
-                {data.map((item) => item.label).join(' | ')}
-            </TypographyText>
+    {#snippet filterItem(item)}
+        <div {...item.props} style={`${item.props.style ?? ''}; justify-content: start; padding: 8px 16px 8px 12px; box-sizing: border-box`}>
+            <Checkbox checked={item.checkStatus.checked} indeterminate={item.checkStatus.halfChecked} onChange={item.onCheck} style="margin-inline-end: 8px" />
+            <Typography.Text ellipsis={{ showTooltip: { opts: { style: 'word-break: break-all' } } }} style="max-width: 260px">
+                {item.data.map((option) => option.label).join(' | ')}
+            </Typography.Text>
         </div>
     {/snippet}
 </Cascader>

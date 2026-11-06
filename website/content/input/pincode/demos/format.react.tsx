@@ -1,5 +1,7 @@
 import { PinCode, Typography } from '@fibrae/semi-ui-react';
 
+const isLowerCase = (char: string) => /[a-z]/.test(char);
+
 export default function PinCodeDemo() {
     return (
         <>
@@ -13,13 +15,7 @@ export default function PinCodeDemo() {
             <PinCode aria-labelledby="pincode-format-upper" format={/[A-Z]/} onComplete={(value) => console.log('pincode: ', value)} />
             <br />
             <Typography.Text id="pincode-format-lower">只小写字母(函数判断)</Typography.Text>
-            <PinCode
-                aria-labelledby="pincode-format-lower"
-                format={(char) => {
-                    return /[a-z]/.test(char);
-                }}
-                onComplete={(value) => console.log('pincode: ', value)}
-            />
+            <PinCode aria-labelledby="pincode-format-lower" format={isLowerCase} onComplete={(value) => console.log('pincode: ', value)} />
         </>
     );
 }

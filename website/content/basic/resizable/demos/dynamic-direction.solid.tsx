@@ -1,14 +1,8 @@
 import { createSignal } from 'solid-js';
 import { Button, ResizeGroup, ResizeHandler, ResizeItem } from '@fibrae/semi-ui-solid';
 
-const boxStyle = {
-    'background-color': 'var(--semi-grey-1)',
-};
-
-const textStyle = {
-    'margin-left': '20%',
-    padding: '5px',
-};
+const itemStyle = { 'background-color': 'var(--semi-grey-1)' };
+const contentStyle = { 'margin-inline-start': '20%', padding: '5px' };
 
 export default function ResizableDemo() {
     const [text, setText] = createSignal('drag to resize');
@@ -33,7 +27,7 @@ export default function ResizableDemo() {
                 >
                     <ResizeGroup direction="horizontal">
                         <ResizeItem
-                            style={boxStyle}
+                            style={itemStyle}
                             onChange={() => {
                                 setText('resizing');
                             }}
@@ -41,28 +35,28 @@ export default function ResizableDemo() {
                                 setText('drag to resize');
                             }}
                         >
-                            <div style={textStyle}>{text()}</div>
+                            <div style={contentStyle}>{text()}</div>
                         </ResizeItem>
                         <ResizeHandler />
                         <ResizeItem
-                            style={boxStyle}
+                            style={itemStyle}
                             onChange={() => {
                                 setText('resizing');
                             }}
                         >
-                            <div style={textStyle}>{text()}</div>
+                            <div style={contentStyle}>{text()}</div>
                         </ResizeItem>
                     </ResizeGroup>
                 </ResizeItem>
                 <ResizeHandler />
                 <ResizeItem
-                    style={boxStyle}
+                    style={itemStyle}
                     defaultSize={1.3}
                     onChange={() => {
                         setText('resizing');
                     }}
                 >
-                    <div style={textStyle}>{text()}</div>
+                    <div style={contentStyle}>{text()}</div>
                 </ResizeItem>
             </ResizeGroup>
         </div>

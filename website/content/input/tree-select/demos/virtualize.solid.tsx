@@ -2,7 +2,7 @@ import { createSignal, Show } from 'solid-js';
 import { Button, TreeSelect, type TreeNodeData } from '@fibrae/semi-ui-solid';
 
 // x: nodes per level. y: nodes with children per level. z: depth (0 is one level)
-function generateData(x = 5, y = 4, z = 3) {
+const generateData = (x = 5, y = 4, z = 3) => {
     const data: TreeNodeData[] = [];
 
     const fill = (level: number, preKey: string, nodes: TreeNodeData[]) => {
@@ -30,7 +30,7 @@ function generateData(x = 5, y = 4, z = 3) {
         total += x * y ** n;
     }
     return { gData: data, total };
-}
+};
 
 export default function TreeSelectDemo() {
     const [gData, setGData] = createSignal<TreeNodeData[]>([]);

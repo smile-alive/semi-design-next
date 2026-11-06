@@ -316,7 +316,7 @@
         }),
     ];
 
-    let references = $state<Reference[]>([
+    const customReferences: Reference[] = [
         {
             type: 'file',
             id: '1',
@@ -354,7 +354,9 @@
             from: 1,
             to: 2,
         },
-    ]);
+    ];
+
+    let reference = $state(customReferences);
 
     const isImageType = ({ name = '', fileInstance }: Attachment) => {
         const PIC_PREFIX = 'image/';
@@ -385,8 +387,8 @@
 
     const richContent = (content: Content[]) => content.filter((item) => item.type !== 'text');
 
-    const onReferenceDelete = (reference: Reference) => {
-        references = references.filter((item) => item.id !== reference.id);
+    const onReferenceDelete = (deleted: Reference) => {
+        reference = reference.filter((item) => item.id !== deleted.id);
     };
 
     const onContentChange = (content: Content[]) => {
@@ -409,10 +411,10 @@
     ]);
 </script>
 
-<AIChatInput bind:this={input} class="aiChatInput-customTopSlot" {extensions} {onContentChange} {onReferenceDelete} placeholder="使用 @ 触发" {references} showReference={false} showUploadFile={false} style="margin: 12px" {transformer} {uploadProps}>
-    {#snippet topSlot({ attachments, content, references: items, onReferenceDelete: deleteReference, onUploadFileDelete })}
+<AIChatInput bind:this={input} class="aiChatInput-customTopSlot" {extensions} {onContentChange} {onReferenceDelete} placeholder="使用 @ 触发" references={reference} showReference={false} showUploadFile={false} style="margin: 12px" {transformer} {uploadProps}>
+    {#snippet topSlot(topSlot)}
         <div class="ai-chat-input-topSlot">
-            {#each richContent(content) as item, index (item.key ?? index)}
+            {#each richContent(topSlot.content) as item, index (item.key ?? index)}
                 {@const Icon = refTypeToIconMap[item.type]}
                 <div class="item">
                     <span class="item-icon">
@@ -431,14 +433,14 @@
                     </span>
                 </div>
             {/each}
-            {#each items as item (item.id)}
+            {#each topSlot.references as item (item.id)}
                 {@const Icon = refTypeToIconMap[item.type ?? '']}
                 <div class="item">
                     <span class="item-icon">
                         {#if Icon}
                             <Icon class="item-left item-icon" size="small" />
                         {/if}
-                        <button aria-label="删除" class="item-icon-delete" type="button" onclick={() => deleteReference(item)}>
+                        <button aria-label="删除" class="item-icon-delete" type="button" onclick={() => topSlot.onReferenceDelete(item)}>
                             <IconClose size="small" />
                         </button>
                     </span>
@@ -450,7 +452,7 @@
                     </span>
                 </div>
             {/each}
-            {#each attachments as item (item.uid)}
+            {#each topSlot.attachments as item (item.uid)}
                 <div class="item">
                     <span class="item-icon">
                         {#if isImageType(item)}
@@ -458,7 +460,7 @@
                         {:else}
                             <IconUpload class="item-left item-icon" size="small" />
                         {/if}
-                        <button aria-label="删除" class="item-icon-delete" type="button" onclick={() => onUploadFileDelete(item)}>
+                        <button aria-label="删除" class="item-icon-delete" type="button" onclick={() => topSlot.onUploadFileDelete(item)}>
                             <IconClose size="small" />
                         </button>
                     </span>

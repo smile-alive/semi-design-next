@@ -29,9 +29,9 @@
         },
     ];
 
-    const onExceed = (checked: CascaderEntity[]) => {
+    const onExceed = (v: CascaderEntity[]) => {
         Toast.warning('exceed max');
-        console.log(checked);
+        console.log(v);
     };
 </script>
 

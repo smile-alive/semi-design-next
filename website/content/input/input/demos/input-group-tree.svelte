@@ -24,17 +24,15 @@
         { value: 'from', label: 'From: ' },
         { value: 'to', label: 'To: ' },
     ];
-    const selectStyle = 'width: 100px';
-    const treeStyle = 'width: 220px';
 </script>
 
 <InputGroup>
-    <Select aria-label="From or to" {optionList} style={selectStyle} value="from" />
-    <TreeSelect placeholder="Please select" style={treeStyle} {treeData} />
+    <Select aria-label="From or to" {optionList} style="width: 100px" value="from" />
+    <TreeSelect placeholder="Please select" style="width: 220px" {treeData} />
 </InputGroup>
 <br />
 <br />
 <InputGroup>
-    <Select aria-label="From or to" {optionList} style={selectStyle} value="from" />
-    <Cascader placeholder="Please select" style={treeStyle} {treeData} />
+    <Select aria-label="From or to" {optionList} style="width: 100px" value="from" />
+    <Cascader placeholder="Please select" style="width: 220px" {treeData} />
 </InputGroup>

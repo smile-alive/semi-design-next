@@ -9,11 +9,12 @@
         { key: '认证状态', value: '未认证' },
     ];
     const aligns = ['center', 'justify', 'left', 'plain'] as const;
+    const style = 'margin: 10px';
 </script>
 
 <div style="display: flex; flex-wrap: wrap">
     {#each aligns as align (align)}
-        <Card shadows="always" style="margin: 10px">
+        <Card shadows="always" {style}>
             <Descriptions {align} {data}>
                 {#snippet value({ item, index })}
                     {#if index === 3}

@@ -24,7 +24,7 @@
     import zh_TW from '@fibrae/semi-foundation/locale/source/zh_TW';
     import { InputNumber, LocaleProvider, Select } from '@fibrae/semi-ui-vue';
 
-    const languages = {
+    const language = {
         zh_CN,
         en_GB,
         en_US,
@@ -49,14 +49,14 @@
         ro,
     };
 
-    const locale = ref<(typeof languages)[keyof typeof languages]>(zh_CN);
+    const locale = ref<(typeof language)[keyof typeof language]>(zh_CN);
     const localeCode = ref('zh_CN');
 
     const onLanguageChange = (code?: string | number) => {
         if (typeof code !== 'string') {
             return;
         }
-        locale.value = languages[code as keyof typeof languages];
+        locale.value = language[code as keyof typeof language];
         localeCode.value = code;
     };
 </script>

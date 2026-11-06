@@ -1,7 +1,5 @@
 <script lang="ts">
-    import { DatePicker, type DatePickerTimePickerOpts } from '@fibrae/semi-ui-svelte';
-
-    const timePickerOpts: DatePickerTimePickerOpts = { scrollItemProps: { mode: 'wheel', cycled: true } };
+    import { DatePicker } from '@fibrae/semi-ui-svelte';
 </script>
 
 <h4>默认日期与时间选择</h4>
@@ -9,4 +7,4 @@
 <br />
 <br />
 <h4>开启时间列表无限循环</h4>
-<DatePicker {timePickerOpts} type="dateTime" />
+<DatePicker timePickerOpts={{ scrollItemProps: { mode: 'wheel', cycled: true } }} type="dateTime" />

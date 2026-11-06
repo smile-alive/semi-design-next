@@ -2,7 +2,7 @@
     import { onMount } from 'svelte';
     import { TreeSelect, type TreeNodeData } from '@fibrae/semi-ui-svelte';
 
-    const source: TreeNodeData[] = [
+    const treeData: TreeNodeData[] = [
         {
             label: '亚洲',
             value: 'Asia',
@@ -33,17 +33,15 @@
             key: '1',
         },
     ];
-    const firstStyle = 'width: 300px; margin-bottom: 20px';
-    const secondStyle = 'width: 300px';
     let data = $state.raw<TreeNodeData[]>([]);
 
     onMount(() => {
         const timer = setTimeout(() => {
-            data = source;
+            data = treeData;
         }, 500);
         return () => clearTimeout(timer);
     });
 </script>
 
-<TreeSelect expandAll placeholder="expandAll" style={firstStyle} treeData={data} />
-<TreeSelect defaultExpandAll placeholder="defaultExpandAll" style={secondStyle} treeData={data} />
+<TreeSelect expandAll placeholder="expandAll" style="width: 300px; margin-bottom: 20px" treeData={data} />
+<TreeSelect defaultExpandAll placeholder="defaultExpandAll" style="width: 300px" treeData={data} />

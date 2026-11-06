@@ -4,18 +4,18 @@
     import { OverflowList, Slider, Tag } from '@fibrae/semi-ui-vue';
 
     interface Item {
+        icon: Component;
         key: string;
     }
 
-    const icons: Record<string, Component> = {
-        alarm: IconAlarm,
-        bookmark: IconBookmark,
-        camera: IconCamera,
-        duration: IconDuration,
-        edit: IconEdit,
-        folder: IconFolder,
-    };
-    const items: Item[] = Object.keys(icons).map((key) => ({ key }));
+    const items: Item[] = [
+        { icon: IconAlarm, key: 'alarm' },
+        { icon: IconBookmark, key: 'bookmark' },
+        { icon: IconCamera, key: 'camera' },
+        { icon: IconDuration, key: 'duration' },
+        { icon: IconEdit, key: 'edit' },
+        { icon: IconFolder, key: 'folder' },
+    ];
     const width = ref(100);
 
     const changeWidth = (value: number | number[]) => {
@@ -31,16 +31,16 @@
         <div :style="{ width: `${width}%` }">
             <OverflowList :items="items" renderMode="scroll">
                 <template #item="{ item }">
-                    <Tag color="blue" :style="{ marginRight: '8px', flex: '0 0 auto' }">
-                        <component :is="icons[item.key]" :style="{ marginRight: '4px' }" />
-                        <span>{{ item.key }}</span>
+                    <Tag color="blue" :style="{ marginInlineEnd: '8px', flex: '0 0 auto' }">
+                        <component :is="item.icon" :style="{ marginInlineEnd: '4px' }" />
+                        {{ item.key }}
                     </Tag>
                 </template>
                 <template #overflow="{ items: hidden }">
                     <Tag
                         :style="{
-                            marginRight: '8px',
-                            marginLeft: '8px',
+                            marginInlineEnd: '8px',
+                            marginInlineStart: '8px',
                             flex: '0 0 auto',
                             fontVariantNumeric: 'tabular-nums',
                         }"

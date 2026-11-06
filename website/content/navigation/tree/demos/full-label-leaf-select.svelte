@@ -38,11 +38,11 @@
     const treeStyle = 'width: 260px; height: 420px; border: 1px solid var(--semi-color-border)';
 </script>
 
-<Tree onChange={(value) => console.log('change', value)} style={treeStyle} {treeData}>
-    {#snippet fullLabel({ class: rowClass, data, expandIcon, onClick, onExpand })}
-        <div class={rowClass} role="presentation" onclick={data.children?.length ? onExpand : onClick}>
-            {@render expandIcon()}
-            <span>{data.label}</span>
+<Tree onChange={(...args) => console.log('change', ...args)} style={treeStyle} {treeData}>
+    {#snippet fullLabel(row)}
+        <div class={row.class} role="presentation" onclick={row.data.children?.length ? row.onExpand : row.onClick}>
+            {@render row.expandIcon()}
+            <span>{row.data.label}</span>
         </div>
     {/snippet}
 </Tree>

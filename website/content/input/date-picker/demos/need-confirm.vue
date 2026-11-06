@@ -1,17 +1,7 @@
 <script setup lang="ts">
-    import { DatePicker, type DatePickerEmits } from '@fibrae/semi-ui-vue';
-
-    const onConfirm = (...args: DatePickerEmits['confirm']) => {
-        console.log('Confirmed: ', ...args);
-    };
-    const onCancel = (...args: DatePickerEmits['cancel']) => {
-        console.log('Canceled: ', ...args);
-    };
-    const onChange = (...args: DatePickerEmits['change']) => {
-        console.log('Changed: ', ...args);
-    };
+    import { DatePicker } from '@fibrae/semi-ui-vue';
 </script>
 
 <template>
-    <DatePicker needConfirm type="dateTime" @cancel="onCancel" @change="onChange" @confirm="onConfirm" />
+    <DatePicker needConfirm type="dateTime" @cancel="(...args) => console.log('Canceled: ', ...args)" @change="(...args) => console.log('Changed: ', ...args)" @confirm="(...args) => console.log('Confirmed: ', ...args)" />
 </template>

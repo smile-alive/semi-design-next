@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { Button, ButtonGroup, Descriptions, DescriptionsItem, List, ListItem, Rating } from '@fibrae/semi-ui-vue';
+    import { Button, ButtonGroup, Descriptions, List, Rating } from '@fibrae/semi-ui-vue';
 
     const data = [
         { title: 'Semi UI', rating: 4.5, feedbacks: 124 },
@@ -13,35 +13,35 @@
         border: '1px solid var(--semi-color-border)',
         backgroundColor: 'var(--semi-color-bg-2)',
         borderRadius: '3px',
-        paddingLeft: '20px',
+        paddingInlineStart: '20px',
     };
 </script>
 
 <template>
     <div>
         <List :dataSource="data" :grid="grid">
-            <template #item="{ item }">
-                <ListItem :style="itemStyle">
+            <template #item="row">
+                <List.Item :style="itemStyle">
                     <div>
-                        <h3 :style="{ color: 'var(--semi-color-text-0)', fontWeight: 500 }">{{ item.title }}</h3>
+                        <h3 :style="{ color: 'var(--semi-color-text-0)', fontWeight: 500 }">{{ row.item.title }}</h3>
                         <Descriptions align="center" row size="small">
-                            <DescriptionsItem>
+                            <Descriptions.Item>
                                 <template #itemKey>满意度</template>
-                                <Rating allowHalf :modelValue="item.rating" size="small" />
-                            </DescriptionsItem>
-                            <DescriptionsItem>
+                                <Rating allowHalf :modelValue="row.item.rating" size="small" />
+                            </Descriptions.Item>
+                            <Descriptions.Item>
                                 <template #itemKey>反馈数</template>
-                                {{ item.feedbacks }}
-                            </DescriptionsItem>
+                                {{ row.item.feedbacks }}
+                            </Descriptions.Item>
                         </Descriptions>
                         <div :style="{ margin: '12px 0', display: 'flex', justifyContent: 'flex-end' }">
-                            <ButtonGroup :style="{ marginTop: '8px' }" theme="borderless">
+                            <ButtonGroup :style="{ marginBlockStart: '8px' }" theme="borderless">
                                 <Button>编辑</Button>
                                 <Button>更多</Button>
                             </ButtonGroup>
                         </div>
                     </div>
-                </ListItem>
+                </List.Item>
             </template>
         </List>
     </div>

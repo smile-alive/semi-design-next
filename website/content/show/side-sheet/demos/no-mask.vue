@@ -8,7 +8,7 @@
 
 <template>
     <Button @click="visible = true">Open SideSheet</Button>
-    <TextArea v-model="value" placeholder="Please enter something" style="margin-top: 12px" />
+    <TextArea v-model="value" placeholder="Please enter something" style="margin-block-start: 12px" />
     <SideSheet v-model:visible="visible" :disableScroll="false" :mask="false" title="可操作外部的侧边栏">
         <p>这里是输入的内容：</p>
         <p>{{ value }}</p>

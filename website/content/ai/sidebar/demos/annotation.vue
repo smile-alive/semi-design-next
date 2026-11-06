@@ -12,9 +12,6 @@
         boxSizing: 'border-box',
     } as const;
 
-    const logo = '/assets/placeholder/avatar-a.svg';
-    const img = '/assets/root-web-sites/abstract.jpg';
-
     const defaultInfoList: AnnotationInfo[] = [
         {
             header: 'Semi design introduction',
@@ -26,10 +23,10 @@
                     duration: 4432,
                     title: 'Semi Design is a design system designed',
                     url: 'https://semi.design/',
-                    logo,
+                    logo: '/assets/placeholder/avatar-a.svg',
                     siteName: 'Semi Design',
                     detail: ' As a comprehensive, easy-to-use, and high-quality modern enterprise-level application UI solution',
-                    img,
+                    img: '/assets/root-web-sites/abstract.jpg',
                 },
                 {
                     order: 2,
@@ -38,9 +35,9 @@
                     duration: 56,
                     url: 'https://semi.design/',
                     detail: ' As a comprehensive, easy-to-use, and high-quality modern enterprise-level application UI solution',
-                    logo,
+                    logo: '/assets/placeholder/avatar-a.svg',
                     siteName: 'Semi Design',
-                    img,
+                    img: '/assets/root-web-sites/abstract.jpg',
                 },
                 {
                     order: 3,
@@ -48,9 +45,9 @@
                     url: 'https://semi.design/',
                     detail: `Semi provides esm format dist, and the css of the component is only imported by the corresponding js.
 When used in Webpack, Rspack, create-react-app or Vite projects, there is no need to configure any compilation items.`,
-                    logo,
+                    logo: '/assets/placeholder/avatar-a.svg',
                     siteName: 'Semi Design',
-                    img,
+                    img: '/assets/root-web-sites/abstract.jpg',
                 },
             ],
         },
@@ -63,9 +60,9 @@ When used in Webpack, Rspack, create-react-app or Vite projects, there is no nee
                     title: 'Semi Design resource',
                     url: 'https://semi.design/',
                     detail: 'Semi Design provides a wealth of design resources to help designers and developers collaborate efficiently. Whether you are a community user or a ByteDance internal designer, you can find UI Kit resource and Figma plug-ins that suit you here.',
-                    logo,
+                    logo: '/assets/placeholder/avatar-a.svg',
                     siteName: 'Semi Design resource',
-                    img,
+                    img: '/assets/root-web-sites/abstract.jpg',
                 },
             ],
         },
@@ -76,11 +73,11 @@ When used in Webpack, Rspack, create-react-app or Vite projects, there is no nee
     const activeKey = shallowRef<string | string[]>('1');
 
     const onChange = (key: string | string[]) => {
-        console.log('change', key);
+        console.log('onChange', key);
     };
 
     const onClick = (event: MouseEvent, item: AnnotationItem) => {
-        console.log('click', event, item);
+        console.log('onClick', event, item);
     };
 </script>
 

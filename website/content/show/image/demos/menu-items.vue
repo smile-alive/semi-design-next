@@ -7,7 +7,7 @@
 
 <template>
     <ImagePreview>
-        <template #previewMenu="{ menuItems }">
+        <template #previewMenu="menu">
             <div
                 :style="{
                     display: 'flex',
@@ -17,11 +17,11 @@
                     borderRadius: '4px',
                 }"
             >
-                <component :is="item" v-for="(item, index) in menuItems.slice(0, 3)" :key="`a${index}`" />
+                <component :is="item" v-for="(item, index) in menu.menuItems.slice(0, 3)" :key="`a${index}`" />
                 <Divider layout="vertical" />
-                <component :is="item" v-for="(item, index) in menuItems.slice(3, 7)" :key="`b${index}`" />
+                <component :is="item" v-for="(item, index) in menu.menuItems.slice(3, 7)" :key="`b${index}`" />
                 <Divider layout="vertical" />
-                <component :is="item" v-for="(item, index) in menuItems.slice(7)" :key="`c${index}`" />
+                <component :is="item" v-for="(item, index) in menu.menuItems.slice(7)" :key="`c${index}`" />
                 <Divider layout="vertical" />
                 <Tooltip content="我是一个自定义操作">
                     <IconInfoCircle size="large" />

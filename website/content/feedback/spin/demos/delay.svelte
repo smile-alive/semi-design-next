@@ -5,6 +5,6 @@
 </script>
 
 <div>
-    <Button style="margin-right: 20px" onclick={() => (loading = !loading)}>延迟显示的 Spin</Button>
+    <Button style="margin-inline-end: 20px" onclick={() => (loading = !loading)}>延迟显示的spin</Button>
     <Spin delay={1000} spinning={loading} />
 </div>

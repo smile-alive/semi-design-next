@@ -3,7 +3,6 @@
     import { AIChatInput, type AIChatInputLeftMenuChangeProps as LeftMenuChangeProps } from '@fibrae/semi-ai-svelte';
     import { IconBookOpenStroked, IconFeishuLogo, IconFigma, IconGit } from '@fibrae/semi-icons-svelte';
 
-    const { Configure } = AIChatInput;
     const uploadProps = { action: 'https://api.semi.design/upload' };
 
     const modelOptions = [
@@ -36,19 +35,19 @@
 
 <AIChatInput {onConfigureChange} placeholder="用于查看左下方配置项的用例" style="margin: 12px" {uploadProps}>
     {#snippet configureArea()}
-        <Configure.Select field="model" initValue="GPT-4o" optionList={modelOptions} />
-        <Configure.Button field="onlineSearch">
+        <AIChatInput.Configure.Select field="model" initValue="GPT-4o" optionList={modelOptions} />
+        <AIChatInput.Configure.Button field="onlineSearch">
             {#snippet icon()}
                 <IconBookOpenStroked />
             {/snippet}
             联网搜索
-        </Configure.Button>
-        <Configure.Mcp {onConfigureButtonClick} options={mcpOptions} showConfigure>
-            {#snippet optionIcon({ item })}
-                {@const Icon = mcpIcons[item.value]}
+        </AIChatInput.Configure.Button>
+        <AIChatInput.Configure.Mcp {onConfigureButtonClick} options={mcpOptions} showConfigure>
+            {#snippet optionIcon(optionIcon)}
+                {@const Icon = mcpIcons[optionIcon.item.value]}
                 <Icon />
             {/snippet}
-        </Configure.Mcp>
-        <Configure.RadioButton field="thinkType" initValue="fast" options={radioButtonProps} />
+        </AIChatInput.Configure.Mcp>
+        <AIChatInput.Configure.RadioButton field="thinkType" initValue="fast" options={radioButtonProps} />
     {/snippet}
 </AIChatInput>

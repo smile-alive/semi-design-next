@@ -1,8 +1,6 @@
 import { useState, useCallback } from 'react';
 import { Sidebar } from '@fibrae/semi-ai-react';
 
-const { FileContent } = Sidebar;
-
 const defaultFiles = [
     {
         key: 'file1',
@@ -119,7 +117,7 @@ export default function SidebarDemo() {
 
     return (
         <div className="semi-sidebar-main">
-            <FileContent style={{ width: 600 }} activeKey={activeKey} files={defaultFiles} onChange={onChange} />
+            <Sidebar.FileContent style={{ width: 600 }} activeKey={activeKey} files={defaultFiles} onChange={onChange} />
         </div>
     );
 }

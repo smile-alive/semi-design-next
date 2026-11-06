@@ -25,12 +25,12 @@
     ];
 </script>
 
-<div style="border-bottom: 1px solid var(--semi-color-border); padding-bottom: 12px">
-    <FormLabel style="margin-left: 10px">切换Label位置:</FormLabel>
+<div style="border-block-end: 1px solid var(--semi-color-border); padding-block-end: 12px">
+    <FormLabel style="margin-inline-start: 10px">切换Label位置:</FormLabel>
     <Select aria-label="labelPosition" bind:value={() => labelPosition, (next) => (labelPosition = next as typeof labelPosition)} optionList={positionOptions} style="width: 200px">
         {#snippet prefix()}labelPosition{/snippet}
     </Select>
-    <FormLabel style="margin-left: 10px">切换Label文本对齐方向:</FormLabel>
+    <FormLabel style="margin-inline-start: 10px">切换Label文本对齐方向:</FormLabel>
     <Select aria-label="labelAlign" bind:value={() => labelAlign, (next) => (labelAlign = next as typeof labelAlign)} optionList={alignOptions} style="width: 200px">
         {#snippet prefix()}labelAlign{/snippet}
     </Select>

@@ -101,7 +101,7 @@
         </span>
     </span>
 
-    <div style="border: 1px solid var(--semi-color-border); border-radius: 12px; margin-top: 10px; padding: 20px">
+    <div style="border: 1px solid var(--semi-color-border); border-radius: 12px; margin-block-start: 10px; padding: 20px">
         <AIChatDialogue {align} bind:this={dialogue} chats={messages} mode="bubble" {onSelect} {roleConfig} selecting={select} />
     </div>
 </div>

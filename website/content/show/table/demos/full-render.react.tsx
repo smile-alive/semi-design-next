@@ -1,4 +1,3 @@
-import { useState, useMemo } from 'react';
 import * as dateFns from 'date-fns';
 import { Table, Avatar, type ColumnProps, type RowSelectionProps } from '@fibrae/semi-ui-react';
 
@@ -16,12 +15,12 @@ interface Row {
 
 const columns: ColumnProps<Row>[] = [
     {
-        title: ({ sorter, filter, selection }) => (
-            <span style={{ display: 'inline-flex', alignItems: 'center', paddingLeft: 20 }}>
-                {selection}
-                <span style={{ marginLeft: 8 }}>Name</span>
-                {sorter}
-                {filter}
+        title: (parts) => (
+            <span style={{ display: 'inline-flex', alignItems: 'center', paddingInlineStart: 20 }}>
+                {parts.selection}
+                <span style={{ marginInlineStart: 8 }}>Name</span>
+                {parts.sorter}
+                {parts.filter}
             </span>
         ),
         dataIndex: 'name',
@@ -39,14 +38,14 @@ const columns: ColumnProps<Row>[] = [
         onFilter: (value, record) => record.name.includes(value),
         useFullRender: true,
         // The fourth render parameter holds the expand button, selection button and text
-        render: (text, _record, _index, { expandIcon, selection, indentText }) => {
+        render: (text, _record, _index, parts) => {
             return (
                 <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {indentText}
-                    {expandIcon}
-                    {selection}
-                    <span style={{ marginLeft: 8 }}>
-                        <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ marginRight: 12 }} />
+                    {parts.indentText}
+                    {parts.expandIcon}
+                    {parts.selection}
+                    <span style={{ marginInlineStart: 8 }}>
+                        <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ marginInlineEnd: 12 }} />
                         {text}
                     </span>
                 </span>
@@ -65,7 +64,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ marginRight: 4 }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ marginInlineEnd: 4 }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}
@@ -93,28 +92,24 @@ function getData(total: number) {
             name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
             owner: isSemiDesign ? '姜鹏志' : '郝宣',
             size: randomNumber,
-            updateTime: new Date(2019, 6, 23, 12).valueOf() + randomNumber * DAY,
+            updateTime: new Date(2024, 4, 6, 12).valueOf() + randomNumber * DAY,
             avatarBg: isSemiDesign ? 'grey' : 'red',
         });
     }
     return data;
 }
 
+const dataSource = getData(46);
+
+const pagination = {
+    pageSize: 12,
+};
+
+const rowSelection: RowSelectionProps<Row> = {
+    hidden: true,
+    fixed: 'left',
+};
+
 export default function TableDemo() {
-    const [dataSource] = useState(() => getData(46));
-    const pagination = useMemo(
-        () => ({
-            pageSize: 12,
-        }),
-        []
-    );
-
-    const rowSelection = useMemo<RowSelectionProps<Row>>(() => {
-        return {
-            hidden: true,
-            fixed: 'left',
-        };
-    }, []);
-
-    return <Table pagination={pagination} rowSelection={rowSelection} columns={columns} dataSource={dataSource} onChange={(...args) => console.log(...args)} expandedRowRender={(record) => <article>{record.name}</article>} />;
+    return <Table pagination={pagination} rowSelection={rowSelection} columns={columns} dataSource={dataSource} onChange={(changeInfo) => console.log(changeInfo)} expandedRowRender={(record) => <article>{record.name}</article>} />;
 }

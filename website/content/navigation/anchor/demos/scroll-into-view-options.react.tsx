@@ -1,7 +1,8 @@
 import { Anchor } from '@fibrae/semi-ui-react';
 
+const sections = ['section-a', 'section-b', 'section-c'];
+
 export default function AnchorDemo() {
-    const sections = ['section-a', 'section-b', 'section-c'];
     return (
         <div style={{ display: 'flex', gap: 24 }}>
             <Anchor getContainer={() => document.getElementById('scroll-box')} scrollMotion scrollIntoViewOptions={{ block: 'center' }} style={{ width: 160 }}>
@@ -9,7 +10,7 @@ export default function AnchorDemo() {
                     <Anchor.Link key={id} href={`#${id}`} title={`章节 ${index + 1}`} />
                 ))}
             </Anchor>
-            {/* 可聚焦，键盘也能滚动这个容器 */}
+            {/* Focusable so the keyboard can scroll this container */}
             <section id="scroll-box" aria-label="章节" tabIndex={0} style={{ height: 240, width: 320, overflow: 'auto', border: '1px solid #ddd' }}>
                 {sections.map((id, index) => (
                     <div key={id} id={id} style={{ height: 200, padding: 8 }}>

@@ -4,7 +4,6 @@
     import { IconBookOpenStroked, IconFeishuLogo, IconGit, IconFigma } from '@fibrae/semi-icons-vue';
     import { RadioGroup, Radio, type RadioValue } from '@fibrae/semi-ui-vue';
 
-    const { Configure } = AIChatInput;
     const uploadProps = { action: 'https://api.semi.design/upload' };
     const modelOptions = [
         { value: 'GPT-5', label: 'GPT-5' },
@@ -25,29 +24,36 @@
         { label: '超能', value: 'super' },
     ];
 
-    const shape = ref<RadioValue | undefined>('square');
+    // A Radio value of true cannot use the bare-attribute shorthand: the prop accepts strings, so it would be ''.
+    const roundOptions = [
+        { label: '圆形', value: true },
+        { label: '方形', value: false },
+    ];
+
+    const round = ref<RadioValue | undefined>(false);
 </script>
 
 <template>
-    <RadioGroup v-model="shape" aria-label="单选组合示例" name="demo-radio-group">
-        <Radio value="round">圆形</Radio>
-        <Radio value="square">方形</Radio>
+    <RadioGroup v-model="round" aria-label="单选组合示例" name="demo-radio-group">
+        <Radio v-for="option in roundOptions" :key="option.label" :value="option.value">
+            {{ option.label }}
+        </Radio>
     </RadioGroup>
-    <AIChatInput placeholder="下方按钮为方形的用例" :round="shape === 'round'" style="margin: 12px" :uploadProps="uploadProps">
+    <AIChatInput placeholder="下方按钮为方形的用例" :round="round === true" style="margin: 12px" :uploadProps="uploadProps">
         <template #configureArea>
-            <Configure.Select field="model" initValue="GPT-4o" :optionList="modelOptions" />
-            <Configure.Button field="onlineSearch">
+            <AIChatInput.Configure.Select field="model" initValue="GPT-4o" :optionList="modelOptions" />
+            <AIChatInput.Configure.Button field="onlineSearch">
                 <template #icon>
                     <IconBookOpenStroked />
                 </template>
                 联网搜索
-            </Configure.Button>
-            <Configure.Mcp :options="mcpOptions">
-                <template #optionIcon="{ item }">
-                    <component :is="mcpIcons[item.value as keyof typeof mcpIcons]" />
+            </AIChatInput.Configure.Button>
+            <AIChatInput.Configure.Mcp :options="mcpOptions">
+                <template #optionIcon="optionIcon">
+                    <component :is="mcpIcons[optionIcon.item.value as keyof typeof mcpIcons]" />
                 </template>
-            </Configure.Mcp>
-            <Configure.RadioButton field="mode" initValue="fast" :options="radioButtonProps" />
+            </AIChatInput.Configure.Mcp>
+            <AIChatInput.Configure.RadioButton field="mode" initValue="fast" :options="radioButtonProps" />
         </template>
     </AIChatInput>
 </template>

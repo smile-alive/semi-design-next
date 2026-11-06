@@ -156,14 +156,14 @@
 
 <template>
     <Table v-model:expandedRowKeys="expandedRowKeys" :childrenRecordName="childrenRecordName" :columns="columns" :dataSource="data" :rowKey="rowKey">
-        <template #cell="{ column, record }">
-            <template v-if="column.key === 'operation'">
-                <Button aria-label="上移" :disabled="!canMove(record, -1)" @click="move(record, -1)">
+        <template #cell="cellProps">
+            <template v-if="cellProps.column.key === 'operation'">
+                <Button aria-label="上移" :disabled="!canMove(cellProps.record, -1)" @click="move(cellProps.record, -1)">
                     <template #icon>
                         <IconArrowUp />
                     </template>
                 </Button>
-                <Button aria-label="下移" :disabled="!canMove(record, 1)" @click="move(record, 1)">
+                <Button aria-label="下移" :disabled="!canMove(cellProps.record, 1)" @click="move(cellProps.record, 1)">
                     <template #icon>
                         <IconArrowDown />
                     </template>

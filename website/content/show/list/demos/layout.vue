@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { Avatar, List, ListItem, type AvatarColor } from '@fibrae/semi-ui-vue';
+    import { Avatar, List, type AvatarColor } from '@fibrae/semi-ui-vue';
 
     interface Item {
         title: string;
@@ -16,18 +16,18 @@
 <template>
     <div :style="{ padding: '12px', border: '1px solid var(--semi-color-border)', margin: '12px' }">
         <List :dataSource="data" layout="horizontal">
-            <template #item="{ item }">
-                <ListItem>
+            <template #item="row">
+                <List.Item>
                     <template #header>
-                        <Avatar :color="item.color">SE</Avatar>
+                        <Avatar :color="row.item.color">SE</Avatar>
                     </template>
                     <template #main>
                         <div>
-                            <span :style="{ color: 'var(--semi-color-text-0)', fontWeight: 500 }">{{ item.title }}</span>
+                            <span :style="{ color: 'var(--semi-color-text-0)', fontWeight: 500 }">{{ row.item.title }}</span>
                             <p :style="{ color: 'var(--semi-color-text-2)', margin: '4px 0' }">Semi Design 设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。</p>
                         </div>
                     </template>
-                </ListItem>
+                </List.Item>
             </template>
         </List>
     </div>

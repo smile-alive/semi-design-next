@@ -9,7 +9,7 @@
 
 <template>
     <span>基本使用：页面右下第三列 1 </span>
-    <FloatButton aria-label="AI 编辑" style="bottom: 270px" @click="onClick">
+    <FloatButton aria-label="AI 编辑" style="inset-block-end: 270px" @click="onClick">
         <template #icon>
             <IconAIEditLevel1 />
         </template>

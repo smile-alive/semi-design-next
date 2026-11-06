@@ -7,7 +7,7 @@ function validate(val?: string) {
     if (!val) {
         return "can't be empty";
     } else if (val.length <= 5) {
-        return 'must more than 5';
+        return '长度需大于 5';
     }
     return;
 }

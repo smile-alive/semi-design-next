@@ -44,10 +44,10 @@
 
 <template>
     <Tree :style="treeStyle" :treeData="treeData" @change="(...args) => console.log('change', ...args)">
-        <template #fullLabel="{ class: rowClass, data, expandIcon, onClick, onExpand }">
-            <div :class="rowClass" @click="data.children?.length ? onExpand($event) : onClick($event)">
-                <component :is="expandIcon" />
-                <span>{{ data.label }}</span>
+        <template #fullLabel="row">
+            <div :class="row.class" @click="row.data.children?.length ? row.onExpand($event) : row.onClick($event)">
+                <component :is="row.expandIcon" />
+                <span>{{ row.data.label }}</span>
             </div>
         </template>
     </Tree>

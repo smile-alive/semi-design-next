@@ -29,35 +29,35 @@
     const onChange = (value: SelectValue) => console.log(value);
 </script>
 
-{#snippet optionLabel({ option }: { option: SelectOptionProps })}
-    <Avatar alt="" size="small" src={option.avatar} />
+{#snippet optionLabel(optionItem: { option: SelectOptionProps })}
+    <Avatar alt="" size="small" src={optionItem.option.avatar} />
     <div style="margin-left: 8px">
-        <div style="font-size: 14px">{option.name}</div>
+        <div style="font-size: 14px">{optionItem.option.name}</div>
         <div style="color: var(--color-text-2); font-size: 12px; line-height: 16px; font-weight: normal">
-            {option.email}
+            {optionItem.option.email}
         </div>
     </div>
 {/snippet}
 
 <Select aria-label="单选" {onChange} {optionLabel} optionList={list} placeholder="请选择" style="width: 280px; height: 40px" value="申悦">
-    {#snippet selectedItem({ option })}
+    {#snippet selectedItem(selected)}
         <div style="display: flex; align-items: center">
-            <Avatar alt="" size="small" src={option.avatar} />
-            <span style="margin-left: 8px">{option.email}</span>
+            <Avatar alt="" size="small" src={selected.option.avatar} />
+            <span style="margin-left: 8px">{selected.option.email}</span>
         </div>
     {/snippet}
 </Select>
 <Select aria-label="多选圆形头像" maxTagCount={2} multiple {onChange} {optionLabel} optionList={list} placeholder="请选择" style="width: 280px; margin-top: 20px" value={['申悦', '曲晨一']}>
-    {#snippet tag({ option, onClose })}
-        <Tag avatarShape="circle" avatarSrc={option.avatar} closable {onClose} size="large">
-            {option.name}
+    {#snippet tag(tagItem)}
+        <Tag avatarShape="circle" avatarSrc={tagItem.option.avatar} closable onClose={tagItem.onClose} size="large">
+            {tagItem.option.name}
         </Tag>
     {/snippet}
 </Select>
 <Select aria-label="多选方形头像" maxTagCount={2} multiple {onChange} {optionLabel} optionList={list} placeholder="请选择" style="width: 280px; margin-top: 20px" value={['申悦', '曲晨一']}>
-    {#snippet tag({ option, onClose })}
-        <Tag avatarShape="square" avatarSrc={option.avatar} closable {onClose} size="large">
-            {option.name}
+    {#snippet tag(tagItem)}
+        <Tag avatarShape="square" avatarSrc={tagItem.option.avatar} closable onClose={tagItem.onClose} size="large">
+            {tagItem.option.name}
         </Tag>
     {/snippet}
 </Select>

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { IconMinusCircle, IconPlusCircle } from '@fibrae/semi-icons-svelte';
-    import { ArrayField, Button, Card, Form, FormInput, FormSelect, TypographyText } from '@fibrae/semi-ui-svelte';
+    import { ArrayField, Button, Card, Form, FormInput, FormSelect, Typography } from '@fibrae/semi-ui-svelte';
 
     const selectOption = [
         { label: '发件人地址', value: 'address' },
@@ -39,7 +39,7 @@
         ],
     };
 
-    const rowStyle = 'margin-top: 12px; margin-left: 12px';
+    const rowStyle = 'margin-block-start: 12px; margin-inline-start: 12px';
 </script>
 
 {#snippet plus()}
@@ -50,25 +50,25 @@
     <IconMinusCircle />
 {/snippet}
 
-<Form allowEmpty initValues={initValue} labelPosition="left" onValueChange={(values) => console.log(values)} style="text-align: left">
+<Form allowEmpty initValues={initValue} labelPosition="left" onValueChange={(values) => console.log(values)} style="text-align: start">
     <ArrayField field="group">
-        {#snippet children({ arrayFields, onAddWithInitValue })}
-            <Button icon={plus} theme="solid" onclick={() => onAddWithInitValue(newRule)}>新增收信规则</Button>
-            {#each arrayFields as item (item.key)}
+        {#snippet children(group)}
+            <Button icon={plus} theme="solid" onclick={() => group.onAddWithInitValue(newRule)}>新增收信规则</Button>
+            {#each group.arrayFields as item (item.key)}
                 <div style="width: 1000px; display: flex; flex-wrap: wrap">
                     <FormInput field={`${item.field}[name]`} label="规则名称" labelPosition="top" style="width: 600px" />
-                    <Button aria-label="删除规则" icon={minus} style="margin: 36px 0 0 12px" type="danger" onclick={item.onRemove} />
-                    <TypographyText strong style="flex-basis: 100%">当邮件到达，满足以下条件时：</TypographyText>
-                    <Card shadows="hover" style="width: 620px; margin: 12px 0 0 24px">
+                    <Button aria-label="删除规则" icon={minus} style="margin-block-start: 36px; margin-inline-start: 12px" type="danger" onclick={item.onRemove} />
+                    <Typography.Text strong style="flex-basis: 100%">当邮件到达，满足以下条件时：</Typography.Text>
+                    <Card shadows="hover" style="width: 620px; margin-block-start: 12px; margin-inline-start: 24px">
                         <ArrayField field={`${item.field}.rules`}>
-                            {#snippet children({ arrayFields: rules, onAddWithInitValue: addRule })}
-                                {#each rules as rule, i (rule.key)}
+                            {#snippet children(rules)}
+                                {#each rules.arrayFields as rule, i (rule.key)}
                                     <div style="display: flex">
-                                        <FormSelect field={`${rule.field}[ruleType]`} label={`${rule.field}.ruleType`} noLabel optionList={selectOption} style="width: 120px; margin-right: 12px" />
-                                        <FormSelect field={`${rule.field}[type]`} label={`${rule.field}.type`} noLabel optionList={typeOption} style="width: 100px; margin-right: 12px" />
+                                        <FormSelect field={`${rule.field}[ruleType]`} label={`${rule.field}.ruleType`} noLabel optionList={selectOption} style="width: 120px; margin-inline-end: 12px" />
+                                        <FormSelect field={`${rule.field}[type]`} label={`${rule.field}.type`} noLabel optionList={typeOption} style="width: 100px; margin-inline-end: 12px" />
                                         <FormInput aria-label="条件内容" field={`${rule.field}[text]`} label={`${rule.field}.text`} noLabel style="width: 200px" />
                                         <Button aria-label="删除条件" icon={minus} style={rowStyle} theme="borderless" type="danger" onclick={rule.onRemove} />
-                                        <Button aria-label="新增条件" disabled={i !== rules.length - 1} icon={plus} style={rowStyle} onclick={() => addRule({ ruleType: `条件${rules.length + 1}`, type: 'include' })} />
+                                        <Button aria-label="新增条件" disabled={i !== rules.arrayFields.length - 1} icon={plus} style={rowStyle} onclick={() => rules.onAddWithInitValue({ ruleType: `条件${rules.arrayFields.length + 1}`, type: 'include' })} />
                                     </div>
                                 {/each}
                             {/snippet}

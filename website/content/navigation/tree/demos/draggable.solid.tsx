@@ -3,67 +3,68 @@ import { Tree, type TreeNodeData, type TreeOnDragProps } from '@fibrae/semi-ui-s
 
 type LoopCallback = (item: TreeNodeData, ind: number, arr: TreeNodeData[]) => void;
 
+const initialData: TreeNodeData[] = [
+    {
+        label: 'Asia',
+        value: 'Asia',
+        key: '0',
+        children: [
+            {
+                label: 'China',
+                value: 'China',
+                key: '0-0',
+                children: [
+                    {
+                        label: 'Beijing',
+                        value: 'Beijing',
+                        key: '0-0-0',
+                    },
+                    {
+                        label: 'Shanghai',
+                        value: 'Shanghai',
+                        key: '0-0-1',
+                    },
+                ],
+            },
+            {
+                label: 'Japan',
+                value: 'Japan',
+                key: '0-1',
+                children: [
+                    {
+                        label: 'Osaka',
+                        value: 'Osaka',
+                        key: '0-1-0',
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        label: 'North America',
+        value: 'North America',
+        key: '1',
+        children: [
+            {
+                label: 'United States',
+                value: 'United States',
+                key: '1-0',
+            },
+            {
+                label: 'Canada',
+                value: 'Canada',
+                key: '1-1',
+            },
+        ],
+    },
+    {
+        label: 'Europe',
+        value: 'Europe',
+        key: '2',
+    },
+];
+
 export default function TreeDemo() {
-    const initialData: TreeNodeData[] = [
-        {
-            label: 'Asia',
-            value: 'Asia',
-            key: '0',
-            children: [
-                {
-                    label: 'China',
-                    value: 'China',
-                    key: '0-0',
-                    children: [
-                        {
-                            label: 'Beijing',
-                            value: 'Beijing',
-                            key: '0-0-0',
-                        },
-                        {
-                            label: 'Shanghai',
-                            value: 'Shanghai',
-                            key: '0-0-1',
-                        },
-                    ],
-                },
-                {
-                    label: 'Japan',
-                    value: 'Japan',
-                    key: '0-1',
-                    children: [
-                        {
-                            label: 'Osaka',
-                            value: 'Osaka',
-                            key: '0-1-0',
-                        },
-                    ],
-                },
-            ],
-        },
-        {
-            label: 'North America',
-            value: 'North America',
-            key: '1',
-            children: [
-                {
-                    label: 'United States',
-                    value: 'United States',
-                    key: '1-0',
-                },
-                {
-                    label: 'Canada',
-                    value: 'Canada',
-                    key: '1-1',
-                },
-            ],
-        },
-        {
-            label: 'Europe',
-            value: 'Europe',
-            key: '2',
-        },
-    ];
     const [treeData, setTreeData] = createSignal<TreeNodeData[]>(initialData);
 
     const onDrop = (info: TreeOnDragProps) => {

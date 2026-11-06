@@ -15,7 +15,7 @@ export default function TagInputDemo() {
             <TagInput
                 maxLength={5}
                 placeholder="单个标签长度不超过5..."
-                style={{ marginTop: 12 }}
+                style={{ marginBlockStart: 12 }}
                 onChange={(v) => console.log(v)}
                 onInputExceed={(v) => {
                     Toast.warning('超过 maxLength');

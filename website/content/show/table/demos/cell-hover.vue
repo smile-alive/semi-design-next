@@ -73,11 +73,11 @@
     <Table class="component-table-demo-cell-hover-custom" :columns="columns" :dataSource="data" :pagination="false">
         <template #cell="{ column, record, text }">
             <div v-if="column.dataIndex === 'name'">
-                <Avatar alt="" shape="square" size="small" :src="record.nameIconSrc" :style="{ marginRight: '12px' }" />
+                <Avatar alt="" shape="square" size="small" :src="record.nameIconSrc" :style="{ marginInlineEnd: '12px' }" />
                 {{ text }}
             </div>
             <div v-else-if="column.dataIndex === 'owner'">
-                <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
+                <Avatar :color="record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
                     {{ typeof text === 'string' && text.slice(0, 1) }}
                 </Avatar>
                 {{ text }}

@@ -62,29 +62,29 @@ const titleStyle = {
 export default function ChatDemo() {
     const [message, setMessage] = useState(defaultMessage);
 
-    const customRenderChatBox = useCallback(({ role, message, defaultNodes, className }: RenderFullChatBoxProps) => {
+    const customRenderChatBox = useCallback((props: RenderFullChatBoxProps) => {
         let titleNode = null;
-        if (message?.role !== 'user') {
+        if (props.message?.role !== 'user') {
             titleNode = (
                 <span style={titleStyle}>
-                    <Avatar size="extra-small" shape="square" src={typeof role?.avatar === 'string' ? role.avatar : undefined} alt="" />
-                    {defaultNodes?.title}
+                    <Avatar size="extra-small" shape="square" src={typeof props.role?.avatar === 'string' ? props.role.avatar : undefined} alt="" />
+                    {props.defaultNodes?.title}
                 </span>
             );
         }
         return (
-            <div className={className}>
+            <div className={props.className}>
                 <div
                     style={{
                         display: 'flex',
                         flexDirection: 'column',
                         rowGap: 4,
-                        alignItems: message?.role === 'user' ? 'end' : '',
+                        alignItems: props.message?.role === 'user' ? 'end' : undefined,
                     }}
                 >
                     {titleNode}
-                    <div style={{ width: 'fit-content' }}>{defaultNodes?.content}</div>
-                    {defaultNodes?.action}
+                    <div style={{ width: 'fit-content' }}>{props.defaultNodes?.content}</div>
+                    {props.defaultNodes?.action}
                 </div>
             </div>
         );

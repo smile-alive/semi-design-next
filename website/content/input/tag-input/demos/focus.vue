@@ -10,5 +10,5 @@
 
 <template>
     <TagInput ref="tagInput" :defaultValue="['抖音', '火山']" />
-    <Button style="margin-top: 10px" @click="handleTagInputFocus">点击按钮聚焦</Button>
+    <Button style="margin-block-start: 10px" @click="handleTagInputFocus">点击按钮聚焦</Button>
 </template>

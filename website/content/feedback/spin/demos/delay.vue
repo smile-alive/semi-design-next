@@ -7,7 +7,7 @@
 
 <template>
     <div>
-        <Button style="margin-right: 20px" @click="loading = !loading">延迟显示的spin</Button>
+        <Button style="margin-inline-end: 20px" @click="loading = !loading">延迟显示的spin</Button>
         <Spin :delay="1000" :spinning="loading" />
     </div>
 </template>

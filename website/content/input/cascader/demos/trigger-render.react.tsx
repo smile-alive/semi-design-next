@@ -1,6 +1,5 @@
-import { useCallback } from 'react';
 import { IconClose, IconChevronDown } from '@fibrae/semi-icons-react';
-import { Cascader, Button, ButtonGroup, Tag, TagInput, type CascaderData, type CascaderTriggerRenderProps, type TagProps } from '@fibrae/semi-ui-react';
+import { Cascader, Button, ButtonGroup, Tag, TagInput, type CascaderData, type CascaderTriggerRenderProps } from '@fibrae/semi-ui-react';
 
 const treeData: CascaderData[] = [
     {
@@ -52,45 +51,38 @@ function getLabelFromValue(value: string) {
     return node?.label;
 }
 
+// The clear button is a sibling of the trigger button: buttons cannot nest
+const triggerRenderSingle = (trigger: CascaderTriggerRenderProps) => (
+    <ButtonGroup theme="light">
+        <Button icon={<IconChevronDown />} iconPosition="right">
+            {trigger.value ? getLabelFromValue(trigger.value) : trigger.placeholder}
+        </Button>
+        {trigger.value && (
+            <Button
+                icon={<IconClose />}
+                aria-label="清除"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    trigger.onClear(e);
+                }}
+            />
+        )}
+    </ButtonGroup>
+);
+
+const triggerRenderMultiple = (trigger: CascaderTriggerRenderProps<true>) => (
+    <TagInput
+        value={Array.from(trigger.value)}
+        onInputChange={trigger.onSearch}
+        renderTagItem={(value) => (
+            <Tag tagKey={value} key={value} closable onClose={() => trigger.onRemove(value)} style={{ marginInlineStart: 2 }}>
+                {getLabelFromValue(value)}
+            </Tag>
+        )}
+    />
+);
+
 export default function CascaderDemo() {
-    const triggerRenderSingle = ({ value, placeholder, onClear }: CascaderTriggerRenderProps) => {
-        // The clear button is a sibling of the trigger button: buttons cannot nest
-        return (
-            <ButtonGroup theme="light">
-                <Button icon={<IconChevronDown />} iconPosition="right">
-                    {value && value.length > 0 ? getLabelFromValue(value) : placeholder}
-                </Button>
-                {Boolean(value) && (
-                    <Button
-                        icon={<IconClose />}
-                        aria-label="清除"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onClear(e);
-                        }}
-                    />
-                )}
-            </ButtonGroup>
-        );
-    };
-
-    const triggerRenderMultiple = useCallback(({ value, onSearch, onRemove }: CascaderTriggerRenderProps<true>) => {
-        const onCloseTag: TagProps['onClose'] = (_value, _e, tagKey) => {
-            onRemove(String(tagKey));
-        };
-
-        const renderTagItem = (value: string) => {
-            const label = getLabelFromValue(value);
-            return (
-                <Tag tagKey={value} key={value} closable onClose={onCloseTag} style={{ marginLeft: 2 }}>
-                    {label}
-                </Tag>
-            );
-        };
-
-        return <TagInput value={Array.from(value)} onInputChange={onSearch} renderTagItem={renderTagItem} />;
-    }, []);
-
     return (
         <>
             <Cascader treeData={treeData} placeholder="Custom Trigger" triggerRender={triggerRenderSingle} />

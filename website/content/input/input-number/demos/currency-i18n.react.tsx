@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import ar from '@fibrae/semi-foundation/locale/source/ar';
 import de from '@fibrae/semi-foundation/locale/source/de';
 import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
@@ -23,37 +23,34 @@ import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import zh_TW from '@fibrae/semi-foundation/locale/source/zh_TW';
 import { LocaleProvider, InputNumber, Select } from '@fibrae/semi-ui-react';
 
+const language = {
+    zh_CN,
+    en_GB,
+    en_US,
+    ko_KR,
+    ja_JP,
+    ar,
+    vi_VN,
+    ru_RU,
+    id_ID,
+    ms_MY,
+    th_TH,
+    tr_TR,
+    pt_BR,
+    zh_TW,
+    es,
+    sv_SE,
+    pl_PL,
+    nl_NL,
+    de,
+    it,
+    fr,
+    ro,
+};
+
 export default function InputNumberDemo() {
     const [locale, setLocale] = useState(zh_CN);
     const [localeCode, setLocaleCode] = useState('zh_CN');
-
-    const language = useMemo(
-        () => ({
-            zh_CN: zh_CN,
-            en_GB: en_GB,
-            en_US: en_US,
-            ko_KR: ko_KR,
-            ja_JP: ja_JP,
-            ar: ar,
-            vi_VN: vi_VN,
-            ru_RU: ru_RU,
-            id_ID: id_ID,
-            ms_MY: ms_MY,
-            th_TH: th_TH,
-            tr_TR: tr_TR,
-            pt_BR: pt_BR,
-            zh_TW: zh_TW,
-            es: es,
-            sv_SE: sv_SE,
-            pl_PL: pl_PL,
-            nl_NL: nl_NL,
-            de,
-            it,
-            fr,
-            ro,
-        }),
-        []
-    );
 
     const onLanguageChange = (code?: string) => {
         if (!code) {

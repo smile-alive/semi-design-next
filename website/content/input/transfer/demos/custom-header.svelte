@@ -12,21 +12,21 @@
 </script>
 
 <Transfer dataSource={data} style="width: 568px; height: 416px">
-    {#snippet sourceHeader({ num, showButton, allChecked, onAllClick })}
+    {#snippet sourceHeader(header)}
         <div style={headerStyle}>
-            <span>共 {num} 项</span>
-            {#if showButton}
-                <Button size="small" theme="borderless" type="tertiary" onclick={onAllClick}>
-                    {allChecked ? '取消全选' : '全选'}
+            <span>共 {header.num} 项</span>
+            {#if header.showButton}
+                <Button size="small" theme="borderless" type="tertiary" onclick={header.onAllClick}>
+                    {header.allChecked ? '取消全选' : '全选'}
                 </Button>
             {/if}
         </div>
     {/snippet}
-    {#snippet selectedHeader({ num, showButton, onClear })}
+    {#snippet selectedHeader(header)}
         <div style={headerStyle}>
-            <span>{num} 项已选</span>
-            {#if showButton}
-                <Button size="small" theme="borderless" type="tertiary" onclick={onClear}>清空</Button>
+            <span>{header.num} 项已选</span>
+            {#if header.showButton}
+                <Button size="small" theme="borderless" type="tertiary" onclick={header.onClear}>清空</Button>
             {/if}
         </div>
     {/snippet}

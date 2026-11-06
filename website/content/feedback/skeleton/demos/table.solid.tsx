@@ -54,7 +54,7 @@ export default function SkeletonDemo() {
     const placeholder = (
         <div style={{ position: 'relative' }}>
             <Table style={{ 'background-color': 'var(--semi-color-bg-1)' }} columns={placeholderColumns} dataSource={placeholderDataSource} pagination={false} />
-            <div style={{ position: 'absolute', left: '0', right: '0', top: '0', bottom: '0' }} />
+            <div style={{ position: 'absolute', inset: '0' }} />
         </div>
     );
 

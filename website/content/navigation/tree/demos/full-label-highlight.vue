@@ -75,7 +75,7 @@
         return res;
     };
 
-    const onSelect = (key: string, _selected: boolean, node: TreeNodeData) => {
+    const handleSelect = (key: string, _bool: boolean, node: TreeNodeData) => {
         selected.value = new Set([key]);
         selectedThroughParent.value = new Set(findDescendantKeys(node));
     };
@@ -94,13 +94,13 @@
 </script>
 
 <template>
-    <Tree defaultExpandAll :style="treeStyle" :treeData="treeData" @select="onSelect">
-        <template #fullLabel="{ class: cls, data, expandIcon, onClick }">
-            <div :class="cls" :style="{ backgroundColor: rowBackground(data.key) }" @click="onClick">
-                <span v-if="!data.children?.length" :style="{ width: '24px' }" />
-                <component :is="expandIcon" v-else />
-                <component :is="icons[data.key ?? '']" :style="iconStyle" />
-                <span>{{ data.label }}</span>
+    <Tree defaultExpandAll :style="treeStyle" :treeData="treeData" @select="handleSelect">
+        <template #fullLabel="row">
+            <div :class="row.class" :style="{ backgroundColor: rowBackground(row.data.key) }" @click="row.onClick">
+                <span v-if="!row.data.children?.length" :style="{ width: '24px' }" />
+                <component :is="row.expandIcon" v-else />
+                <component :is="icons[row.data.key ?? '']" :style="iconStyle" />
+                <span>{{ row.data.label }}</span>
             </div>
         </template>
     </Tree>

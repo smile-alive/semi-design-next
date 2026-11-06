@@ -1,30 +1,30 @@
 import { Popover, Tag, type TooltipPosition as Position } from '@fibrae/semi-ui-react';
 
-export default function PopoverDemo() {
-    const tops: [Position, string][] = [
-        ['topLeft', 'TL'],
-        ['top', 'Top'],
-        ['topRight', 'TR'],
-    ];
-    const lefts: [Position, string][] = [
-        ['leftTop', 'LT'],
-        ['left', 'Left'],
-        ['leftBottom', 'LB'],
-    ];
-    const rights: [Position, string][] = [
-        ['rightTop', 'RT'],
-        ['right', 'Right'],
-        ['rightBottom', 'RB'],
-    ];
-    const bottoms: [Position, string][] = [
-        ['bottomLeft', 'BL'],
-        ['bottom', 'Bottom'],
-        ['bottomRight', 'BR'],
-    ];
+const tops: [Position, string][] = [
+    ['topLeft', 'TL'],
+    ['top', 'Top'],
+    ['topRight', 'TR'],
+];
+const lefts: [Position, string][] = [
+    ['leftTop', 'LT'],
+    ['left', 'Left'],
+    ['leftBottom', 'LB'],
+];
+const rights: [Position, string][] = [
+    ['rightTop', 'RT'],
+    ['right', 'Right'],
+    ['rightBottom', 'RB'],
+];
+const bottoms: [Position, string][] = [
+    ['bottomLeft', 'BL'],
+    ['bottom', 'Bottom'],
+    ['bottomRight', 'BR'],
+];
 
+export default function PopoverDemo() {
     return (
-        <div style={{ paddingLeft: 40 }} className="tag-margin-right">
-            <div style={{ marginLeft: 40, whiteSpace: 'nowrap' }}>
+        <div style={{ paddingInlineStart: 40 }} className="tag-margin-right">
+            <div style={{ marginInlineStart: 40, whiteSpace: 'nowrap' }}>
                 {tops.map(([position, label]) => (
                     <Popover
                         showArrow
@@ -58,7 +58,7 @@ export default function PopoverDemo() {
                     </Popover>
                 ))}
             </div>
-            <div style={{ width: 40, marginLeft: 180 }}>
+            <div style={{ width: 40, marginInlineStart: 180 }}>
                 {rights.map(([position, label]) => (
                     <Popover
                         showArrow
@@ -75,7 +75,7 @@ export default function PopoverDemo() {
                     </Popover>
                 ))}
             </div>
-            <div style={{ marginLeft: 40, clear: 'both', whiteSpace: 'nowrap' }}>
+            <div style={{ marginInlineStart: 40, clear: 'both', whiteSpace: 'nowrap' }}>
                 {bottoms.map(([position, label]) => (
                     <Popover
                         showArrow

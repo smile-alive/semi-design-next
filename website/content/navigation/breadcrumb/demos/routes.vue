@@ -11,9 +11,9 @@
         <Breadcrumb aria-label="字符串路由" :routes="['Semi-ui', 'Breadcrumb', 'Default']" />
         <br />
         <Breadcrumb aria-label="带图标的路由" :routes="iconRoutes">
-            <template #icon="{ index }">
-                <IconHome v-if="index === 0" aria-label="首页" size="small" />
-                <IconArticle v-else-if="index === 1" size="small" />
+            <template #icon="iconContext">
+                <IconHome v-if="iconContext.index === 0" aria-label="首页" size="small" />
+                <IconArticle v-else-if="iconContext.index === 1" size="small" />
             </template>
         </Breadcrumb>
         <br />

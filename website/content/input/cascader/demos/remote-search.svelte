@@ -21,19 +21,19 @@
     let treeData = $state<CascaderData[]>([]);
     let loading = $state(false);
 
-    let latestToken = 0;
-    const onSearch = debounce((input: string) => {
+    const latest = { token: 0 };
+    const handleSearch = debounce((input: string) => {
         if (!input) {
             treeData = [];
             loading = false;
             return;
         }
-        latestToken += 1;
-        const token = latestToken;
+        latest.token += 1;
+        const token = latest.token;
         loading = true;
         void fetchByKeyword(input).then((next) => {
             // Drop stale results that arrive after a newer request
-            if (token !== latestToken) {
+            if (token !== latest.token) {
                 return;
             }
             treeData = next;
@@ -43,5 +43,5 @@
 </script>
 
 <Spin spinning={loading}>
-    <Cascader filterTreeNode onChange={(v) => console.log('selected:', v)} {onSearch} placeholder="输入关键词远程搜索" remote style="width: 300px" {treeData} />
+    <Cascader filterTreeNode onChange={(v) => console.log('selected:', v)} onSearch={handleSearch} placeholder="输入关键词远程搜索" remote style="width: 300px" {treeData} />
 </Spin>

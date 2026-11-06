@@ -16,15 +16,15 @@ export default function SelectDemo() {
         setValList(currentLabels.flatMap((item) => list.find((i) => i.label === item)?.value ?? []));
     };
 
-    const triggerRender = (props: SelectTriggerRenderProps) => (
+    const triggerRender = (selectState: SelectTriggerRenderProps) => (
         <div role="presentation" onKeyDown={(e) => e.stopPropagation()}>
             <TagInput
                 draggable
                 allowDuplicates={false}
-                value={props.value.map((item) => String(item.label))}
+                value={selectState.value.map((item) => String(item.label))}
                 inputValue={inputVal()}
                 onInputChange={(word) => {
-                    props.onSearch(word);
+                    selectState.onSearch(word);
                     setInputVal(word);
                 }}
                 onChange={handleSort}

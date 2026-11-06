@@ -4,7 +4,7 @@
 
 <template>
     <div>
-        <Pagination showTotal style="margin-bottom: 12px" :total="80" />
-        <Pagination showTotal style="margin-bottom: 12px" :total="200" />
+        <Pagination showTotal style="margin-block-end: 12px" :total="80" />
+        <Pagination showTotal style="margin-block-end: 12px" :total="200" />
     </div>
 </template>

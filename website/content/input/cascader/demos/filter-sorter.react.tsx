@@ -1,34 +1,35 @@
 import { Cascader } from '@fibrae/semi-ui-react';
 
+const treeData = [
+    {
+        label: 'Product',
+        value: 'Product',
+        children: [
+            {
+                label: 'Semi-Material',
+                value: 'Semi-Material',
+            },
+            {
+                label: 'Semi-DSM',
+                value: 'Semi-DSM',
+            },
+            {
+                label: 'Semi',
+                value: 'Semi',
+            },
+            {
+                label: 'Semi-C2D',
+                value: 'Semi-C2D',
+            },
+            {
+                label: 'Semi-D2C',
+                value: 'Semi-D2C',
+            },
+        ],
+    },
+];
+
 export default function CascaderDemo() {
-    const treeData = [
-        {
-            label: 'Product',
-            value: 'Product',
-            children: [
-                {
-                    label: 'Semi-Material',
-                    value: 'Semi-Material',
-                },
-                {
-                    label: 'Semi-DSM',
-                    value: 'Semi-DSM',
-                },
-                {
-                    label: 'Semi',
-                    value: 'Semi',
-                },
-                {
-                    label: 'Semi-C2D',
-                    value: 'Semi-C2D',
-                },
-                {
-                    label: 'Semi-D2C',
-                    value: 'Semi-D2C',
-                },
-            ],
-        },
-    ];
     return (
         <div>
             <Cascader

@@ -16,16 +16,16 @@ export default function ButtonDemo() {
     return (
         <div>
             <div>
-                <div className="btn-margin-right" style={{ display: 'inline-flex', alignItems: 'center', paddingBottom: 14 }}>
+                <div className="btn-margin-right" style={{ display: 'inline-flex', alignItems: 'center', paddingBlockEnd: 14 }}>
                     <Button onClick={() => reset(false)}>关闭加载态</Button>
                     <Button onClick={() => reset(true)}>开启加载态</Button>
                 </div>
             </div>
             <hr />
-            <Button loading={saveLoading} onClick={() => setSaveLoading(true)} style={{ marginRight: 14 }}>
+            <Button loading={saveLoading} onClick={() => setSaveLoading(true)} style={{ marginInlineEnd: 14 }}>
                 保存
             </Button>
-            <Button loading={delLoading} icon={<IconDelete />} type="danger" onClick={() => setDelLoading(true)} style={{ marginRight: 14 }}>
+            <Button loading={delLoading} icon={<IconDelete />} type="danger" onClick={() => setDelLoading(true)} style={{ marginInlineEnd: 14 }}>
                 删除
             </Button>
             <div style={{ width: 200, display: 'inline-block' }}>

@@ -2,6 +2,8 @@
     import { IconUpload } from '@fibrae/semi-icons-svelte';
     import { Button, Upload, type FileItem } from '@fibrae/semi-ui-svelte';
 
+    const action = 'https://api.semi.design/upload';
+
     const fileList: FileItem[] = [
         {
             uid: '1',
@@ -23,7 +25,7 @@
     ];
 </script>
 
-<Upload action="https://api.semi.design/upload" {fileList}>
+<Upload {action} {fileList}>
     <Button theme="light">
         {#snippet icon()}<IconUpload />{/snippet}
         点击上传

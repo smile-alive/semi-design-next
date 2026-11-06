@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { ResizeItem, ResizeHandler, ResizeGroup, Button } from '@fibrae/semi-ui-react';
 
+const itemStyle = { backgroundColor: 'var(--semi-grey-1)' };
+const contentStyle = { marginInlineStart: '20%', padding: '5px' };
+
 export default function ResizableDemo() {
     const [text, setText] = useState('drag to resize');
     const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
 
     const changeDirection = () => {
-        if (direction === 'horizontal') {
-            setDirection('vertical');
-        } else {
-            setDirection('horizontal');
-        }
+        setDirection(direction === 'horizontal' ? 'vertical' : 'horizontal');
     };
     return (
         <div style={{ width: '400px', height: '300px' }}>
@@ -27,7 +26,7 @@ export default function ResizableDemo() {
                 >
                     <ResizeGroup direction="horizontal">
                         <ResizeItem
-                            style={{ backgroundColor: 'var(--semi-grey-1)' }}
+                            style={itemStyle}
                             onChange={() => {
                                 setText('resizing');
                             }}
@@ -35,28 +34,28 @@ export default function ResizableDemo() {
                                 setText('drag to resize');
                             }}
                         >
-                            <div style={{ marginLeft: '20%', padding: '5px' }}>{text}</div>
+                            <div style={contentStyle}>{text}</div>
                         </ResizeItem>
                         <ResizeHandler />
                         <ResizeItem
-                            style={{ backgroundColor: 'var(--semi-grey-1)' }}
+                            style={itemStyle}
                             onChange={() => {
                                 setText('resizing');
                             }}
                         >
-                            <div style={{ marginLeft: '20%', padding: '5px' }}>{text}</div>
+                            <div style={contentStyle}>{text}</div>
                         </ResizeItem>
                     </ResizeGroup>
                 </ResizeItem>
                 <ResizeHandler />
                 <ResizeItem
-                    style={{ backgroundColor: 'var(--semi-grey-1)' }}
+                    style={itemStyle}
                     defaultSize={1.3}
                     onChange={() => {
                         setText('resizing');
                     }}
                 >
-                    <div style={{ marginLeft: '20%', padding: '5px' }}>{text}</div>
+                    <div style={contentStyle}>{text}</div>
                 </ResizeItem>
             </ResizeGroup>
         </div>

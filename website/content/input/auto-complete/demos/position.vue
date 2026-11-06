@@ -2,10 +2,12 @@
     import { ref } from 'vue';
     import { AutoComplete } from '@fibrae/semi-ui-vue';
 
+    const domains = ['gmail.com', '163.com', 'qq.com'];
+
     const data = ref<string[]>([]);
 
     const change = (input: string) => {
-        data.value = input ? ['gmail.com', '163.com', 'qq.com'].map((domain) => `${input}@${domain}`) : [];
+        data.value = input ? domains.map((domain) => `${input}@${domain}`) : [];
     };
 </script>
 

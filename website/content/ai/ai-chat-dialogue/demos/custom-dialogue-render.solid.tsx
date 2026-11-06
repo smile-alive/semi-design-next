@@ -39,9 +39,9 @@ const roleConfig = {
 };
 
 const renderConfig: DialogueRenderConfig = {
-    renderDialogueTitle: (props) => <div class="semi-ai-chat-dialogue-title">My-{props.role?.name}</div>,
-    renderDialogueAvatar: (props) => <Avatar src={props.role?.avatar} alt="" size="extra-small" shape="square" />,
-    renderDialogueAction: (props) => <div class={props.class}>{props.defaultActions?.[0]?.()}</div>,
+    renderDialogueTitle: (title) => <div class="semi-ai-chat-dialogue-title">My-{title.role?.name}</div>,
+    renderDialogueAvatar: (avatar) => <Avatar src={avatar.role?.avatar} alt="" size="extra-small" shape="square" />,
+    renderDialogueAction: (action) => <div class={action.class}>{action.defaultActions?.[0]?.()}</div>,
 };
 
 export default function AIChatDialogueDemo() {

@@ -1,35 +1,30 @@
 <script setup lang="ts">
     import { IconAIBellLevel1, IconAIEditLevel1, IconAIEditLevel2, IconAIFileLevel3, IconAIFilledLevel1, IconAIFilledLevel3, IconAIImageLevel3, IconAILoading, IconAISearchLevel3, IconAIStrokedLevel3, IconAIWandLevel3 } from '@fibrae/semi-icons-vue';
-    import { Button, FloatButton, Tag, TypographyTitle } from '@fibrae/semi-ui-vue';
+    import { Button, FloatButton, Tag, Typography } from '@fibrae/semi-ui-vue';
 
+    const shades = Array.from({ length: 10 }, (_, index) => index);
     const wandFill = ['var(--semi-color-danger)', 'var(--semi-color-success)', 'var(--semi-color-primary)', 'var(--semi-color-warning)'];
-    const colorStyle = (color: string) => ({
-        width: '40px',
-        height: '40px',
-        background: color,
-        borderRadius: '50%',
-    });
 </script>
 
 <template>
     <div :style="{ display: 'flex', flexDirection: 'column', rowGap: '20px' }">
         <div :style="{ display: 'flex', flexDirection: 'column', rowGap: '10px' }">
-            <TypographyTitle :heading="5">AI Token</TypographyTitle>
+            <Typography.Title :heading="5">AI Token</Typography.Title>
             <div :style="{ display: 'flex', alignItems: 'center', columnGap: '10px' }">
                 <span>Purple</span>
                 <div :style="{ display: 'inline-flex', columnGap: '4px' }">
-                    <div v-for="index in 10" :key="index" :style="colorStyle(`var(--semi-ai-purple-${index - 1})`)" />
+                    <div v-for="index in shades" :key="index" :style="{ width: '40px', height: '40px', background: `var(--semi-ai-purple-${index})`, borderRadius: '50%' }" />
                 </div>
             </div>
             <div :style="{ display: 'flex', alignItems: 'center', columnGap: '10px' }">
                 <span>General</span>
                 <div :style="{ display: 'inline-flex', columnGap: '4px' }">
-                    <div v-for="index in 10" :key="index" :style="colorStyle(`var(--semi-ai-general-${index - 1})`)" />
+                    <div v-for="index in shades" :key="index" :style="{ width: '40px', height: '40px', background: `var(--semi-ai-general-${index})`, borderRadius: '50%' }" />
                 </div>
             </div>
         </div>
         <div :style="{ display: 'flex', flexDirection: 'column', rowGap: '10px' }">
-            <TypographyTitle :heading="5">AI Icon</TypographyTitle>
+            <Typography.Title :heading="5">AI Icon</Typography.Title>
             <div :style="{ display: 'flex', columnGap: '10px' }">
                 <IconAIBellLevel1 size="extra-large" />
                 <IconAIEditLevel2 size="extra-large" />
@@ -43,7 +38,7 @@
             </div>
         </div>
         <div :style="{ display: 'flex', flexDirection: 'column', rowGap: '10px' }">
-            <TypographyTitle :heading="5">AI Button</TypographyTitle>
+            <Typography.Title :heading="5">AI Button</Typography.Title>
             <div :style="{ display: 'flex', rowGap: '16px', flexDirection: 'column' }">
                 <div :style="{ display: 'flex', columnGap: '16px' }">
                     <Button colorful theme="solid" type="primary">
@@ -102,7 +97,7 @@
             </div>
         </div>
         <div :style="{ display: 'flex', flexDirection: 'column', rowGap: '10px' }">
-            <TypographyTitle :heading="5" :style="{ marginTop: '10px' }">AI Tag</TypographyTitle>
+            <Typography.Title :heading="5" :style="{ marginTop: '10px' }">AI Tag</Typography.Title>
             <div
                 :style="{
                     display: 'grid',
@@ -150,7 +145,7 @@
             </div>
         </div>
         <div :style="{ display: 'flex', flexDirection: 'column', rowGap: '10px' }">
-            <TypographyTitle :heading="5" :style="{ marginTop: '10px' }">AI FloatButton</TypographyTitle>
+            <Typography.Title :heading="5" :style="{ marginTop: '10px' }">AI FloatButton</Typography.Title>
             <div
                 :style="{
                     display: 'grid',

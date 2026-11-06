@@ -3,7 +3,6 @@ import { ConfigProvider, ConfigConsumer, Typography } from '@fibrae/semi-ui-reac
 export default function ConfigProviderDemo() {
     return (
         <ConfigProvider timeZone="GMT+08:00">
-            {/*...*/}
             <ConfigConsumer>
                 {(value) => {
                     return (
@@ -13,7 +12,6 @@ export default function ConfigProviderDemo() {
                     );
                 }}
             </ConfigConsumer>
-            {/*...*/}
         </ConfigProvider>
     );
 }

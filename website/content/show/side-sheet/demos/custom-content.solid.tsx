@@ -23,7 +23,7 @@ export default function SideSheetDemo() {
                 visible={visible()}
                 footer={
                     <div style={{ display: 'flex', 'justify-content': 'flex-end' }}>
-                        <Button style={{ 'margin-right': '8px' }}>重置</Button>
+                        <Button style={{ 'margin-inline-end': '8px' }}>重置</Button>
                         <Button theme="solid">提交</Button>
                     </div>
                 }

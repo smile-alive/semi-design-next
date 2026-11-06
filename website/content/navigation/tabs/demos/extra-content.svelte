@@ -16,5 +16,5 @@
     {#snippet tabBarExtraContent()}
         <Button onclick={onExtraClick}>Extra Action</Button>
     {/snippet}
-    {#snippet panel({ item })}{item.tab}{/snippet}
+    {#snippet panel(pane)}{pane.item.tab}{/snippet}
 </Tabs>

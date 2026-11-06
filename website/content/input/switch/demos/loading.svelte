@@ -3,7 +3,7 @@
 </script>
 
 <div>
-    <Switch aria-label="加载中的开关" loading />
+    <Switch aria-label="Loading switch" loading />
     <br />
-    <Switch aria-label="加载中的开关，已开启" checked loading />
+    <Switch aria-label="Loading switch, on" checked loading />
 </div>

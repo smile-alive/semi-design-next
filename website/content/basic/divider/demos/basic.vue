@@ -9,12 +9,12 @@
         <Divider margin="12px" />
         <span>它定义了一套中后台设计与前端基础组件。</span>
 
-        <h3 :style="{ marginTop: '40px' }">水平虚线</h3>
+        <h3 :style="{ marginBlockStart: '40px' }">水平虚线</h3>
         <span>Semi Design 是一个设计系统。</span>
         <Divider dashed margin="12px" />
         <span>它定义了一套中后台设计与前端基础组件。</span>
 
-        <h3 :style="{ marginTop: '40px' }">垂直实线</h3>
+        <h3 :style="{ marginBlockStart: '40px' }">垂直实线</h3>
 
         <div>
             <span>左</span>
@@ -24,7 +24,7 @@
             <span>右</span>
         </div>
 
-        <h3 :style="{ marginTop: '40px' }">垂直虚线</h3>
+        <h3 :style="{ marginBlockStart: '40px' }">垂直虚线</h3>
         <div>
             <span>左</span>
             <Divider dashed layout="vertical" margin="12px" />

@@ -12,14 +12,14 @@
 </script>
 
 <DatePicker bind:value={date} {onChange} type="dateTimeRange">
-    {#snippet trigger({ value })}
+    {#snippet trigger(triggerProps)}
         <!-- The clear button is a sibling of the trigger button: buttons cannot nest -->
         <ButtonGroup theme="light">
             <Button iconPosition="right">
                 {#snippet icon()}<IconChevronDown />{/snippet}
-                {value.length ? `${dateFns.format(value[0], formatToken)} ~ ${dateFns.format(value[1], formatToken)}` : '请选择日期时间范围'}
+                {triggerProps.value.length ? `${dateFns.format(triggerProps.value[0], formatToken)} ~ ${dateFns.format(triggerProps.value[1], formatToken)}` : '请选择日期时间范围'}
             </Button>
-            {#if value.length}
+            {#if triggerProps.value.length}
                 <Button
                     aria-label="清除"
                     onclick={(event) => {

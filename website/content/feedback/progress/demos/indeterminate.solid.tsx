@@ -6,7 +6,7 @@ export default function ProgressDemo() {
             <Progress indeterminate aria-label="正在加载" />
             <br />
             <Progress indeterminate size="large" aria-label="正在加载" />
-            <div style={{ display: 'flex', 'align-items': 'center', gap: '16px', 'margin-top': '20px' }}>
+            <div style={{ display: 'flex', 'align-items': 'center', gap: '16px', 'margin-block-start': '20px' }}>
                 <Progress indeterminate type="circle" aria-label="正在加载" />
                 <Progress indeterminate type="circle" size="small" aria-label="正在加载" />
             </div>

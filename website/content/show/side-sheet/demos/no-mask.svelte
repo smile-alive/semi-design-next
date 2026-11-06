@@ -6,7 +6,7 @@
 </script>
 
 <Button onclick={() => (visible = true)}>Open SideSheet</Button>
-<TextArea bind:value placeholder="Please enter something" style="margin-top: 12px" />
+<TextArea bind:value placeholder="Please enter something" style="margin-block-start: 12px" />
 <SideSheet bind:visible disableScroll={false} mask={false} title="可操作外部的侧边栏">
     <p>这里是输入的内容：</p>
     <p>{value}</p>

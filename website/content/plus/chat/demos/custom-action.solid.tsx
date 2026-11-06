@@ -70,7 +70,7 @@ const renderChatBoxAction = (props: RenderActionProps) => (
 );
 
 export default function ChatDemo() {
-    const [chats, setChats] = createSignal<Message[]>(defaultMessage);
+    const [message, setMessage] = createSignal<Message[]>(defaultMessage);
 
     const onMessageSend = () => {
         const newAssistantMessage: Message = {
@@ -79,9 +79,9 @@ export default function ChatDemo() {
             content: `This is a mock response`,
         };
         setTimeout(() => {
-            setChats((list) => [...list, newAssistantMessage]);
+            setMessage((list) => [...list, newAssistantMessage]);
         }, 200);
     };
 
-    return <Chat chatBoxRenderConfig={{ renderChatBoxAction }} style={commonOuterStyle} chats={chats()} onChatsChange={(next) => setChats(next)} onMessageSend={onMessageSend} roleConfig={roleInfo} uploadProps={uploadProps} />;
+    return <Chat chatBoxRenderConfig={{ renderChatBoxAction }} style={commonOuterStyle} chats={message()} onChatsChange={(next) => setMessage(next)} onMessageSend={onMessageSend} roleConfig={roleInfo} uploadProps={uploadProps} />;
 }

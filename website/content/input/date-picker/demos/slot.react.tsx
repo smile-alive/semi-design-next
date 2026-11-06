@@ -2,8 +2,6 @@ import { useState, type CSSProperties } from 'react';
 import { IconBulb } from '@fibrae/semi-icons-react';
 import { DatePicker, Typography, Tabs, TabPane, Space } from '@fibrae/semi-ui-react';
 
-const { Text } = Typography;
-
 const uedDisabledDate = (currentDate?: Date) => !!currentDate && currentDate.getDate() > 10 && currentDate.getDate() < 15;
 const testDisabledDate = (currentDate?: Date) => !!currentDate && currentDate.getDate() > 15 && currentDate.getDate() < 25;
 
@@ -29,10 +27,10 @@ function BottomSlot({ style }: SlotProps) {
     return (
         <Space style={{ padding: '12px 20px', ...style }}>
             <IconBulb style={{ color: 'var(--semi-amber-5)' }} />
-            <Text strong style={{ color: 'var(--semi-color-text-2)' }}>
+            <Typography.Text strong style={{ color: 'var(--semi-color-text-2)' }}>
                 定版前请阅读
-            </Text>
-            <Text link={{ href: 'https://semi.design/', target: '_blank' }}>发版须知</Text>
+            </Typography.Text>
+            <Typography.Text link={{ href: 'https://semi.design/', target: '_blank' }}>发版须知</Typography.Text>
         </Space>
     );
 }
@@ -41,10 +39,10 @@ function MonthBottomSlot({ style }: SlotProps) {
     return (
         <Space style={{ padding: '12px 20px', ...style }}>
             <IconBulb style={{ color: 'var(--semi-amber-5)' }} />
-            <Text strong style={{ color: 'var(--semi-color-text-2)' }}>
+            <Typography.Text strong style={{ color: 'var(--semi-color-text-2)' }}>
                 请阅读
-            </Text>
-            <Text link={{ href: 'https://semi.design/', target: '_blank' }}>须知</Text>
+            </Typography.Text>
+            <Typography.Text link={{ href: 'https://semi.design/', target: '_blank' }}>须知</Typography.Text>
         </Space>
     );
 }

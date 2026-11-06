@@ -4,10 +4,10 @@
 
 <template>
     <Form>
-        <template #default="{ formState }">
+        <template #default="form">
             <FormInput field="name" initValue="semi" />
             <FormInput field="familyName" initValue="design" />
-            <code>{{ JSON.stringify(formState) }}</code>
+            <code>{{ JSON.stringify(form.formState) }}</code>
         </template>
     </Form>
 </template>

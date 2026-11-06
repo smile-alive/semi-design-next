@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Cascader, Checkbox, TypographyText, type CascaderData, type TypographyEllipsis } from '@fibrae/semi-ui-svelte';
+    import { Cascader, Checkbox, Typography } from '@fibrae/semi-ui-svelte';
 
     const treeData = [
         {
@@ -29,30 +29,28 @@
             ],
         },
     ];
-    const ellipsis: TypographyEllipsis = { showTooltip: { opts: { style: 'word-break: break-all' } } };
-    const pathLabel = (data: CascaderData[]) => data.map((item) => item.label).join(' / ');
 </script>
 
 <div>
     <p>鼠标 hover 到选项可查看被省略文本完整内容</p>
     <br />
     <Cascader filterTreeNode placeholder="单选，输入 s 自定义搜索选项渲染结果" style="width: 320px" {treeData}>
-        {#snippet filterItem({ props, data, selected })}
-            <li {...props} style="justify-content: flex-start">
-                <TypographyText {ellipsis} style={`width: 270px; ${selected ? 'color: var(--semi-color-primary)' : ''}`}>
-                    {pathLabel(data)}
-                </TypographyText>
+        {#snippet filterItem(item)}
+            <li {...item.props} style="justify-content: flex-start">
+                <Typography.Text ellipsis={{ showTooltip: { opts: { style: 'word-break: break-all' } } }} style={`width: 270px; ${item.selected ? 'color: var(--semi-color-primary)' : ''}`}>
+                    {item.data.map((option) => option.label).join(' / ')}
+                </Typography.Text>
             </li>
         {/snippet}
     </Cascader>
     <br />
-    <Cascader filterTreeNode multiple placeholder="多选，输入 s 自定义搜索选项渲染结果" style="width: 320px; margin-top: 20px" {treeData}>
-        {#snippet filterItem({ props, data, checkStatus, onCheck })}
-            <li {...props} aria-label={pathLabel(data)} style="justify-content: flex-start">
-                <Checkbox checked={checkStatus.checked} indeterminate={checkStatus.halfChecked} onChange={onCheck} tabindex={-1}>
-                    <TypographyText {ellipsis} style="width: 250px">
-                        {pathLabel(data)}
-                    </TypographyText>
+    <Cascader filterTreeNode multiple placeholder="多选，输入 s 自定义搜索选项渲染结果" style="width: 320px; margin-block-start: 20px" {treeData}>
+        {#snippet filterItem(item)}
+            <li {...item.props} aria-label={item.data.map((option) => option.label).join(' / ')} style="justify-content: flex-start">
+                <Checkbox checked={item.checkStatus.checked} indeterminate={item.checkStatus.halfChecked} onChange={item.onCheck} tabindex={-1}>
+                    <Typography.Text ellipsis={{ showTooltip: { opts: { style: 'word-break: break-all' } } }} style="width: 250px">
+                        {item.data.map((option) => option.label).join(' / ')}
+                    </Typography.Text>
                 </Checkbox>
             </li>
         {/snippet}

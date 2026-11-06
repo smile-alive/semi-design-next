@@ -38,15 +38,15 @@
 
 <template>
     <Transfer v-model="value" :dataSource="treeData" style="width: 600px" type="treeList">
-        <template #sourceHeader="{ num, leafOnlyNum, showButton, allChecked, onAllClick }">
+        <template #sourceHeader="header">
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border-bottom: 1px solid var(--semi-color-border)">
                 <span>
                     <strong>文件总数：</strong>
-                    {{ leafOnlyNum !== undefined ? leafOnlyNum : num }} 个文件
-                    <span v-if="leafOnlyNum !== undefined" style="color: var(--semi-color-text-2); margin-inline-start: 8px; font-size: 12px"> （总节点数：{{ num }}） </span>
+                    {{ header.leafOnlyNum !== undefined ? header.leafOnlyNum : header.num }} 个文件
+                    <span v-if="header.leafOnlyNum !== undefined" style="color: var(--semi-color-text-2); margin-inline-start: 8px; font-size: 12px"> （总节点数：{{ header.num }}） </span>
                 </span>
-                <Button v-if="showButton" size="small" theme="borderless" type="tertiary" @click="onAllClick">
-                    {{ allChecked ? '取消全选' : '全选' }}
+                <Button v-if="header.showButton" size="small" theme="borderless" type="tertiary" @click="header.onAllClick">
+                    {{ header.allChecked ? '取消全选' : '全选' }}
                 </Button>
             </div>
         </template>

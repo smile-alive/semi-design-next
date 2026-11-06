@@ -1,5 +1,7 @@
 import { InputGroup, Input, InputNumber, AutoComplete, DatePicker, Select } from '@fibrae/semi-ui-react';
 
+const addressData = ['Beijing Haidian'];
+
 export default function InputDemo() {
     return (
         <div>
@@ -15,7 +17,7 @@ export default function InputDemo() {
                     <Select.Option value="home">Home</Select.Option>
                     <Select.Option value="work">Work</Select.Option>
                 </Select>
-                <AutoComplete data={['Beijing Haidian']} placeholder="Address: " style={{ width: 180 }} />
+                <AutoComplete data={addressData} placeholder="Address: " style={{ width: 180 }} />
             </InputGroup>
             <br />
             <br />

@@ -9,12 +9,12 @@
             :grid="[100, 100]"
             :snapGap="20"
             :style="{
-                marginLeft: '20%',
+                marginInlineStart: '20%',
                 backgroundColor: 'var(--semi-grey-1)',
                 border: 'var(--semi-color-border) 1px solid',
             }"
         >
-            <div :style="{ marginLeft: '20%' }">snap</div>
+            <div :style="{ marginInlineStart: '20%' }">snap</div>
         </Resizable>
     </div>
 </template>

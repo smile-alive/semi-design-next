@@ -3,7 +3,6 @@
     import { AIChatInput, type AIChatInputLeftMenuChangeProps as LeftMenuChangeProps } from '@fibrae/semi-ai-vue';
     import { IconBookOpenStroked, IconFeishuLogo, IconGit, IconFigma } from '@fibrae/semi-icons-vue';
 
-    const { Configure } = AIChatInput;
     const uploadProps = { action: 'https://api.semi.design/upload' };
 
     const modelOptions = [
@@ -37,19 +36,19 @@
 <template>
     <AIChatInput placeholder="用于查看左下方配置项的用例" style="margin: 12px" :uploadProps="uploadProps" @configureChange="onConfigureChange">
         <template #configureArea>
-            <Configure.Select field="model" initValue="GPT-4o" :optionList="modelOptions" />
-            <Configure.Button field="onlineSearch">
+            <AIChatInput.Configure.Select field="model" initValue="GPT-4o" :optionList="modelOptions" />
+            <AIChatInput.Configure.Button field="onlineSearch">
                 <template #icon>
                     <IconBookOpenStroked />
                 </template>
                 联网搜索
-            </Configure.Button>
-            <Configure.Mcp :options="mcpOptions" showConfigure @configureButtonClick="onConfigureButtonClick">
-                <template #optionIcon="{ item }">
-                    <component :is="mcpIcons[item.value]" />
+            </AIChatInput.Configure.Button>
+            <AIChatInput.Configure.Mcp :options="mcpOptions" showConfigure @configureButtonClick="onConfigureButtonClick">
+                <template #optionIcon="optionIcon">
+                    <component :is="mcpIcons[optionIcon.item.value]" />
                 </template>
-            </Configure.Mcp>
-            <Configure.RadioButton field="thinkType" initValue="fast" :options="radioButtonProps" />
+            </AIChatInput.Configure.Mcp>
+            <AIChatInput.Configure.RadioButton field="thinkType" initValue="fast" :options="radioButtonProps" />
         </template>
     </AIChatInput>
 </template>

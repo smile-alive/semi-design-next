@@ -3,8 +3,8 @@
 </script>
 
 <div>
-    <Pagination style="margin-bottom: 12px" total={30} />
-    <Pagination style="margin-bottom: 12px" total={80} />
-    <Pagination style="margin-bottom: 12px" total={200} />
-    <Pagination pageSize={30} style="margin-bottom: 12px" total={80} />
+    <Pagination style="margin-block-end: 12px" total={30} />
+    <Pagination style="margin-block-end: 12px" total={80} />
+    <Pagination style="margin-block-end: 12px" total={200} />
+    <Pagination pageSize={30} style="margin-block-end: 12px" total={80} />
 </div>

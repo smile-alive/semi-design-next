@@ -16,7 +16,7 @@
 </script>
 
 <span>页面右下方最后一行</span>
-<FloatButtonGroup {items} {onClick} style="inset-inline-end: 24px; bottom: 50px">
+<FloatButtonGroup {items} {onClick} style="inset-inline-end: 24px; inset-block-end: 50px">
     {#snippet icon({ index })}
         {@const Icon = icons[index]}
         <Icon />

@@ -11,7 +11,7 @@
         content: string;
     }
 
-    const roleConfig = {
+    const roleInfo = {
         user: {
             name: 'User',
             avatar: '/assets/docs-icon.png',
@@ -26,14 +26,14 @@
         },
     };
 
+    const commonOuterStyle = 'border: 1px solid var(--semi-color-border); border-radius: 16px; height: 500px';
+
     const uploadProps = { action: 'https://api.semi.design/upload' };
 
     let id = 0;
     const getId = () => `id-${id++}`;
 
-    const sourcesOf = (item: ChatMessage): Source[] | undefined => item.source;
-
-    let messages = $state<ChatMessage[]>([
+    let message = $state<ChatMessage[]>([
         {
             role: 'assistant',
             id: '3',
@@ -74,51 +74,57 @@
             content: 'This is a mock response',
         };
         setTimeout(() => {
-            messages = [...messages, newAssistantMessage];
+            message = [...message, newAssistantMessage];
         }, 200);
     };
-
-    const buttonReset = 'border: none; background: var(--semi-color-tertiary-light-hover); border-radius: 16px; font-family: inherit; line-height: inherit';
 </script>
 
-<Chat bind:chats={messages} {onMessageSend} {roleConfig} style="border: 1px solid var(--semi-color-border); border-radius: 16px; height: 500px" {uploadProps}>
-    {#snippet content({ message, class: contentClass })}
-        {@const sources = sourcesOf(message)}
-        <div class={contentClass}>
-            {#if sources}
+<Chat bind:chats={message} {onMessageSend} roleConfig={roleInfo} style={commonOuterStyle} {uploadProps}>
+    {#snippet content(props)}
+        <div class={props.class}>
+            {#if props.message.source}
                 <div style="transition: {collapsed ? 'height 0.4s ease, width 0.4s ease' : 'height 0.4s ease'}; height: {collapsed ? '30px' : '200px'}; width: {collapsed ? '190px' : '100%'}; background: var(--semi-color-tertiary-light-hover); border-radius: 16px; box-sizing: border-box; margin-bottom: 10px">
-                    {#if collapsed}
-                        <button style="{buttonReset}; display: flex; width: fit-content; column-gap: 10px; padding: 5px 10px; cursor: pointer; font-size: 14px; color: var(--semi-color-text-1)" type="button" onclick={() => (collapsed = false)}>
-                            <span>基于{sources.length}个搜索来源</span>
-                            <AvatarGroup items={sources.map((source) => ({ alt: '', src: source.avatar }))} size="extra-extra-small" />
-                        </button>
-                    {:else}
-                        <button style="{buttonReset}; width: 100%; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; padding: 12px; text-align: start; font-size: inherit; color: inherit" type="button" onclick={() => (collapsed = true)}>
-                            <span style="display: flex; align-items: center; justify-content: space-between; padding: 5px 10px; column-gap: 10px; color: var(--semi-color-text-1)">
-                                <span style="font-size: 14px; font-weight: 500">Source</span>
-                                <IconChevronUp />
-                            </span>
-                            <span style="display: flex; flex-wrap: wrap; gap: 10px; overflow: scroll; padding: 5px 10px">
-                                {#each sources as source (source.url)}
-                                    <span style="display: flex; flex-direction: column; row-gap: 5px; flex-basis: 150px; flex-grow: 1; border: 1px solid var(--semi-color-border); border-radius: 12px; padding: 12px; font-size: 12px">
-                                        <span style="display: flex; column-gap: 5px; align-items: center">
-                                            <Avatar alt="" shape="square" src={source.avatar} style="width: 16px; height: 16px; flex-shrink: 0" />
-                                            <span style="color: var(--semi-color-text-2); text-overflow: ellipsis">
-                                                {source.title}
-                                            </span>
-                                        </span>
-                                        <span style="color: var(--semi-color-primary); font-size: 12px">{source.subTitle}</span>
-                                        <span style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; text-overflow: ellipsis; overflow: hidden; color: var(--semi-color-text-2)">
-                                            {source.content}
+                    <button
+                        style="display: {collapsed
+                            ? 'flex'
+                            : 'none'}; width: fit-content; column-gap: 10px; border: none; background: var(--semi-color-tertiary-light-hover); border-radius: 16px; padding: 5px 10px; cursor: pointer; font-family: inherit; font-size: 14px; line-height: inherit; color: var(--semi-color-text-1)"
+                        type="button"
+                        onclick={() => (collapsed = false)}
+                    >
+                        <span>基于{props.message.source.length}个搜索来源</span>
+                        <AvatarGroup items={props.message.source.map((source: Source) => ({ alt: '', src: source.avatar }))} size="extra-extra-small" />
+                    </button>
+                    <button
+                        style="width: 100%; height: 100%; box-sizing: border-box; display: {collapsed
+                            ? 'none'
+                            : 'flex'}; flex-direction: column; border: none; background: var(--semi-color-tertiary-light-hover); border-radius: 16px; padding: 12px; text-align: left; font-family: inherit; font-size: inherit; line-height: inherit; color: inherit"
+                        type="button"
+                        onclick={() => (collapsed = true)}
+                    >
+                        <span style="display: flex; align-items: center; justify-content: space-between; padding: 5px 10px; column-gap: 10px; color: var(--semi-color-text-1)">
+                            <span style="font-size: 14px; font-weight: 500">Source</span>
+                            <IconChevronUp />
+                        </span>
+                        <span style="display: flex; flex-wrap: wrap; gap: 10px; overflow: scroll; padding: 5px 10px">
+                            {#each props.message.source as source (source.url)}
+                                <span style="display: flex; flex-direction: column; row-gap: 5px; flex-basis: 150px; flex-grow: 1; border: 1px solid var(--semi-color-border); border-radius: 12px; padding: 12px; font-size: 12px">
+                                    <span style="display: flex; column-gap: 5px; align-items: center">
+                                        <Avatar alt="" shape="square" src={source.avatar} style="width: 16px; height: 16px; flex-shrink: 0" />
+                                        <span style="color: var(--semi-color-text-2); text-overflow: ellipsis">
+                                            {source.title}
                                         </span>
                                     </span>
-                                {/each}
-                            </span>
-                        </button>
-                    {/if}
+                                    <span style="color: var(--semi-color-primary); font-size: 12px">{source.subTitle}</span>
+                                    <span style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; text-overflow: ellipsis; overflow: hidden; color: var(--semi-color-text-2)">
+                                        {source.content}
+                                    </span>
+                                </span>
+                            {/each}
+                        </span>
+                    </button>
                 </div>
             {/if}
-            <MarkdownRender raw={typeof message.content === 'string' ? message.content : ''} />
+            <MarkdownRender raw={typeof props.message.content === 'string' ? props.message.content : ''} />
         </div>
     {/snippet}
 </Chat>

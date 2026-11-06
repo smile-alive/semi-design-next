@@ -10,14 +10,14 @@
 
 <template>
     <DatePicker v-model="date" :format="formatToken">
-        <template #trigger="{ value, placeholder }">
+        <template #trigger="triggerProps">
             <!-- The clear button is a sibling of the trigger button: buttons cannot nest -->
             <ButtonGroup theme="light">
                 <Button iconPosition="right">
                     <template #icon>
                         <IconChevronDown />
                     </template>
-                    {{ value.length ? dateFns.format(value[0], formatToken) : placeholder }}
+                    {{ triggerProps.value.length ? dateFns.format(triggerProps.value[0], formatToken) : triggerProps.placeholder }}
                 </Button>
                 <Button v-if="date" aria-label="清除" @click.stop="date = null">
                     <template #icon>

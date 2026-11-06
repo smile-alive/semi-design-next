@@ -11,7 +11,7 @@ export default function ResizableDemo() {
                 }}
                 scale={0.5}
             >
-                <div style={{ marginLeft: '20%' }}>scale 0.5</div>
+                <div style={{ marginInlineStart: '20%' }}>scale 0.5</div>
             </Resizable>
         </div>
     );

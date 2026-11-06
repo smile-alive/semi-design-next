@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Banner, Button, Form, FormDatePicker, FormRadio, FormRadioGroup, FormSelect, SideSheet, TypographyText } from '@fibrae/semi-ui-svelte';
+    import { Banner, Button, Form, FormDatePicker, FormRadio, FormRadioGroup, FormSelect, SideSheet, Typography } from '@fibrae/semi-ui-svelte';
 
     let visible = $state(false);
     const createTime = new Date();
@@ -16,7 +16,7 @@
 <SideSheet bind:visible bodyStyle={border} closable={false} headerStyle={border} title="创建资源包">
     {#snippet footer()}
         <div style="display: flex; justify-content: flex-end">
-            <Button style="margin-right: 8px">重置</Button>
+            <Button style="margin-inline-end: 8px">重置</Button>
             <Button theme="solid">提交</Button>
         </div>
     {/snippet}
@@ -34,9 +34,9 @@
         </FormRadioGroup>
         <Banner bordered fullMode={false} icon={null} type="warning">
             {#snippet description()}
-                <TypographyText strong>当前部署环境：线上部署</TypographyText>
+                <Typography.Text strong>当前部署环境：线上部署</Typography.Text>
                 <br />
-                <TypographyText>请选择正确的SCM构建产物，防止出现不符合预期的发布操作。</TypographyText>
+                <Typography.Text>请选择正确的SCM构建产物，防止出现不符合预期的发布操作。</Typography.Text>
             {/snippet}
         </Banner>
         <br />

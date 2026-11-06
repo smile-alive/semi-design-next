@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Carousel, Space, TypographyParagraph, TypographyTitle } from '@fibrae/semi-ui-svelte';
+    import { Carousel, Space, Typography } from '@fibrae/semi-ui-svelte';
 
     let activeIndex = $state(0);
     const logo = '/assets/placeholder/logo.svg';
@@ -24,18 +24,19 @@
     const colorStyle = 'color: #1C1F23';
 </script>
 
-<Carousel autoPlay={false} bind:activeIndex items={slides} style="width: 100%; height: 400px" theme="dark">
-    {#snippet slide({ item })}
-        <div style="height: 100%; background-size: cover; background-image: url('{item.src}')">
-            <Space align="start" spacing="medium" style={titleStyle} vertical>
-                <img alt="semi_logo" src={logo} style="width: 87px; height: 31px" />
-                <TypographyTitle heading={2} style={colorStyle}>{item.title}</TypographyTitle>
-                <Space align="start" vertical>
-                    {#each item.lines as line (line)}
-                        <TypographyParagraph style={colorStyle}>{line}</TypographyParagraph>
-                    {/each}
+<div>
+    <Carousel autoPlay={false} bind:activeIndex items={slides} style="width: 100%; height: 400px" theme="dark">
+        {#snippet slide({ item })}
+            <div style="height: 100%; background-size: cover; background-image: url('{item.src}')">
+                <Space align="start" spacing="medium" style={titleStyle} vertical>
+                    <img alt="semi_logo" src={logo} style="width: 87px; height: 31px" />
+                    <Typography.Title heading={2} style={colorStyle}>{item.title}</Typography.Title>
+                    <Space align="start" vertical>
+                        <Typography.Paragraph style={colorStyle}>{item.lines[0]}</Typography.Paragraph>
+                        <Typography.Paragraph style={colorStyle}>{item.lines[1]}</Typography.Paragraph>
+                    </Space>
                 </Space>
-            </Space>
-        </div>
-    {/snippet}
-</Carousel>
+            </div>
+        {/snippet}
+    </Carousel>
+</div>

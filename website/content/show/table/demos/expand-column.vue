@@ -95,12 +95,12 @@
     <Table :columns="columns" :dataSource="data" :hideExpandedColumn="false" :pagination="false" :rowSelection="rowSelection" rowKey="name">
         <template #cell="{ column, text, record }">
             <span v-if="column.dataIndex === 'name'">
-                <Avatar alt="" shape="square" size="small" :src="record.nameIconSrc" :style="{ marginRight: '12px' }" />
+                <Avatar alt="" shape="square" size="small" :src="record.nameIconSrc" :style="{ marginInlineEnd: '12px' }" />
                 {{ text }}
             </span>
             <div v-else-if="column.dataIndex === 'owner'">
-                <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
-                    {{ text.slice(0, 1) }}
+                <Avatar :color="record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
+                    {{ typeof text === 'string' && text.slice(0, 1) }}
                 </Avatar>
                 {{ text }}
             </div>

@@ -50,7 +50,7 @@
         <br />
         <br />
         <Dropdown position="bottomRight" trigger="contextMenu">
-            <Button :style="{ marginBottom: '20px' }" theme="solid" type="secondary"> Right click (ContextMenu) </Button>
+            <Button :style="{ marginBlockEnd: '20px' }" theme="solid" type="secondary"> Right click (ContextMenu) </Button>
             <template #content>
                 <Dropdown.Menu>
                     <Dropdown.Item>Menu Item 1</Dropdown.Item>

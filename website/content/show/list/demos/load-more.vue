@@ -1,8 +1,9 @@
 <script setup lang="ts">
     import { onBeforeUnmount, ref } from 'vue';
-    import { Avatar, Button, List, Skeleton } from '@fibrae/semi-ui-vue';
+    import { Avatar, Button, List, Skeleton, type AvatarColor } from '@fibrae/semi-ui-vue';
 
     interface Book {
+        color?: AvatarColor;
         title?: string;
         loading: boolean;
     }
@@ -10,7 +11,7 @@
     const count = 3;
     const data: Book[] = [];
     for (let i = 0; i < 40; i++) {
-        data.push({ title: `Semi Design Title ${i}`, loading: false });
+        data.push({ color: 'grey', title: `Semi Design Title ${i}`, loading: false });
     }
     const placeholders: Book[] = [0, 1, 2].map(() => ({ loading: true }));
 
@@ -47,8 +48,8 @@
 
 <template>
     <List :dataSource="loading ? [...dataSource, ...placeholders] : dataSource" :loading="loading">
-        <template #item="{ item }">
-            <Skeleton :loading="item.loading">
+        <template #item="row">
+            <Skeleton :loading="row.item.loading">
                 <template #placeholder>
                     <div
                         :style="{
@@ -58,20 +59,20 @@
                             borderBottom: '1px solid var(--semi-color-border)',
                         }"
                     >
-                        <Skeleton.Avatar :style="{ marginRight: '12px' }" />
+                        <Skeleton.Avatar :style="{ marginInlineEnd: '12px' }" />
                         <div>
-                            <Skeleton.Title :style="{ width: '120px', marginBottom: '12px', marginTop: '12px' }" />
+                            <Skeleton.Title :style="{ width: '120px', marginBlockEnd: '12px', marginBlockStart: '12px' }" />
                             <Skeleton.Paragraph :rows="2" :style="{ width: '600px' }" />
                         </div>
                     </div>
                 </template>
                 <List.Item>
                     <template #header>
-                        <Avatar color="grey">SE</Avatar>
+                        <Avatar :color="row.item.color">SE</Avatar>
                     </template>
                     <template #main>
                         <div>
-                            <span :style="{ color: 'var(--semi-color-text-0)', fontWeight: 500 }">{{ item.title }}</span>
+                            <span :style="{ color: 'var(--semi-color-text-0)', fontWeight: 500 }">{{ row.item.title }}</span>
                             <p :style="{ color: 'var(--semi-color-text-2)', margin: '4px 0' }">Semi Design 设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。</p>
                         </div>
                     </template>
@@ -79,7 +80,7 @@
             </Skeleton>
         </template>
         <template v-if="!loading && !noMore" #loadMore>
-            <div :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }">
+            <div :style="{ textAlign: 'center', marginBlockStart: '12px', height: '32px', lineHeight: '32px' }">
                 <Button @click="onLoadMore">显示更多</Button>
             </div>
         </template>

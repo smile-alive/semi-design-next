@@ -1,8 +1,6 @@
 import { useState, useCallback } from 'react';
 import { Sidebar } from '@fibrae/semi-ai-react';
 
-const { CodeContent } = Sidebar;
-
 const defaultCodes = [
     {
         name: 'Component.js',
@@ -150,7 +148,7 @@ export default function SidebarDemo() {
 
     return (
         <div className="semi-sidebar-main">
-            <CodeContent style={{ width: 600 }} activeKey={activeKey} codes={defaultCodes} onChange={onChange} />
+            <Sidebar.CodeContent style={{ width: 600 }} activeKey={activeKey} codes={defaultCodes} onChange={onChange} />
         </div>
     );
 }

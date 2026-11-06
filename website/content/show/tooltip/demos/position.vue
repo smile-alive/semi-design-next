@@ -25,7 +25,7 @@
 
 <template>
     <div>
-        <div :style="{ marginLeft: '80px', whiteSpace: 'nowrap' }">
+        <div :style="{ marginInlineStart: '80px', whiteSpace: 'nowrap' }">
             <Tooltip v-for="[position, label] in tops" :key="position" :arrowPointAtCenter="false" :position="position">
                 <Tag :style="{ margin: '8px', padding: '20px' }">{{ label }}</Tag>
                 <template #content>
@@ -47,7 +47,7 @@
                 </template>
             </Tooltip>
         </div>
-        <div :style="{ width: '40px', marginLeft: '300px' }">
+        <div :style="{ width: '40px', marginInlineStart: '300px' }">
             <Tooltip v-for="[position, label] in rights" :key="position" :arrowPointAtCenter="false" :position="position">
                 <Tag :style="{ margin: '8px', padding: '20px', width: '60px' }">{{ label }}</Tag>
                 <template #content>
@@ -58,7 +58,7 @@
                 </template>
             </Tooltip>
         </div>
-        <div :style="{ marginLeft: '80px', clear: 'both', whiteSpace: 'nowrap' }">
+        <div :style="{ marginInlineStart: '80px', clear: 'both', whiteSpace: 'nowrap' }">
             <Tooltip v-for="[position, label] in bottoms" :key="position" :arrowPointAtCenter="false" :position="position">
                 <Tag :style="{ margin: '8px', padding: '20px', width: '60px' }">{{ label }}</Tag>
                 <template #content>

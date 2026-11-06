@@ -20,7 +20,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <span>
-                    <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ marginRight: 12 }} />
+                    <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ marginInlineEnd: 12 }} />
                     {text}
                 </span>
             );
@@ -36,7 +36,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ marginRight: 4 }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ marginInlineEnd: 4 }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}
@@ -111,26 +111,26 @@ const expandData: Record<number, { key: string; value: ReactNode }[]> = {
     ],
 };
 
+const expandRowRender: ExpandedRowRender<Row> = (_record, index) => {
+    return <Descriptions align="justify" data={expandData[index]} />;
+};
+
+const rowSelection: RowSelectionProps<Row> = {
+    getCheckboxProps: (record) => ({
+        disabled: record.name === '设计文档', // 这一行不可勾选
+        name: record.name,
+    }),
+    onSelect: (record, selected) => {
+        console.log(`select row: ${selected}`, record);
+    },
+    onSelectAll: (selected, selectedRows) => {
+        console.log(`select all rows: ${selected}`, selectedRows);
+    },
+    onChange: (selectedRowKeys, selectedRows) => {
+        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    },
+};
+
 export default function TableDemo() {
-    const expandRowRender: ExpandedRowRender<Row> = (_record, index) => {
-        return <Descriptions align="justify" data={expandData[index]} />;
-    };
-
-    const rowSelection: RowSelectionProps<Row> = {
-        getCheckboxProps: (record) => ({
-            disabled: record.name === '设计文档', // 这一行不可勾选
-            name: record.name,
-        }),
-        onSelect: (record, selected) => {
-            console.log(`select row: ${selected}`, record);
-        },
-        onSelectAll: (selected, selectedRows) => {
-            console.log(`select all rows: ${selected}`, selectedRows);
-        },
-        onChange: (selectedRowKeys, selectedRows) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-        },
-    };
-
     return <Table rowKey="name" columns={columns} dataSource={data} expandedRowRender={expandRowRender} hideExpandedColumn={false} rowSelection={rowSelection} pagination={false} />;
 }

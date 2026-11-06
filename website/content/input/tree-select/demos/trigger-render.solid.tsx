@@ -32,22 +32,24 @@ const treeData: TreeNodeData[] = [
     },
 ];
 
+const onChange = (value: unknown) => {
+    console.log('onChange', value);
+};
+
 // The render props are a live object: read them in the returned JSX so the TagInput follows the selection
-function renderTrigger(props: TreeSelectTriggerRenderProps) {
-    return (
-        <TagInput
-            value={props.value.flatMap<string>((item) => item.key ?? [])}
-            inputValue={props.inputValue}
-            onInputChange={props.onSearch}
-            renderTagItem={(key) => (
-                <Tag style={{ 'margin-left': '2px' }} tagKey={key} closable onClose={() => props.onRemove(key)}>
-                    {props.value.find((item) => item.key === key)?.label}
-                </Tag>
-            )}
-        />
-    );
-}
+const renderTrigger = (triggerState: TreeSelectTriggerRenderProps) => (
+    <TagInput
+        value={triggerState.value.flatMap<string>((item) => item.key ?? [])}
+        inputValue={triggerState.inputValue}
+        onInputChange={triggerState.onSearch}
+        renderTagItem={(key) => (
+            <Tag style={{ 'margin-inline-start': '2px' }} tagKey={key} closable onClose={() => triggerState.onRemove(key)}>
+                {triggerState.value.find((item) => item.key === key)?.label}
+            </Tag>
+        )}
+    />
+);
 
 export default function TreeSelectDemo() {
-    return <TreeSelect triggerRender={renderTrigger} filterTreeNode searchPosition="trigger" multiple treeData={treeData} placeholder="Custom Trigger" onChange={(value) => console.log('onChange', value)} style={{ width: '300px' }} />;
+    return <TreeSelect triggerRender={renderTrigger} filterTreeNode searchPosition="trigger" multiple treeData={treeData} placeholder="Custom Trigger" onChange={onChange} style={{ width: '300px' }} />;
 }

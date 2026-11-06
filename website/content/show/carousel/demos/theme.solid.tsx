@@ -50,7 +50,7 @@ export default function CarouselDemo() {
             <br />
             <Space>
                 <div>主题</div>
-                <RadioGroup onChange={(e) => setTheme(e.target.value)} value={theme()} type="button">
+                <RadioGroup aria-label="主题" onChange={(e) => setTheme(e.target.value)} value={theme()} type="button">
                     <Radio value="primary">primary</Radio>
                     <Radio value="light">light</Radio>
                     <Radio value="dark">dark</Radio>

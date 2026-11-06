@@ -26,11 +26,11 @@ function ExtractComponent() {
     return <LocaleConsumer componentName="ComponentA">{(localeData) => <div>{localeData.customKey}</div>}</LocaleConsumer>;
 }
 
-export default function LocaleDemo() {
-    const new_zh_CN = { ...zh_CN, ComponentA: { customKey: 'semi' } };
-    const new_ko_KR = { ...ko_KR, ComponentA: { customKey: 'design' } };
-    const new_en_GB = { ...en_GB, ComponentA: { customKey: 'dsm' } };
+const new_zh_CN = { ...zh_CN, ComponentA: { customKey: 'semi' } };
+const new_ko_KR = { ...ko_KR, ComponentA: { customKey: 'design' } };
+const new_en_GB = { ...en_GB, ComponentA: { customKey: 'dsm' } };
 
+export default function LocaleDemo() {
     return (
         <>
             <LocaleProvider locale={new_zh_CN}>

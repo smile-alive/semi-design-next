@@ -2,10 +2,8 @@
     import { ref } from 'vue';
     import { Carousel, Radio, RadioGroup, Space, Typography, type CarouselProps, type RadioValue } from '@fibrae/semi-ui-vue';
 
-    const { Title, Paragraph } = Typography;
-
     const arrowType = ref<CarouselProps['arrowType']>('always');
-    const visibility = ref<'show' | 'hide'>('show');
+    const show = ref(true);
     const logo = '/assets/placeholder/logo.svg';
     const slides = [
         {
@@ -27,8 +25,8 @@
     const titleStyle = { position: 'absolute', top: '100px', left: '100px' } as const;
     const colorStyle = { color: '#1C1F23' };
 
-    const changeVisibility = (value: RadioValue | undefined) => {
-        if (value === 'show' || value === 'hide') visibility.value = value;
+    const changeShow = (value: RadioValue | undefined) => {
+        if (typeof value === 'boolean') show.value = value;
     };
     const changeArrowType = (value: RadioValue | undefined) => {
         if (value === 'always' || value === 'hover') arrowType.value = value;
@@ -37,13 +35,14 @@
 
 <template>
     <div>
-        <Carousel :arrowType="arrowType" :autoPlay="false" :showArrow="visibility === 'show'" :style="{ width: '100%', height: '400px' }" theme="dark">
-            <div v-for="slide in slides" :key="slide.src" :style="{ backgroundSize: 'cover', backgroundImage: `url('${slide.src}')` }">
+        <Carousel :arrowType="arrowType" :autoPlay="false" :showArrow="show" :style="{ width: '100%', height: '400px' }" theme="dark">
+            <div v-for="slide in slides" :key="slide.src" :style="{ height: '100%', backgroundSize: 'cover', backgroundImage: `url('${slide.src}')` }">
                 <Space align="start" spacing="medium" :style="titleStyle" vertical>
                     <img alt="semi_logo" :src="logo" :style="{ width: '87px', height: '31px' }" />
-                    <Title :heading="2" :style="colorStyle">{{ slide.title }}</Title>
+                    <Typography.Title :heading="2" :style="colorStyle">{{ slide.title }}</Typography.Title>
                     <Space align="start" vertical>
-                        <Paragraph v-for="line in slide.lines" :key="line" :style="colorStyle">{{ line }}</Paragraph>
+                        <Typography.Paragraph :style="colorStyle">{{ slide.lines[0] }}</Typography.Paragraph>
+                        <Typography.Paragraph :style="colorStyle">{{ slide.lines[1] }}</Typography.Paragraph>
                     </Space>
                 </Space>
             </div>
@@ -52,14 +51,14 @@
         <Space align="start" vertical>
             <Space>
                 <div>展示箭头</div>
-                <RadioGroup :modelValue="visibility" type="button" @update:modelValue="changeVisibility">
-                    <Radio value="show">show</Radio>
-                    <Radio value="hide">hide</Radio>
+                <RadioGroup aria-label="展示箭头" :modelValue="show" type="button" @update:modelValue="changeShow">
+                    <Radio value>show</Radio>
+                    <Radio :value="false">hide</Radio>
                 </RadioGroup>
             </Space>
             <Space>
                 <div>展示时机</div>
-                <RadioGroup :modelValue="arrowType" type="button" @update:modelValue="changeArrowType">
+                <RadioGroup aria-label="展示时机" :modelValue="arrowType" type="button" @update:modelValue="changeArrowType">
                     <Radio value="always">always</Radio>
                     <Radio value="hover">hover</Radio>
                 </RadioGroup>

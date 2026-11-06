@@ -6,11 +6,7 @@ import { DatePicker, Button, ButtonGroup } from '@fibrae/semi-ui-solid';
 const formatToken = 'yyyy-MM-dd';
 
 export default function DatePickerDemo() {
-    const [date, setDate] = createSignal<Date | undefined>(new Date(2024, 4, 6, 12));
-    const dateText = () => {
-        const value = date();
-        return value ? dateFns.format(value, formatToken) : undefined;
-    };
+    const [date, setDate] = createSignal<Date | undefined>(new Date(2024, 4, 6, 10, 30, 0));
     const onChange = (value: Date | Date[]) => {
         setDate(value as Date);
     };
@@ -28,7 +24,7 @@ export default function DatePickerDemo() {
                 // The clear button is a sibling of the trigger button: buttons cannot nest
                 <ButtonGroup theme="light">
                     <Button icon={<IconChevronDown />} iconPosition="right">
-                        {dateText() ?? triggerProps.placeholder}
+                        {triggerProps.value?.length ? dateFns.format(triggerProps.value[0], formatToken) : triggerProps.placeholder}
                     </Button>
                     <Show when={date()}>
                         <Button icon={<IconClose />} aria-label="清除" onClick={onClear} />

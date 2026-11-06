@@ -73,10 +73,10 @@
         <br />
         <Typography.Title :heading="6">Label 为自定义节点，指定其他属性进行搜索</Typography.Title>
         <Cascader displayProp="labelText" filterTreeNode placeholder="Search for labelText" style="width: 300px" :treeData="labelNodeTreeData" treeNodeFilterProp="labelText">
-            <template #label="{ item }">
+            <template #label="label">
                 <span :style="{ display: 'inline-flex', alignItems: 'center', columnGap: '4px' }">
                     <IconMapPinStroked />
-                    {{ item.label }}
+                    {{ label.item.label }}
                 </span>
             </template>
         </Cascader>

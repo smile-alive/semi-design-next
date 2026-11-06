@@ -32,8 +32,6 @@
             key: '1',
         },
     ];
-    const style = 'width: 300px';
-    const dropdownStyle = 'max-height: 400px; overflow: auto';
 </script>
 
-<TreeSelect {dropdownStyle} placeholder="请选择" {style} {treeData} />
+<TreeSelect dropdownStyle="max-height: 400px; overflow: auto" placeholder="请选择" style="width: 300px" {treeData} />

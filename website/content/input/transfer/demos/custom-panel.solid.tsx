@@ -47,13 +47,13 @@ function renderSelectedPanel(panel: SelectedPanelProps) {
     return (
         <section class="selected-panel">
             <div class="panel-header sp-font">
-                <div>已选同步门店: {panel.length}</div>
+                <div>已选同步门店: {panel.selectedData.length}</div>
                 <Button theme="borderless" type="primary" onClick={() => panel.onClear()} size="small">
                     清空
                 </Button>
             </div>
             <div class="panel-main">
-                <Show when={panel.length > 0} fallback={<div class="empty sp-font">暂无数据，请从左侧筛选</div>}>
+                <Show when={panel.selectedData.length > 0} fallback={<div class="empty sp-font">暂无数据，请从左侧筛选</div>}>
                     <For each={panel.selectedData}>
                         {(item) => (
                             <div class="semi-transfer-item panel-item">

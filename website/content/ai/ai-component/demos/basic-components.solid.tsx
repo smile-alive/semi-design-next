@@ -3,6 +3,7 @@ import { IconAIBellLevel1, IconAIEditLevel2, IconAIFileLevel3, IconAIFilledLevel
 import { Typography, Button, Tag, FloatButton } from '@fibrae/semi-ui-solid';
 
 const shades = Array.from({ length: 10 }, (_, index) => index);
+const wandFill = ['var(--semi-color-danger)', 'var(--semi-color-success)', 'var(--semi-color-primary)', 'var(--semi-color-warning)'];
 
 export default function AIComponentDemo() {
     return (
@@ -54,7 +55,7 @@ export default function AIComponentDemo() {
                     <IconAIImageLevel3 size="extra-large" />
                     <IconAISearchLevel3 size="extra-large" />
                     <IconAIStrokedLevel3 size="extra-large" />
-                    <IconAIWandLevel3 fill={['var(--semi-color-danger)', 'var(--semi-color-success)', 'var(--semi-color-primary)', 'var(--semi-color-warning)']} size="extra-large" />
+                    <IconAIWandLevel3 fill={wandFill} size="extra-large" />
                     <IconAILoading size="extra-large" />
                 </div>
             </div>

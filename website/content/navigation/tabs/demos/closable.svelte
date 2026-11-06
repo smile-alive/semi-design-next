@@ -13,5 +13,5 @@
 </script>
 
 <Tabs onTabClose={close} {tabList} type="card">
-    {#snippet panel({ item })}{item.tab}{/snippet}
+    {#snippet panel(pane)}{pane.item.tab}{/snippet}
 </Tabs>

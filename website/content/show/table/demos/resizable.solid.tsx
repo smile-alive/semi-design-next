@@ -14,25 +14,6 @@ interface Row {
     avatarBg: 'grey' | 'red';
 }
 
-function getData() {
-    const data: Row[] = [];
-    for (let i = 0; i < 46; i++) {
-        const isSemiDesign = i % 2 === 0;
-        const randomNumber = (i * 1000) % 199;
-        data.push({
-            key: '' + i,
-            name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
-            owner: isSemiDesign ? '姜鹏志' : '郝宣',
-            size: randomNumber,
-            updateTime: new Date(2024, 4, 6, 12).valueOf() + randomNumber * DAY,
-            avatarBg: isSemiDesign ? 'grey' : 'red',
-        });
-    }
-    return data;
-}
-
-const dataSource = getData();
-
 const columns: ColumnProps<Row>[] = [
     {
         title: '标题',
@@ -42,7 +23,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text) => {
             return (
                 <div>
-                    <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-right': '12px' }} />
+                    <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ 'margin-inline-end': '12px' }} />
                     {text}
                 </div>
             );
@@ -73,7 +54,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}
@@ -99,6 +80,20 @@ const columns: ColumnProps<Row>[] = [
     },
 ];
 
+const data: Row[] = [];
+for (let i = 0; i < 46; i++) {
+    const isSemiDesign = i % 2 === 0;
+    const randomNumber = (i * 1000) % 199;
+    data.push({
+        key: '' + i,
+        name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
+        owner: isSemiDesign ? '姜鹏志' : '郝宣',
+        size: randomNumber,
+        updateTime: new Date(2024, 4, 6, 12).valueOf() + randomNumber * DAY,
+        avatarBg: isSemiDesign ? 'grey' : 'red',
+    });
+}
+
 export default function TableDemo() {
-    return <Table columns={columns} dataSource={dataSource} resizable bordered />;
+    return <Table columns={columns} dataSource={data} resizable bordered />;
 }

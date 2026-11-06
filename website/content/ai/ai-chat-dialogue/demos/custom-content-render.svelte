@@ -27,7 +27,7 @@
         },
     };
 
-    let messages = $state<Message[]>([
+    const defaultMessages: Message[] = [
         {
             id: '1',
             role: 'user',
@@ -102,7 +102,9 @@
             ],
             status: 'completed',
         },
-    ]);
+    ];
+
+    let messages = $state(defaultMessages);
 
     const userTextStyle = 'background-color: var(--semi-color-fill-1); color: var(--semi-color-text-0); border-radius: 25px; padding: 6px 16px';
 
@@ -119,35 +121,35 @@
 </script>
 
 <AIChatDialogue bind:chats={messages} {roleConfig}>
-    {#snippet contentItem({ item, type, message, defaultItem, class: className })}
-        {#if type === 'function_call' && fields(item).name === 'create_travel_guide'}
-            <div class={className} style={functionCallStyle}>Function Tool Call: {fields(item).name} {fields(item).arguments}</div>
-        {:else if type === 'input_text'}
-            {#if message.role === 'user'}
-                <div class={[className, 'userTextStyle']} style={userTextStyle}>
-                    {fields(item).text}
+    {#snippet contentItem(contentItem)}
+        {#if contentItem.type === 'function_call' && fields(contentItem.item).name === 'create_travel_guide'}
+            <div class={contentItem.class} style={functionCallStyle}>Function Tool Call: {fields(contentItem.item).name} {fields(contentItem.item).arguments}</div>
+        {:else if contentItem.type === 'input_text'}
+            {#if contentItem.message.role === 'user'}
+                <div class={[contentItem.class, 'userTextStyle']} style={userTextStyle}>
+                    {fields(contentItem.item).text}
                 </div>
             {:else}
-                <div class={className} style={assistantStyle}>{fields(item).text}</div>
+                <div class={contentItem.class} style={assistantStyle}>{fields(contentItem.item).text}</div>
             {/if}
-        {:else if type === 'reasoning'}
-            <AIChatDialogue.Reasoning class={className} status={fields(item).status} summary={fields(item).summary}>
-                {#snippet children({ summary, markdownRenderProps })}
-                    <AIChatDialogue.Annotation annotation={fields(item).annotations ?? []} description="参考资料" maxCount={3} onClick={onAnnotationClick} />
-                    <div style="margin-top: 8px">
-                        <MarkdownRender format="md" {...markdownRenderProps} raw={summary?.[0]?.text ?? ''} />
+        {:else if contentItem.type === 'reasoning'}
+            <AIChatDialogue.Reasoning class={contentItem.class} status={fields(contentItem.item).status} summary={fields(contentItem.item).summary}>
+                {#snippet children(reasoning)}
+                    <AIChatDialogue.Annotation annotation={fields(contentItem.item).annotations ?? []} description="参考资料" maxCount={3} onClick={onAnnotationClick} />
+                    <div style="margin-block-start: 8px">
+                        <MarkdownRender format="md" {...reasoning.markdownRenderProps} raw={reasoning.summary?.[0]?.text ?? ''} />
                     </div>
                 {/snippet}
             </AIChatDialogue.Reasoning>
         {:else}
-            {@render defaultItem()}
+            {@render contentItem.defaultItem()}
         {/if}
     {/snippet}
-    {#snippet messageText({ text, message })}
-        {#if message.role === 'user'}
-            <div class="userTextStyle" style={userTextStyle}>{text}</div>
+    {#snippet messageText(messageText)}
+        {#if messageText.message.role === 'user'}
+            <div class="userTextStyle" style={userTextStyle}>{messageText.text}</div>
         {:else}
-            <div style={assistantStyle}>{text}</div>
+            <div style={assistantStyle}>{messageText.text}</div>
         {/if}
     {/snippet}
 </AIChatDialogue>

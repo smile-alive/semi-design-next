@@ -24,11 +24,6 @@
             position: 'bottom',
         },
     ];
-
-    const finish = (message: string) => {
-        current.value = 0;
-        console.log(message);
-    };
 </script>
 
 <template>
@@ -41,6 +36,20 @@
             <Tag id="controlled-demo-2"> Default Tag </Tag>
             <Button id="controlled-demo-3">确定</Button>
         </Space>
-        <UserGuide v-model:current="current" v-model:visible="visible" mask mode="popup" :steps="steps" @finish="finish('引导完成')" @skip="finish('跳过引导')" />
+        <UserGuide
+            v-model:current="current"
+            v-model:visible="visible"
+            mask
+            mode="popup"
+            :steps="steps"
+            @finish="
+                current = 0;
+                console.log('引导完成');
+            "
+            @skip="
+                current = 0;
+                console.log('跳过引导');
+            "
+        />
     </div>
 </template>

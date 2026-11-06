@@ -2,8 +2,8 @@ import { Select, type SelectOptionProps } from '@fibrae/semi-ui-react';
 
 export default function SelectDemo() {
     const searchLabel = (sugInput: string, option: SelectOptionProps) => {
-        let label = String(option.label).toUpperCase();
-        let sug = sugInput.toUpperCase();
+        const label = String(option.label).toUpperCase();
+        const sug = sugInput.toUpperCase();
         return label.includes(sug);
     };
     return (

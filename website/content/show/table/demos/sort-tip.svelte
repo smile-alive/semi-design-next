@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { format } from 'date-fns';
+    import * as dateFns from 'date-fns';
     import { Avatar, Table, type ColumnProps } from '@fibrae/semi-ui-svelte';
 
     interface Row {
@@ -108,25 +108,25 @@
 </script>
 
 <Table {columns} {dataSource}>
-    {#snippet cell({ column, record, text })}
-        {#if column.dataIndex === 'name'}
+    {#snippet cell(cellProps)}
+        {#if cellProps.column.dataIndex === 'name'}
             <div>
-                <Avatar alt="" shape="square" size="small" src={figmaIconUrl} style="margin-right: 12px" />
-                {text}
+                <Avatar alt="" shape="square" size="small" src={figmaIconUrl} style="margin-inline-end: 12px" />
+                {cellProps.text}
             </div>
-        {:else if column.dataIndex === 'size'}
-            {text ? `${text} KB` : '未知'}
-        {:else if column.dataIndex === 'owner'}
+        {:else if cellProps.column.dataIndex === 'size'}
+            {cellProps.text ? `${cellProps.text} KB` : '未知'}
+        {:else if cellProps.column.dataIndex === 'owner'}
             <div>
-                <Avatar color={record.avatarBg} size="small" style="margin-right: 4px">
-                    {typeof text === 'string' && text.slice(0, 1)}
+                <Avatar color={cellProps.record.avatarBg} size="small" style="margin-inline-end: 4px">
+                    {typeof cellProps.text === 'string' && cellProps.text.slice(0, 1)}
                 </Avatar>
-                {text}
+                {cellProps.text}
             </div>
-        {:else if column.dataIndex === 'updateTime'}
-            {format(new Date(text), 'yyyy-MM-dd')}
+        {:else if cellProps.column.dataIndex === 'updateTime'}
+            {dateFns.format(new Date(cellProps.text), 'yyyy-MM-dd')}
         {:else}
-            {text}
+            {cellProps.text}
         {/if}
     {/snippet}
 </Table>

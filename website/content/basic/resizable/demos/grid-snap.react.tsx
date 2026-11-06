@@ -5,7 +5,7 @@ export default function ResizableDemo() {
         <div style={{ width: '500px', height: '60%' }}>
             <Resizable
                 style={{
-                    marginLeft: '20%',
+                    marginInlineStart: '20%',
                     backgroundColor: 'var(--semi-grey-1)',
                     border: 'var(--semi-color-border) 1px solid',
                 }}
@@ -16,7 +16,7 @@ export default function ResizableDemo() {
                 grid={[100, 100]}
                 snapGap={20}
             >
-                <div style={{ marginLeft: '20%' }}>snap</div>
+                <div style={{ marginInlineStart: '20%' }}>snap</div>
             </Resizable>
         </div>
     );

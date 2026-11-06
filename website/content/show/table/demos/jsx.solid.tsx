@@ -48,7 +48,7 @@ const data: Row[] = [
 function renderName(text: string, record: Row) {
     return (
         <div>
-            <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ 'margin-right': '12px' }} />
+            <Avatar size="small" shape="square" src={record.nameIconSrc} alt="" style={{ 'margin-inline-end': '12px' }} />
             {text}
         </div>
     );
@@ -57,7 +57,7 @@ function renderName(text: string, record: Row) {
 function renderOwner(text: string, record: Row) {
     return (
         <div>
-            <Avatar size="small" color={record.avatarBg} style={{ 'margin-right': '4px' }}>
+            <Avatar size="small" color={record.avatarBg} style={{ 'margin-inline-end': '4px' }}>
                 {typeof text === 'string' && text.slice(0, 1)}
             </Avatar>
             {text}

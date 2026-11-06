@@ -50,10 +50,10 @@ const style = {
 export default function TreeDemo() {
     return (
         <>
-            <p>expandIcon 是元素</p>
+            <p>expandIcon 是固定的图标</p>
             <Tree expandIcon={<IconChevronDown size="small" class="testCls" />} multiple defaultExpandedKeys={['yazhou']} treeData={treeData} style={style} />
             <br />
-            <p>expandIcon 是函数 </p>
+            <p>expandIcon 随展开状态变化</p>
             <Tree multiple expandIcon={expandIconFunc} defaultExpandedKeys={['yazhou']} treeData={treeData} style={style} />
         </>
     );

@@ -4,16 +4,14 @@ import { Avatar, AvatarGroup, Popover, type AvatarGroupProps } from '@fibrae/sem
 const renderMore: AvatarGroupProps['renderMore'] = (restNumber, restAvatars) => (
     <Popover
         content={
-            <div>
-                <For each={restAvatars}>
-                    {(avatar) => (
-                        <div style={{ 'padding-bottom': '12px' }}>
-                            {avatar({ size: 'extra-small' })}
-                            <span style={{ 'margin-left': '8px', 'font-size': '14px' }}>这是段文字描述</span>
-                        </div>
-                    )}
-                </For>
-            </div>
+            <For each={restAvatars}>
+                {(avatar) => (
+                    <div style={{ 'padding-bottom': '12px' }}>
+                        {avatar({ size: 'extra-small' })}
+                        <span style={{ 'margin-inline-start': '8px', 'font-size': '14px' }}>这是段文字描述</span>
+                    </div>
+                )}
+            </For>
         }
         autoAdjustOverflow={false}
         position="bottomRight"

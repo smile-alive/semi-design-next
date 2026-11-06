@@ -1,7 +1,7 @@
 <script lang="ts">
     import { IconSemiLogo } from '@fibrae/semi-icons-svelte';
     import { IconBadge, IconBreadcrumb, IconSteps, IconTreeSelect } from '@fibrae/semi-icons-svelte/lab';
-    import { Avatar, Dropdown, DropdownItem, DropdownMenu, Nav, NavFooter, NavHeader, type NavItems } from '@fibrae/semi-ui-svelte';
+    import { Avatar, Dropdown, Nav, type NavItems } from '@fibrae/semi-ui-svelte';
 
     const items: NavItems = [
         { itemKey: 'user', text: '用户管理' },
@@ -17,34 +17,34 @@
 </script>
 
 {#snippet header()}
-    <NavHeader text="Semi 运营后台">
+    <Nav.Header text="Semi 运营后台">
         {#snippet logo()}
             <IconSemiLogo style="height: 36px; font-size: 36px" />
         {/snippet}
-    </NavHeader>
+    </Nav.Header>
 {/snippet}
 
 {#snippet footer()}
-    <NavFooter>
+    <Nav.Footer>
         <Dropdown position="bottomRight">
             <Avatar color="light-blue" size="small" style="margin: 4px">BD</Avatar>
             <span>Bytedancer</span>
             {#snippet content()}
-                <DropdownMenu>
-                    <DropdownItem>详情</DropdownItem>
-                    <DropdownItem>退出</DropdownItem>
-                </DropdownMenu>
+                <Dropdown.Menu>
+                    <Dropdown.Item>详情</Dropdown.Item>
+                    <Dropdown.Item>退出</Dropdown.Item>
+                </Dropdown.Menu>
             {/snippet}
         </Dropdown>
-    </NavFooter>
+    </Nav.Footer>
 {/snippet}
 
 <div style="width: 100%">
-    <Nav {footer} {header} {items} mode="horizontal" onSelect={(data) => console.log(data)}>
-        {#snippet icon({ item, size })}
-            {@const Icon = icons[item.itemKey as keyof typeof icons]}
+    <Nav {footer} {header} {items} mode="horizontal" onSelect={(key) => console.log(key)}>
+        {#snippet icon(renderProps)}
+            {@const Icon = icons[renderProps.item.itemKey as keyof typeof icons]}
             {#if Icon}
-                <Icon {size} />
+                <Icon size={renderProps.size} />
             {/if}
         {/snippet}
     </Nav>

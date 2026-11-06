@@ -20,16 +20,14 @@
         },
         { label: '北美洲', value: 'North America', key: '1' },
     ];
-
-    const dropdownStyle = 'max-height: 400px; overflow: auto';
 </script>
 
 <div>
-    <TreeSelect {dropdownStyle} multiple placeholder="small" size="small" style="width: 300px" {treeData} />
+    <TreeSelect dropdownStyle="max-height: 400px; overflow: auto" multiple placeholder="small" size="small" style="width: 300px" {treeData} />
     <br />
     <br />
-    <TreeSelect {dropdownStyle} multiple placeholder="default" size="default" style="width: 300px" {treeData} />
+    <TreeSelect dropdownStyle="max-height: 400px; overflow: auto" multiple placeholder="default" size="default" style="width: 300px" {treeData} />
     <br />
     <br />
-    <TreeSelect {dropdownStyle} multiple placeholder="large" size="large" style="width: 300px" {treeData} />
+    <TreeSelect dropdownStyle="max-height: 400px; overflow: auto" multiple placeholder="large" size="large" style="width: 300px" {treeData} />
 </div>

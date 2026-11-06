@@ -2,8 +2,6 @@ import { createSignal } from 'solid-js';
 import { Sidebar, type ImageUploadNodeOptions } from '@fibrae/semi-ai-solid';
 import { Button } from '@fibrae/semi-ui-solid';
 
-const { FileItem } = Sidebar;
-
 const defaultFileContent = `<h2>
   Semi Design 介绍
 </h2>
@@ -51,7 +49,7 @@ export default function SidebarDemo() {
             </Button>
             <br />
             <br />
-            <FileItem name="Semi Design 介绍" content={defaultFileContent} editable={editable()} style={{ border: '1px solid var(--semi-color-border)', padding: '12px' }} imgUploadProps={imgUploadProps} />
+            <Sidebar.FileItem name="Semi Design 介绍" content={defaultFileContent} editable={editable()} style={{ border: '1px solid var(--semi-color-border)', padding: '12px' }} imgUploadProps={imgUploadProps} />
         </>
     );
 }

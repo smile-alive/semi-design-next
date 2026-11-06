@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js';
+import { Show, createSignal } from 'solid-js';
 import { AIChatDialogue, type AIChatDialogueMessage as Message, type AIChatDialogueProps } from '@fibrae/semi-ai-solid';
 import { Radio, RadioGroup, type RadioChangeEvent } from '@fibrae/semi-ui-solid';
 
@@ -38,10 +38,6 @@ const roleConfig = {
     },
 };
 
-const containerStyle = { display: 'flex', 'flex-direction': 'column', 'row-gap': '8px' } as const;
-const rowStyle = { display: 'flex', 'align-items': 'center', 'column-gap': '10px' } as const;
-const panelStyle = { border: '1px solid var(--semi-color-border)', 'border-radius': '12px', 'margin-top': '10px', padding: '20px' } as const;
-
 export default function AIChatDialogueDemo() {
     const [messages, setMessages] = createSignal(defaultMessages);
     const [mode, setMode] = createSignal<NonNullable<AIChatDialogueProps['mode']>>('bubble');
@@ -61,8 +57,8 @@ export default function AIChatDialogueDemo() {
 
     return (
         <>
-            <span style={containerStyle}>
-                <span style={rowStyle}>
+            <span style={{ display: 'flex', 'flex-direction': 'column', 'row-gap': '8px' }}>
+                <span style={{ display: 'flex', 'align-items': 'center', 'column-gap': '10px' }}>
                     模式
                     <RadioGroup aria-label="模式" onChange={onModeChange} value={mode()} type="button">
                         <Radio value="bubble">气泡</Radio>
@@ -70,7 +66,7 @@ export default function AIChatDialogueDemo() {
                         <Radio value="userBubble">用户会话气泡</Radio>
                     </RadioGroup>
                 </span>
-                <span style={rowStyle}>
+                <span style={{ display: 'flex', 'align-items': 'center', 'column-gap': '10px' }}>
                     会话布局方式
                     <RadioGroup aria-label="会话布局方式" onChange={onAlignChange} value={align()} type="button">
                         <Radio value="leftRight">左右分布</Radio>
@@ -78,8 +74,10 @@ export default function AIChatDialogueDemo() {
                     </RadioGroup>
                 </span>
             </span>
-            <div style={panelStyle}>
-                <AIChatDialogue align={align()} mode={mode()} chats={messages()} roleConfig={roleConfig} onChatsChange={onChatsChange} />
+            <div style={{ border: '1px solid var(--semi-color-border)', 'border-radius': '12px', 'margin-block-start': '10px', padding: '20px' }}>
+                <Show when={align() + mode()} keyed>
+                    <AIChatDialogue align={align()} mode={mode()} chats={messages()} roleConfig={roleConfig} onChatsChange={onChatsChange} />
+                </Show>
             </div>
         </>
     );

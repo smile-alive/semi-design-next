@@ -1,21 +1,20 @@
 import { IconSetting } from '@fibrae/semi-icons-react';
 import { Typography, TextArea, Button, Toast } from '@fibrae/semi-ui-react';
 
-export default function TypographyDemo() {
-    const { Paragraph, Text, Numeral } = Typography;
-    const timestamp = 1563849138.25;
+const timestamp = 1700000000;
 
+export default function TypographyDemo() {
     return (
         <div>
-            <Paragraph copyable>点击右边的图标复制文本。</Paragraph>
-            <Paragraph copyable={{ content: 'Hello, Semi Design!' }}>点击复制文本。</Paragraph>
-            <Paragraph copyable={{ onCopy: () => Toast.success({ content: '复制文本成功' }) }}>点击右边的图标复制文本。</Paragraph>
+            <Typography.Paragraph copyable>点击右边的图标复制文本。</Typography.Paragraph>
+            <Typography.Paragraph copyable={{ content: 'Hello, Semi Design!' }}>点击复制文本。</Typography.Paragraph>
+            <Typography.Paragraph copyable={{ onCopy: () => Toast.success({ content: '复制文本成功' }) }}>点击右边的图标复制文本。</Typography.Paragraph>
             时间戳:{' '}
-            <Numeral truncate="ceil" copyable underline>
+            <Typography.Numeral truncate="ceil" copyable underline>
                 {timestamp}s
-            </Numeral>
-            <Paragraph copyable={{ icon: <IconSetting style={{ color: 'var(--semi-color-link)' }} /> }}>自定义复制节点</Paragraph>
-            <Paragraph
+            </Typography.Numeral>
+            <Typography.Paragraph copyable={{ icon: <IconSetting style={{ color: 'var(--semi-color-link)' }} /> }}>自定义复制节点</Typography.Paragraph>
+            <Typography.Paragraph
                 copyable={{
                     content: 'Custom render!',
                     render: (copied, doCopy, config) => {
@@ -28,14 +27,14 @@ export default function TypographyDemo() {
                 }}
             >
                 自定义复制渲染
-            </Paragraph>
+            </Typography.Paragraph>
             <br />
             <br />
-            <Text id="typography-copyable-paste" type="secondary">
+            <Typography.Text id="typography-copyable-paste" type="secondary">
                 粘贴区域：
-            </Text>
+            </Typography.Text>
             <br />
-            <TextArea aria-labelledby="typography-copyable-paste" autosize style={{ width: 320, marginTop: 4 }} rows={3} />
+            <TextArea aria-labelledby="typography-copyable-paste" autosize style={{ width: 320, marginBlockStart: 4 }} rows={3} />
         </div>
     );
 }

@@ -1,10 +1,9 @@
 <script lang="ts">
-    import { Button, Modal } from '@fibrae/semi-ui-svelte';
-
-    // Reads the contexts (ConfigProvider, LocaleProvider) of this component, so call it during initialization
-    const modal = Modal.useModal();
+    import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
+    import { ConfigProvider } from '@fibrae/semi-ui-svelte';
+    import UseModalConfirm from './parts/use-modal-confirm.svelte';
 </script>
 
-<div>
-    <Button onclick={() => modal.confirm({ title: 'This is a success message', content: 'Context consumer' })}>Confirm Modal</Button>
-</div>
+<ConfigProvider locale={en_GB}>
+    <UseModalConfirm />
+</ConfigProvider>

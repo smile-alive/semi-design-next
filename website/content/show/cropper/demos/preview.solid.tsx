@@ -8,7 +8,7 @@ const containerStyle = {
 };
 
 const actionStyle = {
-    'margin-top': '20px',
+    'margin-block-start': '20px',
     display: 'flex',
     'align-items': 'center',
     'justify-content': 'center',
@@ -50,9 +50,9 @@ export default function CropperDemo() {
             <div style={{ display: 'flex' }}>
                 <div style={{ width: '50%', 'flex-grow': '1' }}>
                     <strong>实时预览</strong>
-                    <div ref={(node) => (previewWrapper = node)} style={{ height: '300px', 'margin-top': '8px' }} />
+                    <div ref={(node) => (previewWrapper = node)} style={{ height: '300px', 'margin-block-start': '8px' }} />
                 </div>
-                <div style={{ width: '50%', 'flex-grow': '1', 'padding-left': '10px' }}>
+                <div style={{ width: '50%', 'flex-grow': '1', 'padding-inline-start': '10px' }}>
                     <Button onClick={onButtonClick}>裁切</Button>
                     <br />
                     <br />

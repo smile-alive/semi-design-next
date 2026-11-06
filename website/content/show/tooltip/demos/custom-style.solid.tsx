@@ -5,7 +5,7 @@ export default function TooltipDemo() {
         <div>
             <Tooltip style={{ 'max-width': '320px' }} class="another-classname" content="hi semi semi semi semi semi semi semi">
                 {(trigger) => (
-                    <Tag style={{ 'margin-right': '8px' }} {...trigger()}>
+                    <Tag style={{ 'margin-inline-end': '8px' }} {...trigger()}>
                         Custom Style And ClassName
                     </Tag>
                 )}

@@ -9,10 +9,10 @@
 </script>
 
 <Form layout="horizontal" onValueChange={(values) => console.log(values)}>
-    {#snippet children({ formState })}
+    {#snippet children(form)}
         <FormSelect field="Role" label="角色" optionList={roleOptions} style="width: 176px" />
         <FormInput field="UserName" label="用户名" style="width: 80px" />
         <FormInput field="Password" label="密码" style="width: 176px" />
-        <code style="margin-top: 24px">{JSON.stringify(formState)}</code>
+        <code style="margin-block-start: 24px">{JSON.stringify(form.formState)}</code>
     {/snippet}
 </Form>

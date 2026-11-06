@@ -2,11 +2,40 @@
     import { ref, shallowRef, type Component } from 'vue';
     import { AIChatDialogue, AIChatInput, chatInputToMessage, type AIChatDialogueAnnotation as Annotation, type AIChatDialogueMessage as Message, type AIChatInputMessageContent as MessageContent, type AIChatInputReference as Reference, type AnnotationItemProps } from '@fibrae/semi-ai-vue';
     import { IconBookOpenStroked, IconClose, IconFeishuLogo, IconFigma, IconGit, IconSearch, IconTemplateStroked, IconWord } from '@fibrae/semi-icons-vue';
-    import { Button, TypographyParagraph } from '@fibrae/semi-ui-vue';
-
-    const { Configure } = AIChatInput;
+    import { Button, Typography } from '@fibrae/semi-ui-vue';
 
     type SideBarContent = { type?: undefined; value?: undefined } | { type: 'annotation'; value: AnnotationItemProps[] } | { type: 'resource'; value: { name: string } };
+
+    function simpleIsEqual(a: unknown, b: unknown) {
+        if (a === b) {
+            return true;
+        }
+        if (Number.isNaN(a) && Number.isNaN(b)) {
+            return true;
+        }
+        if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
+            return false;
+        }
+        const isArrayA = Array.isArray(a);
+        const isArrayB = Array.isArray(b);
+        if (isArrayA !== isArrayB) {
+            return false;
+        }
+        const keysA = Object.keys(a);
+        const keysB = Object.keys(b);
+        if (keysA.length !== keysB.length) {
+            return false;
+        }
+        for (const key of keysA) {
+            if (!Object.hasOwn(b, key)) {
+                return false;
+            }
+            if (!simpleIsEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key])) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     const defaultMessages: Message[] = [
         {
@@ -149,8 +178,6 @@
         action: 'https://api.semi.design/upload',
     };
 
-    const defaultInput = '我是一名<input-slot placeholder="[职业]">程序员</input-slot>，帮我实现<input-slot placeholder="[需求描述]">Multi Agent 场景下的聊天应用</input-slot>需求';
-
     const modelOptions = [
         {
             value: 'GPT-5',
@@ -190,7 +217,7 @@
         IconFigma,
     };
 
-    const radioOptions = [
+    const radioButtonProps = [
         { label: '快速', value: 'fast' },
         { label: '思考', value: 'think' },
     ];
@@ -198,21 +225,6 @@
     const inputOuterStyle = { margin: '12px', minHeight: '150px', maxHeight: '300px', flexShrink: 0 };
     const editingInputOuterStyle = { margin: '12px 0px', maxHeight: '300px', flexShrink: 0 };
     const dialogueOuterStyle = { flex: 1, overflow: 'auto' };
-    const sideBarTitleStyle = { fontSize: '16px', lineHeight: '22px', fontWeight: 600 };
-    const resourceButtonStyle = {
-        display: 'flex',
-        gap: '8px',
-        width: '100%',
-        backgroundColor: 'var(--semi-color-fill-0)',
-        border: 'none',
-        padding: '12px 16px',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: '12px',
-        color: 'inherit',
-        font: 'inherit',
-        cursor: 'pointer',
-    };
 
     const sideBarVisible = ref(false);
     const messages = shallowRef(defaultMessages);
@@ -224,7 +236,7 @@
         references.value = [...references.value, { ...item, id: `reference-${Date.now()}` }];
     };
 
-    const onReferenceDelete = (item: Reference) => {
+    const handleReferenceDelete = (item: Reference) => {
         references.value = references.value.filter((ref) => ref.id !== item.id);
     };
 
@@ -253,12 +265,12 @@
         messages.value = [...messages.value.slice(0, index), { id: `message-${Date.now()}`, ...chatInputToMessage(content) }];
     };
 
-    const onEditingReferenceDelete = (item: Reference) => {
+    const handleEditingReferenceDelete = (item: Reference) => {
         messages.value = messages.value.map((message) => (message.editing ? { ...message, references: message.references?.filter((ref) => ref.id !== item.id) } : message));
     };
 
     const changeSideBarContent = (content: SideBarContent) => {
-        sideBarVisible.value = JSON.stringify(content) === JSON.stringify(sideBarContent.value) ? !sideBarVisible.value : true;
+        sideBarVisible.value = simpleIsEqual(content, sideBarContent.value) ? !sideBarVisible.value : true;
         sideBarContent.value = content;
     };
 
@@ -282,56 +294,92 @@
         >
             <AIChatDialogue v-model:chats="messages" align="leftRight" mode="bubble" :roleConfig="roleConfig" showReference :style="dialogueOuterStyle" @annotationClick="onAnnotationClick" @referenceClick="onReferenceClick">
                 <template #messageEdit="content">
-                    <AIChatInput :defaultContent="content.inputContents?.[0].text" :generating="false" :references="content.references" :style="editingInputOuterStyle" :uploadProps="{ ...uploadProps, defaultFileList: content.attachments }" @messageSend="onEditMessageSend" @referenceDelete="onEditingReferenceDelete">
+                    <AIChatInput
+                        :defaultContent="content.inputContents?.[0].text"
+                        :generating="false"
+                        :references="content.references"
+                        :style="editingInputOuterStyle"
+                        :uploadProps="{ ...uploadProps, defaultFileList: content.attachments }"
+                        @messageSend="onEditMessageSend"
+                        @referenceDelete="handleEditingReferenceDelete"
+                    >
                         <template #configureArea>
-                            <Configure.Select field="model" initValue="GPT-4o" :optionList="modelOptions" />
-                            <Configure.Button field="onlineSearch">
+                            <AIChatInput.Configure.Select field="model" initValue="GPT-4o" :optionList="modelOptions" />
+                            <AIChatInput.Configure.Button field="onlineSearch">
                                 <template #icon>
                                     <IconBookOpenStroked />
                                 </template>
                                 联网搜索
-                            </Configure.Button>
-                            <Configure.Mcp :options="mcpOptions">
-                                <template #optionIcon="{ item }">
-                                    <component :is="mcpIcons[item.value]" />
+                            </AIChatInput.Configure.Button>
+                            <AIChatInput.Configure.Mcp :options="mcpOptions">
+                                <template #optionIcon="iconArgs">
+                                    <component :is="mcpIcons[iconArgs.item.value]" />
                                 </template>
-                            </Configure.Mcp>
-                            <Configure.RadioButton field="thinkType" initValue="think" :options="radioOptions">
-                                <template #label="{ option }">
-                                    <IconTemplateStroked v-if="option.value === 'fast'" :aria-label="option.label" />
-                                    <IconSearch v-else :aria-label="option.label" />
+                            </AIChatInput.Configure.Mcp>
+                            <AIChatInput.Configure.RadioButton field="thinkType" initValue="think" :options="radioButtonProps">
+                                <template #label="labelArgs">
+                                    <IconTemplateStroked v-if="labelArgs.option.value === 'fast'" :aria-label="labelArgs.option.label" />
+                                    <IconSearch v-else :aria-label="labelArgs.option.label" />
                                 </template>
-                            </Configure.RadioButton>
+                            </AIChatInput.Configure.RadioButton>
                         </template>
                     </AIChatInput>
                 </template>
-                <template #contentItem="{ item, type }">
-                    <button v-if="type === 'resource'" :style="resourceButtonStyle" type="button" @click="changeSideBarContent({ type: 'resource', value: resourceOf(item) })">
+                <template #contentItem="dialogueItem">
+                    <button
+                        v-if="dialogueItem.type === 'resource'"
+                        :style="{
+                            display: 'flex',
+                            gap: '8px',
+                            width: '100%',
+                            backgroundColor: 'var(--semi-color-fill-0)',
+                            border: 'none',
+                            padding: '12px 16px',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: '12px',
+                            color: 'inherit',
+                            font: 'inherit',
+                            cursor: 'pointer',
+                        }"
+                        type="button"
+                        @click="changeSideBarContent({ type: 'resource', value: resourceOf(dialogueItem.item) })"
+                    >
                         <IconWord :style="{ color: 'var(--semi-color-primary)' }" />
-                        {{ resourceOf(item).name }}
+                        {{ resourceOf(dialogueItem.item).name }}
                     </button>
                 </template>
             </AIChatDialogue>
-            <AIChatInput :defaultContent="defaultInput" :generating="generating" placeholder="输入内容或者上传内容" :references="references" :style="inputOuterStyle" :uploadProps="uploadProps" @messageSend="onMessageSend" @referenceDelete="onReferenceDelete" @stopGenerate="generating = false">
+            <AIChatInput
+                defaultContent='我是一名<input-slot placeholder="[职业]">程序员</input-slot>，帮我实现<input-slot placeholder="[需求描述]">Multi Agent 场景下的聊天应用</input-slot>需求'
+                :generating="generating"
+                placeholder="输入内容或者上传内容"
+                :references="references"
+                :style="inputOuterStyle"
+                :uploadProps="uploadProps"
+                @messageSend="onMessageSend"
+                @referenceDelete="handleReferenceDelete"
+                @stopGenerate="generating = false"
+            >
                 <template #configureArea>
-                    <Configure.Select field="model" initValue="GPT-4o" :optionList="modelOptions" />
-                    <Configure.Button field="onlineSearch">
+                    <AIChatInput.Configure.Select field="model" initValue="GPT-4o" :optionList="modelOptions" />
+                    <AIChatInput.Configure.Button field="onlineSearch">
                         <template #icon>
                             <IconBookOpenStroked />
                         </template>
                         联网搜索
-                    </Configure.Button>
-                    <Configure.Mcp :options="mcpOptions">
-                        <template #optionIcon="{ item }">
-                            <component :is="mcpIcons[item.value]" />
+                    </AIChatInput.Configure.Button>
+                    <AIChatInput.Configure.Mcp :options="mcpOptions">
+                        <template #optionIcon="iconArgs">
+                            <component :is="mcpIcons[iconArgs.item.value]" />
                         </template>
-                    </Configure.Mcp>
-                    <Configure.RadioButton field="thinkType" initValue="think" :options="radioOptions">
-                        <template #label="{ option }">
-                            <IconTemplateStroked v-if="option.value === 'fast'" :aria-label="option.label" />
-                            <IconSearch v-else :aria-label="option.label" />
+                    </AIChatInput.Configure.Mcp>
+                    <AIChatInput.Configure.RadioButton field="thinkType" initValue="think" :options="radioButtonProps">
+                        <template #label="labelArgs">
+                            <IconTemplateStroked v-if="labelArgs.option.value === 'fast'" :aria-label="labelArgs.option.label" />
+                            <IconSearch v-else :aria-label="labelArgs.option.label" />
                         </template>
-                    </Configure.RadioButton>
+                    </AIChatInput.Configure.RadioButton>
                 </template>
             </AIChatInput>
         </div>
@@ -354,8 +402,8 @@
                     color: 'var(--semi-color-text)',
                 }"
             >
-                <div v-if="sideBarContent.type === 'annotation'" :style="sideBarTitleStyle">参考资料</div>
-                <div v-if="sideBarContent.type === 'resource'" :style="sideBarTitleStyle">产物列表</div>
+                <div v-if="sideBarContent.type === 'annotation'" :style="{ fontSize: '16px', lineHeight: '22px', fontWeight: 600 }">参考资料</div>
+                <div v-if="sideBarContent.type === 'resource'" :style="{ fontSize: '16px', lineHeight: '22px', fontWeight: 600 }">产物列表</div>
                 <Button aria-label="关闭" :style="{ padding: '0px', width: '24px', height: '24px' }" theme="borderless" type="tertiary" @click="sideBarVisible = !sideBarVisible">
                     <template #icon>
                         <IconClose />
@@ -377,9 +425,9 @@
                             {{ item.title }}
                         </span>
                     </span>
-                    <TypographyParagraph :ellipsis="{ rows: 3 }" :style="{ fontSize: '12px', lineHeight: '16px', color: 'var(--semi-color-text-1)' }">
+                    <Typography.Paragraph :ellipsis="{ rows: 3 }" :style="{ fontSize: '12px', lineHeight: '16px', color: 'var(--semi-color-text-1)' }">
                         {{ item.detail }}
-                    </TypographyParagraph>
+                    </Typography.Paragraph>
                 </div>
             </div>
             <div v-else-if="sideBarContent.type === 'resource'" :style="{ display: 'flex', flexDirection: 'column', rowGap: '12px', padding: '12px' }">

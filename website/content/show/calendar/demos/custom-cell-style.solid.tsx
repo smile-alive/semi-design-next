@@ -3,8 +3,7 @@ import { Calendar } from '@fibrae/semi-ui-solid';
 
 const importantDate: JSX.CSSProperties = {
     position: 'absolute',
-    left: '0',
-    right: '0',
+    'inset-inline': '0',
     top: '0',
     bottom: '0',
     'background-color': 'var(--semi-color-danger-light-default)',

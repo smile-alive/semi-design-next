@@ -8,16 +8,16 @@
 </script>
 
 <Form onSubmit={handleSubmit} style="width: 400px">
-    {#snippet children({ values })}
+    {#snippet children(form)}
         <FormInput field="phone" label="PhoneNumber" placeholder="Enter your phone number" style="width: 100%" />
         <FormInput field="password" label="Password" placeholder="Enter your password" style="width: 100%" />
         <FormCheckbox field="agree" noLabel>I have read and agree to the terms of service</FormCheckbox>
         <div style="display: flex; justify-content: space-between; align-items: center">
             <p>
                 <span>Or</span>
-                <Button style="color: var(--semi-color-primary); margin-left: 10px; cursor: pointer" theme="borderless">Sign up</Button>
+                <Button style="color: var(--semi-color-primary); margin-inline-start: 10px; cursor: pointer" theme="borderless">Sign up</Button>
             </p>
-            <Button disabled={!values.agree} htmlType="submit" type="tertiary">Log in</Button>
+            <Button disabled={!form.values.agree} htmlType="submit" type="tertiary">Log in</Button>
         </div>
     {/snippet}
 </Form>

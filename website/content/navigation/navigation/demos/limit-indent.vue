@@ -23,9 +23,9 @@
 </script>
 
 <template>
-    <Nav :bodyStyle="{ height: '300px' }" :defaultOpenKeys="['job', 'mission1']" :footer="{ collapseButton: true }" :items="items" :limitIndent="false" @select="(data) => console.log(data)">
-        <template #icon="{ item }">
-            <component :is="iconOf(item)" />
+    <Nav :bodyStyle="{ height: '300px' }" :defaultOpenKeys="['job', 'mission1']" :footer="{ collapseButton: true }" :items="items" :limitIndent="false" @select="(key) => console.log(key)">
+        <template #icon="renderProps">
+            <component :is="iconOf(renderProps.item)" />
         </template>
         <Nav.Header text="Semi 运营后台">
             <template #logo>

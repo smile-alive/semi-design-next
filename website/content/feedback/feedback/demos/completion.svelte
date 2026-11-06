@@ -5,7 +5,7 @@
     const createState = () => ({ visible: false, value: '', showThanks: false });
     const popup = $state(createState());
     const modal = $state(createState());
-    const imageStyle = 'width: 150px; height: 150px';
+    const showThankProps = { title: ' ', footer: null };
 
     // The thanks view stays 200ms past the close so the exit animation still shows it.
     const handleOk = (state: ReturnType<typeof createState>) => {
@@ -22,10 +22,10 @@
 {#snippet thanks()}
     <Empty style="padding: 30px">
         {#snippet image()}
-            <IllustrationSuccess style={imageStyle} />
+            <IllustrationSuccess style="width: 150px; height: 150px" />
         {/snippet}
         {#snippet darkModeImage()}
-            <IllustrationSuccessDark style={imageStyle} />
+            <IllustrationSuccessDark style="width: 150px; height: 150px" />
         {/snippet}
         {#snippet description()}感谢您的反馈{/snippet}
     </Empty>
@@ -33,7 +33,7 @@
 
 <div>
     <Button onclick={() => (popup.visible = !popup.visible)}>Open Feedback: Popup, Custom</Button>
-    <Feedback bind:visible={popup.visible} footer={popup.showThanks ? null : undefined} okButtonProps={{ disabled: !popup.value }} onOk={() => handleOk(popup)} title={popup.showThanks ? ' ' : 'What is your feedback on this product?'} type="custom">
+    <Feedback bind:visible={popup.visible} okButtonProps={{ disabled: !popup.value }} onOk={() => handleOk(popup)} title="What is your feedback on this product?" type="custom" {...popup.showThanks ? showThankProps : {}}>
         {#if popup.showThanks}
             {@render thanks()}
         {:else}
@@ -44,7 +44,7 @@
     <br />
     <br />
     <Button onclick={() => (modal.visible = !modal.visible)}>Open Feedback: Modal, Custom</Button>
-    <Feedback bind:visible={modal.visible} footer={modal.showThanks ? null : undefined} mode="modal" okButtonProps={{ disabled: !modal.value }} onOk={() => handleOk(modal)} title={modal.showThanks ? ' ' : 'What is your feedback on this product?'} type="custom">
+    <Feedback bind:visible={modal.visible} mode="modal" okButtonProps={{ disabled: !modal.value }} onOk={() => handleOk(modal)} title="What is your feedback on this product?" type="custom" {...modal.showThanks ? showThankProps : {}}>
         {#if modal.showThanks}
             {@render thanks()}
         {:else}

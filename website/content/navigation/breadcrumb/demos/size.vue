@@ -9,7 +9,7 @@
         <Breadcrumb aria-label="紧凑面包屑" compact>
             <Breadcrumb.Item>
                 <template #icon>
-                    <IconHome size="small" />
+                    <IconHome aria-label="Home" size="small" />
                 </template>
             </Breadcrumb.Item>
             <Breadcrumb.Item>Breadcrumb</Breadcrumb.Item>
@@ -19,7 +19,7 @@
         <Breadcrumb aria-label="宽松面包屑" :compact="false">
             <Breadcrumb.Item>
                 <template #icon>
-                    <IconHome size="small" />
+                    <IconHome aria-label="Home" size="small" />
                 </template>
             </Breadcrumb.Item>
             <Breadcrumb.Item>Breadcrumb</Breadcrumb.Item>

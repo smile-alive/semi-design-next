@@ -1,6 +1,6 @@
 import { Col, Form, FormDatePicker, FormInput, FormSelect, Row } from '@fibrae/semi-ui-solid';
 
-const rules = [
+const nickNameRules = [
     { required: true, message: 'required error' },
     { type: 'string' as const, message: 'type error' },
     { validator: (value: unknown) => value === 'semi', message: 'should be semi' },
@@ -11,7 +11,7 @@ export default function FormDemo() {
         <Form labelPosition="top" style={{ padding: '10px' }}>
             <Row>
                 <Col span={8}>
-                    <FormInput field="nickName1" label="用户名" style={{ width: '250px' }} trigger="blur" rules={rules} />
+                    <FormInput field="nickName1" label="用户名" style={{ width: '250px' }} trigger="blur" rules={nickNameRules} />
                 </Col>
                 <Col span={8}>
                     <FormDatePicker field="date1" label="有效日期" style={{ width: '250px' }} />
@@ -26,7 +26,7 @@ export default function FormDemo() {
             </Row>
             <Row>
                 <Col span={6}>
-                    <FormInput field="nickName2" label="用户名" style={{ width: '200px' }} trigger="blur" rules={rules} />
+                    <FormInput field="nickName2" label="用户名" style={{ width: '200px' }} trigger="blur" rules={nickNameRules} />
                 </Col>
                 <Col span={6}>
                     <FormDatePicker field="date2" label="有效日期" style={{ width: '200px' }} />

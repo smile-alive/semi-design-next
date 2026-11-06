@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Space, Tag, Tooltip } from '@fibrae/semi-ui-svelte';
 
-    const style = 'border: 2px solid var(--semi-color-border); padding-left: 4px; padding-right: 4px; border-radius: 4px';
+    const style = 'border: 2px solid var(--semi-color-border); padding-inline-start: 4px; padding-inline-end: 4px; border-radius: 4px';
 </script>
 
 <Space>

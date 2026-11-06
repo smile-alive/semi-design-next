@@ -182,12 +182,12 @@
 
 <template>
     <AIChatDialogue v-model:chats="messages" :roleConfig="roleConfig">
-        <template #contentItem="{ item, type }">
-            <AIChatDialogue.Step v-if="type === 'plan'" :steps="toSteps(item)">
-                <template #actionIcon="{ item: action }">
-                    <IconSearchStroked v-if="action.type === 'search'" />
-                    <IconBriefStroked v-else-if="action.type === 'docs'" />
-                    <IconCodeStroked v-else-if="action.type === 'code'" />
+        <template #contentItem="contentItem">
+            <AIChatDialogue.Step v-if="contentItem.type === 'plan'" :steps="toSteps(contentItem.item)">
+                <template #actionIcon="actionIcon">
+                    <IconSearchStroked v-if="actionIcon.item.type === 'search'" />
+                    <IconBriefStroked v-else-if="actionIcon.item.type === 'docs'" />
+                    <IconCodeStroked v-else-if="actionIcon.item.type === 'code'" />
                 </template>
             </AIChatDialogue.Step>
         </template>

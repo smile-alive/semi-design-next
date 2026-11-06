@@ -23,7 +23,7 @@ function MyComponent(props: MyComponentProps) {
     const handleChange = (patch: BaseInfo) => props.onChange?.({ ...props.value, ...patch });
     return (
         <fieldset class="customField" id={props.id} aria-labelledby={props['aria-labelledby']} style={{ border: '0', margin: '0', padding: '0' }}>
-            <Input aria-label="名称" aria-required={props['aria-required']} prefix="名称" value={props.value?.name} onChange={(name) => handleChange({ name })} style={{ width: '180px', 'margin-right': '12px' }} />
+            <Input aria-label="名称" aria-required={props['aria-required']} prefix="名称" value={props.value?.name} onChange={(name) => handleChange({ name })} style={{ width: '180px', 'margin-inline-end': '12px' }} />
             <Select aria-label="角色" aria-required={props['aria-required']} prefix="角色" value={props.value?.role} onChange={(role) => handleChange({ role: role as string | undefined })} style={{ width: '200px' }} optionList={roles} />
         </fieldset>
     );

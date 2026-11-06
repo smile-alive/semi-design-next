@@ -10,9 +10,15 @@
         return `background: linear-gradient(to right, ${color[0]} ${gradientPos[0]}%, ${color[1]} ${gradientPos[0]}%, ${color[1]} ${gradientPos[1]}%, ${color[2]} ${gradientPos[1]}%)`;
     };
 
-    let value = $state<number | number[]>([20, 60]);
+    let value = $state([20, 60]);
 
-    const railStyle = $derived(getRailStyle(Array.isArray(value) ? value : [value, value]));
+    const changeValue = (newValue: number | number[]) => {
+        if (Array.isArray(newValue)) {
+            value = newValue;
+        }
+    };
+
+    const railStyle = $derived(getRailStyle(value));
 </script>
 
-<Slider aria-label="Value range" bind:value max={range[1]} min={range[0]} {railStyle} range />
+<Slider aria-label="Value range" max={range[1]} min={range[0]} onChange={changeValue} {railStyle} range {value} />

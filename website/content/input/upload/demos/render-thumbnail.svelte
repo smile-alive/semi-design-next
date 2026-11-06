@@ -3,7 +3,7 @@
     import { Image, Upload, type FileItem } from '@fibrae/semi-ui-svelte';
 
     const action = 'https://api.semi.design/upload';
-    const fileList: FileItem[] = [
+    const defaultFileList: FileItem[] = [
         {
             uid: '1',
             name: 'music.png',
@@ -15,7 +15,7 @@
     ];
 </script>
 
-<Upload accept="image/*" {action} {fileList} listType="picture" multiple>
+<Upload accept="image/*" {action} fileList={defaultFileList} listType="picture" multiple>
     {#snippet thumbnail({ file })}
         <Image alt={file.name} src={file.url} />
     {/snippet}

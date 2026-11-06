@@ -8,7 +8,7 @@ export default function FloatButtonDemo() {
             <FloatButtonGroup
                 style={{
                     insetInlineEnd: 24,
-                    bottom: 50,
+                    insetBlockEnd: 50,
                 }}
                 onClick={(value) => {
                     console.log('点击了 ', value);

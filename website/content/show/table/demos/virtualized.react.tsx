@@ -44,7 +44,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ marginRight: 4 }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ marginInlineEnd: 4 }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}
@@ -74,7 +74,7 @@ function getData() {
             name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
             owner: isSemiDesign ? '姜鹏志' : '郝宣',
             size: randomNumber,
-            updateTime: new Date(2019, 6, 23, 12).valueOf() + randomNumber * DAY,
+            updateTime: new Date(2024, 4, 6, 12).valueOf() + randomNumber * DAY,
             avatarBg: isSemiDesign ? 'grey' : 'red',
         });
     }
@@ -83,10 +83,11 @@ function getData() {
 
 const data = getData();
 
+const scroll = { y: 400, x: 900 };
+const style = { width: 750, margin: '0 auto' };
+
 export default function TableDemo() {
     const virtualizedListRef = useRef<Parameters<TableGetVirtualizedListRef>[0] | null>(null);
-    const scroll = { y: 400, x: 900 };
-    const style = { width: 750, margin: '0 auto' };
 
     return (
         <>

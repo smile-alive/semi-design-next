@@ -66,7 +66,7 @@ const renderFullChatBox = (props: RenderFullChatBoxProps) => (
                 display: 'flex',
                 'flex-direction': 'column',
                 'row-gap': '4px',
-                'align-items': props.message?.role === 'user' ? 'end' : '',
+                'align-items': props.message?.role === 'user' ? 'end' : undefined,
             }}
         >
             <Show when={props.message?.role !== 'user'}>
@@ -82,7 +82,7 @@ const renderFullChatBox = (props: RenderFullChatBoxProps) => (
 );
 
 export default function ChatDemo() {
-    const [chats, setChats] = createSignal<Message[]>(defaultMessage);
+    const [message, setMessage] = createSignal<Message[]>(defaultMessage);
 
     const onMessageSend = () => {
         const newAssistantMessage: Message = {
@@ -91,9 +91,9 @@ export default function ChatDemo() {
             content: `This is a mock response`,
         };
         setTimeout(() => {
-            setChats((list) => [...list, newAssistantMessage]);
+            setMessage((list) => [...list, newAssistantMessage]);
         }, 200);
     };
 
-    return <Chat chatBoxRenderConfig={{ renderFullChatBox }} style={commonOuterStyle} chats={chats()} onChatsChange={(next) => setChats(next)} onMessageSend={onMessageSend} roleConfig={roleInfo} uploadProps={uploadProps} />;
+    return <Chat chatBoxRenderConfig={{ renderFullChatBox }} style={commonOuterStyle} chats={message()} onChatsChange={(next) => setMessage(next)} onMessageSend={onMessageSend} roleConfig={roleInfo} uploadProps={uploadProps} />;
 }

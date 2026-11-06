@@ -32,7 +32,7 @@ export default function StepsDemo() {
             <Steps type="basic" current={current()} onChange={(i) => console.log(i)}>
                 <For each={steps}>{(item) => <Steps.Step title={item.title} />}</For>
             </Steps>
-            <div class="steps-content" style={{ 'margin-top': '4px', 'margin-bottom': '4px' }}>
+            <div class="steps-content" style={{ 'margin-block-start': '4px', 'margin-block-end': '4px' }}>
                 {steps[current()].content}
             </div>
             <div class="steps-action">
@@ -47,7 +47,7 @@ export default function StepsDemo() {
                     </Button>
                 </Show>
                 <Show when={current() > 0}>
-                    <Button style={{ 'margin-left': '8px' }} onClick={prev}>
+                    <Button style={{ 'margin-inline-start': '8px' }} onClick={prev}>
                         Previous
                     </Button>
                 </Show>

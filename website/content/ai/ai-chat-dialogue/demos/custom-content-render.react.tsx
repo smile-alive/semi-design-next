@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { AIChatDialogue, type AIChatDialogueMessage as Message, type AIChatDialogueAnnotation as Annotation, type DialogueContentItemRendererMap, type ReasoningWidgetProps } from '@fibrae/semi-ai-react';
+import { useState, useCallback } from 'react';
+import { AIChatDialogue, type AIChatDialogueMessage as Message, type AIChatDialogueAnnotation as Annotation, type DialogueContentItemRendererMap } from '@fibrae/semi-ai-react';
 import { MarkdownRender, Toast } from '@fibrae/semi-ui-react';
 
 const defaultMessages: Message[] = [
@@ -94,86 +94,82 @@ const roleConfig = {
     },
 };
 
+const userTextStyle = {
+    backgroundColor: 'var(--semi-color-fill-1)',
+    color: 'var(--semi-color-text-0)',
+    borderRadius: '25px',
+    padding: '6px 16px',
+};
+
+const assistantStyle = {
+    color: 'var(--semi-color-text-0)',
+    padding: '6px 16px',
+};
+
+const functionCallStyle = {
+    backgroundColor: 'var(--semi-color-fill-1)',
+    padding: '6px 16px',
+    borderRadius: '25px',
+};
+
+const customRender: DialogueContentItemRendererMap = {
+    function_call: {
+        create_travel_guide: (item) => {
+            return (
+                <div style={functionCallStyle}>
+                    Function Tool Call: {item.name} {item.arguments}
+                </div>
+            );
+        },
+    },
+    input_text: (item, message) =>
+        message?.role === 'user' ? (
+            <div style={userTextStyle} className="userTextStyle">
+                {item.text}
+            </div>
+        ) : (
+            <div style={assistantStyle}>{item.text}</div>
+        ),
+    reasoning: (item) => {
+        const annotations: Annotation[] = item.annotations ?? [];
+        return (
+            <AIChatDialogue.Reasoning
+                status={item.status}
+                summary={item.summary}
+                customRenderer={(reasoning) => (
+                    <>
+                        <AIChatDialogue.Annotation
+                            annotation={annotations}
+                            description="参考资料"
+                            maxCount={3}
+                            onClick={(e) => {
+                                e?.stopPropagation();
+                                Toast.success('Ready to open the sidebar!');
+                            }}
+                        />
+                        <div style={{ marginBlockStart: '8px' }}>
+                            <MarkdownRender format="md" raw={reasoning.summary?.[0]?.text ?? ''} {...reasoning.markdownRenderProps} />
+                        </div>
+                    </>
+                )}
+            />
+        );
+    },
+    default: (item, message) =>
+        message?.role === 'user' ? (
+            <div style={userTextStyle} className="userTextStyle">
+                {item}
+            </div>
+        ) : (
+            <div style={assistantStyle}>{item}</div>
+        ),
+};
+
 export default function AIChatDialogueDemo() {
     const [messages, setMessage] = useState(defaultMessages);
     const onChatsChange = useCallback((chats: Message[]) => {
         setMessage(chats);
     }, []);
-
-    const userTextStyle = {
-        backgroundColor: 'var(--semi-color-fill-1)',
-        color: 'var(--semi-color-text-0)',
-        borderRadius: '25px',
-        padding: '6px 16px',
-    };
-
-    const assistantStyle = {
-        color: 'var(--semi-color-text-0)',
-        padding: '6px 16px',
-    };
-
-    const functionCallStyle = {
-        backgroundColor: 'var(--semi-color-fill-1)',
-        padding: '6px 16px',
-        borderRadius: '25px',
-    };
-
-    const customRenderReasoningContent = useCallback((props: ReasoningWidgetProps) => {
-        // the reasoning item also carries its annotations, which the widget props do not declare
-        const { annotations = [] } = props as ReasoningWidgetProps & { annotations?: Annotation[] };
-        return (
-            <React.Fragment>
-                <AIChatDialogue.Annotation
-                    annotation={annotations}
-                    description="参考资料"
-                    maxCount={3}
-                    onClick={(e) => {
-                        e?.stopPropagation();
-                        Toast.success('Ready to open the sidebar!');
-                    }}
-                />
-                <div style={{ marginTop: '8px' }}>
-                    <MarkdownRender format="md" raw={props.summary?.[0].text ?? ''} {...props.markdownRenderProps} />
-                </div>
-            </React.Fragment>
-        );
-    }, []);
-
-    const customRender: DialogueContentItemRendererMap = {
-        function_call: {
-            create_travel_guide: (item) => {
-                return (
-                    <div style={functionCallStyle}>
-                        Function Tool Call: {item.name} {item.arguments}
-                    </div>
-                );
-            },
-        },
-        input_text: (item, message) => {
-            if (message?.role === 'user') {
-                return (
-                    <div style={userTextStyle} className="userTextStyle">
-                        {item.text}
-                    </div>
-                );
-            }
-            return <div style={assistantStyle}>{item.text}</div>;
-        },
-        reasoning: (item) => {
-            return <AIChatDialogue.Reasoning {...item} customRenderer={customRenderReasoningContent} />;
-        },
-        default: (item, message) => {
-            if (message?.role === 'user') {
-                return (
-                    <div style={userTextStyle} className="userTextStyle">
-                        {item}
-                    </div>
-                );
-            } else {
-                return <div style={assistantStyle}>{item}</div>;
-            }
-        },
-    };
 
     return <AIChatDialogue chats={messages} roleConfig={roleConfig} onChatsChange={onChatsChange} renderDialogueContentItem={customRender} />;
 }

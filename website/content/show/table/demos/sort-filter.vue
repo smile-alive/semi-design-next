@@ -60,20 +60,25 @@
         },
     ];
 
-    const dataSource: Row[] = [];
-    for (let i = 0; i < 46; i++) {
-        const isSemiDesign = i % 2 === 0;
-        const randomNumber = (i * 1000) % 199;
-        dataSource.push({
-            key: '' + i,
-            name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
-            owner: isSemiDesign ? '姜鹏志' : '郝宣',
-            size: randomNumber,
-            status: isSemiDesign ? 'success' : 'wait',
-            updateTime: new Date(2024, 4, 6, 12).valueOf() + randomNumber * DAY,
-            avatarBg: isSemiDesign ? 'grey' : 'red',
-        });
-    }
+    const getData = () => {
+        const data: Row[] = [];
+        for (let i = 0; i < 46; i++) {
+            const isSemiDesign = i % 2 === 0;
+            const randomNumber = (i * 1000) % 199;
+            data.push({
+                key: '' + i,
+                name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
+                owner: isSemiDesign ? '姜鹏志' : '郝宣',
+                size: randomNumber,
+                status: isSemiDesign ? 'success' : 'wait',
+                updateTime: new Date(2024, 4, 6, 12).valueOf() + randomNumber * DAY,
+                avatarBg: isSemiDesign ? 'grey' : 'red',
+            });
+        }
+        return data;
+    };
+
+    const dataSource = getData();
 
     const rowSelection: RowSelectionProps<Row> = {
         onChange: (selectedRowKeys, selectedRows) => {
@@ -89,26 +94,26 @@
 
 <template>
     <Table :columns="columns" :dataSource="dataSource" :rowSelection="rowSelection" :scroll="scroll">
-        <template #cell="{ column, record, text }">
-            <div v-if="column.dataIndex === 'name'">
-                <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginRight: '12px' }" />
-                {{ text }}
+        <template #cell="cellProps">
+            <div v-if="cellProps.column.dataIndex === 'name'">
+                <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginInlineEnd: '12px' }" />
+                {{ cellProps.text }}
             </div>
-            <template v-else-if="column.dataIndex === 'size'">{{ text }} KB</template>
-            <Tag v-else-if="column.dataIndex === 'status'" :color="tagConfig[text as Row['status']].color" shape="circle" :style="{ userSelect: 'text' }">
+            <template v-else-if="cellProps.column.dataIndex === 'size'">{{ cellProps.text }} KB</template>
+            <Tag v-else-if="cellProps.column.dataIndex === 'status'" :color="tagConfig[cellProps.text as Row['status']].color" shape="circle" :style="{ userSelect: 'text' }">
                 <template #prefixIcon>
-                    <component :is="tagConfig[text as Row['status']].icon" />
+                    <component :is="tagConfig[cellProps.text as Row['status']].icon" />
                 </template>
-                {{ tagConfig[text as Row['status']].text }}
+                {{ tagConfig[cellProps.text as Row['status']].text }}
             </Tag>
-            <div v-else-if="column.dataIndex === 'owner'">
-                <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
-                    {{ typeof text === 'string' && text.slice(0, 1) }}
+            <div v-else-if="cellProps.column.dataIndex === 'owner'">
+                <Avatar :color="cellProps.record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
+                    {{ typeof cellProps.text === 'string' && cellProps.text.slice(0, 1) }}
                 </Avatar>
-                {{ text }}
+                {{ cellProps.text }}
             </div>
-            <template v-else-if="column.dataIndex === 'updateTime'">
-                {{ dateFns.format(new Date(text), 'yyyy-MM-dd') }}
+            <template v-else-if="cellProps.column.dataIndex === 'updateTime'">
+                {{ dateFns.format(new Date(cellProps.text), 'yyyy-MM-dd') }}
             </template>
         </template>
     </Table>

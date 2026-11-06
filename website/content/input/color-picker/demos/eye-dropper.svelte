@@ -1,12 +1,5 @@
 <script lang="ts">
-    import { ColorPicker, type ColorValue } from '@fibrae/semi-ui-svelte';
-
-    let hex = $state('');
-
-    const onChange = (value: ColorValue) => {
-        hex = value.hex;
-    };
+    import { ColorPicker } from '@fibrae/semi-ui-svelte';
 </script>
 
-<ColorPicker alpha eyeDropper {onChange} />
-<p>当前颜色：{hex}</p>
+<ColorPicker alpha eyeDropper onChange={(value) => console.log(value)} />

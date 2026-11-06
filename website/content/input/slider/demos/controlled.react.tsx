@@ -10,7 +10,7 @@ export default function SliderDemo() {
 
     return (
         <div>
-            <Button onClick={changeValue} style={{ marginRight: 20 }}>
+            <Button onClick={changeValue} style={{ marginInlineEnd: 20 }}>
                 点击改变value值
             </Button>
             <br />

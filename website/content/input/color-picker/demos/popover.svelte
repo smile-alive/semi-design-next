@@ -1,19 +1,12 @@
 <script lang="ts">
-    import { Button, ColorPicker, type ColorValue } from '@fibrae/semi-ui-svelte';
-
-    let hex = $state('');
-
-    const onChange = (value: ColorValue) => {
-        hex = value.hex;
-    };
+    import { Button, ColorPicker } from '@fibrae/semi-ui-svelte';
 </script>
 
 <div>
-    <ColorPicker alpha {onChange} usePopover />
+    <ColorPicker alpha onChange={(value) => console.log(value)} usePopover />
     <br />
     <div>自定义 trigger</div>
-    <ColorPicker alpha {onChange} usePopover>
+    <ColorPicker alpha onChange={(value) => console.log(value)} usePopover>
         <Button>Trigger</Button>
     </ColorPicker>
-    <p>当前颜色：{hex}</p>
 </div>

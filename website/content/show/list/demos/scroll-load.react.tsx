@@ -48,7 +48,7 @@ export default function ListDemo() {
             <div
                 style={{
                     textAlign: 'center',
-                    marginTop: 12,
+                    marginBlockStart: 12,
                     height: 32,
                     lineHeight: '32px',
                 }}

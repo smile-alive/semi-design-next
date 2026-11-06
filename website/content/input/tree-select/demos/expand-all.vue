@@ -2,7 +2,7 @@
     import { onBeforeUnmount, onMounted, shallowRef } from 'vue';
     import { TreeSelect, type TreeNodeData } from '@fibrae/semi-ui-vue';
 
-    const source: TreeNodeData[] = [
+    const treeData: TreeNodeData[] = [
         {
             label: '亚洲',
             value: 'Asia',
@@ -33,20 +33,18 @@
             key: '1',
         },
     ];
-    const firstStyle = { width: '300px', marginBottom: '20px' };
-    const secondStyle = { width: '300px' };
     const data = shallowRef<TreeNodeData[]>([]);
     let timer: ReturnType<typeof setTimeout> | undefined;
 
     onMounted(() => {
         timer = setTimeout(() => {
-            data.value = source;
+            data.value = treeData;
         }, 500);
     });
     onBeforeUnmount(() => clearTimeout(timer));
 </script>
 
 <template>
-    <TreeSelect expandAll placeholder="expandAll" :style="firstStyle" :treeData="data" />
-    <TreeSelect defaultExpandAll placeholder="defaultExpandAll" :style="secondStyle" :treeData="data" />
+    <TreeSelect expandAll placeholder="expandAll" :style="{ width: '300px', marginBottom: '20px' }" :treeData="data" />
+    <TreeSelect defaultExpandAll placeholder="defaultExpandAll" style="width: 300px" :treeData="data" />
 </template>

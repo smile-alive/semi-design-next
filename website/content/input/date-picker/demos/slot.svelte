@@ -1,6 +1,6 @@
 <script lang="ts">
     import { IconBulb } from '@fibrae/semi-icons-svelte';
-    import { DatePicker, Space, Tabs, TypographyText, type DatePickerValueType, type PlainTab } from '@fibrae/semi-ui-svelte';
+    import { DatePicker, Space, Tabs, Typography, type DatePickerValueType, type PlainTab } from '@fibrae/semi-ui-svelte';
 
     const uedDisabledDate = (currentDate?: Date) => !!currentDate && currentDate.getDate() > 10 && currentDate.getDate() < 15;
     const testDisabledDate = (currentDate?: Date) => !!currentDate && currentDate.getDate() > 15 && currentDate.getDate() < 25;
@@ -22,8 +22,8 @@
 {#snippet notice(padding: string, text: string, linkText: string)}
     <Space style={`padding: ${padding}`}>
         <IconBulb style="color: var(--semi-amber-5)" />
-        <TypographyText strong style="color: var(--semi-color-text-2)">{text}</TypographyText>
-        <TypographyText link={{ href: 'https://semi.design/', target: '_blank' }}>{linkText}</TypographyText>
+        <Typography.Text strong style="color: var(--semi-color-text-2)">{text}</Typography.Text>
+        <Typography.Text link={{ href: 'https://semi.design/', target: '_blank' }}>{linkText}</Typography.Text>
     </Space>
 {/snippet}
 

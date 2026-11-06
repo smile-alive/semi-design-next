@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Card, CardMeta, Rating } from '@fibrae/semi-ui-svelte';
+    import { Card, Rating } from '@fibrae/semi-ui-svelte';
 </script>
 
 {#snippet cover()}
@@ -10,7 +10,7 @@
 {/snippet}
 
 <Card actions={[rating]} {cover} headerLine={false} style="max-width: 300px">
-    <CardMeta title="Semi Doc">
+    <Card.Meta title="Semi Doc">
         {#snippet description()}全面、易用、优质{/snippet}
-    </CardMeta>
+    </Card.Meta>
 </Card>

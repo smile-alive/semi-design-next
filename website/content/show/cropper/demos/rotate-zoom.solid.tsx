@@ -8,7 +8,7 @@ const containerStyle = {
 };
 
 const actionStyle = {
-    'margin-top': '20px',
+    'margin-block-start': '20px',
     display: 'flex',
     'align-items': 'center',
     'justify-content': 'center',

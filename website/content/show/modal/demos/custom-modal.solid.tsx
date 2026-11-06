@@ -65,7 +65,7 @@ export default function ModalDemo() {
                             main={
                                 <div>
                                     <h6 style={{ margin: 0, 'font-size': '16px' }}>{item.title}</h6>
-                                    <p style={{ 'margin-top': '4px', color: 'var(--semi-color-text-1)' }}>{item.content}</p>
+                                    <p style={{ 'margin-block-start': '4px', color: 'var(--semi-color-text-1)' }}>{item.content}</p>
                                 </div>
                             }
                         />

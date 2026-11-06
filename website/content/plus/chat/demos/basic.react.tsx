@@ -101,7 +101,7 @@ export default function ChatDemo() {
             <span style={{ display: 'flex', flexDirection: 'column', rowGap: '8px' }}>
                 <span style={{ display: 'flex', alignItems: 'center', columnGap: '10px' }}>
                     模式
-                    <RadioGroup onChange={onModeChange} value={mode} type="button">
+                    <RadioGroup aria-label="模式" onChange={onModeChange} value={mode} type="button">
                         <Radio value="bubble">气泡</Radio>
                         <Radio value="noBubble">非气泡</Radio>
                         <Radio value="userBubble">用户会话气泡</Radio>
@@ -109,7 +109,7 @@ export default function ChatDemo() {
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', columnGap: '10px' }}>
                     会话布局方式
-                    <RadioGroup onChange={onAlignChange} value={align} type="button">
+                    <RadioGroup aria-label="会话布局方式" onChange={onAlignChange} value={align} type="button">
                         <Radio value="leftRight">左右分布</Radio>
                         <Radio value="leftAlign">左对齐</Radio>
                     </RadioGroup>

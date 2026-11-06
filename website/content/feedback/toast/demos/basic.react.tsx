@@ -1,20 +1,17 @@
 import { throttle } from 'es-toolkit';
 import { Toast, Button } from '@fibrae/semi-ui-react';
 
-export default function ToastDemo() {
-    const opts = {
-        content: 'Hi, Bytedance dance dance',
-        duration: 3,
-        stack: true,
-    };
+const opts = {
+    content: 'Hi, Bytedance dance dance',
+    duration: 3,
+    stack: true,
+};
 
-    const handleClose = () => {
-        throttled.cancel();
-    };
+export default function ToastDemo() {
     const throttleOpts = {
         content: 'Hi, Bytedance dance dance',
         duration: 10,
-        onClose: handleClose,
+        onClose: () => throttled.cancel(),
         stack: true,
     };
     const throttled = throttle(() => Toast.info(throttleOpts), 10000, { edges: ['leading'] });

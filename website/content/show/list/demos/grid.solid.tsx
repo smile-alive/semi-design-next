@@ -22,7 +22,7 @@ const style = {
     border: '1px solid var(--semi-color-border)',
     'background-color': 'var(--semi-color-bg-2)',
     'border-radius': '3px',
-    'padding-left': '20px',
+    'padding-inline-start': '20px',
 };
 
 const renderStat = (stat: DescriptionsData, index: number) => (index === 0 ? <Rating allowHalf size="small" value={typeof stat.value === 'number' ? stat.value : undefined} /> : stat.value);
@@ -51,7 +51,7 @@ export default function ListDemo() {
                                 renderValue={renderStat}
                             />
                             <div style={{ margin: '12px 0', display: 'flex', 'justify-content': 'flex-end' }}>
-                                <ButtonGroup theme="borderless" style={{ 'margin-top': '8px' }}>
+                                <ButtonGroup theme="borderless" style={{ 'margin-block-start': '8px' }}>
                                     <Button>编辑</Button>
                                     <Button>更多</Button>
                                 </ButtonGroup>

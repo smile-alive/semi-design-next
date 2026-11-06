@@ -8,9 +8,7 @@ const renderLabel = (row: TreeRenderFullLabelProps) => (
     <div class={row.class} onClick={(e) => (isLeaf(row) ? row.onCheck(e) : row.onExpand(e))}>
         <Show when={!isLeaf(row)}>{row.expandIcon()}</Show>
         <Show when={isLeaf(row)}>
-            <span aria-hidden="true" style={{ 'margin-right': '8px' }}>
-                <Checkbox tabIndex={-1} indeterminate={row.checkStatus.halfChecked} checked={row.checkStatus.checked} />
-            </span>
+            <Checkbox aria-hidden="true" tabIndex={-1} indeterminate={row.checkStatus.halfChecked} checked={row.checkStatus.checked} style={{ 'margin-right': '8px' }} />
         </Show>
         <span>{row.data.label}</span>
     </div>

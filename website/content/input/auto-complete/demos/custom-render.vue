@@ -33,11 +33,11 @@
         <template #prefix>
             <IconSearch />
         </template>
-        <template #item="{ item }">
-            <Avatar :color="item.color" size="small">{{ item.abbr }}</Avatar>
-            <div style="margin-left: 4px">
-                <div style="font-size: 14px; margin-left: 4px">{{ item.name }}</div>
-                <div style="margin-left: 4px">{{ item.email }}</div>
+        <template #item="entry">
+            <Avatar :color="entry.item.color" size="small">{{ entry.item.abbr }}</Avatar>
+            <div style="margin-inline-start: 4px">
+                <div style="font-size: 14px; margin-inline-start: 4px">{{ entry.item.name }}</div>
+                <div style="margin-inline-start: 4px">{{ entry.item.email }}</div>
             </div>
         </template>
     </AutoComplete>

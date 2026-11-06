@@ -96,7 +96,7 @@ export default function AIChatDialogueDemo() {
                 </span>
             </span>
 
-            <div style={{ border: '1px solid var(--semi-color-border)', borderRadius: 12, marginTop: 10, padding: 20 }}>
+            <div style={{ border: '1px solid var(--semi-color-border)', borderRadius: 12, marginBlockStart: 10, padding: 20 }}>
                 <AIChatDialogue ref={ref} align={align} mode="bubble" chats={messages} selecting={select} onSelect={onSelect} roleConfig={roleConfig} />
             </div>
         </div>

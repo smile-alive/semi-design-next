@@ -10,7 +10,7 @@ export default function SpinDemo() {
 
     return (
         <div>
-            <Button onClick={toggle} style={{ 'margin-right': '20px' }}>
+            <Button onClick={toggle} style={{ 'margin-inline-end': '20px' }}>
                 受控的 Spin
             </Button>
             <Spin spinning={loading()} />

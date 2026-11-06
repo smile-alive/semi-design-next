@@ -1,20 +1,17 @@
-import { createSignal } from 'solid-js';
+import { For, createSignal } from 'solid-js';
 import { Calendar, type CalendarProps, Radio, RadioGroup } from '@fibrae/semi-ui-solid';
+
+const displayValue = new Date(2019, 6, 23);
+const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
 
 export default function CalendarDemo() {
     const [v, setV] = createSignal<CalendarProps['weekStartsOn']>(0);
     return (
         <div>
             <RadioGroup value={v()} aria-label="周起始日" type="button" name="demo-radio-group-vertical" onChange={(e) => setV(e.target.value)}>
-                <Radio value={0}>周日</Radio>
-                <Radio value={1}>周一</Radio>
-                <Radio value={2}>周二</Radio>
-                <Radio value={3}>周三</Radio>
-                <Radio value={4}>周四</Radio>
-                <Radio value={5}>周五</Radio>
-                <Radio value={6}>周六</Radio>
+                <For each={days}>{(day, index) => <Radio value={index()}>{day}</Radio>}</For>
             </RadioGroup>
-            <Calendar style={{ 'margin-top': '20px' }} mode="month" displayValue={new Date(2019, 6, 23)} weekStartsOn={v()} />
+            <Calendar style={{ 'margin-block-start': '20px' }} mode="month" displayValue={displayValue} weekStartsOn={v()} />
         </div>
     );
 }

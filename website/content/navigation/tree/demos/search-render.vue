@@ -38,8 +38,8 @@
 
 <template>
     <Tree filterTreeNode :treeData="treeData">
-        <template #search="{ class: searchClass, modelValue, placeholder, showClear, onChange }">
-            <Input :class="searchClass" :modelValue="modelValue" :placeholder="placeholder" :showClear="showClear" @change="onChange">
+        <template #search="searchProps">
+            <Input :class="searchProps.class" :modelValue="searchProps.modelValue" :placeholder="searchProps.placeholder" :showClear="searchProps.showClear" @change="searchProps.onChange">
                 <template #prefix>Search</template>
             </Input>
         </template>

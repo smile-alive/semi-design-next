@@ -2,8 +2,6 @@ import { createSignal } from 'solid-js';
 import { Sidebar } from '@fibrae/semi-ai-solid';
 import { Radio, RadioGroup } from '@fibrae/semi-ui-solid';
 
-const { CodeItem } = Sidebar;
-
 const code = `.semi-animation-react-demo-auto {
     button {
         height: 50px;
@@ -86,7 +84,7 @@ export default function SidebarDemo() {
                 <Radio value="css">CSS</Radio>
             </RadioGroup>
             <div style={{ height: '200px', overflow: 'auto' }}>
-                <CodeItem {...(type() === 'json' ? jsonProps : codeProps)} />
+                <Sidebar.CodeItem {...(type() === 'json' ? jsonProps : codeProps)} />
             </div>
         </>
     );

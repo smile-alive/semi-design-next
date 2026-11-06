@@ -75,7 +75,7 @@
         return res;
     };
 
-    const onSelect = (key: string, _selected: boolean, node: TreeNodeData) => {
+    const handleSelect = (key: string, _bool: boolean, node: TreeNodeData) => {
         selected = new Set([key]);
         selectedThroughParent = new Set(findDescendantKeys(node));
     };
@@ -89,18 +89,18 @@
     const treeStyle = 'width: 260px; height: 420px; border: 1px solid var(--semi-color-border)';
 </script>
 
-<Tree defaultExpandAll {onSelect} style={treeStyle} {treeData}>
-    {#snippet fullLabel({ class: cls, data, expandIcon, onClick })}
-        {@const Icon = icons[data.key ?? '']}
+<Tree defaultExpandAll onSelect={handleSelect} style={treeStyle} {treeData}>
+    {#snippet fullLabel(row)}
+        {@const Icon = icons[row.data.key ?? '']}
         <!-- the tree handles the keyboard: the row is a pointer shortcut -->
-        <div class={cls} role="presentation" style:background-color={rowBackground(data.key)} onclick={onClick}>
-            {#if !data.children?.length}
+        <div class={row.class} role="presentation" style:background-color={rowBackground(row.data.key)} onclick={row.onClick}>
+            {#if !row.data.children?.length}
                 <span style="width: 24px"></span>
             {:else}
-                {@render expandIcon()}
+                {@render row.expandIcon()}
             {/if}
             <Icon style={iconStyle} />
-            <span>{data.label}</span>
+            <span>{row.data.label}</span>
         </div>
     {/snippet}
 </Tree>

@@ -2,8 +2,6 @@
     import { ref } from 'vue';
     import { Carousel, Radio, RadioGroup, Space, Typography, type CarouselProps, type RadioValue } from '@fibrae/semi-ui-vue';
 
-    const { Title, Paragraph } = Typography;
-
     const size = ref<CarouselProps['indicatorSize']>('small');
     const type = ref<CarouselProps['indicatorType']>('dot');
     const position = ref<CarouselProps['indicatorPosition']>('left');
@@ -42,12 +40,13 @@
 <template>
     <div>
         <Carousel :autoPlay="false" :indicatorPosition="position" :indicatorSize="size" :indicatorType="type" :style="{ width: '100%', height: '400px' }" theme="dark">
-            <div v-for="slide in slides" :key="slide.src" :style="{ backgroundSize: 'cover', backgroundImage: `url('${slide.src}')` }">
+            <div v-for="slide in slides" :key="slide.src" :style="{ height: '100%', backgroundSize: 'cover', backgroundImage: `url('${slide.src}')` }">
                 <Space align="start" spacing="medium" :style="titleStyle" vertical>
                     <img alt="semi_logo" :src="logo" :style="{ width: '87px', height: '31px' }" />
-                    <Title :heading="2" :style="colorStyle">{{ slide.title }}</Title>
+                    <Typography.Title :heading="2" :style="colorStyle">{{ slide.title }}</Typography.Title>
                     <Space align="start" vertical>
-                        <Paragraph v-for="line in slide.lines" :key="line" :style="colorStyle">{{ line }}</Paragraph>
+                        <Typography.Paragraph :style="colorStyle">{{ slide.lines[0] }}</Typography.Paragraph>
+                        <Typography.Paragraph :style="colorStyle">{{ slide.lines[1] }}</Typography.Paragraph>
                     </Space>
                 </Space>
             </div>
@@ -56,7 +55,7 @@
         <Space align="start" vertical>
             <Space>
                 <div>类型</div>
-                <RadioGroup :modelValue="type" type="button" @update:modelValue="changeType">
+                <RadioGroup aria-label="指示器类型" :modelValue="type" type="button" @update:modelValue="changeType">
                     <Radio value="dot">dot</Radio>
                     <Radio value="line">line</Radio>
                     <Radio value="columnar">columnar</Radio>
@@ -64,7 +63,7 @@
             </Space>
             <Space>
                 <div>位置</div>
-                <RadioGroup :modelValue="position" type="button" @update:modelValue="changePosition">
+                <RadioGroup aria-label="指示器位置" :modelValue="position" type="button" @update:modelValue="changePosition">
                     <Radio value="left">left</Radio>
                     <Radio value="center">center</Radio>
                     <Radio value="right">right</Radio>
@@ -72,7 +71,7 @@
             </Space>
             <Space>
                 <div>尺寸</div>
-                <RadioGroup :modelValue="size" type="button" @update:modelValue="changeSize">
+                <RadioGroup aria-label="指示器尺寸" :modelValue="size" type="button" @update:modelValue="changeSize">
                     <Radio value="small">small</Radio>
                     <Radio value="medium">medium</Radio>
                 </RadioGroup>

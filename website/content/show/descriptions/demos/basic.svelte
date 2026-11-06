@@ -16,7 +16,7 @@
         {#if index === 1}
             <div>
                 98%
-                <IconArrowUp size="small" style="color: var(--semi-color-success); margin-left: 2px" />
+                <IconArrowUp size="small" style="color: var(--semi-color-success); margin-inline-start: 2px" />
             </div>
         {:else if index === 3}
             <Tag style="margin: 0">电商</Tag>

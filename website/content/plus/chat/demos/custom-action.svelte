@@ -3,7 +3,7 @@
     import { IconForward, IconMoreStroked } from '@fibrae/semi-icons-svelte';
     import { Button, Dropdown, type DropDownMenuItem } from '@fibrae/semi-ui-svelte';
 
-    const roleConfig = {
+    const roleInfo = {
         user: {
             name: 'User',
             avatar: '/assets/docs-icon.png',
@@ -18,13 +18,15 @@
         },
     };
 
+    const commonOuterStyle = 'border: 1px solid var(--semi-color-border); border-radius: 16px; height: 400px';
+
     const uploadProps = { action: 'https://api.semi.design/upload' };
     const menu: DropDownMenuItem[] = [{ node: 'item', name: '分享' }];
 
     let id = 0;
     const getId = () => `id-${id++}`;
 
-    let messages = $state<ChatMessage[]>([
+    let message = $state<ChatMessage[]>([
         {
             role: 'system',
             id: '1',
@@ -52,23 +54,23 @@
             content: 'This is a mock response',
         };
         setTimeout(() => {
-            messages = [...messages, newAssistantMessage];
+            message = [...message, newAssistantMessage];
         }, 200);
     };
 </script>
 
-<Chat bind:chats={messages} {onMessageSend} {roleConfig} style="border: 1px solid var(--semi-color-border); border-radius: 16px; height: 400px" {uploadProps}>
-    {#snippet action({ defaultActions, class: actionClass })}
-        <span class={actionClass}>
-            {#each defaultActions as defaultAction, index (index)}
+<Chat bind:chats={message} {onMessageSend} roleConfig={roleInfo} style={commonOuterStyle} {uploadProps}>
+    {#snippet action(props)}
+        <span class={props.class}>
+            {#each props.defaultActions as defaultAction, index (index)}
                 {@render defaultAction()}
             {/each}
             <Dropdown {menu} position="top" trigger="click">
                 {#snippet menuIcon()}
                     <IconForward />
                 {/snippet}
-                {#snippet child({ props })}
-                    <Button {...props} aria-label="更多" class="semi-chat-chatBox-action-btn" theme="borderless" type="tertiary">
+                {#snippet child(childArgs)}
+                    <Button {...childArgs.props} aria-label="更多" class="semi-chat-chatBox-action-btn" theme="borderless" type="tertiary">
                         {#snippet icon()}
                             <IconMoreStroked />
                         {/snippet}

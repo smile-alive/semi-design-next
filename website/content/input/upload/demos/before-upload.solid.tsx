@@ -12,7 +12,21 @@ export default function UploadDemo() {
     };
 
     const beforeUpload = ({ file }: BeforeUploadProps) => {
-        const result: BeforeUploadObjectResult = count > 0 ? { autoRemove: false, fileInstance: file.fileInstance, shouldUpload: true } : { autoRemove: false, fileInstance: file.fileInstance, status: 'validateFail', shouldUpload: false };
+        let result: BeforeUploadObjectResult;
+        if (count > 0) {
+            result = {
+                autoRemove: false,
+                fileInstance: file.fileInstance,
+                shouldUpload: true,
+            };
+        } else {
+            result = {
+                autoRemove: false,
+                fileInstance: file.fileInstance,
+                status: 'validateFail',
+                shouldUpload: false,
+            };
+        }
         count = count + 1;
         return result;
     };

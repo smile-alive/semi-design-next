@@ -3,10 +3,10 @@
 </script>
 
 <Form>
-    {#snippet children({ formApi })}
+    {#snippet children(form)}
         <FormInput field="name" initValue="semi" />
         <FormInput field="familyName" initValue="design" />
-        <Button htmlType="submit" style="margin-right: 4px">submit</Button>
-        <Button onclick={() => formApi.setValue('name', Math.random())}>Click Me!!! ChangeName By【formApi】</Button>
+        <Button htmlType="submit" style="margin-inline-end: 4px">submit</Button>
+        <Button onclick={() => form.formApi.setValue('name', Math.random())}>Click Me!!! ChangeName By【formApi】</Button>
     {/snippet}
 </Form>

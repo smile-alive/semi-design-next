@@ -1,14 +1,14 @@
 import { Toast, Button } from '@fibrae/semi-ui-react';
 
-export default function ToastDemo() {
-    let opts = {
-        content: 'Hi, Bytedance dance dance',
-        duration: 3,
-    };
+const opts = {
+    content: 'Hi, Bytedance dance dance',
+    duration: 3,
+};
 
+export default function ToastDemo() {
     return (
         <>
-            <Button style={{ color: `var(--semi-color-success)` }} onClick={() => Toast.success('Hi,Bytedance dance dance')}>
+            <Button style={{ color: 'var(--semi-color-success)' }} onClick={() => Toast.success('Hi,Bytedance dance dance')}>
                 Success
             </Button>
             <br />

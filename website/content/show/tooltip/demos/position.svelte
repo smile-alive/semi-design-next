@@ -23,39 +23,56 @@
     ];
 </script>
 
-{#snippet bubble()}
-    <article>
-        <p>hi bytedance</p>
-        <p>hi bytedance</p>
-    </article>
-{/snippet}
-
 <div>
-    <div style="margin-left: 80px; white-space: nowrap">
+    <div style="margin-inline-start: 80px; white-space: nowrap">
         {#each tops as [position, label] (position)}
-            <Tooltip arrowPointAtCenter={false} content={bubble} {position}>
+            <Tooltip arrowPointAtCenter={false} {position}>
                 <Tag style="margin: 8px; padding: 20px">{label}</Tag>
+                {#snippet content()}
+                    <article>
+                        <p>hi bytedance</p>
+                        <p>hi bytedance</p>
+                    </article>
+                {/snippet}
             </Tooltip>
         {/each}
     </div>
     <div style="width: 80px; float: left">
         {#each lefts as [position, label] (position)}
-            <Tooltip arrowPointAtCenter={false} content={bubble} {position}>
+            <Tooltip arrowPointAtCenter={false} {position}>
                 <Tag style="margin: 8px; padding: 20px; width: 60px">{label}</Tag>
+                {#snippet content()}
+                    <article>
+                        <p>hi bytedance</p>
+                        <p>hi bytedance</p>
+                    </article>
+                {/snippet}
             </Tooltip>
         {/each}
     </div>
-    <div style="width: 40px; margin-left: 300px">
+    <div style="width: 40px; margin-inline-start: 300px">
         {#each rights as [position, label] (position)}
-            <Tooltip arrowPointAtCenter={false} content={bubble} {position}>
+            <Tooltip arrowPointAtCenter={false} {position}>
                 <Tag style="margin: 8px; padding: 20px; width: 60px">{label}</Tag>
+                {#snippet content()}
+                    <article>
+                        <p>hi bytedance</p>
+                        <p>hi bytedance</p>
+                    </article>
+                {/snippet}
             </Tooltip>
         {/each}
     </div>
-    <div style="margin-left: 80px; clear: both; white-space: nowrap">
+    <div style="margin-inline-start: 80px; clear: both; white-space: nowrap">
         {#each bottoms as [position, label] (position)}
-            <Tooltip arrowPointAtCenter={false} content={bubble} {position}>
+            <Tooltip arrowPointAtCenter={false} {position}>
                 <Tag style="margin: 8px; padding: 20px; width: 60px">{label}</Tag>
+                {#snippet content()}
+                    <article>
+                        <p>hi bytedance</p>
+                        <p>hi bytedance</p>
+                    </article>
+                {/snippet}
             </Tooltip>
         {/each}
     </div>

@@ -94,7 +94,7 @@ export default function CalendarDemo() {
 
     return (
         <>
-            <RadioGroup onChange={(e) => setMode(e.target.value)} value={mode()} type="button">
+            <RadioGroup aria-label="视图模式" onChange={(e) => setMode(e.target.value)} value={mode()} type="button">
                 <Radio value="day">日视图</Radio>
                 <Radio value="week">周视图</Radio>
                 <Radio value="month">月视图</Radio>

@@ -2,7 +2,7 @@
     import { IconPlus } from '@fibrae/semi-icons-svelte';
     import { Upload, type FileItem } from '@fibrae/semi-ui-svelte';
 
-    const fileList: FileItem[] = [
+    const defaultFileList: FileItem[] = [
         {
             uid: '1',
             name: 'dy.png',
@@ -14,6 +14,6 @@
     ];
 </script>
 
-<Upload accept="image/*" action="https://api.semi.design/upload" {fileList} listType="picture" multiple>
+<Upload accept="image/*" action="https://api.semi.design/upload" fileList={defaultFileList} listType="picture" multiple>
     <IconPlus aria-label="上传图片" size="extra-large" />
 </Upload>

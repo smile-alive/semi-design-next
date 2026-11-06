@@ -2,7 +2,7 @@
     import { onDestroy } from 'svelte';
     import { Chat, type ChatMessage } from '@fibrae/semi-ai-svelte';
 
-    const roleConfig = {
+    const roleInfo = {
         user: {
             name: 'User',
             avatar: '/assets/docs-icon.png',
@@ -17,12 +17,14 @@
         },
     };
 
+    const commonOuterStyle = 'border: 1px solid var(--semi-color-border); border-radius: 16px; height: 600px';
+
     const uploadProps = { action: 'https://api.semi.design/upload' };
 
     let id = 0;
     const getId = () => `id-${id++}`;
 
-    let messages = $state<ChatMessage[]>([
+    let message = $state<ChatMessage[]>([
         {
             role: 'system',
             id: '1',
@@ -41,12 +43,15 @@
             createAt: 1715676751919,
             content: `
 Semi Design 是由抖音前端团队和MED产品设计团队设计、开发并维护的设计系统。作为一个全面、易用、优质的现代应用UI解决方案，Semi Design从字节跳动各业务线的复杂场景中提炼而来，目前已经支撑了近千个平台产品，服务了内外部超过10万用户[[1]](https://semi.design/zh-CN/start/introduction)。
+
 Semi Design的特点包括：
+
 1. 设计简洁、现代化。
 2. 提供主题方案，可深度样式定制。
 3. 提供明暗色两套模式，切换方便。
 4. 国际化，覆盖了简/繁体中文、英语、日语、韩语、葡萄牙语等20+种语言，日期时间组件提供全球时区支持，全部组件可自动适配阿拉伯文RTL布局。
 5. 采用 Foundation 和 Adapter 跨框架技术方案，方便扩展。
+
 ---
 Learn more:
 1. [Introduction 介绍 - Semi Design](https://semi.design/zh-CN/start/introduction)
@@ -56,53 +61,67 @@ Learn more:
         },
     ]);
 
-    let timer: ReturnType<typeof setInterval> | null = null;
-
-    const stopTimer = () => {
-        if (timer) {
-            clearInterval(timer);
-            timer = null;
-        }
-    };
-
-    const replaceLast = (update: (last: ChatMessage) => ChatMessage) => {
-        messages = [...messages.slice(0, -1), update(messages[messages.length - 1])];
-    };
+    let intervalId: ReturnType<typeof setInterval> | null = null;
 
     const generateMockResponse = (content: string) => {
-        timer = setInterval(() => {
-            const last = messages[messages.length - 1];
-            if (last.status === 'loading') {
-                replaceLast((m) => ({ ...m, content: `mock Response for ${content} \n`, status: 'incomplete' }));
-            } else if (last.status === 'incomplete') {
-                const next = `${last.content} mock stream message`;
-                if ((last.content?.length ?? 0) > 200) {
-                    stopTimer();
-                    replaceLast((m) => ({ ...m, content: next, status: 'complete' }));
+        const id = setInterval(() => {
+            const lastMessage = message[message.length - 1];
+            let newMessage: ChatMessage = { ...lastMessage };
+            if (lastMessage.status === 'loading') {
+                newMessage = {
+                    ...newMessage,
+                    content: `mock Response for ${content} \n`,
+                    status: 'incomplete',
+                };
+            } else if (lastMessage.status === 'incomplete') {
+                if ((lastMessage.content?.length ?? 0) > 200) {
+                    clearInterval(id);
+                    intervalId = null;
+                    newMessage = {
+                        ...newMessage,
+                        content: `${lastMessage.content} mock stream message`,
+                        status: 'complete',
+                    };
                 } else {
-                    replaceLast((m) => ({ ...m, content: next }));
+                    newMessage = {
+                        ...newMessage,
+                        content: `${lastMessage.content} mock stream message`,
+                    };
                 }
             }
+            message = [...message.slice(0, -1), newMessage];
         }, 400);
+        intervalId = id;
     };
 
     const onMessageSend = (content: string) => {
-        messages = [...messages, { role: 'assistant', status: 'loading', createAt: Date.now(), id: getId() }];
+        message = [
+            ...message,
+            {
+                role: 'assistant',
+                status: 'loading',
+                createAt: Date.now(),
+                id: getId(),
+            },
+        ];
         generateMockResponse(content);
     };
 
     const onStopGenerator = () => {
-        if (!timer) {
-            return;
-        }
-        stopTimer();
-        const last = messages[messages.length - 1];
-        if (last.status && last.status !== 'complete') {
-            replaceLast((m) => ({ ...m, status: 'complete' }));
+        if (intervalId) {
+            clearInterval(intervalId);
+            const lastMessage = message[message.length - 1];
+            if (lastMessage.status && lastMessage.status !== 'complete') {
+                let newMessage: ChatMessage = { ...lastMessage };
+                newMessage.status = 'complete';
+                message = [...message.slice(0, -1), newMessage];
+            }
         }
     };
 
-    onDestroy(stopTimer);
+    onDestroy(() => {
+        if (intervalId) clearInterval(intervalId);
+    });
 </script>
 
-<Chat bind:chats={messages} {onMessageSend} {onStopGenerator} {roleConfig} showStopGenerate style="border: 1px solid var(--semi-color-border); border-radius: 16px; height: 600px" {uploadProps} />
+<Chat bind:chats={message} {onMessageSend} {onStopGenerator} roleConfig={roleInfo} showStopGenerate style={commonOuterStyle} {uploadProps} />

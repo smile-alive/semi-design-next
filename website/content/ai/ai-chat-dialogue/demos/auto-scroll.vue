@@ -40,7 +40,7 @@
 </script>
 
 <template>
-    <Button :disabled="streaming" :style="{ marginBottom: '12px' }" @click="send">发送消息</Button>
+    <Button :disabled="streaming" :style="{ marginBlockEnd: '12px' }" @click="send">发送消息</Button>
     <div :style="{ height: '320px' }">
         <AIChatDialogue v-model:chats="messages" :roleConfig="roleConfig" />
     </div>

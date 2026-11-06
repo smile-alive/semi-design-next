@@ -7,16 +7,26 @@
         <p>horizontal</p>
         <hr />
         <Row :gutter="16">
-            <Col v-for="i in 8" :key="i" :span="6">
-                <div class="col-content">col-6</div>
-            </Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
         </Row>
         <p>vertical</p>
         <hr />
         <Row :gutter="[16, 24]">
-            <Col v-for="i in 8" :key="i" :span="6">
-                <div class="col-content">col-6</div>
-            </Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
+            <Col :span="6"><div class="col-content">col-6</div></Col>
         </Row>
     </div>
 </template>

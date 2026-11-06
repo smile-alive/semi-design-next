@@ -14,14 +14,14 @@
 </script>
 
 <template>
-    <div :style="{ borderBottom: '1px solid var(--semi-color-border)', paddingBottom: '12px' }">
-        <FormLabel :style="{ marginLeft: '10px' }">切换Label位置:</FormLabel>
+    <div :style="{ borderBlockEnd: '1px solid var(--semi-color-border)', paddingBlockEnd: '12px' }">
+        <FormLabel :style="{ marginInlineStart: '10px' }">切换Label位置:</FormLabel>
         <Select v-model="labelPosition" aria-label="labelPosition" :style="{ width: '200px' }">
             <template #prefix>labelPosition</template>
             <Select.Option value="top">top</Select.Option>
             <Select.Option value="left">left</Select.Option>
         </Select>
-        <FormLabel :style="{ marginLeft: '10px' }">切换Label文本对齐方向:</FormLabel>
+        <FormLabel :style="{ marginInlineStart: '10px' }">切换Label文本对齐方向:</FormLabel>
         <Select v-model="labelAlign" aria-label="labelAlign" :style="{ width: '200px' }">
             <template #prefix>labelAlign</template>
             <Select.Option value="left">left</Select.Option>

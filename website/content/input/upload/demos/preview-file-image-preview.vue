@@ -18,7 +18,7 @@
 
 <template>
     <Upload action="https://api.semi.design/upload" :defaultFileList="defaultFileList" :itemStyle="{ width: '300px' }">
-        <template #fileOperation="{ file, onRemove }">
+        <template #fileOperation="fileItem">
             <div style="display: flex; column-gap: 8px; padding: 0 8px">
                 <Button aria-label="预览" size="small" theme="borderless" type="tertiary" @click="visible = true">
                     <template #icon>
@@ -30,12 +30,12 @@
                         <IconDownload />
                     </template>
                 </Button>
-                <Button aria-label="删除" size="small" theme="borderless" type="tertiary" @click="onRemove()">
+                <Button aria-label="删除" size="small" theme="borderless" type="tertiary" @click="fileItem.onRemove()">
                     <template #icon>
                         <IconDelete />
                     </template>
                 </Button>
-                <ImagePreview v-model:visible="visible" :src="file.url" />
+                <ImagePreview v-model:visible="visible" :src="fileItem.file.url" />
             </div>
         </template>
         <Button theme="light">

@@ -347,13 +347,14 @@ function MentionList({ ref, command, query, editor }: MentionListProps) {
                         key={index}
                         role="menuitem"
                         tabIndex={-1}
-                        className={index === selectedIndex ? 'is-selected optionItem' : 'optionItem '}
+                        className={index === selectedIndex ? 'is-selected optionItem' : 'optionItem'}
                         onClick={() => onItemClick(item)}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                                 onItemClick(item);
                             }
                         }}
+                        onFocus={() => setSelectedIndex(index)}
                         onMouseEnter={() => setSelectedIndex(index)}
                     >
                         {typeof item === 'string' ? (
@@ -414,8 +415,8 @@ export default function AIChatInputDemo() {
             }),
         ];
     }, []);
-    const renderTopSlot = useCallback(({ attachments = [], references = [], content = [] }: RenderTopSlotProps) => {
-        const showContent = content.filter((item) => item.type !== 'text');
+    const renderTopSlot = useCallback((topSlot: RenderTopSlotProps) => {
+        const showContent = topSlot.content.filter((item) => item.type !== 'text');
         return (
             <div className="ai-chat-input-topSlot">
                 {showContent.map((item, index) => {
@@ -445,7 +446,7 @@ export default function AIChatInputDemo() {
                         </div>
                     );
                 })}
-                {references.map(({ type, name, detail, id }, index) => {
+                {topSlot.references.map(({ type, name, detail, id }, index) => {
                     const icon = type ? refTypeToIconMap.get(type) : undefined;
                     return (
                         <div className="item" key={id}>
@@ -456,7 +457,7 @@ export default function AIChatInputDemo() {
                                     className="item-icon-delete"
                                     aria-label="删除"
                                     onClick={() => {
-                                        const newReferences = [...references];
+                                        const newReferences = [...topSlot.references];
                                         newReferences.splice(index, 1);
                                         setReference(newReferences);
                                     }}
@@ -471,7 +472,7 @@ export default function AIChatInputDemo() {
                         </div>
                     );
                 })}
-                {attachments.map((item) => {
+                {topSlot.attachments.map((item) => {
                     const isImage = isImageType(item);
 
                     const { uid, name } = item;

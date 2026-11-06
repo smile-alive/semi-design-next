@@ -4,8 +4,6 @@
     import { IconSemiLogo, IconStar, IconUser } from '@fibrae/semi-icons-vue';
     import { Button, Calendar, Cascader, ConfigProvider, DatePicker, Form, FormInput, Image, ImagePreview, List, LocaleProvider, Modal, Nav, Pagination, Select, Table, TimePicker, Transfer, TreeSelect, Typography, type NavItemConfig, type NavItems } from '@fibrae/semi-ui-vue';
 
-    const { Paragraph } = Typography;
-
     const treeData = [
         {
             label: 'Asia',
@@ -117,66 +115,6 @@
     };
     type LocaleCode = 'zh_CN' | keyof typeof loaders;
 
-    const languageOptions: { value: LocaleCode; label: string }[] = [
-        { value: 'zh_CN', label: '简体中文' },
-        { value: 'en_US', label: '英语（美）' },
-        { value: 'en_GB', label: '英语（英）' },
-        { value: 'ja_JP', label: '日语' },
-        { value: 'ko_KR', label: '韩语' },
-        { value: 'ar', label: '阿拉伯语' },
-        { value: 'vi_VN', label: '越南语' },
-        { value: 'ru_RU', label: '俄罗斯语' },
-        { value: 'id_ID', label: '印尼语' },
-        { value: 'ms_MY', label: '马来语' },
-        { value: 'th_TH', label: '泰语' },
-        { value: 'tr_TR', label: '土耳其语' },
-        { value: 'pt_BR', label: '葡萄牙语（巴西）' },
-        { value: 'zh_TW', label: '繁体中文' },
-        { value: 'es', label: '西班牙语' },
-        { value: 'de', label: '德语' },
-        { value: 'it', label: '意大利语' },
-        { value: 'fr', label: '法语' },
-        { value: 'ro', label: '罗马尼亚语' },
-        { value: 'sv_SE', label: '瑞典语' },
-        { value: 'pl_PL', label: '波兰语' },
-        { value: 'nl_NL', label: '荷兰语' },
-        { value: 'az', label: '阿塞拜疆语' },
-        { value: 'bn_IN', label: '孟加拉语' },
-        { value: 'bg', label: '保加利亚语' },
-        { value: 'ca', label: '加泰罗尼亚语' },
-        { value: 'cs_CZ', label: '捷克语' },
-        { value: 'ceb_PH', label: '宿务语' },
-        { value: 'da', label: '丹麦语' },
-        { value: 'el_GR', label: '希腊语' },
-        { value: 'es_419', label: '西班牙语（拉美）' },
-        { value: 'et', label: '爱沙尼亚语' },
-        { value: 'fa_IR', label: '波斯语' },
-        { value: 'fil_PH', label: '菲律宾语' },
-        { value: 'fi_FI', label: '芬兰语' },
-        { value: 'fr_CA', label: '法语（加）' },
-        { value: 'ga', label: '爱尔兰语' },
-        { value: 'he_IL', label: '希伯来语' },
-        { value: 'hi_IN', label: '印地语' },
-        { value: 'hr', label: '克罗地亚语' },
-        { value: 'hu_HU', label: '匈牙利语' },
-        { value: 'is', label: '冰岛语' },
-        { value: 'jv_ID', label: '爪哇语' },
-        { value: 'kk', label: '哈萨克语' },
-        { value: 'km_KH', label: '高棉语' },
-        { value: 'lt', label: '立陶宛语' },
-        { value: 'lv', label: '拉脱维亚语' },
-        { value: 'my_MM', label: '缅甸语' },
-        { value: 'nb', label: '挪威语' },
-        { value: 'pt', label: '葡萄牙语' },
-        { value: 'sk', label: '斯洛伐克语' },
-        { value: 'sl', label: '斯洛文尼亚语' },
-        { value: 'sq', label: '阿尔巴尼亚语' },
-        { value: 'sw', label: '斯瓦希里语' },
-        { value: 'uk_UA', label: '乌克兰语' },
-        { value: 'ur', label: '乌尔都语' },
-        { value: 'uz', label: '乌兹别克语' },
-    ];
-
     const localeCode = shallowRef<LocaleCode>('zh_CN');
     const locale = shallowRef(zh_CN);
     let latest: LocaleCode = 'zh_CN';
@@ -197,12 +135,66 @@
 
 <template>
     <div>
-        <div :style="{ borderBottom: '1px solid var(--semi-color-border)', paddingBottom: '20px' }">
+        <div :style="{ borderBlockEnd: '1px solid var(--semi-color-border)', paddingBlockEnd: '20px' }">
             <Select aria-label="切换语言" defaultValue="zh_CN" :style="{ width: '250px' }" @change="(value) => onLanguageChange(value as LocaleCode)">
                 <template #prefix>切换语言</template>
-                <Select.Option v-for="option in languageOptions" :key="option.value" :value="option.value">
-                    {{ option.label }}
-                </Select.Option>
+                <Select.Option value="zh_CN">简体中文</Select.Option>
+                <Select.Option value="en_US">英语（美）</Select.Option>
+                <Select.Option value="en_GB">英语（英）</Select.Option>
+                <Select.Option value="ja_JP">日语</Select.Option>
+                <Select.Option value="ko_KR">韩语</Select.Option>
+                <Select.Option value="ar">阿拉伯语</Select.Option>
+                <Select.Option value="vi_VN">越南语</Select.Option>
+                <Select.Option value="ru_RU">俄罗斯语</Select.Option>
+                <Select.Option value="id_ID">印尼语</Select.Option>
+                <Select.Option value="ms_MY">马来语</Select.Option>
+                <Select.Option value="th_TH">泰语</Select.Option>
+                <Select.Option value="tr_TR">土耳其语</Select.Option>
+                <Select.Option value="pt_BR">葡萄牙语（巴西）</Select.Option>
+                <Select.Option value="zh_TW">繁体中文</Select.Option>
+                <Select.Option value="es">西班牙语</Select.Option>
+                <Select.Option value="de">德语</Select.Option>
+                <Select.Option value="it">意大利语</Select.Option>
+                <Select.Option value="fr">法语</Select.Option>
+                <Select.Option value="ro">罗马尼亚语</Select.Option>
+                <Select.Option value="sv_SE">瑞典语</Select.Option>
+                <Select.Option value="pl_PL">波兰语</Select.Option>
+                <Select.Option value="nl_NL">荷兰语</Select.Option>
+                <Select.Option value="az">阿塞拜疆语</Select.Option>
+                <Select.Option value="bn_IN">孟加拉语</Select.Option>
+                <Select.Option value="bg">保加利亚语</Select.Option>
+                <Select.Option value="ca">加泰罗尼亚语</Select.Option>
+                <Select.Option value="cs_CZ">捷克语</Select.Option>
+                <Select.Option value="ceb_PH">宿务语</Select.Option>
+                <Select.Option value="da">丹麦语</Select.Option>
+                <Select.Option value="el_GR">希腊语</Select.Option>
+                <Select.Option value="es_419">西班牙语（拉美）</Select.Option>
+                <Select.Option value="et">爱沙尼亚语</Select.Option>
+                <Select.Option value="fa_IR">波斯语</Select.Option>
+                <Select.Option value="fil_PH">菲律宾语</Select.Option>
+                <Select.Option value="fi_FI">芬兰语</Select.Option>
+                <Select.Option value="fr_CA">法语（加）</Select.Option>
+                <Select.Option value="ga">爱尔兰语</Select.Option>
+                <Select.Option value="he_IL">希伯来语</Select.Option>
+                <Select.Option value="hi_IN">印地语</Select.Option>
+                <Select.Option value="hr">克罗地亚语</Select.Option>
+                <Select.Option value="hu_HU">匈牙利语</Select.Option>
+                <Select.Option value="is">冰岛语</Select.Option>
+                <Select.Option value="jv_ID">爪哇语</Select.Option>
+                <Select.Option value="kk">哈萨克语</Select.Option>
+                <Select.Option value="km_KH">高棉语</Select.Option>
+                <Select.Option value="lt">立陶宛语</Select.Option>
+                <Select.Option value="lv">拉脱维亚语</Select.Option>
+                <Select.Option value="my_MM">缅甸语</Select.Option>
+                <Select.Option value="nb">挪威语</Select.Option>
+                <Select.Option value="pt">葡萄牙语</Select.Option>
+                <Select.Option value="sk">斯洛伐克语</Select.Option>
+                <Select.Option value="sl">斯洛文尼亚语</Select.Option>
+                <Select.Option value="sq">阿尔巴尼亚语</Select.Option>
+                <Select.Option value="sw">斯瓦希里语</Select.Option>
+                <Select.Option value="uk_UA">乌克兰语</Select.Option>
+                <Select.Option value="ur">乌尔都语</Select.Option>
+                <Select.Option value="uz">乌兹别克语</Select.Option>
             </Select>
         </div>
         <LocaleProvider :locale="locale">
@@ -254,16 +246,16 @@
                     <h5>Calendar</h5>
                     <Calendar :displayValue="new Date(2024, 4, 6, 12)" mode="month" />
                     <h5>Typography - Copyable</h5>
-                    <Paragraph copyable>Click to copy text.</Paragraph>
+                    <Typography.Paragraph copyable>Click to copy text.</Typography.Paragraph>
                     <h5>Typography - Collapsible</h5>
-                    <Paragraph :ellipsis="{ rows: 3, expandable: true, collapsible: true }" :style="{ width: '300px' }">
+                    <Typography.Paragraph :ellipsis="{ rows: 3, expandable: true, collapsible: true }" :style="{ width: '300px' }">
                         支持展开和折叠：Semi Design 是由抖音前端团队与 UED 团队共同设计开发并维护的设计系统。设计系统包含设计语言以及一整套可复用的前端组件，帮助设计师与开发者更容易地打造高质量的、用户体验一致的、符合设计规范的 Web 应用。
-                    </Paragraph>
+                    </Typography.Paragraph>
                     <h5>Transfer</h5>
                     <Transfer :dataSource="transferData" :style="{ width: '568px', height: '416px' }" />
                     <h5>Image</h5>
                     <ImagePreview showTooltip>
-                        <Image v-for="(src, index) in srcList" :key="src" :alt="`lamp${index + 1}`" :src="src" :style="{ marginRight: '5px' }" :width="200" />
+                        <Image v-for="(src, index) in srcList" :key="src" :alt="`lamp${index + 1}`" :src="src" :style="{ marginInlineEnd: '5px' }" :width="200" />
                     </ImagePreview>
                     <h5>Form</h5>
                     <Form layout="horizontal" @valueChange="(values) => console.log(values)">

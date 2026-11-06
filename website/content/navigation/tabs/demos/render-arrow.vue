@@ -24,14 +24,14 @@
 
 <template>
     <Tabs v-model:activeKey="activeKey" collapsible :style="{ width: '50%', margin: '20px' }" type="card">
-        <template #arrow="{ items, position, onClick }">
+        <template #arrow="arrow">
             <Dropdown>
-                <button :style="arrowStyle" type="button" @click="onClick">
-                    {{ position === 'start' ? '←' : '→' }}
+                <button :style="arrowStyle" type="button" @click="arrow.onClick">
+                    {{ arrow.position === 'start' ? '←' : '→' }}
                 </button>
                 <template #content>
                     <Dropdown.Menu>
-                        <Dropdown.Item v-for="item in items" :key="item.itemKey" @click="activeKey = item.itemKey">
+                        <Dropdown.Item v-for="item in arrow.items" :key="item.itemKey" @click="activeKey = item.itemKey">
                             {{ item.itemKey }}
                         </Dropdown.Item>
                     </Dropdown.Menu>

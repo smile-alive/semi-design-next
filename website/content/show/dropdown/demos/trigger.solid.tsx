@@ -1,17 +1,19 @@
 import { Button, Dropdown, Tag } from '@fibrae/semi-ui-solid';
 
-const menu = () => (
-    <Dropdown.Menu>
-        <Dropdown.Item>Menu Item 1</Dropdown.Item>
-        <Dropdown.Item>Menu Item 2</Dropdown.Item>
-        <Dropdown.Item>Menu Item 3</Dropdown.Item>
-    </Dropdown.Menu>
-);
-
 export default function DropdownDemo() {
     return (
         <div>
-            <Dropdown trigger="hover" position="bottomLeft" render={menu()}>
+            <Dropdown
+                trigger="hover"
+                position="bottomLeft"
+                render={
+                    <Dropdown.Menu>
+                        <Dropdown.Item>Menu Item 1</Dropdown.Item>
+                        <Dropdown.Item>Menu Item 2</Dropdown.Item>
+                        <Dropdown.Item>Menu Item 3</Dropdown.Item>
+                    </Dropdown.Menu>
+                }
+            >
                 <Tag>Hover me</Tag>
             </Dropdown>
             <br />
@@ -40,14 +42,34 @@ export default function DropdownDemo() {
             </Dropdown>
             <br />
             <br />
-            <Dropdown trigger="click" position="bottomLeft" render={menu()}>
+            <Dropdown
+                trigger="click"
+                position="bottomLeft"
+                render={
+                    <Dropdown.Menu>
+                        <Dropdown.Item>Menu Item 1</Dropdown.Item>
+                        <Dropdown.Item>Menu Item 2</Dropdown.Item>
+                        <Dropdown.Item>Menu Item 3</Dropdown.Item>
+                    </Dropdown.Menu>
+                }
+            >
                 {(getTriggerProps) => <Button {...getTriggerProps()}>Click me</Button>}
             </Dropdown>
             <br />
             <br />
-            <Dropdown trigger="contextMenu" position="bottomRight" render={menu()}>
+            <Dropdown
+                trigger="contextMenu"
+                position="bottomRight"
+                render={
+                    <Dropdown.Menu>
+                        <Dropdown.Item>Menu Item 1</Dropdown.Item>
+                        <Dropdown.Item>Menu Item 2</Dropdown.Item>
+                        <Dropdown.Item>Menu Item 3</Dropdown.Item>
+                    </Dropdown.Menu>
+                }
+            >
                 {(getTriggerProps) => (
-                    <Button theme="solid" type="secondary" style={{ 'margin-bottom': '20px' }} {...getTriggerProps()}>
+                    <Button theme="solid" type="secondary" style={{ 'margin-block-end': '20px' }} {...getTriggerProps()}>
                         Right click (ContextMenu)
                     </Button>
                 )}

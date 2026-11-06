@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref } from 'vue';
     import { AIChatInput, type AIChatInputContent as Content, type AIChatInputReference as Reference, type AIChatInputUploadProps } from '@fibrae/semi-ai-vue';
-    import type { UploadOnChangeProps } from '@fibrae/semi-ui-vue';
+    import type { UploadOnChangeProps as OnChangeProps } from '@fibrae/semi-ui-vue';
 
     const uploadProps: AIChatInputUploadProps = {
         action: 'https://api.semi.design/upload',
@@ -24,20 +24,22 @@
         ],
     };
 
-    const references = ref<Reference[]>([
+    const reference: Reference[] = [
         {
             id: '1',
             type: 'text',
             content: '测试文本，这里是一段很长的文字，这里是一段很长的文字，这里是一段很长的文字，这里是一段很长的文字，这里是一段很长的文字,这里是一段很长的文字，这里是一段很长的文字，这里是一段很长的文字，这里是一段很长的文字，这里是一段很长的文字',
         },
-    ]);
+    ];
+
+    const references = ref(reference);
     const generating = ref(false);
 
     const onContentChange = (content: Content[]) => {
         console.log('onContentChange', content);
     };
 
-    const onUploadChange = (fileList: UploadOnChangeProps) => {
+    const onUploadChange = (fileList: OnChangeProps) => {
         console.log('onUploadChange', fileList);
     };
 

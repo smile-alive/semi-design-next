@@ -1,4 +1,5 @@
 import { createSignal, For } from 'solid-js';
+import { Dynamic } from 'solid-js/web';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconUser, IconSemiLogo, IconStar } from '@fibrae/semi-icons-solid';
@@ -119,8 +120,8 @@ const columns: ColumnProps<Person>[] = [
     },
 ];
 
-const tableData: Person[] = Array.from({ length: 46 }, (_, i) => ({
-    key: '' + i,
+const dataSource: Person[] = Array.from({ length: 46 }, (_, i) => ({
+    key: String(i),
     name: `Bytedance ${i}`,
     age: 32,
     address: `Beijing, Haidian. Zhichun Road ${i}`,
@@ -137,16 +138,20 @@ const srcList = ['/assets/root-web-sites/abstract.jpg', '/assets/root-web-sites/
 
 const style = { margin: '10px' };
 
+const navItems = [
+    { itemKey: 'user', text: '用户管理' },
+    { itemKey: 'union', text: '活动管理' },
+];
+
+const navIcons: Record<string, typeof IconUser> = { user: IconUser, union: IconStar };
+
+const navHeader = {
+    logo: () => <IconSemiLogo style={{ height: '36px', 'font-size': '36px' }} />,
+    text: 'Semi 数据后台',
+};
+
 function I18nComponent() {
     const [modalVisible, setModalVisible] = createSignal(false);
-    const navItems = [
-        { itemKey: 'user', text: '用户管理' },
-        { itemKey: 'union', text: '活动管理' },
-    ];
-    const navHeader = {
-        logo: () => <IconSemiLogo style={{ height: '36px', 'font-size': '36px' }} />,
-        text: 'Semi 数据后台',
-    };
 
     return (
         <>
@@ -185,7 +190,7 @@ function I18nComponent() {
             <h5>TreeSelect</h5>
             <TreeSelect style={{ ...style, width: '300px' }} dropdownStyle={{ 'max-height': '400px', overflow: 'auto' }} treeData={treeData} filterTreeNode />
             <h5>Table</h5>
-            <Table columns={columns} dataSource={tableData} scroll={{ y: 320 }} />
+            <Table columns={columns} dataSource={dataSource} scroll={{ y: 320 }} />
             <h5>Table - Empty</h5>
             <Table columns={columns} dataSource={[]} scroll={{ y: 320 }} />
             <h5>List - Empty</h5>
@@ -202,14 +207,14 @@ function I18nComponent() {
             <Transfer style={{ width: '568px', height: '416px' }} dataSource={transferData} />
             <h5>Image</h5>
             <ImagePreview showTooltip>
-                <For each={srcList}>{(src, index) => <Image src={src} width={200} alt={`lamp${index() + 1}`} style={{ 'margin-right': '5px' }} />}</For>
+                <For each={srcList}>{(src, index) => <Image src={src} width={200} alt={`lamp${index() + 1}`} style={{ 'margin-inline-end': '5px' }} />}</For>
             </ImagePreview>
             <h5>Form</h5>
             <Form layout="horizontal" onValueChange={(values) => console.log(values)}>
                 <FormInput field="UserName" label={{ text: '角色', optional: true }} style={{ width: '200px' }} />
             </Form>
             <h5>Navigation</h5>
-            <Nav bodyStyle={{ height: '320px' }} items={navItems} renderItemIcon={({ item }) => (item.itemKey === 'user' ? <IconUser /> : <IconStar />)} header={navHeader} footer={{ collapseButton: true }} />
+            <Nav bodyStyle={{ height: '320px' }} items={navItems} renderItemIcon={({ item }) => <Dynamic component={navIcons[String(item.itemKey)]} />} header={navHeader} footer={{ collapseButton: true }} />
         </>
     );
 }
@@ -229,7 +234,7 @@ export default function LocaleDemo() {
 
     return (
         <>
-            <div style={{ 'border-bottom': '1px solid var(--semi-color-border)', 'padding-bottom': '20px' }}>
+            <div style={{ 'border-block-end': '1px solid var(--semi-color-border)', 'padding-block-end': '20px' }}>
                 <Select aria-label="切换语言" onChange={(value) => onLanguageChange(value as LocaleCode)} prefix="切换语言" style={{ width: '250px' }} defaultValue="zh_CN">
                     <Select.Option value="zh_CN">简体中文</Select.Option>
                     <Select.Option value="en_US">英语（美）</Select.Option>

@@ -2,7 +2,6 @@ import React, { useState, useCallback, useRef } from 'react';
 import { AIChatInput, type AIChatInputHandle, type AIChatInputAttachment as Attachment, type AIChatInputReference as Reference, type AIChatInputRenderTopSlotProps as RenderTopSlotProps } from '@fibrae/semi-ai-react';
 import { IconClose, IconUpload, IconFile, IconFolder, IconBranch, IconTerminal, IconGlobeStroke, IconConnectionPoint2, IconTemplateStroked, IconSearch, IconGit, IconCode } from '@fibrae/semi-icons-react';
 
-const { Configure } = AIChatInput;
 const radioButtonProps = [
     // the icon is the only label, so it carries the name
     { label: <IconTemplateStroked aria-label="快速" />, value: 'fast' },
@@ -83,16 +82,16 @@ export default function AIChatInputDemo() {
     const renderLeftMenu = useCallback(
         () => (
             <>
-                <Configure.RadioButton options={radioButtonProps} initValue="fast" field="mode" />
+                <AIChatInput.Configure.RadioButton options={radioButtonProps} initValue="fast" field="mode" />
             </>
         ),
         []
     );
 
-    const renderTopSlot = useCallback(({ attachments = [], references = [] }: RenderTopSlotProps) => {
+    const renderTopSlot = useCallback((topSlot: RenderTopSlotProps) => {
         return (
             <div className="ai-chat-input-topSlot">
-                {references.map(({ type, name, detail, id }, index) => {
+                {topSlot.references.map(({ type, name, detail, id }, index) => {
                     const icon = type ? refTypeToIconMap.get(type) : undefined;
                     return (
                         <div className="item" key={id}>
@@ -103,7 +102,7 @@ export default function AIChatInputDemo() {
                                     className="item-icon-delete"
                                     aria-label="删除"
                                     onClick={() => {
-                                        const newReferences = [...references];
+                                        const newReferences = [...topSlot.references];
                                         newReferences.splice(index, 1);
                                         setReference(newReferences);
                                     }}
@@ -118,7 +117,7 @@ export default function AIChatInputDemo() {
                         </div>
                     );
                 })}
-                {attachments.map((item) => {
+                {topSlot.attachments.map((item) => {
                     const isImage = isImageType(item);
                     const { uid, name } = item;
                     return (

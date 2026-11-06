@@ -6,25 +6,22 @@ export default function TreeSelectDemo() {
 
     const add = () => {
         const itemLength = Math.floor(Math.random() * 5) + 1;
-        const nextTreeData = Array.from({ length: itemLength }, (_v, i) => {
-            const length = Math.floor(Math.random() * 3);
-            const children = Array.from({ length }, (_cv, ci) => {
-                const child = {
+        setTreeData(
+            Array.from({ length: itemLength }, (_, i) => {
+                const length = Math.floor(Math.random() * 3);
+                const children = Array.from({ length }, (_, ci) => ({
                     key: `${i}-${ci}`,
                     label: `Leaf-${i}-${ci}`,
                     value: `${i}-${ci}`,
+                }));
+                return {
+                    key: `${i}`,
+                    label: `Item-${i}`,
+                    value: `${i}`,
+                    children,
                 };
-                return child;
-            });
-            const item = {
-                key: `${i}`,
-                label: `Item-${i}`,
-                value: `${i}`,
-                children,
-            };
-            return item;
-        });
-        setTreeData(nextTreeData);
+            })
+        );
     };
 
     return (

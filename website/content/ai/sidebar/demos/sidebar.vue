@@ -3,9 +3,6 @@
     import { Annotation, Sidebar, type AnnotationInfo, type ImageUploadNodeOptions, type SideBarDetailContent } from '@fibrae/semi-ai-vue';
     import { IconBriefStroked, IconCodeStroked, IconModalStroked, IconSearch } from '@fibrae/semi-icons-vue';
 
-    const { FileContent, CodeContent } = Sidebar;
-    const { AnnotationContent } = Annotation;
-
     const containerStyle = {
         display: 'flex',
         height: '800px',
@@ -286,9 +283,6 @@ If your project is using React v19, please use @fibrae/semi-ui-19. For React ver
         },
     ];
 
-    const logo = '/assets/placeholder/avatar-a.svg';
-    const img = '/assets/root-web-sites/abstract.jpg';
-
     const defaultInfoList: AnnotationInfo[] = [
         {
             header: 'Semi design introduction',
@@ -300,10 +294,10 @@ If your project is using React v19, please use @fibrae/semi-ui-19. For React ver
                     duration: 4432,
                     title: 'Semi Design is a design system designed',
                     url: 'https://semi.design/',
-                    logo,
+                    logo: '/assets/placeholder/avatar-a.svg',
                     siteName: 'Semi Design',
                     detail: ' As a comprehensive, easy-to-use, and high-quality modern enterprise-level application UI solution',
-                    img,
+                    img: '/assets/root-web-sites/abstract.jpg',
                 },
                 {
                     order: 2,
@@ -312,9 +306,9 @@ If your project is using React v19, please use @fibrae/semi-ui-19. For React ver
                     duration: 56,
                     url: 'https://semi.design/',
                     detail: ' As a comprehensive, easy-to-use, and high-quality modern enterprise-level application UI solution',
-                    logo,
+                    logo: '/assets/placeholder/avatar-a.svg',
                     siteName: 'Semi Design',
-                    img,
+                    img: '/assets/root-web-sites/abstract.jpg',
                 },
                 {
                     order: 3,
@@ -322,9 +316,9 @@ If your project is using React v19, please use @fibrae/semi-ui-19. For React ver
                     url: 'https://semi.design/',
                     detail: `Semi provides esm format dist, and the css of the component is only imported by the corresponding js.
 When used in Webpack, Rspack, create-react-app or Vite projects, there is no need to configure any compilation items.`,
-                    logo,
+                    logo: '/assets/placeholder/avatar-a.svg',
                     siteName: 'Semi Design',
-                    img,
+                    img: '/assets/root-web-sites/abstract.jpg',
                 },
             ],
         },
@@ -337,9 +331,9 @@ When used in Webpack, Rspack, create-react-app or Vite projects, there is no nee
                     title: 'Semi Design resource',
                     url: 'https://semi.design/',
                     detail: 'Semi Design provides a wealth of design resources to help designers and developers collaborate efficiently. Whether you are a community user or a ByteDance internal designer, you can find UI Kit resource and Figma plug-ins that suit you here.',
-                    logo,
+                    logo: '/assets/placeholder/avatar-a.svg',
                     siteName: 'Semi Design resource',
-                    img,
+                    img: '/assets/root-web-sites/abstract.jpg',
                 },
             ],
         },
@@ -348,7 +342,7 @@ When used in Webpack, Rspack, create-react-app or Vite projects, there is no nee
     const imgUploadProps: ImageUploadNodeOptions = {
         action: 'https://api.semi.design/upload',
         // response is the action's result; real code reads the uploaded image URL from it
-        getUploadImageSrc: () => logo,
+        getUploadImageSrc: () => '/assets/placeholder/avatar-a.svg',
     };
 
     const defaultSize = { width: '60%' };
@@ -369,14 +363,14 @@ When used in Webpack, Rspack, create-react-app or Vite projects, there is no nee
     <div :style="containerStyle">
         <div :style="{ flexGrow: 1, flexShrink: 1, padding: '20px' }">工作区占位</div>
         <Sidebar v-model:activeKey="activeKey" :defaultSize="defaultSize" :detailContent="currentDetail" :imgUploadProps="imgUploadProps" :mode="mode" :motion="false" :options="optionList" :showClose="false" title="Agent 的工作空间" visible @backWard="(_event, backMode) => (mode = backMode)">
-            <template #optionIcon="{ item }">
-                <component :is="optionIcons[item.key]" />
+            <template #optionIcon="iconArgs">
+                <component :is="optionIcons[iconArgs.item.key]" />
             </template>
-            <template #mainContent="{ activeKey: currentKey }">
-                <AnnotationContent v-if="currentKey === 'searchResult'" v-model:activeKey="activeReferKey" :info="defaultInfoList" />
-                <FileContent v-else-if="currentKey === 'filePreview'" v-model:activeKey="activeFileKey" :files="defaultFiles" @expand="onExpand" />
-                <CodeContent v-else-if="currentKey === 'codePreview'" v-model:activeKey="activeCodeKey" :codes="defaultCodes" @expand="onExpand" />
-                <img v-else-if="currentKey === 'network'" alt="network" src="/assets/root-web-sites/test.jpg" :style="{ width: '100%' }" />
+            <template #mainContent="mainArgs">
+                <Annotation.AnnotationContent v-if="mainArgs.activeKey === 'searchResult'" v-model:activeKey="activeReferKey" :info="defaultInfoList" />
+                <Sidebar.FileContent v-else-if="mainArgs.activeKey === 'filePreview'" v-model:activeKey="activeFileKey" :files="defaultFiles" @expand="onExpand" />
+                <Sidebar.CodeContent v-else-if="mainArgs.activeKey === 'codePreview'" v-model:activeKey="activeCodeKey" :codes="defaultCodes" @expand="onExpand" />
+                <img v-else-if="mainArgs.activeKey === 'network'" alt="network" src="/assets/root-web-sites/test.jpg" :style="{ width: '100%' }" />
             </template>
         </Sidebar>
     </div>

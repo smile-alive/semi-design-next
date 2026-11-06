@@ -16,11 +16,13 @@
         { label: 'Maintainer', value: 'Maintainer', disabled: true },
     ];
 
-    const log = (name: string, e: RadioChangeEvent) => console.log(`${name} checked`, e.target.value);
+    const onChange1 = (e: RadioChangeEvent) => console.log('radio1 checked', e.target.value);
+    const onChange2 = (e: RadioChangeEvent) => console.log('radio2 checked', e.target.value);
+    const onChange3 = (e: RadioChangeEvent) => console.log('radio3 checked', e.target.value);
 </script>
 
 <Space align="start" spacing="loose" vertical>
-    <RadioGroup aria-label="单选组合示例" bind:value={value1} name="demo-radio-group-1" onChange={(e) => log('radio1', e)} options={plainOptions} />
-    <RadioGroup aria-label="单选组合示例" bind:value={value2} name="demo-radio-group-2" onChange={(e) => log('radio2', e)} options={optionsWithDisabled} />
-    <RadioGroup aria-label="单选组合示例" bind:value={value3} name="demo-radio-group-3" onChange={(e) => log('radio3', e)} {options} />
+    <RadioGroup aria-label="单选组合示例" bind:value={value1} name="demo-radio-group-1" onChange={onChange1} options={plainOptions} />
+    <RadioGroup aria-label="单选组合示例" bind:value={value2} name="demo-radio-group-2" onChange={onChange2} options={optionsWithDisabled} />
+    <RadioGroup aria-label="单选组合示例" bind:value={value3} name="demo-radio-group-3" onChange={onChange3} {options} />
 </Space>

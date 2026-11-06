@@ -94,25 +94,25 @@
 
 <template>
     <Table :columns="columns" :dataSource="data" :rowSelection="rowSelection" :scroll="scroll" @change="onChange">
-        <template #cell="{ column, text, record }">
-            <span v-if="column.dataIndex === 'name'">
-                <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginRight: '12px' }" />
-                {{ text }}
+        <template #cell="cellProps">
+            <span v-if="cellProps.column.dataIndex === 'name'">
+                <Avatar alt="" shape="square" size="small" :src="figmaIconUrl" :style="{ marginInlineEnd: '12px' }" />
+                {{ cellProps.text }}
             </span>
-            <template v-else-if="column.dataIndex === 'size'">{{ text }} KB</template>
-            <div v-else-if="column.dataIndex === 'owner'">
-                <Avatar :color="record.avatarBg" size="small" :style="{ marginRight: '4px' }">
-                    {{ typeof text === 'string' && text.slice(0, 1) }}
+            <template v-else-if="cellProps.column.dataIndex === 'size'">{{ cellProps.text }} KB</template>
+            <div v-else-if="cellProps.column.dataIndex === 'owner'">
+                <Avatar :color="cellProps.record.avatarBg" size="small" :style="{ marginInlineEnd: '4px' }">
+                    {{ typeof cellProps.text === 'string' && cellProps.text.slice(0, 1) }}
                 </Avatar>
-                {{ text }}
+                {{ cellProps.text }}
             </div>
-            <template v-else-if="column.dataIndex === 'updateTime'">
-                {{ dateFns.format(new Date(text), 'yyyy-MM-dd') }}
+            <template v-else-if="cellProps.column.dataIndex === 'updateTime'">
+                {{ dateFns.format(new Date(cellProps.text), 'yyyy-MM-dd') }}
             </template>
-            <IconMore v-else-if="column.dataIndex === 'operate'" />
+            <IconMore v-else-if="cellProps.column.dataIndex === 'operate'" />
         </template>
-        <template #expandedRow="{ record }">
-            <article>{{ record.name }}</article>
+        <template #expandedRow="expandedProps">
+            <article>{{ expandedProps.record.name }}</article>
         </template>
     </Table>
 </template>

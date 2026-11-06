@@ -6,6 +6,6 @@
 
 <ImagePreview src={srcList}>
     {#each srcList as src, index (src)}
-        <Image alt="lamp{index + 1}" {src} style="margin-right: 5px" width={200} />
+        <Image alt="lamp{index + 1}" {src} style="margin-inline-end: 5px" width={200} />
     {/each}
 </ImagePreview>

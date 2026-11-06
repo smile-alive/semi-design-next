@@ -21,7 +21,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text) => {
             return (
                 <div>
-                    <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ marginRight: 12 }} />
+                    <Avatar size="small" shape="square" src={figmaIconUrl} alt="" style={{ marginInlineEnd: 12 }} />
                     {text}
                 </div>
             );
@@ -50,7 +50,7 @@ const columns: ColumnProps<Row>[] = [
         render: (text, record) => {
             return (
                 <div>
-                    <Avatar size="small" color={record.avatarBg} style={{ marginRight: 4 }}>
+                    <Avatar size="small" color={record.avatarBg} style={{ marginInlineEnd: 4 }}>
                         {typeof text === 'string' && text.slice(0, 1)}
                     </Avatar>
                     {text}
@@ -78,7 +78,7 @@ function getData() {
             name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
             owner: isSemiDesign ? '姜鹏志' : '郝宣',
             size: randomNumber,
-            updateTime: new Date(2019, 6, 23, 12).valueOf() + randomNumber * DAY,
+            updateTime: new Date(2024, 4, 6, 12).valueOf() + randomNumber * DAY,
             avatarBg: isSemiDesign ? 'grey' : 'red',
         });
     }
@@ -87,9 +87,17 @@ function getData() {
 
 const data = getData();
 
-export default function TableDemo() {
-    const rowKey = (record: Row) => `${record.owner.toLowerCase()}-${record.name.toLowerCase()}`;
+const rowKey = (record: Row) => `${record.owner.toLowerCase()}-${record.name.toLowerCase()}`;
 
+function onGroupedRow(group: { groupKey: string | number; records: Row[] }, index: number) {
+    return {
+        onClick: () => {
+            console.log(`Grouped row clicked: `, group, index);
+        },
+    };
+}
+
+export default function TableDemo() {
     return (
         <div style={{ padding: '20px 0px' }}>
             <Table
@@ -98,13 +106,7 @@ export default function TableDemo() {
                 groupBy="size"
                 columns={columns}
                 renderGroupSection={(groupKey) => <strong>根据文件大小分组 {groupKey} KB</strong>}
-                onGroupedRow={(group, index) => {
-                    return {
-                        onClick: () => {
-                            console.log(`Grouped row clicked: `, group, index);
-                        },
-                    };
-                }}
+                onGroupedRow={onGroupedRow}
                 clickGroupedRowToExpand // 点击整行即可展开
                 scroll={{ y: 480 }}
             />

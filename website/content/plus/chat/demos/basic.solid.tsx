@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js';
+import { Show, createSignal } from 'solid-js';
 import { Chat, type ChatMessage as Message, type ChatProps } from '@fibrae/semi-ai-solid';
 import { Radio, RadioGroup } from '@fibrae/semi-ui-solid';
 
@@ -54,7 +54,7 @@ const uploadProps = { action: 'https://api.semi.design/upload' };
 const uploadTipProps = { content: '自定义上传按钮提示信息' };
 
 export default function ChatDemo() {
-    const [chats, setChats] = createSignal<Message[]>(defaultMessage);
+    const [message, setMessage] = createSignal<Message[]>(defaultMessage);
     const [mode, setMode] = createSignal<NonNullable<ChatProps['mode']>>('bubble');
     const [align, setAlign] = createSignal<NonNullable<ChatProps['align']>>('leftRight');
 
@@ -66,13 +66,13 @@ export default function ChatDemo() {
             content: '这是一条 mock 回复信息',
         };
         setTimeout(() => {
-            setChats((list) => [...list, newAssistantMessage]);
+            setMessage((list) => [...list, newAssistantMessage]);
         }, 200);
     };
 
     const onMessageReset = () => {
         setTimeout(() => {
-            setChats((list) => {
+            setMessage((list) => {
                 const lastMessage = list[list.length - 1];
                 const newLastMessage: Message = {
                     ...lastMessage,
@@ -89,7 +89,7 @@ export default function ChatDemo() {
             <span style={{ display: 'flex', 'flex-direction': 'column', 'row-gap': '8px' }}>
                 <span style={{ display: 'flex', 'align-items': 'center', 'column-gap': '10px' }}>
                     模式
-                    <RadioGroup onChange={(e) => setMode(e.target.value)} value={mode()} type="button">
+                    <RadioGroup aria-label="模式" onChange={(e) => setMode(e.target.value)} value={mode()} type="button">
                         <Radio value="bubble">气泡</Radio>
                         <Radio value="noBubble">非气泡</Radio>
                         <Radio value="userBubble">用户会话气泡</Radio>
@@ -97,13 +97,15 @@ export default function ChatDemo() {
                 </span>
                 <span style={{ display: 'flex', 'align-items': 'center', 'column-gap': '10px' }}>
                     会话布局方式
-                    <RadioGroup onChange={(e) => setAlign(e.target.value)} value={align()} type="button">
+                    <RadioGroup aria-label="会话布局方式" onChange={(e) => setAlign(e.target.value)} value={align()} type="button">
                         <Radio value="leftRight">左右分布</Radio>
                         <Radio value="leftAlign">左对齐</Radio>
                     </RadioGroup>
                 </span>
             </span>
-            <Chat align={align()} mode={mode()} uploadProps={uploadProps} style={commonOuterStyle} chats={chats()} roleConfig={roleInfo} onChatsChange={(next) => setChats(next)} onMessageSend={onMessageSend} onMessageReset={onMessageReset} uploadTipProps={uploadTipProps} />
+            <Show when={align() + mode()} keyed>
+                <Chat align={align()} mode={mode()} uploadProps={uploadProps} style={commonOuterStyle} chats={message()} roleConfig={roleInfo} onChatsChange={(next) => setMessage(next)} onMessageSend={onMessageSend} onMessageReset={onMessageReset} uploadTipProps={uploadTipProps} />
+            </Show>
         </>
     );
 }

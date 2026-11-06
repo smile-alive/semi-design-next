@@ -2,8 +2,6 @@ import { useState, useCallback } from 'react';
 import { Sidebar, type ImageUploadNodeOptions } from '@fibrae/semi-ai-react';
 import { Button } from '@fibrae/semi-ui-react';
 
-const { FileItem } = Sidebar;
-
 const defaultFileContent = `<h2>
   Semi Design 介绍
 </h2>
@@ -55,7 +53,7 @@ export default function SidebarDemo() {
             </Button>
             <br />
             <br />
-            <FileItem name="Semi Design 介绍" content={content} editable={editable} style={{ border: '1px solid var(--semi-color-border)', padding: 12 }} imgUploadProps={imgUploadProps} />
+            <Sidebar.FileItem name="Semi Design 介绍" content={content} editable={editable} style={{ border: '1px solid var(--semi-color-border)', padding: 12 }} imgUploadProps={imgUploadProps} />
         </>
     );
 }

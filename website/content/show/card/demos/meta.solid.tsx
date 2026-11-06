@@ -1,15 +1,12 @@
 import { Avatar, Button, Card, Space, Typography } from '@fibrae/semi-ui-solid';
 
-const avatarSrc = '/assets/placeholder/logo.svg';
-const coverSrc = '/assets/root-web-sites/card-cover-docs-demo.jpeg';
-
 export default function CardDemo() {
     return (
         <Card
             style={{ 'max-width': '340px' }}
-            title={<Card.Meta title="Semi Doc" description="全面、易用、优质" avatar={<Avatar alt="Card meta img" size="default" src={avatarSrc} />} />}
+            title={<Card.Meta title="Semi Doc" description="全面、易用、优质" avatar={<Avatar alt="Card meta img" size="default" src="/assets/placeholder/logo.svg" />} />}
             headerExtraContent={<Typography.Text link>More</Typography.Text>}
-            cover={<img alt="example" src={coverSrc} />}
+            cover={<img alt="example" src="/assets/root-web-sites/card-cover-docs-demo.jpeg" />}
             footerLine
             footerStyle={{ display: 'flex', 'justify-content': 'flex-end' }}
             footer={

@@ -7,18 +7,18 @@
 </script>
 
 <AIChatInput placeholder="输入内容或者上传内容..." style="margin: 12px" {uploadProps}>
-    {#snippet actionArea({ upload, send, class: actionClass })}
-        <div class={actionClass}>
+    {#snippet actionArea(actionArea)}
+        <div class={actionArea.class}>
             <div style="display: flex; align-items: center">
                 <Button aria-label="清空内容" style="border-radius: 50%" type="tertiary">
                     {#snippet icon()}
                         <IconDeleteStroked />
                     {/snippet}
                 </Button>
-                <Divider layout="vertical" style="margin-left: 8px" />
+                <Divider layout="vertical" style="margin-inline-start: 8px" />
             </div>
-            {@render upload()}
-            {@render send()}
+            {@render actionArea.upload()}
+            {@render actionArea.send()}
         </div>
     {/snippet}
 </AIChatInput>

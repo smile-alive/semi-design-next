@@ -1,5 +1,7 @@
 <script lang="ts">
-    import { Cascader, TypographyText } from '@fibrae/semi-ui-svelte';
+    import { Cascader, Typography } from '@fibrae/semi-ui-svelte';
+
+    const slotStyle = 'height: 36px; display: flex; padding: 0 32px; align-items: center; cursor: pointer; border-block-start: 1px solid var(--semi-color-border)';
 
     const treeData = [
         {
@@ -30,9 +32,9 @@
 
 <Cascader placeholder="请选择所在地区" style="width: 300px" {treeData}>
     {#snippet bottomSlot()}
-        <div style="height: 36px; display: flex; padding: 0 32px; align-items: center; cursor: pointer; border-top: 1px solid var(--semi-color-border)">
-            <TypographyText>找不到相关选项？</TypographyText>
-            <TypographyText link>去新建</TypographyText>
+        <div style={slotStyle}>
+            <Typography.Text>找不到相关选项？</Typography.Text>
+            <Typography.Text link>去新建</Typography.Text>
         </div>
     {/snippet}
 </Cascader>

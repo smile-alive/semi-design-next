@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Select } from '@fibrae/semi-ui-react';
 
-export default function SelectDemo() {
-    const provinces = ['四川', '广东'];
-    const maps: Record<string, string[]> = {
-        四川: ['成都', '都江堰'],
-        广东: ['广州', '深圳', '东莞'],
-    };
+const provinces = ['四川', '广东'];
+const maps: Record<string, string[]> = {
+    四川: ['成都', '都江堰'],
+    广东: ['广州', '深圳', '东莞'],
+};
 
+export default function SelectDemo() {
     const [province, setProvince] = useState(provinces[0]);
     const citys = maps[province];
     const [city, setCity] = useState<string | undefined>(citys[0]);
@@ -19,7 +19,6 @@ export default function SelectDemo() {
         setProvince(newProvince);
         setCity(maps[newProvince][0]);
     };
-    const cityChange = (newCity?: string) => setCity(newCity);
 
     return (
         <>
@@ -30,7 +29,7 @@ export default function SelectDemo() {
                     </Select.Option>
                 ))}
             </Select>
-            <Select aria-label="城市" style={{ width: '150px', margin: '10px' }} value={city} onChange={cityChange}>
+            <Select aria-label="城市" style={{ width: '150px', margin: '10px' }} value={city} onChange={(v) => setCity(v)}>
                 {citys.map((c) => (
                     <Select.Option value={c} key={c}>
                         {c}

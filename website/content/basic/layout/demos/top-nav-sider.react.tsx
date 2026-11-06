@@ -1,15 +1,21 @@
 import { IconSemiLogo, IconBell, IconHelpCircle, IconBytedanceLogo, IconHome, IconHistogram, IconLive, IconSetting } from '@fibrae/semi-icons-react';
 import { Layout, Nav, Button, Breadcrumb, Skeleton, Avatar } from '@fibrae/semi-ui-react';
 
+const items = [
+    { itemKey: 'Home', text: '首页', icon: <IconHome size="large" /> },
+    { itemKey: 'Histogram', text: '基础数据', icon: <IconHistogram size="large" /> },
+    { itemKey: 'Live', text: '测试功能', icon: <IconLive size="large" /> },
+    { itemKey: 'Setting', text: '设置', icon: <IconSetting size="large" /> },
+];
+
 export default function LayoutDemo() {
-    const { Header, Footer, Sider, Content } = Layout;
     return (
         <Layout style={{ border: '1px solid var(--semi-color-border)' }}>
-            <Header style={{ backgroundColor: 'var(--semi-color-bg-1)' }}>
+            <Layout.Header style={{ backgroundColor: 'var(--semi-color-bg-1)' }}>
                 <div>
                     <Nav aria-label="顶部导航" mode="horizontal" defaultSelectedKeys={['Home']}>
                         <Nav.Header>
-                            <IconSemiLogo style={{ height: '36px', fontSize: 36 }} />
+                            <IconSemiLogo style={{ height: '36px', fontSize: '36px' }} />
                         </Nav.Header>
                         <span
                             style={{
@@ -18,14 +24,14 @@ export default function LayoutDemo() {
                         >
                             <span
                                 style={{
-                                    marginRight: '24px',
+                                    marginInlineEnd: '24px',
                                     color: 'var(--semi-color-text-0)',
                                     fontWeight: '600',
                                 }}
                             >
                                 模版推荐
                             </span>
-                            <span style={{ marginRight: '24px' }}>所有模版</span>
+                            <span style={{ marginInlineEnd: '24px' }}>所有模版</span>
                             <span>我的模版</span>
                         </span>
                         <Nav.Footer>
@@ -35,7 +41,7 @@ export default function LayoutDemo() {
                                 icon={<IconBell size="large" />}
                                 style={{
                                     color: 'var(--semi-color-text-2)',
-                                    marginRight: '12px',
+                                    marginInlineEnd: '12px',
                                 }}
                             />
                             <Button
@@ -44,7 +50,7 @@ export default function LayoutDemo() {
                                 icon={<IconHelpCircle size="large" />}
                                 style={{
                                     color: 'var(--semi-color-text-2)',
-                                    marginRight: '12px',
+                                    marginInlineEnd: '12px',
                                 }}
                             />
                             <Avatar color="orange" size="small">
@@ -53,25 +59,20 @@ export default function LayoutDemo() {
                         </Nav.Footer>
                     </Nav>
                 </div>
-            </Header>
+            </Layout.Header>
             <Layout>
-                <Sider style={{ backgroundColor: 'var(--semi-color-bg-1)' }}>
+                <Layout.Sider style={{ backgroundColor: 'var(--semi-color-bg-1)' }}>
                     <Nav
                         aria-label="侧边导航"
-                        style={{ maxWidth: 220, height: '100%' }}
+                        style={{ maxWidth: '220px', height: '100%' }}
                         defaultSelectedKeys={['Home']}
-                        items={[
-                            { itemKey: 'Home', text: '首页', icon: <IconHome size="large" /> },
-                            { itemKey: 'Histogram', text: '基础数据', icon: <IconHistogram size="large" /> },
-                            { itemKey: 'Live', text: '测试功能', icon: <IconLive size="large" /> },
-                            { itemKey: 'Setting', text: '设置', icon: <IconSetting size="large" /> },
-                        ]}
+                        items={items}
                         footer={{
                             collapseButton: true,
                         }}
                     />
-                </Sider>
-                <Content
+                </Layout.Sider>
+                <Layout.Content
                     style={{
                         padding: '24px',
                         backgroundColor: 'var(--semi-color-bg-0)',
@@ -79,7 +80,7 @@ export default function LayoutDemo() {
                 >
                     <Breadcrumb
                         style={{
-                            marginBottom: '24px',
+                            marginBlockEnd: '24px',
                         }}
                         routes={['首页', '当这个页面标题很长时需要省略', '上一页', '详情页']}
                     />
@@ -96,9 +97,9 @@ export default function LayoutDemo() {
                             <p>Hi, Bytedance dance dance.</p>
                         </Skeleton>
                     </div>
-                </Content>
+                </Layout.Content>
             </Layout>
-            <Footer
+            <Layout.Footer
                 style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -113,14 +114,14 @@ export default function LayoutDemo() {
                         alignItems: 'center',
                     }}
                 >
-                    <IconBytedanceLogo size="large" style={{ marginRight: '8px' }} />
+                    <IconBytedanceLogo size="large" style={{ marginInlineEnd: '8px' }} />
                     <span>Copyright © 2023 ByteDance. All Rights Reserved. </span>
                 </span>
                 <span>
-                    <span style={{ marginRight: '24px' }}>平台客服</span>
+                    <span style={{ marginInlineEnd: '24px' }}>平台客服</span>
                     <span>反馈建议</span>
                 </span>
-            </Footer>
+            </Layout.Footer>
         </Layout>
     );
 }

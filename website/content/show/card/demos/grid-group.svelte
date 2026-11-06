@@ -1,16 +1,16 @@
 <script lang="ts">
-    import { Card, CardGroup, TypographyText } from '@fibrae/semi-ui-svelte';
+    import { Card, CardGroup, Typography } from '@fibrae/semi-ui-svelte';
 
-    const items = [1, 2, 3, 4, 5, 6, 7];
+    const cardIndexes = Array.from({ length: 7 }, (_, index) => index);
 </script>
 
 <CardGroup type="grid">
-    {#each items as idx (idx)}
+    {#each cardIndexes as idx (idx)}
         <Card headerLine={false} shadows="hover" style="width: 260px" title="Card title">
             {#snippet headerExtraContent()}
-                <TypographyText link>More</TypographyText>
+                <Typography.Text link>More</Typography.Text>
             {/snippet}
-            <TypographyText>Card content</TypographyText>
+            <Typography.Text>Card content</Typography.Text>
         </Card>
     {/each}
 </CardGroup>

@@ -2,7 +2,7 @@ import { createSignal } from 'solid-js';
 import { IconArrowUp, IconArrowDown } from '@fibrae/semi-icons-solid';
 import { Table, Button, type ColumnProps } from '@fibrae/semi-ui-solid';
 
-type TreeRow = {
+interface TreeRow {
     key?: number;
     dataKey: string;
     name: string;
@@ -10,7 +10,7 @@ type TreeRow = {
     description: string;
     default: string;
     children?: TreeRow[];
-};
+}
 
 const raw: TreeRow[] = [
     {
@@ -76,57 +76,48 @@ const raw: TreeRow[] = [
     },
 ];
 
-// Swaps two sibling records; returns undefined when the keys are not found, so the caller keeps the old tree
-function swapSiblings(list: TreeRow[], key1: number, key2: number) {
-    const index1 = list.findIndex((item) => item.key === key1);
-    const index2 = list.findIndex((item) => item.key === key2);
-    if (index1 > -1 && index2 > -1) {
-        const next = [...list];
-        [next[index1], next[index2]] = [next[index2], next[index1]];
-        return next;
-    }
-    for (let i = 0; i < list.length; i++) {
-        const children = list[i].children;
-        const swapped = children && swapSiblings(children, key1, key2);
-        if (swapped) {
-            const next = [...list];
-            next[i] = { ...list[i], children: swapped };
-            return next;
-        }
-    }
-    return undefined;
-}
+const rowKey = 'key';
+const childrenRecordName = 'children';
 
-function getSameLevelRecords(key: number | undefined, list: TreeRow[]): TreeRow[] {
-    if (key != null) {
-        if (list.some((item) => item.key === key)) {
-            return list;
-        }
-        for (const item of list) {
-            const records = item.children ? getSameLevelRecords(key, item.children) : [];
-            if (records.length) {
-                return records;
-            }
+const getSameLevelRecords = (key: number | undefined, rows: TreeRow[]): TreeRow[] => {
+    if (key == null) {
+        return [];
+    }
+    if (rows.some((item) => item[rowKey] === key)) {
+        return rows;
+    }
+    for (const item of rows) {
+        const records = getSameLevelRecords(key, item[childrenRecordName] ?? []);
+        if (records.length) {
+            return records;
         }
     }
     return [];
-}
+};
+
+// Returns a copy of the tree in which the record swaps places with its sibling `offset` rows away.
+const moveRecord = (rows: TreeRow[], key: number | undefined, offset: -1 | 1): TreeRow[] => {
+    const index = rows.findIndex((item) => item[rowKey] === key);
+    if (index === -1) {
+        return rows.map((item) => (item[childrenRecordName] ? { ...item, children: moveRecord(item[childrenRecordName], key, offset) } : item));
+    }
+    const next = [...rows];
+    [next[index], next[index + offset]] = [next[index + offset], next[index]];
+    return next;
+};
 
 export default function TableDemo() {
     const [expandedRowKeys, setExpandedRowKeys] = createSignal<number[]>([1, 2]);
     const [data, setData] = createSignal<TreeRow[]>(raw);
 
-    const switchRecord = (key1: number, key2: number) => {
-        const swapped = swapSiblings(data(), key1, key2);
-        if (swapped) {
-            setData(swapped);
-        }
+    const canMove = (record: TreeRow, offset: -1 | 1) => {
+        const records = getSameLevelRecords(record[rowKey], data());
+        const index = records.findIndex((item) => item[rowKey] === record[rowKey]);
+        return index >= 0 && index + offset >= 0 && index + offset < records.length;
     };
 
-    const siblingKey = (key: number | undefined, offset: number) => {
-        const records = getSameLevelRecords(key, data());
-        const index = records.findIndex((item) => item.key === key);
-        return records[index + offset]?.key;
+    const move = (record: TreeRow, offset: -1 | 1) => {
+        setData(moveRecord(data(), record[rowKey], offset));
     };
 
     const columns: ColumnProps<TreeRow>[] = [
@@ -159,36 +150,14 @@ export default function TableDemo() {
         },
         {
             key: 'operation',
-            render: (record) => {
-                // Read through functions so the buttons follow the tree after a swap
-                const upKey = () => siblingKey(record.key, -1);
-                const downKey = () => siblingKey(record.key, 1);
-
-                return (
-                    <>
-                        <Button
-                            aria-label="上移"
-                            icon={<IconArrowUp />}
-                            disabled={upKey() === undefined}
-                            onClick={() => {
-                                const key = upKey();
-                                if (key !== undefined && record.key !== undefined) switchRecord(record.key, key);
-                            }}
-                        />
-                        <Button
-                            aria-label="下移"
-                            icon={<IconArrowDown />}
-                            disabled={downKey() === undefined}
-                            onClick={() => {
-                                const key = downKey();
-                                if (key !== undefined && record.key !== undefined) switchRecord(record.key, key);
-                            }}
-                        />
-                    </>
-                );
-            },
+            render: (record) => (
+                <>
+                    <Button aria-label="上移" disabled={!canMove(record, -1)} icon={<IconArrowUp />} onClick={() => move(record, -1)} />
+                    <Button aria-label="下移" disabled={!canMove(record, 1)} icon={<IconArrowDown />} onClick={() => move(record, 1)} />
+                </>
+            ),
         },
     ];
 
-    return <Table columns={columns} dataSource={data()} rowKey="key" childrenRecordName="children" expandedRowKeys={expandedRowKeys()} onExpandedRowsChange={(rows = []) => setExpandedRowKeys(rows.flatMap((item) => ('key' in item && item.key !== undefined ? [item.key] : [])))} />;
+    return <Table columns={columns} dataSource={data()} rowKey={rowKey} childrenRecordName={childrenRecordName} expandedRowKeys={expandedRowKeys()} onExpandedRowsChange={(rows = []) => setExpandedRowKeys(rows.flatMap((item) => ('key' in item && item.key !== undefined ? [item.key] : [])))} />;
 }

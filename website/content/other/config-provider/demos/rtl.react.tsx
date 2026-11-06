@@ -2,70 +2,70 @@ import { useState, type CSSProperties } from 'react';
 import { IconVigoLogo, IconEdit, IconCamera, IconList, IconSidebar, IconChevronDown } from '@fibrae/semi-icons-react';
 import { ConfigProvider, ButtonGroup, Button, Row, Col, Notification, DatePicker, TimePicker, Timeline, Popover, Tag, Tooltip, Badge, Avatar, Steps, Pagination, Modal, Breadcrumb, Rating, Nav, Spin, Cascader, Radio, Select, Input, Typography, TextArea, Checkbox, Switch, Toast } from '@fibrae/semi-ui-react';
 
+const flexStyle: CSSProperties = { display: 'flex', marginBlockEnd: 32, flexWrap: 'wrap' };
+const titleStyle = { margin: '50px 0 16px 0' };
+const rowStyle = { margin: '16px 10px' };
+const badgeStyle = {
+    width: '42px',
+    height: '42px',
+    borderRadius: '4px',
+    display: 'inline-block',
+};
+const tagStyle = { marginInlineEnd: 8, marginBlockEnd: 8 };
+const buttonStyle = { ...tagStyle };
+const treeData = [
+    {
+        label: '浙江省',
+        value: 'zhejiang',
+        children: [
+            {
+                label: '杭州市',
+                value: 'hangzhou',
+                children: [
+                    {
+                        label: '西湖区',
+                        value: 'xihu',
+                    },
+                    {
+                        label: '萧山区',
+                        value: 'xiaoshan',
+                    },
+                    {
+                        label: '临安区',
+                        value: 'linan',
+                    },
+                ],
+            },
+            {
+                label: '宁波市',
+                value: 'ningbo',
+                children: [
+                    {
+                        label: '海曙区',
+                        value: 'haishu',
+                    },
+                    {
+                        label: '江北区',
+                        value: 'jiangbei',
+                    },
+                ],
+            },
+        ],
+    },
+];
+
 export default function ConfigProviderDemo() {
-    const { Option } = Select;
     const [direction, setDirection] = useState<'ltr' | 'rtl'>();
-    const flexStyle: CSSProperties = { display: 'flex', marginBottom: 32, flexWrap: 'wrap' };
-    const titleStyle = { margin: '50px 0 16px 0' };
-    const rowStyle = { margin: '16px 10px' };
-    const badgeStyle = {
-        width: '42px',
-        height: '42px',
-        borderRadius: '4px',
-        display: 'inline-block',
-    };
-    const tagStyle = { marginRight: 8, marginBottom: 8 };
-    const buttonStyle = { ...tagStyle };
     const opts = {
         title: 'Hi,Bytedance',
         content: 'ies dance dance dance',
         duration: 3,
         direction,
     };
-    const treeData = [
-        {
-            label: '浙江省',
-            value: 'zhejiang',
-            children: [
-                {
-                    label: '杭州市',
-                    value: 'hangzhou',
-                    children: [
-                        {
-                            label: '西湖区',
-                            value: 'xihu',
-                        },
-                        {
-                            label: '萧山区',
-                            value: 'xiaoshan',
-                        },
-                        {
-                            label: '临安区',
-                            value: 'linan',
-                        },
-                    ],
-                },
-                {
-                    label: '宁波市',
-                    value: 'ningbo',
-                    children: [
-                        {
-                            label: '海曙区',
-                            value: 'haishu',
-                        },
-                        {
-                            label: '江北区',
-                            value: 'jiangbei',
-                        },
-                    ],
-                },
-            ],
-        },
-    ];
 
     return (
         <div>
-            <div style={{ marginBottom: 20 }}>
+            <div style={{ marginBlockEnd: 20 }}>
                 <ButtonGroup>
                     <Button onClick={() => setDirection('ltr')}>LTR</Button>
                     <Button onClick={() => setDirection('rtl')}>RTL</Button>
@@ -76,13 +76,13 @@ export default function ConfigProviderDemo() {
                     <h3 style={titleStyle}>Buttons</h3>
                 </Row>
                 <Row style={rowStyle}>
-                    <Button loading theme="solid" style={{ marginRight: 8 }}>
+                    <Button loading theme="solid" style={{ marginInlineEnd: 8 }}>
                         加载
                     </Button>
-                    <Button icon={<IconSidebar />} theme="solid" style={{ marginRight: 8 }}>
+                    <Button icon={<IconSidebar />} theme="solid" style={{ marginInlineEnd: 8 }}>
                         收起
                     </Button>
-                    <Button icon={<IconChevronDown />} theme="solid" iconPosition="right" style={{ marginRight: 8 }}>
+                    <Button icon={<IconChevronDown />} theme="solid" iconPosition="right" style={{ marginInlineEnd: 8 }}>
                         展开选项
                     </Button>
                     <br />
@@ -122,29 +122,29 @@ export default function ConfigProviderDemo() {
                         <br />
                         <br />
                         <div style={flexStyle}>
-                            <Switch aria-label="已开启的开关" style={{ marginRight: 8 }} defaultChecked />
-                            <Switch aria-label="已关闭的开关" style={{ marginRight: 8 }} />
-                            <Switch aria-label="禁用的开关" disabled defaultChecked style={{ marginRight: 8 }} />
+                            <Switch aria-label="已开启的开关" style={{ marginInlineEnd: 8 }} defaultChecked />
+                            <Switch aria-label="已关闭的开关" style={{ marginInlineEnd: 8 }} />
+                            <Switch aria-label="禁用的开关" disabled defaultChecked style={{ marginInlineEnd: 8 }} />
                         </div>
                         <div style={flexStyle}>
-                            <Checkbox style={{ marginRight: 8 }} defaultChecked>
+                            <Checkbox style={{ marginInlineEnd: 8 }} defaultChecked>
                                 多选框
                             </Checkbox>
-                            <Checkbox style={{ marginRight: 8 }} disabled defaultChecked>
+                            <Checkbox style={{ marginInlineEnd: 8 }} disabled defaultChecked>
                                 禁用的多选框
                             </Checkbox>
-                            <Checkbox style={{ marginRight: 8 }} disabled>
+                            <Checkbox style={{ marginInlineEnd: 8 }} disabled>
                                 禁用的多选框
                             </Checkbox>
                         </div>
-                        <div style={{ ...flexStyle, marginBottom: 0 }}>
-                            <Radio style={{ marginRight: 8 }} defaultChecked>
+                        <div style={{ ...flexStyle, marginBlockEnd: 0 }}>
+                            <Radio style={{ marginInlineEnd: 8 }} defaultChecked>
                                 单选框
                             </Radio>
-                            <Radio style={{ marginRight: 8 }} disabled defaultChecked>
+                            <Radio style={{ marginInlineEnd: 8 }} disabled defaultChecked>
                                 禁用的单选框
                             </Radio>
-                            <Radio style={{ marginRight: 8 }} disabled>
+                            <Radio style={{ marginInlineEnd: 8 }} disabled>
                                 禁用的单选框
                             </Radio>
                         </div>
@@ -157,32 +157,32 @@ export default function ConfigProviderDemo() {
                         <br />
                         <br />
                         <Select aria-label="选择器-单选" style={{ width: '100%' }} placeholder="选择器-单选">
-                            <Option value="abc">抖音</Option>
-                            <Option value="hotsoon">火山</Option>
-                            <Option value="pipixia" disabled>
+                            <Select.Option value="abc">抖音</Select.Option>
+                            <Select.Option value="hotsoon">火山</Select.Option>
+                            <Select.Option value="pipixia" disabled>
                                 皮皮虾
-                            </Option>
-                            <Option value="xigua">西瓜视频</Option>
+                            </Select.Option>
+                            <Select.Option value="xigua">西瓜视频</Select.Option>
                         </Select>
                         <br />
                         <br />
                         <Select aria-label="选择器-禁用" disabled style={{ width: '100%' }} placeholder="选择器-禁用">
-                            <Option value="abc">抖音</Option>
-                            <Option value="hotsoon">火山</Option>
-                            <Option value="pipixia" disabled>
+                            <Select.Option value="abc">抖音</Select.Option>
+                            <Select.Option value="hotsoon">火山</Select.Option>
+                            <Select.Option value="pipixia" disabled>
                                 皮皮虾
-                            </Option>
-                            <Option value="xigua">西瓜视频</Option>
+                            </Select.Option>
+                            <Select.Option value="xigua">西瓜视频</Select.Option>
                         </Select>
                         <br />
                         <br />
                         <Select aria-label="选择器-多选" multiple style={{ width: '100%' }} placeholder="选择器-多选">
-                            <Option value="abc">抖音</Option>
-                            <Option value="hotsoon">火山</Option>
-                            <Option value="pipixia" disabled>
+                            <Select.Option value="abc">抖音</Select.Option>
+                            <Select.Option value="hotsoon">火山</Select.Option>
+                            <Select.Option value="pipixia" disabled>
                                 皮皮虾
-                            </Option>
-                            <Option value="xigua">西瓜视频</Option>
+                            </Select.Option>
+                            <Select.Option value="xigua">西瓜视频</Select.Option>
                         </Select>
                         <br />
                         <br />
@@ -311,12 +311,12 @@ export default function ConfigProviderDemo() {
                     <br />
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <Popover content="hi semi-design" style={{ padding: 8 }}>
-                            <Tag style={{ marginRight: 8 }}>I am Popover</Tag>
+                            <Tag style={{ marginInlineEnd: 8 }}>I am Popover</Tag>
                         </Popover>
                         <Tooltip content="hi semi-design">
-                            <Tag style={{ marginRight: 8 }}>I am Tooltip</Tag>
+                            <Tag style={{ marginInlineEnd: 8 }}>I am Tooltip</Tag>
                         </Tooltip>
-                        <Rating defaultValue={3} size="small" style={{ marginRight: 8 }} />
+                        <Rating defaultValue={3} size="small" style={{ marginInlineEnd: 8 }} />
                     </div>
                     <br />
                     <Timeline>

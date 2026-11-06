@@ -30,5 +30,5 @@
             <Button onclick={remove}>删除</Button>
         </ButtonGroup>
     {/snippet}
-    {#snippet panel({ itemKey })}{contents[itemKey] ?? 'New Tab Pane'}{/snippet}
+    {#snippet panel(pane)}{contents[pane.itemKey] ?? 'New Tab Pane'}{/snippet}
 </Tabs>

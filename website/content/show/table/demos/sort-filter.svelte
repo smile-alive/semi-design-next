@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { format } from 'date-fns';
+    import * as dateFns from 'date-fns';
     import { IconClear, IconComment, IconTickCircle } from '@fibrae/semi-icons-svelte';
     import { Avatar, Table, Tag, type ColumnProps, type RowSelectionProps } from '@fibrae/semi-ui-svelte';
 
@@ -60,20 +60,25 @@
         },
     ];
 
-    const dataSource: Row[] = [];
-    for (let i = 0; i < 46; i++) {
-        const isSemiDesign = i % 2 === 0;
-        const randomNumber = (i * 1000) % 199;
-        dataSource.push({
-            key: '' + i,
-            name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
-            owner: isSemiDesign ? '姜鹏志' : '郝宣',
-            size: randomNumber,
-            status: isSemiDesign ? 'success' : 'wait',
-            updateTime: new Date(2024, 4, 6, 12).valueOf() + randomNumber * DAY,
-            avatarBg: isSemiDesign ? 'grey' : 'red',
-        });
-    }
+    const getData = () => {
+        const data: Row[] = [];
+        for (let i = 0; i < 46; i++) {
+            const isSemiDesign = i % 2 === 0;
+            const randomNumber = (i * 1000) % 199;
+            data.push({
+                key: '' + i,
+                name: isSemiDesign ? `Semi Design 设计稿${i}.fig` : `Semi D2C 设计稿${i}.fig`,
+                owner: isSemiDesign ? '姜鹏志' : '郝宣',
+                size: randomNumber,
+                status: isSemiDesign ? 'success' : 'wait',
+                updateTime: new Date(2024, 4, 6, 12).valueOf() + randomNumber * DAY,
+                avatarBg: isSemiDesign ? 'grey' : 'red',
+            });
+        }
+        return data;
+    };
+
+    const dataSource = getData();
 
     const rowSelection: RowSelectionProps = {
         onChange: (selectedRowKeys, selectedRows) => {
@@ -89,33 +94,33 @@
 </script>
 
 <Table {columns} {dataSource} {rowSelection} {scroll}>
-    {#snippet cell({ column, record, text })}
-        {#if column.dataIndex === 'name'}
+    {#snippet cell(cellProps)}
+        {#if cellProps.column.dataIndex === 'name'}
             <div>
-                <Avatar alt="" shape="square" size="small" src={figmaIconUrl} style="margin-right: 12px" />
-                {text}
+                <Avatar alt="" shape="square" size="small" src={figmaIconUrl} style="margin-inline-end: 12px" />
+                {cellProps.text}
             </div>
-        {:else if column.dataIndex === 'size'}
-            {text} KB
-        {:else if column.dataIndex === 'status'}
-            {@const config = tagConfig[text as Row['status']]}
+        {:else if cellProps.column.dataIndex === 'size'}
+            {cellProps.text} KB
+        {:else if cellProps.column.dataIndex === 'status'}
+            {@const config = tagConfig[cellProps.text as Row['status']]}
             <Tag color={config.color} shape="circle" style="user-select: text">
                 {#snippet prefixIcon()}
                     <config.icon />
                 {/snippet}
                 {config.text}
             </Tag>
-        {:else if column.dataIndex === 'owner'}
+        {:else if cellProps.column.dataIndex === 'owner'}
             <div>
-                <Avatar color={record.avatarBg} size="small" style="margin-right: 4px">
-                    {typeof text === 'string' && text.slice(0, 1)}
+                <Avatar color={cellProps.record.avatarBg} size="small" style="margin-inline-end: 4px">
+                    {typeof cellProps.text === 'string' && cellProps.text.slice(0, 1)}
                 </Avatar>
-                {text}
+                {cellProps.text}
             </div>
-        {:else if column.dataIndex === 'updateTime'}
-            {format(new Date(text), 'yyyy-MM-dd')}
+        {:else if cellProps.column.dataIndex === 'updateTime'}
+            {dateFns.format(new Date(cellProps.text), 'yyyy-MM-dd')}
         {:else}
-            {text}
+            {cellProps.text}
         {/if}
     {/snippet}
 </Table>

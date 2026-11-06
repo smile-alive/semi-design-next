@@ -85,7 +85,7 @@
 <br />
 <br />
 <Calendar {displayValue} {events} height={400} minEventHeight={40} mode={mode as CalendarMode} {range}>
-    {#snippet event({ event })}
-        <div style={event.daily && mode !== 'month' ? dailyEventStyle : allDayStyle}>{event.children}</div>
+    {#snippet event(eventData)}
+        <div style={eventData.event.daily && mode !== 'month' ? dailyEventStyle : allDayStyle}>{eventData.event.children}</div>
     {/snippet}
 </Calendar>

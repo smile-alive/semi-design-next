@@ -1,15 +1,15 @@
-import { Button, Form, FormInput, FormSelect, Row, type FormApi } from '@fibrae/semi-ui-solid';
+import { Button, Form, FormInput, FormSelect, Row, type FormElement } from '@fibrae/semi-ui-solid';
 
 export default function FormDemo() {
-    let formApi: FormApi | undefined;
+    let form: FormElement | undefined;
 
     const handleSelectChange = (value: unknown) => {
         const text = value === 'male' ? 'Hi male' : 'Hi female!';
-        formApi?.setValue('Note', text);
+        form?.formApi.setValue('Note', text);
     };
 
     return (
-        <Form getFormApi={(api) => (formApi = api)} onValueChange={(values) => console.log(values)} style={{ width: '250px' }}>
+        <Form ref={(node) => (form = node)} onValueChange={(values) => console.log(values)} style={{ width: '250px' }}>
             <span>Note will change after Sex select</span>
             <FormInput field="Note" style={{ width: '250px' }} />
             <FormSelect field="Sex" onChange={handleSelectChange} style={{ width: '250px' }}>

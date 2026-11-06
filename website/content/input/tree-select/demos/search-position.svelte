@@ -56,10 +56,9 @@
             ],
         },
     ];
-    const dropdownStyle = 'max-height: 400px; overflow: auto';
 </script>
 
-<TreeSelect {dropdownStyle} filterTreeNode placeholder="单选" searchPosition="trigger" style="width: 300px" {treeData} />
+<TreeSelect dropdownStyle="max-height: 400px; overflow: auto" filterTreeNode placeholder="单选" searchPosition="trigger" style="width: 300px" {treeData} />
 <br />
 <br />
-<TreeSelect {dropdownStyle} filterTreeNode maxTagCount={2} multiple placeholder="多选" searchPosition="trigger" style="width: 300px" {treeData} />
+<TreeSelect dropdownStyle="max-height: 400px; overflow: auto" filterTreeNode maxTagCount={2} multiple placeholder="多选" searchPosition="trigger" style="width: 300px" {treeData} />
