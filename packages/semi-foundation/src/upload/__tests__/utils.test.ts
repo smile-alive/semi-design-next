@@ -1,5 +1,5 @@
-import { afterEach, describe, expect, it } from 'vite-plus/test';
-import { ListFocusTracker, containsName } from '../utils';
+import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
+import { ListFocusTracker, containsName, removeUnlessPrevented } from '../utils';
 
 function setup() {
     document.body.innerHTML = `
@@ -69,6 +69,23 @@ describe('ListFocusTracker', () => {
         await Promise.resolve();
         tracker.restore(list.children, null);
         expect(document.activeElement).toBe(b);
+    });
+});
+
+describe('removeUnlessPrevented', () => {
+    it.each<[string, () => unknown, boolean]>([
+        ['undefined', () => undefined, true],
+        ['true', () => true, true],
+        ['false', () => false, false],
+        ['resolve(true)', () => Promise.resolve(true), true],
+        ['resolve(false)', () => Promise.resolve(false), false],
+        ['reject', () => Promise.reject(new Error('no')), false],
+    ])('beforeRemove 返回 %s 时删除为 %s', async (_, result, removed) => {
+        const remove = vi.fn<() => void>();
+        removeUnlessPrevented(result(), remove);
+        expect(remove).not.toHaveBeenCalled();
+        await new Promise((resolve) => setTimeout(resolve));
+        expect(remove).toHaveBeenCalledTimes(removed ? 1 : 0);
     });
 });
 

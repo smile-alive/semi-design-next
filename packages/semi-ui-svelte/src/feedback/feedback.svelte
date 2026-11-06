@@ -56,10 +56,6 @@
     let modalRef = $state.raw<ReturnType<typeof Modal> | null>(null);
     let sheetRef = $state.raw<ReturnType<typeof SideSheet> | null>(null);
 
-    // Modal derives loading from the returned Promise, but a caller's `loading` would replace it; track both here.
-    let okPending = $state(false);
-    let cancelPending = $state(false);
-
     const prefix = cssClasses.PREFIX;
     const open = $derived(Boolean(visible ?? defaults('visible', false)));
 
@@ -102,8 +98,7 @@
     const buttonProps = (kind: 'ok' | 'cancel'): FeedbackButtonProps => {
         const popup = mode === 'popup';
         const custom = kind === 'ok' ? okButtonProps : cancelButtonProps;
-        const popupPending = (kind === 'ok' ? states().onOKReturnPromiseStatus : states().onCancelReturnPromiseStatus) === 'pending';
-        const pending = popup ? popupPending : kind === 'ok' ? okPending : cancelPending;
+        const pending = (kind === 'ok' ? states().onOKReturnPromiseStatus : states().onCancelReturnPromiseStatus) === 'pending';
         return {
             ...custom,
             ...(kind === 'ok' && { disabled: custom?.disabled ?? disabledOkButton }),
@@ -129,27 +124,6 @@
                 }
             },
         };
-    };
-
-    const track = (result: unknown, setPending: (pending: boolean) => void) => {
-        if (isPromise(result)) {
-            setPending(true);
-            const done = () => setPending(false);
-            (result as Promise<unknown>).then(done, done);
-        }
-    };
-
-    // the foundation returns null for a non-Promise, which Modal does not accept
-    const modalOk = (event: MouseEvent) => {
-        const result = foundation.handleModalOk(event);
-        track(result, (pending) => (okPending = pending));
-        return result ?? undefined;
-    };
-
-    const modalCancel = (event: CancelEvent) => {
-        const result = foundation.handleModalCancel(event);
-        track(result, (pending) => (cancelPending = pending));
-        return result ?? undefined;
     };
 
     const onAfterVisibleChange = (isVisible: boolean) => {
@@ -218,8 +192,8 @@
         {icon}
         {modal}
         okButtonProps={modalOkProps}
-        onCancel={modalCancel}
-        onOk={modalOk}
+        onCancel={foundation.handleModalCancel}
+        onOk={foundation.handleModalOk}
         {title}
     />
 {:else}

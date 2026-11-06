@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, h, shallowRef, useAttrs, useTemplateRef, type ShallowRef } from 'vue';
+    import { computed, h, useAttrs, useTemplateRef } from 'vue';
     import { omitBy } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/feedback/constants';
     import FeedbackFoundation, { isFeedbackValueEmpty, type FeedbackAdapter, type FeedbackBaseState } from '@fibrae/semi-foundation/feedback/foundation';
@@ -46,10 +46,6 @@
     const modal = useTemplateRef('modal');
     const sheet = useTemplateRef('sheet');
 
-    // Modal derives loading from the returned Promise, but a caller's `loading` would replace it; track both here.
-    const okPending = shallowRef(false);
-    const cancelPending = shallowRef(false);
-
     const prefix = cssClasses.PREFIX;
     const okFn = computed(() => props.onOk ?? readSemiDefault(semi, 'Feedback', 'onOk'));
     const cancelFn = computed(() => props.onCancel ?? readSemiDefault(semi, 'Feedback', 'onCancel'));
@@ -89,33 +85,10 @@
 
     const disabledOkButton = computed(() => isFeedbackValueEmpty(state.value.value));
 
-    const track = (result: unknown, pending: ShallowRef<boolean>) => {
-        if (isPromise(result)) {
-            pending.value = true;
-            const done = () => {
-                pending.value = false;
-            };
-            (result as Promise<unknown>).then(done, done);
-        }
-    };
-
-    // the foundation returns null for a non-Promise, which Modal does not accept
-    const modalOk = (event: MouseEvent) => {
-        const result = foundation.handleModalOk(event);
-        track(result, okPending);
-        return result ?? undefined;
-    };
-
-    const modalCancel = (event: CancelEvent) => {
-        const result = foundation.handleModalCancel(event);
-        track(result, cancelPending);
-        return result ?? undefined;
-    };
-
     const buttonProps = (kind: 'ok' | 'cancel'): FeedbackButtonProps => {
         const popup = props.mode === 'popup';
         const custom = kind === 'ok' ? props.okButtonProps : props.cancelButtonProps;
-        const pending = popup ? (kind === 'ok' ? state.value.onOKReturnPromiseStatus : state.value.onCancelReturnPromiseStatus) === 'pending' : (kind === 'ok' ? okPending : cancelPending).value;
+        const pending = (kind === 'ok' ? state.value.onOKReturnPromiseStatus : state.value.onCancelReturnPromiseStatus) === 'pending';
         return {
             ...custom,
             ...(kind === 'ok' && { disabled: custom?.disabled ?? disabledOkButton.value }),
@@ -171,8 +144,8 @@
         :class="[prefix, `${prefix}-${props.type}`]"
         :okButtonProps="modalOkProps"
         :okText="locale.locale.submit"
-        :onCancel="modalCancel"
-        :onOk="modalOk"
+        :onCancel="foundation.handleModalCancel"
+        :onOk="foundation.handleModalOk"
         :title="props.title"
         :visible="props.visible"
         v-bind="definedAttrs()"

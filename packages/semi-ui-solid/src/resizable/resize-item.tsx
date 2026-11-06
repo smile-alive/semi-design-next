@@ -31,13 +31,13 @@ export default function ResizeItem(rawProps: ResizeItemProps) {
     const register = (el: HTMLDivElement) =>
         onCleanup(
             group.registerItem({
-                el,
+                element: el,
                 min: () => props.min,
                 max: () => props.max,
                 defaultSize: () => props.defaultSize,
-                start: (e, direction) => props.onResizeStart?.(e, direction),
-                change: (size, e, direction) => props.onChange?.(size, e, direction),
-                end: (size, e, direction) => props.onResizeEnd?.(size, e, direction),
+                notifyResizeStart: (e, direction) => props.onResizeStart?.(e, direction),
+                notifyResize: (size, e, direction) => props.onChange?.(size, e, direction),
+                notifyResizeEnd: (size, e, direction) => props.onResizeEnd?.(size, e, direction),
             })
         );
 

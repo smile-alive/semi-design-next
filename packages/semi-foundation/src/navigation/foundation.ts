@@ -210,7 +210,7 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
      * (transition off, fixed width, hidden); `getAnimations` flushes style, so right after a commit it lists that
      * commit's transition.
      */
-    static isWidthAnimating(nav: Element | null | undefined) {
+    static isWidthAnimating(nav?: Element | null) {
         return Boolean(nav?.getAnimations().some((animation) => animation instanceof CSSTransition && animation.transitionProperty === 'width'));
     }
 

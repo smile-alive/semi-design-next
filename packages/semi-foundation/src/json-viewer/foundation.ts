@@ -201,7 +201,7 @@ export default class JsonViewerFoundation<P extends JsonViewerBaseProps = JsonVi
         this.search(this.#lastSearch?.text ?? '');
     };
 
-    /** Shows or hides the search bar and resets the search options */
+    /** Also resets the search options */
     toggleSearchBar = () => {
         // a reopened bar starts with an empty input, so old results and highlights go too
         this.#lastSearch = null;

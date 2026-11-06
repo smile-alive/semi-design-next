@@ -1,16 +1,6 @@
 import type { ComputedRef } from 'vue';
-import type { ResizeCallback, ResizeStartCallback } from '@fibrae/semi-foundation/resizable/types';
+import type { ResizeGroupItem } from '@fibrae/semi-foundation/resizable/foundation';
 import { createContext } from '../_base/create-context';
-
-export interface ResizeItemEntry {
-    el: HTMLDivElement;
-    min: () => string | undefined;
-    max: () => string | undefined;
-    defaultSize: () => string | number | undefined;
-    start: ResizeStartCallback;
-    change: ResizeCallback;
-    end: ResizeCallback;
-}
 
 export interface ResizeGroupView {
     direction: 'horizontal' | 'vertical';
@@ -18,8 +8,8 @@ export interface ResizeGroupView {
 
 export interface ResizeGroupContext {
     view: ComputedRef<ResizeGroupView>;
-    // the group orders them by DOM position; both return the unregister function
-    registerItem: (entry: ResizeItemEntry) => () => void;
+    // both return the unregister function
+    registerItem: (item: ResizeGroupItem) => () => void;
     registerHandler: (handler: HTMLDivElement) => () => void;
     notifyResizeStart: (handler: HTMLDivElement, e: PointerEvent) => void;
     notifyResizing: (handler: HTMLDivElement, e: PointerEvent) => void;

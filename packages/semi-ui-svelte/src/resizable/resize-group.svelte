@@ -6,7 +6,7 @@
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import { setResizeGroupContext, type ResizeItemEntry } from './context.js';
+    import { setResizeGroupContext } from './context.js';
     import type { ResizeGroupProps } from './interface.js';
     import { joinStyle } from './style.js';
 
@@ -20,12 +20,6 @@
 
     const prefix = cssClasses.PREFIX;
 
-    // Items and handlers register when they mount: tree order on mount, but one inserted later registers last. Index =
-    // layout order, which is DOM order; it is read on use because items can come and go. The foundation reads them only
-    // after mount, so they need not be reactive.
-    const items: ResizeItemEntry[] = [];
-    const handlers: HTMLDivElement[] = [];
-
     const foundationProps: ResizeGroupBaseProps = {
         get direction() {
             return direction;
@@ -38,70 +32,20 @@
         () => ResizeGroupFoundation.getInitialState(),
         () => ({
             getGroupRef: () => group ?? null,
-            getItem: (index) => orderedItems()[index].el,
-            getItemCount: () => items.length,
-            getHandler: (index) => orderedHandlers()[index],
-            getHandlerCount: () => handlers.length,
-            getItemMin: (index) => orderedItems()[index].min(),
-            getItemMax: (index) => orderedItems()[index].max(),
-            getItemStart: (index) => orderedItems()[index].start,
-            getItemChange: (index) => orderedItems()[index].change,
-            getItemEnd: (index) => orderedItems()[index].end,
-            getItemDefaultSize: (index) => orderedItems()[index].defaultSize(),
         })
     );
 
-    function inDocumentOrder(a: Node, b: Node) {
-        return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
-    }
-
-    function orderedItems() {
-        return items.toSorted((a, b) => inDocumentOrder(a.el, b.el));
-    }
-
-    function orderedHandlers() {
-        return handlers.toSorted(inDocumentOrder);
-    }
-
-    const remove =
-        <T>(list: T[], value: T) =>
-        () => {
-            list.splice(list.indexOf(value), 1);
-        };
-
+    // a handler that left the group (unmounted mid-drag) can still send events: the foundation ignores those
     setResizeGroupContext({
         get direction() {
             return direction;
         },
-        registerItem: (entry) => {
-            items.push(entry);
-            return remove(items, entry);
-        },
-        registerHandler: (handler) => {
-            handlers.push(handler);
-            return remove(handlers, handler);
-        },
-        // a handler that left the group (unmounted mid-drag) can still send events: those are ignored
-        notifyResizeStart: (handler, e) => {
-            const index = orderedHandlers().indexOf(handler);
-            if (index >= 0) {
-                foundation.onResizeStart(index, e);
-            }
-        },
-        notifyResizing: (handler, e) => {
-            if (handlers.includes(handler)) {
-                foundation.onResizing(e);
-            }
-        },
-        notifyResizeEnd: (handler, e) => {
-            if (handlers.includes(handler)) {
-                foundation.onResizeEnd(e);
-            }
-        },
-        notifyKeyDown: (handler, e) => {
-            const index = orderedHandlers().indexOf(handler);
-            return index >= 0 && foundation.resizeByKey(index, e);
-        },
+        registerItem: foundation.registerItem,
+        registerHandler: foundation.registerHandler,
+        notifyResizeStart: foundation.onResizeStart,
+        notifyResizing: foundation.onResizing,
+        notifyResizeEnd: foundation.onResizeEnd,
+        notifyKeyDown: foundation.resizeByKey,
     });
 
     const observeResize = (node: HTMLDivElement) => {

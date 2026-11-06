@@ -59,6 +59,7 @@
         () => CalendarMonthFoundation.getInitialState(),
         () => ({
             notifyClose: (closeEvent) => onClose?.(closeEvent),
+            notifyMoreClick: (clickEvent, date, remaining) => onMoreClick?.(clickEvent, date, remaining),
         })
     );
 
@@ -66,11 +67,10 @@
 
     const prefixCls = `${cssClasses.PREFIX}-month`;
     const cardCls = `${prefixCls}-event-card`;
-    const openCardKey = $derived(CalendarFoundation.getOpenCardKey(states().showCard));
+    const openCardKey = $derived(states().openCardKey);
     const monthlyData = $derived(CalendarFoundation.getMonthlyData(displayValue, locale().dateFnsLocale, weekStartsOn, today));
     const parsedEvents = $derived(CalendarFoundation.getParseMonthlyEvents(events, displayValue, weekStartsOn));
     const weekCount = $derived(Object.keys(monthlyData).length);
-    const stale = $derived(CalendarFoundation.isOpenCardStale(openCardKey, monthlyData, parsedEvents, itemLimit));
 
     const weeks = $derived(
         Object.values(monthlyData).map((weekDays, weekInd) => {
@@ -93,7 +93,7 @@
         })
     );
 
-    const isOpen = (key: string) => states().showCard[key] ?? false;
+    const isOpen = (key: string) => openCardKey === key;
 
     const measure = () => {
         const row = grid?.lastElementChild;
@@ -125,12 +125,7 @@
 
     const handleMoreClick = (clickEvent: MouseEvent, key: string, date: Date, count: number) => {
         clickEvent.stopPropagation();
-        if (isOpen(key)) {
-            closeCardToMore(clickEvent, key);
-            return;
-        }
-        foundation.showCard(key);
-        onMoreClick?.(clickEvent, date, count);
+        foundation.toggleCard(clickEvent, key, date, count);
     };
 
     // The "more" button of the open card counts as inside: clicking it again closes the card through its click
@@ -149,12 +144,8 @@
     watch(() => weekCount, measure);
 
     watch(
-        () => stale,
-        (isStale) => {
-            if (isStale) {
-                foundation.closeCard(null, openCardKey);
-            }
-        }
+        () => [monthlyData, parsedEvents, itemLimit, openCardKey],
+        () => foundation.closeStaleCard(monthlyData, parsedEvents, itemLimit)
     );
 
     onMount(measure);

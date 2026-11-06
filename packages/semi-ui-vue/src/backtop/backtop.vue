@@ -1,6 +1,5 @@
 <script setup lang="ts">
-    import { computed, onBeforeUnmount, onMounted, onUpdated, useAttrs, useTemplateRef, watch } from 'vue';
-    import { throttle } from 'es-toolkit';
+    import { computed, onMounted, onUpdated, useAttrs, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/backtop/constants';
     import BackTopFoundation, { type BackTopAdapter } from '@fibrae/semi-foundation/backtop/foundation';
     import '@fibrae/semi-foundation/backtop/backtop.scss';
@@ -32,7 +31,7 @@
         visibilityHeight: () => semiDefault('BackTop', 'visibilityHeight', 400),
     });
 
-    // Declared so the click is throttled and follows the start of the scroll, which attrs on the button would not.
+    // Declared so the foundation throttles the click and emits it with the start of the scroll, which attrs on the button would not.
     const emit = defineEmits<BackTopEmits>();
     const slots = defineSlots<BackTopSlots>();
     const attrs = useAttrs();
@@ -55,8 +54,6 @@
         { props: { target: () => target.value } }
     );
 
-    const throttledClick = computed(() => throttle((event: MouseEvent) => foundation.onClick(event), props.duration));
-
     // Slots and attrs are not reactive, so the name is decided while rendering. Static children are the visible name,
     // and a different default would contradict them.
     const ariaLabel = () => (attrs['aria-label'] as string | undefined) ?? (hasSlotContent(slots.default) ? undefined : i18n.value.locale.backToTop);
@@ -66,15 +63,13 @@
     const warnInteractive = () => BackTopFoundation.warnInteractiveChildren(button.value?.$el);
 
     useKeepAliveFoundation(foundation);
-    watch(throttledClick, (_next, previous) => previous.cancel());
 
-    onBeforeUnmount(() => throttledClick.value.cancel());
     onMounted(warnInteractive);
     onUpdated(warnInteractive);
 </script>
 
 <template>
-    <FloatButton v-if="state.visible" ref="button" v-bind="$attrs" :aria-label="ariaLabel()" :badge="props.badge" :class="prefix" :colorful="props.colorful" :shape="props.shape" :size="props.size" x-semi-prop="children" @click="throttledClick($event)">
+    <FloatButton v-if="state.visible" ref="button" v-bind="$attrs" :aria-label="ariaLabel()" :badge="props.badge" :class="prefix" :colorful="props.colorful" :shape="props.shape" :size="props.size" x-semi-prop="children" @click="foundation.onClick">
         <template #icon>
             <slot v-if="hasSlotContent(slots.default)" />
             <slot v-else name="icon">

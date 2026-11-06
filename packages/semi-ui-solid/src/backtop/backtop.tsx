@@ -1,6 +1,5 @@
-import { children, createEffect, createMemo, type JSX, onCleanup, Show, splitProps } from 'solid-js';
+import { children, createEffect, type JSX, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { throttle } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/backtop/constants';
 import BackTopFoundation, { type BackTopAdapter, type BackTopState, type Target } from '@fibrae/semi-foundation/backtop/foundation';
 import '@fibrae/semi-foundation/backtop/backtop.scss';
@@ -62,13 +61,6 @@ export default function BackTop(rawProps: BackTopProps) {
 
     // reading creates the content, so it waits for the button: content created while hidden would never be inserted
     const content = children(() => (state().visible ? local.children : undefined));
-    const duration = createMemo(() => local.duration);
-
-    const handleClick = createMemo(() => {
-        const throttled = throttle((event: ClickEvent) => foundation.onClick(event), duration());
-        onCleanup(() => throttled.cancel());
-        return throttled;
-    });
 
     const hasChildren = () => hasContent(content());
 
@@ -88,7 +80,7 @@ export default function BackTop(rawProps: BackTopProps) {
                 aria-label={local['aria-label'] ?? (hasChildren() ? undefined : locale().locale.backToTop)}
                 x-semi-prop="children"
                 icon={hasChildren() ? content() : (local.icon ?? <IconBackTop />)}
-                onClick={(event) => handleClick()(event)}
+                onClick={(event) => foundation.onClick(event)}
             />
         </Show>
     );

@@ -1,20 +1,10 @@
 import type { Accessor } from 'solid-js';
-import type { ResizeCallback, ResizeStartCallback } from '@fibrae/semi-foundation/resizable/types';
+import type { ResizeGroupItem } from '@fibrae/semi-foundation/resizable/foundation';
 import { createContext } from '../_base/create-context';
-
-export interface ResizeItemEntry {
-    el: HTMLDivElement;
-    min: () => string | undefined;
-    max: () => string | undefined;
-    defaultSize: () => string | number | undefined;
-    start: ResizeStartCallback;
-    change: ResizeCallback;
-    end: ResizeCallback;
-}
 
 export interface ResizeGroupContextValue {
     view: Accessor<{ direction: 'horizontal' | 'vertical' }>;
-    registerItem: (entry: ResizeItemEntry) => () => void;
+    registerItem: (item: ResizeGroupItem) => () => void;
     registerHandler: (handler: HTMLDivElement) => () => void;
     notifyResizeStart: (handler: HTMLDivElement, e: PointerEvent) => void;
     notifyResizing: (handler: HTMLDivElement, e: PointerEvent) => void;

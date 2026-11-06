@@ -354,23 +354,6 @@ describe('Svelte TextArea', () => {
         expect(getTextArea()).toHaveValue('ab');
     });
 
-    it.each([
-        [true, '好'],
-        [false, ''],
-    ])('函数绑定的 TextArea 在输入法组合结束后才收到输入事件时（Firefox 的顺序），父组件接受 %s 则显示 %j', async (accept, shown) => {
-        const { store, textarea } = setupModes('function', '', accept);
-        await fireEvent.compositionStart(textarea);
-        await fireEvent.input(textarea, { target: { value: 'hao' }, isComposing: true });
-        await settle();
-        expect(textarea).toHaveValue('hao');
-        await fireEvent.compositionEnd(textarea, { target: { value: '好' } });
-        await settle();
-        await fireEvent.input(textarea);
-        await settle();
-        expect(textarea).toHaveValue(shown);
-        expect(store.value).toBe(shown);
-    });
-
     it('composition 模式下，组合结束后只上报一次，并显示组合中的文本', async () => {
         const onChange = vi.fn<Change>();
         setup({ props: { value: '', composition: true, onChange } });

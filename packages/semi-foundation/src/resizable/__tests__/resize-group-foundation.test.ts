@@ -10,8 +10,8 @@ interface MockElement {
     offsetHeight: number;
 }
 
-function createMockAdapter({ groupEl, handlerEls, itemEls, direction }: { groupEl: MockElement; handlerEls: MockElement[]; itemEls: MockElement[]; direction: string }) {
-    return {
+function createGroup({ groupEl, handlerEls, itemEls, direction }: { groupEl: MockElement; handlerEls: MockElement[]; itemEls: MockElement[]; direction: string }) {
+    const adapter = {
         getProp: (key: string) => ({ direction })[key],
         getProps: () => ({ direction }),
         getState: () => undefined,
@@ -19,28 +19,39 @@ function createMockAdapter({ groupEl, handlerEls, itemEls, direction }: { groupE
         getContext: () => undefined,
         getContexts: () => ({}),
         getGroupRef: () => groupEl,
-        getHandler: (i: number) => handlerEls[i],
-        getHandlerCount: () => handlerEls.length,
-        getItem: (i: number) => itemEls[i],
-        getItemCount: () => itemEls.length,
-        getItemMin: () => undefined,
-        getItemMax: () => undefined,
-        getItemDefaultSize: () => undefined,
-        getItemStart: () => undefined,
-        getItemChange: () => undefined,
-        getItemEnd: () => undefined,
     } as unknown as ResizeGroupAdapter;
+    const foundation = new ResizeGroupFoundation(adapter);
+    handlerEls.forEach((handler) => foundation.registerHandler(handler as unknown as HTMLDivElement));
+    itemEls.forEach((element) =>
+        foundation.registerItem({
+            element: element as unknown as HTMLDivElement,
+            min: () => undefined,
+            max: () => undefined,
+            defaultSize: () => undefined,
+            notifyResizeStart: () => undefined,
+            notifyResize: () => undefined,
+            notifyResizeEnd: () => undefined,
+        })
+    );
+    return { adapter, foundation };
 }
 
 const noBox = Object.fromEntries(['paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom'].map((key) => [key, '0px']).concat(['borderLeftWidth', 'borderRightWidth', 'borderTopWidth', 'borderBottomWidth'].map((key) => [key, '0px'])));
-const makeEl = (size: number) => ({
-    offsetWidth: size,
-    offsetHeight: size,
-    style: {} as { height?: string },
-    id: '',
-    setAttribute() {},
-    ownerDocument: { defaultView: { getComputedStyle: () => noBox } },
-});
+// elements sort in creation order, as DOM order does in a rendered group
+let created = 0;
+function makeEl(size: number) {
+    const order = created++;
+    return {
+        order,
+        offsetWidth: size,
+        offsetHeight: size,
+        style: {} as { height?: string },
+        id: '',
+        setAttribute() {},
+        compareDocumentPosition: (other: { order: number }) => (order < other.order ? Node.DOCUMENT_POSITION_FOLLOWING : Node.DOCUMENT_POSITION_PRECEDING),
+        ownerDocument: { defaultView: { getComputedStyle: () => noBox } },
+    };
+}
 
 describe('ResizeGroupFoundation.handlePropsChange', () => {
     it('把项的尺寸移到新轴，并按手柄在新轴上的长度重新扣除手柄占用的空间', () => {
@@ -58,8 +69,7 @@ describe('ResizeGroupFoundation.handlePropsChange', () => {
             { ...makeEl(0), style: style() },
             { ...makeEl(0), style: style() },
         ];
-        const adapter = createMockAdapter({ groupEl, handlerEls, itemEls, direction: 'horizontal' });
-        const foundation = new ResizeGroupFoundation(adapter);
+        const { adapter, foundation } = createGroup({ groupEl, handlerEls, itemEls, direction: 'horizontal' });
         foundation.init();
         expect(itemEls[0].style.width).toBe('calc(50% - 4px)');
 
@@ -76,8 +86,7 @@ describe('ResizeGroupFoundation 变为可见后重新计算 (#3336)', () => {
         const groupEl = makeEl(0);
         const handlerEls = [makeEl(0)];
         const itemEls = [makeEl(0), makeEl(0)];
-        const adapter = createMockAdapter({ groupEl, handlerEls, itemEls, direction: 'vertical' });
-        const foundation = new ResizeGroupFoundation(adapter);
+        const { foundation } = createGroup({ groupEl, handlerEls, itemEls, direction: 'vertical' });
 
         foundation.init();
 
@@ -99,8 +108,7 @@ describe('ResizeGroupFoundation 变为可见后重新计算 (#3336)', () => {
         const groupEl = makeEl(100);
         const handlerEls = [makeEl(10)];
         const itemEls = [makeEl(50), makeEl(50)];
-        const adapter = createMockAdapter({ groupEl, handlerEls, itemEls, direction: 'vertical' });
-        const foundation = new ResizeGroupFoundation(adapter);
+        const { foundation } = createGroup({ groupEl, handlerEls, itemEls, direction: 'vertical' });
 
         foundation.init();
 
@@ -112,5 +120,52 @@ describe('ResizeGroupFoundation 变为可见后重新计算 (#3336)', () => {
 
         expect(itemEls[0].style.height).toBe('calc(70% - 5px)');
         expect(itemEls[1].style.height).toBe('calc(30% - 5px)');
+    });
+});
+
+describe('ResizeGroupFoundation 子项与手柄注册', () => {
+    const makeGroup = () => {
+        const groupEl = makeEl(100);
+        const handler = makeEl(10);
+        const [first, second] = [makeEl(50), makeEl(50)];
+        const started: string[] = [];
+        const adapter = {
+            getProp: () => 'horizontal',
+            getProps: () => ({ direction: 'horizontal' }),
+            getState: () => undefined,
+            getStates: () => ({}),
+            getGroupRef: () => groupEl,
+        } as unknown as ResizeGroupAdapter;
+        const foundation = new ResizeGroupFoundation(adapter);
+        const item = (name: string, element: MockElement) => ({
+            element: element as unknown as HTMLDivElement,
+            min: () => undefined,
+            max: () => undefined,
+            defaultSize: () => undefined,
+            notifyResizeStart: () => {
+                started.push(name);
+            },
+            notifyResize: () => undefined,
+            notifyResizeEnd: () => undefined,
+        });
+        // registered against DOM order: a child inserted later registers last
+        foundation.registerItem(item('second', second));
+        foundation.registerItem(item('first', first));
+        const unregisterHandler = foundation.registerHandler(handler as unknown as HTMLDivElement);
+        foundation.init();
+        return { foundation, handler: handler as unknown as HTMLDivElement, started, unregisterHandler };
+    };
+
+    it('按 DOM 顺序给子项编号，与注册顺序无关', () => {
+        const { foundation, handler, started } = makeGroup();
+        expect(foundation.resizeByKey(handler, { key: 'ArrowRight' } as KeyboardEvent)).toBe(true);
+        expect(started).toEqual(['first', 'second']);
+    });
+
+    it('已注销的手柄不再触发缩放', () => {
+        const { foundation, handler, started, unregisterHandler } = makeGroup();
+        unregisterHandler();
+        expect(foundation.resizeByKey(handler, { key: 'ArrowRight' } as KeyboardEvent)).toBe(false);
+        expect(started).toEqual([]);
     });
 });

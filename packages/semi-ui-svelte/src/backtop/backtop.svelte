@@ -1,6 +1,5 @@
 <script lang="ts">
     import type { Attachment } from 'svelte/attachments';
-    import { throttle } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/backtop/constants';
     import BackTopFoundation, { type BackTopAdapter, type BackTopBaseProps } from '@fibrae/semi-foundation/backtop/foundation';
     import '@fibrae/semi-foundation/backtop/backtop.scss';
@@ -61,7 +60,6 @@
 
     // Static children are the visible name, and a different default would contradict them
     const ariaLabel = $derived(rest['aria-label'] ?? (children ? undefined : locale().locale.backToTop));
-    const throttledClick = $derived(throttle((event: ClickEvent) => foundation.onClick(event), duration));
 
     const captureButton: Attachment<HTMLElement> = (node) => {
         button = node;
@@ -69,12 +67,6 @@
             button = undefined;
         };
     };
-
-    $effect(() => {
-        // the timer of a replaced or destroyed throttle must not fire
-        const pending = throttledClick;
-        return () => pending.cancel();
-    });
 
     $effect(() => {
         if (children && button) {
@@ -94,5 +86,5 @@
 {/snippet}
 
 {#if states().visible}
-    <FloatButton {...rest} {@attach captureButton} aria-label={ariaLabel} {badge} {badgeCount} class={[prefix, rest.class]} {colorful} icon={iconPart} {shape} {size} x-semi-prop="children" onclick={throttledClick} />
+    <FloatButton {...rest} {@attach captureButton} aria-label={ariaLabel} {badge} {badgeCount} class={[prefix, rest.class]} {colorful} icon={iconPart} {shape} {size} x-semi-prop="children" onclick={foundation.onClick} />
 {/if}

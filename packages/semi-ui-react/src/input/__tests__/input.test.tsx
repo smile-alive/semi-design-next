@@ -834,16 +834,14 @@ describe('Input 行为基线', () => {
         expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-focus`);
     });
 
-    it('清除按钮为 DateInput 标记 change 事件，mousedown 照常冒泡以便外部点击检测关闭浮层', () => {
+    it('清除按钮以 mousedown 事件触发 change，mousedown 照常冒泡以便外部点击检测关闭浮层', () => {
         const onChange = vi.fn<NonNullable<InputProps['onChange']>>();
         const onOuterMouseDown = vi.fn<() => void>();
         document.body.addEventListener('mousedown', onOuterMouseDown);
         try {
             render(<Input defaultValue="semi" showClear onChange={onChange} />);
             fireEvent.mouseDown(getClearBtn());
-            // The marker is an internal flag for DateInput and is absent from the public event type
-            const event = onChange.mock.calls[0][1] as unknown as { __fromClearBtn?: boolean };
-            expect(event.__fromClearBtn).toBe(true);
+            expect(onChange).toHaveBeenCalledWith('', expect.objectContaining({ type: 'mousedown' }));
             expect(onOuterMouseDown).toHaveBeenCalledTimes(1);
         } finally {
             document.body.removeEventListener('mousedown', onOuterMouseDown);

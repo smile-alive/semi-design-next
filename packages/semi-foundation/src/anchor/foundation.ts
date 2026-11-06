@@ -40,7 +40,7 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
     #debouncedScrollEnd = debounce(() => this.#handleClickLink(), 100);
 
     #getContainer() {
-        return this.adapter.getContainer() || window;
+        return this.adapter.getContainer() ?? window;
     }
 
     #getContentNode(link: string) {

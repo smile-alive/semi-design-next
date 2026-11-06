@@ -42,33 +42,30 @@ export default class FeedbackFoundation<P extends object = object, CE = unknown,
         this.adapter.notifyValueChange(value);
     }
 
-    // The footer buttons of the popup report the pending state themselves; the value clears once the handler settles.
-    // A rejection is rethrown, so the caller still sees it.
-    #settlePopup(result: void | Promise<any>, report: (status: PromiseStatus) => void) {
+    // The footer buttons show the pending state from `onOKReturnPromiseStatus` and `onCancelReturnPromiseStatus`; the
+    // value clears once the handler settles. A rejection is rethrown, so the caller still sees it; Modal gets the
+    // returned Promise, and nothing for a handler that returned no Promise.
+    #settle(result: void | Promise<any>, report: (status: PromiseStatus) => void) {
         if (!isPromise(result)) {
             this.setState({ value: null });
-            return;
+            return undefined;
         }
         report('pending');
-        (result as Promise<any>)
-            .then(() => {
+        return (result as Promise<any>).then(
+            () => {
                 report('fulfilled');
                 this.setState({ value: null });
-            })
-            .catch((e) => {
+            },
+            (e) => {
                 report('rejected');
                 throw e;
-            });
+            }
+        );
     }
 
-    // Modal shows the pending state on its own buttons from the promise it gets back
-    #settleModal(result: void | Promise<any>) {
-        if (!isPromise(result)) {
-            this.setState({ value: null });
-            return null;
-        }
-        return (result as Promise<any>).then(() => this.setState({ value: null }));
-    }
+    #reportOk = (onOKReturnPromiseStatus: PromiseStatus) => this.setState({ onOKReturnPromiseStatus });
+
+    #reportCancel = (onCancelReturnPromiseStatus: PromiseStatus) => this.setState({ onCancelReturnPromiseStatus });
 
     static getInitialState(): FeedbackBaseState {
         return { value: null, onOKReturnPromiseStatus: 'fulfilled', onCancelReturnPromiseStatus: 'fulfilled' };
@@ -102,18 +99,14 @@ export default class FeedbackFoundation<P extends object = object, CE = unknown,
     };
 
     handleCancel = (e: CE) => {
-        this.#settlePopup(this.adapter.notifyCancel(e), (onCancelReturnPromiseStatus) => this.setState({ onCancelReturnPromiseStatus }));
+        void this.#settle(this.adapter.notifyCancel(e), this.#reportCancel);
     };
 
     handleSubmit = (e: OE) => {
-        this.#settlePopup(this.adapter.notifyOk(e), (onOKReturnPromiseStatus) => this.setState({ onOKReturnPromiseStatus }));
+        void this.#settle(this.adapter.notifyOk(e), this.#reportOk);
     };
 
-    handleModalOk = (e: OE) => {
-        return this.#settleModal(this.adapter.notifyOk(e));
-    };
+    handleModalOk = (e: OE) => this.#settle(this.adapter.notifyOk(e), this.#reportOk);
 
-    handleModalCancel = (e: CE) => {
-        return this.#settleModal(this.adapter.notifyCancel(e));
-    };
+    handleModalCancel = (e: CE) => this.#settle(this.adapter.notifyCancel(e), this.#reportCancel);
 }

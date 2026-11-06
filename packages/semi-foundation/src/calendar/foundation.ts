@@ -263,11 +263,6 @@ export default class CalendarFoundation<P extends CalendarBaseProps = CalendarBa
         return openCardKey !== undefined && !Object.values(monthlyData).some((weekDays, weekInd) => weekDays.some(({ date, ind }) => date.toString() === openCardKey && CalendarFoundation.countHidden(parsedEvents[weekInd]?.day?.[ind], itemLimit) > 0));
     }
 
-    /** The key of the open "more" card, if any (at most one) */
-    static getOpenCardKey(showCard: Record<string, boolean>) {
-        return Object.keys(showCard).find((key) => showCard[key]);
-    }
-
     // decided once per mount; the views remount a column when its date changes
     override init() {
         const { showCurrTime, displayValue } = this.getProps();

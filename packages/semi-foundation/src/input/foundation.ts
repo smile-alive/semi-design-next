@@ -1,5 +1,4 @@
 import { ENTER_KEY, isComposing } from './../utils/key-code';
-import { strings } from './constants';
 import TextEntryFoundation, { type TextEntryAdapter, type TextEntryBaseProps, type TextEntryBaseState } from './text-entry-foundation';
 
 export interface InputBaseProps extends TextEntryBaseProps {
@@ -20,7 +19,8 @@ export type InputKeyEvent = Pick<KeyboardEvent, 'key'> & Parameters<typeof isCom
 
 /**
  * The host's event types, which the foundation passes on to the callbacks: KE for keydown, keyup and Enter, CE for
- * composition, IE for input. The clear event is not typed: handleClear marks it for DateInput.
+ * composition, IE for input. The clear event is not typed: it is the clear button's click, which handleClear passes
+ * to onChange and then to onClear.
  */
 export interface InputAdapter<P extends InputBaseProps = InputBaseProps, KE = unknown, CE = unknown, IE = unknown> extends TextEntryAdapter<P, InputBaseState, CE> {
     notifyClear(e: any): void;
@@ -83,11 +83,8 @@ export default class InputFoundation<P extends InputBaseProps = InputBaseProps, 
             this.setState({ value });
         }
 
-        // the flag is read by DateInput; the event object itself is marked so every callback sees it
-        const eventObj = Object.assign(typeof e === 'object' && e !== null ? e : {}, { [strings.CLEARBTN_CLICKED_EVENT_FLAG]: true });
-
-        this.adapter.notifyChange(value, eventObj);
-        this.adapter.notifyClear(eventObj);
+        this.adapter.notifyChange(value, e);
+        this.adapter.notifyClear(e);
     };
 
     handleClick = (e: Pick<Event, 'target' | 'currentTarget'>) => {
