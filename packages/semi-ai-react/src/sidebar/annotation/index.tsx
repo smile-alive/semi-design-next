@@ -13,8 +13,7 @@ export interface AnnotationProps extends Omit<ContainerReactProps, 'onChange' | 
 const defaultProps = {} satisfies Partial<AnnotationProps>;
 
 function Annotation(rawProps: AnnotationProps) {
-    const props = useDefaultProps('Annotation', rawProps, defaultProps);
-    const { activeKey, info, onChange, onClick, renderItem, title, className, ...rest } = props;
+    const { activeKey, info, onChange, onClick, renderItem, title, className, ...rest } = useDefaultProps('Annotation', rawProps, defaultProps);
 
     const { locale } = useLocale('Sidebar');
 

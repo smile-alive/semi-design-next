@@ -82,8 +82,7 @@ const defaultProps = {
 } satisfies Partial<PopoverProps>;
 
 function Popover(rawProps: PopoverProps & { ref?: React.Ref<PopoverHandle> }) {
-    const props = useDefaultProps('Popover', rawProps, defaultProps);
-    const { ref, children, prefixCls, showArrow, arrowStyle = {}, position, style, trigger, content, contentClassName, spacing: spacingProp, role: roleProp, ...attr } = props;
+    const { ref, children, prefixCls, showArrow, arrowStyle = {}, position, style, trigger, content, contentClassName, spacing: spacingProp, role: roleProp, ...attr } = useDefaultProps('Popover', rawProps, defaultProps);
 
     const tooltipRef = useRef<TooltipHandle>(null);
 

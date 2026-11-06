@@ -28,8 +28,6 @@ class SidebarRuntime {
 }
 
 function Sidebar(rawProps: SideBarProps) {
-    const props = useDefaultProps('Sidebar', rawProps, defaultProps);
-
     const {
         mode,
         title,
@@ -52,7 +50,7 @@ function Sidebar(rawProps: SideBarProps) {
         containerRef,
         renderHeader,
         ...rest
-    } = props;
+    } = useDefaultProps('Sidebar', rawProps, defaultProps);
 
     const { locale } = useLocale('Sidebar');
 

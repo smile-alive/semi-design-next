@@ -53,10 +53,9 @@
     );
 
     const { PREFIX, PREFIX_ACTION } = cssClasses;
-    const { view } = context;
 
     const flags = computed(() => {
-        const { finished, ...rest } = getDialogueActionFlags({ role: props.message.role, status: props.message.status, isLastChat: props.isLastChat, showReset: view.value.showReset });
+        const { finished, ...rest } = getDialogueActionFlags({ role: props.message.role, status: props.message.status, isLastChat: props.isLastChat, showReset: context.view.value.showReset });
         return {
             ...rest,
             wrapCls: normalizeClass([

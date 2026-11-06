@@ -2,11 +2,9 @@ import { h, type VNodeChild } from 'vue';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { render } from '@test/utils/vue';
 import { Form, type FormApi, type FormDefaultSlotProps } from '../..';
-import Select from '../../../select';
 import { FormSelect } from '../../field';
 
 export { FormCheckbox, FormInput, FormSelect, FormSwitch } from '../../field';
-const Option = Select.Option;
 
 export const prefix = `${BASE_CLASS_PREFIX}-form`;
 export const fieldSelector = `.${prefix}-field`;
@@ -40,4 +38,5 @@ export function renderForm(props: Record<string, unknown> = {}, content?: Conten
     };
 }
 
-export const selectWithOptions = (props: Record<string, unknown> = {}) => h(FormSelect, { field: 'business', label: 'business', ...props }, () => [h(Option, { value: 'abc' }, () => 'Abc'), h(Option, { value: 'hotsoon' }, () => 'Hotsoon'), h(Option, { value: 'topbuzz' }, () => 'TopBuzz')]);
+export const selectWithOptions = (props: Record<string, unknown> = {}) =>
+    h(FormSelect, { field: 'business', label: 'business', ...props }, () => [h(FormSelect.Option, { value: 'abc' }, () => 'Abc'), h(FormSelect.Option, { value: 'hotsoon' }, () => 'Hotsoon'), h(FormSelect.Option, { value: 'topbuzz' }, () => 'TopBuzz')]);

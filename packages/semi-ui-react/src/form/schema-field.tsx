@@ -64,8 +64,7 @@ function UnsupportedField({ field }: { field: string }) {
 const defaultProps = { field: '' } satisfies Partial<SchemaFieldProps>;
 
 export default function SchemaField(rawProps: SchemaFieldProps) {
-    const props = useDefaultProps('SchemaField', rawProps, defaultProps);
-    const { field, jsonSchema, widgets, renderField } = props;
+    const { field, jsonSchema, widgets, renderField } = useDefaultProps('SchemaField', rawProps, defaultProps);
 
     const fieldBridge = useFieldBridgeContext();
     const { locale } = useLocale('Form');

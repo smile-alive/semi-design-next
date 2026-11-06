@@ -10,15 +10,12 @@ import CSSAnimation from '../_css-animation';
 import Toast, { type ToastItemHandle } from './toast';
 
 export default function ToastList({ store }: ToastListProps) {
-    const state = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
+    const { list, removedItems, order, stack, updatedItems } = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
     const [handles] = useState(() => new Map<string, ToastItemHandle>());
     const [stackExpanded, setStackExpanded] = useState(false);
     const innerWrapper = useRef<HTMLDivElement>(null);
     const hovered = useRef(false);
     const focused = useRef(false);
-
-    const { list, removedItems, order, stack, updatedItems } = state;
-
     const byId = new Map([...list, ...removedItems].map((item) => [item.id, item]));
 
     const announcement = useNoticeListEffects(list, updatedItems, removedItems, handles);

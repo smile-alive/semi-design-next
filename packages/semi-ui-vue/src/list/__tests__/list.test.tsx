@@ -51,7 +51,7 @@ describe('List', () => {
     });
 
     it('item 插槽含 header、main 与 extra 的 List', () => {
-        const view = renderList(
+        const { container } = renderList(
             {},
             {
                 item: ({ item }) => [
@@ -76,7 +76,6 @@ describe('List', () => {
                 ],
             }
         );
-        const { container } = view;
         expect(container.querySelector(`.${prefixCls}-item-body-header .${BASE_CLASS_PREFIX}-avatar-label`)).toHaveTextContent(/^SE$/);
         expect(container.querySelector(`.${prefixCls}-item-body-main span`)).toHaveTextContent(/^示例标题$/);
         expect(container.querySelector(`.${prefixCls}-item-extra .${BASE_CLASS_PREFIX}-button-group`)).not.toBeNull();

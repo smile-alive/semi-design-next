@@ -721,8 +721,7 @@ describe(`Table`, () => {
                 address: 'London No. 2 Lake Park',
             },
         ];
-        const targetData = sortData.reduce((a, b) => (a.name.length > b.name.length ? a : b));
-        const { name } = targetData;
+        const { name } = sortData.reduce((a, b) => (a.name.length > b.name.length ? a : b));
         render(<Table columns={sortColumns} dataSource={sortData} />);
         expect(getFirstCellText()).toBe(name);
     });
@@ -769,8 +768,7 @@ describe(`Table`, () => {
                 address: 'London No. 2 Lake Park',
             },
         ];
-        const targetData = sortData.reduce((a, b) => (a.name.length < b.name.length ? a : b));
-        const { name } = targetData;
+        const { name } = sortData.reduce((a, b) => (a.name.length < b.name.length ? a : b));
         render(<Table columns={sortColumns} dataSource={sortData} />);
         expect(getFirstCellText()).toBe(name);
     });
@@ -817,8 +815,7 @@ describe(`Table`, () => {
                 address: 'London No. 2 Lake Park',
             },
         ];
-        const targetData = sortData.reduce((a, b) => (a.name.length > b.name.length ? a : b));
-        const { name } = targetData;
+        const { name } = sortData.reduce((a, b) => (a.name.length > b.name.length ? a : b));
         const { rerender } = render(<Table columns={sortColumns} dataSource={sortData} />);
         expect(getFirstCellText()).toBe(name);
         const ascendOrderColumns: ColumnProps[] = [
@@ -838,8 +835,7 @@ describe(`Table`, () => {
             },
         ];
         rerender(<Table columns={ascendOrderColumns} dataSource={sortData} />);
-        const ascendTargetData = sortData.reduce((a, b) => (a.name.length < b.name.length ? a : b));
-        const { name: ascendTargetName } = ascendTargetData;
+        const { name: ascendTargetName } = sortData.reduce((a, b) => (a.name.length < b.name.length ? a : b));
         expect(getFirstCellText()).toBe(ascendTargetName);
         const defaultOrderColumns = [
             {
@@ -858,8 +854,7 @@ describe(`Table`, () => {
             },
         ];
         rerender(<Table columns={defaultOrderColumns} dataSource={sortData} />);
-        const defaultTargetData = sortData[0];
-        const { name: defaultTargetName } = defaultTargetData;
+        const { name: defaultTargetName } = sortData[0];
         expect(getFirstCellText()).toBe(defaultTargetName);
     });
     it('所有行都禁用时的全选', async () => {
@@ -1655,8 +1650,7 @@ describe(`Table`, () => {
         ];
         const onChange = vi.fn<TableChange>();
 
-        const targetData = sortData.reduce((a, b) => (a.name.length > b.name.length ? a : b));
-        const { name } = targetData;
+        const { name } = sortData.reduce((a, b) => (a.name.length > b.name.length ? a : b));
         const { unmount } = render(<Table columns={sortColumns} dataSource={sortData} onChange={onChange} />);
         expect(getFirstCellText()).toBe(name);
 
@@ -1710,8 +1704,7 @@ describe(`Table`, () => {
 
         const { unmount } = render(<Table columns={ascendOrderColumns} dataSource={sortData} onChange={onChange} />);
 
-        const ascendTargetData = sortData.reduce((a, b) => (a.name.length < b.name.length ? a : b));
-        const { name: ascendTargetName } = ascendTargetData;
+        const { name: ascendTargetName } = sortData.reduce((a, b) => (a.name.length < b.name.length ? a : b));
         expect(getFirstCellText()).toBe(ascendTargetName);
         unmount();
     });
@@ -1763,8 +1756,7 @@ describe(`Table`, () => {
 
         const { rerender, unmount } = render(<Table columns={sortColumns} dataSource={sortData} onChange={onChange} />);
 
-        const defaultTargetData = sortData[0];
-        const { name: defaultTargetName } = defaultTargetData;
+        const { name: defaultTargetName } = sortData[0];
         expect(getFirstCellText()).toBe(defaultTargetName);
 
         const getSorter = () => document.querySelector(`.${BASE_CLASS_PREFIX}-table-thead .${BASE_CLASS_PREFIX}-table-column-sorter`);
@@ -1802,8 +1794,7 @@ describe(`Table`, () => {
             },
         ];
         rerender(<Table columns={sortColumns} dataSource={newData} onChange={onChange} />);
-        const newDescendTargetData = newData.reduce((a, b) => (a.name.length > b.name.length ? a : b));
-        const { name: newDescendTargetName } = newDescendTargetData;
+        const { name: newDescendTargetName } = newData.reduce((a, b) => (a.name.length > b.name.length ? a : b));
         expect(getFirstCellText()).toBe(newDescendTargetName);
         unmount();
     });

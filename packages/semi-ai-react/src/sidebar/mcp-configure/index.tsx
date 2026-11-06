@@ -9,8 +9,7 @@ export interface MCPConfigureProps extends ContainerReactProps, MCPConfigureCont
 const defaultProps = {} satisfies Partial<MCPConfigureProps>;
 
 export default function MCPConfigure(rawProps: MCPConfigureProps) {
-    const props = useDefaultProps('MCPConfigure', rawProps, defaultProps);
-    const { options, customOptions, filter, placeholder, onStatusChange, onSearch, onAddClick, onConfigureClick, onEditClick, renderItem, title, ...rest } = props;
+    const { options, customOptions, filter, placeholder, onStatusChange, onSearch, onAddClick, onConfigureClick, onEditClick, renderItem, title, ...rest } = useDefaultProps('MCPConfigure', rawProps, defaultProps);
 
     const { locale } = useLocale('Sidebar');
 

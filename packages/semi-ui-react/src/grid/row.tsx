@@ -27,8 +27,7 @@ export interface RowProps extends ElementProps<'div'> {
 const defaultProps = { prefixCls: cssClasses.PREFIX } satisfies Partial<RowProps>;
 
 export default function Row(rawProps: RowProps) {
-    const props = useDefaultProps('Row', rawProps, defaultProps);
-    const { ref, prefixCls, type, justify, align, className, style, children, gutter = 0, ...rest } = props;
+    const { ref, prefixCls, type, justify, align, className, style, children, gutter = 0, ...rest } = useDefaultProps('Row', rawProps, defaultProps);
 
     const [horizontal, vertical] = normalizeGutter(gutter);
     const classes = getRowClassName(prefixCls, { type, justify, align }, className);

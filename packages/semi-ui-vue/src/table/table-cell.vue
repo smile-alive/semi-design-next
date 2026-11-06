@@ -66,8 +66,7 @@
         } else if (fixedRight) {
             position[isRTL ? 'left' : 'right'] = toCssLength(props.fixedRight as number);
         }
-        const custom = { ...column.onCell?.(record as AnyRecord, index as number) };
-        const { class: customClass, style: customStyle, onClick, ...customAttrs } = custom;
+        const { class: customClass, style: customStyle, onClick, ...customAttrs } = { ...column.onCell?.(record as AnyRecord, index as number) };
         const { style: extraStyle, ...extraAttrs } = props.cellAttrs ?? {};
         const merged = { ...customAttrs, ...extraAttrs };
         const colSpan = spanOf(merged, 'col');

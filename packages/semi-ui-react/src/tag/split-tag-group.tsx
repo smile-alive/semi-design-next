@@ -13,8 +13,7 @@ export interface SplitTagGroupProps extends ElementProps<'div'> {
 }
 
 export default function SplitTagGroup(rawProps: SplitTagGroupProps) {
-    const props = useDefaultProps('SplitTagGroup', rawProps, {});
-    const { children, className, ...rest } = props;
+    const { children, className, ...rest } = useDefaultProps('SplitTagGroup', rawProps, {});
 
     return (
         <div {...rest} className={clsx(`${prefixCls}-split`, className)} role="group">

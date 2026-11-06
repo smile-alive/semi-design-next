@@ -421,8 +421,7 @@ export default function Body(props: BodyProps) {
         const rowWidth = arrayAdd(cellWidths, 0, columns?.length ?? 0);
 
         const renderRow = (index: number, style: React.CSSProperties) => {
-            const virtualizedItem: any = virtualizedData[index] ?? {};
-            const { key, expandedRow, sectionRow, ...rest } = virtualizedItem;
+            const { key, expandedRow, sectionRow, ...rest }: any = virtualizedData[index] ?? {};
 
             const rowProps = {
                 ...props,

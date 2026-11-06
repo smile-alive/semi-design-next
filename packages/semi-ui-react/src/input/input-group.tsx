@@ -32,8 +32,7 @@ const defaultProps = {
 } satisfies Partial<InputGroupProps>;
 
 export default function InputGroup(rawProps: InputGroupProps) {
-    const props = useDefaultProps('InputGroup', rawProps, defaultProps);
-    const { ref, size, style, className, children, label, labelPosition, onBlur, onFocus, disabled, ...rest } = props;
+    const { ref, size, style, className, children, label, labelPosition, onBlur, onFocus, disabled, ...rest } = useDefaultProps('InputGroup', rawProps, defaultProps);
 
     const { locale } = useLocale('Input');
     const layer = usePopupLayer();

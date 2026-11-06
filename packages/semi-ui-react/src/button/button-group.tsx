@@ -55,8 +55,7 @@ function withLines(inner: ReactNode[], group: ButtonGroupLooks) {
 }
 
 export default function ButtonGroup(rawProps: ButtonGroupProps) {
-    const props = useDefaultProps('ButtonGroup', rawProps, {});
-    const { children, disabled, size, type, theme, colorful, className, ...rest } = props;
+    const { children, disabled, size, type, theme, colorful, className, ...rest } = useDefaultProps('ButtonGroup', rawProps, {});
 
     const layer = usePopupLayer();
 
