@@ -96,7 +96,7 @@ export default function Hydrated() {
 
 const demo = `'use client';
 
-import { Button, DatePicker, Form, Input, Modal, Select, Table, TabPane, Tabs, Toast, Tooltip, Typography } from '@fibrae/semi-ui-react';
+import { Button, DatePicker, Form, FormCheckbox, FormInput, FormSelect, Input, Modal, Select, Table, TabPane, Tabs, Toast, Tooltip, Typography } from '@fibrae/semi-ui-react';
 import { IconHome } from '@fibrae/semi-icons-react';
 import { useState } from 'react';
 import Hydrated from './hydrated';
@@ -147,9 +147,9 @@ export default function Demo() {
             <Table id="probe-empty-table" columns={columns} dataSource={[]} pagination={false} />
             <DatePicker id="probe-date" value={new Date(2026, 9, 1)} />
             <Form id="probe-form" initValues={{ name: 'form-name', fruit: 'apple', agree: true }}>
-                <Form.Input field="name" label="Name" />
-                <Form.Select field="fruit" label="Fruit" optionList={options} style={{ width: 200 }} />
-                <Form.Checkbox field="agree">Agree</Form.Checkbox>
+                <FormInput field="name" label="Name" />
+                <FormSelect field="fruit" label="Fruit" optionList={options} style={{ width: 200 }} />
+                <FormCheckbox field="agree">Agree</FormCheckbox>
             </Form>
             <Tabs id="probe-tabs">
                 <TabPane tab="TabOne" itemKey="1">

@@ -43,6 +43,11 @@ import {
     FloatButton,
     FloatButtonGroup,
     Form,
+    FormErrorMessage,
+    FormInputGroup,
+    FormLabel,
+    FormSection,
+    FormSlot,
     FormAutoComplete,
     FormCascader,
     FormCheckbox,
@@ -627,6 +632,7 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
             'FormRadio',
             'FormRadioGroup',
             'FormRating',
+            'FormSection',
             'FormSelect',
             'FormSlider',
             'FormSwitch',
@@ -644,7 +650,7 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
                     files: [{ uid: '1', name: 'resso.jpeg', status: 'success', size: '2KB', fileInstance: new File([new ArrayBuffer(2048)], 'resso.jpeg', { type: 'image/jpeg' }) }],
                 }}
             >
-                <Form.Section text="Basics">
+                <FormSection text="Basics">
                     <FormInput field="name" label="Name" />
                     <FormTextArea field="description" label="Description" />
                     <FormInputNumber field="count" label="Count" initValue={20} />
@@ -656,8 +662,8 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
                     <FormDatePicker field="date" label="Date" initValue={day} />
                     <FormTimePicker field="time" label="Time" initValue={day} />
                     <FormPinCode field="code" label="Code" />
-                </Form.Section>
-                <Form.Section text="Choices">
+                </FormSection>
+                <FormSection text="Choices">
                     <FormCheckboxGroup field="type" label="Type" initValue={['user']}>
                         <FormCheckbox value="admin">admin</FormCheckbox>
                         <FormCheckbox value="user">user</FormCheckbox>
@@ -673,10 +679,25 @@ export const ssrCases: SsrCase<keyof typeof Entry>[] = [
                     <FormUpload field="files" label="Files" action="https://example.com/upload">
                         <Button icon={<IconUpload />}>Upload</Button>
                     </FormUpload>
-                </Form.Section>
+                </FormSection>
             </Form>
         ),
         text: ['Basics', 'Name', 'resso.jpeg'],
+    },
+    {
+        name: 'form/部件',
+        covers: ['FormSlot', 'FormInputGroup', 'FormLabel', 'FormErrorMessage'],
+        render: () => (
+            <Form>
+                <FormSlot label="slot">x</FormSlot>
+                <FormInputGroup label="g">
+                    <FormInput field="g1" noLabel />
+                </FormInputGroup>
+                <FormLabel text="label" />
+                <FormErrorMessage error={['err']} />
+            </Form>
+        ),
+        text: ['slot', 'label', 'err'],
     },
     {
         name: 'form/ArrayField',

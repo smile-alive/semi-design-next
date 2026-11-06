@@ -264,8 +264,8 @@
                 "en-US": "Whether the group is disabled; controls at any depth in the group that set no `disabled` of their own take it."
             },
             "label": {
-                "zh-CN": "组的标签，对象形式，属性同 `Form.Label`，如 `text`、`required`、`extra`；`text` 可以是 `ReactNode`。",
-                "en-US": "Label of the group, as an object with the `Form.Label` props such as `text`, `required` and `extra`; `text` can be a `ReactNode`."
+                "zh-CN": "组的标签，对象形式，属性同 `FormLabel`，如 `text`、`required`、`extra`；`text` 可以是 `ReactNode`。",
+                "en-US": "Label of the group, as an object with the `FormLabel` props such as `text`, `required` and `extra`; `text` can be a `ReactNode`."
             },
             "labelPosition": { "zh-CN": "标签位置，可选 `top` 或 `left`。", "en-US": "Label position: `top` or `left`." },
             "onBlur": {

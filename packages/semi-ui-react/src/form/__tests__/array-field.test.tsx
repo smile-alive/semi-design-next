@@ -3,7 +3,7 @@ import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { IconPlusCircle } from '@fibrae/semi-icons-react';
-import { Form, ArrayField, Button } from '@fibrae/semi-ui-react';
+import { Form, FormInput, ArrayField, Button } from '@fibrae/semi-ui-react';
 import type { ArrayFieldChildrenProps } from '../array-field';
 import type { FormApi, FormState } from '../interface';
 
@@ -47,8 +47,8 @@ function renderForm(props) {
                         </Button>
                         {arrayFields.map(({ field, key, remove }) => (
                             <div key={key}>
-                                <Form.Input field={`${field}[name]`} {...fieldProps} />
-                                <Form.Input field={`${field}[type]`} {...fieldProps} />
+                                <FormInput field={`${field}[name]`} {...fieldProps} />
+                                <FormInput field={`${field}[type]`} {...fieldProps} />
                                 <Button type="danger" onClick={remove} />
                             </div>
                         ))}
@@ -203,7 +203,7 @@ describe('Form.ArrayField', () => {
                             <>
                                 <Button onClick={() => add()}>Add Empty Line</Button>
                                 {arrayFields.map(({ field, key }) => (
-                                    <Form.Input key={key} field={`${field}[name]`} />
+                                    <FormInput key={key} field={`${field}[name]`} />
                                 ))}
                             </>
                         )}
@@ -256,11 +256,11 @@ describe('Form.ArrayField', () => {
         let addRow: () => void;
         render(
             <Form getFormApi={(api) => (formApi = api)} initValues={{ name: 'n', data: [data[0]] }}>
-                <Form.Input field="name" />
+                <FormInput field="name" />
                 <ArrayField field="data">
                     {({ add, arrayFields }) => {
                         addRow = () => add();
-                        return arrayFields.map(({ field, key }) => <Form.Input key={key} field={`${field}[name]`} />);
+                        return arrayFields.map(({ field, key }) => <FormInput key={key} field={`${field}[name]`} />);
                     }}
                 </ArrayField>
             </Form>
@@ -281,7 +281,7 @@ describe('Form.ArrayField', () => {
                 <ArrayField field="data" initValue={[]}>
                     {(props) => {
                         helpers = props;
-                        return props.arrayFields.map(({ field, key }) => <Form.Input key={key} field={`${field}[name]`} initValue="def" />);
+                        return props.arrayFields.map(({ field, key }) => <FormInput key={key} field={`${field}[name]`} initValue="def" />);
                     }}
                 </ArrayField>
             </Form>
@@ -298,7 +298,7 @@ describe('Form.ArrayField', () => {
         function Demo({ field }: { field: string }) {
             return (
                 <Form getFormApi={(api) => (formApi = api)} initValues={initValues}>
-                    <ArrayField field={field}>{({ arrayFields }) => arrayFields.map(({ field: row, key }) => <Form.Input key={key} field={`${row}[name]`} />)}</ArrayField>
+                    <ArrayField field={field}>{({ arrayFields }) => arrayFields.map(({ field: row, key }) => <FormInput key={key} field={`${row}[name]`} />)}</ArrayField>
                 </Form>
             );
         }
@@ -316,7 +316,7 @@ describe('Form.ArrayField', () => {
                 <ArrayField field="data" initValue={[]}>
                     {({ add, arrayFields }) => {
                         api = add;
-                        return arrayFields.map(({ field, key }) => <Form.Input key={key} field={`${field}[name]`} />);
+                        return arrayFields.map(({ field, key }) => <FormInput key={key} field={`${field}[name]`} />);
                     }}
                 </ArrayField>
             </Form>

@@ -2,9 +2,9 @@ import { createRef } from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { Form } from '@fibrae/semi-ui-react';
+import { FormErrorMessage } from '@fibrae/semi-ui-react';
 
-const ErrorMessage = Form.ErrorMessage;
+const ErrorMessage = FormErrorMessage;
 const emSelector = `.${BASE_CLASS_PREFIX}-form-field-error-message`;
 
 describe('Form-errorMessage', () => {

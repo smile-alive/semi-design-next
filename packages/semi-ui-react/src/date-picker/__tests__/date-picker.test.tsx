@@ -24,7 +24,7 @@ import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { toIANA, zonedTimeToUtc } from '@fibrae/semi-foundation/utils/date-fns-extra';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import ConfigProvider from '@fibrae/semi-ui-react/config-provider';
-import { Form } from '@fibrae/semi-ui-react/form';
+import { Form, FormDatePicker } from '@fibrae/semi-ui-react/form';
 import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
 import Popover from '@fibrae/semi-ui-react/popover';
 import Tabs from '@fibrae/semi-ui-react/tabs';
@@ -4336,10 +4336,10 @@ describe(`DatePicker`, () => {
             expect(getRoot()).not.toHaveAttribute('aria-invalid');
         });
 
-        it('Form.DatePicker 的范围字段按 Label 取到 group，必填与校验失败标在输入框上', async () => {
+        it('FormDatePicker 的范围字段按 Label 取到 group，必填与校验失败标在输入框上', async () => {
             render(
                 <Form>
-                    <Form.DatePicker type="dateRange" field="period" label="Period" motion={false} rules={[{ required: true, message: 'need period' }]} />
+                    <FormDatePicker type="dateRange" field="period" label="Period" motion={false} rules={[{ required: true, message: 'need period' }]} />
                 </Form>
             );
             expect(screen.getByRole('group', { name: 'Period' })).toBeInTheDocument();
@@ -4348,11 +4348,11 @@ describe(`DatePicker`, () => {
             expect(end).toHaveAttribute('aria-required', 'true');
         });
 
-        it('Form.DatePicker 校验失败后输入框带 aria-invalid', async () => {
+        it('FormDatePicker 校验失败后输入框带 aria-invalid', async () => {
             let formApi;
             render(
                 <Form getFormApi={(api) => (formApi = api)}>
-                    <Form.DatePicker field="day" label="Day" rules={[{ required: true, message: 'need day' }]} />
+                    <FormDatePicker field="day" label="Day" rules={[{ required: true, message: 'need day' }]} />
                 </Form>
             );
             await act(async () => {
@@ -4361,11 +4361,11 @@ describe(`DatePicker`, () => {
             expect(screen.getByRole('combobox', { name: 'Day' })).toHaveAttribute('aria-invalid', 'true');
         });
 
-        it('Form.DatePicker 报告选中日期，formApi.reset 后恢复为空', async () => {
+        it('FormDatePicker 报告选中日期，formApi.reset 后恢复为空', async () => {
             let formApi;
             const { container } = render(
                 <Form getFormApi={(api) => (formApi = api)}>
-                    <Form.DatePicker defaultPickerValue="2019-09-01" field="day" motion={false} />
+                    <FormDatePicker defaultPickerValue="2019-09-01" field="day" motion={false} />
                 </Form>
             );
             await userEvent.click(container.querySelector('input'));
@@ -4376,10 +4376,10 @@ describe(`DatePicker`, () => {
             expect(container.querySelector('input')).toHaveValue('');
         });
 
-        it('Form.DatePicker 在面板关闭时校验，而非输入框失焦时校验', async () => {
+        it('FormDatePicker 在面板关闭时校验，而非输入框失焦时校验', async () => {
             const { container } = render(
                 <Form>
-                    <Form.DatePicker field="day" motion={false} rules={[{ required: true, message: 'required' }]} trigger="blur" />
+                    <FormDatePicker field="day" motion={false} rules={[{ required: true, message: 'required' }]} trigger="blur" />
                 </Form>
             );
             const input = container.querySelector('input');
@@ -5176,7 +5176,7 @@ describe('DatePicker 可访问性', () => {
     it('Form inset 标签下 dateRange 的 group 名称指向渲染出的标签', () => {
         render(
             <Form labelPosition="inset">
-                <Form.DatePicker type="dateRange" field="range" label="区间" />
+                <FormDatePicker type="dateRange" field="range" label="区间" />
             </Form>
         );
         const group = screen.getByRole('group', { name: '区间' });

@@ -255,8 +255,8 @@
                 "en-US": "Whether the group is disabled; controls at any depth in the group take it, and a disabled a control sets itself takes precedence."
             },
             "label": {
-                "zh-CN": "渲染一个命名该组的 FormLabel，配置为 Form.Label 的属性，另可设 id、class、style；`name` 会成为该组的 id。节点内容使用 fieldLabel、labelExtra snippet。",
-                "en-US": "Renders a FormLabel that names the group, configured with the Form.Label props plus id, class and style; `name` becomes the id of the group. Use the fieldLabel and labelExtra snippets for node content."
+                "zh-CN": "渲染一个命名该组的 FormLabel，配置为 FormLabel 的属性，另可设 id、class、style；`name` 会成为该组的 id。节点内容使用 fieldLabel、labelExtra snippet。",
+                "en-US": "Renders a FormLabel that names the group, configured with the FormLabel props plus id, class and style; `name` becomes the id of the group. Use the fieldLabel and labelExtra snippets for node content."
             },
             "labelPosition": { "zh-CN": "标签位置，可选 top 或 left。", "en-US": "Label position: top or left." },
             "fieldLabel": {

@@ -6,7 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import type { Virtualize } from '@fibrae/semi-foundation/cascader/foundation';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { Cascader, ConfigProvider, Form, Popover, Tag } from '@fibrae/semi-ui-react';
+import { Cascader, ConfigProvider, Form, FormCascader, Popover, Tag } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import type { CascaderData, CascaderHandle, CascaderProps, Entity, SimpleValueType } from '../index';
 
@@ -2304,12 +2304,12 @@ describe('Cascader 行为', () => {
         });
     });
 
-    it('formApi.reset 后 Form.Cascader 为空，失焦时校验一次', async () => {
+    it('formApi.reset 后 FormCascader 为空，失焦时校验一次', async () => {
         let formApi;
         const validate = vi.fn<() => string>(() => '');
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.Cascader placeholder="pick" field="region" label="Region" treeData={treeData} trigger="blur" validator={validate} {...commonProps} />
+                <FormCascader placeholder="pick" field="region" label="Region" treeData={treeData} trigger="blur" validator={validate} {...commonProps} />
             </Form>
         );
         await userEvent.click(getSelection());
@@ -2503,7 +2503,7 @@ describe('Cascader 行为', () => {
     it('未声明的属性落在根元素上，Form 属性不出现在 DOM 中', () => {
         render(
             <Form labelPosition="inset">
-                <Form.Cascader id="region" title="tip" field="region" treeData={treeData} {...commonProps} />
+                <FormCascader id="region" title="tip" field="region" treeData={treeData} {...commonProps} />
             </Form>
         );
         expect(getTrigger()).toHaveAttribute('title', 'tip');

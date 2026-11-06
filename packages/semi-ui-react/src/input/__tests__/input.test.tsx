@@ -5,7 +5,7 @@ import { describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plu
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconSearch } from '@fibrae/semi-icons-react';
-import { Form, InputGroup, InputNumber, Tooltip } from '@fibrae/semi-ui-react';
+import { Form, FormInput, InputGroup, InputNumber, Tooltip } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import Input, { type InputChangeEvent, type InputGroupProps, type InputHandle, type InputProps } from '../index';
 
@@ -734,11 +734,11 @@ describe('Input 行为基线', () => {
         expect(getInput()).toHaveValue('semi!');
     });
 
-    it('formApi.reset 后 Form.Input 重新变为空', async () => {
+    it('formApi.reset 后 FormInput 重新变为空', async () => {
         let formApi;
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.Input field="name" />
+                <FormInput field="name" />
             </Form>
         );
         await userEvent.type(getInput(), 'semi');
@@ -747,10 +747,10 @@ describe('Input 行为基线', () => {
         expect(getInput()).toHaveValue('');
     });
 
-    it('Form.Input 把字段属性放到原生 input 上，而非包裹层', () => {
+    it('FormInput 把字段属性放到原生 input 上，而非包裹层', () => {
         render(
             <Form>
-                <Form.Input id="name" field="name" label="Name" />
+                <FormInput id="name" field="name" label="Name" />
             </Form>
         );
         expect(getInput()).toHaveAttribute('id', 'name');
@@ -1084,11 +1084,11 @@ describe('Input 行为基线', () => {
         expect(handle.nativeElement).toBeNull();
     });
 
-    it('Form.Input 通过 withField 透传 ref，因此也是句柄', () => {
+    it('FormInput 通过 withField 透传 ref，因此也是句柄', () => {
         const ref = createRef<InputHandle>();
         render(
             <Form>
-                <Form.Input ref={ref} field="name" />
+                <FormInput ref={ref} field="name" />
             </Form>
         );
         expect(ref.current.input).toBe(getInput());

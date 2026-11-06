@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, type CSSProperties } from 'react';
 import { Chat, type ChatMessage as Message, type ChatRenderInputAreaProps as RenderInputAreaProps } from '@fibrae/semi-ai-react';
 import { IconUpload } from '@fibrae/semi-icons-react';
-import { Form, Button, type FormApi as BaseFormApi, type FileItem } from '@fibrae/semi-ui-react';
+import { Form, FormInput, FormUpload, Button, type FormApi as BaseFormApi, type FileItem } from '@fibrae/semi-ui-react';
 
 interface InputValues {
     name?: string;
@@ -53,28 +53,28 @@ const inputStyle: CSSProperties = {
     padding: 8,
 };
 
-function CustomInputRender({ onSend }: RenderInputAreaProps) {
+function CustomInputRender(props: RenderInputAreaProps) {
     const api = useRef<BaseFormApi<InputValues> | null>(null);
     const onSubmit = useCallback(() => {
         if (api.current) {
             const values = api.current.getValues();
             if ((values.name && values.name.length !== 0) || (values.file && values.file.length !== 0)) {
-                onSend?.(values.name, values.file);
+                props.onSend?.(values.name, values.file);
                 api.current.reset();
             }
         }
-    }, [onSend]);
+    }, [props]);
 
     return (
         <div style={inputStyle}>
             <Form getFormApi={(formApi) => (api.current = formApi)}>
                 <strong>输入信息</strong>
-                <Form.Input field="name" label="名称（Input）" style={{ width: 250 }} trigger="blur" />
-                <Form.Upload field="file" label="文档" action="https://api.semi.design/upload">
+                <FormInput field="name" label="名称（Input）" style={{ width: 250 }} trigger="blur" />
+                <FormUpload field="file" label="文档" action={uploadProps.action}>
                     <Button icon={<IconUpload />} theme="light">
                         点击上传
                     </Button>
-                </Form.Upload>
+                </FormUpload>
             </Form>
             <Button style={{ width: 'fit-content' }} onClick={onSubmit}>
                 提交

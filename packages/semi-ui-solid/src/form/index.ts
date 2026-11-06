@@ -1,5 +1,10 @@
 export { default as Form } from './form';
 export { default as ArrayField } from './array-field';
+export { default as FormLabel } from './label';
+export { default as FormErrorMessage } from './error-message';
+export { default as FormSection } from './section';
+export { default as FormSlot } from './slot';
+export { default as FormInputGroup } from './input-group';
 export { default as SchemaField } from './schema-field';
 export { default as SchemaForm } from './schema-form';
 export { default as withField } from './with-field';

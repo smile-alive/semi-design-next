@@ -5,7 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { ConfigProvider, Form, Popover, Select, Tag } from '@fibrae/semi-ui-react';
+import { ConfigProvider, Form, FormSelect, Popover, Select, Tag } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import type { InputChangeEvent, InputHandle } from '@fibrae/semi-ui-react/input';
 import { mockResizeObserver } from '@test/utils/react';
@@ -3372,11 +3372,11 @@ describe('Select 行为基线', () => {
         expect(getSelectionText()).toHaveTextContent(/^Hotsoon$/);
     });
 
-    it('Form.Select 在 blur 时校验，formApi.reset 后恢复为空', async () => {
+    it('FormSelect 在 blur 时校验，formApi.reset 后恢复为空', async () => {
         let formApi;
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.Select field="biz" optionList={defaultList} rules={[{ required: true, message: 'biz is required' }]} trigger="blur" {...commonProps} />
+                <FormSelect field="biz" optionList={defaultList} rules={[{ required: true, message: 'biz is required' }]} trigger="blur" {...commonProps} />
             </Form>
         );
         await userEvent.click(getTrigger());

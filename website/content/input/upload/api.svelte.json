@@ -62,8 +62,8 @@
                 "en-US": "The file list, two-way bindable with bind:fileList. A plain value is the initial list, which Upload then maintains itself. The uid of every item is required and must be unique."
             },
             "fileName": {
-                "zh-CN": "作用与 name 相同，主要在 Form.Upload 中使用，避免与 Field 的 name 冲突。",
-                "en-US": "Same as name. Mainly used in Form.Upload to avoid clashing with the name of Field."
+                "zh-CN": "作用与 name 相同，主要在 FormUpload 中使用，避免与 Field 的 name 冲突。",
+                "en-US": "Same as name. Mainly used in FormUpload to avoid clashing with the name of Field."
             },
             "headers": {
                 "zh-CN": "上传时附带的 headers，或根据文件返回 headers 的函数。",

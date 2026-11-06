@@ -1,7 +1,31 @@
 import { IconUpload } from '@fibrae/semi-icons-solid';
-import { Button, Col, Form, FormCascader, FormCheckbox, FormCheckboxGroup, FormDatePicker, FormInput, FormInputNumber, FormRadio, FormRadioGroup, FormRating, FormSelect, FormSlider, FormSwitch, FormTagInput, FormTextArea, FormTimePicker, FormTreeSelect, FormUpload, Row, Space } from '@fibrae/semi-ui-solid';
+import {
+    Button,
+    Col,
+    Form,
+    FormSection,
+    FormCascader,
+    FormCheckbox,
+    FormCheckboxGroup,
+    FormDatePicker,
+    FormInput,
+    FormInputNumber,
+    FormRadio,
+    FormRadioGroup,
+    FormRating,
+    FormSelect,
+    FormSlider,
+    FormSwitch,
+    FormTagInput,
+    FormTextArea,
+    FormTimePicker,
+    FormTreeSelect,
+    FormUpload,
+    Row,
+    Space,
+} from '@fibrae/semi-ui-solid';
 
-const today = new Date(2024, 4, 6, 12);
+const today = new Date(2024, 4, 6, 10, 30, 0);
 
 const initValues = {
     name: 'semi',
@@ -73,11 +97,12 @@ const treeData = [
 ];
 
 const style = { width: '90%' };
+const extraTextStyle = { color: 'var(--semi-blue-5)', 'font-size': '14px', 'user-select': 'none', cursor: 'pointer' } as const;
 
 export default function FormDemo() {
     return (
         <Form initValues={initValues} style={{ padding: '10px', width: '100%' }} onValueChange={(v) => console.log(v)}>
-            <Form.Section text="基本信息">
+            <FormSection text="基本信息">
                 <Row>
                     <Col span={12}>
                         <FormInput field="name" label="名称（Input）" initValue="mikeya" style={style} trigger="blur" />
@@ -96,7 +121,7 @@ export default function FormDemo() {
                         </FormSelect>
                     </Col>
                     <Col span={12}>
-                        <FormSelect field="business" multiple style={style} placeholder="请选择业务线" label="业务线（多选Select）" extraText={<div style={{ color: 'var(--semi-blue-5)', 'font-size': '14px', 'user-select': 'none', cursor: 'pointer' }}>没有找到合适的业务线？</div>}>
+                        <FormSelect field="business" multiple style={style} placeholder="请选择业务线" label="业务线（多选Select）" extraText={<div style={extraTextStyle}>没有找到合适的业务线？</div>}>
                             <FormSelect.Option value="abc">Semi</FormSelect.Option>
                             <FormSelect.Option value="ulikeCam">轻颜相机</FormSelect.Option>
                             <FormSelect.Option value="toutiao">今日头条</FormSelect.Option>
@@ -125,8 +150,8 @@ export default function FormDemo() {
                         </FormUpload>
                     </Col>
                 </Row>
-            </Form.Section>
-            <Form.Section text="资源详情">
+            </FormSection>
+            <FormSection text="资源详情">
                 <Row>
                     <Col span={12}>
                         <FormTextArea style={{ ...style, height: '120px' }} field="description" label="申请理由（TextArea）" placeholder="请填写申请资源理由" />
@@ -146,7 +171,7 @@ export default function FormDemo() {
                 </Row>
                 <Row>
                     <Col span={12}>
-                        <FormTimePicker field="time" label="截止时刻（TimePicker）" style={{ width: '90%' }} />
+                        <FormTimePicker field="time" label="截止时刻（TimePicker）" style={style} />
                     </Col>
                     <Col span={12}>
                         <FormInputNumber field="number" label="申请数量（InputNumber）" initValue={20} style={style} />
@@ -154,7 +179,7 @@ export default function FormDemo() {
                 </Row>
                 <Row>
                     <Col span={12}>
-                        <FormSlider field="range" label="资源使用报警阈值(%)（Slider）" initValue={10} style={{ width: '90%' }} />
+                        <FormSlider field="range" label="资源使用报警阈值(%)（Slider）" initValue={10} style={style} />
                     </Col>
                     <Col span={12}>
                         <FormSwitch field="switch" label="开关(Switch)" />
@@ -162,10 +187,10 @@ export default function FormDemo() {
                 </Row>
                 <Row>
                     <Col span={12}>
-                        <FormRating field="rating" label="满意度(Rating)" initValue={2} style={{ width: '90%' }} />
+                        <FormRating field="rating" label="满意度(Rating)" initValue={2} style={style} />
                     </Col>
                 </Row>
-            </Form.Section>
+            </FormSection>
             <FormCheckbox value="false" field="agree" noLabel>
                 我已阅读并清楚相关规定（Checkbox）
             </FormCheckbox>

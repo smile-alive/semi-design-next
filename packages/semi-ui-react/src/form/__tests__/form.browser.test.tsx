@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { Button, Form } from '@fibrae/semi-ui-react';
+import { Button, Form, FormInput, FormInputGroup, FormSwitch } from '@fibrae/semi-ui-react';
 import type { FormApi } from '../interface';
 
 const getInput = (field) => document.querySelector(`[x-field-id="${field}"] input`);
@@ -12,8 +12,8 @@ describe('Form', () => {
         onTestFinished(() => warn.mockRestore());
         render(
             <Form labelPosition="inset">
-                <Form.Switch field="on" label="Notify" />
-                <Form.Input field="name" label="Name" />
+                <FormSwitch field="on" label="Notify" />
+                <FormInput field="name" label="Name" />
             </Form>
         );
         expect(warn).toHaveBeenCalledWith(expect.stringContaining('has no inset label, so Field "on" is laid out with labelPosition'));
@@ -31,10 +31,10 @@ describe('Form', () => {
         let validation: Promise<unknown>;
         render(
             <Form getFormApi={(value) => (api = value)}>
-                <Form.InputGroup label="分组">
-                    <Form.Input field="fast" validator={() => fast.promise} />
-                    <Form.Input field="slow" validator={() => slow.promise} />
-                </Form.InputGroup>
+                <FormInputGroup label="分组">
+                    <FormInput field="fast" validator={() => fast.promise} />
+                    <FormInput field="slow" validator={() => slow.promise} />
+                </FormInputGroup>
                 <Button
                     type="tertiary"
                     onClick={() => {
@@ -78,8 +78,8 @@ describe('Form', () => {
                     values.effects &&
                     values.effects.map((effect, i) => (
                         <div key={effect.key}>
-                            <Form.Input field={`effects[${i}].name`} />
-                            <Form.Input field={`effects[${i}].type`} />
+                            <FormInput field={`effects[${i}].name`} />
+                            <FormInput field={`effects[${i}].type`} />
                             <Button onClick={() => remove(effect.key)}>Remove</Button>
                         </div>
                     ))

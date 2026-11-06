@@ -68,7 +68,7 @@ Components support server rendering such as `renderToString` and `prerender`, an
 - Set `semiGlobal.config` only at application startup. The server and client use the same config, and it does not change during rendering.
 - Overlays open after hydration, and the server HTML has no overlay content. The "today" marker of Calendar and the DatePicker panel appears only after hydration. Pass `displayValue` to fix the date Calendar shows during server rendering.
 - Dates format in the runtime time zone. When the server and browser time zones differ, unify them with `timeZone` on `ConfigProvider`, or the date text in the server HTML will not match hydration.
-- In a Server Component, import flat exports (such as `Button`) and named exports such as `TypographyTitle` directly. Dot-notation subcomponents (such as `Typography.Title` and `Form.Input`) are `undefined` in a Server Component, so use them only in `'use client'` files.
+- In a Server Component, import flat exports (such as `Button`) and named exports such as `TypographyTitle` directly. Dot-notation subcomponents (such as `Typography.Title` and `Select.Option`) are `undefined` in a Server Component, so use them only in `'use client'` files.
 
 ### Documentation
 

@@ -1,22 +1,35 @@
-import { IconArrowDown, IconArrowUp } from '@fibrae/semi-icons-react';
-import { ArrayField, Button, Form, Space } from '@fibrae/semi-ui-react';
+import { IconArrowDown, IconArrowUp, IconDelete } from '@fibrae/semi-icons-react';
+import { ArrayField, Button, Form, FormInput, IconButton } from '@fibrae/semi-ui-react';
 
-const steps = [{ title: '需求评审' }, { title: '开发' }, { title: '测试' }, { title: '发布' }];
+const initValue = [{ name: '需求评审' }, { name: '开发' }, { name: '上线' }];
 
 export default function FormDemo() {
     return (
         <Form style={{ width: 480 }}>
-            <ArrayField field="steps" initValue={steps}>
-                {({ arrayFields, move }) =>
-                    arrayFields.map(({ field, key }, index) => (
-                        <Space key={key} align="end">
-                            <Form.Input field={`${field}.title`} label={`第 ${index + 1} 步`} style={{ width: 280 }} />
-                            <Button aria-label={`上移第 ${index + 1} 步`} disabled={index === 0} theme="borderless" icon={<IconArrowUp />} onClick={() => move(index, index - 1)} />
-                            <Button aria-label={`下移第 ${index + 1} 步`} disabled={index === arrayFields.length - 1} theme="borderless" icon={<IconArrowDown />} onClick={() => move(index, index + 1)} />
-                        </Space>
-                    ))
-                }
-            </ArrayField>
+            {(form) => (
+                <>
+                    <ArrayField field="steps" initValue={initValue}>
+                        {(arrayField) => (
+                            <>
+                                {arrayField.arrayFields.map((item, index) => (
+                                    <div key={item.key} style={{ display: 'flex', alignItems: 'flex-end', gap: 4 }}>
+                                        <FormInput field={`${item.field}.name`} label={`第 ${index + 1} 步`} style={{ width: 280 }} />
+                                        <IconButton aria-label={`上移第 ${index + 1} 步`} disabled={index === 0} icon={<IconArrowUp />} theme="borderless" onClick={() => arrayField.move(index, index - 1)} />
+                                        <IconButton aria-label={`下移第 ${index + 1} 步`} disabled={index === arrayField.arrayFields.length - 1} icon={<IconArrowDown />} theme="borderless" onClick={() => arrayField.move(index, index + 1)} />
+                                        <IconButton aria-label={`删除第 ${index + 1} 步`} icon={<IconDelete />} theme="borderless" type="danger" onClick={item.remove} />
+                                    </div>
+                                ))}
+                                <Button theme="light" onClick={arrayField.add}>
+                                    添加一步
+                                </Button>
+                            </>
+                        )}
+                    </ArrayField>
+                    <pre>
+                        <code>{JSON.stringify(form.formState.values)}</code>
+                    </pre>
+                </>
+            )}
         </Form>
     );
 }

@@ -57,18 +57,18 @@ import SchemaFormSvelteApi from './api/schema-form.svelte.en-US.mdx';
 
 Semi encapsulates all form field component (Input、Select、Checkbox、DatePicker etc.) with `withField` once.  
 Taking over their data flow (`props.value` & `props.onChange`)  
-When in use, you need to import from the Form (note: only the control imported from the Form has data synchronization)
+When in use, you need to use the components whose names start with Form (note: only these components have data synchronization). They are named exports and are not mounted under Form.
 
 ### Supported Field Component
 
-- `Input`, `InputNumber`, `TextArea`, `Select`, `Checkbox`, `CheckboxGroup`, `Radio`, `RadioGroup`, `Switch`, `DatePicker`, `TimePicker`, `Slider`, `InputGroup`, `TreeSelect`, `Cascader`, `Transfer`, `Rating`, `AutoComplete`, `Upload`, `PinCode`, `Label`, `ErrorMessage`, `Section`, `Slot`, `TagInput` All mounted under Form and declared directly in `<Form.Input />` and `<Form.Select />` when used.
+- Fields: `FormInput`, `FormInputNumber`, `FormTextArea`, `FormSelect`, `FormCheckbox`, `FormCheckboxGroup`, `FormRadio`, `FormRadioGroup`, `FormSwitch`, `FormDatePicker`, `FormTimePicker`, `FormSlider`, `FormTreeSelect`, `FormCascader`, `FormTransfer`, `FormRating`, `FormAutoComplete`, `FormUpload`, `FormPinCode`, `FormTagInput`
+- Other parts: `ArrayField`, `FormInputGroup`, `FormLabel`, `FormErrorMessage`, `FormSection`, `FormSlot`
 
-```javascript
-import { Form } from '@fibrae/semi-ui-react';
-
-const FormInput = Form.Input;
-const FormSelect = Form.Select;
-const Option = FormSelect.Option;
+```jsx
+// A field takes over its data flow when used inside <Form>
+import { Form, FormInput, FormSelect } from '@fibrae/semi-ui-react';
+// A plain Input is left untouched by the Form
+import { Input } from '@fibrae/semi-ui-react';
 ```
 
 The Field level component provided by Form, its `value` (or other properties specified by `valueKey`), onChange (or other callback functions specified by `onKeyChangeFnName`) Properties are hijacked by Form, so
@@ -133,7 +133,7 @@ When in use, you need to use the components whose names start with Form (note: o
 ### Supported Field Component
 
 - Fields: `FormInput`, `FormInputNumber`, `FormTextArea`, `FormSelect`, `FormCheckbox`, `FormCheckboxGroup`, `FormRadio`, `FormRadioGroup`, `FormSwitch`, `FormDatePicker`, `FormTimePicker`, `FormSlider`, `FormTreeSelect`, `FormCascader`, `FormTransfer`, `FormRating`, `FormAutoComplete`, `FormUpload`, `FormPinCode`, `FormTagInput`
-- Other parts: `ArrayField`, and `Form.InputGroup`, `Form.Label`, `Form.ErrorMessage`, `Form.Section`, `Form.Slot` mounted under Form
+- Other parts: `ArrayField`, `FormInputGroup`, `FormLabel`, `FormErrorMessage`, `FormSection`, `FormSlot`
 
 ```jsx
 // A field takes over its data flow when used inside <Form>
@@ -160,7 +160,7 @@ The Field level component provided by Form, its `value` (or other properties spe
 
 Semi encapsulates all form field components (Input, Select, Checkbox, DatePicker etc.) once.  
 Taking over their data flow (`value` & `onChange`)  
-When in use, you need to use the components whose names start with Form (note: only these components have data synchronization). They are both named exports and mounted under Form: `FormInput` and `Form.Input` are the same component.
+When in use, you need to use the components whose names start with Form (note: only these components have data synchronization). They are named exports and are not mounted under Form.
 
 ### Supported Field Component
 
@@ -170,18 +170,16 @@ When in use, you need to use the components whose names start with Form (note: o
 ```svelte
 <script lang="ts">
     // A field takes over its data flow when used inside <Form>
-    import { Form, FormInput } from '@fibrae/semi-ui-svelte';
+    import { Form, FormInput, FormSelect } from '@fibrae/semi-ui-svelte';
     // A plain Input is left untouched by the Form
     import { Input } from '@fibrae/semi-ui-svelte';
 </script>
 
 <Form>
     <FormInput field="name" />
-    <Form.Select field="role" optionList={[{ label: 'Developer', value: 'rd' }]} />
+    <FormSelect field="role" optionList={[{ label: 'Developer', value: 'rd' }]} />
 </Form>
 ```
-
-The members mounted under Form are all field components (`Form.Input`, `Form.Select`, `Form.Transfer` etc., without the `Form` prefix), plus `Form.Slot`, `Form.ErrorMessage`, `Form.InputGroup`, `Form.Label`, `Form.Section` and `Form.useForm`.
 
 The Field level component provided by Form, its `value` (or other properties specified by `fieldOptions.valueKey`) and `onChange` (or other callbacks specified by `onKeyChangeFnName`) are taken over by Form, so
 
@@ -362,7 +360,7 @@ Below is an example of the field name and their mapping path in FormState
 
 <Framework only="react">
 
-Forms with many fields should group them. Use `Form.Section` to group Fields (it only affects layout and does not change the data structure).
+Forms with many fields should group them. Use `FormSection` to group Fields (it only affects layout and does not change the data structure).
 
 </Framework>
 
@@ -374,7 +372,7 @@ Forms with many fields should group them. Use `FormSection` to group Fields and 
 
 <Framework only="solid">
 
-Forms with many fields should group them. Use `Form.Section` to group Fields and pass the title through the `text` property (it only affects layout and does not change the data structure).
+Forms with many fields should group them. Use `FormSection` to group Fields and pass the title through the `text` property (it only affects layout and does not change the data structure).
 
 </Framework>
 
@@ -429,12 +427,11 @@ A custom component wrapped with `FormField` is laid out with an inset label when
 <Framework only="react">
 
 When the built-in Label and ErrorMessage layout does not meet the business requirements, you need to combine the positions yourself, but you want to use the default styles of Label and ErrorMessage directly.  
-you can import them from the `Form` module, and combine `Form.Label` / `Form.ErrorMessage` by yourself.  
-For details of their API, refer to [Label](#Form.Label) / [ErrorMessage](#Form.ErrorMessage)
+you can import `FormLabel` / `FormErrorMessage` and combine them by yourself.  
+For details of their API, refer to [FormLabel](#FormLabel) / [FormErrorMessage](#FormErrorMessage)
 
 ```jsx
-import { Form } from '@fibrae/semi-ui-react';
-const { Label, ErrorMessage } = Form;
+import { FormErrorMessage, FormLabel } from '@fibrae/semi-ui-react';
 ```
 
 </Framework>
@@ -454,12 +451,11 @@ import { FormErrorMessage, FormLabel } from '@fibrae/semi-ui-vue';
 <Framework only="solid">
 
 When the built-in Label and ErrorMessage layout does not meet the business requirements, you need to combine the positions yourself, but you want to use the default styles of Label and ErrorMessage directly.  
-you can import them from the `Form` module, and combine `Form.Label` / `Form.ErrorMessage` by yourself.  
-For details of their API, refer to [Label](#Form.Label) / [ErrorMessage](#Form.ErrorMessage)
+you can import `FormLabel` / `FormErrorMessage` and combine them by yourself.  
+For details of their API, refer to [FormLabel](#FormLabel) / [FormErrorMessage](#FormErrorMessage)
 
 ```jsx
-import { Form } from '@fibrae/semi-ui-solid';
-const { Label, ErrorMessage } = Form;
+import { FormErrorMessage, FormLabel } from '@fibrae/semi-ui-solid';
 ```
 
 </Framework>
@@ -476,45 +472,11 @@ import { FormErrorMessage, FormLabel } from '@fibrae/semi-ui-svelte';
 
 </Framework>
 
-<Framework only="react">
-
-### Use Form.Slot
-
-When your custom component needs to maintain the same layout style as the Field component, you can place your custom component in `Form.Slot`  
-`labelWidth`, `labelAlign`, `wrapperCol`, `labelCol` set on the Form component automatically acts on `Form.Slot`  
-For the Slot property configuration, refer to [Form.Slot](#Form.Slot)
-
-</Framework>
-
-<Framework only="vue">
-
 ### Use FormSlot
 
 When your custom component needs to maintain the same layout style as the Field component, you can place your custom component in `FormSlot`  
 `labelWidth`, `labelAlign`, `wrapperCol`, `labelCol` set on the Form component automatically acts on `FormSlot`  
 For the FormSlot property configuration, refer to [FormSlot](#FormSlot)
-
-</Framework>
-
-<Framework only="solid">
-
-### Use Form.Slot
-
-When your custom component needs to maintain the same layout style as the Field component, you can place your custom component in `Form.Slot`  
-`labelWidth`, `labelAlign`, `wrapperCol`, `labelCol` set on the Form component automatically acts on `Form.Slot`  
-For the Slot property configuration, refer to [Form.Slot](#Form.Slot)
-
-</Framework>
-
-<Framework only="svelte">
-
-### Use FormSlot
-
-When your custom component needs to maintain the same layout style as the Field component, you can place your custom component in `FormSlot`  
-`labelWidth`, `labelAlign`, `wrapperCol`, `labelCol` set on the Form component automatically acts on `FormSlot`  
-For the FormSlot property configuration, refer to [FormSlot](#FormSlot)
-
-</Framework>
 
 <Demo id="slot" />
 
@@ -564,10 +526,10 @@ This attribute can be configured uniformly on the Form or individually on each F
 
 <Framework only="react">
 
-When you need to combine some fields to use, you can use `Form.InputGroup` to wrap them.  
-In Semi Form, when you using field components like `Form.Input`、`Form.Select`, Form will insert Label module automatically for them.  
-But usually, in`InputGroup` you only need a Label belonging to the entire Group. You can set the label property in the `InputGroup` to insert a Label belonging to the Group  
-`label` configurable properties, see [Label](#Form.Label)
+When you need to combine some fields to use, you can use `FormInputGroup` to wrap them.  
+In Semi Form, when you using field components like `FormInput`、`FormSelect`, Form will insert Label module automatically for them.  
+But usually, in`FormInputGroup` you only need a Label belonging to the entire Group. You can set the label property in the `FormInputGroup` to insert a Label belonging to the Group  
+`label` configurable properties, see [FormLabel](#FormLabel)
 
 </Framework>
 
@@ -582,9 +544,9 @@ But usually, in`FormInputGroup` you only need a Label belonging to the entire Gr
 
 <Framework only="solid">
 
-When you need to combine some fields to use, you can use `Form.InputGroup` to wrap them. The fields inside no longer render their own Label and ErrorMessage, and their errors are shown together below the group.  
-But usually, in `Form.InputGroup` you only need a Label belonging to the entire Group. You can set the label property in the `Form.InputGroup` to insert a Label belonging to the Group  
-`label` configurable properties, see [Label](#Form.Label)
+When you need to combine some fields to use, you can use `FormInputGroup` to wrap them. The fields inside no longer render their own Label and ErrorMessage, and their errors are shown together below the group.  
+But usually, in `FormInputGroup` you only need a Label belonging to the entire Group. You can set the label property in the `FormInputGroup` to insert a Label belonging to the Group  
+`label` configurable properties, see [FormLabel](#FormLabel)
 
 </Framework>
 
@@ -867,7 +829,7 @@ The label comes from `title` (the property name when absent), the help text from
 
 SchemaField renders part of a schema inside an existing Form: `field` sets the path (the root by default), and it can be mixed with hand-written fields. Both can be customized with `widgets` and `renderField`:
 
-- `widgets`: the key is a JSON Schema `format` (such as `uri`, `email`) or a control kind (`input`, `textarea`, `number`, `switch`, `select`), and the value is a field component (such as Form.Input, or a component wrapped with withField). `format` is looked up first, then the control kind.
+- `widgets`: the key is a JSON Schema `format` (such as `uri`, `email`) or a control kind (`input`, `textarea`, `number`, `switch`, `select`), and the value is a field component (such as FormInput, or a component wrapped with withField). `format` is looked up first, then the control kind.
 - `renderField`: the key is a field path, with array rows written as `[]` (such as `contacts[].email`); when it matches, it renders that node and its children.
 
 <Demo id="schema-field" />
@@ -1114,7 +1076,7 @@ Via `withField`, you can extend other custom components into Field. Form will ta
 With Field did the following things.
 
 - Take over the `value` of the component (or other properties specified by valueKey), `onChange` (or other callback functions specified by onKeyChangeFnName)
-- Insert Field's `<Form.Label>`above the field
+- Insert Field's `<FormLabel>`above the field
 - Insert Field's `<ErrorMessage>` under the field
 - Insert Field's extraText under the field
 
@@ -1174,8 +1136,8 @@ Via `withField`, you can extend other custom components into Field. Form will ta
 With Field did the following things.
 
 - Take over the `value` of the component (or other properties specified by `valueKey`), the `onChange` callback (or other callbacks specified by `onKeyChangeFnName`)
-- Insert Field's `Form.Label` above the field
-- Insert Field's `Form.ErrorMessage` under the field
+- Insert Field's `FormLabel` above the field
+- Insert Field's `FormErrorMessage` under the field
 - Insert Field's extraText under the field
 
 With Field Options specific configuration can be consulted [withFieldOption](#withFieldOption)
@@ -1330,7 +1292,7 @@ FormState stores all the state values within the Form, including the values of e
 - Via the [child render function](#Other%20declaration%20methods), formState will injected as a parameter
 - Via the [render props](#Other%20declaration%20methods), formState will injected as a parameter
 - Via [useFormState](#useFormState) in a component inside the Form
-- Via the formState created by `Form.useForm()`, read as an accessor outside the Form
+- Via the formState created by `useForm()`, read as an accessor outside the Form
 
 </Framework>
 
@@ -1379,7 +1341,7 @@ Semi will automatically execute deepClone once for input parameters of `formApi.
 
 <Framework only="react">
 
-- Use `Form.useForm()` to create formApi outside Form, then pass it via props.form to the Form component. This allows you to get formApi before Form renders, suitable for scenarios where you need to control the form from outside the component.
+- Use `useForm()` to create formApi outside Form, then pass it via props.form to the Form component. This allows you to get formApi before Form renders, suitable for scenarios where you need to control the form from outside the component.
 - The Form component in the `ComponentDidMount` phase will execute the `getFormApi` callback passed in by props. You can save a reference to formApi in the callback function for subsequent calls (example code below) In addition, we provide other ways to get formApi, and you can choose different ways of calling according to your preference.
 - Use reference to get form instance，you can access form instance & its formApi
 - By declaring fields through "child render function", formApi will injected as a parameter
@@ -1401,7 +1363,7 @@ Semi will automatically execute deepClone once for input parameters of `formApi.
 
 <Framework only="solid">
 
-- Use `Form.useForm()` to create formApi outside Form, then pass it via the `form` property to the Form component. This allows you to get formApi before Form renders, suitable for scenarios where you need to control the form from outside the component.
+- Use `useForm()` to create formApi outside Form, then pass it via the `form` property to the Form component. This allows you to get formApi before Form renders, suitable for scenarios where you need to control the form from outside the component.
 - After the Form component mounts, it calls the `getFormApi` callback passed in props. You can save a reference to formApi in the callback function for subsequent calls (example code below) In addition, we provide other ways to get formApi, and you can choose different ways of calling
 - Use the `ref` callback to get the form element, you can access its formApi
 - Via the [child render function](#Other%20declaration%20methods), formApi will injected as a parameter
@@ -1422,13 +1384,13 @@ Semi will automatically execute deepClone once for input parameters of `formApi.
 
 <Framework only="react">
 
-#### Using Form.useForm()
+#### Using useForm()
 
-`Form.useForm()` is used to **create** a formApi instance **outside** the Form component, suitable for scenarios where you need to control the form before it renders. It returns an array `[formApi, formState, formValues]`.
+`useForm()` is used to **create** a formApi instance **outside** the Form component, suitable for scenarios where you need to control the form before it renders. It returns an array `[formApi, formState, formValues]`.
 
-<Notice type="primary" title="Difference between Form.useForm() and useFormApi">
+<Notice type="primary" title="Difference between useForm() and useFormApi">
 
-- **Form.useForm()**: Creates formApi **outside** Form, needs to be passed to Form via props.form. Used for parent components controlling child Form.
+- **useForm()**: Creates formApi **outside** Form, needs to be passed to Form via props.form. Used for parent components controlling child Form.
 - **useFormApi**: Gets formApi **inside** Form, used for child components of Form to access the parent Form. See [useFormApi](#useFormApi).
 
 </Notice>
@@ -1452,13 +1414,13 @@ Semi will automatically execute deepClone once for input parameters of `formApi.
 
 <Framework only="solid">
 
-#### Using Form.useForm()
+#### Using useForm()
 
-`Form.useForm()` (also available as the `useForm` import) is used to **create** a formApi **outside** the Form component, suitable for scenarios where you need to control the form before it renders. It returns an array `[formApi, formState, formValues]`: `formState` and `formValues` are accessors that follow the form once bound through the `form` property of Form, read through `formState()` and `formValues()`.
+`useForm()` is used to **create** a formApi **outside** the Form component, suitable for scenarios where you need to control the form before it renders. It returns an array `[formApi, formState, formValues]`: `formState` and `formValues` are accessors that follow the form once bound through the `form` property of Form, read through `formState()` and `formValues()`.
 
-<Notice type="primary" title="Difference between Form.useForm() and useFormApi">
+<Notice type="primary" title="Difference between useForm() and useFormApi">
 
-- **Form.useForm()**: Creates formApi **outside** Form, needs to be passed to Form via props.form. Used for parent components controlling child Form.
+- **useForm()**: Creates formApi **outside** Form, needs to be passed to Form via props.form. Used for parent components controlling child Form.
 - **useFormApi**: Gets formApi **inside** Form, used for child components of Form to access the parent Form. See [useFormApi](#useFormApi).
 
 </Notice>
@@ -1488,7 +1450,7 @@ Usage example:
 
 <Notice type="primary" title="Notice">
 
-When using formApi created by `Form.useForm()` before the Form component mounts, a warning will be logged in the console. It is recommended to call formApi methods after the Form has mounted.
+When using formApi created by `useForm()` before the Form component mounts, a warning will be logged in the console. It is recommended to call formApi methods after the Form has mounted.
 
 </Notice>
 
@@ -1508,7 +1470,7 @@ When using formApi created by `useForm()` before the Form component mounts, a wa
 
 <Notice type="primary" title="Notice">
 
-When using formApi created by `Form.useForm()` before the Form component mounts, a warning will be logged in the console. It is recommended to call formApi methods after the Form has mounted.
+When using formApi created by `useForm()` before the Form component mounts, a warning will be logged in the console. It is recommended to call formApi methods after the Form has mounted.
 
 </Notice>
 
@@ -1562,7 +1524,7 @@ class FormApiDemo extends React.Component {
 
 ```jsx
 import React from 'react';
-import { Form, Button } from '@fibrae/semi-ui-react';
+import { Form, FormInput, Button } from '@fibrae/semi-ui-react';
 
 () => {
     // functional compoentn usage
@@ -1571,7 +1533,7 @@ import { Form, Button } from '@fibrae/semi-ui-react';
     return (
         <>
             <Form getFormApi={(formApi) => (api.current = formApi)}>
-                <Form.Input field="a" />
+                <FormInput field="a" />
                 <Button
                     onClick={() => {
                         console.log(api);
@@ -1687,7 +1649,7 @@ function FormApiDemo() {
 <Framework only="react">
 
 <Notice type="primary" title="About Field ref">
-    The underlying component instance can be obtained directly through ref, such as specifying ref to Form.Input and Form.Select, and directly obtaining the ref reference of the underlying original Input and Select components
+    The underlying component instance can be obtained directly through ref, such as specifying ref to FormInput and FormSelect, and directly obtaining the ref reference of the underlying original Input and Select components
 </Notice>
 
 | Properties | Description | Type | Default | Examples |
@@ -1791,7 +1753,7 @@ A Field is a component made by withField; the table below lists its own properti
 | --- | --- | --- | --- |
 | convert | After the field value changes, before it is stored in formState and shown, update the value of the field | `(fieldValue) => any` |  |
 | field | The mapping path of the field's value in formState.values. Form will use this value to distinguish the internal form control. <br/> **Required!!!** (except a FormCheckbox or FormRadio inside its group) | `string` |  |
-| label | The label text for this field. When not passed, it defaults to the same name as field. An object is passed to Form.Label as its properties and can set `text`, `extra`, `required`, `optional`, `align`, `width` and `disabled`, see [Label](#Form.Label). `text` and `extra` can be JSX | `LabelProps \| JSX.Element` |  |
+| label | The label text for this field. When not passed, it defaults to the same name as field. An object is passed to FormLabel as its properties and can set `text`, `extra`, `required`, `optional`, `align`, `width` and `disabled`, see [FormLabel](#FormLabel). `text` and `extra` can be JSX | `LabelProps \| JSX.Element` |  |
 | labelPosition | Label position of this field. When passed on both Form and Field, the Field props prevail | `'top' \| 'left' \| 'inset'` |  |
 | labelAlign | Text-align of the label text of this field. When passed on both Form and Field, the Field props prevail | `'left' \| 'right'` |  |
 | labelWidth | The width of the label text of this field, a number is in px. When passed on both Form and Field, the Field props prevail | `string \| number` |  |
@@ -2014,7 +1976,6 @@ interface ArrayFieldItem {
 
 ```jsx
 import { SchemaField } from '@fibrae/semi-ui-react';
-// or Form.SchemaField
 ```
 
 <SchemaFieldReactApi />
@@ -2055,7 +2016,6 @@ import { SchemaForm } from '@fibrae/semi-ui-vue';
 
 ```jsx
 import { SchemaField } from '@fibrae/semi-ui-solid';
-// or Form.SchemaField
 ```
 
 <SchemaFieldSolidApi />
@@ -2092,11 +2052,10 @@ import { SchemaForm } from '@fibrae/semi-ui-svelte';
 
 <Framework only="react">
 
-## Form.Section
+## FormSection
 
 ```jsx
-import { Form } from '@fibrae/semi-ui-react';
-const { Section } = Form;
+import { FormSection } from '@fibrae/semi-ui-react';
 ```
 
 <FormSectionReactApi />
@@ -2121,11 +2080,10 @@ import { FormSection } from '@fibrae/semi-ui-vue';
 
 <Framework only="solid">
 
-## Form.Section
+## FormSection
 
 ```jsx
-import { Form } from '@fibrae/semi-ui-solid';
-const { Section } = Form;
+import { FormSection } from '@fibrae/semi-ui-solid';
 ```
 
 <FormSectionSolidApi />
@@ -2150,14 +2108,13 @@ import { FormSection } from '@fibrae/semi-ui-svelte';
 
 <Framework only="react">
 
-## Form.Label
+## FormLabel
 
 By default, `Label` is self-inserted into each `Field` by `Form`.  
-If you need to self-insert Label elsewhere, we have provided the `Label` component for you.
+If you need to self-insert Label elsewhere, we have provided the `FormLabel` component for you.
 
 ```jsx
-import { Form } from '@fibrae/semi-ui-react';
-const { Label } = Form;
+import { FormLabel } from '@fibrae/semi-ui-react';
 ```
 
 <FormLabelReactApi />
@@ -2185,14 +2142,13 @@ import { FormLabel } from '@fibrae/semi-ui-vue';
 
 <Framework only="solid">
 
-## Form.Label
+## FormLabel
 
 By default, `Label` is self-inserted into each `Field` by `Form`.  
-If you need to self-insert Label elsewhere, we have provided the `Label` component for you.
+If you need to self-insert Label elsewhere, we have provided the `FormLabel` component for you.
 
 ```jsx
-import { Form } from '@fibrae/semi-ui-solid';
-const { Label } = Form;
+import { FormLabel } from '@fibrae/semi-ui-solid';
 ```
 
 <FormLabelSolidApi />
@@ -2220,11 +2176,15 @@ import { FormLabel } from '@fibrae/semi-ui-svelte';
 
 <Framework only="react">
 
-## Form.InputGroup
+## FormInputGroup
+
+```jsx
+import { FormInputGroup } from '@fibrae/semi-ui-react';
+```
 
 <FormInputGroupReactApi />
 
-`className`, `style` and `ref` land on the `role="group"` element of the InputGroup inside. `aria-labelledby` and `aria-describedby` are merged with the ids generated by the group and passed to every field in it, the caller's first. The outer element has `role="group"` when a label is set. Form.InputGroup works only inside a Form; outside one it renders nothing and logs a warning.
+`className`, `style` and `ref` land on the `role="group"` element of the InputGroup inside. `aria-labelledby` and `aria-describedby` are merged with the ids generated by the group and passed to every field in it, the caller's first. The outer element has `role="group"` when a label is set. FormInputGroup works only inside a Form; outside one it renders nothing and logs a warning.
 
 When extraTextPositon is middle and labelPosition is left. Since extraText is allowed to be ReactNode, the height of the content is variable, and the Label will no longer ensure that it can be aligned with the first line of text in the Field / InputGroup.
 
@@ -2248,16 +2208,15 @@ When extraTextPosition is middle and labelPosition is left. Since the content of
 
 <Framework only="solid">
 
-## Form.InputGroup
+## FormInputGroup
 
 ```jsx
-import { Form } from '@fibrae/semi-ui-solid';
-const { InputGroup } = Form;
+import { FormInputGroup } from '@fibrae/semi-ui-solid';
 ```
 
 <FormInputGroupSolidApi />
 
-`class`, `style` and `ref` land on the `role="group"` element of the inner InputGroup, and the other native attributes (such as `aria-*`) land there too; `size` and `disabled` reach every field in the group. `aria-labelledby` and `aria-describedby` are merged with the ids generated by the group, the caller's first. The outer element has `role="group"` when a label is set, and has none without a label. Form.InputGroup works inside a Form only; outside one it renders nothing and logs a warning.
+`class`, `style` and `ref` land on the `role="group"` element of the inner InputGroup, and the other native attributes (such as `aria-*`) land there too; `size` and `disabled` reach every field in the group. `aria-labelledby` and `aria-describedby` are merged with the ids generated by the group, the caller's first. The outer element has `role="group"` when a label is set, and has none without a label. FormInputGroup works inside a Form only; outside one it renders nothing and logs a warning.
 
 When extraTextPosition is middle and labelPosition is left. Since the content of extraText has a variable height, the Label will no longer ensure that it can be aligned with the first line of text in the Field / InputGroup.
 
@@ -2281,11 +2240,10 @@ When extraTextPosition is middle and labelPosition is left. Since the content of
 
 <Framework only="react">
 
-## Form.Slot
+## FormSlot
 
 ```jsx
-import { Form } from '@fibrae/semi-ui-react';
-const { Slot } = Form;
+import { FormSlot } from '@fibrae/semi-ui-react';
 ```
 
 <FormSlotReactApi />
@@ -2310,11 +2268,10 @@ import { FormSlot } from '@fibrae/semi-ui-vue';
 
 <Framework only="solid">
 
-## Form.Slot
+## FormSlot
 
 ```jsx
-import { Form } from '@fibrae/semi-ui-solid';
-const { Slot } = Form;
+import { FormSlot } from '@fibrae/semi-ui-solid';
 ```
 
 <FormSlotSolidApi />
@@ -2339,11 +2296,10 @@ import { FormSlot } from '@fibrae/semi-ui-svelte';
 
 <Framework only="react">
 
-## Form.ErrorMessage
+## FormErrorMessage
 
 ```jsx
-import { Form } from '@fibrae/semi-ui-react';
-const { ErrorMessage } = Form;
+import { FormErrorMessage } from '@fibrae/semi-ui-react';
 ```
 
 - The error is an array of strings; multiple errors are joined with commas
@@ -2374,11 +2330,10 @@ import { FormErrorMessage } from '@fibrae/semi-ui-vue';
 
 <Framework only="solid">
 
-## Form.ErrorMessage
+## FormErrorMessage
 
 ```jsx
-import { Form } from '@fibrae/semi-ui-solid';
-const { ErrorMessage } = Form;
+import { FormErrorMessage } from '@fibrae/semi-ui-solid';
 ```
 
 - The error is an array of strings; multiple errors are joined with commas

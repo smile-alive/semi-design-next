@@ -22,7 +22,7 @@ import ApiType from '#/components/ApiType.astro';
 | disabled | Whether Upload is disabled. A disabled Upload no longer shows the remove, retry, replace and clear actions. | `boolean` | `semiDefault("Upload", "disabled", false)` |
 | draggable | Whether dragging files to upload is supported. | `boolean` | `semiDefault("Upload", "draggable", false)` |
 | fileList | Controlled file list, used with v-model:fileList. The uid of every item is required and must be unique. | `FileItem[]` | `semiGlobalDefault("Upload", "fileList")` |
-| fileName | Same as name. Mainly used in Form.Upload to avoid clashing with the name of Field. | `string` | `semiGlobalDefault("Upload", "fileName")` |
+| fileName | Same as name. Mainly used in FormUpload to avoid clashing with the name of Field. | `string` | `semiGlobalDefault("Upload", "fileName")` |
 | headers | Headers sent with the upload, or a function that returns them for a file. | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, string>)"}>Type</ApiType> | `undefined` |
 | hotSpotLocation | Position of the picture wall add button: start or end. | `"end" \| "start"` | `semiDefault("Upload", "hotSpotLocation", "end")` |
 | itemStyle | Inline style of the file cards. | `StyleValue` | `semiGlobalDefault("Upload", "itemStyle")` |

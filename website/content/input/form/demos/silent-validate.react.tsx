@@ -1,5 +1,14 @@
 import { useRef } from 'react';
-import { Form, Button, Toast, type FormApi } from '@fibrae/semi-ui-react';
+import { Form, FormInput, Button, Toast, type FormApi, type RuleItem } from '@fibrae/semi-ui-react';
+
+const usernameRules: RuleItem[] = [
+    { required: true, message: '用户名不能为空' },
+    { min: 3, message: '用户名至少 3 个字符' },
+];
+const emailRules: RuleItem[] = [
+    { required: true, message: '邮箱不能为空' },
+    { type: 'email', message: '邮箱格式不正确' },
+];
 
 export default function FormDemo() {
     const formApiRef = useRef<FormApi | null>(null);
@@ -35,23 +44,9 @@ export default function FormDemo() {
             }}
             layout="horizontal"
         >
-            <Form.Input
-                field="username"
-                label="用户名"
-                rules={[
-                    { required: true, message: '用户名不能为空' },
-                    { min: 3, message: '用户名至少 3 个字符' },
-                ]}
-            />
-            <Form.Input
-                field="email"
-                label="邮箱"
-                rules={[
-                    { required: true, message: '邮箱不能为空' },
-                    { type: 'email', message: '邮箱格式不正确' },
-                ]}
-            />
-            <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
+            <FormInput field="username" label="用户名" rules={usernameRules} />
+            <FormInput field="email" label="邮箱" rules={emailRules} />
+            <div style={{ display: 'flex', gap: 12, marginBlockStart: 12 }}>
                 <Button onClick={handleSilentValidate} type="primary">
                     静默校验（不显示错误）
                 </Button>

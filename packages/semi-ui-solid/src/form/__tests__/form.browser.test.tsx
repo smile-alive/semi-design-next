@@ -4,7 +4,7 @@ import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { IconPlus } from '@fibrae/semi-icons-solid';
-import { type FormApi, Form, FormInput, FormSwitch, FormUpload } from '..';
+import { type FormApi, Form, FormInputGroup, FormInput, FormSwitch, FormUpload } from '..';
 import Button from '../../button';
 
 const getInput = (field: string) => document.querySelector(`[x-field-id="${field}"] input`);
@@ -34,10 +34,10 @@ describe('Form', () => {
         let validation: Promise<unknown> | undefined;
         render(() => (
             <Form getFormApi={(value) => (api = value)}>
-                <Form.InputGroup label="分组">
+                <FormInputGroup label="分组">
                     <FormInput field="fast" validator={() => fast.promise} />
                     <FormInput field="slow" validator={() => slow.promise} />
-                </Form.InputGroup>
+                </FormInputGroup>
                 <Button
                     type="tertiary"
                     onClick={() => {

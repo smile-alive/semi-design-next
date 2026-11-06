@@ -2,9 +2,9 @@ import { createRef } from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { Form } from '@fibrae/semi-ui-react';
+import { Form, FormSlot } from '@fibrae/semi-ui-react';
 
-const Slot = Form.Slot;
+const Slot = FormSlot;
 const slotSelector = `.${BASE_CLASS_PREFIX}-form-slot`;
 const labelTextSelector = `.${BASE_CLASS_PREFIX}-form-field-label-text`;
 const emSelector = `.${BASE_CLASS_PREFIX}-form-field-error-message`;

@@ -28,7 +28,7 @@ import ApiType from '#/components/ApiType.astro';
 | dragSubText | Help text of the drag area. | `ReactNode` | - |
 | fileList | Controlled file list. Passing it makes Upload a controlled component; write a new array back in onChange. The `uid` of every item is required and must be unique. | <ApiType detail={"Array\u003cFileItem>"}>Type</ApiType> | - |
 | fileListTitle | Title area of the file list. A ReactNode replaces only the title text and keeps the default clear button. A function replaces the whole title area including the clear button, with `fileList`, `onClear` and `clearText`. | <ApiType detail={"ReactNode \u007c ((props: RenderFileListTitleProps) => ReactNode)"}>Type</ApiType> | - |
-| fileName | Same as name. Mainly used in Form.Upload to avoid clashing with the name of Field. | `string` | - |
+| fileName | Same as name. Mainly used in FormUpload to avoid clashing with the name of Field. | `string` | - |
 | headers | Headers sent with the upload, or a function that returns them for a file. | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, string>)"}>Type</ApiType> | - |
 | hotSpotLocation | Position of the picture wall add button: `start` or `end`. | `'end' \| 'start'` | `"end"` |
 | itemStyle | Inline style of the file cards. | `CSSProperties` | - |

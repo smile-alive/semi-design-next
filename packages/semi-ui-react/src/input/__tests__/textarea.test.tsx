@@ -5,7 +5,7 @@ import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import truncateValue from '@fibrae/semi-foundation/input/util/truncate-value';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { Form } from '@fibrae/semi-ui-react';
+import { Form, FormTextArea } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import { mockResizeObserver } from '@test/utils/react';
 import TextArea, { type TextAreaChangeEvent, type TextAreaHandle, type TextAreaProps } from '../textarea';
@@ -390,11 +390,11 @@ describe('TextArea', () => {
         expect(getTextArea()).toHaveValue('');
     });
 
-    it('formApi.reset 后 Form.TextArea 清空，且 Form 属性不落到 DOM', async () => {
+    it('formApi.reset 后 FormTextArea 清空，且 Form 属性不落到 DOM', async () => {
         let formApi;
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.TextArea id="desc" field="desc" label="Desc" />
+                <FormTextArea id="desc" field="desc" label="Desc" />
             </Form>
         );
         await userEvent.type(getTextArea(), 'semi');
@@ -584,11 +584,11 @@ describe('TextArea', () => {
         expect(getTextArea()).toHaveFocus();
     });
 
-    it('Form.TextArea 经 withField 透传 ref，因此同样得到句柄', () => {
+    it('FormTextArea 经 withField 透传 ref，因此同样得到句柄', () => {
         const ref = createRef<TextAreaHandle>();
         render(
             <Form>
-                <Form.TextArea ref={ref} field="text" />
+                <FormTextArea ref={ref} field="text" />
             </Form>
         );
         expect(ref.current.textarea).toBe(getTextArea());

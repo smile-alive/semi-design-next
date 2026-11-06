@@ -68,7 +68,7 @@ import en_GB from '@fibrae/semi-ui-react/locale/source/en_GB';
 - `semiGlobal.config` 只在应用启动时设置，服务端与客户端使用同一份配置，渲染过程中不修改。
 - 弹层在 hydration 之后打开，服务端 HTML 不含弹层内容；Calendar 与 DatePicker 面板的「今天」标记只在 hydration 后出现，Calendar 在服务端渲染时传 `displayValue` 固定显示的日期。
 - 日期按运行环境的时区格式化：服务端与浏览器时区不同时，用 `ConfigProvider` 的 `timeZone` 统一，否则服务端 HTML 与 hydration 的日期文字不一致。
-- Server Component 中直接导入扁平导出（如 `Button`）和 `TypographyTitle` 等命名导出；点语法子组件（如 `Typography.Title`、`Form.Input`）在 Server Component 中为 `undefined`，只在 `'use client'` 文件中使用。
+- Server Component 中直接导入扁平导出（如 `Button`）和 `TypographyTitle` 等命名导出；点语法子组件（如 `Typography.Title`、`Select.Option`）在 Server Component 中为 `undefined`，只在 `'use client'` 文件中使用。
 
 ### 文档
 

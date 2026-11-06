@@ -8,7 +8,7 @@ import { FormInput } from './fixtures/fields';
 
 const textSelector = `.${BASE_CLASS_PREFIX}-form-section-text`;
 
-describe('Form.Section', () => {
+describe('FormSection', () => {
     it('class 与 style', () => {
         const { container } = render(FormSection, { props: { class: 'sec-test', style: { color: 'red' } } });
         const section = container.querySelector('fieldset.sec-test');

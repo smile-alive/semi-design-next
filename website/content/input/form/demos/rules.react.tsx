@@ -1,45 +1,27 @@
-import { Form, Button } from '@fibrae/semi-ui-react';
+import { Form, FormInput, Button, type RuleItem } from '@fibrae/semi-ui-react';
+
+const initValues = {
+    name: 'semi',
+    shortcut: 'se',
+};
+
+const style = { width: '100%' };
+
+const rules: RuleItem[] = [
+    { required: true, message: 'required error' },
+    { type: 'string', message: 'type error' },
+    { validator: (value) => value === 'semi', message: 'should be semi' },
+    {
+        validator: (value) => Boolean(value && value.startsWith('se')),
+        message: 'should startsWith se',
+    },
+];
 
 export default function FormDemo() {
-    const initValues = {
-        name: 'semi',
-        shortcut: 'se',
-    };
-
-    const style = { width: '100%' };
-
-    const { Input } = Form;
-
     return (
         <Form initValues={initValues}>
-            <Input
-                field="name"
-                style={style}
-                trigger="blur"
-                rules={[
-                    { required: true, message: 'required error' },
-                    { type: 'string', message: 'type error' },
-                    { validator: (value) => value === 'semi', message: 'should be semi' },
-                    {
-                        validator: (value) => Boolean(value && value.startsWith('se')),
-                        message: 'should startsWith se',
-                    },
-                ]}
-            />
-            <Input
-                field="shortcut"
-                style={style}
-                stopValidateWithError
-                rules={[
-                    { required: true, message: 'required error' },
-                    { type: 'string', message: 'type error' },
-                    { validator: (value) => value === 'semi', message: 'should be semi' },
-                    {
-                        validator: (value) => Boolean(value && value.startsWith('se')),
-                        message: 'should startsWith se',
-                    },
-                ]}
-            />
+            <FormInput field="name" style={style} trigger="blur" rules={rules} />
+            <FormInput field="shortcut" style={style} stopValidateWithError rules={rules} />
             <Button htmlType="submit">提交</Button>
         </Form>
     );

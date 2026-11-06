@@ -29,7 +29,7 @@ import ApiType from '#/components/ApiType.astro';
 | fileList | 文件列表，可用 bind:fileList 双向绑定；只传值时作为初始列表，之后由组件自己维护。每项的 uid 必填且不能重复。 | `FileItem[]` | - |
 | fileListHeader | 替换整个标题区（含清空按钮），参数为 fileList、onClear、clearText。 | <ApiType detail={"Snippet\u003c[UploadFileListHeaderSlotProps]>"}>Type</ApiType> | - |
 | fileListTitle | 只替换文件列表的标题文字，保留清空按钮。 | `Snippet` | - |
-| fileName | 作用与 name 相同，主要在 Form.Upload 中使用，避免与 Field 的 name 冲突。 | `string` | - |
+| fileName | 作用与 name 相同，主要在 FormUpload 中使用，避免与 Field 的 name 冲突。 | `string` | - |
 | fileOperation | 自定义列表项的操作区。 | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType> | - |
 | fileValidateMessage | 自定义文件卡片的校验信息，参数中带 validateMessage。 | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType> | - |
 | headers | 上传时附带的 headers，或根据文件返回 headers 的函数。 | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, string>)"}>Type</ApiType> | - |

@@ -640,7 +640,7 @@ TreeSelect 通过 `bind:this` 暴露 `search(value)` 和 `close()` 两个方法�
 - 按 ARIA 1.2 的 combobox 写法，任一时刻只有一个元素是 combobox。它的名称按优先级取：`aria-labelledby`、`aria-label`、实际渲染出的 insetLabel（Vue 为 `#insetLabel`，未传 `insetLabelId` 时组件生成 id；有 prefix 时 insetLabel 不渲染，也不作名称来源），都没有时取语言包中的名称:
     - 不可搜索或 `searchPosition="dropdown"` 时，触发器是 select-only combobox；下拉内的搜索框保持文本框角色，带 `aria-controls`、`aria-autocomplete`、`aria-activedescendant`
     - `searchPosition="trigger"` 时，搜索框是 combobox 和唯一的 Tab 停靠点，带 `aria-autocomplete="list"`，触发器不再有角色。单选时搜索框在输入前为空，已选文本以 `aria-describedby` 关联为它的描述。点击触发器任意位置会把焦点交给搜索框;
-- TreeSelect 允许用户设置 `aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-labelledby`、`aria-required`，另外，Form 会为 Form.TreeSelect 自动设置这些属性;
+- TreeSelect 允许用户设置 `aria-describedby`、`aria-errormessage`、`aria-invalid`、`aria-labelledby`、`aria-required`，另外，Form 会为 FormTreeSelect 自动设置这些属性;
 - 下拉中 `role="tree"` 的列表与 combobox 使用同一个名称来源：同一组 `aria-labelledby`、同一个 `aria-label` 或同一个 insetLabel；都没有时与 combobox 一样取语言包中的名称;
 
 <Framework only="react">

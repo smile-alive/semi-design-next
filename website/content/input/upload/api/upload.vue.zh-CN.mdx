@@ -22,7 +22,7 @@ import ApiType from '#/components/ApiType.astro';
 | disabled | 是否禁用。禁用后不再显示移除、重试、替换和清空操作。 | `boolean` | `semiDefault("Upload", "disabled", false)` |
 | draggable | 是否支持拖拽上传。 | `boolean` | `semiDefault("Upload", "draggable", false)` |
 | fileList | 受控的文件列表，配合 v-model:fileList 使用。每项的 uid 必填且不能重复。 | `FileItem[]` | `semiGlobalDefault("Upload", "fileList")` |
-| fileName | 作用与 name 相同，主要在 Form.Upload 中使用，避免与 Field 的 name 冲突。 | `string` | `semiGlobalDefault("Upload", "fileName")` |
+| fileName | 作用与 name 相同，主要在 FormUpload 中使用，避免与 Field 的 name 冲突。 | `string` | `semiGlobalDefault("Upload", "fileName")` |
 | headers | 上传时附带的 headers，或根据文件返回 headers 的函数。 | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, string>)"}>Type</ApiType> | `undefined` |
 | hotSpotLocation | 照片墙添加按钮的位置，可选 start 或 end。 | `"end" \| "start"` | `semiDefault("Upload", "hotSpotLocation", "end")` |
 | itemStyle | 文件卡片的内联样式。 | `StyleValue` | `semiGlobalDefault("Upload", "itemStyle")` |

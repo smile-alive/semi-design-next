@@ -43,6 +43,31 @@ import {
     FloatButton,
     FloatButtonGroup,
     Form,
+    FormAutoComplete,
+    FormCascader,
+    FormCheckbox,
+    FormCheckboxGroup,
+    FormDatePicker,
+    FormErrorMessage,
+    FormInput,
+    FormInputGroup,
+    FormInputNumber,
+    FormLabel,
+    FormPinCode,
+    FormRadio,
+    FormRadioGroup,
+    FormRating,
+    FormSection,
+    FormSelect,
+    FormSlider,
+    FormSlot,
+    FormSwitch,
+    FormTagInput,
+    FormTextArea,
+    FormTimePicker,
+    FormTransfer,
+    FormTreeSelect,
+    FormUpload,
     Highlight,
     HotKeys,
     Icon,
@@ -361,8 +386,8 @@ export const ssrCases: SsrCase[] = [
         covers: ['Form'],
         element: () => (
             <Form initValues={{ name: 'semi', kind: 'a' }}>
-                <Form.Input field="name" label="Name" />
-                <Form.Select field="kind" label="Kind" optionList={options} />
+                <FormInput field="name" label="Name" />
+                <FormSelect field="kind" label="Kind" optionList={options} />
             </Form>
         ),
         html: ['value="semi"', 'Alpha'],
@@ -372,17 +397,87 @@ export const ssrCases: SsrCase[] = [
         covers: ['Form'],
         element: () => (
             <Form initValues={{ files: [{ uid: '1', name: 'a.txt', status: 'success', fileInstance: new File(['a'], 'a.txt') }] }}>
-                <Form.Upload action="/upload" field="files" label="Files" />
+                <FormUpload action="/upload" field="files" label="Files" />
             </Form>
         ),
         html: ['a.txt'],
+    },
+    {
+        name: 'form/部件',
+        covers: ['FormSection', 'FormSlot', 'FormInputGroup', 'FormLabel', 'FormErrorMessage'],
+        element: () => (
+            <Form>
+                <FormSection text="s">
+                    <FormInput field="a" label="A" />
+                </FormSection>
+                <FormSlot label="slot">x</FormSlot>
+                <FormInputGroup label="g">
+                    <FormInput field="g1" noLabel />
+                </FormInputGroup>
+                <FormLabel text="label" />
+                <FormErrorMessage error={['err']} />
+            </Form>
+        ),
+        html: ['slot', 'label', 'err'],
+    },
+    {
+        name: 'form/字段',
+        covers: [
+            'FormAutoComplete',
+            'FormCascader',
+            'FormCheckbox',
+            'FormCheckboxGroup',
+            'FormDatePicker',
+            'FormInput',
+            'FormInputNumber',
+            'FormPinCode',
+            'FormRadio',
+            'FormRadioGroup',
+            'FormRating',
+            'FormSelect',
+            'FormSlider',
+            'FormSwitch',
+            'FormTagInput',
+            'FormTextArea',
+            'FormTimePicker',
+            'FormTransfer',
+            'FormTreeSelect',
+            'FormUpload',
+        ],
+        element: () => (
+            <Form initValues={{ input: 'a', date: day }}>
+                <FormInput field="input" />
+                <FormAutoComplete data={['a']} field="ac" />
+                <FormCascader field="cas" treeData={treeData} />
+                <FormCheckbox field="cb">c</FormCheckbox>
+                <FormCheckboxGroup field="cbg" options={['a', 'b']} />
+                <FormDatePicker field="date" timeZone={8} />
+                <FormInputNumber field="num" />
+                <FormPinCode count={4} field="pin" />
+                <FormRadio value="a" field="r">
+                    r
+                </FormRadio>
+                <FormRadioGroup field="rg" options={['a', 'b']} />
+                <FormRating field="rate" />
+                <FormSelect field="sel" optionList={options} />
+                <FormSlider field="sli" />
+                <FormSwitch field="sw" />
+                <FormTagInput field="ti" />
+                <FormTextArea field="ta" />
+                <FormTimePicker field="tp" timeZone={8} />
+                <FormTransfer dataSource={[{ label: 'Option 1', value: 1, key: '1' }]} field="tr" />
+                <FormTreeSelect field="ts" treeData={treeData} />
+                <FormUpload action="/upload" field="up" />
+            </Form>
+        ),
+        html: ['value="a"'],
     },
     {
         name: 'form/ArrayField',
         covers: ['ArrayField'],
         element: () => (
             <Form initValues={{ rules: [{ name: 'r1' }] }}>
-                <ArrayField field="rules">{({ arrayFields }) => arrayFields.map(({ field, key }) => <Form.Input key={key} field={`${field}.name`} />)}</ArrayField>
+                <ArrayField field="rules">{({ arrayFields }) => arrayFields.map(({ field, key }) => <FormInput key={key} field={`${field}.name`} />)}</ArrayField>
             </Form>
         ),
         html: ['value="r1"'],

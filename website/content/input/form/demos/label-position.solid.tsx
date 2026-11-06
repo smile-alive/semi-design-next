@@ -1,5 +1,5 @@
 import { createSignal } from 'solid-js';
-import { Form, FormCheckbox, FormCheckboxGroup, FormInput, FormInputNumber, FormRadio, FormRadioGroup, FormSelect, FormSwitch, Select, type FormProps } from '@fibrae/semi-ui-solid';
+import { Form, FormLabel, FormCheckbox, FormCheckboxGroup, FormInput, FormInputNumber, FormRadio, FormRadioGroup, FormSelect, FormSwitch, Select, type FormProps } from '@fibrae/semi-ui-solid';
 
 const rules = [
     { required: true, message: 'required error' },
@@ -14,14 +14,14 @@ export default function FormDemo() {
 
     return (
         <>
-            <div style={{ 'border-bottom': '1px solid var(--semi-color-border)', 'padding-bottom': '12px' }}>
-                <Form.Label style={{ 'margin-left': '10px' }}>切换Label位置:</Form.Label>
-                <Select onChange={(value) => setLabelPosition(value as FormProps['labelPosition'])} value={labelPosition()} style={{ width: '200px' }} prefix="labelPosition">
+            <div style={{ 'border-block-end': '1px solid var(--semi-color-border)', 'padding-block-end': '12px' }}>
+                <FormLabel style={{ 'margin-inline-start': '10px' }}>切换Label位置:</FormLabel>
+                <Select onChange={(value) => setLabelPosition(value as FormProps['labelPosition'])} value={labelPosition()} aria-label="labelPosition" style={{ width: '200px' }} prefix="labelPosition">
                     <Select.Option value="top">top</Select.Option>
                     <Select.Option value="left">left</Select.Option>
                 </Select>
-                <Form.Label style={{ 'margin-left': '10px' }}>切换Label文本对齐方向:</Form.Label>
-                <Select onChange={(value) => setLabelAlign(value as FormProps['labelAlign'])} value={labelAlign()} style={{ width: '200px' }} prefix="labelAlign">
+                <FormLabel style={{ 'margin-inline-start': '10px' }}>切换Label文本对齐方向:</FormLabel>
+                <Select onChange={(value) => setLabelAlign(value as FormProps['labelAlign'])} value={labelAlign()} aria-label="labelAlign" style={{ width: '200px' }} prefix="labelAlign">
                     <Select.Option value="left">left</Select.Option>
                     <Select.Option value="right">right</Select.Option>
                 </Select>

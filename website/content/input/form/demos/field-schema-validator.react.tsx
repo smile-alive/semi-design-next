@@ -1,20 +1,18 @@
 import * as z from 'zod';
-import { Button, Form } from '@fibrae/semi-ui-react';
+import { Button, Form, FormInput } from '@fibrae/semi-ui-react';
 
-const username = z.string({ error: '请输入用户名' }).min(3, '用户名至少 3 个字符').regex(/^\w+$/, '只能包含字母、数字和下划线');
+const nickname = z.string('请输入昵称').min(3, '昵称至少 3 个字符').max(12, '昵称最多 12 个字符');
+
+const usernameRules = [
+    { required: true, message: '请输入用户名' },
+    { pattern: /^[a-z0-9_]+$/, message: '只能包含小写字母、数字和下划线' },
+];
 
 export default function FormDemo() {
     return (
         <Form style={{ width: 400 }}>
-            <Form.Input field="username" label={{ text: '用户名（validator 传 zod schema）', required: true }} validator={username} />
-            <Form.Input
-                field="nickname"
-                label="昵称（rules）"
-                rules={[
-                    { required: true, message: '请输入昵称' },
-                    { min: 3, message: '昵称至少 3 个字符' },
-                ]}
-            />
+            <FormInput field="nickname" label="昵称（validator 传 schema）" validator={nickname} />
+            <FormInput field="username" label="用户名（rules）" rules={usernameRules} />
             <Button htmlType="submit">提交</Button>
         </Form>
     );

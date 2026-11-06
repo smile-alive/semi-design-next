@@ -21,6 +21,9 @@ import {
     ConfigProvider,
     DatePicker,
     Form,
+    FormCheckbox,
+    FormInput,
+    FormSelect,
     Input,
     Modal,
     Select,
@@ -82,9 +85,9 @@ export function SemiPage({ locale }: { locale: ConfigProviderProps['locale'] }) 
             <Table columns={columns} dataSource={data} pagination={false} />
             <DatePicker defaultValue={new Date(2026, 9, 1)} />
             <Form initValues={{ name: 'FormName', fruit: 'a', agree: true }}>
-                <Form.Input field="name" label="Name" />
-                <Form.Select field="fruit" label="Fruit" optionList={options} style={{ width: 200 }} />
-                <Form.Checkbox field="agree">Agree</Form.Checkbox>
+                <FormInput field="name" label="Name" />
+                <FormSelect field="fruit" label="Fruit" optionList={options} style={{ width: 200 }} />
+                <FormCheckbox field="agree">Agree</FormCheckbox>
             </Form>
             <Tabs>
                 <TabPane tab="Tab1" itemKey="1">

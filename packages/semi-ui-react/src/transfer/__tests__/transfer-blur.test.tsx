@@ -2,7 +2,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { Form } from '@fibrae/semi-ui-react';
+import { Form, FormTransfer } from '@fibrae/semi-ui-react';
 import type { FormApi } from '../../form/interface';
 import Transfer from '../index';
 
@@ -41,13 +41,13 @@ describe('Transfer onBlur', () => {
     });
 });
 
-describe('Form.Transfer trigger="blur"', () => {
+describe('FormTransfer trigger="blur"', () => {
     it('焦点离开后校验并标记 touched', async () => {
         let api!: FormApi;
         render(
             <>
                 <Form getFormApi={(formApi) => (api = formApi)}>
-                    <Form.Transfer dataSource={dataSource} field="members" label="Members" rules={[{ required: true, message: 'pick one' }]} trigger="blur" />
+                    <FormTransfer dataSource={dataSource} field="members" label="Members" rules={[{ required: true, message: 'pick one' }]} trigger="blur" />
                 </Form>
                 <button type="button">outside</button>
             </>

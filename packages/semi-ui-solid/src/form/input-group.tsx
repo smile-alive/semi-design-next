@@ -79,7 +79,7 @@ export default function FormInputGroup(props: InputGroupProps) {
         }),
     };
 
-    warning(!form, '[Semi Form]: Form.InputGroup must be used inside the Form, please check your dom declaration');
+    warning(!form, '[Semi Form]: FormInputGroup must be used inside the Form, please check your dom declaration');
 
     const extraContent = () => (
         <Show when={hasExtraText()}>

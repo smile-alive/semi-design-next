@@ -1,4 +1,4 @@
-import { useFieldApi, Form, Button } from '@fibrae/semi-ui-react';
+import { useFieldApi, Form, FormInput, Button } from '@fibrae/semi-ui-react';
 
 function ComponentUsingFieldApi() {
     const nameFieldApi = useFieldApi('name');
@@ -11,7 +11,7 @@ function ComponentUsingFieldApi() {
 export default function FormDemo() {
     return (
         <Form>
-            <Form.Input field="name" initValue="mike" />
+            <FormInput field="name" initValue="mike" />
             <ComponentUsingFieldApi />
         </Form>
     );

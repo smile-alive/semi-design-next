@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Form, Button, TextArea, type FormApi } from '@fibrae/semi-ui-react';
+import { Form, FormInput, FormSelect, Button, TextArea, type FormApi } from '@fibrae/semi-ui-react';
 
 interface Effect {
     name: string;
@@ -42,23 +42,23 @@ export default function FormDemo() {
             labelPosition="left"
             labelWidth="180px"
         >
-            {({ formState, values }) => (
+            {(form) => (
                 <>
                     <Button onClick={add}>添加</Button>
-                    {values.effects &&
-                        values.effects.map((effect, i) => (
+                    {form.values.effects &&
+                        form.values.effects.map((effect, i) => (
                             <div key={effect.key} style={{ width: 1000, display: 'flex' }}>
-                                <Form.Input field={`effects[${i}].name`} aria-label={`特效 ${i + 1} 名称`} style={{ width: 200, marginRight: 12 }} />
-                                <Form.Select field={`effects[${i}].type`} style={{ width: 90 }}>
-                                    <Form.Select.Option value="2D">2D</Form.Select.Option>
-                                    <Form.Select.Option value="3D">3D</Form.Select.Option>
-                                </Form.Select>
+                                <FormInput field={`effects[${i}].name`} aria-label={`特效 ${i + 1} 名称`} style={{ width: 200, marginInlineEnd: 12 }} />
+                                <FormSelect field={`effects[${i}].type`} style={{ width: 90 }}>
+                                    <FormSelect.Option value="2D">2D</FormSelect.Option>
+                                    <FormSelect.Option value="3D">3D</FormSelect.Option>
+                                </FormSelect>
                                 <Button type="danger" onClick={() => remove(effect.key)} style={{ margin: 12 }}>
                                     删除
                                 </Button>
                             </div>
                         ))}
-                    <TextArea aria-label="表单值" style={{ marginTop: 10 }} value={JSON.stringify(formState.values)} />
+                    <TextArea aria-label="表单值" style={{ marginBlockStart: 10 }} value={JSON.stringify(form.formState.values)} />
                 </>
             )}
         </Form>

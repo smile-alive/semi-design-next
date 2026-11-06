@@ -1,19 +1,12 @@
-import { useState, useCallback, useRef, type CSSProperties, type MouseEvent, type RefObject } from 'react';
+import { useState, useCallback, useRef, type CSSProperties, type MouseEvent } from 'react';
 import { MCPConfigure, type MCPConfigureOption as MCPOption } from '@fibrae/semi-ai-react';
 import { IconSemiLogo, IconFigma } from '@fibrae/semi-icons-react';
-import { Button, Modal, Form, type FormHandle } from '@fibrae/semi-ui-react';
+import { Button, Modal, Form, FormInput, FormTextArea, type FormHandle } from '@fibrae/semi-ui-react';
 
 interface McpFormValues {
     name: string;
     src: string;
     desc: string;
-}
-
-interface CustomOptionCreateModelProps {
-    visible: boolean;
-    handleOk: () => void;
-    handleCancel: () => void;
-    formRef: RefObject<FormHandle<McpFormValues> | null>;
 }
 
 const defaultOptions: MCPOption[] = [
@@ -32,32 +25,13 @@ const defaultOptions: MCPOption[] = [
     },
 ];
 
-function CustomOptionCreateModel({ visible, handleOk, handleCancel, formRef }: CustomOptionCreateModelProps) {
-    return (
-        <Modal title="自定义 MCP" visible={visible} onOk={handleOk} onCancel={handleCancel} closeOnEsc>
-            <Form ref={formRef} layout="vertical" onValueChange={(values) => console.log(values)}>
-                <Form.Input rules={[{ required: true, message: '请输入 MCP 名称' }]} field="name" label="MCP 名称" style={{ width: '100%' }} />
-                <Form.Input
-                    initValue="/assets/placeholder/avatar-a.svg"
-                    rules={[
-                        { required: true, message: '请输入 MCP 图标 URL' },
-                        {
-                            validator: (value) => {
-                                const urlRegex = /^(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+(?::\d+)?(?:\/[^\s]*)?$/i;
-                                return urlRegex.test(value);
-                            },
-                            message: '请输入有效的 MCP 图标 URL',
-                        },
-                    ]}
-                    field="src"
-                    label="MCP 图标 URL"
-                    style={{ width: '100%' }}
-                />
-                <Form.TextArea rules={[{ required: true, message: '请输入 MCP 介绍' }]} field="desc" label="MCP 介绍" style={{ width: '100%' }} />
-            </Form>
-        </Modal>
-    );
-}
+const srcRules = [
+    { required: true, message: '请输入 MCP 图标 URL' },
+    {
+        validator: (value: string) => /^(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+(?::\d+)?(?:\/[^\s]*)?$/i.test(value),
+        message: '请输入有效的 MCP 图标 URL',
+    },
+];
 
 let index = 1;
 
@@ -137,7 +111,13 @@ export default function SidebarDemo() {
                 </Button>
             </div>
             <MCPConfigure style={{ width: 500 }} resizable={false} visible={visible} onCancel={toggleVisible} options={options} customOptions={customOptions} onStatusChange={onStatusChange} onAddClick={onAddClick} onConfigureClick={onConfigureClick} onEditClick={onEditClick} />
-            <CustomOptionCreateModel formRef={formRef} visible={mVisible} handleOk={handleOk} handleCancel={handleCancel} />
+            <Modal title="自定义 MCP" visible={mVisible} onOk={handleOk} onCancel={handleCancel} closeOnEsc>
+                <Form ref={formRef} layout="vertical" onValueChange={(values) => console.log(values)}>
+                    <FormInput field="name" rules={[{ required: true, message: '请输入 MCP 名称' }]} label="MCP 名称" style={{ width: '100%' }} />
+                    <FormInput field="src" initValue="/assets/placeholder/avatar-a.svg" rules={srcRules} label="MCP 图标 URL" style={{ width: '100%' }} />
+                    <FormTextArea field="desc" rules={[{ required: true, message: '请输入 MCP 介绍' }]} label="MCP 介绍" style={{ width: '100%' }} />
+                </Form>
+            </Modal>
         </div>
     );
 }

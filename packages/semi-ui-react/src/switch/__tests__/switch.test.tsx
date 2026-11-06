@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
-import { Form } from '@fibrae/semi-ui-react/form';
+import { Form, FormSwitch } from '@fibrae/semi-ui-react/form';
 import Tooltip from '@fibrae/semi-ui-react/tooltip';
 import Switch from '../index';
 
@@ -363,11 +363,11 @@ describe('Switch', () => {
         expect(getWrapper()).not.toHaveClass(CHECKED_CLS);
     });
 
-    it('formApi.reset 后 Form.Switch 再次取消选中', async () => {
+    it('formApi.reset 后 FormSwitch 再次取消选中', async () => {
         let formApi;
         render(
             <Form getFormApi={(api) => (formApi = api)}>
-                <Form.Switch field="on" />
+                <FormSwitch field="on" />
             </Form>
         );
         await userEvent.click(getSwitch());
@@ -377,11 +377,11 @@ describe('Switch', () => {
         expect(getSwitch()).not.toBeChecked();
     });
 
-    it('Form.Switch 在 blur 时校验，且不把 Form 属性泄漏到 DOM', async () => {
+    it('FormSwitch 在 blur 时校验，且不把 Form 属性泄漏到 DOM', async () => {
         const validate = vi.fn<() => string>(() => '');
         render(
             <Form>
-                <Form.Switch field="on" trigger="blur" validator={validate} />
+                <FormSwitch field="on" trigger="blur" validator={validate} />
             </Form>
         );
         act(() => getSwitch().focus());
@@ -447,10 +447,10 @@ describe('Switch', () => {
         expect(getSwitch()).not.toBeChecked();
     });
 
-    it('Form.Switch 必填时 aria-required 落在 role="switch" 的 input 上', () => {
+    it('FormSwitch 必填时 aria-required 落在 role="switch" 的 input 上', () => {
         render(
             <Form>
-                <Form.Switch field="s" rules={[{ required: true }]} />
+                <FormSwitch field="s" rules={[{ required: true }]} />
             </Form>
         );
         expect(getSwitch()).toHaveAttribute('aria-required', 'true');

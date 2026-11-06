@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react';
-import { Form, Modal, Button, Row, Col, type FormApi } from '@fibrae/semi-ui-react';
+import { Form, FormInput, FormSelect, Modal, Button, Row, Col, type FormApi } from '@fibrae/semi-ui-react';
 
 const message = '该项为必填项';
+const rules = [{ required: true, message }];
 
 export default function FormDemo() {
     const [visible, setVisible] = useState(false);
@@ -29,28 +30,28 @@ export default function FormDemo() {
                 >
                     <Row>
                         <Col span={5}>
-                            <Form.Select field="region" label="国家/地区" placeholder="请选择" style={{ width: '100%' }} rules={[{ required: true, message }]}>
-                                <Form.Select.Option value="China">中国</Form.Select.Option>
-                                <Form.Select.Option value="US">美国</Form.Select.Option>
-                                <Form.Select.Option value="Europe">欧洲</Form.Select.Option>
-                                <Form.Select.Option value="Japan">日本</Form.Select.Option>
-                            </Form.Select>
+                            <FormSelect field="region" label="国家/地区" placeholder="请选择" style={{ width: '100%' }} rules={rules}>
+                                <FormSelect.Option value="China">中国</FormSelect.Option>
+                                <FormSelect.Option value="US">美国</FormSelect.Option>
+                                <FormSelect.Option value="Europe">欧洲</FormSelect.Option>
+                                <FormSelect.Option value="Japan">日本</FormSelect.Option>
+                            </FormSelect>
                         </Col>
                         <Col span={15} offset={2}>
-                            <Form.Input field="owner" label="业务执行人" trigger="blur" rules={[{ required: true, message }]} />
+                            <FormInput field="owner" label="业务执行人" trigger="blur" rules={rules} />
                         </Col>
                     </Row>
                     <Row>
                         <Col span={5}>
-                            <Form.Select field="area" label="投放区域" placeholder="请选择" style={{ width: '100%' }} rules={[{ required: true, message }]}>
-                                <Form.Select.Option value="China">中国</Form.Select.Option>
-                                <Form.Select.Option value="US">美国</Form.Select.Option>
-                                <Form.Select.Option value="Europe">欧洲</Form.Select.Option>
-                                <Form.Select.Option value="Japan">日本</Form.Select.Option>
-                            </Form.Select>
+                            <FormSelect field="area" label="投放区域" placeholder="请选择" style={{ width: '100%' }} rules={rules}>
+                                <FormSelect.Option value="China">中国</FormSelect.Option>
+                                <FormSelect.Option value="US">美国</FormSelect.Option>
+                                <FormSelect.Option value="Europe">欧洲</FormSelect.Option>
+                                <FormSelect.Option value="Japan">日本</FormSelect.Option>
+                            </FormSelect>
                         </Col>
                         <Col span={15} offset={2}>
-                            <Form.Input field="department" label="业务执行部门" trigger="blur" rules={[{ required: true, message }]} />
+                            <FormInput field="department" label="业务执行部门" trigger="blur" rules={rules} />
                         </Col>
                     </Row>
                 </Form>

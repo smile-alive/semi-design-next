@@ -1141,7 +1141,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     }
 
     #scrollToField(field: string, scrollOpts: ScrollIntoViewOptions = { behavior: 'smooth', block: 'start' }) {
-        // a pure field or one inside Form.InputGroup has no field root
+        // a pure field or one inside FormInputGroup has no field root
         const fieldDOM = this.#getFieldExist(field) ? this.#getFieldDOM(field) : null;
         if (fieldDOM) {
             scrollIntoView(fieldDOM, scrollOpts);

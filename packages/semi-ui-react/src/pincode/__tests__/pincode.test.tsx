@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
-import { PinCode, Form, Tooltip } from '@fibrae/semi-ui-react';
+import { PinCode, Form, FormPinCode, Tooltip } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import ConfigProvider from '@fibrae/semi-ui-react/config-provider';
 import type { PinCodeHandle, PinCodeProps } from '../index';
@@ -663,11 +663,11 @@ describe('PinCode', () => {
             await waitFor(() => expect(getInputs()[3]).toHaveFocus());
         });
 
-        it('Form.PinCode 与表单值同步，且不把 Form 属性泄漏到 DOM', async () => {
+        it('FormPinCode 与表单值同步，且不把 Form 属性泄漏到 DOM', async () => {
             let formApi;
             render(
                 <Form getFormApi={(api) => (formApi = api)} labelPosition="inset">
-                    <Form.PinCode autoFocus count={4} field="code" label="Code" />
+                    <FormPinCode autoFocus count={4} field="code" label="Code" />
                 </Form>
             );
             await userEvent.keyboard('12');
@@ -724,7 +724,7 @@ describe('PinCode', () => {
             render(
                 <Form>
                     {/* title is not a declared prop; it is only forwarded to the wrapper */}
-                    <Form.PinCode data-x="1" {...{ title: 'tip' }} id="code" count={2} field="code" helpText="help" />
+                    <FormPinCode data-x="1" {...{ title: 'tip' }} id="code" count={2} field="code" helpText="help" />
                 </Form>
             );
             const wrapper = document.querySelector(wrapperSelector);
@@ -744,7 +744,7 @@ describe('PinCode', () => {
         it('id 放在第一个输入框上，点击 Form label 时使其获得焦点', async () => {
             render(
                 <Form>
-                    <Form.PinCode id="code" count={3} field="code" label="Code" />
+                    <FormPinCode id="code" count={3} field="code" label="Code" />
                 </Form>
             );
             const inputs = getInputs();
@@ -781,11 +781,11 @@ describe('PinCode', () => {
             expect(document.body).toHaveFocus();
         });
 
-        it('Form.PinCode 设置 trigger blur 时，焦点离开整个验证码后才校验一次', async () => {
+        it('FormPinCode 设置 trigger blur 时，焦点离开整个验证码后才校验一次', async () => {
             const validate = vi.fn<() => string>(() => '');
             render(
                 <Form>
-                    <Form.PinCode field="code" trigger="blur" validator={validate} />
+                    <FormPinCode field="code" trigger="blur" validator={validate} />
                     <button type="button">outside</button>
                 </Form>
             );

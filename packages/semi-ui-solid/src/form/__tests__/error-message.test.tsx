@@ -1,9 +1,9 @@
 import { render } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { type ErrorMessageProps, Form } from '..';
+import { type ErrorMessageProps, FormErrorMessage } from '..';
 
-const ErrorMessage = Form.ErrorMessage;
+const ErrorMessage = FormErrorMessage;
 const emSelector = `.${BASE_CLASS_PREFIX}-form-field-error-message`;
 
 describe('Form-errorMessage', () => {

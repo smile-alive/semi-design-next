@@ -1,13 +1,11 @@
 import { IconHelpCircle } from '@fibrae/semi-icons-react';
-import { Form, Tooltip } from '@fibrae/semi-ui-react';
+import { Form, FormInput, FormSelect, Tooltip } from '@fibrae/semi-ui-react';
 
 export default function FormDemo() {
-    const { Option } = Form.Select;
-
     return (
         <Form layout="horizontal" onValueChange={(values) => console.log(values)}>
-            <Form.Input field="UserName" label="用户名" style={{ width: 80 }} />
-            <Form.Input
+            <FormInput field="UserName" label="用户名" style={{ width: 80 }} />
+            <FormInput
                 field="Password"
                 label={{
                     text: '密码',
@@ -19,11 +17,11 @@ export default function FormDemo() {
                 }}
                 style={{ width: 176 }}
             />
-            <Form.Select field="Role" label={{ text: '角色', optional: true }} style={{ width: 176 }}>
-                <Option value="admin">管理员</Option>
-                <Option value="user">普通用户</Option>
-                <Option value="guest">访客</Option>
-            </Form.Select>
+            <FormSelect field="Role" label={{ text: '角色', optional: true }} style={{ width: 176 }}>
+                <FormSelect.Option value="admin">管理员</FormSelect.Option>
+                <FormSelect.Option value="user">普通用户</FormSelect.Option>
+                <FormSelect.Option value="guest">访客</FormSelect.Option>
+            </FormSelect>
         </Form>
     );
 }

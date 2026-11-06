@@ -554,7 +554,7 @@
 ### Form、ArrayField、withField、Label、ErrorMessage、Section、Slot、InputGroup
 
 - React `form/label.tsx` 不导入 `form.scss`；字段状态由 withField 多个 useState 与 foundation 两处保存（随 Form 重写）；每次 Form 更新重渲染全部字段。待处理。
-- Vue `FieldLabel` 无 `id`；React Form.Checkbox、Form.Radio 的 onChange 类型读不到 `latestValues`。待决（均属公开类型变化，需批准）。
+- Vue `FieldLabel` 无 `id`；React FormCheckbox、FormRadio 的 onChange 类型读不到 `latestValues`。待决（均属公开类型变化，需批准）。
 - 语言包 `Form` 的 16 个校验与数组行文案（`required` 至 `item`）在 zh_CN、en_US 以外为机译。待母语者复核（km_KH、my_MM 全部偏低；he_IL、jv_ID 全部中等；ar、fa_IR、bn_IN、sw、uz、ur 的长度类句式；ceb_PH、fil_PH 偏直译；az、hu_HU 的 `stringLen`、`arrayLen`；kk、is、lt、lv、hi_IN 的 `numberLen` 与序号写法；sq 的 `*Max` 说法不统一；tr_TR 的行序号未经读屏验证）。
 - `initValues` 的类型是完整的 `Values`：Values 由 `schema` 推导时（SchemaForm、带 `schema` 的 Form），只传部分初值会类型报错。待决（改为深层 Partial 会削弱从 `initValues` 推导 Values 的能力，需权衡）。
 - `onSubmitFail` 的 `errors` 类型为错误树，Form `validator` 抛出或返回非对象时收到的是原值，类型覆盖不到。已知限制。
@@ -616,7 +616,7 @@
 ### Upload、FileCard
 
 - `#handleProgress` 直接读 `e.total`，无参调用抛 TypeError（改为 `e?.total > 0`）；每个进度事件都让全部 FileCard 重渲染。待处理。
-- Form.Upload 必填时无元素带 `aria-required`。待决（可并入添加按钮 `aria-describedby`）。
+- FormUpload 必填时无元素带 `aria-required`。待决（可并入添加按钮 `aria-describedby`）。
 - FileCard 的 Props 经 `BaseFileItem` 带上内部标志 `_sizeInvalid`。待处理（从公开类型中去掉）。
 - 添加区的 MutationObserver 的 `attributeFilter` 只含 `addAreaControlAttributes`，子元素在挂载后增删 `aria-label`、`aria-labelledby`、`alt` 时不重算是否已有名称，兜底的 `aria-label` 可能多出或缺失。待处理（`attributeFilter` 补上这三个属性）。
 - Vue：添加区是否已含可聚焦控件要挂载后才判定，服务端 HTML 中触发区带 `role="button"`、`tabindex="0"` 并包着内部按钮（嵌套交互元素），挂载后才去掉。已知限制（升级条件：需要 hydration 前无嵌套交互元素时，首帧按 `children` 是否为元素判断）。
@@ -649,7 +649,7 @@
 - 测试里 `fireEvent.keyDown` 约 20 处同时传 `keyCode`。待决（是否全部删去）。
 - semi-ui-react：多数回调 prop 仍以 `noop` 为默认值，显式传 `null` 时抛 TypeError。待处理（逐个改为 `?.()`）。
 - Table：`VirtualizedOnScrollArgs.scrollOffset` 仍声明可选。待决（改必填属公开类型收紧）。
-- 公开 Props 类型含内部属性：TextArea 的 `disabledEnterStartNewLine`，Input 的 `showClearIgnoreDisabled`、`onlyBorder`（InputNumber 经继承带上），OverflowList 的 `overflowRenderDirection`，ScrollItem 与 Layout 基础组件的 `type`，各框架范围不一；React 另有 Breadcrumb.Item 的 `active`、`shouldRenderSeparator`、`route`，TabItem 的 `handleKeyDown`、`deleteTabItem`、`selected`，Option 的 `current`，Form.ErrorMessage 的 `errorMessageId`、`helpTextId`、`isInInputGroup`，以及多数组件的 `prefixCls`，生成的 API 表如实列出并注明内部用途。待处理（拆出内部 Props 类型）。
+- 公开 Props 类型含内部属性：TextArea 的 `disabledEnterStartNewLine`，Input 的 `showClearIgnoreDisabled`、`onlyBorder`（InputNumber 经继承带上），OverflowList 的 `overflowRenderDirection`，ScrollItem 与 Layout 基础组件的 `type`，各框架范围不一；React 另有 Breadcrumb.Item 的 `active`、`shouldRenderSeparator`、`route`，TabItem 的 `handleKeyDown`、`deleteTabItem`、`selected`，Option 的 `current`，FormErrorMessage 的 `errorMessageId`、`helpTextId`、`isInInputGroup`，以及多数组件的 `prefixCls`，生成的 API 表如实列出并注明内部用途。待处理（拆出内部 Props 类型）。
 - React：Cascader、Image、UserGuide 的 Props 类型声明 `children` 但不渲染，API 表已注明。待处理（从公开类型去掉）。
 - React：`hydrateFromServer` 渲染服务端 HTML 时只移走 `document`，`window` 与其他 jsdom 全局仍在，按 `typeof window` 分支的依赖在服务端与客户端都走浏览器分支，由此造成的 hydration 不一致在 `hydration.test.tsx` 中发现不了。UNKNOWN（影响：这类不一致只由 check-pages 的 SSR 验收覆盖）。解决条件：hydration 用例改为读取 `react-ssr` 项目在 Node 中产出的 HTML。
 - React API 表生成器只读组件传给 `useDefaultProps` 的默认值、参数解构的默认值与模块的 `defaultProps`；调用 `useDefaultProps` 之后在函数体内解构的默认值、写在内部渲染组件里的默认值读不到，默认值列显示 `-`，由说明写出实际默认值（Button、Grid、Breadcrumb.Item、CardGroup、Highlight、ColorPicker、Steps、Skeleton、Navigation、Sidebar 等）。已知限制（升级条件：把这些默认值移入组件的默认值对象，或让生成器读取函数体解构，并删去说明里重复的默认值）。

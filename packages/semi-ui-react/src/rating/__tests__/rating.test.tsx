@@ -12,7 +12,7 @@ function English({ children }: { children: ReactNode }) {
 const render = (ui: ReactElement, options?: RenderOptions) => renderWithLibrary(ui, { wrapper: English, ...options });
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { ConfigProvider, Form, Tooltip } from '@fibrae/semi-ui-react';
+import { ConfigProvider, Form, FormRating, Tooltip } from '@fibrae/semi-ui-react';
 import { endLeaveAnimations } from '@test/utils/react';
 import Rating, { type RatingHandle, type RatingProps } from '../index';
 
@@ -645,10 +645,10 @@ describe('Rating', () => {
         expect(onClick.mock.calls[0][1]).toBe(2);
     });
 
-    it('Form.Rating 不把 Form 属性放到 DOM 上', () => {
+    it('FormRating 不把 Form 属性放到 DOM 上', () => {
         render(
             <Form>
-                <Form.Rating field="score" />
+                <FormRating field="score" />
             </Form>
         );
         expect(getList()).not.toHaveAttribute('validatestatus');

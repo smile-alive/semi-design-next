@@ -1,16 +1,13 @@
 import { useState } from 'react';
-import { Input, Typography, Form, TextArea, Button } from '@fibrae/semi-ui-react';
+import { Input, Typography, Form, FormInput, TextArea, Button } from '@fibrae/semi-ui-react';
+
+// Counts grapheme clusters, so an emoji sequence counts as one character
+const getValueLength = (str: string) => [...new Intl.Segmenter().segment(str)].length;
+
+const getTextAreaStrLength = (str: string) => str.replace(/\s/g, '').length;
 
 export default function InputDemo() {
-    const [value, setValue] = useState<string>();
-    const getValueLength = (str: string) => {
-        return [...new Intl.Segmenter().segment(str)].length;
-    };
-
-    const getTextAreaStrLength = (str: string) => {
-        const filteredStr = str.replace(/\s/g, '');
-        return filteredStr.length;
-    };
+    const [value, setValue] = useState('');
 
     return (
         <div>
@@ -24,7 +21,7 @@ export default function InputDemo() {
                     <Typography.Text copyable>👨‍👩‍👧‍👦</Typography.Text>
                 </div>
             </div>
-            <Input aria-labelledby="input-value-length-max-length" maxLength={10} getValueLength={getValueLength} onChange={setValue} style={{ width: 200, marginTop: 12, marginBottom: 12 }} />
+            <Input aria-labelledby="input-value-length-max-length" maxLength={10} getValueLength={getValueLength} onChange={setValue} style={{ width: 200, marginBlock: 12 }} />
             {value && (
                 <div>
                     <div>
@@ -37,9 +34,9 @@ export default function InputDemo() {
             )}
             <br />
             <br />
-            <h4 id="input-value-length-min-length">Form.Input + minLength=4</h4>
+            <h4 id="input-value-length-min-length">FormInput + minLength=4</h4>
             <Form layout="horizontal">
-                <Form.Input noLabel aria-labelledby="input-value-length-min-length" field="username" minLength={4} getValueLength={getValueLength} style={{ width: 200 }} />
+                <FormInput noLabel aria-labelledby="input-value-length-min-length" field="username" minLength={4} getValueLength={getValueLength} style={{ width: 200 }} />
                 <Button type="primary" htmlType="submit">
                     提交
                 </Button>

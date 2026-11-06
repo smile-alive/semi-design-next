@@ -103,7 +103,7 @@ describe('Form hooks', () => {
     });
 });
 
-describe('Form.useForm', () => {
+describe('useForm', () => {
     it('绑定到 Form 后 formState 与 values 跟随表单', () => {
         let state: ReturnType<typeof useForm> | undefined;
         function Demo() {
@@ -134,9 +134,5 @@ describe('Form.useForm', () => {
         const [api] = useForm();
         expect((api as unknown as { then?: unknown }).then).toBeUndefined();
         await expect(Promise.resolve(api)).resolves.toBe(api);
-    });
-
-    it('Form.useForm 与 useForm 是同一个函数', () => {
-        expect(Form.useForm).toBe(useForm);
     });
 });

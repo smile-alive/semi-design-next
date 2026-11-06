@@ -10,7 +10,7 @@ import { IconClose } from '@fibrae/semi-icons-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import Button from '@fibrae/semi-ui-react/button';
 import ConfigProvider from '@fibrae/semi-ui-react/config-provider';
-import { Form } from '@fibrae/semi-ui-react/form';
+import { Form, FormTimePicker } from '@fibrae/semi-ui-react/form';
 import Popover from '@fibrae/semi-ui-react/popover';
 import { countLiveListeners, endLeaveAnimations } from '@test/utils/react';
 import Combobox, { type ComboboxHandle } from '../combobox';
@@ -1425,7 +1425,7 @@ describe(`TimePicker`, () => {
         it('aria 属性、id 和 Form 的 name 落在输入框上', () => {
             render(
                 <Form>
-                    <Form.TimePicker id="start" name="start-name" aria-label="start time" field="start" />
+                    <FormTimePicker id="start" name="start-name" aria-label="start time" field="start" />
                 </Form>
             );
             expect(getInput()).toHaveAttribute('aria-label', 'start time');
@@ -1437,11 +1437,11 @@ describe(`TimePicker`, () => {
             }
         });
 
-        it('Form.TimePicker 上报所选时间，并在 formApi.reset 后再次清空', async () => {
+        it('FormTimePicker 上报所选时间，并在 formApi.reset 后再次清空', async () => {
             let formApi;
             render(
                 <Form getFormApi={(api) => (formApi = api)}>
-                    <Form.TimePicker defaultOpen field="start" {...normalList} />
+                    <FormTimePicker defaultOpen field="start" {...normalList} />
                 </Form>
             );
             clickItem('hour', 7);
@@ -1451,10 +1451,10 @@ describe(`TimePicker`, () => {
             expect(getInput()).toHaveValue('');
         });
 
-        it('Form.TimePicker 在面板关闭时而非输入框失焦时校验', async () => {
+        it('FormTimePicker 在面板关闭时而非输入框失焦时校验', async () => {
             render(
                 <Form>
-                    <Form.TimePicker field="start" rules={[{ required: true, message: 'required' }]} trigger="blur" />
+                    <FormTimePicker field="start" rules={[{ required: true, message: 'required' }]} trigger="blur" />
                 </Form>
             );
             focusInput();

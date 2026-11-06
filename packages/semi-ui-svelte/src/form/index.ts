@@ -21,7 +21,7 @@ import FormTimePicker from './form-time-picker.svelte';
 import FormTransfer from './form-transfer.svelte';
 import FormTreeSelect from './form-tree-select.svelte';
 import FormUpload from './form-upload.svelte';
-import FormBase from './form.svelte';
+import Form from './form.svelte';
 import FormInputGroup from './input-group.svelte';
 import FormLabel from './label.svelte';
 import SchemaField from './schema-field.svelte';
@@ -30,65 +30,9 @@ import FormSection from './section.svelte';
 import FormSlot from './slot.svelte';
 import useForm from './use-form.svelte.js';
 
-// Svelte components are functions, so the parts attach to the component itself
-export const Form: typeof FormBase & {
-    Input: typeof FormInput;
-    TextArea: typeof FormTextArea;
-    InputNumber: typeof FormInputNumber;
-    Select: typeof FormSelect;
-    Checkbox: typeof FormCheckbox;
-    CheckboxGroup: typeof FormCheckboxGroup;
-    Radio: typeof FormRadio;
-    RadioGroup: typeof FormRadioGroup;
-    DatePicker: typeof FormDatePicker;
-    TimePicker: typeof FormTimePicker;
-    Switch: typeof FormSwitch;
-    Slider: typeof FormSlider;
-    TreeSelect: typeof FormTreeSelect;
-    Cascader: typeof FormCascader;
-    Transfer: typeof FormTransfer;
-    Rating: typeof FormRating;
-    AutoComplete: typeof FormAutoComplete;
-    Upload: typeof FormUpload;
-    TagInput: typeof FormTagInput;
-    PinCode: typeof FormPinCode;
-    Slot: typeof FormSlot;
-    ErrorMessage: typeof FormErrorMessage;
-    InputGroup: typeof FormInputGroup;
-    Label: typeof FormLabel;
-    Section: typeof FormSection;
-    useForm: typeof useForm;
-} = Object.assign(FormBase, {
-    Input: FormInput,
-    TextArea: FormTextArea,
-    InputNumber: FormInputNumber,
-    Select: FormSelect,
-    Checkbox: FormCheckbox,
-    CheckboxGroup: FormCheckboxGroup,
-    Radio: FormRadio,
-    RadioGroup: FormRadioGroup,
-    DatePicker: FormDatePicker,
-    TimePicker: FormTimePicker,
-    Switch: FormSwitch,
-    Slider: FormSlider,
-    TreeSelect: FormTreeSelect,
-    Cascader: FormCascader,
-    Transfer: FormTransfer,
-    Rating: FormRating,
-    AutoComplete: FormAutoComplete,
-    Upload: FormUpload,
-    TagInput: FormTagInput,
-    PinCode: FormPinCode,
-    Slot: FormSlot,
-    ErrorMessage: FormErrorMessage,
-    InputGroup: FormInputGroup,
-    Label: FormLabel,
-    Section: FormSection,
-    useForm,
-});
-
 export {
     ArrayField,
+    Form,
     FormAutoComplete,
     FormCascader,
     FormCheckbox,
@@ -125,7 +69,7 @@ export type {
     ArrayFieldProps,
     ArrayFieldSnippetProps,
     CommonFieldProps,
-    ErrorMessageProps,
+    ErrorMessageProps as FormErrorMessageProps,
     FieldError,
     FieldErrorInput,
     FieldLabel,

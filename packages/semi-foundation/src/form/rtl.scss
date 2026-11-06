@@ -6,7 +6,7 @@ $field: #{$prefix}-form-field;
 
 .#{$form}:dir(rtl),
 .#{$field}:dir(rtl),
-// Form.Label can be rendered on its own, outside any form or field
+// FormLabel can be rendered on its own, outside any form or field
 .#{$field}-label:dir(rtl),
 .#{$form}-section:dir(rtl) {
     direction: rtl;

@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { IconPlus } from '@fibrae/semi-icons-react';
-import { Button, Form, Upload } from '@fibrae/semi-ui-react';
+import { Button, Form, FormUpload, Upload } from '@fibrae/semi-ui-react';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import type { UploadHandle, UploadProps } from '../index';
 
@@ -17,14 +17,14 @@ const cardNames = (root: ParentNode = document) => [...root.querySelectorAll(`.$
 const fileInputs = () => document.querySelectorAll('input[type=file]');
 
 describe('Upload（浏览器）', () => {
-    // fix #2448: inside Form.Upload the error outline of a failed picture card was hidden, so the card also draws
+    // fix #2448: inside FormUpload the error outline of a failed picture card was hidden, so the card also draws
     // the error color as a border, kept inside its 96px box
-    it('修复 #2448：Form.Upload 中上传失败的图片卡片在卡片内显示错误边框', () => {
+    it('修复 #2448：FormUpload 中上传失败的图片卡片在卡片内显示错误边框', () => {
         const { container } = render(
             <Form>
-                <Form.Upload multiple accept="image/*" action="https://semi.design/upload" field="files" initValue={[{ uid: '1', name: 'dy.png', status: 'uploadFail', url: '' }]} listType="picture">
+                <FormUpload multiple accept="image/*" action="https://semi.design/upload" field="files" initValue={[{ uid: '1', name: 'dy.png', status: 'uploadFail', url: '' }]} listType="picture">
                     <IconPlus size="extra-large" />
-                </Form.Upload>
+                </FormUpload>
             </Form>
         );
         const card = container.querySelector(`.${prefixCls}-picture-file-card-error`);

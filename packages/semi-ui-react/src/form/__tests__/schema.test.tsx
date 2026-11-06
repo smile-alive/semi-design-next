@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
 import type { StandardSchema } from '@fibrae/semi-foundation/form/interface';
-import { Form } from '@fibrae/semi-ui-react';
+import { Form, FormInput } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import type { FormApi } from '../interface';
 
@@ -18,7 +18,7 @@ describe('Form schema', () => {
     it('输入时显示 schema 的错误，改为有效值后消失，schema 不落到 DOM', async () => {
         const { container } = render(
             <Form schema={nameSchema}>
-                <Form.Input field="name" />
+                <FormInput field="name" />
             </Form>
         );
         expect(container.querySelector('form')).not.toHaveAttribute('schema');
@@ -39,7 +39,7 @@ describe('Form schema', () => {
                 schema={z.object({ name: z.string().trim() })}
                 onSubmit={onSubmit}
             >
-                <Form.Input field="name" />
+                <FormInput field="name" />
             </Form>
         );
         await userEvent.type(container.querySelector('input'), ' abc ');
@@ -53,8 +53,8 @@ describe('Form schema', () => {
         const schema = z.object({ password: z.string({ error: 'required' }), confirm: z.string({ error: 'required' }) }).refine((values) => values.password === values.confirm, { path: ['confirm'], error: 'mismatch' });
         const { container } = render(
             <Form schema={schema}>
-                <Form.Input field="password" />
-                <Form.Input field="confirm" />
+                <FormInput field="password" />
+                <FormInput field="confirm" />
             </Form>
         );
         const [password, confirm] = container.querySelectorAll('input');
@@ -74,7 +74,7 @@ describe('Form schema', () => {
                     api = formApi;
                 }}
             >
-                <Form.Input field="name" />
+                <FormInput field="name" />
             </Form>
         );
         await expect(api.validate()).rejects.toEqual({ name: ['required'] });
@@ -88,7 +88,7 @@ describe('Form schema', () => {
             const schema: StandardSchema<{ name: string }> = { '~standard': { version: 1, vendor: 'test', validate } };
             const { container } = render(
                 <Form schema={schema} schemaDebounce={300}>
-                    <Form.Input field="name" />
+                    <FormInput field="name" />
                 </Form>
             );
             const input = container.querySelector('input');
@@ -110,8 +110,8 @@ describe('Form schema', () => {
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const { container } = render(
             <Form schema={nameSchema}>
-                <Form.Input field="name" label="Name" rules={[{ required: true }]} />
-                <Form.Input field="nick" label={{ text: 'Nick', required: true }} />
+                <FormInput field="name" label="Name" rules={[{ required: true }]} />
+                <FormInput field="nick" label={{ text: 'Nick', required: true }} />
             </Form>
         );
         const asterisks = container.querySelectorAll('.semi-form-field-label-required');
@@ -130,7 +130,7 @@ describe('字段级 validator', () => {
                     api = formApi;
                 }}
             >
-                <Form.Input field="name" validator={z.string({ error: 'required' }).min(2, 'too short')} />
+                <FormInput field="name" validator={z.string({ error: 'required' }).min(2, 'too short')} />
             </Form>
         );
         await userEvent.type(container.querySelector('input'), 'a');
@@ -145,7 +145,7 @@ describe('字段级 validator', () => {
         const { container } = render(
             <Form>
                 {/* @ts-expect-error rules and validator are exclusive */}
-                <Form.Input field="name" rules={[{ required: true, message: 'from rules' }]} validator={(value) => (value === 'x' ? 'from validator' : undefined)} />
+                <FormInput field="name" rules={[{ required: true, message: 'from rules' }]} validator={(value) => (value === 'x' ? 'from validator' : undefined)} />
             </Form>
         );
         expect(warn).toHaveBeenCalledWith('Warning: [Semi Form] the rules and validator of field "name" are exclusive; validator is used');

@@ -29,7 +29,7 @@ import ApiType from '#/components/ApiType.astro';
 | fileList | The file list, two-way bindable with bind:fileList. A plain value is the initial list, which Upload then maintains itself. The uid of every item is required and must be unique. | `FileItem[]` | - |
 | fileListHeader | Replaces the whole title area, clear button included, with fileList, onClear and clearText. | <ApiType detail={"Snippet\u003c[UploadFileListHeaderSlotProps]>"}>Type</ApiType> | - |
 | fileListTitle | Replaces only the title text of the file list; the clear button stays. | `Snippet` | - |
-| fileName | Same as name. Mainly used in Form.Upload to avoid clashing with the name of Field. | `string` | - |
+| fileName | Same as name. Mainly used in FormUpload to avoid clashing with the name of Field. | `string` | - |
 | fileOperation | Custom operation area of a list item. | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType> | - |
 | fileValidateMessage | Custom validate message of a file card, which receives validateMessage. | <ApiType detail={"Snippet\u003c[UploadFileItemSlotProps]>"}>Type</ApiType> | - |
 | headers | Headers sent with the upload, or a function that returns them for a file. | <ApiType detail={"Record\u003cstring, any> \u007c ((file: File) => Record\u003cstring, string>)"}>Type</ApiType> | - |
