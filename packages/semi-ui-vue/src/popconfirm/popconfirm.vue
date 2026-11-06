@@ -169,7 +169,7 @@
             focusPrevFocusElement: () => {
                 pendingFocus = null;
                 // focus that already left the card (Tab away from a focus trigger) stays where it went
-                if (FocusTrapHandle.shouldRestoreFocus(footer.value?.closest('[popover]'), false)) popover.value?.focusTrigger();
+                if (FocusTrapHandle.shouldRestoreFocus(popover.value?.getPopup(), false)) popover.value?.focusTrigger();
             },
         })
     );

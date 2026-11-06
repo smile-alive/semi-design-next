@@ -1,10 +1,16 @@
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 
+const PREFIX = `${BASE_CLASS_PREFIX}-aiChatInput`;
+
 export const cssClasses = {
-    PREFIX: `${BASE_CLASS_PREFIX}-aiChatInput`,
+    PREFIX,
+    // The foundation checks whether focus is inside it
+    FOOTER_CONFIGURE: `${PREFIX}-footer-configure`,
 };
 
 export const strings = {
+    // Key of the status extension's editor storage, read by the foundation
+    STATUS_EXTENSION_NAME: 'SemiAIChatInput' as const,
     ZERO_WIDTH_CHAR: '\uFEFF',
     SKIP_ZERO_WIDTH_NORMALIZE_META: 'skipCustomTransactionPlugin',
     SEND_HOTKEY: {

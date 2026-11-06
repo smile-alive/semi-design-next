@@ -7,12 +7,12 @@ import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputState }
 import { getAttachmentType, getContentType, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/ai-chat-input/utils';
 import { isImageFile } from '@fibrae/semi-ai-foundation/file-suffix';
 import { isUploadProgressVisible } from '@fibrae/semi-ai-foundation/upload-status';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-ai-foundation/ai-chat-input/ai-chat-input.scss';
 import { type IconSize, IconArrowUp, IconClose, IconCode, IconCrossStroked, IconExcel, IconFile, IconMusic, IconPaperclip, IconPdf, IconSendMsgStroked, IconStop, IconTemplateStroked, IconVideo, IconWord } from '@fibrae/semi-icons-solid';
 import callHandler from '@fibrae/semi-ui-solid/_base/call-handler';
 import mergeRefs from '@fibrae/semi-ui-solid/_base/merge-refs';
 import mergeStyles from '@fibrae/semi-ui-solid/_base/merge-styles';
-import { namedRole } from '@fibrae/semi-ui-solid/_base/named-role';
 import useDefaultProps from '@fibrae/semi-ui-solid/_base/use-default-props';
 import useFoundation from '@fibrae/semi-ui-solid/_base/use-foundation';
 import Button from '@fibrae/semi-ui-solid/button/index';
@@ -52,9 +52,6 @@ type Adapter = AIChatInputAdapter<AIChatInputProps>;
 
 function getIconByType(type: string, size: IconSize = 'small') {
     switch (type) {
-        case 'text':
-            return null;
-        case 'file':
         case 'word':
             return <IconWord size={size} />;
         case 'code':
@@ -519,7 +516,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                         onPaste={(e) => local.onPaste?.(e)}
                     />
                     <div class={clsx(`${prefixCls}-footer`, { [`${prefixCls}-footer-round`]: local.round })}>
-                        <div class={`${prefixCls}-footer-configure`}>
+                        <div class={cssClasses.FOOTER_CONFIGURE}>
                             <Configure ref={(instance) => (configure = instance)} onChange={foundation.onConfigureChange}>
                                 <Show when={local.renderConfigureArea} keyed>
                                     {(render) => render()}

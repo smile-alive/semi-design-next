@@ -1,6 +1,7 @@
 import type React from 'react';
 import { useImperativeHandle, useState } from 'react';
 import clsx from 'clsx';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { cssClasses } from '@fibrae/semi-foundation/pincode/constants';
 import PinCodeFoundation, { type PinCodeAdapter, type PinCodeBaseProps, type PinCodeBaseState } from '@fibrae/semi-foundation/pincode/foundation';
 import '@fibrae/semi-foundation/pincode/pincode.scss';
@@ -137,7 +138,7 @@ export default function PinCode(rawProps: PinCodeProps) {
                     aria-describedby={ariaDescribedby}
                     aria-errormessage={ariaErrormessage}
                     aria-invalid={ariaInvalid}
-                    aria-label={locale.digit.replace('${index}', String(index + 1)).replace('${count}', String(count))}
+                    aria-label={formatLocale(locale.digit, { index: index + 1, count })}
                     aria-required={ariaRequired}
                     autoFocus={autoFocus && index === 0}
                     tabIndex={tabIndex}

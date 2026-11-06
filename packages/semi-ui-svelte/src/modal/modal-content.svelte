@@ -13,7 +13,7 @@
     import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
     import '@fibrae/semi-foundation/typography/typography.scss';
     import { IconClose } from '@fibrae/semi-icons-svelte';
-    import { splitControlAttrs } from '../_base/control-attrs.js';
+    import { isAriaKey, splitControlAttrs } from '../_base/control-attrs.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import IconButton from '../icon-button/icon-button.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
@@ -129,7 +129,7 @@
     const idPrefix = `dialog-${uid}`;
 
     // F12: aria-* and role go to the dialog element, style to the .semi-modal box, the rest to the outer element
-    const attrs = $derived(splitControlAttrs(rest, (key) => key === 'role' || key.startsWith('aria-')));
+    const attrs = $derived(splitControlAttrs(rest, (key) => key === 'role' || isAriaKey(key)));
 
     const rootAttrs = $derived.by(() => {
         const { style: _style, ...others } = attrs.root;

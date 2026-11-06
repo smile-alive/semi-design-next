@@ -1,7 +1,7 @@
 import { clamp } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import type { ColorFormat, HsvaColor, RgbaColor } from './interface';
-import { hexToHsva, hexToRgba, hsvaStringToHsva, hsvaToHex, hsvaToRgba, invalidColorString, rgbaToHex, rgbaToHsva, rgbStringToHsva, rgbStringToRgba } from './utils/convert';
+import { hexToHsva, hexToRgba, hsvaStringToHsva, hsvaToHex, hsvaToRgba, invalidColorString, rgbaToHex, rgbaStringToHsva, rgbaStringToRgba, rgbaToHsva } from './utils/convert';
 
 const HEX_PATTERN = /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
 
@@ -80,11 +80,11 @@ export default class ColorPickerFoundation<P extends ColorPickerProps = ColorPic
             const hex = raw.length <= 5 ? '#' + raw.slice(1).replace(/./g, '$&$&') : raw;
             return { hsva: hexToHsva(hex), rgba: hexToRgba(hex), hex };
         } else if (raw.startsWith('rgb')) {
-            const rgba = rgbStringToRgba(raw);
+            const rgba = rgbaStringToRgba(raw);
             if (![rgba.r, rgba.g, rgba.b].every((c) => c >= 0 && c <= 255) || !(rgba.a >= 0 && rgba.a <= 1)) {
                 throw invalidColorString(raw);
             }
-            return { hsva: rgbStringToHsva(raw), rgba, hex: rgbaToHex(rgba) };
+            return { hsva: rgbaStringToHsva(raw), rgba, hex: rgbaToHex(rgba) };
         } else if (raw.startsWith('hsv')) {
             const hsva = hsvaStringToHsva(raw);
             if (![hsva.s, hsva.v].every((c) => c >= 0 && c <= 100) || !(hsva.a >= 0 && hsva.a <= 1)) {

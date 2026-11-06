@@ -116,6 +116,56 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
         return `${rangeStart}${props.rangeSeparator}${rangeEnd}`;
     }
 
+    static #formatShowText({ type, dateFnsLocale, format, rangeSeparator }: InputProps, value: BaseValueType[], customFormat?: string) {
+        const formatToken = customFormat || format || getDefaultFormatTokenByType(type);
+        switch (type) {
+            case 'date':
+            case 'dateTime':
+            case 'month':
+            case 'year':
+                return formatDateValues(value, formatToken, undefined, dateFnsLocale);
+            case 'dateRange':
+            case 'dateTimeRange':
+            case 'monthRange':
+                return formatDateValues(value, formatToken, { groupSize: 2, groupInnerSeparator: rangeSeparator }, dateFnsLocale);
+            default:
+                return '';
+        }
+    }
+
+    static #concatInsetInputValue(props: InputProps, { insetInputValue }: { insetInputValue: InsetInputValue }) {
+        switch (props.type) {
+            case 'date':
+            case 'month':
+            case 'year':
+            case 'monthRange':
+                return insetInputValue.monthLeft.dateInput;
+            case 'dateRange':
+                return InputFoundation.#concatInsetDateRange(props, {
+                    rangeStart: insetInputValue.monthLeft.dateInput,
+                    rangeEnd: insetInputValue.monthRight.dateInput,
+                });
+            case 'dateTime':
+                return InputFoundation.#concatInsetDateAndTime({
+                    date: insetInputValue.monthLeft.dateInput,
+                    time: insetInputValue.monthLeft.timeInput,
+                });
+            case 'dateTimeRange':
+                return InputFoundation.#concatInsetDateRange(props, {
+                    rangeStart: InputFoundation.#concatInsetDateAndTime({
+                        date: insetInputValue.monthLeft.dateInput,
+                        time: insetInputValue.monthLeft.timeInput,
+                    }),
+                    rangeEnd: InputFoundation.#concatInsetDateAndTime({
+                        date: insetInputValue.monthRight.dateInput,
+                        time: insetInputValue.monthRight.timeInput,
+                    }),
+                });
+            default:
+                return '';
+        }
+    }
+
     #autoFillTimeToInsetInputValue({ panel, field, insetInputValue, format }: { insetInputValue: InsetInputValue; format: string } & Pick<InsetInputChangeFoundationProps, 'panel' | 'field'>) {
         const { type, defaultPickerValue, dateFnsLocale } = this.adapter.getProps();
         const { dateInput, timeInput } = insetInputValue[panel];
@@ -136,28 +186,11 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
         };
     }
 
-    static formatShowText({ type, dateFnsLocale, format, rangeSeparator }: InputProps, value: BaseValueType[], customFormat?: string) {
-        const formatToken = customFormat || format || getDefaultFormatTokenByType(type);
-        switch (type) {
-            case 'date':
-            case 'dateTime':
-            case 'month':
-            case 'year':
-                return formatDateValues(value, formatToken, undefined, dateFnsLocale);
-            case 'dateRange':
-            case 'dateTimeRange':
-            case 'monthRange':
-                return formatDateValues(value, formatToken, { groupSize: 2, groupInnerSeparator: rangeSeparator }, dateFnsLocale);
-            default:
-                return '';
-        }
-    }
-
     static getShowText(props: InputProps & { inputValue?: string | null; value?: BaseValueType[] }) {
         if (props.inputValue != null) {
             return props.inputValue;
         }
-        return props.value?.length ? InputFoundation.formatShowText(props, props.value) : '';
+        return props.value?.length ? InputFoundation.#formatShowText(props, props.value) : '';
     }
 
     /** `showClearIgnoreDisabled` keeps the button on a disabled trigger, as with insetInput */
@@ -204,10 +237,10 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
 
         let inputValueStr = '';
         if (isObject(insetInputValue)) {
-            inputValueStr = InputFoundation.concatInsetInputValue(props, { insetInputValue });
+            inputValueStr = InputFoundation.#concatInsetInputValue(props, { insetInputValue });
         } else {
             const insetInputFormat = getInsetInputFormatToken({ format, type });
-            inputValueStr = InputFoundation.formatShowText(props, value, insetInputFormat);
+            inputValueStr = InputFoundation.#formatShowText(props, value, insetInputFormat);
         }
 
         return getInsetInputValueFromInsetInputStr({
@@ -215,39 +248,6 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
             type,
             rangeSeparator,
         });
-    }
-
-    static concatInsetInputValue(props: InputProps, { insetInputValue }: { insetInputValue: InsetInputValue }) {
-        switch (props.type) {
-            case 'date':
-            case 'month':
-            case 'year':
-            case 'monthRange':
-                return insetInputValue.monthLeft.dateInput;
-            case 'dateRange':
-                return InputFoundation.#concatInsetDateRange(props, {
-                    rangeStart: insetInputValue.monthLeft.dateInput,
-                    rangeEnd: insetInputValue.monthRight.dateInput,
-                });
-            case 'dateTime':
-                return InputFoundation.#concatInsetDateAndTime({
-                    date: insetInputValue.monthLeft.dateInput,
-                    time: insetInputValue.monthLeft.timeInput,
-                });
-            case 'dateTimeRange':
-                return InputFoundation.#concatInsetDateRange(props, {
-                    rangeStart: InputFoundation.#concatInsetDateAndTime({
-                        date: insetInputValue.monthLeft.dateInput,
-                        time: insetInputValue.monthLeft.timeInput,
-                    }),
-                    rangeEnd: InputFoundation.#concatInsetDateAndTime({
-                        date: insetInputValue.monthRight.dateInput,
-                        time: insetInputValue.monthRight.timeInput,
-                    }),
-                });
-            default:
-                return '';
-        }
     }
 
     handleChange = (value: string, e: unknown) => {
@@ -307,7 +307,7 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
         const { format, type, rangeSeparator } = props;
         const insetFormatToken = getInsetInputFormatToken({ type, format });
         const newInsetInputValue = { ...insetInputValue, [panel]: { ...insetInputValue[panel], [field]: value } };
-        const insetInputStr = InputFoundation.concatInsetInputValue(props, { insetInputValue: newInsetInputValue });
+        const insetInputStr = InputFoundation.#concatInsetInputValue(props, { insetInputValue: newInsetInputValue });
         const parsedInsetInputValueFromInputStr = getInsetInputValueFromInsetInputStr({
             inputValue: insetInputStr,
             type,
@@ -319,7 +319,7 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
             field,
             format: insetFormatToken,
         });
-        const finalInsetInputStr = InputFoundation.concatInsetInputValue(props, {
+        const finalInsetInputStr = InputFoundation.#concatInsetInputValue(props, {
             insetInputValue: filledTimeInsetInputValue,
         });
         this.adapter.notifyInsetInputChange({

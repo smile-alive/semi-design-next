@@ -1,5 +1,6 @@
 import { type JSX, For, Show, children, createMemo, mergeProps, splitProps } from 'solid-js';
 import clsx from 'clsx';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { cssClasses } from '@fibrae/semi-foundation/rating/constants';
 import RatingFoundation, { type RatingAdapter, type RatingState } from '@fibrae/semi-foundation/rating/foundation';
 import '@fibrae/semi-foundation/rating/rating.scss';
@@ -165,18 +166,8 @@ export default function Rating(rawProps: RatingProps) {
 
     const unitOf = (n: number) => customUnit() ?? (n === 1 ? locale().locale.star : locale().locale.stars);
 
-    // a caller-given aria-label replaces the generated summary as the radiogroup name;
-    // a function replacer keeps `$&` and `$$` in a custom unit literal
-    const ariaLabel = () => {
-        const unit = unitOf(value());
-        return (
-            local['aria-label'] ||
-            locale()
-                .locale.label.replace('${value}', String(value()))
-                .replace('${count}', String(props.count))
-                .replace('${unit}', () => unit)
-        );
-    };
+    // a caller-given aria-label replaces the generated summary as the radiogroup name
+    const ariaLabel = () => local['aria-label'] || formatLocale(locale().locale.label, { value: value(), count: props.count, unit: unitOf(value()) });
 
     const setup = (node: HTMLUListElement) => {
         list = node;

@@ -3,6 +3,7 @@ import { type ChainedCommands, Editor, type Extensions } from '@tiptap/core';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
 import { type Level, type TextRange, canUploadImage, clearSelectionHighlight, confirmLink, getEditorAttributes, getFileEditorExtensions, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/sidebar/file-extensions';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import {
     IconAlignCenter,
     IconAlignJustify,
@@ -147,7 +148,7 @@ function MenuBar(props: { editor: Editor; canUpload: boolean }) {
                             {({ Icon, level }) => (
                                 <Dropdown.Item
                                     class={clsx(`${prefixCls}-menu-bar-dropdown-item`, { [`${prefixCls}-menu-bar-dropdown-item-active`]: state().headingLevel === level })}
-                                    aria-label={text().headingLevel.replace('${level}', String(level))}
+                                    aria-label={formatLocale(text().headingLevel, { level })}
                                     active={state().headingLevel === level}
                                     onClick={() => run((chain) => chain.toggleHeading({ level }))}
                                 >

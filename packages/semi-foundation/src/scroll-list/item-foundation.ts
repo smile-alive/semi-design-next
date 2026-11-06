@@ -6,7 +6,7 @@ import { cssClasses, numbers } from './constants';
 import animatedScrollTo from './scroll-to';
 
 const msPerFrame = 1000 / 60;
-const wheelMode = 'wheel';
+export const wheelMode = 'wheel';
 
 export interface Item {
     [x: string]: any;
@@ -359,6 +359,12 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
 
     static getInitialState(): ScrollItemBaseState {
         return { prependCount: 0, appendCount: 0 };
+    }
+
+    /** Only the selected row is shown through a transform; the item's own transform wins over the column's */
+    static getItemText(item: Item, selected: boolean, transform?: Item['transform']) {
+        const itemTransform = typeof item.transform === 'function' ? item.transform : transform;
+        return selected && typeof itemTransform === 'function' ? itemTransform(item.value, item.text) : (item.text ?? item.value);
     }
 
     override handlePropsChange(prev: Partial<P>) {

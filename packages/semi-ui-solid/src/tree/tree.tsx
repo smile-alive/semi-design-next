@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
 import TreeFoundation, { type BasicTreeInnerData, type BasicTreeProps, type ScrollAlign, type TreeAdapter } from '@fibrae/semi-foundation/tree/foundation';
 import { buildRowProps, nodeId } from '@fibrae/semi-foundation/tree/shared';
+import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/tree/tree.scss';
 import { IconSearch } from '@fibrae/semi-icons-solid';
 import { splitControlAttrs } from '../_base/control-attrs';
@@ -50,7 +51,7 @@ const defaultProps = {
 } satisfies Partial<TreeProps>;
 
 // the tree takes the Tab stop and is the element its name describes, so a wrapping Tooltip's tabIndex goes there too
-const isTreeAttr = (key: string): key is `aria-${string}` | 'tabIndex' => key.startsWith('aria-') || key === 'tabIndex';
+const isTreeAttr = (key: string): key is `aria-${string}` | 'tabIndex' => isAriaKey(key) || key === 'tabIndex';
 
 export default function Tree(rawProps: TreeProps) {
     const props = useDefaultProps('Tree', rawProps, defaultProps);

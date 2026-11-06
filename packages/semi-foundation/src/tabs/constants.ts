@@ -22,11 +22,14 @@ export const cssClasses = {
     TABS_PANE_ANIMATE_BOTTOM_SHOW: `${BASE_CLASS_PREFIX}-tabs-pane-animate-bottomShow`,
 };
 
-/** Prefix of the data-tabkey attribute, which the keyboard handler uses to find sibling tabs */
+/** Attribute on each tab; its value starts with TAB_DATA_KEY_PREFIX, and the keyboard handler finds sibling tabs by it */
+export const TAB_KEY_ATTRIBUTE = 'data-tabkey';
+
 export const TAB_DATA_KEY_PREFIX = 'semiTab';
 
-export function getTabDataKey(itemKey: string) {
-    return `${TAB_DATA_KEY_PREFIX}${itemKey}`;
+/** The attribute of the tab `itemKey`, for the host to spread onto the tab element */
+export function getTabKeyAttrs(itemKey: string) {
+    return { [TAB_KEY_ATTRIBUTE]: `${TAB_DATA_KEY_PREFIX}${itemKey}` };
 }
 
 export function getBarItemKey(itemKey: string) {

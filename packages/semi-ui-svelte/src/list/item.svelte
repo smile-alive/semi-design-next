@@ -2,7 +2,7 @@
     import { omit } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/list/constants';
     import '@fibrae/semi-foundation/list/list.scss';
-    import { splitControlAttrs } from '../_base/control-attrs.js';
+    import { isAriaKey, splitControlAttrs } from '../_base/control-attrs.js';
     import { Col } from '../grid/index.js';
     import { getListContext } from './context.js';
     import type { ListItemProps } from './interface.js';
@@ -19,7 +19,7 @@
     const box = $derived(clickable ? 'span' : 'div');
 
     // The button is the only tab stop, so tabindex, aria-* and attachments belong there, not on the li
-    const attrs = $derived(clickable ? splitControlAttrs(rest, (key) => key === 'tabindex' || key.startsWith('aria-')) : { root: rest, control: {} });
+    const attrs = $derived(clickable ? splitControlAttrs(rest, (key) => key === 'tabindex' || isAriaKey(key)) : { root: rest, control: {} });
 
     // Grid's own class and style go to the Col; the Row-level props went to the Row
     const colProps = $derived(list?.grid && omit(list.grid, ['gutter', 'justify', 'type', 'align']));

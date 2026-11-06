@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { computed, type VNode } from 'vue';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses } from '@fibrae/semi-foundation/tag-input/constants';
     import { IconHandle } from '@fibrae/semi-icons-vue';
     import SlotFragment from '../_base/slot-fragment';
@@ -31,8 +32,7 @@
     const prefix = cssClasses.PREFIX;
     const ellipsis = computed(() => ({ showTooltip: props.showContentTooltip, rows: 1 }));
 
-    // a function replacer keeps `$&` and `$$` in the value literal
-    const tagLabel = () => (props.disabled ? undefined : tagLocale.value.locale.closableTag.replace('${tag}', () => String(props.value)));
+    const tagLabel = () => (props.disabled ? undefined : formatLocale(tagLocale.value.locale.closableTag, { tag: String(props.value) }));
 
     const close = (event?: Event) => emit('close', event);
 </script>

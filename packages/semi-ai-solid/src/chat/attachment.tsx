@@ -1,8 +1,8 @@
 import { For, Show, createMemo, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-ai-foundation/chat/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
 import { getFileType, isImageFile } from '@fibrae/semi-ai-foundation/file-suffix';
-import { isUploadProgressVisible } from '@fibrae/semi-ai-foundation/upload-status';
+import { isUploadFailed, isUploadProgressVisible } from '@fibrae/semi-ai-foundation/upload-status';
 import { IconAlertCircle, IconBriefStroked, IconClear } from '@fibrae/semi-icons-solid';
 import { useLocale } from '@fibrae/semi-ui-solid/hooks';
 import Image from '@fibrae/semi-ui-solid/image/index';
@@ -10,7 +10,6 @@ import Progress from '@fibrae/semi-ui-solid/progress/index';
 import type { FileItem } from '@fibrae/semi-ui-solid/upload/index';
 
 const { PREFIX_ATTACHMENT } = cssClasses;
-const failStatuses: string[] = [strings.FILE_STATUS.UPLOAD_FAIL, strings.FILE_STATUS.VALID_FAIL];
 
 interface AttachmentProps {
     class?: string;
@@ -69,7 +68,7 @@ export default function Attachment(props: AttachmentProps) {
                 <Show when={isUploadProgressVisible(item())}>
                     <Progress type="circle" class={`${PREFIX_ATTACHMENT}-process`} aria-label={locale().locale.uploadProgress} percent={item().percent} size="small" width={30} />
                 </Show>
-                <Show when={failStatuses.includes(item().status)}>
+                <Show when={isUploadFailed(item().status)}>
                     <IconAlertCircle class={`${PREFIX_ATTACHMENT}-fail`} />
                 </Show>
             </div>

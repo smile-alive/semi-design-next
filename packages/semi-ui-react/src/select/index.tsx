@@ -370,7 +370,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     const generatedId = useId();
     const selectionTextId = useId();
     const prevInputsRef = useRef<{ children: ReactNode[]; optionList: OptionProps[] }>(null);
-    let position = positionProp;
+    let inner: React.ReactNode;
 
     const [foundation, state] = useFoundation<SelectFoundation<SelectBodyProps<T>, SelectState, React.UIEvent<HTMLDivElement>>, SelectAdapter<SelectBodyProps<T>, SelectState, React.UIEvent<HTMLDivElement>>, SelectBodyProps<T>, SelectState>(
         SelectFoundation,
@@ -429,67 +429,23 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
     const lagOptions = useDeferredValue(options);
     const lagInputValue = useDeferredValue(inputValue);
     const keywordSettled = lagInputValue === inputValue;
-    const liveVisibleOptions = useMemo(() => options.filter((item) => item.show), [options]);
-    const lagVisibleOptions = useMemo(() => lagOptions.filter((item) => item.show), [lagOptions]);
+    const liveVisibleOptions = useMemo(() => SelectFoundation.getVisibleOptions(options), [options]);
+    const lagVisibleOptions = useMemo(() => SelectFoundation.getVisibleOptions(lagOptions), [lagOptions]);
     const visibleOptions = keywordSettled ? liveVisibleOptions : lagVisibleOptions;
 
     // focusIndex indexes the live list; while rows lag behind, the highlight follows that option or none
     const liveFocusedOption = liveVisibleOptions[focusIndex];
     const deferredFocusIndex = keywordSettled ? focusIndex : visibleOptions.findIndex((option) => liveFocusedOption && option.data.value === liveFocusedOption.data.value);
     const selectID = id || generatedId;
-
-    // A removed node fires no blur: hand its focus to the combobox instead of dropping it to the body
-    const setClearButton = useCallback(
-        (node: HTMLButtonElement) => () => {
-            if (node === FocusTrapHandle.getActiveElement(node)) {
-                (inputRef.current ?? triggerRef.current)?.focus({ preventScroll: foundation.getProps().preventScroll });
-            }
-        },
-        [foundation]
-    );
-
-    // The selection keeps labels of earlier options, so it is not derived in render
-    useLayoutEffect(() => {
-        const prev = prevInputsRef.current;
-        const children = Children.toArray(props.children);
-        prevInputsRef.current = { children, optionList: props.optionList };
-        if (prev && (!isEqualWith(prev.children, children, isSameNode) || !isEqualWith(prev.optionList, props.optionList, isSameNode))) {
-            foundation.handleOptionsChange();
-        }
-    });
-
-    const markPressInside = useClickOutside([triggerRef, optionContainerEl], foundation.handleClickOutside, isOpen);
-
-    useImperativeHandle(
-        props.ref,
-        () => ({
-            close: () => foundation.close(),
-            open: () => foundation.open(),
-            focus: () => foundation.focus(),
-            clearInput: () => foundation.clearInput(),
-            selectAll: foundation.selectAll,
-            deselectAll: foundation.clearSelected,
-            search: foundation.handleInputChange,
-            rePosition: () => popoverRef.current?.rePosition(),
-        }),
-        [foundation]
-    );
-
-    if (position === undefined) {
-        position = direction === 'rtl' ? 'bottomRight' : 'bottomLeft';
-    }
-
-    let inner: React.ReactNode;
-
+    const position = SelectFoundation.getPosition(positionProp, direction);
     const filterable = Boolean(filter);
-    const activeDescendant = isOpen && !loading && deferredFocusIndex !== -1 && deferredFocusIndex < visibleOptions.length ? `${selectID}-option-${deferredFocusIndex}` : undefined;
+    const activeIndex = SelectFoundation.getActiveOptionIndex({ isOpen, loading, focusIndex: deferredFocusIndex, visibleCount: visibleOptions.length });
+    const activeDescendant = activeIndex === undefined ? undefined : `${selectID}-option-${activeIndex}`;
     const hasPrefix = hasContent(prefix) || hasContent(insetLabel);
     const insetLabelShown = hasContent(insetLabel) && !hasContent(prefix) && typeof triggerRender !== 'function';
     const prefixId = insetLabelId ?? (insetLabelShown ? `${selectID}-inset-label` : undefined);
     const name = comboboxName(ariaLabelledby, ariaLabel, insetLabelShown ? prefixId : undefined, locale.label);
-
-    // ARIA 1.2: the search input in the trigger is the combobox; otherwise the trigger is a select-only combobox
-    const inputIsCombobox = filterable && searchPosition === strings.SEARCH_POSITION_TRIGGER && typeof triggerRender !== 'function' && (multiple || showInput);
+    const inputIsCombobox = SelectFoundation.isInputCombobox({ filter, searchPosition, multiple }, showInput, typeof triggerRender === 'function');
 
     const comboboxProps = {
         role: 'combobox',
@@ -547,7 +503,17 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
               [`${prefixcls}-with-suffix`]: hasContent(suffix),
           });
 
-    const clearable = showClear && (selections.size || inputValue) && !disabled;
+    const clearable = SelectFoundation.isClearable({ showClear, disabled }, state);
+
+    // A removed node fires no blur: hand its focus to the combobox instead of dropping it to the body
+    const setClearButton = useCallback(
+        (node: HTMLButtonElement) => () => {
+            if (node === FocusTrapHandle.getActiveElement(node)) {
+                (inputRef.current ?? triggerRef.current)?.focus({ preventScroll: foundation.getProps().preventScroll });
+            }
+        },
+        [foundation]
+    );
 
     const handleInputChange = (sugInput: string, event?: InputChangeEvent) => foundation.handleInputChange(sugInput, event);
 
@@ -707,78 +673,6 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                 </div>
             );
         });
-    };
-
-    const renderOptions = () => {
-        const listContent = virtualize ? (
-            <VirtualList ref={virtualizeListRef} style={{ direction }} tabIndex={-1} height={virtualize.height || numbers.LIST_HEIGHT} itemCount={visibleOptions.length} itemData={{ visibleOptions, renderOption }} itemSize={virtualize.itemSize} width={virtualize.width || '100%'}>
-                {VirtualRow}
-            </VirtualList>
-        ) : (
-            renderWithGroup(visibleOptions)
-        );
-
-        const isEmpty = visibleOptions.length === 0;
-        let body: React.ReactNode = listContent;
-        if (loading) {
-            body = (
-                <div className={`${prefixcls}-loading-wrapper`}>
-                    <Spin />
-                </div>
-            );
-        } else if (isEmpty) {
-            body = <Option empty emptyContent={emptyContent} />;
-        }
-        const renderSlot = (slot: React.ReactNode, name: string) =>
-            slot ? (
-                <div className={`${prefixcls}-option-list-${name}-slot`} onMouseEnter={foundation.handleSlotMouseEnter}>
-                    {slot}
-                </div>
-            ) : null;
-
-        return (
-            <div
-                ref={optionContainerEl}
-                className={clsx(
-                    {
-                        [`${prefixcls}-option-list-wrapper`]: !(isEmpty && emptyContent === null),
-                    },
-                    dropdownClassName
-                )}
-                style={dropdownStyle}
-                onKeyDown={foundation.handleContainerKeyDown}
-                // A press would move the focus to the popup container, where the keys never reach the combobox; it
-                // stays on the trigger or the dropdown search input. A text field in a slot still takes the focus.
-                onMouseDown={(e) => {
-                    if (!isTextEditor(e.target)) {
-                        e.preventDefault();
-                    }
-                }}
-                onMouseDownCapture={markPressInside}
-            >
-                {renderSlot(outerTopSlot, 'outer-top')}
-                {searchPosition === strings.SEARCH_POSITION_DROPDOWN && filter && renderDropdownInput()}
-                <div
-                    id={selectOptionListID}
-                    className={clsx({
-                        [`${prefixcls}-option-list`]: true,
-                        [`${prefixcls}-option-list-chosen`]: selections.size,
-                    })}
-                    style={{ maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight }}
-                    // a name source only: accname would read the combobox's value (typed or selected text)
-                    {...name}
-                    aria-multiselectable={multiple}
-                    role="listbox"
-                    // capture: with virtualize the scrolling element is the VirtualList inside, and scroll does not bubble
-                    onScrollCapture={foundation.handleListScroll}
-                >
-                    {renderSlot(innerTopSlot, 'inner-top')}
-                    {body}
-                    {renderSlot(innerBottomSlot, 'inner-bottom')}
-                </div>
-                {renderSlot(outerBottomSlot, 'outer-bottom')}
-            </div>
-        );
     };
 
     const renderSingleSelection = () => {
@@ -971,6 +865,105 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
             foundation.updateScrollTop();
         }
     };
+
+    // The selection keeps labels of earlier options, so it is not derived in render
+    useLayoutEffect(() => {
+        const prev = prevInputsRef.current;
+        const children = Children.toArray(props.children);
+        prevInputsRef.current = { children, optionList: props.optionList };
+        if (prev && (!isEqualWith(prev.children, children, isSameNode) || !isEqualWith(prev.optionList, props.optionList, isSameNode))) {
+            foundation.handleOptionsChange();
+        }
+    });
+
+    const markPressInside = useClickOutside([triggerRef, optionContainerEl], foundation.handleClickOutside, isOpen);
+
+    const renderOptions = () => {
+        const listContent = virtualize ? (
+            <VirtualList ref={virtualizeListRef} style={{ direction }} tabIndex={-1} height={virtualize.height || numbers.LIST_HEIGHT} itemCount={visibleOptions.length} itemData={{ visibleOptions, renderOption }} itemSize={virtualize.itemSize} width={virtualize.width || '100%'}>
+                {VirtualRow}
+            </VirtualList>
+        ) : (
+            renderWithGroup(visibleOptions)
+        );
+
+        const isEmpty = visibleOptions.length === 0;
+        let body: React.ReactNode = listContent;
+        if (loading) {
+            body = (
+                <div className={`${prefixcls}-loading-wrapper`}>
+                    <Spin />
+                </div>
+            );
+        } else if (isEmpty) {
+            body = <Option empty emptyContent={emptyContent} />;
+        }
+        const renderSlot = (slot: React.ReactNode, name: string) =>
+            slot ? (
+                <div className={`${prefixcls}-option-list-${name}-slot`} onMouseEnter={foundation.handleSlotMouseEnter}>
+                    {slot}
+                </div>
+            ) : null;
+
+        return (
+            <div
+                ref={optionContainerEl}
+                className={clsx(
+                    {
+                        [`${prefixcls}-option-list-wrapper`]: !(isEmpty && emptyContent === null),
+                    },
+                    dropdownClassName
+                )}
+                style={dropdownStyle}
+                onKeyDown={foundation.handleContainerKeyDown}
+                // A press would move the focus to the popup container, where the keys never reach the combobox; it
+                // stays on the trigger or the dropdown search input. A text field in a slot still takes the focus.
+                onMouseDown={(e) => {
+                    if (!isTextEditor(e.target)) {
+                        e.preventDefault();
+                    }
+                }}
+                onMouseDownCapture={markPressInside}
+            >
+                {renderSlot(outerTopSlot, 'outer-top')}
+                {searchPosition === strings.SEARCH_POSITION_DROPDOWN && filter && renderDropdownInput()}
+                <div
+                    id={selectOptionListID}
+                    className={clsx({
+                        [`${prefixcls}-option-list`]: true,
+                        [`${prefixcls}-option-list-chosen`]: selections.size,
+                    })}
+                    style={{ maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight }}
+                    // a name source only: accname would read the combobox's value (typed or selected text)
+                    {...name}
+                    aria-multiselectable={multiple}
+                    role="listbox"
+                    // capture: with virtualize the scrolling element is the VirtualList inside, and scroll does not bubble
+                    onScrollCapture={foundation.handleListScroll}
+                >
+                    {renderSlot(innerTopSlot, 'inner-top')}
+                    {body}
+                    {renderSlot(innerBottomSlot, 'inner-bottom')}
+                </div>
+                {renderSlot(outerBottomSlot, 'outer-bottom')}
+            </div>
+        );
+    };
+
+    useImperativeHandle(
+        props.ref,
+        () => ({
+            close: () => foundation.close(),
+            open: () => foundation.open(),
+            focus: () => foundation.focus(),
+            clearInput: () => foundation.clearInput(),
+            selectAll: foundation.selectAll,
+            deselectAll: foundation.clearSelected,
+            search: foundation.handleInputChange,
+            rePosition: () => popoverRef.current?.rePosition(),
+        }),
+        [foundation]
+    );
 
     if (useCustomTrigger) {
         // a triggerRender that spreads componentProps must not grab the Select's ref

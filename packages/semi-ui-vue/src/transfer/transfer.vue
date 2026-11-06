@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { computed, shallowRef, useId, useTemplateRef, watch } from 'vue';
     import { omit } from 'es-toolkit';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses, strings } from '@fibrae/semi-foundation/transfer/constants';
     import TransferFoundation, { type BasicResolvedDataItem, type TransferAdapter, type TransferBaseProps, type TransferBaseState } from '@fibrae/semi-foundation/transfer/foundation';
     import '@fibrae/semi-foundation/transfer/transfer.scss';
@@ -24,17 +25,10 @@
     import Tree from '../tree';
     import AutoSizer from '../tree/auto-sizer.vue';
     import type { TreeNodeData, TreeValue } from '../tree/interface';
-    import type { TransferDataItem, TransferEmits, TransferGroupItem, TransferHandle, TransferProps, TransferSelectedPanelSlotProps, TransferSlots, TransferSourcePanelSlotProps, TransferValue } from './interface';
+    import type { TransferDataItem, TransferEmits, TransferHandle, TransferProps, TransferSelectedPanelSlotProps, TransferSlots, TransferSourcePanelSlotProps, TransferValue } from './interface';
     import TransferSelectedItem from './transfer-selected-item.vue';
 
     type ResolvedItem = BasicResolvedDataItem & TransferDataItem;
-
-    interface LeftGroup {
-        index: number;
-        parent?: Omit<TransferGroupItem, 'children'>;
-        items: { item: ResolvedItem; index: number }[];
-    }
-
     type Foundation = TransferFoundation<TransferBaseProps>;
     type Adapter = TransferAdapter<TransferBaseProps>;
 
@@ -106,26 +100,7 @@
     const pageSize = computed(() => TransferFoundation.getPageSize(props.pagination));
     const totalPage = computed(() => TransferFoundation.getTotalPage(props.pagination, filterData.value.length));
     const currentPage = computed(() => TransferFoundation.getCurrentPage(props.pagination, state.value.leftCurrentPage, filterData.value.length));
-
-    const leftGroups = computed(() => {
-        const start = (currentPage.value - 1) * pageSize.value;
-        const visible = props.pagination ? filterData.value.slice(start, start + pageSize.value) : filterData.value;
-        const groupIndexes = TransferFoundation.getGroupIndexes(data.value);
-        const groups: LeftGroup[] = [];
-        visible.forEach((item, index) => {
-            const last = groups.at(-1);
-            if (last && last.parent === item._parent) {
-                last.items.push({ item, index });
-            } else {
-                groups.push({
-                    index: groupIndexes.get(item._parent) ?? 0,
-                    parent: item._parent,
-                    items: [{ item, index }],
-                });
-            }
-        });
-        return groups;
-    });
+    const leftGroups = computed(() => TransferFoundation.getGroups(TransferFoundation.getVisibleData(filterData.value, props.pagination, currentPage.value), data.value));
 
     const selectedData = computed((): ResolvedItem[] =>
         [...selectedItems.value.values()].map((item) => ({
@@ -240,7 +215,7 @@
             <template v-else-if="isList || isTree">
                 <slot v-if="$slots.sourceHeader" :allChecked="!leftContainsNotInSelected" :leafOnlyNum="leafOnlyNum" name="sourceHeader" :num="showNumber" :onAllClick="onAllClick" :showButton="showAllButton" />
                 <div v-else :class="[`${prefixCls}-header`, `${prefixCls}-left-header`]">
-                    <span :class="`${prefixCls}-header-total`">{{ locale.locale.total.replace('${total}', String(showNumber)) }}</span>
+                    <span :class="`${prefixCls}-header-total`">{{ formatLocale(locale.locale.total, { total: showNumber }) }}</span>
                     <Button v-if="showAllButton" :class="`${prefixCls}-header-all`" :disabled="props.disabled" size="small" theme="borderless" type="tertiary" @click="onAllClick">{{ leftContainsNotInSelected ? locale.locale.selectAll : locale.locale.clearSelectAll }}</Button>
                 </div>
                 <Tree
@@ -266,11 +241,11 @@
                 </Tree>
                 <!-- checkboxes are disabled with the transfer, so the keyboard can only scroll the list -->
                 <div v-else :aria-label="locale.locale.optionList" :class="`${prefixCls}-left-list`" role="list" :tabindex="props.disabled ? 0 : undefined">
-                    <component :is="group.parent ? 'div' : SlotFragment" v-for="group in leftGroups" :key="group.index" :role="group.parent ? 'listitem' : undefined">
-                        <div v-if="group.parent" :id="groupTitleId(group.index)" :class="`${prefixCls}-group-title`">
-                            {{ group.parent.title }}
+                    <component :is="group.grouped ? 'div' : SlotFragment" v-for="group in leftGroups" :key="group.index" :role="group.grouped ? 'listitem' : undefined">
+                        <div v-if="group.grouped" :id="groupTitleId(group.index)" :class="`${prefixCls}-group-title`">
+                            {{ group.title }}
                         </div>
-                        <component :is="group.parent ? 'div' : SlotFragment" :aria-labelledby="group.parent ? groupTitleId(group.index) : undefined" :role="group.parent ? 'list' : undefined">
+                        <component :is="group.grouped ? 'div' : SlotFragment" :aria-labelledby="group.grouped ? groupTitleId(group.index) : undefined" :role="group.grouped ? 'list' : undefined">
                             <template v-for="{ item, index } in group.items" :key="item.key">
                                 <div v-if="$slots.sourceItem" role="listitem">
                                     <slot :checked="selectedItems.has(item.key)" :index="index" :item="item" name="sourceItem" :onChange="() => onSelectOrRemove(item)" />
@@ -291,7 +266,7 @@
         <section v-else :class="`${prefixCls}-right`">
             <slot v-if="$slots.selectedHeader" name="selectedHeader" :num="selectedData.length" :onClear="foundation.handleClear" :showButton="selectedData.some((item) => !item.disabled)" />
             <div v-else :class="[`${prefixCls}-header`, `${prefixCls}-right-header`]">
-                <span :class="`${prefixCls}-header-total`">{{ locale.locale.selected.replace('${total}', String(selectedData.length)) }}</span>
+                <span :class="`${prefixCls}-header-total`">{{ formatLocale(locale.locale.selected, { total: selectedData.length }) }}</span>
                 <Button v-if="selectedData.some((item) => !item.disabled)" :class="`${prefixCls}-header-all`" :disabled="props.disabled" size="small" theme="borderless" type="tertiary" @click="foundation.handleClear">{{ locale.locale.clear }}</Button>
             </div>
             <template v-if="selectedData.length === 0">

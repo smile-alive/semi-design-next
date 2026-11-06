@@ -2,7 +2,7 @@ import type React from 'react';
 import { cloneElement, isValidElement, useLayoutEffect, useRef, useState, type CSSProperties, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import { cssClasses, strings } from '@fibrae/semi-foundation/overflow-list/constants';
+import { cssClasses, SCROLL_KEY_ATTRIBUTE, strings } from '@fibrae/semi-foundation/overflow-list/constants';
 import OverflowListFoundation, { type OverflowListAdapter, type OverflowListBaseState, type OverflowListView, type VisibleLayout } from '@fibrae/semi-foundation/overflow-list/foundation';
 import { isHTMLElement } from '@fibrae/semi-foundation/utils/dom';
 import '@fibrae/semi-foundation/overflow-list/overflow-list.scss';
@@ -174,7 +174,7 @@ export default function OverflowList(rawProps: OverflowListProps) {
     // narrowed on props: the destructured renderer does not follow the renderMode check
     if (props.renderMode === RenderMode.SCROLL) {
         const scrollWrapper = (
-            <div {...wrapperProps} className={clsx(wrapperClassName, `${prefixCls}-scroll-wrapper`)} style={wrapperStyle}>
+            <div {...wrapperProps} className={clsx(wrapperClassName, cssClasses.SCROLL_WRAPPER)} style={wrapperStyle}>
                 {renderedItems.map(({ element, key }) => {
                     return cloneElement(element as ReactElement<any>, {
                         // cloneElement replaces the ref, so keep the one the renderer put on its element
@@ -187,7 +187,7 @@ export default function OverflowList(rawProps: OverflowListProps) {
                             },
                             (element.props as { ref?: React.Ref<Element> }).ref,
                         ]),
-                        'data-scrollkey': key,
+                        [SCROLL_KEY_ATTRIBUTE]: key,
                         key,
                     });
                 })}

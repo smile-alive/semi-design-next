@@ -5,6 +5,7 @@ import { cssClasses as dropdownClasses } from '@fibrae/semi-foundation/dropdown/
 import { cssClasses, strings } from '@fibrae/semi-foundation/navigation/constants';
 import { countPlaceholderIcons } from '@fibrae/semi-foundation/navigation/item-foundation';
 import SubNavFoundation, { type SubNavAdapter } from '@fibrae/semi-foundation/navigation/sub-nav-foundation';
+import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/navigation/navigation.scss';
 import { IconChevronDown, IconChevronRight } from '@fibrae/semi-icons-solid';
 import { splitControlAttrs } from '../_base/control-attrs';
@@ -21,7 +22,7 @@ import Dropdown, { type DropdownProps, type GetDropdownTriggerProps } from '../d
 import Tooltip, { type GetTriggerProps } from '../tooltip';
 import { NavContext, type NavContextValue, type NavView, useNavContext } from './context';
 import type { ItemKey, NavItemProps, SubNavProps } from './interface';
-import { ItemView, ItemWrapper, NAV_ITEM, iconSlotClass, isAriaKey, plainTrigger } from './item';
+import { ItemView, ItemWrapper, NAV_ITEM, iconSlotClass, plainTrigger } from './item';
 
 const prefix = cssClasses.PREFIX;
 const itemPrefix = `${prefix}-item`;

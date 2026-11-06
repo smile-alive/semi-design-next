@@ -2,6 +2,7 @@ import type React from 'react';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/navigation/constants';
 import ItemFoundation, { type ItemAdapter, type ItemProps, type ItemKey, type SelectedItemProps, countPlaceholderIcons } from '@fibrae/semi-foundation/navigation/item-foundation';
+import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import type { ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';
 import useFoundation from '../_base/use-foundation';
@@ -173,7 +174,7 @@ export function NavItemShell({ ref, itemContent, wrapperProps, ...props }: NavIt
         const ariaProps: Record<string, any> = {};
         const liProps: Record<string, any> = {};
         for (const [key, value] of Object.entries(rest)) {
-            (key.startsWith('aria-') ? ariaProps : liProps)[key] = value;
+            (isAriaKey(key) ? ariaProps : liProps)[key] = value;
         }
 
         let content: React.ReactNode = itemChildren;

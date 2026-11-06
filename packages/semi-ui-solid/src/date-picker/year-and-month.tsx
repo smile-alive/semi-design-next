@@ -2,6 +2,7 @@ import { type JSX, type Ref, Show, createMemo, mergeProps, onCleanup, untrack } 
 import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
 import type { PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
 import YearAndMonthFoundation, { type MonthScrollItem, type YearAndMonthAdapter, type YearAndMonthFoundationProps, type YearScrollItem } from '@fibrae/semi-foundation/date-picker/year-and-month-foundation';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { IconChevronLeft } from '@fibrae/semi-icons-solid';
 import useFoundation from '../_base/use-foundation';
@@ -79,7 +80,7 @@ export default function YearAndMonth(rawProps: YearAndMonthProps) {
                     list={yearList()}
                     mode="normal"
                     selectedIndex={yearList().findIndex((item) => item.value === current().currentYear[panelType])}
-                    transform={(val: number) => props.locale.yearText.replace('${year}', String(val))}
+                    transform={(val: number) => formatLocale(props.locale.yearText, { year: val })}
                     onSelect={(item) => foundation.selectYear(item as YearScrollItem, panelType)}
                     {...props.yearAndMonthOpts}
                 />

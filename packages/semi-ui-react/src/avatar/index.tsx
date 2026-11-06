@@ -3,11 +3,13 @@ import { useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/avatar/constants';
 import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/avatar/foundation';
+import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/avatar/avatar.scss';
 import { usePopupLayer } from '../_base/popup-layer';
 import useDefaultProps from '../_base/use-default-props';
 import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
+import useMergedRef from '../_base/use-merged-ref';
 import useReplayImageEvents from '../_base/use-replay-image-events';
 import { hasContent } from '../_utils';
 import { useAvatarGroupContext } from './context';
@@ -56,6 +58,7 @@ export default function Avatar(rawProps: AvatarProps) {
     const props = useDefaultProps('Avatar', own, defaultProps);
     const { ref, shape, children, size, color, className, hoverMask, onClick, onError, onMouseEnter, onMouseLeave, imgAttr, src, srcSet, style, alt, gap, bottomSlot, topSlot, border, contentMotion, ...rest } = props;
 
+    const rootRef = useRef<HTMLSpanElement>(null);
     const contentRef = useRef<HTMLSpanElement>(null);
     const imgRef = useRef<HTMLImageElement>(null);
 
@@ -67,13 +70,12 @@ export default function Avatar(rawProps: AvatarProps) {
             notifyEnter: (e) => base.getProp('onMouseEnter')?.(e),
             notifyError: (e) => base.getProps().onError?.(e),
             notifyLeave: (e) => base.getProp('onMouseLeave')?.(e),
-            getTextWidths: () => {
-                const text = contentRef.current;
-                return text ? { container: text.parentElement?.offsetWidth ?? 0, text: text.offsetWidth } : null;
-            },
+            getAvatarElement: () => rootRef.current,
+            getTextElement: () => contentRef.current,
         })
     );
 
+    const mergedRef = useMergedRef(ref, rootRef);
     const clickable = onClick !== undefined;
 
     // A clickable avatar has its own Tab stop; tabIndex and aria-* injected by Tooltip belong there, not on the root
@@ -112,7 +114,7 @@ export default function Avatar(rawProps: AvatarProps) {
     useDidUpdate(size, foundation.changeScale);
 
     for (const [key, value] of Object.entries(rest)) {
-        (hasFocusTarget && (key === 'tabIndex' || key.startsWith('aria-')) ? controlProps : rootProps)[key] = value;
+        (hasFocusTarget && (key === 'tabIndex' || isAriaKey(key)) ? controlProps : rootProps)[key] = value;
     }
 
     let content = children;
@@ -185,7 +187,7 @@ export default function Avatar(rawProps: AvatarProps) {
     );
 
     let avatar = (
-        <span role={isListItem ? 'listitem' : undefined} {...rootProps} ref={ref} className={avatarCls} style={shouldWrap ? {} : customStyle} {...(shouldWrap ? {} : mouseEvent)}>
+        <span role={isListItem ? 'listitem' : undefined} {...rootProps} ref={mergedRef} className={avatarCls} style={shouldWrap ? {} : customStyle} {...(shouldWrap ? {} : mouseEvent)}>
             {content}
             {hasContent(hoverContent) && (
                 <div className={`${prefixCls}-hover`} x-semi-prop="hoverContent">

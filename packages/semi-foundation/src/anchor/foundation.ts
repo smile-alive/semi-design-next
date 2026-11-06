@@ -2,6 +2,7 @@ import { debounce, throttle } from 'es-toolkit';
 import scrollIntoView, { type CustomBehaviorOptions, type Options } from 'scroll-into-view-if-needed';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import { cssClasses } from './constants';
+import { findAnchorTarget } from './utils';
 
 export interface AnchorNode {
     href?: string;
@@ -10,9 +11,9 @@ export interface AnchorNode {
 
 /** `E` is the framework's click or key event that activated a link */
 export interface AnchorAdapter<P extends AnchorBaseProps = AnchorBaseProps, E = unknown> extends DefaultAdapter<P, AnchorBaseState> {
-    getContainer: () => HTMLElement | Window;
-    getAnchorNode: (selector: string) => HTMLElement | null;
-    getContentNode: (selector: string) => HTMLElement | null;
+    /** The scroll container, which the foundation falls back to the window for when it is null */
+    getContainer: () => HTMLElement | Window | null;
+    getRoot: () => HTMLElement | null;
     notifyChange: (currentLink: string, previousLink: string) => void;
     notifyClick: (e: E, link: string) => void;
 }
@@ -38,8 +39,16 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
     #throttledScroll = throttle(() => this.handleScroll(), 100);
     #debouncedScrollEnd = debounce(() => this.#handleClickLink(), 100);
 
+    #getContainer() {
+        return this.adapter.getContainer() || window;
+    }
+
+    #getContentNode(link: string) {
+        return findAnchorTarget(this.adapter.getRoot(), link);
+    }
+
     #bind() {
-        const container = this.adapter.getContainer();
+        const container = this.#getContainer();
         this.#container = container;
         container.addEventListener('scroll', this.#throttledScroll);
         container.addEventListener('scroll', this.#debouncedScrollEnd);
@@ -55,7 +64,7 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
         const { scrollMotion, targetOffset, scrollIntoViewOptions } = this.getProps();
         const behavior = scrollMotion ? 'smooth' : 'auto';
         if (link) {
-            const destNode = this.adapter.getContentNode(link);
+            const destNode = this.#getContentNode(link);
             const scrollOpts: CustomBehaviorOptions<void> = {
                 block: 'start',
                 ...scrollIntoViewOptions,
@@ -85,7 +94,7 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
     }
 
     #goToLink(link: string, shouldNotify: boolean) {
-        const destNode = this.adapter.getContentNode(link);
+        const destNode = this.#getContentNode(link);
         const prevLink = this.getState('activeLink');
         this.setActiveLink(link, prevLink, shouldNotify);
         if (destNode) {
@@ -116,11 +125,11 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
     }
 
     protected getLinksTop() {
-        const container = this.adapter.getContainer();
+        const container = this.#getContainer();
         const containerTop = 'getBoundingClientRect' in container ? container.getBoundingClientRect().top : 0;
         const { offsetTop } = this.getProps();
         return this.getState('links').map((link) => {
-            const node = this.adapter.getContentNode(link);
+            const node = this.#getContentNode(link);
             // a missing or exactly aligned target counts as far above the top, so it never wins as the active link
             return (node && node.getBoundingClientRect().top - containerTop - offsetTop) || -Infinity;
         });
@@ -185,7 +194,7 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
     }
 
     handleContainerChange = () => {
-        if (this.adapter.getContainer() !== this.#container) {
+        if (this.#getContainer() !== this.#container) {
             this.#unbind();
             this.#bind();
         }
@@ -194,7 +203,7 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
     // Called after every commit, since links above the active one can move it unnoticed; an unchanged position sets no
     // state, so the call cannot re-render in a loop.
     syncSlideBar = () => {
-        const linkNode = this.adapter.getAnchorNode(`.${cssClasses.PREFIX}-link-title-active`);
+        const linkNode = this.adapter.getRoot()?.querySelector<HTMLElement>(`.${cssClasses.LINK_TITLE_ACTIVE}`);
         if (linkNode && linkNode.offsetTop !== this.#slideBarTop) {
             this.#slideBarTop = linkNode.offsetTop;
             this.setState({ slideBarTop: `${this.#slideBarTop}px` });

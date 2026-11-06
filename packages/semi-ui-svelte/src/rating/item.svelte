@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses } from '@fibrae/semi-foundation/rating/constants';
     import RatingFoundation from '@fibrae/semi-foundation/rating/foundation';
     import { IconStar } from '@fibrae/semi-icons-svelte';
@@ -25,11 +26,7 @@
         return { root, describedby };
     });
 
-    // a function replacer keeps `$&` and `$$` in a custom unit literal
-    const itemName = (n: number) =>
-        locale()
-            .locale.itemLabel.replace('${value}', String(n))
-            .replace('${unit}', () => unit ?? (n === 1 ? locale().locale.star : locale().locale.stars));
+    const itemName = (n: number) => formatLocale(locale().locale.itemLabel, { value: n, unit: unit ?? (n === 1 ? locale().locale.star : locale().locale.stars) });
 
     const radioValueOf = (target: EventTarget | null) => (target === first ? model.firstValue : target === second ? model.secondValue : undefined);
 

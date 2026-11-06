@@ -3,11 +3,11 @@ import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/overflow-list/constants';
 import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState, type OverflowListView, type VisibleLayout } from '@fibrae/semi-foundation/overflow-list/foundation';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/overflow-list/overflow-list.scss';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
-import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import useIntersectionObserver from '../_base/use-intersection-observer';
@@ -282,7 +282,7 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
             <Show when={isScroll() && local.overflowRenderDirection !== 'end'}>{scrollSides()[0]}</Show>
             <Show when={isScroll() && local.overflowRenderDirection === 'start'}>{scrollSides()[1]}</Show>
             <Show when={isScroll()}>
-                <div {...local.wrapperProps} class={clsx(local.wrapperClassName, `${prefixCls}-scroll-wrapper`)} style={local.wrapperStyle}>
+                <div {...local.wrapperProps} class={clsx(local.wrapperClassName, cssClasses.SCROLL_WRAPPER)} style={local.wrapperStyle}>
                     <For each={visibleKeys()}>{(key) => <ScrollItem scrollKey={String(key)} entry={entryOf(key)} render={visibleItemRenderer()} register={(node) => registerScrollNode(String(key), node)} />}</For>
                 </div>
             </Show>

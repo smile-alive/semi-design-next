@@ -98,7 +98,7 @@
     let view = $state.raw<OverflowListView>(untrack(initialView));
 
     // Scroll mode keeps every item rendered; the observer decides which are visible. `key` is the string
-    // data-scrollkey carries.
+    // SCROLL_KEY_ATTRIBUTE carries.
     const scrollItems = $derived(view.visible.map((entry, index) => ({ item: entry as T, index, key: String(keyOf(entry, index)) })));
     const hidden = $derived(view.overflowStatus === 'calculating' && view.pivot < 0);
 
@@ -236,7 +236,7 @@
         {#if overflowRenderDirection === 'start'}
             {@render overflow?.({ items: scrollOverflow[1], position: 'end' })}
         {/if}
-        <div bind:this={wrapper} {...wrapperProps} class={[wrapperClassName, `${prefix}-scroll-wrapper`]} style={wrapperStyle}>
+        <div bind:this={wrapper} {...wrapperProps} class={[wrapperClassName, cssClasses.SCROLL_WRAPPER]} style={wrapperStyle}>
             {#each scrollItems as entry (entry.key)}
                 {@const key = entry.key}
                 <span {@attach markScrollItem(key, onScrollElement)} style="display: contents">

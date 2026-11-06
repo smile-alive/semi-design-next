@@ -1,5 +1,6 @@
 import { type Accessor, type JSX, children, createMemo, createRenderEffect, onCleanup } from 'solid-js';
 import { isServer } from 'solid-js/web';
+import { SCROLL_KEY_ATTRIBUTE } from '@fibrae/semi-foundation/overflow-list/constants';
 import { isHTMLElement } from '@fibrae/semi-foundation/utils/dom';
 import isMarkup from '../_base/is-markup';
 
@@ -22,7 +23,7 @@ export default function ScrollItem<T>(props: ScrollItemProps<T>) {
         if (isServer || !element) {
             return;
         }
-        element.dataset.scrollkey = props.scrollKey;
+        element.setAttribute(SCROLL_KEY_ATTRIBUTE, props.scrollKey);
         onCleanup(props.register(element));
     });
 

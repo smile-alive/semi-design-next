@@ -642,9 +642,8 @@ describe('Anchor', () => {
         expectTypeOf<NonNullable<AnchorProps['position']>>().toEqualTypeOf<NonNullable<TooltipProps['position']>>();
     });
 
-    it('adapter 查找节点的返回类型包含 null', () => {
-        expectTypeOf<ReturnType<AnchorAdapter['getAnchorNode']>>().toEqualTypeOf<HTMLElement | null>();
-        expectTypeOf<ReturnType<AnchorAdapter['getContentNode']>>().toEqualTypeOf<HTMLElement | null>();
+    it('adapter 的 getRoot 返回类型包含 null', () => {
+        expectTypeOf<ReturnType<AnchorAdapter['getRoot']>>().toEqualTypeOf<HTMLElement | null>();
     });
 
     it('展开信号对象传入时，无关属性变化不重建链接，也不丢失已激活链接', () => {

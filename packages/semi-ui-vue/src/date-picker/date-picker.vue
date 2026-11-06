@@ -110,7 +110,7 @@
     const normalized = computed(() => DatePickerFoundation.normalizeProps(props));
     const type = computed(() => normalized.value.type);
     const rangeSeparator = computed(() => normalized.value.rangeSeparator);
-    const position = computed(() => normalized.value.position ?? (config.value.direction === 'rtl' ? 'bottomRight' : 'bottomLeft'));
+    const position = computed(() => DatePickerFoundation.getPosition(normalized.value.position, config.value.direction));
     const spacing = computed(() => normalized.value.spacing);
     const timeZone = computed(() => props.timeZone ?? config.value.timeZone ?? readSemiDefault(semi, 'DatePicker', 'timeZone'));
     const confirmNeeded = computed(() => needConfirm({ type: type.value, needConfirm: props.needConfirm }));

@@ -197,8 +197,12 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         }
     };
 
-    // APG carousel pattern: focus inside pauses rotation regardless of hoverToPause
-    handleKeyboardFocus = () => {
+    // APG carousel pattern: focus inside pauses rotation regardless of hoverToPause. Only keyboard focus counts: a
+    // mouse click on an arrow focuses it too.
+    handleFocusIn = ({ target }: Pick<FocusEvent, 'target'>) => {
+        if (!(target instanceof Element && target.matches(':focus-visible'))) {
+            return;
+        }
         this.#keyboardFocusWithin = true;
         if (this.#interval) {
             this.#unregisterInterval();
@@ -206,7 +210,10 @@ export default class CarouselFoundation<P extends CarouselBaseProps = CarouselBa
         }
     };
 
-    handleFocusLeave = () => {
+    handleFocusOut = ({ currentTarget, relatedTarget }: Pick<FocusEvent, 'currentTarget' | 'relatedTarget'>) => {
+        if (relatedTarget instanceof Node && (currentTarget as Node).contains(relatedTarget)) {
+            return;
+        }
         this.#keyboardFocusWithin = false;
         if (this.#resumeOnFocusLeave) {
             this.#resumeOnFocusLeave = false;

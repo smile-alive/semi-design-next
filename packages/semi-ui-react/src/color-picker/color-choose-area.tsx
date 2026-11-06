@@ -6,6 +6,7 @@ import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
 import ColorPickerFoundation from '@fibrae/semi-foundation/color-picker/foundation';
 import { hsvaToHslString, hsvaToRgba } from '@fibrae/semi-foundation/color-picker/utils/convert';
 import { round } from '@fibrae/semi-foundation/color-picker/utils/round';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import useFoundation from '../_base/use-foundation';
 import useLocale from '../locale/use-locale';
 
@@ -36,7 +37,7 @@ export default function ColorChooseArea(props: ColorChooseAreaProps) {
 
     const handlePosition = ColorPickerFoundation.getHandlePositionByHSVA(hsva, { width, height }, handleSize);
     const currentColor = hsvaToRgba(hsva);
-    const valueText = locale.saturationBrightness.replace('${saturation}', String(round(hsva.s))).replace('${brightness}', String(round(hsva.v)));
+    const valueText = formatLocale(locale.saturationBrightness, { saturation: round(hsva.s), brightness: round(hsva.v) });
 
     const sliders = [
         { axis: 's', name: locale.saturation },

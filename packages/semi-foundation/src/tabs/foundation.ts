@@ -1,11 +1,8 @@
 import { isEqual } from 'es-toolkit';
-import { BASE_CLASS_PREFIX } from '../base/constants';
 import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../base/foundation';
+import { cssClasses as overflowListClasses, SCROLL_KEY_ATTRIBUTE } from '../overflow-list/constants';
 import { scrollIntoViewWithin } from '../utils/supports';
-import { cssClasses, getItemKeyByBarItemKey, TAB_DATA_KEY_PREFIX } from './constants';
-
-// the collapsed bar scrolls inside OverflowList's wrapper, not the bar element
-const OVERFLOW_LIST_SCROLL_WRAPPER = `${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`;
+import { cssClasses, getItemKeyByBarItemKey, TAB_DATA_KEY_PREFIX, TAB_KEY_ATTRIBUTE } from './constants';
 
 /** What the previous update showed, so the pane motion is derived in the same update as the key change */
 export interface MotionView {
@@ -196,12 +193,13 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, E =
         return barEl.scrollWidth > barEl.clientWidth + 1;
     }
 
-    /** `barItemKey` is the data-scrollkey of the tab, see getBarItemKey */
+    /** `barItemKey` is the OverflowList scroll key of the tab, see getBarItemKey */
     static scrollTabIntoView(barEl: HTMLElement | null | undefined, barItemKey: string, position: ScrollLogicalPosition = 'nearest', behavior: ScrollBehavior = 'smooth') {
         // only the bar scrolls: the call can land after the page has scrolled past the tabs, and must not pull it back
-        const tabEl = barEl?.querySelector(`.${cssClasses.TABS_TAB}[data-scrollkey="${CSS.escape(barItemKey)}"]`);
+        const tabEl = barEl?.querySelector(`.${cssClasses.TABS_TAB}[${SCROLL_KEY_ATTRIBUTE}="${CSS.escape(barItemKey)}"]`);
         if (barEl && tabEl) {
-            scrollIntoViewWithin(tabEl, tabEl.closest<HTMLElement>(`.${OVERFLOW_LIST_SCROLL_WRAPPER}`) ?? barEl, { behavior, block: position, inline: position });
+            // the collapsed bar scrolls inside OverflowList's wrapper, not the bar element
+            scrollIntoViewWithin(tabEl, tabEl.closest<HTMLElement>(`.${overflowListClasses.SCROLL_WRAPPER}`) ?? barEl, { behavior, block: position, inline: position });
         }
     }
 
@@ -254,7 +252,7 @@ export default class TabsFoundation<P extends TabsBaseProps = TabsBaseProps, E =
         }
         const { preventScroll } = this.getProps();
         // siblings are found through the tablist, not the parent: a tab can be wrapped (OverflowList wraps each one)
-        const allTabs = [...tab.closest('[role="tablist"]').querySelectorAll<HTMLElement>(`[data-tabkey^="${TAB_DATA_KEY_PREFIX}"]`)];
+        const allTabs = [...tab.closest('[role="tablist"]').querySelectorAll<HTMLElement>(`[${TAB_KEY_ATTRIBUTE}^="${TAB_DATA_KEY_PREFIX}"]`)];
         const tabs = allTabs.filter((item) => item.getAttribute('aria-disabled') !== 'true');
 
         switch (event.key) {

@@ -4,6 +4,7 @@
     import ColorPickerFoundation from '@fibrae/semi-foundation/color-picker/foundation';
     import { hsvaToHslString, hsvaToRgba } from '@fibrae/semi-foundation/color-picker/utils/convert';
     import { round } from '@fibrae/semi-foundation/color-picker/utils/round';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { toDragEvent } from './drag-event.js';
@@ -36,11 +37,7 @@
     });
 
     // both ranges report the same two-dimensional position, as React Aria's ColorArea does
-    const valueText = $derived(
-        locale()
-            .locale.saturationBrightness.replace('${saturation}', String(round(props.hsva.s)))
-            .replace('${brightness}', String(round(props.hsva.v)))
-    );
+    const valueText = $derived(formatLocale(locale().locale.saturationBrightness, { saturation: round(props.hsva.s), brightness: round(props.hsva.v) }));
 
     const sliders = $derived([
         { axis: 's', name: locale().locale.saturation },

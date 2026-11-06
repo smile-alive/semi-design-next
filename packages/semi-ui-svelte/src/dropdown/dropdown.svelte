@@ -76,7 +76,6 @@
 
     let tooltip = $state<Tooltip>();
     let triggerElement = $state.raw<HTMLElement | null>(null);
-    let popupElement = $state<HTMLDivElement>();
     let textOnly = $state(false);
     let focusableInside = $state(false);
 
@@ -98,7 +97,7 @@
         () => DropdownFoundation.getInitialState(),
         () => ({
             notifyVisibleChange: (next) => onVisibleChange?.(next),
-            getPopup: () => popupElement?.closest<HTMLElement>('[popover]') ?? null,
+            getPopup: () => tooltip?.getPopup() ?? null,
             hidePopup: () => tooltip?.hide(),
         }),
         { context: () => menuContext(parent, config.direction) }
@@ -257,7 +256,7 @@
 {/snippet}
 
 {#snippet popup({ initialFocusRef }: RenderContentProps)}
-    <DropdownPopup bind:element={popupElement} contentClass={contentClassName} {context} {focusTarget} {initialFocusRef} {prefixCls} {style}>
+    <DropdownPopup contentClass={contentClassName} {context} {focusTarget} {initialFocusRef} {prefixCls} {style}>
         {#if content}
             {@render content()}
         {:else if menu}

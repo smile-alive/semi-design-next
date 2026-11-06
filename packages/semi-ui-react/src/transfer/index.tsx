@@ -2,6 +2,7 @@ import type React from 'react';
 import { Fragment, Suspense, lazy, useCallback, useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { cssClasses, strings } from '@fibrae/semi-foundation/transfer/constants';
 import TransferFoundation, { type TransferAdapter, type BasicDataItem, type OnSortEndProps } from '@fibrae/semi-foundation/transfer/foundation';
 import '@fibrae/semi-foundation/transfer/transfer.scss';
@@ -391,23 +392,15 @@ export default function Transfer(rawProps: TransferProps) {
     const renderLeftList = (visibleItems: Array<ResolvedDataItem>) => {
         let content: Array<React.ReactNode>;
         if (type === strings.TYPE_GROUP_LIST) {
-            const groups = new Map<ResolvedDataItem['_parent'], Array<React.ReactNode>>();
-            visibleItems.forEach((item, index) => {
-                const groupItems = groups.get(item._parent) ?? [];
-                groupItems.push(renderLeftItem(item, index));
-                groups.set(item._parent, groupItems);
-            });
-            const groupIndexes = TransferFoundation.getGroupIndexes(data);
-            content = [...groups].map(([parentGroup, groupItems]) => {
-                const groupIndex = groupIndexes.get(parentGroup);
+            content = TransferFoundation.getGroups(visibleItems, data).map(({ index: groupIndex, title, items }) => {
                 const titleId = `${idPrefix}-group-${groupIndex}`;
                 return (
                     <div key={groupIndex} role="listitem">
                         <div id={titleId} className={`${prefixCls}-group-title`}>
-                            {parentGroup?.title}
+                            {title}
                         </div>
                         <div aria-labelledby={titleId} role="list">
-                            {groupItems}
+                            {items.map(({ item, index }) => renderLeftItem(item, index))}
                         </div>
                     </div>
                 );
@@ -476,7 +469,7 @@ export default function Transfer(rawProps: TransferProps) {
         }
 
         const headerCom = renderHeader({
-            totalContent: locale.total.replace('${total}', `${showNumber}`),
+            totalContent: formatLocale(locale.total, { total: showNumber }),
             allContent: leftContainsNotInSelected ? locale.selectAll : locale.clearSelectAll,
             onAllClick,
             type: 'left',
@@ -489,8 +482,7 @@ export default function Transfer(rawProps: TransferProps) {
         const pageSize = TransferFoundation.getPageSize(pagination);
         const totalPage = TransferFoundation.getTotalPage(pagination, filterData.length);
         const currentPage = TransferFoundation.getCurrentPage(pagination, state.leftCurrentPage, filterData.length);
-        const startIndex = (currentPage - 1) * pageSize;
-        const visibleData = pagination ? filterData.slice(startIndex, startIndex + pageSize) : filterData;
+        const visibleData = TransferFoundation.getVisibleData(filterData, pagination, currentPage);
 
         let content: React.ReactNode = null;
         if (loading) {
@@ -553,7 +545,7 @@ export default function Transfer(rawProps: TransferProps) {
         // the path keeps each label a node, as a label may be an element
         const label =
             isTree && showPath === true
-                ? item._path?.map((pathItem, i) => (
+                ? TransferFoundation.getPath(item).map((pathItem, i) => (
                       <Fragment key={pathItem.key}>
                           {i > 0 && ' > '}
                           {pathItem.label}
@@ -631,7 +623,7 @@ export default function Transfer(rawProps: TransferProps) {
             });
         }
         const headerCom = renderHeader({
-            totalContent: locale.selected.replace('${total}', `${selectedData.length}`),
+            totalContent: formatLocale(locale.selected, { total: selectedData.length }),
             allContent: locale.clear,
             onAllClick: foundation.handleClear,
             type: 'right',

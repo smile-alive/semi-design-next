@@ -4,9 +4,9 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { cssClasses } from '@fibrae/semi-foundation/code-highlight/constants';
 import CodeHighlightFoundation, { type CodeHighlightAdapter, type CodeHighlightBaseProps, type CodeHighlightBaseState } from '@fibrae/semi-foundation/code-highlight/index';
 import { register } from '@fibrae/semi-foundation/code-highlight/registry';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/code-highlight/code-highlight.scss';
 import type { ElementProps } from '../_base/element-props';
-import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 

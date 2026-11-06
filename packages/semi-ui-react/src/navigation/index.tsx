@@ -205,8 +205,6 @@ function Nav(rawProps: NavProps) {
         setCollapseAnimating(true);
     }
 
-    // no transitionend comes when the width does not animate; getAnimations flushes style, so it lists this
-    // commit's transition
     const navRef = useRef<HTMLElement>(null);
 
     const { onTransitionEnd } = rest as React.HTMLAttributes<HTMLElement>;
@@ -216,7 +214,7 @@ function Nav(rawProps: NavProps) {
 
     const handleTransitionEnd = (event: React.TransitionEvent<HTMLElement>) => {
         onTransitionEnd?.(event);
-        if (event.target === event.currentTarget && event.propertyName === 'width') {
+        if (NavigationFoundation.isWidthTransitionEnd(event)) {
             setCollapseAnimating(false);
         }
     };
@@ -225,8 +223,7 @@ function Nav(rawProps: NavProps) {
         if (!collapseAnimating) {
             return;
         }
-        const animatesWidth = navRef.current.getAnimations().some((animation) => animation instanceof CSSTransition && animation.transitionProperty === 'width');
-        if (!animatesWidth) {
+        if (!NavigationFoundation.isWidthAnimating(navRef.current)) {
             setCollapseAnimating(false);
         }
     }, [collapseAnimating]);

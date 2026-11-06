@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/carousel/constants';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import useLocale from '../locale/use-locale';
 import type { CarouselIndicatorProps } from './interface';
 
@@ -29,7 +30,7 @@ export default function CarouselIndicator({ type, size, theme, style, className,
                     })}
                     data-index={i}
                     aria-controls={getSlideId(i)}
-                    aria-label={locale.slideN.replace('${index}', String(i + 1))}
+                    aria-label={formatLocale(locale.slideN, { index: i + 1 })}
                     aria-selected={i === activeIndex}
                     role="tab"
                     tabIndex={i === activeIndex ? 0 : -1}

@@ -616,9 +616,8 @@ describe('Anchor', () => {
         expect(showTooltip).toEqual({ opts: { mouseEnterDelay: 10 } });
     });
 
-    it('adapter 查找节点的返回类型包含 null', () => {
-        expectTypeOf<ReturnType<AnchorAdapter['getAnchorNode']>>().toEqualTypeOf<HTMLElement | null>();
-        expectTypeOf<ReturnType<AnchorAdapter['getContentNode']>>().toEqualTypeOf<HTMLElement | null>();
+    it('adapter 的 getRoot 返回类型包含 null', () => {
+        expectTypeOf<ReturnType<AnchorAdapter['getRoot']>>().toEqualTypeOf<HTMLElement | null>();
     });
 
     it('position 接受 Tooltip 的全部位置', () => {

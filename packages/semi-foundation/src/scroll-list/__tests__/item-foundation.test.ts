@@ -1,6 +1,21 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
 import ItemFoundation, { type ScrollItemAdapter, type ScrollItemBaseProps, type ScrollItemBaseState } from '../item-foundation';
 
+describe('ItemFoundation.getItemText', () => {
+    const pad = (value: number) => String(value).padStart(2, '0');
+
+    it('只有选中行经过 transform，行自带的 transform 优先于列的', () => {
+        expect(ItemFoundation.getItemText({ value: 5 }, true, pad)).toBe('05');
+        expect(ItemFoundation.getItemText({ value: 5 }, false, pad)).toBe(5);
+        expect(ItemFoundation.getItemText({ value: 5, transform: (value) => `#${value}` }, true, pad)).toBe('#5');
+    });
+
+    it('有 text 时优先显示 text', () => {
+        expect(ItemFoundation.getItemText({ value: 5, text: 'five' }, false)).toBe('five');
+        expect(ItemFoundation.getItemText({ value: 5, text: 'five' }, true, (_value, text) => text.toUpperCase())).toBe('FIVE');
+    });
+});
+
 // jsdom has no layout: items are 36px rows and the scroll element is 180px tall
 function createColumn(initialProps: ScrollItemBaseProps) {
     let props = initialProps;

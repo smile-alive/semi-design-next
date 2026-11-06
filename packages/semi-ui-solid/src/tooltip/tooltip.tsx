@@ -1,7 +1,7 @@
 import { type Accessor, type JSX, type Ref, Show, batch, children, createEffect, createMemo, createSignal, createUniqueId, getOwner, mergeProps, on, onCleanup, onMount, runWithOwner, splitProps, untrack } from 'solid-js';
 import { Portal, isServer } from 'solid-js/web';
 import clsx from 'clsx';
-import { COLOR_SCHEME_SELECTOR, TRIGGER_EVENT_NAMES, canRoleCarryPopupState, colorSchemeOf, cssClasses, isBlockDisplay, numbers, popupTarget, strings, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
+import { COLOR_SCHEME_SELECTOR, POPUP_ID_ATTRIBUTE, TRIGGER_EVENT_NAMES, canRoleCarryPopupState, colorSchemeOf, cssClasses, isBlockDisplay, numbers, popupTarget, strings, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
 import TooltipFoundation, { type Position, type TooltipAdapter, type TooltipBaseProps, type TooltipBaseState } from '@fibrae/semi-foundation/tooltip/foundation';
 import { joinIds, warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
@@ -40,7 +40,7 @@ export type RenderContent = (props: RenderContentProps) => JSX.Element;
 export type TooltipTriggerProps = {
     ref: (element: HTMLElement) => void;
     tabIndex?: number | string;
-    'data-popupid'?: string;
+    [POPUP_ID_ATTRIBUTE]?: string;
     'aria-describedby'?: string;
     'aria-expanded'?: boolean | 'true' | 'false';
     'aria-haspopup'?: JSX.AriaAttributes['aria-haspopup'];
@@ -52,7 +52,7 @@ export type TooltipTriggerProps = {
  * - a value other than undefined wins; undefined means not passed;
  * - `null` leaves the attribute out; `'aria-describedby': null` also opts out of the description, whose id then
  *   reaches descendants through useTooltipDescription (Typography, Slider);
- * - a string `aria-describedby` / `data-popupid` is joined with Tooltip's id (space separated);
+ * - a string `aria-describedby` / `POPUP_ID_ATTRIBUTE` (`data-popupid`) is joined with Tooltip's id (space separated);
  * - `ref` is merged; `tabindex` is folded into `tabIndex`; other keys (handlers, class, style) pass through untouched.
  */
 export interface TriggerOwnProps {
@@ -60,7 +60,7 @@ export interface TriggerOwnProps {
     role?: string;
     tabIndex?: number | string | null;
     tabindex?: number | string | null;
-    'data-popupid'?: string;
+    [POPUP_ID_ATTRIBUTE]?: string;
     'aria-describedby'?: string | null;
     'aria-expanded'?: boolean | 'true' | 'false' | null;
     'aria-haspopup'?: JSX.AriaAttributes['aria-haspopup'] | null;
@@ -75,6 +75,8 @@ export interface TooltipHandle {
     /** Focuses the trigger (only with returnFocusOnClose and a non-custom trigger) */
     focusTrigger: () => void;
     getPopupId: () => string;
+    /** The popup element, null while it is not in the document */
+    getPopup: () => HTMLElement | null;
     /** Hides now and reports onVisibleChange(false); under a controlled `visible` it only reports */
     hide: () => void;
     /** Repositions the open popup at once; it already follows scrolling, resizing and trigger moves, a move a frame late */
@@ -143,7 +145,7 @@ const defaultProps = {
 } satisfies Partial<TooltipProps>;
 
 const prefix = cssClasses.PREFIX;
-const OWN_KEYS = ['ref', 'tabIndex', 'tabindex', 'data-popupid', 'aria-describedby', 'aria-expanded', 'aria-haspopup', 'aria-controls'] as const;
+const OWN_KEYS = ['ref', 'tabIndex', 'tabindex', POPUP_ID_ATTRIBUTE, 'aria-describedby', 'aria-expanded', 'aria-haspopup', 'aria-controls'] as const;
 // null is an explicit "leave it out"; the trigger's attribute is removed either way, and undefined types on any element
 const ownValue = <T,>(value: T | null) => (value === null ? undefined : value);
 
@@ -231,6 +233,9 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
 
     const popupId = () => props.wrapperId || `${prefix}-${id}`;
 
+    // a spread: a JSX attribute name cannot come from a constant
+    const popupIdAttribute = () => ({ [POPUP_ID_ATTRIBUTE]: popupId() });
+
     const nestedPopups = (popups = descendants) => [...popups].map((popup) => popup());
 
     // Reading `showArrow` from props creates its JSX again; the foundation only needs to know whether an arrow shows
@@ -314,7 +319,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
     // server HTML to claim
     const mounted = createMemo<boolean>((prev) => prev || Boolean(state().isInsert && state().portalTarget), false);
     const arrowChild = children(() => (mounted() ? (props.showArrow as JSX.Element) : undefined));
-    const handle: TooltipHandle = { focusTrigger: foundation.focusTrigger, getPopupId: popupId, hide: foundation.hide, rePosition: foundation.calcPosition };
+    const handle: TooltipHandle = { focusTrigger: foundation.focusTrigger, getPopupId: popupId, getPopup: () => container() ?? null, hide: foundation.hide, rePosition: foundation.calcPosition };
 
     // moving between the trigger, the popup and the popups opened from its content does not leave this Tooltip;
     // checked before the handler runs, since a zero mouseLeaveDelay hides at once
@@ -365,8 +370,8 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                 const value = local.tabIndex !== undefined ? local.tabIndex : local.tabindex;
                 return value !== undefined ? ownValue(value) : carries() ? 0 : undefined;
             },
-            get 'data-popupid'() {
-                return wrapped() ? local['data-popupid'] : joinIds(local['data-popupid'], popupId());
+            get [POPUP_ID_ATTRIBUTE]() {
+                return wrapped() ? local[POPUP_ID_ATTRIBUTE] : joinIds(local[POPUP_ID_ATTRIBUTE], popupId());
             },
             // an IDREF to a popup not in the document points at nothing
             get 'aria-describedby'() {
@@ -409,8 +414,8 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                         ref={trackWrapper}
                         class={clsx(`${prefix}-trigger-wrapper`, props.wrapperClassName)}
                         style={{ display: 'inline-block', width: block() ? '100%' : undefined, cursor: special() === strings.STATUS_DISABLED ? 'not-allowed' : undefined }}
-                        tabIndex={special() === strings.STATUS_LOADING ? -1 : 0}
-                        data-popupid={popupId()}
+                        tabindex={special() === strings.STATUS_LOADING ? -1 : 0}
+                        {...popupIdAttribute()}
                         aria-describedby={special() === strings.STATUS_DISABLED && props.role === 'tooltip' && state().isInsert ? popupId() : undefined}
                     >
                         {/* Exception to "isServer does not decide the markup": the effect above runs in the browser only, and inserting
@@ -433,8 +438,8 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                 ref={trackWrapper}
                 class={clsx(`${prefix}-trigger-wrapper`, props.wrapperClassName)}
                 style={{ display: textOnly() ? undefined : 'inline-block', width: block() ? '100%' : undefined, cursor: special() === strings.STATUS_DISABLED && wrapsSpecial() ? 'not-allowed' : undefined }}
-                tabIndex={focusableInside() ? -1 : 0}
-                data-popupid={popupId()}
+                tabindex={focusableInside() ? -1 : 0}
+                {...popupIdAttribute()}
                 aria-describedby={props.role === 'tooltip' && state().isInsert ? popupId() : undefined}
             >
                 {resolved()}

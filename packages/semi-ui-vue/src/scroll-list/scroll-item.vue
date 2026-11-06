@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends ScrollListItem = ScrollListItem">
     import { computed, useId, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
-    import ItemFoundation, { type ScrollItemAdapter, type ScrollItemBaseState } from '@fibrae/semi-foundation/scroll-list/item-foundation';
+    import ItemFoundation, { type ScrollItemAdapter, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/scroll-list/item-foundation';
     import '@fibrae/semi-foundation/scroll-list/scroll-list.scss';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
@@ -19,7 +19,7 @@
     const props = withDefaults(defineProps<ScrollItemProps<T> & /* @vue-ignore */ ElementProps<'div', keyof ScrollItemProps<T> | EmitHandlers<ScrollItemEmits<T>>>>(), {
         cycled: () => semiDefault('ScrollItem', 'cycled', false),
         list: semiGlobalDefault('ScrollItem', 'list'),
-        mode: () => semiDefault('ScrollItem', 'mode', 'wheel'),
+        mode: () => semiDefault('ScrollItem', 'mode', wheelMode),
         motion: () => semiDefault('ScrollItem', 'motion', true),
         selectedIndex: semiGlobalDefault('ScrollItem', 'selectedIndex'),
         transform: undefined,
@@ -42,7 +42,7 @@
     const list = computed(() => props.list ?? []);
     const selectedIndex = computed(() => props.selectedIndex ?? 0);
     const transform = computed(() => props.transform ?? readSemiDefault(semi, 'ScrollItem', 'transform'));
-    const isWheel = computed(() => props.mode === 'wheel');
+    const isWheel = computed(() => props.mode === wheelMode);
 
     const { foundation, state } = useFoundation<Foundation, Adapter, ScrollItemProps<T>, ScrollItemBaseState>(
         ItemFoundation,
@@ -82,7 +82,6 @@
         const items = (keyPrefix: string) =>
             list.value.map((item, index) => {
                 const selected = selectedIndex.value === index;
-                const itemTransform = typeof item.transform === 'function' ? item.transform : transform.value;
                 return {
                     key: `${keyPrefix}${index}`,
                     id: keyPrefix ? undefined : optionId(index),
@@ -95,7 +94,7 @@
                         [`${prefix}-item-sel`]: selected && !isWheel.value,
                         [`${prefix}-item-disabled`]: Boolean(item.disabled),
                     },
-                    text: selected && typeof itemTransform === 'function' ? itemTransform(item.value, item.text) : (item.text ?? item.value),
+                    text: ItemFoundation.getItemText(item, selected, transform.value),
                 };
             });
         if (!isWheel.value) {

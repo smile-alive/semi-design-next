@@ -122,13 +122,48 @@ describe('TransferFoundation 静态辅助函数', () => {
         expect(getSearchResult(items, 'zzz', undefined, 'treeList')).toEqual(new Set([1, 2]));
     });
 
-    it('toPublicItem 按类型去掉内部字段，showPath 时添加 fullPath', () => {
-        expect(TransferFoundation.toPublicItem({ ...items[0], _parent: { title: 'G' } }, 'groupList', false)).toEqual(items[0]);
+    it('getValuesAndItemsFromMap 对 treeList 去掉 _path 与 _isLeaf', () => {
         const [, japan] = _generateTreeData(tree());
-        const publicItem = TransferFoundation.toPublicItem(japan, 'treeList', true);
+        const [publicItem] = getValuesAndItemsFromMap(new Map([[japan.key, japan]]), 'treeList', true).items;
         expect(publicItem).not.toHaveProperty('_path');
         expect(publicItem).not.toHaveProperty('_isLeaf');
         expect(publicItem.fullPath.map((node) => node.label)).toEqual(['Asia', 'Japan']);
+    });
+
+    it('getVisibleData 分页时按当前页切片，不分页时返回全部', () => {
+        const rows = Array.from({ length: 25 }, (_, i) => ({ key: i }));
+        expect(TransferFoundation.getVisibleData(rows, { pageSize: 10 }, 3).map((row) => row.key)).toEqual([20, 21, 22, 23, 24]);
+        expect(TransferFoundation.getVisibleData(rows, undefined, 1)).toBe(rows);
+    });
+
+    it('getGroups 按组归并显示的项目，组序号取自完整列表，项目带显示位置', () => {
+        const data = getData(
+            [
+                { title: 'A', children: [{ key: 1, label: 'a1' }] },
+                {
+                    title: 'B',
+                    children: [
+                        { key: 2, label: 'b1' },
+                        { key: 3, label: 'b2' },
+                    ],
+                },
+            ],
+            'groupList'
+        );
+        const groups = TransferFoundation.getGroups(data.slice(1), data);
+        expect(groups.map(({ index, grouped, title }) => ({ index, grouped, title }))).toEqual([{ index: 1, grouped: true, title: 'B' }]);
+        expect(groups[0].items.map(({ item, index }) => [item.key, index])).toEqual([
+            [2, 0],
+            [3, 1],
+        ]);
+        const flat = getData([{ key: 1 }, { key: 2 }], 'list');
+        expect(TransferFoundation.getGroups(flat, flat)).toMatchObject([{ index: 0, grouped: false, items: [{ index: 0 }, { index: 1 }] }]);
+    });
+
+    it('getPath 给出 treeList 节点的路径，其他类型为空', () => {
+        const [, japan] = _generateTreeData(tree());
+        expect(TransferFoundation.getPath(japan).map((node) => node.label)).toEqual(['Asia', 'Japan']);
+        expect(TransferFoundation.getPath({ key: 1 })).toEqual([]);
     });
 
     it('getValuesAndItemsFromMap 对分组去掉 _parent，showPath 时添加 fullPath', () => {

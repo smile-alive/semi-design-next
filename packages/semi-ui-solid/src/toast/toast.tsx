@@ -98,7 +98,7 @@ export default function Toast(rawProps: ToastItemProps) {
 
     const style = (): JSX.CSSProperties | string => mergeStyles(local.style, { transform: getStackLayerTransform(local.positionInList) });
 
-    useNoticeClose(foundation, list, () => local.id);
+    useNoticeClose(foundation, list);
 
     // The wrapper is there without stack too: the list decides stacking from its newest toast, so a toast can switch
     // modes while shown, and a changed element structure would remount it, losing its state and focus.

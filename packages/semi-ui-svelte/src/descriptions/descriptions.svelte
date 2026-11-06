@@ -1,6 +1,6 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/descriptions/constants';
-    import DescriptionsFoundation from '@fibrae/semi-foundation/descriptions/foundation';
+    import { getHorizontalList } from '@fibrae/semi-foundation/descriptions/foundation';
     import '@fibrae/semi-foundation/descriptions/descriptions.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import type { DescriptionsData, DescriptionsProps } from './interface.js';
@@ -12,7 +12,7 @@
 
     const horizontalRows = $derived(
         layout === 'horizontal'
-            ? DescriptionsFoundation.getHorizontalList(
+            ? getHorizontalList(
                   data.map((item, index) => ({ item, index, hidden: item.hidden, span: item.span })),
                   column
               )

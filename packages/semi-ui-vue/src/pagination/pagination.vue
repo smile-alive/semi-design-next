@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { Text, computed, watch } from 'vue';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/pagination/constants';
     import PaginationFoundation, { type PaginationAdapter, type PaginationState } from '@fibrae/semi-foundation/pagination/foundation';
     import { ENTER_KEY, isComposing } from '@fibrae/semi-foundation/utils/key-code';
@@ -76,11 +77,11 @@
     const sizeOptions = computed(() =>
         PaginationFoundation.getPageSizeOpts(props.pageSizeOpts, state.value.pageSize).map((size) => ({
             value: size,
-            label: text.value.pageSize.replace('${pageSize}', String(size)),
+            label: formatLocale(text.value.pageSize, { pageSize: size }),
         }))
     );
 
-    const pageLabel = (page: number) => text.value.pageN.replace('${page}', String(page));
+    const pageLabel = (page: number) => formatLocale(text.value.pageN, { page });
 
     const isRest = (page: number | '...') => page === '...' && !props.disabled;
 
@@ -119,7 +120,7 @@
 <template>
     <ul v-if="!hidden" :class="[prefix, { [`${prefix}-small`]: props.size === 'small', [`${prefix}-disabled`]: props.disabled }]">
         <li v-if="props.showTotal && props.size !== 'small'" :class="`${prefix}-total`">
-            {{ text.total.replace('${total}', totalPageNum.toString()) }}
+            {{ formatLocale(text.total, { total: totalPageNum }) }}
         </li>
         <!-- one-item list: the slot runs once per render; the constant key keeps the button and its focus -->
         <li v-for="(prev, i) in [textView($slots.prevText)]" :key="i">

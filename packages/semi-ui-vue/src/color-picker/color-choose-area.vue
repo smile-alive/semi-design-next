@@ -5,6 +5,7 @@
     import ColorPickerFoundation from '@fibrae/semi-foundation/color-picker/foundation';
     import { hsvaToHslString, hsvaToRgba } from '@fibrae/semi-foundation/color-picker/utils/convert';
     import { round } from '@fibrae/semi-foundation/color-picker/utils/round';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import useFoundation from '../_base/use-foundation';
     import useLocale from '../locale/use-locale';
     import { toDragEvent } from './drag-event';
@@ -37,7 +38,7 @@
         return `rgba(${r},${g},${b},${a})`;
     });
 
-    const valueText = computed(() => i18n.value.locale.saturationBrightness.replace('${saturation}', String(round(props.hsva.s))).replace('${brightness}', String(round(props.hsva.v))));
+    const valueText = computed(() => formatLocale(i18n.value.locale.saturationBrightness, { saturation: round(props.hsva.s), brightness: round(props.hsva.v) }));
 
     const sliders = computed(
         () =>

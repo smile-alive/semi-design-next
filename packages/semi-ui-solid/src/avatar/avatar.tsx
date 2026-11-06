@@ -2,6 +2,7 @@ import { children, createEffect, createMemo, createSignal, Match, on, onCleanup,
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/avatar/constants';
 import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/avatar/foundation';
+import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/avatar/avatar.scss';
 import callHandler from '../_base/call-handler';
 import { splitControlAttrs } from '../_base/control-attrs';
@@ -45,7 +46,7 @@ function AvatarView(rawProps: AvatarProps) {
 
     // A clickable avatar has its own focus target, so what Tooltip injects (tabindex, aria-*) belongs there; on the
     // root it would add a second Tab stop
-    const [control, rest] = splitControlAttrs(attrs, (key): key is `aria-${string}` | 'tabIndex' | 'tabindex' => key.startsWith('aria-') || key === 'tabIndex' || key === 'tabindex');
+    const [control, rest] = splitControlAttrs(attrs, (key): key is `aria-${string}` | 'tabIndex' | 'tabindex' => isAriaKey(key) || key === 'tabIndex' || key === 'tabindex');
 
     const group = useAvatarGroupContext();
     const currentLayer = usePopupLayer();
@@ -62,7 +63,8 @@ function AvatarView(rawProps: AvatarProps) {
             notifyEnter: (event) => callHandler(base.getProps().onMouseEnter, event),
             notifyError: (event) => base.getProps().onError?.(event),
             notifyLeave: (event) => callHandler(base.getProps().onMouseLeave, event),
-            getTextWidths: () => (contentElement ? { container: contentElement.parentElement?.offsetWidth ?? 0, text: contentElement.offsetWidth } : null),
+            getAvatarElement: () => root() ?? null,
+            getTextElement: () => contentElement ?? null,
         })
     );
 

@@ -1,6 +1,7 @@
 import { For, type JSX, Show, mergeProps, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import Button from '@fibrae/semi-ui-solid/button/index';
 import Dropdown, { type DropdownProps } from '@fibrae/semi-ui-solid/dropdown/index';
 import { useLocale } from '@fibrae/semi-ui-solid/hooks';
@@ -42,7 +43,7 @@ export default function Mcp(rawProps: McpProps) {
             render={
                 <>
                     <div class={`${prefix}-footer-configure-mcp-header`}>
-                        <span class={`${prefix}-footer-configure-mcp-header-title`}>{locale().locale.selected.replace('${count}', String(count()))}</span>
+                        <span class={`${prefix}-footer-configure-mcp-header-title`}>{formatLocale(locale().locale.selected, { count: count() })}</span>
                         <Show when={local.showConfigure}>
                             <Button class={`${prefix}-footer-configure-mcp-header-config`} theme="outline" onClick={() => local.onConfigureButtonClick?.()}>
                                 {locale().locale.configure}

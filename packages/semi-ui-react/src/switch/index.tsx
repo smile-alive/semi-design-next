@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { omitBy, pickBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/switch/constants';
 import SwitchFoundation, { type SwitchAdapter, type SwitchState } from '@fibrae/semi-foundation/switch/foundation';
+import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/switch/switch.scss';
 import type { ElementProps } from '../_base/base';
@@ -96,7 +97,7 @@ export default function Switch(rawProps: SwitchProps) {
     const showUncheckedText = uncheckedText && !checked && size !== 'small';
 
     // the root has no role, so aria-* only reaches assistive technology on the input that carries role="switch"
-    const isAria = (_: unknown, key: string) => key.startsWith('aria-');
+    const isAria = (_: unknown, key: string) => isAriaKey(key);
 
     const controlAria = pickBy(others, isAria);
     const rest = omitBy(others, isAria);

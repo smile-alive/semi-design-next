@@ -2,7 +2,6 @@
     import { onMount } from 'svelte';
     import { cssClasses, strings } from '@fibrae/semi-foundation/anchor/constants';
     import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/anchor/foundation';
-    import { findAnchorTarget } from '@fibrae/semi-foundation/anchor/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/anchor/anchor.scss';
     import useDefaultProps from '../_base/use-default-props.js';
@@ -73,9 +72,8 @@
         foundationProps,
         () => ({ ...AnchorFoundation.getInitialState(), links: hrefs }),
         () => ({
-            getContainer: () => (getContainer ?? (() => window))() || window,
-            getAnchorNode: (selector) => root?.querySelector<HTMLElement>(selector) ?? null,
-            getContentNode: (link) => findAnchorTarget(root, link),
+            getContainer: () => getContainer?.() ?? null,
+            getRoot: () => root ?? null,
             notifyChange: (currentLink, previousLink) => onChange?.(currentLink, previousLink),
             notifyClick: (event, link) => onClick?.(event, link),
         })

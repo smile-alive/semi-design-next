@@ -124,6 +124,31 @@ function createNav(props, state) {
     };
 }
 
+describe('NavigationFoundation 宽度过渡', () => {
+    it('只认导航自身的 width 过渡结束', () => {
+        const nav = document.createElement('nav');
+        const child = document.createElement('div');
+        expect(NavigationFoundation.isWidthTransitionEnd({ target: nav, currentTarget: nav, propertyName: 'width' })).toBe(true);
+        expect(NavigationFoundation.isWidthTransitionEnd({ target: nav, currentTarget: nav, propertyName: 'opacity' })).toBe(false);
+        expect(NavigationFoundation.isWidthTransitionEnd({ target: child, currentTarget: nav, propertyName: 'width' })).toBe(false);
+    });
+
+    it('只有存在 width 的 CSSTransition 才算在播放宽度过渡', () => {
+        class FakeTransition {
+            transitionProperty: string;
+            constructor(transitionProperty: string) {
+                this.transitionProperty = transitionProperty;
+            }
+        }
+        vi.stubGlobal('CSSTransition', FakeTransition);
+        const navWith = (...animations: unknown[]) => ({ getAnimations: () => animations }) as unknown as Element;
+        expect(NavigationFoundation.isWidthAnimating(navWith(new FakeTransition('width')))).toBe(true);
+        expect(NavigationFoundation.isWidthAnimating(navWith(new FakeTransition('opacity'), {}))).toBe(false);
+        expect(NavigationFoundation.isWidthAnimating(navWith())).toBe(false);
+        expect(NavigationFoundation.isWidthAnimating(undefined)).toBe(false);
+    });
+});
+
 describe('NavigationFoundation 更新', () => {
     it('从 adapter 的规范化子项计算选中项祖先', () => {
         const { adapter, foundation } = createNav({}, getInitialState({}));

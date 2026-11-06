@@ -1,5 +1,6 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/avatar/constants';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import useDefaultProps from '../_base/use-default-props.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import AvatarGroupMore from './avatar-group-more.svelte';
@@ -18,7 +19,7 @@
     const overlapClass = $derived(`${prefix}-item-${overlapFrom}-${visibleCount}`);
 
     const moreLabel = $derived.by(() => {
-        const label = locale().locale.more.replace('${count}', String(overflow.length));
+        const label = formatLocale(locale().locale.more, { count: overflow.length });
         const names = overflow
             .map((entry) => entry.alt)
             .filter(Boolean)

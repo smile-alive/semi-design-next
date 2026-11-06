@@ -1,14 +1,12 @@
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import isEnterPress from '../utils/is-enter-press';
-import type { BreadcrumbItemInfo, Route } from './item-foundation';
+import type { Route } from './item-foundation';
 
 export interface BreadcrumbState {
     isCollapsed: boolean;
 }
 
-/** E is the host's item click event, which the foundation only passes through */
-export interface BreadcrumbAdapter<P extends object = object, E = unknown> extends DefaultAdapter<P, BreadcrumbState> {
-    notifyClick: (itemInfo: BreadcrumbItemInfo, event: E) => void;
+export interface BreadcrumbAdapter<P extends object = object> extends DefaultAdapter<P, BreadcrumbState> {
     /**
      * Called right before the more button disappears. A host that cannot hand focus over by node removal records it
      * here; the returned function runs once the expansion is committed.
@@ -16,7 +14,7 @@ export interface BreadcrumbAdapter<P extends object = object, E = unknown> exten
     holdFocus?: () => (() => void) | undefined;
 }
 
-export default class BreadcrumbFoundation<P extends object = object, E = unknown> extends BaseFoundation<BreadcrumbAdapter<P, E>, P, BreadcrumbState> {
+export default class BreadcrumbFoundation<P extends object = object> extends BaseFoundation<BreadcrumbAdapter<P>, P, BreadcrumbState> {
     static getInitialState(): BreadcrumbState {
         return { isCollapsed: true };
     }
@@ -43,6 +41,11 @@ export default class BreadcrumbFoundation<P extends object = object, E = unknown
         return { start: activeIndex + 1, end: activeIndex + afterCount };
     }
 
+    /** Whether the more button stands in for the range; an empty range (`end < start`) has nothing to hide */
+    static shouldCollapse(autoCollapse: boolean | undefined, { start, end }: { start: number; end: number }, isCollapsed: boolean) {
+        return Boolean(autoCollapse) && end >= start && isCollapsed;
+    }
+
     /** `activeIndex` marks the current item; without it the last one is current */
     static isActive(index: number, total: number, activeIndex?: number) {
         return activeIndex !== undefined ? activeIndex === index : index === total - 1;
@@ -53,10 +56,6 @@ export default class BreadcrumbFoundation<P extends object = object, E = unknown
         const hidden = collapsed && (hasCustomMore || moreType === 'popover') && index >= start && index <= end;
         return index !== total - 1 && !hidden;
     }
-
-    handleClick = (info: BreadcrumbItemInfo, event: E) => {
-        this.adapter.notifyClick(info, event);
-    };
 
     handleExpand = () => {
         this.setState({ isCollapsed: false }, this.adapter.holdFocus?.());

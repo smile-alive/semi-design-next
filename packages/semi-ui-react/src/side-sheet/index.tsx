@@ -154,7 +154,6 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
                 disabledBodyScroll: () => runtime.disableBodyScroll(isModal()),
                 enabledBodyScroll: () => runtime.scroll.release(),
                 notifyCancel: (e) => base.getProps().onCancel?.(e),
-                notifyVisibleChange: (visible) => base.getProps().afterVisibleChange?.(visible),
                 openLayer: (onEscape) => runtime.layer.hold(() => openLayer({ element: runtime.root, modal: isModal(), onEscape })),
                 closeLayer: () => runtime.layer.release(),
                 // shortcut: content under a mask confined to a custom container stays Tab-reachable,
@@ -163,7 +162,6 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
                 releaseFocus: () => runtime.focusScope.deactivate(),
                 // a user who moved on to the page next to a non-modal sheet keeps that focus
                 restoreFocus: () => runtime.focusScope.restoreIfAllowed(runtime.dialog, isModal(), true),
-                toggleDisplayNone: (hidden) => setDisplayNone(hidden),
             };
         },
         context
@@ -195,14 +193,14 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
     const wrapperStyle: CSSProperties = inBody ? { zIndex } : { zIndex, position: 'static' };
     const shouldRender = visible || keepDOM || (motion && !hidden);
 
-    const updateState = () => foundation.toggleDisplayNone(!visible);
+    const updateState = () => setDisplayNone(!visible);
 
-    useDidUpdate(displayNone, (isHidden) => foundation.onVisibleChange(!isHidden));
+    useDidUpdate(displayNone, (isHidden) => afterVisibleChange?.(!isHidden));
     useLayoutEffect(() => runtime.setShown(!hidden), [runtime, hidden]);
 
     useRealUnmount(() => {
         if (runtime.takeShown()) {
-            foundation.onVisibleChange(false);
+            afterVisibleChange?.(false);
         }
     });
 

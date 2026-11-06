@@ -8,7 +8,7 @@
     import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
     import { openLayer } from '@fibrae/semi-foundation/utils/layer';
     import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-    import { splitControlAttrs } from '../_base/control-attrs';
+    import { isAriaKey, splitControlAttrs } from '../_base/control-attrs';
     import useFoundation from '../_base/use-foundation';
     import useRecordFocus from '../_base/use-record-focus';
     import type { ModalContentProps, ModalSlots } from './interface';
@@ -94,7 +94,7 @@
     });
 
     // F12: aria-* and role go to the dialog element, style to the .semi-modal box, the rest to the outer element
-    const isDialogKey = (key: string) => key === 'role' || key.startsWith('aria-');
+    const isDialogKey = (key: string) => key === 'role' || isAriaKey(key);
 
     const rootAttrs = () => {
         const { style: _style, ...rest } = splitControlAttrs(attrs, isDialogKey).root;

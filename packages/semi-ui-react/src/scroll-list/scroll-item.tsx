@@ -2,12 +2,11 @@ import type React from 'react';
 import { useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
-import ItemFoundation, { type Item, type ScrollItemAdapter, type ScrollItemBaseState } from '@fibrae/semi-foundation/scroll-list/item-foundation';
+import ItemFoundation, { type Item, type ScrollItemAdapter, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/scroll-list/item-foundation';
 import type { ElementProps, Motion } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 
-const wheelMode = 'wheel';
 const prefix = cssClasses.PREFIX;
 
 export interface ScrollItemProps<T extends Item> extends ElementProps<'div', 'onSelect' | 'children'> {
@@ -85,8 +84,7 @@ export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> 
     const renderItems = (keyPrefix: string) =>
         list.map((item, index) => {
             const selected = selectedIndex === index;
-            const itemTransform = typeof item.transform === 'function' ? item.transform : transform;
-            const text = selected && typeof itemTransform === 'function' ? itemTransform(item.value, item.text) : (item.text ?? item.value);
+            const text = ItemFoundation.getItemText(item, selected, transform);
             return (
                 <li
                     key={`${keyPrefix}${index}`}

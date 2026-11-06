@@ -3,6 +3,7 @@ import { cloneElement, isValidElement, useEffect, useId, useImperativeHandle, us
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/carousel/constants';
 import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/carousel/foundation';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import '@fibrae/semi-foundation/carousel/carousel.scss';
 import flattenChildren from '../_base/flatten-children';
 import useDefaultProps from '../_base/use-default-props';
@@ -113,16 +114,11 @@ export default function Carousel(rawProps: CarouselProps) {
             style={style}
             onBlur={(e) => {
                 rest.onBlur?.(e);
-                if (!e.currentTarget.contains(e.relatedTarget)) {
-                    foundation.handleFocusLeave();
-                }
+                foundation.handleFocusOut(e);
             }}
             onFocus={(e) => {
                 rest.onFocus?.(e);
-                // only keyboard focus pauses: a mouse click on an arrow focuses it too
-                if (e.target.matches(':focus-visible')) {
-                    foundation.handleKeyboardFocus();
-                }
+                foundation.handleFocusIn(e);
             }}
             onMouseEnter={(e) => {
                 rest.onMouseEnter?.(e);
@@ -149,7 +145,7 @@ export default function Carousel(rawProps: CarouselProps) {
                         : {
                               role: 'group',
                               'aria-roledescription': locale.slide,
-                              'aria-label': child.props['aria-label'] ?? locale.slideN.replace('${index}', String(index + 1)),
+                              'aria-label': child.props['aria-label'] ?? formatLocale(locale.slideN, { index: index + 1 }),
                           };
                     return cloneElement(child, {
                         ...a11yProps,

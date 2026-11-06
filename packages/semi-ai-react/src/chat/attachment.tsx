@@ -1,8 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
-import { strings, cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
 import { getFileType, isImageFile } from '@fibrae/semi-ai-foundation/file-suffix';
-import { isUploadProgressVisible } from '@fibrae/semi-ai-foundation/upload-status';
+import { isUploadFailed, isUploadProgressVisible } from '@fibrae/semi-ai-foundation/upload-status';
 import { IconAlertCircle, IconBriefStroked, IconClear } from '@fibrae/semi-icons-react';
 import { useLocale } from '@fibrae/semi-ui-react/hooks';
 import Image from '@fibrae/semi-ui-react/image/index';
@@ -63,7 +63,7 @@ function Attachment({ attachment, onClear, showClear = true, className }: Attach
                             </button>
                         )}
                         {isUploadProgressVisible(item) && <Progress type="circle" className={`${PREFIX_ATTACHMENT}-process`} aria-label={locale.uploadProgress} percent={item.percent} size="small" width={30} />}
-                        {[strings.FILE_STATUS.UPLOAD_FAIL, strings.FILE_STATUS.VALID_FAIL].includes(item.status) && <IconAlertCircle className={`${PREFIX_ATTACHMENT}-fail`} />}
+                        {isUploadFailed(item.status) && <IconAlertCircle className={`${PREFIX_ATTACHMENT}-fail`} />}
                     </div>
                 );
             })}

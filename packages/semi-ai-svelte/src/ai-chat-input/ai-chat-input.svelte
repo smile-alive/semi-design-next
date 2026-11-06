@@ -104,7 +104,6 @@
     const prefix = cssClasses.PREFIX;
 
     const FILE_ICONS: Record<string, Component<any>> = {
-        file: IconWord,
         word: IconWord,
         code: IconCode,
         excel: IconExcel,
@@ -355,9 +354,7 @@
                                         <img alt="" class={`${prefix}-reference-img`} src={item.url} />
                                     {:else}
                                         <span class={[`${prefix}-ref-icon`, `${prefix}-ref-icon-${iconType(item)}`, `${prefix}-reference-icon`]}>
-                                            {#if iconType(item) !== 'text'}
-                                                <Icon size="small" />
-                                            {/if}
+                                            <Icon size="small" />
                                         </span>
                                     {/if}
                                 {/if}
@@ -394,9 +391,7 @@
                             <img alt="" class={`${prefix}-attachment-img`} src={item.url} />
                         {:else}
                             <span class={[`${prefix}-attachment-icon`, `${prefix}-ref-icon`, `${prefix}-ref-icon-${iconType(item)}`]}>
-                                {#if iconType(item) !== 'text'}
-                                    <Icon size="large" />
-                                {/if}
+                                <Icon size="large" />
                             </span>
                         {/if}
                         <div class={`${prefix}-attachment-content`}>
@@ -437,7 +432,7 @@
             {showPlaceholderWhenSkillOnly}
         />
         <div class={[`${prefix}-footer`, { [`${prefix}-footer-round`]: round }]}>
-            <div class={`${prefix}-footer-configure`}>
+            <div class={cssClasses.FOOTER_CONFIGURE}>
                 <Configure bind:this={configure} onChange={foundation.onConfigureChange}>
                     {@render configureArea?.()}
                 </Configure>

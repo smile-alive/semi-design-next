@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, onMounted, shallowRef, useId, watch } from 'vue';
-    import { format, parseISO } from 'date-fns';
+    import { format } from 'date-fns';
     import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
     import MonthFoundation, { type MonthDayInfo } from '@fibrae/semi-foundation/date-picker/month-foundation';
     import useToday from '../calendar/use-today';
@@ -75,19 +75,18 @@
 
     // APG grid: focus stays on the grid; the keys move the active day, Enter or Space selects it
     const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
+        const action = MonthFoundation.getKeyAction(event, { activeDate: activeDate.value, month: props.month, weekStartsOn: props.weekStartsOn, rtl: config.value.direction === 'rtl' });
+        if (!action) {
+            return;
+        }
+        event.preventDefault();
+        if (action.type === 'select') {
             selectDay(weeks.value.flat().find((day) => day.fullDate === activeDate.value));
             return;
         }
-        const target = MonthFoundation.getKeyboardTargetDate(event, parseISO(activeDate.value), props.weekStartsOn, config.value.direction === 'rtl');
-        if (target) {
-            event.preventDefault();
-            keyboardDate.value = format(target, strings.FORMAT_FULL_DATE);
-            const switchType = MonthFoundation.getMonthSwitch(target, props.month);
-            if (switchType) {
-                emit('monthSwitch', switchType);
-            }
+        keyboardDate.value = action.date;
+        if (action.monthSwitch) {
+            emit('monthSwitch', action.monthSwitch);
         }
     };
 

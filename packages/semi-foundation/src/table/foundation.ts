@@ -3,6 +3,7 @@ import { isEqual, merge, pick } from 'es-toolkit';
 import { get } from 'es-toolkit/compat';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import type { BaseCheckboxProps } from '../checkbox/checkbox-foundation';
+import { formatLocale } from '../locale/format';
 import { convertDataToEntities, calcCheckedKeysForChecked, calcCheckedKeysForCheckedKeys, calcCheckedKeysForUnchecked } from '../tree/tree-util';
 import { differenceUnique, withOrderSort } from '../utils/array';
 import isObject from '../utils/is-object';
@@ -960,7 +961,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         const currentEnd = Math.min(currentPage * pageSize, total);
 
         if (formatPageText || (formatPageText !== false && defaultPageText && total > 0)) {
-            info = typeof formatPageText === 'function' ? formatPageText({ currentStart, currentEnd, total }) : defaultPageText.replace('${currentStart}', String(currentStart)).replace('${currentEnd}', String(currentEnd)).replace('${total}', String(total));
+            info = typeof formatPageText === 'function' ? formatPageText({ currentStart, currentEnd, total }) : formatLocale(defaultPageText, { currentStart, currentEnd, total });
         }
 
         return info;

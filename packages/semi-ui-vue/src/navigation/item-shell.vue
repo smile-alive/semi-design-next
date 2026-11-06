@@ -4,7 +4,7 @@
     import { cssClasses, strings } from '@fibrae/semi-foundation/navigation/constants';
     import ItemFoundation, { type ItemAdapter, countPlaceholderIcons } from '@fibrae/semi-foundation/navigation/item-foundation';
     import '@fibrae/semi-foundation/navigation/navigation.scss';
-    import { splitControlAttrs } from '../_base/control-attrs';
+    import { isAriaKey, splitControlAttrs } from '../_base/control-attrs';
     import { nativeTag } from '../_base/native-tag';
     import SlotFragment from '../_base/slot-fragment';
     import slotNodes, { hasSlotContent } from '../_base/slot-nodes';
@@ -85,7 +85,7 @@
         })
     );
 
-    const isControlKey = (key: string) => key.startsWith('aria-') || key === 'tabindex';
+    const isControlKey = (key: string) => isAriaKey(key) || key === 'tabindex';
 
     const handleClick = (event: MouseEvent) => foundation.handleClick(event);
 

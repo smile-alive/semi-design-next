@@ -1,8 +1,8 @@
-import { addDays, addMonths, addYears, clamp, differenceInCalendarMonths, endOfMonth, endOfWeek, parseISO, startOfMonth, startOfWeek } from 'date-fns';
+import { addDays, addMonths, addYears, clamp, differenceInCalendarMonths, endOfMonth, endOfWeek, format, parseISO, startOfMonth, startOfWeek } from 'date-fns';
 import getDayOfWeek from './_utils/get-day-of-week';
 import getMonthTable, { type WeekStartNumber } from './_utils/get-month-table';
 import { isAfter, isBefore, isBetween, isSameDay } from './_utils/index';
-import { cssClasses } from './constants';
+import { cssClasses, strings } from './constants';
 import type { RenderDateType, RenderFullDateType } from './foundation';
 import type { YearMonthChangeType } from './months-grid-foundation';
 
@@ -12,6 +12,8 @@ const MONTH_SWITCHES: Record<number, YearMonthChangeType> = {
     1: 'nextMonth',
     12: 'nextYear',
 };
+
+export type MonthKeyAction = { type: 'select' } | { type: 'move'; date: string; monthSwitch?: YearMonthChangeType };
 
 export interface FocusRecords {
     rangeStart: boolean;
@@ -167,20 +169,12 @@ export default class CalendarMonthFoundation {
         };
     }
 
-    static getWeekdays(weekStartsOn: WeekStartNumber) {
-        return getDayOfWeek({ weekStartsOn });
-    }
-
-    static getMonthTable(month: Date, weekStartsOn: WeekStartNumber): MonthTable {
-        return getMonthTable(month, weekStartsOn);
-    }
-
     /**
-     * The day a key moves the active day to (APG date picker dialog): the arrows by a day or a week, Home and End to
-     * the ends of the week, PageUp and PageDown by a month, or by a year with Shift. Home and End stay in the month,
-     * because the grid leaves the cells of other months empty. Returns null for any other key.
+     * The day a key moves the active day to: the arrows by a day or a week, Home and End to the ends of the week,
+     * PageUp and PageDown by a month, or by a year with Shift. Home and End stay in the month, because the grid leaves
+     * the cells of other months empty.
      */
-    static getKeyboardTargetDate({ key, shiftKey }: Pick<KeyboardEvent, 'key' | 'shiftKey'>, active: Date, weekStartsOn: WeekStartNumber, rtl = false): Date | null {
+    static #getKeyboardTargetDate({ key, shiftKey }: Pick<KeyboardEvent, 'key' | 'shiftKey'>, active: Date, weekStartsOn: WeekStartNumber, rtl: boolean): Date | null {
         const month = { start: startOfMonth(active), end: endOfMonth(active) };
         switch (key) {
             case 'ArrowLeft':
@@ -204,9 +198,27 @@ export default class CalendarMonthFoundation {
         }
     }
 
-    /** The panel switch that shows `target`, a day the keyboard moved to from `month`; none within the month */
-    static getMonthSwitch(target: Date, month: Date): YearMonthChangeType | undefined {
-        return MONTH_SWITCHES[differenceInCalendarMonths(target, month)];
+    static getWeekdays(weekStartsOn: WeekStartNumber) {
+        return getDayOfWeek({ weekStartsOn });
+    }
+
+    static getMonthTable(month: Date, weekStartsOn: WeekStartNumber): MonthTable {
+        return getMonthTable(month, weekStartsOn);
+    }
+
+    /**
+     * What a key does in the grid (APG date picker dialog): Enter and Space select the active day; the other keys move
+     * it, `monthSwitch` being the panel switch needed when it leaves the month. Returns null for any other key.
+     */
+    static getKeyAction(event: Pick<KeyboardEvent, 'key' | 'shiftKey'>, { activeDate, month, weekStartsOn, rtl = false }: { activeDate: string; month: Date; weekStartsOn: WeekStartNumber; rtl?: boolean }): MonthKeyAction | null {
+        if (event.key === 'Enter' || event.key === ' ') {
+            return { type: 'select' };
+        }
+        const target = CalendarMonthFoundation.#getKeyboardTargetDate(event, parseISO(activeDate), weekStartsOn, rtl);
+        if (!target) {
+            return null;
+        }
+        return { type: 'move', date: format(target, strings.FORMAT_FULL_DATE), monthSwitch: MONTH_SWITCHES[differenceInCalendarMonths(target, month)] };
     }
 
     /**

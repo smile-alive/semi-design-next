@@ -3,6 +3,7 @@
     import type { Attachment } from 'svelte/attachments';
     import { cssClasses, strings } from '@fibrae/semi-foundation/avatar/constants';
     import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/avatar/foundation';
+    import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/avatar/avatar.scss';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import { getPopupLayerContext } from '../_base/popup-layer.js';
@@ -70,7 +71,8 @@
             notifyError: (event) => onError?.(event),
             notifyEnter: (event) => onMouseEnter?.(event),
             notifyLeave: (event) => onMouseLeave?.(event),
-            getTextWidths: () => (contentEl ? { container: contentEl.parentElement?.offsetWidth ?? 0, text: contentEl.offsetWidth } : null),
+            getAvatarElement: () => avatarEl ?? null,
+            getTextElement: () => contentEl ?? null,
         })
     );
 
@@ -87,7 +89,7 @@
     const wrapped = $derived(Boolean(topSlot || bottomSlot || topSlotText || bottomSlotText || border));
 
     // A clickable avatar has its own focus target, so aria-*, tabindex and attachments given to the avatar belong there
-    const attrs = $derived(clickable ? splitControlAttrs(rest, (key) => key === 'tabindex' || key.startsWith('aria-')) : { root: rest, control: {} });
+    const attrs = $derived(clickable ? splitControlAttrs(rest, (key) => key === 'tabindex' || isAriaKey(key)) : { root: rest, control: {} });
 
     const rootAttrs = $derived.by(() => {
         const { style: _style, ...root } = attrs.root;

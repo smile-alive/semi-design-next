@@ -4,6 +4,7 @@
     import type { Editor } from '@tiptap/vue-3';
     import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
     import { type Level, type TextRange, clearSelectionHighlight, confirmLink, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/sidebar/file-extensions';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import {
         IconAlignCenter,
         IconAlignJustify,
@@ -125,7 +126,7 @@
                         v-for="(icon, index) in headingIcons"
                         :key="index"
                         :active="state.headingLevel === index + 1"
-                        :aria-label="text.headingLevel.replace('${level}', String(index + 1))"
+                        :aria-label="formatLocale(text.headingLevel, { level: index + 1 })"
                         :class="[
                             `${prefix}-menu-bar-dropdown-item`,
                             {

@@ -1,5 +1,6 @@
 import { type JSX, For, Show, Suspense, batch, children, createEffect, createMemo, createSignal, on, createUniqueId, lazy, mergeProps, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { cssClasses } from '@fibrae/semi-foundation/tag-input/constants';
 import TagInputFoundation, { type OnSortEndProps, type TagInputAdapter, type TagInputBaseState, type TagSortIds } from '@fibrae/semi-foundation/tag-input/foundation';
 import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/tag-input/utils/tag-focus';
@@ -362,8 +363,7 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
                     [`${prefixCls}-wrapper-tag-icon`]: showIconHandler() && !DragHandle,
                 })}
                 // only the closable tag is a button that takes a name; a disabled one is static text.
-                // A function replacer keeps `$&` and `$$` in the value literal
-                aria-label={local.disabled ? undefined : tagLocale().locale.closableTag.replace('${tag}', () => itemProps.value)}
+                aria-label={local.disabled ? undefined : formatLocale(tagLocale().locale.closableTag, { tag: itemProps.value })}
                 closable={!local.disabled}
                 color="white"
                 size={local.size === 'small' ? 'small' : 'large'}

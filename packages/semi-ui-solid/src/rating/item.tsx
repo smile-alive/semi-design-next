@@ -1,5 +1,6 @@
 import { type JSX, type ResolvedChildren, Show, children, createMemo } from 'solid-js';
 import clsx from 'clsx';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { type strings, cssClasses } from '@fibrae/semi-foundation/rating/constants';
 import RatingFoundation from '@fibrae/semi-foundation/rating/foundation';
 import { IconStar } from '@fibrae/semi-icons-solid';
@@ -45,13 +46,7 @@ export default function Item(props: RatingItemProps) {
 
     const isEmpty = () => props.index === props.count;
 
-    // a function replacer keeps `$&` and `$$` in a custom unit literal
-    const itemName = (n: number) => {
-        const unit = props.unitOf(n);
-        return locale()
-            .locale.itemLabel.replace('${value}', String(n))
-            .replace('${unit}', () => unit);
-    };
+    const itemName = (n: number) => formatLocale(locale().locale.itemLabel, { value: n, unit: props.unitOf(n) });
 
     const radioValueOf = (target: EventTarget | null) => (target === firstRadio ? model().firstValue : target === secondRadio ? model().secondValue : undefined);
 

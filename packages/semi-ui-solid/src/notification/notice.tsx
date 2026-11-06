@@ -102,7 +102,7 @@ export default function Notice(rawProps: NoticeProps) {
 
     const typeIcon = () => iconMap[local.type as keyof typeof iconMap];
 
-    useNoticeClose(foundation, list, () => local.id);
+    useNoticeClose(foundation, list);
 
     return (
         <div

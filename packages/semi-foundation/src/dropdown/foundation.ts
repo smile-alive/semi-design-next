@@ -1,5 +1,5 @@
 import BaseFoundation from '../base/foundation';
-import { getMenuButton, handlePrevent, isTextEditor, setFocusToFirstItem, setFocusToLastItem } from '../utils/a11y';
+import { getPopupTrigger, handlePrevent, isTextEditor, setFocusToFirstItem, setFocusToLastItem } from '../utils/a11y';
 import FocusTrapHandle from '../utils/focus-handle';
 import { strings } from './constants';
 import type { DropdownContextAdapter } from './menu-foundation';
@@ -7,7 +7,7 @@ import type { DropdownContextAdapter } from './menu-foundation';
 /** The context is the one around the Dropdown: a Dropdown inside a menu reads that menu's DropdownMenuContext */
 export interface DropdownAdapter<P extends DropdownBaseProps = DropdownBaseProps> extends DropdownContextAdapter<P, DropdownBaseState> {
     notifyVisibleChange(visible: boolean): void;
-    /** The Tooltip popup element (`[popover]`), null while it is not in the document */
+    /** The Tooltip popup element the menu renders in, null while it is not in the document */
     getPopup(): HTMLElement | null;
     /** Hides the popup through Tooltip's hide(), without moving focus: a controlled one only reports the request */
     hidePopup(): void;
@@ -112,7 +112,7 @@ export default class DropdownFoundation<P extends DropdownBaseProps = DropdownBa
      */
     handleOpened = () => {
         const popup = this.adapter.getPopup();
-        const trigger = popup && getMenuButton(popup.id, popup.getRootNode() as ParentNode);
+        const trigger = popup && getPopupTrigger(popup.id, popup.getRootNode() as ParentNode);
         // a key press that did not open the menu (disableFocusListener) must not pull focus away when the pointer
         // opens it later, so the request only holds while focus is still on the trigger
         const focusOnOpen = trigger?.contains(FocusTrapHandle.getActiveElement(trigger)) ? this.#focusOnOpen : null;

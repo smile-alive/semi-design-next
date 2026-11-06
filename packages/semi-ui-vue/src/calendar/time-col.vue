@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import useLocale from '../locale/use-locale';
     import type { CalendarSlots } from './interface';
 
@@ -10,7 +11,7 @@
     const prefixCls = `${cssClasses.PREFIX}-time`;
     const hours = Array.from({ length: 24 }, (_, hour) => hour);
 
-    const label = (hour: number) => (hour < 12 ? i18n.value.locale.AM.replace('${time}', String(hour)) : i18n.value.locale.PM.replace('${time}', String(hour === 12 ? hour : hour - 12)));
+    const label = (hour: number) => formatLocale(hour < 12 ? i18n.value.locale.AM : i18n.value.locale.PM, { time: hour <= 12 ? hour : hour - 12 });
 </script>
 
 <template>

@@ -1,4 +1,4 @@
-import { getFileType } from '../file-suffix';
+import { getFileKind, getFileType } from '../file-suffix';
 import { strings } from './constants';
 import type { AIChatInputBaseProps, AIChatInputState } from './foundation';
 import type { Attachment, BaseSkill, Reference } from './interface';
@@ -48,64 +48,7 @@ export function getPastedFiles(clipboardData?: DataTransfer | null) {
 }
 
 export function getContentType(type: string) {
-    const objMap = new Map([
-        ['docx', 'word'],
-        ['doc', 'word'],
-        ['txt', 'word'],
-        ['epub', 'word'],
-        ['mobi', 'word'],
-        ['js', 'code'],
-        ['ts', 'code'],
-        ['jsx', 'code'],
-        ['tsx', 'code'],
-        ['java', 'code'],
-        ['py', 'code'],
-        ['c', 'code'],
-        ['cpp', 'code'],
-        ['go', 'code'],
-        ['rs', 'code'],
-        ['php', 'code'],
-        ['sql', 'code'],
-        ['html', 'code'],
-        ['css', 'code'],
-        ['scss', 'code'],
-        ['less', 'code'],
-        ['md', 'code'],
-        ['json', 'code'],
-        ['xlsx', 'excel'],
-        ['xls', 'excel'],
-        ['pptx', 'ppt'],
-        ['ppt', 'ppt'],
-        ['mp4', 'video'],
-        ['mkv', 'video'],
-        ['avi', 'video'],
-        ['mov', 'video'],
-        ['wmv', 'video'],
-        ['flv', 'video'],
-        ['webm', 'video'],
-        ['3gp', 'video'],
-        ['flac', 'audio'],
-        ['wav', 'audio'],
-        ['alac', 'audio'],
-        ['ape', 'audio'],
-        ['mp3', 'audio'],
-        ['aac', 'audio'],
-        ['ogg', 'audio'],
-        ['wma', 'audio'],
-        ['m4a', 'audio'],
-        ['amr', 'audio'],
-        ['mid', 'audio'],
-        ['midi', 'audio'],
-        ['png', 'image'],
-        ['jpg', 'image'],
-        ['jpeg', 'image'],
-        ['gif', 'image'],
-        ['bmp', 'image'],
-        ['webp', 'image'],
-        ['pdf', 'pdf'],
-    ]);
-    const result = objMap.get(type) ?? 'unknown';
-    return result;
+    return getFileKind(type) ?? 'unknown';
 }
 
 export function transformSelectSlot({ attrs = {} }: any) {

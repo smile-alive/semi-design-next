@@ -4,7 +4,7 @@ import getYearMonthFromValue from '@fibrae/semi-foundation/date-picker/_utils/ge
 import { isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
 import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/date-picker/constants';
 import DatePickerFoundation, { type DatePickerAdapter, type DatePickerFoundationProps, type DatePickerFoundationState, type DayStatusType, type DisabledDateOptions, type PresetType, type RangeInput, type Type } from '@fibrae/semi-foundation/date-picker/foundation';
-import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
+import { isInnerControlKey, namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import '@fibrae/semi-foundation/date-picker/date-picker.scss';
 import callHandler from '../_base/call-handler';
@@ -12,7 +12,6 @@ import { omitFormInjected } from '../_base/control-attrs';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
-import { namedRole } from '../_base/named-role';
 import { usePopupLayer } from '../_base/popup-layer';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
@@ -352,7 +351,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
 
     const inputDisabled = () => Boolean(local.disabled || (local.insetInput && state().triggerDisabled));
 
-    const position = () => local.position ?? (config().direction === 'rtl' ? 'bottomRight' : 'bottomLeft');
+    const position = () => DatePickerFoundation.getPosition(local.position, config().direction);
 
     const hasPresets = () => Boolean(local.presets?.length);
 

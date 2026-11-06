@@ -6,6 +6,7 @@
     import { type DateObj, toPercent } from '@fibrae/semi-foundation/calendar/event-util';
     import CalendarFoundation, { type ParsedRangeEvent } from '@fibrae/semi-foundation/calendar/foundation';
     import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/calendar/month-foundation';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import useClickOutside from '../_base/use-click-outside.svelte.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
@@ -114,7 +115,7 @@
             };
         };
 
-    const remaining = (count: number) => locale().locale.remaining.replace('${remained}', String(count));
+    const remaining = (count: number) => formatLocale(locale().locale.remaining, { remained: count });
 
     // APG dialog: Esc and the close button hand focus back to "more" instead of dropping it with the card
     const closeCardToMore = (closeEvent: MouseEvent | KeyboardEvent, key: string) => {

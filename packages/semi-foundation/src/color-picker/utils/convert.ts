@@ -126,10 +126,6 @@ export function rgbaStringToRgba(rgbaString: string): RgbaColor {
         a: match[7] === undefined ? 1 : Number(match[7]) / (match[8] ? 100 : 1),
     };
 }
-export const rgbStringToRgba = rgbaStringToRgba;
-
-export const rgbStringToHsva = rgbaStringToHsva;
-
 function format(number: number) {
     const hex = Math.round(number).toString(16);
     return hex.length < 2 ? '0' + hex : hex;

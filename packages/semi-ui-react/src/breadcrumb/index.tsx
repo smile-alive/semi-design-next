@@ -20,8 +20,8 @@ import type { TooltipProps } from '../tooltip';
 import { BreadContext, type BreadContextType } from './bread-context';
 import BreadcrumbItem, { type BreadcrumbItemInfo, type BreadcrumbItemProps, type RouteProps } from './item';
 
-type Foundation = BreadcrumbFoundation<BreadcrumbProps, React.MouseEvent>;
-type Adapter = BreadcrumbAdapter<BreadcrumbProps, React.MouseEvent>;
+type Foundation = BreadcrumbFoundation<BreadcrumbProps>;
+type Adapter = BreadcrumbAdapter<BreadcrumbProps>;
 
 const clsPrefix = cssClasses.PREFIX;
 
@@ -77,23 +77,20 @@ function Breadcrumb(rawProps: BreadcrumbProps) {
         BreadcrumbFoundation,
         props,
         () => BreadcrumbFoundation.getInitialState(),
-        (base) => ({
-            // named parameters: a rest parameter makes the Oxc React Compiler skip the whole component
-            notifyClick: (info, e) => base.getProps().onClick?.(info, e),
-        })
+        () => ({})
     );
 
     const mergedRef = useMergedRef(ref, navRef);
 
     const context = useMemo<BreadContextType>(
         () => ({
-            onClick: foundation.handleClick,
+            onClick: (info, e) => onClick?.(info, e),
             hasOnClick: Boolean(onClick),
             showTooltip,
             compact,
             separator,
         }),
-        [foundation, onClick, showTooltip, compact, separator]
+        [onClick, showTooltip, compact, separator]
     );
 
     const routeItems = routes?.length > 0 ? BreadcrumbFoundation.genRoutes(routes) : null;
@@ -114,8 +111,7 @@ function Breadcrumb(rawProps: BreadcrumbProps) {
         return nav;
     });
 
-    const restItemLength = restEnd - restStart + 1;
-    const shouldCollapse = autoCollapse && restItemLength > 0 && state.isCollapsed;
+    const shouldCollapse = BreadcrumbFoundation.shouldCollapse(autoCollapse, { start: restStart, end: restEnd }, state.isCollapsed);
     const hasRenderMore = typeof renderMore === 'function';
     const collapse = { collapsed: shouldCollapse, start: restStart, end: restEnd, hasCustomMore: hasRenderMore, moreType };
 
@@ -181,7 +177,7 @@ function Breadcrumb(rawProps: BreadcrumbProps) {
                 </span>
             </span>
         );
-        template = template.toSpliced(restStart, restItemLength, spread);
+        template = template.toSpliced(restStart, restEnd - restStart + 1, spread);
     }
 
     return (

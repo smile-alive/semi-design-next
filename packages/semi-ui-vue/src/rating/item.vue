@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { computed, useAttrs, useTemplateRef } from 'vue';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses } from '@fibrae/semi-foundation/rating/constants';
     import RatingFoundation from '@fibrae/semi-foundation/rating/foundation';
     import { IconStar } from '@fibrae/semi-icons-vue';
@@ -68,8 +69,7 @@
 
     const iconSize = computed(() => (isCustomSize.value ? 'inherit' : props.size === 'small' ? 'default' : 'extra-large'));
 
-    // a function replacer keeps `$&` and `$$` in a custom unit literal
-    const itemName = (n: number) => locale.value.locale.itemLabel.replace('${value}', String(n)).replace('${unit}', () => props.unit ?? (n === 1 ? locale.value.locale.star : locale.value.locale.stars));
+    const itemName = (n: number) => formatLocale(locale.value.locale.itemLabel, { value: n, unit: props.unit ?? (n === 1 ? locale.value.locale.star : locale.value.locale.stars) });
 
     const describedby = () => attrs['aria-describedby'] as string | undefined;
 

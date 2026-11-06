@@ -2,9 +2,9 @@ import { type JSX, onCleanup, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
 import type { ResizeCallback, ResizeStartCallback } from '@fibrae/semi-foundation/resizable/types';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import type { ElementProps } from '../_base/element-props';
 import mergeRefs from '../_base/merge-refs';
-import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
 import { useResizeGroupContext } from './context';
 

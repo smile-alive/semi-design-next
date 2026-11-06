@@ -442,7 +442,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
                 this.adapter.focusTrigger();
             }
             this.close();
-            this.handleTriggerBlur(e);
+            this.#handleTriggerBlur(e);
         }
     }
 
@@ -504,6 +504,18 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         if (!expanded) {
             this.#handleNodeLoad(eventKey, data);
         }
+    }
+
+    /**
+     * Reports the blur once per focus: on a mousedown outside, a single pick that closes, or the focus leaving the
+     * trigger and the dropdown (the component checks where it went)
+     */
+    #handleTriggerBlur(e: E | MouseEvent | FocusEvent) {
+        if (!this.#blurPending) {
+            return;
+        }
+        this.setState({ isFocus: false });
+        this.#notifyBlur(e);
     }
 
     protected override initOnce() {
@@ -752,24 +764,12 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
     };
 
     /**
-     * Reports the blur once per focus: on a mousedown outside, a single pick that closes, or the focus leaving the
-     * trigger and the dropdown (the component checks where it went)
-     */
-    handleTriggerBlur(e: E | MouseEvent | FocusEvent) {
-        if (!this.#blurPending) {
-            return;
-        }
-        this.setState({ isFocus: false });
-        this.#notifyBlur(e);
-    }
-
-    /**
      * The focus left the trigger and the dropdown (the component checks where it went): reports the blur, and closes
      * an open dropdown when the focus went to another element (APG combobox). A window blur has no target and keeps
      * the dropdown, as the native select does.
      */
     handleFocusLeave = (e: FocusEvent) => {
-        this.handleTriggerBlur(e);
+        this.#handleTriggerBlur(e);
         if (e.relatedTarget && this.getState('isOpen')) {
             this.close();
         }
@@ -777,7 +777,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
 
     /** A mousedown outside the trigger and the dropdown, listened to while the TreeSelect is focused or open */
     handleClickOutside = (e: MouseEvent) => {
-        this.handleTriggerBlur(e);
+        this.#handleTriggerBlur(e);
         if (this.getState('isOpen')) {
             this.close();
         }

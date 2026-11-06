@@ -84,8 +84,8 @@ describe('DatePickerFoundation 范围输入框的聚焦记录', () => {
 
     it('点击范围触发器外层立即聚焦起始输入框，不留下卸载后才执行的定时器', () => {
         const { foundation, adapter } = createFoundation({ type: 'dateRange' });
-        const event = { target: null, currentTarget: null };
-        foundation.handleTriggerWrapperClick(event);
+        const event = { target: null, currentTarget: null, detail: 1 };
+        foundation.handleTriggerClick(event, true);
         expect(adapter.notifyFocus).toHaveBeenCalledWith(event, 'rangeStart');
         foundation.destroy();
         expect(vi.getTimerCount()).toBe(0);
@@ -161,6 +161,12 @@ describe('DatePickerFoundation 面板打开时被禁用', () => {
         expect(adapter.notifyBlur).not.toHaveBeenCalled();
         expect(adapter.setInputFocus).not.toHaveBeenCalled();
         expect(adapter.setTriggerFocus).not.toHaveBeenCalled();
+    });
+
+    it('getPosition 未指定时按方向给默认值，指定后原样返回', () => {
+        expect(DatePickerFoundation.getPosition(undefined, 'rtl')).toBe('bottomRight');
+        expect(DatePickerFoundation.getPosition(undefined, 'ltr')).toBe('bottomLeft');
+        expect(DatePickerFoundation.getPosition('leftTopOver', 'rtl')).toBe('leftTopOver');
     });
 
     it('受控 open 时不改面板状态，只上报 openChange(false)', () => {

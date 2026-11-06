@@ -1,9 +1,7 @@
 import { describe, expect, it } from 'vite-plus/test';
-import DescriptionsFoundation, { type DescriptionsColumn } from '../foundation';
+import { type DescriptionsColumn, getHorizontalList } from '../foundation';
 
-const { getHorizontalList } = DescriptionsFoundation;
-
-describe('DescriptionsFoundation.getHorizontalList', () => {
+describe('getHorizontalList', () => {
     it('把可见列按列跨度分组为行', () => {
         const columns = [{ key: 'a' }, { key: 'b', hidden: true }, { key: 'c', span: 2 }, { key: 'd' }, { key: 'e' }];
         expect(getHorizontalList(columns, 3)).toEqual([

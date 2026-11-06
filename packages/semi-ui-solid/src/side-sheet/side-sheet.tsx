@@ -141,7 +141,6 @@ export default function SideSheet(rawProps: SideSheetProps) {
                 disabledBodyScroll: () => (isModal() ? scroll.hold(lockBodyScroll) : scroll.release()),
                 enabledBodyScroll: () => scroll.release(),
                 notifyCancel: (e) => base.getProps().onCancel?.(e),
-                notifyVisibleChange: (visible) => base.getProps().afterVisibleChange?.(visible),
                 openLayer: (onEscape) => layer.hold(() => openLayer({ element: root as HTMLElement, modal: isModal(), onEscape })),
                 closeLayer: () => layer.release(),
                 // Solid inserts the sheet after the document loaded, so the browser does not focus its autofocus element.
@@ -160,26 +159,26 @@ export default function SideSheet(rawProps: SideSheetProps) {
                 releaseFocus: () => focusScope.deactivate(),
                 // a user who moved on to the page next to a non-modal sheet keeps that focus
                 restoreFocus: () => focusScope.restoreIfAllowed(dialog(), isModal(), true),
-                toggleDisplayNone: (hidden) => setDisplayNone(hidden),
             };
         }
     );
 
     const visible = createMemo(() => props.visible);
-    const hidden = createMemo(() => (visible() ? false : !props.motion || displayNone()));
 
     // the mask and the content animate separately and either duration may be customized, so both report
     const mask = useCSSAnimation({
         startClassName: () => (visible() ? `${prefixCls}-animation-mask_show` : `${prefixCls}-animation-mask_hide`),
         motion: () => props.motion,
-        onAnimationEnd: () => foundation.toggleDisplayNone(!props.visible),
+        onAnimationEnd: () => setDisplayNone(!props.visible),
     });
 
     const content = useCSSAnimation({
         startClassName: () => (visible() ? `${prefixCls}-animation-content_show_${props.placement}` : `${prefixCls}-animation-content_hide_${props.placement}`),
         motion: () => props.motion,
-        onAnimationEnd: () => foundation.toggleDisplayNone(!props.visible),
+        onAnimationEnd: () => setDisplayNone(!props.visible),
     });
+
+    const hidden = createMemo(() => (visible() ? false : !props.motion || displayNone()));
 
     const shouldRender = () => visible() || props.keepDOM || (props.motion && !hidden());
 
@@ -233,12 +232,12 @@ export default function SideSheet(rawProps: SideSheetProps) {
 
     useWatch(hidden, (isHidden) => {
         shown = !isHidden;
-        foundation.onVisibleChange(!isHidden);
+        props.afterVisibleChange?.(!isHidden);
     });
 
     onCleanup(() => {
         if (shown) {
-            foundation.onVisibleChange(false);
+            props.afterVisibleChange?.(false);
         }
     });
 

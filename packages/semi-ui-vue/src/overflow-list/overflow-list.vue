@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends OverflowListItem = OverflowListItem">
     import { computed, onBeforeUpdate, onMounted, onUpdated, shallowRef, Text, useAttrs, useTemplateRef, type CSSProperties } from 'vue';
     import { isEqual } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/overflow-list/constants';
+    import { cssClasses, SCROLL_KEY_ATTRIBUTE } from '@fibrae/semi-foundation/overflow-list/constants';
     import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState, type OverflowListView } from '@fibrae/semi-foundation/overflow-list/foundation';
     import '@fibrae/semi-foundation/overflow-list/overflow-list.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
@@ -139,7 +139,7 @@
     };
 
     const syncScrollNodes = () => {
-        const nodes = isScroll.value && wrapper.value ? [...wrapper.value.children].filter((node) => node.hasAttribute('data-scrollkey')) : [];
+        const nodes = isScroll.value && wrapper.value ? [...wrapper.value.children].filter((node) => node.hasAttribute(SCROLL_KEY_ATTRIBUTE)) : [];
         const same = nodes.length === scrollNodes.value.length && nodes.every((node, index) => node === scrollNodes.value[index]);
         if (!same) scrollNodes.value = nodes;
     };
@@ -160,7 +160,7 @@
 
     const overflowNodes = () => slotNodes(slots.overflow?.({ items: view.value.overflow as T[], position: props.collapseFrom }) ?? []).filter(([node]) => node.type !== Text || String(node.children).trim() !== '');
 
-    // Scroll mode: the first element of each item's slot output carries the data-scrollkey the observer reports by;
+    // Scroll mode: the first element of each item's slot output carries the SCROLL_KEY_ATTRIBUTE the observer reports by;
     // <component :is> keeps the element's own ref.
     const scrollItems = () =>
         view.value.visible.flatMap((item, index) => {
@@ -197,8 +197,8 @@
         <template v-if="isScroll">
             <slot v-if="props.overflowRenderDirection !== 'end'" :items="scrollOverflow[0]" name="overflow" position="start" />
             <slot v-if="props.overflowRenderDirection === 'start'" :items="scrollOverflow[1]" name="overflow" position="end" />
-            <div ref="wrapper" v-bind="props.wrapperProps" :class="[props.wrapperClassName, `${prefix}-scroll-wrapper`]" :style="props.wrapperStyle">
-                <component :is="entry.node" v-for="entry in scrollItems()" :key="entry.key" :data-scrollkey="entry.key" />
+            <div ref="wrapper" v-bind="props.wrapperProps" :class="[props.wrapperClassName, cssClasses.SCROLL_WRAPPER]" :style="props.wrapperStyle">
+                <component :is="entry.node" v-for="entry in scrollItems()" :key="entry.key" v-bind="{ [SCROLL_KEY_ATTRIBUTE]: entry.key }" />
             </div>
             <slot v-if="props.overflowRenderDirection === 'end'" :items="scrollOverflow[0]" name="overflow" position="start" />
             <slot v-if="props.overflowRenderDirection !== 'start'" :items="scrollOverflow[1]" name="overflow" position="end" />

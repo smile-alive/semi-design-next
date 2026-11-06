@@ -3,6 +3,7 @@
     import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
     import AudioPlayerFoundation, { type AudioPlayerAdapter } from '@fibrae/semi-foundation/audio-player/foundation';
     import { getCurrentTrack } from '@fibrae/semi-foundation/audio-player/utils';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
     import '@fibrae/semi-foundation/audio-player/audio-player.scss';
     import { IconAlertCircle, IconBackward, IconFastForward, IconPause, IconPlay, IconRefresh, IconRestart, IconVolume2, IconVolumnSilent } from '@fibrae/semi-icons-vue';
@@ -49,8 +50,8 @@
     const info = computed(() => getCurrentTrack(props.audioUrl, state.value.currentIndex));
 
     // the Tooltip text only describes the icon-only button, so the same text is also its name
-    const backwardLabel = computed(() => locale.value.backward.replace('${skipDuration}', String(props.skipDuration)));
-    const forwardLabel = computed(() => locale.value.forward.replace('${skipDuration}', String(props.skipDuration)));
+    const backwardLabel = computed(() => formatLocale(locale.value.backward, { skipDuration: props.skipDuration }));
+    const forwardLabel = computed(() => formatLocale(locale.value.forward, { skipDuration: props.skipDuration }));
 
     // the visible rate alone does not say what the menu sets
     const speedLabel = computed(() => [locale.value.playbackRate, state.value.currentRate.label].join(' '));

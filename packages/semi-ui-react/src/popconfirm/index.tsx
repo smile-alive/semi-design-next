@@ -108,7 +108,7 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
             focusPrevFocusElement: () => {
                 pendingFocus.current = null;
                 // focus that already left the card (Tab away from a focus trigger) stays where it went
-                if (FocusTrapHandle.shouldRestoreFocus(footerRef.current?.closest('[popover]'), false)) {
+                if (FocusTrapHandle.shouldRestoreFocus(popoverRef.current?.getPopup(), false)) {
                     popoverRef.current?.focusTrigger();
                 }
             },
@@ -140,15 +140,8 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
 
     const { className, prefixCls, disabled, children, style, position = defaultPosition, ...attrs } = props;
 
-    // Tooltip owns the dialog element and has no describedby prop; without a title the content already names it
-    const describeDialog = (card: HTMLElement | null) => {
-        const dialog = card?.closest('[popover]');
-        if (!dialog || !showTitle || !showContent) {
-            return undefined;
-        }
-        dialog.setAttribute('aria-describedby', contentId);
-        return () => dialog.removeAttribute('aria-describedby');
-    };
+    // without a title the content already names the dialog
+    const describedBy = props['aria-describedby'] || (showTitle && showContent ? contentId : undefined);
 
     const handleCancel = (e: React.MouseEvent) => foundation.handleCancel(e.nativeEvent);
 
@@ -208,7 +201,7 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
 
         return (
             // hides in-card clicks from document click listeners whatever stopPropagation says; Tooltip uses mousedown
-            <div ref={describeDialog} className={popCardCls} style={style} onClick={(e) => e.nativeEvent.stopImmediatePropagation()}>
+            <div className={popCardCls} style={style} onClick={(e) => e.nativeEvent.stopImmediatePropagation()}>
                 <div className={`${prefixCls}-inner`}>
                     <div className={`${prefixCls}-header`}>
                         {hasIcon && (
@@ -244,6 +237,7 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
             // after attrs, which carries Popconfirm's ref
             ref={popoverRef}
             className={cssClasses.POPOVER}
+            aria-describedby={describedBy}
             aria-labelledby={labelledBy}
             content={renderConfirmPopCard}
             position={position}

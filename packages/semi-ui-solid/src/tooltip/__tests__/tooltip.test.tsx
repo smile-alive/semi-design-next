@@ -1503,6 +1503,7 @@ describe('Tooltip', () => {
             expect(button).toHaveFocus();
             fireEvent.click(button);
             await waitFor(() => expect(shown()).not.toBeNull());
+            expect(tip?.getPopup()).toBe(shown());
             expect(() => tip?.rePosition()).not.toThrow();
             tip?.hide();
             await waitFor(() => expect(popup()).toBeNull());

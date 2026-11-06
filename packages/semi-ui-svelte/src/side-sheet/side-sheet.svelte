@@ -107,7 +107,6 @@
                 visible = false;
                 onCancel?.(event);
             },
-            notifyVisibleChange: (isVisible) => afterVisibleChange?.(isVisible),
             openLayer: (onEscape) => layer.hold(() => openLayer({ element: rootEl as HTMLElement, modal: isModal(), onEscape })),
             closeLayer: () => layer.release(),
             // Svelte focuses no autofocus element of content inserted after load, so the sheet picks it before the default
@@ -127,9 +126,6 @@
             releaseFocus: () => focusScope.deactivate(),
             // a user who moved on to the page next to a non-modal sheet keeps that focus
             restoreFocus: () => focusScope.restoreIfAllowed(dialogEl, isModal(), true),
-            toggleDisplayNone: (hide) => {
-                displayNone = hide;
-            },
         })
     );
 
@@ -158,7 +154,7 @@
 
     const endAnimation = () => {
         if (animating === 'hide') {
-            foundation.toggleDisplayNone(true);
+            displayNone = true;
         }
         animating = undefined;
     };
@@ -213,7 +209,7 @@
         () => hidden,
         (isHidden) => {
             shown = !isHidden;
-            foundation.onVisibleChange(!isHidden);
+            afterVisibleChange?.(!isHidden);
         }
     );
 
@@ -221,7 +217,7 @@
         shown = !hidden;
         return () => {
             if (shown) {
-                foundation.onVisibleChange(false);
+                afterVisibleChange?.(false);
             }
         };
     });

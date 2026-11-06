@@ -5,7 +5,7 @@
     import SliderFoundation, { type HandleDot, type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/slider/foundation';
     import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
     import '@fibrae/semi-foundation/slider/slider.scss';
-    import { splitControlAttrs } from '../_base/control-attrs.js';
+    import { isAriaKey, splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import watch from '../_base/watch.svelte.js';
@@ -158,7 +158,7 @@
     );
 
     const shownMarks = $derived(markList.filter((item) => item.active !== false));
-    const attrs = $derived(splitControlAttrs(rest, (key) => key.startsWith('aria-') || key === 'name' || key === 'autofocus' || key === 'tabindex'));
+    const attrs = $derived(splitControlAttrs(rest, (key) => isAriaKey(key) || key === 'name' || key === 'autofocus' || key === 'tabindex'));
 
     // The inputs are the Tab stops, and the slider role supports no aria-required (a native range has no required either);
     // autofocus belongs to the start handle alone: the slider has one Tab stop to land on first

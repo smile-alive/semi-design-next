@@ -1,4 +1,5 @@
 import { Extension } from '@tiptap/core';
+import { strings } from '../constants';
 
 declare module '@tiptap/core' {
     interface Commands<ReturnType> {
@@ -20,7 +21,7 @@ declare module '@tiptap/core' {
  * custom extension that handles Enter clears allowHotKeySend so the send hotkey does not also fire.
  */
 export default Extension.create({
-    name: 'SemiAIChatInput',
+    name: strings.STATUS_EXTENSION_NAME,
     addStorage() {
         return {
             allowHotKeySend: true,
@@ -34,7 +35,7 @@ export default Extension.create({
                 // command props carry the editor, not the extension storage
                 ({ editor, dispatch }) => {
                     if (dispatch) {
-                        editor.storage.SemiAIChatInput.allowHotKeySend = allow;
+                        editor.storage[strings.STATUS_EXTENSION_NAME].allowHotKeySend = allow;
                     }
                     return true;
                 },

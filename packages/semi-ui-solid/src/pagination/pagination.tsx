@@ -1,5 +1,6 @@
 import { type JSX, For, Show, children, createEffect, createMemo, on, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/pagination/constants';
 import PaginationFoundation, { type PageList, type PaginationAdapter, type PaginationState } from '@fibrae/semi-foundation/pagination/foundation';
@@ -164,7 +165,7 @@ export default function Pagination(rawProps: PaginationProps) {
 
     const quickJumpDisabled = () => totalPageNum() < 2 || local.disabled;
 
-    const pageLabel = (page: number) => text().pageN.replace('${page}', String(page));
+    const pageLabel = (page: number) => formatLocale(text().pageN, { page });
 
     const PageItem = (itemProps: { pageKey: PageKey }) => {
         const page = () => (typeof itemProps.pageKey === 'number' ? itemProps.pageKey : '...');
@@ -235,7 +236,7 @@ export default function Pagination(rawProps: PaginationProps) {
             {/* Show's children memo tracks the ref read; a spread props signal would recreate the whole list */}
             <ul {...rest} ref={untrack(() => mergeRefs(local.ref, registerTrigger))} class={clsx(prefixCls, local.class, { [`${prefixCls}-small`]: small(), [`${prefixCls}-disabled`]: local.disabled })}>
                 <Show when={local.showTotal && !small()}>
-                    <li class={`${prefixCls}-total`}>{text().total.replace('${total}', totalPageNum().toString())}</li>
+                    <li class={`${prefixCls}-total`}>{formatLocale(text().total, { total: totalPageNum() })}</li>
                 </Show>
                 <StepButton disabled={disabledState().prevDisabled || local.disabled} kind="prev" label={text().prev} text={local.prevText} onClick={foundation.goPrev} />
                 <Show when={small()} fallback={<For each={pageKeys()}>{(pageKey) => <PageItem pageKey={pageKey} />}</For>}>
@@ -256,7 +257,7 @@ export default function Pagination(rawProps: PaginationProps) {
                             <For each={pageSizeOpts()}>
                                 {(option) => (
                                     <Select.Option value={option}>
-                                        <span>{text().pageSize.replace('${pageSize}', option.toString())}</span>
+                                        <span>{formatLocale(text().pageSize, { pageSize: option })}</span>
                                     </Select.Option>
                                 )}
                             </For>

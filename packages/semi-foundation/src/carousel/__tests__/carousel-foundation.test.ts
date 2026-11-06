@@ -58,6 +58,46 @@ describe('CarouselFoundation 悬停与幻灯片数量变化', () => {
         expect(adapter.setState.mock.calls.map(([state]) => state)).toEqual([{ rotating: true }, { rotating: false }]);
     });
 
+    it('只有键盘焦点暂停播放，焦点移出整个轮播图后恢复', () => {
+        class FakeNode {
+            children: FakeNode[] = [];
+            contains(node: FakeNode) {
+                return node === this || this.children.includes(node);
+            }
+        }
+        class FakeElement extends FakeNode {
+            focusVisible: boolean;
+            constructor(focusVisible: boolean) {
+                super();
+                this.focusVisible = focusVisible;
+            }
+            matches(selector: string) {
+                return selector === ':focus-visible' && this.focusVisible;
+            }
+        }
+        vi.stubGlobal('Node', FakeNode);
+        vi.stubGlobal('Element', FakeElement);
+        const { foundation } = create();
+        const root = new FakeElement(false);
+        const inner = new FakeElement(true);
+        root.children.push(inner);
+        foundation.handleAutoPlay();
+        const running = vi.getTimerCount();
+        expect(running).toBeGreaterThan(0);
+
+        foundation.handleFocusIn({ target: new FakeElement(false) as unknown as EventTarget });
+        expect(vi.getTimerCount()).toBe(running);
+
+        foundation.handleFocusIn({ target: inner as unknown as EventTarget });
+        expect(vi.getTimerCount()).toBe(0);
+
+        foundation.handleFocusOut({ currentTarget: root as unknown as EventTarget, relatedTarget: inner as unknown as EventTarget });
+        expect(vi.getTimerCount()).toBe(0);
+
+        foundation.handleFocusOut({ currentTarget: root as unknown as EventTarget, relatedTarget: null });
+        expect(vi.getTimerCount()).toBe(running);
+    });
+
     it('受控或数量未跨过一张时不启动', () => {
         const controlled = create({ activeIndex: 0 });
         controlled.foundation.handleSlideCountChange(1, 3);

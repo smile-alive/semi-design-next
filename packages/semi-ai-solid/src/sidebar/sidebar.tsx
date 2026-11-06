@@ -88,7 +88,7 @@ function Sidebar(rawProps: SideBarProps) {
                 when={hasContent(customHeader())}
                 fallback={
                     <div class={`${prefixCls}-detail-header`}>
-                        <span class={`${prefixCls}-detail-header-left`}>
+                        <span class={cssClasses.DETAIL_HEADER_LEFT}>
                             <Button type="tertiary" aria-label={locale().locale.close} theme="borderless" icon={<IconClose />} onClick={(e) => local.onBackWard?.(e, strings.MODE.MAIN)} />
                             <span class={`${prefixCls}-detail-header-title`}>{local.detailContent?.name}</span>
                         </span>

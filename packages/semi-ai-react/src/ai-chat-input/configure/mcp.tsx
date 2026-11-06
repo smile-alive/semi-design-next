@@ -1,6 +1,7 @@
 import React, { type MouseEvent, useCallback } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import Button from '@fibrae/semi-ui-react/button/index';
 import Dropdown, { type DropdownProps } from '@fibrae/semi-ui-react/dropdown/index';
@@ -41,7 +42,7 @@ function Mcp({ className, style, options = [], num, children, onConfigureButtonC
                     {(locale: Locale['AIChatInput']) => (
                         <>
                             <div className={`${cssClasses.PREFIX}-footer-configure-mcp-header`}>
-                                <span className={`${cssClasses.PREFIX}-footer-configure-mcp-header-title`}>{locale.selected.replace('${count}', String(count))}</span>
+                                <span className={`${cssClasses.PREFIX}-footer-configure-mcp-header-title`}>{formatLocale(locale.selected, { count })}</span>
                                 {showConfigure && (
                                     <Button className={`${cssClasses.PREFIX}-footer-configure-mcp-header-config`} theme="outline" onClick={onConfigureButtonClick}>
                                         {locale.configure}

@@ -48,6 +48,27 @@ function toColumn(options: number[], disabledOptions: number[], selected: number
 }
 
 export default class ComboboxFoundation {
+    /**
+     * `disabledHours()`, mapped onto the 12-hour column of the half day `isAM` names when `use12Hours`; the hours of
+     * the other half day drop out
+     */
+    static #getDisabledHours({ use12Hours, disabledHours, isAM }: Pick<ComboboxBaseProps, 'use12Hours' | 'disabledHours'> & { isAM?: boolean }) {
+        const disabledOptions = disabledHours && disabledHours();
+
+        if (use12Hours && Array.isArray(disabledOptions)) {
+            return disabledOptions.filter((h) => h < 12 === Boolean(isAM)).map((h) => h % 12 || 12);
+        }
+        return disabledOptions;
+    }
+
+    static #getDisplayDateFromTimeStamp(timeStamp: TimeStamp, defaultIsPM = false) {
+        if (!ComboboxFoundation.hasValue(timeStamp)) {
+            const now = new Date();
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate(), defaultIsPM ? 12 : 0);
+        }
+        return new Date(timeStamp);
+    }
+
     static getColumns(format: string) {
         return {
             showHour: /HH|hh|H|h/.test(format),
@@ -65,11 +86,11 @@ export default class ComboboxFoundation {
 
         const format = typeof props.format === 'string' ? props.format : strings.DEFAULT_FORMAT;
         const isAM = ComboboxFoundation.isAM(timeStampValue, props.defaultIsAM);
-        const dateTime = ComboboxFoundation.getDisplayDateFromTimeStamp(timeStampValue, use12Hours && !isAM);
+        const dateTime = ComboboxFoundation.#getDisplayDateFromTimeStamp(timeStampValue, use12Hours && !isAM);
         const hours = dateTime.getHours();
         const minutes = dateTime.getMinutes();
 
-        const disabledHourOptions = ComboboxFoundation.getDisabledHours({ ...props, isAM });
+        const disabledHourOptions = ComboboxFoundation.#getDisabledHours({ ...props, isAM });
         const disabledMinuteOptions = disabledMinutes?.(hours);
         const disabledSecondOptions = disabledSeconds?.(hours, minutes);
         const hourOptions = use12Hours
@@ -91,7 +112,7 @@ export default class ComboboxFoundation {
 
     /** A 12-hour hour keeps the half day `isAM` names; AM/PM moves the time by 12 hours only when it is in the other half day */
     static applyItem(timeStampValue: TimeStamp, type: ColumnType, itemValue: string, use12Hours: boolean, isAM: boolean) {
-        const date = ComboboxFoundation.getDisplayDateFromTimeStamp(timeStampValue, use12Hours && !isAM);
+        const date = ComboboxFoundation.#getDisplayDateFromTimeStamp(timeStampValue, use12Hours && !isAM);
         const hours = date.getHours();
         if (type === 'hour') {
             date.setHours(use12Hours ? (Number(itemValue) % 12) + (isAM ? 0 : 12) : Number(itemValue));
@@ -110,33 +131,12 @@ export default class ComboboxFoundation {
         return date;
     }
 
-    /**
-     * `disabledHours()`, mapped onto the 12-hour column of the half day `isAM` names when `use12Hours`; the hours of
-     * the other half day drop out
-     */
-    static getDisabledHours({ use12Hours, disabledHours, isAM }: Pick<ComboboxBaseProps, 'use12Hours' | 'disabledHours'> & { isAM?: boolean }) {
-        const disabledOptions = disabledHours && disabledHours();
-
-        if (use12Hours && Array.isArray(disabledOptions)) {
-            return disabledOptions.filter((h) => h < 12 === Boolean(isAM)).map((h) => h % 12 || 12);
-        }
-        return disabledOptions;
-    }
-
     static isAM(timeStamp: TimeStamp, defaultIsAM = true) {
-        return ComboboxFoundation.hasValue(timeStamp) ? ComboboxFoundation.getDisplayDateFromTimeStamp(timeStamp).getHours() < 12 : defaultIsAM;
+        return ComboboxFoundation.hasValue(timeStamp) ? ComboboxFoundation.#getDisplayDateFromTimeStamp(timeStamp).getHours() < 12 : defaultIsAM;
     }
 
     /** A timestamp of 0 is a value; only nothing and '' are not */
     static hasValue(timeStamp: unknown) {
         return timeStamp != null && timeStamp !== '' && isValidDate(new Date(timeStamp as Date));
-    }
-
-    static getDisplayDateFromTimeStamp(timeStamp: TimeStamp, defaultIsPM = false) {
-        if (!ComboboxFoundation.hasValue(timeStamp)) {
-            const now = new Date();
-            return new Date(now.getFullYear(), now.getMonth(), now.getDate(), defaultIsPM ? 12 : 0);
-        }
-        return new Date(timeStamp);
     }
 }

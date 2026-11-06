@@ -60,6 +60,11 @@
         tooltip?.focusTrigger();
     }
 
+    /** The popup element, null while it is not in the document */
+    export function getPopup() {
+        return tooltip?.getPopup() ?? null;
+    }
+
     /** Repositions the open popup at once; it already follows scrolling, resizing and trigger moves */
     export function rePosition() {
         tooltip?.rePosition();

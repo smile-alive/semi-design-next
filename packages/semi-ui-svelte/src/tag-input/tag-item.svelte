@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses } from '@fibrae/semi-foundation/tag-input/constants';
     import { IconHandle } from '@fibrae/semi-icons-svelte';
     import { SortableHandle } from '../_sortable/index.js';
@@ -35,8 +36,8 @@
     const prefix = cssClasses.PREFIX;
     const ellipsis = $derived({ showTooltip: showContentTooltip, rows: 1 });
 
-    // The tag's content is an element, so Tag cannot read its name back from the text; a function replacer keeps `$&` and `$$` in the value literal
-    const tagLabel = $derived(disabled ? undefined : tagLocale().locale.closableTag.replace('${tag}', () => value));
+    // The tag's content is an element, so Tag cannot read its name back from the text
+    const tagLabel = $derived(disabled ? undefined : formatLocale(tagLocale().locale.closableTag, { tag: value }));
 </script>
 
 {#snippet content()}

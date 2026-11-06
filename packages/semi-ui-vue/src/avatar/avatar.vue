@@ -2,6 +2,7 @@
     import { computed, mergeProps, onUpdated, useAttrs, useTemplateRef, watch, type StyleValue } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-foundation/avatar/constants';
     import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/avatar/foundation';
+    import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
     import '@fibrae/semi-foundation/avatar/avatar.scss';
     import { hasClickListener, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
@@ -66,7 +67,8 @@
             notifyError: (event) => onError.value?.(event),
             notifyEnter: (event) => emit('mouseEnter', event),
             notifyLeave: (event) => emit('mouseLeave', event),
-            getTextWidths: () => content.value?.getTextWidths() ?? null,
+            getAvatarElement: () => content.value?.getAvatarElement() ?? null,
+            getTextElement: () => content.value?.getTextElement() ?? null,
         })
     );
 
@@ -104,7 +106,7 @@
 
     const clickable = () => hasClickListener(attrs);
 
-    const isControlKey = (key: string) => clickable() && (key === 'tabindex' || key.startsWith('aria-'));
+    const isControlKey = (key: string) => clickable() && (key === 'tabindex' || isAriaKey(key));
 
     const text = () => (isImg.value ? undefined : getAvatarText(slots.default?.() ?? []));
 

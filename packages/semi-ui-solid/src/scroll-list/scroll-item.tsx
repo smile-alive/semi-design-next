@@ -1,14 +1,13 @@
 import { type Ref, For, Show, createMemo, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
-import ItemFoundation, { type Item, type ScrollItemAdapter, type ScrollItemBaseState } from '@fibrae/semi-foundation/scroll-list/item-foundation';
+import ItemFoundation, { type Item, type ScrollItemAdapter, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/scroll-list/item-foundation';
 import '@fibrae/semi-foundation/scroll-list/scroll-list.scss';
 import type { ElementProps } from '../_base/element-props';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 
-const wheelMode = 'wheel';
 const prefix = cssClasses.PREFIX;
 
 export interface ScrollItemProps<T extends Item = Item> extends ElementProps<'div', 'onSelect' | 'children' | 'ref'> {
@@ -90,10 +89,7 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
         const { copy, index } = parseKey(key);
         const item = () => local.list[index];
         const selected = () => local.selectedIndex === index;
-        const text = () => {
-            const itemTransform = typeof item().transform === 'function' ? item().transform : local.transform;
-            return selected() && typeof itemTransform === 'function' ? itemTransform(item().value, item().text) : (item().text ?? item().value);
-        };
+        const text = () => ItemFoundation.getItemText(item(), selected(), local.transform);
         return (
             <li
                 id={copy ? undefined : optionId(index)}

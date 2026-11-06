@@ -1,6 +1,7 @@
 import { For } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import '@fibrae/semi-foundation/calendar/calendar.scss';
 import useLocale from '../locale/use-locale';
 import type { TimeColProps } from './interface';
@@ -16,7 +17,7 @@ export default function TimeCol(props: TimeColProps) {
             return props.renderTimeDisplay(hour);
         }
         const { AM, PM } = locale().locale;
-        return hour < 12 ? AM.replace('${time}', String(hour)) : PM.replace('${time}', String(hour === 12 ? hour : hour - 12));
+        return formatLocale(hour < 12 ? AM : PM, { time: hour <= 12 ? hour : hour - 12 });
     };
 
     return (

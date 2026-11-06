@@ -3,7 +3,6 @@
     import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
     import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
     import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
     import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
     import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
@@ -16,6 +15,7 @@
     import useLocale from '../locale/use-locale';
     import Modal from '../modal';
     import Popover from '../popover';
+    import type { PopoverHandle } from '../popover/interface';
     import type { UserGuideButtonProps, UserGuideEmits, UserGuideProps, UserGuideSlots, UserGuideStepItem } from './interface';
     import StepNodes from './step-nodes.vue';
     import { anchorStyle, buttonBind, contentNodes } from './use-user-guide';
@@ -54,6 +54,7 @@
     const config = useConfig();
     const locale = useLocale('UserGuide');
 
+    let popover: PopoverHandle | null = null;
     const scroll = new ReleaseHolder();
     const focusScope = new FocusScope();
 
@@ -110,12 +111,14 @@
         if (measuring()) foundation.measureSpotlight(false);
     };
 
+    // a function ref: inside the v-for below, a string ref would collect an array
+    const setPopover = (instance: unknown) => {
+        popover = instance as PopoverHandle | null;
+    };
+
     // Restore focus only if it is still on the card (or lost with it), so a user who clicked elsewhere stays there. A
     // modal guide gets this from its Modal.
-    const restoreFocus = () => {
-        // closest() stops at a shadow boundary, so the card is looked up from the focus as the card's tree sees it
-        focusScope.restoreIfAllowed(FocusTrapHandle.getActiveElement(UserGuideFoundation.getTarget(step.value))?.closest<HTMLElement>(`.${prefix}-popover`), false, true);
-    };
+    const restoreFocus = () => focusScope.restoreIfAllowed(popover?.getPopup(), false, true);
 
     const stepView = () => {
         const item = step.value as UserGuideStepItem;
@@ -257,6 +260,7 @@
             <template v-else-if="props.mode === 'popup' && state.spotlightRect">
                 <Popover
                     :key="`userGuide-popup-${current}`"
+                    :ref="setPopover"
                     :ariaLabelledby="view.hasTitle ? titleId : undefined"
                     :class="[`${prefix}-popover`, $attrs.class, step.class]"
                     :position="step.position || props.position"

@@ -68,7 +68,6 @@
 
     // Inferred, the ref type loops through foundation back into the template bindings (TS7022).
     const tooltip = useTemplateRef<TooltipHandle>('tooltip');
-    const popup = useTemplateRef<{ $el: Element }>('popup');
 
     const tooltipProps = computed<TooltipProps>(() => {
         const { contentClassName: _class, menu: _menu, selectionMode: _mode, showTick: _tick, spacing, ...shared } = props;
@@ -95,7 +94,7 @@
         () => DropdownFoundation.getInitialState(),
         () => ({
             notifyVisibleChange: emitVisible,
-            getPopup: () => popup.value?.$el.closest<HTMLElement>('[popover]') ?? null,
+            getPopup: () => tooltip.value?.getPopup() ?? null,
             hidePopup: () => tooltip.value?.hide(),
         }),
         { context: () => menuContext(parent, config.value.direction) }
@@ -191,7 +190,7 @@
             </template>
         </template>
         <template #content="slotProps">
-            <DropdownPopup ref="popup" :contentClass="props.contentClassName" :context="context" :popStyle="$attrs.style as StyleValue" :prefixCls="props.prefixCls" @vue:beforeMount="bindFocusTarget(slotProps.initialFocusRef)">
+            <DropdownPopup :contentClass="props.contentClassName" :context="context" :popStyle="$attrs.style as StyleValue" :prefixCls="props.prefixCls" @vue:beforeMount="bindFocusTarget(slotProps.initialFocusRef)">
                 <slot v-if="$slots.content" name="content" />
                 <DropdownMenu v-else-if="Array.isArray(props.menu)">
                     <template v-for="(item, index) in props.menu" :key="menuKey(item, index)">

@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
 import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
 import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
 import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
@@ -16,7 +15,7 @@ import Button, { type ButtonProps } from '../button';
 import { useConfigContext } from '../config-provider/context';
 import useLocale from '../locale/use-locale';
 import Modal from '../modal';
-import Popover from '../popover';
+import Popover, { type PopoverHandle } from '../popover';
 import type { Position } from '../tooltip/index';
 
 type Foundation = UserGuideFoundation<UserGuideProps>;
@@ -82,12 +81,6 @@ class UserGuideRuntime {
     readonly #scroll = new ReleaseHolder();
     readonly focusScope = new FocusScope();
 
-    // a user who clicked elsewhere keeps their focus
-    restoreFocus(target?: Element | null) {
-        // closest() stops at a shadow boundary, so the card is looked up from the focus as the card's tree sees it
-        this.focusScope.restoreIfAllowed(FocusTrapHandle.getActiveElement(target)?.closest<HTMLElement>(`.${prefixCls}-popover`), false, true);
-    }
-
     disableBodyScroll(locksBody: boolean) {
         if (locksBody) {
             this.#scroll.hold(lockBodyScroll);
@@ -127,7 +120,7 @@ export default function UserGuide(rawProps: UserGuideProps) {
     const { locale } = useLocale('UserGuide');
 
     const [runtime] = useState(() => new UserGuideRuntime());
-    const anchorRef = useRef<HTMLDivElement>(null);
+    const popoverRef = useRef<PopoverHandle>(null);
 
     const [foundation, state] = useFoundation<Foundation, Adapter, UserGuideProps, UserGuideBaseState>(
         UserGuideFoundation,
@@ -177,9 +170,9 @@ export default function UserGuide(rawProps: UserGuideProps) {
             return undefined;
         }
         runtime.focusScope.record();
-        // the node is read now: the anchor unmounts before this cleanup runs
-        const anchor = anchorRef.current;
-        return () => runtime.restoreFocus(anchor);
+        const popover = popoverRef.current;
+        // a user who clicked elsewhere keeps their focus; an unmounted card holds none
+        return () => runtime.focusScope.restoreIfAllowed(popover?.getPopup(), false, true);
     }, [shown, mode, runtime]);
 
     useLayoutEffect(() => {
@@ -337,6 +330,7 @@ export default function UserGuide(rawProps: UserGuideProps) {
         <>
             <Popover
                 key={`userGuide-popup-${current}`}
+                ref={popoverRef}
                 className={clsx(`${prefixCls}-popover`, className, step.className)}
                 style={{
                     padding: 0,
@@ -353,7 +347,6 @@ export default function UserGuide(rawProps: UserGuideProps) {
             >
                 {/* Tooltip would make the anchor a Tab stop */}
                 <div
-                    ref={anchorRef}
                     style={{
                         position: 'fixed',
                         left: spotlightRect.x,

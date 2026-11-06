@@ -471,7 +471,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
 
     const optionId = (index: number) => `${selectId()}-option-${index}`;
 
-    const visibleOptions = createMemo(() => (state().options as OptionRecord[]).filter((option) => option.show));
+    const visibleOptions = createMemo(() => SelectFoundation.getVisibleOptions(state().options as OptionRecord[]));
     const selectedItems = createMemo(() => [...state().selections.values()] as OptionData[]);
 
     const triggerRenderProps: TriggerRenderProps = {
@@ -497,7 +497,7 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
 
     const searchInTrigger = () => local.searchPosition === strings.SEARCH_POSITION_TRIGGER;
 
-    const position = () => local.position ?? (config().direction === 'rtl' ? 'bottomRight' : 'bottomLeft');
+    const position = () => SelectFoundation.getPosition(local.position, config().direction);
 
     // the record's index, not the visible index: a row that filtering moves up keeps its node
     const rowKey = ({ data, childKey, index }: OptionRecord) => String(data.key ?? childKey ?? `${String(data.label)}${data.value}${index}`);
@@ -513,7 +513,8 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
 
     const activeDescendant = () => {
         const { isOpen, focusIndex } = state();
-        return isOpen && !local.loading && focusIndex !== -1 && focusIndex < visibleOptions().length ? optionId(focusIndex) : undefined;
+        const index = SelectFoundation.getActiveOptionIndex({ isOpen, loading: local.loading, focusIndex, visibleCount: visibleOptions().length });
+        return index === undefined ? undefined : optionId(index);
     };
 
     const prefixKind = () => prefixNode.kind();
@@ -561,10 +562,9 @@ function SelectControl(all: SelectBodyProps & { inGroup?: InputGroupContextValue
         },
     } as const;
 
-    // ARIA 1.2: the search input in the trigger is the combobox; otherwise the trigger is a select-only combobox
-    const inputIsCombobox = () => filterable() && searchInTrigger() && !local.triggerRender && (Boolean(local.multiple) || state().showInput);
+    const inputIsCombobox = () => SelectFoundation.isInputCombobox(local, state().showInput, Boolean(local.triggerRender));
 
-    const clearable = () => Boolean(local.showClear && (state().selections.size || state().inputValue) && !local.disabled);
+    const clearable = () => SelectFoundation.isClearable(local, state());
 
     const tagSize = () => (local.size === 'small' ? 'small' : 'large');
 

@@ -1,5 +1,6 @@
 import { Index, splitProps } from 'solid-js';
 import clsx from 'clsx';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import { cssClasses } from '@fibrae/semi-foundation/pincode/constants';
 import PinCodeFoundation, { type PinCodeAdapter, type PinCodeBaseProps, type PinCodeBaseState } from '@fibrae/semi-foundation/pincode/foundation';
 import '@fibrae/semi-foundation/pincode/pincode.scss';
@@ -90,10 +91,7 @@ export default function PinCode(rawProps: PinCodeProps) {
         () => local.ref
     );
 
-    const digitLabel = (index: number) =>
-        locale()
-            .locale.digit.replace('${index}', String(index + 1))
-            .replace('${count}', String(local.count));
+    const digitLabel = (index: number) => formatLocale(locale().locale.digit, { index: index + 1, count: String(local.count) });
 
     const handleFocusIn = (e: FocusEvent & { currentTarget: HTMLDivElement }) => {
         if (!(e.relatedTarget instanceof Node && e.currentTarget.contains(e.relatedTarget))) {

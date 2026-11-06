@@ -177,7 +177,6 @@ export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTML
             notifyCancel: (e) => base.getProps().onCancel?.(e),
             notifyOk: (e) => base.getProps().onOk?.(e),
             notifyClose: () => base.getProps().afterClose?.(),
-            toggleDisplayNone: (hidden) => setDisplayNone(hidden),
         }),
         context
     );
@@ -203,7 +202,7 @@ export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTML
     const renderedInBody = !isServerRender && coversPage(getPopupContainer ?? context.getPopupContainer);
     const wrapperStyle: CSSProperties = renderedInBody ? { zIndex } : { zIndex, position: 'static' };
 
-    const updateState = () => foundation.toggleDisplayNone(!visible);
+    const updateState = () => setDisplayNone(!visible);
 
     const handleCancel = (e: React.MouseEvent | KeyboardEvent) => foundation.handleCancel(e);
 

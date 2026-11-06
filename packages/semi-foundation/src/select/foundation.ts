@@ -89,7 +89,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
     }
 
     static #firstEnabledIndex(options: OptionRecord[]) {
-        return options.filter((option) => option.show).findIndex((option) => !option.data.disabled);
+        return SelectFoundation.getVisibleOptions(options).findIndex((option) => !option.data.disabled);
     }
 
     static #markSelected({ allowCreate }: SelectBaseProps, selections: Map<any, any>, options: OptionRecord[]): OptionRecord[] {
@@ -326,13 +326,13 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
 
     #moveFocus(offset: number) {
         const { focusIndex, options } = this.getStates();
-        const visibleOptions = options.filter((item) => item.show);
+        const visibleOptions = SelectFoundation.getVisibleOptions(options);
         this.#setFocusIndex(getEnabledStepIndex(offset, focusIndex, visibleOptions.length, (i) => visibleOptions[i].data.disabled));
     }
 
     #selectedIndex(options: OptionRecord[]) {
         const selections = this.getState('selections');
-        return options.filter((option) => option.show).findIndex((option) => selections.has(option.data.value));
+        return SelectFoundation.getVisibleOptions(options).findIndex((option) => selections.has(option.data.value));
     }
 
     // APG: the highlight starts on the selected option; returns whether one is shown
@@ -370,7 +370,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
             this.open();
         }
         const { focusIndex, options } = this.getStates();
-        const visibleOptions = options.filter((option) => option.show);
+        const visibleOptions = SelectFoundation.getVisibleOptions(options);
         let index: number | null;
         if (isTypeahead) {
             const labels = visibleOptions.map(({ data }) => {
@@ -453,7 +453,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
             this.open();
         } else {
             if (focusIndex !== -1) {
-                const visibleOptions = options.filter((item) => item.show);
+                const visibleOptions = SelectFoundation.getVisibleOptions(options);
                 const { length } = visibleOptions;
                 // stale after the visible options shrink
                 if (length <= focusIndex) {
@@ -576,11 +576,11 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
 
     #handleOptionListChange() {
         const { focusIndex, options } = this.getStates();
-        const focusedOption = options.filter((option) => option.show)[focusIndex];
+        const focusedOption = SelectFoundation.getVisibleOptions(options)[focusIndex];
         const newOptionList = this.#filterByKeyword(this.adapter.getOptionsFromChildren());
         this.#updateOptionsActiveStatus(this.getState('selections'), newOptionList);
         // Appending options (load more on scroll or from a slot button) keeps the highlight and the scroll position
-        const keptIndex = focusedOption ? newOptionList.filter((option) => option.show).findIndex((option) => option.data.value === focusedOption.data.value) : -1;
+        const keptIndex = focusedOption ? SelectFoundation.getVisibleOptions(newOptionList).findIndex((option) => option.data.value === focusedOption.data.value) : -1;
         if (keptIndex !== -1) {
             this.setState({ focusIndex: keptIndex });
             return;
@@ -625,6 +625,29 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         if (this.getProp('autoFocus') && !this.#isDisabled()) {
             this.focus();
         }
+    }
+
+    /** The rtl default of `position`; `direction` is read from the host's config */
+    static getPosition<P extends string>(position: P | undefined, direction?: string) {
+        return position ?? (direction === 'rtl' ? 'bottomRight' : 'bottomLeft');
+    }
+
+    static getVisibleOptions<O extends Pick<OptionRecord, 'show'>>(options: O[]) {
+        return options.filter((option) => option.show);
+    }
+
+    /** The index the combobox points at with `aria-activedescendant`, or undefined when no option is highlighted */
+    static getActiveOptionIndex({ isOpen, loading, focusIndex, visibleCount }: { isOpen: boolean; loading?: boolean; focusIndex: number; visibleCount: number }) {
+        return isOpen && !loading && focusIndex !== -1 && focusIndex < visibleCount ? focusIndex : undefined;
+    }
+
+    static isClearable({ showClear, disabled }: { showClear?: boolean; disabled?: boolean }, { selections, inputValue }: Pick<SelectBaseState, 'selections' | 'inputValue'>) {
+        return Boolean(showClear && (selections.size || inputValue) && !disabled);
+    }
+
+    /** ARIA 1.2: the search input in the trigger is the combobox; otherwise the trigger is a select-only combobox */
+    static isInputCombobox({ filter, searchPosition, multiple }: { filter?: unknown; searchPosition?: string; multiple?: boolean }, showInput: boolean, hasCustomTrigger: boolean) {
+        return Boolean(filter) && searchPosition === strings.SEARCH_POSITION_TRIGGER && !hasCustomTrigger && (Boolean(multiple) || showInput);
     }
 
     /** `options` is the host's option list from optionList or the option children */

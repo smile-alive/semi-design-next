@@ -1,4 +1,5 @@
 <script setup lang="ts">
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses } from '@fibrae/semi-foundation/pagination/constants';
     import VirtualList from '../_base/virtual-list.vue';
     import useConfig from '../config-provider/use-config';
@@ -17,7 +18,7 @@
     // Equals $height-pagination_item in pagination.scss
     const itemHeight = 32;
 
-    const pageLabel = (page: number) => locale.value.locale.pageN.replace('${page}', String(page));
+    const pageLabel = (page: number) => formatLocale(locale.value.locale.pageN, { page });
 </script>
 
 <template>

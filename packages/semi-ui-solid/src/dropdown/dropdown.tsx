@@ -1,4 +1,4 @@
-import { type JSX, type Ref, For, Show, children, createMemo, createSignal, mergeProps, onCleanup, onMount, splitProps } from 'solid-js';
+import { type JSX, type Ref, For, Show, children, createMemo, createSignal, mergeProps, onMount, splitProps } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/dropdown/constants';
@@ -111,7 +111,6 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
     const [triggerElement, setTriggerElement] = createSignal<HTMLElement>();
     const [focusableInside, setFocusableInside] = createSignal(false);
     let tooltip: TooltipHandle | undefined;
-    let menuContainer: HTMLDivElement | undefined;
     let wrapper: HTMLSpanElement | undefined;
 
     const { foundation, state } = useFoundation<Foundation, Adapter, DropdownProps, DropdownBaseState>(
@@ -120,7 +119,7 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
         () => DropdownFoundation.getInitialState(),
         () => ({
             notifyVisibleChange: (visible) => props.onVisibleChange?.(visible),
-            getPopup: () => menuContainer?.closest<HTMLElement>('[popover]') ?? null,
+            getPopup: () => tooltip?.getPopup() ?? null,
             hidePopup: () => tooltip?.hide(),
         }),
         { context: () => menuContext(parent, config().direction) }
@@ -220,14 +219,7 @@ export default function Dropdown(rawProps: DropdownProps & { ref?: Ref<DropdownH
     const renderMenu = () => {
         const render = children(() => local.render);
         return (
-            <div
-                ref={(node) => {
-                    menuContainer = node;
-                    onCleanup(() => (menuContainer = undefined));
-                }}
-                class={clsx(props.prefixCls, local.contentClassName)}
-                style={local.style}
-            >
+            <div class={clsx(props.prefixCls, local.contentClassName)} style={local.style}>
                 <div class={`${props.prefixCls}-content`} x-semi-prop="render">
                     <Show when={render() == null && local.menu} fallback={render()}>
                         {(menu) => (

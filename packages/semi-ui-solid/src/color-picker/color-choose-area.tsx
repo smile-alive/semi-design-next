@@ -3,6 +3,7 @@ import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
 import ColorPickerFoundation from '@fibrae/semi-foundation/color-picker/foundation';
 import { hsvaToHslString, hsvaToRgba } from '@fibrae/semi-foundation/color-picker/utils/convert';
 import { round } from '@fibrae/semi-foundation/color-picker/utils/round';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import useFoundation from '../_base/use-foundation';
 import { useLocale } from '../locale';
 
@@ -34,10 +35,7 @@ export default function ColorChooseArea(props: ColorChooseAreaProps) {
         return `rgba(${r},${g},${b},${a})`;
     };
 
-    const valueText = () =>
-        locale()
-            .locale.saturationBrightness.replace('${saturation}', String(round(props.hsva.s)))
-            .replace('${brightness}', String(round(props.hsva.v)));
+    const valueText = () => formatLocale(locale().locale.saturationBrightness, { saturation: round(props.hsva.s), brightness: round(props.hsva.v) });
 
     const renderRange = (axis: Axis, name: () => string) => (
         <input

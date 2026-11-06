@@ -8,7 +8,7 @@ export function focusAfterModeChange(container: HTMLElement | null | undefined, 
     if (!container || (active && active !== document.body)) {
         return;
     }
-    const preferred = container.querySelector<HTMLElement>(isMain ? `.${cssClasses.OPTIONS} [aria-pressed="true"]` : `.${cssClasses.SIDEBAR}-detail-header-left button`);
+    const preferred = container.querySelector<HTMLElement>(isMain ? `.${cssClasses.OPTIONS} [aria-pressed="true"]` : `.${cssClasses.DETAIL_HEADER_LEFT} button`);
     (preferred ?? FocusTrapHandle.getFocusableElements(container)[0])?.focus();
 }
 

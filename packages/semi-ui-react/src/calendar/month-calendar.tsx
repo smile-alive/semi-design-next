@@ -6,6 +6,7 @@ import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
 import { toPercent, type DateObj } from '@fibrae/semi-foundation/calendar/event-util';
 import CalendarFoundation, { type ParsedRangeEvent } from '@fibrae/semi-foundation/calendar/foundation';
 import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/calendar/month-foundation';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import '@fibrae/semi-foundation/calendar/calendar.scss';
 import { IconClose } from '@fibrae/semi-icons-react';
 import useClickOutside from '../_base/use-click-outside';
@@ -189,7 +190,7 @@ export default function MonthCalendar(props: MonthViewProps) {
                         aria-haspopup="dialog"
                         onClick={(e) => handleMoreClick(e, key, date, remained)}
                     >
-                        {locale.remaining.replace('${remained}', String(remained))}
+                        {formatLocale(locale.remaining, { remained })}
                     </button>
                     {dateGridRender?.(date.toString(), date)}
                 </div>

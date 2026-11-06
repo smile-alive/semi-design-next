@@ -404,6 +404,8 @@
 ### Input、TextArea、InputGroup
 
 - Input 在输入法组合中失焦是否需像 TextArea 按 `maxLength` 截断未验证；Vue TextArea 同设 `maxlength` 与 `composition` 时受控或 `v-model.lazy` 下失焦截断可能与显示文字不一致。UNKNOWN（需真实输入法复现、补用例）。
+- Input、TextArea：`composition` 为 true 时，Firefox（`compositionend` 先于 `input`）下一次从候选词提交会触发两次 `onChange`（Solid 原有，Vue、Svelte 同）。已知限制（升级条件：出现依赖 `onChange` 次数的使用方问题，或 `compositionend` 与 `input` 的顺序在规范中统一）。
+- Input、TextArea：Firefox 下真实输入法的行为未验证，Vue、Svelte 的 Firefox 用例用脚本派发 `compositionstart`、`compositionend`、`input` 事件模拟，Playwright 没有输入法接口。UNKNOWN（影响：真实输入法的事件时序可能与模拟不同；解决条件：用真实输入法驱动复现并补用例）。
 - 自动填充用延迟 `transition` 保持主题颜色，只在 Chromium 中实测，Firefox、Safari 未验证。UNKNOWN（影响：这两个浏览器可能仍显示自动填充底色；解决条件：真实浏览器保存表单数据后实测）。
 - 保持原样：未声明属性落在原生 input；内部 Input 的全局默认值按 F7 由宿主显式挡掉；TextArea 清除按钮在 `click` 清除。
 - Solid：在图标槽位（Input、Select 等的 `prefix`、`suffix`，Toast、Notification、Modal.confirm 的 `icon`）之外预先创建的图标元素读不到槽位 context，服务端 HTML 不带槽位的尺寸与类名，挂载后才补上。已知限制（升级条件：首帧图标尺寸跳变成为问题时，数据对象的 `icon` 改为接受图标组件）。
@@ -644,6 +646,7 @@
 - React：`hydrateFromServer` 渲染服务端 HTML 时只移走 `document`，`window` 与其他 jsdom 全局仍在，按 `typeof window` 分支的依赖在服务端与客户端都走浏览器分支，由此造成的 hydration 不一致在 `hydration.test.tsx` 中发现不了。UNKNOWN（影响：这类不一致只由 check-pages 的 SSR 验收覆盖）。解决条件：hydration 用例改为读取 `react-ssr` 项目在 Node 中产出的 HTML。
 - React API 表生成器只读组件传给 `useDefaultProps` 的默认值、参数解构的默认值与模块的 `defaultProps`；调用 `useDefaultProps` 之后在函数体内解构的默认值、写在内部渲染组件里的默认值读不到，默认值列显示 `-`，由说明写出实际默认值（Button、Grid、Breadcrumb.Item、CardGroup、Highlight、ColorPicker、Steps、Skeleton、Navigation、Sidebar 等）。已知限制（升级条件：把这些默认值移入组件的默认值对象，或让生成器读取函数体解构，并删去说明里重复的默认值）。
 - Solid：ScrollList 的公开类型含内部属性 `x-semi-header-alias`、`x-semi-footer-alias`；TimePicker、PinCode 未声明 `autofocus`（经原生属性可用），生成的 API 表不列出。待处理（内部属性随内部 Props 类型拆分处理，`autofocus` 显式声明后重新生成）。
+- Svelte：`vitest/svelte/index.ts` 没有调用 `compatBrowserProjects`，没有 Firefox、WebKit 的浏览器项目，Svelte 组件的浏览器用例从未在 Firefox、WebKit 下运行（React、Vue、Solid 已有）。待处理（照其他框架加上 `...compatBrowserProjects('svelte', browserProject)`，补跑后修复暴露的差异）。
 - `vp pack` 的 d.ts 打包丢失经组件模块再导出的类型（semi-ai-react、semi-ai-vue）。已知限制（升级条件：打包工具修复）。
 - Chat、AIChatDialogue：`escapeHtmlInMarkdown` 不识别 4 空格缩进代码块。已知限制（升级条件：改为 remark 插件）。
 - `pnpm build:icon` 不幂等：生成器输出单行对象，已提交的 semi-icons-core 数据文件是多行，两种写法都能通过 `vp fmt --check`，重新生成产生约 357 个纯格式差异。待处理（让生成器输出与已提交文件一致，或按生成器输出重新提交一次）。

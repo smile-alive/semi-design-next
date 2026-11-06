@@ -9,6 +9,8 @@ export const cssClasses = {
     ANNOTATION_ITEM: `${BASE_CLASS_PREFIX}-sidebar-annotation-item`,
     ANNOTATION: `${BASE_CLASS_PREFIX}-sidebar-annotation`,
     OPTIONS: `${BASE_CLASS_PREFIX}-sidebar-options`,
+    // The back button's container; focusAfterModeChange looks inside it
+    DETAIL_HEADER_LEFT: `${BASE_CLASS_PREFIX}-sidebar-detail-header-left`,
     FILE: `${BASE_CLASS_PREFIX}-sidebar-file`,
 };
 

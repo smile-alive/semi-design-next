@@ -3,6 +3,7 @@ import { memo } from 'react';
 import clsx from 'clsx';
 import { omitBy, pickBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/list/constants';
+import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import type { ElementProps } from '../_base/base';
 import { hasContent } from '../_utils';
 import { Col } from '../grid';
@@ -47,7 +48,7 @@ function ListItem({ ref, header, main, className, extra, children, align = 'flex
         ) : null;
 
     // The button is the only tab stop, so what a Tooltip injects for focus and naming belongs there, not on the li
-    const isControlProp = (_: unknown, key: string) => key === 'tabIndex' || key.startsWith('aria-');
+    const isControlProp = (_: unknown, key: string) => key === 'tabIndex' || isAriaKey(key);
 
     const controlProps: React.AriaAttributes & Pick<React.HTMLAttributes<HTMLElement>, 'tabIndex'> = clickable ? pickBy(rest, isControlProp) : {};
     const liProps = clickable ? omitBy(rest, isControlProp) : rest;

@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { Text, computed, type Slots, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/avatar/constants';
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import type { ElementProps } from '../_base/element-props';
     import { usePopupLayer } from '../_base/popup-layer';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
@@ -57,7 +58,7 @@
     };
 
     const moreLabel = (rest: VNode[]) => {
-        const label = locale.value.locale.more.replace('${count}', String(rest.length));
+        const label = formatLocale(locale.value.locale.more, { count: rest.length });
         const names = rest.map(nameOf).filter(Boolean).join(',');
         return names ? `${label}: ${names}` : label;
     };

@@ -20,6 +20,20 @@ describe('BreadcrumbFoundation.getCollapseRange', () => {
     });
 });
 
+describe('BreadcrumbFoundation.shouldCollapse', () => {
+    it('区间非空、autoCollapse 开启且处于收起态时折叠', () => {
+        expect(BreadcrumbFoundation.shouldCollapse(true, { start: 1, end: 2 }, true)).toBe(true);
+        expect(BreadcrumbFoundation.shouldCollapse(true, { start: 1, end: 1 }, true)).toBe(true);
+    });
+
+    it('区间为空、autoCollapse 关闭或已展开时不折叠', () => {
+        expect(BreadcrumbFoundation.shouldCollapse(true, { start: 1, end: 0 }, true)).toBe(false);
+        expect(BreadcrumbFoundation.shouldCollapse(false, { start: 1, end: 2 }, true)).toBe(false);
+        expect(BreadcrumbFoundation.shouldCollapse(undefined, { start: 1, end: 2 }, true)).toBe(false);
+        expect(BreadcrumbFoundation.shouldCollapse(true, { start: 1, end: 2 }, false)).toBe(false);
+    });
+});
+
 describe('BreadcrumbFoundation.isActive', () => {
     it('有 activeIndex 时只认该项，否则认末项', () => {
         expect(BreadcrumbFoundation.isActive(1, 3, 1)).toBe(true);

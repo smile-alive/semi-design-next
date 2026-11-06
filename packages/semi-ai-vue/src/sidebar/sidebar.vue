@@ -104,7 +104,7 @@
         <template v-if="!isMain" #header>
             <slot v-if="hasSlotContent(() => $slots.detailHeader?.({ mode: props.mode, detailContent: props.detailContent }) ?? [])" :detailContent="props.detailContent" :mode="props.mode" name="detailHeader" />
             <div v-else :class="`${prefix}-detail-header`">
-                <span :class="`${prefix}-detail-header-left`">
+                <span :class="cssClasses.DETAIL_HEADER_LEFT">
                     <Button :aria-label="locale.locale.close" theme="borderless" type="tertiary" @click="emit('backWard', $event, strings.MODE.MAIN)">
                         <template #icon>
                             <IconClose />

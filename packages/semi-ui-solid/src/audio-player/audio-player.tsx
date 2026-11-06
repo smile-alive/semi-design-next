@@ -3,10 +3,11 @@ import clsx from 'clsx';
 import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
 import AudioPlayerFoundation, { type AudioPlayerAdapter } from '@fibrae/semi-foundation/audio-player/foundation';
 import { getCurrentTrack } from '@fibrae/semi-foundation/audio-player/utils';
+import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
 import '@fibrae/semi-foundation/audio-player/audio-player.scss';
 import { IconAlertCircle, IconBackward, IconFastForward, IconPause, IconPlay, IconRefresh, IconRestart, IconVolume2, IconVolumnSilent } from '@fibrae/semi-icons-solid';
-import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import Button from '../button';
@@ -56,9 +57,9 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
     const isList = () => Array.isArray(local.audioUrl);
 
     // the Tooltip text only describes the icon-only buttons, so the same text is also their name
-    const backwardLabel = () => text().backward.replace('${skipDuration}', String(local.skipDuration));
+    const backwardLabel = () => formatLocale(text().backward, { skipDuration: local.skipDuration });
 
-    const forwardLabel = () => text().forward.replace('${skipDuration}', String(local.skipDuration));
+    const forwardLabel = () => formatLocale(text().forward, { skipDuration: local.skipDuration });
 
     const refreshButton = () => <Button style={transparentStyle} aria-label={text().refresh} icon={<IconRefresh class={iconClass} style={{ transform: 'rotateY(180deg)' }} />} onClick={foundation.handleRefresh} />;
 

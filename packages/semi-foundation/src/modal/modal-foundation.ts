@@ -16,7 +16,6 @@ export interface ModalAdapter<P extends ModalProps = ModalProps, CE = unknown, O
     notifyCancel: (e: CE) => unknown;
     notifyOk: (e: OE) => unknown;
     notifyClose: () => void;
-    toggleDisplayNone: (displayNone: boolean) => void;
 }
 
 export interface ModalProps {
@@ -198,9 +197,5 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, CE exten
 
     afterClose = () => {
         this.adapter.notifyClose();
-    };
-
-    toggleDisplayNone = (displayNone: boolean) => {
-        this.adapter.toggleDisplayNone(displayNone);
     };
 }

@@ -3,7 +3,7 @@ import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import FocusTrapHandle from '../utils/focus-handle';
 import type { ArrayElement } from '../utils/type';
 import { adjustPosition } from './adjust-position';
-import { numbers, type strings, TRIGGER_EVENT_NAMES as eventNames } from './constants';
+import { numbers, popupTriggerSelector, type strings, TRIGGER_EVENT_NAMES as eventNames } from './constants';
 
 export interface TooltipAdapter<P extends TooltipBaseProps = TooltipBaseProps> extends DefaultAdapter<P, TooltipBaseState> {
     /** Reports a visibility change, or under a controlled `visible` a request the owner decides on */
@@ -823,8 +823,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
             // disableFocusListener covers neither
             const activeElement = this.#getActiveElement();
             // the focus may be on a control inside the trigger element (the input of a Switch)
-            // a token match: a trigger shared by nested popups lists every popup id
-            const focusOpened = !this.getProp('disableFocusListener') && activeElement?.closest?.(`[data-popupid~="${CSS.escape(this.adapter.getPopupId())}"]`) != null;
+            const focusOpened = !this.getProp('disableFocusListener') && activeElement?.closest?.(popupTriggerSelector(this.adapter.getPopupId())) != null;
             const focusInPopup = Boolean(this.adapter.getPortalContainer()?.contains(activeElement));
             if (!this.adapter.isTriggerHovered() && !focusOpened && !focusInPopup) {
                 this.hide();

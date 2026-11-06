@@ -45,7 +45,6 @@ export interface SideSheetAdapter<P extends SideSheetProps = SideSheetProps> ext
     disabledBodyScroll: () => void;
     enabledBodyScroll: () => void;
     notifyCancel: (e: any) => void;
-    notifyVisibleChange: (visible: boolean) => void;
     /** Puts the sheet on the overlay stack; `onEscape` receives Escape while it is on top */
     openLayer: (onEscape: (e: KeyboardEvent) => boolean) => void;
     closeLayer: () => void;
@@ -53,7 +52,6 @@ export interface SideSheetAdapter<P extends SideSheetProps = SideSheetProps> ext
     trapFocus: () => void;
     releaseFocus: () => void;
     restoreFocus: () => void;
-    toggleDisplayNone: (displayNone: boolean) => void;
 }
 
 export default class SideSheetFoundation<P extends SideSheetProps = SideSheetProps> extends BaseFoundation<SideSheetAdapter<P>, P, SideSheetState> {
@@ -105,7 +103,7 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
     // React refocuses the pre-commit element after the leave starts while the sheet is still mounted: restore again
     override handlePropsChange() {
         if (!this.getProp('visible')) {
-            this.restoreFocus();
+            this.adapter.restoreFocus();
         }
     }
 
@@ -141,18 +139,6 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
         this.adapter.enabledBodyScroll();
         this.adapter.closeLayer();
         this.adapter.releaseFocus();
-        this.restoreFocus();
-    };
-
-    restoreFocus = () => {
         this.adapter.restoreFocus();
-    };
-
-    onVisibleChange = (visible: boolean) => {
-        this.adapter.notifyVisibleChange(visible);
-    };
-
-    toggleDisplayNone = (displayNone: boolean) => {
-        this.adapter.toggleDisplayNone(displayNone);
     };
 }

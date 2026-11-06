@@ -106,7 +106,7 @@
         {@render detailHeader({ mode, detailContent })}
     {:else}
         <div class={`${prefix}-detail-header`}>
-            <span class={`${prefix}-detail-header-left`}>
+            <span class={cssClasses.DETAIL_HEADER_LEFT}>
                 <Button aria-label={locale().locale.close} theme="borderless" type="tertiary" onclick={(event: MouseEvent) => onBackWard?.(event, strings.MODE.MAIN)}>
                     {#snippet icon()}<IconClose />{/snippet}
                 </Button>

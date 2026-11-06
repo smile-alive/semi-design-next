@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses } from '@fibrae/semi-foundation/pincode/constants';
     import PinCodeFoundation, { type PinCodeAdapter, type PinCodeBaseProps } from '@fibrae/semi-foundation/pincode/foundation';
     import '@fibrae/semi-foundation/pincode/pincode.scss';
@@ -68,10 +69,7 @@
     const attrs = $derived(splitControlAttrs(rest, (key) => cellKeys.has(key)));
     const rootAttrs = $derived(Object.fromEntries(Object.entries(attrs.root).filter(([key]) => !dropped.has(key))));
 
-    const digitLabel = (index: number) =>
-        locale()
-            .locale.digit.replace('${index}', String(index + 1))
-            .replace('${count}', String(count));
+    const digitLabel = (index: number) => formatLocale(locale().locale.digit, { index: index + 1, count });
 
     // Form's id goes on the first cell so clicking the label focuses it
     const cellAttrs = (index: number) => (index === 0 ? attrs.control : { ...attrs.control, id: undefined });

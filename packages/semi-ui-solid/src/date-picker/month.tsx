@@ -1,6 +1,6 @@
 import { type Accessor, type JSX, Index, Show, createEffect, createMemo, createSignal, createUniqueId, on } from 'solid-js';
 import clsx from 'clsx';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
 import type { DayStatusType } from '@fibrae/semi-foundation/date-picker/foundation';
 import MonthFoundation, { type MonthDayInfo, type MonthFoundationProps } from '@fibrae/semi-foundation/date-picker/month-foundation';
@@ -66,8 +66,12 @@ export default function Month(props: MonthProps) {
 
     // APG grid: focus stays on the grid, the keys move the active day and Enter or Space selects it
     const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
+        const action = MonthFoundation.getKeyAction(event, { activeDate: activeDate(), month: props.month, weekStartsOn: props.weekStartsOn, rtl: config().direction === 'rtl' });
+        if (!action) {
+            return;
+        }
+        event.preventDefault();
+        if (action.type === 'select') {
             selectDay(
                 weeks()
                     .flat()
@@ -75,14 +79,9 @@ export default function Month(props: MonthProps) {
             );
             return;
         }
-        const target = MonthFoundation.getKeyboardTargetDate(event, parseISO(activeDate()), props.weekStartsOn, config().direction === 'rtl');
-        if (target) {
-            event.preventDefault();
-            setKeyboardDate(format(target, strings.FORMAT_FULL_DATE));
-            const switchType = MonthFoundation.getMonthSwitch(target, props.month);
-            if (switchType) {
-                props.onMonthSwitch(switchType);
-            }
+        setKeyboardDate(action.date);
+        if (action.monthSwitch) {
+            props.onMonthSwitch(action.monthSwitch);
         }
     };
 

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { format, parseISO } from 'date-fns';
+    import { format } from 'date-fns';
     import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
     import MonthFoundation, { type MonthDayInfo } from '@fibrae/semi-foundation/date-picker/month-foundation';
     import watch from '../_base/watch.svelte.js';
@@ -76,19 +76,18 @@
 
     // APG grid: focus stays on the grid; the keys move the active day, Enter or Space selects it
     const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
+        const action = MonthFoundation.getKeyAction(event, { activeDate, month, weekStartsOn, rtl: config.direction === 'rtl' });
+        if (!action) {
+            return;
+        }
+        event.preventDefault();
+        if (action.type === 'select') {
             selectDay(weeks.flat().find((day) => day.fullDate === activeDate));
             return;
         }
-        const target = MonthFoundation.getKeyboardTargetDate(event, parseISO(activeDate), weekStartsOn, config.direction === 'rtl');
-        if (target) {
-            event.preventDefault();
-            keyboardDate = format(target, strings.FORMAT_FULL_DATE);
-            const switchType = MonthFoundation.getMonthSwitch(target, month);
-            if (switchType) {
-                onMonthSwitch(switchType);
-            }
+        keyboardDate = action.date;
+        if (action.monthSwitch) {
+            onMonthSwitch(action.monthSwitch);
         }
     };
 

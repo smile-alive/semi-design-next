@@ -21,8 +21,8 @@ import { BREADCRUMB_ITEM, ItemView } from './item';
 
 const clsPrefix = cssClasses.PREFIX;
 
-type Foundation = BreadcrumbFoundation<BreadcrumbProps, MouseEvent>;
-type Adapter = BreadcrumbAdapter<BreadcrumbProps, MouseEvent>;
+type Foundation = BreadcrumbFoundation<BreadcrumbProps>;
+type Adapter = BreadcrumbAdapter<BreadcrumbProps>;
 type RouteEntry = ReturnType<typeof BreadcrumbFoundation.genRoutes>[number];
 
 const defaultProps = {
@@ -51,9 +51,7 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
         BreadcrumbFoundation,
         props,
         () => BreadcrumbFoundation.getInitialState(),
-        (base) => ({
-            notifyClick: (info, e) => base.getProps().onClick?.(info, e),
-        })
+        () => ({})
     );
 
     const view: BreadcrumbView = {
@@ -71,7 +69,7 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
     const context: BreadContextValue = {
         view: () => view,
         separator: () => local.separator,
-        onClick: foundation.handleClick,
+        onClick: (info, e) => local.onClick?.(info, e),
     };
 
     // a spread signal object notifies every key; new route entries or item contents would remount every item
@@ -114,7 +112,7 @@ export default function Breadcrumb(rawProps: BreadcrumbProps) {
         return navElement;
     });
 
-    const shouldCollapse = () => local.autoCollapse && range().end >= range().start && state().isCollapsed;
+    const shouldCollapse = () => BreadcrumbFoundation.shouldCollapse(local.autoCollapse, range(), state().isCollapsed);
 
     const visible = createMemo((): unknown[] => {
         const all = entries();

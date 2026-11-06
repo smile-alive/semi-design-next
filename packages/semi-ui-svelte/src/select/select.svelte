@@ -246,22 +246,23 @@
     const selectionTextId = $derived(`${uid}-selection`);
     const filterable = $derived(Boolean(filter));
     const searchInTrigger = $derived(searchPosition === strings.SEARCH_POSITION_TRIGGER);
-    const resolvedPosition = $derived(position ?? (config.direction === 'rtl' ? 'bottomRight' : 'bottomLeft'));
-    const visibleOptions = $derived((states().options as OptionRecord[]).filter((option) => option.show));
+    const resolvedPosition = $derived(SelectFoundation.getPosition(position, config.direction));
+    const visibleOptions = $derived(SelectFoundation.getVisibleOptions(states().options as OptionRecord[]));
     const selectedItems = $derived([...states().selections.values()] as SelectOptionProps[]);
     const optionRuns = $derived(getOptionRuns(visibleOptions));
 
     const activeDescendant = $derived.by(() => {
         const { isOpen, focusIndex } = states();
-        return isOpen && !loading && focusIndex !== -1 && focusIndex < visibleOptions.length ? optionId(focusIndex) : undefined;
+        const index = SelectFoundation.getActiveOptionIndex({ isOpen, loading, focusIndex, visibleCount: visibleOptions.length });
+        return index === undefined ? undefined : optionId(index);
     });
 
-    const clearable = $derived(showClear && Boolean(states().selections.size || states().inputValue) && !disabled);
+    const clearable = $derived(SelectFoundation.isClearable({ showClear, disabled }, states()));
     const inputId = $derived((inputProps?.id as string | undefined) ?? `${selectId}-input`);
 
     // ARIA 1.2: while the search input is in the trigger it is the combobox, otherwise the trigger is a select-only
     // combobox. The single-select input mounts only while searching, so the closed trigger exposes the selected text
-    const inputIsCombobox = $derived(filterable && searchInTrigger && !trigger && (multiple || states().showInput));
+    const inputIsCombobox = $derived(SelectFoundation.isInputCombobox({ filter, searchPosition, multiple }, states().showInput, Boolean(trigger)));
 
     // A rendered inset label names the combobox and the listbox, so it needs an id even when the caller gives none
     const insetLabelShown = $derived(!trigger && !prefix && Boolean(insetLabel));
