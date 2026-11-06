@@ -441,6 +441,23 @@ describe('Svelte Input', () => {
         expect(getInput()).toHaveValue('ab');
     });
 
+    it.each([
+        [true, '好'],
+        [false, ''],
+    ])('函数绑定的 Input 在输入法组合结束后才收到输入事件时（Firefox 的顺序），父组件接受 %s 则显示 %j', async (accept, shown) => {
+        const { store, input } = setupModes('function', '', accept);
+        await fireEvent.compositionStart(input);
+        await fireEvent.input(input, { target: { value: 'hao' }, isComposing: true });
+        await settle();
+        expect(input).toHaveValue('hao');
+        await fireEvent.compositionEnd(input, { target: { value: '好' } });
+        await settle();
+        await fireEvent.input(input);
+        await settle();
+        expect(input).toHaveValue(shown);
+        expect(store.value).toBe(shown);
+    });
+
     it('composition 模式在输入法组合结束后上报一次，并显示组合中的文本', async () => {
         const onChange = vi.fn<Change>();
         setup({ props: { value: '', composition: true, onChange } });

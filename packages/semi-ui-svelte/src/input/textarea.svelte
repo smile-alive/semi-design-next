@@ -183,8 +183,10 @@
     };
 
     const handleCompositionEnd = (event: CompositionEvent) => {
-        foundation.handleCompositionEnd(event);
-        void restoreShownText();
+        // false: Firefox reports the committed text in the input event after this one, which restores instead
+        if (foundation.handleCompositionEnd(event)) {
+            void restoreShownText();
+        }
     };
 
     const handleFocusIn = (event: FocusEvent & { currentTarget: HTMLElement }) => {

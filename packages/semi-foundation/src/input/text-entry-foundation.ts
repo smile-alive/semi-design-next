@@ -35,6 +35,7 @@ export interface TextEntryAdapter<P extends TextEntryBaseProps, S extends TextEn
 export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P extends TextEntryBaseProps, S extends TextEntryBaseState, CE = unknown> extends BaseFoundation<A, P, S> {
     #compositionEnter: boolean = false;
     #composedSinceFocus = false;
+    #reported: string | undefined;
 
     protected get composedSinceFocus() {
         return this.#composedSinceFocus;
@@ -97,6 +98,7 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
     handleChange = (value: string, e: unknown) => {
         const { composition } = this.getProps();
         let nextValue = value;
+        this.#reported = value;
         // composing: state must still follow, controlled or not, so the element shows the composing text
         if (composition && this.#compositionEnter) {
             this.setEntryState({ value: nextValue });
@@ -114,6 +116,12 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
         this.adapter.notifyCompositionStart(e);
     };
 
+    /**
+     * Returns whether the parent has been told the element's text, so the host may write the shown text back to the
+     * element now. Gecko fires `compositionend` before the `input` event that reports the committed text
+     * (w3c/uievents#202): this returns false then, and that `input` event is where the host writes back; writing now would
+     * replace the committed text with the stale controlled one.
+     */
     handleCompositionEnd = (e: CE & Pick<Event, 'target'>) => {
         const { composition } = this.getProps();
         const value = e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement ? e.target.value : '';
@@ -121,21 +129,21 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
         this.adapter.notifyCompositionEnd(e);
         if (composition) {
             const nextValue = this.getNextValue(value);
+            this.#reported = value;
             this.changeValue(nextValue, e);
             if (this.isControlledComponent()) {
                 // the parent may reject the result; the value prop then does not change
                 // and nothing else resets the text
                 this.setEntryState({ value: this.getProp('value') });
             }
-            return;
+        } else if (typeof this.getProp('getValueLength') === 'function') {
+            const nextValue = this.handleVisibleMaxLength(value);
+            if (nextValue !== value) {
+                this.#reported = value;
+                this.changeValue(nextValue, e);
+            }
         }
-        if (typeof this.getProp('getValueLength') !== 'function') {
-            return;
-        }
-        const nextValue = this.handleVisibleMaxLength(value);
-        if (nextValue !== value) {
-            this.changeValue(nextValue, e);
-        }
+        return value === this.#reported;
     };
 
     handleCompositionUpdate = (e: CE) => {
