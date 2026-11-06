@@ -14,7 +14,7 @@ import { useFormContext } from './context';
 import { FormInput, FormInputNumber, FormSelect, FormSwitch, FormTextArea } from './field';
 import Section from './section';
 
-export type { SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
+export type { JsonSchema, SchemaFieldKind, SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
 
 export interface SchemaFieldRenderContext {
     node: SchemaFieldNode;

@@ -4,7 +4,7 @@ import type { ElementProps } from '../_base/element-props';
 import type { ColProps } from '../grid';
 import type { LabelProps } from './label';
 
-export type { FieldError, FieldErrorInput, FieldValidateTriggerType, FieldValidator, FormState, RuleItem, RuleType } from '@fibrae/semi-foundation/form/interface';
+export type { FieldError, FieldErrorInput, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, RuleItem, RuleType } from '@fibrae/semi-foundation/form/interface';
 
 /** Values is what the form edits, Output what a validation of the whole form resolves with (a schema's output) */
 export type FormApi<Values extends Record<string, any> = any, Output = Values> = BaseFormApi<Values, Output>;

@@ -81,6 +81,7 @@ export type {
     FormProps,
     FormRenderProps,
     FormState,
+    FormValidator,
     InputGroupProps as FormInputGroupProps,
     JsonSchema,
     LabelProps as FormLabelProps,
