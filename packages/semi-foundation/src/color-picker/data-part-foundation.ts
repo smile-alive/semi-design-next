@@ -1,7 +1,7 @@
 import { isEqual } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import ColorPickerFoundation, { type ColorValue } from './foundation';
-import type { ColorFormat } from './interface';
+import type { ColorFormat, HsvaColor, RgbaColor } from './interface';
 import { hexToRgba, rgbaToHex } from './utils/convert';
 import split from './utils/split';
 
@@ -10,8 +10,9 @@ export interface DataPartBaseProps {
     defaultFormat: ColorFormat;
     width: number;
     alpha?: boolean;
-    foundation: ColorPickerFoundation;
     eyeDropper: boolean;
+    onChange: (color: HsvaColor | RgbaColor | string, format: ColorFormat) => void;
+    onAlphaChange: (alpha: number) => void;
 }
 
 export interface DataPartBaseState {
@@ -19,7 +20,10 @@ export interface DataPartBaseState {
     inputValue: string;
 }
 
-export type DataPartAdapter<P extends DataPartBaseProps = DataPartBaseProps> = DefaultAdapter<P, DataPartBaseState>;
+export interface DataPartAdapter<P extends DataPartBaseProps = DataPartBaseProps> extends DefaultAdapter<P, DataPartBaseState> {
+    notifyChange: (color: HsvaColor | RgbaColor | string, format: ColorFormat) => void;
+    notifyAlphaChange: (alpha: number) => void;
+}
 
 export default class DataPartFoundation<P extends DataPartBaseProps = DataPartBaseProps> extends BaseFoundation<DataPartAdapter<P>, P, DataPartBaseState> {
     // an equal color object, such as a fresh controlled value, keeps what is being typed
@@ -34,12 +38,35 @@ export default class DataPartFoundation<P extends DataPartBaseProps = DataPartBa
     /** Whether the text box already says `color`, so it must not overwrite what is being typed */
     #isInputValueOf(color: ColorValue) {
         const { format, inputValue } = this.getStates();
-        const parsed = this.getValueByInputValue(inputValue);
+        const parsed = this.#parseInputValue(inputValue);
         // a hex typed without '#' is not a match, so the sync completes it
         if (!parsed || (format === 'hex' && !inputValue.startsWith('#'))) {
             return false;
         }
         return isEqual(ColorPickerFoundation.getColorValue(parsed, format, Boolean(this.getProp('alpha'))), color);
+    }
+
+    #parseInputValue(value: string) {
+        const { format } = this.getStates();
+        if (format === 'rgba' || format === 'hsva') {
+            const parsed = format === 'rgba' ? split(value, 'rgba') : split(value, 'hsva');
+            if (!parsed) {
+                return false;
+            }
+            const hasAlpha = value.split(',').filter((part) => part.trim() !== '').length >= 4;
+            return hasAlpha ? parsed : { ...parsed, a: this.getProp('currentColor').rgba.a };
+        } else if (format === 'hex') {
+            if (!value.startsWith('#')) {
+                value = '#' + value;
+            }
+            if (/^#[0-9a-f]{6}$/i.test(value)) {
+                return this.#hexWithCurrentAlpha(value);
+            }
+            if (/^#[0-9a-f]{8}$/i.test(value)) {
+                return value;
+            }
+        }
+        return false;
     }
 
     static getInitialState(props: Pick<DataPartBaseProps, 'currentColor' | 'defaultFormat'>): DataPartBaseState {
@@ -67,31 +94,7 @@ export default class DataPartFoundation<P extends DataPartBaseProps = DataPartBa
         }
     }
 
-    getValueByInputValue = (value: string) => {
-        const { format } = this.getStates();
-        if (format === 'rgba' || format === 'hsva') {
-            const parsed = format === 'rgba' ? split(value, 'rgba') : split(value, 'hsva');
-            if (!parsed) {
-                return false;
-            }
-            const hasAlpha = value.split(',').filter((part) => part.trim() !== '').length >= 4;
-            return hasAlpha ? parsed : { ...parsed, a: this.getProp('currentColor').rgba.a };
-        } else if (format === 'hex') {
-            if (!value.startsWith('#')) {
-                value = '#' + value;
-            }
-            if (/^#[0-9a-f]{6}$/i.test(value)) {
-                return this.#hexWithCurrentAlpha(value);
-            }
-            if (/^#[0-9a-f]{8}$/i.test(value)) {
-                return value;
-            }
-        }
-        return false;
-    };
-
     handlePickValueWithStraw = async () => {
-        const colorPickerFoundation = this.getProps().foundation;
         if (!window.EyeDropper) {
             return;
         }
@@ -101,7 +104,7 @@ export default class DataPartFoundation<P extends DataPartBaseProps = DataPartBa
             // the signal aborts on unmount, cancelling a pick still open
             const { sRGBHex } = await eyeDropper.open({ signal: this.signal });
             // as rgba, not 8-digit hex: the hex round trip would quantize the kept opacity
-            colorPickerFoundation.handleChange({ ...hexToRgba(sRGBHex), a: this.getProp('currentColor').rgba.a }, 'rgba');
+            this.adapter.notifyChange({ ...hexToRgba(sRGBHex), a: this.getProp('currentColor').rgba.a }, 'rgba');
         } catch (e) {
             // AbortError means Esc or unmount; anything else is a real failure
             if (!(e instanceof DOMException && e.name === 'AbortError')) {
@@ -110,8 +113,17 @@ export default class DataPartFoundation<P extends DataPartBaseProps = DataPartBa
         }
     };
 
+    // the color goes out before the text is stored: both land in one commit, so handlePropsChange sees the typed text
     handleInputValueChange = (value: string) => {
+        const parsed = this.#parseInputValue(value);
+        if (parsed) {
+            this.adapter.notifyChange(parsed, this.getState('format'));
+        }
         this.setState({ inputValue: value });
+    };
+
+    handleAlphaInputChange = (percent: number) => {
+        this.adapter.notifyAlphaChange(Number((percent / 100).toFixed(2)));
     };
 
     handleFormatChange = (format: ColorFormat) => {

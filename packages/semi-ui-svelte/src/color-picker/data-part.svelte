@@ -23,21 +23,11 @@
         DataPartFoundation,
         props,
         (view) => DataPartFoundation.getInitialState(view),
-        () => ({})
+        () => ({
+            notifyChange: (color, format) => props.onChange(color, format),
+            notifyAlphaChange: (alpha) => props.onAlphaChange(alpha),
+        })
     );
-
-    // report the color first, so the text box already shows the color it produced
-    const handleTextChange = (text: string) => {
-        const value = foundation.getValueByInputValue(text);
-        if (value) {
-            props.foundation.handleChange(value, states().format);
-        }
-        foundation.handleInputValueChange(text);
-    };
-
-    const handleAlphaChange = (percent: number) => {
-        props.foundation.handleAlphaChangeByHandle({ a: Number((percent / 100).toFixed(2)) });
-    };
 
     const handleSelectFormat = (format: string | number) => {
         foundation.handleFormatChange(format as ColorFormat);
@@ -55,9 +45,9 @@
 <div class={`${cssClasses.PREFIX}-dataPart`} style:width={`${props.width}px`}>
     <div class={`${cssClasses.PREFIX}-colorDemoBlock`} style:background-color={`rgba(${props.currentColor.rgba.r},${props.currentColor.rgba.g},${props.currentColor.rgba.b},${props.currentColor.rgba.a})`} style:min-height="20px" style:min-width="20px"></div>
     <InputGroup class={`${cssClasses.PREFIX}-inputGroup`} size="small">
-        <Input aria-label={locale().locale.color} bind:value={() => states().inputValue, () => {}} class={`${cssClasses.PREFIX}-colorPickerInput`} onChange={handleTextChange} showClear={false} />
+        <Input aria-label={locale().locale.color} bind:value={() => states().inputValue, () => {}} class={`${cssClasses.PREFIX}-colorPickerInput`} onChange={foundation.handleInputValueChange} showClear={false} />
         {#if props.alpha}
-            <InputNumber aria-label={locale().locale.alpha} bind:value={() => Math.round(props.currentColor.rgba.a * 100), () => {}} class={`${cssClasses.PREFIX}-colorPickerInputNumber`} hideButtons max={100} min={0} onNumberChange={handleAlphaChange} showClear={false} suffix={percentSuffix} />
+            <InputNumber aria-label={locale().locale.alpha} bind:value={() => Math.round(props.currentColor.rgba.a * 100), () => {}} class={`${cssClasses.PREFIX}-colorPickerInputNumber`} hideButtons max={100} min={0} onNumberChange={foundation.handleAlphaInputChange} showClear={false} suffix={percentSuffix} />
         {/if}
         <Select aria-label={locale().locale.format} bind:value={() => states().format, () => {}} class={`${cssClasses.PREFIX}-formatSelect`} onSelect={handleSelectFormat} optionList={FORMAT_OPTIONS} size="small" />
     </InputGroup>

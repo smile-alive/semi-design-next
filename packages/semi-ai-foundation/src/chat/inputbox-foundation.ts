@@ -1,5 +1,6 @@
 import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
 import { strings as uploadStrings } from '@fibrae/semi-foundation/upload/constants';
+import { removeUnlessPrevented } from '@fibrae/semi-foundation/upload/utils';
 import { handlePrevent } from '@fibrae/semi-foundation/utils/a11y';
 import { strings, type SendHotKey } from './constants';
 
@@ -60,10 +61,7 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
     };
 
     onAttachmentDelete = (props: any) => {
-        const remove = (allowed: boolean | void) => {
-            if (allowed === false) {
-                return;
-            }
+        removeUnlessPrevented(this.adapter.notifyBeforeRemove(props, this.getState('attachment')), () => {
             // the list may have changed while beforeRemove was pending
             const { content, attachment } = this.getStates();
             const newAttachMent = attachment.filter((item) => item.uid !== props.uid);
@@ -77,14 +75,7 @@ export default class InputBoxFoundation<P extends InputBoxBaseProps = InputBoxBa
                 inputValue: content,
                 attachment: newAttachMent,
             });
-        };
-        const allowed = this.adapter.notifyBeforeRemove(props, this.getState('attachment'));
-        if (allowed instanceof Promise) {
-            // a rejected beforeRemove keeps the attachment, like Upload's
-            allowed.then(remove, () => {});
-        } else {
-            remove(allowed);
-        }
+        });
     };
 
     onSend = (_e: unknown) => {

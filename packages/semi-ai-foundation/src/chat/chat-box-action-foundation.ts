@@ -1,5 +1,6 @@
-import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
+import type { DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
 import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
+import ActionBarFoundation, { type ActionBarState } from '../action-bar-foundation';
 import type { Message } from './foundation';
 
 export interface ChatBoxActionBaseProps {
@@ -13,10 +14,7 @@ export function getMessageText(message?: Message): string | undefined {
     return typeof text === 'string' && text !== '' ? text : undefined;
 }
 
-export interface ChatBoxActionState {
-    visible: boolean;
-    showAction: boolean;
-}
+export type ChatBoxActionState = ActionBarState;
 
 export interface ChatBoxActionAdapter<P extends ChatBoxActionBaseProps = ChatBoxActionBaseProps> extends DefaultAdapter<P, ChatBoxActionState> {
     notifyDeleteMessage: () => void;
@@ -27,22 +25,18 @@ export interface ChatBoxActionAdapter<P extends ChatBoxActionBaseProps = ChatBox
     notifyResetMessage: () => void;
 }
 
-export default class ChatBoxActionFoundation<P extends ChatBoxActionBaseProps = ChatBoxActionBaseProps> extends BaseFoundation<ChatBoxActionAdapter<P>, P, ChatBoxActionState> {
+export default class ChatBoxActionFoundation<P extends ChatBoxActionBaseProps = ChatBoxActionBaseProps> extends ActionBarFoundation<ChatBoxActionAdapter<P>, P, ChatBoxActionState> {
     static getInitialState(): ChatBoxActionState {
         return { visible: false, showAction: false };
     }
 
     showDeletePopup = () => {
-        this.setState({ visible: true, showAction: true });
+        this.openMenu();
     };
 
     /** Closes the delete popConfirm: from its buttons, or on a mousedown outside its trigger while it is open */
     hideDeletePopup = () => {
-        // The delay keeps the action bar from flickering when the popConfirm closes through its cancel button
-        this.setState({ visible: false });
-        setTimeout(() => {
-            this.setState({ showAction: false });
-        }, 150);
+        this.closeMenu();
     };
 
     deleteMessage = () => {

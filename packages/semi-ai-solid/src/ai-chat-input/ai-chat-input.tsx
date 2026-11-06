@@ -1,5 +1,5 @@
 import { For, Index, type JSX, Match, Show, Switch, createMemo, createSignal, createUniqueId, mergeProps, splitProps, untrack } from 'solid-js';
-import type { Editor, FocusPosition, Content as TiptapContent } from '@tiptap/core';
+import type { Editor } from '@tiptap/core';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
 import { cssClasses, numbers, strings } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
@@ -134,10 +134,43 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     let editor: Editor | null = null;
     let upload: UploadElement | null = null;
     let configure: ConfigureHandle | undefined;
-    let trigger: HTMLDivElement | undefined;
     let richText: HTMLDivElement | undefined;
     let skillPanel: HTMLDivElement | undefined;
     let suggestionPanel: HTMLDivElement | undefined;
+
+    const { foundation, state } = useFoundation<Foundation, Adapter, AIChatInputProps, AIChatInputState>(
+        AIChatInputFoundation,
+        props,
+        () => AIChatInputFoundation.getInitialState(props),
+        () => ({
+            getEditor: () => editor,
+            // the panel may render in a shadow root, out of reach of document queries
+            getOptionNode: (kind, index) => ((kind === 'skill' ? skillPanel : suggestionPanel)?.children[index] as HTMLElement | undefined) ?? null,
+            notifySkillChange: (skill?: Skill) => local.onSkillChange?.(skill),
+            notifyContentChange: (result) => {
+                setTransformedContent(result);
+                local.onContentChange?.(result);
+            },
+            setTransformedContent: (result) => setTransformedContent(result),
+            notifyConfigureChange: (value, changedValue) => local.onConfigureChange?.(value, changedValue),
+            manualUpload: (files) => upload?.insert(files),
+            notifyMessageSend: (message) => local.onMessageSend?.(message),
+            notifyStopGenerate: () => local.onStopGenerate?.(),
+            getRichTextDiv: () => richText ?? null,
+            notifyReferenceClick: (reference) => local.onReferenceClick?.(reference),
+            notifyFocus: (event) => local.onFocus?.(event),
+            notifyBlur: (event) => local.onBlur?.(event),
+            notifyUploadChange: (changed) => local.onUploadChange?.(changed),
+            notifyUploadPropsChange: (changed) => local.uploadProps?.onChange?.(changed),
+            notifyBeforeRemove: (file, fileList) => local.uploadProps?.beforeRemove?.(file, fileList),
+            notifyUploadRemove: (file, fileList, fileItem) => local.uploadProps?.onRemove?.(file, fileList, fileItem),
+            getConfigureValue: () => configure?.getConfigureValue(),
+        })
+    );
+
+    // a delete button leaves with its item while it holds focus; the editor is where typing continues
+    // tiptap throws on reading the view of a destroyed editor, which is the case when the whole input unmounts
+    const handoverToEditor = useFocusHandover<HTMLButtonElement>(() => (editor && !editor.isDestroyed ? editor.view.dom : null));
 
     const editorId = `${prefixCls}-editor-${popupId}`;
     const skillListId = `${prefixCls}-skill-${popupId}`;
@@ -153,50 +186,8 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     // read here, untracked: the root is created inside the Popover's children
     const ref = props.ref;
 
-    const setContent = (content: TiptapContent) => {
-        editor?.commands.setContent(content);
-    };
-
-    // null and false are tiptap positions (keep the selection, do nothing), so only undefined falls back
-    const focus = (pos?: FocusPosition) => {
-        editor?.commands.focus(pos ?? 'end');
-    };
-
-    const { foundation, state } = useFoundation<Foundation, Adapter, AIChatInputProps, AIChatInputState>(
-        AIChatInputFoundation,
-        props,
-        () => AIChatInputFoundation.getInitialState(props),
-        () => ({
-            setContent,
-            clearContent: () => setContent(''),
-            focusEditor: focus,
-            getEditor: () => editor,
-            // the panel may render in a shadow root, out of reach of document queries
-            getOptionNode: (kind, index) => ((kind === 'skill' ? skillPanel : suggestionPanel)?.children[index] as HTMLElement | undefined) ?? null,
-            notifySkillChange: (skill?: Skill) => local.onSkillChange?.(skill),
-            notifyContentChange: (result) => {
-                setTransformedContent(result);
-                local.onContentChange?.(result);
-            },
-            setTransformedContent: (result) => setTransformedContent(result),
-            getActiveElement: () => (trigger?.getRootNode() as Document | ShadowRoot | undefined)?.activeElement ?? null,
-            notifyConfigureChange: (value, changedValue) => local.onConfigureChange?.(value, changedValue),
-            manualUpload: (files) => upload?.insert(files),
-            notifyMessageSend: (message) => local.onMessageSend?.(message),
-            notifyStopGenerate: () => local.onStopGenerate?.(),
-            getRichTextDiv: () => richText ?? null,
-            notifyReferenceClick: (reference) => local.onReferenceClick?.(reference),
-            notifyFocus: (event) => local.onFocus?.(event),
-            notifyBlur: (event) => local.onBlur?.(event),
-            notifyUploadChange: (changed) => local.onUploadChange?.(changed),
-            notifyUploadPropsChange: (changed) => local.uploadProps?.onChange?.(changed),
-            notifyUploadRemove: (file, fileList, fileItem) => local.uploadProps?.onRemove?.(file, fileList, fileItem),
-            getConfigureValue: () => configure?.getConfigureValue(),
-        })
-    );
-
     const rootOwn = mergeProps(rest, {
-        ref: (element: HTMLDivElement) => mergeRefs(ref)((trigger = Object.assign(element, handle))),
+        ref: (element: HTMLDivElement) => mergeRefs(ref)(Object.assign(element, handle)),
         get role() {
             return namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']);
         },
@@ -218,10 +209,6 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
         },
     });
 
-    // a delete button leaves with its item while it holds focus; the editor is where typing continues
-    // tiptap throws on reading the view of a destroyed editor, which is the case when the whole input unmounts
-    const handoverToEditor = useFocusHandover<HTMLButtonElement>(() => (editor && !editor.isDestroyed ? editor.view.dom : null));
-
     // a new skill or template renderer redraws the template; the renderer itself is not tracked
     const templateSkill = createMemo(() => state().skill);
 
@@ -229,9 +216,9 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
         changeTemplateVisible: foundation.changeTemplateVisible,
         deleteContent: foundation.handleDeleteContent,
         deleteUploadFile: foundation.handleUploadFileDelete,
-        focusEditor: focus,
+        focusEditor: foundation.focusEditor,
         getEditor: () => editor,
-        setContent,
+        setContent: foundation.setContent,
         setContentWhileSaveTool: foundation.setContentWhileSaveTool,
     };
 
@@ -349,7 +336,7 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     const templateNode = () => {
         const render = renderTemplate();
         const skill = templateSkill();
-        return untrack(() => render?.(skill, setContent));
+        return untrack(() => render?.(skill, foundation.setContent));
     };
 
     const renderPanel = () => (
@@ -505,8 +492,10 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
                         extensions={local.extensions}
                         showPlaceholderWhenSkillOnly={local.showPlaceholderWhenSkillOnly}
                         ref={(element) => (richText = element)}
-                        onReady={(instance) => (editor = instance)}
-                        onCreate={foundation.handleCreate}
+                        onCreate={(instance) => {
+                            editor = instance;
+                            foundation.handleCreate();
+                        }}
                         handleKeyDown={foundation.handleRichTextAreaKeyDown}
                         onBlur={foundation.handleBlur}
                         onChange={foundation.handleContentChange}

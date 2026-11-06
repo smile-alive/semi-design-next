@@ -2,6 +2,7 @@
     import { computed, h, useAttrs, useTemplateRef } from 'vue';
     import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
     import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+    import { followChats, followHints } from '@fibrae/semi-ai-foundation/message-list-foundation';
     import '@fibrae/semi-ai-foundation/ai-chat-dialogue/ai-chat-dialogue.scss';
     import { IconChevronDown } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';
@@ -47,18 +48,8 @@
     const prefix = cssClasses.PREFIX;
     const EMPTY_CHATS: Message[] = [];
     const EMPTY_HINTS: string[] = [];
-
-    // A caller may push messages into a reactive list and append to the last message's text in place, which keeps the
-    // list's identity, so the foundation is handed a copy rebuilt by those edits. Known limitation: other in-place
-    // edits (deep content text, a lone status flip) render but are not followed; upgrade when such an edit needs following.
-    const followedChats = computed(() => {
-        const all = props.chats ?? EMPTY_CHATS;
-        const text = all.at(-1)?.content;
-        void (typeof text === 'string' || Array.isArray(text) ? text.length : text);
-        return [...all];
-    });
-
-    const followedHints = computed(() => [...(props.hints ?? EMPTY_HINTS)]);
+    const followedChats = computed(() => followChats(props.chats));
+    const followedHints = computed(() => followHints(props.hints));
 
     const { foundation, state } = useFoundation<Foundation, Adapter, AIChatDialogueProps, DialogueState>(
         DialogueFoundation,
@@ -124,20 +115,8 @@
     defineExpose<AIChatDialogueHandle>({
         selectAll: foundation.handleSelectAll,
         deselectAll: foundation.handleDeselectAll,
-        scrollToBottom: (animation) => {
-            if (animation) {
-                foundation.scrollToBottomWithAnimation();
-            } else {
-                foundation.scrollToBottomImmediately();
-            }
-        },
-        scrollToTop: (animation) => {
-            if (animation) {
-                foundation.scrollToTopWithAnimation();
-            } else {
-                foundation.scrollToTopImmediately();
-            }
-        },
+        scrollToBottom: foundation.scrollToBottom,
+        scrollToTop: foundation.scrollToTop,
     });
 </script>
 

@@ -3,7 +3,6 @@ import { render, screen, fireEvent, waitFor, within } from '@testing-library/rea
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import AlphaSliderFoundation from '@fibrae/semi-foundation/color-picker/alpha-slider-foundation';
 import ColorChooseAreaFoundation from '@fibrae/semi-foundation/color-picker/color-choose-area-foundation';
 import ColorSliderFoundation from '@fibrae/semi-foundation/color-picker/color-slider-foundation';
 import DataPartFoundation, { type DataPartAdapter } from '@fibrae/semi-foundation/color-picker/data-part-foundation';
@@ -43,7 +42,6 @@ type OnChange = NonNullable<ComponentProps<typeof ColorPicker>['onChange']>;
 type ColorPickerAdapter = ConstructorParameters<typeof ColorPickerFoundation>[0];
 type ColorChooseAreaAdapter = ConstructorParameters<typeof ColorChooseAreaFoundation>[0];
 type ColorSliderAdapter = ConstructorParameters<typeof ColorSliderFoundation>[0];
-type AlphaSliderAdapter = ConstructorParameters<typeof AlphaSliderFoundation>[0];
 
 const defaultColor = {
     hsva: { h: 0, s: 100, v: 100, a: 1 },
@@ -1010,14 +1008,14 @@ describe('ColorPicker', () => {
         expect(getInput()).toHaveValue('#ff0000');
     });
 
-    it('DataPart foundation getValueByInputValue 解析合法 rgba', () => {
+    it('DataPart 输入合法 rgba 值触发 onChange', () => {
         const onChange = vi.fn<OnChange>();
         renderColorPicker({ defaultFormat: 'rgba', defaultValue: greenColor, onChange });
         changeInput('255,0,0');
         expect(lastColor(onChange).rgba).toEqual({ r: 255, g: 0, b: 0, a: 1 });
     });
 
-    it('DataPart foundation getValueByInputValue 解析非法 rgba', () => {
+    it('DataPart 输入非法 rgba 值不触发 onChange', () => {
         const onChange = vi.fn<OnChange>();
         renderColorPicker({ defaultFormat: 'rgba', defaultValue: greenColor, onChange });
         changeInput('invalid');
@@ -1025,28 +1023,28 @@ describe('ColorPicker', () => {
         expect(getInput()).toHaveValue('invalid');
     });
 
-    it('DataPart foundation getValueByInputValue 解析合法 hsva', () => {
+    it('DataPart 输入合法 hsva 值触发 onChange', () => {
         const onChange = vi.fn<OnChange>();
         renderColorPicker({ defaultFormat: 'hsva', defaultValue: greenColor, onChange });
         changeInput('0,100,100');
         expect(lastColor(onChange).hsva).toEqual({ h: 0, s: 100, v: 100, a: 1 });
     });
 
-    it('DataPart foundation getValueByInputValue 解析合法 hex', () => {
+    it('DataPart 输入合法 hex 值触发 onChange', () => {
         const onChange = vi.fn<OnChange>();
         renderColorPicker({ defaultFormat: 'hex', defaultValue: greenColor, onChange });
         changeInput('#ff0000');
         expect(lastColor(onChange).hex).toBe('#ff0000');
     });
 
-    it('DataPart foundation getValueByInputValue 解析不带 # 前缀的 hex', () => {
+    it('DataPart 输入不带 # 前缀的 hex 值触发 onChange', () => {
         const onChange = vi.fn<OnChange>();
         renderColorPicker({ defaultFormat: 'hex', defaultValue: greenColor, onChange });
         changeInput('ff0000');
         expect(lastColor(onChange).hex).toBe('#ff0000');
     });
 
-    it('DataPart foundation getValueByInputValue 解析非法的短 hex', () => {
+    it('DataPart 输入非法的短 hex 值不触发 onChange', () => {
         const onChange = vi.fn<OnChange>();
         renderColorPicker({ defaultFormat: 'hex', defaultValue: greenColor, onChange });
         changeInput('#f00');
@@ -1292,30 +1290,17 @@ describe('ColorPicker', () => {
     });
 
     it('ColorSlider 拖动时 rect 为 null 的情况', () => {
-        const handleColorChangeByHandle = vi.fn<() => void>();
+        const notifyChange = vi.fn<() => void>();
         const setState = vi.fn<() => void>();
         const foundation = new ColorSliderFoundation({
             getDOM: () => null,
-            getProps: () => ({ width: 100, foundation: { handleColorChangeByHandle } }),
+            getProps: () => ({ width: 100, max: 360 }),
             getState: () => true,
+            notifyChange,
             setState,
         } as unknown as ColorSliderAdapter);
         foundation.handlePointerMove({ clientX: 50 } as Parameters<typeof foundation.handlePointerMove>[0]);
-        expect(handleColorChangeByHandle).not.toHaveBeenCalled();
-        expect(setState).not.toHaveBeenCalled();
-    });
-
-    it('AlphaSlider 拖动时 rect 为 null 的情况', () => {
-        const handleAlphaChangeByHandle = vi.fn<() => void>();
-        const setState = vi.fn<() => void>();
-        const foundation = new AlphaSliderFoundation({
-            getDOM: () => null,
-            getProps: () => ({ width: 100, foundation: { handleAlphaChangeByHandle } }),
-            getState: () => true,
-            setState,
-        } as unknown as AlphaSliderAdapter);
-        foundation.handlePointerMove({ clientX: 50 } as Parameters<typeof foundation.handlePointerMove>[0]);
-        expect(handleAlphaChangeByHandle).not.toHaveBeenCalled();
+        expect(notifyChange).not.toHaveBeenCalled();
         expect(setState).not.toHaveBeenCalled();
     });
 
@@ -1363,9 +1348,7 @@ describe('ColorPicker', () => {
                 throw new DOMException('not allowed', 'NotAllowedError');
             }
         };
-        const foundation = new DataPartFoundation({
-            getProps: () => ({ foundation: { handleChange: vi.fn<() => void>() } }),
-        } as unknown as DataPartAdapter);
+        const foundation = new DataPartFoundation({} as unknown as DataPartAdapter);
         foundation.connect();
         await expect(foundation.handlePickValueWithStraw()).rejects.toThrow('not allowed');
     });

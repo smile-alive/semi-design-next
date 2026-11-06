@@ -72,9 +72,9 @@ function ColorPicker(rawProps: ColorPickerReactProps) {
                     foundation.handleChange({ s, v, a: currentColor.hsva.a, h: currentColor.hsva.h }, 'hsva');
                 }}
             />
-            <ColorSlider className="colorSliderWrapper" foundation={foundation} height={10} hue={currentColor.hsva.h} width={width} handleSize={18} />
-            {alpha && <AlphaSlider className="alphaSliderWrapper" foundation={foundation} height={10} hsva={currentColor.hsva} width={width} handleSize={18} />}
-            <DataPart alpha={alpha} currentColor={currentColor} defaultFormat={defaultFormat} eyeDropper={eyeDropper} foundation={foundation} width={width} />
+            <ColorSlider className="colorSliderWrapper" height={10} hue={currentColor.hsva.h} width={width} handleSize={18} onChange={foundation.handleHueChange} />
+            {alpha && <AlphaSlider className="alphaSliderWrapper" height={10} hsva={currentColor.hsva} width={width} handleSize={18} onChange={foundation.handleAlphaChange} />}
+            <DataPart alpha={alpha} currentColor={currentColor} defaultFormat={defaultFormat} eyeDropper={eyeDropper} width={width} onAlphaChange={foundation.handleAlphaChange} onChange={foundation.handleChange} />
             {bottomSlot}
         </div>
     );

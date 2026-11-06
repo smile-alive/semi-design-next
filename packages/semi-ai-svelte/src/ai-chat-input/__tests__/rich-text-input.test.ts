@@ -3,6 +3,7 @@ import { fireEvent, render } from '@testing-library/svelte';
 import type { Editor } from '@tiptap/core';
 import { describe, expect, it } from 'vite-plus/test';
 import { strings } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+import { handleZeroWidthCharLogic } from '@fibrae/semi-ai-foundation/ai-chat-input/extension/plugins';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
@@ -30,13 +31,13 @@ function setup(initial: Partial<Store> = {}) {
 }
 
 describe('RichTextInput 编辑器宿主（attachment）', () => {
-    it('挂载时创建编辑器：可编辑区带 id、可访问名称与 aria-placeholder，依次通知 ready、create', () => {
+    it('挂载时创建编辑器：可编辑区带 id、可访问名称与 aria-placeholder，通知一次 create', () => {
         const { pm, store } = setup({ placeholder: 'Ask anything' });
         expect(pm()).toHaveAttribute('contenteditable', 'true');
         expect(pm()).toHaveAttribute('id', 'editor');
         expect(pm()).toHaveAccessibleName(zh_CN.AIChatInput.input);
         expect(pm()).toHaveAttribute('aria-placeholder', 'Ask anything');
-        expect(store.log.slice(0, 2)).toEqual(['ready', 'create']);
+        expect(store.log).toEqual(['create']);
         expect(pm().parentElement).toHaveClass('semi-aiChatInput-editor-content');
     });
 
@@ -62,16 +63,12 @@ describe('RichTextInput 编辑器宿主（attachment）', () => {
         expect(pm()).toHaveAttribute('aria-placeholder', 'b');
         expect(editor()).toBe(created);
         expect(created.isDestroyed).toBe(false);
-        expect(store.log.filter((entry) => entry === 'ready')).toHaveLength(1);
+        expect(store.log.filter((entry) => entry === 'create')).toHaveLength(1);
     });
 
-    it('placeholder 变化后空段落显示新的占位文字', () => {
-        const { pm, store } = setup({ placeholder: 'first' });
-        expect(pm().querySelector('p')).toHaveAttribute('data-placeholder', 'first');
-        store.placeholder = () => 'second';
-        flushSync();
-        expect(pm().querySelector('p')).toHaveAttribute('data-placeholder', 'second');
-        // a function placeholder is not static text, so it is not exposed
+    it('函数 placeholder 不是静态文字，不暴露 aria-placeholder', () => {
+        const { pm } = setup({ placeholder: () => 'dynamic' });
+        expect(pm().querySelector('p')).toHaveAttribute('data-placeholder', 'dynamic');
         expect(pm()).not.toHaveAttribute('aria-placeholder');
     });
 
@@ -123,6 +120,12 @@ describe('RichTextInput 插槽节点视图', () => {
 
     it('input slot 的内容渲染进节点视图的内容元素，只有零宽字符时显示占位', () => {
         const { pm, editor } = setup({ defaultContent: '<p>write <input-slot placeholder="object"></input-slot></p>' });
+        // AIChatInput fills the zero-width characters of the initial content once the editor exists
+        const tr = handleZeroWidthCharLogic(editor().state);
+        if (tr) {
+            editor().view.dispatch(tr);
+        }
+        flushSync();
         const slot = pm().querySelector('.node-inputSlot') as HTMLElement;
         const placeholder = slot.querySelector('.input-slot-placeholder') as HTMLElement;
         expect(placeholder).toHaveTextContent('object');

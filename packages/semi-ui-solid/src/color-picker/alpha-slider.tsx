@@ -1,25 +1,48 @@
-import AlphaSliderFoundation, { type AlphaSliderAdapter, type AlphaSliderBaseProps, type AlphaSliderBaseState } from '@fibrae/semi-foundation/color-picker/alpha-slider-foundation';
+import ColorSliderFoundation, { type ColorSliderAdapter, type ColorSliderBaseProps, type ColorSliderBaseState } from '@fibrae/semi-foundation/color-picker/color-slider-foundation';
 import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
+import type { HsvaColor } from '@fibrae/semi-foundation/color-picker/interface';
 import { hsvaToHslaString, hsvaToRgbaString } from '@fibrae/semi-foundation/color-picker/utils/convert';
 import { round } from '@fibrae/semi-foundation/color-picker/utils/round';
 import useFoundation from '../_base/use-foundation';
 import { useLocale } from '../locale';
 
-export type AlphaSliderProps = AlphaSliderBaseProps;
+export interface AlphaSliderProps {
+    hsva: HsvaColor;
+    width: number;
+    height: number;
+    handleSize: number;
+    onChange: (alpha: number) => void;
+}
 
-type Foundation = AlphaSliderFoundation<AlphaSliderBaseProps>;
-type Adapter = AlphaSliderAdapter<AlphaSliderBaseProps>;
+type Foundation = ColorSliderFoundation<ColorSliderBaseProps>;
+type Adapter = ColorSliderAdapter<ColorSliderBaseProps>;
 
 export default function AlphaSlider(props: AlphaSliderProps) {
     const locale = useLocale('ColorPicker');
 
     let dom: HTMLDivElement | undefined;
 
-    const { foundation } = useFoundation<Foundation, Adapter, AlphaSliderBaseProps, AlphaSliderBaseState>(
-        AlphaSliderFoundation,
-        props,
-        () => AlphaSliderFoundation.getInitialState(),
-        () => ({ getDOM: () => dom as HTMLDivElement })
+    const foundationProps: ColorSliderBaseProps = {
+        get width() {
+            return props.width;
+        },
+        get value() {
+            return props.hsva.a * 100;
+        },
+        max: 100,
+        get onChange() {
+            return props.onChange;
+        },
+    };
+
+    const { foundation } = useFoundation<Foundation, Adapter, ColorSliderBaseProps, ColorSliderBaseState>(
+        ColorSliderFoundation,
+        foundationProps,
+        () => ColorSliderFoundation.getInitialState(),
+        () => ({
+            getDOM: () => dom as HTMLDivElement,
+            notifyChange: (percent) => props.onChange(percent / 100),
+        })
     );
 
     const percent = () => round(props.hsva.a * 100);
@@ -32,7 +55,7 @@ export default function AlphaSlider(props: AlphaSliderProps) {
                     style={{
                         width: `${props.handleSize}px`,
                         height: `${props.handleSize}px`,
-                        left: `${props.hsva.a * props.width - props.handleSize / 2}px`,
+                        left: `${ColorSliderFoundation.getHandlePosition(foundationProps, props.handleSize)}px`,
                         top: '50%',
                         transform: 'translateY(-50%)',
                         'background-color': hsvaToRgbaString(props.hsva),

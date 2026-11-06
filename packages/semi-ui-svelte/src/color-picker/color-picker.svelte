@@ -104,11 +104,11 @@
     <div bind:this={picker} {...pickerAttrs} class={[cssClasses.PREFIX, rest.class]} role={groupRole(rest)}>
         {@render topSlot?.()}
         <ColorChooseArea handleSize={20} {height} hsva={currentColor.hsva} onChange={handleAreaChange} {width} />
-        <ColorSlider class="colorSliderWrapper" {foundation} handleSize={18} height={10} hue={currentColor.hsva.h} {width} />
+        <ColorSlider class="colorSliderWrapper" handleSize={18} height={10} hue={currentColor.hsva.h} onChange={foundation.handleHueChange} {width} />
         {#if alpha}
-            <AlphaSlider {foundation} handleSize={18} height={10} hsva={currentColor.hsva} {width} />
+            <AlphaSlider handleSize={18} height={10} hsva={currentColor.hsva} onChange={foundation.handleAlphaChange} {width} />
         {/if}
-        <DataPart {alpha} {currentColor} {defaultFormat} {eyeDropper} {foundation} {width} />
+        <DataPart {alpha} {currentColor} {defaultFormat} {eyeDropper} onAlphaChange={foundation.handleAlphaChange} onChange={foundation.handleChange} {width} />
         {@render bottomSlot?.()}
     </div>
 {/snippet}

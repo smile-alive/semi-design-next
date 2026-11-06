@@ -664,7 +664,7 @@ describe('Chat', () => {
             });
             expect(sendButton(container)).toBeDisabled();
             fireEvent.click(container.querySelector('.semi-chat-attachment-clear'));
-            expect(container.querySelectorAll('.semi-chat-attachment-item')).toHaveLength(0);
+            await waitFor(() => expect(container.querySelectorAll('.semi-chat-attachment-item')).toHaveLength(0));
             expect(onInputChange).toHaveBeenLastCalledWith({ inputValue: '', attachment: [] });
         });
 
@@ -675,7 +675,7 @@ describe('Chat', () => {
             await waitFor(() => expect(container.querySelectorAll('.semi-chat-attachment-item')).toHaveLength(1));
             onChange.mockClear();
             fireEvent.click(container.querySelector('.semi-chat-attachment-clear'));
-            expect(onChange).toHaveBeenCalledTimes(1);
+            await waitFor(() => expect(onChange).toHaveBeenCalledOnce());
             expect(onChange).toHaveBeenLastCalledWith({
                 fileList: [],
                 currentFile: expect.objectContaining({ name: 'a.txt' }),

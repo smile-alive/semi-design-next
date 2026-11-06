@@ -1,6 +1,5 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type ColorPickerFoundation from '@fibrae/semi-foundation/color-picker/foundation';
 import type { ColorValue } from '@fibrae/semi-foundation/color-picker/foundation';
 import type { ColorFormat, HsvaColor, RgbaColor } from '@fibrae/semi-foundation/color-picker/interface';
 import type { PopoverProps } from '../popover/index.js';
@@ -37,27 +36,28 @@ export interface ColorChooseAreaProps {
 }
 
 export interface ColorSliderProps {
-    foundation: ColorPickerFoundation;
     hue: number;
     width: number;
     height: number;
     handleSize: number;
     class?: string;
+    onChange: (hue: number) => void;
 }
 
 export interface AlphaSliderProps {
-    foundation: ColorPickerFoundation;
     hsva: HsvaColor;
     width: number;
     height: number;
     handleSize: number;
+    onChange: (alpha: number) => void;
 }
 
 export interface DataPartProps {
-    foundation: ColorPickerFoundation;
     currentColor: ColorValue;
     defaultFormat: ColorFormat;
     width: number;
     alpha: boolean;
     eyeDropper: boolean;
+    onChange: (color: HsvaColor | RgbaColor | string, format: ColorFormat) => void;
+    onAlphaChange: (alpha: number) => void;
 }

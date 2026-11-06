@@ -1,5 +1,4 @@
 import type { HTMLAttributes, StyleValue, VNode } from 'vue';
-import type ColorPickerFoundation from '@fibrae/semi-foundation/color-picker/foundation';
 import type { ColorValue } from '@fibrae/semi-foundation/color-picker/foundation';
 import type { ColorFormat, HsvaColor, RgbaColor } from '@fibrae/semi-foundation/color-picker/interface';
 import type { PopoverEmits, PopoverProps } from '../popover/interface';
@@ -56,7 +55,6 @@ export interface ColorChooseAreaProps {
 }
 
 export interface ColorSliderProps {
-    foundation: ColorPickerFoundation;
     hue: number;
     width: number;
     height: number;
@@ -64,7 +62,6 @@ export interface ColorSliderProps {
 }
 
 export interface AlphaSliderProps {
-    foundation: ColorPickerFoundation;
     hsva: HsvaColor;
     width: number;
     height: number;
@@ -72,7 +69,6 @@ export interface AlphaSliderProps {
 }
 
 export interface DataPartProps {
-    foundation: ColorPickerFoundation;
     currentColor: ColorValue;
     defaultFormat: ColorFormat;
     width: number;

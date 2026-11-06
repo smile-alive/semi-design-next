@@ -33,9 +33,6 @@ export function isUnfinishedMessageStatus(status?: string) {
     return status === MESSAGE_STATUS.LOADING || status === MESSAGE_STATUS.INCOMPLETE;
 }
 
-const SCROLL_ANIMATION_TIME = 300;
-const SHOW_SCROLL_GAP = 100;
-
 const MODE = {
     BUBBLE: 'bubble',
     NO_BUBBLE: 'noBubble',
@@ -56,8 +53,6 @@ export const strings = {
     ROLE,
     CHAT_ALIGN,
     MESSAGE_STATUS,
-    SCROLL_ANIMATION_TIME,
-    SHOW_SCROLL_GAP,
     MODE,
     SEND_HOT_KEY,
 };

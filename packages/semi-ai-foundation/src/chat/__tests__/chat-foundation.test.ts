@@ -73,18 +73,26 @@ describe('ChatFoundation 重新生成', () => {
     });
 });
 
+function changeProps(foundation: ChatFoundation, props: { chats?: Message[]; hints?: string[] }, next: { chats?: Message[]; hints?: string[] }) {
+    const prev = { ...props };
+    Object.assign(props, next);
+    foundation.handlePropsChange(prev);
+}
+
 describe('ChatFoundation 回到底部', () => {
     const create = () => {
         const element = { scrollTop: 0, scrollHeight: 1000, clientHeight: 100 };
         let backBottomVisible = false;
+        const props: { chats?: Message[]; hints?: string[] } = { chats: [{ id: '1', status: 'complete' }] };
         const adapter = {
+            getProp: (key: string) => props[key],
             getContainerRef: () => element,
             getStates: () => ({ backBottomVisible }),
             setState: vi.fn<(state: { backBottomVisible: boolean }) => void>((state) => {
                 backBottomVisible = state.backBottomVisible;
             }),
         };
-        return { adapter, element, foundation: new ChatFoundation(adapter as unknown as ChatAdapter) };
+        return { adapter, element, props, foundation: new ChatFoundation(adapter as unknown as ChatAdapter) };
     };
 
     it('动画结束时贴住当前底部，而不是点击时的底部', () => {
@@ -104,7 +112,7 @@ describe('ChatFoundation 回到底部', () => {
     it('不跟随时，内容变化后更新按钮的显隐', () => {
         vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'requestAnimationFrame', 'cancelAnimationFrame', 'performance'] });
         try {
-            const { adapter, element, foundation } = create();
+            const { adapter, element, props, foundation } = create();
             const scrollTo = (scrollTop: number) => {
                 element.scrollTop = scrollTop;
                 foundation.containerScroll({ target: element as unknown as EventTarget });
@@ -114,11 +122,11 @@ describe('ChatFoundation 回到底部', () => {
             vi.advanceTimersByTime(200);
             adapter.setState.mockClear();
             element.scrollHeight = 1200;
-            foundation.handleChatsChange([{ id: '1', status: 'complete', content: 'more' }], [{ id: '1', status: 'complete' }]);
+            changeProps(foundation, props, { chats: [{ id: '1', status: 'complete', content: 'more' }] });
             vi.advanceTimersByTime(200);
             expect(adapter.setState).toHaveBeenCalledWith({ backBottomVisible: true }, undefined);
             element.scrollHeight = 100;
-            foundation.handleHintsChange(['a'], []);
+            changeProps(foundation, props, { hints: ['a'] });
             vi.advanceTimersByTime(200);
             expect(adapter.setState).toHaveBeenLastCalledWith({ backBottomVisible: false }, undefined);
         } finally {
@@ -158,10 +166,18 @@ describe('InputBoxFoundation.getDisableSend', () => {
 });
 
 describe('ChatFoundation 自动滚动', () => {
-    const create = () => {
+    const create = (props: { chats?: Message[]; hints?: string[] } = {}) => {
         const element = { scrollTop: 0, scrollHeight: 500, clientHeight: 100 };
-        const foundation = new ChatFoundation({ getContainerRef: () => element, getStates: () => ({}), setState: () => {} } as unknown as ChatAdapter);
-        return { element, foundation };
+        const foundation = new ChatFoundation({
+            getProp: (key: string) => props[key],
+            getContainerRef: () => element,
+            getStates: () => ({}),
+            setState: () => {},
+            notifyChatsChange: () => {},
+            notifyHintClick: () => {},
+        } as unknown as ChatAdapter);
+        const addFirst = () => changeProps(foundation, props, { chats: [{ id: '1' }] });
+        return { element, foundation, props, addFirst };
     };
 
     const scrollTo = (foundation, element, scrollTop) => {
@@ -178,69 +194,69 @@ describe('ChatFoundation 自动滚动', () => {
         ['a completed list is replaced', [{ id: '1', status: 'complete' }], [{ id: '1', status: 'complete' }], false],
         ['a message is removed', [{ id: '1' }, { id: '2' }], [{ id: '1' }], false],
     ])('当 %s：%s 时滚动到底部', (_, prev, next, scrolls) => {
-        const { element, foundation } = create();
-        foundation.handleChatsChange(next, prev);
+        const { element, foundation, props } = create({ chats: prev });
+        changeProps(foundation, props, { chats: next });
         expect(element.scrollTop).toBe(scrolls ? 500 : 0);
     });
 
     it('hints 增加时滚动，包括从无到有', () => {
-        const { element, foundation } = create();
-        foundation.handleHintsChange(['a'], undefined);
+        const { element, foundation, props } = create();
+        changeProps(foundation, props, { hints: ['a'] });
         expect(element.scrollTop).toBe(500);
         element.scrollTop = 0;
-        foundation.handleHintsChange(undefined, ['a']);
+        changeProps(foundation, props, { hints: undefined });
         expect(element.scrollTop).toBe(0);
     });
 
     it('用户从底部向上滚动后停止跟随', () => {
-        const { element, foundation } = create();
+        const { element, foundation, addFirst } = create();
         scrollTo(foundation, element, 400);
         scrollTo(foundation, element, 100);
-        foundation.handleChatsChange([{ id: '1' }], []);
+        addFirst();
         expect(element.scrollTop).toBe(100);
     });
 
     it('内容缩小导致位置下降时保持跟随', () => {
-        const { element, foundation } = create();
+        const { element, foundation, addFirst } = create();
         scrollTo(foundation, element, 400);
         element.scrollHeight = 300;
         scrollTo(foundation, element, 200);
-        foundation.handleChatsChange([{ id: '1' }], []);
+        addFirst();
         expect(element.scrollTop).toBe(300);
     });
 
     it('底部重新进入视口时恢复跟随', () => {
-        const { element, foundation } = create();
+        const { element, foundation, addFirst } = create();
         scrollTo(foundation, element, 400);
         scrollTo(foundation, element, 100);
         scrollTo(foundation, element, 400);
-        foundation.handleChatsChange([{ id: '1' }], []);
+        addFirst();
         expect(element.scrollTop).toBe(500);
     });
 
     it('向上滚动后点击提示发送，恢复跟随', () => {
-        const element = { scrollTop: 0, scrollHeight: 500, clientHeight: 100 };
-        const foundation = new ChatFoundation({
-            getContainerRef: () => element,
-            getStates: () => ({}),
-            setState: () => {},
-            getProp: () => [],
-            notifyChatsChange: () => {},
-            notifyHintClick: () => {},
-        } as unknown as ChatAdapter);
+        const { element, foundation, addFirst } = create();
         scrollTo(foundation, element, 400);
         scrollTo(foundation, element, 100);
         foundation.onHintClick('hint');
-        foundation.handleChatsChange([{ id: '1' }], []);
+        addFirst();
         expect(element.scrollTop).toBe(500);
     });
 
+    it('向上滚动后新增别人的消息不恢复跟随', () => {
+        const { element, foundation, props } = create({ chats: [{ id: '1' }] });
+        scrollTo(foundation, element, 400);
+        scrollTo(foundation, element, 100);
+        changeProps(foundation, props, { chats: [{ id: '1' }, { id: '2' }] });
+        expect(element.scrollTop).toBe(100);
+    });
+
     it('内容增长把底部推远但用户未向上滚动时保持跟随', () => {
-        const { element, foundation } = create();
+        const { element, foundation, addFirst } = create();
         scrollTo(foundation, element, 400);
         element.scrollHeight = 900;
         scrollTo(foundation, element, 400);
-        foundation.handleChatsChange([{ id: '1' }], []);
+        addFirst();
         expect(element.scrollTop).toBe(900);
     });
 });

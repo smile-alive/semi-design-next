@@ -1,13 +1,21 @@
-import { type JSX, Show, createSignal, mergeProps } from 'solid-js';
+import { type JSX, Show, mergeProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
 import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
-import { formatTime, getPointerRatio } from '@fibrae/semi-foundation/video-player/utils';
+import SeekFoundation, { type SeekAdapter, type SeekBaseProps, type SeekBaseState } from '@fibrae/semi-foundation/video-player/seek-foundation';
+import { formatTime } from '@fibrae/semi-foundation/video-player/utils';
 import '@fibrae/semi-foundation/audio-player/audio-player.scss';
+import useFoundation from '../_base/use-foundation';
 import Tooltip from '../tooltip';
 import type { AudioPlayerTheme } from './interface';
+
+interface FoundationProps extends SeekBaseProps {
+    onChange?: (value: number) => void;
+}
+
+type Foundation = SeekFoundation<FoundationProps>;
+type Adapter = SeekAdapter<FoundationProps>;
 
 interface AudioSliderProps {
     value?: number;
@@ -40,28 +48,28 @@ export default function AudioSlider(rawProps: AudioSliderProps) {
 
     let track: HTMLDivElement | undefined;
     let input: HTMLInputElement | undefined;
-    const [isDragging, setIsDragging] = createSignal(false);
-    const [movingInfo, setMovingInfo] = createSignal<{ progress: number; offset: number } | null>(null);
+
+    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, SeekBaseState>(
+        SeekFoundation,
+        props,
+        () => SeekFoundation.getInitialState(),
+        () => ({
+            getSliderRef: () => track ?? null,
+            notifyChange: (value) => props.onChange?.(value),
+            // Chrome treats a scripted focus on a range input as keyboard focus; the ring is for the keyboard only
+            focusOnPress: () => {
+                if (input) focusWithoutRing(input, { preventScroll: true });
+            },
+        })
+    );
 
     // the duration is 0 until the metadata loads
     const percent = () => (props.max ? (props.value / props.max) * 100 : 0);
 
-    const handlePointerPosition = (event: MouseEvent, seek: boolean) => {
-        if (!track) {
-            return;
-        }
-        const { total, ratio } = getPointerRatio(track.getBoundingClientRect(), event, props.vertical);
-        if (seek && isDragging()) {
-            props.onChange?.(ratio * props.max);
-        }
-        // from the slider's center to where the dot sits at this ratio, so the preview stays over the dragged dot
-        setMovingInfo({ progress: ratio, offset: (ratio - 0.5) * total });
-    };
-
     // the popup is anchored to the slider's center, so only a translate moves it to the pointer; the vertical offset
     // counts up from the bottom
     const previewStyle = (): JSX.CSSProperties => {
-        const info = movingInfo();
+        const info = state().movingInfo;
         return { translate: info ? (props.vertical ? `0 ${-info.offset}px` : `${info.offset}px 0`) : undefined };
     };
 
@@ -71,27 +79,16 @@ export default function AudioSlider(rawProps: AudioSliderProps) {
             class={clsx(`${prefixCls}-slider-wrapper`, {
                 [`${prefixCls}-slider-wrapper-vertical`]: props.vertical,
                 [`${prefixCls}-slider-wrapper-horizontal`]: !props.vertical,
-                [`${prefixCls}-slider-wrapper-dragging`]: isDragging(),
+                [`${prefixCls}-slider-wrapper-dragging`]: state().isDragging,
             })}
             // the range input inside is the control: -1 stops the wrapping Tooltip from making this div a second Tab stop
             tabIndex={-1}
-            // follows pointerup and pointercancel, and also fires when the slider leaves the page mid-drag
-            onLostPointerCapture={() => setIsDragging(false)}
+            onLostPointerCapture={foundation.handleLostPointerCapture}
             // keeps the press from moving focus from the input to this div
             onMouseDown={(event) => event.preventDefault()}
-            onMouseEnter={(event) => handlePointerPosition(event, false)}
-            // the slider keeps the pointer from the press on, so the moves and the release reach it even outside it
-            onPointerDown={(event) => {
-                if (isSecondaryPress(event)) {
-                    return;
-                }
-                event.currentTarget.setPointerCapture(event.pointerId);
-                // Chrome treats a scripted focus on a range input as keyboard focus; the ring is for the keyboard only
-                if (input) focusWithoutRing(input, { preventScroll: true });
-                setIsDragging(true);
-                handlePointerPosition(event, true);
-            }}
-            onPointerMove={(event) => handlePointerPosition(event, true)}
+            onMouseEnter={(event) => foundation.handlePointerPosition(event, { seek: false })}
+            onPointerDown={foundation.handlePointerDown}
+            onPointerMove={(event) => foundation.handlePointerPosition(event, { seek: true })}
         >
             <input
                 ref={(node) => (input = node)}
@@ -106,13 +103,8 @@ export default function AudioSlider(rawProps: AudioSliderProps) {
                 step={1}
                 value={props.value}
                 onInput={(event) => props.onChange?.(Number(event.currentTarget.value))}
-                // the preview belongs to the pointer; a keyboard use shows the value
-                onFocus={(event) => {
-                    if (event.currentTarget.matches(':focus-visible')) {
-                        setMovingInfo(null);
-                    }
-                }}
-                onKeyDown={() => setMovingInfo(null)}
+                onFocus={foundation.handleFocus}
+                onKeyDown={foundation.clearPreview}
             />
             <div
                 ref={(node) => (track = node)}
@@ -147,10 +139,7 @@ export default function AudioSlider(rawProps: AudioSliderProps) {
         </div>
     );
 
-    const previewTime = () => {
-        const info = movingInfo();
-        return formatTime(info ? info.progress * props.max : props.value);
-    };
+    const previewTime = () => formatTime(state().movingInfo?.value ?? props.value);
 
     return (
         <Show when={props.showTooltip} fallback={renderSlider()}>

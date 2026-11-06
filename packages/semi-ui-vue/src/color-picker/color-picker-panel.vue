@@ -23,9 +23,9 @@
     <div :class="cssClasses.PREFIX" :role="groupRole($attrs)">
         <slot name="topSlot" />
         <ColorChooseArea :handleSize="20" :height="view.height" :hsva="view.currentColor.hsva" :width="view.width" @change="onAreaChange" />
-        <ColorSlider class="colorSliderWrapper" :foundation="foundation" :handleSize="18" :height="10" :hue="view.currentColor.hsva.h" :width="view.width" />
-        <AlphaSlider v-if="view.alpha" :foundation="foundation" :handleSize="18" :height="10" :hsva="view.currentColor.hsva" :width="view.width" />
-        <DataPart :alpha="view.alpha" :currentColor="view.currentColor" :defaultFormat="view.defaultFormat" :eyeDropper="view.eyeDropper" :foundation="foundation" :width="view.width" />
+        <ColorSlider class="colorSliderWrapper" :handleSize="18" :height="10" :hue="view.currentColor.hsva.h" :width="view.width" @change="foundation.handleHueChange" />
+        <AlphaSlider v-if="view.alpha" :handleSize="18" :height="10" :hsva="view.currentColor.hsva" :width="view.width" @change="foundation.handleAlphaChange" />
+        <DataPart :alpha="view.alpha" :currentColor="view.currentColor" :defaultFormat="view.defaultFormat" :eyeDropper="view.eyeDropper" :width="view.width" @alphaChange="foundation.handleAlphaChange" @change="foundation.handleChange" />
         <slot name="bottomSlot" />
     </div>
 </template>

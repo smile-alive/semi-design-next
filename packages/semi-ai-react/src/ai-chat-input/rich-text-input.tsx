@@ -1,9 +1,8 @@
-import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useState } from 'react';
 import type { Content as TiptapContent } from '@tiptap/core';
 import { type Editor, type Extensions, EditorContent, useEditor } from '@tiptap/react';
 import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
-import { createEditorHandlers, getBaseExtensions, getEditorAttributes } from '@fibrae/semi-ai-foundation/ai-chat-input/extension/editor-config';
-import { handleZeroWidthCharLogic } from '@fibrae/semi-ai-foundation/ai-chat-input/extension/plugins';
+import { createEditorProps, getBaseExtensions, getEditorAttributes, getEditorOptions } from '@fibrae/semi-ai-foundation/ai-chat-input/extension/editor-config';
 import { useLocale } from '@fibrae/semi-ui-react/hooks';
 import InputSlot from './extension/input-slot';
 import SelectSlot from './extension/select-slot';
@@ -24,13 +23,8 @@ class PlaceholderHolder {
         this.#value = value;
     }
 
-    /** Returns whether the value changed */
     update(value: PlaceholderProps) {
-        if (this.#value === value) {
-            return false;
-        }
         this.#value = value;
-        return true;
     }
 
     read = (p: Parameters<Extract<PlaceholderProps, (...args: any[]) => any>>[0]) => (typeof this.#value === 'function' ? this.#value(p) : this.#value);
@@ -40,7 +34,7 @@ export default function RichTextInput({
     id,
     controls,
     activeDescendant,
-    setEditor,
+    onCreate,
     onKeyDown,
     onChange,
     placeholder,
@@ -52,7 +46,6 @@ export default function RichTextInput({
     handleKeyDown,
     onFocus,
     onBlur,
-    handleCreate,
     immediatelyRender,
     showPlaceholderWhenSkillOnly,
 }: {
@@ -64,9 +57,10 @@ export default function RichTextInput({
     defaultContent?: TiptapContent;
     placeholder?: PlaceholderProps;
     immediatelyRender?: boolean;
-    setEditor?: (editor: Editor) => void;
+    /** Called once per editor, on the commit that shows it */
+    onCreate: (editor: Editor) => void;
     onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
-    onChange?: (content: string) => void;
+    onChange: (content: string) => void;
     extensions?: Extensions;
     handleKeyDown?: (view: any, event: KeyboardEvent) => boolean;
     /** File paste upload */
@@ -75,7 +69,6 @@ export default function RichTextInput({
     onPasteEvent?: (event: React.ClipboardEvent<HTMLDivElement>) => void;
     onFocus?: (event: React.FocusEvent<HTMLDivElement>) => void;
     onBlur?: (event: React.FocusEvent<HTMLDivElement>) => void;
-    handleCreate?: () => void;
     showPlaceholderWhenSkillOnly?: boolean;
 }) {
     const { locale } = useLocale('AIChatInput');
@@ -90,58 +83,22 @@ export default function RichTextInput({
     // only the string form reaches editorProps: an inline function placeholder would otherwise change editorProps
     // every render, and useEditor compares it by reference and calls setOptions
     const ariaPlaceholder = typeof placeholder === 'string' ? placeholder : undefined;
+    const editorProps = useMemo(() => createEditorProps({ attributes: getEditorAttributes({ id, label: locale.input, placeholder: ariaPlaceholder, controls, activeDescendant }), handleKeyDown, onPasteFiles: onPaste }), [id, locale.input, ariaPlaceholder, controls, activeDescendant, handleKeyDown, onPaste]);
 
-    const editorProps = useMemo(
-        () => ({
-            attributes: getEditorAttributes({ id, label: locale.input, placeholder: ariaPlaceholder, controls, activeDescendant }),
-            handleKeyDown,
-            ...createEditorHandlers(onPaste),
-        }),
-        [id, locale.input, ariaPlaceholder, controls, activeDescendant, handleKeyDown, onPaste]
-    );
+    const editor = useEditor({ ...getEditorOptions({ extensions: allExtensions, defaultContent, editorProps, onChange }), immediatelyRender });
 
-    const onUpdate = useCallback(
-        ({ editor }) => {
-            const content = editor.getText();
-            onChange(content);
-        },
-        [onChange]
-    );
-
-    const editor = useEditor({
-        extensions: allExtensions as Extensions,
-        content: defaultContent ?? ``,
-        editorProps: editorProps,
-        immediatelyRender,
-        // tiptap's injected CSS is unlayered and would override `@layer semi`
-        injectCSS: false,
-        onUpdate,
-    });
-
+    // Runs before the parent's layout effect, where the foundation redraws the placeholder on a change
     useLayoutEffect(() => {
-        if (!placeholderHolder.update(placeholder)) {
-            return;
-        }
-        if (editor && !editor.isDestroyed) {
-            // an empty transaction makes the placeholder plugin recompute its decorations
-            editor.view.dispatch(editor.state.tr);
-        }
-    }, [editor, placeholder, placeholderHolder]);
+        placeholderHolder.update(placeholder);
+    }, [placeholder, placeholderHolder]);
 
     // Hand over on commit, not on tiptap's create event: that fires on a timer, so an editor from a discarded render
     // (StrictMode, suspended sibling) would replace the live one
     useLayoutEffect(() => {
-        if (!editor) {
-            return;
+        if (editor) {
+            onCreate(editor);
         }
-        // set first: the dispatch below runs onUpdate synchronously and the parent reads the editor there
-        setEditor(editor);
-        const tr = handleZeroWidthCharLogic(editor.state);
-        if (tr) {
-            editor.view.dispatch(tr);
-        }
-        handleCreate();
-    }, [editor, setEditor, handleCreate]);
+    }, [editor, onCreate]);
 
     if (!editor) {
         return null;

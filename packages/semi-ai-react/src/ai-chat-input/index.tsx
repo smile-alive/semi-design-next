@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useId, useImperativeHandle, useRef, useState } from 'react';
-import type { Editor, FocusPosition, Content as TiptapContent } from '@tiptap/core';
+import type { Editor } from '@tiptap/core';
 import clsx from 'clsx';
 import { cssClasses, numbers, strings } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
 import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputState } from '@fibrae/semi-ai-foundation/ai-chat-input/foundation';
@@ -71,15 +71,6 @@ class AIChatInputRuntime {
 
     openFileDialog = () => {
         this.upload?.openFileDialog?.();
-    };
-
-    setContent = (content: TiptapContent) => {
-        this.editor?.commands.setContent(content);
-    };
-
-    // null and false are tiptap positions (keep the selection, do nothing), so only undefined falls back
-    focus = (pos?: FocusPosition) => {
-        this.editor?.commands.focus(pos ?? 'end');
     };
 }
 
@@ -163,7 +154,6 @@ function AIChatInput(rawProps: AIChatInputProps) {
 
     const [runtime] = useState(() => new AIChatInputRuntime());
     const popupId = useId();
-    const triggerRef = useRef<HTMLDivElement>(null);
     const richTextRef = useRef<HTMLDivElement>(null);
     const skillPanelRef = useRef<HTMLDivElement>(null);
     const suggestionPanelRef = useRef<HTMLDivElement>(null);
@@ -175,9 +165,6 @@ function AIChatInput(rawProps: AIChatInputProps) {
         props,
         () => AIChatInputFoundation.getInitialState(props),
         (base) => ({
-            setContent: runtime.setContent,
-            clearContent: () => runtime.setContent(''),
-            focusEditor: runtime.focus,
             getEditor: () => runtime.editor,
             // the panel may render in a shadow root, out of reach of document queries
             getOptionNode: (kind, index) => ((kind === 'skill' ? skillPanelRef : suggestionPanelRef).current?.children[index] as HTMLElement | undefined) ?? null,
@@ -187,7 +174,6 @@ function AIChatInput(rawProps: AIChatInputProps) {
                 base.getProps().onContentChange?.(result);
             },
             setTransformedContent,
-            getActiveElement: () => (triggerRef.current?.getRootNode() as Document | ShadowRoot | undefined)?.activeElement ?? null,
             notifyConfigureChange: (value, changedValue) => base.getProps().onConfigureChange?.(value, changedValue),
             manualUpload: (files) => runtime.upload?.insert(files),
             notifyMessageSend: (message) => base.getProps().onMessageSend?.(message),
@@ -198,6 +184,7 @@ function AIChatInput(rawProps: AIChatInputProps) {
             notifyBlur: (event) => base.getProps().onBlur?.(event),
             notifyUploadChange: (props) => base.getProps().onUploadChange?.(props),
             notifyUploadPropsChange: (props) => base.getProps().uploadProps?.onChange?.(props),
+            notifyBeforeRemove: (file, fileList) => base.getProps().uploadProps?.beforeRemove?.(file, fileList),
             notifyUploadRemove: (file, fileList, fileItem) => base.getProps().uploadProps?.onRemove?.(file, fileList, fileItem),
             getConfigureValue: () => configureRef.current?.getConfigureValue(),
         })
@@ -271,13 +258,19 @@ function AIChatInput(rawProps: AIChatInputProps) {
 
     const uploadRef = useMergedRef(setUpload, uploadProps?.ref);
 
-    const setEditor = useCallback((editor: Editor) => runtime.setEditor(editor), [runtime]);
+    const handleEditorCreate = useCallback(
+        (editor: Editor) => {
+            runtime.setEditor(editor);
+            foundation.handleCreate();
+        },
+        [runtime, foundation]
+    );
 
     const renderPopoverContent = () => {
         if (templateVisible) {
             return (
                 <div className={clsx(`${prefixCls}-template`, { [templatesCls]: templatesCls })} style={{ maxHeight: numbers.TEMPLATE_MAX_HEIGHT, ...templatesStyle }}>
-                    {renderTemplate?.(skill, runtime.setContent)}
+                    {renderTemplate?.(skill, foundation.setContent)}
                 </div>
             );
         }
@@ -414,9 +407,9 @@ function AIChatInput(rawProps: AIChatInputProps) {
             changeTemplateVisible: foundation.changeTemplateVisible,
             deleteContent: foundation.handleDeleteContent,
             deleteUploadFile: foundation.handleUploadFileDelete,
-            focusEditor: runtime.focus,
+            focusEditor: foundation.focusEditor,
             getEditor: () => runtime.editor,
-            setContent: runtime.setContent,
+            setContent: foundation.setContent,
             setContentWhileSaveTool: foundation.setContentWhileSaveTool,
         }),
         [foundation, runtime]
@@ -452,7 +445,6 @@ function AIChatInput(rawProps: AIChatInputProps) {
             <div
                 role={namedRole(rest)}
                 {...rest}
-                ref={triggerRef}
                 className={clsx(prefixCls, { [className]: className })}
                 style={style}
                 // the textbox is the Tab stop; Tooltip would add tabIndex 0 here
@@ -479,13 +471,12 @@ function AIChatInput(rawProps: AIChatInputProps) {
                     defaultContent={defaultContent}
                     extensions={extensions}
                     innerRef={richTextRef}
-                    setEditor={setEditor}
                     showPlaceholderWhenSkillOnly={showPlaceholderWhenSkillOnly}
                     immediatelyRender={immediatelyRender}
-                    handleCreate={foundation.handleCreate}
                     handleKeyDown={foundation.handleRichTextAreaKeyDown}
                     onBlur={foundation.handleBlur}
                     onChange={foundation.handleContentChange}
+                    onCreate={handleEditorCreate}
                     onFocus={foundation.handleFocus}
                     onKeyDown={foundation.handleKeyDown}
                     onPaste={foundation.handlePaste}

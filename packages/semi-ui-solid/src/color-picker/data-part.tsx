@@ -1,4 +1,4 @@
-import { Show, batch } from 'solid-js';
+import { Show } from 'solid-js';
 import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
 import DataPartFoundation, { type DataPartAdapter, type DataPartBaseProps, type DataPartBaseState } from '@fibrae/semi-foundation/color-picker/data-part-foundation';
 import type { ColorFormat } from '@fibrae/semi-foundation/color-picker/interface';
@@ -24,23 +24,16 @@ export default function DataPart(props: DataPartProps) {
         DataPartFoundation,
         props,
         (initial) => DataPartFoundation.getInitialState(initial),
-        () => ({})
+        () => ({
+            notifyChange: (color, format) => props.onChange(color, format),
+            notifyAlphaChange: (alpha) => props.onAlphaChange(alpha),
+        })
     );
 
     const demoColor = () => {
         const { r, g, b, a } = props.currentColor.rgba;
         return `rgba(${r},${g},${b},${a})`;
     };
-
-    // one commit: the prop reaction must see the typed text, or it rewrites it with the canonical text of its own color
-    const handleTextChange = (text: string) =>
-        batch(() => {
-            const value = foundation.getValueByInputValue(text);
-            if (value) {
-                props.foundation.handleChange(value, state().format);
-            }
-            foundation.handleInputValueChange(text);
-        });
 
     return (
         <div class={`${cssClasses.PREFIX}-dataPart`} style={{ width: `${props.width}px` }}>
@@ -58,7 +51,7 @@ export default function DataPart(props: DataPartProps) {
                     showClear={false}
                     prefix={null}
                     suffix={null}
-                    onChange={handleTextChange}
+                    onChange={foundation.handleInputValueChange}
                 />
                 <Show when={props.alpha}>
                     <InputNumber
@@ -74,7 +67,7 @@ export default function DataPart(props: DataPartProps) {
                         showClear={false}
                         prefix={null}
                         suffix={<span class={`${cssClasses.PREFIX}-inputNumberSuffix`}>%</span>}
-                        onNumberChange={(percent) => props.foundation.handleAlphaChangeByHandle({ a: Number((percent / 100).toFixed(2)) })}
+                        onNumberChange={foundation.handleAlphaInputChange}
                     />
                 </Show>
                 <Select class={`${cssClasses.PREFIX}-formatSelect`} aria-label={locale().locale.format} value={state().format} optionList={FORMAT_OPTIONS} size="small" onSelect={(format) => foundation.handleFormatChange(format as ColorFormat)} />

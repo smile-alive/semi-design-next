@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/video-player/constants';
-import VideoProgressFoundation, { type Marker, type MarkerListItem, type VideoProgressAdapter } from '@fibrae/semi-foundation/video-player/progress-foundation';
+import VideoProgressFoundation, { type Marker, type MarkerListItem, type VideoProgressAdapter, type VideoProgressBaseState } from '@fibrae/semi-foundation/video-player/progress-foundation';
 import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
 import '@fibrae/semi-foundation/video-player/video-player.scss';
 import useFoundation from '../_base/use-foundation';
@@ -21,12 +21,6 @@ export interface VideoProgressProps {
     bufferedValue: number;
 }
 
-export interface VideoProgressState {
-    isDragging: boolean;
-    movingInfo: { progress: number; offset: number; value: number } | null;
-    activeIndex: number;
-}
-
 const prefixCls = cssClasses.PREFIX_PROGRESS;
 
 export default function VideoProgress(props: VideoProgressProps) {
@@ -36,10 +30,10 @@ export default function VideoProgress(props: VideoProgressProps) {
 
     const sliderRef = useRef<HTMLDivElement>(null);
 
-    const [foundation, state] = useFoundation<Foundation, Adapter, VideoProgressProps, VideoProgressState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, VideoProgressProps, VideoProgressBaseState>(
         VideoProgressFoundation,
         props,
-        () => VideoProgressFoundation.getInitialState(props),
+        () => VideoProgressFoundation.getInitialState(),
         (base) => ({
             getSliderRef: () => sliderRef.current,
             notifyChange: (value) => base.getProps().onChange(value),

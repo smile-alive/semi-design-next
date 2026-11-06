@@ -2,6 +2,7 @@
     import { computed, h, useTemplateRef, watch } from 'vue';
     import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
     import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/chat/foundation';
+    import { followChats, followHints } from '@fibrae/semi-ai-foundation/message-list-foundation';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import '@fibrae/semi-ai-foundation/chat/chat.scss';
     import { IconChevronDown, IconDisc } from '@fibrae/semi-icons-vue';
@@ -62,6 +63,8 @@
     const { PREFIX, PREFIX_DIVIDER } = cssClasses;
     const { ROLE } = strings;
     const EMPTY_CHATS: ChatMessage[] = [];
+    const followedChats = computed(() => followChats(props.chats));
+    const followedHints = computed(() => followHints(props.hints));
 
     const { foundation, state } = useFoundation<Foundation, Adapter, ChatProps, ChatState>(
         ChatFoundation,
@@ -84,7 +87,8 @@
             notifyHintClick: (hint) => emit('hintClick', hint),
             manualUpload: (files) => inputBox.value?.insertFiles(files),
             getDropAreaElement: () => dropArea.value as HTMLDivElement,
-        })
+        }),
+        { props: { chats: () => followedChats.value, hints: () => followedHints.value } }
     );
 
     const chats = computed(() => props.chats ?? EMPTY_CHATS);
@@ -152,14 +156,8 @@
 
     defineExpose<ChatHandle>({
         resetMessage: () => foundation.resetMessage(null),
-        clearContext: () => foundation.clearContext(null),
-        scrollToBottom: (animation) => {
-            if (animation) {
-                foundation.scrollToBottomWithAnimation();
-            } else {
-                foundation.scrollToBottomImmediately();
-            }
-        },
+        clearContext: foundation.clearContext,
+        scrollToBottom: foundation.scrollToBottom,
         sendMessage: foundation.onMessageSend,
     });
 </script>
@@ -218,7 +216,7 @@
                 :showClearContext="props.showClearContext"
                 :uploadProps="props.uploadProps"
                 :uploadTipProps="props.uploadTipProps"
-                @clear="foundation.clearContext(null)"
+                @clear="foundation.clearContext()"
                 @inputChange="foundation.onInputChange"
                 @send="foundation.onMessageSend"
             >

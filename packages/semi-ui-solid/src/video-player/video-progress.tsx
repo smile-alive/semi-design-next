@@ -1,13 +1,13 @@
 import { Index, createMemo } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/video-player/constants';
-import VideoProgressFoundation, { type VideoProgressAdapter } from '@fibrae/semi-foundation/video-player/progress-foundation';
+import VideoProgressFoundation, { type VideoProgressAdapter, type VideoProgressBaseState } from '@fibrae/semi-foundation/video-player/progress-foundation';
 import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
 import '@fibrae/semi-foundation/video-player/video-player.scss';
 import useFoundation from '../_base/use-foundation';
 import useLocale from '../locale/use-locale';
 import Tooltip from '../tooltip';
-import type { VideoProgressProps, VideoProgressState } from './interface';
+import type { VideoProgressProps } from './interface';
 
 type Foundation = VideoProgressFoundation<VideoProgressProps>;
 type Adapter = VideoProgressAdapter<VideoProgressProps>;
@@ -19,10 +19,10 @@ export default function VideoProgress(props: VideoProgressProps) {
 
     let slider: HTMLDivElement | undefined;
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, VideoProgressProps, VideoProgressState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, VideoProgressProps, VideoProgressBaseState>(
         VideoProgressFoundation,
         props,
-        (view) => VideoProgressFoundation.getInitialState(view),
+        () => VideoProgressFoundation.getInitialState(),
         (base) => ({
             getSliderRef: () => slider ?? null,
             notifyChange: (value) => base.getProps().onChange(value),

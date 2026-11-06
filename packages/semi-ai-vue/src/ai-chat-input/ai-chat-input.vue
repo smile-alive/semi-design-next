@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, h, onBeforeUpdate, onUpdated, shallowRef, useId, useTemplateRef, type Component, type ComponentPublicInstance } from 'vue';
-    import type { Editor, FocusPosition, Content as TiptapContent } from '@tiptap/core';
+    import type { Editor } from '@tiptap/core';
     import { cssClasses, numbers } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
     import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputState } from '@fibrae/semi-ai-foundation/ai-chat-input/foundation';
     import type { Attachment, Content, Reference, Suggestion } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
@@ -87,6 +87,38 @@
     // A delete button leaves with its item while it holds focus; the editor is where typing continues
     let focusedBeforeUpdate: Element | null = null;
 
+    const { foundation, state } = useFoundation<Foundation, Adapter, AIChatInputProps, AIChatInputState>(
+        AIChatInputFoundation,
+        props,
+        (view) => AIChatInputFoundation.getInitialState(view),
+        (base) => ({
+            getEditor: () => editor,
+            // the panel may render in a shadow root, out of reach of document queries
+            getOptionNode: (kind, index) => ((kind === 'skill' ? skillPanel : suggestionPanel).value?.children[index] as HTMLElement | undefined) ?? null,
+            notifySkillChange: (skill) => emit('skillChange', skill),
+            notifyContentChange: (result) => {
+                transformedContent.value = result;
+                emit('contentChange', result);
+            },
+            setTransformedContent: (result) => {
+                transformedContent.value = result;
+            },
+            notifyConfigureChange: (value, changedValue) => emit('configureChange', value, changedValue),
+            manualUpload: (files) => upload.value?.insert(files),
+            notifyMessageSend: (message) => emit('messageSend', message),
+            notifyStopGenerate: () => emit('stopGenerate'),
+            getRichTextDiv: () => (richText.value?.$el as HTMLDivElement | undefined) ?? null,
+            notifyReferenceClick: (reference) => emit('referenceClick', reference),
+            notifyFocus: (event) => emit('focus', event),
+            notifyBlur: (event) => emit('blur', event),
+            notifyUploadChange: (change) => emit('uploadChange', change),
+            notifyUploadPropsChange: (change) => base.getProp('uploadProps')?.onChange?.(change),
+            notifyBeforeRemove: (file, fileList) => base.getProp('uploadProps')?.beforeRemove?.(file, fileList),
+            notifyUploadRemove: (file, fileList, fileItem) => base.getProp('uploadProps')?.onRemove?.(file, fileList, fileItem),
+            getConfigureValue: () => configure.value?.getConfigureValue(),
+        })
+    );
+
     const prefix = cssClasses.PREFIX;
 
     const FILE_ICONS: Record<string, Component> = {
@@ -103,51 +135,6 @@
     const suggestionListId = `${prefix}-suggestion-${popupId}`;
     const placeholder = computed(() => props.placeholder ?? readSemiDefault(semi, 'AIChatInput', 'placeholder'));
     const actionCls = `${prefix}-footer-action`;
-
-    const iconType = (item: Attachment | Reference) => getContentType(getAttachmentType(item));
-
-    const fileIcon = (type: string) => FILE_ICONS[type] ?? IconFile;
-
-    const setContent = (content: TiptapContent) => editor?.commands.setContent(content);
-
-    // null and false are tiptap positions (keep the selection, do nothing), so only undefined falls back
-    const focusEditor = (pos?: FocusPosition) => editor?.commands.focus(pos ?? 'end');
-
-    const { foundation, state } = useFoundation<Foundation, Adapter, AIChatInputProps, AIChatInputState>(
-        AIChatInputFoundation,
-        props,
-        (view) => AIChatInputFoundation.getInitialState(view),
-        (base) => ({
-            setContent,
-            clearContent: () => setContent(''),
-            focusEditor,
-            getEditor: () => editor,
-            // the panel may render in a shadow root, out of reach of document queries
-            getOptionNode: (kind, index) => ((kind === 'skill' ? skillPanel : suggestionPanel).value?.children[index] as HTMLElement | undefined) ?? null,
-            notifySkillChange: (skill) => emit('skillChange', skill),
-            notifyContentChange: (result) => {
-                transformedContent.value = result;
-                emit('contentChange', result);
-            },
-            setTransformedContent: (result) => {
-                transformedContent.value = result;
-            },
-            getActiveElement: () => (trigger.value?.getRootNode() as Document | ShadowRoot | undefined)?.activeElement ?? null,
-            notifyConfigureChange: (value, changedValue) => emit('configureChange', value, changedValue),
-            manualUpload: (files) => upload.value?.insert(files),
-            notifyMessageSend: (message) => emit('messageSend', message),
-            notifyStopGenerate: () => emit('stopGenerate'),
-            getRichTextDiv: () => (richText.value?.$el as HTMLDivElement | undefined) ?? null,
-            notifyReferenceClick: (reference) => emit('referenceClick', reference),
-            notifyFocus: (event) => emit('focus', event),
-            notifyBlur: (event) => emit('blur', event),
-            notifyUploadChange: (change) => emit('uploadChange', change),
-            notifyUploadPropsChange: (change) => base.getProp('uploadProps')?.onChange?.(change),
-            notifyUploadRemove: (file, fileList, fileItem) => base.getProp('uploadProps')?.onRemove?.(file, fileList, fileItem),
-            getConfigureValue: () => configure.value?.getConfigureValue(),
-        })
-    );
-
     const listbox = computed(() => getListbox(state.value, props, { skillListId, suggestionListId }));
 
     const popoverBindings = computed(() => {
@@ -171,8 +158,13 @@
 
     const sendEnabled = computed(() => AIChatInputFoundation.getCanSend(props.canSend, state.value.content, state.value.attachments ?? []));
 
-    const onEditorReady = (instance: Editor) => {
+    const iconType = (item: Attachment | Reference) => getContentType(getAttachmentType(item));
+
+    const fileIcon = (type: string) => FILE_ICONS[type] ?? IconFile;
+
+    const onEditorCreate = (instance: Editor) => {
         editor = instance;
+        foundation.handleCreate();
     };
 
     const optionAttrs = (kind: 'skill' | 'suggestion', index: number, select: () => void) => {
@@ -236,9 +228,9 @@
         changeTemplateVisible: foundation.changeTemplateVisible,
         deleteContent: foundation.handleDeleteContent,
         deleteUploadFile: foundation.handleUploadFileDelete,
-        focusEditor,
+        focusEditor: foundation.focusEditor,
         getEditor: () => editor,
-        setContent,
+        setContent: foundation.setContent,
         setContentWhileSaveTool: foundation.setContentWhileSaveTool,
     });
 </script>
@@ -305,12 +297,11 @@
                 :showPlaceholderWhenSkillOnly="props.showPlaceholderWhenSkillOnly"
                 @blur="foundation.handleBlur"
                 @change="foundation.handleContentChange"
-                @create="foundation.handleCreate"
+                @create="onEditorCreate"
                 @focus="foundation.handleFocus"
                 @keydown="foundation.handleKeyDown"
                 @paste="(...args) => emit('paste', ...args)"
                 @pasteFiles="foundation.handlePaste"
-                @ready="onEditorReady"
             />
             <div :class="[`${prefix}-footer`, { [`${prefix}-footer-round`]: props.round }]">
                 <div :class="cssClasses.FOOTER_CONFIGURE">
@@ -353,7 +344,7 @@
         </div>
         <template #content>
             <div v-if="state.templateVisible" :class="[`${prefix}-template`, props.templatesCls]" :style="[{ maxHeight: `${numbers.TEMPLATE_MAX_HEIGHT}px` }, props.templatesStyle]">
-                <slot name="template" :onTemplateClick="setContent" :skill="state.skill" />
+                <slot name="template" :onTemplateClick="foundation.setContent" :skill="state.skill" />
             </div>
             <div v-else-if="state.skillVisible" :id="skillListId" ref="skillPanel" :aria-labelledby="editorId" :class="`${prefix}-skill`" role="listbox" :style="{ maxHeight: `${numbers.SKILL_MAX_HEIGHT}px` }">
                 <template v-for="(item, index) in props.skills" :key="`${index}-${item.value}`">

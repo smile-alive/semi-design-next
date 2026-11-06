@@ -1,14 +1,18 @@
 <script setup lang="ts">
-    import { computed, shallowRef, useTemplateRef } from 'vue';
+    import { computed, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
     import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
-    import { formatTime, getPointerRatio } from '@fibrae/semi-foundation/video-player/utils';
+    import SeekFoundation, { type SeekAdapter, type SeekBaseProps, type SeekBaseState } from '@fibrae/semi-foundation/video-player/seek-foundation';
+    import { formatTime } from '@fibrae/semi-foundation/video-player/utils';
     import '@fibrae/semi-foundation/audio-player/audio-player.scss';
     import SlotFragment from '../_base/slot-fragment';
+    import useFoundation from '../_base/use-foundation';
     import Tooltip from '../tooltip/tooltip.vue';
     import type { AudioSliderEmits, AudioSliderProps } from './interface';
+
+    type Foundation = SeekFoundation<SeekBaseProps>;
+    type Adapter = SeekAdapter<SeekBaseProps>;
 
     const props = withDefaults(defineProps<AudioSliderProps>(), {
         value: 0,
@@ -21,10 +25,23 @@
 
     const emit = defineEmits<AudioSliderEmits>();
 
-    const track = useTemplateRef('track');
-    const input = useTemplateRef('input');
-    const isDragging = shallowRef(false);
-    const movingInfo = shallowRef<{ progress: number; offset: number } | null>(null);
+    // Annotated: the adapter reads these refs, so inference is circular (TS7022)
+    const track = useTemplateRef<HTMLDivElement>('track');
+    const input = useTemplateRef<HTMLInputElement>('input');
+
+    const { foundation, state } = useFoundation<Foundation, Adapter, SeekBaseProps, SeekBaseState>(
+        SeekFoundation,
+        props,
+        () => SeekFoundation.getInitialState(),
+        () => ({
+            getSliderRef: () => track.value,
+            notifyChange: (value) => emit('change', value),
+            // Chrome treats a scripted focus on a range input as keyboard focus; the ring is for the keyboard only
+            focusOnPress: () => {
+                if (input.value) focusWithoutRing(input.value, { preventScroll: true });
+            },
+        })
+    );
 
     const prefix = cssClasses.PREFIX;
 
@@ -34,38 +51,13 @@
 
     // Template notes, kept here because a template comment would become an extra node in the Tooltip's trigger slot:
     // - tabindex="-1" on the wrapper stops the Tooltip adding a Tab stop; the hidden native range input is the control;
-    // - lostpointercapture follows pointerup and pointercancel, and also fires when the slider leaves the page mid-drag;
     // - mousedown.prevent keeps the mouse from moving focus from the input to the wrapper;
     // - the input binds max before value, so a range that grows and moves in one update keeps the new value;
     // - the dot stays inside the track like a native range thumb.
 
-    const onPointer = (e: MouseEvent, seek: boolean) => {
-        if (!track.value) return;
-        const { total, ratio } = getPointerRatio(track.value.getBoundingClientRect(), e, props.vertical);
-        if (seek && isDragging.value) {
-            emit('change', ratio * props.max);
-        }
-        // from the slider's center to where the dot sits at this ratio, so the preview stays over the dragged dot
-        movingInfo.value = { progress: ratio, offset: (ratio - 0.5) * total };
-    };
+    const onPointerDown = (e: PointerEvent) => foundation.handlePointerDown(e as PointerEvent & { currentTarget: Element });
 
-    // the slider keeps the pointer from the press on, so the moves and the release reach it even outside it
-    const onPointerDown = (e: PointerEvent) => {
-        if (isSecondaryPress(e)) return;
-        (e.currentTarget as Element).setPointerCapture(e.pointerId);
-        // Chrome treats a scripted focus on a range input as keyboard focus; the ring is for the keyboard only
-        if (input.value) focusWithoutRing(input.value, { preventScroll: true });
-        isDragging.value = true;
-        onPointer(e, true);
-    };
-
-    const clearPreview = () => {
-        movingInfo.value = null;
-    };
-
-    const onFocus = (e: FocusEvent) => {
-        if ((e.currentTarget as Element).matches(':focus-visible')) clearPreview();
-    };
+    const onFocus = (e: FocusEvent) => foundation.handleFocus(e as FocusEvent & { currentTarget: Element });
 
     const onInput = (e: Event) => emit('change', Number((e.target as HTMLInputElement).value));
 
@@ -73,7 +65,7 @@
     // counts up from the bottom
     const tooltipProps = () => {
         if (!props.showTooltip) return {};
-        const info = movingInfo.value;
+        const info = state.value.movingInfo;
         return {
             autoAdjustOverflow: true,
             position: props.vertical ? 'right' : 'top',
@@ -84,22 +76,22 @@
 
 <template>
     <component :is="props.showTooltip ? Tooltip : SlotFragment" v-bind="tooltipProps()">
-        <template #content>{{ formatTime(movingInfo ? movingInfo.progress * props.max : props.value) }}</template>
+        <template #content>{{ formatTime(state.movingInfo ? state.movingInfo.value : props.value) }}</template>
         <div
             :class="[
                 `${prefix}-slider-wrapper`,
                 {
                     [`${prefix}-slider-wrapper-vertical`]: props.vertical,
                     [`${prefix}-slider-wrapper-horizontal`]: !props.vertical,
-                    [`${prefix}-slider-wrapper-dragging`]: isDragging,
+                    [`${prefix}-slider-wrapper-dragging`]: state.isDragging,
                 },
             ]"
             tabindex="-1"
-            @lostpointercapture="isDragging = false"
+            @lostpointercapture="foundation.handleLostPointerCapture"
             @mousedown.prevent
-            @mouseenter="onPointer($event, false)"
+            @mouseenter="foundation.handlePointerPosition($event, { seek: false })"
             @pointerdown="onPointerDown"
-            @pointermove="onPointer($event, true)"
+            @pointermove="foundation.handlePointerPosition($event, { seek: true })"
         >
             <input
                 ref="input"
@@ -114,7 +106,7 @@
                 :value="props.value"
                 @focus="onFocus"
                 @input="onInput"
-                @keydown="clearPreview"
+                @keydown="foundation.clearPreview"
             />
             <div
                 ref="track"
