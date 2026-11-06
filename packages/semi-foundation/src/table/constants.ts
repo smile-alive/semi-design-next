@@ -31,6 +31,20 @@ export const strings = {
             wrapper: 'tbody',
             row: 'tr',
             cell: 'td',
+            colgroup: {
+                wrapper: 'colgroup',
+                col: 'col',
+            },
+        },
+    },
+    DEFAULT_VIRTUALIZED_BODY_COMPONENTS: {
+        outer: 'div',
+        wrapper: 'div',
+        row: 'div',
+        cell: 'div',
+        colgroup: {
+            wrapper: 'div',
+            col: 'div',
         },
     },
 } as const;

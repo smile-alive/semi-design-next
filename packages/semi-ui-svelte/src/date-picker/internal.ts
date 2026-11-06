@@ -1,7 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { Locale as DateFnsLocale } from 'date-fns';
-import type { WeekStartNumber } from '@fibrae/semi-foundation/date-picker/_utils/get-month-table';
-import type { DisabledTimeType, PresetType, Type } from '@fibrae/semi-foundation/date-picker/foundation';
+import type { DisabledTimeType, PresetType, Type, WeekStartNumber } from '@fibrae/semi-foundation/date-picker/foundation';
 import type { InsetInputChangeFoundationProps, InsetInputChangeProps, InsetInputValue, RangeInput } from '@fibrae/semi-foundation/date-picker/input-foundation';
 import type { FocusRecords, MonthDayInfo } from '@fibrae/semi-foundation/date-picker/month-foundation';
 import type { PanelType, YearMonthChangeType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
@@ -106,7 +105,7 @@ export interface MonthsGridProps {
     disabledTime: (date: Date | Date[], panelType: PanelType) => ReturnType<DisabledTimeType>;
     disabledTimePicker?: boolean;
     hideDisabledOptions?: boolean;
-    isControlledComponent?: boolean;
+    selectionControlled?: boolean;
     rangeInputFocus?: RangeInput | false;
     format?: string;
     startDateOffset?: (selectedDate: Date) => Date;
@@ -129,10 +128,8 @@ export interface MonthsGridProps {
     quickControls?: Snippet;
     date?: Snippet<[DatePickerDateSnippetProps]>;
     fullDate?: Snippet<[DatePickerFullDateSnippetProps]>;
-    hasOtherRangeInputBeenFocused?: (currentRangeInput: RangeInput) => boolean;
-    onChange: (value: Date[], options?: { closePanel?: boolean; needCheckFocusRecord?: boolean; rangeInputFocus?: RangeInput | false }) => void;
+    onChange: (value: Date[], options?: { closePanel?: boolean; needCheckFocusRecord?: boolean; nextRangeInputFocus?: RangeInput }) => void;
     onPanelChange: (date: Date | Date[], dateString: string | string[]) => void;
-    onRangeInputFocus: (rangeInputFocus: RangeInput) => void;
 }
 
 export interface InsetInputBoxProps {

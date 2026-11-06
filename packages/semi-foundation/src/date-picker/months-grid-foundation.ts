@@ -14,6 +14,7 @@ import toCallbackArgs from './_utils/to-callback-args';
 import toDateArg from './_utils/to-date-arg';
 import { strings } from './constants';
 import type { DateInputFoundationProps, DateOffsetType, DisabledDateType, DisabledTimeType, PresetPosition, RenderDateType, RenderFullDateType, ValueType } from './foundation';
+import type { RangeInput } from './input-foundation';
 import type { FocusRecords, MonthDayInfo } from './month-foundation';
 import type { YearAndMonthFoundationProps } from './year-and-month-foundation';
 
@@ -32,6 +33,9 @@ interface MonthsGridElementProps {
 }
 
 export type PanelType = 'left' | 'right';
+export type PanelView = 'date' | 'time';
+/** `panel` is a month panel, `wrap` its year-month or time list, `switch` the date/time switch above it */
+export type PanelPart = 'panel' | 'wrap' | 'switch';
 export type YearMonthChangeType = 'prevMonth' | 'nextMonth' | 'prevYear' | 'nextYear';
 
 export interface MonthsGridFoundationProps extends MonthsGridElementProps, Pick<YearAndMonthFoundationProps, 'startYear' | 'endYear'> {
@@ -50,7 +54,8 @@ export interface MonthsGridFoundationProps extends MonthsGridElementProps, Pick<
     disabledTimePicker?: boolean;
     hideDisabledOptions?: boolean;
     timePickerOpts?: any;
-    isControlledComponent?: boolean;
+    /** DatePicker shows a picked date only once its owner passes it back, see `DatePickerFoundation.isSelectionControlled` */
+    selectionControlled?: boolean;
     rangeStart?: string;
     rangeInputFocus?: boolean | string;
     locale?: any;
@@ -67,14 +72,11 @@ export interface MonthsGridFoundationProps extends MonthsGridElementProps, Pick<
         options?: {
             closePanel?: boolean;
             needCheckFocusRecord?: boolean;
-            rangeInputFocus?: 'rangeStart' | 'rangeEnd' | false;
+            nextRangeInputFocus?: RangeInput;
         }
     ) => void;
     onPanelChange?: (date: Date | Date[], dateString: string | string[]) => void;
-    setRangeInputFocus?: (rangeInputFocus: 'rangeStart' | 'rangeEnd') => void;
-    hasOtherRangeInputBeenFocused?: (currentRangeInput: 'rangeStart' | 'rangeEnd') => boolean;
     focusRecords?: FocusRecords;
-    triggerRender?: (props: Record<string, any>) => any;
     insetInput: DateInputFoundationProps['insetInput'];
     presetPosition?: PresetPosition;
     renderQuickControls?: any;
@@ -104,11 +106,15 @@ export interface MonthsGridFoundationState {
 export interface MonthsGridAdapter extends DefaultAdapter<MonthsGridFoundationProps, MonthsGridFoundationState> {
     notifySelectedChange: MonthsGridFoundationProps['onChange'];
     notifyPanelChange: MonthsGridFoundationProps['onPanelChange'];
-    setRangeInputFocus: MonthsGridFoundationProps['setRangeInputFocus'];
-    hasOtherRangeInputBeenFocused: MonthsGridFoundationProps['hasOtherRangeInputBeenFocused'];
+    /** a part of a month panel, null while it is not rendered */
+    getPanelNode: (part: PanelPart, panelType: PanelType) => HTMLElement | null | undefined;
+    reselectScrollLists: () => void;
 }
 
 export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapter, MonthsGridFoundationProps, MonthsGridFoundationState> {
+    /** the measured height of both panels while they show a scroll list; 0 means measure it when applying */
+    #panelHeight = 0;
+
     static override readonly propKeys = ['selectedValue', 'defaultPickerValue'];
     // a parent rendering `new Date(...)` each time must not pull the panel back
     static override readonly propEquals = { defaultPickerValue: isEqual };
@@ -290,7 +296,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
     }
 
     #updateTimeInDateRange(panelType: PanelType, timeDate: Date) {
-        const { isControlledComponent, dateFnsLocale } = this.getProps();
+        const { selectionControlled, dateFnsLocale } = this.getProps();
         let rangeStart = this.getState('rangeStart');
         let rangeEnd = this.getState('rangeEnd');
         const dateFormat = MonthsGridFoundation.getValidDateFormat(this.getProps());
@@ -306,7 +312,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
                     [rangeStart, rangeEnd] = [rangeEnd, rangeStart];
                     [startDate, endDate] = [endDate, startDate];
                 }
-                if (!isControlledComponent) {
+                if (!selectionControlled) {
                     this.setState({ rangeEnd });
                 }
             } else {
@@ -316,7 +322,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
                     [rangeStart, rangeEnd] = [rangeEnd, rangeStart];
                     [startDate, endDate] = [endDate, startDate];
                 }
-                if (!isControlledComponent) {
+                if (!selectionControlled) {
                     this.setState({ rangeStart });
                 }
             }
@@ -324,13 +330,39 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         }
     }
 
-    #updatePanelDetail(panelType: PanelType, kvs: Partial<PanelState>) {
+    #updatePanelDetail(panelType: PanelType, kvs: Partial<PanelState>, callback?: () => void) {
         const { monthLeft, monthRight } = this.getStates();
         if (panelType === strings.PANEL_TYPE_RIGHT) {
-            this.setState({ monthRight: { ...monthRight, ...kvs } });
+            this.setState({ monthRight: { ...monthRight, ...kvs } }, callback);
         } else {
-            this.setState({ monthLeft: { ...monthLeft, ...kvs } });
+            this.setState({ monthLeft: { ...monthLeft, ...kvs } }, callback);
         }
+    }
+
+    /** How many panels of a range show a year or time list in place of their month */
+    #countScrollLists() {
+        const { monthLeft, monthRight } = this.getStates();
+        return isRangeType(this.getProp('type')) ? Number(MonthsGridFoundation.isYearOrTime(monthLeft)) + Number(MonthsGridFoundation.isYearOrTime(monthRight)) : 0;
+    }
+
+    #scrollListHeight() {
+        const height = (panelType: PanelType) => (this.adapter.getPanelNode('wrap', panelType)?.getBoundingClientRect().height || 0) + (this.adapter.getPanelNode('switch', panelType)?.getBoundingClientRect().height || 0);
+        return Math.max(height(strings.PANEL_TYPE_LEFT), height(strings.PANEL_TYPE_RIGHT));
+    }
+
+    #setPanelView(panelType: PanelType, view: Pick<PanelState, 'isTimePickerOpen' | 'isYearPickerOpen'>) {
+        const before = this.#countScrollLists();
+        this.#updatePanelDetail(panelType, view, () => {
+            const after = this.#countScrollLists();
+            if (before === 1 && after === 2) {
+                // the second list takes the height of the month the first one stood beside
+                this.#panelHeight = this.#scrollListHeight();
+                this.applyPanelSize();
+                this.adapter.reselectScrollLists();
+            } else if (before === 2 && after === 1) {
+                this.adapter.reselectScrollLists();
+            }
+        });
     }
 
     #toMonth(panelType: PanelType, target: Date) {
@@ -395,7 +427,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
     }
 
     #handleDateSelected(day: { fullDate: string; fullValidDate?: Date }, panelType: PanelType) {
-        const { max, type, isControlledComponent, dateFnsLocale } = this.getProps();
+        const { max, type, selectionControlled, dateFnsLocale } = this.getProps();
         const multiple = this.#isMultiple();
         const { selected } = this.getStates();
         const monthDetail = this.#getPanelDetail(panelType);
@@ -421,7 +453,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
 
         this.#handleShowDateAndTime(panelType, time);
 
-        if (!isControlledComponent) {
+        if (!selectionControlled) {
             this.setState({ selected: newSelected });
         }
 
@@ -438,6 +470,8 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         const { startDateOffset, endDateOffset, type, dateFnsLocale, rangeInputFocus } = this.adapter.getProps();
         let rangeStartReset = false;
         let rangeEndReset = false;
+        // the input still to pick for: DatePicker moves the focus there unless the pick closes the panel
+        let nextRangeInputFocus: RangeInput | undefined;
 
         const isDateRangeAndHasOffset = (startDateOffset || endDateOffset) && type === 'dateRange';
         if (isDateRangeAndHasOffset) {
@@ -464,21 +498,22 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             if (isDateRangeAndHasOffset) {
                 this.setState({ rangeStart, rangeEnd });
             } else {
+                const focusRecords = this.getProp('focusRecords');
                 if (rangeInputFocus === 'rangeEnd') {
                     this.setState({ rangeEnd });
                     if (rangeStartReset) {
                         this.setState({ rangeStart });
                     }
-                    if (!this.adapter.hasOtherRangeInputBeenFocused('rangeEnd') || !rangeStart) {
-                        this.adapter.setRangeInputFocus('rangeStart');
+                    if (!focusRecords?.rangeStart || !rangeStart) {
+                        nextRangeInputFocus = 'rangeStart';
                     }
                 } else if (rangeInputFocus === 'rangeStart' || !rangeInputFocus) {
                     this.setState({ rangeStart });
                     if (rangeEndReset) {
                         this.setState({ rangeEnd });
                     }
-                    if (!this.adapter.hasOtherRangeInputBeenFocused('rangeStart') || !rangeEnd) {
-                        this.adapter.setRangeInputFocus('rangeEnd');
+                    if (!focusRecords?.rangeEnd || !rangeEnd) {
+                        nextRangeInputFocus = 'rangeEnd';
                     }
                 }
             }
@@ -501,11 +536,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
                 }
             }
             const needCheckFocusRecord = !(type === 'dateRange' && isDateRangeAndHasOffset);
-            // the focus has moved on above; the dates were picked for the input focused at the click
-            this.adapter.notifySelectedChange(date, {
-                needCheckFocusRecord,
-                rangeInputFocus: rangeInputFocus as 'rangeStart' | 'rangeEnd' | false,
-            });
+            this.adapter.notifySelectedChange(date, { needCheckFocusRecord, nextRangeInputFocus });
         }
     }
 
@@ -585,7 +616,8 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         return (props.format || getDefaultFormatToken(props.type)) as string;
     }
 
-    static calcDisabledTime({ disabledTime, type }: Pick<MonthsGridFoundationProps, 'disabledTime' | 'type'>, { rangeStart, rangeEnd, monthLeft }: Pick<MonthsGridFoundationState, 'rangeStart' | 'rangeEnd' | 'monthLeft'>, panelType: PanelType) {
+    /** The time columns' disabled options of a panel, only those `disabledTime` sets, so `timePickerOpts` keeps the rest */
+    static calcDisabledTime({ disabledTime, type }: Pick<MonthsGridFoundationProps, 'disabledTime' | 'type'>, { rangeStart, rangeEnd, monthLeft }: Pick<MonthsGridFoundationState, 'rangeStart' | 'rangeEnd' | 'monthLeft'>, panelType: PanelType): ReturnType<DisabledTimeType> {
         if (typeof disabledTime === 'function' && panelType && isDateTimeType(type)) {
             const selected = [];
             if (type === 'dateTimeRange') {
@@ -600,9 +632,10 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             }
             const selectedDates = selected.map((str) => (str instanceof Date ? str : parseISO(str)));
             const cbDates = type === 'dateTimeRange' ? selectedDates : selectedDates[0];
-            return disabledTime(cbDates, panelType);
+            const { disabledHours, disabledMinutes, disabledSeconds } = disabledTime(cbDates, panelType) ?? {};
+            return { ...(disabledHours && { disabledHours }), ...(disabledMinutes && { disabledMinutes }), ...(disabledSeconds && { disabledSeconds }) };
         }
-        return undefined;
+        return {};
     }
 
     /**
@@ -742,18 +775,52 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         }
     };
 
+    /** The host calls it after every render */
+    applyPanelSize = () => {
+        const sizes = MonthsGridFoundation.getPanelSizeStyle(this.getStates(), this.getProp('insetInput'), {
+            monthWidth: (panelType) => this.adapter.getPanelNode('wrap', panelType)?.getBoundingClientRect().width ?? null,
+            scrollListHeight: () => this.#panelHeight || this.#scrollListHeight(),
+        });
+        for (const panelType of [strings.PANEL_TYPE_LEFT, strings.PANEL_TYPE_RIGHT] as const) {
+            const panel = this.adapter.getPanelNode('panel', panelType);
+            if (panel) {
+                panel.style.minWidth = sizes[panelType].minWidth;
+                panel.style.minHeight = sizes[panelType].minHeight;
+            }
+        }
+    };
+
+    // a scroll list beside a month keeps its own height; the panels share a minHeight only while both show lists
+    handleWeeksRowNumChange = () => {
+        if (this.#countScrollLists() === 1) {
+            this.#panelHeight = this.#scrollListHeight();
+            // the month's height sets the height of the list beside it, moving the selected item off centre
+            this.adapter.reselectScrollLists();
+        }
+    };
+
     showYearPicker = (panelType: PanelType) => {
-        this.#updatePanelDetail(panelType, { isTimePickerOpen: false, isYearPickerOpen: true });
+        this.#setPanelView(panelType, { isTimePickerOpen: false, isYearPickerOpen: true });
     };
 
     showTimePicker = (panelType: PanelType) => {
         if (this.getProp('disabledTimePicker')) {
             return;
         }
-        this.#updatePanelDetail(panelType, { isTimePickerOpen: true, isYearPickerOpen: false });
+        this.#setPanelView(panelType, { isTimePickerOpen: true, isYearPickerOpen: false });
     };
 
     showDatePanel = (panelType: PanelType) => {
-        this.#updatePanelDetail(panelType, { isTimePickerOpen: false, isYearPickerOpen: false });
+        this.#setPanelView(panelType, { isTimePickerOpen: false, isYearPickerOpen: false });
+    };
+
+    switchPanels = (view: PanelView) => {
+        for (const panelType of [strings.PANEL_TYPE_LEFT, strings.PANEL_TYPE_RIGHT] as const) {
+            if (view === 'time') {
+                this.showTimePicker(panelType);
+            } else {
+                this.showDatePanel(panelType);
+            }
+        }
     };
 }

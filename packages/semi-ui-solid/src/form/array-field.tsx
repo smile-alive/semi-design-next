@@ -1,7 +1,7 @@
 import { type JSX, batch, createEffect, createMemo, createSignal, on, onCleanup, onMount, untrack } from 'solid-js';
-import { generateKeys } from '@fibrae/semi-foundation/form/utils';
+import ArrayFieldRows from '@fibrae/semi-foundation/form/array-field-rows';
+import { generateKeys, resolveKeepState } from '@fibrae/semi-foundation/form/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
-import { createId } from '@fibrae/semi-foundation/utils/uuid';
 import useDefaultProps from '../_base/use-default-props';
 import useWatch from '../_base/use-watch';
 import { type ArrayFieldContextValue, ArrayFieldContext, useArrayFieldContext, useFormContext } from './context';
@@ -48,8 +48,7 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
         throw new Error('ArrayField must be used inside Form');
     }
 
-    let cachedUpdateKey: number | undefined | null = null;
-    const rows = new Map<string, ArrayFieldRow>();
+    const rowEntries = new Map<string, ArrayFieldRow>();
 
     const { bridge } = form;
 
@@ -70,8 +69,10 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
 
     // an entry left by an unmount with keepState: the rows show the values kept in the form, not initValue
     const initValue = bridge.getArrayField(mountedField) ? ObjectUtil.get(formValues(), mountedField) : (props.initValue ?? ObjectUtil.get(formValues(), mountedField));
+    const initialKeys = generateKeys(initValue);
 
-    const [keys, setKeys] = createSignal(generateKeys(initValue));
+    const [keys, setKeys] = createSignal(initialKeys);
+    const rows = new ArrayFieldRows(bridge, initialKeys, { setKeys: (next) => setKeys(next), setShouldUseInitValue });
 
     // separate copies: reset, add and remove must not modify the array the rows read
     const mountedInitValue = cloneDeep(initValue);
@@ -79,13 +80,13 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
 
     const arrayFields = createMemo(() => {
         const current = keys();
-        for (const key of rows.keys()) {
+        for (const key of rowEntries.keys()) {
             if (!current.includes(key)) {
-                rows.delete(key);
+                rowEntries.delete(key);
             }
         }
         return current.map((key) => {
-            let row = rows.get(key);
+            let row = rowEntries.get(key);
             if (!row) {
                 row = {
                     key,
@@ -94,13 +95,13 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
                     },
                     remove: () => remove(keys().indexOf(key)),
                 };
-                rows.set(key, row);
+                rowEntries.set(key, row);
             }
             return row;
         });
     });
 
-    const keepState = () => props.keepState ?? form.formProps.keepState ?? true;
+    const keepState = () => resolveKeepState(props.keepState, parent?.keepState(), form.formProps.keepState);
 
     const context: ArrayFieldContextValue = {
         shouldUseInitValue,
@@ -109,62 +110,22 @@ export default function ArrayField(rawProps: ArrayFieldProps) {
         values: () => (form.formState() === mountedFormState ? ObjectUtil.set(formValues(), mountedField, mountedInitValue) : parent?.values()),
     };
 
-    // an outside update (formApi.setValue, setValues) renews updateKey
-    const syncKeys = () => {
-        const updateKey = bridge.getArrayField(field())?.updateKey;
-        if (updateKey !== cachedUpdateKey) {
-            cachedUpdateKey = updateKey;
-            setKeys((current) => generateKeys(bridge.getValue(field()), current));
-            setShouldUseInitValue(false);
-        }
-    };
+    const syncKeys = () => rows.sync(field());
 
     // Each row operation runs in one batch, so the rows and the form state change together and syncKeys sees the
     // updateKey the operation stored
-    const add = (index?: number | MouseEvent) =>
-        batch(() => {
-            const current = keys();
-            const safeIndex = typeof index === 'number' ? Math.max(0, Math.min(index, current.length)) : undefined;
-            setShouldUseInitValue(true);
-            setKeys(current.toSpliced(safeIndex ?? current.length, 0, createId()));
-            cachedUpdateKey = bridge.addArrayFieldRow(field(), safeIndex);
-        });
+    const add = (index?: number | MouseEvent) => batch(() => rows.add(field(), index));
 
-    const addWithInitValue = (row: Record<string, any> | string, index?: number) =>
-        batch(() => {
-            const added = bridge.addArrayFieldRowWithValue(field(), row, index);
-            if (typeof index === 'number') {
-                // a new key at the position: regenerating by position would keep the old keys, so fields keep stale values
-                setKeys((current) => current.toSpliced(added.index, 0, createId()));
-                cachedUpdateKey = added.updateKey;
-                setShouldUseInitValue(false);
-            }
-        });
+    const addWithInitValue = (row: Record<string, any> | string, index?: number) => batch(() => rows.addWithInitValue(field(), row, index));
 
     const remove = (index: number) => {
         // a row entry kept after its row was removed has no position; toSpliced(-1) would remove the last row
-        if (index < 0) {
-            return;
+        if (index >= 0) {
+            batch(() => rows.remove(field(), index));
         }
-        batch(() => {
-            bridge.removeArrayFieldRow(field(), index);
-            setKeys((current) => current.toSpliced(index, 1));
-        });
     };
 
-    const move = (from: number, to: number) => {
-        const current = keys();
-        const last = current.length - 1;
-        const source = Math.max(0, Math.min(from, last));
-        const target = Math.max(0, Math.min(to, last));
-        if (source === target) {
-            return;
-        }
-        batch(() => {
-            cachedUpdateKey = bridge.moveArrayFieldRow(field(), source, target);
-            setKeys(current.toSpliced(source, 1).toSpliced(target, 0, current[source]));
-        });
-    };
+    const move = (from: number, to: number) => batch(() => rows.move(field(), from, to));
 
     const childrenProps: ArrayFieldChildrenProps = {
         get arrayFields() {

@@ -1,6 +1,6 @@
 import { Text, type VNode, type VNodeChild } from 'vue';
 import { isEqualWith } from 'es-toolkit';
-import { assignColumnKeys, placeInnerColumns } from '@fibrae/semi-foundation/table/utils';
+import { assignColumnKeys, getDefaultComponents, placeInnerColumns } from '@fibrae/semi-foundation/table/utils';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import elementType from '../_base/element-type';
 import { nativeTag } from '../_base/native-tag';
@@ -19,10 +19,10 @@ const native = (component: TableComponent) => (typeof component === 'string' ? n
 
 // Not a deep merge: it would copy component objects and remount them on every merge
 export function mergeComponents(components: TableComponents | undefined, virtualized: boolean): MergedTableComponents {
-    const defaults = virtualized ? { outer: 'div', wrapper: 'div', row: 'div', cell: 'div', colgroup: { wrapper: 'div', col: 'div' } } : { outer: 'table', wrapper: 'tbody', row: 'tr', cell: 'td', colgroup: { wrapper: 'colgroup', col: 'col' } };
-    const header = { outer: 'table', wrapper: 'thead', row: 'tr', cell: 'th', ...components?.header };
-    const body = { ...defaults, ...components?.body };
-    const colgroup = { ...defaults.colgroup, ...components?.body?.colgroup };
+    const defaults = getDefaultComponents(virtualized);
+    const header = { ...defaults.header, ...components?.header };
+    const body = { ...defaults.body, ...components?.body };
+    const colgroup = { ...defaults.body.colgroup, ...components?.body?.colgroup };
     return {
         header: { ...header, outer: native(header.outer) },
         body: { ...body, outer: native(body.outer), colgroup: { wrapper: native(colgroup.wrapper), col: native(colgroup.col) } },

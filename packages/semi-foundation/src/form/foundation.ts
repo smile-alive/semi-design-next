@@ -8,9 +8,10 @@ import warning from '../utils/warning';
 import { cssClasses } from './constants';
 import { type FieldError, hasErrors, isErrorLeaf, normalizeFieldError, normalizeFormErrors } from './errors';
 import type FieldStore from './field-store';
+import { getFormApiProxyInternals } from './form-api-proxy';
 import type { BaseFormAdapter, FormState, FormFoundationState, CallOpts, FieldRegistration, ComponentProps, setValuesConfig, ArrayFieldRegistration, ValidateOptions, ChangeFieldValueOptions, FieldSnapshot, StandardSchema, StandardSchemaIssue, StandardSchemaResult } from './interface';
 import { validateRules } from './rules';
-import { isValid, nextUpdateKey, schemaIssuePath } from './utils';
+import { isValid, nextUpdateKey, pickFormProps, schemaIssuePath, validationSchema } from './utils';
 
 const SILENT: CallOpts = { skipNotify: true, skipRender: true };
 
@@ -118,8 +119,11 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         this.#registeredArrayField = new Map();
     }
 
+    // Renders the form again; `callback` runs once that render is committed. A useForm api follows every render.
     #forceUpdate(callback?: () => void) {
-        this.adapter.forceUpdate(this.getFormState(), callback);
+        const formState = this.getFormState();
+        this.setState({ formState }, callback);
+        getFormApiProxyInternals(this.getProp('form'))?.updateState(formState);
     }
 
     // An empty setState, not a forceUpdate: a Form unmounting after this must not have pushed a snapshot to its useForm api
@@ -287,10 +291,9 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         });
     }
 
-    /** The one check of the exclusive validation sources: a Form `validator` hides the schema, a schema hides field-level validation */
+    /** A schema hides field-level validation */
     #getSchema(): StandardSchema | undefined {
-        const { schema, validator } = this.getProps();
-        return typeof validator === 'function' ? undefined : schema;
+        return validationSchema(this.getProps());
     }
 
     #mapSchemaIssues(issues: ReadonlyArray<StandardSchemaIssue>) {
@@ -670,8 +673,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
      */
     #changeFieldValue = (registration: FieldRegistration, value: unknown, opts: ChangeFieldValueOptions) => {
         const { field, valuePath } = registration;
-        const { allowEmptyString, emptyValue, convert } = registration.getChangeOptions();
-        const { allowEmpty } = opts;
+        const { allowEmpty, allowEmptyString, emptyValue, convert } = registration.getChangeOptions();
         let nextValue = valuePath ? ObjectUtil.get(value, valuePath) : value;
         if (typeof convert === 'function') {
             nextValue = convert(nextValue);
@@ -687,7 +689,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                 // touched is set after onChange, which must not see it yet
                 this.#setFieldTouched(registration, true, SILENT);
                 this.#updateStateValue(field, nextValue, { allowEmpty });
-                if (opts.validate) {
+                if (registration.getValidateOptions().trigger?.includes('change')) {
                     this.#validateOnChange(registration, nextValue);
                 }
             } catch (err) {
@@ -695,6 +697,15 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
                 throw err;
             }
         });
+    };
+
+    #blurField = (registration: FieldRegistration) => {
+        if (!registration.store.getSnapshot().touched) {
+            this.#setFieldTouched(registration, true);
+        }
+        if (registration.getValidateOptions().trigger?.includes('blur')) {
+            void this.#validateField(registration, registration.store.getSnapshot().value);
+        }
     };
 
     /**
@@ -1220,7 +1231,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
     }
 
     protected getFormProps(keys?: Array<string>): ComponentProps {
-        return this.adapter.getFormProps(keys);
+        return pickFormProps(this.getProps(), keys);
     }
 
     protected override initOnce() {
@@ -1304,9 +1315,9 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         return {
             register: this.#register,
             unRegister: this.#unRegister,
-            setFieldTouched: this.#setFieldTouched,
             validateField: this.#validateField,
             changeFieldValue: this.#changeFieldValue,
+            blurField: this.#blurField,
             getValue: this.#getValue,
             getError: this.#getError,
             getTouched: this.#getTouched,
@@ -1314,7 +1325,6 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
             getInitValue: (field?: string) => this.getInitValue(field),
             getFormProps: (keys?: Array<string>) => this.getFormProps(keys),
             getField: this.#getField,
-            usesSchema: () => Boolean(this.#getSchema()),
             registerArrayField: this.#registerArrayField,
             mountArrayField: this.#mountArrayField,
             unRegisterArrayField: this.#unRegisterArrayField,

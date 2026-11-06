@@ -60,26 +60,19 @@
         schema: toRaw(props.schema) ?? readSemiDefault(semi, 'Form', 'schema'),
     }));
 
-    const pickFormProps = (keys?: string[]) => (keys ? Object.fromEntries(keys.map((key) => [key, formProps.value[key as keyof AllFormProps]])) : formProps.value);
-
     const { foundation, state } = useFoundation<FormFoundation<SubmitEvent>, Adapter, AllFormProps<Values, Output>, FormFoundationState>(
         FormFoundation,
         props,
         (view) => FormFoundation.getInitialState(view),
-        (base) => ({
+        () => ({
             cloneDeep,
             notifySubmit: (values, e) => emit('submit', values as Output, e),
             notifySubmitFail: (errors, values, e) => emit('submitFail', errors as Partial<AllErrors<Values>>, values, e),
             getLocale: () => locale.value.locale,
-            forceUpdate: (formState, callback) => {
-                base.setState({ formState }, callback);
-                getFormApiProxyInternals(props.form)?.updateState(formState);
-            },
             notifyChange: (formState) => emit('change', formState),
             notifyValueChange: (values, changedValues) => emit('valueChange', values, changedValues),
             notifyErrorChange: (errors, changedError) => emit('errorChange', errors, changedError),
             notifyReset: () => emit('reset'),
-            getFormProps: pickFormProps,
             getFormElement: () => formElement.value,
         }),
         { props: { validator: () => formProps.value.validator, schema: () => formProps.value.schema } }

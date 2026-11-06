@@ -6,7 +6,10 @@ import {
     flattenData,
     getCellWidths,
     getChangedRowKeys,
+    getDefaultComponents,
     getDefaultVirtualizedRowConfig,
+    getExpandColumn,
+    getSelectionColumn,
     getHeaderRowCount,
     getHeaderStickyOffset,
     getNextSortOrder,
@@ -231,6 +234,29 @@ describe('placeInnerColumns', () => {
 
     it('两个内置列都放在最前时，选择列在展开列之前', () => {
         expect(placeInnerColumns<Record<string, unknown>>([{ key: 'a' }], [expand, selection]).map((column) => column.key)).toEqual(['selection', 'expand', 'a']);
+    });
+});
+
+describe('getSelectionColumn 与 getExpandColumn', () => {
+    it('rowSelection 关闭或 hidden 时没有选择列，其余取 fixed、width 与单元格回调', () => {
+        const onCell = () => ({});
+        expect(getSelectionColumn(false)).toBeNull();
+        expect(getSelectionColumn({ hidden: true })).toBeNull();
+        expect(getSelectionColumn(true)).toEqual({ key: 'column-selection', fixed: undefined, width: undefined, onCell: undefined, onHeaderCell: undefined });
+        expect(getSelectionColumn({ fixed: 'left', width: 40, onCell })).toMatchObject({ key: 'column-selection', fixed: 'left', width: 40, onCell });
+    });
+
+    it('hideExpandedColumn 时没有展开列', () => {
+        expect(getExpandColumn(true, 'left')).toBeNull();
+        expect(getExpandColumn(false, 'left')).toEqual({ key: 'column-expand', fixed: 'left' });
+    });
+});
+
+describe('getDefaultComponents', () => {
+    it('虚拟化时 body 用 div，每次返回新对象', () => {
+        expect(getDefaultComponents(false).body).toEqual({ outer: 'table', wrapper: 'tbody', row: 'tr', cell: 'td', colgroup: { wrapper: 'colgroup', col: 'col' } });
+        expect(getDefaultComponents(true).body).toEqual({ outer: 'div', wrapper: 'div', row: 'div', cell: 'div', colgroup: { wrapper: 'div', col: 'div' } });
+        expect(getDefaultComponents(false).header).not.toBe(getDefaultComponents(false).header);
     });
 });
 

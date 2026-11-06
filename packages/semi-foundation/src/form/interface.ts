@@ -62,13 +62,10 @@ export interface BaseFormAdapter<P = Record<string, any>, Values extends object 
     notifySubmitFail: (errors: Partial<AllErrors<Values>> | unknown, values: Partial<Values>, e?: E) => void;
     /** The Form slice of the current locale: the default rule messages */
     getLocale: () => Locale['Form'];
-    /** Renders the form again from `formState`; `callback` runs once that render is committed */
-    forceUpdate: (formState: FormState, callback?: () => void) => void;
     notifyChange: (formState: FormState) => void;
     notifyValueChange: (values: any, changedValues: any) => void;
     notifyErrorChange: (errors: any, changedError: any) => void;
     notifyReset: () => void;
-    getFormProps: (keys?: Array<string>) => any;
     /** The rendered form element; null before mount and after unmount */
     getFormElement: () => Element | null;
 }
@@ -196,6 +193,8 @@ export interface FieldValidateOptions {
     validate?: FieldValidator;
     transform?: (value: any) => any;
     stopValidateWithError?: boolean;
+    /** When the field validates itself; a change or blur validates only when listed */
+    trigger?: BasicTriggerType[];
 }
 
 export interface FieldRegistration {
@@ -225,9 +224,6 @@ export interface FieldChangeOptions {
 }
 
 export interface ChangeFieldValueOptions {
-    allowEmpty?: boolean;
-    /** Validate the committed value, for a field triggered by change */
-    validate?: boolean;
     /** The field's onChange; it reads the new value through the form api or `latestValues` */
     onChange: (latestValues: Record<string, any>) => void;
 }
@@ -244,9 +240,11 @@ export interface FieldBridge {
      * that path. Dropping the state without keepState and reporting the change wait for the Form's next commit.
      */
     unRegister: (registration: FieldRegistration) => void;
-    setFieldTouched: (registration: FieldRegistration, touched: boolean, opts?: CallOpts) => void;
     validateField: (registration: FieldRegistration, value: any, opts?: CallOpts) => Promise<unknown> | null;
+    /** Commits a value the user entered; validates it when the field's trigger lists change */
     changeFieldValue: (registration: FieldRegistration, value: any, opts: ChangeFieldValueOptions) => void;
+    /** The control lost focus: marks the field touched, and validates it when its trigger lists blur */
+    blurField: (registration: FieldRegistration) => void;
     getValue: (field?: string, opts?: CallOpts) => any;
     getError: (field?: string) => any;
     getTouched: (field?: string) => boolean | Record<string, any> | undefined;
@@ -254,8 +252,6 @@ export interface FieldBridge {
     getInitValue: (field?: string) => any;
     getFormProps: (keys?: Array<string>) => ComponentProps;
     getField: (field: string) => FieldRegistration | undefined;
-    /** Whether the Form validates by its `schema`: field rules are then ignored, the required mark included */
-    usesSchema: () => boolean;
     registerArrayField: (arrayFieldPath: string, val: any) => void;
     mountArrayField: (arrayFieldPath: string, val: any) => void;
     /**

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-    import { computed, nextTick, onMounted, onUpdated, shallowRef, useId, watch } from 'vue';
-    import { isRangeType } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
+    import { computed, nextTick, onMounted, onUpdated, useId } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
-    import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
+    import { isRangeType } from '@fibrae/semi-foundation/date-picker/foundation';
+    import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
     import { IconCalendar, IconClock } from '@fibrae/semi-icons-vue';
     import useFoundation from '../_base/use-foundation';
     import Combobox from '../time-picker/combobox.vue';
@@ -19,7 +19,7 @@
         weekStartsOn: 0,
         disabledTimePicker: false,
         hideDisabledOptions: false,
-        isControlledComponent: false,
+        selectionControlled: false,
         rangeInputFocus: false,
         format: undefined,
         startDateOffset: undefined,
@@ -38,14 +38,16 @@
         yearAndMonthOpts: undefined,
         startYear: undefined,
         endYear: undefined,
-        hasOtherRangeInputBeenFocused: undefined,
     });
 
     const emit = defineEmits<DatePickerMonthsGridEmits>();
     defineSlots<DatePickerMonthsGridSlots>();
 
     const titleId = useId();
-    let panelHeight = 0;
+
+    const nodes: Record<PanelPart, Record<PanelType, HTMLElement | null>> = { panel: { left: null, right: null }, wrap: { left: null, right: null }, switch: { left: null, right: null } };
+    const timePickers: Record<PanelType, ComboboxHandle | null> = { left: null, right: null };
+    const yearAndMonths: Record<PanelType, DatePickerYearAndMonthHandle | null> = { left: null, right: null };
 
     const { foundation, state } = useFoundation<MonthsGridFoundation, MonthsGridAdapter, MonthsGridFoundationProps, MonthsGridFoundationState>(
         MonthsGridFoundation,
@@ -54,8 +56,12 @@
         () => ({
             notifySelectedChange: (value, options) => emit('change', value, options),
             notifyPanelChange: (date, dateString) => emit('panelChange', date, dateString),
-            setRangeInputFocus: (rangeInputFocus) => emit('rangeInputFocus', rangeInputFocus),
-            hasOtherRangeInputBeenFocused: (currentRangeInput) => props.hasOtherRangeInputBeenFocused?.(currentRangeInput) ?? false,
+            getPanelNode: (part, panelType) => nodes[part][panelType],
+            reselectScrollLists: () => {
+                for (const handle of [timePickers.left, timePickers.right, yearAndMonths.left, yearAndMonths.right]) {
+                    handle?.reselect();
+                }
+            },
         })
     );
 
@@ -66,21 +72,9 @@
     const panelTypes = computed<PanelType[]>(() => (isRange.value ? [PANEL_TYPE_LEFT, PANEL_TYPE_RIGHT] : [PANEL_TYPE_LEFT]));
     const dateFormat = computed(() => MonthsGridFoundation.getValidDateFormat(props));
 
-    const nodes = {
-        panel: { left: null, right: null } as Record<PanelType, HTMLElement | null>,
-        wrap: { left: null, right: null } as Record<PanelType, HTMLElement | null>,
-        switch: { left: null, right: null } as Record<PanelType, HTMLElement | null>,
-    };
-
-    const timePickers: Record<PanelType, ComboboxHandle | null> = { left: null, right: null };
-    const yearAndMonths: Record<PanelType, DatePickerYearAndMonthHandle | null> = { left: null, right: null };
-    const emptySize = { minWidth: '', minHeight: '' };
-
-    const panelSize = shallowRef({ left: emptySize, right: emptySize });
-
     const detailOf = (panelType: PanelType) => (panelType === PANEL_TYPE_RIGHT ? state.value.monthRight : state.value.monthLeft);
 
-    const attach = (part: keyof typeof nodes, panelType: PanelType, node: unknown) => {
+    const attach = (part: PanelPart, panelType: PanelType, node: unknown) => {
         nodes[part][panelType] = node as HTMLElement | null;
     };
 
@@ -96,49 +90,7 @@
         void nextTick(() => (nodes.panel[panelType]?.getRootNode() as Document | ShadowRoot | undefined)?.getElementById(`${titleId}-${panelType}-title`)?.focus());
     };
 
-    const scrollListHeight = () => {
-        const height = (panelType: PanelType) => (nodes.wrap[panelType]?.getBoundingClientRect().height || 0) + (nodes.switch[panelType]?.getBoundingClientRect().height || 0);
-        return Math.max(height(PANEL_TYPE_LEFT), height(PANEL_TYPE_RIGHT));
-    };
-
-    // Equal sizes keep the ref, which ends the update cycle this write starts.
-    const applyPanelSize = () => {
-        const size = MonthsGridFoundation.getPanelSizeStyle(state.value, props.insetInput, {
-            monthWidth: (panelType) => nodes.wrap[panelType]?.getBoundingClientRect().width ?? null,
-            scrollListHeight: () => panelHeight || scrollListHeight(),
-        });
-        const current = panelSize.value;
-        const same = (panelType: PanelType) => current[panelType].minWidth === size[panelType].minWidth && current[panelType].minHeight === size[panelType].minHeight;
-        if (!same(PANEL_TYPE_LEFT) || !same(PANEL_TYPE_RIGHT)) {
-            panelSize.value = size;
-        }
-    };
-
-    const reselect = () => {
-        for (const handle of [timePickers.left, timePickers.right, yearAndMonths.left, yearAndMonths.right]) {
-            handle?.reselect();
-        }
-    };
-
-    // Panels share a minHeight only while both show scroll lists, so only the cached height is updated here
-    const handleWeeksRowNumChange = () => {
-        if (isRange.value && !(isYearOrTime(state.value.monthLeft) && isYearOrTime(state.value.monthRight))) {
-            panelHeight = scrollListHeight();
-            // the month's height sets the height of the list beside it, moving the selected item off centre
-            reselect();
-        }
-    };
-
-    const timeOptions = (panelType: PanelType) => {
-        const options: Partial<ComboboxProps> = { ...props.timePickerOpts, hideDisabledOptions: props.hideDisabledOptions };
-        const disabled = MonthsGridFoundation.calcDisabledTime(props, state.value, panelType);
-        for (const key of ['disabledHours', 'disabledMinutes', 'disabledSeconds'] as const) {
-            if (disabled?.[key]) {
-                Object.assign(options, { [key]: disabled[key] });
-            }
-        }
-        return options;
-    };
+    const timeOptions = (panelType: PanelType): Partial<ComboboxProps> => ({ ...props.timePickerOpts, hideDisabledOptions: props.hideDisabledOptions, ...MonthsGridFoundation.calcDisabledTime(props, state.value, panelType) });
 
     const switchTexts = (panelType: PanelType) =>
         MonthsGridFoundation.getSwitchTexts({
@@ -155,27 +107,10 @@
         return [`${prefix}-month-grid-${panelType}`, { [`${prefix}-yam-showing`]: !isRange.value && (detail.isTimePickerOpen || detail.isYearPickerOpen) }];
     };
 
-    watch(
-        () => (isRange.value ? Number(isYearOrTime(state.value.monthLeft)) + Number(isYearOrTime(state.value.monthRight)) : 0),
-        (count, previous) => {
-            if (previous === 1 && count === 2) {
-                panelHeight = scrollListHeight();
-                applyPanelSize();
-                void nextTick(reselect);
-            } else if (previous === 2 && count === 1) {
-                reselect();
-            }
-        },
-        { flush: 'post' }
-    );
+    onMounted(foundation.applyPanelSize);
+    onUpdated(foundation.applyPanelSize);
 
-    onMounted(applyPanelSize);
-    onUpdated(applyPanelSize);
-
-    defineExpose<DatePickerMonthsGridHandle>({
-        showDatePanel: foundation.showDatePanel,
-        showTimePicker: foundation.showTimePicker,
-    });
+    defineExpose<DatePickerMonthsGridHandle>({ switchPanels: foundation.switchPanels });
 </script>
 
 <template>
@@ -184,7 +119,7 @@
         <div>
             <slot name="dateInput" />
             <div :class="`${prefix}-month-grid`" :x-insetinput="props.insetInput ? 'true' : 'false'" :x-panel-yearandmonth-open-type="MonthsGridFoundation.getYAMOpenType(state)" :x-preset-position="props.hasPresets ? props.presetPosition : 'null'" :x-type="props.type">
-                <div v-for="panelType in panelTypes" :key="panelType" :ref="(node) => attach('panel', panelType, node)" :class="panelClass(panelType)" :style="panelSize[panelType]" :x-open-type="MonthsGridFoundation.getOpenType(detailOf(panelType))">
+                <div v-for="panelType in panelTypes" :key="panelType" :ref="(node) => attach('panel', panelType, node)" :class="panelClass(panelType)" :x-open-type="MonthsGridFoundation.getOpenType(detailOf(panelType))">
                     <div v-if="detailOf(panelType).isYearPickerOpen" :class="`${prefix}-yam`">
                         <YearAndMonth
                             :ref="(handle) => (yearAndMonths[panelType] = handle as DatePickerYearAndMonthHandle | null)"
@@ -238,7 +173,7 @@
                             @dayClick="foundation.handleDayClick($event, panelType)"
                             @dayHover="foundation.handleDayHover"
                             @monthSwitch="foundation[$event](panelType)"
-                            @weeksRowNumChange="handleWeeksRowNumChange"
+                            @weeksRowNumChange="foundation.handleWeeksRowNumChange"
                         >
                             <template v-if="$slots.date" #date="slotProps">
                                 <slot name="date" v-bind="slotProps" />

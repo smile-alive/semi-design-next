@@ -1,10 +1,9 @@
 import type { StyleValue, VNode } from 'vue';
 import type { Locale as DateFnsLocale } from 'date-fns';
-import type { WeekStartNumber } from '@fibrae/semi-foundation/date-picker/_utils/get-month-table';
-import type { DisabledTimeType, PresetType, Type } from '@fibrae/semi-foundation/date-picker/foundation';
+import type { DisabledTimeType, PresetType, Type, WeekStartNumber } from '@fibrae/semi-foundation/date-picker/foundation';
 import type { InsetInputChangeFoundationProps, InsetInputChangeProps, InsetInputValue, RangeInput } from '@fibrae/semi-foundation/date-picker/input-foundation';
 import type { FocusRecords, MonthDayInfo } from '@fibrae/semi-foundation/date-picker/month-foundation';
-import type { PanelType, YearMonthChangeType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
+import type { PanelType, PanelView, YearMonthChangeType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
 import type { YearAndMonth } from '@fibrae/semi-foundation/date-picker/year-and-month-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import type { InputHandle, InputSize, ValidateStatus } from '../input/interface';
@@ -129,7 +128,7 @@ export interface DatePickerMonthsGridProps {
     disabledTime: (date: Date | Date[], panelType: PanelType) => ReturnType<DisabledTimeType>;
     disabledTimePicker?: boolean;
     hideDisabledOptions?: boolean;
-    isControlledComponent?: boolean;
+    selectionControlled?: boolean;
     rangeInputFocus?: RangeInput | false;
     format?: string;
     startDateOffset?: (selectedDate: Date) => Date;
@@ -149,14 +148,11 @@ export interface DatePickerMonthsGridProps {
     yearAndMonthOpts?: DatePickerYearAndMonthOpts;
     startYear?: number;
     endYear?: number;
-    /** Whether the range input other than the given one has been focused since the panel opened */
-    hasOtherRangeInputBeenFocused?: (currentRangeInput: RangeInput) => boolean;
 }
 
 export interface DatePickerMonthsGridEmits {
-    change: [value: Date[], options?: { closePanel?: boolean; needCheckFocusRecord?: boolean; rangeInputFocus?: RangeInput | false }];
+    change: [value: Date[], options?: { closePanel?: boolean; needCheckFocusRecord?: boolean; nextRangeInputFocus?: RangeInput }];
     panelChange: [date: Date | Date[], dateString: string | string[]];
-    rangeInputFocus: [rangeInputFocus: RangeInput];
 }
 
 export interface DatePickerMonthsGridSlots {
@@ -168,8 +164,7 @@ export interface DatePickerMonthsGridSlots {
 
 /** Called by DatePicker when an inset input of the panel gets focus */
 export interface DatePickerMonthsGridHandle {
-    showDatePanel(panelType: PanelType): void;
-    showTimePicker(panelType: PanelType): void;
+    switchPanels(view: PanelView): void;
 }
 
 export interface DatePickerInsetBoxProps {

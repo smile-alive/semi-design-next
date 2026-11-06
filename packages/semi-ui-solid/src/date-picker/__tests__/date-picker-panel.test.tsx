@@ -241,7 +241,7 @@ describe('DatePicker 输入框', () => {
         expect(getPopup()).not.toBeNull();
     });
 
-    it('不同类型下 dateInput formatShowText', () => {
+    it('不同类型下 dateInput 显示格式化后的日期文本', () => {
         const { container: dateContainer } = renderDatePicker({ type: 'date', defaultValue: baseDate, motion: false });
         expect(dateContainer.querySelector('input')).toHaveValue('2019-09-08');
 

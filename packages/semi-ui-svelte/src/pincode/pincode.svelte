@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { FORM_INJECTED_PROP_KEYS } from '@fibrae/semi-foundation/form/constants';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses } from '@fibrae/semi-foundation/pincode/constants';
     import PinCodeFoundation, { type PinCodeAdapter, type PinCodeBaseProps } from '@fibrae/semi-foundation/pincode/foundation';
@@ -27,7 +28,7 @@
     const cellKeys = new Set(['id', 'tabindex', 'aria-describedby', 'aria-errormessage', 'aria-invalid', 'aria-required']);
 
     // injected by Form: not DOM attributes, and no single cell carries the code's name
-    const dropped = new Set(['name', 'insetLabel', 'insetLabelId']);
+    const dropped = new Set<string>([...FORM_INJECTED_PROP_KEYS, 'name']);
 
     const foundationProps: PinCodeBaseProps = {
         get value() {

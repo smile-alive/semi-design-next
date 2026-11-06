@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { computed, useAttrs } from 'vue';
+    import { FORM_INJECTED_PROP_KEYS } from '@fibrae/semi-foundation/form/constants';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { cssClasses } from '@fibrae/semi-foundation/pincode/constants';
     import PinCodeFoundation, { type PinCodeAdapter } from '@fibrae/semi-foundation/pincode/foundation';
@@ -72,7 +73,7 @@
     );
 
     // injected by Form: not DOM attributes, and no single cell carries the code's name
-    const dropped = ['name', 'insetLabel', 'insetLabelId'];
+    const dropped = [...FORM_INJECTED_PROP_KEYS, 'name'];
 
     const setInput = (index: number) => (handle: unknown) => {
         inputs[index] = handle as InputHandle | null;

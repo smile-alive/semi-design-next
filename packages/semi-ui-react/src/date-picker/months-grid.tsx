@@ -1,11 +1,10 @@
 import React, { useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { isRangeType } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
 import { strings, numbers, cssClasses } from '@fibrae/semi-foundation/date-picker/constants';
-import MonthsGridFoundation, { type PanelState, type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
+import { isRangeType } from '@fibrae/semi-foundation/date-picker/foundation';
+import MonthsGridFoundation, { type PanelState, type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType, type PanelView } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
 import { IconClock, IconCalendar } from '@fibrae/semi-icons-react';
 import type { BaseProps } from '../_base/base-component';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import Combobox, { type ComboboxHandle, type ComboboxProps } from '../time-picker/combobox';
 import type { DatePickerProps } from './date-picker';
@@ -29,8 +28,7 @@ export interface MonthsGridProps extends MonthsGridFoundationProps, BaseProps {
 
 /** Called by DatePicker when an inset input gets focus */
 export interface MonthsGridHandle {
-    showDatePanel: (panelType: PanelType) => void;
-    showTimePicker: (panelType: PanelType) => void;
+    switchPanels: (view: PanelView) => void;
 }
 
 export type MonthsGridState = MonthsGridFoundationState;
@@ -41,42 +39,7 @@ function noDisabledDate() {
 
 const { isYearOrTime } = MonthsGridFoundation;
 
-type PanelPart = 'panel' | 'wrap' | 'switch';
-
-class PanelNodes {
-    panel: Record<PanelType, HTMLDivElement | null> = { left: null, right: null };
-    wrap: Record<PanelType, HTMLDivElement | null> = { left: null, right: null };
-    switch: Record<PanelType, HTMLDivElement | null> = { left: null, right: null };
-    /** the cached height of both panels while they show a scroll list; 0 means measure it */
-    currentPanelHeight = 0;
-
-    attach(part: PanelPart, panelType: PanelType, node: HTMLDivElement | null) {
-        this[part][panelType] = node;
-    }
-
-    measurePanelHeight() {
-        this.currentPanelHeight = this.calcScrollListHeight();
-    }
-
-    calcScrollListHeight() {
-        const height = (panelType: PanelType) => (this.wrap[panelType]?.getBoundingClientRect().height || 0) + (this.switch[panelType]?.getBoundingClientRect().height || 0);
-        return Math.max(height(PANEL_TYPE_LEFT), height(PANEL_TYPE_RIGHT));
-    }
-
-    applyPanelSize(state: MonthsGridState, insetInput: MonthsGridProps['insetInput']) {
-        const sizes = MonthsGridFoundation.getPanelSizeStyle(state, insetInput, {
-            monthWidth: (panelType) => this.wrap[panelType]?.getBoundingClientRect().width ?? null,
-            scrollListHeight: () => this.currentPanelHeight || this.calcScrollListHeight(),
-        });
-        for (const panelType of [PANEL_TYPE_LEFT, PANEL_TYPE_RIGHT] as const) {
-            const panel = this.panel[panelType];
-            if (panel) {
-                panel.style.minWidth = sizes[panelType].minWidth;
-                panel.style.minHeight = sizes[panelType].minHeight;
-            }
-        }
-    }
-}
+type PanelNodes = Record<PanelPart, Record<PanelType, HTMLDivElement | null>>;
 
 export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     const props: MonthsGridProps = {
@@ -92,7 +55,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     const { weekStartsOn, disabledDate, locale, renderDate, renderFullDate, density, rangeInputFocus, syncSwitchMonth, multiple, focusRecords, format, hideDisabledOptions, timePickerOpts, dateFnsLocale, yearAndMonthOpts, startYear, endYear, disabledTimePicker, presetPosition, renderQuickControls, renderDateInput } =
         props;
 
-    const [nodes] = useState(() => new PanelNodes());
+    const [nodes] = useState<PanelNodes>(() => ({ panel: { left: null, right: null }, wrap: { left: null, right: null }, switch: { left: null, right: null } }));
     const titleId = useId();
 
     // the button that switches between the month and the year picker unmounts or hides under the focus, so the view
@@ -110,10 +73,8 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     const isRange = isRangeType(type);
     const dateFormat = MonthsGridFoundation.getValidDateFormat(props);
 
-    const reselect = () => {
-        for (const handle of [timePickerRefs.left, timePickerRefs.right, yamRefs.left, yamRefs.right]) {
-            handle.current?.reselect();
-        }
+    const attach = (part: PanelPart, panelType: PanelType) => (node: HTMLDivElement | null) => {
+        nodes[part][panelType] = node;
     };
 
     useLayoutEffect(() => {
@@ -133,31 +94,23 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         (base) => ({
             notifySelectedChange: (value, options) => base.getProps().onChange?.(value, options),
             notifyPanelChange: (date, dateString) => base.getProps().onPanelChange?.(date, dateString),
-            setRangeInputFocus: (rangeInputFocus) => base.getProps().setRangeInputFocus(rangeInputFocus),
-            hasOtherRangeInputBeenFocused: (currentRangeInput) => base.getProps().hasOtherRangeInputBeenFocused(currentRangeInput),
+            getPanelNode: (part, panelType) => nodes[part][panelType],
+            reselectScrollLists: () => {
+                for (const handle of [timePickerRefs.left, timePickerRefs.right, yamRefs.left, yamRefs.right]) {
+                    handle.current?.reselect();
+                }
+            },
         })
     );
 
-    const leftIsYearOrTime = isYearOrTime(state.monthLeft);
-    const rightIsYearOrTime = isYearOrTime(state.monthRight);
-    const yearOrTimePanels = isRange ? Number(leftIsYearOrTime) + Number(rightIsYearOrTime) : 0;
     const { selected, rangeStart, rangeEnd, hoverDay, offsetRangeStart, offsetRangeEnd, monthLeft, monthRight } = state;
-
-    // a scroll list beside a month keeps its own height; the panels share a minHeight only while both show lists
-    const handleWeeksRowNumChange = () => {
-        if (isRange && !(leftIsYearOrTime && rightIsYearOrTime)) {
-            nodes.measurePanelHeight();
-            // the month's height sets the height of the list beside it, moving the selected item off centre
-            reselect();
-        }
-    };
 
     const renderMonth = (month: Date, panelType: PanelType, detail: PanelState) => {
         const monthText = MonthsGridFoundation.formatMonthText(locale, month);
         const style: React.CSSProperties = isRange && isYearOrTime(detail) ? { visibility: 'hidden', position: 'absolute', pointerEvents: 'none' } : {};
 
         return (
-            <div ref={(node) => nodes.attach('wrap', panelType, node)} style={style}>
+            <div ref={attach('wrap', panelType)} style={style}>
                 <Navigation
                     density={density}
                     locale={locale}
@@ -194,22 +147,14 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
                     onDayClick={(day) => foundation.handleDayClick(day, panelType)}
                     onDayHover={foundation.handleDayHover}
                     onMonthSwitch={(switchType) => foundation[switchType](panelType)}
-                    onWeeksRowNumChange={handleWeeksRowNumChange}
+                    onWeeksRowNumChange={foundation.handleWeeksRowNumChange}
                 />
             </div>
         );
     };
 
     const renderTimePicker = (panelType: PanelType, panelDetail: PanelState) => {
-        const optionProps: Partial<ComboboxProps> = { ...timePickerOpts, hideDisabledOptions };
-        const disabledOptions = MonthsGridFoundation.calcDisabledTime(props, state, panelType);
-        if (disabledOptions) {
-            for (const key of ['disabledHours', 'disabledMinutes', 'disabledSeconds']) {
-                if (disabledOptions[key]) {
-                    optionProps[key] = disabledOptions[key];
-                }
-            }
-        }
+        const optionProps: Partial<ComboboxProps> = { ...timePickerOpts, hideDisabledOptions, ...MonthsGridFoundation.calcDisabledTime(props, state, panelType) };
         return (
             <div className={`${prefixCls}-time`}>
                 <Combobox
@@ -257,7 +202,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         const textCls = `${prefixCls}-switch-text`;
 
         return (
-            <div ref={(node) => nodes.attach('switch', panelType, node)} className={`${prefixCls}-switch`}>
+            <div ref={attach('switch', panelType)} className={`${prefixCls}-switch`}>
                 <button
                     type="button"
                     className={clsx(`${prefixCls}-switch-date`, {
@@ -295,7 +240,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         });
 
         return (
-            <div key={panelType} ref={(node) => nodes.attach('panel', panelType, node)} className={monthCls} x-open-type={MonthsGridFoundation.getOpenType(panelDetail)}>
+            <div key={panelType} ref={attach('panel', panelType)} className={monthCls} x-open-type={MonthsGridFoundation.getOpenType(panelDetail)}>
                 {isYearPickerOpen && <div className={`${prefixCls}-yam`}>{renderYearAndMonth(panelType, panelDetail)}</div>}
                 {isTimePickerOpen && <div className={`${prefixCls}-tpk`}>{renderTimePicker(panelType, panelDetail)}</div>}
                 {(isRange || !(isYearPickerOpen || isTimePickerOpen)) && panelContent}
@@ -307,27 +252,10 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
     const content = isRange ? [renderPanel(PANEL_TYPE_LEFT), renderPanel(PANEL_TYPE_RIGHT)] : renderPanel(PANEL_TYPE_LEFT);
 
     useLayoutEffect(() => {
-        nodes.applyPanelSize(state, insetInput);
+        foundation.applyPanelSize();
     });
 
-    useDidUpdate(yearOrTimePanels, (count, previous) => {
-        if (previous === 1 && count === 2) {
-            nodes.measurePanelHeight();
-            nodes.applyPanelSize(foundation.getStates(), foundation.getProp('insetInput'));
-            reselect();
-        } else if (previous === 2 && count === 1) {
-            reselect();
-        }
-    });
-
-    useImperativeHandle(
-        ref,
-        () => ({
-            showDatePanel: foundation.showDatePanel,
-            showTimePicker: foundation.showTimePicker,
-        }),
-        [foundation]
-    );
+    useImperativeHandle(ref, () => ({ switchPanels: foundation.switchPanels }), [foundation]);
 
     return (
         <div style={{ display: 'flex' }}>

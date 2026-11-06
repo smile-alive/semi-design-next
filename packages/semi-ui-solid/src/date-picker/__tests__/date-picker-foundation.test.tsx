@@ -186,7 +186,7 @@ describe('DatePicker foundation 行为', () => {
         expect(errors[0]).toBeInstanceOf(TypeError);
     });
 
-    it('foundation handleTriggerWrapperClick 处理范围类型', async () => {
+    it('点击范围输入框打开面板并聚焦起始输入框', async () => {
         const onOpenChange = vi.fn<NonNullable<DatePickerProps['onOpenChange']>>();
         const { container } = renderDatePicker({ type: 'dateRange', defaultValue: [new Date(2021, 5, 1), new Date(2021, 5, 15)], motion: false, onOpenChange });
         await userEvent.click(container.querySelector(`.${dp}-range-input`) as HTMLElement);
@@ -195,7 +195,7 @@ describe('DatePicker foundation 行为', () => {
         await waitFor(() => expect(inputs(container)[0]).toHaveFocus());
     });
 
-    it('foundation handleTriggerWrapperClick 禁用时', () => {
+    it('禁用时点击范围输入框不打开面板', () => {
         const onOpenChange = vi.fn<NonNullable<DatePickerProps['onOpenChange']>>();
         const { container } = renderDatePicker({ type: 'dateRange', disabled: true, motion: false, onOpenChange });
         fireEvent.click(container.querySelector(`.${dp}-range-input`) as HTMLElement);
@@ -272,7 +272,7 @@ describe('DatePicker foundation 行为', () => {
         expect(screen.getByTestId('trigger')).toHaveTextContent('rangeStart');
     });
 
-    it('triggerRender 的范围类型下 foundation handleTriggerWrapperClick', async () => {
+    it('triggerRender 的范围类型下点击触发器打开面板并聚焦起始输入', async () => {
         const { container } = renderDatePicker({ type: 'dateRange', motion: false, triggerRender: (p) => <div class="custom-trigger">{String(p.rangeInputFocus)}</div> });
         const trigger = container.querySelector('.custom-trigger') as HTMLElement;
         expect(trigger).toHaveTextContent('undefined');

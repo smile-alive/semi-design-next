@@ -1,10 +1,10 @@
 <script setup lang="ts" generic="R extends Record<string, any>">
-    import { computed, normalizeStyle, onMounted, onUpdated, shallowRef, useAttrs, useId, useTemplateRef, watch, watchEffect, type CSSProperties, type HTMLAttributes, type StyleValue } from 'vue';
+    import { computed, normalizeStyle, onUpdated, shallowRef, useAttrs, useId, useTemplateRef, watch, watchEffect, type CSSProperties, type HTMLAttributes, type StyleValue } from 'vue';
     import { cloneDeep } from 'es-toolkit';
     import { get } from 'es-toolkit/compat';
     import { numbers, strings } from '@fibrae/semi-foundation/table/constants';
     import TableFoundation, { type BaseColumnProps, type BaseRowKeyType, type TableAdapter } from '@fibrae/semi-foundation/table/foundation';
-    import { amendTableWidth, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, isMissingDataIndex, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/table/utils';
+    import { amendTableWidth, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/table/table.scss';
@@ -24,7 +24,7 @@
     import HeadTable from './head-table.vue';
     import type { ColumnProps, TableChangeInfo, TableEmits, TableHandle, TableHeaderCellSlotProps, TablePaginationProps, TableProps, TableRowKey, TableSlots, TableVirtualizedProps } from './interface';
     import TablePagination from './table-pagination.vue';
-    import { expandColumn, mergePagination, selectionColumn } from './use-table-features';
+    import { expandColumn, selectionColumn } from './use-table-features';
     import { buildColumns, mergeComponents, slotOutput, toElement, type CollectedColumns } from './utils';
 
     type AnyRecord = Record<string, any>;
@@ -183,22 +183,10 @@
             return TableFoundation.getInitialState<AnyRecord>(view, columns, queries);
         },
         (base) => ({
-            resetScrollY: () => {
-                const body = bodies.value?.[0]?.element();
-                if (props.scroll?.y) {
-                    if (body) {
-                        body.scrollTop = 0;
-                    }
-                } else {
-                    wraps.value?.[0]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            },
-            getScrollMetrics: () => TableFoundation.readScrollMetrics(bodies.value?.[0]?.element()),
-            setScrollableEdges: (edges) => TableFoundation.writeScrollableEdges(bodies.value?.[0]?.element(), edges),
-            notifyFilterDropdownVisibleChange: (visible, dataIndex) => {
-                const column = dataIndex ? base.getState('queries')?.find((query) => query.dataIndex === dataIndex) : undefined;
-                column?.onFilterDropdownVisibleChange?.(visible);
-            },
+            getWrapper: () => wraps.value?.[0],
+            getBodyWrapper: () => bodies.value?.[0]?.element(),
+            notifyFilterDropdownVisibleChange: (column, visible) => column.onFilterDropdownVisibleChange?.(visible),
+            notifyPageChange: (currentPage, pageSize) => (base.getProp('pagination') as TablePaginationProps | undefined)?.onChange?.(currentPage, pageSize),
             notifyChange: (changeInfo) => emit('change', changeInfo as TableChangeInfo<R>),
             notifyExpand: (expanded, record, mouseEvent) => emit('expand', expanded, record as R, mouseEvent),
             notifyExpandedRowsChange: (expandedRows, expandedRowKeys) => {
@@ -220,6 +208,8 @@
             },
         }
     );
+
+    const scheduleWidthSync = useRaf();
 
     // derived during render as React does; the foundation writes it back in handlePropsChange
     const derived = computed(() => TableFoundation.deriveState(foundation.getProps(), state.value, toFoundationColumns(flattened.value)));
@@ -287,7 +277,8 @@
         rowKey: rowKey.value,
     }));
 
-    const mergedPagination = computed(() => (props.pagination ? mergePagination(view.value.pagination as TablePaginationProps | undefined, Boolean(props.scroll?.scrollToFirstRowOnChange), foundation.setPage, foundation.resetScrollY) : null));
+    // onChange replaced rather than merged: Vue's listener merge would call both
+    const mergedPagination = computed(() => (props.pagination && view.value.pagination ? { ...(view.value.pagination as TablePaginationProps), onChange: foundation.handlePageChange } : null));
 
     provideTableContext({
         view: contextView,
@@ -344,16 +335,6 @@
         };
     };
 
-    onMounted(() => {
-        watch(
-            () => flattened.value.some(isMissingDataIndex),
-            (missing) => warning(missing, `[Semi Table] The column with sorter or filter must pass the 'dataIndex' prop`),
-            { immediate: true }
-        );
-    });
-
-    const scheduleWidthSync = useRaf();
-
     watchEffect(
         () => {
             if (needSyncTableWidth.value && roots.value?.[0]) {
@@ -378,17 +359,7 @@
     });
 
     defineExpose<TableHandle<R>>({
-        getCurrentPageData: () => {
-            const pageData = foundation.getCurrentPageData();
-            const result: ReturnType<TableHandle<R>['getCurrentPageData']> = {};
-            if (pageData.dataSource) {
-                result.dataSource = pageData.dataSource as R[];
-            }
-            if (pageData.groups) {
-                result.groups = pageData.groups;
-            }
-            return cloneDeep(result);
-        },
+        getCurrentPageData: () => cloneDeep(foundation.getCurrentPageData()) as ReturnType<TableHandle<R>['getCurrentPageData']>,
         scrollTo: (offset: number) => {
             const body = bodies.value?.[0];
             warning(!body?.hasList(), '[Semi Table] scrollTo only works with a mounted virtualized table');

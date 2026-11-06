@@ -2,8 +2,8 @@ import { type Accessor, type JSX, Show, children, createEffect, createMemo, crea
 import clsx from 'clsx';
 import { get } from 'es-toolkit/compat';
 import { strings } from '@fibrae/semi-foundation/table/constants';
-import TableFoundation, { type BaseColumnProps, type BasePageData, type BaseRowKeyType, type TableAdapter, type TableBaseState } from '@fibrae/semi-foundation/table/foundation';
-import { type FlattenDataProps, amendTableWidth, assignColumnKeys, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, isMissingDataIndex, mergedRowExpandable, placeInnerColumns } from '@fibrae/semi-foundation/table/utils';
+import TableFoundation, { type BaseColumnProps, type BaseRowKeyType, type TableAdapter, type TableBaseState } from '@fibrae/semi-foundation/table/foundation';
+import { type FlattenDataProps, amendTableWidth, assignColumnKeys, flattenColumns, flattenData, getCellWidths, getExpandColumn, getHeaderRowCount, getSelectionColumn, mergedRowExpandable, placeInnerColumns } from '@fibrae/semi-foundation/table/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import isObject from '@fibrae/semi-foundation/utils/is-object';
 import warning from '@fibrae/semi-foundation/utils/warning';
@@ -88,7 +88,7 @@ const TABLE_PROP_KEYS = [
     'aria-describedby',
 ] as const satisfies readonly (keyof TableProps)[];
 
-type SelectionConfig = Pick<RowSelectionProps<AnyRecord>, 'class' | 'fixed' | 'width' | 'onCell' | 'onHeaderCell'>;
+type SelectionConfig = Pick<RowSelectionProps<AnyRecord>, 'class' | 'fixed' | 'width' | 'onCell' | 'onHeaderCell'> & { key: string };
 
 const sameSelectionConfig = (a: SelectionConfig | null, b: SelectionConfig | null) => a === b || (a !== null && b !== null && (Object.keys(a) as (keyof SelectionConfig)[]).every((key) => a[key] === b[key]));
 
@@ -158,21 +158,10 @@ export default function NormalTable(props: TableProps) {
                 return typeof func === 'function' ? func : undefined;
             };
             return {
-                getScrollMetrics: () => TableFoundation.readScrollMetrics(bodyWrap),
-                setScrollableEdges: (edges) => TableFoundation.writeScrollableEdges(bodyWrap, edges),
-                resetScrollY: () => {
-                    if (local.scroll?.y) {
-                        if (bodyWrap) {
-                            bodyWrap.scrollTop = 0;
-                        }
-                    } else {
-                        wrap?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                },
-                notifyFilterDropdownVisibleChange: (visible, dataIndex) => {
-                    const column = dataIndex ? base.getState('queries')?.find((query) => query.dataIndex === dataIndex) : undefined;
-                    column?.onFilterDropdownVisibleChange?.(visible);
-                },
+                getWrapper: () => wrap,
+                getBodyWrapper: () => bodyWrap,
+                notifyFilterDropdownVisibleChange: (column, visible) => column.onFilterDropdownVisibleChange?.(visible),
+                notifyPageChange: (currentPage, pageSize) => (base.getProp('pagination') as TablePaginationProps | undefined)?.onChange?.(currentPage, pageSize),
                 notifyChange: (changeInfo) => base.getProps().onChange?.(changeInfo),
                 notifyExpand: (expanded, record, mouseEvent) => base.getProps().onExpand?.(expanded, record as AnyRecord, mouseEvent),
                 notifyExpandedRowsChange: (expandedRows) => base.getProps().onExpandedRowsChange?.(expandedRows as AnyRecord[]),
@@ -191,11 +180,8 @@ export default function NormalTable(props: TableProps) {
     const selectionConfig = createMemo(
         (): SelectionConfig | null => {
             const selection = rowSelection();
-            if (!selection || (isObject(selection) && selection.hidden)) {
-                return null;
-            }
-            const options: RowSelectionProps<AnyRecord> = isObject(selection) ? selection : {};
-            return { class: options.class, fixed: options.fixed, width: options.width, onCell: options.onCell, onHeaderCell: options.onHeaderCell };
+            const fields = getSelectionColumn(selection);
+            return fields && { ...fields, class: isObject(selection) ? selection.class : undefined };
         },
         null,
         { equals: sameSelectionConfig }
@@ -227,22 +213,7 @@ export default function NormalTable(props: TableProps) {
 
     const mergedPagination = createMemo((): TablePaginationProps | null => {
         const statePagination = state().pagination as TablePaginationProps | undefined;
-        if (!statePagination) {
-            return null;
-        }
-        const userOnChange = statePagination.onChange;
-        // the user's onChange replaces setPage, which resets the scroll itself; with scrollToFirstRowOnChange the
-        // replacement still resets it
-        if (local.scroll?.scrollToFirstRowOnChange && typeof userOnChange === 'function') {
-            return {
-                ...statePagination,
-                onChange: (currentPage: number, pageSize: number) => {
-                    foundation.resetScrollY();
-                    userOnChange(currentPage, pageSize);
-                },
-            };
-        }
-        return { onChange: foundation.setPage, ...statePagination };
+        return statePagination ? { ...statePagination, onChange: foundation.handlePageChange } : null;
     });
 
     const paginationInfo = createMemo(() => {
@@ -253,17 +224,7 @@ export default function NormalTable(props: TableProps) {
     });
 
     const handle: TableHandle = {
-        getCurrentPageData: () => {
-            const pageData = foundation.getCurrentPageData();
-            const result: Pick<BasePageData<AnyRecord>, 'dataSource' | 'groups'> = {};
-            if (pageData.dataSource) {
-                result.dataSource = pageData.dataSource;
-            }
-            if (pageData.groups) {
-                result.groups = pageData.groups;
-            }
-            return cloneDeep(result);
-        },
+        getCurrentPageData: () => cloneDeep(foundation.getCurrentPageData()),
     };
 
     const ref = untrack(() => props.ref);
@@ -273,10 +234,14 @@ export default function NormalTable(props: TableProps) {
     // the selection checkbox and the expand button render by these keys when the column gives no render or title
     const selectionColumn = createMemo((): ColumnProps | null => {
         const config = selectionConfig();
-        return config ? { key: strings.DEFAULT_KEY_COLUMN_SELECTION, fixed: config.fixed, width: config.width, onCell: config.onCell, onHeaderCell: config.onHeaderCell, class: clsx(config.class, `${prefixCls()}-column-selection`) } : null;
+        return config ? { ...config, class: clsx(config.class, `${prefixCls()}-column-selection`) } : null;
     });
 
-    const expandColumn = createMemo((): ColumnProps | null => (local.hideExpandedColumn ? null : { fixed: local.expandCellFixed, key: strings.DEFAULT_KEY_COLUMN_EXPAND, class: `${prefixCls()}-column-expand` }));
+    const expandColumn = createMemo((): ColumnProps | null => {
+        const fields = getExpandColumn(local.hideExpandedColumn, local.expandCellFixed);
+        return fields && { ...fields, class: `${prefixCls()}-column-expand` };
+    });
+
     const columns = createMemo(() => buildColumns(cachedColumns(), expandColumn(), selectionColumn()));
     const flattenedColumns = createMemo(() => flattenColumns(columns()) as ColumnProps[]);
     const anyColumnFixed = createMemo(() => columns().some((column) => Boolean(column.fixed)));
@@ -378,7 +343,6 @@ export default function NormalTable(props: TableProps) {
     );
 
     createEffect(() => warning(Boolean(local.columns) && resolvedChildren.toArray().length > 0, '[Semi Table] columns should not given by object and children at the same time'));
-    createEffect(() => warning(flattened().some(isMissingDataIndex), `[Semi Table] The column with sorter or filter must pass the 'dataIndex' prop`));
 
     useResizeObserver(
         () => (needSyncTableWidth() ? rootWrap : null),

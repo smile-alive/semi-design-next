@@ -27,10 +27,6 @@ const defaultProps = {
     showValidateIcon: true,
 } satisfies Partial<FormProps>;
 
-function pickFormProps(props: Record<string, any>, keys?: string[]) {
-    return keys ? Object.fromEntries(keys.map((key) => [key, props[key]])) : props;
-}
-
 export default function Form<Values extends Record<string, any> = any, Output = Values>(rawProps: FormProps<Values, Output>) {
     type Foundation = FormFoundation<SubmitEvent>;
     type Adapter = BaseFormAdapter<FormProps<Values, Output>, Values, SubmitEvent>;
@@ -82,20 +78,15 @@ export default function Form<Values extends Record<string, any> = any, Output = 
         FormFoundation,
         props,
         (view) => FormFoundation.getInitialState(view),
-        (base) => ({
+        () => ({
             cloneDeep,
             getLocale: () => locale().locale,
             notifySubmit: (values, e) => local.onSubmit?.(values, e),
             notifySubmitFail: (errors, values, e) => local.onSubmitFail?.(errors as Partial<AllErrors<Values>>, values, e),
-            forceUpdate: (formState, callback) => {
-                base.setState({ formState }, callback);
-                getFormApiProxyInternals(local.form)?.updateState(formState);
-            },
             notifyChange: (formState) => local.onChange?.(formState),
             notifyValueChange: (values, changedValues) => local.onValueChange?.(values, changedValues),
             notifyErrorChange: (errors, changedError) => local.onErrorChange?.(errors, changedError),
             notifyReset: () => local.onReset?.(),
-            getFormProps: (keys) => pickFormProps(props, keys),
             getFormElement: () => formElement ?? null,
         })
     );

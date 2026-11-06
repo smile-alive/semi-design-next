@@ -1943,7 +1943,7 @@ describe(`DatePicker`, () => {
         expect(getPopup()).not.toBeNull();
     });
 
-    it('不同类型下 dateInput formatShowText', async () => {
+    it('不同类型下 dateInput 显示格式化后的日期文本', async () => {
         const { container: dateContainer } = render(<DatePicker type="date" defaultValue={baseDate} motion={false} />);
         expect(dateContainer.querySelector('input')).toHaveValue('2019-09-08');
 
@@ -2174,7 +2174,7 @@ describe(`DatePicker`, () => {
         consoleError.mockRestore();
     });
 
-    it('foundation handleTriggerWrapperClick 处理范围类型', async () => {
+    it('点击范围输入框打开面板并聚焦起始输入框', async () => {
         const onOpenChange = vi.fn<NonNullable<DatePickerProps['onOpenChange']>>();
         const { container } = render(<DatePicker type="dateRange" defaultValue={[new Date(2021, 5, 1), new Date(2021, 5, 15)]} motion={false} onOpenChange={onOpenChange} />);
         await userEvent.click(container.querySelector(`.${dp}-range-input`));
@@ -2183,7 +2183,7 @@ describe(`DatePicker`, () => {
         await waitFor(() => expect(container.querySelectorAll('input')[0]).toHaveFocus());
     });
 
-    it('foundation handleTriggerWrapperClick 禁用时', async () => {
+    it('禁用时点击范围输入框不打开面板', async () => {
         const onOpenChange = vi.fn<NonNullable<DatePickerProps['onOpenChange']>>();
         const { container } = render(<DatePicker type="dateRange" disabled motion={false} onOpenChange={onOpenChange} />);
         fireEvent.click(container.querySelector(`.${dp}-range-input`));
@@ -2260,7 +2260,7 @@ describe(`DatePicker`, () => {
         expect(screen.getByTestId('trigger')).toHaveTextContent('rangeStart');
     });
 
-    it('triggerRender 的范围类型下 foundation handleTriggerWrapperClick', async () => {
+    it('triggerRender 的范围类型下点击触发器打开面板并聚焦起始输入', async () => {
         const { container } = render(<DatePicker type="dateRange" motion={false} triggerRender={({ rangeInputFocus }) => <div className="custom-trigger">{String(rangeInputFocus)}</div>} />);
         const trigger = container.querySelector('.custom-trigger');
         expect(trigger).toHaveTextContent('undefined');
@@ -2634,7 +2634,7 @@ describe(`DatePicker`, () => {
         expect(insetInputs[0]).toHaveAttribute('placeholder', 'yyyy-MM-dd');
     });
 
-    it('inputFoundation concatInsetInputValue 处理 dateTime 类型', async () => {
+    it('insetInput 的 dateTime 类型修改时间输入框触发 onChange', async () => {
         const onChange = vi.fn<ChangeHandler>();
         render(<DatePicker type="dateTime" defaultValue={baseDate} defaultOpen insetInput motion={false} onChange={onChange} />);
         fireEvent.change(within(getPopup()).getByPlaceholderText('HH:mm:ss'), { target: { value: '10:30:00' } });
@@ -2681,7 +2681,7 @@ describe(`DatePicker`, () => {
         expect(onChange).toHaveBeenLastCalledWith([new Date(2021, 5, 1, 10), new Date(2021, 5, 20, 18)], ['2021-06-01 10:00:00', '2021-06-20 18:00:00']);
     });
 
-    it('inputFoundation concatInsetInputValue 处理 dateRange 类型', async () => {
+    it('insetInput 的 dateRange 类型填完起止日期后触发 onChange', async () => {
         const onChange = vi.fn<ChangeHandler>();
         const { container } = render(<DatePicker type="dateRange" defaultOpen insetInput motion={false} onChange={onChange} />);
         const [startDate, endDate] = within(getPopup()).getAllByPlaceholderText('yyyy-MM-dd');
@@ -2694,7 +2694,7 @@ describe(`DatePicker`, () => {
         expect(endInput).toHaveValue('2021-06-15');
     });
 
-    it('inputFoundation concatInsetInputValue 处理 dateTimeRange 类型', async () => {
+    it('insetInput 的 dateTimeRange 类型修改结束时间触发 onChange', async () => {
         const onChange = vi.fn<ChangeHandler>();
         render(<DatePicker type="dateTimeRange" defaultValue={[new Date(2021, 5, 1, 10, 0), new Date(2021, 5, 15, 18, 0)]} defaultOpen insetInput motion={false} onChange={onChange} />);
         const [, endTime] = within(getPopup()).getAllByPlaceholderText('HH:mm:ss');
@@ -2709,14 +2709,14 @@ describe(`DatePicker`, () => {
         expect(insetInputs[0]).toHaveAttribute('placeholder', 'yyyy-MM ~ yyyy-MM');
     });
 
-    it('inputFoundation formatShowText 处理 dateRange', async () => {
+    it('dateRange 类型按 format 显示起止日期', async () => {
         const { container } = render(<DatePicker type="dateRange" defaultValue={[new Date(2021, 5, 1), new Date(2021, 5, 15)]} format="yyyy/MM/dd" motion={false} />);
         const [startInput, endInput] = container.querySelectorAll('input');
         expect(startInput).toHaveValue('2021/06/01');
         expect(endInput).toHaveValue('2021/06/15');
     });
 
-    it('inputFoundation formatShowText 处理 monthRange', async () => {
+    it('monthRange 类型在单个输入框显示月份区间', async () => {
         const { container } = render(<DatePicker type="monthRange" defaultValue={[new Date(2021, 2), new Date(2021, 8)]} motion={false} />);
         expect(container.querySelectorAll('input')).toHaveLength(1);
         expect(container.querySelector('input')).toHaveValue('2021-03 ~ 2021-09');
@@ -2920,7 +2920,7 @@ describe(`DatePicker`, () => {
         expect(getDay('2021-09-01')).toHaveClass(`${dp}-day-selected-end`);
     });
 
-    it('monthsGrid foundation getValidTimeFormat', async () => {
+    it('format 不含秒时时间切换按钮只显示时分', async () => {
         render(<DatePicker type="dateTime" defaultValue={baseDate} defaultOpen format="yyyy-MM-dd HH:mm" motion={false} />);
         expect(screen.getByRole('button', { name: zh_CN.DatePicker.switchToTime })).toHaveTextContent('08:08');
         expect(screen.getByRole('button', { name: zh_CN.DatePicker.switchToTime })).not.toHaveTextContent('08:08:08');

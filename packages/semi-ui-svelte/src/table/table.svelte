@@ -9,7 +9,7 @@
     import { get } from 'es-toolkit/compat';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/table/constants';
     import TableFoundation, { type BaseColumnProps, type TableAdapter } from '@fibrae/semi-foundation/table/foundation';
-    import { amendTableWidth, assignColumnKeys, findColumn, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, isMissingDataIndex, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/table/utils';
+    import { amendTableWidth, assignColumnKeys, findColumn, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/table/table.scss';
@@ -24,7 +24,7 @@
     import HeadTable from './head-table.svelte';
     import type { ColumnProps, TableChangeInfo, TableHandle, TablePaginationProps, TableProps, TableRowKey, TableVirtualizedProps } from './interface.js';
     import TablePagination from './table-pagination.svelte';
-    import { addWidthPlaceholders, buildColumns, copyColumns, expandColumn, joinStyles, mergeComponents, mergePagination, selectionColumn } from './utils.js';
+    import { addWidthPlaceholders, buildColumns, copyColumns, expandColumn, joinStyles, mergeComponents, selectionColumn } from './utils.js';
 
     type AnyRecord = Record<string, any>;
     type Foundation = TableFoundation<AnyRecord, TableFoundationProps>;
@@ -274,23 +274,11 @@
             const initial = toFoundationColumns(flattened);
             return TableFoundation.getInitialState<AnyRecord>(view, initial, TableFoundation.initColumnsFilteredValueAndSorterOrder<AnyRecord>(cloneDeep(initial)));
         },
-        (base) => ({
-            resetScrollY: () => {
-                const scroller = body?.element();
-                if (scroll?.y) {
-                    if (scroller) {
-                        scroller.scrollTop = 0;
-                    }
-                } else {
-                    wrap?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            },
-            getScrollMetrics: () => TableFoundation.readScrollMetrics(body?.element()),
-            setScrollableEdges: (edges) => TableFoundation.writeScrollableEdges(body?.element(), edges),
-            notifyFilterDropdownVisibleChange: (visible, dataIndex) => {
-                const column = dataIndex ? base.getState('queries')?.find((query) => query.dataIndex === dataIndex) : undefined;
-                (column as ColumnProps | undefined)?.onFilterDropdownVisibleChange?.(visible);
-            },
+        () => ({
+            getWrapper: () => wrap,
+            getBodyWrapper: () => body?.element(),
+            notifyFilterDropdownVisibleChange: (column, visible) => column.onFilterDropdownVisibleChange?.(visible),
+            notifyPageChange: (currentPage, pageSize) => paginationOptions?.onChange?.(currentPage, pageSize),
             notifyChange: (changeInfo) => {
                 if (!followingParent) {
                     onChange?.(changeInfo as TableChangeInfo);
@@ -323,14 +311,18 @@
     const pageData = $derived(view.dataSource ?? []);
 
     const mergedPagination = $derived(
-        pagination
-            ? mergePagination(view.pagination as TablePaginationProps | undefined, Boolean(scroll?.scrollToFirstRowOnChange), foundation.setPage, foundation.resetScrollY, (page) => {
-                  // same as the selection: a controlled pagination.currentPage stays with its owner
-                  userPage = page;
-                  if (currentPage !== undefined || paginationOptions?.currentPage == null) {
-                      currentPage = page;
-                  }
-              })
+        pagination && view.pagination
+            ? {
+                  ...(view.pagination as TablePaginationProps),
+                  onChange: (page: number, pageSize: number) => {
+                      foundation.handlePageChange(page, pageSize);
+                      // same as the selection: a controlled pagination.currentPage stays with its owner
+                      userPage = page;
+                      if (currentPage !== undefined || paginationOptions?.currentPage == null) {
+                          currentPage = page;
+                      }
+                  },
+              }
             : null
     );
 
@@ -601,18 +593,6 @@
         root?.style.setProperty('--semi-table-section-width', `${amendTableWidth(root.getBoundingClientRect().width)}px`);
     };
 
-    const readCurrentPageData = () => {
-        const current = foundation.getCurrentPageData();
-        const result: ReturnType<TableHandle['getCurrentPageData']> = {};
-        if (current.dataSource) {
-            result.dataSource = current.dataSource;
-        }
-        if (current.groups) {
-            result.groups = current.groups;
-        }
-        return cloneDeep(result);
-    };
-
     watch(
         () => currentPage,
         (page) => {
@@ -627,7 +607,6 @@
         }
     );
 
-    $effect(() => warning(flattened.some(isMissingDataIndex), `[Semi Table] The column with sorter or filter must pass the 'dataIndex' prop`));
     $effect(() => warning(isVirtualized && typeof scroll?.y !== 'number', '[Semi Table] You have to specific "scroll.y" which must be a number for table virtualization!'));
 
     $effect(() => {
@@ -660,8 +639,8 @@
         return () => observer.disconnect();
     });
 
-    export function getCurrentPageData() {
-        return readCurrentPageData();
+    export function getCurrentPageData(): ReturnType<TableHandle['getCurrentPageData']> {
+        return cloneDeep(foundation.getCurrentPageData());
     }
 
     export function scrollTo(offset: number) {

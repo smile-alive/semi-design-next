@@ -1,9 +1,21 @@
 import React, { useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import getYearMonthFromValue from '@fibrae/semi-foundation/date-picker/_utils/get-year-month-from-value';
-import { isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
 import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/date-picker/constants';
-import DatePickerFoundation, { type DatePickerAdapter, type DatePickerFoundationProps, type DatePickerFoundationState, type DayStatusType, type PresetType, type Type, type RangeInput, type TriggerRenderProps } from '@fibrae/semi-foundation/date-picker/foundation';
+import DatePickerFoundation, {
+    getYearMonthFromValue,
+    isRangeType,
+    isRangeValueComplete,
+    isYearOrMonthType,
+    needConfirm,
+    type DatePickerAdapter,
+    type DatePickerFoundationProps,
+    type DatePickerFoundationState,
+    type DayStatusType,
+    type PresetType,
+    type Type,
+    type RangeInput,
+    type TriggerRenderProps,
+} from '@fibrae/semi-foundation/date-picker/foundation';
 import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import { noop } from '@fibrae/semi-foundation/utils/function';
@@ -217,6 +229,9 @@ export default function DatePicker(rawProps: DatePickerProps) {
     // a triggerRender spreading componentProps must not grab the handle
     const componentProps = { ...props };
 
+    // customTrigger stays out of props: they reach the root div and triggerRender's componentProps
+    const foundationProps = { ...props, customTrigger: typeof triggerRender === 'function' };
+
     // called while rendering, so they take this render's props: the foundation reads the last committed ones
     const disabledDisposeDate = (date: Date, options?: any) => DatePickerFoundation.disposeDateFn(timeZone, disabledDate, date, options);
 
@@ -233,21 +248,9 @@ export default function DatePicker(rawProps: DatePickerProps) {
 
     const [foundation, state] = useFoundation<DatePickerFoundation, DatePickerAdapter, DatePickerProps, DatePickerState>(
         DatePickerFoundation,
-        props,
-        () => DatePickerFoundation.getInitialState(props),
+        foundationProps,
+        () => DatePickerFoundation.getInitialState(foundationProps),
         (base) => {
-            const setRangeInputFocus: DatePickerAdapter['setRangeInputFocus'] = (rangeInputFocus) => {
-                const { preventScroll } = base.getProps();
-                // focus first: its onFocus must still read the previous rangeInputFocus
-                if (rangeInputFocus === 'rangeStart') {
-                    (rangeInputStartRef.current ?? triggerStartRef.current)?.focus({ preventScroll });
-                } else if (rangeInputFocus === 'rangeEnd') {
-                    (rangeInputEndRef.current ?? triggerEndRef.current)?.focus({ preventScroll });
-                }
-                if (rangeInputFocus !== base.getState('rangeInputFocus')) {
-                    base.setState({ rangeInputFocus });
-                }
-            };
             return {
                 notifyBlur: (e) => base.getProps().onBlur?.(e),
                 notifyFocus: (e, rangeType) => base.getProps().onFocus?.(e, rangeType),
@@ -258,7 +261,11 @@ export default function DatePicker(rawProps: DatePickerProps) {
                 notifyOpenChange: (open) => base.getProps().onOpenChange?.(open),
                 notifyClickOutSide: (e) => base.getProps().onClickOutSide?.(e),
                 notifyPresetsClick: (item, e) => base.getProps().onPresetClick?.(item, e),
-                setRangeInputFocus,
+                focusRangeInput: (rangeInput) => {
+                    const input = rangeInput === 'rangeEnd' ? (rangeInputEndRef.current ?? triggerEndRef.current) : (rangeInputStartRef.current ?? triggerStartRef.current);
+                    input?.focus({ preventScroll: base.getProps().preventScroll });
+                },
+                switchPanels: (view) => monthGridRef.current?.switchPanels(view),
                 isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panelRef.current),
                 setInsetInputFocus: () => {
                     const { preventScroll } = base.getProps();
@@ -360,15 +367,8 @@ export default function DatePicker(rawProps: DatePickerProps) {
                 rangeInputStartRef={rangeInputStartRef}
                 rangeSeparator={rangeSeparator}
                 rangeSeparatorNode={rangeSeparatorNode}
-                handleInsetDateFocus={(e: React.FocusEvent, rangeType: RangeInput) => {
-                    monthGridRef.current?.showDatePanel(strings.PANEL_TYPE_LEFT);
-                    monthGridRef.current?.showDatePanel(strings.PANEL_TYPE_RIGHT);
-                    foundation.handleInputFocus(e, rangeType);
-                }}
-                handleInsetTimeFocus={() => {
-                    monthGridRef.current?.showTimePicker(strings.PANEL_TYPE_LEFT);
-                    monthGridRef.current?.showTimePicker(strings.PANEL_TYPE_RIGHT);
-                }}
+                handleInsetDateFocus={foundation.handleInsetDateFocus}
+                handleInsetTimeFocus={foundation.handleInsetTimeFocus}
                 onInsetInputChange={foundation.handleInsetInputChange}
             />
         ) : null;
@@ -390,15 +390,13 @@ export default function DatePicker(rawProps: DatePickerProps) {
             endYear={endYear}
             focusRecords={state.focusRecords}
             format={format}
-            hasOtherRangeInputBeenFocused={foundation.hasOtherRangeInputBeenFocused}
             hideDisabledOptions={hideDisabledOptions}
             insetInput={insetInput}
-            isControlledComponent={!isConfirmNeeded && props.value !== undefined}
             locale={locale}
             presetPosition={presetPosition}
             rangeInputFocus={rangeInputFocus}
             selectedValue={cachedSelectedValue}
-            setRangeInputFocus={foundation.handleSetRangeFocus}
+            selectionControlled={DatePickerFoundation.isSelectionControlled(props)}
             startDateOffset={startDateOffset}
             startYear={startYear}
             syncSwitchMonth={syncSwitchMonth}
@@ -410,7 +408,6 @@ export default function DatePicker(rawProps: DatePickerProps) {
             renderDateInput={renderDateInput()}
             renderFullDate={renderFullDate}
             renderQuickControls={renderQuickControls()}
-            triggerRender={triggerRender}
             onChange={foundation.handleSelectedChange}
             onPanelChange={onPanelChange}
         />
@@ -557,7 +554,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
                         role={isTriggerButton ? 'button' : undefined}
                         // the inputs or a focusable custom trigger are the Tab stop; Tooltip would add 0 here
                         tabIndex={isTriggerButton && !disabled ? 0 : -1}
-                        onClick={(e) => foundation.handleTriggerClick(e, typeof triggerRender === 'function')}
+                        onClick={foundation.handleTriggerClick}
                         // a control inside the trigger (the range clear button, a custom trigger's own) keeps its keys
                         onKeyDown={(e) => {
                             if (!isInnerControlKey(e)) {
