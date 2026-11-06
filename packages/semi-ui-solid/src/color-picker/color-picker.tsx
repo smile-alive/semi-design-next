@@ -76,11 +76,11 @@ function ColorPicker(rawProps: ColorPickerProps) {
                     foundation.handleChange({ h, s, v, a }, 'hsva');
                 }}
             />
-            <ColorSlider class="colorSliderWrapper" foundation={foundation} handleSize={18} height={10} hue={currentColor().hsva.h} width={width()} />
+            <ColorSlider class="colorSliderWrapper" handleSize={18} height={10} hue={currentColor().hsva.h} width={width()} onChange={foundation.handleHueChange} />
             <Show when={local.alpha}>
-                <AlphaSlider foundation={foundation} handleSize={18} height={10} hsva={currentColor().hsva} width={width()} />
+                <AlphaSlider handleSize={18} height={10} hsva={currentColor().hsva} width={width()} onChange={foundation.handleAlphaChange} />
             </Show>
-            <DataPart alpha={local.alpha} currentColor={currentColor()} defaultFormat={local.defaultFormat} eyeDropper={local.eyeDropper} foundation={foundation} width={width()} />
+            <DataPart alpha={local.alpha} currentColor={currentColor()} defaultFormat={local.defaultFormat} eyeDropper={local.eyeDropper} width={width()} onAlphaChange={foundation.handleAlphaChange} onChange={foundation.handleChange} />
             {local.bottomSlot}
         </div>
     );

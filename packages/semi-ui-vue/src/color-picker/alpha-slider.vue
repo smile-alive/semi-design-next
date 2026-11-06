@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { useTemplateRef } from 'vue';
-    import AlphaSliderFoundation, { type AlphaSliderAdapter, type AlphaSliderBaseProps, type AlphaSliderBaseState } from '@fibrae/semi-foundation/color-picker/alpha-slider-foundation';
+    import ColorSliderFoundation, { type ColorSliderAdapter, type ColorSliderBaseProps, type ColorSliderBaseState } from '@fibrae/semi-foundation/color-picker/color-slider-foundation';
     import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
     import { hsvaToHslaString, hsvaToRgbaString } from '@fibrae/semi-foundation/color-picker/utils/convert';
     import { round } from '@fibrae/semi-foundation/color-picker/utils/round';
@@ -9,20 +9,25 @@
     import { toDragEvent } from './drag-event';
     import type { AlphaSliderProps } from './interface';
 
-    type Foundation = AlphaSliderFoundation<AlphaSliderBaseProps>;
-    type Adapter = AlphaSliderAdapter<AlphaSliderBaseProps>;
+    type Foundation = ColorSliderFoundation<ColorSliderBaseProps>;
+    type Adapter = ColorSliderAdapter<ColorSliderBaseProps>;
 
     const props = defineProps<AlphaSliderProps>();
+    const emit = defineEmits<{ change: [alpha: number] }>();
 
     const i18n = useLocale('ColorPicker');
 
     const dom = useTemplateRef('dom');
 
-    const { foundation } = useFoundation<Foundation, Adapter, AlphaSliderBaseProps, AlphaSliderBaseState>(
-        AlphaSliderFoundation,
+    const { foundation } = useFoundation<Foundation, Adapter, ColorSliderBaseProps, ColorSliderBaseState>(
+        ColorSliderFoundation,
         props,
-        () => AlphaSliderFoundation.getInitialState(),
-        () => ({ getDOM: () => dom.value as HTMLDivElement })
+        () => ColorSliderFoundation.getInitialState(),
+        () => ({
+            getDOM: () => dom.value as HTMLDivElement,
+            notifyChange: (percent) => emit('change', percent / 100),
+        }),
+        { props: { value: () => props.hsva.a * 100, max: () => 100 } }
     );
 
     const onInput = (event: Event) => {
@@ -46,7 +51,7 @@
                 :style="{
                     width: `${props.handleSize}px`,
                     height: `${props.handleSize}px`,
-                    left: `${props.hsva.a * props.width - props.handleSize / 2}px`,
+                    left: `${ColorSliderFoundation.getHandlePosition({ value: props.hsva.a * 100, max: 100, width: props.width }, props.handleSize)}px`,
                     top: '50%',
                     transform: 'translateY(-50%)',
                     backgroundColor: hsvaToRgbaString(props.hsva),

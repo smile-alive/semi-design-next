@@ -1,8 +1,12 @@
+import type { Content as TiptapContent, FocusPosition } from '@tiptap/core';
 import { isEqual } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
+import { removeUnlessPrevented } from '@fibrae/semi-foundation/upload/utils';
 import { centerInScroller } from '@fibrae/semi-foundation/utils/dom';
+import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import { isComposing } from '@fibrae/semi-foundation/utils/key-code';
 import { cssClasses, strings } from './constants';
+import { handleZeroWidthCharLogic } from './extension/plugins';
 import type { Attachment, BaseSkill, Suggestion, Reference, Content, LeftMenuChangeProps, MessageContent, RichTextJSON } from './interface';
 import { findSkillSlot, getSkillSlotString, transformJSONResult } from './utils';
 
@@ -10,8 +14,9 @@ export interface AIChatInputBaseProps {
     uploadProps?: {
         disabled?: boolean;
         defaultFileList?: Attachment[];
-        beforeRemove?: (file: Attachment, fileList: Attachment[]) => boolean | Promise<boolean>;
     };
+    /** Read by the placeholder extension; a change only redraws it */
+    placeholder?: unknown;
     skills?: BaseSkill[];
     suggestions?: Suggestion[];
     skillHotKey?: string;
@@ -37,14 +42,12 @@ export interface AIChatInputState {
 }
 
 export interface AIChatInputAdapter<P extends AIChatInputBaseProps = AIChatInputBaseProps> extends DefaultAdapter<P, AIChatInputState> {
-    setContent: (content: string) => void;
-    focusEditor: (pos?: any) => void;
+    /** The tiptap editor the framework created; null before it exists */
     getEditor: () => any;
     getOptionNode: (kind: 'skill' | 'suggestion', index: number) => HTMLElement | null;
     notifyContentChange: (result: Content[]) => void;
     /** Writes the transformed content without notifying `onContentChange` */
     setTransformedContent: (result: Content[]) => void;
-    getActiveElement: () => Element | null;
     /** `changedValue` is undefined when an item is removed */
     notifyConfigureChange: (value: LeftMenuChangeProps, changedValue?: LeftMenuChangeProps) => void;
     manualUpload: (files: File[]) => void;
@@ -52,7 +55,6 @@ export interface AIChatInputAdapter<P extends AIChatInputBaseProps = AIChatInput
     notifyStopGenerate: () => void;
     /** `skill` is undefined when the skill is removed */
     notifySkillChange: (skill?: BaseSkill) => void;
-    clearContent: () => void;
     getRichTextDiv: () => HTMLDivElement | null;
     notifyReferenceClick: (reference: Reference) => void;
     notifyFocus: (event: any) => void;
@@ -60,6 +62,8 @@ export interface AIChatInputAdapter<P extends AIChatInputBaseProps = AIChatInput
     notifyUploadChange: (props: any) => void;
     /** The `onChange` of `uploadProps` */
     notifyUploadPropsChange: (props: any) => void;
+    /** The `beforeRemove` of `uploadProps`, returned as is */
+    notifyBeforeRemove: (file: Attachment, fileList: Attachment[]) => unknown;
     notifyUploadRemove: (file: File, fileList: Attachment[], fileItem: Attachment) => void;
     getConfigureValue: () => any;
 }
@@ -67,7 +71,7 @@ export interface AIChatInputAdapter<P extends AIChatInputBaseProps = AIChatInput
 export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AIChatInputBaseProps> extends BaseFoundation<AIChatInputAdapter<P>, P, AIChatInputState> {
     #mouseDownTarget: EventTarget | null = null;
 
-    static override readonly propKeys = ['suggestions', 'generating'];
+    static override readonly propKeys = ['suggestions', 'generating', 'placeholder'];
     // callers often pass a new array with the same items
     static override readonly propEquals = { suggestions: isEqual };
 
@@ -123,7 +127,21 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         if (generating && prev.generating !== generating) {
             this.handleGeneratingStart();
         }
+        const editor = this.adapter.getEditor();
+        if (prev.placeholder !== this.getProp('placeholder') && editor && !editor.isDestroyed) {
+            // the extension reads the placeholder when it draws; an empty transaction makes it draw again
+            editor.view.dispatch(editor.state.tr);
+        }
     }
+
+    setContent = (content: TiptapContent) => {
+        this.adapter.getEditor()?.commands.setContent(content);
+    };
+
+    // null and false are tiptap positions (keep the selection, do nothing), so only undefined falls back
+    focusEditor = (pos?: FocusPosition) => {
+        this.adapter.getEditor()?.commands.focus(pos ?? 'end');
+    };
 
     handleSkillSelect = (skill: BaseSkill) => {
         this.setState({
@@ -131,8 +149,8 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
             skillVisible: false,
         });
         this.adapter.notifySkillChange(skill);
-        this.adapter.setContent(getSkillSlotString(skill));
-        this.adapter.focusEditor();
+        this.setContent(getSkillSlotString(skill));
+        this.focusEditor();
     };
 
     changeTemplateVisible = (value: boolean) => {
@@ -148,8 +166,8 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
     };
 
     handleSuggestionSelect = (suggestion: Suggestion) => {
-        this.adapter.setContent(typeof suggestion === 'string' ? suggestion : suggestion.content);
-        this.adapter.focusEditor();
+        this.setContent(typeof suggestion === 'string' ? suggestion : suggestion.content);
+        this.focusEditor();
     };
 
     // The upload list is custom UI, so removal mirrors Upload: beforeRemove, then onRemove, then onUploadChange
@@ -167,32 +185,23 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
             return;
         }
 
-        const beforeRemove = uploadProps?.beforeRemove;
-        Promise.resolve(beforeRemove?.(attachment, attachments) ?? true)
-            .then((res) => {
-                if (res === false) {
-                    return;
-                }
+        removeUnlessPrevented(this.adapter.notifyBeforeRemove(attachment, attachments), () => {
+            const newAttachments = attachments.slice();
+            newAttachments.splice(index, 1);
 
-                const newAttachments = attachments.slice();
-                newAttachments.splice(index, 1);
+            // After sending, onMessageSend handed the url to the owner, so only unsent attachments are revoked
+            const { url, fileInstance } = attachment;
+            if (typeof url === 'string' && url.startsWith('blob:') && fileInstance instanceof File) {
+                URL.revokeObjectURL(url);
+            }
 
-                // After sending, onMessageSend handed the url to the owner, so only unsent attachments are revoked
-                const { url, fileInstance } = attachment;
-                if (typeof url === 'string' && url.startsWith('blob:') && fileInstance instanceof File) {
-                    URL.revokeObjectURL(url);
-                }
+            this.adapter.notifyUploadRemove(attachment.fileInstance, newAttachments, attachment);
 
-                this.adapter.notifyUploadRemove(attachment.fileInstance, newAttachments, attachment);
-
-                this.onUploadChange({
-                    currentFile: attachment,
-                    fileList: newAttachments,
-                });
-            })
-            .catch(() => {
-                // a rejected beforeRemove cancels the removal
+            this.onUploadChange({
+                currentFile: attachment,
+                fileList: newAttachments,
             });
+        });
     };
 
     handleReferenceClick = (reference: Reference) => {
@@ -276,8 +285,17 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         this.setState({ templateVisible: false, skillVisible: false, suggestionVisible: false });
     };
 
+    /**
+     * Called once `getEditor` returns a new editor, before anything else dispatches on it. The normalizing dispatch here
+     * runs the editor's update handler synchronously, which reads the editor through `getEditor`.
+     */
     handleCreate = () => {
-        const json = this.adapter.getEditor()?.getJSON();
+        const editor = this.adapter.getEditor();
+        const tr = handleZeroWidthCharLogic(editor.state);
+        if (tr) {
+            editor.view.dispatch(tr);
+        }
+        const json = editor.getJSON();
         // A default content that normalizes without a transaction never reaches handleContentChange
         this.adapter.setTransformedContent(transformJSONResult(json, this.getProps().transformer));
         this.setState({ content: json });
@@ -314,7 +332,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
 
     setContentWhileSaveTool = (content: string) => {
         const { skill } = this.getStates();
-        this.adapter.setContent(skill ? `<p>${getSkillSlotString(skill)}${content}</p>` : `<p>${content}</p>`);
+        this.setContent(skill ? `<p>${getSkillSlotString(skill)}${content}</p>` : `<p>${content}</p>`);
     };
 
     handleGeneratingStart = () => {
@@ -325,7 +343,7 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
         if (keepSkillAfterSend) {
             this.setContentWhileSaveTool('');
         } else {
-            this.adapter.clearContent();
+            this.setContent('');
         }
         this.setState({ attachments: [] });
     };
@@ -389,11 +407,11 @@ export default class AIChatInputFoundation<P extends AIChatInputBaseProps = AICh
             return;
         }
         // A control that took focus on mousedown (a Configure.Select) keeps it, or its open list would lose the keyboard
-        const active = this.adapter.getActiveElement();
+        const active = FocusTrapHandle.getActiveElement(this.adapter.getRichTextDiv());
         if (active?.closest(`.${cssClasses.FOOTER_CONFIGURE}`)) {
             return;
         }
-        this.adapter.focusEditor();
+        this.focusEditor();
     };
 
     handleRichTextAreaKeyDown = (view: any, event: KeyboardEvent) => {

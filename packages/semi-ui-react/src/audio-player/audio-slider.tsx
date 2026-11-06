@@ -1,13 +1,20 @@
-import type React from 'react';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
-import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
 import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
-import { formatTime, getPointerRatio } from '@fibrae/semi-foundation/video-player/utils';
+import SeekFoundation, { type SeekAdapter, type SeekBaseProps, type SeekBaseState } from '@fibrae/semi-foundation/video-player/seek-foundation';
+import { formatTime } from '@fibrae/semi-foundation/video-player/utils';
 import '@fibrae/semi-foundation/audio-player/audio-player.scss';
+import useFoundation from '../_base/use-foundation';
 import Tooltip from '../tooltip';
 import type { AudioPlayerTheme } from './index';
+
+interface FoundationProps extends SeekBaseProps {
+    onChange?: (value: number) => void;
+}
+
+type Foundation = SeekFoundation<FoundationProps>;
+type Adapter = SeekAdapter<FoundationProps>;
 
 interface AudioSliderProps {
     value?: number;
@@ -29,20 +36,22 @@ const dotSize = 16;
 export default function AudioSlider({ value = 0, onChange, max = 100, vertical = false, height = 4, showTooltip = true, theme = 'dark', label, getValueText }: AudioSliderProps) {
     const sliderRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    const [isDragging, setIsDragging] = useState(false);
-    const [movingInfo, setMovingInfo] = useState<{ progress: number; offset: number } | null>(null);
+
+    const [foundation, { isDragging, movingInfo }] = useFoundation<Foundation, Adapter, FoundationProps, SeekBaseState>(
+        SeekFoundation,
+        { max, vertical, onChange },
+        () => SeekFoundation.getInitialState(),
+        (base) => ({
+            getSliderRef: () => sliderRef.current,
+            notifyChange: (next) => base.getProps().onChange?.(next),
+            // Chrome treats a scripted focus on a range input as keyboard focus; the ring is for the keyboard only
+            focusOnPress: () => {
+                if (inputRef.current) focusWithoutRing(inputRef.current, { preventScroll: true });
+            },
+        })
+    );
 
     const percent = max ? (value / max) * 100 : 0;
-
-    const handlePointerPosition = (e: React.MouseEvent, { seek }: { seek: boolean }) => {
-        if (!sliderRef.current) return;
-        const { total, ratio } = getPointerRatio(sliderRef.current.getBoundingClientRect(), e, vertical);
-        // isDragging set by this press is not readable until the next render
-        if (seek && (isDragging || e.type === 'pointerdown')) {
-            onChange?.(ratio * max);
-        }
-        setMovingInfo({ progress: ratio, offset: (ratio - 0.5) * total });
-    };
 
     const sliderContent = (
         // the range input inside is the control: -1 stops the wrapping Tooltip from making this div a second Tab stop
@@ -53,21 +62,12 @@ export default function AudioSlider({ value = 0, onChange, max = 100, vertical =
                 [`${prefixCls}-slider-wrapper-dragging`]: isDragging,
             })}
             tabIndex={-1}
-            // follows pointerup and pointercancel, and also fires when the slider leaves the page mid-drag
-            onLostPointerCapture={() => setIsDragging(false)}
+            onLostPointerCapture={foundation.handleLostPointerCapture}
             // keeps the press from moving focus from the input to this div
             onMouseDown={(e) => e.preventDefault()}
-            onMouseEnter={(e) => handlePointerPosition(e, { seek: false })}
-            // the slider keeps the pointer from the press on, so the moves and the release reach it even outside it
-            onPointerDown={(e) => {
-                if (isSecondaryPress(e)) return;
-                e.currentTarget.setPointerCapture(e.pointerId);
-                // Chrome treats a scripted focus on a range input as keyboard focus; the ring is for the keyboard only
-                if (inputRef.current) focusWithoutRing(inputRef.current, { preventScroll: true });
-                setIsDragging(true);
-                handlePointerPosition(e, { seek: true });
-            }}
-            onPointerMove={(e) => handlePointerPosition(e, { seek: true })}
+            onMouseEnter={(e) => foundation.handlePointerPosition(e, { seek: false })}
+            onPointerDown={foundation.handlePointerDown}
+            onPointerMove={(e) => foundation.handlePointerPosition(e, { seek: true })}
         >
             <input
                 ref={inputRef}
@@ -81,11 +81,8 @@ export default function AudioSlider({ value = 0, onChange, max = 100, vertical =
                 step={1}
                 value={value}
                 onChange={(e) => onChange?.(Number(e.target.value))}
-                // the preview belongs to the pointer; a keyboard use shows the value
-                onFocus={(e) => {
-                    if (e.currentTarget.matches(':focus-visible')) setMovingInfo(null);
-                }}
-                onKeyDown={() => setMovingInfo(null)}
+                onFocus={foundation.handleFocus}
+                onKeyDown={foundation.clearPreview}
             />
             <div
                 ref={sliderRef}
@@ -127,7 +124,7 @@ export default function AudioSlider({ value = 0, onChange, max = 100, vertical =
                 translate: movingInfo ? (vertical ? `0 ${-movingInfo.offset}px` : `${movingInfo.offset}px 0`) : undefined,
             }}
             autoAdjustOverflow
-            content={formatTime(movingInfo ? movingInfo.progress * max : value)}
+            content={formatTime(movingInfo ? movingInfo.value : value)}
             position={vertical ? 'right' : 'top'}
         >
             {sliderContent}

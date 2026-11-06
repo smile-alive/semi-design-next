@@ -16,11 +16,27 @@
 
     let dom = $state<HTMLDivElement>();
 
+    const foundationProps: ColorSliderBaseProps = {
+        get width() {
+            return props.width;
+        },
+        get value() {
+            return props.hue;
+        },
+        max: 360,
+        get onChange() {
+            return props.onChange;
+        },
+    };
+
     const { foundation } = useFoundation<Foundation, Adapter, ColorSliderBaseProps, ColorSliderBaseState>(
         ColorSliderFoundation,
-        props,
+        foundationProps,
         () => ColorSliderFoundation.getInitialState(),
-        () => ({ getDOM: () => dom as HTMLDivElement })
+        () => ({
+            getDOM: () => dom as HTMLDivElement,
+            notifyChange: (value) => props.onChange(value),
+        })
     );
 
     const handleInput = (event: Event & { currentTarget: HTMLInputElement }) => {
@@ -44,7 +60,7 @@
         class={`${cssClasses.PREFIX}-handle`}
         style:background-color={hsvaToHslString({ h: props.hue, s: 100, v: 100, a: 1 })}
         style:height={`${props.handleSize}px`}
-        style:left={`${(props.hue / 360) * props.width - props.handleSize / 2}px`}
+        style:left={`${ColorSliderFoundation.getHandlePosition(foundationProps, props.handleSize)}px`}
         style:top="50%"
         style:transform="translateY(-50%)"
         style:width={`${props.handleSize}px`}

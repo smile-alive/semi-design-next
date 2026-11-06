@@ -30,14 +30,13 @@
         id={store.id}
         onBlur={() => store.log.push('blur')}
         onChange={(text) => store.log.push(`change ${text}`)}
-        onCreate={() => store.log.push('create')}
+        onCreate={(editor) => {
+            store.editor = editor;
+            store.log.push('create');
+        }}
         onFocus={() => store.log.push('focus')}
         onKeyDown={() => store.log.push('keydown')}
         onPasteFiles={(files) => store.log.push(`files ${files.length}`)}
-        onReady={(editor) => {
-            store.editor = editor;
-            store.log.push('ready');
-        }}
         placeholder={store.placeholder}
     />
 </LocaleProvider>

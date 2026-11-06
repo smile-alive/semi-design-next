@@ -1,171 +1,70 @@
-import { debounce } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
-import { easeInOutCubic, tween } from '@fibrae/semi-foundation/utils/tween';
+import { isEqual } from 'es-toolkit';
 import { createId } from '@fibrae/semi-foundation/utils/uuid';
 import type { Reference } from '../ai-chat-input/interface';
+import MessageListFoundation, { type MessageListAdapter, type MessageListBaseProps, type MessageListState } from '../message-list-foundation';
 import { strings } from './constants';
 import type { ResponseError } from './data-adapter/interface';
 
 export type { Reference };
 
-// shared, so a dialogue without chats or hints compares its list as unchanged
-const EMPTY_CHATS: Message[] = [];
-const EMPTY_HINTS: string[] = [];
-
-export interface DialogueAdapter<P extends DialogueBaseProps = DialogueBaseProps> extends DefaultAdapter<P, DialogueState> {
-    getContainerRef: () => HTMLDivElement;
+export interface DialogueAdapter<P extends DialogueBaseProps = DialogueBaseProps> extends MessageListAdapter<Message, P, DialogueState> {
     notifySelect: (selectedIds: string[]) => void;
-    notifyChatsChange: (chats: Message[]) => void;
-    notifyLikeMessage: (message: Message) => void;
-    notifyDislikeMessage: (message: Message) => void;
     notifyEditMessage: (message: Message) => void;
-    notifyMessageDelete: (message: Message) => void;
     notifyMessageReset: (message: Message) => void;
     notifyHintClick: (hint: string) => void;
 }
 
-export interface DialogueBaseProps {
-    chats?: Message[];
-    hints?: string[];
-}
+export type DialogueBaseProps = MessageListBaseProps<Message>;
 
-export interface DialogueState {
-    backBottomVisible: boolean;
+export interface DialogueState extends MessageListState {
     selectedIds: Set<string>;
 }
 
-export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBaseProps> extends BaseFoundation<DialogueAdapter<P>, P, DialogueState> {
-    #cancelAnimation?: () => void;
-    #scrollFrame?: number;
-    /** Whether new content scrolls into view: stops when the user scrolls up, resumes on return or on a new message */
-    #following = true;
-    #lastScrollTop = 0;
-    /**
-     * Scroll position and content height after the last commit or scroll. Known limit: content that grows in between
-     * (an image loading) counts as inserted; record on resize too if that shows up.
-     */
-    #position = { top: 0, height: 0 };
+export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBaseProps> extends MessageListFoundation<Message, DialogueAdapter<P>, P, DialogueState> {
+    /** The list this dialogue last reported, so the `chats` change it causes is not reported again */
+    #reported: Message[] | undefined;
 
-    static override readonly propKeys = ['chats', 'hints'];
+    protected readonly completedStatus = strings.STATUS.COMPLETED;
 
-    #syncBackBottomVisible({ scrollHeight, clientHeight, scrollTop }: HTMLElement) {
-        const { backBottomVisible } = this.getStates();
-        if (scrollHeight - scrollTop - clientHeight <= strings.SHOW_SCROLL_GAP) {
-            if (backBottomVisible) {
-                this.setState({ backBottomVisible: false });
-            }
-        } else if (!backBottomVisible) {
-            this.setState({ backBottomVisible: true });
-        }
-    }
+    // the dialogue does not see the sends, so a new message stands for one
+    protected override readonly resumeOnAppend = true;
 
-    #updateBackBottomVisible = debounce((element: HTMLElement) => this.#syncBackBottomVisible(element), 100);
-
-    #getChats() {
-        return this.getProps().chats ?? [];
-    }
-
-    #animateScrollTop(getTarget: (element: HTMLDivElement) => number, onEnd?: () => void) {
-        const element = this.adapter.getContainerRef();
-        if (!element) {
-            return;
-        }
-        this.#cancelAnimation?.();
-        this.#cancelAnimation = tween({
-            from: element.scrollTop,
-            to: getTarget(element),
-            duration: strings.SCROLL_ANIMATION_TIME,
-            easing: easeInOutCubic,
-            onFrame: (scrollTop) => {
-                element.scrollTop = scrollTop;
-            },
-            onEnd,
-        });
-    }
-
-    #recordPosition() {
-        const element = this.adapter.getContainerRef();
-        if (element) {
-            this.#position = { top: element.scrollTop, height: element.scrollHeight };
-        }
-    }
-
-    /**
-     * Earlier messages went in above: keeps the content below in place. Set from the recorded position, not added to
-     * scrollTop, as Chrome's scroll anchoring may already have moved it.
-     */
-    #keepPositionAfterPrepend() {
-        const element = this.adapter.getContainerRef();
-        if (element) {
-            element.scrollTop = this.#position.top + element.scrollHeight - this.#position.height;
-        }
+    protected override notifyChats(chats: Message[]) {
+        this.#reported = chats;
+        super.notifyChats(chats);
     }
 
     static getInitialState(): DialogueState {
         return { backBottomVisible: false, selectedIds: new Set() };
     }
 
+    /**
+     * `user` holds without a bubble too, unlike Chat's: here it lays out the user's message and its reference icon, and
+     * only `error` is a bubble color
+     */
     static getContentFlags(role?: string, status?: string, mode?: string) {
         const user = role === strings.ROLE.USER;
         const bubble = mode === strings.MODE.BUBBLE || (mode === strings.MODE.USER_BUBBLE && user);
         return { bubble, user, error: status === strings.STATUS.FAILED && bubble };
     }
 
-    override init() {
-        this.scrollToBottomImmediately();
-        this.#recordPosition();
-    }
-
-    override destroy() {
-        this.#cancelAnimation?.();
-        cancelAnimationFrame(this.#scrollFrame);
-        this.#updateBackBottomVisible.cancel();
-    }
-
-    override handlePropsChange(prev: Partial<P>) {
-        const { chats, hints } = this.getProps();
-        this.handleListUpdate({ chats: prev.chats ?? EMPTY_CHATS, hints: prev.hints ?? EMPTY_HINTS }, { chats: chats ?? EMPTY_CHATS, hints: hints ?? EMPTY_HINTS });
-    }
-
     /**
-     * Runs after a commit in which `chats` or `hints` changed (arrays normalized by the caller)
+     * A `chats` change is reported through `notifyChatsChange` as well, unless it is the list this dialogue reported
+     * itself. Compared by value: a reactive host hands over a copy (`followChats`), and Svelte proxies what a bindable
+     * prop is assigned, items included.
      */
-    handleListUpdate = (prev: DialogueList, { chats, hints }: DialogueList) => {
-        const prevChats = prev.chats;
-        let shouldScroll = false;
-        if (chats !== prevChats) {
+    override handlePropsChange(prev: Partial<P>) {
+        const chats = this.getChats();
+        const reported = this.#reported;
+        this.#reported = undefined;
+        if (this.getProp('chats') !== prev.chats && !(reported && isEqual(chats, reported))) {
             this.adapter.notifyChatsChange(chats);
-            const newLastChat = chats.at(-1);
-            const oldLastChat = prevChats.at(-1);
-            if (chats.length > prevChats.length) {
-                if (prevChats.length === 0 || newLastChat.id !== oldLastChat.id) {
-                    this.#following = true;
-                    shouldScroll = true;
-                } else if (chats[chats.length - prevChats.length].id === prevChats[0].id) {
-                    this.#keepPositionAfterPrepend();
-                }
-            } else if (chats.length === prevChats.length && chats.length && (newLastChat.status !== 'completed' || newLastChat.status !== oldLastChat.status)) {
-                shouldScroll = true;
-            }
         }
-        if (hints !== prev.hints && hints.length > prev.hints.length) {
-            shouldScroll = true;
-        }
-        if (this.#following && shouldScroll) {
-            this.scrollToBottomImmediately();
-        } else {
-            // content that grows or shrinks without scrolling fires no scroll event; known limit: growth outside
-            // `chats` (an image loading) is not seen, upgrade to a ResizeObserver if that shows up
-            const element = this.adapter.getContainerRef();
-            if (element) {
-                this.#updateBackBottomVisible(element);
-            }
-        }
-        this.#recordPosition();
-    };
+        super.handlePropsChange(prev);
+    }
 
     handleSelectAll = () => {
-        const selectedSet = new Set<string>(this.#getChats().map((chat) => chat.id));
+        const selectedSet = new Set<string>(this.getChats().map((chat) => chat.id));
         this.setState({ selectedIds: selectedSet });
         this.adapter.notifySelect(Array.from(selectedSet));
     };
@@ -177,7 +76,7 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
 
     handleSelectOrRemove = (isChecked: boolean, id: string) => {
         // messages deleted or replaced since the last change must not be reported as selected
-        const existingIds = new Set(this.#getChats().map((chat) => chat.id));
+        const existingIds = new Set(this.getChats().map((chat) => chat.id));
         const newSelectedSet = new Set<string>([...this.getStates().selectedIds].filter((selectedId) => existingIds.has(selectedId)));
         if (isChecked) {
             newSelectedSet.add(id);
@@ -188,46 +87,12 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
         this.adapter.notifySelect(Array.from(newSelectedSet));
     };
 
-    likeMessage = (message: Message) => {
-        const chats = this.#getChats();
-        const index = chats.findIndex((item) => item.id === message.id);
-        if (index === -1) {
-            return;
-        }
-        this.adapter.notifyLikeMessage(message);
-        const newChat = {
-            ...chats[index],
-            like: !chats[index].like,
-            dislike: false,
-        };
-        const newChats = [...chats];
-        newChats.splice(index, 1, newChat);
-        this.adapter.notifyChatsChange(newChats);
-    };
-
-    dislikeMessage = (message: Message) => {
-        const chats = this.#getChats();
-        const index = chats.findIndex((item) => item.id === message.id);
-        if (index === -1) {
-            return;
-        }
-        this.adapter.notifyDislikeMessage(message);
-        const newChat = {
-            ...chats[index],
-            like: false,
-            dislike: !chats[index].dislike,
-        };
-        const newChats = [...chats];
-        newChats.splice(index, 1, newChat);
-        this.adapter.notifyChatsChange(newChats);
-    };
-
     resetMessage = (message: Message) => {
-        const chats = this.#getChats();
+        const chats = this.getChats();
         const lastMessage = chats.at(-1);
         const newLastChat = {
             ...lastMessage,
-            status: 'in_progress',
+            status: strings.STATUS.IN_PROGRESS,
             content: '',
             like: false,
             dislike: false,
@@ -237,13 +102,12 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
             id: createId(),
             createdAt: Date.now(),
         };
-        const newChats = chats.slice(0, -1).concat(newLastChat);
-        this.adapter.notifyChatsChange(newChats);
+        this.notifyChats(chats.slice(0, -1).concat(newLastChat));
         this.adapter.notifyMessageReset(message);
     };
 
     editMessage = (message: Message) => {
-        const chats = this.#getChats();
+        const chats = this.getChats();
         this.adapter.notifyEditMessage(message);
         const newChats = chats.map((item) => {
             if (item.id === message.id) {
@@ -251,76 +115,19 @@ export default class DialogueFoundation<P extends DialogueBaseProps = DialogueBa
             }
             return item.editing ? { ...item, editing: false } : item;
         });
-        this.adapter.notifyChatsChange(newChats);
-    };
-
-    deleteMessage = (message: Message) => {
-        const chats = this.#getChats();
-        this.adapter.notifyMessageDelete(message);
-        const newChats = chats.filter((item) => item.id !== message.id);
-        this.adapter.notifyChatsChange(newChats);
+        this.notifyChats(newChats);
     };
 
     onHintClick = (hint: string) => {
-        const chats = this.#getChats();
         const newMessage = {
             role: strings.ROLE.USER,
             id: createId(),
             createdAt: Date.now(),
             content: hint,
         };
-        const newChats = [...chats, newMessage];
-        this.adapter.notifyChatsChange(newChats);
+        this.notifyChats([...this.getChats(), newMessage]);
         this.adapter.notifyHintClick(hint);
     };
-
-    scrollToBottomImmediately = () => {
-        const element = this.adapter.getContainerRef();
-        if (element) {
-            element.scrollTop = element.scrollHeight;
-        }
-    };
-
-    scrollToBottomWithAnimation = () => {
-        // the end is fixed when the animation starts; snapping at the end catches content that grew meanwhile, and the
-        // resulting scroll event resumes following
-        this.#animateScrollTop(
-            (element) => element.scrollHeight,
-            () => this.scrollToBottomImmediately()
-        );
-    };
-
-    scrollToTopImmediately = () => {
-        const element = this.adapter.getContainerRef();
-        if (element) {
-            element.scrollTop = 0;
-        }
-    };
-
-    scrollToTopWithAnimation = () => {
-        this.#animateScrollTop(() => 0);
-    };
-
-    containerScroll = (e: { target: EventTarget | null }) => {
-        // the scroll listener sits on the list element and scroll does not bubble, so the target is always that element
-        const target = e.target as HTMLElement;
-        const { scrollTop, scrollHeight, clientHeight } = target;
-        // only the user lowers scrollTop (growth never does); a drop that still ends at the bottom is shrinking
-        if (scrollHeight - scrollTop - clientHeight <= 1) {
-            this.#following = true;
-        } else if (scrollTop < this.#lastScrollTop) {
-            this.#following = false;
-        }
-        this.#lastScrollTop = scrollTop;
-        this.#position = { top: scrollTop, height: scrollHeight };
-        cancelAnimationFrame(this.#scrollFrame);
-        this.#scrollFrame = requestAnimationFrame(() => this.#updateBackBottomVisible(target));
-    };
-}
-
-export interface DialogueList {
-    chats: Message[];
-    hints: string[];
 }
 
 export interface Message {

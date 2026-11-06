@@ -160,14 +160,8 @@ export default function Chat(rawProps: ChatProps) {
         props.ref,
         () => ({
             resetMessage: () => foundation.resetMessage(null),
-            clearContext: () => foundation.clearContext(null),
-            scrollToBottom: (animation) => {
-                if (animation) {
-                    foundation.scrollToBottomWithAnimation();
-                } else {
-                    foundation.scrollToBottomImmediately();
-                }
-            },
+            clearContext: foundation.clearContext,
+            scrollToBottom: foundation.scrollToBottom,
             sendMessage: foundation.onMessageSend,
         }),
         [foundation]

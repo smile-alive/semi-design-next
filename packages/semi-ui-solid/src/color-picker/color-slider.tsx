@@ -5,8 +5,13 @@ import { hsvaToHslString } from '@fibrae/semi-foundation/color-picker/utils/conv
 import useFoundation from '../_base/use-foundation';
 import { useLocale } from '../locale';
 
-export interface ColorSliderProps extends ColorSliderBaseProps {
+export interface ColorSliderProps {
+    hue: number;
+    width: number;
+    height: number;
+    handleSize: number;
     class?: string;
+    onChange: (hue: number) => void;
 }
 
 type Foundation = ColorSliderFoundation<ColorSliderBaseProps>;
@@ -17,11 +22,27 @@ export default function ColorSlider(props: ColorSliderProps) {
 
     let dom: HTMLDivElement | undefined;
 
+    const foundationProps: ColorSliderBaseProps = {
+        get width() {
+            return props.width;
+        },
+        get value() {
+            return props.hue;
+        },
+        max: 360,
+        get onChange() {
+            return props.onChange;
+        },
+    };
+
     const { foundation } = useFoundation<Foundation, Adapter, ColorSliderBaseProps, ColorSliderBaseState>(
         ColorSliderFoundation,
-        props,
+        foundationProps,
         () => ColorSliderFoundation.getInitialState(),
-        () => ({ getDOM: () => dom as HTMLDivElement })
+        () => ({
+            getDOM: () => dom as HTMLDivElement,
+            notifyChange: (value) => props.onChange(value),
+        })
     );
 
     return (
@@ -31,7 +52,7 @@ export default function ColorSlider(props: ColorSliderProps) {
                 style={{
                     width: `${props.handleSize}px`,
                     height: `${props.handleSize}px`,
-                    left: `${(props.hue / 360) * props.width - props.handleSize / 2}px`,
+                    left: `${ColorSliderFoundation.getHandlePosition(foundationProps, props.handleSize)}px`,
                     top: '50%',
                     transform: 'translateY(-50%)',
                     'background-color': hsvaToHslString({ h: props.hue, s: 100, v: 100, a: 1 }),

@@ -1,8 +1,9 @@
-import { For, type JSX, Show, createMemo, splitProps, untrack } from 'solid-js';
+import { For, type JSX, Show, createMemo, mergeProps, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
 import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
 import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import { followChats, followHints } from '@fibrae/semi-ai-foundation/message-list-foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
 import '@fibrae/semi-ai-foundation/ai-chat-dialogue/ai-chat-dialogue.scss';
@@ -80,14 +81,27 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
 
     let list: HTMLDivElement | undefined;
 
+    const followedChats = createMemo(() => followChats(local.chats));
+    const followedHints = createMemo(() => followHints(local.hints));
+
+    const foundationProps = mergeProps(props, {
+        get chats() {
+            return followedChats();
+        },
+        get hints() {
+            return followedHints();
+        },
+    });
+
     const { foundation, state } = useFoundation<Foundation, Adapter, AIChatDialogueProps, DialogueState>(
         DialogueFoundation,
-        props,
+        foundationProps,
         () => DialogueFoundation.getInitialState(),
         () => ({
             getContainerRef: () => list as HTMLDivElement,
             notifySelect: (ids) => local.onSelect?.(ids),
-            notifyChatsChange: (chats) => local.onChatsChange?.(chats),
+            // the followed copy stands for the list the parent already holds, so it is reported as that list
+            notifyChatsChange: (chats) => local.onChatsChange?.(chats === followedChats() ? (local.chats ?? EMPTY_CHATS) : chats),
             notifyLikeMessage: (message) => local.onMessageGoodFeedback?.(message),
             notifyDislikeMessage: (message) => local.onMessageBadFeedback?.(message),
             notifyEditMessage: (message) => local.onMessageEdit?.(message),
@@ -130,8 +144,8 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
     const handle: AIChatDialogueHandle = {
         selectAll: foundation.handleSelectAll,
         deselectAll: foundation.handleDeselectAll,
-        scrollToBottom: (animation) => (animation ? foundation.scrollToBottomWithAnimation() : foundation.scrollToBottomImmediately()),
-        scrollToTop: (animation) => (animation ? foundation.scrollToTopWithAnimation() : foundation.scrollToTopImmediately()),
+        scrollToBottom: foundation.scrollToBottom,
+        scrollToTop: foundation.scrollToTop,
     };
 
     const context: AIChatDialogueContextValue = {

@@ -1,4 +1,4 @@
-import type { Extensions } from '@tiptap/core';
+import type { Editor, Extensions, Content as TiptapContent } from '@tiptap/core';
 import Document from '@tiptap/extension-document';
 import HardBreak from '@tiptap/extension-hard-break';
 import Paragraph from '@tiptap/extension-paragraph';
@@ -10,9 +10,11 @@ import CustomPlaceholder from './custom-placeholder';
 import { handleCompositionEndLogic, handlePasteLogic, handleTextInputLogic } from './plugins';
 import SemiStatusExtension from './status-extension';
 
-/** The `editorProps` handlers shared by every framework; the editor keeps the ones it was last given */
-export function createEditorHandlers(onPasteFiles?: (files: File[]) => void) {
+/** The `editorProps` of the editor, at creation and on every `setOptions`; the editor keeps the ones it was last given */
+export function createEditorProps({ attributes, handleKeyDown, onPasteFiles }: { attributes?: ReturnType<typeof getEditorAttributes>; handleKeyDown?: (view: EditorView, event: KeyboardEvent) => boolean; onPasteFiles?: (files: File[]) => void }) {
     return {
+        attributes,
+        handleKeyDown,
         // Not tiptap's onPaste: it cannot stop ProseMirror from still inserting the clipboard content
         handlePaste(view: EditorView, event: ClipboardEvent) {
             const files = getPastedFiles(event.clipboardData);
@@ -63,4 +65,20 @@ export function getEditorAttributes({ id, label, placeholder, controls, activeDe
 export function getBaseExtensions({ slotExtensions, readPlaceholder, showPlaceholderWhenSkillOnly, extensions = [] }: { slotExtensions: Extensions; readPlaceholder: PlaceholderOptions['placeholder']; showPlaceholderWhenSkillOnly?: boolean; extensions?: Extensions }): Extensions {
     const placeholderExtension = showPlaceholderWhenSkillOnly ? CustomPlaceholder.configure({ placeholder: readPlaceholder, showPlaceholderWhenSkillOnly: true }) : Placeholder.configure({ placeholder: readPlaceholder });
     return [Document, Paragraph, Text, UndoRedo, HardBreak, ...slotExtensions, placeholderExtension, SemiStatusExtension, ...extensions];
+}
+
+/**
+ * The options every framework creates the editor with, besides its mount element. `extensions` comes from
+ * `getBaseExtensions`; a new array with a new placeholder extension would be an options change to React's `useEditor`.
+ * Hand the editor to `AIChatInputFoundation.handleCreate` once it exists.
+ */
+export function getEditorOptions({ extensions, defaultContent, editorProps, onChange }: { extensions: Extensions; defaultContent?: TiptapContent; editorProps: ReturnType<typeof createEditorProps>; onChange: (text: string) => void }) {
+    return {
+        extensions,
+        content: defaultContent ?? '',
+        editorProps,
+        // tiptap's injected CSS is unlayered and would override `@layer semi`
+        injectCSS: false,
+        onUpdate: ({ editor }: { editor: Editor }) => onChange(editor.getText()),
+    };
 }

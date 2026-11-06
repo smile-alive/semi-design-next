@@ -937,6 +937,16 @@ describe('AIChatInput 输入法、粘贴与焦点', () => {
         await waitForClosed(`.${prefix}-popover-template`);
     });
 
+    it('placeholder 变化后可见占位与 aria-placeholder 同步，编辑器实例不变', async () => {
+        const { container, update, editor } = await setup({ placeholder: 'one' });
+        const instance = editor();
+        expect(query('p[data-placeholder]', container)).toHaveAttribute('data-placeholder', 'one');
+        await update({ placeholder: 'two' });
+        expect(query('p[data-placeholder]', container)).toHaveAttribute('data-placeholder', 'two');
+        expect(pm(container)).toHaveAttribute('aria-placeholder', 'two');
+        expect(editor()).toBe(instance);
+    });
+
     it('focusEditor(false) 不聚焦，不传位置时聚焦到末尾', async () => {
         const { container, handle } = await setup();
         handle().focusEditor(false);

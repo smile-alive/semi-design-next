@@ -100,9 +100,3 @@ export interface ControlsMenuProps<T> {
 export interface ControlsMenuEmits<T> {
     select: [option: VideoPlayerOption<T>];
 }
-
-export interface VideoProgressState {
-    isDragging: boolean;
-    movingInfo: { progress: number; offset: number; value: number } | null;
-    activeIndex: number;
-}

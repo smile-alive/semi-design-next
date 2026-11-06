@@ -83,9 +83,3 @@ export interface VideoProgressProps {
     markers?: VideoPlayerMarker[];
     bufferedValue: number;
 }
-
-export interface VideoProgressState {
-    isDragging: boolean;
-    movingInfo: { progress: number; offset: number; value: number } | null;
-    activeIndex: number;
-}

@@ -4,7 +4,7 @@ import DialogueFoundation, { type DialogueAdapter, type Message } from '../found
 describe('DialogueFoundation 点赞与点踩', () => {
     const create = (chats: Partial<Message>[]) => {
         const adapter = {
-            getProps: () => ({ chats }),
+            getProp: (key: string) => ({ chats })[key],
             notifyLikeMessage: vi.fn<DialogueAdapter['notifyLikeMessage']>(),
             notifyDislikeMessage: vi.fn<DialogueAdapter['notifyDislikeMessage']>(),
             notifyChatsChange: vi.fn<DialogueAdapter['notifyChatsChange']>(),
@@ -28,7 +28,7 @@ describe('DialogueFoundation 点赞与点踩', () => {
 describe('DialogueFoundation 重新生成与选择', () => {
     const create = (chats: Partial<Message>[], selectedIds = new Set<string>()) => {
         const adapter = {
-            getProps: () => ({ chats }),
+            getProp: (key: string) => ({ chats })[key],
             getStates: () => ({ selectedIds }),
             notifyChatsChange: vi.fn<DialogueAdapter['notifyChatsChange']>(),
             notifyMessageReset: vi.fn<DialogueAdapter['notifyMessageReset']>(),
@@ -57,11 +57,50 @@ describe('DialogueFoundation 重新生成与选择', () => {
     });
 });
 
+function changeProps(foundation: DialogueFoundation, props: { chats?: Partial<Message>[]; hints?: string[] }, next: { chats?: Partial<Message>[]; hints?: string[] }) {
+    const prev = { ...props } as { chats?: Message[]; hints?: string[] };
+    Object.assign(props, next);
+    foundation.handlePropsChange(prev);
+}
+
+describe('DialogueFoundation 上报 chats 变化', () => {
+    const create = (chats: Partial<Message>[]) => {
+        const props = { chats };
+        const adapter = {
+            getProp: (key: string) => props[key],
+            getContainerRef: () => null,
+            notifyLikeMessage: vi.fn<DialogueAdapter['notifyLikeMessage']>(),
+            notifyChatsChange: vi.fn<DialogueAdapter['notifyChatsChange']>(),
+        };
+        return { adapter, props, foundation: new DialogueFoundation(adapter as unknown as DialogueAdapter) };
+    };
+
+    it('父组件换入的列表照常上报', () => {
+        const { adapter, props, foundation } = create([{ id: '1' }]);
+        changeProps(foundation, props, { chats: [{ id: '1' }, { id: '2' }] });
+        expect(adapter.notifyChatsChange).toHaveBeenCalledExactlyOnceWith(props.chats);
+    });
+
+    it('组件自己写入的列表回到 chats 时不再上报，按值比较以覆盖宿主交来的副本', () => {
+        const { adapter, props, foundation } = create([{ id: '1' }]);
+        foundation.likeMessage({ id: '1' } as Message);
+        const written = adapter.notifyChatsChange.mock.calls[0][0];
+        changeProps(foundation, props, { chats: [...written] });
+        expect(adapter.notifyChatsChange).toHaveBeenCalledOnce();
+        // the parent rewrote the list in the setter: a different list is reported
+        foundation.likeMessage({ id: '1' } as Message);
+        changeProps(foundation, props, { chats: [{ id: '1', like: true }] });
+        expect(adapter.notifyChatsChange).toHaveBeenCalledTimes(3);
+    });
+});
+
 describe('DialogueFoundation 滚动', () => {
     const create = () => {
         const element = { scrollTop: 0, scrollHeight: 1000, clientHeight: 100 };
         let backBottomVisible = false;
+        const props = { chats: [{ id: '1', role: 'assistant', status: 'completed' }] as Partial<Message>[], hints: [] as string[] };
         const adapter = {
+            getProp: (key: string) => props[key],
             getContainerRef: () => element,
             getStates: () => ({ backBottomVisible }),
             setState: vi.fn<(state: { backBottomVisible: boolean }) => void>((state) => {
@@ -69,7 +108,7 @@ describe('DialogueFoundation 滚动', () => {
             }),
             notifyChatsChange: vi.fn<() => void>(),
         };
-        return { adapter, element, foundation: new DialogueFoundation(adapter as unknown as DialogueAdapter) };
+        return { adapter, element, props, foundation: new DialogueFoundation(adapter as unknown as DialogueAdapter) };
     };
 
     it('回到底部的动画结束时贴住当前底部，而不是点击时的底部', () => {
@@ -89,7 +128,7 @@ describe('DialogueFoundation 滚动', () => {
     it('不跟随时，内容增长后更新回到底部按钮的显隐', () => {
         vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'requestAnimationFrame', 'cancelAnimationFrame', 'performance'] });
         try {
-            const { adapter, element, foundation } = create();
+            const { adapter, element, props, foundation } = create();
             const scrollTo = (scrollTop: number) => {
                 element.scrollTop = scrollTop;
                 foundation.containerScroll({ target: element as unknown as EventTarget });
@@ -100,13 +139,13 @@ describe('DialogueFoundation 滚动', () => {
             adapter.setState.mockClear();
             // growth alone fires no scroll event
             element.scrollHeight = 1200;
-            foundation.handleListUpdate({ chats: [{ id: '1', role: 'assistant', status: 'completed' }], hints: [] }, { chats: [{ id: '1', role: 'assistant', status: 'completed', content: 'more' }], hints: [] });
+            changeProps(foundation, props, { chats: [{ id: '1', role: 'assistant', status: 'completed', content: 'more' }] });
             vi.advanceTimersByTime(200);
             expect(adapter.setState).toHaveBeenCalledWith({ backBottomVisible: true }, undefined);
             // the content shrinks to fit without any scroll event
             element.scrollHeight = 100;
             element.scrollTop = 850;
-            foundation.handleListUpdate({ chats: [{ id: '1', role: 'assistant', status: 'completed' }], hints: [] }, { chats: [{ id: '1', role: 'assistant', status: 'completed', content: 'less' }], hints: [] });
+            changeProps(foundation, props, { chats: [{ id: '1', role: 'assistant', status: 'completed', content: 'less' }] });
             vi.advanceTimersByTime(200);
             expect(adapter.setState).toHaveBeenLastCalledWith({ backBottomVisible: false }, undefined);
         } finally {

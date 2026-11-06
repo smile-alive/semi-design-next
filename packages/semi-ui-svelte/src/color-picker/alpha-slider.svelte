@@ -1,5 +1,5 @@
 <script lang="ts">
-    import AlphaSliderFoundation, { type AlphaSliderAdapter, type AlphaSliderBaseProps, type AlphaSliderBaseState } from '@fibrae/semi-foundation/color-picker/alpha-slider-foundation';
+    import ColorSliderFoundation, { type ColorSliderAdapter, type ColorSliderBaseProps, type ColorSliderBaseState } from '@fibrae/semi-foundation/color-picker/color-slider-foundation';
     import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
     import { hsvaToHslaString, hsvaToRgbaString } from '@fibrae/semi-foundation/color-picker/utils/convert';
     import { round } from '@fibrae/semi-foundation/color-picker/utils/round';
@@ -8,8 +8,8 @@
     import { toDragEvent } from './drag-event.js';
     import type { AlphaSliderProps } from './interface.js';
 
-    type Foundation = AlphaSliderFoundation<AlphaSliderBaseProps>;
-    type Adapter = AlphaSliderAdapter<AlphaSliderBaseProps>;
+    type Foundation = ColorSliderFoundation<ColorSliderBaseProps>;
+    type Adapter = ColorSliderAdapter<ColorSliderBaseProps>;
 
     const props: AlphaSliderProps = $props();
 
@@ -17,11 +17,27 @@
 
     let dom = $state<HTMLDivElement>();
 
-    const { foundation } = useFoundation<Foundation, Adapter, AlphaSliderBaseProps, AlphaSliderBaseState>(
-        AlphaSliderFoundation,
-        props,
-        () => AlphaSliderFoundation.getInitialState(),
-        () => ({ getDOM: () => dom as HTMLDivElement })
+    const foundationProps: ColorSliderBaseProps = {
+        get width() {
+            return props.width;
+        },
+        get value() {
+            return props.hsva.a * 100;
+        },
+        max: 100,
+        get onChange() {
+            return props.onChange;
+        },
+    };
+
+    const { foundation } = useFoundation<Foundation, Adapter, ColorSliderBaseProps, ColorSliderBaseState>(
+        ColorSliderFoundation,
+        foundationProps,
+        () => ColorSliderFoundation.getInitialState(),
+        () => ({
+            getDOM: () => dom as HTMLDivElement,
+            notifyChange: (percent) => props.onChange(percent / 100),
+        })
     );
 
     const handleInput = (event: Event & { currentTarget: HTMLInputElement }) => {
@@ -42,7 +58,15 @@
     onpointermove={(event) => foundation.handlePointerMove(toDragEvent(event))}
 >
     <div class={`${cssClasses.PREFIX}-alphaSliderInner`} style:background={`linear-gradient(90deg, ${hsvaToHslaString({ ...props.hsva, a: 0 })}, ${hsvaToHslaString({ ...props.hsva, a: 1 })})`}>
-        <div class={`${cssClasses.PREFIX}-alphaHandle`} style:background-color={hsvaToRgbaString(props.hsva)} style:height={`${props.handleSize}px`} style:left={`${props.hsva.a * props.width - props.handleSize / 2}px`} style:top="50%" style:transform="translateY(-50%)" style:width={`${props.handleSize}px`}>
+        <div
+            class={`${cssClasses.PREFIX}-alphaHandle`}
+            style:background-color={hsvaToRgbaString(props.hsva)}
+            style:height={`${props.handleSize}px`}
+            style:left={`${ColorSliderFoundation.getHandlePosition(foundationProps, props.handleSize)}px`}
+            style:top="50%"
+            style:transform="translateY(-50%)"
+            style:width={`${props.handleSize}px`}
+        >
             <input aria-label={locale().locale.alpha} aria-valuetext={`${round(props.hsva.a * 100)}%`} class={`${cssClasses.PREFIX}-handleSlider`} max={100} min={0} type="range" value={round(props.hsva.a * 100)} oninput={handleInput} onkeydown={foundation.handleKeyDown} />
         </div>
     </div>

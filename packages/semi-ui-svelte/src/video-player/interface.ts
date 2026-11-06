@@ -81,12 +81,6 @@ export interface VideoProgressProps {
     onChange?: (value: number) => void;
 }
 
-export interface VideoProgressState {
-    isDragging: boolean;
-    movingInfo: { progress: number; offset: number; value: number } | null;
-    activeIndex: number;
-}
-
 export interface ControlsMenuProps<T> {
     current: T;
     /** What the menu sets, read before the current option in the button's name */

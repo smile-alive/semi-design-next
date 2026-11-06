@@ -245,9 +245,15 @@ export const svelteExemptions: SvelteExemption[] = [
     },
     // The drag surfaces take the pointer for sighted users; each hosts native range inputs that carry the role, name and keyboard. The props object is handed to the foundation host as a live view, not read once
     {
-        files: ['packages/semi-ui-svelte/src/color-picker/alpha-slider.svelte', 'packages/semi-ui-svelte/src/color-picker/color-choose-area.svelte', 'packages/semi-ui-svelte/src/color-picker/color-slider.svelte'],
+        files: ['packages/semi-ui-svelte/src/color-picker/color-choose-area.svelte'],
         off: [],
         compilerOff: ['a11y_no_static_element_interactions', 'state_referenced_locally'],
+    },
+    // The drag surfaces take the pointer for sighted users; each hosts a native range input that carries the role, name and keyboard
+    {
+        files: ['packages/semi-ui-svelte/src/color-picker/alpha-slider.svelte', 'packages/semi-ui-svelte/src/color-picker/color-slider.svelte'],
+        off: [],
+        compilerOff: ['a11y_no_static_element_interactions'],
     },
     {
         files: ['packages/semi-ui-svelte/src/color-picker/data-part.svelte'],

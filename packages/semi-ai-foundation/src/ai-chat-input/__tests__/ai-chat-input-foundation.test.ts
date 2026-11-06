@@ -1,6 +1,7 @@
-import { describe, expect, it, vi } from 'vite-plus/test';
+import type { EditorView } from '@tiptap/pm/view';
+import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { cssClasses } from '../constants';
-import { createEditorHandlers, getEditorAttributes } from '../extension/editor-config';
+import { createEditorProps, getEditorAttributes } from '../extension/editor-config';
 import { isSelectionInsideNode } from '../extension/input-slot';
 import AIChatInputFoundation, { type AIChatInputAdapter } from '../foundation';
 import type { Attachment } from '../interface';
@@ -15,6 +16,8 @@ const asAdapter = (adapter: Partial<Record<keyof AIChatInputAdapter, any>>) =>
         notifyUploadChange: (p: any) => adapter.getProps?.().onUploadChange?.(p),
         notifyUploadPropsChange: (p: any) => adapter.getProps?.().uploadProps?.onChange?.(p),
         notifyUploadRemove: (...args: any[]) => adapter.getProps?.().uploadProps?.onRemove?.(...args),
+        notifyBeforeRemove: (file: Attachment, fileList: Attachment[]) => adapter.getProps?.().uploadProps?.beforeRemove?.(file, fileList),
+        getEditor: () => null,
         ...adapter,
     }) as unknown as AIChatInputAdapter;
 
@@ -39,27 +42,25 @@ describe('AIChatInputFoundation', () => {
 
     it('handleGeneratingStart 清空内容、按请求保留 skill，或两者都不动', () => {
         const run = (props, state = {}) => {
+            const setContent = vi.fn<(content: unknown) => void>();
             const adapter = {
                 getProps: () => props,
                 getStates: () => state,
-                setContent: vi.fn<AIChatInputAdapter['setContent']>(),
-                clearContent: vi.fn<AIChatInputAdapter['clearContent']>(),
+                getEditor: () => ({ commands: { setContent } }),
                 setState: vi.fn<(state: object) => void>(),
             };
             new AIChatInputFoundation(asAdapter(adapter)).handleGeneratingStart();
-            return adapter;
+            return { ...adapter, setContent };
         };
         const cleared = run({});
-        expect(cleared.clearContent).toHaveBeenCalledTimes(1);
+        expect(cleared.setContent).toHaveBeenCalledExactlyOnceWith('');
         expect(cleared.setState).toHaveBeenCalledWith({ attachments: [] }, undefined);
 
         const kept = run({ keepSkillAfterSend: true }, { skill: { value: 'writing', label: 'Writing' } });
-        expect(kept.clearContent).not.toHaveBeenCalled();
-        expect(kept.setContent).toHaveBeenCalledWith('<p><skill-slot  data-label="Writing" data-value="writing"></skill-slot></p>');
+        expect(kept.setContent).toHaveBeenCalledExactlyOnceWith('<p><skill-slot  data-label="Writing" data-value="writing"></skill-slot></p>');
         expect(kept.setState).toHaveBeenCalledWith({ attachments: [] }, undefined);
 
         const untouched = run({ clearContentOnGenerating: false });
-        expect(untouched.clearContent).not.toHaveBeenCalled();
         expect(untouched.setContent).not.toHaveBeenCalled();
         expect(untouched.setState).not.toHaveBeenCalled();
     });
@@ -235,8 +236,6 @@ describe('AIChatInputFoundation', () => {
             getProps: () => ({}),
             getStates: () => ({ attachments: [attachment] }),
             setState: () => {},
-            setContent: () => {},
-            clearContent: () => {},
         };
         const foundation = new AIChatInputFoundation(asAdapter(adapter));
 
@@ -352,7 +351,7 @@ describe('AIChatInputFoundation', () => {
             asAdapter({
                 getProps: () => ({}),
                 setState: () => {},
-                getEditor: () => ({ getJSON: () => textDoc }),
+                getEditor: () => ({ getJSON: () => textDoc, state: { doc: { descendants: () => {} } } }),
                 setTransformedContent,
                 notifyContentChange,
             })
@@ -360,6 +359,23 @@ describe('AIChatInputFoundation', () => {
         foundation.handleCreate();
         expect(setTransformedContent).toHaveBeenCalledWith([{ type: 'text', text: 'hi' }]);
         expect(notifyContentChange).not.toHaveBeenCalled();
+    });
+
+    it('placeholder 变化时派发空事务让占位文字重绘，编辑器销毁后不再派发', () => {
+        const tr = {};
+        const dispatch = vi.fn<(tr: object) => void>();
+        const editor = { isDestroyed: false, state: { tr }, view: { dispatch } };
+        const props: { placeholder?: string } = { placeholder: 'a' };
+        const foundation = new AIChatInputFoundation(asAdapter({ getProps: () => props, getProp: (key: string) => props[key], getEditor: () => editor }));
+        foundation.handlePropsChange({ placeholder: 'a' });
+        expect(dispatch).not.toHaveBeenCalled();
+        props.placeholder = 'b';
+        foundation.handlePropsChange({ placeholder: 'a' });
+        expect(dispatch).toHaveBeenCalledExactlyOnceWith(tr);
+        editor.isDestroyed = true;
+        props.placeholder = 'c';
+        foundation.handlePropsChange({ placeholder: 'b' });
+        expect(dispatch).toHaveBeenCalledOnce();
     });
 
     describe('点击容器', () => {
@@ -372,14 +388,21 @@ describe('AIChatInputFoundation', () => {
             const send = document.createElement('button');
             const editorDiv = document.createElement('div');
             root.append(configure, send, editorDiv);
-            const focusEditor = vi.fn<AIChatInputAdapter['focusEditor']>();
-            const active = { control: select, send, root, outside: document.body }[focus];
+            root.tabIndex = -1;
+            document.body.append(root);
+            onTestFinished(() => root.remove());
+            const focusEditor = vi.fn<(pos: unknown) => void>();
+            const active = { control: select, send, root, outside: null }[focus];
+            if (active) {
+                active.focus();
+            } else {
+                (document.activeElement as HTMLElement | null)?.blur();
+            }
             const foundation = new AIChatInputFoundation(
                 asAdapter({
                     getProps: () => ({}),
                     getRichTextDiv: () => editorDiv as HTMLDivElement,
-                    getActiveElement: () => active,
-                    focusEditor,
+                    getEditor: () => ({ commands: { focus: focusEditor } }),
                 })
             );
             foundation.handleContainerClick({ target: root, detail: 1 });
@@ -485,7 +508,7 @@ describe('aiChatInput utils', () => {
         it('输入法组合中不处理文本输入，compositionend 延迟清理', () => {
             vi.useFakeTimers();
             try {
-                const handlers = createEditorHandlers();
+                const handlers = createEditorProps({});
                 expect(handlers.handleTextInput({ composing: true } as any, 0, 0, 'a')).toBe(false);
                 const read = vi.fn<() => void>();
                 const view = {
@@ -508,8 +531,8 @@ describe('aiChatInput utils', () => {
             const onPasteFiles = vi.fn<(files: File[]) => void>();
             const file = new File([''], 'a.png');
             const preventDefault = vi.fn<() => void>();
-            const event = { preventDefault, clipboardData: { getData: () => '', items: [{ getAsFile: () => file }] } } as any;
-            expect(createEditorHandlers(onPasteFiles).handlePaste({} as any, event)).toBe(true);
+            const event = { preventDefault, clipboardData: { getData: () => '', items: [{ getAsFile: () => file }] } } as unknown as ClipboardEvent;
+            expect(createEditorProps({ onPasteFiles }).handlePaste({} as EditorView, event)).toBe(true);
             expect(onPasteFiles).toHaveBeenCalledWith([file]);
             expect(preventDefault).toHaveBeenCalled();
         });

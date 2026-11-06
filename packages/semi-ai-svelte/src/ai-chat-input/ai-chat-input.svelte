@@ -153,6 +153,9 @@
         get references() {
             return references;
         },
+        get placeholder() {
+            return placeholder;
+        },
     };
 
     const { foundation, states } = useFoundation<Foundation, Adapter, AIChatInputBaseProps, AIChatInputState>(
@@ -160,9 +163,6 @@
         foundationProps,
         () => AIChatInputFoundation.getInitialState(foundationProps),
         () => ({
-            setContent,
-            clearContent: () => setContent(''),
-            focusEditor,
             getEditor: () => editor,
             // the panel may render in a shadow root, out of reach of document queries
             getOptionNode: (kind, index) => {
@@ -177,7 +177,6 @@
             setTransformedContent: (result) => {
                 transformedContent = result;
             },
-            getActiveElement: () => (trigger ? FocusTrapHandle.getActiveElement(trigger) : null),
             notifyConfigureChange: (value, changedValue) => onConfigureChange?.(value, changedValue),
             manualUpload: (files) => [...uploads][0]?.insert(files),
             notifyMessageSend: (message) => onMessageSend?.(message),
@@ -188,6 +187,7 @@
             notifyBlur: (event) => onBlur?.(event),
             notifyUploadChange: (change) => onUploadChange?.(change),
             notifyUploadPropsChange: (change) => uploadProps?.onChange?.(change),
+            notifyBeforeRemove: (file, fileList) => uploadProps?.beforeRemove?.(file, fileList),
             notifyUploadRemove: (file, fileList, fileItem) => uploadProps?.onRemove?.(file, fileList, fileItem),
             getConfigureValue: () => configure?.getConfigureValue(),
         })
@@ -288,9 +288,8 @@
         foundation.handleUploadFileDelete(item);
     }
 
-    // null and false are tiptap positions (keep the selection, do nothing), so only undefined falls back
     export function focusEditor(pos?: FocusPosition) {
-        editor?.commands.focus(pos ?? 'end');
+        foundation.focusEditor(pos);
     }
 
     export function getEditor() {
@@ -298,7 +297,7 @@
     }
 
     export function setContent(content: TiptapContent) {
-        editor?.commands.setContent(content);
+        foundation.setContent(content);
     }
 
     export function setContentWhileSaveTool(content: string) {
@@ -422,12 +421,14 @@
             id={editorId}
             onBlur={foundation.handleBlur}
             onChange={foundation.handleContentChange}
-            onCreate={foundation.handleCreate}
+            onCreate={(instance) => {
+                editor = instance;
+                foundation.handleCreate();
+            }}
             onFocus={foundation.handleFocus}
             onKeyDown={foundation.handleKeyDown}
             {onPaste}
             onPasteFiles={foundation.handlePaste}
-            onReady={(instance) => (editor = instance)}
             {placeholder}
             {showPlaceholderWhenSkillOnly}
         />

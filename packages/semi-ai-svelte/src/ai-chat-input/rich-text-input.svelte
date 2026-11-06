@@ -5,8 +5,7 @@
     import { Editor, type Extensions, type Content as TiptapContent } from '@tiptap/core';
     import type { EditorView } from '@tiptap/pm/view';
     import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
-    import { createEditorHandlers, getBaseExtensions, getEditorAttributes } from '@fibrae/semi-ai-foundation/ai-chat-input/extension/editor-config';
-    import { handleZeroWidthCharLogic } from '@fibrae/semi-ai-foundation/ai-chat-input/extension/plugins';
+    import { createEditorProps, getBaseExtensions, getEditorAttributes, getEditorOptions } from '@fibrae/semi-ai-foundation/ai-chat-input/extension/editor-config';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import slotExtensions from './extension/index.js';
     import type { PlaceholderProps } from './interface.js';
@@ -24,9 +23,7 @@
         /** Read when the editor is created */
         showPlaceholderWhenSkillOnly?: boolean;
         /** Called with the editor right after it is created, before its first transaction */
-        onReady: (editor: Editor) => void;
-        /** The content is normalized */
-        onCreate: () => void;
+        onCreate: (editor: Editor) => void;
         onChange: (text: string) => void;
         handleKeyDown: (view: EditorView, event: KeyboardEvent) => boolean;
         onPasteFiles: (files: File[]) => void;
@@ -36,7 +33,7 @@
         onKeyDown: (event: KeyboardEvent) => void;
     }
 
-    let { id, controls, activeDescendant, placeholder, defaultContent, extensions, showPlaceholderWhenSkillOnly = false, onReady, onCreate, onChange, handleKeyDown, onPasteFiles, onPaste, onFocus, onBlur, onKeyDown }: RichTextInputProps = $props();
+    let { id, controls, activeDescendant, placeholder, defaultContent, extensions, showPlaceholderWhenSkillOnly = false, onCreate, onChange, handleKeyDown, onPasteFiles, onPaste, onFocus, onBlur, onKeyDown }: RichTextInputProps = $props();
 
     const locale = useLocale('AIChatInput');
 
@@ -49,32 +46,22 @@
     // the editor keeps the extensions it was created with, so the placeholder plugin reads the latest prop through this
     const readPlaceholder = (args: Parameters<Extract<PlaceholderProps, (...args: never[]) => string>>[0]) => (typeof placeholder === 'function' ? placeholder(args) : (placeholder ?? ''));
 
-    const editorProps = (attrs: ReturnType<typeof getEditorAttributes>) => ({
-        attributes: attrs,
-        handleKeyDown: (view: EditorView, event: KeyboardEvent) => handleKeyDown(view, event),
-        ...createEditorHandlers((files) => onPasteFiles(files)),
-    });
+    const editorProps = (attrs: ReturnType<typeof getEditorAttributes>) => createEditorProps({ attributes: attrs, handleKeyDown: (view: EditorView, event: KeyboardEvent) => handleKeyDown(view, event), onPasteFiles: (files) => onPasteFiles(files) });
 
     // Untracked: a prop read here would make Svelte rerun the attachment, destroying the editor and its content
     const mountEditor: Attachment<HTMLDivElement> = (element) =>
         untrack(() => {
             const instance = new Editor({
                 element,
-                extensions: getBaseExtensions({ slotExtensions: slotExtensions(contexts), readPlaceholder, showPlaceholderWhenSkillOnly, extensions }),
-                content: defaultContent ?? '',
-                editorProps: editorProps(attributes),
-                // tiptap's injected CSS is unlayered and would override `@layer semi`
-                injectCSS: false,
-                onUpdate: ({ editor: updated }) => onChange(updated.getText()),
+                ...getEditorOptions({
+                    extensions: getBaseExtensions({ slotExtensions: slotExtensions(contexts), readPlaceholder, showPlaceholderWhenSkillOnly, extensions }),
+                    defaultContent,
+                    editorProps: editorProps(attributes),
+                    onChange: (text) => onChange(text),
+                }),
             });
             editor = instance;
-            // first: the dispatch below runs onUpdate synchronously and the parent reads the editor there
-            onReady(instance);
-            const tr = handleZeroWidthCharLogic(instance.state);
-            if (tr) {
-                instance.view.dispatch(tr);
-            }
-            onCreate();
+            onCreate(instance);
             // Listened here, not in the template: the wrapper only relays what bubbles from the editable element, which
             // carries the textbox semantics, so it takes no role of its own
             const off = [on(element, 'focusin', (event) => onFocus(event)), on(element, 'focusout', (event) => onBlur(event)), on(element, 'keydown', (event) => onKeyDown(event)), on(element, 'paste', (event) => onPaste?.(event))];
@@ -85,20 +72,10 @@
             };
         });
 
-    // Both run once after the editor is created too, which changes nothing
+    // Runs once after the editor is created too, which changes nothing
     $effect(() => {
         const attrs = attributes;
         untrack(() => editor?.setOptions({ editorProps: editorProps(attrs) }));
-    });
-
-    $effect(() => {
-        void placeholder;
-        untrack(() => {
-            if (editor && !editor.isDestroyed) {
-                // an empty transaction makes the placeholder plugin recompute its decorations
-                editor.view.dispatch(editor.state.tr);
-            }
-        });
     });
 </script>
 

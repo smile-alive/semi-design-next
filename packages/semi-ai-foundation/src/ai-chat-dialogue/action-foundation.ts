@@ -1,5 +1,6 @@
-import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
+import type { DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
 import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
+import ActionBarFoundation, { type ActionBarState } from '../action-bar-foundation';
 import { isUnfinishedStatus, strings } from './constants';
 import type { Message } from './foundation';
 import { getMessageText } from './message-text';
@@ -25,10 +26,7 @@ export interface DialogueActionBaseProps {
     message?: Message;
 }
 
-export interface DialogueActionState {
-    visible: boolean;
-    showAction: boolean;
-}
+export type DialogueActionState = ActionBarState;
 
 export interface DialogueActionAdapter<P extends DialogueActionBaseProps = DialogueActionBaseProps> extends DefaultAdapter<P, DialogueActionState> {
     notifyDeleteMessage: () => void;
@@ -41,7 +39,7 @@ export interface DialogueActionAdapter<P extends DialogueActionBaseProps = Dialo
     notifyEditMessage: () => void;
 }
 
-export default class DialogueActionFoundation<P extends DialogueActionBaseProps = DialogueActionBaseProps> extends BaseFoundation<DialogueActionAdapter<P>, P, DialogueActionState> {
+export default class DialogueActionFoundation<P extends DialogueActionBaseProps = DialogueActionBaseProps> extends ActionBarFoundation<DialogueActionAdapter<P>, P, DialogueActionState> {
     static getInitialState(): DialogueActionState {
         return { visible: false, showAction: false };
     }
@@ -85,14 +83,11 @@ export default class DialogueActionFoundation<P extends DialogueActionBaseProps 
     };
 
     showMoreDropdown = () => {
-        this.setState({ visible: true, showAction: true });
+        this.openMenu();
     };
 
     /** Closes the more menu: after a delete, or on a mousedown outside its trigger while it is open */
     hideMoreDropdown = () => {
-        this.setState({ visible: false });
-        setTimeout(() => {
-            this.setState({ showAction: false });
-        }, 150);
+        this.closeMenu();
     };
 }

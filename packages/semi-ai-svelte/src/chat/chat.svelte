@@ -3,12 +3,12 @@
 
     // shared, so a chat without chats keeps the same list between renders
     const EMPTY_CHATS: ChatMessage[] = [];
-    const EMPTY_HINTS: string[] = [];
 </script>
 
 <script lang="ts">
     import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
     import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/chat/foundation';
+    import { followChats, followHints } from '@fibrae/semi-ai-foundation/message-list-foundation';
     import { cssClasses as toastCssClasses } from '@fibrae/semi-foundation/toast/constants';
     import ToastListStore from '@fibrae/semi-foundation/toast/toast-list-foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
@@ -91,17 +91,8 @@
     let inputBox = $state<ReturnType<typeof InputBox>>();
     const toastStore = new ToastListStore();
 
-    // A caller may push messages into a $state list and append to the last message's text in place, which keeps the
-    // list's identity, so the foundation is handed a copy rebuilt by those edits. Known limitation: other in-place
-    // edits (a deep content edit, a lone status flip) render but are not followed; upgrade when such an edit needs following.
-    const followedChats = $derived.by(() => {
-        const all = chats ?? EMPTY_CHATS;
-        const text = all.at(-1)?.content;
-        void (typeof text === 'string' || Array.isArray(text) ? text.length : text);
-        return [...all];
-    });
-
-    const followedHints = $derived([...(hints ?? EMPTY_HINTS)]);
+    const followedChats = $derived(followChats(chats));
+    const followedHints = $derived(followHints(hints));
 
     const { foundation, states } = useFoundation<Foundation, Adapter, ChatProps, ChatState>(
         ChatFoundation,
@@ -225,15 +216,11 @@
     }
 
     export function clearContext() {
-        foundation.clearContext(null);
+        foundation.clearContext();
     }
 
     export function scrollToBottom(animation?: boolean) {
-        if (animation) {
-            foundation.scrollToBottomWithAnimation();
-        } else {
-            foundation.scrollToBottomImmediately();
-        }
+        foundation.scrollToBottom(animation);
     }
 
     export function sendMessage(text: string, attachment?: FileItem[]) {
@@ -299,7 +286,7 @@
             {inputArea}
             {inputBoxCls}
             {inputBoxStyle}
-            onClear={() => foundation.clearContext(null)}
+            onClear={foundation.clearContext}
             onInputChange={foundation.onInputChange}
             onSend={foundation.onMessageSend}
             pasteUpload={uploadWays.pasteUpload}

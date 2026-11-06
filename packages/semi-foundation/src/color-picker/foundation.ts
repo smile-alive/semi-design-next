@@ -137,11 +137,11 @@ export default class ColorPickerFoundation<P extends ColorPickerProps = ColorPic
         this.#commit(ColorPickerFoundation.getColorValue(color, format, Boolean(this.getProp('alpha'))));
     };
 
-    handleAlphaChangeByHandle = (newAlpha: { a: number }) => {
-        this.handleChangeA(this.getCurrentColor(), newAlpha.a);
+    handleAlphaChange = (alpha: number) => {
+        this.handleChangeA(this.getCurrentColor(), alpha);
     };
 
-    handleColorChangeByHandle(newHue: { h: number }) {
-        this.handleChangeH(this.getCurrentColor(), newHue.h);
-    }
+    handleHueChange = (hue: number) => {
+        this.handleChangeH(this.getCurrentColor(), hue);
+    };
 }

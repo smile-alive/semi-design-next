@@ -1,6 +1,6 @@
 import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
 import DataPartFoundation, { type DataPartAdapter, type DataPartBaseProps, type DataPartBaseState } from '@fibrae/semi-foundation/color-picker/data-part-foundation';
-import type { ColorFormat, HsvaColor, RgbaColor } from '@fibrae/semi-foundation/color-picker/interface';
+import type { ColorFormat } from '@fibrae/semi-foundation/color-picker/interface';
 import { IconEyedropper } from '@fibrae/semi-icons-react';
 import useFoundation from '../_base/use-foundation';
 import Button from '../button';
@@ -24,15 +24,14 @@ export default function DataPart(props: DataPartProps) {
         DataPartFoundation,
         props,
         () => DataPartFoundation.getInitialState(props),
-        () => ({})
+        (base) => ({
+            notifyChange: (color, format) => base.getProps().onChange(color, format),
+            notifyAlphaChange: (alpha) => base.getProps().onAlphaChange(alpha),
+        })
     );
 
     const { format } = state;
     const rgba = currentColor.rgba;
-
-    const handleChange = (newColor: RgbaColor | HsvaColor | string) => {
-        props.foundation.handleChange(newColor, format);
-    };
 
     return (
         <div className={`${cssClasses.PREFIX}-dataPart`} style={{ width }}>
@@ -57,13 +56,7 @@ export default function DataPart(props: DataPartProps) {
                     showClear={false}
                     prefix={null}
                     suffix={null}
-                    onChange={(v) => {
-                        const value = foundation.getValueByInputValue(v);
-                        if (value) {
-                            handleChange(value);
-                        }
-                        foundation.handleInputValueChange(v);
-                    }}
+                    onChange={foundation.handleInputValueChange}
                 />
                 {alpha && (
                     <InputNumber
@@ -79,7 +72,7 @@ export default function DataPart(props: DataPartProps) {
                         showClear={false}
                         prefix={null}
                         suffix={<span className={`${cssClasses.PREFIX}-inputNumberSuffix`}>%</span>}
-                        onNumberChange={(v) => props.foundation.handleAlphaChangeByHandle({ a: Number((v / 100).toFixed(2)) })}
+                        onNumberChange={foundation.handleAlphaInputChange}
                     />
                 )}
                 <Select className={`${cssClasses.PREFIX}-formatSelect`} aria-label={locale.format} value={format} optionList={['hex', 'rgba', 'hsva'].map((type) => ({ label: type, value: type }))} size="small" onSelect={(v) => foundation.handleFormatChange(v as ColorFormat)} />

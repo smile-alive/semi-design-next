@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
     import DataPartFoundation, { type DataPartAdapter, type DataPartBaseProps, type DataPartBaseState } from '@fibrae/semi-foundation/color-picker/data-part-foundation';
-    import type { ColorFormat } from '@fibrae/semi-foundation/color-picker/interface';
+    import type { ColorFormat, HsvaColor, RgbaColor } from '@fibrae/semi-foundation/color-picker/interface';
     import { IconEyedropper } from '@fibrae/semi-icons-vue';
     import useFoundation from '../_base/use-foundation';
     import Button from '../button';
@@ -16,6 +16,7 @@
     type Adapter = DataPartAdapter<DataPartBaseProps>;
 
     const props = defineProps<DataPartProps>();
+    const emit = defineEmits<{ change: [color: HsvaColor | RgbaColor | string, format: ColorFormat]; alphaChange: [alpha: number] }>();
 
     const i18n = useLocale('ColorPicker');
 
@@ -23,21 +24,11 @@
         DataPartFoundation,
         props,
         () => DataPartFoundation.getInitialState(props),
-        () => ({})
+        () => ({
+            notifyChange: (color, format) => emit('change', color, format),
+            notifyAlphaChange: (alpha) => emit('alphaChange', alpha),
+        })
     );
-
-    // report the color first, so the text box already shows the color it produced
-    const onTextChange = (text: string) => {
-        const value = foundation.getValueByInputValue(text);
-        if (value) {
-            props.foundation.handleChange(value, state.value.format);
-        }
-        foundation.handleInputValueChange(text);
-    };
-
-    const onAlphaChange = (percent: number) => {
-        props.foundation.handleAlphaChangeByHandle({ a: Number((percent / 100).toFixed(2)) });
-    };
 
     const onSelectFormat = (format: string | number) => {
         foundation.handleFormatChange(format as ColorFormat);
@@ -55,8 +46,8 @@
             }"
         />
         <InputGroup :class="`${cssClasses.PREFIX}-inputGroup`" size="small">
-            <Input :aria-label="i18n.locale.color" :class="`${cssClasses.PREFIX}-colorPickerInput`" :modelValue="state.inputValue" :showClear="false" @change="onTextChange" />
-            <InputNumber v-if="props.alpha" :aria-label="i18n.locale.alpha" :class="`${cssClasses.PREFIX}-colorPickerInputNumber`" hideButtons :max="100" :min="0" :modelValue="Math.round(props.currentColor.rgba.a * 100)" :showClear="false" @numberChange="onAlphaChange">
+            <Input :aria-label="i18n.locale.color" :class="`${cssClasses.PREFIX}-colorPickerInput`" :modelValue="state.inputValue" :showClear="false" @change="foundation.handleInputValueChange" />
+            <InputNumber v-if="props.alpha" :aria-label="i18n.locale.alpha" :class="`${cssClasses.PREFIX}-colorPickerInputNumber`" hideButtons :max="100" :min="0" :modelValue="Math.round(props.currentColor.rgba.a * 100)" :showClear="false" @numberChange="foundation.handleAlphaInputChange">
                 <template #suffix>
                     <span :class="`${cssClasses.PREFIX}-inputNumberSuffix`">%</span>
                 </template>

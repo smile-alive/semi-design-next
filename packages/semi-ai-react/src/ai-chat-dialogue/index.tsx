@@ -116,20 +116,8 @@ function AIChatDialogue(rawProps: AIChatDialogueProps & { ref?: React.Ref<AIChat
         () => ({
             selectAll: foundation.handleSelectAll,
             deselectAll: foundation.handleDeselectAll,
-            scrollToBottom: (animation: boolean) => {
-                if (animation) {
-                    foundation.scrollToBottomWithAnimation();
-                } else {
-                    foundation.scrollToBottomImmediately();
-                }
-            },
-            scrollToTop: (animation: boolean) => {
-                if (animation) {
-                    foundation.scrollToTopWithAnimation();
-                } else {
-                    foundation.scrollToTopImmediately();
-                }
-            },
+            scrollToBottom: foundation.scrollToBottom,
+            scrollToTop: foundation.scrollToTop,
         }),
         [foundation]
     );

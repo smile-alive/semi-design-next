@@ -1,0 +1,60 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
+import type { DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
+import ActionBarFoundation, { type ActionBarState } from '../action-bar-foundation';
+
+class Bar extends ActionBarFoundation<DefaultAdapter<object, ActionBarState>, object, ActionBarState> {
+    open = () => this.openMenu();
+    close = () => this.closeMenu();
+}
+
+describe('ActionBarFoundation', () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    const create = () => {
+        let state: ActionBarState = { visible: false, showAction: false };
+        const adapter = {
+            getStates: () => state,
+            setState: (partial: Partial<ActionBarState>) => {
+                state = { ...state, ...partial };
+            },
+        };
+        const bar = new Bar(adapter as unknown as DefaultAdapter<object, ActionBarState>);
+        bar.init();
+        return { bar, state: () => state };
+    };
+
+    it('关闭菜单后稍等再收起操作栏', () => {
+        const { bar, state } = create();
+        bar.open();
+        bar.close();
+        expect(state()).toEqual({ visible: false, showAction: true });
+        vi.advanceTimersByTime(150);
+        expect(state().showAction).toBe(false);
+    });
+
+    it('等待期间重新打开时不收起', () => {
+        const { bar, state } = create();
+        bar.open();
+        bar.close();
+        bar.open();
+        vi.advanceTimersByTime(150);
+        expect(state()).toEqual({ visible: true, showAction: true });
+    });
+
+    it('卸载后不再写入；重新挂载时补上没等完的收起', () => {
+        const { bar, state } = create();
+        bar.open();
+        bar.close();
+        bar.destroy();
+        vi.advanceTimersByTime(150);
+        expect(state().showAction).toBe(true);
+        bar.init();
+        expect(state().showAction).toBe(false);
+    });
+});

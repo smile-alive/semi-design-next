@@ -1,7 +1,8 @@
-import { For, type JSX, Show, createMemo, createSignal, onCleanup, splitProps, untrack } from 'solid-js';
+import { For, type JSX, Show, createMemo, createSignal, mergeProps, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
 import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/chat/foundation';
+import { followChats, followHints } from '@fibrae/semi-ai-foundation/message-list-foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import '@fibrae/semi-ai-foundation/chat/chat.scss';
@@ -107,9 +108,21 @@ export default function Chat(rawProps: ChatProps) {
 
     const [toast, toastHolder] = Toast.useToast();
 
+    const followedChats = createMemo(() => followChats(local.chats));
+    const followedHints = createMemo(() => followHints(local.hints));
+
+    const foundationProps = mergeProps(props, {
+        get chats() {
+            return followedChats();
+        },
+        get hints() {
+            return followedHints();
+        },
+    });
+
     const { foundation, state } = useFoundation<Foundation, Adapter, ChatProps, ChatState>(
         ChatFoundation,
-        props,
+        foundationProps,
         () => ChatFoundation.getInitialState(),
         () => ({
             getContainerRef: () => container() as HTMLDivElement,
@@ -168,14 +181,8 @@ export default function Chat(rawProps: ChatProps) {
 
     const handle: ChatHandle = {
         resetMessage: () => foundation.resetMessage(null),
-        clearContext: () => foundation.clearContext(null),
-        scrollToBottom: (animation) => {
-            if (animation) {
-                foundation.scrollToBottomWithAnimation();
-            } else {
-                foundation.scrollToBottomImmediately();
-            }
-        },
+        clearContext: foundation.clearContext,
+        scrollToBottom: foundation.scrollToBottom,
         sendMessage: foundation.onMessageSend,
     };
 

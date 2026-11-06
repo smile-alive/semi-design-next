@@ -7,9 +7,9 @@
 </script>
 
 <script lang="ts">
-    import { tick } from 'svelte';
     import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
     import DialogueFoundation, { type DialogueAdapter, type DialogueBaseProps, type DialogueState } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+    import { followChats, followHints } from '@fibrae/semi-ai-foundation/message-list-foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import '@fibrae/semi-ai-foundation/ai-chat-dialogue/ai-chat-dialogue.scss';
     import { IconChevronDown } from '@fibrae/semi-icons-svelte';
@@ -72,20 +72,8 @@
 
     let list: HTMLDivElement | undefined = $state();
 
-    // set by a list the dialogue writes itself, so the update that write causes does not report it again
-    let ownWrite = false;
-
-    // A caller may push messages into a $state list and append to the last message's text in place, which keeps the
-    // list's identity, so the foundation is handed a copy rebuilt by those edits. Known limitation: other in-place
-    // edits (deep content text, a lone status flip) render but are not followed; upgrade when such an edit needs following.
-    const followedChats = $derived.by(() => {
-        const all = chats ?? EMPTY_CHATS;
-        const text = all.at(-1)?.content;
-        void (typeof text === 'string' || Array.isArray(text) ? text.length : text);
-        return [...all];
-    });
-
-    const followedHints = $derived([...(hints ?? EMPTY_HINTS)]);
+    const followedChats = $derived(followChats(chats));
+    const followedHints = $derived(followHints(hints));
 
     const { foundation, states } = useFoundation<Foundation, Adapter, DialogueBaseProps, DialogueState>(
         DialogueFoundation,
@@ -102,21 +90,12 @@
             getContainerRef: () => list as HTMLDivElement,
             notifySelect: (ids) => onSelect?.(ids),
             notifyChatsChange: (next) => {
-                // the followed copy: the update a write of ours caused, or one the parent made, reported as the list itself
+                // the followed copy stands for the list the parent already holds, so it is reported as that list
                 if (next === followedChats) {
-                    if (ownWrite) {
-                        ownWrite = false;
-                    } else {
-                        onChatsChange?.(currentChats);
-                    }
+                    onChatsChange?.(currentChats);
                     return;
                 }
-                ownWrite = true;
                 chats = next;
-                // cleared once the update this write causes has run; a setter that rejected the write leaves none to skip
-                void tick().then(() => {
-                    ownWrite = false;
-                });
                 onChatsChange?.(next);
             },
             notifyLikeMessage: (message) => onMessageGoodFeedback?.(message),
@@ -214,19 +193,11 @@
     }
 
     export function scrollToBottom(animation?: boolean) {
-        if (animation) {
-            foundation.scrollToBottomWithAnimation();
-        } else {
-            foundation.scrollToBottomImmediately();
-        }
+        foundation.scrollToBottom(animation);
     }
 
     export function scrollToTop(animation?: boolean) {
-        if (animation) {
-            foundation.scrollToTopWithAnimation();
-        } else {
-            foundation.scrollToTopImmediately();
-        }
+        foundation.scrollToTop(animation);
     }
 </script>
 

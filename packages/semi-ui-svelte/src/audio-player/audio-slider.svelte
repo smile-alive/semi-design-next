@@ -1,19 +1,21 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
     import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
-    import { formatTime, getPointerRatio } from '@fibrae/semi-foundation/video-player/utils';
+    import SeekFoundation, { type SeekAdapter, type SeekBaseProps, type SeekBaseState } from '@fibrae/semi-foundation/video-player/seek-foundation';
+    import { formatTime } from '@fibrae/semi-foundation/video-player/utils';
     import '@fibrae/semi-foundation/audio-player/audio-player.scss';
+    import useFoundation from '../_base/use-foundation.svelte.js';
     import { Tooltip, type TooltipTriggerProps } from '../tooltip/index.js';
     import type { AudioSliderProps } from './interface.js';
+
+    type Foundation = SeekFoundation<SeekBaseProps>;
+    type Adapter = SeekAdapter<SeekBaseProps>;
 
     let { value = 0, max = 100, vertical = false, height = 4, showTooltip = true, theme = 'dark', label, getValueText, onChange }: AudioSliderProps = $props();
 
     let track = $state<HTMLDivElement>();
     let input = $state<HTMLInputElement>();
-    let isDragging = $state(false);
-    let movingInfo = $state<{ progress: number; offset: number } | null>(null);
 
     const prefix = cssClasses.PREFIX;
 
@@ -21,45 +23,35 @@
     const dotSize = 16;
     const percent = $derived(max ? (value / max) * 100 : 0);
 
+    const foundationProps: SeekBaseProps = {
+        get max() {
+            return max;
+        },
+        get vertical() {
+            return vertical;
+        },
+    };
+
+    const { foundation, states } = useFoundation<Foundation, Adapter, SeekBaseProps, SeekBaseState>(
+        SeekFoundation,
+        foundationProps,
+        () => SeekFoundation.getInitialState(),
+        () => ({
+            getSliderRef: () => track ?? null,
+            notifyChange: (next) => onChange?.(next),
+            // Chrome treats a scripted focus on a range input as keyboard focus; the ring is for the keyboard only
+            focusOnPress: () => {
+                if (input) {
+                    focusWithoutRing(input, { preventScroll: true });
+                }
+            },
+        })
+    );
+
     // the popup is anchored to the slider's center, so only a translate moves it to the pointer; the vertical offset
     // counts up from the bottom
+    const movingInfo = $derived(states().movingInfo);
     const tooltipStyle = $derived(movingInfo ? `translate: ${vertical ? `0 ${-movingInfo.offset}px` : `${movingInfo.offset}px 0`}` : undefined);
-
-    const onPointer = (event: MouseEvent, seek: boolean) => {
-        if (!track) {
-            return;
-        }
-        const { total, ratio } = getPointerRatio(track.getBoundingClientRect(), event, vertical);
-        if (seek && isDragging) {
-            onChange?.(ratio * max);
-        }
-        // from the slider's center to where the dot sits at this ratio, so the preview stays over the dragged dot
-        movingInfo = { progress: ratio, offset: (ratio - 0.5) * total };
-    };
-
-    // the slider keeps the pointer from the press on, so the moves and the release reach it even outside it
-    const onPointerDown = (event: PointerEvent & { currentTarget: HTMLDivElement }) => {
-        if (isSecondaryPress(event)) {
-            return;
-        }
-        event.currentTarget.setPointerCapture(event.pointerId);
-        // Chrome treats a scripted focus on a range input as keyboard focus; the ring is for the keyboard only
-        if (input) {
-            focusWithoutRing(input, { preventScroll: true });
-        }
-        isDragging = true;
-        onPointer(event, true);
-    };
-
-    const clearPreview = () => {
-        movingInfo = null;
-    };
-
-    const onFocus = (event: FocusEvent & { currentTarget: HTMLInputElement }) => {
-        if (event.currentTarget.matches(':focus-visible')) {
-            clearPreview();
-        }
-    };
 
     const onInput = (event: Event & { currentTarget: HTMLInputElement }) => onChange?.(Number(event.currentTarget.value));
 </script>
@@ -77,17 +69,17 @@
             {
                 [`${prefix}-slider-wrapper-vertical`]: vertical,
                 [`${prefix}-slider-wrapper-horizontal`]: !vertical,
-                [`${prefix}-slider-wrapper-dragging`]: isDragging,
+                [`${prefix}-slider-wrapper-dragging`]: states().isDragging,
             },
         ]}
         tabindex="-1"
-        onlostpointercapture={() => (isDragging = false)}
+        onlostpointercapture={foundation.handleLostPointerCapture}
         onmousedown={(event) => event.preventDefault()}
-        onmouseenter={(event) => onPointer(event, false)}
-        onpointerdown={onPointerDown}
-        onpointermove={(event) => onPointer(event, true)}
+        onmouseenter={(event) => foundation.handlePointerPosition(event, { seek: false })}
+        onpointerdown={foundation.handlePointerDown}
+        onpointermove={(event) => foundation.handlePointerPosition(event, { seek: true })}
     >
-        <input aria-label={label} aria-orientation={vertical ? 'vertical' : undefined} aria-valuetext={getValueText(value)} bind:this={input} class={`${prefix}-slider-input`} {max} min="0" step="1" type="range" {value} onfocus={onFocus} oninput={onInput} onkeydown={clearPreview} />
+        <input aria-label={label} aria-orientation={vertical ? 'vertical' : undefined} aria-valuetext={getValueText(value)} bind:this={input} class={`${prefix}-slider-input`} {max} min="0" step="1" type="range" {value} onfocus={foundation.handleFocus} oninput={onInput} onkeydown={foundation.clearPreview} />
         <div
             bind:this={track}
             class={[
@@ -121,7 +113,7 @@
             {@render wrapper(props)}
         {/snippet}
         {#snippet content()}
-            {formatTime(movingInfo ? movingInfo.progress * max : value)}
+            {formatTime(movingInfo?.value ?? value)}
         {/snippet}
     </Tooltip>
 {:else}

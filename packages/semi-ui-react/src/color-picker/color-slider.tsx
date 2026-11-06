@@ -10,27 +10,31 @@ import useLocale from '../locale/use-locale';
 type Foundation = ColorSliderFoundation<ColorSliderBaseProps>;
 type Adapter = ColorSliderAdapter<ColorSliderBaseProps>;
 
-export interface ColorSliderProps extends ColorSliderBaseProps {
+export interface ColorSliderProps {
+    hue: number;
+    width: number;
+    height: number;
+    handleSize: number;
     className?: string;
     style?: React.CSSProperties;
+    onChange: (hue: number) => void;
 }
 
-function getHandlePosition({ hue, width, handleSize }: ColorSliderBaseProps) {
-    return (hue / 360) * width - handleSize / 2;
-}
-
-export default function ColorSlider(props: ColorSliderProps) {
-    const { hue, width, height, handleSize, className, style } = props;
-
+export default function ColorSlider({ hue, width, height, handleSize, className, style, onChange }: ColorSliderProps) {
     const { locale } = useLocale('ColorPicker');
 
     const domRef = useRef<HTMLDivElement>(null);
 
+    const foundationProps = { width, value: hue, max: 360, onChange };
+
     const [foundation] = useFoundation<Foundation, Adapter, ColorSliderBaseProps, ColorSliderBaseState>(
         ColorSliderFoundation,
-        props,
+        foundationProps,
         () => ColorSliderFoundation.getInitialState(),
-        () => ({ getDOM: () => domRef.current })
+        (base) => ({
+            getDOM: () => domRef.current,
+            notifyChange: (value) => base.getProps().onChange(value),
+        })
     );
 
     return (
@@ -51,7 +55,7 @@ export default function ColorSlider(props: ColorSliderProps) {
                 style={{
                     width: handleSize,
                     height: handleSize,
-                    left: getHandlePosition(props),
+                    left: ColorSliderFoundation.getHandlePosition(foundationProps, handleSize),
                     top: `50%`,
                     transform: `translateY(-50%)`,
                     backgroundColor: hsvaToHslString({ h: hue, s: 100, v: 100, a: 1 }),

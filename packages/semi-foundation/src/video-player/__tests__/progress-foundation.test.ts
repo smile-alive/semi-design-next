@@ -65,7 +65,7 @@ describe('VideoProgressFoundation 的按键过滤', () => {
         const notifyChange = vi.fn<VideoProgressAdapter['notifyChange']>();
         const setPointerCapture = vi.fn<(pointerId: number) => void>();
         const slider = { getBoundingClientRect: () => ({ left: 0, bottom: 10, width: 100, height: 10 }) } as HTMLDivElement;
-        const state = VideoProgressFoundation.getInitialState({ max: 60, value: 0, step: 5 });
+        const state = VideoProgressFoundation.getInitialState();
         const setState = vi.fn<(next: Partial<VideoProgressBaseState>) => void>((next) => {
             Object.assign(state, next);
         });

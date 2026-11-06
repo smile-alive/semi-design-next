@@ -12,6 +12,7 @@
     type Adapter = ColorSliderAdapter<ColorSliderBaseProps>;
 
     const props = defineProps<ColorSliderProps>();
+    const emit = defineEmits<{ change: [hue: number] }>();
 
     const i18n = useLocale('ColorPicker');
 
@@ -21,7 +22,11 @@
         ColorSliderFoundation,
         props,
         () => ColorSliderFoundation.getInitialState(),
-        () => ({ getDOM: () => dom.value as HTMLDivElement })
+        () => ({
+            getDOM: () => dom.value as HTMLDivElement,
+            notifyChange: (value) => emit('change', value),
+        }),
+        { props: { value: () => props.hue, max: () => 360 } }
     );
 
     const onInput = (event: Event) => {
@@ -39,7 +44,7 @@
             :style="{
                 width: `${props.handleSize}px`,
                 height: `${props.handleSize}px`,
-                left: `${(props.hue / 360) * props.width - props.handleSize / 2}px`,
+                left: `${ColorSliderFoundation.getHandlePosition({ value: props.hue, max: 360, width: props.width }, props.handleSize)}px`,
                 top: '50%',
                 transform: 'translateY(-50%)',
                 backgroundColor: hsvaToHslString({ h: props.hue, s: 100, v: 100, a: 1 }),

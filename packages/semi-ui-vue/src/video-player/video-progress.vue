@@ -1,14 +1,14 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/video-player/constants';
-    import VideoProgressFoundation, { type VideoProgressAdapter } from '@fibrae/semi-foundation/video-player/progress-foundation';
+    import VideoProgressFoundation, { type VideoProgressAdapter, type VideoProgressBaseState } from '@fibrae/semi-foundation/video-player/progress-foundation';
     import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
     import '@fibrae/semi-foundation/video-player/video-player.scss';
     import SlotFragment from '../_base/slot-fragment';
     import useFoundation from '../_base/use-foundation';
     import useLocale from '../locale/use-locale';
     import Tooltip from '../tooltip/tooltip.vue';
-    import type { VideoProgressEmits, VideoProgressProps, VideoProgressState } from './interface';
+    import type { VideoProgressEmits, VideoProgressProps } from './interface';
 
     type Foundation = VideoProgressFoundation<VideoProgressProps>;
     type Adapter = VideoProgressAdapter<VideoProgressProps>;
@@ -21,10 +21,10 @@
     // Annotated: the adapter's getSliderRef reads this ref, so inference is circular (TS7022)
     const slider = useTemplateRef<HTMLDivElement>('slider');
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, VideoProgressProps, VideoProgressState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, VideoProgressProps, VideoProgressBaseState>(
         VideoProgressFoundation,
         props,
-        (view) => VideoProgressFoundation.getInitialState(view),
+        () => VideoProgressFoundation.getInitialState(),
         () => ({
             getSliderRef: () => slider.value,
             notifyChange: (value) => emit('change', value),

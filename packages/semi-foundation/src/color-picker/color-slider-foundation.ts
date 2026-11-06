@@ -4,12 +4,12 @@ import { isSecondaryPress } from '../utils/pointer';
 import ColorPickerFoundation from './foundation';
 import type { DragPointerEvent, RangeKeyEvent } from './interface';
 
+/** `value` and `max` are integer steps of one slider: hue over 360, opacity as a percentage over 100 */
 export interface ColorSliderBaseProps {
     width: number;
-    height: number;
-    hue: number;
-    handleSize: number;
-    foundation: ColorPickerFoundation;
+    value: number;
+    max: number;
+    onChange: (value: number) => void;
 }
 
 export interface ColorSliderBaseState {
@@ -18,6 +18,7 @@ export interface ColorSliderBaseState {
 
 export interface ColorSliderAdapter<P extends ColorSliderBaseProps = ColorSliderBaseProps> extends DefaultAdapter<P, ColorSliderBaseState> {
     getDOM: () => HTMLDivElement;
+    notifyChange: (value: number) => void;
 }
 
 export default class ColorSliderFoundation<P extends ColorSliderBaseProps = ColorSliderBaseProps> extends BaseFoundation<ColorSliderAdapter<P>, P, ColorSliderBaseState> {
@@ -26,14 +27,16 @@ export default class ColorSliderFoundation<P extends ColorSliderBaseProps = Colo
         if (!rect) {
             return;
         }
-        const { width, foundation } = this.getProps();
-        foundation.handleColorChangeByHandle({
-            h: Math.round(clamp((e.clientX - rect.x) / width, 0, 1) * 360),
-        });
+        const { width, max } = this.getProps();
+        this.adapter.notifyChange(Math.round(clamp((e.clientX - rect.x) / width, 0, 1) * max));
     }
 
     static getInitialState(): ColorSliderBaseState {
         return { isHandleGrabbing: false };
+    }
+
+    static getHandlePosition({ value, max, width }: Pick<ColorSliderBaseProps, 'value' | 'max' | 'width'>, handleSize: number) {
+        return (value / max) * width - handleSize / 2;
     }
 
     /** Captures the pointer from the press, so moves and release arrive outside the slider too */
@@ -59,8 +62,8 @@ export default class ColorSliderFoundation<P extends ColorSliderBaseProps = Colo
     };
 
     // assistive-technology increments arrive as input events on the range
-    setValue = (h: number) => {
-        this.getProps().foundation.handleColorChangeByHandle({ h });
+    setValue = (value: number) => {
+        this.adapter.notifyChange(value);
     };
 
     handleKeyDown = (e: RangeKeyEvent) => {
@@ -68,12 +71,13 @@ export default class ColorSliderFoundation<P extends ColorSliderBaseProps = Colo
         if (e.altKey || e.ctrlKey || e.metaKey) {
             return;
         }
-        const h = ColorPickerFoundation.getValueByKey(e.key, this.getProps().hue, 360);
-        if (h === null) {
+        const { value, max } = this.getProps();
+        const next = ColorPickerFoundation.getValueByKey(e.key, value, max);
+        if (next === null) {
             return;
         }
         // the native range would step by itself: the value is controlled
         e.preventDefault();
-        this.setValue(h);
+        this.setValue(next);
     };
 }
