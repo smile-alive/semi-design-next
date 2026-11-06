@@ -1,9 +1,8 @@
-import { type Accessor, type JSX, Show, children, createComputed, createEffect, createMemo, createUniqueId, mergeProps, on, splitProps, untrack } from 'solid-js';
+import { type Accessor, type JSX, Show, children, createEffect, createMemo, createUniqueId, mergeProps, on, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
 import { get } from 'es-toolkit/compat';
 import { strings } from '@fibrae/semi-foundation/table/constants';
-import TableFoundation, { type BaseColumnProps, type BaseHeadWidth, type BasePageData, type BaseRowKeyType, type TableAdapter, type TableBaseState } from '@fibrae/semi-foundation/table/foundation';
+import TableFoundation, { type BaseColumnProps, type BasePageData, type BaseRowKeyType, type TableAdapter, type TableBaseState } from '@fibrae/semi-foundation/table/foundation';
 import { type FlattenDataProps, amendTableWidth, assignColumnKeys, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, isMissingDataIndex, mergedRowExpandable, placeInnerColumns } from '@fibrae/semi-foundation/table/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import isObject from '@fibrae/semi-foundation/utils/is-object';
@@ -119,6 +118,9 @@ export default function NormalTable(props: TableProps) {
     const scheduleWidthSync = useRaf();
 
     const titleId = `semi-table-title-${createUniqueId()}`;
+    const resolvedChildren = children(() => local.children);
+    const cachedColumns = createMemo(() => local.columns ?? getColumns(resolvedChildren()));
+    const flattened = createMemo(() => flattenColumns(cachedColumns()) as ColumnProps[]);
 
     // An inline object or array prop is a new value on every read; the foundation compares these by reference to
     // tell a changed prop, so each is read once per change
@@ -140,11 +142,10 @@ export default function NormalTable(props: TableProps) {
         get expandedRowKeys() {
             return expandedRowKeys();
         },
+        get flattenColumns() {
+            return toFoundationColumns(flattened());
+        },
     }) as TableFoundationProps;
-
-    const resolvedChildren = children(() => local.children);
-    const cachedColumns = createMemo(() => local.columns ?? getColumns(resolvedChildren()));
-    const flattened = createMemo(() => flattenColumns(cachedColumns()) as ColumnProps[]);
 
     const { foundation, state: foundationState } = useFoundation<TableFoundation<AnyRecord, TableFoundationProps>, TableAdapter<AnyRecord, TableFoundationProps>, TableFoundationProps, TableBaseState<AnyRecord>>(
         TableFoundation,
@@ -167,36 +168,6 @@ export default function NormalTable(props: TableProps) {
                     } else {
                         wrap?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
-                },
-                setSelectedRowKeys: (selectedRowKeys) =>
-                    base.setState({
-                        rowSelection: {
-                            ...(base.getState('rowSelection') as AnyRecord),
-                            selectedRowKeys: [...selectedRowKeys],
-                            selectedRowKeysSet: new Set(selectedRowKeys),
-                        },
-                    }),
-                setPageDisabledRowKeys: (pageDisabledRowKeys) => base.setState({ pageDisabledRowKeys, pageDisabledRowKeysSet: new Set(pageDisabledRowKeys) }),
-                setPagination: (nextPagination) => base.setState({ pagination: nextPagination }),
-                setGroups: (groups) => base.setState({ groups }),
-                setDataSource: (pageDataSource) => base.setState({ dataSource: pageDataSource }),
-                setExpandedRowKeys: (keys) => base.setState({ expandedRowKeys: [...keys] }),
-                setQueries: (queries) => base.setState({ queries }),
-                setAllRowKeys: (allRowKeys) => base.setState({ allRowKeys }),
-                setCachedFilteredSortedDataSource: (filteredSortedDataSource) => base.setState({ filteredSortedDataSource }),
-                setCachedFilteredSortedRowKeys: (filteredSortedRowKeys) => base.setState({ filteredSortedRowKeys, filteredSortedRowKeysSet: new Set(filteredSortedRowKeys) }),
-                setFilteredDisabledRowKeys: (filteredDisabledRowKeys) => base.setState({ filteredDisabledRowKeys, filteredDisabledRowKeysSet: new Set(filteredDisabledRowKeys) }),
-                getCurrentPage: () => base.getStates().pagination?.currentPage ?? 1,
-                getCachedFilteredSortedDataSource: () => base.getState('filteredSortedDataSource') ?? [],
-                getCachedFilteredSortedRowKeys: () => base.getState('filteredSortedRowKeys') ?? [],
-                getFilteredDisabledRowKeysSet: () => base.getState('filteredDisabledRowKeysSet') ?? new Set(),
-                getHalfCheckedRowKeys: () => base.getState('halfCheckedRowKeys') || [],
-                setHalfCheckedRowKeys: (halfCheckedRowKeys) => base.setState({ halfCheckedRowKeys, halfCheckedRowKeysSet: new Set(halfCheckedRowKeys) }),
-                getKeyEntities: () => base.getState('keyEntities') || {},
-                setKeyEntities: (keyEntities) => base.setState({ keyEntities }),
-                getCheckRelation: () => {
-                    const selection = base.getState('rowSelection');
-                    return selection && typeof selection === 'object' ? (selection.checkRelation ?? 'unRelated') : 'unRelated';
                 },
                 notifyFilterDropdownVisibleChange: (visible, dataIndex) => {
                     const column = dataIndex ? base.getState('queries')?.find((query) => query.dataIndex === dataIndex) : undefined;
@@ -297,12 +268,6 @@ export default function NormalTable(props: TableProps) {
 
     const ref = untrack(() => props.ref);
 
-    // The derived state is written for the foundation, then its update step runs against the previous props, as the
-    // class component's componentDidUpdate did
-    const snapshot = () => ({ props: { dataSource: dataSource(), rowSelection: rowSelection(), expandAllRows: local.expandAllRows, expandAllGroupRows: local.expandAllGroupRows } as TableFoundationProps, flatten: toFoundationColumns(flattened()) });
-
-    let committed = untrack(snapshot);
-
     const prefixCls = () => local.prefixCls ?? 'semi-table';
 
     // the selection checkbox and the expand button render by these keys when the column gives no render or title
@@ -359,21 +324,6 @@ export default function NormalTable(props: TableProps) {
         foundation.syncScrollEdges();
     };
 
-    const setHeadWidths = (widths: BaseHeadWidth[], index = 0) => {
-        const prevHeadWidths = foundation.getState('headWidths') ?? [];
-        if (!isEqual(prevHeadWidths[index], widths)) {
-            const nextHeadWidths = [...prevHeadWidths];
-            nextHeadWidths[index] = [...widths];
-            foundation.setState({ headWidths: nextHeadWidths });
-        }
-    };
-
-    const setBodyHasScrollbar = (hasScrollBar: boolean) => {
-        if (hasScrollBar !== foundation.getState('bodyHasScrollBar')) {
-            foundation.setState({ bodyHasScrollBar: hasScrollBar });
-        }
-    };
-
     const rowExpandable = (record: AnyRecord) => mergedRowExpandable(record, { childrenRecordName: local.childrenRecordName ?? 'children', hasExpandedRow: typeof local.expandedRowRender === 'function', rowExpandable: local.rowExpandable });
 
     // a virtualized table counts all its rows in aria-rowcount, so the rows are flattened here rather than in the body
@@ -400,8 +350,8 @@ export default function NormalTable(props: TableProps) {
         foundation,
         flattenedColumns,
         getCellWidths: (cellColumns) => getCellWidths(state().headWidths, cellColumns),
-        setHeadWidths,
-        setBodyHasScrollbar,
+        setHeadWidths: foundation.setHeadWidths,
+        setBodyHasScrollbar: foundation.setBodyHasScrollbar,
         handleBodyScroll,
         handleRowExpanded: (expanded: boolean, rowKey: BaseRowKeyType, event?: Event) => foundation.handleRowExpanded(expanded, rowKey, event),
         handleRowSelection: (rowKey: BaseRowKeyType, selected: boolean, event: Event) => foundation.handleRowClickSelection(rowKey, selected, event),
@@ -425,21 +375,6 @@ export default function NormalTable(props: TableProps) {
                 </div>
             </div>
         </Show>
-    );
-
-    createComputed(
-        on(
-            [flattened, dataSource, rowSelection, pagination, expandedRowKeys, () => local.expandAllRows, () => local.expandAllGroupRows],
-            () => {
-                const changes = TableFoundation.deriveState(foundationProps, foundation.getStates(), toFoundationColumns(flattened()));
-                if (changes) {
-                    foundation.setState(changes);
-                }
-                foundation.handleUpdate(committed.props, committed.flatten);
-                committed = snapshot();
-            },
-            { defer: true }
-        )
     );
 
     createEffect(() => warning(Boolean(local.columns) && resolvedChildren.toArray().length > 0, '[Semi Table] columns should not given by object and children at the same time'));

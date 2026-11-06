@@ -109,8 +109,8 @@ interface Entry {
     index: number;
 }
 
-type Foundation = OverflowListFoundation<OverflowListBaseProps, OverflowListBaseState>;
-type Adapter = OverflowListAdapter<OverflowListBaseProps, OverflowListBaseState>;
+type Foundation = OverflowListFoundation<OverflowListBaseProps>;
+type Adapter = OverflowListAdapter<OverflowListBaseProps>;
 
 // reference to https://github.com/palantir/blueprint/blob/1aa71605/packages/core/src/components/overflow-list/overflowList.tsx#L34
 export default function OverflowList<T = OverflowItem>(rawProps: OverflowListProps<T>) {
@@ -146,9 +146,9 @@ export default function OverflowList<T = OverflowItem>(rawProps: OverflowListPro
     const { foundation, state } = useFoundation<Foundation, Adapter, OverflowListBaseProps, OverflowListBaseState>(
         OverflowListFoundation,
         props as OverflowListBaseProps,
-        () => ({ containerWidth: 0, overflowWidth: 0, visibleState: new Map() }),
-        (base) => ({
-            updateVisibleState: (visibleState) => base.setState({ visibleState }, () => props.onVisibleStateChange?.(visibleState)),
+        () => OverflowListFoundation.getInitialState(),
+        () => ({
+            notifyVisibleStateChange: (visibleState) => props.onVisibleStateChange?.(visibleState),
             updateView: (viewState) =>
                 setView((prev) => {
                     const next = { ...prev, ...viewState };

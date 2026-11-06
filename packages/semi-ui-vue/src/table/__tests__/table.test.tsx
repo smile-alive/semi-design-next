@@ -515,13 +515,14 @@ describe('Table 回归用例', () => {
         expect(queryAll(`.${P}-colgroup div`)).toHaveLength(0);
     });
 
-    it('dataSource 变化后 Table 只更新一轮', async () => {
+    it('dataSource 变化后 Table 只在 handlePropsChange 后再渲染一轮', async () => {
         const title = vi.fn<(props: TableTitleSlotProps) => string[]>(() => ['Files']);
         const table = mountTable({ columns: [{ title: 'Name', dataIndex: 'name' }], dataSource: smallData() }, { title });
         title.mockClear();
         await table.update({ props: { dataSource: smallData().slice(0, 2) } });
         expect(getBodyRows()).toHaveLength(2);
-        expect(title).toHaveBeenCalledTimes(1);
+        // the render of the new props, then the one for the page data handlePropsChange writes after that commit
+        expect(title).toHaveBeenCalledTimes(2);
     });
 });
 

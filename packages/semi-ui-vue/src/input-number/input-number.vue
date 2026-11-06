@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, useAttrs, useTemplateRef, watch } from 'vue';
+    import { computed, useAttrs, useTemplateRef } from 'vue';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/input-number/constants';
     import InputNumberFoundation, { reachesBound, type InputNumberAdapter } from '@fibrae/semi-foundation/input-number/foundation';
     import '@fibrae/semi-foundation/input-number/input-number.scss';
@@ -18,8 +18,8 @@
         value?: number | string;
     }
 
-    type Foundation = InputNumberFoundation<FoundationProps, InputNumberState, FocusEvent, KeyboardEvent>;
-    type Adapter = InputNumberAdapter<FoundationProps, InputNumberState, FocusEvent, KeyboardEvent>;
+    type Foundation = InputNumberFoundation<FoundationProps, FocusEvent, KeyboardEvent>;
+    type Adapter = InputNumberAdapter<FoundationProps, FocusEvent, KeyboardEvent>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -84,11 +84,7 @@
         InputNumberFoundation,
         props,
         (view) => InputNumberFoundation.getInitialState(view),
-        (base) => ({
-            setValue: (value, cb) => base.setState({ value }, cb),
-            setNumber: (number, cb) => base.setState({ number }, cb),
-            setFocusing: (focusing, cb) => base.setState({ focusing }, cb),
-            setHovering: (hovering) => base.setState({ hovering }),
+        () => ({
             notifyChange: (value, event) => {
                 emit('update:modelValue', value);
                 emit('change', value, event);
@@ -150,11 +146,6 @@
     const showInnerButtons = () => !props.hideButtons && props.innerButtons && Boolean(state.value.hovering || state.value.focusing);
 
     const showOuterButtons = () => !props.hideButtons && !props.innerButtons;
-
-    watch(
-        () => props.modelValue,
-        (value) => foundation.handleValueChange(value as number | string)
-    );
 
     defineExpose<InputNumberHandle>({
         focus: (options) => inputHandle.value?.focus(options),

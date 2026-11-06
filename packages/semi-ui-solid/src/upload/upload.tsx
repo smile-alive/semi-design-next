@@ -1,4 +1,4 @@
-import { type Accessor, Index, type JSX, type Ref, Show, children, createEffect, createMemo, createRenderEffect, mergeProps, on, onCleanup, splitProps } from 'solid-js';
+import { type Accessor, Index, type JSX, type Ref, Show, children, createEffect, createMemo, mergeProps, on, onCleanup, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/upload/constants';
 import UploadFoundation, { type CustomFile, type UploadAdapter, type UploadBaseState } from '@fibrae/semi-foundation/upload/foundation';
@@ -13,9 +13,7 @@ import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
-import useEventListener from '../_base/use-event-listener';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import Cropper, { type CropperHandle } from '../cropper';
 import type { ValidateStatus } from '../input';
 import useLocale from '../locale/use-locale';
@@ -127,7 +125,6 @@ export interface UploadProps extends ElementProps<'div', 'onChange' | 'onDrop' |
 }
 
 interface UploadState extends UploadBaseState {
-    dragAreaStatus: 'default' | 'legal';
     fileList: Array<FileItem>;
 }
 
@@ -253,18 +250,7 @@ export default function Upload(rawProps: UploadProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, UploadProps, UploadState>(
         UploadFoundation,
         props,
-        () => ({
-            fileList: props.defaultFileList ?? [],
-            replaceUid: '',
-            dragAreaStatus: 'default',
-            cropperVisible: false,
-            cropperFile: null,
-            cropperSrc: '',
-            pendingImageFiles: [],
-            nonImageFiles: [],
-            croppedFiles: [],
-            isReplaceOperation: false,
-        }),
+        (view) => UploadFoundation.getInitialState(view),
         (base) => ({
             notifyFileSelect: (files) => base.getProps().onFileChange?.(files),
             notifyError: (error, fileInstance, fileList, xhr) => base.getProps().onError?.(error, fileInstance, fileList, xhr),
@@ -273,7 +259,6 @@ export default function Upload(rawProps: UploadProps) {
             notifyRemove: (file, fileList, fileItem) => base.getProps().onRemove?.(file, fileList, fileItem),
             notifySizeError: (file, fileList) => base.getProps().onSizeError?.(file, fileList),
             notifyExceed: (fileList) => base.getProps().onExceed?.(fileList),
-            updateFileList: (fileList, cb) => base.setState({ fileList }, cb),
             // called only when beforeUpload is a function; its result goes through unchanged, so undefined uploads nothing
             notifyBeforeUpload: ({ file, fileList }) => (base.getProps().beforeUpload as NonNullable<UploadProps['beforeUpload']>)({ file, fileList }),
             notifyAfterUpload: ({ response, file, fileList }) => base.getProps().afterUpload?.({ response, file, fileList }) ?? {},
@@ -289,10 +274,7 @@ export default function Upload(rawProps: UploadProps) {
             },
             notifyPastingError: (error) => base.getProps().onPastingError?.(error),
             notifyCropError: (error) => base.getProps().onCropError?.(error),
-            updateDragAreaStatus: (dragAreaStatus) => base.setState({ dragAreaStatus: dragAreaStatus as UploadState['dragAreaStatus'] }),
             notifyChange: ({ currentFile, fileList }) => base.getProps().onChange?.({ currentFile, fileList }),
-            // the foundation's own url map is the source of truth
-            updateLocalUrls: () => undefined,
             notifyClear: () => base.getProps().onClear?.(),
             notifyPreviewClick: (file) => base.getProps().onPreviewClick?.(file),
             notifyRetry: (fileItem) => base.getProps().onRetry?.(fileItem),
@@ -564,18 +546,7 @@ export default function Upload(rawProps: UploadProps) {
         );
     };
 
-    // before the setState callbacks, so an upload started from one sees the parent's list; the state read reruns it
-    // when the parent keeps the same array after an internal update
-    createRenderEffect(() => {
-        void state().fileList;
-        if (local.fileList !== undefined) {
-            foundation.syncLatestFileList(local.fileList || []);
-        }
-    });
-
-    useWatch(() => local.fileList, foundation.handleFileListPropChange);
     createEffect(on([fileList, () => local.disabled], () => listFocus.restore(cards(), addArea?.isConnected ? addArea : null)));
-    useEventListener(() => document.body, 'paste', foundation.handlePasting, { enabled: () => Boolean(local.addOnPasting) && !local.disabled });
 
     return (
         <div

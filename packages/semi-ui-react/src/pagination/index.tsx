@@ -3,13 +3,12 @@ import { useEffect } from 'react';
 import clsx from 'clsx';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/pagination/constants';
-import PaginationFoundation, { type PageList, type PageRange, type PaginationAdapter } from '@fibrae/semi-foundation/pagination/foundation';
+import PaginationFoundation, { type PageList, type PageRange, type PaginationAdapter, type PaginationState } from '@fibrae/semi-foundation/pagination/foundation';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/pagination/pagination.scss';
 import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import VirtualList, { type VirtualListRowProps } from '../_base/virtual-list';
 import { hasContent } from '../_utils';
@@ -19,6 +18,9 @@ import LocaleConsumer from '../locale/locale-consumer';
 import Popover from '../popover/index';
 import Select from '../select/index';
 import type { Position } from '../tooltip';
+
+type Foundation = PaginationFoundation<PaginationProps>;
+type Adapter = PaginationAdapter<PaginationProps>;
 
 const prefixCls = cssClasses.PREFIX;
 const { Option } = Select;
@@ -53,11 +55,7 @@ export interface PaginationProps extends ElementProps<'ul', 'onChange'> {
     ref?: React.Ref<HTMLUListElement>;
 }
 
-export interface PaginationState {
-    currentPage: number;
-    pageSize: number;
-    quickJumpPage: string | number;
-}
+export type { PaginationState };
 
 export type PaginationLocale = Locale['Pagination'];
 export type PopoverPosition = Position;
@@ -127,14 +125,11 @@ export default function Pagination(rawProps: PaginationProps) {
 
     const { direction } = useConfigContext();
 
-    const [foundation, state] = useFoundation<PaginationFoundation<PaginationProps, PaginationState>, PaginationAdapter<PaginationProps, PaginationState>, PaginationProps, PaginationState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, PaginationProps, PaginationState>(
         PaginationFoundation,
         props,
         () => PaginationFoundation.getInitialState(props),
         (base) => ({
-            updatePageSize: (pageSize) => base.setState({ pageSize }),
-            updateQuickJumpPage: (quickJumpPage) => base.setState({ quickJumpPage }),
-            setCurrentPage: (currentPage) => base.setState({ currentPage }),
             notifyPageChange: (pageIndex) => base.getProps().onPageChange?.(pageIndex),
             notifyPageSizeChange: (pageSize) => base.getProps().onPageSizeChange?.(pageSize),
             notifyChange: (pageIndex, pageSize) => base.getProps().onChange?.(pageIndex, pageSize),
@@ -145,17 +140,6 @@ export default function Pagination(rawProps: PaginationProps) {
     const sizeChangerKeepsSinglePage = sizeChangerShown && Boolean(props.hideOnSinglePage);
     const { currentPage, pageSize, quickJumpPage } = state;
     const totalPageNum = PaginationFoundation.getTotalPageNumber(total, pageSize);
-
-    // only the pageSize prop may overwrite the page size: a total change must not revert the size changer's choice
-    useDidUpdate(props.currentPage, () => foundation.updatePage(props.currentPage));
-    useDidUpdate(props.total, () => foundation.updatePage(props.currentPage));
-
-    // a prop echoing the size changer's choice must not reset the page
-    useDidUpdate(props.pageSize, () => {
-        if (props.pageSize !== state.pageSize) {
-            foundation.updatePage(props.currentPage, props.pageSize);
-        }
-    });
 
     useEffect(() => {
         warning(sizeChangerKeepsSinglePage, '[Semi Pagination] You should not use showSizeChanger and hideOnSinglePage in ths same time. At this time, hideOnSinglePage no longer takes effect, otherwise there may be a problem that the switch entry disappears');

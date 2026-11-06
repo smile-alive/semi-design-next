@@ -43,10 +43,7 @@ async function mount(props: Partial<JsonViewerBaseProps> = {}) {
         setState: (next: Partial<JsonViewerBaseState>) => Object.assign(state, next),
         getEditorRef: () => editor,
         notifyChange: vi.fn<JsonViewerAdapter['notifyChange']>(),
-        toggleSearchOption: vi.fn<JsonViewerAdapter['toggleSearchOption']>(),
-        toggleSearchBar: () => {
-            state.showSearchBar = !state.showSearchBar;
-        },
+        toCoreOptions: (options: JsonViewerBaseProps['options']) => options,
         setCustomRenderMap: vi.fn<JsonViewerAdapter['setCustomRenderMap']>(),
     } as unknown as JsonViewerAdapter;
     const foundation = new JsonViewerFoundation(adapter);

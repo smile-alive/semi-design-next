@@ -2,16 +2,14 @@ import type React from 'react';
 import { useCallback, useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/input/constants';
-import InputFoundation, { type InputAdapter } from '@fibrae/semi-foundation/input/foundation';
+import InputFoundation, { type InputAdapter, type InputBaseState } from '@fibrae/semi-foundation/input/foundation';
 import { stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/input/input.scss';
 import { IconClear, IconEyeOpened, IconEyeClosedSolid } from '@fibrae/semi-icons-react';
 import type { ValidateStatus } from '../_base/base-component';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import { hasContent, isSemiIcon, isText } from '../_utils';
 import useLocale from '../locale/use-locale';
@@ -88,12 +86,7 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
     ref?: React.Ref<InputHandle>;
 }
 
-export interface InputState {
-    value: string | number;
-    cachedValue: string | number;
-    isFocus: boolean;
-    eyeClosed: boolean;
-}
+export interface InputState extends InputBaseState {}
 
 const defaultProps = {
     addonBefore: '',
@@ -107,23 +100,13 @@ const defaultProps = {
     placeholder: '',
     size: 'default',
     className: '',
-    onClear: noop,
-    onChange: noop,
-    onBlur: noop,
-    onFocus: noop,
-    onInput: noop,
-    onKeyDown: noop,
-    onKeyUp: noop,
-    onEnterPress: noop,
-    onCompositionStart: noop,
-    onCompositionEnd: noop,
-    onCompositionUpdate: noop,
     validateStatus: 'default',
     borderless: false,
     composition: false,
 } satisfies Partial<InputProps>;
 
-type Foundation = InputFoundation<InputProps, InputState, React.KeyboardEvent<HTMLInputElement>, React.CompositionEvent<HTMLInputElement>, React.InputEvent<HTMLInputElement>>;
+type Foundation = InputFoundation<InputProps, React.KeyboardEvent<HTMLInputElement>, React.CompositionEvent<HTMLInputElement>, React.InputEvent<HTMLInputElement>>;
+type Adapter = InputAdapter<InputProps, React.KeyboardEvent<HTMLInputElement>, React.CompositionEvent<HTMLInputElement>, React.InputEvent<HTMLInputElement>>;
 
 // outside the component: the Compiler cannot lower getters in an object literal
 function createHandle(inputRef: React.RefObject<HTMLInputElement | null>, rootRef: React.RefObject<HTMLDivElement | null>, foundation: Foundation): InputHandle {
@@ -196,31 +179,23 @@ export default function Input(rawProps: InputProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const rootRef = useRef<HTMLDivElement>(null);
 
-    const [foundation, state] = useFoundation<Foundation, InputAdapter<InputProps, InputState, React.KeyboardEvent<HTMLInputElement>, React.CompositionEvent<HTMLInputElement>, React.InputEvent<HTMLInputElement>>, InputProps, InputState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, InputProps, InputState>(
         InputFoundation,
         props,
-        () => ({
-            value: props.value === undefined ? props.defaultValue : props.value,
-            cachedValue: props.value,
-            isFocus: false,
-            eyeClosed: props.mode === 'password',
-        }),
+        () => InputFoundation.getInitialState(props),
         (base) => ({
-            setValue: (value) => base.setState({ value }),
-            setEyeClosed: (eyeClosed) => base.setState({ eyeClosed }),
-            toggleFocusing: (isFocus) => base.setState({ isFocus }),
             focusInput: () => inputRef.current?.focus({ preventScroll: base.getProps().preventScroll }),
-            notifyChange: (value, e: InputChangeEvent) => base.getProps().onChange(value, e),
-            notifyBlur: (_value, e) => base.getProps().onBlur(e),
-            notifyFocus: (_value, e) => base.getProps().onFocus(e),
-            notifyInput: (e) => base.getProps().onInput(e),
-            notifyKeyDown: (e) => base.getProps().onKeyDown(e),
-            notifyKeyUp: (e) => base.getProps().onKeyUp(e),
-            notifyEnterPress: (e) => base.getProps().onEnterPress(e),
-            notifyClear: (e) => base.getProps().onClear(e),
-            notifyCompositionStart: (e) => base.getProps().onCompositionStart(e),
-            notifyCompositionEnd: (e) => base.getProps().onCompositionEnd(e),
-            notifyCompositionUpdate: (e) => base.getProps().onCompositionUpdate(e),
+            notifyChange: (value, e: InputChangeEvent) => base.getProps().onChange?.(value, e),
+            notifyBlur: (_value, e) => base.getProps().onBlur?.(e),
+            notifyFocus: (_value, e) => base.getProps().onFocus?.(e),
+            notifyInput: (e) => base.getProps().onInput?.(e),
+            notifyKeyDown: (e) => base.getProps().onKeyDown?.(e),
+            notifyKeyUp: (e) => base.getProps().onKeyUp?.(e),
+            notifyEnterPress: (e) => base.getProps().onEnterPress?.(e),
+            notifyClear: (e) => base.getProps().onClear?.(e),
+            notifyCompositionStart: (e) => base.getProps().onCompositionStart?.(e),
+            notifyCompositionEnd: (e) => base.getProps().onCompositionEnd?.(e),
+            notifyCompositionUpdate: (e) => base.getProps().onCompositionUpdate?.(e),
             isEventTarget: (e) => e && e.target === e.currentTarget,
         })
     );
@@ -314,9 +289,6 @@ export default function Input(rawProps: InputProps) {
         },
         [foundation]
     );
-
-    useDidUpdate(props.value, foundation.handleValueChange);
-    useDidUpdate(props.mode, foundation.handleModeChange);
 
     useImperativeHandle(props.ref, () => createHandle(inputRef, rootRef, foundation), [foundation]);
 

@@ -51,11 +51,3 @@ export interface CarouselHandle {
     play: () => void;
     stop: () => void;
 }
-
-export interface CarouselState {
-    activeIndex: number;
-    preIndex: number;
-    isReverse: boolean;
-    isInit: boolean;
-    rotating: boolean;
-}

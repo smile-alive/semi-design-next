@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, nextTick, onBeforeUnmount, onMounted, useAttrs, useId, useTemplateRef, watch, type InputHTMLAttributes } from 'vue';
+    import { computed, nextTick, onBeforeUnmount, onMounted, useAttrs, useId, useTemplateRef, type InputHTMLAttributes } from 'vue';
     import { radioClasses } from '@fibrae/semi-foundation/radio/constants';
     import RadioFoundation, { type RadioAdapter, type RadioBaseState, type RadioChangeEvent as FoundationRadioChangeEvent } from '@fibrae/semi-foundation/radio/radio-foundation';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
@@ -18,8 +18,8 @@
         name?: string;
     }
 
-    type Foundation = RadioFoundation<FoundationProps, RadioBaseState>;
-    type Adapter = RadioAdapter<FoundationProps, RadioBaseState>;
+    type Foundation = RadioFoundation<FoundationProps>;
+    type Adapter = RadioAdapter<FoundationProps>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -73,8 +73,7 @@
         RadioFoundation,
         props,
         (view) => RadioFoundation.getInitialState(view),
-        (base) => ({
-            setChecked: (checked) => base.setState({ checked }),
+        () => ({
             notifyGroupChange: (event) => group?.onChange(pick(event)),
             notifyChange: (event) => {
                 const picked = pick(event);
@@ -165,11 +164,6 @@
             requestSync();
         }
     };
-
-    watch(
-        () => props.modelValue,
-        (value) => foundation.setChecked(Boolean(value))
-    );
 
     onMounted(() => {
         unregister = group?.register(sync) ?? unregister;

@@ -42,7 +42,7 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, FoundationProps, MCPConfigureContentState>(
         MCPConfigureContentFoundation,
         foundationProps,
-        () => ({ mode: strings.MCP_MODE.INNER, inputValue: '', query: '' }),
+        () => MCPConfigureContentFoundation.getInitialState(),
         () => ({
             notifyConfigureClick: (event, option) => onConfigureClick?.(event, option as MCPConfigureOption),
             notifyEditClick: (event, option) => onEditClick?.(event, option as MCPConfigureOption),

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/navigation/constants';
-    import NavigationFoundation, { type NavItemType, type NavigationAdapter, type NavigationBaseProps, type NavigationState } from '@fibrae/semi-foundation/navigation/foundation';
+    import NavigationFoundation, { type NavigationAdapter, type NavigationBaseProps, type NavigationState } from '@fibrae/semi-foundation/navigation/foundation';
     import '@fibrae/semi-foundation/navigation/navigation.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
@@ -53,13 +53,12 @@
     // Texts remount on collapse/expand, so they fade in only while the width animates
     let settledCollapsed = $state(untrack(() => isCollapsed ?? false));
 
-    // Nav.Item and Nav.Sub written as children are not read by the Nav (a snippet cannot expose them), so their tree is empty
-    const NO_TREE: NavItemType[] = [];
     const prefix = cssClasses.PREFIX;
 
+    // $state.snapshot: a parent mutating its own array in place still shows up as a change of the key
     const foundationProps: NavigationBaseProps = {
         get children() {
-            return children ? NO_TREE : undefined;
+            return children;
         },
         get isCollapsed() {
             return isCollapsed;
@@ -71,10 +70,10 @@
             return mode;
         },
         get openKeys() {
-            return openKeys as ItemKey[] | undefined;
+            return $state.snapshot(openKeys) as ItemKey[] | undefined;
         },
         get selectedKeys() {
-            return selectedKeys as ItemKey[] | undefined;
+            return $state.snapshot(selectedKeys) as ItemKey[] | undefined;
         },
     };
 
@@ -82,16 +81,14 @@
         NavigationFoundation,
         foundationProps,
         (view) => NavigationFoundation.getInitialState(view),
-        (base) => ({
-            getItemsFromChildren: () => NO_TREE,
-            setIsCollapsed: (next) => base.setState({ isCollapsed: next }),
+        () => ({
+            // Nav.Item and Nav.Sub written as children are not read by the Nav (a snippet cannot expose them), so their tree is empty
+            getItemsFromChildren: () => [],
             // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
             notifyCollapseChange: (next) => {
                 isCollapsed = next;
                 onCollapseChange?.(next);
             },
-            updateSelectedKeys: (keys) => base.setState({ selectedKeys: keys }),
-            updateOpenKeys: (keys) => base.setState({ openKeys: [...keys] }),
         })
     );
 
@@ -172,19 +169,6 @@
             settledCollapsed = collapsed;
         }
     };
-
-    // $state.snapshot: a parent mutating its own array in place still shows up as a change
-    // children is part of it so the foundation compares the previous props with the same shape, otherwise every change looks like a new tree
-    const snapshot = () => ({ children: foundationProps.children, items, selectedKeys: $state.snapshot(selectedKeys), openKeys: $state.snapshot(openKeys) });
-
-    let previous = untrack(snapshot);
-
-    // New items rebuild the menu from the props, otherwise a changed (deep compared) selectedKeys or openKeys is copied into state
-    watch(snapshot, (next) => {
-        const before = previous;
-        previous = next;
-        foundation.handlePropsUpdate(before as NavigationBaseProps);
-    });
 
     // no transitionend comes when the width does not animate; getAnimations flushes style, so it lists this update's transition
     watch(

@@ -137,7 +137,7 @@ export const reactExemptions: Exemption[] = [
     },
     // The input area click only hands focus to the textarea
     {
-        files: ['packages/semi-ai-react/src/chat/input-box/index.tsx'],
+        files: ['packages/semi-ai-react/src/chat/input-box.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
     // role="heading" div because host pages style h3 outside Semi's layers; the row click is a pointer shortcut
@@ -301,7 +301,7 @@ export const reactExemptions: Exemption[] = [
     },
     // APG window splitter: a focusable role="separator" div, since an hr cannot hold the grip or take focus
     {
-        files: ['packages/semi-ui-react/src/resizable/group/resize-handler.tsx'],
+        files: ['packages/semi-ui-react/src/resizable/resize-handler.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     // A native <select> cannot draw the wheel column; keyboard picking would be a redesign

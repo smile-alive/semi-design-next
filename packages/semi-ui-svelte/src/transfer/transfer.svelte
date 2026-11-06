@@ -10,7 +10,6 @@
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import VirtualList from '../_base/virtual-list.svelte';
-    import watch from '../_base/watch.svelte.js';
     import type SortableComponent from '../_sortable/sortable.svelte';
     import { Button } from '../button/index.js';
     import { Checkbox } from '../checkbox/index.js';
@@ -33,8 +32,8 @@
         items: { item: ResolvedItem; index: number }[];
     }
 
-    type Foundation = TransferFoundation<TransferBaseProps, TransferBaseState>;
-    type Adapter = TransferAdapter<TransferBaseProps, TransferBaseState>;
+    type Foundation = TransferFoundation<TransferBaseProps>;
+    type Adapter = TransferAdapter<TransferBaseProps>;
 
     const defaults = useDefaultProps('Transfer');
 
@@ -78,9 +77,6 @@
     // loaded on first use, so an app that never drags does not pay for dnd-kit
     let Sortable = $state.raw<typeof SortableComponent>();
 
-    // set by the adapter: a `value` released to undefined drops what the transfer remembered of its own selection
-    let clearSelected = noop;
-
     const prefixCls = cssClasses.PREFIX;
 
     // $bindable needs destructuring, so the foundation reads the props through getters
@@ -111,29 +107,19 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, TransferBaseProps, TransferBaseState>(
         TransferFoundation,
         foundationProps,
+        (view) => TransferFoundation.getInitialState(view),
         () => ({
-            selectedValues: [],
-            inputValue: '',
-            leftCurrentPage: pagination?.defaultCurrentPage ?? pagination?.currentPage ?? 1,
-        }),
-        (base) => {
-            clearSelected = () => base.setState({ selectedValues: [] });
-            return {
-                notifyBlur: (event) => onBlur?.(event),
-                updateSelected: (selectedValues) => base.setState({ selectedValues }),
-                notifyChange: (values, items) => {
-                    value = values;
-                    onChange?.(values, items as TransferDataItem[]);
-                },
-                notifySearch: (input) => onSearch?.(input),
-                notifySelect: (item) => onSelect?.(item as TransferDataItem),
-                notifyDeselect: (item) => onDeselect?.(item as TransferDataItem),
-                updateInput: (inputValue) => base.setState({ inputValue }),
-                searchTree: (keyword) => tree?.search(keyword),
-                updateCurrentPage: (leftCurrentPage) => base.setState({ leftCurrentPage }),
-                notifyPageChange: (currentPage) => pagination?.onPageChange?.(currentPage),
-            };
-        }
+            notifyBlur: (event) => onBlur?.(event),
+            notifyChange: (values, items) => {
+                value = values;
+                onChange?.(values, items as TransferDataItem[]);
+            },
+            notifySearch: (input) => onSearch?.(input),
+            notifySelect: (item) => onSelect?.(item as TransferDataItem),
+            notifyDeselect: (item) => onDeselect?.(item as TransferDataItem),
+            searchTree: (keyword) => tree?.search(keyword),
+            notifyPageChange: (currentPage) => pagination?.onPageChange?.(currentPage),
+        })
     );
 
     const data = $derived(TransferFoundation.getData(dataSource, type) as ResolvedItem[]);
@@ -256,15 +242,6 @@
     const onTreeChange = (next: TreeValue) => {
         foundation.handleSelect(next as TransferValue);
     };
-
-    watch(
-        () => value,
-        (next) => {
-            if (next === undefined) {
-                clearSelected();
-            }
-        }
-    );
 
     $effect(() => {
         if (draggable && !Sortable) {

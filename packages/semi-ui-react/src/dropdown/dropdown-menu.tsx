@@ -8,6 +8,9 @@ import useFoundation from '../_base/use-foundation';
 import { useConfigContext } from '../config-provider/context';
 import { useDropdownContext } from './context';
 
+type Foundation = DropdownMenuFoundation;
+type Adapter = DropdownContextAdapter<DropdownMenuProps, Record<string, never>>;
+
 const prefixCls = cssClasses.PREFIX;
 export interface DropdownMenuProps extends BaseProps, ElementProps<'ul'> {
     children: React.ReactNode;
@@ -21,7 +24,7 @@ export default function DropdownMenu(props: DropdownMenuProps) {
     const context = useDropdownContext();
     const { direction } = useConfigContext();
 
-    const [foundation] = useFoundation<DropdownMenuFoundation, DropdownContextAdapter<DropdownMenuProps, Record<string, never>>, DropdownMenuProps, Record<string, never>>(
+    const [foundation] = useFoundation<Foundation, Adapter, DropdownMenuProps, Record<string, never>>(
         DropdownMenuFoundation,
         props,
         () => ({}),

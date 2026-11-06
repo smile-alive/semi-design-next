@@ -16,6 +16,9 @@ import Modal, { type ModalReactProps } from '../modal';
 import RadioGroup, { type RadioGroupProps } from '../radio/radio-group';
 import SideSheet, { type SideSheetReactProps } from '../side-sheet';
 
+type Foundation = FeedbackFoundation<FeedbackProps, FeedbackCancelEvent, React.MouseEvent, TextAreaChangeEvent>;
+type Adapter = FeedbackAdapter<FeedbackProps, FeedbackCancelEvent, React.MouseEvent, TextAreaChangeEvent>;
+
 const { Emoji } = strings;
 
 const prefixCls = cssClasses.PREFIX;
@@ -63,12 +66,11 @@ export default function Feedback(rawProps: FeedbackProps): React.ReactNode {
     const emojiGroupName = useId();
     let content: React.ReactNode = null;
 
-    const [foundation, state] = useFoundation<FeedbackFoundation<FeedbackProps, FeedbackBaseState, FeedbackCancelEvent, React.MouseEvent, TextAreaChangeEvent>, FeedbackAdapter<FeedbackProps, FeedbackBaseState, FeedbackCancelEvent, React.MouseEvent, TextAreaChangeEvent>, FeedbackProps, FeedbackBaseState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, FeedbackProps, FeedbackBaseState>(
         FeedbackFoundation,
         props,
-        () => ({ value: null, onOKReturnPromiseStatus: 'fulfilled', onCancelReturnPromiseStatus: 'fulfilled' }),
+        () => FeedbackFoundation.getInitialState(),
         (base) => ({
-            setValue: (value) => base.setState({ value }),
             notifyValueChange: (value) => base.getProps().onValueChange?.(value),
             notifyCancel: (e) => base.getProps().onCancel?.(e),
             notifyOk: (e) => base.getProps().onOk?.(e),

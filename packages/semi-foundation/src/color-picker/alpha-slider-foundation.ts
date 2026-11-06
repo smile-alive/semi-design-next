@@ -16,17 +16,11 @@ export interface AlphaSliderBaseState {
     isHandleGrabbing: boolean;
 }
 
-export interface AlphaSliderAdapter<P extends AlphaSliderBaseProps = AlphaSliderBaseProps, S extends AlphaSliderBaseState = AlphaSliderBaseState> extends DefaultAdapter<P, S> {
+export interface AlphaSliderAdapter<P extends AlphaSliderBaseProps = AlphaSliderBaseProps> extends DefaultAdapter<P, AlphaSliderBaseState> {
     getDOM: () => HTMLDivElement;
 }
 
-export default class AlphaSliderFoundation<P extends AlphaSliderBaseProps = AlphaSliderBaseProps, S extends AlphaSliderBaseState = AlphaSliderBaseState> extends BaseFoundation<AlphaSliderAdapter<P, S>, P, S> {
-    constructor(adapter: AlphaSliderAdapter<P, S>) {
-        super({
-            ...adapter,
-        });
-    }
-
+export default class AlphaSliderFoundation<P extends AlphaSliderBaseProps = AlphaSliderBaseProps> extends BaseFoundation<AlphaSliderAdapter<P>, P, AlphaSliderBaseState> {
     #pickByPointer(e: { clientX: number }) {
         const rect = this.adapter.getDOM()?.getBoundingClientRect();
         if (!rect) {
@@ -36,6 +30,10 @@ export default class AlphaSliderFoundation<P extends AlphaSliderBaseProps = Alph
         foundation.handleAlphaChangeByHandle({
             a: Number(clamp((e.clientX - rect.x) / width, 0, 1).toFixed(2)),
         });
+    }
+
+    static getInitialState(): AlphaSliderBaseState {
+        return { isHandleGrabbing: false };
     }
 
     /** Captures the pointer from the press, so moves and release arrive outside the slider too */

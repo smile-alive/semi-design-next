@@ -12,7 +12,6 @@
     import useClickOutside from '../_base/use-click-outside.svelte.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import { useConfig } from '../config-provider/index.js';
     import { getInputGroupInScope, setInputGroupContext } from '../input/context.js';
     import { Input } from '../input/index.js';
@@ -127,18 +126,13 @@
         AutoCompleteFoundation,
         foundationProps,
         (view) => AutoCompleteFoundation.getInitialState(view),
-        (base) => ({
-            updateFocusIndex: (focusIndex) => base.setState({ focusIndex }),
+        () => ({
             updateScrollTop: (index) => {
                 const destNode = listbox?.children[index];
                 if (listbox && destNode instanceof HTMLElement) {
                     centerInScroller(destNode, listbox);
                 }
             },
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            toggleListVisible: (visible) => base.setState({ visible }),
-            updateOptionList: (options) => base.setState({ options }),
-            updateSelection: (selection) => base.setState({ selection }),
             notifySearch: (inputValue) => onSearch?.(inputValue),
             notifyChange: (next) => {
                 value = next;
@@ -251,17 +245,6 @@
             untrack(() => foundation.handleDataChange(data));
         }
     });
-
-    // Typing writes the text to `value`; running the foundation on that echo would pass the text through
-    // renderSelectedItem, which expects a data item, and rewrite what the user typed
-    watch(
-        () => value,
-        (next) => {
-            if (!Object.is(next, states().inputValue)) {
-                foundation.handleValueChange(next);
-            }
-        }
-    );
 
     useClickOutside(
         [() => root, () => listbox],

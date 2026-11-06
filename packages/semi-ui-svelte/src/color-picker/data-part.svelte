@@ -1,12 +1,9 @@
 <script lang="ts">
-    import { untrack } from 'svelte';
-    import { isEqual } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
     import DataPartFoundation, { type DataPartAdapter, type DataPartBaseProps, type DataPartBaseState } from '@fibrae/semi-foundation/color-picker/data-part-foundation';
     import type { ColorFormat } from '@fibrae/semi-foundation/color-picker/interface';
     import { IconEyedropper } from '@fibrae/semi-icons-svelte';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import { Button } from '../button/index.js';
     import { InputNumber } from '../input-number/index.js';
     import { Input, InputGroup } from '../input/index.js';
@@ -22,15 +19,10 @@
 
     const locale = useLocale('ColorPicker');
 
-    let previous = untrack(() => props.currentColor);
-
     const { foundation, states } = useFoundation<Foundation, Adapter, DataPartBaseProps, DataPartBaseState>(
         DataPartFoundation,
         props,
-        () => ({
-            format: props.defaultFormat,
-            inputValue: DataPartFoundation.getInputValue(props.currentColor, props.defaultFormat),
-        }),
+        (view) => DataPartFoundation.getInitialState(view),
         () => ({})
     );
 
@@ -50,19 +42,6 @@
     const handleSelectFormat = (format: string | number) => {
         foundation.handleFormatChange(format as ColorFormat);
     };
-
-    // An equal color object, e.g. a fresh controlled value, keeps what is being typed; so does the color the typed text
-    // itself produced, whose canonical text (no alpha, 6 digits) would otherwise erase the next keystrokes.
-    watch(
-        () => props.currentColor,
-        (currentColor) => {
-            const last = previous;
-            previous = currentColor;
-            if (!isEqual(currentColor, last) && !foundation.isInputValueOf(currentColor)) {
-                foundation.syncInputValue();
-            }
-        }
-    );
 </script>
 
 {#snippet percentSuffix()}

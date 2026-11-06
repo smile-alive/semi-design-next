@@ -1,6 +1,6 @@
 import { For, Show, createMemo, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { DEFAULT_RATE, RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
+import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
 import AudioPlayerFoundation, { type AudioPlayerAdapter } from '@fibrae/semi-foundation/audio-player/foundation';
 import { getCurrentTrack } from '@fibrae/semi-foundation/audio-player/utils';
 import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
@@ -18,8 +18,8 @@ import Tooltip from '../tooltip';
 import AudioSlider from './audio-slider';
 import type { AudioPlayerProps, AudioPlayerState } from './interface';
 
-type Foundation = AudioPlayerFoundation<AudioPlayerProps, AudioPlayerState>;
-type Adapter = AudioPlayerAdapter<AudioPlayerProps, AudioPlayerState>;
+type Foundation = AudioPlayerFoundation<AudioPlayerProps>;
+type Adapter = AudioPlayerAdapter<AudioPlayerProps>;
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -45,15 +45,7 @@ export default function AudioPlayer(rawProps: AudioPlayerProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, AudioPlayerProps, AudioPlayerState>(
         AudioPlayerFoundation,
         props,
-        () => ({
-            isPlaying: false,
-            currentIndex: 0,
-            totalTime: 0,
-            currentTime: 0,
-            currentRate: DEFAULT_RATE,
-            volume: 100,
-            error: false,
-        }),
+        (view) => AudioPlayerFoundation.getInitialState(view),
         () => ({ getAudioRef: () => audio ?? null })
     );
 

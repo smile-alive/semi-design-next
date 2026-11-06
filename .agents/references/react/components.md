@@ -21,27 +21,23 @@ semi-ui-react 的 React 19 函数组件写法。组件内语句顺序、foundati
 ## 有 foundation
 
 ```tsx
+type Foundation = SpinFoundation<SpinProps>;
+type Adapter = SpinAdapter<SpinProps>;
+
 const defaultProps = { size: 'middle', spinning: true } satisfies Partial<SpinProps>;
 
 export default function Spin(rawProps: SpinProps) {
     const props = useDefaultProps('Spin', rawProps, defaultProps);
     const { ref, children, size, spinning, delay, ...rest } = props;
 
-    const [foundation, state] = useFoundation<SpinFoundation, SpinAdapter<SpinProps, SpinState>, SpinProps, SpinState>(
-        SpinFoundation,
-        props,
-        () => ({ loading: props.spinning }),
-        (base) => ({ setLoading: (loading) => base.setState({ loading }) })
-    );
-
-    useDidUpdate(props.spinning, (spinning) => foundation.handleSpinningChange(spinning));
+    const [foundation, state] = useFoundation<Foundation, Adapter, SpinProps, SpinState>(SpinFoundation, props, () => SpinFoundation.getInitialState(props), () => ({}));
 
     return <div {...rest} ref={ref} className={...}>...</div>;
 }
 ```
 
 - `useDefaultProps(名称, props, 默认值)` 只填 `undefined`。它每次渲染读取 `semiGlobal.config.overrideDefaultProps`，全局里有而默认值里没有的键也会填上。对外导出的顶层组件一律调用它（F7），名称用组件的导出名。静态挂载的子组件、内部组件，以及 ConfigProvider、LocaleProvider 不调用。合并结果只用于解构时直接写 `const { ... } = useDefaultProps(...)`，像上例那样还要整体传给 `useFoundation` 或读 `props.x` 时才存进 `props`。
-- `useFoundation` 返回 `[foundation, state]`。泛型要显式写出，调用处可以内联。
+- `useFoundation` 返回 `[foundation, state]`，泛型写法见 [components](../components.md#有-foundation)。
 - prop 变化的反应由 foundation 的 `propKeys` 与 `handlePropsChange` 承担（见 [components](../components.md#有-foundation)）。其余值（context、本地 state、派生值）变化时调 foundation 用 `useDidUpdate(值, 回调)`。它不接收依赖数组，挂载时和 StrictMode 重跑时都不触发；使用方每次传新对象、要按内容比较时，第三个参数传 `isEqual`。
 - 必须和 props 在同一次提交里生效的派生状态（如 Collapsible 的高度与过渡 class；分两次提交会让过渡以 0ms 生效），用渲染期比较加条件 setState：新值和旧值不同时才调用，下一轮就收敛。不用 `useDidUpdate`。
 - 渲染期要用的 foundation 静态纯函数直接调用（如 `DescriptionsFoundation.getHorizontalList(columns, column)`）。host 在 insertion 阶段才同步 props，渲染期从实例上读到的是上一轮的 props，所以不经过 `useFoundation` 返回的实例。

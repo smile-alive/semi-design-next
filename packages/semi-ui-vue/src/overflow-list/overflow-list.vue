@@ -14,8 +14,8 @@
     import type { OverflowListEmits, OverflowListItem, OverflowListKey, OverflowListProps, OverflowListSlots } from './interface';
     import MeasuredBox from './measured-box.vue';
 
-    type Foundation = OverflowListFoundation<OverflowListBaseProps, OverflowListBaseState>;
-    type Adapter = OverflowListAdapter<OverflowListBaseProps, OverflowListBaseState>;
+    type Foundation = OverflowListFoundation<OverflowListBaseProps>;
+    type Adapter = OverflowListAdapter<OverflowListBaseProps>;
 
     defineOptions({ name: 'OverflowList' });
 
@@ -110,9 +110,9 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, OverflowListBaseProps, OverflowListBaseState>(
         OverflowListFoundation,
         props as Readonly<OverflowListBaseProps>,
-        () => ({ containerWidth: 0, overflowWidth: 0, visibleState: new Map() }),
-        (base) => ({
-            updateVisibleState: (visibleState) => base.setState({ visibleState }, () => emit('visibleStateChange', visibleState)),
+        () => OverflowListFoundation.getInitialState(),
+        () => ({
+            notifyVisibleStateChange: (visibleState) => emit('visibleStateChange', visibleState),
             updateView: (partial) => writeView({ ...view.value, ...partial }),
             notifyIntersect: (res) => emit('intersect', res),
             notifyOverflow: (overflow) => emit('overflow', overflow as T[]),

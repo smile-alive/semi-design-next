@@ -1,12 +1,11 @@
 <script lang="ts">
     import { cssClasses, numbers } from '@fibrae/semi-foundation/pagination/constants';
-    import PaginationFoundation, { type PaginationAdapter, type PaginationBaseProps, type PaginationBaseState } from '@fibrae/semi-foundation/pagination/foundation';
+    import PaginationFoundation, { type PaginationAdapter, type PaginationBaseProps, type PaginationState } from '@fibrae/semi-foundation/pagination/foundation';
     import { ENTER_KEY, isComposing } from '@fibrae/semi-foundation/utils/key-code';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/pagination/pagination.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import { getConfigContext } from '../config-provider/context.js';
     import { InputNumber } from '../input-number/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
@@ -23,8 +22,8 @@
         pageSizeOpts?: readonly number[];
     }
 
-    type Foundation = PaginationFoundation<FoundationProps, PaginationBaseState>;
-    type Adapter = PaginationAdapter<FoundationProps, PaginationBaseState>;
+    type Foundation = PaginationFoundation<FoundationProps>;
+    type Adapter = PaginationAdapter<FoundationProps>;
 
     const defaults = useDefaultProps('Pagination');
 
@@ -79,14 +78,11 @@
         },
     };
 
-    const { foundation, states } = useFoundation<Foundation, Adapter, FoundationProps, PaginationBaseState>(
+    const { foundation, states } = useFoundation<Foundation, Adapter, FoundationProps, PaginationState>(
         PaginationFoundation,
         foundationProps,
         (view) => PaginationFoundation.getInitialState(view),
-        (base) => ({
-            updatePageSize: (next) => base.setState({ pageSize: next }),
-            updateQuickJumpPage: (quickJumpPage) => base.setState({ quickJumpPage }),
-            setCurrentPage: (next) => base.setState({ currentPage: next }),
+        () => ({
             notifyPageChange: (pageIndex) => {
                 // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
                 currentPage = pageIndex;
@@ -134,28 +130,6 @@
             foundation.handleQuickJumpEnterPress(event.target.value);
         }
     };
-
-    // Only the pageSize prop itself may overwrite the page size: the size changer writes state alone, and a total change
-    // must not revert that choice.
-    watch(
-        () => currentPage ?? globalCurrentPage,
-        (page) => foundation.updatePage(page)
-    );
-
-    watch(
-        () => total,
-        () => foundation.updatePage(currentPage ?? globalCurrentPage)
-    );
-
-    watch(
-        () => pageSize ?? globalPageSize,
-        (next) => {
-            // the changer's own write-back arrives equal to the state; restarting at page 1 would undo the page it recomputed
-            if (next !== states().pageSize) {
-                foundation.updatePage(currentPage ?? globalCurrentPage, next);
-            }
-        }
-    );
 
     $effect(() => {
         warning(sizeChangerShown && hideOnSinglePage, '[Semi Pagination] You should not use showSizeChanger and hideOnSinglePage in ths same time. At this time, hideOnSinglePage no longer takes effect, otherwise there may be a problem that the switch entry disappears');

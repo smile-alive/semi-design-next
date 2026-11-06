@@ -16,7 +16,6 @@ import { usePopupLayer } from '../_base/popup-layer';
 import useDefaultProps from '../_base/use-default-props';
 import useFocusHandover from '../_base/use-focus-handover';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import useLocale from '../locale/use-locale';
 import { useSpecialTrigger } from '../tooltip/context';
 import { useInputGroupContext } from './context';
@@ -95,8 +94,8 @@ export interface InputState {
     eyeClosed: boolean;
 }
 
-type Foundation = InputFoundation<InputProps, InputState, InputElementEvent<KeyboardEvent>, InputElementEvent<CompositionEvent>, InputElementEvent<InputEvent>>;
-type Adapter = InputAdapter<InputProps, InputState, InputElementEvent<KeyboardEvent>, InputElementEvent<CompositionEvent>, InputElementEvent<InputEvent>>;
+type Foundation = InputFoundation<InputProps, InputElementEvent<KeyboardEvent>, InputElementEvent<CompositionEvent>, InputElementEvent<InputEvent>>;
+type Adapter = InputAdapter<InputProps, InputElementEvent<KeyboardEvent>, InputElementEvent<CompositionEvent>, InputElementEvent<InputEvent>>;
 
 // size and disabled are left out: they resolve through an enclosing InputGroup
 const defaultProps = {
@@ -193,16 +192,8 @@ export default function Input(rawProps: InputProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, InputProps, InputState>(
         InputFoundation,
         props,
-        (view) => ({
-            value: view.value === undefined ? view.defaultValue : view.value,
-            cachedValue: view.value,
-            isFocus: false,
-            eyeClosed: view.mode === 'password',
-        }),
-        (base) => ({
-            setValue: (value) => base.setState({ value }),
-            setEyeClosed: (eyeClosed) => base.setState({ eyeClosed }),
-            toggleFocusing: (isFocus) => base.setState({ isFocus }),
+        (view) => InputFoundation.getInitialState(view),
+        () => ({
             focusInput,
             notifyChange: (value, e: InputChangeEvent) => props.onChange?.(value, e),
             notifyBlur: (_, e: FocusEvent) => props.onBlur?.(e),
@@ -298,17 +289,6 @@ export default function Input(rawProps: InputProps) {
     };
 
     createRenderEffect(controlled.syncValue);
-
-    // undefined (a form reset) empties the input
-    useWatch(
-        () => local.value,
-        (next) => foundation.handleValueChange(next as string | number)
-    );
-
-    useWatch(
-        () => local.mode,
-        (next) => foundation.handleModeChange(next as string)
-    );
 
     return (
         <div

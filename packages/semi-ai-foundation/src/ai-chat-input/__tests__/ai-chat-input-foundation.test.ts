@@ -43,24 +43,24 @@ describe('AIChatInputFoundation', () => {
                 getStates: () => state,
                 setContent: vi.fn<AIChatInputAdapter['setContent']>(),
                 clearContent: vi.fn<AIChatInputAdapter['clearContent']>(),
-                clearAttachments: vi.fn<AIChatInputAdapter['clearAttachments']>(),
+                setState: vi.fn<(state: object) => void>(),
             };
             new AIChatInputFoundation(asAdapter(adapter)).handleGeneratingStart();
             return adapter;
         };
         const cleared = run({});
         expect(cleared.clearContent).toHaveBeenCalledTimes(1);
-        expect(cleared.clearAttachments).toHaveBeenCalledTimes(1);
+        expect(cleared.setState).toHaveBeenCalledWith({ attachments: [] }, undefined);
 
         const kept = run({ keepSkillAfterSend: true }, { skill: { value: 'writing', label: 'Writing' } });
         expect(kept.clearContent).not.toHaveBeenCalled();
         expect(kept.setContent).toHaveBeenCalledWith('<p><skill-slot  data-label="Writing" data-value="writing"></skill-slot></p>');
-        expect(kept.clearAttachments).toHaveBeenCalledTimes(1);
+        expect(kept.setState).toHaveBeenCalledWith({ attachments: [] }, undefined);
 
         const untouched = run({ clearContentOnGenerating: false });
         expect(untouched.clearContent).not.toHaveBeenCalled();
         expect(untouched.setContent).not.toHaveBeenCalled();
-        expect(untouched.clearAttachments).not.toHaveBeenCalled();
+        expect(untouched.setState).not.toHaveBeenCalled();
     });
 
     it('删除已上传文件时触发 uploadProps.onRemove', async () => {
@@ -236,7 +236,6 @@ describe('AIChatInputFoundation', () => {
             setState: () => {},
             setContent: () => {},
             clearContent: () => {},
-            clearAttachments: () => {},
         };
         const foundation = new AIChatInputFoundation(asAdapter(adapter));
 

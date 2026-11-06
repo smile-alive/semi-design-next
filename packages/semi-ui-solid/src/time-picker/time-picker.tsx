@@ -1,7 +1,6 @@
 import { type JSX, type Ref, For, Show, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import type { Locale as DateFnsLocale } from 'date-fns';
-import { isEqual } from 'es-toolkit';
 import ComboboxFoundation from '@fibrae/semi-foundation/time-picker/combox-foundation';
 import { strings, cssClasses, type PanelType } from '@fibrae/semi-foundation/time-picker/constants';
 import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/time-picker/foundation';
@@ -15,7 +14,6 @@ import { usePopupLayer } from '../_base/popup-layer';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import useConfig from '../config-provider/use-config';
 import type { InputSize, ValidateStatus } from '../input';
 import { InputGroupContext, useInputGroupContext } from '../input/context';
@@ -246,16 +244,13 @@ export default function TimePicker(rawProps: TimePickerProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, TimePickerState>(
         TimePickerFoundation,
         props,
-        (view) => ({ open: Boolean((view.open || view.defaultOpen) && !view.disabled), ...TimePickerFoundation.getInitialState(view) }),
-        (base) => ({
-            setPanelOpen: (open) => base.setState({ open }),
-            setInputValue: (inputValue) => base.setState({ inputValue }),
+        (view) => TimePickerFoundation.getInitialState(view),
+        () => ({
             notifyOpenChange: (open) => props.onOpenChange?.(open),
             // the foundation passes arrays exactly when type is timeRange, which is what the onChange union says
             notifyChange: (value, str) => (props.onChange as ((value: Date | Date[], str: string | string[]) => void) | undefined)?.(value, str),
             notifyFocus: (e) => props.onFocus?.(e),
             notifyBlur: (e) => props.onBlur?.(e),
-            isRangePicker: () => props.type === strings.TYPE_TIME_RANGE_PICKER,
             isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panel()),
             setTriggerFocus: () => FocusTrapHandle.focusFirstOrSelf(root, { preventScroll: props.preventScroll }),
         })
@@ -285,12 +280,6 @@ export default function TimePicker(rawProps: TimePickerProps) {
     const isRange = () => local.type === strings.TYPE_TIME_RANGE_PICKER;
 
     const format = () => TimePickerFoundation.getValidFormat(props);
-
-    // a new value prop wins (back to undefined clears it), else a new timeZone re-zones the shown value, else only the
-    // text is re-formatted. By value: a Date or array rebuilt by the owner is a new object and must not reset typed text
-    const syncInputs = createMemo(() => ({ value: local.value, timeZone: local.timeZone, format: format(), dateFnsLocale: local.dateFnsLocale, rangeSeparator: local.rangeSeparator }), undefined, {
-        equals: (a, b) => isEqual(a.value, b.value) && a.timeZone === b.timeZone && a.format === b.format && a.dateFnsLocale === b.dateFnsLocale && a.rangeSeparator === b.rangeSeparator,
-    });
 
     const position = () => TimePickerFoundation.getPosition(props, config().direction);
 
@@ -413,27 +402,6 @@ export default function TimePicker(rawProps: TimePickerProps) {
             onChange={foundation.handleInputChange}
             onFocus={foundation.handleFocus}
         />
-    );
-
-    useWatch(syncInputs, (current, previous) => {
-        if (!isEqual(current.value, previous.value)) {
-            foundation.syncValueFromProps({ value: current.value ?? [], timeZone: current.timeZone });
-        } else if (current.timeZone !== previous.timeZone) {
-            foundation.syncValueFromProps({ value: foundation.getState('value'), timeZone: current.timeZone, prevTimeZone: previous.timeZone });
-        } else {
-            // only the text changes: syncing the value again would re-zone it a second time
-            foundation.refreshInputValue();
-        }
-    });
-
-    // isPanelShown is already false for a disabled picker, so the check leaves `disabled` out
-    useWatch(
-        () => Boolean(local.disabled),
-        (disabled) => {
-            if (disabled && TimePickerFoundation.isPanelShown({ open: local.open }, foundation.getStates())) {
-                foundation.close();
-            }
-        }
     );
 
     // Known limit: measured when the custom trigger mounts, which a new triggerRender does; a stable one that switches

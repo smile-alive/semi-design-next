@@ -1,6 +1,4 @@
 <script setup lang="ts">
-    import { watch } from 'vue';
-    import { isEqual } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
     import DataPartFoundation, { type DataPartAdapter, type DataPartBaseProps, type DataPartBaseState } from '@fibrae/semi-foundation/color-picker/data-part-foundation';
     import type { ColorFormat } from '@fibrae/semi-foundation/color-picker/interface';
@@ -24,10 +22,7 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, DataPartBaseProps, DataPartBaseState>(
         DataPartFoundation,
         props,
-        () => ({
-            format: props.defaultFormat,
-            inputValue: DataPartFoundation.getInputValue(props.currentColor, props.defaultFormat),
-        }),
+        () => DataPartFoundation.getInitialState(props),
         () => ({})
     );
 
@@ -47,17 +42,6 @@
     const onSelectFormat = (format: string | number) => {
         foundation.handleFormatChange(format as ColorFormat);
     };
-
-    // An equal color object, e.g. a fresh controlled value, keeps what is being typed; so does the color the typed text
-    // itself produced, whose canonical text (no alpha, 6 digits) would otherwise erase the next keystrokes.
-    watch(
-        () => props.currentColor,
-        (currentColor, previous) => {
-            if (!isEqual(currentColor, previous) && !foundation.isInputValueOf(currentColor)) {
-                foundation.syncInputValue();
-            }
-        }
-    );
 </script>
 
 <template>

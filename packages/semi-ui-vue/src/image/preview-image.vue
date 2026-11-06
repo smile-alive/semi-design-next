@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    import { computed, useTemplateRef, watch, type StyleValue } from 'vue';
+    import { computed, useTemplateRef, type StyleValue } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageBaseProps, type PreviewImageBaseState } from '@fibrae/semi-foundation/image/preview-image-foundation';
+    import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageBaseProps, type PreviewImageState } from '@fibrae/semi-foundation/image/preview-image-foundation';
     import useEventListener, { getWindow } from '../_base/use-event-listener';
     import useFoundation from '../_base/use-foundation';
     import Spin from '../spin';
@@ -36,14 +36,13 @@
     const container = useTemplateRef('container');
     const image = useTemplateRef('image');
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, PreviewImageBaseProps, PreviewImageBaseState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, PreviewImageBaseProps, PreviewImageState>(
         PreviewImageFoundation,
         props,
-        () => ({ width: 0, height: 0, loading: true, translate: { x: 0, y: 0 } }),
-        (base) => ({
+        () => PreviewImageFoundation.getInitialState(),
+        () => ({
             getContainer: () => container.value as HTMLDivElement,
             getImage: () => image.value as HTMLImageElement,
-            setLoading: (loading) => base.setState({ loading }),
             // the style binding has no cursor key, so a patch leaves this one alone
             setImageCursor: (canDrag) => {
                 if (image.value) {
@@ -73,7 +72,6 @@
     });
 
     useEventListener(getWindow, 'resize', foundation.handleWindowResize);
-    watch([() => props.src, () => props.ratio, () => props.rotation, () => props.zoom], (_, [src, ratio, rotation, zoom]) => foundation.handlePropsUpdate({ src, ratio, rotation, zoom }, props.zoomEvent), { flush: 'post' });
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 import { type JSX, Show, children, mergeProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-import PreviewFooterFoundation, { type PreviewFooterAdapter } from '@fibrae/semi-foundation/image/preview-footer-foundation';
+import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterState } from '@fibrae/semi-foundation/image/preview-footer-foundation';
 import { IconChevronLeft, IconChevronRight, IconDownload, IconMinus, IconPlus, IconRealSizeStroked, IconRotate, IconWindowAdaptionStroked } from '@fibrae/semi-icons-solid';
 import useFoundation from '../_base/use-foundation';
 import Divider from '../divider';
@@ -10,8 +10,8 @@ import Slider from '../slider';
 import Tooltip, { type GetTriggerProps } from '../tooltip';
 import type { FooterProps, MenuProps } from './interface';
 
-type Foundation = PreviewFooterFoundation<FooterProps, Record<string, never>>;
-type Adapter = PreviewFooterAdapter<FooterProps, Record<string, never>>;
+type Foundation = PreviewFooterFoundation<FooterProps>;
+type Adapter = PreviewFooterAdapter<FooterProps>;
 
 interface FooterButtonProps {
     label: string;
@@ -74,7 +74,7 @@ export default function Footer(rawProps: FooterProps) {
 
     const locale = useLocale('Image');
 
-    const { foundation } = useFoundation<Foundation, Adapter, FooterProps, Record<string, never>>(
+    const { foundation } = useFoundation<Foundation, Adapter, FooterProps, PreviewFooterState>(
         PreviewFooterFoundation,
         props,
         () => ({}),

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, h, useTemplateRef, watch } from 'vue';
     import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
-    import ChatFoundation, { type ChatAdapter } from '@fibrae/semi-ai-foundation/chat/foundation';
+    import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/chat/foundation';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import '@fibrae/semi-ai-foundation/chat/chat.scss';
     import { IconChevronDown, IconDisc } from '@fibrae/semi-icons-vue';
@@ -20,13 +20,8 @@
     import InputBox from './input-box.vue';
     import type { ChatEmits, ChatHandle, ChatMessage, ChatProps, ChatSlots } from './interface';
 
-    interface ChatState {
-        backBottomVisible: boolean;
-        uploadAreaVisible: boolean;
-    }
-
-    type Foundation = ChatFoundation<ChatProps, ChatState>;
-    type Adapter = ChatAdapter<ChatProps, ChatState>;
+    type Foundation = ChatFoundation<ChatProps>;
+    type Adapter = ChatAdapter<ChatProps>;
 
     defineOptions({ name: 'Chat' });
 
@@ -71,8 +66,8 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, ChatProps, ChatState>(
         ChatFoundation,
         props,
-        () => ({ backBottomVisible: false, uploadAreaVisible: false }),
-        (base) => ({
+        () => ChatFoundation.getInitialState(),
+        () => ({
             getContainerRef: () => container.value as HTMLDivElement,
             notifyChatsChange: (chats) => {
                 emit('update:chats', chats);
@@ -85,14 +80,8 @@
             notifyClearContext: () => emit('clear'),
             notifyMessageSend: (content, attachment) => emit('messageSend', content, attachment),
             notifyInputChange: (value) => emit('inputChange', value),
-            setBackBottomVisible: (visible) => {
-                if (base.getState('backBottomVisible') !== visible) {
-                    base.setState({ backBottomVisible: visible });
-                }
-            },
             notifyStopGenerate: (e) => emit('stopGenerator', e),
             notifyHintClick: (hint) => emit('hintClick', hint),
-            setUploadAreaVisible: (visible) => base.setState({ uploadAreaVisible: visible }),
             manualUpload: (files) => inputBox.value?.insertFiles(files),
             getDropAreaElement: () => dropArea.value as HTMLDivElement,
         })
@@ -127,19 +116,6 @@
             foundation.handleDragEnd();
         }
     };
-
-    // Known limitation: only a replaced list counts as a change; pushing into the same array is not followed
-    watch(
-        () => props.chats,
-        (chats, prevChats) => foundation.handleChatsChange(chats ?? EMPTY_CHATS, prevChats ?? EMPTY_CHATS),
-        { flush: 'post' }
-    );
-
-    watch(
-        () => props.hints,
-        (hints, prevHints) => foundation.handleHintsChange(hints ?? [], prevHints ?? []),
-        { flush: 'post' }
-    );
 
     useResizeObserver(container, foundation.handleScrollContainerResize);
 

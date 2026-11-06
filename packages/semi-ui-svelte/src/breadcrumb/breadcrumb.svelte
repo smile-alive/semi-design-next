@@ -1,6 +1,6 @@
 <script lang="ts">
     import { DEFAULT_TOOLTIP, cssClasses } from '@fibrae/semi-foundation/breadcrumb/constants';
-    import BreadcrumbFoundation, { type BreadcrumbAdapter } from '@fibrae/semi-foundation/breadcrumb/foundation';
+    import BreadcrumbFoundation, { type BreadcrumbAdapter, type BreadcrumbState } from '@fibrae/semi-foundation/breadcrumb/foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
     import '@fibrae/semi-foundation/breadcrumb/breadcrumb.scss';
@@ -13,12 +13,8 @@
     import { setBreadcrumbContext } from './context.js';
     import type { BreadcrumbProps, BreadcrumbRoute } from './interface.js';
 
-    interface BreadcrumbState {
-        isCollapsed: boolean;
-    }
-
-    type Foundation = BreadcrumbFoundation<BreadcrumbProps, BreadcrumbState, MouseEvent>;
-    type Adapter = BreadcrumbAdapter<BreadcrumbProps, BreadcrumbState, MouseEvent>;
+    type Foundation = BreadcrumbFoundation<BreadcrumbProps, MouseEvent>;
+    type Adapter = BreadcrumbAdapter<BreadcrumbProps, MouseEvent>;
 
     const defaults = useDefaultProps('Breadcrumb');
 
@@ -54,22 +50,22 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, BreadcrumbProps, BreadcrumbState>(
         BreadcrumbFoundation,
         foundationProps,
-        () => ({ isCollapsed: true }),
-        (base) => ({
+        () => BreadcrumbFoundation.getInitialState(),
+        () => ({
             notifyClick: (info, event) => onClick?.(info as BreadcrumbRoute, event),
-            expandCollapsed: () => {
-                // Expanding removes the more button, which held focus: the first item it hid takes over, else the nav itself
+            // Expanding removes the more button, which held focus: the first item it hid takes over, else the nav itself
+            holdFocus: () => {
                 const from = moreArea?.contains(document.activeElement) ? moreArea : undefined;
-                base.setState({ isCollapsed: false }, () => {
-                    if (!from) {
-                        return;
-                    }
+                if (!from) {
+                    return undefined;
+                }
+                return () => {
                     const target = root?.children[range.start]?.querySelector<HTMLElement>('a[href], [tabindex]:not([tabindex="-1"])');
                     if (!target && root) {
                         root.tabIndex = -1;
                     }
                     handoverFocus(from, target ?? root);
-                });
+                };
             },
         })
     );

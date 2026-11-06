@@ -2,7 +2,7 @@ import { type JSX, type Ref, Show, createMemo, onCleanup, untrack } from 'solid-
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
 import { cssClasses, strings, type SendHotKey } from '@fibrae/semi-ai-foundation/chat/constants';
-import InputBoxFoundation, { type InputBoxAdapter } from '@fibrae/semi-ai-foundation/chat/inputbox-foundation';
+import InputBoxFoundation, { type InputBoxAdapter, type InputBoxState } from '@fibrae/semi-ai-foundation/chat/inputbox-foundation';
 import { IconArrowUp, IconChainStroked, IconDeleteStroked } from '@fibrae/semi-icons-solid';
 import mergeRefs from '@fibrae/semi-ui-solid/_base/merge-refs';
 import useFoundation from '@fibrae/semi-ui-solid/_base/use-foundation';
@@ -44,13 +44,8 @@ interface InputBoxProps {
     pasteUpload?: boolean;
 }
 
-interface InputBoxState {
-    content: string;
-    attachment: FileItem[];
-}
-
-type Foundation = InputBoxFoundation<InputBoxProps, InputBoxState>;
-type Adapter = InputBoxAdapter<InputBoxProps, InputBoxState>;
+type Foundation = InputBoxFoundation<InputBoxProps>;
+type Adapter = InputBoxAdapter<InputBoxProps>;
 
 /**
  * The elements a node getter created, latest last. A custom input area may render the default node and a detail node
@@ -76,11 +71,9 @@ export default function InputBox(props: InputBoxProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, InputBoxProps, InputBoxState>(
         InputBoxFoundation,
         props,
-        () => ({ content: '', attachment: [] }),
-        (base) => ({
+        () => InputBoxFoundation.getInitialState(),
+        () => ({
             notifyInputChange: (value) => props.onInputChange?.(value),
-            setInputValue: (content) => base.setState({ content }),
-            setAttachment: (attachment) => base.setState({ attachment }),
             notifySend: (content, attachment) => props.onSend?.(content, attachment),
             notifyUploadChange: (changed) => props.uploadProps?.onChange?.(changed),
             notifyBeforeRemove: (file, attachment) => props.uploadProps?.beforeRemove?.(file, attachment),

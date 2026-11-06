@@ -3,14 +3,15 @@ import clsx from 'clsx';
 import { omitBy, pickBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/switch/constants';
 import SwitchFoundation, { type SwitchAdapter, type SwitchState } from '@fibrae/semi-foundation/switch/foundation';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import '@fibrae/semi-foundation/switch/switch.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import Spin from '../spin';
+
+type Foundation = SwitchFoundation<SwitchProps, React.ChangeEvent<HTMLInputElement>>;
+type Adapter = SwitchAdapter<SwitchProps, React.ChangeEvent<HTMLInputElement>>;
 
 export interface SwitchProps extends ElementProps<'div', 'onChange'> {
     defaultChecked?: boolean;
@@ -39,10 +40,7 @@ export type { SwitchState } from '@fibrae/semi-foundation/switch/foundation';
 const defaultProps = {
     disabled: false,
     className: '',
-    onChange: noop,
     loading: false,
-    onMouseEnter: noop,
-    onMouseLeave: noop,
     size: 'default',
 } satisfies Partial<SwitchProps>;
 
@@ -74,13 +72,12 @@ export default function Switch(rawProps: SwitchProps) {
         ...others
     } = props as SwitchProps & { validateStatus?: unknown; insetLabel?: unknown; insetLabelId?: unknown };
 
-    const [foundation, state] = useFoundation<SwitchFoundation<SwitchProps, SwitchState, React.ChangeEvent<HTMLInputElement>>, SwitchAdapter<SwitchProps, SwitchState, React.ChangeEvent<HTMLInputElement>>, SwitchProps, SwitchState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, SwitchProps, SwitchState>(
         SwitchFoundation,
         props,
         () => SwitchFoundation.getInitialState(props),
         (base) => ({
-            setChecked: (checked) => base.setState({ checked }),
-            notifyChange: (checked, e) => base.getProps().onChange(checked, e),
+            notifyChange: (checked, e) => base.getProps().onChange?.(checked, e),
         })
     );
 
@@ -103,8 +100,6 @@ export default function Switch(rawProps: SwitchProps) {
 
     const controlAria = pickBy(others, isAria);
     const rest = omitBy(others, isAria);
-
-    useDidUpdate(props.checked, foundation.setChecked);
 
     return (
         <div {...rest} ref={ref} className={wrapperCls} style={style} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>

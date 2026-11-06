@@ -19,8 +19,8 @@ import TimePicker from '../time-picker/index';
 import Transfer, { type TransferProps } from '../transfer/index';
 import TreeSelect, { type TreeSelectNodeValue, type TreeSelectProps } from '../tree-select/index';
 import Upload, { type UploadProps } from '../upload/index';
-import withField, { withTopLabelField } from './hoc/with-field';
 import type { FieldProps, FormCheckboxProps, FormRadioProps, FormSelectProps } from './interface';
+import withField, { withTopLabelField } from './with-field';
 
 export const FormInput = withField(Input);
 export const FormInputNumber = withField(InputNumber);

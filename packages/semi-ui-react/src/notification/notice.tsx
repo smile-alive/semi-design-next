@@ -13,6 +13,9 @@ import { useConfigContext } from '../config-provider/context';
 import Button from '../icon-button';
 import useLocale from '../locale/use-locale';
 
+type Foundation = NotificationFoundation<NoticeProps>;
+type Adapter = NoticeAdapter<NoticeProps>;
+
 export interface NoticeHandle {
     restartCloseTimer: () => void;
     pauseCloseTimer: () => void;
@@ -81,7 +84,7 @@ export default function Notice(rawProps: NoticeReactProps) {
 
     const noticeRef = useRef<HTMLDivElement>(null);
 
-    const [foundation] = useFoundation<NotificationFoundation<NoticeProps>, NoticeAdapter<NoticeProps>, NoticeProps, NoticeState>(
+    const [foundation] = useFoundation<Foundation, Adapter, NoticeProps, NoticeState>(
         NotificationFoundation,
         props,
         () => ({}),

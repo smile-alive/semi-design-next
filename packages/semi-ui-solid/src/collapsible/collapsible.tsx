@@ -8,7 +8,6 @@ import type { ElementProps } from '../_base/element-props';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 
 export interface CollapsibleProps extends Omit<CollapsibleFoundationProps, 'className'>, ElementProps<'div'> {
     motion?: boolean;
@@ -89,8 +88,6 @@ export default function Collapsible(rawProps: CollapsibleProps) {
         callHandler(local.onTransitionEnd, event);
         foundation.handleTransitionEnd({ isSelf: event.target === event.currentTarget, propertyName: event.propertyName });
     };
-
-    useWatch(() => local.isOpen, foundation.handleOpenChange);
 
     return (
         <div {...rest} ref={mergeRefs(local.ref, (node: HTMLDivElement) => (wrapper = node))} class={clsx(`${cssClasses.PREFIX}-wrapper`, { [`${cssClasses.PREFIX}-transition`]: transitioning() }, local.class)} style={wrapperStyle()} onTransitionEnd={handleTransitionEnd}>

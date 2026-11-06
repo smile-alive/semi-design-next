@@ -2,13 +2,15 @@ import type React from 'react';
 import { useEffect, useEffectEvent, useRef } from 'react';
 import clsx from 'clsx';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import TimeInputFoundation, { type TimeInputAdapter } from '@fibrae/semi-foundation/time-picker/input-foundation';
+import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/time-picker/input-foundation';
 import { IconClock } from '@fibrae/semi-icons-react';
 import type { BaseProps } from '../_base/base-component';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import Input, { type InputHandle } from '../input';
 import type { TimePickerProps } from './time-picker';
+
+type Foundation = TimeInputFoundation<TimeInputProps, React.FocusEvent<HTMLDivElement>>;
+type Adapter = TimeInputAdapter<TimeInputProps, React.FocusEvent<HTMLDivElement>>;
 
 export type TimeInputProps = Pick<
     TimePickerProps,
@@ -56,7 +58,7 @@ export default function TimeInput(props: TimeInputProps) {
 
     const inputRef = useRef<InputHandle>(null);
 
-    const [foundation] = useFoundation<TimeInputFoundation<TimeInputProps, Record<string, never>, React.FocusEvent<HTMLDivElement>>, TimeInputAdapter<TimeInputProps, Record<string, never>, React.FocusEvent<HTMLDivElement>>, TimeInputProps, Record<string, never>>(
+    const [foundation] = useFoundation<Foundation, Adapter, TimeInputProps, TimeInputState>(
         TimeInputFoundation,
         props,
         () => ({}),
@@ -80,8 +82,6 @@ export default function TimeInput(props: TimeInputProps) {
             inputNode.select();
         }
     });
-
-    useDidUpdate(props.value, foundation.restoreCursor);
 
     useEffect(() => {
         const frame = requestAnimationFrame(() => focusOnMount());

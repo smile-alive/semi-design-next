@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, shallowRef, useId, useTemplateRef, watch, type CSSProperties, type ShallowRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/popconfirm/constants';
-    import PopconfirmFoundation, { type PopconfirmAdapter } from '@fibrae/semi-foundation/popconfirm/popconfirm-foundation';
+    import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/popconfirm/popconfirm-foundation';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import '@fibrae/semi-foundation/popconfirm/popconfirm.scss';
     import { IconAlertTriangle, IconClose } from '@fibrae/semi-icons-vue';
@@ -14,10 +14,10 @@
     import Popover from '../popover';
     import type { PopoverProps } from '../popover/interface';
     import type { FocusTarget } from '../tooltip/interface';
-    import type { PopconfirmButtonProps, PopconfirmEmits, PopconfirmHandle, PopconfirmProps, PopconfirmSlots, PopconfirmState } from './interface';
+    import type { PopconfirmButtonProps, PopconfirmEmits, PopconfirmHandle, PopconfirmProps, PopconfirmSlots } from './interface';
 
-    type Foundation = PopconfirmFoundation<PopconfirmProps, PopconfirmState>;
-    type Adapter = PopconfirmAdapter<PopconfirmProps, PopconfirmState>;
+    type Foundation = PopconfirmFoundation<PopconfirmProps>;
+    type Adapter = PopconfirmAdapter<PopconfirmProps>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -147,14 +147,11 @@
 
     watch(footer, applyFocus, { flush: 'post' });
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, PopconfirmProps, PopconfirmState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, PopconfirmProps, PopconfirmBaseState>(
         PopconfirmFoundation,
         props,
-        () => ({ visible: props.defaultVisible || false, cancelLoading: false, confirmLoading: false }),
-        (base) => ({
-            setVisible: (visible) => base.setState({ visible }),
-            updateConfirmLoading: (confirmLoading) => base.setState({ confirmLoading }),
-            updateCancelLoading: (cancelLoading) => base.setState({ cancelLoading }),
+        (view) => PopconfirmFoundation.getInitialState(view),
+        () => ({
             notifyConfirm: (event) => confirmFn.value?.(event),
             notifyCancel: (event) => cancelFn.value?.(event),
             notifyVisibleChange: (visible) => {
@@ -200,14 +197,6 @@
     if (popoverVisible.value) foundation.handlePopupOpen();
 
     watch(popoverVisible, (visible) => (visible ? foundation.handlePopupOpen() : foundation.handlePopupClose()));
-
-    // a disabled Popconfirm renders no popup, so an open one reports the close instead of reopening when re-enabled
-    watch(
-        () => props.disabled,
-        (disabled) => {
-            if (disabled && popoverVisible.value) foundation.handleVisibleChange(false);
-        }
-    );
 
     defineExpose<PopconfirmHandle>({ focusTrigger: () => popover.value?.focusTrigger() });
 </script>

@@ -22,9 +22,8 @@
     import type { RestTagsPopoverProps, TagInputProps } from './interface.js';
     import TagItem from './tag-item.svelte';
 
-    type State = Required<TagInputBaseState>;
-    type Foundation = TagInputFoundation<TagInputBaseProps, State, Event>;
-    type Adapter = TagInputAdapter<TagInputBaseProps, State, Event>;
+    type Foundation = TagInputFoundation<TagInputBaseProps, Event>;
+    type Adapter = TagInputAdapter<TagInputBaseProps, Event>;
 
     const defaults = useDefaultProps('TagInput');
 
@@ -130,35 +129,17 @@
         },
     };
 
-    const { foundation, states } = useFoundation<Foundation, Adapter, TagInputBaseProps, State>(
+    const { foundation, states } = useFoundation<Foundation, Adapter, TagInputBaseProps, TagInputBaseState>(
         TagInputFoundation,
         foundationProps,
+        (view) => TagInputFoundation.getInitialState(view),
         () => ({
-            tagsArray: [],
-            inputValue: '',
-            focusing: false,
-            active: false,
-            entering: false,
-        }),
-        (base) => ({
+            focusInput: () => focusInput(),
             // Every text change passes through here before the notification, and the Firefox IME path has no notification
             // at all, so the write-back lives here: a bound parent or the local override always shows what was set
-            setInputValue: (next) => {
+            syncInputValue: (next) => {
                 inputValue = next;
-                base.setState({ inputValue: next });
             },
-            setTagsArray: (tagsArray) => base.setState({ tagsArray }),
-            setFocusing: (focusing) => base.setState({ focusing }),
-            toggleFocusing: (isFocus) => {
-                if (isFocus) {
-                    focusInput();
-                } else {
-                    input?.getInput()?.blur();
-                }
-                base.setState({ focusing: isFocus });
-            },
-            setActive: (active) => base.setState({ active }),
-            setEntering: (entering) => base.setState({ entering }),
             notifyBlur: (event) => onBlur?.(event),
             notifyFocus: (event) => onFocus?.(event),
             notifyInputChange: (next, event) => onInputChange?.(next, event),
@@ -260,26 +241,6 @@
 
     // prefix and suffix hand the focus to the input, so the press must not move it first
     const keepFocus = (event: MouseEvent) => event.preventDefault();
-
-    // a value that goes back to undefined clears the tags (a form reset) and leaves them uncontrolled
-    watch(
-        () => value,
-        (next) => {
-            if (next === undefined) {
-                foundation.setState({ tagsArray: [] });
-            }
-        }
-    );
-
-    // the state keeps what was typed under control; leaving control must not bring it back
-    watch(
-        () => inputValue,
-        (next) => {
-            if (next === undefined) {
-                foundation.setState({ inputValue: '' });
-            }
-        }
-    );
 
     watch(() => [inputText, tags.length === 0, placeholder, size], foundation.fitInputWidth);
 

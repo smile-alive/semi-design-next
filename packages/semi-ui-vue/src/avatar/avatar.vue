@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, mergeProps, onUpdated, useAttrs, useTemplateRef, watch, type StyleValue } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-foundation/avatar/constants';
-    import AvatarFoundation, { type AvatarAdapter } from '@fibrae/semi-foundation/avatar/foundation';
+    import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/avatar/foundation';
     import '@fibrae/semi-foundation/avatar/avatar.scss';
     import { hasClickListener, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
@@ -14,14 +14,8 @@
     import getAvatarText from './text';
     import TopSlotSvg from './top-slot-svg.vue';
 
-    interface AvatarState {
-        isImgExist: boolean;
-        hovered: boolean;
-        scale: number;
-    }
-
-    type Foundation = AvatarFoundation<AvatarProps, AvatarState, MouseEvent, Event>;
-    type Adapter = AvatarAdapter<AvatarProps, AvatarState, MouseEvent, Event>;
+    type Foundation = AvatarFoundation<AvatarProps, MouseEvent, Event>;
+    type Adapter = AvatarAdapter<AvatarProps, MouseEvent, Event>;
 
     defineOptions({ name: 'Avatar', inheritAttrs: false });
 
@@ -67,19 +61,11 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, AvatarProps, AvatarState>(
         AvatarFoundation,
         props,
-        () => ({ isImgExist: true, hovered: false, scale: 1 }),
-        (base) => ({
-            setImgExist: (isImgExist) => base.setState({ isImgExist }),
-            setScale: (scale) => base.setState({ scale }),
+        () => AvatarFoundation.getInitialState(),
+        () => ({
             notifyError: (event) => onError.value?.(event),
-            notifyEnter: (event) => {
-                base.setState({ hovered: true });
-                emit('mouseEnter', event);
-            },
-            notifyLeave: (event) => {
-                base.setState({ hovered: false });
-                emit('mouseLeave', event);
-            },
+            notifyEnter: (event) => emit('mouseEnter', event),
+            notifyLeave: (event) => emit('mouseLeave', event),
             getTextWidths: () => content.value?.getTextWidths() ?? null,
         })
     );
@@ -139,9 +125,10 @@
         };
     };
 
-    watch(() => props.src, foundation.handleSrcChange);
     watch(content, foundation.changeScale, { flush: 'post' });
-    watch([size, () => props.gap], foundation.changeScale, { flush: 'post' });
+
+    // size is resolved from the group context, so it is not a prop of the foundation
+    watch(size, foundation.changeScale, { flush: 'post' });
 
     onUpdated(() => {
         const value = content.value?.getText();

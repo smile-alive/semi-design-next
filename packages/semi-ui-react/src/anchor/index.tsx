@@ -3,7 +3,7 @@ import { Children, isValidElement, useLayoutEffect, useMemo, useRef } from 'reac
 import clsx from 'clsx';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
 import { cssClasses, strings } from '@fibrae/semi-foundation/anchor/constants';
-import AnchorFoundation, { type AnchorAdapter, type AnchorNode } from '@fibrae/semi-foundation/anchor/foundation';
+import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState, type AnchorNode } from '@fibrae/semi-foundation/anchor/foundation';
 import { findAnchorTarget } from '@fibrae/semi-foundation/anchor/utils';
 import '@fibrae/semi-foundation/anchor/anchor.scss';
 import type { ArrayElement, ElementProps } from '../_base/base';
@@ -16,6 +16,9 @@ import type { Position } from '../tooltip';
 import type { ShowTooltip } from '../typography/interface';
 import { AnchorContext } from './anchor-context';
 import Link from './link';
+
+type Foundation = AnchorFoundation<AnchorProps, AnchorClickEvent>;
+type Adapter = AnchorAdapter<AnchorProps, AnchorClickEvent>;
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -57,12 +60,7 @@ export interface AnchorProps extends ElementProps<'div', 'onChange' | 'onClick'>
     ref?: React.Ref<HTMLDivElement>;
 }
 
-export interface AnchorState {
-    activeLink: string;
-    links: string[];
-    clickLink: boolean;
-    slideBarTop: string;
-}
+export type { AnchorBaseState as AnchorState };
 
 const defaultProps = {
     size: 'default',
@@ -87,10 +85,10 @@ function Anchor(rawProps: AnchorProps) {
 
     const rootRef = useRef<HTMLDivElement>(null);
 
-    const [foundation, state] = useFoundation<AnchorFoundation<AnchorProps, AnchorState, AnchorClickEvent>, AnchorAdapter<AnchorProps, AnchorState, AnchorClickEvent>, AnchorProps, AnchorState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, AnchorProps, AnchorBaseState>(
         AnchorFoundation,
         props,
-        () => ({ activeLink: '', links: [], clickLink: false, slideBarTop: '0' }),
+        () => AnchorFoundation.getInitialState(),
         (base) => ({
             getContainer: () => base.getProps().getContainer() || window,
             getAnchorNode: (selector) => rootRef.current?.querySelector<HTMLElement>(selector) ?? null,

@@ -6,7 +6,6 @@ import '@fibrae/semi-foundation/color-picker/color-picker.scss';
 import type { ElementProps } from '../_base/base';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import useLocale from '../locale/use-locale';
 import Popover, { type PopoverProps } from '../popover';
@@ -14,6 +13,9 @@ import AlphaSlider from './alpha-slider';
 import ColorChooseArea from './color-choose-area';
 import ColorSlider from './color-slider';
 import DataPart from './data-part';
+
+type Foundation = ColorPickerFoundation<ColorPickerProps>;
+type Adapter = ColorPickerAdapter<ColorPickerProps>;
 
 export interface ColorPickerReactProps extends ColorPickerProps, ElementProps<'div', 'defaultValue' | 'onChange'> {
     usePopover?: boolean;
@@ -47,10 +49,10 @@ function ColorPicker(rawProps: ColorPickerReactProps) {
 
     const { locale } = useLocale('ColorPicker');
 
-    const [foundation, state] = useFoundation<ColorPickerFoundation<ColorPickerProps>, ColorPickerAdapter<ColorPickerProps>, ColorPickerProps, ColorPickerState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, ColorPickerProps, ColorPickerState>(
         ColorPickerFoundation,
         props,
-        () => ({ currentColor: props.value ?? props.defaultValue }),
+        () => ColorPickerFoundation.getInitialState(props),
         (base) => ({ notifyChange: (value) => base.getProps().onChange?.(value) })
     );
 
@@ -76,10 +78,6 @@ function ColorPicker(rawProps: ColorPickerReactProps) {
             {bottomSlot}
         </div>
     );
-
-    useDidUpdate(props.value, (value) => {
-        if (value === undefined) foundation.resetToDefault();
-    });
 
     if (!usePopover) {
         return picker;

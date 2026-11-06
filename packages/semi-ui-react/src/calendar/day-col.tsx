@@ -1,10 +1,13 @@
 import { Fragment } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
-import CalendarFoundation, { type CalendarAdapter } from '@fibrae/semi-foundation/calendar/foundation';
+import CalendarFoundation, { type CalendarAdapter, type CalendarBaseState } from '@fibrae/semi-foundation/calendar/foundation';
 import '@fibrae/semi-foundation/calendar/calendar.scss';
 import useFoundation from '../_base/use-foundation';
 import type { DayColProps } from './interface';
+
+type Foundation = CalendarFoundation<DayColProps>;
+type Adapter = CalendarAdapter<DayColProps>;
 
 const prefixCls = `${cssClasses.PREFIX}-grid`;
 const hours = Array.from({ length: 25 }, (_, hour) => hour);
@@ -13,22 +16,14 @@ function pad(d: number) {
     return d < 10 ? `0${d.toString()}` : d.toString();
 }
 
-export interface DayColState {
-    currPos: number;
-    showCurrTime: boolean;
-}
-
 export default function DayCol(props: DayColProps) {
     const { events, scrollHeight, minEventHeight = Number.MIN_SAFE_INTEGER, displayValue, isWeekend, dateGridRender, handleClick, showCurrTime = true } = props;
 
-    const [, state] = useFoundation<CalendarFoundation<DayColProps, DayColState>, CalendarAdapter<DayColProps, DayColState>, DayColProps, DayColState>(
+    const [, state] = useFoundation<Foundation, Adapter, DayColProps, CalendarBaseState>(
         CalendarFoundation,
         props,
-        () => ({ currPos: 0, showCurrTime: false }),
-        (base) => ({
-            updateCurrPos: (currPos) => base.setState({ currPos }),
-            setShowCurrTime: (showCurrTime) => base.setState({ showCurrTime }),
-        })
+        () => CalendarFoundation.getInitialState(),
+        () => ({})
     );
 
     const { currPos } = state;

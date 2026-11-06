@@ -1598,7 +1598,7 @@ describe('AutoComplete Vue 写法', () => {
         expect(getList()?.style.maxHeight).toBe('10px');
     });
 
-    it('KeepAlive 切走再切回后列表关闭，aria-expanded 为 false，只上报一次 false 且不发 blur', async () => {
+    it('KeepAlive 切走期间列表离开文档，切回后列表仍打开，aria-expanded 为 true，隐藏与显示都不上报可见性也不发 blur，外部按下能关闭', async () => {
         const shown = ref(true);
         const onBlur = vi.fn<(event: FocusEvent) => void>();
         const onDropdownVisibleChange = vi.fn<(visible: boolean) => void>();
@@ -1617,10 +1617,15 @@ describe('AutoComplete Vue 写法', () => {
         await expectClosed();
         shown.value = true;
         await settle();
-        expect(getInput()).toHaveAttribute('aria-expanded', 'false');
-        expect(getList()).toBeNull();
-        expect(onDropdownVisibleChange.mock.calls).toEqual([[true], [false]]);
+        await waitFor(() => expect(getList()).toBeVisible());
+        expect(getInput()).toHaveAttribute('aria-expanded', 'true');
+        expect(onDropdownVisibleChange.mock.calls).toEqual([[true]]);
         expect(onBlur).not.toHaveBeenCalled();
+
+        await mouseDown(document.body);
+        await expectClosed();
+        expect(getInput()).toHaveAttribute('aria-expanded', 'false');
+        expect(onDropdownVisibleChange.mock.calls).toEqual([[true], [false]]);
     });
 
     it('change 只收到组件载荷；focus、blur 在焦点进出组件时各发一次；keydown 在组件处理之后发出', async () => {

@@ -11,16 +11,16 @@ export interface PreviewFooterBaseProps {
     ratio?: RatioType;
 }
 
-export interface PreviewFooterBaseState {}
+export type PreviewFooterState = Record<string, never>;
 
-export interface PreviewFooterAdapter<P extends PreviewFooterBaseProps = PreviewFooterBaseProps, S extends PreviewFooterBaseState = PreviewFooterBaseState> extends DefaultAdapter<P, S> {
+export interface PreviewFooterAdapter<P extends PreviewFooterBaseProps = PreviewFooterBaseProps> extends DefaultAdapter<P, PreviewFooterState> {
     notifyZoomIn: (zoom: number) => void;
     notifyZoomOut: (zoom: number) => void;
     notifyAdjustRatio: (type: RatioType) => void;
     notifyRotate: (direction: RotateDirection) => void;
 }
 
-export default class PreviewFooterFoundation<P extends PreviewFooterBaseProps = PreviewFooterBaseProps, S extends PreviewFooterBaseState = PreviewFooterBaseState> extends BaseFoundation<PreviewFooterAdapter<P, S>, P, S> {
+export default class PreviewFooterFoundation<P extends PreviewFooterBaseProps = PreviewFooterBaseProps> extends BaseFoundation<PreviewFooterAdapter<P>, P, PreviewFooterState> {
     protected handleValueChange(value: number) {
         const { zoom } = this.getProps();
         if (value > zoom) {

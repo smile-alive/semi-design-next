@@ -1,7 +1,7 @@
 import { type JSX, For, Show, Suspense, batch, children, createEffect, createMemo, createSignal, on, createUniqueId, lazy, mergeProps, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/tag-input/constants';
-import TagInputFoundation, { type OnSortEndProps, type TagInputAdapter, type TagSortIds } from '@fibrae/semi-foundation/tag-input/foundation';
+import TagInputFoundation, { type OnSortEndProps, type TagInputAdapter, type TagInputBaseState, type TagSortIds } from '@fibrae/semi-foundation/tag-input/foundation';
 import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/tag-input/utils/tag-focus';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
@@ -17,7 +17,6 @@ import mergeRefs from '../_base/merge-refs';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import type { SortableHandle } from '../_sortable/types';
 import Input, { type InputChangeEvent, type InputElementEvent } from '../input';
 import type { InputGroupContextValue } from '../input/context';
@@ -86,16 +85,10 @@ export interface TagInputProps extends ElementProps<'div', 'prefix' | 'defaultVa
     preventScroll?: boolean;
 }
 
-export interface TagInputState {
-    tagsArray: string[];
-    inputValue: string;
-    focusing: boolean;
-    active: boolean;
-    entering: boolean;
-}
+export interface TagInputState extends TagInputBaseState {}
 
-type Foundation = TagInputFoundation<TagInputProps, TagInputState, Event>;
-type Adapter = TagInputAdapter<TagInputProps, TagInputState, Event>;
+type Foundation = TagInputFoundation<TagInputProps, Event>;
+type Adapter = TagInputAdapter<TagInputProps, Event>;
 
 const defaultProps = {
     showClear: false,
@@ -225,27 +218,9 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
     const { foundation, state } = useFoundation<Foundation, Adapter, TagInputProps, TagInputState>(
         TagInputFoundation,
         props,
-        (view) => ({
-            tagsArray: view.defaultValue || [],
-            inputValue: '',
-            focusing: false,
-            active: false,
-            entering: false,
-        }),
-        (base) => ({
-            setInputValue: (inputValue) => base.setState({ inputValue }),
-            setTagsArray: (tagsArray) => base.setState({ tagsArray }),
-            setFocusing: (focusing) => base.setState({ focusing }),
-            toggleFocusing: (isFocus) => {
-                if (isFocus) {
-                    input?.focus({ preventScroll: props.preventScroll });
-                } else {
-                    input?.blur();
-                }
-                base.setState({ focusing: isFocus });
-            },
-            setActive: (active) => base.setState({ active }),
-            setEntering: (entering) => base.setState({ entering }),
+        (view) => TagInputFoundation.getInitialState(view),
+        () => ({
+            focusInput: () => input?.focus({ preventScroll: props.preventScroll }),
             notifyBlur: (e) => props.onBlur?.(e),
             notifyFocus: (e) => props.onFocus?.(e),
             notifyInputChange: (value, e) => props.onInputChange?.(value, e),
@@ -271,12 +246,6 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
     const clearIcon = children(() => local.clearIcon);
     const ellipsis = createMemo(() => ({ showTooltip: local.showContentTooltip, rows: 1 }));
 
-    const inputValue = () => TagInputFoundation.getInputValue(props, state());
-
-    const active = () => state().active;
-
-    const markInside = useClickOutside([() => root], foundation.deactivate, active);
-
     const sortIds = createMemo<{ ids: TagSortIds; handled?: object }>(
         (previous) => {
             const request = moveRequest();
@@ -285,6 +254,12 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
         },
         { ids: TagInputFoundation.getSortIds(untrack(tagsArray)) }
     );
+
+    const inputValue = () => TagInputFoundation.getInputValue(props, state());
+
+    const active = () => state().active;
+
+    const markInside = useClickOutside([() => root], foundation.deactivate, active);
 
     const sortable = createMemo(() => active() && local.draggable && tagsArray().length > 0);
 
@@ -464,16 +439,6 @@ function TagInputControl(all: TagInputProps & { inGroup?: InputGroupContextValue
                 }
             />
         </Suspense>
-    );
-
-    useWatch(
-        () => props.value === undefined,
-        (uncontrolled) => uncontrolled && foundation.setState({ tagsArray: [] })
-    );
-
-    useWatch(
-        () => props.inputValue === undefined,
-        (uncontrolled) => uncontrolled && foundation.setState({ inputValue: '' })
     );
 
     createEffect(on([inputValue, () => tagsArray().length === 0, () => local.placeholder, () => local.size], foundation.fitInputWidth));

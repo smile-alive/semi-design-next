@@ -1,9 +1,8 @@
 import { Fragment, useCallback, useId, useImperativeHandle, useRef, useState } from 'react';
 import type { Editor, FocusPosition, Content as TiptapContent } from '@tiptap/core';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
 import { cssClasses, numbers, strings } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
-import AIChatInputFoundation, { type AIChatInputAdapter } from '@fibrae/semi-ai-foundation/ai-chat-input/foundation';
+import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputState } from '@fibrae/semi-ai-foundation/ai-chat-input/foundation';
 import { getAttachmentType, getContentType, getCustomSlotAttribute, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/ai-chat-input/utils';
 import { isImageFile } from '@fibrae/semi-ai-foundation/file-suffix';
 import { isUploadProgressVisible } from '@fibrae/semi-ai-foundation/upload-status';
@@ -15,17 +14,20 @@ import useDefaultProps from '@fibrae/semi-ui-react/_base/use-default-props';
 import useFoundation from '@fibrae/semi-ui-react/_base/use-foundation';
 import Button from '@fibrae/semi-ui-react/button/index';
 import { useConfigContext } from '@fibrae/semi-ui-react/config-provider/context';
-import { useDidUpdate, useFocusHandover, useLocale, useMergedRef } from '@fibrae/semi-ui-react/hooks';
+import { useFocusHandover, useLocale, useMergedRef } from '@fibrae/semi-ui-react/hooks';
 import Popover from '@fibrae/semi-ui-react/popover/index';
 import Progress from '@fibrae/semi-ui-react/progress/index';
 import Tooltip from '@fibrae/semi-ui-react/tooltip/index';
 import Upload, { type UploadHandle, type UploadProps } from '@fibrae/semi-ui-react/upload/index';
 import Configure, { type ConfigureHandle } from './configure';
 import HorizontalScroller from './horizontal-scroller';
-import type { AIChatInputProps, AIChatInputState, Skill, Attachment, Reference, Content, RenderUploadButtonProps } from './interface';
+import type { AIChatInputProps, Skill, Attachment, Reference, Content, RenderUploadButtonProps } from './interface';
 import RichTextInput from './rich-text-input';
 import SkillItem from './skill-item';
 import SuggestionItem from './suggestion-item';
+
+type Foundation = AIChatInputFoundation<AIChatInputProps>;
+type Adapter = AIChatInputAdapter<AIChatInputProps>;
 
 export { default as getConfigureItem } from './configure/get-configure-item';
 export * from './interface';
@@ -171,23 +173,13 @@ function AIChatInput(rawProps: AIChatInputProps) {
     const configureRef = useRef<ConfigureHandle>(null);
     const [transformedContent, setTransformedContent] = useState<Content[]>([]);
 
-    const [foundation, state] = useFoundation<AIChatInputFoundation<AIChatInputProps, AIChatInputState>, AIChatInputAdapter<AIChatInputProps, AIChatInputState>, AIChatInputProps, AIChatInputState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, AIChatInputProps, AIChatInputState>(
         AIChatInputFoundation,
         props,
-        () => ({
-            templateVisible: false,
-            skillVisible: false,
-            suggestionVisible: false,
-            attachments: props.uploadProps?.defaultFileList ?? [],
-            content: null,
-            skill: undefined,
-            activeSkillIndex: 0,
-            activeSuggestionIndex: 0,
-        }),
+        () => AIChatInputFoundation.getInitialState(props),
         (base) => ({
             setContent: runtime.setContent,
             clearContent: () => runtime.setContent(''),
-            clearAttachments: () => base.setState({ attachments: [] }),
             focusEditor: runtime.focus,
             getEditor: () => runtime.editor,
             // the panel may render in a shadow root, out of reach of document queries
@@ -418,25 +410,6 @@ function AIChatInput(rawProps: AIChatInputProps) {
     };
 
     const actionNode = [renderUploadNode(), sendNode];
-
-    // compared deeply: callers often pass a new array with the same items
-    useDidUpdate(
-        suggestions,
-        (current) => {
-            if (current && current.length > 0) {
-                foundation.showSuggestionPanel();
-            } else {
-                foundation.hideSuggestionPanel();
-            }
-        },
-        isEqual
-    );
-
-    useDidUpdate(generating, (isGenerating) => {
-        if (isGenerating) {
-            foundation.handleGeneratingStart();
-        }
-    });
 
     useImperativeHandle(
         ref,

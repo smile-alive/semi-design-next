@@ -2,7 +2,7 @@
     import { type Snippet, untrack } from 'svelte';
     import { on } from 'svelte/events';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
-    import UserGuideFoundation, { type UserGuideAdapter } from '@fibrae/semi-foundation/user-guide/foundation';
+    import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
     import { coversPage } from '@fibrae/semi-foundation/utils/dom';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
@@ -17,12 +17,12 @@
     import useLocale from '../locale/use-locale.svelte.js';
     import { Modal } from '../modal/index.js';
     import { Popover } from '../popover/index.js';
-    import type { UserGuideButtonProps, UserGuideProps, UserGuideState, UserGuideStepItem, UserGuideStepSnippetProps } from './interface.js';
+    import type { UserGuideButtonProps, UserGuideProps, UserGuideStepItem, UserGuideStepSnippetProps } from './interface.js';
     import { anchorStyle, buttonProps } from './utils.js';
 
-    type FoundationProps = Pick<UserGuideProps, 'current'> & { steps: UserGuideStepItem[] };
-    type Foundation = UserGuideFoundation<FoundationProps, UserGuideState>;
-    type Adapter = UserGuideAdapter<FoundationProps, UserGuideState>;
+    type FoundationProps = Pick<UserGuideProps, 'current' | 'spotlightPadding'> & { steps: UserGuideStepItem[] };
+    type Foundation = UserGuideFoundation<FoundationProps>;
+    type Adapter = UserGuideAdapter<FoundationProps>;
 
     const defaults = useDefaultProps('UserGuide');
 
@@ -76,16 +76,19 @@
         get current() {
             return current ?? defaults('current');
         },
+        get spotlightPadding() {
+            return spotlightPadding;
+        },
         get steps() {
             return steps;
         },
     };
 
-    const { foundation, states } = useFoundation<Foundation, Adapter, FoundationProps, UserGuideState>(
+    const { foundation, states } = useFoundation<Foundation, Adapter, FoundationProps, UserGuideBaseState>(
         UserGuideFoundation,
         foundationProps,
-        (view) => ({ current: view.current ?? numbers.DEFAULT_CURRENT, spotlightRect: null }),
-        (base) => ({
+        (view) => UserGuideFoundation.getInitialState(view),
+        () => ({
             // Only a popup guide covers the page with its mask; a modal guide is locked by its Modal
             disabledBodyScroll: () => (mode === 'popup' && showMask && coversPage(getPopupContainer ?? config.getPopupContainer) ? scroll.hold(lockBodyScroll) : scroll.release()),
             enabledBodyScroll: () => scroll.release(),
@@ -105,7 +108,6 @@
                 visible = false;
                 onSkip?.();
             },
-            setCurrent: (next) => base.setState({ current: next }),
         })
     );
 
@@ -138,14 +140,6 @@
     const modalPrevProps = $derived(buttonProps({ type: 'tertiary' }, prevButtonProps, foundation.handlePrev));
     const modalNextProps = $derived(buttonProps({ theme: 'solid' }, nextButtonProps, foundation.handleNext));
 
-    // Only a step change scrolls, so a user scroll is followed, not fought. A null rect means the step has no target (yet).
-    const measure = (scrollIntoView: boolean) => {
-        const next = UserGuideFoundation.measure(step, spotlightPadding, scrollIntoView);
-        if (!UserGuideFoundation.isSameRect(states().spotlightRect, next)) {
-            foundation.setState({ spotlightRect: next });
-        }
-    };
-
     // Restore focus only if it is still on the card (or lost with it), so a user who clicked elsewhere stays there. A
     // modal guide gets this from its Modal.
     const restoreFocus = () => {
@@ -166,7 +160,7 @@
 
     $effect(() => {
         if (!measuring) return;
-        const remeasure = () => untrack(() => measure(false));
+        const remeasure = () => untrack(() => foundation.measureSpotlight(false));
         const offResize = on(window, 'resize', remeasure);
         // capture: a scroll inside any container can move the target
         const offScroll = on(window, 'scroll', remeasure, { capture: true });
@@ -178,12 +172,12 @@
 
     $effect(() => {
         void currentIndex;
-        if (measuring) untrack(() => measure(true));
+        if (measuring) untrack(() => foundation.measureSpotlight(true));
     });
 
     $effect(() => {
         if (!measuring) return;
-        return UserGuideFoundation.trackFrames(() => untrack(() => measure(false)));
+        return UserGuideFoundation.trackFrames(() => untrack(() => foundation.measureSpotlight(false)));
     });
 
     $effect(() => {
@@ -197,16 +191,10 @@
     $effect(() => {
         if (!open) return;
         return () => {
-            foundation.afterHide();
+            // cleared first: afterHide restarts from the first step only when no current is left
             if (!pinned) current = undefined;
+            foundation.afterHide();
         };
-    });
-
-    // Mirrors a controlled current into state; after the hide effect, so a hide keeps the controlled step
-    $effect(() => {
-        const controlled = current;
-        void open;
-        if (controlled !== undefined) untrack(() => foundation.setState({ current: controlled }));
     });
 
     $effect(() => {

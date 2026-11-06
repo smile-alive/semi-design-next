@@ -4092,7 +4092,7 @@ describe('Select', async () => {
             expect(document.querySelector(`.${prefixCls}-arrow`)?.children).toHaveLength(0);
         });
 
-        it('KeepAlive 内失活时关闭弹层且不发 blur', async () => {
+        it('KeepAlive 内失活时弹层离开文档，重新激活后仍打开，隐藏与显示都不发 blur，外部按下能关闭', async () => {
             const shown = ref(true);
             const onBlur = vi.fn<(event: Event) => void>();
             const Other = defineComponent({ render: () => <div>other</div> });
@@ -4114,9 +4114,13 @@ describe('Select', async () => {
             await expectClosed();
             shown.value = true;
             await settle();
-            expect(getRoot()).toHaveAttribute('aria-expanded', 'false');
-            expect(getOptionList()).toBeNull();
+            expect(getRoot()).toHaveAttribute('aria-expanded', 'true');
+            expect(getOptionList()).toBeVisible();
             expect(onBlur).not.toHaveBeenCalled();
+
+            await fireEvent.mouseDown(document.body);
+            await expectClosed();
+            expect(getRoot()).toHaveAttribute('aria-expanded', 'false');
         });
 
         it('Select.Option 与 Select.OptGroup 即具名导出', () => {

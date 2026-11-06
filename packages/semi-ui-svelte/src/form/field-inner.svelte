@@ -198,10 +198,7 @@
         if (!registered) {
             return;
         }
-        // renames happen one at a time, so another field may already own this name; leave its registration alone
-        if (form.bridge.getField(registered.field) === registered.registration) {
-            form.bridge.unRegister(registered.field);
-        }
+        form.bridge.unRegister(registered.registration);
         registered.leaveGroup?.();
         registered = undefined;
     };
@@ -231,7 +228,7 @@
     });
 
     // A renamed field (a shifted ArrayField row) moves its registration; the first run is the mount below
-    $effect.pre(() => {
+    $effect(() => {
         const path = field;
         untrack(() => {
             if (registered && registered.field !== path) {

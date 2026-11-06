@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, onActivated, onBeforeUnmount, onDeactivated, shallowRef, useAttrs, useId, useTemplateRef, watch, type CSSProperties, type StyleValue } from 'vue';
+    import { computed, nextTick, onBeforeUnmount, shallowRef, useAttrs, useId, useTemplateRef, watch, type CSSProperties, type StyleValue } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/side-sheet/constants';
     import SideSheetFoundation, { type SideSheetAdapter, type SideSheetState } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
     import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
@@ -16,6 +16,7 @@
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import { hasSlotContent } from '../_base/slot-nodes';
     import useFoundation from '../_base/use-foundation';
+    import useKeepAliveFoundation from '../_base/use-keep-alive-foundation';
     import useRecordFocus from '../_base/use-record-focus';
     import useConfig from '../config-provider/use-config';
     import IconButton from '../icon-button';
@@ -71,9 +72,6 @@
     // leave has ended or the Portal unmounts it without one.
     const displayed = shallowRef(false);
 
-    // A deactivated KeepAlive subtree gives up the page inert, scroll lock and focus trap without reporting a close.
-    const active = shallowRef(true);
-
     const prefix = cssClasses.PREFIX;
     const getContainer = computed(() => props.getPopupContainer ?? readSemiDefault(semi, 'SideSheet', 'getPopupContainer'));
     const hidden = computed(() => (props.visible ? false : !props.motion || !displayed.value));
@@ -87,7 +85,7 @@
     const { foundation } = useFoundation<Foundation, Adapter, FoundationProps, SideSheetState>(
         SideSheetFoundation,
         props,
-        () => ({}),
+        () => SideSheetFoundation.getInitialState(),
         () => ({
             disabledBodyScroll: () => (isModal() ? scroll.hold(lockBodyScroll) : scroll.release()),
             enabledBodyScroll: () => scroll.release(),
@@ -119,6 +117,16 @@
             },
         })
     );
+
+    // A deactivated KeepAlive subtree gives up the page inert, scroll lock and focus trap without reporting a close.
+    // Portal's hook runs after this one and re-teleports the content in the next render, which would drop a focus
+    // placed before it, so init waits for that render.
+    const keepAlive: ReturnType<typeof useKeepAliveFoundation> = useKeepAliveFoundation({
+        connect: () => foundation.connect(),
+        disconnect: () => foundation.disconnect(),
+        init: () => void nextTick(() => keepAlive.isDeactivated() || foundation.init()),
+        destroy: () => foundation.destroy(),
+    });
 
     const onEnter = () => foundation.toggleDisplayNone(false);
 
@@ -172,10 +180,9 @@
 
     // vShow writes the display back only in the directive hook that starts the enter, and a post watch on visible runs
     // before that hook, so a keepDOM reopen would move focus into a display:none dialog; waiting for displayed also waits
-    // for Portal, which renders a tick after this component mounts. Post flush runs after Portal moves the dialog back on
-    // reactivation.
+    // for Portal, which renders a tick after this component mounts.
     watch(
-        () => Boolean(props.visible) && active.value && displayed.value,
+        () => Boolean(props.visible) && displayed.value,
         (shown, _, onCleanup) => {
             if (!shown) return;
             foundation.beforeShow();
@@ -190,14 +197,6 @@
         (isHidden) => foundation.onVisibleChange(!isHidden),
         { flush: 'post' }
     );
-
-    onDeactivated(() => {
-        active.value = false;
-    });
-
-    onActivated(() => {
-        active.value = true;
-    });
 
     // Unmounting while shown or leaving counts as hiding; emitted before unmount, since Vue drops emits after it.
     onBeforeUnmount(() => {

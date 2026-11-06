@@ -86,7 +86,7 @@
                 return currentIndex;
             },
         },
-        () => ({}),
+        (view) => PreviewFoundation.getInitialState(view),
         () => ({
             // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
             notifyVisibleChange: (next) => {

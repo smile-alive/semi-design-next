@@ -18,6 +18,9 @@ import Button from '../icon-button';
 import useLocale from '../locale/use-locale';
 import Typography from '../typography';
 
+type Foundation = ModalContentFoundation<ModalContentReactProps, React.MouseEvent>;
+type Adapter = ModalContentAdapter<ModalContentReactProps, React.MouseEvent>;
+
 export interface ModalContentReactProps extends ModalContentProps, React.AriaAttributes {
     /** whether the dialog is shown: from opening until the leave animation ends */
     open: boolean;
@@ -95,7 +98,7 @@ export default function ModalContent(props: ModalContentReactProps) {
     const [runtime] = useState(() => new ModalContentRuntime());
     let headerNode: ReactNode = null;
 
-    const [foundation] = useFoundation<ModalContentFoundation<ModalContentReactProps, React.MouseEvent>, ModalContentAdapter<ModalContentReactProps, React.MouseEvent>, ModalContentReactProps, Record<string, any>>(
+    const [foundation] = useFoundation<Foundation, Adapter, ModalContentReactProps, Record<string, any>>(
         ModalContentFoundation,
         props,
         () => ({}),

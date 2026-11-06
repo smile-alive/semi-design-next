@@ -47,9 +47,4 @@ export interface AnchorProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title
     title?: Snippet<[AnchorTitleContext]>;
 }
 
-export interface AnchorState {
-    activeLink: string;
-    links: string[];
-    clickLink: boolean;
-    slideBarTop: string;
-}
+export type { AnchorBaseState as AnchorState } from '@fibrae/semi-foundation/anchor/foundation';

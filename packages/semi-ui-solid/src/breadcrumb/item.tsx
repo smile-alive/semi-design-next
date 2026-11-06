@@ -16,8 +16,8 @@ const clsPrefix = cssClasses.PREFIX;
 
 export const BREADCRUMB_ITEM = 'Breadcrumb.Item';
 
-type Foundation = BreadcrumbItemFoundation<BreadcrumbItemViewProps, object, MouseEvent>;
-type Adapter = BreadcrumbItemAdapter<BreadcrumbItemViewProps, object, MouseEvent>;
+type Foundation = BreadcrumbItemFoundation<BreadcrumbItemViewProps, MouseEvent>;
+type Adapter = BreadcrumbItemAdapter<BreadcrumbItemViewProps, MouseEvent>;
 
 // Breadcrumb renders the item from this token (ItemView); standing alone it renders nothing
 export default function BreadcrumbItem(props: BreadcrumbItemProps) {

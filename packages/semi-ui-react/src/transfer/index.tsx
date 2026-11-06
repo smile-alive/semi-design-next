@@ -4,14 +4,12 @@ import clsx from 'clsx';
 import { omit } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/transfer/constants';
 import TransferFoundation, { type TransferAdapter, type BasicDataItem, type OnSortEndProps } from '@fibrae/semi-foundation/transfer/foundation';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/transfer/transfer.scss';
 import { IconClose, IconSearch, IconHandle } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import { createContext } from '../_base/create-context';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import useIsServerRender from '../_base/use-is-server-render';
 import VirtualList, { type VirtualListRowProps } from '../_base/virtual-list';
@@ -26,6 +24,9 @@ import Spin from '../spin';
 import Tree from '../tree';
 import AutoSizer from '../tree/auto-sizer';
 import type { Value as TreeValue, TreeProps, TreeHandle } from '../tree/interface';
+
+type Foundation = TransferFoundation<TransferProps, React.FocusEvent<HTMLDivElement>>;
+type Adapter = TransferAdapter<TransferProps, React.FocusEvent<HTMLDivElement>>;
 
 const SortableList = lazy(() => import('../_sortable').then((module) => ({ default: module.Sortable })));
 
@@ -193,10 +194,6 @@ const prefixCls = cssClasses.PREFIX;
 const defaultProps = {
     type: strings.TYPE_LIST as Type,
     dataSource: [],
-    onSearch: noop,
-    onChange: noop,
-    onSelect: noop,
-    onDeselect: noop,
     defaultValue: [],
     emptyContent: {},
     showPath: false,
@@ -299,24 +296,17 @@ export default function Transfer(rawProps: TransferProps) {
 
     const isServerRender = useIsServerRender();
 
-    const [foundation, state] = useFoundation<TransferFoundation<TransferProps, TransferState, React.FocusEvent<HTMLDivElement>>, TransferAdapter<TransferProps, TransferState, React.FocusEvent<HTMLDivElement>>, TransferProps, TransferState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, TransferProps, TransferState>(
         TransferFoundation,
         props,
-        () => ({
-            selectedValues: props.defaultValue,
-            inputValue: '',
-            leftCurrentPage: props.pagination?.defaultCurrentPage ?? props.pagination?.currentPage ?? 1,
-        }),
+        () => TransferFoundation.getInitialState(props),
         (base) => ({
-            updateSelected: (selectedValues) => base.setState({ selectedValues }),
             notifyBlur: (e) => base.getProps().onBlur?.(e),
-            notifyChange: (values, items) => base.getProps().onChange(values, items),
-            notifySearch: (input) => base.getProps().onSearch(input),
-            notifySelect: (item) => base.getProps().onSelect(item),
-            notifyDeselect: (item) => base.getProps().onDeselect(item),
-            updateInput: (inputValue) => base.setState({ inputValue }),
+            notifyChange: (values, items) => base.getProps().onChange?.(values, items),
+            notifySearch: (input) => base.getProps().onSearch?.(input),
+            notifySelect: (item) => base.getProps().onSelect?.(item),
+            notifyDeselect: (item) => base.getProps().onDeselect?.(item),
             searchTree: (keyword) => treeRef.current?.search(keyword),
-            updateCurrentPage: (leftCurrentPage) => base.setState({ leftCurrentPage }),
             notifyPageChange: (currentPage) => base.getProps().pagination?.onPageChange?.(currentPage),
         })
     );
@@ -682,12 +672,6 @@ export default function Transfer(rawProps: TransferProps) {
             </section>
         );
     };
-
-    useDidUpdate(value, (next, previous) => {
-        if (Array.isArray(previous) && !Array.isArray(next)) {
-            foundation.handleValueRelease();
-        }
-    });
 
     useImperativeHandle(props.ref, () => ({ search: (value: string) => foundation.handleInputChange(value, false) }), [foundation]);
 

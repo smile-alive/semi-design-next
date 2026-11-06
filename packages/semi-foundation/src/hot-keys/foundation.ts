@@ -1,7 +1,7 @@
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import { keyToCode, Keys } from './constants';
 
-export interface HotKeysAdapter<P extends HotKeysBaseProps = HotKeysBaseProps, S extends object = object> extends DefaultAdapter<P, S> {
+export interface HotKeysAdapter<P extends HotKeysBaseProps = HotKeysBaseProps> extends DefaultAdapter<P, object> {
     notifyHotKey: (e: KeyboardEvent) => void;
 }
 
@@ -11,9 +11,14 @@ export interface HotKeysBaseProps {
     getListenerTarget?: () => HTMLElement | null | undefined;
 }
 
-export default class HotKeysFoundation<P extends HotKeysBaseProps = HotKeysBaseProps, S extends object = object> extends BaseFoundation<HotKeysAdapter<P, S>, P, S> {
+const sameKeys = (a: readonly string[], b: readonly string[]) => a.length === b.length && a.every((key, index) => key === b[index]);
+
+export default class HotKeysFoundation<P extends HotKeysBaseProps = HotKeysBaseProps> extends BaseFoundation<HotKeysAdapter<P>, P, object> {
     // unbinding must not re-query `getListenerTarget`, which may return another element by then
     #target: HTMLElement | null = null;
+    static override readonly propKeys = ['hotKeys', 'getListenerTarget'];
+    // an inline array is new on every parent render
+    static override readonly propEquals = { hotKeys: sameKeys };
 
     #getTarget() {
         return this.getProps().getListenerTarget?.() ?? document.body;
@@ -93,13 +98,14 @@ export default class HotKeysFoundation<P extends HotKeysBaseProps = HotKeysBaseP
     }
 
     /** Applies the same check as mounting, so an invalid combination set later fails just as loudly */
-    handleHotKeysChange = () => {
+    override handlePropsChange() {
         this.#validate();
-    };
+        this.handleTargetChange();
+    }
 
-    /** Moves the keydown listener when `getListenerTarget` now returns a different element */
+    /** Moves the keydown listener when `getListenerTarget` now returns a different element; idle while destroyed */
     handleTargetChange = () => {
-        if (this.#getTarget() !== this.#target) {
+        if (this.#target && this.#getTarget() !== this.#target) {
             this.#unbind();
             this.#bind();
         }

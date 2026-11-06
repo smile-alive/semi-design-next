@@ -8,7 +8,7 @@ function setup(props: RadioBaseProps, context: RadioContextView | null = null, c
         getProps: () => props,
         getStates: () => ({ checked }),
         getContexts: () => context,
-        setChecked: vi.fn<(checked: boolean) => void>(),
+        setState: vi.fn<(state: object) => void>(),
         notifyGroupChange: vi.fn<(e: RadioChangeEvent) => void>(),
         notifyChange: vi.fn<(e: RadioChangeEvent) => void>(),
         getInput: () => null,
@@ -40,7 +40,7 @@ describe('RadioFoundation', () => {
                 isCardRadio: true,
                 isPureCardRadio: true,
             });
-            expect(RadioFoundation.deriveView({ type: 'button' }, {}, null).isButtonRadio).toBe(true);
+            expect(RadioFoundation.deriveView({ type: 'button' }, { checked: false }, null).isButtonRadio).toBe(true);
         });
 
         it('受控的 checked 在当次渲染就生效', () => {
@@ -53,7 +53,7 @@ describe('RadioFoundation', () => {
                 mode: 'advanced',
                 radioGroup: { value: 'a', disabled: true, isCardRadio: true, buttonSize: 'small', prefixCls: 'g' },
             };
-            expect(RadioFoundation.deriveView({ value: 'a', type: 'button' }, {}, context)).toMatchObject({
+            expect(RadioFoundation.deriveView({ value: 'a', type: 'button' }, { checked: false }, context)).toMatchObject({
                 inGroup: true,
                 checked: true,
                 disabled: true,
@@ -63,12 +63,12 @@ describe('RadioFoundation', () => {
                 buttonSize: 'small',
                 prefixCls: 'g',
             });
-            expect(RadioFoundation.deriveView({ value: 'b' }, {}, context).checked).toBe(false);
+            expect(RadioFoundation.deriveView({ value: 'b' }, { checked: false }, context).checked).toBe(false);
         });
 
         it('组内没有 value 的单选框不会被选中', () => {
             const context = { radioGroup: { value: undefined } };
-            expect(RadioFoundation.deriveView({}, {}, context).checked).toBe(false);
+            expect(RadioFoundation.deriveView({}, { checked: false }, context).checked).toBe(false);
         });
     });
 
@@ -77,17 +77,17 @@ describe('RadioFoundation', () => {
             const { adapter, foundation } = setup({ value: 'a' });
             const calls: string[] = [];
             adapter.notifyGroupChange.mockImplementation(() => calls.push('group'));
-            adapter.setChecked.mockImplementation(() => calls.push('set'));
+            adapter.setState.mockImplementation(() => calls.push('set'));
             adapter.notifyChange.mockImplementation(() => calls.push('own'));
             foundation.handleChange(true, source());
             expect(calls).toEqual(['group', 'set', 'own']);
-            expect(adapter.setChecked).toHaveBeenCalledWith(true);
+            expect(adapter.setState).toHaveBeenCalledWith({ checked: true }, undefined);
         });
 
         it('受控时不写入 checked', () => {
             const { adapter, foundation } = setup({ value: 'a', checked: false });
             foundation.handleChange(true, source());
-            expect(adapter.setChecked).not.toHaveBeenCalled();
+            expect(adapter.setState).not.toHaveBeenCalled();
             expect(adapter.notifyChange).toHaveBeenCalledTimes(1);
         });
 

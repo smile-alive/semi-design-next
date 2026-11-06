@@ -1,11 +1,9 @@
-import { Show, batch, createMemo } from 'solid-js';
-import { isEqual } from 'es-toolkit';
+import { Show, batch } from 'solid-js';
 import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
 import DataPartFoundation, { type DataPartAdapter, type DataPartBaseProps, type DataPartBaseState } from '@fibrae/semi-foundation/color-picker/data-part-foundation';
 import type { ColorFormat } from '@fibrae/semi-foundation/color-picker/interface';
 import { IconEyedropper } from '@fibrae/semi-icons-solid';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import Button from '../button';
 import Input, { InputGroup } from '../input';
 import InputNumber from '../input-number';
@@ -25,22 +23,16 @@ export default function DataPart(props: DataPartProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, DataPartBaseProps, DataPartBaseState>(
         DataPartFoundation,
         props,
-        (initial) => ({
-            format: initial.defaultFormat,
-            inputValue: DataPartFoundation.getInputValue(initial.currentColor, initial.defaultFormat),
-        }),
+        (initial) => DataPartFoundation.getInitialState(initial),
         () => ({})
     );
 
-    // an equal color object, such as a fresh controlled value, must not rewrite what is being typed
-    const currentColor = createMemo(() => props.currentColor, undefined, { equals: isEqual });
-
     const demoColor = () => {
-        const { r, g, b, a } = currentColor().rgba;
+        const { r, g, b, a } = props.currentColor.rgba;
         return `rgba(${r},${g},${b},${a})`;
     };
 
-    // one commit: the sync effect must see the typed text, or it rewrites it with the canonical text of its own color
+    // one commit: the prop reaction must see the typed text, or it rewrites it with the canonical text of its own color
     const handleTextChange = (text: string) =>
         batch(() => {
             const value = foundation.getValueByInputValue(text);
@@ -49,13 +41,6 @@ export default function DataPart(props: DataPartProps) {
             }
             foundation.handleInputValueChange(text);
         });
-
-    // the color the typed text produced must not rewrite the input, or its canonical text erases the next keystrokes
-    useWatch(currentColor, (color) => {
-        if (!foundation.isInputValueOf(color)) {
-            foundation.syncInputValue();
-        }
-    });
 
     return (
         <div class={`${cssClasses.PREFIX}-dataPart`} style={{ width: `${props.width}px` }}>
@@ -81,7 +66,7 @@ export default function DataPart(props: DataPartProps) {
                         aria-label={locale().locale.alpha}
                         max={100}
                         min={0}
-                        value={Math.round(currentColor().rgba.a * 100)}
+                        value={Math.round(props.currentColor.rgba.a * 100)}
                         addonAfter={null}
                         addonBefore={null}
                         hideButtons

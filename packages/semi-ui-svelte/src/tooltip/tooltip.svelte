@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { onMount, untrack } from 'svelte';
+    import { onMount, tick, untrack } from 'svelte';
     import { type Attachment, createAttachmentKey } from 'svelte/attachments';
     import { SvelteMap, SvelteSet } from 'svelte/reactivity';
     import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/button/constants';
     import { COLOR_SCHEME_SELECTOR, canRoleCarryPopupState, colorSchemeOf, cssClasses, isBlockDisplay, numbers, popupTarget, strings, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
-    import TooltipFoundation, { type TooltipAdapter, type TooltipBaseProps } from '@fibrae/semi-foundation/tooltip/foundation';
+    import TooltipFoundation, { type TooltipAdapter, type TooltipBaseProps, type TooltipBaseState } from '@fibrae/semi-foundation/tooltip/foundation';
     import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
     import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
@@ -15,24 +15,13 @@
     import teleport from '../_base/teleport.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import { getConfigContext } from '../config-provider/context.js';
     import { getTooltipPopupsContext, setTooltipPopupsContext, setTriggerContext, type TriggerBinding, type TriggerState } from './context.js';
     import type { FocusTarget, RenderContentProps, TooltipProps, TooltipTriggerProps } from './interface.js';
     import TriangleArrow from './triangle-arrow.svelte';
 
-    interface TooltipState {
-        visible: boolean;
-        transitionState: 'enter' | 'leave' | '';
-        triggerEventSet: Record<string, EventListener>;
-        portalEventSet: Record<string, EventListener>;
-        isInsert: boolean;
-        portalTarget: HTMLElement | ShadowRoot | null;
-        colorScheme?: string;
-    }
-
-    type Foundation = TooltipFoundation<TooltipBaseProps, TooltipState>;
-    type Adapter = TooltipAdapter<TooltipBaseProps, TooltipState>;
+    type Foundation = TooltipFoundation<TooltipBaseProps>;
+    type Adapter = TooltipAdapter<TooltipBaseProps>;
 
     const defaults = useDefaultProps('Tooltip');
 
@@ -105,12 +94,10 @@
     let closePending = false;
     let warnedFocusable = false;
 
-    // the value the last uncontrolled change reported, which the `visible` watch must not apply again
-    let reported: boolean | undefined;
-
-    // `visible` holds a value this Tooltip wrote itself: the foundation still sees it as uncontrolled, so hiding and
-    // showing again in one task (focus moving between trigger and popup with a zero delay) stays synchronous
-    let selfWritten = false;
+    // The value this Tooltip last wrote to an uncontrolled `visible`: the foundation still sees it as uncontrolled, so
+    // hiding and showing again in one task (focus moving between trigger and popup with a zero delay) stays
+    // synchronous. A different value from the owner ends it, and the foundation then reacts to that value.
+    let selfWritten: boolean | undefined;
     const descendants = new SvelteSet<() => HTMLElement | null>();
     const triggers = new SvelteMap<Element, () => TriggerState>();
 
@@ -179,21 +166,17 @@
             return trigger;
         },
         get visible() {
-            return selfWritten ? undefined : visible;
+            if (selfWritten !== undefined && visible !== selfWritten) {
+                selfWritten = undefined;
+            }
+            return selfWritten === undefined ? visible : undefined;
         },
     };
 
-    const { foundation, states } = useFoundation<Foundation, Adapter, TooltipBaseProps, TooltipState>(
+    const { foundation, states } = useFoundation<Foundation, Adapter, TooltipBaseProps, TooltipBaseState>(
         TooltipFoundation,
         foundationProps,
-        () => ({
-            visible: false,
-            transitionState: '',
-            triggerEventSet: {},
-            portalEventSet: {},
-            isInsert: false,
-            portalTarget: null,
-        }),
+        () => TooltipFoundation.getInitialState(),
         (base) => ({
             insertPortal: () => {
                 const element = triggerElement;
@@ -208,22 +191,18 @@
                     colorScheme: colorSchemeOf(element?.closest(COLOR_SCHEME_SELECTOR)),
                 });
             },
-            closePopup: () => base.setState({ transitionState: 'leave', visible: false }),
             removePortal: () => {
                 contentShown = false;
                 base.setState({ isInsert: false, transitionState: '' });
             },
-            registerTriggerEvent: (triggerEventSet) => base.setState({ triggerEventSet }),
-            registerPortalEvent: (portalEventSet) => base.setState({ portalEventSet }),
             notifyVisibleChange: (next) => {
                 // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides
-                // locally, and the foundation applies it through the `visible` watch below
-                const uncontrolled = visible === undefined || selfWritten;
+                // locally, and the foundation applies it as a `visible` change
+                const uncontrolled = foundationProps.visible === undefined;
                 visible = next;
-                // an uncontrolled change was applied before this report: the watch below would only replay it, and
-                // its delayShow would cancel a hide scheduled meanwhile (a trigger blurred right after opening)
-                selfWritten = uncontrolled && visible === next;
-                reported = selfWritten ? next : undefined;
+                // an uncontrolled change was applied before this report: seen as a `visible` change it would only be
+                // replayed, and its delayShow would cancel a hide scheduled meanwhile (a trigger blurred right after opening)
+                selfWritten = uncontrolled && visible === next ? next : undefined;
                 onVisibleChange?.(next);
             },
             registerClickOutsideHandler: (handler) => {
@@ -504,12 +483,20 @@
                         finishClose();
                     }
                 };
-                const animations = element.getAnimations();
-                if (animations.length) {
-                    void Promise.allSettled(animations.map((animation) => animation.finished)).then(finish);
-                } else {
-                    finish();
-                }
+                // shortcut: a leave set by a prop reaction (handlePropsChange runs in a host effect created before this
+                // one) reaches this effect before the template drops the show class, so the exit animation is read
+                // after tick(). Read it at once again when the host runs prop reactions after the component's effects.
+                void tick().then(() => {
+                    if (cancelled) {
+                        return;
+                    }
+                    const animations = element.getAnimations();
+                    if (animations.length) {
+                        void Promise.allSettled(animations.map((animation) => animation.finished)).then(finish);
+                    } else {
+                        finish();
+                    }
+                });
                 return () => {
                     cancelled = true;
                 };
@@ -543,29 +530,6 @@
     $effect(() => {
         warning((mouseLeaveDelay ?? 0) < (mouseEnterDelay ?? 0), strings.LEAVE_DELAY_WARNING);
     });
-
-    watch(() => position, foundation.calcPosition);
-    watch(() => trigger, foundation.rebindEvents);
-    watch(() => clickToHide, foundation.rebindEvents);
-
-    watch(
-        () => visible,
-        (value) => {
-            const replay = value === reported;
-            reported = undefined;
-            if (!replay) {
-                selfWritten = false;
-                foundation.handleVisiblePropChange();
-            }
-        }
-    );
-
-    watch(
-        () => condition,
-        (value) => {
-            if (value === false) foundation.hide();
-        }
-    );
 
     // Measured again when the trigger component's state changes: a disabled Button is not focusable, an enabled one is
     $effect(() => {

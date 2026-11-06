@@ -1,6 +1,5 @@
 import { type JSX, type Ref, Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
 import getYearMonthFromValue from '@fibrae/semi-foundation/date-picker/_utils/get-year-month-from-value';
 import { isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
 import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/date-picker/constants';
@@ -298,17 +297,10 @@ export default function DatePicker(rawProps: DatePickerProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, DatePickerState>(
         DatePickerFoundation,
         props as FoundationProps,
-        (view) => ({
-            panelShow: Boolean(view.open || view.defaultOpen),
-            isRange: false,
-            ...DatePickerFoundation.getInitialState(view),
-            autofocus: Boolean(props.autofocus || (hasRangeInputs(view.type, props.triggerRender) && (view.open || view.defaultOpen))),
-            insetInputValue: null,
-            triggerDisabled: null,
-            focusRecords: { rangeStart: false, rangeEnd: false },
-        }),
+        // Solid names the prop `autofocus`, while the foundation reads `autoFocus`; a getter on the shared props would
+        // reach the root element and triggerRender's componentProps
+        (view) => DatePickerFoundation.getInitialState(mergeProps(view, { autoFocus: props.autofocus })),
         (base) => ({
-            togglePanel: (panelShow, cb) => base.setState({ panelShow }, cb),
             notifyBlur: (e) => props.onBlur?.(e),
             notifyFocus: (e, rangeType) => props.onFocus?.(e, rangeType),
             notifyClear: (e) => props.onClear?.(e),
@@ -318,15 +310,6 @@ export default function DatePicker(rawProps: DatePickerProps) {
             notifyOpenChange: (open) => props.onOpenChange?.(open),
             notifyClickOutSide: (e) => props.onClickOutSide?.(e),
             notifyPresetsClick: (item, e) => props.onPresetClick?.(item, e),
-            updateValue: (value) => base.setState({ value }),
-            updatePrevTimezone: (prevTimeZone) => base.setState({ prevTimeZone }),
-            updateCachedSelectedValue: (cachedSelectedValue) => base.setState({ cachedSelectedValue }),
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            updateInsetInputValue: (insetInputValue) => {
-                if (props.insetInput && !isEqual(insetInputValue, base.getState('insetInputValue'))) {
-                    base.setState({ insetInputValue });
-                }
-            },
             setRangeInputFocus: (rangeInputFocus) => {
                 const focusOptions = { preventScroll: props.preventScroll };
                 // focus first: its onFocus must still read the previous rangeInputFocus
@@ -340,7 +323,6 @@ export default function DatePicker(rawProps: DatePickerProps) {
                 }
             },
             isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panel()),
-            isEventTarget: (e) => Boolean(e) && e.target === e.currentTarget,
             setInsetInputFocus: () => {
                 const input = base.getState('rangeInputFocus') === 'rangeEnd' ? inputs.insetEnd : inputs.insetStart;
                 if (input && FocusTrapHandle.getActiveElement(input) !== input) {
@@ -355,15 +337,8 @@ export default function DatePicker(rawProps: DatePickerProps) {
                     active.blur();
                 }
             },
-            setTriggerDisabled: (triggerDisabled, callback) => base.setState({ triggerDisabled }, callback),
         })
     );
-
-    // a new value prop wins (back to undefined clears it), else a new timeZone re-zones the shown value. By value: a
-    // Date or array rebuilt by the owner is a new object and must not reset the panel
-    const syncInputs = createMemo(() => ({ value: local.value, timeZone: local.timeZone }), undefined, {
-        equals: (a, b) => isEqual(a.value, b.value) && a.timeZone === b.timeZone,
-    });
 
     const panelShow = () => DatePickerFoundation.isPanelShown(props, state());
 
@@ -753,42 +728,6 @@ export default function DatePicker(rawProps: DatePickerProps) {
             </div>
             {renderFooter()}
         </div>
-    );
-
-    // not useWatch: init in onMount reads value, timeZone, open and disabled, so the baseline is the inputs at each
-    // effect's first run, right after init; a creation-time baseline would re-zone a timeZone a parent changed before
-    // init a second time
-    createEffect(
-        on(syncInputs, (current, previous) => {
-            if (!previous) {
-                return;
-            }
-            if (!isEqual(previous.value, current.value)) {
-                foundation.initFromProps({ value: current.value, timeZone: current.timeZone });
-            } else if (current.timeZone !== previous.timeZone) {
-                foundation.initFromProps({ value: foundation.getState('value'), timeZone: current.timeZone, prevTimeZone: previous.timeZone });
-            }
-        })
-    );
-
-    createEffect(
-        on(
-            createMemo(() => local.open),
-            (open) => (open ? foundation.handleControlledOpen() : foundation.handleControlledClose()),
-            { defer: true }
-        )
-    );
-
-    createEffect(
-        on(
-            createMemo(() => Boolean(local.disabled)),
-            (disabled) => {
-                if (disabled && DatePickerFoundation.isPanelShown({ open: local.open, disabled: false }, foundation.getStates())) {
-                    foundation.deactivate();
-                }
-            },
-            { defer: true }
-        )
     );
 
     // Known limit: measured when triggerRender changes, or the wrapper mounts; a stable one that switches between

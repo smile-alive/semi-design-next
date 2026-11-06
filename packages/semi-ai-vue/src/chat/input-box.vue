@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, h, type StyleValue, useTemplateRef } from 'vue';
-    import InputBoxFoundation, { type InputBoxAdapter } from '@fibrae/semi-ai-foundation/chat/inputbox-foundation';
+    import InputBoxFoundation, { type InputBoxAdapter, type InputBoxState } from '@fibrae/semi-ai-foundation/chat/inputbox-foundation';
     import useFoundation from '@fibrae/semi-ui-vue/_base/use-foundation';
     import type { FileItem } from '@fibrae/semi-ui-vue/upload/index';
     import ClearButton from './clear-button.vue';
@@ -26,13 +26,8 @@
         inputBoxStyle?: StyleValue;
     }
 
-    interface InputBoxState {
-        content: string;
-        attachment: FileItem[];
-    }
-
-    type Foundation = InputBoxFoundation<InputBoxProps, InputBoxState>;
-    type Adapter = InputBoxAdapter<InputBoxProps, InputBoxState>;
+    type Foundation = InputBoxFoundation<InputBoxProps>;
+    type Adapter = InputBoxAdapter<InputBoxProps>;
 
     const props = withDefaults(defineProps<InputBoxProps>(), { canSend: undefined });
 
@@ -52,11 +47,9 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, InputBoxProps, InputBoxState>(
         InputBoxFoundation,
         props,
-        () => ({ content: '', attachment: [] }),
-        (base) => ({
+        () => InputBoxFoundation.getInitialState(),
+        () => ({
             notifyInputChange: (value) => emit('inputChange', value),
-            setInputValue: (content) => base.setState({ content }),
-            setAttachment: (attachment) => base.setState({ attachment }),
             notifySend: (content, attachment) => emit('send', content, attachment),
             notifyUploadChange: (change) => props.uploadProps?.onChange?.(change),
             notifyBeforeRemove: (file, attachment) => props.uploadProps?.beforeRemove?.(file, attachment),

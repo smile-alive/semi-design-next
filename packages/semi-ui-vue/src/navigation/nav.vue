@@ -52,7 +52,7 @@
     const slots = defineSlots<NavSlots>();
 
     const navEl = useTemplateRef('nav');
-    let mounted = false;
+    const mounted = shallowRef(false);
 
     // Texts remount on collapse/expand, so they fade in only while the width animates. Pre flush: same patch as the class.
     const collapseAnimating = shallowRef(false);
@@ -87,18 +87,16 @@
                 },
             };
         },
-        (base) => ({
+        () => ({
             getItemsFromChildren: () => childTree.value,
-            setIsCollapsed: (isCollapsed) => base.setState({ isCollapsed }),
             notifyCollapseChange: (isCollapsed) => {
                 emit('update:isCollapsed', isCollapsed);
                 emit('collapseChange', isCollapsed);
             },
-            updateSelectedKeys: (selectedKeys) => base.setState({ selectedKeys }),
-            updateOpenKeys: (openKeys) => base.setState({ openKeys: [...openKeys] }),
         }),
-        // the tree is not read before mount, where setup would call the slot
-        { props: { children: () => (mounted ? childTree.value : undefined) } }
+        // The tree is not read before mount, where setup would call the slot. An empty tree reads as no children too, so
+        // a Nav that takes `items` sees no change of `children` at mount.
+        { props: { children: () => (mounted.value && childTree.value.length ? childTree.value : undefined) } }
     );
 
     const isCollapsed = computed(() => NavigationFoundation.getIsCollapsed(foundationProps, state.value));
@@ -177,12 +175,7 @@
     );
 
     onMounted(() => {
-        mounted = true;
-        // registered after the first render, which already read the tree, so no slot is called here
-        watch(
-            () => ({ ...foundationProps, children: childTree.value }),
-            (_, previous) => foundation.handlePropsUpdate(previous)
-        );
+        mounted.value = true;
     });
 </script>
 

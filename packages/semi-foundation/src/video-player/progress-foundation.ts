@@ -21,7 +21,6 @@ export interface ProgressPointerEvent {
     button: number;
     clientX: number;
     clientY: number;
-    type: string;
 }
 
 /** The fields read from a framework's keyboard event on the bar */
@@ -38,29 +37,32 @@ export interface VideoProgressBaseProps {
     value: number;
     /** Seconds an arrow key moves */
     step: number;
+    markers?: Marker[];
 }
 
 export interface VideoProgressBaseState {
     isDragging: boolean;
+    movingInfo: { progress: number; offset: number; value: number } | null;
+    activeIndex: number;
 }
 
-export interface VideoProgressAdapter<P extends VideoProgressBaseProps = VideoProgressBaseProps, S extends VideoProgressBaseState = VideoProgressBaseState> extends DefaultAdapter<P, S> {
+export interface VideoProgressAdapter<P extends VideoProgressBaseProps = VideoProgressBaseProps> extends DefaultAdapter<P, VideoProgressBaseState> {
     getSliderRef: () => HTMLDivElement | null;
-    getMarkersList: () => MarkerListItem[];
-    setIsDragging: (isDragging: boolean) => void;
-    setActiveIndex: (activeIndex: number) => void;
-    setMovingInfo: (movingInfo: { progress: number; offset: number; value: number } | null) => void;
     notifyChange: (value: number) => void;
 }
 
-export default class VideoProgressFoundation<P extends VideoProgressBaseProps = VideoProgressBaseProps, S extends VideoProgressBaseState = VideoProgressBaseState> extends BaseFoundation<VideoProgressAdapter<P, S>, P, S> {
+export default class VideoProgressFoundation<P extends VideoProgressBaseProps = VideoProgressBaseProps> extends BaseFoundation<VideoProgressAdapter<P>, P, VideoProgressBaseState> {
     #setActiveIndex(currentValue: number) {
-        const markersList = this.adapter.getMarkersList();
-        markersList.forEach((marker: MarkerListItem, index: number) => {
+        const { markers, max } = this.getProps();
+        VideoProgressFoundation.getMarkersList(markers, max).forEach((marker, index) => {
             if (VideoProgressFoundation.isInMarker(marker, currentValue)) {
-                this.adapter.setActiveIndex(index);
+                this.setState({ activeIndex: index });
             }
         });
+    }
+
+    static getInitialState(_props: VideoProgressBaseProps): VideoProgressBaseState {
+        return { isDragging: false, movingInfo: null, activeIndex: -1 };
     }
 
     /**
@@ -138,14 +140,14 @@ export default class VideoProgressFoundation<P extends VideoProgressBaseProps = 
         if (!Object.hasOwn(targets, e.key)) return;
         e.preventDefault();
         // the preview belongs to the pointer; the keys move the playhead it no longer follows
-        this.adapter.setMovingInfo(null);
+        this.setState({ movingInfo: null });
         this.adapter.notifyChange(clamp(targets[e.key], 0, max));
     };
 
     /** A keyboard focus shows the playhead's time, not the last hovered one */
     handleFocus = (e: { currentTarget: Element }) => {
         if (e.currentTarget.matches(':focus-visible')) {
-            this.adapter.setMovingInfo(null);
+            this.setState({ movingInfo: null });
         }
     };
 
@@ -153,18 +155,18 @@ export default class VideoProgressFoundation<P extends VideoProgressBaseProps = 
     handlePointerDown = (e: ProgressPointerEvent & { currentTarget: Element; pointerId: number }) => {
         if (isSecondaryPress(e)) return;
         e.currentTarget.setPointerCapture(e.pointerId);
-        this.adapter.setIsDragging(true);
+        this.setState({ isDragging: true });
         this.handlePointerPosition(e, { seek: true });
     };
 
     /** Follows pointerup and pointercancel, and also fires when the bar leaves the page mid-drag */
     handleLostPointerCapture = () => {
-        this.adapter.setIsDragging(false);
+        this.setState({ isDragging: false });
     };
 
     /** Tracks the pointer over the bar for the tooltip; `seek` also moves the playhead while dragging or on the press. */
     handlePointerPosition = (e: ProgressPointerEvent, { seek }: { seek: boolean }) => {
-        const { isDragging } = this.getStates();
+        const isDragging = this.getState('isDragging');
         const { max } = this.getProps();
         const sliderRef = this.adapter.getSliderRef();
         if (!sliderRef) return;
@@ -172,16 +174,17 @@ export default class VideoProgressFoundation<P extends VideoProgressBaseProps = 
         const { offset, ratio: percentage } = getPointerRatio(rect, e, false);
         const value = percentage * max;
 
-        // the press itself seeks: the dragging state it sets is not read back until the next render
-        if (seek && (isDragging || e.type === 'pointerdown')) {
+        if (seek && isDragging) {
             this.#setActiveIndex(value);
             this.adapter.notifyChange(value);
         }
 
-        this.adapter.setMovingInfo({
-            progress: percentage,
-            offset: offset - rect.width / 2,
-            value,
+        this.setState({
+            movingInfo: {
+                progress: percentage,
+                offset: offset - rect.width / 2,
+                value,
+            },
         });
     };
 }

@@ -622,16 +622,16 @@ describe('AudioPlayer', () => {
         expect(unhandled).not.toHaveBeenCalled();
     });
 
-    it('KeepAlive 切走再切回后音量弹层已关闭', async () => {
+    it('KeepAlive 切回时焦点与指针都已离开，音量弹层关闭', async () => {
         const { container } = render(CachedPlayer);
         const trigger = closestButton(container, 'volume_2');
         trigger.focus();
         await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
         await fireEvent.click(screen.getByText('toggle'));
         await fireEvent.click(screen.getByText('toggle'));
-        expect(closestButton(container, 'volume_2')).toHaveAttribute('aria-expanded', 'false');
         await waitFor(() => {
             endLeaveAnimations();
+            expect(closestButton(container, 'volume_2')).toHaveAttribute('aria-expanded', 'false');
             expect(screen.queryByRole('dialog')).toBeNull();
         });
     });

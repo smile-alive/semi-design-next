@@ -18,7 +18,7 @@ export default function AlphaSlider(props: AlphaSliderProps) {
     const { foundation } = useFoundation<Foundation, Adapter, AlphaSliderBaseProps, AlphaSliderBaseState>(
         AlphaSliderFoundation,
         props,
-        () => ({ isHandleGrabbing: false }),
+        () => AlphaSliderFoundation.getInitialState(),
         () => ({ getDOM: () => dom as HTMLDivElement })
     );
 

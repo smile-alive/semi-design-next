@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, h, useAttrs, useTemplateRef } from 'vue';
     import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import DialogueFoundation, { type DialogueAdapter, type Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+    import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
     import '@fibrae/semi-ai-foundation/ai-chat-dialogue/ai-chat-dialogue.scss';
     import { IconChevronDown } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';
@@ -10,19 +10,14 @@
     import semiDefault, { semiGlobalDefault } from '@fibrae/semi-ui-vue/_base/semi-default';
     import useFoundation from '@fibrae/semi-ui-vue/_base/use-foundation';
     import Button from '@fibrae/semi-ui-vue/button/index';
-    import { useDidUpdate, useFocusHandover, useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useFocusHandover, useLocale } from '@fibrae/semi-ui-vue/hooks';
     import { provideAIChatDialogueContext } from './context';
     import DialogueHint from './dialogue-hint.vue';
     import Dialogue from './dialogue.vue';
     import type { AIChatDialogueEmits, AIChatDialogueHandle, AIChatDialogueProps, AIChatDialogueSlots } from './interface';
 
-    interface AIChatDialogueStates {
-        selectedIds: Set<string>;
-        backBottomVisible: boolean;
-    }
-
-    type Foundation = DialogueFoundation<AIChatDialogueProps, AIChatDialogueStates>;
-    type Adapter = DialogueAdapter<AIChatDialogueProps, AIChatDialogueStates>;
+    type Foundation = DialogueFoundation<AIChatDialogueProps>;
+    type Adapter = DialogueAdapter<AIChatDialogueProps>;
 
     defineOptions({ name: 'AIChatDialogue' });
 
@@ -51,18 +46,32 @@
 
     const prefix = cssClasses.PREFIX;
     const EMPTY_CHATS: Message[] = [];
+    const EMPTY_HINTS: string[] = [];
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, AIChatDialogueProps, AIChatDialogueStates>(
+    // A caller may push messages into a reactive list and append to the last message's text in place, which keeps the
+    // list's identity, so the foundation is handed a copy rebuilt by those edits. Known limitation: other in-place
+    // edits (deep content text, a lone status flip) render but are not followed; upgrade when such an edit needs following.
+    const followedChats = computed(() => {
+        const all = props.chats ?? EMPTY_CHATS;
+        const text = all.at(-1)?.content;
+        void (typeof text === 'string' || Array.isArray(text) ? text.length : text);
+        return [...all];
+    });
+
+    const followedHints = computed(() => [...(props.hints ?? EMPTY_HINTS)]);
+
+    const { foundation, state } = useFoundation<Foundation, Adapter, AIChatDialogueProps, DialogueState>(
         DialogueFoundation,
         props,
-        () => ({ selectedIds: new Set<string>(), backBottomVisible: false }),
-        (base) => ({
+        () => DialogueFoundation.getInitialState(),
+        () => ({
             getContainerRef: () => list.value as HTMLDivElement,
-            updateSelected: (ids: Set<string>) => base.setState({ selectedIds: ids }),
             notifySelect: (ids: string[]) => emit('select', ids),
-            notifyChatsChange: (chats: Message[]) => {
-                emit('update:chats', chats);
-                emit('chatsChange', chats);
+            // a followed copy stands for the list the parent already holds, so it is reported as that list
+            notifyChatsChange: (next: Message[]) => {
+                const list = next === followedChats.value ? chats.value : next;
+                emit('update:chats', list);
+                emit('chatsChange', list);
             },
             notifyLikeMessage: (message: Message) => emit('messageGoodFeedback', message),
             notifyDislikeMessage: (message: Message) => emit('messageBadFeedback', message),
@@ -70,22 +79,18 @@
             notifyMessageDelete: (message: Message) => emit('messageDelete', message),
             notifyMessageReset: (message: Message) => emit('messageReset', message),
             notifyHintClick: (hint: string) => emit('hintClick', hint),
-            setBackBottomVisible: (visible: boolean) => base.setState({ backBottomVisible: visible }),
-        })
+        }),
+        { props: { chats: () => followedChats.value, hints: () => followedHints.value } }
     );
 
     // the button unmounts once the list is at the bottom; focus moves to the list instead of falling to the body
     const handoverBackBottomFocus = useFocusHandover(() => list.value);
 
-    const EMPTY_HINTS: string[] = [];
     const chats = computed(() => props.chats ?? EMPTY_CHATS);
     const hints = computed(() => props.hints ?? EMPTY_HINTS);
 
-    let snapshot = { chats: [...chats.value], hints: [...hints.value] };
-
     // a busy log defers announcements, so a streamed reply is read once it settles
     const streaming = computed(() => isUnfinishedStatus(chats.value.at(-1)?.status));
-    const CHATS_PART = 5;
 
     provideAIChatDialogueContext({
         view: computed(() => ({
@@ -115,34 +120,6 @@
     // Dialogue reads only its own slot names. Passing the slots object forwards every given slot without the ref_for that a
     // dynamic slot outlet inside the list v-for compiles to.
     const dialogueNode = (chat: Message, index: number) => h(Dialogue, { isLastChat: index === chats.value.length - 1, isSelected: state.value.selectedIds.has(chat.id), message: chat, role: props.roleConfig[chat.role] }, handOnSlots(slots));
-
-    // A Vue caller also pushes messages and appends to the last message's text in place, so the list is compared by what
-    // those edits change. Known limitation: other in-place edits (deep content text, a lone status flip) re-render but are
-    // not reported or followed, as the snapshot shares message objects; upgrade when such an edit needs following.
-    const listKey = () => {
-        const list = chats.value;
-        const last = list.at(-1);
-        const content = last?.content;
-        return [list, list.length, last?.id, content, content?.length, hints.value, hints.value.length] as const;
-    };
-
-    useDidUpdate(
-        listKey,
-        (next, previous) => {
-            const changed = (from: number, to: number) => next.slice(from, to).some((v, i) => v !== previous[from + i]);
-            const current = { chats: chats.value, hints: hints.value };
-            // an unchanged part is passed as the same array, so the foundation does not report it as new
-            foundation.handleListUpdate(
-                {
-                    chats: changed(0, CHATS_PART) ? snapshot.chats : current.chats,
-                    hints: changed(CHATS_PART, next.length) ? snapshot.hints : current.hints,
-                },
-                current
-            );
-            snapshot = { chats: [...current.chats], hints: [...current.hints] };
-        },
-        (a, b) => a.every((v, i) => v === b[i])
-    );
 
     defineExpose<AIChatDialogueHandle>({
         selectAll: foundation.handleSelectAll,

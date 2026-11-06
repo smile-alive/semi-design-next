@@ -19,6 +19,9 @@ import { TreeContext, type TreeContextValue } from './tree-context';
 import TreeNode from './tree-node';
 import useTreeKeyboard from './use-tree-keyboard';
 
+type Foundation = TreeFoundation<React.MouseEvent>;
+type Adapter = TreeAdapter<React.MouseEvent>;
+
 export * from './interface';
 export type { AutoSizerProps } from './auto-sizer';
 
@@ -163,13 +166,11 @@ function Tree(rawProps: TreeProps) {
         }
     };
 
-    const [foundation, state] = useFoundation<TreeFoundation<React.MouseEvent>, TreeAdapter<React.MouseEvent>, BasicTreeProps, BasicTreeInnerData>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, BasicTreeProps, BasicTreeInnerData>(
         TreeFoundation,
         props,
         () => TreeFoundation.getInitialState(props),
         (base) => ({
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            updateState: (states) => base.setState({ ...states } as BasicTreeInnerData),
             notifyExpand: (expandedKeys, { expanded, node }) => base.getProps().onExpand?.([...expandedKeys], { expanded, node }),
             notifySelect: (selectKey, bool, node) => base.getProps().onSelect?.(selectKey, bool, node),
             notifyChange: (value) => base.getProps().onChange?.(value),
@@ -183,7 +184,6 @@ function Tree(rawProps: TreeProps) {
             notifyDragLeave: (props) => base.getProps().onDragLeave?.(props),
             notifyDragEnd: (props) => base.getProps().onDragEnd?.(props),
             notifyDrop: (props) => base.getProps().onDrop?.(props),
-            setCachedFlattenNodes: (cachedFlattenNodes) => base.setState({ cachedFlattenNodes }),
             scrollToNode: (key, align) => {
                 scrollRequest.current = { key, align };
                 scrollWhenRendered(base.getState('flattenNodes'));

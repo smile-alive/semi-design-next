@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, useAttrs, useTemplateRef, watch } from 'vue';
+    import { computed, useAttrs, useTemplateRef } from 'vue';
     import { omit } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
     import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps as FoundationProps, type ColorPickerState } from '@fibrae/semi-foundation/color-picker/foundation';
@@ -45,7 +45,7 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, ColorPickerState>(
         ColorPickerFoundation,
         props,
-        (p) => ({ currentColor: p.value ?? props.defaultValue }),
+        (p) => ColorPickerFoundation.getInitialState(p),
         () => ({
             notifyChange: (value) => {
                 emit('update:modelValue', value);
@@ -84,15 +84,6 @@
         })),
         foundation,
     });
-
-    watch(
-        () => props.modelValue,
-        (value) => {
-            if (value === undefined) {
-                foundation.resetToDefault();
-            }
-        }
-    );
 
     defineExpose<ColorPickerHandle>({
         get root() {

@@ -2,7 +2,7 @@ import { type KeyboardEvent, type MouseEvent, type ReactElement, type ReactNode,
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/tabs/constants';
-import TabsFoundation, { type TabsAdapter } from '@fibrae/semi-foundation/tabs/foundation';
+import TabsFoundation, { type TabsAdapter, type TabsState } from '@fibrae/semi-foundation/tabs/foundation';
 import '@fibrae/semi-foundation/tabs/tabs.scss';
 import elementTypeOf from '../_base/element-type';
 import flattenChildren from '../_base/flatten-children';
@@ -17,13 +17,14 @@ import TabItem from './tab-item';
 import TabPane from './tab-pane';
 import { TabsContext } from './tabs-context';
 
+type Foundation = TabsFoundation<TabsProps, TabClickEvent>;
+type Adapter = TabsAdapter<TabsProps, TabClickEvent>;
+
 export * from './interface';
 
 type TabClickEvent = MouseEvent | KeyboardEvent;
 
-export interface TabsState {
-    activeKey: string | null;
-}
+export type { TabsState };
 
 const defaultProps = {
     children: [],
@@ -101,16 +102,13 @@ function Tabs(rawProps: TabsProps) {
 
     const context = useConfigContext();
 
-    const [foundation, state] = useFoundation<TabsFoundation<TabsProps, TabsState, TabClickEvent>, TabsAdapter<TabsProps, TabsState, TabClickEvent>, TabsProps, TabsState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, TabsProps, TabsState>(
         TabsFoundation,
         props,
-        () => ({
-            activeKey: TabsFoundation.getDefaultActiveKey(props, getPanes(props.tabList, props.children)),
-        }),
+        () => TabsFoundation.getInitialState(props, getPanes(props.tabList, props.children)),
         (base) => ({
             notifyTabClick: (activeKey, event) => base.getProps().onTabClick?.(activeKey, event),
             notifyChange: (activeKey) => base.getProps().onChange?.(activeKey),
-            setNewActiveKey: (activeKey) => base.setState({ activeKey }),
             notifyTabDelete: (tabKey) => base.getProps().onTabClose?.(tabKey),
         }),
         context
@@ -206,8 +204,6 @@ function Tabs(rawProps: TabsProps) {
     };
 
     const tabBar = renderTabBar ? renderTabBar(tabBarProps, TabBar) : <TabBar {...tabBarProps} />;
-
-    useDidUpdate(propsActiveKey, foundation.syncActiveKey);
 
     useDidUpdate(
         childKeys,

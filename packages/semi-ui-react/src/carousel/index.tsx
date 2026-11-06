@@ -2,7 +2,7 @@ import type React from 'react';
 import { cloneElement, isValidElement, useEffect, useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/carousel/constants';
-import CarouselFoundation, { type CarouselAdapter } from '@fibrae/semi-foundation/carousel/foundation';
+import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/carousel/foundation';
 import '@fibrae/semi-foundation/carousel/carousel.scss';
 import flattenChildren from '../_base/flatten-children';
 import useDefaultProps from '../_base/use-default-props';
@@ -14,15 +14,12 @@ import CarouselArrow from './carousel-arrow';
 import CarouselIndicator from './carousel-indicator';
 import type { CarouselProps } from './interface';
 
+type Foundation = CarouselFoundation<CarouselProps>;
+type Adapter = CarouselAdapter<CarouselProps>;
+
 export type { CarouselHandle } from './interface';
 
-export interface CarouselState {
-    activeIndex: number;
-    preIndex: number;
-    isReverse: boolean;
-    isInit: boolean;
-    rotating: boolean;
-}
+export type { CarouselState };
 
 const defaultProps = {
     children: [],
@@ -56,20 +53,12 @@ export default function Carousel(rawProps: CarouselProps) {
     const tablistRef = useRef<HTMLDivElement>(null);
     const focusPending = useRef(false);
 
-    const [foundation, state] = useFoundation<CarouselFoundation<CarouselProps, CarouselState>, CarouselAdapter<CarouselProps, CarouselState>, CarouselProps, CarouselState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, CarouselProps, CarouselState>(
         CarouselFoundation,
         props,
-        () => {
-            const activeIndex = CarouselFoundation.getDefaultActiveIndex(props);
-            return { activeIndex, preIndex: activeIndex, isReverse: false, isInit: true, rotating: false };
-        },
+        () => CarouselFoundation.getInitialState(props),
         (base) => ({
             notifyChange: (activeIndex, preIndex) => base.getProps().onChange?.(activeIndex, preIndex),
-            setNewActiveIndex: (activeIndex) => base.setState({ activeIndex }),
-            setPreActiveIndex: (preIndex) => base.setState({ preIndex }),
-            setIsReverse: (isReverse) => base.setState({ isReverse }),
-            setIsInit: (isInit) => base.setState({ isInit }),
-            setRotating: (rotating) => base.setState({ rotating }),
             getSlideCount: () => getSlides(base.getProps().children).length,
         }),
         { direction }
@@ -92,10 +81,6 @@ export default function Carousel(rawProps: CarouselProps) {
 
     const getSlideId = (index: number): string => slides[index].props.id ?? `${baseId}-slide-${index}`;
 
-    useDidUpdate(props.activeIndex, foundation.syncActiveIndex);
-
-    // a boolean, since autoPlay is often a fresh object literal on every render
-    useDidUpdate(CarouselFoundation.isAutoPlayOn(props.autoPlay), foundation.handleAutoPlayChange);
     useDidUpdate(total, (count, previous) => foundation.handleSlideCountChange(previous, count));
 
     useEffect(() => {
@@ -108,10 +93,7 @@ export default function Carousel(rawProps: CarouselProps) {
     useImperativeHandle(
         props.ref,
         () => ({
-            play: () => {
-                foundation.setForcePlay(true);
-                foundation.handleAutoPlay();
-            },
+            play: foundation.play,
             stop: () => {
                 foundation.stopByUser();
             },

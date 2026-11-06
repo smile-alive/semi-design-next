@@ -4,7 +4,6 @@
     import '@fibrae/semi-foundation/collapsible/collapsible.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import type { CollapsibleProps } from './interface.js';
 
     type Foundation = CollapsibleFoundation<CollapsibleBaseProps>;
@@ -99,8 +98,6 @@
     $effect.pre(() => {
         view = next;
     });
-
-    watch(() => isOpen, foundation.handleOpenChange);
 </script>
 
 <!-- With collapseHeight > 0 a preview stays visible, so the content is not inert -->

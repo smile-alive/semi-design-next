@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    import { computed, onUpdated, useSlots, useTemplateRef, watch } from 'vue';
+    import { computed, onUpdated, useSlots, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/spin/constants';
-    import SpinFoundation, { type SpinAdapter } from '@fibrae/semi-foundation/spin/foundation';
+    import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/spin/foundation';
     import '@fibrae/semi-foundation/spin/spin.scss';
     import type { ElementProps } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
@@ -10,12 +10,8 @@
     import SpinIcon from './icon.vue';
     import type { SpinProps, SpinSlots } from './interface';
 
-    interface SpinState {
-        loading?: boolean;
-    }
-
-    type Foundation = SpinFoundation<SpinProps, SpinState>;
-    type Adapter = SpinAdapter<SpinProps, SpinState>;
+    type Foundation = SpinFoundation<SpinProps>;
+    type Adapter = SpinAdapter<SpinProps>;
 
     const props = withDefaults(defineProps<SpinProps & /* @vue-ignore */ ElementProps<'div', keyof SpinProps>>(), {
         size: () => semiDefault('Spin', 'size', 'middle'),
@@ -35,10 +31,8 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, SpinProps, SpinState>(
         SpinFoundation,
         props,
-        (view) => ({ loading: view.spinning }),
-        (base) => ({
-            setLoading: (loading) => base.setState({ loading }),
-        })
+        (view) => SpinFoundation.getInitialState(view),
+        () => ({})
     );
 
     const loading = computed(() => (props.delay ? state.value.loading : props.spinning));
@@ -47,11 +41,6 @@
     const isBlocked = () => Boolean(loading.value && slots.default);
 
     let wasBlocked = isBlocked();
-
-    watch(
-        () => props.spinning,
-        (value) => foundation.handleSpinningChange(Boolean(value))
-    );
 
     // The slot can change without `loading` changing, so this follows the rendered result instead of watching `loading`.
     onUpdated(() => {

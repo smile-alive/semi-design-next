@@ -843,18 +843,22 @@ describe('AIChatInput', () => {
             expect(countLiveListeners(add, remove, 'mousedown')).toBe(0);
         });
 
-        it('KeepAlive 停用时关闭面板，重新激活后保持关闭', async () => {
+        it('KeepAlive 停用时面板随缓存子树离开文档，重新激活后仍打开，外部 mousedown 能关闭', async () => {
             const view = render(KeepAliveHost, { props: { shown: true } });
             await settle();
             await view.rerender({ suggestions: ['first'] });
             await settle();
             expect(suggestionItems()).toHaveLength(1);
             await view.rerender({ shown: false });
-            await waitForClosed(`.${prefix}-popover-suggestion`);
-            await view.rerender({ shown: true });
             await settle();
             expect(document.querySelector(`.${prefix}-popover-suggestion`)).toBeNull();
-            expect(suggestionItems()).toHaveLength(0);
+            await view.rerender({ shown: true });
+            await settle();
+            expect(suggestionItems()).toHaveLength(1);
+            expect(suggestionItems()[0]).toBeVisible();
+
+            await fireEvent.mouseDown(document.body);
+            await waitForClosed(`.${prefix}-popover-suggestion`);
         });
     });
 

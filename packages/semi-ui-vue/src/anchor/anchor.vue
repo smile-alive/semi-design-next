@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, onUpdated, useTemplateRef, watch } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-foundation/anchor/constants';
-    import AnchorFoundation, { type AnchorAdapter } from '@fibrae/semi-foundation/anchor/foundation';
+    import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/anchor/foundation';
     import { findAnchorTarget } from '@fibrae/semi-foundation/anchor/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/anchor/anchor.scss';
@@ -12,10 +12,10 @@
     import useResizeObserver from '../_base/use-resize-observer';
     import useLocale from '../locale/use-locale';
     import { provideAnchorContext } from './context';
-    import type { AnchorClickEvent, AnchorEmits, AnchorProps, AnchorSlots, AnchorState } from './interface';
+    import type { AnchorClickEvent, AnchorEmits, AnchorProps, AnchorSlots } from './interface';
 
-    type Foundation = AnchorFoundation<AnchorProps, AnchorState, AnchorClickEvent>;
-    type Adapter = AnchorAdapter<AnchorProps, AnchorState, AnchorClickEvent>;
+    type Foundation = AnchorFoundation<AnchorProps, AnchorClickEvent>;
+    type Adapter = AnchorAdapter<AnchorProps, AnchorClickEvent>;
 
     defineOptions({ name: 'Anchor' });
 
@@ -48,10 +48,10 @@
     const prefix = cssClasses.PREFIX;
     const getContainer = computed(() => props.getContainer ?? readSemiDefault(semi, 'Anchor', 'getContainer', () => window));
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, AnchorProps, AnchorState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, AnchorProps, AnchorBaseState>(
         AnchorFoundation,
         props,
-        () => ({ activeLink: '', links: [], clickLink: false, slideBarTop: '0' }),
+        () => AnchorFoundation.getInitialState(),
         () => ({
             getContainer: () => getContainer.value() || window,
             getAnchorNode: (selector) => root.value?.querySelector<HTMLElement>(selector) ?? null,

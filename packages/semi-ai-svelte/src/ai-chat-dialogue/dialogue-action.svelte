@@ -1,5 +1,5 @@
 <script lang="ts">
-    import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionBaseProps, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/action-foundation';
+    import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionBaseProps, type DialogueActionState, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/action-foundation';
     import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
     import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
@@ -12,13 +12,8 @@
     import DialogueActionMore from './dialogue-action-more.svelte';
     import type { DefaultActionNodeObj } from './interface.js';
 
-    interface DialogueActionState {
-        visible: boolean;
-        showAction: boolean;
-    }
-
-    type Foundation = DialogueActionFoundation<DialogueActionBaseProps, DialogueActionState>;
-    type Adapter = DialogueActionAdapter<DialogueActionBaseProps, DialogueActionState>;
+    type Foundation = DialogueActionFoundation<DialogueActionBaseProps>;
+    type Adapter = DialogueActionAdapter<DialogueActionBaseProps>;
 
     let { message, isLastChat }: { message: Message; isLastChat: boolean } = $props();
 
@@ -32,8 +27,8 @@
                 return message;
             },
         },
-        () => ({ visible: false, showAction: false }),
-        (base) => ({
+        () => DialogueActionFoundation.getInitialState(),
+        () => ({
             notifyMessageCopy: () => context.messageCopy(message),
             toastCopySuccess: () => Toast.success({ content: locale().locale.copySuccess }),
             notifyLikeMessage: () => context.messageGoodFeedback(message),
@@ -42,8 +37,6 @@
             notifyShareMessage: () => context.messageShare(message),
             notifyEditMessage: () => context.messageEdit(message),
             notifyDeleteMessage: () => context.messageDelete(message),
-            setVisible: (visible) => base.setState({ visible }),
-            setShowAction: (showAction) => base.setState({ showAction }),
         })
     );
 

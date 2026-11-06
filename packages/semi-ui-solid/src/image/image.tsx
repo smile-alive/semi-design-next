@@ -1,7 +1,7 @@
-import { type JSX, Match, Show, Switch, children, createEffect, createMemo, createSignal, mergeProps, onCleanup, splitProps } from 'solid-js';
+import { type JSX, Match, Show, Switch, children, createEffect, createMemo, mergeProps, onCleanup, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-import ImageFoundation, { type ImageAdapter, type ImageLoadStatus } from '@fibrae/semi-foundation/image/image-foundation';
+import ImageFoundation, { type ImageAdapter, type ImageState } from '@fibrae/semi-foundation/image/image-foundation';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import '@fibrae/semi-foundation/image/image.scss';
 import { IconUploadError } from '@fibrae/semi-icons-solid';
@@ -16,8 +16,8 @@ import { usePreviewContext } from './context';
 import type { ImageProps } from './interface';
 import PreviewInner from './preview-inner';
 
-type Foundation = ImageFoundation<ImageProps, Record<string, never>>;
-type Adapter = ImageAdapter<ImageProps, Record<string, never>>;
+type Foundation = ImageFoundation<ImageProps>;
+type Adapter = ImageAdapter<ImageProps>;
 
 const prefixCls = cssClasses.PREFIX;
 const statusCls = `${prefixCls}-status`;
@@ -33,9 +33,6 @@ export default function Image(rawProps: ImageProps) {
     const group = usePreviewContext();
     const locale = useLocale('Image');
 
-    // keyed by src: a new src is loading until its own load or error event
-    const [load, setLoad] = createSignal<{ src?: string; status: ImageLoadStatus }>({ status: 'loading' });
-    const [previewVisibleState, setPreviewVisible] = createSignal(false);
     let thumb: HTMLDivElement | undefined;
 
     // read once per change: the getter of an inline object creates its JSX values on every read, and a read in an
@@ -48,15 +45,13 @@ export default function Image(rawProps: ImageProps) {
         },
     });
 
-    const { foundation } = useFoundation<Foundation, Adapter, ImageProps, Record<string, never>>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, ImageProps, ImageState>(
         ImageFoundation,
         foundationProps,
-        () => ({}),
+        (view) => ImageFoundation.getInitialState(view),
         () => ({
             getIsInGroup: () => Boolean(group),
             openGroupPreview: () => group?.openImage(thumb as HTMLDivElement),
-            setLoadStatus: (status) => setLoad({ src: local.src, status }),
-            setPreviewVisible: (visible) => setPreviewVisible(visible),
             notifyLoad: (e) => callHandler(local.onLoad, e),
             notifyError: (e) => callHandler(local.onError, e),
             notifyPreviewVisibleChange: (visible) => {
@@ -74,14 +69,13 @@ export default function Image(rawProps: ImageProps) {
     });
 
     const placeholder = children(() => local.placeholder);
-    const controlledVisible = createMemo(() => previewObject()?.visible);
 
-    const loadStatus = () => (load().src === local.src ? load().status : 'loading');
+    const loadStatus = () => state().loadStatus;
 
     // created once it shows: the server renders the loading state, and JSX created during hydration needs markup to claim
     const fallback = children(() => (loadStatus() === 'error' ? local.fallback : undefined));
 
-    const previewVisible = () => (controlledVisible() === undefined ? previewVisibleState() : Boolean(controlledVisible()));
+    const previewVisible = () => ImageFoundation.getPreviewVisible(preview(), state());
 
     const canPreview = () => ImageFoundation.canPreview(preview(), Boolean(group));
 
@@ -121,14 +115,6 @@ export default function Image(rawProps: ImageProps) {
             foundation.handleKeyDown(e);
         }
     };
-
-    // a preview that becomes uncontrolled continues from the last controlled visible, as in React
-    createEffect(() => {
-        const visible = controlledVisible();
-        if (visible !== undefined) {
-            setPreviewVisible(Boolean(visible));
-        }
-    });
 
     // every Image registers, even without a preview: the group lazy-loads them all
     createEffect(() => {

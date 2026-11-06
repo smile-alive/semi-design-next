@@ -3,7 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/form/constants';
     import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
     import FormFoundation from '@fibrae/semi-foundation/form/foundation';
-    import type { BaseFormAdapter, FormState } from '@fibrae/semi-foundation/form/interface';
+    import type { BaseFormAdapter, FormFoundationState, FormState } from '@fibrae/semi-foundation/form/interface';
     import '@fibrae/semi-foundation/form/form.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
@@ -13,11 +13,7 @@
     import type { AllFormProps, FormApi, FormProps } from './interface.js';
     import { cloneDeep, untrackMethods } from './utils.js';
 
-    interface FormFoundationState {
-        formState?: FormState;
-    }
-
-    type Adapter = BaseFormAdapter<AllFormProps<Values, Output>, FormFoundationState, Values, SubmitEvent>;
+    type Adapter = BaseFormAdapter<AllFormProps<Values, Output>, Values, SubmitEvent>;
 
     const defaults = useDefaultProps('Form');
 
@@ -125,7 +121,7 @@
     const { foundation, states } = useFoundation<FormFoundation<SubmitEvent>, Adapter, AllFormProps<Values, Output>, FormFoundationState>(
         FormFoundation,
         formProps,
-        () => ({}),
+        (view) => FormFoundation.getInitialState(view),
         (base) => ({
             cloneDeep,
             getLocale: () => locale().locale,
@@ -139,17 +135,15 @@
             notifyValueChange: (values, changedValues) => onValueChange?.(values, changedValues),
             notifyErrorChange: (errors, changedError) => onErrorChange?.(errors, changedError),
             notifyReset: () => onReset?.(),
-            getInitValues: () => initValues as Partial<Values>,
             getFormProps: (keys) => (keys ? Object.fromEntries(keys.map((key) => [key, formProps[key as keyof AllFormProps]])) : formProps),
             getFormElement: () => formElement ?? null,
         })
     );
 
-    const initialFormState = foundation.getFormState();
     const formApi = untrackMethods(foundation.getFormApi()) as FormApi<Values, Output>;
     const fieldBridge = foundation.getFieldBridge();
     const formId = $derived(id ?? uid);
-    const formState = $derived((states().formState ?? initialFormState) as FormState<Values>);
+    const formState = $derived(states().formState as FormState<Values>);
 
     setFormContext({
         get formState() {

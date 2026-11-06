@@ -55,8 +55,8 @@ export interface ModalProps extends Omit<FoundationModalProps, 'className' | 'st
 
 // the foundation reads none of the style props, and a string style is wider than its Record type
 type FoundationProps = Omit<ModalProps, 'style' | 'bodyStyle' | 'maskStyle'>;
-type Foundation = ModalFoundation<FoundationProps, ModalState, MouseEvent | KeyboardEvent, MouseEvent>;
-type Adapter = ModalAdapter<FoundationProps, ModalState, MouseEvent | KeyboardEvent, MouseEvent>;
+type Foundation = ModalFoundation<FoundationProps, MouseEvent | KeyboardEvent, MouseEvent>;
+type Adapter = ModalAdapter<FoundationProps, MouseEvent | KeyboardEvent, MouseEvent>;
 
 const prefix = cssClasses.DIALOG;
 
@@ -154,7 +154,7 @@ export default function Modal(rawProps: ModalProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, ModalState>(
         ModalFoundation,
         props,
-        () => ({}),
+        () => ModalFoundation.getInitialState(),
         (base) => ({
             disabledBodyScroll: () => (modal() ? scroll.hold(lockBodyScroll) : scroll.release()),
             enabledBodyScroll: () => scroll.release(),

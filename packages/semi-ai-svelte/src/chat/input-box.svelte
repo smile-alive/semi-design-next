@@ -1,5 +1,5 @@
 <script lang="ts">
-    import InputBoxFoundation, { type InputBoxAdapter } from '@fibrae/semi-ai-foundation/chat/inputbox-foundation';
+    import InputBoxFoundation, { type InputBoxAdapter, type InputBoxState } from '@fibrae/semi-ai-foundation/chat/inputbox-foundation';
     import useFoundation from '@fibrae/semi-ui-svelte/_base/use-foundation.svelte.js';
     import type { FileItem } from '@fibrae/semi-ui-svelte/upload/interface';
     import ClearButton from './clear-button.svelte';
@@ -31,13 +31,8 @@
         onInputChange: (props: ChatInputChangeProps) => void;
     }
 
-    interface InputBoxState {
-        content: string;
-        attachment: FileItem[];
-    }
-
-    type Foundation = InputBoxFoundation<InputBoxProps, InputBoxState>;
-    type Adapter = InputBoxAdapter<InputBoxProps, InputBoxState>;
+    type Foundation = InputBoxFoundation<InputBoxProps>;
+    type Adapter = InputBoxAdapter<InputBoxProps>;
 
     let { placeholder, showClearContext, sendHotKey, canSend, disableSend, clickUpload, dragUpload, pasteUpload, uploadProps, uploadTipProps, inputBoxCls, inputBoxStyle, inputArea, uploadButton, uploadTip, onSend, onClear, onInputChange }: InputBoxProps = $props();
 
@@ -62,11 +57,9 @@
                 return pasteUpload;
             },
         } as InputBoxProps,
-        () => ({ content: '', attachment: [] }),
-        (base) => ({
+        () => InputBoxFoundation.getInitialState(),
+        () => ({
             notifyInputChange: (value) => onInputChange(value),
-            setInputValue: (content) => base.setState({ content }),
-            setAttachment: (attachment) => base.setState({ attachment }),
             notifySend: (content, attachment) => onSend(content, attachment),
             notifyUploadChange: (change) => uploadProps?.onChange?.(change),
             notifyBeforeRemove: (file, attachment) => uploadProps?.beforeRemove?.(file, attachment),

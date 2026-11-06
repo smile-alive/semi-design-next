@@ -8,12 +8,11 @@
     import { isNativeInputKey, splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import { getRadioGroupContext } from './context.js';
     import type { RadioChangeEvent, RadioProps, RadioValue } from './interface.js';
 
-    type Foundation = RadioFoundation<RadioBaseProps, RadioBaseState>;
-    type Adapter = RadioAdapter<RadioBaseProps, RadioBaseState>;
+    type Foundation = RadioFoundation<RadioBaseProps>;
+    type Adapter = RadioAdapter<RadioBaseProps>;
 
     const defaults = useDefaultProps('Radio');
 
@@ -42,13 +41,19 @@
     const uid = $props.id();
     let input: HTMLInputElement | undefined = $state();
 
-    // The last value this radio wrote to `checked`. Writing an unbound bindable prop overrides it locally, which would
-    // make an uncontrolled radio read as controlled; a `checked` equal to the echo counts as uncontrolled instead.
-    let echoed: boolean | undefined;
+    // The last value an unbound radio wrote to `checked`. Writing an unbound bindable prop overrides it locally, which
+    // would make an uncontrolled radio read as controlled; a `checked` equal to the echo counts as uncontrolled instead.
+    // null marks a parent that bound the echo and then reset it: the foundation must see that change, as a controlled
+    // empty value. Each read of the getter leaves the same answer for the same `checked`.
+    let echoed: boolean | null | undefined;
 
     const foundationProps: RadioBaseProps = {
         get checked() {
-            return checked === echoed ? undefined : checked;
+            if (checked === echoed) {
+                return undefined;
+            }
+            echoed = checked === undefined ? null : undefined;
+            return checked === undefined ? null : checked;
         },
         get disabled() {
             return disabled;
@@ -98,14 +103,13 @@
         RadioFoundation,
         foundationProps,
         (view) => RadioFoundation.getInitialState(view),
-        (base) => ({
-            setChecked: (next) => base.setState({ checked: next }),
+        () => ({
             notifyGroupChange: (event) => group?.handleChange(pick(event)),
             notifyChange: (event) => {
                 const picked = pick(event);
                 // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides locally
-                echoed = picked.target.checked;
-                checked = echoed;
+                echoed = foundationProps.checked === undefined ? picked.target.checked : undefined;
+                checked = picked.target.checked;
                 onChange?.(picked);
             },
             getInput: () => input ?? null,
@@ -174,11 +178,6 @@
             requestSync();
         }
     };
-
-    watch(
-        () => checked,
-        (next) => foundation.setChecked(Boolean(next))
-    );
 
     onMount(() => group?.register(sync));
 

@@ -62,8 +62,6 @@
             isSelf: event.target === event.currentTarget,
             propertyName: event.propertyName,
         });
-
-    watch(() => props.isOpen, foundation.handleOpenChange, { flush: 'post' });
 </script>
 
 <template>

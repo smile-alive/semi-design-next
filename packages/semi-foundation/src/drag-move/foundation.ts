@@ -2,7 +2,7 @@ import { clamp } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import { isSecondaryPress } from '../utils/pointer';
 
-export interface DragMoveAdapter<P extends DragMoveBaseProps = DragMoveBaseProps, S extends object = object> extends DefaultAdapter<P, S> {
+export interface DragMoveAdapter<P extends DragMoveBaseProps = DragMoveBaseProps> extends DefaultAdapter<P, object> {
     notifyMouseDown: (e: PointerEvent) => void;
     notifyMouseMove: (e: PointerEvent) => void;
     notifyMouseUp: (e: PointerEvent) => void;
@@ -21,7 +21,7 @@ export interface DragMoveBaseProps {
     customMove?: (element: HTMLElement, top: number, left: number) => void;
 }
 
-export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBaseProps, S extends object = object> extends BaseFoundation<DragMoveAdapter<P, S>, P, S> {
+export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBaseProps> extends BaseFoundation<DragMoveAdapter<P>, P, object> {
     // the dragged element is only known when a pointer goes down on it (its Fragment child), so it is read lazily
     #element: HTMLElement;
     readonly #elements = new Set<HTMLElement>();
@@ -39,6 +39,7 @@ export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBa
     #startLeft: number;
     #startTop: number;
     #frame: { id: number; apply: () => void } | null = null;
+    static override readonly propKeys = ['positionStrategy'];
 
     #getConstrainer(element: HTMLElement): HTMLElement | null {
         const constrainer = this.getProp('constrainer');
@@ -272,11 +273,11 @@ export default class DragMoveFoundation<P extends DragMoveBaseProps = DragMoveBa
         this.#prepareHandlers();
     };
 
-    updatePositionStrategy = () => {
+    override handlePropsChange() {
         for (const element of this.#elements) {
             this.#applyPositionStrategy(element);
         }
-    };
+    }
 
     override destroy() {
         this.#stopDrag();

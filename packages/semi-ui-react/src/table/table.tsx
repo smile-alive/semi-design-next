@@ -1,11 +1,10 @@
 import React, { type ReactNode, isValidElement, useCallback, useEffect, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import { isEqual, omit } from 'es-toolkit';
+import { omit } from 'es-toolkit';
 import { get } from 'es-toolkit/compat';
 import { strings } from '@fibrae/semi-foundation/table/constants';
-import TableFoundation, { type TableAdapter, type TableBaseState, type BasePageData, type BaseRowKeyType, type BaseHeadWidth } from '@fibrae/semi-foundation/table/foundation';
+import TableFoundation, { type TableAdapter, type TableBaseState, type BasePageData, type BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
 import { type FlattenData, type GroupFlattenData, amendTableWidth, assignColumnKeys, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, isMissingDataIndex, mergedRowExpandable, placeInnerColumns, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/table/utils';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import isObject from '@fibrae/semi-foundation/utils/is-object';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/table/table.scss';
@@ -30,6 +29,8 @@ import { cloneDeep, mergeComponents } from './utils';
 
 export type NormalTableProps<RecordType extends Record<string, any> = Data> = Omit<TableProps<RecordType>, 'resizable'>;
 
+type FoundationProps<RecordType extends Record<string, any>> = NormalTableProps<RecordType> & { flattenColumns: ColumnProps<RecordType>[] };
+
 export interface NormalTableState<RecordType extends Record<string, any> = Data> extends TableBaseState<RecordType> {
     flattenColumns?: ColumnProps<RecordType>[];
     queries?: ColumnProps<RecordType>[];
@@ -46,12 +47,10 @@ function resolveColumns(columns: ColumnProps[], children: ReactNode) {
     return columns ? columns : getColumns(children);
 }
 
-function getInitialState<RecordType extends Record<string, any>>(props: NormalTableProps<RecordType>): NormalTableState<RecordType> {
-    // columns cannot be deepClone, otherwise the comparison will be false
-    const flattened = flattenColumns(resolveColumns(props.columns, props.children));
+function getInitialState<RecordType extends Record<string, any>>(props: FoundationProps<RecordType>): TableBaseState<RecordType> {
     // initialized in place, so they are copies; the clone keeps the React elements a column holds
-    const queries = TableFoundation.initColumnsFilteredValueAndSorterOrder<RecordType, ColumnProps<RecordType>>(cloneDeep(flattened));
-    return TableFoundation.getInitialState(props, flattened, queries);
+    const queries = TableFoundation.initColumnsFilteredValueAndSorterOrder<RecordType, ColumnProps<RecordType>>(cloneDeep(props.flattenColumns));
+    return TableFoundation.getInitialState(props, props.flattenColumns, queries);
 }
 
 interface TableRowStateContextValue {
@@ -332,19 +331,19 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
     const lastScrollLeft = useRef<number>(undefined);
     const widthFrameRef = useRef(0);
 
-    // The derived state is written back for the foundation, which reads state in events; then the class component's
-    // componentDidUpdate runs against the previous commit
-    const committed = useRef<{ props: NormalTableProps<RecordType>; view: NormalTableState<RecordType> }>(null);
+    const cachedColumns = useMemo(() => resolveColumns(propColumns, children), [propColumns, children]);
+    const flattened = useMemo(() => flattenColumns(cachedColumns), [cachedColumns]);
+    const foundationProps: FoundationProps<RecordType> = { ...props, flattenColumns: flattened };
 
-    const [foundation, state] = useFoundation<TableFoundation<RecordType, NormalTableProps<RecordType>, NormalTableState<RecordType>>, TableAdapter<RecordType, NormalTableProps<RecordType>, NormalTableState<RecordType>>, NormalTableProps<RecordType>, NormalTableState<RecordType>>(
+    const [foundation, foundationState] = useFoundation<TableFoundation<RecordType, FoundationProps<RecordType>>, TableAdapter<RecordType, FoundationProps<RecordType>>, FoundationProps<RecordType>, TableBaseState<RecordType>>(
         TableFoundation,
-        props,
-        () => getInitialState(props),
+        foundationProps,
+        () => getInitialState(foundationProps),
         (base) => {
             // the callbacks of the latest rowSelection prop, merged into state
-            const getRowSelectionFn = (funcName: string) => {
+            const getRowSelectionFn = (funcName: string): ((...args: unknown[]) => void) | undefined => {
                 const func = get(base.getState('rowSelection'), funcName);
-                return typeof func === 'function' ? func : noop;
+                return typeof func === 'function' ? func : undefined;
             };
             return {
                 resetScrollY: () => {
@@ -358,47 +357,6 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
                 },
                 getScrollMetrics: () => TableFoundation.readScrollMetrics(bodyWrapRef.current),
                 setScrollableEdges: (edges) => TableFoundation.writeScrollableEdges(bodyWrapRef.current, edges),
-                setSelectedRowKeys: (selectedRowKeys) =>
-                    base.setState({
-                        rowSelection: {
-                            ...(base.getState('rowSelection') as Record<string, any>),
-                            selectedRowKeys: [...selectedRowKeys],
-                            selectedRowKeysSet: new Set(selectedRowKeys),
-                        },
-                    }),
-                setPageDisabledRowKeys: (pageDisabledRowKeys) => base.setState({ pageDisabledRowKeys, pageDisabledRowKeysSet: new Set(pageDisabledRowKeys) }),
-                setPagination: (pagination) => base.setState({ pagination }),
-                setGroups: (groups) => base.setState({ groups }),
-                setDataSource: (dataSource) => base.setState({ dataSource }),
-                setExpandedRowKeys: (expandedRowKeys) => base.setState({ expandedRowKeys: [...expandedRowKeys] }),
-                setQueries: (queries: ColumnProps<RecordType>[]) => base.setState({ queries }),
-                setAllRowKeys: (allRowKeys) => base.setState({ allRowKeys }),
-                setCachedFilteredSortedDataSource: (filteredSortedDataSource) => base.setState({ filteredSortedDataSource }),
-                setCachedFilteredSortedRowKeys: (filteredSortedRowKeys) =>
-                    base.setState({
-                        filteredSortedRowKeys,
-                        filteredSortedRowKeysSet: new Set(filteredSortedRowKeys),
-                    }),
-                setFilteredDisabledRowKeys: (filteredDisabledRowKeys) =>
-                    base.setState({
-                        filteredDisabledRowKeys,
-                        filteredDisabledRowKeysSet: new Set(filteredDisabledRowKeys),
-                    }),
-                getCurrentPage: () => base.getStates().pagination?.currentPage ?? 1,
-                getCachedFilteredSortedDataSource: () => base.getState('filteredSortedDataSource'),
-                getCachedFilteredSortedRowKeys: () => base.getState('filteredSortedRowKeys'),
-                getFilteredDisabledRowKeysSet: () => base.getState('filteredDisabledRowKeysSet'),
-                getHalfCheckedRowKeys: () => base.getState('halfCheckedRowKeys') || [],
-                setHalfCheckedRowKeys: (halfCheckedRowKeys) => base.setState({ halfCheckedRowKeys, halfCheckedRowKeysSet: new Set(halfCheckedRowKeys) }),
-                getKeyEntities: () => base.getState('keyEntities') || {},
-                setKeyEntities: (keyEntities) => base.setState({ keyEntities }),
-                getCheckRelation: () => {
-                    const rowSelection = base.getState('rowSelection');
-                    if (rowSelection && typeof rowSelection === 'object') {
-                        return rowSelection.checkRelation ?? 'unRelated';
-                    }
-                    return 'unRelated';
-                },
                 notifyFilterDropdownVisibleChange: (visible, dataIndex) => {
                     const column = dataIndex && base.getState('queries')?.find((query) => query.dataIndex === dataIndex);
                     const func = column?.onFilterDropdownVisibleChange;
@@ -406,19 +364,19 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
                         func(visible);
                     }
                 },
-                notifyChange: (changeInfo) => base.getProps().onChange(changeInfo),
-                notifyExpand: (expanded, record, mouseEvent) => base.getProps().onExpand(expanded, record, mouseEvent),
-                notifyExpandedRowsChange: (expandedRows) => base.getProps().onExpandedRowsChange(expandedRows),
-                notifySelect: (record, selected, selectedRows, event) => getRowSelectionFn('onSelect')(record, selected, selectedRows, event),
-                notifySelectAll: (selected, selectedRows, changedRows, e) => getRowSelectionFn('onSelectAll')(selected, selectedRows, changedRows, e),
-                notifySelectionChange: (selectedRowKeys, selectedRows) => getRowSelectionFn('onChange')(selectedRowKeys, selectedRows),
+                notifyChange: (changeInfo) => base.getProps().onChange?.(changeInfo),
+                notifyExpand: (expanded, record, mouseEvent) => base.getProps().onExpand?.(expanded, record, mouseEvent),
+                notifyExpandedRowsChange: (expandedRows) => base.getProps().onExpandedRowsChange?.(expandedRows),
+                notifySelect: (record, selected, selectedRows, event) => getRowSelectionFn('onSelect')?.(record, selected, selectedRows, event),
+                notifySelectAll: (selected, selectedRows, changedRows, e) => getRowSelectionFn('onSelectAll')?.(selected, selectedRows, changedRows, e),
+                notifySelectionChange: (selectedRowKeys, selectedRows) => getRowSelectionFn('onChange')?.(selectedRowKeys, selectedRows),
             };
         }
     );
 
-    const cachedColumns = useMemo(() => resolveColumns(propColumns, children), [propColumns, children]);
-    const flattened = useMemo(() => flattenColumns(cachedColumns), [cachedColumns]);
-    const derived = TableFoundation.deriveState(props, state, flattened);
+    // the foundation keeps the React column objects and the user's rowSelection as given
+    const state = foundationState as NormalTableState<RecordType>;
+    const derived = TableFoundation.deriveState(foundationProps, state, flattened);
     const view: NormalTableState<RecordType> = derived ? { ...state, ...derived } : state;
     const { queries, rowSelection, pagination, expandedRowKeys, headWidths, bodyHasScrollBar } = view;
     const bothColumnsGiven = Boolean(propColumns && children);
@@ -528,28 +486,7 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
         [foundation]
     );
 
-    const setHeadWidths = useCallback(
-        (widths: BaseHeadWidth[], index = 0) => {
-            const prevHeadWidths: BaseHeadWidth[][] = foundation.getState('headWidths');
-            if (!isEqual(prevHeadWidths[index], widths)) {
-                const nextHeadWidths = [...prevHeadWidths];
-                nextHeadWidths[index] = [...widths];
-                foundation.setState({ headWidths: nextHeadWidths });
-            }
-        },
-        [foundation]
-    );
-
     const cellWidthsOf = useCallback((flattenedColumns: ColumnProps<RecordType>[]) => getCellWidths(headWidths, flattenedColumns), [headWidths]);
-
-    const setBodyHasScrollbar = useCallback(
-        (hasScrollBar: boolean) => {
-            if (hasScrollBar !== foundation.getState('bodyHasScrollBar')) {
-                foundation.setState({ bodyHasScrollBar: hasScrollBar });
-            }
-        },
-        [foundation]
-    );
 
     const handleRowExpanded = useCallback((expanded: boolean, key: BaseRowKeyType, e: React.MouseEvent<HTMLElement>) => foundation.handleRowExpanded(expanded, key, e), [foundation]);
 
@@ -595,12 +532,12 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
             flattenedColumns: flattenFnsColumns,
             renderExpandIcon,
             renderSelection,
-            setHeadWidths,
+            setHeadWidths: foundation.setHeadWidths,
             getCellWidths: cellWidthsOf,
             headWidths,
             handleRowExpanded,
             getVirtualizedListRef,
-            setBodyHasScrollbar,
+            setBodyHasScrollbar: foundation.setBodyHasScrollbar,
             direction,
             handleRowSelection,
             headerStyle,
@@ -609,21 +546,10 @@ export default function Table<RecordType extends Record<string, any>>(props: Nor
             tableAria,
             headerRowCount,
         }),
-        [anyColumnFixed, flattenFnsColumns, setHeadWidths, cellWidthsOf, headWidths, handleRowExpanded, getVirtualizedListRef, setBodyHasScrollbar, direction, handleRowSelection, headerStyle, rowSpanHover, splitTable, tableAria, headerRowCount]
+        [anyColumnFixed, flattenFnsColumns, foundation, cellWidthsOf, headWidths, handleRowExpanded, getVirtualizedListRef, direction, handleRowSelection, headerStyle, rowSpanHover, splitTable, tableAria, headerRowCount]
     );
 
     const tableLayout = flattenFnsColumns.some((column) => Boolean(column.ellipsis) || Boolean(column.fixed)) || fixedHeader ? 'fixed' : 'auto';
-
-    useLayoutEffect(() => {
-        if (derived) {
-            foundation.setState(derived);
-        }
-        const prev = committed.current;
-        committed.current = { props, view };
-        if (prev) {
-            foundation.handleUpdate(prev.props, prev.view.flattenColumns);
-        }
-    });
 
     // content width changes without a wrapper resize (columns, data) are caught by the commit
     useLayoutEffect(() => {

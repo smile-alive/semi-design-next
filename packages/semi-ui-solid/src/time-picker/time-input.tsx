@@ -1,10 +1,9 @@
 import { onMount, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import TimeInputFoundation, { type TimeInputAdapter } from '@fibrae/semi-foundation/time-picker/input-foundation';
+import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/time-picker/input-foundation';
 import { IconClock } from '@fibrae/semi-icons-solid';
 import useFoundation from '../_base/use-foundation';
 import useRaf from '../_base/use-raf';
-import useWatch from '../_base/use-watch';
 import Input, { type InputProps } from '../input';
 
 export interface TimeInputProps extends Omit<InputProps, 'value' | 'defaultValue' | 'onChange' | 'readOnly' | 'readonly'> {
@@ -18,15 +17,15 @@ export interface TimeInputProps extends Omit<InputProps, 'value' | 'defaultValue
     onChange?: (value: string) => void;
 }
 
-type Foundation = TimeInputFoundation<TimeInputProps, Record<string, never>, FocusEvent>;
-type Adapter = TimeInputAdapter<TimeInputProps, Record<string, never>, FocusEvent>;
+type Foundation = TimeInputFoundation<TimeInputProps, FocusEvent>;
+type Adapter = TimeInputAdapter<TimeInputProps, FocusEvent>;
 
 export default function TimeInput(props: TimeInputProps) {
     const [local, rest] = splitProps(props, ['prefixCls', 'inputReadOnly', 'validateStatus', 'value', 'invalid', 'focusOnOpen', 'onChange', 'onFocus', 'onBlur', 'inputRef', 'prefix', 'insetLabel']);
 
     let input: HTMLInputElement | undefined;
 
-    const { foundation } = useFoundation<Foundation, Adapter, TimeInputProps, Record<string, never>>(
+    const { foundation } = useFoundation<Foundation, Adapter, TimeInputProps, TimeInputState>(
         TimeInputFoundation,
         props,
         () => ({}),
@@ -38,15 +37,12 @@ export default function TimeInput(props: TimeInputProps) {
         })
     );
 
+    const requestFrame = useRaf();
+
     const setInput = (node: HTMLInputElement) => {
         input = node;
         local.inputRef?.(node);
     };
-
-    // Input writes the new text in a render effect, which runs before this one
-    useWatch(() => local.value, foundation.restoreCursor);
-
-    const requestFrame = useRaf();
 
     onMount(() => {
         requestFrame(() => {

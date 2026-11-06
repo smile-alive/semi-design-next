@@ -1,4 +1,4 @@
-import { type JSX, type ValidComponent, Show, children, createComputed, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps, untrack } from 'solid-js';
+import { type JSX, type ValidComponent, Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/form/constants';
@@ -11,6 +11,7 @@ import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import hasContent from '../_base/has-content';
+import useWatch from '../_base/use-watch';
 import { type FormContextValue, useArrayFieldContext, useFormContext, useFormInputGroupContext } from './context';
 import ErrorMessage from './error-message';
 import FieldGrid from './field-grid';
@@ -236,10 +237,7 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
             if (!registered) {
                 return;
             }
-            // renames happen one at a time, so another field may already own this name; leave its registration alone
-            if (form.bridge.getField(registered.field) === registered.registration) {
-                form.bridge.unRegister(registered.field);
-            }
+            form.bridge.unRegister(registered.registration);
             registered.leaveGroup?.();
             registered = undefined;
         };
@@ -364,18 +362,10 @@ function createField(component: ValidComponent, opts: WithFieldOption, insetLabe
 
         createEffect(on(warnInsetFallback, (warn) => warning(warn, `[Semi Form]: ${name} has no inset label, so Field "${local.field}" is laid out with labelPosition 'top'`)));
 
-        // A computation, not an effect: a removed ArrayField row renames the rows after it, and the renames must land
-        // before the Form's effects report the change, or onChange sees the shifted rows missing
-        createComputed(
-            on(
-                fieldPath,
-                (field) => {
-                    unregister();
-                    register(readInitValue(field));
-                },
-                { defer: true }
-            )
-        );
+        useWatch(fieldPath, (field) => {
+            unregister();
+            register(readInitValue(field));
+        });
 
         onMount(() => {
             register(mountedInitValue);

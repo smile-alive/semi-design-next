@@ -119,13 +119,13 @@
     let clearButton = $state<HTMLButtonElement>();
     let prefixKind = $state<SlotKind>();
     let suffixKind = $state<SlotKind>();
-    let previous: { data: CascaderData[]; keyMaps: unknown; value: unknown } | undefined;
 
     // The foundation caches keyEntities by treeData identity, so an in-place change (a `$state` tree) needs a new array;
     // an equal array keeps the old one. Known limit: the snapshot walks the whole tree on every change, so a very large
     // tree wants a replaced treeData rather than in-place edits.
     let treeSource = $state.raw(untrack(() => [...(treeData ?? [])]));
     let treeSnapshot = untrack(() => $state.snapshot(treeData));
+    let treeInput = untrack(() => treeData);
 
     // A key is reported once: in the capture phase if the options may take it, in the bubble phase for inner controls
     const reported = new WeakSet<KeyboardEvent>();
@@ -234,7 +234,6 @@
                 (searchInput ?? tagInput)?.blur();
                 triggerEl?.blur();
             },
-            updateStates: (next) => base.setState(next as BasicCascaderInnerData),
             notifyChange: (next) => {
                 value = next as CascaderValue;
                 onChange?.(next as CascaderChangeValue);
@@ -462,27 +461,17 @@
     $effect.pre(() => {
         const snapshot = $state.snapshot(treeData);
         untrack(() => {
+            const inPlace = treeData === treeInput;
+            treeInput = treeData;
             if (!isEqual(snapshot, treeSnapshot)) {
                 treeSnapshot = snapshot;
                 treeSource = [...(treeData ?? [])];
+                // the copies share the changed nodes, so the foundation's props comparison sees them as equal
+                if (inPlace) {
+                    foundation.handleTreeDataMutation();
+                }
             }
         });
-    });
-
-    // One effect for the tuple, so options and value changing together only re-collect the options. The values are
-    // compared by content: an inline value is a new array on every parent render, and each change resets the search;
-    // undefined, a value going back to uncontrolled, clears the selection.
-    $effect(() => {
-        const next = { data: treeSource, keyMaps: $state.snapshot(keyMaps), value: $state.snapshot(value) };
-        const before = previous;
-        previous = next;
-        if (before) {
-            const optionsChanged = next.data !== before.data || !isEqual(next.keyMaps, before.keyMaps);
-            const valueChanged = !isEqual(next.value, before.value);
-            if (optionsChanged || valueChanged) {
-                untrack(() => foundation.handleInputsChange({ optionsChanged, valueChanged }, next.value as BasicValue));
-            }
-        }
     });
 
     // The clear button goes with the value. A removed node fires no blur, so a focused button would drop the focus to

@@ -41,7 +41,7 @@ export interface SheetSize {
     dialogHeight: number | string;
 }
 
-export interface SideSheetAdapter<P extends SideSheetProps = SideSheetProps, S extends SideSheetState = SideSheetState> extends DefaultAdapter<P, S> {
+export interface SideSheetAdapter<P extends SideSheetProps = SideSheetProps> extends DefaultAdapter<P, SideSheetState> {
     disabledBodyScroll: () => void;
     enabledBodyScroll: () => void;
     notifyCancel: (e: any) => void;
@@ -56,8 +56,14 @@ export interface SideSheetAdapter<P extends SideSheetProps = SideSheetProps, S e
     toggleDisplayNone: (displayNone: boolean) => void;
 }
 
-// the component pairs beforeShow with afterHide, even on unmount, so destroy() stays the base no-op
-export default class SideSheetFoundation<P extends SideSheetProps = SideSheetProps, S extends SideSheetState = SideSheetState> extends BaseFoundation<SideSheetAdapter<P, S>, P, S> {
+export default class SideSheetFoundation<P extends SideSheetProps = SideSheetProps> extends BaseFoundation<SideSheetAdapter<P>, P, SideSheetState> {
+    // between beforeShow and afterHide: the layer, scroll lock and focus trap are held
+    #shown = false;
+    // destroyed while shown: init takes them again
+    #resume = false;
+
+    static override readonly propKeys = ['visible'];
+
     #handleEscape = (e: KeyboardEvent) => {
         if (!this.getProp('closeOnEsc')) {
             return false;
@@ -77,6 +83,32 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
         return mask ? { dialogWidth: sheetWidth, dialogHeight } : { rootWidth: sheetWidth, dialogWidth: '100%', dialogHeight };
     }
 
+    static getInitialState(): SideSheetState {
+        return {};
+    }
+
+    // A hidden instance (KeepAlive, StrictMode replay) holds nothing of the page and init takes it all again
+    override init() {
+        if (this.#resume) {
+            this.#resume = false;
+            this.beforeShow();
+        }
+    }
+
+    override destroy() {
+        if (this.#shown) {
+            this.afterHide();
+            this.#resume = true;
+        }
+    }
+
+    // React refocuses the pre-commit element after the leave starts while the sheet is still mounted: restore again
+    override handlePropsChange() {
+        if (!this.getProp('visible')) {
+            this.restoreFocus();
+        }
+    }
+
     handleCancel = (e: unknown) => {
         // the sheet stays mounted for its leave animation, and its mask and close button still take clicks
         if (!this.getProp('visible')) {
@@ -86,6 +118,10 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
     };
 
     beforeShow = () => {
+        if (this.#shown) {
+            return;
+        }
+        this.#shown = true;
         const allowDisable = this.getProp('disableScroll');
         if (allowDisable) {
             this.adapter.disabledBodyScroll();
@@ -96,6 +132,11 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
 
     // the layer closes before focus returns: it releases the page's inert, and an inert element cannot take focus
     afterHide = () => {
+        this.#resume = false;
+        if (!this.#shown) {
+            return;
+        }
+        this.#shown = false;
         // unconditional: disableScroll may have changed since the lock was taken
         this.adapter.enabledBodyScroll();
         this.adapter.closeLayer();

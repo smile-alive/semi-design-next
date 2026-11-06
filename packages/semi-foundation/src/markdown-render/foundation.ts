@@ -5,7 +5,7 @@ import remarkRehype from 'remark-rehype';
 import { unified, type PluggableList } from 'unified';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 
-export interface MarkdownRenderAdapter<P extends MarkdownRenderBaseProps = MarkdownRenderBaseProps, S extends MarkdownRenderBaseState = MarkdownRenderBaseState> extends DefaultAdapter<P, S> {
+export interface MarkdownRenderAdapter<P extends MarkdownRenderBaseProps = MarkdownRenderBaseProps> extends DefaultAdapter<P, MarkdownRenderBaseState> {
     /** `Fragment`, `jsx` and `jsxs` of the automatic JSX runtime */
     getRuntime: () => any;
     notifyCompileError: (error: unknown) => void;
@@ -35,8 +35,14 @@ export interface MarkdownRenderBaseState {
 
 type PluginProps = Pick<MarkdownRenderBaseProps, 'format' | 'remarkPlugins' | 'rehypePlugins' | 'remarkGfm'>;
 
-export default class MarkdownRenderFoundation<P extends MarkdownRenderBaseProps = MarkdownRenderBaseProps, S extends MarkdownRenderBaseState = MarkdownRenderBaseState> extends BaseFoundation<MarkdownRenderAdapter<P, S>, P, S> {
+export default class MarkdownRenderFoundation<P extends MarkdownRenderBaseProps = MarkdownRenderBaseProps> extends BaseFoundation<MarkdownRenderAdapter<P>, P, MarkdownRenderBaseState> {
     #requestId = 0;
+    static override readonly propKeys = ['raw', 'format', 'remarkGfm', 'remarkPlugins', 'rehypePlugins'];
+    // an inline plugin array is new on every render, so compare entries
+    static override readonly propEquals = {
+        remarkPlugins: MarkdownRenderFoundation.isSamePluginList,
+        rehypePlugins: MarkdownRenderFoundation.isSamePluginList,
+    };
 
     static #getPlugins(props: PluginProps) {
         const remarkPlugins = props.remarkPlugins ?? [];
@@ -84,6 +90,11 @@ export default class MarkdownRenderFoundation<P extends MarkdownRenderBaseProps 
         return (await evaluate(raw, { remarkPlugins, rehypePlugins, format: 'mdx', ...runtime })).default;
     }
 
+    /** md compiles synchronously, so the server HTML and the first client render already hold the content */
+    static getInitialState(props: Pick<MarkdownRenderBaseProps, 'raw' | 'format' | 'remarkPlugins' | 'rehypePlugins' | 'remarkGfm'>, runtime: any): MarkdownRenderBaseState {
+        return { renderContent: MarkdownRenderFoundation.compileMdSync(props, runtime) };
+    }
+
     /**
      * Compiles `md` synchronously for the first render, so server output and hydration start with the content.
      * Returns null for `mdx` (dynamic import and the Function constructor keep it async) and when compiling throws.
@@ -129,8 +140,20 @@ export default class MarkdownRenderFoundation<P extends MarkdownRenderBaseProps 
         });
     }
 
+    // mdx, and md that compileMdSync could not finish, compile after mount; destroy drops a compile still in flight,
+    // so init starts it again
+    override init() {
+        if (!this.getState('renderContent')) {
+            void this.updateContent();
+        }
+    }
+
     override destroy() {
         this.#requestId++;
+    }
+
+    override handlePropsChange() {
+        void this.updateContent();
     }
 
     /** A failed compile keeps the last content and goes to `notifyCompileError` */

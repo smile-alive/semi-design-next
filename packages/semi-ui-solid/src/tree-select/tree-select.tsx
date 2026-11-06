@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { get } from 'es-toolkit/compat';
 import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
 import { cssClasses, strings } from '@fibrae/semi-foundation/tree-select/constants';
-import TreeSelectFoundation, { type BasicTreeSelectInnerData, type BasicTreeSelectProps, type TreeSelectAdapter, treeSelectDerivedPropKeys } from '@fibrae/semi-foundation/tree-select/foundation';
+import TreeSelectFoundation, { type BasicTreeSelectInnerData, type BasicTreeSelectProps, type TreeSelectAdapter } from '@fibrae/semi-foundation/tree-select/foundation';
 import { buildRowProps, nodeId } from '@fibrae/semi-foundation/tree/shared';
 import { normalizeKeyList } from '@fibrae/semi-foundation/tree/tree-util';
 import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
@@ -370,28 +370,24 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
     // An expression prop such as `treeData={list().map(...)}` is a getter that builds a new array on every read, while
     // deriveState compares treeData by reference and keeps a copy of the props: it reads one snapshot per prop change,
     // or every write-back would look like new data and never settle
-    const snapshot = createMemo(() => Object.fromEntries(treeSelectDerivedPropKeys.map((key) => [key, (props as BasicTreeSelectProps)[key]])) as BasicTreeSelectProps);
+    const snapshot = createMemo(() => Object.fromEntries(TreeSelectFoundation.propKeys.map((key) => [key, (props as BasicTreeSelectProps)[key]])) as BasicTreeSelectProps);
 
     const { foundation, state } = useFoundation<Foundation, Adapter, BasicTreeSelectProps, BasicTreeSelectInnerData>(
         TreeSelectFoundation,
         props as BasicTreeSelectProps,
         () => TreeSelectFoundation.getInitialState(snapshot()),
-        (base) => ({
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            updateState: (states) => base.setState(states as BasicTreeSelectInnerData),
+        () => ({
             notifySelect: (selectKey, selected, node) => props.onSelect?.(selectKey, selected, node as TreeNodeData),
             notifySearch: (input, filteredExpandedKeys, filteredNodes) => props.onSearch?.(input, filteredExpandedKeys, filteredNodes as TreeNodeData[]),
-            setCachedFlattenNodes: (cachedFlattenNodes) => base.setState({ cachedFlattenNodes }),
             notifyLoad: (loadedKeys, node) => props.onLoad?.(loadedKeys, node as TreeNodeData),
             notifyClear: (e) => props.onClear?.(e),
-            openMenu: () => base.setState({ isOpen: true }),
-            // a reopened dropdown starts without an active row
-            closeMenu: () =>
-                batch(() => {
-                    base.setState({ isOpen: false });
+            notifyVisibleChange: (visible) => {
+                // a reopened dropdown starts without an active row
+                if (!visible) {
                     keyboard.setKeyboardKey(null);
-                }),
-            notifyVisibleChange: (visible) => props.onVisibleChange?.(visible),
+                }
+                props.onVisibleChange?.(visible);
+            },
             notifyChange: (value, node, e) => props.onChange?.(value, node, e),
             notifyChangeWithObject: (node, e) => props.onChange?.(node, e),
             notifyExpand: (expandedKeys, { expanded, node }) => props.onExpand?.([...expandedKeys], { expanded, node: node as TreeNodeData }),
@@ -408,7 +404,6 @@ function TreeSelectControl(all: TreeSelectBodyProps & { inGroup?: InputGroupCont
                     (searchInput ?? tagInput)?.focus();
                 }
             },
-            updateIsFocus: (isFocus) => base.setState({ isFocus }),
             isInTrigger: (node) => node instanceof Node && Boolean(root?.contains(node)),
         })
     );

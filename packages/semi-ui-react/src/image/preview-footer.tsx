@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-import PreviewFooterFoundation, { type PreviewFooterAdapter } from '@fibrae/semi-foundation/image/preview-footer-foundation';
+import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterState } from '@fibrae/semi-foundation/image/preview-footer-foundation';
 import { IconChevronLeft, IconChevronRight, IconMinus, IconPlus, IconRotate, IconDownload, IconWindowAdaptionStroked, IconRealSizeStroked } from '@fibrae/semi-icons-react';
 import useFoundation from '../_base/use-foundation';
 import Divider from '../divider';
@@ -9,6 +9,9 @@ import useLocale from '../locale/use-locale';
 import Slider from '../slider';
 import Tooltip from '../tooltip';
 import type { FooterProps, MenuProps } from './interface';
+
+type Foundation = PreviewFooterFoundation<FooterProps>;
+type Adapter = PreviewFooterAdapter<FooterProps>;
 
 const prefixCls = cssClasses.PREFIX;
 const footerPrefixCls = `${cssClasses.PREFIX}-preview-footer`;
@@ -25,7 +28,7 @@ export default function Footer(props: FooterProps) {
 
     let content: ReactNode;
 
-    const [foundation] = useFoundation<PreviewFooterFoundation<FooterProps, Record<string, never>>, PreviewFooterAdapter<FooterProps, Record<string, never>>, FooterProps, Record<string, never>>(
+    const [foundation] = useFoundation<Foundation, Adapter, FooterProps, PreviewFooterState>(
         PreviewFooterFoundation,
         props,
         () => ({}),

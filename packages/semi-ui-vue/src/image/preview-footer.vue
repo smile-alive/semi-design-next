@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, h } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterBaseProps, type PreviewFooterBaseState } from '@fibrae/semi-foundation/image/preview-footer-foundation';
+    import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterBaseProps, type PreviewFooterState } from '@fibrae/semi-foundation/image/preview-footer-foundation';
     import useFoundation from '../_base/use-foundation';
     import Divider from '../divider';
     import useLocale from '../locale/use-locale';
@@ -57,7 +57,7 @@
 
     const locale = useLocale('Image');
 
-    const { foundation } = useFoundation<Foundation, Adapter, PreviewFooterBaseProps, PreviewFooterBaseState>(
+    const { foundation } = useFoundation<Foundation, Adapter, PreviewFooterBaseProps, PreviewFooterState>(
         PreviewFooterFoundation,
         props,
         () => ({}),

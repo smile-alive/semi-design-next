@@ -7,7 +7,6 @@ import type { ElementProps } from '../_base/element-props';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import { useLocale } from '../locale';
 import Popover, { type PopoverProps } from '../popover';
 import AlphaSlider from './alpha-slider';
@@ -55,7 +54,7 @@ function ColorPicker(rawProps: ColorPickerProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, BaseColorPickerProps, ColorPickerState>(
         ColorPickerFoundation,
         props,
-        () => ({ currentColor: props.value ?? props.defaultValue }),
+        (initial) => ColorPickerFoundation.getInitialState(initial),
         () => ({ notifyChange: (value) => props.onChange?.(value) })
     );
 
@@ -84,15 +83,6 @@ function ColorPicker(rawProps: ColorPickerProps) {
             <DataPart alpha={local.alpha} currentColor={currentColor()} defaultFormat={local.defaultFormat} eyeDropper={local.eyeDropper} foundation={foundation} width={width()} />
             {local.bottomSlot}
         </div>
-    );
-
-    useWatch(
-        () => local.value,
-        (value) => {
-            if (value === undefined) {
-                foundation.resetToDefault();
-            }
-        }
     );
 
     return (

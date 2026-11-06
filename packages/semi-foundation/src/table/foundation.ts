@@ -1,4 +1,4 @@
-import { merge, pick } from 'es-toolkit';
+import { isEqual, merge, pick } from 'es-toolkit';
 // compat get resolves deep path strings such as 'a.b'
 import { get } from 'es-toolkit/compat';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
@@ -63,31 +63,11 @@ export interface TableScrollableEdges {
     right: boolean;
 }
 
-export interface TableAdapter<RecordType, P extends TableBaseProps<RecordType> = TableBaseProps<RecordType>, S extends TableBaseState<RecordType> = TableBaseState<RecordType>> extends DefaultAdapter<P, S> {
+export interface TableAdapter<RecordType, P extends TableBaseProps<RecordType> = TableBaseProps<RecordType>> extends DefaultAdapter<P, TableBaseState<RecordType>> {
     resetScrollY: () => void;
     /** The metrics of the body scroller, or null while it is not mounted */
     getScrollMetrics: () => TableScrollMetrics | null;
     setScrollableEdges: (edges: TableScrollableEdges) => void;
-    setSelectedRowKeys: (selectedRowKeys: BaseRowKeyType[]) => void;
-    setPageDisabledRowKeys: (pageDisabledRowKeys: BaseRowKeyType[]) => void;
-    setPagination: (pagination: BasePagination) => void;
-    setGroups: (groups: Map<string | number, Set<BaseRowKeyType>>) => void;
-    setDataSource: (dataSource: RecordType[]) => void;
-    setExpandedRowKeys: (expandedRowKeys: BaseRowKeyType[]) => void;
-    // method syntax keeps the parameter bivariant: the queries are the framework's own column objects
-    setQueries(queries: BaseColumnProps<RecordType>[]): void;
-    setAllRowKeys: (allRowKeys: BaseRowKeyType[]) => void;
-    setCachedFilteredSortedDataSource: (filteredSortedDataSource: RecordType[]) => void;
-    setCachedFilteredSortedRowKeys: (filteredSortedRowKeys: BaseRowKeyType[]) => void;
-    setHalfCheckedRowKeys: (halfCheckedRowKeys: BaseRowKeyType[]) => void;
-    setKeyEntities: (keyEntities: BaseEntitys) => void;
-    getCurrentPage: () => number;
-    getCachedFilteredSortedDataSource: () => RecordType[];
-    getCachedFilteredSortedRowKeys: () => BaseRowKeyType[];
-    setFilteredDisabledRowKeys: (filteredDisabledRowKeys: BaseRowKeyType[]) => void;
-    getFilteredDisabledRowKeysSet: () => Set<BaseRowKeyType>;
-    getHalfCheckedRowKeys: () => BaseRowKeyType[];
-    getKeyEntities: () => BaseEntitys;
     notifyFilterDropdownVisibleChange: (visible: boolean, dataIndex: string) => void;
     notifyChange: (changeInfo: { pagination: BasePagination; filters: BaseChangeInfoFilter<RecordType>[]; sorter: BaseChangeInfoSorter<RecordType>; extra: OnChangeExtra }) => void;
     notifyExpand: (expanded: boolean, record: BaseIncludeGroupRecord<RecordType>, mouseEvent: any) => void;
@@ -96,7 +76,6 @@ export interface TableAdapter<RecordType, P extends TableBaseProps<RecordType> =
     notifySelect: (record: BaseIncludeGroupRecord<RecordType>, selected: boolean, selectedRows: BaseIncludeGroupRecord<RecordType>[], event: any) => void;
     notifySelectAll: (selected: boolean, selectedRows: BaseIncludeGroupRecord<RecordType>[], changedRows: BaseIncludeGroupRecord<RecordType>[], e: any) => void;
     notifySelectionChange: (selectedRowKeys: BaseRowKeyType[], selectedRows: BaseIncludeGroupRecord<RecordType>[]) => void;
-    getCheckRelation: () => CheckRelation;
 }
 
 /**
@@ -130,6 +109,11 @@ export interface TableBaseProps<RecordType> extends BaseTableDataProps<RecordTyp
     expandAllGroupRows?: boolean;
     expandedRowRender?: (...args: any[]) => any;
     scroll?: { scrollToFirstRowOnChange?: boolean };
+    /**
+     * Not a user prop: the host passes the leaf columns it resolves from the columns prop or the child columns, the same
+     * reference until they change, so a change reaches handlePropsChange like a prop's
+     */
+    flattenColumns?: BaseColumnProps<RecordType>[];
 }
 
 export type TableBaseStateRowSelection<RecordType> = (TableBaseRowSelection<RecordType> & { selectedRowKeysSet?: Set<BaseRowKeyType> }) | null;
@@ -170,13 +154,7 @@ export type TableColumnsState<RecordType, C extends BaseColumnProps<RecordType>>
     queries?: C[];
 };
 
-export default class TableFoundation<RecordType, P extends TableBaseProps<RecordType> = TableBaseProps<RecordType>, S extends TableBaseState<RecordType> = TableBaseState<RecordType>> extends BaseFoundation<TableAdapter<RecordType, P, S>, P, S> {
-    // StrictMode and React Activity replay init on this instance after destroy, over rows the user may have expanded
-    // or selected since: the expansion and selection defaults apply once. The rest of init still runs every time, since
-    // the Vue host calls it again once the child columns are known.
-    // shortcut: these defaults belong in getInitialState, which needs the key entities and groups resolved statically;
-    // move them there when the state of both hosts is created from it.
-    #defaultKeysApplied = false;
+export default class TableFoundation<RecordType, P extends TableBaseProps<RecordType> = TableBaseProps<RecordType>> extends BaseFoundation<TableAdapter<RecordType, P>, P, TableBaseState<RecordType>> {
     // Without `scroll-state` container queries (Chrome < 133) the fixed-column shadows follow data attributes written by
     // syncScrollEdges. Removable once Firefox and Safari support `container-type: scroll-state`.
     #trackScrollEdges: boolean | undefined;
@@ -187,6 +165,8 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     #rangeBase: Set<BaseRowKeyType> | null = null;
     #rangeResult: Set<BaseRowKeyType> | null = null;
     #spaceShiftKey = false;
+    // every prop deriveState or handlePropsChange compares with its previous value; one missing here never updates
+    static override readonly propKeys = ['flattenColumns', 'dataSource', 'rowSelection', 'pagination', 'expandedRowKeys', 'expandAllRows', 'expandAllGroupRows'];
 
     static #pagerIsControlled(props: { pagination?: BasePagination | boolean }) {
         return (props.pagination as BasePagination)?.currentPage != null;
@@ -264,6 +244,31 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         return this.getState('rowSelection')?.selectedRowKeysSet ?? new Set();
     }
 
+    #getFilteredDisabledRowKeysSet() {
+        return this.getState('filteredDisabledRowKeysSet') ?? new Set<BaseRowKeyType>();
+    }
+
+    #getCheckRelation(): CheckRelation {
+        return this.getState('rowSelection')?.checkRelation ?? 'unRelated';
+    }
+
+    // each key list is written with the Set that render and the selection checks read
+    #setSelectedRowKeys(selectedRowKeys: BaseRowKeyType[]) {
+        this.setState({ rowSelection: { ...this.getState('rowSelection'), selectedRowKeys: [...selectedRowKeys], selectedRowKeysSet: new Set(selectedRowKeys) } });
+    }
+
+    #setHalfCheckedRowKeys(halfCheckedRowKeys: BaseRowKeyType[]) {
+        this.setState({ halfCheckedRowKeys, halfCheckedRowKeysSet: new Set(halfCheckedRowKeys) });
+    }
+
+    #setPageDisabledRowKeys(pageDisabledRowKeys: BaseRowKeyType[]) {
+        this.setState({ pageDisabledRowKeys, pageDisabledRowKeysSet: new Set(pageDisabledRowKeys) });
+    }
+
+    #setFilteredDisabledRowKeys(filteredDisabledRowKeys: BaseRowKeyType[]) {
+        this.setState({ filteredDisabledRowKeys, filteredDisabledRowKeysSet: new Set(filteredDisabledRowKeys) });
+    }
+
     // the rows of the current page in render order, without collapsed tree children and groups: a range covers only
     // the rows the user sees between the two clicks
     #getVisibleRowKeys() {
@@ -287,7 +292,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             this.#rangeBase = new Set(this.#getSelectedRowKeys());
         }
         const selected = this.#rangeBase.has(this.#rangeAnchor);
-        const disabledRowKeys = this.adapter.getFilteredDisabledRowKeysSet();
+        const disabledRowKeys = this.#getFilteredDisabledRowKeysSet();
         const nextKeys = new Set(this.#rangeBase);
         for (const key of visibleRowKeys.slice(Math.min(anchorIndex, index), Math.max(anchorIndex, index) + 1)) {
             if (!disabledRowKeys.has(key)) {
@@ -307,7 +312,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         }
         const selectedRowKeys = [...nextKeys];
         if (!this.#selectionIsControlled()) {
-            this.adapter.setSelectedRowKeys(selectedRowKeys);
+            this.#setSelectedRowKeys(selectedRowKeys);
         }
         this.adapter.notifySelectionChange(selectedRowKeys, this.getRecordsByKeys(null, selectedRowKeys));
         return true;
@@ -372,10 +377,8 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     }
 
     #getGroups() {
-        const groupBy = this.adapter.getProp('groupBy');
-        if (groupBy !== null) {
-            const groups = this.adapter.getState('groups');
-            return groups;
+        if (this.getProp('groupBy') !== null) {
+            return this.getState('groups');
         }
         return null;
     }
@@ -395,7 +398,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             }
 
             let halfCheckedRowKeys: BaseRowKeyType[] = [];
-            if (this.adapter.getCheckRelation() === 'related') {
+            if (this.#getCheckRelation() === 'related') {
                 const related = TableFoundation.#getRelatedCheckedRowKeys(rowKeys, keyEntities);
                 halfCheckedRowKeys = related.halfCheckedRowKeys;
                 if (!controlled) {
@@ -405,27 +408,19 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                 }
             }
 
-            this.adapter.setSelectedRowKeys(rowKeys);
-            this.adapter.setHalfCheckedRowKeys(halfCheckedRowKeys);
+            this.#setSelectedRowKeys(rowKeys);
+            this.#setHalfCheckedRowKeys(halfCheckedRowKeys);
         }
     }
 
-    #setAdapterPageData({ pagination, dataSource, disabledRowKeys, allRowKeys, groups }: BasePageData<RecordType> = {}) {
-        this.adapter.setPageDisabledRowKeys(disabledRowKeys);
-        this.adapter.setAllRowKeys(allRowKeys);
-        this.adapter.setPagination(pagination);
-        this.adapter.setGroups(groups);
-        this.adapter.setDataSource(dataSource);
+    #setPageData({ pagination, dataSource, disabledRowKeys, allRowKeys, groups }: BasePageData<RecordType> = {}) {
+        this.#setPageDisabledRowKeys(disabledRowKeys);
+        this.setState({ allRowKeys, pagination, groups, dataSource });
     }
 
     #setCachedFilteredSortedDataSource(filteredSortedDataSource: RecordType[]) {
-        this.adapter.setCachedFilteredSortedDataSource(filteredSortedDataSource);
         const filteredSortedRowKeys = this.getAllRowKeys(filteredSortedDataSource);
-        this.adapter.setCachedFilteredSortedRowKeys(filteredSortedRowKeys);
-    }
-
-    #setFilteredDisabledRowKeys(disabledRowKeys: BaseRowKeyType[]) {
-        this.adapter.setFilteredDisabledRowKeys(disabledRowKeys);
+        this.setState({ filteredSortedDataSource, filteredSortedRowKeys, filteredSortedRowKeysSet: new Set(filteredSortedRowKeys) });
     }
 
     #applyQueries(queries: BaseColumnProps<RecordType>[]) {
@@ -435,13 +430,13 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         this.#setCachedFilteredSortedDataSource(sortedDataSource);
         this.#setFilteredDisabledRowKeys(allDataDisabledRowKeys);
         const pageData = this.getCurrentPageData(sortedDataSource);
-        this.#setAdapterPageData(pageData);
+        this.#setPageData(pageData);
     }
 
     #updateKeyEntities() {
-        const keyEntities = this.buildKeyEntities(this.getProp('dataSource'));
-        this.adapter.setKeyEntities(keyEntities);
-        this.adapter.setHalfCheckedRowKeys(TableFoundation.#getRelatedCheckedRowKeys(this.#getSelectedRowKeys(), keyEntities).halfCheckedRowKeys);
+        const keyEntities = TableFoundation.buildKeyEntities(this.getProps(), this.getProp('dataSource'));
+        this.setState({ keyEntities });
+        this.#setHalfCheckedRowKeys(TableFoundation.#getRelatedCheckedRowKeys(this.#getSelectedRowKeys(), keyEntities).halfCheckedRowKeys);
     }
 
     /**
@@ -461,7 +456,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             this.#setFilteredDisabledRowKeys(allDataDisabledRowKeys);
             states.dataSource = filteredSortedDataSource;
 
-            if (this.adapter.getCheckRelation() === 'related') {
+            if (this.#getCheckRelation() === 'related') {
                 this.#updateKeyEntities();
             }
 
@@ -488,8 +483,8 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         if (Object.keys(states).length) {
             const pageData = this.getCurrentPageData(states.dataSource ?? null, states.pagination ?? (statePagination && { ...statePagination }), null);
 
-            this.adapter.setAllRowKeys(pageData.allRowKeys);
-            this.adapter.setPageDisabledRowKeys(pageData.disabledRowKeys);
+            this.setState({ allRowKeys: pageData.allRowKeys });
+            this.#setPageDisabledRowKeys(pageData.disabledRowKeys);
 
             if ('dataSource' in states) {
                 // groups recompute with the columns too; only new data, which may bring new groups, expands them again
@@ -497,17 +492,17 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                 if (expandNewGroups || expandAllRows || expandAllGroupRows) {
                     this.initExpandedRowKeys(pageData);
                 }
-                this.adapter.setDataSource(pageData.dataSource);
+                this.setState({ dataSource: pageData.dataSource });
                 states.pagination = pageData.pagination;
             }
             if (pageSizeChanged && !('dataSource' in states)) {
-                this.adapter.setDataSource(pageData.dataSource);
+                this.setState({ dataSource: pageData.dataSource });
             }
             if ('groups' in states) {
-                this.adapter.setGroups(pageData.groups);
+                this.setState({ groups: pageData.groups });
             }
             if ('pagination' in states) {
-                this.adapter.setPagination(pageData.pagination);
+                this.setState({ pagination: pageData.pagination });
             }
         }
     }
@@ -520,32 +515,8 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         return TableFoundation.getRecordKey({ rowKey: this.getProp('rowKey') }, record);
     }
 
-    protected buildKeyEntities(dataSource?: RecordType[]): BaseEntitys {
-        dataSource = dataSource == null ? this.#getDataSource() : dataSource;
-        const childrenRecordName = this.getProp('childrenRecordName');
-        const rowKey = this.getProp('rowKey');
-
-        const convertToTreeData = (data: RecordType[]) => {
-            return data.map((record) => {
-                const key = typeof rowKey === 'function' ? rowKey(record) : get(record, rowKey);
-                const children = get(record, childrenRecordName);
-                // the tree utilities compare keys with the checked Set, so entity keys must be strings; rowKey keeps
-                // the original
-                const node: any = { ...record, key: String(key), rowKey: key };
-                if (Array.isArray(children) && children.length) {
-                    node.children = convertToTreeData(children);
-                }
-                return node;
-            });
-        };
-
-        const treeData = convertToTreeData(dataSource);
-        const { keyEntities } = convertDataToEntities(treeData, { key: 'key', children: 'children' });
-        return keyEntities;
-    }
-
     protected calcCheckedKeysForSelect(realKey: BaseRowKeyType, selected: boolean, checkedKeys: Set<string>, halfCheckedKeys: Set<string>) {
-        const keyEntities = this.adapter.getKeyEntities();
+        const keyEntities = this.getState('keyEntities') ?? {};
         const keyStr = String(realKey);
 
         if (!keyEntities || !keyEntities[keyStr]) {
@@ -608,6 +579,16 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             return queries?.find((query) => query.dataIndex === dataIndex);
         }
         return undefined;
+    }
+
+    protected override initOnce() {
+        const { defaultExpandAllRows, expandAllRows, expandAllGroupRows } = this.getProps();
+        const groups = this.getState('groups');
+        // defaultExpandAllRows is only a default, so its groups leave controlled keys alone; the other options still apply
+        if (!(defaultExpandAllRows && !expandAllRows && !expandAllGroupRows && groups?.size && this.#rowExpansionIsControlled())) {
+            this.initExpandedRowKeys({ groups });
+        }
+        this.#initSelectedRowKeys(this.getState('keyEntities'));
     }
 
     static initColumnsFilteredValueAndSorterOrder<R, C extends BaseColumnProps<R> = BaseColumnProps<R>>(columns: C[]) {
@@ -916,6 +897,25 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         return allRowKeys;
     }
 
+    static buildKeyEntities<R>({ rowKey, childrenRecordName }: BaseTableDataProps<R>, dataSource: R[]): BaseEntitys {
+        const convertToTreeData = (data: R[]) => {
+            return data.map((record) => {
+                const key = typeof rowKey === 'function' ? rowKey(record) : get(record, rowKey);
+                const children = get(record, childrenRecordName);
+                // the tree utilities compare keys with the checked Set, so entity keys must be strings; rowKey keeps
+                // the original
+                const node: any = { ...record, key: String(key), rowKey: key };
+                if (Array.isArray(children) && children.length) {
+                    node.children = convertToTreeData(children);
+                }
+                return node;
+            });
+        };
+
+        const { keyEntities } = convertDataToEntities(convertToTreeData(dataSource ?? []), { key: 'key', children: 'children' });
+        return keyEntities;
+    }
+
     /** scrollLeft is 0 at the start edge and negative in RTL; a pixel of slack absorbs fractional scroll positions */
     static getScrollableEdges({ scrollLeft, scrollWidth, clientWidth, rtl }: TableScrollMetrics): TableScrollableEdges {
         const max = scrollWidth - clientWidth;
@@ -1055,7 +1055,9 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
      */
     static getInitialState<R, C extends BaseColumnProps<R> = BaseColumnProps<R>>(props: TableBaseProps<R>, flattenColumns: C[], queries: C[]): TableColumnsState<R, C> {
         const filteredSortedDataSource = TableFoundation.getFilteredSortedDataSource(props, props.dataSource, queries);
+        const filteredSortedRowKeys = TableFoundation.getAllRowKeys(props, filteredSortedDataSource);
         const pageData = TableFoundation.getPageData(props, filteredSortedDataSource, isObject(props.pagination) ? props.pagination : {}, queries);
+        const related = isObject(props.rowSelection) && props.rowSelection.checkRelation === 'related';
         const state: TableColumnsState<R, C> = {
             flattenColumns,
             queries,
@@ -1065,7 +1067,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             rowSelection: props.rowSelection ? (isObject(props.rowSelection) ? { ...props.rowSelection } : {}) : null,
             pagination: pageData.pagination,
             groups: pageData.groups ?? null,
-            allRowKeys: [],
+            allRowKeys: pageData.allRowKeys,
             pageDisabledRowKeys: [],
             pageDisabledRowKeysSet: new Set(),
             filteredDisabledRowKeys: [],
@@ -1076,12 +1078,22 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             prePagination: undefined,
             halfCheckedRowKeys: [],
             halfCheckedRowKeysSet: new Set(),
-            keyEntities: {},
-            filteredSortedDataSource: [],
-            filteredSortedRowKeys: [],
-            filteredSortedRowKeysSet: new Set(),
+            keyEntities: related && props.dataSource?.length ? TableFoundation.buildKeyEntities(props, props.dataSource) : {},
+            filteredSortedDataSource,
+            filteredSortedRowKeys,
+            filteredSortedRowKeysSet: new Set(filteredSortedRowKeys),
         };
-        return { ...state, ...TableFoundation.deriveState(props, state, flattenColumns) };
+        const filteredDisabledRowKeys = TableFoundation.getAllDisabledRowKeys(props, filteredSortedDataSource);
+        // the disabled keys deriveState takes from the whole dataSource give way to those of the page and of the
+        // filtered rows
+        return {
+            ...state,
+            ...TableFoundation.deriveState(props, state, flattenColumns),
+            pageDisabledRowKeys: pageData.disabledRowKeys,
+            pageDisabledRowKeysSet: new Set(pageData.disabledRowKeys),
+            filteredDisabledRowKeys,
+            filteredDisabledRowKeysSet: new Set(filteredDisabledRowKeys),
+        };
     }
 
     /** Hosts call it after mount, on body scroll and when the table or its content resizes */
@@ -1094,35 +1106,29 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         }
     };
 
-    override init() {
-        const dataSource = this.getProp('dataSource');
-        const { queries } = this.adapter.getStates();
-        const filteredSortedDataSource = this.getFilteredSortedDataSource(dataSource, queries);
-        const allDataDisabledRowKeys = this.getAllDisabledRowKeys(filteredSortedDataSource);
-        const pageData = this.getCurrentPageData(filteredSortedDataSource);
-        this.#setAdapterPageData(pageData);
-        // defaultExpandAllRows is only a default, so its groups leave controlled keys alone; the other options still apply
-        const { defaultExpandAllRows, expandAllRows, expandAllGroupRows } = this.getProps();
-        const applyDefaultKeys = !this.#defaultKeysApplied;
-        this.#defaultKeysApplied = true;
-        if (applyDefaultKeys && !(defaultExpandAllRows && !expandAllRows && !expandAllGroupRows && pageData.groups?.size && this.#rowExpansionIsControlled())) {
-            this.initExpandedRowKeys(pageData);
+    /** `index` is the header row the widths were measured in */
+    setHeadWidths = (widths: BaseHeadWidth[], index = 0) => {
+        const prevHeadWidths = this.getState('headWidths') ?? [];
+        if (!isEqual(prevHeadWidths[index], widths)) {
+            const nextHeadWidths = [...prevHeadWidths];
+            nextHeadWidths[index] = [...widths];
+            this.setState({ headWidths: nextHeadWidths });
         }
-        let keyEntities: BaseEntitys = {};
-        if (this.adapter.getCheckRelation() === 'related' && dataSource && dataSource.length) {
-            keyEntities = this.buildKeyEntities(dataSource);
-            this.adapter.setKeyEntities(keyEntities);
-        }
-        if (applyDefaultKeys) {
-            this.#initSelectedRowKeys(keyEntities);
-        }
-        this.#setCachedFilteredSortedDataSource(filteredSortedDataSource);
-        this.#setFilteredDisabledRowKeys(allDataDisabledRowKeys);
-    }
+    };
 
-    // typed with the base shapes: an arrow field's parameters are checked contravariantly, and a host's context holds
-    // the foundation as TableFoundation<any, TableBaseProps<any>>
-    handleUpdate = (prevProps: TableBaseProps<RecordType>, prevFlattenColumns: TableBaseState<RecordType>['flattenColumns']) => {
+    setBodyHasScrollbar = (bodyHasScrollBar: boolean) => {
+        if (bodyHasScrollBar !== this.getState('bodyHasScrollBar')) {
+            this.setState({ bodyHasScrollBar });
+        }
+    };
+
+    override handlePropsChange(prev: Partial<P>) {
+        // render already shows the derived state; written here first, since the update below builds on it
+        const derived = TableFoundation.deriveState(this.getProps(), this.getStates(), this.getProp('flattenColumns'));
+        if (derived) {
+            this.setState(derived);
+        }
+
         const props = this.getProps();
         const flattenColumns = this.getState('flattenColumns');
 
@@ -1136,20 +1142,20 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             }
         }
 
-        if (props.expandAllRows !== prevProps.expandAllRows || props.expandAllGroupRows !== prevProps.expandAllGroupRows) {
+        if (props.expandAllRows !== prev.expandAllRows || props.expandAllGroupRows !== prev.expandAllGroupRows) {
             this.initExpandedRowKeys({ groups: this.getState('groups') });
         }
 
-        const dataSourceChanged = props.dataSource !== prevProps.dataSource;
-        const recompute = dataSourceChanged || flattenColumns !== prevFlattenColumns;
+        const dataSourceChanged = props.dataSource !== prev.dataSource;
+        const recompute = dataSourceChanged || flattenColumns !== prev.flattenColumns;
         // an unrelated selection keeps no tree
-        const becameRelated = this.adapter.getCheckRelation() === 'related' && !(isObject(prevProps.rowSelection) && prevProps.rowSelection.checkRelation === 'related');
+        const becameRelated = this.#getCheckRelation() === 'related' && !(isObject(prev.rowSelection) && prev.rowSelection.checkRelation === 'related');
         if (becameRelated && !recompute) {
             this.#updateKeyEntities();
         }
         // sorting and filtering recompute in their own handlers and disabled keys in deriveState
-        this.#handleDataUpdate(dataSourceChanged, recompute, prevProps.pagination);
-    };
+        this.#handleDataUpdate(dataSourceChanged, recompute, prev.pagination);
+    }
 
     initExpandedRowKeys({ groups }: { groups?: Map<string | number, Set<BaseRowKeyType>> } = {}) {
         const { defaultExpandAllRows, defaultExpandedRowKeys = [], expandedRowKeys: propExpandedRowKeys = [], dataSource = [], expandAllRows, defaultExpandAllGroupRows, expandAllGroupRows } = this.getProps();
@@ -1164,11 +1170,11 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         } else if (Array.isArray(propExpandedRowKeys) && propExpandedRowKeys.length) {
             this.#addNoDuplicatedItemsToArr(expandedRowKeys, propExpandedRowKeys);
         }
-        this.adapter.setExpandedRowKeys(expandedRowKeys);
+        this.setState({ expandedRowKeys });
     }
 
     getCurrentPageData = (dataSource?: RecordType[], pagination?: BasePagination, queries?: BaseColumnProps<RecordType>[]) => {
-        const filteredSortedDataSource = this.adapter.getCachedFilteredSortedDataSource();
+        const filteredSortedDataSource = this.getState('filteredSortedDataSource') ?? [];
         dataSource = dataSource == null ? [...filteredSortedDataSource] : dataSource;
         pagination = pagination == null ? this.getState('pagination') && { ...this.getState('pagination') } : pagination;
         queries = queries == null ? [...this.getState('queries')] : queries;
@@ -1181,18 +1187,16 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     };
 
     setPage = (currentPage: number, currentPageSize: number) => {
-        currentPage = currentPage || this.adapter.getCurrentPage();
         const currentPagination = this.getState('pagination');
+        currentPage = currentPage || (currentPagination?.currentPage ?? 1);
         const { dataSource, pagination, disabledRowKeys, allRowKeys } = this.getCurrentPageData(null, {
             ...currentPagination,
             currentPage,
             pageSize: currentPageSize,
         });
         if (!TableFoundation.#pagerIsControlled(this.getProps()) && currentPage > 0) {
-            this.adapter.setPageDisabledRowKeys(disabledRowKeys);
-            this.adapter.setAllRowKeys(allRowKeys);
-            this.adapter.setPagination(pagination);
-            this.adapter.setDataSource(dataSource);
+            this.#setPageDisabledRowKeys(disabledRowKeys);
+            this.setState({ allRowKeys, pagination, dataSource });
         }
 
         this.#notifyChange(pagination, undefined, undefined, { changeType: 'pagination' });
@@ -1209,7 +1213,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     handleSelectRow = (realKey: BaseRowKeyType, selected: boolean, e?: BaseSelectRowEvent) => {
         e?.stopPropagation();
         if (typeof selected === 'boolean' && realKey != null) {
-            const checkRelation = this.adapter.getCheckRelation();
+            const checkRelation = this.#getCheckRelation();
             // a related tree checks whole subtrees, so a Shift range has no clear meaning there
             const native = e?.nativeEvent;
             const shiftKey = e?.shiftKey ?? (native?.shiftKey || (native?.detail === 0 && this.#spaceShiftKey));
@@ -1221,7 +1225,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             this.#rangeResult = null;
 
             const selectedRowKeys = this.#getSelectedRowKeys();
-            const halfCheckedRowKeys = [...(this.adapter.getHalfCheckedRowKeys() || [])];
+            const halfCheckedRowKeys = [...(this.getState('halfCheckedRowKeys') ?? [])];
             let foundIdx = -1;
             const selectedRow = this.getRecordsByKeys(null, [realKey])[0];
             let selectedRows: BaseIncludeGroupRecord<RecordType>[];
@@ -1232,15 +1236,15 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
 
                 const { checkedKeys, halfCheckedKeys } = this.calcCheckedKeysForSelect(String(realKey), selected, checkedKeysSet, halfCheckedKeysSet);
 
-                const keyEntities = this.adapter.getKeyEntities();
+                const keyEntities = this.getState('keyEntities') ?? {};
                 const newSelectedRowKeys = TableFoundation.#restoreRowKeys(checkedKeys, [...selectedRowKeys, realKey], keyEntities);
                 const newHalfCheckedRowKeys = TableFoundation.#restoreRowKeys(halfCheckedKeys, halfCheckedRowKeys, keyEntities);
                 selectedRows = this.getRecordsByKeys(null, newSelectedRowKeys);
 
                 // a controlled selection derives its half-checked rows from the keys the parent passes back
                 if (!this.#selectionIsControlled()) {
-                    this.adapter.setSelectedRowKeys(newSelectedRowKeys);
-                    this.adapter.setHalfCheckedRowKeys(newHalfCheckedRowKeys);
+                    this.#setSelectedRowKeys(newSelectedRowKeys);
+                    this.#setHalfCheckedRowKeys(newHalfCheckedRowKeys);
                 }
                 this.adapter.notifySelect(selectedRow, selected, selectedRows, e);
                 this.adapter.notifySelectionChange(newSelectedRowKeys, selectedRows);
@@ -1249,7 +1253,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                     selectedRowKeys.splice(foundIdx, 1);
                     selectedRows = this.getRecordsByKeys(null, selectedRowKeys);
                     if (!this.#selectionIsControlled()) {
-                        this.adapter.setSelectedRowKeys(selectedRowKeys);
+                        this.#setSelectedRowKeys(selectedRowKeys);
                     }
                     this.adapter.notifySelect(selectedRow, selected, selectedRows, e);
                     this.adapter.notifySelectionChange(selectedRowKeys, selectedRows);
@@ -1257,7 +1261,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                     selectedRowKeys.push(realKey);
                     selectedRows = this.getRecordsByKeys(null, selectedRowKeys);
                     if (!this.#selectionIsControlled()) {
-                        this.adapter.setSelectedRowKeys(selectedRowKeys);
+                        this.#setSelectedRowKeys(selectedRowKeys);
                     }
                     this.adapter.notifySelect(selectedRow, selected, selectedRows, e);
                     this.adapter.notifySelectionChange(selectedRowKeys, selectedRows);
@@ -1269,16 +1273,16 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     handleSelectAllRow = (selected: boolean, e?: Pick<Event, 'stopPropagation'>) => {
         e?.stopPropagation();
         if (typeof selected === 'boolean') {
-            const checkRelation = this.adapter.getCheckRelation();
+            const checkRelation = this.#getCheckRelation();
             const curSelectedRowKeys = this.#getSelectedRowKeys();
             let selectedRowKeys = [...curSelectedRowKeys];
             const selectedRowKeysSet = this.#getSelectedRowKeysSet();
-            const disabledRowKeysSet = this.adapter.getFilteredDisabledRowKeysSet();
-            const scopeRowKeys = this.adapter.getCachedFilteredSortedRowKeys().filter((key) => !disabledRowKeysSet.has(key));
+            const disabledRowKeysSet = this.#getFilteredDisabledRowKeysSet();
+            const scopeRowKeys = (this.getState('filteredSortedRowKeys') ?? []).filter((key) => !disabledRowKeysSet.has(key));
 
             if (checkRelation === 'related') {
-                const keyEntities = this.adapter.getKeyEntities();
-                const halfCheckedRowKeys = [...(this.adapter.getHalfCheckedRowKeys() || [])];
+                const keyEntities = this.getState('keyEntities') ?? {};
+                const halfCheckedRowKeys = [...(this.getState('halfCheckedRowKeys') ?? [])];
                 let checkedKeysSet = new Set(selectedRowKeys.map((key) => String(key)));
                 let halfCheckedKeysSet = new Set(halfCheckedRowKeys.map((key) => String(key)));
 
@@ -1310,8 +1314,8 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                 const selectedRows = this.getRecordsByKeys(null, selectedRowKeys || []);
 
                 if (!this.#selectionIsControlled()) {
-                    this.adapter.setSelectedRowKeys(selectedRowKeys);
-                    this.adapter.setHalfCheckedRowKeys(newHalfCheckedRowKeys);
+                    this.#setSelectedRowKeys(selectedRowKeys);
+                    this.#setHalfCheckedRowKeys(newHalfCheckedRowKeys);
                 }
                 this.adapter.notifySelectAll(selected, selectedRows, changedRows, e);
                 this.adapter.notifySelectionChange(selectedRowKeys, selectedRows);
@@ -1330,7 +1334,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                 const selectedRows = this.getRecordsByKeys(null, selectedRowKeys || []);
 
                 if (!this.#selectionIsControlled()) {
-                    this.adapter.setSelectedRowKeys(selectedRowKeys);
+                    this.#setSelectedRowKeys(selectedRowKeys);
                 }
                 this.adapter.notifySelectAll(selected, selectedRows, changedRows, e);
                 this.adapter.notifySelectionChange(selectedRowKeys, selectedRows);
@@ -1353,7 +1357,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         }
 
         if (!this.#rowExpansionIsControlled()) {
-            this.adapter.setExpandedRowKeys(expandedRowKeys);
+            this.setState({ expandedRowKeys: [...expandedRowKeys] });
         }
 
         const expandedRows = this.getRecordsByKeys(null, expandedRowKeys);
@@ -1389,7 +1393,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         const sorter = this.#getAllSorters()[0] as BaseChangeInfoSorter<RecordType>;
 
         if (!this.#filterIsControlled(dataIndex)) {
-            this.adapter.setQueries(queries);
+            this.setState({ queries });
             this.#applyQueries(queries);
         }
 
@@ -1436,7 +1440,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         const filters = this.#getAllFilters();
 
         if (!this.#sorterIsControlled(dataIndex)) {
-            this.adapter.setQueries(queries);
+            this.setState({ queries });
             this.#applyQueries(queries);
         }
 
@@ -1448,7 +1452,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
 
         if (rowSelection?.clickRow && !rowSelection.disabled) {
             const getCheckboxProps = rowSelection?.getCheckboxProps;
-            const record = this.adapter.getCachedFilteredSortedDataSource().find((r: RecordType) => this.getRecordKey(r) === rowKey);
+            const record = (this.getState('filteredSortedDataSource') ?? []).find((r: RecordType) => this.getRecordKey(r) === rowKey);
 
             if (record && typeof getCheckboxProps === 'function' && getCheckboxProps(record).disabled) {
                 return;

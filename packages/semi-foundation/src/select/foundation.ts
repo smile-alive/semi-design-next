@@ -22,6 +22,7 @@ export interface SelectBaseProps {
     // method syntax keeps the option parameter bivariant: the component's OptionProps label is narrower
     filter?: boolean | { filter(inputValue: string, option: BasicOptionProps): boolean }['filter'];
     loading?: boolean;
+    max?: number;
     maxTagCount?: number;
     multiple?: boolean;
     onChangeWithObject?: boolean;
@@ -34,9 +35,11 @@ export interface SelectBaseState {
     focusIndex: number;
     inputValue: string;
     isFocus: boolean;
+    isFocusInContainer: boolean;
     isFullTags: boolean;
     isOpen: boolean;
     options: OptionRecord[];
+    overflowItemCount: number;
     /** The selected options' data by value */
     selections: Map<any, any>;
     showInput: boolean;
@@ -47,22 +50,12 @@ export type SelectKeyEvent = Pick<KeyboardEvent, 'key' | 'target' | 'currentTarg
 
 /** LE is the host's option list scroll event, which the foundation only passes through */
 export interface SelectAdapter<P extends SelectBaseProps = SelectBaseProps, S extends SelectBaseState = SelectBaseState, LE = unknown> extends DefaultAdapter<P, S> {
-    updateFocusState(focus: boolean): void;
     focusTrigger(): void;
     getOptionsFromChildren(): OptionRecord[];
-    updateOptions(options: OptionRecord[]): void;
-    updateFocusIndex(index: number): void;
-    updateSelection(selection: Map<any, any>): void;
-    openMenu(cb?: () => void): void;
     notifyDropdownVisibleChange(visible: boolean): void;
-    toggleInputShow(show: boolean, cb: () => void): void;
-    closeMenu(): void;
     notifyCreate(option: BasicOptionProps): void;
-    getMaxLimit(): number;
-    getSelections(): Map<any, any>;
     notifyMaxLimit(arg: BasicOptionProps): void;
     notifyClear(): void;
-    updateInputValue(inputValue: string): void;
     focusInput(): void;
     focusDropdownInput(): void;
     notifySearch(inputValue: string, event?: any): void;
@@ -75,10 +68,7 @@ export interface SelectAdapter<P extends SelectBaseProps = SelectBaseProps, S ex
     notifyMouseLeave(event: any): void;
     notifyMouseEnter(event: any): void;
     updateScrollTop(index?: number): void;
-    updateOverflowItemCount(count: number): void;
     getOptionList(): any;
-    setIsFocusInContainer(isFocusInContainer: boolean): void;
-    getIsFocusInContainer(): boolean;
 }
 
 type LabelValue = string | number;
@@ -86,13 +76,13 @@ type PropValue = LabelValue | Record<string, any>;
 export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProps, S extends SelectBaseState = SelectBaseState, LE = unknown> extends BaseFoundation<SelectAdapter<P, S, LE>, P, S> {
     // isFocus cannot tell whether onBlur is owed: a Tab into the trigger leaves it unset (clicked style)
     #blurPending = false;
-    // StrictMode and React Activity replay init on this instance after destroy, over a dropdown and focus the user
-    // may have changed since: defaultOpen and autoFocus belong to the first mount
-    #initialized = false;
     #hiddenByWidth = 0;
     readonly #typeahead = new Typeahead();
     // close() defers clearing the search to the end of the leave animation, which the host reports as popoverClose
     readonly #events = new EventEmitter();
+    // the option list is a host-derived value (optionList or option children), so its changes reach handleOptionsChange
+    static override readonly propKeys = ['value'];
+    static override readonly propEquals = { value: isEqual };
 
     static #resolveSelections(props: SelectBaseProps, propValue: PropValue, originalOptions: OptionRecord[], nowSelections: Map<any, any>) {
         return props.multiple ? SelectFoundation.#resolveMultiple(props, propValue as PropValue[], originalOptions, nowSelections) : SelectFoundation.#resolveSingle(props, propValue, originalOptions);
@@ -177,12 +167,17 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         this.adapter.focusTrigger();
     }
 
+    // a copy to edit: #notifyChange diffs the edited selections against those still in state
+    #copySelections() {
+        return new Map(this.getState('selections'));
+    }
+
     #update(propValue: PropValue, originalOptions: OptionRecord[]) {
         const selections = SelectFoundation.#resolveSelections(this.getProps(), propValue, originalOptions, this.getState('selections'));
         if (this.#isMultiple()) {
             this.updateOverflowItemCount(selections.size);
         }
-        this.adapter.updateSelection(selections);
+        this.setState({ selections });
         this.#updateOptionsActiveStatus(selections, originalOptions);
     }
 
@@ -219,7 +214,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         } else {
             // before writing: #notifyChange diffs against the selections in state
             this.#notifyChange(selections);
-            this.adapter.updateSelection(selections);
+            this.setState({ selections });
 
             this.close({
                 event: event,
@@ -232,9 +227,8 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
 
     #handleMultipleSelect(option: BasicOptionProps, event: unknown) {
         const { value } = option;
-        const maxLimit = this.adapter.getMaxLimit();
-        const selections = this.adapter.getSelections();
-        const { autoClearSearchValue } = this.getProps();
+        const { max: maxLimit, autoClearSearchValue } = this.getProps();
+        const selections = this.#copySelections();
         if (selections.has(value)) {
             this.adapter.notifyDeselect(value, option);
             selections.delete(value);
@@ -255,7 +249,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
             }
         } else {
             this.#notifyChange(selections);
-            this.adapter.updateSelection(selections);
+            this.setState({ selections });
             this.updateOverflowItemCount(selections.size);
             let { options } = this.getStates();
             if (this.#isFilterable()) {
@@ -324,7 +318,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
     }
 
     #setFocusIndex(index: number) {
-        this.adapter.updateFocusIndex(index);
+        this.setState({ focusIndex: index });
         if (index !== -1) {
             this.adapter.updateScrollTop(index);
         }
@@ -428,10 +422,10 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
 
     #handlePanelOpenTabKeyDown(focusableElements: FocusableElement[], event: Pick<KeyboardEvent, 'preventDefault' | 'stopPropagation'>) {
         const activeElement = this.#getActiveElement();
-        const isFocusInContainer = this.adapter.getIsFocusInContainer();
+        const { isFocusInContainer } = this.getStates();
         if (!isFocusInContainer) {
             focusableElements[0].focus();
-            this.adapter.setIsFocusInContainer(true);
+            this.setState({ isFocusInContainer: true });
             handlePrevent(event);
         } else if (activeElement === focusableElements.at(-1)) {
             this.#focusTrigger();
@@ -442,13 +436,13 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
 
     #handlePanelOpenShiftTabKeyDown(focusableElements: FocusableElement[], event: Pick<KeyboardEvent, 'preventDefault' | 'stopPropagation'>) {
         const activeElement = this.#getActiveElement();
-        const isFocusInContainer = this.adapter.getIsFocusInContainer();
+        const { isFocusInContainer } = this.getStates();
 
         if (!isFocusInContainer) {
             this.close({ event });
         } else if (activeElement === focusableElements[0]) {
             this.#focusTrigger();
-            this.adapter.setIsFocusInContainer(false);
+            this.setState({ isFocusInContainer: false });
             handlePrevent(event);
         }
     }
@@ -480,7 +474,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
 
     #handleBackspaceKeyDown() {
         if (this.#isMultiple()) {
-            const selections = this.adapter.getSelections();
+            const selections = this.#copySelections();
             const { inputValue } = this.getStates();
             const length = selections.size;
             if (length && !inputValue) {
@@ -560,20 +554,19 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
 
     #toggle2SearchInput(isShow: boolean) {
         if (isShow) {
-            this.adapter.toggleInputShow(isShow, () => this.#focusInput());
+            this.setState({ showInput: true }, () => this.#focusInput());
         } else {
-            this.adapter.toggleInputShow(isShow, () => undefined);
+            this.setState({ showInput: false });
         }
     }
 
     #updateOptionsActiveStatus(selections: Map<any, any>, options: OptionRecord[] = this.getState('options')) {
-        this.adapter.updateOptions(SelectFoundation.#markSelected(this.getProps(), selections, options));
+        this.setState({ options: SelectFoundation.#markSelected(this.getProps(), selections, options) });
     }
 
     #focusInput() {
         this.adapter.focusInput();
-        this.adapter.updateFocusState(true);
-        this.adapter.setIsFocusInContainer(false);
+        this.setState({ isFocus: true, isFocusInContainer: false });
     }
 
     #filterByKeyword(options: OptionRecord[]) {
@@ -589,7 +582,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         // Appending options (load more on scroll or from a slot button) keeps the highlight and the scroll position
         const keptIndex = focusedOption ? newOptionList.filter((option) => option.show).findIndex((option) => option.data.value === focusedOption.data.value) : -1;
         if (keptIndex !== -1) {
-            this.adapter.updateFocusIndex(keptIndex);
+            this.setState({ focusIndex: keptIndex });
             return;
         }
         const selectedIndex = this.#selectedIndex(newOptionList);
@@ -601,7 +594,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         if (focusedOption) {
             this.#setFocusIndex(index);
         } else {
-            this.adapter.updateFocusIndex(index);
+            this.setState({ focusIndex: index });
         }
     }
 
@@ -624,24 +617,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         this.#update(value, this.#filterByKeyword(originalOptions));
     }
 
-    /** `options` is the host's option list from optionList or the option children */
-    static getInitialState(props: SelectBaseProps, options: OptionRecord[]) {
-        const value = (props.value !== undefined ? props.value : props.defaultValue) as PropValue;
-        const selections = SelectFoundation.#resolveSelections(props, value, options, new Map());
-        const { multiple, ellipsisTrigger, maxTagCount } = props;
-        return {
-            options: SelectFoundation.#markSelected(props, selections, options),
-            selections,
-            focusIndex: props.defaultActiveFirstOption ? SelectFoundation.#firstEnabledIndex(options) : -1,
-            overflowItemCount: multiple && ellipsisTrigger && typeof maxTagCount === 'number' ? Math.max(selections.size - maxTagCount, 0) : 0,
-        };
-    }
-
-    override init() {
-        if (this.#initialized) {
-            return;
-        }
-        this.#initialized = true;
+    protected override initOnce() {
         if (this.getProp('defaultOpen') && !this.#isDisabled()) {
             this.open();
         }
@@ -651,6 +627,29 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         }
     }
 
+    /** `options` is the host's option list from optionList or the option children */
+    static getInitialState(props: SelectBaseProps, options: OptionRecord[]): SelectBaseState {
+        const value = (props.value !== undefined ? props.value : props.defaultValue) as PropValue;
+        const selections = SelectFoundation.#resolveSelections(props, value, options, new Map());
+        const { multiple, ellipsisTrigger, maxTagCount } = props;
+        return {
+            isOpen: false,
+            isFocus: false,
+            isFocusInContainer: false,
+            isFullTags: false,
+            inputValue: '',
+            showInput: false,
+            options: SelectFoundation.#markSelected(props, selections, options),
+            selections,
+            focusIndex: props.defaultActiveFirstOption ? SelectFoundation.#firstEnabledIndex(options) : -1,
+            overflowItemCount: multiple && ellipsisTrigger && typeof maxTagCount === 'number' ? Math.max(selections.size - maxTagCount, 0) : 0,
+        };
+    }
+
+    override handlePropsChange() {
+        this.#handleValueChange(this.getProp('value') as PropValue);
+    }
+
     focus = (optionsForOpen?: OptionRecord[], openDropdown?: boolean) => {
         const isFilterable = this.#isFilterable();
         const isMultiple = this.#isMultiple();
@@ -658,8 +657,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         const { searchPosition } = this.getProps();
         const shouldOpenDropdown = openDropdown !== false;
 
-        this.adapter.updateFocusState(true);
-        this.adapter.setIsFocusInContainer(false);
+        this.setState({ isFocus: true, isFocusInContainer: false });
 
         if (isFilterable) {
             /**
@@ -695,15 +693,17 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         }
     };
 
-    /** After an update, the host reports whether the options (optionList or children) and value changed by its own change detection */
-    handleInputsChange = ({ optionsChanged, valueChanged }: { optionsChanged: boolean; valueChanged: boolean }, value: PropValue) => {
-        if (optionsChanged) {
-            this.#handleOptionListChange();
-        }
+    /**
+     * After an update in which the options (optionList or children) changed by the host's own change detection. When
+     * value changed in the same update, handlePropsChange resolves it as well.
+     */
+    handleOptionsChange = () => {
+        this.#handleOptionListChange();
+        const value = this.getProp('value') as PropValue;
         // an updated optionList can change the label of an unchanged value
-        if (valueChanged || (optionsChanged && value !== undefined)) {
+        if (value !== undefined) {
             this.#handleValueChange(value);
-        } else if (optionsChanged) {
+        } else {
             this.#handleOptionListChangeHadDefaultValue();
         }
     };
@@ -733,13 +733,13 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         if (isFilterable) {
             const sugInput = '';
             options = this.#filterOption(options, sugInput).filter((item) => !item.create);
-            this.adapter.updateOptions(options);
+            this.setState({ options });
             this.#toggle2SearchInput(true);
         } else {
-            this.adapter.updateFocusState(true);
+            this.setState({ isFocus: true });
         }
         this.#focusSelectedOption(options);
-        this.adapter.openMenu(() => {
+        this.setState({ isOpen: true }, () => {
             const { searchPosition, autoFocus } = this.getProps();
             if (autoFocus && searchPosition === strings.SEARCH_POSITION_DROPDOWN) {
                 this.adapter.focusDropdownInput();
@@ -755,7 +755,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         if (this.#blurPending) {
             this.#notifyBlur(e);
         }
-        this.adapter.updateFocusState(false);
+        this.setState({ isFocus: false });
     };
 
     close = (closeConfig?: { event?: unknown; closeCb?: () => void; notToggleInput?: boolean; returnFocus?: boolean }) => {
@@ -769,9 +769,8 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
             // before closeMenu: the blur this moves out of the search input must still see the dropdown open
             this.#focusTrigger();
         }
-        this.adapter.closeMenu();
+        this.setState({ isOpen: false, isFocusInContainer: false });
         this.adapter.notifyDropdownVisibleChange(false);
-        this.adapter.setIsFocusInContainer(false);
 
         const isFilterable = this.#isFilterable();
         if (isFilterable && !notToggleInput) {
@@ -804,7 +803,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         } else {
             this.#handleMultipleSelect(option.data, event);
         }
-        this.adapter.updateFocusIndex(optionIndex);
+        this.setState({ focusIndex: optionIndex });
     };
 
     clearSelected = () => {
@@ -814,14 +813,14 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
             this.adapter.notifyClear();
         } else {
             this.#notifyChange(selections);
-            this.adapter.updateSelection(selections);
+            this.setState({ selections });
             this.#updateOptionsActiveStatus(selections);
             this.adapter.notifyClear();
         }
     };
 
     removeTag = (item: BasicOptionProps) => {
-        const selections = this.adapter.getSelections();
+        const selections = this.#copySelections();
         selections.delete(item.value);
 
         if (this.isControlledComponent()) {
@@ -830,7 +829,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         } else {
             this.adapter.notifyDeselect(item.value, item);
             this.#notifyChange(selections);
-            this.adapter.updateSelection(selections);
+            this.setState({ selections });
             this.updateOverflowItemCount(selections.size);
             this.#updateOptionsActiveStatus(selections);
         }
@@ -840,7 +839,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
     clearInput = (event?: unknown) => {
         const { inputValue } = this.getStates();
         if (inputValue !== '') {
-            this.adapter.updateInputValue('');
+            this.setState({ inputValue: '' });
             this.adapter.notifySearch('', event);
             const { options } = this.getStates();
             const { remote } = this.getProps();
@@ -848,12 +847,12 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
             if (!remote) {
                 optionsAfterFilter = this.#filterOption(options, '');
             }
-            this.adapter.updateOptions(optionsAfterFilter);
+            this.setState({ options: optionsAfterFilter });
         }
     };
 
     handleInputChange = (sugInput: string, event: unknown) => {
-        this.adapter.updateInputValue(sugInput);
+        this.setState({ inputValue: sugInput });
         const { options } = this.getStates();
         const { allowCreate, remote } = this.getProps();
 
@@ -864,7 +863,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
 
         optionsAfterFilter = this.#createOptionByInput(allowCreate, optionsAfterFilter, sugInput);
 
-        this.adapter.updateOptions(optionsAfterFilter);
+        this.setState({ options: optionsAfterFilter });
         // The old focusIndex indexes the previous visible list. Known limitation: the scroll runs before the filtered
         // rows render, so it goes to where that index sits in the previous list, which is off when many disabled
         // options precede the first enabled match. Upgrade by scrolling from the host once the new rows are laid out.
@@ -955,7 +954,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
     };
 
     handleOptionMouseEnter = (optionIndex: number) => {
-        this.adapter.updateFocusIndex(optionIndex);
+        this.setState({ focusIndex: optionIndex });
     };
 
     handleListScroll = (e: LE) => {
@@ -963,7 +962,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
     };
 
     handleTriggerFocus = (e: unknown) => {
-        this.adapter.setIsFocusInContainer(false);
+        this.setState({ isFocusInContainer: false });
         this.#notifyFocus(e);
     };
 
@@ -972,7 +971,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         // while open, focus may move into the dropdown; a press outside notifies via handleClickOutside
         if (this.#blurPending && !isOpen) {
             this.#notifyBlur(e);
-            this.adapter.updateFocusState(false);
+            this.setState({ isFocus: false });
         }
     };
 
@@ -980,7 +979,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
     handleInputFocus = (e: unknown) => {
         this.#notifyFocus(e);
         if (this.#isMultiple() && this.#isFilterable()) {
-            this.adapter.updateFocusState(true);
+            this.setState({ isFocus: true });
         }
     };
 
@@ -1002,8 +1001,8 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
             return;
         }
         const { options } = this.getStates();
-        const maxLimit = this.adapter.getMaxLimit();
-        const selections = this.adapter.getSelections();
+        const maxLimit = this.getProp('max');
+        const selections = this.#copySelections();
         const sizeBefore = selections.size;
         for (const { data, show, create } of options) {
             if (!show || data.disabled || create || selections.has(data.value)) {
@@ -1020,7 +1019,7 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
         }
         this.#notifyChange(selections);
         if (!this.isControlledComponent()) {
-            this.adapter.updateSelection(selections);
+            this.setState({ selections });
             this.updateOverflowItemCount(selections.size);
             this.#updateOptionsActiveStatus(selections);
         }
@@ -1044,16 +1043,14 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
             this.#hiddenByWidth = hiddenByWidth;
         }
         if (typeof maxTagCount === 'number') {
-            this.adapter.updateOverflowItemCount(Math.max(selectionLength - maxTagCount, 0) + this.#hiddenByWidth);
+            this.setState({ overflowItemCount: Math.max(selectionLength - maxTagCount, 0) + this.#hiddenByWidth });
         }
     };
 
     updateIsFullTags = () => {
         const { isFullTags } = this.getStates();
         if (!isFullTags) {
-            this.adapter.setState({
-                isFullTags: true,
-            });
+            this.setState({ isFullTags: true });
         }
     };
 
@@ -1062,6 +1059,6 @@ export default class SelectFoundation<P extends SelectBaseProps = SelectBaseProp
     };
 
     handleSlotMouseEnter = () => {
-        this.adapter.updateFocusIndex(-1);
+        this.setState({ focusIndex: -1 });
     };
 }

@@ -1,7 +1,7 @@
 import { children, createEffect, createMemo, createSignal, Match, on, onCleanup, Show, splitProps, Switch, untrack, type JSX } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/avatar/constants';
-import AvatarFoundation, { type AvatarAdapter } from '@fibrae/semi-foundation/avatar/foundation';
+import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/avatar/foundation';
 import '@fibrae/semi-foundation/avatar/avatar.scss';
 import callHandler from '../_base/call-handler';
 import { splitControlAttrs } from '../_base/control-attrs';
@@ -21,16 +21,12 @@ import TopSlotSvg from './top-slot-svg';
 const prefixCls = cssClasses.PREFIX;
 const slotSizes = ['extra-small', 'small', 'default', 'medium', 'large', 'extra-large'];
 
-export interface AvatarState {
-    isImgExist: boolean;
-    hovered: boolean;
-    scale: number;
-}
+export type { AvatarState };
 
 type AvatarMouseEvent = MouseEvent & { currentTarget: HTMLElement; target: Element };
 type AvatarErrorEvent = Event & { currentTarget: HTMLImageElement; target: Element };
-type Foundation = AvatarFoundation<AvatarProps, AvatarState, AvatarMouseEvent, AvatarErrorEvent>;
-type Adapter = AvatarAdapter<AvatarProps, AvatarState, AvatarMouseEvent, AvatarErrorEvent>;
+type Foundation = AvatarFoundation<AvatarProps, AvatarMouseEvent, AvatarErrorEvent>;
+type Adapter = AvatarAdapter<AvatarProps, AvatarMouseEvent, AvatarErrorEvent>;
 
 const defaultProps = {
     size: 'medium',
@@ -61,19 +57,11 @@ function AvatarView(rawProps: AvatarProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, AvatarProps, AvatarState>(
         AvatarFoundation,
         props,
-        () => ({ isImgExist: true, hovered: false, scale: 1 }),
+        () => AvatarFoundation.getInitialState(),
         (base) => ({
-            setImgExist: (isImgExist) => base.setState({ isImgExist }),
-            notifyEnter: (event) => {
-                base.setState({ hovered: true });
-                callHandler(base.getProps().onMouseEnter, event);
-            },
+            notifyEnter: (event) => callHandler(base.getProps().onMouseEnter, event),
             notifyError: (event) => base.getProps().onError?.(event),
-            notifyLeave: (event) => {
-                base.setState({ hovered: false });
-                callHandler(base.getProps().onMouseLeave, event);
-            },
-            setScale: (scale) => base.setState({ scale }),
+            notifyLeave: (event) => callHandler(base.getProps().onMouseLeave, event),
             getTextWidths: () => (contentElement ? { container: contentElement.parentElement?.offsetWidth ?? 0, text: contentElement.offsetWidth } : null),
         })
     );
@@ -247,8 +235,6 @@ function AvatarView(rawProps: AvatarProps) {
         </Show>
     );
 
-    useWatch(() => local.src, foundation.handleSrcChange);
-
     // Watches the text, which also appears when the image fails. A parent's onMount write queues the text insert
     // behind this watch and behind foundation.init's measurement; an effect created here runs after the insert
     useWatch(text, (value) => {
@@ -257,8 +243,8 @@ function AvatarView(rawProps: AvatarProps) {
         }
     });
 
+    // size is resolved from the group context, so it is not a prop of the foundation
     useWatch(size, foundation.changeScale);
-    useWatch(() => local.gap, foundation.changeScale);
 
     // Element children move into the focus wrapper only after the avatar has reconciled its own children: inserting
     // them in the wrapper's JSX lets that reconcile remove them again, since they are still in its old list

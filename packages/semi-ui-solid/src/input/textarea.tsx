@@ -19,7 +19,6 @@ import useFocusHandover from '../_base/use-focus-handover';
 import useFoundation from '../_base/use-foundation';
 import useRaf from '../_base/use-raf';
 import useResizeObserver from '../_base/use-resize-observer';
-import useWatch from '../_base/use-watch';
 import useLocale from '../locale/use-locale';
 import { useSpecialTrigger } from '../tooltip/context';
 import { useInputGroupContext } from './context';
@@ -94,8 +93,8 @@ export interface TextAreaState {
     cachedValue?: string;
 }
 
-type Foundation = TextAreaFoundation<TextAreaProps, TextAreaState, TextAreaElementEvent<KeyboardEvent>, TextAreaElementEvent<CompositionEvent>>;
-type Adapter = TextAreaAdapter<TextAreaProps, TextAreaState, TextAreaElementEvent<KeyboardEvent>, TextAreaElementEvent<CompositionEvent>>;
+type Foundation = TextAreaFoundation<TextAreaProps, TextAreaElementEvent<KeyboardEvent>, TextAreaElementEvent<CompositionEvent>>;
+type Adapter = TextAreaAdapter<TextAreaProps, TextAreaElementEvent<KeyboardEvent>, TextAreaElementEvent<CompositionEvent>>;
 
 const defaultProps = {
     autosize: false,
@@ -177,14 +176,8 @@ export default function TextArea(rawProps: TextAreaProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, TextAreaProps, TextAreaState>(
         TextAreaFoundation,
         props,
-        (view) => ({
-            value: view.value === undefined ? view.defaultValue : view.value,
-            isFocus: false,
-            cachedValue: view.value,
-        }),
-        (base) => ({
-            setValue: (value) => base.setState({ value }),
-            toggleFocusing: (isFocus) => base.setState({ isFocus }),
+        (view) => TextAreaFoundation.getInitialState(view),
+        () => ({
             notifyChange: (value, e: TextAreaChangeEvent) => props.onChange?.(value, e),
             notifyClear: (e: MouseEvent) => props.onClear?.(e),
             notifyBlur: (_, e: FocusEvent) => props.onBlur?.(e),
@@ -332,11 +325,6 @@ export default function TextArea(rawProps: TextAreaProps) {
     );
 
     createRenderEffect(controlled.syncValue);
-
-    useWatch(
-        () => local.value,
-        (next) => foundation.handleValueChange(next as string)
-    );
 
     createEffect(() => {
         const element = textarea();

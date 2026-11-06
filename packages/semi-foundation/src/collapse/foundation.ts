@@ -24,7 +24,6 @@ export interface CollapseState {
 /** E is the host's header click or key event, which the foundation only passes through */
 export interface CollapseAdapter<E = unknown> extends DefaultAdapter<CollapseProps, CollapseState> {
     notifyChange: (activeKey: string[], e: E) => void;
-    setActiveSet: (activeSet: CollapseState['activeSet']) => void;
 }
 
 // '' and null mean "nothing open", so they must not become a key
@@ -36,6 +35,10 @@ function toSet(activeKey: string | string[] | null) {
 }
 
 export default class CollapseFoundation<E = unknown> extends BaseFoundation<CollapseAdapter<E>, CollapseProps, CollapseState> {
+    static override readonly propKeys = ['activeKey'];
+    // a controlled array that is new on every parent update changes nothing
+    static override readonly propEquals = { activeKey: isEqual };
+
     static getInitialState({ defaultActiveKey, activeKey, accordion }: CollapseProps): CollapseState {
         if (activeKey !== undefined) {
             return { activeSet: toSet(activeKey) };
@@ -61,15 +64,16 @@ export default class CollapseFoundation<E = unknown> extends BaseFoundation<Coll
         return hasBody && (active || (keepDOM && (!lazyRender || everOpened)));
     }
 
-    // a later uncontrolled click continues from the last controlled panels
-    syncActiveKey = (activeKey: CollapseProps['activeKey']) => {
+    // an activeKey that goes back to undefined keeps the last controlled panels, which a later uncontrolled click continues from
+    override handlePropsChange() {
+        const { activeKey } = this.getProps();
         if (activeKey !== undefined) {
             const newSet = toSet(activeKey);
-            if (!isEqual(newSet, this.getStates().activeSet)) {
-                this.adapter.setActiveSet(newSet);
+            if (!isEqual(newSet, this.getState('activeSet'))) {
+                this.setState({ activeSet: newSet });
             }
         }
-    };
+    }
 
     handleChange = (newKey: string, e: E) => {
         const { activeKey, accordion } = this.getProps();
@@ -83,7 +87,7 @@ export default class CollapseFoundation<E = unknown> extends BaseFoundation<Coll
         }
         this.adapter.notifyChange([...newSet.values()], e);
         if (typeof activeKey === 'undefined') {
-            this.adapter.setActiveSet(newSet);
+            this.setState({ activeSet: newSet });
         }
     };
 }

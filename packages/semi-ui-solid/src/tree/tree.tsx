@@ -1,7 +1,7 @@
 import { type Accessor, type JSX, Show, batch, children, createComputed, createEffect, createMemo, createSelector, createSignal, createUniqueId, on, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
-import TreeFoundation, { type BasicTreeInnerData, type BasicTreeProps, type ScrollAlign, type TreeAdapter, treeDerivedPropKeys } from '@fibrae/semi-foundation/tree/foundation';
+import TreeFoundation, { type BasicTreeInnerData, type BasicTreeProps, type ScrollAlign, type TreeAdapter } from '@fibrae/semi-foundation/tree/foundation';
 import { buildRowProps, nodeId } from '@fibrae/semi-foundation/tree/shared';
 import '@fibrae/semi-foundation/tree/tree.scss';
 import { IconSearch } from '@fibrae/semi-icons-solid';
@@ -128,18 +128,16 @@ export default function Tree(rawProps: TreeProps) {
     let treeElement: HTMLDivElement | undefined;
 
     // An expression prop such as `treeData={list().map(...)}` is a getter that builds a new array on every read, while
-    // deriveState compares treeData by reference and keeps a copy of the props: it reads one snapshot per prop change,
-    // or every write-back would look like new data and never settle. Only its own keys are read, so JSX props (icon,
-    // emptyContent) are not created for nothing.
-    const snapshot = createMemo(() => Object.fromEntries(treeDerivedPropKeys.map((key) => [key, (props as BasicTreeProps)[key]])) as BasicTreeProps);
+    // deriveState compares treeData by reference and keeps a snapshot of the props: it reads one snapshot per prop
+    // change, or every write-back would look like new data and never settle. Only its own keys are read, so JSX props
+    // (icon, emptyContent) are not created for nothing.
+    const snapshot = createMemo(() => Object.fromEntries(TreeFoundation.propKeys.map((key) => [key, (props as BasicTreeProps)[key]])) as BasicTreeProps);
 
     const { foundation, state } = useFoundation<Foundation, Adapter, BasicTreeProps, BasicTreeInnerData>(
         TreeFoundation,
         props as BasicTreeProps,
         () => TreeFoundation.getInitialState(snapshot()),
-        (base) => ({
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            updateState: (states) => base.setState(states as BasicTreeInnerData),
+        () => ({
             notifyExpand: (expandedKeys, info) => local.onExpand?.([...expandedKeys], info as ExpandedOtherProps),
             notifySelect: (selectKey, selected, node) => local.onSelect?.(selectKey, selected, node as TreeNodeData),
             notifyChange: (value) => local.onChange?.(value as Value),
@@ -153,7 +151,6 @@ export default function Tree(rawProps: TreeProps) {
             notifyDragLeave: (info) => local.onDragLeave?.(info as DragProps),
             notifyDragEnd: (info) => local.onDragEnd?.(info as DragProps),
             notifyDrop: (info) => local.onDrop?.(info as OnDragProps),
-            setCachedFlattenNodes: (cachedFlattenNodes) => base.setState({ cachedFlattenNodes }),
             // the effect below scrolls once the rows of a search in the same call are rendered
             scrollToNode: (key, align) => setScrollRequest({ key, align }),
         })

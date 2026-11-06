@@ -30,6 +30,8 @@ export interface ContainerAdapter extends DefaultAdapter<ContainerProps, Record<
 }
 
 export default class ContainerFoundation extends BaseFoundation<ContainerAdapter, ContainerProps, Record<string, never>> {
+    static override readonly propKeys = ['visible'];
+
     #handleCancel(e: KeyboardEvent) {
         this.adapter.notifyCancel(e);
     }
@@ -46,7 +48,14 @@ export default class ContainerFoundation extends BaseFoundation<ContainerAdapter
         this.adapter.toggleDisplayNone(displayNone);
     }
 
-    override init() {}
+    // afterHide is not enough: a container hidden in the tick it mounted never ran beforeShow, yet focus may already be
+    // inside it, and a host may refocus the pre-commit element after the layer cleanup while the content is still
+    // mounted for the leave animation
+    override handlePropsChange() {
+        if (!this.getProp('visible')) {
+            this.restoreFocus();
+        }
+    }
 
     beforeShow = () => {
         this.adapter.openLayer(this.#handleEscape);

@@ -105,8 +105,6 @@
         props,
         (foundationProps) => TreeFoundation.getInitialState(foundationProps),
         (base) => ({
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            updateState: (states) => base.setState(states as BasicTreeInnerData),
             notifyExpand: (expandedKeys, info) => {
                 emit('update:expandedKeys', [...expandedKeys]);
                 emit('expand', [...expandedKeys], info as TreeExpandedOtherProps);
@@ -129,7 +127,6 @@
             notifyDragLeave: (info) => emit('dragLeave', info),
             notifyDragEnd: (info) => emit('dragEnd', info),
             notifyDrop: (info) => emit('drop', info),
-            setCachedFlattenNodes: (cachedFlattenNodes) => base.setState({ cachedFlattenNodes }),
             // a search in the same call renders its rows on the next tick
             scrollToNode: (key, align) =>
                 void nextTick(() => {

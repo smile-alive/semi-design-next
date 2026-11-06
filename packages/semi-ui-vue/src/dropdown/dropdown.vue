@@ -20,8 +20,8 @@
     import DropdownTitle from './dropdown-title.vue';
     import type { DropDownMenuItem, DropdownEmits, DropdownHandle, DropdownProps, DropdownSlots } from './interface';
 
-    type Foundation = DropdownFoundation<DropdownProps, DropdownBaseState>;
-    type Adapter = DropdownAdapter<DropdownProps, DropdownBaseState>;
+    type Foundation = DropdownFoundation<DropdownProps>;
+    type Adapter = DropdownAdapter<DropdownProps>;
 
     // F11: no root DOM; class goes to the popup wrapper, style to the menu container, the rest is dropped.
     defineOptions({ inheritAttrs: false });
@@ -92,9 +92,8 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, DropdownProps, DropdownBaseState>(
         DropdownFoundation,
         props,
-        () => ({ popVisible: false }),
-        (base) => ({
-            setPopVisible: (popVisible) => base.setState({ popVisible }),
+        () => DropdownFoundation.getInitialState(),
+        () => ({
             notifyVisibleChange: emitVisible,
             getPopup: () => popup.value?.$el.closest<HTMLElement>('[popover]') ?? null,
             hidePopup: () => tooltip.value?.hide(),

@@ -111,16 +111,6 @@
         { flush: 'post' }
     );
 
-    // afterHide is not enough: a container hidden in the tick it mounted never ran beforeShow, yet focus may already be
-    // inside it and would drop to the body on unmount.
-    watch(
-        () => props.visible,
-        (visible) => {
-            if (!visible) foundation.restoreFocus();
-        },
-        { flush: 'post' }
-    );
-
     watch(displayed, foundation.onVisibleChange, { flush: 'post' });
 
     onDeactivated(() => {

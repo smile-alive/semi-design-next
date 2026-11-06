@@ -1,9 +1,9 @@
 <script setup lang="ts" generic="Values extends Record<string, any> = Record<string, any>, Output = Values">
-    import { computed, onBeforeUnmount, onMounted, shallowRef, toRaw, useId, useTemplateRef, watch } from 'vue';
+    import { computed, onBeforeUnmount, onMounted, toRaw, useId, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/form/constants';
     import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
     import FormFoundation from '@fibrae/semi-foundation/form/foundation';
-    import type { AllErrors, BaseFormAdapter, FormState } from '@fibrae/semi-foundation/form/interface';
+    import type { AllErrors, BaseFormAdapter, FormFoundationState, FormState } from '@fibrae/semi-foundation/form/interface';
     import '@fibrae/semi-foundation/form/form.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
@@ -15,11 +15,7 @@
     import type { AllFormProps, FormApi, FormEmits, FormHandle, FormProps, FormSlots } from './interface';
     import { cloneDeep } from './utils';
 
-    interface FormFoundationState {
-        formState?: FormState;
-    }
-
-    type Adapter = BaseFormAdapter<AllFormProps<Values, Output>, FormFoundationState, Values, SubmitEvent>;
+    type Adapter = BaseFormAdapter<AllFormProps<Values, Output>, Values, SubmitEvent>;
 
     // the root may be a Row, so attrs are bound to the form element explicitly
     defineOptions({ inheritAttrs: false });
@@ -52,7 +48,6 @@
     const locale = useLocale('Form');
 
     const generatedId = useId();
-    const afterUpdateTick = shallowRef(0);
     const formElement = useTemplateRef('form');
 
     const prefix = cssClasses.PREFIX;
@@ -65,53 +60,32 @@
         schema: toRaw(props.schema) ?? readSemiDefault(semi, 'Form', 'schema'),
     }));
 
-    // Fields renamed by the render (shifted ArrayField rows) register in post-flush watchers that run after the Form's own,
-    // so callbacks run in a post-flush watcher queued by the first one, in the next pass of the same flush.
-    const afterUpdate: (() => void)[] = [];
-
     const pickFormProps = (keys?: string[]) => (keys ? Object.fromEntries(keys.map((key) => [key, formProps.value[key as keyof AllFormProps]])) : formProps.value);
-
-    watch(
-        afterUpdateTick,
-        () => {
-            afterUpdate.splice(0).forEach((callback) => callback());
-        },
-        { flush: 'post' }
-    );
 
     const { foundation, state } = useFoundation<FormFoundation<SubmitEvent>, Adapter, AllFormProps<Values, Output>, FormFoundationState>(
         FormFoundation,
         props,
-        () => ({}),
+        (view) => FormFoundation.getInitialState(view),
         (base) => ({
             cloneDeep,
             notifySubmit: (values, e) => emit('submit', values as Output, e),
             notifySubmitFail: (errors, values, e) => emit('submitFail', errors as Partial<AllErrors<Values>>, values, e),
             getLocale: () => locale.value.locale,
             forceUpdate: (formState, callback) => {
-                base.setState(
-                    { formState },
-                    callback &&
-                        (() => {
-                            afterUpdate.push(callback);
-                            afterUpdateTick.value++;
-                        })
-                );
+                base.setState({ formState }, callback);
                 getFormApiProxyInternals(props.form)?.updateState(formState);
             },
             notifyChange: (formState) => emit('change', formState),
             notifyValueChange: (values, changedValues) => emit('valueChange', values, changedValues),
             notifyErrorChange: (errors, changedError) => emit('errorChange', errors, changedError),
             notifyReset: () => emit('reset'),
-            getInitValues: () => props.initValues as Partial<Values>,
             getFormProps: pickFormProps,
             getFormElement: () => formElement.value,
         }),
         { props: { validator: () => formProps.value.validator, schema: () => formProps.value.schema } }
     );
 
-    const initialFormState = foundation.getFormState();
-    const formState = computed<FormState<Values>>(() => state.value.formState ?? initialFormState);
+    const formState = computed(() => state.value.formState as FormState<Values>);
     const values = computed(() => formState.value.values as Values);
     const formApi = foundation.getFormApi() as FormApi<Values, Output>;
 

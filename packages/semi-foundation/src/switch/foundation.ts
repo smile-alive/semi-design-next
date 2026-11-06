@@ -1,8 +1,7 @@
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 
 /** E is the host's change event, which the foundation only passes through */
-export interface SwitchAdapter<P extends SwitchBaseProps = SwitchBaseProps, S extends SwitchState = SwitchState, E = unknown> extends DefaultAdapter<P, S> {
-    setChecked: (checked?: boolean) => void;
+export interface SwitchAdapter<P extends SwitchBaseProps = SwitchBaseProps, E = unknown> extends DefaultAdapter<P, SwitchState> {
     notifyChange: (checked: boolean, e: E) => void;
 }
 
@@ -12,17 +11,19 @@ interface SwitchCheckedProps {
 }
 
 export interface SwitchState {
-    checked?: boolean;
+    checked: boolean;
 }
 
 export interface SwitchBaseProps extends SwitchCheckedProps {
     loading?: boolean;
 }
 
-export default class SwitchFoundation<P extends SwitchBaseProps = SwitchBaseProps, S extends SwitchState = SwitchState, E = unknown> extends BaseFoundation<SwitchAdapter<P, S, E>, P, S> {
+export default class SwitchFoundation<P extends SwitchBaseProps = SwitchBaseProps, E = unknown> extends BaseFoundation<SwitchAdapter<P, E>, P, SwitchState> {
+    static override readonly propKeys = ['checked'];
+
     static getInitialState(props: SwitchCheckedProps): SwitchState {
         return {
-            checked: props.checked ?? props.defaultChecked,
+            checked: props.checked !== undefined ? Boolean(props.checked) : Boolean(props.defaultChecked),
         };
     }
 
@@ -31,17 +32,17 @@ export default class SwitchFoundation<P extends SwitchBaseProps = SwitchBaseProp
         return Boolean(props.checked !== undefined ? props.checked : state.checked);
     }
 
-    // mirrors `checked`, so a form reset to undefined leaves the switch unchecked
-    setChecked = (checked?: boolean) => {
-        this.adapter.setChecked(checked);
-    };
+    // state mirrors `checked`, so a form reset to undefined leaves the switch unchecked
+    override handlePropsChange() {
+        this.setState({ checked: Boolean(this.getProp('checked')) });
+    }
 
     handleChange = (checked: boolean, e: E) => {
         if (this.getProp('loading')) {
             return;
         }
         if (!this.isControlledComponent('checked')) {
-            this.setChecked(checked);
+            this.setState({ checked });
         }
         this.adapter.notifyChange(checked, e);
     };

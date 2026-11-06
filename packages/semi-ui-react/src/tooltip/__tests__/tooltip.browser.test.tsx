@@ -850,7 +850,7 @@ describe('Activity 隐藏 keepDOM 弹层（浏览器）', () => {
             expect(popup.checkVisibility()).toBe(false);
         });
 
-    it('打开中被隐藏时弹层离开顶层且不可见，重新显示后保持关闭，点击触发器能再次打开', async () => {
+    it('打开中被隐藏时弹层离开顶层且不可见，重新显示后原样回到顶层，点击外部能关闭，点击触发器能再次打开', async () => {
         const view = (mode: 'visible' | 'hidden') => (
             <Activity mode={mode}>
                 <Tooltip content="kept tip" keepDOM trigger="click">
@@ -868,9 +868,12 @@ describe('Activity 隐藏 keepDOM 弹层（浏览器）', () => {
         await expectGone(popup);
 
         rerender(view('visible'));
-        await sleep(300);
+        await waitFor(() => expect(popup.matches(':popover-open')).toBe(true));
+        await waitFor(() => expect(screen.getByText('kept tip')).toBeVisible());
         expect(popup.isConnected).toBe(true);
-        expect(popup.matches(':popover-open')).toBe(false);
+
+        await userEvent.click(document.body);
+        await waitFor(() => expect(popup.matches(':popover-open')).toBe(false));
         expect(popup.checkVisibility()).toBe(false);
 
         await userEvent.click(screen.getByRole('button', { name: 'kept' }));

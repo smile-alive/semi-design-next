@@ -1,9 +1,9 @@
-import { For, Index, type JSX, Match, Show, Switch, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, splitProps, untrack } from 'solid-js';
+import { For, Index, type JSX, Match, Show, Switch, createMemo, createSignal, createUniqueId, mergeProps, splitProps, untrack } from 'solid-js';
 import type { Editor, FocusPosition, Content as TiptapContent } from '@tiptap/core';
 import clsx from 'clsx';
-import { isEqual, omit } from 'es-toolkit';
+import { omit } from 'es-toolkit';
 import { cssClasses, numbers, strings } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
-import AIChatInputFoundation, { type AIChatInputAdapter } from '@fibrae/semi-ai-foundation/ai-chat-input/foundation';
+import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputState } from '@fibrae/semi-ai-foundation/ai-chat-input/foundation';
 import { getAttachmentType, getContentType, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/ai-chat-input/utils';
 import { isImageFile } from '@fibrae/semi-ai-foundation/file-suffix';
 import { isUploadProgressVisible } from '@fibrae/semi-ai-foundation/upload-status';
@@ -15,7 +15,6 @@ import mergeStyles from '@fibrae/semi-ui-solid/_base/merge-styles';
 import { namedRole } from '@fibrae/semi-ui-solid/_base/named-role';
 import useDefaultProps from '@fibrae/semi-ui-solid/_base/use-default-props';
 import useFoundation from '@fibrae/semi-ui-solid/_base/use-foundation';
-import useWatch from '@fibrae/semi-ui-solid/_base/use-watch';
 import Button from '@fibrae/semi-ui-solid/button/index';
 import useConfig from '@fibrae/semi-ui-solid/config-provider/use-config';
 import { useFocusHandover, useLocale } from '@fibrae/semi-ui-solid/hooks';
@@ -26,7 +25,7 @@ import { useAddAreaControl } from '@fibrae/semi-ui-solid/upload/context';
 import Upload, { type UploadElement, type UploadProps } from '@fibrae/semi-ui-solid/upload/index';
 import Configure, { type ConfigureHandle } from './configure';
 import HorizontalScroller from './horizontal-scroller';
-import type { AIChatInputHandle, AIChatInputProps, AIChatInputState, ActionAreaProps, Attachment, Content, Reference, RenderTopSlotProps, RenderUploadButtonProps, Skill } from './interface';
+import type { AIChatInputHandle, AIChatInputProps, ActionAreaProps, Attachment, Content, Reference, RenderTopSlotProps, RenderUploadButtonProps, Skill } from './interface';
 import RichTextInput from './rich-text-input';
 import SkillItem from './skill-item';
 import SuggestionItem from './suggestion-item';
@@ -48,8 +47,8 @@ const defaultProps = {
 
 const hiddenStyle = { display: 'none' } as const;
 
-type Foundation = AIChatInputFoundation<AIChatInputProps, AIChatInputState>;
-type Adapter = AIChatInputAdapter<AIChatInputProps, AIChatInputState>;
+type Foundation = AIChatInputFoundation<AIChatInputProps>;
+type Adapter = AIChatInputAdapter<AIChatInputProps>;
 
 function getIconByType(type: string, size: IconSize = 'small') {
     switch (type) {
@@ -148,10 +147,6 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     const suggestionListId = `${prefixCls}-suggestion-${popupId}`;
     const actionCls = `${prefixCls}-footer-action`;
 
-    // compared deeply: callers often pass a new array with the same items
-    const suggestions = createMemo(() => local.suggestions, undefined, { equals: isEqual });
-    const generating = createMemo(() => local.generating);
-
     // a consumer spreading a signal object notifies every prop on any change, which must not redraw these nodes
     const uploadTipProps = createMemo(() => local.uploadTipProps);
     const renderUploadButton = createMemo(() => local.renderUploadButton);
@@ -173,20 +168,10 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, AIChatInputProps, AIChatInputState>(
         AIChatInputFoundation,
         props,
+        () => AIChatInputFoundation.getInitialState(props),
         () => ({
-            templateVisible: false,
-            skillVisible: false,
-            suggestionVisible: false,
-            attachments: untrack(() => local.uploadProps?.defaultFileList) ?? [],
-            content: undefined,
-            skill: undefined,
-            activeSkillIndex: 0,
-            activeSuggestionIndex: 0,
-        }),
-        (base) => ({
             setContent,
             clearContent: () => setContent(''),
-            clearAttachments: () => base.setState({ attachments: [] }),
             focusEditor: focus,
             getEditor: () => editor,
             // the panel may render in a shadow root, out of reach of document queries
@@ -472,28 +457,6 @@ export default function AIChatInput(rawProps: AIChatInputProps) {
         // the variable follows the trigger width while open, so a resize is followed
         return mergeStyles({ width: 'var(--semi-tooltip-trigger-width)' }, style);
     };
-
-    useWatch(suggestions, (current) => {
-        if (current && current.length > 0) {
-            foundation.showSuggestionPanel();
-        } else {
-            foundation.hideSuggestionPanel();
-        }
-    });
-
-    // Deferred rather than useWatch: the editor is created in RichTextInput's onMount, after this effect's first run, so
-    // a change before then would clear the attachments but not the content
-    createEffect(
-        on(
-            generating,
-            (isGenerating) => {
-                if (isGenerating) {
-                    foundation.handleGeneratingStart();
-                }
-            },
-            { defer: true }
-        )
-    );
 
     return (
         <Popover

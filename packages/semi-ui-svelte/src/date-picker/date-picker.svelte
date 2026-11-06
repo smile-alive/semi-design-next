@@ -1,6 +1,5 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { isEqual } from 'es-toolkit';
     import getYearMonthFromValue from '@fibrae/semi-foundation/date-picker/_utils/get-year-month-from-value';
     import { isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm as isConfirmNeeded } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/date-picker/constants';
@@ -14,7 +13,6 @@
     import useClickOutside from '../_base/use-click-outside.svelte.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import { useConfig } from '../config-provider/index.js';
     import { getInputGroupInScope, setInputGroupContext } from '../input/context.js';
     import { useLocale } from '../locale/index.js';
@@ -116,9 +114,6 @@
     // Known limitation: measured once on mount; a trigger that later gains or loses a focusable element leaves the
     // measurement stale. Upgrade to a MutationObserver on the wrapper if such triggers need support.
     let customTriggerFocusable = $state(false);
-
-    // The value and timeZone the foundation last synced from, to tell a new value from an equal one written back
-    let synced: { value: DatePickerProps['value']; timeZone?: string | number } | undefined;
 
     // an InputGroup supplies size and disabled when the control is given none; the controls inside this one must not read it again
     const group = getInputGroupInScope();
@@ -222,16 +217,7 @@
     const { foundation, states } = useFoundation<DatePickerFoundation, DatePickerAdapter, DatePickerFoundationProps, DatePickerFoundationState>(
         DatePickerFoundation,
         foundationProps,
-        (view) => ({
-            panelShow: Boolean(view.open),
-            isRange: false,
-            // the value the first render shows, so the server HTML and hydration agree without waiting for init
-            ...DatePickerFoundation.getInitialState(view),
-            autofocus: Boolean(view.autoFocus || (isRangeType(view.type) && !trigger && view.open)),
-            insetInputValue: null,
-            triggerDisabled: null,
-            focusRecords: { rangeStart: false, rangeEnd: false },
-        }),
+        (view) => DatePickerFoundation.getInitialState(view),
         (base) => {
             // the inset inputs of the panel take the range focus while there are any
             const rangeInputs = () => insetDateInput ?? triggerInput;
@@ -248,7 +234,6 @@
             };
 
             return {
-                togglePanel: (panelShow, callback) => base.setState({ panelShow }, callback),
                 notifyBlur: (event) => onBlur?.(event),
                 notifyFocus: (event, rangeType) => onFocus?.(event, rangeType || undefined),
                 notifyClear: (event) => {
@@ -278,18 +263,8 @@
                 },
                 notifyClickOutSide: (event) => onClickOutSide?.(event),
                 notifyPresetsClick: (item, event) => onPresetClick?.(item, event),
-                updateValue: (next) => base.setState({ value: next }),
-                updatePrevTimezone: (prevTimeZone) => base.setState({ prevTimeZone }),
-                updateCachedSelectedValue: (cachedSelectedValue) => base.setState({ cachedSelectedValue }),
-                updateInputValue: (inputValue) => base.setState({ inputValue }),
-                updateInsetInputValue: (insetInputValue) => {
-                    if (insetInput && !isEqual(insetInputValue, base.getState('insetInputValue'))) {
-                        base.setState({ insetInputValue });
-                    }
-                },
                 setRangeInputFocus,
                 isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panelElement),
-                isEventTarget: (event) => Boolean(event && event.target === event.currentTarget),
                 setInsetInputFocus: () => {
                     const target = base.getState('rangeInputFocus') === 'rangeEnd' ? rangeInputs()?.getRangeEnd() : rangeInputs()?.getRangeStart();
                     const input = target?.getInput();
@@ -305,7 +280,6 @@
                         active.blur();
                     }
                 },
-                setTriggerDisabled: (triggerDisabled, callback) => base.setState({ triggerDisabled }, callback),
             };
         }
     );
@@ -390,20 +364,6 @@
         onClear: foundation.handleInputClear,
     });
 
-    const syncFoundation = () => {
-        const next = { value, timeZone: zone };
-        const previous = synced;
-        synced = next;
-        if (!previous) {
-            return;
-        }
-        if (!isEqual(next.value, previous.value)) {
-            foundation.initFromProps({ value: next.value, timeZone: next.timeZone });
-        } else if (next.timeZone !== previous.timeZone) {
-            foundation.initFromProps({ value: foundation.getState('value'), timeZone: next.timeZone, prevTimeZone: previous.timeZone });
-        }
-    };
-
     const focusInsetDate = (event: FocusEvent, rangeType: RangeInput) => {
         monthsGrid?.showDatePanel(strings.PANEL_TYPE_LEFT);
         monthsGrid?.showDatePanel(strings.PANEL_TYPE_RIGHT);
@@ -423,28 +383,6 @@
     };
 
     useClickOutside([() => root, () => panelElement], foundation.handleClickOutside, () => panelShow, useNestedPopups());
-    $effect(syncFoundation);
-
-    watch(
-        () => openProp,
-        (next) => {
-            if (next) {
-                foundation.handleControlledOpen();
-            } else {
-                foundation.handleControlledClose();
-            }
-        }
-    );
-
-    // isPanelShown is already false for a disabled picker, so the check passes `disabled: false`
-    watch(
-        () => disabled,
-        (next) => {
-            if (next && DatePickerFoundation.isPanelShown({ open: openProp, disabled: false }, states())) {
-                foundation.deactivate();
-            }
-        }
-    );
 
     onMount(() => {
         if (trigger && combobox) {

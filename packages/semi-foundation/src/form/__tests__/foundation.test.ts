@@ -15,8 +15,9 @@ function createHost(props: Record<string, unknown> = {}) {
     const adapter = {
         getProps: () => props,
         getProp: (key: string) => props[key],
+        // commits at once, so what waits for the Form's next commit (unregistering) settles before the call returns
+        setState: vi.fn<(state: object, callback?: () => void) => void>((_state, callback) => callback?.()),
         cloneDeep: (value: unknown) => structuredClone(value),
-        getInitValues: () => props.initValues ?? {},
         getFormProps: () => props,
         forceUpdate: vi.fn<Notify>(),
         notifyChange: vi.fn<Notify>(),
@@ -28,6 +29,7 @@ function createHost(props: Record<string, unknown> = {}) {
         getLocale: () => enUS.Form,
     };
     const foundation = new FormFoundation(adapter as unknown as BaseFormAdapter);
+    foundation.connect();
     foundation.init();
     const fieldBridge = foundation.getFieldBridge();
     const api = foundation.getFormApi();
@@ -77,7 +79,7 @@ describe('FormFoundation 契约', () => {
         fieldBridge.register('name', registration);
         expect(store.getSnapshot()).toBe(initial);
         expect(api.getValues()).toEqual({});
-        fieldBridge.unRegister('name');
+        fieldBridge.unRegister(registration);
         expect(store.getSnapshot()).toBe(initial);
     });
 
@@ -152,7 +154,7 @@ describe('FormFoundation 契约', () => {
         expect(api.getValue('name')).toBe('a');
         expect(api.getFieldExist('name')).toBe(true);
 
-        fieldBridge.unRegister('name');
+        fieldBridge.unRegister(registration);
         expect(api.getFieldExist('name')).toBe(false);
         expect(api.getValues()).toEqual({});
         expect(registration.store.getSnapshot().error).toBeUndefined();
@@ -290,10 +292,10 @@ describe('FormFoundation 契约', () => {
 
     it('destroy 之后卸载字段不再通知 onChange', () => {
         const { adapter, foundation, fieldBridge, addField } = createHost();
-        addField('a');
+        const registration = addField('a');
         adapter.notifyChange.mockClear();
         foundation.destroy();
-        fieldBridge.unRegister('a');
+        fieldBridge.unRegister(registration);
         expect(adapter.notifyChange).not.toHaveBeenCalled();
     });
 
@@ -369,10 +371,10 @@ describe('FormFoundation 校验结算', () => {
     it('静默校验期间注销字段，结果仍按发起时的字段对位', async () => {
         let resolveB: (error?: string) => void = () => {};
         const { api, fieldBridge, addField } = createHost();
-        addField('a', { validate: () => undefined });
+        const a = addField('a', { validate: () => undefined });
         addField('b', { validate: () => new Promise<string | undefined>((resolve) => (resolveB = resolve)) });
         const validation = api.validate({ silent: true });
-        fieldBridge.unRegister('a');
+        fieldBridge.unRegister(a);
         resolveB('b-err');
         await expect(validation).rejects.toEqual({ b: ['b-err'] });
     });
@@ -380,12 +382,12 @@ describe('FormFoundation 校验结算', () => {
     it('Form 卸载时仍挂起的校验不再通知：validate 以取消原因 reject，submit 不调用 onSubmit、onSubmitFail', async () => {
         const { resolvers, validate } = pendingValidate();
         const { adapter, api, foundation, fieldBridge, addField } = createHost();
-        addField('name', { validate });
+        const registration = addField('name', { validate });
         const validation = api.validate();
         api.submitForm();
         adapter.notifyChange.mockClear();
         foundation.destroy();
-        fieldBridge.unRegister('name');
+        fieldBridge.unRegister(registration);
         resolvers.forEach((resolve) => resolve('err'));
         await expect(validation).rejects.toThrow('unmounted');
         await settle();
@@ -651,15 +653,16 @@ describe('FormFoundation schema', () => {
     it('校验全部字段时，已卸载的 keepState 字段的旧错误随结果更新；整表 reset 清掉没有字段的错误', async () => {
         let passes = false;
         const { fieldBridge, api, addField } = createHost({ schema: schemaOf(() => (passes ? { value: {} } : { issues: [{ message: '错', path: ['kept'] }] })) });
-        addField('kept', {}, true);
+        const kept = addField('kept', {}, true);
         await expect(api.validate()).rejects.toEqual({ kept: ['错'] });
-        fieldBridge.unRegister('kept');
+        fieldBridge.unRegister(kept);
         passes = true;
         await expect(api.validate()).resolves.toEqual({});
-        expect(addField('kept', {}, true).store.getSnapshot().error).toBeUndefined();
+        const remounted = addField('kept', {}, true);
+        expect(remounted.store.getSnapshot().error).toBeUndefined();
 
         passes = false;
-        fieldBridge.unRegister('kept');
+        fieldBridge.unRegister(remounted);
         await expect(api.validate()).rejects.toEqual({ kept: ['错'] });
         api.reset();
         expect(api.getFormState().errors).toEqual({});
@@ -859,12 +862,12 @@ describe('formApi.setError', () => {
 describe('FormFoundation 字段 keepState', () => {
     it('keepState 字段卸载后 formState 保留 value、error、touched，重新注册时恢复', () => {
         const { api, fieldBridge, addField } = createHost();
-        addField('name', {}, true);
+        const registration = addField('name', {}, true);
         api.setValue('name', 'kept');
         api.setError('name', 'bad');
         api.setTouched('name', true);
 
-        fieldBridge.unRegister('name');
+        fieldBridge.unRegister(registration);
         expect(api.getFieldExist('name')).toBe(false);
         expect(api.getValue('name')).toBe('kept');
         expect(api.getError('name')).toEqual(['bad']);
@@ -876,12 +879,12 @@ describe('FormFoundation 字段 keepState', () => {
 
     it('非 keepState 字段卸载后 value、error、touched 都被删除', () => {
         const { api, fieldBridge, addField } = createHost();
-        addField('name');
+        const registration = addField('name');
         api.setValue('name', 'gone');
         api.setError('name', 'bad');
         api.setTouched('name', true);
 
-        fieldBridge.unRegister('name');
+        fieldBridge.unRegister(registration);
         expect(api.getFormState()).toEqual({ values: {}, errors: {}, touched: {} });
     });
 });
@@ -952,8 +955,8 @@ describe('FormFoundation ArrayField 行', () => {
 
         // React's commit order: the removed row and the renamed row unregister their old paths, then the renamed row registers its new one with the same store
         fieldBridge.removeArrayFieldRow('a', 1);
-        fieldBridge.unRegister('a[1]');
-        fieldBridge.unRegister('a[2]');
+        fieldBridge.unRegister(rows[1]);
+        fieldBridge.unRegister(rows[2]);
         addField('a[1]', {}, true, true, rows[2].store);
 
         expect(api.getValue('a')).toEqual(['v0', 'v2']);
@@ -1022,11 +1025,11 @@ describe('FormFoundation ArrayField 行', () => {
     it('保留的 ArrayField 再挂载时，新的行字段取回保留的错误与 touched', () => {
         const { api, fieldBridge, addField } = createHost();
         fieldBridge.mountArrayField('a', ['x']);
-        addField('a[0]', {}, true, true, new FieldStore({ value: 'x' }));
+        const first = addField('a[0]', {}, true, true, new FieldStore({ value: 'x' }));
         api.setError('a[0]', '行错误');
         api.setTouched('a[0]', true);
 
-        fieldBridge.unRegister('a[0]');
+        fieldBridge.unRegister(first);
         fieldBridge.unRegisterArrayField('a', true);
         fieldBridge.mountArrayField('a', ['x']);
         const row = addField('a[0]', {}, true, true, new FieldStore({ value: 'x' }));

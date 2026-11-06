@@ -3,7 +3,7 @@ import { cloneElement, isValidElement, useLayoutEffect, useRef, useState, type C
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/overflow-list/constants';
-import OverflowListFoundation, { type OverflowListAdapter, type OverflowListView, type VisibleLayout } from '@fibrae/semi-foundation/overflow-list/foundation';
+import OverflowListFoundation, { type OverflowListAdapter, type OverflowListBaseState, type OverflowListView, type VisibleLayout } from '@fibrae/semi-foundation/overflow-list/foundation';
 import { isHTMLElement } from '@fibrae/semi-foundation/utils/dom';
 import '@fibrae/semi-foundation/overflow-list/overflow-list.scss';
 import type { ElementProps } from '../_base/base';
@@ -14,6 +14,9 @@ import useIntersectionObserver from '../_base/use-intersection-observer';
 import { hasContent } from '../_utils';
 import { mergeRefs } from '../_utils/merge-refs';
 import ReactResizeObserver, { type ResizeEntry } from '../resize-observer';
+
+type Foundation = OverflowListFoundation<OverflowListProps>;
+type Adapter = OverflowListAdapter<OverflowListProps>;
 
 const prefixCls = cssClasses.PREFIX;
 const Boundary = strings.BOUNDARY_MAP;
@@ -55,11 +58,7 @@ interface OverflowListScrollProps<T> extends OverflowListCommonProps<T> {
 
 export type OverflowListProps<T = OverflowItem> = OverflowListCollapseProps<T> | OverflowListScrollProps<T>;
 
-export interface OverflowListState {
-    containerWidth: number;
-    overflowWidth: number;
-    visibleState: Map<string, boolean>;
-}
+export type { OverflowListBaseState as OverflowListState };
 
 const defaultProps = {
     collapseFrom: 'end',
@@ -107,12 +106,12 @@ export default function OverflowList(rawProps: OverflowListProps) {
     const [storedView, setView] = useState(() => resetView(emptyView, 0));
     let view = storedView;
 
-    const [foundation, state] = useFoundation<OverflowListFoundation<OverflowListProps, OverflowListState>, OverflowListAdapter<OverflowListProps, OverflowListState>, OverflowListProps, OverflowListState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, OverflowListProps, OverflowListBaseState>(
         OverflowListFoundation,
         props,
-        () => ({ containerWidth: 0, overflowWidth: 0, visibleState: new Map() }),
+        () => OverflowListFoundation.getInitialState(),
         (base) => ({
-            updateVisibleState: (visibleState) => base.setState({ visibleState }, () => base.getProps().onVisibleStateChange?.(visibleState)),
+            notifyVisibleStateChange: (visibleState) => base.getProps().onVisibleStateChange?.(visibleState),
             updateView: (viewState) =>
                 setView((prev) => {
                     const next = { ...prev, ...viewState };

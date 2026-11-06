@@ -18,8 +18,8 @@
     import ModalContent from './modal-content.svelte';
 
     type FoundationProps = Pick<FoundationModalProps, 'visible'>;
-    type Foundation = ModalFoundation<FoundationProps, ModalState, MouseEvent | KeyboardEvent, MouseEvent>;
-    type Adapter = ModalAdapter<FoundationProps, ModalState, MouseEvent | KeyboardEvent, MouseEvent>;
+    type Foundation = ModalFoundation<FoundationProps, MouseEvent | KeyboardEvent, MouseEvent>;
+    type Adapter = ModalAdapter<FoundationProps, MouseEvent | KeyboardEvent, MouseEvent>;
 
     const defaults = useDefaultProps('Modal');
 
@@ -86,7 +86,7 @@
                 return open;
             },
         },
-        () => ({}),
+        () => ModalFoundation.getInitialState(),
         () => ({
             // the page keeps scrolling behind a non-modal dialog (no mask, or a mask confined to a custom container)
             disabledBodyScroll: () => {

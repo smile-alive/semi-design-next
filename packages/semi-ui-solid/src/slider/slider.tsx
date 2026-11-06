@@ -13,7 +13,6 @@ import forwardFocus from '../_base/forward-focus';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import useConfig from '../config-provider/use-config';
 import { useLocale } from '../locale';
 import Tooltip from '../tooltip';
@@ -138,8 +137,9 @@ export default function Slider(rawProps: SliderProps) {
         { context: config }
     );
 
-    const percent = createMemo(() => SliderFoundation.getMinAndMaxPercent(foundationProps, state().currentValue), undefined, { equals: isEqual });
-    const tips = createMemo(() => SliderFoundation.computeHandleVisibleVal(foundationProps, state()));
+    const currentValue = createMemo(() => SliderFoundation.deriveValue(foundationProps, state()), undefined, { equals: isEqual });
+    const percent = createMemo(() => SliderFoundation.getMinAndMaxPercent(foundationProps, currentValue()), undefined, { equals: isEqual });
+    const tips = createMemo(() => SliderFoundation.computeHandleVisibleVal(foundationProps, { ...state(), currentValue: currentValue() }));
 
     const isRTL = () => config().direction === 'rtl' && !props.vertical;
 
@@ -151,7 +151,7 @@ export default function Slider(rawProps: SliderProps) {
 
     const markPercent = (mark: string) => (Number(mark) - props.min) / (props.max - props.min);
 
-    const markActive = (mark: string) => SliderFoundation.isMarkActive(foundationProps, state().currentValue, Number(mark));
+    const markActive = (mark: string) => SliderFoundation.isMarkActive(foundationProps, currentValue(), Number(mark));
 
     // each call builds its own node, so the label and the tooltip never share one
     const markLabel = (mark: string) => {
@@ -171,7 +171,7 @@ export default function Slider(rawProps: SliderProps) {
 
     const renderHandle = (pos: Handle) => {
         const index = pos === 'min' ? 0 : 1;
-        const handleValue = () => (props.range ? (state().currentValue as number[])[index] : (state().currentValue as number));
+        const handleValue = () => (props.range ? (currentValue() as number[])[index] : (currentValue() as number));
         const dot = () => (Array.isArray(local.handleDot) ? local.handleDot[index] : local.handleDot);
         const active = () => state().chooseMovePos === pos && (props.range || state().isDrag);
         const a11y = createMemo(() =>
@@ -337,20 +337,6 @@ export default function Slider(rawProps: SliderProps) {
                 <span class={`${prefixCls}-boundary-max`}>{local.max}</span>
             </div>
         </div>
-    );
-
-    // a literal array is a new value on every change of its parts: compare by content
-    useWatch(
-        createMemo(() => local.value, undefined, { equals: isEqual }),
-        (value) => {
-            // a Form reset: back to the default position, nothing to report
-            if (value === undefined) {
-                foundation.resetValue();
-            } else {
-                foundation.handleValueChange(value);
-                props.onAfterChange?.(value);
-            }
-        }
     );
 
     onMount(() => autofocus(local.autofocus, minInput));

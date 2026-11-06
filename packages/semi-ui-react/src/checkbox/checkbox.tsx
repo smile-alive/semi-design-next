@@ -1,20 +1,21 @@
 import type React from 'react';
 import { useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
-import CheckboxFoundation, { type CheckboxAdapter, type BasicCheckboxEvent, type BasicTargetObject, type BaseCheckboxProps } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
+import CheckboxFoundation, { type CheckboxAdapter, type BasicCheckboxEvent, type BasicTargetObject, type BaseCheckboxProps, type CheckboxBaseState } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
 import { checkboxClasses as css } from '@fibrae/semi-foundation/checkbox/constants';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
 import '@fibrae/semi-foundation/checkbox/checkbox.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import { hasContent } from '../_utils';
 import type { CheckboxType } from './checkbox-group';
 import CheckboxInner from './checkbox-inner';
 import { useCheckboxGroupContext } from './context';
+
+type Foundation = CheckboxFoundation;
+type Adapter = CheckboxAdapter<CheckboxProps>;
 
 export interface CheckboxEvent extends BasicCheckboxEvent {
     /** The click that toggled the checkbox; a Space press reaches it as a click too */
@@ -42,16 +43,9 @@ export interface CheckboxProps extends BaseCheckboxProps, ElementProps<'span', '
     ref?: React.Ref<CheckboxHandle>;
 }
 
-interface CheckboxState {
-    checked: boolean;
-}
-
 const defaultProps = {
     defaultChecked: false,
     indeterminate: false,
-    onChange: noop,
-    onMouseEnter: noop,
-    onMouseLeave: noop,
     type: 'default',
 } satisfies Partial<CheckboxProps>;
 
@@ -106,13 +100,13 @@ export default function Checkbox(rawProps: CheckboxProps) {
     const context = useCheckboxGroupContext();
 
     const inputRef = useRef<HTMLInputElement>(null);
+    const uid = useId();
 
-    const [foundation, state] = useFoundation<CheckboxFoundation, CheckboxAdapter<CheckboxProps, CheckboxState>, CheckboxProps, CheckboxState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, CheckboxProps, CheckboxBaseState>(
         CheckboxFoundation,
         props,
-        () => ({ checked: Boolean(props.checked ?? props.defaultChecked) }),
+        () => CheckboxFoundation.getInitialState(props),
         (base) => ({
-            setChecked: (checked) => base.setState({ checked }),
             notifyChange: (event) => base.getProps().onChange?.(event as CheckboxEvent),
             generateEvent: (checked, e) => {
                 const { ref, ...target } = base.getProps();
@@ -160,15 +154,6 @@ export default function Checkbox(rawProps: CheckboxProps) {
     const extraCls = clsx(`${prefix}-extra`, {
         [`${prefix}-cardType_extra_noChildren`]: isCardType && !hasChildren,
     });
-
-    // only a boolean or undefined (Form reset) checked is mirrored; other values keep the current state
-    useDidUpdate(props.checked, (checked) => {
-        if (checked === undefined || typeof checked === 'boolean') {
-            foundation.setChecked(Boolean(checked));
-        }
-    });
-
-    const uid = useId();
 
     const addonId = addonIdProp || `addon-${uid}`;
     const extraId = extraIdProp || `extra-${uid}`;

@@ -41,7 +41,7 @@ export interface TransferBaseProps {
     defaultValue?: Array<number | string>;
     disabled?: boolean;
     filter?: BasicFilter;
-    pagination?: { currentPage?: number };
+    pagination?: { currentPage?: number; defaultCurrentPage?: number };
     showPath?: boolean;
     type?: string;
     value?: Array<number | string>;
@@ -55,20 +55,19 @@ export interface TransferBaseState {
 }
 
 /** E is the host's focusout event, passed on to notifyBlur */
-export interface TransferAdapter<P extends TransferBaseProps = TransferBaseProps, S extends TransferBaseState = TransferBaseState, E = FocusEvent> extends DefaultAdapter<P, S> {
+export interface TransferAdapter<P extends TransferBaseProps = TransferBaseProps, E = FocusEvent> extends DefaultAdapter<P, TransferBaseState> {
     notifyBlur: (e: E) => void;
-    updateSelected: (values: Array<number | string>) => void;
     notifyChange: (values: Array<number | string>, items: Array<BasicDataItem>) => void;
     notifySearch: (searchValue: string) => void;
     notifySelect: (item: BasicDataItem) => void;
     notifyDeselect: (item: BasicDataItem) => void;
-    updateInput: (input: string) => void;
     searchTree: (keyword: string) => void;
-    updateCurrentPage: (currentPage: number) => void;
     notifyPageChange: (currentPage: number) => void;
 }
 
-export default class TransferFoundation<P extends TransferBaseProps = TransferBaseProps, S extends TransferBaseState = TransferBaseState, E = FocusEvent> extends BaseFoundation<TransferAdapter<P, S, E>, P, S> {
+export default class TransferFoundation<P extends TransferBaseProps = TransferBaseProps, E = FocusEvent> extends BaseFoundation<TransferAdapter<P, E>, P, TransferBaseState> {
+    static override readonly propKeys = ['value'];
+
     #getData() {
         const { dataSource, type } = this.getProps();
         return TransferFoundation.getData(dataSource, type);
@@ -92,9 +91,17 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
         const { values, items } = this.#getValuesAndItems(selectedItems);
         // mirrors getSelectedItems: null falls back to the state like undefined
         if (!Array.isArray(this.getProp('value'))) {
-            this.adapter.updateSelected(values);
+            this.setState({ selectedValues: values });
         }
         this.adapter.notifyChange(values, items);
+    }
+
+    static getInitialState(props: TransferBaseProps): TransferBaseState {
+        return {
+            selectedValues: props.defaultValue ?? [],
+            inputValue: '',
+            leftCurrentPage: props.pagination?.defaultCurrentPage ?? props.pagination?.currentPage ?? 1,
+        };
     }
 
     /** The flat item list of a dataSource: groupList items carry `_parent`, treeList nodes carry `_path` */
@@ -210,7 +217,7 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
         if (notify) {
             this.adapter.notifySearch(inputVal);
         }
-        this.adapter.updateInput(inputVal);
+        this.setState({ inputValue: inputVal });
         // via handlePageChange so a controlled caller is told to move
         if (TransferFoundation.getPageNumber(this.getProp('pagination'), this.getState('leftCurrentPage')) !== 1) {
             this.handlePageChange(1);
@@ -293,9 +300,11 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
      * `value` went back to a non-array (a form reset). The state still holds what was selected before `value` took
      * over, since a controlled selection never writes it, so it returns to the initial selection.
      */
-    handleValueRelease = () => {
-        this.adapter.updateSelected([...(this.getProp('defaultValue') ?? [])]);
-    };
+    override handlePropsChange(prev: Partial<P>) {
+        if (Array.isArray(prev.value) && !Array.isArray(this.getProp('value'))) {
+            this.setState({ selectedValues: [...(this.getProp('defaultValue') ?? [])] });
+        }
+    }
 
     /**
      * A focusout from the root or anything inside it: reports the blur once the focus has left the whole transfer.
@@ -317,7 +326,7 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
     };
 
     handlePageChange = (currentPage: number) => {
-        this.adapter.updateCurrentPage(currentPage);
+        this.setState({ leftCurrentPage: currentPage });
         this.adapter.notifyPageChange(currentPage);
     };
 }

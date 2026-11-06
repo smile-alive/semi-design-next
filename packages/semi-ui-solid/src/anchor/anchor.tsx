@@ -1,7 +1,7 @@
 import { createEffect, createMemo, createSignal, on, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/anchor/constants';
-import AnchorFoundation, { type AnchorAdapter } from '@fibrae/semi-foundation/anchor/foundation';
+import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/anchor/foundation';
 import { findAnchorTarget } from '@fibrae/semi-foundation/anchor/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
@@ -13,14 +13,14 @@ import useFoundation from '../_base/use-foundation';
 import useResizeObserver from '../_base/use-resize-observer';
 import useLocale from '../locale/use-locale';
 import { AnchorContext, type AnchorView } from './context';
-import type { AnchorClickEvent, AnchorProps, AnchorState } from './interface';
+import type { AnchorClickEvent, AnchorProps } from './interface';
 import { Entries } from './link-item';
 import { collectEntries, toAnchorNodes } from './tree';
 
 const prefixCls = cssClasses.PREFIX;
 
-type Foundation = AnchorFoundation<AnchorProps, AnchorState, AnchorClickEvent>;
-type Adapter = AnchorAdapter<AnchorProps, AnchorState, AnchorClickEvent>;
+type Foundation = AnchorFoundation<AnchorProps, AnchorClickEvent>;
+type Adapter = AnchorAdapter<AnchorProps, AnchorClickEvent>;
 
 const defaultProps = {
     size: 'default',
@@ -45,10 +45,10 @@ export default function Anchor(rawProps: AnchorProps) {
     let root: HTMLDivElement | undefined;
     const [linkWrapper, setLinkWrapper] = createSignal<HTMLDivElement>();
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, AnchorProps, AnchorState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, AnchorProps, AnchorBaseState>(
         AnchorFoundation,
         props,
-        () => ({ activeLink: '', links: [], clickLink: false, slideBarTop: '0' }),
+        () => AnchorFoundation.getInitialState(),
         (base) => ({
             getContainer: () => props.getContainer() || window,
             getAnchorNode: (selector) => root?.querySelector<HTMLElement>(selector) ?? null,

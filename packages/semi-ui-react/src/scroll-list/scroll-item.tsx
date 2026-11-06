@@ -2,11 +2,9 @@ import type React from 'react';
 import { useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
-import ItemFoundation, { type Item, type ScrollItemAdapter } from '@fibrae/semi-foundation/scroll-list/item-foundation';
-import { noop } from '@fibrae/semi-foundation/utils/function';
+import ItemFoundation, { type Item, type ScrollItemAdapter, type ScrollItemBaseState } from '@fibrae/semi-foundation/scroll-list/item-foundation';
 import type { ElementProps, Motion } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 
 const wheelMode = 'wheel';
@@ -25,24 +23,18 @@ export interface ScrollItemProps<T extends Item> extends ElementProps<'div', 'on
     type?: string | number; // identifies the item to the Semi components that use it; not for end users
 }
 
-export interface ScrollItemState {
-    prependCount: number;
-    appendCount: number;
-}
-
 /** Called by TimePicker and DatePicker to re-centre a column, e.g. after the panel resizes */
 export interface ScrollItemHandle {
     /** Scrolls to the selected item; `selectedIndex` is not used, the target is the item last selected */
     scrollToIndex: (selectedIndex?: number, duration?: number) => void;
 }
 
-type ScrollItemFoundation<T extends Item> = ItemFoundation<T, ScrollItemProps<T>, ScrollItemState>;
+type ScrollItemFoundation<T extends Item> = ItemFoundation<T, ScrollItemProps<T>>;
 
 const defaultProps = {
     selectedIndex: 0,
     motion: true,
     list: [],
-    onSelect: noop,
     cycled: false,
     mode: wheelMode,
 } satisfies Partial<ScrollItemProps<Item>>;
@@ -56,15 +48,15 @@ export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> 
     const selectorRef = useRef<HTMLDivElement>(null);
     const listId = useId();
 
-    const [foundation, state] = useFoundation<ScrollItemFoundation<T>, ScrollItemAdapter<T, ScrollItemProps<T>, ScrollItemState>, ScrollItemProps<T>, ScrollItemState>(
+    const [foundation, state] = useFoundation<ScrollItemFoundation<T>, ScrollItemAdapter<T, ScrollItemProps<T>>, ScrollItemProps<T>, ScrollItemBaseState>(
         ItemFoundation,
         props,
-        () => ({ prependCount: 0, appendCount: 0 }),
+        () => ItemFoundation.getInitialState(),
         (base) => ({
             getListNode: () => listRef.current,
             getScrollNode: () => wrapperRef.current,
             getSelectorNode: () => selectorRef.current,
-            notifySelectItem: (data) => base.getProps().onSelect(data),
+            notifySelectItem: (data) => base.getProps().onSelect?.(data),
         })
     );
 
@@ -113,9 +105,6 @@ export default function ScrollItem<T extends Item>(rawProps: ScrollItemProps<T> 
                 </li>
             );
         });
-
-    useDidUpdate(props.selectedIndex, foundation.syncSelectedIndex);
-    useDidUpdate(props.list.length, foundation.syncList);
 
     useImperativeHandle(ref, () => ({ scrollToIndex: (_index, duration) => foundation.scrollToSelected(duration) }), [foundation]);
 

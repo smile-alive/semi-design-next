@@ -2,7 +2,7 @@ import type React from 'react';
 import { useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/banner/constants';
-import BannerFoundation, { type BannerAdapter } from '@fibrae/semi-foundation/banner/foundation';
+import BannerFoundation, { type BannerAdapter, type BannerState } from '@fibrae/semi-foundation/banner/foundation';
 import { findFocusAfter } from '@fibrae/semi-foundation/utils/focus-handover';
 import '@fibrae/semi-foundation/banner/banner.scss';
 import { IconClose, IconAlertTriangle, IconInfoCircle, IconTickCircle, IconAlertCircle } from '@fibrae/semi-icons-react';
@@ -14,6 +14,9 @@ import { hasContent } from '../_utils';
 import Button from '../icon-button';
 import useLocale from '../locale/use-locale';
 import Typography from '../typography';
+
+type Foundation = BannerFoundation<BannerProps, React.MouseEvent>;
+type Adapter = BannerAdapter<BannerProps, React.MouseEvent>;
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -34,9 +37,7 @@ export interface BannerProps extends ElementProps<'div', 'title'> {
     ref?: React.Ref<HTMLDivElement>;
 }
 
-export interface BannerState {
-    visible: boolean;
-}
+export type { BannerState };
 
 const defaultProps = {
     type: 'info',
@@ -59,12 +60,11 @@ export default function Banner(rawProps: BannerProps) {
     // closing removes the whole banner, so the element to land on is read before it goes
     const focusAfterClose = useRef<HTMLElement | null>(null);
 
-    const [foundation, state] = useFoundation<BannerFoundation<BannerProps, BannerState, React.MouseEvent>, BannerAdapter<BannerProps, BannerState, React.MouseEvent>, BannerProps, BannerState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, BannerProps, BannerState>(
         BannerFoundation,
         props,
-        () => ({ visible: true }),
+        () => BannerFoundation.getInitialState(),
         (base) => ({
-            hide: () => base.setState({ visible: false }),
             notifyClose: (e) => base.getProps().onClose?.(e),
         })
     );

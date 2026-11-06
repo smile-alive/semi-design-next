@@ -32,7 +32,7 @@ describe('DialogueFoundation 重新生成与选择', () => {
             getStates: () => ({ selectedIds }),
             notifyChatsChange: vi.fn<DialogueAdapter['notifyChatsChange']>(),
             notifyMessageReset: vi.fn<DialogueAdapter['notifyMessageReset']>(),
-            updateSelected: vi.fn<DialogueAdapter['updateSelected']>(),
+            setState: vi.fn<(state: object) => void>(),
             notifySelect: vi.fn<DialogueAdapter['notifySelect']>(),
         };
         return { adapter, foundation: new DialogueFoundation(adapter as unknown as DialogueAdapter) };
@@ -64,8 +64,8 @@ describe('DialogueFoundation 滚动', () => {
         const adapter = {
             getContainerRef: () => element,
             getStates: () => ({ backBottomVisible }),
-            setBackBottomVisible: vi.fn<(visible: boolean) => void>((visible) => {
-                backBottomVisible = visible;
+            setState: vi.fn<(state: { backBottomVisible: boolean }) => void>((state) => {
+                backBottomVisible = state.backBottomVisible;
             }),
             notifyChatsChange: vi.fn<() => void>(),
         };
@@ -97,18 +97,18 @@ describe('DialogueFoundation 滚动', () => {
             scrollTo(900);
             scrollTo(850);
             vi.advanceTimersByTime(200);
-            adapter.setBackBottomVisible.mockClear();
+            adapter.setState.mockClear();
             // growth alone fires no scroll event
             element.scrollHeight = 1200;
             foundation.handleListUpdate({ chats: [{ id: '1', role: 'assistant', status: 'completed' }], hints: [] }, { chats: [{ id: '1', role: 'assistant', status: 'completed', content: 'more' }], hints: [] });
             vi.advanceTimersByTime(200);
-            expect(adapter.setBackBottomVisible).toHaveBeenCalledWith(true);
+            expect(adapter.setState).toHaveBeenCalledWith({ backBottomVisible: true }, undefined);
             // the content shrinks to fit without any scroll event
             element.scrollHeight = 100;
             element.scrollTop = 850;
             foundation.handleListUpdate({ chats: [{ id: '1', role: 'assistant', status: 'completed' }], hints: [] }, { chats: [{ id: '1', role: 'assistant', status: 'completed', content: 'less' }], hints: [] });
             vi.advanceTimersByTime(200);
-            expect(adapter.setBackBottomVisible).toHaveBeenLastCalledWith(false);
+            expect(adapter.setState).toHaveBeenLastCalledWith({ backBottomVisible: false }, undefined);
         } finally {
             vi.useRealTimers();
         }

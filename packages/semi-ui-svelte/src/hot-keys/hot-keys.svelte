@@ -4,7 +4,6 @@
     import '@fibrae/semi-foundation/hot-keys/hot-keys.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import type { HotKeysProps } from './interface.js';
 
     type Foundation = HotKeysFoundation<HotKeysBaseProps>;
@@ -14,8 +13,9 @@
     let { hotKeys, content = defaults('content'), preventDefault = defaults('preventDefault', false), getListenerTarget = defaults('getListenerTarget'), onHotKey, children, ...rest }: HotKeysProps = $props();
 
     const foundationProps: HotKeysBaseProps = {
+        // read item by item so an in-place edit of a reactive array also re-validates
         get hotKeys() {
-            return hotKeys;
+            return [...hotKeys];
         },
         get preventDefault() {
             return preventDefault;
@@ -25,17 +25,12 @@
         },
     };
 
-    const { foundation } = useFoundation<Foundation, Adapter, HotKeysBaseProps, object>(
+    useFoundation<Foundation, Adapter, HotKeysBaseProps, object>(
         HotKeysFoundation,
         foundationProps,
         () => ({}),
         () => ({ notifyHotKey: (event) => onHotKey?.(event) })
     );
-
-    watch(() => getListenerTarget, foundation.handleTargetChange);
-
-    // read item by item so an in-place edit of a reactive array also re-validates
-    watch(() => [...hotKeys], foundation.handleHotKeysChange);
 </script>
 
 <div {...rest} class={[cssClasses.PREFIX, rest.class]}>

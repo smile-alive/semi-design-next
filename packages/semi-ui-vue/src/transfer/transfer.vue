@@ -35,8 +35,8 @@
         items: { item: ResolvedItem; index: number }[];
     }
 
-    type Foundation = TransferFoundation<TransferBaseProps, TransferBaseState>;
-    type Adapter = TransferAdapter<TransferBaseProps, TransferBaseState>;
+    type Foundation = TransferFoundation<TransferBaseProps>;
+    type Adapter = TransferAdapter<TransferBaseProps>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -74,13 +74,8 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, TransferBaseProps, TransferBaseState>(
         TransferFoundation,
         props,
+        (view) => TransferFoundation.getInitialState(view),
         () => ({
-            selectedValues: props.defaultValue,
-            inputValue: '',
-            leftCurrentPage: props.pagination?.defaultCurrentPage ?? props.pagination?.currentPage ?? 1,
-        }),
-        (base) => ({
-            updateSelected: (selectedValues) => base.setState({ selectedValues }),
             notifyBlur: (event) => emit('blur', event),
             notifyChange: (values, items) => {
                 emit('update:modelValue', values);
@@ -89,9 +84,7 @@
             notifySearch: (input) => emit('search', input),
             notifySelect: (item) => emit('select', item as TransferDataItem),
             notifyDeselect: (item) => emit('deselect', item as TransferDataItem),
-            updateInput: (inputValue) => base.setState({ inputValue }),
             searchTree: (keyword) => tree.value?.search(keyword),
-            updateCurrentPage: (leftCurrentPage) => base.setState({ leftCurrentPage }),
             notifyPageChange: (currentPage) => props.pagination?.onPageChange?.(currentPage),
         }),
         { props: { value: () => props.modelValue, filter: () => filter.value } }
@@ -193,15 +186,6 @@
     const showsEmpty = (slot?: () => unknown) => !slot || hasSlotContent(slot as Parameters<typeof hasSlotContent>[0]);
 
     const groupTitleId = (index: number) => `${uid}-group-${index}`;
-
-    watch(
-        () => props.modelValue,
-        (next, previous) => {
-            if (Array.isArray(previous) && !Array.isArray(next)) {
-                foundation.handleValueRelease();
-            }
-        }
-    );
 
     watch(
         () => props.draggable,

@@ -1,19 +1,16 @@
 import type React from 'react';
 import { memo, useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import ComboboxFoundation from '@fibrae/semi-foundation/time-picker/combox-foundation';
 import { strings, cssClasses, type PanelType } from '@fibrae/semi-foundation/time-picker/constants';
 import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/time-picker/foundation';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/time-picker/time-picker.scss';
 import type { ElementProps } from '../_base/base';
 import type { ValidateStatus } from '../_base/base-component';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import { useConfigContext } from '../config-provider/context';
 import type { InputSize } from '../input';
@@ -25,6 +22,9 @@ import type { Position } from '../tooltip';
 import Trigger from '../trigger';
 import Combobox from './combobox';
 import TimeInput from './time-input';
+
+type Foundation = TimePickerFoundation<TimePickerProps, React.FocusEvent<HTMLDivElement>>;
+type Adapter = TimePickerAdapter<TimePickerProps, React.FocusEvent<HTMLDivElement>>;
 
 export type BaseValueType = string | number | Date | undefined;
 
@@ -132,7 +132,6 @@ const defaultProps = {
     borderless: false,
     showClear: true,
     rangeSeparator: strings.DEFAULT_RANGE_SEPARATOR,
-    onOpenChange: noop,
     prefixCls: cssClasses.PREFIX,
     inputReadOnly: false,
     style: {},
@@ -143,9 +142,6 @@ const defaultProps = {
     disabledMinutes: (): number[] => [],
     disabledSeconds: (): number[] => [],
     hideDisabledOptions: false,
-    onFocus: noop,
-    onBlur: noop,
-    onChange: noop,
     use12Hours: false,
     focusOnOpen: false,
     size: 'default',
@@ -278,29 +274,26 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
         }
     }, [props.triggerRender]);
 
-    const [foundation, state] = useFoundation<TimePickerFoundation<TimePickerProps, React.FocusEvent<HTMLDivElement>>, TimePickerAdapter<TimePickerProps, React.FocusEvent<HTMLDivElement>>, TimePickerProps, TimePickerState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, TimePickerProps, TimePickerState>(
         TimePickerFoundation,
         props,
-        () => ({ open: Boolean((props.open || props.defaultOpen) && !props.disabled), ...TimePickerFoundation.getInitialState(props) }),
+        () => TimePickerFoundation.getInitialState(props),
         (base) => ({
-            setPanelOpen: (open) => base.setState({ open }),
-            setInputValue: (inputValue) => base.setState({ inputValue }),
-            notifyOpenChange: (open) => base.getProps().onOpenChange(open),
+            notifyOpenChange: (open) => base.getProps().onOpenChange?.(open),
             notifyChange: (value, str) => {
                 const current = base.getProps();
                 // the foundation passes arrays exactly when type is timeRange; the Array.isArray checks only
                 // narrow the arguments to the onChange the type selects
                 if (current.type === 'timeRange') {
                     if (Array.isArray(value) && Array.isArray(str)) {
-                        current.onChange(value, str);
+                        current.onChange?.(value, str);
                     }
                 } else if (!Array.isArray(value) && !Array.isArray(str)) {
-                    current.onChange(value, str);
+                    current.onChange?.(value, str);
                 }
             },
-            notifyFocus: (e) => base.getProps().onFocus(e),
-            notifyBlur: (e) => base.getProps().onBlur(e),
-            isRangePicker: () => base.getProps().type === strings.TYPE_TIME_RANGE_PICKER,
+            notifyFocus: (e) => base.getProps().onFocus?.(e),
+            notifyBlur: (e) => base.getProps().onBlur?.(e),
             isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panelRef.current),
             // a custom trigger without a focus target of its own leaves the root as the Tab stop
             setTriggerFocus: () => FocusTrapHandle.focusFirstOrSelf(rootRef.current, { preventScroll: base.getProps().preventScroll }),
@@ -335,26 +328,6 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
             ))}
         </div>
     );
-
-    // a new value prop wins (back to undefined clears it), else a new timeZone re-zones the shown value
-    useDidUpdate(props, (current, prev) => {
-        // by value: a Date or array built in the parent's render is a new object every time and must not reset typed text
-        if (!isEqual(current.value, prev.value)) {
-            foundation.syncValueFromProps({ value: current.value, timeZone: current.timeZone });
-        } else if (current.timeZone !== prev.timeZone) {
-            foundation.syncValueFromProps({
-                value: foundation.getState('value'),
-                timeZone: current.timeZone,
-                prevTimeZone: prev.timeZone,
-            });
-        } else if (TimePickerFoundation.getValidFormat(current) !== TimePickerFoundation.getValidFormat(prev) || current.dateFnsLocale !== prev.dateFnsLocale || current.rangeSeparator !== prev.rangeSeparator) {
-            // only the text changes: syncing the value again would re-zone it a second time
-            foundation.refreshInputValue();
-        }
-        if (current.disabled && !prev.disabled && TimePickerFoundation.isPanelShown({ ...current, disabled: false }, foundation.getStates())) {
-            foundation.close();
-        }
-    });
 
     useImperativeHandle(
         props.ref,

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, h, shallowRef, useTemplateRef } from 'vue';
-    import { isEqual, omitBy } from 'es-toolkit';
+    import { omitBy } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/json-viewer/constants';
     import JsonViewerFoundation, { type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions } from '@fibrae/semi-foundation/json-viewer/foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
@@ -8,11 +8,10 @@
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
-    import useDidUpdate from '../_base/use-did-update';
     import useFoundation from '../_base/use-foundation';
     import useLocale from '../locale/use-locale';
     import { provideJsonViewerContext } from './context';
-    import type { JsonViewerCustomRenderSlotProps, JsonViewerEmits, JsonViewerHandle, JsonViewerProps, JsonViewerSearchButtonSlotProps, JsonViewerSearchOptions, JsonViewerSlots } from './interface';
+    import type { JsonViewerCustomRenderSlotProps, JsonViewerEmits, JsonViewerHandle, JsonViewerProps, JsonViewerSearchButtonSlotProps, JsonViewerSlots } from './interface';
     import SearchButton from './search-button.vue';
 
     interface CustomRenderEntry extends JsonViewerCustomRenderSlotProps {
@@ -45,7 +44,6 @@
     let nextEntryId = 0;
 
     const prefix = cssClasses.PREFIX;
-    const defaultSearchOptions: JsonViewerSearchOptions = { caseSensitive: false, wholeWord: false, regex: false };
 
     // merged per key: a whole-object default would be replaced by any caller `options`
     const mergedOptions = computed(() => ({
@@ -56,42 +54,31 @@
         ...omitBy(props.options ?? {}, (option) => option === undefined),
     }));
 
-    // The core hands a rule's render result back after layout; returning the slot arguments lets #customRender draw it.
-    const coreOptions = (): CoreOptions => {
-        const { customRenderRule, ...rest } = mergedOptions.value;
-        return {
-            ...rest,
-            ...(customRenderRule && {
-                customRenderRule: customRenderRule.map((item, index) => ({
-                    match: item.match,
-                    render: (content: string): JsonViewerCustomRenderSlotProps => ({ item, index, content }),
-                })),
-            }),
-        };
-    };
-
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, JsonViewerBaseState>(
         JsonViewerFoundation,
         props as Readonly<Omit<JsonViewerProps, 'options'>>,
-        () => ({ searchOptions: defaultSearchOptions, showSearchBar: false }),
-        (base) => ({
+        () => JsonViewerFoundation.getInitialState(),
+        () => ({
             getEditorRef: () => editor.value as HTMLDivElement,
             notifyChange: (value) => {
                 emit('update:modelValue', value);
                 emit('change', value);
             },
+            // The core hands a rule's render result back after layout; returning the slot arguments lets #customRender draw it.
+            toCoreOptions: ({ customRenderRule, ...rest }) => ({
+                ...rest,
+                ...(customRenderRule && {
+                    customRenderRule: customRenderRule.map((item, index) => ({
+                        match: item.match,
+                        render: (content: string): JsonViewerCustomRenderSlotProps => ({ item, index, content }),
+                    })),
+                }),
+            }),
             setCustomRenderMap: (map: Map<HTMLElement, JsonViewerCustomRenderSlotProps>) => {
                 customRenderEntries.value = Array.from(map, ([el, value]) => ({ ...value, id: nextEntryId++, el }));
             },
-            toggleSearchOption: (key) => {
-                const { searchOptions } = base.getStates();
-                base.setState({ searchOptions: { ...searchOptions, [key]: !searchOptions[key] } });
-            },
-            toggleSearchBar: () => {
-                base.setState({ showSearchBar: !base.getStates().showSearchBar, searchOptions: defaultSearchOptions });
-            },
         }),
-        { props: { value: () => props.modelValue ?? '', options: coreOptions } }
+        { props: { value: () => props.modelValue ?? '', options: () => mergedOptions.value as CoreOptions } }
     );
 
     provideJsonViewerContext({
@@ -123,19 +110,6 @@
         onReplace: foundation.replace,
         onReplaceAll: foundation.replaceAll,
     });
-
-    // A value equal to the editor's own text is the echo of a v-model edit: re-creating would drop the caret.
-    useDidUpdate(
-        () => ({ value: props.modelValue ?? '', options: mergedOptions.value }),
-        (next, previous) => {
-            if (isEqual(next.options, previous.options) && next.value === foundation.jsonViewer?.getModel().getValue()) {
-                return;
-            }
-            foundation.destroy();
-            foundation.init();
-        },
-        isEqual
-    );
 
     defineExpose<JsonViewerHandle>({
         getValue: () => foundation.jsonViewer?.getModel().getValue() ?? '',

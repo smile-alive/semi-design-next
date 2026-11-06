@@ -88,10 +88,7 @@ export default function useField(props: Readonly<Partial<CommonFieldProps>>, opt
 
     const unregister = () => {
         if (!registered) return;
-        // renames happen one at a time, so another field may already own this name; leave its registration alone
-        if (bridge.getField(registered.field) === registered.registration) {
-            bridge.unRegister(registered.field);
-        }
+        bridge.unRegister(registered.registration);
         registered.leaveGroup?.();
         registered = undefined;
     };

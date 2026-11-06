@@ -21,8 +21,8 @@ import ErrorSvg from './error-svg';
 import type { VideoControl, VideoPlayerProps, VideoPlayerState } from './interface';
 import VideoProgress from './video-progress';
 
-type Foundation = VideoPlayerFoundation<VideoPlayerProps, VideoPlayerState>;
-type Adapter = VideoPlayerAdapter<VideoPlayerProps, VideoPlayerState>;
+type Foundation = VideoPlayerFoundation<VideoPlayerProps>;
+type Adapter = VideoPlayerAdapter<VideoPlayerProps>;
 
 const prefixCls = cssClasses.PREFIX;
 const controlsCls = cssClasses.PREFIX_CONTROLS;
@@ -88,23 +88,7 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, VideoPlayerProps, VideoPlayerState>(
         VideoPlayerFoundation,
         props,
-        () => ({
-            bufferedValue: 0,
-            currentQuality: props.defaultQuality || '',
-            currentRoute: props.defaultRoute || '',
-            currentTime: 0,
-            isError: false,
-            isFullScreen: false,
-            isMirror: false,
-            isPlaying: false,
-            muted: props.muted,
-            notificationContent: '',
-            playbackRate: props.defaultPlaybackRate || 1,
-            showNotification: false,
-            showControls: true,
-            totalTime: 0,
-            volume: props.volume,
-        }),
+        (view) => VideoPlayerFoundation.getInitialState(view),
         (base) => ({
             getVideo: () => video ?? null,
             getVideoWrapper: () => wrapper ?? null,
@@ -114,21 +98,6 @@ export default function VideoPlayer(rawProps: VideoPlayerProps) {
             notifyRateChange: (rate) => base.getProps().onRateChange?.(rate),
             notifyRouteChange: (route) => base.getProps().onRouteChange?.(route),
             notifyVolumeChange: (volume) => base.getProps().onVolumeChange?.(volume),
-            setBufferedValue: (bufferedValue) => base.setState({ bufferedValue }),
-            setCurrentTime: (currentTime) => base.setState({ currentTime }),
-            setIsError: (isError) => base.setState({ isError }),
-            setIsFullScreen: (isFullScreen) => base.setState({ isFullScreen }),
-            setIsMirror: (isMirror) => base.setState({ isMirror }),
-            setIsPlaying: (isPlaying) => base.setState({ isPlaying }),
-            setMuted: (muted) => base.setState({ muted }),
-            setNotificationContent: (notificationContent) => base.setState({ notificationContent }),
-            setPlaybackRate: (playbackRate) => base.setState({ playbackRate }),
-            setQuality: (currentQuality) => base.setState({ currentQuality }),
-            setRoute: (currentRoute) => base.setState({ currentRoute }),
-            setShowControls: (showControls) => base.setState({ showControls }),
-            setShowNotification: (showNotification) => base.setState({ showNotification }),
-            setTotalTime: (totalTime) => base.setState({ totalTime }),
-            setVolume: (volume) => base.setState({ volume }),
         })
     );
 

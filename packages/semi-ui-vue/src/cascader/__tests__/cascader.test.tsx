@@ -3032,7 +3032,7 @@ describe('Cascader Vue', () => {
         expect(getSelectionText()).toBe('北美洲 / 加拿大');
     });
 
-    it('V14 KeepAlive 切走再切回后弹层关闭，发 dropdownVisibleChange(false)，不发 blur', async () => {
+    it('V14 KeepAlive 切走再切回后弹层仍打开，不发 dropdownVisibleChange(false)，不发 blur', async () => {
         const shown = ref(true);
         const onBlur = spy<'blur'>();
         const onDropdownVisibleChange = spy<'dropdownVisibleChange'>();
@@ -3052,11 +3052,12 @@ describe('Cascader Vue', () => {
         expect(isDropdownOpen()).toBe(true);
         shown.value = false;
         await settle();
-        expect(onDropdownVisibleChange).toHaveBeenLastCalledWith(false);
         shown.value = true;
         await settle();
-        expect(getTrigger()).toHaveAttribute('aria-expanded', 'false');
-        expect(isDropdownOpen()).toBe(false);
+        expect(getTrigger()).toHaveAttribute('aria-expanded', 'true');
+        expect(isDropdownOpen()).toBe(true);
+        expect(onDropdownVisibleChange).toHaveBeenCalledTimes(1);
+        expect(onDropdownVisibleChange).toHaveBeenLastCalledWith(true);
         expect(onBlur).not.toHaveBeenCalled();
     });
 

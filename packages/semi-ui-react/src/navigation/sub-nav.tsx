@@ -19,6 +19,9 @@ import { NavItemShell } from './item';
 import { NavContext, useNavContext } from './nav-context';
 import { fitNavIcon } from './nav-icon';
 
+type Foundation = SubNavFoundation;
+type Adapter = SubNavAdapter<SubNavProps>;
+
 export interface SubNavProps extends BaseProps, ElementProps<'li', 'onClick'> {
     disabled?: boolean;
     dropdownStyle?: React.CSSProperties;
@@ -46,7 +49,7 @@ export default function SubNav({ ref, ...props }: SubNavProps) {
 
     const itemRef = useRef<HTMLLIElement>(null);
 
-    const [foundation] = useFoundation<SubNavFoundation, SubNavAdapter<SubNavProps>, SubNavProps, object>(
+    const [foundation] = useFoundation<Foundation, Adapter, SubNavProps, object>(
         SubNavFoundation,
         props,
         () => ({}),

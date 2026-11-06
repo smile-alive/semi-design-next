@@ -27,8 +27,7 @@ export interface FeedbackBaseState {
  * The host's event types, which the foundation only passes on to the callbacks: CE for cancel, OE for ok, TE for a
  * text area change
  */
-export interface FeedbackAdapter<P extends object = object, S extends FeedbackBaseState = FeedbackBaseState, CE = unknown, OE = unknown, TE = unknown> extends DefaultAdapter<P, S> {
-    setValue(value: FeedbackValue | null): void;
+export interface FeedbackAdapter<P extends object = object, CE = unknown, OE = unknown, TE = unknown> extends DefaultAdapter<P, FeedbackBaseState> {
     notifyValueChange(value: FeedbackValue): void;
     notifyCancel: (e: CE) => void | Promise<any>;
     notifyOk: (e: OE) => void | Promise<any>;
@@ -37,9 +36,9 @@ export interface FeedbackAdapter<P extends object = object, S extends FeedbackBa
     notifyRadioChange: (e: RadioChangeEvent) => void;
 }
 
-export default class FeedbackFoundation<P extends object = object, S extends FeedbackBaseState = FeedbackBaseState, CE = unknown, OE = unknown, TE = unknown> extends BaseFoundation<FeedbackAdapter<P, S, CE, OE, TE>, P, S> {
+export default class FeedbackFoundation<P extends object = object, CE = unknown, OE = unknown, TE = unknown> extends BaseFoundation<FeedbackAdapter<P, CE, OE, TE>, P, FeedbackBaseState> {
     #changeValue(value: FeedbackValue) {
-        this.adapter.setValue(value);
+        this.setState({ value });
         this.adapter.notifyValueChange(value);
     }
 
@@ -47,14 +46,14 @@ export default class FeedbackFoundation<P extends object = object, S extends Fee
     // A rejection is rethrown, so the caller still sees it.
     #settlePopup(result: void | Promise<any>, report: (status: PromiseStatus) => void) {
         if (!isPromise(result)) {
-            this.adapter.setValue(null);
+            this.setState({ value: null });
             return;
         }
         report('pending');
         (result as Promise<any>)
             .then(() => {
                 report('fulfilled');
-                this.adapter.setValue(null);
+                this.setState({ value: null });
             })
             .catch((e) => {
                 report('rejected');
@@ -65,10 +64,14 @@ export default class FeedbackFoundation<P extends object = object, S extends Fee
     // Modal shows the pending state on its own buttons from the promise it gets back
     #settleModal(result: void | Promise<any>) {
         if (!isPromise(result)) {
-            this.adapter.setValue(null);
+            this.setState({ value: null });
             return null;
         }
-        return (result as Promise<any>).then(() => this.adapter.setValue(null));
+        return (result as Promise<any>).then(() => this.setState({ value: null }));
+    }
+
+    static getInitialState(): FeedbackBaseState {
+        return { value: null, onOKReturnPromiseStatus: 'fulfilled', onCancelReturnPromiseStatus: 'fulfilled' };
     }
 
     handleRadioChange = (e: RadioChangeEvent) => {
@@ -79,7 +82,7 @@ export default class FeedbackFoundation<P extends object = object, S extends Fee
 
     handleEmojiReasonChange = (value: string, e?: TE) => {
         this.adapter.notifyTextAreaChange(value, e);
-        const oldValue = this.adapter.getState('value');
+        const oldValue = this.getState('value');
         const emoji = typeof oldValue === 'object' && !Array.isArray(oldValue) ? oldValue?.emoji : undefined;
         this.#changeValue({ ...(emoji !== undefined && { emoji }), text: value });
     };
@@ -99,11 +102,11 @@ export default class FeedbackFoundation<P extends object = object, S extends Fee
     };
 
     handleCancel = (e: CE) => {
-        this.#settlePopup(this.adapter.notifyCancel(e), (onCancelReturnPromiseStatus) => this.adapter.setState({ onCancelReturnPromiseStatus }));
+        this.#settlePopup(this.adapter.notifyCancel(e), (onCancelReturnPromiseStatus) => this.setState({ onCancelReturnPromiseStatus }));
     };
 
     handleSubmit = (e: OE) => {
-        this.#settlePopup(this.adapter.notifyOk(e), (onOKReturnPromiseStatus) => this.adapter.setState({ onOKReturnPromiseStatus }));
+        this.#settlePopup(this.adapter.notifyOk(e), (onOKReturnPromiseStatus) => this.setState({ onOKReturnPromiseStatus }));
     };
 
     handleModalOk = (e: OE) => {

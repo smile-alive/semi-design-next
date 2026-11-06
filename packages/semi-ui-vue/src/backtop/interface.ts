@@ -22,6 +22,4 @@ export interface BackTopEmits {
     click: [event: MouseEvent];
 }
 
-export interface BackTopState {
-    visible?: boolean;
-}
+export type { BackTopState } from '@fibrae/semi-foundation/backtop/foundation';

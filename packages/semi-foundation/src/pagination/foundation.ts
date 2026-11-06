@@ -1,10 +1,7 @@
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import { numbers } from './constants';
 
-export interface PaginationAdapter<P extends PaginationBaseProps = PaginationBaseProps, S extends PaginationBaseState = PaginationBaseState> extends DefaultAdapter<P, S> {
-    updatePageSize: (pageSize: number) => void;
-    updateQuickJumpPage: (quickJumpPage: string | number) => void;
-    setCurrentPage: (pageIndex: number) => void;
+export interface PaginationAdapter<P extends PaginationBaseProps = PaginationBaseProps> extends DefaultAdapter<P, PaginationState> {
     notifyPageChange: (pageIndex: number) => void;
     notifyPageSizeChange: (pageSize: number) => void;
     notifyChange: (pageIndex: number, pageSize: number) => void;
@@ -27,17 +24,32 @@ export interface AdapterPageList {
 
 export interface PaginationBaseProps {
     currentPage?: number;
+    pageSize?: number;
     preventPageChangeOnPageSizeChange?: boolean;
     total?: number;
 }
 
-export interface PaginationBaseState {
+export interface PaginationState {
     currentPage: number;
     pageSize: number;
     quickJumpPage: string | number;
 }
 
-export default class PaginationFoundation<P extends PaginationBaseProps = PaginationBaseProps, S extends PaginationBaseState = PaginationBaseState> extends BaseFoundation<PaginationAdapter<P, S>, P, S> {
+export default class PaginationFoundation<P extends PaginationBaseProps = PaginationBaseProps> extends BaseFoundation<PaginationAdapter<P>, P, PaginationState> {
+    static override readonly propKeys = ['currentPage', 'total', 'pageSize'];
+
+    // undefined means page 1: an uncontrolled pager restarts when its total or pageSize prop changes
+    #updatePage(targetPageIndex = 1, pageSize?: number) {
+        const { currentPage, pageSize: currentPageSize } = this.getStates();
+        const newPageSize = pageSize ?? currentPageSize;
+        if (targetPageIndex !== currentPage) {
+            this.setState({ currentPage: targetPageIndex });
+        }
+        if (newPageSize !== currentPageSize) {
+            this.setState({ pageSize: newPageSize });
+        }
+    }
+
     #handleQuickJump(quickJumpPage: string | number) {
         // Number('') is 0
         if (quickJumpPage === '') {
@@ -56,15 +68,15 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
         if (page <= 0) {
             page = 1;
         }
-        this.adapter.updateQuickJumpPage('');
+        this.setState({ quickJumpPage: '' });
         this.goPage(page);
     }
 
-    static getInitialState(props: { currentPage?: number; defaultCurrentPage?: number; pageSize?: number; pageSizeOpts?: readonly number[] }) {
+    static getInitialState(props: { currentPage?: number; defaultCurrentPage?: number; pageSize?: number; pageSizeOpts?: readonly number[] }): PaginationState {
         return {
             currentPage: props.currentPage || props.defaultCurrentPage,
             pageSize: props.pageSize || props.pageSizeOpts[0] || numbers.DEFAULT_PAGE_SIZE,
-            quickJumpPage: '' as string | number,
+            quickJumpPage: '',
         };
     }
 
@@ -146,22 +158,10 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
             return;
         }
         if (!this.isControlledComponent('currentPage')) {
-            this.updatePage(targetPageIndex);
+            this.#updatePage(targetPageIndex);
         }
         this.adapter.notifyPageChange(targetPageIndex);
         this.adapter.notifyChange(targetPageIndex, pageSize);
-    };
-
-    // undefined means page 1: an uncontrolled pager restarts when its total or pageSize prop changes
-    updatePage = (targetPageIndex = 1, pageSize?: number) => {
-        const { currentPage, pageSize: currentPageSize } = this.getStates();
-        const newPageSize = pageSize ?? currentPageSize;
-        if (targetPageIndex !== currentPage) {
-            this.adapter.setCurrentPage(targetPageIndex);
-        }
-        if (newPageSize !== currentPageSize) {
-            this.adapter.updatePageSize(newPageSize);
-        }
     };
 
     goPrev = () => {
@@ -180,7 +180,7 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
 
     changePageSize = (newPageSize: number) => {
         const { pageSize, currentPage } = this.getStates();
-        this.adapter.updatePageSize(newPageSize);
+        this.setState({ pageSize: newPageSize });
         this.adapter.notifyPageSizeChange(newPageSize);
 
         let newCurrentPage = currentPage;
@@ -190,7 +190,7 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
         }
 
         if (!this.isControlledComponent('currentPage')) {
-            this.updatePage(newCurrentPage, newPageSize);
+            this.#updatePage(newCurrentPage, newPageSize);
         }
         if (currentPage !== newCurrentPage) {
             this.adapter.notifyPageChange(newCurrentPage);
@@ -198,8 +198,20 @@ export default class PaginationFoundation<P extends PaginationBaseProps = Pagina
         this.adapter.notifyChange(newCurrentPage, newPageSize);
     };
 
+    override handlePropsChange(prev: Partial<P>) {
+        const { currentPage, total, pageSize } = this.getProps();
+        if (prev.currentPage !== currentPage || prev.total !== total) {
+            this.#updatePage(currentPage);
+        }
+        // only the pageSize prop may overwrite the page size: a total change must not revert the size changer's choice,
+        // and a prop echoing that choice must not reset the page
+        if (prev.pageSize !== pageSize && pageSize !== this.getState('pageSize')) {
+            this.#updatePage(currentPage, pageSize);
+        }
+    }
+
     handleQuickJumpNumberChange = (targetPage: string | number) => {
-        this.adapter.updateQuickJumpPage(targetPage);
+        this.setState({ quickJumpPage: targetPage });
     };
 
     handleQuickJumpBlur = () => {

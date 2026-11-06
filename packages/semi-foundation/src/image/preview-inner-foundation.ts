@@ -1,4 +1,4 @@
-import { throttle, type ThrottledFunction } from 'es-toolkit';
+import { isEqual, throttle, type ThrottledFunction } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../base/foundation';
 import { handlePrevent } from '../utils/a11y';
 import { ESC_KEY } from '../utils/key-code';
@@ -15,7 +15,7 @@ export interface PreviewInnerContext extends DirectionContext {
     popupContainer?: () => HTMLElement;
 }
 
-export interface PreviewInnerAdapter<P extends PreviewInnerBaseProps = PreviewInnerBaseProps, S extends PreviewInnerBaseState = PreviewInnerBaseState> extends DefaultAdapter<P, S, PreviewInnerContext> {
+export interface PreviewInnerAdapter<P extends PreviewInnerBaseProps = PreviewInnerBaseProps> extends DefaultAdapter<P, PreviewInnerState, PreviewInnerContext> {
     getIsInGroup: () => boolean;
     notifyChange: (index: number, direction: SwitchDirection) => void;
     notifyZoom: (zoom: number, increase: boolean) => void;
@@ -56,26 +56,32 @@ export interface PreviewInnerBaseProps {
     visible?: boolean;
     maskClosable?: boolean;
     currentIndex?: number;
+    defaultCurrentIndex?: number;
 }
 
-export interface PreviewInnerBaseState {
-    viewerVisible?: boolean;
-    zoom?: number;
+export interface PreviewInnerState {
+    viewerVisible: boolean;
+    zoom: number;
     /** the wheel event that set `zoom`, which the image centers the zoom on; undefined for other zoom changes */
     zoomEvent?: WheelEvent;
-    rotation?: number;
+    rotation: number;
     /** used when currentIndex is not a prop */
-    currentIndex?: number;
+    currentIndex: number;
     /** of the latest switch; undefined before the first one */
     direction?: SwitchDirection;
     /** keyed by src */
-    imgLoadStatus?: Record<string, boolean>;
-    preloadAfterVisibleChange?: boolean;
+    imgLoadStatus: Record<string, boolean>;
+    preloadAfterVisibleChange: boolean;
 }
 
-export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = PreviewInnerBaseProps, S extends PreviewInnerBaseState = PreviewInnerBaseState> extends BaseFoundation<PreviewInnerAdapter<P, S>, P, S> {
+export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = PreviewInnerBaseProps> extends BaseFoundation<PreviewInnerAdapter<P>, P, PreviewInnerState> {
     #timer = null;
     #startMouseDown = { x: 0, y: 0 };
+
+    static override readonly propKeys = ['src'];
+
+    // a group builds a new list every render, which must not restart the delay
+    static override readonly propEquals = { src: isEqual };
 
     #getImgSrc() {
         return PreviewInnerFoundation.getSrcList(this.getProp('src'));
@@ -172,6 +178,17 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         });
     }
 
+    static getInitialState(props: PreviewInnerBaseProps): PreviewInnerState {
+        return {
+            imgLoadStatus: {},
+            zoom: 0.1,
+            currentIndex: props.defaultCurrentIndex ?? 0,
+            rotation: 0,
+            viewerVisible: true,
+            preloadAfterVisibleChange: true,
+        };
+    }
+
     static getSrcList(src: string | string[]) {
         return Array.isArray(src) ? src : [src];
     }
@@ -206,6 +223,10 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         });
         this.adapter.setRatio('adaptation');
     };
+
+    override handlePropsChange() {
+        this.updateTimer();
+    }
 
     override destroy() {
         this.#mouseMoveHandler.cancel();

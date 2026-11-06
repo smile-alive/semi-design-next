@@ -1,12 +1,10 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { isEqual } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/collapse/constants';
     import CollapseFoundation, { type CollapseAdapter, type CollapseProps as FoundationProps, type CollapseState } from '@fibrae/semi-foundation/collapse/foundation';
     import '@fibrae/semi-foundation/collapse/collapse.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
-    import useDidUpdate from '../_base/use-did-update';
     import useFoundation from '../_base/use-foundation';
     import { provideCollapseContext, type CollapseView } from './context';
     import type { CollapseEmits, CollapseProps, CollapseSlots } from './interface';
@@ -38,12 +36,11 @@
         CollapseFoundation,
         props,
         (view) => CollapseFoundation.getInitialState(view),
-        (base) => ({
+        () => ({
             notifyChange: (activeKey, event) => {
                 emit('update:activeKey', activeKey);
                 emit('change', activeKey, event);
             },
-            setActiveSet: (activeSet) => base.setState({ activeSet }),
         })
     );
 
@@ -60,8 +57,6 @@
         slots,
         onClick: foundation.handleChange,
     });
-
-    useDidUpdate(() => props.activeKey, foundation.syncActiveKey, isEqual, 'pre');
 </script>
 
 <template>

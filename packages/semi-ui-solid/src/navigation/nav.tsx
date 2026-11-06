@@ -152,10 +152,7 @@ export default function Nav(rawProps: NavProps) {
         (view) => NavigationFoundation.getInitialState(view, tree()),
         (base) => ({
             getItemsFromChildren: () => tree(),
-            setIsCollapsed: (isCollapsed) => base.setState({ isCollapsed }),
             notifyCollapseChange: (isCollapsed) => base.getProps().onCollapseChange?.(isCollapsed),
-            updateSelectedKeys: (selectedKeys) => base.setState({ selectedKeys }),
-            updateOpenKeys: (openKeys) => base.setState({ openKeys: [...openKeys] }),
         })
     );
 
@@ -169,8 +166,6 @@ export default function Nav(rawProps: NavProps) {
     // texts remount on collapse, so they fade in only while the width animates
     const [settledCollapsed, setSettledCollapsed] = createSignal(untrack(isCollapsed));
 
-    const selectedKeysSource = createMemo(() => local.selectedKeys);
-    const openKeysSource = createMemo(() => local.openKeys);
     const headerContent = children(() => local.header as JSX.Element);
     const footerContent = children(() => local.footer as JSX.Element);
     const headerSlot = createMemo(() => slotProps<NavHeaderProps>(headerContent(), NAV_HEADER));
@@ -234,10 +229,6 @@ export default function Nav(rawProps: NavProps) {
         removeOpenKey: foundation.removeOpenKey,
     };
 
-    const snapshot = () => ({ items: itemsSource(), children: tree(), selectedKeys: local.selectedKeys, openKeys: local.openKeys });
-
-    let previous = untrack(snapshot);
-
     // Items made from `items`. shortcut: a new `items` array remounts every row (the focused one loses focus), unlike
     // React, which keeps rows by key; upgrade by reusing tokens per itemKey.
     // The renderItem* calls stay in the JSX attributes: compiled to getters, they run when the Item or Sub view reads
@@ -276,15 +267,6 @@ export default function Nav(rawProps: NavProps) {
             setSettledCollapsed(isCollapsed());
         }
     };
-
-    useWatch(
-        () => [itemsSource(), tree(), selectedKeysSource(), openKeysSource()],
-        () => {
-            const prevProps = previous;
-            previous = snapshot();
-            foundation.handlePropsUpdate(prevProps);
-        }
-    );
 
     // no transitionend comes when the width does not animate; getAnimations flushes style, so it lists this update's transition
     useWatch(isCollapsed, (collapsed) => {

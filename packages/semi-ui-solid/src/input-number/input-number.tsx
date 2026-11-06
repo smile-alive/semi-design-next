@@ -10,7 +10,6 @@ import mergeRefs from '../_base/merge-refs';
 import { usePopupLayer } from '../_base/popup-layer';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import Input, { type InputChangeEvent, type InputElementEvent, type InputProps } from '../input';
 import { InputGroupContext, useInputGroupContext } from '../input/context';
 import useLocale from '../locale/use-locale';
@@ -61,8 +60,8 @@ export interface InputNumberProps extends Omit<InputProps, 'ref' | 'value' | 'de
 
 export interface InputNumberState extends BaseInputNumberState {}
 
-type Foundation = InputNumberFoundation<InputNumberProps, InputNumberState, FocusEvent, InputElementEvent<KeyboardEvent>>;
-type Adapter = InputNumberAdapter<InputNumberProps, InputNumberState, FocusEvent, InputElementEvent<KeyboardEvent>>;
+type Foundation = InputNumberFoundation<InputNumberProps, FocusEvent, InputElementEvent<KeyboardEvent>>;
+type Adapter = InputNumberAdapter<InputNumberProps, FocusEvent, InputElementEvent<KeyboardEvent>>;
 
 const defaultProps = {
     innerButtons: false,
@@ -155,11 +154,7 @@ export default function InputNumber(rawProps: InputNumberProps) {
         InputNumberFoundation,
         props,
         (view) => InputNumberFoundation.getInitialState(view),
-        (base) => ({
-            setValue: (value, cb) => base.setState({ value }, cb),
-            setNumber: (number, cb) => base.setState({ number }, cb),
-            setFocusing: (focusing, cb) => base.setState({ focusing }, cb),
-            setHovering: (hovering) => base.setState({ hovering }),
+        () => ({
             notifyChange: (value, e) => props.onChange?.(value, e),
             notifyNumberChange: (value, e) => props.onNumberChange?.(value, e),
             notifyBlur: (e) => props.onBlur?.(e),
@@ -221,11 +216,6 @@ export default function InputNumber(rawProps: InputNumberProps) {
         forwardFocus(node, () => input, focusOptions);
         registerTrigger(node);
     };
-
-    useWatch(
-        () => local.value,
-        (next) => foundation.handleValueChange(next as number | string)
-    );
 
     return (
         // the inner Input and any slot content belong to the InputNumber, not to an enclosing InputGroup

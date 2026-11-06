@@ -6,7 +6,6 @@ import '@fibrae/semi-foundation/collapse/collapse.scss';
 import type { ElementProps } from '../_base/element-props';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import { CollapseContext, type CollapseContextValue } from './context';
 
 type CollapseClickEvent = MouseEvent;
@@ -41,7 +40,6 @@ export default function Collapse(rawProps: CollapseProps) {
         (view) => CollapseFoundation.getInitialState(view),
         (base) => ({
             notifyChange: (activeKey, event) => base.getProps().onChange?.(activeKey, event),
-            setActiveSet: (activeSet) => base.setState({ activeSet }),
         })
     );
 
@@ -60,9 +58,6 @@ export default function Collapse(rawProps: CollapseProps) {
         collapseIcon: () => local.collapseIcon,
         onClick: foundation.handleChange,
     };
-
-    // a controlled array that is new on every parent update is compared by content inside the foundation
-    useWatch(() => local.activeKey, foundation.syncActiveKey);
 
     return (
         <div {...rest} class={clsx(cssClasses.PREFIX, local.class)}>

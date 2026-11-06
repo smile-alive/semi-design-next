@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, useTemplateRef, watch } from 'vue';
+    import { computed, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
     import { ResizeGroupFoundation, type ResizeGroupAdapter, type ResizeGroupBaseState } from '@fibrae/semi-foundation/resizable/foundation';
     import '@fibrae/semi-foundation/resizable/resizable.scss';
@@ -38,12 +38,7 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, ResizeGroupProps, ResizeGroupBaseState>(
         ResizeGroupFoundation,
         props,
-        () => ({
-            isResizing: false,
-            originalPosition: { x: 0, y: 0, lastItemSize: 0, nextItemSize: 0 },
-            backgroundStyle: { cursor: 'auto' },
-            curHandler: null,
-        }),
+        () => ResizeGroupFoundation.getInitialState(),
         () => ({
             getGroupRef: () => group.value,
             getItem: (index) => orderedItems()[index].el,
@@ -110,8 +105,6 @@
             return index >= 0 && foundation.resizeByKey(index, e);
         },
     });
-
-    watch(() => props.direction, foundation.handleDirectionChange, { flush: 'post' });
 
     // vw and vh limits change with the window even when the group keeps its size
     useEventListener(getWindow, 'resize', () => foundation.ensureConstraint());

@@ -3,12 +3,10 @@ import { useCallback, useImperativeHandle, useState } from 'react';
 import clsx from 'clsx';
 import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/input-number/constants';
 import InputNumberFoundation, { reachesBound, type BaseInputNumberState, type InputNumberAdapter, type ScientificNotationConfig } from '@fibrae/semi-foundation/input-number/foundation';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/input-number/input-number.scss';
 import { IconChevronUp, IconChevronDown } from '@fibrae/semi-icons-react';
 import type { ArrayElement } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import Input, { type InputProps, type InputHandle, type InputChangeEvent } from '../input';
 import { InputGroupContext, useInputGroupInScope, withInputGroup } from '../input/context';
@@ -90,13 +88,6 @@ const defaultProps = {
     showCurrencySymbol: true,
     size: strings.DEFAULT_SIZE,
     step: numbers.DEFAULT_STEP,
-    onBlur: noop,
-    onChange: noop,
-    onDownClick: noop,
-    onFocus: noop,
-    onKeyDown: noop,
-    onNumberChange: noop,
-    onUpClick: noop,
 } satisfies Partial<InputNumberProps>;
 
 // the adapter is created during render and so must not read a ref
@@ -114,7 +105,8 @@ class InputNumberRuntime {
     }
 }
 
-type Foundation = InputNumberFoundation<InputNumberProps, InputNumberState, React.FocusEvent<HTMLDivElement>, React.KeyboardEvent<HTMLInputElement>>;
+type Foundation = InputNumberFoundation<InputNumberProps, React.FocusEvent<HTMLDivElement>, React.KeyboardEvent<HTMLInputElement>>;
+type Adapter = InputNumberAdapter<InputNumberProps, React.FocusEvent<HTMLDivElement>, React.KeyboardEvent<HTMLInputElement>>;
 
 // outside the component: the Compiler cannot lower getters in an object literal
 function createHandle(runtime: InputNumberRuntime, foundation: Foundation): InputNumberHandle {
@@ -179,23 +171,19 @@ export default function InputNumber(rawProps: InputNumberProps) {
 
     const [runtime] = useState(() => new InputNumberRuntime());
 
-    const [foundation, state] = useFoundation<Foundation, InputNumberAdapter<InputNumberProps, InputNumberState, React.FocusEvent<HTMLDivElement>, React.KeyboardEvent<HTMLInputElement>>, InputNumberProps, InputNumberState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, InputNumberProps, InputNumberState>(
         InputNumberFoundation,
         props,
         () => InputNumberFoundation.getInitialState(props),
         (base) => {
             return {
-                setValue: (value, cb) => base.setState({ value }, cb),
-                setNumber: (number, cb) => base.setState({ number }, cb),
-                setFocusing: (focusing, cb) => base.setState({ focusing }, cb),
-                setHovering: (hovering) => base.setState({ hovering }),
-                notifyChange: (value, e) => base.getProps().onChange(value, e),
-                notifyNumberChange: (value, e) => base.getProps().onNumberChange(value, e),
-                notifyBlur: (e) => base.getProps().onBlur(e),
-                notifyFocus: (e) => base.getProps().onFocus(e),
-                notifyUpClick: (value, e) => base.getProps().onUpClick(value, e),
-                notifyDownClick: (value, e) => base.getProps().onDownClick(value, e),
-                notifyKeyDown: (e) => base.getProps().onKeyDown(e),
+                notifyChange: (value, e) => base.getProps().onChange?.(value, e),
+                notifyNumberChange: (value, e) => base.getProps().onNumberChange?.(value, e),
+                notifyBlur: (e) => base.getProps().onBlur?.(e),
+                notifyFocus: (e) => base.getProps().onFocus?.(e),
+                notifyUpClick: (value, e) => base.getProps().onUpClick?.(value, e),
+                notifyDownClick: (value, e) => base.getProps().onDownClick?.(value, e),
+                notifyKeyDown: (e) => base.getProps().onKeyDown?.(e),
                 getInput: () => runtime.input,
             };
         }
@@ -242,8 +230,6 @@ export default function InputNumber(rawProps: InputNumberProps) {
     const setInput = useCallback((handle: InputHandle | null) => runtime.attachInput(handle), [runtime]);
 
     const setRoot = useCallback((node: HTMLDivElement | null) => runtime.attachRoot(node), [runtime]);
-
-    useDidUpdate(props.value, foundation.handleValueChange);
 
     useImperativeHandle(props.ref, () => createHandle(runtime, foundation), [foundation, runtime]);
 

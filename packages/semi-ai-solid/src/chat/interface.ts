@@ -176,8 +176,3 @@ export interface Metadata {
     color?: AvatarProps['color'];
     [x: string]: any;
 }
-
-export interface ChatState {
-    backBottomVisible?: boolean;
-    uploadAreaVisible?: boolean;
-}

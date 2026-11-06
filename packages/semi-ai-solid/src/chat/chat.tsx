@@ -1,7 +1,7 @@
 import { For, type JSX, Show, createMemo, createSignal, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
-import ChatFoundation, { type ChatAdapter } from '@fibrae/semi-ai-foundation/chat/foundation';
+import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/chat/foundation';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import '@fibrae/semi-ai-foundation/chat/chat.scss';
 import { IconChevronDown, IconDisc } from '@fibrae/semi-icons-solid';
@@ -10,7 +10,6 @@ import mergeRefs from '@fibrae/semi-ui-solid/_base/merge-refs';
 import { namedRole } from '@fibrae/semi-ui-solid/_base/named-role';
 import useDefaultProps from '@fibrae/semi-ui-solid/_base/use-default-props';
 import useFoundation from '@fibrae/semi-ui-solid/_base/use-foundation';
-import useWatch from '@fibrae/semi-ui-solid/_base/use-watch';
 import Button from '@fibrae/semi-ui-solid/button/index';
 import Divider from '@fibrae/semi-ui-solid/divider/index';
 import { useLocale, useResizeObserver } from '@fibrae/semi-ui-solid/hooks';
@@ -19,10 +18,10 @@ import ChatBox from './chat-box';
 import { ChatContext, type ChatContextValue, type ChatView } from './context';
 import Hint from './hint';
 import InputBox, { type InputBoxHandle } from './input-box';
-import type { ChatHandle, ChatProps, ChatState, Message } from './interface';
+import type { ChatHandle, ChatProps, Message } from './interface';
 
-type Foundation = ChatFoundation<ChatProps, ChatState>;
-type Adapter = ChatAdapter<ChatProps, ChatState>;
+type Foundation = ChatFoundation<ChatProps>;
+type Adapter = ChatAdapter<ChatProps>;
 
 type RootDragEvent = DragEvent & { currentTarget: HTMLDivElement; target: Element };
 
@@ -111,8 +110,8 @@ export default function Chat(rawProps: ChatProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, ChatProps, ChatState>(
         ChatFoundation,
         props,
-        () => ({ backBottomVisible: false, uploadAreaVisible: false }),
-        (base) => ({
+        () => ChatFoundation.getInitialState(),
+        () => ({
             getContainerRef: () => container() as HTMLDivElement,
             notifyChatsChange: (chats) => local.onChatsChange?.(chats),
             notifyLikeMessage: (message) => local.onMessageGoodFeedback?.(message),
@@ -123,14 +122,8 @@ export default function Chat(rawProps: ChatProps) {
             notifyClearContext: () => local.onClear?.(),
             notifyMessageSend: (content, attachment) => local.onMessageSend?.(content, attachment),
             notifyInputChange: (value) => local.onInputChange?.(value),
-            setBackBottomVisible: (visible) => {
-                if (base.getState('backBottomVisible') !== visible) {
-                    base.setState({ backBottomVisible: visible });
-                }
-            },
             notifyStopGenerate: (e) => local.onStopGenerator?.(e),
             notifyHintClick: (hint) => local.onHintClick?.(hint),
-            setUploadAreaVisible: (visible) => base.setState({ uploadAreaVisible: visible }),
             manualUpload: (files) => inputBox?.insert(files),
             getDropAreaElement: () => dropArea as HTMLDivElement,
         })
@@ -235,16 +228,6 @@ export default function Chat(rawProps: ChatProps) {
             </Show>
         );
     };
-
-    useWatch(
-        () => local.chats,
-        (chats, previous) => foundation.handleChatsChange(chats ?? emptyChats, previous ?? emptyChats)
-    );
-
-    useWatch(
-        () => local.hints,
-        (hints, previous) => foundation.handleHintsChange(hints ?? [], previous ?? [])
-    );
 
     useResizeObserver(container, foundation.handleScrollContainerResize);
 

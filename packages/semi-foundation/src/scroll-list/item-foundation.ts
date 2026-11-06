@@ -30,7 +30,7 @@ export interface ScrollItemBaseState {
     appendCount: number;
 }
 
-export interface ScrollItemAdapter<I extends Item = Item, P extends ScrollItemBaseProps<I> = ScrollItemBaseProps<I>, S extends ScrollItemBaseState = ScrollItemBaseState> extends DefaultAdapter<P, S> {
+export interface ScrollItemAdapter<I extends Item = Item, P extends ScrollItemBaseProps<I> = ScrollItemBaseProps<I>> extends DefaultAdapter<P, ScrollItemBaseState> {
     /** The listbox element that holds the options, and in a cycled column their copies */
     getListNode: () => HTMLElement | null;
     /** The element that scrolls: the root in normal mode, the outer list in wheel mode */
@@ -40,12 +40,15 @@ export interface ScrollItemAdapter<I extends Item = Item, P extends ScrollItemBa
     notifySelectItem: (data: I & { type?: string | number; index: number }) => void;
 }
 
-export default class ItemFoundation<I extends Item = Item, P extends ScrollItemBaseProps<I> = ScrollItemBaseProps<I>, S extends ScrollItemBaseState = ScrollItemBaseState> extends BaseFoundation<ScrollItemAdapter<I, P, S>, P, S> {
+export default class ItemFoundation<I extends Item = Item, P extends ScrollItemBaseProps<I> = ScrollItemBaseProps<I>> extends BaseFoundation<ScrollItemAdapter<I, P>, P, ScrollItemBaseState> {
     readonly #typeahead = new Typeahead();
     #cancelScroll: (() => void) | null = null;
     #selectedNode: HTMLElement | null = null;
     #willSelectNode: HTMLElement | null = null;
     #resizeObserver: ResizeObserver | null = null;
+    static override readonly propKeys = ['selectedIndex', 'list'];
+    // only the list length matters: the sync reads no rows
+    static override readonly propEquals = { list: (a: Item[] | undefined, b: Item[] | undefined) => a?.length === b?.length };
     readonly #select = debounce((node: HTMLElement) => {
         this.#cacheSelectedNode(node);
         this.#selectNode(node);
@@ -327,6 +330,47 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
         return null;
     }
 
+    #syncList() {
+        if (this.#isCycledWheel) {
+            this.#locateSelected();
+        } else if (this.#recoverSelectedNode()) {
+            this.scrollToSelected();
+        }
+    }
+
+    #syncSelectedIndex(selectedIndex: number, previous: number) {
+        if (this.#recoverSelectedNode()) {
+            this.scrollToSelected();
+            return;
+        }
+        // Key repeat restarts the self-scroll before it ends, and handleScroll does not wrap during one
+        if (this.#isCycledWheel) {
+            this.#stopScroll();
+            this.#wrapCycledScroll();
+        }
+        const { list } = this.getProps();
+        const willSelectIndex = this.#indexOf(this.#willSelectNode);
+        if (!list.length || willSelectIndex % list.length !== selectedIndex % list.length) {
+            this.#cacheWillSelectNode(this.#getNodeByOffset(this.#selectedNode, selectedIndex - previous));
+        }
+        this.#cacheSelectedNode(this.#willSelectNode);
+        this.scrollToSelected();
+    }
+
+    static getInitialState(): ScrollItemBaseState {
+        return { prependCount: 0, appendCount: 0 };
+    }
+
+    override handlePropsChange(prev: Partial<P>) {
+        const { selectedIndex, list } = this.getProps();
+        if (prev.selectedIndex !== selectedIndex) {
+            this.#syncSelectedIndex(selectedIndex, prev.selectedIndex);
+        }
+        if (prev.list.length !== list.length) {
+            this.#syncList();
+        }
+    }
+
     override init() {
         const selectedNode = this.#getSelectedIndexNode();
         this.#cacheSelectedNode(selectedNode);
@@ -415,35 +459,6 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
             this.#wrapCycledScroll();
         }
         this.#select(this.#getNearestNodeInfo().nearestNode);
-    };
-
-    /** The list length changed */
-    syncList = () => {
-        if (this.#isCycledWheel) {
-            this.#locateSelected();
-        } else if (this.#recoverSelectedNode()) {
-            this.scrollToSelected();
-        }
-    };
-
-    /** The owner changed `selectedIndex` */
-    syncSelectedIndex = (selectedIndex: number, previous: number) => {
-        if (this.#recoverSelectedNode()) {
-            this.scrollToSelected();
-            return;
-        }
-        // Key repeat restarts the self-scroll before it ends, and handleScroll does not wrap during one
-        if (this.#isCycledWheel) {
-            this.#stopScroll();
-            this.#wrapCycledScroll();
-        }
-        const { list } = this.getProps();
-        const willSelectIndex = this.#indexOf(this.#willSelectNode);
-        if (!list.length || willSelectIndex % list.length !== selectedIndex % list.length) {
-            this.#cacheWillSelectNode(this.#getNodeByOffset(this.#selectedNode, selectedIndex - previous));
-        }
-        this.#cacheSelectedNode(this.#willSelectNode);
-        this.scrollToSelected();
     };
 
     scrollToSelected = (duration: number = numbers.DEFAULT_SCROLL_DURATION) => {

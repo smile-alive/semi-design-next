@@ -7,14 +7,13 @@
     import { IconBackTop } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import FloatButton from '../float-button/float-button.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { BackTopProps, BackTopState } from './interface.js';
 
     type ClickEvent = Parameters<NonNullable<BackTopProps['onclick']>>[0];
-    type Foundation = BackTopFoundation<BackTopBaseProps, BackTopState, ClickEvent>;
-    type Adapter = BackTopAdapter<BackTopBaseProps, BackTopState, ClickEvent>;
+    type Foundation = BackTopFoundation<BackTopBaseProps, ClickEvent>;
+    type Adapter = BackTopAdapter<BackTopBaseProps, ClickEvent>;
 
     const defaults = useDefaultProps('BackTop');
 
@@ -52,9 +51,8 @@
                 return duration;
             },
         },
-        () => ({ visible: false }),
-        (base) => ({
-            updateVisible: (visible) => base.setState({ visible }),
+        () => BackTopFoundation.getInitialState(),
+        () => ({
             notifyClick: (event) => onclick?.(event),
         })
     );
@@ -71,8 +69,6 @@
             button = undefined;
         };
     };
-
-    watch(() => target, foundation.handleTargetChange);
 
     $effect(() => {
         // the timer of a replaced or destroyed throttle must not fire

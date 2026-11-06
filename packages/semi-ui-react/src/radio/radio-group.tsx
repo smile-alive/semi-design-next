@@ -3,15 +3,16 @@ import { Children, isValidElement, useId } from 'react';
 import clsx from 'clsx';
 import { radioGroupClasses as css, strings } from '@fibrae/semi-foundation/radio/constants';
 import type { RadioChangeEvent } from '@fibrae/semi-foundation/radio/radio-foundation';
-import RadioGroupFoundation, { type RadioGroupAdapter } from '@fibrae/semi-foundation/radio/radio-group-foundation';
-import { noop } from '@fibrae/semi-foundation/utils/function';
+import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/radio/radio-group-foundation';
 import type { ArrayElement, ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import { hasContent } from '../_utils';
 import { RadioGroupContext, type RadioGroupButtonSize, type RadioMode } from './context';
 import Radio, { type RadioType } from './radio';
+
+type Foundation = RadioGroupFoundation<RadioGroupProps>;
+type Adapter = RadioGroupAdapter<RadioGroupProps>;
 
 export interface OptionItem {
     label?: React.ReactNode;
@@ -47,13 +48,10 @@ export interface RadioGroupProps extends ElementProps<'div', 'onChange' | 'defau
     ref?: React.Ref<HTMLDivElement>;
 }
 
-export interface RadioGroupState {
-    value?: any;
-}
+export type RadioGroupState = RadioGroupBaseState;
 
 const defaultProps = {
     disabled: false,
-    onChange: noop,
     direction: strings.DEFAULT_DIRECTION,
     mode: '',
     type: strings.TYPE_DEFAULT,
@@ -104,12 +102,11 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
     const generatedName = useId();
     let inner;
 
-    const [foundation, state] = useFoundation<RadioGroupFoundation<RadioGroupProps, RadioGroupState>, RadioGroupAdapter<RadioGroupProps, RadioGroupState>, RadioGroupProps, RadioGroupState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, RadioGroupProps, RadioGroupState>(
         RadioGroupFoundation,
         props,
-        () => ({ value: props.value === undefined ? props.defaultValue : props.value }),
+        () => RadioGroupFoundation.getInitialState(props),
         (base) => ({
-            setValue: (value) => base.setState({ value }),
             notifyChange: (evt) => base.getProps().onChange?.(evt),
         })
     );
@@ -128,9 +125,6 @@ export default function RadioGroup(rawProps: RadioGroupProps) {
         [`${prefix}-${direction}-card`]: direction && isCardRadio,
         [`${prefix}-buttonRadio`]: isButtonRadio,
     });
-
-    // Object.is treats NaN as unchanged, so a NaN value does not loop
-    useDidUpdate(props.value, foundation.handlePropValueChange);
 
     if (options) {
         inner = options.map((option, index) =>

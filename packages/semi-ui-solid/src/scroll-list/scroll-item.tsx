@@ -1,13 +1,12 @@
 import { type Ref, For, Show, createMemo, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
-import ItemFoundation, { type Item, type ScrollItemAdapter } from '@fibrae/semi-foundation/scroll-list/item-foundation';
+import ItemFoundation, { type Item, type ScrollItemAdapter, type ScrollItemBaseState } from '@fibrae/semi-foundation/scroll-list/item-foundation';
 import '@fibrae/semi-foundation/scroll-list/scroll-list.scss';
 import type { ElementProps } from '../_base/element-props';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 
 const wheelMode = 'wheel';
 const prefix = cssClasses.PREFIX;
@@ -25,11 +24,6 @@ export interface ScrollItemProps<T extends Item = Item> extends ElementProps<'di
     ref?: Ref<ScrollItemElement>;
 }
 
-export interface ScrollItemState {
-    prependCount: number;
-    appendCount: number;
-}
-
 export interface ScrollItemHandle {
     /** Scrolls to the selected item; `selectedIndex` is not used, the target is the item last selected */
     scrollToIndex: (selectedIndex?: number, duration?: number) => void;
@@ -37,8 +31,8 @@ export interface ScrollItemHandle {
 
 export type ScrollItemElement = HTMLDivElement & ScrollItemHandle;
 
-type Foundation<T extends Item> = ItemFoundation<T, ScrollItemProps<T>, ScrollItemState>;
-type Adapter<T extends Item> = ScrollItemAdapter<T, ScrollItemProps<T>, ScrollItemState>;
+type Foundation<T extends Item> = ItemFoundation<T, ScrollItemProps<T>>;
+type Adapter<T extends Item> = ScrollItemAdapter<T, ScrollItemProps<T>>;
 
 const defaultProps = {
     selectedIndex: 0,
@@ -63,10 +57,10 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
 
     const isWheel = () => local.mode === wheelMode;
 
-    const { foundation, state } = useFoundation<Foundation<T>, Adapter<T>, ScrollItemProps<T>, ScrollItemState>(
+    const { foundation, state } = useFoundation<Foundation<T>, Adapter<T>, ScrollItemProps<T>, ScrollItemBaseState>(
         ItemFoundation,
         props,
-        () => ({ prependCount: 0, appendCount: 0 }),
+        () => ItemFoundation.getInitialState(),
         (base) => ({
             getListNode: () => listbox,
             getScrollNode: () => (isWheel() ? outer : root),
@@ -145,9 +139,6 @@ export default function ScrollItem<T extends Item = Item>(rawProps: ScrollItemPr
             <For each={keys()}>{(key) => renderOption(key)}</For>
         </ul>
     );
-
-    useWatch(() => local.selectedIndex, foundation.syncSelectedIndex);
-    useWatch(() => local.list.length, foundation.syncList);
 
     return (
         <div {...rest} ref={(node) => mergeRefs(local.ref)((root = Object.assign(node, handle)))} class={clsx(isWheel() ? `${prefix}-item-wheel` : `${prefix}-item`, local.class)}>

@@ -17,7 +17,7 @@ describe('CarouselFoundation 悬停与幻灯片数量变化', () => {
             getProps: () => ({ autoPlay: true, speed: 0, ...props }),
             getStates: () => ({ activeIndex: 0, isInit: true }),
             getSlideCount: () => slideCount,
-            setRotating: vi.fn<(rotating: boolean) => void>(),
+            setState: vi.fn<(state: object) => void>(),
         };
         return { adapter, foundation: new CarouselFoundation(adapter as any) };
     };
@@ -26,12 +26,12 @@ describe('CarouselFoundation 悬停与幻灯片数量变化', () => {
         const { adapter, foundation } = create();
         foundation.handleAutoPlay();
         foundation.handlePointerEnter();
-        expect(adapter.setRotating).toHaveBeenLastCalledWith(true);
+        expect(adapter.setState).toHaveBeenLastCalledWith({ rotating: true }, undefined);
         vi.advanceTimersByTime(numbers.HOVER_DELAY);
-        expect(adapter.setRotating).toHaveBeenLastCalledWith(false);
+        expect(adapter.setState).toHaveBeenLastCalledWith({ rotating: false }, undefined);
         foundation.handlePointerLeave();
         vi.advanceTimersByTime(numbers.HOVER_DELAY);
-        expect(adapter.setRotating).toHaveBeenLastCalledWith(true);
+        expect(adapter.setState).toHaveBeenLastCalledWith({ rotating: true }, undefined);
     });
 
     it('destroy 与 resetPointer 取消尚未触发的悬停', () => {
@@ -39,13 +39,15 @@ describe('CarouselFoundation 悬停与幻灯片数量变化', () => {
         foundation.handleAutoPlay();
         foundation.handlePointerEnter();
         foundation.destroy();
+        const afterDestroy = adapter.setState.mock.calls.length;
         vi.advanceTimersByTime(numbers.HOVER_DELAY);
-        expect(adapter.setRotating).not.toHaveBeenCalledWith(false);
+        expect(adapter.setState).toHaveBeenCalledTimes(afterDestroy);
         foundation.handleAutoPlay();
         foundation.handlePointerEnter();
         foundation.resetPointer();
+        const afterReset = adapter.setState.mock.calls.length;
         vi.advanceTimersByTime(numbers.HOVER_DELAY);
-        expect(adapter.setRotating).not.toHaveBeenCalledWith(false);
+        expect(adapter.setState).toHaveBeenCalledTimes(afterReset);
     });
 
     it('幻灯片从不超过一张增到多张时启动自动播放，指针在内则补一次暂停', () => {
@@ -53,7 +55,7 @@ describe('CarouselFoundation 悬停与幻灯片数量变化', () => {
         foundation.handlePointerEnter();
         vi.advanceTimersByTime(numbers.HOVER_DELAY);
         foundation.handleSlideCountChange(1, 3);
-        expect(adapter.setRotating.mock.calls.map(([rotating]) => rotating)).toEqual([true, false]);
+        expect(adapter.setState.mock.calls.map(([state]) => state)).toEqual([{ rotating: true }, { rotating: false }]);
     });
 
     it('受控或数量未跨过一张时不启动', () => {
@@ -62,8 +64,8 @@ describe('CarouselFoundation 悬停与幻灯片数量变化', () => {
         const grown = create();
         grown.foundation.handleSlideCountChange(2, 3);
         grown.foundation.handleSlideCountChange(3, 1);
-        expect(controlled.adapter.setRotating).not.toHaveBeenCalled();
-        expect(grown.adapter.setRotating).not.toHaveBeenCalled();
+        expect(controlled.adapter.setState).not.toHaveBeenCalled();
+        expect(grown.adapter.setState).not.toHaveBeenCalled();
     });
 });
 

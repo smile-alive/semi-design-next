@@ -2,9 +2,8 @@ import type React from 'react';
 import { cloneElement, isValidElement, useImperativeHandle, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/dropdown/constants';
-import DropdownFoundation, { type DropdownAdapter } from '@fibrae/semi-foundation/dropdown/foundation';
+import DropdownFoundation, { type DropdownAdapter, type DropdownBaseState } from '@fibrae/semi-foundation/dropdown/foundation';
 import type { DropdownSelectionMode } from '@fibrae/semi-foundation/dropdown/menu-foundation';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/dropdown/dropdown.scss';
 import elementTypeOf from '../_base/element-type';
 import useDefaultProps from '../_base/use-default-props';
@@ -16,6 +15,9 @@ import DropdownDivider, { type DropdownDividerProps } from './dropdown-divider';
 import DropdownItem, { type DropdownItemProps } from './dropdown-item';
 import DropdownMenu from './dropdown-menu';
 import DropdownTitle, { type DropdownTitleProps } from './dropdown-title';
+
+type Foundation = DropdownFoundation<DropdownProps>;
+type Adapter = DropdownAdapter<DropdownProps>;
 
 export type { DropdownDividerProps } from './dropdown-divider';
 export type { DropdownItemProps, Type } from './dropdown-item';
@@ -62,12 +64,7 @@ export interface DropdownProps extends TooltipProps {
     onEscKeyDown?: TooltipProps['onEscKeyDown'];
 }
 
-interface DropdownState {
-    popVisible: boolean;
-}
-
 const defaultProps = {
-    onVisibleChange: noop,
     prefixCls: cssClasses.PREFIX,
     motion: true,
     trigger: 'hover',
@@ -75,7 +72,6 @@ const defaultProps = {
     mouseLeaveDelay: strings.DEFAULT_LEAVE_DELAY,
     showTick: false,
     closeOnEsc: true,
-    onEscKeyDown: noop,
 } satisfies Partial<DropdownProps>;
 
 /** Whether the trigger can carry the menu button attributes; a Dropdown.Item with a submenu is a menuitem */
@@ -133,12 +129,11 @@ function Dropdown(rawProps: DropdownProps & { ref?: React.Ref<DropdownHandle> })
     const tooltipRef = useRef<TooltipHandle>(null);
     const popRef = useRef<HTMLDivElement>(null);
 
-    const [foundation, state] = useFoundation<DropdownFoundation<DropdownProps, DropdownState>, DropdownAdapter<DropdownProps, DropdownState>, DropdownProps, DropdownState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, DropdownProps, DropdownBaseState>(
         DropdownFoundation,
         props,
-        () => ({ popVisible: false }),
+        () => DropdownFoundation.getInitialState(),
         (base) => ({
-            setPopVisible: (popVisible) => base.setState({ popVisible }),
             notifyVisibleChange: (visible) => base.getProps().onVisibleChange?.(visible),
             getPopup: () => popRef.current?.closest<HTMLElement>('[popover]') ?? null,
             hidePopup: () => tooltipRef.current?.hide(),

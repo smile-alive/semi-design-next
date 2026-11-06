@@ -1,4 +1,5 @@
 import { isValid, type Locale } from 'date-fns';
+import { isEqual } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import { utcToZonedTime, zonedTimeToUtc } from '../utils/date-fns-extra';
 import isValidTimeZone from '../utils/is-valid-time-zone';
@@ -9,14 +10,11 @@ export type Position = 'top' | 'topLeft' | 'topRight' | 'left' | 'leftTop' | 'le
 
 /** `E` is the focus event of the host framework, which the foundation only passes on */
 export interface TimePickerAdapter<P extends TimePickerBaseProps = TimePickerBaseProps, E = unknown> extends DefaultAdapter<P, TimePickerBaseState> {
-    setPanelOpen: (open: boolean) => void;
-    setInputValue: (inputValue: string) => void;
     notifyOpenChange: (open: boolean) => void;
     notifyChange: (value: Date | Date[], str: string | string[]) => void;
     notifyFocus: (e: E) => void;
     /** The picker blurs only when a mousedown outside closes the panel */
     notifyBlur: (e: MouseEvent) => void;
-    isRangePicker: () => boolean;
     /** focus is in the panel and came from the keyboard (`:focus-visible`), not from a click */
     isKeyboardFocusInPanel: () => boolean;
     /** focuses the input, or the focus target of a custom trigger */
@@ -25,6 +23,7 @@ export interface TimePickerAdapter<P extends TimePickerBaseProps = TimePickerBas
 
 export interface TimePickerBaseProps {
     dateFnsLocale?: Locale;
+    defaultOpen?: boolean;
     disabled?: boolean;
     disabledHours?: () => number[];
     disabledMinutes?: (selectedHour: number) => number[];
@@ -34,6 +33,7 @@ export interface TimePickerBaseProps {
     open?: boolean;
     rangeSeparator?: string;
     timeZone?: string | number;
+    type?: typeof strings.TYPE_TIME_PICKER | typeof strings.TYPE_TIME_RANGE_PICKER;
     use12Hours?: boolean;
     value?: unknown;
 }
@@ -56,6 +56,10 @@ function isEmptyValue(value: unknown) {
 }
 
 export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePickerBaseProps, E = unknown> extends BaseFoundation<TimePickerAdapter<P, E>, P, TimePickerBaseState> {
+    static override readonly propKeys = ['value', 'timeZone', 'format', 'use12Hours', 'dateFnsLocale', 'rangeSeparator', 'disabled'];
+    // a Date or array built in the parent's render is a new object every time and must not reset typed text
+    static override readonly propEquals = { value: isEqual };
+
     /**
      * The dates a `value` shows, on mount and on every update. An empty side of a range ('' or undefined) stays
      * undefined, as the panel reports it, so one picked side shows with its separator. No picked side at all is no
@@ -81,11 +85,28 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
         return dates.map((date) => (date === undefined ? '' : formatToString(date, formatToken, props.dateFnsLocale))).join(props.rangeSeparator);
     }
 
+    #isRange() {
+        return this.getProp('type') === strings.TYPE_TIME_RANGE_PICKER;
+    }
+
+    #syncValueFromProps({ value, timeZone, prevTimeZone }: { value: TimeValue | (TimeValue | undefined)[]; timeZone?: string | number; prevTimeZone?: string | number }) {
+        const dates = TimePickerFoundation.#parseDates(value, this.getProps(), timeZone, prevTimeZone);
+        this.setState({
+            value: dates,
+            invalid: this.validateDates(dates),
+            inputValue: this.formatValue(dates),
+        });
+    }
+
+    #refreshInputValue() {
+        this.setState({ inputValue: this.formatValue(this.getState('value')) });
+    }
+
     #notifyChange(value: Date[], inputValue: string) {
         let str: string | string[] = inputValue;
         let _value: Date | Date[] = value;
         const timeZone = this.getProp('timeZone');
-        if (this.adapter.isRangePicker()) {
+        if (this.#isRange()) {
             const parts = inputValue.split(this.getProp('rangeSeparator'));
             // text typed for one side has no separator, but a range value always has both sides
             str = value.length === 2 ? [parts[0], parts[1] ?? ''] : parts;
@@ -130,7 +151,7 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
     }
 
     protected isDisabledHMS({ hours, minutes, seconds }: { hours: number; minutes: number; seconds: number }, panelType: PanelType = 'left', dates: Date[] = []) {
-        const { disabledHours, disabledMinutes, disabledSeconds } = TimePickerFoundation.getDisabledTimeFns(this.getProps(), dates, panelType, this.adapter.isRangePicker());
+        const { disabledHours, disabledMinutes, disabledSeconds } = TimePickerFoundation.getDisabledTimeFns(this.getProps(), dates, panelType, this.#isRange());
         const hDis = hours != null && hourIsDisabled(disabledHours, hours);
         const mDis = hours != null && minutes != null && minuteIsDisabled(disabledMinutes, hours, minutes);
         const sDis = hours != null && minutes != null && seconds != null && secondIsDisabled(disabledSeconds, hours, minutes, seconds);
@@ -147,7 +168,7 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
         let invalid = dates.some((d) => d !== undefined && isNaN(Number(d)));
 
         if (!invalid) {
-            if (this.adapter.isRangePicker()) {
+            if (this.#isRange()) {
                 invalid = dates.some((d, idx) => {
                     if (d === undefined) {
                         return false;
@@ -213,15 +234,33 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
         return (props.open !== undefined ? Boolean(props.open) : Boolean(state.open)) && !props.disabled;
     }
 
-    static getInitialState(props: Record<string, any>) {
+    static getInitialState(props: Record<string, any>): TimePickerBaseState {
         // null is a controlled empty value; only undefined leaves the picker uncontrolled
         const value = props.value === undefined ? props.defaultValue : props.value;
         const dates = TimePickerFoundation.#parseDates(value, props, props.timeZone);
         return {
+            open: Boolean((props.open || props.defaultOpen) && !props.disabled),
             value: dates,
             inputValue: TimePickerFoundation.#formatDates(dates, props),
             invalid: false,
         };
+    }
+
+    /** A new value wins (back to undefined clears it), else a new timeZone re-zones the shown value, else only the text is re-formatted */
+    override handlePropsChange(prev: Partial<P>) {
+        const { value, timeZone, disabled } = this.getProps();
+        if (!isEqual(value, prev.value)) {
+            this.#syncValueFromProps({ value: value as TimeValue, timeZone });
+        } else if (timeZone !== prev.timeZone) {
+            this.#syncValueFromProps({ value: this.getState('value'), timeZone, prevTimeZone: prev.timeZone });
+        } else if (this.getValidFormat() !== TimePickerFoundation.getValidFormat(prev) || this.getProp('dateFnsLocale') !== prev.dateFnsLocale || this.getProp('rangeSeparator') !== prev.rangeSeparator) {
+            // only the text changes: syncing the value again would re-zone it a second time
+            this.#refreshInputValue();
+        }
+        // isPanelShown is already false for a disabled picker, so the check leaves `disabled` out
+        if (disabled && !prev.disabled && TimePickerFoundation.isPanelShown({ open: this.getProp('open') }, this.getStates())) {
+            this.close();
+        }
     }
 
     handlePanelChange = (result: { timeStampValue: number }, index = 0) => {
@@ -230,7 +269,7 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
         const oldValue: Date[] = this.getState('value');
 
         // an empty side stays undefined so a start picked first shows its separator like an end picked first
-        const value: Date[] = this.adapter.isRangePicker() ? [oldValue[0], oldValue[1]] : transformToArray(oldValue);
+        const value: Date[] = this.#isRange() ? [oldValue[0], oldValue[1]] : transformToArray(oldValue);
 
         if (result) {
             const date = parseToDate(result.timeStampValue, formatToken, dateFnsLocale);
@@ -252,15 +291,6 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
         }
     };
 
-    syncValueFromProps = ({ value, timeZone, prevTimeZone }: { value: TimeValue | (TimeValue | undefined)[]; timeZone?: string | number; prevTimeZone?: string | number }) => {
-        const dates = TimePickerFoundation.#parseDates(value, this.getProps(), timeZone, prevTimeZone);
-        this.setState({
-            value: dates,
-            invalid: this.validateDates(dates),
-            inputValue: this.formatValue(dates),
-        });
-    };
-
     handleFocus = (e: E) => {
         this.handlePanelOpen();
         this.adapter.notifyFocus(e);
@@ -274,18 +304,11 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
         }
     };
 
-    refreshInputValue = () => {
-        this.setState({ inputValue: this.formatValue(this.getState('value')) });
-    };
-
-    /**
-     * Closes the panel and reports openChange(false), without blur and without moving focus, e.g. for a picker that
-     * leaves the page while open (Vue KeepAlive)
-     */
+    /** Closes the panel and reports openChange(false), without blur and without moving focus */
     close = () => {
         // a controlled `open` is only asked to close; its owner decides
         if (!this.isControlledComponent('open')) {
-            this.adapter.setPanelOpen(false);
+            this.setState({ open: false });
         }
         this.adapter.notifyOpenChange(false);
     };
@@ -308,7 +331,7 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
             return;
         }
         if (!this.isControlledComponent('open')) {
-            this.adapter.setPanelOpen(true);
+            this.setState({ open: true });
         }
         this.adapter.notifyOpenChange(true);
     };
@@ -320,7 +343,7 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
     };
 
     handleInputChange = (input: string) => {
-        this.adapter.setInputValue(input);
+        this.setState({ inputValue: input });
 
         const rangeSeparator = this.getProp('rangeSeparator');
         const inputValues = (input ?? '').split(rangeSeparator);
@@ -330,7 +353,7 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
             return;
         }
 
-        const isRange = this.adapter.isRangePicker();
+        const isRange = this.#isRange();
         // a range has two sides: more parts are no value, and one typed side leaves the other empty
         if (isRange && inputValues.length > 2) {
             this.setState({ invalid: true });

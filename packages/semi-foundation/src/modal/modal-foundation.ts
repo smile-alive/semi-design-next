@@ -9,7 +9,7 @@ export type Size = 'small' | 'medium' | 'large' | 'full-width';
 export type ModalButtonEvent = Pick<Event, 'currentTarget' | 'target'>;
 
 /** CE and OE are the host's cancel and ok events, which the foundation passes on to the callbacks */
-export interface ModalAdapter<P extends ModalProps = ModalProps, S extends ModalState = ModalState, CE = unknown, OE = unknown> extends DefaultAdapter<P, S> {
+export interface ModalAdapter<P extends ModalProps = ModalProps, CE = unknown, OE = unknown> extends DefaultAdapter<P, ModalState> {
     disabledBodyScroll: () => void;
     enabledBodyScroll: () => void;
     // only a returned promise is awaited, so any other value is accepted, such as a setter's
@@ -66,13 +66,17 @@ export interface ModalProps {
     footerFill?: boolean;
 }
 export interface ModalState {
-    onOKReturnPromiseStatus?: 'pending' | 'fulfilled' | 'rejected';
-    onCancelReturnPromiseStatus?: 'pending' | 'fulfilled' | 'rejected';
+    onOKReturnPromiseStatus: 'pending' | 'fulfilled' | 'rejected' | undefined;
+    onCancelReturnPromiseStatus: 'pending' | 'fulfilled' | 'rejected' | undefined;
 }
 
-export default class ModalFoundation<P extends ModalProps = ModalProps, S extends ModalState = ModalState, CE extends ModalButtonEvent = ModalButtonEvent, OE extends ModalButtonEvent = ModalButtonEvent> extends BaseFoundation<ModalAdapter<P, S, CE, OE>, P, S> {
+export default class ModalFoundation<P extends ModalProps = ModalProps, CE extends ModalButtonEvent = ModalButtonEvent, OE extends ModalButtonEvent = ModalButtonEvent> extends BaseFoundation<ModalAdapter<P, CE, OE>, P, ModalState> {
     #lastCancelTarget: EventTarget | null = null;
     #lastOkTarget: EventTarget | null = null;
+    // between beforeShow and afterHide: the body lock is held
+    #shown = false;
+    // destroyed while shown: init takes the lock again
+    #resume = false;
 
     #debouncedOk = debounce(
         (e: OE) => {
@@ -93,13 +97,13 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, S extend
     #invokeCancel(e: CE) {
         const result = this.adapter.notifyCancel(e);
         if (isPromise(result)) {
-            this.adapter.setState({ onCancelReturnPromiseStatus: 'pending' });
+            this.setState({ onCancelReturnPromiseStatus: 'pending' });
             (result as Promise<any>)
                 ?.then(() => {
-                    this.adapter.setState({ onCancelReturnPromiseStatus: 'fulfilled' });
+                    this.setState({ onCancelReturnPromiseStatus: 'fulfilled' });
                 })
                 ?.catch((e) => {
-                    this.adapter.setState({ onCancelReturnPromiseStatus: 'rejected' });
+                    this.setState({ onCancelReturnPromiseStatus: 'rejected' });
                     throw e;
                 });
         }
@@ -108,16 +112,20 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, S extend
     #invokeOk(e: OE) {
         const result = this.adapter.notifyOk(e);
         if (isPromise(result)) {
-            this.adapter.setState({ onOKReturnPromiseStatus: 'pending' });
+            this.setState({ onOKReturnPromiseStatus: 'pending' });
             (result as Promise<any>)
                 ?.then(() => {
-                    this.adapter.setState({ onOKReturnPromiseStatus: 'fulfilled' });
+                    this.setState({ onOKReturnPromiseStatus: 'fulfilled' });
                 })
                 ?.catch((e) => {
-                    this.adapter.setState({ onOKReturnPromiseStatus: 'rejected' });
+                    this.setState({ onOKReturnPromiseStatus: 'rejected' });
                     throw e;
                 });
         }
+    }
+
+    static getInitialState(): ModalState {
+        return { onOKReturnPromiseStatus: undefined, onCancelReturnPromiseStatus: undefined };
     }
 
     /** The default footer button (its `data-type`) focused on opening; none when the caller supplies the footer */
@@ -131,11 +139,22 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, S extend
         return hasCancel && cancelButtonProps?.autoFocus !== false ? 'cancel' : undefined;
     }
 
-    // body lock and afterClose follow the shown state, not the instance: StrictMode destroys and re-inits a shown
-    // modal, which must neither unlock the body nor report a close
+    // A hidden instance (KeepAlive, StrictMode replay) holds no body lock and init takes it again; afterClose follows
+    // the shown state, not the instance, so neither destroy nor init reports a close
+    override init() {
+        if (this.#resume) {
+            this.#resume = false;
+            this.beforeShow();
+        }
+    }
+
     override destroy() {
         this.#debouncedOk.cancel();
         this.#debouncedCancel.cancel();
+        if (this.#shown) {
+            this.afterHide();
+            this.#resume = true;
+        }
     }
 
     handleCancel = (e: CE) => {
@@ -161,10 +180,19 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, S extend
     };
 
     beforeShow = () => {
+        if (this.#shown) {
+            return;
+        }
+        this.#shown = true;
         this.adapter.disabledBodyScroll();
     };
 
     afterHide = () => {
+        this.#resume = false;
+        if (!this.#shown) {
+            return;
+        }
+        this.#shown = false;
         this.adapter.enabledBodyScroll();
     };
 

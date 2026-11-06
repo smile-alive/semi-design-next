@@ -9,11 +9,11 @@ export { FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDa
 export { default as SchemaField } from './schema-field';
 export { default as SchemaForm } from './schema-form';
 
-export { useFormApi, useFormState, useFieldApi, useFieldState, useForm } from './hooks/index';
+export { useFormApi, useFormState, useFieldApi, useFieldState, useForm } from './hooks';
 
-export { default as withField } from './hoc/with-field';
-export { default as withFormState } from './hoc/with-form-state';
-export { default as withFormApi } from './hoc/with-form-api';
+export { default as withField } from './with-field';
+export { default as withFormState } from './with-form-state';
+export { default as withFormApi } from './with-form-api';
 
 export * from './interface';
 export type { ArrayFieldProps, ArrayFieldChildrenProps } from './array-field';

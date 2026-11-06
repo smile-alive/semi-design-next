@@ -1,12 +1,15 @@
+import { isEqual } from 'es-toolkit';
 import type lottie from 'lottie-web';
 import type { AnimationItem } from 'lottie-web';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 
 type LoadParams = Parameters<typeof lottie.loadAnimation>[0];
 
-export interface LottieAdapter<P extends LottieBaseProps = LottieBaseProps, S extends LottieBaseState = LottieBaseState> extends DefaultAdapter<P, S> {
+export interface LottieAdapter<P extends LottieBaseProps = LottieBaseProps> extends DefaultAdapter<P, LottieBaseState> {
     /** The element the animation renders into when `params.container` is not given */
     getContainer: () => HTMLElement | null;
+    notifyAnimationInstance: (animation: AnimationItem) => void;
+    notifyLottie: (lottiePKG: typeof lottie) => void;
     notifyLoadError: (error: unknown) => void;
 }
 
@@ -20,7 +23,7 @@ export interface LottieBaseProps {
 
 export interface LottieBaseState {}
 
-export default class LottieFoundation<P extends LottieBaseProps = LottieBaseProps, S extends LottieBaseState = LottieBaseState> extends BaseFoundation<LottieAdapter<P, S>, P, S> {
+export default class LottieFoundation<P extends LottieBaseProps = LottieBaseProps> extends BaseFoundation<LottieAdapter<P>, P, LottieBaseState> {
     // lottie-web is large, so it loads lazily; one import is shared
     // and a failed one is dropped so the next caller retries
     static #pending: Promise<typeof lottie> | null = null;
@@ -30,6 +33,9 @@ export default class LottieFoundation<P extends LottieBaseProps = LottieBaseProp
     #lottieNotified = false;
     // WCAG 2.2.2: autoplay must not start for a user who asked the system for less motion
     #reducedMotion: MediaQueryList | null = null;
+    static override readonly propKeys = ['params'];
+    // params is usually a fresh literal, so it compares by content
+    static override readonly propEquals = { params: isEqual };
 
     #getLoadParams() {
         const params = this.getProp('params');
@@ -61,10 +67,10 @@ export default class LottieFoundation<P extends LottieBaseProps = LottieBaseProp
                 return;
             }
             this.#animation = lottie.loadAnimation(this.#getLoadParams());
-            this.getProp('getAnimationInstance')?.(this.#animation);
+            this.adapter.notifyAnimationInstance(this.#animation);
             if (!this.#lottieNotified) {
                 this.#lottieNotified = true;
-                this.getProp('getLottie')?.(lottie);
+                this.adapter.notifyLottie(lottie);
             }
         } catch (error) {
             // load() is not awaited, so this would otherwise be an unhandled rejection
@@ -88,11 +94,11 @@ export default class LottieFoundation<P extends LottieBaseProps = LottieBaseProp
         void this.#load();
     }
 
-    handleParamsUpdate = () => {
+    override handlePropsChange() {
         this.#animation?.destroy();
         this.#animation = null;
         void this.#load();
-    };
+    }
 
     override destroy() {
         super.destroy();

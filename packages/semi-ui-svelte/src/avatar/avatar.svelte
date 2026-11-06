@@ -2,7 +2,7 @@
     import { tick, untrack } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
     import { cssClasses, strings } from '@fibrae/semi-foundation/avatar/constants';
-    import AvatarFoundation, { type AvatarAdapter } from '@fibrae/semi-foundation/avatar/foundation';
+    import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/avatar/foundation';
     import '@fibrae/semi-foundation/avatar/avatar.scss';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import { getPopupLayerContext } from '../_base/popup-layer.js';
@@ -13,14 +13,8 @@
     import type { AvatarProps } from './interface.js';
     import TopSlotSvg from './top-slot-svg.svelte';
 
-    interface AvatarState {
-        isImgExist: boolean;
-        hovered: boolean;
-        scale: number;
-    }
-
-    type Foundation = AvatarFoundation<AvatarProps, AvatarState, MouseEvent, Event>;
-    type Adapter = AvatarAdapter<AvatarProps, AvatarState, MouseEvent, Event>;
+    type Foundation = AvatarFoundation<AvatarProps, MouseEvent, Event>;
+    type Adapter = AvatarAdapter<AvatarProps, MouseEvent, Event>;
 
     const defaults = useDefaultProps('Avatar');
 
@@ -67,20 +61,15 @@
             get gap() {
                 return gap;
             },
+            get src() {
+                return src;
+            },
         },
-        () => ({ isImgExist: true, hovered: false, scale: 1 }),
-        (base) => ({
-            setImgExist: (isImgExist) => base.setState({ isImgExist }),
-            setScale: (scale) => base.setState({ scale }),
+        () => AvatarFoundation.getInitialState(),
+        () => ({
             notifyError: (event) => onError?.(event),
-            notifyEnter: (event) => {
-                base.setState({ hovered: true });
-                onMouseEnter?.(event);
-            },
-            notifyLeave: (event) => {
-                base.setState({ hovered: false });
-                onMouseLeave?.(event);
-            },
+            notifyEnter: (event) => onMouseEnter?.(event),
+            notifyLeave: (event) => onMouseLeave?.(event),
             getTextWidths: () => (contentEl ? { container: contentEl.parentElement?.offsetWidth ?? 0, text: contentEl.offsetWidth } : null),
         })
     );
@@ -166,9 +155,8 @@
         };
     };
 
-    watch(() => src, foundation.handleSrcChange);
+    // size is resolved from the group context, so it is not a prop of the foundation
     watch(() => size, foundation.changeScale);
-    watch(() => gap, foundation.changeScale);
 </script>
 
 {#snippet body(outer: boolean)}

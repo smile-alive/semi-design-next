@@ -9,7 +9,6 @@ import type { BaseProps } from '../_base/base-component';
 import elementTypeOf from '../_base/element-type';
 import flattenChildren from '../_base/flatten-children';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import useMergedRef from '../_base/use-merged-ref';
 import type { DropdownProps } from '../dropdown';
@@ -19,6 +18,9 @@ import Header, { type NavHeaderProps } from './header';
 import Item, { type NavItemProps, type ItemKey } from './item';
 import { NavContext } from './nav-context';
 import SubNav, { type SubNavProps } from './sub-nav';
+
+type Foundation = NavigationFoundation;
+type Adapter = NavigationAdapter<NavProps>;
 
 export type { CollapseButtonProps } from './collapse-button';
 export type { NavFooterProps } from './footer';
@@ -178,30 +180,25 @@ function Nav(rawProps: NavProps) {
 
     const [collapseAnimating, setCollapseAnimating] = useState(false);
 
-    const [foundation, state] = useFoundation<NavigationFoundation, NavigationAdapter<NavProps>, NavProps, NavigationState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, NavProps, NavigationState>(
         NavigationFoundation,
         props,
         () => NavigationFoundation.getInitialState(props, getItemsFromChildren(props.children)),
         (base) => ({
             getItemsFromChildren: () => getItemsFromChildren(base.getProps().children),
-            setIsCollapsed: (isCollapsed) => base.setState({ isCollapsed }),
             notifyCollapseChange: (isCollapsed) => base.getProps().onCollapseChange?.(isCollapsed),
-            updateSelectedKeys: (selectedKeys) => base.setState({ selectedKeys }),
-            updateOpenKeys: (openKeys) => base.setState({ openKeys: [...openKeys] }),
         })
     );
 
     const isCollapsed = NavigationFoundation.getIsCollapsed(props, state);
-    const openKeysIsControlled = NavigationFoundation.isOpenKeysControlled(props, isCollapsed);
-    const openKeys = NavigationFoundation.getOpenKeys(props, state, isCollapsed);
-    const { formattedItems, itemKeysMap } = useMemo(() => NavigationFoundation.getFormattedItems({ items }, getItemsFromChildren(originChildren)), [items, originChildren]);
-    const selectedKeys = NavigationFoundation.getSelectedKeys(props, state, itemKeysMap);
 
     // texts remount on collapse, so they fade in only while the width animates (not for sub lists opened later)
     const [prevCollapsed, setPrevCollapsed] = useState(isCollapsed);
 
-    // the merged props object is new on every render, so this runs after every update
-    useDidUpdate(props, (_, prevProps) => foundation.handlePropsUpdate(prevProps));
+    const openKeysIsControlled = NavigationFoundation.isOpenKeysControlled(props, isCollapsed);
+    const openKeys = NavigationFoundation.getOpenKeys(props, state, isCollapsed);
+    const { formattedItems, itemKeysMap } = useMemo(() => NavigationFoundation.getFormattedItems({ items }, getItemsFromChildren(originChildren)), [items, originChildren]);
+    const selectedKeys = NavigationFoundation.getSelectedKeys(props, state, itemKeysMap);
 
     if (isCollapsed !== prevCollapsed) {
         setPrevCollapsed(isCollapsed);

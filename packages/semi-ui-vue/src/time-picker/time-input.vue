@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    import { onMounted, useTemplateRef, watch } from 'vue';
+    import { onMounted, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/time-picker/constants';
-    import TimeInputFoundation, { type TimeInputAdapter } from '@fibrae/semi-foundation/time-picker/input-foundation';
+    import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/time-picker/input-foundation';
     import { IconClock } from '@fibrae/semi-icons-vue';
     import useFoundation from '../_base/use-foundation';
     import useRaf from '../_base/use-raf';
@@ -9,8 +9,9 @@
     import type { InputHandle } from '../input/interface';
     import type { TimeInputEmits, TimeInputProps, TimeInputSlots } from './interface';
 
-    type Foundation = TimeInputFoundation<TimeInputProps, Record<string, never>, FocusEvent>;
-    type Adapter = TimeInputAdapter<TimeInputProps, Record<string, never>, FocusEvent>;
+    type FoundationProps = TimeInputProps & { value?: string };
+    type Foundation = TimeInputFoundation<FoundationProps, FocusEvent>;
+    type Adapter = TimeInputAdapter<FoundationProps, FocusEvent>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -29,7 +30,7 @@
     // Annotated: the adapter's getInputNode reads this ref, so inference is circular (TS7022)
     const input = useTemplateRef<InputHandle>('input');
 
-    const { foundation } = useFoundation<Foundation, Adapter, TimeInputProps, Record<string, never>>(
+    const { foundation } = useFoundation<Foundation, Adapter, FoundationProps, TimeInputState>(
         TimeInputFoundation,
         props,
         () => ({}),
@@ -38,15 +39,13 @@
             notifyFocus: (event) => emit('focus', event),
             notifyBlur: (event) => emit('blur', event),
             getInputNode: () => input.value?.input ?? null,
-        })
+        }),
+        { props: { value: () => props.modelValue } }
     );
 
-    const prefix = cssClasses.PREFIX;
-
-    // Re-formatting moves the caret to the end; post flush runs after the Input wrote the new text
-    watch(() => props.modelValue, foundation.restoreCursor, { flush: 'post' });
-
     const scheduleFrame = useRaf();
+
+    const prefix = cssClasses.PREFIX;
 
     onMounted(() =>
         scheduleFrame(() => {

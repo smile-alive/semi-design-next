@@ -5,13 +5,12 @@
     import '@fibrae/semi-foundation/checkbox/checkbox.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import Checkbox from './checkbox.svelte';
     import { setCheckboxGroupContext } from './context.js';
     import type { CheckboxGroupProps, CheckboxOptionItem } from './interface.js';
 
-    type Foundation = CheckboxGroupFoundation<CheckboxGroupBaseProps, CheckboxGroupBaseState>;
-    type Adapter = CheckboxGroupAdapter<CheckboxGroupBaseProps, CheckboxGroupBaseState>;
+    type Foundation = CheckboxGroupFoundation<CheckboxGroupBaseProps>;
+    type Adapter = CheckboxGroupAdapter<CheckboxGroupBaseProps>;
 
     const defaults = useDefaultProps('CheckboxGroup');
 
@@ -49,9 +48,8 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, CheckboxGroupBaseProps, CheckboxGroupBaseState>(
         CheckboxGroupFoundation,
         foundationProps,
-        (props) => ({ value: Array.isArray(props.value) ? props.value : [] }),
-        (base) => ({
-            updateGroupValue: (next) => base.setState({ value: next }),
+        (props) => CheckboxGroupFoundation.getInitialState(props),
+        () => ({
             notifyChange: (next) => {
                 value = next;
                 onChange?.(next);
@@ -89,8 +87,6 @@
             onBlur?.(event);
         }
     };
-
-    watch(() => value, foundation.handlePropValueChange);
 </script>
 
 <div {...rootAttrs} class={[prefix, `${prefix}-wrapper`, direction && `${prefix}-${direction}`, direction && isCardType && `${prefix}-${direction}-cardType`, direction && isPureCardType && `${prefix}-${direction}-pureCardType`, rest.class]} role="group" onfocusout={handleFocusout}>

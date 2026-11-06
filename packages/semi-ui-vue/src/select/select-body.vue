@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T = BasicSelectValue, Multiple extends boolean | undefined = undefined">
-    import { computed, isRef, mergeProps, onDeactivated, shallowRef, useAttrs, useId, useTemplateRef, watch, type ShallowRef, type StyleValue } from 'vue';
-    import { isEqual, isEqualWith, omit } from 'es-toolkit';
+    import { computed, isRef, mergeProps, shallowRef, useAttrs, useId, useTemplateRef, watch, type ShallowRef, type StyleValue } from 'vue';
+    import { isEqualWith, omit } from 'es-toolkit';
     import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/select/constants';
     import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/select/foundation';
@@ -37,14 +37,9 @@
     import SelectOption from './option.vue';
     import type { GroupRecord, OptionData, OptionRecord } from './utils';
 
-    interface SelectState extends SelectBaseState {
-        isFocusInContainer: boolean;
-        overflowItemCount: number;
-    }
-
     type FoundationProps = SelectBaseProps & { preventScroll?: boolean };
-    type Foundation = SelectFoundation<FoundationProps, SelectState, Event>;
-    type Adapter = SelectAdapter<FoundationProps, SelectState, Event>;
+    type Foundation = SelectFoundation<FoundationProps, SelectBaseState, Event>;
+    type Adapter = SelectAdapter<FoundationProps, SelectBaseState, Event>;
 
     type DefaultedKey =
         | 'remote'
@@ -101,33 +96,16 @@
     const prefix = cssClasses.PREFIX;
     const filter = computed(() => props.filter ?? readSemiDefault(semi, 'Select', 'filter', false));
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, SelectState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, SelectBaseState>(
         SelectFoundation,
         props as Readonly<Partial<FoundationProps>>,
-        (view) => ({
-            isOpen: false,
-            isFocus: false,
-            inputValue: '',
-            showInput: false,
-            isFocusInContainer: false,
-            isFullTags: false,
-            ...SelectFoundation.getInitialState(view, props.optionRecords as BaseOptionRecord[]),
-        }),
-        (base) => ({
-            updateFocusIndex: (focusIndex) => base.setState({ focusIndex }),
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            toggleInputShow: (showInput, cb) => base.setState({ showInput }, cb),
+        (view) => SelectFoundation.getInitialState(view, props.optionRecords as BaseOptionRecord[]),
+        () => ({
             focusInput: () => triggerInput.value?.focus({ preventScroll: props.preventScroll }),
             focusDropdownInput: () => dropdownInput.value?.focus({ preventScroll: props.preventScroll }),
             notifyMaxLimit: (option) => emit('exceed', plain(option)),
-            getMaxLimit: () => props.max as number,
             notifyDeselect: (value, option) => emit('deselect', value as string | number, plain(option)),
             getOptionsFromChildren: () => props.optionRecords as BaseOptionRecord[],
-            updateOptions: (options) => base.setState({ options }),
-            openMenu: (cb) => base.setState({ isOpen: true }, cb),
-            closeMenu: () => base.setState({ isOpen: false }),
-            updateSelection: (selections) => base.setState({ selections }),
-            getSelections: () => new Map(base.getState('selections')),
             notifyChange: (value) => {
                 const object = (option: string | BasicOptionProps) => (typeof option === 'object' ? plain(option) : option);
                 const payload = (props.changeWithObject ? (Array.isArray(value) ? value.map(object) : value && object(value)) : value) as SelectChangeValue<T, Multiple>;
@@ -145,12 +123,8 @@
             notifyBlur: (event) => emit('blur', event),
             notifyClear: () => emit('clear'),
             notifyListScroll: (event) => emit('listScroll', event),
-            updateFocusState: (isFocus) => base.setState({ isFocus }),
-            updateOverflowItemCount: (overflowItemCount) => base.setState({ overflowItemCount }),
             focusTrigger: () => trigger.value?.focus({ preventScroll: props.preventScroll }),
             getOptionList: () => optionContainer.value,
-            setIsFocusInContainer: (isFocusInContainer) => base.setState({ isFocusInContainer }),
-            getIsFocusInContainer: () => base.getState('isFocusInContainer'),
             updateScrollTop: (index) => {
                 if (index !== undefined && virtualList.value) {
                     // only the rows in view are rendered, so the target may not be in the DOM yet
@@ -509,10 +483,11 @@
     // select.vue passes a new option array on every render; an option list change also re-resolves the selection,
     // which keeps labels of earlier options
     watch(
-        () => [props.optionRecords, props.modelValue] as const,
-        ([options, value], [prevOptions, prevValue]) => {
-            const changed = { optionsChanged: !sameOptions(prevOptions, options), valueChanged: !isEqual(prevValue, value) };
-            foundation.handleInputsChange(changed, value as Parameters<typeof foundation.handleInputsChange>[1]);
+        () => props.optionRecords,
+        (options, prevOptions) => {
+            if (!sameOptions(prevOptions, options)) {
+                foundation.handleOptionsChange();
+            }
         },
         { flush: 'post' }
     );
@@ -526,9 +501,6 @@
             (triggerInput.value ?? trigger.value)?.focus({ preventScroll: props.preventScroll });
         }
     });
-
-    // The dropdown follows the foundation state, which a cached KeepAlive subtree would keep open
-    onDeactivated(() => foundation.close({ returnFocus: false }));
 
     defineExpose<SelectHandle>({
         close: () => foundation.close(),

@@ -70,7 +70,7 @@ export type { EmptyProps } from './empty';
 export { default as Modal } from './modal';
 export type { ModalReactProps as ModalProps } from './modal/modal';
 export type { ConfirmProps as ModalConfirmProps } from './modal/confirm';
-export type { HookModalRef as ModalHookRef } from './modal/use-modal/hook-modal';
+export type { HookModalRef as ModalHookRef } from './modal/hook-modal';
 export type { ModalHookApi } from './modal';
 export { default as Dropdown } from './dropdown';
 export { default as DropdownMenu } from './dropdown/dropdown-menu';
@@ -436,10 +436,10 @@ export { default as HotKeys } from './hot-keys';
 export type { HotKeysProps } from './hot-keys';
 
 export { Resizable, ResizeItem, ResizeHandler, ResizeGroup } from './resizable';
-export type { ResizableProps } from './resizable/single/resizable';
-export type { ResizeItemProps } from './resizable/group/resize-item';
-export type { ResizeHandlerProps } from './resizable/group/resize-handler';
-export type { ResizeGroupProps } from './resizable/group/resize-group';
+export type { ResizableProps } from './resizable/resizable';
+export type { ResizeItemProps } from './resizable/resize-item';
+export type { ResizeHandlerProps } from './resizable/resize-handler';
+export type { ResizeGroupProps } from './resizable/resize-group';
 
 export { default as JsonViewer } from './json-viewer';
 export type { JsonViewerProps, JsonViewerHandle, JsonViewerOptions } from './json-viewer';

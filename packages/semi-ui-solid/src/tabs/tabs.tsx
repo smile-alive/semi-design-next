@@ -2,7 +2,7 @@ import { children, createMemo, createSignal, createUniqueId, For, Show, splitPro
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
 import { cssClasses, getPanelId, getTabId } from '@fibrae/semi-foundation/tabs/constants';
-import TabsFoundation, { type MotionView, type TabsAdapter } from '@fibrae/semi-foundation/tabs/foundation';
+import TabsFoundation, { type MotionView, type TabsAdapter, type TabsState } from '@fibrae/semi-foundation/tabs/foundation';
 import '@fibrae/semi-foundation/tabs/tabs.scss';
 import { isToken, type Token } from '../_base/token';
 import useDefaultProps from '../_base/use-default-props';
@@ -14,12 +14,10 @@ import type { PlainTab, TabBarProps, TabPaneProps, TabRender, TabsProps } from '
 import TabBar from './tab-bar';
 import { TAB_PANE } from './tab-pane';
 
-export interface TabsState {
-    activeKey: string | null;
-}
+export type { TabsState };
 
-type Foundation = TabsFoundation<TabsProps, TabsState, MouseEvent | KeyboardEvent>;
-type Adapter = TabsAdapter<TabsProps, TabsState, MouseEvent | KeyboardEvent>;
+type Foundation = TabsFoundation<TabsProps, MouseEvent | KeyboardEvent>;
+type Adapter = TabsAdapter<TabsProps, MouseEvent | KeyboardEvent>;
 
 const defaultProps = {
     collapsible: false,
@@ -105,11 +103,10 @@ export default function Tabs(rawProps: TabsProps) {
         TabsFoundation,
         props,
         // tokens resolve synchronously on first read, so the default key sees the panes in the first render
-        (view) => ({ activeKey: TabsFoundation.getDefaultActiveKey(view, panes()) }),
+        (view) => TabsFoundation.getInitialState(view, panes()),
         (base) => ({
             notifyTabClick: (key, event) => base.getProps().onTabClick?.(key, event),
             notifyChange: (key) => base.getProps().onChange?.(key),
-            setNewActiveKey: (key) => base.setState({ activeKey: key }),
             notifyTabDelete: (key) => base.getProps().onTabClose?.(key),
         }),
         { context: config }
@@ -268,7 +265,6 @@ export default function Tabs(rawProps: TabsProps) {
         );
     };
 
-    useWatch(() => local.activeKey, foundation.syncActiveKey);
     useWatch(paneKeys, () => foundation.handleTabPanesChange(panes()));
 
     return (

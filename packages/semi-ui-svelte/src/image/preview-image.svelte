@@ -1,9 +1,7 @@
 <script lang="ts">
-    import { untrack } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageBaseProps, type PreviewImageBaseState } from '@fibrae/semi-foundation/image/preview-image-foundation';
+    import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageBaseProps, type PreviewImageState } from '@fibrae/semi-foundation/image/preview-image-foundation';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import { Spin } from '../spin/index.js';
     import type { RatioType } from './interface.js';
 
@@ -31,9 +29,8 @@
 
     let container = $state.raw<HTMLDivElement | null>(null);
     let image = $state.raw<HTMLImageElement | null>(null);
-    let previous = untrack(() => ({ src, ratio, rotation, zoom }));
 
-    const { foundation, states } = useFoundation<Foundation, Adapter, PreviewImageBaseProps, PreviewImageBaseState>(
+    const { foundation, states } = useFoundation<Foundation, Adapter, PreviewImageBaseProps, PreviewImageState>(
         PreviewImageFoundation,
         {
             get src() {
@@ -60,12 +57,14 @@
             get initialZoom() {
                 return initialZoom;
             },
+            get zoomEvent() {
+                return zoomEvent;
+            },
         },
-        () => ({ width: 0, height: 0, loading: true, translate: { x: 0, y: 0 } }),
-        (base) => ({
+        () => PreviewImageFoundation.getInitialState(),
+        () => ({
             getContainer: () => container as HTMLDivElement,
             getImage: () => image as HTMLImageElement,
-            setLoading: (loading) => base.setState({ loading }),
             // Written on the element, not through the style attribute, which the transform updates would overwrite
             setImageCursor: (canDrag) => {
                 if (image) {
@@ -82,15 +81,6 @@
     );
 
     const cls = `${cssClasses.PREFIX}-preview-image`;
-
-    watch(
-        () => ({ src, ratio, rotation, zoom }),
-        (next) => {
-            const prev = previous;
-            previous = next;
-            foundation.handlePropsUpdate(prev, zoomEvent);
-        }
-    );
 </script>
 
 <svelte:window onresize={foundation.handleWindowResize} />

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { DEFAULT_RATE, RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
+    import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
     import AudioPlayerFoundation, { type AudioPlayerAdapter, type AudioPlayerBaseProps, type AudioPlayerBaseState } from '@fibrae/semi-foundation/audio-player/foundation';
     import { getCurrentTrack } from '@fibrae/semi-foundation/audio-player/utils';
     import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
@@ -17,8 +17,8 @@
     import AudioSlider from './audio-slider.svelte';
     import type { AudioPlayerProps } from './interface.js';
 
-    type Foundation = AudioPlayerFoundation<AudioPlayerBaseProps, AudioPlayerBaseState>;
-    type Adapter = AudioPlayerAdapter<AudioPlayerBaseProps, AudioPlayerBaseState>;
+    type Foundation = AudioPlayerFoundation<AudioPlayerBaseProps>;
+    type Adapter = AudioPlayerAdapter<AudioPlayerBaseProps>;
 
     const defaults = useDefaultProps('AudioPlayer');
     let { audioUrl, autoPlay = defaults('autoPlay', false), showToolbar = defaults('showToolbar', true), skipDuration = defaults('skipDuration', 10), theme = defaults('theme', 'dark'), ...rest }: AudioPlayerProps = $props();
@@ -39,15 +39,7 @@
     const { foundation, states } = useFoundation<Foundation, Adapter, AudioPlayerBaseProps, AudioPlayerBaseState>(
         AudioPlayerFoundation,
         foundationProps,
-        () => ({
-            isPlaying: false,
-            currentIndex: 0,
-            totalTime: 0,
-            currentTime: 0,
-            currentRate: DEFAULT_RATE,
-            volume: 100,
-            error: false,
-        }),
+        (view) => AudioPlayerFoundation.getInitialState(view),
         () => ({ getAudioRef: () => audio ?? null })
     );
 

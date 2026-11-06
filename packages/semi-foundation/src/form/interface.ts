@@ -49,8 +49,13 @@ export type FieldValidator = ((fieldValue: any, values: Record<string, any>) => 
 /** A field validates by `rules` or by `validator`, not both; with both, the foundation warns and uses `validator` */
 export type ExclusiveFieldValidation = { rules?: RuleItem[]; validator?: never } | { rules?: never; validator?: FieldValidator };
 
+export interface FormFoundationState {
+    /** The form state as of the latest render; the foundation's own copy runs ahead of it between renders */
+    formState: FormState;
+}
+
 /** E is the host's submit event, which the foundation only passes through; a submit by API has none */
-export interface BaseFormAdapter<P = Record<string, any>, S = Record<string, any>, Values extends object = any, E = unknown> extends DefaultAdapter<P, S> {
+export interface BaseFormAdapter<P = Record<string, any>, Values extends object = any, E = unknown> extends DefaultAdapter<P, FormFoundationState> {
     cloneDeep: (val: any, ...rest: any[]) => any;
     notifySubmit: (values: any, e?: E) => void;
     /** `errors` is the error tree of a failed field validation, or what a Form validator threw or returned when it is not an object */
@@ -63,7 +68,6 @@ export interface BaseFormAdapter<P = Record<string, any>, S = Record<string, any
     notifyValueChange: (values: any, changedValues: any) => void;
     notifyErrorChange: (errors: any, changedError: any) => void;
     notifyReset: () => void;
-    getInitValues: () => Partial<Values>;
     getFormProps: (keys?: Array<string>) => any;
     /** The rendered form element; null before mount and after unmount */
     getFormElement: () => Element | null;
@@ -235,7 +239,11 @@ export interface ArrayFieldRegistration {
 }
 export interface FieldBridge {
     register: (field: string, registration: FieldRegistration) => void;
-    unRegister: (field: string) => void;
+    /**
+     * Unregisters the field instance `registration.id` from `registration.field`, a no-op once another instance holds
+     * that path. Dropping the state without keepState and reporting the change wait for the Form's next commit.
+     */
+    unRegister: (registration: FieldRegistration) => void;
     setFieldTouched: (registration: FieldRegistration, touched: boolean, opts?: CallOpts) => void;
     validateField: (registration: FieldRegistration, value: any, opts?: CallOpts) => Promise<unknown> | null;
     changeFieldValue: (registration: FieldRegistration, value: any, opts: ChangeFieldValueOptions) => void;

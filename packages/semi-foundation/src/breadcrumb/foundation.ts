@@ -2,13 +2,25 @@ import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import isEnterPress from '../utils/is-enter-press';
 import type { BreadcrumbItemInfo, Route } from './item-foundation';
 
-/** E is the host's item click event, which the foundation only passes through */
-export interface BreadcrumbAdapter<P extends object = object, S extends object = object, E = unknown> extends DefaultAdapter<P, S> {
-    notifyClick: (itemInfo: BreadcrumbItemInfo, event: E) => void;
-    expandCollapsed: (clickEvent?: unknown) => void;
+export interface BreadcrumbState {
+    isCollapsed: boolean;
 }
 
-export default class BreadcrumbFoundation<P extends object = object, S extends object = object, E = unknown> extends BaseFoundation<BreadcrumbAdapter<P, S, E>, P, S> {
+/** E is the host's item click event, which the foundation only passes through */
+export interface BreadcrumbAdapter<P extends object = object, E = unknown> extends DefaultAdapter<P, BreadcrumbState> {
+    notifyClick: (itemInfo: BreadcrumbItemInfo, event: E) => void;
+    /**
+     * Called right before the more button disappears. A host that cannot hand focus over by node removal records it
+     * here; the returned function runs once the expansion is committed.
+     */
+    holdFocus?: () => (() => void) | undefined;
+}
+
+export default class BreadcrumbFoundation<P extends object = object, E = unknown> extends BaseFoundation<BreadcrumbAdapter<P, E>, P, BreadcrumbState> {
+    static getInitialState(): BreadcrumbState {
+        return { isCollapsed: true };
+    }
+
     /** Normalizes string routes to `{ name }` and keeps the caller's object in `_origin`; pure, called during render */
     static genRoutes(routes: Array<Route | string>): Array<Route & { _origin: Route }> {
         return routes.map((route) => (typeof route === 'object' ? { _origin: route, ...route } : { name: route, _origin: { name: route } }));
@@ -46,8 +58,8 @@ export default class BreadcrumbFoundation<P extends object = object, S extends o
         this.adapter.notifyClick(info, event);
     };
 
-    handleExpand = (clickEvent: unknown) => {
-        this.adapter.expandCollapsed(clickEvent);
+    handleExpand = () => {
+        this.setState({ isCollapsed: false }, this.adapter.holdFocus?.());
     };
 
     handleExpandKeyDown = (keyboardEvent: Pick<KeyboardEvent, 'key' | 'target' | 'preventDefault'> & { currentTarget: Node }) => {
@@ -58,7 +70,7 @@ export default class BreadcrumbFoundation<P extends object = object, S extends o
         }
         if (isEnterPress(keyboardEvent) || keyboardEvent.key === ' ') {
             keyboardEvent.preventDefault(); // Space scrolls the page
-            this.handleExpand(keyboardEvent);
+            this.handleExpand();
         }
     };
 }

@@ -5,7 +5,7 @@ import { createId } from '../utils/uuid';
 import { strings, numbers } from './constants';
 import { getFileSize, byteKB, mapFileTree } from './utils';
 
-const { FILE_STATUS_UPLOADING, FILE_STATUS_SUCCESS, FILE_STATUS_UPLOAD_FAIL, FILE_STATUS_VALID_FAIL, FILE_STATUS_WAIT_UPLOAD, DRAG_AREA_DEFAULT, DRAG_AREA_LEGAL, TRIGGER_AUTO } = strings;
+const { FILE_STATUS_UPLOADING, FILE_STATUS_SUCCESS, FILE_STATUS_UPLOAD_FAIL, FILE_STATUS_VALID_FAIL, FILE_STATUS_WAIT_UPLOAD, TRIGGER_AUTO } = strings;
 
 export interface XhrError extends Error {
     status: XMLHttpRequest['status'];
@@ -70,17 +70,13 @@ export interface UploadAdapter<P extends UploadBaseProps = UploadBaseProps, S ex
     notifyRemove: (file: CustomFile | undefined, newFileList: Array<BaseFileItem>, fileItem: BaseFileItem) => void;
     notifySizeError: (file: CustomFile, fileList: Array<BaseFileItem>) => void;
     notifyExceed: (files: Array<File>) => void;
-    updateFileList: (newFileList: Array<BaseFileItem>, callback?: () => void) => void;
     notifyBeforeUpload: ({ file, fileList }: { file: BaseFileItem; fileList: Array<BaseFileItem> }) => boolean | BeforeUploadObjectResult | Promise<BeforeUploadObjectResult>;
     notifyAfterUpload: ({ response, file, fileList }: { response: any; file: BaseFileItem; fileList: Array<BaseFileItem> }) => AfterUploadResult;
     resetInput: () => void;
     resetReplaceInput: () => void;
-    updateDragAreaStatus: (dragAreaStatus: string) => void;
     notifyBeforeRemove: (file: BaseFileItem, fileList: Array<BaseFileItem>) => boolean | Promise<boolean>;
     notifyBeforeClear: (fileList: Array<BaseFileItem>) => boolean | Promise<boolean>;
     notifyChange: ({ currentFile, fileList }: { currentFile?: BaseFileItem | null; fileList: Array<BaseFileItem> }) => void;
-    // Snapshot only; the foundation's uid->url map is the truth because setState is async
-    updateLocalUrls: (urls: Array<string>) => void;
     notifyClear: () => void;
     notifyPreviewClick: (file: BaseFileItem) => void;
     notifyRetry: (fileItem: BaseFileItem) => void;
@@ -107,11 +103,13 @@ export interface CustomRequestArgs {
 export interface UploadBaseProps {
     action: string;
     accept?: string;
+    addOnPasting?: boolean;
     afterUpload?: (object: { file: BaseFileItem; fileList: Array<BaseFileItem>; response: any }) => AfterUploadResult;
     beforeUpload?: (object: { file: BaseFileItem; fileList: Array<BaseFileItem> }) => boolean | BeforeUploadObjectResult | Promise<BeforeUploadObjectResult>;
     // Method syntax on purpose: bivariance lets the UI Props, which declare loose callback shapes, satisfy this
     customRequest?(object: CustomRequestArgs): void;
     data?: Record<string, any> | ((file: File) => Record<string, any>);
+    defaultFileList?: Array<BaseFileItem>;
     directory?: boolean;
     disabled?: boolean;
     fileList?: Array<BaseFileItem>;
@@ -130,6 +128,7 @@ export interface UploadBaseProps {
 
 export interface UploadBaseState {
     fileList: BaseFileItem[];
+    dragAreaStatus: 'default' | 'legal';
     /** The uid of the item a pending replace will overwrite; the list may change while the user picks the file */
     replaceUid: string;
     cropperVisible: boolean;
@@ -148,21 +147,22 @@ function isImageFile(file: File) {
 }
 
 export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProps, S extends UploadBaseState = UploadBaseState, E extends UploadDragEvent = UploadDragEvent> extends BaseFoundation<UploadAdapter<P, S, E>, P, S> {
-    // Canonical objectURL storage; React state would lose updates from a sync loop because setState is async
+    // Every objectURL this instance created, by uid: a controlled fileList cannot say which urls the foundation owns
     #localUrls: Record<string, string> = {};
-    // Updated synchronously (React state is batched), so a later async beforeUpload result builds on earlier sync
-    // removals of the same batch instead of a stale snapshot
+    // Only for a controlled fileList, whose prop is still the old list until the parent's commit: a later async
+    // beforeUpload result of the same batch builds on this list instead of that stale prop
     #latestFileList: Array<BaseFileItem> | null = null;
     // Entered minus left elements: moving between the area and its children fires dragenter on the new element before
     // dragleave on the old one, so the area is left only when the count returns to 0
     #dragDepth = 0;
+
+    static override readonly propKeys = ['fileList'];
 
     #syncLocalUrlsFromFileList() {
         const fileList = this.getFileList();
         const next: Record<string, string> = {};
         if (!Array.isArray(fileList)) {
             this.#localUrls = {};
-            this.adapter.updateLocalUrls([]);
             return;
         }
         fileList.forEach((item: any) => {
@@ -174,7 +174,6 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             }
         });
         this.#localUrls = next;
-        this.adapter.updateLocalUrls(Object.values(this.#localUrls));
     }
 
     #releaseFileUrl(uid: string) {
@@ -189,7 +188,6 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         const next = { ...this.#localUrls };
         delete next[uid];
         this.#localUrls = next;
-        this.adapter.updateLocalUrls(Object.values(this.#localUrls));
     }
 
     // Only for truly removed files; unmount must not revoke (see destroy)
@@ -205,7 +203,6 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             }
         });
         this.#localUrls = {};
-        this.adapter.updateLocalUrls([]);
     }
 
     #getFileIndex(file: CustomFile | BaseFileItem, fileList: Array<BaseFileItem>) {
@@ -222,7 +219,6 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             next[uid] = url;
         }
         this.#localUrls = next;
-        this.adapter.updateLocalUrls(Object.values(this.#localUrls));
         return url;
     }
 
@@ -230,14 +226,21 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         URL.revokeObjectURL(url);
     }
 
-    // Every fileList commit goes through here so #latestFileList is current before React flushes setState
     #updateFileListInternal(newFileList: Array<BaseFileItem>, callback?: () => void) {
-        this.#latestFileList = newFileList;
-        this.adapter.updateFileList(newFileList, callback);
+        if (this.isControlledComponent('fileList')) {
+            this.#latestFileList = newFileList;
+        }
+        this.setState({ fileList: newFileList }, () => {
+            // the prop now shows what the parent kept, which a parent that refused the write leaves unchanged
+            if (this.#latestFileList === newFileList) {
+                this.#latestFileList = null;
+            }
+            callback?.();
+        });
     }
 
     #getLatestFileList() {
-        return this.#latestFileList || this.getFileList();
+        return this.#latestFileList ?? this.getFileList();
     }
 
     /** The step every incoming file goes through: transformFile, then uid, then the size check on the final File */
@@ -566,7 +569,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         const items = [].slice.call(e.dataTransfer.items);
         const files = await mapFileTree(items);
         this.#selectFiles(files, false);
-        this.adapter.updateDragAreaStatus(DRAG_AREA_DEFAULT);
+        this.setState({ dragAreaStatus: 'default' });
         this.adapter.notifyDrop(e, files, fileList);
     }
 
@@ -716,6 +719,40 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         });
     }
 
+    /** Adds the files of a paste on the page while addOnPasting is on and the Upload is not disabled */
+    #handlePasting = (e: ClipboardEvent) => {
+        const { addOnPasting, disabled } = this.getProps();
+        if (!addOnPasting || disabled || !e.clipboardData) {
+            return;
+        }
+
+        const files: File[] = [];
+        for (const item of e.clipboardData.items) {
+            if (item.kind !== 'file') {
+                continue;
+            }
+            try {
+                const file = item.getAsFile();
+                if (file) {
+                    files.push(file);
+                } else {
+                    this.adapter.notifyPastingError(new Error('Failed to read a pasted file from the clipboard'));
+                }
+            } catch (error) {
+                this.adapter.notifyPastingError(error as Error);
+            }
+        }
+
+        if (files.length > 0) {
+            e.preventDefault();
+            this.addFiles(files);
+        }
+    };
+
+    protected override initOnce() {
+        this.#syncLocalUrlsFromFileList();
+    }
+
     protected getError({ action, xhr, message, fileName }: { action: string; xhr: UploadErrorSource; message?: string; fileName: string }): XhrError {
         const status = xhr ? xhr.status : 0;
         const msg = message || `cannot post ${fileName} to ${action}, xhr status: ${status}`;
@@ -798,6 +835,21 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         });
     }
 
+    static getInitialState({ defaultFileList }: UploadBaseProps): UploadBaseState {
+        return {
+            fileList: defaultFileList ?? [],
+            replaceUid: '',
+            dragAreaStatus: 'default',
+            cropperVisible: false,
+            cropperFile: null,
+            cropperSrc: '',
+            pendingImageFiles: [],
+            nonImageFiles: [],
+            croppedFiles: [],
+            isReplaceOperation: false,
+        };
+    }
+
     /** Closes the cropper and drops the queue; the files already cropped are discarded */
     cancelCrop = () => {
         const { cropperSrc } = this.getStates();
@@ -853,58 +905,24 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         }
     };
 
-    /** Keep the synchronous snapshot aligned with an externally controlled fileList. */
-    syncLatestFileList = (fileList: Array<BaseFileItem>) => {
-        this.#latestFileList = fileList.slice();
-    };
-
     /** A fileList prop that goes back to undefined clears the list (a form reset) and leaves it uncontrolled */
-    handleFileListPropChange = (fileList?: Array<BaseFileItem>) => {
-        if (fileList === undefined) {
+    override handlePropsChange() {
+        if (this.getProp('fileList') === undefined) {
             this.#updateFileListInternal([]);
         }
-    };
+    }
 
     getFileList() {
         const props = this.getProps();
         return props.fileList === undefined ? this.getState('fileList') : props.fileList || [];
     }
 
-    // No destroy override: requests outlive destroy and keep committing through #latestFileList, and objectURLs are not
-    // revoked because a controlled parent may keep the blob urls, so previews would break after remount
+    // The listener is all destroy undoes. Requests outlive it and keep notifying, and an open crop dialog stays open
+    // (unmount and hiding both run destroy, and the host cannot tell them apart); objectURLs are not revoked because a
+    // controlled parent may keep the blob urls, so previews would break after remount.
     override init() {
-        this.syncLatestFileList(this.getFileList());
-        this.#syncLocalUrlsFromFileList();
+        document.body.addEventListener('paste', this.#handlePasting, { signal: this.signal });
     }
-
-    /** Adds the files of a paste on the page; the host listens only while addOnPasting is on and not disabled */
-    handlePasting = (e: ClipboardEvent) => {
-        if (!e.clipboardData) {
-            return;
-        }
-
-        const files: File[] = [];
-        for (const item of e.clipboardData.items) {
-            if (item.kind !== 'file') {
-                continue;
-            }
-            try {
-                const file = item.getAsFile();
-                if (file) {
-                    files.push(file);
-                } else {
-                    this.adapter.notifyPastingError(new Error('Failed to read a pasted file from the clipboard'));
-                }
-            } catch (error) {
-                this.adapter.notifyPastingError(error as Error);
-            }
-        }
-
-        if (files.length > 0) {
-            e.preventDefault();
-            this.addFiles(files);
-        }
-    };
 
     /** Entry for picked, dropped and pasted files: with crop on, images are cropped before they are added */
     addFiles = (currentFileList: FileList | Array<File>) => {
@@ -1029,7 +1047,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         this.#dragDepth++;
         const { disabled } = this.getProps();
         if (!disabled) {
-            this.adapter.updateDragAreaStatus(DRAG_AREA_LEGAL);
+            this.setState({ dragAreaStatus: 'legal' });
         }
     };
 
@@ -1047,7 +1065,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
             }
             const files: File[] = Array.from(e.dataTransfer.files);
             this.addFiles(files);
-            this.adapter.updateDragAreaStatus(DRAG_AREA_DEFAULT);
+            this.setState({ dragAreaStatus: 'default' });
             this.adapter.notifyDrop(e, files, fileList);
         }
     };
@@ -1062,7 +1080,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         e.stopPropagation();
         this.#dragDepth = Math.max(0, this.#dragDepth - 1);
         if (this.#dragDepth === 0) {
-            this.adapter.updateDragAreaStatus(DRAG_AREA_DEFAULT);
+            this.setState({ dragAreaStatus: 'default' });
         }
     };
 

@@ -5,7 +5,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
     import { type DateObj, toPercent } from '@fibrae/semi-foundation/calendar/event-util';
     import CalendarFoundation, { type ParsedRangeEvent } from '@fibrae/semi-foundation/calendar/foundation';
-    import CalendarMonthFoundation, { type CalendarMonthAdapter } from '@fibrae/semi-foundation/calendar/month-foundation';
+    import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/calendar/month-foundation';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import useClickOutside from '../_base/use-click-outside.svelte.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
@@ -26,10 +26,6 @@
         weekStartsOn: WeekStartsOn;
     }
 
-    interface MonthCalendarState {
-        showCard: Record<string, boolean>;
-    }
-
     type MonthDay = DateObj & {
         key: string;
         titleId: string;
@@ -37,8 +33,8 @@
         hidden: number;
     };
 
-    type Foundation = CalendarMonthFoundation<object, MonthCalendarState>;
-    type Adapter = CalendarMonthAdapter<object, MonthCalendarState>;
+    type Foundation = CalendarMonthFoundation<object>;
+    type Adapter = CalendarMonthAdapter<object>;
 
     let { displayValue, events, markWeekend, weekStartsOn, today, width, height, header, event, dateDisplay, dateGrid, onClick, onClose, onMoreClick, ...rest }: Props = $props();
 
@@ -56,16 +52,12 @@
     // Starts at 0 as in the other frameworks' first frame: the row height is only known once mounted
     let itemLimit = $state(0);
 
-    const { foundation, states } = useFoundation<Foundation, Adapter, object, MonthCalendarState>(
+    const { foundation, states } = useFoundation<Foundation, Adapter, object, CalendarMonthBaseState>(
         CalendarMonthFoundation,
         {},
-        () => ({ showCard: {} }),
-        (base) => ({
-            notifyClose: (closeEvent, key) => {
-                base.setState({ showCard: { ...base.getState('showCard'), [key]: false } });
-                onClose?.(closeEvent);
-            },
-            openCard: (key) => base.setState({ showCard: { [key]: true } }),
+        () => CalendarMonthFoundation.getInitialState(),
+        () => ({
+            notifyClose: (closeEvent) => onClose?.(closeEvent),
         })
     );
 

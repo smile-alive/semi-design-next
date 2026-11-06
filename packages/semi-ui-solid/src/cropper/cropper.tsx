@@ -12,7 +12,6 @@ import useDefaultProps from '../_base/use-default-props';
 import useEventListener from '../_base/use-event-listener';
 import useFoundation from '../_base/use-foundation';
 import useResizeObserver from '../_base/use-resize-observer';
-import useWatch from '../_base/use-watch';
 import useLocale from '../locale/use-locale';
 
 // namedRole yields a plain string, which the typed role attribute does not accept
@@ -78,13 +77,7 @@ export default function Cropper(rawProps: CropperProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, CropperFoundationProps, CropperState>(
         CropperFoundation,
         props,
-        () => ({
-            imgData: { width: 0, height: 0, centerPoint: { x: 0, y: 0 } },
-            cropperBox: { width: 0, height: 0, centerPoint: { x: 0, y: 0 } },
-            zoom: 1,
-            rotate: 0,
-            loaded: false,
-        }),
+        () => CropperFoundation.getInitialState(),
         (base) => ({
             getContainer: () => root,
             notifyZoomChange: (zoom) => base.getProps().onZoomChange?.(zoom),
@@ -113,26 +106,6 @@ export default function Cropper(rawProps: CropperProps) {
         void [state().loaded, state().zoom, state().rotate, local.zoom, local.rotate];
         foundation.syncRotateAndZoom();
     });
-
-    useWatch(() => local.aspectRatio, foundation.applyAspectRatio);
-
-    useWatch(
-        () => local.zoom,
-        (zoom) => {
-            if (zoom === undefined) {
-                foundation.syncRotateAndZoom({ zoom: 1 });
-            }
-        }
-    );
-
-    useWatch(
-        () => local.rotate,
-        (rotate) => {
-            if (rotate === undefined) {
-                foundation.syncRotateAndZoom({ rotate: 0 });
-            }
-        }
-    );
 
     createEffect(() => {
         // updatePreview reads getStates(), which Solid does not track: subscribe to the keys it uses.

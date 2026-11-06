@@ -1,12 +1,10 @@
 <script lang="ts">
     import { tick, untrack } from 'svelte';
-    import { isEqual } from 'es-toolkit';
     import { isRangeType } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
     import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
     import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
     import { IconCalendar, IconClock } from '@fibrae/semi-icons-svelte';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import Combobox from '../time-picker/combobox.svelte';
     import type { ComboboxHandle, ComboboxProps } from '../time-picker/interface.js';
     import type { MonthsGridProps } from './internal.js';
@@ -20,7 +18,6 @@
 
     const titleId = $props.id();
     let panelHeight = 0;
-    let syncedPickerValue: { value: MonthsGridProps['defaultPickerValue'] } | undefined;
     let previousCount: number | undefined;
     let panelSize = $state.raw<PanelSize>({ left: { minWidth: '', minHeight: '' }, right: { minWidth: '', minHeight: '' } });
 
@@ -34,15 +31,7 @@
         MonthsGridFoundation,
         props as MonthsGridFoundationProps,
         (view) => MonthsGridFoundation.getInitialState(view),
-        (base) => ({
-            updateDaySelected: (selected) => base.setState({ selected }),
-            setRangeStart: (rangeStart) => base.setState({ rangeStart }),
-            setRangeEnd: (rangeEnd) => base.setState({ rangeEnd }),
-            setHoverDay: (hoverDay) => base.setState({ hoverDay }),
-            setOffsetRangeStart: (offsetRangeStart) => base.setState({ offsetRangeStart }),
-            setOffsetRangeEnd: (offsetRangeEnd) => base.setState({ offsetRangeEnd }),
-            updateMonthOnLeft: (monthLeft) => base.setState({ monthLeft }),
-            updateMonthOnRight: (monthRight) => base.setState({ monthRight }),
+        () => ({
             notifySelectedChange: (value, options) => props.onChange(value, options),
             notifyPanelChange: (date, dateString) => props.onPanelChange(date, dateString),
             setRangeInputFocus: (rangeInputFocus) => props.onRangeInputFocus(rangeInputFocus),
@@ -146,21 +135,6 @@
         const detail = detailOf(panelType);
         return [`${prefix}-month-grid-${panelType}`, { [`${prefix}-yam-showing`]: !isRange && (detail.isTimePickerOpen || detail.isYearPickerOpen) }];
     };
-
-    watch(
-        () => props.selectedValue,
-        (value) => foundation.updateSelectedFromProps(value as (Date | null)[])
-    );
-
-    // by content: a parent rendering `new Date(...)` each time must not pull the panel back
-    $effect(() => {
-        const next = { value: props.defaultPickerValue };
-        const previous = syncedPickerValue;
-        syncedPickerValue = next;
-        if (previous && !isEqual(next.value, previous.value)) {
-            foundation.initDefaultPickerValue();
-        }
-    });
 
     $effect(() => {
         const count = scrollListCount;

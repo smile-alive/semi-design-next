@@ -33,15 +33,10 @@
     import type { SelectCreateItemSnippetProps, SelectOptionGroup, SelectOptionItemSnippetProps, SelectOptionProps, SelectProps, SelectSelectedItemSnippetProps, SelectTriggerSnippetProps, SelectValue } from './interface.js';
     import Option from './option.svelte';
 
-    interface SelectState extends SelectBaseState {
-        isFocusInContainer: boolean;
-        overflowItemCount: number;
-    }
-
     type OptionRecord = BaseOptionRecord<SelectOptionProps, SelectOptionGroup>;
     type FoundationProps = SelectBaseProps & { preventScroll?: boolean };
-    type Foundation = SelectFoundation<FoundationProps, SelectState, Event>;
-    type Adapter = SelectAdapter<FoundationProps, SelectState, Event>;
+    type Foundation = SelectFoundation<FoundationProps, SelectBaseState, Event>;
+    type Adapter = SelectAdapter<FoundationProps, SelectBaseState, Event>;
 
     const defaults = useDefaultProps('Select');
 
@@ -134,7 +129,7 @@
     let virtualList = $state<VirtualList>();
     let prefixKind = $state<SlotKind>();
     let suffixKind = $state<SlotKind>();
-    let previous: { options: OptionRecord[]; value: SelectValue } | undefined;
+    let previous: OptionRecord[] | undefined;
     const comboboxKeys = new Set(['aria-label', 'aria-labelledby', 'aria-describedby', 'aria-errormessage', 'aria-invalid', 'aria-required']);
 
     const nestedPopups = useNestedPopups();
@@ -177,6 +172,9 @@
         get loading() {
             return loading;
         },
+        get max() {
+            return max;
+        },
         get maxTagCount() {
             return maxTagCount;
         },
@@ -200,33 +198,16 @@
         },
     };
 
-    const { foundation, states } = useFoundation<Foundation, Adapter, FoundationProps, SelectState>(
+    const { foundation, states } = useFoundation<Foundation, Adapter, FoundationProps, SelectBaseState>(
         SelectFoundation,
         foundationProps,
-        (view) => ({
-            isOpen: false,
-            isFocus: false,
-            inputValue: '',
-            showInput: false,
-            isFocusInContainer: false,
-            isFullTags: false,
-            ...SelectFoundation.getInitialState(view, collectedOptions as BaseOptionRecord[]),
-        }),
-        (base) => ({
-            updateFocusIndex: (focusIndex) => base.setState({ focusIndex }),
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            toggleInputShow: (showInput, cb) => base.setState({ showInput }, cb),
+        (view) => SelectFoundation.getInitialState(view, collectedOptions as BaseOptionRecord[]),
+        () => ({
             focusInput: () => triggerInput?.focus({ preventScroll }),
             focusDropdownInput: () => dropdownInput?.focus({ preventScroll }),
             notifyMaxLimit: (option) => onExceed?.(option as SelectOptionProps),
-            getMaxLimit: () => max as number,
             notifyDeselect: (deselected, option) => onDeselect?.(deselected as string | number, option as SelectOptionProps),
             getOptionsFromChildren: () => collectedOptions as BaseOptionRecord[],
-            updateOptions: (options) => base.setState({ options }),
-            openMenu: (cb) => base.setState({ isOpen: true }, cb),
-            closeMenu: () => base.setState({ isOpen: false }),
-            updateSelection: (selections) => base.setState({ selections }),
-            getSelections: () => new Map(base.getState('selections')),
             notifyChange: (next) => {
                 value = next as SelectValue;
                 onChange?.(next as SelectValue);
@@ -241,12 +222,8 @@
             notifyBlur: (event) => onBlur?.(event),
             notifyClear: () => onClear?.(),
             notifyListScroll: (event) => onListScroll?.(event),
-            updateFocusState: (isFocus) => base.setState({ isFocus }),
-            updateOverflowItemCount: (overflowItemCount) => base.setState({ overflowItemCount }),
             focusTrigger: () => root?.focus({ preventScroll }),
             getOptionList: () => optionContainer,
-            setIsFocusInContainer: (isFocusInContainer) => base.setState({ isFocusInContainer }),
-            getIsFocusInContainer: () => base.getState('isFocusInContainer'),
             updateScrollTop: (index) => {
                 if (index !== undefined && virtualList) {
                     // only the rows in view are rendered, so the target may not be in the DOM yet
@@ -493,14 +470,13 @@
 
     useClickOutside([() => root, () => optionContainer], foundation.handleClickOutside, () => states().isOpen, nestedPopups);
 
-    // An option list or value change re-resolves the selection; the first run records the values the initial state read
+    // An option list change re-resolves the selection; the first run records the options the initial state read
     $effect(() => {
-        const next = { options: collectedOptions, value };
+        const next = collectedOptions;
         const before = previous;
         previous = next;
-        if (before) {
-            const changed = { optionsChanged: !isEqual(before.options, next.options), valueChanged: !isEqual(before.value, next.value) };
-            untrack(() => foundation.handleInputsChange(changed, next.value as Parameters<typeof foundation.handleInputsChange>[1]));
+        if (before && !isEqual(before, next)) {
+            untrack(() => foundation.handleOptionsChange());
         }
     });
 

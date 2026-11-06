@@ -100,20 +100,7 @@ export interface MonthsGridFoundationState {
     offsetRangeEnd: string;
 }
 
-export interface MonthsGridDateAdapter {
-    updateDaySelected: (selected: Set<string>) => void;
-}
-export interface MonthsGridRangeAdapter {
-    setRangeStart: (rangeStart: string) => void;
-    setRangeEnd: (rangeEnd: string) => void;
-    setHoverDay: (hoverDay: string) => void;
-    setOffsetRangeStart: (offsetRangeStart: string) => void;
-    setOffsetRangeEnd: (offsetRangeEnd: string) => void;
-}
-
-export interface MonthsGridAdapter extends DefaultAdapter<MonthsGridFoundationProps, MonthsGridFoundationState>, MonthsGridRangeAdapter, MonthsGridDateAdapter {
-    updateMonthOnLeft: (v: PanelState) => void;
-    updateMonthOnRight: (v: PanelState) => void;
+export interface MonthsGridAdapter extends DefaultAdapter<MonthsGridFoundationProps, MonthsGridFoundationState> {
     notifySelectedChange: MonthsGridFoundationProps['onChange'];
     notifyPanelChange: MonthsGridFoundationProps['onPanelChange'];
     setRangeInputFocus: MonthsGridFoundationProps['setRangeInputFocus'];
@@ -121,10 +108,14 @@ export interface MonthsGridAdapter extends DefaultAdapter<MonthsGridFoundationPr
 }
 
 export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapter, MonthsGridFoundationProps, MonthsGridFoundationState> {
+    static override readonly propKeys = ['selectedValue', 'defaultPickerValue'];
+    // a parent rendering `new Date(...)` each time must not pull the panel back
+    static override readonly propEquals = { defaultPickerValue: isEqual };
+
     #initDatePickerFromValue(values: Date[], refreshPicker = true) {
         const { monthLeft } = this.adapter.getStates();
         const newMonthLeft = { ...monthLeft };
-        this.adapter.updateMonthOnLeft(newMonthLeft);
+        this.setState({ monthLeft: newMonthLeft });
         const newSelected = new Set<string>();
         const isMultiple = this.#isMultiple();
         if (!isMultiple) {
@@ -150,7 +141,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         } else {
             this.#handleShowDateAndTime(strings.PANEL_TYPE_LEFT, newMonthLeft.pickerDate);
         }
-        this.adapter.updateDaySelected(newSelected);
+        this.setState({ selected: newSelected });
     }
 
     #initDateRangePickerFromValue(values: (Date | null)[], withTime = false) {
@@ -183,9 +174,57 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         if (this.#isNeedSwap(rangeStart, rangeEnd)) {
             [rangeStart, rangeEnd] = [rangeEnd, rangeStart];
         }
-        this.adapter.setRangeStart(rangeStart);
-        this.adapter.setRangeEnd(rangeEnd);
-        this.adapter.setHoverDay(rangeEnd);
+        this.setState({ rangeStart, rangeEnd, hoverDay: rangeEnd });
+    }
+
+    #updateSelectedFromProps(values: (Date | null)[]) {
+        const type: Type = this.getProp('type');
+        const { selected, rangeStart, rangeEnd } = this.getStates();
+        if (values && values?.length) {
+            switch (type) {
+                case 'date':
+                    this.#initDatePickerFromValue(values);
+                    break;
+                case 'dateRange':
+                    this.#initDateRangePickerFromValue(values);
+                    break;
+                case 'dateTime':
+                    this.#initDateTimePickerFromValue(values);
+                    break;
+                case 'dateTimeRange':
+                    this.#initDateTimeRangePickerFormValue(values);
+                    break;
+                default:
+                    break;
+            }
+        } else if ((Array.isArray(values) && !values.length) || !values) {
+            if (selected instanceof Set && selected.size) {
+                this.setState({ selected: new Set() });
+            }
+            if (rangeStart) {
+                this.setState({ rangeStart: '' });
+            }
+            if (rangeEnd) {
+                this.setState({ rangeEnd: '' });
+            }
+        }
+    }
+
+    // the first value is applied by getInitialState
+    #applyDefaultPickerValue() {
+        const { defaultPickerValue, type, format, dateFnsLocale } = this.getProps();
+        if (defaultPickerValue === undefined) {
+            return;
+        }
+        const { nowDate, nextDate } = getDefaultPickerDate({
+            defaultPickerValue,
+            format: format || getDefaultFormatTokenByType(type),
+            dateFnsLocale,
+        });
+        if (isValidDate(nowDate) && isValidDate(nextDate)) {
+            this.#updatePanelDetail(strings.PANEL_TYPE_LEFT, { pickerDate: nowDate });
+            this.#updatePanelDetail(strings.PANEL_TYPE_RIGHT, { pickerDate: nextDate });
+        }
     }
 
     #initDateTimePickerFromValue(values: Date[]) {
@@ -251,7 +290,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
                     [startDate, endDate] = [endDate, startDate];
                 }
                 if (!isControlledComponent) {
-                    this.adapter.setRangeEnd(rangeEnd);
+                    this.setState({ rangeEnd });
                 }
             } else {
                 startDate = this.#mergeDateAndTime(timeDate, timeDate);
@@ -261,7 +300,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
                     [startDate, endDate] = [endDate, startDate];
                 }
                 if (!isControlledComponent) {
-                    this.adapter.setRangeStart(rangeStart);
+                    this.setState({ rangeStart });
                 }
             }
             this.adapter.notifySelectedChange([startDate, endDate]);
@@ -271,9 +310,9 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
     #updatePanelDetail(panelType: PanelType, kvs: Partial<PanelState>) {
         const { monthLeft, monthRight } = this.getStates();
         if (panelType === strings.PANEL_TYPE_RIGHT) {
-            this.adapter.updateMonthOnRight({ ...monthRight, ...kvs });
+            this.setState({ monthRight: { ...monthRight, ...kvs } });
         } else {
-            this.adapter.updateMonthOnLeft({ ...monthLeft, ...kvs });
+            this.setState({ monthLeft: { ...monthLeft, ...kvs } });
         }
     }
 
@@ -366,7 +405,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         this.#handleShowDateAndTime(panelType, time);
 
         if (!isControlledComponent) {
-            this.adapter.updateDaySelected(newSelected);
+            this.setState({ selected: newSelected });
         }
 
         this.adapter.notifySelectedChange(newSelectedDates as [Date]);
@@ -406,21 +445,20 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
 
         if (isRangeType(type)) {
             if (isDateRangeAndHasOffset) {
-                this.adapter.setRangeStart(rangeStart);
-                this.adapter.setRangeEnd(rangeEnd);
+                this.setState({ rangeStart, rangeEnd });
             } else {
                 if (rangeInputFocus === 'rangeEnd') {
-                    this.adapter.setRangeEnd(rangeEnd);
+                    this.setState({ rangeEnd });
                     if (rangeStartReset) {
-                        this.adapter.setRangeStart(rangeStart);
+                        this.setState({ rangeStart });
                     }
                     if (!this.adapter.hasOtherRangeInputBeenFocused('rangeEnd') || !rangeStart) {
                         this.adapter.setRangeInputFocus('rangeStart');
                     }
                 } else if (rangeInputFocus === 'rangeStart' || !rangeInputFocus) {
-                    this.adapter.setRangeStart(rangeStart);
+                    this.setState({ rangeStart });
                     if (rangeEndReset) {
-                        this.adapter.setRangeEnd(rangeEnd);
+                        this.setState({ rangeEnd });
                     }
                     if (!this.adapter.hasOtherRangeInputBeenFocused('rangeStart') || !rangeEnd) {
                         this.adapter.setRangeInputFocus('rangeEnd');
@@ -492,13 +530,14 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         }
     }
 
+    /** The panels at `defaultPickerValue`, then moved to and selecting `selectedValue` */
     static getInitialState(props: MonthsGridFoundationProps): MonthsGridFoundationState {
         const { nowDate, nextDate } = getDefaultPickerDate({
             defaultPickerValue: props.defaultPickerValue,
             format: props.format || getDefaultFormatTokenByType(props.type),
             dateFnsLocale: props.dateFnsLocale,
         });
-        return {
+        const state: MonthsGridFoundationState = {
             selected: new Set<string>(),
             monthLeft: { pickerDate: nowDate, showDate: nowDate, isTimePickerOpen: false, isYearPickerOpen: false },
             monthRight: { pickerDate: nextDate, showDate: nextDate, isTimePickerOpen: false, isYearPickerOpen: false },
@@ -508,6 +547,19 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
             offsetRangeStart: '',
             offsetRangeEnd: '',
         };
+        // shortcut: the selection is applied by instance methods, so a reader writes into the local state; upgrade by
+        // making them static functions of the props and the state
+        const readerAdapter = {
+            getProp: (key: string) => props[key],
+            getProps: () => props,
+            getState: (key: string) => state[key],
+            getStates: () => state,
+            setState: (states: Partial<MonthsGridFoundationState>) => {
+                Object.assign(state, states);
+            },
+        } satisfies Pick<MonthsGridAdapter, 'getProp' | 'getProps' | 'getState' | 'getStates' | 'setState'>;
+        new MonthsGridFoundation(readerAdapter as MonthsGridAdapter).#updateSelectedFromProps(props.selectedValue);
+        return state;
     }
 
     /** The time part of `format`, in the tokens the time panel uses */
@@ -615,59 +667,15 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
         };
     }
 
-    override init() {
-        this.updateSelectedFromProps(this.getProp('selectedValue'));
+    override handlePropsChange(prev: Partial<MonthsGridFoundationProps>) {
+        const { selectedValue, defaultPickerValue } = this.getProps();
+        if (selectedValue !== prev.selectedValue) {
+            this.#updateSelectedFromProps(selectedValue);
+        }
+        if (!isEqual(defaultPickerValue, prev.defaultPickerValue)) {
+            this.#applyDefaultPickerValue();
+        }
     }
-
-    /** Moves the panels when `defaultPickerValue` changes; the first value is applied by getInitialState */
-    initDefaultPickerValue = () => {
-        const { defaultPickerValue, type, format, dateFnsLocale } = this.getProps();
-        if (defaultPickerValue === undefined) {
-            return;
-        }
-        const { nowDate, nextDate } = getDefaultPickerDate({
-            defaultPickerValue,
-            format: format || getDefaultFormatTokenByType(type),
-            dateFnsLocale,
-        });
-        if (isValidDate(nowDate) && isValidDate(nextDate)) {
-            this.#updatePanelDetail(strings.PANEL_TYPE_LEFT, { pickerDate: nowDate });
-            this.#updatePanelDetail(strings.PANEL_TYPE_RIGHT, { pickerDate: nextDate });
-        }
-    };
-
-    updateSelectedFromProps = (values: (Date | null)[], refreshPicker = true) => {
-        const type: Type = this.getProp('type');
-        const { selected, rangeStart, rangeEnd } = this.getStates();
-        if (values && values?.length) {
-            switch (type) {
-                case 'date':
-                    this.#initDatePickerFromValue(values, refreshPicker);
-                    break;
-                case 'dateRange':
-                    this.#initDateRangePickerFromValue(values);
-                    break;
-                case 'dateTime':
-                    this.#initDateTimePickerFromValue(values);
-                    break;
-                case 'dateTimeRange':
-                    this.#initDateTimeRangePickerFormValue(values);
-                    break;
-                default:
-                    break;
-            }
-        } else if ((Array.isArray(values) && !values.length) || !values) {
-            if (selected instanceof Set && selected.size) {
-                this.adapter.updateDaySelected(new Set());
-            }
-            if (rangeStart) {
-                this.adapter.setRangeStart('');
-            }
-            if (rangeEnd) {
-                this.adapter.setRangeEnd('');
-            }
-        }
-    };
 
     toYearMonth = (panelType: PanelType, target: Date) => {
         this.#toMonth(panelType, target);
@@ -706,13 +714,12 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
     handleDayHover = ({ fullDate } = { fullDate: '' }) => {
         const { startDateOffset, endDateOffset, type } = this.getProps();
 
-        this.adapter.setHoverDay(fullDate);
+        this.setState({ hoverDay: fullDate });
 
         if ((startDateOffset || endDateOffset) && type === 'dateRange') {
             const offsetRangeStart = getFullDateOffset(startDateOffset, fullDate);
             const offsetRangeEnd = getFullDateOffset(endDateOffset, fullDate);
-            this.adapter.setOffsetRangeStart(offsetRangeStart);
-            this.adapter.setOffsetRangeEnd(offsetRangeEnd);
+            this.setState({ offsetRangeStart, offsetRangeEnd });
         }
     };
 

@@ -40,6 +40,7 @@
 - Solid：触发元素的字符串 `style` 在两次打开之间被重写时冲掉 `pointer-events`。已知限制（升级条件：有需求时监听 `style` 属性变化并补写）。
 - Solid：非函数 children 的特殊触发器（disabled、loading 的 Button、Input 等）在 ref 回调中登记，服务端认不出，包裹 span 的 `cursor`、`width` 挂载后才补上（函数 children 展开 `getTriggerProps` 时，组件体内按其 ref 登记，服务端首帧已正确）。已知限制（升级条件：需要首帧样式时，服务端改为按 Tooltip 解析的子项身份查找登记）。
 - Solid：非函数 children 的 span 在 `onMount` 中才确定 `tabindex`，首帧是否短暂出现两个 Tab 停靠点未验证。UNKNOWN（浏览器用例在首个 `requestAnimationFrame` 内断言 `tabindex`）。
+- Svelte：宿主的 `handlePropsChange` 所在 effect 早于组件自己的 effect，受控关闭的出场动画要在 `tick()` 之后才能读到；`keepDOM` 加受控重新打开的 enter 分支可能有同样的问题。已知限制（前者已按此顺序实现；后者 UNKNOWN，补用例确认；升级条件：宿主 effect 能排在组件 effect 之后）。
 - Solid：与 Popover、Dropdown 的集成用例未移植。UNKNOWN（影响：Tooltip 与这两个组件嵌套时的行为未经用例覆盖；解决条件：补 Solid 集成用例）。
 - 默认打开（如 `visible` 或 `defaultVisible`）的弹层不进服务端 HTML，触发器的 `aria-expanded`、`aria-controls`、`aria-describedby` 要到挂载后才与弹层一致。已知限制（升级条件：需要首帧即带这些属性时，按 props 在服务端推算）。
 - React、Solid：竖向三角箭头的 svg 没有 `viewBox`（Vue、Svelte 为 `0 0 7 24`）。UNKNOWN（影响：框架间的箭头渲染可能不一致；解决条件：浏览器截图对比，不一致则补 `viewBox`）。
@@ -232,7 +233,6 @@
 - 保持原样：只滚动最近的可纵向滚动容器；原生平滑滚动卸载时无法取消。
 - React、Vue：Link 靠元素树遍历确定层级，经自定义组件渲染出来的 Link 不参与展开判断，`defaultAnchor` 指向其中的折叠子项时展不开（直接嵌套的子项已能展开）。待决（是否改为 Link 经 context 注册；Solid 解析实际渲染结果、Svelte 的层级来自 `links` 数据，不受影响）。
 - `autoCollapse` 下滚动进入未展开的折叠分支时，高亮不落到子项。UNKNOWN（未复现；补浏览器用例）。
-- React：被 Activity 隐藏再显示时 `init` 重放 `defaultAnchor`，把用户位置拉回。UNKNOWN（推断自代码；补 Activity 用例）。
 
 ### ScrollList、ScrollItem
 
@@ -491,6 +491,7 @@
 - 受控单选 `filterLeafOnly=false` 搜索选中分支后受控与非受控显示不一致。待决。
 - 保持原样：不用 `aria-owns`；点击标签后移除焦点落 body；多选搜索无当前项时 Enter 仍建新标签；受控 `value` 中不在 `treeData` 的路径无占位标签。
 - React：`item.tsx` 的 `renderItem` 递归渲染各列，没有用 `semi-foundation/cascader/util` 的 `getColumns`（Vue、Solid、Svelte 已共用）。待处理（改用 `getColumns`）。
+- Vue：`modelValue` 的原地修改检测不到，需替换整个数组。Svelte：绑定的 `value` 与 `keyMaps` 的原地修改检测不到，需替换整个对象。已知限制（宿主的 tracker 只比较引用；升级条件：框架提供不依赖引用比较的变更通知时在框架侧补检测）。
 - Svelte：就地修改 `$state` 的 `treeData` 时每次都用 `$state.snapshot` 遍历整棵树比较，树很大时应替换整个 `treeData`；节点上放函数或 DOM 节点时 dev 下可能告警。已知限制（升级条件：出现大树性能问题时改用显式版本号或替换式更新）。
 
 ### TimePicker、TimeInput、Combobox
@@ -512,6 +513,7 @@
 - 保持原样：分组标题使 `:nth-child` 偏移；自定义创建项不可聚焦；重开下拉保留上次高亮；`prefix` 与 `insetLabelId` 同传时 prefix 不作名称来源。
 - Solid：`OptionGroupProps` 用索引签名，没有原生属性的类型提示；`inputProps` 内含 JSX 时每次读取都新建节点。待处理。
 - Vue、Solid：选项数据上仍挂框架层的 `_slot`（Vue 的分组另有 `_labelSlot`），Vue 的 `optionItem`、`selectedItem` 插槽参数会带出 `_slot`。待处理（与 foundation 的选项记录一样，移到包装记录的字段上）。
+- `options`（AutoComplete 为 `data`）被原地修改的检测在框架侧，宿主的 tracker 只比较引用。已知限制（升级条件：框架提供不依赖引用比较的变更通知时并入宿主；AutoComplete 相同）。
 - `defaultOpen` 的 Select 服务端 HTML 中触发器 `aria-expanded="false"`，挂载后才打开。已知限制（升级条件：弹层进入服务端 HTML 时一并处理，TreeSelect、AutoComplete 相同）。
 - Svelte：`optionList` 里属于同一分组的条目必须相邻，不相邻的同 `key` 条目渲染成两个分组；虚拟列表下不显示分组标题。已知限制。
 - Svelte：`prefix`、`suffix` 的 text 或 icon 类名挂载后才补上，服务端 HTML 缺这两个类（同 Input）。已知限制。
@@ -612,6 +614,7 @@
 - Solid、React、Vue：FileCard 的图片预览只靠 `onError` 切到回退图，图片在 hydration 前已加载失败时不显示回退图（Solid 实测；React、Vue 依源码，UNKNOWN）。待处理（同 Avatar 的补发事件）。
 - Svelte：上传区域的 `role="button"` 在首帧（含服务端）靠挂载后的 MutationObserver 判断内部是否含 Semi 控件，首帧可能多一个按钮语义。已知限制（升级条件：Semi 控件初始化时向上传区域登记，Solid 的做法）。
 - Svelte：没有接入 Tooltip 的特殊触发器协议，外包 Tooltip 时 `tabindex` 落在上传区域。已知限制。
+- 卸载时不 revoke 裁剪预览的 blob URL（`destroy()` 分不清卸载与隐藏，受控的父组件也可能还持有这些 URL；Vue 原来在失活时取消裁剪并 revoke）。已知限制（升级条件：宿主能区分卸载与隐藏时，卸载分支 revoke）。
 
 ### Transfer
 
@@ -634,7 +637,7 @@
 - Svelte：`drag-move/drag-move.ts` 的 `options` 在 attachment 闭包内解构，移到形参会提前读取、改变响应式追踪。保持原样。
 - semi-animation 的 `styles/viewTransition.scss` 不是 kebab-case，但它是发布路径 `@fibrae/semi-animation/styles/viewTransition.css`。待决（改名属公开路径变化）。
 - 测试里 `fireEvent.keyDown` 约 20 处同时传 `keyCode`。待决（是否全部删去）。
-- semi-ui-react：多数回调 prop 仍以 `noop` 为默认值，显式传 `null` 时抛 TypeError。待处理（逐个改为 `?.()`）。
+- semi-ui-react、semi-ai-react：Popover 的 `onClickOutSide`、`onEscKeyDown`，InputGroup 的 `onBlur`、`onFocus`，FileCard 的 `onRemove`、`onRetry`，Table `resizable` 的 `onResize`、`onResizeStart`、`onResizeStop`，AIChatInput 的 `onContentChange`、`onStopGenerate` 仍以 `noop` 为默认值，显式传 `null` 时抛 TypeError；Table、DatePicker 内部子组件的同类默认值不对外。待处理（逐个改为 `?.()`）。
 - React、Solid 的 Table：`VirtualizedOnScrollArgs.scrollOffset` 仍声明可选。待决（改必填属公开类型收紧）。
 - 公开 Props 类型含内部属性：TextArea 的 `disabledEnterStartNewLine`，Input 的 `showClearIgnoreDisabled`、`onlyBorder`（InputNumber 经继承带上），OverflowList 的 `overflowRenderDirection`，ScrollItem 与 Layout 基础组件的 `type`，各框架范围不一；React 另有 Breadcrumb.Item 的 `active`、`shouldRenderSeparator`、`route`，TabItem 的 `handleKeyDown`、`deleteTabItem`、`selected`，Option 的 `current`，FormErrorMessage 的 `errorMessageId`、`helpTextId`、`isInInputGroup`，以及多数组件的 `prefixCls`，生成的 API 表如实列出并注明内部用途。待处理（拆出内部 Props 类型）。
 - React：Cascader、Image、UserGuide 的 Props 类型声明 `children` 但不渲染，API 表已注明。待处理（从公开类型去掉）。

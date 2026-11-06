@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T = TreeSelectValue, Multiple extends boolean | undefined = undefined">
-    import { computed, onDeactivated, shallowRef, useAttrs, useId, useTemplateRef, watch, type ComponentPublicInstance } from 'vue';
+    import { computed, shallowRef, useAttrs, useId, useTemplateRef, watch, type ComponentPublicInstance } from 'vue';
     import { get } from 'es-toolkit/compat';
     import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
     import { cssClasses } from '@fibrae/semi-foundation/tree-select/constants';
@@ -17,6 +17,7 @@
     import useClickOutside from '../_base/use-click-outside';
     import useFocusHandover from '../_base/use-focus-handover';
     import useFoundation from '../_base/use-foundation';
+    import useKeepAliveFoundation from '../_base/use-keep-alive-foundation';
     import useConfig from '../config-provider/use-config';
     import Input from '../input';
     import { provideInputGroupContext } from '../input/context';
@@ -189,23 +190,20 @@
         // The value type T is an unconstrained generic, so TS cannot prove it fits the foundation's BasicValue
         props as unknown as Readonly<Partial<BasicTreeSelectProps>>,
         (foundationProps) => TreeSelectFoundation.getInitialState(foundationProps),
-        (base) => ({
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            updateState: (states) => base.setState(states as BasicTreeSelectInnerData),
+        () => ({
             notifySelect: (selectedKey, selected, node) => emit('select', selectedKey, selected, node as TreeNodeData),
             notifySearch: (input, filteredExpandedKeys, filteredNodes) => emit('search', input, filteredExpandedKeys, filteredNodes as TreeNodeData[]),
-            setCachedFlattenNodes: (cachedFlattenNodes) => base.setState({ cachedFlattenNodes }),
             notifyLoad: (loadedKeys, node) => {
                 emit('update:loadedKeys', [...loadedKeys]);
                 emit('load', loadedKeys, node as TreeNodeData);
             },
             notifyClear: (event) => emit('clear', event as FoundationEvent | null),
-            openMenu: () => base.setState({ isOpen: true }),
-            closeMenu: () => {
-                keyboardKey.value = null;
-                base.setState({ isOpen: false });
+            notifyVisibleChange: (visible) => {
+                if (!visible) {
+                    keyboardKey.value = null;
+                }
+                emit('dropdownVisibleChange', visible);
             },
-            notifyVisibleChange: (visible) => emit('dropdownVisibleChange', visible),
             notifyChange: (value, node, event) => {
                 const changed = value as TreeSelectChangeValue<T, Multiple>;
                 emit('update:modelValue', changed);
@@ -233,7 +231,6 @@
                     (searchInput.value ?? tagInputs.value?.[0])?.focus();
                 }
             },
-            updateIsFocus: (isFocus) => base.setState({ isFocus }),
             isInTrigger: (node) => node instanceof Node && Boolean(triggers.value?.[0]?.contains(node)),
         }),
         {
@@ -561,15 +558,10 @@
         }
     });
 
+    useKeepAliveFoundation(foundation);
+
     // blur comes from a click outside, so it is listened to while focused, not only while open
     useClickOutside([() => triggers.value?.[0], content], foundation.handleClickOutside, () => view.value.isOpen || view.value.isFocus, useNestedPopups());
-
-    // A cached KeepAlive subtree would keep the dropdown open; close() neither blurs nor moves focus
-    onDeactivated(() => {
-        if (state.value.isOpen) {
-            foundation.close();
-        }
-    });
 
     // the owner may clear the value while the clear button holds focus; the combobox takes it back
     const clearHandover = useFocusHandover(() => (renderedInputIsCombobox() ? triggers.value?.[0]?.querySelector('input') : triggers.value?.[0]));

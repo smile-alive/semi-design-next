@@ -25,12 +25,9 @@ export interface NavigationState {
     selectedKeys: ItemKey[];
 }
 
-export interface NavigationAdapter<P extends NavigationBaseProps = NavigationBaseProps, S extends NavigationState = NavigationState> extends DefaultAdapter<P, S> {
+export interface NavigationAdapter<P extends NavigationBaseProps = NavigationBaseProps> extends DefaultAdapter<P, NavigationState> {
     getItemsFromChildren(): NavItemType[];
-    setIsCollapsed(isCollapsed: boolean): void;
     notifyCollapseChange(isCollapsed: boolean): void;
-    updateSelectedKeys(keys: ItemKey[]): void;
-    updateOpenKeys(keys: ItemKey[]): void;
 }
 
 export interface NavigationBaseProps {
@@ -45,7 +42,10 @@ export interface NavigationBaseProps {
     mode?: string;
 }
 
-export default class NavigationFoundation<P extends NavigationBaseProps = NavigationBaseProps, S extends NavigationState = NavigationState> extends BaseFoundation<NavigationAdapter<P, S>, P, S> {
+export default class NavigationFoundation<P extends NavigationBaseProps = NavigationBaseProps> extends BaseFoundation<NavigationAdapter<P>, P, NavigationState> {
+    static override readonly propKeys = ['items', 'children', 'selectedKeys', 'openKeys'];
+    static override readonly propEquals = { selectedKeys: isEqual, openKeys: isEqual };
+
     #getItemKeysMap() {
         return NavigationFoundation.getFormattedItems(this.getProps(), this.adapter.getItemsFromChildren()).itemKeysMap;
     }
@@ -59,10 +59,10 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
         const selectedKeys = Array.from(new Set(willSelectedKeys.concat(NavigationFoundation.getZeroParentKeys(itemKeysMap, ...willSelectedKeys))));
         const willOpenKeys = NavigationFoundation.getNextOpenKeys(props, this.getState('openKeys'), itemKeysMap, selectedKeys);
         if (!isEqual(selectedKeys, this.getState('selectedKeys'))) {
-            this.adapter.updateSelectedKeys(selectedKeys);
+            this.setState({ selectedKeys });
         }
         if (!isEqual(willOpenKeys, this.getState('openKeys'))) {
-            this.adapter.updateOpenKeys(willOpenKeys);
+            this.setState({ openKeys: willOpenKeys });
         }
     }
 
@@ -212,31 +212,31 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
      * New items or children rebuild the menu from the props, otherwise a changed (deep compared) selectedKeys or
      * openKeys is copied into state
      */
-    handlePropsUpdate = (prevProps: NavigationBaseProps) => {
+    override handlePropsChange(prev: Partial<P>) {
         const props = this.getProps();
-        if (prevProps.items !== props.items || prevProps.children !== props.children) {
+        if (prev.items !== props.items || prev.children !== props.children) {
             this.#rebuild();
             return;
         }
-        if (props.selectedKeys && !isEqual(prevProps.selectedKeys, props.selectedKeys)) {
+        if (props.selectedKeys && !isEqual(prev.selectedKeys, props.selectedKeys)) {
             this.updateSelectedKeys(props.selectedKeys);
-            this.adapter.updateOpenKeys(NavigationFoundation.getNextOpenKeys(props, this.getState('openKeys'), this.#getItemKeysMap(), props.selectedKeys));
-        } else if (prevProps.selectedKeys !== undefined && props.selectedKeys === undefined) {
-            this.adapter.updateSelectedKeys([]);
+            this.setState({ openKeys: NavigationFoundation.getNextOpenKeys(props, this.getState('openKeys'), this.#getItemKeysMap(), props.selectedKeys) });
+        } else if (prev.selectedKeys !== undefined && props.selectedKeys === undefined) {
+            this.setState({ selectedKeys: [] });
         }
-        if (props.openKeys && !isEqual(prevProps.openKeys, props.openKeys)) {
-            this.adapter.updateOpenKeys(props.openKeys);
-        } else if (prevProps.openKeys !== undefined && props.openKeys === undefined) {
-            this.adapter.updateOpenKeys(NavigationFoundation.getWillOpenKeys(props, [], this.#getItemKeysMap()));
+        if (props.openKeys && !isEqual(prev.openKeys, props.openKeys)) {
+            this.setState({ openKeys: props.openKeys });
+        } else if (prev.openKeys !== undefined && props.openKeys === undefined) {
+            this.setState({ openKeys: NavigationFoundation.getWillOpenKeys(props, [], this.#getItemKeysMap()) });
         }
-    };
+    }
 
     // The four handlers below are arrow properties: a host hands them out as context values, and a stable identity keeps
     // memoized consumers from re-rendering.
 
     updateSelectedKeys = (keys: ItemKey[]) => {
         const parentKeys = NavigationFoundation.getZeroParentKeys(this.#getItemKeysMap(), ...keys);
-        this.adapter.updateSelectedKeys(Array.from(new Set(keys.concat(parentKeys))));
+        this.setState({ selectedKeys: Array.from(new Set(keys.concat(parentKeys))) });
     };
 
     addOpenKey = (itemKey: ItemKey) => {
@@ -244,7 +244,7 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
         if (itemKey != null) {
             openKeys.add(itemKey);
         }
-        this.adapter.updateOpenKeys(Array.from(openKeys));
+        this.setState({ openKeys: Array.from(openKeys) });
     };
 
     removeOpenKey = (itemKey: ItemKey) => {
@@ -252,14 +252,14 @@ export default class NavigationFoundation<P extends NavigationBaseProps = Naviga
         if (itemKey != null) {
             openKeys.delete(itemKey);
         }
-        this.adapter.updateOpenKeys(Array.from(openKeys));
+        this.setState({ openKeys: Array.from(openKeys) });
     };
 
     handleCollapseChange = () => {
         const isCollapsed = !NavigationFoundation.getIsCollapsed(this.getProps(), this.getStates());
 
         if (!this.isControlledComponent('isCollapsed')) {
-            this.adapter.setIsCollapsed(isCollapsed);
+            this.setState({ isCollapsed });
         }
         this.adapter.notifyCollapseChange(isCollapsed);
     };

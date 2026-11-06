@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
     import type { DailyEventLayout } from '@fibrae/semi-foundation/calendar/event-util';
-    import CalendarFoundation, { type CalendarAdapter } from '@fibrae/semi-foundation/calendar/foundation';
+    import CalendarFoundation, { type CalendarAdapter, type CalendarBaseState } from '@fibrae/semi-foundation/calendar/foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import useFoundation from '../_base/use-foundation';
     import useKeepAliveFoundation from '../_base/use-keep-alive-foundation';
@@ -17,14 +17,9 @@
         showCurrTime: boolean;
     }
 
-    interface DayColState {
-        currPos: number;
-        showCurrTime: boolean;
-    }
-
     // decided on mount and again on each KeepAlive activation; views key the column by date and showCurrTime
-    type Foundation = CalendarFoundation<DayColProps, DayColState>;
-    type Adapter = CalendarAdapter<DayColProps, DayColState>;
+    type Foundation = CalendarFoundation<DayColProps>;
+    type Adapter = CalendarAdapter<DayColProps>;
 
     const props = defineProps<DayColProps>();
     const emit = defineEmits<{ slotClick: [event: MouseEvent, value: Date] }>();
@@ -32,14 +27,11 @@
 
     const eventsByKey = useCalendarContext();
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, DayColProps, DayColState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, DayColProps, CalendarBaseState>(
         CalendarFoundation,
         props,
-        () => ({ currPos: 0, showCurrTime: false }),
-        (base) => ({
-            updateCurrPos: (currPos) => base.setState({ currPos }),
-            setShowCurrTime: (showCurrTime) => base.setState({ showCurrTime }),
-        })
+        () => CalendarFoundation.getInitialState(),
+        () => ({})
     );
 
     const prefixCls = `${cssClasses.PREFIX}-grid`;

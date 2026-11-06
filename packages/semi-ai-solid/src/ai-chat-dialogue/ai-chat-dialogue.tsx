@@ -1,8 +1,8 @@
-import { For, type JSX, Show, createEffect, createMemo, splitProps, untrack } from 'solid-js';
+import { For, type JSX, Show, createMemo, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
 import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-import DialogueFoundation, { type DialogueAdapter, type Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
 import '@fibrae/semi-ai-foundation/ai-chat-dialogue/ai-chat-dialogue.scss';
 import { IconChevronDown } from '@fibrae/semi-icons-solid';
@@ -17,13 +17,8 @@ import Dialogue from './dialogue';
 import type { AIChatDialogueHandle, AIChatDialogueProps } from './interface';
 import Hint from './widgets/dialogue-hint';
 
-interface AIChatDialogueStates {
-    selectedIds: Set<string>;
-    backBottomVisible: boolean;
-}
-
-type Foundation = DialogueFoundation<AIChatDialogueProps, AIChatDialogueStates>;
-type Adapter = DialogueAdapter<AIChatDialogueProps, AIChatDialogueStates>;
+type Foundation = DialogueFoundation<AIChatDialogueProps>;
+type Adapter = DialogueAdapter<AIChatDialogueProps>;
 
 const prefix = cssClasses.PREFIX;
 
@@ -85,13 +80,12 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
 
     let list: HTMLDivElement | undefined;
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, AIChatDialogueProps, AIChatDialogueStates>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, AIChatDialogueProps, DialogueState>(
         DialogueFoundation,
         props,
-        () => ({ selectedIds: new Set<string>(), backBottomVisible: false }),
-        (base) => ({
+        () => DialogueFoundation.getInitialState(),
+        () => ({
             getContainerRef: () => list as HTMLDivElement,
-            updateSelected: (ids) => base.setState({ selectedIds: ids }),
             notifySelect: (ids) => local.onSelect?.(ids),
             notifyChatsChange: (chats) => local.onChatsChange?.(chats),
             notifyLikeMessage: (message) => local.onMessageGoodFeedback?.(message),
@@ -100,7 +94,6 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
             notifyMessageDelete: (message) => local.onMessageDelete?.(message),
             notifyMessageReset: (message) => local.onMessageReset?.(message),
             notifyHintClick: (hint) => local.onHintClick?.(hint),
-            setBackBottomVisible: (visible) => base.setState({ backBottomVisible: visible }),
         })
     );
 
@@ -109,8 +102,6 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
 
     const chats = createMemo(() => local.chats ?? EMPTY_CHATS);
     const hints = createMemo(() => local.hints ?? EMPTY_HINTS);
-
-    let committed = { chats: untrack(chats), hints: untrack(hints) };
 
     // Rows follow the message id, as React's key does: a streamed reply arrives as a new object with the same id per
     // chunk, and a row keyed by the object would rebuild its DOM and drop the focus inside it
@@ -161,16 +152,6 @@ export default function AIChatDialogue(rawProps: AIChatDialogueProps) {
 
     // a busy log defers announcements, so a streamed reply is read once it settles, not chunk by chunk
     const streaming = () => isUnfinishedStatus(chats().at(-1)?.status);
-
-    // after the rows of the new list are in the DOM, so the foundation measures and scrolls the updated content
-    createEffect(() => {
-        const next = { chats: chats(), hints: hints() };
-        if (next.chats !== committed.chats || next.hints !== committed.hints) {
-            const previous = committed;
-            committed = next;
-            untrack(() => foundation.handleListUpdate(previous, next));
-        }
-    });
 
     return (
         <div {...rest} ref={(node) => mergeRefs(local.ref)(Object.assign(node, handle))} role={namedRole(rest.role, rest['aria-label'], rest['aria-labelledby']) as JSX.HTMLAttributes<HTMLDivElement>['role']} class={clsx(prefix, local.class)} style={local.style}>

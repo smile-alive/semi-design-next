@@ -3,18 +3,20 @@ import { useEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { throttle } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/backtop/constants';
-import BackTopFoundation, { type BackTopAdapter, type Target } from '@fibrae/semi-foundation/backtop/foundation';
+import BackTopFoundation, { type BackTopAdapter, type BackTopState, type Target } from '@fibrae/semi-foundation/backtop/foundation';
 import '@fibrae/semi-foundation/backtop/backtop.scss';
 import { IconBackTop } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import useMergedRef from '../_base/use-merged-ref';
 import { hasContent } from '../_utils';
 import FloatButton from '../float-button';
 import type { FloatButtonProps } from '../float-button/interface';
 import useLocale from '../locale/use-locale';
+
+type Foundation = BackTopFoundation<BackTopProps, React.MouseEvent>;
+type Adapter = BackTopAdapter<BackTopProps, React.MouseEvent>;
 
 const prefixCls = cssClasses.PREFIX;
 
@@ -37,9 +39,7 @@ export interface BackTopProps extends ElementProps<'button', 'onClick' | 'type' 
     ref?: React.Ref<HTMLButtonElement>;
 }
 
-export interface BackTopState {
-    visible?: boolean;
-}
+export type { BackTopState };
 
 const defaultProps = {
     visibilityHeight: 400,
@@ -55,12 +55,11 @@ export default function BackTop(rawProps: BackTopProps) {
 
     const buttonRef = useRef<HTMLButtonElement>(null);
 
-    const [foundation, state] = useFoundation<BackTopFoundation<BackTopProps, BackTopState, React.MouseEvent>, BackTopAdapter<BackTopProps, BackTopState, React.MouseEvent>, BackTopProps, BackTopState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, BackTopProps, BackTopState>(
         BackTopFoundation,
         props,
-        () => ({ visible: false }),
+        () => BackTopFoundation.getInitialState(),
         (base) => ({
-            updateVisible: (visible) => base.setState({ visible }),
             notifyClick: (e) => base.getProps().onClick?.(e),
         })
     );
@@ -74,7 +73,6 @@ export default function BackTop(rawProps: BackTopProps) {
         foundation.handleTargetChange();
     }, [foundation]);
 
-    useDidUpdate(props.target, foundation.handleTargetChange);
     useEffect(() => () => handleClick.cancel(), [handleClick]);
 
     useEffect(() => {

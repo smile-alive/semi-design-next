@@ -1,10 +1,10 @@
 <script setup lang="ts">
-    import { computed, onDeactivated, onMounted, shallowRef, useId, useTemplateRef, watch, type ComponentPublicInstance, type ShallowRef } from 'vue';
+    import { computed, onMounted, shallowRef, useId, useTemplateRef, watch, type ComponentPublicInstance, type ShallowRef } from 'vue';
     import { format } from 'date-fns';
     import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
     import { toPercent } from '@fibrae/semi-foundation/calendar/event-util';
     import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
-    import CalendarMonthFoundation, { type CalendarMonthAdapter } from '@fibrae/semi-foundation/calendar/month-foundation';
+    import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/calendar/month-foundation';
     import { IconClose } from '@fibrae/semi-icons-vue';
     import SlotFragment from '../_base/slot-fragment';
     import { hasSlotContent } from '../_base/slot-nodes';
@@ -27,12 +27,8 @@
         today: number | null;
     }
 
-    interface MonthCalendarState {
-        showCard: Record<string, boolean>;
-    }
-
-    type Foundation = CalendarMonthFoundation<MonthCalendarProps, MonthCalendarState>;
-    type Adapter = CalendarMonthAdapter<MonthCalendarProps, MonthCalendarState>;
+    type Foundation = CalendarMonthFoundation<MonthCalendarProps>;
+    type Adapter = CalendarMonthAdapter<MonthCalendarProps>;
 
     const props = defineProps<MonthCalendarProps>();
 
@@ -56,16 +52,12 @@
     const grid = useTemplateRef('grid');
     const itemLimit = shallowRef(0);
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, MonthCalendarProps, MonthCalendarState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, MonthCalendarProps, CalendarMonthBaseState>(
         CalendarMonthFoundation,
         props,
-        () => ({ showCard: {} }),
-        (base) => ({
-            notifyClose: (event, key) => {
-                base.setState({ showCard: { ...base.getState('showCard'), [key]: false } });
-                emit('close', event);
-            },
-            openCard: (key) => base.setState({ showCard: { [key]: true } }),
+        () => CalendarMonthFoundation.getInitialState(),
+        () => ({
+            notifyClose: (event) => emit('close', event),
         })
     );
 
@@ -156,14 +148,6 @@
     );
 
     watch(weekCount, measure, { flush: 'post' });
-
-    // Tooltip only reports a deactivation through update:visible, which this card ignores; close it here.
-    onDeactivated(() => {
-        const key = openCardKey.value;
-        if (key !== undefined) {
-            foundation.closeCard(null, key);
-        }
-    });
 
     onMounted(measure);
 

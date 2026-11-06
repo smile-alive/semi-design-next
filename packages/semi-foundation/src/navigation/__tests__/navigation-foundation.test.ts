@@ -111,10 +111,11 @@ function createNav(props, state) {
         getProp: (key) => host.props[key],
         getStates: () => host.state,
         getState: (key) => host.state[key],
-        setIsCollapsed: vi.fn<NavigationAdapter['setIsCollapsed']>((isCollapsed) => (host.state = { ...host.state, isCollapsed })),
+        setState: vi.fn<NavigationAdapter['setState']>((states, cb) => {
+            host.state = { ...host.state, ...states };
+            cb?.();
+        }),
         notifyCollapseChange: vi.fn<NavigationAdapter['notifyCollapseChange']>(),
-        updateSelectedKeys: vi.fn<NavigationAdapter['updateSelectedKeys']>((selectedKeys) => (host.state = { ...host.state, selectedKeys })),
-        updateOpenKeys: vi.fn<NavigationAdapter['updateOpenKeys']>((openKeys) => (host.state = { ...host.state, openKeys })),
     };
     return {
         host,
@@ -128,7 +129,7 @@ describe('NavigationFoundation 更新', () => {
         const { adapter, foundation } = createNav({}, getInitialState({}));
         adapter.getItemsFromChildren = () => [{ itemKey: 'parent', items: [{ itemKey: 'child' }] }];
         foundation.updateSelectedKeys(['child']);
-        expect(adapter.updateSelectedKeys).toHaveBeenCalledWith(['child', 'parent']);
+        expect(adapter.setState).toHaveBeenCalledWith({ selectedKeys: ['child', 'parent'] }, undefined);
     });
 
     it('items 变化时保留非受控的当前选中', () => {
@@ -136,7 +137,7 @@ describe('NavigationFoundation 更新', () => {
         const { host, foundation } = createNav(props, getInitialState(props));
         host.state = { ...host.state, selectedKeys: ['query'] };
         host.props = { ...props, items: [...items] };
-        foundation.handlePropsUpdate(props);
+        foundation.handlePropsChange(props);
         expect(host.state.selectedKeys).toEqual(['query', 'job']);
     });
 
@@ -144,22 +145,16 @@ describe('NavigationFoundation 更新', () => {
         const props = { items, defaultSelectedKeys: ['list'], mode: 'vertical' };
         const { host, adapter, foundation } = createNav(props, getInitialState(props));
         host.props = { ...props, items: [...items] };
-        foundation.handlePropsUpdate(props);
-        expect(adapter.updateSelectedKeys).not.toHaveBeenCalled();
-        expect(adapter.updateOpenKeys).not.toHaveBeenCalled();
+        foundation.handlePropsChange(props);
+        expect(adapter.setState).not.toHaveBeenCalled();
     });
 
     it('将深层变化的 selectedKeys 或 openKeys 复制到 state', () => {
         const props = { items, selectedKeys: ['list'], openKeys: ['user'], mode: 'vertical' };
-        const { host, adapter, foundation } = createNav(props, getInitialState(props));
-        host.props = { ...props, selectedKeys: ['list'], openKeys: ['user'] };
-        foundation.handlePropsUpdate(props);
-        expect(adapter.updateSelectedKeys).not.toHaveBeenCalled();
-        expect(adapter.updateOpenKeys).not.toHaveBeenCalled();
-
+        const { host, foundation } = createNav(props, getInitialState(props));
         const prev = host.props;
         host.props = { ...prev, selectedKeys: ['query'], openKeys: ['job'] };
-        foundation.handlePropsUpdate(prev);
+        foundation.handlePropsChange(prev);
         expect(host.state.selectedKeys).toEqual(['query', 'job']);
         expect(host.state.openKeys).toEqual(['job']);
     });
@@ -170,7 +165,7 @@ describe('NavigationFoundation 更新', () => {
         expect(host.state.selectedKeys).toEqual(['list', 'user']);
         const prev = host.props;
         host.props = { items, mode: 'vertical' };
-        foundation.handlePropsUpdate(prev);
+        foundation.handlePropsChange(prev);
         expect(host.state.selectedKeys).toEqual([]);
         expect(host.state.openKeys).toEqual([]);
     });
@@ -180,7 +175,7 @@ describe('NavigationFoundation 更新', () => {
         const { host, foundation } = createNav(props, getInitialState(props));
         const prev = host.props;
         host.props = { items, defaultSelectedKeys: ['query'], mode: 'vertical' };
-        foundation.handlePropsUpdate(prev);
+        foundation.handlePropsChange(prev);
         expect(host.state.openKeys).toEqual(['job']);
     });
 
@@ -214,7 +209,7 @@ describe('NavigationFoundation 更新', () => {
 
         const controlled = createNav({ isCollapsed: true }, { isCollapsed: false });
         controlled.foundation.handleCollapseChange();
-        expect(controlled.adapter.setIsCollapsed).not.toHaveBeenCalled();
+        expect(controlled.adapter.setState).not.toHaveBeenCalled();
         expect(controlled.adapter.notifyCollapseChange).toHaveBeenCalledWith(false);
     });
 });

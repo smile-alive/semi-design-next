@@ -1,6 +1,6 @@
 import { children, createEffect, createMemo, createUniqueId, Match, onMount, Show, splitProps, Switch, type Accessor, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import CheckboxFoundation, { type CheckboxAdapter, type CheckboxView } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
+import CheckboxFoundation, { type CheckboxAdapter, type CheckboxBaseState, type CheckboxView } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
 import type { CheckboxValue } from '@fibrae/semi-foundation/checkbox/checkbox-group-foundation';
 import { checkboxClasses as css } from '@fibrae/semi-foundation/checkbox/constants';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
@@ -16,7 +16,6 @@ import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import { useSpecialTrigger } from '../tooltip/context';
 import type { CheckboxType } from './checkbox-group';
 import { useCheckboxGroupContext } from './context';
@@ -59,13 +58,9 @@ export interface CheckboxProps extends ElementProps<'span', 'onChange' | 'onFocu
     'x-semi-children-alias'?: string;
 }
 
-interface CheckboxState {
-    checked: boolean;
-}
-
 type FoundationProps = Pick<CheckboxProps, 'checked' | 'defaultChecked' | 'disabled' | 'value' | 'onChange' | 'preventScroll'>;
-type Foundation = CheckboxFoundation<FoundationProps, CheckboxState>;
-type Adapter = CheckboxAdapter<FoundationProps, CheckboxState>;
+type Foundation = CheckboxFoundation<FoundationProps>;
+type Adapter = CheckboxAdapter<FoundationProps>;
 
 const defaultProps = {
     defaultChecked: false,
@@ -90,13 +85,11 @@ export default function Checkbox(rawProps: CheckboxProps) {
         () => local.ref
     );
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, CheckboxState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, CheckboxBaseState>(
         CheckboxFoundation,
         props,
-        // only the initial value is wanted: later changes of `checked` arrive through the effect below
-        (view) => ({ checked: Boolean(view.checked ?? view.defaultChecked) }),
+        (view) => CheckboxFoundation.getInitialState(view),
         (base) => ({
-            setChecked: (checked) => base.setState({ checked }),
             notifyChange: (event) => base.getProps().onChange?.(event as CheckboxEvent),
             generateEvent: (checked, event) => ({
                 target: { checked, value: local.value, name: name(), disabled: disabled() },
@@ -178,16 +171,6 @@ export default function Checkbox(rawProps: CheckboxProps) {
         forwardFocus(node, () => input, focusOptions);
         registerTrigger(node);
     };
-
-    useWatch(
-        () => local.checked,
-        (value) => {
-            // only a boolean or undefined (Form reset) is mirrored; other values keep the current state
-            if (value === undefined || typeof value === 'boolean') {
-                foundation.setChecked(Boolean(value));
-            }
-        }
-    );
 
     createEffect(() => {
         input.indeterminate = showMixed();

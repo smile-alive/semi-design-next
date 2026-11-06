@@ -1,8 +1,8 @@
 <script setup lang="ts" generic="Multiple extends boolean | undefined = undefined">
-    import { computed, nextTick, onDeactivated, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue';
+    import { computed, nextTick, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue';
     import { isEqual } from 'es-toolkit';
     import { cssClasses, strings } from '@fibrae/semi-foundation/cascader/constants';
-    import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicValue, type CascaderAdapter } from '@fibrae/semi-foundation/cascader/foundation';
+    import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type CascaderAdapter } from '@fibrae/semi-foundation/cascader/foundation';
     import { calcMergeType } from '@fibrae/semi-foundation/cascader/util';
     import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
     import { isInnerControlKey, isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
@@ -18,6 +18,7 @@
     import useClickOutside from '../_base/use-click-outside';
     import useFocusHandover from '../_base/use-focus-handover';
     import useFoundation from '../_base/use-foundation';
+    import useKeepAliveFoundation from '../_base/use-keep-alive-foundation';
     import useConfig from '../config-provider/use-config';
     import Input, { type InputHandle } from '../input';
     import { provideInputGroupContext } from '../input/context';
@@ -111,6 +112,10 @@
     // A key is reported once: in the capture phase if the options may take it, in the bubble phase for inner controls
     const reported = new WeakSet<KeyboardEvent>();
 
+    // Set by the treeData watcher for an in-place change: the copies share the changed nodes, so the foundation's
+    // props comparison sees them as equal
+    let treeDataMutated = false;
+
     const looks = useGroupLooks('Cascader', props, { size: 'default', disabled: false });
 
     const prefix = cssClasses.PREFIX;
@@ -178,6 +183,7 @@
     watch(
         () => props.treeData,
         (next, previous) => {
+            treeDataMutated = next === previous;
             if (next === previous || !isEqual(next, treeData.value)) {
                 treeData.value = [...(next ?? [])];
             }
@@ -205,7 +211,6 @@
                 combobox()?.blur();
                 trigger.value?.blur();
             },
-            updateStates: (states) => base.setState(states as BasicCascaderInnerData),
             notifyChange: (value) => {
                 emit('update:modelValue', value as CascaderChangeValue<Multiple>);
                 emit('change', value as CascaderChangeValue<Multiple>);
@@ -426,16 +431,16 @@
         foundation.handleKeyDown(event);
     };
 
-    // One watcher for the tuple, so options and value changing together only re-collect the options. Known limit: modelValue
-    // is not watched deeply, so a controlled array changed in place is missed; upgrade when needed.
-    watch([() => treeData.value, () => props.keyMaps, () => props.modelValue], ([data, keyMaps, value], [previousData, previousKeyMaps, previousValue]) => {
-        const optionsChanged = data !== previousData || !isEqual(keyMaps, previousKeyMaps);
-        // by content: an inline value is a new array on every parent render, and each change resets the search;
-        // undefined, a value going back to uncontrolled, clears the selection
-        foundation.handleInputsChange({ optionsChanged, valueChanged: !isEqual(value, previousValue) }, value as BasicValue);
+    watch(treeData, () => {
+        if (treeDataMutated) {
+            treeDataMutated = false;
+            foundation.handleTreeDataMutation();
+        }
     });
 
     const nestedPopups = useNestedPopups();
+
+    useKeepAliveFoundation(foundation);
 
     useClickOutside(
         [trigger, content],
@@ -447,12 +452,6 @@
         () => state.value.isOpen,
         nestedPopups
     );
-
-    onDeactivated(() => {
-        if (state.value.isOpen) {
-            foundation.deactivate();
-        }
-    });
 
     // the owner may clear the value while the clear button holds focus; the combobox takes it back
     const clearHandover = useFocusHandover(() => (inputIsCombobox() ? trigger.value?.querySelector('input') : trigger.value));

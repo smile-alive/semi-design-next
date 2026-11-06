@@ -311,7 +311,7 @@ describe('Upload 裁剪', () => {
         expect(query('.semi-modal')).toHaveStyle({ width: '600px', height: '500px' });
     });
 
-    it('KeepAlive：裁剪弹窗打开时失活即取消裁剪，激活后可重新选择同一文件', async () => {
+    it('KeepAlive：裁剪弹窗打开时失活，弹窗随缓存子树离开文档且不取消裁剪，激活后原样出现并可取消', async () => {
         const onChange = fn();
         render(CachedUpload, {
             props: { uploadProps: { crop: true, cropModalProps: { motion: false }, onChange } as never },
@@ -323,11 +323,20 @@ describe('Upload 裁剪', () => {
         await expectCropperClosed();
         expect(screen.queryByRole('dialog')).toBeNull();
         expect(document.querySelector('[inert]')).toBeNull();
+        expect(revokeObjectURL).not.toHaveBeenCalled();
+        expect(onChange).not.toHaveBeenCalled();
+
+        await userEvent.click(screen.getByRole('button', { name: 'toggle' }));
+        expect(await screen.findByText(cropTitle)).toBeVisible();
+        expect(screen.getByRole('dialog')).toBeVisible();
+        expect(getCropperImg()).toHaveAttribute('src', 'blob:avatar.png');
+        expect(revokeObjectURL).not.toHaveBeenCalled();
+
+        await userEvent.click(screen.getByRole('button', { name: '取消' }));
+        await expectCropperClosed();
         expect(revokeObjectURL).toHaveBeenCalledWith('blob:avatar.png');
         expect(onChange).not.toHaveBeenCalled();
-        await userEvent.click(screen.getByRole('button', { name: 'toggle' }));
         await selectFiles([image]);
         expect(await screen.findByText(cropTitle)).toBeInTheDocument();
-        expect(getCropperImg()).toHaveAttribute('src', 'blob:avatar.png');
     });
 });

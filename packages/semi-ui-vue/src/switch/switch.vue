@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, watch, type InputHTMLAttributes } from 'vue';
+    import { computed, type InputHTMLAttributes } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/switch/constants';
     import SwitchFoundation, { type SwitchAdapter, type SwitchState } from '@fibrae/semi-foundation/switch/foundation';
     import '@fibrae/semi-foundation/switch/switch.scss';
@@ -15,8 +15,8 @@
         checked?: boolean;
     }
 
-    type Foundation = SwitchFoundation<FoundationProps, SwitchState, Event>;
-    type Adapter = SwitchAdapter<FoundationProps, SwitchState, Event>;
+    type Foundation = SwitchFoundation<FoundationProps, Event>;
+    type Adapter = SwitchAdapter<FoundationProps, Event>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -36,8 +36,7 @@
         SwitchFoundation,
         props,
         (view) => SwitchFoundation.getInitialState(view),
-        (base) => ({
-            setChecked: (checked) => base.setState({ checked }),
+        () => ({
             notifyChange: (checked, event) => {
                 emit('update:modelValue', checked);
                 emit('change', checked, event);
@@ -54,8 +53,6 @@
         // Vue does not patch an unchanged controlled value after the browser toggles a checkbox.
         input.checked = checked.value;
     };
-
-    watch(() => props.modelValue, foundation.setChecked);
 </script>
 
 <template>

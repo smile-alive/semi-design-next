@@ -1,6 +1,5 @@
 import React, { useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { isEqual } from 'es-toolkit';
 import getYearMonthFromValue from '@fibrae/semi-foundation/date-picker/_utils/get-year-month-from-value';
 import { isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm } from '@fibrae/semi-foundation/date-picker/_utils/picker-type';
 import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/date-picker/constants';
@@ -13,7 +12,6 @@ import type { ElementProps } from '../_base/base';
 import { namedRole } from '../_base/named-role';
 import useClickOutside from '../_base/use-click-outside';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import { useConfigContext } from '../config-provider/context';
 import type { InputHandle } from '../input';
@@ -91,15 +89,6 @@ const defaultProps = {
     multiple: false,
     defaultOpen: false,
     hideDisabledOptions: false,
-    onBlur: noop,
-    onFocus: noop,
-    onClear: noop,
-    onCancel: noop,
-    onConfirm: noop,
-    onChange: noop,
-    onOpenChange: noop,
-    onPanelChange: noop,
-    onPresetClick: noop,
     weekStartsOn: numbers.WEEK_START_ON,
     disabledDate: () => false,
     disabledTime: () => ({}),
@@ -108,7 +97,6 @@ const defaultProps = {
     syncSwitchMonth: false,
     rangeSeparator: strings.DEFAULT_SEPARATOR_RANGE,
     insetInput: false,
-    onClickOutSide: noop,
 } satisfies Partial<DatePickerProps>;
 
 function hasRangeInputs(type: Type, triggerRender: DatePickerProps['triggerRender']) {
@@ -246,16 +234,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
     const [foundation, state] = useFoundation<DatePickerFoundation, DatePickerAdapter, DatePickerProps, DatePickerState>(
         DatePickerFoundation,
         props,
-        () => ({
-            panelShow: props.open || props.defaultOpen,
-            isRange: false,
-            // the input text comes from value, which init would only set after the server HTML is out
-            ...DatePickerFoundation.getInitialState(props),
-            autofocus: props.autoFocus || (hasRangeInputs(props.type, props.triggerRender) && (props.open || props.defaultOpen)),
-            insetInputValue: null,
-            triggerDisabled: undefined,
-            focusRecords: { rangeStart: false, rangeEnd: false },
-        }),
+        () => DatePickerFoundation.getInitialState(props),
         (base) => {
             const setRangeInputFocus: DatePickerAdapter['setRangeInputFocus'] = (rangeInputFocus) => {
                 const { preventScroll } = base.getProps();
@@ -270,28 +249,17 @@ export default function DatePicker(rawProps: DatePickerProps) {
                 }
             };
             return {
-                togglePanel: (panelShow, cb) => base.setState({ panelShow }, cb),
-                notifyBlur: (e) => base.getProps().onBlur(e),
-                notifyFocus: (e, rangeType) => base.getProps().onFocus(e, rangeType),
-                notifyClear: (e) => base.getProps().onClear(e),
-                notifyChange: (date, dateStr) => base.getProps().onChange(date, dateStr),
-                notifyCancel: (date, dateStr) => base.getProps().onCancel(date, dateStr),
-                notifyConfirm: (date, dateStr) => base.getProps().onConfirm(date, dateStr),
-                notifyOpenChange: (open) => base.getProps().onOpenChange(open),
-                notifyClickOutSide: (e) => base.getProps().onClickOutSide(e),
-                notifyPresetsClick: (item, e) => base.getProps().onPresetClick(item, e),
-                updateValue: (value) => base.setState({ value }),
-                updatePrevTimezone: (prevTimeZone) => base.setState({ prevTimeZone }),
-                updateCachedSelectedValue: (cachedSelectedValue) => base.setState({ cachedSelectedValue }),
-                updateInputValue: (inputValue) => base.setState({ inputValue }),
-                updateInsetInputValue: (insetInputValue) => {
-                    if (base.getProps().insetInput && !isEqual(insetInputValue, base.getState('insetInputValue'))) {
-                        base.setState({ insetInputValue });
-                    }
-                },
+                notifyBlur: (e) => base.getProps().onBlur?.(e),
+                notifyFocus: (e, rangeType) => base.getProps().onFocus?.(e, rangeType),
+                notifyClear: (e) => base.getProps().onClear?.(e),
+                notifyChange: (date, dateStr) => base.getProps().onChange?.(date, dateStr),
+                notifyCancel: (date, dateStr) => base.getProps().onCancel?.(date, dateStr),
+                notifyConfirm: (date, dateStr) => base.getProps().onConfirm?.(date, dateStr),
+                notifyOpenChange: (open) => base.getProps().onOpenChange?.(open),
+                notifyClickOutSide: (e) => base.getProps().onClickOutSide?.(e),
+                notifyPresetsClick: (item, e) => base.getProps().onPresetClick?.(item, e),
                 setRangeInputFocus,
                 isKeyboardFocusInPanel: () => FocusTrapHandle.isFocusVisibleWithin(panelRef.current),
-                isEventTarget: (e) => e && e.target === e.currentTarget,
                 setInsetInputFocus: () => {
                     const { preventScroll } = base.getProps();
                     const input = base.getState('rangeInputFocus') === 'rangeEnd' ? rangeInputEndRef.current : rangeInputStartRef.current;
@@ -307,12 +275,14 @@ export default function DatePicker(rawProps: DatePickerProps) {
                         active.blur();
                     }
                 },
-                setTriggerDisabled: (triggerDisabled, callback) => base.setState({ triggerDisabled }, callback),
             };
         }
     );
 
     const panelShow = DatePickerFoundation.isPanelShown(props, state);
+
+    const markPressInside = useClickOutside([triggerElRef, panelRef], foundation.handleClickOutside, panelShow);
+
     const { value, inputValue, rangeInputFocus, triggerDisabled, cachedSelectedValue, insetInputValue } = state;
     const inputDisabled = disabled || (insetInput && triggerDisabled);
     const valueLabel = value.length ? locale.changeDate : locale.chooseDate;
@@ -521,30 +491,6 @@ export default function DatePicker(rawProps: DatePickerProps) {
             {renderFooter()}
         </div>
     );
-
-    useDidUpdate(props, (current, prev) => {
-        if (!isEqual(prev.value, current.value)) {
-            foundation.initFromProps({ ...current });
-        } else if (current.timeZone !== prev.timeZone) {
-            foundation.initFromProps({
-                value: foundation.getState('value'),
-                timeZone: current.timeZone,
-                prevTimeZone: prev.timeZone,
-            });
-        }
-        if (prev.open !== current.open) {
-            if (current.open) {
-                foundation.handleControlledOpen();
-            } else {
-                foundation.handleControlledClose();
-            }
-        }
-        if (current.disabled && !prev.disabled && DatePickerFoundation.isPanelShown({ open: current.open, disabled: false }, foundation.getStates())) {
-            foundation.deactivate();
-        }
-    });
-
-    const markPressInside = useClickOutside([triggerElRef, panelRef], foundation.handleClickOutside, panelShow);
 
     useImperativeHandle(
         props.ref,

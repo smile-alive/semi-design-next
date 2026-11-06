@@ -19,7 +19,7 @@ export interface CropperFoundationProps {
     preview?: () => HTMLElement | null;
 }
 
-export interface CropperAdapter<P extends CropperFoundationProps = CropperFoundationProps, S extends CropperState = CropperState> extends DefaultAdapter<P, S> {
+export interface CropperAdapter<P extends CropperFoundationProps = CropperFoundationProps> extends DefaultAdapter<P, CropperState> {
     getContainer: () => HTMLElement;
     notifyZoomChange: (zoom: number) => void;
     getImg: () => HTMLImageElement;
@@ -87,6 +87,7 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
     };
     // restored by destroy after the preview overwrites them
     #previewOriginalStyle: { overflow: string; width: string; height: string };
+    static override readonly propKeys = ['aspectRatio', 'zoom', 'rotate'];
 
     #getImgDataWhenResize(ratio: number) {
         const { imgData } = this.getStates();
@@ -565,6 +566,16 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         this.handleCornerLostPointerCapture();
     }
 
+    static getInitialState(): CropperState {
+        return {
+            imgData: { width: 0, height: 0, centerPoint: { x: 0, y: 0 } },
+            cropperBox: { width: 0, height: 0, centerPoint: { x: 0, y: 0 } },
+            zoom: 1,
+            rotate: 0,
+            loaded: false,
+        };
+    }
+
     handleCornerPointerMove = (e: Pick<PointerEvent, 'clientX' | 'clientY' | 'preventDefault'>) => {
         if (!this.#resizeDir) {
             return;
@@ -635,6 +646,20 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         // destroy removed the preview and no image load will rebuild it
         if (this.getStates().loaded) {
             this.#renderPreview();
+            this.updatePreview();
+        }
+    }
+
+    /** A zoom or rotate prop that goes back to undefined (a form reset) returns to 1 or 0 */
+    override handlePropsChange(prev: Partial<CropperFoundationProps>) {
+        const { aspectRatio, zoom, rotate } = this.getProps();
+        if (prev.aspectRatio !== aspectRatio) {
+            this.applyAspectRatio();
+        }
+        const resetZoom = zoom === undefined && prev.zoom !== undefined;
+        const resetRotate = rotate === undefined && prev.rotate !== undefined;
+        if (resetZoom || resetRotate) {
+            this.syncRotateAndZoom({ zoom: resetZoom ? 1 : undefined, rotate: resetRotate ? 0 : undefined });
         }
     }
 

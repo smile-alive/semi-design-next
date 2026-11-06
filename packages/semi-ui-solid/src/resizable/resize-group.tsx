@@ -1,4 +1,4 @@
-import { type JSX, Show, createEffect, createMemo, on, splitProps, untrack } from 'solid-js';
+import { type JSX, Show, createMemo, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
 import { ResizeGroupFoundation, type ResizeGroupAdapter, type ResizeGroupBaseState } from '@fibrae/semi-foundation/resizable/foundation';
@@ -47,12 +47,7 @@ export default function ResizeGroup(rawProps: ResizeGroupProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, ResizeGroupProps, ResizeGroupBaseState>(
         ResizeGroupFoundation,
         props,
-        () => ({
-            isResizing: false,
-            originalPosition: { x: 0, y: 0, lastItemSize: 0, nextItemSize: 0 },
-            backgroundStyle: { cursor: 'auto' },
-            curHandler: null,
-        }),
+        () => ResizeGroupFoundation.getInitialState(),
         () => ({
             getGroupRef: () => group ?? null,
             getItem: (index) => orderedItems()[index].el,
@@ -112,14 +107,6 @@ export default function ResizeGroup(rawProps: ResizeGroupProps) {
             return index >= 0 && foundation.resizeByKey(index, e);
         },
     };
-
-    createEffect(
-        on(
-            createMemo(() => props.direction),
-            foundation.handleDirectionChange,
-            { defer: true }
-        )
-    );
 
     // vw and vh limits change with the window even when the group keeps its size
     useEventListener(

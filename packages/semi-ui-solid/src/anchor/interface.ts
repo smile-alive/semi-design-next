@@ -27,12 +27,7 @@ export interface AnchorProps extends ElementProps<'div', 'onChange' | 'onClick'>
     onClick?: (e: AnchorClickEvent, currentLink: string) => void;
 }
 
-export interface AnchorState {
-    activeLink: string;
-    links: string[];
-    clickLink: boolean;
-    slideBarTop: string;
-}
+export type { AnchorBaseState as AnchorState } from '@fibrae/semi-foundation/anchor/foundation';
 
 /** `ref` and `class` land on the link's list item div */
 export interface LinkProps extends ElementProps<'div', 'title'> {

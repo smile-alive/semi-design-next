@@ -23,7 +23,7 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, ColorChooseAreaBaseProps, ColorChooseAreaBaseState>(
         ColorChooseAreaFoundation,
         props,
-        () => ({ isHandleGrabbing: false }),
+        () => ColorChooseAreaFoundation.getInitialState(),
         () => ({
             getDOM: () => dom.value as HTMLDivElement,
             notifyChange: (color) => emit('change', color),

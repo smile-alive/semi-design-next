@@ -21,6 +21,9 @@ import Portal from '../_portal';
 import { useConfigContext } from '../config-provider/context';
 import SideSheetContent from './side-sheet-content';
 
+type Foundation = SideSheetFoundation<SideSheetReactProps>;
+type Adapter = SideSheetAdapter<SideSheetReactProps>;
+
 const prefixCls = cssClasses.PREFIX;
 
 export type { SideSheetContentProps } from './side-sheet-content';
@@ -140,10 +143,10 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
 
     const isServerRender = useIsServerRender();
 
-    const [foundation] = useFoundation<SideSheetFoundation<SideSheetReactProps>, SideSheetAdapter<SideSheetReactProps>, SideSheetReactProps, SideSheetState>(
+    const [foundation] = useFoundation<Foundation, Adapter, SideSheetReactProps, SideSheetState>(
         SideSheetFoundation,
         props,
-        () => ({}),
+        () => SideSheetFoundation.getInitialState(),
         (base) => {
             // a mask confined to a custom popup container leaves the rest of the page usable
             const isModal = () => Boolean(base.getProp('mask')) && coversPage(base.getProp('getPopupContainer') ?? base.getContext('getPopupContainer'));
@@ -193,14 +196,6 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
     const shouldRender = visible || keepDOM || (motion && !hidden);
 
     const updateState = () => foundation.toggleDisplayNone(!visible);
-
-    // React refocuses the pre-commit element after the cleanup while the sheet is still mounted for its leave
-    // animation; restore again
-    useDidUpdate(visible, (isVisible) => {
-        if (!isVisible) {
-            foundation.restoreFocus();
-        }
-    });
 
     useDidUpdate(displayNone, (isHidden) => foundation.onVisibleChange(!isHidden));
     useLayoutEffect(() => runtime.setShown(!hidden), [runtime, hidden]);

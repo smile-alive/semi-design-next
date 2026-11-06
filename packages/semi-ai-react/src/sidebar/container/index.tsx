@@ -14,9 +14,8 @@ import useRealUnmount from '@fibrae/semi-ui-react/_base/use-real-unmount';
 import CSSAnimation from '@fibrae/semi-ui-react/_css-animation/index';
 import Button from '@fibrae/semi-ui-react/button/index';
 import { useDidUpdate, useMergedRef, useLocale } from '@fibrae/semi-ui-react/hooks';
-import Resizable from '@fibrae/semi-ui-react/resizable/single/resizable';
+import Resizable from '@fibrae/semi-ui-react/resizable/resizable';
 import type { ContainerReactProps } from '../interface';
-
 const prefixCls = cssClasses.SIDEBAR;
 
 class ContainerRuntime {
@@ -102,14 +101,6 @@ export default function Container(props: ContainerReactProps) {
         // Focus is not restored here: StrictMode's simulated unmount runs this cleanup and must not move focus
         return foundation.closeLayer;
     }, [visible, foundation]);
-
-    // React refocuses the pre-commit element after the cleanup, while it is still mounted for the leave animation;
-    // restore again
-    useDidUpdate(visible, (isVisible) => {
-        if (!isVisible) {
-            foundation.restoreFocus();
-        }
-    });
 
     // Focused content unmounts with the sidebar and would leave focus on the body
     useRealUnmount(foundation.restoreFocus);

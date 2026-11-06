@@ -1,8 +1,10 @@
 import { Fragment, useCallback, type FragmentInstance, type ReactNode } from 'react';
 import DragMoveFoundation, { type DragMoveAdapter } from '@fibrae/semi-foundation/drag-move/foundation';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
+
+type Foundation = DragMoveFoundation<DragMoveProps>;
+type Adapter = DragMoveAdapter<DragMoveProps>;
 
 export interface DragMoveProps {
     // the drag trigger; defaults to the element
@@ -34,7 +36,7 @@ const defaultProps = {
 export default function DragMove(rawProps: DragMoveProps) {
     const props = useDefaultProps('DragMove', rawProps, defaultProps);
 
-    const [foundation] = useFoundation<DragMoveFoundation<DragMoveProps>, DragMoveAdapter<DragMoveProps>, DragMoveProps, object>(
+    const [foundation] = useFoundation<Foundation, Adapter, DragMoveProps, object>(
         DragMoveFoundation,
         props,
         () => ({}),
@@ -66,8 +68,6 @@ export default function DragMove(rawProps: DragMoveProps) {
         },
         [foundation]
     );
-
-    useDidUpdate(props.positionStrategy, foundation.updatePositionStrategy);
 
     return <Fragment ref={setFragment}>{props.children}</Fragment>;
 }

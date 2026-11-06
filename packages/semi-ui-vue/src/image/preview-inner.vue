@@ -1,8 +1,7 @@
 <script setup lang="ts">
     import { computed, nextTick, onActivated, onDeactivated, shallowRef, useId, useTemplateRef, watch, type StyleValue } from 'vue';
-    import { isEqual } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerBaseState } from '@fibrae/semi-foundation/image/preview-inner-foundation';
+    import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/image/preview-inner-foundation';
     import { resolvePopupContainer } from '@fibrae/semi-foundation/utils/dom';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
@@ -11,7 +10,6 @@
     import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
     import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-vue';
     import Portal from '../_base/portal.vue';
-    import useDidUpdate from '../_base/use-did-update';
     import useFoundation from '../_base/use-foundation';
     import useRecordFocus from '../_base/use-record-focus';
     import useConfig from '../config-provider/use-config';
@@ -122,17 +120,10 @@
     // Read once per show: only a preview in body is modal (aria-modal, inert page, scroll lock, Tab trap, focus return).
     let modal = false;
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, PreviewInnerBaseProps, PreviewInnerBaseState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, PreviewInnerBaseProps, PreviewInnerState>(
         PreviewInnerFoundation,
         props,
-        (view) => ({
-            imgLoadStatus: {},
-            zoom: 0.1,
-            currentIndex: (view as PreviewInnerProps).defaultCurrentIndex ?? 0,
-            rotation: 0,
-            viewerVisible: true,
-            preloadAfterVisibleChange: true,
-        }),
+        (view) => PreviewInnerFoundation.getInitialState(view),
         () => ({
             getIsInGroup: () => Boolean(group),
             disabledBodyScroll: () => (modal ? scroll.hold(lockBodyScroll) : scroll.release()),
@@ -237,6 +228,25 @@
         { flush: 'post' }
     );
 
+    // same render as the new src, so PreviewImage does not re-fit the leaving image
+    watch(currentIndex, () => {
+        ratio.value = 'adaptation';
+    });
+
+    // a focused prev/next button disappears at the ends; keep focus in the dialog. Focus the user moved elsewhere is left
+    // alone.
+    watch(
+        () => currentIndex.value,
+        () => {
+            const el = wrap.value;
+            const active = FocusTrapHandle.getActiveElement();
+            if (el && (!active || active === document.body)) {
+                el.focus({ preventScroll: true });
+            }
+        },
+        { flush: 'post' }
+    );
+
     // KeepAlive: the Portal removes the hidden preview, so release page-level holds without closing it
     onDeactivated(() => {
         if (props.visible) {
@@ -258,27 +268,6 @@
             }
         });
     });
-
-    useDidUpdate(() => props.src, foundation.updateTimer, isEqual, 'pre');
-
-    // same render as the new src, so PreviewImage does not re-fit the leaving image
-    watch(currentIndex, () => {
-        ratio.value = 'adaptation';
-    });
-
-    // a focused prev/next button disappears at the ends; keep focus in the dialog. Focus the user moved elsewhere is left
-    // alone.
-    watch(
-        () => currentIndex.value,
-        () => {
-            const el = wrap.value;
-            const active = FocusTrapHandle.getActiveElement();
-            if (el && (!active || active === document.body)) {
-                el.focus({ preventScroll: true });
-            }
-        },
-        { flush: 'post' }
-    );
 </script>
 
 <template>

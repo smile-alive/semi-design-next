@@ -51,11 +51,7 @@ export type InputNumberKeyEvent = Pick<KeyboardEvent, 'key' | 'preventDefault' |
 export type InputNumberPressEvent = Pick<PointerEvent, 'button' | 'currentTarget' | 'pointerId' | 'shiftKey' | 'stopPropagation'>;
 
 /** FE and KE are the host's focus and keydown events, which the foundation passes on to the callbacks */
-export interface InputNumberAdapter<P extends InputNumberBaseProps = InputNumberBaseProps, S extends BaseInputNumberState = BaseInputNumberState, FE = unknown, KE = unknown> extends DefaultAdapter<P, S> {
-    setValue: (value: string, cb?: () => void) => void;
-    setNumber: (number: number | null, cb?: () => void) => void;
-    setFocusing: (focusing: boolean, cb?: () => void) => void;
-    setHovering: (hovering: boolean) => void;
+export interface InputNumberAdapter<P extends InputNumberBaseProps = InputNumberBaseProps, FE = unknown, KE = unknown> extends DefaultAdapter<P, BaseInputNumberState> {
     notifyChange: (value: string | number, e?: any) => void;
     notifyNumberChange: (value: number, e?: any) => void;
     notifyBlur: (e: FE) => void;
@@ -76,7 +72,7 @@ export interface BaseInputNumberState {
     hovering?: boolean;
 }
 
-export default class InputNumberFoundation<P extends InputNumberBaseProps = InputNumberBaseProps, S extends BaseInputNumberState = BaseInputNumberState, FE = unknown, KE extends InputNumberKeyEvent = InputNumberKeyEvent> extends BaseFoundation<InputNumberAdapter<P, S, FE, KE>, P, S> {
+export default class InputNumberFoundation<P extends InputNumberBaseProps = InputNumberBaseProps, FE = unknown, KE extends InputNumberKeyEvent = InputNumberKeyEvent> extends BaseFoundation<InputNumberAdapter<P, FE, KE>, P, BaseInputNumberState> {
     #intervalHasRegistered: boolean;
     #interval: any;
     #timerHasRegistered: boolean;
@@ -86,6 +82,8 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
     #lastChangeWasStep = false;
     // the text after the caret, so the caret can follow it after formatting
     #caretTail: string | undefined;
+
+    static override readonly propKeys = ['value'];
 
     #recordCaret() {
         this.#caretTail = recordCaretTail(this.adapter.getInput());
@@ -118,13 +116,13 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
 
         if (!this.isControlled()) {
             if (isValidNumber) {
-                this.adapter.setNumber(parsed);
+                this.setState({ number: parsed });
             }
-            this.adapter.setValue(v, updateCb);
+            this.setState({ value: v }, updateCb);
         }
 
         if (this.getProp('keepFocus')) {
-            this.adapter.setFocusing(true, () => {
+            this.setState({ focusing: true }, () => {
                 // refocusing fires handleInputFocus, which clears the step mark, so mark the step afterwards
                 if (this.#lastChangeWasStep && this.getState('focusing')) {
                     this.#focusInput();
@@ -591,13 +589,13 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
                     const parsedNum = typeof number === 'number' ? number : this.doParse(strVal, false, false, false);
                     if (!Number.isNaN(parsedNum)) {
                         const fullNumberStr = this.doFormat(parsedNum, true, false);
-                        this.adapter.setValue(fullNumberStr);
+                        this.setState({ value: fullNumberStr });
                     }
                 }
             }
         }
         this.#recordCaret();
-        this.adapter.setFocusing(true);
+        this.setState({ focusing: true });
         this.#lastChangeWasStep = false;
         this.adapter.notifyFocus(e);
     };
@@ -644,10 +642,10 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         this.#notifyChange(notifyVal, event);
 
         if (!this.isControlled() && (num === null || (typeof num === 'number' && !isNaN(num)))) {
-            this.adapter.setNumber(num);
+            this.setState({ number: num });
         }
 
-        this.adapter.setValue(this.isControlled() && !this.isCurrency() ? formattedNum : this.doFormat(valueAfterParser, false), () => {
+        this.setState({ value: this.isControlled() && !this.isCurrency() ? formattedNum : this.doFormat(valueAfterParser, false) }, () => {
             this.#restoreCaret();
         });
     };
@@ -740,29 +738,29 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
                 }
 
                 if (willSetVal != null) {
-                    this.adapter.setValue(willSetVal);
+                    this.setState({ value: willSetVal });
                 }
 
                 if (willSetNum != null && !this.isControlled()) {
-                    this.adapter.setNumber(willSetNum);
+                    this.setState({ number: willSetNum });
                 }
             }
         }
-        this.adapter.setFocusing(false);
+        this.setState({ focusing: false });
         this.adapter.notifyBlur(e);
     };
 
     handleInputMouseEnter = () => {
-        this.adapter.setHovering(true);
+        this.setState({ hovering: true });
     };
 
     handleInputMouseLeave = () => {
-        this.adapter.setHovering(false);
+        this.setState({ hovering: false });
     };
 
     handleInputMouseMove = () => {
         if (!this.getState('hovering')) {
-            this.adapter.setHovering(true);
+            this.setState({ hovering: true });
         }
     };
 
@@ -799,7 +797,8 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
      * be on blur (and the text right after a step), an unparsable value replaces the text. Otherwise the value is
      * formatted like on blur, except that it is not clamped, and an unparsable one empties it.
      */
-    handleValueChange = (value: number | string) => {
+    override handlePropsChange() {
+        const { value }: InputNumberBaseProps = this.getProps();
         let states: BaseInputNumberState;
         let callback: () => void;
 
@@ -831,5 +830,5 @@ export default class InputNumberFoundation<P extends InputNumberBaseProps = Inpu
         }
 
         this.setState(states, callback);
-    };
+    }
 }

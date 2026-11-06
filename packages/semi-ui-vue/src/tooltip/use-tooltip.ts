@@ -1,34 +1,25 @@
 import { type ComputedRef, type ShallowRef, computed, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, shallowRef, useId, watch, watchEffect } from 'vue';
 import { COLOR_SCHEME_SELECTOR, colorSchemeOf, cssClasses, popupTarget, strings } from '@fibrae/semi-foundation/tooltip/constants';
-import TooltipFoundation, { type TooltipAdapter } from '@fibrae/semi-foundation/tooltip/foundation';
+import TooltipFoundation, { type TooltipAdapter, type TooltipBaseState } from '@fibrae/semi-foundation/tooltip/foundation';
 import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
 import { openLayer } from '@fibrae/semi-foundation/utils/layer';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import useEventListener, { getWindow } from '../_base/use-event-listener';
 import useFoundation from '../_base/use-foundation';
+import useKeepAliveFoundation from '../_base/use-keep-alive-foundation';
 import useTimeout from '../_base/use-timeout';
 import useConfig from '../config-provider/use-config';
 import { provideTooltipPopupsContext, useTooltipPopupsContext } from './context';
 import type { FocusTarget, RenderContentProps, TooltipEmits, TooltipHandle, TooltipProps } from './interface';
 
-interface TooltipState {
-    visible: boolean;
-    transitionState: 'enter' | 'leave' | '';
-    triggerEventSet: Record<string, EventListener>;
-    portalEventSet: Record<string, EventListener>;
-    isInsert: boolean;
-    portalTarget: HTMLElement | ShadowRoot | null;
-    colorScheme?: string;
-}
-
-type Foundation = TooltipFoundation<TooltipProps, TooltipState>;
-type Adapter = TooltipAdapter<TooltipProps, TooltipState>;
+type Foundation = TooltipFoundation<TooltipProps>;
+type Adapter = TooltipAdapter<TooltipProps>;
 type Emit = <K extends keyof TooltipEmits>(name: K, ...args: TooltipEmits[K]) => void;
 
 interface TooltipRuntime {
     foundation: Foundation;
-    state: Readonly<ShallowRef<TooltipState>>;
+    state: Readonly<ShallowRef<TooltipBaseState>>;
     context: ReturnType<typeof useConfig>;
     popupId: ComputedRef<string>;
     contentShown: ShallowRef<boolean>;
@@ -87,12 +78,11 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
     const initialFocusRef = shallowRef<FocusTarget | null>(null);
     const onClickOutside = shallowRef<((event: MouseEvent) => void) | null>(null);
 
-    // KeepAlive leaves the teleported popup on the page when the trigger is cached away; a popup is transient, so it
-    // closes as if the pointer had left. A controlled owner may keep it open: tooltip.vue then disables the Teleport,
-    // which moves the popup into the cached subtree, out of the document.
+    // KeepAlive leaves the teleported popup on the page when the trigger is cached away; an open popup keeps its state,
+    // so tooltip.vue disables the Teleport, which moves the popup into the cached subtree, out of the document.
     const active = shallowRef(true);
 
-    // handleOpened runs once per opening, though reactivation shows the popup again
+    // handleOpened runs once per showing, though the enter watch below reruns on every state write
     let openedHandled = false;
     let openPending = false;
     let closePending = false;
@@ -105,17 +95,10 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
         (event) => state.value.portalEventSet[event.type]?.(event)
     );
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, TooltipProps, TooltipState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, TooltipProps, TooltipBaseState>(
         TooltipFoundation,
         props,
-        () => ({
-            visible: false,
-            transitionState: '',
-            triggerEventSet: {},
-            portalEventSet: {},
-            isInsert: false,
-            portalTarget: null,
-        }),
+        () => TooltipFoundation.getInitialState(),
         (base) => {
             const adapter: Omit<Adapter, keyof typeof base> = {
                 insertPortal: () => {
@@ -131,13 +114,10 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
                         colorScheme: colorSchemeOf(first?.closest(COLOR_SCHEME_SELECTOR)),
                     });
                 },
-                closePopup: () => base.setState({ transitionState: 'leave', visible: false }),
                 removePortal: () => {
                     contentShown.value = false;
                     base.setState({ isInsert: false, transitionState: '' });
                 },
-                registerTriggerEvent: (triggerEventSet) => base.setState({ triggerEventSet }),
-                registerPortalEvent: (portalEventSet) => base.setState({ portalEventSet }),
                 notifyVisibleChange: (visible) => {
                     emit('update:visible', visible);
                     emit('visibleChange', visible);
@@ -331,19 +311,6 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
         { immediate: true }
     );
 
-    watch(() => props.position, foundation.calcPosition, { flush: 'post' });
-    watch(() => props.trigger, foundation.rebindEvents, { flush: 'post' });
-    watch(() => props.clickToHide, foundation.rebindEvents, { flush: 'post' });
-    watch(() => props.visible, foundation.handleVisiblePropChange, { flush: 'post' });
-
-    watch(
-        () => props.condition,
-        (condition) => {
-            if (condition === false) foundation.hide();
-        },
-        { flush: 'post' }
-    );
-
     const scheduleTimeout = useTimeout();
 
     onMounted(() => scheduleTimeout(foundation.updateStateIfCursorOnTrigger));
@@ -351,13 +318,16 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
     // Vue drops emits after unmount, so the final close is reported in beforeUnmount
     onBeforeUnmount(afterClose);
 
+    useKeepAliveFoundation(foundation);
+
     onDeactivated(() => {
         active.value = false;
-        foundation.hide();
     });
 
+    // shown again: handleOpened rechecks the pointer of a hover popup, without reporting the opening again
     onActivated(() => {
         active.value = true;
+        openedHandled = false;
     });
 
     return {

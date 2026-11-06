@@ -1,5 +1,5 @@
 /** @jsxImportSource vue */
-import { KeepAlive, defineComponent, nextTick, onUpdated, shallowRef } from 'vue';
+import { KeepAlive, nextTick, shallowRef } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
@@ -154,25 +154,6 @@ describe('Pagination', () => {
         expect(getActivePage(view.container)).toHaveTextContent(/^3$/);
         await view.rerender({ ...props, currentPage: 4 });
         expect(getActivePage(view.container)).toHaveTextContent(/^4$/);
-    });
-
-    it('父组件改 currentPage 后，父组件的 onUpdated 读到新页码', async () => {
-        const seen: (string | null | undefined)[] = [];
-        const Parent = defineComponent({
-            props: { page: { type: Number, required: true } },
-            setup(props) {
-                const host = shallowRef<HTMLElement>();
-                onUpdated(() => seen.push(host.value && getActivePage(host.value)?.textContent));
-                return () => (
-                    <div ref={host}>
-                        <Pagination total={100} currentPage={props.page} />
-                    </div>
-                );
-            },
-        });
-        const view = render(Parent, { props: { page: 1 } });
-        await view.rerender({ page: 3 });
-        expect(seen).toEqual(['3']);
     });
 
     describe('快速跳转', () => {

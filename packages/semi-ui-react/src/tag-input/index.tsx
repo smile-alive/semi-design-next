@@ -2,16 +2,14 @@ import type React from 'react';
 import { Fragment, lazy, Suspense, useCallback, useId, useImperativeHandle, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
 import { type strings, cssClasses } from '@fibrae/semi-foundation/tag-input/constants';
-import TagInputFoundation, { type TagInputAdapter } from '@fibrae/semi-foundation/tag-input/foundation';
+import TagInputFoundation, { type TagInputAdapter, type TagInputBaseState } from '@fibrae/semi-foundation/tag-input/foundation';
 import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/tag-input/utils/tag-focus';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/tag-input/tag-input.scss';
 import { IconClear, IconHandle } from '@fibrae/semi-icons-react';
 import type { ArrayElement, ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useEventListener, { getDocument } from '../_base/use-event-listener';
 import useFoundation from '../_base/use-foundation';
 import type { RenderItemProps } from '../_sortable';
@@ -24,6 +22,9 @@ import Popover, { type PopoverProps } from '../popover';
 import Tag from '../tag';
 import type { ShowTooltip } from '../typography';
 import Paragraph from '../typography/paragraph';
+
+type Foundation = TagInputFoundation<TagInputProps, React.SyntheticEvent>;
+type Adapter = TagInputAdapter<TagInputProps, React.SyntheticEvent>;
 
 // dnd-kit is only needed once a draggable TagInput is active
 const Sortable = lazy(() => import('../_sortable').then((module) => ({ default: module.Sortable })));
@@ -89,13 +90,7 @@ export interface TagInputProps extends ElementProps<'div', 'prefix' | 'defaultVa
     ref?: React.Ref<TagInputHandle>;
 }
 
-export interface TagInputState {
-    tagsArray?: string[];
-    inputValue?: string;
-    focusing?: boolean;
-    active?: boolean;
-    entering?: boolean;
-}
+export interface TagInputState extends TagInputBaseState {}
 
 // Form, or a combobox built on TagInput (Cascader, TreeSelect), injects these; they describe the text input, which
 // is the control, not the root div. Such a combobox makes the input itself the combobox (ARIA 1.2), hence the role
@@ -113,15 +108,6 @@ const defaultProps = {
     separator: ',',
     size: 'default',
     validateStatus: 'default',
-    onBlur: noop,
-    onFocus: noop,
-    onChange: noop,
-    onInputChange: noop,
-    onExceed: noop,
-    onInputExceed: noop,
-    onAdd: noop,
-    onRemove: noop,
-    onKeyDown: noop,
 } satisfies Partial<TagInputProps>;
 
 // holds the DOM nodes for the adapter, which is created during render and must not read refs
@@ -233,38 +219,21 @@ export default function TagInput(rawProps: TagInputProps) {
     const { locale: tagLocale } = useLocale('Tag');
 
     const [runtime] = useState(() => new TagInputRuntime());
+    const generatedLabelId = useId();
 
-    const [foundation, state] = useFoundation<TagInputFoundation<TagInputProps, TagInputState, React.SyntheticEvent>, TagInputAdapter<TagInputProps, TagInputState, React.SyntheticEvent>, TagInputProps, TagInputState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, TagInputProps, TagInputState>(
         TagInputFoundation,
         props,
-        () => ({
-            tagsArray: props.defaultValue || [],
-            inputValue: '',
-            focusing: false,
-            active: false,
-            entering: false,
-        }),
+        () => TagInputFoundation.getInitialState(props),
         (base) => ({
-            setInputValue: (inputValue) => base.setState({ inputValue }),
-            setTagsArray: (tagsArray) => base.setState({ tagsArray }),
-            setFocusing: (focusing) => base.setState({ focusing }),
-            toggleFocusing: (isFocus) => {
-                if (isFocus) {
-                    runtime.input?.focus({ preventScroll: base.getProps().preventScroll });
-                } else {
-                    runtime.input?.blur();
-                }
-                base.setState({ focusing: isFocus });
-            },
-            setActive: (active) => base.setState({ active }),
-            setEntering: (entering) => base.setState({ entering }),
-            notifyBlur: (e) => base.getProps().onBlur(e),
-            notifyFocus: (e) => base.getProps().onFocus(e),
-            notifyInputChange: (v, e) => base.getProps().onInputChange(v, e),
-            notifyTagChange: (v) => base.getProps().onChange(v),
-            notifyTagAdd: (v) => base.getProps().onAdd(v),
-            notifyTagRemove: (v, idx) => base.getProps().onRemove(v, idx),
-            notifyKeyDown: (e) => base.getProps().onKeyDown(e),
+            focusInput: () => runtime.input?.focus({ preventScroll: base.getProps().preventScroll }),
+            notifyBlur: (e) => base.getProps().onBlur?.(e),
+            notifyFocus: (e) => base.getProps().onFocus?.(e),
+            notifyInputChange: (v, e) => base.getProps().onInputChange?.(v, e),
+            notifyTagChange: (v) => base.getProps().onChange?.(v),
+            notifyTagAdd: (v) => base.getProps().onAdd?.(v),
+            notifyTagRemove: (v, idx) => base.getProps().onRemove?.(v, idx),
+            notifyKeyDown: (e) => base.getProps().onKeyDown?.(e),
             notifyInputExceed: (value) => base.getProps().onInputExceed?.(value),
             notifyExceed: (tagList) => base.getProps().onExceed?.(tagList),
             getInput: () => runtime.input,
@@ -291,28 +260,13 @@ export default function TagInput(rawProps: TagInputProps) {
     } = rest as typeof rest & FieldA11yProps;
 
     const tagsArray = TagInputFoundation.getTagsArray(props, state);
-    const inputValue = TagInputFoundation.getInputValue(props, state);
-    const { focusing, active } = state;
 
     const [sortIds, setSortIds] = useState(() => TagInputFoundation.getSortIds(tagsArray));
 
+    const inputValue = TagInputFoundation.getInputValue(props, state);
+    const { focusing, active } = state;
     const nextSortIds = sortIds.values === tagsArray ? sortIds : TagInputFoundation.getSortIds(tagsArray, sortIds);
     const showPlaceholder = tagsArray.length === 0;
-
-    useDidUpdate(props.value, (value) => {
-        if (value === undefined) {
-            foundation.setState({ tagsArray: [] });
-        }
-    });
-
-    // the state keeps what was typed under control; leaving control must not bring it back
-    useDidUpdate(props.inputValue, (inputValue) => {
-        if (inputValue === undefined) {
-            foundation.setState({ inputValue: '' });
-        }
-    });
-
-    const generatedLabelId = useId();
 
     if (nextSortIds !== sortIds) {
         setSortIds(nextSortIds);

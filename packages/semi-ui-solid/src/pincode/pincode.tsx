@@ -9,7 +9,6 @@ import forwardFocus from '../_base/forward-focus';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import Input, { type InputSize, type ValidateStatus } from '../input';
 import useLocale from '../locale/use-locale';
 import { useSpecialTrigger } from '../tooltip/context';
@@ -26,8 +25,8 @@ export interface PinCodeProps extends Omit<PinCodeBaseProps, 'autoFocus'>, Eleme
 
 export interface PinCodeState extends PinCodeBaseState {}
 
-type Foundation = PinCodeFoundation<PinCodeProps, PinCodeState>;
-type Adapter = PinCodeAdapter<PinCodeProps, PinCodeState>;
+type Foundation = PinCodeFoundation<PinCodeProps>;
+type Adapter = PinCodeAdapter<PinCodeProps>;
 
 const defaultProps = {
     count: 6,
@@ -72,10 +71,8 @@ export default function PinCode(rawProps: PinCodeProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, PinCodeProps, PinCodeState>(
         PinCodeFoundation,
         props,
-        (view) => ({ valueList: Array.from(view.value ?? view.defaultValue ?? ''), currentActiveIndex: 0 }),
-        (base) => ({
-            // resolves after commit: a controlled paste awaits the parent's new value
-            onCurrentActiveIndexChange: (currentActiveIndex) => new Promise<void>((resolve) => base.setState({ currentActiveIndex }, resolve)),
+        (view) => PinCodeFoundation.getInitialState(view),
+        () => ({
             notifyValueChange: (values) => props.onChange?.(values.join('')),
             notifyComplete: (value) => props.onComplete?.(value),
             changeSpecificInputFocusState: (index, focusState) => {
@@ -85,7 +82,6 @@ export default function PinCode(rawProps: PinCodeProps) {
                     inputs[index]?.blur();
                 }
             },
-            updateValueList: (valueList) => new Promise<void>((resolve) => base.setState({ valueList }, resolve)),
         })
     );
 
@@ -119,11 +115,6 @@ export default function PinCode(rawProps: PinCodeProps) {
         });
         registerTrigger(node);
     };
-
-    useWatch(
-        () => local.value,
-        (next) => void foundation.updateValueList(Array.from(next || ''))
-    );
 
     return (
         <div role="group" {...rest} ref={mergeRefs(setRoot, local.ref)} class={clsx(`${cssClasses.PREFIX}-wrapper`, local.class)} onFocusIn={handleFocusIn} onFocusOut={handleFocusOut}>

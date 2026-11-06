@@ -27,6 +27,7 @@ function sameTags(a: string[], b: string[]) {
 
 export interface TagInputBaseProps {
     value?: string[] | null;
+    defaultValue?: string[];
     inputValue?: string;
     disabled?: boolean;
     maxLength?: number;
@@ -38,20 +39,17 @@ export interface TagInputBaseProps {
 }
 
 export interface TagInputBaseState {
-    tagsArray?: string[];
-    inputValue?: string;
-    focusing?: boolean;
-    active?: boolean;
-    entering?: boolean;
+    tagsArray: string[];
+    inputValue: string;
+    focusing: boolean;
+    active: boolean;
+    entering: boolean;
 }
 
-export interface TagInputAdapter<P extends TagInputBaseProps = TagInputBaseProps, S extends TagInputBaseState = TagInputBaseState, E = TagInputChangeEvent> extends DefaultAdapter<P, S> {
-    setInputValue: (inputValue: string) => void;
-    setTagsArray: (tagsArray: string[]) => void;
-    setFocusing: (focusing: boolean) => void;
-    toggleFocusing(focused: boolean): void;
-    setActive: (active: boolean) => void;
-    setEntering: (entering: boolean) => void;
+export interface TagInputAdapter<P extends TagInputBaseProps = TagInputBaseProps, E = TagInputChangeEvent> extends DefaultAdapter<P, TagInputBaseState> {
+    focusInput(): void;
+    /** A host that binds `inputValue` (Svelte) writes the typed text back here; it runs before every write of the text state */
+    syncInputValue?: (inputValue: string) => void;
     notifyBlur: (e: TagInputCursorEvent) => void;
     notifyFocus: (e: TagInputCursorEvent) => void;
     notifyInputChange: (v: string, e: E) => void;
@@ -64,9 +62,11 @@ export interface TagInputAdapter<P extends TagInputBaseProps = TagInputBaseProps
     getInput(): HTMLInputElement | null;
 }
 
-export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBaseProps, S extends TagInputBaseState = TagInputBaseState, E = TagInputChangeEvent> extends BaseFoundation<TagInputAdapter<P, S, E>, P, S> {
+export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBaseProps, E = TagInputChangeEvent> extends BaseFoundation<TagInputAdapter<P, E>, P, TagInputBaseState> {
     // the browser lacks CSS field-sizing, so the input width is written inline
     #fitInline = false;
+
+    static override readonly propKeys = ['value', 'inputValue'];
 
     #current() {
         const props = this.getProps();
@@ -133,7 +133,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
     }
     #onRemove(newTagList: string[], removedTags: string, index: number) {
         if (!this.isControlledComponent()) {
-            this.adapter.setTagsArray(newTagList);
+            this.setState({ tagsArray: newTagList });
         }
         this.adapter.notifyTagChange(newTagList);
         this.adapter.notifyTagRemove(removedTags, index);
@@ -141,14 +141,19 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
 
     #onAdd(newTagList: string[], addTags: string[]) {
         if (!this.isControlledComponent()) {
-            this.adapter.setTagsArray(newTagList);
+            this.setState({ tagsArray: newTagList });
         }
         this.adapter.notifyTagChange(newTagList);
         this.adapter.notifyTagAdd(addTags);
     }
 
+    #setInputValue(inputValue: string) {
+        this.adapter.syncInputValue?.(inputValue);
+        this.setState({ inputValue });
+    }
+
     #onInputChange(value: string, e: E) {
-        this.adapter.setInputValue(value);
+        this.#setInputValue(value);
         this.adapter.notifyInputChange(value, e);
     }
 
@@ -194,6 +199,10 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         return typeof props.inputValue === 'string' ? props.inputValue : state.inputValue;
     }
 
+    static getInitialState(props: Pick<TagInputBaseProps, 'defaultValue'>): TagInputBaseState {
+        return { tagsArray: props.defaultValue ?? [], inputValue: '', focusing: false, active: false, entering: false };
+    }
+
     override init() {
         // decided after mount, so the server and the first client render agree
         this.#fitInline = !supportsFieldSizing();
@@ -205,6 +214,20 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
 
     override destroy() {
         this.#fitInline = false;
+    }
+
+    /**
+     * A prop that goes back to undefined (a form reset) empties its state and leaves control. For `inputValue` the state
+     * keeps what was typed under control, so leaving control must not bring it back.
+     */
+    override handlePropsChange(prev: Partial<P>) {
+        const { value, inputValue } = this.getProps();
+        if (prev.value !== undefined && value === undefined) {
+            this.setState({ tagsArray: [] });
+        }
+        if (prev.inputValue !== undefined && inputValue === undefined) {
+            this.setState({ inputValue: '' });
+        }
     }
 
     /** Re-fits the inline input width without field-sizing; hosts call it when the typed text changes */
@@ -230,7 +253,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         if (typeof maxLength !== 'number') {
             return;
         }
-        this.adapter.setEntering(true);
+        this.setState({ entering: true });
     };
 
     handleInputCompositionEnd = (e: any) => {
@@ -239,7 +262,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         if (typeof maxLength !== 'number') {
             return;
         }
-        this.adapter.setEntering(false);
+        this.setState({ entering: false });
         let allowChange = true;
         const inputArr = this.#splitArray(value, separator);
         let index = 0;
@@ -260,7 +283,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
             this.#onInputChange(newInputArr.join(Array.isArray(separator) ? separator[0] : separator), e);
         } else {
             // Firefox does not fire onChange after the composition ends, so the value is set here
-            this.adapter.setInputValue(value);
+            this.#setInputValue(value);
         }
     };
 
@@ -290,14 +313,14 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         // focus left the TagInput: a click-started session must not outlive it, or the focus style, expanded tags and
         // drag handles stay until a later mousedown elsewhere
         this.deactivate();
-        this.adapter.setFocusing(false);
+        this.setState({ focusing: false });
         this.adapter.notifyBlur(e);
     };
 
     handleInputFocus = (e: TagInputCursorEvent) => {
         // Tab entry gets the same state as a click
         this.handleClick();
-        this.adapter.setFocusing(true);
+        this.setState({ focusing: true });
         this.adapter.notifyFocus(e);
     };
 
@@ -305,7 +328,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         const { inputValue, tagsArray } = this.#current();
         if (tagsArray.length > 0) {
             if (!this.isControlledComponent()) {
-                this.adapter.setTagsArray([]);
+                this.setState({ tagsArray: [] });
             }
             this.adapter.notifyTagChange([]);
         }
@@ -330,20 +353,21 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
             return;
         }
         if (!this.getState('active')) {
-            this.adapter.setActive(true);
+            this.setState({ active: true });
         }
     };
 
     /** Ends the active session started by a click: on a mousedown outside the TagInput, or on blur() */
     deactivate = () => {
-        this.adapter.setActive(false);
+        this.setState({ active: false });
     };
 
     handleClickPrefixOrSuffix = () => {
         const { disabled } = this.adapter.getProps();
         const { focusing } = this.adapter.getStates();
         if (!disabled && !focusing) {
-            this.adapter.toggleFocusing(true);
+            this.adapter.focusInput();
+            this.setState({ focusing: true });
         }
     };
 
@@ -351,7 +375,7 @@ export default class TagInputFoundation<P extends TagInputBaseProps = TagInputBa
         const { tagsArray } = this.#current();
         const newTagsArray = arrayMove(tagsArray, oldIndex, newIndex);
         if (!this.isControlledComponent()) {
-            this.adapter.setTagsArray(newTagsArray);
+            this.setState({ tagsArray: newTagsArray });
         }
         this.adapter.notifyTagChange(newTagsArray);
     };

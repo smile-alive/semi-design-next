@@ -742,7 +742,7 @@ describe('Tooltip', () => {
         expect(document.querySelector(wrapper)).toBeNull();
     });
 
-    it('KeepAlive 失活时关闭弹层并通知', async () => {
+    it('KeepAlive 失活时关闭弹层，与卸载一样不通知', async () => {
         const onVisibleChange = vi.fn<(visible: boolean) => void>();
         const Cached = defineComponent({
             name: 'Cached',
@@ -768,10 +768,10 @@ describe('Tooltip', () => {
         cached.value = false;
         await nextTick();
         expect(document.querySelector(wrapper)).toBeNull();
-        expect(onVisibleChange).toHaveBeenLastCalledWith(false);
+        expect(onVisibleChange).not.toHaveBeenCalledWith(false);
     });
 
-    it('KeepAlive 失活时单向绑定 visible 为 true 的弹层随缓存子树移出页面，激活后回到页面', async () => {
+    it('KeepAlive 失活时单向绑定 visible 为 true 的弹层关闭，激活后重新打开', async () => {
         const Cached = defineComponent({
             name: 'Cached',
             setup: () => () => (

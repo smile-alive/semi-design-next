@@ -12,7 +12,6 @@ import mergeStyles from '../_base/merge-styles';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import VirtualList from '../_base/virtual-list';
 import type { SortableHandle } from '../_sortable/types';
 import Button from '../button';
@@ -30,8 +29,8 @@ import { type DataItem, type RenderSelectedItemProps, type ResolvedDataItem, typ
 const Sortable = lazy(() => import('../_sortable').then((module) => ({ default: module.Sortable })));
 
 type BlurEvent = Parameters<NonNullable<TransferProps['onBlur']>>[0];
-type Foundation = TransferFoundation<TransferProps, TransferState, BlurEvent>;
-type Adapter = TransferAdapter<TransferProps, TransferState, BlurEvent>;
+type Foundation = TransferFoundation<TransferProps, BlurEvent>;
+type Adapter = TransferAdapter<TransferProps, BlurEvent>;
 type ItemKey = string | number;
 
 const prefixCls = cssClasses.PREFIX;
@@ -101,22 +100,14 @@ export default function Transfer(rawProps: TransferProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, TransferProps, TransferState>(
         TransferFoundation,
         props,
-        // the starting values only: later selections and pages live in the state
-        (view) => ({
-            selectedValues: view.defaultValue ?? [],
-            inputValue: '',
-            leftCurrentPage: view.pagination?.defaultCurrentPage ?? view.pagination?.currentPage ?? 1,
-        }),
-        (base) => ({
-            updateSelected: (selectedValues) => base.setState({ selectedValues }),
+        (view) => TransferFoundation.getInitialState(view),
+        () => ({
             notifyBlur: (e) => local.onBlur?.(e),
             notifyChange: (values, items) => local.onChange?.(values, items as DataItem[]),
             notifySearch: (input) => local.onSearch?.(input),
             notifySelect: (item) => local.onSelect?.(item as DataItem),
             notifyDeselect: (item) => local.onDeselect?.(item as DataItem),
-            updateInput: (inputValue) => base.setState({ inputValue }),
             searchTree: (keyword) => treeHandle()?.search(keyword),
-            updateCurrentPage: (leftCurrentPage) => base.setState({ leftCurrentPage }),
             notifyPageChange: (currentPage) => local.pagination?.onPageChange?.(currentPage),
         })
     );
@@ -549,15 +540,6 @@ export default function Transfer(rawProps: TransferProps) {
         >
             {(render) => render(selectedPanelProps)}
         </Show>
-    );
-
-    useWatch(
-        () => local.value,
-        (next, previous) => {
-            if (Array.isArray(previous) && !Array.isArray(next)) {
-                foundation.handleValueRelease();
-            }
-        }
     );
 
     createEffect(

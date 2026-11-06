@@ -1,7 +1,7 @@
 import { children, createMemo, createUniqueId, onCleanup, onMount, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
 import { radioClasses as css, type strings } from '@fibrae/semi-foundation/radio/constants';
-import RadioFoundation, { type RadioAdapter, type RadioChangeEvent } from '@fibrae/semi-foundation/radio/radio-foundation';
+import RadioFoundation, { type RadioAdapter, type RadioBaseState, type RadioChangeEvent } from '@fibrae/semi-foundation/radio/radio-foundation';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-foundation/radio/radio.scss';
 import { IconRadio } from '@fibrae/semi-icons-solid';
@@ -14,7 +14,6 @@ import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import { useSpecialTrigger } from '../tooltip/context';
 import { type RadioMode, useRadioGroupContext } from './context';
 
@@ -46,14 +45,12 @@ export interface RadioProps extends ElementProps<'label', 'onChange' | 'onFocus'
     onBlur?: JSX.EventHandlerUnion<HTMLInputElement, FocusEvent>;
 }
 
-export interface RadioState {
-    checked?: boolean;
-}
+export type RadioState = RadioBaseState;
 
 export type { RadioChangeEvent };
 
-type Foundation = RadioFoundation<RadioProps, RadioState>;
-type Adapter = RadioAdapter<RadioProps, RadioState>;
+type Foundation = RadioFoundation<RadioProps>;
+type Adapter = RadioAdapter<RadioProps>;
 
 const defaultProps = {
     defaultChecked: false,
@@ -87,10 +84,8 @@ export default function Radio(rawProps: RadioProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, RadioProps, RadioState>(
         RadioFoundation,
         eventProps,
-        // only the initial value is wanted: later changes of `checked` arrive through the effect below
         (view) => RadioFoundation.getInitialState(view),
         (base) => ({
-            setChecked: (checked) => base.setState({ checked }),
             notifyGroupChange: (event) => group?.onChange(event),
             notifyChange: (event) => base.getProps().onChange?.(event),
             getInput: () => input,
@@ -159,18 +154,6 @@ export default function Radio(rawProps: RadioProps) {
         forwardFocus(node, () => input, focusOptions);
         registerTrigger(node);
     };
-
-    // `checked` going back to undefined (a Form reset) unchecks; other non-boolean values are ignored
-    useWatch(
-        () => local.checked,
-        (checked) => {
-            if (checked === undefined) {
-                foundation.setChecked(false);
-            } else if (typeof checked === 'boolean') {
-                foundation.setChecked(checked);
-            }
-        }
-    );
 
     onMount(() => {
         autofocus(control.autofocus, input);

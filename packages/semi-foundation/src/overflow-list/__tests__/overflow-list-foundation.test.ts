@@ -65,7 +65,8 @@ describe('OverflowListFoundation.handleIntersect', () => {
         const adapter = {
             getProps: () => props,
             getState: () => new Map<string, boolean>(),
-            updateVisibleState: vi.fn<OverflowListAdapter['updateVisibleState']>(),
+            setState: vi.fn<OverflowListAdapter['setState']>(),
+            notifyVisibleStateChange: vi.fn<OverflowListAdapter['notifyVisibleStateChange']>(),
             updateView: vi.fn<OverflowListAdapter['updateView']>(),
             notifyIntersect: vi.fn<OverflowListAdapter['notifyIntersect']>(),
         };

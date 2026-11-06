@@ -152,11 +152,6 @@ export interface Metadata {
     [x: string]: any;
 }
 
-export interface ChatState {
-    backBottomVisible?: boolean;
-    uploadAreaVisible?: boolean;
-}
-
 export interface ChatBoxProps extends Omit<CommonChatsProps, 'chats'> {
     toast?: any;
     style?: React.CSSProperties;
@@ -190,9 +185,4 @@ export interface InputBoxProps {
     clickUpload?: boolean;
     dragUpload?: boolean;
     pasteUpload?: boolean;
-}
-
-export interface InputBoxState {
-    content: string;
-    attachment: FileItem[];
 }

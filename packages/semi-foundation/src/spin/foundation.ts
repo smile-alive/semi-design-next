@@ -1,35 +1,44 @@
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import FocusTrapHandle from '../utils/focus-handle';
 
-export interface SpinAdapter<P extends SpinBaseProps = SpinBaseProps, S extends object = object> extends DefaultAdapter<P, S> {
-    setLoading: (val: boolean) => void;
+export interface SpinState {
+    loading: boolean;
 }
+
+export type SpinAdapter<P extends SpinBaseProps = SpinBaseProps> = DefaultAdapter<P, SpinState>;
 
 export interface SpinBaseProps {
     delay?: number;
+    spinning?: boolean;
 }
 
-export default class SpinFoundation<P extends SpinBaseProps = SpinBaseProps, S extends object = object> extends BaseFoundation<SpinAdapter<P, S>, P, S> {
+export default class SpinFoundation<P extends SpinBaseProps = SpinBaseProps> extends BaseFoundation<SpinAdapter<P>, P, SpinState> {
     #timer: ReturnType<typeof setTimeout> = null;
     #heldFocus: HTMLElement | null = null;
+
+    static override readonly propKeys = ['spinning'];
 
     #clearTimer() {
         clearTimeout(this.#timer);
         this.#timer = null;
     }
 
-    handleSpinningChange = (spinning: boolean) => {
+    static getInitialState(props: SpinBaseProps): SpinState {
+        return { loading: props.spinning };
+    }
+
+    override handlePropsChange() {
         this.#clearTimer();
-        const { delay } = this.getProps();
+        const { delay, spinning } = this.getProps();
         if (spinning && delay) {
             this.#timer = setTimeout(() => {
                 this.#timer = null;
-                this.adapter.setLoading(true);
+                this.setState({ loading: true });
             }, delay);
         } else {
-            this.adapter.setLoading(spinning);
+            this.setState({ loading: spinning });
         }
-    };
+    }
 
     /**
      * Called when the content under `root` becomes inert (`blocked`) or interactive again. inert drops focus to <body> on

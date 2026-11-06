@@ -10,8 +10,8 @@
     import Tooltip from '../tooltip/tooltip.vue';
     import type { VideoProgressEmits, VideoProgressProps, VideoProgressState } from './interface';
 
-    type Foundation = VideoProgressFoundation<VideoProgressProps, VideoProgressState>;
-    type Adapter = VideoProgressAdapter<VideoProgressProps, VideoProgressState>;
+    type Foundation = VideoProgressFoundation<VideoProgressProps>;
+    type Adapter = VideoProgressAdapter<VideoProgressProps>;
 
     const props = withDefaults(defineProps<VideoProgressProps>(), { markers: undefined, showTooltip: true });
     const emit = defineEmits<VideoProgressEmits>();
@@ -21,27 +21,19 @@
     // Annotated: the adapter's getSliderRef reads this ref, so inference is circular (TS7022)
     const slider = useTemplateRef<HTMLDivElement>('slider');
 
-    const prefix = cssClasses.PREFIX_PROGRESS;
-    const locale = computed(() => localeResult.value.locale);
-    const markersList = computed(() => VideoProgressFoundation.getMarkersList(props.markers, props.max));
-
     const { foundation, state } = useFoundation<Foundation, Adapter, VideoProgressProps, VideoProgressState>(
         VideoProgressFoundation,
         props,
+        (view) => VideoProgressFoundation.getInitialState(view),
         () => ({
-            isDragging: false,
-            movingInfo: null,
-            activeIndex: -1,
-        }),
-        (base) => ({
             getSliderRef: () => slider.value,
-            getMarkersList: () => markersList.value,
-            setIsDragging: (isDragging) => base.setState({ isDragging }),
-            setActiveIndex: (activeIndex) => base.setState({ activeIndex }),
-            setMovingInfo: (movingInfo) => base.setState({ movingInfo }),
             notifyChange: (value) => emit('change', value),
         })
     );
+
+    const prefix = cssClasses.PREFIX_PROGRESS;
+    const locale = computed(() => localeResult.value.locale);
+    const markersList = computed(() => VideoProgressFoundation.getMarkersList(props.markers, props.max));
 
     const onFocus = (e: FocusEvent) => foundation.handleFocus(e as FocusEvent & { currentTarget: Element });
 

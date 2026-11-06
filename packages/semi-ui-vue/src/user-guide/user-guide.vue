@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, onActivated, onDeactivated, onMounted, onUpdated, shallowRef, useAttrs, useId, watch } from 'vue';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
-    import UserGuideFoundation, { type UserGuideAdapter } from '@fibrae/semi-foundation/user-guide/foundation';
+    import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
     import { coversPage } from '@fibrae/semi-foundation/utils/dom';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
@@ -16,13 +16,13 @@
     import useLocale from '../locale/use-locale';
     import Modal from '../modal';
     import Popover from '../popover';
-    import type { UserGuideButtonProps, UserGuideEmits, UserGuideProps, UserGuideSlots, UserGuideState, UserGuideStepItem } from './interface';
+    import type { UserGuideButtonProps, UserGuideEmits, UserGuideProps, UserGuideSlots, UserGuideStepItem } from './interface';
     import StepNodes from './step-nodes.vue';
     import { anchorStyle, buttonBind, contentNodes } from './use-user-guide';
 
     type FoundationProps = UserGuideProps & { steps: UserGuideStepItem[] };
-    type Foundation = UserGuideFoundation<FoundationProps, UserGuideState>;
-    type Adapter = UserGuideAdapter<FoundationProps, UserGuideState>;
+    type Foundation = UserGuideFoundation<FoundationProps>;
+    type Adapter = UserGuideAdapter<FoundationProps>;
 
     // No root element takes the attrs: class and style go to the popover or modal, the rest is dropped (F11)
     defineOptions({ inheritAttrs: false });
@@ -68,11 +68,11 @@
     const titleId = `${spotlightId}-title`;
     const getContainer = computed(() => props.getPopupContainer ?? readSemiDefault(semi, 'UserGuide', 'getPopupContainer'));
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, UserGuideState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, UserGuideBaseState>(
         UserGuideFoundation,
         props,
-        () => ({ current: props.current ?? numbers.DEFAULT_CURRENT, spotlightRect: null }),
-        (base) => ({
+        () => UserGuideFoundation.getInitialState(props),
+        () => ({
             // Only a popup guide covers the page with its mask; a modal guide is locked by its Modal
             disabledBodyScroll: () => (props.mode === 'popup' && showMask.value && coversPage(getContainer.value ?? config.value.getPopupContainer) ? scroll.hold(lockBodyScroll) : scroll.release()),
             enabledBodyScroll: () => scroll.release(),
@@ -90,7 +90,6 @@
                 emit('update:visible', false);
                 emit('skip');
             },
-            setCurrent: (current) => base.setState({ current }),
         })
     );
 
@@ -107,15 +106,8 @@
 
     const measuring = () => props.visible && props.mode === 'popup' && active.value;
 
-    const measure = (scrollIntoView: boolean) => {
-        const next = UserGuideFoundation.measure(step.value, props.spotlightPadding, scrollIntoView);
-        if (!UserGuideFoundation.isSameRect(state.value.spotlightRect, next)) {
-            foundation.setState({ spotlightRect: next });
-        }
-    };
-
     const remeasure = () => {
-        if (measuring()) measure(false);
+        if (measuring()) foundation.measureSpotlight(false);
     };
 
     // Restore focus only if it is still on the card (or lost with it), so a user who clicked elsewhere stays there. A
@@ -182,7 +174,7 @@
         watch(
             [() => props.visible, () => props.mode, current, active],
             () => {
-                if (measuring()) measure(true);
+                if (measuring()) foundation.measureSpotlight(true);
             },
             { immediate: true, flush: 'post' }
         );
@@ -208,14 +200,6 @@
                 if (visible) onCleanup(foundation.afterHide);
             },
             { immediate: true, flush: 'post' }
-        );
-        // Mirrors a controlled current into state; after the hide watcher so a hide keeps the controlled step
-        watch(
-            [() => props.current, () => props.visible],
-            ([controlled]) => {
-                if (controlled !== undefined) foundation.setState({ current: controlled });
-            },
-            { flush: 'post' }
         );
     });
 

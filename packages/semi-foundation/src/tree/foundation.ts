@@ -292,8 +292,6 @@ export type TreeDragEvent = Pick<DragEvent, 'dataTransfer' | 'clientY'>;
 
 /** E is the host's node mouse event (right or double click), which the foundation only passes through */
 export interface TreeAdapter<E = unknown> extends DefaultAdapter<BasicTreeProps, BasicTreeInnerData> {
-    updateInputValue: (value: string) => void;
-    updateState: (states: Partial<BasicTreeInnerData>) => void;
     notifyExpand: (expandedKeys: Set<string>, { expanded, node }: BasicExpandedOtherProps) => void;
     notifySelect: (selectKey: string, bool: boolean, node: BasicTreeNodeData) => void;
     notifyChange: (value: BasicValue) => void;
@@ -307,38 +305,9 @@ export interface TreeAdapter<E = unknown> extends DefaultAdapter<BasicTreeProps,
     notifyDragLeave: (props: BasicDragProps) => void;
     notifyDragEnd: (props: BasicDragProps) => void;
     notifyDrop: (props: BasicOnDragProps) => void;
-    /** Keeps the rows from before a collapse for its animation; `undefined` drops them */
-    setCachedFlattenNodes: (nodes?: BasicFlattenNode[]) => void;
     /** Scrolls the virtualized list to a row of flattenNodes, found by key once the rendered rows catch up with a search */
     scrollToNode: (key: string, align: ScrollAlign) => void;
 }
-
-/**
- * Every prop `TreeFoundation.deriveState` reads. A host that hands it a snapshot of the props instead of the props
- * object (Solid) picks these keys, so a prop deriveState starts reading goes on this list too.
- */
-export const treeDerivedPropKeys = [
-    'autoExpandParent',
-    'checkRelation',
-    'defaultExpandAll',
-    'defaultExpandedKeys',
-    'defaultValue',
-    'disableStrictly',
-    'expandAll',
-    'expandedKeys',
-    'filterTreeNode',
-    'keyMaps',
-    'loadData',
-    'loadedKeys',
-    'motion',
-    'multiple',
-    'onChangeWithObject',
-    'showFilteredOnly',
-    'treeData',
-    'treeDataSimpleJson',
-    'treeNodeFilterProp',
-    'value',
-] as const satisfies readonly (keyof BasicTreeProps)[];
 
 /** Compares key/value/children only: a label that is a ReactNode is a new object on every render */
 function isTreeDataStructureEqual(prevTreeData: any[], nextTreeData: any[], keyMaps?: KeyMapProps) {
@@ -364,19 +333,37 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
     #dragNode: BasicTreeNodeProps | null = null;
     #dragEnterTimers = new Set<ReturnType<typeof setTimeout>>();
     #autoExpandTimer: ReturnType<typeof setTimeout> | undefined;
-    #throttledDragOverUpdate: ReturnType<typeof throttle>;
+    /**
+     * Every prop `deriveState` reads, which it keeps as `prevProps`. They change state during render, so there is no
+     * `handlePropsChange`; a prop deriveState starts reading goes on this list too.
+     */
+    static override readonly propKeys = [
+        'autoExpandParent',
+        'checkRelation',
+        'defaultExpandAll',
+        'defaultExpandedKeys',
+        'defaultValue',
+        'disableStrictly',
+        'expandAll',
+        'expandedKeys',
+        'filterTreeNode',
+        'keyMaps',
+        'loadData',
+        'loadedKeys',
+        'motion',
+        'multiple',
+        'onChangeWithObject',
+        'showFilteredOnly',
+        'treeData',
+        'treeDataSimpleJson',
+        'treeNodeFilterProp',
+        'value',
+    ] as const satisfies readonly (keyof BasicTreeProps)[];
 
-    constructor(adapter: TreeAdapter<E>) {
-        super({
-            ...adapter,
-        });
-        // 16ms: at most one dropPosition update per frame while dragging
-        this.#throttledDragOverUpdate = throttle((dropPosition: number) => {
-            this.adapter.updateState({
-                dropPosition,
-            });
-        }, 16);
-    }
+    // 16ms: at most one dropPosition update per frame while dragging
+    #throttledDragOverUpdate = throttle((dropPosition: number) => {
+        this.setState({ dropPosition });
+    }, 16);
 
     #isMultiple() {
         return this.getProp('multiple');
@@ -467,7 +454,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
             selectedKeys = [eventKey];
             this.#notifyChange(eventKey);
             if (!this.isControlledComponent()) {
-                this.adapter.updateState({ selectedKeys });
+                this.setState({ selectedKeys });
             }
         }
     }
@@ -480,7 +467,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         this.adapter.notifySelect(treeNode.eventKey, result.targetStatus, treeNode.data);
         this.#notifyChange(result.keys);
         if (!this.isControlledComponent()) {
-            this.adapter.updateState(result.state);
+            this.setState(result.state as BasicTreeInnerData);
         }
     }
 
@@ -500,7 +487,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
             motionType = 'hide';
         }
         // flattenNodes are rebuilt, never mutated, so the pre-collapse list can be kept as is
-        this.adapter.setCachedFlattenNodes(motionType === 'hide' && this.#isAnimated() ? this.getState('flattenNodes') : undefined);
+        this.setState({ cachedFlattenNodes: motionType === 'hide' && this.#isAnimated() ? this.getState('flattenNodes') : undefined });
 
         if (!this.#isExpandControlled()) {
             const flattenNodes = flattenTreeData(treeData, expandedKeys, keyMaps, isSearching && showFilteredOnly && filteredShownKeys);
@@ -508,13 +495,12 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
             if (isSearching && showFilteredOnly) {
                 motionKeys = motionKeys.filter((key) => filteredShownKeys.has(key));
             }
-            const newState = {
+            this.setState({
                 [expandedStateKey]: expandedKeys,
                 flattenNodes,
                 motionKeys: new Set(motionKeys),
                 motionType,
-            };
-            this.adapter.updateState(newState);
+            } as Pick<BasicTreeInnerData, typeof expandedStateKey | 'flattenNodes' | 'motionKeys' | 'motionType'>);
         }
 
         return {
@@ -537,7 +523,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
 
     #clearDragState() {
         this.#clearDragEnterTimers();
-        this.adapter.updateState({
+        this.setState({
             dragOverNodeKey: '',
             dragging: false,
         });
@@ -706,8 +692,8 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         if (prevProps && Object.keys(newState).length === 0 && !comparedPropChanged) {
             return null;
         }
-        // a copy: Vue passes the same reactive props object every time, so a stored reference always equals itself
-        newState.prevProps = { ...props };
+        // a snapshot: a host may pass the same live props object every time
+        newState.prevProps = pick(props, TreeFoundation.propKeys);
         return newState;
     }
 
@@ -743,16 +729,13 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
 
     override destroy() {
         super.destroy();
-        if (this.#throttledDragOverUpdate) {
-            this.#throttledDragOverUpdate.cancel();
-        }
-
+        this.#throttledDragOverUpdate.cancel();
         this.#clearDragEnterTimers();
     }
 
     /** Writes the state derived from new props back, so handlers read what was rendered */
     syncDerivedState = (derived: Partial<BasicTreeInnerData>) => {
-        this.adapter.updateState(derived);
+        this.setState(derived as BasicTreeInnerData);
     };
 
     scrollTo = ({ key, align = 'center' }: { key: string; align?: ScrollAlign }) => {
@@ -762,7 +745,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
     };
 
     handleInputChange = (sugInput: string) => {
-        this.adapter.updateInputValue(sugInput);
+        this.setState({ inputValue: sugInput });
         const { selectedKeys, keyEntities, treeData } = this.getStates();
         const expandedKeys = new Set(this.getState('expandedKeys'));
         const { showFilteredOnly, filterTreeNode, treeNodeFilterProp, keyMaps } = this.getProps();
@@ -789,7 +772,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         }
         const newFilteredExpandedKeys = new Set(expandedOptsKeys);
         this.adapter.notifySearch(sugInput, Array.from(newFilteredExpandedKeys));
-        this.adapter.updateState({
+        this.setState({
             expandedKeys,
             flattenNodes,
             motionKeys: new Set([]),
@@ -859,11 +842,11 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
                 this.adapter.notifyLoad(newLoadedKeys, data);
 
                 if (!this.#isLoadControlled()) {
-                    this.adapter.updateState({
+                    this.setState({
                         loadedKeys: newLoadedKeys,
                     });
                 }
-                this.adapter.updateState({
+                this.setState({
                     loadingKeys: newLoadingKeys,
                 });
             })
@@ -873,11 +856,11 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
                 if (currentLoadingKeys.has(key)) {
                     const newLoadingKeys = new Set(currentLoadingKeys);
                     newLoadingKeys.delete(key);
-                    this.adapter.updateState({ loadingKeys: newLoadingKeys });
+                    this.setState({ loadingKeys: newLoadingKeys });
                 }
             });
 
-        this.adapter.updateState({ loadingKeys: new Set<string>(loadingKeys).add(key) });
+        this.setState({ loadingKeys: new Set<string>(loadingKeys).add(key) });
     }
 
     handleNodeDragStart = (e: TreeDragEvent, treeNode: BasicTreeNodeProps) => {
@@ -901,7 +884,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
 
         this.#dragNode = treeNode;
 
-        this.adapter.updateState({
+        this.setState({
             dragging: true,
             dragNodesKeys: new Set(getDragNodesKeys(eventKey, keyEntities)),
         });
@@ -920,7 +903,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         const dropPosition = calcDropRelativePosition(e, treeNode);
 
         if (dragNode.eventKey === eventKey && dropPosition === 0) {
-            this.adapter.updateState({
+            this.setState({
                 dragOverNodeKey: '',
                 dropPosition: null,
             });
@@ -930,7 +913,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         // after the state cleared in dragleave is applied
         const timer = setTimeout(() => {
             this.#dragEnterTimers.delete(timer);
-            this.adapter.updateState({
+            this.setState({
                 dragOverNodeKey: eventKey,
                 dropPosition,
             });
@@ -976,7 +959,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
         this.#throttledDragOverUpdate.cancel();
         // the pending auto expand belongs to the node being left; a node entered next schedules its own
         clearTimeout(this.#autoExpandTimer);
-        this.adapter.updateState({
+        this.setState({
             dragOverNodeKey: '',
         });
         this.adapter.notifyDragLeave(this.#dragProps(e, treeNode));

@@ -1,9 +1,9 @@
 <script setup lang="ts" generic="R extends Record<string, any>">
     import { computed, normalizeStyle, onMounted, onUpdated, shallowRef, useAttrs, useId, useTemplateRef, watch, watchEffect, type CSSProperties, type HTMLAttributes, type StyleValue } from 'vue';
-    import { cloneDeep, isEqual } from 'es-toolkit';
+    import { cloneDeep } from 'es-toolkit';
     import { get } from 'es-toolkit/compat';
     import { numbers, strings } from '@fibrae/semi-foundation/table/constants';
-    import TableFoundation, { type BaseColumnProps, type BaseHeadWidth, type BaseRowKeyType, type TableAdapter } from '@fibrae/semi-foundation/table/foundation';
+    import TableFoundation, { type BaseColumnProps, type BaseRowKeyType, type TableAdapter } from '@fibrae/semi-foundation/table/foundation';
     import { amendTableWidth, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, isMissingDataIndex, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import warning from '@fibrae/semi-foundation/utils/warning';
@@ -195,33 +195,6 @@
             },
             getScrollMetrics: () => TableFoundation.readScrollMetrics(bodies.value?.[0]?.element()),
             setScrollableEdges: (edges) => TableFoundation.writeScrollableEdges(bodies.value?.[0]?.element(), edges),
-            setSelectedRowKeys: (selectedRowKeys) =>
-                base.setState({
-                    rowSelection: {
-                        ...base.getState('rowSelection'),
-                        selectedRowKeys: [...selectedRowKeys],
-                        selectedRowKeysSet: new Set(selectedRowKeys),
-                    },
-                }),
-            setPageDisabledRowKeys: (pageDisabledRowKeys) => base.setState({ pageDisabledRowKeys, pageDisabledRowKeysSet: new Set(pageDisabledRowKeys) }),
-            setPagination: (pagination) => base.setState({ pagination }),
-            setGroups: (groups) => base.setState({ groups }),
-            setDataSource: (records) => base.setState({ dataSource: records }),
-            setExpandedRowKeys: (expandedRowKeys) => base.setState({ expandedRowKeys: [...expandedRowKeys] }),
-            setQueries: (queries) => base.setState({ queries }),
-            setAllRowKeys: (allRowKeys) => base.setState({ allRowKeys }),
-            setCachedFilteredSortedDataSource: (filteredSortedDataSource) => base.setState({ filteredSortedDataSource }),
-            setCachedFilteredSortedRowKeys: (filteredSortedRowKeys) => base.setState({ filteredSortedRowKeys, filteredSortedRowKeysSet: new Set(filteredSortedRowKeys) }),
-            setFilteredDisabledRowKeys: (filteredDisabledRowKeys) => base.setState({ filteredDisabledRowKeys, filteredDisabledRowKeysSet: new Set(filteredDisabledRowKeys) }),
-            getCurrentPage: () => base.getStates().pagination?.currentPage ?? 1,
-            getCachedFilteredSortedDataSource: () => base.getState('filteredSortedDataSource') ?? [],
-            getCachedFilteredSortedRowKeys: () => base.getState('filteredSortedRowKeys') ?? [],
-            getFilteredDisabledRowKeysSet: () => base.getState('filteredDisabledRowKeysSet') ?? new Set(),
-            getHalfCheckedRowKeys: () => base.getState('halfCheckedRowKeys') ?? [],
-            setHalfCheckedRowKeys: (halfCheckedRowKeys) => base.setState({ halfCheckedRowKeys, halfCheckedRowKeysSet: new Set(halfCheckedRowKeys) }),
-            getKeyEntities: () => base.getState('keyEntities') ?? {},
-            setKeyEntities: (keyEntities) => base.setState({ keyEntities }),
-            getCheckRelation: () => base.getState('rowSelection')?.checkRelation ?? 'unRelated',
             notifyFilterDropdownVisibleChange: (visible, dataIndex) => {
                 const column = dataIndex ? base.getState('queries')?.find((query) => query.dataIndex === dataIndex) : undefined;
                 column?.onFilterDropdownVisibleChange?.(visible);
@@ -243,11 +216,12 @@
                 groupBy: () => groupBy.value,
                 rowExpandable: () => rowExpandableProp.value,
                 expandedRowRender: () => (hasExpandedRow.value ? expandedRowRender : undefined),
+                flattenColumns: () => toFoundationColumns(flattened.value),
             },
         }
     );
 
-    // derived during render as React does; the watch below writes it back for the foundation's event handlers
+    // derived during render as React does; the foundation writes it back in handlePropsChange
     const derived = computed(() => TableFoundation.deriveState(foundation.getProps(), state.value, toFoundationColumns(flattened.value)));
     const view = computed<TableState>(() => (derived.value ? { ...state.value, ...derived.value } : state.value));
 
@@ -315,21 +289,6 @@
 
     const mergedPagination = computed(() => (props.pagination ? mergePagination(view.value.pagination as TablePaginationProps | undefined, Boolean(props.scroll?.scrollToFirstRowOnChange), foundation.setPage, foundation.resetScrollY) : null));
 
-    const setHeadWidths = (widths: BaseHeadWidth[], index = 0) => {
-        const prev = foundation.getState('headWidths') ?? [];
-        if (!isEqual(prev[index], widths)) {
-            const next = [...prev];
-            next[index] = [...widths];
-            foundation.setState({ headWidths: next });
-        }
-    };
-
-    const setBodyHasScrollbar = (hasScrollbar: boolean) => {
-        if (hasScrollbar !== foundation.getState('bodyHasScrollBar')) {
-            foundation.setState({ bodyHasScrollBar: hasScrollbar });
-        }
-    };
-
     provideTableContext({
         view: contextView,
         rowState,
@@ -337,7 +296,7 @@
         slots: slots as TableSlots,
         resolveColumnSlot,
         renderTitle,
-        setHeadWidths,
+        setHeadWidths: foundation.setHeadWidths,
         getCellWidths: (columns: ColumnProps[]) => {
             const measured = getCellWidths(view.value.headWidths, columns);
             if (measured.length || !virtualized.value) {
@@ -355,7 +314,7 @@
             });
             return declared.every((width) => typeof width === 'number') ? (declared as number[]) : [];
         },
-        setBodyHasScrollbar,
+        setBodyHasScrollbar: foundation.setBodyHasScrollbar,
         handleBodyScroll,
         handleRowExpanded: (expanded: boolean, key: BaseRowKeyType, event?: Event) => foundation.handleRowExpanded(expanded, key, event),
         handleRowSelection: (key: BaseRowKeyType, selected: boolean, event: Event) => foundation.handleRowClickSelection(key, selected, event),
@@ -390,19 +349,6 @@
             () => flattened.value.some(isMissingDataIndex),
             (missing) => warning(missing, `[Semi Table] The column with sorter or filter must pass the 'dataIndex' prop`),
             { immediate: true }
-        );
-        let committed = { props: { ...foundation.getProps() }, flatten: foundation.getState('flattenColumns') };
-        watch(
-            [flattened, dataSource, () => props.rowSelection, () => props.pagination, () => props.expandedRowKeys, () => props.expandAllRows, () => props.expandAllGroupRows],
-            () => {
-                const changes = TableFoundation.deriveState(foundation.getProps(), state.value, toFoundationColumns(flattened.value));
-                if (changes) {
-                    foundation.setState(changes);
-                }
-                foundation.handleUpdate(committed.props, committed.flatten);
-                committed = { props: { ...foundation.getProps() }, flatten: foundation.getState('flattenColumns') };
-            },
-            { flush: 'pre' }
         );
     });
 

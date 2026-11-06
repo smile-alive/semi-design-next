@@ -2,45 +2,59 @@ import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 
 export interface AvatarBaseProps {
     gap?: number;
+    src?: string;
 }
 
-export interface AvatarBaseState {}
+export interface AvatarState {
+    isImgExist: boolean;
+    hovered: boolean;
+    scale: number;
+}
 
 /** E is the host's mouse event and ErrorEvent the host's image error event; the foundation only passes them through */
-export interface AvatarAdapter<P = AvatarBaseProps, S = AvatarBaseState, E = unknown, ErrorEvent = unknown> extends DefaultAdapter<P, S> {
-    setImgExist(isImgExist: boolean): void;
+export interface AvatarAdapter<P = AvatarBaseProps, E = unknown, ErrorEvent = unknown> extends DefaultAdapter<P, AvatarState> {
     notifyLeave(event: E): void;
     /** Returns what the callback returned: `false` keeps the broken image instead of falling back */
     notifyError(event: ErrorEvent): boolean | void;
     notifyEnter(event: E): void;
-    setScale: (scale: number) => void;
     /** Widths of the avatar and of its text content; null while no text is rendered */
     getTextWidths: () => { container: number; text: number } | null;
 }
 
-export default class AvatarFoundation<P extends AvatarBaseProps = AvatarBaseProps, S extends AvatarBaseState = AvatarBaseState, E = unknown, ErrorEvent = unknown> extends BaseFoundation<AvatarAdapter<P, S, E, ErrorEvent>, P, S> {
+export default class AvatarFoundation<P extends AvatarBaseProps = AvatarBaseProps, E = unknown, ErrorEvent = unknown> extends BaseFoundation<AvatarAdapter<P, E, ErrorEvent>, P, AvatarState> {
+    static override readonly propKeys = ['src', 'gap'];
+
+    static getInitialState(): AvatarState {
+        return { isImgExist: true, hovered: false, scale: 1 };
+    }
+
     override init() {
         this.changeScale();
     }
 
-    override destroy() {}
-
-    handleSrcChange = () => {
-        this.adapter.setImgExist(true);
-    };
+    override handlePropsChange(prev: Partial<P>) {
+        if (prev.src !== this.getProp('src')) {
+            this.setState({ isImgExist: true });
+        }
+        if (prev.gap !== this.getProp('gap')) {
+            this.changeScale();
+        }
+    }
 
     handleImgLoadError = (e: ErrorEvent) => {
         const errorFlag = this.adapter.notifyError(e);
         if (errorFlag !== false) {
-            this.adapter.setImgExist(false);
+            this.setState({ isImgExist: false });
         }
     };
 
     handleEnter = (e: E) => {
+        this.setState({ hovered: true });
         this.adapter.notifyEnter(e);
     };
 
     handleLeave = (e: E) => {
+        this.setState({ hovered: false });
         this.adapter.notifyLeave(e);
     };
 
@@ -53,7 +67,7 @@ export default class AvatarFoundation<P extends AvatarBaseProps = AvatarBaseProp
         const { container: nodeWidth, text: stringNodeWidth } = widths;
         if (nodeWidth !== 0 && stringNodeWidth !== 0 && gap * 2 < nodeWidth) {
             const scale = nodeWidth - gap * 2 > stringNodeWidth ? 1 : (nodeWidth - gap * 2) / stringNodeWidth;
-            this.adapter.setScale(scale);
+            this.setState({ scale });
         }
     };
 }

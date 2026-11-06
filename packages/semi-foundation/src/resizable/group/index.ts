@@ -12,7 +12,7 @@ export interface ResizeGroupOriginalPosition {
     nextItemSize: number;
 }
 
-export interface ResizeGroupAdapter<P extends ResizeGroupBaseProps = ResizeGroupBaseProps, S extends ResizeGroupBaseState = ResizeGroupBaseState> extends DefaultAdapter<P, S> {
+export interface ResizeGroupAdapter<P extends ResizeGroupBaseProps = ResizeGroupBaseProps> extends DefaultAdapter<P, ResizeGroupBaseState> {
     getGroupRef: () => HTMLDivElement | null;
     getItem: (index: number) => HTMLDivElement;
     getItemCount: () => number;
@@ -37,11 +37,12 @@ export interface ResizeGroupBaseState {
     curHandler: number | null;
 }
 
-export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupBaseProps, S extends ResizeGroupBaseState = ResizeGroupBaseState> extends BaseFoundation<ResizeGroupAdapter<P, S>, P, S> {
+export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupBaseProps> extends BaseFoundation<ResizeGroupAdapter<P>, P, ResizeGroupBaseState> {
     #itemMinusMap: Map<number, number>;
     #itemPercentMap: Map<number, number>; // percentages avoid float drift
     // false when the first initSpace ran inside display:none. #3336
     #sizeInitialized: boolean = false;
+    static override readonly propKeys = ['direction'];
 
     get #direction(): 'horizontal' | 'vertical' {
         return this.getProp('direction');
@@ -274,6 +275,15 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
         return lastResult !== false && nextResult !== false;
     }
 
+    static getInitialState(): ResizeGroupBaseState {
+        return {
+            isResizing: false,
+            originalPosition: { x: 0, y: 0, lastItemSize: 0, nextItemSize: 0 },
+            backgroundStyle: { cursor: 'auto' },
+            curHandler: null,
+        };
+    }
+
     override init() {
         this.#itemMinusMap = new Map();
         this.#itemPercentMap = new Map();
@@ -289,7 +299,7 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
         }
     };
 
-    handleDirectionChange = () => {
+    override handlePropsChange() {
         const [stale, current] = this.#direction === 'horizontal' ? ['height', 'width'] : ['width', 'height'];
         this.#measureHandlerRoom();
         for (let i = 0; i < this.adapter.getItemCount(); i++) {
@@ -298,7 +308,7 @@ export class ResizeGroupFoundation<P extends ResizeGroupBaseProps = ResizeGroupB
             item.style[current] = `calc(${this.#itemPercentMap.get(i)}% - ${this.#itemMinusMap.get(i)}px)`;
         }
         this.#syncAria();
-    };
+    }
 
     /**
      * Keyboard resize, reported like a drag: arrows move 1% of the group (Shift: 10%), Home and End go to the

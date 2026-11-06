@@ -59,8 +59,8 @@ type AnyFeedbackProps = BasicFeedbackProps &
         onOk?: FeedbackSideSheetProps['onOk'];
     };
 
-type Foundation = FeedbackFoundation<FeedbackProps, FeedbackBaseState, FeedbackCancelEvent, MouseEvent, TextAreaChangeEvent>;
-type Adapter = FeedbackAdapter<FeedbackProps, FeedbackBaseState, FeedbackCancelEvent, MouseEvent, TextAreaChangeEvent>;
+type Foundation = FeedbackFoundation<FeedbackProps, FeedbackCancelEvent, MouseEvent, TextAreaChangeEvent>;
+type Adapter = FeedbackAdapter<FeedbackProps, FeedbackCancelEvent, MouseEvent, TextAreaChangeEvent>;
 
 const defaultProps = {
     mode: 'popup',
@@ -78,9 +78,8 @@ export default function Feedback(rawProps: FeedbackProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, FeedbackProps, FeedbackBaseState>(
         FeedbackFoundation,
         props as FeedbackProps,
-        () => ({ value: null, onOKReturnPromiseStatus: 'fulfilled', onCancelReturnPromiseStatus: 'fulfilled' }),
-        (base) => ({
-            setValue: (value) => base.setState({ value }),
+        () => FeedbackFoundation.getInitialState(),
+        () => ({
             notifyValueChange: (value) => local.onValueChange?.(value),
             notifyCancel: (e) => local.onCancel?.(e) as void | Promise<unknown>,
             notifyOk: (e) => local.onOk?.(e) as void | Promise<unknown>,

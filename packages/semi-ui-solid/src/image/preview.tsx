@@ -78,11 +78,7 @@ export default function ImagePreview(rawProps: PreviewProps) {
     const { foundation, state } = useFoundation<Foundation, Adapter, PreviewProps, PreviewState>(
         PreviewFoundation,
         props,
-        (initial) => ({
-            currentIndex: initial.currentIndex || initial.defaultCurrentIndex || 0,
-            visible: initial.visible || initial.defaultVisible || false,
-            images: [],
-        }),
+        (initial) => PreviewFoundation.getInitialState(initial),
         (base) => ({
             notifyVisibleChange: (visible) => base.getProps().onVisibleChange?.(visible),
             notifyChange: (index) => base.getProps().onChange?.(index),

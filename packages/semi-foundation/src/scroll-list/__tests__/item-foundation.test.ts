@@ -36,15 +36,18 @@ function createColumn(initialProps: ScrollItemBaseProps) {
         getSelectorNode: () => selector,
         notifySelectItem,
     };
+    const foundation = new ItemFoundation(adapter);
     return {
-        foundation: new ItemFoundation(adapter),
+        foundation,
         list,
         items,
         wrapper,
         selector,
         notifySelectItem,
         setProps: (next: Partial<ScrollItemBaseProps>) => {
+            const prev = props;
             props = { ...props, ...next };
+            foundation.handlePropsChange(prev);
         },
     };
 }
@@ -63,11 +66,9 @@ describe('ItemFoundation', () => {
         column.list.append(...column.items(4));
 
         column.setProps({ selectedIndex: 3 });
-        column.foundation.syncSelectedIndex(3, 1);
         expect(column.wrapper.scrollTop).toBe(180);
 
         column.setProps({ selectedIndex: 0 });
-        column.foundation.syncSelectedIndex(0, 3);
         expect(column.wrapper.scrollTop).toBe(72);
         expect(column.notifySelectItem).not.toHaveBeenCalled();
         column.foundation.destroy();
@@ -88,7 +89,6 @@ describe('ItemFoundation', () => {
         column.list.append(...column.items(12));
 
         column.setProps({ selectedIndex: 0 });
-        column.foundation.syncSelectedIndex(0, 11);
         expect(column.wrapper.scrollTop).toBe(24 * 36 - 72);
         column.foundation.destroy();
         column.wrapper.remove();
@@ -120,7 +120,6 @@ describe('ItemFoundation', () => {
 
             column.foundation.handleKeyDown(press('ArrowDown'));
             column.setProps({ selectedIndex: 6 });
-            column.foundation.syncSelectedIndex(6, 5);
             vi.advanceTimersByTime(200);
 
             expect(column.notifySelectItem.mock.calls.map(([data]) => data.index)).toEqual([6]);
@@ -139,7 +138,6 @@ describe('ItemFoundation', () => {
             column.foundation.handleScroll();
 
             column.setProps({ selectedIndex: 6 });
-            column.foundation.syncSelectedIndex(6, 5);
             vi.advanceTimersByTime(200);
 
             expect(column.notifySelectItem).not.toHaveBeenCalled();

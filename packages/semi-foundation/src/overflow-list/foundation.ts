@@ -30,9 +30,10 @@ export interface OverflowListView {
     scrollOverflow: ScrollOverflow;
 }
 
-export interface OverflowListAdapter<P extends OverflowListBaseProps = OverflowListBaseProps, S extends OverflowListBaseState = OverflowListBaseState> extends DefaultAdapter<P, S> {
+export interface OverflowListAdapter<P extends OverflowListBaseProps = OverflowListBaseProps> extends DefaultAdapter<P, OverflowListBaseState> {
     updateView: (view: Partial<OverflowListView>) => void;
-    updateVisibleState: (visible: Map<string, boolean>) => void;
+    /** Runs after the commit that shows `visibleState` */
+    notifyVisibleStateChange: (visibleState: Map<string, boolean>) => void;
     notifyIntersect: (res: Record<string, IntersectionObserverEntry>) => void;
     notifyOverflow: (overflow: Array<Record<string, any>>) => void;
 }
@@ -69,7 +70,7 @@ function computeScrollOverflow(items: Array<Record<string, any>>, itemKey: ItemK
     return [items.slice(0, visibleStart), items.slice(visibleStateArr.lastIndexOf(true) + 1)];
 }
 
-export default class OverflowListFoundation<P extends OverflowListBaseProps = OverflowListBaseProps, S extends OverflowListBaseState = OverflowListBaseState> extends BaseFoundation<OverflowListAdapter<P, S>, P, S> {
+export default class OverflowListFoundation<P extends OverflowListBaseProps = OverflowListBaseProps> extends BaseFoundation<OverflowListAdapter<P>, P, OverflowListBaseState> {
     #previousY = undefined;
     #notifiedOverflow: Array<Record<string, any>> = [];
     #itemSizes = new Map<ItemKey, number>();
@@ -101,6 +102,10 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
     protected getReversedItems() {
         const { items } = this.getProps();
         return items.toReversed();
+    }
+
+    static getInitialState(): OverflowListBaseState {
+        return { containerWidth: 0, overflowWidth: 0, visibleState: new Map() };
     }
 
     /** The visibleState table is keyed by the stringified item key, the form data-scrollkey carries */
@@ -200,7 +205,7 @@ export default class OverflowListFoundation<P extends OverflowListBaseProps = Ov
             return;
         }
         this.#previousY = currentY;
-        this.adapter.updateVisibleState(visibleState);
+        this.setState({ visibleState }, () => this.adapter.notifyVisibleStateChange(visibleState));
         this.#syncScrollOverflowCache(visibleState);
         this.adapter.notifyIntersect(res);
     };

@@ -1,13 +1,11 @@
 <script setup lang="ts">
     import { computed, onBeforeUpdate, shallowRef, useAttrs, useId } from 'vue';
-    import { isEqual } from 'es-toolkit';
     import type { CheckboxGroupView } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
-    import CheckboxGroupFoundation, { type CheckboxGroupAdapter } from '@fibrae/semi-foundation/checkbox/checkbox-group-foundation';
+    import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxGroupBaseState } from '@fibrae/semi-foundation/checkbox/checkbox-group-foundation';
     import { checkboxGroupClasses, strings } from '@fibrae/semi-foundation/checkbox/constants';
     import '@fibrae/semi-foundation/checkbox/checkbox.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
-    import useDidUpdate from '../_base/use-did-update';
     import useFoundation from '../_base/use-foundation';
     import Checkbox from './checkbox.vue';
     import { provideCheckboxGroupContext } from './context';
@@ -17,12 +15,8 @@
         value?: CheckboxValue[];
     }
 
-    interface GroupState {
-        value?: CheckboxValue[];
-    }
-
-    type Foundation = CheckboxGroupFoundation<FoundationProps, GroupState>;
-    type Adapter = CheckboxGroupAdapter<FoundationProps, GroupState>;
+    type Foundation = CheckboxGroupFoundation<FoundationProps>;
+    type Adapter = CheckboxGroupAdapter<FoundationProps>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -48,12 +42,11 @@
     // Tooltip injects the rest for a dialog trigger, and tabindex would add a stray Tab stop.
     const DROPPED_ATTRS = new Set(['aria-invalid', 'aria-errormessage', 'aria-required', 'aria-expanded', 'aria-haspopup', 'aria-controls', 'tabindex', 'tabIndex']);
 
-    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, GroupState>(
+    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, CheckboxGroupBaseState>(
         CheckboxGroupFoundation,
         props,
-        (view) => ({ value: view.value || view.defaultValue }),
-        (base) => ({
-            updateGroupValue: (value) => base.setState({ value }),
+        (view) => CheckboxGroupFoundation.getInitialState(view),
+        () => ({
             notifyChange: (value) => {
                 emit('update:modelValue', value);
                 emit('change', value);
@@ -100,9 +93,6 @@
             emit('blur', event);
         }
     };
-
-    // Deep comparison: Tree and TreeSelect pass a new array on every render.
-    useDidUpdate(() => props.modelValue, foundation.handlePropValueChange, isEqual, 'pre');
 
     onBeforeUpdate(() => {
         const next = pickAria();

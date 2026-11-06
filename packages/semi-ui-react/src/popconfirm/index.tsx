@@ -2,9 +2,8 @@ import React, { useId, useImperativeHandle, useLayoutEffect, useRef } from 'reac
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/popconfirm/constants';
-import PopconfirmFoundation, { type PopconfirmAdapter } from '@fibrae/semi-foundation/popconfirm/popconfirm-foundation';
+import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/popconfirm/popconfirm-foundation';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/popconfirm/popconfirm.scss';
 import { IconClose, IconAlertTriangle } from '@fibrae/semi-icons-react';
 import useDefaultProps from '../_base/use-default-props';
@@ -16,6 +15,9 @@ import { useConfigContext } from '../config-provider/context';
 import useLocale from '../locale/use-locale';
 import Popover, { type PopoverHandle, type PopoverProps } from '../popover';
 import type { Position, Trigger, RenderContentProps, TooltipProps } from '../tooltip';
+
+type Foundation = PopconfirmFoundation<PopconfirmProps>;
+type Adapter = PopconfirmAdapter<PopconfirmProps>;
 
 export interface PopconfirmProps extends PopoverProps {
     cancelText?: string;
@@ -46,27 +48,19 @@ export interface PopconfirmHandle {
     focusTrigger: () => void;
 }
 
-export interface PopconfirmState {
-    visible: boolean;
-    cancelLoading: boolean;
-    confirmLoading: boolean;
-}
+export type PopconfirmState = PopconfirmBaseState;
 
 const defaultProps = {
     // a confirmation is a dialog whatever opens it, hover and focus included, unlike a plain Popover (F12)
     role: 'dialog',
     stopPropagation: true,
     trigger: 'click',
-    onVisibleChange: noop,
     disabled: false,
     icon: <IconAlertTriangle size="extra-large" />,
     okType: 'primary',
     cancelType: 'tertiary',
     prefixCls: cssClasses.PREFIX,
     showCloseIcon: true,
-    onCancel: noop,
-    onConfirm: noop,
-    onClickOutSide: noop,
 } satisfies Partial<PopconfirmProps>;
 
 const hasNode = (node: unknown) => node != null && typeof node !== 'boolean' && node !== '';
@@ -101,17 +95,14 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
         }
     };
 
-    const [foundation, state] = useFoundation<PopconfirmFoundation<PopconfirmProps, PopconfirmState>, PopconfirmAdapter<PopconfirmProps, PopconfirmState>, PopconfirmProps, PopconfirmState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, PopconfirmProps, PopconfirmState>(
         PopconfirmFoundation,
         props,
-        () => ({ cancelLoading: false, confirmLoading: false, visible: props.defaultVisible || false }),
+        () => PopconfirmFoundation.getInitialState(props),
         (base) => ({
-            setVisible: (visible) => base.setState({ visible }),
-            updateConfirmLoading: (confirmLoading) => base.setState({ confirmLoading }),
-            updateCancelLoading: (cancelLoading) => base.setState({ cancelLoading }),
-            notifyConfirm: (e) => base.getProps().onConfirm(e),
-            notifyCancel: (e) => base.getProps().onCancel(e),
-            notifyVisibleChange: (visible) => base.getProps().onVisibleChange(visible),
+            notifyConfirm: (e) => base.getProps().onConfirm?.(e),
+            notifyCancel: (e) => base.getProps().onCancel?.(e),
+            notifyVisibleChange: (visible) => base.getProps().onVisibleChange?.(visible),
             focusCancelButton: () => focusButton('cancel'),
             focusOkButton: () => focusButton('ok'),
             focusPrevFocusElement: () => {
@@ -136,13 +127,6 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
     useDidUpdate(open, (visible) => {
         if (!visible) {
             foundation.handlePopupClose();
-        }
-    });
-
-    // a disabled Popconfirm renders no popup, so an open one reports the close instead of reopening when re-enabled
-    useDidUpdate(props.disabled, (disabled) => {
-        if (disabled && open) {
-            foundation.handleVisibleChange(false);
         }
     });
 

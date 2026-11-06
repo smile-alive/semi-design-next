@@ -37,6 +37,9 @@ import TreeNode from '../tree/tree-node';
 import useTreeKeyboard from '../tree/use-tree-keyboard';
 import Trigger from '../trigger';
 
+type Foundation = TreeSelectFoundation<TreeSelectBodyProps, TreeSelectState, React.MouseEvent | React.KeyboardEvent>;
+type Adapter = TreeSelectAdapter<TreeSelectBodyProps, TreeSelectState, React.MouseEvent | React.KeyboardEvent>;
+
 export type SearchInputElement = InputHandle | HTMLInputElement | HTMLTextAreaElement;
 
 export type ExpandAction = false | 'click' | 'doubleClick';
@@ -187,7 +190,6 @@ const defaultProps = {
     defaultOpen: false,
     showSearchClear: true,
     showClear: false,
-    onVisibleChange: noop,
     expandAction: false,
     clickToHide: true,
     searchAutoFocus: false,
@@ -311,20 +313,15 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
     const treeId = useId();
     const singleSearchTextId = useId();
 
-    const [foundation, state] = useFoundation<TreeSelectFoundation<TreeSelectBodyProps, TreeSelectState, React.MouseEvent | React.KeyboardEvent>, TreeSelectAdapter<TreeSelectBodyProps, TreeSelectState, React.MouseEvent | React.KeyboardEvent>, TreeSelectBodyProps, TreeSelectState>(
+    const [foundation, state] = useFoundation<Foundation, Adapter, TreeSelectBodyProps, TreeSelectState>(
         TreeSelectFoundation,
         props,
         () => TreeSelectFoundation.getInitialState(props) as TreeSelectState,
         (base) => ({
-            updateInputValue: (inputValue) => base.setState({ inputValue }),
-            updateState: (states) => base.setState({ ...states } as TreeSelectState),
             notifySelect: (selectKey, bool, node) => base.getProps().onSelect?.(selectKey, bool, node),
             notifySearch: (input, filteredExpandedKeys, filteredNodes) => base.getProps().onSearch?.(input, filteredExpandedKeys, filteredNodes),
-            setCachedFlattenNodes: (cachedFlattenNodes) => base.setState({ cachedFlattenNodes }),
             notifyLoad: (newLoadedKeys, data) => base.getProps().onLoad?.(newLoadedKeys, data),
             notifyClear: (e) => base.getProps().onClear?.(e),
-            openMenu: () => base.setState({ isOpen: true }),
-            closeMenu: () => base.setState({ isOpen: false }),
             notifyVisibleChange: (visible) => base.getProps().onVisibleChange?.(visible),
             notifyChange: (value, node, e) => base.getProps().onChange?.(value, node, e),
             notifyChangeWithObject: (node, e) => base.getProps().onChange?.(node, e),
@@ -342,7 +339,6 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                     (inputRef.current ?? tagInputRef.current)?.focus();
                 }
             },
-            updateIsFocus: (isFocus) => base.setState({ isFocus }),
             isInTrigger: (node) => node instanceof Node && Boolean(triggerRef.current?.contains(node)),
         })
     );

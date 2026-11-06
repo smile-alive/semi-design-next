@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { computed, h, normalizeClass, onDeactivated } from 'vue';
-    import ChatBoxActionFoundation, { type ChatBoxActionAdapter } from '@fibrae/semi-ai-foundation/chat/chat-box-action-foundation';
+    import { computed, h, normalizeClass } from 'vue';
+    import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionState } from '@fibrae/semi-ai-foundation/chat/chat-box-action-foundation';
     import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
     import useFoundation from '@fibrae/semi-ui-vue/_base/use-foundation';
     import { useLocale } from '@fibrae/semi-ui-vue/hooks';
@@ -14,14 +14,9 @@
         isLast: boolean;
     }
 
-    interface ChatBoxActionState {
-        visible: boolean;
-        showAction: boolean;
-    }
-
     type ActionName = 'copy' | 'like' | 'dislike' | 'reset' | 'delete';
-    type Foundation = ChatBoxActionFoundation<ChatBoxActionProps, ChatBoxActionState>;
-    type Adapter = ChatBoxActionAdapter<ChatBoxActionProps, ChatBoxActionState>;
+    type Foundation = ChatBoxActionFoundation<ChatBoxActionProps>;
+    type Adapter = ChatBoxActionAdapter<ChatBoxActionProps>;
 
     const props = defineProps<ChatBoxActionProps>();
     defineSlots<Pick<ChatSlots, 'action'>>();
@@ -32,8 +27,8 @@
     const { foundation, state } = useFoundation<Foundation, Adapter, ChatBoxActionProps, ChatBoxActionState>(
         ChatBoxActionFoundation,
         props,
-        () => ({ visible: false, showAction: false }),
-        (base) => ({
+        () => ChatBoxActionFoundation.getInitialState(),
+        () => ({
             notifyDeleteMessage: () => context.deleteMessage(props.message),
             notifyMessageCopy: () => context.copyMessage(props.message),
             // a function, so the text follows a locale change while the toast shows
@@ -41,8 +36,6 @@
             notifyLikeMessage: () => context.likeMessage(props.message),
             notifyDislikeMessage: () => context.dislikeMessage(props.message),
             notifyResetMessage: () => context.resetMessage(props.message),
-            setVisible: (visible) => base.setState({ visible }),
-            setShowAction: (showAction) => base.setState({ showAction }),
         })
     );
 
@@ -101,9 +94,6 @@
         const defaultActionsObj: ChatDefaultActionNodeObj = Object.fromEntries(actions.value.map((name) => [`${name}Node`, actionNode(name)]));
         return { defaultActions: Object.values(defaultActionsObj), defaultActionsObj };
     };
-
-    // a cached chat keeps its state, and a confirmation left open would show again on return
-    onDeactivated(foundation.hideDeletePopup);
 </script>
 
 <template>
