@@ -16,9 +16,9 @@ export type { ArrayFieldChildrenProps, ArrayFieldProps, ArrayFieldRow } from './
 export type { ErrorMessageProps } from './error-message';
 export type { FormCheckboxProps, FormRadioProps, FormSelectProps, FormUploadProps } from './field';
 export type { InputGroupProps } from './input-group';
-export type { CommonFieldProps, FieldError, FieldErrorInput, FieldProps, FieldValidateTriggerType, FieldValidator, FormApi, FormElement, FormHandle, FormProps, FormRenderProps, FormState, OptionalFieldProps, RuleItem, RuleType, ScrollOptions } from './interface';
+export type { CommonFieldProps, FieldError, FieldErrorInput, FieldProps, FieldValidateTriggerType, FieldValidator, FormApi, FormElement, FormHandle, FormProps, FormRenderProps, FormState, FormValidator, OptionalFieldProps, RuleItem, RuleType, ScrollOptions } from './interface';
 export type { LabelProps } from './label';
-export type { SchemaFieldNode, SchemaFieldProps, SchemaFieldRenderContext } from './schema-field';
+export type { JsonSchema, SchemaFieldKind, SchemaFieldNode, SchemaFieldProps, SchemaFieldRenderContext } from './schema-field';
 export type { SchemaFormProps } from './schema-form';
 export type { SectionProps } from './section';
 export type { SlotProps } from './slot';

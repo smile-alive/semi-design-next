@@ -9,7 +9,7 @@ import type { ColProps } from '../grid/interface.js';
 import type { InputGroupProps as BaseInputGroupProps, ValidateStatus } from '../input/interface.js';
 
 export type { FieldError, FieldErrorInput } from '@fibrae/semi-foundation/form/errors';
-export type { FieldValidateTriggerType, FieldValidator, FormState } from '@fibrae/semi-foundation/form/interface';
+export type { FieldValidateTriggerType, FieldValidator, FormState, FormValidator } from '@fibrae/semi-foundation/form/interface';
 export type { JsonSchema, SchemaFieldKind, SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
 export type { RuleItem, RuleType } from '@fibrae/semi-foundation/form/rules';
 
