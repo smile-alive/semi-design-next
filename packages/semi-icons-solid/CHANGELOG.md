@@ -1,5 +1,11 @@
 # @fibrae/semi-icons-solid
 
+## 0.4.0
+
+### Patch Changes
+
+- @fibrae/semi-icons-core@0.4.0
+
 ## 0.3.1
 
 ### Patch Changes
