@@ -40,7 +40,7 @@ export default function Spin(rawProps: SpinProps) {
 - `useFoundation` 返回 `[foundation, state]`，泛型写法见 [components](../components.md#有-foundation)。
 - prop 变化的反应由 foundation 的 `propKeys` 与 `handlePropsChange` 承担（见 [components](../components.md#有-foundation)）。其余值（context、本地 state、派生值）变化时调 foundation 用 `useDidUpdate(值, 回调)`。它不接收依赖数组，挂载时和 StrictMode 重跑时都不触发；使用方每次传新对象、要按内容比较时，第三个参数传 `isEqual`。
 - 必须和 props 在同一次提交里生效的派生状态（如 Collapsible 的高度与过渡 class；分两次提交会让过渡以 0ms 生效），用渲染期比较加条件 setState：新值和旧值不同时才调用，下一轮就收敛。不用 `useDidUpdate`。
-- 渲染期要用的 foundation 静态纯函数直接调用（如 `DescriptionsFoundation.getHorizontalList(columns, column)`）。host 在 insertion 阶段才同步 props，渲染期从实例上读到的是上一轮的 props，所以不经过 `useFoundation` 返回的实例。
+- 渲染期要用的 foundation 静态纯函数直接调用（如 `DatePickerFoundation.isSelectionControlled(props)`）。host 在 insertion 阶段才同步 props，渲染期从实例上读到的是上一轮的 props，所以不经过 `useFoundation` 返回的实例。
 - DOM 测量用 `useLayoutEffect`，纯通知用 `useEffect`。
 
 ## 无 foundation

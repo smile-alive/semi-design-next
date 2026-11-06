@@ -50,7 +50,7 @@ Foundation 包含组件交互的业务逻辑，包括 UI 行为触发后的各�
 
 ### Adapter
 
-Adapter 是一个接口，包含 Foundation 实现业务逻辑所需的全部方法，负责组件 DOM 结构声明以及与 DOM 操作、更新相关的逻辑，通常使用框架 API 完成 setState、getState、addEventListener、removeListener 等操作。React 通过 adapter 与 hook 接入，Vue 通过 composable 接入，Svelte 通过 runes 接入。
+Adapter 是一个接口，包含 Foundation 实现业务逻辑所需的全部方法，负责组件 DOM 结构声明以及与 DOM 操作、更新相关的逻辑，通常用框架 API 交出 DOM 元素、完成测量与聚焦，并把事件通知给组件的回调；状态由 Foundation 持有。React 通过 adapter 与 hook 接入，Vue 通过 composable 接入，Svelte 通过 runes 接入。
 
 目前有 React、Vue、Solid 与 Svelte 四套实现，分别对应 `@fibrae/semi-ui-react`、`@fibrae/semi-ui-vue`、`@fibrae/semi-ui-solid` 与 `@fibrae/semi-ui-svelte`，AI 组件在 `@fibrae/semi-ai-react`、`@fibrae/semi-ai-vue`、`@fibrae/semi-ai-solid` 与 `@fibrae/semi-ai-svelte` 中。
 
