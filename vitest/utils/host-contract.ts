@@ -23,7 +23,14 @@ export const stateText = () => document.querySelector('[data-contract-state]')?.
 const labelText = () => document.querySelector('[data-contract-label]')?.textContent ?? null;
 
 export class ContractFoundation extends BaseFoundation<ContractAdapter, ContractProps, ContractState> {
+    static override readonly propKeys = ['label'];
+    // a change of letter case alone is no change
+    static override readonly propEquals = { label: (a?: string, b?: string) => a?.toLowerCase() === b?.toLowerCase() };
     readonly signals: AbortSignal[] = [];
+
+    protected override initOnce() {
+        this.adapter.log(`initOnce aborted=${this.signal.aborted}`);
+    }
 
     override init() {
         this.signals.push(this.signal);
@@ -40,9 +47,8 @@ export class ContractFoundation extends BaseFoundation<ContractAdapter, Contract
         this.adapter.notifyChange(x);
     }
 
-    /** Called by the host's native prop-change reaction (React and Vue `useDidUpdate`) */
-    handleLabelChange() {
-        this.adapter.log(`labelChange prop=${this.getProp('label')} dom=${labelText()}`);
+    override handlePropsChange(prev: Partial<ContractProps>) {
+        this.adapter.log(`labelChange prev=${prev.label} prop=${this.getProp('label')} dom=${labelText()}`);
     }
 }
 
@@ -56,8 +62,7 @@ export interface ContractMountOptions {
 
 /**
  * What a framework driver provides. It mounts a component that renders the two `data-contract-*` elements with
- * `label` starting at 'a', reacts to `label` changes with `handleLabelChange`, and logs 'commit' from a post-commit
- * hook declared after the host (React useLayoutEffect, Vue onMounted and onUpdated). That hook also appends
+ * `label` starting at 'a', and logs 'commit' from a post-commit hook declared after the host (React useLayoutEffect, Vue onMounted and onUpdated). That hook also appends
  * `foundation.getContext('theme')` to `commitContexts`. The host passes `{ theme }` as the foundation's context, where
  * `theme` follows `setContext`.
  */
@@ -75,7 +80,8 @@ export interface ContractHost {
     unmount(): Promise<void>;
 }
 
-const lifecycle = (log: string[]) => log.filter((entry) => entry.startsWith('init') || entry.startsWith('destroy'));
+const lifecycle = (log: string[]) => log.filter((entry) => /^(init |destroy)/.test(entry));
+const initOnces = (log: string[]) => log.filter((entry) => entry.startsWith('initOnce'));
 
 /**
  * Registers the host contract documented on `BaseFoundation` (`semi-foundation/base/foundation.ts`) against one
@@ -91,6 +97,12 @@ export function defineHostContract(mount: (options?: ContractMountOptions) => Pr
         await host.unmount();
         expect(lifecycle(host.log)).toEqual(['init state=0', `destroy attached=${!features.detachedOnDestroy} aborted=false`]);
         expect(foundation.signals.map((signal) => signal.aborted)).toEqual([true]);
+    });
+
+    it('initOnce 在第一次 init 之前执行一次，此时 signal 可用', async () => {
+        const host = await mount({ strictMode: features.strictMode });
+        expect(initOnces(host.log)).toEqual(['initOnce aborted=false']);
+        expect(host.log.indexOf('initOnce aborted=false')).toBeLessThan(host.log.findIndex((entry) => entry.startsWith('init ')));
     });
 
     it.runIf(features.strictMode)('StrictMode 下 init 与 destroy 成对：挂载期间 init 比 destroy 多一次，卸载后相等且 signal 全部 abort', async () => {
@@ -151,12 +163,27 @@ export function defineHostContract(mount: (options?: ContractMountOptions) => Pr
         expect(host.commitContexts).toEqual(['a', 'b']);
     });
 
-    it('props 变化的反应通过 getProp 读到新值且 DOM 已更新，挂载时不触发', async () => {
+    it('propKeys 变化后 handlePropsChange 收到旧值、getProp 读到新值且 DOM 已更新，挂载时不触发', async () => {
         const host = await mount();
         const reactions = () => host.log.filter((entry) => entry.startsWith('labelChange'));
         expect(reactions()).toEqual([]);
         await host.setLabel('b');
-        expect(reactions()).toEqual(['labelChange prop=b dom=b']);
+        expect(reactions()).toEqual(['labelChange prev=a prop=b dom=b']);
+    });
+
+    it('propEquals 判为相等的变化不触发 handlePropsChange，旧值仍是上次触发时的值', async () => {
+        const host = await mount();
+        const reactions = () => host.log.filter((entry) => entry.startsWith('labelChange'));
+        await host.setLabel('A');
+        expect(reactions()).toEqual([]);
+        await host.setLabel('b');
+        expect(reactions()).toEqual(['labelChange prev=a prop=b dom=b']);
+    });
+
+    it('不在 propKeys 中的 prop 变化不触发 handlePropsChange', async () => {
+        const host = await mount();
+        await host.setContext('b');
+        expect(host.log.filter((entry) => entry.startsWith('labelChange'))).toEqual([]);
     });
 
     it('先 setState 再通知：使用方读到新 state 与旧 DOM，回调读到父级回写的受控 prop', async () => {
@@ -168,6 +195,6 @@ export function defineHostContract(mount: (options?: ContractMountOptions) => Pr
             },
         });
         await host.run((foundation) => foundation.increment());
-        expect(host.log.filter((entry) => /^(onChange|callback|labelChange)/.test(entry))).toEqual(['onChange arg=1 state=1 dom=0 label=a', 'callback state=1 label=L1', 'labelChange prop=L1 dom=L1']);
+        expect(host.log.filter((entry) => /^(onChange|callback|labelChange)/.test(entry))).toEqual(['onChange arg=1 state=1 dom=0 label=a', 'callback state=1 label=L1', 'labelChange prev=a prop=L1 dom=L1']);
     });
 }

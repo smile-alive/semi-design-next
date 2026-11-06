@@ -2,7 +2,7 @@
     import { onMount, untrack } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
     import { cssClasses } from '@fibrae/semi-foundation/popconfirm/constants';
-    import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseProps } from '@fibrae/semi-foundation/popconfirm/popconfirm-foundation';
+    import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseProps, type PopconfirmBaseState } from '@fibrae/semi-foundation/popconfirm/popconfirm-foundation';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import '@fibrae/semi-foundation/popconfirm/popconfirm.scss';
     import { IconAlertTriangle, IconClose } from '@fibrae/semi-icons-svelte';
@@ -14,10 +14,10 @@
     import useLocale from '../locale/use-locale.svelte.js';
     import { Popover } from '../popover/index.js';
     import type { FocusTarget, RenderContentProps, TooltipTriggerProps } from '../tooltip/index.js';
-    import type { PopconfirmButtonProps, PopconfirmProps, PopconfirmState } from './interface.js';
+    import type { PopconfirmButtonProps, PopconfirmProps } from './interface.js';
 
-    type Foundation = PopconfirmFoundation<PopconfirmBaseProps, PopconfirmState>;
-    type Adapter = PopconfirmAdapter<PopconfirmBaseProps, PopconfirmState>;
+    type Foundation = PopconfirmFoundation<PopconfirmBaseProps>;
+    type Adapter = PopconfirmAdapter<PopconfirmBaseProps>;
 
     const defaults = useDefaultProps('Popconfirm');
 
@@ -107,6 +107,9 @@
         get cancelButtonProps() {
             return cancelButtonProps;
         },
+        get disabled() {
+            return disabled;
+        },
         get okButtonProps() {
             return okButtonProps;
         },
@@ -115,14 +118,11 @@
         },
     };
 
-    const { foundation, states } = useFoundation<Foundation, Adapter, PopconfirmBaseProps, PopconfirmState>(
+    const { foundation, states } = useFoundation<Foundation, Adapter, PopconfirmBaseProps, PopconfirmBaseState>(
         PopconfirmFoundation,
         foundationProps,
-        () => ({ visible: false, cancelLoading: false, confirmLoading: false }),
-        (base) => ({
-            setVisible: (next) => base.setState({ visible: next }),
-            updateConfirmLoading: (confirmLoading) => base.setState({ confirmLoading }),
-            updateCancelLoading: (cancelLoading) => base.setState({ cancelLoading }),
+        (view) => PopconfirmFoundation.getInitialState(view),
+        () => ({
             notifyConfirm: (event) => onConfirm?.(event),
             notifyCancel: (event) => onCancel?.(event),
             notifyVisibleChange: (next) => {
@@ -215,14 +215,6 @@
     watch(
         () => popoverVisible,
         (next) => (next ? foundation.handlePopupOpen() : foundation.handlePopupClose())
-    );
-
-    // a disabled Popconfirm renders no popup, so an open one reports the close instead of reopening when re-enabled
-    watch(
-        () => disabled,
-        (next) => {
-            if (next && popoverVisible) foundation.handleVisibleChange(false);
-        }
     );
 
     onMount(() => {

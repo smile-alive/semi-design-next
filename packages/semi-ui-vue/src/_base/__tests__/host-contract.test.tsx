@@ -3,7 +3,6 @@ import { KeepAlive, defineComponent, nextTick, onMounted, onUpdated, ref } from 
 import { describe, expect, it } from 'vite-plus/test';
 import { type ContractAdapter, type ContractHost, type ContractMountOptions, type ContractProps, type ContractState, ContractFoundation, defineHostContract, stateText } from '@test/utils/host-contract';
 import { render } from '@test/utils/vue';
-import useDidUpdate from '../use-did-update';
 import useFoundation from '../use-foundation';
 
 async function mount(options: ContractMountOptions & { wrapInKeepAlive?: boolean } = {}): Promise<ContractHost & { setActive: (active: boolean) => Promise<void> }> {
@@ -41,10 +40,6 @@ async function mount(options: ContractMountOptions & { wrapInKeepAlive?: boolean
                 { context: () => ({ theme: props.theme }) }
             );
             foundation = f;
-            useDidUpdate(
-                () => props.label,
-                () => f.handleLabelChange()
-            );
             const commit = () => {
                 rendered = readByRender;
                 log.push('commit');
@@ -101,10 +96,10 @@ describe('Vue useFoundation 宿主契约', () => {
         const foundation = host.foundation();
         await host.setActive(false);
         expect(stateText()).toBeNull();
-        expect(host.log.filter((entry) => /^(init|destroy)/.test(entry))).toEqual(['init state=0']);
+        expect(host.log.filter((entry) => /^(init |destroy)/.test(entry))).toEqual(['init state=0']);
         expect(foundation.signals.map((signal) => signal.aborted)).toEqual([false]);
         await host.setActive(true);
-        expect(host.log.filter((entry) => /^(init|destroy)/.test(entry))).toEqual(['init state=0']);
+        expect(host.log.filter((entry) => /^(init |destroy)/.test(entry))).toEqual(['init state=0']);
         expect(stateText()).toBe('2');
     });
 });

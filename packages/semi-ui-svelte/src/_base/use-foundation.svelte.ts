@@ -1,13 +1,6 @@
 import { onMount, untrack } from 'svelte';
 import { SvelteMap } from 'svelte/reactivity';
-import type { DefaultAdapter, HostContext } from '@fibrae/semi-foundation/base/foundation';
-
-interface Lifecycle {
-    connect: () => void;
-    disconnect: () => void;
-    init?: () => void;
-    destroy?: () => void;
-}
+import { type DefaultAdapter, type HostContext, type Lifecycle, type PropReactions, createPropsTracker } from '@fibrae/semi-foundation/base/foundation';
 
 class Version {
     value = $state(0);
@@ -62,13 +55,14 @@ function createStateMirror<S extends object>(initial: S) {
  * - Svelte batches synchronous writes and flushes them in a microtask, so one handler commits once.
  * - A `setState` callback runs in an effect this hook creates, so after the DOM shows the update and before the
  *   effects the component creates after the host: Svelte runs one component's effects in creation order.
+ *   `handlePropsChange` runs in an effect created after onMount, so after init and after those callbacks.
  * - Foundation methods run untracked: a method called from an effect does not subscribe that effect to the props and
  *   state the method reads.
  * - `connect` and `init` run in `onMount`; `destroy` and `disconnect` run in its teardown, which Svelte runs after
  *   it removed the component's DOM. Svelte has no hook before that removal.
  */
 export default function useFoundation<F extends Lifecycle, A extends DefaultAdapter<P, S, any>, P extends object, S extends object, C = HostContext<A>>(
-    Foundation: new (adapter: A) => F,
+    Foundation: (new (adapter: A) => F) & PropReactions,
     props: P,
     initialState: (props: P) => S,
     createAdapter: (base: DefaultAdapter<P, S, C>) => Omit<A, keyof DefaultAdapter<P, S>>,
@@ -127,12 +121,23 @@ export default function useFoundation<F extends Lifecycle, A extends DefaultAdap
 
     onMount(() => {
         foundation.connect();
-        foundation.init?.();
+        foundation.init();
         return () => {
-            foundation.destroy?.();
+            foundation.destroy();
             foundation.disconnect();
         };
     });
+
+    // Created after onMount, so its first run follows init
+    if (Foundation.propKeys.length > 0) {
+        const tracker = untrack(() => createPropsTracker(Foundation, (key) => props[key as keyof P]));
+        $effect(() => {
+            const prev = tracker.check();
+            if (prev) {
+                foundation.handlePropsChange(prev);
+            }
+        });
+    }
 
     return { foundation, states: () => mirror.view };
 }

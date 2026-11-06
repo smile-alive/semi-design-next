@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { render } from '@test/utils/vue';
 import useKeepAliveFoundation from '../use-keep-alive-foundation';
 
-function mount(options: { override?: boolean } = {}) {
+function mount() {
     const log: string[] = [];
     const active = ref(true);
     let isDeactivated!: () => boolean;
@@ -13,10 +13,11 @@ function mount(options: { override?: boolean } = {}) {
         disconnect: () => log.push('disconnect'),
         init: () => log.push('init'),
         destroy: () => log.push('destroy'),
+        handlePropsChange: () => log.push('handlePropsChange'),
     };
     const Probe = defineComponent({
         setup() {
-            ({ isDeactivated } = useKeepAliveFoundation(foundation, options.override ? { reactivate: () => log.push('reactivate') } : {}));
+            ({ isDeactivated } = useKeepAliveFoundation(foundation));
             return () => <div />;
         },
     });
@@ -44,12 +45,5 @@ describe('useKeepAliveFoundation', () => {
         await host.setActive(true);
         expect(host.log).toEqual(['destroy', 'disconnect', 'connect', 'init']);
         expect(host.isDeactivated()).toBe(false);
-    });
-
-    it('传入 reactivate 时激活只调用它', async () => {
-        const host = mount({ override: true });
-        await host.setActive(false);
-        await host.setActive(true);
-        expect(host.log).toEqual(['destroy', 'disconnect', 'reactivate']);
     });
 });

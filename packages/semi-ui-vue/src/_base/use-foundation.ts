@@ -1,19 +1,19 @@
 import { type ShallowRef, markRaw, onBeforeUnmount, onMounted, shallowRef, watch } from 'vue';
-import type { DefaultAdapter, HostContext } from '@fibrae/semi-foundation/base/foundation';
-
-interface Lifecycle {
-    connect: () => void;
-    disconnect: () => void;
-    init?: () => void;
-    destroy?: () => void;
-}
+import { type DefaultAdapter, type HostContext, type Lifecycle, type PropReactions, createPropsTracker } from '@fibrae/semi-foundation/base/foundation';
 
 /**
- * `options.props` overrides individual keys as the foundation sees them (e.g. `modelValue` read as `checked`),
- * in initialization, getProp and getProps alike.
+ * Hosts a semi-foundation class in a Vue component (host contract: `semi-foundation/src/base/foundation.ts`).
+ *
+ * - `connect` and `init` run in onMounted, `destroy` and `disconnect` in onBeforeUnmount. KeepAlive deactivation calls
+ *   neither; a component that must release what `init` set up while cached uses `useKeepAliveFoundation`.
+ * - State is a shallowRef replaced on every `setState`, so a read right after a write sees the new value; callbacks and
+ *   `handlePropsChange` run in post-flush watchers, after the DOM shows the update, in that order.
+ * - `options.props` overrides individual keys as the foundation sees them (e.g. `modelValue` read as `checked`, a
+ *   runtime default), in initial state, getProp, getProps and the `propKeys` comparison alike.
+ * - The instance stays markRaw: a reactive proxy cannot access a foundation's native private fields.
  */
 export default function useFoundation<F extends Lifecycle, A extends DefaultAdapter<P, S, any>, P extends object, S extends object, C = HostContext<A>>(
-    Foundation: new (adapter: A) => F,
+    Foundation: (new (adapter: A) => F) & PropReactions,
     props: Readonly<Partial<P>>,
     initialState: (props: P) => S,
     createAdapter: (base: DefaultAdapter<P, S, C>) => Omit<A, keyof DefaultAdapter<P, S>>,
@@ -51,7 +51,6 @@ export default function useFoundation<F extends Lifecycle, A extends DefaultAdap
         },
     };
 
-    // A reactive proxy cannot access a foundation's native private fields.
     const foundation = markRaw(new Foundation({ ...base, ...createAdapter(base) } as A));
 
     watch(
@@ -66,13 +65,28 @@ export default function useFoundation<F extends Lifecycle, A extends DefaultAdap
         { flush: 'post' }
     );
 
+    if (Foundation.propKeys.length > 0) {
+        const tracker = createPropsTracker(Foundation, (key) => getProp(key as keyof P));
+        // the getter only subscribes to the keys; a fresh array makes every trigger reach the tracker's comparison
+        watch(
+            () => Foundation.propKeys.map((key) => getProp(key as keyof P)),
+            () => {
+                const prev = tracker.check();
+                if (prev) {
+                    foundation.handlePropsChange(prev);
+                }
+            },
+            { flush: 'post' }
+        );
+    }
+
     onMounted(() => {
         foundation.connect();
-        foundation.init?.();
+        foundation.init();
     });
 
     onBeforeUnmount(() => {
-        foundation.destroy?.();
+        foundation.destroy();
         foundation.disconnect();
         callbacks = [];
     });

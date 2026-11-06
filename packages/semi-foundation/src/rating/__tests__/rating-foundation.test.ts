@@ -7,9 +7,8 @@ function createFoundation(getStarDOM: RatingAdapter['getStarDOM']) {
         getStates: () => ({ value: 0, hoverValue: undefined, clearedValue: null }),
         getContext: () => 'ltr',
         getStarDOM,
-        setValue: vi.fn<(value: number) => void>(),
+        setState: vi.fn<(state: object) => void>(),
         notifyChange: vi.fn<(value: number) => void>(),
-        setClearedValue: vi.fn<(value: number) => void>(),
         notifyClick: vi.fn<(e: unknown, index: number) => void>(),
     } as unknown as RatingAdapter;
     return { foundation: new RatingFoundation(adapter), adapter };

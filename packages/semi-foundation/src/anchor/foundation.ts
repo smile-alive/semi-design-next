@@ -97,6 +97,14 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
         }
     }
 
+    // runs once the links have registered
+    protected override initOnce() {
+        const { defaultAnchor } = this.getProps();
+        if (defaultAnchor) {
+            this.#goToLink(defaultAnchor, false);
+        }
+    }
+
     protected setActiveLink(link: string, prevLink: string, shouldNotify = true) {
         const activeLink = this.adapter.getState('activeLink');
         if (activeLink !== link) {
@@ -162,13 +170,8 @@ export default class AnchorFoundation<P extends AnchorBaseProps = AnchorBaseProp
         return childMap;
     }
 
-    /** Runs once the links have registered: listens to the container, applies `defaultAnchor` */
     override init() {
         this.#bind();
-        const { defaultAnchor } = this.getProps();
-        if (defaultAnchor) {
-            this.#goToLink(defaultAnchor, false);
-        }
     }
 
     override destroy() {

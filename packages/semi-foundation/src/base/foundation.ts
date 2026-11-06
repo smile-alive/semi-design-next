@@ -30,46 +30,87 @@ export interface DirectionContext {
     direction?: 'ltr' | 'rtl';
 }
 
+/** What a framework host calls on a foundation instance; every `BaseFoundation` satisfies it */
+export interface Lifecycle {
+    connect(): void;
+    disconnect(): void;
+    init(): void;
+    destroy(): void;
+    handlePropsChange(prev: Record<string, unknown>): void;
+}
+
+/** The statics a host reads off a foundation class; `BaseFoundation` declares both */
+export interface PropReactions {
+    readonly propKeys: readonly string[];
+    readonly propEquals: Readonly<Record<string, (a: any, b: any) => boolean>>;
+}
+
+/**
+ * The host side of `handlePropsChange`: `check()` reads every key of `propKeys` through `read`, so a host that calls it
+ * inside its reactive effect subscribes to them, and returns the previous snapshot when one of them changed since the
+ * last `check()` (or since creation, so a mount never reports a change).
+ */
+export function createPropsTracker({ propKeys, propEquals }: PropReactions, read: (key: string) => unknown) {
+    const snapshot = () => Object.fromEntries(propKeys.map((key) => [key, read(key)]));
+    let committed = snapshot();
+    return {
+        check(): Record<string, unknown> | undefined {
+            const next = snapshot();
+            const prev = committed;
+            if (propKeys.every((key) => (propEquals[key] ?? Object.is)(prev[key], next[key]))) {
+                return undefined;
+            }
+            committed = next;
+            return prev;
+        },
+    };
+}
+
 /**
  * Framework-free component logic; the framework host implements the adapter and drives the lifecycle.
  *
- * Host contract, implemented by the React and Vue `_base/use-foundation` hosts; `vitest/utils/host-contract.ts` is
- * its framework-free test fixture, which every host's driver runs:
- * - The constructor may run more than once per mount (StrictMode discards one instance), so it has no side effects.
- * - On mount the host calls `connect()` then `init()`, after the DOM is in place and before paint (layout phase).
- *   On unmount it calls `destroy()` then `disconnect()`. Under StrictMode the kept instance goes through
- *   init -> destroy -> init. `destroy()` must not rely on the DOM still being attached: Svelte removes a
- *   component's DOM before it runs teardown.
- * - `init()` may run again after `destroy()` on state the user already changed (StrictMode, and React Activity each
- *   time it shows again), so it must be idempotent: initial values resolved from props (`default*`, `value`) belong
- *   in a static `getInitialState` the host calls when it creates the state; `init()` only subscribes and runs
- *   guarded one-time side effects.
- * - `getProps`, `getStates` and `getContext` read the latest values: the host syncs props and context before any
- *   layout effect of the commit runs, and state as soon as `setState` is called. Only their content is contract:
- *   whether render state is the `getStates()` object and which extra keys `getProps()` carries differ by host.
+ * Host contract, which every framework's `_base/use-foundation` implements and maps onto its own primitives in its
+ * header comment; `vitest/utils/host-contract.ts` is its framework-free test fixture, which every host's driver runs:
+ * - The constructor may run more than once per mount (a host may discard an instance), so it has no side effects.
+ * - On mount the host calls `connect()` then `init()`, after the DOM is in place and before paint. On unmount it calls
+ *   `destroy()` then `disconnect()`. `destroy()` must not rely on the DOM still being attached: a host may remove it
+ *   before teardown.
+ * - Hiding a component without unmounting it (React StrictMode's replay, React Activity, a Vue component that opts in
+ *   through `useKeepAliveFoundation`) is `destroy()`, and showing it again is `init()`, on the state the user already
+ *   changed. `destroy()` undoes everything `init()` set up (listeners, timers, page-level holds) and writes no state:
+ *   an open panel stays open, hidden with the subtree (React Activity hides portals, Vue's Portal and Tooltip move
+ *   theirs into the cached subtree), so a setup -> cleanup -> setup replay is indistinguishable from one setup;
+ *   `init()` is idempotent and re-arms what an open panel needs. Initial values resolved from props
+ *   (`default*`, `value`) belong in a static `getInitialState` the host calls when it creates the state; one-time side
+ *   effects (autofocus, `defaultOpen`) belong in `initOnce()`.
+ * - `getProp`, `getProps`, `getStates` and `getContext` read the current values: the host syncs props and context
+ *   before any layout effect of the commit runs, and state as soon as `setState` is called. Only their content is
+ *   contract, never object identity: whether `getProps()` returns a new object and which extra keys it carries differ
+ *   by host.
  * - A `setState` callback runs after the commit that shows the new state, before the layout effects the component
  *   declares after the host.
- * - Foundation instance methods run from events and effects, never during render. A reaction to a prop change runs
- *   in the layout phase of the commit in which the value changed, never on mount
- *   (`semi-ui-react/_base/use-did-update`).
- * - Vue uses onMounted/onBeforeUnmount for the lifecycle, shallowRef replacement for synchronous state, and a
- *   post-flush watcher for commit callbacks. KeepAlive deactivation calls neither destroy nor init; a component that
- *   must release listeners while cached uses `semi-ui-vue/_base/use-keep-alive-foundation`. The instance stays
- *   markRaw so native private fields remain accessible.
- * - Vue maps modelValue to value/checked and resolves runtime defaults through the adapter's props overlay;
- *   initial state, getProp and getProps all read that same view. Notifications leave through adapter methods.
+ * - Foundation instance methods run from events and effects, never during render.
+ * - A reaction to a prop change is `handlePropsChange(prev)`: after a commit in which any key of the static
+ *   `propKeys` changed (`propEquals[key]`, `Object.is` otherwise), the host calls it once with the previous values of
+ *   all those keys, after the commit's `setState` callbacks; never on mount.
+ * - Notifications leave through adapter methods.
  */
-export default class BaseFoundation<T extends DefaultAdapter<P, S, any>, P = Record<string, any>, S = Record<string, any>> {
+export default class BaseFoundation<T extends DefaultAdapter<P, S, any>, P = Record<string, any>, S = Record<string, any>> implements Lifecycle {
     #lifetime: AbortController | null = null;
+    #started = false;
     protected adapter: T;
+    /** The props `handlePropsChange` reacts to */
+    static readonly propKeys: readonly string[] = [];
+    /** A comparison for a key of `propKeys` whose change is not an `Object.is` change */
+    static readonly propEquals: Readonly<Record<string, (a: any, b: any) => boolean>> = {};
 
     constructor(adapter: T) {
         this.adapter = adapter;
     }
 
     /**
-     * A prop is controlled when its value is not `undefined`: a Vue adapter's props hold every declared key. Without
-     * a key it checks `value`, the controlled prop of most components.
+     * A prop is controlled when its value is not `undefined`, since a host may hold every declared key. Without a key
+     * it checks `value`, the controlled prop of most components.
      */
     protected isControlledComponent(key: keyof P & string = 'value' as keyof P & string) {
         return this.getProps()[key] !== undefined;
@@ -82,6 +123,16 @@ export default class BaseFoundation<T extends DefaultAdapter<P, S, any>, P = Rec
             throw new Error('[Semi] foundation.signal is only available while the component is mounted');
         }
         return this.#lifetime.signal;
+    }
+
+    /** `setState` whose Promise resolves once the commit showing it ran, after a controlled parent wrote its value back */
+    protected commitState<K extends keyof S>(states: Pick<S, K>) {
+        return new Promise<void>((resolve) => this.setState(states, resolve));
+    }
+
+    /** Runs once per instance, right before its first `init()`; `signal` is already available */
+    protected initOnce() {
+        // Subclasses override this for one-time side effects (autofocus, defaultOpen)
     }
 
     getProp<K extends keyof P>(key: K) {
@@ -116,6 +167,10 @@ export default class BaseFoundation<T extends DefaultAdapter<P, S, any>, P = Rec
     // overriding init or destroy cannot forget them
     connect() {
         this.#lifetime = new AbortController();
+        if (!this.#started) {
+            this.#started = true;
+            this.initOnce();
+        }
     }
 
     disconnect() {
@@ -129,5 +184,10 @@ export default class BaseFoundation<T extends DefaultAdapter<P, S, any>, P = Rec
 
     destroy() {
         // Subclasses override this to undo what init registered
+    }
+
+    /** `prev` holds the previous value of every key of the static `propKeys`; `getProp` reads the current ones */
+    handlePropsChange(_prev: Partial<P>) {
+        // Subclasses override this to react to a change of their propKeys
     }
 }

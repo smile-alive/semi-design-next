@@ -8,7 +8,6 @@ import { noop } from '@fibrae/semi-foundation/utils/function';
 import '@fibrae/semi-foundation/rating/rating.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
-import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import { useConfigContext } from '../config-provider/context';
 import useLocale from '../locale/use-locale';
@@ -60,8 +59,6 @@ const defaultProps = {
     allowClear: true,
     style: {},
     prefixCls: cssClasses.PREFIX,
-    onChange: noop,
-    onHoverChange: noop,
     size: 'default',
 } satisfies Partial<RatingProps>;
 
@@ -122,7 +119,7 @@ export default function Rating(rawProps: RatingProps) {
     const [stars] = useState(() => new Map<number, RatingItemHandle>());
     const listRef = useRef<HTMLUListElement>(null);
 
-    const [foundation, state] = useFoundation<RatingFoundation<RatingProps, RatingState, RatingClickEvent, React.FocusEvent, React.KeyboardEvent>, RatingAdapter<RatingProps, RatingState, RatingClickEvent, React.FocusEvent, React.KeyboardEvent>, RatingProps, RatingState>(
+    const [foundation, state] = useFoundation<RatingFoundation<RatingProps, RatingClickEvent, React.FocusEvent, React.KeyboardEvent>, RatingAdapter<RatingProps, RatingClickEvent, React.FocusEvent, React.KeyboardEvent>, RatingProps, RatingState>(
         RatingFoundation,
         props,
         () => RatingFoundation.getInitialState(props),
@@ -138,16 +135,12 @@ export default function Rating(rawProps: RatingProps) {
                 stars.get(index < 0 ? count : index).starFocus(starValue);
             },
             getStarDOM: (index) => stars.get(index).getDomNode(),
-            setHover: (hoverValue, clearedValue) => base.setState({ hoverValue, clearedValue }),
-            notifyHoverChange: (hoverValue) => base.getProps().onHoverChange(hoverValue),
-            setValue: (value) => base.setState({ value }),
-            notifyChange: (value) => base.getProps().onChange(value),
-            setClearedValue: (clearedValue) => base.setState({ clearedValue }),
+            notifyHoverChange: (hoverValue) => base.getProps().onHoverChange?.(hoverValue),
+            notifyChange: (value) => base.getProps().onChange?.(value),
             notifyClick: (e, index) => base.getProps().onClick?.(e, index),
             notifyFocus: (e) => base.getProps().onFocus?.(e),
             notifyBlur: (e) => base.getProps().onBlur?.(e),
             notifyKeyDown: (e) => base.getProps().onKeyDown?.(e),
-            setFocusVisibleStar: (focusVisibleStar) => base.setState({ focusVisibleStar }),
         }),
         context
     );
@@ -211,12 +204,6 @@ export default function Rating(rawProps: RatingProps) {
             );
         }
         return content;
-    });
-
-    useDidUpdate(props.value, (value) => {
-        if (value === undefined) {
-            foundation.resetValue();
-        }
     });
 
     // the same radio autoFocus picks

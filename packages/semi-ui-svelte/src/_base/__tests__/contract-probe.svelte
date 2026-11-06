@@ -1,7 +1,6 @@
 <script lang="ts">
     import { type ContractAdapter, type ContractProps, type ContractState, ContractFoundation } from '@test/utils/host-contract';
     import useFoundation from '../use-foundation.svelte';
-    import watch from '../watch.svelte';
 
     interface Hooks {
         log: (entry: string) => void;
@@ -20,11 +19,6 @@
         { context: () => ({ theme: props.theme }) }
     );
     props.hooks.expose(host.foundation);
-
-    watch(
-        () => props.label,
-        () => host.foundation.handleLabelChange()
-    );
 
     // Svelte has no component re-render: the commit hook is an effect that reads everything the component shows
     $effect(() => {

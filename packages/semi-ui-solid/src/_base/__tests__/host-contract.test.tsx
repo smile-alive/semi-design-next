@@ -1,4 +1,4 @@
-import { batch, createEffect, createSignal, on } from 'solid-js';
+import { batch, createEffect, createSignal } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { type ContractAdapter, type ContractHost, type ContractMountOptions, type ContractProps, type ContractState, ContractFoundation, defineHostContract, stateText } from '@test/utils/host-contract';
@@ -31,13 +31,6 @@ async function mount(options: ContractMountOptions = {}): Promise<ContractHost> 
             { context: () => ({ theme: props.theme }) }
         );
         foundation = host.foundation;
-        createEffect(
-            on(
-                () => props.label,
-                () => host.foundation.handleLabelChange(),
-                { defer: true }
-            )
-        );
         // Solid has no component re-render: the commit hook is an effect that reads every state key it shows
         createEffect(() => {
             rendered = { x: host.state().x };
@@ -84,7 +77,7 @@ describe('Solid useFoundation 宿主契约', () => {
             },
         });
         screen.getByRole('button').click();
-        expect(host.log.filter((entry) => /^(onChange|callback|labelChange)/.test(entry))).toEqual(['onChange arg=1 state=1 dom=0', 'callback state=1 label=L1', 'labelChange prop=L1 dom=L1']);
+        expect(host.log.filter((entry) => /^(onChange|callback|labelChange)/.test(entry))).toEqual(['onChange arg=1 state=1 dom=0', 'callback state=1 label=L1', 'labelChange prev=a prop=L1 dom=L1']);
     });
 
     // The server build's mergeProps copies descriptors, so a view that lists no keys merges into an empty object

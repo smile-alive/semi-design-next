@@ -2,7 +2,6 @@ import { Activity, StrictMode, useLayoutEffect, useState } from 'react';
 import { act, render } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
 import { type ContractHost, type ContractMountOptions, type ContractProps, type ContractState, ContractFoundation, defineHostContract, stateText } from '@test/utils/host-contract';
-import useDidUpdate from '../use-did-update';
 import useFoundation from '../use-foundation';
 
 async function mount(options: ContractMountOptions & { wrapInActivity?: boolean } = {}): Promise<ContractHost & { setVisible: (visible: boolean) => Promise<void> }> {
@@ -32,13 +31,13 @@ async function mount(options: ContractMountOptions & { wrapInActivity?: boolean 
             }),
             { theme }
         );
-        useDidUpdate(props.label, () => f.handleLabelChange());
         useLayoutEffect(() => {
             foundation = f;
             rendered = state;
             log.push('commit');
             commitContexts.push(f.getContext('theme'));
         });
+
         return (
             <>
                 <span data-contract-state>{state.x}</span>
@@ -87,15 +86,15 @@ describe('React useFoundation 宿主契约', () => {
 
     // Activity runs effect cleanups on hide and effects again on show, so a hidden component holds no listeners;
     // that is why `init` must be idempotent
-    it('Activity 隐藏时 destroy 并 abort signal，再次显示时在保留的 state 上重新 init', async () => {
+    it('Activity 隐藏时 destroy 并 abort signal，再次显示时在保留的 state 上重新 init，不再 initOnce', async () => {
         const host = await mount({ wrapInActivity: true });
         await host.run((foundation) => foundation.setState({ x: 2 }));
         const foundation = host.foundation();
         await host.setVisible(false);
-        expect(host.log.filter((entry) => /^(init|destroy)/.test(entry))).toEqual(['init state=0', 'destroy attached=true aborted=false']);
+        expect(host.log.filter((entry) => /^(init|destroy)/.test(entry))).toEqual(['initOnce aborted=false', 'init state=0', 'destroy attached=true aborted=false']);
         expect(foundation.signals.map((signal) => signal.aborted)).toEqual([true]);
         await host.setVisible(true);
-        expect(host.log.filter((entry) => /^(init|destroy)/.test(entry))).toEqual(['init state=0', 'destroy attached=true aborted=false', 'init state=2']);
+        expect(host.log.filter((entry) => /^(init|destroy)/.test(entry))).toEqual(['initOnce aborted=false', 'init state=0', 'destroy attached=true aborted=false', 'init state=2']);
         expect(foundation.signals.map((signal) => signal.aborted)).toEqual([true, false]);
         expect(stateText()).toBe('2');
     });

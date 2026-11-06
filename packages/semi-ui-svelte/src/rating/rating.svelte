@@ -5,7 +5,6 @@
     import '@fibrae/semi-foundation/rating/rating.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
-    import watch from '../_base/watch.svelte.js';
     import { getConfigContext } from '../config-provider/context.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { TooltipTriggerProps } from '../tooltip/interface.js';
@@ -15,8 +14,8 @@
 
     type ClickEvent = MouseEvent | KeyboardEvent;
     type ListFocusEvent = FocusEvent & RatingFocusEvent;
-    type Foundation = RatingFoundation<RatingBaseProps, RatingState, ClickEvent, ListFocusEvent, KeyboardEvent>;
-    type Adapter = RatingAdapter<RatingBaseProps, RatingState, ClickEvent, ListFocusEvent, KeyboardEvent>;
+    type Foundation = RatingFoundation<RatingBaseProps, ClickEvent, ListFocusEvent, KeyboardEvent>;
+    type Adapter = RatingAdapter<RatingBaseProps, ClickEvent, ListFocusEvent, KeyboardEvent>;
 
     const defaults = useDefaultProps('Rating');
 
@@ -81,7 +80,7 @@
         RatingFoundation,
         foundationProps,
         (view) => RatingFoundation.getInitialState(view),
-        (base) => ({
+        () => ({
             focusStar: (starValue) => {
                 if (!RatingFoundation.isRadioValue(starValue, count, allowHalf)) {
                     focusTabStop();
@@ -91,19 +90,15 @@
                 stars[index < 0 ? count : index]?.starFocus(starValue);
             },
             getStarDOM: (index) => stars[index]?.getDomNode() ?? null,
-            setHover: (hoverValue, clearedValue) => base.setState({ hoverValue, clearedValue }),
             notifyHoverChange: (hoverValue) => onHoverChange?.(hoverValue),
-            setValue: (next) => base.setState({ value: next }),
             notifyChange: (next) => {
                 value = next;
                 onChange?.(next);
             },
-            setClearedValue: (clearedValue) => base.setState({ clearedValue }),
             notifyClick: (event, index) => onClick?.(event, index),
             notifyFocus: (event) => onFocus?.(event),
             notifyBlur: (event) => onBlur?.(event),
             notifyKeyDown: (event) => onKeyDown?.(event),
-            setFocusVisibleStar: (focusVisibleStar) => base.setState({ focusVisibleStar }),
         }),
         { context: () => config }
     );
@@ -160,15 +155,6 @@
         rest.onmouseleave?.(event);
         foundation.handleMouseLeave();
     };
-
-    watch(
-        () => value,
-        (next) => {
-            if (next === undefined) {
-                foundation.resetValue();
-            }
-        }
-    );
 
     export function focus() {
         if (!disabled) {

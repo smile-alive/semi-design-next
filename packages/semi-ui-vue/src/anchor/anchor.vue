@@ -61,14 +61,8 @@
         })
     );
 
-    // init is not replayed: it would reset the active link to defaultAnchor and scroll the page back to it. While cached,
-    // an update or a container change must not bind the scroll listeners.
-    const { isDeactivated } = useKeepAliveFoundation(foundation, {
-        reactivate: () => {
-            foundation.connect();
-            foundation.handleContainerChange();
-        },
-    });
+    // while cached, an update or a container change must not bind the scroll listeners
+    const { isDeactivated } = useKeepAliveFoundation(foundation);
 
     provideAnchorContext({
         view: computed(() => ({
