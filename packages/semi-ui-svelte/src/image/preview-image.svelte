@@ -65,15 +65,6 @@
         () => ({
             getContainer: () => container as HTMLDivElement,
             getImage: () => image as HTMLImageElement,
-            // Written on the element, not through the style attribute, which the transform updates would overwrite
-            setImageCursor: (canDrag) => {
-                if (image) {
-                    image.style.cursor = canDrag ? 'grab' : 'default';
-                    // a touch drag pans only a draggable image; otherwise the page keeps scrolling and pinch-zooming
-                    image.style.touchAction = canDrag ? 'none' : '';
-                }
-            },
-            capturePointer: (pointerId) => image?.setPointerCapture(pointerId),
             requestZoom: (value, reportToUser) => onZoom(value, reportToUser),
             notifyLoad: (loaded) => onLoad(loaded),
             notifyError: (failed) => onError(failed),

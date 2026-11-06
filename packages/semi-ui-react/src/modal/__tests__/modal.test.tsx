@@ -632,21 +632,21 @@ describe('modal 行为', () => {
         expect(container.mock.calls.length).toBeLessThanOrEqual(3);
     });
 
-    it('Activity 隐藏显示中的 modal 视同关闭：调用一次 afterClose 并解除 body 锁定，重新显示后再次锁定', async () => {
+    it('Activity 隐藏显示中的 modal 不算关闭：不调用 afterClose 并解除 body 锁定，重新显示后再次锁定，真正卸载时调用一次', async () => {
         const afterClose = vi.fn<() => void>();
         const view = (mode: 'visible' | 'hidden') => <Activity mode={mode}>{getModal({ visible: true, afterClose })}</Activity>;
-        const { rerender } = render(view('visible'));
+        const { rerender, unmount } = render(view('visible'));
         expect(document.body.style.overflow).toBe('hidden');
         rerender(view('hidden'));
         await act(async () => {});
-        expect(afterClose).toHaveBeenCalledTimes(1);
+        expect(afterClose).not.toHaveBeenCalled();
         expect(document.body.style.overflow).toBe('');
         rerender(view('visible'));
         await act(async () => {});
         expect(document.body.style.overflow).toBe('hidden');
-        rerender(view('hidden'));
+        unmount();
         await act(async () => {});
-        expect(afterClose).toHaveBeenCalledTimes(2);
+        expect(afterClose).toHaveBeenCalledTimes(1);
         expect(document.body.style.overflow).toBe('');
     });
 

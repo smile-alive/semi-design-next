@@ -6,8 +6,10 @@ export interface PopconfirmAdapter<P extends PopconfirmBaseProps = PopconfirmBas
     notifyConfirm: (e: MouseEvent) => unknown;
     notifyCancel: (e: MouseEvent) => unknown;
     notifyVisibleChange: (visible: boolean) => void;
-    focusCancelButton: () => void;
-    focusOkButton: () => void;
+    /** The card's footer holding the `data-type="cancel"` and `data-type="ok"` buttons; null while the card is not mounted */
+    getFooter: () => HTMLElement | null | undefined;
+    /** Hands the autoFocus button to Tooltip as its initial focus target, which Tooltip focuses after the card opens */
+    setInitialFocus: (button: HTMLElement) => void;
     focusPrevFocusElement: () => void;
 }
 
@@ -33,6 +35,8 @@ export interface PopconfirmBaseState {
 export default class PopConfirmFoundation<P extends PopconfirmBaseProps = PopconfirmBaseProps> extends BaseFoundation<PopconfirmAdapter<P>, P, PopconfirmBaseState> {
     // lets a settled onConfirm/onCancel Promise tell the popup was closed (maybe reopened) while pending
     #closeCount = 0;
+    // Tooltip mounts the card only after `visible` turns true, so the autoFocus button waits for the footer to exist
+    #pendingFocus: 'cancel' | 'ok' | null = null;
     static override readonly propKeys = ['disabled'];
 
     #isOpen() {
@@ -113,16 +117,35 @@ export default class PopConfirmFoundation<P extends PopconfirmBaseProps = Popcon
 
     /** Hosts call this when the popup really opens, whoever set `visible` */
     handlePopupOpen = () => {
-        const { cancelButtonProps, okButtonProps } = this.adapter.getProps();
+        const { cancelButtonProps, okButtonProps } = this.getProps();
         if (cancelButtonProps?.autoFocus && !cancelButtonProps.disabled) {
-            this.adapter.focusCancelButton();
+            this.#pendingFocus = 'cancel';
         } else if (okButtonProps?.autoFocus && !okButtonProps.disabled) {
-            this.adapter.focusOkButton();
+            this.#pendingFocus = 'ok';
+        } else {
+            this.#pendingFocus = null;
         }
+        this.handleFooterMounted();
+    };
+
+    /**
+     * Hosts call this once the card's footer is in the document. A pending autoFocus button is focused and handed to
+     * Tooltip too: Tooltip focuses its initial target after the card opens, which would otherwise override it.
+     */
+    handleFooterMounted = () => {
+        const type = this.#pendingFocus;
+        const button = type && this.adapter.getFooter()?.querySelector<HTMLElement>(`[data-type=${type}]`);
+        if (!button) {
+            return;
+        }
+        this.#pendingFocus = null;
+        button.focus({ preventScroll: true });
+        this.adapter.setInitialFocus(button);
     };
 
     /** Hosts call this when the popup really closes, whoever set `visible`; the card is still mounted */
     handlePopupClose = () => {
+        this.#pendingFocus = null;
         this.setState({ visible: false });
         this.#closeCount++;
         this.adapter.focusPrevFocusElement();

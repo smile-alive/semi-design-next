@@ -1,11 +1,9 @@
 import { type JSX, type Ref, Show, children, createEffect, createMemo, createRenderEffect, createSignal, on, onCleanup, splitProps } from 'solid-js';
+import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
-import { isModal } from '@fibrae/semi-foundation/modal/modal-content-foundation';
 import ModalFoundation, { type ModalAdapter, type ModalProps as FoundationModalProps, type ModalState } from '@fibrae/semi-foundation/modal/modal-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
 import '@fibrae/semi-foundation/modal/modal.scss';
 import useCSSAnimation from '../_base/css-animation';
 import type { ElementProps } from '../_base/element-props';
@@ -133,13 +131,21 @@ export default function Modal(rawProps: ModalProps) {
 
     // the initial value only: the effects below and the end of the animations keep it in step
     const [displayNone, setDisplayNone] = createSignal(!props.visible);
-    const scroll = new ReleaseHolder();
-
-    // shown or leaving: a close in this period still reports afterClose
-    let closePending = false;
 
     // getPopupContainer may query a node that exists only once the parent is inserted
     const mounted = useMounted();
+
+    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, ModalState>(
+        ModalFoundation,
+        props,
+        () => ModalFoundation.getInitialState(),
+        (base) => ({
+            notifyCancel: (e) => base.getProps().onCancel?.(e),
+            notifyOk: (e) => base.getProps().onOk?.(e),
+            notifyClose: () => base.getProps().afterClose?.(),
+        }),
+        { context: config }
+    );
 
     const visible = createMemo(() => Boolean(local.visible));
     const hidden = createMemo(() => (visible() ? false : displayNone()));
@@ -148,21 +154,6 @@ export default function Modal(rawProps: ModalProps) {
     // Once per change: every reader would otherwise call the consumer's function again. Not called before mount (nor on
     // the server): the container it queries may not be inserted yet, and the popup is not rendered until then
     const inBody = createMemo(() => !mounted() || coversPage(local.getPopupContainer ?? config().getPopupContainer));
-
-    const modal = () => isModal({ mask: local.mask, maskFixed: local.maskFixed, inBody: inBody() });
-
-    const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, ModalState>(
-        ModalFoundation,
-        props,
-        () => ModalFoundation.getInitialState(),
-        (base) => ({
-            disabledBodyScroll: () => (modal() ? scroll.hold(lockBodyScroll) : scroll.release()),
-            enabledBodyScroll: () => scroll.release(),
-            notifyCancel: (e) => base.getProps().onCancel?.(e),
-            notifyOk: (e) => base.getProps().onOk?.(e),
-            notifyClose: () => base.getProps().afterClose?.(),
-        })
-    );
 
     const shouldRender = () => visible() || (local.keepDOM && (!local.lazyRender || everShown())) || (local.motion && !hidden());
 
@@ -222,7 +213,6 @@ export default function Modal(rawProps: ModalProps) {
             if (isHidden) {
                 return;
             }
-            closePending = true;
             foundation.beforeShow();
             onCleanup(foundation.afterHide);
         })
@@ -232,21 +222,18 @@ export default function Modal(rawProps: ModalProps) {
         on(
             hidden,
             (isHidden) => {
-                if (isHidden && closePending) {
-                    closePending = false;
-                    foundation.afterClose();
+                if (isHidden) {
+                    foundation.handleHidden();
                 }
             },
             { defer: true }
         )
     );
 
-    onCleanup(() => {
-        if (closePending) {
-            closePending = false;
-            foundation.afterClose();
-        }
-    });
+    // the server disposes the root without ever showing the modal
+    if (!isServer) {
+        onCleanup(foundation.handleHidden);
+    }
 
     return (
         <Show when={mounted() && shouldRender()}>

@@ -2,10 +2,6 @@
     import { computed, onActivated, onDeactivated, onMounted, onUpdated, shallowRef, useAttrs, useId, watch } from 'vue';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
     import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
-    import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-    import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-    import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-    import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
     import '@fibrae/semi-foundation/user-guide/user-guide.scss';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import useEventListener, { getWindow } from '../_base/use-event-listener';
@@ -55,8 +51,6 @@
     const locale = useLocale('UserGuide');
 
     let popover: PopoverHandle | null = null;
-    const scroll = new ReleaseHolder();
-    const focusScope = new FocusScope();
 
     // A deactivated KeepAlive subtree leaves the page: close the card, stop the scroll lock and measuring silently, and
     // resume on reactivation. Tooltip would not close a controlled card.
@@ -74,9 +68,7 @@
         props,
         () => UserGuideFoundation.getInitialState(props),
         () => ({
-            // Only a popup guide covers the page with its mask; a modal guide is locked by its Modal
-            disabledBodyScroll: () => (props.mode === 'popup' && showMask.value && coversPage(getContainer.value ?? config.value.getPopupContainer) ? scroll.hold(lockBodyScroll) : scroll.release()),
-            enabledBodyScroll: () => scroll.release(),
+            getPopup: () => popover?.getPopup(),
             notifyChange: (current) => {
                 emit('update:current', current);
                 emit('change', current);
@@ -91,7 +83,8 @@
                 emit('update:visible', false);
                 emit('skip');
             },
-        })
+        }),
+        { props: { getPopupContainer: () => getContainer.value }, context: () => config.value }
     );
 
     const current = computed(() => UserGuideFoundation.deriveCurrent(props, state.value));
@@ -115,10 +108,6 @@
     const setPopover = (instance: unknown) => {
         popover = instance as PopoverHandle | null;
     };
-
-    // Restore focus only if it is still on the card (or lost with it), so a user who clicked elsewhere stays there. A
-    // modal guide gets this from its Modal.
-    const restoreFocus = () => focusScope.restoreIfAllowed(popover?.getPopup(), false, true);
 
     const stepView = () => {
         const item = step.value as UserGuideStepItem;
@@ -167,8 +156,8 @@
         () => shown.value && props.mode === 'popup',
         (on, _, onCleanup) => {
             if (!on) return;
-            focusScope.record();
-            onCleanup(restoreFocus);
+            foundation.recordFocus();
+            onCleanup(foundation.restoreFocus);
         }
     );
 

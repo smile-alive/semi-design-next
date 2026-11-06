@@ -135,25 +135,12 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
     let popover: PopoverHandle | undefined;
     let footer: HTMLDivElement | undefined;
 
-    // Tooltip mounts the card only after `visible` turns true, so the focus request waits for the footer to exist
-    let pendingFocus: 'cancel' | 'ok' | null = null;
+    // Tooltip's initial focus target of the mounted card
+    let tooltipFocus: RenderContentProps['initialFocusRef'] | undefined;
 
     // the card reports which parts it rendered; the dialog's name and description point at them
     const [titled, setTitled] = createSignal(false);
     const [bodied, setBodied] = createSignal(false);
-
-    const titleId = `${createUniqueId()}-title`;
-    const contentId = `${titleId}-content`;
-    const ref = props.ref;
-
-    const focusButton = (type: 'cancel' | 'ok') => {
-        const button = footer?.querySelector<HTMLElement>(`[data-type=${type}]`);
-        if (button) {
-            button.focus({ preventScroll: true });
-        } else {
-            pendingFocus = type;
-        }
-    };
 
     const { foundation, state } = useFoundation<Foundation, Adapter, PopconfirmProps, PopconfirmState>(
         PopconfirmFoundation,
@@ -163,10 +150,9 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
             notifyConfirm: (event) => props.onConfirm?.(event),
             notifyCancel: (event) => props.onCancel?.(event),
             notifyVisibleChange: (visible) => props.onVisibleChange?.(visible),
-            focusCancelButton: () => focusButton('cancel'),
-            focusOkButton: () => focusButton('ok'),
+            getFooter: () => footer,
+            setInitialFocus: (button) => tooltipFocus?.(button),
             focusPrevFocusElement: () => {
-                pendingFocus = null;
                 // focus that already left the card (Tab away from a focus trigger) stays where it went
                 if (FocusTrapHandle.shouldRestoreFocus(popover?.getPopup(), false)) {
                     popover?.focusTrigger();
@@ -174,6 +160,10 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
             },
         })
     );
+
+    const titleId = `${createUniqueId()}-title`;
+    const contentId = `${titleId}-content`;
+    const ref = props.ref;
 
     // by value: a state write notifies even when equal, and handlePopupClose writes the state
     const open = createMemo(() => (props.visible !== undefined ? props.visible : state().visible));
@@ -219,6 +209,7 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
             setTitled(false);
             setBodied(false);
             footer = undefined;
+            tooltipFocus = undefined;
         });
 
         // Tooltip owns the dialog element and has no describedby prop; without a title the content already names it
@@ -231,13 +222,9 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: Ref<Popco
             onCleanup(() => dialog.removeAttribute('aria-describedby'));
         });
 
-        // Tooltip focuses its initial target once the popup has opened; the autoFocus button wins over content's
         onMount(() => {
-            const button = pendingFocus && footer?.querySelector<HTMLElement>(`[data-type=${pendingFocus}]`);
-            if (button) {
-                pendingFocus = null;
-                renderProps.initialFocusRef(button);
-            }
+            tooltipFocus = renderProps.initialFocusRef;
+            foundation.handleFooterMounted();
         });
 
         const handleCancel = (event: MouseEvent) => foundation.handleCancel(event);

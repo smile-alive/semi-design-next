@@ -22,11 +22,15 @@ function createFoundation(props: TooltipBaseProps, triggerRect: DOMRect, popupSi
         getTriggerElement: () => trigger,
         observeTrigger: (observer: ResizeObserver | IntersectionObserver) => observers.push(observer),
         unobserveTrigger: vi.fn<(observer: ResizeObserver | IntersectionObserver) => void>(),
-        getState: () => undefined,
+        getState: (key: string) => ({ isInsert: true, transitionState: 'enter' })[key],
+        showPopover: () => {},
+        hidePopover: () => {},
+        waitAnimations: () => null,
         unregisterClickOutsideHandler: () => {},
     };
     const foundation = new TooltipFoundation(adapter as unknown as TooltipAdapter);
-    foundation.handleShown();
+    // an entering popup is shown and positioned
+    foundation.syncPopup();
     return { foundation, popup, adapter, observers };
 }
 

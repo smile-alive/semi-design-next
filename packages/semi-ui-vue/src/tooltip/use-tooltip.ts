@@ -1,14 +1,11 @@
-import { type ComputedRef, type ShallowRef, computed, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, shallowRef, useId, watch, watchEffect } from 'vue';
-import { COLOR_SCHEME_SELECTOR, colorSchemeOf, cssClasses, popupTarget, strings } from '@fibrae/semi-foundation/tooltip/constants';
+import { type ComputedRef, type ShallowRef, computed, nextTick, onActivated, onBeforeUnmount, onDeactivated, shallowRef, useId, watch, watchEffect } from 'vue';
+import { COLOR_SCHEME_SELECTOR, colorSchemeOf, cssClasses, popupTarget } from '@fibrae/semi-foundation/tooltip/constants';
 import TooltipFoundation, { type TooltipAdapter, type TooltipBaseState } from '@fibrae/semi-foundation/tooltip/foundation';
 import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-import warning from '@fibrae/semi-foundation/utils/warning';
 import useEventListener, { getWindow } from '../_base/use-event-listener';
 import useFoundation from '../_base/use-foundation';
 import useKeepAliveFoundation from '../_base/use-keep-alive-foundation';
-import useTimeout from '../_base/use-timeout';
 import useConfig from '../config-provider/use-config';
 import { provideTooltipPopupsContext, useTooltipPopupsContext } from './context';
 import type { FocusTarget, RenderContentProps, TooltipEmits, TooltipHandle, TooltipProps } from './interface';
@@ -82,11 +79,6 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
     // so tooltip.vue disables the Teleport, which moves the popup into the cached subtree, out of the document.
     const active = shallowRef(true);
 
-    // handleOpened runs once per showing, though the enter watch below reruns on every state write
-    let openedHandled = false;
-    let openPending = false;
-    let closePending = false;
-
     const popupId = computed(() => props.wrapperId || `${cssClasses.PREFIX}-${generatedId}`);
 
     const { descendants, relayFocus } = usePopupRegistry(
@@ -103,21 +95,26 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
             const adapter: Omit<Adapter, keyof typeof base> = {
                 insertPortal: () => {
                     const first = triggerElement.value;
-                    openPending = true;
-                    closePending = true;
-                    openedHandled = false;
-                    base.setState({
-                        isInsert: true,
-                        transitionState: 'enter',
-                        visible: true,
+                    return {
                         portalTarget: popupTarget(first?.getRootNode(), (fullscreen) => Boolean(first && fullscreen.contains(first))),
                         colorScheme: colorSchemeOf(first?.closest(COLOR_SCHEME_SELECTOR)),
-                    });
+                    };
                 },
                 removePortal: () => {
                     contentShown.value = false;
-                    base.setState({ isInsert: false, transitionState: '' });
                 },
+                showPopover: () => {
+                    if (!container.value?.matches(':popover-open')) {
+                        container.value?.showPopover();
+                    }
+                },
+                hidePopover: () => container.value?.hidePopover(),
+                waitAnimations: () => {
+                    const animations = container.value?.getAnimations() ?? [];
+                    return animations.length ? Promise.allSettled(animations.map((animation) => animation.finished)) : null;
+                },
+                notifyAfterOpen: () => emit('afterOpen'),
+                notifyAfterClose: () => emit('afterClose'),
                 notifyVisibleChange: (visible) => {
                     emit('update:visible', visible);
                     emit('visibleChange', visible);
@@ -161,13 +158,6 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
         getPopup: () => container.value,
         hide: foundation.hide,
         rePosition: foundation.calcPosition,
-    };
-
-    const afterClose = () => {
-        if (closePending) {
-            closePending = false;
-            emit('afterClose');
-        }
     };
 
     const setTriggerElement = (element: Element | null) => {
@@ -219,74 +209,14 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
         { flush: 'post' }
     );
 
+    // Separate sources: compared one by one, so it runs once per change, not on every state write. showPopover() throws
+    // on a popup cached out of the document, and the browser hides one taken out of it without showing it again when
+    // it is moved back, so it is synced on every activation
     watch(
-        () => [state.value.isInsert, state.value.transitionState, container.value, active.value] as const,
-        ([inserted, transition, element, isActive], _, cleanup) => {
-            if (!inserted || !element) {
-                return;
-            }
-            if (transition === 'enter') {
-                // showPopover() throws on a popup cached out of the document, and the browser hides one taken out of
-                // it without showing it again when it is moved back, so it is shown on every activation
-                if (!isActive) {
-                    return;
-                }
-                // reopened during its exit animation, it is still shown
-                if (!element.matches(':popover-open')) {
-                    element.showPopover();
-                }
-                foundation.handleShown();
-                const entering = element.getAnimations();
-                let cancelled = false;
-                const timer = setTimeout(() => {
-                    if (!openedHandled) {
-                        openedHandled = true;
-                        foundation.handleOpened();
-                    }
-                    void Promise.allSettled(entering.map((animation) => animation.finished)).then(() => {
-                        // a hover popup that backed out in handleOpened, or one closed meanwhile, is leaving
-                        if (!cancelled && openPending && foundation.getState('transitionState') === 'enter') {
-                            openPending = false;
-                            emit('afterOpen');
-                        }
-                    });
-                });
-                cleanup(() => {
-                    cancelled = true;
-                    clearTimeout(timer);
-                });
-            } else if (transition === 'leave') {
-                let cancelled = false;
-                cleanup(() => {
-                    cancelled = true;
-                });
-                // The exit animation plays while the popup is still open, so it keeps the top layer; it hides once
-                // that ends
-                const finish = () => {
-                    if (!cancelled) {
-                        element.hidePopover();
-                        if (!props.keepDOM) {
-                            foundation.removePortal();
-                        }
-                        afterClose();
-                    }
-                };
-                const animations = element.getAnimations();
-                if (animations.length) {
-                    void Promise.allSettled(animations.map((animation) => animation.finished)).then(finish);
-                } else {
-                    finish();
-                }
-            }
-        },
-        { flush: 'post' }
-    );
-
-    watchEffect(
-        (cleanup) => {
-            const element = container.value;
-            if (isOpen.value && element) {
-                cleanup(openLayer({ element, modal: false, onEscape: foundation.handleEscape }));
+        [() => state.value.isInsert, () => state.value.transitionState, container, active],
+        ([, , , isActive]) => {
+            if (isActive) {
+                foundation.syncPopup();
             }
         },
         { flush: 'post' }
@@ -304,20 +234,8 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
         { flush: 'post' }
     );
 
-    watch(
-        () => [props.mouseEnterDelay, props.mouseLeaveDelay] as const,
-        ([enter, leave]) => {
-            warning((leave ?? 0) < (enter ?? 0), strings.LEAVE_DELAY_WARNING);
-        },
-        { immediate: true }
-    );
-
-    const scheduleTimeout = useTimeout();
-
-    onMounted(() => scheduleTimeout(foundation.updateStateIfCursorOnTrigger));
-
     // Vue drops emits after unmount, so the final close is reported in beforeUnmount
-    onBeforeUnmount(afterClose);
+    onBeforeUnmount(foundation.handleUnmount);
 
     useKeepAliveFoundation(foundation);
 
@@ -325,10 +243,8 @@ export default function useTooltip(props: TooltipProps, emit: Emit, container: R
         active.value = false;
     });
 
-    // shown again: handleOpened rechecks the pointer of a hover popup, without reporting the opening again
     onActivated(() => {
         active.value = true;
-        openedHandled = false;
     });
 
     return {

@@ -48,11 +48,12 @@ export const vueExemptions: VueExemption[] = [
         off: [],
         templateOff: ['vuejs-accessibility/no-autofocus'],
     },
-    // The popup's dynamic tooltip/dialog role owns the container keyboard and focus handlers.
+    // The popup's dynamic tooltip/dialog role owns the container keyboard and focus handlers; its click only applies
+    // clickToHide, and its keys (Escape, the guardFocus Tab trap) are listeners the foundation adds.
     {
         files: ['packages/semi-ui-vue/src/tooltip/tooltip.vue'],
         off: [],
-        templateOff: ['vuejs-accessibility/no-static-element-interactions'],
+        templateOff: ['vuejs-accessibility/click-events-have-key-events', 'vuejs-accessibility/no-static-element-interactions'],
     },
     // Dynamic menuitem role the rules cannot read; the enclosing role="menu" keydown handler clicks it.
     {

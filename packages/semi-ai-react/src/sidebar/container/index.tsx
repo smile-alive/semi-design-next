@@ -2,10 +2,6 @@ import { useInsertionEffect, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
 import ContainerFoundation, { type ContainerAdapter, type ContainerProps } from '@fibrae/semi-ai-foundation/sidebar/container-foundation';
-import { canRestoreFocus } from '@fibrae/semi-ai-foundation/sidebar/utils';
-import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
 import '@fibrae/semi-ai-foundation/sidebar/sidebar.scss';
 import { IconClose } from '@fibrae/semi-icons-react';
 import { namedRole } from '@fibrae/semi-ui-react/_base/named-role';
@@ -19,8 +15,6 @@ import type { ContainerReactProps } from '../interface';
 const prefixCls = cssClasses.SIDEBAR;
 
 class ContainerRuntime {
-    readonly #layer = new ReleaseHolder();
-    readonly focusScope = new FocusScope();
     root: HTMLDivElement | null = null;
     resizable: HTMLDivElement | null = null;
 
@@ -31,23 +25,6 @@ class ContainerRuntime {
     readonly attachResizable = (node: HTMLDivElement | null) => {
         this.resizable = node;
     };
-
-    openLayer(onEscape: (e: KeyboardEvent) => boolean) {
-        // The layer covers the Resizable around the container when there is one: its drag handles are siblings of the
-        // container, and a modal layer opened earlier would make them inert. The page beside the sidebar stays usable,
-        // so the layer is not modal.
-        this.#layer.hold(() => openLayer({ element: this.resizable ?? this.root, modal: false, onEscape }));
-    }
-
-    closeLayer() {
-        this.#layer.release();
-    }
-
-    restoreFocus() {
-        if (canRestoreFocus(this.root)) {
-            this.focusScope.restore(true);
-        }
-    }
 }
 
 export default function Container(props: ContainerReactProps) {
@@ -65,10 +42,9 @@ export default function Container(props: ContainerReactProps) {
         (base) => ({
             notifyCancel: (e) => base.getProps().onCancel?.(e),
             notifyVisibleChange: (isVisible) => base.getProps().afterVisibleChange?.(isVisible),
-            openLayer: (onEscape) => runtime.openLayer(onEscape),
-            closeLayer: () => runtime.closeLayer(),
+            getRoot: () => runtime.root,
+            getLayer: () => runtime.resizable ?? runtime.root,
             toggleDisplayNone: (hidden) => setDisplayNone(hidden),
-            restoreFocus: () => runtime.restoreFocus(),
         })
     );
 
@@ -89,9 +65,9 @@ export default function Container(props: ContainerReactProps) {
     // Read before this commit's layout phase, where an autoFocus element inside the sidebar takes focus
     useInsertionEffect(() => {
         if (visible) {
-            runtime.focusScope.record();
+            foundation.recordFocus();
         }
-    }, [visible, runtime]);
+    }, [visible, foundation]);
 
     useLayoutEffect(() => {
         if (!visible) {

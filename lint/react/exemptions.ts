@@ -371,10 +371,11 @@ export const reactExemptions: Exemption[] = [
         files: ['packages/semi-ui-react/src/time-picker/time-picker.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
-    // The popup's role is the `role` prop (tooltip or dialog), which jsx-a11y only accepts as a literal
+    // The popup's role is the `role` prop (tooltip or dialog), which jsx-a11y only accepts as a literal; its click only
+    // applies clickToHide, and its keys (Escape, the guardFocus Tab trap) are listeners the foundation adds
     {
         files: ['packages/semi-ui-react/src/tooltip/index.tsx'],
-        off: ['jsx-a11y/no-static-element-interactions'],
+        off: ['jsx-a11y/no-static-element-interactions', 'jsx-a11y/click-events-have-key-events'],
     },
     // role="list" divs (items are Checkbox spans, virtual rows or dnd-kit wrappers, not li); a disabled Transfer has no
     // focusable item, so each scrolling list is the Tab stop

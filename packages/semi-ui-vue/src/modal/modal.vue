@@ -1,12 +1,8 @@
 <script setup lang="ts">
     import { computed, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
-    import { isModal } from '@fibrae/semi-foundation/modal/modal-content-foundation';
     import ModalFoundation, { type ModalAdapter } from '@fibrae/semi-foundation/modal/modal-foundation';
-    import { resolvePopupContainer } from '@fibrae/semi-foundation/utils/dom';
     import isPromise from '@fibrae/semi-foundation/utils/is-promise';
-    import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-    import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
     import '@fibrae/semi-foundation/modal/modal.scss';
     import Portal from '../_base/portal.vue';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
@@ -67,13 +63,8 @@
     const locale = useLocale('Modal');
 
     const content = useTemplateRef('content');
-    const scroll = new ReleaseHolder();
     const displayNone = shallowRef(!props.visible);
     const haveRendered = shallowRef(false);
-
-    // Starts true for a modal mounted visible: inside a post flush its mount hook runs late, and a close before then must
-    // still report afterClose.
-    let closePending = props.visible;
 
     const prefix = cssClasses.DIALOG;
     const okFn = computed(() => props.onOk ?? readSemiDefault(semi, 'Modal', 'onOk'));
@@ -103,16 +94,6 @@
         props,
         () => ModalFoundation.getInitialState(),
         () => ({
-            // the page keeps scrolling behind a non-modal dialog (no mask, or a mask confined to a custom container)
-            disabledBodyScroll: () => {
-                const inBody = resolvePopupContainer(getContainer.value ?? config.value.getPopupContainer) === document.body;
-                if (isModal({ mask: props.mask, maskFixed: props.maskFixed, inBody })) {
-                    scroll.hold(lockBodyScroll);
-                } else {
-                    scroll.release();
-                }
-            },
-            enabledBodyScroll: () => scroll.release(),
             notifyCancel: (event) => {
                 const result = cancelFn.value?.(event);
                 closeAfter(result);
@@ -120,16 +101,11 @@
             },
             notifyOk: (event) => okFn.value?.(event),
             notifyClose: () => emit('afterClose'),
-        })
+        }),
+        { props: { getPopupContainer: () => getContainer.value }, context: () => config.value }
     );
 
     const cancel = (event: MouseEvent | KeyboardEvent) => foundation.handleCancel(event);
-
-    const takePendingClose = () => {
-        const pending = closePending;
-        closePending = false;
-        return pending;
-    };
 
     // autoFocus only selects the initially focused button and never reaches the DOM; data-type locates the button for it
     const footerButton = (kind: 'cancel' | 'ok', custom?: ModalButtonProps) => {
@@ -174,7 +150,7 @@
             // without motion the content unmounts with no leave, so no after-leave records the hide; a later switch to
             // motion would otherwise mount an invisible full-page wrap
             displayNone.value = true;
-            if (takePendingClose()) foundation.afterClose();
+            foundation.handleHidden();
         },
         { flush: 'post' }
     );
@@ -188,7 +164,6 @@
             () => !hidden.value,
             (shown, _, onCleanup) => {
                 if (!shown) return;
-                closePending = true;
                 foundation.beforeShow();
                 onCleanup(foundation.afterHide);
             },
@@ -197,9 +172,7 @@
     );
 
     // emitted before unmount, since Vue drops emits after it
-    onBeforeUnmount(() => {
-        if (takePendingClose()) foundation.afterClose();
-    });
+    onBeforeUnmount(foundation.handleHidden);
 
     defineExpose<ModalHandle>({
         get root() {

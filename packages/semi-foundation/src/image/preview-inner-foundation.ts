@@ -1,7 +1,10 @@
 import { isEqual, throttle, type ThrottledFunction } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../base/foundation';
 import { handlePrevent } from '../utils/a11y';
+import { resolvePopupContainer } from '../utils/dom';
+import FocusTrapHandle from '../utils/focus-handle';
 import { ESC_KEY } from '../utils/key-code';
+import ModalResources from '../utils/modal-resources';
 import { clampZoom, getPreloadSrcList, downloadImage } from './utils';
 
 export type RatioType = 'adaptation' | 'realSize';
@@ -25,17 +28,9 @@ export interface PreviewInnerAdapter<P extends PreviewInnerBaseProps = PreviewIn
     notifyRotateChange: (angle: number) => void;
     notifyDownload: (src: string, index: number) => void;
     notifyDownloadError: (src: string) => void;
-    registerKeyDownListener: () => void;
-    unregisterKeyDownListener: () => void;
-    /** Puts the preview on the overlay stack (utils/layer); `onEscape` receives Escape while the preview is on top */
-    openLayer: (onEscape: (e: KeyboardEvent) => boolean) => void;
-    closeLayer: () => void;
-    disabledBodyScroll: () => void;
-    enabledBodyScroll: () => void;
-    getSetDownloadFunc: () => (src: string) => string;
+    /** The `role="dialog"` element: it goes on the overlay stack and takes focus */
+    getWrap: () => HTMLElement | null | undefined;
     isValidTarget: (e: any) => boolean;
-    /** Whether a keyboard event comes from the preview, from the page itself (window, body), or from no element at all */
-    isEventInPreview: (e: KeyboardEvent) => boolean;
     setRatio: (ratio: RatioType) => void;
 }
 
@@ -57,6 +52,8 @@ export interface PreviewInnerBaseProps {
     maskClosable?: boolean;
     currentIndex?: number;
     defaultCurrentIndex?: number;
+    /** The group's `setDownloadName` (context) takes precedence */
+    setDownloadName?: (src: string) => string;
 }
 
 export interface PreviewInnerState {
@@ -77,6 +74,11 @@ export interface PreviewInnerState {
 export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = PreviewInnerBaseProps> extends BaseFoundation<PreviewInnerAdapter<P>, P, PreviewInnerState> {
     #timer = null;
     #startMouseDown = { x: 0, y: 0 };
+    readonly #resources = new ModalResources();
+    // between beforeShow and afterHide: the window listener, layer, scroll lock and focus trap are held
+    #shown = false;
+    // destroyed while shown (Activity, KeepAlive): init takes them again
+    #resume = false;
 
     static override readonly propKeys = ['src'];
 
@@ -124,6 +126,14 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         this.adapter.notifyClose();
         return true;
     };
+
+    // a non-modal preview leaves focus the user moved elsewhere where it is
+    #release() {
+        this.#shown = false;
+        window.removeEventListener('keydown', this.handleKeyDown);
+        this.#resources.release();
+        this.#clearTimer();
+    }
 
     #clearTimer() {
         if (this.#timer) {
@@ -204,18 +214,30 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         return infinite || (direction === 'prev' ? currentIndex > 0 : currentIndex < total - 1);
     }
 
+    /** Hosts call this once the dialog is in the document and displayed, after `recordFocus` */
     beforeShow = () => {
-        this.adapter.registerKeyDownListener();
-        this.adapter.openLayer(this.#handleEscape);
-        this.adapter.disabledBodyScroll();
+        if (this.#shown) {
+            return;
+        }
+        this.#shown = true;
+        window.addEventListener('keydown', this.handleKeyDown);
+        const wrap = this.adapter.getWrap();
+        // browsers skip autofocus on elements inserted after page load
+        if (wrap && !wrap.contains(FocusTrapHandle.getActiveElement(wrap))) {
+            FocusTrapHandle.findAutofocus(wrap)?.focus({ preventScroll: true });
+        }
+        // only a preview in body covers the page: it is modal, locks scroll and keeps Tab inside
+        const modal = resolvePopupContainer(this.getContext('popupContainer')) === document.body;
+        this.#resources.hold({ modal, layer: wrap, onEscape: this.#handleEscape, focus: wrap, preventScroll: true });
         this.updateTimer();
     };
 
     afterHide = () => {
-        this.adapter.unregisterKeyDownListener();
-        this.adapter.closeLayer();
-        this.adapter.enabledBodyScroll();
-        this.#clearTimer();
+        this.#resume = false;
+        if (!this.#shown) {
+            return;
+        }
+        this.#release();
         this.setState({
             viewerVisible: true,
             rotation: 0,
@@ -224,12 +246,29 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
         this.adapter.setRatio('adaptation');
     };
 
+    /** Remembers the element to return focus to; hosts call it before the preview renders, or its own focus would be recorded */
+    recordFocus = () => {
+        this.#resources.record();
+    };
+
     override handlePropsChange() {
         this.updateTimer();
     }
 
+    // A hidden preview (Activity, KeepAlive) holds nothing of the page and stays open; init takes it all again
+    override init() {
+        if (this.#resume) {
+            this.#resume = false;
+            this.beforeShow();
+        }
+    }
+
     override destroy() {
         this.#mouseMoveHandler.cancel();
+        if (this.#shown) {
+            this.#release();
+            this.#resume = true;
+        }
     }
 
     handleMouseMove = (e: unknown) => {
@@ -293,7 +332,8 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
     handleKeyDown = (e: KeyboardEvent) => {
         // the listener is on window: keys typed in a control outside the preview, such as a page button or a Modal above
         // a non-modal preview, are not meant for it
-        if (!this.adapter.isEventInPreview(e)) {
+        const { target } = e;
+        if (target instanceof Element && target !== document.body && !this.adapter.getWrap()?.contains(target)) {
             return;
         }
         if (e.key === ESC_KEY && this.getProp('closeOnEsc')) {
@@ -336,7 +376,7 @@ export default class PreviewInnerFoundation<P extends PreviewInnerBaseProps = Pr
 
     handleDownload = () => {
         const currentIndex = this.#getCurrentIndex();
-        const setDownloadName = this.adapter.getSetDownloadFunc();
+        const setDownloadName = this.getContext('setDownloadName') ?? this.getProp('setDownloadName');
         const downloadSrc = this.#getImgSrc()[currentIndex];
         if (downloadSrc === undefined) {
             return;

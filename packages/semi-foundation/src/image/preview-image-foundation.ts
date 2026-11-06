@@ -6,8 +6,6 @@ import { clampZoom } from './utils';
 export interface PreviewImageAdapter<P extends PreviewImageBaseProps = PreviewImageBaseProps> extends DefaultAdapter<P, PreviewImageState> {
     getContainer: () => HTMLDivElement;
     getImage: () => HTMLImageElement;
-    setImageCursor: (canDrag: boolean) => void;
-    capturePointer: (pointerId: number) => void;
     /** Asks the owner of the zoom to set it; `reportToUser` decides whether onZoomIn / onZoomOut are called */
     requestZoom: (zoom: number, reportToUser: boolean) => void;
     notifyLoad: (src: string) => void;
@@ -217,8 +215,10 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
         if (imageDOM) {
             const { canDragVertical, canDragHorizontal } = this.getCanDragDirection(newImageBound.width, newImageBound.height);
             const canDrag = canDragVertical || canDragHorizontal;
-
-            this.adapter.setImageCursor(canDrag);
+            // on the element, not through the host's style binding, which has no such keys and leaves them alone
+            imageDOM.style.cursor = canDrag ? 'grab' : 'default';
+            // a touch drag pans only a draggable image; otherwise the page keeps scrolling and pinch-zooming
+            imageDOM.style.touchAction = canDrag ? 'none' : '';
         }
     }
 
@@ -355,6 +355,6 @@ export default class PreviewImageFoundation<P extends PreviewImageBaseProps = Pr
             y: e.clientY,
         };
         // the drag keeps following a pointer that leaves the image
-        this.adapter.capturePointer(e.pointerId);
+        this.adapter.getImage()?.setPointerCapture(e.pointerId);
     };
 }

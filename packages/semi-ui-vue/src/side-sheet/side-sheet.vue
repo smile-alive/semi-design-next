@@ -3,12 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/side-sheet/constants';
     import SideSheetFoundation, { type SideSheetAdapter, type SideSheetState } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
     import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
-    import { coversPage, toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-    import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-    import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-    import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
+    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/side-sheet/side-sheet.scss';
     import { IconClose } from '@fibrae/semi-icons-vue';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs';
@@ -64,9 +59,6 @@
     const titleId = useId();
     const root = useTemplateRef('root');
     const dialog = useTemplateRef('dialog');
-    const scroll = new ReleaseHolder();
-    const layer = new ReleaseHolder();
-    const focusScope = new FocusScope();
 
     // Kept by the Transition hooks: true once the dialog is shown and vShow has written its display back, false once the
     // leave has ended or the Portal unmounts it without one.
@@ -74,44 +66,22 @@
 
     const prefix = cssClasses.PREFIX;
     const getContainer = computed(() => props.getPopupContainer ?? readSemiDefault(semi, 'SideSheet', 'getPopupContainer'));
-    const hidden = computed(() => (props.visible ? false : !props.motion || !displayed.value));
-    const shouldRender = computed(() => props.visible || props.keepDOM || (props.motion && !hidden.value));
-
-    // The same container function Portal renders with, ConfigProvider's included. Only a mask over the whole page makes the
-    // sheet modal: aria-modal, the inert page, the Tab trap, unconditional focus return and the body scroll lock. coversPage
-    // does not throw for a container already gone, which happens when the sheet unmounts with it.
-    const isModal = () => Boolean(props.mask) && coversPage(getContainer.value ?? config.value.getPopupContainer);
 
     const { foundation } = useFoundation<Foundation, Adapter, FoundationProps, SideSheetState>(
         SideSheetFoundation,
         props,
         () => SideSheetFoundation.getInitialState(),
         () => ({
-            disabledBodyScroll: () => (isModal() ? scroll.hold(lockBodyScroll) : scroll.release()),
-            enabledBodyScroll: () => scroll.release(),
             notifyCancel: (event) => {
                 emit('update:visible', false);
                 emit('cancel', event);
             },
-            openLayer: (onEscape) => layer.hold(() => openLayer({ element: root.value as HTMLElement, modal: isModal(), onEscape })),
-            closeLayer: () => layer.release(),
-            // Neither the browser nor Vue focuses an inserted autofocus element, so the sheet picks it before the default
-            // (the dialog itself). A non-modal sheet leaves the page usable and Tab may leave it.
-            // shortcut: a mask confined to a custom container still covers content under it that Tab can reach, upgrade
-            // to inert on the container's other children if that content must become unreachable.
-            trapFocus: () => {
-                const el = dialog.value;
-                if (!el) return;
-                if (!el.contains(FocusTrapHandle.getActiveElement(el))) {
-                    FocusTrapHandle.findAutofocus(el)?.focus({ preventScroll: true });
-                }
-                focusScope.engage(el, isModal(), true);
-            },
-            releaseFocus: () => focusScope.deactivate(),
-            // A user who moved on to the page next to a non-modal sheet keeps that focus. Unlike React, Vue does not
-            // refocus the pre-update element after the update, so restoring once in afterHide is enough.
-            restoreFocus: () => focusScope.restoreIfAllowed(dialog.value, isModal(), true),
-        })
+            notifyAfterVisibleChange: (isVisible) => emit('afterVisibleChange', isVisible),
+            getRoot: () => root.value,
+            getDialog: () => dialog.value,
+        }),
+        // the same container function Portal renders with
+        { props: { getPopupContainer: () => getContainer.value }, context: () => config.value }
     );
 
     // A deactivated KeepAlive subtree gives up the page inert, scroll lock and focus trap without reporting a close.
@@ -123,6 +93,9 @@
         init: () => void nextTick(() => keepAlive.isDeactivated() || foundation.init()),
         destroy: () => foundation.destroy(),
     });
+
+    const hidden = computed(() => (props.visible ? false : !props.motion || !displayed.value));
+    const shouldRender = computed(() => props.visible || props.keepDOM || (props.motion && !hidden.value));
 
     const onEnter = () => {
         displayed.value = true;
@@ -151,7 +124,7 @@
         return {
             // The title names the dialog unless the caller does; a generated reference would shadow aria-label.
             'aria-labelledby': !control['aria-label'] && hasTitle() ? titleId : undefined,
-            'aria-modal': props.mask && inBody ? ('true' as const) : undefined,
+            'aria-modal': SideSheetFoundation.isModal({ mask: props.mask, inBody }) ? ('true' as const) : undefined,
             ...control,
         };
     };
@@ -171,7 +144,7 @@
         };
     };
 
-    useRecordFocus(focusScope, () => props.visible);
+    useRecordFocus({ record: foundation.recordFocus }, () => props.visible);
 
     // Unmounting the Portal removes a v-show element without a leave, so after-leave never resets displayed.
     watch(shouldRender, (rendered) => {
@@ -192,16 +165,10 @@
         { flush: 'post' }
     );
 
-    watch(
-        () => hidden.value,
-        (isHidden) => emit('afterVisibleChange', !isHidden),
-        { flush: 'post' }
-    );
+    watch(() => hidden.value, foundation.handleHiddenChange, { flush: 'post' });
 
     // Unmounting while shown or leaving counts as hiding; emitted before unmount, since Vue drops emits after it.
-    onBeforeUnmount(() => {
-        if (!hidden.value) emit('afterVisibleChange', false);
-    });
+    onBeforeUnmount(() => foundation.handleHiddenChange(true));
 
     defineExpose<SideSheetHandle>({
         get root() {

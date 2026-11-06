@@ -75,25 +75,11 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
     const footerRef = useRef<HTMLDivElement>(null);
     const popoverRef = useRef<PopoverHandle>(null);
 
-    // Tooltip mounts the card only after `visible` turns true, so the focus request waits for the footer to exist
-    const pendingFocus = useRef<'cancel' | 'ok' | null>(null);
+    // Tooltip's initial focus target of the mounted card
+    const tooltipFocusRef = useRef<RenderContentProps['initialFocusRef'] | null>(null);
 
     // the title names the dialog; without one, the content is the question being confirmed
     let labelledBy = props['aria-labelledby'];
-
-    const titleId = `${useId()}-title`;
-    const contentId = `${titleId}-content`;
-    const showTitle = hasNode(title);
-    const showContent = hasNode(content);
-
-    const focusButton = (type: 'cancel' | 'ok') => {
-        const button = footerRef.current?.querySelector<HTMLElement>(`[data-type=${type}]`);
-        if (button) {
-            button.focus({ preventScroll: true });
-        } else {
-            pendingFocus.current = type;
-        }
-    };
 
     const [foundation, state] = useFoundation<Foundation, Adapter, PopconfirmProps, PopconfirmState>(
         PopconfirmFoundation,
@@ -103,10 +89,13 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
             notifyConfirm: (e) => base.getProps().onConfirm?.(e),
             notifyCancel: (e) => base.getProps().onCancel?.(e),
             notifyVisibleChange: (visible) => base.getProps().onVisibleChange?.(visible),
-            focusCancelButton: () => focusButton('cancel'),
-            focusOkButton: () => focusButton('ok'),
+            getFooter: () => footerRef.current,
+            setInitialFocus: (button) => {
+                if (tooltipFocusRef.current) {
+                    tooltipFocusRef.current.current = button;
+                }
+            },
             focusPrevFocusElement: () => {
-                pendingFocus.current = null;
                 // focus that already left the card (Tab away from a focus trigger) stays where it went
                 if (FocusTrapHandle.shouldRestoreFocus(popoverRef.current?.getPopup(), false)) {
                     popoverRef.current?.focusTrigger();
@@ -115,6 +104,10 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
         })
     );
 
+    const titleId = `${useId()}-title`;
+    const contentId = `${titleId}-content`;
+    const showTitle = hasNode(title);
+    const showContent = hasNode(content);
     const open = props.visible !== undefined ? props.visible : state.visible;
 
     // Tooltip reports only Popconfirm's own requests, so focus follows the `visible` it is given, whoever set it
@@ -187,11 +180,9 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
         const hasIcon = hasNode(icon);
         const setFooter = (footer: HTMLDivElement | null) => {
             footerRef.current = footer;
-            const button = pendingFocus.current && footer?.querySelector<HTMLElement>(`[data-type=${pendingFocus.current}]`);
-            if (button) {
-                pendingFocus.current = null;
-                // Tooltip focuses its initial target once the popup has opened; the autoFocus button wins over content's
-                initialFocusRef.current = button;
+            tooltipFocusRef.current = footer ? initialFocusRef : null;
+            if (footer) {
+                foundation.handleFooterMounted();
             }
         };
         const bodyCls = clsx({

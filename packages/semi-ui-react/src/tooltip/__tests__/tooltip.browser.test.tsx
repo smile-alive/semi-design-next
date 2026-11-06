@@ -872,7 +872,7 @@ describe('Activity 隐藏 keepDOM 弹层（浏览器）', () => {
         await waitFor(() => expect(screen.getByText('kept tip')).toBeVisible());
         expect(popup.isConnected).toBe(true);
 
-        await userEvent.click(document.body);
+        await clickOutside();
         await waitFor(() => expect(popup.matches(':popover-open')).toBe(false));
         expect(popup.checkVisibility()).toBe(false);
 

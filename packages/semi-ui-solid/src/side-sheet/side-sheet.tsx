@@ -5,11 +5,6 @@ import { cssClasses } from '@fibrae/semi-foundation/side-sheet/constants';
 import SideSheetFoundation, { type Placement, type SideSheetAdapter, type SideSheetState } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
 import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
 import '@fibrae/semi-foundation/side-sheet/side-sheet.scss';
 import useCSSAnimation from '../_base/css-animation';
 import type { ElementProps } from '../_base/element-props';
@@ -118,14 +113,7 @@ export default function SideSheet(rawProps: SideSheetProps) {
     // the initial value only: the effects below and the end of the animations keep it in step
     const [displayNone, setDisplayNone] = createSignal(!props.visible);
     const [dialog, setDialog] = createSignal<HTMLDivElement>();
-    const scroll = new ReleaseHolder();
-    const layer = new ReleaseHolder();
-    const focusScope = new FocusScope();
     let root: HTMLDivElement | undefined;
-
-    // shown or leaving: an unmount in this period still reports afterVisibleChange(false). The initial value only, as
-    // hidden starts as !visible; the watch on hidden keeps it in step. The server disposes the root without ever showing it
-    let shown = !isServer && Boolean(props.visible);
 
     // getPopupContainer may query a node that exists only once the parent is inserted
     const mounted = useMounted();
@@ -134,33 +122,13 @@ export default function SideSheet(rawProps: SideSheetProps) {
         SideSheetFoundation,
         props,
         () => SideSheetFoundation.getInitialState(),
-        (base) => {
-            // a mask confined to a custom popup container leaves the rest of the page usable
-            const isModal = () => Boolean(base.getProp('mask')) && coversPage(base.getProp('getPopupContainer') ?? config().getPopupContainer);
-            return {
-                disabledBodyScroll: () => (isModal() ? scroll.hold(lockBodyScroll) : scroll.release()),
-                enabledBodyScroll: () => scroll.release(),
-                notifyCancel: (e) => base.getProps().onCancel?.(e),
-                openLayer: (onEscape) => layer.hold(() => openLayer({ element: root as HTMLElement, modal: isModal(), onEscape })),
-                closeLayer: () => layer.release(),
-                // Solid inserts the sheet after the document loaded, so the browser does not focus its autofocus element.
-                // shortcut: content under a mask confined to a custom container stays Tab-reachable,
-                // upgrade to inert on the container's other children if it must become unreachable.
-                trapFocus: () => {
-                    const element = dialog();
-                    if (!element) {
-                        return;
-                    }
-                    if (!element.contains(FocusTrapHandle.getActiveElement(element))) {
-                        FocusTrapHandle.findAutofocus(element)?.focus({ preventScroll: true });
-                    }
-                    focusScope.engage(element, isModal(), true);
-                },
-                releaseFocus: () => focusScope.deactivate(),
-                // a user who moved on to the page next to a non-modal sheet keeps that focus
-                restoreFocus: () => focusScope.restoreIfAllowed(dialog(), isModal(), true),
-            };
-        }
+        (base) => ({
+            notifyCancel: (e) => base.getProps().onCancel?.(e),
+            notifyAfterVisibleChange: (isVisible) => base.getProps().afterVisibleChange?.(isVisible),
+            getRoot: () => root,
+            getDialog: () => dialog(),
+        }),
+        { context: config }
     );
 
     const visible = createMemo(() => props.visible);
@@ -206,7 +174,7 @@ export default function SideSheet(rawProps: SideSheetProps) {
 
     const onClose = (event: MouseEvent) => foundation.handleCancel(event);
 
-    useRecordFocus(focusScope, visible);
+    useRecordFocus({ record: foundation.recordFocus }, visible);
 
     // an interrupted leave must start from the shown state, or the next close would unmount at once
     createRenderEffect(
@@ -230,16 +198,12 @@ export default function SideSheet(rawProps: SideSheetProps) {
         onCleanup(foundation.afterHide);
     });
 
-    useWatch(hidden, (isHidden) => {
-        shown = !isHidden;
-        props.afterVisibleChange?.(!isHidden);
-    });
+    useWatch(hidden, foundation.handleHiddenChange);
 
-    onCleanup(() => {
-        if (shown) {
-            props.afterVisibleChange?.(false);
-        }
-    });
+    // the server disposes the root without ever showing the sheet
+    if (!isServer) {
+        onCleanup(() => foundation.handleHiddenChange(true));
+    }
 
     return (
         <Show when={mounted() && shouldRender()}>
@@ -262,7 +226,7 @@ export default function SideSheet(rawProps: SideSheetProps) {
                     footer={local.footer}
                     mask={local.mask}
                     maskClosable={local.maskClosable}
-                    modal={local.mask && inBody()}
+                    modal={SideSheetFoundation.isModal({ mask: local.mask, inBody: inBody() })}
                     sheetSize={SideSheetFoundation.getSheetSize(props)}
                     size={local.size}
                     onClose={onClose}

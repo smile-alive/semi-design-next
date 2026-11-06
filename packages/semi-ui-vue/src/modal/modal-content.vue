@@ -4,10 +4,6 @@
     import ModalContentFoundation, { type ModalContentAdapter, isModal } from '@fibrae/semi-foundation/modal/modal-content-foundation';
     import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-    import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-    import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs';
     import useFoundation from '../_base/use-foundation';
     import useRecordFocus from '../_base/use-record-focus';
@@ -30,14 +26,8 @@
 
     const root = useTemplateRef('root');
     const dialog = shallowRef<HTMLElement | null>(null);
-    const focusScope = new FocusScope();
-    const layer = new ReleaseHolder();
-    let bodyFocus: HTMLElement | null = null;
     const displayed = shallowRef(false);
     const active = shallowRef(true);
-
-    const idPrefix = `dialog-${useId()}`;
-    const prefix = cssClasses.DIALOG;
 
     const { foundation } = useFoundation<Foundation, Adapter, FoundationProps, Record<string, unknown>>(
         ModalContentFoundation,
@@ -45,34 +35,13 @@
         () => ({}),
         () => ({
             notifyClose: (event) => props.onClose(event),
-            openLayer: (onEscape) => layer.hold(() => openLayer({ element: root.value as HTMLElement, modal: isModal(props), onEscape })),
-            closeLayer: () => layer.release(),
-            trapFocus: () => {
-                const el = dialog.value;
-                if (!el) return;
-                const { preventScroll } = props;
-                const footer = el.querySelector(`:scope > .${prefix}-footer`);
-                const active = FocusTrapHandle.getActiveElement(el);
-                // Vue does not focus an inserted autofocus element, and WebKit only does at the next rendering update: pick the body element the first open
-                // focused (a component's mount-time focus acts once, so a keepDOM reopen needs it), autofocus, footer
-                // button, first. Known limit: keepDOM with lazyRender={false} that starts hidden mounts under display:none,
-                // where mount-time focus fails, so nothing is remembered and the default button wins.
-                if (el.contains(active)) {
-                    if (active !== el && !footer?.contains(active)) {
-                        bodyFocus ??= active as HTMLElement;
-                    }
-                } else {
-                    FocusTrapHandle.pickInitialFocus(el, { remembered: bodyFocus, autofocus: true, footer, initialFocus: props.initialFocus })?.focus({ preventScroll });
-                }
-                focusScope.engage(el, isModal(props), preventScroll);
-            },
-            releaseFocus: () => {
-                dialog.value?.blur();
-                focusScope.deactivate();
-            },
-            restoreFocus: () => focusScope.restoreIfAllowed(dialog.value, isModal(props), props.preventScroll),
+            getRoot: () => root.value,
+            getDialog: () => dialog.value,
         })
     );
+
+    const idPrefix = `dialog-${useId()}`;
+    const prefix = cssClasses.DIALOG;
 
     const contentTransition = (): TransitionProps => ({
         name: prefix,
@@ -148,7 +117,7 @@
         );
 
     // record before the content's components take focus in their mounted hooks (an autofocusing Input)
-    useRecordFocus(focusScope, () => props.visible);
+    useRecordFocus({ record: foundation.recordFocus }, () => props.visible);
 
     // Gated on `displayed`, not `visible`: vShow restores the display in its own post-flush hook, which runs after a watch
     // on `visible`, so focusing there would hit a display:none dialog on a keepDOM reopen. Post flush also runs after

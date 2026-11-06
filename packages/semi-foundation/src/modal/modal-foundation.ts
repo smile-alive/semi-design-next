@@ -1,6 +1,10 @@
 import { debounce } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
+import { resolvePopupContainer } from '../utils/dom';
 import isPromise from '../utils/is-promise';
+import ModalResources from '../utils/modal-resources';
+import PopupLifecycle from '../utils/popup-lifecycle';
+import { isModal } from './modal-content-foundation';
 
 export type OKType = 'primary' | 'secondary' | 'tertiary' | 'warning' | 'danger';
 export type Size = 'small' | 'medium' | 'large' | 'full-width';
@@ -8,10 +12,13 @@ export type Size = 'small' | 'medium' | 'large' | 'full-width';
 /** The members of a button event the foundation reads to tell presses of different buttons apart */
 export type ModalButtonEvent = Pick<Event, 'currentTarget' | 'target'>;
 
+/** What the modal reads around it: ConfigProvider's popup container, which the modal's own prop overrides */
+export interface ModalContext {
+    getPopupContainer?: () => HTMLElement;
+}
+
 /** CE and OE are the host's cancel and ok events, which the foundation passes on to the callbacks */
-export interface ModalAdapter<P extends ModalProps = ModalProps, CE = unknown, OE = unknown> extends DefaultAdapter<P, ModalState> {
-    disabledBodyScroll: () => void;
-    enabledBodyScroll: () => void;
+export interface ModalAdapter<P extends ModalProps = ModalProps, CE = unknown, OE = unknown> extends DefaultAdapter<P, ModalState, ModalContext> {
     // only a returned promise is awaited, so any other value is accepted, such as a setter's
     notifyCancel: (e: CE) => unknown;
     notifyOk: (e: OE) => unknown;
@@ -76,6 +83,16 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, CE exten
     #shown = false;
     // destroyed while shown: init takes the lock again
     #resume = false;
+    readonly #lifecycle = new PopupLifecycle();
+    readonly #resources = new ModalResources();
+
+    constructor(adapter: ModalAdapter<P, CE, OE>) {
+        super(adapter);
+        // a modal mounted visible is shown before its host's effects run, and a close before then still owes afterClose
+        if (this.getProp('visible')) {
+            this.#lifecycle.show();
+        }
+    }
 
     #debouncedOk = debounce(
         (e: OE) => {
@@ -183,7 +200,11 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, CE exten
             return;
         }
         this.#shown = true;
-        this.adapter.disabledBodyScroll();
+        this.#lifecycle.show();
+        // ModalContent holds the layer and focus; the page keeps scrolling behind a non-modal dialog
+        const { mask, maskFixed, getPopupContainer } = this.getProps();
+        const inBody = resolvePopupContainer(getPopupContainer ?? this.getContext('getPopupContainer')) === document.body;
+        this.#resources.hold({ modal: isModal({ mask, maskFixed, inBody }) });
     };
 
     afterHide = () => {
@@ -192,10 +213,14 @@ export default class ModalFoundation<P extends ModalProps = ModalProps, CE exten
             return;
         }
         this.#shown = false;
-        this.adapter.enabledBodyScroll();
+        this.#resources.release();
     };
 
-    afterClose = () => {
-        this.adapter.notifyClose();
+    /**
+     * Hosts call this when the wrap is hidden (the leave animation ended) and when the modal unmounts for good:
+     * afterClose is reported once per showing, a reopening during the leave included.
+     */
+    handleHidden = () => {
+        this.#lifecycle.ended(() => this.adapter.notifyClose());
     };
 }

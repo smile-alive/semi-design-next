@@ -2,16 +2,14 @@ import type React from 'react';
 import { type CSSProperties, type ReactNode, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
-import { isModal } from '@fibrae/semi-foundation/modal/modal-content-foundation';
 import ModalFoundation, { type ModalAdapter, type ModalProps, type ModalState } from '@fibrae/semi-foundation/modal/modal-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
 import '@fibrae/semi-foundation/modal/modal.scss';
 import useDefaultProps from '../_base/use-default-props';
 import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
 import useIsServerRender from '../_base/use-is-server-render';
+import useMergedRef from '../_base/use-merged-ref';
 import useRealUnmount from '../_base/use-real-unmount';
 import CSSAnimation from '../_css-animation';
 import Portal from '../_portal';
@@ -65,26 +63,15 @@ const defaultProps = {
 } satisfies Partial<ModalReactProps>;
 
 class ModalRuntime {
-    #closePending = false;
-    readonly scroll = new ReleaseHolder();
+    // Kept after the ref detaches. A real unmount removes it from the portal element; Activity only hides it, and
+    // Portal detaches the portal element itself, so isConnected cannot tell the two apart but parentNode can.
+    lastRoot: HTMLDivElement | null = null;
 
-    markShown() {
-        this.#closePending = true;
-    }
-
-    takePendingClose() {
-        const pending = this.#closePending;
-        this.#closePending = false;
-        return pending;
-    }
-
-    disableBodyScroll(locksBody: boolean) {
-        if (locksBody) {
-            this.scroll.hold(lockBodyScroll);
-        } else {
-            this.scroll.release();
+    readonly attachRoot = (node: HTMLDivElement | null) => {
+        if (node) {
+            this.lastRoot = node;
         }
-    }
+    };
 }
 
 // autoFocus is dropped: ModalContent focuses the button on each opening, as React's autoFocus acts on mount alone
@@ -165,15 +152,6 @@ export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTML
         props,
         () => ModalFoundation.getInitialState(),
         (base) => ({
-            disabledBodyScroll: () =>
-                runtime.disableBodyScroll(
-                    isModal({
-                        mask: base.getProp('mask'),
-                        maskFixed: base.getProp('maskFixed'),
-                        inBody: coversPage(base.getProp('getPopupContainer') ?? base.getContext('getPopupContainer')),
-                    })
-                ),
-            enabledBodyScroll: () => runtime.scroll.release(),
             notifyCancel: (e) => base.getProps().onCancel?.(e),
             notifyOk: (e) => base.getProps().onOk?.(e),
             notifyClose: () => base.getProps().afterClose?.(),
@@ -195,6 +173,7 @@ export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTML
         setHaveRendered(true);
     }
 
+    const rootRef = useMergedRef(ref, runtime.attachRoot);
     const initialFocus = ModalFoundation.getInitialFocus({ customFooter: footer !== undefined, okButtonProps, hasCancel, cancelButtonProps });
 
     // evaluated once per render: the getter is the caller's function and ModalContent reuses the result
@@ -240,20 +219,19 @@ export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTML
         if (hidden) {
             return undefined;
         }
-        runtime.markShown();
         foundation.beforeShow();
         return foundation.afterHide;
-    }, [hidden, foundation, runtime]);
+    }, [hidden, foundation]);
 
     useDidUpdate(hidden, (isHidden) => {
-        if (isHidden && runtime.takePendingClose()) {
-            foundation.afterClose();
+        if (isHidden) {
+            foundation.handleHidden();
         }
     });
 
     useRealUnmount(() => {
-        if (runtime.takePendingClose()) {
-            foundation.afterClose();
+        if (!runtime.lastRoot?.parentNode) {
+            foundation.handleHidden();
         }
     });
 
@@ -266,7 +244,7 @@ export default function Modal(rawProps: ModalReactProps & { ref?: React.Ref<HTML
                             <Portal style={wrapperStyle} getPopupContainer={getPopupContainer}>
                                 <ModalContent
                                     {...rest}
-                                    ref={ref}
+                                    ref={rootRef}
                                     className={clsx(className, {
                                         [`${cssClasses.DIALOG}-displayNone`]: keepDOM && hidden,
                                     })}

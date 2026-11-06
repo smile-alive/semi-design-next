@@ -7,10 +7,6 @@
     import { cssClasses as typographyClasses } from '@fibrae/semi-foundation/typography/constants';
     import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-    import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-    import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
     import '@fibrae/semi-foundation/typography/typography.scss';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs.js';
@@ -60,11 +56,6 @@
     const uid = $props.id();
     let root = $state.raw<HTMLDivElement | null>(null);
     let dialog = $state.raw<HTMLElement | null>(null);
-    const focusScope = new FocusScope();
-    const layer = new ReleaseHolder();
-
-    // the body element the first open focused, which a keepDOM reopen focuses again
-    let bodyFocus: HTMLElement | null = null;
 
     const prefix = cssClasses.DIALOG;
 
@@ -92,37 +83,25 @@
             get inBody() {
                 return inBody;
             },
+            get mask() {
+                return mask;
+            },
+            get maskFixed() {
+                return maskFixed;
+            },
+            get preventScroll() {
+                return preventScroll;
+            },
+            get initialFocus() {
+                return initialFocus;
+            },
             onClose: (event) => onClose(event),
         },
         () => ({}),
         () => ({
             notifyClose: (event) => onClose(event),
-            openLayer: (onEscape) => layer.hold(() => openLayer({ element: root as HTMLElement, modal: isModal({ mask, maskFixed, inBody }), onEscape })),
-            closeLayer: () => layer.release(),
-            trapFocus: () => {
-                const el = dialog;
-                if (!el) return;
-                const footerElement = el.querySelector(`:scope > .${prefix}-footer`);
-                const active = FocusTrapHandle.getActiveElement(el);
-                // Svelte focuses an autofocus element in a microtask, which may land before or after this runs; pick the
-                // body element the first open focused (a component's mount-time focus acts once, so a keepDOM reopen
-                // needs it), autofocus, footer button, first. Known limit: keepDOM with lazyRender={false} that starts
-                // hidden mounts under display:none, where mount-time focus fails, so nothing is remembered and the
-                // default button wins.
-                if (el.contains(active)) {
-                    if (active !== el && !footerElement?.contains(active)) {
-                        bodyFocus ??= active;
-                    }
-                } else {
-                    FocusTrapHandle.pickInitialFocus(el, { remembered: bodyFocus, autofocus: true, footer: footerElement, initialFocus })?.focus({ preventScroll });
-                }
-                focusScope.engage(el, isModal({ mask, maskFixed, inBody }), preventScroll);
-            },
-            releaseFocus: () => {
-                dialog?.blur();
-                focusScope.deactivate();
-            },
-            restoreFocus: () => focusScope.restoreIfAllowed(dialog, isModal({ mask, maskFixed, inBody }), preventScroll),
+            getRoot: () => root,
+            getDialog: () => dialog,
         })
     );
 
@@ -151,7 +130,7 @@
     // record before the content's components take focus in their mount effects (an autofocusing Input)
     $effect.pre(() => {
         if (visible) {
-            untrack(() => focusScope.record());
+            untrack(() => foundation.recordFocus());
         }
     });
 

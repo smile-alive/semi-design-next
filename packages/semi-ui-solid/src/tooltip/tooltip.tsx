@@ -1,4 +1,4 @@
-import { type Accessor, type JSX, type Ref, Show, batch, children, createEffect, createMemo, createSignal, createUniqueId, getOwner, mergeProps, on, onCleanup, onMount, runWithOwner, splitProps, untrack } from 'solid-js';
+import { type Accessor, type JSX, type Ref, Show, batch, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import { Portal, isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { COLOR_SCHEME_SELECTOR, POPUP_ID_ATTRIBUTE, TRIGGER_EVENT_NAMES, canRoleCarryPopupState, colorSchemeOf, cssClasses, isBlockDisplay, numbers, popupTarget, strings, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
@@ -7,7 +7,6 @@ import { joinIds, warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import { noop } from '@fibrae/semi-foundation/utils/function';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/tooltip/tooltip.scss';
 import autofocus from '../_base/autofocus';
@@ -210,10 +209,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
     // this popup, while moving onto a popup the trigger renders leaves the trigger
     const contentDescendants = new Set<Accessor<HTMLElement | undefined>>();
 
-    // inserted and afterOpen, afterClose not yet reported
-    let openPending = false;
-    let closePending = false;
-
     const layer = Symbol('semi-popup-layer');
     const contentProps: RenderContentProps = { initialFocusRef: (focusTarget) => (initialFocus = focusTarget) };
     const isDialog = createMemo(() => props.role === 'dialog');
@@ -253,21 +248,29 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
             const adapter: Omit<Adapter, keyof typeof base> = {
                 insertPortal: () => {
                     const el = target();
-                    openPending = true;
-                    closePending = true;
-                    base.setState({
-                        isInsert: true,
-                        transitionState: 'enter',
-                        visible: true,
+                    return {
                         portalTarget: popupTarget(el?.getRootNode(), (fullscreen) => Boolean(el && fullscreen.contains(el))),
                         colorScheme: colorSchemeOf(el?.closest(COLOR_SCHEME_SELECTOR)),
-                    });
+                    };
                 },
-                removePortal: () =>
-                    batch(() => {
-                        setContentShown(false);
-                        base.setState({ isInsert: false, transitionState: '' });
-                    }),
+                removePortal: () => setContentShown(false),
+                showPopover: () => {
+                    const el = container();
+                    if (el && !el.matches(':popover-open')) {
+                        el.showPopover();
+                    }
+                },
+                hidePopover: () => container()?.hidePopover(),
+                // always settles in a microtask: a hide() from the foundation's own timer commits unbatched, and
+                // afterClose must follow its onVisibleChange(false)
+                waitAnimations: () =>
+                    Promise.allSettled(
+                        container()
+                            ?.getAnimations()
+                            .map((animation) => animation.finished) ?? []
+                    ),
+                notifyAfterOpen: () => props.afterOpen?.(),
+                notifyAfterClose: () => props.afterClose?.(),
                 notifyVisibleChange: (visible) => props.onVisibleChange?.(visible),
                 registerClickOutsideHandler: (handler) => {
                     adapter.unregisterClickOutsideHandler();
@@ -313,7 +316,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
 
     // an equal write still notifies: the effects these drive show the popover and register the layer once per change
     const phase = createMemo(() => (state().isInsert ? state().transitionState : ''));
-    const isOpen = createMemo(() => state().isInsert && state().transitionState !== 'leave');
 
     // created when the popup first mounts, then kept across reopening: JSX created during hydration has no node in the
     // server HTML to claim
@@ -530,87 +532,18 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
     });
 
     // Portal's own effect runs before user effects, so the container is in the document here
-    createEffect(
-        on([phase, container], ([current, el]) => {
-            if (!el) {
-                return;
-            }
-            if (current === 'enter') {
-                if (!el.matches(':popover-open')) {
-                    el.showPopover();
-                }
-                foundation.handleShown();
-                const entering = el.getAnimations();
-                let cancelled = false;
-                // a prop getter compiled from a conditional creates a memo, which needs this effect as its owner
-                const owner = getOwner();
-                // `:hover` is not updated yet in the mouseenter task; handleOpened's hover check runs a task later
-                const timer = setTimeout(() => {
-                    runWithOwner(owner, foundation.handleOpened);
-                    void Promise.allSettled(entering.map((animation) => animation.finished)).then(() => {
-                        if (!cancelled && openPending && foundation.getState('transitionState') === 'enter') {
-                            openPending = false;
-                            props.afterOpen?.();
-                        }
-                    });
-                });
-                onCleanup(() => {
-                    cancelled = true;
-                    clearTimeout(timer);
-                });
-            } else if (current === 'leave') {
-                // The exit animation plays while the popup is still open, so it keeps the top layer; it hides once that
-                // ends. Read right after the update that dropped the show class; cancelled ones settle too.
-                const exits = el.getAnimations();
-                let reopened = false;
-                // always settles in a microtask: a hide() from the foundation's own timer commits unbatched, and
-                // afterClose must follow its onVisibleChange(false)
-                void Promise.allSettled(exits.map((animation) => animation.finished)).then(() => {
-                    if (reopened || foundation.getState('transitionState') !== 'leave') {
-                        return;
-                    }
-                    el.hidePopover();
-                    if (!props.keepDOM) {
-                        foundation.removePortal();
-                    }
-                    if (closePending) {
-                        closePending = false;
-                        props.afterClose?.();
-                    }
-                });
-                onCleanup(() => {
-                    reopened = true;
-                });
-            }
-        })
-    );
-
-    // Non-modal layer: takes Escape while on top, and a Modal opened before it leaves it interactive. Registered from
-    // insertion so it exists before the content mounts and takes focus.
-    createEffect(() => {
-        const el = container();
-        if (isOpen() && el) {
-            onCleanup(openLayer({ element: el, modal: false, onEscape: foundation.handleEscape }));
-        }
-    });
+    createEffect(on([phase, container], () => foundation.syncPopup()));
 
     // The name may point into the content, so check after it mounts. Only contentShown is tracked: an effect that
-    // isOpen also queued in the same flush would run before the content is inserted.
+    // the phase also queued in the same flush would run before the content is inserted.
     createEffect(on(contentShown, (shown) => shown && isDialog() && warnIfDialogUnnamed(container() ?? null, 'Popover'), { defer: true }));
 
-    // handleShown measured the popup without its content: a top popup placed by a zero height would hang over the
+    // syncPopup measured the popup without its content: a top popup placed by a zero height would hang over the
     // trigger and take the next click until the resize observer runs
     createEffect(on(contentShown, (shown) => shown && foundation.calcPosition(), { defer: true }));
 
     // showPopover() ran its autofocus step before the content mounted
     createEffect(on(contentShown, (shown) => autofocus(shown, container()?.querySelector<HTMLElement>('[autofocus]'), { preventScroll: props.preventScroll }), { defer: true }));
-
-    createEffect(
-        on(
-            createMemo(() => props.mouseLeaveDelay < props.mouseEnterDelay),
-            (leavesFirst) => warning(leavesFirst, strings.LEAVE_DELAY_WARNING)
-        )
-    );
 
     onMount(() => {
         if (isRender) {
@@ -624,20 +557,10 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
         warning(inside, '[Semi Tooltip] the trigger holds a focusable element the description cannot reach; pass children as (getTriggerProps) => JSX');
     });
 
-    onMount(() => {
-        const timer = setTimeout(foundation.updateStateIfCursorOnTrigger);
-        onCleanup(() => clearTimeout(timer));
-    });
-
     onMount(() => onCleanup(outerPopups?.register(container) ?? noop));
 
     // runs on unmount, after the foundation's destroy (registered in onMount, so owned and cleaned first), which closes the popup without reporting a close
-    onCleanup(() => {
-        if (closePending) {
-            closePending = false;
-            props.afterClose?.();
-        }
-    });
+    onCleanup(foundation.handleUnmount);
 
     // delivered once while created, like an element ref; the methods read the foundation and DOM only when called
     if (typeof ref === 'function') {
@@ -699,7 +622,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: Ref<TooltipHand
                                 }
                                 stop(e);
                             }}
-                            onKeyDown={foundation.handleContainerKeydown}
                             onMouseDown={(e) => {
                                 pressedInside = e;
                                 stop(e);

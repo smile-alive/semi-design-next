@@ -2,12 +2,7 @@
     import { untrack } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/image/constants';
     import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/image/preview-inner-foundation';
-    import { coversPage } from '@fibrae/semi-foundation/utils/dom';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-    import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-    import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-    import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
     import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-svelte';
     import Portal from '../_base/portal.svelte';
     import useFoundation from '../_base/use-foundation.svelte.js';
@@ -98,13 +93,6 @@
     // The index a ratio was set at: an index change brings the ratio back to fit in the same render as the new src, so
     // the image leaving is not re-fitted
     let ratioState = $state.raw<{ index: number; ratio: RatioType }>({ index: -1, ratio: 'adaptation' });
-    const scroll = new ReleaseHolder();
-    const layer = new ReleaseHolder();
-    const focusScope = new FocusScope();
-
-    // Read once per show: only a preview over the whole page is modal (aria-modal, inert page, scroll lock, Tab trap,
-    // focus return)
-    let modal = false;
 
     const { foundation, states } = useFoundation<Foundation, Adapter, PreviewInnerBaseProps, PreviewInnerState>(
         PreviewInnerFoundation,
@@ -145,12 +133,13 @@
             get currentIndex() {
                 return controlledIndex;
             },
+            get setDownloadName() {
+                return setDownloadName;
+            },
         },
         (view) => PreviewInnerFoundation.getInitialState(view),
         (base) => ({
             getIsInGroup: () => Boolean(setCurrentIndex),
-            disabledBodyScroll: () => (modal ? scroll.hold(lockBodyScroll) : scroll.release()),
-            enabledBodyScroll: () => scroll.release(),
             notifyChange: (index, direction) => {
                 onChange?.(index);
                 if (direction === 'prev') {
@@ -166,19 +155,14 @@
             notifyRotateChange: (angle) => onRotateLeft?.(angle),
             notifyDownload: (source, index) => onDownload?.(source, index),
             notifyDownloadError: (source) => onDownloadError?.(source),
-            registerKeyDownListener: () => window.addEventListener('keydown', handleKeyDown),
-            unregisterKeyDownListener: () => window.removeEventListener('keydown', handleKeyDown),
-            openLayer: (onEscape) => layer.hold(() => openLayer({ element: wrapEl as HTMLDivElement, modal, onEscape })),
-            closeLayer: () => layer.release(),
-            getSetDownloadFunc: () => setDownloadName as (source: string) => string,
+            getWrap: () => wrapEl,
             isValidTarget: ({ target }: Event) => !(target instanceof Node && [header?.getRoot(), footer?.getRoot(), leftButton, rightButton].some((element) => element?.contains(target))),
-            isEventInPreview: (event) => !(event.target instanceof Element) || event.target === document.body || Boolean(wrapEl?.contains(event.target)),
             setRatio: (ratio) => {
                 ratioState = { index: PreviewInnerFoundation.getCurrentIndex(base.getProps(), base.getStates()), ratio };
             },
         }),
         {
-            context: () => ({ isGroup: Boolean(setCurrentIndex), setCurrentIndex, direction: config.direction }),
+            context: () => ({ isGroup: Boolean(setCurrentIndex), setCurrentIndex, direction: config.direction, popupContainer: getPopupContainer ?? config.getPopupContainer }),
         }
     );
 
@@ -195,8 +179,6 @@
     // 0.29 * 100 is 28.999999999999996, which the slider would read out
     const toPercent = (value: number) => Number((value * 100).toFixed(2));
 
-    const handleKeyDown = (event: KeyboardEvent) => foundation.handleKeyDown(event);
-
     const handlePrev = () => foundation.handleSwitchImage('prev');
 
     const handleNext = () => foundation.handleSwitchImage('next');
@@ -204,42 +186,17 @@
     // Recorded before the preview renders, or its own focus would be recorded
     $effect.pre(() => {
         if (visible) {
-            untrack(() => focusScope.record());
+            untrack(() => foundation.recordFocus());
         }
     });
 
     $effect(() => {
-        const element = wrapEl;
-        if (!visible || !element) {
+        if (!visible || !wrapEl) {
             return;
         }
-        untrack(() => {
-            modal = coversPage(getPopupContainer ?? config.getPopupContainer);
-            foundation.beforeShow();
-            // Browsers skip autofocus on elements inserted after page load
-            if (!element.contains(FocusTrapHandle.getActiveElement(element))) {
-                FocusTrapHandle.findAutofocus(element)?.focus({ preventScroll: true });
-            }
-            focusScope.engage(element, modal, true);
-        });
-        return () => {
-            // afterHide releases the inert around the preview first, so the opener can take focus again
-            foundation.afterHide();
-            focusScope.deactivate();
-        };
+        untrack(() => foundation.beforeShow());
+        return foundation.afterHide;
     });
-
-    // After the effect above has released the inert: Svelte runs one component's effects in creation order. A non-modal
-    // preview leaves focus the user moved elsewhere where it is.
-    watch(
-        () => visible,
-        (shown) => {
-            const active = FocusTrapHandle.getActiveElement();
-            if (!shown && (modal || !active || active === document.body)) {
-                focusScope.restore(true);
-            }
-        }
-    );
 
     // A focused prev or next button disappears at the first or last image; focus stays in the dialog. Focus the user
     // moved elsewhere is left alone.

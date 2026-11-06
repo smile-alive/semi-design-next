@@ -23,13 +23,6 @@ export default function PreviewImage(props: Props) {
         (base) => ({
             getContainer: () => container as HTMLDivElement,
             getImage: () => image as HTMLImageElement,
-            setImageCursor: (canDrag) => {
-                const style = (image as HTMLImageElement).style;
-                style.cursor = canDrag ? 'grab' : 'default';
-                // a touch drag pans only a draggable image; otherwise the page keeps scrolling and pinch-zooming
-                style.touchAction = canDrag ? 'none' : '';
-            },
-            capturePointer: (pointerId) => image?.setPointerCapture(pointerId),
             requestZoom: (zoom, reportToUser) => base.getProps().onZoom?.(zoom, reportToUser),
             notifyLoad: (src) => base.getProps().onLoad?.(src),
             notifyError: (src) => base.getProps().onError?.(src),

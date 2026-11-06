@@ -5,11 +5,8 @@ function setup() {
     const notifyClose = vi.fn<ModalContentAdapter['notifyClose']>();
     const adapter = {
         notifyClose,
-        openLayer: () => {},
-        closeLayer: () => {},
-        trapFocus: () => {},
-        releaseFocus: () => {},
-        restoreFocus: () => {},
+        getRoot: () => null,
+        getDialog: () => null,
     } as unknown as ModalContentAdapter;
     const foundation = new ModalContentFoundation(adapter);
     const mask = document.createElement('div');

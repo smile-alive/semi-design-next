@@ -2,11 +2,7 @@ import { type JSX, Show, children, createComputed, createEffect, createMemo, cre
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
 import ContainerFoundation, { type ContainerAdapter, type ContainerProps } from '@fibrae/semi-ai-foundation/sidebar/container-foundation';
-import { canRestoreFocus } from '@fibrae/semi-ai-foundation/sidebar/utils';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
 import '@fibrae/semi-ai-foundation/sidebar/sidebar.scss';
 import { IconClose } from '@fibrae/semi-icons-solid';
 import useCSSAnimation from '@fibrae/semi-ui-solid/_base/css-animation';
@@ -34,9 +30,6 @@ export default function Container(rawProps: ContainerSolidProps) {
 
     const locale = useLocale('Sidebar');
 
-    const layer = new ReleaseHolder();
-    const focusScope = new FocusScope();
-
     // only the initial value: afterwards the foundation sets it when an animation ends
     const [displayNone, setDisplayNone] = createSignal(untrack(() => !props.visible));
     const [root, setRoot] = createSignal<HTMLDivElement>();
@@ -49,20 +42,9 @@ export default function Container(rawProps: ContainerSolidProps) {
         () => ({
             notifyCancel: (e) => props.onCancel?.(e),
             notifyVisibleChange: (isVisible) => props.afterVisibleChange?.(isVisible),
-            // The layer covers the Resizable around the container when there is one: its drag handles are siblings of the
-            // container, and a modal layer opened earlier would make them inert. The page beside the sidebar stays
-            // usable, so the layer is not modal.
-            openLayer: (onEscape) => {
-                const element = (local.resizable ? resizableRoot : undefined) ?? (root() as HTMLDivElement);
-                layer.hold(() => openLayer({ element, modal: false, onEscape }));
-            },
-            closeLayer: () => layer.release(),
+            getRoot: () => root() ?? null,
+            getLayer: () => (local.resizable ? resizableRoot : undefined) ?? root() ?? null,
             toggleDisplayNone: (hidden) => setDisplayNone(hidden),
-            restoreFocus: () => {
-                if (canRestoreFocus(root())) {
-                    focusScope.restore(true);
-                }
-            },
         })
     );
 
@@ -107,7 +89,7 @@ export default function Container(rawProps: ContainerSolidProps) {
         </div>
     );
 
-    useRecordFocus(focusScope, visible);
+    useRecordFocus({ record: foundation.recordFocus }, visible);
 
     // before the DOM updates, so showing mounts the content in this same update
     createComputed(() => {
