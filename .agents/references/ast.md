@@ -19,27 +19,16 @@
 
 ## 引用方式
 
-仓库内的脚本（`scripts/*.ts` 等）直接按包名导入：
+仓库内的脚本（`scripts/*.ts`、`tmp/` 下的临时脚本等）直接按包名导入，Node 从脚本所在目录逐级向上解析到仓库根的 `node_modules`。不写相对路径，也不写 `.pnpm/` 下带哈希的路径：
 
 ```ts
+import ts from 'typescript';
 import { parseSync } from 'vite/rolldown/utils';
-```
-
-仓库外的临时脚本（例如会话的 scratchpad）从仓库根解析包名。不写相对路径，也不写 `.pnpm/` 下带哈希的路径。在仓库根目录运行脚本，`createRequire` 的参数取当前目录下的 `package.json`：
-
-```ts
-import { createRequire } from 'node:module';
-import { join } from 'node:path';
-import { pathToFileURL } from 'node:url';
-
-const repoRequire = createRequire(join(process.cwd(), 'package.json'));
-const { parseSync } = await import(pathToFileURL(repoRequire.resolve('vite/rolldown/utils')).href);
-const ts = repoRequire('typescript');
 ```
 
 ## 约束
 
-- 一次性的统计和 codemod 脚本放在仓库外的临时目录，不提交。需要长期运行的检查脚本放在 `scripts/*.ts`，由 `tsconfig.node.json` 做类型检查。
+- 一次性的统计和 codemod 脚本放在 `tmp/<任务名>/`，用完删除，不提交。需要长期运行的检查脚本放在 `scripts/*.ts`，由 `tsconfig.node.json` 做类型检查。
 - 只读统计可以直接运行。用 codemod 改写仓库文件前，先说明改写范围并取得用户确认；改写后用一个脚本比对改写前后的成员或文本，作为验证证据。
 - 改写时按 AST 节点的 `start`、`end` 区间拼接原文，不用正则替换源码，也不从 AST 重新生成代码：Oxc 只负责解析，不输出代码；按区间拼接才能保留注释和格式。改写后跑 `vp fmt` 和相关检查。
 - 统计口径（如何识别组件、hook、回调传递）写进报告；无法静态判定的情况列为例外，不要猜。
