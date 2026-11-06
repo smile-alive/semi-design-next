@@ -10,7 +10,6 @@ import forwardFocus from '../_base/forward-focus';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
-import useWatch from '../_base/use-watch';
 import useConfig from '../config-provider/use-config';
 import { useLocale } from '../locale';
 import Tooltip from '../tooltip';
@@ -54,8 +53,8 @@ export interface RatingProps extends ElementProps<'ul', 'defaultValue' | 'onChan
 }
 
 type FoundationProps = RatingProps & { autoFocus?: boolean };
-type Foundation = RatingFoundation<FoundationProps, RatingState, RatingClickEvent, RatingFocusEvent, RatingKeyboardEvent>;
-type Adapter = RatingAdapter<FoundationProps, RatingState, RatingClickEvent, RatingFocusEvent, RatingKeyboardEvent>;
+type Foundation = RatingFoundation<FoundationProps, RatingClickEvent, RatingFocusEvent, RatingKeyboardEvent>;
+type Adapter = RatingAdapter<FoundationProps, RatingClickEvent, RatingFocusEvent, RatingKeyboardEvent>;
 
 const defaultProps = {
     defaultValue: 0,
@@ -137,7 +136,7 @@ export default function Rating(rawProps: RatingProps) {
         RatingFoundation,
         foundationProps,
         (view) => RatingFoundation.getInitialState(view),
-        (base) => ({
+        () => ({
             focusStar: (starValue) => {
                 // a value between radios has no radio to focus: Tab's landing radio stands in
                 if (!RatingFoundation.isRadioValue(starValue, props.count, props.allowHalf)) {
@@ -150,16 +149,12 @@ export default function Rating(rawProps: RatingProps) {
                 radios?.[RatingFoundation.isFirstRadio(starValue, index, props.allowHalf) ? 0 : radios.length - 1].focus({ preventScroll: props.preventScroll });
             },
             getStarDOM: (index) => starAt(index) ?? null,
-            setHover: (hoverValue, clearedValue) => base.setState({ hoverValue, clearedValue }),
             notifyHoverChange: (hoverValue) => props.onHoverChange?.(hoverValue),
-            setValue: (value) => base.setState({ value }),
             notifyChange: (value) => props.onChange?.(value),
-            setClearedValue: (clearedValue) => base.setState({ clearedValue }),
             notifyClick: (event, index) => props.onClick?.(event, index),
             notifyFocus: (event) => props.onFocus?.(event),
             notifyBlur: (event) => props.onBlur?.(event),
             notifyKeyDown: (event) => props.onKeyDown?.(event),
-            setFocusVisibleStar: (focusVisibleStar) => base.setState({ focusVisibleStar }),
         }),
         { context: config }
     );
@@ -194,11 +189,6 @@ export default function Rating(rawProps: RatingProps) {
         // an enclosing Tooltip wraps a disabled rating so that it still receives the pointer (F4)
         registerTrigger(node);
     };
-
-    useWatch(
-        () => props.value,
-        (next) => next === undefined && foundation.resetValue()
-    );
 
     return (
         <ul

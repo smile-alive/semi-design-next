@@ -7,20 +7,16 @@ export type RatingFocusEvent = { currentTarget: Node; relatedTarget: Node | null
  * The host's event types, which the foundation passes on to the callbacks: CE for a star click (mouse or keyboard),
  * FE for focus and blur of the list, KE for its keydown
  */
-export interface RatingAdapter<P extends RatingBaseProps = RatingBaseProps, S extends RatingState = RatingState, CE = unknown, FE = unknown, KE = unknown> extends DefaultAdapter<P, S, DirectionContext> {
+export interface RatingAdapter<P extends RatingBaseProps = RatingBaseProps, CE = unknown, FE = unknown, KE = unknown> extends DefaultAdapter<P, RatingState, DirectionContext> {
     /** Focuses the radio that stands for `value`; 0 is the empty star */
     focusStar: (value: number) => void;
     getStarDOM: (index: number) => Element | null;
-    setHover: (hoverValue: number, clearedValue: number) => void;
     notifyHoverChange: (hoverValue: number) => void;
-    setValue: (value: number) => void;
     notifyChange: (value: number) => void;
-    setClearedValue: (clearedValue: number) => void;
     notifyClick: (e: CE, index: number) => void;
     notifyFocus: (e: FE) => void;
     notifyBlur: (e: FE) => void;
     notifyKeyDown: (e: KE) => void;
-    setFocusVisibleStar: (index?: number) => void;
 }
 
 interface RatingValueProps {
@@ -58,24 +54,30 @@ export interface RatingBaseProps extends RatingValueProps {
 
 type RatingKeyEvent = Pick<KeyboardEvent, 'key' | 'preventDefault' | 'altKey' | 'ctrlKey' | 'metaKey'>;
 
-export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProps, S extends RatingState = RatingState, CE = unknown, FE extends RatingFocusEvent = RatingFocusEvent, KE extends RatingKeyEvent = RatingKeyEvent> extends BaseFoundation<RatingAdapter<P, S, CE, FE, KE>, P, S> {
-    // StrictMode and React Activity replay init on this instance after destroy: autoFocus belongs to the first mount
-    #initialized = false;
+export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProps, CE = unknown, FE extends RatingFocusEvent = RatingFocusEvent, KE extends RatingKeyEvent = RatingKeyEvent> extends BaseFoundation<RatingAdapter<P, CE, FE, KE>, P, RatingState> {
+    static override readonly propKeys = ['value'];
 
     #getOffsetLeft(el: Element) {
         return el.getBoundingClientRect().left + el.ownerDocument.defaultView.scrollX;
     }
 
     #changeHover(hoverValue: number, clearedValue: number) {
-        this.adapter.setHover(hoverValue, clearedValue);
+        this.setState({ hoverValue, clearedValue });
         this.adapter.notifyHoverChange(hoverValue);
     }
 
     #updateValue(value: number) {
         if (!this.isControlledComponent()) {
-            this.adapter.setValue(value);
+            this.setState({ value });
         }
         this.adapter.notifyChange(value);
+    }
+
+    protected override initOnce() {
+        const { autoFocus, disabled } = this.getProps();
+        if (autoFocus && !disabled) {
+            this.adapter.focusStar(RatingFoundation.deriveValue(this.getProps(), this.getStates()));
+        }
     }
 
     protected getStarValue(index: number, pos: number) {
@@ -171,21 +173,13 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
         return (hoverValue === undefined ? focusVisibleStar === index : Math.ceil(hoverValue) - 1 === index) && Boolean(tip);
     }
 
-    override init() {
-        if (this.#initialized) {
-            return;
-        }
-        this.#initialized = true;
-        const { autoFocus, disabled } = this.getProps();
-        if (autoFocus && !disabled) {
-            this.adapter.focusStar(RatingFoundation.deriveValue(this.getProps(), this.getStates()));
+    /** A value prop that goes back to undefined (a form reset) returns to defaultValue, like Slider (Switch and Checkbox become unchecked) */
+    override handlePropsChange() {
+        const { value, defaultValue } = this.getProps();
+        if (value === undefined) {
+            this.setState({ value: defaultValue });
         }
     }
-
-    /** A value prop that goes back to undefined (a form reset) returns to defaultValue, like Slider (Switch and Checkbox become unchecked) */
-    resetValue = () => {
-        this.adapter.setValue(this.getProps().defaultValue);
-    };
 
     handleHover = (event: Pick<MouseEvent, 'pageX'>, index: number) => {
         const currValue = this.getStarValue(index, event.pageX);
@@ -211,7 +205,7 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
         if (isReset) {
             this.#changeHover(undefined, newValue);
         } else {
-            this.adapter.setClearedValue(null);
+            this.setState({ clearedValue: null });
         }
         this.adapter.notifyClick(event, index);
     };
@@ -226,14 +220,14 @@ export default class RatingFoundation<P extends RatingBaseProps = RatingBaseProp
     handleStarFocus = (e: { target: Element }, index: number) => {
         // an arrow key moves focus between stars before the browser reports :focus-visible for the new one
         if (e.target.matches(':focus-visible') || this.getStates().focusVisibleStar !== undefined) {
-            this.adapter.setFocusVisibleStar(index);
+            this.setState({ focusVisibleStar: index });
         }
     };
 
     handleBlur = (e: FE) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
             this.adapter.notifyBlur(e);
-            this.adapter.setFocusVisibleStar(undefined);
+            this.setState({ focusVisibleStar: undefined });
         }
     };
 

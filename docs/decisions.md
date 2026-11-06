@@ -115,7 +115,7 @@
 
 | # | 事项 | 决定 | 理由与约束 |
 | --- | --- | --- | --- |
-| X1 | 宿主方案 | 已定（2026-10-23）：沿用 foundation 加 adapter，不改 foundation 的宿主契约 | Solid 宿主通过 `vitest/utils/host-contract.ts` 的契约夹具；2026-10-30 起契约不再要求 `destroy()` 时 DOM 仍挂载，因为 Svelte 先移除 DOM 再执行 teardown，夹具以 `detachedOnDestroy` 区分 |
+| X1 | 宿主方案 | 已定（2026-10-23，2026-11-06 修订契约）：沿用 foundation 加 adapter，四个框架的宿主实现同一份契约（`base/foundation.ts`）。2026-11-06 起 prop 变化的反应由宿主统一驱动：foundation 声明静态 `propKeys`，宿主按名单比较快照后调 `handlePropsChange(prev)`；一次性副作用进 `initOnce()`；隐藏（StrictMode 重放、Activity、KeepAlive）时 `destroy()` 只撤销 `init()` 建立的内容、不写 state，打开的面板随子树隐藏，重新显示后原样出现，与 React 官方「setup -> cleanup -> setup 与一次 setup 不可区分」的要求一致 | 宿主都通过 `vitest/utils/host-contract.ts` 的契约夹具；2026-10-30 起契约不再要求 `destroy()` 时 DOM 仍挂载，因为 Svelte 先移除 DOM 再执行 teardown，夹具以 `detachedOnDestroy` 区分；修订前四个宿主的 `getProps()` 对象形状不同，foundation 各写补偿（手写键名单、`{ ...props }` 拷贝、逐键挑 prop），比较改由宿主按名单做后不再依赖对象同一性 |
 | X15 | 版本 | 已定（2026-10-23，peer 下限于 2026-10-25 调整）：solid-js 1.9 稳定版（peer `^1.9.17`：dom 产物导入的 `setStyleProperty` 从 1.9.8 才有，测试只在 1.9.17 上运行）；Solid 2 正式发布后另立任务整体迁移宿主层，不保留兼容，迁移中途发布也先在 1.9 上做完 | Kobalte、Ark UI、`@tanstack/solid-virtual`、`@dnd-kit/solid`、`@astrojs/solid-js` 只支持 1.x |
 | X19 | 收集型父组件如何拿子组件数据 | 已定：token 模式，子组件返回以公开访问路径（`Tabs.TabPane`）为标签的数据 token（`_base/token.ts`） | Solid 的 `children()` 返回 DOM，读不到子组件函数与静态属性（S-H4），不能按 `elementType` 识别；context 注册在 1.9 同样可行，作为备选 |
 | X20 | lint | 已定：`lint/solid` 经 oxlint jsPlugins 接 eslint-plugin-solid 的 TypeScript 预设 | `solid/no-destructure` 在 typeAware 下报错，lint 链路可用 |

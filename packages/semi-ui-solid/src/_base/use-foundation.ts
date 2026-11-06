@@ -1,12 +1,5 @@
 import { type Accessor, batch, createEffect, createSignal, onCleanup, onMount, untrack } from 'solid-js';
-import type { DefaultAdapter, HostContext } from '@fibrae/semi-foundation/base/foundation';
-
-interface Lifecycle {
-    connect: () => void;
-    disconnect: () => void;
-    init?: () => void;
-    destroy?: () => void;
-}
+import { type DefaultAdapter, type HostContext, type Lifecycle, type PropReactions, createPropsTracker } from '@fibrae/semi-foundation/base/foundation';
 
 function createTrigger() {
     const [track, notify] = createSignal(undefined, { equals: false });
@@ -102,11 +95,12 @@ function createCommitQueue() {
  * - A `setState` callback runs after the DOM shows the update, before the component's effects for it.
  * - `connect` and `init` run in `onMount`, once the DOM is in place; `destroy` and `disconnect` run on disposal, while
  *   the DOM is still in place, and only after a mount.
- * - Props reach the foundation as the live Solid props object, so `getProp` reads the current value; a reaction to a
- *   prop change is the component's own `useWatch`.
+ * - Props reach the foundation as the live Solid props object, so `getProp` reads the current value.
+ *   `handlePropsChange` runs in an effect created after the commit queue's and after onMount, so after init and after the
+ *   callbacks of the same flush.
  */
 export default function useFoundation<F extends Lifecycle, A extends DefaultAdapter<P, S, any>, P extends object, S extends object, C = HostContext<A>>(
-    Foundation: new (adapter: A) => F,
+    Foundation: (new (adapter: A) => F) & PropReactions,
     props: P,
     initialState: (props: P) => S,
     createAdapter: (base: DefaultAdapter<P, S, C>) => Omit<A, keyof DefaultAdapter<P, S>>,
@@ -149,13 +143,25 @@ export default function useFoundation<F extends Lifecycle, A extends DefaultAdap
 
     onMount(() => {
         foundation.connect();
-        foundation.init?.();
+        foundation.init();
         // Registered here, not at the top level: a server render disposes without mounting, and destroy touches the DOM
         onCleanup(() => {
-            foundation.destroy?.();
+            foundation.destroy();
             foundation.disconnect();
         });
     });
+
+    // Created after onMount, so its first run follows init: a prop a parent's onMount changed after creation reaches a
+    // connected foundation, compared with the value getInitialState read
+    if (Foundation.propKeys.length > 0) {
+        const tracker = createPropsTracker(Foundation, (key) => props[key as keyof P]);
+        createEffect(() => {
+            const prev = tracker.check();
+            if (prev) {
+                foundation.handlePropsChange(prev);
+            }
+        });
+    }
 
     return { foundation, state: () => mirror.view };
 }

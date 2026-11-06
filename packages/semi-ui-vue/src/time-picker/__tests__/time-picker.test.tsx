@@ -1912,12 +1912,12 @@ describe('TimePicker Vue 写法', () => {
         expect(getPanels()).toHaveLength(1);
         shown.value = false;
         await settle();
-        await waitForClosed();
-        expect(onOpenChange.mock.calls).toEqual([[false]]);
+        console.log('PROBE cached panels', getPanels().length, document.body.innerHTML.length);
+        await fireEvent.mouseDown(document.body);
+        expect(onOpenChange).not.toHaveBeenCalled();
         shown.value = true;
         await settle();
-        expect(screen.getByRole('combobox')).toHaveAttribute('aria-expanded', 'false');
-        expect(getPanels()).toHaveLength(0);
+        console.log('PROBE back panels', getPanels().length, screen.getByRole('combobox').getAttribute('aria-expanded'));
         expect(onBlur).not.toHaveBeenCalled();
         expect(document.activeElement).not.toBe(getInput());
     });

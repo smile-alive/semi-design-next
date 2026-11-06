@@ -496,6 +496,7 @@
 
 - Foundation、Adapter 的方法与 state 属内部实现，直接继承或实现它们的代码不保证兼容。深路径导入有大量删除与改名，如删除 `utils/index`（改为导入具体模块）、`pullAll` 改名 `differenceUnique`、`empty` 改名 `isEmpty`、各组件 `constants` 中无导入方的取值表。
 - 移到 semi-foundation：`registerMediaQuery`、`coversPage` 到 `@fibrae/semi-foundation/utils/dom`，`measureScrollbar`、`amendTableWidth` 到 `.../table/utils`，Tree 静态方法到 `.../tree/shared`；`highlight/foundation` 改为具名导出 `findAll`；`FieldState` 改名 `FieldSnapshot`。
+- `base/foundation` 的宿主契约：foundation 以静态 `propKeys`（可配 `propEquals`）声明要响应的 prop，宿主在这些 prop 变化的那次提交后调用 `handlePropsChange(prev)`，挂载时不调用；一次性副作用写在 `initOnce()`，每个实例只在第一次 `init()` 前执行一次；`commitState(partial)` 返回在提交后兑现的 Promise；`Lifecycle` 接口从 `base/foundation` 导出。隐藏（React StrictMode 重放、`<Activity>`、经 `useKeepAliveFoundation` 接入的 Vue `<KeepAlive>`）等同 `destroy()`，重新显示等同 `init()`。Vue 的 `useKeepAliveFoundation` 删除 `reactivate` 选项。
 
 ### AudioPlayer、VideoPlayer
 
@@ -658,7 +659,7 @@
 ### Anchor
 
 - 破坏性：根元素不再自动生成 `id="semi-anchor-xxx"`，改用 `.semi-anchor` 选择；滑轨与链接列表包在新容器 `.semi-anchor-rail-wrapper` 中，`.semi-anchor` 不再是 `position: relative`；`LinkProps` 删除无效的 `level`、`direction`；`onClick` 事件参数改为 `React.MouseEvent | React.KeyboardEvent`；删除 `strings.POSITION_SET`，改用 Tooltip 的 `POSITION_SET`。
-- Link 只响应 Enter 激活；以 `#` 开头的 `href` 按元素 id 查找而非 CSS 选择器；当前链接带 `aria-current="location"`（原 `aria-details="active"`）；新增 `scrollIntoViewOptions`；无激活链接时 `onChange` 收到 `''`（原 `undefined`）。
+- Link 只响应 Enter 激活；以 `#` 开头的 `href` 按元素 id 查找而非 CSS 选择器；当前链接带 `aria-current="location"`（原 `aria-details="active"`）；新增 `scrollIntoViewOptions`；无激活链接时 `onChange` 收到 `''`（原 `undefined`）；`defaultAnchor` 只在首次挂载时应用，React `<Activity>` 重新显示时不再跳回它。
 - Vue：`onChange`、`onClick` 改为 `change`、`click` 事件（`click` 只在激活链接时触发）；Link 节点标题用 `#title` 插槽。
 - Solid：`Anchor.Link` 须是 Anchor 或 Anchor.Link 的直接 JSX 子节点（可经 Fragment、Show、For），写在 Anchor 外不渲染；`getContainer` 只在挂载时与其读取的 signal 变化时求值，容器晚于挂载出现时让它读取一个随容器出现而变化的 signal。
 - Svelte 破坏性：不提供 `Anchor.Link`，链接用数据 prop `links`（`{ href?, title?, disabled?, children? }[]`，`children` 嵌套），自定义标题用 `title` snippet（参数 `{ item, level }`）；服务端首帧带全部链接，`autoCollapse` 的折叠首帧即正确；`onChange`、`onClick` 是函数 prop，`onClick` 只在激活链接时触发；没有子链接的项不输出空的 `role="list"`。

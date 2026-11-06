@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { Text, computed, useTemplateRef, watch, type ComponentPublicInstance } from 'vue';
+    import { Text, computed, useTemplateRef, type ComponentPublicInstance } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/rating/constants';
     import RatingFoundation, { type RatingAdapter, type RatingFocusEvent, type RatingState } from '@fibrae/semi-foundation/rating/foundation';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
@@ -22,8 +22,8 @@
         autoFocus?: boolean;
     }
 
-    type Foundation = RatingFoundation<FoundationProps, RatingState, ClickEvent, ListFocusEvent, KeyboardEvent>;
-    type Adapter = RatingAdapter<FoundationProps, RatingState, ClickEvent, ListFocusEvent, KeyboardEvent>;
+    type Foundation = RatingFoundation<FoundationProps, ClickEvent, ListFocusEvent, KeyboardEvent>;
+    type Adapter = RatingAdapter<FoundationProps, ClickEvent, ListFocusEvent, KeyboardEvent>;
 
     defineOptions({ inheritAttrs: false });
 
@@ -59,7 +59,7 @@
         RatingFoundation,
         props,
         (view) => RatingFoundation.getInitialState(view),
-        (base) => ({
+        () => ({
             focusStar: (starValue) => {
                 // a value between radios has no radio to focus: Tab's landing radio stands in, as for focus()
                 if (!RatingFoundation.isRadioValue(starValue, props.count, props.allowHalf)) {
@@ -70,19 +70,15 @@
                 stars.get(index < 0 ? props.count : index)?.starFocus(starValue);
             },
             getStarDOM: (index) => stars.get(index)?.getDomNode() ?? null,
-            setHover: (hoverValue, clearedValue) => base.setState({ hoverValue, clearedValue }),
             notifyHoverChange: (hoverValue) => emit('hoverChange', hoverValue),
-            setValue: (value) => base.setState({ value }),
             notifyChange: (value) => {
                 emit('update:modelValue', value);
                 emit('change', value);
             },
-            setClearedValue: (clearedValue) => base.setState({ clearedValue }),
             notifyClick: (event, index) => emit('click', event, index),
             notifyFocus: (event) => emit('focus', event),
             notifyBlur: (event) => emit('blur', event),
             notifyKeyDown: (event) => emit('keydown', event),
-            setFocusVisibleStar: (focusVisibleStar) => base.setState({ focusVisibleStar }),
         }),
         { context: () => config.value, props: { value: () => props.modelValue, autoFocus: () => props.autofocus } }
     );
@@ -142,15 +138,6 @@
             foundation.handleStarFocus({ target: event.target as HTMLElement }, index);
         }
     };
-
-    watch(
-        () => props.modelValue,
-        (modelValue) => {
-            if (modelValue === undefined) {
-                foundation.resetValue();
-            }
-        }
-    );
 
     defineExpose<RatingHandle>({
         focus: () => {
