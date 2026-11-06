@@ -6,6 +6,7 @@
     import { IconChevronDown } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';
     import { groupRole } from '@fibrae/semi-ui-vue/_base/group-role';
+    import { handOnSlots } from '@fibrae/semi-ui-vue/_base/hand-on';
     import semiDefault, { semiGlobalDefault } from '@fibrae/semi-ui-vue/_base/semi-default';
     import useFoundation from '@fibrae/semi-ui-vue/_base/use-foundation';
     import Button from '@fibrae/semi-ui-vue/button/index';
@@ -113,7 +114,7 @@
 
     // Dialogue reads only its own slot names. Passing the slots object forwards every given slot without the ref_for that a
     // dynamic slot outlet inside the list v-for compiles to.
-    const dialogueNode = (chat: Message, index: number) => h(Dialogue, { isLastChat: index === chats.value.length - 1, isSelected: state.value.selectedIds.has(chat.id), message: chat, role: props.roleConfig[chat.role] }, { ...slots });
+    const dialogueNode = (chat: Message, index: number) => h(Dialogue, { isLastChat: index === chats.value.length - 1, isSelected: state.value.selectedIds.has(chat.id), message: chat, role: props.roleConfig[chat.role] }, handOnSlots(slots));
 
     // A Vue caller also pushes messages and appends to the last message's text in place, so the list is compared by what
     // those edits change. Known limitation: other in-place edits (deep content text, a lone status flip) re-render but are
