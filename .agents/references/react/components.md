@@ -40,7 +40,7 @@ export default function Spin(rawProps: SpinProps) {
 }
 ```
 
-- `useDefaultProps(名称, props, 默认值)` 只填 `undefined`。它每次渲染读取 `semiGlobal.config.overrideDefaultProps`，全局里有而默认值里没有的键也会填上。对外导出的顶层组件一律调用它（F7），名称用组件的导出名。静态挂载的子组件、内部组件，以及 ConfigProvider、LocaleProvider 不调用。
+- `useDefaultProps(名称, props, 默认值)` 只填 `undefined`。它每次渲染读取 `semiGlobal.config.overrideDefaultProps`，全局里有而默认值里没有的键也会填上。对外导出的顶层组件一律调用它（F7），名称用组件的导出名。静态挂载的子组件、内部组件，以及 ConfigProvider、LocaleProvider 不调用。合并结果只用于解构时直接写 `const { ... } = useDefaultProps(...)`，像上例那样还要整体传给 `useFoundation` 或读 `props.x` 时才存进 `props`。
 - `useFoundation` 返回 `[foundation, state]`。泛型要显式写出，调用处可以内联。
 - 值变化时调 foundation 用 `useDidUpdate(值, 回调)`。它不接收依赖数组，挂载时和 StrictMode 重跑时都不触发；使用方每次传新对象、要按内容比较时，第三个参数传 `isEqual`。
 - 必须和 props 在同一次提交里生效的派生状态（如 Collapsible 的高度与过渡 class；分两次提交会让过渡以 0ms 生效），用渲染期比较加条件 setState：新值和旧值不同时才调用，下一轮就收敛。不用 `useDidUpdate`。
@@ -79,7 +79,7 @@ export default function Spin(rawProps: SpinProps) {
 
 - `export default Object.assign(memo(Button), { elementType: 'Button' })`：Tooltip、ButtonGroup 等靠 `type.elementType` 识别子组件，`memo` 的结果上也要能读到。没有读取方的组件不声明 `elementType`。父组件用 `_base/element-type.ts` 的 `elementTypeOf(node)` 读取，不写 `'elementType' in type`（Fragment、Suspense 的 type 是 symbol），也不另设 `isXxx` 布尔标记。
 - 收集子组件的组件用 `_base/flatten-children.ts` 的 `flattenChildren(children)` 取子节点：它展开 Fragment（与 Vue 的 `slotNodes` 一致），Fragment 里的子项与直接写出的子项同样编号、定位和选中；不用 `Children.toArray`，它把 Fragment 当作一个元素。
-- 子组件挂载（`Select.Option` 等）同样用 `Object.assign`。
+- 子组件挂载（`Select.Option` 等）同样用 `Object.assign`。Form 例外：字段与部件只有具名导出，`Form` 不挂静态成员（F17）。
 - 点语法跨不过 `'use client'` 边界：Server Component 拿到的是父组件的客户端引用，`Typography.Title` 为 `undefined`。需要在 Server Component 中直接使用的子组件，在 `src/index.ts` 补「父名 + 子名」的命名导出（如 `TypographyTitle`），点语法保留，`__tests__/ssr.ssr.test.tsx` 加一条两者是同一组件的断言；其他复合组件的点语法只在 `'use client'` 文件中使用。
 
 ## React Compiler
