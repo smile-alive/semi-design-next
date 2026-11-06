@@ -115,5 +115,6 @@ export PATH="$(mise where node@26.10.0)/bin:$(mise where pnpm@12.9.1):$PATH"
 
 - 回复和文档用简体中文，技术标识保持原文。README 例外：`README.md` 用英文，`README.zh-CN.md` 用简体中文，两份同步修改。结果用 `PASS`、`FAIL`、`SKIP`、`UNKNOWN` 标记。
 - 组件的行为或公开 API 有变化时，写进 `docs/release-notes.md` 对应组件的章节；发现但不在本次范围内的问题，登记到 `docs/component-issues.md`。
-- 文件用编辑工具修改，不用 sed、重定向、heredoc 或脚本改写内容；formatter、linter 自动修复和生成命令除外。用 codemod 改写仓库文件前，先说明范围并取得用户确认（见 [ast](.agents/references/ast.md)）。删除用 `trash`。一次性脚本放在仓库外的临时目录。
+- 文件用编辑工具修改，不用 sed、重定向、heredoc 或脚本改写内容；formatter、linter 自动修复和生成命令除外。用 codemod 改写仓库文件前，先说明范围并取得用户确认（见 [ast](.agents/references/ast.md)）。删除用 `trash`。
+- 一次性脚本、复现、探针、日志等中间产物放在仓库根的 `tmp/<任务名>/`，不用系统临时目录或会话 scratchpad；用完用 `trash` 删掉这个子目录，需要留给后续使用的在回报里列出路径和原因。`tmp/` 已被 git 和各 lint、格式化工具忽略；`tmp/vitest`、`tmp/vitest-firefox-home` 由测试工具使用，不动。
 - 只在用户要求时 commit，不 push。用户要求推送时，从 `release` 拉分支推送并开 PR 合入 `release`，不直接推 `release` 或 `main`；分支模型见 [CONTRIBUTING](CONTRIBUTING.md#分支)。commit 用 Conventional Commits：`type(scope)` 用英文，scope 写包名或组件目录名；subject 和 body 用简体中文，header 不超过 72 个字符；只暂存本任务的改动，不加 AI 署名。

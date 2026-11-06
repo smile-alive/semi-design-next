@@ -5,7 +5,7 @@ export default {
     plugins: ['stylelint-order', 'stylelint-scss'],
     customSyntax: 'postcss-scss',
     // ignoreFiles replaces stylelint's default node_modules ignore, so it is listed
-    ignoreFiles: ['**/node_modules/**', '**/dist/**', '**/coverage/**', '**/.astro/**', '.claude/**'],
+    ignoreFiles: ['**/node_modules/**', '**/dist/**', '**/coverage/**', '**/.astro/**', '.claude/**', 'tmp/**'],
     // A disable must name its reason (`-- why`) and still suppress something
     reportDescriptionlessDisables: true,
     reportNeedlessDisables: true,

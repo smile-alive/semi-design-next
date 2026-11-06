@@ -8,4 +8,4 @@ import { vueEslint } from './lint/vue/eslint.ts';
 const overlappingRules = oxlint.buildFromOxlintConfig(structuredClone(lintConfig));
 
 // ESLint checks only what oxlint cannot parse: framework templates (D-2)
-export default defineConfig([{ ignores: ['**/dist/**', '**/coverage/**'] }, ...vueEslint(overlappingRules), ...svelteEslint(overlappingRules)]);
+export default defineConfig([{ ignores: ['**/dist/**', '**/coverage/**', 'tmp/**'] }, ...vueEslint(overlappingRules), ...svelteEslint(overlappingRules)]);
