@@ -35,7 +35,7 @@ export default function ResizeHandler(rawProps: ResizeHandlerProps) {
 
     const mergedRef = useMergedRef(ref, handlerRef);
 
-    useLayoutEffect(() => registerHandler(handlerRef), [registerHandler]);
+    useLayoutEffect(() => registerHandler(handlerRef.current as HTMLDivElement), [registerHandler]);
 
     // captured here because nativeEvent.currentTarget is not the handler
     return (
@@ -51,13 +51,13 @@ export default function ResizeHandler(rawProps: ResizeHandlerProps) {
             tabIndex={0}
             onKeyDown={(e) => {
                 rest.onKeyDown?.(e);
-                if (notifyKeyDown(handlerRef, e.nativeEvent)) {
+                if (notifyKeyDown(e.currentTarget, e.nativeEvent)) {
                     e.preventDefault();
                 }
             }}
             onLostPointerCapture={(e) => {
                 rest.onLostPointerCapture?.(e);
-                notifyResizeEnd(e.nativeEvent);
+                notifyResizeEnd(e.currentTarget, e.nativeEvent);
             }}
             onPointerDown={(e) => {
                 rest.onPointerDown?.(e);
@@ -65,11 +65,11 @@ export default function ResizeHandler(rawProps: ResizeHandlerProps) {
                     return;
                 }
                 e.currentTarget.setPointerCapture(e.pointerId);
-                notifyResizeStart(handlerRef, e.nativeEvent);
+                notifyResizeStart(e.currentTarget, e.nativeEvent);
             }}
             onPointerMove={(e) => {
                 rest.onPointerMove?.(e);
-                notifyResizing(e.nativeEvent);
+                notifyResizing(e.currentTarget, e.nativeEvent);
             }}
         >
             {children ?? <IconHandle style={{ rotate: direction === 'horizontal' ? '0deg' : '90deg' }} size="inherit" />}

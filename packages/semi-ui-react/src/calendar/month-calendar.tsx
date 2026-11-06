@@ -42,26 +42,24 @@ export default function MonthCalendar(props: MonthViewProps) {
     // the row height is only known once mounted, so the first frame limits to 0
     const [itemLimit, setItemLimit] = useState(0);
 
-    const [foundation, { showCard }] = useFoundation<Foundation, Adapter, MonthViewProps, CalendarMonthBaseState>(
+    const [foundation, { openCardKey }] = useFoundation<Foundation, Adapter, MonthViewProps, CalendarMonthBaseState>(
         CalendarMonthFoundation,
         props,
         () => CalendarMonthFoundation.getInitialState(),
         (base) => ({
             notifyClose: (e) => base.getProps().onClose?.(e),
+            notifyMoreClick: (e, date, remaining) => base.getProps().onMoreClick?.(e, date, remaining),
         })
     );
 
-    const openCardKey = CalendarFoundation.getOpenCardKey(showCard);
-
     // the "more" button that owns the card toggles it on click; closing on its mousedown too would reopen it
-    const markPressInCard = useClickOutside([cardRef, moreButtonRef], () => foundation.closeCard(null, openCardKey), openCardKey !== undefined);
+    const markPressInCard = useClickOutside([cardRef, moreButtonRef], () => foundation.closeCard(null), openCardKey !== undefined);
     const today = useToday();
 
     const mergedRef = useMergedRef(ref, rootRef);
     const monthlyData = useMemo(() => CalendarFoundation.getMonthlyData(displayValue, dateFnsLocale, weekStartsOn, today), [displayValue, dateFnsLocale, weekStartsOn, today]);
     const weekCount = Object.keys(monthlyData).length;
     const parsedEvents = useMemo(() => CalendarFoundation.getParseMonthlyEvents(events, displayValue, weekStartsOn), [events, displayValue, weekStartsOn]);
-    const openCardStale = CalendarFoundation.isOpenCardStale(openCardKey, monthlyData, parsedEvents, itemLimit);
 
     const measureItemLimit = useCallback(() => {
         const cell = cellRef.current;
@@ -91,12 +89,7 @@ export default function MonthCalendar(props: MonthViewProps) {
 
     const handleMoreClick = (e: React.MouseEvent, key: string, date: Date, remaining: number) => {
         e.stopPropagation();
-        if (showCard[key]) {
-            foundation.closeCard(e, key);
-            return;
-        }
-        foundation.showCard(key);
-        onMoreClick?.(e, date, remaining);
+        foundation.toggleCard(e, key, date, remaining);
     };
 
     // APG dialog: Esc and the close button hand focus back to "more" instead of dropping it with the card
@@ -135,7 +128,7 @@ export default function MonthCalendar(props: MonthViewProps) {
     // a day's events are a sparse array indexed by row, so `remained` counts by row
     const renderCollapsed = (dayEvents: ParsedRangeEvent[], { weekday, dayString, date, month, isToday }: DateObj, listCls: string, remained: number) => {
         const key = date.toString();
-        const isCardOpen = showCard[key] ?? false;
+        const isCardOpen = openCardKey === key;
         // key is the date string, which has spaces and so is no IDREF
         const titleId = `${cardIdPrefix}-${date.valueOf()}`;
         const content = ({ initialFocusRef }: RenderContentProps<HTMLButtonElement>) => (
@@ -203,10 +196,8 @@ export default function MonthCalendar(props: MonthViewProps) {
     }, [measureItemLimit, height, weekCount]);
 
     useEffect(() => {
-        if (openCardStale) {
-            foundation.closeCard(null, openCardKey);
-        }
-    }, [foundation, openCardStale, openCardKey]);
+        foundation.closeStaleCard(monthlyData, parsedEvents, itemLimit);
+    }, [foundation, monthlyData, parsedEvents, itemLimit, openCardKey]);
 
     return (
         <div aria-label={format(displayValue, 'LLLL y', { locale: dateFnsLocale })} role="table" {...rest} ref={mergedRef} className={clsx(prefixCls, className)} style={{ height, width, ...style }}>

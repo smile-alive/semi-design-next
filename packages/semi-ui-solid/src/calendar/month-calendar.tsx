@@ -48,18 +48,17 @@ export default function MonthCalendar(props: DayCalendarProps) {
         () => CalendarMonthFoundation.getInitialState(),
         (base) => ({
             notifyClose: (e) => base.getProps().onClose?.(e),
+            notifyMoreClick: (e, date, remaining) => base.getProps().onMoreClick?.(e, date, remaining),
         })
     );
 
     const today = useToday();
 
-    const openCardKey = createMemo(() => CalendarFoundation.getOpenCardKey(state().showCard));
-
     // the "more" button that owns the card toggles it on click; closing on its mousedown too would reopen it
     const markPressInCard = useClickOutside(
-        [() => cardElement, () => moreButtons.get(openCardKey() ?? '')],
-        () => foundation.closeCard(null, openCardKey() as string),
-        () => openCardKey() !== undefined
+        [() => cardElement, () => moreButtons.get(state().openCardKey ?? '')],
+        () => foundation.closeCard(null),
+        () => state().openCardKey !== undefined
     );
 
     const header = children(() => local.header);
@@ -77,7 +76,8 @@ export default function MonthCalendar(props: DayCalendarProps) {
     const monthlyData = createMemo(() => CalendarFoundation.getMonthlyData(displayValue(), locale().dateFnsLocale, weekStartsOn(), null));
     const weeks = createMemo(() => Object.values(monthlyData()));
     const parsedEvents = createMemo(() => CalendarFoundation.getParseMonthlyEvents(events(), displayValue(), weekStartsOn()));
-    const openCardStale = createMemo(() => CalendarFoundation.isOpenCardStale(openCardKey(), monthlyData(), parsedEvents(), itemLimit()));
+
+    const openCardKey = () => state().openCardKey;
 
     // rows split the grid height evenly; the last row is measured because it always renders
     const measureItemLimit = () => {
@@ -93,12 +93,7 @@ export default function MonthCalendar(props: DayCalendarProps) {
 
     const handleMoreClick = (e: MouseEvent, key: string, date: Date, remaining: number) => {
         e.stopPropagation();
-        if (state().showCard[key]) {
-            foundation.closeCard(e, key);
-            return;
-        }
-        foundation.showCard(key);
-        local.onMoreClick?.(e, date, remaining);
+        foundation.toggleCard(e, key, date, remaining);
     };
 
     // APG dialog: Esc and the close button hand focus back to "more" instead of dropping it with the card
@@ -135,7 +130,7 @@ export default function MonthCalendar(props: DayCalendarProps) {
         const titleId = `${cardIdPrefix}-${untrack(() => cell.day.date.valueOf())}`;
         const dayEvents = () => parsedEvents()[cell.weekInd]?.day?.[cell.day.ind];
         const hidden = () => CalendarFoundation.countHidden(dayEvents(), itemLimit());
-        const isOpen = () => state().showCard[key] ?? false;
+        const isOpen = () => openCardKey() === key;
         const isToday = () => {
             const day = today();
             return day !== null && isSameDay(cell.day.date, day);
@@ -237,12 +232,7 @@ export default function MonthCalendar(props: DayCalendarProps) {
 
     useResizeObserver(grid, measureItemLimit);
     createEffect(on([() => local.height, () => weeks().length], measureItemLimit));
-
-    createEffect(() => {
-        if (openCardStale()) {
-            untrack(() => foundation.closeCard(null, openCardKey() as string));
-        }
-    });
+    createEffect(on([monthlyData, parsedEvents, itemLimit, openCardKey], ([monthly, parsed, limit]) => foundation.closeStaleCard(monthly, parsed, limit)));
 
     return (
         <div aria-label={format(displayValue(), 'LLLL y', { locale: locale().dateFnsLocale })} role="table" {...rest} ref={mergeRefs(local.ref)} class={clsx(prefixCls, local.class)} style={rootStyle(local.style, local.width, local.height)}>

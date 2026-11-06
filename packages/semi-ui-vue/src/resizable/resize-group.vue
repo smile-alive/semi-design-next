@@ -9,7 +9,7 @@
     import useEventListener, { getWindow } from '../_base/use-event-listener';
     import useFoundation from '../_base/use-foundation';
     import useResizeObserver from '../_base/use-resize-observer';
-    import { provideResizeGroupContext, type ResizeItemEntry } from './context';
+    import { provideResizeGroupContext } from './context';
     import type { ResizeGroupProps, ResizeGroupSlots } from './interface';
 
     type Foundation = ResizeGroupFoundation<ResizeGroupProps>;
@@ -27,83 +27,27 @@
 
     const group = useTemplateRef('group');
 
-    const prefix = cssClasses.PREFIX;
-
-    // Items and handlers register in their mounted hooks: tree order on mount, but one inserted later registers last.
-    // Index = layout order, which is DOM order; it is read on use because items can come and go. The foundation reads
-    // them only after mount, so they need not be reactive.
-    const items: ResizeItemEntry[] = [];
-    const handlers: HTMLDivElement[] = [];
-
     const { foundation, state } = useFoundation<Foundation, Adapter, ResizeGroupProps, ResizeGroupBaseState>(
         ResizeGroupFoundation,
         props,
         () => ResizeGroupFoundation.getInitialState(),
         () => ({
             getGroupRef: () => group.value,
-            getItem: (index) => orderedItems()[index].el,
-            getItemCount: () => items.length,
-            getHandler: (index) => orderedHandlers()[index],
-            getHandlerCount: () => handlers.length,
-            getItemMin: (index) => orderedItems()[index].min(),
-            getItemMax: (index) => orderedItems()[index].max(),
-            getItemStart: (index) => orderedItems()[index].start,
-            getItemChange: (index) => orderedItems()[index].change,
-            getItemEnd: (index) => orderedItems()[index].end,
-            getItemDefaultSize: (index) => orderedItems()[index].defaultSize(),
         })
     );
 
-    function inDocumentOrder(a: Node, b: Node) {
-        return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
-    }
+    const prefix = cssClasses.PREFIX;
 
-    function orderedItems() {
-        return items.toSorted((a, b) => inDocumentOrder(a.el, b.el));
-    }
-
-    function orderedHandlers() {
-        return handlers.toSorted(inDocumentOrder);
-    }
-
-    const remove =
-        <T>(list: T[], value: T) =>
-        () => {
-            list.splice(list.indexOf(value), 1);
-        };
-
+    // Vue keeps the native listeners of a detached element, so a handler that left the group (unmounted mid-drag) can
+    // still send events: the foundation ignores those.
     provideResizeGroupContext({
         view: computed(() => ({ direction: props.direction })),
-        registerItem: (entry) => {
-            items.push(entry);
-            return remove(items, entry);
-        },
-        registerHandler: (handler) => {
-            handlers.push(handler);
-            return remove(handlers, handler);
-        },
-        // Vue keeps the native listeners of a detached element, so a handler that left the group (unmounted mid-drag)
-        // can still send events: those are ignored.
-        notifyResizeStart: (handler, e) => {
-            const index = orderedHandlers().indexOf(handler);
-            if (index >= 0) {
-                foundation.onResizeStart(index, e);
-            }
-        },
-        notifyResizing: (handler, e) => {
-            if (handlers.includes(handler)) {
-                foundation.onResizing(e);
-            }
-        },
-        notifyResizeEnd: (handler, e) => {
-            if (handlers.includes(handler)) {
-                foundation.onResizeEnd(e);
-            }
-        },
-        notifyKeyDown: (handler, e) => {
-            const index = orderedHandlers().indexOf(handler);
-            return index >= 0 && foundation.resizeByKey(index, e);
-        },
+        registerItem: foundation.registerItem,
+        registerHandler: foundation.registerHandler,
+        notifyResizeStart: foundation.onResizeStart,
+        notifyResizing: foundation.onResizing,
+        notifyResizeEnd: foundation.onResizeEnd,
+        notifyKeyDown: foundation.resizeByKey,
     });
 
     // vw and vh limits change with the window even when the group keeps its size

@@ -3,7 +3,7 @@ import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import isPromise from '../utils/is-promise';
 import { createId } from '../utils/uuid';
 import { strings, numbers } from './constants';
-import { getFileSize, byteKB, mapFileTree } from './utils';
+import { getFileSize, byteKB, mapFileTree, removeUnlessPrevented } from './utils';
 
 const { FILE_STATUS_UPLOADING, FILE_STATUS_SUCCESS, FILE_STATUS_UPLOAD_FAIL, FILE_STATUS_VALID_FAIL, FILE_STATUS_WAIT_UPLOAD, TRIGGER_AUTO } = strings;
 
@@ -996,28 +996,21 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         }
         const fileList = this.getFileList();
 
-        void Promise.resolve(this.adapter.notifyBeforeRemove(file, fileList)).then(
-            (res) => {
-                if (res === false) {
-                    return;
-                }
+        removeUnlessPrevented(this.adapter.notifyBeforeRemove(file, fileList), () => {
+            // the list may have changed while beforeRemove was pending
+            const newFileList = this.#getLatestFileList().slice();
+            const index = this.#getFileIndex(file, newFileList);
+            if (index < 0) {
+                return;
+            }
+            newFileList.splice(index, 1);
 
-                // the list may have changed while beforeRemove was pending
-                const newFileList = this.#getLatestFileList().slice();
-                const index = this.#getFileIndex(file, newFileList);
-                if (index < 0) {
-                    return;
-                }
-                newFileList.splice(index, 1);
+            this.#releaseFileUrl(file.uid);
 
-                this.#releaseFileUrl(file.uid);
-
-                this.adapter.notifyRemove(file.fileInstance, newFileList, file);
-                this.#updateFileListInternal(newFileList);
-                this.adapter.notifyChange({ fileList: newFileList, currentFile: file });
-            },
-            () => {}
-        );
+            this.adapter.notifyRemove(file.fileInstance, newFileList, file);
+            this.#updateFileListInternal(newFileList);
+            this.adapter.notifyChange({ fileList: newFileList, currentFile: file });
+        });
     };
 
     handleClear = () => {

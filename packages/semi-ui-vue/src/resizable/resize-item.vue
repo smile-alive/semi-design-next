@@ -24,7 +24,7 @@
 
     const prefix = cssClasses.PREFIX;
 
-    // The group sizes the item through its element, which exists only once mounted; the entry reads the current props
+    // The group sizes the item through its element, which exists only once mounted; the item reads the current props
     // at drag time. The group writes style.width and style.height on the element directly. Known limit: a caller's
     // string style is reapplied whole when it changes and drops them, while an object style leaves them alone; upgrade
     // by replaying the sizes after the group's update if string styles are needed.
@@ -32,13 +32,13 @@
 
     onMounted(() => {
         unregister = group.registerItem({
-            el: item.value as HTMLDivElement,
+            element: item.value as HTMLDivElement,
             min: () => props.min,
             max: () => props.max,
             defaultSize: () => props.defaultSize,
-            start: (e, direction) => (props.onResizeStart ?? readSemiDefault(semi, 'ResizeItem', 'onResizeStart'))?.(e, direction),
-            change: (size, e, direction) => emit('change', size, e, direction),
-            end: (size, e, direction) => emit('resizeEnd', size, e, direction),
+            notifyResizeStart: (e, direction) => (props.onResizeStart ?? readSemiDefault(semi, 'ResizeItem', 'onResizeStart'))?.(e, direction),
+            notifyResize: (size, e, direction) => emit('change', size, e, direction),
+            notifyResizeEnd: (size, e, direction) => emit('resizeEnd', size, e, direction),
         });
     });
 

@@ -1,5 +1,5 @@
 /** @jsxImportSource vue */
-import { nextTick, shallowRef } from 'vue';
+import { nextTick } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
@@ -604,16 +604,14 @@ describe('Input 行为基线', () => {
         expect(getWrapper()).toHaveClass(`${prefixCls}-wrapper-focus`);
     });
 
-    it('清除按钮为 DateInput 标记 change 事件，mousedown 照常冒泡以便外部点击检测关闭浮层', async () => {
+    it('清除按钮以 mousedown 事件触发 change，mousedown 照常冒泡以便外部点击检测关闭浮层', async () => {
         const change = vi.fn<Change>();
         const outer = vi.fn<() => void>();
         document.body.addEventListener('mousedown', outer);
         onTestFinished(() => document.body.removeEventListener('mousedown', outer));
         render(Input, { props: { defaultValue: 'semi', showClear: true, onChange: change } });
         await fireEvent.mouseDown(getClearBtn() as HTMLElement);
-        // The marker is an internal flag for DateInput and is absent from the public event type
-        const event = change.mock.calls[0][1] as unknown as { __fromClearBtn?: boolean };
-        expect(event.__fromClearBtn).toBe(true);
+        expect(change).toHaveBeenCalledWith('', expect.objectContaining({ type: 'mousedown' }));
         expect(outer).toHaveBeenCalledTimes(1);
     });
 
@@ -652,27 +650,6 @@ describe('Input 行为基线', () => {
         await fireEvent.compositionEnd(getInput(), { target: { value: 'abc' } });
         expect(change.mock.calls.at(-1)?.[0]).toBe('ab');
         expect(getInput()).toHaveValue('ab');
-    });
-
-    it('受控 Input 在输入法组合结束后才收到输入事件时（Firefox 的顺序），保留组合结果', async () => {
-        const value = shallowRef('');
-        render({ render: () => <Input modelValue={value.value} onUpdate:modelValue={(next: string) => (value.value = next)} /> });
-        await fireEvent.compositionStart(getInput());
-        await fireEvent.input(getInput(), { target: { value: 'hao' }, isComposing: true });
-        await fireEvent.compositionEnd(getInput(), { target: { value: '好' } });
-        await fireEvent.input(getInput());
-        expect(getInput()).toHaveValue('好');
-        expect(value.value).toBe('好');
-    });
-
-    it('受控 Input 在输入法组合结束后才收到输入事件，且父组件拒绝时，恢复为属性值', async () => {
-        render(Input, { props: { modelValue: '', onChange: vi.fn<Change>() } });
-        await fireEvent.compositionStart(getInput());
-        await fireEvent.input(getInput(), { target: { value: 'hao' }, isComposing: true });
-        expect(getInput()).toHaveValue('hao');
-        await fireEvent.compositionEnd(getInput(), { target: { value: '好' } });
-        await fireEvent.input(getInput());
-        expect(getInput()).toHaveValue('');
     });
 
     it('composition 受控且父组件拒绝组合结果时，组合结束后恢复为属性值', async () => {

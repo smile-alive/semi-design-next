@@ -59,12 +59,13 @@
         () => CalendarMonthFoundation.getInitialState(),
         () => ({
             notifyClose: (event) => emit('close', event),
+            notifyMoreClick: (event, date, remaining) => emit('moreClick', event, date, remaining),
         })
     );
 
     const prefixCls = `${cssClasses.PREFIX}-month`;
     const cardCls = `${prefixCls}-event-card`;
-    const openCardKey = computed(() => CalendarFoundation.getOpenCardKey(state.value.showCard));
+    const openCardKey = computed(() => state.value.openCardKey);
     const monthlyData = computed(() => CalendarFoundation.getMonthlyData(props.displayValue, i18n.value.dateFnsLocale, props.weekStartsOn, props.today));
     const parsedEvents = computed(() => CalendarFoundation.getParseMonthlyEvents(props.events, props.displayValue, props.weekStartsOn));
     const weekCount = computed(() => Object.keys(monthlyData.value).length);
@@ -98,7 +99,7 @@
         })
     );
 
-    const isOpen = (key: string) => state.value.showCard[key] ?? false;
+    const isOpen = (key: string) => openCardKey.value === key;
 
     const measure = () => {
         const row = grid.value?.lastElementChild;
@@ -119,15 +120,6 @@
     const closeCardToMore = (event: MouseEvent | KeyboardEvent, key: string) => {
         foundation.closeCard(event, key);
         moreButtons.get(key)?.focus();
-    };
-
-    const handleMoreClick = (event: MouseEvent, key: string, date: Date, count: number) => {
-        if (isOpen(key)) {
-            closeCardToMore(event, key);
-            return;
-        }
-        foundation.showCard(key);
-        emit('moreClick', event, date, count);
     };
 
     const setInitialFocus = (focusRef: ShallowRef<FocusTarget | null>, el: unknown) => {
@@ -153,13 +145,7 @@
     onMounted(measure);
 
     useResizeObserver(grid, measure);
-
-    watch(
-        () => CalendarFoundation.isOpenCardStale(openCardKey.value, monthlyData.value, parsedEvents.value, itemLimit.value),
-        (stale) => {
-            if (stale) foundation.closeCard(null, openCardKey.value);
-        }
-    );
+    watch([monthlyData, parsedEvents, itemLimit, openCardKey], () => foundation.closeStaleCard(monthlyData.value, parsedEvents.value, itemLimit.value));
 </script>
 
 <template>
@@ -208,7 +194,7 @@
                                             <span v-else :class="`${cssClasses.PREFIX}-today-date`">{{ day.dayString }}</span>
                                         </span>
                                     </slot>
-                                    <button v-if="day.hidden > 0" :ref="(el) => setMoreButton(day.key, el)" :aria-expanded="isOpen(day.key)" aria-haspopup="dialog" :class="`${cardCls}-wrapper`" style="bottom: 0" type="button" @click.stop="handleMoreClick($event, day.key, day.date, day.hidden)">
+                                    <button v-if="day.hidden > 0" :ref="(el) => setMoreButton(day.key, el)" :aria-expanded="isOpen(day.key)" aria-haspopup="dialog" :class="`${cardCls}-wrapper`" style="bottom: 0" type="button" @click.stop="foundation.toggleCard($event, day.key, day.date, day.hidden)">
                                         {{ remaining(day.hidden) }}
                                     </button>
                                     <slot :date="day.date" :dateString="day.date.toString()" name="dateGrid" />

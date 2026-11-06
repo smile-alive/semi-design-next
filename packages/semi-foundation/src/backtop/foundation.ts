@@ -1,3 +1,4 @@
+import { throttle, type ThrottledFunction } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import { easeInOutCubic, tween } from '../utils/tween';
 import warning, { isDev } from '../utils/warning';
@@ -26,8 +27,10 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
     #targetNode: Target = null;
     #frame: number;
     #cancelAnimation?: () => void;
+    #throttledClick?: ThrottledFunction<(e: E) => void>;
+    #throttleDuration?: number;
 
-    static override readonly propKeys = ['target'];
+    static override readonly propKeys = ['target', 'duration'];
 
     #bind() {
         const targetNode = this.getProps().target();
@@ -61,6 +64,25 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
         });
     };
 
+    #scrollToTop = (e: E) => {
+        const targetNode = this.#targetNode;
+        if (targetNode) {
+            this.#cancelAnimation?.();
+            this.#cancelAnimation = tween({
+                from: this.#getScroll(targetNode),
+                to: 0,
+                duration: this.getProps().duration,
+                easing: easeInOutCubic,
+                onFrame: (scrollTop) => {
+                    // the window scrolls through the root element
+                    const scroller = 'document' in targetNode ? document.documentElement : targetNode;
+                    scroller.scrollTop = scrollTop;
+                },
+            });
+        }
+        this.adapter.notifyClick(e);
+    };
+
     static getInitialState(): BackTopState {
         return { visible: false };
     }
@@ -81,6 +103,11 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
         if (this.#active) {
             this.handleTargetChange();
         }
+        // a click pending in the old window must not fire after the interval changed
+        if (this.getProps().duration !== this.#throttleDuration) {
+            this.#throttledClick?.cancel();
+            this.#throttledClick = undefined;
+        }
     }
 
     handleTargetChange = () => {
@@ -94,24 +121,16 @@ export default class BackTopFoundation<P extends BackTopBaseProps = BackTopBaseP
         this.#active = false;
         this.#unbind();
         this.#cancelAnimation?.();
+        // a trailing click must not scroll or report after the component is gone
+        this.#throttledClick?.cancel();
     }
 
+    /** Throttled by `duration`: a click inside the window is merged into one trailing call, which also reaches `onClick` */
     onClick = (e: E) => {
-        const targetNode = this.#targetNode;
-        if (targetNode) {
-            this.#cancelAnimation?.();
-            this.#cancelAnimation = tween({
-                from: this.#getScroll(targetNode),
-                to: 0,
-                duration: this.getProps().duration,
-                easing: easeInOutCubic,
-                onFrame: (scrollTop) => {
-                    // the window scrolls through the root element
-                    const scroller = 'document' in targetNode ? document.documentElement : targetNode;
-                    scroller.scrollTop = scrollTop;
-                },
-            });
+        if (!this.#throttledClick) {
+            this.#throttleDuration = this.getProps().duration;
+            this.#throttledClick = throttle(this.#scrollToTop, this.#throttleDuration);
         }
-        this.adapter.notifyClick(e);
+        this.#throttledClick(e);
     };
 }

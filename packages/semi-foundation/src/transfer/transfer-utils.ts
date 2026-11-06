@@ -5,7 +5,7 @@ import type { BasicDataItem, BasicGroupItem, BasicResolvedDataItem } from './fou
 export function _generateGroupedData(dataSource: BasicGroupItem[]) {
     const newData: BasicResolvedDataItem[] = [];
     for (const { children = [], ...group } of dataSource) {
-        // one _parent per group: getGroupIndexes tells groups apart by the object, as titles may repeat or be absent
+        // one _parent per group: TransferFoundation tells groups apart by the object, as titles may repeat or be absent
         for (const item of children) {
             newData.push({ ...item, _parent: group });
         }

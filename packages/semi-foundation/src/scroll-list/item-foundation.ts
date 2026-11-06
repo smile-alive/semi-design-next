@@ -48,7 +48,7 @@ export default class ItemFoundation<I extends Item = Item, P extends ScrollItemB
     #resizeObserver: ResizeObserver | null = null;
     static override readonly propKeys = ['selectedIndex', 'list'];
     // only the list length matters: the sync reads no rows
-    static override readonly propEquals = { list: (a: Item[] | undefined, b: Item[] | undefined) => a?.length === b?.length };
+    static override readonly propEquals = { list: (a?: Item[], b?: Item[]) => a?.length === b?.length };
     readonly #select = debounce((node: HTMLElement) => {
         this.#cacheSelectedNode(node);
         this.#selectNode(node);

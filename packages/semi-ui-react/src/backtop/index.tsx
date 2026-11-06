@@ -1,7 +1,6 @@
 import type React from 'react';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
-import { throttle } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/backtop/constants';
 import BackTopFoundation, { type BackTopAdapter, type BackTopState, type Target } from '@fibrae/semi-foundation/backtop/foundation';
 import '@fibrae/semi-foundation/backtop/backtop.scss';
@@ -64,7 +63,6 @@ export default function BackTop(rawProps: BackTopProps) {
         })
     );
 
-    const handleClick = useMemo(() => throttle((e: React.MouseEvent) => foundation.onClick(e), duration), [foundation, duration]);
     const mergedRef = useMergedRef(ref, buttonRef);
     const hasChildren = hasContent(children);
 
@@ -72,8 +70,6 @@ export default function BackTop(rawProps: BackTopProps) {
     useEffect(() => {
         foundation.handleTargetChange();
     }, [foundation]);
-
-    useEffect(() => () => handleClick.cancel(), [handleClick]);
 
     useEffect(() => {
         if (hasContent(children)) {
@@ -95,7 +91,7 @@ export default function BackTop(rawProps: BackTopProps) {
             aria-label={ariaLabel ?? (hasChildren ? undefined : locale.backToTop)}
             x-semi-prop="children"
             icon={hasChildren ? children : (icon ?? <IconBackTop />)}
-            onClick={handleClick}
+            onClick={foundation.onClick}
         />
     );
 }

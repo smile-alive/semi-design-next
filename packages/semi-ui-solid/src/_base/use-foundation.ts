@@ -1,4 +1,4 @@
-import { type Accessor, batch, createEffect, createSignal, onCleanup, onMount, untrack } from 'solid-js';
+import { type Accessor, batch, createEffect, createSignal, getOwner, onCleanup, onMount, runWithOwner, untrack } from 'solid-js';
 import { type DefaultAdapter, type HostContext, type Lifecycle, type PropReactions, createPropsTracker } from '@fibrae/semi-foundation/base/foundation';
 
 function createTrigger() {
@@ -108,11 +108,14 @@ export default function useFoundation<F extends Lifecycle, A extends DefaultAdap
 ): { foundation: F; state: Accessor<Readonly<S>> } {
     const mirror = createStateMirror(initialState(props));
     const commit = createCommitQueue();
+    const owner = getOwner();
 
     const base: DefaultAdapter<P, S, C> = {
         getContext: (key) => (options.context?.() as C)?.[key] as C[typeof key],
         getContexts: () => options.context?.() as C,
-        getProp: (key) => props[key],
+        // A compiled JSX prop getter such as `visible={a && b}` creates a memo on each read; read from a timer or a
+        // promise it would have no owner, so it is created under the component and disposed with it
+        getProp: (key) => (getOwner() ? props[key] : (runWithOwner(owner, () => props[key]) as P[typeof key])),
         getProps: () => props,
         getState: (key) => mirror.current()[key],
         getStates: () => mirror.current(),

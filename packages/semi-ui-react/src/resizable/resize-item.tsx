@@ -40,7 +40,19 @@ export default function ResizeItem(rawProps: ResizeItemProps) {
         propsRef.current = props;
     });
 
-    useLayoutEffect(() => registerItem(itemRef, propsRef), [registerItem]);
+    useLayoutEffect(
+        () =>
+            registerItem({
+                element: itemRef.current as HTMLDivElement,
+                min: () => propsRef.current.min,
+                max: () => propsRef.current.max,
+                defaultSize: () => propsRef.current.defaultSize,
+                notifyResizeStart: (e, direction) => propsRef.current.onResizeStart?.(e, direction),
+                notifyResize: (size, e, direction) => propsRef.current.onChange?.(size, e, direction),
+                notifyResizeEnd: (size, e, direction) => propsRef.current.onResizeEnd?.(size, e, direction),
+            }),
+        [registerItem]
+    );
 
     return (
         <div role={namedRole(rest)} {...rest} ref={mergedRef} className={clsx(className, prefixCls + '-item')} style={style}>

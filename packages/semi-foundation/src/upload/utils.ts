@@ -63,6 +63,21 @@ export class ListFocusTracker {
     };
 }
 
+/**
+ * Upload's removal protocol for the result of `beforeRemove`: false, a Promise resolving to false, or a rejection keeps
+ * the file; anything else runs `remove`, a microtask later even for a plain return.
+ */
+export function removeUnlessPrevented(result: unknown, remove: () => void) {
+    void Promise.resolve(result).then(
+        (allowed) => {
+            if (allowed !== false) {
+                remove();
+            }
+        },
+        () => {}
+    );
+}
+
 export function getFileSize(number: number) {
     if (number < byteKB) {
         return `${(number / byteKB).toFixed(2)}KB`;
