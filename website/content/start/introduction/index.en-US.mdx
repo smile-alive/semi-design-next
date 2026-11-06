@@ -50,7 +50,7 @@ The Foundation contains the business logic of component interaction, including t
 
 ### Adapter
 
-The Adapter is an interface with all the methods the Foundation needs to implement its logic. It declares the DOM structure of the component and handles everything related to DOM operations and updates, usually through framework APIs such as setState, getState, addEventListener and removeListener. React integrates through adapters and hooks, Vue through composables, Svelte through runes.
+The Adapter is an interface with all the methods the Foundation needs to implement its logic. It declares the DOM structure of the component and handles everything related to DOM operations and updates, usually through framework APIs that hand over DOM elements, measure, move focus and pass events to the component's callbacks; the Foundation holds the state. React integrates through adapters and hooks, Vue through composables, Svelte through runes.
 
 There are currently four implementations, React, Vue, Solid and Svelte, corresponding to `@fibrae/semi-ui-react`, `@fibrae/semi-ui-vue`, `@fibrae/semi-ui-solid` and `@fibrae/semi-ui-svelte`. The AI components are in `@fibrae/semi-ai-react`, `@fibrae/semi-ai-vue`, `@fibrae/semi-ai-solid` and `@fibrae/semi-ai-svelte`.
 

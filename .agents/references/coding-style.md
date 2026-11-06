@@ -62,7 +62,7 @@ TS/TSX 源码中工具决定不了的写法。格式（含 `sortImports`）交�
 1. 不读实例状态的纯计算 -> `static`
 2. 子类覆盖的扩展点、BaseFoundation 的共用方法 -> 原型方法（`protected` 或公开）
 3. 框架层（UI 包、adapter）调用，无论直接调用还是当值传 -> 公开箭头字段
-4. 只在类内使用但引用会被当值传出（监听器、`openLayer`、交给 Field 的 updater 对象）-> `#` 箭头字段
+4. 只在类内使用但引用会被当值传出（监听器、交给 `ModalResources.hold` 的 `onEscape`、交给 Field 的 updater 对象）-> `#` 箭头字段
 5. 只在类内直接调用 -> `#` 原型方法
 6. 覆写父类成员的一律加 `override`
 
