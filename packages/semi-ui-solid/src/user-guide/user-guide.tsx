@@ -2,10 +2,6 @@ import { type JSX, For, Show, children, createEffect, createMemo, createUniqueId
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
 import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
-import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
 import '@fibrae/semi-foundation/user-guide/user-guide.scss';
 import hasContent from '../_base/has-content';
 import mergeStyles from '../_base/merge-styles';
@@ -101,8 +97,6 @@ export default function UserGuide(rawProps: UserGuideProps) {
     const locale = useLocale('UserGuide');
     const config = useConfig();
 
-    const scroll = new ReleaseHolder();
-    const focusScope = new FocusScope();
     let popover: PopoverHandle | undefined;
 
     const mounted = useMounted();
@@ -112,15 +106,14 @@ export default function UserGuide(rawProps: UserGuideProps) {
         props,
         () => UserGuideFoundation.getInitialState(props),
         (base) => ({
-            disabledBodyScroll: () => (coversPage(base.getProp('getPopupContainer') ?? config().getPopupContainer) ? scroll.hold(lockBodyScroll) : scroll.release()),
-            // hiding and unmounting both call it; release is idempotent
-            enabledBodyScroll: () => scroll.release(),
+            getPopup: () => popover?.getPopup(),
             notifyChange: (current) => base.getProps().onChange?.(current),
             notifyFinish: () => base.getProps().onFinish?.(),
             notifyNext: (current) => base.getProps().onNext?.(current),
             notifyPrev: (current) => base.getProps().onPrev?.(current),
             notifySkip: () => base.getProps().onSkip?.(),
-        })
+        }),
+        { context: config }
     );
 
     const spotlightId = `${prefixCls}-spotlight-${createUniqueId()}`;
@@ -135,8 +128,6 @@ export default function UserGuide(rawProps: UserGuideProps) {
     const popupShown = createMemo(() => shown() && mode() === 'popup');
 
     const showMask = () => step()?.mask ?? local.mask;
-
-    const locksScroll = createMemo(() => popupShown() && showMask());
 
     const isFirst = () => current() === 0;
 
@@ -308,9 +299,10 @@ export default function UserGuide(rawProps: UserGuideProps) {
         </svg>
     );
 
+    // mode and showMask are read by the foundation's lock rule
     createEffect(
-        on(locksScroll, (locks) => {
-            if (!locks) {
+        on([shown, mode, showMask], ([isShown]) => {
+            if (!isShown) {
                 return;
             }
             foundation.beforeShow();
@@ -331,9 +323,8 @@ export default function UserGuide(rawProps: UserGuideProps) {
             if (!isShown) {
                 return;
             }
-            focusScope.record();
-            // a user who clicked elsewhere keeps their focus; an unmounted card holds none
-            onCleanup(() => focusScope.restoreIfAllowed(popover?.getPopup(), false, true));
+            foundation.recordFocus();
+            onCleanup(foundation.restoreFocus);
         })
     );
 

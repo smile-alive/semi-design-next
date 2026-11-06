@@ -5,10 +5,6 @@ import { omitBy, pickBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
 import ModalContentFoundation, { type ModalContentAdapter, type ModalContentProps, isModal } from '@fibrae/semi-foundation/modal/modal-content-foundation';
 import { isAriaKey, warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
 import { IconClose } from '@fibrae/semi-icons-react';
 import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
@@ -28,8 +24,6 @@ export interface ModalContentReactProps extends ModalContentProps, React.AriaAtt
     modalRender?: (node: ReactNode) => ReactNode;
     /** Attached to the outer div inside the portal */
     ref?: React.Ref<HTMLDivElement>;
-    /** The default footer button (its `data-type`) focused on opening when the content holds no focused element */
-    initialFocus?: 'ok' | 'cancel';
     // role and every aria-* land on the dialog element (F12); the other unknown props land on the outer div
     role?: 'dialog' | 'alertdialog';
 }
@@ -37,10 +31,6 @@ export interface ModalContentReactProps extends ModalContentProps, React.AriaAtt
 class ModalContentRuntime {
     root: HTMLDivElement | null = null;
     dialog: HTMLDivElement | null = null;
-    readonly focusScope = new FocusScope();
-    readonly layer = new ReleaseHolder();
-    // the first element outside the default footer that held focus when the dialog opened
-    bodyFocus: HTMLElement | null = null;
 
     readonly attachRoot = (node: HTMLDivElement | null) => {
         this.root = node;
@@ -104,31 +94,8 @@ export default function ModalContent(props: ModalContentReactProps) {
         () => ({}),
         (base) => ({
             notifyClose: (e) => base.getProps().onClose(e),
-            openLayer: (onEscape) => runtime.layer.hold(() => openLayer({ element: runtime.root, modal: isModal(base.getProps()), onEscape })),
-            closeLayer: () => runtime.layer.release(),
-            trapFocus: () => {
-                const { dialog } = runtime;
-                const { preventScroll, initialFocus } = base.getProps();
-                const footer = dialog.querySelector(`:scope > .${cssClasses.DIALOG}-footer`);
-                const active = FocusTrapHandle.getActiveElement(dialog);
-                // React's autoFocus acts only on mount, so a keepDOM reopen refocuses the body element the first open
-                // focused, else picks the default button; FocusScope would otherwise focus the tabIndex=-1 dialog first.
-                // Known limit: keepDOM with lazyRender={false} that starts hidden mounts under display:none, where
-                // autoFocus cannot focus, so nothing is remembered and the default button wins.
-                if (dialog.contains(active)) {
-                    if (!runtime.bodyFocus && active !== dialog && !footer?.contains(active)) {
-                        runtime.bodyFocus = active as HTMLElement;
-                    }
-                } else {
-                    FocusTrapHandle.pickInitialFocus(dialog, { remembered: runtime.bodyFocus, footer, initialFocus })?.focus({ preventScroll });
-                }
-                runtime.focusScope.engage(dialog, isModal(base.getProps()), preventScroll);
-            },
-            releaseFocus: () => {
-                runtime.dialog?.blur();
-                runtime.focusScope.deactivate();
-            },
-            restoreFocus: () => runtime.focusScope.restoreIfAllowed(runtime.dialog, isModal(base.getProps()), base.getProp('preventScroll')),
+            getRoot: () => runtime.root,
+            getDialog: () => runtime.dialog,
         })
     );
 
@@ -156,9 +123,9 @@ export default function ModalContent(props: ModalContentReactProps) {
     // records the opener before the layout phase, where the footer's autoFocus button takes focus
     useInsertionEffect(() => {
         if (open) {
-            runtime.focusScope.record();
+            foundation.recordFocus();
         }
-    }, [open, runtime]);
+    }, [open, foundation]);
 
     // Portal puts its container in the document before this layout effect, so the dialog can take focus
     useLayoutEffect(() => {
@@ -173,7 +140,7 @@ export default function ModalContent(props: ModalContentReactProps) {
     // (a keepDOM dialog's button), so restore again in the layout phase
     useDidUpdate(open, (isOpen) => {
         if (!isOpen) {
-            runtime.focusScope.restoreIfAllowed(runtime.dialog, isModal({ mask, maskFixed, inBody }), preventScroll);
+            foundation.restoreFocus();
         }
     });
 

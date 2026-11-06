@@ -2,20 +2,17 @@ import { type FocusableElement, tabbable } from 'tabbable';
 import { isHTMLElement } from './dom';
 
 interface HandleOptions {
-    enable?: boolean;
     preventScroll?: boolean;
 }
 
 export default class FocusTrapHandle {
     #options: HandleOptions;
-    #enable: boolean;
     #container: HTMLElement;
 
     constructor(container: HTMLElement, options?: HandleOptions) {
         // a frozen copy: options cannot change after init, and the caller's own object stays writable
         this.#options = Object.freeze({ ...options });
         this.#container = container;
-        this.#enable = options?.enable ?? true;
         this.#container.addEventListener('keydown', this.#onKeyPress);
     }
 
@@ -30,7 +27,7 @@ export default class FocusTrapHandle {
             const focusableElements = FocusTrapHandle.getFocusableElements(this.#container);
             const focusableNum = focusableElements.length;
             if (focusableNum) {
-                if (this.#enable && FocusTrapHandle.getActiveElement(this.#container) === this.#container) {
+                if (FocusTrapHandle.getActiveElement(this.#container) === this.#container) {
                     // from the container itself the browser would move on by DOM position, out of the container
                     this.#focusElement(event.shiftKey ? focusableElements.at(-1) : focusableElements[0], event);
                 } else if (event.shiftKey) {
@@ -47,7 +44,7 @@ export default class FocusTrapHandle {
         const isLastCurrentFocus = focusableElements.at(-1) === activeElement;
 
         const redirectForcingElement = focusableElements[0];
-        if (this.#enable && isLastCurrentFocus) {
+        if (isLastCurrentFocus) {
             this.#focusElement(redirectForcingElement, event);
         }
     }
@@ -56,7 +53,7 @@ export default class FocusTrapHandle {
         const activeElement = FocusTrapHandle.getActiveElement(this.#container);
         const isFirstCurrentFocus = focusableElements[0] === activeElement;
         const redirectForcingElement = focusableElements.at(-1);
-        if (this.#enable && isFirstCurrentFocus) {
+        if (isFirstCurrentFocus) {
             this.#focusElement(redirectForcingElement, event);
         }
     }

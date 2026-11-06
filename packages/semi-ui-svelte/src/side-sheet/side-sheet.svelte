@@ -3,12 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/side-sheet/constants';
     import SideSheetFoundation, { type SideSheetAdapter, type SideSheetProps as SideSheetBaseProps, type SideSheetState } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
     import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
-    import { coversPage, toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-    import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-    import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-    import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
+    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import '@fibrae/semi-foundation/side-sheet/side-sheet.scss';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs.js';
@@ -65,10 +60,6 @@
     let displayNone = $state(true);
     let animating = $state<'show' | 'hide'>();
     let started = false;
-    let shown = false;
-    const scroll = new ReleaseHolder();
-    const layer = new ReleaseHolder();
-    const focusScope = new FocusScope();
 
     const prefix = cssClasses.PREFIX;
     const hidden = $derived(visible ? false : !motion || displayNone);
@@ -90,42 +81,26 @@
         get visible() {
             return visible;
         },
+        get mask() {
+            return mask;
+        },
+        get getPopupContainer() {
+            return getPopupContainer ?? config.getPopupContainer;
+        },
     };
-
-    // Only a mask over the whole page makes the sheet modal: aria-modal, the inert page, the Tab trap, unconditional focus
-    // return and the body scroll lock. A mask confined to a custom container leaves the rest of the page usable.
-    const isModal = () => Boolean(mask) && coversPage(getPopupContainer ?? config.getPopupContainer);
 
     const { foundation } = useFoundation<Foundation, Adapter, SideSheetBaseProps, SideSheetState>(
         SideSheetFoundation,
         foundationProps,
         () => SideSheetFoundation.getInitialState(),
         () => ({
-            disabledBodyScroll: () => (isModal() ? scroll.hold(lockBodyScroll) : scroll.release()),
-            enabledBodyScroll: () => scroll.release(),
             notifyCancel: (event) => {
                 visible = false;
                 onCancel?.(event);
             },
-            openLayer: (onEscape) => layer.hold(() => openLayer({ element: rootEl as HTMLElement, modal: isModal(), onEscape })),
-            closeLayer: () => layer.release(),
-            // Svelte focuses no autofocus element of content inserted after load, so the sheet picks it before the default
-            // (the dialog itself). A non-modal sheet leaves the page usable and Tab may leave it.
-            // shortcut: a mask confined to a custom container still covers content under it that Tab can reach, upgrade
-            // to inert on the container's other children if that content must become unreachable.
-            trapFocus: () => {
-                const element = dialogEl;
-                if (!element) {
-                    return;
-                }
-                if (!element.contains(FocusTrapHandle.getActiveElement(element))) {
-                    FocusTrapHandle.findAutofocus(element)?.focus({ preventScroll: true });
-                }
-                focusScope.engage(element, isModal(), true);
-            },
-            releaseFocus: () => focusScope.deactivate(),
-            // a user who moved on to the page next to a non-modal sheet keeps that focus
-            restoreFocus: () => focusScope.restoreIfAllowed(dialogEl, isModal(), true),
+            notifyAfterVisibleChange: (isVisible) => afterVisibleChange?.(isVisible),
+            getRoot: () => rootEl,
+            getDialog: () => dialogEl,
         })
     );
 
@@ -133,7 +108,7 @@
     // shadow aria-label
     const dialogAttrs = (inBody: boolean) => ({
         'aria-labelledby': !attrs.control['aria-label'] && hasTitle ? `${uid}-title` : undefined,
-        'aria-modal': mask && inBody ? true : undefined,
+        'aria-modal': SideSheetFoundation.isModal({ mask, inBody }) ? true : undefined,
         ...attrs.control,
     });
 
@@ -168,7 +143,7 @@
             if (open) {
                 displayNone = false;
                 animating = motion ? 'show' : undefined;
-                focusScope.record();
+                foundation.recordFocus();
             } else if (started) {
                 animating = motion ? 'hide' : undefined;
             }
@@ -205,22 +180,9 @@
         return foundation.afterHide;
     });
 
-    watch(
-        () => hidden,
-        (isHidden) => {
-            shown = !isHidden;
-            afterVisibleChange?.(!isHidden);
-        }
-    );
+    watch(() => hidden, foundation.handleHiddenChange);
 
-    onMount(() => {
-        shown = !hidden;
-        return () => {
-            if (shown) {
-                afterVisibleChange?.(false);
-            }
-        };
-    });
+    onMount(() => () => foundation.handleHiddenChange(true));
 
     export function getRoot() {
         return rootEl;

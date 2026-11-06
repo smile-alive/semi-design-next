@@ -5,10 +5,6 @@ import { cssClasses, numbers } from '@fibrae/semi-foundation/image/constants';
 import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerState, type RatioType } from '@fibrae/semi-foundation/image/preview-inner-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
 import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-solid';
 import hasContent from '../_base/has-content';
 import PopupPortal from '../_base/popup-portal';
@@ -61,9 +57,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
 
     // an index change resets the ratio together with the new src, so PreviewImage does not re-fit the old image
     const [ratioState, setRatioState] = createSignal<{ index: number; ratio: RatioType }>({ index: -1, ratio: 'adaptation' });
-    const scroll = new ReleaseHolder();
-    const layer = new ReleaseHolder();
-    const focusScope = new FocusScope();
     let header: HTMLElement | undefined;
     let footer: HTMLElement | undefined;
     let leftIcon: HTMLButtonElement | undefined;
@@ -78,8 +71,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
         (initial) => PreviewInnerFoundation.getInitialState(initial),
         (base) => ({
             getIsInGroup: () => Boolean(previewContext),
-            disabledBodyScroll: () => (inBody() ? scroll.hold(lockBodyScroll) : scroll.release()),
-            enabledBodyScroll: () => scroll.release(),
             notifyChange: (index, direction) => {
                 const { onChange, onPrev, onNext } = base.getProps();
                 onChange?.(index);
@@ -96,17 +87,8 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
             notifyRotateChange: (angle) => base.getProps().onRotateLeft?.(angle),
             notifyDownload: (src, index) => base.getProps().onDownload?.(src, index),
             notifyDownloadError: (src) => base.getProps().onDownloadError?.(src),
-            registerKeyDownListener: () => window.addEventListener('keydown', handleKeyDown),
-            unregisterKeyDownListener: () => window.removeEventListener('keydown', handleKeyDown),
-            openLayer: (onEscape) => {
-                const element = wrap() as HTMLElement;
-                const modal = inBody();
-                layer.hold(() => openLayer({ element, modal, onEscape }));
-            },
-            closeLayer: () => layer.release(),
-            getSetDownloadFunc: () => (base.getContexts()?.setDownloadName ?? base.getProp('setDownloadName')) as (src: string) => string,
+            getWrap: () => wrap(),
             isValidTarget: (e) => !(e.target instanceof Node && [header, footer, leftIcon, rightIcon].some((element) => element?.contains(e.target))),
-            isEventInPreview: (e) => !(e.target instanceof Element) || e.target === document.body || Boolean(wrap()?.contains(e.target)),
             setRatio: (ratio) => setRatioState({ index: currentIndex(), ratio }),
         }),
         {
@@ -115,6 +97,7 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
                 setCurrentIndex: previewContext?.setCurrentIndex,
                 setDownloadName: previewContext?.view().setDownloadName,
                 direction: config().direction,
+                popupContainer: props.getPopupContainer ?? config().getPopupContainer,
             }),
         }
     );
@@ -130,9 +113,8 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
     const showNext = createMemo(() => PreviewInnerFoundation.canSwitch('next', currentIndex(), total(), props.infinite));
     const title = children(() => (shown() ? (previewContext?.view().titles[currentIndex()] ?? props.previewTitle) : undefined));
 
-    // only a preview in body covers the page: it is modal, locks scroll and keeps Tab inside. A memo, so a consumer
-    // spreading a props signal does not re-run the show effect, which would restart the delay and pull focus back
-    // Not called before mount (nor on the server): the container the consumer's getter queries may not be inserted yet
+    // A memo, so every reader does not call the consumer's getter again. Not called before mount (nor on the server):
+    // the container the consumer's getter queries may not be inserted yet
     const inBody = createMemo(() => !mounted() || coversPage(props.getPopupContainer ?? config().getPopupContainer));
 
     const ratio = () => (ratioState().index === currentIndex() ? ratioState().ratio : 'adaptation');
@@ -155,44 +137,20 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
 
     const hideCls = () => (state().viewerVisible ? '' : `${previewPrefixCls}-hide`);
 
-    const handleKeyDown = (e: KeyboardEvent) => foundation.handleKeyDown(e);
-
     const handlePrev = () => foundation.handleSwitchImage('prev');
 
     const handleNext = () => foundation.handleSwitchImage('next');
 
-    useRecordFocus(focusScope, visible);
+    useRecordFocus({ record: foundation.recordFocus }, visible);
 
     // tracks the dialog, so the layer, scroll lock and focus are taken once it is in the document
     createEffect(() => {
-        const element = wrap();
-        if (!visible() || !element) {
+        if (!visible() || !wrap()) {
             return;
         }
-        const modal = inBody();
-        untrack(() => {
-            foundation.beforeShow();
-            focusScope.engage(element, modal, true);
-        });
-        onCleanup(() => {
-            // afterHide releases the inert around the preview first, so the opener can take focus again
-            foundation.afterHide();
-            focusScope.deactivate();
-        });
+        untrack(foundation.beforeShow);
+        onCleanup(foundation.afterHide);
     });
-
-    createEffect(
-        on(
-            visible,
-            (isVisible) => {
-                const active = FocusTrapHandle.getActiveElement();
-                if (!isVisible && (inBody() || !active || active === document.body)) {
-                    focusScope.restore(true);
-                }
-            },
-            { defer: true }
-        )
-    );
 
     // a focused prev or next button disappears at the first or last image; focus stays in the dialog. Focus the user
     // moved elsewhere is left alone.

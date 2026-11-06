@@ -1,5 +1,38 @@
-import { describe, expect, it } from 'vite-plus/test';
-import SideSheetFoundation from '../side-sheet-foundation';
+import { describe, expect, it, vi } from 'vite-plus/test';
+import SideSheetFoundation, { type SideSheetAdapter, type SideSheetProps } from '../side-sheet-foundation';
+
+function createFoundation(props: SideSheetProps) {
+    const notifyAfterVisibleChange = vi.fn<(isVisible: boolean) => void>();
+    const adapter = {
+        getProp: (key: keyof SideSheetProps) => props[key],
+        getProps: () => props,
+        notifyAfterVisibleChange,
+    } as unknown as SideSheetAdapter;
+    return { foundation: new SideSheetFoundation(adapter), notifyAfterVisibleChange };
+}
+
+describe('SideSheetFoundation.handleHiddenChange', () => {
+    it('挂载即可见时不报打开，卸载时报一次隐藏', () => {
+        const { foundation, notifyAfterVisibleChange } = createFoundation({ visible: true });
+        foundation.handleHiddenChange(true);
+        foundation.handleHiddenChange(true);
+        expect(notifyAfterVisibleChange.mock.calls).toEqual([[false]]);
+    });
+
+    it('从未显示时卸载不报隐藏', () => {
+        const { foundation, notifyAfterVisibleChange } = createFoundation({ visible: false });
+        foundation.handleHiddenChange(true);
+        expect(notifyAfterVisibleChange).not.toHaveBeenCalled();
+    });
+
+    it('显示后隐藏各报一次，隐藏后卸载不再报', () => {
+        const { foundation, notifyAfterVisibleChange } = createFoundation({ visible: false });
+        foundation.handleHiddenChange(false);
+        foundation.handleHiddenChange(true);
+        foundation.handleHiddenChange(true);
+        expect(notifyAfterVisibleChange.mock.calls).toEqual([[true], [false]]);
+    });
+});
 
 describe('SideSheetFoundation.getSheetSize', () => {
     it('左右方向使用 width，高度撑满', () => {
@@ -21,5 +54,14 @@ describe('SideSheetFoundation.getSheetSize', () => {
 
     it('没有宽度时不设置宽度', () => {
         expect(SideSheetFoundation.getSheetSize({ placement: 'left', mask: false })).toEqual({ dialogHeight: '100%' });
+    });
+});
+
+describe('SideSheetFoundation.isModal', () => {
+    it('只有渲染在 body 里的遮罩才算模态', () => {
+        expect(SideSheetFoundation.isModal({ mask: true, inBody: true })).toBe(true);
+        expect(SideSheetFoundation.isModal({ mask: true, inBody: false })).toBe(false);
+        expect(SideSheetFoundation.isModal({ mask: false, inBody: true })).toBe(false);
+        expect(SideSheetFoundation.isModal({ inBody: true })).toBe(false);
     });
 });

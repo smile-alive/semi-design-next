@@ -646,7 +646,7 @@ describe('Tooltip 浏览器', () => {
         await waitFor(() => expect(screen.getByText('cached content')).toBeVisible());
         expect(onVisibleChange.mock.calls).toEqual([[true]]);
 
-        await userEvent.click(document.body);
+        await clickOutside();
         await waitFor(() => expect(screen.queryByText('cached content')).toBeNull());
         expect(shown.value).toBe(false);
     });

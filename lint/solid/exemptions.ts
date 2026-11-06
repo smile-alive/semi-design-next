@@ -26,10 +26,11 @@ export const solidExemptions: Exemption[] = [
         files: ['packages/semi-ui-solid/src/tabs/tab-item.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
-    // The popup's role is the `role` prop (tooltip or dialog), which jsx-a11y only accepts as a literal
+    // The popup's role is the `role` prop (tooltip or dialog), which jsx-a11y only accepts as a literal; its click only
+    // applies clickToHide, and its keys (Escape, the guardFocus Tab trap) are listeners the foundation adds
     {
         files: ['packages/semi-ui-solid/src/tooltip/tooltip.tsx'],
-        off: ['jsx-a11y/no-static-element-interactions'],
+        off: ['jsx-a11y/no-static-element-interactions', 'jsx-a11y/click-events-have-key-events'],
     },
     // A text Avatar is a role="img" span holding initials; AvatarGroup is a role="list" div of role="listitem" spans
     {

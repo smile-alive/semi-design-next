@@ -4,10 +4,6 @@ import { cssClasses, numbers } from '@fibrae/semi-foundation/image/constants';
 import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerState, type RatioType } from '@fibrae/semi-foundation/image/preview-inner-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-import { openLayer, type Layer } from '@fibrae/semi-foundation/utils/layer';
-import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
 import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-react';
 import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
@@ -42,67 +38,30 @@ const defaultProps = {
     minZoom: 0.1,
 } satisfies Partial<PreviewInnerProps>;
 
-class PreviewInnerRuntime {
-    #foundation: PreviewInnerFoundation | null = null;
-    readonly #scroll = new ReleaseHolder();
-    readonly #layer = new ReleaseHolder();
-    readonly focusScope = new FocusScope();
-    readonly handleKeyDown = (e: KeyboardEvent) => this.#foundation?.handleKeyDown(e);
-
-    mount(foundation: PreviewInnerFoundation) {
-        this.#foundation = foundation;
-    }
-
-    disableBodyScroll(locksBody: boolean) {
-        if (locksBody) {
-            this.#scroll.hold(lockBodyScroll);
-        } else {
-            this.#scroll.release();
-        }
-    }
-
-    enableBodyScroll() {
-        this.#scroll.release();
-    }
-
-    openLayer(layer: Layer) {
-        this.#layer.hold(() => openLayer(layer));
-    }
-
-    closeLayer() {
-        this.#layer.release();
-    }
-}
-
 // 0.29 * 100 is 28.999999999999996, which the slider would read out
 const toPercent = (ratio: number) => Number((ratio * 100).toFixed(2));
 
 interface PreviewOpenEffectsProps {
     foundation: PreviewInnerFoundation;
-    inBody: boolean;
-    runtime: PreviewInnerRuntime;
     wrapRef: RefObject<HTMLDivElement | null>;
 }
 
 // Rendered in the Portal after the dialog, so these effects run once its DOM and refs exist: in the Portal's first
 // commit, which on a hydrated page comes after hydration rather than with the preview's own mount
-function PreviewOpenEffects({ foundation, inBody, runtime, wrapRef }: PreviewOpenEffectsProps) {
+function PreviewOpenEffects({ foundation, wrapRef }: PreviewOpenEffectsProps) {
     // records the opener before the layout phase moves focus into the preview
-    useInsertionEffect(() => runtime.focusScope.record(), [runtime]);
+    useInsertionEffect(() => foundation.recordFocus(), [foundation]);
 
     useLayoutEffect(() => {
         const wrap = wrapRef.current;
         // React's onWheel is passive, but the trackpad pinch must preventDefault or the whole page zooms
         wrap.addEventListener('wheel', foundation.handleWheel, { passive: false });
         foundation.beforeShow();
-        runtime.focusScope.engage(wrap, inBody, true);
         return () => {
             wrap.removeEventListener('wheel', foundation.handleWheel);
-            // afterHide releases the inert around the preview first, so the opener can take focus again
             foundation.afterHide();
-            runtime.focusScope.deactivate();
         };
-    }, [inBody, foundation, runtime, wrapRef]);
+    }, [foundation, wrapRef]);
 
     return null;
 }
@@ -154,7 +113,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
     const config = useConfigContext();
     const { locale } = useLocale('Image');
 
-    const [runtime] = useState(() => new PreviewInnerRuntime());
     const wrapRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLElement>(null);
     const footerRef = useRef<HTMLElement>(null);
@@ -180,8 +138,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
         () => PreviewInnerFoundation.getInitialState(props),
         (base) => ({
             getIsInGroup: () => Boolean(base.getContexts()?.isGroup),
-            disabledBodyScroll: () => runtime.disableBodyScroll(coversPage(base.getContext('popupContainer'))),
-            enabledBodyScroll: () => runtime.enableBodyScroll(),
             notifyChange: (index, direction) => {
                 const { onChange, onPrev, onNext } = base.getProps();
                 onChange?.(index);
@@ -205,18 +161,8 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
             notifyRotateChange: (angle) => base.getProps().onRotateLeft?.(angle),
             notifyDownload: (src, index) => base.getProps().onDownload?.(src, index),
             notifyDownloadError: (src) => base.getProps().onDownloadError?.(src),
-            registerKeyDownListener: () => window.addEventListener('keydown', runtime.handleKeyDown),
-            unregisterKeyDownListener: () => window.removeEventListener('keydown', runtime.handleKeyDown),
-            openLayer: (onEscape) =>
-                runtime.openLayer({
-                    element: wrapRef.current,
-                    modal: coversPage(base.getContext('popupContainer')),
-                    onEscape,
-                }),
-            closeLayer: () => runtime.closeLayer(),
-            getSetDownloadFunc: () => base.getContexts()?.setDownloadName ?? base.getProp('setDownloadName'),
+            getWrap: () => wrapRef.current,
             isValidTarget: (e) => !(e.target instanceof Node && [headerRef, footerRef, leftIconRef, rightIconRef].some((item) => item.current?.contains(e.target))),
-            isEventInPreview: (e) => !(e.target instanceof Element) || e.target === document.body || Boolean(wrapRef.current?.contains(e.target)),
             setRatio: (ratio) => setRatioState((prev) => ({ ...prev, ratio })),
         }),
         context
@@ -233,16 +179,6 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
     // only a preview in body covers the page: it is modal, locks scroll and keeps Tab inside. The caller's getter may
     // read document; on the server and while hydrating the Portal renders nothing anyway
     const inBody = !isServerRender && coversPage(popupContainer);
-
-    useLayoutEffect(() => runtime.mount(foundation), [runtime, foundation]);
-
-    // a non-modal preview leaves focus the user moved elsewhere where it is
-    useDidUpdate(visible, (isVisible) => {
-        const active = FocusTrapHandle.getActiveElement();
-        if (!isVisible && (inBody || !active || active === document.body)) {
-            runtime.focusScope.restore(true);
-        }
-    });
 
     // a focused prev or next button disappears at the first or last image; focus stays in the dialog. Focus the user
     // moved elsewhere is left alone.
@@ -359,7 +295,7 @@ export default function PreviewInner(rawProps: PreviewInnerProps) {
                     onZoomOut={foundation.handleZoomImage}
                 />
             </div>
-            <PreviewOpenEffects foundation={foundation} inBody={inBody} runtime={runtime} wrapRef={wrapRef} />
+            <PreviewOpenEffects foundation={foundation} wrapRef={wrapRef} />
         </Portal>
     );
 }

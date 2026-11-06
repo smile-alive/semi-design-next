@@ -2,10 +2,6 @@
     import { untrack } from 'svelte';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
     import ContainerFoundation, { type ContainerAdapter, type ContainerProps as FoundationProps } from '@fibrae/semi-ai-foundation/sidebar/container-foundation';
-    import { canRestoreFocus } from '@fibrae/semi-ai-foundation/sidebar/utils';
-    import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-    import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-    import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
     import '@fibrae/semi-ai-foundation/sidebar/sidebar.scss';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import cssAnimation from '@fibrae/semi-ui-svelte/_base/css-animation';
@@ -27,8 +23,6 @@
     // Kept by the transition events: true once the element has entered, false once its leave has ended. It starts at
     // visible so an initially visible container reports no change.
     let displayed = $state(untrack(() => Boolean(visible)));
-    const layer = new ReleaseHolder();
-    const focusScope = new FocusScope();
 
     const prefix = cssClasses.SIDEBAR;
     const resizableProps = $derived({ defaultSize, enable: strings.DIRECTION, maxWidth, minWidth });
@@ -50,18 +44,10 @@
         () => ({
             notifyCancel: (event) => cancel(event),
             notifyVisibleChange: (isVisible) => afterVisibleChange?.(isVisible),
-            // the page beside the sidebar stays usable, so the layer is not modal; it covers the Resizable around the
-            // container when there is one, because the drag handles are its children and a modal layer opened earlier
-            // would make them inert
-            openLayer: (onEscape) => layer.hold(() => openLayer({ element: (resizable ? rootEl?.parentElement : null) ?? (rootEl as HTMLElement), modal: false, onEscape })),
-            closeLayer: () => layer.release(),
+            getRoot: () => rootEl,
+            getLayer: () => (resizable ? rootEl?.parentElement : null) ?? rootEl,
             toggleDisplayNone: (displayNone) => {
                 displayed = !displayNone;
-            },
-            restoreFocus: () => {
-                if (canRestoreFocus(rootEl)) {
-                    focusScope.restore(true);
-                }
             },
         })
     );
@@ -75,7 +61,7 @@
     // Before the DOM updates, so the focus is recorded ahead of anything in the container taking it
     $effect.pre(() => {
         if (visible) {
-            untrack(() => focusScope.record());
+            untrack(foundation.recordFocus);
         }
     });
 

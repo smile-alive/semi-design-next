@@ -72,9 +72,6 @@
     const popover = useTemplateRef('popover');
     const footer = useTemplateRef('footer');
 
-    // Tooltip mounts the card only after `visible` turns true, so the focus request waits for the footer to exist.
-    let pendingFocus: 'cancel' | 'ok' | null = null;
-
     const confirmFn = computed(() => props.onConfirm ?? readSemiDefault(semi, 'Popconfirm', 'onConfirm'));
     const cancelFn = computed(() => props.onCancel ?? readSemiDefault(semi, 'Popconfirm', 'onCancel'));
 
@@ -83,6 +80,29 @@
     // Wrapped in an object because the template would unwrap a top-level ref before it reaches the slot.
     const contentSlotProps = { initialFocusRef: shallowRef<FocusTarget | null>(null) };
     const tooltip: { focusRef: ShallowRef<FocusTarget | null> | null } = { focusRef: null };
+
+    const { foundation, state } = useFoundation<Foundation, Adapter, PopconfirmProps, PopconfirmBaseState>(
+        PopconfirmFoundation,
+        props,
+        (view) => PopconfirmFoundation.getInitialState(view),
+        () => ({
+            notifyConfirm: (event) => confirmFn.value?.(event),
+            notifyCancel: (event) => cancelFn.value?.(event),
+            notifyVisibleChange: (visible) => {
+                emit('update:visible', visible);
+                emit('visibleChange', visible);
+            },
+            getFooter: () => footer.value,
+            setInitialFocus: (button) => {
+                if (tooltip.focusRef) tooltip.focusRef.value = button;
+            },
+            focusPrevFocusElement: () => {
+                // focus that already left the card (Tab away from a focus trigger) stays where it went
+                if (FocusTrapHandle.shouldRestoreFocus(popover.value?.getPopup(), false)) popover.value?.focusTrigger();
+            },
+        })
+    );
+
     const rtl = computed(() => context.value.direction === 'rtl');
     const popoverPosition = computed(() => props.position ?? (rtl.value ? 'bottomRight' : 'bottomLeft'));
 
@@ -111,21 +131,17 @@
 
     const titleId = `${useId()}-title`;
     const contentId = `${titleId}-content`;
+    const popoverVisible = computed(() => (props.visible !== undefined ? props.visible : state.value.visible));
 
     const bindTooltipFocus = (focusRef: ShallowRef<FocusTarget | null>) => {
         tooltip.focusRef = focusRef;
     };
 
-    const applyFocus = () => {
+    // the content's target first, so a pending autoFocus button handed over by the foundation replaces it
+    const handleFooterMounted = () => {
         if (!footer.value) return;
-        if (pendingFocus) {
-            const button = footer.value.querySelector<HTMLElement>(`[data-type=${pendingFocus}]`);
-            button?.focus({ preventScroll: true });
-            if (tooltip.focusRef) tooltip.focusRef.value = button;
-            pendingFocus = null;
-        } else if (tooltip.focusRef) {
-            tooltip.focusRef.value = contentSlotProps.initialFocusRef.value;
-        }
+        if (tooltip.focusRef) tooltip.focusRef.value = contentSlotProps.initialFocusRef.value;
+        foundation.handleFooterMounted();
     };
 
     const hasTitle = () => (slots.title ? hasSlotContent(slots.title) : Boolean(props.title));
@@ -145,37 +161,6 @@
         };
     };
 
-    watch(footer, applyFocus, { flush: 'post' });
-
-    const { foundation, state } = useFoundation<Foundation, Adapter, PopconfirmProps, PopconfirmBaseState>(
-        PopconfirmFoundation,
-        props,
-        (view) => PopconfirmFoundation.getInitialState(view),
-        () => ({
-            notifyConfirm: (event) => confirmFn.value?.(event),
-            notifyCancel: (event) => cancelFn.value?.(event),
-            notifyVisibleChange: (visible) => {
-                emit('update:visible', visible);
-                emit('visibleChange', visible);
-            },
-            focusCancelButton: () => {
-                pendingFocus = 'cancel';
-                applyFocus();
-            },
-            focusOkButton: () => {
-                pendingFocus = 'ok';
-                applyFocus();
-            },
-            focusPrevFocusElement: () => {
-                pendingFocus = null;
-                // focus that already left the card (Tab away from a focus trigger) stays where it went
-                if (FocusTrapHandle.shouldRestoreFocus(popover.value?.getPopup(), false)) popover.value?.focusTrigger();
-            },
-        })
-    );
-
-    const popoverVisible = computed(() => (props.visible !== undefined ? props.visible : state.value.visible));
-
     // autoFocus only selects the initially focused button, so it never reaches the DOM. type and theme may be
     // overridden; data-type locates the button for autoFocus and the pending loading guards against a second click.
     const footerButton = (kind: 'cancel' | 'ok', custom?: PopconfirmButtonProps) => {
@@ -192,6 +177,8 @@
 
     const cancelProps = computed(() => footerButton('cancel', props.cancelButtonProps));
     const okProps = computed(() => footerButton('ok', props.okButtonProps));
+
+    watch(footer, handleFooterMounted, { flush: 'post' });
 
     // Tooltip reports only Popconfirm's own requests, so focus follows the `visible` it is given, whoever set it
     if (popoverVisible.value) foundation.handlePopupOpen();

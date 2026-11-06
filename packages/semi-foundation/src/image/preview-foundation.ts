@@ -80,8 +80,8 @@ export default class PreviewFoundation<P extends PreviewBaseProps = PreviewBaseP
     /** `I` is the framework's image type, which hosts register through `registerImage` */
     static getInitialState<I extends PreviewGroupImage = PreviewGroupImage>(props: PreviewBaseProps): PreviewBaseState & { images: I[] } {
         return {
-            currentIndex: props.currentIndex || props.defaultCurrentIndex || 0,
-            visible: props.visible || props.defaultVisible || false,
+            currentIndex: props.currentIndex ?? props.defaultCurrentIndex ?? 0,
+            visible: props.visible ?? props.defaultVisible ?? false,
             images: [],
         };
     }

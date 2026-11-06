@@ -1,4 +1,5 @@
 import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
+import ModalResources from '@fibrae/semi-foundation/utils/modal-resources';
 
 export interface ContainerProps {
     title?: any;
@@ -21,15 +22,18 @@ export interface ContainerProps {
 export interface ContainerAdapter extends DefaultAdapter<ContainerProps, Record<string, never>> {
     notifyCancel: (e: KeyboardEvent) => void;
     notifyVisibleChange: (visible: boolean) => void;
-    /** Puts the sidebar on the overlay stack (utils/layer) as a non-modal layer that receives Escape while on top */
-    openLayer: (onEscape: (e: KeyboardEvent) => boolean) => void;
-    closeLayer: () => void;
+    /** The `.semi-sidebar-container` element; null while it is not rendered */
+    getRoot: () => HTMLElement | null;
+    /**
+     * The sidebar's outermost element: the Resizable around the container when there is one, else the container.
+     * The Resizable's drag handles are siblings of the container, and a modal layer opened earlier would make them inert.
+     */
+    getLayer: () => HTMLElement | null;
     toggleDisplayNone: (displayNone: boolean) => void;
-    /** Focuses the element focused when the sidebar opened, unless the user has moved focus elsewhere on the page */
-    restoreFocus: () => void;
 }
 
 export default class ContainerFoundation extends BaseFoundation<ContainerAdapter, ContainerProps, Record<string, never>> {
+    readonly #resources = new ModalResources();
     static override readonly propKeys = ['visible'];
 
     #handleCancel(e: KeyboardEvent) {
@@ -57,12 +61,18 @@ export default class ContainerFoundation extends BaseFoundation<ContainerAdapter
         }
     }
 
+    /** Remembers the element to return focus to; hosts call it on showing, before anything inside the sidebar takes focus */
+    recordFocus = () => {
+        this.#resources.record();
+    };
+
+    // The page beside the sidebar stays usable, so the layer is not modal and focus does not move in
     beforeShow = () => {
-        this.adapter.openLayer(this.#handleEscape);
+        this.#resources.hold({ modal: false, layer: this.adapter.getLayer(), onEscape: this.#handleEscape, preventScroll: true });
     };
 
     closeLayer = () => {
-        this.adapter.closeLayer();
+        this.#resources.release();
     };
 
     // focused content unmounts with the sidebar, which would leave focus on the body
@@ -71,8 +81,9 @@ export default class ContainerFoundation extends BaseFoundation<ContainerAdapter
         this.restoreFocus();
     };
 
+    /** Skipped when the user has moved focus elsewhere on the page */
     restoreFocus = () => {
-        this.adapter.restoreFocus();
+        this.#resources.restoreFocus(this.adapter.getRoot());
     };
 
     onVisibleChange = (visible: boolean) => {

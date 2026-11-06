@@ -43,15 +43,6 @@
         () => ({
             getContainer: () => container.value as HTMLDivElement,
             getImage: () => image.value as HTMLImageElement,
-            // the style binding has no cursor key, so a patch leaves this one alone
-            setImageCursor: (canDrag) => {
-                if (image.value) {
-                    image.value.style.cursor = canDrag ? 'grab' : 'default';
-                    // a touch drag pans only a draggable image; otherwise the page keeps scrolling and pinch-zooming
-                    image.value.style.touchAction = canDrag ? 'none' : '';
-                }
-            },
-            capturePointer: (pointerId) => image.value?.setPointerCapture(pointerId),
             requestZoom: (zoom, reportToUser) => emit('zoom', zoom, reportToUser),
             notifyLoad: (src) => emit('load', src),
             notifyError: (src) => emit('error', src),

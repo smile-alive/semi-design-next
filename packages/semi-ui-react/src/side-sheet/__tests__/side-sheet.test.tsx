@@ -547,19 +547,22 @@ describe('SideSheet 行为', () => {
         expect(document.body.style.overflow).toBe('hidden');
     });
 
-    it('Activity 隐藏显示中的 SideSheet 视同关闭：上报一次 afterVisibleChange(false) 并解除 body 锁定，重新显示后再次锁定', async () => {
+    it('Activity 隐藏显示中的 SideSheet 不算关闭：不报 afterVisibleChange(false) 并解除 body 锁定，重新显示后再次锁定，真正卸载时报一次', async () => {
         const afterVisibleChange = vi.fn<(visible: boolean) => void>();
         const view = (mode: 'visible' | 'hidden') => <Activity mode={mode}>{getSideSheet({ visible: true, motion: false, afterVisibleChange })}</Activity>;
-        const { rerender } = render(view('visible'));
+        const hides = () => afterVisibleChange.mock.calls.filter(([visible]) => !visible);
+        const { rerender, unmount } = render(view('visible'));
         expect(document.body.style.overflow).toBe('hidden');
         rerender(view('hidden'));
         await act(async () => {});
-        expect(afterVisibleChange).toHaveBeenCalledWith(false);
-        expect(afterVisibleChange.mock.calls.filter(([visible]) => !visible)).toHaveLength(1);
+        expect(hides()).toHaveLength(0);
         expect(document.body.style.overflow).toBe('');
         rerender(view('visible'));
         await act(async () => {});
         expect(document.body.style.overflow).toBe('hidden');
+        unmount();
+        await act(async () => {});
+        expect(hides()).toHaveLength(1);
     });
 
     it('data-* 属性设置在 sidesheet 外层容器上', () => {

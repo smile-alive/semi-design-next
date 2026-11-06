@@ -1,14 +1,12 @@
 import type React from 'react';
-import { Fragment, cloneElement, isValidElement, useCallback, useEffect, useEffectEvent, useId, useImperativeHandle, useLayoutEffect, useState, type CSSProperties, type FragmentInstance } from 'react';
+import { Fragment, cloneElement, isValidElement, useCallback, useEffect, useId, useImperativeHandle, useLayoutEffect, useState, type CSSProperties, type FragmentInstance } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 import { strings, cssClasses, numbers, POPUP_ID_ATTRIBUTE, TRIGGER_EVENT_NAMES, COLOR_SCHEME_SELECTOR, canRoleCarryPopupState, colorSchemeOf, isBlockDisplay, popupTarget, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
 import TooltipFoundation, { type TooltipAdapter, type TooltipBaseState, type Position } from '@fibrae/semi-foundation/tooltip/foundation';
 import { joinIds, warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
-import warning from '@fibrae/semi-foundation/utils/warning';
 import '@fibrae/semi-foundation/tooltip/tooltip.scss';
 import type { BaseProps } from '../_base/base-component';
 import { PopupLayerContext } from '../_base/popup-layer';
@@ -143,9 +141,6 @@ class TooltipRuntime {
     readonly #triggerElements = new Set<Element>();
     // cached between the observer's reports; undefined once they change the set
     #firstTriggerElement: Element | null | undefined;
-    // inserted and afterOpen, afterClose not yet reported
-    #openPending = false;
-    #closePending = false;
     // handed to `content` as initialFocusRef; not named *Ref, which the React Compiler would read as a ref
     readonly initialFocus: { current: { focus?: (options?: FocusOptions) => void } | null } = { current: null };
     trigger: FragmentInstance | null = null;
@@ -229,21 +224,9 @@ class TooltipRuntime {
         return !this.lastContainer?.isConnected;
     }
 
-    markOpened() {
-        this.#openPending = true;
-        this.#closePending = true;
-    }
-
-    takePendingOpen() {
-        const pending = this.#openPending;
-        this.#openPending = false;
-        return pending;
-    }
-
-    takePendingClose() {
-        const pending = this.#closePending;
-        this.#closePending = false;
-        return pending;
+    waitAnimations() {
+        const animations = this.container?.getAnimations() ?? [];
+        return animations.length ? Promise.allSettled(animations.map((animation) => animation.finished)) : null;
     }
 
     isInTrigger(node: Node | null) {
@@ -313,7 +296,6 @@ export function canCarryPopupState(child: React.ReactElement<Record<string, any>
 
 export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<TooltipHandle> }) {
     const props = useDefaultProps('Tooltip', rawProps, defaultProps);
-    const { mouseEnterDelay, mouseLeaveDelay } = props;
     const { wrapWhenSpecial, role, trigger, wrapperClassName } = props;
 
     const context = useConfigContext();
@@ -336,20 +318,18 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
         () => TooltipFoundation.getInitialState(),
         (base) => {
             const adapter: Omit<TooltipAdapter<TooltipProps>, keyof typeof base> = {
-                insertPortal: () => {
-                    runtime.markOpened();
-                    base.setState({
-                        isInsert: true,
-                        transitionState: 'enter',
-                        visible: true,
-                        portalTarget: runtime.getPortalTarget(),
-                        colorScheme: runtime.getColorScheme(),
-                    });
+                insertPortal: () => ({ portalTarget: runtime.getPortalTarget(), colorScheme: runtime.getColorScheme() }),
+                removePortal: () => setContentShown(false),
+                showPopover: () => {
+                    if (!runtime.container?.matches(':popover-open')) {
+                        runtime.container?.showPopover();
+                    }
                 },
-                removePortal: () => {
-                    setContentShown(false);
-                    base.setState({ isInsert: false, transitionState: '' });
-                },
+                // the last element: Activity hides the popup through destroy, where the ref may already be detached
+                hidePopover: () => runtime.lastContainer?.hidePopover(),
+                waitAnimations: () => runtime.waitAnimations(),
+                notifyAfterOpen: () => base.getProps().afterOpen?.(),
+                notifyAfterClose: () => base.getProps().afterClose?.(),
                 notifyVisibleChange: (visible) => base.getProps().onVisibleChange?.(visible),
                 registerClickOutsideHandler: (handler) => {
                     adapter.unregisterClickOutsideHandler();
@@ -389,9 +369,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
     );
 
     const popupId = popupIdOf(props.wrapperId, generatedId);
-
-    // Non-modal layer: takes Escape while on top, and a Modal opened before it leaves it interactive. Registered from
-    // insertion so it exists before the content mounts and takes focus.
     const isOpen = state.isInsert && state.transitionState !== 'leave';
 
     // the name may point into the content, so check after it mounts
@@ -401,21 +378,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
     const setTrigger = useCallback((frag: FragmentInstance | null) => runtime.setTrigger(frag), [runtime]);
 
     const setContainer = useCallback((node: HTMLDivElement | null) => runtime.setContainer(node), [runtime]);
-
-    const didOpen = useEffectEvent(() => {
-        if (runtime.takePendingOpen()) {
-            props.afterOpen?.();
-        }
-    });
-
-    const didLeave = useEffectEvent(() => {
-        if (!props.keepDOM) {
-            foundation.removePortal();
-        }
-        if (runtime.takePendingClose()) {
-            props.afterClose?.();
-        }
-    });
 
     const renderIcon = () => {
         const { showArrow, prefixCls, style } = props;
@@ -482,7 +444,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
                     portalFocus?.(e);
                     stop(e);
                 }}
-                onKeyDown={foundation.handleContainerKeydown}
                 onMouseDown={stop}
                 onMouseDownCapture={(e) => {
                     runtime.pressedInside = e.nativeEvent;
@@ -542,82 +503,12 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
         };
     }, [runtime, state.triggerEventSet]);
 
-    // Activity hides a kept popup by disconnecting effects, so the leave below never runs; display:none alone would
-    // leave it open in the top layer. Keyed on insertion only: entering or leaving must not hide it.
+    // the effects remount when Activity shows a hidden popup again, which syncs it again
     useLayoutEffect(() => {
-        const el = runtime.container;
-        if (!el || !state.isInsert) {
-            return undefined;
-        }
-        return () => el.hidePopover();
-    }, [runtime, state.isInsert]);
+        foundation.syncPopup();
+    }, [foundation, state.isInsert, state.transitionState]);
 
-    useLayoutEffect(() => {
-        const el = runtime.container;
-        if (!el || !state.isInsert) {
-            return undefined;
-        }
-        if (state.transitionState === 'enter') {
-            // reopened during its exit animation, it is still shown
-            if (!el.matches(':popover-open')) {
-                el.showPopover();
-            }
-            foundation.handleShown();
-            // read right after showPopover() to see the enter animation it started
-            const entering = el.getAnimations();
-            let cancelled = false;
-            // `:hover` is not updated yet in the mouseenter task; handleOpened's hover check runs a task later
-            const timer = setTimeout(() => {
-                foundation.handleOpened();
-                void Promise.allSettled(entering.map((animation) => animation.finished)).then(() => {
-                    // a hover popup that backed out in handleOpened, or one closed meanwhile, is leaving
-                    if (!cancelled && foundation.getState('transitionState') === 'enter') {
-                        didOpen();
-                    }
-                });
-            });
-            return () => {
-                cancelled = true;
-                clearTimeout(timer);
-            };
-        }
-        if (state.transitionState !== 'leave') {
-            return undefined;
-        }
-        // The exit animation plays while the popup is still open, so it keeps the top layer; it hides once that ends.
-        // Read right after the commit that dropped the show class; cancelled ones settle too.
-        const exits = el.getAnimations();
-        if (!exits.length) {
-            // useFoundation's layout effects run first and may have reopened it in this commit (a controlled `visible`
-            // back to true); that popup is opening, not closing
-            if (foundation.getState('transitionState') === 'leave') {
-                el.hidePopover();
-                didLeave();
-            }
-            return undefined;
-        }
-        let reopened = false;
-        void Promise.allSettled(exits.map((animation) => animation.finished)).then(() => {
-            // show() moves the foundation state to 'enter' at once, but `reopened` only at the commit, which a
-            // timer-driven show() leaves to a later task; the exits can settle in between
-            if (!reopened && foundation.getState('transitionState') === 'leave') {
-                el.hidePopover();
-                didLeave();
-            }
-        });
-        return () => {
-            reopened = true;
-        };
-    }, [runtime, foundation, state.isInsert, state.transitionState]);
-
-    useLayoutEffect(() => {
-        if (!isOpen) {
-            return undefined;
-        }
-        return openLayer({ element: runtime.container, modal: false, onEscape: foundation.handleEscape });
-    }, [isOpen, runtime, foundation]);
-
-    // handleShown measured the popup before its content mounted: a top popup placed by a zero height would hang over
+    // syncPopup measured the popup before its content mounted: a top popup placed by a zero height would hang over
     // the trigger and take the next click until the resize observer runs
     useLayoutEffect(() => {
         if (contentShown) {
@@ -631,18 +522,9 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
         }
     }, [isOpen, contentShown, warnsUnnamedDialog, runtime]);
 
-    useEffect(() => {
-        const timer = setTimeout(foundation.updateStateIfCursorOnTrigger);
-        return () => clearTimeout(timer);
-    }, [foundation]);
-
-    useEffect(() => {
-        warning(mouseLeaveDelay < mouseEnterDelay, strings.LEAVE_DELAY_WARNING);
-    }, [mouseEnterDelay, mouseLeaveDelay]);
-
     useRealUnmount(() => {
-        if (runtime.isPopupRemoved() && runtime.takePendingClose()) {
-            props.afterClose?.();
+        if (runtime.isPopupRemoved()) {
+            foundation.handleUnmount();
         }
     });
 

@@ -1,10 +1,28 @@
-import { describe, expect, it, vi } from 'vite-plus/test';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import TooltipFoundation, { type TooltipAdapter, type TooltipBaseProps, type TooltipBaseState } from '../foundation';
+
+const created: TooltipFoundation[] = [];
+
+beforeEach(() => {
+    vi.useFakeTimers();
+});
+
+afterEach(() => {
+    for (const foundation of created.splice(0)) {
+        foundation.destroy();
+    }
+    document.body.replaceChildren();
+    vi.useRealTimers();
+});
 
 function createFoundation(initialProps: TooltipBaseProps = {}) {
     const props: TooltipBaseProps = { trigger: 'click', ...initialProps };
+    // in the document: the focus checks read the active element of the popup's tree
+    const popup = document.createElement('div');
+    document.body.append(popup);
     let state = TooltipFoundation.getInitialState();
     let clickOutsideHandler: ((e: MouseEvent) => void) | undefined;
+    let animations: Promise<void> | null = null;
     const adapter = {
         getProp: (key: string) => props[key],
         getProps: () => props,
@@ -22,17 +40,27 @@ function createFoundation(initialProps: TooltipBaseProps = {}) {
         isEventInTrigger: () => false,
         isEventInPopup: () => false,
         notifyClickOutSide: vi.fn<(e: MouseEvent) => void>(),
-        insertPortal: vi.fn<() => void>(() => adapter.setState({ isInsert: true, transitionState: 'enter', visible: true })),
-        removePortal: vi.fn<() => void>(() => adapter.setState({ isInsert: false, transitionState: '' })),
+        insertPortal: vi.fn<TooltipAdapter['insertPortal']>(() => ({ portalTarget: null, colorScheme: undefined })),
+        removePortal: vi.fn<() => void>(),
+        showPopover: vi.fn<() => void>(),
+        hidePopover: vi.fn<() => void>(),
+        waitAnimations: () => animations,
+        notifyAfterOpen: vi.fn<() => void>(),
+        notifyAfterClose: vi.fn<() => void>(),
         getPopupId: () => 'popup',
-        getPortalContainer: (): HTMLElement | null => null,
+        getPortalContainer: (): HTMLElement | null => popup,
         getTriggerNode: () => null,
+        getTriggerRect: () => null,
+        getTriggerElement: () => null,
+        observeTrigger: () => {},
+        unobserveTrigger: () => {},
         setInitialFocus: () => {},
         notifyOpen: vi.fn<() => void>(),
         isTriggerHovered: () => true,
         notifyVisibleChange: vi.fn<(visible: boolean) => void>(),
     };
     const foundation = new TooltipFoundation(adapter as unknown as TooltipAdapter);
+    created.push(foundation);
     foundation.init();
     const setVisible = (visible?: boolean) => {
         const prev = { ...props };
@@ -44,9 +72,25 @@ function createFoundation(initialProps: TooltipBaseProps = {}) {
         clickOutsideHandler?.(event);
         return event;
     };
+    // the host's commit: syncs the new phase, and the opening's hover check runs a task later
+    const commit = () => {
+        foundation.syncPopup();
+        vi.advanceTimersByTime(0);
+    };
+    // the next waitAnimations() hands out a promise the test settles
+    const animate = () => {
+        const { promise, resolve } = Promise.withResolvers<void>();
+        animations = promise;
+        return async () => {
+            animations = null;
+            resolve();
+            await promise;
+        };
+    };
     // closing marks the popup as leaving
     const closes = () => adapter.setState.mock.calls.filter(([partial]) => partial.transitionState === 'leave').length;
-    return { foundation, adapter, setVisible, pressOutside, closes };
+    const getState = () => state;
+    return { foundation, adapter, setVisible, pressOutside, commit, animate, closes, getState };
 }
 
 describe('show', () => {
@@ -71,16 +115,15 @@ describe('show', () => {
     });
 
     it('destroy 与 init 之间保持打开：不重复打开，点击外部仍能关闭', () => {
-        const { foundation, adapter, pressOutside, closes } = createFoundation();
-        adapter.getPortalContainer = () => document.createElement('div');
+        const { foundation, adapter, pressOutside, commit, closes } = createFoundation();
 
         foundation.show();
-        foundation.handleOpened();
+        commit();
         foundation.destroy();
         expect(closes()).toBe(0);
         foundation.init();
         foundation.show();
-        foundation.handleOpened();
+        commit();
         expect(adapter.insertPortal).toHaveBeenCalledTimes(1);
         expect(adapter.notifyOpen).toHaveBeenCalledTimes(1);
         expect(adapter.notifyVisibleChange.mock.calls).toEqual([[true]]);
@@ -90,21 +133,21 @@ describe('show', () => {
     });
 
     it('受控 visible 为 false 时 show 只请求打开，使用方回写后打开且不重复报告', () => {
-        const { foundation, adapter, setVisible } = createFoundation({ visible: false });
+        const { foundation, adapter, setVisible, commit } = createFoundation({ visible: false });
         foundation.show();
         foundation.show();
         expect(adapter.insertPortal).not.toHaveBeenCalled();
         expect(adapter.notifyVisibleChange.mock.calls).toEqual([[true], [true]]);
 
         setVisible(true);
-        foundation.handleOpened();
+        commit();
         expect(adapter.insertPortal).toHaveBeenCalledTimes(1);
         expect(adapter.notifyVisibleChange).toHaveBeenCalledTimes(2);
     });
 
     it('受控 visible 为 true 时 hide 只请求关闭，使用方回写后关闭且不重复报告', () => {
-        const { foundation, adapter, setVisible, closes } = createFoundation({ visible: true });
-        foundation.handleOpened();
+        const { foundation, adapter, setVisible, commit, closes } = createFoundation({ visible: true });
+        commit();
         expect(adapter.notifyVisibleChange).not.toHaveBeenCalled();
         foundation.hide();
         foundation.hide();
@@ -117,10 +160,10 @@ describe('show', () => {
     });
 
     it('受控时使用方自行打开和关闭都不报告', () => {
-        const { foundation, adapter, setVisible, closes } = createFoundation({ visible: false });
+        const { adapter, setVisible, commit, closes } = createFoundation({ visible: false });
 
         setVisible(true);
-        foundation.handleOpened();
+        commit();
         expect(adapter.insertPortal).toHaveBeenCalledTimes(1);
         setVisible(false);
         expect(closes()).toBe(1);
@@ -128,13 +171,13 @@ describe('show', () => {
     });
 
     it('使用方拒绝打开请求后自行打开再关闭，弹层照常开合且都不报告', () => {
-        const { foundation, adapter, setVisible, closes } = createFoundation({ visible: false });
+        const { foundation, adapter, setVisible, commit, closes } = createFoundation({ visible: false });
         foundation.show();
         adapter.notifyVisibleChange.mockClear();
 
         // visible stays false while the request is rejected, so hosts never re-enter the prop handler
         setVisible(true);
-        foundation.handleOpened();
+        commit();
         expect(adapter.insertPortal).toHaveBeenCalledTimes(1);
         setVisible(false);
         expect(closes()).toBe(1);
@@ -142,9 +185,9 @@ describe('show', () => {
     });
 
     it('非受控时 show 与 hide 直接开关并报告', () => {
-        const { foundation, adapter, closes } = createFoundation();
+        const { foundation, adapter, commit, closes } = createFoundation();
         foundation.show();
-        foundation.handleOpened();
+        commit();
         foundation.hide();
         expect(adapter.insertPortal).toHaveBeenCalledTimes(1);
         expect(closes()).toBe(1);
@@ -159,12 +202,102 @@ describe('show', () => {
     });
 });
 
+describe('syncPopup', () => {
+    it('进场：showPopover 之后，进场动画结束时报告一次 afterOpen', async () => {
+        const { foundation, adapter, commit, animate } = createFoundation();
+        foundation.show();
+        const finish = animate();
+        commit();
+        expect(adapter.showPopover).toHaveBeenCalledTimes(1);
+        expect(adapter.notifyAfterOpen).not.toHaveBeenCalled();
+
+        await finish();
+        commit();
+        expect(adapter.notifyAfterOpen).toHaveBeenCalledTimes(1);
+    });
+
+    it('悬停打开时指针已离开，弹层收回且不报告 afterOpen', () => {
+        const { foundation, adapter, commit, closes } = createFoundation({ trigger: 'hover' });
+        adapter.isTriggerHovered = () => false;
+        foundation.show();
+        commit();
+        expect(closes()).toBe(1);
+        expect(adapter.notifyOpen).not.toHaveBeenCalled();
+        expect(adapter.notifyAfterOpen).not.toHaveBeenCalled();
+    });
+
+    it('离场：动画结束后 hidePopover、卸载弹层并报告 afterClose', async () => {
+        const { foundation, adapter, commit, animate, getState } = createFoundation();
+        foundation.show();
+        commit();
+        foundation.hide();
+        const finish = animate();
+        commit();
+        expect(adapter.hidePopover).not.toHaveBeenCalled();
+
+        await finish();
+        expect(adapter.hidePopover).toHaveBeenCalledTimes(1);
+        expect(adapter.removePortal).toHaveBeenCalledTimes(1);
+        expect(getState().isInsert).toBe(false);
+        expect(adapter.notifyAfterClose).toHaveBeenCalledTimes(1);
+    });
+
+    it('keepDOM 时离场后保留弹层', () => {
+        const { foundation, adapter, commit, getState } = createFoundation({ keepDOM: true });
+        foundation.show();
+        commit();
+        foundation.hide();
+        commit();
+        expect(adapter.hidePopover).toHaveBeenCalledTimes(1);
+        expect(adapter.removePortal).not.toHaveBeenCalled();
+        expect(getState().isInsert).toBe(true);
+        expect(adapter.notifyAfterClose).toHaveBeenCalledTimes(1);
+    });
+
+    it('离场中重新打开：旧的离场作废，不报告 afterClose', async () => {
+        const { foundation, adapter, commit, animate } = createFoundation();
+        foundation.show();
+        commit();
+        foundation.hide();
+        const finish = animate();
+        commit();
+        foundation.show();
+        commit();
+        await finish();
+        expect(adapter.hidePopover).not.toHaveBeenCalled();
+        expect(adapter.notifyAfterClose).not.toHaveBeenCalled();
+        // the reopening is an opening of its own
+        expect(adapter.notifyAfterOpen).toHaveBeenCalledTimes(2);
+    });
+
+    it('destroy 作废等待中的动画', async () => {
+        const { foundation, adapter, commit, animate } = createFoundation();
+        foundation.show();
+        const finish = animate();
+        commit();
+        foundation.destroy();
+        await finish();
+        expect(adapter.notifyAfterOpen).not.toHaveBeenCalled();
+    });
+
+    it('handleUnmount 补报一次尚未报告的 afterClose', () => {
+        const { foundation, adapter, commit } = createFoundation();
+        foundation.handleUnmount();
+        expect(adapter.notifyAfterClose).not.toHaveBeenCalled();
+
+        foundation.show();
+        commit();
+        foundation.handleUnmount();
+        foundation.handleUnmount();
+        expect(adapter.notifyAfterClose).toHaveBeenCalledTimes(1);
+    });
+});
+
 describe('handleClickOutside', () => {
     const openPopup = (props: TooltipBaseProps) => {
-        const created = createFoundation(props);
-        created.adapter.getPortalContainer = () => document.createElement('div');
-        created.foundation.show();
-        return created;
+        const opened = createFoundation(props);
+        opened.foundation.show();
+        return opened;
     };
 
     it.each<TooltipBaseProps>([{ trigger: 'click' }, { trigger: 'contextMenu' }, { trigger: 'hover', clickTriggerToHide: true }, { trigger: 'custom', clickTriggerToHide: true }])('%o 时在外部按下先报告再关闭', (props) => {
@@ -221,10 +354,10 @@ describe('handleOpened', () => {
         trigger.dataset.popupid = popupIds;
         document.body.append(trigger);
         trigger.focus();
-        const { foundation, adapter, closes } = createFoundation({ trigger: 'hover' });
+        const { foundation, adapter, commit, closes } = createFoundation({ trigger: 'hover' });
         adapter.isTriggerHovered = () => false;
         foundation.show();
-        foundation.handleOpened();
+        commit();
         trigger.remove();
         expect(closes()).toBe(kept ? 0 : 1);
     });

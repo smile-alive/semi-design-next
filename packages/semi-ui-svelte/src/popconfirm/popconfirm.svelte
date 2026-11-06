@@ -82,9 +82,6 @@
     let popover = $state<Popover>();
     let footer = $state.raw<HTMLDivElement | null>(null);
 
-    // Tooltip mounts the card only once it shows, so a focus request waits for the footer to exist
-    let pendingFocus: 'cancel' | 'ok' | null = null;
-
     // Tooltip focuses its initial target after the card opens, which would override a button focused here, so the
     // button is handed to Tooltip too; the content's target is used only when no button wins
     let tooltipFocus: ((target: FocusTarget) => void) | undefined;
@@ -129,16 +126,9 @@
                 visible = next;
                 onVisibleChange?.(next);
             },
-            focusCancelButton: () => {
-                pendingFocus = 'cancel';
-                applyFocus();
-            },
-            focusOkButton: () => {
-                pendingFocus = 'ok';
-                applyFocus();
-            },
+            getFooter: () => footer,
+            setInitialFocus: (button) => tooltipFocus?.(button),
             focusPrevFocusElement: () => {
-                pendingFocus = null;
                 // focus that already left the card (Tab away from a focus trigger) stays where it went
                 if (FocusTrapHandle.shouldRestoreFocus(popover?.getPopup(), false)) popover?.focusTrigger();
             },
@@ -168,18 +158,10 @@
     const cancelProps = $derived(footerButton('cancel', cancelButtonProps));
     const okProps = $derived(footerButton('ok', okButtonProps));
 
-    const applyFocus = () => {
-        if (!footer) {
-            return;
-        }
-        if (pendingFocus) {
-            const button = footer.querySelector<HTMLElement>(`[data-type=${pendingFocus}]`);
-            button?.focus({ preventScroll: true });
-            if (button) tooltipFocus?.(button);
-            pendingFocus = null;
-        } else if (contentFocus) {
-            tooltipFocus?.(contentFocus);
-        }
+    // the content's target first, so a pending autoFocus button handed over by the foundation replaces it
+    const handleFooterMounted = () => {
+        if (contentFocus) tooltipFocus?.(contentFocus);
+        foundation.handleFooterMounted();
     };
 
     const holdFocusRef = (initialFocusRef: RenderContentProps['initialFocusRef']): Attachment<HTMLDivElement> => {
@@ -203,7 +185,7 @@
 
     $effect(() => {
         if (footer) {
-            untrack(applyFocus);
+            untrack(handleFooterMounted);
         } else {
             contentFocus = undefined;
         }

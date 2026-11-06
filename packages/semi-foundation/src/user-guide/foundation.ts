@@ -1,25 +1,36 @@
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
+import { coversPage } from '../utils/dom';
+import ModalResources from '../utils/modal-resources';
 import { numbers } from './constants';
 
-export interface UserGuideAdapter<P extends UserGuideBaseProps = UserGuideBaseProps> extends DefaultAdapter<P, UserGuideBaseState> {
+/** What the guide reads around it: ConfigProvider's popup container, which the guide's own prop overrides */
+export interface UserGuideContext {
+    getPopupContainer?: () => HTMLElement;
+}
+
+export interface UserGuideAdapter<P extends UserGuideBaseProps = UserGuideBaseProps> extends DefaultAdapter<P, UserGuideBaseState, UserGuideContext> {
     notifyChange: (current: number) => void;
     notifyPrev: (current: number) => void;
     notifyNext: (current: number) => void;
     notifySkip: () => void;
     notifyFinish: () => void;
-    disabledBodyScroll: () => void;
-    enabledBodyScroll: () => void;
+    /** The card of a popup step; null while none is rendered */
+    getPopup: () => HTMLElement | null | undefined;
 }
 
 export interface UserGuideStepBase {
     target?: Element | (() => Element | null | undefined) | null;
     spotlightPadding?: number;
+    mask?: boolean;
 }
 
 export interface UserGuideBaseProps {
     current?: number;
     spotlightPadding?: number;
     steps: UserGuideStepBase[];
+    mode?: 'popup' | 'modal';
+    mask?: boolean;
+    getPopupContainer?: () => HTMLElement;
 }
 
 export interface UserGuideBaseState {
@@ -28,6 +39,7 @@ export interface UserGuideBaseState {
 }
 
 export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuideBaseProps> extends BaseFoundation<UserGuideAdapter<P>, P, UserGuideBaseState> {
+    readonly #resources = new ModalResources();
     static override readonly propKeys = ['current'];
 
     #getCurrent() {
@@ -96,7 +108,7 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
     }
 
     override destroy() {
-        this.adapter.enabledBodyScroll();
+        this.#resources.release();
     }
 
     // state mirrors a controlled current, so going uncontrolled continues from the last controlled step
@@ -116,13 +128,30 @@ export default class UserGuideFoundation<P extends UserGuideBaseProps = UserGuid
         }
     };
 
+    /**
+     * Hosts call this while a step is on screen, again when the step's mask or the mode changes. Only a popup guide
+     * covers the page with its mask and locks scroll; a modal guide is locked by its Modal. The guide is never modal.
+     */
     beforeShow = () => {
-        this.adapter.disabledBodyScroll();
+        const { mode, mask, steps, getPopupContainer } = this.getProps();
+        const showMask = steps[this.#getCurrent()]?.mask ?? mask;
+        const lockScroll = mode === 'popup' && Boolean(showMask) && coversPage(getPopupContainer ?? this.getContext('getPopupContainer'));
+        this.#resources.hold({ modal: false, lockScroll, preventScroll: true });
     };
 
     // the scroll lock follows whether a step is on screen, which can end while the guide is still visible
     releaseScroll = () => {
-        this.adapter.enabledBodyScroll();
+        this.#resources.release();
+    };
+
+    /** Remembers the element to return focus to when a popup step leaves the screen; a modal guide gets this from Modal */
+    recordFocus = () => {
+        this.#resources.record();
+    };
+
+    /** Returns focus only if it is still on the card (or lost with it), so a user who clicked elsewhere stays there */
+    restoreFocus = () => {
+        this.#resources.restoreFocus(this.adapter.getPopup());
     };
 
     afterHide = () => {

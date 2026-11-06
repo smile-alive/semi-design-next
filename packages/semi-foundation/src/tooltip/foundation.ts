@@ -1,17 +1,33 @@
 import type { FocusableElement } from 'tabbable';
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
 import FocusTrapHandle from '../utils/focus-handle';
+import { openLayer } from '../utils/layer';
+import PopupLifecycle from '../utils/popup-lifecycle';
+import ReleaseHolder from '../utils/release-holder';
 import type { ArrayElement } from '../utils/type';
+import warning from '../utils/warning';
 import { adjustPosition } from './adjust-position';
-import { numbers, popupTriggerSelector, type strings, TRIGGER_EVENT_NAMES as eventNames } from './constants';
+import { numbers, popupTriggerSelector, strings, TRIGGER_EVENT_NAMES as eventNames } from './constants';
 
 export interface TooltipAdapter<P extends TooltipBaseProps = TooltipBaseProps> extends DefaultAdapter<P, TooltipBaseState> {
     /** Reports a visibility change, or under a controlled `visible` a request the owner decides on */
     notifyVisibleChange(isVisible: boolean): void;
-    /** Mounts the popup DOM node and marks it as entering; a layout effect calls `showPopover()` once it commits */
-    insertPortal(): void;
-    /** Unmounts the popup DOM node (the non-keepDOM close path) */
+    /** Resolves, from the trigger, where the popup mounts and the color scheme around it; the foundation then inserts it */
+    insertPortal(): Pick<TooltipBaseState, 'portalTarget' | 'colorScheme'>;
+    /** Drops what the host renders into the popup itself (its content), right before the foundation unmounts the popup */
     removePortal(): void;
+    /** Shows the popup in the top layer, unless it is still open (reopened during its exit animation) */
+    showPopover(): void;
+    hidePopover(): void;
+    /**
+     * Settles once the popup's running animations finish or are cancelled, read when called; null when none runs, so
+     * the step finishes at once
+     */
+    waitAnimations(): Promise<unknown> | null;
+    /** Once per opening, after the enter animation; not for an opening closed before it finishes */
+    notifyAfterOpen(): void;
+    /** Once per opening, after the popup left or when the component unmounts while it is shown */
+    notifyAfterClose(): void;
     /** Binds `handler` to every mousedown in the window until `unregisterClickOutsideHandler` */
     registerClickOutsideHandler(handler: (e: MouseEvent) => void): void;
     unregisterClickOutsideHandler(): void;
@@ -85,14 +101,14 @@ export interface TooltipBaseProps {
 
 export interface TooltipBaseState {
     isInsert: boolean;
-    /** 'leave' makes a layout effect call `hidePopover()`, which keeps the popup mounted (unmounting is `removePortal`'s job) */
+    /** The popup's phase, which `syncPopup` acts on after each commit */
     transitionState: 'enter' | 'leave' | '';
     triggerEventSet: Record<string, any>;
     portalEventSet: Record<string, any>;
     visible: boolean;
-    /** Where the popup mounts, resolved by the host's `insertPortal` from the trigger */
+    /** Where the popup mounts, resolved by the adapter's `insertPortal` from the trigger */
     portalTarget: HTMLElement | ShadowRoot | null;
-    /** The color scheme class of the area around the trigger, resolved by the host's `insertPortal` */
+    /** The color scheme class of the area around the trigger, resolved by the adapter's `insertPortal` */
     colorScheme: string | undefined;
 }
 
@@ -106,10 +122,20 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
     #timer: ReturnType<typeof setTimeout>;
     #mounted: boolean;
     #isClickToHide = false;
-    // From show() until hide(), including before `handleOpened`; `visible` only turns true after it
+    // From show() until hide(), including before `#handleOpened`; `visible` only turns true after it
     #open = false;
-    // a popup shown again after a hide (Activity, KeepAlive) runs handleOpened again but is not a new opening
+    // a popup shown again after a hide (Activity, KeepAlive) runs #handleOpened again but is not a new opening
     #openReported = false;
+    // #handleOpened runs once per showing, though a host may sync the same phase again (a new popup element)
+    #openedHandled = false;
+    readonly #lifecycle = new PopupLifecycle();
+    // the non-modal overlay layer: takes Escape while on top, and a Modal opened before it leaves it interactive
+    readonly #layer = new ReleaseHolder();
+    // bumped by every syncPopup and by destroy: a wait or timer of an older phase is stale
+    #syncStep = 0;
+    #openTimer: ReturnType<typeof setTimeout> | undefined;
+    #cursorTimer: ReturnType<typeof setTimeout> | undefined;
+    #focusTrap: FocusTrapHandle | null = null;
     // the last request made to a controlled owner; applying it skips the hover or focus delay already waited out
     #requestedVisible: boolean | undefined;
     // decided when the click-outside listener is bound: a custom trigger only reports the press
@@ -124,7 +150,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
     // The viewport's top band a fixed page header covers. The top layer paints over any z-index, so the popup instead
     // keeps out of the band and hides once its trigger is under it. Read once per opening.
     #insetTop = 0;
-    static override readonly propKeys = ['trigger', 'clickToHide', 'visible', 'position', 'condition'];
+    static override readonly propKeys = ['trigger', 'clickToHide', 'visible', 'position', 'condition', 'mouseEnterDelay', 'mouseLeaveDelay'];
 
     constructor(adapter: TooltipAdapter<P>) {
         super(adapter);
@@ -206,8 +232,111 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         }
     }
 
-    #closePopup() {
-        this.setState({ transitionState: 'leave', visible: false });
+    #removePortal() {
+        this.adapter.removePortal();
+        this.setState({ isInsert: false, transitionState: '' });
+    }
+
+    #warnLeaveDelay() {
+        const { mouseEnterDelay, mouseLeaveDelay } = this.getProps();
+        warning((mouseLeaveDelay ?? 0) < (mouseEnterDelay ?? 0), strings.LEAVE_DELAY_WARNING);
+    }
+
+    // Runs `step` once `wait` settles, unless a later sync or a destroy made this phase stale
+    #afterAnimations(wait: Promise<unknown> | null, step: () => void) {
+        const current = this.#syncStep;
+        const run = () => {
+            if (current === this.#syncStep) {
+                step();
+            }
+        };
+        if (wait) {
+            void wait.then(run);
+        } else {
+            run();
+        }
+    }
+
+    #updateStateIfCursorOnTrigger() {
+        if (this.adapter.isTriggerHovered()) {
+            this.getState('triggerEventSet')[eventNames.mouseEnter]?.();
+        }
+    }
+
+    // positions the popup and keeps it beside the trigger until it closes
+    #handleShown() {
+        if (!this.#stopTracking) {
+            this.#startTracking();
+        }
+        this.calcPosition();
+    }
+
+    // Runs once per showing, again when a hidden popup is shown again; a hover popup can still back out here if the
+    // pointer already left. The opening is reported only the first time.
+    #handleOpened() {
+        if (!this.#open) {
+            return;
+        }
+        // a controlled owner that shows the popup decides when it closes, not where the pointer is
+        if (this.getProp('trigger') === 'hover' && this.getProp('visible') !== true) {
+            // a focus may already have moved on (ArrowDown into the popup) or still count as current;
+            // disableFocusListener covers neither
+            const activeElement = this.#getActiveElement();
+            // the focus may be on a control inside the trigger element (the input of a Switch)
+            const focusOpened = !this.getProp('disableFocusListener') && activeElement?.closest?.(popupTriggerSelector(this.adapter.getPopupId())) != null;
+            const focusInPopup = Boolean(this.adapter.getPortalContainer()?.contains(activeElement));
+            if (!this.adapter.isTriggerHovered() && !focusOpened && !focusInPopup) {
+                this.hide();
+                return;
+            }
+        }
+        if (this.#openReported) {
+            return;
+        }
+        this.#openReported = true;
+        this.adapter.setInitialFocus();
+        this.adapter.notifyOpen();
+        this.#reportVisibleChange(true);
+    }
+
+    #enter() {
+        // before showPopover(): the content mounts on beforetoggle and may take focus
+        this.#layer.hold(() => openLayer({ element: this.adapter.getPortalContainer(), modal: false, onEscape: this.handleEscape }));
+        this.adapter.showPopover();
+        this.#handleShown();
+        // read right after showPopover() to see the enter animation it started
+        const entering = this.adapter.waitAnimations();
+        // `:hover` is not updated yet in the mouseenter task, so the hover check of #handleOpened runs a task later
+        this.#openTimer = setTimeout(() => {
+            if (!this.#openedHandled) {
+                this.#openedHandled = true;
+                this.#handleOpened();
+            }
+            // a hover popup that backed out in #handleOpened, or one closed meanwhile, is leaving
+            this.#afterAnimations(entering, () => {
+                if (this.getState('transitionState') === 'enter') {
+                    this.#lifecycle.entered(() => this.adapter.notifyAfterOpen());
+                }
+            });
+        });
+    }
+
+    // The exit animation plays while the popup is still open, so it keeps the top layer; it hides once that ends.
+    // Read right after the commit that dropped the show class; cancelled animations settle too.
+    #leave() {
+        // released at the commit, not at hide(): a close and a reopen in one task (focus moving from the trigger into
+        // the popup) commit no leave, and the popup keeps its layer
+        this.#layer.release();
+        this.#afterAnimations(this.adapter.waitAnimations(), () => {
+            if (this.getState('transitionState') !== 'leave') {
+                return;
+            }
+            this.adapter.hidePopover();
+            if (!this.getProp('keepDOM')) {
+                this.#removePortal();
+            }
+            this.#lifecycle.ended(() => this.adapter.notifyAfterClose());
+        });
     }
 
     // window-level: bound only while shown, or one click would fire every instance's handler
@@ -344,26 +473,6 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         return FocusTrapHandle.getActiveElement(this.adapter.getPortalContainer() ?? this.adapter.getTriggerNode());
     }
 
-    #handleContainerTabKeyDown(focusableElements: FocusableElement[], event: Pick<KeyboardEvent, 'preventDefault'>) {
-        const { preventScroll } = this.getProps();
-        const activeElement = this.#getActiveElement();
-        const isLastCurrentFocus = focusableElements.at(-1) === activeElement;
-        if (isLastCurrentFocus) {
-            focusableElements[0].focus({ preventScroll });
-            event.preventDefault();
-        }
-    }
-
-    #handleContainerShiftTabKeyDown(focusableElements: FocusableElement[], event: Pick<KeyboardEvent, 'preventDefault'>) {
-        const { preventScroll } = this.getProps();
-        const activeElement = this.#getActiveElement();
-        const isFirstCurrentFocus = focusableElements[0] === activeElement;
-        if (isFirstCurrentFocus) {
-            focusableElements.at(-1).focus({ preventScroll });
-            event.preventDefault();
-        }
-    }
-
     #handleTriggerArrowDownKeydown(focusableElements: FocusableElement[], event: Pick<KeyboardEvent, 'preventDefault'>) {
         const { preventScroll } = this.getProps();
         focusableElements[0].focus({ preventScroll });
@@ -431,6 +540,10 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         );
         if (popup) {
             resizeObserver.observe(popup);
+            // guardFocus is read once per opening
+            if (this.getProp('guardFocus')) {
+                this.#focusTrap = new FocusTrapHandle(popup, { preventScroll: this.getProp('preventScroll') });
+            }
         }
         this.adapter.observeTrigger(resizeObserver);
         this.adapter.observeTrigger(intersectionObserver);
@@ -440,6 +553,8 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         }
         Tooltip.#tracking.add(this);
         this.#stopTracking = () => {
+            this.#focusTrap?.destroy();
+            this.#focusTrap = null;
             this.adapter.unobserveTrigger(resizeObserver);
             this.adapter.unobserveTrigger(intersectionObserver);
             resizeObserver.disconnect();
@@ -718,6 +833,10 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         return style;
     }
 
+    protected override initOnce() {
+        this.#warnLeaveDelay();
+    }
+
     static getInitialState(): TooltipBaseState {
         return { isInsert: false, transitionState: '', triggerEventSet: {}, portalEventSet: {}, visible: false, portalTarget: null, colorScheme: undefined };
     }
@@ -725,8 +844,10 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
     override init() {
         this.#mounted = true;
         this.#bindEvent();
-        // shown again with the popup still open (StrictMode replay, Activity, KeepAlive): the host shows it again and
-        // calls handleOpened, which closes a hover popup the pointer left meanwhile
+        this.#cursorTimer = setTimeout(() => this.#updateStateIfCursorOnTrigger());
+        // shown again with the popup still open (StrictMode replay, Activity, KeepAlive): the host syncs the popup
+        // again, and #handleOpened closes a hover popup the pointer left meanwhile
+        this.#openedHandled = false;
         if (!this.#open) {
             this.#shouldShow();
             return;
@@ -740,10 +861,19 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
     }
 
     override destroy() {
+        this.#syncStep++;
+        clearTimeout(this.#openTimer);
+        clearTimeout(this.#cursorTimer);
+        this.#layer.release();
+        // React's Activity hides a kept popup by disconnecting effects, and display:none alone would leave it open
+        // in the top layer
+        if (this.getState('isInsert')) {
+            this.adapter.hidePopover();
+        }
         // A hidden popup keeps its open state (the host hides it with the subtree); a leave cut short by hiding would
         // never remove it, so that is finished here.
         if (this.getState('transitionState') === 'leave' && !this.getProp('keepDOM')) {
-            this.adapter.removePortal();
+            this.#removePortal();
         }
         this.#mounted = false;
         this.#requestedVisible = undefined;
@@ -757,7 +887,10 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         if (!this.#mounted) {
             return;
         }
-        const { trigger, clickToHide, visible, position, condition } = this.getProps();
+        const { trigger, clickToHide, visible, position, condition, mouseEnterDelay, mouseLeaveDelay } = this.getProps();
+        if (prev.mouseEnterDelay !== mouseEnterDelay || prev.mouseLeaveDelay !== mouseLeaveDelay) {
+            this.#warnLeaveDelay();
+        }
         if (prev.trigger !== trigger || prev.clickToHide !== clickToHide) {
             this.#rebindEvents();
         }
@@ -773,15 +906,29 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         }
     }
 
-    removePortal = () => {
-        this.adapter.removePortal();
+    /**
+     * Hosts call this after every commit that changes `isInsert`, `transitionState` or the popup element, and again
+     * when a hidden popup shows again (Activity, KeepAlive), with the popup in the document. Entering shows the
+     * popover, positions it, checks a hover opening a task later and reports afterOpen once the enter animation ends;
+     * leaving waits for the exit animation, hides the popover, unmounts it unless keepDOM and reports afterClose.
+     */
+    syncPopup = () => {
+        this.#syncStep++;
+        clearTimeout(this.#openTimer);
+        if (!this.getState('isInsert') || !this.adapter.getPortalContainer()) {
+            return;
+        }
+        const phase = this.getState('transitionState');
+        if (phase === 'enter') {
+            this.#enter();
+        } else if (phase === 'leave') {
+            this.#leave();
+        }
     };
 
-    updateStateIfCursorOnTrigger = () => {
-        if (this.adapter.isTriggerHovered()) {
-            const triggerEventSet = this.getState('triggerEventSet');
-            triggerEventSet[eventNames.mouseEnter]?.();
-        }
+    /** Hosts call this when the component unmounts for good, not when it is only hidden: reports a close still owed */
+    handleUnmount = () => {
+        this.#lifecycle.ended(() => this.adapter.notifyAfterClose());
     };
 
     delayShow() {
@@ -805,47 +952,12 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         }
         this.#open = true;
         this.#openReported = false;
+        this.#openedHandled = false;
+        this.#lifecycle.show();
         this.#clearDelayTimer();
-        this.adapter.insertPortal();
+        this.setState({ isInsert: true, transitionState: 'enter', visible: true, ...this.adapter.insertPortal() });
         this.#watchClickOutside();
     }
-
-    /** Called once `showPopover()` has been issued for this opening (by the layout effect that reacts to the
-     * mount `insertPortal` requested), and again when a hidden popup is shown again; a hover popup can still back out
-     * here if the pointer already left. The opening is reported only the first time. */
-    handleOpened = () => {
-        if (!this.#open) {
-            return;
-        }
-        // a controlled owner that shows the popup decides when it closes, not where the pointer is
-        if (this.getProp('trigger') === 'hover' && this.getProp('visible') !== true) {
-            // a focus may already have moved on (ArrowDown into the popup) or still count as current;
-            // disableFocusListener covers neither
-            const activeElement = this.#getActiveElement();
-            // the focus may be on a control inside the trigger element (the input of a Switch)
-            const focusOpened = !this.getProp('disableFocusListener') && activeElement?.closest?.(popupTriggerSelector(this.adapter.getPopupId())) != null;
-            const focusInPopup = Boolean(this.adapter.getPortalContainer()?.contains(activeElement));
-            if (!this.adapter.isTriggerHovered() && !focusOpened && !focusInPopup) {
-                this.hide();
-                return;
-            }
-        }
-        if (this.#openReported) {
-            return;
-        }
-        this.#openReported = true;
-        this.adapter.setInitialFocus();
-        this.adapter.notifyOpen();
-        this.#reportVisibleChange(true);
-    };
-
-    /** Hosts call this right after `showPopover()`: positions the popup and keeps it beside the trigger until it closes */
-    handleShown = () => {
-        if (!this.#stopTracking) {
-            this.#startTracking();
-        }
-        this.calcPosition();
-    };
 
     /** Positions an open popup beside its trigger at once, without waiting for a frame */
     calcPosition = () => {
@@ -883,7 +995,7 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         this.#endTracking();
         // a popup still leaving, or kept by keepDOM, is inserted but already closed
         if (wasOpen || this.getState('visible')) {
-            this.#closePopup();
+            this.setState({ transitionState: 'leave', visible: false });
             this.#reportVisibleChange(false);
         }
     };
@@ -906,29 +1018,6 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         }
         this.adapter.notifyEscKeydown(event);
         return true;
-    };
-
-    handleContainerKeydown = (event: Pick<KeyboardEvent, 'key' | 'shiftKey' | 'preventDefault'>) => {
-        const { guardFocus } = this.getProps();
-        switch (event && event.key) {
-            case 'Tab':
-                if (guardFocus) {
-                    const container = this.adapter.getPortalContainer();
-                    const focusableElements = FocusTrapHandle.getFocusableElements(container);
-                    const focusableNum = focusableElements.length;
-
-                    if (focusableNum) {
-                        if (event.shiftKey) {
-                            this.#handleContainerShiftTabKeyDown(focusableElements, event);
-                        } else {
-                            this.#handleContainerTabKeyDown(focusableElements, event);
-                        }
-                    }
-                }
-                break;
-            default:
-                break;
-        }
     };
 
     /**

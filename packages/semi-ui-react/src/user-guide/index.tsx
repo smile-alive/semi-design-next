@@ -1,12 +1,8 @@
 import type React from 'react';
-import { type ReactNode, useId, useLayoutEffect, useRef, useState } from 'react';
+import { type ReactNode, useId, useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
 import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
-import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
 import '@fibrae/semi-foundation/user-guide/user-guide.scss';
 import type { BaseProps } from '../_base/base-component';
 import useDefaultProps from '../_base/use-default-props';
@@ -77,24 +73,6 @@ const defaultProps = {
     zIndex: numbers.DEFAULT_Z_INDEX,
 } satisfies Partial<UserGuideProps>;
 
-class UserGuideRuntime {
-    readonly #scroll = new ReleaseHolder();
-    readonly focusScope = new FocusScope();
-
-    disableBodyScroll(locksBody: boolean) {
-        if (locksBody) {
-            this.#scroll.hold(lockBodyScroll);
-        } else {
-            this.#scroll.release();
-        }
-    }
-
-    // hiding and unmounting both call it; release is idempotent
-    enableBodyScroll() {
-        this.#scroll.release();
-    }
-}
-
 // A non-modal popup step would be reached after the whole page, so its card focuses the primary button on mount.
 // Module level, so the ref runs only on mount.
 function focusOnMount(node: HTMLButtonElement | null) {
@@ -119,7 +97,6 @@ export default function UserGuide(rawProps: UserGuideProps) {
 
     const { locale } = useLocale('UserGuide');
 
-    const [runtime] = useState(() => new UserGuideRuntime());
     const popoverRef = useRef<PopoverHandle>(null);
 
     const [foundation, state] = useFoundation<Foundation, Adapter, UserGuideProps, UserGuideBaseState>(
@@ -127,8 +104,7 @@ export default function UserGuide(rawProps: UserGuideProps) {
         props,
         () => UserGuideFoundation.getInitialState(props),
         (base) => ({
-            disabledBodyScroll: () => runtime.disableBodyScroll(coversPage(base.getProp('getPopupContainer') ?? base.getContext('getPopupContainer'))),
-            enabledBodyScroll: () => runtime.enableBodyScroll(),
+            getPopup: () => popoverRef.current?.getPopup(),
             notifyChange: (current) => base.getProps().onChange?.(current),
             notifyFinish: () => base.getProps().onFinish?.(),
             notifyNext: (current) => base.getProps().onNext?.(current),
@@ -147,15 +123,15 @@ export default function UserGuide(rawProps: UserGuideProps) {
 
     // nothing rendered (popup target not measured yet) must not lock the page or take focus
     const shown = Boolean(visible && step && (mode === 'modal' || spotlightRect));
-    const locksScroll = shown && mode === 'popup' && showMask;
 
+    // mode and showMask are read by the foundation's lock rule
     useLayoutEffect(() => {
-        if (!locksScroll) {
+        if (!shown) {
             return undefined;
         }
         foundation.beforeShow();
         return foundation.releaseScroll;
-    }, [locksScroll, foundation]);
+    }, [shown, mode, showMask, foundation]);
 
     useLayoutEffect(() => {
         if (!visible) {
@@ -169,11 +145,9 @@ export default function UserGuide(rawProps: UserGuideProps) {
         if (!shown || mode !== 'popup') {
             return undefined;
         }
-        runtime.focusScope.record();
-        const popover = popoverRef.current;
-        // a user who clicked elsewhere keeps their focus; an unmounted card holds none
-        return () => runtime.focusScope.restoreIfAllowed(popover?.getPopup(), false, true);
-    }, [shown, mode, runtime]);
+        foundation.recordFocus();
+        return foundation.restoreFocus;
+    }, [shown, mode, foundation]);
 
     useLayoutEffect(() => {
         if (!visible || mode !== 'popup') {

@@ -114,7 +114,6 @@
             @click="click"
             @focusin="stop"
             @focusout="stop"
-            @keydown="foundation.handleContainerKeydown($event)"
             @mousedown="stop"
         >
             <div v-if="contentShown" :class="`${cssClasses.PREFIX}-content`">

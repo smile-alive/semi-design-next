@@ -3,10 +3,6 @@
     import { on } from 'svelte/events';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
     import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
-    import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-    import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-    import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-    import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
     import '@fibrae/semi-foundation/user-guide/user-guide.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
@@ -19,7 +15,7 @@
     import type { UserGuideButtonProps, UserGuideProps, UserGuideStepItem, UserGuideStepSnippetProps } from './interface.js';
     import { anchorStyle, buttonProps } from './utils.js';
 
-    type FoundationProps = Pick<UserGuideProps, 'current' | 'spotlightPadding'> & { steps: UserGuideStepItem[] };
+    type FoundationProps = Pick<UserGuideProps, 'current' | 'spotlightPadding' | 'mode' | 'mask' | 'getPopupContainer'> & { steps: UserGuideStepItem[] };
     type Foundation = UserGuideFoundation<FoundationProps>;
     type Adapter = UserGuideAdapter<FoundationProps>;
 
@@ -60,8 +56,6 @@
     // hide, so an uncontrolled guide restarts from the first step
     let pinned = untrack(() => current !== undefined);
     let written: number | undefined;
-    const scroll = new ReleaseHolder();
-    const focusScope = new FocusScope();
     let popover = $state<Popover>();
     const uid = $props.id();
 
@@ -82,6 +76,15 @@
         get steps() {
             return steps;
         },
+        get mode() {
+            return mode;
+        },
+        get mask() {
+            return mask;
+        },
+        get getPopupContainer() {
+            return getPopupContainer ?? config.getPopupContainer;
+        },
     };
 
     const { foundation, states } = useFoundation<Foundation, Adapter, FoundationProps, UserGuideBaseState>(
@@ -89,9 +92,7 @@
         foundationProps,
         (view) => UserGuideFoundation.getInitialState(view),
         () => ({
-            // Only a popup guide covers the page with its mask; a modal guide is locked by its Modal
-            disabledBodyScroll: () => (mode === 'popup' && showMask && coversPage(getPopupContainer ?? config.getPopupContainer) ? scroll.hold(lockBodyScroll) : scroll.release()),
-            enabledBodyScroll: () => scroll.release(),
+            getPopup: () => popover?.getPopup(),
             // the bindable props are the source of truth: bound, the write reaches the parent; unbound, it overrides locally
             notifyChange: (next) => {
                 written = next;
@@ -140,10 +141,6 @@
     const modalPrevProps = $derived(buttonProps({ type: 'tertiary' }, prevButtonProps, foundation.handlePrev));
     const modalNextProps = $derived(buttonProps({ theme: 'solid' }, nextButtonProps, foundation.handleNext));
 
-    // Restore focus only if it is still on the card (or lost with it), so a user who clicked elsewhere stays there. A
-    // modal guide gets this from its Modal.
-    const restoreFocus = () => focusScope.restoreIfAllowed(popover?.getPopup(), false, true);
-
     watch(
         () => current,
         (value) => {
@@ -177,11 +174,12 @@
         return UserGuideFoundation.trackFrames(() => untrack(() => foundation.measureSpotlight(false)));
     });
 
+    // mode and showMask are read by the foundation's lock rule
     $effect(() => {
         if (!shown) return;
         void showMask;
         void mode;
-        foundation.beforeShow();
+        untrack(() => foundation.beforeShow());
         return foundation.releaseScroll;
     });
 
@@ -196,8 +194,8 @@
 
     $effect(() => {
         if (!(shown && mode === 'popup')) return;
-        focusScope.record();
-        return restoreFocus;
+        untrack(() => foundation.recordFocus());
+        return foundation.restoreFocus;
     });
 </script>
 

@@ -5,10 +5,6 @@ import { cssClasses } from '@fibrae/semi-foundation/side-sheet/constants';
 import SideSheetFoundation, { type SideSheetAdapter, type SideSheetProps, type SideSheetState } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
 import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
 import '@fibrae/semi-foundation/side-sheet/side-sheet.scss';
 import useDefaultProps from '../_base/use-default-props';
 import useDidUpdate from '../_base/use-did-update';
@@ -61,39 +57,22 @@ const defaultProps = {
 } satisfies Partial<SideSheetReactProps>;
 
 class SideSheetRuntime {
-    // shown or leaving: an unmount in this period still reports afterVisibleChange(false)
-    #shown = false;
-    readonly scroll = new ReleaseHolder();
-    readonly layer = new ReleaseHolder();
     root: HTMLDivElement | null = null;
+    // Kept after the ref detaches. A real unmount removes it from the portal element; Activity only hides it, and
+    // Portal detaches the portal element itself, so isConnected cannot tell the two apart but parentNode can.
+    lastRoot: HTMLDivElement | null = null;
     dialog: HTMLDivElement | null = null;
-    readonly focusScope = new FocusScope();
-
-    setShown(shown: boolean) {
-        this.#shown = shown;
-    }
-
-    takeShown() {
-        const shown = this.#shown;
-        this.#shown = false;
-        return shown;
-    }
 
     readonly attachRoot = (node: HTMLDivElement | null) => {
         this.root = node;
+        if (node) {
+            this.lastRoot = node;
+        }
     };
 
     readonly attachDialog = (node: HTMLDivElement | null) => {
         this.dialog = node;
     };
-
-    disableBodyScroll(modal: boolean) {
-        if (modal) {
-            this.scroll.hold(lockBodyScroll);
-        } else {
-            this.scroll.release();
-        }
-    }
 }
 
 interface SideSheetOpenEffectsProps {
@@ -108,9 +87,9 @@ function SideSheetOpenEffects({ visible, foundation, runtime }: SideSheetOpenEff
     // Read before this commit's layout phase, where an autoFocus element inside the sheet takes focus
     useInsertionEffect(() => {
         if (visible) {
-            runtime.focusScope.record();
+            foundation.recordFocus();
         }
-    }, [visible, runtime]);
+    }, [visible, foundation]);
 
     useLayoutEffect(() => {
         if (!visible) {
@@ -147,23 +126,12 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
         SideSheetFoundation,
         props,
         () => SideSheetFoundation.getInitialState(),
-        (base) => {
-            // a mask confined to a custom popup container leaves the rest of the page usable
-            const isModal = () => Boolean(base.getProp('mask')) && coversPage(base.getProp('getPopupContainer') ?? base.getContext('getPopupContainer'));
-            return {
-                disabledBodyScroll: () => runtime.disableBodyScroll(isModal()),
-                enabledBodyScroll: () => runtime.scroll.release(),
-                notifyCancel: (e) => base.getProps().onCancel?.(e),
-                openLayer: (onEscape) => runtime.layer.hold(() => openLayer({ element: runtime.root, modal: isModal(), onEscape })),
-                closeLayer: () => runtime.layer.release(),
-                // shortcut: content under a mask confined to a custom container stays Tab-reachable,
-                // upgrade to inert on the container's other children if it must become unreachable.
-                trapFocus: () => runtime.focusScope.engage(runtime.dialog, isModal(), true),
-                releaseFocus: () => runtime.focusScope.deactivate(),
-                // a user who moved on to the page next to a non-modal sheet keeps that focus
-                restoreFocus: () => runtime.focusScope.restoreIfAllowed(runtime.dialog, isModal(), true),
-            };
-        },
+        (base) => ({
+            notifyCancel: (e) => base.getProps().onCancel?.(e),
+            notifyAfterVisibleChange: (isVisible) => base.getProps().afterVisibleChange?.(isVisible),
+            getRoot: () => runtime.root,
+            getDialog: () => runtime.dialog,
+        }),
         context
     );
 
@@ -195,12 +163,11 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
 
     const updateState = () => setDisplayNone(!visible);
 
-    useDidUpdate(displayNone, (isHidden) => afterVisibleChange?.(!isHidden));
-    useLayoutEffect(() => runtime.setShown(!hidden), [runtime, hidden]);
+    useDidUpdate(displayNone, foundation.handleHiddenChange);
 
     useRealUnmount(() => {
-        if (runtime.takeShown()) {
-            afterVisibleChange?.(false);
+        if (!runtime.lastRoot?.parentNode) {
+            foundation.handleHiddenChange(true);
         }
     });
 
@@ -230,7 +197,7 @@ export default function SideSheet(rawProps: SideSheetReactProps) {
                                     mask={mask}
                                     maskClosable={maskClosable}
                                     maskExtraProps={maskAnimationEventsNeedBind}
-                                    modal={mask && inBody}
+                                    modal={SideSheetFoundation.isModal({ mask, inBody })}
                                     sheetSize={SideSheetFoundation.getSheetSize(props)}
                                     size={size}
                                     wrapperExtraProps={animationEventsNeedBind}

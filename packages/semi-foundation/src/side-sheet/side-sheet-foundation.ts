@@ -1,4 +1,8 @@
 import BaseFoundation, { type DefaultAdapter } from '../base/foundation';
+import { coversPage } from '../utils/dom';
+import FocusTrapHandle from '../utils/focus-handle';
+import ModalResources from '../utils/modal-resources';
+import PopupLifecycle from '../utils/popup-lifecycle';
 import { strings } from './constants';
 
 export type Placement = 'top' | 'bottom' | 'left' | 'right';
@@ -41,17 +45,18 @@ export interface SheetSize {
     dialogHeight: number | string;
 }
 
-export interface SideSheetAdapter<P extends SideSheetProps = SideSheetProps> extends DefaultAdapter<P, SideSheetState> {
-    disabledBodyScroll: () => void;
-    enabledBodyScroll: () => void;
+/** What the sheet reads around it: ConfigProvider's popup container, which the sheet's own prop overrides */
+export interface SideSheetContext {
+    getPopupContainer?: () => HTMLElement;
+}
+
+export interface SideSheetAdapter<P extends SideSheetProps = SideSheetProps> extends DefaultAdapter<P, SideSheetState, SideSheetContext> {
     notifyCancel: (e: any) => void;
-    /** Puts the sheet on the overlay stack; `onEscape` receives Escape while it is on top */
-    openLayer: (onEscape: (e: KeyboardEvent) => boolean) => void;
-    closeLayer: () => void;
-    /** Traps focus in the sheet; a no-op without mask, which is not modal */
-    trapFocus: () => void;
-    releaseFocus: () => void;
-    restoreFocus: () => void;
+    notifyAfterVisibleChange: (isVisible: boolean) => void;
+    /** The outermost element, which goes on the overlay stack */
+    getRoot: () => HTMLElement | null | undefined;
+    /** The `role="dialog"` element, which takes focus */
+    getDialog: () => HTMLElement | null | undefined;
 }
 
 export default class SideSheetFoundation<P extends SideSheetProps = SideSheetProps> extends BaseFoundation<SideSheetAdapter<P>, P, SideSheetState> {
@@ -59,8 +64,18 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
     #shown = false;
     // destroyed while shown: init takes them again
     #resume = false;
+    readonly #lifecycle = new PopupLifecycle();
+    readonly #resources = new ModalResources();
 
     static override readonly propKeys = ['visible'];
+
+    constructor(adapter: SideSheetAdapter<P>) {
+        super(adapter);
+        // a sheet mounted visible is shown without a report, and its unmount still reports afterVisibleChange(false)
+        if (this.getProp('visible')) {
+            this.#lifecycle.show();
+        }
+    }
 
     #handleEscape = (e: KeyboardEvent) => {
         if (!this.getProp('closeOnEsc')) {
@@ -79,6 +94,14 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
             return { dialogHeight };
         }
         return mask ? { dialogWidth: sheetWidth, dialogHeight } : { rootWidth: sheetWidth, dialogWidth: '100%', dialogHeight };
+    }
+
+    /**
+     * Only a mask over the whole page makes the sheet modal: aria-modal, the inert page, the Tab trap, unconditional
+     * focus return and the body scroll lock. `inBody`: the sheet renders into body (`coversPage`).
+     */
+    static isModal({ mask, inBody }: { mask?: boolean; inBody: boolean }) {
+        return Boolean(mask) && inBody;
     }
 
     static getInitialState(): SideSheetState {
@@ -103,9 +126,14 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
     // React refocuses the pre-commit element after the leave starts while the sheet is still mounted: restore again
     override handlePropsChange() {
         if (!this.getProp('visible')) {
-            this.adapter.restoreFocus();
+            this.#resources.restoreFocus();
         }
     }
+
+    /** Remembers the element to return focus to; hosts call it on opening, before anything inside the sheet takes focus */
+    recordFocus = () => {
+        this.#resources.record();
+    };
 
     handleCancel = (e: unknown) => {
         // the sheet stays mounted for its leave animation, and its mask and close button still take clicks
@@ -115,30 +143,45 @@ export default class SideSheetFoundation<P extends SideSheetProps = SideSheetPro
         this.adapter.notifyCancel(e);
     };
 
+    /**
+     * Hosts call this when the sheet stops or starts being hidden (once the animations ended), not on mount, and with
+     * `true` when it unmounts for good: afterVisibleChange(false) is reported once per showing.
+     */
+    handleHiddenChange = (isHidden: boolean) => {
+        if (isHidden) {
+            this.#lifecycle.ended(() => this.adapter.notifyAfterVisibleChange(false));
+        } else {
+            this.#lifecycle.show();
+            this.adapter.notifyAfterVisibleChange(true);
+        }
+    };
+
     beforeShow = () => {
         if (this.#shown) {
             return;
         }
         this.#shown = true;
-        const allowDisable = this.getProp('disableScroll');
-        if (allowDisable) {
-            this.adapter.disabledBodyScroll();
+        this.#lifecycle.show();
+        const { mask, getPopupContainer, disableScroll } = this.getProps();
+        const modal = SideSheetFoundation.isModal({ mask, inBody: coversPage(getPopupContainer ?? this.getContext('getPopupContainer')) });
+        const dialog = this.adapter.getDialog();
+        // no framework focuses an autofocus element of content inserted after load, so the sheet picks it before the
+        // default (the dialog itself)
+        if (dialog && !dialog.contains(FocusTrapHandle.getActiveElement(dialog))) {
+            FocusTrapHandle.findAutofocus(dialog)?.focus({ preventScroll: true });
         }
-        this.adapter.openLayer(this.#handleEscape);
-        this.adapter.trapFocus();
+        // shortcut: content under a mask confined to a custom container stays Tab-reachable, upgrade to inert on the
+        // container's other children if it must become unreachable.
+        this.#resources.hold({ modal, layer: this.adapter.getRoot(), onEscape: this.#handleEscape, lockScroll: disableScroll && modal, focus: dialog, preventScroll: true });
     };
 
-    // the layer closes before focus returns: it releases the page's inert, and an inert element cannot take focus
+    // a user who moved on to the page next to a non-modal sheet keeps that focus
     afterHide = () => {
         this.#resume = false;
         if (!this.#shown) {
             return;
         }
         this.#shown = false;
-        // unconditional: disableScroll may have changed since the lock was taken
-        this.adapter.enabledBodyScroll();
-        this.adapter.closeLayer();
-        this.adapter.releaseFocus();
-        this.adapter.restoreFocus();
+        this.#resources.release();
     };
 }

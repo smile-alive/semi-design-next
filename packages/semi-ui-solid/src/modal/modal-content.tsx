@@ -5,10 +5,6 @@ import ModalContentFoundation, { type ModalContentAdapter, isModal } from '@fibr
 import type { Size } from '@fibrae/semi-foundation/modal/modal-foundation';
 import { isAriaKey, warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
 import { IconClose } from '@fibrae/semi-icons-solid';
 import { splitControlAttrs } from '../_base/control-attrs';
 import hasContent from '../_base/has-content';
@@ -61,7 +57,7 @@ export interface ModalContentProps extends JSX.AriaAttributes {
     width?: string | number;
 }
 
-// the foundation reads closeOnEsc and onClose only; its style types are React's
+// the foundation's style types are React's
 type FoundationProps = Omit<ModalContentProps, 'style' | 'bodyStyle' | 'maskStyle'>;
 type Foundation = ModalContentFoundation<FoundationProps, MouseEvent>;
 type Adapter = ModalContentAdapter<FoundationProps, MouseEvent>;
@@ -110,13 +106,8 @@ export default function ModalContent(props: ModalContentProps) {
 
     const locale = useLocale('Modal');
 
-    const focusScope = new FocusScope();
-    const layer = new ReleaseHolder();
     let root: HTMLDivElement | undefined;
     let dialog: HTMLDivElement | undefined;
-
-    // the first element outside the default footer that held focus when the dialog opened
-    let bodyFocus: HTMLElement | null = null;
 
     const { foundation } = useFoundation<Foundation, Adapter, FoundationProps, object>(
         ModalContentFoundation,
@@ -124,32 +115,8 @@ export default function ModalContent(props: ModalContentProps) {
         () => ({}),
         () => ({
             notifyClose: (e) => props.onClose(e),
-            openLayer: (onEscape) => layer.hold(() => openLayer({ element: root as HTMLDivElement, modal: isModal(props), onEscape })),
-            closeLayer: () => layer.release(),
-            trapFocus: () => {
-                if (!dialog) {
-                    return;
-                }
-                const footer = dialog.querySelector(`:scope > .${prefix}-footer`);
-                const active = FocusTrapHandle.getActiveElement(dialog);
-                // Solid never focuses an inserted autofocus element, and a component's mount-time focus acts once, so
-                // a keepDOM reopen refocuses the body element the first open focused, else autofocus, else the default
-                // button; FocusScope would otherwise focus the tabIndex=-1 dialog first. Known limit: keepDOM with
-                // lazyRender={false} that starts hidden mounts under display:none, where mount-time focus fails.
-                if (dialog.contains(active)) {
-                    if (!bodyFocus && active !== dialog && !footer?.contains(active)) {
-                        bodyFocus = active;
-                    }
-                } else {
-                    FocusTrapHandle.pickInitialFocus(dialog, { remembered: bodyFocus, autofocus: true, footer, initialFocus: local.initialFocus })?.focus({ preventScroll: local.preventScroll });
-                }
-                focusScope.engage(dialog, isModal(props), local.preventScroll);
-            },
-            releaseFocus: () => {
-                dialog?.blur();
-                focusScope.deactivate();
-            },
-            restoreFocus: () => focusScope.restoreIfAllowed(dialog, isModal(props), local.preventScroll),
+            getRoot: () => root,
+            getDialog: () => dialog,
         })
     );
 
@@ -309,7 +276,7 @@ export default function ModalContent(props: ModalContentProps) {
         </div>
     );
 
-    useRecordFocus(focusScope, open);
+    useRecordFocus({ record: foundation.recordFocus }, open);
 
     createEffect(
         on(open, (isOpen) => {

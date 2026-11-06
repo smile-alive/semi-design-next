@@ -12,11 +12,6 @@ export function focusAfterModeChange(container: HTMLElement | null | undefined, 
     (preferred ?? FocusTrapHandle.getFocusableElements(container)[0])?.focus();
 }
 
-// Focus the user moved to the page beside the sidebar stays there; checking inside through root's own tree also holds in a shadow root
-export function canRestoreFocus(root?: HTMLElement | null) {
-    return FocusTrapHandle.shouldRestoreFocus(root, false);
-}
-
 // Computed while rendering so option and filter changes apply at once
 export function getShowOptions<T extends MCPOption>({ options = [], customOptions = [], filter }: { options?: T[]; customOptions?: T[]; filter?: (value: string, option: T) => boolean }, mode: MCPConfigureMode, query: string) {
     const list = mode === strings.MCP_MODE.INNER ? options : customOptions;

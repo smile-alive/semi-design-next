@@ -8,7 +8,6 @@
     import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
     import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import { openLayer } from '@fibrae/semi-foundation/utils/layer';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/tooltip/tooltip.scss';
     import PopupLayerProvider from '../_base/popup-layer-provider.svelte';
@@ -87,11 +86,6 @@
     let textOnly = $state(false);
     let initialFocus: FocusTarget | undefined;
     let clickOutside: AbortController | undefined;
-
-    // handleOpened runs once per opening; afterOpen and afterClose are reported once per opening
-    let openedHandled = false;
-    let openPending = false;
-    let closePending = false;
     let warnedFocusable = false;
 
     // The value this Tooltip last wrote to an uncontrolled `visible`: the foundation still sees it as uncontrolled, so
@@ -177,24 +171,33 @@
         TooltipFoundation,
         foundationProps,
         () => TooltipFoundation.getInitialState(),
-        (base) => ({
+        () => ({
             insertPortal: () => {
                 const element = triggerElement;
-                openPending = true;
-                closePending = true;
-                openedHandled = false;
-                base.setState({
-                    isInsert: true,
-                    transitionState: 'enter',
-                    visible: true,
+                return {
                     portalTarget: popupTarget(element?.getRootNode(), (fullscreen) => Boolean(element && fullscreen.contains(element))),
                     colorScheme: colorSchemeOf(element?.closest(COLOR_SCHEME_SELECTOR)),
-                });
+                };
             },
             removePortal: () => {
                 contentShown = false;
-                base.setState({ isInsert: false, transitionState: '' });
             },
+            showPopover: () => {
+                if (!container?.matches(':popover-open')) {
+                    container?.showPopover();
+                }
+            },
+            hidePopover: () => container?.hidePopover(),
+            // shortcut: a leave set by a prop reaction (handlePropsChange runs in a host effect created before the
+            // phase effect) reaches syncPopup before the template drops the show class, so the animations are read
+            // after tick(). Read them at once again when the host runs prop reactions after the component's effects.
+            waitAnimations: () =>
+                tick().then(() => {
+                    const animations = container?.getAnimations() ?? [];
+                    return animations.length ? Promise.allSettled(animations.map((animation) => animation.finished)) : undefined;
+                }),
+            notifyAfterOpen: () => afterOpen?.(),
+            notifyAfterClose: () => afterClose?.(),
             notifyVisibleChange: (next) => {
                 // the bindable prop is the source of truth: bound, the write reaches the parent; unbound, it overrides
                 // locally, and the foundation applies it as a `visible` change
@@ -237,7 +240,6 @@
     );
 
     const popupId = $derived(wrapperId || `${cssClasses.PREFIX}-${uid}`);
-    const isOpen = $derived(states().isInsert && states().transitionState !== 'leave');
 
     // Compared by value: the show/hide effect runs once per change, not on every equal write of the foundation
     const phase = $derived(states().isInsert ? states().transitionState : '');
@@ -361,13 +363,6 @@
         }
     };
 
-    const finishClose = () => {
-        if (closePending) {
-            closePending = false;
-            afterClose?.();
-        }
-    };
-
     // The foundation writes the position into element.style and does not write an unchanged layout again, so the `style`
     // prop is applied per property: setting the attribute as a whole would drop the position when `style` changes.
     const applyStyle: Attachment<HTMLDivElement> = (element) => {
@@ -408,7 +403,6 @@
         );
         element.addEventListener('focusin', relayFocus, { signal });
         element.addEventListener('focusout', relayFocus, { signal });
-        element.addEventListener('keydown', foundation.handleContainerKeydown, { signal });
         return () => controller.abort();
     };
 
@@ -438,83 +432,13 @@
     });
 
     $effect(() => {
-        const current = phase;
-        const element = container;
-        if (!element) {
-            return;
-        }
-        return untrack(() => {
-            if (current === 'enter') {
-                if (!element.matches(':popover-open')) {
-                    element.showPopover();
-                }
-                foundation.handleShown();
-                // read right after showPopover() to see the enter animation it started
-                const entering = element.getAnimations();
-                let cancelled = false;
-                // `:hover` is not updated yet in the mouseenter task; handleOpened's hover check runs a task later
-                const timer = setTimeout(() => {
-                    if (!openedHandled) {
-                        openedHandled = true;
-                        foundation.handleOpened();
-                    }
-                    void Promise.allSettled(entering.map((animation) => animation.finished)).then(() => {
-                        // a hover popup that backed out in handleOpened, or one closed meanwhile, is leaving
-                        if (!cancelled && openPending && foundation.getState('transitionState') === 'enter') {
-                            openPending = false;
-                            afterOpen?.();
-                        }
-                    });
-                });
-                return () => {
-                    cancelled = true;
-                    clearTimeout(timer);
-                };
-            }
-            if (current === 'leave') {
-                let cancelled = false;
-                // The exit animation plays while the popup is still open, so it keeps the top layer; it hides once that ends
-                const finish = () => {
-                    if (!cancelled) {
-                        element.hidePopover();
-                        if (!keepDOM) {
-                            foundation.removePortal();
-                        }
-                        finishClose();
-                    }
-                };
-                // shortcut: a leave set by a prop reaction (handlePropsChange runs in a host effect created before this
-                // one) reaches this effect before the template drops the show class, so the exit animation is read
-                // after tick(). Read it at once again when the host runs prop reactions after the component's effects.
-                void tick().then(() => {
-                    if (cancelled) {
-                        return;
-                    }
-                    const animations = element.getAnimations();
-                    if (animations.length) {
-                        void Promise.allSettled(animations.map((animation) => animation.finished)).then(finish);
-                    } else {
-                        finish();
-                    }
-                });
-                return () => {
-                    cancelled = true;
-                };
-            }
-            return undefined;
-        });
+        void phase;
+        void container;
+        // only the phase and the popup element drive it; what the sync reads (layout, props) must not
+        untrack(foundation.syncPopup);
     });
 
-    // Non-modal layer: takes Escape while on top, and a Modal opened before it leaves it interactive
-    $effect(() => {
-        const element = container;
-        if (isOpen && element) {
-            return openLayer({ element, modal: false, onEscape: foundation.handleEscape });
-        }
-        return undefined;
-    });
-
-    // showPopover() ran its autofocus step before the content mounted; handleShown measured the popup without its
+    // showPopover() ran its autofocus step before the content mounted; syncPopup measured the popup without its
     // content, and a top popup placed by a zero height would hang over the trigger and take the next click
     $effect(() => {
         if (!contentShown) {
@@ -525,10 +449,6 @@
             container?.querySelector<HTMLElement>('[autofocus]')?.focus({ preventScroll });
             if (role === 'dialog') warnIfDialogUnnamed(container, 'Popover');
         });
-    });
-
-    $effect(() => {
-        warning((mouseLeaveDelay ?? 0) < (mouseEnterDelay ?? 0), strings.LEAVE_DELAY_WARNING);
     });
 
     // Measured again when the trigger component's state changes: a disabled Button is not focusable, an enabled one is
@@ -548,13 +468,11 @@
     });
 
     onMount(() => {
-        const timer = setTimeout(foundation.updateStateIfCursorOnTrigger);
         const unregister = parentPopups?.register(() => container);
         return () => {
-            clearTimeout(timer);
             unregister?.();
             // the foundation's destroy closed the popup without reporting it
-            finishClose();
+            foundation.handleUnmount();
         };
     });
 

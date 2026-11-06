@@ -1,16 +1,12 @@
 <script setup lang="ts">
-    import { computed, nextTick, onActivated, onDeactivated, shallowRef, useId, useTemplateRef, watch, type StyleValue } from 'vue';
+    import { computed, nextTick, shallowRef, useId, useTemplateRef, watch, type StyleValue } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/image/constants';
     import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/image/preview-inner-foundation';
-    import { resolvePopupContainer } from '@fibrae/semi-foundation/utils/dom';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import FocusScope from '@fibrae/semi-foundation/utils/focus-scope';
-    import { openLayer } from '@fibrae/semi-foundation/utils/layer';
-    import ReleaseHolder from '@fibrae/semi-foundation/utils/release-holder';
-    import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
     import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-vue';
     import Portal from '../_base/portal.vue';
     import useFoundation from '../_base/use-foundation';
+    import useKeepAliveFoundation from '../_base/use-keep-alive-foundation';
     import useRecordFocus from '../_base/use-record-focus';
     import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';
@@ -106,19 +102,13 @@
 
     const titleId = useId();
 
-    // explicit: these feed openLayer and isValidTarget, whose foundation state flows back into the template, so inference hits TS7022
+    // explicit: these feed getWrap and isValidTarget, whose foundation state flows back into the template, so inference hits TS7022
     const wrap = useTemplateRef<HTMLDivElement>('wrap');
     const header = useTemplateRef<InstanceType<typeof PreviewHeader>>('header');
     const footer = useTemplateRef<InstanceType<typeof PreviewFooter>>('footer');
     const leftIcon = useTemplateRef<HTMLButtonElement>('leftIcon');
     const rightIcon = useTemplateRef<HTMLButtonElement>('rightIcon');
     const ratio = shallowRef<RatioType>('adaptation');
-    const scroll = new ReleaseHolder();
-    const layer = new ReleaseHolder();
-    const focusScope = new FocusScope();
-
-    // Read once per show: only a preview in body is modal (aria-modal, inert page, scroll lock, Tab trap, focus return).
-    let modal = false;
 
     const { foundation, state } = useFoundation<Foundation, Adapter, PreviewInnerBaseProps, PreviewInnerState>(
         PreviewInnerFoundation,
@@ -126,8 +116,6 @@
         (view) => PreviewInnerFoundation.getInitialState(view),
         () => ({
             getIsInGroup: () => Boolean(group),
-            disabledBodyScroll: () => (modal ? scroll.hold(lockBodyScroll) : scroll.release()),
-            enabledBodyScroll: () => scroll.release(),
             notifyChange: (index, direction) => {
                 emit('change', index);
                 if (direction === 'prev') {
@@ -143,13 +131,8 @@
             notifyRotateChange: (angle) => emit('rotateLeft', angle),
             notifyDownload: (src, index) => emit('download', src, index),
             notifyDownloadError: (src) => emit('downloadError', src),
-            registerKeyDownListener: () => window.addEventListener('keydown', handleKeyDown),
-            unregisterKeyDownListener: () => window.removeEventListener('keydown', handleKeyDown),
-            openLayer: (onEscape) => layer.hold(() => openLayer({ element: wrap.value as HTMLDivElement, modal, onEscape })),
-            closeLayer: () => layer.release(),
-            getSetDownloadFunc: () => (group?.view.value.setDownloadName ?? props.setDownloadName) as (src: string) => string,
+            getWrap: () => wrap.value,
             isValidTarget: (e: Event) => !(e.target instanceof Node && [header.value?.$el, footer.value?.$el, leftIcon.value, rightIcon.value].some((el) => el?.contains(e.target as Node))),
-            isEventInPreview: (e) => !(e.target instanceof Element) || e.target === document.body || Boolean(wrap.value?.contains(e.target)),
             setRatio: (value) => {
                 ratio.value = value;
             },
@@ -158,7 +141,9 @@
             context: () => ({
                 isGroup: Boolean(group),
                 setCurrentIndex: group?.setCurrentIndex,
+                setDownloadName: group?.view.value.setDownloadName,
                 direction: config.value.direction,
+                popupContainer: props.getPopupContainer ?? config.value.getPopupContainer,
             }),
         }
     );
@@ -166,10 +151,6 @@
     const cls = `${cssClasses.PREFIX}-preview`;
     const srcList = computed(() => PreviewInnerFoundation.getSrcList(props.src as string | string[]));
     const total = computed(() => srcList.value.length);
-
-    // stable reference: the listener added on show is the one removed on hide
-    const handleKeyDown = (e: KeyboardEvent) => foundation.handleKeyDown(e);
-
     const currentIndex = computed(() => PreviewInnerFoundation.getCurrentIndex(props, state.value));
     const showPrev = computed(() => PreviewInnerFoundation.canSwitch('prev', currentIndex.value, total.value, props.infinite));
     const showNext = computed(() => PreviewInnerFoundation.canSwitch('next', currentIndex.value, total.value, props.infinite));
@@ -183,21 +164,8 @@
 
     const handleNext = () => foundation.handleSwitchImage('next');
 
-    const inBody = () => {
-        const container = resolvePopupContainer(props.getPopupContainer ?? config.value.getPopupContainer);
-        return container === container.ownerDocument.body;
-    };
-
-    const show = (el: HTMLElement) => {
-        modal = inBody();
-        foundation.beforeShow();
-        // browsers skip autofocus on elements inserted after page load
-        el.querySelector<HTMLElement>('[autofocus]')?.focus({ preventScroll: true });
-        focusScope.engage(el, modal, true);
-    };
-
     // recorded before the preview renders, or its own focus would be recorded
-    useRecordFocus(focusScope, () => props.visible);
+    useRecordFocus({ record: foundation.recordFocus }, () => props.visible);
 
     watch(
         () => (props.visible ? wrap.value : null),
@@ -205,25 +173,8 @@
             if (!el) {
                 return;
             }
-            show(el);
-            onCleanup(() => {
-                foundation.afterHide();
-                focusScope.deactivate();
-            });
-        },
-        { flush: 'post' }
-    );
-
-    // Runs after the watcher above releases the inert: both are post jobs of this instance with the same id, so only the
-    // stable sort of the post queue plus creation order keeps them in sequence; do not swap the two. A non-modal preview
-    // keeps focus the user moved elsewhere.
-    watch(
-        () => props.visible,
-        (visible) => {
-            const active = FocusTrapHandle.getActiveElement();
-            if (!visible && (modal || !active || active === document.body)) {
-                focusScope.restore(true);
-            }
+            foundation.beforeShow();
+            onCleanup(foundation.afterHide);
         },
         { flush: 'post' }
     );
@@ -247,26 +198,13 @@
         { flush: 'post' }
     );
 
-    // KeepAlive: the Portal removes the hidden preview, so release page-level holds without closing it
-    onDeactivated(() => {
-        if (props.visible) {
-            window.removeEventListener('keydown', handleKeyDown);
-            layer.release();
-            scroll.release();
-            focusScope.deactivate();
-        }
-    });
-
-    onActivated(() => {
-        if (!props.visible) {
-            return;
-        }
-        // the Portal moves the dialog back next render, and moving a focused element drops its focus
-        void nextTick(() => {
-            if (props.visible && wrap.value) {
-                show(wrap.value);
-            }
-        });
+    // KeepAlive: the Portal removes the hidden preview, so destroy releases page-level holds without closing it. The
+    // Portal moves the dialog back next render, and moving a focused element drops its focus, so init waits for it.
+    const keepAlive: ReturnType<typeof useKeepAliveFoundation> = useKeepAliveFoundation({
+        connect: () => foundation.connect(),
+        disconnect: () => foundation.disconnect(),
+        init: () => void nextTick(() => keepAlive.isDeactivated() || foundation.init()),
+        destroy: () => foundation.destroy(),
     });
 </script>
 
