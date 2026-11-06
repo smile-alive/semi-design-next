@@ -3,19 +3,16 @@
 
 import { type App, render } from 'vue';
 import { resolveConfirmProps } from '@fibrae/semi-foundation/modal/confirm';
+import ConfirmRegistry from '@fibrae/semi-foundation/modal/confirm-registry';
 import { IconAlertCircle, IconAlertTriangle, IconHelpCircle, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-vue';
 import { assertClient } from '../_base/client-only';
 import { rootAppContext, setInstalledApp } from '../_base/installed-app';
 import ConfirmModal from './confirm-modal.vue';
 import type { ConfirmProps, ModalConfirmProps } from './interface';
 
-const destroyFns: Array<() => void> = [];
+const registry = new ConfirmRegistry();
 
-export function destroyAll() {
-    for (const close of destroyFns.splice(0)) {
-        close();
-    }
-}
+export const destroyAll = registry.destroyAll;
 
 /** Optional: static confirms (and the other static APIs) then render with this app's context. */
 export function install(app: App) {
@@ -36,10 +33,7 @@ export default function confirm(props: ConfirmProps) {
         destroyed = true;
         render(null, div);
         div.remove();
-        const index = destroyFns.indexOf(close);
-        if (index !== -1) {
-            destroyFns.splice(index, 1);
-        }
+        unregister();
     };
 
     const mount = ({ afterClose, ...rest }: ConfirmProps) => {
@@ -69,8 +63,8 @@ export default function confirm(props: ConfirmProps) {
         mount(current);
     };
 
+    const unregister = registry.register(close);
     mount(current);
-    destroyFns.push(close);
     return { destroy: close, update };
 }
 

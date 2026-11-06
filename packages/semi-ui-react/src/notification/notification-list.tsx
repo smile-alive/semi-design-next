@@ -1,8 +1,8 @@
 import { type CSSProperties, useLayoutEffect, useState, useSyncExternalStore } from 'react';
 import clsx from 'clsx';
 import { cssClasses, getStackItemTransform, getStackThreshold, numbers } from '@fibrae/semi-foundation/notification/constants';
-import type { NoticeInstance } from '@fibrae/semi-foundation/notification/notification-foundation';
-import type { ConfigProps, NotificationListProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
+import type { NoticeInstance, NoticePosition } from '@fibrae/semi-foundation/notification/notification-foundation';
+import { type ConfigProps, groupNoticesByPosition, noticePositions, type NotificationListProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
 import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
@@ -11,17 +11,6 @@ import useNoticeListEffects from '../_base/use-notice-list-effects';
 import CSSAnimation from '../_css-animation';
 import { useConfigContext } from '../config-provider/context';
 import Notice, { type NoticeHandle } from './notice';
-
-const positions = ['top', 'topLeft', 'topRight', 'bottom', 'bottomLeft', 'bottomRight'] as const;
-
-export type NoticesInPosition = {
-    top: NoticeInstance[];
-    topLeft: NoticeInstance[];
-    topRight: NoticeInstance[];
-    bottom: NoticeInstance[];
-    bottomLeft: NoticeInstance[];
-    bottomRight: NoticeInstance[];
-};
 
 // NoticeInstance does not declare the offsets, but they reach the store from Notification.config()
 function positionStyle(notice: NoticeInstance & Pick<ConfigProps, 'top' | 'left' | 'bottom' | 'right'>) {
@@ -49,7 +38,7 @@ export default function NotificationList({ store }: NotificationListProps) {
     // a list unmounting under the pointer never gets mouseleave or blur, so the ref cleanup resets the state
     const [listRefs] = useState(() =>
         Object.fromEntries(
-            positions.map((position) => [
+            noticePositions.map((position) => [
                 position,
                 (element: HTMLDivElement) => {
                     lists.set(position, element);
@@ -63,24 +52,17 @@ export default function NotificationList({ store }: NotificationListProps) {
         )
     );
 
-    const { removedItems, order, updatedItems } = state;
-
-    const byId = new Map([...state.notices, ...removedItems].map((notice) => [notice.id, notice]));
+    const { removedItems, updatedItems } = state;
 
     const announcement = useNoticeListEffects(state.notices, updatedItems, removedItems, handles);
 
-    const noticesInPosition = Object.fromEntries(positions.map((position) => [position, []])) as NoticesInPosition;
+    const noticesInPosition = groupNoticesByPosition(state, direction);
 
     const remove = (id: string) => store.remove(String(id));
 
-    for (const notice of order.filter((id) => byId.has(id)).map((id) => byId.get(id))) {
-        const defaultPosition = (notice.direction || direction) === 'rtl' ? 'topLeft' : 'topRight';
-        noticesInPosition[notice.position || defaultPosition].push(notice);
-    }
-
     const resumeIfIdle = (position: string, pointer: boolean, focus: boolean) => {
         if (!pointer && !focus) {
-            noticesInPosition[position as keyof NoticesInPosition].forEach((notice) => handles.get(notice.id)?.resumeCloseTimer());
+            noticesInPosition[position as NoticePosition].forEach((notice) => handles.get(notice.id)?.resumeCloseTimer());
         }
     };
 

@@ -1,11 +1,7 @@
 import type React from 'react';
 import type { CSSProperties } from 'react';
-import { omitBy } from 'es-toolkit';
-import { cssClasses, setPosition } from '@fibrae/semi-foundation/toast/constants';
+import ToastApi from '@fibrae/semi-foundation/toast/toast-api-foundation';
 import type { ConfigProps, ToastProps } from '@fibrae/semi-foundation/toast/toast-foundation';
-import ToastListStore from '@fibrae/semi-foundation/toast/toast-list-foundation';
-import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
-import { createId } from '@fibrae/semi-foundation/utils/uuid';
 import { assertBrowser, render as reactRender, unmount as reactUnmount } from '../_utils/react-render';
 import { readGlobalDefaults } from '../_utils/semi-global';
 import ToastList from './toast-list';
@@ -29,69 +25,24 @@ export type { ToastHookApi } from './use-toast';
 export type { ToastListProps, ToastListState } from '@fibrae/semi-foundation/toast/toast-list-foundation';
 
 function createBaseToast(initialConfig?: ConfigProps) {
-    const store = new ToastListStore(initialConfig);
-    // held as an element, not found by id: two instances shown in the same millisecond would share an id
-    let wrapper: HTMLDivElement | null = null;
-
-    const show = (opts: ToastOptions | string, type: ToastProps['type']) => toast.create({ ...(typeof opts === 'string' ? { content: opts } : opts), type });
-
-    const toast = {
-        get defaultOpts() {
-            return store.defaults;
-        },
-        useToast,
-
-        create(opts: Omit<ToastReactProps, 'close'>) {
-            assertBrowser('Toast', 'Toast.useToast()');
-            const id = opts.id ?? createId('toast');
-            // an explicit undefined must not replace the defaults
-            const mergedOpts = { ...store.defaults, ...readGlobalDefaults('Toast'), ...omitBy(opts, (value) => value === undefined) };
-
+    const api = new ToastApi<Omit<ToastReactProps, 'close'>>(
+        {
+            assertClient: () => assertBrowser('Toast', 'Toast.useToast()'),
+            readGlobalDefaults: () => readGlobalDefaults('Toast'),
             // createRoot renders asynchronously; calls before the list mounts only reach the store
-            if (!wrapper) {
-                wrapper = document.createElement('div');
-                wrapper.className = cssClasses.WRAPPER;
-                wrapper.id = createId('toast-wrapper');
-                wrapper.setAttribute(KEEP_INTERACTIVE_ATTRIBUTE, '');
-                (mergedOpts.getPopupContainer ? mergedOpts.getPopupContainer() : document.body).appendChild(wrapper);
+            mount: (wrapper, store) => {
                 reactRender(<ToastList store={store} />, wrapper);
-            }
-            wrapper.style.zIndex = String(mergedOpts.zIndex);
-            setPosition(wrapper, mergedOpts);
-            store.setStack(mergedOpts.stack);
-            store.add({ ...mergedOpts, id });
-            return id;
+                return () => reactUnmount(wrapper);
+            },
         },
-
-        close(id: string) {
-            store.remove(id);
-        },
-
-        destroyAll() {
-            if (wrapper) {
-                store.clear();
-                reactUnmount(wrapper);
-                wrapper.remove();
-                wrapper = null;
-            }
-        },
-
-        getWrapperId: (): string | null => wrapper?.id ?? null,
-
-        info: (opts: ToastOptions | string) => show(opts, 'info'),
-        warning: (opts: ToastOptions | string) => show(opts, 'warning'),
-        error: (opts: ToastOptions | string) => show(opts, 'error'),
-        success: (opts: ToastOptions | string) => show(opts, 'success'),
-
-        config: (opts: ConfigProps) => store.config(opts),
-        resetConfig: () => store.resetConfig(),
-    };
-    return toast;
+        initialConfig
+    );
+    return Object.assign(api, { useToast });
 }
 
 export class ToastFactory {
     static create(config?: ConfigProps): ReturnType<typeof createBaseToast> {
-        return createBaseToast(config && { ...config });
+        return createBaseToast(config);
     }
 }
 export default ToastFactory.create();

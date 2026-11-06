@@ -9,18 +9,31 @@ export interface AutoCloseBaseProps {
 export interface AutoCloseAdapter<P extends AutoCloseBaseProps = AutoCloseBaseProps, S = Record<string, never>> extends DefaultAdapter<P, S> {
     notifyWrapperToRemove: (id: string) => void;
     notifyClose: () => void;
-    /** Only Notice reports the click on its close button, ahead of the close itself */
-    notifyCloseClick?: (id: string) => void;
+}
+
+/** What a Toast or Notification list tells each of its items; every field keeps its identity until it changes */
+export interface AutoCloseListState {
+    /** The pointer or focus is inside the list: every countdown waits */
+    paused: boolean;
+    /** Omitted by a host that unmounts a removed item at once, which leaves no countdown to stop */
+    removedItems?: readonly { id?: string }[];
+    updatedItems: readonly { id?: string }[];
 }
 
 /** Closes a toast or notice after `duration`; the list pauses the countdown on hover and restarts it after */
-export default class AutoCloseFoundation<P extends AutoCloseBaseProps = AutoCloseBaseProps, S = Record<string, never>> extends BaseFoundation<AutoCloseAdapter<P, S>, P, S> {
+export default class AutoCloseFoundation<P extends AutoCloseBaseProps = AutoCloseBaseProps, S = Record<string, never>, A extends AutoCloseAdapter<P, S> = AutoCloseAdapter<P, S>> extends BaseFoundation<A, P, S> {
     #timer: ReturnType<typeof setTimeout> | null = null;
     #id: string | null = null;
-    // an update while hovered must not start the countdown the hover paused
+    // an update while hovered must not start the countdown the hover paused; also holds a pause that arrived before init()
     #paused = false;
     // removed from outside: hover/focus ending during the leave animation must not restart the countdown
     #leaving = false;
+    #list: AutoCloseListState | undefined;
+
+    #includesThis(items: readonly { id?: string }[]) {
+        const id = this.getProp('id');
+        return items.some((item) => item.id === id);
+    }
 
     override init() {
         this.startCloseTimer();
@@ -30,6 +43,8 @@ export default class AutoCloseFoundation<P extends AutoCloseBaseProps = AutoClos
     override destroy() {
         this.clearCloseTimer();
     }
+
+    isLeaving = () => this.#leaving;
 
     leave = () => {
         this.#leaving = true;
@@ -46,50 +61,41 @@ export default class AutoCloseFoundation<P extends AutoCloseBaseProps = AutoClos
         this.startCloseTimer();
     };
 
-    /** The list pauses the countdown while it is hovered or focused */
-    handleListPausedChange = (paused: boolean) => {
-        if (paused) {
-            this.pauseCloseTimer();
-        } else {
-            this.resumeCloseTimer();
+    /**
+     * Follows the list: pauses while it is hovered or focused, stops when the store removed this item from outside (the
+     * countdown must not call onClose during the leave), and restarts when the store updated it in place. The first call
+     * only applies the state the item mounted into; hosts may call it before or after init(). Returns whether this call
+     * saw this item updated, so the host can follow up (announce it).
+     */
+    handleListChange = (list: AutoCloseListState) => {
+        const prev = this.#list;
+        this.#list = list;
+        if (list.paused !== (prev?.paused ?? false)) {
+            if (list.paused) {
+                this.pauseCloseTimer();
+            } else {
+                this.resumeCloseTimer();
+            }
         }
-    };
-
-    /** The store removed this item from outside: the countdown must not call onClose during the leave */
-    handleListRemoved = (removedItems: readonly { id?: string }[]) => {
-        if (removedItems.some((item) => item.id === this.getProp('id'))) {
+        if (list.removedItems && list.removedItems !== prev?.removedItems && this.#includesThis(list.removedItems)) {
             this.leave();
         }
-    };
-
-    /** The store updated this item in place; resolves whether it was this item, so the host can follow up */
-    handleListUpdated = (updatedItems: readonly { id?: string }[]) => {
-        const updated = updatedItems.some((item) => item.id === this.getProp('id'));
-        if (updated) {
+        if (prev && list.updatedItems !== prev.updatedItems && this.#includesThis(list.updatedItems)) {
             this.restartCloseTimer();
+            return true;
         }
-        return updated;
+        return false;
     };
 
     startCloseTimer() {
         this.clearCloseTimer();
         const duration = this.getProp('duration');
-        if (!this.#leaving && duration && typeof duration === 'number') {
+        if (!this.#leaving && !this.#paused && duration && typeof duration === 'number') {
             this.#timer = setTimeout(() => {
                 this.close();
             }, duration * 1000);
         }
     }
-
-    clickClose = (e: { stopPropagation: () => void }) => {
-        // the click must not reach the item's own handler, also when it is ignored
-        e.stopPropagation();
-        if (this.#leaving) {
-            return;
-        }
-        this.adapter.notifyCloseClick?.(this.#id);
-        this.close();
-    };
 
     close = (e?: { stopPropagation: () => void }) => {
         e?.stopPropagation();
@@ -112,9 +118,6 @@ export default class AutoCloseFoundation<P extends AutoCloseBaseProps = AutoClos
 
     restartCloseTimer = () => {
         this.#leaving = false;
-        this.clearCloseTimer();
-        if (!this.#paused) {
-            this.startCloseTimer();
-        }
+        this.startCloseTimer();
     };
 }

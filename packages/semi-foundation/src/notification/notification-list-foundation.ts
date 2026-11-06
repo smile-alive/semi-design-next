@@ -1,5 +1,7 @@
+import { omitBy } from 'es-toolkit';
 import ListStore, { type ListStoreState } from '../base/list-store';
 import type { NoticeInstance, NoticePosition } from '../notification/notification-foundation';
+import { createId } from '../utils/uuid';
 
 export interface NotificationListState extends ListStoreState<NoticeInstance> {
     notices: NoticeInstance[];
@@ -28,6 +30,28 @@ const builtInDefaults: NoticeInstance & Pick<ConfigProps, 'top' | 'bottom' | 'le
     zIndex: 1010,
 };
 
+export const noticePositions = ['top', 'topLeft', 'topRight', 'bottom', 'bottomLeft', 'bottomRight'] as const satisfies readonly NoticePosition[];
+
+export type NoticesInPosition<T extends NoticeInstance = NoticeInstance> = Record<NoticePosition, T[]>;
+
+/**
+ * The notices of a snapshot per position, in display order with the leaving ones in their place. A notice naming no
+ * position goes to the corner its direction (its own, else the list's) starts from. The notices must carry the global
+ * default position already: `open` merges it.
+ */
+export function groupNoticesByPosition<T extends NoticeInstance>({ notices, removedItems, order }: { notices: T[]; removedItems: T[]; order: string[] }, direction?: 'ltr' | 'rtl') {
+    const byId = new Map([...notices, ...removedItems].map((notice) => [notice.id, notice]));
+    const grouped = Object.fromEntries(noticePositions.map((position) => [position, []])) as unknown as NoticesInPosition<T>;
+    for (const id of order) {
+        const notice = byId.get(id);
+        if (notice) {
+            const defaultPosition = (notice.direction || direction) === 'rtl' ? 'topLeft' : 'topRight';
+            grouped[notice.position || defaultPosition].push(notice);
+        }
+    }
+    return grouped;
+}
+
 /** Notices of one list, newest first; `defaults` are the options of the static API that owns the list */
 export default class NotificationListStore {
     #items = new ListStore<NoticeInstance, 'notices', NotificationListState>('notices', 'start', {
@@ -45,6 +69,19 @@ export default class NotificationListStore {
 
     add = (notice: NoticeInstance) => {
         this.#items.add(notice);
+    };
+
+    /**
+     * Shows a notice with `opts` over the list's defaults and the global defaults, which is where the global defaults
+     * take effect (position, offsets and stack included): an explicit undefined replaces nothing. `beforeShow` gets the
+     * merged options before the notice is added, so a static API can place its wrapper by them. Returns the id.
+     */
+    open = (opts: NoticeInstance, globalDefaults: Partial<NoticeInstance>, beforeShow?: (merged: NoticeInstance) => void) => {
+        const merged: NoticeInstance = { ...this.defaults, ...globalDefaults, ...omitBy(opts, (value) => value === undefined) };
+        const id = merged.id ?? createId('notification');
+        beforeShow?.(merged);
+        this.add({ ...merged, id });
+        return id;
     };
 
     remove = (id: string) => {

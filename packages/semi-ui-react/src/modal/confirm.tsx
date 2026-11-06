@@ -1,4 +1,5 @@
 import { type ConfirmType, resolveConfirmProps } from '@fibrae/semi-foundation/modal/confirm';
+import ConfirmRegistry from '@fibrae/semi-foundation/modal/confirm-registry';
 import '@fibrae/semi-foundation/modal/modal.scss';
 import { IconAlertCircle, IconAlertTriangle, IconHelpCircle, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-react';
 import { assertBrowser, render as reactRender, unmount as reactUnmount } from '../_utils/react-render';
@@ -9,13 +10,9 @@ export interface ConfirmProps extends ModalReactProps {
     type: ConfirmType;
 }
 
-const destroyFns: Array<() => void> = [];
+const registry = new ConfirmRegistry();
 
-export function destroyAll() {
-    for (const close of destroyFns.splice(0)) {
-        close();
-    }
-}
+export const destroyAll = registry.destroyAll;
 
 export default function confirm(props: ConfirmProps) {
     assertBrowser('Modal.confirm and its variants', 'Modal.useModal()');
@@ -34,10 +31,7 @@ export default function confirm(props: ConfirmProps) {
         destroyed = true;
         reactUnmount(div);
         div.remove();
-        const index = destroyFns.indexOf(close);
-        if (index !== -1) {
-            destroyFns.splice(index, 1);
-        }
+        unregister();
     };
 
     const render = (renderProps: ConfirmProps) => {
@@ -80,8 +74,8 @@ export default function confirm(props: ConfirmProps) {
         render(currentConfig);
     };
 
+    const unregister = registry.register(close);
     render(currentConfig);
-    destroyFns.push(close);
     return {
         destroy: close,
         update,

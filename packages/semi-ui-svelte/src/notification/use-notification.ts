@@ -1,10 +1,11 @@
-import { getAllContexts, mount, onDestroy, unmount } from 'svelte';
+import { getAllContexts, getContext, mount, onDestroy, unmount } from 'svelte';
+import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
 import { cssClasses } from '@fibrae/semi-foundation/notification/constants';
-import type { NoticeType } from '@fibrae/semi-foundation/notification/notification-foundation';
+import type { NoticeInstance, NoticeType } from '@fibrae/semi-foundation/notification/notification-foundation';
 import NotificationListStore from '@fibrae/semi-foundation/notification/notification-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
-import { createId } from '@fibrae/semi-foundation/utils/uuid';
 import { assertClient } from '../_base/client-only.js';
+import semiGlobal, { type SemiGlobal, semiGlobalKey } from '../_utils/semi-global.js';
 import type { NotificationHookApi, NotificationHookOptions } from './interface.js';
 import NotificationList from './notification-list.svelte';
 
@@ -15,6 +16,7 @@ import NotificationList from './notification-list.svelte';
  */
 export default function useNotification(): NotificationHookApi {
     const context = getAllContexts();
+    const semi = getContext<SemiGlobal | undefined>(semiGlobalKey) ?? semiGlobal;
     const store = new NotificationListStore();
     let wrapper: HTMLDivElement | null = null;
     let list: ReturnType<typeof mount> | null = null;
@@ -37,9 +39,7 @@ export default function useNotification(): NotificationHookApi {
             document.body.appendChild(wrapper);
             list = mount(NotificationList, { target: wrapper, props: { store }, context });
         }
-        const id = createId('semi_notice_');
-        store.add({ ...config, type, id });
-        return id;
+        return store.open({ ...config, type } as NoticeInstance, omitInstanceIds(semi.config.overrideDefaultProps?.Notification));
     };
 
     return {

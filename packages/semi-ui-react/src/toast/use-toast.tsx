@@ -1,10 +1,9 @@
 import { type ReactElement, useState } from 'react';
-import { omitBy } from 'es-toolkit';
-import { builtInOpts, cssClasses, numbers } from '@fibrae/semi-foundation/toast/constants';
+import { cssClasses } from '@fibrae/semi-foundation/toast/constants';
 import type { ToastProps } from '@fibrae/semi-foundation/toast/toast-foundation';
 import ToastListStore from '@fibrae/semi-foundation/toast/toast-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
-import { createId } from '@fibrae/semi-foundation/utils/uuid';
+import { readGlobalDefaults } from '../_utils/semi-global';
 import type { ToastOptions } from './index';
 import ToastList from './toast-list';
 
@@ -20,17 +19,10 @@ export interface ToastHookApi {
     close: (id: string) => void;
 }
 
-const defaultOpts = { ...builtInOpts, duration: numbers.duration };
-
 function createToastHook(): [ToastHookApi, ReactElement] {
     const store = new ToastListStore();
 
-    const addToast = (config: ToastHookOptions, type: ToastProps['type']) => {
-        const id = createId('semi_toast_');
-        store.setStack(config.stack);
-        store.add({ ...defaultOpts, ...omitBy(config, (value) => value === undefined), type, id });
-        return id;
-    };
+    const addToast = (config: ToastHookOptions, type: ToastProps['type']) => store.open({ ...config, type }, readGlobalDefaults('Toast'));
 
     const contextHolder = (
         <div className={cssClasses.WRAPPER} {...{ [KEEP_INTERACTIVE_ATTRIBUTE]: '' }}>

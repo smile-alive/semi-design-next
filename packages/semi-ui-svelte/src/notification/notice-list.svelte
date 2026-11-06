@@ -5,7 +5,6 @@
     import type NotificationListStore from '@fibrae/semi-foundation/notification/notification-list-foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import useDefaultProps from '../_base/use-default-props.js';
     import watch from '../_base/watch.svelte.js';
     import { type ListedNotice, setNoticeListContext } from './context.js';
     import Notice from './notice.svelte';
@@ -22,7 +21,6 @@
     // One list per position: pointer and focus state goes when the position empties, so an unmounted list cannot leave
     // notices paused. A leaving notice stays in `items` until its leave ends, so the list outlives it.
     let { announce, items, placement, removedItems, store, updatedItems }: NoticeListProps = $props();
-    const defaults = useDefaultProps('Notification');
 
     let listEl = $state<HTMLDivElement>();
     let pointerInside = $state(false);
@@ -31,16 +29,16 @@
     const paused = $derived(pointerInside || focusInside);
     const removedIds = $derived(new Set(removedItems.map((item) => item.id)));
     const shownCount = $derived(items.filter((item) => !removedIds.has(item.id)).length);
-    const threshold = $derived(getStackThreshold(items[0].stack ?? defaults('stack')));
+    const threshold = $derived(getStackThreshold(items[0].stack));
     const expanded = $derived(paused || shownCount <= threshold);
 
     const listStyle = $derived.by(() => {
         const newest = items[0];
         return {
-            top: toCssLength(newest.top ?? defaults('top')),
-            bottom: toCssLength(newest.bottom ?? defaults('bottom')),
-            left: toCssLength(newest.left ?? defaults('left')),
-            right: toCssLength(newest.right ?? defaults('right')),
+            top: toCssLength(newest.top),
+            bottom: toCssLength(newest.bottom),
+            left: toCssLength(newest.left),
+            right: toCssLength(newest.right),
         };
     });
 

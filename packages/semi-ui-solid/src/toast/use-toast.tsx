@@ -1,10 +1,9 @@
 import type { JSX } from 'solid-js';
-import { omitBy } from 'es-toolkit';
-import { builtInOpts, cssClasses, numbers } from '@fibrae/semi-foundation/toast/constants';
+import { cssClasses } from '@fibrae/semi-foundation/toast/constants';
 import type { ToastInstance, ToastType } from '@fibrae/semi-foundation/toast/toast-foundation';
 import ToastListStore from '@fibrae/semi-foundation/toast/toast-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
-import { createId } from '@fibrae/semi-foundation/utils/uuid';
+import { readGlobalDefaults } from '../_utils/semi-global';
 import type { ToastProps } from './toast';
 import ToastList from './toast-list';
 
@@ -20,8 +19,6 @@ export interface ToastHookApi {
     close: (id: string) => void;
 }
 
-const defaultOpts = { ...builtInOpts, duration: numbers.duration };
-
 /**
  * Toasts rendered by the returned holder. The holder is created here, under the caller's owner, so its toasts read the
  * caller's ConfigProvider, LocaleProvider and other context; place it once.
@@ -29,12 +26,7 @@ const defaultOpts = { ...builtInOpts, duration: numbers.duration };
 export default function useToast(): [ToastHookApi, JSX.Element] {
     const store = new ToastListStore();
 
-    const addToast = (config: ToastHookOptions, type: ToastType) => {
-        const id = createId('semi_toast_');
-        store.setStack(config.stack);
-        store.add({ ...defaultOpts, ...omitBy(config, (value) => value === undefined), type, id } as ToastInstance);
-        return id;
-    };
+    const addToast = (config: ToastHookOptions, type: ToastType) => store.open({ ...config, type } as ToastInstance, readGlobalDefaults('Toast'));
 
     const contextHolder = (
         <div class={cssClasses.WRAPPER} {...{ [KEEP_INTERACTIVE_ATTRIBUTE]: '' }}>
