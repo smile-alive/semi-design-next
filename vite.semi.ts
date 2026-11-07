@@ -26,7 +26,7 @@ const sourcePackages: { name: string; dir: string; entry?: string; components?: 
     { name: '@fibrae/semi-ai-react', dir: 'packages/semi-ai-react/src', entry: 'index.ts' },
     { name: '@fibrae/semi-ui-solid', dir: 'packages/semi-ui-solid/src', entry: 'index.ts', components: true },
     { name: '@fibrae/semi-ai-solid', dir: 'packages/semi-ai-solid/src', entry: 'index.ts' },
-    { name: '@fibrae/semi-ui-svelte', dir: 'packages/semi-ui-svelte/src', entry: 'index.ts' },
+    { name: '@fibrae/semi-ui-svelte', dir: 'packages/semi-ui-svelte/src', entry: 'index.ts', components: true },
     { name: '@fibrae/semi-ai-svelte', dir: 'packages/semi-ai-svelte/src', entry: 'index.ts' },
     { name: '@fibrae/semi-foundation', dir: 'packages/semi-foundation/src' },
     { name: '@fibrae/semi-ai-foundation', dir: 'packages/semi-ai-foundation/src' },

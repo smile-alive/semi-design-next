@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { page, userEvent } from 'vite-plus/test/browser';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { createStore } from '@fibrae/semi-ui-svelte/_base/__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { tabTo } from '@test/utils/browser';
 import type { ChatMessage } from '../interface';
 import ChatHost, { type ChatHostStore } from './chat-host.svelte';

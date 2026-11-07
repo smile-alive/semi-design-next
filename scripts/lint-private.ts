@@ -54,7 +54,7 @@ const publishedSubpath: Record<string, (subpath: string) => string | undefined> 
     // `./*.svelte.js` maps to a rune module `<name>.svelte.ts`, `./*.svelte` to a component, and `./*` to `<name>.ts`
     svelte: (subpath) => {
         const source = subpath.endsWith('.svelte.js') ? `${subpath.slice(0, -3)}.ts` : subpath.endsWith('.svelte') ? subpath : `${subpath}.ts`;
-        return fs.existsSync(path.join('packages/semi-ui-svelte/src', source)) ? source : undefined;
+        return fs.existsSync(uiSource('svelte', source)) ? source : undefined;
     },
 };
 for (const [framework, resolve] of Object.entries(publishedSubpath)) {

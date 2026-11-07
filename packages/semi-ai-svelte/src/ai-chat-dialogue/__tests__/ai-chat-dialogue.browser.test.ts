@@ -4,7 +4,7 @@ import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { cdp, page, userEvent } from 'vite-plus/test/browser';
 import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { createStore } from '@fibrae/semi-ui-svelte/_base/__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { Modal } from '@fibrae/semi-ui-svelte/modal/index';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import { AIChatDialogue } from '../../index';

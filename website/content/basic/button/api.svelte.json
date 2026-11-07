@@ -1,6 +1,6 @@
 {
     "button": {
-        "source": "packages/semi-ui-svelte/src/button/button.svelte",
+        "source": "packages/semi-ui-svelte/src/components/button/button.svelte",
         "props": {
             "block": { "zh-CN": "将按钮设置为块级按钮。", "en-US": "Renders the button as a block-level button." },
             "children": {
@@ -54,7 +54,7 @@
         }
     },
     "button-group": {
-        "source": "packages/semi-ui-svelte/src/button/button-group.svelte",
+        "source": "packages/semi-ui-svelte/src/components/button/button-group.svelte",
         "props": {
             "children": { "zh-CN": "组内的 Button。", "en-US": "Buttons in the group." },
             "colorful": {
@@ -80,7 +80,7 @@
         }
     },
     "split-button-group": {
-        "source": "packages/semi-ui-svelte/src/button/split-button-group.svelte",
+        "source": "packages/semi-ui-svelte/src/components/button/split-button-group.svelte",
         "props": {
             "children": {
                 "zh-CN": "分裂按钮：一个 Button 加一个包裹 Button 的 Dropdown。",

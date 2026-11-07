@@ -32,7 +32,7 @@ Styles and theme tokens load with the components. You do not need to import base
 | Entry                                           | Description                                                                                                                                       |
 | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `@fibrae/semi-ui-svelte`                        | All components and types, `ConfigProvider`, `LocaleProvider`, `LocaleConsumer`, `useLocale` and `semiGlobal`                                      |
-| `@fibrae/semi-ui-svelte/<directory>/index`      | Deep file paths that map one-to-one to the directories under `src/`; component files are `<directory>/<name>.svelte`                              |
+| `@fibrae/semi-ui-svelte/<directory>/index`      | Deep file paths that map one-to-one to the directories under `src/components/`; component files are `<directory>/<name>.svelte`                   |
 | `@fibrae/semi-ui-svelte/hooks`                  | `useLocale`, `useClickOutside`, `useCopied` and the attachment `observeResize`                                                                    |
 | `@fibrae/semi-ui-svelte/tokens`                 | Theme tokens and base rules. Import it first in the application entry so tokens still load with the entry when the first component is lazy-loaded |
 | `@fibrae/semi-ui-svelte/styles.css`             | The full stylesheet, for loading all component styles at once                                                                                     |

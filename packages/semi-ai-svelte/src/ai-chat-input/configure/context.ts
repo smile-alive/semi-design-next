@@ -1,5 +1,5 @@
 import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
-import { createContext } from '@fibrae/semi-ui-svelte/_base/create-context';
+import { createContext } from '@fibrae/semi-ui-svelte/base/create-context';
 
 /** `view` is read through a getter, so the items follow the input's values */
 export interface ConfigureContextValue {

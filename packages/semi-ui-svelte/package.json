@@ -23,20 +23,70 @@
         "./styles.css": "./dist/styles.css",
         "./tailwind.css": "./dist/tailwind.css",
         "./package.json": "./package.json",
+        "./hooks": {
+            "types": "./dist/hooks.d.ts",
+            "svelte": "./dist/hooks.js",
+            "default": "./dist/hooks.js"
+        },
+        "./tokens": {
+            "types": "./dist/tokens.d.ts",
+            "svelte": "./dist/tokens.js",
+            "default": "./dist/tokens.js"
+        },
+        "./base/*.svelte": {
+            "types": "./dist/base/*.svelte.d.ts",
+            "svelte": "./dist/base/*.svelte",
+            "default": "./dist/base/*.svelte"
+        },
+        "./base/*.svelte.js": {
+            "types": "./dist/base/*.svelte.d.ts",
+            "svelte": "./dist/base/*.svelte.js",
+            "default": "./dist/base/*.svelte.js"
+        },
+        "./base/*": {
+            "types": "./dist/base/*.d.ts",
+            "svelte": "./dist/base/*.js",
+            "default": "./dist/base/*.js"
+        },
+        "./hooks/*.svelte.js": {
+            "types": "./dist/hooks/*.svelte.d.ts",
+            "svelte": "./dist/hooks/*.svelte.js",
+            "default": "./dist/hooks/*.svelte.js"
+        },
+        "./hooks/*": {
+            "types": "./dist/hooks/*.d.ts",
+            "svelte": "./dist/hooks/*.js",
+            "default": "./dist/hooks/*.js"
+        },
+        "./internal/*.svelte": {
+            "types": "./dist/internal/*.svelte.d.ts",
+            "svelte": "./dist/internal/*.svelte",
+            "default": "./dist/internal/*.svelte"
+        },
+        "./internal/*": {
+            "types": "./dist/internal/*.d.ts",
+            "svelte": "./dist/internal/*.js",
+            "default": "./dist/internal/*.js"
+        },
+        "./utils/*": {
+            "types": "./dist/utils/*.d.ts",
+            "svelte": "./dist/utils/*.js",
+            "default": "./dist/utils/*.js"
+        },
         "./*.svelte": {
-            "types": "./dist/*.svelte.d.ts",
-            "svelte": "./dist/*.svelte",
-            "default": "./dist/*.svelte"
+            "types": "./dist/components/*.svelte.d.ts",
+            "svelte": "./dist/components/*.svelte",
+            "default": "./dist/components/*.svelte"
         },
         "./*.svelte.js": {
-            "types": "./dist/*.svelte.d.ts",
-            "svelte": "./dist/*.svelte.js",
-            "default": "./dist/*.svelte.js"
+            "types": "./dist/components/*.svelte.d.ts",
+            "svelte": "./dist/components/*.svelte.js",
+            "default": "./dist/components/*.svelte.js"
         },
         "./*": {
-            "types": "./dist/*.d.ts",
-            "svelte": "./dist/*.js",
-            "default": "./dist/*.js"
+            "types": "./dist/components/*.d.ts",
+            "svelte": "./dist/components/*.js",
+            "default": "./dist/components/*.js"
         }
     },
     "files": [

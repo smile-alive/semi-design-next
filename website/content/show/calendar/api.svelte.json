@@ -1,6 +1,6 @@
 {
     "calendar": {
-        "source": "packages/semi-ui-svelte/src/calendar/calendar.svelte",
+        "source": "packages/semi-ui-svelte/src/components/calendar/calendar.svelte",
         "props": {
             "displayValue": {
                 "zh-CN": "展示日期，未传时为当前日期并在午夜更新。",

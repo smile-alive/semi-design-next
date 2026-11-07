@@ -1,6 +1,6 @@
 {
     "radio": {
-        "source": "packages/semi-ui-svelte/src/radio/radio.svelte",
+        "source": "packages/semi-ui-svelte/src/components/radio/radio.svelte",
         "props": {
             "addonClassName": {
                 "zh-CN": "包裹内容容器的类名。",
@@ -66,7 +66,7 @@
         }
     },
     "radio-group": {
-        "source": "packages/semi-ui-svelte/src/radio/radio-group.svelte",
+        "source": "packages/semi-ui-svelte/src/components/radio/radio-group.svelte",
         "props": {
             "buttonSize": {
                 "zh-CN": "type 为 button 时按钮的尺寸，可选 small、middle、large。",

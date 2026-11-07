@@ -1,6 +1,6 @@
 {
     "list": {
-        "source": "packages/semi-ui-svelte/src/list/list.svelte",
+        "source": "packages/semi-ui-svelte/src/components/list/list.svelte",
         "props": {
             "bordered": { "zh-CN": "是否显示边框。", "en-US": "Whether to show a border." },
             "dataSource": {
@@ -50,7 +50,7 @@
         }
     },
     "list-item": {
-        "source": "packages/semi-ui-svelte/src/list/item.svelte",
+        "source": "packages/semi-ui-svelte/src/components/list/item.svelte",
         "props": {
             "align": {
                 "zh-CN": "header 与 main 的垂直对齐方式，可选 flex-start、flex-end、center、baseline 或 stretch，未传时为 flex-start。",

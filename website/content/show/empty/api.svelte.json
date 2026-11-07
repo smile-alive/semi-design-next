@@ -1,6 +1,6 @@
 {
     "empty": {
-        "source": "packages/semi-ui-svelte/src/empty/empty.svelte",
+        "source": "packages/semi-ui-svelte/src/components/empty/empty.svelte",
         "props": {
             "children": { "zh-CN": "描述下方的操作区。", "en-US": "Actions below the description." },
             "darkModeImage": {

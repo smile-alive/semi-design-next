@@ -12,15 +12,15 @@
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import '@fibrae/semi-ai-foundation/components/ai-chat-input/ai-chat-input.scss';
     import { IconClose, IconCode, IconCrossStroked, IconExcel, IconFile, IconMusic, IconPdf, IconSendMsgStroked, IconTemplateStroked, IconVideo, IconWord } from '@fibrae/semi-icons-svelte';
-    import { groupRole } from '@fibrae/semi-ui-svelte/_base/group-role';
-    import useDefaultProps from '@fibrae/semi-ui-svelte/_base/use-default-props';
-    import useFoundation from '@fibrae/semi-ui-svelte/_base/use-foundation.svelte.js';
+    import useDefaultProps from '@fibrae/semi-ui-svelte/base/use-default-props';
+    import useFoundation from '@fibrae/semi-ui-svelte/base/use-foundation.svelte.js';
     import { Button } from '@fibrae/semi-ui-svelte/button/index';
     import { useConfig } from '@fibrae/semi-ui-svelte/config-provider/index';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import { Popover } from '@fibrae/semi-ui-svelte/popover/index';
     import { Progress } from '@fibrae/semi-ui-svelte/progress/index';
     import type { TooltipTriggerProps } from '@fibrae/semi-ui-svelte/tooltip/index';
+    import { groupRole } from '@fibrae/semi-ui-svelte/utils/group-role';
     import Configure from './configure/configure.svelte';
     import HorizontalScroller from './horizontal-scroller.svelte';
     import type { AIChatInputProps, AIChatInputSkillIconSnippetProps, AIChatInputSkillItemSnippetProps, AIChatInputSuggestionItemSnippetProps, AIChatInputTopSlotSnippetProps, Skill } from './interface.js';

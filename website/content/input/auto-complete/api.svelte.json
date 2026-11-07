@@ -1,6 +1,6 @@
 {
     "auto-complete": {
-        "source": "packages/semi-ui-svelte/src/auto-complete/auto-complete.svelte",
+        "source": "packages/semi-ui-svelte/src/components/auto-complete/auto-complete.svelte",
         "props": {
             "value": {
                 "zh-CN": "输入框的当前值，可 `bind:value`。不传时由组件自行管理；单向 `value={x}` 只作初值，要完全受控用函数绑定 `bind:value={get, set}`。没有 defaultValue。",

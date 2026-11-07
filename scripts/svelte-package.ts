@@ -3,7 +3,7 @@
 // and the files `vp pack` emits for the other frameworks are written by hand.
 // Run from a package root: node ../../scripts/svelte-package.ts [--bundles ui|ai] [--locale]
 //   --bundles  whole-package stylesheets of vite.semi.ts (`ui`: styles.css and tailwind.css, `ai`: styles.css)
-//   --locale   dist/locale/source/<name> re-exports of the foundation locale packs
+//   --locale   dist/components/locale/source/<name> re-exports of the foundation locale packs
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -66,7 +66,7 @@ if (options.bundles) {
 // without installing foundation itself
 if (options.locale) {
     const sourceDir = path.resolve(import.meta.dirname, '../packages/semi-foundation/src/locale/source');
-    const outDir = path.join(dist, 'locale/source');
+    const outDir = path.join(dist, 'components/locale/source');
     fs.mkdirSync(outDir, { recursive: true });
     for (const file of fs.globSync('*.ts', { cwd: sourceDir })) {
         const name = path.basename(file, '.ts');

@@ -13,11 +13,11 @@
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/ai-chat-dialogue.scss';
     import { IconChevronDown } from '@fibrae/semi-icons-svelte';
-    import { groupRole } from '@fibrae/semi-ui-svelte/_base/group-role';
-    import useDefaultProps from '@fibrae/semi-ui-svelte/_base/use-default-props';
-    import useFoundation from '@fibrae/semi-ui-svelte/_base/use-foundation.svelte.js';
+    import useDefaultProps from '@fibrae/semi-ui-svelte/base/use-default-props';
+    import useFoundation from '@fibrae/semi-ui-svelte/base/use-foundation.svelte.js';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
+    import { groupRole } from '@fibrae/semi-ui-svelte/utils/group-role';
     import { setAIChatDialogueContext } from './context.js';
     import DialogueHint from './dialogue-hint.svelte';
     import Dialogue from './dialogue.svelte';

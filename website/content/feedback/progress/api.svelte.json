@@ -1,6 +1,6 @@
 {
     "progress": {
-        "source": "packages/semi-ui-svelte/src/progress/progress.svelte",
+        "source": "packages/semi-ui-svelte/src/components/progress/progress.svelte",
         "props": {
             "direction": {
                 "zh-CN": "条状进度条的方向，可选 horizontal、vertical。",

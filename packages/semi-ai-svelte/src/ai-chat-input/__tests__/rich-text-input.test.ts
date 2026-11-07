@@ -7,7 +7,7 @@ import { handleZeroWidthCharLogic } from '@fibrae/semi-ai-foundation/components/
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { createStore } from '@fibrae/semi-ui-svelte/_base/__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { PlaceholderProps } from '../interface';
 import RichTextHost from './rich-text-host.svelte';
 

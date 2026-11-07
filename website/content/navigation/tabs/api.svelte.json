@@ -1,6 +1,6 @@
 {
     "tabs": {
-        "source": "packages/semi-ui-svelte/src/tabs/tabs.svelte",
+        "source": "packages/semi-ui-svelte/src/components/tabs/tabs.svelte",
         "props": {
             "activeKey": {
                 "zh-CN": "当前激活的标签页的 itemKey，可用 `bind:activeKey` 双向绑定。传 `null` 时不激活任何标签页，仍是受控；不传或为 `undefined` 时按非受控处理，默认选中第一个启用的标签页。",
@@ -123,7 +123,7 @@
         }
     },
     "tab-item": {
-        "source": "packages/semi-ui-svelte/src/tabs/tab-item.svelte",
+        "source": "packages/semi-ui-svelte/src/components/tabs/tab-item.svelte",
         "props": {
             "closable": { "zh-CN": "是否显示关闭按钮。", "en-US": "Whether to show the close button." },
             "disabled": {

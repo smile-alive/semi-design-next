@@ -15,15 +15,15 @@
     import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
     import '@fibrae/semi-ai-foundation/components/chat/chat.scss';
     import { IconChevronDown, IconDisc } from '@fibrae/semi-icons-svelte';
-    import { groupRole } from '@fibrae/semi-ui-svelte/_base/group-role';
-    import useDefaultProps from '@fibrae/semi-ui-svelte/_base/use-default-props';
-    import useFoundation from '@fibrae/semi-ui-svelte/_base/use-foundation.svelte.js';
+    import useDefaultProps from '@fibrae/semi-ui-svelte/base/use-default-props';
+    import useFoundation from '@fibrae/semi-ui-svelte/base/use-foundation.svelte.js';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import Divider from '@fibrae/semi-ui-svelte/divider/divider.svelte';
     import { observeResize, useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import ToastList from '@fibrae/semi-ui-svelte/toast/toast-list.svelte';
     import { createToastHookApi } from '@fibrae/semi-ui-svelte/toast/use-toast';
     import type { FileItem } from '@fibrae/semi-ui-svelte/upload/interface';
+    import { groupRole } from '@fibrae/semi-ui-svelte/utils/group-role';
     import ChatBox from './chat-box.svelte';
     import { setChatContext } from './context.js';
     import Hint from './hint.svelte';

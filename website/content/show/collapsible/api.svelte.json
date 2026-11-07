@@ -1,6 +1,6 @@
 {
     "collapsible": {
-        "source": "packages/semi-ui-svelte/src/collapsible/collapsible.svelte",
+        "source": "packages/semi-ui-svelte/src/components/collapsible/collapsible.svelte",
         "props": {
             "children": {
                 "zh-CN": "需要展开或收起的内容的 snippet。",

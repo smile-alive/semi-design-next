@@ -4,7 +4,7 @@
     import { Editor } from '@tiptap/core';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import { canUploadImage, getEditorAttributes, getFileEditorExtensions } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
-    import watch from '@fibrae/semi-ui-svelte/_base/watch.svelte.js';
+    import watch from '@fibrae/semi-ui-svelte/hooks/watch.svelte.js';
     import { createImageUploadNode } from './image-slot.js';
     import type { FileItemProps } from './interface.js';
     import MenuBar from './menu-bar.svelte';

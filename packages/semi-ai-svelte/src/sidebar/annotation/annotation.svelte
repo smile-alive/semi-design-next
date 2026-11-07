@@ -1,6 +1,6 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
-    import useDefaultProps from '@fibrae/semi-ui-svelte/_base/use-default-props';
+    import useDefaultProps from '@fibrae/semi-ui-svelte/base/use-default-props';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import Container from '../container/container.svelte';
     import AnnotationContent from './annotation-content.svelte';

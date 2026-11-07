@@ -1,6 +1,6 @@
 {
     "hot-keys": {
-        "source": "packages/semi-ui-svelte/src/hot-keys/hot-keys.svelte",
+        "source": "packages/semi-ui-svelte/src/components/hot-keys/hot-keys.svelte",
         "props": {
             "children": {
                 "zh-CN": "替换按键提示的内容，写在标签内。传了 children 就不渲染默认的按键提示，快捷键仍然有效。",

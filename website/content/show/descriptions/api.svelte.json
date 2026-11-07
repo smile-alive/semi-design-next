@@ -1,6 +1,6 @@
 {
     "descriptions": {
-        "source": "packages/semi-ui-svelte/src/descriptions/descriptions.svelte",
+        "source": "packages/semi-ui-svelte/src/components/descriptions/descriptions.svelte",
         "props": {
             "align": {
                 "zh-CN": "对齐方式，可选 center、justify、left、plain；row 为 true 时无效。",

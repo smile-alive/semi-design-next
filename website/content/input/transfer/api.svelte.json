@@ -1,6 +1,6 @@
 {
     "transfer": {
-        "source": "packages/semi-ui-svelte/src/transfer/transfer.svelte",
+        "source": "packages/semi-ui-svelte/src/components/transfer/transfer.svelte",
         "props": {
             "value": {
                 "zh-CN": "已选中项的 value 数组，可用 bind:value 绑定。只传值时作为初始选中项，之后由组件自己维护；`bind:value={get, set}` 使其完全受控，数组顺序就是右侧的显示顺序。",
