@@ -120,7 +120,7 @@
         }
     },
     "tab-pane": {
-        "source": "packages/semi-ui-solid/src/components/tabs/tab-pane.tsx",
+        "source": "packages/semi-ui-solid/src/components/tabs/tab-pane.ts",
         "props": {
             "children": { "zh-CN": "面板内容。", "en-US": "Panel content." },
             "closable": {

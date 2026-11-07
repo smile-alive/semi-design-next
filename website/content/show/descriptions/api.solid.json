@@ -34,7 +34,7 @@
         }
     },
     "descriptions-item": {
-        "source": "packages/semi-ui-solid/src/components/descriptions/item.tsx",
+        "source": "packages/semi-ui-solid/src/components/descriptions/item.ts",
         "props": {
             "children": {
                 "zh-CN": "值，可以是 JSX 元素，也可以是渲染时调用的函数。",

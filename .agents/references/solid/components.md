@@ -10,7 +10,7 @@ semi-ui-solid 的写法。框架版本以其 `peerDependencies` 为准（Solid 1
 ## 公开 API
 
 - prop 名、回调签名与受控 prop 以 semi-ui-react 为准（`checked`、`value`、`activeKey`，回调 `onChange(value, event)`），只按 Solid 原生写法改：`className` 改为 `class`（Semi 自己的 `contentClassName`、`wrapperClassName` 等保持原名），`style` 接受对象（键用 kebab-case）或字符串，`ref` 是回调，React 的 `ReactNode` 改为 `JSX.Element`，render 类函数 prop 返回 `JSX.Element`。不照搬 Vue 的插槽、emit 与 `modelValue`。
-- 目录与文件用 kebab-case，组件写在 `.tsx`，`index.ts` 汇总导出组件与 `XxxProps` 等类型；包入口 `src/index.ts` 再导出。组件用 `function` 声明：`export default function Button(props: ButtonProps)`，子组件挂载用 `Object.assign(Tabs, { TabPane })`；Form 例外，字段与部件只有具名导出（F17）。
+- 目录与文件用 kebab-case，含 JSX 的文件写成 `.tsx`，不含 JSX 的（包括直接调用其他组件、不写 JSX 的组件）写成 `.ts`，`index.ts` 汇总导出组件与 `XxxProps` 等类型；包入口 `src/index.ts` 再导出。组件用 `function` 声明：`export default function Button(props: ButtonProps)`，子组件挂载用 `Object.assign(Tabs, { TabPane })`；Form 例外，字段与部件只有具名导出（F17）。
 - 不写 `elementType`：Solid 读不到子组件的类型（S-H4），识别子项见下文「子项」。
 
 ## props
@@ -79,7 +79,7 @@ semi-ui-solid 的写法。框架版本以其 `peerDependencies` 为准（Solid 1
 - 状态变化需要屏幕阅读器播报时用 `primitives/use-announcer.ts`，它提供常驻的 live region 文本。
 - 复制到剪贴板并短暂显示「已复制」时用 `primitives/use-copied.ts`。
 - 无 role 的 div 有名称时需要 `group` 角色，用 `@fibrae/semi-foundation/utils/a11y` 的 `namedRole`。
-- 进出场动画用 `internal/css-animation.tsx` 的 `useCSSAnimation`：变化的值传访问器，回调传普通函数；`ref` 放在动画元素上，`className()`、`style()` 写到该元素。它不管挂载：元素是否挂载由 foundation 状态决定，调用方在 `onAnimationEnd` 里卸载；一轮里没有运行中的 CSS 动画时立即结束。jsdom 的 `getAnimations()` 恒为空，测动画事件路径时 spy `Element.prototype.getAnimations`。
+- 进出场动画用 `internal/css-animation.ts` 的 `useCSSAnimation`：变化的值传访问器，回调传普通函数；`ref` 放在动画元素上，`className()`、`style()` 写到该元素。它不管挂载：元素是否挂载由 foundation 状态决定，调用方在 `onAnimationEnd` 里卸载；一轮里没有运行中的 CSS 动画时立即结束。jsdom 的 `getAnimations()` 恒为空，测动画事件路径时 spy `Element.prototype.getAnimations`。
 - 命令式 API（`Toast.info`、`Modal.confirm`）用 `base/detached-render.ts` 的 `renderDetached` 渲染：树在任何 owner 之外，只读全局默认值与默认语言包；每次调用是一个新根，只能经 `code` 里读的 signal 更新；返回的 dispose 同步移除容器，在微任务里释放树。自建容器的调用方（Toast、Notification）在访问 `document` 之前先调同文件的 `assertClient()`，服务端调用抛出说明性错误。hook 形式返回 `[api, contextHolder]`，holder 在调用方的 owner 下创建，继承其 context。
 - 渲染到 `getPopupContainer` 的浮层（Modal、SideSheet）用 `internal/popup-portal.tsx` 的 `PopupPortal`，它负责容器回落、`semi-portal` 包裹元素和外层 Tooltip 的弹层登记。
 - 只渲染可见行的列表（Select、Cascader、Tree、TreeSelect、Transfer、Pagination、Table）用 `internal/virtual-list.tsx` 的 `VirtualList`（`@tanstack/solid-virtual`）。`height` 是像素数，按它计算可见行，不测量；`itemSize` 为函数且返回值变了而行数没变时，调用 handle 的 `measure()`。children 是 `(row) => JSX.Element`，每个行 key 只调用一次，`row.index`、`row.style`、`row.data`（即 `itemData`）都是活 getter，不解构；按身份复用行时传 `itemKey`，此时 `itemCount` 与 `itemData` 从同一来源派生或在同一个 `batch` 里更新，否则 `itemKey` 拿到和数据对不上的 index。`outerElementType` 把收到的 `ref`、`style`、`onScroll`、`children` 落到自己的滚动元素上，`innerElementType` 接收 `style` 和各行。行不可聚焦的列表传 `tabIndex={-1}`。

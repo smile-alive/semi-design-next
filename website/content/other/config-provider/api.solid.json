@@ -33,7 +33,7 @@
         }
     },
     "config-consumer": {
-        "source": "packages/semi-ui-solid/src/components/config-provider/config-consumer.tsx",
+        "source": "packages/semi-ui-solid/src/components/config-provider/config-consumer.ts",
         "props": {
             "children": {
                 "zh-CN": "函数子节点，参数为当前生效的配置（ContextValue）；在 ConfigProvider 内还包含 `screens` 与 `onBreakpoint`，没有 ConfigProvider 时为空对象。函数只执行一次，字段以 `config.xxx` 的形式在 JSX 中读取，不要解构。",

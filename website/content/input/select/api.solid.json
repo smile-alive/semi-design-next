@@ -352,7 +352,7 @@
         }
     },
     "select-opt-group": {
-        "source": "packages/semi-ui-solid/src/components/select/option-group.tsx",
+        "source": "packages/semi-ui-solid/src/components/select/option-group.ts",
         "props": {
             "children": {
                 "zh-CN": "分组内的选项，只能是 `Select.Option`。",

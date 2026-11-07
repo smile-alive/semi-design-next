@@ -199,7 +199,7 @@
         }
     },
     "column": {
-        "source": "packages/semi-ui-react/src/components/table/column.tsx",
+        "source": "packages/semi-ui-react/src/components/table/column.ts",
         "props": {
             "align": {
                 "zh-CN": "列内容的对齐方式，可选 `left`、`right` 或 `center`，RTL 时自动切换。未设置时为 `left`。",
