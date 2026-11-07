@@ -11,9 +11,9 @@
     import { ToastFactory } from '@fibrae/semi-ui-svelte/toast/index';
     import Container from './container/container.svelte';
     import type { SideBarOption, SideBarProps } from './interface.js';
-    import CodeItem from './widget/code-item.svelte';
-    import FileItem from './widget/file-item.svelte';
-    import type { CodeItemData, FileItemData } from './widget/interface.js';
+    import CodeItem from './widgets/code-item.svelte';
+    import FileItem from './widgets/file-item.svelte';
+    import type { CodeItemData, FileItemData } from './widgets/interface.js';
 
     const defaults = useDefaultProps('Sidebar');
 

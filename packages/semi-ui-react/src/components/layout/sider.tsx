@@ -5,7 +5,7 @@ import { defaultResponsiveMap, type ResponsiveMap } from '@fibrae/semi-foundatio
 import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
 import { registerMediaQuery } from '@fibrae/semi-foundation/utils/dom';
 import type { ElementProps } from '../../base/base';
-import { useLayoutContext } from './layout-context';
+import { useLayoutContext } from './context';
 
 export type { ResponsiveMap };
 

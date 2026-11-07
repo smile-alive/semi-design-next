@@ -15,11 +15,11 @@ import { useLocale, useResizeObserver } from '@fibrae/semi-ui-solid/primitives';
 import Toast from '@fibrae/semi-ui-solid/toast/index';
 import callHandler from '@fibrae/semi-ui-solid/utils/call-handler';
 import mergeRefs from '@fibrae/semi-ui-solid/utils/merge-refs';
-import ChatBox from './chat-box';
 import { ChatContext, type ChatContextValue, type ChatView } from './context';
-import Hint from './hint';
-import InputBox, { type InputBoxHandle } from './input-box';
 import type { ChatHandle, ChatProps, Message } from './interface';
+import ChatBox from './widgets/chat-box';
+import Hint from './widgets/hint';
+import InputBox, { type InputBoxHandle } from './widgets/input-box';
 
 type Foundation = ChatFoundation<ChatProps>;
 type Adapter = ChatAdapter<ChatProps>;

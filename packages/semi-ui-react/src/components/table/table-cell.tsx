@@ -6,8 +6,8 @@ import { get } from 'es-toolkit/compat';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/table/constants';
 import { isSelectionColumn, isExpandedColumn, getRTLAlign, shouldShowEllipsisTitle, getRTLFlexAlign } from '@fibrae/semi-foundation/components/table/utils';
 import type { BaseProps } from '../../base/base-component';
+import { useTableContext } from './context';
 import type { ColumnProps, ExpandIcon } from './interface';
-import { useTableContext } from './table-context';
 
 export interface TableCellProps extends BaseProps {
     record?: Record<string, any>;

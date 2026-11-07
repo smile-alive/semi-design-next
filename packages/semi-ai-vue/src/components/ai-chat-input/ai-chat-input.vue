@@ -21,11 +21,11 @@
     import Progress from '@fibrae/semi-ui-vue/progress/index';
     import { groupRole } from '@fibrae/semi-ui-vue/utils/group-role';
     import Configure from './configure';
-    import HorizontalScroller from './horizontal-scroller.vue';
     import type { AIChatInputEmits, AIChatInputHandle, AIChatInputProps, AIChatInputSkillItemSlotProps, AIChatInputSlots, AIChatInputSuggestionItemSlotProps, AIChatInputTopSlotProps, Skill } from './interface';
-    import RichTextInput from './rich-text-input.vue';
-    import SendButton from './send-button.vue';
-    import UploadButton from './upload-button.vue';
+    import HorizontalScroller from './widgets/horizontal-scroller.vue';
+    import RichTextInput from './widgets/rich-text-input.vue';
+    import SendButton from './widgets/send-button.vue';
+    import UploadButton from './widgets/upload-button.vue';
 
     type Foundation = AIChatInputFoundation<AIChatInputProps>;
     type Adapter = AIChatInputAdapter<AIChatInputProps>;

@@ -6,9 +6,9 @@ import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/fo
 import { isLastLeftFixed, arrayAdd, isFixedLeft, isFixedRight, isFirstFixedRight, isInnerColumnKey, isExpandedColumn } from '@fibrae/semi-foundation/components/table/utils';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
+import { useTableContext } from '../context';
 import type { ColumnProps, TableComponents, Virtualized, ExpandIcon, OnRow, RowExpandable } from '../interface';
 import TableCell from '../table-cell';
-import { useTableContext } from '../table-context';
 
 export interface BaseRowProps {
     cellWidths?: number[];

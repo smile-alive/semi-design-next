@@ -6,7 +6,7 @@ import '@fibrae/semi-foundation/components/layout/layout.scss';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import flattenChildren from '../../utils/flatten-children';
-import { LayoutContext, type ContextType } from './layout-context';
+import { LayoutContext, type ContextType } from './context';
 import Sider from './sider';
 
 export type { ResponsiveMap, SiderProps } from './sider';

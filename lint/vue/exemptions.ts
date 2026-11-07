@@ -472,7 +472,7 @@ export const vueExemptions: VueExemption[] = [
     },
     // Input area click only focuses the textarea
     {
-        files: ['packages/semi-ai-vue/src/components/chat/input-box-layout.vue'],
+        files: ['packages/semi-ai-vue/src/components/chat/widgets/input-box-layout.vue'],
         off: [],
         templateOff: ['vuejs-accessibility/click-events-have-key-events', 'vuejs-accessibility/no-static-element-interactions'],
     },

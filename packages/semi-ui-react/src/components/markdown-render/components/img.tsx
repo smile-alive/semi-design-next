@@ -3,7 +3,7 @@ import { omit } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
 import { IconUploadError } from '@fibrae/semi-icons-react';
 import Image, { type ImageProps } from '../../image';
-import { useLinkContext } from './link-context';
+import { useLinkContext } from '../context';
 
 // capitalised for the hooks rules, though markdown names it `img`
 export default function Img(props: PropsWithChildren<ImageProps>) {

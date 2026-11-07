@@ -11,9 +11,9 @@ import { useDidUpdate, useLocale } from '@fibrae/semi-ui-react/hooks';
 import { ToastFactory } from '@fibrae/semi-ui-react/toast/index';
 import Container from './container';
 import type { SideBarProps } from './interface';
-import Options from './options';
-import CodeContent, { CodeItem } from './widget/code';
-import FileContent, { FileItem } from './widget/file';
+import CodeContent, { CodeItem } from './widgets/code';
+import FileContent, { FileItem } from './widgets/file';
+import Options from './widgets/options';
 
 const prefixCls = cssClasses.SIDEBAR;
 

@@ -5,9 +5,9 @@ import { cssClasses, getTabKeyAttrs } from '@fibrae/semi-foundation/components/t
 import { IconClose } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../../base/base';
 import useLocale from '../locale/use-locale';
+import { useTabsContext } from './context';
 import { getPanelId, getTabId } from './ids';
 import type { TabType, TabSize, TabPosition } from './interface';
-import { useTabsContext } from './tabs-context';
 
 export interface TabItemProps extends ElementProps<'div', 'onClick'> {
     tab?: ReactNode;

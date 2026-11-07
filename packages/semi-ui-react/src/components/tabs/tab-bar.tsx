@@ -12,10 +12,10 @@ import Button from '../button';
 import Dropdown, { type DropdownProps } from '../dropdown';
 import useLocale from '../locale/use-locale';
 import OverflowList from '../overflow-list';
+import { TabsContext, useTabsContext } from './context';
 import { getTabId } from './ids';
 import type { TabBarProps, PlainTab } from './interface';
 import TabItem from './tab-item';
-import { TabsContext, useTabsContext } from './tabs-context';
 
 export interface OverflowItem extends PlainTab {
     key: string;

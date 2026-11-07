@@ -7,9 +7,9 @@ import { IconTreeTriangleDown, IconFile, IconFolder, IconFolderOpen } from '@fib
 import { Checkbox } from '../checkbox';
 import Highlight from '../highlight';
 import Spin from '../spin';
+import { useTreeContext } from './context';
 import Indent from './indent';
 import type { TreeNodeProps } from './interface';
-import { useTreeContext } from './tree-context';
 
 const prefixcls = cssClasses.PREFIX_OPTION;
 

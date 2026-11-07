@@ -103,7 +103,7 @@ export type {
 export { Sidebar, Annotation, MCPConfigure } from './components/sidebar/index.js';
 export type { ContainerHandle as SidebarContainerHandle, ContainerProps as SidebarContainerProps } from './components/sidebar/container/interface.js';
 export type { SideBarProps, SideBarOption, SideBarDetailContent, SideBarOptionSnippetProps, SideBarOptionItemSnippetProps, SideBarMainContentSnippetProps, SideBarDetailHeaderSnippetProps, SideBarDetailBodySnippetProps } from './components/sidebar/interface.js';
-export type { CodeItemProps, CodeContentProps, FileItemProps, FileContentProps, ImageUploadNodeOptions } from './components/sidebar/widget/interface.js';
+export type { CodeItemProps, CodeContentProps, FileItemProps, FileContentProps, ImageUploadNodeOptions } from './components/sidebar/widgets/interface.js';
 export type { AnnotationProps, AnnotationContentProps, AnnotationItem, AnnotationInfo, AnnotationHeaderSnippetProps, AnnotationItemSnippetProps } from './components/sidebar/annotation/interface.js';
 export type { MCPConfigureProps, MCPConfigureContentProps, MCPConfigureOption, MCPConfigureItemSnippetProps } from './components/sidebar/mcp-configure/interface.js';
 

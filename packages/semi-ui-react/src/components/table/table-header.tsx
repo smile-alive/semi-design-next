@@ -2,8 +2,8 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
 import { parseHeaderRows } from '@fibrae/semi-foundation/components/table/utils';
 import type { BaseProps } from '../../base/base-component';
+import { useTableContext } from './context';
 import type { TableComponents, OnHeaderRow } from './interface';
-import { useTableContext } from './table-context';
 import TableHeaderRow from './table-header-row';
 
 export interface TableHeaderProps extends BaseProps {

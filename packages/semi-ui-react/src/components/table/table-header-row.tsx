@@ -5,8 +5,8 @@ import { cssClasses, strings } from '@fibrae/semi-foundation/components/table/co
 import { getHeadWidths, parseHeaderRows, getHeaderStickyOffset, isFirstFixedRight, isLastLeftFixed, isFixedLeft, isFixedRight, sliceColumnsByLevel, getColumnsByLevel, getRTLAlign, getNextSortOrder, type TableHeaderCell } from '@fibrae/semi-foundation/components/table/utils';
 import LocaleConsumer from '../locale/locale-consumer';
 import Tooltip from '../tooltip';
+import { useTableContext } from './context';
 import type { TableComponents, OnHeaderRow, TableLocale, ColumnProps } from './interface';
-import { useTableContext } from './table-context';
 
 /** A column as Table hands it to the header; not part of the public column configuration */
 export interface HeaderColumn extends ColumnProps {

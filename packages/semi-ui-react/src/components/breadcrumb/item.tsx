@@ -7,7 +7,7 @@ import type { BaseProps } from '../../base/base-component';
 import useFoundation from '../../base/use-foundation';
 import { fitNavIcon } from '../navigation/nav-icon';
 import Typography, { type ShowTooltip } from '../typography';
-import { useBreadContext } from './bread-context';
+import { useBreadContext } from './context';
 
 type Foundation = BreadcrumbItemFoundation<BreadcrumbItemProps, React.MouseEvent>;
 type Adapter = BreadcrumbItemAdapter<BreadcrumbItemProps, React.MouseEvent>;

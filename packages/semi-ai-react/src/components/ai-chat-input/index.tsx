@@ -20,11 +20,11 @@ import Tooltip from '@fibrae/semi-ui-react/tooltip/index';
 import Upload, { type UploadHandle, type UploadProps } from '@fibrae/semi-ui-react/upload/index';
 import { namedRole } from '@fibrae/semi-ui-react/utils/named-role';
 import Configure, { type ConfigureHandle } from './configure';
-import HorizontalScroller from './horizontal-scroller';
 import type { AIChatInputProps, Skill, Attachment, Reference, Content, RenderUploadButtonProps } from './interface';
-import RichTextInput from './rich-text-input';
-import SkillItem from './skill-item';
-import SuggestionItem from './suggestion-item';
+import HorizontalScroller from './widgets/horizontal-scroller';
+import RichTextInput from './widgets/rich-text-input';
+import SkillItem from './widgets/skill-item';
+import SuggestionItem from './widgets/suggestion-item';
 
 type Foundation = AIChatInputFoundation<AIChatInputProps>;
 type Adapter = AIChatInputAdapter<AIChatInputProps>;

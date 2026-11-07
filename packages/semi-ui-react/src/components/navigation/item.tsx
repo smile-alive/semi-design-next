@@ -10,7 +10,7 @@ import useMergedRef from '../../hooks/use-merged-ref';
 import { cloneDeep } from '../../utils';
 import Dropdown from '../dropdown';
 import Tooltip from '../tooltip';
-import { useNavContext } from './nav-context';
+import { useNavContext } from './context';
 import { fitNavIcon } from './nav-icon';
 import type { SubNavProps } from './sub-nav';
 

@@ -359,18 +359,18 @@ export const solidExemptions: Exemption[] = [
     // Options stay out of the Tab order: the textbox owns focus and moves the active option through
     // aria-activedescendant, so a click is a pointer shortcut
     {
-        files: ['packages/semi-ai-solid/src/components/ai-chat-input/skill-item.tsx', 'packages/semi-ai-solid/src/components/ai-chat-input/suggestion-item.tsx'],
+        files: ['packages/semi-ai-solid/src/components/ai-chat-input/widgets/skill-item.tsx', 'packages/semi-ai-solid/src/components/ai-chat-input/widgets/suggestion-item.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/interactive-supports-focus', 'jsx-a11y/prefer-tag-over-role'],
     },
     // The editor host relays focusin, focusout, keydown and paste from the Tiptap contenteditable inside it, which holds
     // the textbox role
     {
-        files: ['packages/semi-ai-solid/src/components/ai-chat-input/rich-text-input.tsx'],
+        files: ['packages/semi-ai-solid/src/components/ai-chat-input/widgets/rich-text-input.tsx'],
         off: ['jsx-a11y/no-static-element-interactions'],
     },
     // The input area click only hands focus to the textarea
     {
-        files: ['packages/semi-ai-solid/src/components/chat/input-box.tsx'],
+        files: ['packages/semi-ai-solid/src/components/chat/widgets/input-box.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
     // role="button" divs hold block content; a file card's reference action cannot be a native button inside the

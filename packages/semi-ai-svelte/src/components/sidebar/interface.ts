@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ContainerProps } from './container/interface.js';
-import type { CodeItemData, CodeItemSnippets, FileItemData, ImageUploadNodeOptions } from './widget/interface.js';
+import type { CodeItemData, CodeItemSnippets, FileItemData, ImageUploadNodeOptions } from './widgets/interface.js';
 
 export interface SideBarOption {
     name: string;

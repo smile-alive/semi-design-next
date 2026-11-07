@@ -24,11 +24,11 @@ import callHandler from '@fibrae/semi-ui-solid/utils/call-handler';
 import mergeRefs from '@fibrae/semi-ui-solid/utils/merge-refs';
 import mergeStyles from '@fibrae/semi-ui-solid/utils/merge-styles';
 import Configure, { type ConfigureHandle } from './configure';
-import HorizontalScroller from './horizontal-scroller';
 import type { AIChatInputHandle, AIChatInputProps, ActionAreaProps, Attachment, Content, Reference, RenderTopSlotProps, RenderUploadButtonProps, Skill } from './interface';
-import RichTextInput from './rich-text-input';
-import SkillItem from './skill-item';
-import SuggestionItem from './suggestion-item';
+import HorizontalScroller from './widgets/horizontal-scroller';
+import RichTextInput from './widgets/rich-text-input';
+import SkillItem from './widgets/skill-item';
+import SuggestionItem from './widgets/suggestion-item';
 
 const prefixCls = cssClasses.PREFIX;
 

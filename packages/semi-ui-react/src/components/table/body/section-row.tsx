@@ -1,8 +1,8 @@
 import { type ReactNode, memo, isValidElement } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
+import { useTableContext } from '../context';
 import type { ColumnProps, RenderGroupSection, OnGroupedRow, TableComponents, Virtualized, RowKey, OnRowReturnObject } from '../interface';
-import { useTableContext } from '../table-context';
 import BaseRow from './base-row';
 
 type SectionRecord = Parameters<OnGroupedRow<Record<string, any>>>[0];

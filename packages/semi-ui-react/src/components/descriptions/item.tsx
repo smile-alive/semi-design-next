@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
 import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
 import type { ElementProps } from '../../base/base';
-import { useDescriptionsContext } from './descriptions-context';
+import { useDescriptionsContext } from './context';
 
 export interface DescriptionsItemProps extends ElementProps<'tr', 'children'> {
     hidden?: boolean;

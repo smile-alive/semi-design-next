@@ -29,9 +29,9 @@ import TagInput, { type TagInputHandle } from '../tag-input';
 import TagGroup from '../tag/group';
 import Tag, { type TagProps } from '../tag/index';
 import AutoSizer from '../tree/auto-sizer';
+import { TreeContext, type TreeContextValue } from '../tree/context';
 import type { TreeProps, TreeState, FlattenNode, TreeNodeData, TreeNodeProps } from '../tree/interface';
 import NodeList from '../tree/node-list';
-import { TreeContext, type TreeContextValue } from '../tree/tree-context';
 import TreeNode from '../tree/tree-node';
 import useTreeKeyboard from '../tree/use-tree-keyboard';
 

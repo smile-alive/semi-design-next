@@ -3,9 +3,9 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/tabs/constants';
 import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
 import CSSAnimation from '../../internal/css-animation';
+import { useTabsContext } from './context';
 import { getPanelId, getTabId } from './ids';
 import type { TabPaneProps } from './interface';
-import { useTabsContext } from './tabs-context';
 
 function TabPane({ ref, className, style, children, itemKey, tabIndex, disabled, icon, tab, closable, ...rest }: TabPaneProps) {
     const { activeKey, lazyRender, panes, tabPaneMotion: motion, tabPosition, prevActiveKey, forceDisableMotion, tabsId } = useTabsContext();

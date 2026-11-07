@@ -9,7 +9,7 @@ import { LocaleProvider } from '@fibrae/semi-ui-solid/locale/index';
 import Toast from '@fibrae/semi-ui-solid/toast/index';
 import type { UploadProps } from '@fibrae/semi-ui-solid/upload/index';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
-import FileContent, { FileItem, type FileItemProps } from '../widget/file';
+import FileContent, { FileItem, type FileItemProps } from '../widgets/file';
 
 // tiptap emits `create` on a 0ms timer after the editor is built
 const settle = () => new Promise((resolve) => setTimeout(resolve, 10));

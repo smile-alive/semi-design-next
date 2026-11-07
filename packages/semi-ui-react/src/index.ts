@@ -61,7 +61,7 @@ export type {
 } from './components/date-picker';
 export { default as Descriptions } from './components/descriptions';
 export type { DescriptionsProps, DescriptionsSize, Data as DescriptionsData } from './components/descriptions';
-export type { DescriptionsAlign, DescriptionLayout as DescriptionsLayout } from './components/descriptions/descriptions-context';
+export type { DescriptionsAlign, DescriptionLayout as DescriptionsLayout } from './components/descriptions/context';
 export type { DescriptionsItemProps } from './components/descriptions/item';
 export { default as Divider } from './components/divider';
 export type { DividerProps } from './components/divider';
@@ -84,7 +84,7 @@ export { Layout } from './components/layout';
 export type { BasicLayoutProps as LayoutProps, BasicProps as LayoutBasicProps, SiderProps } from './components/layout';
 export { default as List } from './components/list';
 export type { ListProps, ListItemProps } from './components/list';
-export type { Grid as ListGrid } from './components/list/list-context';
+export type { Grid as ListGrid } from './components/list/context';
 export { default as IconButton } from './components/icon-button';
 export type { IconButtonProps } from './components/icon-button';
 export { default as Icon } from './components/icons';

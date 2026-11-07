@@ -15,11 +15,11 @@
     import Toast from '@fibrae/semi-ui-vue/toast/index';
     import { groupRole } from '@fibrae/semi-ui-vue/utils/group-role';
     import { handOnSlots } from '@fibrae/semi-ui-vue/utils/hand-on';
-    import ChatBox from './chat-box.vue';
     import { provideChatContext } from './context';
-    import Hint from './hint.vue';
-    import InputBox from './input-box.vue';
     import type { ChatEmits, ChatHandle, ChatMessage, ChatProps, ChatSlots } from './interface';
+    import ChatBox from './widgets/chat-box.vue';
+    import Hint from './widgets/hint.vue';
+    import InputBox from './widgets/input-box.vue';
 
     type Foundation = ChatFoundation<ChatProps>;
     type Adapter = ChatAdapter<ChatProps>;
