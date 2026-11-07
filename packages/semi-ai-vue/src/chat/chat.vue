@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { computed, h, useTemplateRef, watch } from 'vue';
-    import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
-    import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/chat/foundation';
-    import { followChats, followHints } from '@fibrae/semi-ai-foundation/message-list-foundation';
+    import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
+    import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
+    import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/components/chat/foundation';
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-    import '@fibrae/semi-ai-foundation/chat/chat.scss';
+    import '@fibrae/semi-ai-foundation/components/chat/chat.scss';
     import { IconChevronDown, IconDisc } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';
     import { groupRole } from '@fibrae/semi-ui-vue/_base/group-role';

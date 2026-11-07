@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import type { VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import Button from '@fibrae/semi-ui-vue/button/index';
 
     // elementType lets a Dropdown tell this is a button and put aria-haspopup and aria-expanded on it

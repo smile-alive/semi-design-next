@@ -30,7 +30,7 @@ export type {
     DialogueStepWidgetProps,
     DialogueStepWidgetActionIconSnippetProps,
 } from './ai-chat-dialogue/interface.js';
-export type { Message as AIChatDialogueMessage, Annotation as AIChatDialogueAnnotation, ContentItem as AIChatDialogueContentItem } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+export type { Message as AIChatDialogueMessage, Annotation as AIChatDialogueAnnotation, ContentItem as AIChatDialogueContentItem } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 
 export { AIChatInput } from './ai-chat-input/index.js';
 export type {
@@ -70,7 +70,7 @@ export type {
     RichTextJSON as AIChatInputRichTextJSON,
     Setup as AIChatInputSetup,
     Suggestion as AIChatInputSuggestion,
-} from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+} from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 
 export { Chat } from './chat/index.js';
 export type {
@@ -107,6 +107,6 @@ export type { CodeItemProps, CodeContentProps, FileItemProps, FileContentProps, 
 export type { AnnotationProps, AnnotationContentProps, AnnotationItem, AnnotationInfo, AnnotationHeaderSnippetProps, AnnotationItemSnippetProps } from './sidebar/annotation/interface.js';
 export type { MCPConfigureProps, MCPConfigureContentProps, MCPConfigureOption, MCPConfigureItemSnippetProps } from './sidebar/mcp-configure/interface.js';
 
-export type { StreamingResponseState, ResponseChunk } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/interface';
-export type { StreamingChatState } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/streaming-chat-completion-to-message';
-export { chatCompletionToMessage, streamingChatCompletionToMessage, streamingResponseToMessage, responseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/index';
+export type { StreamingResponseState, ResponseChunk } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/interface';
+export type { StreamingChatState } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/streaming-chat-completion-to-message';
+export { chatCompletionToMessage, streamingChatCompletionToMessage, streamingResponseToMessage, responseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';

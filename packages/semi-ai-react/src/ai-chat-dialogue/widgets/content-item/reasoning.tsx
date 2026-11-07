@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { IconChevronDown, IconChevronUp, IconAISearchLevel2 } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '@fibrae/semi-ui-react/_base/base';

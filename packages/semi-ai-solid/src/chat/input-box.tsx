@@ -1,8 +1,8 @@
 import { type JSX, type Ref, Show, createMemo, onCleanup, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
-import { cssClasses, strings, type SendHotKey } from '@fibrae/semi-ai-foundation/chat/constants';
-import InputBoxFoundation, { type InputBoxAdapter, type InputBoxState } from '@fibrae/semi-ai-foundation/chat/inputbox-foundation';
+import { cssClasses, strings, type SendHotKey } from '@fibrae/semi-ai-foundation/components/chat/constants';
+import InputBoxFoundation, { type InputBoxAdapter, type InputBoxState } from '@fibrae/semi-ai-foundation/components/chat/inputbox-foundation';
 import { IconArrowUp, IconChainStroked, IconDeleteStroked } from '@fibrae/semi-icons-solid';
 import mergeRefs from '@fibrae/semi-ui-solid/_base/merge-refs';
 import useFoundation from '@fibrae/semi-ui-solid/_base/use-foundation';

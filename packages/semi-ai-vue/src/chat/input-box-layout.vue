@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import type { VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
 
     const emit = defineEmits<{ innerClick: [] }>();
     defineSlots<{ clear?: () => VNode[]; upload?: () => VNode[]; input?: () => VNode[]; send?: () => VNode[] }>();

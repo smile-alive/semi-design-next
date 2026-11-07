@@ -6,14 +6,14 @@
 </script>
 
 <script lang="ts">
-    import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
-    import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/chat/foundation';
-    import { followChats, followHints } from '@fibrae/semi-ai-foundation/message-list-foundation';
+    import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
+    import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
+    import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/components/chat/foundation';
     import { cssClasses as toastCssClasses } from '@fibrae/semi-foundation/components/toast/constants';
     import ToastListStore from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
-    import '@fibrae/semi-ai-foundation/chat/chat.scss';
+    import '@fibrae/semi-ai-foundation/components/chat/chat.scss';
     import { IconChevronDown, IconDisc } from '@fibrae/semi-icons-svelte';
     import { groupRole } from '@fibrae/semi-ui-svelte/_base/group-role';
     import useDefaultProps from '@fibrae/semi-ui-svelte/_base/use-default-props';

@@ -1,8 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
-import { getFileType, isImageFile } from '@fibrae/semi-ai-foundation/file-suffix';
-import { isUploadFailed, isUploadProgressVisible } from '@fibrae/semi-ai-foundation/upload-status';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
+import { getFileType, isImageFile } from '@fibrae/semi-ai-foundation/utils/file-suffix';
+import { isUploadFailed, isUploadProgressVisible } from '@fibrae/semi-ai-foundation/utils/upload-status';
 import { IconAlertCircle, IconBriefStroked, IconClear } from '@fibrae/semi-icons-react';
 import { useLocale } from '@fibrae/semi-ui-react/hooks';
 import Image from '@fibrae/semi-ui-react/image/index';

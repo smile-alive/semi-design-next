@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import type { MCPConfigureContentProps, MCPOption } from '@fibrae/semi-ai-foundation/sidebar/mcp-cof-content-foundation';
+import type { MCPConfigureContentProps, MCPOption } from '@fibrae/semi-ai-foundation/components/sidebar/mcp-cof-content-foundation';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { MCPConfigure } from '@fibrae/semi-ai-react';

@@ -1,6 +1,6 @@
 import React, { type ReactNode } from 'react';
-import type { ChatAlign, ChatMode, SendHotKey } from '@fibrae/semi-ai-foundation/chat/constants';
-import type { EnableUploadProps, Message } from '@fibrae/semi-ai-foundation/chat/foundation';
+import type { ChatAlign, ChatMode, SendHotKey } from '@fibrae/semi-ai-foundation/components/chat/constants';
+import type { EnableUploadProps, Message } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import type { ElementProps } from '@fibrae/semi-ui-react/_base/base';
 import type { AvatarProps } from '@fibrae/semi-ui-react/avatar/index';
 import type { MarkdownRenderProps as OriginMarkdownRenderProps } from '@fibrae/semi-ui-react/markdown-render/index';
@@ -9,7 +9,7 @@ import type { FileItem, UploadHandle, UploadProps } from '@fibrae/semi-ui-react/
 
 export type MarkdownRenderProps = Partial<Omit<OriginMarkdownRenderProps, 'raw' | 'ref' | 'components'>>;
 
-export type { Message } from '@fibrae/semi-ai-foundation/chat/foundation';
+export type { Message } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 export interface CommonChatsProps {
     align?: ChatAlign;
     mode?: ChatMode;

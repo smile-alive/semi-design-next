@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import type { AIChatDialogueProps } from './interface.js';
 
     interface DialogueHintProps {

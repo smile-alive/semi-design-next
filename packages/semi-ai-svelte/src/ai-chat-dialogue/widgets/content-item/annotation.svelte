@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import { IconChevronRight } from '@fibrae/semi-icons-svelte';
     import AvatarGroup from '@fibrae/semi-ui-svelte/avatar/avatar-group.svelte';
     import Avatar from '@fibrae/semi-ui-svelte/avatar/avatar.svelte';

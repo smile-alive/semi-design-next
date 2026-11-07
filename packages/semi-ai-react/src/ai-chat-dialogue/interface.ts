@@ -1,6 +1,6 @@
 import React, { type ReactNode } from 'react';
-import type { Annotation, InputFile, InputImage, Message, Reference } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
-import type { MessageContent } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+import type { Annotation, InputFile, InputImage, Message, Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+import type { MessageContent } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { ElementProps } from '@fibrae/semi-ui-react/_base/base';
 import type { AvatarProps } from '@fibrae/semi-ui-react/avatar/index';
 import type { MarkdownRenderProps as OriginMarkdownRenderProps } from '@fibrae/semi-ui-react/markdown-render/index';

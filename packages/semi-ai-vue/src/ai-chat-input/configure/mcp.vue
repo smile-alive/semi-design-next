@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import Button from '@fibrae/semi-ui-vue/button/index';
     import Dropdown, { DropdownItem, DropdownMenu } from '@fibrae/semi-ui-vue/dropdown/index';

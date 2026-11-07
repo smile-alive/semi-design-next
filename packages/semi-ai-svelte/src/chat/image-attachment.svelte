@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import Image from '@fibrae/semi-ui-svelte/image/image.svelte';
 

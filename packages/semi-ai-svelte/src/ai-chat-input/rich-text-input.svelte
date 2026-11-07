@@ -4,8 +4,8 @@
     import { on } from 'svelte/events';
     import { Editor, type Extensions, type Content as TiptapContent } from '@tiptap/core';
     import type { EditorView } from '@tiptap/pm/view';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
-    import { createEditorProps, getBaseExtensions, getEditorAttributes, getEditorOptions } from '@fibrae/semi-ai-foundation/ai-chat-input/extension/editor-config';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
+    import { createEditorProps, getBaseExtensions, getEditorAttributes, getEditorOptions } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/editor-config';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import slotExtensions from './extension/index.js';
     import type { PlaceholderProps } from './interface.js';

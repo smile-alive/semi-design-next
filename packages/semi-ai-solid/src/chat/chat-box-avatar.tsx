@@ -1,6 +1,6 @@
 import { type JSX, Show } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import Avatar from '@fibrae/semi-ui-solid/avatar/index';
 import type { Message, Metadata, RenderAvatarProps, RenderRoleAvatarProps } from './interface';
 

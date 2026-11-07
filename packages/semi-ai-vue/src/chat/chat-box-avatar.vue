@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, h } from 'vue';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import Avatar from '@fibrae/semi-ui-vue/avatar/index';
     import type { ChatMessage, ChatMetadata, ChatSlots } from './interface';
 

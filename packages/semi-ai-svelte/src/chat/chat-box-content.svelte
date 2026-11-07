@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
-    import ChatFoundation from '@fibrae/semi-ai-foundation/chat/foundation';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
+    import ChatFoundation from '@fibrae/semi-ai-foundation/components/chat/foundation';
     import ChatBoxBody from './chat-box-body.svelte';
     import { getChatContext } from './context.js';
     import type { ChatMessage, ChatMetadata } from './interface.js';

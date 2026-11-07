@@ -17,7 +17,7 @@ pnpm add @fibrae/semi-ai-foundation
 本包没有 `.` 入口，不能裸导入包名，只能按路径导入：
 
 ```ts
-import ChatFoundation from '@fibrae/semi-ai-foundation/chat/foundation';
+import ChatFoundation from '@fibrae/semi-ai-foundation/components/chat/foundation';
 ```
 
 | 入口                                       | 说明                                                                       |
@@ -26,7 +26,7 @@ import ChatFoundation from '@fibrae/semi-ai-foundation/chat/foundation';
 | `@fibrae/semi-ai-foundation/<路径>.css`    | 编译后的样式                                                               |
 | `@fibrae/semi-ai-foundation/<路径>.scss`   | SCSS 源码；`rtl.scss`、`variables.scss`、`animation.scss` 只以源码形式发布 |
 
-目录有 `ai-chat-dialogue`、`ai-chat-input`、`chat`、`sidebar`。tiptap 扩展在 `ai-chat-input/extension/`，各框架包各自 `.extend({ addNodeView })` 提供节点视图。
+`components/` 下有 `ai-chat-dialogue`、`ai-chat-input`、`chat`、`sidebar`；`base/` 放多个组件继承的 foundation（`message-list-foundation`、`action-bar-foundation`）；`utils/` 放无状态工具。tiptap 扩展在 `components/ai-chat-input/extension/`，各框架包各自 `.extend({ addNodeView })` 提供节点视图。
 
 ## 与其他包的关系
 

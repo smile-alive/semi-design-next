@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import type { ButtonProps } from '@fibrae/semi-ui-svelte/button/interface';
 

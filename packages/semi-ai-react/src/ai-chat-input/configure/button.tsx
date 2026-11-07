@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import Button, { type ButtonProps } from '@fibrae/semi-ui-react/button/index';
 import getConfigureItem from './get-configure-item';
 

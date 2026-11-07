@@ -1,4 +1,4 @@
-import { getCustomSlotAttribute } from '@fibrae/semi-ai-foundation/ai-chat-input/utils';
+import { getCustomSlotAttribute } from '@fibrae/semi-ai-foundation/components/ai-chat-input/utils';
 import AIChatInput from './ai-chat-input';
 import Configure from './configure';
 

@@ -1,5 +1,5 @@
+import { isImageFile } from '../../../utils/file-suffix';
 import type { MessageContent, Reference, Setup } from '../../ai-chat-input/interface';
-import { isImageFile } from '../../file-suffix';
 import type { InputMessage } from '../foundation';
 
 export interface ChatInputMessage {

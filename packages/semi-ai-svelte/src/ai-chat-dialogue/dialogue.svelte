@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import Checkbox from '@fibrae/semi-ui-svelte/checkbox/checkbox.svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import { getAIChatDialogueContext } from './context.js';

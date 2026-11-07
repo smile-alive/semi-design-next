@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import type { ElementProps } from '@fibrae/semi-ui-vue/_base/element-props';
     import CodeHighlight from '@fibrae/semi-ui-vue/code-highlight/index';
     import JsonViewer from '@fibrae/semi-ui-vue/json-viewer/index';

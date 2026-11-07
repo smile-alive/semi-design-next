@@ -1,8 +1,8 @@
 import { For, Show, createSignal, getOwner, mergeProps, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import { type ChainedCommands, Editor, type Extensions } from '@tiptap/core';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
-import { type Level, type TextRange, canUploadImage, clearSelectionHighlight, confirmLink, getEditorAttributes, getFileEditorExtensions, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/sidebar/file-extensions';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+import { type Level, type TextRange, canUploadImage, clearSelectionHighlight, confirmLink, getEditorAttributes, getFileEditorExtensions, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import {
     IconAlignCenter,

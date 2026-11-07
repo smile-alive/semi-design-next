@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-ai-foundation/chat/constants';
+import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import ChatBoxAction from './chat-box-action';
 import ChatBoxAvatar from './chat-box-avatar';
 import ChatBoxContent from './chat-box-content';

@@ -1,12 +1,12 @@
 import { For, type JSX, Show, createMemo, mergeProps, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
-import { followChats, followHints } from '@fibrae/semi-ai-foundation/message-list-foundation';
+import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
+import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
-import '@fibrae/semi-ai-foundation/ai-chat-dialogue/ai-chat-dialogue.scss';
+import '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/ai-chat-dialogue.scss';
 import { IconChevronDown } from '@fibrae/semi-icons-solid';
 import mergeRefs from '@fibrae/semi-ui-solid/_base/merge-refs';
 import useDefaultProps from '@fibrae/semi-ui-solid/_base/use-default-props';

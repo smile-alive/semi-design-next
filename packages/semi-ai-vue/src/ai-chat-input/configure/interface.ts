@@ -1,5 +1,5 @@
 import type { AllowedComponentProps, VNode, VNodeProps } from 'vue';
-import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 
 export interface ConfigureProps {
     /** The value the items start from; each item's `initValue` is merged on top when it mounts */

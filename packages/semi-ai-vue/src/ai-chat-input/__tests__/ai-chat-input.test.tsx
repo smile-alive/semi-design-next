@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { Extension, Node, type Editor } from '@tiptap/core';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import type { Attachment } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+import type { Attachment } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/_utils/semi-global';
 import Popover from '@fibrae/semi-ui-vue/popover/index';

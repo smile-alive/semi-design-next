@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
-import type { MessageContent } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+import type { MessageContent } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import chatCompletionToMessage from '../data-adapter/chat-completion-to-message';
 import chatInputToChatCompletion from '../data-adapter/chat-input-to-chat-completion';
 import chatInputToMessage, { type ChatInputMessage } from '../data-adapter/chat-input-to-message';

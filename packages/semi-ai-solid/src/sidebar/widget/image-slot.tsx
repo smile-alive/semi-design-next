@@ -3,8 +3,8 @@ import { insert } from 'solid-js/web';
 import { NodeView, type NodeViewRendererProps } from '@tiptap/core';
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
-import { ImageUploadNode as ImageUploadSchema, insertUploadedImage } from '@fibrae/semi-ai-foundation/sidebar/file-extensions';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+import { ImageUploadNode as ImageUploadSchema, insertUploadedImage } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
 import { useLocale } from '@fibrae/semi-ui-solid/hooks';
 import Upload, { type FileItem, type OnChangeProps, type UploadProps } from '@fibrae/semi-ui-solid/upload/index';
 

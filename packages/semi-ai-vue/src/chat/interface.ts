@@ -1,6 +1,6 @@
 import type { HTMLAttributes, StyleValue, VNode } from 'vue';
-import type { ChatAlign, ChatMode, SendHotKey } from '@fibrae/semi-ai-foundation/chat/constants';
-import type { Content, EnableUploadProps, Message } from '@fibrae/semi-ai-foundation/chat/foundation';
+import type { ChatAlign, ChatMode, SendHotKey } from '@fibrae/semi-ai-foundation/components/chat/constants';
+import type { Content, EnableUploadProps, Message } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import type { AvatarProps } from '@fibrae/semi-ui-vue/avatar/index';
 import type { MarkdownRenderComponents, MarkdownRenderProps } from '@fibrae/semi-ui-vue/markdown-render/index';
 import type { TooltipProps } from '@fibrae/semi-ui-vue/tooltip/index';

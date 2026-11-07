@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, h, useAttrs, useTemplateRef } from 'vue';
-    import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
-    import { followChats, followHints } from '@fibrae/semi-ai-foundation/message-list-foundation';
-    import '@fibrae/semi-ai-foundation/ai-chat-dialogue/ai-chat-dialogue.scss';
+    import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
+    import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+    import '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/ai-chat-dialogue.scss';
     import { IconChevronDown } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';
     import { groupRole } from '@fibrae/semi-ui-vue/_base/group-role';

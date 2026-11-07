@@ -1,6 +1,6 @@
 import { Index, type JSX, Show } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { RenderHintBoxProps } from '../interface';
 
 const { PREFIX_HINT } = cssClasses;

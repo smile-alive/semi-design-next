@@ -1,8 +1,8 @@
 import { createRawSnippet, flushSync } from 'svelte';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, type Mock, onTestFinished, vi } from 'vite-plus/test';
-import { chatCompletionToMessage } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/index';
-import type { Annotation } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import { chatCompletionToMessage } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
+import type { Annotation } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';

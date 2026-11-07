@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, h, normalizeClass } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import Checkbox from '@fibrae/semi-ui-vue/checkbox/index';
     import { useLocale } from '@fibrae/semi-ui-vue/hooks';
     import { useAIChatDialogueContext } from './context';

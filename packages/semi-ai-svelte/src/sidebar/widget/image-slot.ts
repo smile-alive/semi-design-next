@@ -1,7 +1,7 @@
 import { mount, unmount } from 'svelte';
 import { NodeView, type NodeViewRendererProps } from '@tiptap/core';
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
-import { ImageUploadNode as ImageUploadSchema } from '@fibrae/semi-ai-foundation/sidebar/file-extensions';
+import { ImageUploadNode as ImageUploadSchema } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
 import ImageSlotView from './image-slot-view.svelte';
 import type { ImageUploadNodeOptions } from './interface.js';
 

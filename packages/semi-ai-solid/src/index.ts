@@ -43,8 +43,8 @@ export type { AnnotationItemProps } from './ai-chat-dialogue/widgets/content-ite
 export type { ReasoningWidgetProps } from './ai-chat-dialogue/widgets/content-item/reasoning';
 // Foundation types are re-exported from their source module: the d.ts bundler drops types that reach the entry
 // through a component module's own re-export of an import
-export type { Content as ChatContent, EnableUploadProps as ChatEnableUploadProps, Message as ChatMessage } from '@fibrae/semi-ai-foundation/chat/foundation';
-export type { Annotation as AIChatDialogueAnnotation, ContentItem as AIChatDialogueContentItem, Message as AIChatDialogueMessage } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+export type { Content as ChatContent, EnableUploadProps as ChatEnableUploadProps, Message as ChatMessage } from '@fibrae/semi-ai-foundation/components/chat/foundation';
+export type { Annotation as AIChatDialogueAnnotation, ContentItem as AIChatDialogueContentItem, Message as AIChatDialogueMessage } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 export type {
     MessageContent as AIChatInputMessageContent,
     Content as AIChatInputContent,
@@ -53,9 +53,9 @@ export type {
     LeftMenuChangeProps as AIChatInputLeftMenuChangeProps,
     Suggestion as AIChatInputSuggestion,
     Setup as AIChatInputSetup,
-} from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
-export type { StreamingResponseState, ResponseChunk } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/interface';
-export type { StreamingChatState } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/streaming-chat-completion-to-message';
+} from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
+export type { StreamingResponseState, ResponseChunk } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/interface';
+export type { StreamingChatState } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/streaming-chat-completion-to-message';
 export { default as AIChatInput, getConfigureItem } from './ai-chat-input';
 export type {
     AIChatInputProps,
@@ -69,7 +69,7 @@ export type {
     ActionAreaProps as AIChatInputActionAreaProps,
     PlaceholderProps as AIChatInputPlaceholderProps,
 } from './ai-chat-input';
-export { chatCompletionToMessage, streamingChatCompletionToMessage, streamingResponseToMessage, responseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/index';
+export { chatCompletionToMessage, streamingChatCompletionToMessage, streamingResponseToMessage, responseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
 export { default as MCPConfigure } from './sidebar/mcp-configure';
 export type { MCPConfigureProps } from './sidebar/mcp-configure';
 export type { MCPSolidOption as MCPConfigureOption } from './sidebar/mcp-configure/content';

@@ -1,7 +1,7 @@
 import { type ReactNode, useEffect, useRef } from 'react';
 import clsx from 'clsx';
-import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionState } from '@fibrae/semi-ai-foundation/chat/chat-box-action-foundation';
-import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
+import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionState } from '@fibrae/semi-ai-foundation/components/chat/chat-box-action-foundation';
+import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
 import { IconThumbUpStroked, IconDeleteStroked, IconCopyStroked, IconLikeThumb, IconRedoStroked } from '@fibrae/semi-icons-react';

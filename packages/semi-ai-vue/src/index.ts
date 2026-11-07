@@ -62,7 +62,7 @@ export type {
     DialogueStepWidgetSlots,
     DialogueStepWidgetActionIconSlotProps,
 } from './ai-chat-dialogue/interface';
-export type { Message as AIChatDialogueMessage, Annotation as AIChatDialogueAnnotation, ContentItem as AIChatDialogueContentItem } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+export type { Message as AIChatDialogueMessage, Annotation as AIChatDialogueAnnotation, ContentItem as AIChatDialogueContentItem } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 
 export { default as AIChatInput, getConfigureItem } from './ai-chat-input/index';
 export type {
@@ -93,11 +93,11 @@ export type {
     Suggestion as AIChatInputSuggestion,
     Setup as AIChatInputSetup,
     RichTextJSON as AIChatInputRichTextJSON,
-} from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+} from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 
-export type { StreamingResponseState, ResponseChunk } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/interface';
-export type { StreamingChatState } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/streaming-chat-completion-to-message';
-export { chatCompletionToMessage, streamingChatCompletionToMessage, streamingResponseToMessage, responseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/index';
+export type { StreamingResponseState, ResponseChunk } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/interface';
+export type { StreamingChatState } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/streaming-chat-completion-to-message';
+export { chatCompletionToMessage, streamingChatCompletionToMessage, streamingResponseToMessage, responseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
 
 export { default as MCPConfigure } from './sidebar/mcp-configure/index';
 export type { MCPConfigureProps, MCPConfigureEmits, MCPConfigureSlots, MCPConfigureOption, MCPConfigureItemSlotProps } from './sidebar/mcp-configure/interface';

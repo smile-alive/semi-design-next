@@ -1,13 +1,13 @@
 import type { JSX, Ref } from 'solid-js';
 import type { Editor, Extensions, FocusPosition, Content as TiptapContent } from '@tiptap/core';
 import type { Node } from '@tiptap/pm/model';
-import type { Attachment, Content, LeftMenuChangeProps, MessageContent, Reference, Suggestion } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+import type { Attachment, Content, LeftMenuChangeProps, MessageContent, Reference, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { ElementProps } from '@fibrae/semi-ui-solid/_base/element-props';
 import type { PopoverProps } from '@fibrae/semi-ui-solid/popover/index';
 import type { TooltipProps } from '@fibrae/semi-ui-solid/tooltip/index';
 import type { OnChangeProps, UploadProps } from '@fibrae/semi-ui-solid/upload/index';
 
-export type * from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+export type * from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 
 export type PlaceholderProps = string | ((props: { editor: Editor; node: Node; pos: number; hasAnchor: boolean }) => string);
 

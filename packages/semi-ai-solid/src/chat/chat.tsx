@@ -1,11 +1,11 @@
 import { For, type JSX, Show, createMemo, createSignal, mergeProps, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
-import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/chat/foundation';
-import { followChats, followHints } from '@fibrae/semi-ai-foundation/message-list-foundation';
+import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
+import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
+import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-ai-foundation/chat/chat.scss';
+import '@fibrae/semi-ai-foundation/components/chat/chat.scss';
 import { IconChevronDown, IconDisc } from '@fibrae/semi-icons-solid';
 import callHandler from '@fibrae/semi-ui-solid/_base/call-handler';
 import mergeRefs from '@fibrae/semi-ui-solid/_base/merge-refs';

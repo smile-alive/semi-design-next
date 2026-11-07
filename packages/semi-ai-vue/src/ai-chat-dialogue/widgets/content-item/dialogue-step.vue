@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { shallowReactive, watch } from 'vue';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import { IconChevronDown, IconChevronUp, IconStoryStroked } from '@fibrae/semi-icons-vue';
     import type { ElementProps } from '@fibrae/semi-ui-vue/_base/element-props';
     import Collapsible from '@fibrae/semi-ui-vue/collapsible/index';

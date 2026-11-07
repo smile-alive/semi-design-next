@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { page, userEvent } from 'vite-plus/test/browser';
-import type { Message } from '@fibrae/semi-ai-foundation/chat/foundation';
+import type { Message } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import ConfigProvider from '@fibrae/semi-ui-react/config-provider/index';
 import Modal from '@fibrae/semi-ui-react/modal/index';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';

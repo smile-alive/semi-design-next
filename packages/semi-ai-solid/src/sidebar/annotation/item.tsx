@@ -1,5 +1,5 @@
 import { Show } from 'solid-js';
-import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
 import { IconPlay } from '@fibrae/semi-icons-solid';
 

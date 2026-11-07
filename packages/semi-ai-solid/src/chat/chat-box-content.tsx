@@ -1,9 +1,9 @@
 import { type JSX, Index, Match, Show, Switch, createMemo } from 'solid-js';
 import clsx from 'clsx';
 import { omitBy } from 'es-toolkit';
-import { cssClasses, strings, type ChatMode } from '@fibrae/semi-ai-foundation/chat/constants';
-import ChatFoundation, { type Content } from '@fibrae/semi-ai-foundation/chat/foundation';
-import { getFileType } from '@fibrae/semi-ai-foundation/file-suffix';
+import { cssClasses, strings, type ChatMode } from '@fibrae/semi-ai-foundation/components/chat/constants';
+import ChatFoundation, { type Content } from '@fibrae/semi-ai-foundation/components/chat/foundation';
+import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
 import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
 import MarkdownRender, { type MarkdownRenderComponents } from '@fibrae/semi-ui-solid/markdown-render/index';
 import { FileAttachment, ImageAttachment } from './attachment';

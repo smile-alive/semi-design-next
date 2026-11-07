@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { IconChainStroked } from '@fibrae/semi-icons-svelte';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';

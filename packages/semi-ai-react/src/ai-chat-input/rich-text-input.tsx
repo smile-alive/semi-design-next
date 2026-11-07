@@ -1,8 +1,8 @@
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import type { Content as TiptapContent } from '@tiptap/core';
 import { type Editor, type Extensions, EditorContent, useEditor } from '@tiptap/react';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
-import { createEditorProps, getBaseExtensions, getEditorAttributes, getEditorOptions } from '@fibrae/semi-ai-foundation/ai-chat-input/extension/editor-config';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
+import { createEditorProps, getBaseExtensions, getEditorAttributes, getEditorOptions } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/editor-config';
 import { useLocale } from '@fibrae/semi-ui-react/hooks';
 import InputSlot from './extension/input-slot';
 import SelectSlot from './extension/select-slot';

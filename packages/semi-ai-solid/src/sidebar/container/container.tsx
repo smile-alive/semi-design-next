@@ -1,9 +1,9 @@
 import { type JSX, Show, children, createComputed, createEffect, createMemo, createSignal, mergeProps, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
-import ContainerFoundation, { type ContainerAdapter, type ContainerProps } from '@fibrae/semi-ai-foundation/sidebar/container-foundation';
+import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+import ContainerFoundation, { type ContainerAdapter, type ContainerProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-ai-foundation/sidebar/sidebar.scss';
+import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
 import { IconClose } from '@fibrae/semi-icons-solid';
 import useCSSAnimation from '@fibrae/semi-ui-solid/_base/css-animation';
 import hasContent from '@fibrae/semi-ui-solid/_base/has-content';

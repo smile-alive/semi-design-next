@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { getChatContext } from './context.js';
     import type { ChatMessage, ChatMetadata } from './interface.js';
 

@@ -1,8 +1,8 @@
 import { Show, createMemo, createSignal } from 'solid-js';
 import clsx from 'clsx';
-import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionState, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/action-foundation';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionState, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/action-foundation';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
 import { IconCopyStroked, IconDeleteStroked, IconEditStroked, IconLikeThumb, IconMoreStroked, IconRedoStroked, IconShareStroked, IconThumbUpStroked } from '@fibrae/semi-icons-solid';
 import useFoundation from '@fibrae/semi-ui-solid/_base/use-foundation';

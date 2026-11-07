@@ -197,7 +197,7 @@ write(
         "import type * as EnUS from '@fibrae/semi-foundation/locale/source/en_US';",
         "import type * as ReactEnUS from '@fibrae/semi-ui-react/locale/source/en_US';",
         "import type * as VueEnUS from '@fibrae/semi-ui-vue/locale/source/en_US';",
-        "import type * as ChatFoundation from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';",
+        "import type * as ChatFoundation from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';",
         "import type * as Icons from '@fibrae/semi-icons-react';",
         "import type * as LabIcons from '@fibrae/semi-icons-react/lab';",
         "import type * as IconData from '@fibrae/semi-icons-core';",

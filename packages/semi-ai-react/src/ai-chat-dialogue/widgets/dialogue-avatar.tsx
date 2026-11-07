@@ -1,6 +1,6 @@
 import React, { type ReactNode, type ReactElement, useMemo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import Avatar from '@fibrae/semi-ui-react/avatar/index';
 import type { RenderAvatarProps } from '../interface';
 

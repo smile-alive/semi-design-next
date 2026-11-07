@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Reference } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+    import type { Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
     import { AIChatInput } from '../index';
 
     let { store }: { store: { references: Reference[]; retry: boolean } } = $props();

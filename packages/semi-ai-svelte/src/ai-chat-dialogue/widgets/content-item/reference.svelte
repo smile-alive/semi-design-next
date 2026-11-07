@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses, getDialogueFileKind } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import type { Reference } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
-    import { getFileSuffix, isImageFile } from '@fibrae/semi-ai-foundation/file-suffix';
+    import { cssClasses, getDialogueFileKind } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import type { Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+    import { getFileSuffix, isImageFile } from '@fibrae/semi-ai-foundation/utils/file-suffix';
     import { IconCode, IconExcel, IconPdf, IconSendMsgStroked, IconVideo, IconWord } from '@fibrae/semi-icons-svelte';
     import Image from '@fibrae/semi-ui-svelte/image/image.svelte';
 

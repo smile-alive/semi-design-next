@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import { IconFullScreenStroked } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';
     import Button from '@fibrae/semi-ui-vue/button/index';

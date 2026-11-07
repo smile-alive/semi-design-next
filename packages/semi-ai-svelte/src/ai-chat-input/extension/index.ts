@@ -1,6 +1,6 @@
-import BaseInputSlot, { updateInputSlotNodeView } from '@fibrae/semi-ai-foundation/ai-chat-input/extension/input-slot';
-import BaseSelectSlot from '@fibrae/semi-ai-foundation/ai-chat-input/extension/select-slot';
-import BaseSkillSlot from '@fibrae/semi-ai-foundation/ai-chat-input/extension/skill-slot';
+import BaseInputSlot, { updateInputSlotNodeView } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/input-slot';
+import BaseSelectSlot from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/select-slot';
+import BaseSkillSlot from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/skill-slot';
 import InputSlotView from './input-slot.svelte';
 import svelteNodeViewRenderer from './node-view.svelte.js';
 import SelectSlotView from './select-slot.svelte';

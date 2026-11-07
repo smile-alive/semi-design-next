@@ -1,5 +1,5 @@
 import React, { type CSSProperties, type ReactNode } from 'react';
-import type { ContainerProps } from '@fibrae/semi-ai-foundation/sidebar/container-foundation';
+import type { ContainerProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
 import type { ElementProps } from '@fibrae/semi-ui-react/_base/base';
 import type { CodeItemProps } from './widget/code';
 import type { FileItemProps } from './widget/file';

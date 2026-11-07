@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, onActivated, onDeactivated, shallowRef, useTemplateRef, watch, type ComponentPublicInstance } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
-    import ContainerFoundation, { type ContainerAdapter, type ContainerProps as FoundationProps } from '@fibrae/semi-ai-foundation/sidebar/container-foundation';
-    import '@fibrae/semi-ai-foundation/sidebar/sidebar.scss';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+    import ContainerFoundation, { type ContainerAdapter, type ContainerProps as FoundationProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
+    import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
     import { IconClose } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';
     import { groupRole } from '@fibrae/semi-ui-vue/_base/group-role';

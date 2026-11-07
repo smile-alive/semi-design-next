@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-import '@fibrae/semi-ai-foundation/ai-chat-dialogue/ai-chat-dialogue.scss';
+import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+import '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/ai-chat-dialogue.scss';
 import { Checkbox } from '@fibrae/semi-ui-react/checkbox/index';
 import { useLocale } from '@fibrae/semi-ui-react/hooks';
 import type { AIChatDialogueItemProps } from './interface';

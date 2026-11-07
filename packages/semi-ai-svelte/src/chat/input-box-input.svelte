@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import TextArea from '@fibrae/semi-ui-svelte/input/textarea.svelte';
     import type { FileItem } from '@fibrae/semi-ui-svelte/upload/interface';

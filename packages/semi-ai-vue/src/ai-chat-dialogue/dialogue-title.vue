@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { h } from 'vue';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import type { AIChatDialogueSlots, Metadata } from './interface';
 
     const props = defineProps<{ message: Message; role?: Metadata }>();

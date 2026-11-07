@@ -2,8 +2,8 @@
 import { type VNode, nextTick, reactive, toRaw } from 'vue';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, onTestFinished, vi, type Mock } from 'vite-plus/test';
-import { chatCompletionToMessage } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/index';
-import type { Annotation } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import { chatCompletionToMessage } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
+import type { Annotation } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';

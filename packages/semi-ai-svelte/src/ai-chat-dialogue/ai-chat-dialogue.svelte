@@ -1,5 +1,5 @@
 <script lang="ts" module>
-    import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 
     // shared, so a dialogue without chats or hints keeps the same lists between renders
     const EMPTY_CHATS: Message[] = [];
@@ -7,11 +7,11 @@
 </script>
 
 <script lang="ts">
-    import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import DialogueFoundation, { type DialogueAdapter, type DialogueBaseProps, type DialogueState } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
-    import { followChats, followHints } from '@fibrae/semi-ai-foundation/message-list-foundation';
+    import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
+    import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import DialogueFoundation, { type DialogueAdapter, type DialogueBaseProps, type DialogueState } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
-    import '@fibrae/semi-ai-foundation/ai-chat-dialogue/ai-chat-dialogue.scss';
+    import '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/ai-chat-dialogue.scss';
     import { IconChevronDown } from '@fibrae/semi-icons-svelte';
     import { groupRole } from '@fibrae/semi-ui-svelte/_base/group-role';
     import useDefaultProps from '@fibrae/semi-ui-svelte/_base/use-default-props';

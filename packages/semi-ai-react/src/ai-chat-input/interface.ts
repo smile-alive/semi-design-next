@@ -1,11 +1,11 @@
 import type { ReactNode, ClipboardEvent as ReactClipboardEvent } from 'react';
 import type { Editor, Extensions, FocusPosition, Content as TiptapContent } from '@tiptap/core';
-import type { BaseSkill, Reference, Suggestion, Attachment, Content, LeftMenuChangeProps, MessageContent } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+import type { BaseSkill, Reference, Suggestion, Attachment, Content, LeftMenuChangeProps, MessageContent } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { ElementProps } from '@fibrae/semi-ui-react/_base/base';
 import type { PopoverProps } from '@fibrae/semi-ui-react/popover/index';
 import type { TooltipProps } from '@fibrae/semi-ui-react/tooltip/index';
 import type { OnChangeProps, UploadProps } from '@fibrae/semi-ui-react/upload/index';
-export type * from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+export type * from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { Node } from '@tiptap/pm/model';
 
 export type PlaceholderProps = string | ((props: { editor: Editor; node: Node; pos: number; hasAnchor: boolean }) => string);

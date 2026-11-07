@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import type { AIChatDialogueSlots } from './interface';
 
     const props = defineProps<{ hints: string[]; selecting: boolean }>();

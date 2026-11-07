@@ -1,4 +1,4 @@
-import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import { createContext } from '@fibrae/semi-ui-svelte/_base/create-context';
 
 /** `view` is read through a getter, so the items follow the input's values */

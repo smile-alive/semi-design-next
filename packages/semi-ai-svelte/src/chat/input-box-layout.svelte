@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
 
     interface InputBoxLayoutProps {
         class?: string;

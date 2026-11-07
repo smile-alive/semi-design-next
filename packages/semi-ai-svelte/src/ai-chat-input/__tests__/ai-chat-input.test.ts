@@ -2,7 +2,7 @@ import { flushSync, tick } from 'svelte';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/svelte';
 import { Extension, Node, type Editor } from '@tiptap/core';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import type { Attachment, MessageContent } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+import type { Attachment, MessageContent } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { createStore } from '@fibrae/semi-ui-svelte/_base/__tests__/store.svelte';
 import semiGlobal from '@fibrae/semi-ui-svelte/_utils/semi-global';

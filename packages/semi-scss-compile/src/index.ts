@@ -58,11 +58,12 @@ export function compileSemiCss({ iconPath = resolveIconPath(), foundationPath = 
 
 /** The AI stylesheet carries no tokens, so it is loaded after the full stylesheet */
 export function compileSemiAiCss({ aiFoundationPath, foundationPath = resolveFoundationPath(), ...options }: Omit<AiOptions, 'outputPath'>) {
-    const folders = new Set(fs.globSync('*/*.scss', { cwd: aiFoundationPath }).map((file) => path.dirname(file)));
+    const components = path.join(aiFoundationPath, 'components');
+    const folders = new Set(fs.globSync('*/*.scss', { cwd: components }).map((file) => path.dirname(file)));
     return compileStylesheets(
         { ...options, foundationPath },
         [],
-        [...folders].toSorted().map((folder) => path.join(aiFoundationPath, folder, `${folder}.scss`))
+        [...folders].toSorted().map((folder) => path.join(components, folder, `${folder}.scss`))
     );
 }
 

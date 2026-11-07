@@ -1,5 +1,5 @@
 import { type JSX, Show } from 'solid-js';
-import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import type { Message, Metadata, RenderTitleProps } from './interface';
 
 const { PREFIX_CHAT_BOX } = cssClasses;

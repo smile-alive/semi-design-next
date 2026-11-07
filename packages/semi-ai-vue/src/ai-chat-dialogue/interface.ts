@@ -1,6 +1,6 @@
 import type { HTMLAttributes, StyleValue, VNode } from 'vue';
-import type { Annotation, ContentItem, InputFile, InputImage, InputMessage, InputText, Message, OutputMessage, OutputText, Reference, Refusal, Step } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
-import type { MessageContent } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+import type { Annotation, ContentItem, InputFile, InputImage, InputMessage, InputText, Message, OutputMessage, OutputText, Reference, Refusal, Step } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+import type { MessageContent } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { AvatarProps } from '@fibrae/semi-ui-vue/avatar/index';
 import type { MarkdownRenderProps as OriginMarkdownRenderProps } from '@fibrae/semi-ui-vue/markdown-render/interface';
 

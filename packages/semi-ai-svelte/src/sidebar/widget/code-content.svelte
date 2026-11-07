@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import { Collapse, CollapsePanel } from '@fibrae/semi-ui-svelte/collapse/index';
     import CodeItem from './code-item.svelte';
     import CollapseHeader from './collapse-header.svelte';

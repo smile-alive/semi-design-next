@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import { IconCodeStroked, IconFile } from '@fibrae/semi-icons-svelte';
 
     let { mode, name }: { mode: 'code' | 'file'; name?: string } = $props();

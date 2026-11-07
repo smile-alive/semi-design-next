@@ -1,8 +1,8 @@
 import { isPlainObject } from 'es-toolkit';
 import { handlePrevent } from '@fibrae/semi-foundation/utils/a11y';
 import { createId } from '@fibrae/semi-foundation/utils/uuid';
-import { isImageFile } from '../file-suffix';
-import MessageListFoundation, { type MessageListAdapter, type MessageListBaseProps, type MessageListState } from '../message-list-foundation';
+import MessageListFoundation, { type MessageListAdapter, type MessageListBaseProps, type MessageListState } from '../../base/message-list-foundation';
+import { isImageFile } from '../../utils/file-suffix';
 import { strings, type MessageStatus } from './constants';
 
 const { MESSAGE_STATUS, MODE, ROLE } = strings;

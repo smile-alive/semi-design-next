@@ -1,12 +1,12 @@
 import React, { type ReactNode, useMemo, useCallback } from 'react';
 import clsx from 'clsx';
 import { omitBy } from 'es-toolkit';
-import { cssClasses, getDialogueFileKind, strings } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-import { messageToChatInput } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/index';
-import DialogueFoundation, { type FunctionToolCall, type InputFile, type ContentItem, type InputMessage, type InputText, type InputImage, type OutputText, type Reasoning, type CustomToolCall, type OutputMessage, type Refusal } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
-import { findContentItemRenderer, getAttachmentLayout, getVisibleAnnotations, isAwaitingOutput, isImageList } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/message-content';
-import { getMessageText } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/message-text';
-import { getFileType } from '@fibrae/semi-ai-foundation/file-suffix';
+import { cssClasses, getDialogueFileKind, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+import { messageToChatInput } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
+import DialogueFoundation, { type FunctionToolCall, type InputFile, type ContentItem, type InputMessage, type InputText, type InputImage, type OutputText, type Reasoning, type CustomToolCall, type OutputMessage, type Refusal } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+import { findContentItemRenderer, getAttachmentLayout, getVisibleAnnotations, isAwaitingOutput, isImageList } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-content';
+import { getMessageText } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-text';
+import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
 import { IconAlertCircle, IconCode, IconExcel, IconFile, IconPdf, IconSendMsgStroked, IconVideo, IconWord, IconWrench } from '@fibrae/semi-icons-react';

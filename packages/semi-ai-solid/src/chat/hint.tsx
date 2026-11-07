@@ -1,6 +1,6 @@
 import { type JSX, Index, Show } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import { IconArrowRight } from '@fibrae/semi-icons-solid';
 import type { RenderHintBoxProps } from './interface';
 

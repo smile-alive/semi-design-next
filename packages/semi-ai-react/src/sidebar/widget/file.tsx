@@ -2,8 +2,8 @@ import React, { useMemo, useState } from 'react';
 import type { Extensions } from '@tiptap/core';
 import { type Editor, EditorContent, useEditor, useEditorState } from '@tiptap/react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
-import { type TextRange, canUploadImage, clearSelectionHighlight, confirmLink, getEditorAttributes, getFileEditorExtensions, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/sidebar/file-extensions';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+import { type TextRange, canUploadImage, clearSelectionHighlight, confirmLink, getEditorAttributes, getFileEditorExtensions, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import {
     IconH1,

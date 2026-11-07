@@ -1,8 +1,8 @@
 import { type ComponentProps, type JSX, For, createSignal } from 'solid-js';
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, type Mock, onTestFinished, vi } from 'vite-plus/test';
-import { chatCompletionToMessage } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/index';
-import type { Annotation, Step } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import { chatCompletionToMessage } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
+import type { Annotation, Step } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';

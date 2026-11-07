@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
-    import { focusAfterModeChange } from '@fibrae/semi-ai-foundation/sidebar/utils';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+    import { focusAfterModeChange } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
     import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
     import { IconClose, IconCopyStroked } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '@fibrae/semi-ui-svelte/_base/use-default-props';

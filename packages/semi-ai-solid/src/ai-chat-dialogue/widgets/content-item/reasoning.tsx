@@ -1,6 +1,6 @@
 import { type JSX, Show, createSignal, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import { IconAISearchLevel2, IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '@fibrae/semi-ui-solid/_base/element-props';
 import Collapsible from '@fibrae/semi-ui-solid/collapsible/index';

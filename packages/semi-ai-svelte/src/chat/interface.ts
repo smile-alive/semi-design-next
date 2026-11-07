@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { ChatAlign, ChatMode, SendHotKey } from '@fibrae/semi-ai-foundation/chat/constants';
-import type { Content, EnableUploadProps, Message } from '@fibrae/semi-ai-foundation/chat/foundation';
+import type { ChatAlign, ChatMode, SendHotKey } from '@fibrae/semi-ai-foundation/components/chat/constants';
+import type { Content, EnableUploadProps, Message } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import type { AvatarProps } from '@fibrae/semi-ui-svelte/avatar/interface';
 import type { MarkdownRenderComponents, MarkdownRenderProps } from '@fibrae/semi-ui-svelte/markdown-render/interface';
 import type { TooltipProps } from '@fibrae/semi-ui-svelte/tooltip/interface';

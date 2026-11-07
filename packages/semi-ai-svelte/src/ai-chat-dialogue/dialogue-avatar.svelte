@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import Avatar from '@fibrae/semi-ui-svelte/avatar/avatar.svelte';
     import { getAIChatDialogueContext } from './context.js';
     import type { Metadata } from './interface.js';

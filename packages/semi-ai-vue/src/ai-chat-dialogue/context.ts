@@ -1,5 +1,5 @@
 import type { ComputedRef } from 'vue';
-import type { Annotation, InputFile, InputImage, Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import type { Annotation, InputFile, InputImage, Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { createContext } from '@fibrae/semi-ui-vue/_base/create-context';
 import type { AIChatDialogueEmits, AIChatDialogueProps } from './interface';
 

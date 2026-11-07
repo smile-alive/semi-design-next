@@ -1,15 +1,15 @@
 <script setup lang="ts">
     import { computed, h, onBeforeUpdate, onUpdated, shallowRef, useId, useTemplateRef, type Component, type ComponentPublicInstance } from 'vue';
     import type { Editor } from '@tiptap/core';
-    import { cssClasses, numbers } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
-    import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputState } from '@fibrae/semi-ai-foundation/ai-chat-input/foundation';
-    import type { Attachment, Content, Reference, Suggestion } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
-    import { getAttachmentType, getContentType, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/ai-chat-input/utils';
-    import { isImageFile } from '@fibrae/semi-ai-foundation/file-suffix';
-    import { isUploadProgressVisible } from '@fibrae/semi-ai-foundation/upload-status';
+    import { cssClasses, numbers } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
+    import AIChatInputFoundation, { type AIChatInputAdapter, type AIChatInputState } from '@fibrae/semi-ai-foundation/components/ai-chat-input/foundation';
+    import type { Attachment, Content, Reference, Suggestion } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
+    import { getAttachmentType, getContentType, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/components/ai-chat-input/utils';
+    import { isImageFile } from '@fibrae/semi-ai-foundation/utils/file-suffix';
+    import { isUploadProgressVisible } from '@fibrae/semi-ai-foundation/utils/upload-status';
     import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
-    import '@fibrae/semi-ai-foundation/ai-chat-input/ai-chat-input.scss';
+    import '@fibrae/semi-ai-foundation/components/ai-chat-input/ai-chat-input.scss';
     import { IconClose, IconCode, IconCrossStroked, IconExcel, IconFile, IconMusic, IconPdf, IconSendMsgStroked, IconTemplateStroked, IconVideo, IconWord } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';
     import { groupRole } from '@fibrae/semi-ui-vue/_base/group-role';

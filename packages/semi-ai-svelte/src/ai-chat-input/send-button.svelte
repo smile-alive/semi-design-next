@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import { IconArrowUp, IconStop } from '@fibrae/semi-icons-svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
 

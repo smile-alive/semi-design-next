@@ -1,5 +1,5 @@
 import React, { type ReactElement, type ReactNode } from 'react';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { RenderTitleProps } from '../interface';
 
 const prefix = cssClasses.PREFIX;

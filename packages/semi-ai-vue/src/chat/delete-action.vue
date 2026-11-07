@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { onUnmounted, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import { IconDeleteStroked } from '@fibrae/semi-icons-vue';
     import Button from '@fibrae/semi-ui-vue/button/index';

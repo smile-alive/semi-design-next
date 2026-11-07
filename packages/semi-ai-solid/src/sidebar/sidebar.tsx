@@ -1,7 +1,7 @@
 import { Match, Show, Switch, children, createEffect, createMemo, on, onCleanup, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
-import { focusAfterModeChange } from '@fibrae/semi-ai-foundation/sidebar/utils';
+import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+import { focusAfterModeChange } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
 import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
 import { IconClose, IconCopyStroked } from '@fibrae/semi-icons-solid';
 import hasContent from '@fibrae/semi-ui-solid/_base/has-content';

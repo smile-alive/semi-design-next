@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, h, useTemplateRef } from 'vue';
     import { omit } from 'es-toolkit';
-    import type { Attachment } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+    import type { Attachment } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
     import Tooltip, { type TooltipProps } from '@fibrae/semi-ui-vue/tooltip/index';
     import Upload, { type UploadOnChangeProps } from '@fibrae/semi-ui-vue/upload/index';
     import type { AIChatInputSlots, AIChatInputUploadButtonSlotProps, AIChatInputUploadProps } from './interface';

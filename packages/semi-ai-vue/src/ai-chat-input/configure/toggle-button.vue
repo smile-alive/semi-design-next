@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import type { VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import Button from '@fibrae/semi-ui-vue/button/index';
 
     const props = withDefaults(defineProps<{ modelValue?: boolean }>(), { modelValue: false });

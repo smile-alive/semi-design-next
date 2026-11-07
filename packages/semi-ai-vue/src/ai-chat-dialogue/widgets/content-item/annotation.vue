@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import { IconChevronRight } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';
     import Avatar, { AvatarGroup } from '@fibrae/semi-ui-vue/avatar/index';

@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
 // the sidebar styles load with Container; the content is mounted here without it
-import '@fibrae/semi-ai-foundation/sidebar/sidebar.scss';
+import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
 import MCPConfigureContent from '../mcp-configure/content';
 
 const options = [

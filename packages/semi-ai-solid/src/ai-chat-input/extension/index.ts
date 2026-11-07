@@ -1,7 +1,7 @@
 import type { Owner } from 'solid-js';
-import BaseInputSlot, { updateInputSlotNodeView } from '@fibrae/semi-ai-foundation/ai-chat-input/extension/input-slot';
-import BaseSelectSlot from '@fibrae/semi-ai-foundation/ai-chat-input/extension/select-slot';
-import BaseSkillSlot from '@fibrae/semi-ai-foundation/ai-chat-input/extension/skill-slot';
+import BaseInputSlot, { updateInputSlotNodeView } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/input-slot';
+import BaseSelectSlot from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/select-slot';
+import BaseSkillSlot from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/skill-slot';
 import InputSlotView from './input-slot';
 import solidNodeViewRenderer from './node-view';
 import SelectSlotView from './select-slot';

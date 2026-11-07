@@ -1,5 +1,5 @@
 <script lang="ts">
-    import InputBoxFoundation, { type InputBoxAdapter, type InputBoxState } from '@fibrae/semi-ai-foundation/chat/inputbox-foundation';
+    import InputBoxFoundation, { type InputBoxAdapter, type InputBoxState } from '@fibrae/semi-ai-foundation/components/chat/inputbox-foundation';
     import useFoundation from '@fibrae/semi-ui-svelte/_base/use-foundation.svelte.js';
     import type { FileItem } from '@fibrae/semi-ui-svelte/upload/interface';
     import ClearButton from './clear-button.svelte';

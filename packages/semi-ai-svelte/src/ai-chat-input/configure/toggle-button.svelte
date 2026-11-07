@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import { Button, type ButtonProps } from '@fibrae/semi-ui-svelte/button/index';
 
     interface ToggleButtonProps extends Omit<ButtonProps, 'onclick' | 'value'> {

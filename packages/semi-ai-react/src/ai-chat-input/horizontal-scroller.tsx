@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { numbers } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+import { numbers } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import { IconChevronRightStroked } from '@fibrae/semi-icons-react';
 import { useFocusHandover, useLocale, useResizeObserver } from '@fibrae/semi-ui-react/hooks';
 
