@@ -2,9 +2,9 @@ import { flushSync } from 'svelte';
 import { render, screen, waitFor, within } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { clickOutside, mouse } from '@test/utils/browser';
 import type { SelectOptionProps, SelectProps, SelectValue } from '..';
-import { createStore } from '../../../__tests__/store.svelte';
 import SelectCase from './select-case.svelte';
 
 const optionList: SelectOptionProps[] = [

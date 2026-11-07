@@ -2,8 +2,8 @@ import { flushSync } from 'svelte';
 import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { OverflowListItem } from '..';
-import { createStore } from '../../../__tests__/store.svelte';
 import OverflowListLayout from './overflow-list-layout.svelte';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-overflow-list`;

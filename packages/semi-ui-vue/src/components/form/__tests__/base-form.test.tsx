@@ -5,9 +5,9 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render, sleep } from '@test/utils/vue';
 import { Form, type FormApi, type FormDefaultSlotProps, type FormHandle } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import Button from '../../button';
 import { fieldSelector, flush, FormInput, getInput, getInputs, labelSelector, prefix, renderForm, selectWithOptions } from './fixtures/fields';
 

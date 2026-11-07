@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import Popover from '../../../popover/popover.vue';
+    import Popover from '@fibrae/semi-ui-vue/popover/popover.vue';
     import AvatarGroup from '../../avatar-group.vue';
     import Avatar from '../../avatar.vue';
 </script>

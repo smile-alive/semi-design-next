@@ -1,8 +1,8 @@
 import { render, waitFor } from '@testing-library/svelte';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { keyboardClick, mouse } from '@test/utils/browser';
-import { createStore } from '../../../__tests__/store.svelte';
 import type { ImageProps, PreviewProps } from '../interface';
 import GroupFixture from './group-fixture.svelte';
 import { $, arrow, footerIcon, getPreview, pageInfo, prefixCls, previewCls, previewImg, thumbs } from './helpers';

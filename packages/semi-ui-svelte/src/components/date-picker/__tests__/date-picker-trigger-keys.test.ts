@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { getPopup } from './date-picker-dom-utils';
 import TriggerKeysFixture, { type TriggerKeysFixtureStore } from './date-picker-trigger-keys-fixture.svelte';
 import { settle } from './test-utils';

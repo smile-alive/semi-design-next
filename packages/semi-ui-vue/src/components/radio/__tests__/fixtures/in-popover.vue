@@ -1,6 +1,6 @@
 <script setup lang="ts">
+    import Popover from '@fibrae/semi-ui-vue/popover/index';
     import Radio, { RadioGroup } from '../..';
-    import Popover from '../../../popover';
 </script>
 
 <template>

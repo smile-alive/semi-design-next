@@ -3,9 +3,9 @@ import { fireEvent, screen } from '@testing-library/vue';
 import { vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
 import { render } from '@test/utils/vue';
 import Tree, { type TreeEmits, type TreeHandle, type TreeNodeData } from '../..';
-import ConfigProvider from '../../../config-provider';
 
 export type Slots = Record<string, (scope: never) => VNodeChild>;
 

@@ -5,8 +5,8 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import type { AnchorAdapter } from '@fibrae/semi-foundation/components/anchor/foundation';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Anchor, { type AnchorProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import type { TooltipProps } from '../../tooltip';
 

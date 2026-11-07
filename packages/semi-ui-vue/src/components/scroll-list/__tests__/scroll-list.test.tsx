@@ -4,9 +4,9 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render, sleep } from '@test/utils/vue';
 import ScrollList, { ScrollItem, type ScrollItemHandle, type ScrollItemSelectData, type ScrollListItem } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import Demo from './fixtures/demo.vue';
 import TwoWay from './fixtures/two-way.vue';
 

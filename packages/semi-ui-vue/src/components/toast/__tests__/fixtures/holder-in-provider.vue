@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-    import ConfigProvider from '../../../config-provider';
+    import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
     import Toast from '../../index';
     import type { ToastHookApi } from '../../interface';
 

@@ -1,8 +1,8 @@
 /** @jsxImportSource vue */
 import { fireEvent } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
-import { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import Badge from '../index';
 import type { BadgeProps } from '../interface';
 import CustomCount from './fixtures/custom-count.vue';

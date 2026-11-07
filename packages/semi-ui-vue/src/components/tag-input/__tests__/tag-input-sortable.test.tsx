@@ -9,7 +9,7 @@ import TagInput from '..';
 
 // The sortable list loads lazily; this stand-in waits for the test to release it
 const gate = vi.hoisted(() => Promise.withResolvers<void>());
-vi.mock('../../../internal/sortable/sortable.vue', async () => {
+vi.mock('@fibrae/semi-ui-vue/internal/sortable/sortable.vue', async () => {
     await gate.promise;
     const { defineComponent, h: el } = await import('vue');
     return {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref, useTemplateRef } from 'vue';
+    import Button from '@fibrae/semi-ui-vue/button/index';
     import Carousel from '../..';
-    import Button from '../../../button';
 
     const props = withDefaults(defineProps<{ controlled?: boolean }>(), { controlled: false });
     const carousel = useTemplateRef('carousel');

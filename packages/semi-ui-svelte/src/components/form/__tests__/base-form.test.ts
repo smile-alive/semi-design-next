@@ -2,7 +2,7 @@ import { flushSync } from 'svelte';
 import { fireEvent, render, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import semiGlobal from '../../../utils/semi-global';
+import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { FormApi } from '../interface';
 import FormRef from './form-ref.svelte';
 import { errorSelector, fieldSelector, getInput, input, inputIn, labelSelector, prefix, renderForm, select, settle, sleep, typeInto } from './helpers';

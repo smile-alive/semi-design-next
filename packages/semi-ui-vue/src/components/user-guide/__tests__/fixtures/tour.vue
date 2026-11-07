@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref } from 'vue';
-    import Button from '../../../button';
+    import Button from '@fibrae/semi-ui-vue/button/index';
     import UserGuide from '../../user-guide.vue';
 
     const props = withDefaults(defineProps<{ mask?: boolean; mode?: 'popup' | 'modal'; startVisible?: boolean }>(), {

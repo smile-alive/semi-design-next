@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { ref } from 'vue';
+    import Button from '@fibrae/semi-ui-vue/button/index';
+    import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
     import TimePicker from '../..';
-    import Button from '../../../button';
-    import ConfigProvider from '../../../config-provider';
 
     const date = ref<Date | (Date | undefined)[] | undefined>(new Date('2022-04-17T00:00:00Z'));
     const disabledHours = () => [5];

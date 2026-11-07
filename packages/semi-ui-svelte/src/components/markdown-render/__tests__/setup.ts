@@ -1,7 +1,7 @@
 import { flushSync } from 'svelte';
 import { render } from '@testing-library/svelte';
 import { vi } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { MarkdownRenderProps } from '../interface';
 import Driver from './driver.svelte';
 

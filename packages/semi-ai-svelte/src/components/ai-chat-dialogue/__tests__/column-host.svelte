@@ -9,7 +9,7 @@
 </script>
 
 <script lang="ts">
-    import { AIChatDialogue } from '../../../index';
+    import { AIChatDialogue } from '@fibrae/semi-ai-svelte';
 
     let { store }: { store: ColumnHostStore } = $props();
 </script>

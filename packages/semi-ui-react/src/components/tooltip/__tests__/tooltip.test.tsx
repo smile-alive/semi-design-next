@@ -4,11 +4,11 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, expectTypeOf, it, onTestFinished, test, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { strings } from '@fibrae/semi-foundation/components/tooltip/constants';
+import { PopupLayerContext, usePopupLayer } from '@fibrae/semi-ui-react/base/popup-layer';
 import Button from '@fibrae/semi-ui-react/button';
 import Modal from '@fibrae/semi-ui-react/modal';
 import Select from '@fibrae/semi-ui-react/select';
 import { sleep } from '@test/utils/react';
-import { PopupLayerContext, usePopupLayer } from '../../../base/popup-layer';
 import { useTooltipDescription } from '../context';
 import Tooltip, { type TooltipHandle, type TooltipProps } from '../index';
 

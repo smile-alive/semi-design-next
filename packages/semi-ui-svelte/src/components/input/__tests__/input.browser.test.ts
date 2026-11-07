@@ -4,8 +4,8 @@ import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { cdp, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { clickOutside, disableFieldSizing, expectThemeFocusRing, isChromium, tab, tabTo } from '@test/utils/browser';
-import { createStore } from '../../../__tests__/store.svelte';
 import InputCase from './input-case.svelte';
 import TextAreaCase from './textarea-case.svelte';
 

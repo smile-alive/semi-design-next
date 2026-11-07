@@ -1,6 +1,6 @@
 import { h } from 'vue';
+import Button from '@fibrae/semi-ui-vue/button/index';
 import { ArrayField, type ArrayFieldSlotProps } from '../..';
-import Button from '../../../button';
 import { FormInput, renderForm } from './fields';
 
 export const newLine = { name: 'yx', type: 'rd' };

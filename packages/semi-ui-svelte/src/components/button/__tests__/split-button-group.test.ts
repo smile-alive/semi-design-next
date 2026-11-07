@@ -1,7 +1,7 @@
 import { flushSync } from 'svelte';
 import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import SplitCase from './split-case.svelte';
 
 const button = (name: string) => screen.getByText(name).closest('button') as HTMLButtonElement;

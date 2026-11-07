@@ -2,7 +2,7 @@
 import { fireEvent } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
-import semiGlobal from '../../../utils/semi-global';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { errorSelector, flush, FormInput, getInput, getInputs, renderForm } from './fixtures/fields';
 
 const nameSchema = z.object({ name: z.string({ error: 'required' }).min(2, 'too short') });

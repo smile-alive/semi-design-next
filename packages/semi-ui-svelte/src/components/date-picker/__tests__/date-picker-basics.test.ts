@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { click, getFooterButtons, getPopups, getPresetButtons, setupPinned, ymd } from './date-picker-dom-utils';
 import SlotsFixture, { type SlotsFixtureStore } from './date-picker-slots-fixture.svelte';
 import { changes, clickOutside, dp, getContainer, getDay, getInput, getRoot, getSelectedDays, getTrigger, opens, settle, setup, typeText, useBaseDate } from './test-utils';

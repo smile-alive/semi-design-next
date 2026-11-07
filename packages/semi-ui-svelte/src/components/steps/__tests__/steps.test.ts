@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
-import { createStore } from '../../../__tests__/store.svelte';
-import semiGlobal from '../../../utils/semi-global';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { Steps, type StepData, type StepStatus } from '../index';
 import StepsDemo from './steps-demo.svelte';
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
+    import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
     import Dropdown, { DropdownItem, DropdownMenu } from '../..';
-    import ConfigProvider from '../../../config-provider';
 
     const props = defineProps<{ direction?: 'ltr' | 'rtl' }>();
     const emit = defineEmits<{ inner: [event: MouseEvent] }>();

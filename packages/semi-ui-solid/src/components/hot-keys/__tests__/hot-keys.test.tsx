@@ -2,8 +2,8 @@ import { createSignal } from 'solid-js';
 import { fireEvent, render } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import HotKeys, { type HotKeysProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 const prefix = `${BASE_CLASS_PREFIX}-hotKeys`;
 

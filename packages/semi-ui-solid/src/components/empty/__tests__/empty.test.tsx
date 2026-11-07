@@ -1,8 +1,8 @@
 import { createSignal } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, expectTypeOf, it } from 'vite-plus/test';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Empty from '..';
-import semiGlobal from '../../../utils/semi-global';
 import type { EmptyProps } from '../empty';
 
 afterEach(() => {

@@ -1,8 +1,8 @@
 import { type JSX, createSignal } from 'solid-js';
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Collapsible, { type CollapsibleProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 const queryContent = () => screen.queryByText('hello');
 const getWrapper = (container: HTMLElement) => container.querySelector<HTMLElement>('.semi-collapsible-wrapper') as HTMLElement;

@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import PinCode, { type PinCodeProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import { LocaleProvider } from '../../locale';
 import Tooltip from '../../tooltip';
 

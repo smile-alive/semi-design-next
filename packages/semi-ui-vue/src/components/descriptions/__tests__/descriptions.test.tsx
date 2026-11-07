@@ -2,8 +2,8 @@
 import { type VNode } from 'vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
-import { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import Descriptions, { DescriptionsItem, type DescriptionsData, type DescriptionsItemProps, type DescriptionsProps } from '../index';
 import Authored from './fixtures/authored.vue';

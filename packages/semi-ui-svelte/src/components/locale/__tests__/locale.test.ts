@@ -6,7 +6,7 @@ import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { LocaleComponentName, LocaleResult } from '../interface';
 import AccessibleNames from './accessible-names.svelte';
 import type { Layer } from './nest.svelte';

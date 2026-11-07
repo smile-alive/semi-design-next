@@ -6,8 +6,8 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import type { BackTopBaseProps } from '@fibrae/semi-foundation/components/backtop/foundation';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
-import { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import LocaleProvider from '../../locale/locale-provider.vue';
 import BackTop from '../backtop.vue';
 import type { BackTopEmits } from '../interface';

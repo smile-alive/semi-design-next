@@ -1,8 +1,8 @@
 /** @jsxImportSource vue */
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
-import { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import Skeleton, { SkeletonAvatar, SkeletonButton, SkeletonImage, SkeletonParagraph, SkeletonTitle, type SkeletonAvatarProps, type SkeletonBasicProps, type SkeletonParagraphProps } from '../index';
 
 const { Avatar, Image, Title, Button, Paragraph } = Skeleton;

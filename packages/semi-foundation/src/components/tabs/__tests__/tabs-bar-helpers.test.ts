@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { scrollIntoViewWithin } from '../../../utils/supports';
+import { scrollIntoViewWithin } from '@fibrae/semi-foundation/utils/supports';
 import { getBarItemKey, getItemKeyByBarItemKey, getTabKeyAttrs } from '../constants';
 import TabsFoundation, { type MotionView } from '../foundation';
 
-vi.mock('../../../utils/supports', () => ({ scrollIntoViewWithin: vi.fn<() => void>() }));
+vi.mock('@fibrae/semi-foundation/utils/supports', () => ({ scrollIntoViewWithin: vi.fn<() => void>() }));
 
 describe('TabsFoundation.getMotionView', () => {
     const first = TabsFoundation.getMotionView(undefined, { activeKey: 'a', propsActiveKey: undefined, paneKeys: ['a', 'b'] });

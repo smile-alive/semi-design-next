@@ -3,10 +3,10 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/sve
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { sleep } from '@test/utils/function';
 import { ScrollItem, type ScrollItemHandle, type ScrollItemProps, type ScrollItemSelectData, type ScrollListItem } from '..';
-import { createStore } from '../../../__tests__/store.svelte';
-import semiGlobal from '../../../utils/semi-global';
 import ScrollItemModes from './scroll-item-modes.svelte';
 import ScrollListFixture from './scroll-list-fixture.svelte';
 

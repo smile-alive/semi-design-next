@@ -5,9 +5,9 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi, type Moc
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { mockResizeObserverCore } from '@test/utils/dom/resize-observer-core';
-import { createStore } from '../../../__tests__/store.svelte';
-import semiGlobal from '../../../utils/semi-global';
 import type { JsonViewerOptions, JsonViewerProps } from '../interface';
 import type JsonViewer from '../json-viewer.svelte';
 import Fixture, { type FixtureStore } from './json-viewer-fixture.svelte';

@@ -1,7 +1,7 @@
 import { flushSync } from 'svelte';
 import { render } from '@testing-library/svelte';
 import { beforeEach, describe, expect, it } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { FileItem } from '../interface';
 import { action, createFile, defaultFileList, getCardNames, installFakeXhr, selectFiles, type FakeXhr } from './helpers';
 import UploadModes from './upload-modes.svelte';

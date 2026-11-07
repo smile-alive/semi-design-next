@@ -2,8 +2,8 @@
 import { screen } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import { IconEdit } from '@fibrae/semi-icons-vue';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
-import semiGlobal from '../../../utils/semi-global';
 import { ButtonGroup } from '../../button';
 import IconButton, { type IconButtonProps } from '../index';
 

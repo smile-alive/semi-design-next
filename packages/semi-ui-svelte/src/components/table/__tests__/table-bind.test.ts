@@ -1,7 +1,7 @@
 import { flushSync, tick } from 'svelte';
 import { render } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { RowSelectionOnChange, TableProps } from '../interface';
 import { click, getColumns, getData, getPageItem, getRowCheckboxInputs, query, rowKeys } from './helpers';
 import TableBind from './table-bind.svelte';

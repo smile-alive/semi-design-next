@@ -16,8 +16,8 @@
 </script>
 
 <script lang="ts">
+    import { AIChatDialogue } from '@fibrae/semi-ai-svelte';
     import LocaleProvider from '@fibrae/semi-ui-svelte/locale/locale-provider.svelte';
-    import { AIChatDialogue } from '../../../index';
 
     let { store }: { store: DialogueHostStore } = $props();
 </script>

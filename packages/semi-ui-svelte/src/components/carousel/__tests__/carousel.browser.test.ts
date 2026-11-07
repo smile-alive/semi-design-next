@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing } from '@test/utils/browser';
-import { createStore } from '../../../__tests__/store.svelte';
 import Fixture, { type FixtureStore } from './carousel-fixture.svelte';
 
 const prefix = `${BASE_CLASS_PREFIX}-carousel`;

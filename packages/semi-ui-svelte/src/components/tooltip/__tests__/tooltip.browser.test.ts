@@ -2,7 +2,7 @@ import { flushSync } from 'svelte';
 import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { TooltipProps } from '../interface';
 import TooltipFixture from './tooltip-fixture.svelte';
 import TooltipFocusInput from './tooltip-focus-input.svelte';

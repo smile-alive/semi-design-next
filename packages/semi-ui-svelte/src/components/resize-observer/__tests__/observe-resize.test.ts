@@ -1,10 +1,10 @@
 import { flushSync } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
+import { observeResize as fromRoot } from '@fibrae/semi-ui-svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { observeResize as fromHooks } from '@fibrae/semi-ui-svelte/hooks';
 import { mockResizeObserverCore } from '@test/utils/dom/resize-observer-core';
-import { createStore } from '../../../__tests__/store.svelte';
-import { observeResize as fromHooks } from '../../../hooks';
-import { observeResize as fromRoot } from '../../../index';
 import observeResize from '../observe-resize';
 import Fixture from './observe-fixture.svelte';
 

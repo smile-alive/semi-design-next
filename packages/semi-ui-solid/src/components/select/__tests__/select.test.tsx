@@ -5,9 +5,9 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { mockResizeObserver } from '@test/utils/solid';
 import Select, { type OptionRenderProps, type RenderMultipleSelectedItemFn, type RenderSingleSelectedItemFn, type SelectElement, type SelectProps, type TriggerRenderProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
 import { InputGroup } from '../../input';

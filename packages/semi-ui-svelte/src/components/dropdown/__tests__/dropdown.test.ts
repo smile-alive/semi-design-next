@@ -1,9 +1,9 @@
 import { createRawSnippet, flushSync, mount, unmount } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { Dropdown, type DropdownProps, type DropDownMenuItem } from '..';
-import { createStore } from '../../../__tests__/store.svelte';
-import semiGlobal from '../../../utils/semi-global';
 import DisabledParent from './disabled-parent.svelte';
 import DropdownCase from './dropdown-case.svelte';
 import MenuCase from './menu-case.svelte';

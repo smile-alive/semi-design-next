@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref, useSlots } from 'vue';
+    import type { TreeNodeData } from '@fibrae/semi-ui-vue/tree/index';
     import TreeSelect, { type TreeSelectValue } from '../..';
-    import type { TreeNodeData } from '../../../tree';
 
     defineOptions({ inheritAttrs: false });
     const props = defineProps<{

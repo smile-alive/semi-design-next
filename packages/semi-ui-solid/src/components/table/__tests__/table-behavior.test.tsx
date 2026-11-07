@@ -4,9 +4,9 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { getData } from '@test/utils/solid';
 import Table from '..';
-import semiGlobal from '../../../utils/semi-global';
 import type { ColumnProps, ColumnTitleProps, TableElement, TableProps } from '../interface';
 import { P, getActivePage, getBodyRows, getColumns, getFirstCellText, getHeaderSelectionCheckbox, getPageItems, query, queryAll } from './table-helpers';
 

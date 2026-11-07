@@ -8,9 +8,9 @@ import { numbers } from '@fibrae/semi-foundation/components/input-number/constan
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import de from '@fibrae/semi-foundation/locale/source/de';
 import { IconSearch } from '@fibrae/semi-icons-vue';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import InputNumber, { type InputNumberChangeEvent, type InputNumberHandle, type InputNumberProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import { LocaleProvider } from '../../locale';
 import Controlled from './fixtures/controlled.vue';
 import InGroup from './fixtures/in-group.vue';

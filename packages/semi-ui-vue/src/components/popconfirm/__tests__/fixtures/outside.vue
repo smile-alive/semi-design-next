@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import Button from '../../../button';
+    import Button from '@fibrae/semi-ui-vue/button/index';
     import Popconfirm from '../../popconfirm.vue';
 
     defineOptions({ inheritAttrs: false });

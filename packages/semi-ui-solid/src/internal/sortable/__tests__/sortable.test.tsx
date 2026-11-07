@@ -3,8 +3,8 @@ import { render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import ConfigProvider from '@fibrae/semi-ui-solid/config-provider/index';
 import { type OnSortEnd, Sortable } from '..';
-import ConfigProvider from '../../../components/config-provider';
 
 function List(props: { items?: (string | number)[] }) {
     return (

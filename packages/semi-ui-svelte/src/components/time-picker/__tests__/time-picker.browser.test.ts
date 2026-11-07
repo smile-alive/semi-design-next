@@ -3,7 +3,7 @@ import { render, screen, waitFor, within } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import Fixture, { type FixtureStore } from './time-picker-fixture.svelte';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-timepicker`;

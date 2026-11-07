@@ -7,6 +7,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconHandle } from '@fibrae/semi-icons-vue';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import Transfer, {
     type TransferDataItem,
@@ -22,7 +23,6 @@ import Transfer, {
     type TransferSourcePanelSlotProps,
     type TransferTreeProps,
 } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import Model from './fixtures/model.vue';
 import TemplateSlots from './fixtures/template-slots.vue';

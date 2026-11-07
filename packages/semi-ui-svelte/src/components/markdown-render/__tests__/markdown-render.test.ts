@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
+import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { codeText } from '../index';
 import type { MarkdownRenderProps } from '../interface';
 import OwnHeading from './own-heading.svelte';

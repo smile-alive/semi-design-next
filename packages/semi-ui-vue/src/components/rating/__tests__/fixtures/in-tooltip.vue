@@ -1,6 +1,6 @@
 <script setup lang="ts">
+    import Tooltip from '@fibrae/semi-ui-vue/tooltip/index';
     import Rating from '../..';
-    import Tooltip from '../../../tooltip';
 </script>
 
 <template>

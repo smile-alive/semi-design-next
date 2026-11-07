@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import en_US from '../../../locale/source/en_US';
+import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import { defaultResponsiveMap } from '../../grid/constants';
 import { inheritConfig, switchesDirection } from '../inherit-config';
 

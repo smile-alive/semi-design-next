@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import ConfigProvider from '../../../config-provider';
+    import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
     import Badge from '../../badge.vue';
 
     defineProps<{ direction?: 'ltr' | 'rtl' }>();

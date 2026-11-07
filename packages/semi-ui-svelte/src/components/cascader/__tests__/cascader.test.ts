@@ -1,9 +1,9 @@
 import { createRawSnippet, flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { CascaderChangeValue, CascaderData, CascaderEntity, CascaderProps, CascaderValue } from '..';
-import { createStore } from '../../../__tests__/store.svelte';
-import semiGlobal from '../../../utils/semi-global';
 import CascaderCase from './cascader-case.svelte';
 
 type Mode = 'bind' | 'function' | 'one-way' | 'uncontrolled';

@@ -1,7 +1,7 @@
 import { flushSync, tick, type Snippet } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { Modal } from '../index';
 import type { ModalConfirmProps, ModalHookApi, ModalHookRef } from '../interface';
 import HookHost from './hook-host.svelte';

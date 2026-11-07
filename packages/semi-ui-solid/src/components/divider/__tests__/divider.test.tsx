@@ -1,8 +1,8 @@
 import { createSignal, onMount } from 'solid-js';
 import { render } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Divider from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 describe('Divider', () => {
     afterEach(() => {

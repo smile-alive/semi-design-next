@@ -1,8 +1,8 @@
 import { render } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Transfer from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 describe('全局 Input 默认值不给 Transfer 搜索框加后缀与标签', () => {
     afterEach(() => {

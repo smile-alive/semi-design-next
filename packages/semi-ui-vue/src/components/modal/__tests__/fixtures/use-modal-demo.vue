@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { ref } from 'vue';
     import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
-    import Button from '../../../button';
-    import ConfigProvider from '../../../config-provider';
+    import Button from '@fibrae/semi-ui-vue/button/index';
+    import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
     import Modal from '../../index';
     import type { ModalHookRef } from '../../interface';
 

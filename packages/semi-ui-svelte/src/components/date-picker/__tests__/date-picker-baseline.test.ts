@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, within } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { countLiveListeners } from '@test/utils/dom/common';
-import { createStore } from '../../../__tests__/store.svelte';
-import semiGlobal from '../../../utils/semi-global';
 import { click, getPanel, getPopup, getYMLists, setupPinned } from './date-picker-dom-utils';
 import ScenarioFixture, { type ScenarioStore } from './date-picker-scenarios-fixture.svelte';
 import SlotsFixture, { type SlotsFixtureStore } from './date-picker-slots-fixture.svelte';

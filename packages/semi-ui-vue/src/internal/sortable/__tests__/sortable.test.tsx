@@ -4,9 +4,9 @@ import { screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it } from 'vite-plus/test';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
 import { render } from '@test/utils/vue';
 import { SortableHandle } from '..';
-import ConfigProvider from '../../../components/config-provider';
 import List from './fixtures/list.vue';
 
 const itemTexts = () => [...document.querySelectorAll('.semi-sortable-sortable-item [data-index] > span')].map((item) => item.textContent);

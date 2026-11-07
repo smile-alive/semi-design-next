@@ -7,10 +7,10 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
+import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import ColorPicker from '..';
 import type * as ColorPickerModule from '..';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import DeepRef from './fixtures/deep-ref.vue';
 import Model from './fixtures/model.vue';

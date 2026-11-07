@@ -4,9 +4,9 @@ import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { getData, render } from '@test/utils/vue';
 import { TableColumn, type ColumnProps, type TableChangeInfo, type TableHeaderCellSlotProps, type TableSortIconSlotProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import ColumnSlots from './fixtures/column-slots.vue';
 import { P, firstCellTexts, getBodyRows, getFirstCellText, getPageItems, getSorters, mountTable, query, queryAll, type Row } from './table-helpers';
 

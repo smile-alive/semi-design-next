@@ -2,8 +2,8 @@
 import { nextTick } from 'vue';
 import { fireEvent } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
-import semiGlobal from '../../../utils/semi-global';
 import Avatar from '../avatar.vue';
 import type { AvatarColor, AvatarEmits, AvatarProps } from '../interface';
 import TopSlotSvg from '../top-slot-svg.vue';

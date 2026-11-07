@@ -1,7 +1,7 @@
 import { flushSync } from 'svelte';
 import { render } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { LayoutProps } from '../interface';
 import LayoutFixture from './layout-fixture.svelte';
 

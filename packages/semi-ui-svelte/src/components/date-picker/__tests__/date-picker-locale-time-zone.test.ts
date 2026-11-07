@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import { toIANA, zonedTimeToUtc } from '@fibrae/semi-foundation/utils/date-fns-extra';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { click, ymd } from './date-picker-dom-utils';
 import ProviderFixture, { type ProviderFixtureStore } from './date-picker-provider-fixture.svelte';
 import { dp, getInput, settle, useBaseDate } from './test-utils';

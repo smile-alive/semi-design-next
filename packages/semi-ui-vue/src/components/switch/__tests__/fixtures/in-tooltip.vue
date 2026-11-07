@@ -1,6 +1,6 @@
 <script setup lang="ts">
+    import Tooltip from '@fibrae/semi-ui-vue/tooltip/index';
     import Switch from '../..';
-    import Tooltip from '../../../tooltip';
 </script>
 
 <template>

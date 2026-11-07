@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Tag, { SplitTagGroup, TagGroup } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import type { SplitTagGroupProps, TagCloseEvent, TagGroupItem, TagGroupProps, TagProps } from '../interface';
 
 const prefix = `${BASE_CLASS_PREFIX}-tag`;

@@ -2,7 +2,7 @@ import { flushSync } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import scrollIntoView from 'scroll-into-view-if-needed';
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { AnchorProps } from '../interface';
 import AnchorFixture from './anchor-fixture.svelte';
 import { flat, type Fixture } from './fixture-data';

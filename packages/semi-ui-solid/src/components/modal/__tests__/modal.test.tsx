@@ -5,9 +5,9 @@ import { type MockInstance, afterEach, beforeEach, describe, expect, expectTypeO
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import { IconEyeClosed } from '@fibrae/semi-icons-solid';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { sleep } from '@test/utils/solid';
 import Modal, { type ModalProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import Input from '../../input';
 import { LocaleProvider } from '../../locale';

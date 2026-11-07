@@ -2,8 +2,8 @@ import { createSignal } from 'solid-js';
 import { render } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Descriptions, { type Data, type DescriptionsProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-descriptions`;

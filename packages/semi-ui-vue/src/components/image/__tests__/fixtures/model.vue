@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { shallowRef } from 'vue';
-    import Button from '../../../button';
+    import Button from '@fibrae/semi-ui-vue/button/index';
     import ImagePreview from '../../preview.vue';
 
     const props = defineProps<{ src: string[] }>();

@@ -3,9 +3,9 @@ import { nextTick, type ComponentPublicInstance, type VNodeChild } from 'vue';
 import { screen } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { mockResizeObserver, render, sleep } from '@test/utils/vue';
 import OverflowList, { type OverflowListEmits, type OverflowListItem, type OverflowListItemSlotProps, type OverflowListOverflowSlotProps, type OverflowListProps, type OverflowListSlots } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import ScrollRefs from './fixtures/scroll-refs.vue';
 import Typed from './fixtures/typed.vue';
 

@@ -2,8 +2,8 @@ import { createSignal, type JSX } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Skeleton, { type AvatarProps, type BasicProps, type GenericProps, type ParagraphProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 const { Avatar, Image, Title, Button, Paragraph } = Skeleton;
 const prefixCls = `${BASE_CLASS_PREFIX}-skeleton`;

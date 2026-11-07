@@ -5,9 +5,9 @@ import { createEvent, fireEvent, screen, waitFor, within } from '@testing-librar
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import semiGlobal, { type OverrideDefaultProps } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { mockResizeObserver, render } from '@test/utils/vue';
 import Select, { SelectOptGroup, SelectOption, type SelectHandle, type SelectOptionProps } from '..';
-import semiGlobal, { type OverrideDefaultProps } from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import Popover from '../../popover';
 import Tag from '../../tag';

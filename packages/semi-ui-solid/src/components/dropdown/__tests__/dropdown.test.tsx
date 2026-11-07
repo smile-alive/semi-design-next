@@ -3,9 +3,9 @@ import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import semiGlobal, { type OverrideDefaultProps } from '@fibrae/semi-ui-solid/utils/semi-global';
 import { sleep } from '@test/utils/solid';
 import Dropdown, { type DropDownMenuItem, type DropDownMenuItemItem, type DropdownHandle, type DropdownItemProps, type DropdownProps } from '..';
-import semiGlobal, { type OverrideDefaultProps } from '../../../utils/semi-global';
 import Avatar from '../../avatar';
 import ConfigProvider from '../../config-provider';
 

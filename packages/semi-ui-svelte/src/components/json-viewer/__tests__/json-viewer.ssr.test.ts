@@ -1,7 +1,7 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import Fixture, { type FixtureStore } from './json-viewer-fixture.svelte';
 
 function html(props: FixtureStore['props'], init: Partial<Omit<FixtureStore, 'props'>> = {}) {

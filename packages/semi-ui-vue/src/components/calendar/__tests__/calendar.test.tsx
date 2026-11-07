@@ -9,8 +9,8 @@ import { calcRowHeight } from '@fibrae/semi-foundation/components/calendar/event
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, mockResizeObserver, render } from '@test/utils/vue';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import LocaleProvider from '../../locale/locale-provider.vue';
 import Calendar, { type CalendarEmits, type CalendarEventSlotProps, type CalendarMode, type CalendarProps, type EventObject } from '../index';
 import CachedMonth from './fixtures/cached-month.vue';

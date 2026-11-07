@@ -3,9 +3,9 @@ import { createSSRApp, isReactive, reactive, shallowRef } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import { screen, waitFor } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import Lottie, { type LottieParams } from '..';
-import { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import CachedLottie from './fixtures/cached-lottie.vue';
 
 // a hoisted mock the tests read directly: lottie-web types loadAnimation as a method, which lint forbids passing

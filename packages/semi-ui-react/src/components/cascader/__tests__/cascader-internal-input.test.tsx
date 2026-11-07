@@ -2,8 +2,8 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import Cascader from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 describe('全局 Input 默认值不给 Cascader 触发器搜索框加清除按钮与前后缀', () => {
     afterEach(() => {

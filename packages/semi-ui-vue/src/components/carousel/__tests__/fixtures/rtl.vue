@@ -1,6 +1,6 @@
 <script setup lang="ts">
+    import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
     import Carousel from '../..';
-    import ConfigProvider from '../../../config-provider';
 </script>
 
 <template>

@@ -2,9 +2,9 @@ import { createSignal } from 'solid-js';
 import { render, waitFor } from '@solidjs/testing-library';
 import { afterEach, beforeAll, describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { sleep } from '@test/utils/solid';
 import CodeHighlight from '..';
-import semiGlobal from '../../../utils/semi-global';
 import { grammar } from './grammars';
 
 const waitForShiki = (container: HTMLElement) => waitFor(() => expect(container.querySelector('pre.shiki')).not.toBeNull(), { timeout: 5000 });

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import * as z from 'zod';
+    import type { InputChangeEvent } from '@fibrae/semi-ui-vue/input/interface';
     import { Form, SchemaForm, withField } from '../..';
-    import type { InputChangeEvent } from '../../../input/interface';
     import { FormInput } from './fields';
 
     const onChange = (_value: string, _event: InputChangeEvent, _latest: Record<string, any>) => undefined;

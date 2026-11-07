@@ -5,9 +5,9 @@ import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { mockResizeObserver, render } from '@test/utils/vue';
 import { TextArea, type TextAreaChangeEvent, type TextAreaHandle, type TextAreaProps } from '..';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import TextAreaModel from './fixtures/textarea-model.vue';
 
 type Change = (value: string, event: TextAreaChangeEvent) => void;

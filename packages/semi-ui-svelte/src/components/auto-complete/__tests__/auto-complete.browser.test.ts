@@ -2,9 +2,9 @@ import { flushSync } from 'svelte';
 import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { clickOutside } from '@test/utils/browser';
 import type { AutoCompleteItems, AutoCompleteProps } from '..';
-import { createStore } from '../../../__tests__/store.svelte';
 import AutoCompleteCase from './auto-complete-case.svelte';
 
 const getPopupWrapper = () => document.querySelector<HTMLElement>('.semi-popover-wrapper');

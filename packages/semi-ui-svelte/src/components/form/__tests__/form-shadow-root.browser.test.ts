@@ -1,6 +1,6 @@
 import { render } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { FormApi } from '../interface';
 import FormFixture, { type FormFixtureStore } from './form-fixture.svelte';
 import { input, settle } from './helpers';

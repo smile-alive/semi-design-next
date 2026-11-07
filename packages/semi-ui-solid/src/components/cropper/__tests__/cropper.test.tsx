@@ -1,9 +1,9 @@
 import { createSignal } from 'solid-js';
 import { fireEvent, render } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { countLiveListeners, mockResizeObserver } from '@test/utils/solid';
 import Cropper, { type CropperElement, type CropperHandle, type CropperProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 const size = { width: 400, height: 300 };
 const src = 'https://example.com/a.png';

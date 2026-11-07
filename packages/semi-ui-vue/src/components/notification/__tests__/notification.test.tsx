@@ -5,8 +5,8 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import { IconToutiaoLogo } from '@fibrae/semi-icons-vue';
+import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { endTransitions, render } from '@test/utils/vue';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import Notification from '../index';
 import type { NoticeHandle, NoticeProps, NotificationHookApi, NotificationHookOptions } from '../interface';
 import Notice from '../notice.vue';

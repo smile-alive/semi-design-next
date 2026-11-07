@@ -7,8 +7,8 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import DatePicker, { type DatePickerProps, type YearAndMonthProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import YearAndMonth from '../year-and-month';
 
 type ChangeHandler = NonNullable<DatePickerProps['onChange']>;

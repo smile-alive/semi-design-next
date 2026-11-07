@@ -1,7 +1,7 @@
 import { flushSync } from 'svelte';
 import { fireEvent, render } from '@testing-library/svelte';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { ColumnProps, TableHandle, TableProps } from '../interface';
 import TableHost from './table-host.svelte';
 

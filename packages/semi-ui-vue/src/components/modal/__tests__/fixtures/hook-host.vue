@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { provide } from 'vue';
-    import ConfigProvider from '../../../config-provider';
+    import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
     import Modal from '../../index';
     import type { ModalHookApi } from '../../interface';
     import { reachableKey } from './reachable';

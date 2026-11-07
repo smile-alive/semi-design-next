@@ -7,11 +7,11 @@ import { calcRowHeight } from '@fibrae/semi-foundation/components/calendar/event
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import semiGlobal, { SemiGlobal } from '@fibrae/semi-ui-svelte/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations } from '@test/utils/dom/common';
 import { mockResizeObserverCore } from '@test/utils/dom/resize-observer-core';
 import { Calendar, type CalendarAllDayEventsArgs, type CalendarDateDisplayArgs, type CalendarDateGridArgs, type CalendarEventArgs, type CalendarMode, type CalendarProps, type CalendarTimeDisplayArgs, type EventObject } from '..';
-import { createStore } from '../../../__tests__/store.svelte';
-import semiGlobal, { SemiGlobal } from '../../../utils/semi-global';
 import CalendarFixture from './calendar-fixture.svelte';
 import CalendarGlobal from './calendar-global.svelte';
 import CalendarLocale from './calendar-locale.svelte';
