@@ -2,10 +2,10 @@
     import { Text, computed, useTemplateRef } from 'vue';
     import { omit } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
-    import slotNodes from '@fibrae/semi-ui-vue/_base/slot-nodes';
     import Tooltip from '@fibrae/semi-ui-vue/tooltip/index';
     import { canCarryPopupState } from '@fibrae/semi-ui-vue/tooltip/trigger';
     import Upload, { type FileItem, type UploadOnChangeProps } from '@fibrae/semi-ui-vue/upload/index';
+    import slotNodes from '@fibrae/semi-ui-vue/utils/slot-nodes';
     import type { ChatProps, ChatSlots } from './interface';
     import UploadButton from './upload-button.vue';
 

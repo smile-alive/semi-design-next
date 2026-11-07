@@ -1,6 +1,6 @@
 {
     "calendar": {
-        "source": "packages/semi-ui-vue/src/calendar/calendar.vue",
+        "source": "packages/semi-ui-vue/src/components/calendar/calendar.vue",
         "props": {
             "displayValue": {
                 "zh-CN": "展示日期，未传时为当前日期并在午夜更新。",

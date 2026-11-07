@@ -2,7 +2,7 @@
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { IconDeleteStroked } from '@fibrae/semi-icons-vue';
     import Button from '@fibrae/semi-ui-vue/button/index';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
 
     const i18n = useLocale('Chat');
 </script>

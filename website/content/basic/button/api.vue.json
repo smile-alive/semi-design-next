@@ -1,6 +1,6 @@
 {
     "button": {
-        "source": "packages/semi-ui-vue/src/button/button.vue",
+        "source": "packages/semi-ui-vue/src/components/button/button.vue",
         "props": {
             "block": { "zh-CN": "将按钮设置为块级按钮。", "en-US": "Renders the button as a block-level button." },
             "colorful": {
@@ -52,7 +52,7 @@
         "exposed": {}
     },
     "button-group": {
-        "source": "packages/semi-ui-vue/src/button/button-group.vue",
+        "source": "packages/semi-ui-vue/src/components/button/button-group.vue",
         "props": {
             "colorful": {
                 "zh-CN": "多彩样式，作为组内按钮的默认值。",
@@ -82,7 +82,7 @@
         "exposed": {}
     },
     "split-button-group": {
-        "source": "packages/semi-ui-vue/src/button/split-button-group.vue",
+        "source": "packages/semi-ui-vue/src/components/button/split-button-group.vue",
         "props": {},
         "events": {},
         "slots": {

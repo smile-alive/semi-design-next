@@ -4,14 +4,14 @@
     import ContainerFoundation, { type ContainerAdapter, type ContainerProps as FoundationProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
     import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
     import { IconClose } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';
-    import { groupRole } from '@fibrae/semi-ui-vue/_base/group-role';
-    import SlotFragment from '@fibrae/semi-ui-vue/_base/slot-fragment';
-    import { hasSlotContent } from '@fibrae/semi-ui-vue/_base/slot-nodes';
-    import useFoundation from '@fibrae/semi-ui-vue/_base/use-foundation';
+    import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/base/element-props';
+    import SlotFragment from '@fibrae/semi-ui-vue/base/slot-fragment';
+    import useFoundation from '@fibrae/semi-ui-vue/base/use-foundation';
     import Button from '@fibrae/semi-ui-vue/button/index';
-    import { useLocale, useRecordFocus } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale, useRecordFocus } from '@fibrae/semi-ui-vue/composables';
     import { Resizable } from '@fibrae/semi-ui-vue/resizable/index';
+    import { groupRole } from '@fibrae/semi-ui-vue/utils/group-role';
+    import { hasSlotContent } from '@fibrae/semi-ui-vue/utils/slot-nodes';
     import type { ContainerEmits, ContainerHandle, ContainerProps, ContainerSlots } from './interface';
 
     // attrs go on the container element inside the optional Resizable wrapper

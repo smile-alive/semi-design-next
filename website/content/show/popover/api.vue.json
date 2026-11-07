@@ -1,6 +1,6 @@
 {
     "popover": {
-        "source": "packages/semi-ui-vue/src/popover/popover.vue",
+        "source": "packages/semi-ui-vue/src/components/popover/popover.vue",
         "props": {
             "ariaLabel": {
                 "zh-CN": "弹出层 role 为 dialog 时的 aria-label。",

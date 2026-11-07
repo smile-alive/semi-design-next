@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import { IconArrowUp, IconStop } from '@fibrae/semi-icons-vue';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
 
     const props = defineProps<{ generating: boolean; canSend: boolean }>();
 

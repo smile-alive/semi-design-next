@@ -1,6 +1,6 @@
 {
     "slider": {
-        "source": "packages/semi-ui-vue/src/slider/slider.vue",
+        "source": "packages/semi-ui-vue/src/components/slider/slider.vue",
         "props": {
             "modelValue": {
                 "zh-CN": "当前取值，配合 v-model 使用；只传不回写时拖动、点击与方向键仅触发通知，滑块不移动。变回 undefined 时回到 defaultValue，没有则回到 min，且不触发 afterChange。",

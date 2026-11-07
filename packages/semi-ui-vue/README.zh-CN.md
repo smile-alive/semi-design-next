@@ -31,7 +31,7 @@ peer 依赖：`vue` ^3.5.0。浏览器、模块格式、Node.js 与构建插件�
 | 入口                                       | 说明                                                                                            |
 | ------------------------------------------ | ----------------------------------------------------------------------------------------------- |
 | `@fibrae/semi-ui-vue`                      | 全部组件、类型、`ConfigProvider`、`LocaleProvider`、`LocaleConsumer`、`useLocale`、`semiGlobal` |
-| `@fibrae/semi-ui-vue/<目录>/index`         | 逐文件深路径，与 `src/` 下的目录一一对应                                                        |
+| `@fibrae/semi-ui-vue/<目录>/index`         | 逐文件深路径，与 `src/components/` 下的目录一一对应                                             |
 | `@fibrae/semi-ui-vue/tokens`               | 主题 token 与 base 规则，在应用入口文件最先导入，首个组件懒加载时 token 仍随入口加载            |
 | `@fibrae/semi-ui-vue/styles.css`           | 整包样式，需要一次性加载全部组件样式时使用                                                      |
 | `@fibrae/semi-ui-vue/tailwind.css`         | Tailwind v4 的 `@theme inline` 映射                                                             |

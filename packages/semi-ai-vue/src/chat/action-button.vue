@@ -3,7 +3,7 @@
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { IconCopyStroked, IconLikeThumb, IconRedoStroked, IconThumbUpStroked } from '@fibrae/semi-icons-vue';
     import Button from '@fibrae/semi-ui-vue/button/index';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
 
     const props = defineProps<{ name: 'copy' | 'like' | 'dislike' | 'reset'; active: boolean }>();
 

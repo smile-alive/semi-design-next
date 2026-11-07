@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { getBody, getDocument, getWindow } from '../hooks';
+import { getBody, getDocument, getWindow } from '../composables';
 
 describe('hooks 入口', () => {
     it('导出全局事件目标的 getter', () => {

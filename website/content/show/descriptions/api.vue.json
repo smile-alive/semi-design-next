@@ -1,6 +1,6 @@
 {
     "descriptions": {
-        "source": "packages/semi-ui-vue/src/descriptions/descriptions.vue",
+        "source": "packages/semi-ui-vue/src/components/descriptions/descriptions.vue",
         "props": {
             "align": {
                 "zh-CN": "对齐方式，可选 center、justify、left、plain；row 为 true 时无效。",
@@ -42,7 +42,7 @@
         "exposed": {}
     },
     "descriptions-item": {
-        "source": "packages/semi-ui-vue/src/descriptions/descriptions-item.vue",
+        "source": "packages/semi-ui-vue/src/components/descriptions/descriptions-item.vue",
         "props": {
             "hidden": { "zh-CN": "是否隐藏该项。", "en-US": "Whether to hide the item." },
             "span": { "zh-CN": "单元格跨越的列数。", "en-US": "Number of columns the cell spans." },

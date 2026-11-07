@@ -6,8 +6,8 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconCode } from '@fibrae/semi-icons-vue';
-import semiGlobal from '@fibrae/semi-ui-vue/_utils/semi-global';
 import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { endTransitions, render } from '@test/utils/vue';
 import Sidebar from '..';
 import Annotation from '../annotation';

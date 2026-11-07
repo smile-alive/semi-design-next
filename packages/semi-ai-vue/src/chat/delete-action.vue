@@ -4,7 +4,7 @@
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import { IconDeleteStroked } from '@fibrae/semi-icons-vue';
     import Button from '@fibrae/semi-ui-vue/button/index';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import Popconfirm from '@fibrae/semi-ui-vue/popconfirm/index';
 
     const props = defineProps<{ visible: boolean }>();

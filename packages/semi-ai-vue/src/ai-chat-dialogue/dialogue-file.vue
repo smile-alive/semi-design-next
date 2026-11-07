@@ -4,7 +4,7 @@
     import type { InputFile } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
     import { IconCode, IconExcel, IconFile, IconPdf, IconSendMsgStroked, IconVideo, IconWord } from '@fibrae/semi-icons-vue';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import { useAIChatDialogueContext } from './context';
 
     const props = defineProps<{ file: InputFile; role: string; isLastFile: boolean }>();

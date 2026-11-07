@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { useTemplateRef } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import { TextArea } from '@fibrae/semi-ui-vue/input/index';
     import type { FileItem } from '@fibrae/semi-ui-vue/upload/index';
     import Attachment from './attachment.vue';

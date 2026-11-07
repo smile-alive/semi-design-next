@@ -3,8 +3,8 @@
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import { IconDeleteStroked, IconMoreStroked } from '@fibrae/semi-icons-vue';
     import Button from '@fibrae/semi-ui-vue/button/index';
+    import { useClickOutside, useLocale } from '@fibrae/semi-ui-vue/composables';
     import Dropdown, { DropdownItem, DropdownMenu } from '@fibrae/semi-ui-vue/dropdown/index';
-    import { useClickOutside, useLocale } from '@fibrae/semi-ui-vue/hooks';
     import { useNestedPopups } from '@fibrae/semi-ui-vue/tooltip/context';
 
     const props = defineProps<{ visible: boolean }>();

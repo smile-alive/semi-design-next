@@ -1,6 +1,6 @@
 {
     "spin": {
-        "source": "packages/semi-ui-vue/src/spin/spin.vue",
+        "source": "packages/semi-ui-vue/src/components/spin/spin.vue",
         "props": {
             "childStyle": {
                 "zh-CN": "内部子元素的样式。",

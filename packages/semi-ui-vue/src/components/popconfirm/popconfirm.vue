@@ -1,0 +1,246 @@
+<script setup lang="ts">
+    import { computed, shallowRef, useId, useTemplateRef, watch, type CSSProperties, type ShallowRef } from 'vue';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses } from '@fibrae/semi-foundation/components/popconfirm/constants';
+    import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
+    import '@fibrae/semi-foundation/components/popconfirm/popconfirm.scss';
+    import { IconAlertTriangle, IconClose } from '@fibrae/semi-icons-vue';
+    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
+    import useFoundation from '../../base/use-foundation';
+    import { hasSlotContent } from '../../utils/slot-nodes';
+    import Button from '../button';
+    import useConfig from '../config-provider/use-config';
+    import useLocale from '../locale/use-locale';
+    import Popover from '../popover';
+    import type { PopoverProps } from '../popover/interface';
+    import type { FocusTarget } from '../tooltip/interface';
+    import type { PopconfirmButtonProps, PopconfirmEmits, PopconfirmHandle, PopconfirmProps, PopconfirmSlots } from './interface';
+
+    type Foundation = PopconfirmFoundation<PopconfirmProps>;
+    type Adapter = PopconfirmAdapter<PopconfirmProps>;
+
+    defineOptions({ inheritAttrs: false });
+
+    const props = withDefaults(defineProps<PopconfirmProps>(), {
+        cancelButtonProps: semiGlobalDefault('Popconfirm', 'cancelButtonProps'),
+        cancelText: semiGlobalDefault('Popconfirm', 'cancelText'),
+        cancelType: () => semiDefault('Popconfirm', 'cancelType', 'tertiary'),
+        defaultVisible: semiGlobalDefault('Popconfirm', 'defaultVisible'),
+        disabled: () => semiDefault('Popconfirm', 'disabled', false),
+        okButtonProps: semiGlobalDefault('Popconfirm', 'okButtonProps'),
+        okText: semiGlobalDefault('Popconfirm', 'okText'),
+        okType: () => semiDefault('Popconfirm', 'okType', 'primary'),
+        prefixCls: () => semiDefault('Popconfirm', 'prefixCls', cssClasses.PREFIX),
+        showCloseIcon: () => semiDefault('Popconfirm', 'showCloseIcon', true),
+        // a confirmation is a dialog whatever opens it, hover and focus included, unlike a plain Popover (F12)
+        role: () => semiDefault('Popconfirm', 'role', 'dialog'),
+        stopPropagation: () => semiDefault('Popconfirm', 'stopPropagation', true),
+        trigger: () => semiDefault('Popconfirm', 'trigger', 'click'),
+        visible: semiGlobalDefault('Popconfirm', 'visible'),
+        position: semiGlobalDefault('Popconfirm', 'position'),
+        onCancel: undefined,
+        onConfirm: undefined,
+        showArrow: semiGlobalDefault('Popconfirm', 'showArrow'),
+        autoAdjustOverflow: semiGlobalDefault('Popconfirm', 'autoAdjustOverflow'),
+        motion: semiGlobalDefault('Popconfirm', 'motion'),
+        closeOnEsc: semiGlobalDefault('Popconfirm', 'closeOnEsc'),
+        returnFocusOnClose: semiGlobalDefault('Popconfirm', 'returnFocusOnClose'),
+        guardFocus: semiGlobalDefault('Popconfirm', 'guardFocus'),
+        arrowPointAtCenter: semiGlobalDefault('Popconfirm', 'arrowPointAtCenter'),
+        clickToHide: semiGlobalDefault('Popconfirm', 'clickToHide'),
+        disableArrowKeyDown: semiGlobalDefault('Popconfirm', 'disableArrowKeyDown'),
+        disableFocusListener: semiGlobalDefault('Popconfirm', 'disableFocusListener'),
+        keepDOM: semiGlobalDefault('Popconfirm', 'keepDOM'),
+        condition: semiGlobalDefault('Popconfirm', 'condition'),
+        mouseEnterDelay: semiGlobalDefault('Popconfirm', 'mouseEnterDelay'),
+        mouseLeaveDelay: semiGlobalDefault('Popconfirm', 'mouseLeaveDelay'),
+        contentClassName: semiGlobalDefault('Popconfirm', 'contentClassName'),
+        spacing: semiGlobalDefault('Popconfirm', 'spacing'),
+        arrowStyle: semiGlobalDefault('Popconfirm', 'arrowStyle'),
+        ariaLabel: semiGlobalDefault('Popconfirm', 'ariaLabel'),
+        ariaLabelledby: semiGlobalDefault('Popconfirm', 'ariaLabelledby'),
+        ariaDescribedby: semiGlobalDefault('Popconfirm', 'ariaDescribedby'),
+    });
+
+    const emit = defineEmits<PopconfirmEmits>();
+    const slots = defineSlots<PopconfirmSlots>();
+
+    const semi = useSemiGlobal();
+    const i18n = useLocale('Popconfirm');
+    const context = useConfig();
+
+    const popover = useTemplateRef('popover');
+    const footer = useTemplateRef('footer');
+
+    const confirmFn = computed(() => props.onConfirm ?? readSemiDefault(semi, 'Popconfirm', 'onConfirm'));
+    const cancelFn = computed(() => props.onCancel ?? readSemiDefault(semi, 'Popconfirm', 'onCancel'));
+
+    // Tooltip moves focus to its initialFocusRef after the card opens, which would override a button focused here.
+    // So the button is also handed to Tooltip as the initial target; a content ref is used only when no button wins.
+    // Wrapped in an object because the template would unwrap a top-level ref before it reaches the slot.
+    const contentSlotProps = { initialFocusRef: shallowRef<FocusTarget | null>(null) };
+    const tooltip: { focusRef: ShallowRef<FocusTarget | null> | null } = { focusRef: null };
+
+    const { foundation, state } = useFoundation<Foundation, Adapter, PopconfirmProps, PopconfirmBaseState>(
+        PopconfirmFoundation,
+        props,
+        (view) => PopconfirmFoundation.getInitialState(view),
+        () => ({
+            notifyConfirm: (event) => confirmFn.value?.(event),
+            notifyCancel: (event) => cancelFn.value?.(event),
+            notifyVisibleChange: (visible) => {
+                emit('update:visible', visible);
+                emit('visibleChange', visible);
+            },
+            getFooter: () => footer.value,
+            setInitialFocus: (button) => {
+                if (tooltip.focusRef) tooltip.focusRef.value = button;
+            },
+            focusPrevFocusElement: () => {
+                // focus that already left the card (Tab away from a focus trigger) stays where it went
+                if (FocusTrapHandle.shouldRestoreFocus(popover.value?.getPopup(), false)) popover.value?.focusTrigger();
+            },
+        })
+    );
+
+    const rtl = computed(() => context.value.direction === 'rtl');
+    const popoverPosition = computed(() => props.position ?? (rtl.value ? 'bottomRight' : 'bottomLeft'));
+
+    const forwarded = computed<PopoverProps>(() => ({
+        ariaLabel: props.ariaLabel,
+        arrowPointAtCenter: props.arrowPointAtCenter,
+        arrowStyle: props.arrowStyle,
+        autoAdjustOverflow: props.autoAdjustOverflow,
+        clickToHide: props.clickToHide,
+        closeOnEsc: props.closeOnEsc,
+        condition: props.condition,
+        contentClassName: props.contentClassName,
+        disableArrowKeyDown: props.disableArrowKeyDown,
+        disableFocusListener: props.disableFocusListener,
+        guardFocus: props.guardFocus,
+        keepDOM: props.keepDOM,
+        motion: props.motion,
+        mouseEnterDelay: props.mouseEnterDelay,
+        mouseLeaveDelay: props.mouseLeaveDelay,
+        returnFocusOnClose: props.returnFocusOnClose,
+        role: props.role,
+        showArrow: props.showArrow,
+        spacing: props.spacing,
+        stopPropagation: props.stopPropagation,
+    }));
+
+    const titleId = `${useId()}-title`;
+    const contentId = `${titleId}-content`;
+    const popoverVisible = computed(() => (props.visible !== undefined ? props.visible : state.value.visible));
+
+    const bindTooltipFocus = (focusRef: ShallowRef<FocusTarget | null>) => {
+        tooltip.focusRef = focusRef;
+    };
+
+    // the content's target first, so a pending autoFocus button handed over by the foundation replaces it
+    const handleFooterMounted = () => {
+        if (!footer.value) return;
+        if (tooltip.focusRef) tooltip.focusRef.value = contentSlotProps.initialFocusRef.value;
+        foundation.handleFooterMounted();
+    };
+
+    const hasTitle = () => (slots.title ? hasSlotContent(slots.title) : Boolean(props.title));
+
+    const hasContent = () => {
+        const content = slots.content;
+        return content ? hasSlotContent(() => content(contentSlotProps)) : false;
+    };
+
+    const dialogNames = () => {
+        const title = hasTitle();
+        const content = hasContent();
+        const own = props.ariaLabelledby || props.ariaLabel;
+        return {
+            ariaLabelledby: own ? props.ariaLabelledby : title ? titleId : content ? contentId : undefined,
+            ariaDescribedby: props.ariaDescribedby || (title && content ? contentId : undefined),
+        };
+    };
+
+    // autoFocus only selects the initially focused button, so it never reaches the DOM. type and theme may be
+    // overridden; data-type locates the button for autoFocus and the pending loading guards against a second click.
+    const footerButton = (kind: 'cancel' | 'ok', custom?: PopconfirmButtonProps) => {
+        const { autoFocus: _autoFocus, ...rest } = custom ?? {};
+        const pending = kind === 'ok' ? state.value.confirmLoading : state.value.cancelLoading;
+        return {
+            type: kind === 'ok' ? props.okType : props.cancelType,
+            theme: kind === 'ok' ? ('solid' as const) : undefined,
+            ...rest,
+            'data-type': kind,
+            loading: rest.loading || pending,
+        };
+    };
+
+    const cancelProps = computed(() => footerButton('cancel', props.cancelButtonProps));
+    const okProps = computed(() => footerButton('ok', props.okButtonProps));
+
+    watch(footer, handleFooterMounted, { flush: 'post' });
+
+    // Tooltip reports only Popconfirm's own requests, so focus follows the `visible` it is given, whoever set it
+    if (popoverVisible.value) foundation.handlePopupOpen();
+
+    watch(popoverVisible, (visible) => (visible ? foundation.handlePopupOpen() : foundation.handlePopupClose()));
+
+    defineExpose<PopconfirmHandle>({ focusTrigger: () => popover.value?.focusTrigger() });
+</script>
+
+<template>
+    <slot v-if="props.disabled" />
+    <Popover
+        v-else
+        ref="popover"
+        v-bind="{ ...forwarded, ...dialogNames() }"
+        :class="cssClasses.POPOVER"
+        :position="popoverPosition"
+        :trigger="props.trigger"
+        :visible="popoverVisible"
+        @afterClose="(...args) => emit('afterClose', ...args)"
+        @afterOpen="emit('afterOpen')"
+        @clickOutSide="(...args) => emit('clickOutSide', ...args)"
+        @escKeyDown="(...args) => emit('escKeyDown', ...args)"
+        @open="emit('open')"
+        @visibleChange="foundation.handleVisibleChange"
+    >
+        <slot />
+        <template #content="slotProps">
+            <!-- Keeps clicks inside the card from click listeners on the document, whatever stopPropagation says. -->
+            <div :class="[props.prefixCls, $attrs.class]" :style="$attrs.style as CSSProperties" @click.stop @vue:before-mount="bindTooltipFocus(slotProps.initialFocusRef)">
+                <div :class="`${props.prefixCls}-inner`">
+                    <template v-for="(part, i) in [{ icon: !$slots.icon || hasSlotContent($slots.icon), title: hasTitle(), content: hasContent() }]" :key="i">
+                        <div :class="`${props.prefixCls}-header`">
+                            <i v-if="part.icon" :class="`${props.prefixCls}-header-icon`" x-semi-prop="icon">
+                                <slot v-if="$slots.icon" name="icon" />
+                                <IconAlertTriangle v-else size="extra-large" />
+                            </i>
+                            <div :class="`${props.prefixCls}-header-body`">
+                                <div v-if="part.title" :id="titleId" :class="`${props.prefixCls}-header-title`" x-semi-prop="title">
+                                    <slot name="title">{{ props.title }}</slot>
+                                </div>
+                            </div>
+                            <Button v-if="props.showCloseIcon" :aria-label="i18n.locale.close" :class="`${props.prefixCls}-btn-close`" size="small" theme="borderless" :type="props.cancelType" @click="foundation.handleCancel">
+                                <template #icon>
+                                    <IconClose />
+                                </template>
+                            </Button>
+                        </div>
+                        <div v-if="part.content" :id="contentId" :class="[`${props.prefixCls}-body`, { [`${props.prefixCls}-body-withIcon`]: part.icon }]" x-semi-prop="content">
+                            <slot name="content" v-bind="contentSlotProps" />
+                        </div>
+                    </template>
+                    <div ref="footer" :class="`${props.prefixCls}-footer`">
+                        <Button v-bind="cancelProps" @click="foundation.handleCancel">
+                            {{ props.cancelText || i18n.locale.cancel }}
+                        </Button>
+                        <Button v-bind="okProps" @click="foundation.handleConfirm">
+                            {{ props.okText || i18n.locale.confirm }}
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </Popover>
+</template>

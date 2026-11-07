@@ -1,6 +1,6 @@
 {
     "steps": {
-        "source": "packages/semi-ui-vue/src/steps/steps.vue",
+        "source": "packages/semi-ui-vue/src/components/steps/steps.vue",
         "props": {
             "type": {
                 "zh-CN": "步骤条类型，可选 fill、basic、nav。",
@@ -47,7 +47,7 @@
         "exposed": {}
     },
     "step": {
-        "source": "packages/semi-ui-vue/src/steps/step.vue",
+        "source": "packages/semi-ui-vue/src/components/steps/step.vue",
         "props": {
             "status": {
                 "zh-CN": "该步骤自己的状态；缺省时随 Steps 的 current 与 status 自动决定。",

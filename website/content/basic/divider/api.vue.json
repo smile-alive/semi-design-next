@@ -1,6 +1,6 @@
 {
     "divider": {
-        "source": "packages/semi-ui-vue/src/divider/divider.vue",
+        "source": "packages/semi-ui-vue/src/components/divider/divider.vue",
         "props": {
             "align": {
                 "zh-CN": "带内容时内容的对齐方式，可选 left、center、right。",

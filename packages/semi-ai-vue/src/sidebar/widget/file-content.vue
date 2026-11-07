@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import { IconFullScreenStroked } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';
+    import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/base/element-props';
     import Button from '@fibrae/semi-ui-vue/button/index';
     import Collapse, { CollapsePanel } from '@fibrae/semi-ui-vue/collapse/index';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import CollapseHeader from './collapse-header.vue';
     import FileItem from './file-item.vue';
     import type { FileContentEmits, FileContentProps } from './interface';

@@ -1,6 +1,6 @@
 {
     "form": {
-        "source": "packages/semi-ui-vue/src/form/form.vue",
+        "source": "packages/semi-ui-vue/src/components/form/form.vue",
         "props": {
             "allowEmpty": {
                 "zh-CN": "值变为空的字段是否在 values 中保留 key。字段上的同名属性优先。",
@@ -126,7 +126,7 @@
         "exposed": {}
     },
     "array-field": {
-        "source": "packages/semi-ui-vue/src/form/array-field.vue",
+        "source": "packages/semi-ui-vue/src/components/form/array-field.vue",
         "props": {
             "field": {
                 "zh-CN": "数组在 formState.values 中的路径，必填。例如各行字段为 a[0].name、a[1].name 时应传 a。",
@@ -151,7 +151,7 @@
         "exposed": {}
     },
     "form-label": {
-        "source": "packages/semi-ui-vue/src/form/label.vue",
+        "source": "packages/semi-ui-vue/src/components/form/label.vue",
         "props": {
             "align": {
                 "zh-CN": "Label 文本的对齐方式。",
@@ -200,7 +200,7 @@
         "exposed": {}
     },
     "form-error-message": {
-        "source": "packages/semi-ui-vue/src/form/error-message.vue",
+        "source": "packages/semi-ui-vue/src/components/form/error-message.vue",
         "props": {
             "error": {
                 "zh-CN": "错误信息，字符串数组，多条以逗号连接显示。有错误时不显示 helpText；`['']` 表示校验失败但没有文本，不渲染内容；空数组与空值视为没有错误。",
@@ -241,7 +241,7 @@
         "exposed": {}
     },
     "form-section": {
-        "source": "packages/semi-ui-vue/src/form/section.vue",
+        "source": "packages/semi-ui-vue/src/components/form/section.vue",
         "props": {},
         "events": {},
         "slots": {
@@ -257,7 +257,7 @@
         "exposed": {}
     },
     "form-slot": {
-        "source": "packages/semi-ui-vue/src/form/form-slot.vue",
+        "source": "packages/semi-ui-vue/src/components/form/form-slot.vue",
         "props": {
             "error": {
                 "zh-CN": "错误信息，字符串数组，渲染在内容之后；不传则不显示。",
@@ -298,7 +298,7 @@
         "exposed": {}
     },
     "form-input-group": {
-        "source": "packages/semi-ui-vue/src/form/input-group.vue",
+        "source": "packages/semi-ui-vue/src/components/form/input-group.vue",
         "props": {
             "disabled": {
                 "zh-CN": "组内字段统一的 disabled，不传时沿用 Form 的 disabled。",
@@ -339,7 +339,7 @@
         "exposed": {}
     },
     "schema-field": {
-        "source": "packages/semi-ui-vue/src/form/schema-field.vue",
+        "source": "packages/semi-ui-vue/src/components/form/schema-field.vue",
         "props": {
             "field": {
                 "zh-CN": "要渲染的节点路径，默认为根；根对象不包 Section，其他对象渲染为以 title 为标题的 Section。",
@@ -363,7 +363,7 @@
         "exposed": {}
     },
     "schema-form": {
-        "source": "packages/semi-ui-vue/src/form/schema-form.vue",
+        "source": "packages/semi-ui-vue/src/components/form/schema-form.vue",
         "props": {
             "allowEmpty": { "zh-CN": "同 Form 的 allowEmpty。", "en-US": "The allowEmpty of Form." },
             "autoScrollToError": { "zh-CN": "同 Form 的 autoScrollToError。", "en-US": "The autoScrollToError of Form." },

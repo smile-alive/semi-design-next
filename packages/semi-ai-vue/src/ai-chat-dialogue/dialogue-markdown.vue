@@ -5,7 +5,7 @@
     import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
     import { IconSendMsgStroked } from '@fibrae/semi-icons-vue';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import MarkdownRender from '@fibrae/semi-ui-vue/markdown-render/index';
     import { useAIChatDialogueContext } from './context';
     import useContentClass from './use-content-class';

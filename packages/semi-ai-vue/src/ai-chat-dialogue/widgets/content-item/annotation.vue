@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import { IconChevronRight } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';
     import Avatar, { AvatarGroup } from '@fibrae/semi-ui-vue/avatar/index';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/base/element-props';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import type { AnnotationItemProps, AnnotationWidgetEmits, AnnotationWidgetProps } from '../../interface';
 
     const props = defineProps<AnnotationWidgetProps & /* @vue-ignore */ ElementProps<'div', keyof AnnotationWidgetProps | EmitHandlers<AnnotationWidgetEmits>>>();

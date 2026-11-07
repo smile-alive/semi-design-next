@@ -1,6 +1,6 @@
 {
     "cascader": {
-        "source": "packages/semi-ui-vue/src/cascader/cascader.vue",
+        "source": "packages/semi-ui-vue/src/components/cascader/cascader.vue",
         "props": {
             "modelValue": {
                 "zh-CN": "当前选中的条目，用 v-model 绑定。传入后即为受控组件，传入 undefined 回到非受控并清空选中项；只在整体替换时识别变化，就地修改受控数组不会生效。单选时是节点或节点路径，多选时可以是路径数组。",

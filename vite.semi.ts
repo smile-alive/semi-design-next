@@ -20,7 +20,7 @@ const fatalDeprecations: sass.DeprecationOrId[] = ['import', 'global-builtin'];
 
 // package.json main points at the built lib/, so imports are mapped to source explicitly
 const sourcePackages: { name: string; dir: string; entry?: string; components?: boolean }[] = [
-    { name: '@fibrae/semi-ui-vue', dir: 'packages/semi-ui-vue/src', entry: 'index.ts' },
+    { name: '@fibrae/semi-ui-vue', dir: 'packages/semi-ui-vue/src', entry: 'index.ts', components: true },
     { name: '@fibrae/semi-ai-vue', dir: 'packages/semi-ai-vue/src', entry: 'index.ts' },
     { name: '@fibrae/semi-ui-react', dir: 'packages/semi-ui-react/src', entry: 'index.ts', components: true },
     { name: '@fibrae/semi-ai-react', dir: 'packages/semi-ai-react/src', entry: 'index.ts' },

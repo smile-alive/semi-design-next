@@ -1,6 +1,6 @@
 {
     "hot-keys": {
-        "source": "packages/semi-ui-vue/src/hot-keys/hot-keys.vue",
+        "source": "packages/semi-ui-vue/src/components/hot-keys/hot-keys.vue",
         "props": {
             "hotKeys": {
                 "zh-CN": "快捷键组合：任意个修饰键加一个普通键，取值参考 KeyboardEvent.key。组合不合法时抛错，更新后同样校验。",

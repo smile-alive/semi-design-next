@@ -4,7 +4,7 @@
     import { NodeViewContent, NodeViewWrapper } from '@tiptap/vue-3';
     import { strings } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import { isSelectionInsideNode } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/input-slot';
-    import { useEventListener } from '@fibrae/semi-ui-vue/hooks';
+    import { useEventListener } from '@fibrae/semi-ui-vue/composables';
 
     const props = defineProps<NodeViewProps>();
 

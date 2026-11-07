@@ -1,6 +1,6 @@
 {
     "side-sheet": {
-        "source": "packages/semi-ui-vue/src/side-sheet/side-sheet.vue",
+        "source": "packages/semi-ui-vue/src/components/side-sheet/side-sheet.vue",
         "props": {
             "bodyStyle": { "zh-CN": "面板内容区的样式。", "en-US": "Style of the panel body." },
             "canVerticalSetWidth": {

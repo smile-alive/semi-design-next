@@ -4,7 +4,7 @@
     import { NodeViewWrapper } from '@tiptap/vue-3';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import { insertUploadedImage } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import Upload from '@fibrae/semi-ui-vue/upload/index';
     import type { CustomFile, FileItemStatus, UploadOnChangeProps } from '@fibrae/semi-ui-vue/upload/interface';
     import type { ImageUploadNodeOptions } from './interface';

@@ -1,6 +1,6 @@
 {
     "dropdown": {
-        "source": "packages/semi-ui-vue/src/dropdown/dropdown.vue",
+        "source": "packages/semi-ui-vue/src/components/dropdown/dropdown.vue",
         "props": {
             "contentClassName": {
                 "zh-CN": "下拉菜单根元素的类名。",
@@ -176,7 +176,7 @@
         }
     },
     "dropdown-menu": {
-        "source": "packages/semi-ui-vue/src/dropdown/dropdown-menu.vue",
+        "source": "packages/semi-ui-vue/src/components/dropdown/dropdown-menu.vue",
         "props": {},
         "events": {},
         "slots": {
@@ -188,7 +188,7 @@
         "exposed": {}
     },
     "dropdown-item": {
-        "source": "packages/semi-ui-vue/src/dropdown/dropdown-item.vue",
+        "source": "packages/semi-ui-vue/src/components/dropdown/dropdown-item.vue",
         "props": {
             "active": {
                 "zh-CN": "当前项是否处于激活态，激活态时字体加粗、颜色加深；Dropdown 的 showTick 为 true 时左侧还会展示 √。",
@@ -212,7 +212,7 @@
         "exposed": {}
     },
     "dropdown-title": {
-        "source": "packages/semi-ui-vue/src/dropdown/dropdown-title.vue",
+        "source": "packages/semi-ui-vue/src/components/dropdown/dropdown-title.vue",
         "props": {},
         "events": {},
         "slots": { "default": { "zh-CN": "分组标题的内容。", "en-US": "Content of the group title." } },

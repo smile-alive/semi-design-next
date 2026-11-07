@@ -3,9 +3,9 @@ import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { Extension, type Editor } from '@tiptap/core';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import semiGlobal from '@fibrae/semi-ui-vue/_utils/semi-global';
 import Toast from '@fibrae/semi-ui-vue/toast/index';
 import type { UploadCustomRequestArgs, UploadEmits } from '@fibrae/semi-ui-vue/upload/interface';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import Sidebar, { type ImageUploadNodeOptions } from '..';
 

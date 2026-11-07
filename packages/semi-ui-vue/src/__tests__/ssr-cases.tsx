@@ -158,7 +158,7 @@ import {
     AudioPlayer,
     withField,
 } from '..';
-import SelectGroups from '../select/__tests__/fixtures/groups.vue';
+import SelectGroups from '../components/select/__tests__/fixtures/groups.vue';
 
 const options = [
     { value: 'a', label: 'A' },

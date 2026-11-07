@@ -2,8 +2,8 @@
     import { computed, h, normalizeClass } from 'vue';
     import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionState } from '@fibrae/semi-ai-foundation/components/chat/chat-box-action-foundation';
     import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
-    import useFoundation from '@fibrae/semi-ui-vue/_base/use-foundation';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import useFoundation from '@fibrae/semi-ui-vue/base/use-foundation';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import ActionButton from './action-button.vue';
     import { useChatContext } from './context';
     import DeleteAction from './delete-action.vue';

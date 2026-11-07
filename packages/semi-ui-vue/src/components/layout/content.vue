@@ -1,0 +1,21 @@
+<script setup lang="ts">
+    import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
+    import '@fibrae/semi-foundation/components/layout/layout.scss';
+    import type { ElementProps } from '../../base/element-props';
+    import { nativeTag } from '../../utils/native-tag';
+    import type { LayoutBasicProps, LayoutSlots } from './interface';
+
+    const props = withDefaults(defineProps<LayoutBasicProps & /* @vue-ignore */ ElementProps<'section', keyof LayoutBasicProps>>(), {
+        prefixCls: cssClasses.PREFIX,
+        tagName: 'main',
+        type: 'content',
+    });
+
+    defineSlots<LayoutSlots>();
+</script>
+
+<template>
+    <component :is="nativeTag(props.tagName)" :class="`${props.prefixCls}-${props.type}`">
+        <slot />
+    </component>
+</template>

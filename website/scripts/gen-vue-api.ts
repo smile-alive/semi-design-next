@@ -61,7 +61,7 @@ export function extractApi(source: string) {
 // Native attrs typed through ElementProps are valid at call sites, but only the component's own props belong in the API
 // table. element-props declares the attrs it rewrites (autocomplete) and the emit handlers, so its file counts as native.
 export function ownProps(meta: ComponentMeta) {
-    return meta.props.filter((prop) => !prop.global && !prop.getDeclarations().every((declaration) => declaration.file.includes('/@vue/runtime-dom/') || declaration.file.includes('/_base/element-props.')));
+    return meta.props.filter((prop) => !prop.global && !prop.getDeclarations().every((declaration) => declaration.file.includes('/@vue/runtime-dom/') || declaration.file.includes('/base/element-props.')));
 }
 
 export function generateApis(check: boolean, pages: string[]) {
