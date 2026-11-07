@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { Modal } from '../index';
-import type { ModalConfirmProps, ModalHookApi, ModalHookRef } from '../interface';
+import type { ModalConfirmProps, ModalHookApi } from '../interface';
 import HookHost from './hook-host.svelte';
 import Snippets from './snippets.svelte';
 
@@ -27,7 +27,7 @@ async function settle() {
     await tick();
 }
 
-async function openConfirm(method: Method, props: ModalConfirmProps = {}): Promise<ModalHookRef> {
+async function openConfirm(method: Method, props: ModalConfirmProps = {}) {
     const handle = Modal[method]({ title: 'Semi', content: 'Content', motion: false, ...props });
     await settle();
     return handle;

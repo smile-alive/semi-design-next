@@ -4,7 +4,7 @@ import { type InputGroupContextValue, InputGroupContext, useInputGroupContext } 
 
 export interface InputGroupBoundaryProps {
     /** Receives the enclosing InputGroup of the same popup layer, whose size and `disabled` the control applies to itself */
-    children: (inGroup: InputGroupContextValue | undefined) => JSX.Element;
+    children: (inGroup?: InputGroupContextValue) => JSX.Element;
 }
 
 /**

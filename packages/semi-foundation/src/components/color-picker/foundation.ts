@@ -51,7 +51,7 @@ export default class ColorPickerFoundation<P extends ColorPickerProps = ColorPic
         this.#commit({ rgba, hex: rgbaToHex(rgba), hsva: { ...currentColor.hsva, a } });
     }
 
-    protected getCurrentColor(): ColorValue {
+    protected getCurrentColor() {
         return this.isControlledComponent('value') ? (this.getProp('value') ?? this.getProp('defaultValue')) : this.getState('currentColor');
     }
 

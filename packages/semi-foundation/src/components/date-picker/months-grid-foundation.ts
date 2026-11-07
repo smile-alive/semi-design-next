@@ -579,7 +579,7 @@ export default class MonthsGridFoundation extends BaseFoundation<MonthsGridAdapt
     }
 
     /** The panels at `defaultPickerValue`, then moved to and selecting `selectedValue` */
-    static getInitialState(props: MonthsGridFoundationProps): MonthsGridFoundationState {
+    static getInitialState(props: MonthsGridFoundationProps) {
         const { nowDate, nextDate } = getDefaultPickerDate({
             defaultPickerValue: props.defaultPickerValue,
             format: props.format || getDefaultFormatTokenByType(props.type),

@@ -26,7 +26,7 @@ export function useInputGroupInScope(): InputGroupLooks | undefined {
  * Fills the control's unset size and disabled from the group. Applied before global and built-in defaults, so the
  * order is own -> group -> global -> built-in; `undefined` counts as not passed.
  */
-export function withInputGroup<P extends InputGroupLooks>(own: P, group?: InputGroupLooks): P {
+export function withInputGroup<P extends InputGroupLooks>(own: P, group?: InputGroupLooks) {
     if (!group) {
         return own;
     }
@@ -34,7 +34,7 @@ export function withInputGroup<P extends InputGroupLooks>(own: P, group?: InputG
 }
 
 /** For controls without a size (TextArea): only disabled is inherited */
-export function withInputGroupDisabled<P extends Pick<InputGroupLooks, 'disabled'>>(own: P, group?: InputGroupLooks): P {
+export function withInputGroupDisabled<P extends Pick<InputGroupLooks, 'disabled'>>(own: P, group?: InputGroupLooks) {
     if (!group) {
         return own;
     }

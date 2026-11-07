@@ -192,7 +192,7 @@ const semiGlobal = new SemiGlobal();
 export default semiGlobal;
 
 // The server renders JSX to strings, which every instance can share
-const holdsNode = (value: unknown): boolean => (!isServer && value instanceof Node) || (Array.isArray(value) && value.some(holdsNode));
+const holdsNode = (value: unknown) => (!isServer && value instanceof Node) || (Array.isArray(value) && value.some(holdsNode));
 
 /**
  * The global defaults of one component without per-instance ids, which an untyped caller may still have set, and

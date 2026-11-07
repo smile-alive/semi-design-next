@@ -13,7 +13,7 @@ const FILE_KIND_SUFFIXES = {
 
 export type FileKind = keyof typeof FILE_KIND_SUFFIXES;
 
-const SUFFIX_KINDS = new Map<string, FileKind>(Object.entries(FILE_KIND_SUFFIXES).flatMap(([kind, suffixes]) => suffixes.map((suffix): [string, FileKind] => [suffix, kind as FileKind])));
+const SUFFIX_KINDS = new Map<string, FileKind>(Object.entries(FILE_KIND_SUFFIXES).flatMap(([kind, suffixes]) => suffixes.map((suffix) => [suffix, kind as FileKind])));
 
 /** The kind of a lower-cased file extension; undefined for an extension the table does not list */
 export function getFileKind(suffix?: string): FileKind | undefined {

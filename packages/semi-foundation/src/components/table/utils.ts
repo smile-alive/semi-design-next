@@ -197,7 +197,7 @@ export function placeInnerColumns<T extends { key?: unknown; fixed?: unknown }>(
 }
 
 /** The selection column's framework-free fields, null when rowSelection is off or hidden; the host adds its class and cells */
-export function getSelectionColumn<O extends { hidden?: boolean; fixed?: unknown; width?: unknown; onCell?: unknown; onHeaderCell?: unknown }>(rowSelection: O | boolean | null | undefined) {
+export function getSelectionColumn<O extends { hidden?: boolean; fixed?: unknown; width?: unknown; onCell?: unknown; onHeaderCell?: unknown }>(rowSelection?: O | boolean | null) {
     if (!rowSelection || (typeof rowSelection === 'object' && rowSelection.hidden)) {
         return null;
     }

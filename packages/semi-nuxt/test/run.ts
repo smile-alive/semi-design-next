@@ -14,7 +14,7 @@ function loadWithModule(overrides: Record<string, unknown>, cwd = path.join(impo
     return loadNuxt({ cwd, dotenv: { cwd: buildDir, fileName: [] }, overrides: { buildDir, modules: [semiNuxt], telemetry: false, ...overrides } });
 }
 
-async function viteConfigOf(semi: Record<string, unknown> | undefined, environments?: Record<string, unknown>) {
+async function viteConfigOf(semi?: Record<string, unknown>, environments?: Record<string, unknown>) {
     const nuxt = await loadWithModule(semi ? { semi } : {});
     try {
         const ctx = { nuxt, config: { plugins: [] as Plugin[][], ...(environments && { environments }) } };

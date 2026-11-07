@@ -1219,7 +1219,7 @@ export default class FormFoundation<E = unknown> extends BaseFoundation<BaseForm
         }
     }
 
-    protected getInitValues(): any {
+    protected getInitValues() {
         return this.getProp('initValues');
     }
 

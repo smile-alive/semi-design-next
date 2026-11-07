@@ -517,7 +517,7 @@ export function deriveSearchingState(
     props: Pick<BasicTreeProps, 'filterTreeNode' | 'treeNodeFilterProp' | 'showFilteredOnly' | 'keyMaps' | 'expandedKeys' | 'autoExpandParent' | 'motion'>,
     prevState: Pick<BasicTreeInnerData, 'inputValue' | 'treeData' | 'flattenNodes' | 'filteredExpandedKeys' | 'filteredShownKeys'> & { prevProps: Pick<BasicTreeProps, 'showFilteredOnly'> | null },
     { treeData, structureChanged, keyEntities, prevFilteredKeys }: { treeData?: BasicTreeNodeData[]; structureChanged: boolean; keyEntities: BasicKeyEntities; prevFilteredKeys?: Set<string> }
-): Partial<BasicTreeInnerData> {
+) {
     const { prevProps } = prevState;
     const { keyMaps } = props;
     const newState: Partial<BasicTreeInnerData> = {};

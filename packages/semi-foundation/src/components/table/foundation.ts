@@ -282,7 +282,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         return this.getState('filteredDisabledRowKeysSet') ?? new Set<BaseRowKeyType>();
     }
 
-    #getCheckRelation(): CheckRelation {
+    #getCheckRelation() {
         return this.getState('rowSelection')?.checkRelation ?? 'unRelated';
     }
 

@@ -50,7 +50,7 @@ export default function Slot(props: SlotProps) {
 
     const ariaLabelledby = () => joinIds(rest['aria-labelledby'], labelId());
 
-    const errorProps = (): ErrorMessageProps => {
+    const errorProps = () => {
         const value = local.error;
         return isLabelConfig(value) ? (value as ErrorMessageProps) : { error: normalizeFieldError(value) };
     };
