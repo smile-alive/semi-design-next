@@ -32,7 +32,7 @@ export const vueExemptions: VueExemption[] = [
     },
     // The header is a button only when the step has actions to expand; the rule cannot see the conditional role.
     {
-        files: ['packages/semi-ai-vue/src/ai-chat-dialogue/widgets/content-item/dialogue-step.vue'],
+        files: ['packages/semi-ai-vue/src/components/ai-chat-dialogue/widgets/content-item/dialogue-step.vue'],
         off: [],
         templateOff: ['vuejs-accessibility/no-static-element-interactions'],
     },
@@ -466,25 +466,25 @@ export const vueExemptions: VueExemption[] = [
     },
     // Drag-over only opens the drop area; the upload button is the keyboard counterpart
     {
-        files: ['packages/semi-ai-vue/src/chat/chat.vue'],
+        files: ['packages/semi-ai-vue/src/components/chat/chat.vue'],
         off: [],
         templateOff: ['vuejs-accessibility/no-static-element-interactions'],
     },
     // Input area click only focuses the textarea
     {
-        files: ['packages/semi-ai-vue/src/chat/input-box-layout.vue'],
+        files: ['packages/semi-ai-vue/src/components/chat/input-box-layout.vue'],
         off: [],
         templateOff: ['vuejs-accessibility/click-events-have-key-events', 'vuejs-accessibility/no-static-element-interactions'],
     },
     // The fixture checks that kebab-case attributes in a template reach the camelCase props
     {
-        files: ['packages/semi-ai-vue/src/chat/__tests__/fixtures/kebab.vue'],
+        files: ['packages/semi-ai-vue/src/components/chat/__tests__/fixtures/kebab.vue'],
         off: [],
         templateOff: ['vue/attribute-hyphenation'],
     },
     // No label in the editor's prose; Select names its combobox from the locale when no aria-label is given.
     {
-        files: ['packages/semi-ai-vue/src/ai-chat-input/extension/select-slot.vue'],
+        files: ['packages/semi-ai-vue/src/components/ai-chat-input/extension/select-slot.vue'],
         off: [],
         templateOff: ['vuejs-accessibility/form-control-has-label'],
     },

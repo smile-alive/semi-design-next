@@ -9,7 +9,7 @@
         "../../packages/semi-*-react/**/__tests__/**/*.browser.test.tsx",
         "../../packages/semi-ui-react/src/styles.d.ts",
         "../../packages/semi-ai-react/src/styles.d.ts",
-        "../../packages/semi-ai-react/src/semi-global.ts",
+        "../../packages/semi-ai-react/src/utils/semi-global.ts",
         "../../packages/semi-icons-react/src/styles.d.ts",
         "../../packages/semi-foundation/src/dom.d.ts"
     ],

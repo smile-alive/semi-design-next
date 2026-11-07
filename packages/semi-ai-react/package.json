@@ -17,7 +17,8 @@
         ".": "./dist/index.js",
         "./styles.css": "./dist/styles.css",
         "./package.json": "./package.json",
-        "./*": "./dist/*.js"
+        "./utils/*": "./dist/utils/*.js",
+        "./*": "./dist/components/*.js"
     },
     "scripts": {
         "build": "vp pack"

@@ -1,8 +1,8 @@
-import './semi-global';
+import './utils/semi-global';
 
 // Types are exported from the interface module that declares them: the d.ts bundler drops types that reach the entry
 // through a component module's own re-export of an import
-export { default as Chat } from './chat/index';
+export { default as Chat } from './components/chat/index';
 export type {
     ChatProps,
     ChatEmits,
@@ -27,9 +27,9 @@ export type {
     ChatInputAreaSlotProps,
     ChatHintBoxSlotProps,
     ChatDividerSlotProps,
-} from './chat/interface';
+} from './components/chat/interface';
 
-export { default as AIChatDialogue } from './ai-chat-dialogue/index';
+export { default as AIChatDialogue } from './components/ai-chat-dialogue/index';
 export type {
     AIChatDialogueProps,
     AIChatDialogueEmits,
@@ -61,10 +61,10 @@ export type {
     DialogueStepWidgetProps,
     DialogueStepWidgetSlots,
     DialogueStepWidgetActionIconSlotProps,
-} from './ai-chat-dialogue/interface';
+} from './components/ai-chat-dialogue/interface';
 export type { Message as AIChatDialogueMessage, Annotation as AIChatDialogueAnnotation, ContentItem as AIChatDialogueContentItem } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 
-export { default as AIChatInput, getConfigureItem } from './ai-chat-input/index';
+export { default as AIChatInput, getConfigureItem } from './components/ai-chat-input/index';
 export type {
     AIChatInputProps,
     AIChatInputEmits,
@@ -82,8 +82,8 @@ export type {
     AIChatInputSkillItemSlotProps,
     AIChatInputSkillIconSlotProps,
     AIChatInputTemplateSlotProps,
-} from './ai-chat-input/interface';
-export type { ConfigureProps, ConfigureEmits, ConfigureSlots, ConfigureHandle, ConfigureItemOpts, ConfigureItemProps, McpProps, McpEmits, McpSlots, McpOption, McpOptionIconSlotProps } from './ai-chat-input/configure/interface';
+} from './components/ai-chat-input/interface';
+export type { ConfigureProps, ConfigureEmits, ConfigureSlots, ConfigureHandle, ConfigureItemOpts, ConfigureItemProps, McpProps, McpEmits, McpSlots, McpOption, McpOptionIconSlotProps } from './components/ai-chat-input/configure/interface';
 export type {
     MessageContent as AIChatInputMessageContent,
     Content as AIChatInputContent,
@@ -99,13 +99,13 @@ export type { StreamingResponseState, ResponseChunk } from '@fibrae/semi-ai-foun
 export type { StreamingChatState } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/streaming-chat-completion-to-message';
 export { chatCompletionToMessage, streamingChatCompletionToMessage, streamingResponseToMessage, responseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
 
-export { default as MCPConfigure } from './sidebar/mcp-configure/index';
-export type { MCPConfigureProps, MCPConfigureEmits, MCPConfigureSlots, MCPConfigureOption, MCPConfigureItemSlotProps } from './sidebar/mcp-configure/interface';
+export { default as MCPConfigure } from './components/sidebar/mcp-configure/index';
+export type { MCPConfigureProps, MCPConfigureEmits, MCPConfigureSlots, MCPConfigureOption, MCPConfigureItemSlotProps } from './components/sidebar/mcp-configure/interface';
 
-export { default as Annotation } from './sidebar/annotation/index';
-export type { AnnotationProps, AnnotationEmits, AnnotationSlots, AnnotationItem, AnnotationInfo, AnnotationHeaderSlotProps, AnnotationItemSlotProps } from './sidebar/annotation/interface';
+export { default as Annotation } from './components/sidebar/annotation/index';
+export type { AnnotationProps, AnnotationEmits, AnnotationSlots, AnnotationItem, AnnotationInfo, AnnotationHeaderSlotProps, AnnotationItemSlotProps } from './components/sidebar/annotation/interface';
 
-export { default as Sidebar } from './sidebar/index';
-export type { SidebarContainerHandle } from './sidebar/index';
-export type { SideBarProps, SideBarEmits, SideBarSlots, SideBarOption, SideBarDetailContent, SideBarOptionSlotProps, SideBarOptionItemSlotProps, SideBarMainContentSlotProps, SideBarDetailHeaderSlotProps, SideBarDetailContentSlotProps } from './sidebar/interface';
-export type { CodeItemProps, CodeItemSlots, FileItemProps, FileItemEmits, ImageUploadNodeOptions } from './sidebar/widget/interface';
+export { default as Sidebar } from './components/sidebar/index';
+export type { SidebarContainerHandle } from './components/sidebar/index';
+export type { SideBarProps, SideBarEmits, SideBarSlots, SideBarOption, SideBarDetailContent, SideBarOptionSlotProps, SideBarOptionItemSlotProps, SideBarMainContentSlotProps, SideBarDetailHeaderSlotProps, SideBarDetailContentSlotProps } from './components/sidebar/interface';
+export type { CodeItemProps, CodeItemSlots, FileItemProps, FileItemEmits, ImageUploadNodeOptions } from './components/sidebar/widget/interface';

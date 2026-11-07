@@ -4,7 +4,7 @@
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import { canUploadImage, getEditorAttributes, getFileEditorExtensions } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/base/element-props';
-    import useEditorAppContext from '../../_base/editor-app-context';
+    import useEditorAppContext from '../../../base/editor-app-context';
     import { ImageUploadNode } from './image-slot';
     import type { FileItemEmits, FileItemProps } from './interface';
     import MenuBar from './menu-bar.vue';

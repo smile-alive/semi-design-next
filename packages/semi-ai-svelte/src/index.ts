@@ -1,8 +1,8 @@
-import './semi-global.js';
+import './utils/semi-global.js';
 
 // Types are exported from the interface module that declares them: the d.ts bundler drops types that reach the entry
 // through a component module's own re-export of an import
-export { AIChatDialogue } from './ai-chat-dialogue/index.js';
+export { AIChatDialogue } from './components/ai-chat-dialogue/index.js';
 export type {
     AIChatDialogueProps,
     RoleConfig as AIChatDialogueRoleConfig,
@@ -29,10 +29,10 @@ export type {
     DialogueStepAction,
     DialogueStepWidgetProps,
     DialogueStepWidgetActionIconSnippetProps,
-} from './ai-chat-dialogue/interface.js';
+} from './components/ai-chat-dialogue/interface.js';
 export type { Message as AIChatDialogueMessage, Annotation as AIChatDialogueAnnotation, ContentItem as AIChatDialogueContentItem } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 
-export { AIChatInput } from './ai-chat-input/index.js';
+export { AIChatInput } from './components/ai-chat-input/index.js';
 export type {
     AIChatInputProps,
     AIChatInputHandle,
@@ -48,7 +48,7 @@ export type {
     AIChatInputSkillItemSnippetProps,
     AIChatInputSkillIconSnippetProps,
     AIChatInputTemplateSnippetProps,
-} from './ai-chat-input/interface.js';
+} from './components/ai-chat-input/interface.js';
 export type {
     ConfigureProps as AIChatInputConfigureProps,
     ConfigureHandle as AIChatInputConfigureHandle,
@@ -59,7 +59,7 @@ export type {
     McpOption as AIChatInputMcpOption,
     McpOptionIconSnippetProps as AIChatInputMcpOptionIconSnippetProps,
     McpProps as AIChatInputMcpProps,
-} from './ai-chat-input/configure/interface.js';
+} from './components/ai-chat-input/configure/interface.js';
 export type {
     Attachment as AIChatInputAttachment,
     BaseSkill as AIChatInputBaseSkill,
@@ -72,7 +72,7 @@ export type {
     Suggestion as AIChatInputSuggestion,
 } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 
-export { Chat } from './chat/index.js';
+export { Chat } from './components/chat/index.js';
 export type {
     ChatProps,
     ChatHandle,
@@ -98,14 +98,14 @@ export type {
     ChatInputAreaSnippetProps,
     ChatHintBoxSnippetProps,
     ChatDividerSnippetProps,
-} from './chat/interface.js';
+} from './components/chat/interface.js';
 
-export { Sidebar, Annotation, MCPConfigure } from './sidebar/index.js';
-export type { ContainerHandle as SidebarContainerHandle, ContainerProps as SidebarContainerProps } from './sidebar/container/interface.js';
-export type { SideBarProps, SideBarOption, SideBarDetailContent, SideBarOptionSnippetProps, SideBarOptionItemSnippetProps, SideBarMainContentSnippetProps, SideBarDetailHeaderSnippetProps, SideBarDetailBodySnippetProps } from './sidebar/interface.js';
-export type { CodeItemProps, CodeContentProps, FileItemProps, FileContentProps, ImageUploadNodeOptions } from './sidebar/widget/interface.js';
-export type { AnnotationProps, AnnotationContentProps, AnnotationItem, AnnotationInfo, AnnotationHeaderSnippetProps, AnnotationItemSnippetProps } from './sidebar/annotation/interface.js';
-export type { MCPConfigureProps, MCPConfigureContentProps, MCPConfigureOption, MCPConfigureItemSnippetProps } from './sidebar/mcp-configure/interface.js';
+export { Sidebar, Annotation, MCPConfigure } from './components/sidebar/index.js';
+export type { ContainerHandle as SidebarContainerHandle, ContainerProps as SidebarContainerProps } from './components/sidebar/container/interface.js';
+export type { SideBarProps, SideBarOption, SideBarDetailContent, SideBarOptionSnippetProps, SideBarOptionItemSnippetProps, SideBarMainContentSnippetProps, SideBarDetailHeaderSnippetProps, SideBarDetailBodySnippetProps } from './components/sidebar/interface.js';
+export type { CodeItemProps, CodeContentProps, FileItemProps, FileContentProps, ImageUploadNodeOptions } from './components/sidebar/widget/interface.js';
+export type { AnnotationProps, AnnotationContentProps, AnnotationItem, AnnotationInfo, AnnotationHeaderSnippetProps, AnnotationItemSnippetProps } from './components/sidebar/annotation/interface.js';
+export type { MCPConfigureProps, MCPConfigureContentProps, MCPConfigureOption, MCPConfigureItemSnippetProps } from './components/sidebar/mcp-configure/interface.js';
 
 export type { StreamingResponseState, ResponseChunk } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/interface';
 export type { StreamingChatState } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/streaming-chat-completion-to-message';

@@ -353,36 +353,36 @@ export const solidExemptions: Exemption[] = [
     // The skill and suggestion lists are textbox-driven listboxes of rich options, which a native select or datalist
     // cannot render
     {
-        files: ['packages/semi-ai-solid/src/ai-chat-input/ai-chat-input.tsx'],
+        files: ['packages/semi-ai-solid/src/components/ai-chat-input/ai-chat-input.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     // Options stay out of the Tab order: the textbox owns focus and moves the active option through
     // aria-activedescendant, so a click is a pointer shortcut
     {
-        files: ['packages/semi-ai-solid/src/ai-chat-input/skill-item.tsx', 'packages/semi-ai-solid/src/ai-chat-input/suggestion-item.tsx'],
+        files: ['packages/semi-ai-solid/src/components/ai-chat-input/skill-item.tsx', 'packages/semi-ai-solid/src/components/ai-chat-input/suggestion-item.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/interactive-supports-focus', 'jsx-a11y/prefer-tag-over-role'],
     },
     // The editor host relays focusin, focusout, keydown and paste from the Tiptap contenteditable inside it, which holds
     // the textbox role
     {
-        files: ['packages/semi-ai-solid/src/ai-chat-input/rich-text-input.tsx'],
+        files: ['packages/semi-ai-solid/src/components/ai-chat-input/rich-text-input.tsx'],
         off: ['jsx-a11y/no-static-element-interactions'],
     },
     // The input area click only hands focus to the textarea
     {
-        files: ['packages/semi-ai-solid/src/chat/input-box.tsx'],
+        files: ['packages/semi-ai-solid/src/components/chat/input-box.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
     // role="button" divs hold block content; a file card's reference action cannot be a native button inside the
     // card's <a>
     {
-        files: ['packages/semi-ai-solid/src/ai-chat-dialogue/widgets/dialogue-hint.tsx', 'packages/semi-ai-solid/src/ai-chat-dialogue/widgets/content-item/annotation.tsx', 'packages/semi-ai-solid/src/ai-chat-dialogue/widgets/dialogue-content.tsx'],
+        files: ['packages/semi-ai-solid/src/components/ai-chat-dialogue/widgets/dialogue-hint.tsx', 'packages/semi-ai-solid/src/components/ai-chat-dialogue/widgets/content-item/annotation.tsx', 'packages/semi-ai-solid/src/components/ai-chat-dialogue/widgets/dialogue-content.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     // The step header takes role="button", tabIndex and its handlers only when it has actions to expand; the rule
     // cannot see the conditional role
     {
-        files: ['packages/semi-ai-solid/src/ai-chat-dialogue/widgets/content-item/dialogue-step.tsx'],
+        files: ['packages/semi-ai-solid/src/components/ai-chat-dialogue/widgets/content-item/dialogue-step.tsx'],
         off: ['jsx-a11y/no-static-element-interactions'],
     },
     // The single-selection text beside the trigger search input only focuses that input on click; the dropdown div

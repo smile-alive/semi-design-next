@@ -7,7 +7,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { Modal } from '@fibrae/semi-ui-svelte/modal/index';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { AIChatDialogue } from '../../index';
+import { AIChatDialogue } from '../../../index';
 import ColumnHost, { type ColumnHostStore } from './column-host.svelte';
 
 const prefix = `${BASE_CLASS_PREFIX}-ai-chat-dialogue`;

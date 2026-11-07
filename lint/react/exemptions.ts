@@ -20,25 +20,25 @@ export const reactExemptions: Exemption[] = [
     },
     // role="button" divs hold block content; a file card's action cannot be a button inside the card's <a>
     {
-        files: ['packages/semi-ai-react/src/ai-chat-dialogue/widgets/dialogue-hint.tsx'],
+        files: ['packages/semi-ai-react/src/components/ai-chat-dialogue/widgets/dialogue-hint.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     {
-        files: ['packages/semi-ai-react/src/ai-chat-dialogue/widgets/content-item/annotation.tsx'],
+        files: ['packages/semi-ai-react/src/components/ai-chat-dialogue/widgets/content-item/annotation.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     {
-        files: ['packages/semi-ai-react/src/ai-chat-dialogue/widgets/dialogue-content.tsx'],
+        files: ['packages/semi-ai-react/src/components/ai-chat-dialogue/widgets/dialogue-content.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     // Root click only focuses the editor, where the keys are handled; the skill and suggestion lists are textbox-driven
     // listboxes of rich options, which a native select or datalist cannot render
     {
-        files: ['packages/semi-ai-react/src/ai-chat-input/index.tsx'],
+        files: ['packages/semi-ai-react/src/components/ai-chat-input/index.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions', 'jsx-a11y/prefer-tag-over-role'],
     },
     {
-        files: ['packages/semi-ai-react/src/ai-chat-input/skill-item.tsx', 'packages/semi-ai-react/src/ai-chat-input/suggestion-item.tsx'],
+        files: ['packages/semi-ai-react/src/components/ai-chat-input/skill-item.tsx', 'packages/semi-ai-react/src/components/ai-chat-input/suggestion-item.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/interactive-supports-focus', 'jsx-a11y/prefer-tag-over-role'],
     },
     // Links are role="link" divs because an <a href> would write the hash
@@ -143,7 +143,7 @@ export const reactExemptions: Exemption[] = [
     },
     // The input area click only hands focus to the textarea
     {
-        files: ['packages/semi-ai-react/src/chat/input-box.tsx'],
+        files: ['packages/semi-ai-react/src/components/chat/input-box.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
     // role="heading" div because host pages style h3 outside Semi's layers; the row click is a pointer shortcut
@@ -472,7 +472,7 @@ export const reactExemptions: Exemption[] = [
     },
     // Needs a native autoFocus input inside the container to check StrictMode's simulated unmount leaves focus there
     {
-        files: ['packages/semi-ai-react/src/sidebar/__tests__/sidebar.test.tsx'],
+        files: ['packages/semi-ai-react/src/components/sidebar/__tests__/sidebar.test.tsx'],
         off: ['jsx-a11y/no-autofocus'],
     },
     // DOM methods go only to expect()/vi.mocked(), or are kept to restore or run with .call(this); none runs unbound

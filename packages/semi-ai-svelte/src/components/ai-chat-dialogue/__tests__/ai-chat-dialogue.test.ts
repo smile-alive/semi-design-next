@@ -12,7 +12,7 @@ import { Modal } from '@fibrae/semi-ui-svelte/modal/index';
 import { Toast } from '@fibrae/semi-ui-svelte/toast/index';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 // the package entry, which also loads the semi-global type augmentation
-import { AIChatDialogue } from '../../index';
+import { AIChatDialogue } from '../../../index';
 import type { AIChatDialogueProps, DefaultActionNodeObj, MarkdownRenderProps, Message, Metadata } from '../interface';
 import ReferenceWidget from '../widgets/content-item/reference.svelte';
 import CustomStrong from './custom-strong.svelte';

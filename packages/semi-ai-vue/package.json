@@ -17,7 +17,9 @@
         ".": "./dist/index.js",
         "./styles.css": "./dist/styles.css",
         "./package.json": "./package.json",
-        "./*": "./dist/*.js"
+        "./base/*": "./dist/base/*.js",
+        "./utils/*": "./dist/utils/*.js",
+        "./*": "./dist/components/*.js"
     },
     "files": [
         "dist"

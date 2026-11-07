@@ -21,10 +21,15 @@
         },
         "./styles.css": "./dist/styles.css",
         "./package.json": "./package.json",
+        "./utils/*": {
+            "types": "./dist/utils/*.d.ts",
+            "solid": "./dist/utils/*.jsx",
+            "default": "./dist/utils/*.js"
+        },
         "./*": {
-            "types": "./dist/*.d.ts",
-            "solid": "./dist/*.jsx",
-            "default": "./dist/*.js"
+            "types": "./dist/components/*.d.ts",
+            "solid": "./dist/components/*.jsx",
+            "default": "./dist/components/*.js"
         }
     },
     "files": [

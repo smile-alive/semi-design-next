@@ -1,10 +1,10 @@
 import type { GlobalDefaults } from '@fibrae/semi-ui-solid/utils/semi-global';
-import type { AIChatDialogueProps } from './ai-chat-dialogue/interface';
-import type { AIChatInputProps } from './ai-chat-input';
-import type { ChatProps } from './chat';
-import type { AnnotationProps } from './sidebar/annotation';
-import type { SideBarProps } from './sidebar/interface';
-import type { MCPConfigureProps } from './sidebar/mcp-configure';
+import type { AIChatDialogueProps } from '../components/ai-chat-dialogue/interface';
+import type { AIChatInputProps } from '../components/ai-chat-input';
+import type { ChatProps } from '../components/chat';
+import type { AnnotationProps } from '../components/sidebar/annotation';
+import type { SideBarProps } from '../components/sidebar/interface';
+import type { MCPConfigureProps } from '../components/sidebar/mcp-configure';
 
 declare module '@fibrae/semi-ui-solid/utils/semi-global' {
     interface OverrideDefaultProps {
