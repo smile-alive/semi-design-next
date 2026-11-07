@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { numbers } from '@fibrae/semi-foundation/input-number/constants';
+import { numbers } from '@fibrae/semi-foundation/components/input-number/constants';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import de from '@fibrae/semi-foundation/locale/source/de';
 import InputNumber, { type InputNumberProps } from '..';

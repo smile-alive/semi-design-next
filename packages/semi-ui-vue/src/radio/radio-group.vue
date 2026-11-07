@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, nextTick, useId } from 'vue';
-    import { radioGroupClasses, strings } from '@fibrae/semi-foundation/radio/constants';
-    import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/radio/radio-group-foundation';
-    import '@fibrae/semi-foundation/radio/radio.scss';
+    import { radioGroupClasses, strings } from '@fibrae/semi-foundation/components/radio/constants';
+    import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/components/radio/radio-group-foundation';
+    import '@fibrae/semi-foundation/components/radio/radio.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import useFoundation from '../_base/use-foundation';

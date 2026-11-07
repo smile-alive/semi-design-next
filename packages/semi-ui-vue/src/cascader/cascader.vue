@@ -1,11 +1,11 @@
 <script setup lang="ts" generic="Multiple extends boolean | undefined = undefined">
     import { computed, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue';
     import { isEqual } from 'es-toolkit';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/cascader/constants';
-    import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type CascaderAdapter } from '@fibrae/semi-foundation/cascader/foundation';
-    import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/cascader/constants';
+    import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type CascaderAdapter } from '@fibrae/semi-foundation/components/cascader/foundation';
+    import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
     import { isInnerControlKey, isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import '@fibrae/semi-foundation/cascader/cascader.scss';
+    import '@fibrae/semi-foundation/components/cascader/cascader.scss';
     import { IconChevronDown, IconClear } from '@fibrae/semi-icons-vue';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';

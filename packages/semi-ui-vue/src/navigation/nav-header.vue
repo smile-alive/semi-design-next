@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, mergeProps } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/navigation/constants';
-    import '@fibrae/semi-foundation/navigation/navigation.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
+    import '@fibrae/semi-foundation/components/navigation/navigation.scss';
     import type { ElementProps } from '../_base/element-props';
     import SlotFragment from '../_base/slot-fragment';
     import { hasSlotContent } from '../_base/slot-nodes';

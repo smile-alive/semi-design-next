@@ -970,7 +970,7 @@ describe('Table 滚动条宽度测量', () => {
     it('滚动条宽度为 0（overlay 滚动条）时只测量一次', async () => {
         // the measured size is cached per module
         vi.resetModules();
-        const { measureScrollbar } = await import('@fibrae/semi-foundation/table/utils');
+        const { measureScrollbar } = await import('@fibrae/semi-foundation/components/table/utils');
         vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(0);
         vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(0);
         const append = vi.spyOn(document.body, 'appendChild');

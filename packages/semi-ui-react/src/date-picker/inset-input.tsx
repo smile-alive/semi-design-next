@@ -1,4 +1,4 @@
-import type { InsetInputValue, Type, InsetInputChangeFoundationProps } from '@fibrae/semi-foundation/date-picker/input-foundation';
+import type { InsetInputValue, Type, InsetInputChangeFoundationProps } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 import Input, { type InputProps } from '../input';
 
 export interface InsetDateInputProps extends Pick<InsetInputChangeFoundationProps, 'panel'> {

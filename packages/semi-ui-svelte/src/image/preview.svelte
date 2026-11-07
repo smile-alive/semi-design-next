@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import PreviewFoundation, { getGroupPreviewList, type PreviewAdapter, type PreviewBaseState } from '@fibrae/semi-foundation/image/preview-foundation';
-    import '@fibrae/semi-foundation/image/image.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+    import PreviewFoundation, { getGroupPreviewList, type PreviewAdapter, type PreviewBaseState } from '@fibrae/semi-foundation/components/image/preview-foundation';
+    import '@fibrae/semi-foundation/components/image/image.scss';
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

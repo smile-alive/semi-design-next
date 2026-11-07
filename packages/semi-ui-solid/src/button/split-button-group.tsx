@@ -1,8 +1,8 @@
 import { createSignal, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/button/constants';
-import { markEnds } from '@fibrae/semi-foundation/button/utils';
-import '@fibrae/semi-foundation/button/button.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/button/constants';
+import { markEnds } from '@fibrae/semi-foundation/components/button/utils';
+import '@fibrae/semi-foundation/components/button/button.scss';
 import type { ElementProps } from '../_base/element-props';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';

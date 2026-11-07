@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { Text, computed, useTemplateRef, type ShallowRef, type StyleValue, type VNode } from 'vue';
-    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/dropdown/constants';
-    import DropdownFoundation, { type DropdownAdapter, type DropdownBaseState } from '@fibrae/semi-foundation/dropdown/foundation';
-    import { cssClasses as tooltipClasses } from '@fibrae/semi-foundation/tooltip/constants';
-    import '@fibrae/semi-foundation/dropdown/dropdown.scss';
+    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/dropdown/constants';
+    import DropdownFoundation, { type DropdownAdapter, type DropdownBaseState } from '@fibrae/semi-foundation/components/dropdown/foundation';
+    import { cssClasses as tooltipClasses } from '@fibrae/semi-foundation/components/tooltip/constants';
+    import '@fibrae/semi-foundation/components/dropdown/dropdown.scss';
     import elementType from '../_base/element-type';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import slotNodes, { type KeyedNode } from '../_base/slot-nodes';

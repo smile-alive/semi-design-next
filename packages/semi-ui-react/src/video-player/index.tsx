@@ -1,12 +1,12 @@
 import type React from 'react';
 import { useRef, useState } from 'react';
 import clsx from 'clsx';
+import { cssClasses, DEFAULT_PLAYBACK_RATE, numbers, strings } from '@fibrae/semi-foundation/components/video-player/constants';
+import VideoPlayerFoundation, { type VideoPlayerAdapter } from '@fibrae/semi-foundation/components/video-player/foundation';
+import type { Marker } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
+import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import { cssClasses, DEFAULT_PLAYBACK_RATE, numbers, strings } from '@fibrae/semi-foundation/video-player/constants';
-import VideoPlayerFoundation, { type VideoPlayerAdapter } from '@fibrae/semi-foundation/video-player/foundation';
-import type { Marker } from '@fibrae/semi-foundation/video-player/progress-foundation';
-import { formatTime } from '@fibrae/semi-foundation/video-player/utils';
-import '@fibrae/semi-foundation/video-player/video-player.scss';
+import '@fibrae/semi-foundation/components/video-player/video-player.scss';
 import { IconPlay, IconPause, IconVolume1, IconVolume2, IconRestart, IconFlipHorizontal, IconMinimize, IconMaximize, IconMute, IconPlayCircle, IconMiniPlayer } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import type { MediaEventKeys } from '../_base/media-event-keys';

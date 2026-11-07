@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { startOfDay } from 'date-fns';
-import { getCurrDate } from '@fibrae/semi-foundation/calendar/event-util';
-import type { EventObject } from '@fibrae/semi-foundation/calendar/foundation';
-import '@fibrae/semi-foundation/calendar/calendar.scss';
+import { getCurrDate } from '@fibrae/semi-foundation/components/calendar/event-util';
+import type { EventObject } from '@fibrae/semi-foundation/components/calendar/foundation';
+import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import useDefaultProps from '../_base/use-default-props';
 import DayCalendar from './day-calendar';
 import type { CalendarProps } from './interface';

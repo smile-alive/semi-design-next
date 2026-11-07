@@ -1,9 +1,9 @@
 import { children, createUniqueId, Show, splitProps, type JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/notification/constants';
-import NotificationFoundation, { type NoticeAdapter, type NoticeProps as FoundationNoticeProps, type NoticeState } from '@fibrae/semi-foundation/notification/notification-foundation';
-import type { ConfigProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/notification/constants';
+import NotificationFoundation, { type NoticeAdapter, type NoticeProps as FoundationNoticeProps, type NoticeState } from '@fibrae/semi-foundation/components/notification/notification-foundation';
+import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { isAlertType } from '@fibrae/semi-foundation/utils/announcer';
 import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../_base/element-props';
@@ -47,7 +47,7 @@ export interface NoticeProps extends Omit<FoundationNoticeProps, 'className' | '
 /** Options of one notification opened through the static methods or a hook; the list supplies the omitted keys */
 export type NotificationOptions = Omit<NoticeProps, 'close' | 'ref'>;
 
-export type { NoticeState } from '@fibrae/semi-foundation/notification/notification-foundation';
+export type { NoticeState } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 
 type Foundation = NotificationFoundation<NoticeProps>;
 type Adapter = NoticeAdapter<NoticeProps>;

@@ -1,5 +1,5 @@
 import type { ComputedRef } from 'vue';
-import type { PreviewGroupImage } from '@fibrae/semi-foundation/image/preview-foundation';
+import type { PreviewGroupImage } from '@fibrae/semi-foundation/components/image/preview-foundation';
 import { createContext } from '../_base/create-context';
 
 export interface GroupImage extends PreviewGroupImage {

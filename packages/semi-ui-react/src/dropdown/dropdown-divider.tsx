@@ -1,6 +1,6 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/dropdown/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
 import type { ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';
 

@@ -1,9 +1,9 @@
 import { type JSX, Match, Show, Switch, children, createEffect, createMemo, mergeProps, onCleanup, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-import ImageFoundation, { type ImageAdapter, type ImageState } from '@fibrae/semi-foundation/image/image-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+import ImageFoundation, { type ImageAdapter, type ImageState } from '@fibrae/semi-foundation/components/image/image-foundation';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-import '@fibrae/semi-foundation/image/image.scss';
+import '@fibrae/semi-foundation/components/image/image.scss';
 import { IconUploadError } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';
 import hasContent from '../_base/has-content';

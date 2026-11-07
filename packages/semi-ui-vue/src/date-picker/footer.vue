@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/date-picker/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/date-picker/constants';
     import Button from '../button/button.vue';
     import type { DatePickerFooterEmits, DatePickerFooterProps } from './internal';
 

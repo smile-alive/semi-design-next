@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { h, normalizeClass, onBeforeUnmount, type VNode } from 'vue';
     import { debounce } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
-    import { getTreeLabelClassMap, getTreeRowAria, getTreeRowClassMap, isTreeNodeLeaf, type TreeRowFlags } from '@fibrae/semi-foundation/tree/shared';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
+    import { getTreeLabelClassMap, getTreeRowAria, getTreeRowClassMap, isTreeNodeLeaf, type TreeRowFlags } from '@fibrae/semi-foundation/components/tree/shared';
     import { IconFile, IconFolder, IconFolderOpen } from '@fibrae/semi-icons-vue';
     import slotNodes, { hasSlotContent, type KeyedNode } from '../_base/slot-nodes';
     import Checkbox from '../checkbox';

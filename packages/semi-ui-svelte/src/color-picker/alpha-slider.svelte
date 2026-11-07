@@ -1,8 +1,8 @@
 <script lang="ts">
-    import ColorSliderFoundation, { type ColorSliderAdapter, type ColorSliderBaseProps, type ColorSliderBaseState } from '@fibrae/semi-foundation/color-picker/color-slider-foundation';
-    import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
-    import { hsvaToHslaString, hsvaToRgbaString } from '@fibrae/semi-foundation/color-picker/utils/convert';
-    import { round } from '@fibrae/semi-foundation/color-picker/utils/round';
+    import ColorSliderFoundation, { type ColorSliderAdapter, type ColorSliderBaseProps, type ColorSliderBaseState } from '@fibrae/semi-foundation/components/color-picker/color-slider-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+    import { hsvaToHslaString, hsvaToRgbaString } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
+    import { round } from '@fibrae/semi-foundation/components/color-picker/utils/round';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { toDragEvent } from './drag-event.js';

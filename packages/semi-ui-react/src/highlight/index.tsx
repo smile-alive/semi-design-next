@@ -1,9 +1,9 @@
 import type React from 'react';
 import { createElement, memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/highlight/constants';
-import { findAll, type SearchWords } from '@fibrae/semi-foundation/highlight/foundation';
-import '@fibrae/semi-foundation/highlight/highlight.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/highlight/constants';
+import { findAll, type SearchWords } from '@fibrae/semi-foundation/components/highlight/foundation';
+import '@fibrae/semi-foundation/components/highlight/highlight.scss';
 import useDefaultProps from '../_base/use-default-props';
 
 export interface HighlightProps {

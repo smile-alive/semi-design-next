@@ -1,4 +1,4 @@
-import type { ButtonLooks } from '@fibrae/semi-foundation/button/utils';
+import type { ButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
 import { createContext } from '../_base/create-context.js';
 import { getPopupLayerContext } from '../_base/popup-layer.js';
 

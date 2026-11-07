@@ -1,11 +1,11 @@
 import { type Component, type JSX, For, Match, Show, Switch, children, createMemo, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/button/constants';
-import { buttonClassList, colorfulFill, isAILoading, paddingSides, resolveButtonLooks } from '@fibrae/semi-foundation/button/utils';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/button/constants';
+import { buttonClassList, colorfulFill, isAILoading, paddingSides, resolveButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
-import '@fibrae/semi-foundation/button/button.scss';
-import '@fibrae/semi-foundation/button/icon-button.scss';
+import '@fibrae/semi-foundation/components/button/button.scss';
+import '@fibrae/semi-foundation/components/button/icon-button.scss';
 import { IconAILoading, type IconFill } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';

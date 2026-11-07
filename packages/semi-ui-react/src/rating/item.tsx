@@ -1,10 +1,10 @@
 import type React from 'react';
 import { useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
+import { type strings, cssClasses } from '@fibrae/semi-foundation/components/rating/constants';
+import RatingFoundation from '@fibrae/semi-foundation/components/rating/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import { type strings, cssClasses } from '@fibrae/semi-foundation/rating/constants';
-import RatingFoundation from '@fibrae/semi-foundation/rating/foundation';
-import '@fibrae/semi-foundation/rating/rating.scss';
+import '@fibrae/semi-foundation/components/rating/rating.scss';
 import { IconStar } from '@fibrae/semi-icons-react';
 import type { ArrayElement } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';

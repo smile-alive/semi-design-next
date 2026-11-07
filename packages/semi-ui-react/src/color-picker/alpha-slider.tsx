@@ -1,10 +1,10 @@
 import type React from 'react';
 import { useRef } from 'react';
-import ColorSliderFoundation, { type ColorSliderAdapter, type ColorSliderBaseProps, type ColorSliderBaseState } from '@fibrae/semi-foundation/color-picker/color-slider-foundation';
-import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
-import type { HsvaColor } from '@fibrae/semi-foundation/color-picker/interface';
-import { hsvaToHslaString, hsvaToRgbaString } from '@fibrae/semi-foundation/color-picker/utils/convert';
-import { round } from '@fibrae/semi-foundation/color-picker/utils/round';
+import ColorSliderFoundation, { type ColorSliderAdapter, type ColorSliderBaseProps, type ColorSliderBaseState } from '@fibrae/semi-foundation/components/color-picker/color-slider-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+import type { HsvaColor } from '@fibrae/semi-foundation/components/color-picker/interface';
+import { hsvaToHslaString, hsvaToRgbaString } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
+import { round } from '@fibrae/semi-foundation/components/color-picker/utils/round';
 import useFoundation from '../_base/use-foundation';
 import useLocale from '../locale/use-locale';
 

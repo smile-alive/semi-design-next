@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { shallowRef, useTemplateRef } from 'vue';
-    import { addAreaControlAttributes, containsControl, containsName } from '@fibrae/semi-foundation/upload/utils';
+    import { addAreaControlAttributes, containsControl, containsName } from '@fibrae/semi-foundation/components/upload/utils';
     import useMutationObserver from '../_base/use-mutation-observer';
     import useLocale from '../locale/use-locale';
 

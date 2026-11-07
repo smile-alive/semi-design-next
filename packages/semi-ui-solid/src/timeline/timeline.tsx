@@ -1,9 +1,9 @@
 import { children, createMemo, For, Index, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/timeline/constants';
-import { getPosCls } from '@fibrae/semi-foundation/timeline/utils';
+import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
+import { getPosCls } from '@fibrae/semi-foundation/components/timeline/utils';
 import warning from '@fibrae/semi-foundation/utils/warning';
-import '@fibrae/semi-foundation/timeline/timeline.scss';
+import '@fibrae/semi-foundation/components/timeline/timeline.scss';
 import hasContent from '../_base/has-content';
 import { isToken, type Token } from '../_base/token';
 import useDefaultProps from '../_base/use-default-props';

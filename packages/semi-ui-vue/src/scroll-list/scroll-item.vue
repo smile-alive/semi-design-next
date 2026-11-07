@@ -1,8 +1,8 @@
 <script setup lang="ts" generic="T extends ScrollListItem = ScrollListItem">
     import { computed, useId, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
-    import ItemFoundation, { type ScrollItemAdapter, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/scroll-list/item-foundation';
-    import '@fibrae/semi-foundation/scroll-list/scroll-list.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
+    import ItemFoundation, { type ScrollItemAdapter, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
+    import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';

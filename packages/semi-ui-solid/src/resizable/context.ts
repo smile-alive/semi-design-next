@@ -1,5 +1,5 @@
 import type { Accessor } from 'solid-js';
-import type { ResizeGroupItem } from '@fibrae/semi-foundation/resizable/foundation';
+import type { ResizeGroupItem } from '@fibrae/semi-foundation/components/resizable/foundation';
 import { createContext } from '../_base/create-context';
 
 export interface ResizeGroupContextValue {

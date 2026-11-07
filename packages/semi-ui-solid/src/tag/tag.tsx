@@ -1,10 +1,10 @@
 import { batch, children, createMemo, createSignal, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/tag/constants';
+import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/components/tag/focus';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import { cssClasses, strings } from '@fibrae/semi-foundation/tag/constants';
-import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/tag/focus';
 import { handlePrevent } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/tag/tag.scss';
+import '@fibrae/semi-foundation/components/tag/tag.scss';
 import { IconClose } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';
 import hasContent from '../_base/has-content';

@@ -1,6 +1,6 @@
 import { createSignal } from 'solid-js';
-import { resolveConfirmProps } from '@fibrae/semi-foundation/modal/confirm';
-import ConfirmRegistry from '@fibrae/semi-foundation/modal/confirm-registry';
+import { resolveConfirmProps } from '@fibrae/semi-foundation/components/modal/confirm';
+import ConfirmRegistry from '@fibrae/semi-foundation/components/modal/confirm-registry';
 import renderDetached from '../_base/detached-render';
 import ConfirmModal, { type ConfirmProps } from './confirm-modal';
 import type { ModalProps } from './modal';

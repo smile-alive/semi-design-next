@@ -1,4 +1,4 @@
-import { strings } from '@fibrae/semi-foundation/table/constants';
+import { strings } from '@fibrae/semi-foundation/components/table/constants';
 import TableColumn from './column';
 import Table from './table.vue';
 

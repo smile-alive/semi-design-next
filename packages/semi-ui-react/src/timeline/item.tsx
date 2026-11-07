@@ -1,8 +1,8 @@
 import type React from 'react';
 import { memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/timeline/constants';
-import '@fibrae/semi-foundation/timeline/timeline.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
+import '@fibrae/semi-foundation/components/timeline/timeline.scss';
 import type { ElementProps } from '../_base/base';
 
 export interface TimelineItemProps extends ElementProps<'li', 'content'> {

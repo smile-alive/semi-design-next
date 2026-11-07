@@ -1,10 +1,10 @@
 import React, { cloneElement, isValidElement, useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import { DEFAULT_TOOLTIP, cssClasses } from '@fibrae/semi-foundation/breadcrumb/constants';
-import BreadcrumbFoundation, { type BreadcrumbAdapter, type BreadcrumbState } from '@fibrae/semi-foundation/breadcrumb/foundation';
+import { DEFAULT_TOOLTIP, cssClasses } from '@fibrae/semi-foundation/components/breadcrumb/constants';
+import BreadcrumbFoundation, { type BreadcrumbAdapter, type BreadcrumbState } from '@fibrae/semi-foundation/components/breadcrumb/foundation';
 import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
 import warning from '@fibrae/semi-foundation/utils/warning';
-import '@fibrae/semi-foundation/breadcrumb/breadcrumb.scss';
+import '@fibrae/semi-foundation/components/breadcrumb/breadcrumb.scss';
 import { IconMore } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';

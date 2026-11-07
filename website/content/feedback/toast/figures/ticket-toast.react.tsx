@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import '@fibrae/semi-foundation/toast/toast.scss';
+import '@fibrae/semi-foundation/components/toast/toast.scss';
 import type { ToastProps } from '@fibrae/semi-ui-react';
 import ToastCard from '@fibrae/semi-ui-react/toast/toast';
 

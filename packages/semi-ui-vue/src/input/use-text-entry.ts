@@ -1,5 +1,5 @@
 import { nextTick, type ComputedRef, type ShallowRef } from 'vue';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import type { ModelModifiers } from './interface';
 import { keepsTypedValue } from './model-modifiers';
 

@@ -1,9 +1,9 @@
 import { For, Show, createMemo } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
-import CalendarFoundation, { type CalendarAdapter, type CalendarBaseState } from '@fibrae/semi-foundation/calendar/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
+import CalendarFoundation, { type CalendarAdapter, type CalendarBaseState } from '@fibrae/semi-foundation/components/calendar/foundation';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-import '@fibrae/semi-foundation/calendar/calendar.scss';
+import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import useFoundation from '../_base/use-foundation';
 import ByKey from './by-key';
 import EventContent from './event-content';

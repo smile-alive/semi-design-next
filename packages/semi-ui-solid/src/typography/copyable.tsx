@@ -1,6 +1,6 @@
 import { type JSX, Show, children, createEffect, mergeProps, on } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/typography/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
 import { IconCopy, IconTick } from '@fibrae/semi-icons-solid';
 import useCopied from '../_base/use-copied';
 import useLocale from '../locale/use-locale';

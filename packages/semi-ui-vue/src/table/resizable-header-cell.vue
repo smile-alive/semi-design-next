@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses, numbers } from '@fibrae/semi-foundation/table/constants';
+    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/table/constants';
     import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
 
     const props = withDefaults(

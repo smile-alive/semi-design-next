@@ -1,6 +1,6 @@
 import { Show, batch, children, createEffect, createMemo, createSignal, splitProps, untrack } from 'solid-js';
-import { numbers, strings } from '@fibrae/semi-foundation/table/constants';
-import { assignColumnKeys } from '@fibrae/semi-foundation/table/utils';
+import { numbers, strings } from '@fibrae/semi-foundation/components/table/constants';
+import { assignColumnKeys } from '@fibrae/semi-foundation/components/table/utils';
 import { addClass, removeClass } from '@fibrae/semi-foundation/utils/classnames';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import type { ColumnProps, OnHeaderCellReturnObject, RowSelectionProps, TableComponents, TableProps } from './interface';

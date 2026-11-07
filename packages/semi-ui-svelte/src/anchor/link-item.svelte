@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/anchor/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/anchor/constants';
     import isEnterPress from '@fibrae/semi-foundation/utils/is-enter-press';
     import { TypographyText } from '../typography/index.js';
     import { getAnchorContext } from './context.js';

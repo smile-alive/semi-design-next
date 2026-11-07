@@ -1,8 +1,8 @@
 import { type JSX, For, Show, children, createComputed, createMemo, createSignal, on, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/table/constants';
-import { toggleFilteredValue } from '@fibrae/semi-foundation/table/utils';
+import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
+import { toggleFilteredValue } from '@fibrae/semi-foundation/components/table/utils';
 import { IconFilter } from '@fibrae/semi-icons-solid';
 import Button from '../button';
 import Checkbox from '../checkbox';

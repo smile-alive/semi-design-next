@@ -1,7 +1,7 @@
 import { Index, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, cssClassesGroup } from '@fibrae/semi-foundation/float-button/constants';
-import '@fibrae/semi-foundation/float-button/float-button.scss';
+import { cssClasses, cssClassesGroup } from '@fibrae/semi-foundation/components/float-button/constants';
+import '@fibrae/semi-foundation/components/float-button/float-button.scss';
 import callHandler from '../_base/call-handler';
 import type { ElementProps } from '../_base/element-props';
 import useDefaultProps from '../_base/use-default-props';

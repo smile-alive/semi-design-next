@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { Text, computed, type Slots, type VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/avatar/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/avatar/constants';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import type { ElementProps } from '../_base/element-props';
     import { usePopupLayer } from '../_base/popup-layer';

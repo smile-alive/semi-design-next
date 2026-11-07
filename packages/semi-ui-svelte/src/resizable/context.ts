@@ -1,4 +1,4 @@
-import type { ResizeGroupItem } from '@fibrae/semi-foundation/resizable/foundation';
+import type { ResizeGroupItem } from '@fibrae/semi-foundation/components/resizable/foundation';
 import { createContext } from '../_base/create-context.js';
 
 export interface ResizeGroupContext {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, mergeProps, useTemplateRef, type ImgHTMLAttributes, type VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/avatar/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/avatar/constants';
 
     const props = defineProps<{
         image?: ImgHTMLAttributes;

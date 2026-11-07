@@ -1,6 +1,6 @@
 import { onMount, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/time-picker/input-foundation';
+import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/components/time-picker/input-foundation';
 import { IconClock } from '@fibrae/semi-icons-solid';
 import useFoundation from '../_base/use-foundation';
 import useRaf from '../_base/use-raf';

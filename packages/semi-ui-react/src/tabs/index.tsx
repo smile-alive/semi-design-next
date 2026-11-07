@@ -1,9 +1,9 @@
 import { type KeyboardEvent, type MouseEvent, type ReactElement, type ReactNode, useCallback, useId, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/tabs/constants';
-import TabsFoundation, { type TabsAdapter, type TabsState } from '@fibrae/semi-foundation/tabs/foundation';
-import '@fibrae/semi-foundation/tabs/tabs.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/tabs/constants';
+import TabsFoundation, { type TabsAdapter, type TabsState } from '@fibrae/semi-foundation/components/tabs/foundation';
+import '@fibrae/semi-foundation/components/tabs/tabs.scss';
 import elementTypeOf from '../_base/element-type';
 import flattenChildren from '../_base/flatten-children';
 import useDefaultProps from '../_base/use-default-props';

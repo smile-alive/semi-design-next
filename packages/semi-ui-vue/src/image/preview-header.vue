@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/image/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import { IconClose } from '@fibrae/semi-icons-vue';
     import useLocale from '../locale/use-locale';
     import type { ImagePreviewSlots } from './interface';

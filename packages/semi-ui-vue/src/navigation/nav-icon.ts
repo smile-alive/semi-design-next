@@ -1,6 +1,6 @@
 import { Text, type VNode } from 'vue';
-import type { NavItemType } from '@fibrae/semi-foundation/navigation/foundation';
-import type { ItemKey } from '@fibrae/semi-foundation/navigation/item-foundation';
+import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
+import type { ItemKey } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import elementType from '../_base/element-type';
 import slotNodes from '../_base/slot-nodes';
 

@@ -1,10 +1,10 @@
 <script lang="ts">
     import { onMount, untrack } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
-    import { cssClasses } from '@fibrae/semi-foundation/popconfirm/constants';
-    import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseProps, type PopconfirmBaseState } from '@fibrae/semi-foundation/popconfirm/popconfirm-foundation';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/popconfirm/popconfirm.scss';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses } from '@fibrae/semi-foundation/components/popconfirm/constants';
+    import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseProps, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
+    import '@fibrae/semi-foundation/components/popconfirm/popconfirm.scss';
     import { IconAlertTriangle, IconClose } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

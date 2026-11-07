@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
 import Typography, { type TitleProps } from '../../typography';
 
 function heading(level: NonNullable<TitleProps['heading']>) {

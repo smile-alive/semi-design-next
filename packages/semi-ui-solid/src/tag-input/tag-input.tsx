@@ -1,12 +1,12 @@
 import { type JSX, For, Show, Suspense, batch, children, createEffect, createMemo, createSignal, on, createUniqueId, lazy, mergeProps, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { cssClasses } from '@fibrae/semi-foundation/components/tag-input/constants';
+import TagInputFoundation, { type OnSortEndProps, type TagInputAdapter, type TagInputBaseState, type TagSortIds } from '@fibrae/semi-foundation/components/tag-input/foundation';
+import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/components/tag-input/utils/tag-focus';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import { cssClasses } from '@fibrae/semi-foundation/tag-input/constants';
-import TagInputFoundation, { type OnSortEndProps, type TagInputAdapter, type TagInputBaseState, type TagSortIds } from '@fibrae/semi-foundation/tag-input/foundation';
-import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/tag-input/utils/tag-focus';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
-import '@fibrae/semi-foundation/tag-input/tag-input.scss';
+import '@fibrae/semi-foundation/components/tag-input/tag-input.scss';
 import { IconClear, IconHandle } from '@fibrae/semi-icons-solid';
 import autofocus from '../_base/autofocus';
 import callHandler from '../_base/call-handler';

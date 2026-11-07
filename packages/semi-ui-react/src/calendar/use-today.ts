@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import { startOfDay } from 'date-fns';
-import { getCurrDate } from '@fibrae/semi-foundation/calendar/event-util';
-import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
+import { getCurrDate } from '@fibrae/semi-foundation/components/calendar/event-util';
+import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
 
 function getSnapshot() {
     return startOfDay(getCurrDate()).getTime();

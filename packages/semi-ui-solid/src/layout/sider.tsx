@@ -1,9 +1,9 @@
 import { onCleanup, onMount, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { defaultResponsiveMap, type ResponsiveMap } from '@fibrae/semi-foundation/grid/constants';
-import { cssClasses } from '@fibrae/semi-foundation/layout/constants';
+import { defaultResponsiveMap, type ResponsiveMap } from '@fibrae/semi-foundation/components/grid/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
 import { registerMediaQuery } from '@fibrae/semi-foundation/utils/dom';
-import '@fibrae/semi-foundation/layout/layout.scss';
+import '@fibrae/semi-foundation/components/layout/layout.scss';
 import type { ElementProps } from '../_base/element-props';
 import { useLayoutContext } from './context';
 

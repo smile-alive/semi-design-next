@@ -1,9 +1,9 @@
 import type React from 'react';
 import { cloneElement, useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/notification/constants';
-import NotificationFoundation, { type NoticeAdapter, type NoticeProps, type NoticeState } from '@fibrae/semi-foundation/notification/notification-foundation';
-import type { ConfigProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/notification/constants';
+import NotificationFoundation, { type NoticeAdapter, type NoticeProps, type NoticeState } from '@fibrae/semi-foundation/components/notification/notification-foundation';
+import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { isAlertType, readNoticeText } from '@fibrae/semi-foundation/utils/announcer';
 import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-react';
 import useDefaultProps from '../_base/use-default-props';

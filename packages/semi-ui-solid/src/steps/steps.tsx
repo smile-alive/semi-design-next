@@ -1,10 +1,10 @@
 import { children, createEffect, createMemo, For, Match, mergeProps, splitProps, Switch } from 'solid-js';
 import clsx from 'clsx';
-import { stepsClasses as css } from '@fibrae/semi-foundation/steps/constants';
-import { getStepState } from '@fibrae/semi-foundation/steps/utils';
+import { stepsClasses as css } from '@fibrae/semi-foundation/components/steps/constants';
+import { getStepState } from '@fibrae/semi-foundation/components/steps/utils';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import warning from '@fibrae/semi-foundation/utils/warning';
-import '@fibrae/semi-foundation/steps/steps.scss';
+import '@fibrae/semi-foundation/components/steps/steps.scss';
 import hasContent from '../_base/has-content';
 import { isToken, type Token } from '../_base/token';
 import useDefaultProps from '../_base/use-default-props';

@@ -1,9 +1,9 @@
 import React, { type ReactNode, memo, useCallback } from 'react';
 import clsx from 'clsx';
 import { omit, isEqual, pick } from 'es-toolkit';
-import { strings, cssClasses } from '@fibrae/semi-foundation/table/constants';
-import type { BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
-import { isLastLeftFixed, arrayAdd, isFixedLeft, isFixedRight, isFirstFixedRight, isInnerColumnKey, isExpandedColumn } from '@fibrae/semi-foundation/table/utils';
+import { strings, cssClasses } from '@fibrae/semi-foundation/components/table/constants';
+import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
+import { isLastLeftFixed, arrayAdd, isFixedLeft, isFixedRight, isFirstFixedRight, isInnerColumnKey, isExpandedColumn } from '@fibrae/semi-foundation/components/table/utils';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
 import type { ColumnProps, TableComponents, Virtualized, ExpandIcon, OnRow, RowExpandable } from '../interface';

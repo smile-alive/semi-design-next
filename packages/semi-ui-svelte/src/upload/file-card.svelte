@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { cssClasses, strings } from '@fibrae/semi-foundation/upload/constants';
-    import { getFileSize } from '@fibrae/semi-foundation/upload/utils';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+    import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/upload/upload.scss';
+    import '@fibrae/semi-foundation/components/upload/upload.scss';
     import { IconAlertCircle, IconClear, IconClose, IconFile, IconRefresh } from '@fibrae/semi-icons-svelte';
     import Button from '../button/button.svelte';
     import useLocale from '../locale/use-locale.svelte.js';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/timeline/constants';
-    import { getPosCls } from '@fibrae/semi-foundation/timeline/utils';
-    import '@fibrae/semi-foundation/timeline/timeline.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
+    import { getPosCls } from '@fibrae/semi-foundation/components/timeline/utils';
+    import '@fibrae/semi-foundation/components/timeline/timeline.scss';
     import type { ElementProps } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import slotNodes from '../_base/slot-nodes';

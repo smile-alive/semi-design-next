@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { useAttrs } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/dropdown/constants';
-    import { getItemRole } from '@fibrae/semi-foundation/dropdown/menu-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
+    import { getItemRole } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
     import { IconTick } from '@fibrae/semi-icons-vue';
     import { isClickListenerKey } from '../_base/control-attrs';
     import type { ElementProps } from '../_base/element-props';

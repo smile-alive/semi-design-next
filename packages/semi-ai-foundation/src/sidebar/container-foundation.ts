@@ -1,5 +1,5 @@
 import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
-import ModalResources from '@fibrae/semi-foundation/utils/modal-resources';
+import ModalResources from '@fibrae/semi-foundation/base/modal-resources';
 
 export interface ContainerProps {
     title?: any;

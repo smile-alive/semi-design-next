@@ -1,9 +1,9 @@
 <script lang="ts">
     import { tick } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/input/constants';
-    import InputFoundation, { type InputAdapter, type InputBaseProps } from '@fibrae/semi-foundation/input/foundation';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/input/input.scss';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
+    import InputFoundation, { type InputAdapter, type InputBaseProps } from '@fibrae/semi-foundation/components/input/foundation';
+    import '@fibrae/semi-foundation/components/input/input.scss';
     import { IconClear, IconEyeClosedSolid, IconEyeOpened } from '@fibrae/semi-icons-svelte';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import { type SlotKind, trackSlotKind } from '../_base/slot-kind.js';

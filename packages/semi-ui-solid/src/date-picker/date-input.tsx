@@ -1,8 +1,8 @@
 import { type JSX, Show, children, mergeProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
-import { isSplitRangeInputs } from '@fibrae/semi-foundation/date-picker/foundation';
-import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type InsetInputChangeFoundationProps, type InsetInputChangeProps, type InsetInputProps, type RangeInput } from '@fibrae/semi-foundation/date-picker/input-foundation';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+import { isSplitRangeInputs } from '@fibrae/semi-foundation/components/date-picker/foundation';
+import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type InsetInputChangeFoundationProps, type InsetInputChangeProps, type InsetInputProps, type RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { IconCalendar, IconCalendarClock, IconClear } from '@fibrae/semi-icons-solid';
 import hasContent from '../_base/has-content';

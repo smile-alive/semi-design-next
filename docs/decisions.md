@@ -95,7 +95,7 @@
 
 ### 2.2 依赖
 
-- `lottie-web`：Lottie 已改为首次使用时动态导入（`semi-foundation/src/lottie/foundation.ts`），渲染器仍是完整版，轻量入口待评估。
+- `lottie-web`：Lottie 已改为首次使用时动态导入（`semi-foundation/src/components/lottie/foundation.ts`），渲染器仍是完整版，轻量入口待评估。
 
 ### 2.3 体积
 

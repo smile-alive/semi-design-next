@@ -1,9 +1,9 @@
 <script lang="ts">
     import { onDestroy } from 'svelte';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/progress/constants';
-    import { generateColor } from '@fibrae/semi-foundation/progress/generates';
-    import { calcCircleGeometry, calcPercent, createPercentAnimation } from '@fibrae/semi-foundation/progress/utils';
-    import '@fibrae/semi-foundation/progress/progress.scss';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/progress/constants';
+    import { generateColor } from '@fibrae/semi-foundation/components/progress/generates';
+    import { calcCircleGeometry, calcPercent, createPercentAnimation } from '@fibrae/semi-foundation/components/progress/utils';
+    import '@fibrae/semi-foundation/components/progress/progress.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import watch from '../_base/watch.svelte.js';
     import type { ProgressProps } from './interface.js';

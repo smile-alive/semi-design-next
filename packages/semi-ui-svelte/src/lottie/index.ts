@@ -1,4 +1,4 @@
-import LottieFoundation from '@fibrae/semi-foundation/lottie/foundation';
+import LottieFoundation from '@fibrae/semi-foundation/components/lottie/foundation';
 import LottieComponent from './lottie.svelte';
 
 // annotated because the inferred type inlines lottie-web's types, which declaration emit cannot name

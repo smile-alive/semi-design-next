@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, nextTick, onMounted, onUpdated, useId } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
-    import { isRangeType } from '@fibrae/semi-foundation/date-picker/foundation';
-    import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+    import { isRangeType } from '@fibrae/semi-foundation/components/date-picker/foundation';
+    import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
     import { IconCalendar, IconClock } from '@fibrae/semi-icons-vue';
     import useFoundation from '../_base/use-foundation';
     import Combobox from '../time-picker/combobox.vue';

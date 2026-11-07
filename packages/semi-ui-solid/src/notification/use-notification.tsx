@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js';
-import type { NoticeInstance, NoticeType } from '@fibrae/semi-foundation/notification/notification-foundation';
-import NotificationListStore from '@fibrae/semi-foundation/notification/notification-list-foundation';
+import type { NoticeInstance, NoticeType } from '@fibrae/semi-foundation/components/notification/notification-foundation';
+import NotificationListStore from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
 import { readGlobalDefaults } from '../_utils/semi-global';
 import type { NotificationOptions } from './notice';

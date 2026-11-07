@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from 'vue';
+    import { cssClasses, DEFAULT_PLAYBACK_RATE, numbers, strings } from '@fibrae/semi-foundation/components/video-player/constants';
+    import VideoPlayerFoundation, { type VideoPlayerAdapter } from '@fibrae/semi-foundation/components/video-player/foundation';
+    import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import { cssClasses, DEFAULT_PLAYBACK_RATE, numbers, strings } from '@fibrae/semi-foundation/video-player/constants';
-    import VideoPlayerFoundation, { type VideoPlayerAdapter } from '@fibrae/semi-foundation/video-player/foundation';
-    import { formatTime } from '@fibrae/semi-foundation/video-player/utils';
-    import '@fibrae/semi-foundation/video-player/video-player.scss';
+    import '@fibrae/semi-foundation/components/video-player/video-player.scss';
     import { IconFlipHorizontal, IconMaximize, IconMiniPlayer, IconMinimize, IconMute, IconPause, IconPlay, IconPlayCircle, IconRestart, IconVolume1, IconVolume2 } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';

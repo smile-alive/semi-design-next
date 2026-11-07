@@ -1,7 +1,7 @@
 import { type JSX, Show, children, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/dropdown/constants';
-import { getItemRole } from '@fibrae/semi-foundation/dropdown/menu-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
+import { getItemRole } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import { IconTick } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';
 import type { ElementProps } from '../_base/element-props';

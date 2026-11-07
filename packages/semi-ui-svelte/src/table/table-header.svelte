@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { parseHeaderRows } from '@fibrae/semi-foundation/table/utils';
+    import { parseHeaderRows } from '@fibrae/semi-foundation/components/table/utils';
     import { getTableContext } from './context.js';
     import type { ColumnProps } from './interface.js';
     import TableHeaderRow from './table-header-row.svelte';

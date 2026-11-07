@@ -2,9 +2,9 @@
 
 import type { Component } from 'vue';
 import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
-import { cssClasses } from '@fibrae/semi-foundation/toast/constants';
-import type { ToastInstance, ToastType } from '@fibrae/semi-foundation/toast/toast-foundation';
-import ToastListStore from '@fibrae/semi-foundation/toast/toast-list-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
+import type { ToastInstance, ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
+import ToastListStore from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
 import { createHolder } from '../_base/holder';
 import { useSemiGlobal } from '../_base/semi-default';

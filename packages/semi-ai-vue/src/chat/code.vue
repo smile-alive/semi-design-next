@@ -2,7 +2,7 @@
     import { type VNode, normalizeClass, useAttrs } from 'vue';
     import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-    import MarkdownRenderFoundation from '@fibrae/semi-foundation/markdown-render/foundation';
+    import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
     import { IconCopyStroked, IconTick } from '@fibrae/semi-icons-vue';
     import { useCopied, useLocale } from '@fibrae/semi-ui-vue/hooks';
     import { code as MarkdownCode } from '@fibrae/semi-ui-vue/markdown-render/components/index';

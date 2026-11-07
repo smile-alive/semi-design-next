@@ -1,9 +1,9 @@
 <script lang="ts" generics="T">
     import { onMount } from 'svelte';
-    import { cssClasses, numbers } from '@fibrae/semi-foundation/carousel/constants';
-    import CarouselFoundation, { type CarouselAdapter, type CarouselBaseProps, type CarouselState } from '@fibrae/semi-foundation/carousel/foundation';
+    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/carousel/constants';
+    import CarouselFoundation, { type CarouselAdapter, type CarouselBaseProps, type CarouselState } from '@fibrae/semi-foundation/components/carousel/foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import '@fibrae/semi-foundation/carousel/carousel.scss';
+    import '@fibrae/semi-foundation/components/carousel/carousel.scss';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

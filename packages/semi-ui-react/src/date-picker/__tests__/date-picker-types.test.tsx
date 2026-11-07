@@ -1,6 +1,6 @@
 import type React from 'react';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
-import type { DayStatusType, RangeInput } from '@fibrae/semi-foundation/date-picker/foundation';
+import type { DayStatusType, RangeInput } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import type { DatePickerProps, MonthsGridProps, TriggerRenderProps } from '../index';
 
 describe('DatePicker 回调类型与运行时入参一致', () => {

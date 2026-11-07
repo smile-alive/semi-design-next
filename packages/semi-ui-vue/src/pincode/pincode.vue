@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { computed, useAttrs } from 'vue';
-    import { FORM_INJECTED_PROP_KEYS } from '@fibrae/semi-foundation/form/constants';
+    import { FORM_INJECTED_PROP_KEYS } from '@fibrae/semi-foundation/components/form/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/pincode/constants';
+    import PinCodeFoundation, { type PinCodeAdapter } from '@fibrae/semi-foundation/components/pincode/foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { cssClasses } from '@fibrae/semi-foundation/pincode/constants';
-    import PinCodeFoundation, { type PinCodeAdapter } from '@fibrae/semi-foundation/pincode/foundation';
-    import '@fibrae/semi-foundation/pincode/pincode.scss';
+    import '@fibrae/semi-foundation/components/pincode/pincode.scss';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';

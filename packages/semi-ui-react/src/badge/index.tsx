@@ -1,8 +1,8 @@
 import type React from 'react';
 import { memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/badge/constants';
-import '@fibrae/semi-foundation/badge/badge.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/badge/constants';
+import '@fibrae/semi-foundation/components/badge/badge.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import { useConfigContext } from '../config-provider/context';

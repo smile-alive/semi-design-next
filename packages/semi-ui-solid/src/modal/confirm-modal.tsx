@@ -2,8 +2,8 @@ import { createRenderEffect, createSignal, createUniqueId, onCleanup, splitProps
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { type ConfirmType, settleConfirm } from '@fibrae/semi-foundation/modal/confirm';
-import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
+import { type ConfirmType, settleConfirm } from '@fibrae/semi-foundation/components/modal/confirm';
+import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
 import { IconAlertCircle, IconAlertTriangle, IconHelpCircle, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-solid';
 import hasContent from '../_base/has-content';
 import { createIconSlot } from '../_base/icon-slot';

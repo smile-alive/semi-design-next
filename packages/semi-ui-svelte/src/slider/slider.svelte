@@ -1,10 +1,10 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import { isEqual } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/slider/constants';
-    import SliderFoundation, { type HandleDot, type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/slider/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/slider/constants';
+    import SliderFoundation, { type HandleDot, type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
     import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
-    import '@fibrae/semi-foundation/slider/slider.scss';
+    import '@fibrae/semi-foundation/components/slider/slider.scss';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { BaseValueType, DateOffsetType, DayStatusType, DensityType, DisabledDateOptions, DisabledDateType, DisabledTimeType, PresetPosition, PresetType, PresetsType, Type, ValueType, WeekStartNumber } from '@fibrae/semi-foundation/date-picker/foundation';
-import type { InsetInputProps, RangeInput } from '@fibrae/semi-foundation/date-picker/input-foundation';
+import type { BaseValueType, DateOffsetType, DayStatusType, DensityType, DisabledDateOptions, DisabledDateType, DisabledTimeType, PresetPosition, PresetType, PresetsType, Type, ValueType, WeekStartNumber } from '@fibrae/semi-foundation/components/date-picker/foundation';
+import type { InsetInputProps, RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 import type { InputSize, ValidateStatus } from '../input/index.js';
 import type { ScrollItemProps } from '../scroll-list/index.js';
 import type { ComboboxProps } from '../time-picker/interface.js';

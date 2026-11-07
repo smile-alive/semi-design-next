@@ -1,8 +1,8 @@
 import { Fragment } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
-import CalendarFoundation, { type CalendarAdapter, type CalendarBaseState } from '@fibrae/semi-foundation/calendar/foundation';
-import '@fibrae/semi-foundation/calendar/calendar.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
+import CalendarFoundation, { type CalendarAdapter, type CalendarBaseState } from '@fibrae/semi-foundation/components/calendar/foundation';
+import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import useFoundation from '../_base/use-foundation';
 import type { DayColProps } from './interface';
 

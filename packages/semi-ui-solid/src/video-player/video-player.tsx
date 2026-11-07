@@ -1,11 +1,11 @@
 import { type JSX, Show, createMemo, onCleanup, onMount, splitProps } from 'solid-js';
 import clsx from 'clsx';
+import { DEFAULT_PLAYBACK_RATE, cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/video-player/constants';
+import VideoPlayerFoundation, { type VideoPlayerAdapter } from '@fibrae/semi-foundation/components/video-player/foundation';
+import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-import { DEFAULT_PLAYBACK_RATE, cssClasses, numbers, strings } from '@fibrae/semi-foundation/video-player/constants';
-import VideoPlayerFoundation, { type VideoPlayerAdapter } from '@fibrae/semi-foundation/video-player/foundation';
-import { formatTime } from '@fibrae/semi-foundation/video-player/utils';
-import '@fibrae/semi-foundation/video-player/video-player.scss';
+import '@fibrae/semi-foundation/components/video-player/video-player.scss';
 import { IconFlipHorizontal, IconMaximize, IconMiniPlayer, IconMinimize, IconMute, IconPause, IconPlay, IconPlayCircle, IconRestart, IconVolume1, IconVolume2 } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';
 import mergeRefs from '../_base/merge-refs';

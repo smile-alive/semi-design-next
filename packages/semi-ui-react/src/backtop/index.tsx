@@ -1,9 +1,9 @@
 import type React from 'react';
 import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/backtop/constants';
-import BackTopFoundation, { type BackTopAdapter, type BackTopState, type Target } from '@fibrae/semi-foundation/backtop/foundation';
-import '@fibrae/semi-foundation/backtop/backtop.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/backtop/constants';
+import BackTopFoundation, { type BackTopAdapter, type BackTopState, type Target } from '@fibrae/semi-foundation/components/backtop/foundation';
+import '@fibrae/semi-foundation/components/backtop/backtop.scss';
 import { IconBackTop } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';

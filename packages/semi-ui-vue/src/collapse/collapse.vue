@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/collapse/constants';
-    import CollapseFoundation, { type CollapseAdapter, type CollapseProps as FoundationProps, type CollapseState } from '@fibrae/semi-foundation/collapse/foundation';
-    import '@fibrae/semi-foundation/collapse/collapse.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
+    import CollapseFoundation, { type CollapseAdapter, type CollapseProps as FoundationProps, type CollapseState } from '@fibrae/semi-foundation/components/collapse/foundation';
+    import '@fibrae/semi-foundation/components/collapse/collapse.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import useFoundation from '../_base/use-foundation';

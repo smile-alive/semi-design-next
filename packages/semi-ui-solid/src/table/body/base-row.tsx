@@ -1,8 +1,8 @@
 import { type JSX, For, Show, createMemo, untrack } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import type { BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
-import { arrayAdd, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isInnerColumnKey, isLastLeftFixed } from '@fibrae/semi-foundation/table/utils';
+import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
+import { arrayAdd, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isInnerColumnKey, isLastLeftFixed } from '@fibrae/semi-foundation/components/table/utils';
 import callHandler from '../../_base/call-handler';
 import mergeStyles from '../../_base/merge-styles';
 import { useTableContext } from '../context';

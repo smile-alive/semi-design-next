@@ -2,7 +2,7 @@
     import { onActivated, onBeforeUnmount, onDeactivated, onMounted, shallowRef, useTemplateRef } from 'vue';
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
     import { resolvePopupContainer } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/_portal/portal.scss';
+    import '@fibrae/semi-foundation/components/portal/portal.scss';
     import useConfig from '../config-provider/use-config';
     import { useTooltipPopupsContext } from '../tooltip/context';
     import PopupLayerProvider from './popup-layer-provider.vue';

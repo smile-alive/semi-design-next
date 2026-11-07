@@ -1,7 +1,7 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
-import '@fibrae/semi-foundation/scroll-list/scroll-list.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
+import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
 import type { ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';
 import { namedRole } from '../_base/named-role';

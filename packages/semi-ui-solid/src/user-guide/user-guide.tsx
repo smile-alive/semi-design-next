@@ -1,8 +1,8 @@
 import { type JSX, For, Show, children, createEffect, createMemo, createUniqueId, on, onCleanup, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
-import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
-import '@fibrae/semi-foundation/user-guide/user-guide.scss';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/user-guide/constants';
+import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/components/user-guide/foundation';
+import '@fibrae/semi-foundation/components/user-guide/user-guide.scss';
 import hasContent from '../_base/has-content';
 import mergeStyles from '../_base/merge-styles';
 import useDefaultProps from '../_base/use-default-props';

@@ -1,10 +1,10 @@
 import { For, Show, children, createMemo, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { format, isSameDay, startOfDay } from 'date-fns';
-import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
-import { checkWeekend } from '@fibrae/semi-foundation/calendar/event-util';
-import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
-import '@fibrae/semi-foundation/calendar/calendar.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
+import { checkWeekend } from '@fibrae/semi-foundation/components/calendar/event-util';
+import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
+import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
 import useLocale from '../locale/use-locale';

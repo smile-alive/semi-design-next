@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/notification/constants';
-    import { groupNoticesByPosition, noticePositions } from '@fibrae/semi-foundation/notification/notification-list-foundation';
-    import '@fibrae/semi-foundation/notification/notification.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
+    import { groupNoticesByPosition, noticePositions } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
+    import '@fibrae/semi-foundation/components/notification/notification.scss';
     import useAnnouncer from '../_base/use-announcer.svelte.js';
     import useStoreSnapshot from '../_base/use-store-snapshot.svelte.js';
     import { getConfigContext } from '../config-provider/context.js';

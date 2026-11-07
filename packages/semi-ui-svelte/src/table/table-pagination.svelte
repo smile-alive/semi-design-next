@@ -1,6 +1,6 @@
 <script lang="ts">
     import { omit } from 'es-toolkit';
-    import TableFoundation from '@fibrae/semi-foundation/table/foundation';
+    import TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
     import useLocale from '../locale/use-locale.svelte.js';
     import Pagination from '../pagination/pagination.svelte';
     import { getTableContext } from './context.js';

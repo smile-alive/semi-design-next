@@ -2,8 +2,8 @@ import { type CSSProperties, type ReactElement, type ReactNode, isValidElement, 
 import clsx from 'clsx';
 // compat pick also copies inherited properties of user-provided tabList items
 import { pick } from 'es-toolkit/compat';
-import { cssClasses, getBarItemKey } from '@fibrae/semi-foundation/tabs/constants';
-import TabsFoundation from '@fibrae/semi-foundation/tabs/foundation';
+import { cssClasses, getBarItemKey } from '@fibrae/semi-foundation/components/tabs/constants';
+import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
 import { IconChevronRight, IconChevronLeft, IconChevronDown } from '@fibrae/semi-icons-react';
 import useDidUpdate from '../_base/use-did-update';
 import useMergedRef from '../_base/use-merged-ref';

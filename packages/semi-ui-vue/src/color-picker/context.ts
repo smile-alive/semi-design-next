@@ -1,5 +1,5 @@
 import type { ComputedRef } from 'vue';
-import type ColorPickerFoundation from '@fibrae/semi-foundation/color-picker/foundation';
+import type ColorPickerFoundation from '@fibrae/semi-foundation/components/color-picker/foundation';
 import { createContext } from '../_base/create-context';
 import type { ColorFormat, ColorValue } from './interface';
 

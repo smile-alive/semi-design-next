@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { computed, h, useAttrs, useTemplateRef } from 'vue';
     import { omitBy } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/feedback/constants';
-    import FeedbackFoundation, { isFeedbackValueEmpty, type FeedbackAdapter, type FeedbackBaseState } from '@fibrae/semi-foundation/feedback/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/feedback/constants';
+    import FeedbackFoundation, { isFeedbackValueEmpty, type FeedbackAdapter, type FeedbackBaseState } from '@fibrae/semi-foundation/components/feedback/foundation';
     import isPromise from '@fibrae/semi-foundation/utils/is-promise';
-    import '@fibrae/semi-foundation/feedback/feedback.scss';
+    import '@fibrae/semi-foundation/components/feedback/feedback.scss';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import useFoundation from '../_base/use-foundation';
     import Button from '../button';

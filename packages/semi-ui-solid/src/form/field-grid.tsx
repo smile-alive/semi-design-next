@@ -1,6 +1,6 @@
 import { type JSX, Show } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/form/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import { type ColProps, Col, Row } from '../grid';
 
 const prefix = cssClasses.PREFIX;

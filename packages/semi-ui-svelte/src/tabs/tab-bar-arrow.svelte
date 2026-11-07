@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/tabs/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tabs/constants';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-svelte';
     import { Button } from '../button/index.js';
     import { Dropdown, DropdownItem, DropdownMenu, type DropdownTriggerProps } from '../dropdown/index.js';

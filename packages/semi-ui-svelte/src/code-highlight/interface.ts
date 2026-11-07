@@ -1,7 +1,7 @@
 import type { HTMLAttributes } from 'svelte/elements';
-import type { CodeHighlightThemes, LanguageInput } from '@fibrae/semi-foundation/code-highlight/registry';
+import type { CodeHighlightThemes, LanguageInput } from '@fibrae/semi-foundation/components/code-highlight/registry';
 
-export type { CodeHighlightRegistration, CodeHighlightThemes, LanguageInput, ThemeInput } from '@fibrae/semi-foundation/code-highlight/registry';
+export type { CodeHighlightRegistration, CodeHighlightThemes, LanguageInput, ThemeInput } from '@fibrae/semi-foundation/components/code-highlight/registry';
 
 // The `code` prop is the root's only content, so there is no children snippet.
 export interface CodeHighlightProps extends HTMLAttributes<HTMLDivElement> {

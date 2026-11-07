@@ -1,12 +1,12 @@
 <script setup lang="ts">
     import { computed, onMounted, onUpdated, shallowRef, useId, useTemplateRef } from 'vue';
-    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/date-picker/constants';
-    import DatePickerFoundation, { getYearMonthFromValue, isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm, type DatePickerAdapter, type DatePickerFoundationProps, type DatePickerFoundationState, type DisabledDateOptions } from '@fibrae/semi-foundation/date-picker/foundation';
-    import type { RangeInput } from '@fibrae/semi-foundation/date-picker/input-foundation';
-    import type { PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+    import DatePickerFoundation, { getYearMonthFromValue, isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm, type DatePickerAdapter, type DatePickerFoundationProps, type DatePickerFoundationState, type DisabledDateOptions } from '@fibrae/semi-foundation/components/date-picker/foundation';
+    import type { RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
+    import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
     import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/date-picker/date-picker.scss';
+    import '@fibrae/semi-foundation/components/date-picker/date-picker.scss';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';

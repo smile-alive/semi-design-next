@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, shallowRef, useTemplateRef, watch, type StyleValue } from 'vue';
-    import { numbers } from '@fibrae/semi-foundation/table/constants';
-    import type { BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
-    import { arrayAdd, buildRecordsByKey, expandBtnShouldInRow, flattenBodyRows, getRecordKey, getRowSpanHoverKeys, isDisabled, isExpanded, isSelected, resolveVirtualizedItemSize, type ExpandBtnShouldInRowProps, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/table/utils';
+    import { numbers } from '@fibrae/semi-foundation/components/table/constants';
+    import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
+    import { arrayAdd, buildRecordsByKey, expandBtnShouldInRow, flattenBodyRows, getRecordKey, getRowSpanHoverKeys, isDisabled, isExpanded, isSelected, resolveVirtualizedItemSize, type ExpandBtnShouldInRowProps, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import useEventListener from '../../_base/use-event-listener';

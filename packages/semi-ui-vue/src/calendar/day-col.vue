@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
-    import type { DailyEventLayout } from '@fibrae/semi-foundation/calendar/event-util';
-    import CalendarFoundation, { type CalendarAdapter, type CalendarBaseState } from '@fibrae/semi-foundation/calendar/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
+    import type { DailyEventLayout } from '@fibrae/semi-foundation/components/calendar/event-util';
+    import CalendarFoundation, { type CalendarAdapter, type CalendarBaseState } from '@fibrae/semi-foundation/components/calendar/foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import useFoundation from '../_base/use-foundation';
     import useKeepAliveFoundation from '../_base/use-keep-alive-foundation';

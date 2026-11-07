@@ -1,10 +1,10 @@
 import { type JSX, type ResolvedChildren, Show, children, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-import { normalizeFieldError } from '@fibrae/semi-foundation/form/errors';
-import type { FieldErrorInput } from '@fibrae/semi-foundation/form/interface';
+import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+import { normalizeFieldError } from '@fibrae/semi-foundation/components/form/errors';
+import type { FieldErrorInput } from '@fibrae/semi-foundation/components/form/interface';
 import { joinIds, namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/form/form.scss';
+import '@fibrae/semi-foundation/components/form/form.scss';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import { useFormContext } from './context';

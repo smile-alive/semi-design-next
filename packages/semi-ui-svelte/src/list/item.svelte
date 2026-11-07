@@ -1,7 +1,7 @@
 <script lang="ts">
     import { omit } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/list/constants';
-    import '@fibrae/semi-foundation/list/list.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
+    import '@fibrae/semi-foundation/components/list/list.scss';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs.js';
     import { Col } from '../grid/index.js';
     import { getListContext } from './context.js';

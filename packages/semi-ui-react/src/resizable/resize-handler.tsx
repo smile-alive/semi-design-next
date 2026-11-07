@@ -1,8 +1,8 @@
 import type React from 'react';
 import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
-import type { Direction, HandlerCallback } from '@fibrae/semi-foundation/resizable/types';
+import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
+import type { Direction, HandlerCallback } from '@fibrae/semi-foundation/components/resizable/types';
 import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
 import { IconHandle } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';

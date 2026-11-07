@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/dropdown/constants';
-    import DropdownMenuFoundation, { type DropdownContextAdapter } from '@fibrae/semi-foundation/dropdown/menu-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
+    import DropdownMenuFoundation, { type DropdownContextAdapter } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
     import type { ElementProps } from '../_base/element-props';
     import useFoundation from '../_base/use-foundation';
     import useConfig from '../config-provider/use-config';

@@ -1,12 +1,12 @@
 import { For, Show, children, createEffect, createMemo, createSignal, createUniqueId, on, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { format, isSameDay } from 'date-fns';
-import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
-import { type DateObj, toPercent } from '@fibrae/semi-foundation/calendar/event-util';
-import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
-import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/calendar/month-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
+import { type DateObj, toPercent } from '@fibrae/semi-foundation/components/calendar/event-util';
+import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
+import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/components/calendar/month-foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import '@fibrae/semi-foundation/calendar/calendar.scss';
+import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import { IconClose } from '@fibrae/semi-icons-solid';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';

@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, useAttrs, useId, useTemplateRef, type CSSProperties } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/slider/constants';
-    import SliderFoundation, { type HandleDot, type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/slider/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/slider/constants';
+    import SliderFoundation, { type HandleDot, type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
     import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
-    import '@fibrae/semi-foundation/slider/slider.scss';
+    import '@fibrae/semi-foundation/components/slider/slider.scss';
     import { hasAutofocus, vAutofocus } from '../_base/autofocus';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';

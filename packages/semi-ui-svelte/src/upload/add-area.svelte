@@ -2,7 +2,7 @@
     import type { Snippet } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
     import type { HTMLAttributes } from 'svelte/elements';
-    import { addAreaControlAttributes, containsControl, containsName } from '@fibrae/semi-foundation/upload/utils';
+    import { addAreaControlAttributes, containsControl, containsName } from '@fibrae/semi-foundation/components/upload/utils';
     import useLocale from '../locale/use-locale.svelte.js';
 
     interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'tabindex'> {

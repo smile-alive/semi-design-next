@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, shallowRef, watch } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/tabs/constants';
-    import TabsFoundation from '@fibrae/semi-foundation/tabs/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tabs/constants';
+    import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
     import type { ElementProps } from '../_base/element-props';
     import { useTabsContext } from './context';
     import { getPanelId, getTabId } from './ids';

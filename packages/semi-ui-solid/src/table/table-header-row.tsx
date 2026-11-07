@@ -1,9 +1,9 @@
 import { type JSX, For, Show, createEffect, createMemo, on, untrack } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { strings } from '@fibrae/semi-foundation/table/constants';
-import TableFoundation from '@fibrae/semi-foundation/table/foundation';
-import { getColumnsByLevel, getHeadWidths, getHeaderStickyOffset, getNextSortOrder, getRTLAlign, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isLastLeftFixed, isSelectionColumn, shouldShowEllipsisTitle, sliceColumnsByLevel } from '@fibrae/semi-foundation/table/utils';
+import { strings } from '@fibrae/semi-foundation/components/table/constants';
+import TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
+import { getColumnsByLevel, getHeadWidths, getHeaderStickyOffset, getNextSortOrder, getRTLAlign, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isLastLeftFixed, isSelectionColumn, shouldShowEllipsisTitle, sliceColumnsByLevel } from '@fibrae/semi-foundation/components/table/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import callHandler from '../_base/call-handler';
 import mergeStyles from '../_base/merge-styles';

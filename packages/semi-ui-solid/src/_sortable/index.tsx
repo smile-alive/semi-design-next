@@ -4,7 +4,7 @@ import { DragDropProvider, type DragDropProviderProps, DragOverlay, useDragDropM
 import { isSortable, useSortable } from '@dnd-kit/solid/sortable';
 import clsx from 'clsx';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { SortableAnnouncer } from '@fibrae/semi-foundation/sortable/accessibility';
+import { SortableAnnouncer } from '@fibrae/semi-foundation/components/sortable/accessibility';
 import useLocale from '../locale/use-locale';
 import type { SortableHandle, SortableProps } from './types';
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { cssClasses, cssClassesGroup } from '@fibrae/semi-foundation/float-button/constants';
-    import '@fibrae/semi-foundation/float-button/float-button.scss';
+    import { cssClasses, cssClassesGroup } from '@fibrae/semi-foundation/components/float-button/constants';
+    import '@fibrae/semi-foundation/components/float-button/float-button.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault from '../_base/semi-default';
     import Badge from '../badge';

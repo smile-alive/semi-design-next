@@ -1,5 +1,5 @@
 import { type PropsWithChildren, Children, isValidElement } from 'react';
-import MarkdownRenderFoundation from '@fibrae/semi-foundation/markdown-render/foundation';
+import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
 import code from './code';
 
 // CodeHighlight's div and pre are invalid inside a pre, so the wrapper of a highlighted block goes; only the Semi code

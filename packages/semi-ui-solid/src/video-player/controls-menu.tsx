@@ -1,6 +1,6 @@
 import { For } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/video-player/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/video-player/constants';
 import Dropdown from '../dropdown';
 import type { VideoPlayerOption } from './interface';
 

@@ -2,9 +2,9 @@
 
 import type { Component } from 'vue';
 import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
-import { cssClasses } from '@fibrae/semi-foundation/notification/constants';
-import type { NoticeInstance, NoticeType } from '@fibrae/semi-foundation/notification/notification-foundation';
-import NotificationListStore from '@fibrae/semi-foundation/notification/notification-list-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
+import type { NoticeInstance, NoticeType } from '@fibrae/semi-foundation/components/notification/notification-foundation';
+import NotificationListStore from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
 import { createHolder } from '../_base/holder';
 import { useSemiGlobal } from '../_base/semi-default';

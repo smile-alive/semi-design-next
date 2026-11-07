@@ -1,8 +1,8 @@
 import type React from 'react';
 import { type ReactNode, type CSSProperties, memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/skeleton/constants';
-import '@fibrae/semi-foundation/skeleton/skeleton.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/skeleton/constants';
+import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import { Avatar, Image, Title, Button, Paragraph } from './item';

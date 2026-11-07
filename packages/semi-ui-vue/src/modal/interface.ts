@@ -1,9 +1,9 @@
 import type { HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
-import type { ConfirmType } from '@fibrae/semi-foundation/modal/confirm';
-import type { OKType, Size } from '@fibrae/semi-foundation/modal/modal-foundation';
+import type { ConfirmType } from '@fibrae/semi-foundation/components/modal/confirm';
+import type { OKType, Size } from '@fibrae/semi-foundation/components/modal/modal-foundation';
 import type { ButtonProps } from '../button/interface';
 
-export type { ModalState, OKType, Size } from '@fibrae/semi-foundation/modal/modal-foundation';
+export type { ModalState, OKType, Size } from '@fibrae/semi-foundation/components/modal/modal-foundation';
 
 export type Directions = 'ltr' | 'rtl';
 
@@ -117,7 +117,7 @@ export interface ModalHookApi {
     confirm: (config: ModalConfirmProps) => ModalHookRef;
 }
 
-export type { ConfirmType } from '@fibrae/semi-foundation/modal/confirm';
+export type { ConfirmType } from '@fibrae/semi-foundation/components/modal/confirm';
 
 /** A confirm's options with its type; the options ConfirmModal does not declare reach Modal as attrs. */
 export type ConfirmProps = ModalConfirmProps & { type: ConfirmType };

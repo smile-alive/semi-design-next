@@ -1,8 +1,8 @@
 <script lang="ts">
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-    import { strings } from '@fibrae/semi-foundation/date-picker/constants';
-    import type { PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
-    import YearAndMonthFoundation, { type MonthScrollItem, type YearAndMonthAdapter, type YearAndMonthFoundationProps, type YearScrollItem } from '@fibrae/semi-foundation/date-picker/year-and-month-foundation';
+    import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+    import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
+    import YearAndMonthFoundation, { type MonthScrollItem, type YearAndMonthAdapter, type YearAndMonthFoundationProps, type YearScrollItem } from '@fibrae/semi-foundation/components/date-picker/year-and-month-foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { IconChevronLeft } from '@fibrae/semi-icons-svelte';
     import useFoundation from '../_base/use-foundation.svelte.js';

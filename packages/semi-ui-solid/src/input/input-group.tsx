@@ -1,7 +1,7 @@
 import { Show, children, createMemo, createUniqueId, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/input/constants';
-import '@fibrae/semi-foundation/input/input.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
+import '@fibrae/semi-foundation/components/input/input.scss';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';

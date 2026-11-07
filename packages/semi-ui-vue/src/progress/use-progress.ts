@@ -1,5 +1,5 @@
 import { onScopeDispose, type Ref, ref, watch } from 'vue';
-import { createPercentAnimation } from '@fibrae/semi-foundation/progress/utils';
+import { createPercentAnimation } from '@fibrae/semi-foundation/components/progress/utils';
 
 /** The number shown in the text, animated towards `percent`; aria-valuenow reads the target instead */
 export function useAnimatedPercent(percent: () => number, motion: () => boolean): Readonly<Ref<number>> {

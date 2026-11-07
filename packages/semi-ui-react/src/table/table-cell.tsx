@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import { omit, isEqual, merge } from 'es-toolkit';
 // compat get resolves deep dataIndex paths such as 'a.b'
 import { get } from 'es-toolkit/compat';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/table/constants';
-import { isSelectionColumn, isExpandedColumn, getRTLAlign, shouldShowEllipsisTitle, getRTLFlexAlign } from '@fibrae/semi-foundation/table/utils';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/table/constants';
+import { isSelectionColumn, isExpandedColumn, getRTLAlign, shouldShowEllipsisTitle, getRTLFlexAlign } from '@fibrae/semi-foundation/components/table/utils';
 import type { BaseProps } from '../_base/base-component';
 import type { ColumnProps, ExpandIcon } from './interface';
 import { useTableContext } from './table-context';

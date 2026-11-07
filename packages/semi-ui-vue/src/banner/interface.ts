@@ -25,4 +25,4 @@ export interface BannerEmits {
     close: [event: MouseEvent];
 }
 
-export type { BannerState } from '@fibrae/semi-foundation/banner/foundation';
+export type { BannerState } from '@fibrae/semi-foundation/components/banner/foundation';

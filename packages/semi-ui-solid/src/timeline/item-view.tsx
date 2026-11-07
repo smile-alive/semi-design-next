@@ -1,7 +1,7 @@
 import { children, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/timeline/constants';
-import '@fibrae/semi-foundation/timeline/timeline.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
+import '@fibrae/semi-foundation/components/timeline/timeline.scss';
 import callHandler from '../_base/call-handler';
 import hasContent from '../_base/has-content';
 import type { TimelineItemProps } from './interface';

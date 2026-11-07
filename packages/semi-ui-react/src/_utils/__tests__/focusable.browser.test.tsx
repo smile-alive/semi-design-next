@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 
 // Real layout is needed: checkVisibility depends on computed display and visibility.
 function Panels() {

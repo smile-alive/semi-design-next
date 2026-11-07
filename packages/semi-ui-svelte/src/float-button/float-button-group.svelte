@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses, cssClassesGroup } from '@fibrae/semi-foundation/float-button/constants';
-    import '@fibrae/semi-foundation/float-button/float-button.scss';
+    import { cssClasses, cssClassesGroup } from '@fibrae/semi-foundation/components/float-button/constants';
+    import '@fibrae/semi-foundation/components/float-button/float-button.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import Badge from '../badge/badge.svelte';
     import FloatButtonAction from './float-button-action.svelte';

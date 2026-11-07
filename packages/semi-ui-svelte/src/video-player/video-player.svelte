@@ -1,9 +1,9 @@
 <script lang="ts">
+    import { cssClasses, DEFAULT_PLAYBACK_RATE, numbers, strings } from '@fibrae/semi-foundation/components/video-player/constants';
+    import VideoPlayerFoundation, { type VideoPlayerAdapter, type VideoPlayerBaseProps } from '@fibrae/semi-foundation/components/video-player/foundation';
+    import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import { cssClasses, DEFAULT_PLAYBACK_RATE, numbers, strings } from '@fibrae/semi-foundation/video-player/constants';
-    import VideoPlayerFoundation, { type VideoPlayerAdapter, type VideoPlayerBaseProps } from '@fibrae/semi-foundation/video-player/foundation';
-    import { formatTime } from '@fibrae/semi-foundation/video-player/utils';
-    import '@fibrae/semi-foundation/video-player/video-player.scss';
+    import '@fibrae/semi-foundation/components/video-player/video-player.scss';
     import { IconFlipHorizontal, IconMaximize, IconMiniPlayer, IconMinimize, IconMute, IconPause, IconPlay, IconPlayCircle, IconRestart, IconVolume1, IconVolume2 } from '@fibrae/semi-icons-svelte';
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';

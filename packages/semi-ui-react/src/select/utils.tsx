@@ -1,5 +1,5 @@
 import React from 'react';
-import { type OptionRecord, toOptionRecord } from '@fibrae/semi-foundation/select/option-foundation';
+import { type OptionRecord, toOptionRecord } from '@fibrae/semi-foundation/components/select/option-foundation';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import elementTypeOf from '../_base/element-type';
 import flattenChildren from '../_base/flatten-children';

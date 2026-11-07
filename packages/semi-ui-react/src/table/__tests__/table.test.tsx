@@ -4,8 +4,8 @@ import { act, render, screen, fireEvent, waitFor, within } from '@testing-librar
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { numbers } from '@fibrae/semi-foundation/components/table/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { numbers } from '@fibrae/semi-foundation/table/constants';
 import { IconStar } from '@fibrae/semi-icons-react';
 import { Tag, Tooltip } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
@@ -3561,7 +3561,7 @@ describe('Table 滚动条宽度测量', () => {
     it('滚动条宽度为 0（overlay 滚动条）时只测量一次', async () => {
         // the measured size is cached per module
         vi.resetModules();
-        const { measureScrollbar } = await import('@fibrae/semi-foundation/table/utils');
+        const { measureScrollbar } = await import('@fibrae/semi-foundation/components/table/utils');
         vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockReturnValue(0);
         vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockReturnValue(0);
         const append = vi.spyOn(document.body, 'appendChild');

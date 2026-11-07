@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, shallowRef, useTemplateRef, watch } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/collapsible/constants';
-    import CollapsibleFoundation, { type CollapsibleAdapter, type CollapsibleBaseProps } from '@fibrae/semi-foundation/collapsible/foundation';
-    import '@fibrae/semi-foundation/collapsible/collapsible.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/collapsible/constants';
+    import CollapsibleFoundation, { type CollapsibleAdapter, type CollapsibleBaseProps } from '@fibrae/semi-foundation/components/collapsible/foundation';
+    import '@fibrae/semi-foundation/components/collapsible/collapsible.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault from '../_base/semi-default';
     import useFoundation from '../_base/use-foundation';

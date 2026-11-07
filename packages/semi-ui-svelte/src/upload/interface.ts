@@ -1,13 +1,13 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { strings } from '@fibrae/semi-foundation/upload/constants';
-import type { AfterUploadResult as FoundationAfterUploadResult, BaseFileItem, BeforeUploadObjectResult as FoundationBeforeUploadObjectResult, CustomFile } from '@fibrae/semi-foundation/upload/foundation';
+import type { strings } from '@fibrae/semi-foundation/components/upload/constants';
+import type { AfterUploadResult as FoundationAfterUploadResult, BaseFileItem, BeforeUploadObjectResult as FoundationBeforeUploadObjectResult, CustomFile } from '@fibrae/semi-foundation/components/upload/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import type { ValidateStatus } from '../input/interface.js';
 import type { ModalProps } from '../modal/interface.js';
 import type { ShowTooltip, TypographyEllipsisTooltipProps } from '../typography/interface.js';
 
-export type { CustomFile, FileItemStatus } from '@fibrae/semi-foundation/upload/foundation';
+export type { CustomFile, FileItemStatus } from '@fibrae/semi-foundation/components/upload/foundation';
 
 export type PromptPositionType = ArrayElement<typeof strings.PROMPT_POSITION>;
 export type UploadListType = ArrayElement<typeof strings.LIST_TYPE>;

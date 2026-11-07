@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, Text } from 'vue';
-    import { stepsClasses } from '@fibrae/semi-foundation/steps/constants';
-    import '@fibrae/semi-foundation/steps/steps.scss';
+    import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
+    import '@fibrae/semi-foundation/components/steps/steps.scss';
     import type { ElementProps } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';
     import semiDefault, { readSemiDefault, useSemiGlobal } from '../_base/semi-default';

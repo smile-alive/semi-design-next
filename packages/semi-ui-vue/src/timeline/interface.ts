@@ -1,5 +1,5 @@
 import type { StyleValue, VNode } from 'vue';
-import type { TimelineItemPosition, TimelineMode } from '@fibrae/semi-foundation/timeline/utils';
+import type { TimelineItemPosition, TimelineMode } from '@fibrae/semi-foundation/components/timeline/utils';
 
 export type { TimelineItemPosition, TimelineMode };
 export type TimelineItemType = 'default' | 'ongoing' | 'success' | 'warning' | 'error';

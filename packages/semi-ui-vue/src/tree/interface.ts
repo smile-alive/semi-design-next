@@ -1,7 +1,7 @@
 import type { StyleValue, VNode } from 'vue';
-import type { BasicExpandedOtherProps, BasicFlattenNode, BasicOnDragProps, BasicTreeNodeData, BasicTreeNodeProps, CheckRelation, ExpandAction, KeyMapProps, ScrollAlign, TreeDataSimpleJson, TreeMotionType, Virtualize } from '@fibrae/semi-foundation/tree/foundation';
+import type { BasicExpandedOtherProps, BasicFlattenNode, BasicOnDragProps, BasicTreeNodeData, BasicTreeNodeProps, CheckRelation, ExpandAction, KeyMapProps, ScrollAlign, TreeDataSimpleJson, TreeMotionType, Virtualize } from '@fibrae/semi-foundation/components/tree/foundation';
 
-export type { TreeDataSimpleJson } from '@fibrae/semi-foundation/tree/foundation';
+export type { TreeDataSimpleJson } from '@fibrae/semi-foundation/components/tree/foundation';
 export type TreeKeyMapProps = KeyMapProps;
 export type TreeVirtualize = Virtualize;
 

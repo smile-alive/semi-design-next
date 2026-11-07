@@ -1,8 +1,8 @@
 import { children, createSignal, Match, Show, splitProps, Switch, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, type strings } from '@fibrae/semi-foundation/empty/constants';
+import { cssClasses, type strings } from '@fibrae/semi-foundation/components/empty/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
-import '@fibrae/semi-foundation/empty/empty.scss';
+import '@fibrae/semi-foundation/components/empty/empty.scss';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import isMarkup from '../_base/is-markup';

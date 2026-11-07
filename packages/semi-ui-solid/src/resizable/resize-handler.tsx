@@ -1,6 +1,6 @@
 import { type JSX, Show, children, onCleanup, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
 import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
 import { IconHandle } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, useAttrs } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/list/constants';
-    import '@fibrae/semi-foundation/list/list.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
+    import '@fibrae/semi-foundation/components/list/list.scss';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs';
     import { hasSlotContent } from '../_base/slot-nodes';
     import { useListContext } from './context';

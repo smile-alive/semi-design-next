@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-    import '@fibrae/semi-foundation/form/form.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+    import '@fibrae/semi-foundation/components/form/form.scss';
     import type { ElementProps } from '../_base/element-props';
     import { hasSlotContent } from '../_base/slot-nodes';
     import type { FormSectionSlots } from './interface';

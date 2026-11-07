@@ -2,12 +2,12 @@
     import { onMount } from 'svelte';
     import { type Attachment, createAttachmentKey } from 'svelte/attachments';
     import { on } from 'svelte/events';
-    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/dropdown/constants';
-    import DropdownFoundation, { type DropdownAdapter, type DropdownBaseProps, type DropdownBaseState } from '@fibrae/semi-foundation/dropdown/foundation';
-    import { canRoleCarryPopupState, cssClasses as tooltipClasses } from '@fibrae/semi-foundation/tooltip/constants';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/dropdown/constants';
+    import DropdownFoundation, { type DropdownAdapter, type DropdownBaseProps, type DropdownBaseState } from '@fibrae/semi-foundation/components/dropdown/foundation';
+    import { canRoleCarryPopupState, cssClasses as tooltipClasses } from '@fibrae/semi-foundation/components/tooltip/constants';
     import warning from '@fibrae/semi-foundation/utils/warning';
-    import '@fibrae/semi-foundation/dropdown/dropdown.scss';
+    import '@fibrae/semi-foundation/components/dropdown/dropdown.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import { getConfigContext } from '../config-provider/context.js';

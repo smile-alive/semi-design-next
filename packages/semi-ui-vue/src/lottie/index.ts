@@ -1,4 +1,4 @@
-import LottieFoundation from '@fibrae/semi-foundation/lottie/foundation';
+import LottieFoundation from '@fibrae/semi-foundation/components/lottie/foundation';
 import Lottie from './lottie.vue';
 
 // Annotated so declaration emit refers to the SFC types instead of inlining Vue's GlobalComponents, and does not name

@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
 import Typography, { type TitleProps } from '../../typography';
 
 export default function h2(props: PropsWithChildren<TitleProps>) {

@@ -1,12 +1,12 @@
 import type React from 'react';
 import { memo, useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import ComboboxFoundation from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
+import { strings, cssClasses, type PanelType } from '@fibrae/semi-foundation/components/time-picker/constants';
+import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/components/time-picker/foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import ComboboxFoundation from '@fibrae/semi-foundation/time-picker/combox-foundation';
-import { strings, cssClasses, type PanelType } from '@fibrae/semi-foundation/time-picker/constants';
-import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/time-picker/foundation';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import '@fibrae/semi-foundation/time-picker/time-picker.scss';
+import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
 import type { ElementProps } from '../_base/base';
 import type { ValidateStatus } from '../_base/base-component';
 import useClickOutside from '../_base/use-click-outside';

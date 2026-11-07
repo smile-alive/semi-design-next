@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/navigation/constants';
-    import '@fibrae/semi-foundation/navigation/navigation.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
+    import '@fibrae/semi-foundation/components/navigation/navigation.scss';
     import { getNavContext } from './context.js';
     import type { NavHeaderProps } from './interface.js';
 

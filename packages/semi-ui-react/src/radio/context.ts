@@ -1,5 +1,5 @@
-import type { strings } from '@fibrae/semi-foundation/radio/constants';
-import type { RadioChangeEvent } from '@fibrae/semi-foundation/radio/radio-foundation';
+import type { strings } from '@fibrae/semi-foundation/components/radio/constants';
+import type { RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
 import type { ArrayElement } from '../_base/base';
 import { createContext } from '../_base/create-context';
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, onMounted, onUpdated, useAttrs, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/backtop/constants';
-    import BackTopFoundation, { type BackTopAdapter } from '@fibrae/semi-foundation/backtop/foundation';
-    import '@fibrae/semi-foundation/backtop/backtop.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/backtop/constants';
+    import BackTopFoundation, { type BackTopAdapter } from '@fibrae/semi-foundation/components/backtop/foundation';
+    import '@fibrae/semi-foundation/components/backtop/backtop.scss';
     import { IconBackTop } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';

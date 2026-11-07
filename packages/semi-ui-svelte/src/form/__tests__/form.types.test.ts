@@ -1,7 +1,7 @@
 import type { Component, ComponentProps, Snippet } from 'svelte';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import * as z from 'zod';
-import type { FieldPath, FieldPathValue, FormState } from '@fibrae/semi-foundation/form/interface';
+import type { FieldPath, FieldPathValue, FormState } from '@fibrae/semi-foundation/components/form/interface';
 import {
     FormInput,
     type FormAutoComplete,

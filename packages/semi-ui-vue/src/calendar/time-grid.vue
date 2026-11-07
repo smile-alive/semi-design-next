@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, useId, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
-    import { calcRowHeight, toPercent, type DateObj } from '@fibrae/semi-foundation/calendar/event-util';
-    import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
+    import { calcRowHeight, toPercent, type DateObj } from '@fibrae/semi-foundation/components/calendar/event-util';
+    import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
     import { hasSlotContent } from '../_base/slot-nodes';
     import useLocale from '../locale/use-locale';
     import { useCalendarContext } from './context';

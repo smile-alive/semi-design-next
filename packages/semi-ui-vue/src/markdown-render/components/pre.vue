@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { type VNode, Text, normalizeClass } from 'vue';
-    import MarkdownRenderFoundation from '@fibrae/semi-foundation/markdown-render/foundation';
+    import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
     import { childSlots, toVNodes } from '../../_base/read-vnode';
     import SlotFragment from '../../_base/slot-fragment';
     import slotNodes from '../../_base/slot-nodes';

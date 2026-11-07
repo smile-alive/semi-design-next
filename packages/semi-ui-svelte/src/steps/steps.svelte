@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { stepsClasses } from '@fibrae/semi-foundation/steps/constants';
-    import '@fibrae/semi-foundation/steps/steps.scss';
+    import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
+    import '@fibrae/semi-foundation/components/steps/steps.scss';
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import { Col, Row } from '../grid/index.js';

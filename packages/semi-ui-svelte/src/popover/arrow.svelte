@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/popover/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/popover/constants';
     import type { ArrowProps } from './interface.js';
 
     let { position = '', arrowStyle, popStyle }: ArrowProps = $props();

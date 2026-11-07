@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/avatar/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/avatar/constants';
 
     let { gradientStart, gradientEnd }: { gradientStart: string; gradientEnd: string } = $props();
 

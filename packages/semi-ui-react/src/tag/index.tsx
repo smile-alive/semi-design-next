@@ -1,11 +1,11 @@
 import type React from 'react';
 import { Children, useState } from 'react';
 import clsx from 'clsx';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/tag/constants';
+import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/components/tag/focus';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import { cssClasses, strings } from '@fibrae/semi-foundation/tag/constants';
-import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/tag/focus';
 import { handlePrevent } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/tag/tag.scss';
+import '@fibrae/semi-foundation/components/tag/tag.scss';
 import { IconClose } from '@fibrae/semi-icons-react';
 import useDefaultProps from '../_base/use-default-props';
 import Avatar from '../avatar/index';

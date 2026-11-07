@@ -1,5 +1,5 @@
 import { onBeforeUnmount, onMounted, watch } from 'vue';
-import { EllipsisRuntime } from '@fibrae/semi-foundation/typography/ellipsis';
+import { EllipsisRuntime } from '@fibrae/semi-foundation/components/typography/ellipsis';
 import useResizeObserver from '../_base/use-resize-observer';
 
 /**

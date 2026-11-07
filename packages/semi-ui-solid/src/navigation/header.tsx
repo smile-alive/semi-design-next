@@ -1,7 +1,7 @@
 import { Show, children, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/navigation/constants';
-import '@fibrae/semi-foundation/navigation/navigation.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
+import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import hasContent from '../_base/has-content';
 import { createToken } from '../_base/token';
 import { useNavContext } from './context';

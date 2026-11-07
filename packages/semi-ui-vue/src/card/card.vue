@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { Text } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/card/constants';
-    import '@fibrae/semi-foundation/card/card.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
+    import '@fibrae/semi-foundation/components/card/card.scss';
     import type { ElementProps } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';

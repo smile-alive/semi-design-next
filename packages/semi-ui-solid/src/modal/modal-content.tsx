@@ -1,8 +1,8 @@
 import { type JSX, Match, Show, Switch, children, createEffect, createMemo, createUniqueId, on, onCleanup, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
-import ModalContentFoundation, { type ModalContentAdapter, isModal } from '@fibrae/semi-foundation/modal/modal-content-foundation';
-import type { Size } from '@fibrae/semi-foundation/modal/modal-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
+import ModalContentFoundation, { type ModalContentAdapter, isModal } from '@fibrae/semi-foundation/components/modal/modal-content-foundation';
+import type { Size } from '@fibrae/semi-foundation/components/modal/modal-foundation';
 import { isAriaKey, warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import { IconClose } from '@fibrae/semi-icons-solid';

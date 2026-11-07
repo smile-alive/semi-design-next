@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, shallowRef, useId, useTemplateRef, watch, type CSSProperties, type ShallowRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/popconfirm/constants';
-    import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/popconfirm/popconfirm-foundation';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/popconfirm/popconfirm.scss';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses } from '@fibrae/semi-foundation/components/popconfirm/constants';
+    import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
+    import '@fibrae/semi-foundation/components/popconfirm/popconfirm.scss';
     import { IconAlertTriangle, IconClose } from '@fibrae/semi-icons-vue';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import { hasSlotContent } from '../_base/slot-nodes';

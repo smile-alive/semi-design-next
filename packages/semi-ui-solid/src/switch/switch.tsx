@@ -1,9 +1,9 @@
 import { children, onMount, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/switch/constants';
-import SwitchFoundation, { type SwitchAdapter, type SwitchState } from '@fibrae/semi-foundation/switch/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/switch/constants';
+import SwitchFoundation, { type SwitchAdapter, type SwitchState } from '@fibrae/semi-foundation/components/switch/foundation';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
-import '@fibrae/semi-foundation/switch/switch.scss';
+import '@fibrae/semi-foundation/components/switch/switch.scss';
 import autofocus from '../_base/autofocus';
 import { isNativeInputKey, omitFormInjected, splitControlAttrs } from '../_base/control-attrs';
 import type { ElementProps } from '../_base/element-props';

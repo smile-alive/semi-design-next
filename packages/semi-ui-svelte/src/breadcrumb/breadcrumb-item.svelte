@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/breadcrumb/constants';
-    import BreadcrumbItemFoundation, { type BreadcrumbItemAdapter } from '@fibrae/semi-foundation/breadcrumb/item-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/breadcrumb/constants';
+    import BreadcrumbItemFoundation, { type BreadcrumbItemAdapter } from '@fibrae/semi-foundation/components/breadcrumb/item-foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import { TypographyText } from '../typography/index.js';

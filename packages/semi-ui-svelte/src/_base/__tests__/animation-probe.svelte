@@ -1,5 +1,5 @@
 <script lang="ts">
-    import '@fibrae/semi-foundation/modal/modal.scss';
+    import '@fibrae/semi-foundation/components/modal/modal.scss';
     import cssAnimation from '../css-animation';
 
     let { store }: { store: { visible: boolean } } = $props();

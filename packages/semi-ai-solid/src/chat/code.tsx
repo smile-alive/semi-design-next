@@ -2,7 +2,7 @@ import { Show, children } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import MarkdownRenderFoundation from '@fibrae/semi-foundation/markdown-render/foundation';
+import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
 import { IconCopyStroked, IconTick } from '@fibrae/semi-icons-solid';
 import { useCopied, useLocale } from '@fibrae/semi-ui-solid/hooks';
 import type { MarkdownCodeProps } from '@fibrae/semi-ui-solid/markdown-render/components/code';

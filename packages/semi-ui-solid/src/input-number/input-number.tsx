@@ -1,8 +1,8 @@
 import { type JSX, type Ref, Show, createMemo, mergeProps, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/input-number/constants';
-import InputNumberFoundation, { reachesBound, type BaseInputNumberState, type InputNumberAdapter, type ScientificNotationConfig } from '@fibrae/semi-foundation/input-number/foundation';
-import '@fibrae/semi-foundation/input-number/input-number.scss';
+import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/input-number/constants';
+import InputNumberFoundation, { reachesBound, type BaseInputNumberState, type InputNumberAdapter, type ScientificNotationConfig } from '@fibrae/semi-foundation/components/input-number/foundation';
+import '@fibrae/semi-foundation/components/input-number/input-number.scss';
 import { IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';
 import forwardFocus from '../_base/forward-focus';

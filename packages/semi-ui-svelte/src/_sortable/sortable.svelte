@@ -4,7 +4,7 @@
     import { DragDropProvider, DragOverlay } from '@dnd-kit/svelte';
     import { isSortable } from '@dnd-kit/svelte/sortable';
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-    import { SortableAnnouncer } from '@fibrae/semi-foundation/sortable/accessibility';
+    import { SortableAnnouncer } from '@fibrae/semi-foundation/components/sortable/accessibility';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { SortableProps } from './interface.js';
     import SortableItem from './sortable-item.svelte';

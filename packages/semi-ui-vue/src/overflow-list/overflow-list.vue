@@ -1,9 +1,9 @@
 <script setup lang="ts" generic="T extends OverflowListItem = OverflowListItem">
     import { computed, onBeforeUpdate, onMounted, onUpdated, shallowRef, Text, useAttrs, useTemplateRef, type CSSProperties } from 'vue';
     import { isEqual } from 'es-toolkit';
-    import { cssClasses, SCROLL_KEY_ATTRIBUTE } from '@fibrae/semi-foundation/overflow-list/constants';
-    import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState, type OverflowListView } from '@fibrae/semi-foundation/overflow-list/foundation';
-    import '@fibrae/semi-foundation/overflow-list/overflow-list.scss';
+    import { cssClasses, SCROLL_KEY_ATTRIBUTE } from '@fibrae/semi-foundation/components/overflow-list/constants';
+    import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState, type OverflowListView } from '@fibrae/semi-foundation/components/overflow-list/foundation';
+    import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';

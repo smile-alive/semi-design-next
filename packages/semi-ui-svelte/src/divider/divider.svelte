@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/divider/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/divider/constants';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/divider/divider.scss';
+    import '@fibrae/semi-foundation/components/divider/divider.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import type { DividerProps } from './interface.js';
 

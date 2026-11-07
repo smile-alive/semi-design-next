@@ -1,0 +1,159 @@
+import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import truncateValue from './util/truncate-value';
+
+export interface TextEntryBaseProps {
+    value?: string | number;
+    defaultValue?: string | number;
+    composition?: boolean;
+    minLength?: number;
+    maxLength?: number;
+    getValueLength?: (value: string) => number;
+}
+
+export interface TextEntryBaseState {
+    value?: string | number;
+    cachedValue?: string | number;
+    isFocus?: boolean;
+}
+
+/**
+ * CE is the host's composition event. The change and focus events stay untyped: the change callback also receives
+ * composition and clear events, and focus is reported from the wrapper element.
+ */
+export interface TextEntryAdapter<P extends TextEntryBaseProps, S extends TextEntryBaseState, CE = unknown> extends DefaultAdapter<P, S> {
+    notifyChange(value: string, e: any): void;
+    notifyFocus(value: string | number, e: any): void;
+    notifyCompositionStart(e: CE): void;
+    notifyCompositionEnd(e: CE): void;
+    notifyCompositionUpdate(e: CE): void;
+}
+
+/**
+ * What Input and TextArea share: controlled and uncontrolled value updates, IME composition, and maxLength and
+ * minLength counted by `getValueLength` (so multi-unit characters such as emoji count once).
+ */
+export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P extends TextEntryBaseProps, S extends TextEntryBaseState, CE = unknown> extends BaseFoundation<A, P, S> {
+    #compositionEnter: boolean = false;
+    #composedSinceFocus = false;
+    #reported: string | undefined;
+
+    protected get composedSinceFocus() {
+        return this.#composedSinceFocus;
+    }
+
+    protected getNextValue(value: string) {
+        if (typeof this.getProp('getValueLength') !== 'function') {
+            return value;
+        }
+        return this.handleVisibleMaxLength(value);
+    }
+
+    // S is any state extending TextEntryBaseState, which TypeScript cannot match against a write of the shared keys
+    protected setEntryState(states: TextEntryBaseState) {
+        this.setState(states as Pick<S, keyof S>);
+    }
+
+    protected changeValue(value: string, e: unknown) {
+        if (!this.isControlledComponent()) {
+            this.setEntryState({ value });
+        }
+        this.adapter.notifyChange(value, e);
+    }
+
+    protected handleVisibleMaxLength(value: string) {
+        const { maxLength, getValueLength } = this.getProps();
+        if (typeof maxLength === 'number' && maxLength >= 0) {
+            if (TextEntryFoundation.getValueCount(value, getValueLength) > maxLength) {
+                console.warn('[Semi] The input character is truncated because the input length exceeds the maximum length limit');
+                return truncateValue({ value, maxLength, getValueLength });
+            }
+        }
+        return value;
+    }
+
+    // the native minlength counts UTF-16 units; adding the missing characters makes the browser check
+    // follow getValueLength
+    static getNativeMinLength({ minLength, getValueLength }: { minLength?: number; getValueLength?: (value: string) => number }, value?: string | number) {
+        if (typeof minLength !== 'number' || minLength < 0 || typeof getValueLength !== 'function') {
+            return minLength;
+        }
+        const text = String(value ?? '');
+        const valueLength = getValueLength(text);
+        return valueLength < minLength ? text.length + (minLength - valueLength) : minLength;
+    }
+
+    // a changed `value` prop wins on its render; state may hold text the prop does not (IME composition in progress)
+    static deriveValue<V>(props: { value?: V }, state: { value?: V; cachedValue?: V }) {
+        return props.value !== state.cachedValue ? props.value : state.value;
+    }
+
+    /** The length the counter and maxLength count: `getValueLength` when given, otherwise UTF-16 units */
+    static getValueCount(value?: string, getValueLength?: (value: string) => number) {
+        if (!value) {
+            return 0;
+        }
+        return typeof getValueLength === 'function' ? getValueLength(value) : value.length;
+    }
+
+    handleChange = (value: string, e: unknown) => {
+        const { composition } = this.getProps();
+        let nextValue = value;
+        this.#reported = value;
+        // composing: state must still follow, controlled or not, so the element shows the composing text
+        if (composition && this.#compositionEnter) {
+            this.setEntryState({ value: nextValue });
+            return;
+        }
+        if (!this.#compositionEnter) {
+            nextValue = this.getNextValue(nextValue);
+        }
+        this.changeValue(nextValue, e);
+    };
+
+    handleCompositionStart = (e: CE) => {
+        this.#compositionEnter = true;
+        this.#composedSinceFocus = true;
+        this.adapter.notifyCompositionStart(e);
+    };
+
+    /**
+     * Returns whether the parent has been told the element's text, so the host may write the shown text back to the
+     * element now. Gecko fires `compositionend` before the `input` event that reports the committed text
+     * (w3c/uievents#202): this returns false then, and that `input` event is where the host writes back; writing now would
+     * replace the committed text with the stale controlled one.
+     */
+    handleCompositionEnd = (e: CE & Pick<Event, 'target'>) => {
+        const { composition } = this.getProps();
+        const value = e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement ? e.target.value : '';
+        this.#compositionEnter = false;
+        this.adapter.notifyCompositionEnd(e);
+        if (composition) {
+            const nextValue = this.getNextValue(value);
+            this.#reported = value;
+            this.changeValue(nextValue, e);
+            if (this.isControlledComponent()) {
+                // the parent may reject the result; the value prop then does not change
+                // and nothing else resets the text
+                this.setEntryState({ value: this.getProp('value') });
+            }
+        } else if (typeof this.getProp('getValueLength') === 'function') {
+            const nextValue = this.handleVisibleMaxLength(value);
+            if (nextValue !== value) {
+                this.#reported = value;
+                this.changeValue(nextValue, e);
+            }
+        }
+        return value === this.#reported;
+    };
+
+    handleCompositionUpdate = (e: CE) => {
+        this.adapter.notifyCompositionUpdate(e);
+    };
+
+    handleFocus = (e: unknown) => {
+        const { value } = this.getStates();
+        this.#composedSinceFocus = false;
+        this.setEntryState({ isFocus: true });
+        this.adapter.notifyFocus(value, e);
+    };
+}

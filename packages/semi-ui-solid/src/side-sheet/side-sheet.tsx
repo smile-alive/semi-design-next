@@ -1,11 +1,11 @@
 import { type JSX, Show, createEffect, createMemo, createRenderEffect, createSignal, on, onCleanup, splitProps, untrack } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/side-sheet/constants';
-import SideSheetFoundation, { type Placement, type SideSheetAdapter, type SideSheetState } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
+import SideSheetFoundation, { type Placement, type SideSheetAdapter, type SideSheetState } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
 import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-import '@fibrae/semi-foundation/side-sheet/side-sheet.scss';
+import '@fibrae/semi-foundation/components/side-sheet/side-sheet.scss';
 import useCSSAnimation from '../_base/css-animation';
 import type { ElementProps } from '../_base/element-props';
 import mergeRefs from '../_base/merge-refs';

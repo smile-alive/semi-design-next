@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/popover/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/popover/constants';
     import type { ArrowProps } from './interface';
 
     const props = withDefaults(defineProps<ArrowProps>(), { position: '' });

@@ -1,6 +1,6 @@
 import type { HTMLAttributes, StyleValue, VNode } from 'vue';
-import type { CheckboxValue } from '@fibrae/semi-foundation/checkbox/checkbox-group-foundation';
-import type { EmojiResult, FeedbackValue } from '@fibrae/semi-foundation/feedback/foundation';
+import type { CheckboxValue } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
+import type { EmojiResult, FeedbackValue } from '@fibrae/semi-foundation/components/feedback/foundation';
 import type { CheckboxGroupOptionSlotProps, CheckboxGroupProps } from '../checkbox/interface';
 import type { TextAreaChangeEvent, TextAreaProps } from '../input/interface';
 import type { ModalButtonProps, ModalProps } from '../modal/interface';

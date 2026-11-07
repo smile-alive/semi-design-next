@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, type InputHTMLAttributes } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/switch/constants';
-    import SwitchFoundation, { type SwitchAdapter, type SwitchState } from '@fibrae/semi-foundation/switch/foundation';
-    import '@fibrae/semi-foundation/switch/switch.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/switch/constants';
+    import SwitchFoundation, { type SwitchAdapter, type SwitchState } from '@fibrae/semi-foundation/components/switch/foundation';
+    import '@fibrae/semi-foundation/components/switch/switch.scss';
     import { hasAutofocus, vAutofocus } from '../_base/autofocus';
     import { isNativeInputKey, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';

@@ -1,8 +1,8 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes, HTMLImgAttributes } from 'svelte/elements';
-import type { RatioType } from '@fibrae/semi-foundation/image/preview-inner-foundation';
+import type { RatioType } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 
-export type { RatioType, RotateDirection, SwitchDirection } from '@fibrae/semi-foundation/image/preview-inner-foundation';
+export type { RatioType, RotateDirection, SwitchDirection } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 
 export interface PreviewOptions {
     /** The images of the preview. A group lists the srcs its `Image` children open at */

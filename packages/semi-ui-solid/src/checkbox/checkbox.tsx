@@ -1,11 +1,11 @@
 import { children, createEffect, createMemo, createUniqueId, Match, onMount, Show, splitProps, Switch, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import CheckboxFoundation, { type CheckboxAdapter, type CheckboxBaseState } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
-import type { CheckboxValue } from '@fibrae/semi-foundation/checkbox/checkbox-group-foundation';
-import { checkboxClasses as css } from '@fibrae/semi-foundation/checkbox/constants';
+import CheckboxFoundation, { type CheckboxAdapter, type CheckboxBaseState } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
+import type { CheckboxValue } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
+import { checkboxClasses as css } from '@fibrae/semi-foundation/components/checkbox/constants';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
-import '@fibrae/semi-foundation/checkbox/checkbox.scss';
+import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
 import { IconCheckboxIndeterminate, IconCheckboxTick } from '@fibrae/semi-icons-solid';
 import autofocus from '../_base/autofocus';
 import callHandler from '../_base/call-handler';

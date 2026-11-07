@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
     import { IconChevronLeft, IconChevronRight, IconDoubleChevronLeft, IconDoubleChevronRight } from '@fibrae/semi-icons-vue';
     import Button from '../button/button.vue';
     import IconButton from '../icon-button/icon-button.vue';

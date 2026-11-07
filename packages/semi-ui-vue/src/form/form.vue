@@ -1,10 +1,10 @@
 <script setup lang="ts" generic="Values extends Record<string, any> = Record<string, any>, Output = Values">
     import { computed, onBeforeUnmount, onMounted, toRaw, useId, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-    import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
-    import FormFoundation from '@fibrae/semi-foundation/form/foundation';
-    import type { AllErrors, BaseFormAdapter, FormFoundationState, FormState } from '@fibrae/semi-foundation/form/interface';
-    import '@fibrae/semi-foundation/form/form.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+    import { getFormApiProxyInternals } from '@fibrae/semi-foundation/components/form/form-api-proxy';
+    import FormFoundation from '@fibrae/semi-foundation/components/form/foundation';
+    import type { AllErrors, BaseFormAdapter, FormFoundationState, FormState } from '@fibrae/semi-foundation/components/form/interface';
+    import '@fibrae/semi-foundation/components/form/form.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import SlotFragment from '../_base/slot-fragment';

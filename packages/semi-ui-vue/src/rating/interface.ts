@@ -1,6 +1,6 @@
 import type { VNode } from 'vue';
 
-export type { RatingState } from '@fibrae/semi-foundation/rating/foundation';
+export type { RatingState } from '@fibrae/semi-foundation/components/rating/foundation';
 
 export interface RatingProps {
     modelValue?: number;

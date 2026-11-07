@@ -1,7 +1,7 @@
 import { type JSX, Show, children, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/side-sheet/constants';
-import type { SheetSize } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
+import type { SheetSize } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import { IconClose } from '@fibrae/semi-icons-solid';

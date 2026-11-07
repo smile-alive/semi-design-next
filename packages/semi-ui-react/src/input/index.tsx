@@ -1,12 +1,12 @@
 import type React from 'react';
 import { useCallback, useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/input/constants';
-import InputFoundation, { type InputAdapter, type InputBaseState } from '@fibrae/semi-foundation/input/foundation';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
+import InputFoundation, { type InputAdapter, type InputBaseState } from '@fibrae/semi-foundation/components/input/foundation';
 import { stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
-import '@fibrae/semi-foundation/input/input.scss';
+import '@fibrae/semi-foundation/components/input/input.scss';
 import { IconClear, IconEyeOpened, IconEyeClosedSolid } from '@fibrae/semi-icons-react';
 import type { ValidateStatus } from '../_base/base-component';
 import useDefaultProps from '../_base/use-default-props';

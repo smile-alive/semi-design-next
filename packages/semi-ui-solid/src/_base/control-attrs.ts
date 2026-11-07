@@ -1,5 +1,5 @@
 import { $PROXY } from 'solid-js';
-import { FORM_INJECTED_PROP_KEYS } from '@fibrae/semi-foundation/form/constants';
+import { FORM_INJECTED_PROP_KEYS } from '@fibrae/semi-foundation/components/form/constants';
 import { isNativeInputKey as isNativeInputKeyOf } from '@fibrae/semi-foundation/utils/a11y';
 
 const formInjectedKeys = new Set<string>(FORM_INJECTED_PROP_KEYS);

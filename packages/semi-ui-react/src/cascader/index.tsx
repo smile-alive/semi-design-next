@@ -1,10 +1,10 @@
 import React, { Fragment, useDeferredValue, useId, useImperativeHandle, useRef, type ReactNode, type CSSProperties, type MouseEvent } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/cascader/constants';
-import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicTriggerRenderProps, type BasicScrollPanelProps, type CascaderAdapter } from '@fibrae/semi-foundation/cascader/foundation';
-import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/cascader/constants';
+import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicTriggerRenderProps, type BasicScrollPanelProps, type CascaderAdapter } from '@fibrae/semi-foundation/components/cascader/foundation';
+import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/cascader/cascader.scss';
+import '@fibrae/semi-foundation/components/cascader/cascader.scss';
 import { IconClear, IconChevronDown } from '@fibrae/semi-icons-react';
 import type { Bivariant, ByMultiple, ElementProps } from '../_base/base';
 import type { ValidateStatus } from '../_base/base-component';
@@ -28,7 +28,7 @@ import Item, { type CascaderData, type Entities, type Entity, type Data, type Fi
 type Foundation = CascaderFoundation<MouseEvent | React.KeyboardEvent, React.UIEvent<HTMLUListElement>>;
 type Adapter = CascaderAdapter<MouseEvent | React.KeyboardEvent, React.UIEvent<HTMLUListElement>>;
 
-export type { CascaderType, ShowNextType, KeyMapProps } from '@fibrae/semi-foundation/cascader/foundation';
+export type { CascaderType, ShowNextType, KeyMapProps } from '@fibrae/semi-foundation/components/cascader/foundation';
 export type { CascaderData, Entity, Data, CascaderItemProps, FilterRenderProps } from './item';
 
 export interface ScrollPanelProps extends BasicScrollPanelProps {

@@ -1,9 +1,9 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { defaultResponsiveMap } from '@fibrae/semi-foundation/grid/constants';
-    import { cssClasses } from '@fibrae/semi-foundation/layout/constants';
+    import { defaultResponsiveMap } from '@fibrae/semi-foundation/components/grid/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
     import { registerMediaQuery } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/layout/layout.scss';
+    import '@fibrae/semi-foundation/components/layout/layout.scss';
     import { getLayoutContext } from './context.js';
     import type { ResponsiveMap, SiderProps } from './interface.js';
 

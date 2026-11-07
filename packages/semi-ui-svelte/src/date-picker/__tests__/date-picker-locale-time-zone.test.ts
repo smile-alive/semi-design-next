@@ -2,7 +2,7 @@ import { render } from '@testing-library/svelte';
 import { add, format, parse, set } from 'date-fns';
 import { enUS, zhCN } from 'date-fns/locale';
 import { describe, expect, it } from 'vite-plus/test';
-import { strings } from '@fibrae/semi-foundation/date-picker/constants';
+import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import { toIANA, zonedTimeToUtc } from '@fibrae/semi-foundation/utils/date-fns-extra';
 import { createStore } from '../../_base/__tests__/store.svelte';

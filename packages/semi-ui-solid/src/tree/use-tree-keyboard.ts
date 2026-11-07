@@ -1,5 +1,5 @@
 import { type Accessor, createMemo, createSignal } from 'solid-js';
-import { getTreeKeyboardAction, isTreeNodeLeaf } from '@fibrae/semi-foundation/tree/shared';
+import { getTreeKeyboardAction, isTreeNodeLeaf } from '@fibrae/semi-foundation/components/tree/shared';
 import { Typeahead } from '@fibrae/semi-foundation/utils/a11y';
 import type { FlattenNode, TreeRowProps } from './interface';
 

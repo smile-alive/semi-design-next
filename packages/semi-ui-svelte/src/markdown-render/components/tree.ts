@@ -1,4 +1,4 @@
-import MarkdownRenderFoundation from '@fibrae/semi-foundation/markdown-render/foundation';
+import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
 import type { ColumnAlign, ColumnProps } from '../../table/index.js';
 import { type MarkdownChild, type MarkdownNode, isNode } from '../runtime.js';
 import Code from './code.svelte';

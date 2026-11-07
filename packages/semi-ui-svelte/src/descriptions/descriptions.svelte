@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/descriptions/constants';
-    import { getHorizontalList } from '@fibrae/semi-foundation/descriptions/foundation';
-    import '@fibrae/semi-foundation/descriptions/descriptions.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
+    import { getHorizontalList } from '@fibrae/semi-foundation/components/descriptions/foundation';
+    import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import type { DescriptionsData, DescriptionsProps } from './interface.js';
 

@@ -1,8 +1,8 @@
 import React, { cloneElement, isValidElement, type ReactNode } from 'react';
 import clsx from 'clsx';
-import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/cascader/constants';
-import CascaderFoundation, { type BasicCascaderData, type BasicEntity, type ShowNextType, type BasicData, type Virtualize } from '@fibrae/semi-foundation/cascader/foundation';
-import { highlightParts } from '@fibrae/semi-foundation/cascader/util';
+import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/cascader/constants';
+import CascaderFoundation, { type BasicCascaderData, type BasicEntity, type ShowNextType, type BasicData, type Virtualize } from '@fibrae/semi-foundation/components/cascader/foundation';
+import { highlightParts } from '@fibrae/semi-foundation/components/cascader/util';
 import { IconChevronRight, IconTick } from '@fibrae/semi-icons-react';
 import VirtualList, { type VirtualListHandle } from '../_base/virtual-list';
 import Checkbox, { type CheckboxEvent } from '../checkbox';

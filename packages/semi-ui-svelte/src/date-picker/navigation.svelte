@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
     import { IconChevronLeft, IconChevronRight, IconDoubleChevronLeft, IconDoubleChevronRight } from '@fibrae/semi-icons-svelte';
     import { Button } from '../button/index.js';
     import { IconButton } from '../icon-button/index.js';

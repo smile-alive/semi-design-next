@@ -1,8 +1,8 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/collapse/constants';
-import CollapseFoundation, { type CollapseAdapter, type CollapseProps, type CollapseState } from '@fibrae/semi-foundation/collapse/foundation';
-import '@fibrae/semi-foundation/collapse/collapse.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
+import CollapseFoundation, { type CollapseAdapter, type CollapseProps, type CollapseState } from '@fibrae/semi-foundation/components/collapse/foundation';
+import '@fibrae/semi-foundation/components/collapse/collapse.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

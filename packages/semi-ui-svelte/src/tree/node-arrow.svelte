@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
-    import { isTreeNodeLeaf } from '@fibrae/semi-foundation/tree/shared';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
+    import { isTreeNodeLeaf } from '@fibrae/semi-foundation/components/tree/shared';
     import { IconTreeTriangleDown } from '@fibrae/semi-icons-svelte';
     import Spin from '../spin/spin.svelte';
     import { getTreeContext } from './context.js';

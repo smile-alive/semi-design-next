@@ -1,12 +1,12 @@
 import { type CSSProperties, useLayoutEffect, useState, useSyncExternalStore } from 'react';
 import clsx from 'clsx';
-import { cssClasses, getStackItemTransform, getStackThreshold, numbers } from '@fibrae/semi-foundation/notification/constants';
-import type { NoticeInstance, NoticePosition } from '@fibrae/semi-foundation/notification/notification-foundation';
-import { type ConfigProps, groupNoticesByPosition, noticePositions, type NotificationListProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { cssClasses, getStackItemTransform, getStackThreshold, numbers } from '@fibrae/semi-foundation/components/notification/constants';
+import type { NoticeInstance, NoticePosition } from '@fibrae/semi-foundation/components/notification/notification-foundation';
+import { type ConfigProps, groupNoticesByPosition, noticePositions, type NotificationListProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import '@fibrae/semi-foundation/notification/notification.scss';
+import '@fibrae/semi-foundation/components/notification/notification.scss';
 import useNoticeListEffects from '../_base/use-notice-list-effects';
 import CSSAnimation from '../_css-animation';
 import { useConfigContext } from '../config-provider/context';

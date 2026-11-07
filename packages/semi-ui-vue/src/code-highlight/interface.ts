@@ -1,6 +1,6 @@
-import type { CodeHighlightThemes, LanguageInput } from '@fibrae/semi-foundation/code-highlight/registry';
+import type { CodeHighlightThemes, LanguageInput } from '@fibrae/semi-foundation/components/code-highlight/registry';
 
-export type { CodeHighlightRegistration, CodeHighlightThemes, LanguageInput, ThemeInput } from '@fibrae/semi-foundation/code-highlight/registry';
+export type { CodeHighlightRegistration, CodeHighlightThemes, LanguageInput, ThemeInput } from '@fibrae/semi-foundation/components/code-highlight/registry';
 
 export interface CodeHighlightProps {
     /** Treated as an empty string when undefined */

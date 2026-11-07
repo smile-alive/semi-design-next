@@ -1,9 +1,9 @@
 import type { JSX } from 'solid-js';
-import type { PreviewGroupImage } from '@fibrae/semi-foundation/image/preview-foundation';
-import type { RatioType, RotateDirection } from '@fibrae/semi-foundation/image/preview-inner-foundation';
+import type { PreviewGroupImage } from '@fibrae/semi-foundation/components/image/preview-foundation';
+import type { RatioType, RotateDirection } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 import type { ElementProps } from '../_base/element-props';
 
-export type { RatioType } from '@fibrae/semi-foundation/image/preview-inner-foundation';
+export type { RatioType } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 
 type Style = JSX.CSSProperties | string;
 

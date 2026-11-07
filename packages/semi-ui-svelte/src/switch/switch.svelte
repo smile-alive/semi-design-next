@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/switch/constants';
-    import SwitchFoundation, { type SwitchAdapter, type SwitchBaseProps, type SwitchState } from '@fibrae/semi-foundation/switch/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/switch/constants';
+    import SwitchFoundation, { type SwitchAdapter, type SwitchBaseProps, type SwitchState } from '@fibrae/semi-foundation/components/switch/foundation';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import '@fibrae/semi-foundation/switch/switch.scss';
+    import '@fibrae/semi-foundation/components/switch/switch.scss';
     import { isNativeInputKey, splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

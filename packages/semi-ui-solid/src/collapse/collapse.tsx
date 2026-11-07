@@ -1,8 +1,8 @@
 import { type JSX, createMemo, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/collapse/constants';
-import CollapseFoundation, { type CollapseAdapter, type CollapseProps as CollapseFoundationProps, type CollapseState } from '@fibrae/semi-foundation/collapse/foundation';
-import '@fibrae/semi-foundation/collapse/collapse.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
+import CollapseFoundation, { type CollapseAdapter, type CollapseProps as CollapseFoundationProps, type CollapseState } from '@fibrae/semi-foundation/components/collapse/foundation';
+import '@fibrae/semi-foundation/components/collapse/collapse.scss';
 import type { ElementProps } from '../_base/element-props';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

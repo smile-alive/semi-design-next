@@ -1,4 +1,4 @@
-import type { ToastInstance } from '@fibrae/semi-foundation/toast/toast-foundation';
+import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 import { createContext } from '../_base/create-context.js';
 
 export interface ToastListContext {

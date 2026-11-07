@@ -1,8 +1,8 @@
 import { type JSX, Show, children, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/form/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-import '@fibrae/semi-foundation/form/form.scss';
+import '@fibrae/semi-foundation/components/form/form.scss';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import mergeStyles from '../_base/merge-styles';

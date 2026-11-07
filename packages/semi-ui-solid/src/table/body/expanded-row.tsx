@@ -1,6 +1,6 @@
 import { type JSX, Show, createMemo, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { arrayAdd } from '@fibrae/semi-foundation/table/utils';
+import { arrayAdd } from '@fibrae/semi-foundation/components/table/utils';
 import { useTableContext } from '../context';
 import type { ColumnProps, ExpandedRowRender } from '../interface';
 import { isRenderReturnObject } from '../utils';

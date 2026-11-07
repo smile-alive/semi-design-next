@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/spin/constants';
-    import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/spin/foundation';
-    import '@fibrae/semi-foundation/spin/spin.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/spin/constants';
+    import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/components/spin/foundation';
+    import '@fibrae/semi-foundation/components/spin/spin.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import watch from '../_base/watch.svelte.js';

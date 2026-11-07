@@ -1,5 +1,5 @@
 import type { HTMLAttributes } from 'svelte/elements';
-import type { PinCodeBaseState } from '@fibrae/semi-foundation/pincode/foundation';
+import type { PinCodeBaseState } from '@fibrae/semi-foundation/components/pincode/foundation';
 import type { InputSize, ValidateStatus } from '../input/interface.js';
 
 export type PinCodeFormat = 'number' | 'mixed' | RegExp | ((value: string) => boolean);

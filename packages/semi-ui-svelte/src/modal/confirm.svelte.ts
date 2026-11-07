@@ -1,6 +1,6 @@
 import { mount, unmount } from 'svelte';
-import { resolveConfirmProps } from '@fibrae/semi-foundation/modal/confirm';
-import ConfirmRegistry from '@fibrae/semi-foundation/modal/confirm-registry';
+import { resolveConfirmProps } from '@fibrae/semi-foundation/components/modal/confirm';
+import ConfirmRegistry from '@fibrae/semi-foundation/components/modal/confirm-registry';
 import { assertClient } from '../_base/client-only.js';
 import ConfirmModal from './confirm-modal.svelte';
 import type { ConfirmProps, ModalConfirmProps, ModalHookRef } from './interface.js';

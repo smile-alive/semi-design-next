@@ -1,8 +1,8 @@
 import { type ValidComponent, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/typography/constants';
-import '@fibrae/semi-foundation/typography/typography.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
+import '@fibrae/semi-foundation/components/typography/typography.scss';
 import type { ElementProps } from '../_base/element-props';
 import useDefaultProps from '../_base/use-default-props';
 

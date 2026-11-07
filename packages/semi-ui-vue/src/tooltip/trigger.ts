@@ -1,5 +1,5 @@
 import { type CSSProperties, type VNode, Text, normalizeStyle } from 'vue';
-import { POPUP_ID_ATTRIBUTE, cssClasses, canRoleCarryPopupState, isBlockDisplay, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
+import { POPUP_ID_ATTRIBUTE, cssClasses, canRoleCarryPopupState, isBlockDisplay, wrapsSpecialTrigger } from '@fibrae/semi-foundation/components/tooltip/constants';
 import elementType from '../_base/element-type';
 import type { TooltipProps } from './interface';
 

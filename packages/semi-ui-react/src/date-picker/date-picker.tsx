@@ -1,6 +1,7 @@
 import React, { useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/date-picker/constants';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/components/date-picker/constants';
 import DatePickerFoundation, {
     getYearMonthFromValue,
     isRangeType,
@@ -15,11 +16,10 @@ import DatePickerFoundation, {
     type Type,
     type RangeInput,
     type TriggerRenderProps,
-} from '@fibrae/semi-foundation/date-picker/foundation';
+} from '@fibrae/semi-foundation/components/date-picker/foundation';
 import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import { noop } from '@fibrae/semi-foundation/utils/function';
-import '@fibrae/semi-foundation/date-picker/date-picker.scss';
+import '@fibrae/semi-foundation/components/date-picker/date-picker.scss';
 import type { ElementProps } from '../_base/base';
 import { namedRole } from '../_base/named-role';
 import useClickOutside from '../_base/use-click-outside';

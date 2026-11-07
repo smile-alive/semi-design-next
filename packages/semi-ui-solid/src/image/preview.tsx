@@ -1,9 +1,9 @@
 import { type JSX, createMemo, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-import PreviewFoundation, { type PreviewAdapter, getGroupPreviewList, loadLazyImages } from '@fibrae/semi-foundation/image/preview-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+import PreviewFoundation, { type PreviewAdapter, getGroupPreviewList, loadLazyImages } from '@fibrae/semi-foundation/components/image/preview-foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/image/image.scss';
+import '@fibrae/semi-foundation/components/image/image.scss';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

@@ -1,9 +1,9 @@
 import type React from 'react';
 import { isValidElement, memo, useEffect, useState, useInsertionEffect, useLayoutEffect, useEffectEvent, useId, useSyncExternalStore } from 'react';
 import clsx from 'clsx';
-import { cssClasses, FIELD_PROP_KEYS } from '@fibrae/semi-foundation/form/constants';
-import FieldStore from '@fibrae/semi-foundation/form/field-store';
-import { type FieldRegistrationView, createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
+import { cssClasses, FIELD_PROP_KEYS } from '@fibrae/semi-foundation/components/form/constants';
+import FieldStore from '@fibrae/semi-foundation/components/form/field-store';
+import { type FieldRegistrationView, createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/components/form/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
 import warning from '@fibrae/semi-foundation/utils/warning';

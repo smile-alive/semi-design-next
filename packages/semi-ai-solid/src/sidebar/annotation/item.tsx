@@ -1,6 +1,6 @@
 import { Show } from 'solid-js';
 import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
-import { formatTime } from '@fibrae/semi-foundation/video-player/utils';
+import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
 import { IconPlay } from '@fibrae/semi-icons-solid';
 
 const prefixCls = cssClasses.ANNOTATION_ITEM;

@@ -1,9 +1,9 @@
 import { children, createEffect, createMemo, createSignal, Match, on, onCleanup, Show, splitProps, Switch, untrack, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/avatar/constants';
-import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/avatar/foundation';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/avatar/constants';
+import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/components/avatar/foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/avatar/avatar.scss';
+import '@fibrae/semi-foundation/components/avatar/avatar.scss';
 import callHandler from '../_base/call-handler';
 import { splitControlAttrs } from '../_base/control-attrs';
 import hasContent from '../_base/has-content';

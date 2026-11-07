@@ -1,7 +1,7 @@
 import { type JSX, Show, children, createMemo, createUniqueId, mergeProps, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/collapse/constants';
-import CollapseFoundation from '@fibrae/semi-foundation/collapse/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
+import CollapseFoundation from '@fibrae/semi-foundation/components/collapse/foundation';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
 import { IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../_base/element-props';

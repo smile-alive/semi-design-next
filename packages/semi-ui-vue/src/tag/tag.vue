@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { Text, useAttrs } from 'vue';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tag/constants';
+    import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/components/tag/focus';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { cssClasses } from '@fibrae/semi-foundation/tag/constants';
-    import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/tag/focus';
-    import '@fibrae/semi-foundation/tag/tag.scss';
+    import '@fibrae/semi-foundation/components/tag/tag.scss';
     import { IconClose } from '@fibrae/semi-icons-vue';
     import { hasClickListener } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';

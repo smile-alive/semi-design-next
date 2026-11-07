@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/notification/constants';
-    import type NotificationListStore from '@fibrae/semi-foundation/notification/notification-list-foundation';
-    import { groupNoticesByPosition, noticePositions } from '@fibrae/semi-foundation/notification/notification-list-foundation';
-    import '@fibrae/semi-foundation/notification/notification.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
+    import type NotificationListStore from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
+    import { groupNoticesByPosition, noticePositions } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
+    import '@fibrae/semi-foundation/components/notification/notification.scss';
     import useAnnouncer from '../_base/use-announcer';
     import useStoreSnapshot from '../_base/use-store-snapshot';
     import useConfig from '../config-provider/use-config';

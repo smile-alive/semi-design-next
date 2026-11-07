@@ -1,4 +1,4 @@
-import '@fibrae/semi-foundation/modal/modal.scss';
+import '@fibrae/semi-foundation/components/modal/modal.scss';
 import confirm, { destroyAll, withConfirm, withError, withInfo, withSuccess, withWarning } from './confirm';
 import ModalBase, { type ModalReactProps } from './modal';
 import useModal from './use-modal';
@@ -9,7 +9,7 @@ export type { ModalHookApi } from './use-modal';
 export type Directions = 'ltr' | 'rtl';
 
 export type { ModalReactProps } from './modal';
-export type { ModalState } from '@fibrae/semi-foundation/modal/modal-foundation';
+export type { ModalState } from '@fibrae/semi-foundation/components/modal/modal-foundation';
 
 // statics are attached here: confirm -> ConfirmModal -> Modal would form a runtime cycle in modal.tsx
 const Modal = Object.assign(ModalBase, {

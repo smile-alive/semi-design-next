@@ -1,5 +1,5 @@
-import type { strings } from '@fibrae/semi-foundation/calendar/constants';
-import type { DailyEventLayout, EventObject, weekStartsOnEnum } from '@fibrae/semi-foundation/calendar/foundation';
+import type { strings } from '@fibrae/semi-foundation/components/calendar/constants';
+import type { DailyEventLayout, EventObject, weekStartsOnEnum } from '@fibrae/semi-foundation/components/calendar/foundation';
 import type { ArrayElement, ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';
 

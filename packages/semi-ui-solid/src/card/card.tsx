@@ -1,8 +1,8 @@
 import { children, createMemo, Index, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/card/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/card/card.scss';
+import '@fibrae/semi-foundation/components/card/card.scss';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import useDefaultProps from '../_base/use-default-props';

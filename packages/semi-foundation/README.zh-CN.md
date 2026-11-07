@@ -27,6 +27,7 @@ pnpm add @fibrae/semi-foundation
 
 ```ts
 import BaseFoundation from '@fibrae/semi-foundation/base/foundation';
+import InputFoundation from '@fibrae/semi-foundation/components/input/foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
 import { utcToZonedTime } from '@fibrae/semi-foundation/utils/date-fns-extra';
@@ -36,14 +37,13 @@ import { utcToZonedTime } from '@fibrae/semi-foundation/utils/date-fns-extra';
 
 ## 目录
 
-`src/` 下每个组件一个目录，按需包含 `foundation.ts`、`constants.ts` 与 `*.scss`（`variables.scss`、`mixin.scss`、`rtl.scss` 等只按源文件发布）。公共目录：
-
-| 目录      | 内容                                                                |
-| --------- | ------------------------------------------------------------------- |
-| `base/`   | `BaseFoundation` 与通用常量                                         |
-| `theme/`  | 唯一的主题：全局 token、色板、mixin，组件 SCSS 经 `semi:theme` 加载 |
-| `locale/` | 语言包与 `Locale` 类型                                              |
-| `utils/`  | 焦点、层栈、日期、DOM 等工具                                        |
+| 目录          | 内容                                                                                                                                  |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `components/` | 每个组件一个目录，按需包含 `foundation.ts`、`constants.ts` 与 `*.scss`（`variables.scss`、`mixin.scss`、`rtl.scss` 等只按源文件发布） |
+| `base/`       | `BaseFoundation`、通用常量，以及 foundation 组合使用的有状态类（焦点范围、弹层生命周期、模态资源等）                                  |
+| `utils/`      | 无状态工具：DOM、日期、焦点辅助、层栈等                                                                                               |
+| `theme/`      | 唯一的主题：全局 token、色板、mixin，组件 SCSS 经 `semi:theme` 加载                                                                   |
+| `locale/`     | 语言包与 `Locale` 类型                                                                                                                |
 
 ## 语言包
 

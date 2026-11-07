@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/video-player/constants';
-import VideoProgressFoundation, { type Marker, type MarkerListItem, type VideoProgressAdapter, type VideoProgressBaseState } from '@fibrae/semi-foundation/video-player/progress-foundation';
-import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
-import '@fibrae/semi-foundation/video-player/video-player.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/video-player/constants';
+import VideoProgressFoundation, { type Marker, type MarkerListItem, type VideoProgressAdapter, type VideoProgressBaseState } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
+import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
+import '@fibrae/semi-foundation/components/video-player/video-player.scss';
 import useFoundation from '../_base/use-foundation';
 import useLocale from '../locale/use-locale';
 import Tooltip from '../tooltip';

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/input-number/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/input-number/constants';
     import { IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-vue';
 
     // Not focusable, no role: the keyboard steps with the input's arrow keys.

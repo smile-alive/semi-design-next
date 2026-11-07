@@ -2,8 +2,8 @@ import { children, createEffect, createMemo, createSignal, For, type JSX, on, on
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import { cssClasses, getBarItemKey, getTabId } from '@fibrae/semi-foundation/tabs/constants';
-import TabsFoundation from '@fibrae/semi-foundation/tabs/foundation';
+import { cssClasses, getBarItemKey, getTabId } from '@fibrae/semi-foundation/components/tabs/constants';
+import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
 import { IconChevronDown, IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-solid';
 import hasContent from '../_base/has-content';
 import { serverHtml } from '../_base/is-markup';

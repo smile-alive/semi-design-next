@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import type { CSSProperties } from 'vue';
-    import type { BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
-    import { arrayAdd } from '@fibrae/semi-foundation/table/utils';
+    import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
+    import { arrayAdd } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { useTableContext } from '../context';
     import type { ColumnProps } from '../interface';

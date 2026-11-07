@@ -1,8 +1,8 @@
 import React, { memo, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { debounce } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
-import { getTreeLabelClassMap, getTreeRowAria, getTreeRowClassMap, isTreeNodeLeaf } from '@fibrae/semi-foundation/tree/shared';
+import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
+import { getTreeLabelClassMap, getTreeRowAria, getTreeRowClassMap, isTreeNodeLeaf } from '@fibrae/semi-foundation/components/tree/shared';
 import { IconTreeTriangleDown, IconFile, IconFolder, IconFolderOpen } from '@fibrae/semi-icons-react';
 import { Checkbox } from '../checkbox';
 import Highlight from '../highlight';

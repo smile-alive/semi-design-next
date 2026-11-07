@@ -2,8 +2,8 @@
 import { type Component, createApp, inject, nextTick, ref } from 'vue';
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
+import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import type { ConfigProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
 import { IconToutiaoLogo } from '@fibrae/semi-icons-vue';
 import { endTransitions, render } from '@test/utils/vue';
 import semiGlobal, { SemiGlobal, semiGlobalKey } from '../../_utils/semi-global';

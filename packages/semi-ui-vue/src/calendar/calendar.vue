@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { getCurrDate } from '@fibrae/semi-foundation/calendar/event-util';
-    import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
+    import { getCurrDate } from '@fibrae/semi-foundation/components/calendar/event-util';
+    import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/calendar/calendar.scss';
+    import '@fibrae/semi-foundation/components/calendar/calendar.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import { provideCalendarContext } from './context';

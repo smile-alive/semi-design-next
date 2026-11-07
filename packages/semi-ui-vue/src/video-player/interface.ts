@@ -1,5 +1,5 @@
-import type { strings } from '@fibrae/semi-foundation/video-player/constants';
-import type { Marker } from '@fibrae/semi-foundation/video-player/progress-foundation';
+import type { strings } from '@fibrae/semi-foundation/components/video-player/constants';
+import type { Marker } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
 
 export type VideoPlayerTheme = 'dark' | 'light';
 

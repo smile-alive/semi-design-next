@@ -1,9 +1,9 @@
 import { children, createMemo, createUniqueId, onCleanup, onMount, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { radioClasses as css, type strings } from '@fibrae/semi-foundation/radio/constants';
-import RadioFoundation, { type RadioAdapter, type RadioBaseState, type RadioChangeEvent } from '@fibrae/semi-foundation/radio/radio-foundation';
+import { radioClasses as css, type strings } from '@fibrae/semi-foundation/components/radio/constants';
+import RadioFoundation, { type RadioAdapter, type RadioBaseState, type RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/radio/radio.scss';
+import '@fibrae/semi-foundation/components/radio/radio.scss';
 import { IconRadio } from '@fibrae/semi-icons-solid';
 import autofocus from '../_base/autofocus';
 import callHandler from '../_base/call-handler';

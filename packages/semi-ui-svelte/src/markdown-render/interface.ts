@@ -1,6 +1,6 @@
 import type { Component, Snippet } from 'svelte';
 import type { HTMLAttributes, SvelteHTMLElements } from 'svelte/elements';
-import type { MarkdownRenderBaseProps } from '@fibrae/semi-foundation/markdown-render/foundation';
+import type { MarkdownRenderBaseProps } from '@fibrae/semi-foundation/components/markdown-render/foundation';
 import type { MarkdownNode } from './runtime.js';
 
 // The index signature admits tag names too: without it an intrinsic key could not keep its own tag name, nor could a

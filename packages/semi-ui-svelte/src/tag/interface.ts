@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { strings } from '@fibrae/semi-foundation/tag/constants';
+import type { strings } from '@fibrae/semi-foundation/components/tag/constants';
 import type { AvatarShape } from '../avatar/interface.js';
 import type { PopoverProps } from '../popover/index.js';
 

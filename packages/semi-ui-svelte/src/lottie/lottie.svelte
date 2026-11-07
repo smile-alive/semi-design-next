@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/lottie/constants';
-    import LottieFoundation, { type LottieAdapter, type LottieBaseProps, type LottieBaseState } from '@fibrae/semi-foundation/lottie/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/lottie/constants';
+    import LottieFoundation, { type LottieAdapter, type LottieBaseProps, type LottieBaseState } from '@fibrae/semi-foundation/components/lottie/foundation';
     import { isDev } from '@fibrae/semi-foundation/utils/warning';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

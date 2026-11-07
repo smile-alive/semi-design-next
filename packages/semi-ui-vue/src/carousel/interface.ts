@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes, VNode } from 'vue';
-import type { CarouselAutoPlay } from '@fibrae/semi-foundation/carousel/foundation';
+import type { CarouselAutoPlay } from '@fibrae/semi-foundation/components/carousel/foundation';
 
 export interface ArrowButton {
     props?: ButtonHTMLAttributes;

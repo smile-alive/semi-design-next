@@ -1,7 +1,7 @@
 import { type JSX, createMemo, createRenderEffect, untrack } from 'solid-js';
 import { isServer } from 'solid-js/web';
-import { cssClasses } from '@fibrae/semi-foundation/table/constants';
-import TableFoundation from '@fibrae/semi-foundation/table/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
+import TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
 import { IconChevronRight, IconTreeTriangleRight } from '@fibrae/semi-icons-solid';
 import isMarkup from '../_base/is-markup';
 import useLocale from '../locale/use-locale';

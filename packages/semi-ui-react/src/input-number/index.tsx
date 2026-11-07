@@ -1,9 +1,9 @@
 import type React from 'react';
 import { useCallback, useImperativeHandle, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/input-number/constants';
-import InputNumberFoundation, { reachesBound, type BaseInputNumberState, type InputNumberAdapter, type ScientificNotationConfig } from '@fibrae/semi-foundation/input-number/foundation';
-import '@fibrae/semi-foundation/input-number/input-number.scss';
+import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/input-number/constants';
+import InputNumberFoundation, { reachesBound, type BaseInputNumberState, type InputNumberAdapter, type ScientificNotationConfig } from '@fibrae/semi-foundation/components/input-number/foundation';
+import '@fibrae/semi-foundation/components/input-number/input-number.scss';
 import { IconChevronUp, IconChevronDown } from '@fibrae/semi-icons-react';
 import type { ArrayElement } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';

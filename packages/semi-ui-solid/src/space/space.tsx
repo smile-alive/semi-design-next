@@ -1,7 +1,7 @@
 import { splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/space/constants';
-import '@fibrae/semi-foundation/space/space.scss';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/space/constants';
+import '@fibrae/semi-foundation/components/space/space.scss';
 import type { ElementProps } from '../_base/element-props';
 import useDefaultProps from '../_base/use-default-props';
 

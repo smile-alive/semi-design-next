@@ -1,7 +1,7 @@
 // Languages used by demo code blocks are registered once at the site entry; unregistered ones render as plain text,
 // and blocks mounted earlier re-highlight. Registering through the foundation registry the components share keeps
 // page scripts from loading a framework package.
-import { register } from '@fibrae/semi-foundation/code-highlight/registry';
+import { register } from '@fibrae/semi-foundation/components/code-highlight/registry';
 
 register({
     languages: [

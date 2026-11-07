@@ -1,10 +1,10 @@
 <script lang="ts">
     import { on } from 'svelte/events';
     import { omit } from 'es-toolkit';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/cropper/constants';
-    import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/cropper/foundation';
-    import { getCropperGeometry } from '@fibrae/semi-foundation/cropper/utils';
-    import '@fibrae/semi-foundation/cropper/cropper.scss';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/cropper/constants';
+    import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/components/cropper/foundation';
+    import { getCropperGeometry } from '@fibrae/semi-foundation/components/cropper/utils';
+    import '@fibrae/semi-foundation/components/cropper/cropper.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import useLocale from '../locale/use-locale.svelte.js';

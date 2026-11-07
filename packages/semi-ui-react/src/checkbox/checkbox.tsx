@@ -1,11 +1,11 @@
 import type React from 'react';
 import { useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
-import CheckboxFoundation, { type CheckboxAdapter, type BasicCheckboxEvent, type BasicTargetObject, type BaseCheckboxProps, type CheckboxBaseState } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
-import { checkboxClasses as css } from '@fibrae/semi-foundation/checkbox/constants';
+import CheckboxFoundation, { type CheckboxAdapter, type BasicCheckboxEvent, type BasicTargetObject, type BaseCheckboxProps, type CheckboxBaseState } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
+import { checkboxClasses as css } from '@fibrae/semi-foundation/components/checkbox/constants';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
-import '@fibrae/semi-foundation/checkbox/checkbox.scss';
+import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

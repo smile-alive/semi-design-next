@@ -1,12 +1,12 @@
 import React, { useEffectEvent, useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
-import FormFoundation, { type BaseFormAdapter } from '@fibrae/semi-foundation/form/foundation';
-import type { AllErrors, FieldBridge, FormFoundationState } from '@fibrae/semi-foundation/form/interface';
-import { pickFormProps } from '@fibrae/semi-foundation/form/utils';
+import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+import { getFormApiProxyInternals } from '@fibrae/semi-foundation/components/form/form-api-proxy';
+import FormFoundation, { type BaseFormAdapter } from '@fibrae/semi-foundation/components/form/foundation';
+import type { AllErrors, FieldBridge, FormFoundationState } from '@fibrae/semi-foundation/components/form/interface';
+import { pickFormProps } from '@fibrae/semi-foundation/components/form/utils';
 import warning from '@fibrae/semi-foundation/utils/warning';
-import '@fibrae/semi-foundation/form/form.scss';
+import '@fibrae/semi-foundation/components/form/form.scss';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import { cloneDeep } from '../_utils/index';

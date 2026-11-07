@@ -1,8 +1,8 @@
 <script lang="ts">
     import { omit } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/timeline/constants';
-    import { getPosCls } from '@fibrae/semi-foundation/timeline/utils';
-    import '@fibrae/semi-foundation/timeline/timeline.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
+    import { getPosCls } from '@fibrae/semi-foundation/components/timeline/utils';
+    import '@fibrae/semi-foundation/components/timeline/timeline.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import type { TimelineData, TimelineProps } from './interface.js';
 

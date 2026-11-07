@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ResponsiveMap, BreakpointScreens, OnBreakpointScreensCallback, OnBreakpointChangeCallback, Breakpoint } from '@fibrae/semi-foundation/config-provider/responsive-types';
+import type { ResponsiveMap, BreakpointScreens, OnBreakpointScreensCallback, OnBreakpointChangeCallback, Breakpoint } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { createContext } from '../_base/create-context';
 

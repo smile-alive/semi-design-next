@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
-    import MarkdownRenderFoundation from '@fibrae/semi-foundation/markdown-render/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
+    import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
     import { CodeHighlight } from '../../code-highlight/index.js';
     import codeText from '../code-text.js';
     import type { MarkdownRenderElementProps } from '../interface.js';

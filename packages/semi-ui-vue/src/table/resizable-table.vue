@@ -1,8 +1,8 @@
 <script setup lang="ts" generic="R extends Record<string, any>">
     import { computed, normalizeClass, onMounted, shallowReactive, useTemplateRef, watch } from 'vue';
     import { cloneDeep } from 'es-toolkit';
-    import { numbers, strings } from '@fibrae/semi-foundation/table/constants';
-    import { assignColumnKeys, findColumn } from '@fibrae/semi-foundation/table/utils';
+    import { numbers, strings } from '@fibrae/semi-foundation/components/table/constants';
+    import { assignColumnKeys, findColumn } from '@fibrae/semi-foundation/components/table/utils';
     import { addClass, removeClass } from '@fibrae/semi-foundation/utils/classnames';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import type { EmitProps } from '../_base/element-props';

@@ -1,11 +1,11 @@
 import { type JSX, type Ref, For, Show, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import type { Locale as DateFnsLocale } from 'date-fns';
-import ComboboxFoundation from '@fibrae/semi-foundation/time-picker/combox-foundation';
-import { strings, cssClasses, type PanelType } from '@fibrae/semi-foundation/time-picker/constants';
-import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/time-picker/foundation';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import '@fibrae/semi-foundation/time-picker/time-picker.scss';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import ComboboxFoundation from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
+import { strings, cssClasses, type PanelType } from '@fibrae/semi-foundation/components/time-picker/constants';
+import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/components/time-picker/foundation';
+import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
 import { omitFormInjected } from '../_base/control-attrs';
 import type { ElementProps } from '../_base/element-props';
 import forwardFocus from '../_base/forward-focus';

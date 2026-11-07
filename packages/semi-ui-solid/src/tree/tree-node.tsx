@@ -1,7 +1,7 @@
 import { type JSX, Index, Match, Show, Switch, children, createMemo, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
-import { getTreeLabelClassMap, getTreeRowAria, getTreeRowClassMap, isTreeNodeLeaf, type TreeRowFlags } from '@fibrae/semi-foundation/tree/shared';
+import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
+import { getTreeLabelClassMap, getTreeRowAria, getTreeRowClassMap, isTreeNodeLeaf, type TreeRowFlags } from '@fibrae/semi-foundation/components/tree/shared';
 import { IconFile, IconFolder, IconFolderOpen } from '@fibrae/semi-icons-solid';
 import hasContent from '../_base/has-content';
 import Checkbox from '../checkbox';

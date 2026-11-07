@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/hot-keys/constants';
-    import HotKeysFoundation, { type HotKeysAdapter } from '@fibrae/semi-foundation/hot-keys/foundation';
-    import '@fibrae/semi-foundation/hot-keys/hot-keys.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/hot-keys/constants';
+    import HotKeysFoundation, { type HotKeysAdapter } from '@fibrae/semi-foundation/components/hot-keys/foundation';
+    import '@fibrae/semi-foundation/components/hot-keys/hot-keys.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import { hasSlotContent } from '../_base/slot-nodes';

@@ -1,12 +1,12 @@
 import { type Accessor, type JSX, For, Index, Match, Show, Switch, children, createMemo, createUniqueId, mergeProps, splitProps, untrack } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses as dropdownClasses } from '@fibrae/semi-foundation/dropdown/constants';
-import { cssClasses, strings } from '@fibrae/semi-foundation/navigation/constants';
-import { countPlaceholderIcons } from '@fibrae/semi-foundation/navigation/item-foundation';
-import SubNavFoundation, { type SubNavAdapter } from '@fibrae/semi-foundation/navigation/sub-nav-foundation';
+import { cssClasses as dropdownClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
+import { countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
+import SubNavFoundation, { type SubNavAdapter } from '@fibrae/semi-foundation/components/navigation/sub-nav-foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/navigation/navigation.scss';
+import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import { IconChevronDown, IconChevronRight } from '@fibrae/semi-icons-solid';
 import { splitControlAttrs } from '../_base/control-attrs';
 import forwardFocus from '../_base/forward-focus';

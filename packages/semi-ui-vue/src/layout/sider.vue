@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { onBeforeUnmount, onMounted } from 'vue';
-    import { defaultResponsiveMap } from '@fibrae/semi-foundation/grid/constants';
-    import { cssClasses } from '@fibrae/semi-foundation/layout/constants';
+    import { defaultResponsiveMap } from '@fibrae/semi-foundation/components/grid/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
     import { registerMediaQuery } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/layout/layout.scss';
+    import '@fibrae/semi-foundation/components/layout/layout.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { useLayoutContext } from './context';
     import type { LayoutSlots, ResponsiveMap, SiderEmits, SiderProps } from './interface';

@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
-    import ModalFoundation, { type ModalAdapter } from '@fibrae/semi-foundation/modal/modal-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
+    import ModalFoundation, { type ModalAdapter } from '@fibrae/semi-foundation/components/modal/modal-foundation';
     import isPromise from '@fibrae/semi-foundation/utils/is-promise';
-    import '@fibrae/semi-foundation/modal/modal.scss';
+    import '@fibrae/semi-foundation/components/modal/modal.scss';
     import Portal from '../_base/portal.vue';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import useFoundation from '../_base/use-foundation';

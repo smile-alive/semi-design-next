@@ -1,7 +1,7 @@
 import { type JSX, Show, children, mergeProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterState } from '@fibrae/semi-foundation/image/preview-footer-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterState } from '@fibrae/semi-foundation/components/image/preview-footer-foundation';
 import { IconChevronLeft, IconChevronRight, IconDownload, IconMinus, IconPlus, IconRealSizeStroked, IconRotate, IconWindowAdaptionStroked } from '@fibrae/semi-icons-solid';
 import useFoundation from '../_base/use-foundation';
 import Divider from '../divider';

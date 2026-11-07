@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { flattenColumns } from '@fibrae/semi-foundation/table/utils';
+    import { flattenColumns } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { nativeTag } from '../_base/native-tag';
     import type { ColumnProps, TableComponent } from './interface';

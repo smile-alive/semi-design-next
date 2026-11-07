@@ -12,4 +12,4 @@ export interface BackTopProps extends Omit<FloatButtonProps, 'children' | 'disab
     icon?: Snippet;
 }
 
-export type { BackTopState } from '@fibrae/semi-foundation/backtop/foundation';
+export type { BackTopState } from '@fibrae/semi-foundation/components/backtop/foundation';

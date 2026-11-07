@@ -1,11 +1,11 @@
 import { type JSX, For, Match, Show, Switch, children, createMemo, splitProps, untrack } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
-import { DEFAULT_TOOLTIP, cssClasses } from '@fibrae/semi-foundation/breadcrumb/constants';
-import BreadcrumbFoundation, { type BreadcrumbAdapter, type BreadcrumbState } from '@fibrae/semi-foundation/breadcrumb/foundation';
+import { DEFAULT_TOOLTIP, cssClasses } from '@fibrae/semi-foundation/components/breadcrumb/constants';
+import BreadcrumbFoundation, { type BreadcrumbAdapter, type BreadcrumbState } from '@fibrae/semi-foundation/components/breadcrumb/foundation';
 import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
 import warning from '@fibrae/semi-foundation/utils/warning';
-import '@fibrae/semi-foundation/breadcrumb/breadcrumb.scss';
+import '@fibrae/semi-foundation/components/breadcrumb/breadcrumb.scss';
 import { IconMore } from '@fibrae/semi-icons-solid';
 import isMarkup from '../_base/is-markup';
 import mergeRefs from '../_base/merge-refs';

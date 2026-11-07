@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
-import type TableFoundation from '@fibrae/semi-foundation/table/foundation';
-import type { BaseHeadWidth, BaseRowKeyType, TableBaseProps, TableBaseState, TableBaseStateRowSelection } from '@fibrae/semi-foundation/table/foundation';
+import type TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
+import type { BaseHeadWidth, BaseRowKeyType, TableBaseProps, TableBaseState, TableBaseStateRowSelection } from '@fibrae/semi-foundation/components/table/foundation';
 import { createContext } from '../_base/create-context.js';
 import type { ColumnProps, TableExpandIconSnippetProps, TableProps, TableRowKey, TableScroll, TableSize, TableSticky, TableVirtualizedProps } from './interface.js';
 

@@ -1,16 +1,16 @@
 import { Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { cssClasses } from '@fibrae/semi-foundation/code-highlight/constants';
-import CodeHighlightFoundation, { type CodeHighlightAdapter, type CodeHighlightBaseProps, type CodeHighlightBaseState } from '@fibrae/semi-foundation/code-highlight/index';
-import { register } from '@fibrae/semi-foundation/code-highlight/registry';
+import { cssClasses } from '@fibrae/semi-foundation/components/code-highlight/constants';
+import CodeHighlightFoundation, { type CodeHighlightAdapter, type CodeHighlightBaseProps, type CodeHighlightBaseState } from '@fibrae/semi-foundation/components/code-highlight/index';
+import { register } from '@fibrae/semi-foundation/components/code-highlight/registry';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/code-highlight/code-highlight.scss';
+import '@fibrae/semi-foundation/components/code-highlight/code-highlight.scss';
 import type { ElementProps } from '../_base/element-props';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 
-export type { CodeHighlightRegistration, CodeHighlightThemes, LanguageInput, ThemeInput } from '@fibrae/semi-foundation/code-highlight/registry';
+export type { CodeHighlightRegistration, CodeHighlightThemes, LanguageInput, ThemeInput } from '@fibrae/semi-foundation/components/code-highlight/registry';
 
 // The `code` prop is the root's only content, so children and raw content would be ignored or clash with it
 export interface CodeHighlightProps extends CodeHighlightBaseProps, ElementProps<'div', 'children' | 'innerHTML' | 'textContent' | 'innerText'> {}

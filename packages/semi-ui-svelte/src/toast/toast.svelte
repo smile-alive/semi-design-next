@@ -1,7 +1,7 @@
 <script lang="ts">
     import { untrack } from 'svelte';
-    import { cssClasses, getStackLayerTransform, numbers } from '@fibrae/semi-foundation/toast/constants';
-    import ToastFoundation, { type ToastAdapter, type ToastState, type ToastType } from '@fibrae/semi-foundation/toast/toast-foundation';
+    import { cssClasses, getStackLayerTransform, numbers } from '@fibrae/semi-foundation/components/toast/constants';
+    import ToastFoundation, { type ToastAdapter, type ToastState, type ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
     import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
     import { isAlertType } from '@fibrae/semi-foundation/utils/announcer';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';

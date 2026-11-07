@@ -1,10 +1,10 @@
 import { useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/toast/constants';
-import type { ToastListProps } from '@fibrae/semi-foundation/toast/toast-list-foundation';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/toast/constants';
+import type { ToastListProps } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import '@fibrae/semi-foundation/toast/toast.scss';
+import '@fibrae/semi-foundation/components/toast/toast.scss';
 import useNoticeListEffects from '../_base/use-notice-list-effects';
 import CSSAnimation from '../_css-animation';
 import Toast, { type ToastItemHandle } from './toast';

@@ -6,8 +6,8 @@ import { add, addDays, addWeeks, endOfWeek, format, parse, set, startOfWeek } fr
 import { enUS, zhCN } from 'date-fns/locale';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { strings } from '@fibrae/semi-foundation/date-picker/constants';
-import type { DatePickerFoundationState } from '@fibrae/semi-foundation/date-picker/foundation';
+import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+import type { DatePickerFoundationState } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';

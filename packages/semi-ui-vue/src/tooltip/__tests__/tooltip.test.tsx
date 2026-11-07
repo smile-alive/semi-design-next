@@ -3,7 +3,7 @@ import { Comment, KeepAlive, defineComponent, h, nextTick, shallowRef, type VNod
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
-import { strings } from '@fibrae/semi-foundation/tooltip/constants';
+import { strings } from '@fibrae/semi-foundation/components/tooltip/constants';
 import { countLiveListeners, render } from '@test/utils/vue';
 import type useClickOutside from '../../_base/use-click-outside';
 import semiGlobal from '../../_utils/semi-global';

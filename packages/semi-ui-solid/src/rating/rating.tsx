@@ -1,9 +1,9 @@
 import { type JSX, For, Show, children, createMemo, mergeProps, splitProps } from 'solid-js';
 import clsx from 'clsx';
+import { cssClasses } from '@fibrae/semi-foundation/components/rating/constants';
+import RatingFoundation, { type RatingAdapter, type RatingState } from '@fibrae/semi-foundation/components/rating/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import { cssClasses } from '@fibrae/semi-foundation/rating/constants';
-import RatingFoundation, { type RatingAdapter, type RatingState } from '@fibrae/semi-foundation/rating/foundation';
-import '@fibrae/semi-foundation/rating/rating.scss';
+import '@fibrae/semi-foundation/components/rating/rating.scss';
 import callHandler from '../_base/call-handler';
 import { omitFormInjected } from '../_base/control-attrs';
 import type { ElementProps } from '../_base/element-props';

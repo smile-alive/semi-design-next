@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type JsonViewerFoundation from '@fibrae/semi-foundation/json-viewer/foundation';
-import type { JsonViewerOptions as CoreOptions, SearchOptions, TokenRenderType } from '@fibrae/semi-foundation/json-viewer/foundation';
+import type JsonViewerFoundation from '@fibrae/semi-foundation/components/json-viewer/foundation';
+import type { JsonViewerOptions as CoreOptions, SearchOptions, TokenRenderType } from '@fibrae/semi-foundation/components/json-viewer/foundation';
 
 export type JsonViewerSearchOptions = SearchOptions;
 

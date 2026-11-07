@@ -1,10 +1,10 @@
 import type React from 'react';
 import { useId, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/slider/constants';
-import SliderFoundation, { type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/slider/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/slider/constants';
+import SliderFoundation, { type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
 import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
-import '@fibrae/semi-foundation/slider/slider.scss';
+import '@fibrae/semi-foundation/components/slider/slider.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

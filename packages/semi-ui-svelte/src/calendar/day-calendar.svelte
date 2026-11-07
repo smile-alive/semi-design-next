@@ -1,8 +1,8 @@
 <script lang="ts">
     import { format, isSameDay, startOfDay } from 'date-fns';
-    import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
-    import { checkWeekend } from '@fibrae/semi-foundation/calendar/event-util';
-    import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
+    import { checkWeekend } from '@fibrae/semi-foundation/components/calendar/event-util';
+    import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
     import useLocale from '../locale/use-locale.svelte.js';
     import { getCalendarContext } from './context.js';
     import DayCol from './day-col.svelte';

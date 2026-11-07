@@ -3,8 +3,8 @@ import { act, render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import type { TreeDataSimpleJson } from '@fibrae/semi-foundation/components/tree/foundation';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import type { TreeDataSimpleJson } from '@fibrae/semi-foundation/tree/foundation';
 import { IconMapPin } from '@fibrae/semi-icons-react';
 import { Tree, Button } from '@fibrae/semi-ui-react';
 import type { DragProps, OnDragProps, TreeProps } from '../interface';

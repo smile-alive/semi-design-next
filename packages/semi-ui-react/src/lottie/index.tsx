@@ -1,8 +1,8 @@
 import type React from 'react';
 import { useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/lottie/constants';
-import LottieFoundation, { type LottieAdapter, type LottieBaseProps, type LottieBaseState } from '@fibrae/semi-foundation/lottie/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/lottie/constants';
+import LottieFoundation, { type LottieAdapter, type LottieBaseProps, type LottieBaseState } from '@fibrae/semi-foundation/components/lottie/foundation';
 import { isDev } from '@fibrae/semi-foundation/utils/warning';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';

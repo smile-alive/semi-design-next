@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { computed, onMounted, shallowRef, useId, useTemplateRef, watch, type ComponentPublicInstance, type ShallowRef } from 'vue';
     import { format } from 'date-fns';
-    import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
-    import { toPercent } from '@fibrae/semi-foundation/calendar/event-util';
-    import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
-    import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/calendar/month-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
+    import { toPercent } from '@fibrae/semi-foundation/components/calendar/event-util';
+    import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
+    import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/components/calendar/month-foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { IconClose } from '@fibrae/semi-icons-vue';
     import SlotFragment from '../_base/slot-fragment';

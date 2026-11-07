@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, nextTick, onBeforeUnmount, onMounted, useAttrs, useId, useTemplateRef, type InputHTMLAttributes } from 'vue';
-    import { radioClasses } from '@fibrae/semi-foundation/radio/constants';
-    import RadioFoundation, { type RadioAdapter, type RadioBaseState } from '@fibrae/semi-foundation/radio/radio-foundation';
+    import { radioClasses } from '@fibrae/semi-foundation/components/radio/constants';
+    import RadioFoundation, { type RadioAdapter, type RadioBaseState } from '@fibrae/semi-foundation/components/radio/radio-foundation';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import '@fibrae/semi-foundation/radio/radio.scss';
+    import '@fibrae/semi-foundation/components/radio/radio.scss';
     import { IconRadio } from '@fibrae/semi-icons-vue';
     import { hasAutofocus, vAutofocus } from '../_base/autofocus';
     import { isNativeInputKey, splitControlAttrs } from '../_base/control-attrs';

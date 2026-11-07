@@ -3,7 +3,7 @@ import type { Exemption } from './framework.ts';
 export const exemptions: Exemption[] = [
     // DOM methods go only to expect()/vi.mocked(), or are kept to restore or run with .call(this); none runs unbound
     {
-        files: ['packages/semi-foundation/src/upload/__tests__/upload-batch-auto-remove.test.ts'],
+        files: ['packages/semi-foundation/src/components/upload/__tests__/upload-batch-auto-remove.test.ts'],
         off: ['typescript/unbound-method'],
     },
     // The shim tests save the native AbortSignal.any and checkVisibility to restore them; none runs unbound

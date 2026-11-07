@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { computed, shallowRef, useId, useTemplateRef, watch } from 'vue';
     import { omit } from 'es-toolkit';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/transfer/constants';
+    import TransferFoundation, { type BasicResolvedDataItem, type TransferAdapter, type TransferBaseProps, type TransferBaseState } from '@fibrae/semi-foundation/components/transfer/foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/transfer/constants';
-    import TransferFoundation, { type BasicResolvedDataItem, type TransferAdapter, type TransferBaseProps, type TransferBaseState } from '@fibrae/semi-foundation/transfer/foundation';
-    import '@fibrae/semi-foundation/transfer/transfer.scss';
+    import '@fibrae/semi-foundation/components/transfer/transfer.scss';
     import { IconSearch } from '@fibrae/semi-icons-vue';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';

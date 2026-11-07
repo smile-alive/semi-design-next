@@ -2,10 +2,10 @@
  * Implementation reference from: https://github.com/ant-design/ant-design/blob/master/components/grid/row.tsx
  */
 import type React from 'react';
-import { cssClasses, type Breakpoint } from '@fibrae/semi-foundation/grid/constants';
-import { gutterStyle, normalizeGutter, type Gutter } from '@fibrae/semi-foundation/grid/gutter';
-import { getRowClassName } from '@fibrae/semi-foundation/grid/utils';
-import '@fibrae/semi-foundation/grid/grid.scss';
+import { cssClasses, type Breakpoint } from '@fibrae/semi-foundation/components/grid/constants';
+import { gutterStyle, normalizeGutter, type Gutter } from '@fibrae/semi-foundation/components/grid/gutter';
+import { getRowClassName } from '@fibrae/semi-foundation/components/grid/utils';
+import '@fibrae/semi-foundation/components/grid/grid.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 

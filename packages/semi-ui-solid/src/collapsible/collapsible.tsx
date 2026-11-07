@@ -1,8 +1,8 @@
 import { type JSX, createComputed, createMemo, createSignal, on, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/collapsible/constants';
-import CollapsibleFoundation, { type CollapsibleAdapter, type CollapsibleBaseProps, type CollapsibleFoundationProps } from '@fibrae/semi-foundation/collapsible/foundation';
-import '@fibrae/semi-foundation/collapsible/collapsible.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/collapsible/constants';
+import CollapsibleFoundation, { type CollapsibleAdapter, type CollapsibleBaseProps, type CollapsibleFoundationProps } from '@fibrae/semi-foundation/components/collapsible/foundation';
+import '@fibrae/semi-foundation/components/collapsible/collapsible.scss';
 import callHandler from '../_base/call-handler';
 import type { ElementProps } from '../_base/element-props';
 import mergeRefs from '../_base/merge-refs';

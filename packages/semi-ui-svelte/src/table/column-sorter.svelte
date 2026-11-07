@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { strings } from '@fibrae/semi-foundation/table/constants';
-    import { getNextSortOrder } from '@fibrae/semi-foundation/table/utils';
+    import { strings } from '@fibrae/semi-foundation/components/table/constants';
+    import { getNextSortOrder } from '@fibrae/semi-foundation/components/table/utils';
     import { IconCaretdown, IconCaretup } from '@fibrae/semi-icons-svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { TooltipTriggerProps } from '../tooltip/interface.js';

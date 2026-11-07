@@ -3,7 +3,7 @@ import { DragDropProvider, DragOverlay, type DragEndEvent } from '@dnd-kit/react
 import { isSortable, useSortable, type UseSortableInput } from '@dnd-kit/react/sortable';
 import clsx from 'clsx';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { SortableAnnouncer } from '@fibrae/semi-foundation/sortable/accessibility';
+import { SortableAnnouncer } from '@fibrae/semi-foundation/components/sortable/accessibility';
 import { createContext } from '../_base/create-context';
 import useLocale from '../locale/use-locale';
 import type { SortableHandle } from './types';

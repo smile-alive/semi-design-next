@@ -1,10 +1,10 @@
 <script lang="ts">
     import type { Attachment } from 'svelte/attachments';
     import type { ClassValue } from 'svelte/elements';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/navigation/constants';
-    import { countPlaceholderIcons } from '@fibrae/semi-foundation/navigation/item-foundation';
-    import SubNavFoundation, { type SubNavAdapter, type SubNavBaseProps } from '@fibrae/semi-foundation/navigation/sub-nav-foundation';
-    import '@fibrae/semi-foundation/navigation/navigation.scss';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
+    import { countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
+    import SubNavFoundation, { type SubNavAdapter, type SubNavBaseProps } from '@fibrae/semi-foundation/components/navigation/sub-nav-foundation';
+    import '@fibrae/semi-foundation/components/navigation/navigation.scss';
     import { IconChevronDown, IconChevronRight } from '@fibrae/semi-icons-svelte';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

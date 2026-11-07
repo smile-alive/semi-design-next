@@ -1,11 +1,11 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from 'vue';
-    import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
-    import AudioPlayerFoundation, { type AudioPlayerAdapter } from '@fibrae/semi-foundation/audio-player/foundation';
-    import { getCurrentTrack } from '@fibrae/semi-foundation/audio-player/utils';
+    import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/components/audio-player/constants';
+    import AudioPlayerFoundation, { type AudioPlayerAdapter } from '@fibrae/semi-foundation/components/audio-player/foundation';
+    import { getCurrentTrack } from '@fibrae/semi-foundation/components/audio-player/utils';
+    import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
-    import '@fibrae/semi-foundation/audio-player/audio-player.scss';
+    import '@fibrae/semi-foundation/components/audio-player/audio-player.scss';
     import { IconAlertCircle, IconBackward, IconFastForward, IconPause, IconPlay, IconRefresh, IconRestart, IconVolume2, IconVolumnSilent } from '@fibrae/semi-icons-vue';
     import type { ElementProps } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';

@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { Attachment } from 'svelte/attachments';
-    import { cssClasses } from '@fibrae/semi-foundation/button/constants';
-    import { markEnds } from '@fibrae/semi-foundation/button/utils';
-    import '@fibrae/semi-foundation/button/button.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/button/constants';
+    import { markEnds } from '@fibrae/semi-foundation/components/button/utils';
+    import '@fibrae/semi-foundation/components/button/button.scss';
     import type { SplitButtonGroupProps } from './interface.js';
 
     let { children, ...rest }: SplitButtonGroupProps = $props();

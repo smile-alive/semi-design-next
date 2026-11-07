@@ -1,12 +1,12 @@
 <script setup lang="ts">
     import { computed, shallowRef, useTemplateRef, watch } from 'vue';
     import { omit } from 'es-toolkit';
-    import { cssClasses, getStackThreshold } from '@fibrae/semi-foundation/notification/constants';
-    import type { NoticeInstance, NoticePosition } from '@fibrae/semi-foundation/notification/notification-foundation';
-    import type { default as NotificationListStore } from '@fibrae/semi-foundation/notification/notification-list-foundation';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses, getStackThreshold } from '@fibrae/semi-foundation/components/notification/constants';
+    import type { NoticeInstance, NoticePosition } from '@fibrae/semi-foundation/components/notification/notification-foundation';
+    import type { default as NotificationListStore } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
     import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import { provideNoticeListContext, type ListedNotice } from './context';
     import Notice from './notice.vue';
 

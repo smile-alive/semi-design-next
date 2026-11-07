@@ -1,7 +1,7 @@
 import type { StyleValue, VNode } from 'vue';
-import type { TimeStamp } from '@fibrae/semi-foundation/time-picker/combox-foundation';
-import type { PanelType } from '@fibrae/semi-foundation/time-picker/constants';
-import type { DisabledTimeFns } from '@fibrae/semi-foundation/time-picker/foundation';
+import type { TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
+import type { PanelType } from '@fibrae/semi-foundation/components/time-picker/constants';
+import type { DisabledTimeFns } from '@fibrae/semi-foundation/components/time-picker/foundation';
 import type { InputSize, ValidateStatus } from '../input/interface';
 import type { ScrollItemProps } from '../scroll-list/interface';
 import type { Position } from '../tooltip/interface';

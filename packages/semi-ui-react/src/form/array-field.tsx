@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
-import ArrayFieldRows from '@fibrae/semi-foundation/form/array-field-rows';
-import { generateKeys, resolveKeepState } from '@fibrae/semi-foundation/form/utils';
+import ArrayFieldRows from '@fibrae/semi-foundation/components/form/array-field-rows';
+import { generateKeys, resolveKeepState } from '@fibrae/semi-foundation/components/form/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import useDefaultProps from '../_base/use-default-props';
 import { cloneDeep } from '../_utils/index';

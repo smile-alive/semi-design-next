@@ -1,4 +1,4 @@
-import { popupTriggerSelector } from '../tooltip/constants';
+import { popupTriggerSelector } from '../components/tooltip/constants';
 import { isDev } from './warning';
 
 export function handlePrevent(event: Pick<Event, 'stopPropagation' | 'preventDefault'>) {

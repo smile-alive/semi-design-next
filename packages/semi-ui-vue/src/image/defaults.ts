@@ -1,4 +1,4 @@
-import { numbers } from '@fibrae/semi-foundation/image/constants';
+import { numbers } from '@fibrae/semi-foundation/components/image/constants';
 
 export const previewDefaults = {
     showTooltip: false,

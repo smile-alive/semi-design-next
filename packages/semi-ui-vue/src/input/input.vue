@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, shallowRef, useAttrs, useId, useTemplateRef, watch, type InputHTMLAttributes } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/input/constants';
-    import InputFoundation, { type InputAdapter } from '@fibrae/semi-foundation/input/foundation';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/input/input.scss';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
+    import InputFoundation, { type InputAdapter } from '@fibrae/semi-foundation/components/input/foundation';
+    import '@fibrae/semi-foundation/components/input/input.scss';
     import { IconClear, IconEyeClosedSolid, IconEyeOpened } from '@fibrae/semi-icons-vue';
     import { isBooleanAttrOn, isNotClassOrStyle, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';

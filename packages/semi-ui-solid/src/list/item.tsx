@@ -2,7 +2,7 @@ import { children, Show, splitProps, type JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/list/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
 import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import { splitControlAttrs } from '../_base/control-attrs';
 import type { ElementProps } from '../_base/element-props';

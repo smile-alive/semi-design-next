@@ -1,7 +1,7 @@
 import { screen, within } from '@testing-library/svelte';
 import { format } from 'date-fns';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { strings } from '@fibrae/semi-foundation/date-picker/constants';
+import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { zonedTimeToUtc } from '@fibrae/semi-foundation/utils/date-fns-extra';
 import { click, getFooterButtons, getYMLists, ymd } from './date-picker-dom-utils';

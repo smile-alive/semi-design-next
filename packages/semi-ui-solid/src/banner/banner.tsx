@@ -1,10 +1,10 @@
 import { children, Show, splitProps, type JSX } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/banner/constants';
-import BannerFoundation, { type BannerAdapter, type BannerState } from '@fibrae/semi-foundation/banner/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/banner/constants';
+import BannerFoundation, { type BannerAdapter, type BannerState } from '@fibrae/semi-foundation/components/banner/foundation';
 import { findFocusAfter } from '@fibrae/semi-foundation/utils/focus-handover';
-import '@fibrae/semi-foundation/banner/banner.scss';
+import '@fibrae/semi-foundation/components/banner/banner.scss';
 import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';

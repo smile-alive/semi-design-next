@@ -1,9 +1,9 @@
 import type React from 'react';
 import { cloneElement, useEffectEvent, useId, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
-import { settleConfirm } from '@fibrae/semi-foundation/modal/confirm';
-import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
-import '@fibrae/semi-foundation/modal/modal.scss';
+import { settleConfirm } from '@fibrae/semi-foundation/components/modal/confirm';
+import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
+import '@fibrae/semi-foundation/components/modal/modal.scss';
 import { isSemiIcon } from '../_utils';
 import { useConfigContext } from '../config-provider/context';
 import type { ConfirmProps } from './confirm';

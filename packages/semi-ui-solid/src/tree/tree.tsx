@@ -1,10 +1,10 @@
 import { type Accessor, type JSX, Show, batch, children, createComputed, createEffect, createMemo, createSelector, createSignal, createUniqueId, on, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
-import TreeFoundation, { type BasicTreeInnerData, type BasicTreeProps, type ScrollAlign, type TreeAdapter } from '@fibrae/semi-foundation/tree/foundation';
-import { buildRowProps, nodeId } from '@fibrae/semi-foundation/tree/shared';
+import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
+import TreeFoundation, { type BasicTreeInnerData, type BasicTreeProps, type ScrollAlign, type TreeAdapter } from '@fibrae/semi-foundation/components/tree/foundation';
+import { buildRowProps, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
 import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/tree/tree.scss';
+import '@fibrae/semi-foundation/components/tree/tree.scss';
 import { IconSearch } from '@fibrae/semi-icons-solid';
 import { splitControlAttrs } from '../_base/control-attrs';
 import hasContent from '../_base/has-content';

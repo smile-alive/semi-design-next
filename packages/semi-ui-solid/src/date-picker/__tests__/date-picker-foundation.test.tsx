@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { addDays, format } from 'date-fns';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { strings } from '@fibrae/semi-foundation/date-picker/constants';
+import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { zonedTimeToUtc } from '@fibrae/semi-foundation/utils/date-fns-extra';

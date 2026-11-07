@@ -1,9 +1,9 @@
 import React, { Fragment, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { pick } from 'es-toolkit';
-import { numbers } from '@fibrae/semi-foundation/table/constants';
-import type { BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
-import { type BodyRow, type FlattenData, type GroupFlattenData, arrayAdd, buildRecordsByKey, expandBtnShouldInRow, flattenBodyRows, genExpandedRowKey, getRecordKey, getRowSpanHoverKeys, isDisabled, isExpanded, isSelected, resolveVirtualizedItemSize } from '@fibrae/semi-foundation/table/utils';
+import { numbers } from '@fibrae/semi-foundation/components/table/constants';
+import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
+import { type BodyRow, type FlattenData, type GroupFlattenData, arrayAdd, buildRecordsByKey, expandBtnShouldInRow, flattenBodyRows, genExpandedRowKey, getRecordKey, getRowSpanHoverKeys, isDisabled, isExpanded, isSelected, resolveVirtualizedItemSize } from '@fibrae/semi-foundation/components/table/utils';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import type { BaseProps } from '../../_base/base-component';
 import { createContext } from '../../_base/create-context';

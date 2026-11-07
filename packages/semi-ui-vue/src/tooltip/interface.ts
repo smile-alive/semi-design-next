@@ -1,8 +1,8 @@
 import type { ShallowRef, VNode } from 'vue';
-import type { strings } from '@fibrae/semi-foundation/tooltip/constants';
-import type { Position, TooltipBaseProps } from '@fibrae/semi-foundation/tooltip/foundation';
+import type { strings } from '@fibrae/semi-foundation/components/tooltip/constants';
+import type { Position, TooltipBaseProps } from '@fibrae/semi-foundation/components/tooltip/foundation';
 
-export type { Position } from '@fibrae/semi-foundation/tooltip/foundation';
+export type { Position } from '@fibrae/semi-foundation/components/tooltip/foundation';
 export type Trigger = (typeof strings.TRIGGER_SET)[number];
 
 export interface TooltipProps extends TooltipBaseProps {

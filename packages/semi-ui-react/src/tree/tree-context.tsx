@@ -1,6 +1,6 @@
 import type React from 'react';
 import type { ReactNode, MouseEvent, DragEvent, KeyboardEvent } from 'react';
-import type { Virtualize, ExpandAction } from '@fibrae/semi-foundation/tree/foundation';
+import type { Virtualize, ExpandAction } from '@fibrae/semi-foundation/components/tree/foundation';
 import { createContext } from '../_base/create-context';
 import type { TreeNodeData, TreeNodeProps, RenderFullLabelProps } from './interface';
 

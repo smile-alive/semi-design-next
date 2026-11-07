@@ -1,10 +1,10 @@
 import type React from 'react';
 import { cloneElement, isValidElement, useEffect, useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/carousel/constants';
-import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/carousel/foundation';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/carousel/constants';
+import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/components/carousel/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import '@fibrae/semi-foundation/carousel/carousel.scss';
+import '@fibrae/semi-foundation/components/carousel/carousel.scss';
 import flattenChildren from '../_base/flatten-children';
 import useDefaultProps from '../_base/use-default-props';
 import useDidUpdate from '../_base/use-did-update';

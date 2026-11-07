@@ -1,5 +1,5 @@
 import type { Accessor } from 'solid-js';
-import type { Breakpoint, BreakpointScreens, OnBreakpointChangeCallback, OnBreakpointScreensCallback, ResponsiveMap } from '@fibrae/semi-foundation/config-provider/responsive-types';
+import type { Breakpoint, BreakpointScreens, OnBreakpointChangeCallback, OnBreakpointScreensCallback, ResponsiveMap } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { createContext } from '../_base/create-context';
 

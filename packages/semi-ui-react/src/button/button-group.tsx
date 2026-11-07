@@ -1,9 +1,9 @@
 import type React from 'react';
 import { type ReactNode, isValidElement } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/button/constants';
-import { groupLineClass, inheritGroupLooks, resolveButtonLooks } from '@fibrae/semi-foundation/button/utils';
-import '@fibrae/semi-foundation/button/button.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/button/constants';
+import { groupLineClass, inheritGroupLooks, resolveButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
+import '@fibrae/semi-foundation/components/button/button.scss';
 import type { ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';
 import flattenChildren from '../_base/flatten-children';

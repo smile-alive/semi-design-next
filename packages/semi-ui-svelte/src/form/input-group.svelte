@@ -1,12 +1,12 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import { SvelteSet } from 'svelte/reactivity';
-    import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-    import { isErrorLeaf } from '@fibrae/semi-foundation/form/errors';
+    import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+    import { isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
     import warning from '@fibrae/semi-foundation/utils/warning';
-    import '@fibrae/semi-foundation/form/form.scss';
+    import '@fibrae/semi-foundation/components/form/form.scss';
     import { type SlotKind, trackSlotKind } from '../_base/slot-kind.js';
     // aliased: the generated declaration names this component `InputGroup` after its file
     import BaseInputGroup from '../input/input-group.svelte';

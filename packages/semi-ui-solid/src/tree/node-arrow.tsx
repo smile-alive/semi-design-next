@@ -1,7 +1,7 @@
 import { type JSX, Match, Switch, children, createRenderEffect, onCleanup } from 'solid-js';
 import { isServer } from 'solid-js/web';
-import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
-import { isTreeNodeLeaf } from '@fibrae/semi-foundation/tree/shared';
+import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
+import { isTreeNodeLeaf } from '@fibrae/semi-foundation/components/tree/shared';
 import { IconTreeTriangleDown } from '@fibrae/semi-icons-solid';
 import hasContent from '../_base/has-content';
 import Spin from '../spin';

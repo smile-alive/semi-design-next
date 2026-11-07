@@ -1,12 +1,12 @@
 <script setup lang="ts" generic="T = TreeSelectValue, Multiple extends boolean | undefined = undefined">
     import { computed, shallowRef, useAttrs, useId, useTemplateRef, watch, type ComponentPublicInstance } from 'vue';
-    import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
-    import { cssClasses } from '@fibrae/semi-foundation/tree-select/constants';
-    import TreeSelectFoundation, { type BasicTreeSelectInnerData, type BasicTreeSelectProps, type TreeSelectAdapter } from '@fibrae/semi-foundation/tree-select/foundation';
-    import { buildRowProps, getNodeData as getTreeNodeData, nodeId } from '@fibrae/semi-foundation/tree/shared';
+    import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tree-select/constants';
+    import TreeSelectFoundation, { type BasicTreeSelectInnerData, type BasicTreeSelectProps, type TreeSelectAdapter } from '@fibrae/semi-foundation/components/tree-select/foundation';
+    import { buildRowProps, getNodeData as getTreeNodeData, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
     import { isInnerControlKey, isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import '@fibrae/semi-foundation/tree/tree.scss';
-    import '@fibrae/semi-foundation/tree-select/tree-select.scss';
+    import '@fibrae/semi-foundation/components/tree/tree.scss';
+    import '@fibrae/semi-foundation/components/tree-select/tree-select.scss';
     import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-vue';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';

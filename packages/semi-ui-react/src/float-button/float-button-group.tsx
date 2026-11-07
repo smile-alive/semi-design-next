@@ -1,8 +1,8 @@
 import { Fragment } from 'react';
 import type React from 'react';
 import clsx from 'clsx';
-import { cssClasses, cssClassesGroup } from '@fibrae/semi-foundation/float-button/constants';
-import '@fibrae/semi-foundation/float-button/float-button.scss';
+import { cssClasses, cssClassesGroup } from '@fibrae/semi-foundation/components/float-button/constants';
+import '@fibrae/semi-foundation/components/float-button/float-button.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import Badge from '../badge';

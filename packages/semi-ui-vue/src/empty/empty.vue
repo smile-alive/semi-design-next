@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { Text, type VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/empty/constants';
-    import '@fibrae/semi-foundation/empty/empty.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/empty/constants';
+    import '@fibrae/semi-foundation/components/empty/empty.scss';
     import type { ElementProps } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import slotNodes, { type KeyedNode } from '../_base/slot-nodes';

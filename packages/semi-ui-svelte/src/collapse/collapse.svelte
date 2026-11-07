@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/collapse/constants';
-    import CollapseFoundation, { type CollapseAdapter, type CollapseProps as FoundationProps, type CollapseState } from '@fibrae/semi-foundation/collapse/foundation';
-    import '@fibrae/semi-foundation/collapse/collapse.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
+    import CollapseFoundation, { type CollapseAdapter, type CollapseProps as FoundationProps, type CollapseState } from '@fibrae/semi-foundation/components/collapse/foundation';
+    import '@fibrae/semi-foundation/components/collapse/collapse.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import { setCollapseContext } from './context.js';

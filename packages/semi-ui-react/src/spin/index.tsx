@@ -1,9 +1,9 @@
 import type React from 'react';
 import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses as css } from '@fibrae/semi-foundation/spin/constants';
-import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/spin/foundation';
-import '@fibrae/semi-foundation/spin/spin.scss';
+import { cssClasses as css } from '@fibrae/semi-foundation/components/spin/constants';
+import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/components/spin/foundation';
+import '@fibrae/semi-foundation/components/spin/spin.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

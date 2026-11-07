@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { computed, useId, useTemplateRef, watch, type ImgHTMLAttributes } from 'vue';
     import { omit } from 'es-toolkit';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/cropper/constants';
-    import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/cropper/foundation';
-    import { getCropperGeometry } from '@fibrae/semi-foundation/cropper/utils';
-    import '@fibrae/semi-foundation/cropper/cropper.scss';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/cropper/constants';
+    import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/components/cropper/foundation';
+    import { getCropperGeometry } from '@fibrae/semi-foundation/components/cropper/utils';
+    import '@fibrae/semi-foundation/components/cropper/cropper.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';

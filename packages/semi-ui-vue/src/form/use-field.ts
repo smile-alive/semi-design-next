@@ -1,7 +1,7 @@
 import { computed, onActivated, onBeforeUnmount, onDeactivated, onMounted, onScopeDispose, shallowRef, useId, watch } from 'vue';
-import FieldStore from '@fibrae/semi-foundation/form/field-store';
-import type { FieldRegistration } from '@fibrae/semi-foundation/form/interface';
-import { createFieldRegistration, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
+import FieldStore from '@fibrae/semi-foundation/components/form/field-store';
+import type { FieldRegistration } from '@fibrae/semi-foundation/components/form/interface';
+import { createFieldRegistration, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/components/form/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import { useArrayFieldContext, useFormContext, useFormInputGroupContext } from './context';

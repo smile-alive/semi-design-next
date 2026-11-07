@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/time-picker/constants';
-    import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/time-picker/input-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/time-picker/constants';
+    import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/components/time-picker/input-foundation';
     import { IconClock } from '@fibrae/semi-icons-svelte';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import { Input } from '../input/index.js';

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/table/constants';
-    import TableFoundation from '@fibrae/semi-foundation/table/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
+    import TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
     import { IconChevronRight, IconTreeTriangleRight } from '@fibrae/semi-icons-svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import { getTableContext } from './context.js';

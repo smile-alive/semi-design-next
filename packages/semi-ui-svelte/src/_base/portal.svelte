@@ -2,7 +2,7 @@
     import { onMount, type Snippet } from 'svelte';
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
     import { resolvePopupContainer } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/_portal/portal.scss';
+    import '@fibrae/semi-foundation/components/portal/portal.scss';
     import { getConfigContext } from '../config-provider/context.js';
     import { getTooltipPopupsContext } from '../tooltip/context.js';
     import PopupLayerProvider from './popup-layer-provider.svelte';

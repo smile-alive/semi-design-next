@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { onBeforeUnmount, type ComponentPublicInstance } from 'vue';
-    import DragMoveFoundation, { type DragMoveAdapter } from '@fibrae/semi-foundation/drag-move/foundation';
+    import DragMoveFoundation, { type DragMoveAdapter } from '@fibrae/semi-foundation/components/drag-move/foundation';
     import semiDefault, { readSemiDefault, useSemiGlobal } from '../_base/semi-default';
     import slotNodes from '../_base/slot-nodes';
     import useFoundation from '../_base/use-foundation';

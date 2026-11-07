@@ -3,9 +3,9 @@ import { render, screen, fireEvent, waitFor, act, within } from '@testing-librar
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import type { BasicTreeNodeData } from '@fibrae/semi-foundation/components/tree/foundation';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import type { BasicTreeNodeData } from '@fibrae/semi-foundation/tree/foundation';
 import { CheckboxGroup, ConfigProvider, Form, FormTreeSelect, Popover, Tag, TreeSelect } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import type { TreeNodeData } from '@fibrae/semi-ui-react/tree/interface';

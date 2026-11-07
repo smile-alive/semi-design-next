@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
+    import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
     import Table from '../table.svelte';
     import { getColumns, getData } from './helpers';
 

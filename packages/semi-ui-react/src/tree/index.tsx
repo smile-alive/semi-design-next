@@ -1,10 +1,10 @@
 import type React from 'react';
 import { memo, useDeferredValue, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
-import TreeFoundation, { type TreeAdapter, type BasicFlattenNode, type BasicTreeProps, type BasicTreeInnerData, type ScrollAlign } from '@fibrae/semi-foundation/tree/foundation';
-import { buildRowProps, nodeId } from '@fibrae/semi-foundation/tree/shared';
-import '@fibrae/semi-foundation/tree/tree.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
+import TreeFoundation, { type TreeAdapter, type BasicFlattenNode, type BasicTreeProps, type BasicTreeInnerData, type ScrollAlign } from '@fibrae/semi-foundation/components/tree/foundation';
+import { buildRowProps, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
+import '@fibrae/semi-foundation/components/tree/tree.scss';
 import { IconSearch } from '@fibrae/semi-icons-react';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

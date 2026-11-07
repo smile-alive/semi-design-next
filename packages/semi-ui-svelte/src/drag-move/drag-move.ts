@@ -1,5 +1,5 @@
 import type { Attachment } from 'svelte/attachments';
-import DragMoveFoundation, { type DragMoveAdapter, type DragMoveBaseProps } from '@fibrae/semi-foundation/drag-move/foundation';
+import DragMoveFoundation, { type DragMoveAdapter, type DragMoveBaseProps } from '@fibrae/semi-foundation/components/drag-move/foundation';
 import type { DragMoveOptions } from './interface.js';
 
 /**

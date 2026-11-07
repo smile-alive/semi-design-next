@@ -1,8 +1,8 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
-    import { cssClasses } from '@fibrae/semi-foundation/dropdown/constants';
-    import { getItemRole } from '@fibrae/semi-foundation/dropdown/menu-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
+    import { getItemRole } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
     import { IconTick } from '@fibrae/semi-icons-svelte';
     import { getDropdownContext, menuItems } from './context.js';
     import type { DropdownItemProps } from './interface.js';

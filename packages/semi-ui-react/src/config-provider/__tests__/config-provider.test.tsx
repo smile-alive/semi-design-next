@@ -1,7 +1,7 @@
 import { Component, StrictMode, memo, use, useEffect, useState } from 'react';
 import { act, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import type { Breakpoint, OnBreakpointChangeCallback, OnBreakpointScreensCallback } from '@fibrae/semi-foundation/config-provider/responsive-types';
+import type { Breakpoint, OnBreakpointChangeCallback, OnBreakpointScreensCallback } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import Badge from '@fibrae/semi-ui-react/badge';
 import { mockMatchMedia } from '@test/utils/react';

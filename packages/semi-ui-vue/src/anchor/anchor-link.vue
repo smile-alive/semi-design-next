@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, onBeforeUnmount, onMounted, watch, type Slots, type VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/anchor/constants';
-    import AnchorFoundation, { type AnchorNode } from '@fibrae/semi-foundation/anchor/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/anchor/constants';
+    import AnchorFoundation, { type AnchorNode } from '@fibrae/semi-foundation/components/anchor/foundation';
     import isEnterPress from '@fibrae/semi-foundation/utils/is-enter-press';
     import type { ElementProps } from '../_base/element-props';
     import elementType from '../_base/element-type';

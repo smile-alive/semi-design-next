@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 
     interface AutoSizerProps {

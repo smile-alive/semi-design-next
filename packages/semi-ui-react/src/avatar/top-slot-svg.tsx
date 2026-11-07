@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import { cssClasses } from '@fibrae/semi-foundation/avatar/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/avatar/constants';
 
 export default function TopSlotSvg({ gradientStart, gradientEnd }: { gradientStart: string; gradientEnd: string }) {
     const id = `${cssClasses.PREFIX}-top-slot${useId()}`;

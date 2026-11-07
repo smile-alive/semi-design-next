@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { mergeProps, type CSSProperties } from 'vue';
-    import type { BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
-    import { isFixedLeft, isFixedRight } from '@fibrae/semi-foundation/table/utils';
+    import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
+    import { isFixedLeft, isFixedRight } from '@fibrae/semi-foundation/components/table/utils';
     import { useTableContext } from '../context';
     import type { ColumnProps } from '../interface';
     import TableCell from '../table-cell.vue';

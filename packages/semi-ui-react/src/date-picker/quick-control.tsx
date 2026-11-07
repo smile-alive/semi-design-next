@@ -1,8 +1,8 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { type strings, cssClasses } from '@fibrae/semi-foundation/date-picker/constants';
-import type { PresetsType, PresetType } from '@fibrae/semi-foundation/date-picker/foundation';
-import type { DateInputFoundationProps } from '@fibrae/semi-foundation/date-picker/input-foundation';
+import { type strings, cssClasses } from '@fibrae/semi-foundation/components/date-picker/constants';
+import type { PresetsType, PresetType } from '@fibrae/semi-foundation/components/date-picker/foundation';
+import type { DateInputFoundationProps } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import Button from '../button/index';
 import Typography from '../typography/index';

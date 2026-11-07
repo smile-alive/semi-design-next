@@ -1,6 +1,6 @@
 import { children, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/card/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 

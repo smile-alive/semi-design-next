@@ -1,5 +1,5 @@
 import { untrack } from 'solid-js';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 
 /** Focuses `element` through the prototype, past a `focus()` that `forwardFocus` replaced on it */
 export function focusElement(element: HTMLElement, options?: FocusOptions) {

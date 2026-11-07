@@ -52,7 +52,7 @@ semi-ui-svelte 的 Svelte 5 组件写法。组件内语句顺序、foundation、
 
 ## 样式、图标与动画
 
-- 在 `<script lang="ts">` 里导入 foundation 的 SCSS，导入哪些文件照 Vue 版同名组件：`import '@fibrae/semi-foundation/radio/radio.scss';`。发布时 `scripts/svelte-package.ts` 改写为 `.css`。
+- 在 `<script lang="ts">` 里导入 foundation 的 SCSS，导入哪些文件照 Vue 版同名组件：`import '@fibrae/semi-foundation/components/radio/radio.scss';`。发布时 `scripts/svelte-package.ts` 改写为 `.css`。
 - 图标从 `@fibrae/semi-icons-svelte` 导入（`import { IconClose } from '@fibrae/semi-icons-svelte'`）。Svelte 版 Icon 不支持 `elementType` 与 ref。
 - 进出场用 `in:` / `out:` 指令配 `_base/css-animation.ts` 的 `cssAnimation`：`in:cssAnimation={{ className: '<进场类>' }}`、`out:cssAnimation={{ className: '<出场类>', motion }}`。关键帧只在 foundation SCSS 里维护。
 

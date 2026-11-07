@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { Text, computed, type VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/breadcrumb/constants';
-    import BreadcrumbItemFoundation, { type BreadcrumbItemAdapter } from '@fibrae/semi-foundation/breadcrumb/item-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/breadcrumb/constants';
+    import BreadcrumbItemFoundation, { type BreadcrumbItemAdapter } from '@fibrae/semi-foundation/components/breadcrumb/item-foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import type { ElementProps } from '../_base/element-props';
     import slotNodes, { type KeyedNode } from '../_base/slot-nodes';

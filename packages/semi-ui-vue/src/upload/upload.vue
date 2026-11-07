@@ -1,11 +1,11 @@
 <script setup lang="ts">
     import { computed, onUpdated, useAttrs, useTemplateRef, type InputHTMLAttributes } from 'vue';
     import { omit } from 'es-toolkit';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/upload/constants';
-    import UploadFoundation, { type UploadAdapter, type UploadBaseState } from '@fibrae/semi-foundation/upload/foundation';
-    import { ListFocusTracker } from '@fibrae/semi-foundation/upload/utils';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+    import UploadFoundation, { type UploadAdapter, type UploadBaseState } from '@fibrae/semi-foundation/components/upload/foundation';
+    import { ListFocusTracker } from '@fibrae/semi-foundation/components/upload/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/upload/upload.scss';
+    import '@fibrae/semi-foundation/components/upload/upload.scss';
     import { IconUpload } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';

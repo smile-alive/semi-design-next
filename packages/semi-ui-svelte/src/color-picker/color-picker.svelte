@@ -1,8 +1,8 @@
 <script lang="ts">
     import { omit } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
-    import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps as FoundationProps, type ColorPickerState } from '@fibrae/semi-foundation/color-picker/foundation';
-    import '@fibrae/semi-foundation/color-picker/color-picker.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+    import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps as FoundationProps, type ColorPickerState } from '@fibrae/semi-foundation/components/color-picker/foundation';
+    import '@fibrae/semi-foundation/components/color-picker/color-picker.scss';
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

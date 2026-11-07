@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { resolvePopupContainer } from '@fibrae/semi-foundation/utils/dom';
-import '@fibrae/semi-foundation/_portal/portal.scss';
+import '@fibrae/semi-foundation/components/portal/portal.scss';
 import { PopupLayerContext } from '../_base/popup-layer';
 import useDidUpdate from '../_base/use-did-update';
 import useIsServerRender from '../_base/use-is-server-render';

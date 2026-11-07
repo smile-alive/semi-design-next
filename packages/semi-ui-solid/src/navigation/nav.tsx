@@ -1,9 +1,9 @@
 import { type JSX, type ResolvedChildren, For, Show, children, createMemo, createSignal, mergeProps, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/navigation/constants';
-import NavigationFoundation, { type NavItemType, type NavigationAdapter, type NavigationState } from '@fibrae/semi-foundation/navigation/foundation';
-import '@fibrae/semi-foundation/navigation/navigation.scss';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/navigation/constants';
+import NavigationFoundation, { type NavItemType, type NavigationAdapter, type NavigationState } from '@fibrae/semi-foundation/components/navigation/foundation';
+import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import callHandler from '../_base/call-handler';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import '@fibrae/semi-foundation/notification/notification.scss';
+import '@fibrae/semi-foundation/components/notification/notification.scss';
 import type { NoticeProps } from '@fibrae/semi-ui-react';
 import NotificationCard from '@fibrae/semi-ui-react/notification/notice';
 

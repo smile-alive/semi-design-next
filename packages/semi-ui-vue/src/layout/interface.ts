@@ -1,5 +1,5 @@
 import type { VNode } from 'vue';
-import type { ResponsiveMap } from '@fibrae/semi-foundation/grid/constants';
+import type { ResponsiveMap } from '@fibrae/semi-foundation/components/grid/constants';
 
 export type { ResponsiveMap };
 

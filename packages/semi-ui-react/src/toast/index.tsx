@@ -1,7 +1,7 @@
 import type React from 'react';
 import type { CSSProperties } from 'react';
-import ToastApi from '@fibrae/semi-foundation/toast/toast-api-foundation';
-import type { ConfigProps, ToastProps } from '@fibrae/semi-foundation/toast/toast-foundation';
+import ToastApi from '@fibrae/semi-foundation/components/toast/toast-api-foundation';
+import type { ConfigProps, ToastProps } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 import { assertBrowser, render as reactRender, unmount as reactUnmount } from '../_utils/react-render';
 import { readGlobalDefaults } from '../_utils/semi-global';
 import ToastList from './toast-list';
@@ -19,10 +19,10 @@ export interface ToastReactProps extends ToastProps {
 
 export type ToastOptions = Omit<ToastReactProps, 'type' | 'close'>;
 
-export type { ConfigProps, ToastState } from '@fibrae/semi-foundation/toast/toast-foundation';
+export type { ConfigProps, ToastState } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 export type { ToastHandle } from './toast';
 export type { ToastHookApi } from './use-toast';
-export type { ToastListProps, ToastListState } from '@fibrae/semi-foundation/toast/toast-list-foundation';
+export type { ToastListProps, ToastListState } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 
 function createBaseToast(initialConfig?: ConfigProps) {
     const api = new ToastApi<Omit<ToastReactProps, 'close'>>(

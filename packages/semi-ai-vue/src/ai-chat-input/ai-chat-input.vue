@@ -7,7 +7,7 @@
     import { getAttachmentType, getContentType, getListbox, getOptionId } from '@fibrae/semi-ai-foundation/ai-chat-input/utils';
     import { isImageFile } from '@fibrae/semi-ai-foundation/file-suffix';
     import { isUploadProgressVisible } from '@fibrae/semi-ai-foundation/upload-status';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import '@fibrae/semi-ai-foundation/ai-chat-input/ai-chat-input.scss';
     import { IconClose, IconCode, IconCrossStroked, IconExcel, IconFile, IconMusic, IconPdf, IconSendMsgStroked, IconTemplateStroked, IconVideo, IconWord } from '@fibrae/semi-icons-vue';

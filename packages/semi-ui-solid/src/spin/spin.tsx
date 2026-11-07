@@ -1,8 +1,8 @@
 import { children, createEffect, on, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/spin/constants';
-import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/spin/foundation';
-import '@fibrae/semi-foundation/spin/spin.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/spin/constants';
+import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/components/spin/foundation';
+import '@fibrae/semi-foundation/components/spin/spin.scss';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';

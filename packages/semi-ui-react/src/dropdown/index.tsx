@@ -1,10 +1,10 @@
 import type React from 'react';
 import { cloneElement, isValidElement, useImperativeHandle, useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/dropdown/constants';
-import DropdownFoundation, { type DropdownAdapter, type DropdownBaseState } from '@fibrae/semi-foundation/dropdown/foundation';
-import type { DropdownSelectionMode } from '@fibrae/semi-foundation/dropdown/menu-foundation';
-import '@fibrae/semi-foundation/dropdown/dropdown.scss';
+import { cssClasses, strings, numbers } from '@fibrae/semi-foundation/components/dropdown/constants';
+import DropdownFoundation, { type DropdownAdapter, type DropdownBaseState } from '@fibrae/semi-foundation/components/dropdown/foundation';
+import type { DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
+import '@fibrae/semi-foundation/components/dropdown/dropdown.scss';
 import elementTypeOf from '../_base/element-type';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

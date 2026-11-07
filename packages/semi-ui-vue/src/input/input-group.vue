@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, useId } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/input/constants';
-    import '@fibrae/semi-foundation/input/input.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
+    import '@fibrae/semi-foundation/components/input/input.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { usePopupLayer } from '../_base/popup-layer';
     import { semiGlobalDefault } from '../_base/semi-default';

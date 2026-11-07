@@ -1,4 +1,4 @@
-import { Keys } from '@fibrae/semi-foundation/hot-keys/constants';
+import { Keys } from '@fibrae/semi-foundation/components/hot-keys/constants';
 import HotKeysComponent from './hot-keys.svelte';
 
 export const HotKeys = Object.assign(HotKeysComponent, { Keys });

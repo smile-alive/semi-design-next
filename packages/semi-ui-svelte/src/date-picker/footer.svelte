@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/date-picker/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/date-picker/constants';
     import { Button } from '../button/index.js';
     import type { FooterProps } from './internal.js';
 

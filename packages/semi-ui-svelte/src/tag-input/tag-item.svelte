@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tag-input/constants';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { cssClasses } from '@fibrae/semi-foundation/tag-input/constants';
     import { IconHandle } from '@fibrae/semi-icons-svelte';
     import { SortableHandle } from '../_sortable/index.js';
     import useLocale from '../locale/use-locale.svelte.js';

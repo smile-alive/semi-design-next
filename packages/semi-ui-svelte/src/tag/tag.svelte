@@ -1,10 +1,10 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tag/constants';
+    import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/components/tag/focus';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { cssClasses } from '@fibrae/semi-foundation/tag/constants';
-    import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/tag/focus';
-    import '@fibrae/semi-foundation/tag/tag.scss';
+    import '@fibrae/semi-foundation/components/tag/tag.scss';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../_base/use-default-props.js';
     import Avatar from '../avatar/avatar.svelte';

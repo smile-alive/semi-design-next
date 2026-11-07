@@ -1,7 +1,7 @@
 import { Index, createMemo } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { parseHeaderRows, type TableHeaderCell } from '@fibrae/semi-foundation/table/utils';
+import { parseHeaderRows, type TableHeaderCell } from '@fibrae/semi-foundation/components/table/utils';
 import { useTableContext } from './context';
 import type { ColumnProps } from './interface';
 import TableHeaderRow from './table-header-row';

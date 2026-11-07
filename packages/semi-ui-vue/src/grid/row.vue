@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/grid/constants';
-    import { gutterStyle, normalizeGutter } from '@fibrae/semi-foundation/grid/gutter';
-    import { getRowClassName } from '@fibrae/semi-foundation/grid/utils';
-    import '@fibrae/semi-foundation/grid/grid.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/grid/constants';
+    import { gutterStyle, normalizeGutter } from '@fibrae/semi-foundation/components/grid/gutter';
+    import { getRowClassName } from '@fibrae/semi-foundation/components/grid/utils';
+    import '@fibrae/semi-foundation/components/grid/grid.scss';
     import type { ElementProps } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import type { RowProps, RowSlots } from './interface';

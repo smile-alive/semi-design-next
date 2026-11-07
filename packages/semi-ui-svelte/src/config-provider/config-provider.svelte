@@ -1,10 +1,10 @@
 <script lang="ts">
     import { onMount, untrack } from 'svelte';
     import { isEqual } from 'es-toolkit';
-    import BreakpointObserver, { noScreens } from '@fibrae/semi-foundation/config-provider/breakpoint-observer';
-    import { inheritConfig, switchesDirection } from '@fibrae/semi-foundation/config-provider/inherit-config';
-    import type { ResponsiveMap } from '@fibrae/semi-foundation/config-provider/responsive-types';
-    import { defaultResponsiveMap } from '@fibrae/semi-foundation/grid/constants';
+    import BreakpointObserver, { noScreens } from '@fibrae/semi-foundation/components/config-provider/breakpoint-observer';
+    import { inheritConfig, switchesDirection } from '@fibrae/semi-foundation/components/config-provider/inherit-config';
+    import type { ResponsiveMap } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
+    import { defaultResponsiveMap } from '@fibrae/semi-foundation/components/grid/constants';
     import { getConfigContext, setConfigContext } from './context.js';
     import type { ConfigProviderProps } from './interface.js';
 

@@ -1,10 +1,10 @@
 import type React from 'react';
 import { useId, useImperativeHandle, useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/cropper/constants';
-import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/cropper/foundation';
-import { getCropperGeometry } from '@fibrae/semi-foundation/cropper/utils';
-import '@fibrae/semi-foundation/cropper/cropper.scss';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/cropper/constants';
+import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/components/cropper/foundation';
+import { getCropperGeometry } from '@fibrae/semi-foundation/components/cropper/utils';
+import '@fibrae/semi-foundation/components/cropper/cropper.scss';
 import type { ElementProps } from '../_base/base';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';

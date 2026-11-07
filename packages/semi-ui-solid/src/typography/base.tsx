@@ -1,9 +1,9 @@
 import { type Component, type JSX, Match, Show, Switch, type ValidComponent, children, createEffect, createMemo, createSignal, mergeProps, onCleanup, splitProps, untrack } from 'solid-js';
 import { Dynamic, isServer } from 'solid-js/web';
 import clsx from 'clsx';
-import { POPUP_ID_ATTRIBUTE } from '@fibrae/semi-foundation/tooltip/constants';
-import { cssClasses } from '@fibrae/semi-foundation/typography/constants';
-import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getRenderText, isInsideWidgetItem, isOverflowing } from '@fibrae/semi-foundation/typography/ellipsis';
+import { POPUP_ID_ATTRIBUTE } from '@fibrae/semi-foundation/components/tooltip/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
+import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getRenderText, isInsideWidgetItem, isOverflowing } from '@fibrae/semi-foundation/components/typography/ellipsis';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import callHandler from '../_base/call-handler';
 import type { ElementProps } from '../_base/element-props';

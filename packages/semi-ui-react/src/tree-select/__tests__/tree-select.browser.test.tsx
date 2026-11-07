@@ -3,7 +3,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import type { BasicTreeNodeData } from '@fibrae/semi-foundation/tree/foundation';
+import type { BasicTreeNodeData } from '@fibrae/semi-foundation/components/tree/foundation';
 import { Button, Tag, TagInput, TreeSelect } from '@fibrae/semi-ui-react';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import type { TreeSelectProps } from '../index';

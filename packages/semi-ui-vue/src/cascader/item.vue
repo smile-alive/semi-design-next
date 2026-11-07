@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, useTemplateRef, type StyleValue, type VNode } from 'vue';
-    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/cascader/constants';
-    import CascaderFoundation, { type BasicData } from '@fibrae/semi-foundation/cascader/foundation';
-    import { getColumns, highlightParts } from '@fibrae/semi-foundation/cascader/util';
+    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/cascader/constants';
+    import CascaderFoundation, { type BasicData } from '@fibrae/semi-foundation/components/cascader/foundation';
+    import { getColumns, highlightParts } from '@fibrae/semi-foundation/components/cascader/util';
     import { IconChevronRight, IconTick } from '@fibrae/semi-icons-vue';
     import slotNodes, { hasSlotContent, type KeyedNode } from '../_base/slot-nodes';
     import VirtualList from '../_base/virtual-list.vue';

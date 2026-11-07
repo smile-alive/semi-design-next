@@ -1,8 +1,8 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { format } from 'date-fns';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
-    import MonthFoundation, { type MonthDayInfo } from '@fibrae/semi-foundation/date-picker/month-foundation';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+    import MonthFoundation, { type MonthDayInfo } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
     import watch from '../_base/watch.svelte.js';
     import useToday from '../calendar/use-today.svelte.js';
     import { useConfig } from '../config-provider/index.js';

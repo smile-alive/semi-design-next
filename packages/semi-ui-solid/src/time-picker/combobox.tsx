@@ -1,6 +1,6 @@
 import { type JSX, type Ref, Show, createMemo, onCleanup, untrack } from 'solid-js';
 import { pick } from 'es-toolkit';
-import ComboboxFoundation, { type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/time-picker/combox-foundation';
+import ComboboxFoundation, { type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
 import useLocale from '../locale/use-locale';
 import ScrollList, { ScrollItem, type ScrollItemHandle, type ScrollItemProps } from '../scroll-list';
 

@@ -1,4 +1,4 @@
-import '@fibrae/semi-foundation/image/image.scss';
+import '@fibrae/semi-foundation/components/image/image.scss';
 export { default } from './image';
 export { default as Preview } from './preview';
 

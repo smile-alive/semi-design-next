@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
     import { IconUploadError } from '@fibrae/semi-icons-svelte';
     import { Image, type ImageProps } from '../../image/index.js';
     import { getMarkdownLinkContext } from '../context.js';

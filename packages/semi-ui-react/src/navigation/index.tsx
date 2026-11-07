@@ -1,9 +1,9 @@
 import type React from 'react';
 import { type ReactElement, type ReactNode, isValidElement, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/navigation/constants';
-import NavigationFoundation, { type NavigationAdapter, type NavigationState, type NavItemType } from '@fibrae/semi-foundation/navigation/foundation';
-import '@fibrae/semi-foundation/navigation/navigation.scss';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/navigation/constants';
+import NavigationFoundation, { type NavigationAdapter, type NavigationState, type NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
+import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import type { ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';
 import elementTypeOf from '../_base/element-type';

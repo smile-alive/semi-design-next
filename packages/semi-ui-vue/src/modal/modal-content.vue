@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { Transition, h, normalizeStyle, onActivated, onDeactivated, shallowRef, useAttrs, useId, useTemplateRef, vShow, watch, withDirectives, type CSSProperties, type ComponentPublicInstance, type TransitionProps } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
-    import ModalContentFoundation, { type ModalContentAdapter, isModal } from '@fibrae/semi-foundation/modal/modal-content-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
+    import ModalContentFoundation, { type ModalContentAdapter, isModal } from '@fibrae/semi-foundation/components/modal/modal-content-foundation';
     import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs';

@@ -1,4 +1,4 @@
-import type { DragPointerEvent } from '@fibrae/semi-foundation/color-picker/interface';
+import type { DragPointerEvent } from '@fibrae/semi-foundation/components/color-picker/interface';
 
 // The foundation types currentTarget as Element, while the native PointerEvent has EventTarget | null.
 // The listener runs synchronously, so currentTarget is still set and can capture the pointer.

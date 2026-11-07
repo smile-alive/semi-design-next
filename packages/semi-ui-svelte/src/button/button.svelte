@@ -1,10 +1,10 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/button/constants';
-    import { buttonClassList, colorfulFill, groupLineClass, isAILoading, paddingSides, resolveButtonLooks } from '@fibrae/semi-foundation/button/utils';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/button/constants';
+    import { buttonClassList, colorfulFill, groupLineClass, isAILoading, paddingSides, resolveButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import '@fibrae/semi-foundation/button/button.scss';
-    import '@fibrae/semi-foundation/button/icon-button.scss';
+    import '@fibrae/semi-foundation/components/button/button.scss';
+    import '@fibrae/semi-foundation/components/button/icon-button.scss';
     import { IconAILoading } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../_base/use-default-props.js';
     import { getInputGroupInScope } from '../input/context.js';

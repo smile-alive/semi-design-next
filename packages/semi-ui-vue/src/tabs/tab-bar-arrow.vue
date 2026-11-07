@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/tabs/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tabs/constants';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-vue';
     import SlotFragment from '../_base/slot-fragment';
     import slotNodes, { hasSlotContent } from '../_base/slot-nodes';

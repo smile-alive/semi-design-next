@@ -1,1 +1,1 @@
-export { getPanelId, getTabId } from '@fibrae/semi-foundation/tabs/constants';
+export { getPanelId, getTabId } from '@fibrae/semi-foundation/components/tabs/constants';

@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { ColorValue } from '@fibrae/semi-foundation/color-picker/foundation';
-import type { ColorFormat, HsvaColor, RgbaColor } from '@fibrae/semi-foundation/color-picker/interface';
+import type { ColorValue } from '@fibrae/semi-foundation/components/color-picker/foundation';
+import type { ColorFormat, HsvaColor, RgbaColor } from '@fibrae/semi-foundation/components/color-picker/interface';
 import type { PopoverProps } from '../popover/index.js';
 
 export type { ColorValue, ColorFormat, HsvaColor, RgbaColor };

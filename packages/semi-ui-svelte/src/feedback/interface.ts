@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
-import type { CheckboxValue } from '@fibrae/semi-foundation/checkbox/checkbox-group-foundation';
-import type { EmojiResult, FeedbackValue } from '@fibrae/semi-foundation/feedback/foundation';
+import type { CheckboxValue } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
+import type { EmojiResult, FeedbackValue } from '@fibrae/semi-foundation/components/feedback/foundation';
 import type { CheckboxGroupOptionSnippetProps, CheckboxGroupProps } from '../checkbox/interface.js';
 import type { TextAreaChangeEvent, TextAreaProps } from '../input/interface.js';
 import type { ModalButtonProps, ModalProps } from '../modal/interface.js';

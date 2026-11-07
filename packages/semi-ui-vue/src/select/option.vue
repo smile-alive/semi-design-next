@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { Text, useAttrs } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/select/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/select/constants';
     import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
     import { IconTick } from '@fibrae/semi-icons-vue';
     import slotNodes from '../_base/slot-nodes';

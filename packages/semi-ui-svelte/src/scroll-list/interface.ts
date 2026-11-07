@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { Item } from '@fibrae/semi-foundation/scroll-list/item-foundation';
+import type { Item } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
 
 export type ScrollListItem = Item;
 

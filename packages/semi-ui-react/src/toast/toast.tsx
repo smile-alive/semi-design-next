@@ -1,8 +1,8 @@
 import type React from 'react';
 import { cloneElement, useImperativeHandle, useRef, type CSSProperties } from 'react';
 import clsx from 'clsx';
-import { numbers, cssClasses, getStackLayerTransform } from '@fibrae/semi-foundation/toast/constants';
-import ToastFoundation, { type ToastAdapter, type ToastInstance, type ToastState } from '@fibrae/semi-foundation/toast/toast-foundation';
+import { numbers, cssClasses, getStackLayerTransform } from '@fibrae/semi-foundation/components/toast/constants';
+import ToastFoundation, { type ToastAdapter, type ToastInstance, type ToastState } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 import { isAlertType } from '@fibrae/semi-foundation/utils/announcer';
 import { IconClose, IconAlertTriangle, IconInfoCircle, IconTickCircle, IconAlertCircle } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
@@ -47,7 +47,7 @@ export interface ToastReactProps extends ToastInstance, ElementProps<'div', 'con
     ref?: React.Ref<ToastItemHandle>;
 }
 
-export type { ToastState } from '@fibrae/semi-foundation/toast/toast-foundation';
+export type { ToastState } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 
 const defaultProps = {
     content: '',

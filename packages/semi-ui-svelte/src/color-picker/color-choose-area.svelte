@@ -1,9 +1,9 @@
 <script lang="ts">
-    import ColorChooseAreaFoundation, { type ColorChooseAreaAdapter, type ColorChooseAreaBaseProps, type ColorChooseAreaBaseState } from '@fibrae/semi-foundation/color-picker/color-choose-area-foundation';
-    import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
-    import ColorPickerFoundation from '@fibrae/semi-foundation/color-picker/foundation';
-    import { hsvaToHslString, hsvaToRgba } from '@fibrae/semi-foundation/color-picker/utils/convert';
-    import { round } from '@fibrae/semi-foundation/color-picker/utils/round';
+    import ColorChooseAreaFoundation, { type ColorChooseAreaAdapter, type ColorChooseAreaBaseProps, type ColorChooseAreaBaseState } from '@fibrae/semi-foundation/components/color-picker/color-choose-area-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+    import ColorPickerFoundation from '@fibrae/semi-foundation/components/color-picker/foundation';
+    import { hsvaToHslString, hsvaToRgba } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
+    import { round } from '@fibrae/semi-foundation/components/color-picker/utils/round';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import useLocale from '../locale/use-locale.svelte.js';

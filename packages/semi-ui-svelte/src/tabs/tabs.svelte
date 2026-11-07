@@ -1,8 +1,8 @@
 <script lang="ts">
     import { untrack } from 'svelte';
-    import { cssClasses, getPanelId, getTabId } from '@fibrae/semi-foundation/tabs/constants';
-    import TabsFoundation, { type MotionView, type TabsAdapter, type TabsBaseProps, type TabsState } from '@fibrae/semi-foundation/tabs/foundation';
-    import '@fibrae/semi-foundation/tabs/tabs.scss';
+    import { cssClasses, getPanelId, getTabId } from '@fibrae/semi-foundation/components/tabs/constants';
+    import TabsFoundation, { type MotionView, type TabsAdapter, type TabsBaseProps, type TabsState } from '@fibrae/semi-foundation/components/tabs/foundation';
+    import '@fibrae/semi-foundation/components/tabs/tabs.scss';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

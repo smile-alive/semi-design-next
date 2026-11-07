@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, isVNode, useId, useTemplateRef, type Component } from 'vue';
-    import { cssClasses, getStackItemTransform, numbers } from '@fibrae/semi-foundation/notification/constants';
-    import NotificationFoundation, { type NoticeAdapter, type NoticePosition, type NoticeState, type NoticeType } from '@fibrae/semi-foundation/notification/notification-foundation';
+    import { cssClasses, getStackItemTransform, numbers } from '@fibrae/semi-foundation/components/notification/constants';
+    import NotificationFoundation, { type NoticeAdapter, type NoticePosition, type NoticeState, type NoticeType } from '@fibrae/semi-foundation/components/notification/notification-foundation';
     import { isAlertType, readNoticeText } from '@fibrae/semi-foundation/utils/announcer';
     import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-vue';
     import elementType from '../_base/element-type';

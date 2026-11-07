@@ -1,12 +1,12 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import { isEqual } from 'es-toolkit';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/cascader/constants';
-    import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicValue, type CascaderAdapter } from '@fibrae/semi-foundation/cascader/foundation';
-    import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/cascader/constants';
+    import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicValue, type CascaderAdapter } from '@fibrae/semi-foundation/components/cascader/foundation';
+    import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
     import { isInnerControlKey, isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/cascader/cascader.scss';
+    import '@fibrae/semi-foundation/components/cascader/cascader.scss';
     import { IconChevronDown, IconClear } from '@fibrae/semi-icons-svelte';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import { type SlotKind, trackSlotKind } from '../_base/slot-kind.js';

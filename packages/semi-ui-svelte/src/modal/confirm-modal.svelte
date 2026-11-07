@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { settleConfirm } from '@fibrae/semi-foundation/modal/confirm';
-    import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
+    import { settleConfirm } from '@fibrae/semi-foundation/components/modal/confirm';
+    import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
     import { createId } from '@fibrae/semi-foundation/utils/uuid';
     import { IconAlertCircle, IconAlertTriangle, IconHelpCircle, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-svelte';
     import { getConfigContext } from '../config-provider/context.js';

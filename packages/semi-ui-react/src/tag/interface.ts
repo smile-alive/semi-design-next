@@ -1,5 +1,5 @@
 import React from 'react';
-import type { strings } from '@fibrae/semi-foundation/tag/constants';
+import type { strings } from '@fibrae/semi-foundation/components/tag/constants';
 import type { ElementProps } from '../_base/base';
 import type { PopoverProps } from '../popover/index';
 

@@ -1,4 +1,4 @@
-import type { DropdownMenuContext } from '@fibrae/semi-foundation/dropdown/menu-foundation';
+import type { DropdownMenuContext } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import { createContext } from '../_base/create-context';
 import type { TooltipProps } from '../tooltip/index';
 

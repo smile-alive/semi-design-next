@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, onMounted, shallowRef, useTemplateRef, watch, type VNode } from 'vue';
     import { isEqual } from 'es-toolkit';
-    import { cssClasses, numbers } from '@fibrae/semi-foundation/navigation/constants';
-    import NavigationFoundation, { type NavigationAdapter, type NavigationBaseProps, type NavigationState, type NavItemType } from '@fibrae/semi-foundation/navigation/foundation';
-    import '@fibrae/semi-foundation/navigation/navigation.scss';
+    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/navigation/constants';
+    import NavigationFoundation, { type NavigationAdapter, type NavigationBaseProps, type NavigationState, type NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
+    import '@fibrae/semi-foundation/components/navigation/navigation.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import elementType from '../_base/element-type';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';

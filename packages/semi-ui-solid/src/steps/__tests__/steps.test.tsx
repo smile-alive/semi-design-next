@@ -3,7 +3,7 @@ import { render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { stepsClasses } from '@fibrae/semi-foundation/steps/constants';
+import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
 import Steps, { type BasicStepProps, type FillStepProps, type NavStepProps, type Status, type StepProps, type StepsProps } from '..';
 import semiGlobal from '../../_utils/semi-global';
 

@@ -1,8 +1,8 @@
 import type React from 'react';
 import { useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
-import ItemFoundation, { type Item, type ScrollItemAdapter, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/scroll-list/item-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
+import ItemFoundation, { type Item, type ScrollItemAdapter, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
 import type { ElementProps, Motion } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

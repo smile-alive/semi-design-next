@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, type VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/descriptions/constants';
-    import { getHorizontalList } from '@fibrae/semi-foundation/descriptions/foundation';
-    import '@fibrae/semi-foundation/descriptions/descriptions.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
+    import { getHorizontalList } from '@fibrae/semi-foundation/components/descriptions/foundation';
+    import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
     import type { ElementProps } from '../_base/element-props';
     import elementType from '../_base/element-type';
     import semiDefault from '../_base/semi-default';

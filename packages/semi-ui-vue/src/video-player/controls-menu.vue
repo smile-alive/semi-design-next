@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends string | number">
     import { computed } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/video-player/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/video-player/constants';
     import Dropdown, { DropdownItem, DropdownMenu } from '../dropdown';
     import type { ControlsMenuEmits, ControlsMenuProps } from './interface';
 

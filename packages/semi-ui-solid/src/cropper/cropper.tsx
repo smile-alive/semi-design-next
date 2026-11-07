@@ -1,10 +1,10 @@
 import { For, type JSX, type Ref, Show, createEffect, createMemo, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/cropper/constants';
-import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/cropper/foundation';
-import { getCropperGeometry } from '@fibrae/semi-foundation/cropper/utils';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/cropper/constants';
+import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/components/cropper/foundation';
+import { getCropperGeometry } from '@fibrae/semi-foundation/components/cropper/utils';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/cropper/cropper.scss';
+import '@fibrae/semi-foundation/components/cropper/cropper.scss';
 import callHandler from '../_base/call-handler';
 import type { ElementProps } from '../_base/element-props';
 import mergeRefs from '../_base/merge-refs';

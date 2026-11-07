@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/anchor/constants';
-import type { AnchorBaseProps } from '@fibrae/semi-foundation/anchor/foundation';
+import type { strings } from '@fibrae/semi-foundation/components/anchor/constants';
+import type { AnchorBaseProps } from '@fibrae/semi-foundation/components/anchor/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import type { ElementProps } from '../_base/element-props';
 import type { Position } from '../tooltip';
@@ -27,7 +27,7 @@ export interface AnchorProps extends ElementProps<'div', 'onChange' | 'onClick'>
     onClick?: (e: AnchorClickEvent, currentLink: string) => void;
 }
 
-export type { AnchorBaseState as AnchorState } from '@fibrae/semi-foundation/anchor/foundation';
+export type { AnchorBaseState as AnchorState } from '@fibrae/semi-foundation/components/anchor/foundation';
 
 /** `ref` and `class` land on the link's list item div */
 export interface LinkProps extends ElementProps<'div', 'title'> {

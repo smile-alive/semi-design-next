@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/grid/constants';
-    import { getColClassName } from '@fibrae/semi-foundation/grid/utils';
-    import '@fibrae/semi-foundation/grid/grid.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/grid/constants';
+    import { getColClassName } from '@fibrae/semi-foundation/components/grid/utils';
+    import '@fibrae/semi-foundation/components/grid/grid.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import type { ColProps } from './interface.js';
 

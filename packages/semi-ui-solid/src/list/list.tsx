@@ -1,11 +1,11 @@
 import { children, createMemo, For, Show, splitProps, untrack, type JSX } from 'solid-js';
 import clsx from 'clsx';
 import { pick } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/list/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
-import '@fibrae/semi-foundation/list/list.scss';
+import '@fibrae/semi-foundation/components/list/list.scss';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import useDefaultProps from '../_base/use-default-props';

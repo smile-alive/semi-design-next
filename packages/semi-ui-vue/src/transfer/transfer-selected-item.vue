@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import type { VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/transfer/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/transfer/constants';
     import { IconClose, IconHandle } from '@fibrae/semi-icons-vue';
     import SortableHandle from '../_sortable/sortable-handle.vue';
     import useLocale from '../locale/use-locale';

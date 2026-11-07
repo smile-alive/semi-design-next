@@ -1,9 +1,9 @@
 import { type Accessor, type JSX, Index, Show, createEffect, createMemo, createSignal, createUniqueId, on } from 'solid-js';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
-import type { DayStatusType } from '@fibrae/semi-foundation/date-picker/foundation';
-import MonthFoundation, { type MonthDayInfo, type MonthFoundationProps } from '@fibrae/semi-foundation/date-picker/month-foundation';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+import type { DayStatusType } from '@fibrae/semi-foundation/components/date-picker/foundation';
+import MonthFoundation, { type MonthDayInfo, type MonthFoundationProps } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import useToday from '../calendar/use-today';
 import useConfig from '../config-provider/use-config';

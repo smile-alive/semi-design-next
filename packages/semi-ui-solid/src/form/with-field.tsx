@@ -1,11 +1,11 @@
 import { type JSX, type ValidComponent, Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses, FIELD_PROP_KEYS } from '@fibrae/semi-foundation/form/constants';
-import { errorMessages } from '@fibrae/semi-foundation/form/errors';
-import FieldStore from '@fibrae/semi-foundation/form/field-store';
-import type { ExclusiveFieldValidation, FieldRegistration } from '@fibrae/semi-foundation/form/interface';
-import { createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
+import { cssClasses, FIELD_PROP_KEYS } from '@fibrae/semi-foundation/components/form/constants';
+import { errorMessages } from '@fibrae/semi-foundation/components/form/errors';
+import FieldStore from '@fibrae/semi-foundation/components/form/field-store';
+import type { ExclusiveFieldValidation, FieldRegistration } from '@fibrae/semi-foundation/components/form/interface';
+import { createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/components/form/utils';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import warning from '@fibrae/semi-foundation/utils/warning';

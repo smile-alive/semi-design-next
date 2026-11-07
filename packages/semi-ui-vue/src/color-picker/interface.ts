@@ -1,6 +1,6 @@
 import type { HTMLAttributes, StyleValue, VNode } from 'vue';
-import type { ColorValue } from '@fibrae/semi-foundation/color-picker/foundation';
-import type { ColorFormat, HsvaColor, RgbaColor } from '@fibrae/semi-foundation/color-picker/interface';
+import type { ColorValue } from '@fibrae/semi-foundation/components/color-picker/foundation';
+import type { ColorFormat, HsvaColor, RgbaColor } from '@fibrae/semi-foundation/components/color-picker/interface';
 import type { PopoverEmits, PopoverProps } from '../popover/interface';
 
 export type { ColorValue, ColorFormat, HsvaColor, RgbaColor };

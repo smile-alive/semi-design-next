@@ -1,6 +1,6 @@
 import { type JSX, batch, createEffect, createMemo, createSignal, on, onCleanup, onMount, untrack } from 'solid-js';
-import ArrayFieldRows from '@fibrae/semi-foundation/form/array-field-rows';
-import { generateKeys, resolveKeepState } from '@fibrae/semi-foundation/form/utils';
+import ArrayFieldRows from '@fibrae/semi-foundation/components/form/array-field-rows';
+import { generateKeys, resolveKeepState } from '@fibrae/semi-foundation/components/form/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import useDefaultProps from '../_base/use-default-props';
 import useWatch from '../_base/use-watch';

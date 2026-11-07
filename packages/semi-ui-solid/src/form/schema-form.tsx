@@ -1,5 +1,5 @@
 import { type JSX, splitProps } from 'solid-js';
-import type { ExclusiveFormValidation } from '@fibrae/semi-foundation/form/interface';
+import type { ExclusiveFormValidation } from '@fibrae/semi-foundation/components/form/interface';
 import useDefaultProps from '../_base/use-default-props';
 import Form from './form';
 import type { FormProps } from './interface';

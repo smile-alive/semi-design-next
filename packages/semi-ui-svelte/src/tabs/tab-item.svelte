@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses, getPanelId, getTabId, getTabKeyAttrs } from '@fibrae/semi-foundation/tabs/constants';
+    import { cssClasses, getPanelId, getTabId, getTabKeyAttrs } from '@fibrae/semi-foundation/components/tabs/constants';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import { getTabsContext } from './context.js';

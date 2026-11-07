@@ -1,5 +1,5 @@
 import { type Accessor, type JSX, children, createMemo } from 'solid-js';
-import type { AnchorNode } from '@fibrae/semi-foundation/anchor/foundation';
+import type { AnchorNode } from '@fibrae/semi-foundation/components/anchor/foundation';
 import hasContent from '../_base/has-content';
 import { isToken } from '../_base/token';
 import type { LinkProps } from './interface';

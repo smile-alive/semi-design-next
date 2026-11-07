@@ -1,9 +1,9 @@
 import type React from 'react';
 import { type ReactNode, useId, useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
-import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
-import '@fibrae/semi-foundation/user-guide/user-guide.scss';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/user-guide/constants';
+import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/components/user-guide/foundation';
+import '@fibrae/semi-foundation/components/user-guide/user-guide.scss';
 import type { BaseProps } from '../_base/base-component';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

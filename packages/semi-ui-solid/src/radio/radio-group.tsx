@@ -1,8 +1,8 @@
 import { children, createMemo, createUniqueId, Index, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { radioGroupClasses as css, strings } from '@fibrae/semi-foundation/radio/constants';
-import type { RadioChangeEvent } from '@fibrae/semi-foundation/radio/radio-foundation';
-import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/radio/radio-group-foundation';
+import { radioGroupClasses as css, strings } from '@fibrae/semi-foundation/components/radio/constants';
+import type { RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
+import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/components/radio/radio-group-foundation';
 import callHandler from '../_base/call-handler';
 import { omitFormInjected } from '../_base/control-attrs';
 import type { ElementProps } from '../_base/element-props';

@@ -2,7 +2,7 @@ import type { PropsWithChildren } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import MarkdownRenderFoundation from '@fibrae/semi-foundation/markdown-render/foundation';
+import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
 import { IconCopyStroked, IconTick } from '@fibrae/semi-icons-react';
 import { useCopied, useLocale } from '@fibrae/semi-ui-react/hooks';
 import { code } from '@fibrae/semi-ui-react/markdown-render/components/index';

@@ -1,8 +1,8 @@
 import type React from 'react';
 import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
-import type { ResizeCallback, ResizeStartCallback } from '@fibrae/semi-foundation/resizable/types';
+import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
+import type { ResizeCallback, ResizeStartCallback } from '@fibrae/semi-foundation/components/resizable/types';
 import type { ElementProps } from '../_base/base';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';

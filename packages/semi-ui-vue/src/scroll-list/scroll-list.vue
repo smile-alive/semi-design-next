@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
-    import '@fibrae/semi-foundation/scroll-list/scroll-list.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
+    import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
     import type { ElementProps } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';
     import { semiGlobalDefault } from '../_base/semi-default';

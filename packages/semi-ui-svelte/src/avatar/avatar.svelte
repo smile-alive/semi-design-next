@@ -1,10 +1,10 @@
 <script lang="ts">
     import { tick, untrack } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/avatar/constants';
-    import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/avatar/foundation';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/avatar/constants';
+    import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/components/avatar/foundation';
     import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
-    import '@fibrae/semi-foundation/avatar/avatar.scss';
+    import '@fibrae/semi-foundation/components/avatar/avatar.scss';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import { getPopupLayerContext } from '../_base/popup-layer.js';
     import useDefaultProps from '../_base/use-default-props.js';

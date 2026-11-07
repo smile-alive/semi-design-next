@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import type { VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
-    import { isTreeNodeLeaf } from '@fibrae/semi-foundation/tree/shared';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
+    import { isTreeNodeLeaf } from '@fibrae/semi-foundation/components/tree/shared';
     import { IconTreeTriangleDown } from '@fibrae/semi-icons-vue';
     import slotNodes, { hasSlotContent, type KeyedNode } from '../_base/slot-nodes';
     import Spin from '../spin';

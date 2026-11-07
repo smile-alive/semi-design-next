@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterBaseProps, type PreviewFooterState } from '@fibrae/semi-foundation/image/preview-footer-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+    import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterBaseProps, type PreviewFooterState } from '@fibrae/semi-foundation/components/image/preview-footer-foundation';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import { Divider } from '../divider/index.js';
     import useLocale from '../locale/use-locale.svelte.js';

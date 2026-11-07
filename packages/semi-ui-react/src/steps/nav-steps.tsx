@@ -1,7 +1,7 @@
 import type React from 'react';
 import { cloneElement, Children, isValidElement, type ReactElement } from 'react';
 import clsx from 'clsx';
-import { stepsClasses as css } from '@fibrae/semi-foundation/steps/constants';
+import { stepsClasses as css } from '@fibrae/semi-foundation/components/steps/constants';
 import type { ElementProps } from '../_base/base';
 import flattenChildren from '../_base/flatten-children';
 import { namedRole } from '../_base/named-role';

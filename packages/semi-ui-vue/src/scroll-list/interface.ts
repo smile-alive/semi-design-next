@@ -1,5 +1,5 @@
 import type { VNode } from 'vue';
-import type { Item } from '@fibrae/semi-foundation/scroll-list/item-foundation';
+import type { Item } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
 
 /** An entry of a column: `text` (or `value`) is shown, `transform` formats the selected one */
 export type ScrollListItem = Item;

@@ -2,12 +2,12 @@ import type React from 'react';
 import { Fragment, cloneElement, isValidElement, useCallback, useEffect, useId, useImperativeHandle, useLayoutEffect, useState, type CSSProperties, type FragmentInstance } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
-import { strings, cssClasses, numbers, POPUP_ID_ATTRIBUTE, TRIGGER_EVENT_NAMES, COLOR_SCHEME_SELECTOR, canRoleCarryPopupState, colorSchemeOf, isBlockDisplay, popupTarget, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
-import TooltipFoundation, { type TooltipAdapter, type TooltipBaseState, type Position } from '@fibrae/semi-foundation/tooltip/foundation';
+import { strings, cssClasses, numbers, POPUP_ID_ATTRIBUTE, TRIGGER_EVENT_NAMES, COLOR_SCHEME_SELECTOR, canRoleCarryPopupState, colorSchemeOf, isBlockDisplay, popupTarget, wrapsSpecialTrigger } from '@fibrae/semi-foundation/components/tooltip/constants';
+import TooltipFoundation, { type TooltipAdapter, type TooltipBaseState, type Position } from '@fibrae/semi-foundation/components/tooltip/foundation';
 import { joinIds, warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
-import '@fibrae/semi-foundation/tooltip/tooltip.scss';
+import '@fibrae/semi-foundation/components/tooltip/tooltip.scss';
 import type { BaseProps } from '../_base/base-component';
 import { PopupLayerContext } from '../_base/popup-layer';
 import useDefaultProps from '../_base/use-default-props';
@@ -24,7 +24,7 @@ type Foundation = TooltipFoundation<TooltipProps>;
 type Adapter = TooltipAdapter<TooltipProps>;
 
 export type Trigger = ArrayElement<typeof strings.TRIGGER_SET>;
-export type { Position } from '@fibrae/semi-foundation/tooltip/foundation';
+export type { Position } from '@fibrae/semi-foundation/components/tooltip/foundation';
 
 // `any`: the ref may hold a DOM element or a component handle such as InputHandle; only focus() is called
 export interface RenderContentProps<T = any> {

@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-lib
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import type { Item } from '@fibrae/semi-foundation/scroll-list/item-foundation';
+import type { Item } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
 import { sleep } from '@test/utils/solid';
 import ScrollList, { ScrollItem, type ScrollItemElement, type ScrollItemProps } from '..';
 import semiGlobal from '../../_utils/semi-global';

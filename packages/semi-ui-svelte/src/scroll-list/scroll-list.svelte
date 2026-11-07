@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
-    import '@fibrae/semi-foundation/scroll-list/scroll-list.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
+    import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import type { ScrollListProps } from './interface.js';

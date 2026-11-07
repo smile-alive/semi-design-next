@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { Text, type VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/navigation/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
     import { IconSidebar } from '@fibrae/semi-icons-vue';
     import slotNodes from '../_base/slot-nodes';
     import Button from '../button/button.vue';

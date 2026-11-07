@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
-import { cssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
-import MarkdownRenderFoundation from '@fibrae/semi-foundation/markdown-render/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
+import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
 import CodeHighlight from '../../code-highlight';
 
 export default function code(props: PropsWithChildren<{ className?: string }>) {

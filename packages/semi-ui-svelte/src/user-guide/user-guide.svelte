@@ -1,9 +1,9 @@
 <script lang="ts">
     import { type Snippet, untrack } from 'svelte';
     import { on } from 'svelte/events';
-    import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
-    import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
-    import '@fibrae/semi-foundation/user-guide/user-guide.scss';
+    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/user-guide/constants';
+    import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/components/user-guide/foundation';
+    import '@fibrae/semi-foundation/components/user-guide/user-guide.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import watch from '../_base/watch.svelte.js';

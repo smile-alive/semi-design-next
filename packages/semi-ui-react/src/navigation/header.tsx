@@ -1,8 +1,8 @@
 import type React from 'react';
 import { memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/navigation/constants';
-import '@fibrae/semi-foundation/navigation/navigation.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
+import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import type { ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';
 import { useNavContext } from './nav-context';

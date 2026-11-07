@@ -1,6 +1,6 @@
 import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
-import { strings as uploadStrings } from '@fibrae/semi-foundation/upload/constants';
-import { removeUnlessPrevented } from '@fibrae/semi-foundation/upload/utils';
+import { strings as uploadStrings } from '@fibrae/semi-foundation/components/upload/constants';
+import { removeUnlessPrevented } from '@fibrae/semi-foundation/components/upload/utils';
 import { handlePrevent } from '@fibrae/semi-foundation/utils/a11y';
 import { strings, type SendHotKey } from './constants';
 

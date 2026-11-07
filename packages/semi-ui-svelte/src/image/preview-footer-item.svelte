@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/image/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import { IconChevronLeft, IconChevronRight, IconDownload, IconMinus, IconPlus, IconRealSizeStroked, IconRotate, IconWindowAdaptionStroked } from '@fibrae/semi-icons-svelte';
     import { Slider } from '../slider/index.js';
     import { Tooltip, type TooltipTriggerProps } from '../tooltip/index.js';

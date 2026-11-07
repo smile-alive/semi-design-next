@@ -1,5 +1,5 @@
 import type React from 'react';
-import { focusableSelector } from '@fibrae/semi-foundation/steps/constants';
+import { focusableSelector } from '@fibrae/semi-foundation/components/steps/constants';
 import { namedRole } from '../_base/named-role';
 
 interface StepItemOptions {

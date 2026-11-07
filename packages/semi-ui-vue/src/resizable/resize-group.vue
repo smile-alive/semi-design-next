@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
-    import { ResizeGroupFoundation, type ResizeGroupAdapter, type ResizeGroupBaseState } from '@fibrae/semi-foundation/resizable/foundation';
-    import '@fibrae/semi-foundation/resizable/resizable.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
+    import { ResizeGroupFoundation, type ResizeGroupAdapter, type ResizeGroupBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
+    import '@fibrae/semi-foundation/components/resizable/resizable.scss';
     import type { ElementProps } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';
     import semiDefault from '../_base/semi-default';

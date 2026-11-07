@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { computed, useAttrs, useId, useTemplateRef, type InputHTMLAttributes } from 'vue';
-    import CheckboxFoundation, { type CheckboxAdapter, type CheckboxBaseState, type CheckboxView } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
-    import { checkboxClasses } from '@fibrae/semi-foundation/checkbox/constants';
+    import CheckboxFoundation, { type CheckboxAdapter, type CheckboxBaseState, type CheckboxView } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
+    import { checkboxClasses } from '@fibrae/semi-foundation/components/checkbox/constants';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
-    import '@fibrae/semi-foundation/checkbox/checkbox.scss';
+    import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
     import { IconCheckboxIndeterminate, IconCheckboxTick } from '@fibrae/semi-icons-vue';
     import { hasAutofocus, vAutofocus } from '../_base/autofocus';
     import { isNativeInputKey, splitControlAttrs } from '../_base/control-attrs';

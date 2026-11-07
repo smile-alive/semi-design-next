@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import { focusableSelector } from '@fibrae/semi-foundation/steps/constants';
+import { focusableSelector } from '@fibrae/semi-foundation/components/steps/constants';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import callHandler from '../_base/call-handler';
 

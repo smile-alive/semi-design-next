@@ -1,6 +1,6 @@
 import { flushSync } from 'svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { numbers } from '@fibrae/semi-foundation/table/constants';
+import { numbers } from '@fibrae/semi-foundation/components/table/constants';
 import type { TableProps } from '../interface';
 import { P, click, firstCellTexts, getBodyRows, getColumns, getData, getHeads, mountTable, query, queryAll, rowKeys } from './helpers';
 

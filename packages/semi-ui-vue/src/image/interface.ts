@@ -1,7 +1,7 @@
 import type { StyleValue, VNode } from 'vue';
-import type { RatioType } from '@fibrae/semi-foundation/image/preview-inner-foundation';
+import type { RatioType } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 
-export type { RatioType, RotateDirection, SwitchDirection } from '@fibrae/semi-foundation/image/preview-inner-foundation';
+export type { RatioType, RotateDirection, SwitchDirection } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 
 export interface ImagePreviewComponentProps {
     src?: string | string[];

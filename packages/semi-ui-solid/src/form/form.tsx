@@ -1,12 +1,12 @@
 import { type JSX, Match, Show, Switch, createUniqueId, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
-import FormFoundation from '@fibrae/semi-foundation/form/foundation';
-import type { AllErrors, BaseFormAdapter, FormFoundationState } from '@fibrae/semi-foundation/form/interface';
+import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+import { getFormApiProxyInternals } from '@fibrae/semi-foundation/components/form/form-api-proxy';
+import FormFoundation from '@fibrae/semi-foundation/components/form/foundation';
+import type { AllErrors, BaseFormAdapter, FormFoundationState } from '@fibrae/semi-foundation/components/form/interface';
 import warning from '@fibrae/semi-foundation/utils/warning';
-import '@fibrae/semi-foundation/form/form.scss';
+import '@fibrae/semi-foundation/components/form/form.scss';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
 import { Row } from '../grid';

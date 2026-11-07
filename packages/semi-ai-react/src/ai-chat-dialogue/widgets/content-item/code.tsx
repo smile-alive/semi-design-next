@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-import MarkdownRenderFoundation from '@fibrae/semi-foundation/markdown-render/foundation';
+import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
 import { IconCopyStroked, IconTick } from '@fibrae/semi-icons-react';
 import { useCopied, useLocale } from '@fibrae/semi-ui-react/hooks';
 import { code } from '@fibrae/semi-ui-react/markdown-render/components/index';

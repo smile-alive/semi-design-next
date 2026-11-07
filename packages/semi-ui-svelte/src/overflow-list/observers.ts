@@ -1,5 +1,5 @@
 import type { Attachment } from 'svelte/attachments';
-import { SCROLL_KEY_ATTRIBUTE } from '@fibrae/semi-foundation/overflow-list/constants';
+import { SCROLL_KEY_ATTRIBUTE } from '@fibrae/semi-foundation/components/overflow-list/constants';
 
 /**
  * Reports the element's own size. Attached with a stable expression: a new attachment per render would observe again,

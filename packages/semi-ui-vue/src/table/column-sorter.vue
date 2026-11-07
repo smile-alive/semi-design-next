@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import type { VNode } from 'vue';
-    import { strings } from '@fibrae/semi-foundation/table/constants';
-    import { getNextSortOrder } from '@fibrae/semi-foundation/table/utils';
+    import { strings } from '@fibrae/semi-foundation/components/table/constants';
+    import { getNextSortOrder } from '@fibrae/semi-foundation/components/table/utils';
     import { IconCaretdown, IconCaretup } from '@fibrae/semi-icons-vue';
     import SlotFragment from '../_base/slot-fragment';
     import useLocale from '../locale/use-locale';

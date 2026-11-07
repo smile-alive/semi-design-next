@@ -1,13 +1,13 @@
 <script setup lang="ts" generic="T extends AutoCompleteItems = AutoCompleteItems">
     import { computed, useAttrs, useId, useTemplateRef } from 'vue';
     import { isEqual } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/auto-complete/constants';
-    import AutoCompleteFoundation, { type AutoCompleteAdapter, type AutoCompleteBaseProps, type StateOptionItem } from '@fibrae/semi-foundation/auto-complete/foundation';
-    import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
+    import { cssClasses } from '@fibrae/semi-foundation/components/auto-complete/constants';
+    import AutoCompleteFoundation, { type AutoCompleteAdapter, type AutoCompleteBaseProps, type StateOptionItem } from '@fibrae/semi-foundation/components/auto-complete/foundation';
+    import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
     import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
     import { centerInScroller, toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
-    import '@fibrae/semi-foundation/auto-complete/auto-complete.scss';
+    import '@fibrae/semi-foundation/components/auto-complete/auto-complete.scss';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/avatar/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/avatar/constants';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import flattenChildren from '../_base/flatten-children';
 import { usePopupLayer } from '../_base/popup-layer';

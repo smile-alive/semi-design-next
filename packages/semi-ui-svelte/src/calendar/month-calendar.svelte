@@ -2,10 +2,10 @@
     import { onMount } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
     import { format } from 'date-fns';
-    import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
-    import { type DateObj, toPercent } from '@fibrae/semi-foundation/calendar/event-util';
-    import CalendarFoundation, { type ParsedRangeEvent } from '@fibrae/semi-foundation/calendar/foundation';
-    import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/calendar/month-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
+    import { type DateObj, toPercent } from '@fibrae/semi-foundation/components/calendar/event-util';
+    import CalendarFoundation, { type ParsedRangeEvent } from '@fibrae/semi-foundation/components/calendar/foundation';
+    import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/components/calendar/month-foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import useClickOutside from '../_base/use-click-outside.svelte.js';

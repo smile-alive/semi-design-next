@@ -1,13 +1,13 @@
 <script lang="ts">
     import { type Snippet, untrack } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
-    import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
-    import ModalContentFoundation, { type ModalContentAdapter, type ModalContentProps as FoundationProps, isModal } from '@fibrae/semi-foundation/modal/modal-content-foundation';
-    import type { Size } from '@fibrae/semi-foundation/modal/modal-foundation';
-    import { cssClasses as typographyClasses } from '@fibrae/semi-foundation/typography/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
+    import ModalContentFoundation, { type ModalContentAdapter, type ModalContentProps as FoundationProps, isModal } from '@fibrae/semi-foundation/components/modal/modal-content-foundation';
+    import type { Size } from '@fibrae/semi-foundation/components/modal/modal-foundation';
+    import { cssClasses as typographyClasses } from '@fibrae/semi-foundation/components/typography/constants';
     import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/typography/typography.scss';
+    import '@fibrae/semi-foundation/components/typography/typography.scss';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

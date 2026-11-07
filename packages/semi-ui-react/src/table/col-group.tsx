@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/table/constants';
-import { flattenColumns } from '@fibrae/semi-foundation/table/utils';
+import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
+import { flattenColumns } from '@fibrae/semi-foundation/components/table/utils';
 import type { ColumnProps, TableComponents } from './interface';
 
 export interface ColGroupProps {

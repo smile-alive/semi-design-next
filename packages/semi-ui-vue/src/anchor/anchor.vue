@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, onUpdated, useTemplateRef, watch } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/anchor/constants';
-    import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/anchor/foundation';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/anchor/constants';
+    import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/components/anchor/foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/anchor/anchor.scss';
+    import '@fibrae/semi-foundation/components/anchor/anchor.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import useFoundation from '../_base/use-foundation';

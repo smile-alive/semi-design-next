@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
-    import AudioPlayerFoundation, { type AudioPlayerAdapter, type AudioPlayerBaseProps, type AudioPlayerBaseState } from '@fibrae/semi-foundation/audio-player/foundation';
-    import { getCurrentTrack } from '@fibrae/semi-foundation/audio-player/utils';
+    import { RATE_OPTIONS, cssClasses } from '@fibrae/semi-foundation/components/audio-player/constants';
+    import AudioPlayerFoundation, { type AudioPlayerAdapter, type AudioPlayerBaseProps, type AudioPlayerBaseState } from '@fibrae/semi-foundation/components/audio-player/foundation';
+    import { getCurrentTrack } from '@fibrae/semi-foundation/components/audio-player/utils';
+    import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
-    import '@fibrae/semi-foundation/audio-player/audio-player.scss';
+    import '@fibrae/semi-foundation/components/audio-player/audio-player.scss';
     import { IconAlertCircle, IconBackward, IconFastForward, IconPause, IconPlay, IconRefresh, IconRestart, IconVolume2, IconVolumnSilent } from '@fibrae/semi-icons-svelte';
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';

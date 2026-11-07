@@ -1,5 +1,5 @@
 import type { ComputedRef } from 'vue';
-import type { ExpandAction } from '@fibrae/semi-foundation/tree/foundation';
+import type { ExpandAction } from '@fibrae/semi-foundation/components/tree/foundation';
 import { createContext } from '../_base/create-context';
 import type { TreeRowProps } from './interface';
 

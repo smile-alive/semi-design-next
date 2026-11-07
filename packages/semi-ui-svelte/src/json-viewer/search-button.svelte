@@ -1,7 +1,7 @@
 <script lang="ts">
     import { tick } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
-    import { cssClasses } from '@fibrae/semi-foundation/json-viewer/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { IconSearch } from '@fibrae/semi-icons-svelte';
     import Button from '../button/button.svelte';

@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/float-button/constants';
+import type { strings } from '@fibrae/semi-foundation/components/float-button/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import type { ElementProps } from '../_base/element-props';
 import type { BadgeProps } from '../badge';

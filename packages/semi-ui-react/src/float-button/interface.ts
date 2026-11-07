@@ -1,4 +1,4 @@
-import type { strings } from '@fibrae/semi-foundation/float-button/constants';
+import type { strings } from '@fibrae/semi-foundation/components/float-button/constants';
 import type { ArrayElement, ElementProps } from '../_base/base';
 import type { BadgeProps } from '../badge';
 

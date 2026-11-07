@@ -1,14 +1,14 @@
 import { type Accessor, type JSX, type Ref, Show, batch, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import { Portal, isServer } from 'solid-js/web';
 import clsx from 'clsx';
-import { COLOR_SCHEME_SELECTOR, POPUP_ID_ATTRIBUTE, TRIGGER_EVENT_NAMES, canRoleCarryPopupState, colorSchemeOf, cssClasses, isBlockDisplay, numbers, popupTarget, strings, wrapsSpecialTrigger } from '@fibrae/semi-foundation/tooltip/constants';
-import TooltipFoundation, { type Position, type TooltipAdapter, type TooltipBaseProps, type TooltipBaseState } from '@fibrae/semi-foundation/tooltip/foundation';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { COLOR_SCHEME_SELECTOR, POPUP_ID_ATTRIBUTE, TRIGGER_EVENT_NAMES, canRoleCarryPopupState, colorSchemeOf, cssClasses, isBlockDisplay, numbers, popupTarget, strings, wrapsSpecialTrigger } from '@fibrae/semi-foundation/components/tooltip/constants';
+import TooltipFoundation, { type Position, type TooltipAdapter, type TooltipBaseProps, type TooltipBaseState } from '@fibrae/semi-foundation/components/tooltip/foundation';
 import { joinIds, warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import warning from '@fibrae/semi-foundation/utils/warning';
-import '@fibrae/semi-foundation/tooltip/tooltip.scss';
+import '@fibrae/semi-foundation/components/tooltip/tooltip.scss';
 import autofocus from '../_base/autofocus';
 import { PopupLayerContext } from '../_base/popup-layer';
 import useDefaultProps from '../_base/use-default-props';

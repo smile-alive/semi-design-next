@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/date-picker/constants';
-    import type { PresetType } from '@fibrae/semi-foundation/date-picker/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/date-picker/constants';
+    import type { PresetType } from '@fibrae/semi-foundation/components/date-picker/foundation';
     import { Button } from '../button/index.js';
     import { TypographyText } from '../typography/index.js';
     import type { QuickControlProps } from './internal.js';

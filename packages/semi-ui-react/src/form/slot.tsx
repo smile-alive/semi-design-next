@@ -1,7 +1,7 @@
 import React, { useId } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-import { normalizeFieldError } from '@fibrae/semi-foundation/form/errors';
+import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+import { normalizeFieldError } from '@fibrae/semi-foundation/components/form/errors';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import type { ElementProps } from '../_base/base';
 import { namedRole } from '../_base/named-role';

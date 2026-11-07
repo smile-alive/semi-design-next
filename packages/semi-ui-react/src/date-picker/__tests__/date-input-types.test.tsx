@@ -1,6 +1,6 @@
 import type React from 'react';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
-import type { DateInputFoundationProps } from '@fibrae/semi-foundation/date-picker/input-foundation';
+import type { DateInputFoundationProps } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 import type { DateInputProps } from '../index';
 
 // The assertions are checked by typecheck; the runtime body only keeps the file a valid test.

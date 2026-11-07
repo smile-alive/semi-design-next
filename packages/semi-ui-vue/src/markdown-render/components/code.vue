@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { Text, normalizeClass, useAttrs, type VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
-    import MarkdownRenderFoundation from '@fibrae/semi-foundation/markdown-render/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
+    import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
     import slotNodes from '../../_base/slot-nodes';
     import CodeHighlight from '../../code-highlight';
     import codeText from '../code-text';

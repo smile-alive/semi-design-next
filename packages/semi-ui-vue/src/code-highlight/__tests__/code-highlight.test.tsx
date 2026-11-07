@@ -4,15 +4,15 @@ import { renderToString } from 'vue/server-renderer';
 import { waitFor } from '@testing-library/vue';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { register as foundationRegister } from '@fibrae/semi-foundation/code-highlight/registry';
+import { register as foundationRegister } from '@fibrae/semi-foundation/components/code-highlight/registry';
 import { render, sleep } from '@test/utils/vue';
 import CodeHighlight from '..';
 import { SemiGlobal, semiGlobalKey } from '../../_utils/semi-global';
 import { grammar } from './grammars';
 
 const highlights = vi.hoisted(() => ({ count: 0 }));
-vi.mock('@fibrae/semi-foundation/code-highlight/highlighter', async (importOriginal) => {
-    const original = await importOriginal<typeof import('@fibrae/semi-foundation/code-highlight/highlighter')>();
+vi.mock('@fibrae/semi-foundation/components/code-highlight/highlighter', async (importOriginal) => {
+    const original = await importOriginal<typeof import('@fibrae/semi-foundation/components/code-highlight/highlighter')>();
     return {
         ...original,
         highlight: (...args: Parameters<typeof original.highlight>) => {

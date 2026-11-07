@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="R extends Record<string, any>">
     import { computed, defineAsyncComponent, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/table/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';

@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
-import type { DayStatusType, RangeInput } from '@fibrae/semi-foundation/date-picker/foundation';
-import type { DateInputFoundationProps } from '@fibrae/semi-foundation/date-picker/input-foundation';
+import type { DayStatusType, RangeInput } from '@fibrae/semi-foundation/components/date-picker/foundation';
+import type { DateInputFoundationProps } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 import type { DateInputProps, DatePickerProps, MonthsGridProps, TriggerRenderProps } from '..';
 
 // The assertions are checked by typecheck; the runtime bodies only keep the file a valid test.

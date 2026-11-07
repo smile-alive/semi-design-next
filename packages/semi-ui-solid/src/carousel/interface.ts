@@ -1,6 +1,6 @@
 import type { JSX, Ref } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/carousel/constants';
-import type { CarouselAutoPlay } from '@fibrae/semi-foundation/carousel/foundation';
+import type { strings } from '@fibrae/semi-foundation/components/carousel/constants';
+import type { CarouselAutoPlay } from '@fibrae/semi-foundation/components/carousel/foundation';
 import type { ElementProps } from '../_base/element-props';
 
 export interface CarouselHandle {

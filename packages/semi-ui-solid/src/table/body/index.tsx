@@ -1,9 +1,9 @@
 import { type JSX, For, Show, createEffect, createMemo, createSelector, createSignal, on, splitProps, untrack } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { numbers } from '@fibrae/semi-foundation/table/constants';
-import type { BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
-import { type ExpandBtnShouldInRowProps, type FlattenData, type GroupFlattenData, arrayAdd, buildRecordsByKey, expandBtnShouldInRow, flattenBodyRows, getRecordKey, getRowSpanHoverKeys, isDisabled, isExpanded, isSelected, resolveVirtualizedItemSize } from '@fibrae/semi-foundation/table/utils';
+import { numbers } from '@fibrae/semi-foundation/components/table/constants';
+import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
+import { type ExpandBtnShouldInRowProps, type FlattenData, type GroupFlattenData, arrayAdd, buildRecordsByKey, expandBtnShouldInRow, flattenBodyRows, getRecordKey, getRowSpanHoverKeys, isDisabled, isExpanded, isSelected, resolveVirtualizedItemSize } from '@fibrae/semi-foundation/components/table/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import callHandler from '../../_base/call-handler';

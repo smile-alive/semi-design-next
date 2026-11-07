@@ -1,5 +1,5 @@
 import type { ComponentPublicInstance, StyleValue, VNode } from 'vue';
-import type { CheckRelation, ExpandAction } from '@fibrae/semi-foundation/tree/foundation';
+import type { CheckRelation, ExpandAction } from '@fibrae/semi-foundation/components/tree/foundation';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import type { ValidateStatus } from '../input/interface';
 import type { PopoverProps } from '../popover/interface';

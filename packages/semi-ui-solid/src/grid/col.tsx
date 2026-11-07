@@ -1,6 +1,6 @@
 import { splitProps } from 'solid-js';
-import { cssClasses } from '@fibrae/semi-foundation/grid/constants';
-import { getColClassName, type ColSize } from '@fibrae/semi-foundation/grid/utils';
+import { cssClasses } from '@fibrae/semi-foundation/components/grid/constants';
+import { getColClassName, type ColSize } from '@fibrae/semi-foundation/components/grid/utils';
 import type { ElementProps } from '../_base/element-props';
 import useDefaultProps from '../_base/use-default-props';
 

@@ -1,9 +1,9 @@
 import { Fragment, useId, useMemo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
-import { calcRowHeight, toPercent } from '@fibrae/semi-foundation/calendar/event-util';
-import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
-import '@fibrae/semi-foundation/calendar/calendar.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
+import { calcRowHeight, toPercent } from '@fibrae/semi-foundation/components/calendar/event-util';
+import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
+import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import useMergedRef from '../_base/use-merged-ref';
 import useLocale from '../locale/use-locale';
 import DayCol from './day-col';

@@ -1,7 +1,7 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vite-plus/test';
+import ToastListStore from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import ToastListStore from '@fibrae/semi-foundation/toast/toast-list-foundation';
 import { Toast } from '../index';
 import type { ToastHookApi } from '../interface';
 import ToastList from '../toast-list.svelte';

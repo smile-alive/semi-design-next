@@ -1,7 +1,7 @@
 import { type JSX, Show, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/table/constants';
-import { getNextSortOrder } from '@fibrae/semi-foundation/table/utils';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/table/constants';
+import { getNextSortOrder } from '@fibrae/semi-foundation/components/table/utils';
 import { IconCaretdown, IconCaretup } from '@fibrae/semi-icons-solid';
 import useLocale from '../locale/use-locale';
 import Tooltip from '../tooltip';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, normalizeStyle, useTemplateRef, type CSSProperties } from 'vue';
-    import { cssClasses, getPopoverRole, getPopoverSpacing } from '@fibrae/semi-foundation/popover/constants';
-    import '@fibrae/semi-foundation/popover/popover.scss';
+    import { cssClasses, getPopoverRole, getPopoverSpacing } from '@fibrae/semi-foundation/components/popover/constants';
+    import '@fibrae/semi-foundation/components/popover/popover.scss';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import type { TooltipProps } from '../tooltip/interface';
     import Tooltip from '../tooltip/tooltip.vue';

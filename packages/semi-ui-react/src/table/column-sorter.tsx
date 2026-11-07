@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/table/constants';
-import { getNextSortOrder } from '@fibrae/semi-foundation/table/utils';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/table/constants';
+import { getNextSortOrder } from '@fibrae/semi-foundation/components/table/utils';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import { IconCaretup, IconCaretdown } from '@fibrae/semi-icons-react';
 import useLocale from '../locale/use-locale';

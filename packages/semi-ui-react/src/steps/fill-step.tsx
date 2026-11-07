@@ -1,6 +1,6 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { stepsClasses as css } from '@fibrae/semi-foundation/steps/constants';
+import { stepsClasses as css } from '@fibrae/semi-foundation/components/steps/constants';
 import { IconTickCircle, IconAlertCircle, IconAlertTriangle } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import type { Status } from './types';

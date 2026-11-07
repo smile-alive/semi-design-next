@@ -1,6 +1,6 @@
 # 样式
 
-组件样式是 `packages/semi-foundation/src/<组件>/` 下的 SCSS，各框架包的组件在 JS 里直接导入（`import '@fibrae/semi-foundation/tag/tag.scss'`）。唯一的主题在 `packages/semi-foundation/src/theme/`，经 `semi:theme` 加载；没有主题包和编译期覆写，使用方只通过 `--semi-*` CSS 变量和不分层的 CSS 规则定制。importer 与构建协议见本文「Sass 模块与 semi: importer」，主题 token 见「主题 token 协议」。lint 用 stylelint，配置在 `stylelint.config.ts`，warning 也算失败。
+组件样式是 `packages/semi-foundation/src/components/<组件>/` 下的 SCSS，各框架包的组件在 JS 里直接导入（`import '@fibrae/semi-foundation/components/tag/tag.scss'`）。唯一的主题在 `packages/semi-foundation/src/theme/`，经 `semi:theme` 加载；没有主题包和编译期覆写，使用方只通过 `--semi-*` CSS 变量和不分层的 CSS 规则定制。importer 与构建协议见本文「Sass 模块与 semi: importer」，主题 token 见「主题 token 协议」。lint 用 stylelint，配置在 `stylelint.config.ts`，warning 也算失败。
 
 ## 组件 SCSS
 

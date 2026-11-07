@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from 'vue';
     import { format, isSameDay, startOfDay } from 'date-fns';
-    import { cssClasses } from '@fibrae/semi-foundation/calendar/constants';
-    import { checkWeekend } from '@fibrae/semi-foundation/calendar/event-util';
-    import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
+    import { checkWeekend } from '@fibrae/semi-foundation/components/calendar/event-util';
+    import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
     import { hasSlotContent } from '../_base/slot-nodes';
     import useLocale from '../locale/use-locale';
     import { useCalendarContext } from './context';

@@ -1,8 +1,23 @@
 <script lang="ts">
     import { untrack } from 'svelte';
-    import { numbers, strings } from '@fibrae/semi-foundation/table/constants';
-    import type { BaseEllipsis } from '@fibrae/semi-foundation/table/foundation';
-    import { getColumnsByLevel, getHeadWidths, getHeaderStickyOffset, getNextSortOrder, getRTLAlign, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isLastLeftFixed, isSelectionColumn, shouldShowEllipsisTitle, sliceColumnsByLevel, type TableHeaderCell } from '@fibrae/semi-foundation/table/utils';
+    import { numbers, strings } from '@fibrae/semi-foundation/components/table/constants';
+    import type { BaseEllipsis } from '@fibrae/semi-foundation/components/table/foundation';
+    import {
+        getColumnsByLevel,
+        getHeadWidths,
+        getHeaderStickyOffset,
+        getNextSortOrder,
+        getRTLAlign,
+        isExpandedColumn,
+        isFirstFixedRight,
+        isFixedLeft,
+        isFixedRight,
+        isLastLeftFixed,
+        isSelectionColumn,
+        shouldShowEllipsisTitle,
+        sliceColumnsByLevel,
+        type TableHeaderCell,
+    } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
     import useLocale from '../locale/use-locale.svelte.js';

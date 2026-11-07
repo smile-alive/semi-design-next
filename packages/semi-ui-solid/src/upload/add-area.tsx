@@ -1,5 +1,5 @@
 import { children, createSignal, splitProps, untrack } from 'solid-js';
-import { addAreaControlAttributes, containsControl, containsName } from '@fibrae/semi-foundation/upload/utils';
+import { addAreaControlAttributes, containsControl, containsName } from '@fibrae/semi-foundation/components/upload/utils';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';

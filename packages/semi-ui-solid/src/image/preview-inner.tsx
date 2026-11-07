@@ -1,10 +1,10 @@
 import { Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/image/constants';
-import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerState, type RatioType } from '@fibrae/semi-foundation/image/preview-inner-foundation';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/image/constants';
+import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerState, type RatioType } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-solid';
 import hasContent from '../_base/has-content';
 import PopupPortal from '../_base/popup-portal';

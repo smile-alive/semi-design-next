@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from 'vue';
-    import ComboboxFoundation, { type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/time-picker/combox-foundation';
-    import { strings } from '@fibrae/semi-foundation/time-picker/constants';
+    import ComboboxFoundation, { type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
+    import { strings } from '@fibrae/semi-foundation/components/time-picker/constants';
     import useLocale from '../locale/use-locale';
     import ScrollItem from '../scroll-list/scroll-item.vue';
     import ScrollList from '../scroll-list/scroll-list.vue';

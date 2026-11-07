@@ -1,7 +1,7 @@
 import type React from 'react';
 import type { MouseEvent, ReactNode } from 'react';
 import clsx from 'clsx';
-import { cssClasses, getTabKeyAttrs } from '@fibrae/semi-foundation/tabs/constants';
+import { cssClasses, getTabKeyAttrs } from '@fibrae/semi-foundation/components/tabs/constants';
 import { IconClose } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import useLocale from '../locale/use-locale';

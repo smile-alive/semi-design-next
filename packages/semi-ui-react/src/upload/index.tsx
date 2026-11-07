@@ -1,9 +1,9 @@
 import { useCallback, useImperativeHandle, useLayoutEffect, useRef, useState, type ReactNode, type CSSProperties, type ChangeEvent, type DragEvent, type FocusEvent, type KeyboardEvent } from 'react';
 import clsx from 'clsx';
-import { strings, cssClasses } from '@fibrae/semi-foundation/upload/constants';
-import UploadFoundation, { type CustomFile, type UploadAdapter, type UploadBaseState, type BeforeUploadObjectResult, type AfterUploadResult, type FileItemStatus } from '@fibrae/semi-foundation/upload/foundation';
-import { addAreaControlAttributes, containsControl, containsName, ListFocusTracker } from '@fibrae/semi-foundation/upload/utils';
-import '@fibrae/semi-foundation/upload/upload.scss';
+import { strings, cssClasses } from '@fibrae/semi-foundation/components/upload/constants';
+import UploadFoundation, { type CustomFile, type UploadAdapter, type UploadBaseState, type BeforeUploadObjectResult, type AfterUploadResult, type FileItemStatus } from '@fibrae/semi-foundation/components/upload/foundation';
+import { addAreaControlAttributes, containsControl, containsName, ListFocusTracker } from '@fibrae/semi-foundation/components/upload/utils';
+import '@fibrae/semi-foundation/components/upload/upload.scss';
 import { IconUpload } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import type { ValidateStatus } from '../_base/base-component';

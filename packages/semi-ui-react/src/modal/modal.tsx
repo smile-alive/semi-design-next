@@ -1,10 +1,10 @@
 import type React from 'react';
 import { type CSSProperties, type ReactNode, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
-import ModalFoundation, { type ModalAdapter, type ModalProps, type ModalState } from '@fibrae/semi-foundation/modal/modal-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
+import ModalFoundation, { type ModalAdapter, type ModalProps, type ModalState } from '@fibrae/semi-foundation/components/modal/modal-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-import '@fibrae/semi-foundation/modal/modal.scss';
+import '@fibrae/semi-foundation/components/modal/modal.scss';
 import useDefaultProps from '../_base/use-default-props';
 import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
@@ -22,7 +22,7 @@ import ModalContent from './modal-content';
 type Foundation = ModalFoundation<ModalReactProps, React.MouseEvent | KeyboardEvent, React.MouseEvent>;
 type Adapter = ModalAdapter<ModalReactProps, React.MouseEvent | KeyboardEvent, React.MouseEvent>;
 
-export type { ModalState } from '@fibrae/semi-foundation/modal/modal-foundation';
+export type { ModalState } from '@fibrae/semi-foundation/components/modal/modal-foundation';
 export interface ModalReactProps extends ModalProps {
     cancelButtonProps?: ButtonProps;
     children?: React.ReactNode;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses, getTabKeyAttrs } from '@fibrae/semi-foundation/tabs/constants';
+    import { cssClasses, getTabKeyAttrs } from '@fibrae/semi-foundation/components/tabs/constants';
     import { IconClose } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { hasSlotContent } from '../_base/slot-nodes';

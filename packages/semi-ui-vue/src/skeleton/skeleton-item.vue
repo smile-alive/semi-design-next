@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/skeleton/constants';
-    import '@fibrae/semi-foundation/skeleton/skeleton.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/skeleton/constants';
+    import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
     import type { SkeletonAvatarProps } from './interface';
 
     interface SkeletonItemProps extends SkeletonAvatarProps {

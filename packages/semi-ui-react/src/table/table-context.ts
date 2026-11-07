@@ -1,4 +1,4 @@
-import type { BaseRowKeyType, BaseHeadWidth } from '@fibrae/semi-foundation/table/foundation';
+import type { BaseRowKeyType, BaseHeadWidth } from '@fibrae/semi-foundation/components/table/foundation';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import { createContext } from '../_base/create-context';
 import type { ContextValue } from '../config-provider/context';

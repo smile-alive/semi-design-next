@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
-    import { isFixedLeft, isFixedRight } from '@fibrae/semi-foundation/table/utils';
+    import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
+    import { isFixedLeft, isFixedRight } from '@fibrae/semi-foundation/components/table/utils';
     import { getTableContext } from '../context.js';
     import type { ColumnProps } from '../interface.js';
     import TableCell from '../table-cell.svelte';

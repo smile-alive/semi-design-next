@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/progress/constants';
-    import { generateColor } from '@fibrae/semi-foundation/progress/generates';
-    import { calcCircleGeometry, calcPercent } from '@fibrae/semi-foundation/progress/utils';
-    import '@fibrae/semi-foundation/progress/progress.scss';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/progress/constants';
+    import { generateColor } from '@fibrae/semi-foundation/components/progress/generates';
+    import { calcCircleGeometry, calcPercent } from '@fibrae/semi-foundation/components/progress/utils';
+    import '@fibrae/semi-foundation/components/progress/progress.scss';
     import type { ElementProps } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import type { ProgressProps, ProgressSlots } from './interface';

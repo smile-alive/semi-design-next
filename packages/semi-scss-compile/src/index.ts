@@ -16,17 +16,19 @@ export interface Options {
     cssLayer?: boolean;
 }
 
-// Every component's stylesheet, folders sorted by name: the cascade order the full stylesheet uses
+// Every component's stylesheet plus base/base.scss, sorted by folder name: the cascade order the full stylesheet uses.
+// portal goes first so component rules on the same popup element (equal specificity) override it.
+// theme/ is loaded through semi:theme, its tokens through the entry's semi:theme/global and semi:theme/animation.
 function componentStylesheets(foundationPath: string, iconPath: string) {
-    const fileOf: Record<string, string> = { _portal: 'portal.scss' };
-    // theme/ is loaded through semi:theme, its tokens through the entry's semi:theme/global and semi:theme/animation
-    const folders = [...new Set(fs.globSync('*/*.scss', { cwd: foundationPath, exclude: ['theme/**'] }).map((file) => path.dirname(file)))];
+    const components = path.join(foundationPath, 'components');
+    const folders = [...new Set(fs.globSync('*/*.scss', { cwd: components }).map((file) => path.dirname(file)))];
+    const sortKey = (folder: string) => (folder === 'portal' ? '' : folder);
     return [
-        ...folders.toSorted().map((folder) => path.join(foundationPath, folder, fileOf[folder] ?? `${folder}.scss`)),
+        ...[...folders, 'base'].toSorted((a, b) => (sortKey(a) < sortKey(b) ? -1 : 1)).map((folder) => path.join(folder === 'base' ? foundationPath : components, folder, `${folder}.scss`)),
         path.join(iconPath, 'styles', 'icons.scss'),
         // second stylesheets of a component folder
-        path.join(foundationPath, 'button', 'icon-button.scss'),
-        path.join(foundationPath, 'input', 'textarea.scss'),
+        path.join(components, 'button', 'icon-button.scss'),
+        path.join(components, 'input', 'textarea.scss'),
     ];
 }
 

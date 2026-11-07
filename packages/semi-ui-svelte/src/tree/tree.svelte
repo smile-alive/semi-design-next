@@ -1,10 +1,10 @@
 <script lang="ts">
     import { getAllContexts, mount, tick, unmount } from 'svelte';
     import { isEqual } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
-    import TreeFoundation, { type BasicTreeInnerData, type BasicTreeNodeData, type BasicTreeProps, type TreeAdapter } from '@fibrae/semi-foundation/tree/foundation';
-    import { buildRowProps, getClearedSelection, nodeId } from '@fibrae/semi-foundation/tree/shared';
-    import '@fibrae/semi-foundation/tree/tree.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
+    import TreeFoundation, { type BasicTreeInnerData, type BasicTreeNodeData, type BasicTreeProps, type TreeAdapter } from '@fibrae/semi-foundation/components/tree/foundation';
+    import { buildRowProps, getClearedSelection, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
+    import '@fibrae/semi-foundation/components/tree/tree.scss';
     import { IconSearch } from '@fibrae/semi-icons-svelte';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';

@@ -1,7 +1,7 @@
 import type React from 'react';
 import { isValidElement } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/typography/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
 import { IconCopy, IconTick } from '@fibrae/semi-icons-react';
 import type { BaseProps } from '../_base/base-component';
 import useCopied from '../_base/use-copied';

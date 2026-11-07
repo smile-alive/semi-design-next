@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/empty/constants';
-    import '@fibrae/semi-foundation/empty/empty.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/empty/constants';
+    import '@fibrae/semi-foundation/components/empty/empty.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import { TypographyTitle } from '../typography/index.js';
     import type { EmptyProps } from './interface.js';

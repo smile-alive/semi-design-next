@@ -1,7 +1,7 @@
 <script lang="ts">
     import { untrack } from 'svelte';
-    import { cssClasses, getStackItemTransform, numbers } from '@fibrae/semi-foundation/notification/constants';
-    import NotificationFoundation, { type NoticeAdapter, type NoticeState, type NoticeType } from '@fibrae/semi-foundation/notification/notification-foundation';
+    import { cssClasses, getStackItemTransform, numbers } from '@fibrae/semi-foundation/components/notification/constants';
+    import NotificationFoundation, { type NoticeAdapter, type NoticeState, type NoticeType } from '@fibrae/semi-foundation/components/notification/notification-foundation';
     import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
     import { isAlertType, readNoticeText } from '@fibrae/semi-foundation/utils/announcer';
     import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-svelte';

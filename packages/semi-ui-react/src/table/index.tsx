@@ -1,5 +1,5 @@
 import { Suspense, lazy, memo } from 'react';
-import { strings, cssClasses, numbers } from '@fibrae/semi-foundation/table/constants';
+import { strings, cssClasses, numbers } from '@fibrae/semi-foundation/components/table/constants';
 import useDefaultProps from '../_base/use-default-props';
 import useIsServerRender from '../_base/use-is-server-render';
 import { useConfigContext } from '../config-provider/context';

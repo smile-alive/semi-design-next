@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, onBeforeUnmount, onMounted, shallowRef, watch } from 'vue';
     import { isEqual } from 'es-toolkit';
-    import BreakpointObserver, { noScreens } from '@fibrae/semi-foundation/config-provider/breakpoint-observer';
-    import { inheritConfig, switchesDirection } from '@fibrae/semi-foundation/config-provider/inherit-config';
-    import { defaultResponsiveMap } from '@fibrae/semi-foundation/grid/constants';
+    import BreakpointObserver, { noScreens } from '@fibrae/semi-foundation/components/config-provider/breakpoint-observer';
+    import { inheritConfig, switchesDirection } from '@fibrae/semi-foundation/components/config-provider/inherit-config';
+    import { defaultResponsiveMap } from '@fibrae/semi-foundation/components/grid/constants';
     import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
     import { provideConfigContext } from './context';
     import type { ConfigProviderProps, ConfigProviderSlots, ContextValue } from './interface';

@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-    import { errorMessages, isErrorLeaf } from '@fibrae/semi-foundation/form/errors';
-    import '@fibrae/semi-foundation/form/form.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+    import { errorMessages, isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
+    import '@fibrae/semi-foundation/components/form/form.scss';
     import { IconAlertCircle, IconAlertTriangle } from '@fibrae/semi-icons-svelte';
     import type { ErrorMessageProps } from './interface.js';
 

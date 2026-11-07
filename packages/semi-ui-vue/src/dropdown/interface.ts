@@ -1,5 +1,5 @@
 import type { CSSProperties, VNode } from 'vue';
-import type { DropdownSelectionMode } from '@fibrae/semi-foundation/dropdown/menu-foundation';
+import type { DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import type { TooltipEmits, TooltipProps } from '../tooltip/interface';
 
 export type { Position, Trigger } from '../tooltip/interface';

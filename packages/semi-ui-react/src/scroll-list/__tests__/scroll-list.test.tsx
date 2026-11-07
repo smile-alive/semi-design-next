@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor, within } from '@testing-library/rea
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import type { Item } from '@fibrae/semi-foundation/scroll-list/item-foundation';
+import type { Item } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
 import { Button } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import { sleep } from '@test/utils/react';

@@ -1,6 +1,6 @@
 import { type JSX, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/popover/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/popover/constants';
 
 /** An option object with React's and Vue's camelCase keys, not a Solid style object */
 export interface ArrowStyle {

@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import type { ClassValue } from 'svelte/elements';
-    import { cssClasses } from '@fibrae/semi-foundation/form/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import Col from '../grid/col.svelte';
     import type { ColProps } from '../grid/interface.js';
     import Row from '../grid/row.svelte';

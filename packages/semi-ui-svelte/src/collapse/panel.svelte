@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/collapse/constants';
-    import CollapseFoundation from '@fibrae/semi-foundation/collapse/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
+    import CollapseFoundation from '@fibrae/semi-foundation/components/collapse/foundation';
     import { IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-svelte';
     import Collapsible from '../collapsible/collapsible.svelte';
     import { getCollapseContext } from './context.js';

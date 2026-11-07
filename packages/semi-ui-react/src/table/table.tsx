@@ -2,12 +2,12 @@ import React, { type ReactNode, isValidElement, useCallback, useEffect, useId, u
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
 import { get } from 'es-toolkit/compat';
-import { strings } from '@fibrae/semi-foundation/table/constants';
-import TableFoundation, { type TableAdapter, type TableBaseState, type BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
-import { type FlattenData, type GroupFlattenData, amendTableWidth, assignColumnKeys, flattenColumns, flattenData, getCellWidths, getExpandColumn, getHeaderRowCount, getSelectionColumn, mergedRowExpandable, placeInnerColumns, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/table/utils';
+import { strings } from '@fibrae/semi-foundation/components/table/constants';
+import TableFoundation, { type TableAdapter, type TableBaseState, type BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
+import { type FlattenData, type GroupFlattenData, amendTableWidth, assignColumnKeys, flattenColumns, flattenData, getCellWidths, getExpandColumn, getHeaderRowCount, getSelectionColumn, mergedRowExpandable, placeInnerColumns, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/components/table/utils';
 import isObject from '@fibrae/semi-foundation/utils/is-object';
 import warning from '@fibrae/semi-foundation/utils/warning';
-import '@fibrae/semi-foundation/table/table.scss';
+import '@fibrae/semi-foundation/components/table/table.scss';
 import { createContext } from '../_base/create-context';
 import useFoundation from '../_base/use-foundation';
 import useResizeObserver from '../_base/use-resize-observer';
