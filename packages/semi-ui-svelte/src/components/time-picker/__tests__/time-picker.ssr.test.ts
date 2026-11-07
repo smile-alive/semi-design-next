@@ -1,6 +1,6 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import Fixture, { type FixtureStore } from './time-picker-fixture.svelte';
 
 const renderBody = (init: Partial<FixtureStore>) => render(Fixture, { props: { store: createStore<FixtureStore>({ target: 'value', mode: 'one-way', accept: true, log: [], props: {}, ...init }) } }).body;

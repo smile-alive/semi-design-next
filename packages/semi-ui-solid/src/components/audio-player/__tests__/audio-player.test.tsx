@@ -4,9 +4,9 @@ import { type MockInstance, afterAll, afterEach, beforeAll, beforeEach, describe
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { countLiveListeners } from '@test/utils/solid';
 import AudioPlayer, { type AudioPlayerProps, type AudioUrl } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import LocaleProvider from '../../locale/locale-provider';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-audio-player`;

@@ -7,9 +7,9 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { mockResizeObserver, render } from '@test/utils/vue';
 import Tabs, { TabItem, TabPane, type PlainTab, type TabBarProps, type TabPaneProps, type TabsArrowSlotProps, type TabsDropdownItemProps, type TabsEmits, type TabsMoreContentSlotProps, type TabsProps, type TabsTabBarSlotProps, type TabsTabSlotProps } from '..';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import Closable from './fixtures/closable.vue';
 import Collect from './fixtures/collect.vue';

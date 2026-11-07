@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref } from 'vue';
-    import Radio, { RadioGroup } from '../../../radio';
+    import Radio, { RadioGroup } from '@fibrae/semi-ui-vue/radio/index';
     import Calendar from '../../calendar.vue';
     import type { CalendarMode, EventObject } from '../../interface';
 

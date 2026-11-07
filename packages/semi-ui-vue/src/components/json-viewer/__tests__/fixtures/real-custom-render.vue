@@ -1,7 +1,7 @@
 <script setup lang="ts">
+    import Popover from '@fibrae/semi-ui-vue/popover/index';
+    import Rating from '@fibrae/semi-ui-vue/rating/index';
     import JsonViewer, { type JsonViewerOptions } from '../..';
-    import Popover from '../../../popover';
-    import Rating from '../../../rating';
 
     defineProps<{ value: string }>();
 

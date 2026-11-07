@@ -1,7 +1,7 @@
 import { flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import Fixture, { type FixtureStore } from './json-viewer-fixture.svelte';
 
 // The real editor core, unlike json-viewer.test.ts. jsdom has no Worker, blob URLs or idle callbacks: the fake worker

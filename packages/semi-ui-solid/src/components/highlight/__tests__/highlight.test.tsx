@@ -1,8 +1,8 @@
 import { createSignal } from 'solid-js';
 import { render } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Highlight, { type HighlightProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 const marks = (container: HTMLElement, tag = 'mark') => [...container.querySelectorAll(tag)];
 const texts = (container: HTMLElement, tag = 'mark') => marks(container, tag).map((el) => el.textContent);

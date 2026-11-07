@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref } from 'vue';
+    import type { TreeNodeData } from '@fibrae/semi-ui-vue/tree/index';
     import TreeSelect from '../..';
-    import type { TreeNodeData } from '../../../tree';
 
     // `multiple` arrives as '' because the generic Multiple gives Vue no Boolean type to cast it with
     defineOptions({ inheritAttrs: false });

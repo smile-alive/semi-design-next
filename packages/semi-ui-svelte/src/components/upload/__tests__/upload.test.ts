@@ -466,7 +466,7 @@ describe('Upload beforeUpload 与 afterUpload', () => {
     it('全局默认值对函数 prop 也生效，实例值优先', async () => {
         const globalBeforeUpload = vi.fn<BeforeUpload>(() => false);
         const ownBeforeUpload = vi.fn<BeforeUpload>(() => true);
-        const { default: semiGlobal } = await import('../../../utils/semi-global');
+        const { default: semiGlobal } = await import('@fibrae/semi-ui-svelte/utils/semi-global');
         const previous = semiGlobal.config.overrideDefaultProps;
         semiGlobal.config.overrideDefaultProps = { Upload: { listType: 'picture', beforeUpload: globalBeforeUpload } };
         try {

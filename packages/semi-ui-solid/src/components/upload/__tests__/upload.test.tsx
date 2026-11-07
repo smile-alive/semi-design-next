@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import type { CustomFile } from '@fibrae/semi-foundation/components/upload/foundation';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconUser } from '@fibrae/semi-icons-solid';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Upload, {
     type AfterUploadProps,
     type AfterUploadResult,
@@ -21,7 +22,6 @@ import Upload, {
     type UploadHandle,
     type UploadProps,
 } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import Button from '../../button';
 import FileCard from '../file-card';
 

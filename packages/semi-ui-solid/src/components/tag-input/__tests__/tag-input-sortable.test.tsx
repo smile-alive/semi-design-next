@@ -4,12 +4,12 @@ import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import type { SortableProps } from '@fibrae/semi-ui-solid/internal/sortable/types';
 import TagInput, { type TagInputProps } from '..';
-import type { SortableProps } from '../../../internal/sortable/types';
 
 // The sortable list loads lazily; this stand-in waits for the test to release it, and shows its ids and a sort end
 const gate = vi.hoisted(() => Promise.withResolvers<void>());
-vi.mock('../../../internal/sortable', async () => {
+vi.mock('@fibrae/semi-ui-solid/internal/sortable/index', async () => {
     await gate.promise;
     const handleCls = `${BASE_CLASS_PREFIX}-tagInput-sortable-handle`;
     const StubHandle = () => <button type="button" class={handleCls} aria-label="drag" />;

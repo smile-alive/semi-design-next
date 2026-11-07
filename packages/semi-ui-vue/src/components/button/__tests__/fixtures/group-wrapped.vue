@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import Tooltip from '../../../tooltip';
+    import Tooltip from '@fibrae/semi-ui-vue/tooltip/index';
     import ButtonGroup from '../../button-group.vue';
     import Button from '../../index';
     import Inner from './inner-button.vue';

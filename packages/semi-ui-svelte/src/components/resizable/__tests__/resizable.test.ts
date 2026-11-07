@@ -2,9 +2,9 @@ import { flushSync, tick } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { ResizeCallback, ResizeStartCallback } from '..';
-import { createStore } from '../../../__tests__/store.svelte';
-import semiGlobal from '../../../utils/semi-global';
 import Box from './box.svelte';
 import { down, drag, key, mockLayout, move, up } from './helpers';
 

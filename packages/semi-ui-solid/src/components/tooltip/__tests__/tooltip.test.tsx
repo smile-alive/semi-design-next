@@ -6,10 +6,10 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, onTestFinish
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { strings } from '@fibrae/semi-foundation/components/tooltip/constants';
 import { openLayer } from '@fibrae/semi-foundation/utils/layer';
+import { PopupLayerContext, usePopupLayer } from '@fibrae/semi-ui-solid/base/popup-layer';
+import semiGlobal, { type OverrideDefaultProps } from '@fibrae/semi-ui-solid/utils/semi-global';
 import { sleep } from '@test/utils/solid';
 import Tooltip, { type RenderContentProps, type TooltipHandle, type TooltipProps } from '..';
-import { PopupLayerContext, usePopupLayer } from '../../../base/popup-layer';
-import semiGlobal, { type OverrideDefaultProps } from '../../../utils/semi-global';
 import Button, { ButtonGroup } from '../../button';
 import ConfigProvider from '../../config-provider';
 import { useTooltipDescription } from '../context';

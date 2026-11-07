@@ -4,7 +4,7 @@ import { addDays } from 'date-fns';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { click, getFooterButtons, getPanel, getPopup, getPopups, getWeekDays, getYMSelected, setupPinned, ymd } from './date-picker-dom-utils';
 import NestedFixture, { type NestedFixtureStore } from './date-picker-nested-fixture.svelte';
 import { changes, clickOutside, dp, getContainer, getDay, getGrid, getInput, getInputs, getNavTitle, getRoot, opens, settle, setup, useBaseDate } from './test-utils';

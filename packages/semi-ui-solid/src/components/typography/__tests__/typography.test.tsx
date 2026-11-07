@@ -6,9 +6,9 @@ import { escapeRegExp } from 'es-toolkit';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconSetting } from '@fibrae/semi-icons-solid';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { mockResizeObserver, sleep } from '@test/utils/solid';
 import Typography, { type Ellipsis, type NumeralProps, type TextProps, type TitleProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import Dropdown from '../../dropdown';
 import type { CopyableConfig } from '../interface';
 

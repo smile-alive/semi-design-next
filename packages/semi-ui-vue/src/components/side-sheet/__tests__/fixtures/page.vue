@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref } from 'vue';
-    import Button from '../../../button';
+    import Button from '@fibrae/semi-ui-vue/button/index';
     import SideSheet from '../../side-sheet.vue';
 
     withDefaults(defineProps<{ mask?: boolean }>(), { mask: true });

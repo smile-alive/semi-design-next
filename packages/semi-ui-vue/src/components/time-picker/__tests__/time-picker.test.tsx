@@ -8,9 +8,9 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, render } from '@test/utils/vue';
 import TimePicker, { type TimePickerEmits, type TimePickerHandle, type TimePickerProps, type TimePickerSlots, type TimePickerTriggerSlotProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import { LocaleProvider } from '../../locale';
 import Popover from '../../popover';

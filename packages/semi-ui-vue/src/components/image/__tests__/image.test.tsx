@@ -4,9 +4,9 @@ import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import Image, { ImagePreview, type ImagePreviewProps, type ImageProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-image`;
 const src = 'https://example.com/a.jpg';

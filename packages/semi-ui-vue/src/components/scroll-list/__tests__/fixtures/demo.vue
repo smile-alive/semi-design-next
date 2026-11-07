@@ -1,6 +1,6 @@
 <script setup lang="ts">
+    import Button from '@fibrae/semi-ui-vue/button/index';
     import ScrollList, { ScrollItem, type ScrollItemSelectData } from '../..';
-    import Button from '../../../button';
 
     const props = withDefaults(
         defineProps<{

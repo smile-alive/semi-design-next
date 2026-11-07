@@ -2,8 +2,8 @@ import { flushSync } from 'svelte';
 import { fireEvent, render } from '@testing-library/svelte';
 import { afterEach, beforeEach, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { createStore } from '../../../__tests__/store.svelte';
-import semiGlobal from '../../../utils/semi-global';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import Fixture, { type FixtureStore } from './date-picker-fixture.svelte';
 
 export const dp = `${BASE_CLASS_PREFIX}-datepicker`;

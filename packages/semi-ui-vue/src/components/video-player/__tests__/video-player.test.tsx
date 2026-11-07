@@ -5,8 +5,8 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, render } from '@test/utils/vue';
-import { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import type { VideoControl, VideoPlayerEmits, VideoPlayerHandle, VideoPlayerProps } from '../interface';
 import VideoPlayer from '../video-player.vue';

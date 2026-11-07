@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Portal from '../../../internal/portal.svelte';
+    import Portal from '@fibrae/semi-ui-svelte/internal/portal.svelte';
     import type { TooltipProps, TooltipTriggerProps } from '../interface';
     import Tooltip from '../tooltip.svelte';
 

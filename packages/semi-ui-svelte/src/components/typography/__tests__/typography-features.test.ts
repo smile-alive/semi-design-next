@@ -2,7 +2,7 @@ import { flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import Fixture from './typography-fixture.svelte';
 
 const prefix = 'semi-typography';

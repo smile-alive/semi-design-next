@@ -2,9 +2,9 @@
 import { nextTick, shallowRef, type VNodeChild } from 'vue';
 import { screen, waitFor } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import DragMove, { type DragMoveProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import Card from './fixtures/card.vue';
 import ChildRef from './fixtures/child-ref.vue';
 import Handler from './fixtures/handler.vue';

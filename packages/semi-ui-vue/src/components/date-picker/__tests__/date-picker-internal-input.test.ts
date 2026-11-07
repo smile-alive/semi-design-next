@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import DatePicker from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 const clearButtonIn = (root: ParentNode) => root.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`);
 const settle = () => new Promise((resolve) => setTimeout(resolve));

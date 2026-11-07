@@ -5,9 +5,9 @@ import { beforeEach, describe, expect, expectTypeOf, it, vi, type Mock } from 'v
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { mockResizeObserver, sleep } from '@test/utils/solid';
 import JsonViewer, { type JsonViewerElement, type JsonViewerHandle, type JsonViewerProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import LocaleProvider from '../../locale/locale-provider';
 
 const fake = vi.hoisted(() => ({ instances: [] as unknown[] }));

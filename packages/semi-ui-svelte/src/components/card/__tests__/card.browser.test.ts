@@ -1,7 +1,7 @@
 import { render } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { CardProps } from '../interface';
 import CardFixture from './card-fixture.svelte';
 import type { Parts } from './fixture-parts';

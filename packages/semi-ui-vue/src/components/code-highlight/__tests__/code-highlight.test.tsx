@@ -5,9 +5,9 @@ import { waitFor } from '@testing-library/vue';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { register as foundationRegister } from '@fibrae/semi-foundation/components/code-highlight/registry';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render, sleep } from '@test/utils/vue';
 import CodeHighlight from '..';
-import { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import { grammar } from './grammars';
 
 const highlights = vi.hoisted(() => ({ count: 0 }));

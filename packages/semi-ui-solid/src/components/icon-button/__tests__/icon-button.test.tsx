@@ -1,7 +1,7 @@
 import { render, screen } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import { IconEdit } from '@fibrae/semi-icons-solid';
-import semiGlobal, { type OverrideDefaultProps } from '../../../utils/semi-global';
+import semiGlobal, { type OverrideDefaultProps } from '@fibrae/semi-ui-solid/utils/semi-global';
 import { ButtonGroup } from '../../button';
 import IconButton, { type IconButtonProps } from '../index';
 

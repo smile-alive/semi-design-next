@@ -1,7 +1,7 @@
 import { flushSync } from 'svelte';
 import { fireEvent, render } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import Fixture from './typography-fixture.svelte';
 
 const prefix = 'semi-typography';

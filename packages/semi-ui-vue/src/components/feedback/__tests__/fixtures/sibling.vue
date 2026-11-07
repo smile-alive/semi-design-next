@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import SideSheet from '../../../side-sheet';
+    import SideSheet from '@fibrae/semi-ui-vue/side-sheet/index';
     import Feedback from '../../feedback.vue';
 </script>
 

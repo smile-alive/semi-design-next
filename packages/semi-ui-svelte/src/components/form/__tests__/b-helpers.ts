@@ -1,6 +1,6 @@
 import { render } from '@testing-library/svelte';
 import { vi } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { FormApi } from '../interface';
 import FieldsFixture, { type AnyFieldSpec, type AnyFieldsStore } from './b-fields-fixture.svelte';
 import GroupFixture, { type GroupStore } from './b-group.svelte';

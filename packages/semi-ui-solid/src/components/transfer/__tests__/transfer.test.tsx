@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi, type Mock } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Transfer, { type DataItem, type PaginationProps, type SelectedPanelProps, type SourcePanelProps, type TransferElement, type TransferProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import Tooltip from '../../tooltip';
 
 // mock.lastCall is undefined until the first call; fail loudly instead of asserting on nothing

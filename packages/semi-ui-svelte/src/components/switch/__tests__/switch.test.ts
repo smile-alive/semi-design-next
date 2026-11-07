@@ -1,7 +1,7 @@
 import { flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import FallbackParent from './fallback-parent.svelte';
 import SwitchModes from './switch-modes.svelte';
 

@@ -1,7 +1,7 @@
 import { createRawSnippet } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import FormSlot from '../slot.svelte';
 import ASlotFixture, { type SlotStore } from './a-slot-fixture.svelte';
 import { errorSelector, prefix } from './helpers';

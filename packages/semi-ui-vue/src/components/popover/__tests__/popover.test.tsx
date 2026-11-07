@@ -2,8 +2,8 @@
 import { nextTick } from 'vue';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
+import semiGlobal, { semiGlobalKey, SemiGlobal } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
-import semiGlobal, { semiGlobalKey, SemiGlobal } from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider/config-provider.vue';
 import type { PopoverEmits, PopoverProps } from '../interface';
 import Popover from '../popover.vue';

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { setContext } from 'svelte';
-    import { type SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
+    import { type SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils/semi-global';
     import Banner from '../banner.svelte';
 
     let { semi }: { semi: SemiGlobal } = $props();

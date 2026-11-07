@@ -2,8 +2,8 @@ import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { createStore } from '../../../__tests__/store.svelte';
 import BannerFixture from './banner-fixture.svelte';
 
 function setup(props = {}, neighbors = false, container?: HTMLElement) {

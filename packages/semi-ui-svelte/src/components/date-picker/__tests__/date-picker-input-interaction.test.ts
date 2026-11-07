@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import ClearIconFixture, { type ClearIconFixtureStore } from './date-picker-clear-icon-fixture.svelte';
 import { click, getPopup, ymd } from './date-picker-dom-utils';
 import SlotsFixture, { type SlotsFixtureStore } from './date-picker-slots-fixture.svelte';

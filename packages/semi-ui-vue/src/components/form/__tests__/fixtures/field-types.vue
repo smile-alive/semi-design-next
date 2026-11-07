@@ -1,11 +1,11 @@
 <script setup lang="ts">
     import { ref, useTemplateRef } from 'vue';
     import { expectTypeOf } from 'vite-plus/test';
+    import AutoComplete from '@fibrae/semi-ui-vue/auto-complete/index';
+    import type { CascaderSimpleValue } from '@fibrae/semi-ui-vue/cascader/index';
+    import type { BasicSelectValue, SelectHandle } from '@fibrae/semi-ui-vue/select/index';
+    import type { TreeNodeData } from '@fibrae/semi-ui-vue/tree/interface';
     import { FormAutoComplete, FormCascader, FormCheckbox, FormSelect, FormTreeSelect, FormUpload, withField } from '../..';
-    import AutoComplete from '../../../auto-complete';
-    import type { CascaderSimpleValue } from '../../../cascader';
-    import type { BasicSelectValue, SelectHandle } from '../../../select';
-    import type { TreeNodeData } from '../../../tree/interface';
     import type { FieldHandle } from '../../interface';
 
     type TreeValue = string | number | TreeNodeData;

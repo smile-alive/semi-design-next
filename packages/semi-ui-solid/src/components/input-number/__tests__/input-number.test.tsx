@@ -6,8 +6,8 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { numbers } from '@fibrae/semi-foundation/components/input-number/constants';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import de from '@fibrae/semi-foundation/locale/source/de';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import InputNumber, { type InputNumberProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import { LocaleProvider } from '../../locale';
 import Tooltip from '../../tooltip';
 

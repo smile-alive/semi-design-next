@@ -2,9 +2,9 @@ import { flushSync } from 'svelte';
 import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { clickOutside } from '@test/utils/browser';
 import type { TreeSelectProps, TreeSelectValue } from '..';
-import { createStore } from '../../../__tests__/store.svelte';
 import { getRows, optionCls, treeData } from './data';
 import TreeSelectCase from './tree-select-case.svelte';
 

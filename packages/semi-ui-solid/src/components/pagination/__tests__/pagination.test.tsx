@@ -5,8 +5,8 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Pagination, { type PaginationProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import LocaleProvider from '../../locale/locale-provider';
 import Tooltip from '../../tooltip';

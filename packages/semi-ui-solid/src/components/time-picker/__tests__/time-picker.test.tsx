@@ -6,9 +6,9 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import Locale from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconClose } from '@fibrae/semi-icons-solid';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { countLiveListeners } from '@test/utils/solid';
 import TimePicker, { type TimePickerProps, type TimePickerTriggerRenderProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
 import { type FormApi, Form, FormTimePicker } from '../../form';

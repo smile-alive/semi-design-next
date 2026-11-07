@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref } from 'vue';
+    import type { TreeNodeData } from '@fibrae/semi-ui-vue/tree/index';
     import TreeSelect from '../..';
-    import type { TreeNodeData } from '../../../tree';
 
     type ChangeEvent = MouseEvent | KeyboardEvent | null;
     const data: TreeNodeData[] = [{ key: 'a', label: 'A', value: 'a' }];

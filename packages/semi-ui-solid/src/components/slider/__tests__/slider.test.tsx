@@ -5,8 +5,8 @@ import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/t
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Slider, { type SliderProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import Tooltip from '../../tooltip';
 

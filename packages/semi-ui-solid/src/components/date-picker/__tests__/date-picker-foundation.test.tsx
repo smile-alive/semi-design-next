@@ -8,8 +8,8 @@ import { strings } from '@fibrae/semi-foundation/components/date-picker/constant
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { zonedTimeToUtc } from '@fibrae/semi-foundation/utils/date-fns-extra';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import DatePicker, { type DatePickerElement, type DatePickerProps, type DisabledDateType } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import { LocaleProvider } from '../../locale';
 
 type ChangeHandler = NonNullable<DatePickerProps['onChange']>;

@@ -1,8 +1,8 @@
 import { createSignal, onMount } from 'solid-js';
 import { render, screen, waitFor } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Lottie, { type LottieProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 // a hoisted mock the tests read directly: lottie-web types loadAnimation as a method, which lint forbids passing around
 const loadAnimation = vi.hoisted(() => {

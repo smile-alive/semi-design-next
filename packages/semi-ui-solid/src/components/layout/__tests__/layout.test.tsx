@@ -2,9 +2,9 @@ import { createSignal, Show } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { mockMatchMedia } from '@test/utils/solid';
 import Layout from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-layout`;
 const hasSiderCls = `${prefixCls}-has-sider`;

@@ -1,7 +1,7 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vite-plus/test';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { CascaderData, CascaderProps, CascaderValue } from '..';
-import { createStore } from '../../../__tests__/store.svelte';
 import CascaderCase from './cascader-case.svelte';
 
 const treeData: CascaderData[] = [

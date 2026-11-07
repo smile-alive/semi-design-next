@@ -6,9 +6,9 @@ import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/t
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconSearch } from '@fibrae/semi-icons-vue';
+import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import Input, { InputGroup, TextArea, type InputChangeEvent, type InputHandle, type InputProps } from '..';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import InTooltip from './fixtures/in-tooltip.vue';
 import Model from './fixtures/model.vue';
 import Upper from './fixtures/upper.vue';

@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { IconHome } from '@fibrae/semi-icons-solid';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Nav, { type ItemKey, type NavFooterProps, type NavItemProps, type NavProps, type OnSelectedData, type SubNavProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import type { DropdownProps } from '../../dropdown';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-navigation`;

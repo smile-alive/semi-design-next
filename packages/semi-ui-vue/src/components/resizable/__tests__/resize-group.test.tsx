@@ -2,9 +2,9 @@
 import { nextTick, ref, type ComponentPublicInstance, type VNode } from 'vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { mockResizeObserver, render } from '@test/utils/vue';
 import { ResizeGroup, ResizeHandler, ResizeItem, type ResizeCallback, type Size } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import Group from './fixtures/group.vue';
 import { down, drag, key, mockLayout, move, nonPrimaryPresses, up } from './helpers';

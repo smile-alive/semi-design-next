@@ -4,8 +4,8 @@ import { fireEvent, render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Timeline, { type Data, type TimelineProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-timeline`;
 

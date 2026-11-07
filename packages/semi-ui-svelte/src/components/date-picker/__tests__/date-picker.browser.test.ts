@@ -4,8 +4,8 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { createStore } from '../../../__tests__/store.svelte';
 import Fixture, { type FixtureStore } from './date-picker-fixture.svelte';
 
 const dp = `${BASE_CLASS_PREFIX}-datepicker`;

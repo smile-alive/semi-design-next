@@ -4,8 +4,8 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Spin, { type SpinProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-spin`;

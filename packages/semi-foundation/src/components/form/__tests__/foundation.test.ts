@@ -1,7 +1,7 @@
 import scrollIntoView from 'scroll-into-view-if-needed';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
-import enUS from '../../../locale/source/en_US';
+import enUS from '@fibrae/semi-foundation/locale/source/en_US';
 import FieldStore from '../field-store';
 import { createFormApiProxy } from '../form-api-proxy';
 import FormFoundation from '../foundation';

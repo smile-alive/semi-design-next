@@ -1,8 +1,8 @@
 import { flushSync } from 'svelte';
 import { render } from '@testing-library/svelte';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
-import semiGlobal from '../../../utils/semi-global';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { DividerProps } from '../interface';
 import DividerFixture from './divider-fixture.svelte';
 

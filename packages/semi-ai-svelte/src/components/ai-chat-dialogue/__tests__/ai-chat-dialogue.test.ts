@@ -6,13 +6,13 @@ import type { Annotation } from '@fibrae/semi-ai-foundation/components/ai-chat-d
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+// the package entry, which also loads the semi-global type augmentation
+import { AIChatDialogue } from '@fibrae/semi-ai-svelte';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { AvatarProps } from '@fibrae/semi-ui-svelte/avatar/interface';
 import { Modal } from '@fibrae/semi-ui-svelte/modal/index';
 import { Toast } from '@fibrae/semi-ui-svelte/toast/index';
 import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
-// the package entry, which also loads the semi-global type augmentation
-import { AIChatDialogue } from '../../../index';
 import type { AIChatDialogueProps, DefaultActionNodeObj, MarkdownRenderProps, Message, Metadata } from '../interface';
 import ReferenceWidget from '../widgets/content-item/reference.svelte';
 import CustomStrong from './custom-strong.svelte';

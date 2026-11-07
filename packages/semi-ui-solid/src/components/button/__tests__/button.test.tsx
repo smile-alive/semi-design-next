@@ -4,8 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { type IconFill, IconAIEditLevel2, IconEdit } from '@fibrae/semi-icons-solid';
-import { PopupLayerContext } from '../../../base/popup-layer';
-import semiGlobal, { type OverrideDefaultProps } from '../../../utils/semi-global';
+import { PopupLayerContext } from '@fibrae/semi-ui-solid/base/popup-layer';
+import semiGlobal, { type OverrideDefaultProps } from '@fibrae/semi-ui-solid/utils/semi-global';
 import IconButton from '../../icon-button';
 import Button, { type ButtonProps, type HtmlType, type Theme, type Type, ButtonGroup } from '../index';
 

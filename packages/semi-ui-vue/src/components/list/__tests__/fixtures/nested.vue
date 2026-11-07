@@ -1,6 +1,6 @@
 <script setup lang="ts">
+    import Button from '@fibrae/semi-ui-vue/button/index';
     import List, { ListItem } from '../..';
-    import Button from '../../../button';
 
     const emit = defineEmits<{ inner: []; outer: [event: MouseEvent] }>();
 </script>

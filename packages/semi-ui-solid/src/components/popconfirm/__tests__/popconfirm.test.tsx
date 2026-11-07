@@ -5,9 +5,9 @@ import { describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plu
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { sleep } from '@test/utils/solid';
 import Popconfirm, { type PopconfirmHandle, type PopconfirmProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
 import { LocaleProvider } from '../../locale';

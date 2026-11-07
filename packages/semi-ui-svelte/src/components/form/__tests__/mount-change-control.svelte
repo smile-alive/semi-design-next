@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import watch from '../../../hooks/watch.svelte';
+    import watch from '@fibrae/semi-ui-svelte/hooks/watch.svelte';
 
     // Reports a change from its onMount, before the field registers, and again whenever emittedValue changes
     let { value = $bindable(), emittedValue, onChange }: { value?: unknown; emittedValue: string; onChange?: (value: string) => void } = $props();

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { useTemplateRef } from 'vue';
-    import useClickOutside from '../../../../composables/use-click-outside';
-    import Popover from '../../../popover';
+    import useClickOutside from '@fibrae/semi-ui-vue/composables/use-click-outside';
+    import Popover from '@fibrae/semi-ui-vue/popover/index';
     import { useNestedPopups } from '../../context';
 
     const emit = defineEmits<{ outside: [] }>();

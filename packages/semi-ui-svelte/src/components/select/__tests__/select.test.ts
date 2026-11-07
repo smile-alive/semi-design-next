@@ -1,9 +1,9 @@
 import { createRawSnippet, flushSync } from 'svelte';
 import { fireEvent, render, screen, within } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { SelectOptionItemSnippetProps, SelectOptionProps, SelectProps, SelectValue } from '..';
-import { createStore } from '../../../__tests__/store.svelte';
-import semiGlobal from '../../../utils/semi-global';
 import SelectCase from './select-case.svelte';
 
 type Mode = 'bind' | 'function' | 'one-way' | 'uncontrolled';

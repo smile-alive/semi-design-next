@@ -5,9 +5,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { numbers } from '@fibrae/semi-foundation/components/carousel/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { mockMatchMedia } from '@test/utils/solid';
 import Carousel, { type CarouselElement, type CarouselHandle, type CarouselProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 
 type OnChange = (index: number, preIndex: number) => void;

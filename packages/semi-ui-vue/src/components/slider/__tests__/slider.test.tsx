@@ -6,9 +6,9 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import Slider, { type HandleDot, type SliderProps } from '..';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import InTooltip from './fixtures/in-tooltip.vue';
 import MarksSlot from './fixtures/marks-slot.vue';

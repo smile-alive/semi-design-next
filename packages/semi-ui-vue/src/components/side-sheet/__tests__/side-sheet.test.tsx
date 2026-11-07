@@ -6,8 +6,8 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconEyeClosed } from '@fibrae/semi-icons-vue';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { endTransitions, render } from '@test/utils/vue';
-import semiGlobal from '../../../utils/semi-global';
 import Button from '../../button';
 import ButtonGroup from '../../button/button-group.vue';
 import ConfigProvider from '../../config-provider/config-provider.vue';

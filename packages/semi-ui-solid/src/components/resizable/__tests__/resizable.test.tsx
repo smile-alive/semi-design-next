@@ -1,9 +1,9 @@
 import { type ComponentProps, createSignal } from 'solid-js';
 import { fireEvent, render } from '@solidjs/testing-library';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { mockResizeObserver } from '@test/utils/solid';
 import { Resizable, ResizeGroup, ResizeHandler, ResizeItem } from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 type ResizeCallback = NonNullable<ComponentProps<typeof Resizable>['onChange']>;
 type ResizeStartCallback = NonNullable<ComponentProps<typeof Resizable>['onResizeStart']>;

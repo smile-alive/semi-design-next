@@ -1,6 +1,6 @@
 <script setup lang="ts">
+    import { DropdownItem } from '@fibrae/semi-ui-vue/dropdown/index';
     import Table, { type ColumnProps, type TableChangeInfo } from '../..';
-    import { DropdownItem } from '../../../dropdown';
 
     defineProps<{ onChange?: (info: TableChangeInfo) => void }>();
     const dataSource = [

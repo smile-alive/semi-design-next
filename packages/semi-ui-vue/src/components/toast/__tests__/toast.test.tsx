@@ -5,8 +5,8 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconWifi } from '@fibrae/semi-icons-vue';
+import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { endTransitions, render } from '@test/utils/vue';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '../../../utils/semi-global';
 import Toast, { ToastFactory } from '../index';
 import type { ToastHandle, ToastHookApi, ToastHookOptions, ToastProps } from '../interface';
 import ToastItem from '../toast.vue';

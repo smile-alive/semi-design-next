@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
-import type { Locale } from '../../../locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import MonthsGridFoundation, { type PanelState, type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState } from '../months-grid-foundation';
 
 const panel = (date: Date): PanelState => ({

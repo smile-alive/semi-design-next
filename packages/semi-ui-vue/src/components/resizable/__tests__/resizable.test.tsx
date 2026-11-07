@@ -3,9 +3,9 @@ import { nextTick, ref, shallowRef, type ComponentPublicInstance, type StyleValu
 import { screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import { Resizable, type ResizeCallback, type ResizeStartCallback, type Size } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import ConfigProvider from '../../config-provider';
 import Controlled from './fixtures/controlled.vue';
 import { down, drag, key, mockLayout, move, nonPrimaryPresses, up } from './helpers';

@@ -4,9 +4,9 @@ import { type Mock, type MockInstance, afterEach, beforeEach, describe, expect, 
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { countLiveListeners } from '@test/utils/solid';
 import VideoPlayer, { type VideoControl, type VideoPlayerMarker, type VideoPlayerOption, type VideoPlayerProps, type VideoPlayerTheme } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import LocaleProvider from '../../locale/locale-provider';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-videoPlayer`;

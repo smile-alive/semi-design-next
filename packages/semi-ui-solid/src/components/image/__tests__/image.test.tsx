@@ -3,8 +3,8 @@ import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Image, { ImagePreview, type ImageProps, type PreviewImageProps } from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-image`;
 const src = 'https://example.com/a.jpg';

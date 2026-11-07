@@ -1,6 +1,6 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import GroupFixture from './group-fixture.svelte';
 import SplitFixture from './split-fixture.svelte';
 import TagFixture from './tag-fixture.svelte';

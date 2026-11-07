@@ -1,6 +1,6 @@
 <script setup lang="ts">
+    import { InputGroup } from '@fibrae/semi-ui-vue/input/index';
     import InputNumber from '../..';
-    import { InputGroup } from '../../../input';
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref, shallowRef } from 'vue';
+    import Button from '@fibrae/semi-ui-vue/button/index';
     import Tree, { type TreeNodeData } from '../..';
-    import Button from '../../../button';
 
     const data = shallowRef<TreeNodeData[]>([{ key: '0', label: 'item-0', value: '0' }]);
     const inputValue = ref('');

@@ -2,8 +2,8 @@ import { fireEvent, render } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { type FormApi, Form, FormInput } from '..';
-import semiGlobal from '../../../utils/semi-global';
 
 const errorSelector = '.semi-form-field-error-message';
 const nameSchema = z.object({ name: z.string({ error: 'required' }).min(2, 'too short') });

@@ -1,7 +1,7 @@
 import { createRawSnippet } from 'svelte';
 import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import FormInputGroup from '../input-group.svelte';
 import AGroupFixture, { type GroupStore } from './a-group-fixture.svelte';
 

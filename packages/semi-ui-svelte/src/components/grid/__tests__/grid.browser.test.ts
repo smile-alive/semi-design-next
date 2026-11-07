@@ -2,7 +2,7 @@ import { flushSync } from 'svelte';
 import { render } from '@testing-library/svelte';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { page } from 'vite-plus/test/browser';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import type { ColProps, RowProps } from '../interface';
 import GridFixture from './grid-fixture.svelte';
 

@@ -1,6 +1,6 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vite-plus/test';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import SideSheetFixture from './side-sheet-fixture.svelte';
 
 describe('Svelte SideSheet 服务端首帧', () => {

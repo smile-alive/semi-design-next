@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import Modal from '../../../modal';
+    import Modal from '@fibrae/semi-ui-vue/modal/index';
     import type { UserGuideStepItem } from '../../interface';
     import UserGuide from '../../user-guide.vue';
 

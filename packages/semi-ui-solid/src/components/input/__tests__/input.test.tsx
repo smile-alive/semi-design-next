@@ -5,8 +5,8 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { IconSearch } from '@fibrae/semi-icons-solid';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import Input, { type InputChangeEvent, type InputGroupProps, type InputMode, type InputProps, InputGroup, TextArea } from '..';
-import semiGlobal from '../../../utils/semi-global';
 import Tooltip from '../../tooltip';
 
 type Change = NonNullable<InputProps['onChange']>;

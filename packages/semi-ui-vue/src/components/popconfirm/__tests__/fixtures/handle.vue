@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { useTemplateRef } from 'vue';
-    import Button from '../../../button';
+    import Button from '@fibrae/semi-ui-vue/button/index';
     import type { PopconfirmHandle } from '../../interface';
     import Popconfirm from '../../popconfirm.vue';
 

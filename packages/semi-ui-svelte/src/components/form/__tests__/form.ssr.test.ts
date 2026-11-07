@@ -2,7 +2,7 @@ import { render } from 'svelte/server';
 import { describe, expect, it } from 'vite-plus/test';
 import * as z from 'zod';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import { createStore } from '../../../__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import CompositeFixture from './composite-fixture.svelte';
 import FormFixture, { type FieldSpec, type FormFixtureStore } from './form-fixture.svelte';
 import SchemaFixture, { type SchemaFixtureStore } from './schema-fixture.svelte';

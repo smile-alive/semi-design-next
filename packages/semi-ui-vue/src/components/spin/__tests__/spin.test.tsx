@@ -5,9 +5,9 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import Spin from '..';
-import semiGlobal from '../../../utils/semi-global';
 import LocaleFixture from './fixtures/locale.vue';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-spin`;
