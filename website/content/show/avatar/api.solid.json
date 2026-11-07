@@ -1,6 +1,6 @@
 {
     "avatar": {
-        "source": "packages/semi-ui-solid/src/avatar/avatar.tsx",
+        "source": "packages/semi-ui-solid/src/components/avatar/avatar.tsx",
         "props": {
             "alt": {
                 "zh-CN": "头像图片或文字的替代文本。",
@@ -65,7 +65,7 @@
         }
     },
     "avatar-group": {
-        "source": "packages/semi-ui-solid/src/avatar/avatar-group.tsx",
+        "source": "packages/semi-ui-solid/src/components/avatar/avatar-group.tsx",
         "props": {
             "children": {
                 "zh-CN": "组内的 Avatar。",

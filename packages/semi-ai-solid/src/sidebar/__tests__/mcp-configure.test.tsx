@@ -4,8 +4,8 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import type { MCPOption } from '@fibrae/semi-ai-foundation/components/sidebar/mcp-cof-content-foundation';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import semiGlobal from '@fibrae/semi-ui-solid/_utils/semi-global';
 import { LocaleProvider } from '@fibrae/semi-ui-solid/locale/index';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import MCPConfigure, { type MCPConfigureProps } from '../mcp-configure';
 import type { MCPSolidOption } from '../mcp-configure/content';
 

@@ -1,6 +1,6 @@
 {
     "resizable": {
-        "source": "packages/semi-ui-solid/src/resizable/resizable.tsx",
+        "source": "packages/semi-ui-solid/src/components/resizable/resizable.tsx",
         "props": {
             "size": {
                 "zh-CN": "受控尺寸，按轴生效：未设置的轴仍跟随拖拽。拖动时需在 onChange 中把新尺寸写回。",
@@ -93,7 +93,7 @@
         }
     },
     "resize-group": {
-        "source": "packages/semi-ui-solid/src/resizable/resize-group.tsx",
+        "source": "packages/semi-ui-solid/src/components/resizable/resize-group.tsx",
         "props": {
             "direction": {
                 "zh-CN": "组内的伸缩方向，可选 horizontal 或 vertical。",
@@ -102,7 +102,7 @@
         }
     },
     "resize-item": {
-        "source": "packages/semi-ui-solid/src/resizable/resize-item.tsx",
+        "source": "packages/semi-ui-solid/src/components/resizable/resize-item.tsx",
         "props": {
             "min": {
                 "zh-CN": "最小尺寸（%、px、vw 或 vh）。",

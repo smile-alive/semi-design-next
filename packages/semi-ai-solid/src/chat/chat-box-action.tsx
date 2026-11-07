@@ -4,10 +4,10 @@ import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionS
 import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
 import { IconCopyStroked, IconDeleteStroked, IconLikeThumb, IconRedoStroked, IconThumbUpStroked } from '@fibrae/semi-icons-solid';
-import useFoundation from '@fibrae/semi-ui-solid/_base/use-foundation';
+import useFoundation from '@fibrae/semi-ui-solid/base/use-foundation';
 import Button from '@fibrae/semi-ui-solid/button/index';
-import { useLocale } from '@fibrae/semi-ui-solid/hooks';
 import Popconfirm from '@fibrae/semi-ui-solid/popconfirm/index';
+import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import { useChatContext } from './context';
 import type { DefaultActionNodeObj, Message, RenderActionProps } from './interface';
 

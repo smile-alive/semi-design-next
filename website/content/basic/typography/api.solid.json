@@ -1,6 +1,6 @@
 {
     "typography-text": {
-        "source": "packages/semi-ui-solid/src/typography/text.tsx",
+        "source": "packages/semi-ui-solid/src/components/typography/text.tsx",
         "props": {
             "code": { "zh-CN": "是否被 code 元素包裹。", "en-US": "Whether the text is wrapped in a code element." },
             "component": {
@@ -37,7 +37,7 @@
         }
     },
     "typography-title": {
-        "source": "packages/semi-ui-solid/src/typography/title.tsx",
+        "source": "packages/semi-ui-solid/src/components/typography/title.tsx",
         "props": {
             "component": {
                 "zh-CN": "自定义渲染元素，可以是标签名或组件，默认由 heading 决定（h1 到 h6）。",
@@ -69,7 +69,7 @@
         }
     },
     "typography-paragraph": {
-        "source": "packages/semi-ui-solid/src/typography/paragraph.tsx",
+        "source": "packages/semi-ui-solid/src/components/typography/paragraph.tsx",
         "props": {
             "component": {
                 "zh-CN": "自定义渲染元素，可以是标签名或组件，默认 p。",
@@ -101,7 +101,7 @@
         }
     },
     "typography-numeral": {
-        "source": "packages/semi-ui-solid/src/typography/numeral.tsx",
+        "source": "packages/semi-ui-solid/src/components/typography/numeral.tsx",
         "props": {
             "code": { "zh-CN": "是否被 code 元素包裹。", "en-US": "Whether the text is wrapped in a code element." },
             "component": {

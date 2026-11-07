@@ -2,7 +2,7 @@ import { type JSX, For, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import { IconBookOpenStroked } from '@fibrae/semi-icons-solid';
-import type { ElementProps } from '@fibrae/semi-ui-solid/_base/element-props';
+import type { ElementProps } from '@fibrae/semi-ui-solid/base/element-props';
 import Collapse from '@fibrae/semi-ui-solid/collapse/index';
 import Item, { type AnnotationItem, VideoItem } from './item';
 

@@ -4,9 +4,9 @@ import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
 import { IconCopyStroked, IconTick } from '@fibrae/semi-icons-solid';
-import { useCopied, useLocale } from '@fibrae/semi-ui-solid/hooks';
 import type { MarkdownCodeProps } from '@fibrae/semi-ui-solid/markdown-render/components/code';
 import { code as MarkdownCode } from '@fibrae/semi-ui-solid/markdown-render/components/index';
+import { useCopied, useLocale } from '@fibrae/semi-ui-solid/primitives';
 
 const { PREFIX_CHAT_BOX } = cssClasses;
 

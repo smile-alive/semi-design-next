@@ -1,6 +1,6 @@
 {
     "input": {
-        "source": "packages/semi-ui-solid/src/input/input.tsx",
+        "source": "packages/semi-ui-solid/src/components/input/input.tsx",
         "props": {
             "addonAfter": {
                 "zh-CN": "后置标签，可以是文本、Semi 图标或任意 JSX 元素。",
@@ -141,7 +141,7 @@
         }
     },
     "text-area": {
-        "source": "packages/semi-ui-solid/src/input/textarea.tsx",
+        "source": "packages/semi-ui-solid/src/components/input/textarea.tsx",
         "props": {
             "autosize": {
                 "zh-CN": "高度是否随内容自适应，可传 `{ minRows, maxRows }` 限制行数。",
@@ -270,7 +270,7 @@
         }
     },
     "input-group": {
-        "source": "packages/semi-ui-solid/src/input/input-group.tsx",
+        "source": "packages/semi-ui-solid/src/components/input/input-group.tsx",
         "props": {
             "disabled": {
                 "zh-CN": "是否禁用，组内任意深度未自行设置 disabled 的控件取这个值。",

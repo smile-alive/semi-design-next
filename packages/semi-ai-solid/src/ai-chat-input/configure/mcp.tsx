@@ -4,7 +4,7 @@ import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import Button from '@fibrae/semi-ui-solid/button/index';
 import Dropdown, { type DropdownProps } from '@fibrae/semi-ui-solid/dropdown/index';
-import { useLocale } from '@fibrae/semi-ui-solid/hooks';
+import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 
 const prefix = cssClasses.PREFIX;
 

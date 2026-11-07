@@ -2,12 +2,12 @@ import { For, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import { IconCodeStroked, IconFile, IconFullScreenStroked } from '@fibrae/semi-icons-solid';
-import type { ElementProps } from '@fibrae/semi-ui-solid/_base/element-props';
+import type { ElementProps } from '@fibrae/semi-ui-solid/base/element-props';
 import Button from '@fibrae/semi-ui-solid/button/index';
 import CodeHighlight, { type CodeHighlightProps } from '@fibrae/semi-ui-solid/code-highlight/index';
 import Collapse from '@fibrae/semi-ui-solid/collapse/index';
-import { useLocale } from '@fibrae/semi-ui-solid/hooks';
 import JsonViewer, { type JsonViewerProps } from '@fibrae/semi-ui-solid/json-viewer/index';
+import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import type { SideBarCollapseProps } from '../interface';
 
 const collapseCls = cssClasses.COLLAPSE;

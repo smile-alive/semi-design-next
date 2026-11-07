@@ -1,6 +1,6 @@
 {
     "lottie": {
-        "source": "packages/semi-ui-solid/src/lottie/lottie.tsx",
+        "source": "packages/semi-ui-solid/src/components/lottie/lottie.tsx",
         "props": {
             "params": {
                 "zh-CN": "传给 lottie-web loadAnimation 的参数。内容与上次加载时不同才会重新加载，每次渲染传入内容相同的新对象不会重新加载；原地修改对象不会触发。",

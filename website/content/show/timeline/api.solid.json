@@ -1,6 +1,6 @@
 {
     "timeline": {
-        "source": "packages/semi-ui-solid/src/timeline/timeline.tsx",
+        "source": "packages/semi-ui-solid/src/components/timeline/timeline.tsx",
         "props": {
             "dataSource": {
                 "zh-CN": "数据数组；非空时按数据渲染，忽略子节点。项的字段见下表。",
@@ -29,7 +29,7 @@
         }
     },
     "timeline-item": {
-        "source": "packages/semi-ui-solid/src/timeline/item.tsx",
+        "source": "packages/semi-ui-solid/src/components/timeline/item.tsx",
         "props": {
             "color": {
                 "zh-CN": "节点的颜色，作为圆点的背景色，覆盖 type 对应的颜色。",

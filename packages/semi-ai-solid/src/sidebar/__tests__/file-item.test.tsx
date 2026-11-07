@@ -5,10 +5,10 @@ import { type Editor, Extension, type Mark, type Node } from '@tiptap/core';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import semiGlobal from '@fibrae/semi-ui-solid/_utils/semi-global';
 import { LocaleProvider } from '@fibrae/semi-ui-solid/locale/index';
 import Toast from '@fibrae/semi-ui-solid/toast/index';
 import type { UploadProps } from '@fibrae/semi-ui-solid/upload/index';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import FileContent, { FileItem, type FileItemProps } from '../widget/file';
 
 // tiptap emits `create` on a 0ms timer after the editor is built

@@ -1,6 +1,6 @@
 {
     "color-picker": {
-        "source": "packages/semi-ui-solid/src/color-picker/color-picker.tsx",
+        "source": "packages/semi-ui-solid/src/components/color-picker/color-picker.tsx",
         "props": {
             "alpha": {
                 "zh-CN": "是否开启透明度选择。",

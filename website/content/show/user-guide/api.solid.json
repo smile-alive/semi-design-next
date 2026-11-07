@@ -1,6 +1,6 @@
 {
     "user-guide": {
-        "source": "packages/semi-ui-solid/src/user-guide/user-guide.tsx",
+        "source": "packages/semi-ui-solid/src/components/user-guide/user-guide.tsx",
         "props": {
             "class": {
                 "zh-CN": "自定义类名。popup 模式下落在气泡卡片上，modal 模式下落在弹窗的外层元素上。",

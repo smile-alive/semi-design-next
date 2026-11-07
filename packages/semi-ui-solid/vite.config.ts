@@ -14,6 +14,6 @@ export default defineConfig({
         define: { 'process.env.NODE_ENV': 'process.env.NODE_ENV' },
         outDir: 'dist',
         dts: true,
-        plugins: [solid(), semiPackStyles(fileURLToPath(new URL('src', import.meta.url)), { ignore: notShipped, bundles: semiUiBundles }), semiLocaleReexports({ jsx: true, dir: 'locale/source' })],
+        plugins: [solid(), semiPackStyles(fileURLToPath(new URL('src', import.meta.url)), { ignore: notShipped, bundles: semiUiBundles }), semiLocaleReexports({ jsx: true })],
     }),
 });

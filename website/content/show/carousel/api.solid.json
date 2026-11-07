@@ -1,6 +1,6 @@
 {
     "carousel": {
-        "source": "packages/semi-ui-solid/src/carousel/carousel.tsx",
+        "source": "packages/semi-ui-solid/src/components/carousel/carousel.tsx",
         "props": {
             "activeIndex": {
                 "zh-CN": "当前展示的索引，传入即为受控；传 `undefined` 时交还内部状态，从最后一次的索引继续。",

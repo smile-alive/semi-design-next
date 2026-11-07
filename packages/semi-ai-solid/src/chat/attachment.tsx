@@ -4,8 +4,8 @@ import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants
 import { getFileType, isImageFile } from '@fibrae/semi-ai-foundation/utils/file-suffix';
 import { isUploadFailed, isUploadProgressVisible } from '@fibrae/semi-ai-foundation/utils/upload-status';
 import { IconAlertCircle, IconBriefStroked, IconClear } from '@fibrae/semi-icons-solid';
-import { useLocale } from '@fibrae/semi-ui-solid/hooks';
 import Image from '@fibrae/semi-ui-solid/image/index';
+import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import Progress from '@fibrae/semi-ui-solid/progress/index';
 import type { FileItem } from '@fibrae/semi-ui-solid/upload/index';
 

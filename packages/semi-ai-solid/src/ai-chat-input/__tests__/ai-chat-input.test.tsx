@@ -3,9 +3,9 @@ import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-lib
 import { type Editor, Extension, Node } from '@tiptap/core';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import semiGlobal from '@fibrae/semi-ui-solid/_utils/semi-global';
 import Popover from '@fibrae/semi-ui-solid/popover/index';
 import type { UploadHandle, UploadProps } from '@fibrae/semi-ui-solid/upload/index';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { countLiveListeners } from '@test/utils/solid';
 import AIChatInput, { getConfigureItem, type AIChatInputElement, type AIChatInputHandle, type AIChatInputProps, type Attachment, type LeftMenuChangeProps } from '../index';
 

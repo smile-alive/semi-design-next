@@ -3,10 +3,10 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Annotation } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { IconChevronRight } from '@fibrae/semi-icons-solid';
-import callHandler from '@fibrae/semi-ui-solid/_base/call-handler';
-import type { ElementProps } from '@fibrae/semi-ui-solid/_base/element-props';
 import Avatar, { AvatarGroup } from '@fibrae/semi-ui-solid/avatar/index';
-import { useLocale } from '@fibrae/semi-ui-solid/hooks';
+import type { ElementProps } from '@fibrae/semi-ui-solid/base/element-props';
+import { useLocale } from '@fibrae/semi-ui-solid/primitives';
+import callHandler from '@fibrae/semi-ui-solid/utils/call-handler';
 
 export interface AnnotationItemProps {
     title?: string;

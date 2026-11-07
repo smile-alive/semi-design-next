@@ -1,6 +1,6 @@
 import { Show } from 'solid-js';
 import { IconClose } from '@fibrae/semi-icons-solid';
-import { useLocale } from '@fibrae/semi-ui-solid/hooks';
+import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import type { SlotViewProps } from './node-view';
 
 export default function SkillSlotView(props: SlotViewProps) {

@@ -10,9 +10,9 @@ import { getMessageText } from '@fibrae/semi-ai-foundation/components/ai-chat-di
 import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
 import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
 import { IconAlertCircle, IconCode, IconExcel, IconFile, IconPdf, IconSendMsgStroked, IconVideo, IconWord, IconWrench } from '@fibrae/semi-icons-solid';
-import { useLocale } from '@fibrae/semi-ui-solid/hooks';
 import Image from '@fibrae/semi-ui-solid/image/index';
 import MarkdownRender from '@fibrae/semi-ui-solid/markdown-render/index';
+import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import { useAIChatDialogueContext } from '../context';
 import type { DialogueContentItemRenderer, Metadata } from '../interface';
 import { AnnotationWidget } from './content-item/annotation';

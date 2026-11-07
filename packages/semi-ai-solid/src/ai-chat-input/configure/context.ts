@@ -1,5 +1,5 @@
 import type { Accessor } from 'solid-js';
-import { createContext } from '@fibrae/semi-ui-solid/_base/create-context';
+import { createContext } from '@fibrae/semi-ui-solid/base/create-context';
 
 export interface ConfigureContextType {
     value: Accessor<Record<string, any>>;

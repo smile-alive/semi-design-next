@@ -1,6 +1,6 @@
 {
     "code-highlight": {
-        "source": "packages/semi-ui-solid/src/code-highlight/code-highlight.tsx",
+        "source": "packages/semi-ui-solid/src/components/code-highlight/code-highlight.tsx",
         "props": {
             "code": {
                 "zh-CN": "代码纯文本，未传时按空字符串处理。code 变化后先显示新文本，高亮完成后再替换。",

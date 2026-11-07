@@ -1,6 +1,6 @@
 {
     "skeleton": {
-        "source": "packages/semi-ui-solid/src/skeleton/skeleton.tsx",
+        "source": "packages/semi-ui-solid/src/components/skeleton/skeleton.tsx",
         "props": {
             "active": {
                 "zh-CN": "是否展示动画效果。",
@@ -17,7 +17,7 @@
         }
     },
     "skeleton-avatar": {
-        "source": "packages/semi-ui-solid/src/skeleton/item.tsx#Avatar",
+        "source": "packages/semi-ui-solid/src/components/skeleton/item.tsx#Avatar",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 `semi-skeleton`。",
@@ -38,7 +38,7 @@
         }
     },
     "skeleton-image": {
-        "source": "packages/semi-ui-solid/src/skeleton/item.tsx#Image",
+        "source": "packages/semi-ui-solid/src/components/skeleton/item.tsx#Image",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 `semi-skeleton`。",
@@ -51,7 +51,7 @@
         }
     },
     "skeleton-title": {
-        "source": "packages/semi-ui-solid/src/skeleton/item.tsx#Title",
+        "source": "packages/semi-ui-solid/src/components/skeleton/item.tsx#Title",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 `semi-skeleton`。",
@@ -64,7 +64,7 @@
         }
     },
     "skeleton-button": {
-        "source": "packages/semi-ui-solid/src/skeleton/item.tsx#Button",
+        "source": "packages/semi-ui-solid/src/components/skeleton/item.tsx#Button",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 `semi-skeleton`。",
@@ -77,7 +77,7 @@
         }
     },
     "skeleton-paragraph": {
-        "source": "packages/semi-ui-solid/src/skeleton/item.tsx#Paragraph",
+        "source": "packages/semi-ui-solid/src/components/skeleton/item.tsx#Paragraph",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 `semi-skeleton`。",
