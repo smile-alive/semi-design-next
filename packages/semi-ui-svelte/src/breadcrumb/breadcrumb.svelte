@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { DEFAULT_TOOLTIP, cssClasses } from '@fibrae/semi-foundation/breadcrumb/constants';
-    import BreadcrumbFoundation, { type BreadcrumbAdapter, type BreadcrumbState } from '@fibrae/semi-foundation/breadcrumb/foundation';
+    import { DEFAULT_TOOLTIP, cssClasses } from '@fibrae/semi-foundation/components/breadcrumb/constants';
+    import BreadcrumbFoundation, { type BreadcrumbAdapter, type BreadcrumbState } from '@fibrae/semi-foundation/components/breadcrumb/foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
-    import '@fibrae/semi-foundation/breadcrumb/breadcrumb.scss';
+    import '@fibrae/semi-foundation/components/breadcrumb/breadcrumb.scss';
     import { IconMore } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

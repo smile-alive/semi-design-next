@@ -1,12 +1,12 @@
 import type { Component, IntrinsicElementAttributes, StyleValue, VNode, VNodeChild } from 'vue';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { AllErrors, BaseFormApi, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldPath, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, RuleItem, StandardSchema } from '@fibrae/semi-foundation/form/interface';
-import type { JsonSchema, SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
+import type { AllErrors, BaseFormApi, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldPath, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, RuleItem, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
+import type { JsonSchema, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
 import type { ColProps } from '../grid/interface';
 import type { ValidateStatus } from '../input/interface';
 
-export type { FieldError, FieldErrorInput, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, RuleItem, RuleType } from '@fibrae/semi-foundation/form/interface';
-export type { JsonSchema, SchemaFieldKind, SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
+export type { FieldError, FieldErrorInput, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, RuleItem, RuleType } from '@fibrae/semi-foundation/components/form/interface';
+export type { JsonSchema, SchemaFieldKind, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
 
 export interface LabelProps {
     /** Content of the label; the default slot takes precedence */

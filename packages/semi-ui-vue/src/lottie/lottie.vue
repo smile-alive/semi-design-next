@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { toRaw, useAttrs, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/lottie/constants';
-    import LottieFoundation, { type LottieAdapter, type LottieBaseProps, type LottieBaseState } from '@fibrae/semi-foundation/lottie/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/lottie/constants';
+    import LottieFoundation, { type LottieAdapter, type LottieBaseProps, type LottieBaseState } from '@fibrae/semi-foundation/components/lottie/foundation';
     import { isDev } from '@fibrae/semi-foundation/utils/warning';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { semiGlobalDefault } from '../_base/semi-default';

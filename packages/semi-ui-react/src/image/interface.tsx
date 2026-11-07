@@ -1,10 +1,10 @@
 import React, { type ReactNode } from 'react';
-import type { PreviewGroupImage } from '@fibrae/semi-foundation/image/preview-foundation';
-import type { RatioType, RotateDirection } from '@fibrae/semi-foundation/image/preview-inner-foundation';
+import type { PreviewGroupImage } from '@fibrae/semi-foundation/components/image/preview-foundation';
+import type { RatioType, RotateDirection } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 import type { ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';
 
-export type { RatioType } from '@fibrae/semi-foundation/image/preview-inner-foundation';
+export type { RatioType } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 
 export interface ImageProps extends BaseProps, React.ImgHTMLAttributes<HTMLImageElement> {
     /** Attached to the img, where undeclared attributes land too */

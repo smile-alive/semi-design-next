@@ -1,7 +1,7 @@
 import { children, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/badge/constants';
-import '@fibrae/semi-foundation/badge/badge.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/badge/constants';
+import '@fibrae/semi-foundation/components/badge/badge.scss';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import useDefaultProps from '../_base/use-default-props';

@@ -1,6 +1,6 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/select/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/select/constants';
 import type { ElementProps } from '../_base/base';
 
 export interface OptionGroupProps extends ElementProps<'div'> {

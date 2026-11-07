@@ -1,11 +1,11 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import { omit } from 'es-toolkit';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/upload/constants';
-    import UploadFoundation, { type UploadAdapter, type UploadBaseProps, type UploadBaseState } from '@fibrae/semi-foundation/upload/foundation';
-    import { ListFocusTracker } from '@fibrae/semi-foundation/upload/utils';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+    import UploadFoundation, { type UploadAdapter, type UploadBaseProps, type UploadBaseState } from '@fibrae/semi-foundation/components/upload/foundation';
+    import { ListFocusTracker } from '@fibrae/semi-foundation/components/upload/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/upload/upload.scss';
+    import '@fibrae/semi-foundation/components/upload/upload.scss';
     import { IconUpload } from '@fibrae/semi-icons-svelte';
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';

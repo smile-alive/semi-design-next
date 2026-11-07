@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { type ComponentPublicInstance, type VNode, computed, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/typography/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
     import elementType from '../_base/element-type';
     import slotNodes from '../_base/slot-nodes';
     import Copyable from './copyable.vue';

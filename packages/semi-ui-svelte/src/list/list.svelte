@@ -1,6 +1,6 @@
 <script lang="ts" generics="T = any">
-    import { cssClasses } from '@fibrae/semi-foundation/list/constants';
-    import '@fibrae/semi-foundation/list/list.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
+    import '@fibrae/semi-foundation/components/list/list.scss';
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import { Row } from '../grid/index.js';

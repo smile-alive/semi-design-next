@@ -1,8 +1,8 @@
 import type React from 'react';
 import { memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/typography/constants';
-import '@fibrae/semi-foundation/typography/typography.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
+import '@fibrae/semi-foundation/components/typography/typography.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 

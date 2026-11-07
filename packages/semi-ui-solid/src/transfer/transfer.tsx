@@ -1,11 +1,11 @@
 import { type JSX, type Ref, For, Match, Show, Suspense, Switch, children, createEffect, createMemo, createSignal, createUniqueId, lazy, on, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/transfer/constants';
+import TransferFoundation, { type TransferAdapter } from '@fibrae/semi-foundation/components/transfer/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import { cssClasses, strings } from '@fibrae/semi-foundation/transfer/constants';
-import TransferFoundation, { type TransferAdapter } from '@fibrae/semi-foundation/transfer/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/transfer/transfer.scss';
+import '@fibrae/semi-foundation/components/transfer/transfer.scss';
 import { IconClose, IconHandle, IconSearch } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';
 import hasContent from '../_base/has-content';

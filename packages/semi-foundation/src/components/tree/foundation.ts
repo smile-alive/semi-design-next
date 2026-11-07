@@ -1,0 +1,702 @@
+/**
+ * The drag and drop handler implementation is referenced from rc-tree
+ * https://github.com/react-component/tree
+ */
+
+import { throttle } from 'es-toolkit';
+// compat pick resolves deep paths (treeDataSimpleJson)
+import { get, pick } from 'es-toolkit/compat';
+import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { strings } from './constants';
+import { deriveTreeState, getMultipleChange, getMultipleSelectResult, getSearchState, isTreeNodeLeaf, loadTreeNode } from './shared';
+import { flattenTreeData, normalizedArr, getMotionKeys, getValueOrKey, getDragNodesKeys, calcDropRelativePosition, calcDropActualPosition, type KeyMapProps } from './tree-util';
+export type { KeyMapProps };
+
+export interface BasicTreeNodeProps {
+    [x: string]: any;
+    expanded?: boolean;
+    selected?: boolean;
+    checked?: boolean;
+    halfChecked?: boolean;
+    disabled?: boolean;
+    loaded?: boolean;
+    loading?: boolean;
+    isLeaf?: boolean;
+    pos?: string;
+    children?: BasicTreeNodeData[];
+    icon?: any;
+    directory?: boolean;
+    selectedKey?: string;
+    motionKey?: string[] | string;
+    eventKey?: string;
+    showLine?: boolean;
+    setsize?: number;
+    posinset?: number;
+}
+
+export interface BasicTreeNodeData {
+    [x: string]: any;
+    key?: string;
+    value?: number | string;
+    label?: any;
+    icon?: any;
+    disabled?: boolean;
+    isLeaf?: boolean;
+    children?: BasicTreeNodeData[];
+}
+
+export interface BasicKeyEntities {
+    [key: string]: BasicKeyEntity;
+}
+
+export interface BasicKeyEntity {
+    children?: BasicKeyEntity[];
+    data?: BasicTreeNodeData;
+    ind?: number;
+    key?: string;
+    level?: number;
+    parent?: BasicKeyEntity;
+    parentPos?: null | string;
+    pos?: string;
+}
+
+export interface BasicDragTreeNode extends BasicTreeNodeData {
+    expanded: boolean;
+    /**
+     * The positional relationship of the current node in the entire
+     * treeData, such as the 0th node of the 2nd node of the 1st node
+     * of the 0th layer: '0-1-2-0'
+     */
+    pos: string;
+}
+
+export interface BasicFlattenNode {
+    _innerDataTag?: boolean;
+    children?: BasicFlattenNode[];
+    data?: BasicTreeNodeData;
+    disabled?: boolean;
+    icon?: any;
+    isEnd?: boolean[];
+    isLeaf?: boolean;
+    key?: string;
+    label?: any;
+    parent?: null | BasicFlattenNode;
+    pos?: string;
+    value?: string;
+}
+
+export type TreeMotionType = 'show' | 'hide';
+
+/** The values and the `smart` rule are those of the adapter's virtual list */
+export type ScrollAlign = 'center' | 'start' | 'end' | 'smart' | 'auto';
+
+export interface BasicDragProps {
+    event: any;
+    node: BasicDragTreeNode;
+}
+
+export interface BasicDragEnterProps extends BasicDragProps {
+    expandedKeys?: string[];
+}
+
+export type ExpandAction = false | 'click' | 'doubleClick';
+
+export type BasicValue = string | number | BasicTreeNodeData | Array<BasicTreeNodeData | string | number>;
+
+export interface BasicOnDragProps {
+    event: any;
+    node: BasicDragTreeNode;
+    dragNode: BasicDragTreeNode;
+    dragNodesKeys: string[];
+    /**
+     * dropPosition represents the position of the dragged node being
+     * dropped in the current level. If inserted before the 0th node
+     * of the same level, it is -1, after the 0th node, it is 1, and
+     * it is 0 when it falls on it. And so on. With dropToGap, a more
+     * complete judgment can be obtained.
+     */
+    dropPosition: number;
+    /**
+     * Indicates whether the dragged node is dropped between nodes, if
+     *  it is false, it is dropped above a node
+     */
+    dropToGap: boolean;
+}
+
+export interface BasicRenderFullLabelProps {
+    onClick: (e: any) => void;
+    onContextMenu: (e: any) => void;
+    onDoubleClick: (e: any) => void;
+    className: string;
+    onExpand: (e: any) => void;
+    data: BasicTreeNodeData;
+    level: number;
+    // With virtualization this style must be applied to the DOM element
+    style: any;
+    onCheck: (e: any) => void;
+    expandIcon: any;
+    checkStatus: {
+        checked: boolean;
+        halfChecked: boolean;
+    };
+    expandStatus: {
+        expanded: boolean;
+        loading: boolean;
+    };
+    filtered?: boolean;
+    searchWord?: string;
+}
+
+export interface BasicSearchRenderProps {
+    className: string;
+    placeholder: string;
+    prefix: any;
+    showClear?: boolean;
+    value: string;
+    onChange: (value: string) => void;
+}
+
+export interface TreeDataSimpleJson {
+    [x: string]: string | TreeDataSimpleJson;
+}
+
+export interface Virtualize {
+    itemSize: number;
+    height?: number | string;
+    width?: number | string;
+}
+
+export type CheckRelation = 'related' | 'unRelated';
+
+export interface BasicTreeProps {
+    autoExpandParent?: boolean;
+    autoExpandWhenDragEnter?: boolean;
+    blockNode?: boolean;
+    children?: any;
+    className?: string;
+    expandAll?: boolean;
+    defaultExpandAll?: boolean;
+    defaultExpandedKeys?: string[];
+    defaultValue?: BasicValue;
+    directory?: boolean;
+    disabled?: boolean;
+    disableStrictly?: boolean;
+    draggable?: boolean;
+    emptyContent?: any;
+    expandAction?: ExpandAction;
+    expandedKeys?: string[];
+    filterTreeNode?: boolean | ((inputValue: string, treeNodeString: string, data?: BasicTreeNodeData) => boolean);
+    hideDraggingNode?: boolean;
+    labelEllipsis?: boolean;
+    leafOnly?: boolean;
+    loadData?: (treeNode?: BasicTreeNodeData) => Promise<void>;
+    loadedKeys?: string[];
+    motion?: boolean;
+    multiple?: boolean;
+    onChange?: (value: BasicValue) => void;
+    onChangeWithObject?: boolean;
+    onDoubleClick?: (e: any, node: BasicTreeNodeData) => void;
+    onDragEnd?: (dragProps: BasicDragProps) => void;
+    onDragEnter?: (dragEnterProps: BasicDragEnterProps) => void;
+    onDragLeave?: (dragProps: BasicDragProps) => void;
+    onDragOver?: (dragProps: BasicDragProps) => void;
+    onDragStart?: (dragProps: BasicDragProps) => void;
+    onDrop?: (onDragProps: BasicOnDragProps) => void;
+    onExpand?: (expandedKeys: string[], expandedOtherProps: BasicExpandedOtherProps) => void;
+    onLoad?: (loadedKeys?: Set<string>, treeNode?: BasicTreeNodeData) => void;
+    onContextMenu?: (e: any, node: BasicTreeNodeData) => void;
+    onSearch?: (searchValue: string, filteredExpandedKeys: string[]) => void;
+    onSelect?: (selectedKey: string, selected: boolean, selectedNode: BasicTreeNodeData) => void;
+    renderDraggingNode?: (nodeInstance: HTMLElement, node: BasicTreeNodeData) => HTMLElement;
+    renderFullLabel?: (renderFullLabelProps: BasicRenderFullLabelProps) => any;
+    renderLabel?: (label?: any, treeNode?: BasicTreeNodeData) => any;
+    searchClassName?: string;
+    searchPlaceholder?: string;
+    searchRender?: ((searchRenderProps: BasicSearchRenderProps) => any) | false;
+    searchStyle?: any;
+    showClear?: boolean;
+    showFilteredOnly?: boolean;
+    showLine?: boolean;
+    style?: any;
+    treeData?: BasicTreeNodeData[];
+    treeDataSimpleJson?: TreeDataSimpleJson;
+    treeNodeFilterProp?: string;
+    value?: BasicValue;
+    virtualize?: Virtualize;
+    icon?: any;
+    checkRelation?: CheckRelation;
+    keyMaps?: KeyMapProps;
+    autoMergeValue?: boolean;
+    'aria-label'?: string;
+}
+
+export interface BasicTreeInnerData {
+    inputValue: string;
+    keyEntities: BasicKeyEntities;
+    treeData: BasicTreeNodeData[];
+    flattenNodes: BasicFlattenNode[];
+    selectedKeys: string[];
+    checkedKeys: Set<string>;
+    halfCheckedKeys: Set<string>;
+    realCheckedKeys: Set<string>;
+    motionKeys: Set<string>;
+    motionType: TreeMotionType | null;
+    expandedKeys: Set<string>;
+    filteredKeys: Set<string>;
+    filteredExpandedKeys: Set<string>;
+    filteredShownKeys: Set<string>;
+    prevProps: null | BasicTreeProps;
+    loadedKeys: Set<string>;
+    loadingKeys: Set<string>;
+    cachedFlattenNodes?: BasicFlattenNode[];
+    cachedKeyValuePairs: { [x: string]: string };
+    disabledKeys: Set<string>;
+    dragging: boolean;
+    dragNodesKeys: Set<string>;
+    dragOverNodeKey: string | null;
+    dropPosition: number | null;
+}
+
+export interface BasicExpandedOtherProps {
+    expanded: boolean;
+    node: BasicTreeNodeData;
+}
+
+/** The members of a drag event the foundation reads; DOM events and React synthetic events both satisfy it */
+export type TreeDragEvent = Pick<DragEvent, 'dataTransfer' | 'clientY'>;
+
+/** E is the host's node mouse event (right or double click), which the foundation only passes through */
+export interface TreeAdapter<E = unknown> extends DefaultAdapter<BasicTreeProps, BasicTreeInnerData> {
+    notifyExpand: (expandedKeys: Set<string>, { expanded, node }: BasicExpandedOtherProps) => void;
+    notifySelect: (selectKey: string, bool: boolean, node: BasicTreeNodeData) => void;
+    notifyChange: (value: BasicValue) => void;
+    notifySearch: (input: string, filteredExpandedKeys: string[]) => void;
+    notifyRightClick: (e: E, node: BasicTreeNodeData) => void;
+    notifyDoubleClick: (e: E, node: BasicTreeNodeData) => void;
+    notifyLoad: (loadedKeys: Set<string>, treeNode: BasicTreeNodeData) => void;
+    notifyDragStart: (props: BasicDragProps) => void;
+    notifyDragEnter: (props: BasicDragEnterProps) => void;
+    notifyDragOver: (props: BasicDragProps) => void;
+    notifyDragLeave: (props: BasicDragProps) => void;
+    notifyDragEnd: (props: BasicDragProps) => void;
+    notifyDrop: (props: BasicOnDragProps) => void;
+    /** Scrolls the virtualized list to a row of flattenNodes, found by key once the rendered rows catch up with a search */
+    scrollToNode: (key: string, align: ScrollAlign) => void;
+}
+
+export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdapter<E>, BasicTreeProps, BasicTreeInnerData> {
+    #dragNode: BasicTreeNodeProps | null = null;
+    #dragEnterTimers = new Set<ReturnType<typeof setTimeout>>();
+    #autoExpandTimer: ReturnType<typeof setTimeout> | undefined;
+    /**
+     * Every prop `deriveState` reads, which it keeps as `prevProps`. They change state during render, so there is no
+     * `handlePropsChange`; a prop deriveState starts reading goes on this list too.
+     */
+    static override readonly propKeys = [
+        'autoExpandParent',
+        'checkRelation',
+        'defaultExpandAll',
+        'defaultExpandedKeys',
+        'defaultValue',
+        'disableStrictly',
+        'expandAll',
+        'expandedKeys',
+        'filterTreeNode',
+        'keyMaps',
+        'loadedKeys',
+        'motion',
+        'multiple',
+        'onChangeWithObject',
+        'showFilteredOnly',
+        'treeData',
+        'treeDataSimpleJson',
+        'treeNodeFilterProp',
+        'value',
+    ] as const satisfies readonly (keyof BasicTreeProps)[];
+
+    // 16ms: at most one dropPosition update per frame while dragging
+    #throttledDragOverUpdate = throttle((dropPosition: number) => {
+        this.setState({ dropPosition });
+    }, 16);
+
+    #isMultiple() {
+        return this.getProp('multiple');
+    }
+
+    #isAnimated() {
+        return this.getProp('motion');
+    }
+
+    #isDisabled(treeNode: BasicTreeNodeProps = {}) {
+        return this.getProp('disabled') || treeNode.disabled;
+    }
+
+    #isExpandControlled() {
+        return this.getProp('expandedKeys') !== undefined;
+    }
+
+    #showFilteredOnly() {
+        const { inputValue } = this.getStates();
+        const { showFilteredOnly } = this.getProps();
+        return Boolean(inputValue) && showFilteredOnly;
+    }
+
+    #notifyJsonChange(key: string[] | string) {
+        const data = this.getProp('treeDataSimpleJson');
+        // array paths keep keys containing '.' unsplit
+        const selectedPath = normalizedArr(key).map((i) => i.split(strings.JSON_KEY_SPLIT));
+        const value = pick(data, selectedPath);
+        this.adapter.notifyChange(value as BasicValue);
+    }
+
+    #notifyMultipleChange(key: string[]) {
+        const { nodes, value } = getMultipleChange(key, this.getProps(), this.getState('keyEntities'));
+        this.adapter.notifyChange(this.getProp('onChangeWithObject') ? nodes : value);
+    }
+
+    #notifyChange(key: string[] | string) {
+        const isMultiple = this.#isMultiple();
+        const { keyMaps } = this.getProps();
+        const { keyEntities } = this.getStates();
+        if (this.getProp('treeDataSimpleJson')) {
+            this.#notifyJsonChange(key);
+        } else if (isMultiple) {
+            this.#notifyMultipleChange(key as string[]);
+        } else {
+            let value;
+            if (this.getProp('onChangeWithObject')) {
+                value = get(keyEntities, key).data;
+            } else {
+                const { data } = get(keyEntities, key);
+                value = getValueOrKey(data, keyMaps);
+            }
+            this.adapter.notifyChange(value);
+        }
+    }
+
+    #handleSingleSelect(_e: unknown, { selected, eventKey, data }: BasicTreeNodeProps) {
+        let selectedKeys = [...this.getState('selectedKeys')];
+        const targetSelected = !selected;
+
+        this.adapter.notifySelect(eventKey, true, data);
+
+        if (!targetSelected) {
+            return;
+        }
+
+        if (!selectedKeys.includes(eventKey)) {
+            selectedKeys = [eventKey];
+            this.#notifyChange(eventKey);
+            if (!this.isControlledComponent()) {
+                this.setState({ selectedKeys });
+            }
+        }
+    }
+
+    #handleMultipleSelect(_e: unknown, treeNode: BasicTreeNodeProps) {
+        const result = getMultipleSelectResult(treeNode, this.getProps(), this.getStates());
+        if (!result) {
+            return;
+        }
+        this.adapter.notifySelect(treeNode.eventKey, result.targetStatus, treeNode.data);
+        this.#notifyChange(result.keys);
+        if (!this.isControlledComponent()) {
+            this.setState(result.state as BasicTreeInnerData);
+        }
+    }
+
+    #setExpandedStatus({ eventKey, expanded, data }: BasicTreeNodeProps) {
+        const { inputValue, treeData, filteredShownKeys, keyEntities } = this.getStates();
+        const { keyMaps } = this.getProps();
+        const isSearching = Boolean(inputValue);
+        const showFilteredOnly = this.#showFilteredOnly();
+        const expandedStateKey = isSearching ? 'filteredExpandedKeys' : 'expandedKeys';
+        const expandedKeys = new Set(this.getState(expandedStateKey));
+
+        let motionType: TreeMotionType = 'show';
+        if (!expanded) {
+            expandedKeys.add(eventKey);
+        } else if (expandedKeys.has(eventKey)) {
+            expandedKeys.delete(eventKey);
+            motionType = 'hide';
+        }
+        // flattenNodes are rebuilt, never mutated, so the pre-collapse list can be kept as is
+        this.setState({ cachedFlattenNodes: motionType === 'hide' && this.#isAnimated() ? this.getState('flattenNodes') : undefined });
+
+        if (!this.#isExpandControlled()) {
+            const flattenNodes = flattenTreeData(treeData, expandedKeys, keyMaps, isSearching && showFilteredOnly && filteredShownKeys);
+            let motionKeys = this.#isAnimated() ? getMotionKeys(eventKey, expandedKeys, keyEntities) : [];
+            if (isSearching && showFilteredOnly) {
+                motionKeys = motionKeys.filter((key) => filteredShownKeys.has(key));
+            }
+            this.setState({
+                [expandedStateKey]: expandedKeys,
+                flattenNodes,
+                motionKeys: new Set(motionKeys),
+                motionType,
+            } as Pick<BasicTreeInnerData, typeof expandedStateKey | 'flattenNodes' | 'motionKeys' | 'motionType'>);
+        }
+
+        return {
+            expandedKeys,
+            expanded: !expanded,
+            data,
+        };
+    }
+
+    #dragProps(event: unknown, node: BasicTreeNodeProps): BasicDragProps {
+        return { event, node: this.getDragEventNodeData(node) };
+    }
+
+    #clearDragEnterTimers() {
+        this.#dragEnterTimers.forEach((timer) => clearTimeout(timer));
+        this.#dragEnterTimers.clear();
+        clearTimeout(this.#autoExpandTimer);
+        this.#autoExpandTimer = undefined;
+    }
+
+    #clearDragState() {
+        this.#clearDragEnterTimers();
+        this.setState({
+            dragOverNodeKey: '',
+            dragging: false,
+        });
+    }
+
+    protected getDragEventNodeData(node: BasicTreeNodeProps) {
+        return {
+            ...node.data,
+            ...pick(node, ['expanded', 'pos', 'children']),
+        };
+    }
+
+    /** The state that props imply, given the previous state; null when nothing changed (see `deriveTreeState`) */
+    static deriveState(props: BasicTreeProps, prevState: BasicTreeInnerData): Partial<BasicTreeInnerData> | null {
+        return deriveTreeState(props, prevState, TreeFoundation.propKeys);
+    }
+
+    static getInitialState(props: BasicTreeProps): BasicTreeInnerData {
+        const state: BasicTreeInnerData = {
+            inputValue: '',
+            keyEntities: {},
+            treeData: [],
+            flattenNodes: [],
+            selectedKeys: [],
+            checkedKeys: new Set(),
+            halfCheckedKeys: new Set(),
+            realCheckedKeys: new Set(),
+            motionKeys: new Set(),
+            motionType: 'hide',
+            expandedKeys: new Set(props.expandedKeys),
+            filteredKeys: new Set(),
+            filteredExpandedKeys: new Set(),
+            filteredShownKeys: new Set(),
+            prevProps: null,
+            loadedKeys: new Set(),
+            loadingKeys: new Set(),
+            cachedFlattenNodes: undefined,
+            cachedKeyValuePairs: {},
+            disabledKeys: new Set(),
+            dragging: false,
+            dragNodesKeys: new Set(),
+            dragOverNodeKey: null,
+            dropPosition: null,
+        };
+        return { ...state, ...TreeFoundation.deriveState(props, state) };
+    }
+
+    override destroy() {
+        super.destroy();
+        this.#throttledDragOverUpdate.cancel();
+        this.#clearDragEnterTimers();
+    }
+
+    /** Writes the state derived from new props back, so handlers read what was rendered */
+    syncDerivedState = (derived: Partial<BasicTreeInnerData>) => {
+        this.setState(derived as BasicTreeInnerData);
+    };
+
+    scrollTo = ({ key, align = 'center' }: { key: string; align?: ScrollAlign }) => {
+        if (key && this.getState('flattenNodes')?.some((node: BasicFlattenNode) => node.key === key)) {
+            this.adapter.scrollToNode(key, align);
+        }
+    };
+
+    handleInputChange = (sugInput: string) => {
+        this.setState({ inputValue: sugInput });
+        const { state } = getSearchState(sugInput, this.getProps(), this.getStates());
+        this.adapter.notifySearch(sugInput, [...state.filteredExpandedKeys]);
+        this.setState(state);
+    };
+
+    handleNodeSelect = (e: unknown, treeNode: BasicTreeNodeProps) => {
+        const isDisabled = this.#isDisabled(treeNode);
+        if (isDisabled) {
+            return;
+        }
+        if (!this.#isMultiple()) {
+            this.#handleSingleSelect(e, treeNode);
+        } else {
+            this.#handleMultipleSelect(e, treeNode);
+        }
+    };
+
+    handleNodeRightClick = (e: E, treeNode: BasicTreeNodeProps) => {
+        this.adapter.notifyRightClick(e, treeNode.data);
+    };
+
+    handleNodeDoubleClick = (e: E, treeNode: BasicTreeNodeProps) => {
+        this.adapter.notifyDoubleClick(e, treeNode.data);
+    };
+
+    handleNodeExpand = (_e: unknown, treeNode: BasicTreeNodeProps) => {
+        const { loadData } = this.getProps();
+        if (!loadData && (!treeNode.children || !treeNode.children.length)) {
+            return;
+        }
+        // expandAction="click" reaches here from any row, a leaf included
+        if (isTreeNodeLeaf(treeNode, loadData)) {
+            return;
+        }
+
+        const { expandedKeys, data, expanded } = this.#setExpandedStatus(treeNode);
+        this.adapter.notifyExpand(expandedKeys, {
+            expanded,
+            node: data,
+        });
+        if (expanded) {
+            loadTreeNode(this, treeNode.eventKey, data, (loadedKeys, node) => this.adapter.notifyLoad(loadedKeys, node));
+        }
+    };
+
+    handleNodeDragStart = (e: TreeDragEvent, treeNode: BasicTreeNodeProps) => {
+        const { keyEntities } = this.getStates();
+        const { hideDraggingNode, renderDraggingNode } = this.getProps();
+        const { eventKey, nodeInstance, data } = treeNode;
+
+        if (hideDraggingNode || renderDraggingNode) {
+            let dragImg;
+            if (typeof renderDraggingNode === 'function') {
+                dragImg = renderDraggingNode(nodeInstance, data);
+            } else if (hideDraggingNode) {
+                dragImg = nodeInstance.cloneNode(true);
+                dragImg.style.opacity = 0;
+            }
+            document.body.appendChild(dragImg);
+            e.dataTransfer.setDragImage(dragImg, 0, 0);
+            // the browser captures the drag image after dragstart ends
+            setTimeout(() => dragImg.remove());
+        }
+
+        this.#dragNode = treeNode;
+
+        this.setState({
+            dragging: true,
+            dragNodesKeys: new Set(getDragNodesKeys(eventKey, keyEntities)),
+        });
+
+        this.adapter.notifyDragStart(this.#dragProps(e, treeNode));
+    };
+
+    handleNodeDragEnter = (e: TreeDragEvent, treeNode: BasicTreeNodeProps) => {
+        const { dragNodesKeys } = this.getStates();
+        const { autoExpandWhenDragEnter } = this.getProps();
+        const { eventKey, expanded } = treeNode;
+        const dragNode = this.#dragNode;
+        if (!dragNode || dragNodesKeys.has(eventKey)) {
+            return;
+        }
+        const dropPosition = calcDropRelativePosition(e, treeNode);
+
+        if (dragNode.eventKey === eventKey && dropPosition === 0) {
+            this.setState({
+                dragOverNodeKey: '',
+                dropPosition: null,
+            });
+            return;
+        }
+
+        // after the state cleared in dragleave is applied
+        const timer = setTimeout(() => {
+            this.#dragEnterTimers.delete(timer);
+            this.setState({
+                dragOverNodeKey: eventKey,
+                dropPosition,
+            });
+
+            if (!autoExpandWhenDragEnter || expanded) {
+                this.adapter.notifyDragEnter(this.#dragProps(e, treeNode));
+                return;
+            }
+
+            // delayed so a quick pass over a node does not expand it
+            clearTimeout(this.#autoExpandTimer);
+            this.#autoExpandTimer = setTimeout(() => {
+                const { expandedKeys: newExpandedKeys } = this.#setExpandedStatus(treeNode);
+                this.adapter.notifyDragEnter({
+                    ...this.#dragProps(e, treeNode),
+                    expandedKeys: [...newExpandedKeys],
+                });
+            }, 400);
+        }, 0);
+        this.#dragEnterTimers.add(timer);
+    };
+
+    handleNodeDragOver = (e: TreeDragEvent, treeNode: BasicTreeNodeProps) => {
+        const { dropPosition, dragNodesKeys, dragOverNodeKey } = this.getStates();
+        const { eventKey } = treeNode;
+
+        if (dragNodesKeys.has(eventKey)) {
+            return;
+        }
+
+        if (this.#dragNode && eventKey === dragOverNodeKey) {
+            const newPos = calcDropRelativePosition(e, treeNode);
+            if (dropPosition === newPos) {
+                return;
+            }
+            this.#throttledDragOverUpdate(newPos);
+        }
+
+        this.adapter.notifyDragOver(this.#dragProps(e, treeNode));
+    };
+
+    handleNodeDragLeave = (e: TreeDragEvent, treeNode: BasicTreeNodeProps) => {
+        this.#throttledDragOverUpdate.cancel();
+        // the pending auto expand belongs to the node being left; a node entered next schedules its own
+        clearTimeout(this.#autoExpandTimer);
+        this.setState({
+            dragOverNodeKey: '',
+        });
+        this.adapter.notifyDragLeave(this.#dragProps(e, treeNode));
+    };
+
+    handleNodeDragEnd = (e: TreeDragEvent, treeNode: BasicTreeNodeProps) => {
+        this.#throttledDragOverUpdate.flush();
+        this.#clearDragState();
+        this.adapter.notifyDragEnd(this.#dragProps(e, treeNode));
+        this.#dragNode = null;
+    };
+
+    handleNodeDrop = (e: TreeDragEvent, treeNode: BasicTreeNodeProps) => {
+        this.#throttledDragOverUpdate.flush();
+        const { dropPosition, dragNodesKeys } = this.getStates();
+        const { eventKey, pos } = treeNode;
+        const dragNode = this.#dragNode;
+        this.#clearDragState();
+        // a drop from outside the tree (files, another tree) has no node of this tree to move
+        if (!dragNode || dragNodesKeys.has(eventKey)) {
+            return;
+        }
+
+        const dropRes = {
+            dragNode: this.getDragEventNodeData(dragNode),
+            dragNodesKeys: [...dragNodesKeys],
+            dropPosition: calcDropActualPosition(pos, dropPosition),
+            dropToGap: dropPosition !== 0,
+        };
+
+        this.adapter.notifyDrop({ ...this.#dragProps(e, treeNode), ...dropRes });
+        this.#dragNode = null;
+    };
+}

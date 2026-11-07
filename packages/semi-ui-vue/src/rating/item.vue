@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, useAttrs, useTemplateRef } from 'vue';
+    import { cssClasses } from '@fibrae/semi-foundation/components/rating/constants';
+    import RatingFoundation from '@fibrae/semi-foundation/components/rating/foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { cssClasses } from '@fibrae/semi-foundation/rating/constants';
-    import RatingFoundation from '@fibrae/semi-foundation/rating/foundation';
     import { IconStar } from '@fibrae/semi-icons-vue';
     import useLocale from '../locale/use-locale';
     import type { RatingItemHandle } from './interface';

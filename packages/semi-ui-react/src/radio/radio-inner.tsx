@@ -1,6 +1,6 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { radioClasses as css } from '@fibrae/semi-foundation/radio/constants';
+import { radioClasses as css } from '@fibrae/semi-foundation/components/radio/constants';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import { IconRadio } from '@fibrae/semi-icons-react';
 

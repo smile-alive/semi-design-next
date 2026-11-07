@@ -1,5 +1,5 @@
 import type { VNode } from 'vue';
-import type { strings } from '@fibrae/semi-foundation/tag/constants';
+import type { strings } from '@fibrae/semi-foundation/components/tag/constants';
 import type { PopoverProps } from '../popover/interface';
 
 export type TagColor = (typeof strings.TAG_COLOR)[number];

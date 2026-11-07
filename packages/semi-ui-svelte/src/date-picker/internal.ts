@@ -1,10 +1,10 @@
 import type { Snippet } from 'svelte';
 import type { Locale as DateFnsLocale } from 'date-fns';
-import type { DisabledTimeType, PresetType, Type, WeekStartNumber } from '@fibrae/semi-foundation/date-picker/foundation';
-import type { InsetInputChangeFoundationProps, InsetInputChangeProps, InsetInputValue, RangeInput } from '@fibrae/semi-foundation/date-picker/input-foundation';
-import type { FocusRecords, MonthDayInfo } from '@fibrae/semi-foundation/date-picker/month-foundation';
-import type { PanelType, YearMonthChangeType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
-import type { YearAndMonth } from '@fibrae/semi-foundation/date-picker/year-and-month-foundation';
+import type { DisabledTimeType, PresetType, Type, WeekStartNumber } from '@fibrae/semi-foundation/components/date-picker/foundation';
+import type { InsetInputChangeFoundationProps, InsetInputChangeProps, InsetInputValue, RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
+import type { FocusRecords, MonthDayInfo } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
+import type { PanelType, YearMonthChangeType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
+import type { YearAndMonth } from '@fibrae/semi-foundation/components/date-picker/year-and-month-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import type { InputSize, ValidateStatus } from '../input/index.js';
 import type { DatePickerDateSnippetProps, DatePickerDensity, DatePickerFullDateSnippetProps, DatePickerInsetInputProps, DatePickerPresetPosition, DatePickerPresetsType, DatePickerTimePickerOpts, DatePickerValueType, DatePickerYearAndMonthOpts } from './interface.js';

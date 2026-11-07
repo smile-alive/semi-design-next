@@ -1,8 +1,8 @@
 import type React from 'react';
 import { memo, type ReactNode, type CSSProperties } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/card/constants';
-import '@fibrae/semi-foundation/card/card.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
+import '@fibrae/semi-foundation/components/card/card.scss';
 import type { ElementProps } from '../_base/base';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';

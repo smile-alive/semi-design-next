@@ -1,7 +1,7 @@
 import type { CSSProperties, VNode } from 'vue';
-import type { HandleDot } from '@fibrae/semi-foundation/slider/foundation';
+import type { HandleDot } from '@fibrae/semi-foundation/components/slider/foundation';
 
-export type { HandleDot, SliderState } from '@fibrae/semi-foundation/slider/foundation';
+export type { HandleDot, SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
 
 export interface SliderProps {
     modelValue?: number | number[];

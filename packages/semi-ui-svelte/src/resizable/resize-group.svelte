@@ -1,8 +1,8 @@
 <script lang="ts">
     import { on } from 'svelte/events';
-    import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
-    import { ResizeGroupFoundation, type ResizeGroupAdapter, type ResizeGroupBaseProps, type ResizeGroupBaseState } from '@fibrae/semi-foundation/resizable/foundation';
-    import '@fibrae/semi-foundation/resizable/resizable.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
+    import { ResizeGroupFoundation, type ResizeGroupAdapter, type ResizeGroupBaseProps, type ResizeGroupBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
+    import '@fibrae/semi-foundation/components/resizable/resizable.scss';
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

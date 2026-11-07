@@ -1,9 +1,9 @@
 <script lang="ts">
     import { omitBy } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
-    import MarkdownRenderFoundation, { type MarkdownRenderAdapter, type MarkdownRenderBaseProps, type MarkdownRenderBaseState } from '@fibrae/semi-foundation/markdown-render/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
+    import MarkdownRenderFoundation, { type MarkdownRenderAdapter, type MarkdownRenderBaseProps, type MarkdownRenderBaseState } from '@fibrae/semi-foundation/components/markdown-render/foundation';
     import { isDev } from '@fibrae/semi-foundation/utils/warning';
-    import '@fibrae/semi-foundation/markdown-render/markdown-render.scss';
+    import '@fibrae/semi-foundation/components/markdown-render/markdown-render.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import * as defaultComponents from './components/index.js';

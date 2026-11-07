@@ -1,8 +1,8 @@
 import type { AnchorHTMLAttributes, CSSProperties, StyleValue, VNode } from 'vue';
-import type { ItemKey } from '@fibrae/semi-foundation/navigation/item-foundation';
+import type { ItemKey } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import type { DropdownProps } from '../dropdown/interface';
 
-export type { ItemKey } from '@fibrae/semi-foundation/navigation/item-foundation';
+export type { ItemKey } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 export type Mode = 'vertical' | 'horizontal';
 
 type DataAttributes = { [key: `data-${string}`]: unknown };

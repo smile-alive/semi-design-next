@@ -1,11 +1,11 @@
 import { type JSX, Show, children, createMemo, createSignal, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-import { isErrorLeaf } from '@fibrae/semi-foundation/form/errors';
+import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+import { isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import warning from '@fibrae/semi-foundation/utils/warning';
-import '@fibrae/semi-foundation/form/form.scss';
+import '@fibrae/semi-foundation/components/form/form.scss';
 import hasContent from '../_base/has-content';
 import InputGroup, { type InputGroupProps as BaseInputGroupProps } from '../input/input-group';
 import { type FormInputGroupContextValue, FormInputGroupContext, useFormContext } from './context';

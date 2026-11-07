@@ -1,9 +1,9 @@
 import type React from 'react';
 import { useImperativeHandle, useRef } from 'react';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { strings } from '@fibrae/semi-foundation/date-picker/constants';
-import type { PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
-import YearAndMonthFoundation, { type YearAndMonthAdapter, type YearAndMonthFoundationProps } from '@fibrae/semi-foundation/date-picker/year-and-month-foundation';
+import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
+import YearAndMonthFoundation, { type YearAndMonthAdapter, type YearAndMonthFoundationProps } from '@fibrae/semi-foundation/components/date-picker/year-and-month-foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { noop } from '@fibrae/semi-foundation/utils/function';

@@ -1,10 +1,10 @@
 <script lang="ts">
     import { onMount, tick, untrack } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/side-sheet/constants';
-    import SideSheetFoundation, { type SideSheetAdapter, type SideSheetProps as SideSheetBaseProps, type SideSheetState } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
+    import SideSheetFoundation, { type SideSheetAdapter, type SideSheetProps as SideSheetBaseProps, type SideSheetState } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
     import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/side-sheet/side-sheet.scss';
+    import '@fibrae/semi-foundation/components/side-sheet/side-sheet.scss';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs.js';
     import Portal from '../_base/portal.svelte';

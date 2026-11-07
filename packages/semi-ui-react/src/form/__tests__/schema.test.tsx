@@ -2,7 +2,7 @@ import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
-import type { StandardSchema } from '@fibrae/semi-foundation/form/interface';
+import type { StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
 import { Form, FormInput } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import type { FormApi } from '../interface';

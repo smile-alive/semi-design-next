@@ -1,8 +1,8 @@
 import { createRawSnippet, flushSync, type Snippet, tick } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
+import NotificationListStore, { type ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
-import NotificationListStore, { type ConfigProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
 import { createStore } from '../../_base/__tests__/store.svelte';
 import semiGlobal from '../../_utils/semi-global';
 import { Notification } from '../index';

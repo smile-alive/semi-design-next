@@ -1,9 +1,9 @@
 import type React from 'react';
 import { useEffect, type ReactNode } from 'react';
 import clsx from 'clsx';
-import { cssClasses, Keys } from '@fibrae/semi-foundation/hot-keys/constants';
-import HotKeysFoundation, { type HotKeysAdapter } from '@fibrae/semi-foundation/hot-keys/foundation';
-import '@fibrae/semi-foundation/hot-keys/hot-keys.scss';
+import { cssClasses, Keys } from '@fibrae/semi-foundation/components/hot-keys/constants';
+import HotKeysFoundation, { type HotKeysAdapter } from '@fibrae/semi-foundation/components/hot-keys/foundation';
+import '@fibrae/semi-foundation/components/hot-keys/hot-keys.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

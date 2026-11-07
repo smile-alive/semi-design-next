@@ -1,10 +1,10 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import { noop, omit } from 'es-toolkit';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/transfer/constants';
+    import TransferFoundation, { type BasicResolvedDataItem, type TransferAdapter, type TransferBaseProps, type TransferBaseState } from '@fibrae/semi-foundation/components/transfer/foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/transfer/constants';
-    import TransferFoundation, { type BasicResolvedDataItem, type TransferAdapter, type TransferBaseProps, type TransferBaseState } from '@fibrae/semi-foundation/transfer/foundation';
-    import '@fibrae/semi-foundation/transfer/transfer.scss';
+    import '@fibrae/semi-foundation/components/transfer/transfer.scss';
     import { IconSearch } from '@fibrae/semi-icons-svelte';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import { groupRole } from '../_base/group-role.js';

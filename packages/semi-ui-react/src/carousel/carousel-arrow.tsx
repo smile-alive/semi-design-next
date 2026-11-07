@@ -1,6 +1,6 @@
 import { type ReactNode, isValidElement } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/carousel/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/carousel/constants';
 import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-react';
 import useLocale from '../locale/use-locale';
 import type { CarouselArrowProps } from './interface';

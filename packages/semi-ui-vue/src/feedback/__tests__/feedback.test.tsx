@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { isFeedbackValueEmpty } from '@fibrae/semi-foundation/feedback/foundation';
+import { isFeedbackValueEmpty } from '@fibrae/semi-foundation/components/feedback/foundation';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { render } from '@test/utils/vue';

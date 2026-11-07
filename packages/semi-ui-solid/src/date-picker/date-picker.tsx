@@ -1,6 +1,7 @@
 import { type JSX, type Ref, Show, children, createEffect, createMemo, createSignal, createUniqueId, mergeProps, on, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/date-picker/constants';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import DatePickerFoundation, {
     getYearMonthFromValue,
     isRangeType,
@@ -15,10 +16,9 @@ import DatePickerFoundation, {
     type PresetType,
     type RangeInput,
     type Type,
-} from '@fibrae/semi-foundation/date-picker/foundation';
+} from '@fibrae/semi-foundation/components/date-picker/foundation';
 import { isInnerControlKey, namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import '@fibrae/semi-foundation/date-picker/date-picker.scss';
+import '@fibrae/semi-foundation/components/date-picker/date-picker.scss';
 import callHandler from '../_base/call-handler';
 import { omitFormInjected } from '../_base/control-attrs';
 import type { ElementProps } from '../_base/element-props';

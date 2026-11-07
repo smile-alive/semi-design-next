@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/float-button/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/float-button/constants';
     import type { FloatButtonShape, FloatButtonSize } from './interface.js';
 
     let {

@@ -1,4 +1,4 @@
-import ColorPickerFoundation from '@fibrae/semi-foundation/color-picker/foundation';
+import ColorPickerFoundation from '@fibrae/semi-foundation/components/color-picker/foundation';
 import ColorPicker from './color-picker.vue';
 
 // Annotated so declaration emit refers to the SFC type instead of inlining it with Vue's GlobalComponents.

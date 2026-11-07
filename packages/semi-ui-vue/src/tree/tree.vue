@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { Fragment, computed, h, nextTick, render, shallowRef, useAttrs, useId, useTemplateRef, watch } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
-    import TreeFoundation, { type BasicTreeInnerData, type BasicTreeNodeData, type BasicTreeProps, type TreeAdapter } from '@fibrae/semi-foundation/tree/foundation';
-    import { buildRowProps, nodeId } from '@fibrae/semi-foundation/tree/shared';
-    import '@fibrae/semi-foundation/tree/tree.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
+    import TreeFoundation, { type BasicTreeInnerData, type BasicTreeNodeData, type BasicTreeProps, type TreeAdapter } from '@fibrae/semi-foundation/components/tree/foundation';
+    import { buildRowProps, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
+    import '@fibrae/semi-foundation/components/tree/tree.scss';
     import { IconSearch } from '@fibrae/semi-icons-vue';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';

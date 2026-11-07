@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { stepsClasses } from '@fibrae/semi-foundation/steps/constants';
+import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
 import { createStore } from '../../_base/__tests__/store.svelte';
 import semiGlobal from '../../_utils/semi-global';
 import { Steps, type StepData, type StepStatus } from '../index';

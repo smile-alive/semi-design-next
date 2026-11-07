@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import type { Breakpoint, OnBreakpointChangeCallback, OnBreakpointScreensCallback } from '@fibrae/semi-foundation/config-provider/responsive-types';
+    import type { Breakpoint, OnBreakpointChangeCallback, OnBreakpointScreensCallback } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
     import ConfigProvider from '../../index';
     import type { ConfigProviderProps, ContextValue } from '../../interface';
     import Probe from './probe.vue';

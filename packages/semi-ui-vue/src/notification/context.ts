@@ -1,6 +1,6 @@
 import type { ComputedRef } from 'vue';
-import type { NoticeInstance } from '@fibrae/semi-foundation/notification/notification-foundation';
-import type { ConfigProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
+import type { NoticeInstance } from '@fibrae/semi-foundation/components/notification/notification-foundation';
+import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { createContext } from '../_base/create-context';
 
 /** A notice as the store holds it: `add` always has an id, and the offsets ride along from the options */

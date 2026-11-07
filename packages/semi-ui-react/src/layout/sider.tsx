@@ -1,8 +1,8 @@
 import type React from 'react';
 import { type CSSProperties, memo, useEffectEvent, useId, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
-import { defaultResponsiveMap, type ResponsiveMap } from '@fibrae/semi-foundation/grid/constants';
-import { cssClasses } from '@fibrae/semi-foundation/layout/constants';
+import { defaultResponsiveMap, type ResponsiveMap } from '@fibrae/semi-foundation/components/grid/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
 import { registerMediaQuery } from '@fibrae/semi-foundation/utils/dom';
 import type { ElementProps } from '../_base/base';
 import { useLayoutContext } from './layout-context';

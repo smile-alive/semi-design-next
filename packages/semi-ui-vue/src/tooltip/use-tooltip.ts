@@ -1,6 +1,6 @@
 import { type ComputedRef, type ShallowRef, computed, nextTick, onActivated, onBeforeUnmount, onDeactivated, shallowRef, useId, watch, watchEffect } from 'vue';
-import { COLOR_SCHEME_SELECTOR, colorSchemeOf, cssClasses, popupTarget } from '@fibrae/semi-foundation/tooltip/constants';
-import TooltipFoundation, { type TooltipAdapter, type TooltipBaseState } from '@fibrae/semi-foundation/tooltip/foundation';
+import { COLOR_SCHEME_SELECTOR, colorSchemeOf, cssClasses, popupTarget } from '@fibrae/semi-foundation/components/tooltip/constants';
+import TooltipFoundation, { type TooltipAdapter, type TooltipBaseState } from '@fibrae/semi-foundation/components/tooltip/foundation';
 import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
 import useEventListener, { getWindow } from '../_base/use-event-listener';

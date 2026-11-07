@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/card/constants';
-    import '@fibrae/semi-foundation/card/card.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
+    import '@fibrae/semi-foundation/components/card/card.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import Space from '../space/space.svelte';
     import type { CardGroupProps } from './interface.js';

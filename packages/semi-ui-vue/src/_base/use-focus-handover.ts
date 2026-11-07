@@ -1,5 +1,5 @@
 import { type ComponentPublicInstance, nextTick } from 'vue';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
 
 /**

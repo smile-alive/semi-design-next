@@ -1,11 +1,11 @@
 import type React from 'react';
 import { useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
-import { ResizableFoundation, type ResizableAdapter, type ResizableBaseState } from '@fibrae/semi-foundation/resizable/foundation';
-import { type Direction, type Size, type Enable, type ResizeStartCallback, type ResizeCallback, type HandleClassName, directions } from '@fibrae/semi-foundation/resizable/types';
-import { isKeyboardEdge } from '@fibrae/semi-foundation/resizable/utils';
-import '@fibrae/semi-foundation/resizable/resizable.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
+import { ResizableFoundation, type ResizableAdapter, type ResizableBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
+import { type Direction, type Size, type Enable, type ResizeStartCallback, type ResizeCallback, type HandleClassName, directions } from '@fibrae/semi-foundation/components/resizable/types';
+import { isKeyboardEdge } from '@fibrae/semi-foundation/components/resizable/utils';
+import '@fibrae/semi-foundation/components/resizable/resizable.scss';
 import type { ElementProps } from '../_base/base';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';

@@ -1,10 +1,10 @@
 import { useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/audio-player/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/audio-player/constants';
+import SeekFoundation, { type SeekAdapter, type SeekBaseProps, type SeekBaseState } from '@fibrae/semi-foundation/components/video-player/seek-foundation';
+import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
 import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
-import SeekFoundation, { type SeekAdapter, type SeekBaseProps, type SeekBaseState } from '@fibrae/semi-foundation/video-player/seek-foundation';
-import { formatTime } from '@fibrae/semi-foundation/video-player/utils';
-import '@fibrae/semi-foundation/audio-player/audio-player.scss';
+import '@fibrae/semi-foundation/components/audio-player/audio-player.scss';
 import useFoundation from '../_base/use-foundation';
 import Tooltip from '../tooltip';
 import type { AudioPlayerTheme } from './index';

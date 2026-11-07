@@ -1,9 +1,9 @@
 import type { HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
-import type { NoticeProps as FoundationNoticeProps } from '@fibrae/semi-foundation/notification/notification-foundation';
-import type { ConfigProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
+import type { NoticeProps as FoundationNoticeProps } from '@fibrae/semi-foundation/components/notification/notification-foundation';
+import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 
-export type { ConfigProps as NotificationConfigProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
-export type { NoticePosition, NoticeTheme, NoticeType } from '@fibrae/semi-foundation/notification/notification-foundation';
+export type { ConfigProps as NotificationConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
+export type { NoticePosition, NoticeTheme, NoticeType } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 
 /** Same shape as ToastNode: a text, a VNode, or a function rendered as a functional component (it may inject) */
 export type NotificationNode = string | VNode | (() => VNodeChild);

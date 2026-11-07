@@ -3,7 +3,7 @@ import { act, render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import truncateValue from '@fibrae/semi-foundation/input/util/truncate-value';
+import truncateValue from '@fibrae/semi-foundation/components/input/util/truncate-value';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Form, FormTextArea } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';

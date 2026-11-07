@@ -3,7 +3,7 @@ import { nextTick, type ComponentPublicInstance } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import type { BackTopBaseProps } from '@fibrae/semi-foundation/backtop/foundation';
+import type { BackTopBaseProps } from '@fibrae/semi-foundation/components/backtop/foundation';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { render } from '@test/utils/vue';

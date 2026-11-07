@@ -1,8 +1,8 @@
 import type React from 'react';
 import { useSyncExternalStore } from 'react';
 import clsx from 'clsx';
-import { type strings, cssClasses } from '@fibrae/semi-foundation/empty/constants';
-import '@fibrae/semi-foundation/empty/empty.scss';
+import { type strings, cssClasses } from '@fibrae/semi-foundation/components/empty/constants';
+import '@fibrae/semi-foundation/components/empty/empty.scss';
 import type { ArrayElement, ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import { hasContent } from '../_utils';

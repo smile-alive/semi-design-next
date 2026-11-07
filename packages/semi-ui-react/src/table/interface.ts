@@ -1,7 +1,7 @@
 import React, { type ReactNode } from 'react';
+import type { strings } from '@fibrae/semi-foundation/components/table/constants';
+import type { BaseRowKeyType, BaseSortOrder, BaseGroupBy, BaseGroupByFn, BaseFixed, BaseAlign, BaseChangeInfoSorter, BaseSorter, BaseFilter, BaseChangeInfoFilter, BaseIncludeGroupRecord, BaseEllipsis, BasePageData, OnChangeExtra } from '@fibrae/semi-foundation/components/table/foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import type { strings } from '@fibrae/semi-foundation/table/constants';
-import type { BaseRowKeyType, BaseSortOrder, BaseGroupBy, BaseGroupByFn, BaseFixed, BaseAlign, BaseChangeInfoSorter, BaseSorter, BaseFilter, BaseChangeInfoFilter, BaseIncludeGroupRecord, BaseEllipsis, BasePageData, OnChangeExtra } from '@fibrae/semi-foundation/table/foundation';
 import type { ArrayElement, ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';
 import type { CheckboxEvent, CheckboxProps } from '../checkbox';

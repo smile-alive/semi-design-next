@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
-    import { arrayAdd } from '@fibrae/semi-foundation/table/utils';
+    import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
+    import { arrayAdd } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { getTableContext } from '../context.js';
     import type { ColumnProps, TableCellAttrs } from '../interface.js';

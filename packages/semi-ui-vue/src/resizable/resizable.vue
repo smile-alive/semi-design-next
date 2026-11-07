@@ -1,12 +1,12 @@
 <script setup lang="ts">
     import { computed, useAttrs, useTemplateRef, type HTMLAttributes, type StyleValue } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
-    import { ResizableFoundation, type ResizableAdapter, type ResizableBaseState } from '@fibrae/semi-foundation/resizable/foundation';
-    import { directions, type Direction } from '@fibrae/semi-foundation/resizable/types';
-    import { getStringSize, isKeyboardEdge } from '@fibrae/semi-foundation/resizable/utils';
+    import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
+    import { ResizableFoundation, type ResizableAdapter, type ResizableBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
+    import { directions, type Direction } from '@fibrae/semi-foundation/components/resizable/types';
+    import { getStringSize, isKeyboardEdge } from '@fibrae/semi-foundation/components/resizable/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
-    import '@fibrae/semi-foundation/resizable/resizable.scss';
+    import '@fibrae/semi-foundation/components/resizable/resizable.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';

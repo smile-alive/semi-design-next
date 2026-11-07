@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageBaseProps, type PreviewImageState } from '@fibrae/semi-foundation/image/preview-image-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+    import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageBaseProps, type PreviewImageState } from '@fibrae/semi-foundation/components/image/preview-image-foundation';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import { Spin } from '../spin/index.js';
     import type { RatioType } from './interface.js';

@@ -1,7 +1,7 @@
 import { type JSX, type Ref, splitProps } from 'solid-js';
 import clsx, { type ClassValue } from 'clsx';
-import { cssClasses, getPopoverRole, getPopoverSpacing } from '@fibrae/semi-foundation/popover/constants';
-import '@fibrae/semi-foundation/popover/popover.scss';
+import { cssClasses, getPopoverRole, getPopoverSpacing } from '@fibrae/semi-foundation/components/popover/constants';
+import '@fibrae/semi-foundation/components/popover/popover.scss';
 import useDefaultProps from '../_base/use-default-props';
 import Tooltip, { PopupContent, type Position, type RenderContentProps, type TooltipHandle, type TooltipProps, type Trigger } from '../tooltip';
 import Arrow, { type ArrowStyle } from './arrow';

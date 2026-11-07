@@ -1,13 +1,13 @@
 import type React from 'react';
 import { Fragment, lazy, Suspense, useCallback, useId, useImperativeHandle, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { type strings, cssClasses } from '@fibrae/semi-foundation/components/tag-input/constants';
+import TagInputFoundation, { type TagInputAdapter, type TagInputBaseState } from '@fibrae/semi-foundation/components/tag-input/foundation';
+import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/components/tag-input/utils/tag-focus';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import { type strings, cssClasses } from '@fibrae/semi-foundation/tag-input/constants';
-import TagInputFoundation, { type TagInputAdapter, type TagInputBaseState } from '@fibrae/semi-foundation/tag-input/foundation';
-import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/tag-input/utils/tag-focus';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import '@fibrae/semi-foundation/tag-input/tag-input.scss';
+import '@fibrae/semi-foundation/components/tag-input/tag-input.scss';
 import { IconClear, IconHandle } from '@fibrae/semi-icons-react';
 import type { ArrayElement, ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';

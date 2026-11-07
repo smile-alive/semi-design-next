@@ -1,9 +1,9 @@
 import { type JSX, type Ref, Show, children, createEffect, createMemo, createRenderEffect, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/popconfirm/constants';
-import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/popconfirm/popconfirm-foundation';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import '@fibrae/semi-foundation/popconfirm/popconfirm.scss';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { cssClasses } from '@fibrae/semi-foundation/components/popconfirm/constants';
+import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
+import '@fibrae/semi-foundation/components/popconfirm/popconfirm.scss';
 import { IconAlertTriangle, IconClose } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';
 import hasContent from '../_base/has-content';

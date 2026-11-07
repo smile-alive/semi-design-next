@@ -1,6 +1,6 @@
 import { type JSX, Show, children, createMemo, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/image/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
 import { IconClose } from '@fibrae/semi-icons-solid';
 import hasContent from '../_base/has-content';
 import useLocale from '../locale/use-locale';

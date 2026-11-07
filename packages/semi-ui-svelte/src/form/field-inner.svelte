@@ -1,13 +1,13 @@
 <script lang="ts">
     import { type Component, type Snippet, onMount, untrack } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-    import FieldStore from '@fibrae/semi-foundation/form/field-store';
-    import type { FieldRegistration } from '@fibrae/semi-foundation/form/interface';
-    import { createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/form/utils';
+    import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+    import FieldStore from '@fibrae/semi-foundation/components/form/field-store';
+    import type { FieldRegistration } from '@fibrae/semi-foundation/components/form/interface';
+    import { createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/components/form/utils';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
     import warning from '@fibrae/semi-foundation/utils/warning';
-    import '@fibrae/semi-foundation/form/form.scss';
+    import '@fibrae/semi-foundation/components/form/form.scss';
     import { type SlotKind, trackSlotKind } from '../_base/slot-kind.js';
     import useStoreSnapshot from '../_base/use-store-snapshot.svelte.js';
     import type { ColProps } from '../grid/interface.js';

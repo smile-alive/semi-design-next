@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { strings } from '@fibrae/semi-foundation/typography/constants';
+    import { strings } from '@fibrae/semi-foundation/components/typography/constants';
     import TypographyBase from './base.svelte';
     import type { TypographyTitleProps } from './interface.js';
     import type { TypographyBaseProps } from './internal.js';

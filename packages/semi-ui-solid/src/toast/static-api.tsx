@@ -1,5 +1,5 @@
-import ToastApi from '@fibrae/semi-foundation/toast/toast-api-foundation';
-import type { ConfigProps } from '@fibrae/semi-foundation/toast/toast-foundation';
+import ToastApi from '@fibrae/semi-foundation/components/toast/toast-api-foundation';
+import type { ConfigProps } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 import renderDetached, { assertClient } from '../_base/detached-render';
 import { readGlobalDefaults } from '../_utils/semi-global';
 import type { ToastProps } from './toast';

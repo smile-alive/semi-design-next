@@ -1,6 +1,6 @@
 import { Text, type VNode, type VNodeChild } from 'vue';
 import { isEqualWith } from 'es-toolkit';
-import { assignColumnKeys, getDefaultComponents, placeInnerColumns } from '@fibrae/semi-foundation/table/utils';
+import { assignColumnKeys, getDefaultComponents, placeInnerColumns } from '@fibrae/semi-foundation/components/table/utils';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import elementType from '../_base/element-type';
 import { nativeTag } from '../_base/native-tag';

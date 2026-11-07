@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAttributes } from 'svelte/elements';
-import type { BasicCascaderData, BasicEntity, BasicScrollPanelProps, KeyMapProps, Virtualize } from '@fibrae/semi-foundation/cascader/foundation';
+import type { BasicCascaderData, BasicEntity, BasicScrollPanelProps, KeyMapProps, Virtualize } from '@fibrae/semi-foundation/components/cascader/foundation';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import type { CheckboxEvent } from '../checkbox/index.js';
 import type { ValidateStatus } from '../input/index.js';

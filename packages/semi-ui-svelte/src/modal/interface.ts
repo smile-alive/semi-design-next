@@ -1,10 +1,10 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { ConfirmType } from '@fibrae/semi-foundation/modal/confirm';
-import type { OKType, Size } from '@fibrae/semi-foundation/modal/modal-foundation';
+import type { ConfirmType } from '@fibrae/semi-foundation/components/modal/confirm';
+import type { OKType, Size } from '@fibrae/semi-foundation/components/modal/modal-foundation';
 import type { ButtonProps } from '../button/interface.js';
 
-export type { ModalState, OKType } from '@fibrae/semi-foundation/modal/modal-foundation';
+export type { ModalState, OKType } from '@fibrae/semi-foundation/components/modal/modal-foundation';
 export type { ConfirmType };
 // not `Size`: the package root also exports Button's
 export type ModalSize = Size;

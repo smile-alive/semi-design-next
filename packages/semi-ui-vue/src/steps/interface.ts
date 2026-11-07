@@ -1,5 +1,5 @@
 import type { VNode } from 'vue';
-import type { StepStatus } from '@fibrae/semi-foundation/steps/utils';
+import type { StepStatus } from '@fibrae/semi-foundation/components/steps/utils';
 
 export type { StepStatus };
 export type StepsSize = 'default' | 'small';

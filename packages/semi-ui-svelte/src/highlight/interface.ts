@@ -1,6 +1,6 @@
-import type { HighlightStyle } from '@fibrae/semi-foundation/highlight/foundation';
+import type { HighlightStyle } from '@fibrae/semi-foundation/components/highlight/foundation';
 
-export type { HighlightStyle } from '@fibrae/semi-foundation/highlight/foundation';
+export type { HighlightStyle } from '@fibrae/semi-foundation/components/highlight/foundation';
 
 export interface ComplexSearchWord {
     text: string;

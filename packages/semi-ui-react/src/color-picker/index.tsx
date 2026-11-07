@@ -1,8 +1,8 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
-import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps, type ColorPickerState } from '@fibrae/semi-foundation/color-picker/foundation';
-import '@fibrae/semi-foundation/color-picker/color-picker.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps, type ColorPickerState } from '@fibrae/semi-foundation/components/color-picker/foundation';
+import '@fibrae/semi-foundation/components/color-picker/color-picker.scss';
 import type { ElementProps } from '../_base/base';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';
@@ -98,7 +98,7 @@ function ColorPicker(rawProps: ColorPickerReactProps) {
     );
 }
 
-export type { ColorValue } from '@fibrae/semi-foundation/color-picker/foundation';
-export type { ColorFormat, HsvaColor, RgbaColor } from '@fibrae/semi-foundation/color-picker/interface';
+export type { ColorValue } from '@fibrae/semi-foundation/components/color-picker/foundation';
+export type { ColorFormat, HsvaColor, RgbaColor } from '@fibrae/semi-foundation/components/color-picker/interface';
 
 export default Object.assign(ColorPicker, { colorStringToValue: ColorPickerFoundation.colorStringToValue });

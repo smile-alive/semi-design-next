@@ -1,10 +1,10 @@
 import type { Accessor, JSX, Ref } from 'solid-js';
-import type { BasicExpandedOtherProps, BasicFlattenNode, BasicOnDragProps, BasicRenderFullLabelProps, BasicSearchRenderProps, BasicTreeNodeData, BasicTreeNodeProps, BasicTreeProps, KeyMapProps, ScrollAlign, TreeMotionType, Virtualize } from '@fibrae/semi-foundation/tree/foundation';
+import type { BasicExpandedOtherProps, BasicFlattenNode, BasicOnDragProps, BasicRenderFullLabelProps, BasicSearchRenderProps, BasicTreeNodeData, BasicTreeNodeProps, BasicTreeProps, KeyMapProps, ScrollAlign, TreeMotionType, Virtualize } from '@fibrae/semi-foundation/components/tree/foundation';
 import type { ElementProps } from '../_base/element-props';
 import type { VirtualListHandle } from '../_base/virtual-list';
 
 export type { KeyMapProps, ScrollAlign, Virtualize };
-export type { TreeDataSimpleJson } from '@fibrae/semi-foundation/tree/foundation';
+export type { TreeDataSimpleJson } from '@fibrae/semi-foundation/components/tree/foundation';
 
 /** What a function `expandIcon` receives; put `class` and `onClick` on the element it returns */
 export interface ExpandIconProps {

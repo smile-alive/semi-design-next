@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/transfer/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/transfer/constants';
     import { IconClose, IconHandle } from '@fibrae/semi-icons-svelte';
     import { SortableHandle } from '../_sortable/index.js';
     import useLocale from '../locale/use-locale.svelte.js';

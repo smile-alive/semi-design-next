@@ -1,11 +1,11 @@
 <script lang="ts">
     import type { Attachment } from 'svelte/attachments';
     import { omit } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import ImageFoundation, { type ImageAdapter, type ImageState } from '@fibrae/semi-foundation/image/image-foundation';
-    import { loadLazyImages } from '@fibrae/semi-foundation/image/preview-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+    import ImageFoundation, { type ImageAdapter, type ImageState } from '@fibrae/semi-foundation/components/image/image-foundation';
+    import { loadLazyImages } from '@fibrae/semi-foundation/components/image/preview-foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/image/image.scss';
+    import '@fibrae/semi-foundation/components/image/image.scss';
     import { IconUploadError } from '@fibrae/semi-icons-svelte';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';

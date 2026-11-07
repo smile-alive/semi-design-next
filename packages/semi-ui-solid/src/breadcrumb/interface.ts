@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { BreadcrumbItemInfo as BaseBreadcrumbItemInfo, Route } from '@fibrae/semi-foundation/breadcrumb/item-foundation';
+import type { BreadcrumbItemInfo as BaseBreadcrumbItemInfo, Route } from '@fibrae/semi-foundation/components/breadcrumb/item-foundation';
 import type { ElementProps } from '../_base/element-props';
 import type { TooltipProps } from '../tooltip';
 

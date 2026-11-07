@@ -1,7 +1,7 @@
 import { flushSync } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
-import type { OnBreakpointScreensCallback } from '@fibrae/semi-foundation/config-provider/responsive-types';
+import type { OnBreakpointScreensCallback } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
 import { countLiveListeners } from '@test/utils/dom/common';
 import { createStore } from '../../_base/__tests__/store.svelte';
 import { defaultResponsiveMap } from '../index';

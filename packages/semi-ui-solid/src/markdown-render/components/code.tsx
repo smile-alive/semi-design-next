@@ -1,6 +1,6 @@
 import { children, type JSX, Match, Switch } from 'solid-js';
-import { cssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
-import MarkdownRenderFoundation from '@fibrae/semi-foundation/markdown-render/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
+import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
 import CodeHighlight from '../../code-highlight';
 import { usePreContext } from '../context';
 

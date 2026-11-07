@@ -1,10 +1,10 @@
 import { type JSX, For, Show, createMemo, createUniqueId, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/slider/constants';
-import SliderFoundation, { type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/slider/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/slider/constants';
+import SliderFoundation, { type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
 import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
-import '@fibrae/semi-foundation/slider/slider.scss';
+import '@fibrae/semi-foundation/components/slider/slider.scss';
 import autofocus from '../_base/autofocus';
 import callHandler from '../_base/call-handler';
 import { omitFormInjected } from '../_base/control-attrs';

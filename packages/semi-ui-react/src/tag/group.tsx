@@ -1,8 +1,8 @@
 import type React from 'react';
 import { memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/tag/constants';
-import { getTagListKeys } from '@fibrae/semi-foundation/tag/tag-key';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/tag/constants';
+import { getTagListKeys } from '@fibrae/semi-foundation/components/tag/tag-key';
 import useDefaultProps from '../_base/use-default-props';
 import Popover from '../popover/index';
 import Tag from './index';

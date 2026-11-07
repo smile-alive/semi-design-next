@@ -1,9 +1,9 @@
 <script lang="ts" generics="T extends ScrollListItem = ScrollListItem">
     import type { Attachment } from 'svelte/attachments';
     import { on } from 'svelte/events';
-    import { cssClasses } from '@fibrae/semi-foundation/scroll-list/constants';
-    import ItemFoundation, { type ScrollItemAdapter, type ScrollItemBaseProps, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/scroll-list/item-foundation';
-    import '@fibrae/semi-foundation/scroll-list/scroll-list.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
+    import ItemFoundation, { type ScrollItemAdapter, type ScrollItemBaseProps, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
+    import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

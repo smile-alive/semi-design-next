@@ -1,8 +1,8 @@
 import type React from 'react';
 import { Children, cloneElement, createElement, isValidElement, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/typography/constants';
-import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getRenderText, isInsideWidgetItem, isOverflowing } from '@fibrae/semi-foundation/typography/ellipsis';
+import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
+import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getRenderText, isInsideWidgetItem, isOverflowing } from '@fibrae/semi-foundation/components/typography/ellipsis';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import type { BaseProps } from '../_base/base-component';
 import useMergedRef from '../_base/use-merged-ref';

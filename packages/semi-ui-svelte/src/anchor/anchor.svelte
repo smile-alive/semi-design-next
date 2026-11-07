@@ -1,9 +1,9 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/anchor/constants';
-    import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/anchor/foundation';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/anchor/constants';
+    import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/components/anchor/foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/anchor/anchor.scss';
+    import '@fibrae/semi-foundation/components/anchor/anchor.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import watch from '../_base/watch.svelte.js';

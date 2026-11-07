@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/typography/constants';
-    import '@fibrae/semi-foundation/typography/typography.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
+    import '@fibrae/semi-foundation/components/typography/typography.scss';
     import type { ElementProps } from '../_base/element-props';
     import { readSemiDefault, useSemiGlobal } from '../_base/semi-default';
     import type { TypographyProps, TypographySlots } from './interface';

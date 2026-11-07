@@ -493,7 +493,7 @@
 - 每个选项 Item 收到内联回调，悬停或展开时整列重渲染。待处理。
 - 受控单选 `filterLeafOnly=false` 搜索选中分支后受控与非受控显示不一致。待决。
 - 保持原样：不用 `aria-owns`；点击标签后移除焦点落 body；多选搜索无当前项时 Enter 仍建新标签；受控 `value` 中不在 `treeData` 的路径无占位标签。
-- React：`item.tsx` 的 `renderItem` 递归渲染各列，没有用 `semi-foundation/cascader/util` 的 `getColumns`（Vue、Solid、Svelte 已共用）。待处理（改用 `getColumns`）。
+- React：`item.tsx` 的 `renderItem` 递归渲染各列，没有用 `semi-foundation/components/cascader/util` 的 `getColumns`（Vue、Solid、Svelte 已共用）。待处理（改用 `getColumns`）。
 - Vue：`modelValue` 的原地修改检测不到，需替换整个数组。Svelte：绑定的 `value` 与 `keyMaps` 的原地修改检测不到，需替换整个对象。已知限制（宿主的 tracker 只比较引用；升级条件：框架提供不依赖引用比较的变更通知时在框架侧补检测）。
 - Svelte：就地修改 `$state` 的 `treeData` 时每次都用 `$state.snapshot` 遍历整棵树比较，树很大时应替换整个 `treeData`；节点上放函数或 DOM 节点时 dev 下可能告警。已知限制（升级条件：出现大树性能问题时改用显式版本号或替换式更新）。
 

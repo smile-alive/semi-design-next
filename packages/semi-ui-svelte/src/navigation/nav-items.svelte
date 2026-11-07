@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import type { NavItemType } from '@fibrae/semi-foundation/navigation/foundation';
+    import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
     import type { NavExpandIconArgs, NavIconArgs, NavItemConfig, NavItemRenderProps, SubDropdownProps } from './interface.js';
     import NavItem from './nav-item.svelte';
     import NavItems from './nav-items.svelte';

@@ -1,5 +1,5 @@
 import { type JSX, Show, createMemo, untrack } from 'solid-js';
-import { cssClasses } from '@fibrae/semi-foundation/table/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
 import Pagination from '../pagination';
 import type { RenderPagination, TablePaginationProps as PaginationProps } from './interface';
 

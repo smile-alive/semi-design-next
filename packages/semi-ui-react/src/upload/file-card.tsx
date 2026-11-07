@@ -1,9 +1,9 @@
 import { isValidElement, useState, type ReactNode, type MouseEvent, type CSSProperties, type SVGProps } from 'react';
 import clsx from 'clsx';
 import { pickBy } from 'es-toolkit';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import { cssClasses, strings } from '@fibrae/semi-foundation/upload/constants';
-import { getFileSize } from '@fibrae/semi-foundation/upload/utils';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import { IconAlertCircle, IconClose, IconClear, IconFile, IconRefresh } from '@fibrae/semi-icons-react';
 import Button from '../button/index';

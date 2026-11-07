@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/upload/constants';
-import type { BaseFileItem, AfterUploadResult as FoundationAfterUploadResult, BeforeUploadObjectResult as FoundationBeforeUploadObjectResult } from '@fibrae/semi-foundation/upload/foundation';
+import type { strings } from '@fibrae/semi-foundation/components/upload/constants';
+import type { BaseFileItem, AfterUploadResult as FoundationAfterUploadResult, BeforeUploadObjectResult as FoundationBeforeUploadObjectResult } from '@fibrae/semi-foundation/components/upload/foundation';
 import type { ModalProps } from '../modal';
 import type { ShowTooltip } from '../typography/interface';
 

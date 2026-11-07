@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses, strings } from '@fibrae/semi-foundation/space/constants';
-    import '@fibrae/semi-foundation/space/space.scss';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/space/constants';
+    import '@fibrae/semi-foundation/components/space/space.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import type { SpaceProps, Spacing } from './interface.js';
 

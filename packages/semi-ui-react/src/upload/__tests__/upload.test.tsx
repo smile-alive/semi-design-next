@@ -3,8 +3,8 @@ import { render, screen, fireEvent, waitFor, act, createEvent } from '@testing-l
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import type { CustomFile } from '@fibrae/semi-foundation/components/upload/foundation';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import type { CustomFile } from '@fibrae/semi-foundation/upload/foundation';
 import { IconUser } from '@fibrae/semi-icons-react';
 import { Upload, Button } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';

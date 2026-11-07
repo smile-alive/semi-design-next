@@ -3,7 +3,7 @@
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
     import MCPConfigureContentFoundation, { type MCPConfigureContentAdapter, type MCPConfigureContentProps as FoundationProps, type MCPConfigureContentState, type MCPConfigureMode, type MCPOption } from '@fibrae/semi-ai-foundation/sidebar/mcp-cof-content-foundation';
     import { getShowOptions } from '@fibrae/semi-ai-foundation/sidebar/utils';
-    import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/button/constants';
+    import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/components/button/constants';
     import { IconEdit, IconMinus, IconPlus, IconSearch, IconSetting } from '@fibrae/semi-icons-vue';
     import { IllustrationNoContent, IllustrationNoContentDark } from '@fibrae/semi-illustrations-vue';
     import SlotFragment from '@fibrae/semi-ui-vue/_base/slot-fragment';

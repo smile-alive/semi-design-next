@@ -2,8 +2,8 @@
 // JSX because confirm() mounts a ConfirmModal vnode outside any template and sets its appContext by hand.
 
 import { type App, render } from 'vue';
-import { resolveConfirmProps } from '@fibrae/semi-foundation/modal/confirm';
-import ConfirmRegistry from '@fibrae/semi-foundation/modal/confirm-registry';
+import { resolveConfirmProps } from '@fibrae/semi-foundation/components/modal/confirm';
+import ConfirmRegistry from '@fibrae/semi-foundation/components/modal/confirm-registry';
 import { IconAlertCircle, IconAlertTriangle, IconHelpCircle, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-vue';
 import { assertClient } from '../_base/client-only';
 import { rootAppContext, setInstalledApp } from '../_base/installed-app';

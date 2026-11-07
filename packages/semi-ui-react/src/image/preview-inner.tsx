@@ -1,9 +1,9 @@
 import { type CSSProperties, isValidElement, type RefObject, useId, useInsertionEffect, useLayoutEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/image/constants';
-import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerState, type RatioType } from '@fibrae/semi-foundation/image/preview-inner-foundation';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/image/constants';
+import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerState, type RatioType } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-react';
 import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';

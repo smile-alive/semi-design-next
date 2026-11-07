@@ -1,9 +1,9 @@
 import { useInsertionEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { isEqual } from 'es-toolkit';
-import BreakpointObserver, { noScreens } from '@fibrae/semi-foundation/config-provider/breakpoint-observer';
-import { inheritConfig, switchesDirection } from '@fibrae/semi-foundation/config-provider/inherit-config';
-import type { ResponsiveMap, BreakpointScreens } from '@fibrae/semi-foundation/config-provider/responsive-types';
-import { defaultResponsiveMap } from '@fibrae/semi-foundation/grid/constants';
+import BreakpointObserver, { noScreens } from '@fibrae/semi-foundation/components/config-provider/breakpoint-observer';
+import { inheritConfig, switchesDirection } from '@fibrae/semi-foundation/components/config-provider/inherit-config';
+import type { ResponsiveMap, BreakpointScreens } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
+import { defaultResponsiveMap } from '@fibrae/semi-foundation/components/grid/constants';
 import { ConfigContext, useConfigContext, type ContextValue } from './context';
 
 export interface ConfigProviderProps extends Omit<ContextValue, 'onBreakpoint' | 'screens'> {
@@ -13,7 +13,7 @@ export interface ConfigProviderProps extends Omit<ContextValue, 'onBreakpoint' |
     responsiveObserve?: boolean;
 }
 
-export { defaultResponsiveMap } from '@fibrae/semi-foundation/grid/constants';
+export { defaultResponsiveMap } from '@fibrae/semi-foundation/components/grid/constants';
 
 export const ConfigConsumer = ConfigContext.Consumer;
 
@@ -65,4 +65,4 @@ export default Object.assign(ConfigProvider, {
     defaultResponsiveMap,
 });
 
-export type { ResponsiveMap, BreakpointScreens, Breakpoint, OnBreakpointScreensCallback, OnBreakpointChangeCallback } from '@fibrae/semi-foundation/config-provider/responsive-types';
+export type { ResponsiveMap, BreakpointScreens, Breakpoint, OnBreakpointScreensCallback, OnBreakpointChangeCallback } from '@fibrae/semi-foundation/components/config-provider/responsive-types';

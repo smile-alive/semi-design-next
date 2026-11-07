@@ -1,4 +1,4 @@
-import NotificationApi from '@fibrae/semi-foundation/notification/notification-api-foundation';
+import NotificationApi from '@fibrae/semi-foundation/components/notification/notification-api-foundation';
 import { assertBrowser, render as reactRender, unmount as reactUnmount } from '../_utils/react-render';
 import { readGlobalDefaults } from '../_utils/semi-global';
 import type { NotificationOptions } from './notice';
@@ -7,8 +7,8 @@ import useNotification from './use-notification';
 
 export type { NoticeReactProps } from './notice';
 export type { NotificationHookOptions } from './use-notification';
-export type { NoticeState } from '@fibrae/semi-foundation/notification/notification-foundation';
-export type { ConfigProps, NoticesInPosition, NotificationListProps, NotificationListState } from '@fibrae/semi-foundation/notification/notification-list-foundation';
+export type { NoticeState } from '@fibrae/semi-foundation/components/notification/notification-foundation';
+export type { ConfigProps, NoticesInPosition, NotificationListProps, NotificationListState } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 
 const api = new NotificationApi<NotificationOptions>({
     assertClient: () => assertBrowser('Notification', 'Notification.useNotification()'),

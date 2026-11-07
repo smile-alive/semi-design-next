@@ -1,5 +1,5 @@
 import type { CSSProperties, ImgHTMLAttributes, VNode } from 'vue';
-import type { strings } from '@fibrae/semi-foundation/avatar/constants';
+import type { strings } from '@fibrae/semi-foundation/components/avatar/constants';
 
 export type AvatarShape = 'circle' | 'square';
 export type AvatarSize = (typeof strings.SIZE)[number];

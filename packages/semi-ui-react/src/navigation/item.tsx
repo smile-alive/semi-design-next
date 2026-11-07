@@ -1,7 +1,7 @@
 import type React from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/navigation/constants';
-import ItemFoundation, { type ItemAdapter, type ItemProps, type ItemKey, type SelectedItemProps, countPlaceholderIcons } from '@fibrae/semi-foundation/navigation/item-foundation';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
+import ItemFoundation, { type ItemAdapter, type ItemProps, type ItemKey, type SelectedItemProps, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import type { ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';
@@ -44,7 +44,7 @@ export interface SelectedData extends SelectedItemProps<NavItemProps> {
     text?: React.ReactNode;
 }
 
-export type { ItemKey } from '@fibrae/semi-foundation/navigation/item-foundation';
+export type { ItemKey } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 
 /** What only SubNav passes: it renders its own title and list inside the wrapper li that Item builds */
 interface NavItemShellProps extends NavItemProps {

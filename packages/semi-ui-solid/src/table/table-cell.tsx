@@ -3,7 +3,7 @@ import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 // compat get resolves deep dataIndex paths such as 'a.b'
 import { get } from 'es-toolkit/compat';
-import { getRTLAlign, getRTLFlexAlign, isExpandedColumn, isSelectionColumn, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/table/utils';
+import { getRTLAlign, getRTLFlexAlign, isExpandedColumn, isSelectionColumn, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/components/table/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import mergeStyles from '../_base/merge-styles';
 import { TableSelection } from './column-selection';

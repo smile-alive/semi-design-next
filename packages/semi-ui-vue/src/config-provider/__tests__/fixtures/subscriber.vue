@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { onBeforeUnmount, onMounted } from 'vue';
-    import type { Breakpoint, OnBreakpointChangeCallback, OnBreakpointScreensCallback } from '@fibrae/semi-foundation/config-provider/responsive-types';
+    import type { Breakpoint, OnBreakpointChangeCallback, OnBreakpointScreensCallback } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
     import useConfig from '../../use-config';
 
     const props = defineProps<{ args: [OnBreakpointScreensCallback] | [Breakpoint[], OnBreakpointChangeCallback] }>();

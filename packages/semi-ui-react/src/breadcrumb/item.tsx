@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/breadcrumb/constants';
-import BreadcrumbItemFoundation, { type BreadcrumbItemAdapter, type Route, type BreadcrumbItemInfo as BaseBreadcrumbItemInfo } from '@fibrae/semi-foundation/breadcrumb/item-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/breadcrumb/constants';
+import BreadcrumbItemFoundation, { type BreadcrumbItemAdapter, type Route, type BreadcrumbItemInfo as BaseBreadcrumbItemInfo } from '@fibrae/semi-foundation/components/breadcrumb/item-foundation';
 import type { ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';
 import useFoundation from '../_base/use-foundation';

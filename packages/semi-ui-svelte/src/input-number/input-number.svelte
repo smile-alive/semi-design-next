@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses, numbers } from '@fibrae/semi-foundation/input-number/constants';
-    import InputNumberFoundation, { type InputNumberAdapter, type InputNumberBaseProps, reachesBound } from '@fibrae/semi-foundation/input-number/foundation';
-    import '@fibrae/semi-foundation/input-number/input-number.scss';
+    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/input-number/constants';
+    import InputNumberFoundation, { type InputNumberAdapter, type InputNumberBaseProps, reachesBound } from '@fibrae/semi-foundation/components/input-number/foundation';
+    import '@fibrae/semi-foundation/components/input-number/input-number.scss';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

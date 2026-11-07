@@ -1,7 +1,7 @@
 import { memo, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/tabs/constants';
-import TabsFoundation from '@fibrae/semi-foundation/tabs/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/tabs/constants';
+import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
 import CSSAnimation from '../_css-animation';
 import { getPanelId, getTabId } from './ids';
 import type { TabPaneProps } from './interface';

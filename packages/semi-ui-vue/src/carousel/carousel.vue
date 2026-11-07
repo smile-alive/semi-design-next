@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { Comment, Text, computed, isVNode, onMounted, onUpdated, useId, useTemplateRef, watch, type VNode } from 'vue';
-    import { cssClasses, numbers } from '@fibrae/semi-foundation/carousel/constants';
-    import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/carousel/foundation';
+    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/carousel/constants';
+    import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/components/carousel/foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import '@fibrae/semi-foundation/carousel/carousel.scss';
+    import '@fibrae/semi-foundation/components/carousel/carousel.scss';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';

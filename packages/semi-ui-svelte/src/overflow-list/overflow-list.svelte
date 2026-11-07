@@ -1,9 +1,9 @@
 <script lang="ts" generics="T extends OverflowListItem = OverflowListItem">
     import { untrack } from 'svelte';
     import { isEqual } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/overflow-list/constants';
-    import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState, type OverflowListView, type VisibleLayout } from '@fibrae/semi-foundation/overflow-list/foundation';
-    import '@fibrae/semi-foundation/overflow-list/overflow-list.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/overflow-list/constants';
+    import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState, type OverflowListView, type VisibleLayout } from '@fibrae/semi-foundation/components/overflow-list/foundation';
+    import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useLayoutEffect } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/anchor/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/anchor/constants';
 import isEnterPress from '@fibrae/semi-foundation/utils/is-enter-press';
 import type { ElementProps } from '../_base/base';
 import Typography from '../typography/index';

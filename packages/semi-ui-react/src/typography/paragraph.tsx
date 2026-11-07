@@ -1,7 +1,7 @@
 import type React from 'react';
 import { memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/typography/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
 import Base from './base';
 import type { TypographyBaseSize, TypographyBaseSpacing, OmitTypographyProps, TypographyCommonProps, TypographyEllipsisProps } from './interface';
 

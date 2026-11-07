@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, type VNode } from 'vue';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tag-input/constants';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { cssClasses } from '@fibrae/semi-foundation/tag-input/constants';
     import { IconHandle } from '@fibrae/semi-icons-vue';
     import SlotFragment from '../_base/slot-fragment';
     import SortableHandle from '../_sortable/sortable-handle.vue';

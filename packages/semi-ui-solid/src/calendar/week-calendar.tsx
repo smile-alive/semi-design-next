@@ -1,5 +1,5 @@
 import { createMemo } from 'solid-js';
-import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
+import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
 import type { WeekCalendarProps } from './interface';
 import TimeGrid from './time-grid';
 

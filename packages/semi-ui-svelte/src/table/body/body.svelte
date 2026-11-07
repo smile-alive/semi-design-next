@@ -1,8 +1,8 @@
 <script lang="ts">
     import { type Snippet, untrack } from 'svelte';
-    import { numbers } from '@fibrae/semi-foundation/table/constants';
-    import type { BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
-    import { arrayAdd, buildRecordsByKey, expandBtnShouldInRow, flattenBodyRows, getRecordKey, getRowSpanHoverKeys, isDisabled, isExpanded, isSelected, resolveVirtualizedItemSize, type ExpandBtnShouldInRowProps, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/table/utils';
+    import { numbers } from '@fibrae/semi-foundation/components/table/constants';
+    import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
+    import { arrayAdd, buildRecordsByKey, expandBtnShouldInRow, flattenBodyRows, getRecordKey, getRowSpanHoverKeys, isDisabled, isExpanded, isSelected, resolveVirtualizedItemSize, type ExpandBtnShouldInRowProps, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import VirtualList, { type VirtualListAlign } from '../../_base/virtual-list.svelte';
     import ColGroup from '../col-group.svelte';

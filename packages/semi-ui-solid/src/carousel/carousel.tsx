@@ -1,10 +1,10 @@
 import { For, Show, children, createEffect, createMemo, createUniqueId, on, splitProps } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/carousel/constants';
-import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/carousel/foundation';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/carousel/constants';
+import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/components/carousel/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import '@fibrae/semi-foundation/carousel/carousel.scss';
+import '@fibrae/semi-foundation/components/carousel/carousel.scss';
 import callHandler from '../_base/call-handler';
 import isMarkup from '../_base/is-markup';
 import mergeRefs from '../_base/merge-refs';

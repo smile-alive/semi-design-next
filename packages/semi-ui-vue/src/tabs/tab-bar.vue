@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, h, normalizeStyle, onMounted, onUpdated, shallowRef, Text, useTemplateRef, watch, type CSSProperties, type HTMLAttributes, type StyleValue, type VNode } from 'vue';
-    import { cssClasses, getBarItemKey } from '@fibrae/semi-foundation/tabs/constants';
-    import TabsFoundation from '@fibrae/semi-foundation/tabs/foundation';
+    import { cssClasses, getBarItemKey } from '@fibrae/semi-foundation/components/tabs/constants';
+    import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
     import { IconChevronDown } from '@fibrae/semi-icons-vue';
     import slotNodes, { type KeyedNode } from '../_base/slot-nodes';
     import useRaf from '../_base/use-raf';

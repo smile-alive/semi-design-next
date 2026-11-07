@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { computed, toRaw } from 'vue';
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-    import { cssClasses } from '@fibrae/semi-foundation/code-highlight/constants';
-    import CodeHighlightFoundation, { type CodeHighlightAdapter, type CodeHighlightBaseState } from '@fibrae/semi-foundation/code-highlight/index';
-    import type { LanguageInput } from '@fibrae/semi-foundation/code-highlight/registry';
-    import '@fibrae/semi-foundation/code-highlight/code-highlight.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/code-highlight/constants';
+    import CodeHighlightFoundation, { type CodeHighlightAdapter, type CodeHighlightBaseState } from '@fibrae/semi-foundation/components/code-highlight/index';
+    import type { LanguageInput } from '@fibrae/semi-foundation/components/code-highlight/registry';
+    import '@fibrae/semi-foundation/components/code-highlight/code-highlight.scss';
     import type { ElementProps } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';

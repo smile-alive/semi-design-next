@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/video-player/constants';
-    import VideoProgressFoundation, { type VideoProgressAdapter, type VideoProgressBaseState } from '@fibrae/semi-foundation/video-player/progress-foundation';
-    import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
-    import '@fibrae/semi-foundation/video-player/video-player.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/video-player/constants';
+    import VideoProgressFoundation, { type VideoProgressAdapter, type VideoProgressBaseState } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
+    import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
+    import '@fibrae/semi-foundation/components/video-player/video-player.scss';
     import SlotFragment from '../_base/slot-fragment';
     import useFoundation from '../_base/use-foundation';
     import useLocale from '../locale/use-locale';

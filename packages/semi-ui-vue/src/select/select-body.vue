@@ -1,15 +1,15 @@
 <script setup lang="ts" generic="T = BasicSelectValue, Multiple extends boolean | undefined = undefined">
     import { computed, isRef, mergeProps, shallowRef, useAttrs, useId, useTemplateRef, watch, type ShallowRef, type StyleValue } from 'vue';
     import { isEqualWith, omit } from 'es-toolkit';
-    import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
-    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/select/constants';
-    import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/select/foundation';
-    import { getOptionRuns, type BasicOptionProps, type OptionRecord as BaseOptionRecord } from '@fibrae/semi-foundation/select/option-foundation';
-    import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/tag/constants';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
+    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/select/constants';
+    import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/components/select/foundation';
+    import { getOptionRuns, type BasicOptionProps, type OptionRecord as BaseOptionRecord } from '@fibrae/semi-foundation/components/select/option-foundation';
+    import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
     import { isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import { centerInScroller, toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/select/select.scss';
+    import '@fibrae/semi-foundation/components/select/select.scss';
     import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-vue';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';

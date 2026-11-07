@@ -1,6 +1,6 @@
 import { children, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, getPanelId, getTabId, getTabKeyAttrs } from '@fibrae/semi-foundation/tabs/constants';
+import { cssClasses, getPanelId, getTabId, getTabKeyAttrs } from '@fibrae/semi-foundation/components/tabs/constants';
 import { IconClose } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';
 import hasContent from '../_base/has-content';

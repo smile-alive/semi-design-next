@@ -4,7 +4,7 @@ import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { strings } from '@fibrae/semi-foundation/tooltip/constants';
+import { strings } from '@fibrae/semi-foundation/components/tooltip/constants';
 import { openLayer } from '@fibrae/semi-foundation/utils/layer';
 import { sleep } from '@test/utils/solid';
 import Tooltip, { type RenderContentProps, type TooltipHandle, type TooltipProps } from '..';

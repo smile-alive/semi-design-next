@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/tag/constants';
-    import { getTagListKeys } from '@fibrae/semi-foundation/tag/tag-key';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tag/constants';
+    import { getTagListKeys } from '@fibrae/semi-foundation/components/tag/tag-key';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import Popover from '../popover';

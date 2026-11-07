@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { CheckboxGroupView } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
-    import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxGroupBaseProps, type CheckboxGroupBaseState } from '@fibrae/semi-foundation/checkbox/checkbox-group-foundation';
-    import { checkboxGroupClasses, strings } from '@fibrae/semi-foundation/checkbox/constants';
-    import '@fibrae/semi-foundation/checkbox/checkbox.scss';
+    import type { CheckboxGroupView } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
+    import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxGroupBaseProps, type CheckboxGroupBaseState } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
+    import { checkboxGroupClasses, strings } from '@fibrae/semi-foundation/components/checkbox/constants';
+    import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import Checkbox from './checkbox.svelte';

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/select/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/select/constants';
     import type { ElementProps } from '../_base/element-props';
     import type { SelectOptGroupProps, SelectOptGroupSlots } from './interface';
 

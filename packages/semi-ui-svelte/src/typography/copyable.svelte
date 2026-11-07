@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { ClassValue } from 'svelte/elements';
-    import { cssClasses } from '@fibrae/semi-foundation/typography/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
     import { IconCopy, IconTick } from '@fibrae/semi-icons-svelte';
     import useCopied from '../_base/use-copied.svelte.js';
     import useLocale from '../locale/use-locale.svelte.js';

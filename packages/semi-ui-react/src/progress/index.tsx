@@ -1,11 +1,11 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/progress/constants';
-import { type StrokeArr, generateColor } from '@fibrae/semi-foundation/progress/generates';
-import { calcCircleGeometry, calcPercent, createPercentAnimation } from '@fibrae/semi-foundation/progress/utils';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/progress/constants';
+import { type StrokeArr, generateColor } from '@fibrae/semi-foundation/components/progress/generates';
+import { calcCircleGeometry, calcPercent, createPercentAnimation } from '@fibrae/semi-foundation/components/progress/utils';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
-import '@fibrae/semi-foundation/progress/progress.scss';
+import '@fibrae/semi-foundation/components/progress/progress.scss';
 import type { ElementProps, Motion } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useDidUpdate from '../_base/use-did-update';

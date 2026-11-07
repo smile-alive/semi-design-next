@@ -1,8 +1,8 @@
 import type React from 'react';
 import { type CSSProperties, createElement, isValidElement, memo, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/layout/constants';
-import '@fibrae/semi-foundation/layout/layout.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
+import '@fibrae/semi-foundation/components/layout/layout.scss';
 import type { ElementProps } from '../_base/base';
 import flattenChildren from '../_base/flatten-children';
 import useDefaultProps from '../_base/use-default-props';

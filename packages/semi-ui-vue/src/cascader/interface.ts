@@ -1,5 +1,5 @@
 import type { ClassValue, StyleValue, VNode } from 'vue';
-import type { BasicCascaderData, BasicEntity, BasicScrollPanelProps, KeyMapProps, Virtualize } from '@fibrae/semi-foundation/cascader/foundation';
+import type { BasicCascaderData, BasicEntity, BasicScrollPanelProps, KeyMapProps, Virtualize } from '@fibrae/semi-foundation/components/cascader/foundation';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
 import type { CheckboxEvent } from '../checkbox/interface';
 import type { ValidateStatus } from '../input/interface';

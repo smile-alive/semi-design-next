@@ -1,11 +1,11 @@
 import type React from 'react';
 import clsx from 'clsx';
 import { omitBy, pickBy } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/switch/constants';
-import SwitchFoundation, { type SwitchAdapter, type SwitchState } from '@fibrae/semi-foundation/switch/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/switch/constants';
+import SwitchFoundation, { type SwitchAdapter, type SwitchState } from '@fibrae/semi-foundation/components/switch/foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
-import '@fibrae/semi-foundation/switch/switch.scss';
+import '@fibrae/semi-foundation/components/switch/switch.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
@@ -36,7 +36,7 @@ export interface SwitchProps extends ElementProps<'div', 'onChange'> {
     ref?: React.Ref<HTMLDivElement>;
 }
 
-export type { SwitchState } from '@fibrae/semi-foundation/switch/foundation';
+export type { SwitchState } from '@fibrae/semi-foundation/components/switch/foundation';
 
 const defaultProps = {
     disabled: false,

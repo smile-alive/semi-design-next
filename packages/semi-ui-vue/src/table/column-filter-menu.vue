@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/table/constants';
-    import { toggleFilteredValue } from '@fibrae/semi-foundation/table/utils';
+    import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
+    import { toggleFilteredValue } from '@fibrae/semi-foundation/components/table/utils';
     import SlotFragment from '../_base/slot-fragment';
     import Button from '../button';
     import Checkbox from '../checkbox';

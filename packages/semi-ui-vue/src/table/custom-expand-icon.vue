@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/table/constants';
-    import TableFoundation, { type BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
+    import TableFoundation, { type BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
     import { IconChevronRight, IconTreeTriangleRight } from '@fibrae/semi-icons-vue';
     import useLocale from '../locale/use-locale';
     import { useTableContext } from './context';

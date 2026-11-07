@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/skeleton/constants';
-    import '@fibrae/semi-foundation/skeleton/skeleton.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/skeleton/constants';
+    import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
     import type { SkeletonAvatarProps } from './interface.js';
 
     let { prefixCls = cssClasses.PREFIX, type, size = 'medium', shape = 'circle', ...rest }: SkeletonAvatarProps & { type: string } = $props();

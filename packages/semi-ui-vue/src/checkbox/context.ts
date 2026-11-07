@@ -1,5 +1,5 @@
 import type { ComputedRef } from 'vue';
-import type { BasicCheckboxEvent, CheckboxGroupView } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
+import type { BasicCheckboxEvent, CheckboxGroupView } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
 import { createContext } from '../_base/create-context';
 
 export interface CheckboxGroupContext {

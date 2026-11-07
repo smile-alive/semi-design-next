@@ -1,7 +1,7 @@
 import type { JSX, Ref } from 'solid-js';
+import type { strings } from '@fibrae/semi-foundation/components/table/constants';
+import type { BaseAlign, BaseChangeInfoFilter, BaseChangeInfoSorter, BaseEllipsis, BaseFilter, BaseFixed, BaseGroupBy, BaseGroupByFn, BaseIncludeGroupRecord, BasePageData, BaseRowKeyType, BaseSorter, BaseSortOrder, OnChangeExtra } from '@fibrae/semi-foundation/components/table/foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import type { strings } from '@fibrae/semi-foundation/table/constants';
-import type { BaseAlign, BaseChangeInfoFilter, BaseChangeInfoSorter, BaseEllipsis, BaseFilter, BaseFixed, BaseGroupBy, BaseGroupByFn, BaseIncludeGroupRecord, BasePageData, BaseRowKeyType, BaseSorter, BaseSortOrder, OnChangeExtra } from '@fibrae/semi-foundation/table/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import type { ElementProps } from '../_base/element-props';
 import type { VirtualListHandle } from '../_base/virtual-list';

@@ -1,6 +1,6 @@
 import React, { useId, useMemo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/input/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import type { ElementProps } from '../_base/base';
 import { usePopupLayer } from '../_base/popup-layer';

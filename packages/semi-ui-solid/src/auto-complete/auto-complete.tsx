@@ -1,14 +1,14 @@
 import { type JSX, type Ref, For, Show, children, createMemo, createUniqueId, mergeProps, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/auto-complete/constants';
-import AutoCompleteFoundation, { type AutoCompleteAdapter, type AutoCompleteBaseProps, type AutoCompleteBaseState, type DataItem } from '@fibrae/semi-foundation/auto-complete/foundation';
-import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
+import { cssClasses } from '@fibrae/semi-foundation/components/auto-complete/constants';
+import AutoCompleteFoundation, { type AutoCompleteAdapter, type AutoCompleteBaseProps, type AutoCompleteBaseState, type DataItem } from '@fibrae/semi-foundation/components/auto-complete/foundation';
+import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
 import { centerInScroller, toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
-import '@fibrae/semi-foundation/auto-complete/auto-complete.scss';
+import '@fibrae/semi-foundation/components/auto-complete/auto-complete.scss';
 import callHandler from '../_base/call-handler';
 import { isNativeInputKey, omitFormInjected, splitControlAttrs } from '../_base/control-attrs';
 import type { ElementProps } from '../_base/element-props';

@@ -1,7 +1,7 @@
 import { For, Show, createMemo, createSignal } from 'solid-js';
 import { isEqual } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
-import { sameKeys } from '@fibrae/semi-foundation/tree/shared';
+import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
+import { sameKeys } from '@fibrae/semi-foundation/components/tree/shared';
 import VirtualList from '../_base/virtual-list';
 import useConfig from '../config-provider/use-config';
 import AutoSizer from './auto-sizer';

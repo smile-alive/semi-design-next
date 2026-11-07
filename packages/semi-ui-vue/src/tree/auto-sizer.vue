@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { shallowRef, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import useResizeObserver from '../_base/use-resize-observer';
     import type { AutoSizerProps } from './interface';

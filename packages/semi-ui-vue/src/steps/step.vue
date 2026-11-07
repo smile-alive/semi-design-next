@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, Text, type VNode } from 'vue';
-    import { focusableSelector, stepsClasses } from '@fibrae/semi-foundation/steps/constants';
-    import { getStepState } from '@fibrae/semi-foundation/steps/utils';
-    import '@fibrae/semi-foundation/steps/steps.scss';
+    import { focusableSelector, stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
+    import { getStepState } from '@fibrae/semi-foundation/components/steps/utils';
+    import '@fibrae/semi-foundation/components/steps/steps.scss';
     import { IconAlertCircle, IconAlertTriangle, IconChevronRight, IconTickCircle } from '@fibrae/semi-icons-vue';
     import type { ElementProps } from '../_base/element-props';
     import slotNodes, { hasSlotContent } from '../_base/slot-nodes';

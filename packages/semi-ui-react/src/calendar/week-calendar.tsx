@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import CalendarFoundation from '@fibrae/semi-foundation/calendar/foundation';
+import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
 import type { WeekCalendarProps } from './interface';
 import TimeGrid from './time-grid';
 

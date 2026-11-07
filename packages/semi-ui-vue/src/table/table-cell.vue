@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { h, Text, type StyleValue, type VNode } from 'vue';
     import { get } from 'es-toolkit/compat';
-    import type { BaseEllipsis } from '@fibrae/semi-foundation/table/foundation';
-    import { getRTLAlign, getRTLFlexAlign, isExpandedColumn, isSelectionColumn, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/table/utils';
+    import type { BaseEllipsis } from '@fibrae/semi-foundation/components/table/foundation';
+    import { getRTLAlign, getRTLFlexAlign, isExpandedColumn, isSelectionColumn, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import SlotFragment from '../_base/slot-fragment';
     import type { KeyedNode } from '../_base/slot-nodes';

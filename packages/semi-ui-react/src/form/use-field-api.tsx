@@ -1,4 +1,4 @@
-import type { FieldErrorInput } from '@fibrae/semi-foundation/form/interface';
+import type { FieldErrorInput } from '@fibrae/semi-foundation/components/form/interface';
 import type { FormApi } from './interface';
 import useFormApi from './use-form-api';
 

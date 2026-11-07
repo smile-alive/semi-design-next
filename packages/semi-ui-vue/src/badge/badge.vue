@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { Text, computed } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/badge/constants';
-    import '@fibrae/semi-foundation/badge/badge.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/badge/constants';
+    import '@fibrae/semi-foundation/components/badge/badge.scss';
     import type { ElementProps } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import slotNodes, { type KeyedNode } from '../_base/slot-nodes';

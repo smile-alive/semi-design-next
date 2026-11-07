@@ -1,5 +1,5 @@
 <script lang="ts">
-    import TableFoundation from '@fibrae/semi-foundation/table/foundation';
+    import TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
     import Checkbox from '../checkbox/checkbox.svelte';
     import type { CheckboxEvent } from '../checkbox/interface.js';
     import useLocale from '../locale/use-locale.svelte.js';

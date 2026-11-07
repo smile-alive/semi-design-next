@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, useId } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/feedback/constants';
-    import type { EmojiResult } from '@fibrae/semi-foundation/feedback/foundation';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/feedback/constants';
+    import type { EmojiResult } from '@fibrae/semi-foundation/components/feedback/foundation';
     import CheckboxGroup from '../checkbox/checkbox-group.vue';
     import TextArea from '../input/textarea.vue';
     import useLocale from '../locale/use-locale';

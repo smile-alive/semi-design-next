@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { parseHeaderRows } from '@fibrae/semi-foundation/table/utils';
+    import { parseHeaderRows } from '@fibrae/semi-foundation/components/table/utils';
     import { useTableContext } from './context';
     import type { ColumnProps } from './interface';
     import TableHeaderRow from './table-header-row.vue';

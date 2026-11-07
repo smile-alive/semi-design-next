@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/cascader/constants';
-    import CascaderFoundation, { type BasicData } from '@fibrae/semi-foundation/cascader/foundation';
-    import { getColumns, highlightParts } from '@fibrae/semi-foundation/cascader/util';
+    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/cascader/constants';
+    import CascaderFoundation, { type BasicData } from '@fibrae/semi-foundation/components/cascader/foundation';
+    import { getColumns, highlightParts } from '@fibrae/semi-foundation/components/cascader/util';
     import { IconChevronRight, IconTick } from '@fibrae/semi-icons-svelte';
     import VirtualList from '../_base/virtual-list.svelte';
     import { Checkbox, type CheckboxEvent } from '../checkbox/index.js';

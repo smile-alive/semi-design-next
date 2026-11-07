@@ -1,9 +1,9 @@
 <script lang="ts">
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses } from '@fibrae/semi-foundation/components/rating/constants';
+    import RatingFoundation, { type RatingAdapter, type RatingBaseProps, type RatingFocusEvent, type RatingState } from '@fibrae/semi-foundation/components/rating/foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { cssClasses } from '@fibrae/semi-foundation/rating/constants';
-    import RatingFoundation, { type RatingAdapter, type RatingBaseProps, type RatingFocusEvent, type RatingState } from '@fibrae/semi-foundation/rating/foundation';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/rating/rating.scss';
+    import '@fibrae/semi-foundation/components/rating/rating.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import { getConfigContext } from '../config-provider/context.js';

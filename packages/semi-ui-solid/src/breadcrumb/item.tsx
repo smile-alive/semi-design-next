@@ -1,7 +1,7 @@
 import { Show, children, createMemo, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/breadcrumb/constants';
-import BreadcrumbItemFoundation, { type BreadcrumbItemAdapter } from '@fibrae/semi-foundation/breadcrumb/item-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/breadcrumb/constants';
+import BreadcrumbItemFoundation, { type BreadcrumbItemAdapter } from '@fibrae/semi-foundation/components/breadcrumb/item-foundation';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import hasContent from '../_base/has-content';
 import { createIconSlot } from '../_base/icon-slot';

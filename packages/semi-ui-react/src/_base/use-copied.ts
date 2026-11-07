@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
+import { ResetTimer } from '@fibrae/semi-foundation/base/reset-timer';
 import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
-import { ResetTimer } from '@fibrae/semi-foundation/utils/reset-timer';
 
 /**
  * `copy(text)` writes to the clipboard and resolves whether it succeeded; after a success `copied` stays true for

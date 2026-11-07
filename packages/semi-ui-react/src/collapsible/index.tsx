@@ -1,9 +1,9 @@
 import type React from 'react';
 import { useRef, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/collapsible/constants';
-import CollapsibleFoundation, { type CollapsibleAdapter, type CollapsibleFoundationProps } from '@fibrae/semi-foundation/collapsible/foundation';
-import '@fibrae/semi-foundation/collapsible/collapsible.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/collapsible/constants';
+import CollapsibleFoundation, { type CollapsibleAdapter, type CollapsibleFoundationProps } from '@fibrae/semi-foundation/components/collapsible/foundation';
+import '@fibrae/semi-foundation/components/collapsible/collapsible.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

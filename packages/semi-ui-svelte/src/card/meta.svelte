@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/card/constants';
-    import '@fibrae/semi-foundation/card/card.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
+    import '@fibrae/semi-foundation/components/card/card.scss';
     import type { MetaProps } from './interface.js';
 
     // A static subcomponent: it reads no global defaults, as in React.

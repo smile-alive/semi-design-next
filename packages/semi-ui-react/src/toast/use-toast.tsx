@@ -1,7 +1,7 @@
 import { type ReactElement, useState } from 'react';
-import { cssClasses } from '@fibrae/semi-foundation/toast/constants';
-import type { ToastProps } from '@fibrae/semi-foundation/toast/toast-foundation';
-import ToastListStore from '@fibrae/semi-foundation/toast/toast-list-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
+import type { ToastProps } from '@fibrae/semi-foundation/components/toast/toast-foundation';
+import ToastListStore from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
 import { readGlobalDefaults } from '../_utils/semi-global';
 import type { ToastOptions } from './index';

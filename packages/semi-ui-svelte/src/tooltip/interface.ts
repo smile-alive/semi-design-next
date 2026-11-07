@@ -1,9 +1,9 @@
 import type { Snippet } from 'svelte';
 import type { Attachment } from 'svelte/attachments';
-import type { POPUP_ID_ATTRIBUTE, strings } from '@fibrae/semi-foundation/tooltip/constants';
-import type { Position, TooltipBaseProps } from '@fibrae/semi-foundation/tooltip/foundation';
+import type { POPUP_ID_ATTRIBUTE, strings } from '@fibrae/semi-foundation/components/tooltip/constants';
+import type { Position, TooltipBaseProps } from '@fibrae/semi-foundation/components/tooltip/foundation';
 
-export type { Position } from '@fibrae/semi-foundation/tooltip/foundation';
+export type { Position } from '@fibrae/semi-foundation/components/tooltip/foundation';
 export type Trigger = (typeof strings.TRIGGER_SET)[number];
 
 export interface FocusTarget {

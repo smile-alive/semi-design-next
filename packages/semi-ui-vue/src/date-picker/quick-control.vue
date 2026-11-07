@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/date-picker/constants';
-    import type { PresetType } from '@fibrae/semi-foundation/date-picker/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/date-picker/constants';
+    import type { PresetType } from '@fibrae/semi-foundation/components/date-picker/foundation';
     import Button from '../button/button.vue';
     import Text from '../typography/text.vue';
     import type { DatePickerQuickControlEmits, DatePickerQuickControlProps } from './internal';

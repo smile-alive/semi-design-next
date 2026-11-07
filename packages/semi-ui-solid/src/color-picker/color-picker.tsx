@@ -1,9 +1,9 @@
 import { type JSX, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
-import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps as BaseColorPickerProps, type ColorPickerState, type ColorValue } from '@fibrae/semi-foundation/color-picker/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps as BaseColorPickerProps, type ColorPickerState, type ColorValue } from '@fibrae/semi-foundation/components/color-picker/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/color-picker/color-picker.scss';
+import '@fibrae/semi-foundation/components/color-picker/color-picker.scss';
 import type { ElementProps } from '../_base/element-props';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

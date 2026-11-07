@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/layout/constants';
-    import '@fibrae/semi-foundation/layout/layout.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
+    import '@fibrae/semi-foundation/components/layout/layout.scss';
     import type { LayoutBasicProps } from './interface.js';
 
     let { prefixCls = cssClasses.PREFIX, tagName = 'main', type = 'content', children, ...rest }: LayoutBasicProps = $props();

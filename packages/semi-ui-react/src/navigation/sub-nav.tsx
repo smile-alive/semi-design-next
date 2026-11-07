@@ -1,11 +1,11 @@
 import type React from 'react';
 import { isValidElement, useId, useRef } from 'react';
 import clsx from 'clsx';
-import { strings, cssClasses } from '@fibrae/semi-foundation/navigation/constants';
-import { countPlaceholderIcons } from '@fibrae/semi-foundation/navigation/item-foundation';
-import SubNavFoundation, { type SubNavAdapter } from '@fibrae/semi-foundation/navigation/sub-nav-foundation';
+import { strings, cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
+import { countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
+import SubNavFoundation, { type SubNavAdapter } from '@fibrae/semi-foundation/components/navigation/sub-nav-foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/navigation/navigation.scss';
+import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import { IconChevronDown, IconChevronRight } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';

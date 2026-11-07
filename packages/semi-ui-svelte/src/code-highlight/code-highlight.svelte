@@ -1,8 +1,8 @@
 <script lang="ts">
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-    import { cssClasses } from '@fibrae/semi-foundation/code-highlight/constants';
-    import CodeHighlightFoundation, { type CodeHighlightAdapter, type CodeHighlightBaseProps, type CodeHighlightBaseState } from '@fibrae/semi-foundation/code-highlight/index';
-    import '@fibrae/semi-foundation/code-highlight/code-highlight.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/code-highlight/constants';
+    import CodeHighlightFoundation, { type CodeHighlightAdapter, type CodeHighlightBaseProps, type CodeHighlightBaseState } from '@fibrae/semi-foundation/components/code-highlight/index';
+    import '@fibrae/semi-foundation/components/code-highlight/code-highlight.scss';
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

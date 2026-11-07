@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/tag/constants';
+import type { strings } from '@fibrae/semi-foundation/components/tag/constants';
 import type { ElementProps } from '../_base/element-props';
 import type { PopoverProps } from '../popover';
 

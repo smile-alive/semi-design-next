@@ -1,10 +1,10 @@
 import { type JSX, Index, Show, children, mergeProps, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cloneDeep, isPlainObject } from 'es-toolkit';
-import { cssClasses, strings } from '@fibrae/semi-foundation/navigation/constants';
-import ItemFoundation, { type ItemAdapter, countPlaceholderIcons } from '@fibrae/semi-foundation/navigation/item-foundation';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
+import ItemFoundation, { type ItemAdapter, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/navigation/navigation.scss';
+import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import callHandler from '../_base/call-handler';
 import { splitControlAttrs } from '../_base/control-attrs';
 import forwardFocus from '../_base/forward-focus';

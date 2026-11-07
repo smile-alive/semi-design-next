@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
-    import { cssClasses } from '@fibrae/semi-foundation/pagination/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/pagination/constants';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-svelte';
     import { type SlotKind, getSlotKind } from '../_base/slot-kind.js';
 

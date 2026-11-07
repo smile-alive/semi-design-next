@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { onMounted, shallowRef, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/json-viewer/constants';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
     import { IconCaseSensitive, IconChevronLeft, IconChevronRight, IconClose, IconRegExp, IconWholeWord } from '@fibrae/semi-icons-vue';
     import { nativeTag } from '../_base/native-tag';
     import Button, { ButtonGroup } from '../button';

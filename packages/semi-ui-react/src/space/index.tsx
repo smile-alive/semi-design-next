@@ -1,8 +1,8 @@
 import type React from 'react';
 import { memo, type ReactNode, type CSSProperties } from 'react';
 import clsx from 'clsx';
-import { strings, cssClasses } from '@fibrae/semi-foundation/space/constants';
-import '@fibrae/semi-foundation/space/space.scss';
+import { strings, cssClasses } from '@fibrae/semi-foundation/components/space/constants';
+import '@fibrae/semi-foundation/components/space/space.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 

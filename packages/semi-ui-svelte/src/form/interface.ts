@@ -1,17 +1,17 @@
 import type { Component, ComponentProps, Snippet } from 'svelte';
 import type { HTMLAttributes, HTMLFieldsetAttributes, HTMLFormAttributes, HTMLLabelAttributes } from 'svelte/elements';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { FieldError } from '@fibrae/semi-foundation/form/errors';
-import type { AllErrors, BaseFormApi, ExclusiveFieldValidation, ExclusiveFormValidation, FieldPath, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, StandardSchema } from '@fibrae/semi-foundation/form/interface';
-import type { JsonSchema, SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
-import type { RuleItem } from '@fibrae/semi-foundation/form/rules';
+import type { FieldError } from '@fibrae/semi-foundation/components/form/errors';
+import type { AllErrors, BaseFormApi, ExclusiveFieldValidation, ExclusiveFormValidation, FieldPath, FieldValidateTriggerType, FieldValidator, FormState, FormValidator, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
+import type { JsonSchema, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
+import type { RuleItem } from '@fibrae/semi-foundation/components/form/rules';
 import type { ColProps } from '../grid/interface.js';
 import type { InputGroupProps as BaseInputGroupProps, ValidateStatus } from '../input/interface.js';
 
-export type { FieldError, FieldErrorInput } from '@fibrae/semi-foundation/form/errors';
-export type { FieldValidateTriggerType, FieldValidator, FormState, FormValidator } from '@fibrae/semi-foundation/form/interface';
-export type { JsonSchema, SchemaFieldKind, SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
-export type { RuleItem, RuleType } from '@fibrae/semi-foundation/form/rules';
+export type { FieldError, FieldErrorInput } from '@fibrae/semi-foundation/components/form/errors';
+export type { FieldValidateTriggerType, FieldValidator, FormState, FormValidator } from '@fibrae/semi-foundation/components/form/interface';
+export type { JsonSchema, SchemaFieldKind, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
+export type { RuleItem, RuleType } from '@fibrae/semi-foundation/components/form/rules';
 
 /** Values is what the form edits, Output what a validation of the whole form resolves with (a schema's output) */
 export type FormApi<Values extends Record<string, any> = any, Output = Values> = BaseFormApi<Values, Output>;

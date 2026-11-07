@@ -1,8 +1,8 @@
 import type { HTMLAttributes, StyleValue, VNode, VNodeChild } from 'vue';
-import type { ToastProps as FoundationToastProps } from '@fibrae/semi-foundation/toast/toast-foundation';
+import type { ToastProps as FoundationToastProps } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 
-export type { ConfigProps, ConfigProps as ToastConfigProps, Directions, ToastState, ToastTheme, ToastType } from '@fibrae/semi-foundation/toast/toast-foundation';
-export type { ToastListProps, ToastListState } from '@fibrae/semi-foundation/toast/toast-list-foundation';
+export type { ConfigProps, ConfigProps as ToastConfigProps, Directions, ToastState, ToastTheme, ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
+export type { ToastListProps, ToastListState } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 
 /** A text, a VNode, or a function rendered as a functional component (it may inject) */
 export type ToastNode = string | VNode | (() => VNodeChild);

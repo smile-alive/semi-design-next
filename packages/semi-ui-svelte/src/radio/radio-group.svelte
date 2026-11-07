@@ -1,8 +1,8 @@
 <script lang="ts">
     import { SvelteSet } from 'svelte/reactivity';
-    import { radioGroupClasses, strings } from '@fibrae/semi-foundation/radio/constants';
-    import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseProps, type RadioGroupBaseState } from '@fibrae/semi-foundation/radio/radio-group-foundation';
-    import '@fibrae/semi-foundation/radio/radio.scss';
+    import { radioGroupClasses, strings } from '@fibrae/semi-foundation/components/radio/constants';
+    import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseProps, type RadioGroupBaseState } from '@fibrae/semi-foundation/components/radio/radio-group-foundation';
+    import '@fibrae/semi-foundation/components/radio/radio.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import { setRadioGroupContext } from './context.js';

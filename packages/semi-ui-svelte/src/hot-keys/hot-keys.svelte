@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/hot-keys/constants';
-    import HotKeysFoundation, { type HotKeysAdapter, type HotKeysBaseProps } from '@fibrae/semi-foundation/hot-keys/foundation';
-    import '@fibrae/semi-foundation/hot-keys/hot-keys.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/hot-keys/constants';
+    import HotKeysFoundation, { type HotKeysAdapter, type HotKeysBaseProps } from '@fibrae/semi-foundation/components/hot-keys/foundation';
+    import '@fibrae/semi-foundation/components/hot-keys/hot-keys.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import type { HotKeysProps } from './interface.js';

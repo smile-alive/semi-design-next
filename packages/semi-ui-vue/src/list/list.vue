@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T = any">
     import { computed, Comment, Fragment, useAttrs, type VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/list/constants';
-    import '@fibrae/semi-foundation/list/list.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
+    import '@fibrae/semi-foundation/components/list/list.scss';
     import type { ElementProps } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';

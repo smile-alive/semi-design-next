@@ -1,5 +1,5 @@
 import { computed } from 'vue';
-import { resolveButtonLooks } from '@fibrae/semi-foundation/button/utils';
+import { resolveButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
 import { usePopupLayer } from '../_base/popup-layer';
 import { useSemiGlobal } from '../_base/semi-default';
 import type { SemiGlobal } from '../_utils/semi-global';

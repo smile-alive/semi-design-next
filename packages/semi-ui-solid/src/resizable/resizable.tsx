@@ -1,12 +1,12 @@
 import { type JSX, For, Show, onCleanup, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
-import { ResizableFoundation, type ResizableAdapter, type ResizableBaseState } from '@fibrae/semi-foundation/resizable/foundation';
-import { type Direction, type Size, type Enable, type ResizeStartCallback, type ResizeCallback, type HandleClassName, directions } from '@fibrae/semi-foundation/resizable/types';
-import { isKeyboardEdge } from '@fibrae/semi-foundation/resizable/utils';
+import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
+import { ResizableFoundation, type ResizableAdapter, type ResizableBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
+import { type Direction, type Size, type Enable, type ResizeStartCallback, type ResizeCallback, type HandleClassName, directions } from '@fibrae/semi-foundation/components/resizable/types';
+import { isKeyboardEdge } from '@fibrae/semi-foundation/components/resizable/utils';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-import '@fibrae/semi-foundation/resizable/resizable.scss';
+import '@fibrae/semi-foundation/components/resizable/resizable.scss';
 import type { ElementProps } from '../_base/element-props';
 import mergeRefs from '../_base/merge-refs';
 import useDefaultProps from '../_base/use-default-props';

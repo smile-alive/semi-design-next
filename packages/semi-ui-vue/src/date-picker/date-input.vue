@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/date-picker/constants';
-    import { isSplitRangeInputs } from '@fibrae/semi-foundation/date-picker/foundation';
-    import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type InsetInputChangeFoundationProps, type InsetInputValue, type RangeInput } from '@fibrae/semi-foundation/date-picker/input-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/date-picker/constants';
+    import { isSplitRangeInputs } from '@fibrae/semi-foundation/components/date-picker/foundation';
+    import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type InsetInputChangeFoundationProps, type InsetInputValue, type RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
     import { IconCalendar, IconCalendarClock, IconClear } from '@fibrae/semi-icons-vue';
     import slotKind from '../_base/slot-kind';
     import useFocusHandover from '../_base/use-focus-handover';

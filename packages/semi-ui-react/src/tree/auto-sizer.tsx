@@ -1,6 +1,6 @@
 import type React from 'react';
 import { useState } from 'react';
-import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
 import ReactResizeObserver, { type ResizeEntry } from '../resize-observer';
 
 export interface AutoSizerProps {

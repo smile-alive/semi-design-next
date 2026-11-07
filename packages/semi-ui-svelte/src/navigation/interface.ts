@@ -1,10 +1,10 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAnchorAttributes, HTMLAttributes } from 'svelte/elements';
-import type { ItemKey } from '@fibrae/semi-foundation/navigation/item-foundation';
+import type { ItemKey } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import type { IconSize } from '@fibrae/semi-icons-svelte';
 import type { DropdownProps } from '../dropdown/index.js';
 
-export type { ItemKey } from '@fibrae/semi-foundation/navigation/item-foundation';
+export type { ItemKey } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 export type Mode = 'vertical' | 'horizontal';
 
 type DataAttributes = { [key: `data-${string}`]: unknown };

@@ -1,8 +1,8 @@
 <script lang="ts">
     import { tick, untrack } from 'svelte';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
-    import { isRangeType } from '@fibrae/semi-foundation/date-picker/foundation';
-    import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType, type PanelView } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+    import { isRangeType } from '@fibrae/semi-foundation/components/date-picker/foundation';
+    import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType, type PanelView } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
     import { IconCalendar, IconClock } from '@fibrae/semi-icons-svelte';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import Combobox from '../time-picker/combobox.svelte';

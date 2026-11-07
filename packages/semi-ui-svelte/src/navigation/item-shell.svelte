@@ -2,9 +2,9 @@
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
     import { cloneDeep } from 'es-toolkit';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/navigation/constants';
-    import ItemFoundation, { type ItemAdapter, type ItemKey, type ItemProps, countPlaceholderIcons } from '@fibrae/semi-foundation/navigation/item-foundation';
-    import '@fibrae/semi-foundation/navigation/navigation.scss';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
+    import ItemFoundation, { type ItemAdapter, type ItemKey, type ItemProps, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
+    import '@fibrae/semi-foundation/components/navigation/navigation.scss';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import { DropdownItem } from '../dropdown/index.js';

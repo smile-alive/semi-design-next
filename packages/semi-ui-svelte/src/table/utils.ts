@@ -1,6 +1,6 @@
-import { numbers } from '@fibrae/semi-foundation/table/constants';
-import TableFoundation, { type ColumnFlags as BaseColumnFlags } from '@fibrae/semi-foundation/table/foundation';
-import { assignColumnKeys, getDefaultComponents, getExpandColumn, getSelectionColumn, placeInnerColumns } from '@fibrae/semi-foundation/table/utils';
+import { numbers } from '@fibrae/semi-foundation/components/table/constants';
+import TableFoundation, { type ColumnFlags as BaseColumnFlags } from '@fibrae/semi-foundation/components/table/foundation';
+import { assignColumnKeys, getDefaultComponents, getExpandColumn, getSelectionColumn, placeInnerColumns } from '@fibrae/semi-foundation/components/table/utils';
 import type { MergedTableComponents } from './context.js';
 import type { ColumnProps, TableComponents, TableProps } from './interface.js';
 

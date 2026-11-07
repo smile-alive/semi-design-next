@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses, getPopoverRole, getPopoverSpacing } from '@fibrae/semi-foundation/popover/constants';
-    import '@fibrae/semi-foundation/popover/popover.scss';
+    import { cssClasses, getPopoverRole, getPopoverSpacing } from '@fibrae/semi-foundation/components/popover/constants';
+    import '@fibrae/semi-foundation/components/popover/popover.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import { type RenderContentProps, Tooltip } from '../tooltip/index.js';
     import Arrow from './arrow.svelte';

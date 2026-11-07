@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/image/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import { IconChevronLeft, IconChevronRight, IconDownload, IconMinus, IconPlus, IconRealSizeStroked, IconRotate, IconWindowAdaptionStroked } from '@fibrae/semi-icons-vue';
     import SlotFragment from '../_base/slot-fragment';
     import Slider from '../slider';

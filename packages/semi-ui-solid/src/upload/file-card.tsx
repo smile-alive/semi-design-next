@@ -1,7 +1,7 @@
 import { type JSX, Match, Show, Switch, children, createSignal } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/upload/constants';
-import { getFileSize } from '@fibrae/semi-foundation/upload/utils';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import { IconAlertCircle, IconClear, IconClose, IconFile, IconRefresh } from '@fibrae/semi-icons-solid';
 import { splitControlAttrs } from '../_base/control-attrs';

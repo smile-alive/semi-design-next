@@ -3,11 +3,11 @@ import { render, screen, fireEvent, waitFor, within } from '@testing-library/rea
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import ColorChooseAreaFoundation from '@fibrae/semi-foundation/color-picker/color-choose-area-foundation';
-import ColorSliderFoundation from '@fibrae/semi-foundation/color-picker/color-slider-foundation';
-import DataPartFoundation, { type DataPartAdapter } from '@fibrae/semi-foundation/color-picker/data-part-foundation';
-import ColorPickerFoundation from '@fibrae/semi-foundation/color-picker/foundation';
-import { hexToHsva, hexToRgba, hsvaToHex, hsvaToHslaString, hsvaToHslString, hsvaToRgba, rgbaStringToHsva, rgbaStringToRgba, rgbaToHex, rgbaToHsva } from '@fibrae/semi-foundation/color-picker/utils/convert';
+import ColorChooseAreaFoundation from '@fibrae/semi-foundation/components/color-picker/color-choose-area-foundation';
+import ColorSliderFoundation from '@fibrae/semi-foundation/components/color-picker/color-slider-foundation';
+import DataPartFoundation, { type DataPartAdapter } from '@fibrae/semi-foundation/components/color-picker/data-part-foundation';
+import ColorPickerFoundation from '@fibrae/semi-foundation/components/color-picker/foundation';
+import { hexToHsva, hexToRgba, hsvaToHex, hsvaToHslaString, hsvaToHslString, hsvaToRgba, rgbaStringToHsva, rgbaStringToRgba, rgbaToHex, rgbaToHsva } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { ColorPicker, type ColorFormat as PackageColorFormat, type ColorValue as PackageColorValue, type HsvaColor as PackageHsvaColor, type RgbaColor as PackageRgbaColor } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';

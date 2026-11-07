@@ -1,11 +1,11 @@
 import type React from 'react';
 import { type ReactNode, cloneElement, isValidElement } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/button/constants';
-import { buttonClassList, colorfulFill, isAILoading, paddingSides, resolveButtonLooks } from '@fibrae/semi-foundation/button/utils';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/button/constants';
+import { buttonClassList, colorfulFill, isAILoading, paddingSides, resolveButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
-import '@fibrae/semi-foundation/button/button.scss';
-import '@fibrae/semi-foundation/button/icon-button.scss';
+import '@fibrae/semi-foundation/components/button/button.scss';
+import '@fibrae/semi-foundation/components/button/icon-button.scss';
 import { IconAILoading } from '@fibrae/semi-icons-react';
 import { hasContent } from '../_utils';
 import SpinIcon from '../spin/icon';

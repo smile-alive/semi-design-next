@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { useAttrs, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/timeline/constants';
-    import '@fibrae/semi-foundation/timeline/timeline.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
+    import '@fibrae/semi-foundation/components/timeline/timeline.scss';
     import { hasClickListener, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps } from '../_base/element-props';
     import { hasSlotContent } from '../_base/slot-nodes';

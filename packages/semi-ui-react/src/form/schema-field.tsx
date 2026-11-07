@@ -1,8 +1,8 @@
 import type React from 'react';
 import { Fragment, useEffect, useMemo } from 'react';
-import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-import type { StandardSchema } from '@fibrae/semi-foundation/form/interface';
-import { blankRow, describeSchemaField, resolveJsonSchema, type JsonSchema, type SchemaFieldKind, type SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
+import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+import type { StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
+import { blankRow, describeSchemaField, resolveJsonSchema, type JsonSchema, type SchemaFieldKind, type SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import { IconArrowDown, IconArrowUp, IconDelete, IconPlus } from '@fibrae/semi-icons-react';
@@ -14,7 +14,7 @@ import { useFieldBridgeContext } from './context';
 import { FormInput, FormInputNumber, FormSelect, FormSwitch, FormTextArea } from './field';
 import Section from './section';
 
-export type { JsonSchema, SchemaFieldKind, SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
+export type { JsonSchema, SchemaFieldKind, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
 
 export type SchemaFieldRenderer = (context: { node: SchemaFieldNode; field: string }) => React.ReactNode;
 

@@ -1,7 +1,7 @@
 import { Show, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/table/constants';
-import TableFoundation from '@fibrae/semi-foundation/table/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
+import TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
 import Checkbox, { type CheckboxEvent, type CheckboxProps } from '../checkbox';
 import useLocale from '../locale/use-locale';
 import { useTableContext } from './context';

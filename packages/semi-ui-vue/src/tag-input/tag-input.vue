@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { computed, nextTick, shallowRef, useAttrs, useId, useTemplateRef, watch, type InputHTMLAttributes } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/tag-input/constants';
-    import TagInputFoundation, { type OnSortEndProps, type TagInputAdapter, type TagInputBaseState } from '@fibrae/semi-foundation/tag-input/foundation';
-    import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/tag-input/utils/tag-focus';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/tag-input/tag-input.scss';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tag-input/constants';
+    import TagInputFoundation, { type OnSortEndProps, type TagInputAdapter, type TagInputBaseState } from '@fibrae/semi-foundation/components/tag-input/foundation';
+    import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/components/tag-input/utils/tag-focus';
+    import '@fibrae/semi-foundation/components/tag-input/tag-input.scss';
     import { IconClear } from '@fibrae/semi-icons-vue';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';

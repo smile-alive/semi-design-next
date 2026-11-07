@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses, strings } from '@fibrae/semi-foundation/navigation/constants';
-    import '@fibrae/semi-foundation/navigation/navigation.scss';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
+    import '@fibrae/semi-foundation/components/navigation/navigation.scss';
     import CollapseButton from './collapse-button.svelte';
     import { getNavContext } from './context.js';
     import type { NavFooterProps } from './interface.js';

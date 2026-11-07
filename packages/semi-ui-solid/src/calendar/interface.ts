@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/calendar/constants';
-import type { DailyEventLayout, EventObject, weekStartsOnEnum } from '@fibrae/semi-foundation/calendar/foundation';
+import type { strings } from '@fibrae/semi-foundation/components/calendar/constants';
+import type { DailyEventLayout, EventObject, weekStartsOnEnum } from '@fibrae/semi-foundation/components/calendar/foundation';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import type { ElementProps } from '../_base/element-props';
 

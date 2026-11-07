@@ -1,9 +1,9 @@
 import type React from 'react';
 import { Children, isValidElement, useId } from 'react';
 import clsx from 'clsx';
-import { radioGroupClasses as css, strings } from '@fibrae/semi-foundation/radio/constants';
-import type { RadioChangeEvent } from '@fibrae/semi-foundation/radio/radio-foundation';
-import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/radio/radio-group-foundation';
+import { radioGroupClasses as css, strings } from '@fibrae/semi-foundation/components/radio/constants';
+import type { RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
+import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/components/radio/radio-group-foundation';
 import type { ArrayElement, ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

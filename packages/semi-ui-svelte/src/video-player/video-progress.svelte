@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/video-player/constants';
-    import VideoProgressFoundation, { type VideoProgressAdapter, type VideoProgressBaseProps, type VideoProgressBaseState } from '@fibrae/semi-foundation/video-player/progress-foundation';
-    import { formatTime, formatTimeText } from '@fibrae/semi-foundation/video-player/utils';
-    import '@fibrae/semi-foundation/video-player/video-player.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/video-player/constants';
+    import VideoProgressFoundation, { type VideoProgressAdapter, type VideoProgressBaseProps, type VideoProgressBaseState } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
+    import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
+    import '@fibrae/semi-foundation/components/video-player/video-player.scss';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { Tooltip, type TooltipTriggerProps } from '../tooltip/index.js';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, isVNode, shallowRef, type FunctionalComponent, type ShallowRef, type VNode } from 'vue';
-    import { settleConfirm } from '@fibrae/semi-foundation/modal/confirm';
-    import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
+    import { settleConfirm } from '@fibrae/semi-foundation/components/modal/confirm';
+    import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
     import { createId } from '@fibrae/semi-foundation/utils/uuid';
     import type { EmitProps } from '../_base/element-props';
     import elementType from '../_base/element-type';

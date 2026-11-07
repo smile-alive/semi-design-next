@@ -1,9 +1,9 @@
 import { type JSX, Show, createComputed, createEffect, createMemo, createSignal, on, onCleanup, onMount, untrack } from 'solid-js';
 import { isEqual } from 'es-toolkit';
-import BreakpointObserver, { noScreens } from '@fibrae/semi-foundation/config-provider/breakpoint-observer';
-import { inheritConfig, switchesDirection } from '@fibrae/semi-foundation/config-provider/inherit-config';
-import type { ResponsiveMap } from '@fibrae/semi-foundation/config-provider/responsive-types';
-import { defaultResponsiveMap } from '@fibrae/semi-foundation/grid/constants';
+import BreakpointObserver, { noScreens } from '@fibrae/semi-foundation/components/config-provider/breakpoint-observer';
+import { inheritConfig, switchesDirection } from '@fibrae/semi-foundation/components/config-provider/inherit-config';
+import type { ResponsiveMap } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
+import { defaultResponsiveMap } from '@fibrae/semi-foundation/components/grid/constants';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
 import { ConfigContext, type ContextValue, useConfigContext } from './context';
 

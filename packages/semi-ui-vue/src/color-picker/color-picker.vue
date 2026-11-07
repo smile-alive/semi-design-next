@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, useAttrs, useTemplateRef } from 'vue';
     import { omit } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
-    import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps as FoundationProps, type ColorPickerState } from '@fibrae/semi-foundation/color-picker/foundation';
-    import '@fibrae/semi-foundation/color-picker/color-picker.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+    import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps as FoundationProps, type ColorPickerState } from '@fibrae/semi-foundation/components/color-picker/foundation';
+    import '@fibrae/semi-foundation/components/color-picker/color-picker.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import useFoundation from '../_base/use-foundation';

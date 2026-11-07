@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { Placement } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
+import type { Placement } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
 
 /**
  * `aria-*` and `style` land on the `role="dialog"` element, `class` and the other attributes on the outer

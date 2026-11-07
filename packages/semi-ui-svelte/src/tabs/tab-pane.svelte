@@ -1,7 +1,7 @@
 <script lang="ts">
     import { untrack } from 'svelte';
-    import { cssClasses, getPanelId, getTabId } from '@fibrae/semi-foundation/tabs/constants';
-    import TabsFoundation from '@fibrae/semi-foundation/tabs/foundation';
+    import { cssClasses, getPanelId, getTabId } from '@fibrae/semi-foundation/components/tabs/constants';
+    import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
     import { requireTabsContext } from './context.js';
     import type { TabPaneProps } from './interface.js';
 

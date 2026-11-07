@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { strings } from '@fibrae/semi-foundation/calendar/constants';
+import type { strings } from '@fibrae/semi-foundation/components/calendar/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 
 export type CalendarMode = ArrayElement<typeof strings.MODE>;

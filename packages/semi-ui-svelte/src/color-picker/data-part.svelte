@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
-    import DataPartFoundation, { type DataPartAdapter, type DataPartBaseProps, type DataPartBaseState } from '@fibrae/semi-foundation/color-picker/data-part-foundation';
-    import type { ColorFormat } from '@fibrae/semi-foundation/color-picker/interface';
+    import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+    import DataPartFoundation, { type DataPartAdapter, type DataPartBaseProps, type DataPartBaseState } from '@fibrae/semi-foundation/components/color-picker/data-part-foundation';
+    import type { ColorFormat } from '@fibrae/semi-foundation/components/color-picker/interface';
     import { IconEyedropper } from '@fibrae/semi-icons-svelte';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import { Button } from '../button/index.js';

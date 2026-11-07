@@ -1,9 +1,9 @@
 import { createMemo, type JSX, Index, Show } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/highlight/constants';
-import { findAll, type HighlightStyle } from '@fibrae/semi-foundation/highlight/foundation';
-import '@fibrae/semi-foundation/highlight/highlight.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/highlight/constants';
+import { findAll, type HighlightStyle } from '@fibrae/semi-foundation/components/highlight/foundation';
+import '@fibrae/semi-foundation/components/highlight/highlight.scss';
 import useDefaultProps from '../_base/use-default-props';
 
 export interface ComplexSearchWord {

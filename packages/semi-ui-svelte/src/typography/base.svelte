@@ -3,10 +3,10 @@
     import type { Attachment } from 'svelte/attachments';
     import type { HTMLAnchorAttributes } from 'svelte/elements';
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-    import { cssClasses } from '@fibrae/semi-foundation/typography/constants';
-    import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getRenderText, isInsideWidgetItem, isOverflowing } from '@fibrae/semi-foundation/typography/ellipsis';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/typography/typography.scss';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
+    import { EllipsisRuntime, canUseCSSEllipsis, getEllipsisOpt, getRenderText, isInsideWidgetItem, isOverflowing } from '@fibrae/semi-foundation/components/typography/ellipsis';
+    import '@fibrae/semi-foundation/components/typography/typography.scss';
     import useLocale from '../locale/use-locale.svelte.js';
     import Popover from '../popover/popover.svelte';
     import type { TooltipTriggerProps } from '../tooltip/interface.js';

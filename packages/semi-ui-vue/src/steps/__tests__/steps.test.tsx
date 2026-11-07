@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { stepsClasses } from '@fibrae/semi-foundation/steps/constants';
+import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
 import { render } from '@test/utils/vue';
 import { SemiGlobal, semiGlobalKey } from '../../_utils/semi-global';
 import Steps, { Step, type StepSlots, type StepStatus, type StepsProps } from '../index';

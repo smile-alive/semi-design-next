@@ -1,5 +1,5 @@
 import type { Accessor } from 'solid-js';
-import type { DropdownMenuContext, DropdownSelectionMode } from '@fibrae/semi-foundation/dropdown/menu-foundation';
+import type { DropdownMenuContext, DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import { createContext } from '../_base/create-context';
 import type { Trigger } from '../tooltip';
 

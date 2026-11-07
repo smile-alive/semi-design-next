@@ -1,10 +1,10 @@
 <script lang="ts" generics="Values extends Record<string, any> = any, Output = Values">
     import { onMount } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-    import { getFormApiProxyInternals } from '@fibrae/semi-foundation/form/form-api-proxy';
-    import FormFoundation from '@fibrae/semi-foundation/form/foundation';
-    import type { BaseFormAdapter, FormFoundationState, FormState } from '@fibrae/semi-foundation/form/interface';
-    import '@fibrae/semi-foundation/form/form.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+    import { getFormApiProxyInternals } from '@fibrae/semi-foundation/components/form/form-api-proxy';
+    import FormFoundation from '@fibrae/semi-foundation/components/form/foundation';
+    import type { BaseFormAdapter, FormFoundationState, FormState } from '@fibrae/semi-foundation/components/form/interface';
+    import '@fibrae/semi-foundation/components/form/form.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import Row from '../grid/row.svelte';

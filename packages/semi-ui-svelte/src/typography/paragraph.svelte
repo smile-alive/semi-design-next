@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/typography/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
     import TypographyBase from './base.svelte';
     import type { TypographyParagraphProps } from './interface.js';
     import type { TypographyBaseProps } from './internal.js';

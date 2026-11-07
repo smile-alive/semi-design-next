@@ -1,9 +1,9 @@
 import type React from 'react';
 import { cloneElement, isValidElement, memo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/timeline/constants';
-import { getPosCls } from '@fibrae/semi-foundation/timeline/utils';
-import '@fibrae/semi-foundation/timeline/timeline.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
+import { getPosCls } from '@fibrae/semi-foundation/components/timeline/utils';
+import '@fibrae/semi-foundation/components/timeline/timeline.scss';
 import type { ElementProps } from '../_base/base';
 import flattenChildren from '../_base/flatten-children';
 import useDefaultProps from '../_base/use-default-props';

@@ -1,9 +1,9 @@
 import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-import ImageFoundation, { type ImageAdapter, type ImageState } from '@fibrae/semi-foundation/image/image-foundation';
-import '@fibrae/semi-foundation/image/image.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+import ImageFoundation, { type ImageAdapter, type ImageState } from '@fibrae/semi-foundation/components/image/image-foundation';
+import '@fibrae/semi-foundation/components/image/image.scss';
 import { IconUploadError } from '@fibrae/semi-icons-react';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

@@ -1,4 +1,4 @@
-import type { PinCodeBaseState } from '@fibrae/semi-foundation/pincode/foundation';
+import type { PinCodeBaseState } from '@fibrae/semi-foundation/components/pincode/foundation';
 import type { InputSize, ModelModifiers, ValidateStatus } from '../input/interface';
 
 // `RegExp & object` is equivalent to RegExp in TS; plain RegExp is not in compiler-sfc's runtime type whitelist,

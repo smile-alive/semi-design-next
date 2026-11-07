@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, nextTick, normalizeStyle, useTemplateRef, type CSSProperties } from 'vue';
-    import { cssClasses, numbers } from '@fibrae/semi-foundation/tooltip/constants';
-    import '@fibrae/semi-foundation/tooltip/tooltip.scss';
+    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/tooltip/constants';
+    import '@fibrae/semi-foundation/components/tooltip/tooltip.scss';
     import PopupLayerProvider from '../_base/popup-layer-provider.vue';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import slotNodes from '../_base/slot-nodes';

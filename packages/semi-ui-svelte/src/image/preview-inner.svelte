@@ -1,8 +1,8 @@
 <script lang="ts">
     import { untrack } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/image/preview-inner-foundation';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+    import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
     import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-svelte';
     import Portal from '../_base/portal.svelte';
     import useFoundation from '../_base/use-foundation.svelte.js';

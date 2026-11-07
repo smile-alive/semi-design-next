@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount, untrack, type Snippet } from 'svelte';
-    import { cssClasses, getBarItemKey, getTabId } from '@fibrae/semi-foundation/tabs/constants';
-    import TabsFoundation from '@fibrae/semi-foundation/tabs/foundation';
+    import { cssClasses, getBarItemKey, getTabId } from '@fibrae/semi-foundation/components/tabs/constants';
+    import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
     import { IconChevronDown } from '@fibrae/semi-icons-svelte';
     import watch from '../_base/watch.svelte.js';
     import { Dropdown, DropdownItem, DropdownMenu, type DropdownTriggerProps } from '../dropdown/index.js';

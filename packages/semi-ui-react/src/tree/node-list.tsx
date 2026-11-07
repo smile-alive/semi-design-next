@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { isEqual } from 'es-toolkit';
-import { getTransitionNodes, sameKeys } from '@fibrae/semi-foundation/tree/shared';
+import { getTransitionNodes, sameKeys } from '@fibrae/semi-foundation/components/tree/shared';
 import type { NodeListProps, NodeListState } from './interface';
 import NodeCollapsible from './node-collapsible';
 

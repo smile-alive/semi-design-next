@@ -1,6 +1,6 @@
 import { children, Match, mergeProps, Show, splitProps, Switch } from 'solid-js';
 import clsx from 'clsx';
-import { stepsClasses as css } from '@fibrae/semi-foundation/steps/constants';
+import { stepsClasses as css } from '@fibrae/semi-foundation/components/steps/constants';
 import { IconAlertCircle, IconAlertTriangle, IconTickCircle } from '@fibrae/semi-icons-solid';
 import hasContent from '../_base/has-content';
 import type { BasicStepProps } from './interface';

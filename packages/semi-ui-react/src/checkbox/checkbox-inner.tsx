@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
-import { checkboxClasses as css } from '@fibrae/semi-foundation/checkbox/constants';
+import { checkboxClasses as css } from '@fibrae/semi-foundation/components/checkbox/constants';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import { IconCheckboxTick, IconCheckboxIndeterminate } from '@fibrae/semi-icons-react';
 import useMergedRef from '../_base/use-merged-ref';

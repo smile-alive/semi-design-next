@@ -1,5 +1,5 @@
 import type { HTMLAttributes } from 'svelte/elements';
-import type { ResponsiveMap } from '@fibrae/semi-foundation/grid/constants';
+import type { ResponsiveMap } from '@fibrae/semi-foundation/components/grid/constants';
 
 export type { ResponsiveMap };
 

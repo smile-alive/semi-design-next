@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/navigation/constants';
-    import '@fibrae/semi-foundation/navigation/navigation.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
+    import '@fibrae/semi-foundation/components/navigation/navigation.scss';
     import { IconSidebar } from '@fibrae/semi-icons-svelte';
     import { Button } from '../button/index.js';
     import useLocale from '../locale/use-locale.svelte.js';

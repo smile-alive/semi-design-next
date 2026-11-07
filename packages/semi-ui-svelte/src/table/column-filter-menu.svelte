@@ -16,8 +16,8 @@
 </script>
 
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/table/constants';
-    import { toggleFilteredValue } from '@fibrae/semi-foundation/table/utils';
+    import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
+    import { toggleFilteredValue } from '@fibrae/semi-foundation/components/table/utils';
     import Button from '../button/button.svelte';
     import Checkbox from '../checkbox/checkbox.svelte';
     import DropdownItem from '../dropdown/dropdown-item.svelte';

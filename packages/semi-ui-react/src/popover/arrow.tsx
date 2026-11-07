@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/popover/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/popover/constants';
 
 export interface ArrowProps {
     position?: string;

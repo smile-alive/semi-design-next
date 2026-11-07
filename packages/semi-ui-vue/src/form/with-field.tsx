@@ -1,9 +1,9 @@
 /** @jsxImportSource vue */
 // JSX because withField is a component factory: the wrapped component is a runtime argument, which a template cannot name.
 import { type Component, type IntrinsicElementAttributes, type PropType, type Slot, camelize, capitalize, createTextVNode, createVNode, defineComponent, mergeProps, shallowRef, toHandlerKey, watch } from 'vue';
-import { cssClasses, type FieldPropKey } from '@fibrae/semi-foundation/form/constants';
-import { errorMessages } from '@fibrae/semi-foundation/form/errors';
-import { getFieldAriaProps } from '@fibrae/semi-foundation/form/utils';
+import { cssClasses, type FieldPropKey } from '@fibrae/semi-foundation/components/form/constants';
+import { errorMessages } from '@fibrae/semi-foundation/components/form/errors';
+import { getFieldAriaProps } from '@fibrae/semi-foundation/components/form/utils';
 import warning from '@fibrae/semi-foundation/utils/warning';
 import { handOn } from '../_base/hand-on';
 import { hasSlotContent } from '../_base/slot-nodes';

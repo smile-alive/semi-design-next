@@ -1,6 +1,6 @@
 import type { ComputedRef, CSSProperties } from 'vue';
-import type TableFoundation from '@fibrae/semi-foundation/table/foundation';
-import type { BaseHeadWidth, BaseRowKeyType, TableBaseProps, TableBaseState, TableBaseStateRowSelection } from '@fibrae/semi-foundation/table/foundation';
+import type TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
+import type { BaseHeadWidth, BaseRowKeyType, TableBaseProps, TableBaseState, TableBaseStateRowSelection } from '@fibrae/semi-foundation/components/table/foundation';
 import { createContext } from '../_base/create-context';
 import type { RawSlots } from '../_base/read-vnode';
 import type { KeyedNode } from '../_base/slot-nodes';

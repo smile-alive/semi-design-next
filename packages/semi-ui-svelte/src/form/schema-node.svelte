@@ -1,7 +1,7 @@
 <script lang="ts">
     import { type Component, untrack } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-    import { blankRow, describeSchemaField, type JsonSchema, type SchemaFieldKind, type SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
+    import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+    import { blankRow, describeSchemaField, type JsonSchema, type SchemaFieldKind, type SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import warning from '@fibrae/semi-foundation/utils/warning';
     import { IconArrowDown, IconArrowUp, IconDelete, IconPlus } from '@fibrae/semi-icons-svelte';

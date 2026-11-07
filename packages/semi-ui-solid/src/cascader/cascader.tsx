@@ -1,11 +1,11 @@
 import { type JSX, type Ref, For, Index, Show, batch, children, createMemo, createUniqueId, mergeProps, onCleanup, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/cascader/constants';
-import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicTriggerRenderProps, type BasicScrollPanelProps, type CascaderAdapter, type Virtualize } from '@fibrae/semi-foundation/cascader/foundation';
-import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/cascader/constants';
+import CascaderFoundation, { type BasicCascaderInnerData, type BasicCascaderProps, type BasicTriggerRenderProps, type BasicScrollPanelProps, type CascaderAdapter, type Virtualize } from '@fibrae/semi-foundation/components/cascader/foundation';
+import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
 import { isInnerControlKey, isTextEditor, joinIds, stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
-import '@fibrae/semi-foundation/cascader/cascader.scss';
+import '@fibrae/semi-foundation/components/cascader/cascader.scss';
 import { IconChevronDown, IconClear } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';
 import { omitFormInjected } from '../_base/control-attrs';
@@ -31,7 +31,7 @@ import type { Position } from '../tooltip';
 import { useSpecialTrigger } from '../tooltip/context';
 import Item, { type CascaderData, type Data, type Entity, type FilterRenderProps } from './item';
 
-export type { KeyMapProps, ShowNextType } from '@fibrae/semi-foundation/cascader/foundation';
+export type { KeyMapProps, ShowNextType } from '@fibrae/semi-foundation/components/cascader/foundation';
 
 export type CascaderType = Size;
 

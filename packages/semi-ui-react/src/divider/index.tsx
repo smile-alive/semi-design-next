@@ -1,7 +1,7 @@
 import React, { type CSSProperties, type ReactNode, Children } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/divider/constants';
-import '@fibrae/semi-foundation/divider/divider.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/divider/constants';
+import '@fibrae/semi-foundation/components/divider/divider.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 

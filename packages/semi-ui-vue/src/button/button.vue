@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { mergeProps } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/button/constants';
-    import { buttonClassList, colorfulFill, isAILoading, paddingSides } from '@fibrae/semi-foundation/button/utils';
-    import '@fibrae/semi-foundation/button/button.scss';
-    import '@fibrae/semi-foundation/button/icon-button.scss';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/button/constants';
+    import { buttonClassList, colorfulFill, isAILoading, paddingSides } from '@fibrae/semi-foundation/components/button/utils';
+    import '@fibrae/semi-foundation/components/button/button.scss';
+    import '@fibrae/semi-foundation/components/button/icon-button.scss';
     import { IconAILoading } from '@fibrae/semi-icons-vue';
     import type { ElementProps } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';

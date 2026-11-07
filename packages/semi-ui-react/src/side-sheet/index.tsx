@@ -1,11 +1,11 @@
 import type React from 'react';
 import { type CSSProperties, useEffect, useInsertionEffect, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/side-sheet/constants';
-import SideSheetFoundation, { type SideSheetAdapter, type SideSheetProps, type SideSheetState } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
+import SideSheetFoundation, { type SideSheetAdapter, type SideSheetProps, type SideSheetState } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
 import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-import '@fibrae/semi-foundation/side-sheet/side-sheet.scss';
+import '@fibrae/semi-foundation/components/side-sheet/side-sheet.scss';
 import useDefaultProps from '../_base/use-default-props';
 import useDidUpdate from '../_base/use-did-update';
 import useFoundation from '../_base/use-foundation';
@@ -39,7 +39,7 @@ export interface SideSheetReactProps extends SideSheetProps {
     ref?: React.Ref<HTMLDivElement>;
 }
 
-export type { SideSheetState } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
+export type { SideSheetState } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
 
 const defaultProps = {
     visible: false,

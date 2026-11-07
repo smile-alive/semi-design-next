@@ -1,4 +1,4 @@
-import { cssClasses } from '@fibrae/semi-foundation/navigation/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
 import { IconSidebar } from '@fibrae/semi-icons-solid';
 import Button from '../button';
 import Tooltip, { type GetTriggerProps } from '../tooltip';

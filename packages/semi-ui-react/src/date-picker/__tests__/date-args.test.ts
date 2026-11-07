@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vite-plus/test';
-import getDefaultPickerDate from '@fibrae/semi-foundation/date-picker/_utils/get-default-picker-date';
-import isBetween from '@fibrae/semi-foundation/date-picker/_utils/is-between';
-import isSameDay from '@fibrae/semi-foundation/date-picker/_utils/is-same-day';
-import { compatibleParse } from '@fibrae/semi-foundation/date-picker/_utils/parser';
+import getDefaultPickerDate from '@fibrae/semi-foundation/components/date-picker/_utils/get-default-picker-date';
+import isBetween from '@fibrae/semi-foundation/components/date-picker/_utils/is-between';
+import isSameDay from '@fibrae/semi-foundation/components/date-picker/_utils/is-same-day';
+import { compatibleParse } from '@fibrae/semi-foundation/components/date-picker/_utils/parser';
 
 // date-fns 4 reads null as 1970-01-01; these cases keep it invalid and stringify non-string tokens and values
 describe('DatePicker 日期参数', () => {

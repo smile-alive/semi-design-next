@@ -1,8 +1,8 @@
 <script lang="ts">
     import { untrack } from 'svelte';
-    import { cssClasses, numbers } from '@fibrae/semi-foundation/navigation/constants';
-    import NavigationFoundation, { type NavigationAdapter, type NavigationBaseProps, type NavigationState } from '@fibrae/semi-foundation/navigation/foundation';
-    import '@fibrae/semi-foundation/navigation/navigation.scss';
+    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/navigation/constants';
+    import NavigationFoundation, { type NavigationAdapter, type NavigationBaseProps, type NavigationState } from '@fibrae/semi-foundation/components/navigation/foundation';
+    import '@fibrae/semi-foundation/components/navigation/navigation.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import watch from '../_base/watch.svelte.js';

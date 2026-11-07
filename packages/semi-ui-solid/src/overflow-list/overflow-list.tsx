@@ -1,10 +1,10 @@
 import { type Accessor, type JSX, type ResolvedChildren, For, Show, children, createComputed, createEffect, createMemo, createSignal, on, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/overflow-list/constants';
-import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState, type OverflowListView, type VisibleLayout } from '@fibrae/semi-foundation/overflow-list/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/overflow-list/constants';
+import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState, type OverflowListView, type VisibleLayout } from '@fibrae/semi-foundation/components/overflow-list/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/overflow-list/overflow-list.scss';
+import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
 import type { ElementProps } from '../_base/element-props';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';

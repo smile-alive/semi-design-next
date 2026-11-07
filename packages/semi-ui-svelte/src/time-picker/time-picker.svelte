@@ -1,11 +1,11 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import type { Locale } from 'date-fns';
-    import ComboboxFoundation from '@fibrae/semi-foundation/time-picker/combox-foundation';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/time-picker/constants';
-    import TimePickerFoundation, { type TimePickerAdapter, type TimePickerBaseProps } from '@fibrae/semi-foundation/time-picker/foundation';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/time-picker/time-picker.scss';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import ComboboxFoundation from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/time-picker/constants';
+    import TimePickerFoundation, { type TimePickerAdapter, type TimePickerBaseProps } from '@fibrae/semi-foundation/components/time-picker/foundation';
+    import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import useClickOutside from '../_base/use-click-outside.svelte.js';
     import useDefaultProps from '../_base/use-default-props.js';

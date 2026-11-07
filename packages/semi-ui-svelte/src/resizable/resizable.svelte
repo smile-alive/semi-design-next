@@ -1,12 +1,12 @@
 <script lang="ts">
     import type { HTMLAttributes } from 'svelte/elements';
-    import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
-    import { ResizableFoundation, type ResizableAdapter, type ResizableBaseProps, type ResizableBaseState } from '@fibrae/semi-foundation/resizable/foundation';
-    import { directions, type Direction } from '@fibrae/semi-foundation/resizable/types';
-    import { getStringSize, isKeyboardEdge } from '@fibrae/semi-foundation/resizable/utils';
+    import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
+    import { ResizableFoundation, type ResizableAdapter, type ResizableBaseProps, type ResizableBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
+    import { directions, type Direction } from '@fibrae/semi-foundation/components/resizable/types';
+    import { getStringSize, isKeyboardEdge } from '@fibrae/semi-foundation/components/resizable/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
-    import '@fibrae/semi-foundation/resizable/resizable.scss';
+    import '@fibrae/semi-foundation/components/resizable/resizable.scss';
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

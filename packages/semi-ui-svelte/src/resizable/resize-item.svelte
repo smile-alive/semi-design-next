@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import { getResizeGroupContext } from './context.js';

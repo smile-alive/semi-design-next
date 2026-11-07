@@ -1,8 +1,8 @@
 import { type JSX, type Ref, For, Show, createEffect, createMemo, createUniqueId, mergeProps, on, onCleanup, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/date-picker/constants';
-import { isRangeType, type DayStatusType } from '@fibrae/semi-foundation/date-picker/foundation';
-import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType, type PanelView } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
+import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+import { isRangeType, type DayStatusType } from '@fibrae/semi-foundation/components/date-picker/foundation';
+import MonthsGridFoundation, { type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType, type PanelView } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { IconCalendar, IconClock } from '@fibrae/semi-icons-solid';
 import useFoundation from '../_base/use-foundation';

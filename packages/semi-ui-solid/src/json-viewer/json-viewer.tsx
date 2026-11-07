@@ -2,12 +2,12 @@ import { type JSX, type Ref, For, Show, createEffect, createMemo, createRenderEf
 import { insert } from 'solid-js/web';
 import clsx from 'clsx';
 import { isEqual, omitBy } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/json-viewer/constants';
-import JsonViewerFoundation, { type CustomRenderRule, type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions, type SearchOptions } from '@fibrae/semi-foundation/json-viewer/foundation';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
+import JsonViewerFoundation, { type CustomRenderRule, type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions, type SearchOptions } from '@fibrae/semi-foundation/components/json-viewer/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import '@fibrae/semi-foundation/json-viewer/json-viewer.scss';
+import '@fibrae/semi-foundation/components/json-viewer/json-viewer.scss';
 import { IconCaseSensitive, IconChevronLeft, IconChevronRight, IconClose, IconRegExp, IconSearch, IconWholeWord } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '../_base/element-props';
 import mergeRefs from '../_base/merge-refs';

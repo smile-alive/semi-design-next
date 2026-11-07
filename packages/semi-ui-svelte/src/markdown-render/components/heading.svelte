@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
     import { TypographyTitle, type TypographyTitleProps } from '../../typography/index.js';
     import type { MarkdownRenderElementProps } from '../interface.js';
 

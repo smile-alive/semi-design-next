@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import ColorSliderFoundation, { type ColorSliderAdapter, type ColorSliderBaseProps, type ColorSliderBaseState } from '@fibrae/semi-foundation/color-picker/color-slider-foundation';
-import { cssClasses } from '@fibrae/semi-foundation/color-picker/constants';
-import { hsvaToHslString } from '@fibrae/semi-foundation/color-picker/utils/convert';
+import ColorSliderFoundation, { type ColorSliderAdapter, type ColorSliderBaseProps, type ColorSliderBaseState } from '@fibrae/semi-foundation/components/color-picker/color-slider-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
+import { hsvaToHslString } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
 import useFoundation from '../_base/use-foundation';
 import { useLocale } from '../locale';
 

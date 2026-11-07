@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/image/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { ImagePreviewTitleSnippetProps } from './interface.js';

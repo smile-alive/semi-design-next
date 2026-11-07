@@ -1,8 +1,8 @@
 import type React from 'react';
 import { memo, useId, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/collapse/constants';
-import CollapseFoundation from '@fibrae/semi-foundation/collapse/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
+import CollapseFoundation from '@fibrae/semi-foundation/components/collapse/foundation';
 import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
 import { IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';

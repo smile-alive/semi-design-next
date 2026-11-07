@@ -1,5 +1,5 @@
 <script lang="ts" module>
-    import type { Breakpoint, OnBreakpointChangeCallback, OnBreakpointScreensCallback } from '@fibrae/semi-foundation/config-provider/responsive-types';
+    import type { Breakpoint, OnBreakpointChangeCallback, OnBreakpointScreensCallback } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
     import type { ConfigProviderProps, ContextValue } from '../interface';
 
     export interface TreeStore {

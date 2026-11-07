@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/input/constants';
-    import '@fibrae/semi-foundation/input/input.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
+    import '@fibrae/semi-foundation/components/input/input.scss';
     import { getPopupLayerContext } from '../_base/popup-layer.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import FormLabel from '../form/label.svelte';

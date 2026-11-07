@@ -1,4 +1,4 @@
-import type { BaseInputNumberState, ScientificNotationConfig } from '@fibrae/semi-foundation/input-number/foundation';
+import type { BaseInputNumberState, ScientificNotationConfig } from '@fibrae/semi-foundation/components/input-number/foundation';
 import type { InputChangeEvent, InputProps } from '../input/interface.js';
 
 export type { ScientificNotationConfig };

@@ -1,4 +1,4 @@
-import type { BaseFileItem } from '@fibrae/semi-foundation/upload/foundation';
+import type { BaseFileItem } from '@fibrae/semi-foundation/components/upload/foundation';
 
 export interface RichTextJSON {
     type: string;

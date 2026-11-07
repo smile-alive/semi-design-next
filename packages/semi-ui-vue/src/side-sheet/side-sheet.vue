@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { computed, nextTick, onBeforeUnmount, shallowRef, useAttrs, useId, useTemplateRef, watch, type CSSProperties, type StyleValue } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/side-sheet/constants';
-    import SideSheetFoundation, { type SideSheetAdapter, type SideSheetState } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
+    import SideSheetFoundation, { type SideSheetAdapter, type SideSheetState } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
     import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/side-sheet/side-sheet.scss';
+    import '@fibrae/semi-foundation/components/side-sheet/side-sheet.scss';
     import { IconClose } from '@fibrae/semi-icons-vue';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs';
     import Portal from '../_base/portal.vue';

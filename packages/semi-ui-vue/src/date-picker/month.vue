@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, onMounted, shallowRef, useId, watch } from 'vue';
     import { format } from 'date-fns';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
-    import MonthFoundation, { type MonthDayInfo } from '@fibrae/semi-foundation/date-picker/month-foundation';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+    import MonthFoundation, { type MonthDayInfo } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
     import useToday from '../calendar/use-today';
     import useConfig from '../config-provider/use-config';
     import type { DatePickerMonthEmits, DatePickerMonthProps, DatePickerMonthSlots } from './internal';

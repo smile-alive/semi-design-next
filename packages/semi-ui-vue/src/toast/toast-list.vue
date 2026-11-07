@@ -1,12 +1,12 @@
 <script setup lang="ts">
     import { computed, shallowRef, useTemplateRef, watch } from 'vue';
     import { omit } from 'es-toolkit';
-    import { cssClasses, numbers } from '@fibrae/semi-foundation/toast/constants';
-    import type { ToastInstance } from '@fibrae/semi-foundation/toast/toast-foundation';
-    import type { ToastListProps } from '@fibrae/semi-foundation/toast/toast-list-foundation';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/toast/constants';
+    import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
+    import type { ToastListProps } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
     import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/toast/toast.scss';
+    import '@fibrae/semi-foundation/components/toast/toast.scss';
     import useAnnouncer from '../_base/use-announcer';
     import useStoreSnapshot from '../_base/use-store-snapshot';
     import { provideToastListContext } from './context';

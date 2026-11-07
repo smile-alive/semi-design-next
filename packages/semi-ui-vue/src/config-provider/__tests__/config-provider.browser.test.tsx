@@ -1,7 +1,7 @@
 /** @jsxImportSource vue */
 import { screen } from '@testing-library/vue';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
-import type { OnBreakpointScreensCallback } from '@fibrae/semi-foundation/config-provider/responsive-types';
+import type { OnBreakpointScreensCallback } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
 import { countLiveListeners, render } from '@test/utils/vue';
 import Modal from '../../modal';
 import Switch from '../../switch';

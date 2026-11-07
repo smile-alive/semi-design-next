@@ -2,7 +2,7 @@ import { flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { numbers } from '@fibrae/semi-foundation/input-number/constants';
+import { numbers } from '@fibrae/semi-foundation/components/input-number/constants';
 import { createStore } from '../../_base/__tests__/store.svelte';
 import semiGlobal from '../../_utils/semi-global';
 import InputNumber from '../input-number.svelte';

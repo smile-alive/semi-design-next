@@ -1,5 +1,5 @@
 import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
-import { ResetTimer } from '@fibrae/semi-foundation/utils/reset-timer';
+import { ResetTimer } from '@fibrae/semi-foundation/base/reset-timer';
 
 // keeps the action bar from flickering while the menu's close transition runs
 const HIDE_ACTION_DELAY = 150;

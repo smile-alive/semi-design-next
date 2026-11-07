@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, onBeforeUnmount, onMounted, shallowRef, watch } from 'vue';
-    import ArrayFieldRows from '@fibrae/semi-foundation/form/array-field-rows';
-    import { generateKeys, resolveKeepState } from '@fibrae/semi-foundation/form/utils';
+    import ArrayFieldRows from '@fibrae/semi-foundation/components/form/array-field-rows';
+    import { generateKeys, resolveKeepState } from '@fibrae/semi-foundation/components/form/utils';
     import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
     import { semiGlobalDefault } from '../_base/semi-default';
     import { provideArrayFieldContext, useArrayFieldContext } from './context';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/layout/constants';
-    import '@fibrae/semi-foundation/layout/layout.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
+    import '@fibrae/semi-foundation/components/layout/layout.scss';
     import type { ElementProps } from '../_base/element-props';
     import elementType from '../_base/element-type';
     import { nativeTag } from '../_base/native-tag';

@@ -1,8 +1,8 @@
 import { type Accessor, type JSX, For, Show, children, createMemo, createRenderEffect, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/cascader/constants';
-import CascaderFoundation, { type BasicCascaderData, type BasicData, type BasicEntity, type ShowNextType, type Virtualize } from '@fibrae/semi-foundation/cascader/foundation';
-import { getColumns, highlightParts } from '@fibrae/semi-foundation/cascader/util';
+import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/cascader/constants';
+import CascaderFoundation, { type BasicCascaderData, type BasicData, type BasicEntity, type ShowNextType, type Virtualize } from '@fibrae/semi-foundation/components/cascader/foundation';
+import { getColumns, highlightParts } from '@fibrae/semi-foundation/components/cascader/util';
 import { IconChevronRight, IconTick } from '@fibrae/semi-icons-solid';
 import hasContent from '../_base/has-content';
 import VirtualList, { type VirtualListHandle } from '../_base/virtual-list';

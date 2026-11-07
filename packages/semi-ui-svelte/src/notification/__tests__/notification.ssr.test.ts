@@ -1,7 +1,7 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vite-plus/test';
+import NotificationListStore from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import NotificationListStore from '@fibrae/semi-foundation/notification/notification-list-foundation';
 import { Notification } from '../index';
 import type { NotificationHookApi } from '../interface';
 import Notice from '../notice.svelte';

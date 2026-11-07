@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, h, onMounted, useAttrs, useId } from 'vue';
     import { isEqual } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/tabs/constants';
-    import TabsFoundation, { type MotionView, type TabsAdapter, type TabsState } from '@fibrae/semi-foundation/tabs/foundation';
-    import '@fibrae/semi-foundation/tabs/tabs.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tabs/constants';
+    import TabsFoundation, { type MotionView, type TabsAdapter, type TabsState } from '@fibrae/semi-foundation/components/tabs/foundation';
+    import '@fibrae/semi-foundation/components/tabs/tabs.scss';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/dropdown/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
     import type { ElementProps } from '../_base/element-props';
     import type { DropdownDividerProps } from './interface';
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { onMounted, onUnmounted, ref, useId, useTemplateRef } from 'vue';
     import '@fibrae/semi-foundation/base/tokens.scss';
-    import '@fibrae/semi-foundation/button/button.scss';
+    import '@fibrae/semi-foundation/components/button/button.scss';
     import useResizeObserver from '../../use-resize-observer';
 
     const id = useId();

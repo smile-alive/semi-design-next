@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { Attachment } from 'svelte/attachments';
-    import { cssClasses } from '@fibrae/semi-foundation/backtop/constants';
-    import BackTopFoundation, { type BackTopAdapter, type BackTopBaseProps } from '@fibrae/semi-foundation/backtop/foundation';
-    import '@fibrae/semi-foundation/backtop/backtop.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/backtop/constants';
+    import BackTopFoundation, { type BackTopAdapter, type BackTopBaseProps } from '@fibrae/semi-foundation/components/backtop/foundation';
+    import '@fibrae/semi-foundation/components/backtop/backtop.scss';
     import { IconBackTop } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';

@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes, HTMLLiAttributes } from 'svelte/elements';
-import type { TimelineItemPosition, TimelineMode } from '@fibrae/semi-foundation/timeline/utils';
+import type { TimelineItemPosition, TimelineMode } from '@fibrae/semi-foundation/components/timeline/utils';
 
 export type { TimelineItemPosition, TimelineMode };
 export type TimelineItemType = 'default' | 'ongoing' | 'success' | 'warning' | 'error';

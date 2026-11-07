@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { ExclusiveFormValidation } from '@fibrae/semi-foundation/form/interface';
+import type { ExclusiveFormValidation } from '@fibrae/semi-foundation/components/form/interface';
 import useDefaultProps from '../_base/use-default-props';
 import Form from './base-form';
 import type { AllFormProps } from './interface';

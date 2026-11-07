@@ -1,8 +1,8 @@
 import { type JSX, type ResolvedChildren, Show, children, createMemo } from 'solid-js';
 import clsx from 'clsx';
+import { type strings, cssClasses } from '@fibrae/semi-foundation/components/rating/constants';
+import RatingFoundation from '@fibrae/semi-foundation/components/rating/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import { type strings, cssClasses } from '@fibrae/semi-foundation/rating/constants';
-import RatingFoundation from '@fibrae/semi-foundation/rating/foundation';
 import { IconStar } from '@fibrae/semi-icons-solid';
 import hasContent from '../_base/has-content';
 import { useLocale } from '../locale';

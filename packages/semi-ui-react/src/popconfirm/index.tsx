@@ -1,10 +1,10 @@
 import React, { useId, useImperativeHandle, useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/popconfirm/constants';
-import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/popconfirm/popconfirm-foundation';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import '@fibrae/semi-foundation/popconfirm/popconfirm.scss';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { cssClasses } from '@fibrae/semi-foundation/components/popconfirm/constants';
+import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
+import '@fibrae/semi-foundation/components/popconfirm/popconfirm.scss';
 import { IconClose, IconAlertTriangle } from '@fibrae/semi-icons-react';
 import useDefaultProps from '../_base/use-default-props';
 import useDidUpdate from '../_base/use-did-update';

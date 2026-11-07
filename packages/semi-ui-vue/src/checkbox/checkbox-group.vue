@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, onBeforeUpdate, shallowRef, useAttrs, useId } from 'vue';
-    import type { CheckboxGroupView } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
-    import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxGroupBaseState } from '@fibrae/semi-foundation/checkbox/checkbox-group-foundation';
-    import { checkboxGroupClasses, strings } from '@fibrae/semi-foundation/checkbox/constants';
-    import '@fibrae/semi-foundation/checkbox/checkbox.scss';
+    import type { CheckboxGroupView } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
+    import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxGroupBaseState } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
+    import { checkboxGroupClasses, strings } from '@fibrae/semi-foundation/components/checkbox/constants';
+    import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import useFoundation from '../_base/use-foundation';

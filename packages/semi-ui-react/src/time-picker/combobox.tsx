@@ -1,8 +1,8 @@
 import type React from 'react';
 import { useImperativeHandle, useRef } from 'react';
 import { pick as pickKeys } from 'es-toolkit';
-import ComboboxFoundation, { type formatOption, type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/time-picker/combox-foundation';
-import { strings } from '@fibrae/semi-foundation/time-picker/constants';
+import ComboboxFoundation, { type formatOption, type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
+import { strings } from '@fibrae/semi-foundation/components/time-picker/constants';
 import type { BaseProps } from '../_base/base-component';
 import useLocale from '../locale/use-locale';
 import ScrollList from '../scroll-list/index';

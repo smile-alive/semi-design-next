@@ -1,8 +1,8 @@
 import { isServer } from 'solid-js/web';
 // compat merge accepts an undefined source and deep-merges the component maps, keeping component functions as they are
 import { merge } from 'es-toolkit/compat';
-import { cloneFormValue } from '@fibrae/semi-foundation/form/utils';
-import { getDefaultComponents } from '@fibrae/semi-foundation/table/utils';
+import { cloneFormValue } from '@fibrae/semi-foundation/components/form/utils';
+import { getDefaultComponents } from '@fibrae/semi-foundation/components/table/utils';
 import isMarkup from '../_base/is-markup';
 import type { TableComponent, TableComponents } from './interface';
 

@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/video-player/constants';
-import type { Marker } from '@fibrae/semi-foundation/video-player/progress-foundation';
+import type { strings } from '@fibrae/semi-foundation/components/video-player/constants';
+import type { Marker } from '@fibrae/semi-foundation/components/video-player/progress-foundation';
 import type { ElementProps } from '../_base/element-props';
 import type { MediaEventKeys } from '../_base/media-event-keys';
 

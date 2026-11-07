@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor, act, within } from '@testing-librar
 import userEvent from '@testing-library/user-event';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import type { Virtualize } from '@fibrae/semi-foundation/cascader/foundation';
+import type { Virtualize } from '@fibrae/semi-foundation/components/cascader/foundation';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Cascader, ConfigProvider, Form, FormCascader, Popover, Tag } from '@fibrae/semi-ui-react';

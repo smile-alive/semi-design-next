@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { onBeforeUnmount, onMounted, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';
     import { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';

@@ -1,12 +1,12 @@
 import type React from 'react';
 import { useImperativeHandle, useRef, useState } from 'react';
 import clsx from 'clsx';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { cssClasses } from '@fibrae/semi-foundation/components/rating/constants';
+import RatingFoundation, { type RatingAdapter, type RatingState } from '@fibrae/semi-foundation/components/rating/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import { cssClasses } from '@fibrae/semi-foundation/rating/constants';
-import RatingFoundation, { type RatingAdapter, type RatingState } from '@fibrae/semi-foundation/rating/foundation';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import { noop } from '@fibrae/semi-foundation/utils/function';
-import '@fibrae/semi-foundation/rating/rating.scss';
+import '@fibrae/semi-foundation/components/rating/rating.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';
@@ -19,7 +19,7 @@ type Foundation = RatingFoundation<RatingProps, RatingClickEvent, React.FocusEve
 type Adapter = RatingAdapter<RatingProps, RatingClickEvent, React.FocusEvent, React.KeyboardEvent>;
 
 export type { RatingItemProps, RatingItemHandle } from './item';
-export type { RatingState } from '@fibrae/semi-foundation/rating/foundation';
+export type { RatingState } from '@fibrae/semi-foundation/components/rating/foundation';
 
 type RatingClickEvent = React.MouseEvent | React.KeyboardEvent;
 

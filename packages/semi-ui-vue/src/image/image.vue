@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { computed, onMounted, useTemplateRef, watch, type StyleValue } from 'vue';
     import { isEqual, omit } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import ImageFoundation, { type ImageAdapter, type ImageState } from '@fibrae/semi-foundation/image/image-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+    import ImageFoundation, { type ImageAdapter, type ImageState } from '@fibrae/semi-foundation/components/image/image-foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/image/image.scss';
+    import '@fibrae/semi-foundation/components/image/image.scss';
     import { IconUploadError } from '@fibrae/semi-icons-vue';
     import { isNotClassOrStyle, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';

@@ -1,7 +1,7 @@
 import type React from 'react';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import * as z from 'zod';
-import type { FieldPath, FieldPathValue, FormState } from '@fibrae/semi-foundation/form/interface';
+import type { FieldPath, FieldPathValue, FormState } from '@fibrae/semi-foundation/components/form/interface';
 import Form from '../base-form';
 import { FormInput, type FormUpload } from '../field';
 import type { BaseFormProps, FieldProps, FormApi, FormCheckboxProps, FormRadioProps } from '../interface';

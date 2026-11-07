@@ -1,5 +1,5 @@
 import type { VNode } from 'vue';
-import type { ExclusiveFieldValidation } from '@fibrae/semi-foundation/form/interface';
+import type { ExclusiveFieldValidation } from '@fibrae/semi-foundation/components/form/interface';
 import type { ElementProps, EmitHandlers, EmitProps } from '../_base/element-props';
 import AutoComplete, { type AutoCompleteEmits, type AutoCompleteHandle, type AutoCompleteItems, type AutoCompleteProps, type AutoCompleteSlots } from '../auto-complete';
 import Cascader, { type CascaderEmits, type CascaderHandle, type CascaderProps, type CascaderSlots } from '../cascader';

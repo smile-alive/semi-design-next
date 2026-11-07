@@ -1,6 +1,6 @@
 import { type Ref, onBeforeUnmount, ref } from 'vue';
+import { ResetTimer } from '@fibrae/semi-foundation/base/reset-timer';
 import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
-import { ResetTimer } from '@fibrae/semi-foundation/utils/reset-timer';
 
 /**
  * `copied` stays true for `duration()` ms after a successful copy; a repeated copy restarts the countdown.

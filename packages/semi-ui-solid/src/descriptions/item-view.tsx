@@ -1,6 +1,6 @@
 import { type JSX, Show, splitProps } from 'solid-js';
-import { cssClasses } from '@fibrae/semi-foundation/descriptions/constants';
-import '@fibrae/semi-foundation/descriptions/descriptions.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
+import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
 import { useDescriptionsContext } from './context';
 import type { DescriptionsItemProps } from './interface';
 

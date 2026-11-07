@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, mergeProps, toRaw, type VNode } from 'vue';
     import { cloneDeep } from 'es-toolkit';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/navigation/constants';
-    import ItemFoundation, { type ItemAdapter, countPlaceholderIcons } from '@fibrae/semi-foundation/navigation/item-foundation';
-    import '@fibrae/semi-foundation/navigation/navigation.scss';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
+    import ItemFoundation, { type ItemAdapter, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
+    import '@fibrae/semi-foundation/components/navigation/navigation.scss';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs';
     import { nativeTag } from '../_base/native-tag';
     import SlotFragment from '../_base/slot-fragment';

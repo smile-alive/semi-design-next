@@ -1,9 +1,9 @@
 import type React from 'react';
 import { useMemo, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
-import { ResizeGroupFoundation, type ResizeGroupAdapter, type ResizeGroupBaseState } from '@fibrae/semi-foundation/resizable/foundation';
-import '@fibrae/semi-foundation/resizable/resizable.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
+import { ResizeGroupFoundation, type ResizeGroupAdapter, type ResizeGroupBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
+import '@fibrae/semi-foundation/components/resizable/resizable.scss';
 import type { ElementProps } from '../_base/base';
 import { namedRole } from '../_base/named-role';
 import useDefaultProps from '../_base/use-default-props';

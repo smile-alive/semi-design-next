@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes, HTMLImgAttributes } from 'svelte/elements';
-import type { strings } from '@fibrae/semi-foundation/avatar/constants';
+import type { strings } from '@fibrae/semi-foundation/components/avatar/constants';
 
 export type AvatarShape = 'circle' | 'square';
 export type AvatarSize = (typeof strings.SIZE)[number];

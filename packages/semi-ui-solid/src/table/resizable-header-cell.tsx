@@ -1,5 +1,5 @@
 import { type JSX, Show, splitProps } from 'solid-js';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/table/constants';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/table/constants';
 import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
 
 /** The second argument carries the new width for onResize */

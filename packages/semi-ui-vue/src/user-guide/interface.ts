@@ -76,4 +76,4 @@ export interface UserGuideSlots {
     prevText?: () => VNode[];
 }
 
-export type { UserGuideBaseState as UserGuideState } from '@fibrae/semi-foundation/user-guide/foundation';
+export type { UserGuideBaseState as UserGuideState } from '@fibrae/semi-foundation/components/user-guide/foundation';

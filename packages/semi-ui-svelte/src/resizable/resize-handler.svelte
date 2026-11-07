@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/resizable/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
     import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
     import { IconHandle } from '@fibrae/semi-icons-svelte';
     import useLocale from '../locale/use-locale.svelte.js';

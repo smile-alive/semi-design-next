@@ -1,13 +1,13 @@
 <script lang="ts">
     import { isEqual } from 'es-toolkit';
-    import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
-    import { cssClasses } from '@fibrae/semi-foundation/tree-select/constants';
-    import TreeSelectFoundation, { type BasicTreeSelectInnerData, type BasicTreeSelectProps, type TreeSelectAdapter } from '@fibrae/semi-foundation/tree-select/foundation';
-    import { buildRowProps, getClearedSelection, getNodeData as getTreeNodeData, nodeId } from '@fibrae/semi-foundation/tree/shared';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tree-select/constants';
+    import TreeSelectFoundation, { type BasicTreeSelectInnerData, type BasicTreeSelectProps, type TreeSelectAdapter } from '@fibrae/semi-foundation/components/tree-select/foundation';
+    import { buildRowProps, getClearedSelection, getNodeData as getTreeNodeData, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
     import { isInnerControlKey, isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/tree/tree.scss';
-    import '@fibrae/semi-foundation/tree-select/tree-select.scss';
+    import '@fibrae/semi-foundation/components/tree/tree.scss';
+    import '@fibrae/semi-foundation/components/tree-select/tree-select.scss';
     import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-svelte';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import { type SlotKind, trackSlotKind } from '../_base/slot-kind.js';

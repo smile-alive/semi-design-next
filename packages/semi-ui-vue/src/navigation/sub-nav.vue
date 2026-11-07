@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, mergeProps, useId, useTemplateRef } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/navigation/constants';
-    import { countPlaceholderIcons } from '@fibrae/semi-foundation/navigation/item-foundation';
-    import SubNavFoundation, { type SubNavAdapter } from '@fibrae/semi-foundation/navigation/sub-nav-foundation';
-    import '@fibrae/semi-foundation/navigation/navigation.scss';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/navigation/constants';
+    import { countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
+    import SubNavFoundation, { type SubNavAdapter } from '@fibrae/semi-foundation/components/navigation/sub-nav-foundation';
+    import '@fibrae/semi-foundation/components/navigation/navigation.scss';
     import { IconChevronDown, IconChevronRight } from '@fibrae/semi-icons-vue';
     import { isAriaKey, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps } from '../_base/element-props';

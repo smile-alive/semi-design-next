@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, onUpdated, useTemplateRef } from 'vue';
     import { pick } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import PreviewFoundation, { getGroupPreviewList, loadLazyImages, type PreviewAdapter, type PreviewBaseState } from '@fibrae/semi-foundation/image/preview-foundation';
-    import '@fibrae/semi-foundation/image/image.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+    import PreviewFoundation, { getGroupPreviewList, loadLazyImages, type PreviewAdapter, type PreviewBaseState } from '@fibrae/semi-foundation/components/image/preview-foundation';
+    import '@fibrae/semi-foundation/components/image/image.scss';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';

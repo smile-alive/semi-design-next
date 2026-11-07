@@ -1,6 +1,6 @@
 import type React from 'react';
-import { cssClasses, strings } from '@fibrae/semi-foundation/date-picker/constants';
-import type { PanelType } from '@fibrae/semi-foundation/date-picker/months-grid-foundation';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import { IconChevronLeft, IconChevronRight, IconDoubleChevronLeft, IconDoubleChevronRight } from '@fibrae/semi-icons-react';

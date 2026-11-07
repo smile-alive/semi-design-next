@@ -1,11 +1,11 @@
 import { type JSX, type Ref, Index, Show, createEffect, createRenderEffect, createSignal, createUniqueId, mergeProps, on, onCleanup, onMount, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { throttle } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/input/constants';
-import TextAreaFoundation, { type TextAreaAdapter } from '@fibrae/semi-foundation/input/textarea-foundation';
-import { syncLineNumberHeights } from '@fibrae/semi-foundation/input/util/line-number';
+import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
+import TextAreaFoundation, { type TextAreaAdapter } from '@fibrae/semi-foundation/components/input/textarea-foundation';
+import { syncLineNumberHeights } from '@fibrae/semi-foundation/components/input/util/line-number';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/input/textarea.scss';
+import '@fibrae/semi-foundation/components/input/textarea.scss';
 import { IconClear } from '@fibrae/semi-icons-solid';
 import autofocus from '../_base/autofocus';
 import callHandler from '../_base/call-handler';

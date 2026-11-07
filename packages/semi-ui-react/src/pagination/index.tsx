@@ -1,12 +1,12 @@
 import type React from 'react';
 import { useEffect } from 'react';
 import clsx from 'clsx';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/pagination/constants';
+import PaginationFoundation, { type PageList, type PageRange, type PaginationAdapter, type PaginationState } from '@fibrae/semi-foundation/components/pagination/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/pagination/constants';
-import PaginationFoundation, { type PageList, type PageRange, type PaginationAdapter, type PaginationState } from '@fibrae/semi-foundation/pagination/foundation';
 import warning from '@fibrae/semi-foundation/utils/warning';
-import '@fibrae/semi-foundation/pagination/pagination.scss';
+import '@fibrae/semi-foundation/components/pagination/pagination.scss';
 import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';

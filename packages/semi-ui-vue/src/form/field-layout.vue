@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import type { StyleValue, VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-    import '@fibrae/semi-foundation/form/form.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+    import '@fibrae/semi-foundation/components/form/form.scss';
     import slotKind from '../_base/slot-kind';
     import { hasSlotContent } from '../_base/slot-nodes';
     import type { ColProps } from '../grid/interface';

@@ -1,9 +1,9 @@
 import { children, createMemo, createSignal, createUniqueId, For, Show, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { isEqual } from 'es-toolkit';
-import { cssClasses, getPanelId, getTabId } from '@fibrae/semi-foundation/tabs/constants';
-import TabsFoundation, { type MotionView, type TabsAdapter, type TabsState } from '@fibrae/semi-foundation/tabs/foundation';
-import '@fibrae/semi-foundation/tabs/tabs.scss';
+import { cssClasses, getPanelId, getTabId } from '@fibrae/semi-foundation/components/tabs/constants';
+import TabsFoundation, { type MotionView, type TabsAdapter, type TabsState } from '@fibrae/semi-foundation/components/tabs/foundation';
+import '@fibrae/semi-foundation/components/tabs/tabs.scss';
 import { isToken, type Token } from '../_base/token';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

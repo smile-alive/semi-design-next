@@ -10,8 +10,8 @@ import CodeHighlightStore from './code-highlight-store.svelte';
 import { grammar } from './grammars';
 
 const highlights = vi.hoisted(() => ({ count: 0 }));
-vi.mock('@fibrae/semi-foundation/code-highlight/highlighter', async (importOriginal) => {
-    const original = await importOriginal<typeof import('@fibrae/semi-foundation/code-highlight/highlighter')>();
+vi.mock('@fibrae/semi-foundation/components/code-highlight/highlighter', async (importOriginal) => {
+    const original = await importOriginal<typeof import('@fibrae/semi-foundation/components/code-highlight/highlighter')>();
     return {
         ...original,
         highlight: (...args: Parameters<typeof original.highlight>) => {

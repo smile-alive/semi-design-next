@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/highlight/constants';
-    import { findAll } from '@fibrae/semi-foundation/highlight/foundation';
-    import '@fibrae/semi-foundation/highlight/highlight.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/highlight/constants';
+    import { findAll } from '@fibrae/semi-foundation/components/highlight/foundation';
+    import '@fibrae/semi-foundation/components/highlight/highlight.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import type { HighlightProps, HighlightStyle } from './interface.js';
 

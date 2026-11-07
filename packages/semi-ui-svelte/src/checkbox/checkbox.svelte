@@ -1,9 +1,9 @@
 <script lang="ts">
-    import CheckboxFoundation, { type BaseCheckboxProps, type CheckboxAdapter, type CheckboxBaseState } from '@fibrae/semi-foundation/checkbox/checkbox-foundation';
-    import { checkboxClasses } from '@fibrae/semi-foundation/checkbox/constants';
+    import CheckboxFoundation, { type BaseCheckboxProps, type CheckboxAdapter, type CheckboxBaseState } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
+    import { checkboxClasses } from '@fibrae/semi-foundation/components/checkbox/constants';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import { focusWithoutRing } from '@fibrae/semi-foundation/utils/supports';
-    import '@fibrae/semi-foundation/checkbox/checkbox.scss';
+    import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
     import { IconCheckboxIndeterminate, IconCheckboxTick } from '@fibrae/semi-icons-svelte';
     import { isNativeInputKey, splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';

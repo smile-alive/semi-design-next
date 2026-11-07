@@ -1,5 +1,5 @@
 <script lang="ts">
-    import FormatNumeral from '@fibrae/semi-foundation/typography/format-numeral';
+    import FormatNumeral from '@fibrae/semi-foundation/components/typography/format-numeral';
     import TypographyBase from './base.svelte';
     import type { TypographyNumeralProps } from './interface.js';
 

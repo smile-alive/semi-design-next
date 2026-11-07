@@ -1,8 +1,8 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
-import type { HandleDot } from '@fibrae/semi-foundation/slider/foundation';
+import type { HandleDot } from '@fibrae/semi-foundation/components/slider/foundation';
 
-export type { HandleDot, SliderState } from '@fibrae/semi-foundation/slider/foundation';
+export type { HandleDot, SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
 
 export interface SliderMarkSnippetProps {
     value: number;

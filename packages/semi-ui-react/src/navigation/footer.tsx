@@ -1,8 +1,8 @@
 import type React from 'react';
 import { Children, isValidElement, memo } from 'react';
 import clsx from 'clsx';
-import { strings, cssClasses } from '@fibrae/semi-foundation/navigation/constants';
-import '@fibrae/semi-foundation/navigation/navigation.scss';
+import { strings, cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
+import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import type { ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';
 import CollapseButton from './collapse-button';

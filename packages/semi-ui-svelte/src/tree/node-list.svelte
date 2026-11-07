@@ -1,8 +1,8 @@
 <script lang="ts">
     import { isEqual } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
-    import type { ScrollAlign } from '@fibrae/semi-foundation/tree/foundation';
-    import { getTransitionNodes, sameKeys } from '@fibrae/semi-foundation/tree/shared';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
+    import type { ScrollAlign } from '@fibrae/semi-foundation/components/tree/foundation';
+    import { getTransitionNodes, sameKeys } from '@fibrae/semi-foundation/components/tree/shared';
     import VirtualList from '../_base/virtual-list.svelte';
     import { useConfig } from '../config-provider/index.js';
     import AutoSizer from './auto-sizer.svelte';

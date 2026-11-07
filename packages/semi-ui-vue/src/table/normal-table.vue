@@ -2,12 +2,12 @@
     import { computed, normalizeStyle, onUpdated, shallowRef, useAttrs, useId, useTemplateRef, watch, watchEffect, type CSSProperties, type HTMLAttributes, type StyleValue } from 'vue';
     import { cloneDeep } from 'es-toolkit';
     import { get } from 'es-toolkit/compat';
-    import { numbers, strings } from '@fibrae/semi-foundation/table/constants';
-    import TableFoundation, { type BaseColumnProps, type BaseRowKeyType, type TableAdapter } from '@fibrae/semi-foundation/table/foundation';
-    import { amendTableWidth, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/table/utils';
+    import { numbers, strings } from '@fibrae/semi-foundation/components/table/constants';
+    import TableFoundation, { type BaseColumnProps, type BaseRowKeyType, type TableAdapter } from '@fibrae/semi-foundation/components/table/foundation';
+    import { amendTableWidth, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import warning from '@fibrae/semi-foundation/utils/warning';
-    import '@fibrae/semi-foundation/table/table.scss';
+    import '@fibrae/semi-foundation/components/table/table.scss';
     import { splitControlAttrs } from '../_base/control-attrs';
     import type { RawSlots } from '../_base/read-vnode';
     import { readSemiDefault, useSemiGlobal } from '../_base/semi-default';

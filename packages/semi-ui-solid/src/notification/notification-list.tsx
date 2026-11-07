@@ -1,12 +1,12 @@
 import { createEffect, createMemo, createSignal, For, type JSX, on, onCleanup, onMount, Show, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, getStackItemTransform, getStackThreshold, numbers } from '@fibrae/semi-foundation/notification/constants';
-import { groupNoticesByPosition, noticePositions, type NotificationListProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { cssClasses, getStackItemTransform, getStackThreshold, numbers } from '@fibrae/semi-foundation/components/notification/constants';
+import { groupNoticesByPosition, noticePositions, type NotificationListProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
 import { pickFreshAnnouncements, readNoticeText } from '@fibrae/semi-foundation/utils/announcer';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import '@fibrae/semi-foundation/notification/notification.scss';
+import '@fibrae/semi-foundation/components/notification/notification.scss';
 import useCSSAnimation from '../_base/css-animation';
 import mergeRefs from '../_base/merge-refs';
 import useAnnouncer from '../_base/use-announcer';

@@ -2,7 +2,7 @@ import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { TooltipTriggerProps } from '../tooltip/interface.js';
 
-export type { RatingState } from '@fibrae/semi-foundation/rating/foundation';
+export type { RatingState } from '@fibrae/semi-foundation/components/rating/foundation';
 
 export interface RatingProps extends Omit<HTMLAttributes<HTMLUListElement>, 'onblur' | 'onchange' | 'onclick' | 'onfocus' | 'onkeydown'> {
     value?: number;

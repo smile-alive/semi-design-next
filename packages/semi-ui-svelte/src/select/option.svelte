@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import type { ClassValue } from 'svelte/elements';
-    import { cssClasses } from '@fibrae/semi-foundation/select/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/select/constants';
     import { IconTick } from '@fibrae/semi-icons-svelte';
     import { Highlight } from '../highlight/index.js';
 

@@ -1,7 +1,7 @@
 import React, { isValidElement, useEffect, useId } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-import { isErrorLeaf } from '@fibrae/semi-foundation/form/errors';
+import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+import { isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
 import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
 import warning from '@fibrae/semi-foundation/utils/warning';

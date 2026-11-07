@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { onMounted, useTemplateRef, watch, type StyleValue } from 'vue';
-    import { strings } from '@fibrae/semi-foundation/table/constants';
-    import { getColumnsByLevel, getHeadWidths, getHeaderStickyOffset, getNextSortOrder, getRTLAlign, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isLastLeftFixed, isSelectionColumn, sliceColumnsByLevel, type TableHeaderCell } from '@fibrae/semi-foundation/table/utils';
+    import { strings } from '@fibrae/semi-foundation/components/table/constants';
+    import { getColumnsByLevel, getHeadWidths, getHeaderStickyOffset, getNextSortOrder, getRTLAlign, isExpandedColumn, isFirstFixedRight, isFixedLeft, isFixedRight, isLastLeftFixed, isSelectionColumn, sliceColumnsByLevel, type TableHeaderCell } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import SlotFragment from '../_base/slot-fragment';
     import type { KeyedNode } from '../_base/slot-nodes';

@@ -2,10 +2,10 @@
     import { tick } from 'svelte';
     import type { Attachment } from 'svelte/attachments';
     import { omitBy } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/json-viewer/constants';
-    import JsonViewerFoundation, { type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions } from '@fibrae/semi-foundation/json-viewer/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
+    import JsonViewerFoundation, { type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions } from '@fibrae/semi-foundation/components/json-viewer/foundation';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/json-viewer/json-viewer.scss';
+    import '@fibrae/semi-foundation/components/json-viewer/json-viewer.scss';
     import { groupRole } from '../_base/group-role.js';
     import teleport from '../_base/teleport.js';
     import useDefaultProps from '../_base/use-default-props.js';

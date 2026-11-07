@@ -1,9 +1,9 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { ToastProps as FoundationToastProps } from '@fibrae/semi-foundation/toast/toast-foundation';
+import type { ToastProps as FoundationToastProps } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 
-export type { ConfigProps, ConfigProps as ToastConfigProps, Directions, ToastState, ToastTheme, ToastType } from '@fibrae/semi-foundation/toast/toast-foundation';
-export type { ToastListProps, ToastListState } from '@fibrae/semi-foundation/toast/toast-list-foundation';
+export type { ConfigProps, ConfigProps as ToastConfigProps, Directions, ToastState, ToastTheme, ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
+export type { ToastListProps, ToastListState } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 
 /** A text, or a snippet rendered where the toast list is: a static toast reads no caller context, a hook's reads the calling component's */
 export type ToastNode = string | Snippet;

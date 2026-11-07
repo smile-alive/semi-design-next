@@ -1,9 +1,9 @@
 import { createMemo, createUniqueId, For, type JSX, Match, Show, splitProps, Switch } from 'solid-js';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
-import { cssClasses, strings } from '@fibrae/semi-foundation/feedback/constants';
-import FeedbackFoundation, { type EmojiResult, type FeedbackAdapter, type FeedbackBaseState, type FeedbackValue, isFeedbackValueEmpty } from '@fibrae/semi-foundation/feedback/foundation';
-import '@fibrae/semi-foundation/feedback/feedback.scss';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/feedback/constants';
+import FeedbackFoundation, { type EmojiResult, type FeedbackAdapter, type FeedbackBaseState, type FeedbackValue, isFeedbackValueEmpty } from '@fibrae/semi-foundation/components/feedback/foundation';
+import '@fibrae/semi-foundation/components/feedback/feedback.scss';
 import callHandler from '../_base/call-handler';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

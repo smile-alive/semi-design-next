@@ -1,9 +1,9 @@
 import type React from 'react';
 import { isValidElement, useMemo } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/descriptions/constants';
-import { getHorizontalList } from '@fibrae/semi-foundation/descriptions/foundation';
-import '@fibrae/semi-foundation/descriptions/descriptions.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
+import { getHorizontalList } from '@fibrae/semi-foundation/components/descriptions/foundation';
+import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
 import type { ElementProps } from '../_base/base';
 import flattenChildren from '../_base/flatten-children';
 import useDefaultProps from '../_base/use-default-props';

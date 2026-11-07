@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import type { NavItemType } from '@fibrae/semi-foundation/navigation/foundation';
+    import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
     import type { NavItemConfig, NavItemSlotProps, NavSlots, SubDropdownProps } from './interface';
     import NavItem from './nav-item.vue';
     import SubNav from './sub-nav.vue';

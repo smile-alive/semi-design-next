@@ -7,12 +7,12 @@
     import { SvelteMap, SvelteSet } from 'svelte/reactivity';
     import { cloneDeep } from 'es-toolkit';
     import { get } from 'es-toolkit/compat';
-    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/table/constants';
-    import TableFoundation, { type BaseColumnProps, type TableAdapter } from '@fibrae/semi-foundation/table/foundation';
-    import { amendTableWidth, assignColumnKeys, findColumn, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/table/utils';
+    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/table/constants';
+    import TableFoundation, { type BaseColumnProps, type TableAdapter } from '@fibrae/semi-foundation/components/table/foundation';
+    import { amendTableWidth, assignColumnKeys, findColumn, flattenColumns, flattenData, getCellWidths, getHeaderRowCount, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import warning from '@fibrae/semi-foundation/utils/warning';
-    import '@fibrae/semi-foundation/table/table.scss';
+    import '@fibrae/semi-foundation/components/table/table.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import watch from '../_base/watch.svelte.js';

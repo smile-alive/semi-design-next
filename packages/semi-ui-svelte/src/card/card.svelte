@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/card/constants';
-    import '@fibrae/semi-foundation/card/card.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
+    import '@fibrae/semi-foundation/components/card/card.scss';
     import { groupRole } from '../_base/group-role.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import { Skeleton, SkeletonParagraph, SkeletonTitle } from '../skeleton/index.js';

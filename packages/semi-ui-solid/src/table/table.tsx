@@ -1,13 +1,13 @@
 import { type Accessor, type JSX, Show, children, createEffect, createMemo, createUniqueId, mergeProps, on, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { get } from 'es-toolkit/compat';
-import { strings } from '@fibrae/semi-foundation/table/constants';
-import TableFoundation, { type BaseColumnProps, type BaseRowKeyType, type TableAdapter, type TableBaseState } from '@fibrae/semi-foundation/table/foundation';
-import { type FlattenDataProps, amendTableWidth, assignColumnKeys, flattenColumns, flattenData, getCellWidths, getExpandColumn, getHeaderRowCount, getSelectionColumn, mergedRowExpandable, placeInnerColumns } from '@fibrae/semi-foundation/table/utils';
+import { strings } from '@fibrae/semi-foundation/components/table/constants';
+import TableFoundation, { type BaseColumnProps, type BaseRowKeyType, type TableAdapter, type TableBaseState } from '@fibrae/semi-foundation/components/table/foundation';
+import { type FlattenDataProps, amendTableWidth, assignColumnKeys, flattenColumns, flattenData, getCellWidths, getExpandColumn, getHeaderRowCount, getSelectionColumn, mergedRowExpandable, placeInnerColumns } from '@fibrae/semi-foundation/components/table/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import isObject from '@fibrae/semi-foundation/utils/is-object';
 import warning from '@fibrae/semi-foundation/utils/warning';
-import '@fibrae/semi-foundation/table/table.scss';
+import '@fibrae/semi-foundation/components/table/table.scss';
 import hasContent from '../_base/has-content';
 import mergeRefs from '../_base/merge-refs';
 import mergeStyles from '../_base/merge-styles';

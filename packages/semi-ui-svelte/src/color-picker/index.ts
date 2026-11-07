@@ -1,4 +1,4 @@
-import ColorPickerFoundation from '@fibrae/semi-foundation/color-picker/foundation';
+import ColorPickerFoundation from '@fibrae/semi-foundation/components/color-picker/foundation';
 
 export { default as ColorPicker } from './color-picker.svelte';
 /** Parses `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`, `rgb()`, `rgba()`, `hsv()` and `hsva()`; anything else throws */

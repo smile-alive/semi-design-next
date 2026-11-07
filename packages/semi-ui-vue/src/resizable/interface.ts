@@ -1,7 +1,7 @@
 import type { StyleValue, VNode } from 'vue';
-import type { Direction, Enable, HandleClassName, ResizeStartCallback, Size } from '@fibrae/semi-foundation/resizable/types';
+import type { Direction, Enable, HandleClassName, ResizeStartCallback, Size } from '@fibrae/semi-foundation/components/resizable/types';
 
-export type { Direction, Enable, HandleClassName, ResizeCallback, ResizeStartCallback, Size } from '@fibrae/semi-foundation/resizable/types';
+export type { Direction, Enable, HandleClassName, ResizeCallback, ResizeStartCallback, Size } from '@fibrae/semi-foundation/components/resizable/types';
 
 export type HandleStyle = Partial<Record<Direction, StyleValue>>;
 

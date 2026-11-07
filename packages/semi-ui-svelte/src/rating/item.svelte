@@ -1,7 +1,7 @@
 <script lang="ts">
+    import { cssClasses } from '@fibrae/semi-foundation/components/rating/constants';
+    import RatingFoundation from '@fibrae/semi-foundation/components/rating/foundation';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { cssClasses } from '@fibrae/semi-foundation/rating/constants';
-    import RatingFoundation from '@fibrae/semi-foundation/rating/foundation';
     import { IconStar } from '@fibrae/semi-icons-svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { RatingItemProps } from './interface.js';

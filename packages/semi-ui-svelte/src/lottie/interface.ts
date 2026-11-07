@@ -1,5 +1,5 @@
 import type { HTMLAttributes } from 'svelte/elements';
-import type { LottieBaseProps } from '@fibrae/semi-foundation/lottie/foundation';
+import type { LottieBaseProps } from '@fibrae/semi-foundation/components/lottie/foundation';
 
 // lottie-web is a semi-foundation dependency and cannot be imported here; interfaces keep declaration emit from
 // inlining its types.

@@ -1,8 +1,8 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLInputAttributes } from 'svelte/elements';
-import type { TimeStamp } from '@fibrae/semi-foundation/time-picker/combox-foundation';
-import type { PanelType } from '@fibrae/semi-foundation/time-picker/constants';
-import type { DisabledTimeFns } from '@fibrae/semi-foundation/time-picker/foundation';
+import type { TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
+import type { PanelType } from '@fibrae/semi-foundation/components/time-picker/constants';
+import type { DisabledTimeFns } from '@fibrae/semi-foundation/components/time-picker/foundation';
 import type { InputProps, InputSize, ValidateStatus } from '../input/index.js';
 import type { ScrollItemProps } from '../scroll-list/index.js';
 import type { Position } from '../tooltip/index.js';

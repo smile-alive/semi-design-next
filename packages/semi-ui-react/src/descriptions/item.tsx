@@ -1,7 +1,7 @@
 import type React from 'react';
 import { memo } from 'react';
-import { cssClasses } from '@fibrae/semi-foundation/descriptions/constants';
-import '@fibrae/semi-foundation/descriptions/descriptions.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
+import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
 import type { ElementProps } from '../_base/base';
 import { useDescriptionsContext } from './descriptions-context';
 

@@ -1,11 +1,11 @@
 import { type Component, createMemo, For, type JSX, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { omitBy } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
-import MarkdownRenderFoundation, { type MarkdownRenderAdapter, type MarkdownRenderBaseProps, type MarkdownRenderBaseState } from '@fibrae/semi-foundation/markdown-render/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
+import MarkdownRenderFoundation, { type MarkdownRenderAdapter, type MarkdownRenderBaseProps, type MarkdownRenderBaseState } from '@fibrae/semi-foundation/components/markdown-render/foundation';
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import { isDev } from '@fibrae/semi-foundation/utils/warning';
-import '@fibrae/semi-foundation/markdown-render/markdown-render.scss';
+import '@fibrae/semi-foundation/components/markdown-render/markdown-render.scss';
 import type { ElementProps } from '../_base/element-props';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

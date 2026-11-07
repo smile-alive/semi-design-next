@@ -1,4 +1,4 @@
-import { register } from '@fibrae/semi-foundation/code-highlight/registry';
+import { register } from '@fibrae/semi-foundation/components/code-highlight/registry';
 import CodeHighlight from './code-highlight.vue';
 
 // Annotated so declaration emit refers to the SFC types instead of inlining them with Vue's GlobalComponents.

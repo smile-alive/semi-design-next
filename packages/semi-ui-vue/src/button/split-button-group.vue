@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/button/constants';
-    import { markEnds } from '@fibrae/semi-foundation/button/utils';
-    import '@fibrae/semi-foundation/button/button.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/button/constants';
+    import { markEnds } from '@fibrae/semi-foundation/components/button/utils';
+    import '@fibrae/semi-foundation/components/button/button.scss';
     import type { ElementProps } from '../_base/element-props';
     import useMutationObserver from '../_base/use-mutation-observer';
     import type { SplitButtonGroupProps, SplitButtonGroupSlots } from './interface';

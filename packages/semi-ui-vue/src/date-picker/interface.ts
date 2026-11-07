@@ -1,6 +1,6 @@
 import type { StyleValue, VNode } from 'vue';
-import type { BaseValueType, DateOffsetType, DayStatusType, DensityType, DisabledDateOptions, DisabledDateType, DisabledTimeType, PresetPosition, PresetType, PresetsType, Type, ValueType, WeekStartNumber } from '@fibrae/semi-foundation/date-picker/foundation';
-import type { InsetInputProps, RangeInput } from '@fibrae/semi-foundation/date-picker/input-foundation';
+import type { BaseValueType, DateOffsetType, DayStatusType, DensityType, DisabledDateOptions, DisabledDateType, DisabledTimeType, PresetPosition, PresetType, PresetsType, Type, ValueType, WeekStartNumber } from '@fibrae/semi-foundation/components/date-picker/foundation';
+import type { InsetInputProps, RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 import type { InputSize, ValidateStatus } from '../input/interface';
 import type { ScrollItemProps } from '../scroll-list/interface';
 import type { ComboboxProps } from '../time-picker/interface';

@@ -1,8 +1,8 @@
 import { children, createEffect, type JSX, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/backtop/constants';
-import BackTopFoundation, { type BackTopAdapter, type BackTopState, type Target } from '@fibrae/semi-foundation/backtop/foundation';
-import '@fibrae/semi-foundation/backtop/backtop.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/backtop/constants';
+import BackTopFoundation, { type BackTopAdapter, type BackTopState, type Target } from '@fibrae/semi-foundation/components/backtop/foundation';
+import '@fibrae/semi-foundation/components/backtop/backtop.scss';
 import { IconBackTop } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';
 import type { ElementProps } from '../_base/element-props';

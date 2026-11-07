@@ -1,5 +1,5 @@
 import { Show } from 'solid-js';
-import type { InsetInputChangeFoundationProps, InsetInputValue, Type } from '@fibrae/semi-foundation/date-picker/input-foundation';
+import type { InsetInputChangeFoundationProps, InsetInputValue, Type } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
 import Input from '../input';
 
 interface InsetInputBaseProps extends Pick<InsetInputChangeFoundationProps, 'panel'> {

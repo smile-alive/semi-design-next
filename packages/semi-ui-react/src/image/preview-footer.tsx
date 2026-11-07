@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterState } from '@fibrae/semi-foundation/image/preview-footer-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterState } from '@fibrae/semi-foundation/components/image/preview-footer-foundation';
 import { IconChevronLeft, IconChevronRight, IconMinus, IconPlus, IconRotate, IconDownload, IconWindowAdaptionStroked, IconRealSizeStroked } from '@fibrae/semi-icons-react';
 import useFoundation from '../_base/use-foundation';
 import Divider from '../divider';

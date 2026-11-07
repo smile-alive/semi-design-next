@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, h, type VNode } from 'vue';
-    import TableFoundation, { type BaseRowKeyType } from '@fibrae/semi-foundation/table/foundation';
+    import TableFoundation, { type BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
     import type { KeyedNode } from '../_base/slot-nodes';
     import Checkbox, { type CheckboxEvent } from '../checkbox';
     import useLocale from '../locale/use-locale';

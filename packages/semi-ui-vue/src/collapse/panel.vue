@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { Text, computed, useId, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/collapse/constants';
-    import CollapseFoundation from '@fibrae/semi-foundation/collapse/foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
+    import CollapseFoundation from '@fibrae/semi-foundation/components/collapse/foundation';
     import { IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import SlotFragment from '../_base/slot-fragment';

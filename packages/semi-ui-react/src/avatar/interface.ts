@@ -1,5 +1,5 @@
 import React, { type CSSProperties } from 'react';
-import type { strings } from '@fibrae/semi-foundation/avatar/constants';
+import type { strings } from '@fibrae/semi-foundation/components/avatar/constants';
 import type { ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';
 

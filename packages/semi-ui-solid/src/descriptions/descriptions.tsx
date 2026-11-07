@@ -1,9 +1,9 @@
 import { children, createMemo, For, Index, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/descriptions/constants';
-import { getHorizontalList } from '@fibrae/semi-foundation/descriptions/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
+import { getHorizontalList } from '@fibrae/semi-foundation/components/descriptions/foundation';
 import warning from '@fibrae/semi-foundation/utils/warning';
-import '@fibrae/semi-foundation/descriptions/descriptions.scss';
+import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
 import hasContent from '../_base/has-content';
 import { isToken, type Token } from '../_base/token';
 import useDefaultProps from '../_base/use-default-props';

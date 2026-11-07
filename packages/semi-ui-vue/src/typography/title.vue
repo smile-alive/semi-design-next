@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { strings } from '@fibrae/semi-foundation/typography/constants';
+    import { strings } from '@fibrae/semi-foundation/components/typography/constants';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import slotNodes from '../_base/slot-nodes';
     import TypographyBase from './base.vue';

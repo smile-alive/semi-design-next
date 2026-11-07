@@ -1,16 +1,16 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import { isEqual } from 'es-toolkit';
-    import { comboboxName } from '@fibrae/semi-foundation/select/combobox-name';
-    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/select/constants';
-    import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/select/foundation';
-    import { type BasicOptionProps, type OptionRecord as BaseOptionRecord, getOptionRuns, toOptionRecord } from '@fibrae/semi-foundation/select/option-foundation';
-    import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/tag/constants';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
+    import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/select/constants';
+    import SelectFoundation, { type SelectAdapter, type SelectBaseProps, type SelectBaseState } from '@fibrae/semi-foundation/components/select/foundation';
+    import { type BasicOptionProps, type OptionRecord as BaseOptionRecord, getOptionRuns, toOptionRecord } from '@fibrae/semi-foundation/components/select/option-foundation';
+    import { cssClasses as tagCssClasses } from '@fibrae/semi-foundation/components/tag/constants';
     import { isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
     import { centerInScroller, toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
     import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
-    import '@fibrae/semi-foundation/select/select.scss';
+    import '@fibrae/semi-foundation/components/select/select.scss';
     import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-svelte';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import { type SlotKind, trackSlotKind } from '../_base/slot-kind.js';

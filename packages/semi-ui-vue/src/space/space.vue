@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, type StyleValue } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/space/constants';
-    import '@fibrae/semi-foundation/space/space.scss';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/space/constants';
+    import '@fibrae/semi-foundation/components/space/space.scss';
     import type { ElementProps } from '../_base/element-props';
     import semiDefault from '../_base/semi-default';
     import type { SpaceProps, SpaceSlots, Spacing } from './interface';

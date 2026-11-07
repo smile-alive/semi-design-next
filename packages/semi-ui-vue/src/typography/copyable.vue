@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { watch, type StyleValue } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/typography/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
     import { IconCopy, IconTick } from '@fibrae/semi-icons-vue';
     import slotNodes from '../_base/slot-nodes';
     import useCopied from '../_base/use-copied';

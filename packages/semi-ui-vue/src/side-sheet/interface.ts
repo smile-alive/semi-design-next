@@ -1,5 +1,5 @@
 import type { StyleValue, VNode } from 'vue';
-import type { Placement } from '@fibrae/semi-foundation/side-sheet/side-sheet-foundation';
+import type { Placement } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
 
 export interface SideSheetProps {
     bodyStyle?: StyleValue;

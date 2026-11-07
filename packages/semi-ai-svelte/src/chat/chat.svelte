@@ -9,8 +9,8 @@
     import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
     import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/chat/foundation';
     import { followChats, followHints } from '@fibrae/semi-ai-foundation/message-list-foundation';
-    import { cssClasses as toastCssClasses } from '@fibrae/semi-foundation/toast/constants';
-    import ToastListStore from '@fibrae/semi-foundation/toast/toast-list-foundation';
+    import { cssClasses as toastCssClasses } from '@fibrae/semi-foundation/components/toast/constants';
+    import ToastListStore from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
     import '@fibrae/semi-ai-foundation/chat/chat.scss';

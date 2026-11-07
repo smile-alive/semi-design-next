@@ -1,10 +1,10 @@
 import { type JSX, type Ref, Show, children, createEffect, createMemo, createRenderEffect, createSignal, on, onCleanup, splitProps } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/modal/constants';
-import ModalFoundation, { type ModalAdapter, type ModalProps as FoundationModalProps, type ModalState } from '@fibrae/semi-foundation/modal/modal-foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
+import ModalFoundation, { type ModalAdapter, type ModalProps as FoundationModalProps, type ModalState } from '@fibrae/semi-foundation/components/modal/modal-foundation';
 import { coversPage } from '@fibrae/semi-foundation/utils/dom';
-import '@fibrae/semi-foundation/modal/modal.scss';
+import '@fibrae/semi-foundation/components/modal/modal.scss';
 import useCSSAnimation from '../_base/css-animation';
 import type { ElementProps } from '../_base/element-props';
 import mergeRefs from '../_base/merge-refs';

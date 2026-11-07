@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, onActivated, onDeactivated, onMounted, onUpdated, shallowRef, useAttrs, useId, watch } from 'vue';
-    import { cssClasses, numbers } from '@fibrae/semi-foundation/user-guide/constants';
-    import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/user-guide/foundation';
-    import '@fibrae/semi-foundation/user-guide/user-guide.scss';
+    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/user-guide/constants';
+    import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/components/user-guide/foundation';
+    import '@fibrae/semi-foundation/components/user-guide/user-guide.scss';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';
     import useEventListener, { getWindow } from '../_base/use-event-listener';
     import useFoundation from '../_base/use-foundation';

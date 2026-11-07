@@ -130,7 +130,7 @@ export { default as ScrollList } from './scroll-list';
 export { default as ScrollItem } from './scroll-list/scroll-item';
 export type { ScrollListProps } from './scroll-list';
 export type { ScrollItemProps, ScrollItemHandle } from './scroll-list/scroll-item';
-export type { Item as ScrollListItem } from '@fibrae/semi-foundation/scroll-list/item-foundation';
+export type { Item as ScrollListItem } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
 export { default as Select } from './select';
 export type {
     SelectProps,
@@ -443,7 +443,7 @@ export type { ResizeGroupProps } from './resizable/resize-group';
 
 export { default as JsonViewer } from './json-viewer';
 export type { JsonViewerProps, JsonViewerHandle, JsonViewerOptions } from './json-viewer';
-export type { CustomRenderRule as JsonViewerCustomRenderRule } from '@fibrae/semi-foundation/json-viewer/foundation';
+export type { CustomRenderRule as JsonViewerCustomRenderRule } from '@fibrae/semi-foundation/components/json-viewer/foundation';
 export { default as DragMove } from './drag-move';
 export type { DragMoveProps } from './drag-move';
 export { default as Cropper } from './cropper';
@@ -456,7 +456,7 @@ export { default as VideoPlayer } from './video-player';
 export type { VideoControl, VideoPlayerMarker, VideoPlayerOption, VideoPlayerProps, VideoPlayerTheme } from './video-player';
 export { default as Feedback } from './feedback';
 export type { FeedbackProps, FeedbackModalProps, FeedbackSideSheetProps } from './feedback';
-export type { FeedbackValue } from '@fibrae/semi-foundation/feedback/foundation';
+export type { FeedbackValue } from '@fibrae/semi-foundation/components/feedback/foundation';
 export { default as FloatButton } from './float-button';
 export { default as FloatButtonGroup } from './float-button/float-button-group';
 export type { FloatButtonProps } from './float-button/interface';

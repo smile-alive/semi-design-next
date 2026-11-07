@@ -27,6 +27,7 @@ This package has no root entry. It offers only deep file paths, which map one-to
 
 ```ts
 import BaseFoundation from '@fibrae/semi-foundation/base/foundation';
+import InputFoundation from '@fibrae/semi-foundation/components/input/foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import en_GB from '@fibrae/semi-foundation/locale/source/en_GB';
 import { utcToZonedTime } from '@fibrae/semi-foundation/utils/date-fns-extra';
@@ -36,14 +37,13 @@ import { utcToZonedTime } from '@fibrae/semi-foundation/utils/date-fns-extra';
 
 ## Directories
 
-`src/` has one directory per component, containing `foundation.ts`, `constants.ts` and `*.scss` as needed (`variables.scss`, `mixin.scss`, `rtl.scss` and similar ship only as source). Shared directories:
-
-| Directory | Contents                                                                                         |
-| --------- | ------------------------------------------------------------------------------------------------ |
-| `base/`   | `BaseFoundation` and common constants                                                            |
-| `theme/`  | The one theme: global tokens, palettes and mixins, loaded by component SCSS through `semi:theme` |
-| `locale/` | Locale packs and the `Locale` type                                                               |
-| `utils/`  | Focus, layer stack, date, DOM and other utilities                                                |
+| Directory     | Contents                                                                                                                                                                    |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `components/` | One directory per component, containing `foundation.ts`, `constants.ts` and `*.scss` as needed (`variables.scss`, `mixin.scss`, `rtl.scss` and similar ship only as source) |
+| `base/`       | `BaseFoundation`, common constants and the stateful classes a foundation composes (focus scope, popup lifecycle, modal resources and similar)                               |
+| `utils/`      | Stateless utilities: DOM, date, focus helpers, layer stack and similar                                                                                                      |
+| `theme/`      | The one theme: global tokens, palettes and mixins, loaded by component SCSS through `semi:theme`                                                                            |
+| `locale/`     | Locale packs and the `Locale` type                                                                                                                                          |
 
 ## Locale packs
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { isEqualWith } from 'es-toolkit';
-import { cloneFormValue } from '@fibrae/semi-foundation/form/utils';
+import { cloneFormValue } from '@fibrae/semi-foundation/components/form/utils';
 import elementTypeOf from '../_base/element-type';
 /** `noImmediate` skips stopImmediatePropagation on the native event */
 export function stopPropagation(e: React.MouseEvent | React.FocusEvent<HTMLElement>, noImmediate?: boolean) {

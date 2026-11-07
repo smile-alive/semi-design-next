@@ -3,7 +3,7 @@
     import { DragDropProvider, DragOverlay, type DragDropProviderProps, type DragEndEvent } from '@dnd-kit/vue';
     import { isSortable } from '@dnd-kit/vue/sortable';
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-    import { SortableAnnouncer } from '@fibrae/semi-foundation/sortable/accessibility';
+    import { SortableAnnouncer } from '@fibrae/semi-foundation/components/sortable/accessibility';
     import useLocale from '../locale/use-locale';
     import type { SortableEmits, SortableProps, SortableSlots } from './interface';
     import SortableItem from './sortable-item.vue';

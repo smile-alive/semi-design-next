@@ -1,8 +1,8 @@
 import { children, createSignal, splitProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/layout/constants';
-import '@fibrae/semi-foundation/layout/layout.scss';
+import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
+import '@fibrae/semi-foundation/components/layout/layout.scss';
 import type { ElementProps } from '../_base/element-props';
 import useDefaultProps from '../_base/use-default-props';
 import { Content, Footer, Header } from './basic';

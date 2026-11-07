@@ -1,5 +1,5 @@
 import type { CSSProperties, VNode } from 'vue';
-import type { strings } from '@fibrae/semi-foundation/empty/constants';
+import type { strings } from '@fibrae/semi-foundation/components/empty/constants';
 
 export type EmptyLayout = (typeof strings.LAYOUT)[number];
 

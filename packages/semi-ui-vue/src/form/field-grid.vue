@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import type { HTMLAttributes, VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/form/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import SlotFragment from '../_base/slot-fragment';
     import Col from '../grid/col.vue';
     import type { ColProps } from '../grid/interface';

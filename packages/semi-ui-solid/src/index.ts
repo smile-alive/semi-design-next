@@ -70,7 +70,7 @@ export { default as Empty } from './empty';
 export type { EmptyProps } from './empty';
 export { default as Feedback } from './feedback';
 export type { FeedbackProps, FeedbackModalProps, FeedbackSideSheetProps } from './feedback';
-export type { FeedbackValue } from '@fibrae/semi-foundation/feedback/foundation';
+export type { FeedbackValue } from '@fibrae/semi-foundation/components/feedback/foundation';
 export { default as FloatButton, FloatButtonGroup } from './float-button';
 export type { FloatButtonProps, FloatButtonGroupProps, FloatButtonGroupItem } from './float-button';
 export {

@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { stepsClasses } from '@fibrae/semi-foundation/steps/constants';
+import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
 import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import Steps, { type BasicStepProps, type FillStepProps, type NavStepProps, type Status, type StepProps } from '../index';
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, useAttrs, useId } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/form/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import '@fibrae/semi-foundation/form/form.scss';
+    import '@fibrae/semi-foundation/components/form/form.scss';
     import type { ElementProps } from '../_base/element-props';
     import { groupRole } from '../_base/group-role';
     import { hasSlotContent } from '../_base/slot-nodes';

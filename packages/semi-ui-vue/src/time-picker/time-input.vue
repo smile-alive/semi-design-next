@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { onMounted, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/time-picker/constants';
-    import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/time-picker/input-foundation';
+    import { cssClasses } from '@fibrae/semi-foundation/components/time-picker/constants';
+    import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/components/time-picker/input-foundation';
     import { IconClock } from '@fibrae/semi-icons-vue';
     import useFoundation from '../_base/use-foundation';
     import useRaf from '../_base/use-raf';

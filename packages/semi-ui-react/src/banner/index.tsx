@@ -1,10 +1,10 @@
 import type React from 'react';
 import { useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/banner/constants';
-import BannerFoundation, { type BannerAdapter, type BannerState } from '@fibrae/semi-foundation/banner/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/banner/constants';
+import BannerFoundation, { type BannerAdapter, type BannerState } from '@fibrae/semi-foundation/components/banner/foundation';
 import { findFocusAfter } from '@fibrae/semi-foundation/utils/focus-handover';
-import '@fibrae/semi-foundation/banner/banner.scss';
+import '@fibrae/semi-foundation/components/banner/banner.scss';
 import { IconClose, IconAlertTriangle, IconInfoCircle, IconTickCircle, IconAlertCircle } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';

@@ -1,8 +1,8 @@
 import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { omit } from 'es-toolkit';
-import { cssClasses, strings } from '@fibrae/semi-foundation/table/constants';
-import { getHeadWidths, parseHeaderRows, getHeaderStickyOffset, isFirstFixedRight, isLastLeftFixed, isFixedLeft, isFixedRight, sliceColumnsByLevel, getColumnsByLevel, getRTLAlign, getNextSortOrder, type TableHeaderCell } from '@fibrae/semi-foundation/table/utils';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/table/constants';
+import { getHeadWidths, parseHeaderRows, getHeaderStickyOffset, isFirstFixedRight, isLastLeftFixed, isFixedLeft, isFixedRight, sliceColumnsByLevel, getColumnsByLevel, getRTLAlign, getNextSortOrder, type TableHeaderCell } from '@fibrae/semi-foundation/components/table/utils';
 import LocaleConsumer from '../locale/locale-consumer';
 import Tooltip from '../tooltip';
 import type { TableComponents, OnHeaderRow, TableLocale, ColumnProps } from './interface';

@@ -1,7 +1,7 @@
 import { type Accessor, type Component, type JSX, For, Index, Match, Show, Switch, createEffect, createMemo, on, untrack } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
-import { cssClasses } from '@fibrae/semi-foundation/form/constants';
-import { type JsonSchema, type SchemaFieldKind, type SchemaFieldNode, blankRow, describeSchemaField, resolveJsonSchema } from '@fibrae/semi-foundation/form/json-schema';
+import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+import { type JsonSchema, type SchemaFieldKind, type SchemaFieldNode, blankRow, describeSchemaField, resolveJsonSchema } from '@fibrae/semi-foundation/components/form/json-schema';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import warning from '@fibrae/semi-foundation/utils/warning';
@@ -15,7 +15,7 @@ import { useFormContext } from './context';
 import { FormInput, FormInputNumber, FormSelect, FormSwitch, FormTextArea } from './field';
 import Section from './section';
 
-export type { JsonSchema, SchemaFieldKind, SchemaFieldNode } from '@fibrae/semi-foundation/form/json-schema';
+export type { JsonSchema, SchemaFieldKind, SchemaFieldNode } from '@fibrae/semi-foundation/components/form/json-schema';
 
 export interface SchemaFieldRenderContext {
     node: SchemaFieldNode;

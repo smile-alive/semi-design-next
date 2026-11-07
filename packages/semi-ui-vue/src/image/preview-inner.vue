@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, nextTick, shallowRef, useId, useTemplateRef, watch, type StyleValue } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/image/constants';
-    import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/image/preview-inner-foundation';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
+    import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
     import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-vue';
     import Portal from '../_base/portal.vue';
     import useFoundation from '../_base/use-foundation';

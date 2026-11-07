@@ -1,11 +1,11 @@
 import { createEffect, createMemo, createSignal, For, on, onCleanup, onMount, type Setter, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, numbers } from '@fibrae/semi-foundation/toast/constants';
-import type { ToastListProps } from '@fibrae/semi-foundation/toast/toast-list-foundation';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+import { cssClasses, numbers } from '@fibrae/semi-foundation/components/toast/constants';
+import type { ToastListProps } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
 import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
 import { pickFreshAnnouncements } from '@fibrae/semi-foundation/utils/announcer';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-import '@fibrae/semi-foundation/toast/toast.scss';
+import '@fibrae/semi-foundation/components/toast/toast.scss';
 import useCSSAnimation from '../_base/css-animation';
 import mergeRefs from '../_base/merge-refs';
 import useAnnouncer from '../_base/use-announcer';

@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
-import type { CarouselAutoPlay } from '@fibrae/semi-foundation/carousel/foundation';
+import type { CarouselAutoPlay } from '@fibrae/semi-foundation/components/carousel/foundation';
 
 export interface ArrowButton {
     props?: HTMLButtonAttributes;

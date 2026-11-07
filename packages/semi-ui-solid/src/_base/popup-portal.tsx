@@ -2,7 +2,7 @@ import { type JSX, createMemo, createRenderEffect, createSignal, onCleanup, onMo
 import { Portal } from 'solid-js/web';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { resolvePopupContainer } from '@fibrae/semi-foundation/utils/dom';
-import '@fibrae/semi-foundation/_portal/portal.scss';
+import '@fibrae/semi-foundation/components/portal/portal.scss';
 import useConfig from '../config-provider/use-config';
 import { useTooltipPopups } from '../tooltip/context';
 import { PopupLayerContext } from './popup-layer';

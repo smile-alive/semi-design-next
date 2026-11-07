@@ -1,6 +1,6 @@
 import type { VNode } from 'vue';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import type { strings } from '@fibrae/semi-foundation/anchor/constants';
+import type { strings } from '@fibrae/semi-foundation/components/anchor/constants';
 import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
 import type { Position } from '../tooltip/interface';
 import type { ShowTooltip } from '../typography/interface';
@@ -34,7 +34,7 @@ export interface AnchorSlots {
     default?: () => VNode[];
 }
 
-export type { AnchorBaseState as AnchorState } from '@fibrae/semi-foundation/anchor/foundation';
+export type { AnchorBaseState as AnchorState } from '@fibrae/semi-foundation/components/anchor/foundation';
 
 export interface LinkProps {
     disabled?: boolean;

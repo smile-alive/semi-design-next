@@ -1,6 +1,6 @@
 import { splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/dropdown/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
 import type { ElementProps } from '../_base/element-props';
 
 export interface DropdownDividerProps extends ElementProps<'li'> {}

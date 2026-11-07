@@ -1,5 +1,5 @@
 import { isVNode } from 'vue';
-import { cloneFormValue } from '@fibrae/semi-foundation/form/utils';
+import { cloneFormValue } from '@fibrae/semi-foundation/components/form/utils';
 import type { FieldLabel } from './interface';
 
 /** Deep clone that keeps functions, VNodes and errors as they are */

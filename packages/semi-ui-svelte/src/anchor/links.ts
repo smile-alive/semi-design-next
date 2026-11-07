@@ -1,4 +1,4 @@
-import type { AnchorNode } from '@fibrae/semi-foundation/anchor/foundation';
+import type { AnchorNode } from '@fibrae/semi-foundation/components/anchor/foundation';
 import type { AnchorLinkItem } from './interface.js';
 
 export const hrefsOf = (items: AnchorLinkItem[]): string[] => items.flatMap((item) => [item.href ?? '#', ...hrefsOf(item.children ?? [])]);

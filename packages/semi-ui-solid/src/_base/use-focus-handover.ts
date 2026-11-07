@@ -1,5 +1,5 @@
 import { onCleanup } from 'solid-js';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
 
 /**

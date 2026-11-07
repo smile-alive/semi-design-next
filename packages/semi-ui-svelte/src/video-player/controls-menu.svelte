@@ -1,5 +1,5 @@
 <script lang="ts" generics="T extends string | number">
-    import { cssClasses } from '@fibrae/semi-foundation/video-player/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/video-player/constants';
     import { Dropdown, DropdownItem, DropdownMenu, type DropdownTriggerProps } from '../dropdown/index.js';
     import type { ControlsMenuProps } from './interface.js';
 

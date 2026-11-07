@@ -1,5 +1,5 @@
 import { type JSX, children, createMemo, splitProps } from 'solid-js';
-import FormatNumeral from '@fibrae/semi-foundation/typography/format-numeral';
+import FormatNumeral from '@fibrae/semi-foundation/components/typography/format-numeral';
 import type { ElementProps } from '../_base/element-props';
 import Base, { type BaseTypographyProps } from './base';
 import type { OmitTypographyProps, TypographyBaseRule, TypographyBaseSize, TypographyBaseTruncate, TypographyCommonProps, TypographyIcon } from './interface';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, isVNode, useTemplateRef, type Component } from 'vue';
-    import { cssClasses, getStackLayerTransform, numbers } from '@fibrae/semi-foundation/toast/constants';
-    import ToastFoundation, { type ToastAdapter, type ToastState, type ToastType } from '@fibrae/semi-foundation/toast/toast-foundation';
+    import { cssClasses, getStackLayerTransform, numbers } from '@fibrae/semi-foundation/components/toast/constants';
+    import ToastFoundation, { type ToastAdapter, type ToastState, type ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
     import { isAlertType } from '@fibrae/semi-foundation/utils/announcer';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-vue';

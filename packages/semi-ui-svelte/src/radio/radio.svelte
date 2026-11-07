@@ -1,9 +1,9 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { radioClasses } from '@fibrae/semi-foundation/radio/constants';
-    import RadioFoundation, { type RadioAdapter, type RadioBaseProps, type RadioBaseState } from '@fibrae/semi-foundation/radio/radio-foundation';
+    import { radioClasses } from '@fibrae/semi-foundation/components/radio/constants';
+    import RadioFoundation, { type RadioAdapter, type RadioBaseProps, type RadioBaseState } from '@fibrae/semi-foundation/components/radio/radio-foundation';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import '@fibrae/semi-foundation/radio/radio.scss';
+    import '@fibrae/semi-foundation/components/radio/radio.scss';
     import { IconRadio } from '@fibrae/semi-icons-svelte';
     import { isNativeInputKey, splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';

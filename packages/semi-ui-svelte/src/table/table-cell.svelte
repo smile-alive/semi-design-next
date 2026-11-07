@@ -1,8 +1,8 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import { get } from 'es-toolkit/compat';
-    import type { BaseEllipsis } from '@fibrae/semi-foundation/table/foundation';
-    import { getRTLAlign, getRTLFlexAlign, isExpandedColumn, isSelectionColumn, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/table/utils';
+    import type { BaseEllipsis } from '@fibrae/semi-foundation/components/table/foundation';
+    import { getRTLAlign, getRTLFlexAlign, isExpandedColumn, isSelectionColumn, shouldShowEllipsisTitle } from '@fibrae/semi-foundation/components/table/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
     import ColumnSelection from './column-selection.svelte';
     import { getTableContext } from './context.js';

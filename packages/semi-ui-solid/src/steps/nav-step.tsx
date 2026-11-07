@@ -1,6 +1,6 @@
 import { children, mergeProps, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { stepsClasses as css } from '@fibrae/semi-foundation/steps/constants';
+import { stepsClasses as css } from '@fibrae/semi-foundation/components/steps/constants';
 import { IconChevronRight } from '@fibrae/semi-icons-solid';
 import type { NavStepProps } from './interface';
 import { createStepItem } from './use-step-item';

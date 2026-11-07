@@ -1,6 +1,6 @@
 /** @jsxImportSource vue */
 import { defineComponent } from 'vue';
-import { cssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
 import { TypographyTitle } from '../../typography';
 
 // Stateful rather than functional, so markdown attributes (such as rehype-slug ids) fall through to the title.

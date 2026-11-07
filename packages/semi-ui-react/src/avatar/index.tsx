@@ -1,10 +1,10 @@
 import type React from 'react';
 import { useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/avatar/constants';
-import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/avatar/foundation';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/avatar/constants';
+import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/components/avatar/foundation';
 import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
-import '@fibrae/semi-foundation/avatar/avatar.scss';
+import '@fibrae/semi-foundation/components/avatar/avatar.scss';
 import { usePopupLayer } from '../_base/popup-layer';
 import useDefaultProps from '../_base/use-default-props';
 import useDidUpdate from '../_base/use-did-update';

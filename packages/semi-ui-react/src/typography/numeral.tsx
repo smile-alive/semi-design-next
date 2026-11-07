@@ -1,6 +1,6 @@
 import type React from 'react';
 import { Children, cloneElement, isValidElement, memo } from 'react';
-import FormatNumeral from '@fibrae/semi-foundation/typography/format-numeral';
+import FormatNumeral from '@fibrae/semi-foundation/components/typography/format-numeral';
 import Base from './base';
 import type { TypographyBaseSize, TypographyBaseRule, OmitTypographyProps, TypographyBaseTruncate, TypographyCommonProps } from './interface';
 

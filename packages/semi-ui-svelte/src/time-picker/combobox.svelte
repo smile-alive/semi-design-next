@@ -1,6 +1,6 @@
 <script lang="ts">
-    import ComboboxFoundation, { type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/time-picker/combox-foundation';
-    import { strings } from '@fibrae/semi-foundation/time-picker/constants';
+    import ComboboxFoundation, { type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
+    import { strings } from '@fibrae/semi-foundation/components/time-picker/constants';
     import useLocale from '../locale/use-locale.svelte.js';
     import { ScrollItem, type ScrollItemHandle, type ScrollItemSelectData, ScrollList } from '../scroll-list/index.js';
     import type { ComboboxProps } from './interface.js';

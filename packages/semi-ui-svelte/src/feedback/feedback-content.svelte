@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses, strings } from '@fibrae/semi-foundation/feedback/constants';
-    import type { EmojiResult } from '@fibrae/semi-foundation/feedback/foundation';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/feedback/constants';
+    import type { EmojiResult } from '@fibrae/semi-foundation/components/feedback/foundation';
     import CheckboxGroup from '../checkbox/checkbox-group.svelte';
     import TextArea from '../input/textarea.svelte';
     import useLocale from '../locale/use-locale.svelte.js';

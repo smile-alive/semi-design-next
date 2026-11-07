@@ -1,8 +1,8 @@
 <script lang="ts">
     import { onDestroy } from 'svelte';
     import { debounce } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/tree/constants';
-    import { getTreeLabelClassMap, getTreeRowAria, getTreeRowClassMap, isTreeNodeLeaf, type TreeRowFlags } from '@fibrae/semi-foundation/tree/shared';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
+    import { getTreeLabelClassMap, getTreeRowAria, getTreeRowClassMap, isTreeNodeLeaf, type TreeRowFlags } from '@fibrae/semi-foundation/components/tree/shared';
     import { IconFile, IconFolder, IconFolderOpen } from '@fibrae/semi-icons-svelte';
     import Checkbox from '../checkbox/checkbox.svelte';
     import Highlight from '../highlight/highlight.svelte';

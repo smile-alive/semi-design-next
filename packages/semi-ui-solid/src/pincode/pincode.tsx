@@ -1,9 +1,9 @@
 import { Index, splitProps } from 'solid-js';
 import clsx from 'clsx';
+import { cssClasses } from '@fibrae/semi-foundation/components/pincode/constants';
+import PinCodeFoundation, { type PinCodeAdapter, type PinCodeBaseProps, type PinCodeBaseState } from '@fibrae/semi-foundation/components/pincode/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import { cssClasses } from '@fibrae/semi-foundation/pincode/constants';
-import PinCodeFoundation, { type PinCodeAdapter, type PinCodeBaseProps, type PinCodeBaseState } from '@fibrae/semi-foundation/pincode/foundation';
-import '@fibrae/semi-foundation/pincode/pincode.scss';
+import '@fibrae/semi-foundation/components/pincode/pincode.scss';
 import { omitFormInjected } from '../_base/control-attrs';
 import type { ElementProps } from '../_base/element-props';
 import forwardFocus from '../_base/forward-focus';

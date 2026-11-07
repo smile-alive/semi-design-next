@@ -1,11 +1,11 @@
 <script setup lang="ts">
     import { computed, onMounted, onUpdated, shallowRef, useAttrs, useId, useTemplateRef } from 'vue';
     import type { Locale } from 'date-fns';
-    import ComboboxFoundation from '@fibrae/semi-foundation/time-picker/combox-foundation';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/time-picker/constants';
-    import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/time-picker/foundation';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/time-picker/time-picker.scss';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import ComboboxFoundation from '@fibrae/semi-foundation/components/time-picker/combox-foundation';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/time-picker/constants';
+    import TimePickerFoundation, { type TimePickerAdapter } from '@fibrae/semi-foundation/components/time-picker/foundation';
+    import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
     import { isNotClassOrStyle, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';

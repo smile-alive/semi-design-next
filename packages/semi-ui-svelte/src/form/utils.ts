@@ -1,7 +1,7 @@
 import { untrack } from 'svelte';
-import { FIELD_PROP_KEYS } from '@fibrae/semi-foundation/form/constants';
-import { errorMessages } from '@fibrae/semi-foundation/form/errors';
-import { cloneFormValue } from '@fibrae/semi-foundation/form/utils';
+import { FIELD_PROP_KEYS } from '@fibrae/semi-foundation/components/form/constants';
+import { errorMessages } from '@fibrae/semi-foundation/components/form/errors';
+import { cloneFormValue } from '@fibrae/semi-foundation/components/form/utils';
 import type { CommonFieldProps, FieldLabel } from './interface.js';
 
 const fieldOnlyKeys = new Set<string>([...FIELD_PROP_KEYS, 'error', 'fieldLabel', 'labelExtra'] satisfies (keyof CommonFieldProps)[]);

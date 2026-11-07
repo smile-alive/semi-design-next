@@ -1,5 +1,5 @@
 import { createSignal } from 'solid-js';
-import { createFormApiProxy, EMPTY_FORM_STATE } from '@fibrae/semi-foundation/form/form-api-proxy';
+import { createFormApiProxy, EMPTY_FORM_STATE } from '@fibrae/semi-foundation/components/form/form-api-proxy';
 import type { FormState } from './interface';
 
 /**

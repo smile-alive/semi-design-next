@@ -1,5 +1,5 @@
+import FocusTrapHandle from '../base/focus-handle';
 import { isHTMLElement } from './dom';
-import FocusTrapHandle from './focus-handle';
 
 /**
  * The tabbable element a keyboard user would reach next after `from` is removed: the first one after it in document

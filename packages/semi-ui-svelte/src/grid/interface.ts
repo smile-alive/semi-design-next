@@ -1,7 +1,7 @@
 import type { HTMLAttributes } from 'svelte/elements';
-import type { Breakpoint } from '@fibrae/semi-foundation/grid/constants';
-import type { Gutter } from '@fibrae/semi-foundation/grid/gutter';
-import type { ColSize } from '@fibrae/semi-foundation/grid/utils';
+import type { Breakpoint } from '@fibrae/semi-foundation/components/grid/constants';
+import type { Gutter } from '@fibrae/semi-foundation/components/grid/gutter';
+import type { ColSize } from '@fibrae/semi-foundation/components/grid/utils';
 
 export type { Breakpoint, ColSize, Gutter };
 

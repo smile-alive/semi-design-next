@@ -1,9 +1,9 @@
 <script lang="ts">
     import { omit } from 'es-toolkit';
-    import { cssClasses, numbers } from '@fibrae/semi-foundation/toast/constants';
-    import type { ToastInstance } from '@fibrae/semi-foundation/toast/toast-foundation';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/toast/toast.scss';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/toast/constants';
+    import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
+    import '@fibrae/semi-foundation/components/toast/toast.scss';
     import useAnnouncer from '../_base/use-announcer.svelte.js';
     import useStoreSnapshot from '../_base/use-store-snapshot.svelte.js';
     import watch from '../_base/watch.svelte.js';

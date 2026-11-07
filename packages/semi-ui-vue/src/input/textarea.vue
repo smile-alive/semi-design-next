@@ -1,12 +1,12 @@
 <script setup lang="ts">
     import { computed, mergeProps, onBeforeUnmount, onMounted, shallowRef, useAttrs, useId, useTemplateRef, watch, type StyleValue, type TextareaHTMLAttributes } from 'vue';
     import { throttle } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/input/constants';
-    import TextAreaFoundation, { type TextAreaAdapter } from '@fibrae/semi-foundation/input/textarea-foundation';
-    import { syncLineNumberHeights } from '@fibrae/semi-foundation/input/util/line-number';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
+    import TextAreaFoundation, { type TextAreaAdapter } from '@fibrae/semi-foundation/components/input/textarea-foundation';
+    import { syncLineNumberHeights } from '@fibrae/semi-foundation/components/input/util/line-number';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/input/textarea.scss';
+    import '@fibrae/semi-foundation/components/input/textarea.scss';
     import { IconClear } from '@fibrae/semi-icons-vue';
     import { isBooleanAttrOn, isNotClassOrStyle, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';

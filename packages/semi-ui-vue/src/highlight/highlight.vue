@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/highlight/constants';
-    import { findAll } from '@fibrae/semi-foundation/highlight/foundation';
-    import '@fibrae/semi-foundation/highlight/highlight.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/highlight/constants';
+    import { findAll } from '@fibrae/semi-foundation/components/highlight/foundation';
+    import '@fibrae/semi-foundation/components/highlight/highlight.scss';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import type { HighlightProps } from './interface';
 

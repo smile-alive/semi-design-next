@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, mergeProps, onUpdated, useAttrs, useTemplateRef, watch, type StyleValue } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/avatar/constants';
-    import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/avatar/foundation';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/avatar/constants';
+    import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/components/avatar/foundation';
     import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
-    import '@fibrae/semi-foundation/avatar/avatar.scss';
+    import '@fibrae/semi-foundation/components/avatar/avatar.scss';
     import { hasClickListener, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { usePopupLayer } from '../_base/popup-layer';

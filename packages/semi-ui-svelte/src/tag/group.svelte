@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/tag/constants';
-    import { getTagListKeys } from '@fibrae/semi-foundation/tag/tag-key';
+    import { cssClasses } from '@fibrae/semi-foundation/components/tag/constants';
+    import { getTagListKeys } from '@fibrae/semi-foundation/components/tag/tag-key';
     import useDefaultProps from '../_base/use-default-props.js';
     import { Popover } from '../popover/index.js';
     import type { TooltipTriggerProps } from '../tooltip/index.js';

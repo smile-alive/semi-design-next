@@ -1,10 +1,10 @@
 import { createEffect, createMemo, createSignal, For, type JSX, on, onCleanup, Show, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/progress/constants';
-import { type StrokeArr, generateColor } from '@fibrae/semi-foundation/progress/generates';
-import { calcCircleGeometry, calcPercent, createPercentAnimation } from '@fibrae/semi-foundation/progress/utils';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/progress/constants';
+import { type StrokeArr, generateColor } from '@fibrae/semi-foundation/components/progress/generates';
+import { calcCircleGeometry, calcPercent, createPercentAnimation } from '@fibrae/semi-foundation/components/progress/utils';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
-import '@fibrae/semi-foundation/progress/progress.scss';
+import '@fibrae/semi-foundation/components/progress/progress.scss';
 import type { ElementProps } from '../_base/element-props';
 import useDefaultProps from '../_base/use-default-props';
 

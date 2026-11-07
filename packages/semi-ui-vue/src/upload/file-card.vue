@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, shallowRef, useAttrs, type StyleValue } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-foundation/upload/constants';
-    import { getFileSize } from '@fibrae/semi-foundation/upload/utils';
+    import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
+    import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
     import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import '@fibrae/semi-foundation/upload/upload.scss';
+    import '@fibrae/semi-foundation/components/upload/upload.scss';
     import { IconAlertCircle, IconClear, IconClose, IconFile, IconRefresh } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import { hasSlotContent } from '../_base/slot-nodes';

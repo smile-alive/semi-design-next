@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { strings } from '@fibrae/semi-foundation/avatar/constants';
+import type { strings } from '@fibrae/semi-foundation/components/avatar/constants';
 import type { ElementProps } from '../_base/element-props';
 
 export type AvatarShape = 'circle' | 'square';

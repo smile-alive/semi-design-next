@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, onUpdated, useSlots, useTemplateRef } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/spin/constants';
-    import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/spin/foundation';
-    import '@fibrae/semi-foundation/spin/spin.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/spin/constants';
+    import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/components/spin/foundation';
+    import '@fibrae/semi-foundation/components/spin/spin.scss';
     import type { ElementProps } from '../_base/element-props';
     import semiDefault, { semiGlobalDefault } from '../_base/semi-default';
     import useFoundation from '../_base/use-foundation';

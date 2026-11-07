@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { omit } from 'es-toolkit';
-    import TableFoundation from '@fibrae/semi-foundation/table/foundation';
+    import TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
     import useLocale from '../locale/use-locale';
     import Pagination from '../pagination';
     import { useTableContext } from './context';

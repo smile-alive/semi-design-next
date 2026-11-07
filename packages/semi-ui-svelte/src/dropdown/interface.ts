@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { DropdownSelectionMode } from '@fibrae/semi-foundation/dropdown/menu-foundation';
+import type { DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import type { TooltipProps, TooltipTriggerProps } from '../tooltip/index.js';
 
 /**

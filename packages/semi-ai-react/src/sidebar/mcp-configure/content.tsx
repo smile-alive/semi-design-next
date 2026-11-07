@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
 import MCPConfigureContentFoundation, { type MCPOption, type MCPConfigureContentProps, type MCPConfigureContentState, type MCPConfigureContentAdapter } from '@fibrae/semi-ai-foundation/sidebar/mcp-cof-content-foundation';
 import { getShowOptions } from '@fibrae/semi-ai-foundation/sidebar/utils';
-import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/button/constants';
+import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/components/button/constants';
 import { IconSearch, IconPlus, IconSetting, IconMinus, IconEdit } from '@fibrae/semi-icons-react';
 import { IllustrationNoContent, IllustrationNoContentDark } from '@fibrae/semi-illustrations-react';
 import useFoundation from '@fibrae/semi-ui-react/_base/use-foundation';

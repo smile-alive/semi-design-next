@@ -1,6 +1,6 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/card/constants';
-    import '@fibrae/semi-foundation/card/card.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
+    import '@fibrae/semi-foundation/components/card/card.scss';
     import type { ElementProps } from '../_base/element-props';
     import { hasSlotContent } from '../_base/slot-nodes';
     import type { MetaProps, MetaSlots } from './interface';

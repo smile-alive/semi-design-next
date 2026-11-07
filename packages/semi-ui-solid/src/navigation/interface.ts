@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js';
+import type { ItemKey, SelectedItemProps } from '@fibrae/semi-foundation/components/navigation/item-foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
-import type { ItemKey, SelectedItemProps } from '@fibrae/semi-foundation/navigation/item-foundation';
 import type { ElementProps } from '../_base/element-props';
 import type { DropdownProps } from '../dropdown';
 

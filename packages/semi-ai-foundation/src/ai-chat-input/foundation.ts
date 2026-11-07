@@ -1,9 +1,9 @@
 import type { Content as TiptapContent, FocusPosition } from '@tiptap/core';
 import { isEqual } from 'es-toolkit';
+import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
 import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
-import { removeUnlessPrevented } from '@fibrae/semi-foundation/upload/utils';
+import { removeUnlessPrevented } from '@fibrae/semi-foundation/components/upload/utils';
 import { centerInScroller } from '@fibrae/semi-foundation/utils/dom';
-import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
 import { isComposing } from '@fibrae/semi-foundation/utils/key-code';
 import { cssClasses, strings } from './constants';
 import { handleZeroWidthCharLogic } from './extension/plugins';

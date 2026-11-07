@@ -2,7 +2,7 @@ import type React from 'react';
 import { memo } from 'react';
 import clsx from 'clsx';
 import { omitBy, pickBy } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/list/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
 import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import type { ElementProps } from '../_base/base';
 import { hasContent } from '../_utils';

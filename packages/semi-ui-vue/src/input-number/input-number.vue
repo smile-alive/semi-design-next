@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, useAttrs, useTemplateRef } from 'vue';
-    import { cssClasses, numbers } from '@fibrae/semi-foundation/input-number/constants';
-    import InputNumberFoundation, { reachesBound, type InputNumberAdapter } from '@fibrae/semi-foundation/input-number/foundation';
-    import '@fibrae/semi-foundation/input-number/input-number.scss';
+    import { cssClasses, numbers } from '@fibrae/semi-foundation/components/input-number/constants';
+    import InputNumberFoundation, { reachesBound, type InputNumberAdapter } from '@fibrae/semi-foundation/components/input-number/foundation';
+    import '@fibrae/semi-foundation/components/input-number/input-number.scss';
     import { isNotClassOrStyle, splitControlAttrs } from '../_base/control-attrs';
     import type { ElementProps, EmitHandlers } from '../_base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../_base/semi-default';

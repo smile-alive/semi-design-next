@@ -1,10 +1,10 @@
 import { createEffect, createMemo, createSignal, on, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-foundation/anchor/constants';
-import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/anchor/foundation';
+import { cssClasses, strings } from '@fibrae/semi-foundation/components/anchor/constants';
+import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/components/anchor/foundation';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
-import '@fibrae/semi-foundation/anchor/anchor.scss';
+import '@fibrae/semi-foundation/components/anchor/anchor.scss';
 import mergeRefs from '../_base/merge-refs';
 import mergeStyles from '../_base/merge-styles';
 import useDefaultProps from '../_base/use-default-props';

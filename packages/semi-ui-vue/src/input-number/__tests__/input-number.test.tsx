@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { numbers } from '@fibrae/semi-foundation/input-number/constants';
+import { numbers } from '@fibrae/semi-foundation/components/input-number/constants';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import de from '@fibrae/semi-foundation/locale/source/de';
 import { IconSearch } from '@fibrae/semi-icons-vue';

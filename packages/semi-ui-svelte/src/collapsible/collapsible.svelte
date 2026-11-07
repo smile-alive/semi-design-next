@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/collapsible/constants';
-    import CollapsibleFoundation, { type CollapsibleAdapter, type CollapsibleBaseProps } from '@fibrae/semi-foundation/collapsible/foundation';
-    import '@fibrae/semi-foundation/collapsible/collapsible.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/collapsible/constants';
+    import CollapsibleFoundation, { type CollapsibleAdapter, type CollapsibleBaseProps } from '@fibrae/semi-foundation/components/collapsible/foundation';
+    import '@fibrae/semi-foundation/components/collapsible/collapsible.scss';
     import useDefaultProps from '../_base/use-default-props.js';
     import useFoundation from '../_base/use-foundation.svelte.js';
     import type { CollapsibleProps } from './interface.js';

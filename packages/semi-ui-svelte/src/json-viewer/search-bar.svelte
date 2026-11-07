@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-foundation/json-viewer/constants';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
     import { IconCaseSensitive, IconChevronLeft, IconChevronRight, IconClose, IconRegExp, IconWholeWord } from '@fibrae/semi-icons-svelte';
     import ButtonGroup from '../button/button-group.svelte';
     import Button from '../button/button.svelte';

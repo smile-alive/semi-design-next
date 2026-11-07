@@ -1,9 +1,9 @@
 import type React from 'react';
 import { useId, useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
-import { type strings, radioClasses as css } from '@fibrae/semi-foundation/radio/constants';
-import RadioFoundation, { type RadioAdapter, type RadioBaseState, type RadioChangeEvent } from '@fibrae/semi-foundation/radio/radio-foundation';
-import '@fibrae/semi-foundation/radio/radio.scss';
+import { type strings, radioClasses as css } from '@fibrae/semi-foundation/components/radio/constants';
+import RadioFoundation, { type RadioAdapter, type RadioBaseState, type RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
+import '@fibrae/semi-foundation/components/radio/radio.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

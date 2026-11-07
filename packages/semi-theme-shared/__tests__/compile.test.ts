@@ -15,7 +15,7 @@ const options = {
 
 it('semi:theme 来自 semi-foundation/theme，输出包在 @layer semi 中', () => {
     const requested: string[] = [];
-    const { css, loadedFiles } = compileSemiScss(path.join(foundationPath, 'button/button.scss'), {
+    const { css, loadedFiles } = compileSemiScss(path.join(foundationPath, 'components/button/button.scss'), {
         resolveFoundation: (subpath) => {
             requested.push(subpath);
             return options.resolveFoundation(subpath);
@@ -28,7 +28,7 @@ it('semi:theme 来自 semi-foundation/theme，输出包在 @layer semi 中', () 
 });
 
 it('prefixCls 同时改写组件类名和 global.scss 中的明暗子树类名', () => {
-    const button = compileSemiScss(path.join(foundationPath, 'button/button.scss'), { ...options, prefixCls: 'x' }).css;
+    const button = compileSemiScss(path.join(foundationPath, 'components/button/button.scss'), { ...options, prefixCls: 'x' }).css;
     expect(button).toContain('.x-button');
     expect(button).not.toContain('.semi-button');
     const tokens = compileSemiScss(path.join(foundationPath, 'base/tokens.scss'), { ...options, prefixCls: 'x' }).css;
@@ -45,7 +45,7 @@ it('cssLayer 为 false 时 tokens.scss 只留下 semi-base 层，不产生顶层
 
 it('Semi 自身样式里的弃用写法让编译失败', () => {
     const deprecated = '.a { width: percentage(0.5); }';
-    expect(() => compileSemiScss(path.join(foundationPath, 'button/button.scss'), options, deprecated)).toThrow(/global-builtin|math\.percentage/);
+    expect(() => compileSemiScss(path.join(foundationPath, 'components/button/button.scss'), options, deprecated)).toThrow(/global-builtin|math\.percentage/);
 });
 
 it('主题入口在全部弃用项 fatal 下可编译（经 importer 加载时它们被静默）', () => {
@@ -99,7 +99,7 @@ console.log(JSON.stringify([r('theme/index', ${JSON.stringify(iconsDir)}, ${JSON
 // Compiles every component stylesheet in one test, so its CPU time is real work; the default timeout leaves no margin
 // when the suite shares a busy machine
 it('semi-foundation 的全部组件样式入口都可编译', { timeout: 20_000 }, () => {
-    const files = fs.globSync('*/*.scss', { cwd: foundationPath, exclude: ['theme/**'] }).filter((file) => !path.basename(file).startsWith('_'));
+    const files = fs.globSync(['components/*/*.scss', 'base/*.scss'], { cwd: foundationPath }).filter((file) => !path.basename(file).startsWith('_'));
     expect(files.length).toBeGreaterThan(80);
     const failures = files.flatMap((file) => {
         try {

@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
-import { cssClasses as css } from '@fibrae/semi-foundation/dropdown/constants';
-import { getItemRole } from '@fibrae/semi-foundation/dropdown/menu-foundation';
+import { cssClasses as css } from '@fibrae/semi-foundation/components/dropdown/constants';
+import { getItemRole } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import { IconTick } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '../_base/base';
 import type { BaseProps } from '../_base/base-component';

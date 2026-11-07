@@ -1,10 +1,10 @@
 import { type JSX, type Ref, Show, children, createRenderEffect, createUniqueId, mergeProps, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-foundation/input/constants';
-import InputFoundation, { type InputAdapter } from '@fibrae/semi-foundation/input/foundation';
+import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
+import InputFoundation, { type InputAdapter } from '@fibrae/semi-foundation/components/input/foundation';
 import { stopButtonActivationKeys } from '@fibrae/semi-foundation/utils/a11y';
 import type { Size } from '@fibrae/semi-foundation/utils/type';
-import '@fibrae/semi-foundation/input/input.scss';
+import '@fibrae/semi-foundation/components/input/input.scss';
 import { IconClear, IconEyeClosedSolid, IconEyeOpened } from '@fibrae/semi-icons-solid';
 import callHandler from '../_base/call-handler';
 import type { ElementProps } from '../_base/element-props';

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import type { VNode } from 'vue';
-    import { cssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
+    import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
     import { childSlots, toVNodes } from '../../_base/read-vnode';
     import { TypographyParagraph } from '../../typography';
     import A from './a.vue';

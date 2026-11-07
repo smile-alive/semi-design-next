@@ -1,10 +1,10 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { NoticeProps as FoundationNoticeProps, NoticePosition } from '@fibrae/semi-foundation/notification/notification-foundation';
-import type { ConfigProps } from '@fibrae/semi-foundation/notification/notification-list-foundation';
+import type { NoticeProps as FoundationNoticeProps, NoticePosition } from '@fibrae/semi-foundation/components/notification/notification-foundation';
+import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 
-export type { ConfigProps as NotificationConfigProps, NotificationListProps, NotificationListState } from '@fibrae/semi-foundation/notification/notification-list-foundation';
-export type { NoticePosition, NoticeTheme, NoticeType } from '@fibrae/semi-foundation/notification/notification-foundation';
+export type { ConfigProps as NotificationConfigProps, NotificationListProps, NotificationListState } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
+export type { NoticePosition, NoticeTheme, NoticeType } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 
 /** A text, or a snippet rendered where the notification list is: a static notification reads no caller context, a hook's reads the calling component's */
 export type NotificationNode = string | Snippet;

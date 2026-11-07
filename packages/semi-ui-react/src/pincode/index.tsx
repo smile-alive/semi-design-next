@@ -1,10 +1,10 @@
 import type React from 'react';
 import { useImperativeHandle, useState } from 'react';
 import clsx from 'clsx';
+import { cssClasses } from '@fibrae/semi-foundation/components/pincode/constants';
+import PinCodeFoundation, { type PinCodeAdapter, type PinCodeBaseProps, type PinCodeBaseState } from '@fibrae/semi-foundation/components/pincode/foundation';
 import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import { cssClasses } from '@fibrae/semi-foundation/pincode/constants';
-import PinCodeFoundation, { type PinCodeAdapter, type PinCodeBaseProps, type PinCodeBaseState } from '@fibrae/semi-foundation/pincode/foundation';
-import '@fibrae/semi-foundation/pincode/pincode.scss';
+import '@fibrae/semi-foundation/components/pincode/pincode.scss';
 import type { ElementProps } from '../_base/base';
 import useDefaultProps from '../_base/use-default-props';
 import useFoundation from '../_base/use-foundation';

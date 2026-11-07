@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-foundation/skeleton/constants';
-    import '@fibrae/semi-foundation/skeleton/skeleton.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/skeleton/constants';
+    import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
     import type { SkeletonParagraphProps } from './interface.js';
 
     let { prefixCls = cssClasses.PREFIX, rows = 4, ...rest }: SkeletonParagraphProps = $props();

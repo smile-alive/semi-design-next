@@ -1,5 +1,5 @@
 import { createUniqueId } from 'solid-js';
-import { cssClasses } from '@fibrae/semi-foundation/avatar/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/avatar/constants';
 
 export default function TopSlotSvg(props: { gradientStart: string; gradientEnd: string }) {
     const id = `${cssClasses.PREFIX}-top-slot${createUniqueId()}`;

@@ -1,8 +1,8 @@
 import type { Accessor, JSX } from 'solid-js';
-import type { ButtonLooks } from '@fibrae/semi-foundation/button/utils';
+import type { ButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
 import { createContext } from '../_base/create-context';
 
-export type { ButtonLooks } from '@fibrae/semi-foundation/button/utils';
+export type { ButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
 
 export type ButtonGroupLooks = Partial<ButtonLooks>;
 

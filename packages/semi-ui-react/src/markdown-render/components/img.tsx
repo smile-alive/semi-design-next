@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 import { omit } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-foundation/markdown-render/constants';
+import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
 import { IconUploadError } from '@fibrae/semi-icons-react';
 import Image, { type ImageProps } from '../../image';
 import { useLinkContext } from './link-context';

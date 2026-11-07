@@ -1,9 +1,9 @@
 <script lang="ts">
     import type { Attachment } from 'svelte/attachments';
     import { SvelteSet } from 'svelte/reactivity';
-    import { cssClasses } from '@fibrae/semi-foundation/button/constants';
-    import { inheritGroupLooks } from '@fibrae/semi-foundation/button/utils';
-    import '@fibrae/semi-foundation/button/button.scss';
+    import { cssClasses } from '@fibrae/semi-foundation/components/button/constants';
+    import { inheritGroupLooks } from '@fibrae/semi-foundation/components/button/utils';
+    import '@fibrae/semi-foundation/components/button/button.scss';
     import { getPopupLayerContext } from '../_base/popup-layer.js';
     import useDefaultProps from '../_base/use-default-props.js';
     import { getInputGroupInScope } from '../input/context.js';

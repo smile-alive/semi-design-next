@@ -3,7 +3,7 @@
 
 import { type App, render } from 'vue';
 import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
-import NotificationApi from '@fibrae/semi-foundation/notification/notification-api-foundation';
+import NotificationApi from '@fibrae/semi-foundation/components/notification/notification-api-foundation';
 import { assertClient } from '../_base/client-only';
 import { getInstalledApp, rootAppContext, setInstalledApp } from '../_base/installed-app';
 import { useSemiGlobal } from '../_base/semi-default';

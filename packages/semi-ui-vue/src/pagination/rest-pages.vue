@@ -1,6 +1,6 @@
 <script setup lang="ts">
+    import { cssClasses } from '@fibrae/semi-foundation/components/pagination/constants';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { cssClasses } from '@fibrae/semi-foundation/pagination/constants';
     import VirtualList from '../_base/virtual-list.vue';
     import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';

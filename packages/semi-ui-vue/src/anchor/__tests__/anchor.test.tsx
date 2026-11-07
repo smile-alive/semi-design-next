@@ -4,7 +4,7 @@ import { renderToString } from 'vue/server-renderer';
 import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import type { AnchorAdapter } from '@fibrae/semi-foundation/anchor/foundation';
+import type { AnchorAdapter } from '@fibrae/semi-foundation/components/anchor/foundation';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { countLiveListeners, render } from '@test/utils/vue';
 import elementType from '../../_base/element-type';

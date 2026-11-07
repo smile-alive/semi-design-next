@@ -1,12 +1,12 @@
 <script lang="ts">
     import { onMount, tick } from 'svelte';
     import { throttle } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-foundation/input/constants';
-    import TextAreaFoundation, { type TextAreaAdapter, type TextAreaBaseProps } from '@fibrae/semi-foundation/input/textarea-foundation';
-    import { syncLineNumberHeights } from '@fibrae/semi-foundation/input/util/line-number';
+    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
+    import TextAreaFoundation, { type TextAreaAdapter, type TextAreaBaseProps } from '@fibrae/semi-foundation/components/input/textarea-foundation';
+    import { syncLineNumberHeights } from '@fibrae/semi-foundation/components/input/util/line-number';
     import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
-    import FocusTrapHandle from '@fibrae/semi-foundation/utils/focus-handle';
-    import '@fibrae/semi-foundation/input/textarea.scss';
+    import '@fibrae/semi-foundation/components/input/textarea.scss';
     import { IconClear } from '@fibrae/semi-icons-svelte';
     import { splitControlAttrs } from '../_base/control-attrs.js';
     import useDefaultProps from '../_base/use-default-props.js';

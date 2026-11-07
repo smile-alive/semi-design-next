@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { strings, numbers } from '@fibrae/semi-foundation/table/constants';
-import { assignColumnKeys } from '@fibrae/semi-foundation/table/utils';
+import { strings, numbers } from '@fibrae/semi-foundation/components/table/constants';
+import { assignColumnKeys } from '@fibrae/semi-foundation/components/table/utils';
 import { addClass, removeClass } from '@fibrae/semi-foundation/utils/classnames';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import warning from '@fibrae/semi-foundation/utils/warning';

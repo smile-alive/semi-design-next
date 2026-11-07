@@ -3,8 +3,8 @@
 
 import { type App, render } from 'vue';
 import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
-import ToastApi from '@fibrae/semi-foundation/toast/toast-api-foundation';
-import type { ConfigProps, ToastInstance } from '@fibrae/semi-foundation/toast/toast-foundation';
+import ToastApi from '@fibrae/semi-foundation/components/toast/toast-api-foundation';
+import type { ConfigProps, ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 import { assertClient } from '../_base/client-only';
 import { getInstalledApp, rootAppContext, setInstalledApp } from '../_base/installed-app';
 import { useSemiGlobal } from '../_base/semi-default';
