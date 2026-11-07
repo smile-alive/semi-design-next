@@ -448,10 +448,10 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
         }
     }
     const ui = path.join(scope, 'semi-ui-svelte');
-    assert.strictEqual(fs.globSync('*.js', { cwd: path.join(ui, 'dist/locale/source') }).length, fs.globSync('*.js', { cwd: path.join(scope, 'semi-foundation/dist/locale/source') }).length, 'semi-ui-svelte re-exports every foundation locale pack');
+    assert.strictEqual(fs.globSync('*.js', { cwd: path.join(ui, 'dist/components/locale/source') }).length, fs.globSync('*.js', { cwd: path.join(scope, 'semi-foundation/dist/locale/source') }).length, 'semi-ui-svelte re-exports every foundation locale pack');
     // Svelte-aware tools resolve with the `svelte` condition; plain Node and other bundlers take `default`. The AI package
     // reaches the UI package's internals by deep path: a `.ts` module without extension, a `.svelte.ts` one as `.svelte.js`
-    const subpaths = ['hooks', 'tokens', 'locale/source/en_US', 'styles.css', 'tailwind.css', 'switch/switch.svelte', '_base/create-context', '_base/use-foundation.svelte.js'];
+    const subpaths = ['hooks', 'tokens', 'locale/source/en_US', 'styles.css', 'tailwind.css', 'switch/switch.svelte', 'base/create-context', 'base/use-foundation.svelte.js', 'hooks/watch.svelte.js', 'internal/portal.svelte'];
     for (const condition of [[], ['--conditions=svelte']]) {
         const resolved = execFileSync(process.execPath, [...condition, '--input-type=module', '-e', 'for (const specifier of process.argv.slice(1)) console.log(import.meta.resolve(specifier));', ...subpaths.map((subpath) => `@fibrae/semi-ui-svelte/${subpath}`)], { cwd: appDir, encoding: 'utf-8' })
             .trim()
@@ -462,7 +462,7 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
             });
         assert.deepStrictEqual(
             resolved,
-            ['hooks.js', 'tokens.js', 'locale/source/en_US.js', 'styles.css', 'tailwind.css', 'switch/switch.svelte', '_base/create-context.js', '_base/use-foundation.svelte.js'].map((file) => `semi-ui-svelte/dist/${file}`),
+            ['hooks.js', 'tokens.js', 'components/locale/source/en_US.js', 'styles.css', 'tailwind.css', 'components/switch/switch.svelte', 'base/create-context.js', 'base/use-foundation.svelte.js', 'hooks/watch.svelte.js', 'internal/portal.svelte'].map((file) => `semi-ui-svelte/dist/${file}`),
             `the semi-ui-svelte subpaths resolve ${condition.join(' ') || 'by default'}`
         );
     }

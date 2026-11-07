@@ -4,10 +4,10 @@
     import { focusAfterModeChange } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
     import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
     import { IconClose, IconCopyStroked } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '@fibrae/semi-ui-svelte/_base/use-default-props';
-    import watch from '@fibrae/semi-ui-svelte/_base/watch.svelte.js';
+    import useDefaultProps from '@fibrae/semi-ui-svelte/base/use-default-props';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
+    import watch from '@fibrae/semi-ui-svelte/hooks/watch.svelte.js';
     import { ToastFactory } from '@fibrae/semi-ui-svelte/toast/index';
     import Container from './container/container.svelte';
     import type { SideBarOption, SideBarProps } from './interface.js';

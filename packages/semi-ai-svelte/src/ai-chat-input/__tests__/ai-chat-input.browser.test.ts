@@ -1,7 +1,7 @@
 import { render, waitFor } from '@testing-library/svelte';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { createStore } from '@fibrae/semi-ui-svelte/_base/__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import type { AIChatInputProps } from '../interface';
 import InputHost, { type InputHostStore } from './input-host.svelte';

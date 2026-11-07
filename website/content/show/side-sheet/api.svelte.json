@@ -1,6 +1,6 @@
 {
     "side-sheet": {
-        "source": "packages/semi-ui-svelte/src/side-sheet/side-sheet.svelte",
+        "source": "packages/semi-ui-svelte/src/components/side-sheet/side-sheet.svelte",
         "props": {
             "afterVisibleChange": {
                 "zh-CN": "显示时在 visible 变为 true 的那次提交立即触发，不等进场动画；隐藏时在离场动画结束后触发；显示期间被卸载时以 false 触发一次。",

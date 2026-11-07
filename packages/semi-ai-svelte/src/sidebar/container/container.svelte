@@ -4,13 +4,13 @@
     import ContainerFoundation, { type ContainerAdapter, type ContainerProps as FoundationProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
     import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
     import { IconClose } from '@fibrae/semi-icons-svelte';
-    import cssAnimation from '@fibrae/semi-ui-svelte/_base/css-animation';
-    import { groupRole } from '@fibrae/semi-ui-svelte/_base/group-role';
-    import useFoundation from '@fibrae/semi-ui-svelte/_base/use-foundation.svelte.js';
-    import watch from '@fibrae/semi-ui-svelte/_base/watch.svelte.js';
+    import useFoundation from '@fibrae/semi-ui-svelte/base/use-foundation.svelte.js';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
+    import watch from '@fibrae/semi-ui-svelte/hooks/watch.svelte.js';
     import Resizable from '@fibrae/semi-ui-svelte/resizable/resizable.svelte';
+    import cssAnimation from '@fibrae/semi-ui-svelte/utils/css-animation';
+    import { groupRole } from '@fibrae/semi-ui-svelte/utils/group-role';
     import type { ContainerProps } from './interface.js';
 
     // No fallback on `visible`: a bound `undefined` would throw with one, and undefined means hidden

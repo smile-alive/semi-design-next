@@ -1,6 +1,6 @@
 {
     "typography-text": {
-        "source": "packages/semi-ui-svelte/src/typography/text.svelte",
+        "source": "packages/semi-ui-svelte/src/components/typography/text.svelte",
         "props": {
             "code": { "zh-CN": "是否被 code 元素包裹。", "en-US": "Whether the text is wrapped in a code element." },
             "component": {
@@ -55,7 +55,7 @@
         }
     },
     "typography-title": {
-        "source": "packages/semi-ui-svelte/src/typography/title.svelte",
+        "source": "packages/semi-ui-svelte/src/components/typography/title.svelte",
         "props": {
             "component": {
                 "zh-CN": "自定义渲染元素的标签名，默认由 heading 决定（h1 到 h6）。",
@@ -105,7 +105,7 @@
         }
     },
     "typography-paragraph": {
-        "source": "packages/semi-ui-svelte/src/typography/paragraph.svelte",
+        "source": "packages/semi-ui-svelte/src/components/typography/paragraph.svelte",
         "props": {
             "component": {
                 "zh-CN": "自定义渲染元素的标签名，默认 p。",
@@ -155,7 +155,7 @@
         }
     },
     "typography-numeral": {
-        "source": "packages/semi-ui-svelte/src/typography/numeral.svelte",
+        "source": "packages/semi-ui-svelte/src/components/typography/numeral.svelte",
         "props": {
             "code": { "zh-CN": "是否被 code 元素包裹。", "en-US": "Whether the text is wrapped in a code element." },
             "component": {

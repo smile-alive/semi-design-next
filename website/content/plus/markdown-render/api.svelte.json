@@ -1,6 +1,6 @@
 {
     "markdown-render": {
-        "source": "packages/semi-ui-svelte/src/markdown-render/markdown-render.svelte",
+        "source": "packages/semi-ui-svelte/src/components/markdown-render/markdown-render.svelte",
         "props": {
             "raw": {
                 "zh-CN": "Markdown 或 MDX 的纯文本。变化时重新编译。",

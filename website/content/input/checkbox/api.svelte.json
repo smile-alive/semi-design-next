@@ -1,6 +1,6 @@
 {
     "checkbox": {
-        "source": "packages/semi-ui-svelte/src/checkbox/checkbox.svelte",
+        "source": "packages/semi-ui-svelte/src/components/checkbox/checkbox.svelte",
         "props": {
             "addonId": {
                 "zh-CN": "addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。",
@@ -59,7 +59,7 @@
         }
     },
     "checkbox-group": {
-        "source": "packages/semi-ui-svelte/src/checkbox/checkbox-group.svelte",
+        "source": "packages/semi-ui-svelte/src/components/checkbox/checkbox-group.svelte",
         "props": {
             "children": {
                 "zh-CN": "组内的 Checkbox；设置 options 时忽略。",

@@ -1,6 +1,6 @@
 {
     "cascader": {
-        "source": "packages/semi-ui-svelte/src/cascader/cascader.svelte",
+        "source": "packages/semi-ui-svelte/src/components/cascader/cascader.svelte",
         "props": {
             "value": {
                 "zh-CN": "当前选中的条目，用 bind:value 绑定。不传时为非受控，需要初始选中项时绑定一个带初始值的 $state；`bind:value={get, set}` 为完全受控。单选时是节点或节点路径，多选时可以是路径数组。",

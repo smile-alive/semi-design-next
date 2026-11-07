@@ -1,6 +1,6 @@
 {
     "anchor": {
-        "source": "packages/semi-ui-svelte/src/anchor/anchor.svelte",
+        "source": "packages/semi-ui-svelte/src/components/anchor/anchor.svelte",
         "props": {
             "autoCollapse": {
                 "zh-CN": "是否在滚动时动态展示下一级锚点。",

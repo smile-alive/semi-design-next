@@ -1,5 +1,5 @@
 import type { Annotation, InputFile, InputImage, Message, Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-import { createContext } from '@fibrae/semi-ui-svelte/_base/create-context';
+import { createContext } from '@fibrae/semi-ui-svelte/base/create-context';
 import type { AIChatDialogueProps } from './interface.js';
 
 export type AIChatDialogueView = Required<Pick<AIChatDialogueProps, 'align' | 'disabledFileItemClick' | 'escapeHtml' | 'mode' | 'selecting' | 'showReference' | 'showReset'>> & Pick<AIChatDialogueProps, 'markdownRenderProps'>;

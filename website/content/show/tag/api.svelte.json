@@ -1,6 +1,6 @@
 {
     "tag": {
-        "source": "packages/semi-ui-svelte/src/tag/tag.svelte",
+        "source": "packages/semi-ui-svelte/src/components/tag/tag.svelte",
         "props": {
             "avatarShape": {
                 "zh-CN": "头像标签中头像的形状，可选 square 或 circle。",
@@ -73,7 +73,7 @@
         }
     },
     "tag-group": {
-        "source": "packages/semi-ui-svelte/src/tag/group.svelte",
+        "source": "packages/semi-ui-svelte/src/components/tag/group.svelte",
         "props": {
             "avatarShape": {
                 "zh-CN": "组内头像标签的头像形状。",
@@ -118,7 +118,7 @@
         }
     },
     "split-tag-group": {
-        "source": "packages/semi-ui-svelte/src/tag/split-tag-group.svelte",
+        "source": "packages/semi-ui-svelte/src/components/tag/split-tag-group.svelte",
         "props": {
             "children": {
                 "zh-CN": "组合在一起的 Tag 的 snippet。",

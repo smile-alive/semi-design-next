@@ -1,6 +1,6 @@
 {
     "tree-select": {
-        "source": "packages/semi-ui-svelte/src/tree-select/tree-select.svelte",
+        "source": "packages/semi-ui-svelte/src/components/tree-select/tree-select.svelte",
         "props": {
             "value": {
                 "zh-CN": "当前选中的值，可 `bind:value`；多选时为数组。不传时由组件自行管理；单向 `value={x}` 只作初值，要完全受控用函数绑定 `bind:value={get, set}`；绑成 `undefined` 会清空选中。没有 defaultValue。",

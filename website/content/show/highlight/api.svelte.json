@@ -1,6 +1,6 @@
 {
     "highlight": {
-        "source": "packages/semi-ui-svelte/src/highlight/highlight.svelte",
+        "source": "packages/semi-ui-svelte/src/components/highlight/highlight.svelte",
         "props": {
             "autoEscape": {
                 "zh-CN": "是否自动转义 searchWords 中的正则特殊字符。",

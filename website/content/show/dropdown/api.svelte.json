@@ -1,6 +1,6 @@
 {
     "dropdown": {
-        "source": "packages/semi-ui-svelte/src/dropdown/dropdown.svelte",
+        "source": "packages/semi-ui-svelte/src/components/dropdown/dropdown.svelte",
         "props": {
             "afterClose": {
                 "zh-CN": "菜单关闭且离场动画结束后触发。",
@@ -173,7 +173,7 @@
         }
     },
     "dropdown-menu": {
-        "source": "packages/semi-ui-svelte/src/dropdown/dropdown-menu.svelte",
+        "source": "packages/semi-ui-svelte/src/components/dropdown/dropdown-menu.svelte",
         "props": {
             "children": {
                 "zh-CN": "菜单的子元素，一般为 DropdownItem、DropdownTitle 或 DropdownDivider。",
@@ -182,7 +182,7 @@
         }
     },
     "dropdown-item": {
-        "source": "packages/semi-ui-svelte/src/dropdown/dropdown-item.svelte",
+        "source": "packages/semi-ui-svelte/src/components/dropdown/dropdown-item.svelte",
         "props": {
             "active": {
                 "zh-CN": "当前项是否处于激活态，激活态时字体加粗、颜色加深；Dropdown 的 showTick 为 true 时左侧还会展示 √。",
@@ -205,7 +205,7 @@
         }
     },
     "dropdown-title": {
-        "source": "packages/semi-ui-svelte/src/dropdown/dropdown-title.svelte",
+        "source": "packages/semi-ui-svelte/src/components/dropdown/dropdown-title.svelte",
         "props": {
             "children": { "zh-CN": "分组标题的内容。", "en-US": "Content of the group title." }
         }

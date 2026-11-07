@@ -442,7 +442,7 @@
 - `maxTagCount` 折叠时在 `+N` 浮层中点击标签：焦点进入浮层会激活 TagInput 并展开全部标签，浮层随之消失，这次点击关不掉那个标签（React、Solid 相同）。待处理。
 - Solid：上一次放下的动画未结束时立即开始键盘拖拽，方向键不移动项。UNKNOWN（影响：连续快速键盘排序；解决条件：确认是否为 dnd-kit 行为，React、Vue 是否相同）。
 - Solid：拖拽中途 Sortable 被卸载（受控 value 清空、`draggable` 变 false）时 `onDraggingChange(false)` 可能不触发，之后失焦不结束激活（React 相同）。UNKNOWN（解决条件：确认 dnd-kit 卸载时是否补发 dragend）。
-- Svelte：拖拽排序（内部模块 `_sortable`，Transfer 同样适用）的 `items` 变序时，Svelte 会移动被重排项的节点，浏览器让持有焦点的手柄失焦（Vue 版保留焦点）。已知限制（升级条件：改成只移动没有焦点的节点）。
+- Svelte：拖拽排序（内部模块 `internal/sortable`，Transfer 同样适用）的 `items` 变序时，Svelte 会移动被重排项的节点，浏览器让持有焦点的手柄失焦（Vue 版保留焦点）。已知限制（升级条件：改成只移动没有焦点的节点）。
 - Svelte：拖拽排序所用的 `@dnd-kit/svelte` 没有 `OptimisticSortingPlugin`，拖动中的视觉顺序由组件自己的预览列表驱动，松手后清除。已知限制。
 - Svelte：prefix、suffix 是文本还是图标要挂载后才知道，服务端首帧不带 `-prefix-text`、`-prefix-icon` 类。已知限制。
 
@@ -472,7 +472,7 @@
 - 未设 `ellipsis`、`fixed`、固定表头时表格为 `table-layout: auto`，各列数值 `width` 之和超过容器时，Chrome、Firefox 加宽表格并横向滚动，WebKit 把表格限在容器宽度并按比例压缩各列（1000px 容器中 364、400、100、100 渲染为 343、378、99、99），`resizable` 拖到的宽度随之不准。待决（影响：Safari 中列宽小于声明值，拖动时手柄落后于指针；解决条件：决定是否在列宽之和超出时改用 `fixed` 布局或给表格写 `min-width`）。
 - 不做：列宽拖动手柄的键盘操作（APG 无对应模式；升级条件：出现需求时按 Resizable 的 separator 模式实现）。
 - 保持原样：根类名 `semi-table-wrapper-undefined`；只应用第一个排序器；受控 currentPage 不调用 onChange；RTL 虚拟化与表头阴影；`OnHeaderCell<R>` 使 `ColumnProps` 对 R 不变；`rowSelection.disabled` 阻止 `clickRow`；`handlerClassName` 默认 `'resizing'`。
-- Svelte：虚拟化的行高只取自 `itemSize`（数值或按行返回数值的函数），不测量实际高度。已知限制（升级条件：`_base/virtual-list.svelte` 提供测量接口后支持动态行高）。
+- Svelte：虚拟化的行高只取自 `itemSize`（数值或按行返回数值的函数），不测量实际高度。已知限制（升级条件：`internal/virtual-list.svelte` 提供测量接口后支持动态行高）。
 - Vue、Svelte：列宽拖拽的覆盖值按生成的 key 存，列既无 `key` 也无 `dataIndex` 时 key 是 `${level}-${index}`，列顺序变化后覆盖值错位。待处理。
 - Svelte：`table.svelte` 不是泛型组件，`ColumnProps`、`TableProps` 的行类型为 `Record<string, any>`，snippet 与回调里需 `as` 收窄。已知限制。
 - Svelte：`components` 只接受标签名字符串，不能换成组件（可排序行等做不了）。已知限制。

@@ -1,0 +1,35 @@
+import type { FieldBridge, FormState } from '@fibrae/semi-foundation/components/form/interface';
+import { createContext } from '../../base/create-context.js';
+import type { AllFormProps, FormApi } from './interface.js';
+
+export interface FormContextValue {
+    readonly formState: FormState;
+    readonly formProps: AllFormProps;
+    formApi: FormApi;
+    bridge: FieldBridge;
+}
+
+export interface ArrayFieldContextValue {
+    readonly shouldUseInitValue: boolean;
+    /** What the rows' fields keep when their own keepState is unset */
+    readonly keepState: boolean;
+    /** The values the rows read their initial values from until the ArrayField's own mount write is rendered */
+    readonly values?: Record<string, any>;
+}
+
+export interface FormInputGroupAria {
+    labelledby?: string;
+    describedby?: string;
+    errormessage: string;
+}
+
+export interface FormInputGroupContextValue {
+    /** Adds a field to the group's error; returns the function that removes it again */
+    registerField: (field: string) => () => void;
+    readonly aria: FormInputGroupAria;
+}
+
+// optional: fields, FormSlot and FormInputGroup also render outside a Form
+export const [getFormContext, setFormContext] = createContext<FormContextValue>('Form', { optional: true });
+export const [getArrayFieldContext, setArrayFieldContext] = createContext<ArrayFieldContextValue>('ArrayField', { optional: true });
+export const [getFormInputGroupContext, setFormInputGroupContext] = createContext<FormInputGroupContextValue>('FormInputGroup', { optional: true });

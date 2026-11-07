@@ -1,6 +1,6 @@
 {
     "popover": {
-        "source": "packages/semi-ui-svelte/src/popover/popover.svelte",
+        "source": "packages/semi-ui-svelte/src/components/popover/popover.svelte",
         "props": {
             "aria-describedby": {
                 "zh-CN": "弹出层 role 为 dialog 时的 aria-describedby。",

@@ -1,6 +1,6 @@
 {
     "input-number": {
-        "source": "packages/semi-ui-svelte/src/input-number/input-number.svelte",
+        "source": "packages/semi-ui-svelte/src/components/input-number/input-number.svelte",
         "props": {
             "addonAfter": { "zh-CN": "后置标签的 snippet。", "en-US": "Snippet of the trailing addon." },
             "addonBefore": { "zh-CN": "前置标签的 snippet。", "en-US": "Snippet of the leading addon." },

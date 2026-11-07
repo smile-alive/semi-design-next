@@ -2,7 +2,7 @@
     import type { Snippet } from 'svelte';
     import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionState } from '@fibrae/semi-ai-foundation/components/chat/chat-box-action-foundation';
     import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
-    import useFoundation from '@fibrae/semi-ui-svelte/_base/use-foundation.svelte.js';
+    import useFoundation from '@fibrae/semi-ui-svelte/base/use-foundation.svelte.js';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import ActionButton from './action-button.svelte';
     import { getChatContext } from './context.js';

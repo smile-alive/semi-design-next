@@ -1,6 +1,6 @@
 {
     "card": {
-        "source": "packages/semi-ui-svelte/src/card/card.svelte",
+        "source": "packages/semi-ui-svelte/src/components/card/card.svelte",
         "props": {
             "actions": {
                 "zh-CN": "操作区，每个 snippet 作为一个操作，位于内容区底部，间距 12px。",
@@ -44,7 +44,7 @@
         }
     },
     "card-meta": {
-        "source": "packages/semi-ui-svelte/src/card/meta.svelte",
+        "source": "packages/semi-ui-svelte/src/components/card/meta.svelte",
         "props": {
             "avatar": { "zh-CN": "头像。", "en-US": "Avatar." },
             "description": { "zh-CN": "描述。", "en-US": "Description." },
@@ -55,7 +55,7 @@
         }
     },
     "card-group": {
-        "source": "packages/semi-ui-svelte/src/card/card-group.svelte",
+        "source": "packages/semi-ui-svelte/src/components/card/card-group.svelte",
         "props": {
             "align": {
                 "zh-CN": "子项的交叉轴对齐方式，传给 Space，可选 start、center、end、baseline。",

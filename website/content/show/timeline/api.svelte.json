@@ -1,6 +1,6 @@
 {
     "timeline": {
-        "source": "packages/semi-ui-svelte/src/timeline/timeline.svelte",
+        "source": "packages/semi-ui-svelte/src/components/timeline/timeline.svelte",
         "props": {
             "content": {
                 "zh-CN": "dataSource 每一项内容的 snippet，参数 `{ item, index }`，缺省渲染 item.content。",

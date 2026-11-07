@@ -14,7 +14,7 @@ export const svelteComponentOrder: ComponentOrder = {
         setContext: ['provide'],
         $effect: ['effect', 'effect'],
         '$effect.pre': ['effect', 'watch'],
-        // _base/watch.svelte.ts wraps $effect
+        // hooks/watch.svelte.ts wraps $effect
         watch: ['effect', 'effect'],
         // Svelte's onMount is a user effect, so it keeps its order among $effect calls
         onMount: ['lifecycle', 'effect'],

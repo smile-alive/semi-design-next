@@ -1,6 +1,6 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vite-plus/test';
-import { createStore } from '@fibrae/semi-ui-svelte/_base/__tests__/store.svelte';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import RichTextHost from './rich-text-host.svelte';
 
 describe('RichTextInput 服务端首帧', () => {

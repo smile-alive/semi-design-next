@@ -3,7 +3,7 @@
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
-    import useFoundation from '@fibrae/semi-ui-svelte/_base/use-foundation.svelte.js';
+    import useFoundation from '@fibrae/semi-ui-svelte/base/use-foundation.svelte.js';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import { Modal } from '@fibrae/semi-ui-svelte/modal/index';
     import { Toast } from '@fibrae/semi-ui-svelte/toast/index';

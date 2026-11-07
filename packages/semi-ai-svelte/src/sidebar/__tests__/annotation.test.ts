@@ -3,8 +3,8 @@ import { createEvent, fireEvent, render, screen } from '@testing-library/svelte'
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { createStore } from '@fibrae/semi-ui-svelte/_base/__tests__/store.svelte';
-import semiGlobal from '@fibrae/semi-ui-svelte/_utils/semi-global';
+import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
 import type { AnnotationInfo, AnnotationProps } from '../annotation/interface';
 import { Annotation } from '../index';
 import BindHost, { type BindHostStore } from './bind-host.svelte';

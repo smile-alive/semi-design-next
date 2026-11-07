@@ -1,6 +1,6 @@
 {
     "carousel": {
-        "source": "packages/semi-ui-svelte/src/carousel/carousel.svelte",
+        "source": "packages/semi-ui-svelte/src/components/carousel/carousel.svelte",
         "props": {
             "activeIndex": {
                 "zh-CN": "当前展示的索引，可用 `bind:activeIndex` 绑定；传 undefined 时交还控制权，从最后一次受控的索引继续。",

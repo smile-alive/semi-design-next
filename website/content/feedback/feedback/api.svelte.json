@@ -1,6 +1,6 @@
 {
     "feedback": {
-        "source": "packages/semi-ui-svelte/src/feedback/feedback.svelte",
+        "source": "packages/semi-ui-svelte/src/components/feedback/feedback.svelte",
         "props": {
             "afterClose": {
                 "zh-CN": "弹层完全关闭后调用，两种模式都会调用。",
