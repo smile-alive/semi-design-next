@@ -28,6 +28,8 @@ export const baseLint = {
         'prefer-rest-params': 'error',
         'import/export': 'error',
         'import/no-duplicates': ['error', { preferInline: true }],
+        // D4; locale files keep their language tag (`zh_CN.ts`)
+        'unicorn/filename-case': ['error', { case: 'kebabCase', ignore: ['^[a-z]{2,3}_([A-Z]{2}|\\d{3})\\.ts$'] }],
     },
     ignorePatterns: ['**/*.d.ts'],
 } satisfies OxlintConfig;
@@ -51,6 +53,8 @@ export const typescriptRules = {
 
 export const baseOverrides: OxlintOverride[] = [
     { files: ['**/*.ts', '**/*.tsx'], rules: typescriptRules },
+    // Astro components keep the PascalCase file names used in the Astro docs
+    { files: ['**/*.astro'], rules: { 'unicorn/filename-case': 'off' } },
     {
         files: ['**/*.js'],
         rules: {

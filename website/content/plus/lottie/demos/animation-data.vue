@@ -2,7 +2,7 @@
     import { computed, onMounted, shallowRef } from 'vue';
     import { Lottie } from '@fibrae/semi-ui-vue';
 
-    const jsonURL = '/assets/root-web-sites/lottie_demo.json';
+    const jsonURL = '/assets/root-web-sites/lottie-demo.json';
 
     // large animation data is held in a shallowRef so it is not made deeply reactive
     const data = shallowRef<object | string>('');

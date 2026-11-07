@@ -4,4 +4,4 @@ import { buildIllustrationComponents } from '../../../scripts/build-illustration
 
 const coreSrc = resolve(dirname(fileURLToPath(import.meta.resolve('@fibrae/semi-icons-core/package.json'))), 'src');
 
-buildIllustrationComponents(resolve(import.meta.dirname, '../src/illustrations'), coreSrc, '@fibrae/semi-icons-svelte/components/svg.svelte', 'svelte');
+buildIllustrationComponents(resolve(import.meta.dirname, '../src'), coreSrc, '@fibrae/semi-icons-svelte/components/svg.svelte', 'svelte');

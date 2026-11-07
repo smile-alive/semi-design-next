@@ -2,7 +2,7 @@
     import { onMount } from 'svelte';
     import { Lottie } from '@fibrae/semi-ui-svelte';
 
-    const jsonURL = '/assets/root-web-sites/lottie_demo.json';
+    const jsonURL = '/assets/root-web-sites/lottie-demo.json';
 
     // large animation data is held in $state.raw so it is not made deeply reactive
     let data = $state.raw<object | string>('');

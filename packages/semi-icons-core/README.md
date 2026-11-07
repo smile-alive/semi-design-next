@@ -53,16 +53,16 @@ The styles define `.{prefix}-icon`, `-extra-small`, `-small`, `-default`, `-larg
 
 - Monochrome icon: add `svgs/icons/<name>.svg` and an entry in `svgs/icons/meta.json`. `category` is the group name on the icon page and reuses existing values such as `Basic`, `Arrow` and `Interface`; AI icons use `One Color`, `Two Color` and `Multiple Color` by color level. Colors become `currentColor`.
 - Color icon: add `svgs/lab/<name>.svg` and an entry in `svgs/lab/meta.json`. Colors stay as they are.
-- The file name is the icon type, and the export name is `Icon` plus PascalCase (`ai_` becomes `AI`).
+- The SVG file name is the icon type, the export name is `Icon` plus PascalCase (`ai_` becomes `AI`), and the generated module file name is the export name in kebab-case (`IconAIBellLevel2` becomes `icon-ai-bell-level-2.ts`).
 - Do not hand-write `{uid}` for ids in the SVG source. The generator adds the prefix, and rendering replaces it per instance.
-- Run `pnpm build:icon` at the repository root. It first writes `src/icons`, `src/lab/icons` and `src/illustrations/icons` in this package (`scripts/build-icon.ts`, with a fixed svgo config to keep path data stable), then generates the icon and illustration components of each framework. Do not edit generated files by hand.
+- Run `pnpm build:icon` at the repository root. It first writes `src/icons`, `src/lab` and `src/illustrations` in this package (`scripts/build-icon.ts`, with a fixed svgo config to keep path data stable), then generates the icon and illustration components of each framework. Do not edit generated files by hand.
 - Run `pnpm site:dev` and open the [icon docs page](../../website/content/basic/icon) to check the new icon.
 
 ## Adding illustrations
 
 - Add `svgs/illustrations/<name>.svg`, and name the dark variant `<name>-dark.svg`. Colors, `width` and `height` stay as they are, with colors written as `var(--semi-color-*)`.
 - The export name is `Illustration` plus PascalCase, so `noContent-dark` becomes `IllustrationNoContentDark`.
-- Ids also skip the hand-written `{uid}`. Run `pnpm build:icon` to generate `src/illustrations/icons` and the illustration components of each framework.
+- Ids also skip the hand-written `{uid}`. Run `pnpm build:icon` to generate `src/illustrations` and the illustration components of each framework.
 
 ## Development
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import '../src/styles/viewTransition.scss';
+import '../src/styles/view-transition.scss';
 
 const runningAnimations = () =>
     document.documentElement

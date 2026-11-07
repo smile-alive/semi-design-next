@@ -1,7 +1,7 @@
 import { onMount } from 'solid-js';
 import { Lottie } from '@fibrae/semi-ui-solid';
 
-const jsonURL = '/assets/root-web-sites/lottie_demo.json';
+const jsonURL = '/assets/root-web-sites/lottie-demo.json';
 
 export default function LottieDemo() {
     onMount(() => {

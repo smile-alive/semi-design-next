@@ -2,7 +2,7 @@
     import { onMounted } from 'vue';
     import { Lottie } from '@fibrae/semi-ui-vue';
 
-    const jsonURL = '/assets/root-web-sites/lottie_demo.json';
+    const jsonURL = '/assets/root-web-sites/lottie-demo.json';
 
     onMounted(() => {
         void Lottie.getLottie().then((lottie) => console.log('lottie', lottie));
