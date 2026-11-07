@@ -12,7 +12,7 @@
         item?: Snippet<[{ index: number }]>;
     }
 
-    // Stands in for _base/use-default-props: the generator only reads the fallback each call passes
+    // Stands in for base/use-default-props: the generator only reads the fallback each call passes
     function useDefaultProps(_name: string) {
         return <T>(_key: string, fallback?: T) => fallback;
     }

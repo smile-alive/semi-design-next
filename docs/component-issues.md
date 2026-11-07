@@ -671,6 +671,7 @@
 - `packages/semi-foundation/src/locale/source/bn_IN.ts`：混用预组合 U+09DF（27 处）与分解形式 U+09AF U+09BC（44 处）。待母语者复核（统一为一种 Unicode 形式）。
 - `packages/semi-foundation/src/locale/source/ar.ts`：`Sidebar.defaultMcpInfo` 译文为机译。待母语者复核。
 - `website/scripts/gen-vue-api.ts`：经符号链接路径运行时脚本直接以 0 退出。待处理（改为 `import.meta.main`）。
+- API 片段检查（`node scripts/gen-<框架>-api.ts --check`）有页面不通过：React 的 Tooltip、Popover、Dropdown、Popconfirm 缺 `aria-describedby` 说明，DatePicker 缺 `customTrigger` 说明，Sidebar 缺 `className` 说明，AIChatInput 多出 `children` 说明，Upload 片段过时；Vue 的 Tooltip、Popover 缺 `getPopup` 说明，Resizable、ScrollList 片段过时；Solid 的 Tooltip、Popover 缺 `getPopup` 说明，DatePicker 缺 `customTrigger` 说明；Svelte 的 Tooltip、Popover 缺 `getPopup` 说明，Table 片段过时（`getCurrentPageData` 的类型打印不同）。待处理（补双语说明后重新生成片段）。
 - Table 页「固定表头」一节的示意图只有 React 实现，只在 React 页显示，Vue、Solid、Svelte 页没有示意图。已知限制（升级条件：各框架各写一份示意）。
 - Vue API 片段的默认值列对经 `semiDefault` 读取的属性显示整段表达式（如 `semiDefault("TreeSelect", "treeNodeLabelProp", "label")`，85 个片段共 609 处），看不出实际值。待决（是否只显示第三个参数）。
 - `theme-tokens.browser.test.tsx`：用例标题「尺寸 token 声明在 body 上」已过时。待处理（只改标题）。
