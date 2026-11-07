@@ -121,11 +121,7 @@
 
 ## 验证范围
 
-- 只验证改动范围：
-    - 跑相关目录的用例，以及改动文件的 lint；
-    - 公开类型变化或测试有改动时跑 `pnpm build && pnpm typecheck`（测试的类型检查读取已构建的 `dist`）；
-    - 改动布局、焦点或指针行为时才跑浏览器测试。
-    - 修复后只重跑失败的文件。
+- 按 AGENTS.md「验证」一节的改动类型表选命令；测试文件有改动时也跑 `pnpm build && pnpm typecheck`（测试的类型检查读取已构建的 `dist`）。修复后只重跑失败的文件。
 - 全量单测、浏览器用例、`test:packed`、体积和全站页面扫描，在一批改动合入后跑一次，不为几行改动反复跑全套。多个 agent 并行跑全量会压满机器，引发超时和重跑。
 - 框架包的类型读取 semi-foundation 已构建的 `dist`：foundation 有改动时，先 `pnpm build` 再 typecheck。只跑框架包的 `tsc` 查不出 foundation 自己的类型错误，要用根目录的 `pnpm typecheck`。
 - `pnpm test:coverage` 的全局阈值在 `vitest/index.ts`、包级阈值在 `vitest/<框架>/index.ts`，按实测值向下取整，随覆盖率提升上调；它在一条命令里先跑完全量单测再跑全量浏览器用例（单测项目 `groupOrder` 为 0、浏览器项目为 1，由 `vitest/framework.ts` 统一设置，两者同跑会让浏览器用例超时），阈值对两段合起来的覆盖率检查，只在合入后（`check:full`）运行。SSR 与 hydration 项目（`*-ssr`、`*-hydration-browser`）不进覆盖率运行，由 `pnpm test:ssr` 在 `check:full` 中另跑：Vue、Solid 在这些项目里把同一源文件编译成服务端或 hydration 版本，istanbul 按路径合并后多出只有另一种编译才走得到的语句和分支，计入后覆盖率会随 SSR 用例增加而下降。带 `--coverage` 时浏览器依赖预构建缓存放在 `node_modules/.vite/coverage`，不与普通运行和编辑器的 Vitest 扩展共用：两者配置 hash 不同，共用时后启动的一方会删掉对方正在使用的 deps，浏览器会话报 `Failed to connect to the browser session`。
