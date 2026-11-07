@@ -25,7 +25,11 @@ jobs:
         outputs:
             published: ${{ steps.changesets.outputs.published }}
         steps:
+            # Full history: the final push to main is a fast-forward only if git can see main's tip among HEAD's ancestors,
+            # and a shallow clone rejects it with "fetch first"
             - uses: actions/checkout@v5
+              with:
+                  fetch-depth: 0
             # Under workflow_run github.sha is the branch tip, which the checkout follows; a newer push gets its own run,
             # so this one must not build code that CI did not pass. Nothing to version or publish skips the build
             - id: pending
