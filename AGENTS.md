@@ -109,7 +109,20 @@ export PATH="$(mise where node@26.10.0)/bin:$(mise where pnpm@12.9.1):$PATH"
 | 文档页面 | 见 [check-pages](.agents/skills/check-pages/SKILL.md) |
 | 提交前 | 日常 `pnpm check:changed`（相对 release 的改动，需要本地有 `release` 分支）；全量 `pnpm check`（不含浏览器测试）；完整校验 `pnpm check:full` |
 
-- 只验证改动范围：相关目录的用例、改动文件的 lint；公开类型变化时跑 typecheck；改动布局、焦点或指针行为时才跑浏览器测试。全量测试和全站页面扫描在一批改动合入后跑一次，不为几行改动反复跑全套。
+按改动的性质选命令，只跑能发现这次改动出错的检查。一次改动跨几类时取并集；修复后只重跑失败的那一步。
+
+| 改动 | 跑 | 不跑 |
+| --- | --- | --- |
+| 移动、改名文件，只改导入路径 | 改动文件的 lint、`pnpm lint:rules`、`pnpm build && pnpm typecheck`；深路径或 `exports` 变化时加 `pnpm test:packed`；用 `rg` 查字符串里的旧路径（`import.meta.glob`、`vi.mock`、fixture 路径、`api.*.json` 的 `source`、lint 豁免、文档），只跑引用了这些字符串的测试文件 | 单元、浏览器、SSR 测试 |
+| 只改类型（注解、签名、`import type`），运行时不变 | 改动文件的 lint、typecheck；导出的类型变化时比较构建前后的 d.ts | 测试 |
+| 注释、文档、Markdown | `vp fmt`；文档表格或 MDX 加 `pnpm lint:docs` | 测试、typecheck |
+| 组件逻辑或渲染 | 改动文件的 lint、相关目录的单元测试；公开类型变化时加 typecheck；影响服务端输出时加对应的 SSR 项目 | 无关目录的测试 |
+| 布局、焦点、指针行为 | 在上一行基础上加相关目录的浏览器测试 |  |
+| 样式与主题 token | `pnpm lint:style`、`pnpm lint:rules`；视觉变化用 check-pages 扫相关页面 | 单元测试 |
+| 构建插件、发布形态 | `pnpm build`、`pnpm test:packed`、`pnpm test:plugins`，宿主相关时加 `pnpm test:hosts` |  |
+| 文档站代码与 demo | 改动文件的 lint；影响构建时跑文档站构建，影响页面时用 check-pages 扫相关页面 |  |
+
+- 全量测试、覆盖率和全站页面扫描在一批改动合入后跑一次，不为几行改动反复跑全套。
 - 完成声明要有本次实际运行的输出，未执行或无法验证的部分标 `UNKNOWN`。
 
 ## 交付
