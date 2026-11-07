@@ -6,8 +6,8 @@ import { scssStatements } from '#/lib/scss';
 
 const scssFiles = import.meta.glob<string>(
     [
-        '@fibrae/semi-foundation/*/{variables,animation}.scss',
-        '@fibrae/semi-ai-foundation/*/{variables,animation}.scss',
+        '@fibrae/semi-foundation/components/*/{variables,animation}.scss',
+        '@fibrae/semi-ai-foundation/components/*/{variables,animation}.scss',
     ],
     { query: '?raw', import: 'default', eager: true }
 );
