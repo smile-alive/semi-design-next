@@ -1,5 +1,22 @@
 # @fibrae/semi-ui-solid
 
+## 0.4.0
+
+### Minor Changes
+
+- cc2514e: Form 改为只提供具名导出（破坏性），`Form` 不再挂静态成员：`Form.Input` 等字段改为 `FormInput` 至 `FormPinCode`，`Form.Section`、`Form.Label`、`Form.ErrorMessage`、`Form.Slot`、`Form.InputGroup` 改为 `FormSection`、`FormLabel`、`FormErrorMessage`、`FormSlot`、`FormInputGroup`，`Form.useForm`、`Form.SchemaField` 改为 `useForm`、`SchemaField`。新增类型导出 `FormErrorMessageProps`。
+- 7cd2518: Form 新增 `schema` 属性，接受 Zod、Valibot、ArkType 等实现了 Standard Schema 的校验对象，与字段的 `validator`、`rules` 及 Form 的 `validator` 互斥；字段首次挂载时显示已有的错误，整表 `reset()` 清空全部错误
+- d1cdb20: Form 校验升级（破坏性）：错误一律为 `string[]`；删除 async-validator，`rules` 由自带规则引擎执行，默认文案来自语言包；字段 `rules` 与 `validator` 互斥，`validator` 可传 Standard Schema；`keepState` 默认开启并支持 ArrayField；有 `schema` 时必填星号只看 `label.required`；`FormApi` 区分输入与输出类型。新增 `schemaDebounce`、ArrayField 的 `move`、SchemaField 与 SchemaForm
+- 58996a3: 深路径调整（破坏性），包入口的导出不变。foundation 的组件目录移入 `components/`，如 `@fibrae/semi-foundation/button/button.scss` 改为 `@fibrae/semi-foundation/components/button/button.scss`；UI 与 AI 包的组件深路径不变，`_base/*`、`_utils/*` 等子路径改为 `base/*`、`utils/*` 与各框架的 hook 目录，AI 组件的子组件移入 `widgets/`；单个图标与插画的深路径改为导出名的 kebab-case，如 `@fibrae/semi-icons-react/icons/IconHome` 改为 `@fibrae/semi-icons-react/icons/icon-home`、`@fibrae/semi-illustrations-react/IllustrationNoContent` 改为 `@fibrae/semi-illustrations-react/illustration-no-content`；`@fibrae/semi-animation/styles/viewTransition.css` 改为 `@fibrae/semi-animation/styles/view-transition.css`。完整列表见 `docs/release-notes.md`。
+
+### Patch Changes
+
+- Updated dependencies [7cd2518]
+- Updated dependencies [d1cdb20]
+- Updated dependencies [58996a3]
+    - @fibrae/semi-foundation@0.4.0
+    - @fibrae/semi-icons-solid@0.4.0
+
 ## 0.3.1
 
 ### Patch Changes
