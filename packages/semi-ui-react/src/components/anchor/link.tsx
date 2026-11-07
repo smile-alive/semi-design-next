@@ -5,7 +5,7 @@ import { cssClasses } from '@fibrae/semi-foundation/components/anchor/constants'
 import isEnterPress from '@fibrae/semi-foundation/utils/is-enter-press';
 import type { ElementProps } from '../../base/base';
 import Typography from '../typography/index';
-import { AnchorContext, useAnchorContext } from './anchor-context';
+import { AnchorContext, useAnchorContext } from './context';
 
 const prefixCls = cssClasses.PREFIX;
 

@@ -11,9 +11,9 @@ import { ToastFactory } from '@fibrae/semi-ui-solid/toast/index';
 import hasContent from '@fibrae/semi-ui-solid/utils/has-content';
 import Container from './container';
 import type { SideBarProps } from './interface';
-import Options from './options';
-import CodeContent, { CodeItem, type CodeItemProps } from './widget/code';
-import FileContent, { FileItem, type FileItemProps } from './widget/file';
+import CodeContent, { CodeItem, type CodeItemProps } from './widgets/code';
+import FileContent, { FileItem, type FileItemProps } from './widgets/file';
+import Options from './widgets/options';
 
 const prefixCls = cssClasses.SIDEBAR;
 

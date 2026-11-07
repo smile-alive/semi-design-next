@@ -22,11 +22,11 @@
     import type { TooltipTriggerProps } from '@fibrae/semi-ui-svelte/tooltip/index';
     import { groupRole } from '@fibrae/semi-ui-svelte/utils/group-role';
     import Configure from './configure/configure.svelte';
-    import HorizontalScroller from './horizontal-scroller.svelte';
     import type { AIChatInputProps, AIChatInputSkillIconSnippetProps, AIChatInputSkillItemSnippetProps, AIChatInputSuggestionItemSnippetProps, AIChatInputTopSlotSnippetProps, Skill } from './interface.js';
-    import RichTextInput from './rich-text-input.svelte';
-    import SendButton from './send-button.svelte';
-    import UploadButton from './upload-button.svelte';
+    import HorizontalScroller from './widgets/horizontal-scroller.svelte';
+    import RichTextInput from './widgets/rich-text-input.svelte';
+    import SendButton from './widgets/send-button.svelte';
+    import UploadButton from './widgets/upload-button.svelte';
 
     type Foundation = AIChatInputFoundation<AIChatInputBaseProps>;
     type Adapter = AIChatInputAdapter<AIChatInputBaseProps>;

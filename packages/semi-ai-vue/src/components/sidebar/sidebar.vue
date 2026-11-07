@@ -14,8 +14,8 @@
     import Container from './container/container.vue';
     import type { ContainerHandle } from './container/interface';
     import type { SideBarEmits, SideBarOption, SideBarProps, SideBarSlots } from './interface';
-    import CodeItem from './widget/code-item.vue';
-    import FileItem from './widget/file-item.vue';
+    import CodeItem from './widgets/code-item.vue';
+    import FileItem from './widgets/file-item.vue';
 
     defineOptions({ name: 'Sidebar' });
 

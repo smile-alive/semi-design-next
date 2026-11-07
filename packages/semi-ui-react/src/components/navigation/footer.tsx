@@ -6,7 +6,7 @@ import '@fibrae/semi-foundation/components/navigation/navigation.scss';
 import type { ElementProps } from '../../base/base';
 import type { BaseProps } from '../../base/base-component';
 import CollapseButton from './collapse-button';
-import { useNavContext } from './nav-context';
+import { useNavContext } from './context';
 
 export interface NavFooterProps extends BaseProps, ElementProps<'div', 'onClick'> {
     collapseButton?: React.ReactNode;

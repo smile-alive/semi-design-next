@@ -7,7 +7,7 @@ import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
 import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import flattenChildren from '../../utils/flatten-children';
-import { DescriptionsContext, type DescriptionsAlign, type DescriptionLayout } from './descriptions-context';
+import { DescriptionsContext, type DescriptionsAlign, type DescriptionLayout } from './context';
 import Item, { type DescriptionsItemProps } from './item';
 
 export type { DescriptionsItemProps } from './item';

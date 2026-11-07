@@ -13,10 +13,10 @@ import elementTypeOf from '../../utils/element-type';
 import flattenChildren from '../../utils/flatten-children';
 import type { DropdownProps } from '../dropdown';
 import useLocale from '../locale/use-locale';
+import { NavContext } from './context';
 import Footer, { type NavFooterProps } from './footer';
 import Header, { type NavHeaderProps } from './header';
 import Item, { type NavItemProps, type ItemKey } from './item';
-import { NavContext } from './nav-context';
 import SubNav, { type SubNavProps } from './sub-nav';
 
 type Foundation = NavigationFoundation;

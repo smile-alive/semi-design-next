@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
-import ChatBoxAvatar from '../chat-box-avatar';
+import ChatBoxAvatar from '../widgets/chat-box-avatar';
 
 const hiddenCls = 'semi-chat-chatBox-avatar-hidden';
 

@@ -19,9 +19,9 @@
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import { groupRole } from '@fibrae/semi-ui-svelte/utils/group-role';
     import { setAIChatDialogueContext } from './context.js';
-    import DialogueHint from './dialogue-hint.svelte';
-    import Dialogue from './dialogue.svelte';
     import type { AIChatDialogueProps } from './interface.js';
+    import DialogueHint from './widgets/dialogue-hint.svelte';
+    import Dialogue from './widgets/dialogue.svelte';
 
     type Foundation = DialogueFoundation<DialogueBaseProps>;
     type Adapter = DialogueAdapter<DialogueBaseProps>;

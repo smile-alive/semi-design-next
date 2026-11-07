@@ -8,7 +8,7 @@ import { IconCode, IconFile } from '@fibrae/semi-icons-react';
 import { JsonViewer } from '@fibrae/semi-json-viewer-core';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import type { Option, SideBarProps } from '../interface';
-import type { CodeItemProps } from '../widget/code';
+import type { CodeItemProps } from '../widgets/code';
 
 const { Container, CodeContent, CodeItem } = Sidebar;
 

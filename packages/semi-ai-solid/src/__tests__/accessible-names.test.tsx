@@ -6,7 +6,7 @@ import { LocaleProvider } from '@fibrae/semi-ui-solid/locale/index';
 import type { UploadProps } from '@fibrae/semi-ui-solid/upload/index';
 import AIChatDialogue from '../components/ai-chat-dialogue';
 import AIChatInput from '../components/ai-chat-input';
-import ChatAttachment from '../components/chat/attachment';
+import ChatAttachment from '../components/chat/widgets/attachment';
 import Sidebar from '../components/sidebar';
 
 // Every name below is asserted against the Japanese pack, a locale that is neither the zh_CN default nor English

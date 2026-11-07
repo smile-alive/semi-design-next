@@ -10,8 +10,8 @@ import useFoundation from '../../base/use-foundation';
 import useIntersectionObserver from '../../hooks/use-intersection-observer';
 import useMergedRef from '../../hooks/use-merged-ref';
 import { namedRole } from '../../utils/named-role';
+import { PreviewContext } from './context';
 import type { PreviewProps, PreviewState } from './interface';
-import { PreviewContext } from './preview-context';
 import PreviewInner from './preview-inner';
 
 type Foundation = PreviewFoundation<PreviewProps, PreviewState>;

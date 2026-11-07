@@ -15,10 +15,10 @@ import LocaleConsumer from '@fibrae/semi-ui-react/locale/locale-consumer';
 import Toast from '@fibrae/semi-ui-react/toast/index';
 import type { UploadHandle } from '@fibrae/semi-ui-react/upload/index';
 import { namedRole } from '@fibrae/semi-ui-react/utils/named-role';
-import ChatContent from './chat-content';
-import Hint from './hint';
-import InputBox from './input-box';
 import type { ChatProps, InputBoxHandle } from './interface';
+import ChatContent from './widgets/chat-content';
+import Hint from './widgets/hint';
+import InputBox from './widgets/input-box';
 
 type Foundation = ChatFoundation;
 type Adapter = ChatAdapter<ChatProps>;

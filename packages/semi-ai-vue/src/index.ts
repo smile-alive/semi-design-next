@@ -108,4 +108,4 @@ export type { AnnotationProps, AnnotationEmits, AnnotationSlots, AnnotationItem,
 export { default as Sidebar } from './components/sidebar/index';
 export type { SidebarContainerHandle } from './components/sidebar/index';
 export type { SideBarProps, SideBarEmits, SideBarSlots, SideBarOption, SideBarDetailContent, SideBarOptionSlotProps, SideBarOptionItemSlotProps, SideBarMainContentSlotProps, SideBarDetailHeaderSlotProps, SideBarDetailContentSlotProps } from './components/sidebar/interface';
-export type { CodeItemProps, CodeItemSlots, FileItemProps, FileItemEmits, ImageUploadNodeOptions } from './components/sidebar/widget/interface';
+export type { CodeItemProps, CodeItemSlots, FileItemProps, FileItemEmits, ImageUploadNodeOptions } from './components/sidebar/widgets/interface';

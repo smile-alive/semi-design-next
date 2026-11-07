@@ -14,9 +14,9 @@ import Toast from '@fibrae/semi-ui-vue/toast/index';
 import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, endTransitions, render, sleep } from '@test/utils/vue';
 import AIChatDialogue from '..';
-import DialogueAvatar from '../dialogue-avatar.vue';
 import type { AIChatDialogueEmits, AIChatDialogueHandle, AIChatDialogueProps, DefaultActionNodeObj, MarkdownRenderProps, Message, Metadata } from '../interface';
 import ReferenceWidget from '../widgets/content-item/reference.vue';
+import DialogueAvatar from '../widgets/dialogue-avatar.vue';
 import ModelHost from './fixtures/model-host.vue';
 
 type Emit<K extends keyof AIChatDialogueEmits> = (...args: AIChatDialogueEmits[K]) => void;

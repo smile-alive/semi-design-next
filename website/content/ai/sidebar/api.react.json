@@ -377,7 +377,7 @@
         }
     },
     "code-content": {
-        "source": "packages/semi-ai-react/src/components/sidebar/widget/code.tsx",
+        "source": "packages/semi-ai-react/src/components/sidebar/widgets/code.tsx",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的代码面板 key，支持单个或多个。",
@@ -400,7 +400,7 @@
         }
     },
     "file-content": {
-        "source": "packages/semi-ai-react/src/components/sidebar/widget/file.tsx",
+        "source": "packages/semi-ai-react/src/components/sidebar/widgets/file.tsx",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的文件面板 key，支持单个或多个。",
@@ -423,7 +423,7 @@
         }
     },
     "code-item": {
-        "source": "packages/semi-ai-react/src/components/sidebar/widget/code.tsx#CodeItem",
+        "source": "packages/semi-ai-react/src/components/sidebar/widgets/code.tsx#CodeItem",
         "props": {
             "codeHighlightProps": {
                 "zh-CN": "CodeHighlight 的属性，在 `code` 与 `language` 之后展开。",
@@ -450,7 +450,7 @@
         }
     },
     "file-item": {
-        "source": "packages/semi-ai-react/src/components/sidebar/widget/file.tsx#FileItem",
+        "source": "packages/semi-ai-react/src/components/sidebar/widgets/file.tsx#FileItem",
         "props": {
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
             "content": {

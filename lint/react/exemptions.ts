@@ -38,7 +38,7 @@ export const reactExemptions: Exemption[] = [
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions', 'jsx-a11y/prefer-tag-over-role'],
     },
     {
-        files: ['packages/semi-ai-react/src/components/ai-chat-input/skill-item.tsx', 'packages/semi-ai-react/src/components/ai-chat-input/suggestion-item.tsx'],
+        files: ['packages/semi-ai-react/src/components/ai-chat-input/widgets/skill-item.tsx', 'packages/semi-ai-react/src/components/ai-chat-input/widgets/suggestion-item.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/interactive-supports-focus', 'jsx-a11y/prefer-tag-over-role'],
     },
     // Links are role="link" divs because an <a href> would write the hash
@@ -143,7 +143,7 @@ export const reactExemptions: Exemption[] = [
     },
     // The input area click only hands focus to the textarea
     {
-        files: ['packages/semi-ai-react/src/components/chat/input-box.tsx'],
+        files: ['packages/semi-ai-react/src/components/chat/widgets/input-box.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
     // role="heading" div because host pages style h3 outside Semi's layers; the row click is a pointer shortcut

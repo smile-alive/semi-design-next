@@ -10,7 +10,7 @@ import Annotation from '../annotation';
 import type { ContainerSolidProps, Option, SideBarProps } from '../interface';
 import MCPConfigure from '../mcp-configure';
 import Sidebar from '../sidebar';
-import type { CodeContentProps, CodeItemProps } from '../widget/code';
+import type { CodeContentProps, CodeItemProps } from '../widgets/code';
 
 const { Container, CodeContent, CodeItem } = Sidebar;
 

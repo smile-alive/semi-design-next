@@ -7,7 +7,7 @@ import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
 import type { ElementProps } from '../../base/base';
 import { hasContent } from '../../utils';
 import { Col } from '../grid';
-import { useListContext } from './list-context';
+import { useListContext } from './context';
 
 export interface ListItemProps extends ElementProps<'li'> {
     extra?: React.ReactNode;

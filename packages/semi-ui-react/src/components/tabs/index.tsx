@@ -10,12 +10,12 @@ import useDidUpdate from '../../hooks/use-did-update';
 import elementTypeOf from '../../utils/element-type';
 import flattenChildren from '../../utils/flatten-children';
 import { useConfigContext } from '../config-provider/context';
+import { TabsContext } from './context';
 import { getPanelId, getTabId } from './ids';
 import type { PlainTab, TabBarProps, TabPaneProps, TabsProps } from './interface';
 import TabBar from './tab-bar';
 import TabItem from './tab-item';
 import TabPane from './tab-pane';
-import { TabsContext } from './tabs-context';
 
 type Foundation = TabsFoundation<TabsProps, TabClickEvent>;
 type Adapter = TabsAdapter<TabsProps, TabClickEvent>;

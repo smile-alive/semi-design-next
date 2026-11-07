@@ -7,9 +7,9 @@ import { LocaleProvider } from '@fibrae/semi-ui-solid/locale/index';
 import type { FileItem, UploadProps } from '@fibrae/semi-ui-solid/upload/index';
 import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { mockResizeObserver, sleep } from '@test/utils/solid';
-import Code from '../code';
 import Chat from '../index';
 import type { ChatBoxRenderConfig, ChatElement, ChatHandle, ChatProps, DefaultActionNodeObj, MarkdownRenderProps, Message } from '../interface';
+import Code from '../widgets/code';
 
 type Props = Partial<ChatProps> & Record<string, unknown>;
 

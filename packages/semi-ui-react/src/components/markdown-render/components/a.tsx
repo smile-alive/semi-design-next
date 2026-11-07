@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 import Typography, { type TextProps } from '../../typography';
-import { LinkContext } from './link-context';
+import { LinkContext } from '../context';
 
 export default function a(props: PropsWithChildren<TextProps>) {
     return (

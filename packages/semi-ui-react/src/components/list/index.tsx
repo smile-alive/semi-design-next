@@ -13,8 +13,8 @@ import { namedRole } from '../../utils/named-role';
 import { Row } from '../grid';
 import LocaleConsumer from '../locale/locale-consumer';
 import Spin from '../spin';
+import { ListContext, type Grid } from './context';
 import ListItem from './item';
-import { ListContext, type Grid } from './list-context';
 
 export type { ListItemProps } from './item';
 

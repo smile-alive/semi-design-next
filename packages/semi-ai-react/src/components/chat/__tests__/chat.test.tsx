@@ -6,9 +6,9 @@ import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import type { FileItem, UploadProps } from '@fibrae/semi-ui-react/upload/index';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import { mockResizeObserver, sleep } from '@test/utils/react';
-import Code from '../code';
 import Chat, { type ChatHandle } from '../index';
 import type { ChatBoxRenderConfig, ChatProps, DefaultActionNodeObj, MarkdownRenderProps } from '../interface';
+import Code from '../widgets/code';
 
 type Props = ChatProps;
 

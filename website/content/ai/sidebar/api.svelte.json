@@ -410,7 +410,7 @@
         }
     },
     "code-content": {
-        "source": "packages/semi-ai-svelte/src/components/sidebar/widget/code-content.svelte",
+        "source": "packages/semi-ai-svelte/src/components/sidebar/widgets/code-content.svelte",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的代码面板 key，可用 `bind:activeKey` 绑定。",
@@ -439,7 +439,7 @@
         }
     },
     "code-item": {
-        "source": "packages/semi-ai-svelte/src/components/sidebar/widget/code-item.svelte",
+        "source": "packages/semi-ai-svelte/src/components/sidebar/widgets/code-item.svelte",
         "props": {
             "name": {
                 "zh-CN": "代码项名称，由 CodeContent 的面板头部和 Sidebar 的详情头部显示，CodeItem 自身不渲染。",
@@ -473,7 +473,7 @@
         }
     },
     "file-content": {
-        "source": "packages/semi-ai-svelte/src/components/sidebar/widget/file-content.svelte",
+        "source": "packages/semi-ai-svelte/src/components/sidebar/widgets/file-content.svelte",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的文件面板 key，可用 `bind:activeKey` 绑定。",
@@ -494,7 +494,7 @@
         }
     },
     "file-item": {
-        "source": "packages/semi-ai-svelte/src/components/sidebar/widget/file-item.svelte",
+        "source": "packages/semi-ai-svelte/src/components/sidebar/widgets/file-item.svelte",
         "props": {
             "name": {
                 "zh-CN": "文件名称，作为编辑区域的可访问名称，挂载后变化会同步到编辑器。",

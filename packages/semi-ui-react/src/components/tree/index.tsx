@@ -13,9 +13,9 @@ import { useConfigContext } from '../config-provider/context';
 import Input from '../input/index';
 import useLocale from '../locale/use-locale';
 import AutoSizer from './auto-sizer';
+import { TreeContext, type TreeContextValue } from './context';
 import type { TreeProps, TreeState, FlattenNode, TreeNodeProps } from './interface';
 import NodeList from './node-list';
-import { TreeContext, type TreeContextValue } from './tree-context';
 import TreeNode from './tree-node';
 import useTreeKeyboard from './use-tree-keyboard';
 

@@ -13,7 +13,7 @@ import ReactResizeObserver from '../../internal/resize-observer';
 import useLocale from '../locale/use-locale';
 import type { Position } from '../tooltip';
 import type { ShowTooltip } from '../typography/interface';
-import { AnchorContext } from './anchor-context';
+import { AnchorContext } from './context';
 import Link from './link';
 
 type Foundation = AnchorFoundation<AnchorProps, AnchorClickEvent>;

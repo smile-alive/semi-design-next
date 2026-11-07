@@ -13,9 +13,9 @@
     import { groupRole } from '@fibrae/semi-ui-vue/utils/group-role';
     import { handOnSlots } from '@fibrae/semi-ui-vue/utils/hand-on';
     import { provideAIChatDialogueContext } from './context';
-    import DialogueHint from './dialogue-hint.vue';
-    import Dialogue from './dialogue.vue';
     import type { AIChatDialogueEmits, AIChatDialogueHandle, AIChatDialogueProps, AIChatDialogueSlots } from './interface';
+    import DialogueHint from './widgets/dialogue-hint.vue';
+    import Dialogue from './widgets/dialogue.vue';
 
     type Foundation = DialogueFoundation<AIChatDialogueProps>;
     type Adapter = DialogueAdapter<AIChatDialogueProps>;

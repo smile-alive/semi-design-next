@@ -14,8 +14,8 @@ import Button from '@fibrae/semi-ui-solid/button/index';
 import { useFocusHandover, useLocale } from '@fibrae/semi-ui-solid/primitives';
 import mergeRefs from '@fibrae/semi-ui-solid/utils/merge-refs';
 import { AIChatDialogueContext, type AIChatDialogueContextValue } from './context';
-import Dialogue from './dialogue';
 import type { AIChatDialogueHandle, AIChatDialogueProps } from './interface';
+import Dialogue from './widgets/dialogue';
 import Hint from './widgets/dialogue-hint';
 
 type Foundation = DialogueFoundation<AIChatDialogueProps>;

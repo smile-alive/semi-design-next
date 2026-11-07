@@ -2,7 +2,7 @@
     import type { AnnotationInfo } from '../annotation/interface';
     import type { SideBarOption } from '../interface';
     import type { MCPConfigureOption } from '../mcp-configure/interface';
-    import type { CodeItemData } from '../widget/interface';
+    import type { CodeItemData } from '../widgets/interface';
 
     export interface BindHostStore {
         kind: 'container' | 'sidebar' | 'annotation' | 'mcp' | 'codes';

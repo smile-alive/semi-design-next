@@ -2,8 +2,8 @@ import { type ReactNode, memo, isValidElement } from 'react';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/table/constants';
 import { arrayAdd } from '@fibrae/semi-foundation/components/table/utils';
+import { useTableContext } from '../context';
 import type { ColumnProps, TableComponents, Virtualized, Fixed } from '../interface';
-import { useTableContext } from '../table-context';
 import TableRow from './base-row';
 
 export interface TableExpandedRowProps {

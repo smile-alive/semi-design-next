@@ -4,7 +4,7 @@
 
 ## 目录
 
-- 组件目录里的文件平铺，文件名就是它导出的组件或 hook（`chat-box-action.tsx`、`use-form-api.tsx`）。不建只放一个 `index` 的子目录，也不建 `hooks/`、`hoc/` 这类按种类分的子目录，相关文件用名字前缀归组。确实需要子目录时（Sidebar 的 `container/`、`annotation/`），四个框架用同样的子目录。`__tests__/` 与 `_` 开头的内部目录不受此限。
+- 组件目录的根只放入口组件（React 为 `index.tsx`，其他框架为与目录同名的组件文件）、`index`、`interface` 与 `context`；其余子组件和它们专用的辅助文件放 `widgets/`（`chat/widgets/chat-box-action.tsx`）。文件名就是它导出的组件或 hook。按功能独立成块的部分用自己的子目录（Sidebar 的 `container/`、`annotation/`，AIChatInput 的 `configure/`、`extension/`），不放进 `widgets/`。不建只放一个 `index` 的子目录，也不建 `hooks/`、`hoc/` 这类按种类分的子目录。AI 包已按这条整理；UI 包的组件目录仍是平铺，待迁移，见 [component-issues](../../docs/component-issues.md)。四个框架用同样的子目录。`__tests__/` 与 `_` 开头的内部目录不受此限。
 
 ## 组件内语句顺序
 

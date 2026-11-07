@@ -10,12 +10,12 @@ import useFoundation from '@fibrae/semi-ui-react/base/use-foundation';
 import Button from '@fibrae/semi-ui-react/button/index';
 import { useFocusHandover, useLocale } from '@fibrae/semi-ui-react/hooks';
 import { namedRole } from '@fibrae/semi-ui-react/utils/named-role';
-import DialogueItem from './dialogue';
 import type { AIChatDialogueHandle, AIChatDialogueProps } from './interface';
 import { AnnotationWidget } from './widgets/content-item/annotation';
 import Code from './widgets/content-item/code';
 import { DialogueStepWidget } from './widgets/content-item/dialogue-step';
 import { ReasoningWidget } from './widgets/content-item/reasoning';
+import DialogueItem from './widgets/dialogue';
 import Hint from './widgets/dialogue-hint';
 
 type Foundation = DialogueFoundation;

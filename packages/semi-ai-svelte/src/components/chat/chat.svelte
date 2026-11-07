@@ -24,11 +24,11 @@
     import { createToastHookApi } from '@fibrae/semi-ui-svelte/toast/use-toast';
     import type { FileItem } from '@fibrae/semi-ui-svelte/upload/interface';
     import { groupRole } from '@fibrae/semi-ui-svelte/utils/group-role';
-    import ChatBox from './chat-box.svelte';
     import { setChatContext } from './context.js';
-    import Hint from './hint.svelte';
-    import InputBox from './input-box.svelte';
     import type { ChatProps } from './interface.js';
+    import ChatBox from './widgets/chat-box.svelte';
+    import Hint from './widgets/hint.svelte';
+    import InputBox from './widgets/input-box.svelte';
 
     type Foundation = ChatFoundation<ChatProps>;
     type Adapter = ChatAdapter<ChatProps>;

@@ -17,7 +17,7 @@ import flattenChildren from '../../utils/flatten-children';
 import useLocale from '../locale/use-locale';
 import Popover from '../popover';
 import type { TooltipProps } from '../tooltip';
-import { BreadContext, type BreadContextType } from './bread-context';
+import { BreadContext, type BreadContextType } from './context';
 import BreadcrumbItem, { type BreadcrumbItemInfo, type BreadcrumbItemProps, type RouteProps } from './item';
 
 type Foundation = BreadcrumbFoundation<BreadcrumbProps>;

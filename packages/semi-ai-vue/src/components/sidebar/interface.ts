@@ -1,6 +1,6 @@
 import type { VNode } from 'vue';
 import type { ContainerEmits, ContainerProps } from './container/interface';
-import type { CodeItemData, CodeItemSlots, FileItemData, ImageUploadNodeOptions } from './widget/interface';
+import type { CodeItemData, CodeItemSlots, FileItemData, ImageUploadNodeOptions } from './widgets/interface';
 
 export interface SideBarOption {
     name: string;

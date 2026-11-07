@@ -16,8 +16,8 @@ import CSSAnimation from '../../internal/css-animation';
 import Collapsible from '../collapsible';
 import Dropdown, { type DropdownProps } from '../dropdown';
 import Tooltip from '../tooltip';
+import { NavContext, useNavContext } from './context';
 import { NavItemShell } from './item';
-import { NavContext, useNavContext } from './nav-context';
 import { fitNavIcon } from './nav-icon';
 
 type Foundation = SubNavFoundation;

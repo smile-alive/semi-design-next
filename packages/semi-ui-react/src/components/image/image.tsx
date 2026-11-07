@@ -11,8 +11,8 @@ import useMergedRef from '../../hooks/use-merged-ref';
 import useReplayImageEvents from '../../hooks/use-replay-image-events';
 import useLocale from '../locale/use-locale';
 import Skeleton from '../skeleton';
+import { usePreviewContext } from './context';
 import type { ImageProps } from './interface';
-import { usePreviewContext } from './preview-context';
 import PreviewInner from './preview-inner';
 
 type Foundation = ImageFoundation<ImageProps>;

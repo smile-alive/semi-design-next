@@ -1,9 +1,9 @@
 import Container from './container/container.vue';
 import Sidebar from './sidebar.vue';
-import CodeContent from './widget/code-content.vue';
-import CodeItem from './widget/code-item.vue';
-import FileContent from './widget/file-content.vue';
-import FileItem from './widget/file-item.vue';
+import CodeContent from './widgets/code-content.vue';
+import CodeItem from './widgets/code-item.vue';
+import FileContent from './widgets/file-content.vue';
+import FileItem from './widgets/file-item.vue';
 
 // Annotated so declaration emit refers to the SFC types instead of inlining Vue's GlobalComponents.
 const SidebarWithParts: typeof Sidebar & {
@@ -16,4 +16,4 @@ const SidebarWithParts: typeof Sidebar & {
 export default SidebarWithParts;
 export type { ContainerHandle as SidebarContainerHandle } from './container/interface';
 export type { SideBarProps, SideBarEmits, SideBarSlots, SideBarOption, SideBarDetailContent, SideBarOptionSlotProps, SideBarOptionItemSlotProps, SideBarMainContentSlotProps, SideBarDetailHeaderSlotProps, SideBarDetailContentSlotProps } from './interface';
-export type { CodeItemProps, CodeItemSlots, FileItemProps, FileItemEmits, ImageUploadNodeOptions } from './widget/interface';
+export type { CodeItemProps, CodeItemSlots, FileItemProps, FileItemEmits, ImageUploadNodeOptions } from './widgets/interface';

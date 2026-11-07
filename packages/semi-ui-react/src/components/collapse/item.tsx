@@ -9,7 +9,7 @@ import type { ElementProps } from '../../base/base';
 import useDefaultProps from '../../base/use-default-props';
 import { hasContent } from '../../utils';
 import Collapsible from '../collapsible';
-import { useCollapseContext } from './collapse-context';
+import { useCollapseContext } from './context';
 
 export interface CollapsePanelProps extends ElementProps<'div'> {
     itemKey: string;
