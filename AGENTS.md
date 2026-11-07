@@ -55,6 +55,7 @@
 ## 包与依赖
 
 - `packages/semi-foundation` 与框架无关，不依赖任何框架和 UI 包；组件逻辑放 foundation，各框架包用本框架的原生机制通过 adapter 接入，框架包之间不互相导入。
+- 组件包的 `src/` 只在顶层放入口文件：组件放 `components/`，框架适配层放 `base/`，通用 hook 放该框架的 hook 目录（React、Svelte 为 `hooks/`，Vue 为 `composables/`，Solid 为 `primitives/`），不导出的内部组件放 `internal/`，无状态工具放 `utils/`；各目录的职责与 `exports` 映射见 [CONTRIBUTING](CONTRIBUTING.md#目录结构)。
 - 同包模块用相对路径导入；跨 Semi 包用包名（`@fibrae/semi-*`），不用指向另一个包源码的相对路径。这两条由 lint 检查。
 - 文件属于哪个框架只看命名：框架包命名为 `semi-<名>-<框架>`；包外为某个框架写的文件命名为 `<框架>.*` 或 `*.<框架>.*`（如 `<框架>.setup.ts`、`*.<框架>.tsx`），框架自有的扩展名按扩展名归属，细则见该框架的 lint.md。其余文件属于通用范围，不导入任何框架的模块，由 lint 检查；`pnpm lint:scopes [文件...]` 查看归属。
 - Node 与 pnpm 的版本以 `mise.toml` 为准，根 `package.json` 的 `packageManager` 与之一致。共用依赖走 `pnpm-workspace.yaml` 的 catalog。

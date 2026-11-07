@@ -64,7 +64,18 @@ pnpm site:dev
 | `.agents/references/<框架>/` | 各框架的组件、测试、lint 与 website 写法，框架无关的写法见 `.agents/references/` 下的共享文件 |
 | [`website/`](website/README.zh-CN.md) | Astro 文档站，正文在 `website/content/<分类>/<页面>/index.<语言>.mdx` |
 
-各包的源码在 `src/`，`vp pack` 的产物在 `dist/`，含逐文件的 ESM、类型声明和组件 CSS，UI 包另有整包样式 `styles.css` 与 `tailwind.css`；发布的子路径与 `src/` 下的目录一一对应。
+各包的源码在 `src/`，`vp pack` 的产物在 `dist/`，含逐文件的 ESM、类型声明和组件 CSS，UI 包另有整包样式 `styles.css` 与 `tailwind.css`。组件包的 `src/` 按职责分目录：
+
+| 目录                 | foundation 包                         | UI 包与 AI 包                                                                                                 |
+| -------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `components/<组件>/` | 组件的 foundation、常量与 SCSS        | 组件实现，子路径省略 `components/`（如 `/button/index`）                                                      |
+| `base/`              | Foundation 基类、契约与有状态的共用类 | 框架适配层：`useFoundation`、`createContext`、全局默认值读取、弹层层级等                                      |
+| hook 目录            | -                                     | 通用 hook：React、Svelte 为 `hooks/`，Vue 为 `composables/`，Solid 为 `primitives/`，同名入口文件汇总公开导出 |
+| `internal/`          | -                                     | 不从根入口导出的内部组件（Portal、VirtualList、Sortable 等），不属于公开 API                                  |
+| `utils/`             | 无状态工具函数                        | 无状态工具与 `semi-global`                                                                                    |
+| `__tests__/`         | 跨组件测试                            | 跨组件测试；只测单个文件的用例放在该文件旁的 `__tests__/`                                                     |
+
+foundation 包另有 `locale/`、`theme/`。UI 包与 AI 包的 `exports` 先列入口文件和上述基础目录，其余子路径映射到 `dist/components/`；新增基础目录时同步 `package.json` 的 `exports`、`vite.semi.ts` 的别名、`vitest/<框架>/tsconfig.<框架>.json` 的 `paths` 与 `scripts/lint-private.ts`。
 
 ## 样式定制
 

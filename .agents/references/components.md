@@ -35,7 +35,7 @@
 - 默认值只填 `undefined`。回调 prop 不设 `noop` 默认值，调用处一律 `?.()`：默认值不覆盖使用方显式传入的 `null`，直接调用会抛 TypeError。判断使用方是否给了回调写 `Boolean(onX)`，不和 `noop` 比较。
 - foundation 拥有自己的 state：静态 `getInitialState(props)` 返回全部 state 键，foundation 用 `this.setState` 写入，需要等提交的写入用 `this.commitState(partial)`（返回提交后兑现的 Promise）。adapter 只写框架才做得到的事：读写 DOM、测量、聚焦、`notify*`、框架渲染的元素句柄、Svelte 的 bindable 回写；不写只转发 `setState` 或只读 state、prop 的方法。`getProps`、`setState` 等由 `base` 提供；adapter 接口用完整的 `DefaultAdapter<P, S>` 泛型（`Partial<DefaultAdapter>` 不满足约束）。组件不直接写 foundation 的 state 键，改调 foundation 方法。`setState` 后立即能读到新值，所以 foundation 里需要旧值做比较或通知时，要先读或先通知，再写。
 - prop 变化的反应写在 foundation：静态 `propKeys` 列出要响应的 prop（按内容比较的键在静态 `propEquals` 里给比较函数），宿主在其中任一键变化的那次提交后调用一次 `handlePropsChange(prev)`，`prev` 是这些键的旧值，`getProp` 读新值；挂载时不调用。组件不再为这些 prop 写 `useDidUpdate`、`watch`、`useWatch`。
-- 每个实例只做一次的副作用（autofocus、`defaultOpen`、默认展开与选中）写在 `initOnce()`，不在 `init()` 里加 `#initialized` 标志。`init()` 只建立挂载期的订阅，`destroy()` 撤销 `init()` 建立的全部内容：隐藏（React StrictMode 重放、`<Activity>`、经 `useKeepAliveFoundation` 接入的 Vue `<KeepAlive>`）就是 `destroy()`，重新显示就是 `init()`，foundation 不另写 `deactivate` 一类方法。`destroy()` 不写 state，打开的面板隐藏后仍是打开的：React 的 `<Activity>` 连 portal 一起隐藏，Vue 的 `_base/portal.vue` 与 Tooltip 在缓存期间把 Teleport 移回缓存子树，`useClickOutside` 在缓存期间不响应；`init()` 发现面板仍打开时重新挂上它需要的监听。组件不在 `onDeactivated` 里关面板。
+- 每个实例只做一次的副作用（autofocus、`defaultOpen`、默认展开与选中）写在 `initOnce()`，不在 `init()` 里加 `#initialized` 标志。`init()` 只建立挂载期的订阅，`destroy()` 撤销 `init()` 建立的全部内容：隐藏（React StrictMode 重放、`<Activity>`、经 `useKeepAliveFoundation` 接入的 Vue `<KeepAlive>`）就是 `destroy()`，重新显示就是 `init()`，foundation 不另写 `deactivate` 一类方法。`destroy()` 不写 state，打开的面板隐藏后仍是打开的：React 的 `<Activity>` 连 portal 一起隐藏，Vue 的 `internal/portal.vue` 与 Tooltip 在缓存期间把 Teleport 移回缓存子树，`useClickOutside` 在缓存期间不响应；`init()` 发现面板仍打开时重新挂上它需要的监听。组件不在 `onDeactivated` 里关面板。
 - foundation 不直接调用 props 上的事件回调，统一经 adapter 的 `notify*` 方法发出（如 `this.adapter.notifyChange(value)`），由 adapter 负责调用 props 回调，写法参照同组件已有的 `notify*`（`base.getProps().onX?.(...)`）；回调的返回值被 foundation 使用时（Promise、boolean），`notify*` 原样返回。布尔和配置型 props（`onChangeWithObject`）与参与计算的数据函数（`loadData`、`column.onFilter`）不在此列。
 - 必须和 props 在同一次提交里生效的派生状态（如 Collapsible 的高度与过渡 class；分两次提交会让过渡以 0ms 生效），用渲染期比较加条件 setState：新值和旧值不同时才调用，下一轮就收敛。
 - 渲染期要用的 foundation 逻辑写成静态纯函数直接调用（如 `Foundation.getInitialState`），不经过 foundation 实例：渲染期从实例上读到的 props 可能是上一轮的值。只有无状态计算、不需要 adapter 的逻辑写成 foundation 里的普通函数，不继承 `BaseFoundation`，组件直接调用（Highlight 的 `findAll`、Descriptions 的 `getHorizontalList`）。
@@ -67,7 +67,7 @@
     - 捕获后的事件仍冒泡到祖先，祖先上的同类处理要按自己的拖动状态判断。捕获期间不发兼容的 mouseleave，按住后移出不能靠它结束。
     - 拖动面设 `touch-action: none`，样式里写明原因。
     - foundation 只读 `pointerId`、`clientX/Y` 与 `currentTarget` 时，参数类型用 `Pick<PointerEvent, ...>`；事件要原样交给使用方回调时传 `e.nativeEvent`，捕获在组件里做（`nativeEvent.currentTarget` 不是被按下的元素）。
-- 判断插槽类 prop（`prefix`、`suffix`、`insetLabel`、`addonBefore` 等）是否渲染用 `_utils` 的 `hasContent(node)`（`null`、`undefined`、布尔与 `''` 不渲染，`0` 照常渲染），不用真值判断；`-text` 类用 `isText(node)`，数字与字符串都算文字。
+- 判断插槽类 prop（`prefix`、`suffix`、`insetLabel`、`addonBefore` 等）是否渲染用 `utils` 的 `hasContent(node)`（`null`、`undefined`、布尔与 `''` 不渲染，`0` 照常渲染），不用真值判断；`-text` 类用 `isText(node)`，数字与字符串都算文字。
 
 ## 子组件识别
 
@@ -75,7 +75,7 @@
 
 ## context
 
-- 用 `_base/create-context.ts` 的 `createContext<T>(name, options?)` 创建，导出 `[XxxContext, useXxxContext]`，`name` 用提供方组件名。默认必选：没有 provider 时读取抛出「`caller` must be used inside `name`」，不手写抛错包装；子组件离开父组件也能用时传 `{ optional: true }`，返回 `undefined`；缺 provider 时有真实可用的值（ConfigProvider 的 `{}`、Typography 的 `'normal'`）传 `{ defaultValue }`。不用 `null`、`{} as X` 冒充默认值；唯一例外是 FormApi，公开的 `useFormApi` 返回类型不含 `undefined`，在 Form 外沿用空对象。
+- 用 `base/create-context.ts` 的 `createContext<T>(name, options?)` 创建，导出 `[XxxContext, useXxxContext]`，`name` 用提供方组件名。默认必选：没有 provider 时读取抛出「`caller` must be used inside `name`」，不手写抛错包装；子组件离开父组件也能用时传 `{ optional: true }`，返回 `undefined`；缺 provider 时有真实可用的值（ConfigProvider 的 `{}`、Typography 的 `'normal'`）传 `{ defaultValue }`。不用 `null`、`{} as X` 冒充默认值；唯一例外是 FormApi，公开的 `useFormApi` 返回类型不含 `undefined`，在 Form 外沿用空对象。
 - 值形态与提供方、读取方的写法见各框架文件。
 
 ## 类型与体积
@@ -87,7 +87,7 @@
 ## 组值回落
 
 - 父组件经 context 下发、子组件自身值优先的 prop（如 Button 的 size、type、disabled 由 ButtonGroup 下发），默认值写 `undefined`，不用工厂默认值（工厂默认值会让缺省时读到全局值，组值无法生效）。派生时按「自身值 -> 组值 -> 全局默认值 -> 兜底值」回落。
-- 组配置会穿过弹层的 Teleport 或 Portal，消费方用 `_base/popup-layer.ts` 的 `usePopupLayer()` 比较弹层层级，只继承同一层级的组。
+- 组配置会穿过弹层的 Teleport 或 Portal，消费方用 `base/popup-layer.ts` 的 `usePopupLayer()` 比较弹层层级，只继承同一层级的组。
 
 ## 无障碍与语言包
 
