@@ -1,6 +1,6 @@
 {
     "select": {
-        "source": "packages/semi-ui-react/src/select/index.tsx",
+        "source": "packages/semi-ui-react/src/components/select/index.tsx",
         "props": {
             "allowCreate": {
                 "zh-CN": "是否允许创建下拉列表中不存在的条目，需配合 `filter` 使用。创建时触发 `onCreate`，创建项的内容可用 `renderCreateItem` 自定义。",
@@ -339,7 +339,7 @@
         }
     },
     "select-option": {
-        "source": "packages/semi-ui-react/src/select/option.tsx",
+        "source": "packages/semi-ui-react/src/components/select/option.tsx",
         "props": {
             "children": {
                 "zh-CN": "选项的内容。未设置 `label` 时作为展示的内容。",
@@ -376,7 +376,7 @@
         }
     },
     "select-opt-group": {
-        "source": "packages/semi-ui-react/src/select/option-group.tsx",
+        "source": "packages/semi-ui-react/src/components/select/option-group.tsx",
         "props": {
             "children": {
                 "zh-CN": "分组内的选项，即 `Select.Option`。",

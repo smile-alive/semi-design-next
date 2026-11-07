@@ -1,6 +1,6 @@
 {
     "cascader": {
-        "source": "packages/semi-ui-react/src/cascader/index.tsx",
+        "source": "packages/semi-ui-react/src/components/cascader/index.tsx",
         "props": {
             "arrowIcon": {
                 "zh-CN": "自定义右侧下拉箭头，传入 `null` 时不显示箭头。`showClear` 开启且有选中值时，悬停优先显示清除按钮。",

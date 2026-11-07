@@ -1,0 +1,22 @@
+import React from 'react';
+import type { ResponsiveMap, BreakpointScreens, OnBreakpointScreensCallback, OnBreakpointChangeCallback, Breakpoint } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
+import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import { createContext } from '../../base/create-context';
+
+export interface ContextValue {
+    direction?: 'ltr' | 'rtl';
+    timeZone?: string | number;
+    /** `null` clears the locale inherited from an enclosing ConfigProvider, letting a LocaleProvider below take effect */
+    locale?: Locale | null;
+    children?: React.ReactNode;
+    getPopupContainer?: () => HTMLElement;
+    responsiveObserve?: boolean;
+    responsiveMap?: ResponsiveMap;
+    onBreakpoint?: {
+        (callback: OnBreakpointScreensCallback): () => void;
+        (breakpoints: Breakpoint[], callback: OnBreakpointChangeCallback): () => void;
+    };
+    screens?: BreakpointScreens;
+}
+
+export const [ConfigContext, useConfigContext] = createContext<ContextValue>('ConfigProvider', { defaultValue: {} });

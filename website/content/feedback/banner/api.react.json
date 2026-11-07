@@ -1,6 +1,6 @@
 {
     "banner": {
-        "source": "packages/semi-ui-react/src/banner/index.tsx",
+        "source": "packages/semi-ui-react/src/components/banner/index.tsx",
         "props": {
             "bordered": {
                 "zh-CN": "是否展示边框，仅在非全屏模式下有效，默认不展示。",

@@ -5,8 +5,8 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
 import { Sidebar } from '@fibrae/semi-ai-react';
 import { Toast } from '@fibrae/semi-ui-react';
-import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import type { UploadProps } from '@fibrae/semi-ui-react/upload/index';
+import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import type { FileItemProps } from '../widget/file';
 
 const { FileItem, FileContent } = Sidebar;

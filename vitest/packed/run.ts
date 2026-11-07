@@ -364,7 +364,7 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
     // Component and token stylesheets live in semi-foundation; semi-ui-react only imports them
     assert.ok(cssFiles.includes('semi-foundation/dist/base/tokens.css'), 'semi-foundation ships the token entry as dist/base/tokens.css');
     assert.ok(
-        cssFiles.some((file) => file.startsWith('semi-foundation/dist/button/')),
+        cssFiles.some((file) => file.startsWith('semi-foundation/dist/components/button/')),
         'semi-foundation ships component CSS'
     );
     // The theme is loaded only through semi:theme, so it ships as SCSS
@@ -491,7 +491,7 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
 
     const startsWithUseClient = (distDir: string, file: string) => /^["']use client["']/.test(fs.readFileSync(path.join(distDir, file), 'utf-8').slice(0, 20));
     // The root entry only re-exports, and the locale re-exports are plain data
-    const isUnmarked = (file: string) => file === 'index.js' || file.startsWith('locale/source/');
+    const isUnmarked = (file: string) => file === 'index.js' || file.startsWith('components/locale/source/');
     for (const name of ['semi-ui-react', 'semi-ai-react']) {
         const distDir = path.join(scope, name, 'dist');
         const missing = fs.globSync('**/*.js', { cwd: distDir }).filter((file) => !isUnmarked(file) && !startsWithUseClient(distDir, file));
@@ -515,8 +515,8 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
                 assert.ok(fs.existsSync(fileURLToPath(url)), `${url} exists`);
                 return url.replace(/^.*\/@fibrae\//, '');
             });
-    assert.deepStrictEqual(resolveLocale([]), ['semi-ui-react/dist/locale/source/en_US.js', 'semi-ui-vue/dist/locale/source/en_US.js', 'semi-ui-solid/dist/locale/source/en_US.js'], 'the locale subpath resolves by default');
-    assert.deepStrictEqual(resolveLocale(['--conditions=solid']), ['semi-ui-react/dist/locale/source/en_US.js', 'semi-ui-vue/dist/locale/source/en_US.js', 'semi-ui-solid/dist/locale/source/en_US.jsx'], 'the locale subpath resolves under the solid condition');
+    assert.deepStrictEqual(resolveLocale([]), ['semi-ui-react/dist/components/locale/source/en_US.js', 'semi-ui-vue/dist/locale/source/en_US.js', 'semi-ui-solid/dist/locale/source/en_US.js'], 'the locale subpath resolves by default');
+    assert.deepStrictEqual(resolveLocale(['--conditions=solid']), ['semi-ui-react/dist/components/locale/source/en_US.js', 'semi-ui-vue/dist/locale/source/en_US.js', 'semi-ui-solid/dist/locale/source/en_US.jsx'], 'the locale subpath resolves under the solid condition');
 }
 
 // The app's own copies, typed by the workspace sources they were packed from

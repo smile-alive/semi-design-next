@@ -1,6 +1,6 @@
 {
     "anchor": {
-        "source": "packages/semi-ui-react/src/anchor/index.tsx",
+        "source": "packages/semi-ui-react/src/components/anchor/index.tsx",
         "props": {
             "aria-label": {
                 "zh-CN": "根导航元素的可访问名称，未设置时使用语言包中的文案。",
@@ -85,7 +85,7 @@
         }
     },
     "anchor-link": {
-        "source": "packages/semi-ui-react/src/anchor/link.tsx",
+        "source": "packages/semi-ui-react/src/components/anchor/link.tsx",
         "props": {
             "children": {
                 "zh-CN": "下一级的 `Anchor.Link`，仅在链接展开时渲染。",

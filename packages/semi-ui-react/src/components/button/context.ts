@@ -1,0 +1,36 @@
+import { inheritGroupLooks } from '@fibrae/semi-foundation/components/button/utils';
+import { createContext } from '../../base/create-context';
+import { usePopupLayer } from '../../base/popup-layer';
+import { useInputGroupInScope } from '../input/context';
+import type { ButtonProps } from './button';
+
+export type ButtonGroupLooks = Pick<ButtonProps, 'disabled' | 'size' | 'type' | 'theme' | 'colorful'>;
+
+export interface ButtonGroupContextType extends ButtonGroupLooks {
+    /** Popup layer the group was rendered in; buttons inside a popup opened from the group do not inherit. */
+    layer?: symbol;
+}
+
+export const [ButtonGroupContext, useButtonGroupContext] = createContext<ButtonGroupContextType>('ButtonGroup', { optional: true });
+
+/** The enclosing ButtonGroup's values, unless a popup layer lies between the group and the caller */
+export function useButtonGroupLooks(): ButtonGroupLooks | undefined {
+    const group = useButtonGroupContext();
+    const layer = usePopupLayer();
+    return group?.layer === layer ? group : undefined;
+}
+
+/** What a button or nested group inherits: the enclosing ButtonGroup, whose unset size and disabled come from an InputGroup */
+export function useInheritedButtonLooks(): ButtonGroupLooks | undefined {
+    const group = useButtonGroupLooks();
+    const input = useInputGroupInScope();
+    return group ? inheritGroupLooks(group, input) : input;
+}
+
+/** Fills the button's unset looks from the group; applied before global defaults, so own -> group -> global as in Vue */
+export function withGroupLooks<P extends ButtonGroupLooks>(own: P, group?: ButtonGroupLooks) {
+    if (!group) {
+        return own;
+    }
+    return { ...own, ...inheritGroupLooks(own, group) };
+}

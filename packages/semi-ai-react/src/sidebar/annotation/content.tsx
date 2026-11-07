@@ -2,7 +2,7 @@ import React, { type ReactNode, Fragment } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import { IconBookOpenStroked } from '@fibrae/semi-icons-react';
-import type { ElementProps } from '@fibrae/semi-ui-react/_base/base';
+import type { ElementProps } from '@fibrae/semi-ui-react/base/base';
 import Collapse from '@fibrae/semi-ui-react/collapse/index';
 import Item, { type AnnotationItem, VideoItem } from './item';
 

@@ -1,6 +1,6 @@
 {
     "user-guide": {
-        "source": "packages/semi-ui-react/src/user-guide/index.tsx",
+        "source": "packages/semi-ui-react/src/components/user-guide/index.tsx",
         "props": {
             "children": {
                 "zh-CN": "组件不渲染 children，传入的内容会被忽略。",

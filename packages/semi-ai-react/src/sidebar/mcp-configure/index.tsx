@@ -1,4 +1,4 @@
-import useDefaultProps from '@fibrae/semi-ui-react/_base/use-default-props';
+import useDefaultProps from '@fibrae/semi-ui-react/base/use-default-props';
 import { useLocale } from '@fibrae/semi-ui-react/hooks';
 import Container from '../container';
 import type { ContainerReactProps } from '../interface';

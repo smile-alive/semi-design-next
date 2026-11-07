@@ -1,6 +1,6 @@
 {
     "rating": {
-        "source": "packages/semi-ui-react/src/rating/index.tsx",
+        "source": "packages/semi-ui-react/src/components/rating/index.tsx",
         "props": {
             "aria-invalid": { "zh-CN": "是否校验失败，设置在根元素的 `aria-invalid` 上。", "en-US": "Whether validation failed, set as `aria-invalid` on the root element." },
             "aria-required": { "zh-CN": "是否必填，设置在根元素的 `aria-required` 上。", "en-US": "Whether a value is required, set as `aria-required` on the root element." },

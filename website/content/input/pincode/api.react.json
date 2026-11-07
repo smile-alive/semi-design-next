@@ -1,6 +1,6 @@
 {
     "pin-code": {
-        "source": "packages/semi-ui-react/src/pincode/index.tsx",
+        "source": "packages/semi-ui-react/src/components/pincode/index.tsx",
         "props": {
             "autoFocus": {
                 "zh-CN": "挂载时是否聚焦第一个输入框。只在用户明确进入验证码输入步骤时开启，页面加载时自动聚焦会让读屏跳过之前的内容。",

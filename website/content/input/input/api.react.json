@@ -1,6 +1,6 @@
 {
     "input": {
-        "source": "packages/semi-ui-react/src/input/index.tsx",
+        "source": "packages/semi-ui-react/src/components/input/index.tsx",
         "props": {
             "aria-label": { "zh-CN": "原生 input 的 `aria-label`。", "en-US": "`aria-label` of the native input." },
             "aria-describedby": { "zh-CN": "原生 input 的 `aria-describedby`。", "en-US": "`aria-describedby` of the native input." },
@@ -148,7 +148,7 @@
         }
     },
     "text-area": {
-        "source": "packages/semi-ui-react/src/input/textarea.tsx",
+        "source": "packages/semi-ui-react/src/components/input/textarea.tsx",
         "props": {
             "autoFocus": { "zh-CN": "挂载后自动获得焦点。", "en-US": "Focuses the textarea on mount." },
             "autosize": {
@@ -257,7 +257,7 @@
         }
     },
     "input-group": {
-        "source": "packages/semi-ui-react/src/input/input-group.tsx",
+        "source": "packages/semi-ui-react/src/components/input/input-group.tsx",
         "props": {
             "disabled": {
                 "zh-CN": "是否禁用，组内任意深度未自行设置 `disabled` 的控件取这个值。",

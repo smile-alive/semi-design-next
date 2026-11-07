@@ -1,6 +1,6 @@
 {
     "config-provider": {
-        "source": "packages/semi-ui-react/src/config-provider/index.tsx",
+        "source": "packages/semi-ui-react/src/components/config-provider/index.tsx",
         "props": {
             "children": {
                 "zh-CN": "受该配置影响的内容。显式传入的 `direction` 与外层不同时（含最外层），内容外包一层带 `dir` 属性的 `div`。",

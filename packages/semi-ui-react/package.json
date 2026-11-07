@@ -18,7 +18,13 @@
         "./styles.css": "./dist/styles.css",
         "./tailwind.css": "./dist/tailwind.css",
         "./package.json": "./package.json",
-        "./*": "./dist/*.js"
+        "./hooks": "./dist/hooks.js",
+        "./tokens": "./dist/tokens.js",
+        "./base/*": "./dist/base/*.js",
+        "./hooks/*": "./dist/hooks/*.js",
+        "./internal/*": "./dist/internal/*.js",
+        "./utils/*": "./dist/utils/*.js",
+        "./*": "./dist/components/*.js"
     },
     "scripts": {
         "build": "vp pack"

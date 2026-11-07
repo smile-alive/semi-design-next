@@ -1,6 +1,6 @@
 {
     "tabs": {
-        "source": "packages/semi-ui-react/src/tabs/index.tsx",
+        "source": "packages/semi-ui-react/src/components/tabs/index.tsx",
         "props": {
             "activeKey": {
                 "zh-CN": "当前激活的标签页的 itemKey，受控。传 `null` 时不激活任何标签页，仍是受控；不传或为 `undefined` 时按非受控处理。",
@@ -101,7 +101,7 @@
         }
     },
     "tab-pane": {
-        "source": "packages/semi-ui-react/src/tabs/tab-pane.tsx",
+        "source": "packages/semi-ui-react/src/components/tabs/tab-pane.tsx",
         "props": {
             "children": { "zh-CN": "面板内容。", "en-US": "Panel content." },
             "className": {
@@ -134,7 +134,7 @@
         }
     },
     "tab-item": {
-        "source": "packages/semi-ui-react/src/tabs/tab-item.tsx",
+        "source": "packages/semi-ui-react/src/components/tabs/tab-item.tsx",
         "props": {
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
             "closable": { "zh-CN": "是否显示关闭按钮。", "en-US": "Whether to show the close button." },

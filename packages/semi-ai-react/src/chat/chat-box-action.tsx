@@ -5,7 +5,7 @@ import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
 import { IconThumbUpStroked, IconDeleteStroked, IconCopyStroked, IconLikeThumb, IconRedoStroked } from '@fibrae/semi-icons-react';
-import useFoundation from '@fibrae/semi-ui-react/_base/use-foundation';
+import useFoundation from '@fibrae/semi-ui-react/base/use-foundation';
 import Button from '@fibrae/semi-ui-react/button/index';
 import { useLocale } from '@fibrae/semi-ui-react/hooks';
 import LocaleConsumer from '@fibrae/semi-ui-react/locale/locale-consumer';

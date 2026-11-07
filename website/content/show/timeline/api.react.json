@@ -1,6 +1,6 @@
 {
     "timeline": {
-        "source": "packages/semi-ui-react/src/timeline/index.tsx",
+        "source": "packages/semi-ui-react/src/components/timeline/index.tsx",
         "props": {
             "children": {
                 "zh-CN": "时间轴的节点，通常为 `Timeline.Item`；dataSource 非空时被忽略。",
@@ -29,7 +29,7 @@
         }
     },
     "timeline-item": {
-        "source": "packages/semi-ui-react/src/timeline/item.tsx",
+        "source": "packages/semi-ui-react/src/components/timeline/item.tsx",
         "props": {
             "children": {
                 "zh-CN": "节点内容。",

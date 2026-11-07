@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Step } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { IconStoryStroked, IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-react';
-import type { ElementProps } from '@fibrae/semi-ui-react/_base/base';
+import type { ElementProps } from '@fibrae/semi-ui-react/base/base';
 import Collapsible from '@fibrae/semi-ui-react/collapsible/index';
 
 const prefixCls = cssClasses.PREFIX_STEP;
