@@ -1,6 +1,6 @@
 {
     "ai-chat-input": {
-        "source": "packages/semi-ai-svelte/src/components/ai-chat-input/ai-chat-input.svelte",
+        "source": "packages/svelte/ai/src/components/ai-chat-input/ai-chat-input.svelte",
         "props": {
             "actionArea": {
                 "zh-CN": "自定义底部操作区域的 snippet，参数 `upload` 为上传节点（showUploadButton 为 false 时是隐藏的 Upload，仍需渲染才能粘贴上传）、`send` 为发送或停止按钮，均是 snippet，用 `{@render}` 渲染；`class` 为操作区域的类名。",

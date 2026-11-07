@@ -1,6 +1,6 @@
 {
     "tooltip": {
-        "source": "packages/semi-ui-vue/src/components/tooltip/tooltip.vue",
+        "source": "packages/vue/ui/src/components/tooltip/tooltip.vue",
         "props": {
             "motion": { "zh-CN": "是否展示弹出层动画。", "en-US": "Whether the popup is animated." },
             "autoAdjustOverflow": {

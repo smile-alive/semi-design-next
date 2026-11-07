@@ -1,6 +1,6 @@
 {
     "select": {
-        "source": "packages/semi-ui-solid/src/components/select/select.tsx",
+        "source": "packages/solid/ui/src/components/select/select.tsx",
         "props": {
             "allowCreate": {
                 "zh-CN": "是否允许创建下拉列表中不存在的条目，需配合 filter 使用。创建时触发 onCreate，条目的渲染可用 renderCreateItem 定制。",
@@ -319,7 +319,7 @@
         }
     },
     "select-option": {
-        "source": "packages/semi-ui-solid/src/components/select/option.tsx",
+        "source": "packages/solid/ui/src/components/select/option.tsx",
         "props": {
             "children": {
                 "zh-CN": "选项在下拉列表与回显中的内容，设置后代替 label 显示，可以是任意 JSX。它不参与搜索，也不作为回调里的 label；需要搜索时同时传 label。",
@@ -352,7 +352,7 @@
         }
     },
     "select-opt-group": {
-        "source": "packages/semi-ui-solid/src/components/select/option-group.ts",
+        "source": "packages/solid/ui/src/components/select/option-group.ts",
         "props": {
             "children": {
                 "zh-CN": "分组内的选项，只能是 `Select.Option`。",

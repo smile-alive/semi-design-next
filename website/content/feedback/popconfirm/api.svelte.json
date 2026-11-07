@@ -1,6 +1,6 @@
 {
     "popconfirm": {
-        "source": "packages/semi-ui-svelte/src/components/popconfirm/popconfirm.svelte",
+        "source": "packages/svelte/ui/src/components/popconfirm/popconfirm.svelte",
         "props": {
             "aria-describedby": {
                 "zh-CN": "对话框的 aria-describedby，缺省在同时有标题和内容时指向内容。",

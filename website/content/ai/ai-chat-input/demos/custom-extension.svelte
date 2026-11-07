@@ -321,13 +321,13 @@
             type: 'file',
             id: '1',
             name: 'horizontalScroller.tsx',
-            path: 'packages/semi-ui-react/AIChatInput/horizontalScroller.tsx',
+            path: 'packages/react/ui/AIChatInput/horizontalScroller.tsx',
         },
         {
             type: 'folder',
             id: '2',
             name: 'AIChatInput',
-            path: 'packages/semi-ui-react/AIChatInput',
+            path: 'packages/react/ui/AIChatInput',
         },
         {
             type: 'web',

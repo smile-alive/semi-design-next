@@ -1,6 +1,6 @@
 {
     "markdown-render": {
-        "source": "packages/semi-ui-react/src/components/markdown-render/index.tsx",
+        "source": "packages/react/ui/src/components/markdown-render/index.tsx",
         "props": {
             "className": {
                 "zh-CN": "根元素 `div` 的类名，与组件自身的类名合并。",

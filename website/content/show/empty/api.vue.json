@@ -1,6 +1,6 @@
 {
     "empty": {
-        "source": "packages/semi-ui-vue/src/components/empty/empty.vue",
+        "source": "packages/vue/ui/src/components/empty/empty.vue",
         "props": {
             "layout": {
                 "zh-CN": "布局模式，可选 vertical、horizontal。",

@@ -1,6 +1,6 @@
 {
     "back-top": {
-        "source": "packages/semi-ui-vue/src/components/backtop/backtop.vue",
+        "source": "packages/vue/ui/src/components/backtop/backtop.vue",
         "props": {
             "badge": {
                 "zh-CN": "徽章参数，同 FloatButton。",

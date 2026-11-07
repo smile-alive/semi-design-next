@@ -1,6 +1,6 @@
 {
     "scroll-list": {
-        "source": "packages/semi-ui-react/src/components/scroll-list/index.tsx",
+        "source": "packages/react/ui/src/components/scroll-list/index.tsx",
         "props": {
             "bodyHeight": {
                 "zh-CN": "列表主体的高度，数字单位为 px；未设置时由样式表决定。",
@@ -37,7 +37,7 @@
         }
     },
     "scroll-item": {
-        "source": "packages/semi-ui-react/src/components/scroll-list/scroll-item.tsx",
+        "source": "packages/react/ui/src/components/scroll-list/scroll-item.tsx",
         "props": {
             "className": {
                 "zh-CN": "根元素的类名。",

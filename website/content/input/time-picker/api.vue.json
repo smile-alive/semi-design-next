@@ -1,6 +1,6 @@
 {
     "time-picker": {
-        "source": "packages/semi-ui-vue/src/components/time-picker/time-picker.vue",
+        "source": "packages/vue/ui/src/components/time-picker/time-picker.vue",
         "props": {
             "modelValue": {
                 "zh-CN": "当前时间，配合 v-model 使用；type 为 timeRange 时为数组。传 null 是受控的空值，undefined 视为非受控。",

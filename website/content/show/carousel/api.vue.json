@@ -1,6 +1,6 @@
 {
     "carousel": {
-        "source": "packages/semi-ui-vue/src/components/carousel/carousel.vue",
+        "source": "packages/vue/ui/src/components/carousel/carousel.vue",
         "props": {
             "activeIndex": {
                 "zh-CN": "当前展示的索引，配合 v-model:activeIndex 使用；传 undefined 时交还控制权，从最后一次受控的索引继续。",

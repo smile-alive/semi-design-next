@@ -1,6 +1,6 @@
 {
     "audio-player": {
-        "source": "packages/semi-ui-react/src/components/audio-player/index.tsx",
+        "source": "packages/react/ui/src/components/audio-player/index.tsx",
         "props": {
             "audioUrl": {
                 "zh-CN": "音频地址，可以是字符串、`AudioInfo` 对象，或由它们组成的数组；传入数组时显示上一首、下一首按钮。",

@@ -1,6 +1,6 @@
 {
     "highlight": {
-        "source": "packages/semi-ui-react/src/components/highlight/index.ts",
+        "source": "packages/react/ui/src/components/highlight/index.ts",
         "props": {
             "autoEscape": {
                 "zh-CN": "是否自动转义 `searchWords` 中的正则特殊字符。关闭后 `searchWords` 按正则表达式匹配。",

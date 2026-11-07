@@ -1,6 +1,6 @@
 {
     "nav": {
-        "source": "packages/semi-ui-react/src/components/navigation/index.tsx",
+        "source": "packages/react/ui/src/components/navigation/index.tsx",
         "props": {
             "bodyStyle": {
                 "zh-CN": "导航项列表的自定义样式。",
@@ -129,7 +129,7 @@
         }
     },
     "nav-item": {
-        "source": "packages/semi-ui-react/src/components/navigation/item.tsx",
+        "source": "packages/react/ui/src/components/navigation/item.tsx",
         "props": {
             "className": {
                 "zh-CN": "导航项的自定义类名，传入后替代默认的 `semi-navigation-item-normal`。",
@@ -218,7 +218,7 @@
         }
     },
     "sub-nav": {
-        "source": "packages/semi-ui-react/src/components/navigation/sub-nav.tsx",
+        "source": "packages/react/ui/src/components/navigation/sub-nav.tsx",
         "props": {
             "children": {
                 "zh-CN": "子导航的子元素，如 `Nav.Item`，渲染在展开的列表中。",
@@ -299,7 +299,7 @@
         }
     },
     "nav-header": {
-        "source": "packages/semi-ui-react/src/components/navigation/header.tsx",
+        "source": "packages/react/ui/src/components/navigation/header.tsx",
         "props": {
             "children": {
                 "zh-CN": "头部区域的子元素，渲染在 Logo 与文案之后。",
@@ -336,7 +336,7 @@
         }
     },
     "nav-footer": {
-        "source": "packages/semi-ui-react/src/components/navigation/footer.tsx",
+        "source": "packages/react/ui/src/components/navigation/footer.tsx",
         "props": {
             "children": {
                 "zh-CN": "底部区域的子元素。有子元素时，`collapseButton` 不生效。",

@@ -19,5 +19,5 @@ export const solidComponentOrder: ComponentOrder = {
         onMount: ['lifecycle', 'effect'],
         onCleanup: ['lifecycle', 'lifecycle'],
     },
-    targets: [{ kind: 'components', pathspecs: ['packages/semi-ui-solid/src/*.tsx', 'packages/semi-ai-solid/src/*.tsx'] }],
+    targets: [{ kind: 'components', pathspecs: ['packages/solid/ui/src/*.tsx', 'packages/solid/ai/src/*.tsx'] }],
 };

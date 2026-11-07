@@ -1,6 +1,6 @@
 {
     "popconfirm": {
-        "source": "packages/semi-ui-vue/src/components/popconfirm/popconfirm.vue",
+        "source": "packages/vue/ui/src/components/popconfirm/popconfirm.vue",
         "props": {
             "cancelButtonProps": {
                 "zh-CN": "取消按钮的属性，autoFocus 为 true 时打开后聚焦该按钮，class、style 落在按钮上。",

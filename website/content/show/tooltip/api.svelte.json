@@ -1,6 +1,6 @@
 {
     "tooltip": {
-        "source": "packages/semi-ui-svelte/src/components/tooltip/tooltip.svelte",
+        "source": "packages/svelte/ui/src/components/tooltip/tooltip.svelte",
         "props": {
             "afterClose": {
                 "zh-CN": "弹出层关闭且离场动画结束后的回调。",

@@ -11,7 +11,7 @@ export const react: FrameworkLint = {
     files,
     // preact stands in for React via preact/compat; only the motion and tiptap bindings are React's
     imports: ['react', 'react-dom', 'react-is', '@types/react*', 'preact', 'motion/react', '@tiptap/react', '@testing-library/react', '@test/utils/react', '@tanstack/react-virtual', 'react-infinite-scroller', '@fibrae/semi-*-react', ...frameworkSpecifiers('react')],
-    packages: ['semi-ui-react', 'semi-ai-react', 'semi-icons-react', 'semi-illustrations-react'],
+    packages: ['react/ui', 'react/ai', 'react/icons', 'react/illustrations'],
     overrides: [
         {
             files,
@@ -40,12 +40,12 @@ export const react: FrameworkLint = {
             },
         },
         {
-            files: ['packages/{semi-ui-react,semi-ai-react}/**/*.tsx', `${landingSamples}/*.react.tsx`],
+            files: ['packages/react/{ui,ai}/**/*.tsx', `${landingSamples}/*.react.tsx`],
             jsPlugins: ['eslint-plugin-perfectionist'],
             rules: jsxPropsOrderRules,
         },
         {
-            files: ['packages/semi-ai-react/**', 'packages/semi-ui-react/**'],
+            files: ['packages/react/ai/**', 'packages/react/ui/**'],
             plugins: ['react'],
             rules: {
                 // Syntax React Compiler cannot handle (`??=`, object getters, JSX in parameter defaults) skips silently

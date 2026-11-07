@@ -23,7 +23,7 @@ runs:
           if: inputs.dist != 'none'
           uses: actions/cache/restore@v6
           with:
-              path: packages/*/dist
+              path: packages/*/*/dist
               key: ${{ steps.key.outputs.value }}
               fail-on-cache-miss: ${{ inputs.dist == 'required' }}
         - if: inputs.dist == 'auto' && steps.restore.outputs.cache-hit != 'true'
@@ -32,5 +32,5 @@ runs:
         - if: inputs.dist == 'auto' && steps.restore.outputs.cache-hit != 'true'
           uses: actions/cache/save@v6
           with:
-              path: packages/*/dist
+              path: packages/*/*/dist
               key: ${{ steps.key.outputs.value }}

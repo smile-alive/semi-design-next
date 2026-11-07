@@ -1,6 +1,6 @@
 {
     "image": {
-        "source": "packages/semi-ui-react/src/components/image/image.tsx",
+        "source": "packages/react/ui/src/components/image/image.tsx",
         "props": {
             "alt": {
                 "zh-CN": "图像描述，同时作为可预览缩略图的读屏名称。",
@@ -69,7 +69,7 @@
         }
     },
     "image-preview": {
-        "source": "packages/semi-ui-react/src/components/image/preview.tsx",
+        "source": "packages/react/ui/src/components/image/preview.tsx",
         "props": {
             "adaptiveTip": {
                 "zh-CN": "适应页面操作按钮的提示；未设置时取语言包的文案。",

@@ -1,6 +1,6 @@
 {
     "row": {
-        "source": "packages/semi-ui-svelte/src/components/grid/row.svelte",
+        "source": "packages/svelte/ui/src/components/grid/row.svelte",
         "props": {
             "align": {
                 "zh-CN": "flex 布局下的垂直对齐方式，可选 top、middle、bottom。",
@@ -23,7 +23,7 @@
         }
     },
     "col": {
-        "source": "packages/semi-ui-svelte/src/components/grid/col.svelte",
+        "source": "packages/svelte/ui/src/components/grid/col.svelte",
         "props": {
             "children": { "zh-CN": "栅格内的内容。", "en-US": "Content of the column." },
             "lg": {

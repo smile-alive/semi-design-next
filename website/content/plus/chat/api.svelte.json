@@ -1,6 +1,6 @@
 {
     "chat": {
-        "source": "packages/semi-ai-svelte/src/components/chat/chat.svelte",
+        "source": "packages/svelte/ai/src/components/chat/chat.svelte",
         "props": {
             "chats": {
                 "zh-CN": "对话列表，可绑定：`bind:chats`。发送消息、点赞、重置、清除上下文、删除时，Chat 先把新列表写回，再触发 `onChatsChange`。列表的整体替换、`push` 和最后一条消息文本的就地增长都会被跟随，其他就地修改（如深层 content 改动、单独翻转 status）会渲染但不被跟随，建议整体替换数组。",

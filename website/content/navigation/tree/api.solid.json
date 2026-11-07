@@ -1,6 +1,6 @@
 {
     "tree": {
-        "source": "packages/semi-ui-solid/src/components/tree/tree.tsx",
+        "source": "packages/solid/ui/src/components/tree/tree.tsx",
         "props": {
             "autoExpandParent": {
                 "zh-CN": "expandedKeys 变化时是否自动展开其中节点的父节点；挂载时总会展开。开启后，展开受控时要先收起所有已展开的子节点才能收起父节点。",

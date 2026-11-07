@@ -1,6 +1,6 @@
 {
     "config-provider": {
-        "source": "packages/semi-ui-vue/src/components/config-provider/config-provider.vue",
+        "source": "packages/vue/ui/src/components/config-provider/config-provider.vue",
         "props": {
             "direction": {
                 "zh-CN": "文本方向，可选 ltr 或 rtl。未传时继承外层 ConfigProvider，最外层默认为 ltr。",
@@ -37,7 +37,7 @@
         "exposed": {}
     },
     "config-consumer": {
-        "source": "packages/semi-ui-vue/src/components/config-provider/config-consumer.vue",
+        "source": "packages/vue/ui/src/components/config-provider/config-consumer.vue",
         "props": {},
         "events": {},
         "slots": {

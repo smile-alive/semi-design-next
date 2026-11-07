@@ -27,7 +27,7 @@ export const reactComponentOrder: ComponentOrder = {
     targets: [
         {
             kind: 'components',
-            pathspecs: ['packages/semi-ui-react/src/*.tsx', 'packages/semi-ai-react/src/*.tsx'],
+            pathspecs: ['packages/react/ui/src/*.tsx', 'packages/react/ai/src/*.tsx'],
         },
     ],
 };

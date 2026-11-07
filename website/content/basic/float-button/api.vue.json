@@ -1,6 +1,6 @@
 {
     "float-button": {
-        "source": "packages/semi-ui-vue/src/components/float-button/float-button.vue",
+        "source": "packages/vue/ui/src/components/float-button/float-button.vue",
         "props": {
             "badge": {
                 "zh-CN": "徽章参数，同 Badge 的 props；class、style 以及 onClick、onMouseenter、onMouseleave 落在 Badge 根元素上。",
@@ -39,7 +39,7 @@
         "exposed": {}
     },
     "float-button-group": {
-        "source": "packages/semi-ui-vue/src/components/float-button/float-button-group.vue",
+        "source": "packages/vue/ui/src/components/float-button/float-button-group.vue",
         "props": {
             "disabled": { "zh-CN": "禁用全部子项。", "en-US": "Disables every item." },
             "items": { "zh-CN": "子项列表。", "en-US": "List of items." }

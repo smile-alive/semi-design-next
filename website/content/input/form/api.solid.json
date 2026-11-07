@@ -1,6 +1,6 @@
 {
     "form": {
-        "source": "packages/semi-ui-solid/src/components/form/form.tsx",
+        "source": "packages/solid/ui/src/components/form/form.tsx",
         "props": {
             "allowEmpty": {
                 "zh-CN": "值变为空的字段是否在 values 中保留 key。Form 与字段任一设置为 true 即生效。",
@@ -133,7 +133,7 @@
         }
     },
     "array-field": {
-        "source": "packages/semi-ui-solid/src/components/form/array-field.tsx",
+        "source": "packages/solid/ui/src/components/form/array-field.tsx",
         "props": {
             "children": {
                 "zh-CN": "每一行的渲染函数，必填，只调用一次，参数为 `{ arrayFields, add, addWithInitValue, move }`，需在返回的 JSX 中读取 `arrayFields` 才会随行增删更新。`move(from, to)` 把一行连同它的值、错误和 touched 移到目标位置，越界的下标按首尾处理。",
@@ -154,7 +154,7 @@
         }
     },
     "form-section": {
-        "source": "packages/semi-ui-solid/src/components/form/section.tsx",
+        "source": "packages/solid/ui/src/components/form/section.tsx",
         "props": {
             "text": {
                 "zh-CN": "分组标题，没有内容时不渲染标题。",
@@ -163,7 +163,7 @@
         }
     },
     "form-label": {
-        "source": "packages/semi-ui-solid/src/components/form/label.tsx",
+        "source": "packages/solid/ui/src/components/form/label.tsx",
         "props": {
             "align": {
                 "zh-CN": "Label 文本的对齐方式，可选 left 或 right。",
@@ -200,7 +200,7 @@
         }
     },
     "form-input-group": {
-        "source": "packages/semi-ui-solid/src/components/form/input-group.tsx",
+        "source": "packages/solid/ui/src/components/form/input-group.tsx",
         "props": {
             "disabled": {
                 "zh-CN": "组内字段统一的 disabled，不传时沿用 Form 的 disabled。",
@@ -237,7 +237,7 @@
         }
     },
     "form-slot": {
-        "source": "packages/semi-ui-solid/src/components/form/slot.tsx",
+        "source": "packages/solid/ui/src/components/form/slot.tsx",
         "props": {
             "error": {
                 "zh-CN": "错误信息，渲染在内容之后：对象作为 ErrorMessage 的属性，字符串或字符串数组作为错误内容；不传则不显示。",
@@ -258,7 +258,7 @@
         }
     },
     "form-error-message": {
-        "source": "packages/semi-ui-solid/src/components/form/error-message.tsx",
+        "source": "packages/solid/ui/src/components/form/error-message.tsx",
         "props": {
             "error": {
                 "zh-CN": "错误信息，字符串数组，多条以逗号连接显示。有错误时不显示 helpText；`['']` 表示校验失败但没有文本，不渲染内容；空数组与空值视为没有错误。",
@@ -291,7 +291,7 @@
         }
     },
     "schema-field": {
-        "source": "packages/semi-ui-solid/src/components/form/schema-field.tsx",
+        "source": "packages/solid/ui/src/components/form/schema-field.tsx",
         "props": {
             "field": {
                 "zh-CN": "要渲染的节点路径，默认为根；根对象不包 Section，其他对象渲染为以 title 为标题的 Section。",
@@ -312,7 +312,7 @@
         }
     },
     "schema-form": {
-        "source": "packages/semi-ui-solid/src/components/form/schema-form.tsx",
+        "source": "packages/solid/ui/src/components/form/schema-form.tsx",
         "props": {
             "allowEmpty": {
                 "zh-CN": "值变为空的字段是否在 values 中保留 key。Form 与字段任一设置为 true 即生效。",

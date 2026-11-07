@@ -19,7 +19,7 @@ export const solid: FrameworkLint = {
     files,
     // Only the runtime and test bindings; the build plugin (unplugin-solid) is imported by framework-free config
     imports: ['solid-js', '@solidjs/testing-library', '@test/utils/solid', '@tanstack/solid-virtual', '@fibrae/semi-*-solid', ...frameworkSpecifiers('solid')],
-    packages: ['semi-ui-solid', 'semi-ai-solid', 'semi-icons-solid', 'semi-illustrations-solid'],
+    packages: ['solid/ui', 'solid/ai', 'solid/icons', 'solid/illustrations'],
     overrides: [
         {
             files,

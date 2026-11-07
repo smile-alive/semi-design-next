@@ -1,6 +1,6 @@
 {
     "transfer": {
-        "source": "packages/semi-ui-solid/src/components/transfer/transfer.tsx",
+        "source": "packages/solid/ui/src/components/transfer/transfer.tsx",
         "props": {
             "disabled": {
                 "zh-CN": "是否禁用。",

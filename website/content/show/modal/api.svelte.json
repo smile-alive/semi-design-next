@@ -1,6 +1,6 @@
 {
     "modal": {
-        "source": "packages/semi-ui-svelte/src/components/modal/modal.svelte",
+        "source": "packages/svelte/ui/src/components/modal/modal.svelte",
         "props": {
             "afterClose": {
                 "zh-CN": "对话框完全关闭后触发；显示期间被卸载时也会触发一次。",

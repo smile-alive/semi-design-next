@@ -35,7 +35,7 @@ const listFiles = (...pathspecs: string[]) =>
 
 const files = listFiles('*.tsx', ':!legacy');
 
-for (const file of files.filter((name) => /^packages\/semi-[^/]+-vue\//.test(name))) {
+for (const file of files.filter((name) => name.startsWith('packages/vue/'))) {
     if (fs.readFileSync(file, 'utf8').split('\n', 1)[0] !== '/** @jsxImportSource vue */') {
         console.error(`${file}:1: a Vue .tsx file must start with /** @jsxImportSource vue */`);
         failed = true;
@@ -45,7 +45,7 @@ for (const file of files.filter((name) => /^packages\/semi-[^/]+-vue\//.test(nam
 // Mirrors the UI packages' exports map: entry files and the infrastructure directories sit under src/ as written, every
 // other subpath is a component under src/components/
 const uiDirs = new Set(['base', 'utils', 'hooks', 'composables', 'primitives', 'internal']);
-const uiSource = (framework: string, source: string) => path.join(`packages/semi-ui-${framework}/src`, source.includes('/') && !uiDirs.has(source.split('/')[0]) ? 'components' : '', source);
+const uiSource = (framework: string, source: string) => path.join(`packages/${framework}/ui/src`, source.includes('/') && !uiDirs.has(source.split('/')[0]) ? 'components' : '', source);
 
 const publishedSubpath: Record<string, (subpath: string) => string | undefined> = {
     // A bare SFC subpath does not resolve (no `.vue` in resolve.extensions), and a `.vue` one is published as
@@ -59,7 +59,7 @@ const publishedSubpath: Record<string, (subpath: string) => string | undefined> 
 };
 for (const [framework, resolve] of Object.entries(publishedSubpath)) {
     const specifiers = new RegExp(`['"]@fibrae/semi-ui-${framework}(?:/([^'"]*))?['"]`, 'g');
-    for (const file of listFiles(`packages/semi-ai-${framework}/src`).filter((name) => !name.includes('/__tests__/'))) {
+    for (const file of listFiles(`packages/${framework}/ai/src`).filter((name) => !name.includes('/__tests__/'))) {
         const source = fs.readFileSync(file, 'utf8');
         for (const { 0: specifier, 1: subpath, index } of source.matchAll(specifiers)) {
             if (!subpath || !resolve(subpath)) {
@@ -73,8 +73,8 @@ for (const [framework, resolve] of Object.entries(publishedSubpath)) {
 const iconPackages = new Set(
     frameworks
         .flatMap((framework) => framework.packages)
-        .filter((name) => name.startsWith('semi-icons-'))
-        .map((name) => `@fibrae/${name}`)
+        .filter((dir) => dir.endsWith('/icons'))
+        .map((dir) => (JSON.parse(fs.readFileSync(`packages/${dir}/package.json`, 'utf8')) as { name: string }).name)
 );
 
 for (const file of files) {

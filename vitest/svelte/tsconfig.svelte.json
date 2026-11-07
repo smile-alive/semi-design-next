@@ -8,31 +8,23 @@
         "verbatimModuleSyntax": true,
         "paths": {
             "@test/*": ["../*"],
-            "@fibrae/semi-ui-svelte": ["../../packages/semi-ui-svelte/src/index.ts"],
-            "@fibrae/semi-ui-svelte/hooks": ["../../packages/semi-ui-svelte/src/hooks.ts"],
-            "@fibrae/semi-ui-svelte/tokens": ["../../packages/semi-ui-svelte/src/tokens.ts"],
-            "@fibrae/semi-ui-svelte/base/*": ["../../packages/semi-ui-svelte/src/base/*"],
-            "@fibrae/semi-ui-svelte/hooks/*": ["../../packages/semi-ui-svelte/src/hooks/*"],
-            "@fibrae/semi-ui-svelte/internal/*": ["../../packages/semi-ui-svelte/src/internal/*"],
-            "@fibrae/semi-ui-svelte/utils/*": ["../../packages/semi-ui-svelte/src/utils/*"],
-            "@fibrae/semi-ui-svelte/__tests__/*": ["../../packages/semi-ui-svelte/src/__tests__/*"],
-            "@fibrae/semi-ui-svelte/*": ["../../packages/semi-ui-svelte/src/components/*"],
-            "@fibrae/semi-icons-svelte": ["../../packages/semi-icons-svelte/src/index.ts"],
-            "@fibrae/semi-icons-svelte/*": ["../../packages/semi-icons-svelte/src/*"],
-            "@fibrae/semi-illustrations-svelte": ["../../packages/semi-illustrations-svelte/src/index.ts"],
-            "@fibrae/semi-illustrations-svelte/*": ["../../packages/semi-illustrations-svelte/src/*"],
-            "@fibrae/semi-foundation/*": ["../../packages/semi-foundation/dist/*"],
-            "@fibrae/semi-json-viewer-core": ["../../packages/semi-json-viewer-core/dist/index.d.ts"]
+            "@fibrae/semi-ui-svelte": ["../../packages/svelte/ui/src/index.ts"],
+            "@fibrae/semi-ui-svelte/hooks": ["../../packages/svelte/ui/src/hooks.ts"],
+            "@fibrae/semi-ui-svelte/tokens": ["../../packages/svelte/ui/src/tokens.ts"],
+            "@fibrae/semi-ui-svelte/base/*": ["../../packages/svelte/ui/src/base/*"],
+            "@fibrae/semi-ui-svelte/hooks/*": ["../../packages/svelte/ui/src/hooks/*"],
+            "@fibrae/semi-ui-svelte/internal/*": ["../../packages/svelte/ui/src/internal/*"],
+            "@fibrae/semi-ui-svelte/utils/*": ["../../packages/svelte/ui/src/utils/*"],
+            "@fibrae/semi-ui-svelte/__tests__/*": ["../../packages/svelte/ui/src/__tests__/*"],
+            "@fibrae/semi-ui-svelte/*": ["../../packages/svelte/ui/src/components/*"],
+            "@fibrae/semi-icons-svelte": ["../../packages/svelte/icons/src/index.ts"],
+            "@fibrae/semi-icons-svelte/*": ["../../packages/svelte/icons/src/*"],
+            "@fibrae/semi-illustrations-svelte": ["../../packages/svelte/illustrations/src/index.ts"],
+            "@fibrae/semi-illustrations-svelte/*": ["../../packages/svelte/illustrations/src/*"],
+            "@fibrae/semi-foundation/*": ["../../packages/shared/foundation/dist/*"],
+            "@fibrae/semi-json-viewer-core": ["../../packages/shared/json-viewer-core/dist/index.d.ts"]
         }
     },
-    "include": [
-        "svelte.setup.ts",
-        "../utils/host-contract.ts",
-        "../../packages/semi-*-svelte/**/__tests__/**/*.ts",
-        "../../packages/semi-*-svelte/**/__tests__/**/*.svelte",
-        "../../packages/semi-*-svelte/src/*.d.ts",
-        "../../packages/semi-foundation/src/dom.d.ts",
-        "../../node_modules/@testing-library/jest-dom/types/vitest.d.ts"
-    ],
-    "exclude": ["../../packages/*/node_modules", "../../packages/*/dist", "../../packages/**/*.browser.test.*"]
+    "include": ["svelte.setup.ts", "../utils/host-contract.ts", "../../packages/svelte/*/**/__tests__/**/*.ts", "../../packages/svelte/*/**/__tests__/**/*.svelte", "../../packages/svelte/*/src/*.d.ts", "../../packages/shared/foundation/src/dom.d.ts", "../../node_modules/@testing-library/jest-dom/types/vitest.d.ts"],
+    "exclude": ["../../packages/*/*/node_modules", "../../packages/*/*/dist", "../../packages/**/*.browser.test.*"]
 }

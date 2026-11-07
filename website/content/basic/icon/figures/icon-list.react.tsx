@@ -1,8 +1,8 @@
 import { createElement, useState, type ElementType } from 'react';
+import pkgJson from '#packages/react/icons/package.json';
 // The package alias points at src/ and cannot reach the root package.json or svgs/meta.json, hence #packages/
-import iconMeta from '#packages/semi-icons-core/svgs/icons/meta.json';
-import iconLabMeta from '#packages/semi-icons-core/svgs/lab/meta.json';
-import pkgJson from '#packages/semi-icons-react/package.json';
+import iconMeta from '#packages/shared/icons-core/svgs/icons/meta.json';
+import iconLabMeta from '#packages/shared/icons-core/svgs/lab/meta.json';
 import * as SemiIconSet from '@fibrae/semi-icons-react';
 import * as SemiIconLabSet from '@fibrae/semi-icons-react/lab';
 import { Tabs, TabPane, Typography, Tag, Toast, Collapsible } from '@fibrae/semi-ui-react';

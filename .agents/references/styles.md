@@ -1,6 +1,6 @@
 # 样式
 
-组件样式是 `packages/semi-foundation/src/components/<组件>/` 下的 SCSS，各框架包的组件在 JS 里直接导入（`import '@fibrae/semi-foundation/components/tag/tag.scss'`）。唯一的主题在 `packages/semi-foundation/src/theme/`，经 `semi:theme` 加载；没有主题包和编译期覆写，使用方只通过 `--semi-*` CSS 变量和不分层的 CSS 规则定制。importer 与构建协议见本文「Sass 模块与 semi: importer」，主题 token 见「主题 token 协议」。lint 用 stylelint，配置在 `stylelint.config.ts`，warning 也算失败。
+组件样式是 `packages/shared/foundation/src/components/<组件>/` 下的 SCSS，各框架包的组件在 JS 里直接导入（`import '@fibrae/semi-foundation/components/tag/tag.scss'`）。唯一的主题在 `packages/shared/foundation/src/theme/`，经 `semi:theme` 加载；没有主题包和编译期覆写，使用方只通过 `--semi-*` CSS 变量和不分层的 CSS 规则定制。importer 与构建协议见本文「Sass 模块与 semi: importer」，主题 token 见「主题 token 协议」。lint 用 stylelint，配置在 `stylelint.config.ts`，warning 也算失败。
 
 ## 组件 SCSS
 
@@ -13,12 +13,12 @@
     - 需要给使用方定制的值，做成 `--semi-*` CSS 变量。
 - 组件级 CSS 变量只读：组件不在自己的类上声明变量，默认值写在 `var(--semi-x, 默认值)` 的回退里，同一默认值多处使用时由 Sass 变量提供；需要随主题变化的值做成声明在 body 的全局 token。理由：元素自身的声明总是压过继承值（与选择器权重无关，`:where` 也不能解决），组件类上声明的变量会让使用方在 body 或祖先上的覆盖失效；只读写法在 body、子树、组件类三处覆盖都生效。例：Button 的 `--semi-button-colorful-*`，默认值在 `icon-button/index.tsx` 的回退里。
 - 值优先用主题的 CSS 变量（`var(--semi-color-*)`）和已有 token，不写死颜色。颜色不用颜色名，十六进制用小写、能短写则短写；字重用数字。无回退值的 `var(--semi-*)` 引用必须在 foundation（含 `theme/`）或图标包的样式表里有声明，`pnpm lint:scss-variables` 检查；带回退值的引用视为刻意只读。调色板 token（`--semi-blue-5` 等）是完整颜色：不透明直接写 `var(--semi-x)`，带透明度写 `color-mix(in srgb, var(--semi-x) 50%, transparent)`，混色也用 `color-mix()`；不写 `rgba(var(--semi-x), a)`，它对完整颜色无效；不写 `rgb(from var(--semi-x) r g b / a)`，Firefox 128 才支持，低于 D15 的下限。
-- Sass 的弃用写法（`@import`、全局内置函数、`if()` 函数等）会让编译直接失败：`compileSemiScss` 把当前 Sass 全部 active 弃用项设为 fatal。升级 sass 带来的新弃用项同样生效，先改源码再升级。`theme/` 经 importer 加载时弃用写法只告警，由 `semi-theme-shared` 的测试把它的入口直接编译来拦截。
+- Sass 的弃用写法（`@import`、全局内置函数、`if()` 函数等）会让编译直接失败：`compileSemiScss` 把当前 Sass 全部 active 弃用项设为 fatal。升级 sass 带来的新弃用项同样生效，先改源码再升级。`theme/` 经 importer 加载时弃用写法只告警，由 `semi-scss-core` 的测试把它的入口直接编译来拦截。
 - 盒模型：带 `semi-` 前缀类名的元素及其伪元素统一是 `border-box`（`base/base.scss` 的 `@layer semi-base`；`cssLayer: true` 时嵌套层名是 `semi.semi-base`，`cssLayer: false` 时是顶层 `semi-base`，不用 `base` 以免并入 Tailwind 的 base 层），不依赖宿主页面。尺寸变量写外框尺寸（含 padding 与 border）；能由内容决定的高度不写死，由 padding 和内容撑开。组件里不再重复写 `box-sizing: border-box`。
 
 ## Sass 模块与 semi: importer
 
-全部 SCSS 使用 Sass 模块系统（`@use` / `@forward`），主题与前缀经 `semi:` importer 注入。主题只有一份，位于 `packages/semi-foundation/src/theme/`：`index.scss` 转发 `variables`、`mixin`、`font`；`global.scss`（经 `@use 'palette'` 带上 `_palette.scss`）和 `animation.scss` 输出 CSS 变量。主题随 semi-foundation 以 SCSS 发布在 `dist/theme/`，不单独编译成 CSS。没有主题包和覆写入口：插件与 `semi-scss-compile` 的样式选项只有 `prefixCls`（须匹配 `/^[a-zA-Z][\w-]*$/`，否则抛错）与 `cssLayer`。
+全部 SCSS 使用 Sass 模块系统（`@use` / `@forward`），主题与前缀经 `semi:` importer 注入。主题只有一份，位于 `packages/shared/foundation/src/theme/`：`index.scss` 转发 `variables`、`mixin`、`font`；`global.scss`（经 `@use 'palette'` 带上 `_palette.scss`）和 `animation.scss` 输出 CSS 变量。主题随 semi-foundation 以 SCSS 发布在 `dist/theme/`，不单独编译成 CSS。没有主题包和覆写入口：插件与 `semi-scss-compile` 的样式选项只有 `prefixCls`（须匹配 `/^[a-zA-Z][\w-]*$/`，否则抛错）与 `cssLayer`。
 
 | URL | 内容 | 使用方 |
 | --- | --- | --- |
@@ -26,11 +26,11 @@
 | `semi:theme/global`、`semi:theme/animation` | `theme/global.scss`、`theme/animation.scss` 本身 | `semi-foundation/base/tokens.scss`、`semi-scss-compile` 的入口 |
 | `semi:foundation/<subpath>` | 任一 semi-foundation 样式表 | semi-foundation 以外的样式表，如 semi-ai-foundation 的 `@use 'semi:foundation/base/mixin' as *` |
 
-- 解析：`semiImporters({ prefixCls, resolveFoundation })`（`packages/semi-theme-shared/src/theme.ts`）把 `<subpath>` 交给 `resolveFoundation(subpath, fromDir)`。`semi:theme/*` 与 `semi:foundation/*` 由 FileImporter 处理，`fromDir` 是请求它的样式表所在目录；`semi:theme` 是生成模块，没有所在文件，`fromDir` 为 `undefined`。
+- 解析：`semiImporters({ prefixCls, resolveFoundation })`（`packages/shared/scss-core/src/theme.ts`）把 `<subpath>` 交给 `resolveFoundation(subpath, fromDir)`。`semi:theme/*` 与 `semi:foundation/*` 由 FileImporter 处理，`fromDir` 是请求它的样式表所在目录；`semi:theme` 是生成模块，没有所在文件，`fromDir` 为 `undefined`。
 - 仓库内（`vite.semi.ts`、`semi-scss-compile`）直接映射到源码目录或 `foundationPath`。插件用 `resolveFoundationFromNode(subpath, fromDir, rootDir)`：依次从样式表目录、应用根目录（Vite 的 `root`、webpack/rspack 的 `rootContext`）解析 `@fibrae/semi-foundation/<subpath>.scss`，每个目录先直接解析，再经它能看到的各框架 UI 包（`@fibrae/semi-ui-<框架>`）解析。原因：semi-icons-core 不依赖 semi-foundation，只安装 UI 包的应用在 pnpm isolated 下从根目录也看不到 semi-foundation。
 - 跨包读取 semi-foundation 的样式表用 `semi:foundation/<path>`，不用 `pkg:`：foundation 的 `exports` 把 `./*.scss` 指向 `dist/`，仓库内源码模式（文档站、Vitest）没有 `dist/`。由各编译路径决定从源码还是从安装包解析，安装包按请求文件所在目录解析，兼容 pnpm isolated。
 - `@layer semi`：Vite 预处理路径（文档站、Vitest browser）无法在编译前包裹模块化的样式表，由 PostCSS 插件 `semiCssLayer`（`vite.semi.ts`）在编译后包裹，只作用于 `vite.semi.ts` 的 `themedPackages` 所列包内的样式表（实际生效的是 semi-foundation、semi-ai-foundation、semi-icons-core，各框架包自身不含样式表）；其余路径（插件、`semi-scss-compile`、发布构建）由 `wrapInSemiLayer` 包裹，`@charset` 保持在最前。
-- 弃用项：`compileSemiScss` 默认把全部 active 弃用项设为 fatal，并保留 `quietDeps`（经 importer 加载的主题属于依赖）；`semi-theme-shared` 的 `compile.test.ts` 把 `theme/index.scss`、`global.scss`、`animation.scss` 作为入口直接编译，守护它们的弃用项。
+- 弃用项：`compileSemiScss` 默认把全部 active 弃用项设为 fatal，并保留 `quietDeps`（经 importer 加载的主题属于依赖）；`semi-scss-core` 的 `compile.test.ts` 把 `theme/index.scss`、`global.scss`、`animation.scss` 作为入口直接编译，守护它们的弃用项。
 - 发布的 SCSS 只能经 Semi 插件或 `@fibrae/semi-scss-compile` 编译：缺少 `semi:` importer 时 Sass 报错并指出 URL。
 
 ## 主题 token 协议

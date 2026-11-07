@@ -1,6 +1,6 @@
 {
     "hot-keys": {
-        "source": "packages/semi-ui-solid/src/components/hot-keys/hot-keys.tsx",
+        "source": "packages/solid/ui/src/components/hot-keys/hot-keys.tsx",
         "props": {
             "hotKeys": {
                 "zh-CN": "快捷键组合：任意个修饰键加一个普通键，取值参考 `KeyboardEvent.key`。组合不合法时抛错，更新后同样校验。",

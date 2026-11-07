@@ -1,6 +1,6 @@
 {
     "switch": {
-        "source": "packages/semi-ui-svelte/src/components/switch/switch.svelte",
+        "source": "packages/svelte/ui/src/components/switch/switch.svelte",
         "props": {
             "checked": {
                 "zh-CN": "选中状态，可用 `bind:checked` 双向绑定。`bind:checked={get, set}` 时完全受控；只传 `checked` 时作为初值，点击在组件内覆盖，父级再传新值时以父级为准。",

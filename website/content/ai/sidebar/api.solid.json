@@ -1,6 +1,6 @@
 {
     "container": {
-        "source": "packages/semi-ai-solid/src/components/sidebar/container/container.tsx",
+        "source": "packages/solid/ai/src/components/sidebar/container/container.tsx",
         "props": {
             "afterVisibleChange": {
                 "zh-CN": "可见状态变化完成后的回调，参数为当前是否可见；有动画时在动画结束后触发。",
@@ -65,7 +65,7 @@
         }
     },
     "mcp-configure": {
-        "source": "packages/semi-ai-solid/src/components/sidebar/mcp-configure/mcp-configure.tsx",
+        "source": "packages/solid/ai/src/components/sidebar/mcp-configure/mcp-configure.tsx",
         "props": {
             "afterVisibleChange": {
                 "zh-CN": "可见状态变化完成后的回调，参数为当前是否可见；有动画时在动画结束后触发。",
@@ -178,7 +178,7 @@
         }
     },
     "annotation": {
-        "source": "packages/semi-ai-solid/src/components/sidebar/annotation/annotation.tsx",
+        "source": "packages/solid/ai/src/components/sidebar/annotation/annotation.tsx",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的分组 key，支持单个或多个。",
@@ -267,7 +267,7 @@
         }
     },
     "annotation-content": {
-        "source": "packages/semi-ai-solid/src/components/sidebar/annotation/content.tsx",
+        "source": "packages/solid/ai/src/components/sidebar/annotation/content.tsx",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的分组 key，支持单个或多个。",
@@ -296,7 +296,7 @@
         }
     },
     "sidebar": {
-        "source": "packages/semi-ai-solid/src/components/sidebar/sidebar.tsx",
+        "source": "packages/solid/ai/src/components/sidebar/sidebar.tsx",
         "props": {
             "activeKey": {
                 "zh-CN": "主视图中当前选中的选项 key。",
@@ -421,7 +421,7 @@
         }
     },
     "code-content": {
-        "source": "packages/semi-ai-solid/src/components/sidebar/widgets/code.tsx",
+        "source": "packages/solid/ai/src/components/sidebar/widgets/code.tsx",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的代码面板 key，支持单个或多个。",
@@ -442,7 +442,7 @@
         }
     },
     "file-content": {
-        "source": "packages/semi-ai-solid/src/components/sidebar/widgets/file.tsx",
+        "source": "packages/solid/ai/src/components/sidebar/widgets/file.tsx",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的文件面板 key，支持单个或多个。",
@@ -463,7 +463,7 @@
         }
     },
     "code-item": {
-        "source": "packages/semi-ai-solid/src/components/sidebar/widgets/code.tsx#CodeItem",
+        "source": "packages/solid/ai/src/components/sidebar/widgets/code.tsx#CodeItem",
         "props": {
             "codeHighlightProps": {
                 "zh-CN": "CodeHighlight 的属性，在 `code` 与 `language` 之后展开。",
@@ -490,7 +490,7 @@
         }
     },
     "file-item": {
-        "source": "packages/semi-ai-solid/src/components/sidebar/widgets/file.tsx#FileItem",
+        "source": "packages/solid/ai/src/components/sidebar/widgets/file.tsx#FileItem",
         "props": {
             "content": {
                 "zh-CN": "富文本 HTML，挂载后变化会同步到编辑器，不触发 `onContentChange`。",

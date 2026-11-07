@@ -1,6 +1,6 @@
 {
     "select": {
-        "source": "packages/semi-ui-vue/src/components/select/select.vue",
+        "source": "packages/vue/ui/src/components/select/select.vue",
         "props": {
             "modelValue": {
                 "zh-CN": "当前选中的值，用 v-model 绑定；多选时为数组。传入后即为受控组件，值为 undefined 时按非受控处理并读取 defaultValue。",
@@ -289,7 +289,7 @@
         "exposed": {}
     },
     "select-option": {
-        "source": "packages/semi-ui-vue/src/components/select/option.vue",
+        "source": "packages/vue/ui/src/components/select/option.vue",
         "props": {
             "value": {
                 "zh-CN": "选项的值，用来识别选项，每个选项都应声明。",
@@ -352,7 +352,7 @@
         "exposed": {}
     },
     "select-opt-group": {
-        "source": "packages/semi-ui-vue/src/components/select/option-group.vue",
+        "source": "packages/vue/ui/src/components/select/option-group.vue",
         "props": {
             "label": {
                 "zh-CN": "分组标题的文本，为字符串或数字，也参与默认搜索；带标记的标题使用 label 插槽。",

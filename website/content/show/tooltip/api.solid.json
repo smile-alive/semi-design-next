@@ -1,6 +1,6 @@
 {
     "tooltip": {
-        "source": "packages/semi-ui-solid/src/components/tooltip/tooltip.tsx",
+        "source": "packages/solid/ui/src/components/tooltip/tooltip.tsx",
         "props": {
             "children": {
                 "zh-CN": "触发元素。传函数时参数为 `getTriggerProps`，把 `getTriggerProps(自有属性)` 的结果展开到接收焦点的元素上；其他内容会被 Tooltip 包进一个 span 作为触发元素。",

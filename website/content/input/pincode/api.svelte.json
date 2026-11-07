@@ -1,6 +1,6 @@
 {
     "pin-code": {
-        "source": "packages/semi-ui-svelte/src/components/pincode/pincode.svelte",
+        "source": "packages/svelte/ui/src/components/pincode/pincode.svelte",
         "props": {
             "autofocus": {
                 "zh-CN": "挂载时是否自动聚焦到第一个输入框。只在用户明确进入验证码输入步骤时开启，页面加载时自动聚焦会让读屏跳过之前的内容。",

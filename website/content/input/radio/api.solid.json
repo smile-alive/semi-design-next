@@ -1,6 +1,6 @@
 {
     "radio": {
-        "source": "packages/semi-ui-solid/src/components/radio/radio.tsx",
+        "source": "packages/solid/ui/src/components/radio/radio.tsx",
         "props": {
             "addonClassName": {
                 "zh-CN": "包裹内容容器的类名。",
@@ -74,7 +74,7 @@
         }
     },
     "radio-group": {
-        "source": "packages/semi-ui-solid/src/components/radio/radio-group.tsx",
+        "source": "packages/solid/ui/src/components/radio/radio-group.tsx",
         "props": {
             "buttonSize": {
                 "zh-CN": "type 为 button 时按钮的尺寸，可选 small、middle、large。",

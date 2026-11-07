@@ -1,6 +1,6 @@
 {
     "progress": {
-        "source": "packages/semi-ui-vue/src/components/progress/progress.vue",
+        "source": "packages/vue/ui/src/components/progress/progress.vue",
         "props": {
             "direction": {
                 "zh-CN": "条状进度条的方向，可选 horizontal、vertical。",

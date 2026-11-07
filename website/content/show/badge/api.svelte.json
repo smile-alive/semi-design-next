@@ -1,6 +1,6 @@
 {
     "badge": {
-        "source": "packages/semi-ui-svelte/src/components/badge/badge.svelte",
+        "source": "packages/svelte/ui/src/components/badge/badge.svelte",
         "props": {
             "children": {
                 "zh-CN": "徽章依附的元素的 snippet；缺省时徽章独立显示。",

@@ -1,6 +1,6 @@
 {
     "pagination": {
-        "source": "packages/semi-ui-vue/src/components/pagination/pagination.vue",
+        "source": "packages/vue/ui/src/components/pagination/pagination.vue",
         "props": {
             "total": { "zh-CN": "总条数。", "en-US": "Total number of items." },
             "showTotal": {

@@ -1,6 +1,6 @@
 {
     "icon": {
-        "source": "packages/semi-icons-vue/src/components/icon.vue",
+        "source": "packages/vue/icons/src/components/icon.vue",
         "props": {
             "type": { "zh-CN": "附加图标类型类名。", "en-US": "Adds an icon type class name." },
             "size": {

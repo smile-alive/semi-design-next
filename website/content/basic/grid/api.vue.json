@@ -1,6 +1,6 @@
 {
     "row": {
-        "source": "packages/semi-ui-vue/src/components/grid/row.vue",
+        "source": "packages/vue/ui/src/components/grid/row.vue",
         "props": {
             "align": {
                 "zh-CN": "flex 布局下的垂直对齐方式，可选 top、middle、bottom。",
@@ -27,7 +27,7 @@
         "exposed": {}
     },
     "col": {
-        "source": "packages/semi-ui-vue/src/components/grid/col.vue",
+        "source": "packages/vue/ui/src/components/grid/col.vue",
         "props": {
             "lg": {
                 "zh-CN": "屏幕宽度 ≥992px 时生效的响应式栅格，可为栅格数或对象配置。",

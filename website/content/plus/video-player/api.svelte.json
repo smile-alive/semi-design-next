@@ -1,6 +1,6 @@
 {
     "video-player": {
-        "source": "packages/semi-ui-svelte/src/components/video-player/video-player.svelte",
+        "source": "packages/svelte/ui/src/components/video-player/video-player.svelte",
         "props": {
             "autoPlay": { "zh-CN": "是否自动播放。", "en-US": "Whether to play automatically." },
             "captionsSrc": { "zh-CN": "字幕资源地址，传入后默认显示字幕。", "en-US": "Captions source URL; the captions are shown by default once set." },

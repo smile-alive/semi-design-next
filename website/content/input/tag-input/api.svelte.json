@@ -1,6 +1,6 @@
 {
     "tag-input": {
-        "source": "packages/semi-ui-svelte/src/components/tag-input/tag-input.svelte",
+        "source": "packages/svelte/ui/src/components/tag-input/tag-input.svelte",
         "props": {
             "value": {
                 "zh-CN": "当前标签，可 `bind:value`。不传时由组件自行管理；`null` 表示受控且没有标签；单向 `value={x}` 只作初值，要完全受控用函数绑定 `bind:value={get, set}`；绑成 `undefined` 会清空标签。没有 defaultValue。",

@@ -1,6 +1,6 @@
 {
     "cropper": {
-        "source": "packages/semi-ui-svelte/src/components/cropper/cropper.svelte",
+        "source": "packages/svelte/ui/src/components/cropper/cropper.svelte",
         "props": {
             "aspectRatio": {
                 "zh-CN": "固定的裁切框宽高比；加载后改变时，裁切框按新比例重排。",

@@ -1,6 +1,6 @@
 {
     "collapse": {
-        "source": "packages/semi-ui-vue/src/components/collapse/collapse.vue",
+        "source": "packages/vue/ui/src/components/collapse/collapse.vue",
         "props": {
             "activeKey": {
                 "zh-CN": "受控属性，当前展开面板的 key；null 与空字符串表示全部收起。",
@@ -56,7 +56,7 @@
         "exposed": {}
     },
     "collapse-panel": {
-        "source": "packages/semi-ui-vue/src/components/collapse/panel.vue",
+        "source": "packages/vue/ui/src/components/collapse/panel.vue",
         "props": {
             "itemKey": {
                 "zh-CN": "必填且唯一，用于匹配 activeKey 与 defaultActiveKey。",

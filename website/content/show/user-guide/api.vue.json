@@ -1,6 +1,6 @@
 {
     "user-guide": {
-        "source": "packages/semi-ui-vue/src/components/user-guide/user-guide.vue",
+        "source": "packages/vue/ui/src/components/user-guide/user-guide.vue",
         "props": {
             "current": {
                 "zh-CN": "当前步骤的索引，对应 v-model:current；不传时由组件自己保存，从 0 开始。",

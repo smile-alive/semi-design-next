@@ -39,7 +39,7 @@ const tokens = Object.entries(scssFiles)
     );
 
 if (!tokens.length) {
-    throw new Error(`<DesignToken>: no tokens found for "${component}" in packages/semi-foundation or packages/semi-ai-foundation`);
+    throw new Error(`<DesignToken>: no tokens found for "${component}" in packages/shared/foundation or packages/shared/ai-foundation`);
 }
 
 const t = translate(asLocale(Astro.currentLocale));

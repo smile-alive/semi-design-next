@@ -552,11 +552,224 @@ importers:
         specifier: 'catalog:'
         version: 4.6.7
 
-  packages/semi-ai-foundation:
+  packages/plugins/next:
+    dependencies:
+      '@fibrae/semi-webpack-plugin':
+        specifier: workspace:*
+        version: link:../webpack
+    devDependencies:
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/plugins/nuxt:
+    dependencies:
+      '@fibrae/semi-vite-plugin':
+        specifier: workspace:*
+        version: link:../vite
+      '@nuxt/kit':
+        specifier: 'catalog:'
+        version: 4.6.2(@nuxt/schema@4.6.2)(confbox@0.3.1)(dotenv@17.4.2)(giget@3.3.1)(jiti@2.7.0)(magic-string@1.4.3)(mlly@1.8.2)(rolldown@1.2.13)(unplugin@3.4.0(@rspack/core@2.2.9(@swc/helpers@0.5.23))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(esbuild@0.28.2)(rolldown@1.2.13)(rollup@4.65.0)(webpack@5.112.2(cssnano@9.9.0(postcss@8.5.30))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.30)(sharp@0.35.5(@types/node@26.6.5))(svgo@4.1.0)))
+    devDependencies:
+      nuxt:
+        specifier: 'catalog:'
+        version: 4.6.2(422bb208d3a7975d73864b8c3853368e)
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vite:
+        specifier: npm:@voidzero-dev/vite-plus-core@1.4.0
+        version: '@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1)'
+
+  packages/plugins/rspack:
+    dependencies:
+      sass:
+        specifier: 'catalog:'
+        version: 1.106.1
+    devDependencies:
+      '@fibrae/semi-scss-core':
+        specifier: workspace:*
+        version: link:../../shared/scss-core
+      '@rspack/core':
+        specifier: ^2.2.9
+        version: 2.2.9(@swc/helpers@0.5.23)
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/plugins/vite:
+    dependencies:
+      sass:
+        specifier: 'catalog:'
+        version: 1.106.1
+      vite:
+        specifier: npm:@voidzero-dev/vite-plus-core@1.4.0
+        version: '@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1)'
+    devDependencies:
+      '@fibrae/semi-scss-core':
+        specifier: workspace:*
+        version: link:../../shared/scss-core
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/plugins/webpack:
+    dependencies:
+      css-loader:
+        specifier: 'catalog:'
+        version: 7.1.5(@rspack/core@2.2.9(@swc/helpers@0.5.23))(webpack@5.112.2(cssnano@9.9.0(postcss@8.5.30))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.30)(sharp@0.35.5(@types/node@26.6.5))(svgo@4.1.0))
+      sass:
+        specifier: 'catalog:'
+        version: 1.106.1
+      style-loader:
+        specifier: ^4.0.0
+        version: 4.0.0(webpack@5.112.2(cssnano@9.9.0(postcss@8.5.30))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.30)(sharp@0.35.5(@types/node@26.6.5))(svgo@4.1.0))
+    devDependencies:
+      '@fibrae/semi-scss-core':
+        specifier: workspace:*
+        version: link:../../shared/scss-core
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      webpack:
+        specifier: 'catalog:'
+        version: 5.112.2(cssnano@9.9.0(postcss@8.5.30))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.30)(sharp@0.35.5(@types/node@26.6.5))(svgo@4.1.0)
+
+  packages/react/ai:
+    dependencies:
+      '@fibrae/semi-ai-foundation':
+        specifier: workspace:*
+        version: link:../../shared/ai-foundation
+      '@fibrae/semi-foundation':
+        specifier: workspace:*
+        version: link:../../shared/foundation
+      '@fibrae/semi-icons-react':
+        specifier: workspace:*
+        version: link:../icons
+      '@fibrae/semi-illustrations-react':
+        specifier: workspace:*
+        version: link:../illustrations
+      '@fibrae/semi-ui-react':
+        specifier: workspace:*
+        version: link:../ui
+      '@tiptap/core':
+        specifier: 'catalog:'
+        version: 3.32.0(@tiptap/pm@3.32.0)
+      '@tiptap/pm':
+        specifier: 'catalog:'
+        version: 3.32.0
+      '@tiptap/react':
+        specifier: 'catalog:'
+        version: 3.32.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))(@tiptap/pm@3.32.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
+      es-toolkit:
+        specifier: 'catalog:'
+        version: 1.53.0
+    devDependencies:
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.3.0(@types/react@19.3.0)
+      react:
+        specifier: 'catalog:'
+        version: 19.3.1
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.3.1(react@19.3.1)
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/react/icons:
+    dependencies:
+      '@fibrae/semi-icons-core':
+        specifier: workspace:*
+        version: link:../../shared/icons-core
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
+      react:
+        specifier: catalog:peer
+        version: 19.3.1
+    devDependencies:
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/react/illustrations:
+    dependencies:
+      '@fibrae/semi-icons-core':
+        specifier: workspace:*
+        version: link:../../shared/icons-core
+      '@fibrae/semi-icons-react':
+        specifier: workspace:*
+        version: link:../icons
+      react:
+        specifier: catalog:peer
+        version: 19.3.1
+    devDependencies:
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/react/ui:
+    dependencies:
+      '@dnd-kit/react':
+        specifier: 'catalog:'
+        version: 0.5.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      '@fibrae/semi-foundation':
+        specifier: workspace:*
+        version: link:../../shared/foundation
+      '@fibrae/semi-icons-react':
+        specifier: workspace:*
+        version: link:../icons
+      '@fibrae/semi-illustrations-react':
+        specifier: workspace:*
+        version: link:../illustrations
+      '@tanstack/react-virtual':
+        specifier: 'catalog:'
+        version: 3.14.22(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.4.0
+      es-toolkit:
+        specifier: 'catalog:'
+        version: 1.53.0
+      scroll-into-view-if-needed:
+        specifier: 'catalog:'
+        version: 3.1.0
+    devDependencies:
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.3.0(@types/react@19.3.0)
+      react:
+        specifier: 'catalog:'
+        version: 19.3.1
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.3.1(react@19.3.1)
+      shiki:
+        specifier: 'catalog:'
+        version: 4.5.0
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/shared/ai-foundation:
     dependencies:
       '@fibrae/semi-foundation':
         specifier: workspace:*
-        version: link:../semi-foundation
+        version: link:../foundation
       '@tiptap/core':
         specifier: 'catalog:'
         version: 3.32.0(@tiptap/pm@3.32.0)
@@ -625,203 +838,7 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
-  packages/semi-ai-react:
-    dependencies:
-      '@fibrae/semi-ai-foundation':
-        specifier: workspace:*
-        version: link:../semi-ai-foundation
-      '@fibrae/semi-foundation':
-        specifier: workspace:*
-        version: link:../semi-foundation
-      '@fibrae/semi-icons-react':
-        specifier: workspace:*
-        version: link:../semi-icons-react
-      '@fibrae/semi-illustrations-react':
-        specifier: workspace:*
-        version: link:../semi-illustrations-react
-      '@fibrae/semi-ui-react':
-        specifier: workspace:*
-        version: link:../semi-ui-react
-      '@tiptap/core':
-        specifier: 'catalog:'
-        version: 3.32.0(@tiptap/pm@3.32.0)
-      '@tiptap/pm':
-        specifier: 'catalog:'
-        version: 3.32.0
-      '@tiptap/react':
-        specifier: 'catalog:'
-        version: 3.32.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))(@tiptap/pm@3.32.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      clsx:
-        specifier: 'catalog:'
-        version: 2.1.1
-      es-toolkit:
-        specifier: 'catalog:'
-        version: 1.53.0
-    devDependencies:
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.3.0
-      '@types/react-dom':
-        specifier: 'catalog:'
-        version: 19.3.0(@types/react@19.3.0)
-      react:
-        specifier: 'catalog:'
-        version: 19.3.1
-      react-dom:
-        specifier: 'catalog:'
-        version: 19.3.1(react@19.3.1)
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-
-  packages/semi-ai-solid:
-    dependencies:
-      '@fibrae/semi-ai-foundation':
-        specifier: workspace:*
-        version: link:../semi-ai-foundation
-      '@fibrae/semi-foundation':
-        specifier: workspace:*
-        version: link:../semi-foundation
-      '@fibrae/semi-icons-solid':
-        specifier: workspace:*
-        version: link:../semi-icons-solid
-      '@fibrae/semi-illustrations-solid':
-        specifier: workspace:*
-        version: link:../semi-illustrations-solid
-      '@fibrae/semi-ui-solid':
-        specifier: workspace:*
-        version: link:../semi-ui-solid
-      '@tiptap/core':
-        specifier: 'catalog:'
-        version: 3.32.0(@tiptap/pm@3.32.0)
-      '@tiptap/pm':
-        specifier: 'catalog:'
-        version: 3.32.0
-      clsx:
-        specifier: 'catalog:'
-        version: 2.1.1
-      es-toolkit:
-        specifier: 'catalog:'
-        version: 1.53.0
-    devDependencies:
-      solid-js:
-        specifier: 'catalog:'
-        version: 1.9.17
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-      unplugin-solid:
-        specifier: 'catalog:'
-        version: 2.0.0(@rspack/core@2.2.9(@swc/helpers@0.5.23))(@testing-library/jest-dom@7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.5))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(esbuild@0.28.2)(rolldown@1.2.13)(rollup@4.65.0)(solid-js@1.9.17)(supports-color@8.1.1)(webpack@5.112.2(cssnano@9.9.0(postcss@8.5.30))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.30)(sharp@0.35.5(@types/node@26.6.5))(svgo@4.1.0))
-
-  packages/semi-ai-svelte:
-    dependencies:
-      '@fibrae/semi-ai-foundation':
-        specifier: workspace:*
-        version: link:../semi-ai-foundation
-      '@fibrae/semi-foundation':
-        specifier: workspace:*
-        version: link:../semi-foundation
-      '@fibrae/semi-icons-svelte':
-        specifier: workspace:*
-        version: link:../semi-icons-svelte
-      '@fibrae/semi-illustrations-svelte':
-        specifier: workspace:*
-        version: link:../semi-illustrations-svelte
-      '@fibrae/semi-ui-svelte':
-        specifier: workspace:*
-        version: link:../semi-ui-svelte
-      '@tiptap/core':
-        specifier: 'catalog:'
-        version: 3.32.0(@tiptap/pm@3.32.0)
-      '@tiptap/pm':
-        specifier: 'catalog:'
-        version: 3.32.0
-      es-toolkit:
-        specifier: 'catalog:'
-        version: 1.53.0
-    devDependencies:
-      '@sveltejs/package':
-        specifier: 'catalog:'
-        version: 3.0.1(svelte@5.57.3(@typescript-eslint/types@8.72.0))(typescript@6.0.3)
-      '@sveltejs/vite-plugin-svelte':
-        specifier: 'catalog:'
-        version: 7.3.1(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(svelte@5.57.3(@typescript-eslint/types@8.72.0))
-      '@testing-library/svelte':
-        specifier: 'catalog:'
-        version: 5.4.2(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(svelte@5.57.3(@typescript-eslint/types@8.72.0))(vitest@5.0.5)
-      '@tiptap/extension-document':
-        specifier: 'catalog:'
-        version: 3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))
-      '@tiptap/extension-paragraph':
-        specifier: 'catalog:'
-        version: 3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))
-      '@tiptap/extension-text':
-        specifier: 'catalog:'
-        version: 3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))
-      svelte:
-        specifier: 'catalog:'
-        version: 5.57.3(@typescript-eslint/types@8.72.0)
-      svelte-check:
-        specifier: 'catalog:'
-        version: 4.7.7(picomatch@4.0.7)(svelte@5.57.3(@typescript-eslint/types@8.72.0))(typescript@6.0.3)
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-
-  packages/semi-ai-vue:
-    dependencies:
-      '@fibrae/semi-ai-foundation':
-        specifier: workspace:*
-        version: link:../semi-ai-foundation
-      '@fibrae/semi-foundation':
-        specifier: workspace:*
-        version: link:../semi-foundation
-      '@fibrae/semi-icons-vue':
-        specifier: workspace:*
-        version: link:../semi-icons-vue
-      '@fibrae/semi-illustrations-vue':
-        specifier: workspace:*
-        version: link:../semi-illustrations-vue
-      '@fibrae/semi-ui-vue':
-        specifier: workspace:*
-        version: link:../semi-ui-vue
-      '@tiptap/core':
-        specifier: 'catalog:'
-        version: 3.32.0(@tiptap/pm@3.32.0)
-      '@tiptap/pm':
-        specifier: 'catalog:'
-        version: 3.32.0
-      '@tiptap/vue-3':
-        specifier: 'catalog:'
-        version: 3.32.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))(@tiptap/pm@3.32.0)(vue@3.5.44(typescript@6.0.3))
-      es-toolkit:
-        specifier: 'catalog:'
-        version: 1.53.0
-    devDependencies:
-      '@tiptap/extension-document':
-        specifier: 'catalog:'
-        version: 3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))
-      '@tiptap/extension-paragraph':
-        specifier: 'catalog:'
-        version: 3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))
-      '@tiptap/extension-text':
-        specifier: 'catalog:'
-        version: 3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))
-      '@vitejs/plugin-vue':
-        specifier: 'catalog:'
-        version: 6.0.10(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(vue@3.5.44(typescript@6.0.3))
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-      vue:
-        specifier: 'catalog:'
-        version: 3.5.44(typescript@6.0.3)
-      vue-tsc:
-        specifier: 'catalog:'
-        version: 3.3.13(typescript@6.0.3)
-
-  packages/semi-animation:
+  packages/shared/animation:
     devDependencies:
       motion:
         specifier: ^14.6.0
@@ -836,7 +853,7 @@ importers:
         specifier: 'catalog:'
         version: 3.5.44(typescript@6.0.3)
 
-  packages/semi-foundation:
+  packages/shared/foundation:
     dependencies:
       '@date-fns/tz':
         specifier: ^1.5.0
@@ -846,7 +863,7 @@ importers:
         version: 0.5.1
       '@fibrae/semi-json-viewer-core':
         specifier: workspace:*
-        version: link:../semi-json-viewer-core
+        version: link:../json-viewer-core
       '@mdx-js/mdx':
         specifier: ^3.1.1
         version: 3.1.1(supports-color@8.1.1)
@@ -894,33 +911,101 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
-  packages/semi-icons-core:
+  packages/shared/icons-core:
     devDependencies:
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
 
-  packages/semi-icons-react:
+  packages/shared/json-viewer-core:
+    devDependencies:
+      jsonc-parser:
+        specifier: ^3.3.1
+        version: 3.3.1
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/shared/polyfill:
+    devDependencies:
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/shared/scss-compile:
     dependencies:
+      '@fibrae/semi-foundation':
+        specifier: workspace:*
+        version: link:../foundation
       '@fibrae/semi-icons-core':
         specifier: workspace:*
-        version: link:../semi-icons-core
+        version: link:../icons-core
+      sass:
+        specifier: 'catalog:'
+        version: 1.106.1
+    devDependencies:
+      '@fibrae/semi-scss-core':
+        specifier: workspace:*
+        version: link:../scss-core
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/shared/scss-core:
+    dependencies:
+      sass:
+        specifier: 'catalog:'
+        version: 1.106.1
+    devDependencies:
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/solid/ai:
+    dependencies:
+      '@fibrae/semi-ai-foundation':
+        specifier: workspace:*
+        version: link:../../shared/ai-foundation
+      '@fibrae/semi-foundation':
+        specifier: workspace:*
+        version: link:../../shared/foundation
+      '@fibrae/semi-icons-solid':
+        specifier: workspace:*
+        version: link:../icons
+      '@fibrae/semi-illustrations-solid':
+        specifier: workspace:*
+        version: link:../illustrations
+      '@fibrae/semi-ui-solid':
+        specifier: workspace:*
+        version: link:../ui
+      '@tiptap/core':
+        specifier: 'catalog:'
+        version: 3.32.0(@tiptap/pm@3.32.0)
+      '@tiptap/pm':
+        specifier: 'catalog:'
+        version: 3.32.0
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
-      react:
-        specifier: catalog:peer
-        version: 19.3.1
+      es-toolkit:
+        specifier: 'catalog:'
+        version: 1.53.0
     devDependencies:
+      solid-js:
+        specifier: 'catalog:'
+        version: 1.9.17
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
+      unplugin-solid:
+        specifier: 'catalog:'
+        version: 2.0.0(@rspack/core@2.2.9(@swc/helpers@0.5.23))(@testing-library/jest-dom@7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.5))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(esbuild@0.28.2)(rolldown@1.2.13)(rollup@4.65.0)(solid-js@1.9.17)(supports-color@8.1.1)(webpack@5.112.2(cssnano@9.9.0(postcss@8.5.30))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.30)(sharp@0.35.5(@types/node@26.6.5))(svgo@4.1.0))
 
-  packages/semi-icons-solid:
+  packages/solid/icons:
     dependencies:
       '@fibrae/semi-icons-core':
         specifier: workspace:*
-        version: link:../semi-icons-core
+        version: link:../../shared/icons-core
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
@@ -935,74 +1020,14 @@ importers:
         specifier: 'catalog:'
         version: 2.0.0(@rspack/core@2.2.9(@swc/helpers@0.5.23))(@testing-library/jest-dom@7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.5))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(esbuild@0.28.2)(rolldown@1.2.13)(rollup@4.65.0)(solid-js@1.9.17)(supports-color@8.1.1)(webpack@5.112.2(cssnano@9.9.0(postcss@8.5.30))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.30)(sharp@0.35.5(@types/node@26.6.5))(svgo@4.1.0))
 
-  packages/semi-icons-svelte:
+  packages/solid/illustrations:
     dependencies:
       '@fibrae/semi-icons-core':
         specifier: workspace:*
-        version: link:../semi-icons-core
-    devDependencies:
-      '@sveltejs/package':
-        specifier: 'catalog:'
-        version: 3.0.1(svelte@5.57.3(@typescript-eslint/types@8.72.0))(typescript@6.0.3)
-      '@sveltejs/vite-plugin-svelte':
-        specifier: 'catalog:'
-        version: 7.3.1(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(svelte@5.57.3(@typescript-eslint/types@8.72.0))
-      '@testing-library/svelte':
-        specifier: 'catalog:'
-        version: 5.4.2(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(svelte@5.57.3(@typescript-eslint/types@8.72.0))(vitest@5.0.5)
-      svelte:
-        specifier: 'catalog:'
-        version: 5.57.3(@typescript-eslint/types@8.72.0)
-      svelte-check:
-        specifier: 'catalog:'
-        version: 4.7.7(picomatch@4.0.7)(svelte@5.57.3(@typescript-eslint/types@8.72.0))(typescript@6.0.3)
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-
-  packages/semi-icons-vue:
-    dependencies:
-      '@fibrae/semi-icons-core':
-        specifier: workspace:*
-        version: link:../semi-icons-core
-    devDependencies:
-      '@vitejs/plugin-vue':
-        specifier: 'catalog:'
-        version: 6.0.10(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(vue@3.5.44(typescript@6.0.3))
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-      vue:
-        specifier: 'catalog:'
-        version: 3.5.44(typescript@6.0.3)
-      vue-tsc:
-        specifier: 'catalog:'
-        version: 3.3.13(typescript@6.0.3)
-
-  packages/semi-illustrations-react:
-    dependencies:
-      '@fibrae/semi-icons-core':
-        specifier: workspace:*
-        version: link:../semi-icons-core
-      '@fibrae/semi-icons-react':
-        specifier: workspace:*
-        version: link:../semi-icons-react
-      react:
-        specifier: catalog:peer
-        version: 19.3.1
-    devDependencies:
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-
-  packages/semi-illustrations-solid:
-    dependencies:
-      '@fibrae/semi-icons-core':
-        specifier: workspace:*
-        version: link:../semi-icons-core
+        version: link:../../shared/icons-core
       '@fibrae/semi-icons-solid':
         specifier: workspace:*
-        version: link:../semi-icons-solid
+        version: link:../icons
     devDependencies:
       solid-js:
         specifier: 'catalog:'
@@ -1011,202 +1036,17 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
-  packages/semi-illustrations-svelte:
-    dependencies:
-      '@fibrae/semi-icons-core':
-        specifier: workspace:*
-        version: link:../semi-icons-core
-      '@fibrae/semi-icons-svelte':
-        specifier: workspace:*
-        version: link:../semi-icons-svelte
-    devDependencies:
-      '@sveltejs/package':
-        specifier: 'catalog:'
-        version: 3.0.1(svelte@5.57.3(@typescript-eslint/types@8.72.0))(typescript@6.0.3)
-      '@sveltejs/vite-plugin-svelte':
-        specifier: 'catalog:'
-        version: 7.3.1(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(svelte@5.57.3(@typescript-eslint/types@8.72.0))
-      '@testing-library/svelte':
-        specifier: 'catalog:'
-        version: 5.4.2(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(svelte@5.57.3(@typescript-eslint/types@8.72.0))(vitest@5.0.5)
-      svelte:
-        specifier: 'catalog:'
-        version: 5.57.3(@typescript-eslint/types@8.72.0)
-      svelte-check:
-        specifier: 'catalog:'
-        version: 4.7.7(picomatch@4.0.7)(svelte@5.57.3(@typescript-eslint/types@8.72.0))(typescript@6.0.3)
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-
-  packages/semi-illustrations-vue:
-    dependencies:
-      '@fibrae/semi-icons-core':
-        specifier: workspace:*
-        version: link:../semi-icons-core
-      '@fibrae/semi-icons-vue':
-        specifier: workspace:*
-        version: link:../semi-icons-vue
-    devDependencies:
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-      vue:
-        specifier: 'catalog:'
-        version: 3.5.44(typescript@6.0.3)
-      vue-tsc:
-        specifier: 'catalog:'
-        version: 3.3.13(typescript@6.0.3)
-
-  packages/semi-json-viewer-core:
-    devDependencies:
-      jsonc-parser:
-        specifier: ^3.3.1
-        version: 3.3.1
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-
-  packages/semi-next:
-    dependencies:
-      '@fibrae/semi-webpack-plugin':
-        specifier: workspace:*
-        version: link:../semi-webpack
-    devDependencies:
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-
-  packages/semi-nuxt:
-    dependencies:
-      '@fibrae/semi-vite-plugin':
-        specifier: workspace:*
-        version: link:../semi-vite
-      '@nuxt/kit':
-        specifier: 'catalog:'
-        version: 4.6.2(@nuxt/schema@4.6.2)(confbox@0.3.1)(dotenv@17.4.2)(giget@3.3.1)(jiti@2.7.0)(magic-string@1.4.3)(mlly@1.8.2)(rolldown@1.2.13)(unplugin@3.4.0(@rspack/core@2.2.9(@swc/helpers@0.5.23))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(esbuild@0.28.2)(rolldown@1.2.13)(rollup@4.65.0)(webpack@5.112.2(cssnano@9.9.0(postcss@8.5.30))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.30)(sharp@0.35.5(@types/node@26.6.5))(svgo@4.1.0)))
-    devDependencies:
-      nuxt:
-        specifier: 'catalog:'
-        version: 4.6.2(422bb208d3a7975d73864b8c3853368e)
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-      vite:
-        specifier: npm:@voidzero-dev/vite-plus-core@1.4.0
-        version: '@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1)'
-
-  packages/semi-polyfill:
-    devDependencies:
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-
-  packages/semi-rspack:
-    dependencies:
-      sass:
-        specifier: 'catalog:'
-        version: 1.106.1
-    devDependencies:
-      '@fibrae/semi-theme-shared':
-        specifier: workspace:*
-        version: link:../semi-theme-shared
-      '@rspack/core':
-        specifier: ^2.2.9
-        version: 2.2.9(@swc/helpers@0.5.23)
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-
-  packages/semi-scss-compile:
-    dependencies:
-      '@fibrae/semi-foundation':
-        specifier: workspace:*
-        version: link:../semi-foundation
-      '@fibrae/semi-icons-core':
-        specifier: workspace:*
-        version: link:../semi-icons-core
-      sass:
-        specifier: 'catalog:'
-        version: 1.106.1
-    devDependencies:
-      '@fibrae/semi-theme-shared':
-        specifier: workspace:*
-        version: link:../semi-theme-shared
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-
-  packages/semi-theme-shared:
-    dependencies:
-      sass:
-        specifier: 'catalog:'
-        version: 1.106.1
-    devDependencies:
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-
-  packages/semi-ui-react:
-    dependencies:
-      '@dnd-kit/react':
-        specifier: 'catalog:'
-        version: 0.5.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      '@fibrae/semi-foundation':
-        specifier: workspace:*
-        version: link:../semi-foundation
-      '@fibrae/semi-icons-react':
-        specifier: workspace:*
-        version: link:../semi-icons-react
-      '@fibrae/semi-illustrations-react':
-        specifier: workspace:*
-        version: link:../semi-illustrations-react
-      '@tanstack/react-virtual':
-        specifier: 'catalog:'
-        version: 3.14.22(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      clsx:
-        specifier: 'catalog:'
-        version: 2.1.1
-      date-fns:
-        specifier: 'catalog:'
-        version: 4.4.0
-      es-toolkit:
-        specifier: 'catalog:'
-        version: 1.53.0
-      scroll-into-view-if-needed:
-        specifier: 'catalog:'
-        version: 3.1.0
-    devDependencies:
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.3.0
-      '@types/react-dom':
-        specifier: 'catalog:'
-        version: 19.3.0(@types/react@19.3.0)
-      react:
-        specifier: 'catalog:'
-        version: 19.3.1
-      react-dom:
-        specifier: 'catalog:'
-        version: 19.3.1(react@19.3.1)
-      shiki:
-        specifier: 'catalog:'
-        version: 4.5.0
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-
-  packages/semi-ui-solid:
+  packages/solid/ui:
     dependencies:
       '@dnd-kit/solid':
         specifier: 'catalog:'
         version: 0.5.1(solid-js@1.9.17)
       '@fibrae/semi-foundation':
         specifier: workspace:*
-        version: link:../semi-foundation
+        version: link:../../shared/foundation
       '@fibrae/semi-icons-solid':
         specifier: workspace:*
-        version: link:../semi-icons-solid
+        version: link:../icons
       '@tanstack/solid-virtual':
         specifier: 'catalog:'
         version: 3.13.49(solid-js@1.9.17)
@@ -1230,7 +1070,115 @@ importers:
         specifier: 'catalog:'
         version: 2.0.0(@rspack/core@2.2.9(@swc/helpers@0.5.23))(@testing-library/jest-dom@7.0.1(@testing-library/dom@10.4.2)(vitest@5.0.5))(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(esbuild@0.28.2)(rolldown@1.2.13)(rollup@4.65.0)(solid-js@1.9.17)(supports-color@8.1.1)(webpack@5.112.2(cssnano@9.9.0(postcss@8.5.30))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.30)(sharp@0.35.5(@types/node@26.6.5))(svgo@4.1.0))
 
-  packages/semi-ui-svelte:
+  packages/svelte/ai:
+    dependencies:
+      '@fibrae/semi-ai-foundation':
+        specifier: workspace:*
+        version: link:../../shared/ai-foundation
+      '@fibrae/semi-foundation':
+        specifier: workspace:*
+        version: link:../../shared/foundation
+      '@fibrae/semi-icons-svelte':
+        specifier: workspace:*
+        version: link:../icons
+      '@fibrae/semi-illustrations-svelte':
+        specifier: workspace:*
+        version: link:../illustrations
+      '@fibrae/semi-ui-svelte':
+        specifier: workspace:*
+        version: link:../ui
+      '@tiptap/core':
+        specifier: 'catalog:'
+        version: 3.32.0(@tiptap/pm@3.32.0)
+      '@tiptap/pm':
+        specifier: 'catalog:'
+        version: 3.32.0
+      es-toolkit:
+        specifier: 'catalog:'
+        version: 1.53.0
+    devDependencies:
+      '@sveltejs/package':
+        specifier: 'catalog:'
+        version: 3.0.1(svelte@5.57.3(@typescript-eslint/types@8.72.0))(typescript@6.0.3)
+      '@sveltejs/vite-plugin-svelte':
+        specifier: 'catalog:'
+        version: 7.3.1(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(svelte@5.57.3(@typescript-eslint/types@8.72.0))
+      '@testing-library/svelte':
+        specifier: 'catalog:'
+        version: 5.4.2(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(svelte@5.57.3(@typescript-eslint/types@8.72.0))(vitest@5.0.5)
+      '@tiptap/extension-document':
+        specifier: 'catalog:'
+        version: 3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))
+      '@tiptap/extension-paragraph':
+        specifier: 'catalog:'
+        version: 3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))
+      '@tiptap/extension-text':
+        specifier: 'catalog:'
+        version: 3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))
+      svelte:
+        specifier: 'catalog:'
+        version: 5.57.3(@typescript-eslint/types@8.72.0)
+      svelte-check:
+        specifier: 'catalog:'
+        version: 4.7.7(picomatch@4.0.7)(svelte@5.57.3(@typescript-eslint/types@8.72.0))(typescript@6.0.3)
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/svelte/icons:
+    dependencies:
+      '@fibrae/semi-icons-core':
+        specifier: workspace:*
+        version: link:../../shared/icons-core
+    devDependencies:
+      '@sveltejs/package':
+        specifier: 'catalog:'
+        version: 3.0.1(svelte@5.57.3(@typescript-eslint/types@8.72.0))(typescript@6.0.3)
+      '@sveltejs/vite-plugin-svelte':
+        specifier: 'catalog:'
+        version: 7.3.1(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(svelte@5.57.3(@typescript-eslint/types@8.72.0))
+      '@testing-library/svelte':
+        specifier: 'catalog:'
+        version: 5.4.2(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(svelte@5.57.3(@typescript-eslint/types@8.72.0))(vitest@5.0.5)
+      svelte:
+        specifier: 'catalog:'
+        version: 5.57.3(@typescript-eslint/types@8.72.0)
+      svelte-check:
+        specifier: 'catalog:'
+        version: 4.7.7(picomatch@4.0.7)(svelte@5.57.3(@typescript-eslint/types@8.72.0))(typescript@6.0.3)
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/svelte/illustrations:
+    dependencies:
+      '@fibrae/semi-icons-core':
+        specifier: workspace:*
+        version: link:../../shared/icons-core
+      '@fibrae/semi-icons-svelte':
+        specifier: workspace:*
+        version: link:../icons
+    devDependencies:
+      '@sveltejs/package':
+        specifier: 'catalog:'
+        version: 3.0.1(svelte@5.57.3(@typescript-eslint/types@8.72.0))(typescript@6.0.3)
+      '@sveltejs/vite-plugin-svelte':
+        specifier: 'catalog:'
+        version: 7.3.1(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(svelte@5.57.3(@typescript-eslint/types@8.72.0))
+      '@testing-library/svelte':
+        specifier: 'catalog:'
+        version: 5.4.2(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(svelte@5.57.3(@typescript-eslint/types@8.72.0))(vitest@5.0.5)
+      svelte:
+        specifier: 'catalog:'
+        version: 5.57.3(@typescript-eslint/types@8.72.0)
+      svelte-check:
+        specifier: 'catalog:'
+        version: 4.7.7(picomatch@4.0.7)(svelte@5.57.3(@typescript-eslint/types@8.72.0))(typescript@6.0.3)
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+
+  packages/svelte/ui:
     dependencies:
       '@dnd-kit/dom':
         specifier: 'catalog:'
@@ -1240,10 +1188,10 @@ importers:
         version: 0.5.1(svelte@5.57.3(@typescript-eslint/types@8.72.0))
       '@fibrae/semi-foundation':
         specifier: workspace:*
-        version: link:../semi-foundation
+        version: link:../../shared/foundation
       '@fibrae/semi-icons-svelte':
         specifier: workspace:*
-        version: link:../semi-icons-svelte
+        version: link:../icons
       '@tanstack/svelte-virtual':
         specifier: 'catalog:'
         version: 3.13.49(svelte@5.57.3(@typescript-eslint/types@8.72.0))
@@ -1282,17 +1230,107 @@ importers:
         specifier: 'catalog:'
         version: 6.0.3
 
-  packages/semi-ui-vue:
+  packages/vue/ai:
+    dependencies:
+      '@fibrae/semi-ai-foundation':
+        specifier: workspace:*
+        version: link:../../shared/ai-foundation
+      '@fibrae/semi-foundation':
+        specifier: workspace:*
+        version: link:../../shared/foundation
+      '@fibrae/semi-icons-vue':
+        specifier: workspace:*
+        version: link:../icons
+      '@fibrae/semi-illustrations-vue':
+        specifier: workspace:*
+        version: link:../illustrations
+      '@fibrae/semi-ui-vue':
+        specifier: workspace:*
+        version: link:../ui
+      '@tiptap/core':
+        specifier: 'catalog:'
+        version: 3.32.0(@tiptap/pm@3.32.0)
+      '@tiptap/pm':
+        specifier: 'catalog:'
+        version: 3.32.0
+      '@tiptap/vue-3':
+        specifier: 'catalog:'
+        version: 3.32.0(@floating-ui/dom@1.8.0)(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))(@tiptap/pm@3.32.0)(vue@3.5.44(typescript@6.0.3))
+      es-toolkit:
+        specifier: 'catalog:'
+        version: 1.53.0
+    devDependencies:
+      '@tiptap/extension-document':
+        specifier: 'catalog:'
+        version: 3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))
+      '@tiptap/extension-paragraph':
+        specifier: 'catalog:'
+        version: 3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))
+      '@tiptap/extension-text':
+        specifier: 'catalog:'
+        version: 3.32.0(@tiptap/core@3.32.0(@tiptap/pm@3.32.0))
+      '@vitejs/plugin-vue':
+        specifier: 'catalog:'
+        version: 6.0.10(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(vue@3.5.44(typescript@6.0.3))
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vue:
+        specifier: 'catalog:'
+        version: 3.5.44(typescript@6.0.3)
+      vue-tsc:
+        specifier: 'catalog:'
+        version: 3.3.13(typescript@6.0.3)
+
+  packages/vue/icons:
+    dependencies:
+      '@fibrae/semi-icons-core':
+        specifier: workspace:*
+        version: link:../../shared/icons-core
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: 'catalog:'
+        version: 6.0.10(@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1))(vue@3.5.44(typescript@6.0.3))
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vue:
+        specifier: 'catalog:'
+        version: 3.5.44(typescript@6.0.3)
+      vue-tsc:
+        specifier: 'catalog:'
+        version: 3.3.13(typescript@6.0.3)
+
+  packages/vue/illustrations:
+    dependencies:
+      '@fibrae/semi-icons-core':
+        specifier: workspace:*
+        version: link:../../shared/icons-core
+      '@fibrae/semi-icons-vue':
+        specifier: workspace:*
+        version: link:../icons
+    devDependencies:
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vue:
+        specifier: 'catalog:'
+        version: 3.5.44(typescript@6.0.3)
+      vue-tsc:
+        specifier: 'catalog:'
+        version: 3.3.13(typescript@6.0.3)
+
+  packages/vue/ui:
     dependencies:
       '@dnd-kit/vue':
         specifier: 'catalog:'
         version: 0.5.1(vue@3.5.44(typescript@6.0.3))
       '@fibrae/semi-foundation':
         specifier: workspace:*
-        version: link:../semi-foundation
+        version: link:../../shared/foundation
       '@fibrae/semi-icons-vue':
         specifier: workspace:*
-        version: link:../semi-icons-vue
+        version: link:../icons
       '@tanstack/vue-virtual':
         specifier: 'catalog:'
         version: 3.13.48(vue@3.5.44(typescript@6.0.3))
@@ -1321,44 +1359,6 @@ importers:
       vue-tsc:
         specifier: 'catalog:'
         version: 3.3.13(typescript@6.0.3)
-
-  packages/semi-vite:
-    dependencies:
-      sass:
-        specifier: 'catalog:'
-        version: 1.106.1
-      vite:
-        specifier: npm:@voidzero-dev/vite-plus-core@1.4.0
-        version: '@voidzero-dev/vite-plus-core@1.4.0(@types/node@26.6.5)(@volar/typescript@2.4.28(typescript@6.0.3))(@vue/language-core@3.3.13)(esbuild@0.28.2)(jiti@2.7.0)(sass-embedded@1.106.1)(sass@1.106.1)(terser@5.51.2)(typescript@6.0.3)(vue-tsc@3.3.13(typescript@6.0.3))(yaml@2.9.1)'
-    devDependencies:
-      '@fibrae/semi-theme-shared':
-        specifier: workspace:*
-        version: link:../semi-theme-shared
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-
-  packages/semi-webpack:
-    dependencies:
-      css-loader:
-        specifier: 'catalog:'
-        version: 7.1.5(@rspack/core@2.2.9(@swc/helpers@0.5.23))(webpack@5.112.2(cssnano@9.9.0(postcss@8.5.30))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.30)(sharp@0.35.5(@types/node@26.6.5))(svgo@4.1.0))
-      sass:
-        specifier: 'catalog:'
-        version: 1.106.1
-      style-loader:
-        specifier: ^4.0.0
-        version: 4.0.0(webpack@5.112.2(cssnano@9.9.0(postcss@8.5.30))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.30)(sharp@0.35.5(@types/node@26.6.5))(svgo@4.1.0))
-    devDependencies:
-      '@fibrae/semi-theme-shared':
-        specifier: workspace:*
-        version: link:../semi-theme-shared
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-      webpack:
-        specifier: 'catalog:'
-        version: 5.112.2(cssnano@9.9.0(postcss@8.5.30))(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.30)(sharp@0.35.5(@types/node@26.6.5))(svgo@4.1.0)
 
   website:
     dependencies:
@@ -1403,58 +1403,58 @@ importers:
         version: 0.5.1(vue@3.5.44(typescript@6.0.3))
       '@fibrae/semi-ai-foundation':
         specifier: workspace:*
-        version: link:../packages/semi-ai-foundation
+        version: link:../packages/shared/ai-foundation
       '@fibrae/semi-ai-react':
         specifier: workspace:*
-        version: link:../packages/semi-ai-react
+        version: link:../packages/react/ai
       '@fibrae/semi-ai-solid':
         specifier: workspace:*
-        version: link:../packages/semi-ai-solid
+        version: link:../packages/solid/ai
       '@fibrae/semi-ai-svelte':
         specifier: workspace:*
-        version: link:../packages/semi-ai-svelte
+        version: link:../packages/svelte/ai
       '@fibrae/semi-ai-vue':
         specifier: workspace:*
-        version: link:../packages/semi-ai-vue
+        version: link:../packages/vue/ai
       '@fibrae/semi-foundation':
         specifier: workspace:*
-        version: link:../packages/semi-foundation
+        version: link:../packages/shared/foundation
       '@fibrae/semi-icons-react':
         specifier: workspace:*
-        version: link:../packages/semi-icons-react
+        version: link:../packages/react/icons
       '@fibrae/semi-icons-solid':
         specifier: workspace:*
-        version: link:../packages/semi-icons-solid
+        version: link:../packages/solid/icons
       '@fibrae/semi-icons-svelte':
         specifier: workspace:*
-        version: link:../packages/semi-icons-svelte
+        version: link:../packages/svelte/icons
       '@fibrae/semi-icons-vue':
         specifier: workspace:*
-        version: link:../packages/semi-icons-vue
+        version: link:../packages/vue/icons
       '@fibrae/semi-illustrations-react':
         specifier: workspace:*
-        version: link:../packages/semi-illustrations-react
+        version: link:../packages/react/illustrations
       '@fibrae/semi-illustrations-solid':
         specifier: workspace:*
-        version: link:../packages/semi-illustrations-solid
+        version: link:../packages/solid/illustrations
       '@fibrae/semi-illustrations-svelte':
         specifier: workspace:*
-        version: link:../packages/semi-illustrations-svelte
+        version: link:../packages/svelte/illustrations
       '@fibrae/semi-illustrations-vue':
         specifier: workspace:*
-        version: link:../packages/semi-illustrations-vue
+        version: link:../packages/vue/illustrations
       '@fibrae/semi-ui-react':
         specifier: workspace:*
-        version: link:../packages/semi-ui-react
+        version: link:../packages/react/ui
       '@fibrae/semi-ui-solid':
         specifier: workspace:*
-        version: link:../packages/semi-ui-solid
+        version: link:../packages/solid/ui
       '@fibrae/semi-ui-svelte':
         specifier: workspace:*
-        version: link:../packages/semi-ui-svelte
+        version: link:../packages/svelte/ui
       '@fibrae/semi-ui-vue':
         specifier: workspace:*
-        version: link:../packages/semi-ui-vue
+        version: link:../packages/vue/ui
       '@floating-ui/dom':
         specifier: 'catalog:'
         version: 1.8.0

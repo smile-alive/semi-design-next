@@ -1,6 +1,6 @@
 {
     "highlight": {
-        "source": "packages/semi-ui-solid/src/components/highlight/highlight.tsx",
+        "source": "packages/solid/ui/src/components/highlight/highlight.tsx",
         "props": {
             "autoEscape": {
                 "zh-CN": "是否自动转义 searchWords 中的正则特殊字符。",

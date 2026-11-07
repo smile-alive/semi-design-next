@@ -1,6 +1,6 @@
 {
     "button": {
-        "source": "packages/semi-ui-react/src/components/button/button.tsx",
+        "source": "packages/react/ui/src/components/button/button.tsx",
         "props": {
             "aria-label": { "zh-CN": "按钮的可访问名称，只有图标没有文字的按钮需要设置。", "en-US": "Accessible name of the button, needed when it shows only an icon." },
             "block": { "zh-CN": "将按钮设置为块级按钮。", "en-US": "Renders the button as a block-level button." },
@@ -49,7 +49,7 @@
         }
     },
     "button-group": {
-        "source": "packages/semi-ui-react/src/components/button/button-group.tsx",
+        "source": "packages/react/ui/src/components/button/button-group.tsx",
         "props": {
             "children": { "zh-CN": "组内的按钮。", "en-US": "Buttons in the group." },
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
@@ -63,7 +63,7 @@
         }
     },
     "split-button-group": {
-        "source": "packages/semi-ui-react/src/components/button/split-button-group.tsx",
+        "source": "packages/react/ui/src/components/button/split-button-group.tsx",
         "props": {
             "aria-label": { "zh-CN": "分裂按钮组的可访问名称。", "en-US": "Accessible name of the split button group." },
             "children": { "zh-CN": "组内的按钮。", "en-US": "Buttons in the group." },

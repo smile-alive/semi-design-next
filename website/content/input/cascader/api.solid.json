@@ -1,6 +1,6 @@
 {
     "cascader": {
-        "source": "packages/semi-ui-solid/src/components/cascader/cascader.tsx",
+        "source": "packages/solid/ui/src/components/cascader/cascader.tsx",
         "props": {
             "aria-label": {
                 "zh-CN": "组合框的可访问名称，次于 `aria-labelledby`，优先于 insetLabel 的内容。",

@@ -1,6 +1,6 @@
 {
     "nav": {
-        "source": "packages/semi-ui-vue/src/components/navigation/nav.vue",
+        "source": "packages/vue/ui/src/components/navigation/nav.vue",
         "props": {
             "bodyStyle": {
                 "zh-CN": "导航项列表的自定义样式。",
@@ -146,7 +146,7 @@
         "exposed": {}
     },
     "nav-item": {
-        "source": "packages/semi-ui-vue/src/components/navigation/nav-item.vue",
+        "source": "packages/vue/ui/src/components/navigation/nav-item.vue",
         "props": {
             "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the item is disabled." },
             "indent": {
@@ -197,7 +197,7 @@
         "exposed": {}
     },
     "sub-nav": {
-        "source": "packages/semi-ui-vue/src/components/navigation/sub-nav.vue",
+        "source": "packages/vue/ui/src/components/navigation/sub-nav.vue",
         "props": {
             "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the sub navigation is disabled." },
             "dropdownProps": {
@@ -239,7 +239,7 @@
         "exposed": {}
     },
     "nav-header": {
-        "source": "packages/semi-ui-vue/src/components/navigation/nav-header.vue",
+        "source": "packages/vue/ui/src/components/navigation/nav-header.vue",
         "props": {
             "link": {
                 "zh-CN": "头部的 href 链接，传入时头部内容包裹在 a 标签中。",
@@ -260,7 +260,7 @@
         "exposed": {}
     },
     "nav-footer": {
-        "source": "packages/semi-ui-vue/src/components/navigation/nav-footer.vue",
+        "source": "packages/vue/ui/src/components/navigation/nav-footer.vue",
         "props": {
             "collapseButton": {
                 "zh-CN": "是否展示底部的收起侧边栏按钮，仅 mode 为 vertical 且 Footer 没有默认插槽内容时有效。",

@@ -48,7 +48,7 @@ export default {
         },
         {
             // Physical left/right is an RTL regression here; excluded ones and semi-ai-foundation await decision L3
-            files: ['packages/semi-foundation/src/components/!(cropper|video-player|code-highlight|resizable|markdown-render|audio-player|float-button)/*.scss', 'packages/semi-foundation/src/!(components)/*.scss'],
+            files: ['packages/shared/foundation/src/components/!(cropper|video-player|code-highlight|resizable|markdown-render|audio-player|float-button)/*.scss', 'packages/shared/foundation/src/!(components)/*.scss'],
             rules: {
                 'property-disallowed-list': [/^(margin|padding|border)-(left|right)(-|$)/, /^border-(top|bottom)-(left|right)-radius$/, /^(left|right)$/],
                 'declaration-property-value-disallowed-list': {
@@ -62,7 +62,7 @@ export default {
         },
         {
             // The class prefix is configurable (prefixCls); selectors use $prefix / $module
-            files: ['packages/{semi-foundation,semi-ai-foundation}/**/*.scss'],
+            files: ['packages/shared/{foundation,ai-foundation}/**/*.scss'],
             rules: { 'selector-disallowed-list': [/\.semi-/] },
         },
     ],

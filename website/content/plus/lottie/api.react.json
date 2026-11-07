@@ -1,6 +1,6 @@
 {
     "lottie": {
-        "source": "packages/semi-ui-react/src/components/lottie/index.tsx",
+        "source": "packages/react/ui/src/components/lottie/index.tsx",
         "props": {
             "className": {
                 "zh-CN": "容器 `div` 的类名，与组件自身的类名合并。",

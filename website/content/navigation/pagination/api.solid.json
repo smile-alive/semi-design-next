@@ -1,6 +1,6 @@
 {
     "pagination": {
-        "source": "packages/semi-ui-solid/src/components/pagination/pagination.tsx",
+        "source": "packages/solid/ui/src/components/pagination/pagination.tsx",
         "props": {
             "total": { "zh-CN": "总条数。", "en-US": "Total number of items." },
             "showTotal": {

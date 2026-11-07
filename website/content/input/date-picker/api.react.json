@@ -1,6 +1,6 @@
 {
     "date-picker": {
-        "source": "packages/semi-ui-react/src/components/date-picker/date-picker.tsx",
+        "source": "packages/react/ui/src/components/date-picker/date-picker.tsx",
         "props": {
             "autoAdjustOverflow": {
                 "zh-CN": "浮层被遮挡时是否自动调整方向。",

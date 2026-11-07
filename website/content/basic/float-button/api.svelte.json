@@ -1,6 +1,6 @@
 {
     "float-button": {
-        "source": "packages/semi-ui-svelte/src/components/float-button/float-button.svelte",
+        "source": "packages/svelte/ui/src/components/float-button/float-button.svelte",
         "props": {
             "badge": {
                 "zh-CN": "徽章参数，同 Badge 的 props（不含 children）；class、style 以及 onclick、onmouseenter、onmouseleave 落在 Badge 根元素上。",
@@ -30,7 +30,7 @@
         }
     },
     "float-button-group": {
-        "source": "packages/semi-ui-svelte/src/components/float-button/float-button-group.svelte",
+        "source": "packages/svelte/ui/src/components/float-button/float-button-group.svelte",
         "props": {
             "badgeCount": {
                 "zh-CN": "自定义子项徽章内容的 snippet，参数为 `{ item, index }`。",

@@ -1,6 +1,6 @@
 {
     "image": {
-        "source": "packages/semi-ui-svelte/src/components/image/image.svelte",
+        "source": "packages/svelte/ui/src/components/image/image.svelte",
         "props": {
             "src": { "zh-CN": "图片获取地址。", "en-US": "Image source URL." },
             "width": {
@@ -68,7 +68,7 @@
         }
     },
     "image-preview": {
-        "source": "packages/semi-ui-svelte/src/components/image/preview.svelte",
+        "source": "packages/svelte/ui/src/components/image/preview.svelte",
         "props": {
             "src": {
                 "zh-CN": "要预览的图片地址列表，决定组内图片及其顺序；包裹的 Image 按自己的 src（或 preview.src）在列表中的位置打开预览，不在列表中的 Image 单独预览。",

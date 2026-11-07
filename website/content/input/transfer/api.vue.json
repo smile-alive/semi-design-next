@@ -1,6 +1,6 @@
 {
     "transfer": {
-        "source": "packages/semi-ui-vue/src/components/transfer/transfer.vue",
+        "source": "packages/vue/ui/src/components/transfer/transfer.vue",
         "props": {
             "modelValue": {
                 "zh-CN": "已选中项的 value 数组，用 v-model 绑定。传入后即为受控组件，数组顺序就是右侧的显示顺序；传入 undefined 回到非受控。",

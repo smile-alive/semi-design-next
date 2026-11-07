@@ -1,6 +1,6 @@
 {
     "card": {
-        "source": "packages/semi-ui-solid/src/components/card/card.tsx",
+        "source": "packages/solid/ui/src/components/card/card.tsx",
         "props": {
             "actions": {
                 "zh-CN": "操作区，每个元素作为一个操作，位于内容区底部，操作之间以 12px 的水平间距排列。",
@@ -61,7 +61,7 @@
         }
     },
     "card-meta": {
-        "source": "packages/semi-ui-solid/src/components/card/meta.tsx",
+        "source": "packages/solid/ui/src/components/card/meta.tsx",
         "props": {
             "avatar": {
                 "zh-CN": "头像，位于标题与描述的左侧。",
@@ -78,7 +78,7 @@
         }
     },
     "card-group": {
-        "source": "packages/semi-ui-solid/src/components/card/card-group.tsx",
+        "source": "packages/solid/ui/src/components/card/card-group.tsx",
         "props": {
             "align": {
                 "zh-CN": "子项的交叉轴对齐方式，透传给 Space，可选 start、center、end、baseline，默认 center。",

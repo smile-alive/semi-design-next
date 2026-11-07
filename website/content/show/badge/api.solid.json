@@ -1,6 +1,6 @@
 {
     "badge": {
-        "source": "packages/semi-ui-solid/src/components/badge/badge.tsx",
+        "source": "packages/solid/ui/src/components/badge/badge.tsx",
         "props": {
             "count": {
                 "zh-CN": "徽章内容，数字或字符串按文字显示；传入 JSX 元素时直接渲染该元素，并去掉 type 与 theme 对应的样式类。",

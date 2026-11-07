@@ -15,6 +15,7 @@ export interface FrameworkLint {
     // Specifiers framework-free files and other frameworks may not import; gitignore-style, covering subpaths, and a
     // bare name matches the last path segment (`react` matches `@dnd-kit/react`)
     imports: string[];
+    // Package directories under packages/ (`react/ui`)
     packages: string[];
     // Overrides for parts of the framework's files; `pnpm lint:scopes` fails when one reaches outside them
     overrides: OxlintOverride[];
@@ -26,12 +27,12 @@ export interface FrameworkLint {
     typecheck?: 'vue-tsc' | 'svelte-check';
 }
 
-// A file belongs to a framework by name alone: in a semi-*-<id> package, named <id>.* or *.<id>.*, or its extension
+// A file belongs to a framework by name alone: in a packages/<id>/ package, named <id>.* or *.<id>.*, or its extension
 export function frameworkFiles(id: string, extensions: string[] = []) {
-    return [`packages/semi-*-${id}/**`, `**/${id}.*`, `**/*.${id}.*`, ...extensions.map((extension) => `**/*.${extension}`)];
+    return [`packages/${id}/**`, `**/${id}.*`, `**/*.${id}.*`, ...extensions.map((extension) => `**/*.${extension}`)];
 }
 
 // frameworkFiles' naming rule as import specifiers, so relative paths into a framework's files hit the boundary
 export function frameworkSpecifiers(id: string, extensions: string[] = []) {
-    return [`**/semi-*-${id}/**`, `${id}.*`, `*.${id}`, `*.${id}.*`, ...extensions.map((extension) => `*.${extension}`)];
+    return [`**/packages/${id}/**`, `${id}.*`, `*.${id}`, `*.${id}.*`, ...extensions.map((extension) => `*.${extension}`)];
 }

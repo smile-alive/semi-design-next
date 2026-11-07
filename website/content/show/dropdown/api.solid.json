@@ -1,6 +1,6 @@
 {
     "dropdown": {
-        "source": "packages/semi-ui-solid/src/components/dropdown/dropdown.tsx",
+        "source": "packages/solid/ui/src/components/dropdown/dropdown.tsx",
         "props": {
             "afterClose": {
                 "zh-CN": "菜单关闭且离场动画结束后调用。",
@@ -183,11 +183,11 @@
         }
     },
     "dropdown-menu": {
-        "source": "packages/semi-ui-solid/src/components/dropdown/dropdown-menu.tsx",
+        "source": "packages/solid/ui/src/components/dropdown/dropdown-menu.tsx",
         "props": {}
     },
     "dropdown-item": {
-        "source": "packages/semi-ui-solid/src/components/dropdown/dropdown-item.tsx",
+        "source": "packages/solid/ui/src/components/dropdown/dropdown-item.tsx",
         "props": {
             "active": {
                 "zh-CN": "当前项是否处于激活态，激活态时字体加粗、颜色加深；Dropdown 的 showTick 为 true 时左侧还会展示 √。",
@@ -216,7 +216,7 @@
         }
     },
     "dropdown-title": {
-        "source": "packages/semi-ui-solid/src/components/dropdown/dropdown-title.tsx",
+        "source": "packages/solid/ui/src/components/dropdown/dropdown-title.tsx",
         "props": {}
     }
 }

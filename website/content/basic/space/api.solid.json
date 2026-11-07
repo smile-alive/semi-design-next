@@ -1,6 +1,6 @@
 {
     "space": {
-        "source": "packages/semi-ui-solid/src/components/space/space.tsx",
+        "source": "packages/solid/ui/src/components/space/space.tsx",
         "props": {
             "wrap": {
                 "zh-CN": "是否自动换行，仅水平方向生效。",

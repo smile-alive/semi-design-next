@@ -1,6 +1,6 @@
 {
     "breadcrumb": {
-        "source": "packages/semi-ui-svelte/src/components/breadcrumb/breadcrumb.svelte",
+        "source": "packages/svelte/ui/src/components/breadcrumb/breadcrumb.svelte",
         "props": {
             "activeIndex": {
                 "zh-CN": "受控使用，当前项的序号（从 0 起）；缺省时最后一项为当前项。",

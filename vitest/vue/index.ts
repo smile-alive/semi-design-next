@@ -33,11 +33,11 @@ export const vue: TestFramework = {
         ...compatBrowserProjects('vue', browserProject),
     ],
     coverage: {
-        include: ['packages/{semi-ui-vue,semi-ai-vue}/src/**/*.{ts,tsx,vue}'],
-        exclude: ['packages/{semi-ui-vue,semi-ai-vue}/src/index.ts'],
+        include: ['packages/vue/{ui,ai}/src/**/*.{ts,tsx,vue}'],
+        exclude: ['packages/vue/{ui,ai}/src/index.ts'],
         thresholds: {
-            'packages/semi-ui-vue/**': { statements: 98, branches: 94, functions: 97, lines: 98 },
-            'packages/semi-ai-vue/**': { statements: 96, branches: 88, functions: 94, lines: 96 },
+            'packages/vue/ui/**': { statements: 98, branches: 94, functions: 97, lines: 98 },
+            'packages/vue/ai/**': { statements: 96, branches: 88, functions: 94, lines: 96 },
         },
     },
 };

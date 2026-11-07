@@ -1,6 +1,6 @@
 {
     "divider": {
-        "source": "packages/semi-ui-svelte/src/components/divider/divider.svelte",
+        "source": "packages/svelte/ui/src/components/divider/divider.svelte",
         "props": {
             "align": {
                 "zh-CN": "带内容时内容的对齐方式，可选 left、center、right。",

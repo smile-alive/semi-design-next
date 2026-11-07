@@ -1,6 +1,6 @@
 {
     "tree-select": {
-        "source": "packages/semi-ui-vue/src/components/tree-select/tree-select.vue",
+        "source": "packages/vue/ui/src/components/tree-select/tree-select.vue",
         "props": {
             "modelValue": {
                 "zh-CN": "当前选中的节点的 value（没有 value 时为 key），用 v-model 绑定；多选时只接受数组。传入后即为受控组件，传入 undefined 会清空选中项。",

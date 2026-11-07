@@ -1,6 +1,6 @@
 {
     "color-picker": {
-        "source": "packages/semi-ui-vue/src/components/color-picker/color-picker.vue",
+        "source": "packages/vue/ui/src/components/color-picker/color-picker.vue",
         "props": {
             "modelValue": {
                 "zh-CN": "受控值，使用 v-model 绑定；形态同 defaultValue。传 undefined 视为非受控，从受控变回 undefined 时显示回到 defaultValue。ColorValue 按不可变值对待，更新时整体替换。",

@@ -63,7 +63,7 @@
 | 浏览器项目     | 名称必须以 `-browser` 结尾；Solid 的 hydration 项目为 `solid-hydration-browser`，文件后缀 `*.hydration.browser.test.tsx`，`solid-browser` 项目排除这一后缀                                                       |
 | 用例表         | 每个包一张 `src/__tests__/ssr-cases.tsx`；每个导出组件一条最小用例；弹层与内部用弹层的组件另加默认打开用例；子组件放进父组件渲染                                                                                 |
 | 用例名         | `<组件目录>/<场景>`，如 `tooltip/默认打开`、`date-picker/dateRange 受控值`；可以用 `-t '^(tooltip\|popover)/'` 按目录筛选                                                                                        |
-| 守卫           | 遍历 `src/index.ts` 的组件导出，用例表缺项即失败（写法参照 `packages/semi-ai-vue/src/__tests__/override-default-props-coverage.test.ts`）                                                                        |
+| 守卫           | 遍历 `src/index.ts` 的组件导出，用例表缺项即失败（写法参照 `packages/vue/ai/src/__tests__/override-default-props-coverage.test.ts`）                                                                             |
 | 图标与插画     | 服务端循环渲染全部导出；hydration 只抽样                                                                                                                                                                         |
 | 首帧内容       | 框架告警发现不了的差异用内容断言：受控值、DatePicker 已选日期文字、`md` 正文、Typography 文字（Solid）、虚拟化 Table 数据行（Vue）                                                                               |
 | 时间           | 用例表中的 Calendar 一律传 `displayValue`；跨日用 `vi.setSystemTime` 在服务端渲染与 hydration 之间推进到次日，断言「今天」标记只在 hydration 后出现；跨时区不进单测                                              |

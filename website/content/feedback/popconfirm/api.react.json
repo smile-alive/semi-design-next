@@ -1,6 +1,6 @@
 {
     "popconfirm": {
-        "source": "packages/semi-ui-react/src/components/popconfirm/index.tsx",
+        "source": "packages/react/ui/src/components/popconfirm/index.tsx",
         "props": {
             "ref": {
                 "zh-CN": "接收句柄的引用，句柄只有 `focusTrigger` 方法。",

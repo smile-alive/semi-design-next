@@ -1,6 +1,6 @@
 {
     "highlight": {
-        "source": "packages/semi-ui-vue/src/components/highlight/highlight.vue",
+        "source": "packages/vue/ui/src/components/highlight/highlight.vue",
         "props": {
             "autoEscape": {
                 "zh-CN": "是否自动转义 searchWords 中的正则特殊字符。",

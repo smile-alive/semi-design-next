@@ -1,6 +1,6 @@
 {
     "time-picker": {
-        "source": "packages/semi-ui-solid/src/components/time-picker/time-picker.tsx",
+        "source": "packages/solid/ui/src/components/time-picker/time-picker.tsx",
         "props": {
             "autoAdjustOverflow": {
                 "zh-CN": "浮层被遮挡时是否自动调整方向。",

@@ -1,6 +1,6 @@
 {
     "cropper": {
-        "source": "packages/semi-ui-solid/src/components/cropper/cropper.tsx",
+        "source": "packages/solid/ui/src/components/cropper/cropper.tsx",
         "props": {
             "src": { "zh-CN": "被裁切图片的地址。", "en-US": "Address of the image to crop." },
             "imgProps": {

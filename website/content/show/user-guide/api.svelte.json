@@ -1,6 +1,6 @@
 {
     "user-guide": {
-        "source": "packages/semi-ui-svelte/src/components/user-guide/user-guide.svelte",
+        "source": "packages/svelte/ui/src/components/user-guide/user-guide.svelte",
         "props": {
             "class": {
                 "zh-CN": "popup 模式落在气泡卡片上，modal 模式落在 Modal 的最外层元素上。",

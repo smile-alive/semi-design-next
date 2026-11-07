@@ -1,6 +1,6 @@
 {
     "calendar": {
-        "source": "packages/semi-ui-react/src/components/calendar/index.tsx",
+        "source": "packages/react/ui/src/components/calendar/index.tsx",
         "props": {
             "allDayEventsRender": {
                 "zh-CN": "自定义日、多日、周视图顶部的全天事件区域，参数 `events` 为传入的全部事件，需自行筛选。",

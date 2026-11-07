@@ -11,12 +11,12 @@ export const svelte: FrameworkLint = {
     files,
     // Only the runtime and test bindings; the build plugins (@sveltejs/*) and the ESLint plugin are imported by framework-free config
     imports: ['svelte', '@testing-library/svelte', '@tanstack/svelte-virtual', '@dnd-kit/svelte', '@fibrae/semi-*-svelte', ...frameworkSpecifiers('svelte', ['svelte'])],
-    packages: ['semi-ui-svelte', 'semi-ai-svelte', 'semi-icons-svelte', 'semi-illustrations-svelte'],
+    packages: ['svelte/ui', 'svelte/ai', 'svelte/icons', 'svelte/illustrations'],
     overrides: [
         { files: ['**/*.svelte'], rules: typescriptRules },
         // svelte-package publishes specifiers as written, and Node, webpack's fullySpecified and TS nodenext need the extension
-        { files: ['packages/semi-*-svelte/src/**'], rules: { 'import/extensions': ['error', 'ignorePackages', { checkTypeImports: true }] } },
-        { files: ['packages/semi-*-svelte/src/**/__tests__/**'], rules: { 'import/extensions': 'off' } },
+        { files: ['packages/svelte/*/src/**'], rules: { 'import/extensions': ['error', 'ignorePackages', { checkTypeImports: true }] } },
+        { files: ['packages/svelte/*/src/**/__tests__/**'], rules: { 'import/extensions': 'off' } },
     ],
     exemptions: svelteExemptions,
     componentOrder: svelteComponentOrder,

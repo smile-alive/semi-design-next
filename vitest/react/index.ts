@@ -30,7 +30,7 @@ export const react: TestFramework = {
         ...compatBrowserProjects('react', browserProject),
     ],
     coverage: {
-        include: ['packages/{semi-ui-react,semi-ai-react}/src/**/*.{js,jsx,mjs,ts,tsx}'],
-        exclude: ['packages/{semi-ui-react,semi-ai-react}/src/index.ts'],
+        include: ['packages/react/{ui,ai}/src/**/*.{js,jsx,mjs,ts,tsx}'],
+        exclude: ['packages/react/{ui,ai}/src/index.ts'],
     },
 };

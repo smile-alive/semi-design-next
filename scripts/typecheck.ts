@@ -5,7 +5,7 @@ import path from 'node:path';
 import ts from 'typescript';
 import { frameworks } from '../lint/index.ts';
 
-const configs = ['tsconfig.node.json', ...globSync('packages/*/tsconfig.json').toSorted(), ...globSync('website/tsconfig*.json').toSorted(), ...globSync('vitest/tsconfig*.json').toSorted(), ...globSync('vitest/*/tsconfig*.json').toSorted()];
+const configs = ['tsconfig.node.json', ...globSync('packages/*/*/tsconfig.json').toSorted(), ...globSync('website/tsconfig*.json').toSorted(), ...globSync('vitest/tsconfig*.json').toSorted(), ...globSync('vitest/*/tsconfig*.json').toSorted()];
 const failed: string[] = [];
 // A vitest config missing from the root references is not type-checked by the editor or by `tsc -b`
 const referenced = new Set<string>(ts.readConfigFile('tsconfig.json', (file) => ts.sys.readFile(file)).config.references.map((reference: { path: string }) => path.normalize(reference.path)));

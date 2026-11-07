@@ -1,12 +1,18 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import type { OxlintOverride } from 'vite-plus/lint';
 import type { FrameworkLint } from './framework.ts';
 
 type ImportPattern = { group: string[]; message: string };
 type RestrictedImports = ['error', { patterns: ImportPattern[] }];
 
+const root = path.resolve(import.meta.dirname, '..');
+// Package directory under packages/ (`react/ui`) to its npm name
+const packageNames = new Map(fs.globSync('packages/*/*/package.json', { cwd: root }).map((file) => [path.dirname(file).slice('packages/'.length), (JSON.parse(fs.readFileSync(path.join(root, file), 'utf8')) as { name: string }).name]));
+
 // A relative path into another Semi package reaches its source, not what consumers install
 const noRelativeSemiPackage: ImportPattern = {
-    group: ['../**/semi-*/**'],
+    group: [...packageNames.keys()].map((dir) => `../**/${dir}/**`),
     message: 'Import another Semi package by its name (@fibrae/semi-*), not by a relative path.',
 };
 
@@ -23,7 +29,7 @@ function restrictedImports(patterns: ImportPattern[], ownPackage?: string): Rest
                 ...(ownPackage
                     ? [
                           {
-                              group: [`@fibrae/${ownPackage}`, `@fibrae/${ownPackage}/**`],
+                              group: withSubpaths([ownPackage]),
                               message: 'Import modules of the same package by relative path.',
                           },
                       ]
@@ -35,10 +41,12 @@ function restrictedImports(patterns: ImportPattern[], ownPackage?: string): Rest
 }
 
 // Tests import what they test by package name (resolved to source by semiSourceAliases), not `../../`
-function packageBoundary(pkg: string, patterns: ImportPattern[]): OxlintOverride[] {
+function packageBoundary(dir: string, patterns: ImportPattern[]): OxlintOverride[] {
+    const name = packageNames.get(dir);
+    if (!name) throw new Error(`no package at packages/${dir}`);
     return [
-        { files: [`packages/${pkg}/**`], rules: { 'no-restricted-imports': restrictedImports(patterns, pkg) } },
-        { files: [`packages/${pkg}/**/__tests__/**`], rules: { 'no-restricted-imports': restrictedImports(patterns) } },
+        { files: [`packages/${dir}/**`], rules: { 'no-restricted-imports': restrictedImports(patterns, name) } },
+        { files: [`packages/${dir}/**/__tests__/**`], rules: { 'no-restricted-imports': restrictedImports(patterns) } },
     ];
 }
 
@@ -70,16 +78,16 @@ export function boundaryOverrides(frameworks: FrameworkLint[]): OxlintOverride[]
                     group: withSubpaths(other.imports),
                     message: `${framework.name} code must not depend on ${other.name}.`,
                 }));
-            return [{ files: framework.files, rules: { 'no-restricted-imports': restrictedImports(patterns) } }, ...framework.packages.flatMap((pkg) => packageBoundary(pkg, patterns))];
+            return [{ files: framework.files, rules: { 'no-restricted-imports': restrictedImports(patterns) } }, ...framework.packages.flatMap((dir) => packageBoundary(dir, patterns))];
         }),
-        ...packageBoundary('semi-foundation', [
+        ...packageBoundary('shared/foundation', [
             {
                 group: [...frameworkImports, ...withSubpaths(['motion', '@fibrae/semi-ai-foundation'])],
                 message: 'semi-foundation must not depend on a framework, on Motion or on the AI packages.',
             },
         ]),
         // The AI foundation builds on semi-foundation
-        ...packageBoundary('semi-ai-foundation', [
+        ...packageBoundary('shared/ai-foundation', [
             {
                 group: [...frameworkImports, ...withSubpaths(['motion'])],
                 message: 'semi-ai-foundation must not depend on a framework or on Motion.',

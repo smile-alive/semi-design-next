@@ -1,6 +1,6 @@
 {
     "steps": {
-        "source": "packages/semi-ui-svelte/src/components/steps/steps.svelte",
+        "source": "packages/svelte/ui/src/components/steps/steps.svelte",
         "props": {
             "current": {
                 "zh-CN": "当前步骤，从 0 开始计数；`dataSource` 项可用 status 覆盖状态。不可绑定，更新由使用方在 `onChange` 里写。",

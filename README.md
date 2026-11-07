@@ -119,17 +119,17 @@ The full guide covers build plugins, server rendering and theming: [React](https
 
 Replace `<framework>` with `react`, `vue`, `solid` or `svelte`.
 
-| Package                                                                                                                                                              | Purpose                                                         |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| `@fibrae/semi-ui-<framework>`                                                                                                                                        | Components                                                      |
-| `@fibrae/semi-ai-<framework>`                                                                                                                                        | AI components                                                   |
-| `@fibrae/semi-icons-<framework>`                                                                                                                                     | Icons                                                           |
-| `@fibrae/semi-illustrations-<framework>`                                                                                                                             | Illustrations                                                   |
-| [`@fibrae/semi-animation`](packages/semi-animation/README.md)                                                                                                        | Presets for Motion and View Transitions                         |
-| [`@fibrae/semi-polyfill`](packages/semi-polyfill/README.md)                                                                                                          | Optional polyfills for older supported Safari versions          |
-| [`@fibrae/semi-vite-plugin`](packages/semi-vite/README.md), [`-webpack-plugin`](packages/semi-webpack/README.md), [`-rspack-plugin`](packages/semi-rspack/README.md) | Build plugins for the class prefix, `@layer semi` and `omitCss` |
-| [`@fibrae/semi-next`](packages/semi-next/README.md), [`@fibrae/semi-nuxt`](packages/semi-nuxt/README.md)                                                             | Next.js and Nuxt integrations                                   |
-| [`@fibrae/semi-scss-compile`](packages/semi-scss-compile/README.md)                                                                                                  | Compiles Semi SCSS to CSS                                       |
+| Package                                                                                                                                                                       | Purpose                                                         |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `@fibrae/semi-ui-<framework>`                                                                                                                                                 | Components                                                      |
+| `@fibrae/semi-ai-<framework>`                                                                                                                                                 | AI components                                                   |
+| `@fibrae/semi-icons-<framework>`                                                                                                                                              | Icons                                                           |
+| `@fibrae/semi-illustrations-<framework>`                                                                                                                                      | Illustrations                                                   |
+| [`@fibrae/semi-animation`](packages/shared/animation/README.md)                                                                                                               | Presets for Motion and View Transitions                         |
+| [`@fibrae/semi-polyfill`](packages/shared/polyfill/README.md)                                                                                                                 | Optional polyfills for older supported Safari versions          |
+| [`@fibrae/semi-vite-plugin`](packages/plugins/vite/README.md), [`-webpack-plugin`](packages/plugins/webpack/README.md), [`-rspack-plugin`](packages/plugins/rspack/README.md) | Build plugins for the class prefix, `@layer semi` and `omitCss` |
+| [`@fibrae/semi-next`](packages/plugins/next/README.md), [`@fibrae/semi-nuxt`](packages/plugins/nuxt/README.md)                                                                | Next.js and Nuxt integrations                                   |
+| [`@fibrae/semi-scss-compile`](packages/shared/scss-compile/README.md)                                                                                                         | Compiles Semi SCSS to CSS                                       |
 
 ## Coming from Semi Design
 

@@ -1,6 +1,6 @@
 {
     "card": {
-        "source": "packages/semi-ui-vue/src/components/card/card.vue",
+        "source": "packages/vue/ui/src/components/card/card.vue",
         "props": {
             "bodyStyle": { "zh-CN": "内容区的内联样式。", "en-US": "Inline style of the content area." },
             "bordered": { "zh-CN": "是否显示卡片外边框。", "en-US": "Whether the card has an outer border." },
@@ -52,7 +52,7 @@
         "exposed": {}
     },
     "card-meta": {
-        "source": "packages/semi-ui-vue/src/components/card/meta.vue",
+        "source": "packages/vue/ui/src/components/card/meta.vue",
         "props": {
             "title": {
                 "zh-CN": "标题文字，等价于 title 插槽，两者同时给出时插槽优先。",
@@ -68,7 +68,7 @@
         "exposed": {}
     },
     "card-group": {
-        "source": "packages/semi-ui-vue/src/components/card/card-group.vue",
+        "source": "packages/vue/ui/src/components/card/card-group.vue",
         "props": {
             "align": {
                 "zh-CN": "子项的交叉轴对齐方式，传给 Space，可选 start、center、end、baseline。",

@@ -1,6 +1,6 @@
 {
     "time-picker": {
-        "source": "packages/semi-ui-svelte/src/components/time-picker/time-picker.svelte",
+        "source": "packages/svelte/ui/src/components/time-picker/time-picker.svelte",
         "props": {
             "value": {
                 "zh-CN": "当前时间，配合 bind:value 使用；type 为 timeRange 时为数组。传 null 是受控的空值，undefined 视为非受控。",

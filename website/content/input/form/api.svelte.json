@@ -1,6 +1,6 @@
 {
     "form": {
-        "source": "packages/semi-ui-svelte/src/components/form/form.svelte",
+        "source": "packages/svelte/ui/src/components/form/form.svelte",
         "props": {
             "initValues": {
                 "zh-CN": "表单的初始值，仅在 Form 创建时复制一次。",
@@ -127,7 +127,7 @@
         }
     },
     "array-field": {
-        "source": "packages/semi-ui-svelte/src/components/form/array-field.svelte",
+        "source": "packages/svelte/ui/src/components/form/array-field.svelte",
         "props": {
             "field": {
                 "zh-CN": "数组在 formState.values 中的路径，必填。例如各行字段为 a[0].name、a[1].name 时应传 a。",
@@ -148,7 +148,7 @@
         }
     },
     "schema-form": {
-        "source": "packages/semi-ui-svelte/src/components/form/schema-form.svelte",
+        "source": "packages/svelte/ui/src/components/form/schema-form.svelte",
         "props": {
             "jsonSchema": {
                 "zh-CN": "要渲染的 JSON Schema，优先于从 Form 的 `schema` 导出的结果；两者都没有时不渲染字段，开发模式下警告。",
@@ -287,7 +287,7 @@
         }
     },
     "schema-field": {
-        "source": "packages/semi-ui-svelte/src/components/form/schema-field.svelte",
+        "source": "packages/svelte/ui/src/components/form/schema-field.svelte",
         "props": {
             "field": {
                 "zh-CN": "要渲染的子树路径，默认为根。",
@@ -308,7 +308,7 @@
         }
     },
     "form-label": {
-        "source": "packages/semi-ui-svelte/src/components/form/label.svelte",
+        "source": "packages/svelte/ui/src/components/form/label.svelte",
         "props": {
             "text": {
                 "zh-CN": "Label 文本，`children` snippet 优先。",
@@ -349,7 +349,7 @@
         }
     },
     "form-error-message": {
-        "source": "packages/semi-ui-svelte/src/components/form/error-message.svelte",
+        "source": "packages/svelte/ui/src/components/form/error-message.svelte",
         "props": {
             "error": {
                 "zh-CN": "错误信息，字符串数组，各条用逗号连接显示，空字符串不显示；`['']` 表示校验失败但没有文本，此时也不显示 helpText；空数组与空值不渲染。",
@@ -386,7 +386,7 @@
         }
     },
     "form-section": {
-        "source": "packages/semi-ui-svelte/src/components/form/section.svelte",
+        "source": "packages/svelte/ui/src/components/form/section.svelte",
         "props": {
             "text": {
                 "zh-CN": "分组标题，没有内容时不渲染标题元素。",
@@ -399,7 +399,7 @@
         }
     },
     "form-slot": {
-        "source": "packages/semi-ui-svelte/src/components/form/slot.svelte",
+        "source": "packages/svelte/ui/src/components/form/slot.svelte",
         "props": {
             "label": {
                 "zh-CN": "Label 的文本，或 text、align、width、required、optional 等 Label 配置；`fieldLabel` snippet 优先。",
@@ -436,7 +436,7 @@
         }
     },
     "form-input-group": {
-        "source": "packages/semi-ui-svelte/src/components/form/input-group.svelte",
+        "source": "packages/svelte/ui/src/components/form/input-group.svelte",
         "props": {
             "label": {
                 "zh-CN": "整个 Group 的 Label：字符串作为文本，对象作为 Label 配置，其中 id 用作 Label 的 id；`fieldLabel` snippet 优先。",

@@ -1,6 +1,6 @@
 {
     "collapse": {
-        "source": "packages/semi-ui-solid/src/components/collapse/collapse.tsx",
+        "source": "packages/solid/ui/src/components/collapse/collapse.tsx",
         "props": {
             "activeKey": {
                 "zh-CN": "受控属性，当前展开面板的 key；null 与空字符串表示全部收起。",
@@ -50,7 +50,7 @@
         }
     },
     "collapse-panel": {
-        "source": "packages/semi-ui-solid/src/components/collapse/panel.tsx",
+        "source": "packages/solid/ui/src/components/collapse/panel.tsx",
         "props": {
             "itemKey": {
                 "zh-CN": "必填且唯一，用于匹配 activeKey 与 defaultActiveKey。",

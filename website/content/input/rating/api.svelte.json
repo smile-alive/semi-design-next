@@ -1,6 +1,6 @@
 {
     "rating": {
-        "source": "packages/semi-ui-svelte/src/components/rating/rating.svelte",
+        "source": "packages/svelte/ui/src/components/rating/rating.svelte",
         "props": {
             "allowClear": {
                 "zh-CN": "是否允许再次点击后清除。",

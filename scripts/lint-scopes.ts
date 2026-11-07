@@ -53,10 +53,7 @@ for (const file of files) {
     }
 }
 
-const packageDirs = fs
-    .readdirSync(path.join(root, 'packages'), { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name);
+const packageDirs = fs.globSync('packages/*/*/package.json', { cwd: root }).map((file) => path.dirname(file).slice('packages/'.length));
 for (const framework of frameworks) {
     const named = packageDirs.filter((dir) => framework.files.some((glob) => path.matchesGlob(`packages/${dir}/index.ts`, glob)));
     if (named.toSorted().join() !== framework.packages.toSorted().join()) {
@@ -113,7 +110,8 @@ if (args.length) {
     const counts = new Map<string, Map<string, number>>();
     for (const file of files) {
         const parts = file.split('/');
-        const area = parts.length === 1 ? '(root)' : parts.length > 2 && ['packages', 'website'].includes(parts[0]) ? `${parts[0]}/${parts[1]}` : parts[0];
+        const depth = parts[0] === 'packages' ? 3 : parts[0] === 'website' ? 2 : 1;
+        const area = parts.length === 1 ? '(root)' : parts.slice(0, Math.min(depth, parts.length - 1)).join('/');
         const scope = ownersOf(file)[0] ?? COMMON;
         const row = counts.get(area) ?? new Map<string, number>();
         row.set(scope, (row.get(scope) ?? 0) + 1);

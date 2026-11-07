@@ -1,6 +1,6 @@
 {
     "image": {
-        "source": "packages/semi-ui-vue/src/components/image/image.vue",
+        "source": "packages/vue/ui/src/components/image/image.vue",
         "props": {
             "src": { "zh-CN": "图片获取地址。", "en-US": "Image source URL." },
             "width": {
@@ -77,7 +77,7 @@
         "exposed": {}
     },
     "image-preview": {
-        "source": "packages/semi-ui-vue/src/components/image/preview.vue",
+        "source": "packages/vue/ui/src/components/image/preview.vue",
         "props": {
             "src": {
                 "zh-CN": "要预览的图片地址列表。包裹 Image 时与各 Image 登记的预览图合并，src 中的图片排在前面。",

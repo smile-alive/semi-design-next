@@ -1,6 +1,6 @@
 {
     "icon": {
-        "source": "packages/semi-icons-svelte/src/components/icon.svelte",
+        "source": "packages/svelte/icons/src/components/icon.svelte",
         "props": {
             "children": {
                 "zh-CN": "自定义 SVG 内容的 snippet，参数为 `{ fill }`，可把 `fill` 传给自定义 SVG。",

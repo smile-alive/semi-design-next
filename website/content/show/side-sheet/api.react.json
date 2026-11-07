@@ -1,6 +1,6 @@
 {
     "side-sheet": {
-        "source": "packages/semi-ui-react/src/components/side-sheet/index.tsx",
+        "source": "packages/react/ui/src/components/side-sheet/index.tsx",
         "props": {
             "afterVisibleChange": {
                 "zh-CN": "面板显示时在 `visible` 变为 `true` 的那次提交中立即触发，不等进场动画；隐藏时在离场动画结束后触发；显示期间被卸载，或所在子树被 `Activity` 隐藏时以 `false` 触发一次。",

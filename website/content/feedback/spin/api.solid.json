@@ -1,6 +1,6 @@
 {
     "spin": {
-        "source": "packages/semi-ui-solid/src/components/spin/spin.tsx",
+        "source": "packages/solid/ui/src/components/spin/spin.tsx",
         "props": {
             "childStyle": {
                 "zh-CN": "内部子元素的样式，可以是对象（键使用 kebab-case）或字符串。",

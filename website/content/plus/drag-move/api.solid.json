@@ -1,6 +1,6 @@
 {
     "drag-move": {
-        "source": "packages/semi-ui-solid/src/components/drag-move/drag-move.tsx",
+        "source": "packages/solid/ui/src/components/drag-move/drag-move.tsx",
         "props": {
             "allowInputDrag": {
                 "zh-CN": "在原生 input、textarea 上按下时是否允许拖动。",

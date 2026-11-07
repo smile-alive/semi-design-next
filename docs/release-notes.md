@@ -98,9 +98,9 @@
 ## 主题
 
 - 破坏性：删除主题包与编译期 Sass 覆写：`@fibrae/semi-theme-default` 删除（并入 `@fibrae/semi-foundation/theme/`），插件删除 `theme`、`variables`、`include` 选项，`semi-scss-compile` 删除 `themePath`（`-t`/`--theme`），`local.scss`、`custom.scss` 不再加载。定制只走 `--semi-*` CSS 变量与 `@layer semi` 之外的 CSS；`prefixCls`、`cssLayer`、`omitCss` 保留。
-- 破坏性：Sass 变量不再是公开定制面，`!default` 删除；`semi-theme-shared` 删除 `resolveThemeDir`、`convertMapToString`。
+- 破坏性：Sass 变量不再是公开定制面，`!default` 删除；`semi-scss-core` 删除 `resolveThemeDir`、`convertMapToString`。
 - token 入口由 `semi-ui-react/_base/base.scss` 移到 `@fibrae/semi-foundation/base/tokens.scss`，任一组件入口自带 token；新增 `@fibrae/semi-ui-react/tokens`（Vue、Solid、Svelte 的 UI 包同名），在应用入口最先导入。
-- 破坏性：删除 Web Component 构建工具链：semi-webpack、semi-rspack 删除 `webComponentPath`、`semiWebComponentLoader`、`semiCssModuleLoader`，`semi-theme-shared` 删除 `injectWebComponentStyles`、`cssToModule`。组件可在 open ShadowRoot 内使用（F13），样式由应用加入 ShadowRoot。
+- 破坏性：删除 Web Component 构建工具链：semi-webpack、semi-rspack 删除 `webComponentPath`、`semiWebComponentLoader`、`semiCssModuleLoader`，`semi-scss-core` 删除 `injectWebComponentStyles`、`cssToModule`。组件可在 open ShadowRoot 内使用（F13），样式由应用加入 ShadowRoot。
 - 破坏性：删除 `$z-popover`、`$z-dropdown`、`$z-tooltip` 等变量与 `--semi-z-popover`、`--semi-z-dropdown`、`--semi-z-tooltip` 等 CSS 变量：弹层在 top layer，z-index 不起作用（D5）。
 - base 层名由 `base` 改为 `semi-base`。与 Tailwind 同用时须先声明 `@layer theme, base, semi, components, utilities;` 并保持 `cssLayer` 为 `true`；新增 `@fibrae/semi-ui-react/tailwind.css`（Vue、Solid、Svelte 的 UI 包同名）映射 token，圆角工具类由 `rounded-semi-border-radius-*` 改为 `rounded-semi-*`。
 - 破坏性：token 落点由 `body` 改为 `:root`（暗色为 `[theme-mode='dark']`），`theme-mode` 仍写在 `body` 上；`:root` 上的未分层覆盖现在对浅色生效。

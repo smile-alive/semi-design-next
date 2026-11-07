@@ -1,6 +1,6 @@
 {
     "float-button": {
-        "source": "packages/semi-ui-react/src/components/float-button/index.tsx",
+        "source": "packages/react/ui/src/components/float-button/index.tsx",
         "props": {
             "badge": { "zh-CN": "徽章参数，同 Badge 的 props，作用于包裹按钮内容的 Badge。", "en-US": "Badge props, same as Badge. Applied to the Badge that wraps the button content." },
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
@@ -24,7 +24,7 @@
         }
     },
     "float-button-group": {
-        "source": "packages/semi-ui-react/src/components/float-button/float-button-group.tsx",
+        "source": "packages/react/ui/src/components/float-button/float-button-group.tsx",
         "props": {
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
             "disabled": { "zh-CN": "禁用全部子项。", "en-US": "Disables every item." },

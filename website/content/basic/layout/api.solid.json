@@ -1,6 +1,6 @@
 {
     "layout": {
-        "source": "packages/semi-ui-solid/src/components/layout/layout.tsx",
+        "source": "packages/solid/ui/src/components/layout/layout.tsx",
         "props": {
             "hasSider": {
                 "zh-CN": "表示子元素里有 Sider，一般不用指定。Sider 在创建时向最近的 Layout 登记，首帧（含 SSR）即带 has-sider 类。传 false 不能去掉 Sider 带来的 has-sider 类。",
@@ -11,7 +11,7 @@
         }
     },
     "layout-header": {
-        "source": "packages/semi-ui-solid/src/components/layout/basic.tsx#Header",
+        "source": "packages/solid/ui/src/components/layout/basic.tsx#Header",
         "props": {
             "prefixCls": { "zh-CN": "类名前缀，默认为 `semi-layout`。", "en-US": "Class name prefix. Defaults to `semi-layout`." },
             "tagName": { "zh-CN": "根元素的标签名，默认为 `header`。", "en-US": "Tag name of the root element. Defaults to `header`." },
@@ -19,7 +19,7 @@
         }
     },
     "layout-footer": {
-        "source": "packages/semi-ui-solid/src/components/layout/basic.tsx#Footer",
+        "source": "packages/solid/ui/src/components/layout/basic.tsx#Footer",
         "props": {
             "prefixCls": { "zh-CN": "类名前缀，默认为 `semi-layout`。", "en-US": "Class name prefix. Defaults to `semi-layout`." },
             "tagName": { "zh-CN": "根元素的标签名，默认为 `footer`。", "en-US": "Tag name of the root element. Defaults to `footer`." },
@@ -27,7 +27,7 @@
         }
     },
     "layout-content": {
-        "source": "packages/semi-ui-solid/src/components/layout/basic.tsx#Content",
+        "source": "packages/solid/ui/src/components/layout/basic.tsx#Content",
         "props": {
             "prefixCls": { "zh-CN": "类名前缀，默认为 `semi-layout`。", "en-US": "Class name prefix. Defaults to `semi-layout`." },
             "tagName": { "zh-CN": "根元素的标签名，默认为 `main`。", "en-US": "Tag name of the root element. Defaults to `main`." },
@@ -35,7 +35,7 @@
         }
     },
     "layout-sider": {
-        "source": "packages/semi-ui-solid/src/components/layout/sider.tsx",
+        "source": "packages/solid/ui/src/components/layout/sider.tsx",
         "props": {
             "breakpoint": {
                 "zh-CN": "触发响应式布局的断点，可选 xs、sm、md、lg、xl、xxl。仅在挂载时读取一次。",

@@ -1,6 +1,6 @@
 {
     "overflow-list": {
-        "source": "packages/semi-ui-react/src/components/overflow-list/index.tsx",
+        "source": "packages/react/ui/src/components/overflow-list/index.tsx",
         "props": {
             "className": {
                 "zh-CN": "根元素的类名。",

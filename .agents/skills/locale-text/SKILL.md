@@ -5,11 +5,11 @@ description: 给组件新增或修改可访问名称、内置文案时，补齐 
 
 # 语言包文案
 
-组件的可访问名称和内置文案一律从语言包读取。语言包在 `packages/semi-foundation/src/locale/source/`，共 57 个，每个文件都是 `const local: Locale = {...}`：类型就是完整性检查，漏了键 typecheck 会报错。
+组件的可访问名称和内置文案一律从语言包读取。语言包在 `packages/shared/foundation/src/locale/source/`，共 57 个，每个文件都是 `const local: Locale = {...}`：类型就是完整性检查，漏了键 typecheck 会报错。
 
 ## 步骤
 
-1. **定键**：在 `packages/semi-foundation/src/locale/interface.ts` 中对应组件的切片里加键，键名描述用途（`closableTag`、`pageN`）。有占位符的写成 `${名字}`，并用 JSDoc 说明它代表什么：
+1. **定键**：在 `packages/shared/foundation/src/locale/interface.ts` 中对应组件的切片里加键，键名描述用途（`closableTag`、`pageN`）。有占位符的写成 `${名字}`，并用 JSDoc 说明它代表什么：
 
     ```ts
     /** `${page}` is the page number */
@@ -28,14 +28,14 @@ description: 给组件新增或修改可访问名称、内置文案时，补齐 
 
     ```bash
     pnpm build && pnpm typecheck
-    vp test run --project common --project <框架> packages/semi-foundation/src/locale packages/<包>/src/locale packages/<包>/src/<组件目录>
+    vp test run --project common --project <框架> packages/shared/foundation/src/locale packages/<包>/src/locale packages/<包>/src/<组件目录>
     ```
 
 8. **记录**：可访问名称或可见文案有变化时，写进 `docs/release-notes.md` 对应组件的章节。
 
 ## 新增语言
 
-1. 新建 `packages/semi-foundation/src/locale/source/<code>.ts`：写成 `const local: Locale = {...}`，`code`、`dateFnsLocale`（从 `date-fns/locale` 导入）、`currency` 的含义见 `packages/semi-foundation/README.md` 的「语言包」一节。
+1. 新建 `packages/shared/foundation/src/locale/source/<code>.ts`：写成 `const local: Locale = {...}`，`code`、`dateFnsLocale`（从 `date-fns/locale` 导入）、`currency` 的含义见 `packages/shared/foundation/README.md` 的「语言包」一节。
 2. 译全 `Locale` 的所有键，`${名字}` 占位符本身不翻译。
 3. 跑 typecheck 确认键齐全。
 4. 在文档站 `website/content/other/locale/index.zh-CN.mdx` 与 `index.en-US.mdx` 的表补上该语言：中文页的小节是「目前支持语言」，英文页是「Languages supported」。

@@ -76,7 +76,7 @@ export function browserBase(browser: 'chromium' | 'firefox' | 'webkit' = 'chromi
 
 // A file belongs to a framework's tests by name: its package's __tests__, or a __tests__ file named <id>.* or *.<id>.*
 function filesOfKind(id: string, kind: string) {
-    return [`packages/semi-*-${id}/**/__tests__/**/*.${kind}.{ts,tsx}`, `packages/**/__tests__/**/{${id},*.${id}}.*${kind}.{ts,tsx}`];
+    return [`packages/${id}/*/**/__tests__/**/*.${kind}.{ts,tsx}`, `packages/**/__tests__/**/{${id},*.${id}}.*${kind}.{ts,tsx}`];
 }
 
 export function testFiles(id: string, browser: boolean) {
@@ -100,7 +100,7 @@ export function compatBrowserProjects(id: string, browserProject: () => TestProj
                 ...project.test,
                 ...browserBase(browser),
                 name: `${id}-${browser}-browser`,
-                include: [`packages/semi-*-${id}/src/${compatComponents}/__tests__/**/*.browser.test.{ts,tsx}`],
+                include: [`packages/${id}/*/src/${compatComponents}/__tests__/**/*.browser.test.{ts,tsx}`],
                 // gc() exists only under Chromium's --expose-gc
                 exclude: ['**/node_modules/**', '**/*-gc.browser.test.*', '**/*.hydration.browser.test.*'],
             },

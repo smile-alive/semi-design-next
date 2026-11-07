@@ -9,7 +9,7 @@ export const svelte: TestFramework = {
             plugins: [sveltePlugin(), semiStubStyles],
             // Without the browser condition Node resolves svelte's server build, where mount() throws
             resolve: { conditions: ['browser'] },
-            test: { ...jsdomBase, name: 'svelte', server: { deps: { inline: [/@dnd-kit\/svelte/] } }, include: [...testFiles('svelte', false), 'packages/semi-*-svelte/**/__tests__/**/*.test.ts'], setupFiles: ['./vitest/vitest.setup.ts', './vitest/svelte/svelte.setup.ts'] },
+            test: { ...jsdomBase, name: 'svelte', server: { deps: { inline: [/@dnd-kit\/svelte/] } }, include: [...testFiles('svelte', false), 'packages/svelte/*/**/__tests__/**/*.test.ts'], setupFiles: ['./vitest/vitest.setup.ts', './vitest/svelte/svelte.setup.ts'] },
         },
         {
             extends: true,

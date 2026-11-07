@@ -1,6 +1,6 @@
 {
     "list": {
-        "source": "packages/semi-ui-react/src/components/list/index.tsx",
+        "source": "packages/react/ui/src/components/list/index.tsx",
         "props": {
             "bordered": { "zh-CN": "是否显示边框。", "en-US": "Whether to show a border." },
             "children": {
@@ -47,7 +47,7 @@
         }
     },
     "list-item": {
-        "source": "packages/semi-ui-react/src/components/list/item.tsx",
+        "source": "packages/react/ui/src/components/list/item.tsx",
         "props": {
             "align": {
                 "zh-CN": "header 与 main 的垂直对齐方式，可选 `flex-start`、`flex-end`、`center`、`baseline` 或 `stretch`。",

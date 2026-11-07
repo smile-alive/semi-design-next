@@ -1,6 +1,6 @@
 {
     "tooltip": {
-        "source": "packages/semi-ui-react/src/components/tooltip/index.tsx",
+        "source": "packages/react/ui/src/components/tooltip/index.tsx",
         "props": {
             "afterClose": { "zh-CN": "弹出层关闭且离场动画结束后调用。", "en-US": "Called after the popup has closed and its leave animation has finished." },
             "afterOpen": {

@@ -1,6 +1,6 @@
 {
     "badge": {
-        "source": "packages/semi-ui-react/src/components/badge/index.tsx",
+        "source": "packages/react/ui/src/components/badge/index.tsx",
         "props": {
             "children": {
                 "zh-CN": "徽章所附着的元素，徽章相对它定位；不传时徽章作为独立元素显示。",

@@ -17,7 +17,7 @@ import { frameworks } from './src/lib/frameworks.ts';
 import { shikiThemes } from './src/lib/shiki.ts';
 
 // Two JSX integrations split files by the repo's naming rule: the Solid packages (aliased to source) and *.solid.tsx demos
-const solidFiles = [/\/packages\/semi-[a-z-]+-solid\//, /\.solid\.tsx$/];
+const solidFiles = [/\/packages\/solid\//, /\.solid\.tsx$/];
 // src/pages/index.astro and [locale]/[framework]/index.astro only redirect
 const redirectPage = new RegExp(`^/(?:[^/]+/(?:${frameworks.join('|')})/)?$`);
 

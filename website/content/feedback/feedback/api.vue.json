@@ -1,6 +1,6 @@
 {
     "feedback": {
-        "source": "packages/semi-ui-vue/src/components/feedback/feedback.vue",
+        "source": "packages/vue/ui/src/components/feedback/feedback.vue",
         "props": {
             "mode": {
                 "zh-CN": "展示模式：popup 是底部无遮罩的非模态面板（SideSheet），modal 是模态对话框（Modal）。未声明的属性按模式落到对应的 SideSheet 或 Modal 上。",

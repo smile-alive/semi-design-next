@@ -1,6 +1,6 @@
 {
     "tabs": {
-        "source": "packages/semi-ui-vue/src/components/tabs/tabs.vue",
+        "source": "packages/vue/ui/src/components/tabs/tabs.vue",
         "props": {
             "activeKey": {
                 "zh-CN": "当前激活的标签页的 itemKey，配合 v-model:activeKey 使用。传 null 时不激活任何标签页，仍是受控；不传或为 undefined 时按非受控处理。",
@@ -126,7 +126,7 @@
         "exposed": {}
     },
     "tab-pane": {
-        "source": "packages/semi-ui-vue/src/components/tabs/tab-pane.vue",
+        "source": "packages/vue/ui/src/components/tabs/tab-pane.vue",
         "props": {
             "itemKey": {
                 "zh-CN": "标签页的唯一标识，对应 activeKey。",
@@ -153,7 +153,7 @@
         "exposed": {}
     },
     "tab-item": {
-        "source": "packages/semi-ui-vue/src/components/tabs/tab-item.vue",
+        "source": "packages/vue/ui/src/components/tabs/tab-item.vue",
         "props": {
             "itemKey": { "zh-CN": "标签的唯一标识。", "en-US": "Unique key of the tab." },
             "selected": { "zh-CN": "是否为选中状态。", "en-US": "Whether the tab is selected." },

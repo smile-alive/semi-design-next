@@ -1,6 +1,6 @@
 {
     "checkbox": {
-        "source": "packages/semi-ui-react/src/components/checkbox/checkbox.tsx",
+        "source": "packages/react/ui/src/components/checkbox/checkbox.tsx",
         "props": {
             "addonId": {
                 "zh-CN": "文案节点的 id，`aria-labelledby` 指向它；未设置时随机生成。",
@@ -103,7 +103,7 @@
         }
     },
     "checkbox-group": {
-        "source": "packages/semi-ui-react/src/components/checkbox/checkbox-group.tsx",
+        "source": "packages/react/ui/src/components/checkbox/checkbox-group.tsx",
         "props": {
             "children": {
                 "zh-CN": "组内的 Checkbox；未设置 `options` 时生效。",

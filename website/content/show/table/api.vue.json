@@ -1,6 +1,6 @@
 {
     "table": {
-        "source": "packages/semi-ui-vue/src/components/table/table.vue",
+        "source": "packages/vue/ui/src/components/table/table.vue",
         "props": {
             "bordered": {
                 "zh-CN": "是否展示外边框和列边框。",

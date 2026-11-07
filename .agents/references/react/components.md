@@ -4,7 +4,7 @@ semi-ui-react 的 React 19 函数组件写法。组件内语句顺序、foundati
 
 ## 硬性规则
 
-- 对外导出的 React 顶层组件调用 `useDefaultProps`（F7），名称用组件导出名，并在 `packages/semi-ui-react/src/utils/semi-global.ts` 的 `overrideDefaultProps` 类型中补上组件名。
+- 对外导出的 React 顶层组件调用 `useDefaultProps`（F7），名称用组件导出名，并在 `packages/react/ui/src/utils/semi-global.ts` 的 `overrideDefaultProps` 类型中补上组件名。
 - React 组件和 hook 要能通过 `compiler-check.ts`（`pnpm lint:react`）。
 - render 中不写副作用，定时器等放到事件处理或 `useDidUpdate` 里。
 
@@ -58,7 +58,7 @@ export default function Spin(rawProps: SpinProps) {
 
 ## 通用 hook 与 DOM 工具
 
-`packages/semi-ui-react/src/hooks/` 下的 hook 先于手写同类逻辑使用：
+`packages/react/ui/src/hooks/` 下的 hook 先于手写同类逻辑使用：
 
 - 事件监听声明在组件里，不经 adapter 注册：
     - 「某条件成立期间监听」写成 `useEventListener(target, type, listener, { enabled })`，`enabled` 直接用渲染时算出的条件（如面板是否显示），监听函数只转调 foundation 的处理方法（如 `handleClickOutside(e)`）。条件依赖受控 prop 与 state 的组合时，写成 foundation 的静态纯函数（如 `TimePickerFoundation.isPanelShown(props, state)`），渲染期和 foundation 共用。
@@ -113,7 +113,7 @@ export default function Spin(rawProps: SpinProps) {
 - 参数只用于一次解构时在形参处解构，解构默认值含 JSX 时例外，在函数体内判断 `=== undefined`（见 React Compiler 一节）。
 - 类名统一 `import clsx from 'clsx'`，本地名就叫 `clsx`。
 - `utils/index.tsx` 的 `cloneDeep` 刻意跳过函数和 React element，不替换它；纯数据拷贝用 `structuredClone`。
-- `packages/semi-ui-react` 的入口会匹配所有 `.ts`，包内的 `scripts/*.ts` 要列进它 `vite.config.ts` 的 `notShipped`。
+- `packages/react/ui` 的入口会匹配所有 `.ts`，包内的 `scripts/*.ts` 要列进它 `vite.config.ts` 的 `notShipped`。
 - 体积对比用 `pnpm build && node scripts/size-probe.ts <导出名...>`：每个导出单独打包，React 外置。
 
 ## 语言包读取

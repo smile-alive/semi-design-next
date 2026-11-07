@@ -1,6 +1,6 @@
 {
     "tag-input": {
-        "source": "packages/semi-ui-vue/src/components/tag-input/tag-input.vue",
+        "source": "packages/vue/ui/src/components/tag-input/tag-input.vue",
         "props": {
             "modelValue": {
                 "zh-CN": "当前标签，配合 v-model 使用；undefined 时按非受控处理，null 表示受控且没有标签；从数组变回 undefined 时清空标签。",

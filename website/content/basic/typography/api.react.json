@@ -1,6 +1,6 @@
 {
     "typography-text": {
-        "source": "packages/semi-ui-react/src/components/typography/text.tsx",
+        "source": "packages/react/ui/src/components/typography/text.tsx",
         "props": {
             "children": {
                 "zh-CN": "文本内容；`copyable` 为 `true` 时复制的就是它，`ellipsis` 只能截断纯文本。",
@@ -45,7 +45,7 @@
         }
     },
     "typography-title": {
-        "source": "packages/semi-ui-react/src/components/typography/title.tsx",
+        "source": "packages/react/ui/src/components/typography/title.tsx",
         "props": {
             "component": {
                 "zh-CN": "根元素渲染的标签名或组件，默认与 `heading` 对应的 `h1` 到 `h6`。",
@@ -84,7 +84,7 @@
         }
     },
     "typography-paragraph": {
-        "source": "packages/semi-ui-react/src/components/typography/paragraph.tsx",
+        "source": "packages/react/ui/src/components/typography/paragraph.tsx",
         "props": {
             "component": {
                 "zh-CN": "根元素渲染的标签名或组件，默认 `p`。",
@@ -126,7 +126,7 @@
         }
     },
     "typography-numeral": {
-        "source": "packages/semi-ui-react/src/components/typography/numeral.tsx",
+        "source": "packages/react/ui/src/components/typography/numeral.tsx",
         "props": {
             "children": {
                 "zh-CN": "需要格式化的内容，递归遍历其中的文本，包括子元素内的数字。",

@@ -5,8 +5,8 @@ import { fileURLToPath } from 'node:url';
 import type * as sass from 'sass';
 import { build, type Alias, type Plugin, type Rolldown } from 'vite-plus';
 // Relative source paths: configs must load on a fresh checkout without building
-import { compileSemiAiCss, compileSemiCss, compileTailwindTheme } from './packages/semi-scss-compile/src/index.ts';
-import { compileSemiScss, semiImporters, type SemiScssOptions } from './packages/semi-theme-shared/src/index.ts';
+import { compileSemiAiCss, compileSemiCss, compileTailwindTheme } from './packages/shared/scss-compile/src/index.ts';
+import { compileSemiScss, semiImporters, type SemiScssOptions } from './packages/shared/scss-core/src/index.ts';
 
 export const rootDir = fileURLToPath(new URL('.', import.meta.url));
 function resolve(p: string) {
@@ -14,23 +14,23 @@ function resolve(p: string) {
 }
 
 const sourceTheme: SemiScssOptions = {
-    resolveFoundation: (subpath) => resolve(`packages/semi-foundation/src/${subpath}.scss`),
+    resolveFoundation: (subpath) => resolve(`packages/shared/foundation/src/${subpath}.scss`),
 };
 const fatalDeprecations: sass.DeprecationOrId[] = ['import', 'global-builtin'];
 
 // package.json main points at the built lib/, so imports are mapped to source explicitly
 // A package with a root entry is a UI or AI package laid out with src/components/; foundation packages map 1:1
 const sourcePackages: { name: string; dir: string; entry?: string }[] = [
-    { name: '@fibrae/semi-ui-vue', dir: 'packages/semi-ui-vue/src', entry: 'index.ts' },
-    { name: '@fibrae/semi-ai-vue', dir: 'packages/semi-ai-vue/src', entry: 'index.ts' },
-    { name: '@fibrae/semi-ui-react', dir: 'packages/semi-ui-react/src', entry: 'index.ts' },
-    { name: '@fibrae/semi-ai-react', dir: 'packages/semi-ai-react/src', entry: 'index.ts' },
-    { name: '@fibrae/semi-ui-solid', dir: 'packages/semi-ui-solid/src', entry: 'index.ts' },
-    { name: '@fibrae/semi-ai-solid', dir: 'packages/semi-ai-solid/src', entry: 'index.ts' },
-    { name: '@fibrae/semi-ui-svelte', dir: 'packages/semi-ui-svelte/src', entry: 'index.ts' },
-    { name: '@fibrae/semi-ai-svelte', dir: 'packages/semi-ai-svelte/src', entry: 'index.ts' },
-    { name: '@fibrae/semi-foundation', dir: 'packages/semi-foundation/src' },
-    { name: '@fibrae/semi-ai-foundation', dir: 'packages/semi-ai-foundation/src' },
+    { name: '@fibrae/semi-ui-vue', dir: 'packages/vue/ui/src', entry: 'index.ts' },
+    { name: '@fibrae/semi-ai-vue', dir: 'packages/vue/ai/src', entry: 'index.ts' },
+    { name: '@fibrae/semi-ui-react', dir: 'packages/react/ui/src', entry: 'index.ts' },
+    { name: '@fibrae/semi-ai-react', dir: 'packages/react/ai/src', entry: 'index.ts' },
+    { name: '@fibrae/semi-ui-solid', dir: 'packages/solid/ui/src', entry: 'index.ts' },
+    { name: '@fibrae/semi-ai-solid', dir: 'packages/solid/ai/src', entry: 'index.ts' },
+    { name: '@fibrae/semi-ui-svelte', dir: 'packages/svelte/ui/src', entry: 'index.ts' },
+    { name: '@fibrae/semi-ai-svelte', dir: 'packages/svelte/ai/src', entry: 'index.ts' },
+    { name: '@fibrae/semi-foundation', dir: 'packages/shared/foundation/src' },
+    { name: '@fibrae/semi-ai-foundation', dir: 'packages/shared/ai-foundation/src' },
 ];
 
 // A UI or AI package's subpaths mirror its exports map: entry files and the infrastructure directories map to src/ as
@@ -49,16 +49,16 @@ export const semiSourceAliases: Alias[] = [
               ]
             : [{ find: new RegExp(`^${name}/`), replacement: `${resolve(dir)}/` }]
     ),
-    { find: '@fibrae/semi-illustrations-react', replacement: resolve('packages/semi-illustrations-react/src') },
-    { find: '@fibrae/semi-illustrations-vue', replacement: resolve('packages/semi-illustrations-vue/src') },
-    { find: '@fibrae/semi-illustrations-solid', replacement: resolve('packages/semi-illustrations-solid/src') },
-    { find: '@fibrae/semi-illustrations-svelte', replacement: resolve('packages/semi-illustrations-svelte/src') },
-    { find: '@fibrae/semi-icons-core', replacement: resolve('packages/semi-icons-core/src') },
-    { find: '@fibrae/semi-icons-svelte', replacement: resolve('packages/semi-icons-svelte/src') },
-    { find: '@fibrae/semi-icons-react', replacement: resolve('packages/semi-icons-react/src') },
-    { find: '@fibrae/semi-icons-vue', replacement: resolve('packages/semi-icons-vue/src') },
-    { find: '@fibrae/semi-icons-solid', replacement: resolve('packages/semi-icons-solid/src') },
-    { find: '@fibrae/semi-json-viewer-core', replacement: resolve('packages/semi-json-viewer-core/src') },
+    { find: '@fibrae/semi-illustrations-react', replacement: resolve('packages/react/illustrations/src') },
+    { find: '@fibrae/semi-illustrations-vue', replacement: resolve('packages/vue/illustrations/src') },
+    { find: '@fibrae/semi-illustrations-solid', replacement: resolve('packages/solid/illustrations/src') },
+    { find: '@fibrae/semi-illustrations-svelte', replacement: resolve('packages/svelte/illustrations/src') },
+    { find: '@fibrae/semi-icons-core', replacement: resolve('packages/shared/icons-core/src') },
+    { find: '@fibrae/semi-icons-svelte', replacement: resolve('packages/svelte/icons/src') },
+    { find: '@fibrae/semi-icons-react', replacement: resolve('packages/react/icons/src') },
+    { find: '@fibrae/semi-icons-vue', replacement: resolve('packages/vue/icons/src') },
+    { find: '@fibrae/semi-icons-solid', replacement: resolve('packages/solid/icons/src') },
+    { find: '@fibrae/semi-json-viewer-core', replacement: resolve('packages/shared/json-viewer-core/src') },
 ];
 
 // semi-json-viewer-core starts its worker from a blob URL, so the worker is bundled and inlined as a string
@@ -72,7 +72,7 @@ function buildJsonWorker() {
             minify: true,
             target: 'esnext',
             lib: {
-                entry: resolve('packages/semi-json-viewer-core/src/worker/json.worker.ts'),
+                entry: resolve('packages/shared/json-viewer-core/src/worker/json.worker.ts'),
                 formats: ['iife'],
                 name: 'semiJsonWorker',
             },
@@ -105,16 +105,16 @@ interface SemiPackStylesOptions {
     bundles?: Record<string, () => string>;
 }
 
-const foundationSrc = resolve('packages/semi-foundation/src');
+const foundationSrc = resolve('packages/shared/foundation/src');
 
 export const semiUiBundles = {
-    'styles.css': () => compileSemiCss({ foundationPath: foundationSrc, iconPath: resolve('packages/semi-icons-core/src'), isMin: true }),
+    'styles.css': () => compileSemiCss({ foundationPath: foundationSrc, iconPath: resolve('packages/shared/icons-core/src'), isMin: true }),
     'tailwind.css': () => compileTailwindTheme({ foundationPath: foundationSrc }),
 };
 
 // Loaded after the UI package's styles.css, which carries the tokens
 export const semiAiBundles = {
-    'styles.css': () => compileSemiAiCss({ foundationPath: foundationSrc, aiFoundationPath: resolve('packages/semi-ai-foundation/src'), isMin: true }),
+    'styles.css': () => compileSemiAiCss({ foundationPath: foundationSrc, aiFoundationPath: resolve('packages/shared/ai-foundation/src'), isMin: true }),
 };
 
 // plugin-vue splits each SFC into a `<name>.vue?vue&type=script&setup=true&lang` virtual module, which would otherwise be
@@ -173,7 +173,7 @@ export function semiPackStyles(srcDir: string, { ignore = [], sourceOnly = [], b
 // import `@fibrae/semi-ui-<framework>/locale/source/<name>` without installing foundation itself. Solid needs a `.jsx`
 // twin because its `./*` export resolves to `.jsx` under the `solid` condition.
 export function semiLocaleReexports({ jsx = false }: { jsx?: boolean } = {}): Plugin {
-    const sourceDir = resolve('packages/semi-foundation/src/locale/source');
+    const sourceDir = resolve('packages/shared/foundation/src/locale/source');
     return {
         name: 'semi:locale-reexports',
         generateBundle() {
@@ -203,7 +203,7 @@ export const semiStubStyles: Plugin = {
     },
 };
 
-const themedPackages = ['semi-foundation', 'semi-ai-foundation', 'semi-icons-core'].map((name) => resolve(`packages/${name}`) + path.sep);
+const themedPackages = ['foundation', 'ai-foundation', 'icons-core'].map((name) => resolve(`packages/shared/${name}`) + path.sep);
 
 // A module-system stylesheet cannot be wrapped before compiling, so the `semi` layer is applied on the CSS
 export const semiCssLayer = {

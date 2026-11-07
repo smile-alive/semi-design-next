@@ -1,6 +1,6 @@
 {
     "switch": {
-        "source": "packages/semi-ui-vue/src/components/switch/switch.vue",
+        "source": "packages/vue/ui/src/components/switch/switch.vue",
         "props": {
             "modelValue": {
                 "zh-CN": "是否选中，配合 v-model 使用；传入后由该值决定显示，只传不回写时点击仅触发通知。",

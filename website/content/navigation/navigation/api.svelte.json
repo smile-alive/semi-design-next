@@ -1,6 +1,6 @@
 {
     "nav": {
-        "source": "packages/semi-ui-svelte/src/components/navigation/nav.svelte",
+        "source": "packages/svelte/ui/src/components/navigation/nav.svelte",
         "props": {
             "bodyStyle": { "zh-CN": "导航项列表的自定义样式。", "en-US": "Custom style of the navigation item list." },
             "isCollapsed": {
@@ -106,7 +106,7 @@
         }
     },
     "nav-item": {
-        "source": "packages/semi-ui-svelte/src/components/navigation/nav-item.svelte",
+        "source": "packages/svelte/ui/src/components/navigation/nav-item.svelte",
         "props": {
             "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the item is disabled." },
             "indent": {
@@ -155,7 +155,7 @@
         }
     },
     "sub-nav": {
-        "source": "packages/semi-ui-svelte/src/components/navigation/sub-nav.svelte",
+        "source": "packages/svelte/ui/src/components/navigation/sub-nav.svelte",
         "props": {
             "disabled": { "zh-CN": "是否禁用。", "en-US": "Whether the sub navigation is disabled." },
             "dropdownProps": {
@@ -199,7 +199,7 @@
         }
     },
     "nav-header": {
-        "source": "packages/semi-ui-svelte/src/components/navigation/nav-header.svelte",
+        "source": "packages/svelte/ui/src/components/navigation/nav-header.svelte",
         "props": {
             "link": {
                 "zh-CN": "头部的 href 链接，传入时头部内容包裹在 a 标签中。",
@@ -215,7 +215,7 @@
         }
     },
     "nav-footer": {
-        "source": "packages/semi-ui-svelte/src/components/navigation/nav-footer.svelte",
+        "source": "packages/svelte/ui/src/components/navigation/nav-footer.svelte",
         "props": {
             "collapseButton": {
                 "zh-CN": "是否展示底部的收起侧边栏按钮，仅 mode 为 vertical 且 Footer 没有 children 时有效；传入 snippet 则替换内置按钮，显示条件相同。",

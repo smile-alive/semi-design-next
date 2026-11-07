@@ -1,6 +1,6 @@
 {
     "resizable": {
-        "source": "packages/semi-ui-svelte/src/components/resizable/resizable.svelte",
+        "source": "packages/svelte/ui/src/components/resizable/resizable.svelte",
         "props": {
             "boundElement": {
                 "zh-CN": "限制宽高的元素：'parent'、'window' 或一个 HTMLElement。",
@@ -94,7 +94,7 @@
         }
     },
     "resize-group": {
-        "source": "packages/semi-ui-svelte/src/components/resizable/resize-group.svelte",
+        "source": "packages/svelte/ui/src/components/resizable/resize-group.svelte",
         "props": {
             "children": {
                 "zh-CN": "ResizeItem 与 ResizeHandler，子项挂载后自行向组注册。",
@@ -107,13 +107,13 @@
         }
     },
     "resize-handler": {
-        "source": "packages/semi-ui-svelte/src/components/resizable/resize-handler.svelte",
+        "source": "packages/svelte/ui/src/components/resizable/resize-handler.svelte",
         "props": {
             "children": { "zh-CN": "替换默认的握把图标。", "en-US": "Replaces the default grip icon." }
         }
     },
     "resize-item": {
-        "source": "packages/semi-ui-svelte/src/components/resizable/resize-item.svelte",
+        "source": "packages/svelte/ui/src/components/resizable/resize-item.svelte",
         "props": {
             "children": { "zh-CN": "子项的内容。", "en-US": "Content of the item." },
             "defaultSize": {

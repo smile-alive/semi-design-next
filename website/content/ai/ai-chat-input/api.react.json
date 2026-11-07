@@ -1,6 +1,6 @@
 {
     "ai-chat-input": {
-        "source": "packages/semi-ai-react/src/components/ai-chat-input/index.tsx",
+        "source": "packages/react/ai/src/components/ai-chat-input/index.tsx",
         "props": {
             "canSend": {
                 "zh-CN": "是否可以发送。未设置时，根据输入框内容和上传内容决定；引用内容不参与判断。",
@@ -231,7 +231,7 @@
         }
     },
     "mcp": {
-        "source": "packages/semi-ai-react/src/components/ai-chat-input/configure/mcp.tsx",
+        "source": "packages/react/ai/src/components/ai-chat-input/configure/mcp.tsx",
         "props": {
             "options": {
                 "zh-CN": "MCP 选项列表，选项只含数据，图标为选项的 icon（ReactNode）。",

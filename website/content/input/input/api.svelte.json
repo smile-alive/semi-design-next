@@ -1,6 +1,6 @@
 {
     "input": {
-        "source": "packages/semi-ui-svelte/src/components/input/input.svelte",
+        "source": "packages/svelte/ui/src/components/input/input.svelte",
         "props": {
             "value": {
                 "zh-CN": "输入框内容，可用 `bind:value` 绑定。只传值时作为初始内容，之后由组件自己维护；`bind:value={get, set}` 使其完全受控。",
@@ -138,7 +138,7 @@
         }
     },
     "text-area": {
-        "source": "packages/semi-ui-svelte/src/components/input/textarea.svelte",
+        "source": "packages/svelte/ui/src/components/input/textarea.svelte",
         "props": {
             "value": {
                 "zh-CN": "文本内容，可用 `bind:value` 绑定。只传值时作为初始内容，之后由组件自己维护；`bind:value={get, set}` 使其完全受控。",
@@ -244,7 +244,7 @@
         }
     },
     "input-group": {
-        "source": "packages/semi-ui-svelte/src/components/input/input-group.svelte",
+        "source": "packages/svelte/ui/src/components/input/input-group.svelte",
         "props": {
             "size": {
                 "zh-CN": "输入框大小，可选 large、default、small；组内任意深度未自行设置 size 的控件取这个值。",

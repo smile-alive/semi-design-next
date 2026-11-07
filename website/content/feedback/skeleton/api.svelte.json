@@ -1,6 +1,6 @@
 {
     "skeleton": {
-        "source": "packages/semi-ui-svelte/src/components/skeleton/skeleton.svelte",
+        "source": "packages/svelte/ui/src/components/skeleton/skeleton.svelte",
         "props": {
             "active": {
                 "zh-CN": "是否展示动画效果。",
@@ -21,7 +21,7 @@
         }
     },
     "skeleton-avatar": {
-        "source": "packages/semi-ui-svelte/src/components/skeleton/avatar.svelte",
+        "source": "packages/svelte/ui/src/components/skeleton/avatar.svelte",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 semi-skeleton。",
@@ -42,7 +42,7 @@
         }
     },
     "skeleton-image": {
-        "source": "packages/semi-ui-svelte/src/components/skeleton/image.svelte",
+        "source": "packages/svelte/ui/src/components/skeleton/image.svelte",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 semi-skeleton。",
@@ -55,7 +55,7 @@
         }
     },
     "skeleton-title": {
-        "source": "packages/semi-ui-svelte/src/components/skeleton/title.svelte",
+        "source": "packages/svelte/ui/src/components/skeleton/title.svelte",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 semi-skeleton。",
@@ -68,7 +68,7 @@
         }
     },
     "skeleton-button": {
-        "source": "packages/semi-ui-svelte/src/components/skeleton/button.svelte",
+        "source": "packages/svelte/ui/src/components/skeleton/button.svelte",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 semi-skeleton。",
@@ -81,7 +81,7 @@
         }
     },
     "skeleton-paragraph": {
-        "source": "packages/semi-ui-svelte/src/components/skeleton/paragraph.svelte",
+        "source": "packages/svelte/ui/src/components/skeleton/paragraph.svelte",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 semi-skeleton。",

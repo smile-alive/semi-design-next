@@ -4,11 +4,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = path.resolve(import.meta.dirname, '..');
-const stylesheets = ['semi-foundation', 'semi-ai-foundation'].flatMap((name) => {
-    const foundation = path.join(root, 'packages', name, 'src');
+const stylesheets = ['foundation', 'ai-foundation'].flatMap((name) => {
+    const foundation = path.join(root, 'packages/shared', name, 'src');
     return fs.globSync('*/**/*.scss', { cwd: foundation }).map((f) => path.join(foundation, f));
 });
-const readers = [...stylesheets, ...fs.globSync(path.join(root, 'packages/semi-icons-core/src/styles/*.scss'))];
+const readers = [...stylesheets, ...fs.globSync(path.join(root, 'packages/shared/icons-core/src/styles/*.scss'))];
 
 // Comments do not count as a use; line comments first, as one may contain `/*`
 const code = readers.map((file) =>

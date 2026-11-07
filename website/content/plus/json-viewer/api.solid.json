@@ -1,6 +1,6 @@
 {
     "json-viewer": {
-        "source": "packages/semi-ui-solid/src/components/json-viewer/json-viewer.tsx",
+        "source": "packages/solid/ui/src/components/json-viewer/json-viewer.tsx",
         "props": {
             "value": {
                 "zh-CN": "展示与编辑的 JSON 文本，未传时按空文本创建。只有 value 变为与编辑器当前内容不同的值时才会重建编辑器，把 onChange 的值写回 value 不会丢失光标。",

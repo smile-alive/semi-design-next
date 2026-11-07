@@ -1,6 +1,6 @@
 {
     "collapsible": {
-        "source": "packages/semi-ui-vue/src/components/collapsible/collapsible.vue",
+        "source": "packages/vue/ui/src/components/collapsible/collapsible.vue",
         "props": {
             "isOpen": { "zh-CN": "是否展开内容区域。", "en-US": "Whether the content area is expanded." },
             "duration": { "zh-CN": "动画执行的时间，单位为毫秒。", "en-US": "Animation duration in milliseconds." },

@@ -21,9 +21,9 @@ export const svelteComponentOrder: ComponentOrder = {
         onDestroy: ['lifecycle', 'lifecycle'],
     },
     targets: [
-        { kind: 'svelte-script', pathspecs: ['packages/semi-ui-svelte/src/*.svelte'] },
-        { kind: 'composables', pathspecs: ['packages/semi-ui-svelte/src/*.svelte.ts'] },
-        { kind: 'svelte-script', pathspecs: ['packages/semi-ai-svelte/src/*.svelte'] },
-        { kind: 'composables', pathspecs: ['packages/semi-ai-svelte/src/*.svelte.ts'] },
+        { kind: 'svelte-script', pathspecs: ['packages/svelte/ui/src/*.svelte'] },
+        { kind: 'composables', pathspecs: ['packages/svelte/ui/src/*.svelte.ts'] },
+        { kind: 'svelte-script', pathspecs: ['packages/svelte/ai/src/*.svelte'] },
+        { kind: 'composables', pathspecs: ['packages/svelte/ai/src/*.svelte.ts'] },
     ],
 };

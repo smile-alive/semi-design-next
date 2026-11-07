@@ -1,6 +1,6 @@
 {
     "layout": {
-        "source": "packages/semi-ui-svelte/src/components/layout/layout.svelte",
+        "source": "packages/svelte/ui/src/components/layout/layout.svelte",
         "props": {
             "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." },
             "tagName": { "zh-CN": "根元素的标签名。", "en-US": "Tag name of the root element." },
@@ -15,7 +15,7 @@
         }
     },
     "layout-header": {
-        "source": "packages/semi-ui-svelte/src/components/layout/header.svelte",
+        "source": "packages/svelte/ui/src/components/layout/header.svelte",
         "props": {
             "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." },
             "tagName": { "zh-CN": "根元素的标签名。", "en-US": "Tag name of the root element." },
@@ -24,7 +24,7 @@
         }
     },
     "layout-footer": {
-        "source": "packages/semi-ui-svelte/src/components/layout/footer.svelte",
+        "source": "packages/svelte/ui/src/components/layout/footer.svelte",
         "props": {
             "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." },
             "tagName": { "zh-CN": "根元素的标签名。", "en-US": "Tag name of the root element." },
@@ -33,7 +33,7 @@
         }
     },
     "layout-content": {
-        "source": "packages/semi-ui-svelte/src/components/layout/content.svelte",
+        "source": "packages/svelte/ui/src/components/layout/content.svelte",
         "props": {
             "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." },
             "tagName": { "zh-CN": "根元素的标签名。", "en-US": "Tag name of the root element." },
@@ -42,7 +42,7 @@
         }
     },
     "layout-sider": {
-        "source": "packages/semi-ui-svelte/src/components/layout/sider.svelte",
+        "source": "packages/svelte/ui/src/components/layout/sider.svelte",
         "props": {
             "prefixCls": { "zh-CN": "类名前缀。", "en-US": "Class name prefix." },
             "breakpoint": {

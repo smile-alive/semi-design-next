@@ -1,6 +1,6 @@
 {
     "resizable": {
-        "source": "packages/semi-ui-vue/src/components/resizable/resizable.vue",
+        "source": "packages/vue/ui/src/components/resizable/resizable.vue",
         "props": {
             "size": {
                 "zh-CN": "受控尺寸，按轴生效：未设置的轴仍跟随拖拽，配合 v-model:size 使用。",
@@ -103,7 +103,7 @@
         "exposed": {}
     },
     "resize-group": {
-        "source": "packages/semi-ui-vue/src/components/resizable/resize-group.vue",
+        "source": "packages/vue/ui/src/components/resizable/resize-group.vue",
         "props": {
             "direction": {
                 "zh-CN": "组内的伸缩方向，horizontal 为左右排列，vertical 为上下排列。",
@@ -120,7 +120,7 @@
         "exposed": {}
     },
     "resize-handler": {
-        "source": "packages/semi-ui-vue/src/components/resizable/resize-handler.vue",
+        "source": "packages/vue/ui/src/components/resizable/resize-handler.vue",
         "props": {},
         "events": {},
         "slots": {
@@ -129,7 +129,7 @@
         "exposed": {}
     },
     "resize-item": {
-        "source": "packages/semi-ui-vue/src/components/resizable/resize-item.vue",
+        "source": "packages/vue/ui/src/components/resizable/resize-item.vue",
         "props": {
             "min": {
                 "zh-CN": "最小尺寸（%、px、vw 或 vh）。",

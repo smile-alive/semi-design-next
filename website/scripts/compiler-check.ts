@@ -95,8 +95,8 @@ function functions(code: string, kind: ts.ScriptKind) {
 }
 
 const defaultFiles = () =>
-    ['semi-ui-react', 'semi-ai-react'].flatMap((name) => {
-        const dir = path.resolve(import.meta.dirname, '../../packages', name, 'src');
+    ['ui', 'ai'].flatMap((name) => {
+        const dir = path.resolve(import.meta.dirname, '../../packages/react', name, 'src');
         return fs
             .globSync('**/*.{ts,tsx}', { cwd: dir, exclude: (entry) => entry === '__tests__' })
             .filter((file) => !file.endsWith('.d.ts') && !file.includes('.test.'))

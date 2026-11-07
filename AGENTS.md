@@ -29,12 +29,12 @@
 
 改哪个框架的包或文件，就先读该框架目录下全部文件；改框架无关代码，只读共享文件。新增框架只加一行，并按 [lint](.agents/references/lint.md) 的步骤登记。
 
-| 框架   | 包                       | 规则                         | lint           | 测试项目与目录                               |
-| ------ | ------------------------ | ---------------------------- | -------------- | -------------------------------------------- |
-| React  | `packages/semi-*-react`  | `.agents/references/react/`  | `lint/react/`  | `react`、`react-browser`；`vitest/react/`    |
-| Vue    | `packages/semi-*-vue`    | `.agents/references/vue/`    | `lint/vue/`    | `vue`、`vue-browser`；`vitest/vue/`          |
-| Solid  | `packages/semi-*-solid`  | `.agents/references/solid/`  | `lint/solid/`  | `solid`、`solid-browser`；`vitest/solid/`    |
-| Svelte | `packages/semi-*-svelte` | `.agents/references/svelte/` | `lint/svelte/` | `svelte`、`svelte-browser`；`vitest/svelte/` |
+| 框架   | 包                  | 规则                         | lint           | 测试项目与目录                               |
+| ------ | ------------------- | ---------------------------- | -------------- | -------------------------------------------- |
+| React  | `packages/react/*`  | `.agents/references/react/`  | `lint/react/`  | `react`、`react-browser`；`vitest/react/`    |
+| Vue    | `packages/vue/*`    | `.agents/references/vue/`    | `lint/vue/`    | `vue`、`vue-browser`；`vitest/vue/`          |
+| Solid  | `packages/solid/*`  | `.agents/references/solid/`  | `lint/solid/`  | `solid`、`solid-browser`；`vitest/solid/`    |
+| Svelte | `packages/svelte/*` | `.agents/references/svelte/` | `lint/svelte/` | `svelte`、`svelte-browser`；`vitest/svelte/` |
 
 3. 涉及公开 API、目录结构，或与已定决策冲突的修改，先说明影响，等维护者决定；已定决策不重新讨论。
 
@@ -54,10 +54,10 @@
 
 ## 包与依赖
 
-- `packages/semi-foundation` 与框架无关，不依赖任何框架和 UI 包；组件逻辑放 foundation，各框架包用本框架的原生机制通过 adapter 接入，框架包之间不互相导入。
+- `packages/shared/foundation` 与框架无关，不依赖任何框架和 UI 包；组件逻辑放 foundation，各框架包用本框架的原生机制通过 adapter 接入，框架包之间不互相导入。
 - 组件包的 `src/` 只在顶层放入口文件：组件放 `components/`，框架适配层放 `base/`，通用 hook 放该框架的 hook 目录（React、Svelte 为 `hooks/`，Vue 为 `composables/`，Solid 为 `primitives/`），不导出的内部组件放 `internal/`，无状态工具放 `utils/`；各目录的职责与 `exports` 映射见 [CONTRIBUTING](CONTRIBUTING.md#目录结构)。
 - 同包模块用相对路径导入；跨 Semi 包用包名（`@fibrae/semi-*`），不用指向另一个包源码的相对路径。这两条由 lint 检查。
-- 文件属于哪个框架只看命名：框架包命名为 `semi-<名>-<框架>`；包外为某个框架写的文件命名为 `<框架>.*` 或 `*.<框架>.*`（如 `<框架>.setup.ts`、`*.<框架>.tsx`），框架自有的扩展名按扩展名归属，细则见该框架的 lint.md。其余文件属于通用范围，不导入任何框架的模块，由 lint 检查；`pnpm lint:scopes [文件...]` 查看归属。
+- 文件属于哪个框架只看路径与命名：框架包放在 `packages/<框架>/` 下；包外为某个框架写的文件命名为 `<框架>.*` 或 `*.<框架>.*`（如 `<框架>.setup.ts`、`*.<框架>.tsx`），框架自有的扩展名按扩展名归属，细则见该框架的 lint.md。其余文件属于通用范围，不导入任何框架的模块，由 lint 检查；`pnpm lint:scopes [文件...]` 查看归属。
 - Node 与 pnpm 的版本以 `mise.toml` 为准，根 `package.json` 的 `packageManager` 与之一致。共用依赖走 `pnpm-workspace.yaml` 的 catalog。
 - 新依赖先查已有依赖、语言原语和 foundation 工具能否覆盖；解析源码不新增解析器依赖。依赖与工具函数的写法见 [coding-style](.agents/references/coding-style.md#依赖与工具函数)。
 - 生成文件只由生成命令更新：`pnpm build:icon` 从 SVG 生成 semi-icons-core 数据、各框架的图标与插画组件源码。SVG 源文件里的 id 不手写 `{uid}`，生成器统一加前缀，渲染时按实例替换。

@@ -1,6 +1,6 @@
 {
     "spin": {
-        "source": "packages/semi-ui-react/src/components/spin/index.tsx",
+        "source": "packages/react/ui/src/components/spin/index.tsx",
         "props": {
             "childStyle": {
                 "zh-CN": "内部子元素的内联样式。",

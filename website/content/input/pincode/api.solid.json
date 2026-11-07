@@ -1,6 +1,6 @@
 {
     "pin-code": {
-        "source": "packages/semi-ui-solid/src/components/pincode/pincode.tsx",
+        "source": "packages/solid/ui/src/components/pincode/pincode.tsx",
         "props": {
             "count": { "zh-CN": "验证码位数。", "en-US": "Number of digits." },
             "defaultValue": { "zh-CN": "非受控时的初始内容。", "en-US": "Initial content when uncontrolled." },

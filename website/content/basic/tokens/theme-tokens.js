@@ -1,6 +1,6 @@
 import { scssStatements } from '#/lib/scss';
 
-const files = import.meta.glob('../../../../packages/semi-foundation/src/theme/{_palette,global,variables,animation}.scss', {
+const files = import.meta.glob('../../../../packages/shared/foundation/src/theme/{_palette,global,variables,animation}.scss', {
     query: '?raw',
     import: 'default',
     eager: true,
@@ -9,7 +9,7 @@ const files = import.meta.glob('../../../../packages/semi-foundation/src/theme/{
 const readLines = (name) => {
     const entry = Object.entries(files).find(([file]) => file.endsWith(`/${name}`));
     if (!entry) {
-        throw new Error(`theme-tokens: packages/semi-foundation/src/theme/${name} not found`);
+        throw new Error(`theme-tokens: packages/shared/foundation/src/theme/${name} not found`);
     }
     return scssStatements(entry[1]);
 };

@@ -33,7 +33,7 @@ const listed = (pathspecs: string[]) =>
 
 // `const [XxxContext, useXxx] = createContext(...)` names context readers that do not end in `Context`
 const contextReaders = new Set<string>();
-for (const file of listed(['packages/*/src/*.ts', 'packages/*/src/*.tsx'])) {
+for (const file of listed(['packages/*/*/src/*.ts', 'packages/*/*/src/*.tsx'])) {
     for (const match of fs.readFileSync(file, 'utf8').matchAll(/\[\s*\w+\s*,\s*(\w+)\s*\]\s*=\s*createContext\b/g)) contextReaders.add(match[1]);
 }
 

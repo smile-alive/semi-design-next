@@ -1,6 +1,6 @@
 {
     "pagination": {
-        "source": "packages/semi-ui-svelte/src/components/pagination/pagination.svelte",
+        "source": "packages/svelte/ui/src/components/pagination/pagination.svelte",
         "props": {
             "currentPage": {
                 "zh-CN": "当前页码，可用 `bind:currentPage` 双向绑定；不传时由组件自己管理页码，用 `bind:currentPage={get, set}` 完全受控。",

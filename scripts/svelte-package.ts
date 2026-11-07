@@ -65,7 +65,7 @@ if (options.bundles) {
 // Same files as semiLocaleReexports in vite.semi.ts: an app imports `@fibrae/semi-ui-svelte/locale/source/<name>`
 // without installing foundation itself
 if (options.locale) {
-    const sourceDir = path.resolve(import.meta.dirname, '../packages/semi-foundation/src/locale/source');
+    const sourceDir = path.resolve(import.meta.dirname, '../packages/shared/foundation/src/locale/source');
     const outDir = path.join(dist, 'components/locale/source');
     fs.mkdirSync(outDir, { recursive: true });
     for (const file of fs.globSync('*.ts', { cwd: sourceDir })) {

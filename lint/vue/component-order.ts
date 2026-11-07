@@ -46,11 +46,11 @@ export const vueComponentOrder: ComponentOrder = {
     targets: [
         {
             kind: 'script-setup',
-            pathspecs: ['packages/semi-ui-vue/src/*.vue', 'packages/semi-ai-vue/src/*.vue'],
+            pathspecs: ['packages/vue/ui/src/*.vue', 'packages/vue/ai/src/*.vue'],
         },
         {
             kind: 'composables',
-            pathspecs: ['packages/semi-ui-vue/src/*.ts', 'packages/semi-ui-vue/src/*.tsx', 'packages/semi-ai-vue/src/*.ts', 'packages/semi-ai-vue/src/*.tsx'],
+            pathspecs: ['packages/vue/ui/src/*.ts', 'packages/vue/ui/src/*.tsx', 'packages/vue/ai/src/*.ts', 'packages/vue/ai/src/*.tsx'],
         },
     ],
 };

@@ -1,6 +1,6 @@
 {
     "form": {
-        "source": "packages/semi-ui-react/src/components/form/base-form.tsx",
+        "source": "packages/react/ui/src/components/form/base-form.tsx",
         "props": {
             "aria-label": {
                 "zh-CN": "表单的可访问名称，写在 form 元素上。",
@@ -151,7 +151,7 @@
         }
     },
     "array-field": {
-        "source": "packages/semi-ui-react/src/components/form/array-field.tsx",
+        "source": "packages/react/ui/src/components/form/array-field.tsx",
         "props": {
             "children": {
                 "zh-CN": "每一行的渲染函数，必填，参数为 `{ arrayFields, add, addWithInitValue, move }`，返回 ReactNode。`move(from, to)` 把一行连同它的值、错误和 touched 移到目标位置，越界的下标按首尾处理。",
@@ -172,7 +172,7 @@
         }
     },
     "form-section": {
-        "source": "packages/semi-ui-react/src/components/form/section.tsx",
+        "source": "packages/react/ui/src/components/form/section.tsx",
         "props": {
             "children": {
                 "zh-CN": "分组的内容。",
@@ -197,7 +197,7 @@
         }
     },
     "form-label": {
-        "source": "packages/semi-ui-react/src/components/form/label.tsx",
+        "source": "packages/react/ui/src/components/form/label.tsx",
         "props": {
             "align": {
                 "zh-CN": "Label 文本的对齐方式，可选 `left` 或 `right`。",
@@ -254,7 +254,7 @@
         }
     },
     "form-input-group": {
-        "source": "packages/semi-ui-react/src/components/form/group.tsx",
+        "source": "packages/react/ui/src/components/form/group.tsx",
         "props": {
             "disabled": {
                 "zh-CN": "组内字段统一的 disabled，不传时沿用 Form 的 disabled。",
@@ -295,7 +295,7 @@
         }
     },
     "form-slot": {
-        "source": "packages/semi-ui-react/src/components/form/slot.tsx",
+        "source": "packages/react/ui/src/components/form/slot.tsx",
         "props": {
             "children": {
                 "zh-CN": "slot 的主体内容。",
@@ -332,7 +332,7 @@
         }
     },
     "form-error-message": {
-        "source": "packages/semi-ui-react/src/components/form/error-message.tsx",
+        "source": "packages/react/ui/src/components/form/error-message.tsx",
         "props": {
             "className": {
                 "zh-CN": "错误信息元素的类名。",
@@ -377,7 +377,7 @@
         }
     },
     "schema-field": {
-        "source": "packages/semi-ui-react/src/components/form/schema-field.tsx",
+        "source": "packages/react/ui/src/components/form/schema-field.tsx",
         "props": {
             "field": {
                 "zh-CN": "要渲染的节点路径，默认为根；根对象不包 Section，其他对象与数组渲染为以 title 为标题的 Section。",
@@ -398,7 +398,7 @@
         }
     },
     "schema-form": {
-        "source": "packages/semi-ui-react/src/components/form/schema-form.tsx",
+        "source": "packages/react/ui/src/components/form/schema-form.tsx",
         "props": {
             "aria-label": {
                 "zh-CN": "表单的可访问名称，写在 form 元素上。",

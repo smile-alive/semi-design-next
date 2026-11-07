@@ -1,6 +1,6 @@
 {
     "breadcrumb": {
-        "source": "packages/semi-ui-solid/src/components/breadcrumb/breadcrumb.tsx",
+        "source": "packages/solid/ui/src/components/breadcrumb/breadcrumb.tsx",
         "props": {
             "activeIndex": {
                 "zh-CN": "受控使用，当前项的序号（从 0 起）；缺省时最后一项为当前项。",
@@ -53,7 +53,7 @@
         }
     },
     "breadcrumb-item": {
-        "source": "packages/semi-ui-solid/src/components/breadcrumb/item.tsx",
+        "source": "packages/solid/ui/src/components/breadcrumb/item.tsx",
         "props": {
             "href": {
                 "zh-CN": "链接的目的地，挂载在 a 标签上；当前项不渲染为链接。",

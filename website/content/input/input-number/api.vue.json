@@ -1,6 +1,6 @@
 {
     "input-number": {
-        "source": "packages/semi-ui-vue/src/components/input-number/input-number.vue",
+        "source": "packages/vue/ui/src/components/input-number/input-number.vue",
         "props": {
             "modelValue": {
                 "zh-CN": "当前值，供 v-model 使用。输入的中间态或非法文本为字符串，清空时为 ''；显式传 undefined 时按非受控处理。",

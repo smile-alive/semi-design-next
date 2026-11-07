@@ -1,6 +1,6 @@
 {
     "tag": {
-        "source": "packages/semi-ui-react/src/components/tag/index.tsx",
+        "source": "packages/react/ui/src/components/tag/index.tsx",
         "props": {
             "avatarShape": {
                 "zh-CN": "头像标签中头像的形状，可选 `square` 和 `circle`。",
@@ -85,7 +85,7 @@
         }
     },
     "tag-group": {
-        "source": "packages/semi-ui-react/src/components/tag/group.tsx",
+        "source": "packages/react/ui/src/components/tag/group.tsx",
         "props": {
             "avatarShape": {
                 "zh-CN": "组内头像标签的头像形状，可选 `square` 和 `circle`。",
@@ -142,7 +142,7 @@
         }
     },
     "split-tag-group": {
-        "source": "packages/semi-ui-react/src/components/tag/split-tag-group.tsx",
+        "source": "packages/react/ui/src/components/tag/split-tag-group.tsx",
         "props": {
             "ref": {
                 "zh-CN": "根元素的引用。",

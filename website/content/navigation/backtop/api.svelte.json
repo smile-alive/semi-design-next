@@ -1,6 +1,6 @@
 {
     "back-top": {
-        "source": "packages/semi-ui-svelte/src/components/backtop/backtop.svelte",
+        "source": "packages/svelte/ui/src/components/backtop/backtop.svelte",
         "props": {
             "badge": {
                 "zh-CN": "徽章参数，同 FloatButton。",

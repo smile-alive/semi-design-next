@@ -1,6 +1,6 @@
 {
     "layout": {
-        "source": "packages/semi-ui-react/src/components/layout/index.tsx",
+        "source": "packages/react/ui/src/components/layout/index.tsx",
         "props": {
             "children": {
                 "zh-CN": "布局内容，可包含 `Layout.Header`、`Layout.Sider`、`Layout.Content`、`Layout.Footer` 或嵌套的 `Layout`。",
@@ -18,7 +18,7 @@
         }
     },
     "layout-sider": {
-        "source": "packages/semi-ui-react/src/components/layout/sider.tsx",
+        "source": "packages/react/ui/src/components/layout/sider.tsx",
         "props": {
             "aria-label": { "zh-CN": "侧边栏的可访问名称，描述该 Sider 的作用。", "en-US": "Accessible name of the sider, describing what it is for." },
             "breakpoint": {

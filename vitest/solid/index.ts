@@ -54,18 +54,18 @@ export const solid: TestFramework = {
             test: {
                 ...browserBase(),
                 name: 'solid-hydration-browser',
-                include: [`packages/semi-*-solid/${hydrationFiles}`, `vitest/solid/${hydrationFiles}`],
+                include: [`packages/solid/*/${hydrationFiles}`, `vitest/solid/${hydrationFiles}`],
                 globalSetup: ['./vitest/solid/hydration-setup.ts'],
                 setupFiles: ['./vitest/browser.setup.ts'],
             },
         },
     ],
     coverage: {
-        include: ['packages/{semi-ui-solid,semi-ai-solid}/src/**/*.{ts,tsx}'],
-        exclude: ['packages/{semi-ui-solid,semi-ai-solid}/src/index.ts'],
+        include: ['packages/solid/{ui,ai}/src/**/*.{ts,tsx}'],
+        exclude: ['packages/solid/{ui,ai}/src/index.ts'],
         thresholds: {
-            'packages/semi-ui-solid/**': { statements: 99, branches: 91, functions: 97, lines: 99 },
-            'packages/semi-ai-solid/**': { statements: 96, branches: 85, functions: 96, lines: 96 },
+            'packages/solid/ui/**': { statements: 99, branches: 91, functions: 97, lines: 99 },
+            'packages/solid/ai/**': { statements: 96, branches: 85, functions: 96, lines: 96 },
         },
     },
 };

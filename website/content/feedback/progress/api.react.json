@@ -1,6 +1,6 @@
 {
     "progress": {
-        "source": "packages/semi-ui-react/src/components/progress/index.tsx",
+        "source": "packages/react/ui/src/components/progress/index.tsx",
         "props": {
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
             "direction": { "zh-CN": "条状进度条的方向，可选 `horizontal` 或 `vertical`。", "en-US": "Direction of the line progress bar: `horizontal` or `vertical`." },

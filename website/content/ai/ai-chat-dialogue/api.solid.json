@@ -1,6 +1,6 @@
 {
     "ai-chat-dialogue": {
-        "source": "packages/semi-ai-solid/src/components/ai-chat-dialogue/ai-chat-dialogue.tsx",
+        "source": "packages/solid/ai/src/components/ai-chat-dialogue/ai-chat-dialogue.tsx",
         "props": {
             "align": {
                 "zh-CN": "对话布局方式，可选 leftRight（左右分布）或 leftAlign（左对齐）。",
@@ -151,7 +151,7 @@
         }
     },
     "reasoning": {
-        "source": "packages/semi-ai-solid/src/components/ai-chat-dialogue/widgets/content-item/reasoning.tsx#ReasoningWidget",
+        "source": "packages/solid/ai/src/components/ai-chat-dialogue/widgets/content-item/reasoning.tsx#ReasoningWidget",
         "props": {
             "customRenderer": {
                 "zh-CN": "替换推理正文的渲染。参数为推理组件的全部属性，返回的内容放在正文区域中。",
@@ -176,7 +176,7 @@
         }
     },
     "dialogue-step": {
-        "source": "packages/semi-ai-solid/src/components/ai-chat-dialogue/widgets/content-item/dialogue-step.tsx#DialogueStepWidget",
+        "source": "packages/solid/ai/src/components/ai-chat-dialogue/widgets/content-item/dialogue-step.tsx#DialogueStepWidget",
         "props": {
             "steps": {
                 "zh-CN": "步骤列表，必填。每个步骤含 summary、status 与 actions，status 为 completed 时显示完成图标，否则显示加载中；actions 每项含 summary、description 与 icon，步骤有操作时可点击或用 Enter、空格展开收起。",
@@ -185,7 +185,7 @@
         }
     },
     "annotation": {
-        "source": "packages/semi-ai-solid/src/components/ai-chat-dialogue/widgets/content-item/annotation.tsx#AnnotationWidget",
+        "source": "packages/solid/ai/src/components/ai-chat-dialogue/widgets/content-item/annotation.tsx#AnnotationWidget",
         "props": {
             "annotation": {
                 "zh-CN": "参考来源列表，每项可含 title、logo、url、detail。必填。",

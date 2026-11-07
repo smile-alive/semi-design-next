@@ -1,6 +1,6 @@
 {
     "nav": {
-        "source": "packages/semi-ui-solid/src/components/navigation/nav.tsx",
+        "source": "packages/solid/ui/src/components/navigation/nav.tsx",
         "props": {
             "bodyStyle": {
                 "zh-CN": "导航项列表的自定义样式。",
@@ -121,7 +121,7 @@
         }
     },
     "nav-item": {
-        "source": "packages/semi-ui-solid/src/components/navigation/item.tsx",
+        "source": "packages/solid/ui/src/components/navigation/item.tsx",
         "props": {
             "disabled": {
                 "zh-CN": "是否禁用。禁用项仍可聚焦，但激活无效。",
@@ -186,7 +186,7 @@
         }
     },
     "sub-nav": {
-        "source": "packages/semi-ui-solid/src/components/navigation/sub-nav.tsx",
+        "source": "packages/solid/ui/src/components/navigation/sub-nav.tsx",
         "props": {
             "disabled": {
                 "zh-CN": "是否禁用。",
@@ -231,7 +231,7 @@
         }
     },
     "nav-header": {
-        "source": "packages/semi-ui-solid/src/components/navigation/header.tsx",
+        "source": "packages/solid/ui/src/components/navigation/header.tsx",
         "props": {
             "link": {
                 "zh-CN": "头部的 `href`，传入时头部内容包裹在链接中。",
@@ -252,7 +252,7 @@
         }
     },
     "nav-footer": {
-        "source": "packages/semi-ui-solid/src/components/navigation/footer.tsx",
+        "source": "packages/solid/ui/src/components/navigation/footer.tsx",
         "props": {
             "collapseButton": {
                 "zh-CN": "是否展示收起侧边栏按钮，`true` 时展示内置按钮，也可以传入节点替换它。仅 `mode` 为 `vertical` 且底部没有子元素时生效。",

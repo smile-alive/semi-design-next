@@ -1,6 +1,6 @@
 {
     "popover": {
-        "source": "packages/semi-ui-solid/src/components/popover/popover.tsx",
+        "source": "packages/solid/ui/src/components/popover/popover.tsx",
         "props": {
             "afterClose": {
                 "zh-CN": "弹出层关闭且离场动画结束后触发。",

@@ -1,6 +1,6 @@
 {
     "anchor": {
-        "source": "packages/semi-ui-solid/src/components/anchor/anchor.tsx",
+        "source": "packages/solid/ui/src/components/anchor/anchor.tsx",
         "props": {
             "autoCollapse": {
                 "zh-CN": "是否动态展示下一级锚点：只展开当前高亮链接所在的分支。",
@@ -65,7 +65,7 @@
         }
     },
     "anchor-link": {
-        "source": "packages/semi-ui-solid/src/components/anchor/link.ts",
+        "source": "packages/solid/ui/src/components/anchor/link.ts",
         "props": {
             "disabled": {
                 "zh-CN": "是否禁用，禁用后不响应点击跳转。",

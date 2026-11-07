@@ -1,6 +1,6 @@
 {
     "drag-move": {
-        "source": "packages/semi-ui-vue/src/components/drag-move/drag-move.vue",
+        "source": "packages/vue/ui/src/components/drag-move/drag-move.vue",
         "props": {
             "handler": {
                 "zh-CN": "返回触发拖动的元素，返回 null 时回退为被拖动元素本身。",

@@ -12,23 +12,23 @@
         // The Lottie and JsonViewer tests mock or import dependencies only semi-foundation declares.
         "paths": {
             "@test/*": ["../*"],
-            "@fibrae/semi-ui-react": ["../../packages/semi-ui-react/src/index.ts"],
-            "@fibrae/semi-ui-react/hooks": ["../../packages/semi-ui-react/src/hooks.ts"],
-            "@fibrae/semi-ui-react/tokens": ["../../packages/semi-ui-react/src/tokens.ts"],
-            "@fibrae/semi-ui-react/base/*": ["../../packages/semi-ui-react/src/base/*"],
-            "@fibrae/semi-ui-react/hooks/*": ["../../packages/semi-ui-react/src/hooks/*"],
-            "@fibrae/semi-ui-react/internal/*": ["../../packages/semi-ui-react/src/internal/*"],
-            "@fibrae/semi-ui-react/utils/*": ["../../packages/semi-ui-react/src/utils/*"],
-            "@fibrae/semi-ui-react/__tests__/*": ["../../packages/semi-ui-react/src/__tests__/*"],
-            "@fibrae/semi-ui-react/*": ["../../packages/semi-ui-react/src/components/*"],
-            "@fibrae/semi-ai-react": ["../../packages/semi-ai-react/src/index.ts"],
-            "@fibrae/semi-ai-react/utils/*": ["../../packages/semi-ai-react/src/utils/*"],
-            "@fibrae/semi-ai-react/__tests__/*": ["../../packages/semi-ai-react/src/__tests__/*"],
-            "@fibrae/semi-ai-react/*": ["../../packages/semi-ai-react/src/components/*"],
-            "@fibrae/semi-foundation/*": ["../../packages/semi-foundation/src/*"],
-            "@fibrae/semi-ai-foundation/*": ["../../packages/semi-ai-foundation/src/*"],
-            "@fibrae/semi-json-viewer-core": ["../../packages/semi-json-viewer-core/dist/index.d.ts"],
-            "lottie-web": ["../../packages/semi-foundation/node_modules/lottie-web"]
+            "@fibrae/semi-ui-react": ["../../packages/react/ui/src/index.ts"],
+            "@fibrae/semi-ui-react/hooks": ["../../packages/react/ui/src/hooks.ts"],
+            "@fibrae/semi-ui-react/tokens": ["../../packages/react/ui/src/tokens.ts"],
+            "@fibrae/semi-ui-react/base/*": ["../../packages/react/ui/src/base/*"],
+            "@fibrae/semi-ui-react/hooks/*": ["../../packages/react/ui/src/hooks/*"],
+            "@fibrae/semi-ui-react/internal/*": ["../../packages/react/ui/src/internal/*"],
+            "@fibrae/semi-ui-react/utils/*": ["../../packages/react/ui/src/utils/*"],
+            "@fibrae/semi-ui-react/__tests__/*": ["../../packages/react/ui/src/__tests__/*"],
+            "@fibrae/semi-ui-react/*": ["../../packages/react/ui/src/components/*"],
+            "@fibrae/semi-ai-react": ["../../packages/react/ai/src/index.ts"],
+            "@fibrae/semi-ai-react/utils/*": ["../../packages/react/ai/src/utils/*"],
+            "@fibrae/semi-ai-react/__tests__/*": ["../../packages/react/ai/src/__tests__/*"],
+            "@fibrae/semi-ai-react/*": ["../../packages/react/ai/src/components/*"],
+            "@fibrae/semi-foundation/*": ["../../packages/shared/foundation/src/*"],
+            "@fibrae/semi-ai-foundation/*": ["../../packages/shared/ai-foundation/src/*"],
+            "@fibrae/semi-json-viewer-core": ["../../packages/shared/json-viewer-core/dist/index.d.ts"],
+            "lottie-web": ["../../packages/shared/foundation/node_modules/lottie-web"]
         }
     },
     "include": [
@@ -37,14 +37,14 @@
         "../utils/react.ts",
         "../utils/dom/react.ts",
         "../utils/table/react.tsx",
-        "../../packages/semi-*-react/**/__tests__/**/*.ts",
-        "../../packages/semi-*-react/**/__tests__/**/*.tsx",
-        "../../packages/semi-ui-react/src/styles.d.ts",
-        "../../packages/semi-ai-react/src/styles.d.ts",
-        "../../packages/semi-ai-react/src/utils/semi-global.ts",
-        "../../packages/semi-icons-react/src/styles.d.ts",
-        "../../packages/semi-foundation/src/dom.d.ts"
+        "../../packages/react/*/**/__tests__/**/*.ts",
+        "../../packages/react/*/**/__tests__/**/*.tsx",
+        "../../packages/react/ui/src/styles.d.ts",
+        "../../packages/react/ai/src/styles.d.ts",
+        "../../packages/react/ai/src/utils/semi-global.ts",
+        "../../packages/react/icons/src/styles.d.ts",
+        "../../packages/shared/foundation/src/dom.d.ts"
     ],
     // Browser tests: their matcher types replace jest-dom's, so tsconfig.react.browser.json checks them.
-    "exclude": ["../../packages/**/*.browser.test.*", "../../packages/*/node_modules", "../../packages/*/dist"]
+    "exclude": ["../../packages/**/*.browser.test.*", "../../packages/*/*/node_modules", "../../packages/*/*/dist"]
 }

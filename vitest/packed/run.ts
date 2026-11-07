@@ -8,33 +8,33 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type * as Vite from 'vite';
-import type * as SemiVite from '../../packages/semi-vite/src/index.ts';
+import type * as SemiVite from '../../packages/plugins/vite/src/index.ts';
 
 const rootDir = path.resolve(import.meta.dirname, '../..');
 const packages = [
-    'semi-ai-react',
-    'semi-ai-solid',
-    'semi-ai-svelte',
-    'semi-ai-vue',
-    'semi-ai-foundation',
-    'semi-animation',
-    'semi-foundation',
-    'semi-icons-core',
-    'semi-icons-react',
-    'semi-icons-solid',
-    'semi-icons-svelte',
-    'semi-icons-vue',
-    'semi-illustrations-react',
-    'semi-illustrations-solid',
-    'semi-illustrations-svelte',
-    'semi-illustrations-vue',
-    'semi-json-viewer-core',
-    'semi-scss-compile',
-    'semi-ui-react',
-    'semi-ui-solid',
-    'semi-ui-svelte',
-    'semi-ui-vue',
-    'semi-vite',
+    'react/ai',
+    'solid/ai',
+    'svelte/ai',
+    'vue/ai',
+    'shared/ai-foundation',
+    'shared/animation',
+    'shared/foundation',
+    'shared/icons-core',
+    'react/icons',
+    'solid/icons',
+    'svelte/icons',
+    'vue/icons',
+    'react/illustrations',
+    'solid/illustrations',
+    'svelte/illustrations',
+    'vue/illustrations',
+    'shared/json-viewer-core',
+    'shared/scss-compile',
+    'react/ui',
+    'solid/ui',
+    'svelte/ui',
+    'vue/ui',
+    'plugins/vite',
 ];
 
 const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'semi-packed-'));

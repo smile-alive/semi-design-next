@@ -1,6 +1,6 @@
 {
     "markdown-render": {
-        "source": "packages/semi-ui-solid/src/components/markdown-render/markdown-render.tsx",
+        "source": "packages/solid/ui/src/components/markdown-render/markdown-render.tsx",
         "props": {
             "components": {
                 "zh-CN": "用于覆盖 Markdown 元素，也可添加 MDX 中引用的自定义组件；值为 Solid 组件或 HTML 标签名，元素键（如 `h1`）只接受组件或自身的标签名。与 `MarkdownRender.defaultComponents` 合并，变化时只重新渲染，不重新编译。值为 `undefined` 的键回退为内置组件。",

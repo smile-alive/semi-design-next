@@ -1,6 +1,6 @@
 {
     "collapsible": {
-        "source": "packages/semi-ui-react/src/components/collapsible/index.tsx",
+        "source": "packages/react/ui/src/components/collapsible/index.tsx",
         "props": {
             "children": { "zh-CN": "需要展开或收起的内容。", "en-US": "Content to expand or collapse." },
             "className": { "zh-CN": "外层 wrapper 的类名。", "en-US": "Class name of the outer wrapper." },

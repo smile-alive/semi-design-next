@@ -1,6 +1,6 @@
 {
     "cropper": {
-        "source": "packages/semi-ui-react/src/components/cropper/index.tsx",
+        "source": "packages/react/ui/src/components/cropper/index.tsx",
         "props": {
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
             "style": { "zh-CN": "根元素的样式。", "en-US": "Style of the root element." },

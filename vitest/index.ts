@@ -11,7 +11,7 @@ import { vue } from './vue/index.ts';
 const testFrameworks: TestFramework[] = [react, vue, solid, svelte];
 
 // Framework-free packages only; framework files are excluded by lint's frameworks so each file lands in one project
-const commonPackages = '{semi-foundation,semi-ai-foundation,semi-icons-core,semi-animation,semi-polyfill,semi-scss-compile,semi-theme-shared}';
+const commonPackages = 'shared/{foundation,ai-foundation,icons-core,animation,polyfill,scss-compile,scss-core}';
 const frameworkFiles = frameworks.flatMap((framework) => framework.files);
 
 const common: TestProjectInlineConfiguration = {
@@ -56,8 +56,8 @@ export const testProjects = [common, commonSsr, commonBrowser, ...testFrameworks
 const coverages = testFrameworks.flatMap((framework) => (framework.coverage ? [framework.coverage] : []));
 
 export const coverageFiles = {
-    include: ['packages/{semi-foundation,semi-ai-foundation}/src/**/*.{js,jsx,mjs,ts,tsx}', ...coverages.flatMap((coverage) => coverage.include)],
-    exclude: ['packages/**/__tests__/**', 'packages/semi-foundation/src/locale/**', ...coverages.flatMap((coverage) => coverage.exclude)],
+    include: ['packages/shared/{foundation,ai-foundation}/src/**/*.{js,jsx,mjs,ts,tsx}', ...coverages.flatMap((coverage) => coverage.include)],
+    exclude: ['packages/**/__tests__/**', 'packages/shared/foundation/src/locale/**', ...coverages.flatMap((coverage) => coverage.exclude)],
     // Measured coverage rounded down; raise as coverage grows
     thresholds: Object.assign({ statements: 97, branches: 92, functions: 97, lines: 97 }, ...coverages.map((coverage) => coverage.thresholds)),
 };

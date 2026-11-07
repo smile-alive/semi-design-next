@@ -1,6 +1,6 @@
 {
     "container": {
-        "source": "packages/semi-ai-svelte/src/components/sidebar/container/container.svelte",
+        "source": "packages/svelte/ai/src/components/sidebar/container/container.svelte",
         "props": {
             "visible": {
                 "zh-CN": "是否显示容器，可用 `bind:visible` 绑定。关闭按钮或 Esc 触发取消时先写入 false，再调用 onCancel。",
@@ -68,7 +68,7 @@
         }
     },
     "mcp-configure": {
-        "source": "packages/semi-ai-svelte/src/components/sidebar/mcp-configure/mcp-configure.svelte",
+        "source": "packages/svelte/ai/src/components/sidebar/mcp-configure/mcp-configure.svelte",
         "props": {
             "visible": {
                 "zh-CN": "是否显示，可用 `bind:visible` 绑定。",
@@ -175,7 +175,7 @@
         }
     },
     "annotation": {
-        "source": "packages/semi-ai-svelte/src/components/sidebar/annotation/annotation.svelte",
+        "source": "packages/svelte/ai/src/components/sidebar/annotation/annotation.svelte",
         "props": {
             "visible": {
                 "zh-CN": "是否显示，可用 `bind:visible` 绑定。",
@@ -258,7 +258,7 @@
         }
     },
     "annotation-content": {
-        "source": "packages/semi-ai-svelte/src/components/sidebar/annotation/annotation-content.svelte",
+        "source": "packages/svelte/ai/src/components/sidebar/annotation/annotation-content.svelte",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的分组 key，可用 `bind:activeKey` 绑定。",
@@ -287,7 +287,7 @@
         }
     },
     "sidebar": {
-        "source": "packages/semi-ai-svelte/src/components/sidebar/sidebar.svelte",
+        "source": "packages/svelte/ai/src/components/sidebar/sidebar.svelte",
         "props": {
             "visible": {
                 "zh-CN": "是否显示，可用 `bind:visible` 绑定。",
@@ -410,7 +410,7 @@
         }
     },
     "code-content": {
-        "source": "packages/semi-ai-svelte/src/components/sidebar/widgets/code-content.svelte",
+        "source": "packages/svelte/ai/src/components/sidebar/widgets/code-content.svelte",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的代码面板 key，可用 `bind:activeKey` 绑定。",
@@ -439,7 +439,7 @@
         }
     },
     "code-item": {
-        "source": "packages/semi-ai-svelte/src/components/sidebar/widgets/code-item.svelte",
+        "source": "packages/svelte/ai/src/components/sidebar/widgets/code-item.svelte",
         "props": {
             "name": {
                 "zh-CN": "代码项名称，由 CodeContent 的面板头部和 Sidebar 的详情头部显示，CodeItem 自身不渲染。",
@@ -473,7 +473,7 @@
         }
     },
     "file-content": {
-        "source": "packages/semi-ai-svelte/src/components/sidebar/widgets/file-content.svelte",
+        "source": "packages/svelte/ai/src/components/sidebar/widgets/file-content.svelte",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的文件面板 key，可用 `bind:activeKey` 绑定。",
@@ -494,7 +494,7 @@
         }
     },
     "file-item": {
-        "source": "packages/semi-ai-svelte/src/components/sidebar/widgets/file-item.svelte",
+        "source": "packages/svelte/ai/src/components/sidebar/widgets/file-item.svelte",
         "props": {
             "name": {
                 "zh-CN": "文件名称，作为编辑区域的可访问名称，挂载后变化会同步到编辑器。",

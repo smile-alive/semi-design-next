@@ -1,6 +1,6 @@
 {
     "lottie": {
-        "source": "packages/semi-ui-svelte/src/components/lottie/lottie.svelte",
+        "source": "packages/svelte/ui/src/components/lottie/lottie.svelte",
         "props": {
             "getAnimationInstance": {
                 "zh-CN": "每创建一次动画（包括每次重新加载）调用一次的回调，参数为当前动画的 AnimationItem。",

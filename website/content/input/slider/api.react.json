@@ -1,6 +1,6 @@
 {
     "slider": {
-        "source": "packages/semi-ui-react/src/components/slider/index.tsx",
+        "source": "packages/react/ui/src/components/slider/index.tsx",
         "props": {
             "aria-label": {
                 "zh-CN": "滑块的可访问名称；`range` 模式下两个滑块在其后分别追加语言包中的起点、终点。",

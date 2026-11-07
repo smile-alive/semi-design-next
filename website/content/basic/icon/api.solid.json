@@ -1,6 +1,6 @@
 {
     "icon": {
-        "source": "packages/semi-icons-solid/src/components/icon.tsx",
+        "source": "packages/solid/icons/src/components/icon.tsx",
         "props": {
             "fill": {
                 "zh-CN": "双色、多色图标的填充颜色，支持字符串或字符串数组。",

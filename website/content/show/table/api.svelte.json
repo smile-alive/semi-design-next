@@ -1,6 +1,6 @@
 {
     "table": {
-        "source": "packages/semi-ui-svelte/src/components/table/table.svelte",
+        "source": "packages/svelte/ui/src/components/table/table.svelte",
         "props": {
             "aria-describedby": {
                 "zh-CN": "表格的 aria-describedby。",

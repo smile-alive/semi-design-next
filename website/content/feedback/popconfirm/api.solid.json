@@ -1,6 +1,6 @@
 {
     "popconfirm": {
-        "source": "packages/semi-ui-solid/src/components/popconfirm/popconfirm.tsx",
+        "source": "packages/solid/ui/src/components/popconfirm/popconfirm.tsx",
         "props": {
             "ref": {
                 "zh-CN": "接收句柄的回调，句柄只有 `focusTrigger` 方法；组件创建时调用一次。",
