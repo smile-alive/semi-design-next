@@ -80,7 +80,7 @@
         selectedThroughParent.value = new Set(findDescendantKeys(node));
     };
 
-    const rowBackground = (key: string | undefined) => {
+    const rowBackground = (key?: string) => {
         if (selected.value.has(key)) return 'var(--semi-blue-0)';
         if (selectedThroughParent.value.has(key)) return 'color-mix(in srgb, var(--semi-blue-0) 50%, transparent)';
         return 'transparent';

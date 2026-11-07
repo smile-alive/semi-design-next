@@ -115,7 +115,7 @@ describe('Table（浏览器）', () => {
         const byId = new Map(nodes.map((node) => [node.nodeId, node]));
         const exposed = nodes.filter((node) => !node.ignored);
         const ofRole = (role: string) => exposed.filter((node) => node.role?.value === role);
-        const owner = (node: (typeof nodes)[number] | undefined) => {
+        const owner = (node?: (typeof nodes)[number]) => {
             let parent = node?.parentId ? byId.get(node.parentId) : undefined;
             while (parent && (parent.ignored || parent.role?.value === 'generic')) {
                 parent = parent.parentId ? byId.get(parent.parentId) : undefined;

@@ -19,7 +19,7 @@ type ResolvedLooks<B extends GroupLooks> = { readonly [K in 'size' | 'disabled']
  * control's own value. The getters read a computed, so they stay reactive in templates, computed and watch sources.
  */
 
-export default function useGroupLooks<B extends GroupLooks = Record<never, never>>(name: GroupMember, props: GroupLooks, builtin?: B): ResolvedLooks<B> {
+export default function useGroupLooks<B extends GroupLooks = Record<never, never>>(name: GroupMember, props: GroupLooks, builtin?: B) {
     const semi = useSemiGlobal();
 
     const group = useInputGroupInScope();

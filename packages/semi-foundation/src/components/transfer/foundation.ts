@@ -72,7 +72,7 @@ export default class TransferFoundation<P extends TransferBaseProps = TransferBa
      * Each groupList group's position among the groups of `getData`'s result. Search and paging leave it unchanged,
      * so it keys and names the group rows; titles cannot, as they may repeat, be absent or hold spaces.
      */
-    static #getGroupIndexes(data: Array<BasicResolvedDataItem>): Map<BasicResolvedDataItem['_parent'], number> {
+    static #getGroupIndexes(data: Array<BasicResolvedDataItem>) {
         const indexes = new Map<BasicResolvedDataItem['_parent'], number>();
         for (const { _parent } of data) {
             if (!indexes.has(_parent)) {

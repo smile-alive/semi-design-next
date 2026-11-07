@@ -225,7 +225,7 @@ export function langIsolation(pathname: string, markers: { en: string; zh: strin
     return {
         name: 'lang',
         run: async ({ baseUrl }) => {
-            const langs = Array.from({ length: 20 }, (_, index): 'en' | 'zh' => (index % 2 === 0 ? 'en' : 'zh'));
+            const langs = Array.from({ length: 20 }, (_, index) => (index % 2 === 0 ? 'en' : 'zh'));
             const responses = await Promise.all(
                 langs.map(async (lang, index) => {
                     const url = new URL(pathname, baseUrl);

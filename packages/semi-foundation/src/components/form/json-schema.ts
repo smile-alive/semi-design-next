@@ -93,7 +93,7 @@ function resolve(root: JsonSchema, schema: JsonSchema, seen: string[]) {
     return { schema: current, seen };
 }
 
-function optionsOf(schema: JsonSchema): SchemaFieldNode['options'] {
+function optionsOf(schema: JsonSchema) {
     let entries: Array<{ value: unknown; title?: string }> | undefined;
     if (Array.isArray(schema.enum)) {
         entries = schema.enum.map((value) => ({ value }));
@@ -168,7 +168,7 @@ function buildNode(root: JsonSchema, { schema, seen }: Resolved, field: string, 
 }
 
 /** Explicit wins; otherwise the Form schema's Standard JSON Schema input (target draft-2020-12); undefined when neither exists */
-export function resolveJsonSchema(jsonSchema: JsonSchema | undefined, schema: StandardSchema | undefined): JsonSchema | undefined {
+export function resolveJsonSchema(jsonSchema?: JsonSchema, schema?: StandardSchema): JsonSchema | undefined {
     return jsonSchema ?? schema?.['~standard'].jsonSchema?.input({ target: 'draft-2020-12' });
 }
 

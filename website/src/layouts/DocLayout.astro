@@ -57,7 +57,7 @@ const navGroups = sidebar.map((group) => ({
 }));
 const flat = sidebar.flatMap((group) => group.items);
 const index = flat.findIndex((d) => d.id === doc.id);
-const linkOf = (d: Doc | undefined) =>
+const linkOf = (d?: Doc) =>
     d && {
         href: hrefOf(d),
         path: `${categoryLabel(locale, parseDocId(d.id).category)} / ${d.data.title}`,

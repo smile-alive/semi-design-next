@@ -107,7 +107,7 @@ function solidOptimizeDepsInclude(root: string) {
  * });
  * ```
  */
-export default function semiTheming(options: SemiVitePluginOptions = {}): Plugin[] {
+export default function semiTheming(options: SemiVitePluginOptions = {}) {
     let root = process.cwd();
     const { prefixCls, omitCss } = options;
 

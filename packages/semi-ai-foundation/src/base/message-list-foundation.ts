@@ -38,7 +38,7 @@ export interface MessageListAdapter<M extends ListMessage, P extends MessageList
  * other in-place edits (deep content text, a lone status flip) render but are not followed; upgrade when such an edit
  * needs following.
  */
-export function followChats<M extends ListMessage>(chats: readonly M[] | undefined): M[] {
+export function followChats<M extends ListMessage>(chats?: readonly M[]) {
     const list = chats ?? [];
     const content = list.at(-1)?.content;
     void (typeof content === 'string' || Array.isArray(content) ? content.length : content);
@@ -46,7 +46,7 @@ export function followChats<M extends ListMessage>(chats: readonly M[] | undefin
 }
 
 /** `hints` as a reactive host hands it to the foundation; see `followChats` */
-export function followHints(hints: readonly string[] | undefined): string[] {
+export function followHints(hints?: readonly string[]) {
     return [...(hints ?? [])];
 }
 

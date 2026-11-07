@@ -40,7 +40,7 @@ let readingData = false;
  * (`<Default {...props} />`). Known limit: content that is not compiled markdown comes back as created nodes; tag it
  * when it is created if a reader such as MarkdownTable has to accept children written outside compiled markdown.
  */
-export function readMarkdownData(read: () => unknown): unknown {
+export function readMarkdownData(read: () => unknown) {
     readingData = true;
     try {
         return read();
