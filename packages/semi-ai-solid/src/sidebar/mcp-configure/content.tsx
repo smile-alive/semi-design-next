@@ -6,11 +6,11 @@ import { getShowOptions } from '@fibrae/semi-ai-foundation/components/sidebar/ut
 import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/components/button/constants';
 import { IconEdit, IconMinus, IconPlus, IconSearch, IconSetting } from '@fibrae/semi-icons-solid';
 import { IllustrationNoContent, IllustrationNoContentDark } from '@fibrae/semi-illustrations-solid';
-import useFoundation from '@fibrae/semi-ui-solid/_base/use-foundation';
+import useFoundation from '@fibrae/semi-ui-solid/base/use-foundation';
 import Button from '@fibrae/semi-ui-solid/button/index';
 import Empty from '@fibrae/semi-ui-solid/empty/index';
-import { useLocale } from '@fibrae/semi-ui-solid/hooks';
 import Input from '@fibrae/semi-ui-solid/input/index';
+import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import Radio, { RadioGroup } from '@fibrae/semi-ui-solid/radio/index';
 import Tooltip from '@fibrae/semi-ui-solid/tooltip/index';
 

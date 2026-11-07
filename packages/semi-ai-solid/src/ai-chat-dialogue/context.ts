@@ -1,6 +1,6 @@
 import type { Accessor } from 'solid-js';
 import type { Annotation, InputFile, InputImage, Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-import { createContext } from '@fibrae/semi-ui-solid/_base/create-context';
+import { createContext } from '@fibrae/semi-ui-solid/base/create-context';
 import type { AIChatDialogueProps } from './interface';
 
 export type AIChatDialogueView = Pick<AIChatDialogueProps, 'align' | 'dialogueRenderConfig' | 'disabledFileItemClick' | 'escapeHtml' | 'markdownRenderProps' | 'messageEditRender' | 'mode' | 'renderDialogueContentItem' | 'selecting' | 'showReference' | 'showReset'>;

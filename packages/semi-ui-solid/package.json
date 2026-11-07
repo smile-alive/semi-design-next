@@ -22,10 +22,40 @@
         "./styles.css": "./dist/styles.css",
         "./tailwind.css": "./dist/tailwind.css",
         "./package.json": "./package.json",
+        "./primitives": {
+            "types": "./dist/primitives.d.ts",
+            "solid": "./dist/primitives.jsx",
+            "default": "./dist/primitives.js"
+        },
+        "./tokens": {
+            "types": "./dist/tokens.d.ts",
+            "solid": "./dist/tokens.jsx",
+            "default": "./dist/tokens.js"
+        },
+        "./base/*": {
+            "types": "./dist/base/*.d.ts",
+            "solid": "./dist/base/*.jsx",
+            "default": "./dist/base/*.js"
+        },
+        "./primitives/*": {
+            "types": "./dist/primitives/*.d.ts",
+            "solid": "./dist/primitives/*.jsx",
+            "default": "./dist/primitives/*.js"
+        },
+        "./internal/*": {
+            "types": "./dist/internal/*.d.ts",
+            "solid": "./dist/internal/*.jsx",
+            "default": "./dist/internal/*.js"
+        },
+        "./utils/*": {
+            "types": "./dist/utils/*.d.ts",
+            "solid": "./dist/utils/*.jsx",
+            "default": "./dist/utils/*.js"
+        },
         "./*": {
-            "types": "./dist/*.d.ts",
-            "solid": "./dist/*.jsx",
-            "default": "./dist/*.js"
+            "types": "./dist/components/*.d.ts",
+            "solid": "./dist/components/*.jsx",
+            "default": "./dist/components/*.js"
         }
     },
     "files": [

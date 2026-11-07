@@ -1,6 +1,6 @@
 {
     "float-button": {
-        "source": "packages/semi-ui-solid/src/float-button/float-button.tsx",
+        "source": "packages/semi-ui-solid/src/components/float-button/float-button.tsx",
         "props": {
             "badge": {
                 "zh-CN": "徽章参数，同 Badge 的 props，作用于包裹按钮内容的 Badge。",
@@ -37,7 +37,7 @@
         }
     },
     "float-button-group": {
-        "source": "packages/semi-ui-solid/src/float-button/float-button-group.tsx",
+        "source": "packages/semi-ui-solid/src/components/float-button/float-button-group.tsx",
         "props": {
             "disabled": { "zh-CN": "禁用全部子项。", "en-US": "Disables every item." },
             "items": {

@@ -1,6 +1,6 @@
 {
     "empty": {
-        "source": "packages/semi-ui-solid/src/empty/empty.tsx",
+        "source": "packages/semi-ui-solid/src/components/empty/empty.tsx",
         "props": {
             "darkModeImage": {
                 "zh-CN": "暗色模式下的占位图，跟随 document.body 的 theme-mode 属性变化；取值同 image。",

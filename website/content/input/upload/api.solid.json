@@ -1,6 +1,6 @@
 {
     "upload": {
-        "source": "packages/semi-ui-solid/src/upload/upload.tsx",
+        "source": "packages/semi-ui-solid/src/components/upload/upload.tsx",
         "props": {
             "accept": {
                 "zh-CN": "接受上传的文件类型，写法同 input 的 accept：文件后缀（如 `.jpg`）或 MIME type，用逗号分隔。",
@@ -261,7 +261,7 @@
         }
     },
     "upload-file-card": {
-        "source": "packages/semi-ui-solid/src/upload/file-card.tsx",
+        "source": "packages/semi-ui-solid/src/components/upload/file-card.tsx",
         "props": {
             "index": { "zh-CN": "文件在列表中的位置。", "en-US": "Position of the file in the list." },
             "listType": {

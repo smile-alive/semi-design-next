@@ -1,6 +1,6 @@
 {
     "button": {
-        "source": "packages/semi-ui-solid/src/button/button.tsx",
+        "source": "packages/semi-ui-solid/src/components/button/button.tsx",
         "props": {
             "block": { "zh-CN": "将按钮设置为块级按钮。", "en-US": "Renders the button as a block-level button." },
             "colorful": {
@@ -50,7 +50,7 @@
         }
     },
     "button-group": {
-        "source": "packages/semi-ui-solid/src/button/button-group.tsx",
+        "source": "packages/semi-ui-solid/src/components/button/button-group.tsx",
         "props": {
             "colorful": {
                 "zh-CN": "多彩样式，作为组内按钮的默认值。",
@@ -75,7 +75,7 @@
         }
     },
     "split-button-group": {
-        "source": "packages/semi-ui-solid/src/button/split-button-group.tsx",
+        "source": "packages/semi-ui-solid/src/components/button/split-button-group.tsx",
         "props": {}
     }
 }

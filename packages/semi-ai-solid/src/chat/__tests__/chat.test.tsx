@@ -3,9 +3,9 @@ import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-lib
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import semiGlobal from '@fibrae/semi-ui-solid/_utils/semi-global';
 import { LocaleProvider } from '@fibrae/semi-ui-solid/locale/index';
 import type { FileItem, UploadProps } from '@fibrae/semi-ui-solid/upload/index';
+import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
 import { mockResizeObserver, sleep } from '@test/utils/solid';
 import Code from '../code';
 import Chat from '../index';

@@ -1,6 +1,6 @@
 {
     "overflow-list": {
-        "source": "packages/semi-ui-solid/src/overflow-list/overflow-list.tsx",
+        "source": "packages/semi-ui-solid/src/components/overflow-list/overflow-list.tsx",
         "props": {
             "collapseFrom": {
                 "zh-CN": "collapse 模式的折叠方向，可选 start 或 end。",

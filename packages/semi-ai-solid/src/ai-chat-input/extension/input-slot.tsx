@@ -1,7 +1,7 @@
 import { createEffect, createSignal, on, onCleanup } from 'solid-js';
 import { strings } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import { isSelectionInsideNode } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/input-slot';
-import { useEventListener } from '@fibrae/semi-ui-solid/hooks';
+import { useEventListener } from '@fibrae/semi-ui-solid/primitives';
 import type { SlotViewProps } from './node-view';
 
 export default function InputSlotView(props: SlotViewProps) {

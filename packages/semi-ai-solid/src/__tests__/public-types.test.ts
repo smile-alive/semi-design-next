@@ -1,7 +1,7 @@
 import path from 'node:path';
 import ts from 'typescript';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
-import type { OverrideDefaultProps } from '@fibrae/semi-ui-solid/_utils/semi-global';
+import type { OverrideDefaultProps } from '@fibrae/semi-ui-solid/utils/semi-global';
 import type { AIChatDialogueMessage, AIChatInputProps, ChatMessage, ChatProps } from '../index';
 
 const packageRoot = path.resolve(import.meta.dirname, '../..');

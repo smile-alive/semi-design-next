@@ -383,7 +383,7 @@
 - React：Nav 的 `multiple`、`onDeselect` 与 Nav.Sub 的 `isCollapsed`、`isOpen`、`maxHeight` 声明但不生效，API 表已注明。待决（从公开类型删除属公开 API 变化）。
 - React：折叠或水平弹层里的嵌套 Sub，外层 li（Dropdown.Item）和标题都是 `menuitem`，两层嵌套。待处理（外层 li 改为 `role="none"`，同 Solid；Vue 未核对）。
 - Solid：用 `items` 渲染时，新的 `items` 数组重建所有行，持有焦点的行失焦（React 按 key 保留）。已知限制（升级条件：按 itemKey 复用 Nav.Item 与 Nav.Sub 的 token）。
-- Solid：图标尺寸适配（`_base/icon-slot.ts`）无法区分写成 `size="default"` 与未写尺寸的图标，Breadcrumb、Toast、Notification、确认框同样受限。已知限制（升级条件：图标组件提供显式的尺寸标记）。在插槽之外创建的图标元素（数据对象里的 JSX，如 `Modal.confirm({ icon })`）拿不到插槽的类名与尺寸类，这些类在 effect 里加上，服务端 HTML 不带，hydration 后才出现。已知限制（升级条件：这类入口改为渲染函数，在插槽内创建）。
+- Solid：图标尺寸适配（`utils/icon-slot.ts`）无法区分写成 `size="default"` 与未写尺寸的图标，Breadcrumb、Toast、Notification、确认框同样受限。已知限制（升级条件：图标组件提供显式的尺寸标记）。在插槽之外创建的图标元素（数据对象里的 JSX，如 `Modal.confirm({ icon })`）拿不到插槽的类名与尺寸类，这些类在 effect 里加上，服务端 HTML 不带，hydration 后才出现。已知限制（升级条件：这类入口改为渲染函数，在插槽内创建）。
 - Solid：Nav.Sub 里 Nav.Item、Nav.Sub 以外的内容在 Nav 祖先的 context 下创建，放进 Dropdown 弹层后读不到该 Dropdown 的 context。已知限制（升级条件：改为在 Sub 视图里解析内容，itemKey 另做一次解析来收集）。
 - Svelte：children 写法无祖先自动展开、无顶层 Sub 选中标记（Nav 读不到子树）。已知限制（升级条件：Svelte 提供不依赖向上注册、首帧可用的子树读取机制）。
 - Svelte：`icon` snippet 无法判空，图标列总是保留。已知限制。

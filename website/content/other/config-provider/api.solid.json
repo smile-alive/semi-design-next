@@ -1,6 +1,6 @@
 {
     "config-provider": {
-        "source": "packages/semi-ui-solid/src/config-provider/config-provider.tsx",
+        "source": "packages/semi-ui-solid/src/components/config-provider/config-provider.tsx",
         "props": {
             "children": {
                 "zh-CN": "受该配置影响的内容。显式传入的 `direction` 与外层不同时（含最外层），内容外包一层带 `dir` 属性的 `div`。",
@@ -33,7 +33,7 @@
         }
     },
     "config-consumer": {
-        "source": "packages/semi-ui-solid/src/config-provider/config-consumer.tsx",
+        "source": "packages/semi-ui-solid/src/components/config-provider/config-consumer.tsx",
         "props": {
             "children": {
                 "zh-CN": "函数子节点，参数为当前生效的配置（ContextValue）；在 ConfigProvider 内还包含 `screens` 与 `onBreakpoint`，没有 ConfigProvider 时为空对象。函数只执行一次，字段以 `config.xxx` 的形式在 JSX 中读取，不要解构。",

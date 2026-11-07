@@ -4,11 +4,11 @@ import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sideb
 import { focusAfterModeChange } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
 import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
 import { IconClose, IconCopyStroked } from '@fibrae/semi-icons-solid';
-import hasContent from '@fibrae/semi-ui-solid/_base/has-content';
-import useDefaultProps from '@fibrae/semi-ui-solid/_base/use-default-props';
+import useDefaultProps from '@fibrae/semi-ui-solid/base/use-default-props';
 import Button from '@fibrae/semi-ui-solid/button/index';
-import { useLocale } from '@fibrae/semi-ui-solid/hooks';
+import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import { ToastFactory } from '@fibrae/semi-ui-solid/toast/index';
+import hasContent from '@fibrae/semi-ui-solid/utils/has-content';
 import Container from './container';
 import type { SideBarProps } from './interface';
 import Options from './options';

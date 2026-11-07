@@ -5,11 +5,11 @@ import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialog
 import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
 import { IconCopyStroked, IconDeleteStroked, IconEditStroked, IconLikeThumb, IconMoreStroked, IconRedoStroked, IconShareStroked, IconThumbUpStroked } from '@fibrae/semi-icons-solid';
-import useFoundation from '@fibrae/semi-ui-solid/_base/use-foundation';
+import useFoundation from '@fibrae/semi-ui-solid/base/use-foundation';
 import Button from '@fibrae/semi-ui-solid/button/index';
 import Dropdown from '@fibrae/semi-ui-solid/dropdown/index';
-import { useClickOutside, useLocale } from '@fibrae/semi-ui-solid/hooks';
 import Modal from '@fibrae/semi-ui-solid/modal/index';
+import { useClickOutside, useLocale } from '@fibrae/semi-ui-solid/primitives';
 import Toast from '@fibrae/semi-ui-solid/toast/index';
 import { useAIChatDialogueContext } from '../context';
 import type { DefaultActionNodeObj } from '../interface';

@@ -33,14 +33,14 @@ import {
     IconText,
     IconUndo,
 } from '@fibrae/semi-icons-solid';
-import type { ElementProps } from '@fibrae/semi-ui-solid/_base/element-props';
-import useWatch from '@fibrae/semi-ui-solid/_base/use-watch';
+import type { ElementProps } from '@fibrae/semi-ui-solid/base/element-props';
 import Button, { type ButtonProps } from '@fibrae/semi-ui-solid/button/index';
 import Collapse from '@fibrae/semi-ui-solid/collapse/index';
 import Divider from '@fibrae/semi-ui-solid/divider/index';
 import Dropdown from '@fibrae/semi-ui-solid/dropdown/index';
-import { useLocale } from '@fibrae/semi-ui-solid/hooks';
 import Input from '@fibrae/semi-ui-solid/input/index';
+import { useLocale } from '@fibrae/semi-ui-solid/primitives';
+import useWatch from '@fibrae/semi-ui-solid/primitives/use-watch';
 import Toast from '@fibrae/semi-ui-solid/toast/index';
 import type { SideBarCollapseProps } from '../interface';
 import { CollapseExpandButton, CollapseHeader } from './code';

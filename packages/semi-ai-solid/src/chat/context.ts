@@ -1,5 +1,5 @@
 import type { Accessor } from 'solid-js';
-import { createContext } from '@fibrae/semi-ui-solid/_base/create-context';
+import { createContext } from '@fibrae/semi-ui-solid/base/create-context';
 import type { ToastHookApi } from '@fibrae/semi-ui-solid/toast/index';
 import type { ChatProps, Message } from './interface';
 

@@ -1,0 +1,20 @@
+import { type JSX, createSignal } from 'solid-js';
+import useResizeObserver from '../../primitives/use-resize-observer';
+
+export interface MeasuredBoxProps {
+    class: string;
+    onResize: (entry: ResizeObserverEntry) => void;
+    children?: JSX.Element;
+}
+
+export default function MeasuredBox(props: MeasuredBoxProps) {
+    const [box, setBox] = createSignal<HTMLDivElement>();
+
+    useResizeObserver(box, ([entry]) => props.onResize(entry));
+
+    return (
+        <div ref={setBox} class={props.class}>
+            {props.children}
+        </div>
+    );
+}

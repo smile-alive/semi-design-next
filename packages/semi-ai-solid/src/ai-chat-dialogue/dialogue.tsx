@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import Checkbox from '@fibrae/semi-ui-solid/checkbox/index';
-import { useLocale } from '@fibrae/semi-ui-solid/hooks';
+import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import { useAIChatDialogueContext } from './context';
 import type { Metadata } from './interface';
 import DialogueAction from './widgets/dialogue-action';

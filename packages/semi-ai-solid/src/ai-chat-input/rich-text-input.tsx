@@ -4,7 +4,7 @@ import type { EditorView } from '@tiptap/pm/view';
 import { isEqual } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import { createEditorProps, getBaseExtensions, getEditorAttributes, getEditorOptions } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/editor-config';
-import { useLocale } from '@fibrae/semi-ui-solid/hooks';
+import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import slotExtensions from './extension';
 import type { PlaceholderProps } from './interface';
 

@@ -1,6 +1,6 @@
 {
     "auto-complete": {
-        "source": "packages/semi-ui-solid/src/auto-complete/auto-complete.tsx",
+        "source": "packages/semi-ui-solid/src/components/auto-complete/auto-complete.tsx",
         "props": {
             "autoAdjustOverflow": {
                 "zh-CN": "下拉面板被遮挡时是否自动调整方向。",

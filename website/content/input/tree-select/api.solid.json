@@ -1,6 +1,6 @@
 {
     "tree-select": {
-        "source": "packages/semi-ui-solid/src/tree-select/tree-select.tsx",
+        "source": "packages/semi-ui-solid/src/components/tree-select/tree-select.tsx",
         "props": {
             "aria-label": {
                 "zh-CN": "combobox 的可访问名称：搜索框在选择框内时是搜索框，否则是触发器。",

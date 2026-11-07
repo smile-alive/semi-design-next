@@ -5,14 +5,14 @@ import ContainerFoundation, { type ContainerAdapter, type ContainerProps } from 
 import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
 import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
 import { IconClose } from '@fibrae/semi-icons-solid';
-import useCSSAnimation from '@fibrae/semi-ui-solid/_base/css-animation';
-import hasContent from '@fibrae/semi-ui-solid/_base/has-content';
-import mergeRefs from '@fibrae/semi-ui-solid/_base/merge-refs';
-import useFoundation from '@fibrae/semi-ui-solid/_base/use-foundation';
-import useWatch from '@fibrae/semi-ui-solid/_base/use-watch';
+import useFoundation from '@fibrae/semi-ui-solid/base/use-foundation';
 import Button from '@fibrae/semi-ui-solid/button/index';
-import { useLocale, useRecordFocus } from '@fibrae/semi-ui-solid/hooks';
+import useCSSAnimation from '@fibrae/semi-ui-solid/internal/css-animation';
+import { useLocale, useRecordFocus } from '@fibrae/semi-ui-solid/primitives';
+import useWatch from '@fibrae/semi-ui-solid/primitives/use-watch';
 import { Resizable } from '@fibrae/semi-ui-solid/resizable/index';
+import hasContent from '@fibrae/semi-ui-solid/utils/has-content';
+import mergeRefs from '@fibrae/semi-ui-solid/utils/merge-refs';
 import type { ContainerSolidProps } from '../interface';
 
 const prefixCls = cssClasses.SIDEBAR;

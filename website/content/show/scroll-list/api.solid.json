@@ -1,6 +1,6 @@
 {
     "scroll-list": {
-        "source": "packages/semi-ui-solid/src/scroll-list/scroll-list.tsx",
+        "source": "packages/semi-ui-solid/src/components/scroll-list/scroll-list.tsx",
         "props": {
             "bodyHeight": {
                 "zh-CN": "列表主体的高度，数字单位为 px；未设置时由样式表决定。",
@@ -25,7 +25,7 @@
         }
     },
     "scroll-item": {
-        "source": "packages/semi-ui-solid/src/scroll-list/scroll-item.tsx",
+        "source": "packages/semi-ui-solid/src/components/scroll-list/scroll-item.tsx",
         "props": {
             "cycled": {
                 "zh-CN": "是否为无限循环。wheel 模式下列表首尾相接地无限滚动；两种模式下方向键都在首尾循环。",

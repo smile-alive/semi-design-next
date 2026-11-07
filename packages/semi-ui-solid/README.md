@@ -29,7 +29,7 @@ Styles and theme tokens load with the components. You do not need to import base
 | Entry                                          | Description                                                                                                                                       |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `@fibrae/semi-ui-solid`                        | All components and types, `ConfigProvider`, `LocaleProvider`, `LocaleConsumer`, `useLocale` and `semiGlobal`                                      |
-| `@fibrae/semi-ui-solid/<directory>/index`      | Deep file paths that map one-to-one to the directories under `src/`                                                                               |
+| `@fibrae/semi-ui-solid/<directory>/index`      | Deep file paths that map one-to-one to the directories under `src/components/`                                                                    |
 | `@fibrae/semi-ui-solid/tokens`                 | Theme tokens and base rules. Import it first in the application entry so tokens still load with the entry when the first component is lazy-loaded |
 | `@fibrae/semi-ui-solid/styles.css`             | The full stylesheet, for loading all component styles at once                                                                                     |
 | `@fibrae/semi-ui-solid/tailwind.css`           | The Tailwind v4 `@theme inline` mapping                                                                                                           |

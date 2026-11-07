@@ -1,6 +1,6 @@
 {
     "checkbox": {
-        "source": "packages/semi-ui-solid/src/checkbox/checkbox.tsx",
+        "source": "packages/semi-ui-solid/src/components/checkbox/checkbox.tsx",
         "props": {
             "addonId": {
                 "zh-CN": "addon 节点的 id，aria-labelledby 指向这个 id；未设置时随机生成。",
@@ -59,7 +59,7 @@
         }
     },
     "checkbox-group": {
-        "source": "packages/semi-ui-solid/src/checkbox/checkbox-group.tsx",
+        "source": "packages/semi-ui-solid/src/components/checkbox/checkbox-group.tsx",
         "props": {
             "defaultValue": {
                 "zh-CN": "非受控时组内默认选中的值，与 Checkbox 的 value 匹配。",
