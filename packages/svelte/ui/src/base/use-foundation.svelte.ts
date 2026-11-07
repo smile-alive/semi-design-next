@@ -48,7 +48,7 @@ function createStateMirror<S extends object>(initial: S) {
 }
 
 /**
- * Hosts a semi-foundation class in a Svelte component (host contract: `semi-foundation/src/base/foundation.ts`).
+ * Hosts a semi-foundation class in a Svelte component (host contract: `packages/shared/foundation/src/base/foundation.ts`).
  *
  * - `states().x` subscribes to key `x` only; every `setState` notifies its keys, equal value or not. The name is not
  *   `state` because a local `state` turns the `$state` rune of the same component into a store subscription.

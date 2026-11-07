@@ -26,7 +26,7 @@
 | D-2 | Vue 的 lint | 已定（2026-10-16）：React 与 Vue 的规则按目录隔离；`.vue` 模板由 ESLint 检查，是「不引入第二套同类工具」的例外 | oxlint 不检查模板；按后缀豁免会漏掉 Vue 包 `.ts` 里的 `setup()` 误报 |
 | D-3 | Vue 版插画与图标 | 已定（2026-10-16）：新增 `semi-illustrations-vue` 与 `semi-icons-vue`，与 React 包读同一份 `semi-icons-core` 数据 | Empty 与 semi-ai-vue 需要 Vue 版插画 |
 | D14 | 规则文档、lint、测试基础设施按前端框架隔离 | 已定（2026-10-23）：规则文档在 `.agents/references/<框架>/`，lint 在 `lint/<框架>/`，测试在 `vitest/<框架>/`；框架配置目录属于通用范围，运行时文件带框架名；新增框架只加目录与注册项 | 推广了 D-2：D-2 只覆盖 Vue 的 lint，按框架隔离同样用于文档与测试；共享文件不写框架名，新增框架不改共享逻辑 |
-| D15 | 支持的浏览器与兼容层交付方式 | 已定（2026-10-27）：Chrome 120、Firefox 125、Safari 17.2 及以上（Baseline 2023，Firefox 取 125 以原生支持 Popover，D5 不变）。兼容写法分三种：es-toolkit 等已有依赖能直接替代的 JS 能力，组件代码直接调用该函数；只能从全局补齐的 API（`AbortSignal.any`、`checkVisibility`）由可选包 `@fibrae/semi-polyfill` 提供，使用方在入口最先导入；参数级差异与 CSS 新特性（`scrollIntoView({ container })`、`focus({ focusVisible })`、`scroll-state`、`field-sizing`、`interpolate-size` 等）在 foundation 挂载后做特性检测，支持时走新写法，否则走兼容写法。视觉效果不接受降级：滚动条、固定列阴影、自适应尺寸、焦点环与进出场动画都有兼容写法 | 组件包不自动导入 polyfill，避免污染使用方全局、让新浏览器白白加载；`requestIdleCallback` 在所有 Safari 都没有，回退写在 JsonViewer 代码里而不是 polyfill。特性检测集中在 `semi-foundation/src/utils/supports.ts`，每项注释写明可删除的浏览器版本；兼容路径在 Firefox、Safari 上是主路径，测试覆盖 Playwright Firefox 与 WebKit |
+| D15 | 支持的浏览器与兼容层交付方式 | 已定（2026-10-27）：Chrome 120、Firefox 125、Safari 17.2 及以上（Baseline 2023，Firefox 取 125 以原生支持 Popover，D5 不变）。兼容写法分三种：es-toolkit 等已有依赖能直接替代的 JS 能力，组件代码直接调用该函数；只能从全局补齐的 API（`AbortSignal.any`、`checkVisibility`）由可选包 `@fibrae/semi-polyfill` 提供，使用方在入口最先导入；参数级差异与 CSS 新特性（`scrollIntoView({ container })`、`focus({ focusVisible })`、`scroll-state`、`field-sizing`、`interpolate-size` 等）在 foundation 挂载后做特性检测，支持时走新写法，否则走兼容写法。视觉效果不接受降级：滚动条、固定列阴影、自适应尺寸、焦点环与进出场动画都有兼容写法 | 组件包不自动导入 polyfill，避免污染使用方全局、让新浏览器白白加载；`requestIdleCallback` 在所有 Safari 都没有，回退写在 JsonViewer 代码里而不是 polyfill。特性检测集中在 `packages/shared/foundation/src/utils/supports.ts`，每项注释写明可删除的浏览器版本；兼容路径在 Firefox、Safari 上是主路径，测试覆盖 Playwright Firefox 与 WebKit |
 | D16 | 分支模型与历史形态 | 已定（2026-11-04）：历史一条直线。`release` 是唯一集成分支，PR 只允许 Rebase and merge；`main` 只是最后一次发版的指针，由 Release 工作流在发布后 fast-forward 推送，不接收 PR；版本 PR 开到 `release`。`main`、`release` 的规则集都要求线性历史 | 原先 `release` 与 `main` 互相 merge，每次发版留下两个 merge commit，历史图无法阅读；rebase 合并会改写哈希，两个分支来回 rebase 必然冲突，所以 `main` 不能再有自己的提交。正式文档站只随发版更新，发版之间上线文档要手动 fast-forward `main`（CONTRIBUTING「发布」） |
 | D17 | 包目录分组 | 已定（2026-11-07）：`packages/<分组>/<短名>`，分组为 `shared`（框架无关的包）、`react`、`vue`、`solid`、`svelte`（各含 `ui`、`ai`、`icons`、`illustrations`）与 `plugins`（构建插件与 Nuxt 模块）；目录短名不带 `semi-` 与框架名，npm 包名不变；构建插件共用的私有编译管线改名为 `@fibrae/semi-scss-core`（`shared/scss-core`）。新增框架加一个分组目录 | 平铺的 29 个目录难以浏览；仓库的规则、lint 与测试都按框架隔离（D14），按框架分组让框架归属直接由路径前缀 `packages/<框架>/` 决定。参考 Zag 的分组布局 |
 
@@ -96,14 +96,14 @@
 
 ### 2.2 依赖
 
-- `lottie-web`：Lottie 已改为首次使用时动态导入（`semi-foundation/src/components/lottie/foundation.ts`），渲染器仍是完整版，轻量入口待评估。
+- `lottie-web`：Lottie 已改为首次使用时动态导入（`packages/shared/foundation/src/components/lottie/foundation.ts`），渲染器仍是完整版，轻量入口待评估。
 
 ### 2.3 体积
 
-| 组件                                         | 问题                                                                                                                                                          | 做法                                                                     |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Grid                                         | 生成 70 KB CSS，`grid/mixin.scss` 仍保留 float 布局与重复选择器                                                                                               | 只保留 flex 或 CSS grid，列宽用自定义属性                                |
-| DatePicker、TimePicker、Calendar 与 `locale` | `Locale` 接口含 `dateFnsLocale`（`semi-foundation/src/locale/interface.ts`），默认 locale 把 date-fns 语言包带进所有使用 `useLocale`、`LocaleConsumer` 的组件 | `dateFnsLocale` 移到日期组件内部按语言代码查找（自定义 locale 结构变化） |
+| 组件                                         | 问题                                                                                                                                                                     | 做法                                                                     |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| Grid                                         | 生成 70 KB CSS，`grid/mixin.scss` 仍保留 float 布局与重复选择器                                                                                                          | 只保留 flex 或 CSS grid，列宽用自定义属性                                |
+| DatePicker、TimePicker、Calendar 与 `locale` | `Locale` 接口含 `dateFnsLocale`（`packages/shared/foundation/src/locale/interface.ts`），默认 locale 把 date-fns 语言包带进所有使用 `useLocale`、`LocaleConsumer` 的组件 | `dateFnsLocale` 移到日期组件内部按语言代码查找（自定义 locale 结构变化） |
 
 ### 2.4 TypeScript 与 API 表
 

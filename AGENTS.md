@@ -43,7 +43,7 @@
 - 各框架包支持的框架版本以其 `package.json` 的 `peerDependencies` 为准。浏览器支持 Chrome 120、Firefox 125、Safari 17.2 及以上（D15），用到的每项 JS、DOM 与 CSS 能力都要在这三个版本上成立：
     - es-toolkit 等已有依赖能直接替代的 JS 能力（如 `RegExp.escape`、Set methods、`Map.groupBy`），组件代码直接调用该函数；
     - 只能从全局补齐的 API 放进 `@fibrae/semi-polyfill`，组件代码照常调用原生 API，组件包不导入 polyfill；
-    - 参数级差异与 CSS 新特性在 `semi-foundation/src/utils/supports.ts` 或组件 foundation 中挂载后检测，支持时走新写法，否则走兼容写法，注释写明可删除的浏览器版本；CSS 回退写在 `@supports not (...)` 块里。
+    - 参数级差异与 CSS 新特性在 `packages/shared/foundation/src/utils/supports.ts` 或组件 foundation 中挂载后检测，支持时走新写法，否则走兼容写法，注释写明可删除的浏览器版本；CSS 回退写在 `@supports not (...)` 块里。
 - 部署在 HTTPS 下（D1），`navigator.clipboard`、`crypto.randomUUID` 直接用，不留回退。
 - 发布物只有 ESM，由 `vp pack` 产出；不提供 UMD、CDN 构建。
 - 支持服务端渲染与 hydration（React 另支持 RSC 客户端边界），写法见 [components](.agents/references/components.md#服务端渲染)。

@@ -2,7 +2,7 @@ import { type ShallowRef, markRaw, onBeforeUnmount, onMounted, shallowRef, watch
 import { type DefaultAdapter, type HostContext, type Lifecycle, type PropReactions, createPropsTracker } from '@fibrae/semi-foundation/base/foundation';
 
 /**
- * Hosts a semi-foundation class in a Vue component (host contract: `semi-foundation/src/base/foundation.ts`).
+ * Hosts a semi-foundation class in a Vue component (host contract: `packages/shared/foundation/src/base/foundation.ts`).
  *
  * - `connect` and `init` run in onMounted, `destroy` and `disconnect` in onBeforeUnmount. KeepAlive deactivation calls
  *   neither; a component that must release what `init` set up while cached uses `useKeepAliveFoundation`.

@@ -68,7 +68,7 @@ class FoundationHost<F extends Lifecycle, A extends DefaultAdapter<P, S, any>, P
 }
 
 /**
- * Function-component host for a semi-foundation class (host contract: `semi-foundation/src/base/foundation.ts`).
+ * Function-component host for a semi-foundation class (host contract: `packages/shared/foundation/src/base/foundation.ts`).
  *
  * - The adapter is created once and reads the latest props, state and context, so foundation methods called from
  *   events and effects never see a stale render's values.

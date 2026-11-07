@@ -82,7 +82,7 @@ function createCommitQueue() {
 }
 
 /**
- * Hosts a semi-foundation class in a Solid component (host contract: `semi-foundation/src/base/foundation.ts`).
+ * Hosts a semi-foundation class in a Solid component (host contract: `packages/shared/foundation/src/base/foundation.ts`).
  *
  * - `state().x` subscribes to key `x` only; `state()` itself subscribes to nothing. Spreading, `Object.keys` and `in`
  *   see the current keys; spreading reads, and so subscribes to, every key.
