@@ -3,7 +3,7 @@
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import Checkbox from '@fibrae/semi-ui-vue/checkbox/index';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import { useAIChatDialogueContext } from './context';
     import DialogueAction from './dialogue-action.vue';
     import DialogueAvatar from './dialogue-avatar.vue';

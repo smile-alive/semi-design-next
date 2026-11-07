@@ -1,6 +1,6 @@
 {
     "typography-text": {
-        "source": "packages/semi-ui-vue/src/typography/text.vue",
+        "source": "packages/semi-ui-vue/src/components/typography/text.vue",
         "props": {
             "code": { "zh-CN": "是否被 code 元素包裹。", "en-US": "Whether the text is wrapped in a code element." },
             "component": {
@@ -69,7 +69,7 @@
         "exposed": {}
     },
     "typography-title": {
-        "source": "packages/semi-ui-vue/src/typography/title.vue",
+        "source": "packages/semi-ui-vue/src/components/typography/title.vue",
         "props": {
             "component": {
                 "zh-CN": "自定义渲染元素，可以是标签名或 Vue 组件，默认由 heading 决定（h1 到 h6）。",
@@ -133,7 +133,7 @@
         "exposed": {}
     },
     "typography-paragraph": {
-        "source": "packages/semi-ui-vue/src/typography/paragraph.vue",
+        "source": "packages/semi-ui-vue/src/components/typography/paragraph.vue",
         "props": {
             "component": {
                 "zh-CN": "自定义渲染元素，可以是标签名或 Vue 组件，默认 p。",
@@ -197,7 +197,7 @@
         "exposed": {}
     },
     "typography-numeral": {
-        "source": "packages/semi-ui-vue/src/typography/numeral.vue",
+        "source": "packages/semi-ui-vue/src/components/typography/numeral.vue",
         "props": {
             "code": { "zh-CN": "是否被 code 元素包裹。", "en-US": "Whether the text is wrapped in a code element." },
             "component": {

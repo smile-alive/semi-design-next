@@ -1,6 +1,6 @@
 {
     "breadcrumb": {
-        "source": "packages/semi-ui-vue/src/breadcrumb/breadcrumb.vue",
+        "source": "packages/semi-ui-vue/src/components/breadcrumb/breadcrumb.vue",
         "props": {
             "activeIndex": {
                 "zh-CN": "受控使用，当前项的序号（从 0 起）；缺省时最后一项为当前项。",
@@ -59,7 +59,7 @@
         "exposed": {}
     },
     "breadcrumb-item": {
-        "source": "packages/semi-ui-vue/src/breadcrumb/breadcrumb-item.vue",
+        "source": "packages/semi-ui-vue/src/components/breadcrumb/breadcrumb-item.vue",
         "props": {
             "active": {
                 "zh-CN": "是否为当前项，由 Breadcrumb 注入；当前项带 aria-current=\"page\" 且不渲染为链接。",

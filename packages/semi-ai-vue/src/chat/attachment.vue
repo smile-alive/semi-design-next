@@ -3,7 +3,7 @@
     import { getFileType, isImageFile } from '@fibrae/semi-ai-foundation/utils/file-suffix';
     import { isUploadFailed, isUploadProgressVisible } from '@fibrae/semi-ai-foundation/utils/upload-status';
     import { IconAlertCircle, IconClear } from '@fibrae/semi-icons-vue';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import Progress from '@fibrae/semi-ui-vue/progress/index';
     import type { FileItem } from '@fibrae/semi-ui-vue/upload/index';
     import FileAttachment from './file-attachment.vue';

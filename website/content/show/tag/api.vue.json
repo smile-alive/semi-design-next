@@ -1,6 +1,6 @@
 {
     "tag": {
-        "source": "packages/semi-ui-vue/src/tag/tag.vue",
+        "source": "packages/semi-ui-vue/src/components/tag/tag.vue",
         "props": {
             "tabindex": {
                 "zh-CN": "标签的 tabindex；可交互的标签缺省为 0。",
@@ -61,7 +61,7 @@
         "exposed": {}
     },
     "tag-group": {
-        "source": "packages/semi-ui-vue/src/tag/group.vue",
+        "source": "packages/semi-ui-vue/src/components/tag/group.vue",
         "props": {
             "tagList": {
                 "zh-CN": "标签配置数组，每项为 Tag 的属性，children 为 string 或 number 的标签文字。",
@@ -108,7 +108,7 @@
         "exposed": {}
     },
     "split-tag-group": {
-        "source": "packages/semi-ui-vue/src/tag/split-tag-group.vue",
+        "source": "packages/semi-ui-vue/src/components/tag/split-tag-group.vue",
         "props": {},
         "events": {},
         "slots": { "default": { "zh-CN": "组合在一起的 Tag。", "en-US": "The Tag components combined into one." } },

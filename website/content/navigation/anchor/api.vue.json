@@ -1,6 +1,6 @@
 {
     "anchor": {
-        "source": "packages/semi-ui-vue/src/anchor/anchor.vue",
+        "source": "packages/semi-ui-vue/src/components/anchor/anchor.vue",
         "props": {
             "autoCollapse": {
                 "zh-CN": "是否在滚动时动态展示下一级锚点。",
@@ -63,7 +63,7 @@
         "exposed": {}
     },
     "anchor-link": {
-        "source": "packages/semi-ui-vue/src/anchor/anchor-link.vue",
+        "source": "packages/semi-ui-vue/src/components/anchor/anchor-link.vue",
         "props": {
             "disabled": {
                 "zh-CN": "是否禁用，禁用后不响应点击跳转。",

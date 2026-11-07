@@ -10,7 +10,7 @@ semi-ui-vue 的 Vue 3 组件写法。组件内语句顺序、foundation、属性
 ## 组件结构
 
 - 使用 `<script setup lang="ts">` 与模板；目录和文件用 kebab-case。已有的 VNode（插槽节点、调用方节点）用 `<component :is="node" v-bind="extra">` 渲染：Vue 合并 class、style 与监听器并保留原 ref，不用 `cloneVNode`。
-- 模板表达不了的渲染（组件工厂如命令式 Toast，数据树如 Tree、Cascader、Table 单元格）写成 `.tsx` 中的 JSX，首行必须是 `/** @jsxImportSource vue */`，并注释为什么不用模板。仓库自身的构建由 tsconfig 的 `jsxImportSource: vue` 选中 `vue/jsx-runtime`，但站点的 `@vitejs/plugin-react` 把全局 importSource 设为 React，只有文件内的 pragma 能让 Vue 文件在那里仍按 Vue 编译（`_base/__tests__/base.test.tsx` 有守卫用例）。不用 `<script lang="tsx">`（plugin-vue 会把 SFC 的 tsx 交给 Oxc 默认的 React 转换）。
+- 模板表达不了的渲染（组件工厂如命令式 Toast，数据树如 Tree、Cascader、Table 单元格）写成 `.tsx` 中的 JSX，首行必须是 `/** @jsxImportSource vue */`，并注释为什么不用模板。仓库自身的构建由 tsconfig 的 `jsxImportSource: vue` 选中 `vue/jsx-runtime`，但站点的 `@vitejs/plugin-react` 把全局 importSource 设为 React，只有文件内的 pragma 能让 Vue 文件在那里仍按 Vue 编译（`src/__tests__/base.test.tsx` 有守卫用例）。不用 `<script lang="tsx">`（plugin-vue 会把 SFC 的 tsx 交给 Oxc 默认的 React 转换）。
 - 没有手写结构、只把数据逐层转成 VNode 的通用树（如图标的 SVG 数据）用递归的 `h()`。`vue/jsx-runtime` 等同 `h()`：原生元素直接写子内容，组件的子内容写插槽函数或插槽对象（`<Comp>{{ default: () => ... }}</Comp>`）。Vue 的 tsconfig 保持 `jsx: preserve`（vue-tsc 只在此模式下正确检查 Vue JSX 的子内容），转换由 Vite 与 `vp pack` 显式设置的 automatic runtime 负责。
 - 有状态组件仍用 SFC 与模板；SFC 内只为插槽参数构造单个 VNode 时直接用 `h()`，不为一次调用拆文件。不用 `getCurrentInstance`；class 用模板的数组与对象写法，不用 clsx。SFC 不写 `<style>`，在 script 导入共享 foundation SCSS。
 - `<script setup>` 的语句顺序与空行见共享规则。宏之间的顺序由 `vue/define-macros-order` 检查（`defineOptions`、`defineProps`、`defineEmits`、`defineSlots`、`defineModel`，`defineExpose` 放最后）。同一关注点超过约 30 行或会被第二个组件复用时抽成 `use-xxx.ts`。模板 ref 用 `useTemplateRef`，不用 `ref()`（`vue/prefer-use-template-ref`）。
@@ -18,7 +18,7 @@ semi-ui-vue 的 Vue 3 组件写法。组件内语句顺序、foundation、属性
 
 ## props
 
-- Props 只声明组件属性，原生属性经 attrs 透传（D12）。有根 DOM 的对外组件在 `defineProps` 里交叉落点元素的原生属性类型，落点与 React 版的 `ElementProps` 相同，F11 组件不加：`defineProps<XxxProps & /* @vue-ignore */ ElementProps<'tag', keyof XxxProps | EmitHandlers<XxxEmits>>>()`（`_base/element-props.ts`）。`@vue-ignore` 让 compiler-sfc 跳过这一项，运行时 props 不变，TSX 调用方仍能写原生属性；省略的键必须包含 emit 推导出的 `onXxx`（内联 emits 直接列出名字），否则同名原生事件与 emit 签名取交集，调用方按 emit 签名写的处理函数报错。组件自己绑定、调用方传了也无效的原生属性同样省略（Input、TextArea 的 `value`）；落到内部 input 而落点元素没有的属性另行交叉（Checkbox、Radio、Switch 的 `Pick<InputHTMLAttributes, 'name' | 'autofocus'>`）。属性全部转交给内层组件的包装组件交叉 `InstanceType<typeof Comp>['$props']`（泛型组件用 `Parameters<typeof Comp>[0]`），只经 attrs 转发内层监听器的交叉 `EmitProps<Emits>`。组件内的 `props` 类型也带着这些原生属性，运行时恒为 undefined，读原生属性用 `attrs`。
+- Props 只声明组件属性，原生属性经 attrs 透传（D12）。有根 DOM 的对外组件在 `defineProps` 里交叉落点元素的原生属性类型，落点与 React 版的 `ElementProps` 相同，F11 组件不加：`defineProps<XxxProps & /* @vue-ignore */ ElementProps<'tag', keyof XxxProps | EmitHandlers<XxxEmits>>>()`（`base/element-props.ts`）。`@vue-ignore` 让 compiler-sfc 跳过这一项，运行时 props 不变，TSX 调用方仍能写原生属性；省略的键必须包含 emit 推导出的 `onXxx`（内联 emits 直接列出名字），否则同名原生事件与 emit 签名取交集，调用方按 emit 签名写的处理函数报错。组件自己绑定、调用方传了也无效的原生属性同样省略（Input、TextArea 的 `value`）；落到内部 input 而落点元素没有的属性另行交叉（Checkbox、Radio、Switch 的 `Pick<InputHTMLAttributes, 'name' | 'autofocus'>`）。属性全部转交给内层组件的包装组件交叉 `InstanceType<typeof Comp>['$props']`（泛型组件用 `Parameters<typeof Comp>[0]`），只经 attrs 转发内层监听器的交叉 `EmitProps<Emits>`。组件内的 `props` 类型也带着这些原生属性，运行时恒为 undefined，读原生属性用 `attrs`。
 - props、emits、slots 用类型声明，导出 `XxxProps`、`XxxSlots` 与需要的 `XxxHandle`。事件对象使用原生 DOM 事件，需返回值的回调仍用函数 prop。`defineProps` 引用到的接口与类型别名（含交叉、联合里的成员）都要从所在模块导出，否则 `vp pack` 生成 `.d.ts` 时报 TS4023（`__VLS_export ... cannot be named`）；只在 `interface.ts` 导出即可，不必加进 `index.ts`。
 - 靠监听是否存在决定渲染、或经 context 下发并读全局默认值的事件（Upload、VideoPlayer、Steps、List、Breadcrumb 等的 `onXxx`）也保留函数 prop；这类事件不支持 `.once` 等修饰符（`@xxx.once` 编译为 `onXxxOnce`，不命中函数 prop，也不走 emits），在 release-notes 的对应章节写明。
 - 返回 DOM 或 VNode 的 render 类函数 prop 改为作用域插槽：插槽名去掉 `render` 前缀（`renderTabBar` -> `#tabBar`），位置参数改为插槽作用域对象的具名字段（`TabsTabBarSlotProps` 的 `tabBarProps`），React 版传入的组件参数改为 VNode 字段（`tabBar`）；Tree 的 `#renderDraggingNode` 是保留原名的特例，不作为新插槽的范例；返回字符串的格式化函数（AutoComplete 的 `renderSelectedItem`）仍是函数 prop。
@@ -30,7 +30,7 @@ semi-ui-vue 的 Vue 3 组件写法。组件内语句顺序、foundation、属性
 
 ## context 与组值
 
-- context 用 `_base/create-context.ts` 的 `createContext<T>(name, { optional? })`：每个组件目录一个 `context.ts`，导出 `[provideXxxContext, useXxxContext]` 与值类型，`name` 用提供方组件名。`useXxxContext()` 没有 provider 时的行为见共享规则。嵌套继承写成先 `useXxxContext()` 读外层、再 `provideXxxContext()` 下发；重置子树写成 context 类型含 `undefined` 并 `provideXxxContext(undefined)`。值形态：只有数据时下发 `ComputedRef<T>`；带方法时下发普通对象 `{ view: ComputedRef<View>, ...方法 }`，方法不进 computed；不变的标识值（如弹层层级的 symbol）直接下发。`semiGlobalKey` 是公开的 app 级注入键（`app.provide(semiGlobalKey, config)`），不走 `createContext`。
+- context 用 `base/create-context.ts` 的 `createContext<T>(name, { optional? })`：每个组件目录一个 `context.ts`，导出 `[provideXxxContext, useXxxContext]` 与值类型，`name` 用提供方组件名。`useXxxContext()` 没有 provider 时的行为见共享规则。嵌套继承写成先 `useXxxContext()` 读外层、再 `provideXxxContext()` 下发；重置子树写成 context 类型含 `undefined` 并 `provideXxxContext(undefined)`。值形态：只有数据时下发 `ComputedRef<T>`；带方法时下发普通对象 `{ view: ComputedRef<View>, ...方法 }`，方法不进 computed；不变的标识值（如弹层层级的 symbol）直接下发。`semiGlobalKey` 是公开的 app 级注入键（`app.provide(semiGlobalKey, config)`），不走 `createContext`。
 - Vue 的 `createContext` helper 没有 `defaultValue`：读取处用 `??` 补默认值，不为对齐 React 而加参数。
 - 组件的 `useLocale` 返回 computed，使用方名称优先，缺省按 ConfigProvider -> LocaleProvider -> zh_CN 读取。
 - 组值回落的 computed 写法：默认值写字面量 `undefined`（不用工厂默认值），在 computed 中按共享规则的顺序回落。
@@ -38,10 +38,10 @@ semi-ui-vue 的 Vue 3 组件写法。组件内语句顺序、foundation、属性
 ## 子节点
 
 - 逐个包裹或在子项之间插入元素的组件（ButtonGroup 分隔线、AvatarGroup）：用 `slotNodes(slots.default?.() ?? [])` 取 `[node, key]`，模板 `v-for` 把 `:key="key"` 写在包装元素上（无包装时写在 `<component :is>` 上），outlet 上不加 `v-if`；key 规则同 `React.Children.toArray`，不用 `node.key ?? index`。
-- 收集子组件数据的组件（Select、Tabs、Steps、Table.Column）：在模板或 render 期读取默认插槽 vnode 的 props，用 `_base/element-type.ts` 读 `elementType` 识别；`v-for`、`v-if`、`<template>`（Fragment）由 `slotNodes` 展开，与 React 的 `flattenChildren` 一致；不用子组件自注册，自注册在 SSR 与 mount 同步阶段拿不到数据。
+- 收集子组件数据的组件（Select、Tabs、Steps、Table.Column）：在模板或 render 期读取默认插槽 vnode 的 props，用 `utils/element-type.ts` 读 `elementType` 识别；`v-for`、`v-if`、`<template>`（Fragment）由 `slotNodes` 展开，与 React 的 `flattenChildren` 一致；不用子组件自注册，自注册在 SSR 与 mount 同步阶段拿不到数据。
 - 例外是 React 本身经 context 自注册、且首帧不需要子项数据的组件：ResizeGroup 要子项挂载后的实际尺寸，Image 分组要收集封装在其他组件里的 Image；FormInputGroup 的组内字段本就经 Form 的 context 注册，组只汇集这些注册的字段名与错误，读插槽 props 拿不到 withField 包装后的字段身份；子项在 `onMounted` 注册、`onBeforeUnmount` 注销。
-- 子组件身份用 `defineOptions({ elementType: 'Xxx' })` 声明，父组件用 `_base/element-type.ts` 读取。在 computed 里读插槽的收集型组件用 `_base/use-slot-version.ts` 的 `useSlotVersion(slots)` 让 computed 失效：它在 `onBeforeUpdate` 里比较插槽函数引用，只在引用变化时递增，不无条件递增；已知限制是引用不变、读非响应式数据的插槽在组件因其他原因更新时不重读，调用方传响应式数据或新的插槽函数。
-- 模板里标签名来自 prop 或内部常量时（Table 的 `components`、Transfer 与 JsonViewer 的 `search`）用 `_base/native-tag.ts` 的 `nativeTag(tag)` 渲染，绕过 `resolveDynamicComponent` 的注册表查找，应用全局注册同名组件不会接管；递归渲染自身的 SFC 用 `defineOptions({ name })`。`nativeTag` 组件的 `type` 是函数，检查 `vnode.type` 是否为字符串的代码（Tooltip 的 `canCarryPopupState`）认不出它，见 component-issues 的 Tooltip 节。
+- 子组件身份用 `defineOptions({ elementType: 'Xxx' })` 声明，父组件用 `utils/element-type.ts` 读取。在 computed 里读插槽的收集型组件用 `composables/use-slot-version.ts` 的 `useSlotVersion(slots)` 让 computed 失效：它在 `onBeforeUpdate` 里比较插槽函数引用，只在引用变化时递增，不无条件递增；已知限制是引用不变、读非响应式数据的插槽在组件因其他原因更新时不重读，调用方传响应式数据或新的插槽函数。
+- 模板里标签名来自 prop 或内部常量时（Table 的 `components`、Transfer 与 JsonViewer 的 `search`）用 `utils/native-tag.ts` 的 `nativeTag(tag)` 渲染，绕过 `resolveDynamicComponent` 的注册表查找，应用全局注册同名组件不会接管；递归渲染自身的 SFC 用 `defineOptions({ name })`。`nativeTag` 组件的 `type` 是函数，检查 `vnode.type` 是否为字符串的代码（Tooltip 的 `canCarryPopupState`）认不出它，见 component-issues 的 Tooltip 节。
 
 ## foundation 与响应式
 
@@ -55,24 +55,24 @@ semi-ui-vue 的 Vue 3 组件写法。组件内语句顺序、foundation、属性
     - 组件自有、只原地增删的集合用 `shallowReactive`：Set、Map、子项注册数组。原地 `add`、`delete`、`set`、`push`、`splice`，不复制后整体赋值；变量用 `const`，不解构，不整体替换。
     - 不用深层 `ref()`、`reactive()`：集合里的 DOM 元素、VNode、foundation 实例会被包成 Proxy，`===` 与 `Set.has` 失效，深层追踪也没有用处。foundation 实例不放进 `reactive()`、`ref()`：Proxy 会让 `#` 访问抛错，用 `shallowRef` 或 `markRaw`。
     - 原地修改不改变引用。消费方要读内容（`has`、`get`、遍历、在 computed 里读），不能用 `() => collection` 作 watch source，也不能当 prop 传下去等子组件发现引用变化；需要这两种用法的集合用 `shallowRef` 整体替换。
-- 观察 DOM 变化用 `_base/use-mutation-observer.ts`：挂载后开始观察，开始时以空记录调用一次回调以读取初始状态，卸载时断开；观察可见性用 `_base/use-intersection-observer.ts`：目标或选项变化时重建，没有目标时不建 observer。不手写 observer 加 `onMounted`、`onBeforeUnmount`。两者都在挂载时开始，调用写在给目标赋值的 `onMounted` 之后，首次观察才落在挂载内；目标来自插槽输出等不被追踪的 DOM 时，由组件在提交后比较并只在变化时给 ref 赋值。
-- 下一帧或延时执行用 `_base/use-raf.ts`、`_base/use-timeout.ts` 返回的调度函数：新的调用替换尚未执行的那次，卸载时取消。不手写 `let frame` 或 `let timer` 加 `onBeforeUnmount` 清理；只在某次 watch 运行内有效的定时器仍用 watch 的 `onCleanup`。
+- 观察 DOM 变化用 `composables/use-mutation-observer.ts`：挂载后开始观察，开始时以空记录调用一次回调以读取初始状态，卸载时断开；观察可见性用 `composables/use-intersection-observer.ts`：目标或选项变化时重建，没有目标时不建 observer。不手写 observer 加 `onMounted`、`onBeforeUnmount`。两者都在挂载时开始，调用写在给目标赋值的 `onMounted` 之后，首次观察才落在挂载内；目标来自插槽输出等不被追踪的 DOM 时，由组件在提交后比较并只在变化时给 ref 赋值。
+- 下一帧或延时执行用 `composables/use-raf.ts`、`composables/use-timeout.ts` 返回的调度函数：新的调用替换尚未执行的那次，卸载时取消。不手写 `let frame` 或 `let timer` 加 `onBeforeUnmount` 清理；只在某次 watch 运行内有效的定时器仍用 watch 的 `onCleanup`。
 
 ## 服务端渲染
 
 框架无关的协议见 `.agents/references/components.md` 的「服务端渲染」一节，本节写 Vue 的机制。
 
-- 服务端只执行 `setup`、`immediate` 的 watcher 和 `flush` 不是 `'post'` 的 `watchEffect`，不执行 `onBeforeMount`、`onMounted` 与其他 watcher。读写 DOM 的首次执行放 `onBeforeMount`、`onMounted`，不用 `immediate` watcher；读写 DOM 的 `watchEffect` 用 `flush: 'post'`。打开时记录焦点用 `_base/use-record-focus.ts`；只在挂载后渲染的内容用 `_base/use-mounted.ts`；其他「首次执行加后续变化」的逻辑写 `onBeforeMount` 加不带 `immediate` 的 `watch`。
-- 弹层经 `_base/portal.vue` 在 `onMounted` 后才渲染 `Teleport`，服务端 HTML 只含触发器，默认打开的弹层在 hydration 后出现。
+- 服务端只执行 `setup`、`immediate` 的 watcher 和 `flush` 不是 `'post'` 的 `watchEffect`，不执行 `onBeforeMount`、`onMounted` 与其他 watcher。读写 DOM 的首次执行放 `onBeforeMount`、`onMounted`，不用 `immediate` watcher；读写 DOM 的 `watchEffect` 用 `flush: 'post'`。打开时记录焦点用 `composables/use-record-focus.ts`；只在挂载后渲染的内容用 `composables/use-mounted.ts`；其他「首次执行加后续变化」的逻辑写 `onBeforeMount` 加不带 `immediate` 的 `watch`。
+- 弹层经 `internal/portal.vue` 在 `onMounted` 后才渲染 `Teleport`，服务端 HTML 只含触发器，默认打开的弹层在 hydration 后出现。
 - 服务端渲染用例在 `vue-ssr` 项目（`*.ssr.test.tsx`），hydration 用例在 `vue` 项目：用例表 `__tests__/ssr-cases.tsx` 按导出列出，守卫检查两个方向；新增导出必须补用例。
 
 ## 模板与事件
 
-- 可点击状态用 `_base/control-attrs.ts` 的 `hasClickListener(attrs)` 判断，按值剔除 click 监听时用 `isClickListenerKey(key)`：`.once`、`.capture`、`.passive` 会让键变成 `onClickOnce`、`onClickCapture`、`onClickPassive`（可叠加），只看 `attrs.onClick` 会漏掉；`.stop`、`.self`、`.prevent` 的键仍是 `onClick`。`click` 不声明在 emits 里。
+- 可点击状态用 `utils/control-attrs.ts` 的 `hasClickListener(attrs)` 判断，按值剔除 click 监听时用 `isClickListenerKey(key)`：`.once`、`.capture`、`.passive` 会让键变成 `onClickOnce`、`onClickCapture`、`onClickPassive`（可叠加），只看 `attrs.onClick` 会漏掉；`.stop`、`.self`、`.prevent` 的键仍是 `onClick`。`click` 不声明在 emits 里。
 - 输入类使用 `@input`，由 foundation 处理 isComposing；容器焦点进入与离开使用 `@focusin`/`@focusout`。
 - 模板只写简单表达式：带类型标注的内联箭头函数、超过约 80 字符的条件对象或三元表达式移到 script；读 slots、`$attrs` 或 v-for 变量的写成 render 期调用的函数（必要时带参数），只依赖 props、state、computed 的才用 computed；作为子组件 prop 传递的对象保持函数调用，每次渲染给新对象。
 - 插槽与事件转发：包装层把本组件的插槽整体转给子组件时用动态转发 `<template v-for="(_, name) in $slots" #[name]="scope"><slot :name="name as keyof XxxSlots" v-bind="scope" /></template>`（插槽类型是内联写法时先 `const slots = defineSlots<...>()`，再写 `name as keyof typeof slots`）；要过滤时在 script 用 `passedSlots()`，并配一条「被过滤的插槽不下传」的用例。列表 `v-for` 内的子组件要整体接收插槽时，动态转发会编译出 `ref_for`，改在 script 写一个返回 `h(Child, props, handOnSlots(slots))` 的函数，模板用 `<component :is="childNode(item, index)" v-for=... :key>` 渲染（AIChatDialogue 的 Dialogue、Chat 的 ChatBox）；子组件只读自己的插槽名时，多收到的插槽无影响。
-- script 已用 `h()` 造出某个子节点作为插槽参数（`#fullDialogue` 的 `defaultNodes`、`#content` 的 `defaultContent`、`#ellipsisTooltip` 的 `trigger`）时，默认分支用 `<component :is>` 渲染同一个函数的结果，多个节点用单元素 `v-for` 绑定，不在模板里再写一遍子组件。v-for 作用域内的插槽出口不用对象 `v-bind`。`h()` 里转交 defineSlots 返回的 slots 写 `h(Child, props, handOnSlots(slots))`（`_base/hand-on.ts`）：服务端渲染下 `{ ...slots }` 会丢掉使用方的条件插槽，见 component-issues 第 2 节的 Vue 条件插槽条目；`Slots` 是 interface，没有索引签名，直接传 `slots` 报 TS2769。模板里用 `$slots`，script 里用 `slots`；script 不读插槽时只写 `defineSlots<XxxSlots>()`，不赋值。
+- script 已用 `h()` 造出某个子节点作为插槽参数（`#fullDialogue` 的 `defaultNodes`、`#content` 的 `defaultContent`、`#ellipsisTooltip` 的 `trigger`）时，默认分支用 `<component :is>` 渲染同一个函数的结果，多个节点用单元素 `v-for` 绑定，不在模板里再写一遍子组件。v-for 作用域内的插槽出口不用对象 `v-bind`。`h()` 里转交 defineSlots 返回的 slots 写 `h(Child, props, handOnSlots(slots))`（`utils/hand-on.ts`）：服务端渲染下 `{ ...slots }` 会丢掉使用方的条件插槽，见 component-issues 第 2 节的 Vue 条件插槽条目；`Slots` 是 interface，没有索引签名，直接传 `slots` 报 TS2769。模板里用 `$slots`，script 里用 `slots`；script 不读插槽时只写 `defineSlots<XxxSlots>()`，不赋值。
 - 同名纯转发的事件在包装层声明 emits 并显式 re-emit，写成 `(...args) => emit('x', ...args)`；只适用于子组件在 `defineEmits` 里声明、且参数个数与本组件声明一致的事件，原生透传监听或子组件参数多于本组件声明时保持 `emit('x', $event)`。只用第一个参数的事件处理写成带 `$event` 的内联语句（`@close="removeTag(item, $event)"`），不写单参数箭头函数；`vue/v-on-handler-style` 的选项都与这套写法冲突，所以不开启。
 - 根是焦点目标时使用默认 attrs 透传；根和控件不同则 `inheritAttrs: false`，模板中直接调用 `splitControlAttrs($attrs, ...)` 分流，不能用 computed 缓存 useAttrs。Input 类除 class/style 外都透传到原生输入；Switch 类将 aria-*、id、name、tabindex、autofocus 透传到控件。
 - 无根 DOM 包装组件丢弃未声明 attrs，class/style 按既定落点转发弹层；对话框的 aria-* 落到 role="dialog"；使用方传的 `role` 在 Modal 落到 `role="dialog"` 元素、在 SideSheet 落到外层容器（F12）。

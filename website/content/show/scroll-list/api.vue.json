@@ -1,6 +1,6 @@
 {
     "scroll-list": {
-        "source": "packages/semi-ui-vue/src/scroll-list/scroll-list.vue",
+        "source": "packages/semi-ui-vue/src/components/scroll-list/scroll-list.vue",
         "props": {
             "bodyHeight": { "zh-CN": "列表主体的高度。", "en-US": "Height of the list body." },
             "footer": {
@@ -21,7 +21,7 @@
         "exposed": {}
     },
     "scroll-item": {
-        "source": "packages/semi-ui-vue/src/scroll-list/scroll-item.vue",
+        "source": "packages/semi-ui-vue/src/components/scroll-list/scroll-item.vue",
         "props": {
             "cycled": {
                 "zh-CN": "是否无限循环。wheel 模式下列表首尾相接地无限滚动；两种模式下方向键都在首尾循环。",

@@ -1,6 +1,6 @@
 {
     "json-viewer": {
-        "source": "packages/semi-ui-vue/src/json-viewer/json-viewer.vue",
+        "source": "packages/semi-ui-vue/src/components/json-viewer/json-viewer.vue",
         "props": {
             "modelValue": {
                 "zh-CN": "编辑器的文本，配合 v-model 使用；变为与编辑器当前内容不同的值时重建编辑器，与当前内容相同的回写不会丢失光标；未传时按空文本创建。",

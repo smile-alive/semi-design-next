@@ -35,9 +35,9 @@
         IconUndo,
     } from '@fibrae/semi-icons-vue';
     import Button from '@fibrae/semi-ui-vue/button/index';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import Divider from '@fibrae/semi-ui-vue/divider/index';
     import Dropdown, { DropdownItem, DropdownMenu } from '@fibrae/semi-ui-vue/dropdown/index';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
     import Input from '@fibrae/semi-ui-vue/input/index';
     import Toast from '@fibrae/semi-ui-vue/toast/index';
     import MenuButton from './menu-button.vue';

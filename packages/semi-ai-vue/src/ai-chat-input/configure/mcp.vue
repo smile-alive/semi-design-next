@@ -3,8 +3,8 @@
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import Button from '@fibrae/semi-ui-vue/button/index';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import Dropdown, { DropdownItem, DropdownMenu } from '@fibrae/semi-ui-vue/dropdown/index';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
     import type { McpEmits, McpProps, McpSlots } from './interface';
 
     defineOptions({ name: 'ConfigureMcp' });

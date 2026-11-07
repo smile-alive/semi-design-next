@@ -1,5 +1,5 @@
 import type { ComputedRef } from 'vue';
-import { createContext } from '@fibrae/semi-ui-vue/_base/create-context';
+import { createContext } from '@fibrae/semi-ui-vue/base/create-context';
 import type { ToastHookApi } from '@fibrae/semi-ui-vue/toast/index';
 import type { ChatMessage, ChatProps } from './interface';
 

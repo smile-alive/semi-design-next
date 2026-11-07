@@ -6,7 +6,7 @@
     import { NodeViewWrapper, VueNodeViewRenderer, nodeViewProps, posToDOMRect } from '@tiptap/vue-3';
     import { AIChatInput, type AIChatInputHandle, type AIChatInputAttachment as Attachment, type AIChatInputContent as Content, type AIChatInputReference as Reference } from '@fibrae/semi-ai-vue';
     import { IconFile, IconFolder, IconBranch, IconCode, IconGit, IconGlobeStroke, IconChevronRight, IconClose, IconUpload, IconTerminal, IconConnectionPoint2 } from '@fibrae/semi-icons-vue';
-    import { useMounted } from '@fibrae/semi-ui-vue/hooks';
+    import { useMounted } from '@fibrae/semi-ui-vue/composables';
 
     const uploadProps = { action: 'https://api.semi.design/upload' };
 

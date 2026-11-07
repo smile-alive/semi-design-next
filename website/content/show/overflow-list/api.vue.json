@@ -1,6 +1,6 @@
 {
     "overflow-list": {
-        "source": "packages/semi-ui-vue/src/overflow-list/overflow-list.vue",
+        "source": "packages/semi-ui-vue/src/components/overflow-list/overflow-list.vue",
         "props": {
             "collapseFrom": {
                 "zh-CN": "collapse 模式的折叠方向，可选 start 或 end。",

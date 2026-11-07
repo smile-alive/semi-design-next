@@ -2,7 +2,7 @@
     import { onMounted, onUpdated, shallowRef, useTemplateRef, type VNode } from 'vue';
     import { cssClasses, numbers } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import { IconChevronRightStroked } from '@fibrae/semi-icons-vue';
-    import { useFocusHandover, useLocale, useResizeObserver } from '@fibrae/semi-ui-vue/hooks';
+    import { useFocusHandover, useLocale, useResizeObserver } from '@fibrae/semi-ui-vue/composables';
 
     defineSlots<{ default?: () => VNode[] }>();
 

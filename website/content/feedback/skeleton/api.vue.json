@@ -1,6 +1,6 @@
 {
     "skeleton": {
-        "source": "packages/semi-ui-vue/src/skeleton/skeleton.vue",
+        "source": "packages/semi-ui-vue/src/components/skeleton/skeleton.vue",
         "props": {
             "active": {
                 "zh-CN": "是否展示动画效果。",
@@ -25,7 +25,7 @@
         "exposed": {}
     },
     "skeleton-avatar": {
-        "source": "packages/semi-ui-vue/src/skeleton/avatar.vue",
+        "source": "packages/semi-ui-vue/src/components/skeleton/avatar.vue",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 semi-skeleton。",
@@ -49,7 +49,7 @@
         "exposed": {}
     },
     "skeleton-image": {
-        "source": "packages/semi-ui-vue/src/skeleton/image.vue",
+        "source": "packages/semi-ui-vue/src/components/skeleton/image.vue",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 semi-skeleton。",
@@ -65,7 +65,7 @@
         "exposed": {}
     },
     "skeleton-title": {
-        "source": "packages/semi-ui-vue/src/skeleton/title.vue",
+        "source": "packages/semi-ui-vue/src/components/skeleton/title.vue",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 semi-skeleton。",
@@ -81,7 +81,7 @@
         "exposed": {}
     },
     "skeleton-button": {
-        "source": "packages/semi-ui-vue/src/skeleton/button.vue",
+        "source": "packages/semi-ui-vue/src/components/skeleton/button.vue",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 semi-skeleton。",
@@ -97,7 +97,7 @@
         "exposed": {}
     },
     "skeleton-paragraph": {
-        "source": "packages/semi-ui-vue/src/skeleton/paragraph.vue",
+        "source": "packages/semi-ui-vue/src/components/skeleton/paragraph.vue",
         "props": {
             "prefixCls": {
                 "zh-CN": "类名前缀，默认为 semi-skeleton。",

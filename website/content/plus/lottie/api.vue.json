@@ -1,6 +1,6 @@
 {
     "lottie": {
-        "source": "packages/semi-ui-vue/src/lottie/lottie.vue",
+        "source": "packages/semi-ui-vue/src/components/lottie/lottie.vue",
         "props": {
             "params": {
                 "zh-CN": "传给 lottie-web loadAnimation 的参数。内容变化时重新加载，原地修改不会触发：请整体替换，较大的动画数据用 shallowRef 持有。",

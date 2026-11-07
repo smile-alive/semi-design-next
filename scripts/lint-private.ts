@@ -42,10 +42,15 @@ for (const file of files.filter((name) => /^packages\/semi-[^/]+-vue\//.test(nam
     }
 }
 
+// Mirrors the UI packages' exports map: entry files and the infrastructure directories sit under src/ as written, every
+// other subpath is a component under src/components/
+const uiDirs = new Set(['base', 'utils', 'hooks', 'composables', 'primitives', 'internal']);
+const uiSource = (framework: string, source: string) => path.join(`packages/semi-ui-${framework}/src`, source.includes('/') && !uiDirs.has(source.split('/')[0]) ? 'components' : '', source);
+
 const publishedSubpath: Record<string, (subpath: string) => string | undefined> = {
     // A bare SFC subpath does not resolve (no `.vue` in resolve.extensions), and a `.vue` one is published as
     // `.vue.js`, which `./*` does not map
-    vue: (subpath) => (subpath.endsWith('.vue') ? undefined : ['.ts', '.tsx'].map((ext) => `${subpath}${ext}`).find((source) => fs.existsSync(path.join('packages/semi-ui-vue/src', source)))),
+    vue: (subpath) => (subpath.endsWith('.vue') ? undefined : ['.ts', '.tsx'].map((ext) => `${subpath}${ext}`).find((source) => fs.existsSync(uiSource('vue', source)))),
     // `./*.svelte.js` maps to a rune module `<name>.svelte.ts`, `./*.svelte` to a component, and `./*` to `<name>.ts`
     svelte: (subpath) => {
         const source = subpath.endsWith('.svelte.js') ? `${subpath.slice(0, -3)}.ts` : subpath.endsWith('.svelte') ? subpath : `${subpath}.ts`;

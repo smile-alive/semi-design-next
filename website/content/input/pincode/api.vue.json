@@ -1,6 +1,6 @@
 {
     "pin-code": {
-        "source": "packages/semi-ui-vue/src/pincode/pincode.vue",
+        "source": "packages/semi-ui-vue/src/components/pincode/pincode.vue",
         "props": {
             "modelValue": {
                 "zh-CN": "输入框内容，配合 v-model 使用。",

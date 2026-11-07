@@ -1,6 +1,6 @@
 {
     "markdown-render": {
-        "source": "packages/semi-ui-vue/src/markdown-render/markdown-render.vue",
+        "source": "packages/semi-ui-vue/src/components/markdown-render/markdown-render.vue",
         "props": {
             "components": {
                 "zh-CN": "用于覆盖 Markdown 元素，也可添加 MDX 中引用的自定义组件；值为 Vue 组件或 HTML 标签名，元素键（如 h1）只接受组件或自身的标签名。与 MarkdownRender.defaultComponents 合并，变化时只重新渲染，不重新编译。",

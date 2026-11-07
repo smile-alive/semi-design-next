@@ -515,8 +515,8 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
                 assert.ok(fs.existsSync(fileURLToPath(url)), `${url} exists`);
                 return url.replace(/^.*\/@fibrae\//, '');
             });
-    assert.deepStrictEqual(resolveLocale([]), ['semi-ui-react/dist/components/locale/source/en_US.js', 'semi-ui-vue/dist/locale/source/en_US.js', 'semi-ui-solid/dist/locale/source/en_US.js'], 'the locale subpath resolves by default');
-    assert.deepStrictEqual(resolveLocale(['--conditions=solid']), ['semi-ui-react/dist/components/locale/source/en_US.js', 'semi-ui-vue/dist/locale/source/en_US.js', 'semi-ui-solid/dist/locale/source/en_US.jsx'], 'the locale subpath resolves under the solid condition');
+    assert.deepStrictEqual(resolveLocale([]), ['semi-ui-react/dist/components/locale/source/en_US.js', 'semi-ui-vue/dist/components/locale/source/en_US.js', 'semi-ui-solid/dist/locale/source/en_US.js'], 'the locale subpath resolves by default');
+    assert.deepStrictEqual(resolveLocale(['--conditions=solid']), ['semi-ui-react/dist/components/locale/source/en_US.js', 'semi-ui-vue/dist/components/locale/source/en_US.js', 'semi-ui-solid/dist/locale/source/en_US.jsx'], 'the locale subpath resolves under the solid condition');
 }
 
 // The app's own copies, typed by the workspace sources they were packed from

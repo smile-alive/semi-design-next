@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import Image from '@fibrae/semi-ui-vue/image/index';
 
     const props = defineProps<{ src?: string; alt?: string; name?: string }>();

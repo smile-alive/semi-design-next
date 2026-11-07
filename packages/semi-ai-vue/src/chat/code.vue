@@ -4,7 +4,7 @@
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
     import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
     import { IconCopyStroked, IconTick } from '@fibrae/semi-icons-vue';
-    import { useCopied, useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useCopied, useLocale } from '@fibrae/semi-ui-vue/composables';
     import { code as MarkdownCode } from '@fibrae/semi-ui-vue/markdown-render/components/index';
     import { codeText } from '@fibrae/semi-ui-vue/markdown-render/index';
 

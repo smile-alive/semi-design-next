@@ -1,6 +1,6 @@
 {
     "rating": {
-        "source": "packages/semi-ui-vue/src/rating/rating.vue",
+        "source": "packages/semi-ui-vue/src/components/rating/rating.vue",
         "props": {
             "modelValue": {
                 "zh-CN": "当前值，配合 v-model 使用；传入后由该值决定显示，变回 undefined 时回到 defaultValue 并转为非受控。",

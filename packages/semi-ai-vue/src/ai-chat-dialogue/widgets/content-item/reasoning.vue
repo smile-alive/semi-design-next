@@ -2,9 +2,9 @@
     import { computed, shallowRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import { IconAISearchLevel2, IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-vue';
-    import type { ElementProps } from '@fibrae/semi-ui-vue/_base/element-props';
+    import type { ElementProps } from '@fibrae/semi-ui-vue/base/element-props';
     import Collapsible from '@fibrae/semi-ui-vue/collapsible/index';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import MarkdownRender from '@fibrae/semi-ui-vue/markdown-render/index';
     import type { ReasoningWidgetProps, ReasoningWidgetSlots } from '../../interface';
 

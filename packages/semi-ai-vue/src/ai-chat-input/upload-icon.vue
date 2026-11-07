@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import { IconPaperclip } from '@fibrae/semi-icons-vue';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
 
     // aria-disabled, not disabled: stays focusable so the upload tip reaches the keyboard
     const props = defineProps<{ disabled: boolean }>();

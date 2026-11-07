@@ -4,9 +4,9 @@
     import type { ContentItem, CustomToolCall, FunctionToolCall, InputFile, InputImage, InputMessage, Message, OutputMessage, OutputText, Reasoning, Refusal } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { getAttachmentLayout, getVisibleAnnotations, isImageList } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-content';
     import { IconWrench } from '@fibrae/semi-icons-vue';
-    import slotNodes, { isSlotContent } from '@fibrae/semi-ui-vue/_base/slot-nodes';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import Image from '@fibrae/semi-ui-vue/image/index';
+    import slotNodes, { isSlotContent } from '@fibrae/semi-ui-vue/utils/slot-nodes';
     import { useAIChatDialogueContext } from './context';
     import DialogueFile from './dialogue-file.vue';
     import DialogueMarkdown from './dialogue-markdown.vue';

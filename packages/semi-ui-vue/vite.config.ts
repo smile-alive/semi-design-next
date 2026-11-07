@@ -17,6 +17,6 @@ export default defineConfig({
         dts: { vue: true },
         // tsdown never calls configResolved, so production mode must be explicit. Comments are dropped because a comment
         // beside the root element makes a Fragment root, and the production runtime discards fallthrough attrs on those.
-        plugins: [vue({ isProduction: true, template: { compilerOptions: { comments: false } } }), semiPackStyles(fileURLToPath(new URL('src', import.meta.url)), { ignore: notShipped, bundles: semiUiBundles }), semiLocaleReexports({ dir: 'locale/source' })],
+        plugins: [vue({ isProduction: true, template: { compilerOptions: { comments: false } } }), semiPackStyles(fileURLToPath(new URL('src', import.meta.url)), { ignore: notShipped, bundles: semiUiBundles }), semiLocaleReexports()],
     },
 });

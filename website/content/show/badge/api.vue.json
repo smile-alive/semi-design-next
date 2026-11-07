@@ -1,6 +1,6 @@
 {
     "badge": {
-        "source": "packages/semi-ui-vue/src/badge/badge.vue",
+        "source": "packages/semi-ui-vue/src/components/badge/badge.vue",
         "props": {
             "count": {
                 "zh-CN": "徽章内容，数字或字符串；其他内容使用 count 插槽。",

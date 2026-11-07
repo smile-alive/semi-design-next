@@ -7,11 +7,11 @@ import type { Annotation } from '@fibrae/semi-ai-foundation/components/ai-chat-d
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import semiGlobal from '@fibrae/semi-ui-vue/_utils/semi-global';
 import type { AvatarProps } from '@fibrae/semi-ui-vue/avatar/index';
 import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
 import Modal from '@fibrae/semi-ui-vue/modal/index';
 import Toast from '@fibrae/semi-ui-vue/toast/index';
+import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
 import { countLiveListeners, endLeaveAnimations, endTransitions, render, sleep } from '@test/utils/vue';
 import AIChatDialogue from '..';
 import DialogueAvatar from '../dialogue-avatar.vue';

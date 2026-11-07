@@ -1,38 +1,38 @@
 export { default as BaseFoundation } from '@fibrae/semi-foundation/base/foundation';
-export { default as semiGlobal, semiGlobalKey } from './_utils/semi-global';
-export { default as ConfigProvider, ConfigConsumer, useConfig, defaultResponsiveMap } from './config-provider';
-export type { ConfigProviderProps, ConfigProviderSlots, ConfigConsumerSlots, ContextValue, ResponsiveMap, BreakpointScreens, Breakpoint, OnBreakpointScreensCallback, OnBreakpointChangeCallback } from './config-provider';
-export { LocaleProvider, LocaleConsumer, useLocale } from './locale';
-export type { LocaleComponentName, LocaleConsumerProps, LocaleConsumerSlots, LocaleProviderProps, LocaleProviderSlots, LocaleResult } from './locale';
-export { default as Spin } from './spin';
-export type { SpinProps, SpinSize, SpinSlots } from './spin';
-export { default as Avatar, AvatarGroup } from './avatar';
-export * from './avatar/interface';
-export { default as Tooltip } from './tooltip';
-export type { TooltipProps, TooltipSlots, TooltipEmits, TooltipHandle, RenderContentProps, Position, Trigger } from './tooltip';
-export { default as Switch } from './switch';
-export type { SwitchProps, SwitchSlots, SwitchEmits, SwitchState } from './switch';
-export { default as Popover } from './popover';
-export type { PopoverProps, PopoverSlots, PopoverEmits, PopoverHandle, ArrowProps } from './popover';
-export { default as Tag, TagGroup, SplitTagGroup } from './tag';
-export type { TagProps, TagSlots, TagEmits, TagColor, TagType, TagSize, TagShape, TagCloseEvent, TagGroupProps, TagGroupSlots, TagGroupEmits, TagGroupItem, SplitTagGroupProps, SplitTagGroupSlots } from './tag';
-export { default as Space } from './space';
-export type { SpaceProps, SpaceSlots } from './space';
-export { default as Divider } from './divider';
-export type { DividerProps, DividerSlots } from './divider';
-export { Row, Col } from './grid';
-export type { RowProps, RowSlots, ColProps, ColSlots, ColSize } from './grid';
-export { default as Button, ButtonGroup, SplitButtonGroup } from './button';
-export type { ButtonProps, ButtonSlots, ButtonGroupProps, ButtonGroupSlots, SplitButtonGroupProps, SplitButtonGroupSlots } from './button';
-export { default as IconButton } from './icon-button';
-export type { IconButtonProps, IconButtonSlots } from './icon-button';
-export { default as Checkbox, CheckboxGroup } from './checkbox';
-export type * from './checkbox/interface';
-export { default as Radio, RadioGroup } from './radio';
-export type * from './radio/interface';
-export { default as Input, TextArea, InputGroup } from './input';
-export type { InputProps, InputEmits, InputSlots, InputHandle, InputChangeEvent, InputSize, InputMode, ValidateStatus as InputValidateStatus, TextAreaProps, TextAreaEmits, TextAreaHandle, TextAreaChangeEvent, AutosizeRow, InputGroupProps, InputGroupEmits, InputGroupSlots, InputGroupLabel } from './input';
-export { default as Typography, TypographyText, TypographyTitle, TypographyParagraph, TypographyNumeral } from './typography';
+export { default as semiGlobal, semiGlobalKey } from './utils/semi-global';
+export { default as ConfigProvider, ConfigConsumer, useConfig, defaultResponsiveMap } from './components/config-provider';
+export type { ConfigProviderProps, ConfigProviderSlots, ConfigConsumerSlots, ContextValue, ResponsiveMap, BreakpointScreens, Breakpoint, OnBreakpointScreensCallback, OnBreakpointChangeCallback } from './components/config-provider';
+export { LocaleProvider, LocaleConsumer, useLocale } from './components/locale';
+export type { LocaleComponentName, LocaleConsumerProps, LocaleConsumerSlots, LocaleProviderProps, LocaleProviderSlots, LocaleResult } from './components/locale';
+export { default as Spin } from './components/spin';
+export type { SpinProps, SpinSize, SpinSlots } from './components/spin';
+export { default as Avatar, AvatarGroup } from './components/avatar';
+export * from './components/avatar/interface';
+export { default as Tooltip } from './components/tooltip';
+export type { TooltipProps, TooltipSlots, TooltipEmits, TooltipHandle, RenderContentProps, Position, Trigger } from './components/tooltip';
+export { default as Switch } from './components/switch';
+export type { SwitchProps, SwitchSlots, SwitchEmits, SwitchState } from './components/switch';
+export { default as Popover } from './components/popover';
+export type { PopoverProps, PopoverSlots, PopoverEmits, PopoverHandle, ArrowProps } from './components/popover';
+export { default as Tag, TagGroup, SplitTagGroup } from './components/tag';
+export type { TagProps, TagSlots, TagEmits, TagColor, TagType, TagSize, TagShape, TagCloseEvent, TagGroupProps, TagGroupSlots, TagGroupEmits, TagGroupItem, SplitTagGroupProps, SplitTagGroupSlots } from './components/tag';
+export { default as Space } from './components/space';
+export type { SpaceProps, SpaceSlots } from './components/space';
+export { default as Divider } from './components/divider';
+export type { DividerProps, DividerSlots } from './components/divider';
+export { Row, Col } from './components/grid';
+export type { RowProps, RowSlots, ColProps, ColSlots, ColSize } from './components/grid';
+export { default as Button, ButtonGroup, SplitButtonGroup } from './components/button';
+export type { ButtonProps, ButtonSlots, ButtonGroupProps, ButtonGroupSlots, SplitButtonGroupProps, SplitButtonGroupSlots } from './components/button';
+export { default as IconButton } from './components/icon-button';
+export type { IconButtonProps, IconButtonSlots } from './components/icon-button';
+export { default as Checkbox, CheckboxGroup } from './components/checkbox';
+export type * from './components/checkbox/interface';
+export { default as Radio, RadioGroup } from './components/radio';
+export type * from './components/radio/interface';
+export { default as Input, TextArea, InputGroup } from './components/input';
+export type { InputProps, InputEmits, InputSlots, InputHandle, InputChangeEvent, InputSize, InputMode, ValidateStatus as InputValidateStatus, TextAreaProps, TextAreaEmits, TextAreaHandle, TextAreaChangeEvent, AutosizeRow, InputGroupProps, InputGroupEmits, InputGroupSlots, InputGroupLabel } from './components/input';
+export { default as Typography, TypographyText, TypographyTitle, TypographyParagraph, TypographyNumeral } from './components/typography';
 export type {
     TypographyProps,
     TypographySlots,
@@ -63,88 +63,88 @@ export type {
     TypographyBaseSpacing,
     TypographyBaseRule,
     TypographyBaseTruncate,
-} from './typography';
-export { default as Popconfirm } from './popconfirm';
-export type { PopconfirmProps, PopconfirmSlots, PopconfirmEmits, PopconfirmHandle, PopconfirmButtonProps } from './popconfirm';
-export { default as Toast, ToastFactory } from './toast';
-export type { ToastProps, ToastConfigProps, ToastHandle, ToastHookApi, ToastHookOptions, ToastNode } from './toast';
-export { default as Badge } from './badge';
-export type * from './badge/interface';
-export { default as Empty } from './empty';
-export type * from './empty/interface';
-export { default as Skeleton, SkeletonAvatar, SkeletonImage, SkeletonTitle, SkeletonButton, SkeletonParagraph } from './skeleton';
-export type * from './skeleton/interface';
-export { default as Highlight } from './highlight';
-export type * from './highlight/interface';
-export { default as HotKeys } from './hot-keys';
-export type * from './hot-keys/interface';
-export { Layout, LayoutHeader, LayoutFooter, LayoutContent, LayoutSider } from './layout';
-export type * from './layout/interface';
-export { default as Progress } from './progress';
-export type { ProgressProps, ProgressSlots, ProgressSize, ProgressType, ProgressDirection } from './progress';
-export { default as Timeline, TimelineItem } from './timeline';
-export type { TimelineProps, TimelineItemProps, TimelineData, TimelineSlots, TimelineItemSlots, TimelineSlotProps, TimelineMode, TimelineItemType, TimelineItemPosition } from './timeline';
-export { default as Descriptions, DescriptionsItem } from './descriptions';
-export type { DescriptionsProps, DescriptionsItemProps, DescriptionsData, DescriptionsSlots, DescriptionsItemSlots, DescriptionsSlotProps, DescriptionsSize, DescriptionsAlign, DescriptionsLayout } from './descriptions';
-export { default as Steps, Step } from './steps';
-export type { StepsProps, StepProps, StepsSlots, StepSlots, StepStatus, StepsSize, StepsDirection, StepsType } from './steps';
-export { default as Collapsible } from './collapsible';
-export type { CollapsibleProps, CollapsibleEmits, CollapsibleSlots } from './collapsible';
-export { default as Collapse, CollapsePanel } from './collapse';
-export type { CollapseProps, CollapseEmits, CollapseSlots, CollapsePanelProps, CollapsePanelEmits, CollapsePanelSlots } from './collapse';
-export { default as Card, CardGroup, CardMeta } from './card';
-export type * from './card/interface';
-export { default as List, ListItem } from './list';
-export type * from './list/interface';
-export { default as Banner } from './banner';
-export type { BannerProps, BannerSlots, BannerEmits, BannerState, BannerType } from './banner';
-export { default as FloatButton, FloatButtonGroup } from './float-button';
-export type { FloatButtonBadge, FloatButtonProps, FloatButtonSlots, FloatButtonEmits, FloatButtonShape, FloatButtonSize, FloatButtonGroupProps, FloatButtonGroupSlots, FloatButtonGroupEmits, FloatButtonGroupItem, FloatButtonGroupItemSlotProps } from './float-button';
-export { default as BackTop } from './backtop';
-export type { BackTopProps, BackTopSlots, BackTopEmits, BackTopState } from './backtop';
-export { default as Rating } from './rating';
-export type { RatingEmits, RatingHandle, RatingProps, RatingSlots, RatingState } from './rating';
-export { default as Slider } from './slider';
-export type { HandleDot, SliderEmits, SliderMarkSlotProps, SliderProps, SliderSlots, SliderState, SliderTipSlotProps } from './slider';
-export { default as InputNumber } from './input-number';
-export type { InputNumberProps, InputNumberEmits, InputNumberSlots, InputNumberHandle, InputNumberChangeEvent, InputNumberState, ScientificNotationConfig } from './input-number';
-export { default as PinCode } from './pincode';
-export type { PinCodeProps, PinCodeEmits, PinCodeFormat, PinCodeHandle, PinCodeState } from './pincode';
-export { default as Dropdown, DropdownMenu, DropdownItem, DropdownDivider, DropdownTitle } from './dropdown';
-export type * from './dropdown/interface';
-export { default as Breadcrumb, BreadcrumbItem } from './breadcrumb';
-export type { BreadcrumbProps, BreadcrumbSlots, BreadcrumbItemProps, BreadcrumbItemSlots, BreadcrumbItemInfo, BreadcrumbRouteSlotProps, BreadcrumbMoreSlotProps, Route, ShowTooltipProps, MoreType } from './breadcrumb';
-export { default as Anchor, AnchorLink } from './anchor';
-export type { AnchorProps, AnchorEmits, AnchorSlots, LinkProps, AnchorLinkSlots } from './anchor';
-export { default as Modal } from './modal';
-export type { ModalProps, ModalSlots, ModalEmits, ModalButtonProps, ModalConfirmProps, ModalHandle, ModalHookApi, ModalHookRef, ModalNode } from './modal';
-export { default as SideSheet } from './side-sheet';
-export type { SideSheetProps, SideSheetEmits, SideSheetSlots, SideSheetHandle } from './side-sheet';
-export { default as Notification } from './notification';
-export type { NoticeProps, NoticeHandle, NotificationConfigProps, NotificationHookApi, NotificationHookOptions, NotificationNode, NoticePosition, NoticeTheme, NoticeType } from './notification';
-export { default as OverflowList } from './overflow-list';
-export type { OverflowListProps, OverflowListEmits, OverflowListSlots, OverflowListItem, OverflowListKey, OverflowListItemSlotProps, OverflowListOverflowSlotProps } from './overflow-list';
-export { default as ScrollList, ScrollItem } from './scroll-list';
-export type { ScrollListProps, ScrollListSlots, ScrollListItem, ScrollItemProps, ScrollItemEmits, ScrollItemHandle, ScrollItemSelectData } from './scroll-list';
-export { Resizable, ResizeGroup, ResizeItem, ResizeHandler } from './resizable';
-export type { ResizableProps, ResizableEmits, ResizableSlots, ResizableHandleSlotProps, ResizeGroupProps, ResizeGroupSlots, ResizeItemProps, ResizeItemEmits, ResizeItemSlots, ResizeHandlerSlots } from './resizable';
-export { default as DragMove } from './drag-move';
-export type { DragMoveProps, DragMoveEmits, DragMoveSlots } from './drag-move';
-export { default as Carousel } from './carousel';
-export type { CarouselProps, CarouselEmits, CarouselSlots, CarouselHandle, ArrowProps as CarouselArrowProps, ArrowButton as CarouselArrowButton } from './carousel';
-export { default as Image, ImagePreview } from './image';
-export type { ImageProps, ImageSlots, ImageEmits, ImagePreviewProps, ImagePreviewComponentProps, ImagePreviewSlots, ImagePreviewEmits, MenuProps as ImagePreviewMenuProps, ImagePreviewTitleSlotProps, ImagePreviewIconSlotProps } from './image';
-export { default as Cropper } from './cropper';
-export type { CropperEmits, CropperHandle, CropperProps, CropperShape } from './cropper';
-export { default as CodeHighlight } from './code-highlight';
-export type { CodeHighlightProps, CodeHighlightRegistration, CodeHighlightThemes, LanguageInput, ThemeInput } from './code-highlight';
-export { default as Lottie } from './lottie';
-export type { LottieAnimation, LottieEmits, LottieModule, LottieParams, LottieProps } from './lottie';
-export { default as Select, SelectOption, SelectOptGroup } from './select';
-export type * from './select/interface';
-export { default as TagInput } from './tag-input';
-export type { TagInputProps, TagInputEmits, TagInputSlots, TagInputHandle, TagInputSize, TagInputValidateStatus, TagInputTagSlotProps, RestTagsPopoverProps } from './tag-input';
-export { default as Nav, NavItem, SubNav, NavHeader, NavFooter } from './navigation';
+} from './components/typography';
+export { default as Popconfirm } from './components/popconfirm';
+export type { PopconfirmProps, PopconfirmSlots, PopconfirmEmits, PopconfirmHandle, PopconfirmButtonProps } from './components/popconfirm';
+export { default as Toast, ToastFactory } from './components/toast';
+export type { ToastProps, ToastConfigProps, ToastHandle, ToastHookApi, ToastHookOptions, ToastNode } from './components/toast';
+export { default as Badge } from './components/badge';
+export type * from './components/badge/interface';
+export { default as Empty } from './components/empty';
+export type * from './components/empty/interface';
+export { default as Skeleton, SkeletonAvatar, SkeletonImage, SkeletonTitle, SkeletonButton, SkeletonParagraph } from './components/skeleton';
+export type * from './components/skeleton/interface';
+export { default as Highlight } from './components/highlight';
+export type * from './components/highlight/interface';
+export { default as HotKeys } from './components/hot-keys';
+export type * from './components/hot-keys/interface';
+export { Layout, LayoutHeader, LayoutFooter, LayoutContent, LayoutSider } from './components/layout';
+export type * from './components/layout/interface';
+export { default as Progress } from './components/progress';
+export type { ProgressProps, ProgressSlots, ProgressSize, ProgressType, ProgressDirection } from './components/progress';
+export { default as Timeline, TimelineItem } from './components/timeline';
+export type { TimelineProps, TimelineItemProps, TimelineData, TimelineSlots, TimelineItemSlots, TimelineSlotProps, TimelineMode, TimelineItemType, TimelineItemPosition } from './components/timeline';
+export { default as Descriptions, DescriptionsItem } from './components/descriptions';
+export type { DescriptionsProps, DescriptionsItemProps, DescriptionsData, DescriptionsSlots, DescriptionsItemSlots, DescriptionsSlotProps, DescriptionsSize, DescriptionsAlign, DescriptionsLayout } from './components/descriptions';
+export { default as Steps, Step } from './components/steps';
+export type { StepsProps, StepProps, StepsSlots, StepSlots, StepStatus, StepsSize, StepsDirection, StepsType } from './components/steps';
+export { default as Collapsible } from './components/collapsible';
+export type { CollapsibleProps, CollapsibleEmits, CollapsibleSlots } from './components/collapsible';
+export { default as Collapse, CollapsePanel } from './components/collapse';
+export type { CollapseProps, CollapseEmits, CollapseSlots, CollapsePanelProps, CollapsePanelEmits, CollapsePanelSlots } from './components/collapse';
+export { default as Card, CardGroup, CardMeta } from './components/card';
+export type * from './components/card/interface';
+export { default as List, ListItem } from './components/list';
+export type * from './components/list/interface';
+export { default as Banner } from './components/banner';
+export type { BannerProps, BannerSlots, BannerEmits, BannerState, BannerType } from './components/banner';
+export { default as FloatButton, FloatButtonGroup } from './components/float-button';
+export type { FloatButtonBadge, FloatButtonProps, FloatButtonSlots, FloatButtonEmits, FloatButtonShape, FloatButtonSize, FloatButtonGroupProps, FloatButtonGroupSlots, FloatButtonGroupEmits, FloatButtonGroupItem, FloatButtonGroupItemSlotProps } from './components/float-button';
+export { default as BackTop } from './components/backtop';
+export type { BackTopProps, BackTopSlots, BackTopEmits, BackTopState } from './components/backtop';
+export { default as Rating } from './components/rating';
+export type { RatingEmits, RatingHandle, RatingProps, RatingSlots, RatingState } from './components/rating';
+export { default as Slider } from './components/slider';
+export type { HandleDot, SliderEmits, SliderMarkSlotProps, SliderProps, SliderSlots, SliderState, SliderTipSlotProps } from './components/slider';
+export { default as InputNumber } from './components/input-number';
+export type { InputNumberProps, InputNumberEmits, InputNumberSlots, InputNumberHandle, InputNumberChangeEvent, InputNumberState, ScientificNotationConfig } from './components/input-number';
+export { default as PinCode } from './components/pincode';
+export type { PinCodeProps, PinCodeEmits, PinCodeFormat, PinCodeHandle, PinCodeState } from './components/pincode';
+export { default as Dropdown, DropdownMenu, DropdownItem, DropdownDivider, DropdownTitle } from './components/dropdown';
+export type * from './components/dropdown/interface';
+export { default as Breadcrumb, BreadcrumbItem } from './components/breadcrumb';
+export type { BreadcrumbProps, BreadcrumbSlots, BreadcrumbItemProps, BreadcrumbItemSlots, BreadcrumbItemInfo, BreadcrumbRouteSlotProps, BreadcrumbMoreSlotProps, Route, ShowTooltipProps, MoreType } from './components/breadcrumb';
+export { default as Anchor, AnchorLink } from './components/anchor';
+export type { AnchorProps, AnchorEmits, AnchorSlots, LinkProps, AnchorLinkSlots } from './components/anchor';
+export { default as Modal } from './components/modal';
+export type { ModalProps, ModalSlots, ModalEmits, ModalButtonProps, ModalConfirmProps, ModalHandle, ModalHookApi, ModalHookRef, ModalNode } from './components/modal';
+export { default as SideSheet } from './components/side-sheet';
+export type { SideSheetProps, SideSheetEmits, SideSheetSlots, SideSheetHandle } from './components/side-sheet';
+export { default as Notification } from './components/notification';
+export type { NoticeProps, NoticeHandle, NotificationConfigProps, NotificationHookApi, NotificationHookOptions, NotificationNode, NoticePosition, NoticeTheme, NoticeType } from './components/notification';
+export { default as OverflowList } from './components/overflow-list';
+export type { OverflowListProps, OverflowListEmits, OverflowListSlots, OverflowListItem, OverflowListKey, OverflowListItemSlotProps, OverflowListOverflowSlotProps } from './components/overflow-list';
+export { default as ScrollList, ScrollItem } from './components/scroll-list';
+export type { ScrollListProps, ScrollListSlots, ScrollListItem, ScrollItemProps, ScrollItemEmits, ScrollItemHandle, ScrollItemSelectData } from './components/scroll-list';
+export { Resizable, ResizeGroup, ResizeItem, ResizeHandler } from './components/resizable';
+export type { ResizableProps, ResizableEmits, ResizableSlots, ResizableHandleSlotProps, ResizeGroupProps, ResizeGroupSlots, ResizeItemProps, ResizeItemEmits, ResizeItemSlots, ResizeHandlerSlots } from './components/resizable';
+export { default as DragMove } from './components/drag-move';
+export type { DragMoveProps, DragMoveEmits, DragMoveSlots } from './components/drag-move';
+export { default as Carousel } from './components/carousel';
+export type { CarouselProps, CarouselEmits, CarouselSlots, CarouselHandle, ArrowProps as CarouselArrowProps, ArrowButton as CarouselArrowButton } from './components/carousel';
+export { default as Image, ImagePreview } from './components/image';
+export type { ImageProps, ImageSlots, ImageEmits, ImagePreviewProps, ImagePreviewComponentProps, ImagePreviewSlots, ImagePreviewEmits, MenuProps as ImagePreviewMenuProps, ImagePreviewTitleSlotProps, ImagePreviewIconSlotProps } from './components/image';
+export { default as Cropper } from './components/cropper';
+export type { CropperEmits, CropperHandle, CropperProps, CropperShape } from './components/cropper';
+export { default as CodeHighlight } from './components/code-highlight';
+export type { CodeHighlightProps, CodeHighlightRegistration, CodeHighlightThemes, LanguageInput, ThemeInput } from './components/code-highlight';
+export { default as Lottie } from './components/lottie';
+export type { LottieAnimation, LottieEmits, LottieModule, LottieParams, LottieProps } from './components/lottie';
+export { default as Select, SelectOption, SelectOptGroup } from './components/select';
+export type * from './components/select/interface';
+export { default as TagInput } from './components/tag-input';
+export type { TagInputProps, TagInputEmits, TagInputSlots, TagInputHandle, TagInputSize, TagInputValidateStatus, TagInputTagSlotProps, RestTagsPopoverProps } from './components/tag-input';
+export { default as Nav, NavItem, SubNav, NavHeader, NavFooter } from './components/navigation';
 export type {
     NavProps,
     NavEmits,
@@ -173,10 +173,10 @@ export type {
     NavFooterSlots,
     NavCollapseTextSlotProps,
     NavCollapseButtonProps,
-} from './navigation';
-export { default as TimePicker } from './time-picker';
-export type { TimePickerEmits, TimePickerHandle, TimePickerPanelSlotProps, TimePickerProps, TimePickerScrollItemProps, TimePickerSlots, TimePickerTriggerSlotProps, TimePickerType, TimePickerValue } from './time-picker';
-export { default as Tabs, TabPane, TabItem } from './tabs';
+} from './components/navigation';
+export { default as TimePicker } from './components/time-picker';
+export type { TimePickerEmits, TimePickerHandle, TimePickerPanelSlotProps, TimePickerProps, TimePickerScrollItemProps, TimePickerSlots, TimePickerTriggerSlotProps, TimePickerType, TimePickerValue } from './components/time-picker';
+export { default as Tabs, TabPane, TabItem } from './components/tabs';
 export type {
     PlainTab,
     TabBarProps,
@@ -198,16 +198,16 @@ export type {
     TabsTabBarSlotProps,
     TabsTabSlotProps,
     TabType,
-} from './tabs';
-export { default as Calendar } from './calendar';
-export type { CalendarProps, CalendarEmits, CalendarSlots, CalendarEventSlotProps, CalendarDateDisplaySlotProps, CalendarDateGridSlotProps, CalendarTimeDisplaySlotProps, CalendarAllDayEventsSlotProps, CalendarMode, EventObject as CalendarEventObject, WeekStartsOn as CalendarWeekStartsOn } from './calendar';
-export { default as AutoComplete } from './auto-complete';
-export type { AutoCompleteDataItem, AutoCompleteEmits, AutoCompleteHandle, AutoCompleteItems, AutoCompleteItemSlotProps, AutoCompleteProps, AutoCompleteSelectedItem, AutoCompleteSlots, AutoCompleteTriggerSlotProps } from './auto-complete';
-export { default as Pagination } from './pagination';
-export type { PaginationEmits, PaginationProps, PaginationSlots } from './pagination';
-export { default as ColorPicker } from './color-picker';
-export type { ColorPickerProps, ColorPickerPopoverProps, ColorPickerEmits, ColorPickerSlots, ColorPickerHandle, ColorValue, ColorFormat, HsvaColor, RgbaColor } from './color-picker';
-export { default as DatePicker } from './date-picker';
+} from './components/tabs';
+export { default as Calendar } from './components/calendar';
+export type { CalendarProps, CalendarEmits, CalendarSlots, CalendarEventSlotProps, CalendarDateDisplaySlotProps, CalendarDateGridSlotProps, CalendarTimeDisplaySlotProps, CalendarAllDayEventsSlotProps, CalendarMode, EventObject as CalendarEventObject, WeekStartsOn as CalendarWeekStartsOn } from './components/calendar';
+export { default as AutoComplete } from './components/auto-complete';
+export type { AutoCompleteDataItem, AutoCompleteEmits, AutoCompleteHandle, AutoCompleteItems, AutoCompleteItemSlotProps, AutoCompleteProps, AutoCompleteSelectedItem, AutoCompleteSlots, AutoCompleteTriggerSlotProps } from './components/auto-complete';
+export { default as Pagination } from './components/pagination';
+export type { PaginationEmits, PaginationProps, PaginationSlots } from './components/pagination';
+export { default as ColorPicker } from './components/color-picker';
+export type { ColorPickerProps, ColorPickerPopoverProps, ColorPickerEmits, ColorPickerSlots, ColorPickerHandle, ColorValue, ColorFormat, HsvaColor, RgbaColor } from './components/color-picker';
+export { default as DatePicker } from './components/date-picker';
 export type {
     DatePickerBaseValueType,
     DatePickerDateOffsetType,
@@ -232,8 +232,8 @@ export type {
     DatePickerType,
     DatePickerValueType,
     DatePickerYearAndMonthOpts,
-} from './date-picker';
-export { default as Cascader } from './cascader';
+} from './components/date-picker';
+export { default as Cascader } from './components/cascader';
 export type {
     CascaderChangeValue,
     CascaderData,
@@ -253,12 +253,12 @@ export type {
     CascaderTriggerSlotProps,
     CascaderValue,
     CascaderVirtualize,
-} from './cascader';
-export { default as AudioPlayer } from './audio-player';
-export type { AudioInfo, AudioPlayerProps, AudioPlayerTheme, AudioUrl } from './audio-player';
-export { default as VideoPlayer } from './video-player';
-export type { VideoControl, VideoPlayerEmits, VideoPlayerHandle, VideoPlayerMarker, VideoPlayerOption, VideoPlayerProps, VideoPlayerTheme } from './video-player';
-export { default as Tree } from './tree';
+} from './components/cascader';
+export { default as AudioPlayer } from './components/audio-player';
+export type { AudioInfo, AudioPlayerProps, AudioPlayerTheme, AudioUrl } from './components/audio-player';
+export { default as VideoPlayer } from './components/video-player';
+export type { VideoControl, VideoPlayerEmits, VideoPlayerHandle, VideoPlayerMarker, VideoPlayerOption, VideoPlayerProps, VideoPlayerTheme } from './components/video-player';
+export { default as Tree } from './components/tree';
 export type {
     TreeDataSimpleJson,
     TreeDragEnterProps,
@@ -281,8 +281,8 @@ export type {
     TreeSlots,
     TreeValue,
     TreeVirtualize,
-} from './tree';
-export { default as TreeSelect } from './tree-select';
+} from './components/tree';
+export { default as TreeSelect } from './components/tree-select';
 export type {
     TreeSelectChangeEvent,
     TreeSelectChangeNode,
@@ -299,8 +299,8 @@ export type {
     TreeSelectSlots,
     TreeSelectTriggerSlotProps,
     TreeSelectValue,
-} from './tree-select';
-export { default as Upload, UploadFileCard } from './upload';
+} from './components/tree-select';
+export { default as Upload, UploadFileCard } from './components/upload';
 export type {
     UploadProps,
     UploadEmits,
@@ -326,10 +326,10 @@ export type {
     UploadFileItemSlotProps,
     UploadPicCloseSlotProps,
     UploadFileListHeaderSlotProps,
-} from './upload';
-export { default as JsonViewer } from './json-viewer';
-export type { JsonViewerProps, JsonViewerEmits, JsonViewerSlots, JsonViewerHandle, JsonViewerOptions, JsonViewerCustomRenderRule, JsonViewerCustomRenderSlotProps, JsonViewerSearchButtonSlotProps, JsonViewerSearchOptions } from './json-viewer';
-export { default as Table, TableColumn } from './table';
+} from './components/upload';
+export { default as JsonViewer } from './components/json-viewer';
+export type { JsonViewerProps, JsonViewerEmits, JsonViewerSlots, JsonViewerHandle, JsonViewerOptions, JsonViewerCustomRenderRule, JsonViewerCustomRenderSlotProps, JsonViewerSearchButtonSlotProps, JsonViewerSearchOptions } from './components/json-viewer';
+export { default as Table, TableColumn } from './components/table';
 export type {
     CheckboxAttrs as TableCheckboxAttrs,
     CheckRelation,
@@ -392,10 +392,10 @@ export type {
     TableVirtualizedItemSize,
     TableVirtualizedItemSizeFn,
     TableVirtualizedProps,
-} from './table';
-export { default as MarkdownRender } from './markdown-render';
-export type { MarkdownRenderComponents, MarkdownRenderProps } from './markdown-render';
-export { default as Transfer } from './transfer';
+} from './components/table';
+export { default as MarkdownRender } from './components/markdown-render';
+export type { MarkdownRenderComponents, MarkdownRenderProps } from './components/markdown-render';
+export { default as Transfer } from './components/transfer';
 export type {
     TransferProps,
     TransferEmits,
@@ -419,10 +419,10 @@ export type {
     TransferSelectedHeaderSlotProps,
     TransferSourcePanelSlotProps,
     TransferSelectedPanelSlotProps,
-} from './transfer';
-export { default as UserGuide } from './user-guide';
-export type { UserGuideButtonProps, UserGuideEmits, UserGuideProps, UserGuideSlots, UserGuideStepItem, UserGuideStepSlotProps } from './user-guide';
-export { default as Feedback } from './feedback';
+} from './components/transfer';
+export { default as UserGuide } from './components/user-guide';
+export type { UserGuideButtonProps, UserGuideEmits, UserGuideProps, UserGuideSlots, UserGuideStepItem, UserGuideStepSlotProps } from './components/user-guide';
+export { default as Feedback } from './components/feedback';
 export type {
     FeedbackProps,
     FeedbackEmits,
@@ -443,7 +443,7 @@ export type {
     FeedbackFullProps,
     FeedbackValue,
     EmojiResult,
-} from './feedback';
+} from './components/feedback';
 export {
     Form,
     ArrayField,
@@ -480,7 +480,7 @@ export {
     FormTransfer,
     FormTreeSelect,
     FormUpload,
-} from './form';
+} from './components/form';
 export type {
     ArrayFieldItem,
     ArrayFieldProps,
@@ -527,4 +527,4 @@ export type {
     SchemaFieldRenderer,
     SchemaFormProps,
     WithFieldOptions,
-} from './form';
+} from './components/form';

@@ -3,7 +3,7 @@
     import type { NodeViewProps } from '@tiptap/core';
     import { NodeViewWrapper } from '@tiptap/vue-3';
     import { IconClose } from '@fibrae/semi-icons-vue';
-    import { useLocale } from '@fibrae/semi-ui-vue/hooks';
+    import { useLocale } from '@fibrae/semi-ui-vue/composables';
 
     const props = defineProps<NodeViewProps>();
 

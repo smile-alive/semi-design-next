@@ -1,6 +1,6 @@
 {
     "space": {
-        "source": "packages/semi-ui-vue/src/space/space.vue",
+        "source": "packages/semi-ui-vue/src/components/space/space.vue",
         "props": {
             "wrap": {
                 "zh-CN": "是否自动换行，仅水平方向生效。",
