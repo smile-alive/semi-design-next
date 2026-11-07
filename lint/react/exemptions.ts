@@ -187,7 +187,7 @@ export const reactExemptions: Exemption[] = [
     },
     // Whether the page cancelled the animation is known only from the DOM (getAnimations) after the class is applied
     {
-        files: ['packages/semi-ui-react/src/internal/css-animation/index.tsx'],
+        files: ['packages/semi-ui-react/src/internal/css-animation/index.ts'],
         off: ['react/set-state-in-effect'],
     },
     // Rows rebuild when the foundation's updateKey moves; it has no subscription, so the check runs each commit

@@ -29,7 +29,7 @@
         }
     },
     "timeline-item": {
-        "source": "packages/semi-ui-solid/src/components/timeline/item.tsx",
+        "source": "packages/semi-ui-solid/src/components/timeline/item.ts",
         "props": {
             "color": {
                 "zh-CN": "节点的颜色，作为圆点的背景色，覆盖 type 对应的颜色。",

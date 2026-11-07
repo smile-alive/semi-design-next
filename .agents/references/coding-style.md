@@ -5,7 +5,7 @@ TS/TSX 源码中工具决定不了的写法。格式（含 `sortImports`）交�
 ## 命名
 
 - TypeScript 使用 strict；部分包的 strictNullChecks 例外见「TypeScript」节。模板格式由 oxfmt 处理，脚本与模板 lint 的边界见 [lint](lint.md)。
-- 包内目录和文件名用 kebab-case（`date-picker/months-grid-foundation.ts`、`modal/modal-content.tsx`），测试与样式文件同样如此；语言包文件名保留语言标签写法（`zh_CN.ts`）。文档站页面目录与组件目录同名。
+- 包内目录和文件名用 kebab-case（`date-picker/months-grid-foundation.ts`、`modal/modal-content.tsx`），测试与样式文件同样如此；语言包文件名保留语言标签写法（`zh_CN.ts`）。含 JSX 的文件用 `.tsx`，不含 JSX 的用 `.ts`，组件、hook、context 都按这条判断。文档站页面目录与组件目录同名。
 
 ## 导出
 

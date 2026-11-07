@@ -65,7 +65,7 @@
         }
     },
     "anchor-link": {
-        "source": "packages/semi-ui-solid/src/components/anchor/link.tsx",
+        "source": "packages/semi-ui-solid/src/components/anchor/link.ts",
         "props": {
             "disabled": {
                 "zh-CN": "是否禁用，禁用后不响应点击跳转。",
