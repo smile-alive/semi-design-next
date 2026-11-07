@@ -5,11 +5,11 @@ import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/compo
 import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/ai-chat-dialogue.scss';
 import { IconChevronDown } from '@fibrae/semi-icons-react';
-import { namedRole } from '@fibrae/semi-ui-react/_base/named-role';
-import useDefaultProps from '@fibrae/semi-ui-react/_base/use-default-props';
-import useFoundation from '@fibrae/semi-ui-react/_base/use-foundation';
+import useDefaultProps from '@fibrae/semi-ui-react/base/use-default-props';
+import useFoundation from '@fibrae/semi-ui-react/base/use-foundation';
 import Button from '@fibrae/semi-ui-react/button/index';
 import { useFocusHandover, useLocale } from '@fibrae/semi-ui-react/hooks';
+import { namedRole } from '@fibrae/semi-ui-react/utils/named-role';
 import DialogueItem from './dialogue';
 import type { AIChatDialogueHandle, AIChatDialogueProps } from './interface';
 import { AnnotationWidget } from './widgets/content-item/annotation';

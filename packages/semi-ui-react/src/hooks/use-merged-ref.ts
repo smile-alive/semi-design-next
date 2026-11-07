@@ -1,0 +1,8 @@
+import { type Ref, useMemo } from 'react';
+import { mergeRefs } from '../utils/merge-refs';
+
+type MaybeRef<T> = Ref<T> | null | undefined;
+
+export default function useMergedRef<T>(a: MaybeRef<T>, b: MaybeRef<T>, c?: MaybeRef<T>) {
+    return useMemo(() => mergeRefs([a, b, c]), [a, b, c]);
+}

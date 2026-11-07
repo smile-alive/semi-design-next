@@ -1,6 +1,6 @@
 {
     "back-top": {
-        "source": "packages/semi-ui-react/src/backtop/index.tsx",
+        "source": "packages/semi-ui-react/src/components/backtop/index.tsx",
         "props": {
             "aria-label": {
                 "zh-CN": "按钮的可访问名称；未传且没有 children 时取语言包中的「回到顶部」。",

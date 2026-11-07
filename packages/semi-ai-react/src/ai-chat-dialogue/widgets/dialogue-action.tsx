@@ -4,7 +4,7 @@ import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActi
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
 import { IconThumbUpStroked, IconDeleteStroked, IconShareStroked, IconCopyStroked, IconLikeThumb, IconRedoStroked, IconEditStroked, IconMoreStroked } from '@fibrae/semi-icons-react';
-import useFoundation from '@fibrae/semi-ui-react/_base/use-foundation';
+import useFoundation from '@fibrae/semi-ui-react/base/use-foundation';
 import Button from '@fibrae/semi-ui-react/button/index';
 import Dropdown from '@fibrae/semi-ui-react/dropdown/index';
 import { useClickOutside, useLocale } from '@fibrae/semi-ui-react/hooks';

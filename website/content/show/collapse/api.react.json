@@ -1,6 +1,6 @@
 {
     "collapse": {
-        "source": "packages/semi-ui-react/src/collapse/index.tsx",
+        "source": "packages/semi-ui-react/src/components/collapse/index.tsx",
         "props": {
             "accordion": { "zh-CN": "手风琴模式，每次只展开一个面板。", "en-US": "Accordion mode, only one panel is expanded at a time." },
             "activeKey": {
@@ -44,7 +44,7 @@
         }
     },
     "collapse-panel": {
-        "source": "packages/semi-ui-react/src/collapse/item.tsx",
+        "source": "packages/semi-ui-react/src/components/collapse/item.tsx",
         "props": {
             "children": { "zh-CN": "面板内容。", "en-US": "Panel content." },
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },

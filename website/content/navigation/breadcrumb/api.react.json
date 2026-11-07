@@ -1,6 +1,6 @@
 {
     "breadcrumb": {
-        "source": "packages/semi-ui-react/src/breadcrumb/index.tsx",
+        "source": "packages/semi-ui-react/src/components/breadcrumb/index.tsx",
         "props": {
             "activeIndex": {
                 "zh-CN": "受控的当前项序号，从 0 开始计数；未设置时最后一项为当前项。",
@@ -69,7 +69,7 @@
         }
     },
     "breadcrumb-item": {
-        "source": "packages/semi-ui-react/src/breadcrumb/item.tsx",
+        "source": "packages/semi-ui-react/src/components/breadcrumb/item.tsx",
         "props": {
             "active": {
                 "zh-CN": "是否为当前项，由 `Breadcrumb` 设置，使用方不应传入。",

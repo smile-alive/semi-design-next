@@ -3,8 +3,8 @@ import { act, fireEvent, render, screen, waitFor, within } from '@testing-librar
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import type { Message } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import type { FileItem, UploadProps } from '@fibrae/semi-ui-react/upload/index';
+import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import { mockResizeObserver, sleep } from '@test/utils/react';
 import Code from '../code';
 import Chat, { type ChatHandle } from '../index';

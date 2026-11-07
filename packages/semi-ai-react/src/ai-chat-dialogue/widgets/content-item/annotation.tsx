@@ -4,9 +4,9 @@ import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialog
 import type { Annotation } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { IconChevronRight } from '@fibrae/semi-icons-react';
-import type { ElementProps } from '@fibrae/semi-ui-react/_base/base';
 import AvatarGroup from '@fibrae/semi-ui-react/avatar/avatar-group';
 import Avatar from '@fibrae/semi-ui-react/avatar/index';
+import type { ElementProps } from '@fibrae/semi-ui-react/base/base';
 import { useLocale } from '@fibrae/semi-ui-react/hooks';
 import LocaleConsumer from '@fibrae/semi-ui-react/locale/locale-consumer';
 

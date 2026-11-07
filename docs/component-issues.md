@@ -169,7 +169,7 @@
 - Solid：文字头像的缩放 `transform: scale(...)` 要测量后才确定，服务端 HTML 不含缩放。已知限制（升级条件：首帧文字溢出成为问题时，改为按字数推算初值）。
 - Solid：AvatarGroup 在首帧与服务端还不知道子节点的位置，按 Avatar 的创建顺序计数 `maxCount`，挂载后才按子节点位置计数：子节点之间夹有文字或包装元素（`<Tooltip><Avatar /></Tooltip>`、`<div>`）时，首帧可能隐藏包装元素里的头像，包装元素收到 token 后显示为空（在数组中显示为「[object Object]」），挂载后恢复；超出 `maxCount` 的包装元素整体交给 `renderMore`，默认 `+N` 的名称不含其中头像的 `alt`；新增的头像在列表协调前先创建，协调后超出 `maxCount` 的再释放。已知限制（升级条件：包装元素里的头像需要在服务端正确渲染时，让包装元素也向组登记）。
 - Solid：默认 `+N` 头像的名称只列被隐藏头像的 `alt`，因为隐藏头像不创建，读取子节点会创建它们。保持原样（需要名称时给头像传 `alt`）。
-- Solid、Vue：图片在 hydration 前已加载失败时，Avatar 只靠 `onError` 切换，hydration 后不显示回退态（Solid 实测；Vue 依源码，UNKNOWN）。待处理（同 React 的 `_base/use-replay-image-events.ts`，hydration 时按 `img.complete` 与 `naturalWidth` 补发事件）。
+- Solid、Vue：图片在 hydration 前已加载失败时，Avatar 只靠 `onError` 切换，hydration 后不显示回退态（Solid 实测；Vue 依源码，UNKNOWN）。待处理（同 React 的 `hooks/use-replay-image-events.ts`，hydration 时按 `img.complete` 与 `naturalWidth` 补发事件）。
 - Svelte：服务端首帧的文字头像没有 `aria-label` 与缩放，挂载后补上；元素内容的头像首帧先套文字结构再切换。已知限制。
 
 ### Breadcrumb、Breadcrumb.Item
@@ -203,7 +203,7 @@
 - 私有 `#imgData` 与 `state.imgData` 同名不同义，`ImageData` 遮蔽 DOM 全局类型。待处理（仅改名）。
 - 保持原样：切换 src 后 zoom、rotate 不重置。
 - Solid：内联尺寸与定位要测量后才写入，服务端 HTML 不含。已知限制（升级条件：需要首帧即正确时，按 props 推算）。
-- React：UNKNOWN：服务端渲染的图片在 hydration 前已加载完成时，`onLoad` 不触发，裁切框的初始布局是否建立未验证（影响：裁切框可能不出现）。解决条件：在 `react-browser` 中用已缓存的图片做 hydration 用例，失败时接入 Image 使用的 `_base/use-replay-image-events.ts`。
+- React：UNKNOWN：服务端渲染的图片在 hydration 前已加载完成时，`onLoad` 不触发，裁切框的初始布局是否建立未验证（影响：裁切框可能不出现）。解决条件：在 `react-browser` 中用已缓存的图片做 hydration 用例，失败时接入 Image 使用的 `hooks/use-replay-image-events.ts`。
 - Solid：图片在 hydration 前已加载完成时 `onLoad` 不触发，裁切框可能不初始化（依源码）。待处理（同 Avatar 的补发事件）。
 
 ### Pagination
@@ -635,7 +635,7 @@
 ### 跨组件命名
 
 - 公开类型小写开头或拼错（`customRequestArgs`、`optionRenderProps`、`virtualListProps`、`showToolTipProps`、`weekStartsOnEnum`、`stepSizeMapIconSize`、`DropDownMenuItemItem`）。待处理（涉及公开 API，需维护者决定）。
-- React：`_base/base-component.ts` 只剩类型，文件名过时；`button-group.tsx`、`layout/index.tsx`、`tooltip/index.tsx` 未用 `_base/element-type.ts`。待处理（改名 `base-props.ts`，收口）。
+- React：`base/base-component.ts` 只剩类型，文件名过时；`button-group.tsx`、`layout/index.tsx`、`tooltip/index.tsx` 未用 `utils/element-type.ts`。待处理（改名 `base-props.ts`，收口）。
 
 ## 2 已知未处理的类型与工具链问题
 

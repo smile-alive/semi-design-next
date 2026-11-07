@@ -1,6 +1,6 @@
 {
     "auto-complete": {
-        "source": "packages/semi-ui-react/src/auto-complete/index.tsx",
+        "source": "packages/semi-ui-react/src/components/auto-complete/index.tsx",
         "props": {
             "autoAdjustOverflow": {
                 "zh-CN": "下拉面板被遮挡时是否自动调整方向。未设置时取 Popover 的默认值 `true`。",

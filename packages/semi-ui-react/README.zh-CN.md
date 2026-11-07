@@ -29,7 +29,7 @@ export function App() {
 | 入口                                         | 说明                                                                                 |
 | -------------------------------------------- | ------------------------------------------------------------------------------------ |
 | `@fibrae/semi-ui-react`                      | 全部组件、类型、`LocaleProvider`、`LocaleConsumer`、`BaseFoundation`                 |
-| `@fibrae/semi-ui-react/<目录>/index`         | 逐文件深路径，与 `src/` 下的目录一一对应，例如 `button/index`                        |
+| `@fibrae/semi-ui-react/<目录>/index`         | 逐文件深路径，与 `src/components/` 下的目录一一对应，例如 `button/index`             |
 | `@fibrae/semi-ui-react/tokens`               | 主题 token 与 base 规则，在应用入口文件最先导入，首个组件懒加载时 token 仍随入口加载 |
 | `@fibrae/semi-ui-react/styles.css`           | 整包样式，需要一次性加载全部组件样式时使用                                           |
 | `@fibrae/semi-ui-react/tailwind.css`         | Tailwind v4 的 `@theme inline` 映射                                                  |
@@ -84,4 +84,4 @@ import en_GB from '@fibrae/semi-ui-react/locale/source/en_GB';
 
 `pnpm --filter @fibrae/semi-ui-react build` 执行 `vp pack`：`src` 下的 TS/TSX 逐文件输出 ESM 与类型声明到 `dist`，并产出组件 CSS 与整包 `styles.css`、`tailwind.css`。本包的类型检查读取 foundation 已构建的类型，需先构建。
 
-通用命令见根目录 [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令)。组件写法见 [components](../../.agents/references/react/components.md)，修组件缺陷的流程见 [fix-component-bug](../../.agents/skills/fix-component-bug/SKILL.md)，相对上游的变化见 [release-notes](../../docs/release-notes.md)。DatePicker 的时区设计见 [contributing.md](src/date-picker/contributing.md)。
+通用命令见根目录 [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令)。组件写法见 [components](../../.agents/references/react/components.md)，修组件缺陷的流程见 [fix-component-bug](../../.agents/skills/fix-component-bug/SKILL.md)，相对上游的变化见 [release-notes](../../docs/release-notes.md)。DatePicker 的时区设计见 [contributing.md](src/components/date-picker/contributing.md)。

@@ -144,7 +144,7 @@ pnpm site:stop
     改动布局、焦点或指针行为时，再跑该组件的浏览器测试：
 
     ```bash
-    vp test run --project react-browser packages/semi-ui-react/src/<组件>
+    vp test run --project react-browser packages/semi-ui-react/src/components/<组件>
     ```
 
 CI 的 `gate` job 先看改了哪些文件，再决定跑什么。多类改动取并集；跳过的 job 以 skipped 计入必需检查。

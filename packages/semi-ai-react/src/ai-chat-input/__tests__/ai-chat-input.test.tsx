@@ -3,9 +3,9 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { Extension, Node } from '@tiptap/core';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import semiGlobal from '@fibrae/semi-ui-react/_utils/semi-global';
 import Popover from '@fibrae/semi-ui-react/popover/index';
 import type { UploadProps } from '@fibrae/semi-ui-react/upload/index';
+import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import { countLiveListeners } from '@test/utils/react';
 import AIChatInput, { getConfigureItem, type AIChatInputHandle, type AIChatInputProps, type Attachment, type LeftMenuChangeProps } from '../index';
 

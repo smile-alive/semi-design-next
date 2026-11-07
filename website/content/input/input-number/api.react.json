@@ -1,6 +1,6 @@
 {
     "input-number": {
-        "source": "packages/semi-ui-react/src/input-number/index.tsx",
+        "source": "packages/semi-ui-react/src/components/input-number/index.tsx",
         "props": {
             "addonAfter": { "zh-CN": "后置标签，显示在输入框外部的右侧。", "en-US": "Trailing addon, shown outside the input on the right." },
             "addonBefore": { "zh-CN": "前置标签，显示在输入框外部的左侧。", "en-US": "Leading addon, shown outside the input on the left." },

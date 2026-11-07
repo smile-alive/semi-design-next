@@ -1,6 +1,6 @@
 {
     "json-viewer": {
-        "source": "packages/semi-ui-react/src/json-viewer/index.tsx",
+        "source": "packages/semi-ui-react/src/components/json-viewer/index.tsx",
         "props": {
             "className": {
                 "zh-CN": "根元素的类名。",

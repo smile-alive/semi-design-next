@@ -7,7 +7,7 @@ import { getShowOptions } from '@fibrae/semi-ai-foundation/components/sidebar/ut
 import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/components/button/constants';
 import { IconSearch, IconPlus, IconSetting, IconMinus, IconEdit } from '@fibrae/semi-icons-react';
 import { IllustrationNoContent, IllustrationNoContentDark } from '@fibrae/semi-illustrations-react';
-import useFoundation from '@fibrae/semi-ui-react/_base/use-foundation';
+import useFoundation from '@fibrae/semi-ui-react/base/use-foundation';
 import Button from '@fibrae/semi-ui-react/button/index';
 import Empty from '@fibrae/semi-ui-react/empty/index';
 import { useLocale } from '@fibrae/semi-ui-react/hooks';

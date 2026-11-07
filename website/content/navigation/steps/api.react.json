@@ -1,6 +1,6 @@
 {
     "steps": {
-        "source": "packages/semi-ui-react/src/steps/index.tsx",
+        "source": "packages/semi-ui-react/src/components/steps/index.tsx",
         "props": {
             "aria-label": {
                 "zh-CN": "步骤条的可访问名称，传入后根元素带 `role=\"group\"`。",
@@ -49,7 +49,7 @@
         }
     },
     "step": {
-        "source": "packages/semi-ui-react/src/steps/step.tsx",
+        "source": "packages/semi-ui-react/src/components/steps/step.tsx",
         "props": {
             "className": { "zh-CN": "步骤项（根元素）的类名。", "en-US": "Class name of the step item (root element)." },
             "description": {

@@ -4,13 +4,13 @@ import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sideb
 import ContainerFoundation, { type ContainerAdapter, type ContainerProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
 import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
 import { IconClose } from '@fibrae/semi-icons-react';
-import { namedRole } from '@fibrae/semi-ui-react/_base/named-role';
-import useFoundation from '@fibrae/semi-ui-react/_base/use-foundation';
-import useRealUnmount from '@fibrae/semi-ui-react/_base/use-real-unmount';
-import CSSAnimation from '@fibrae/semi-ui-react/_css-animation/index';
+import useFoundation from '@fibrae/semi-ui-react/base/use-foundation';
 import Button from '@fibrae/semi-ui-react/button/index';
 import { useDidUpdate, useMergedRef, useLocale } from '@fibrae/semi-ui-react/hooks';
+import useRealUnmount from '@fibrae/semi-ui-react/hooks/use-real-unmount';
+import CSSAnimation from '@fibrae/semi-ui-react/internal/css-animation/index';
 import Resizable from '@fibrae/semi-ui-react/resizable/resizable';
+import { namedRole } from '@fibrae/semi-ui-react/utils/named-role';
 import type { ContainerReactProps } from '../interface';
 const prefixCls = cssClasses.SIDEBAR;
 

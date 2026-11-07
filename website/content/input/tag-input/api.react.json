@@ -1,6 +1,6 @@
 {
     "tag-input": {
-        "source": "packages/semi-ui-react/src/tag-input/index.tsx",
+        "source": "packages/semi-ui-react/src/components/tag-input/index.tsx",
         "props": {
             "addOnBlur": {
                 "zh-CN": "焦点离开整个组件时，是否将输入框内容自动创建为标签。",

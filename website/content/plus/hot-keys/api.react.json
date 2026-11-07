@@ -1,6 +1,6 @@
 {
     "hot-keys": {
-        "source": "packages/semi-ui-react/src/hot-keys/index.tsx",
+        "source": "packages/semi-ui-react/src/components/hot-keys/index.tsx",
         "props": {
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
             "content": { "zh-CN": "显示的按键文字，缺省显示 hotKeys。", "en-US": "Key labels to show. Defaults to hotKeys." },

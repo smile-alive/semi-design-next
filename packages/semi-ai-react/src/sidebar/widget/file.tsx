@@ -34,7 +34,7 @@ import {
     IconAlignRight,
     IconImage,
 } from '@fibrae/semi-icons-react';
-import type { ElementProps } from '@fibrae/semi-ui-react/_base/base';
+import type { ElementProps } from '@fibrae/semi-ui-react/base/base';
 import Button, { type ButtonProps } from '@fibrae/semi-ui-react/button/index';
 import Collapse from '@fibrae/semi-ui-react/collapse/index';
 import Divider from '@fibrae/semi-ui-react/divider/index';

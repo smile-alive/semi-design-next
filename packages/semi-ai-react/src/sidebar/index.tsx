@@ -5,7 +5,7 @@ import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sideb
 import { focusAfterModeChange } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
 import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
 import { IconClose, IconCopyStroked } from '@fibrae/semi-icons-react';
-import useDefaultProps from '@fibrae/semi-ui-react/_base/use-default-props';
+import useDefaultProps from '@fibrae/semi-ui-react/base/use-default-props';
 import Button from '@fibrae/semi-ui-react/button/index';
 import { useDidUpdate, useLocale } from '@fibrae/semi-ui-react/hooks';
 import { ToastFactory } from '@fibrae/semi-ui-react/toast/index';
