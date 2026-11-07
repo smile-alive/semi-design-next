@@ -325,28 +325,28 @@ const rtlDesignSpecification = `
         color="blue"
         icon={<IconFlipHorizontal />}
         title="镜像翻转"
-        image="/assets/root-web-sites/RTL1.png"
+        image="/assets/root-web-sites/rtl-1.png"
         description="直接对页面整体框架和内容进行镜像翻转。"
     />
     <ColorImageCard
         color="cyan"
         icon={<IconAppCenter />}
         title="局部混搭"
-        image="/assets/root-web-sites/RTL2.png"
+        image="/assets/root-web-sites/rtl-2.png"
         description="局部文本布局情况需要根据场景进行特殊处理。"
     />
     <ColorImageCard
         color="green"
         icon={<IconListView />}
         title="保持不变"
-        image="/assets/root-web-sites/RTL3.png"
+        image="/assets/root-web-sites/rtl-3.png"
         description="具有国际标准或统一认知的元素展示方式保持不变。"
     />
     <ColorImageCard
         color="lime"
         icon={<IconSync />}
         title="灵活转换"
-        image="/assets/root-web-sites/RTL4.png"
+        image="/assets/root-web-sites/rtl-4.png"
         description="有些图标不能单纯镜像，需要对局部进行灵活修改。"
     />
 </div>
@@ -354,30 +354,30 @@ const rtlDesignSpecification = `
 ## 二. RTL 设计的具体规则
 ### 页面布局规范
 在 RTL 文本环境下，整体的页面布局需要镜像，以保证信息按顺序合理进行展示。尤其注意列表的排布顺序，以确保信息按照逻辑顺序排列，符合用户的阅读习惯：
-<img className="gatsby-img" src="/assets/root-web-sites/RTL-rule1.png" alt="RTL 页面布局规范" />
+<img className="gatsby-img" src="/assets/root-web-sites/rtl-rule-1.png" alt="RTL 页面布局规范" />
 
 更多设计规则可以阅读文档：<a target="_blank" href="https://bytedance.larkoffice.com/wiki/XJj9wCkU1ibmCuksSCych7c2nHy#share-QNSzdDbxLoMy4axWqkhleAQogHc">RTL 布局规范</a>
 
 ### 文本排版规范
 在 RTL 的设计中，我们可以从文本的对齐方式、文本的呈现顺序两个方面来了解相关的设计规范：
-<img className="gatsby-img" src="/assets/root-web-sites/RTL-rule2.png" alt="RTL 文本排版规范" />
+<img className="gatsby-img" src="/assets/root-web-sites/rtl-rule-2.png" alt="RTL 文本排版规范" />
 更多设计规则可以阅读文档：<a target="_blank" href="https://bytedance.larkoffice.com/wiki/XJj9wCkU1ibmCuksSCych7c2nHy#share-Aogvdn7mrodrHUxJ7ymlq1Vsgmd">RTL 文本信息规范</a>
 
 ### 信息名词规范
 在 RTL 的设计中，信息的呈现方式和信息的内容有很强的关联性，有些信息不需要做阅读顺序的调整，有些则需要：
-<img className="gatsby-img" src="/assets/root-web-sites/RTL-rule3.png" alt="RTL 信息名词规范" />
+<img className="gatsby-img" src="/assets/root-web-sites/rtl-rule-3.png" alt="RTL 信息名词规范" />
 
 更多设计规则可以阅读文档：<a target="_blank" href="https://bytedance.larkoffice.com/wiki/XJj9wCkU1ibmCuksSCych7c2nHy#share-OIrqd7jLco4XmAxle4elSdFpg3d">RTL 信息名词规范</a>
 
 ### 视觉元素规范
 在 RTL 的设计中，我们需要根据图片、图标和其他各类元素的含义和应用场景来判断是否需要更改图标的方向：
-<img className="gatsby-img" src="/assets/root-web-sites/RTL-rule4.png" alt="RTL 视觉元素规范" />
+<img className="gatsby-img" src="/assets/root-web-sites/rtl-rule-4.png" alt="RTL 视觉元素规范" />
 
 更多设计规则可以阅读文档：<a target="_blank" href="https://bytedance.larkoffice.com/wiki/XJj9wCkU1ibmCuksSCych7c2nHy#share-EGq0dIcoYoKOLNxk5ZPlNB5Ngpe">RTL 图标和图片规范</a>
 
 ### 交互操作规范
 在 RTL 的设计中，交互操作也通常需要换方向，以符合用户的阅读和操作习惯，提升用户体验：
-<img className="gatsby-img" src="/assets/root-web-sites/RTL-rule5.png" alt="RTL 交互操作规范" />
+<img className="gatsby-img" src="/assets/root-web-sites/rtl-rule-5.png" alt="RTL 交互操作规范" />
 
 更多设计规则可以阅读文档：<a target="_blank" href="https://bytedance.larkoffice.com/wiki/XJj9wCkU1ibmCuksSCych7c2nHy#share-CiowdLCZ2oNKLjx0yyql4rofgMd">RTL 交互操作规范</a>
 `;
@@ -705,28 +705,28 @@ There are four basic methods of RTL design in international products:
         color="blue"
         icon={<IconFlipHorizontal />}
         title="Mirror Flip"
-        image="/assets/root-web-sites/RTL1.png"
+        image="/assets/root-web-sites/rtl-1.png"
         description="Directly mirror the overall framework and content of the page."
     />
     <ColorImageCard
         color="cyan"
         icon={<IconAppCenter />}
         title="Local Mix"
-        image="/assets/root-web-sites/RTL2.png"
+        image="/assets/root-web-sites/rtl-2.png"
         description="The local text layout needs to be specially processed according to the scene."
     />
     <ColorImageCard
         color="green"
         icon={<IconListView />}
         title="Keep Unchanged"
-        image="/assets/root-web-sites/RTL3.png"
+        image="/assets/root-web-sites/rtl-3.png"
         description="The display method of elements with international standards or universal recognition remains unchanged."
     />
     <ColorImageCard
         color="lime"
         icon={<IconSync />}
         title="Flexible Conversion"
-        image="/assets/root-web-sites/RTL4.png"
+        image="/assets/root-web-sites/rtl-4.png"
         description="Some icons cannot be simply mirrored, and need to be modified locally."
     />
 </div>
@@ -734,31 +734,31 @@ There are four basic methods of RTL design in international products:
 ## 2. Specific Rules of RTL Design
 ###  Page Layout Specification
 In the RTL text environment, the overall page layout needs to be mirrored to ensure that information is displayed in a reasonable order. Especially pay attention to the arrangement order of lists to ensure that information is arranged in a logical order, consistent with the reading habits of users:
-<img className="gatsby-img" src="/assets/root-web-sites/RTL-rule1.png" alt="RTL 页面布局规范" />
+<img className="gatsby-img" src="/assets/root-web-sites/rtl-rule-1.png" alt="RTL 页面布局规范" />
 
 More design rules can be read in the document: <a target="_blank" href="https://bytedance.larkoffice.com/wiki/XJj9wCkU1ibmCuksSCych7c2nHy#share-QNSzdDbxLoMy4axWqkhleAQogHc">RTL Layout Specification</a>
 
 ### Text Layout Specification
 In the RTL design, we can understand the relevant design specifications from two aspects: the alignment of text and the order of text presentation:
-<img className="gatsby-img" src="/assets/root-web-sites/RTL-rule2.png" alt="RTL 文本排版规范" />
+<img className="gatsby-img" src="/assets/root-web-sites/rtl-rule-2.png" alt="RTL 文本排版规范" />
 
 More design rules can be read in the document: <a target="_blank" href="https://bytedance.larkoffice.com/wiki/XJj9wCkU1ibmCuksSCych7c2nHy#share-Aogvdn7mrodrHUxJ7ymlq1Vsgmd">RTL Text Information Specification</a>
 
 ### Information Noun Specification
 In the RTL design, the presentation method of information and the content of information are strongly related. Some information does not need to be adjusted for reading order, while some do:
-<img className="gatsby-img" src="/assets/root-web-sites/RTL-rule3.png" alt="RTL 信息名词规范" />
+<img className="gatsby-img" src="/assets/root-web-sites/rtl-rule-3.png" alt="RTL 信息名词规范" />
 
 More design rules can be read in the document: <a target="_blank" href="https://bytedance.larkoffice.com/wiki/XJj9wCkU1ibmCuksSCych7c2nHy#share-OIrqd7jLco4XmAxle4elSdFpg3d">RTL Information Noun Specification</a>
 
 ### Visual Element Specification
 In the RTL design, we need to determine whether to change the direction of icons and images according to the meaning and application scenarios of pictures, icons and other elements:
-<img className="gatsby-img" src="/assets/root-web-sites/RTL-rule4.png" alt="RTL 视觉元素规范" />
+<img className="gatsby-img" src="/assets/root-web-sites/rtl-rule-4.png" alt="RTL 视觉元素规范" />
 
 More design rules can be read in the document: <a target="_blank" href="https://bytedance.larkoffice.com/wiki/XJj9wCkU1ibmCuksSCych7c2nHy#share-EGq0dIcoYoKOLNxk5ZPlNB5Ngpe">RTL Icon and Image Specification</a>
 
 ### Interaction Operation Specification
 In the RTL design, interaction operations also need to be changed in direction to conform to the reading and operation habits of users, improving user experience:
-<img className="gatsby-img" src="/assets/root-web-sites/RTL-rule5.png" alt="RTL 交互操作规范" />
+<img className="gatsby-img" src="/assets/root-web-sites/rtl-rule-5.png" alt="RTL 交互操作规范" />
 
 More design rules can be read in the document: <a target="_blank" href="https://bytedance.larkoffice.com/wiki/XJj9wCkU1ibmCuksSCych7c2nHy#share-CiowdLCZ2oNKLjx0yyql4rofgMd">RTL Interaction Operation Specification</a>
 `;

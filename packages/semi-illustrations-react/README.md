@@ -44,5 +44,5 @@ Component docs are in [website/content/show/empty](../../website/content/show/em
 
 ## Development
 
-- `src/illustrations` is generated source, so do not edit it by hand. The illustration SVGs are in `svgs/illustrations` of `semi-icons-core`, as described in [semi-icons-core](../semi-icons-core/README.md#adding-illustrations). After changing them, run `pnpm build:icon` at the repository root, which updates the illustration packages of every framework.
+- All of `src/` is generated source, so do not edit it by hand. The illustration SVGs are in `svgs/illustrations` of `semi-icons-core`, as described in [semi-icons-core](../semi-icons-core/README.md#adding-illustrations). After changing them, run `pnpm build:icon` at the repository root, which updates the illustration packages of every framework.
 - For build and test commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.

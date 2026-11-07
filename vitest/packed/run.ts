@@ -153,7 +153,7 @@ write(
 write(
     path.join(appDir, 'src/animation.js'),
     [
-        "import '@fibrae/semi-animation/styles/viewTransition.css';",
+        "import '@fibrae/semi-animation/styles/view-transition.css';",
         "import { animate } from 'motion';",
         "import { easings, springs } from '@fibrae/semi-animation';",
         'export const fade = (el) => animate(el, { opacity: [0, 1] }, { ease: easings.easeInOutCubic });',

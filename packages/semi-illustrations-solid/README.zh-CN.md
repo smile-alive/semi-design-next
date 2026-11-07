@@ -36,5 +36,5 @@ import { Empty } from '@fibrae/semi-ui-solid';
 
 ## 开发
 
-- `src/illustrations` 是生成源码，不要手改。插画 SVG 在 `semi-icons-core` 的 `svgs/illustrations`，见 [semi-icons-core](../semi-icons-core/README.zh-CN.md#新增插画)；修改后在仓库根目录运行 `pnpm build:icon` 重新生成。
+- `src/` 全部是生成源码，不要手改。插画 SVG 在 `semi-icons-core` 的 `svgs/illustrations`，见 [semi-icons-core](../semi-icons-core/README.zh-CN.md#新增插画)；修改后在仓库根目录运行 `pnpm build:icon` 重新生成。
 - 构建与测试命令见根目录 [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令)。

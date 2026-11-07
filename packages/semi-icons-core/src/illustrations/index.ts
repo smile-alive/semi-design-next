@@ -1,1 +1,16 @@
-export * from './icons';
+export { default as IllustrationConstruction } from './illustration-construction';
+export { default as IllustrationConstructionDark } from './illustration-construction-dark';
+export { default as IllustrationFailure } from './illustration-failure';
+export { default as IllustrationFailureDark } from './illustration-failure-dark';
+export { default as IllustrationIdle } from './illustration-idle';
+export { default as IllustrationIdleDark } from './illustration-idle-dark';
+export { default as IllustrationNoAccess } from './illustration-no-access';
+export { default as IllustrationNoAccessDark } from './illustration-no-access-dark';
+export { default as IllustrationNoContent } from './illustration-no-content';
+export { default as IllustrationNoContentDark } from './illustration-no-content-dark';
+export { default as IllustrationNoResult } from './illustration-no-result';
+export { default as IllustrationNoResultDark } from './illustration-no-result-dark';
+export { default as IllustrationNotFound } from './illustration-not-found';
+export { default as IllustrationNotFoundDark } from './illustration-not-found-dark';
+export { default as IllustrationSuccess } from './illustration-success';
+export { default as IllustrationSuccessDark } from './illustration-success-dark';

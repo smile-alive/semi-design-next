@@ -3,7 +3,7 @@ import { motion } from 'motion-v';
 import { describe, expect, it } from 'vite-plus/test';
 import { render } from '@test/utils/vue';
 import { easings, springs } from '../../index';
-import '../../src/styles/viewTransition.scss';
+import '../../src/styles/view-transition.scss';
 
 describe('Vue 中的 semi-animation 预设', () => {
     it('motion-v 使用 Bézier 预设运行真实动画并到达终态', async () => {

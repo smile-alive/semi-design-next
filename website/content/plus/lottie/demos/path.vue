@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { Lottie } from '@fibrae/semi-ui-vue';
 
-    const jsonURL = '/assets/root-web-sites/lottie_demo.json';
+    const jsonURL = '/assets/root-web-sites/lottie-demo.json';
 </script>
 
 <template>

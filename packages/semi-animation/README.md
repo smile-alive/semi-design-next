@@ -57,7 +57,7 @@ Motion hands `opacity` and full `transform` strings to the browser, which animat
 ## View Transition preset classes
 
 ```js
-import '@fibrae/semi-animation/styles/viewTransition.css';
+import '@fibrae/semi-animation/styles/view-transition.css';
 ```
 
 Classes for the [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API). One class covers every trigger: an appearing element enters, a disappearing element exits, and a kept (or shared) element does both.
@@ -87,7 +87,7 @@ Without a framework, or in Vue, give the element a unique `view-transition-name`
 
 ```html
 <script setup>
-    import '@fibrae/semi-animation/styles/viewTransition.css';
+    import '@fibrae/semi-animation/styles/view-transition.css';
     import { nextTick, ref } from 'vue';
 
     const shown = ref(false);
@@ -114,4 +114,4 @@ Under `prefers-reduced-motion: reduce`, every class falls back to a fade. The st
 
 ## Development
 
-`pnpm build` runs `vp pack` in this package directory and compiles `src/styles/viewTransition.scss` to `dist/styles/viewTransition.css` (the `.scss` also ships). Tests are in `__tests__/`. For commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.
+`pnpm build` runs `vp pack` in this package directory and compiles `src/styles/view-transition.scss` to `dist/styles/view-transition.css` (the `.scss` also ships). Tests are in `__tests__/`. For commands, see [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令) at the repository root.

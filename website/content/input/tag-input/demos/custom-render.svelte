@@ -5,7 +5,7 @@
     const list = [
         {
             name: '夏可漫',
-            avatar: '/assets/root-web-sites/avatarDemo.jpeg',
+            avatar: '/assets/root-web-sites/avatar-demo.jpeg',
         },
         {
             name: '申悦',
@@ -17,7 +17,7 @@
         },
         {
             name: '文嘉茂',
-            avatar: '/assets/root-web-sites/avatarDemo.jpeg',
+            avatar: '/assets/root-web-sites/avatar-demo.jpeg',
         },
     ];
     const mapList = new Map(list.map((item) => [item.name, item]));

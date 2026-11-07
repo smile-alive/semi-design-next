@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import { basename, extname, resolve } from 'node:path';
-import { pascalCase } from 'es-toolkit';
+import { kebabCase, pascalCase } from 'es-toolkit';
 import type { PluginConfig } from 'svgo';
 import { svgToIconData } from '../../../scripts/svg-to-icon-data.ts';
 
@@ -35,6 +35,7 @@ function illustrationName(name: string) {
     return `Illustration${pascalCase(name)}`;
 }
 
+// Each outDir holds only generated modules and their index, so it is replaced wholesale
 function build(svgDir: string, outDir: string, typesPath: string, exportName: (name: string) => string, pluginsFor: (name: string) => PluginConfig[]) {
     if (fs.existsSync(outDir)) execFileSync('trash', [outDir]);
     fs.mkdirSync(outDir);
@@ -47,8 +48,9 @@ function build(svgDir: string, outDir: string, typesPath: string, exportName: (n
     for (const name of names) {
         const data = svgToIconData(name, fs.readFileSync(resolve(svgDir, `${name}.svg`), 'utf-8'), pluginsFor(name));
         const component = exportName(name);
-        fs.writeFileSync(resolve(outDir, `${component}.ts`), `import type { IconData } from '${typesPath}';\n\nconst ${component}: IconData = ${JSON.stringify(data)};\n\nexport default ${component};\n`);
-        exports.push(`export { default as ${component} } from './${component}';\n`);
+        const file = kebabCase(component);
+        fs.writeFileSync(resolve(outDir, `${file}.ts`), `import type { IconData } from '${typesPath}';\n\nconst ${component}: IconData = ${JSON.stringify(data)};\n\nexport default ${component};\n`);
+        exports.push(`export { default as ${component} } from './${file}';\n`);
     }
     fs.writeFileSync(resolve(outDir, 'index.ts'), exports.join(''));
     return names.length;
@@ -56,12 +58,12 @@ function build(svgDir: string, outDir: string, typesPath: string, exportName: (n
 
 const outDirs = {
     icons: resolve(srcDir, 'icons'),
-    lab: resolve(srcDir, 'lab/icons'),
-    illustrations: resolve(srcDir, 'illustrations/icons'),
+    lab: resolve(srcDir, 'lab'),
+    illustrations: resolve(srcDir, 'illustrations'),
 };
 const count = build(resolve(svgsDir, 'icons'), outDirs.icons, '../types', iconName, (name) => [convertColors, ...(keepPathData.test(name) ? [] : [convertPathData]), ...cleanup, removeDimensions, prefixIds]);
-const labCount = build(resolve(svgsDir, 'lab'), outDirs.lab, '../../types', iconName, () => [convertPathData, ...cleanup, removeDimensions, prefixIds]);
-const illustrationCount = build(resolve(svgsDir, 'illustrations'), outDirs.illustrations, '../../types', illustrationName, () => [convertPathData, ...cleanup, prefixIds]);
+const labCount = build(resolve(svgsDir, 'lab'), outDirs.lab, '../types', iconName, () => [convertPathData, ...cleanup, removeDimensions, prefixIds]);
+const illustrationCount = build(resolve(svgsDir, 'illustrations'), outDirs.illustrations, '../types', illustrationName, () => [convertPathData, ...cleanup, prefixIds]);
 const rootDir = resolve(import.meta.dirname, '../../..');
 execFileSync(resolve(rootDir, 'node_modules/.bin/vp'), ['fmt', ...Object.values(outDirs)], { cwd: rootDir, stdio: 'inherit' });
 console.log(`${count} icons, ${labCount} lab icons, ${illustrationCount} illustrations`);

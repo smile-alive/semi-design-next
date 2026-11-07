@@ -1,3 +1,4 @@
+import { kebabCase } from 'es-toolkit';
 import { frameworkHref } from '#/lib/framework-links';
 import type { Framework } from '#/lib/frameworks';
 import { pathsByEnTitle } from './component-overview-pages.ts';
@@ -24,7 +25,7 @@ const titleAlias: Record<string, string> = {
     'Descriptions 描述列表': 'Description',
 };
 
-const imageUrl = (enName: string, dark: boolean) => `/assets/${dark ? 'components-dark' : 'components'}/${enName}.${dark ? 'png' : 'jpg'}`;
+const imageUrl = (enName: string, dark: boolean) => `/assets/${dark ? 'components-dark' : 'components'}/${kebabCase(enName)}.${dark ? 'png' : 'jpg'}`;
 
 export default function ComponentOverview({ locale, names, framework }: { locale: string; names: string[]; framework: Framework }) {
     const { paths, available } = pathsByEnTitle();

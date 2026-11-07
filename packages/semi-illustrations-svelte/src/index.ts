@@ -1,1 +1,16 @@
-export * from './illustrations/index.js';
+export { default as IllustrationConstruction } from './illustration-construction.svelte';
+export { default as IllustrationConstructionDark } from './illustration-construction-dark.svelte';
+export { default as IllustrationFailure } from './illustration-failure.svelte';
+export { default as IllustrationFailureDark } from './illustration-failure-dark.svelte';
+export { default as IllustrationIdle } from './illustration-idle.svelte';
+export { default as IllustrationIdleDark } from './illustration-idle-dark.svelte';
+export { default as IllustrationNoAccess } from './illustration-no-access.svelte';
+export { default as IllustrationNoAccessDark } from './illustration-no-access-dark.svelte';
+export { default as IllustrationNoContent } from './illustration-no-content.svelte';
+export { default as IllustrationNoContentDark } from './illustration-no-content-dark.svelte';
+export { default as IllustrationNoResult } from './illustration-no-result.svelte';
+export { default as IllustrationNoResultDark } from './illustration-no-result-dark.svelte';
+export { default as IllustrationNotFound } from './illustration-not-found.svelte';
+export { default as IllustrationNotFoundDark } from './illustration-not-found-dark.svelte';
+export { default as IllustrationSuccess } from './illustration-success.svelte';
+export { default as IllustrationSuccessDark } from './illustration-success-dark.svelte';

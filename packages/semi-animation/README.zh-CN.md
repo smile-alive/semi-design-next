@@ -57,7 +57,7 @@ Motion 把 `opacity` 和完整的 `transform` 字符串交给浏览器，在主�
 ## View Transition 预设类
 
 ```js
-import '@fibrae/semi-animation/styles/viewTransition.css';
+import '@fibrae/semi-animation/styles/view-transition.css';
 ```
 
 用于 [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API) 的类。一个类同时覆盖所有触发场景：出现的元素进入，消失的元素退出，保留的元素（或共享元素）两者都做。
@@ -87,7 +87,7 @@ startTransition(() => setShown(true));
 
 ```html
 <script setup>
-    import '@fibrae/semi-animation/styles/viewTransition.css';
+    import '@fibrae/semi-animation/styles/view-transition.css';
     import { nextTick, ref } from 'vue';
 
     const shown = ref(false);
@@ -114,4 +114,4 @@ startTransition(() => setShown(true));
 
 ## 开发
 
-`pnpm build` 在本包目录运行 `vp pack`，并把 `src/styles/viewTransition.scss` 编译为 `dist/styles/viewTransition.css`（同时保留 `.scss`）。测试在 `__tests__/`，命令见根目录 [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令)。
+`pnpm build` 在本包目录运行 `vp pack`，并把 `src/styles/view-transition.scss` 编译为 `dist/styles/view-transition.css`（同时保留 `.scss`）。测试在 `__tests__/`，命令见根目录 [CONTRIBUTING.md](../../CONTRIBUTING.md#常用命令)。

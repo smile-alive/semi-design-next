@@ -2,7 +2,7 @@
     import { onMount } from 'svelte';
     import { Lottie } from '@fibrae/semi-ui-svelte';
 
-    const jsonURL = '/assets/root-web-sites/lottie_demo.json';
+    const jsonURL = '/assets/root-web-sites/lottie-demo.json';
 
     onMount(() => {
         void Lottie.getLottie().then((lottie) => console.log('lottie', lottie));

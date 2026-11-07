@@ -53,16 +53,16 @@ IconActivity;
 
 - 单色图标：新增 `svgs/icons/<name>.svg`，并在 `svgs/icons/meta.json` 加条目（`category` 是图标页的分组名，沿用已有值，如 `Basic`、`Arrow`、`Interface`；AI 图标按颜色层级用 `One Color`、`Two Color`、`Multiple Color`）。颜色会转为 `currentColor`。
 - 彩色图标：新增 `svgs/lab/<name>.svg`，并在 `svgs/lab/meta.json` 加条目。颜色保持原样。
-- 文件名即图标 type，导出名是 `Icon` 加 PascalCase（`ai_` 变为 `AI`）。
+- SVG 文件名即图标 type，导出名是 `Icon` 加 PascalCase（`ai_` 变为 `AI`），生成的模块文件名是导出名的 kebab-case（`IconAIBellLevel2` 为 `icon-ai-bell-level-2.ts`）。
 - SVG 源文件里的 id 不手写 `{uid}`，生成器统一加前缀，渲染时按实例替换。
-- 在仓库根目录运行 `pnpm build:icon`：先在本包写出 `src/icons`、`src/lab/icons` 与 `src/illustrations/icons`（`scripts/build-icon.ts`，svgo 使用固定配置以保持路径数据稳定），再依次生成各框架的图标与插画组件。不要手改生成文件。
+- 在仓库根目录运行 `pnpm build:icon`：先在本包写出 `src/icons`、`src/lab` 与 `src/illustrations`（`scripts/build-icon.ts`，svgo 使用固定配置以保持路径数据稳定），再依次生成各框架的图标与插画组件。不要手改生成文件。
 - 运行 `pnpm site:dev`，打开[图标文档页](../../website/content/basic/icon)检查新图标。
 
 ## 新增插画
 
 - 新增 `svgs/illustrations/<name>.svg`，暗色变体命名为 `<name>-dark.svg`。颜色与 `width`、`height` 保持原样，配色用 `var(--semi-color-*)`。
 - 导出名是 `Illustration` 加 PascalCase，如 `noContent-dark` 为 `IllustrationNoContentDark`。
-- id 同样不手写 `{uid}`；运行 `pnpm build:icon` 生成 `src/illustrations/icons` 与各框架的插画组件。
+- id 同样不手写 `{uid}`；运行 `pnpm build:icon` 生成 `src/illustrations` 与各框架的插画组件。
 
 ## 开发
 

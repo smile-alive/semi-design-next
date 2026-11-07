@@ -445,21 +445,21 @@ const roleConfig = {
             'PM',
             {
                 name: '产品经理',
-                avatar: '/assets/ai/PM.png',
+                avatar: '/assets/ai/pm.png',
             },
         ],
         [
             'UI',
             {
                 name: '设计师',
-                avatar: '/assets/ai/UI.png',
+                avatar: '/assets/ai/ui.png',
             },
         ],
         [
             'FE',
             {
                 name: '前端开发',
-                avatar: '/assets/ai/FE.png',
+                avatar: '/assets/ai/fe.png',
             },
         ],
     ]),
