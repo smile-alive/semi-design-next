@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed } from 'vue';
     import { omitBy } from 'es-toolkit';
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/chat/constants';
-    import { getFileType } from '@fibrae/semi-ai-foundation/file-suffix';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
+    import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
     import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
     import MarkdownRender from '@fibrae/semi-ui-vue/markdown-render/index';
     import Code from './code.vue';

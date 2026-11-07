@@ -1,7 +1,7 @@
 import { type JSX, Show, createMemo, onCleanup, untrack } from 'solid-js';
 import clsx from 'clsx';
-import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionState } from '@fibrae/semi-ai-foundation/chat/chat-box-action-foundation';
-import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/chat/constants';
+import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionState } from '@fibrae/semi-ai-foundation/components/chat/chat-box-action-foundation';
+import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
 import { IconCopyStroked, IconDeleteStroked, IconLikeThumb, IconRedoStroked, IconThumbUpStroked } from '@fibrae/semi-icons-solid';
 import useFoundation from '@fibrae/semi-ui-solid/_base/use-foundation';

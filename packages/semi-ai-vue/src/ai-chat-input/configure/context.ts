@@ -1,5 +1,5 @@
 import type { ComputedRef } from 'vue';
-import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import { createContext } from '@fibrae/semi-ui-vue/_base/create-context';
 
 export interface ConfigureContext {

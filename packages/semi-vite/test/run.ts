@@ -239,7 +239,7 @@ console.log('\n== server 环境的 noExternal ==');
     const prefixed = await resolveConfig({ root: fixture, configFile: false, logLevel: 'error', plugins: [semiTheming({ prefixCls: 'my' })], environments: { ssr: {}, browser: { consumer: 'client' } } }, 'build');
     const [, foundation] = prefixed.environments.ssr.resolve.noExternal as RegExp[];
     assert.ok(foundation instanceof RegExp, 'prefixCls 时 ssr 环境追加 foundation');
-    for (const id of ['@fibrae/semi-foundation/components/button/constants', '@fibrae/semi-ai-foundation/chat/foundation', '/app/node_modules/@fibrae/semi-foundation/dist/base/env.js']) {
+    for (const id of ['@fibrae/semi-foundation/components/button/constants', '@fibrae/semi-ai-foundation/components/chat/foundation', '/app/node_modules/@fibrae/semi-foundation/dist/base/env.js']) {
         assert.ok(foundation.test(id), `${id} 在 prefixCls 下打进服务端产物`);
     }
     assert.deepStrictEqual(prefixed.environments.browser.resolve.noExternal, [], 'prefixCls 时客户端环境仍不设 noExternal');

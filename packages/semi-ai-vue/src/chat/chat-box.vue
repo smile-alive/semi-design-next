@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, h, normalizeClass } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import ChatBoxAction from './chat-box-action.vue';
     import ChatBoxAvatar from './chat-box-avatar.vue';
     import ChatBoxContent from './chat-box-content.vue';

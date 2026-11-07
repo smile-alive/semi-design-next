@@ -1,6 +1,6 @@
 import { For, Show } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import Button from '@fibrae/semi-ui-solid/button/index';
 import type { OptionProps } from './interface';
 

@@ -1,7 +1,7 @@
 import { Index, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-import type { Annotation } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+import type { Annotation } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { IconChevronRight } from '@fibrae/semi-icons-solid';
 import callHandler from '@fibrae/semi-ui-solid/_base/call-handler';
 import type { ElementProps } from '@fibrae/semi-ui-solid/_base/element-props';

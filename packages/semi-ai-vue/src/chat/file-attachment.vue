@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { IconBriefStroked } from '@fibrae/semi-icons-vue';
 
     const props = defineProps<{ url?: string; name?: string; size?: string; type?: string }>();

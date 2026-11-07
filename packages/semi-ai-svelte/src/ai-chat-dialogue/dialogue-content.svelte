@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
-    import { isAwaitingOutput } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/message-content';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+    import { isAwaitingOutput } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-content';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import contentClass from './content-class.js';
     import { getAIChatDialogueContext } from './context.js';

@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, Fragment, h } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
-    import { isAwaitingOutput } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/message-content';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+    import { isAwaitingOutput } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-content';
     import { useLocale } from '@fibrae/semi-ui-vue/hooks';
     import DialogueContentBody from './dialogue-content-body.vue';
     import type { AIChatDialogueSlots, Metadata } from './interface';

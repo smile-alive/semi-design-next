@@ -3,7 +3,7 @@ import { shallowRef } from 'vue';
 import { waitFor } from '@testing-library/vue';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import type { Attachment } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+import type { Attachment } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import { render } from '@test/utils/vue';
 import AIChatInput from '../index';

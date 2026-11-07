@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed } from 'vue';
     import { omitBy } from 'es-toolkit';
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
     import { IconSendMsgStroked } from '@fibrae/semi-icons-vue';
     import { useLocale } from '@fibrae/semi-ui-vue/hooks';

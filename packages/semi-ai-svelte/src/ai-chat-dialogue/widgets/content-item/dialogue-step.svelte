@@ -1,7 +1,7 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import { SvelteSet } from 'svelte/reactivity';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import { IconChevronDown, IconChevronUp, IconStoryStroked } from '@fibrae/semi-icons-svelte';
     import watch from '@fibrae/semi-ui-svelte/_base/watch.svelte.js';
     import Collapsible from '@fibrae/semi-ui-svelte/collapsible/collapsible.svelte';

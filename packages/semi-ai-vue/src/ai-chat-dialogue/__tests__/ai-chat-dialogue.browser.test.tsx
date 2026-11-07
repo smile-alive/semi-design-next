@@ -3,7 +3,7 @@ import { shallowRef } from 'vue';
 import { screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { cdp, page, userEvent } from 'vite-plus/test/browser';
-import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import Modal from '@fibrae/semi-ui-vue/modal/index';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';

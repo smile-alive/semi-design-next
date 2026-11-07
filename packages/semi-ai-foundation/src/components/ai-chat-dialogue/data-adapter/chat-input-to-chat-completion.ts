@@ -1,4 +1,4 @@
-import { isImageFile } from '../../file-suffix';
+import { isImageFile } from '../../../utils/file-suffix';
 import type { AudioContentPart, ChatCompletionInput, ImageContentPart, FileContentPart, TextInput } from './interface';
 
 // Known limitation: the input is untyped; type it with the aiChatInput interfaces.

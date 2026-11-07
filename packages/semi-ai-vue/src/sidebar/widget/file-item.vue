@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { watch } from 'vue';
     import { EditorContent, useEditor } from '@tiptap/vue-3';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
-    import { canUploadImage, getEditorAttributes, getFileEditorExtensions } from '@fibrae/semi-ai-foundation/sidebar/file-extensions';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+    import { canUploadImage, getEditorAttributes, getFileEditorExtensions } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';
     import useEditorAppContext from '../../_base/editor-app-context';
     import { ImageUploadNode } from './image-slot';

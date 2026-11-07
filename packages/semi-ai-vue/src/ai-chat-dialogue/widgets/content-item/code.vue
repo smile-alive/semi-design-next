@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { type VNode, normalizeClass } from 'vue';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
     import { IconCopyStroked, IconTick } from '@fibrae/semi-icons-vue';
     import { useCopied, useLocale } from '@fibrae/semi-ui-vue/hooks';

@@ -1,7 +1,7 @@
 import { isEqual } from 'es-toolkit';
 import { createId } from '@fibrae/semi-foundation/utils/uuid';
+import MessageListFoundation, { type MessageListAdapter, type MessageListBaseProps, type MessageListState } from '../../base/message-list-foundation';
 import type { Reference } from '../ai-chat-input/interface';
-import MessageListFoundation, { type MessageListAdapter, type MessageListBaseProps, type MessageListState } from '../message-list-foundation';
 import { strings } from './constants';
 import type { ResponseError } from './data-adapter/interface';
 

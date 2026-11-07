@@ -1,8 +1,8 @@
 import { useInsertionEffect, useLayoutEffect, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
-import ContainerFoundation, { type ContainerAdapter, type ContainerProps } from '@fibrae/semi-ai-foundation/sidebar/container-foundation';
-import '@fibrae/semi-ai-foundation/sidebar/sidebar.scss';
+import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+import ContainerFoundation, { type ContainerAdapter, type ContainerProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
+import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
 import { IconClose } from '@fibrae/semi-icons-react';
 import { namedRole } from '@fibrae/semi-ui-react/_base/named-role';
 import useFoundation from '@fibrae/semi-ui-react/_base/use-foundation';

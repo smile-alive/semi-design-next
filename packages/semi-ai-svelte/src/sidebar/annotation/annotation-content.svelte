@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import { IconBookOpenStroked } from '@fibrae/semi-icons-svelte';
     import { Collapse, CollapsePanel } from '@fibrae/semi-ui-svelte/collapse/index';
     import AnnotationItemView from './annotation-item.svelte';

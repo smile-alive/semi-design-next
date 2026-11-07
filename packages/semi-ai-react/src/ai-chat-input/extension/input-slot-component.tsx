@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { NodeViewWrapper, NodeViewContent, type NodeViewProps } from '@tiptap/react';
-import { strings } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
-import { isSelectionInsideNode } from '@fibrae/semi-ai-foundation/ai-chat-input/extension/input-slot';
+import { strings } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
+import { isSelectionInsideNode } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/input-slot';
 import { useEventListener } from '@fibrae/semi-ui-react/hooks';
 
 export default function InputSlotComponent({ editor, node, getPos }: NodeViewProps) {

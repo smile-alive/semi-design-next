@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import type { MCPOption } from '@fibrae/semi-ai-foundation/sidebar/mcp-cof-content-foundation';
+import type { MCPOption } from '@fibrae/semi-ai-foundation/components/sidebar/mcp-cof-content-foundation';
 import type { ContainerProps } from '../container/interface.js';
 
 export interface MCPConfigureOption extends MCPOption {

@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 import type { ButtonProps } from '@fibrae/semi-ui-svelte/button/index';
 import type { DropdownProps } from '@fibrae/semi-ui-svelte/dropdown/index';
 import type { RadioGroupProps, RadioValue } from '@fibrae/semi-ui-svelte/radio/index';

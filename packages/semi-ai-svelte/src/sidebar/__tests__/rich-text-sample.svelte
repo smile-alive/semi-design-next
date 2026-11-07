@@ -1,5 +1,5 @@
 <script lang="ts">
-    import '@fibrae/semi-ai-foundation/sidebar/sidebar.scss';
+    import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
 </script>
 
 <div class="semi-sidebar-file">

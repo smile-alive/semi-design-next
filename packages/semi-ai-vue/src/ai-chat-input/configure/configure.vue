@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { computed, shallowRef } from 'vue';
-    import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+    import type { LeftMenuChangeProps } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
     import { provideConfigureContext } from './context';
     import type { ConfigureEmits, ConfigureHandle, ConfigureProps, ConfigureSlots } from './interface';
 

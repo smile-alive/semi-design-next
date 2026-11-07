@@ -1,6 +1,6 @@
 import { type JSX, Show } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import type { RenderSkillItemProps, Skill } from './interface';
 
 const prefixCls = cssClasses.PREFIX;

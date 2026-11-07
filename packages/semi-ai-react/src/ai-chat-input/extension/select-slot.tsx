@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { ReactNodeViewRenderer, NodeViewWrapper, type NodeViewProps } from '@tiptap/react';
-import BaseSelectSlot from '@fibrae/semi-ai-foundation/ai-chat-input/extension/select-slot';
+import BaseSelectSlot from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/select-slot';
 import Select from '@fibrae/semi-ui-react/select/index';
 
 function SelectSlotComponent({ node, updateAttributes }: NodeViewProps) {

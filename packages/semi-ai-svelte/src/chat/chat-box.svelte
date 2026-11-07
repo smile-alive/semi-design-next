@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import ChatBoxAction from './chat-box-action.svelte';
     import ChatBoxAvatar from './chat-box-avatar.svelte';
     import ChatBoxContent from './chat-box-content.svelte';

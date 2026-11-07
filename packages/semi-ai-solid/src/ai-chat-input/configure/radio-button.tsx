@@ -1,4 +1,4 @@
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import { RadioGroup } from '@fibrae/semi-ui-solid/radio/index';
 import getConfigureItem from './get-configure-item';
 

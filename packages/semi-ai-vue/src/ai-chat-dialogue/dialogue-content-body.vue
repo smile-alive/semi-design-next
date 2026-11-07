@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import { messageToChatInput } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/index';
-    import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
-    import { getMessageText } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/message-text';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import { messageToChatInput } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
+    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+    import { getMessageText } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-text';
     import { IconAlertCircle } from '@fibrae/semi-icons-vue';
     import DialogueContentItem from './dialogue-content-item.vue';
     import DialogueMarkdown from './dialogue-markdown.vue';

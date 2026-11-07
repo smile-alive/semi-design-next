@@ -1,7 +1,7 @@
 /** @jsxImportSource vue */
 import { describe, expect, it } from 'vite-plus/test';
 // the sidebar styles load with Container; the content is mounted here without it
-import '@fibrae/semi-ai-foundation/sidebar/sidebar.scss';
+import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
 import { render } from '@test/utils/vue';
 import MCPConfigureContent from '../mcp-configure/mcp-configure-content.vue';
 

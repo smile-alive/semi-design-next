@@ -1,4 +1,4 @@
-import type { Annotation, InputFile, InputImage, Message, Reference } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import type { Annotation, InputFile, InputImage, Message, Reference } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { createContext } from '@fibrae/semi-ui-svelte/_base/create-context';
 import type { AIChatDialogueProps } from './interface.js';
 

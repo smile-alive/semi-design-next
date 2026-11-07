@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import clsx from 'clsx';
-import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionState, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/action-foundation';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionState, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/action-foundation';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
 import { IconThumbUpStroked, IconDeleteStroked, IconShareStroked, IconCopyStroked, IconLikeThumb, IconRedoStroked, IconEditStroked, IconMoreStroked } from '@fibrae/semi-icons-react';
 import useFoundation from '@fibrae/semi-ui-react/_base/use-foundation';

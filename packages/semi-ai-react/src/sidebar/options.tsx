@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import Button from '@fibrae/semi-ui-react/button/index';
 import type { OptionProps } from './interface';
 

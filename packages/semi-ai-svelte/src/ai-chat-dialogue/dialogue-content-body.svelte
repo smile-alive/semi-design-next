@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import { messageToChatInput } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/data-adapter/index';
-    import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
-    import { getMessageText } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/message-text';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import { messageToChatInput } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
+    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+    import { getMessageText } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-text';
     import { IconAlertCircle } from '@fibrae/semi-icons-svelte';
     import { getAIChatDialogueContext } from './context.js';
     import DialogueContentItem from './dialogue-content-item.svelte';

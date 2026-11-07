@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { IconArrowRight } from '@fibrae/semi-icons-vue';
     import type { ChatSlots } from './interface';
 

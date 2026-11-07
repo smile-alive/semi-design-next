@@ -1,5 +1,5 @@
 import { VueNodeViewRenderer } from '@tiptap/vue-3';
-import { ImageUploadNode as ImageUploadSchema } from '@fibrae/semi-ai-foundation/sidebar/file-extensions';
+import { ImageUploadNode as ImageUploadSchema } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
 import ImageSlotView from './image-slot-view.vue';
 import type { ImageUploadNodeOptions } from './interface';
 

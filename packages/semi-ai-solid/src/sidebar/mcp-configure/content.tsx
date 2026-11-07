@@ -1,8 +1,8 @@
 import { type Accessor, type JSX, Index, Show, createMemo } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
-import MCPConfigureContentFoundation, { type MCPConfigureContentAdapter, type MCPConfigureContentProps, type MCPConfigureContentState, type MCPOption } from '@fibrae/semi-ai-foundation/sidebar/mcp-cof-content-foundation';
-import { getShowOptions } from '@fibrae/semi-ai-foundation/sidebar/utils';
+import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+import MCPConfigureContentFoundation, { type MCPConfigureContentAdapter, type MCPConfigureContentProps, type MCPConfigureContentState, type MCPOption } from '@fibrae/semi-ai-foundation/components/sidebar/mcp-cof-content-foundation';
+import { getShowOptions } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
 import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/components/button/constants';
 import { IconEdit, IconMinus, IconPlus, IconSearch, IconSetting } from '@fibrae/semi-icons-solid';
 import { IllustrationNoContent, IllustrationNoContentDark } from '@fibrae/semi-illustrations-solid';

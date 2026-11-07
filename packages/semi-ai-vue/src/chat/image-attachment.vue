@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { useLocale } from '@fibrae/semi-ui-vue/hooks';
     import Image from '@fibrae/semi-ui-vue/image/index';
 

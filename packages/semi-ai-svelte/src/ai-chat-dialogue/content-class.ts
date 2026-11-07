@@ -1,5 +1,5 @@
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-import DialogueFoundation, { type Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+import DialogueFoundation, { type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 
 const { PREFIX_CONTENT } = cssClasses;
 

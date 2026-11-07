@@ -2,8 +2,8 @@
     import { computed, onBeforeUnmount, shallowRef } from 'vue';
     import type { ChainedCommands } from '@tiptap/core';
     import type { Editor } from '@tiptap/vue-3';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
-    import { type Level, type TextRange, clearSelectionHighlight, confirmLink, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/sidebar/file-extensions';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+    import { type Level, type TextRange, clearSelectionHighlight, confirmLink, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import {
         IconAlignCenter,

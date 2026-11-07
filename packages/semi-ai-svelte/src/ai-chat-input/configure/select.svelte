@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     // aliased: the generated declaration names this component `Select` after its file
     import { Select as SemiSelect } from '@fibrae/semi-ui-svelte/select/index';
     import ConfigureItem from './configure-item.svelte';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, onBeforeUnmount, useTemplateRef, watch } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
-    import { focusAfterModeChange } from '@fibrae/semi-ai-foundation/sidebar/utils';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+    import { focusAfterModeChange } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
     import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
     import { IconClose, IconCopyStroked } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/_base/element-props';

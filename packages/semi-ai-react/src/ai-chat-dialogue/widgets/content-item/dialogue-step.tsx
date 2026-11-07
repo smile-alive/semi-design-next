@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-import type { Step } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+import type { Step } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { IconStoryStroked, IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '@fibrae/semi-ui-react/_base/base';
 import Collapsible from '@fibrae/semi-ui-react/collapsible/index';

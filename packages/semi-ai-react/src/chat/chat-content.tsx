@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { cssClasses, strings } from '@fibrae/semi-ai-foundation/chat/constants';
+import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import Divider from '@fibrae/semi-ui-react/divider/index';
 import LocaleConsumer from '@fibrae/semi-ui-react/locale/locale-consumer';

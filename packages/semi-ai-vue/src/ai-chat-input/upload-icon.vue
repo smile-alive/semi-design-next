@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import { IconPaperclip } from '@fibrae/semi-icons-vue';
     import { useLocale } from '@fibrae/semi-ui-vue/hooks';
 

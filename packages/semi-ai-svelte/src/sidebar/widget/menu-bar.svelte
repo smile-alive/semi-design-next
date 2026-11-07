@@ -1,8 +1,8 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import type { ChainedCommands, Editor } from '@tiptap/core';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/sidebar/constants';
-    import { type Level, type TextRange, clearSelectionHighlight, confirmLink, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/sidebar/file-extensions';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+    import { type Level, type TextRange, clearSelectionHighlight, confirmLink, readFileMenuState, readLinkEditorOpenState } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import {
         IconAlignCenter,

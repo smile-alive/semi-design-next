@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 const { PREFIX_HINT } = cssClasses;
 
 interface HintProps {

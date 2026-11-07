@@ -1,5 +1,5 @@
 import type { VNode } from 'vue';
-import type { MCPOption } from '@fibrae/semi-ai-foundation/sidebar/mcp-cof-content-foundation';
+import type { MCPOption } from '@fibrae/semi-ai-foundation/components/sidebar/mcp-cof-content-foundation';
 import type { ContainerEmits, ContainerProps } from '../container/interface';
 
 export interface MCPConfigureOption extends MCPOption {

@@ -1,6 +1,6 @@
 import { computed, normalizeClass } from 'vue';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-import DialogueFoundation, { type Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+import DialogueFoundation, { type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { useAIChatDialogueContext } from './context';
 
 const { PREFIX_CONTENT } = cssClasses;

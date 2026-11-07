@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
     import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
     import { IconCopyStroked, IconTick } from '@fibrae/semi-icons-svelte';

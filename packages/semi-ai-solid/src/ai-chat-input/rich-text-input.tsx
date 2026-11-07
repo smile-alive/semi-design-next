@@ -2,8 +2,8 @@ import { createEffect, createMemo, getOwner, on, onCleanup, onMount, untrack } f
 import { Editor, type Extensions, type Content as TiptapContent } from '@tiptap/core';
 import type { EditorView } from '@tiptap/pm/view';
 import { isEqual } from 'es-toolkit';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
-import { createEditorProps, getBaseExtensions, getEditorAttributes, getEditorOptions } from '@fibrae/semi-ai-foundation/ai-chat-input/extension/editor-config';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
+import { createEditorProps, getBaseExtensions, getEditorAttributes, getEditorOptions } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/editor-config';
 import { useLocale } from '@fibrae/semi-ui-solid/hooks';
 import slotExtensions from './extension';
 import type { PlaceholderProps } from './interface';

@@ -1,9 +1,9 @@
 import type React from 'react';
 import { useImperativeHandle, useRef } from 'react';
 import clsx from 'clsx';
-import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
-import '@fibrae/semi-ai-foundation/ai-chat-dialogue/ai-chat-dialogue.scss';
+import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+import '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/ai-chat-dialogue.scss';
 import { IconChevronDown } from '@fibrae/semi-icons-react';
 import { namedRole } from '@fibrae/semi-ui-react/_base/named-role';
 import useDefaultProps from '@fibrae/semi-ui-react/_base/use-default-props';
@@ -21,7 +21,7 @@ import Hint from './widgets/dialogue-hint';
 type Foundation = DialogueFoundation;
 type Adapter = DialogueAdapter<AIChatDialogueProps>;
 
-export * from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+export * from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 export * from './interface';
 
 const prefix = cssClasses.PREFIX;

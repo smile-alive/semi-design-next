@@ -1,6 +1,6 @@
 import React from 'react';
 import { ReactNodeViewRenderer, NodeViewWrapper, type NodeViewProps } from '@tiptap/react';
-import BaseSkillSlot from '@fibrae/semi-ai-foundation/ai-chat-input/extension/skill-slot';
+import BaseSkillSlot from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/skill-slot';
 import { IconClose } from '@fibrae/semi-icons-react';
 import { useLocale } from '@fibrae/semi-ui-react/hooks';
 

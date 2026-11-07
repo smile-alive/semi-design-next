@@ -1,5 +1,5 @@
 import { ReactNodeViewRenderer } from '@tiptap/react';
-import BaseInputSlot, { updateInputSlotNodeView } from '@fibrae/semi-ai-foundation/ai-chat-input/extension/input-slot';
+import BaseInputSlot, { updateInputSlotNodeView } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/input-slot';
 import Component from './input-slot-component';
 
 export default BaseInputSlot.extend({

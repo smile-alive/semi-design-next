@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, h, normalizeClass } from 'vue';
-    import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionState, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/action-foundation';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+    import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionState, getDialogueActionFlags } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/action-foundation';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
     import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
     import useFoundation from '@fibrae/semi-ui-vue/_base/use-foundation';
     import { useLocale } from '@fibrae/semi-ui-vue/hooks';

@@ -1,4 +1,4 @@
-import { getFileKind, getFileType } from '../file-suffix';
+import { getFileKind, getFileType } from '../../utils/file-suffix';
 import { strings } from './constants';
 import type { AIChatInputBaseProps, AIChatInputState } from './foundation';
 import type { Attachment, BaseSkill, Reference } from './interface';

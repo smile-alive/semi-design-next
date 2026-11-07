@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-    import type { ContentItem, CustomToolCall, FunctionToolCall, InputFile, InputImage, InputMessage, Message, OutputMessage, OutputText, Reasoning, Refusal } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
-    import { getAttachmentLayout, getVisibleAnnotations, isImageList } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/message-content';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+    import type { ContentItem, CustomToolCall, FunctionToolCall, InputFile, InputImage, InputMessage, Message, OutputMessage, OutputText, Reasoning, Refusal } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
+    import { getAttachmentLayout, getVisibleAnnotations, isImageList } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/message-content';
     import { IconWrench } from '@fibrae/semi-icons-vue';
     import slotNodes, { isSlotContent } from '@fibrae/semi-ui-vue/_base/slot-nodes';
     import { useLocale } from '@fibrae/semi-ui-vue/hooks';

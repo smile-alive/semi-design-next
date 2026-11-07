@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import { IconBriefStroked } from '@fibrae/semi-icons-svelte';
 
     let { url, name, size, type }: { url?: string; name?: string; size?: string; type?: string } = $props();

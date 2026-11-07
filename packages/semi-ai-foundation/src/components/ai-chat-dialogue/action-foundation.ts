@@ -1,6 +1,6 @@
 import type { DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
 import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
-import ActionBarFoundation, { type ActionBarState } from '../action-bar-foundation';
+import ActionBarFoundation, { type ActionBarState } from '../../base/action-bar-foundation';
 import { isUnfinishedStatus, strings } from './constants';
 import type { Message } from './foundation';
 import { getMessageText } from './message-text';

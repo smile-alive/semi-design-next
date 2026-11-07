@@ -1,6 +1,6 @@
 <script lang="ts">
     import { omit } from 'es-toolkit';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import type { TooltipTriggerProps } from '@fibrae/semi-ui-svelte/tooltip/interface';
     import Tooltip from '@fibrae/semi-ui-svelte/tooltip/tooltip.svelte';
     import type { FileItem, UploadOnChangeProps } from '@fibrae/semi-ui-svelte/upload/interface';

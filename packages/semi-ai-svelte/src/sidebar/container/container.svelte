@@ -1,8 +1,8 @@
 <script lang="ts">
     import { untrack } from 'svelte';
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
-    import ContainerFoundation, { type ContainerAdapter, type ContainerProps as FoundationProps } from '@fibrae/semi-ai-foundation/sidebar/container-foundation';
-    import '@fibrae/semi-ai-foundation/sidebar/sidebar.scss';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
+    import ContainerFoundation, { type ContainerAdapter, type ContainerProps as FoundationProps } from '@fibrae/semi-ai-foundation/components/sidebar/container-foundation';
+    import '@fibrae/semi-ai-foundation/components/sidebar/sidebar.scss';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import cssAnimation from '@fibrae/semi-ui-svelte/_base/css-animation';
     import { groupRole } from '@fibrae/semi-ui-svelte/_base/group-role';

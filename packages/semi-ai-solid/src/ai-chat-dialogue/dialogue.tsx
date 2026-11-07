@@ -1,7 +1,7 @@
 import { Show, createMemo } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-import type { Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import Checkbox from '@fibrae/semi-ui-solid/checkbox/index';
 import { useLocale } from '@fibrae/semi-ui-solid/hooks';
 import { useAIChatDialogueContext } from './context';

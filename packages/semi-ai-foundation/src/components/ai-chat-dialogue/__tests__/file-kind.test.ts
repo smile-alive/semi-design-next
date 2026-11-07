@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { getFileSuffix } from '../../file-suffix';
+import { getFileSuffix } from '../../../utils/file-suffix';
 import { getDialogueFileKind } from '../constants';
 
 describe('getDialogueFileKind', () => {

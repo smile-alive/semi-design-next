@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount, type Snippet } from 'svelte';
     import { omit } from 'es-toolkit';
-    import type { Attachment } from '@fibrae/semi-ai-foundation/ai-chat-input/interface';
+    import type { Attachment } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
     import { Tooltip } from '@fibrae/semi-ui-svelte/tooltip/index';
     import { type FileItem, Upload, type UploadOnChangeProps } from '@fibrae/semi-ui-svelte/upload/index';
     import type { AIChatInputProps, AIChatInputUploadButtonSnippetProps, AIChatInputUploadProps } from './interface.js';

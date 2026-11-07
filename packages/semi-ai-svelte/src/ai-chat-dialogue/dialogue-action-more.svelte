@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import { IconDeleteStroked, IconMoreStroked } from '@fibrae/semi-icons-svelte';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import DropdownItem from '@fibrae/semi-ui-svelte/dropdown/dropdown-item.svelte';

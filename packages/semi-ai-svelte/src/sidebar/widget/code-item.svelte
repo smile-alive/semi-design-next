@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
+    import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import CodeHighlight from '@fibrae/semi-ui-svelte/code-highlight/code-highlight.svelte';
     import JsonViewer from '@fibrae/semi-ui-svelte/json-viewer/json-viewer.svelte';
     import type { CodeItemProps } from './interface.js';

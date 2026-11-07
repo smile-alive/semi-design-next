@@ -1,7 +1,7 @@
 import { Index, Show, createSignal, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
-import type { Step } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
+import type { Step } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { IconChevronDown, IconChevronUp, IconStoryStroked } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '@fibrae/semi-ui-solid/_base/element-props';
 import useWatch from '@fibrae/semi-ui-solid/_base/use-watch';

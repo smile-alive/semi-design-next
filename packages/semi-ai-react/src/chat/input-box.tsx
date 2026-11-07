@@ -1,7 +1,7 @@
 import React, { useCallback, useImperativeHandle, useState } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-ai-foundation/chat/constants';
-import InputBoxFoundation, { type InputBoxAdapter, type InputBoxState } from '@fibrae/semi-ai-foundation/chat/inputbox-foundation';
+import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
+import InputBoxFoundation, { type InputBoxAdapter, type InputBoxState } from '@fibrae/semi-ai-foundation/components/chat/inputbox-foundation';
 import { IconDeleteStroked, IconChainStroked, IconArrowUp } from '@fibrae/semi-icons-react';
 import useFoundation from '@fibrae/semi-ui-react/_base/use-foundation';
 import Button from '@fibrae/semi-ui-react/button/index';

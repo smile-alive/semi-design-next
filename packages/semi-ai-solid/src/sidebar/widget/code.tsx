@@ -1,6 +1,6 @@
 import { For, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
+import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import { IconCodeStroked, IconFile, IconFullScreenStroked } from '@fibrae/semi-icons-solid';
 import type { ElementProps } from '@fibrae/semi-ui-solid/_base/element-props';
 import Button from '@fibrae/semi-ui-solid/button/index';

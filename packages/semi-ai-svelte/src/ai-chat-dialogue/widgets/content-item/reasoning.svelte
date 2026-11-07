@@ -1,6 +1,6 @@
 <script lang="ts">
     import { untrack } from 'svelte';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import { IconAISearchLevel2, IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-svelte';
     import Collapsible from '@fibrae/semi-ui-svelte/collapsible/collapsible.svelte';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';

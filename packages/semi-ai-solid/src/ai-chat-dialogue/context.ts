@@ -1,5 +1,5 @@
 import type { Accessor } from 'solid-js';
-import type { Annotation, InputFile, InputImage, Message } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/foundation';
+import type { Annotation, InputFile, InputImage, Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { createContext } from '@fibrae/semi-ui-solid/_base/create-context';
 import type { AIChatDialogueProps } from './interface';
 

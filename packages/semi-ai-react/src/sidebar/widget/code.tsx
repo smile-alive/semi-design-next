@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import clsx from 'clsx';
-import { cssClasses, strings } from '@fibrae/semi-ai-foundation/sidebar/constants';
+import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import { IconCodeStroked, IconFullScreenStroked, IconFile } from '@fibrae/semi-icons-react';
 import type { ElementProps } from '@fibrae/semi-ui-react/_base/base';
 import Button from '@fibrae/semi-ui-react/button/index';

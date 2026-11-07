@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { h } from 'vue';
-    import { cssClasses } from '@fibrae/semi-ai-foundation/chat/constants';
+    import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import type { ChatMessage, ChatMetadata, ChatSlots } from './interface';
 
     const props = defineProps<{ message: ChatMessage; role: ChatMetadata }>();

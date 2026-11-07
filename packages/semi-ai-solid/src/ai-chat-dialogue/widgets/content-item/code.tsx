@@ -1,5 +1,5 @@
 import { type ComponentProps, Show, children } from 'solid-js';
-import { cssClasses } from '@fibrae/semi-ai-foundation/ai-chat-dialogue/constants';
+import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
 import { IconCopyStroked, IconTick } from '@fibrae/semi-icons-solid';
 import { useCopied, useLocale } from '@fibrae/semi-ui-solid/hooks';

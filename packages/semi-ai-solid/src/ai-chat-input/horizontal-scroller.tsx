@@ -1,5 +1,5 @@
 import { type JSX, Show, children, createEffect, createSignal, on } from 'solid-js';
-import { numbers } from '@fibrae/semi-ai-foundation/ai-chat-input/constants';
+import { numbers } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
 import { IconChevronRightStroked } from '@fibrae/semi-icons-solid';
 import { useFocusHandover, useLocale, useResizeObserver } from '@fibrae/semi-ui-solid/hooks';
 
