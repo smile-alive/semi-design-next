@@ -1,6 +1,6 @@
 {
     "ai-chat-dialogue": {
-        "source": "packages/semi-ai-vue/src/ai-chat-dialogue/ai-chat-dialogue.vue",
+        "source": "packages/semi-ai-vue/src/components/ai-chat-dialogue/ai-chat-dialogue.vue",
         "props": {
             "align": {
                 "zh-CN": "对话布局方式，可选 leftRight（左右分布）或 leftAlign（左对齐）。",
@@ -136,7 +136,7 @@
         }
     },
     "reasoning": {
-        "source": "packages/semi-ai-vue/src/ai-chat-dialogue/widgets/content-item/reasoning.vue",
+        "source": "packages/semi-ai-vue/src/components/ai-chat-dialogue/widgets/content-item/reasoning.vue",
         "props": {
             "status": {
                 "zh-CN": "推理状态。为 completed 时标题显示已完成，且初次渲染时折叠；其他值显示思考中并展开。",
@@ -165,7 +165,7 @@
         "exposed": {}
     },
     "dialogue-step": {
-        "source": "packages/semi-ai-vue/src/ai-chat-dialogue/widgets/content-item/dialogue-step.vue",
+        "source": "packages/semi-ai-vue/src/components/ai-chat-dialogue/widgets/content-item/dialogue-step.vue",
         "props": {
             "steps": {
                 "zh-CN": "步骤列表。每个步骤含 summary、status 与 actions，status 为 completed 时显示完成图标，否则显示加载中；actions 只放数据（summary、description 等），步骤可点击或用 Enter、空格展开收起。",
@@ -182,7 +182,7 @@
         "exposed": {}
     },
     "annotation": {
-        "source": "packages/semi-ai-vue/src/ai-chat-dialogue/widgets/content-item/annotation.vue",
+        "source": "packages/semi-ai-vue/src/components/ai-chat-dialogue/widgets/content-item/annotation.vue",
         "props": {
             "maxCount": {
                 "zh-CN": "最多显示的来源图标数，超出部分显示为 +N。",

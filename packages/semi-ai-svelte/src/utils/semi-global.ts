@@ -1,10 +1,10 @@
 import type { GlobalDefaults } from '@fibrae/semi-ui-svelte/utils/semi-global';
-import type { AIChatDialogueProps } from './ai-chat-dialogue/interface.js';
-import type { AIChatInputProps } from './ai-chat-input/interface.js';
-import type { ChatProps } from './chat/interface.js';
-import type { AnnotationProps } from './sidebar/annotation/interface.js';
-import type { SideBarProps } from './sidebar/interface.js';
-import type { MCPConfigureProps } from './sidebar/mcp-configure/interface.js';
+import type { AIChatDialogueProps } from '../components/ai-chat-dialogue/interface.js';
+import type { AIChatInputProps } from '../components/ai-chat-input/interface.js';
+import type { ChatProps } from '../components/chat/interface.js';
+import type { AnnotationProps } from '../components/sidebar/annotation/interface.js';
+import type { SideBarProps } from '../components/sidebar/interface.js';
+import type { MCPConfigureProps } from '../components/sidebar/mcp-configure/interface.js';
 
 declare module '@fibrae/semi-ui-svelte/utils/semi-global' {
     interface OverrideDefaultProps {

@@ -2,8 +2,8 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import type { OverrideDefaultProps } from '@fibrae/semi-ui-vue/utils/semi-global';
+import type { SidebarContainerHandle as SubpathHandle } from '../components/sidebar/index';
 import type { AIChatDialogueMessage, AIChatDialogueProps, AIChatInputEmits, AIChatInputMessageContent, ChatEmits, ChatMessage, ChatProps, SidebarContainerHandle } from '../index';
-import type { SidebarContainerHandle as SubpathHandle } from '../sidebar/index';
 
 // ts.createProgram cannot read .vue files, so the value half reads the entry's text; the type half is the
 // `import type` above, which vue-tsc (vitest/vue/tsconfig.vue.json) rejects when a name is missing

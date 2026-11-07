@@ -14,7 +14,7 @@
         "../../packages/semi-ai-vue/**/__tests__/**/*.browser.test.tsx",
         "../../packages/semi-ai-vue/**/__tests__/fixtures/**/*.vue",
         "../../packages/semi-ai-vue/src/styles.d.ts",
-        "../../packages/semi-ai-vue/src/semi-global.ts"
+        "../../packages/semi-ai-vue/src/utils/semi-global.ts"
     ],
     "exclude": ["../../packages/*/node_modules", "../../packages/*/dist"]
 }

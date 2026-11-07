@@ -1,6 +1,6 @@
 {
     "chat": {
-        "source": "packages/semi-ai-vue/src/chat/chat.vue",
+        "source": "packages/semi-ai-vue/src/components/chat/chat.vue",
         "props": {
             "chats": {
                 "zh-CN": "对话列表，配合 v-model:chats 使用。只有整体替换数组才视为变化，就地 push 不会触发跟随滚动。",

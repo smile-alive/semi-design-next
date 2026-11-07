@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vite-plus/test';
 
 // Glob, not a `?raw` default import: semi-global.ts has no default export, which import/default flags
-const [globalTypes] = Object.values(import.meta.glob<string>('../semi-global.ts', { eager: true, query: '?raw', import: 'default' }));
+const [globalTypes] = Object.values(import.meta.glob<string>('../utils/semi-global.ts', { eager: true, query: '?raw', import: 'default' }));
 const sources = import.meta.glob<string>(['../*/**/*.{ts,tsx}', '!../**/__tests__/**'], {
     eager: true,
     query: '?raw',

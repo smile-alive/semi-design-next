@@ -3,12 +3,12 @@ import { fireEvent } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { render } from '@test/utils/vue';
-import AIChatDialogue from '../ai-chat-dialogue/index';
-import AIChatInput from '../ai-chat-input/index';
-import Chat from '../chat/index';
-import Annotation from '../sidebar/annotation/index';
-import Sidebar from '../sidebar/index';
-import MCPConfigure from '../sidebar/mcp-configure/index';
+import AIChatDialogue from '../components/ai-chat-dialogue/index';
+import AIChatInput from '../components/ai-chat-input/index';
+import Chat from '../components/chat/index';
+import Annotation from '../components/sidebar/annotation/index';
+import Sidebar from '../components/sidebar/index';
+import MCPConfigure from '../components/sidebar/mcp-configure/index';
 
 // Runtime half of F2; the type half is fixtures/attrs.vue. vue-tsc infers native attributes only where the template
 // binds them to an element, so a component whose root is another component or that splits `$attrs` in script

@@ -19,35 +19,36 @@ const sourceTheme: SemiScssOptions = {
 const fatalDeprecations: sass.DeprecationOrId[] = ['import', 'global-builtin'];
 
 // package.json main points at the built lib/, so imports are mapped to source explicitly
-const sourcePackages: { name: string; dir: string; entry?: string; components?: boolean }[] = [
-    { name: '@fibrae/semi-ui-vue', dir: 'packages/semi-ui-vue/src', entry: 'index.ts', components: true },
+// A package with a root entry is a UI or AI package laid out with src/components/; foundation packages map 1:1
+const sourcePackages: { name: string; dir: string; entry?: string }[] = [
+    { name: '@fibrae/semi-ui-vue', dir: 'packages/semi-ui-vue/src', entry: 'index.ts' },
     { name: '@fibrae/semi-ai-vue', dir: 'packages/semi-ai-vue/src', entry: 'index.ts' },
-    { name: '@fibrae/semi-ui-react', dir: 'packages/semi-ui-react/src', entry: 'index.ts', components: true },
+    { name: '@fibrae/semi-ui-react', dir: 'packages/semi-ui-react/src', entry: 'index.ts' },
     { name: '@fibrae/semi-ai-react', dir: 'packages/semi-ai-react/src', entry: 'index.ts' },
-    { name: '@fibrae/semi-ui-solid', dir: 'packages/semi-ui-solid/src', entry: 'index.ts', components: true },
+    { name: '@fibrae/semi-ui-solid', dir: 'packages/semi-ui-solid/src', entry: 'index.ts' },
     { name: '@fibrae/semi-ai-solid', dir: 'packages/semi-ai-solid/src', entry: 'index.ts' },
-    { name: '@fibrae/semi-ui-svelte', dir: 'packages/semi-ui-svelte/src', entry: 'index.ts', components: true },
+    { name: '@fibrae/semi-ui-svelte', dir: 'packages/semi-ui-svelte/src', entry: 'index.ts' },
     { name: '@fibrae/semi-ai-svelte', dir: 'packages/semi-ai-svelte/src', entry: 'index.ts' },
     { name: '@fibrae/semi-foundation', dir: 'packages/semi-foundation/src' },
     { name: '@fibrae/semi-ai-foundation', dir: 'packages/semi-ai-foundation/src' },
 ];
 
-// A UI package's subpaths mirror its exports map: entry files and the infrastructure directories map to src/ as written,
-// every other subpath is a component under src/components/
+// A UI or AI package's subpaths mirror its exports map: entry files and the infrastructure directories map to src/ as
+// written, every other subpath is a component under src/components/
 const uiEntryFiles = 'hooks|composables|primitives|tokens';
 const uiDirs = 'base|utils|hooks|composables|primitives|internal|__tests__';
 
 export const semiSourceAliases: Alias[] = [
-    ...sourcePackages.flatMap(({ name, dir, entry, components }) => [
-        ...(entry ? [{ find: new RegExp(`^${name}/?$`), replacement: resolve(`${dir}/${entry}`) }] : []),
-        ...(components
+    ...sourcePackages.flatMap(({ name, dir, entry }) =>
+        entry
             ? [
+                  { find: new RegExp(`^${name}/?$`), replacement: resolve(`${dir}/${entry}`) },
                   { find: new RegExp(`^${name}/(${uiEntryFiles})$`), replacement: `${resolve(dir)}/$1.ts` },
                   { find: new RegExp(`^${name}/(${uiDirs})/`), replacement: `${resolve(dir)}/$1/` },
                   { find: new RegExp(`^${name}/`), replacement: `${resolve(dir)}/components/` },
               ]
-            : [{ find: new RegExp(`^${name}/`), replacement: `${resolve(dir)}/` }]),
-    ]),
+            : [{ find: new RegExp(`^${name}/`), replacement: `${resolve(dir)}/` }]
+    ),
     { find: '@fibrae/semi-illustrations-react', replacement: resolve('packages/semi-illustrations-react/src') },
     { find: '@fibrae/semi-illustrations-vue', replacement: resolve('packages/semi-illustrations-vue/src') },
     { find: '@fibrae/semi-illustrations-solid', replacement: resolve('packages/semi-illustrations-solid/src') },
@@ -171,7 +172,7 @@ export function semiPackStyles(srcDir: string, { ignore = [], sourceOnly = [], b
 // The locale packs live in semi-foundation; each UI package republishes them as one-line re-exports so an app can
 // import `@fibrae/semi-ui-<framework>/locale/source/<name>` without installing foundation itself. Solid needs a `.jsx`
 // twin because its `./*` export resolves to `.jsx` under the `solid` condition.
-export function semiLocaleReexports({ jsx = false, dir = 'components/locale/source' }: { jsx?: boolean; dir?: string } = {}): Plugin {
+export function semiLocaleReexports({ jsx = false }: { jsx?: boolean } = {}): Plugin {
     const sourceDir = resolve('packages/semi-foundation/src/locale/source');
     return {
         name: 'semi:locale-reexports',
@@ -181,7 +182,7 @@ export function semiLocaleReexports({ jsx = false, dir = 'components/locale/sour
                 const name = path.basename(file, '.ts');
                 const source = `export { default } from '@fibrae/semi-foundation/locale/source/${name}';\n`;
                 for (const extension of extensions) {
-                    this.emitFile({ type: 'asset', fileName: `${dir}/${name}${extension}`, source });
+                    this.emitFile({ type: 'asset', fileName: `components/locale/source/${name}${extension}`, source });
                 }
             }
         },

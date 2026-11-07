@@ -1,6 +1,6 @@
 {
     "chat": {
-        "source": "packages/semi-ai-solid/src/chat/chat.tsx",
+        "source": "packages/semi-ai-solid/src/components/chat/chat.tsx",
         "props": {
             "chats": {
                 "zh-CN": "对话列表，受控使用，配合 `onChatsChange` 回写。只有整体替换数组才视为变化，就地修改同一数组不会更新界面。",

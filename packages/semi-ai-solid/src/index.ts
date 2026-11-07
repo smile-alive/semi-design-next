@@ -1,6 +1,6 @@
-import './semi-global';
+import './utils/semi-global';
 
-export { default as Chat } from './chat';
+export { default as Chat } from './components/chat';
 export type {
     ChatProps,
     ChatElement,
@@ -18,8 +18,8 @@ export type {
     Metadata as ChatMetadata,
     DefaultActionNodeObj as ChatDefaultActionNodeObj,
     FullChatBoxNodes as ChatFullChatBoxNodes,
-} from './chat';
-export { default as AIChatDialogue } from './ai-chat-dialogue';
+} from './components/chat';
+export { default as AIChatDialogue } from './components/ai-chat-dialogue';
 export type {
     AIChatDialogueProps,
     AIChatDialogueHandle,
@@ -38,9 +38,9 @@ export type {
     MarkdownRenderProps as AIChatDialogueMarkdownRenderProps,
     DefaultActionNodeObj as AIChatDialogueDefaultActionNodeObj,
     FullDialogueNodes as AIChatDialogueFullDialogueNodes,
-} from './ai-chat-dialogue';
-export type { AnnotationItemProps } from './ai-chat-dialogue/widgets/content-item/annotation';
-export type { ReasoningWidgetProps } from './ai-chat-dialogue/widgets/content-item/reasoning';
+} from './components/ai-chat-dialogue';
+export type { AnnotationItemProps } from './components/ai-chat-dialogue/widgets/content-item/annotation';
+export type { ReasoningWidgetProps } from './components/ai-chat-dialogue/widgets/content-item/reasoning';
 // Foundation types are re-exported from their source module: the d.ts bundler drops types that reach the entry
 // through a component module's own re-export of an import
 export type { Content as ChatContent, EnableUploadProps as ChatEnableUploadProps, Message as ChatMessage } from '@fibrae/semi-ai-foundation/components/chat/foundation';
@@ -56,7 +56,7 @@ export type {
 } from '@fibrae/semi-ai-foundation/components/ai-chat-input/interface';
 export type { StreamingResponseState, ResponseChunk } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/interface';
 export type { StreamingChatState } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/streaming-chat-completion-to-message';
-export { default as AIChatInput, getConfigureItem } from './ai-chat-input';
+export { default as AIChatInput, getConfigureItem } from './components/ai-chat-input';
 export type {
     AIChatInputProps,
     AIChatInputElement,
@@ -68,17 +68,17 @@ export type {
     RenderTopSlotProps as AIChatInputRenderTopSlotProps,
     ActionAreaProps as AIChatInputActionAreaProps,
     PlaceholderProps as AIChatInputPlaceholderProps,
-} from './ai-chat-input';
+} from './components/ai-chat-input';
 export { chatCompletionToMessage, streamingChatCompletionToMessage, streamingResponseToMessage, responseToMessage, chatInputToMessage, chatInputToChatCompletion } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
-export { default as MCPConfigure } from './sidebar/mcp-configure';
-export type { MCPConfigureProps } from './sidebar/mcp-configure';
-export type { MCPSolidOption as MCPConfigureOption } from './sidebar/mcp-configure/content';
-export { default as Annotation } from './sidebar/annotation';
-export type { AnnotationProps } from './sidebar/annotation';
-export type { AnnotationInfo } from './sidebar/annotation/content';
-export type { AnnotationItem } from './sidebar/annotation/item';
-export { default as Sidebar } from './sidebar';
-export type { SideBarProps, Option as SideBarOption, DetailContent as SideBarDetailContent } from './sidebar/interface';
-export type { ImageUploadNodeOptions } from './sidebar/widget/image-slot';
-export type { CodeItemProps } from './sidebar/widget/code';
-export type { FileItemProps } from './sidebar/widget/file';
+export { default as MCPConfigure } from './components/sidebar/mcp-configure';
+export type { MCPConfigureProps } from './components/sidebar/mcp-configure';
+export type { MCPSolidOption as MCPConfigureOption } from './components/sidebar/mcp-configure/content';
+export { default as Annotation } from './components/sidebar/annotation';
+export type { AnnotationProps } from './components/sidebar/annotation';
+export type { AnnotationInfo } from './components/sidebar/annotation/content';
+export type { AnnotationItem } from './components/sidebar/annotation/item';
+export { default as Sidebar } from './components/sidebar';
+export type { SideBarProps, Option as SideBarOption, DetailContent as SideBarDetailContent } from './components/sidebar/interface';
+export type { ImageUploadNodeOptions } from './components/sidebar/widget/image-slot';
+export type { CodeItemProps } from './components/sidebar/widget/code';
+export type { FileItemProps } from './components/sidebar/widget/file';

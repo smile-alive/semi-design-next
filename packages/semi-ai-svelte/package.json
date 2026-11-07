@@ -22,15 +22,20 @@
         },
         "./styles.css": "./dist/styles.css",
         "./package.json": "./package.json",
+        "./utils/*": {
+            "types": "./dist/utils/*.d.ts",
+            "svelte": "./dist/utils/*.js",
+            "default": "./dist/utils/*.js"
+        },
         "./*.svelte": {
-            "types": "./dist/*.svelte.d.ts",
-            "svelte": "./dist/*.svelte",
-            "default": "./dist/*.svelte"
+            "types": "./dist/components/*.svelte.d.ts",
+            "svelte": "./dist/components/*.svelte",
+            "default": "./dist/components/*.svelte"
         },
         "./*": {
-            "types": "./dist/*.d.ts",
-            "svelte": "./dist/*.js",
-            "default": "./dist/*.js"
+            "types": "./dist/components/*.d.ts",
+            "svelte": "./dist/components/*.js",
+            "default": "./dist/components/*.js"
         }
     },
     "files": [

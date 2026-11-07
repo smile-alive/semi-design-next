@@ -19,7 +19,10 @@
             "@fibrae/semi-ui-vue/__tests__/*": ["../../packages/semi-ui-vue/src/__tests__/*"],
             "@fibrae/semi-ui-vue/*": ["../../packages/semi-ui-vue/src/components/*"],
             "@fibrae/semi-ai-vue": ["../../packages/semi-ai-vue/src/index.ts"],
-            "@fibrae/semi-ai-vue/*": ["../../packages/semi-ai-vue/src/*"],
+            "@fibrae/semi-ai-vue/base/*": ["../../packages/semi-ai-vue/src/base/*"],
+            "@fibrae/semi-ai-vue/utils/*": ["../../packages/semi-ai-vue/src/utils/*"],
+            "@fibrae/semi-ai-vue/__tests__/*": ["../../packages/semi-ai-vue/src/__tests__/*"],
+            "@fibrae/semi-ai-vue/*": ["../../packages/semi-ai-vue/src/components/*"],
             "@fibrae/semi-icons-vue": ["../../packages/semi-icons-vue/src/index.ts"],
             "@fibrae/semi-icons-vue/*": ["../../packages/semi-icons-vue/src/*"],
             "@fibrae/semi-illustrations-vue": ["../../packages/semi-illustrations-vue/src/index.ts"],
@@ -42,7 +45,7 @@
         "../../packages/semi-ai-vue/**/__tests__/**/*.vue",
         "../../packages/semi-ai-vue/src/styles.d.ts",
         "../../packages/semi-foundation/src/dom.d.ts",
-        "../../packages/semi-ai-vue/src/semi-global.ts",
+        "../../packages/semi-ai-vue/src/utils/semi-global.ts",
         "../../node_modules/@testing-library/jest-dom/types/vitest.d.ts"
     ],
     "exclude": ["../../packages/*/node_modules", "../../packages/*/dist", "../../packages/**/*.browser.test.*"]

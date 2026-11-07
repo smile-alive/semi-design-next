@@ -1,6 +1,6 @@
 {
     "container": {
-        "source": "packages/semi-ai-vue/src/sidebar/container/container.vue",
+        "source": "packages/semi-ai-vue/src/components/sidebar/container/container.vue",
         "props": {
             "visible": {
                 "zh-CN": "是否显示容器，配合 v-model:visible 使用。",
@@ -72,7 +72,7 @@
         }
     },
     "mcp-configure": {
-        "source": "packages/semi-ai-vue/src/sidebar/mcp-configure/mcp-configure.vue",
+        "source": "packages/semi-ai-vue/src/components/sidebar/mcp-configure/mcp-configure.vue",
         "props": {
             "visible": {
                 "zh-CN": "是否显示，配合 v-model:visible 使用。",
@@ -199,7 +199,7 @@
         }
     },
     "annotation": {
-        "source": "packages/semi-ai-vue/src/sidebar/annotation/annotation.vue",
+        "source": "packages/semi-ai-vue/src/components/sidebar/annotation/annotation.vue",
         "props": {
             "visible": {
                 "zh-CN": "是否显示，配合 v-model:visible 使用。",
@@ -298,7 +298,7 @@
         }
     },
     "annotation-content": {
-        "source": "packages/semi-ai-vue/src/sidebar/annotation/annotation-content.vue",
+        "source": "packages/semi-ai-vue/src/components/sidebar/annotation/annotation-content.vue",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的分组 key，配合 v-model:activeKey 使用。",
@@ -336,7 +336,7 @@
         "exposed": {}
     },
     "sidebar": {
-        "source": "packages/semi-ai-vue/src/sidebar/sidebar.vue",
+        "source": "packages/semi-ai-vue/src/components/sidebar/sidebar.vue",
         "props": {
             "visible": {
                 "zh-CN": "是否显示，配合 v-model:visible 使用。",
@@ -475,7 +475,7 @@
         }
     },
     "code-content": {
-        "source": "packages/semi-ai-vue/src/sidebar/widget/code-content.vue",
+        "source": "packages/semi-ai-vue/src/components/sidebar/widget/code-content.vue",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的代码面板 key，配合 v-model:activeKey 使用。",
@@ -513,7 +513,7 @@
         "exposed": {}
     },
     "code-item": {
-        "source": "packages/semi-ai-vue/src/sidebar/widget/code-item.vue",
+        "source": "packages/semi-ai-vue/src/components/sidebar/widget/code-item.vue",
         "props": {
             "name": {
                 "zh-CN": "代码项名称，由 CodeContent 的面板头部和 Sidebar 的详情头部显示，CodeItem 自身不渲染。",
@@ -551,7 +551,7 @@
         "exposed": {}
     },
     "file-content": {
-        "source": "packages/semi-ai-vue/src/sidebar/widget/file-content.vue",
+        "source": "packages/semi-ai-vue/src/components/sidebar/widget/file-content.vue",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的文件面板 key，配合 v-model:activeKey 使用。",
@@ -580,7 +580,7 @@
         "exposed": {}
     },
     "file-item": {
-        "source": "packages/semi-ai-vue/src/sidebar/widget/file-item.vue",
+        "source": "packages/semi-ai-vue/src/components/sidebar/widget/file-item.vue",
         "props": {
             "name": {
                 "zh-CN": "文件名称，作为编辑区域的可访问名称，挂载后变化会同步到编辑器。",

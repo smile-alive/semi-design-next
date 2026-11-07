@@ -1,6 +1,6 @@
 {
     "chat": {
-        "source": "packages/semi-ai-react/src/chat/index.tsx",
+        "source": "packages/semi-ai-react/src/components/chat/index.tsx",
         "props": {
             "align": { "zh-CN": "对话布局方式，可选 `leftRight`（左右分布）或 `leftAlign`（左对齐）。", "en-US": "Conversation layout: `leftRight` or `leftAlign`." },
             "bottomSlot": { "zh-CN": "输入框下方的节点。", "en-US": "Node below the input box." },

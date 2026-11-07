@@ -1,6 +1,6 @@
 {
     "container": {
-        "source": "packages/semi-ai-react/src/sidebar/container/index.tsx",
+        "source": "packages/semi-ai-react/src/components/sidebar/container/index.tsx",
         "props": {
             "afterVisibleChange": {
                 "zh-CN": "可见状态变化完成后的回调，参数为当前是否可见；有动画时在动画结束后触发。",
@@ -60,7 +60,7 @@
         }
     },
     "mcp-configure": {
-        "source": "packages/semi-ai-react/src/sidebar/mcp-configure/index.tsx",
+        "source": "packages/semi-ai-react/src/components/sidebar/mcp-configure/index.tsx",
         "props": {
             "afterVisibleChange": {
                 "zh-CN": "可见状态变化完成后的回调，参数为当前是否可见；有动画时在动画结束后触发。",
@@ -160,7 +160,7 @@
         }
     },
     "annotation": {
-        "source": "packages/semi-ai-react/src/sidebar/annotation/index.tsx",
+        "source": "packages/semi-ai-react/src/components/sidebar/annotation/index.tsx",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的分组 key，支持单个或多个。",
@@ -240,7 +240,7 @@
         }
     },
     "annotation-content": {
-        "source": "packages/semi-ai-react/src/sidebar/annotation/content.tsx",
+        "source": "packages/semi-ai-react/src/components/sidebar/annotation/content.tsx",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的分组 key，支持单个或多个。",
@@ -267,7 +267,7 @@
         }
     },
     "sidebar": {
-        "source": "packages/semi-ai-react/src/sidebar/index.tsx",
+        "source": "packages/semi-ai-react/src/components/sidebar/index.tsx",
         "props": {
             "activeKey": {
                 "zh-CN": "主视图中当前选中的选项 key。",
@@ -377,7 +377,7 @@
         }
     },
     "code-content": {
-        "source": "packages/semi-ai-react/src/sidebar/widget/code.tsx",
+        "source": "packages/semi-ai-react/src/components/sidebar/widget/code.tsx",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的代码面板 key，支持单个或多个。",
@@ -400,7 +400,7 @@
         }
     },
     "file-content": {
-        "source": "packages/semi-ai-react/src/sidebar/widget/file.tsx",
+        "source": "packages/semi-ai-react/src/components/sidebar/widget/file.tsx",
         "props": {
             "activeKey": {
                 "zh-CN": "当前展开的文件面板 key，支持单个或多个。",
@@ -423,7 +423,7 @@
         }
     },
     "code-item": {
-        "source": "packages/semi-ai-react/src/sidebar/widget/code.tsx#CodeItem",
+        "source": "packages/semi-ai-react/src/components/sidebar/widget/code.tsx#CodeItem",
         "props": {
             "codeHighlightProps": {
                 "zh-CN": "CodeHighlight 的属性，在 `code` 与 `language` 之后展开。",
@@ -450,7 +450,7 @@
         }
     },
     "file-item": {
-        "source": "packages/semi-ai-react/src/sidebar/widget/file.tsx#FileItem",
+        "source": "packages/semi-ai-react/src/components/sidebar/widget/file.tsx#FileItem",
         "props": {
             "className": { "zh-CN": "根元素的类名。", "en-US": "Class name of the root element." },
             "content": {

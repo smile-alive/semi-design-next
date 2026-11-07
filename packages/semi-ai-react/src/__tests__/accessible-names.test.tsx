@@ -3,10 +3,10 @@ import { describe, expect, it } from 'vite-plus/test';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
 import type { UploadProps } from '@fibrae/semi-ui-react/upload/index';
-import AIChatDialogue from '../ai-chat-dialogue';
-import AIChatInput from '../ai-chat-input';
-import ChatAttachment from '../chat/attachment';
-import Sidebar from '../sidebar';
+import AIChatDialogue from '../components/ai-chat-dialogue';
+import AIChatInput from '../components/ai-chat-input';
+import ChatAttachment from '../components/chat/attachment';
+import Sidebar from '../components/sidebar';
 
 // Every name below is asserted against the Japanese pack, a locale that is neither the zh_CN default nor English
 const ja = ja_JP;

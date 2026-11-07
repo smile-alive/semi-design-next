@@ -5,10 +5,10 @@ import en_US from '@fibrae/semi-foundation/locale/source/en_US';
 import ja_JP from '@fibrae/semi-foundation/locale/source/ja_JP';
 import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
 import { render } from '@test/utils/vue';
-import AIChatDialogue from '../ai-chat-dialogue/index';
-import AIChatInput from '../ai-chat-input/index';
-import ChatAttachment from '../chat/attachment.vue';
-import Sidebar from '../sidebar/index';
+import AIChatDialogue from '../components/ai-chat-dialogue/index';
+import AIChatInput from '../components/ai-chat-input/index';
+import ChatAttachment from '../components/chat/attachment.vue';
+import Sidebar from '../components/sidebar/index';
 
 // Every name below is asserted against the Japanese pack, a locale that is neither the zh_CN default nor English
 const ja = ja_JP;

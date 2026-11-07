@@ -6,7 +6,7 @@
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
     import { createEditorProps, getBaseExtensions, getEditorAttributes, getEditorOptions } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/editor-config';
     import { useLocale } from '@fibrae/semi-ui-vue/composables';
-    import useEditorAppContext from '../_base/editor-app-context';
+    import useEditorAppContext from '../../base/editor-app-context';
     import { InputSlot, SelectSlot, SkillSlot } from './extension';
     import type { PlaceholderProps } from './interface';
 
