@@ -12,7 +12,7 @@ export const vue: FrameworkLint = {
     files,
     // Only the motion-v and tiptap bindings are Vue's; the editor core and extensions are framework-free
     imports: ['vue', '@vue/*', 'motion-v', '@tiptap/vue-3', '@testing-library/vue', '@test/utils/vue', '@tanstack/vue-virtual', '@fibrae/semi-*-vue', ...frameworkSpecifiers('vue', ['vue'])],
-    packages: ['semi-ui-vue', 'semi-ai-vue', 'semi-icons-vue', 'semi-illustrations-vue'],
+    packages: ['semi-ui-vue', 'semi-ai-vue', 'semi-icons-vue'],
     overrides: [
         { files: ['**/*.vue'], rules: typescriptRules },
         {

@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { prerender } from 'react-dom/static';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as icons from '@fibrae/semi-icons-react';
-import * as illustrations from '@fibrae/semi-illustrations-react';
+import * as illustrations from '@fibrae/semi-icons-react/illustrations';
 import * as semi from '../index';
 import { ssrCases } from './ssr-cases';
 

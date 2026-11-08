@@ -58,7 +58,7 @@ import en_GB from '@fibrae/semi-ui-solid/locale/source/en_GB';
 </LocaleProvider>;
 ```
 
-语言包的结构见 [@fibrae/semi-foundation](../semi-foundation/README.zh-CN.md#语言包)。
+语言包的结构见 [@fibrae/semi-foundation](../shared/semi-foundation/README.zh-CN.md#语言包)。
 
 ### 服务端渲染
 

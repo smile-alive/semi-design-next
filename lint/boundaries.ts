@@ -35,10 +35,10 @@ function restrictedImports(patterns: ImportPattern[], ownPackage?: string): Rest
 }
 
 // Tests import what they test by package name (resolved to source by semiSourceAliases), not `../../`
-function packageBoundary(pkg: string, patterns: ImportPattern[]): OxlintOverride[] {
+function packageBoundary(pkg: string, patterns: ImportPattern[], dir = pkg): OxlintOverride[] {
     return [
-        { files: [`packages/${pkg}/**`], rules: { 'no-restricted-imports': restrictedImports(patterns, pkg) } },
-        { files: [`packages/${pkg}/**/__tests__/**`], rules: { 'no-restricted-imports': restrictedImports(patterns) } },
+        { files: [`packages/${dir}/**`], rules: { 'no-restricted-imports': restrictedImports(patterns, pkg) } },
+        { files: [`packages/${dir}/**/__tests__/**`], rules: { 'no-restricted-imports': restrictedImports(patterns) } },
     ];
 }
 
@@ -72,18 +72,26 @@ export function boundaryOverrides(frameworks: FrameworkLint[]): OxlintOverride[]
                 }));
             return [{ files: framework.files, rules: { 'no-restricted-imports': restrictedImports(patterns) } }, ...framework.packages.flatMap((pkg) => packageBoundary(pkg, patterns))];
         }),
-        ...packageBoundary('semi-foundation', [
-            {
-                group: [...frameworkImports, ...withSubpaths(['motion', '@fibrae/semi-ai-foundation'])],
-                message: 'semi-foundation must not depend on a framework, on Motion or on the AI packages.',
-            },
-        ]),
+        ...packageBoundary(
+            'semi-foundation',
+            [
+                {
+                    group: [...frameworkImports, ...withSubpaths(['motion', '@fibrae/semi-ai-foundation'])],
+                    message: 'semi-foundation must not depend on a framework, on Motion or on the AI packages.',
+                },
+            ],
+            'shared/semi-foundation'
+        ),
         // The AI foundation builds on semi-foundation
-        ...packageBoundary('semi-ai-foundation', [
-            {
-                group: [...frameworkImports, ...withSubpaths(['motion'])],
-                message: 'semi-ai-foundation must not depend on a framework or on Motion.',
-            },
-        ]),
+        ...packageBoundary(
+            'semi-ai-foundation',
+            [
+                {
+                    group: [...frameworkImports, ...withSubpaths(['motion'])],
+                    message: 'semi-ai-foundation must not depend on a framework or on Motion.',
+                },
+            ],
+            'shared/semi-ai-foundation'
+        ),
     ];
 }

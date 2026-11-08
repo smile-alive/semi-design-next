@@ -38,7 +38,7 @@ export default function App() {
 
 ## 与其他包的关系
 
-- 依赖 `@fibrae/semi-ai-foundation`（逻辑与样式）、`@fibrae/semi-foundation`、`@fibrae/semi-ui-react`、`@fibrae/semi-icons-react`、`@fibrae/semi-illustrations-react`。
+- 依赖 `@fibrae/semi-ai-foundation`（逻辑与样式）、`@fibrae/semi-foundation`、`@fibrae/semi-ui-react`、`@fibrae/semi-icons-react`、`@fibrae/semi-icons-react/illustrations`。
 - 输入框基于 tiptap；富文本扩展的框架无关部分在 foundation，本包用 `addNodeView` 接入 React。
 - 各框架的对应包是 `@fibrae/semi-ai-<框架>`。
 

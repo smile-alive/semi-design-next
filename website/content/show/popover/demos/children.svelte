@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-svelte';
+    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-icons-svelte/illustrations';
     import { Empty, Popover, Space, Tag } from '@fibrae/semi-ui-svelte';
 
     const style = 'border: 2px solid var(--semi-color-border); padding-inline-start: 4px; padding-inline-end: 4px; border-radius: 4px';

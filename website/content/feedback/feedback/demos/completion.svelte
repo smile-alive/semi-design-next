@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-svelte';
+    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-icons-svelte/illustrations';
     import { Button, Empty, Feedback, TextArea } from '@fibrae/semi-ui-svelte';
 
     const createState = () => ({ visible: false, value: '', showThanks: false });

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { IllustrationNoContent } from '@fibrae/semi-illustrations-react';
+import { IllustrationNoContent } from '@fibrae/semi-icons-react/illustrations';
 import { AutoComplete, Empty } from '@fibrae/semi-ui-react';
 
 export default function AutoCompleteDemo() {

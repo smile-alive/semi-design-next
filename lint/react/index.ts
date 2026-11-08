@@ -11,7 +11,7 @@ export const react: FrameworkLint = {
     files,
     // preact stands in for React via preact/compat; only the motion and tiptap bindings are React's
     imports: ['react', 'react-dom', 'react-is', '@types/react*', 'preact', 'motion/react', '@tiptap/react', '@testing-library/react', '@test/utils/react', '@tanstack/react-virtual', 'react-infinite-scroller', '@fibrae/semi-*-react', ...frameworkSpecifiers('react')],
-    packages: ['semi-ui-react', 'semi-ai-react', 'semi-icons-react', 'semi-illustrations-react'],
+    packages: ['semi-ui-react', 'semi-ai-react', 'semi-icons-react'],
     overrides: [
         {
             files,

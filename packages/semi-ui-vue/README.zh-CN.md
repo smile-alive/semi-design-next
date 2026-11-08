@@ -60,7 +60,7 @@ peer 依赖：`vue` ^3.5.0。浏览器、模块格式、Node.js 与构建插件�
 </template>
 ```
 
-语言包的结构见 [@fibrae/semi-foundation](../semi-foundation/README.zh-CN.md#语言包)。
+语言包的结构见 [@fibrae/semi-foundation](../shared/semi-foundation/README.zh-CN.md#语言包)。
 
 ### 服务端渲染
 

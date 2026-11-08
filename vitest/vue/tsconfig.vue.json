@@ -25,9 +25,8 @@
             "@fibrae/semi-ai-vue/*": ["../../packages/semi-ai-vue/src/components/*"],
             "@fibrae/semi-icons-vue": ["../../packages/semi-icons-vue/src/index.ts"],
             "@fibrae/semi-icons-vue/*": ["../../packages/semi-icons-vue/src/*"],
-            "@fibrae/semi-illustrations-vue": ["../../packages/semi-illustrations-vue/src/index.ts"],
-            "@fibrae/semi-foundation/*": ["../../packages/semi-foundation/dist/*"],
-            "@fibrae/semi-json-viewer-core": ["../../packages/semi-json-viewer-core/dist/index.d.ts"]
+            "@fibrae/semi-foundation/*": ["../../packages/shared/semi-foundation/dist/*"],
+            "@fibrae/semi-json-viewer-core": ["../../packages/shared/semi-json-viewer-core/dist/index.d.ts"]
         }
     },
     "vueCompilerOptions": { "checkUnknownComponents": true, "strictVModel": true },
@@ -44,7 +43,7 @@
         "../../packages/semi-ai-vue/**/__tests__/**/*.tsx",
         "../../packages/semi-ai-vue/**/__tests__/**/*.vue",
         "../../packages/semi-ai-vue/src/styles.d.ts",
-        "../../packages/semi-foundation/src/dom.d.ts",
+        "../../packages/shared/semi-foundation/src/dom.d.ts",
         "../../packages/semi-ai-vue/src/utils/semi-global.ts",
         "../../node_modules/@testing-library/jest-dom/types/vitest.d.ts"
     ],

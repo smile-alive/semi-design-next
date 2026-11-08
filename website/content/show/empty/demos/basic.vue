@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { IllustrationConstruction, IllustrationConstructionDark } from '@fibrae/semi-illustrations-vue';
+    import { IllustrationConstruction, IllustrationConstructionDark } from '@fibrae/semi-icons-vue/illustrations';
     import { Empty } from '@fibrae/semi-ui-vue';
 
     const imageStyle = { width: '150px', height: '150px' };

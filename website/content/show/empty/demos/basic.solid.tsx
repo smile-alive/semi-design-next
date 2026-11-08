@@ -1,4 +1,4 @@
-import { IllustrationConstruction, IllustrationConstructionDark } from '@fibrae/semi-illustrations-solid';
+import { IllustrationConstruction, IllustrationConstructionDark } from '@fibrae/semi-icons-solid/illustrations';
 import { Empty } from '@fibrae/semi-ui-solid';
 
 const imageStyle = { width: '150px', height: '150px' };

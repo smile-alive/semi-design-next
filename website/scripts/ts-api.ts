@@ -274,7 +274,7 @@ export function extractApis(framework: Framework, sources: string[]): ComponentA
         const { options } = ts.parseJsonConfigFileContent(parsed.config, ts.sys, dirname(config));
         // A foundation's built declarations keep the types of its constants but not their values; its sources let a
         // default such as `cssClasses.PREFIX` print as the value.
-        const paths = Object.fromEntries(['semi-foundation', 'semi-ai-foundation'].map((name) => [`@fibrae/${name}/*`, [join(root, 'packages', name, 'src', '*')]]));
+        const paths = Object.fromEntries(['semi-foundation', 'semi-ai-foundation'].map((name) => [`@fibrae/${name}/*`, [join(root, 'packages/shared', name, 'src', '*')]]));
         const program = ts.createProgram({ rootNames: targets.filter((_, index) => configs[index] === config).map(({ path }) => path), options: { ...options, paths: { ...options.paths, ...paths } } });
         programs.set(config, program);
         return program;

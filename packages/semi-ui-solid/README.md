@@ -58,7 +58,7 @@ import en_GB from '@fibrae/semi-ui-solid/locale/source/en_GB';
 </LocaleProvider>;
 ```
 
-For the structure of a locale pack, see [@fibrae/semi-foundation](../semi-foundation/README.md#locale-packs).
+For the structure of a locale pack, see [@fibrae/semi-foundation](../shared/semi-foundation/README.md#locale-packs).
 
 ### Server rendering
 

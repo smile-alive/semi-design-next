@@ -71,7 +71,7 @@ peer 依赖：`svelte` ^5.57.0。
 pnpm add @fibrae/semi-ui-react @fibrae/semi-icons-react
 ```
 
-图标包 `@fibrae/semi-icons-react` 与插画包 `@fibrae/semi-illustrations-react` 都是组件库的依赖。应用代码直接导入它们时，要在自己的 `package.json` 中声明，pnpm 不允许导入未声明的包。
+图标包 `@fibrae/semi-icons-react` 是组件库的依赖，插画从它的 `@fibrae/semi-icons-react/illustrations` 入口导入。应用代码直接导入它时要在自己的 `package.json` 中声明，pnpm 不允许导入未声明的包。
 
 </Framework>
 
@@ -81,7 +81,7 @@ pnpm add @fibrae/semi-ui-react @fibrae/semi-icons-react
 pnpm add @fibrae/semi-ui-vue @fibrae/semi-icons-vue
 ```
 
-图标包 `@fibrae/semi-icons-vue` 是组件库的依赖，应用代码直接导入它时要在自己的 `package.json` 中声明，pnpm 不允许导入未声明的包。插画包 `@fibrae/semi-illustrations-vue` 不随组件库安装，用到时单独安装。
+图标包 `@fibrae/semi-icons-vue` 是组件库的依赖，插画从它的 `@fibrae/semi-icons-vue/illustrations` 入口导入。应用代码直接导入它时要在自己的 `package.json` 中声明，pnpm 不允许导入未声明的包。
 
 </Framework>
 
@@ -91,7 +91,7 @@ pnpm add @fibrae/semi-ui-vue @fibrae/semi-icons-vue
 pnpm add @fibrae/semi-ui-solid @fibrae/semi-icons-solid
 ```
 
-图标包 `@fibrae/semi-icons-solid` 是组件库的依赖，应用代码直接导入它时要在自己的 `package.json` 中声明，pnpm 不允许导入未声明的包。插画包 `@fibrae/semi-illustrations-solid` 不随组件库安装，用到时单独安装。
+图标包 `@fibrae/semi-icons-solid` 是组件库的依赖，插画从它的 `@fibrae/semi-icons-solid/illustrations` 入口导入。应用代码直接导入它时要在自己的 `package.json` 中声明，pnpm 不允许导入未声明的包。
 
 </Framework>
 
@@ -101,7 +101,7 @@ pnpm add @fibrae/semi-ui-solid @fibrae/semi-icons-solid
 pnpm add svelte @fibrae/semi-ui-svelte @fibrae/semi-icons-svelte
 ```
 
-图标包 `@fibrae/semi-icons-svelte` 是组件库的依赖，应用代码直接导入它时要在自己的 `package.json` 中声明，pnpm 不允许导入未声明的包。插画包 `@fibrae/semi-illustrations-svelte` 不随组件库安装，用到时单独安装。
+图标包 `@fibrae/semi-icons-svelte` 是组件库的依赖，插画从它的 `@fibrae/semi-icons-svelte/illustrations` 入口导入。应用代码直接导入它时要在自己的 `package.json` 中声明，pnpm 不允许导入未声明的包。
 
 Svelte 包发布的是 `.svelte` 源码与 `.d.ts`，不是编译产物：`exports` 带 `svelte` 条件，由 `@sveltejs/vite-plugin-svelte`（SvelteKit 已内置）按应用的目标（DOM 或服务端）编译。不识别 `svelte` 条件、也不编译 `.svelte` 的工具无法使用这些包。
 
@@ -384,7 +384,7 @@ export function HomeIcon() {
 }
 ```
 
-插画从 `@fibrae/semi-illustrations-react` 导入，如 `IllustrationNoContent`。
+插画从 `@fibrae/semi-icons-react/illustrations` 导入，如 `IllustrationNoContent`。
 
 </Framework>
 
@@ -400,7 +400,7 @@ export function HomeIcon() {
 </template>
 ```
 
-自定义 SVG 使用 Icon 的默认插槽。插画从 `@fibrae/semi-illustrations-vue` 导入，如 `IllustrationNoContent`。
+自定义 SVG 使用 Icon 的默认插槽。插画从 `@fibrae/semi-icons-vue/illustrations` 导入，如 `IllustrationNoContent`。
 
 </Framework>
 
@@ -414,7 +414,7 @@ export function HomeIcon() {
 }
 ```
 
-插画从 `@fibrae/semi-illustrations-solid` 导入，如 `IllustrationNoContent`。
+插画从 `@fibrae/semi-icons-solid/illustrations` 导入，如 `IllustrationNoContent`。
 
 </Framework>
 
@@ -442,7 +442,7 @@ export function HomeIcon() {
 </Icon>
 ```
 
-插画从 `@fibrae/semi-illustrations-svelte` 导入，如 `IllustrationNoContent`。
+插画从 `@fibrae/semi-icons-svelte/illustrations` 导入，如 `IllustrationNoContent`。
 
 </Framework>
 

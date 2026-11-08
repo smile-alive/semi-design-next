@@ -38,7 +38,7 @@ Component docs and examples are in [website/content/ai](../../website/content/ai
 
 ## Related packages
 
-- Depends on `@fibrae/semi-ai-foundation` (logic and styles), `@fibrae/semi-foundation`, `@fibrae/semi-ui-vue`, `@fibrae/semi-icons-vue` and `@fibrae/semi-illustrations-vue`.
+- Depends on `@fibrae/semi-ai-foundation` (logic and styles), `@fibrae/semi-foundation`, `@fibrae/semi-ui-vue`, `@fibrae/semi-icons-vue` and `@fibrae/semi-icons-vue/illustrations`.
 - The input is built on tiptap (`@tiptap/vue-3`). The framework-agnostic parts of the extensions live in the foundation, and this package connects them to Vue.
 - The equivalent package for each framework is `@fibrae/semi-ai-<framework>`.
 

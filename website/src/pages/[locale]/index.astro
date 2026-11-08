@@ -5,7 +5,7 @@ import '#/styles/reset.css';
 import '@fibrae/semi-foundation/base/tokens.scss';
 import '#/styles/site.scss';
 // .changeset fixes every @fibrae/* package to one version
-import pkgJson from '#packages/semi-foundation/package.json';
+import pkgJson from '#packages/shared/semi-foundation/package.json';
 import { IconCopy, IconTick } from '@fibrae/semi-icons-react';
 import { Button } from '@fibrae/semi-ui-react';
 import AppWindow from '#/components/landing/app-window.solid';
@@ -31,7 +31,7 @@ const locale = Astro.params.locale as Locale;
 const t = translate(locale);
 const l = landingText[locale];
 
-const languageCount = Object.keys(import.meta.glob('#packages/semi-foundation/src/locale/source/*.ts')).length;
+const languageCount = Object.keys(import.meta.glob('#packages/shared/semi-foundation/src/locale/source/*.ts')).length;
 const componentCount = await getComponentCount(locale, 'react');
 const fill = (value: string) => value.replace('{count}', String(componentCount)).replace('{languages}', String(languageCount));
 

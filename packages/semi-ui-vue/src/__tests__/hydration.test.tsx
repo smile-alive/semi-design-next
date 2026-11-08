@@ -2,8 +2,8 @@
 import { h } from 'vue';
 import { describe, expect, it } from 'vite-plus/test';
 import * as icons from '@fibrae/semi-icons-vue';
+import * as illustrations from '@fibrae/semi-icons-vue/illustrations';
 import * as lab from '@fibrae/semi-icons-vue/lab';
-import * as illustrations from '@fibrae/semi-illustrations-vue';
 import { expectCleanHydration, hydrate } from '@test/utils/vue.ssr';
 import { ssrCases } from './ssr-cases';
 

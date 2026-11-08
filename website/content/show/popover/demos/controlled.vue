@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref } from 'vue';
-    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-vue';
+    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-icons-vue/illustrations';
     import { Empty, Popover, Radio, RadioGroup, type RadioValue } from '@fibrae/semi-ui-vue';
 
     const visible = ref<RadioValue | undefined>(0);

@@ -51,7 +51,7 @@ const unknown = selected.filter((name) => !discovered.some((entry) => entry.name
 assert.deepEqual(unknown, [], `unknown hosts; known: ${discovered.map(({ name }) => name).join(', ')}`);
 const targets = selected.length > 0 ? discovered.filter(({ name }) => selected.includes(name)) : discovered;
 
-const packages = fs.readdirSync(path.join(rootDir, 'packages')).map((dir) => ({ dir, manifest: JSON.parse(fs.readFileSync(path.join(rootDir, 'packages', dir, 'package.json'), 'utf8')) as { name: string; private?: boolean } }));
+const packages = fs.globSync(['*/package.json', '*/*/package.json'], { cwd: path.join(rootDir, 'packages') }).map((file) => ({ dir: path.dirname(file), manifest: JSON.parse(fs.readFileSync(path.join(rootDir, 'packages', file), 'utf8')) as { name: string; private?: boolean } }));
 const hasDist = (dir: string) => fs.existsSync(path.join(rootDir, 'packages', dir, 'dist'));
 const unbuilt = packages.filter(({ dir, manifest }) => !manifest.private && !hasDist(dir));
 // Private packages (the Solid ones, per X36) are not published yet but hosts install them; a private package without a

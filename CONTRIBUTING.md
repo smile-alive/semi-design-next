@@ -31,34 +31,31 @@ pnpm site:dev
 
 ## 目录结构
 
+`packages/` 第一层只放各框架的组件包，目录名是 npm 包名去掉 `@fibrae/`；框架无关的运行时依赖放 `packages/shared/`，构建工具放 `packages/plugins/`（D17）。
+
 | 路径 | 说明 |
 | --- | --- |
 | [`packages/semi-ui-react`](packages/semi-ui-react/README.zh-CN.md) | React 组件库 `@fibrae/semi-ui-react` |
 | [`packages/semi-ui-vue`](packages/semi-ui-vue/README.zh-CN.md) | Vue 组件库 `@fibrae/semi-ui-vue` |
 | [`packages/semi-ui-solid`](packages/semi-ui-solid/README.zh-CN.md) | Solid 组件库 `@fibrae/semi-ui-solid` |
 | [`packages/semi-ui-svelte`](packages/semi-ui-svelte/README.zh-CN.md) | Svelte 组件库 `@fibrae/semi-ui-svelte`，发布 `.svelte` 源码 |
-| [`packages/semi-foundation`](packages/semi-foundation/README.zh-CN.md) | 与框架无关的组件逻辑和 SCSS；唯一的主题（全局 token、色板、mixin）在 `src/theme/` |
 | [`packages/semi-ai-react`](packages/semi-ai-react/README.zh-CN.md) | AI 组件 `@fibrae/semi-ai-react`（AIChatInput、AIChatDialogue、Chat、Sidebar），基于 semi-ui-react |
 | [`packages/semi-ai-vue`](packages/semi-ai-vue/README.zh-CN.md) | Vue 版 AI 组件 `@fibrae/semi-ai-vue`（AIChatInput、AIChatDialogue、Chat、Sidebar），基于 semi-ui-vue |
 | [`packages/semi-ai-solid`](packages/semi-ai-solid/README.zh-CN.md) | Solid 版 AI 组件 `@fibrae/semi-ai-solid`，基于 semi-ui-solid |
 | [`packages/semi-ai-svelte`](packages/semi-ai-svelte/README.zh-CN.md) | Svelte 版 AI 组件 `@fibrae/semi-ai-svelte`，基于 semi-ui-svelte，发布 `.svelte` 源码 |
-| [`packages/semi-ai-foundation`](packages/semi-ai-foundation/README.zh-CN.md) | AI 组件与框架无关的逻辑、SCSS 和编辑器插件，基于 semi-foundation |
-| [`packages/semi-icons-core`](packages/semi-icons-core/README.zh-CN.md) | 图标的唯一源 `svgs/icons`（保留原色的彩色图标在 `svgs/lab`，插画在 `svgs/illustrations`）与由它生成的框架无关图标与插画数据 `@fibrae/semi-icons-core` |
-| [`packages/semi-icons-react`](packages/semi-icons-react/README.zh-CN.md) | React 图标组件 `@fibrae/semi-icons-react`，每个图标由 core 的数据经 `createIcon` 生成；彩色图标在子路径 `@fibrae/semi-icons-react/lab` |
-| [`packages/semi-icons-vue`](packages/semi-icons-vue/README.zh-CN.md) | Vue 图标组件 `@fibrae/semi-icons-vue`，与 React 共享 core 数据与样式；彩色图标在子路径 `/lab` |
-| [`packages/semi-icons-solid`](packages/semi-icons-solid/README.zh-CN.md) | Solid 图标组件 `@fibrae/semi-icons-solid`，读同一份 core 数据 |
-| [`packages/semi-icons-svelte`](packages/semi-icons-svelte/README.zh-CN.md) | Svelte 图标组件 `@fibrae/semi-icons-svelte`，读同一份 core 数据 |
-| [`packages/semi-animation`](packages/semi-animation/README.zh-CN.md) | 给 Motion 用的 Semi 预设（缓动、弹簧）与 View Transition 预设类 `@fibrae/semi-animation` |
-| [`packages/semi-polyfill`](packages/semi-polyfill/README.zh-CN.md) | 可选 polyfill `@fibrae/semi-polyfill`（`AbortSignal.any`、`Element.prototype.checkVisibility`），供 Safari 17.2 与 17.3 在入口最先导入 |
-| [`packages/semi-illustrations-react`](packages/semi-illustrations-react/README.zh-CN.md) | React 插画组件，由 `semi-icons-core` 的插画数据生成，实例隔离渐变、滤镜与 mask ID |
-| [`packages/semi-illustrations-vue`](packages/semi-illustrations-vue/README.zh-CN.md) | Vue 插画组件，由 `semi-icons-core` 的插画数据生成，实例隔离渐变、滤镜与 mask ID |
-| [`packages/semi-illustrations-solid`](packages/semi-illustrations-solid/README.zh-CN.md) | Solid 插画组件，由同一份插画数据生成 |
-| [`packages/semi-illustrations-svelte`](packages/semi-illustrations-svelte/README.zh-CN.md) | Svelte 插画组件，由同一份插画数据生成 |
-| [`packages/semi-json-viewer-core`](packages/semi-json-viewer-core/README.zh-CN.md) | JsonViewer 的编辑器内核 |
-| [`packages/semi-scss-compile`](packages/semi-scss-compile/README.zh-CN.md) | 把 Semi SCSS 编译为 CSS 的工具 |
-| [`packages/semi-theme-shared`](packages/semi-theme-shared/README.zh-CN.md) | 插件与 `semi-scss-compile` 共用的 `semi:` Sass importer 与编译管线，不发布 |
-| [`packages/semi-vite`](packages/semi-vite/README.zh-CN.md)、[`semi-webpack`](packages/semi-webpack/README.zh-CN.md)、[`semi-rspack`](packages/semi-rspack/README.zh-CN.md)、[`semi-next`](packages/semi-next/README.zh-CN.md) | 类名前缀替换、`@layer semi` 开关与 `omitCss` 的构建插件 |
-| [`packages/semi-nuxt`](packages/semi-nuxt/README.zh-CN.md) | Nuxt 4 模块 `@fibrae/semi-nuxt`，把 semi-vite 插件注册进 Nuxt 的 Vite 构建，并在应用未设置时关闭 `features.inlineStyles` |
+| [`packages/semi-icons-react`](packages/semi-icons-react/README.zh-CN.md) | React 图标与插画组件 `@fibrae/semi-icons-react`，由 core 的数据生成；彩色图标在子路径 `/lab`，插画在子路径 `/illustrations`，插画实例隔离渐变、滤镜与 mask ID |
+| [`packages/semi-icons-vue`](packages/semi-icons-vue/README.zh-CN.md) | Vue 图标与插画组件 `@fibrae/semi-icons-vue`，与 React 共享 core 数据与样式；子路径同 React |
+| [`packages/semi-icons-solid`](packages/semi-icons-solid/README.zh-CN.md) | Solid 图标与插画组件 `@fibrae/semi-icons-solid`，读同一份 core 数据 |
+| [`packages/semi-icons-svelte`](packages/semi-icons-svelte/README.zh-CN.md) | Svelte 图标与插画组件 `@fibrae/semi-icons-svelte`，读同一份 core 数据 |
+| [`packages/shared/semi-foundation`](packages/shared/semi-foundation/README.zh-CN.md) | 与框架无关的组件逻辑和 SCSS；唯一的主题（全局 token、色板、mixin）在 `src/theme/` |
+| [`packages/shared/semi-ai-foundation`](packages/shared/semi-ai-foundation/README.zh-CN.md) | AI 组件与框架无关的逻辑、SCSS 和编辑器插件，基于 semi-foundation |
+| [`packages/shared/semi-icons-core`](packages/shared/semi-icons-core/README.zh-CN.md) | 图标的唯一源 `svgs/icons`（保留原色的彩色图标在 `svgs/lab`，插画在 `svgs/illustrations`）与由它生成的框架无关图标与插画数据 `@fibrae/semi-icons-core` |
+| [`packages/shared/semi-animation`](packages/shared/semi-animation/README.zh-CN.md) | 给 Motion 用的 Semi 预设（缓动、弹簧）与 View Transition 预设类 `@fibrae/semi-animation` |
+| [`packages/shared/semi-polyfill`](packages/shared/semi-polyfill/README.zh-CN.md) | 可选 polyfill `@fibrae/semi-polyfill`（`AbortSignal.any`、`Element.prototype.checkVisibility`），供 Safari 17.2 与 17.3 在入口最先导入 |
+| [`packages/shared/semi-json-viewer-core`](packages/shared/semi-json-viewer-core/README.zh-CN.md) | JsonViewer 的编辑器内核 |
+| [`packages/plugins/semi-scss-compile`](packages/plugins/semi-scss-compile/README.zh-CN.md) | 把 Semi SCSS 编译为 CSS 的工具；子路径 `/core` 是各构建插件共用的 `semi:` Sass importer 与编译管线 |
+| [`packages/plugins/semi-vite`](packages/plugins/semi-vite/README.zh-CN.md)、[`semi-webpack`](packages/plugins/semi-webpack/README.zh-CN.md)、[`semi-rspack`](packages/plugins/semi-rspack/README.zh-CN.md)、[`semi-next`](packages/plugins/semi-next/README.zh-CN.md) | 类名前缀替换、`@layer semi` 开关与 `omitCss` 的构建插件 |
+| [`packages/plugins/semi-nuxt`](packages/plugins/semi-nuxt/README.zh-CN.md) | Nuxt 4 模块 `@fibrae/semi-nuxt`，把 semi-vite 插件注册进 Nuxt 的 Vite 构建，并在应用未设置时关闭 `features.inlineStyles` |
 | `scripts/svg-to-icon-data.ts` | 图标与插画共用的 SVG 转数据脚本，各框架的图标与插画组件都由这份数据生成 |
 | `vitest/` | 测试项目注册与 setup（`vitest/<框架>/` 放该框架的 setup、tsconfig 与工具）、测试工具（`@test/utils/<框架>` 与框架无关的模块）与打包产物测试 `vitest/packed` |
 | `.agents/references/<框架>/` | 各框架的组件、测试、lint 与 website 写法，框架无关的写法见 `.agents/references/` 下的共享文件 |
@@ -79,7 +76,7 @@ foundation 包另有 `locale/`、`theme/`。UI 包与 AI 包的 `exports` 先列
 
 ## 样式定制
 
-仓库只有一份主题，位于 `packages/semi-foundation/src/theme/`，组件 SCSS 经 `semi:theme` 加载它；没有主题包，也没有编译期的 Sass 变量覆写。使用方只通过 `--semi-*` CSS 变量（全局 token，Tailwind 映射见 `@fibrae/semi-ui-react/tailwind.css`）和 `@layer semi` 之外的 CSS 规则定制样式。Sass 变量是内部实现。
+仓库只有一份主题，位于 `packages/shared/semi-foundation/src/theme/`，组件 SCSS 经 `semi:theme` 加载它；没有主题包，也没有编译期的 Sass 变量覆写。使用方只通过 `--semi-*` CSS 变量（全局 token，Tailwind 映射见 `@fibrae/semi-ui-react/tailwind.css`）和 `@layer semi` 之外的 CSS 规则定制样式。Sass 变量是内部实现。
 
 ## 常用命令
 
@@ -140,7 +137,7 @@ pnpm site:stop
 ## 提交 PR
 
 1. 从 `release` 新建分支，一个 PR 只做一件事。
-2. 组件逻辑放 `packages/semi-foundation`，React、Vue、Solid、Svelte 四个框架的包同步修改。
+2. 组件逻辑放 `packages/shared/semi-foundation`，React、Vue、Solid、Svelte 四个框架的包同步修改。
 3. 测试断言可见行为；修 bug 不新增回归用例。
 4. 行为或公开 API 有变化时：
     - 更新 `docs/release-notes.md` 对应组件的章节；
@@ -166,7 +163,7 @@ flowchart LR
     C -->|*.md、docs/、.agents/、.claude/、.changeset/、.github/workflows/| F[只跑 fmt]
     C -->|website/| W[lint + fmt<br/>astro check<br/>website/src 时 test common<br/>部署预览站]
     C -->|packages/semi-*-框架/src/| P[lint + fmt + typecheck<br/>只跑该框架的 test<br/>部署预览站]
-    C -->|其余 packages/*/src/，如 foundation| S[lint + fmt + typecheck<br/>5 个 test 都跑<br/>部署预览站]
+    C -->|packages/shared 与 plugins 下的 src/，如 foundation| S[lint + fmt + typecheck<br/>5 个 test 都跑<br/>部署预览站]
     C -->|其他任何文件：lockfile、vitest/、lint/、vite*.ts、package.json| A[全量：5 个 test 不按改动筛选]
     W & P & S --> T[test 带 --changed base<br/>只跑 import 链连到改动文件的测试]
 ```

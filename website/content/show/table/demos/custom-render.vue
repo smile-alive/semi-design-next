@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { shallowRef } from 'vue';
     import { IconClear, IconComment, IconDelete, IconTickCircle } from '@fibrae/semi-icons-vue';
-    import { IllustrationNoResult, IllustrationNoResultDark } from '@fibrae/semi-illustrations-vue';
+    import { IllustrationNoResult, IllustrationNoResultDark } from '@fibrae/semi-icons-vue/illustrations';
     import { Avatar, Button, Empty, Table, Tag, Typography, type ColumnProps } from '@fibrae/semi-ui-vue';
 
     interface Row {

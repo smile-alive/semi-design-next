@@ -1,4 +1,4 @@
-import { IllustrationNoAccess, IllustrationNoAccessDark } from '@fibrae/semi-illustrations-react';
+import { IllustrationNoAccess, IllustrationNoAccessDark } from '@fibrae/semi-icons-react/illustrations';
 import { Button, Empty } from '@fibrae/semi-ui-react';
 
 export default function NoAccess({ action }: { action: string }) {

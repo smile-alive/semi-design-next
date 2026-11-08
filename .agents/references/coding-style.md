@@ -92,7 +92,7 @@ TS/TSX 源码中工具决定不了的写法。格式（含 `sortImports`）交�
     - 先用主入口。注意主入口的 `merge(target, source)` 只接收两个参数，source 为 `undefined` 时会抛错；`pick` 只接受单层键名，对象为 null 时会抛错。
     - 只有语义与主入口不同的函数（`get`、`set`、`has`、`unset`、`toPath` 等，路径由使用方传入，例如 Table 的 `dataIndex`）才从 `es-toolkit/compat` 导入，每个文件一行 `import { ... } from 'es-toolkit/compat'`。
 - 纯数据拷贝可用 `structuredClone`。
-- 与框架无关的工具放进 `packages/semi-foundation/src/utils`，并补 `__tests__`。
+- 与框架无关的工具放进 `packages/shared/semi-foundation/src/utils`，并补 `__tests__`。
 - `noop` 用 semi-foundation `utils/function` 导出的具名 `noop`：InputGroup 会检查函数名。
 - 依赖版本：两个及以上的包共用的依赖在 `pnpm-workspace.yaml` 的 `catalog` 里定版本，写 `catalog:`；`catalogMode: prefer` 会把只有一个包用的依赖也写成 `catalog:`，这种情况改回普通版本范围。
 

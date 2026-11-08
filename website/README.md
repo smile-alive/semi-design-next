@@ -53,4 +53,4 @@ pnpm --filter semi-website check:pages http://127.0.0.1:4321      # console erro
 
 ## Related packages
 
-Depends on all UI-related packages: the UI and AI packages of each framework, `@fibrae/semi-ai-foundation`, `@fibrae/semi-foundation`, and the icon and illustration packages of each framework. The docs site does not use `@fibrae/semi-vite-plugin`.
+Depends on all UI-related packages: the UI and AI packages of each framework, `@fibrae/semi-ai-foundation`, `@fibrae/semi-foundation`, and the icon packages of each framework. The docs site does not use `@fibrae/semi-vite-plugin`.

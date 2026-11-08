@@ -19,10 +19,8 @@
             "@fibrae/semi-ui-svelte/*": ["../../packages/semi-ui-svelte/src/components/*"],
             "@fibrae/semi-icons-svelte": ["../../packages/semi-icons-svelte/src/index.ts"],
             "@fibrae/semi-icons-svelte/*": ["../../packages/semi-icons-svelte/src/*"],
-            "@fibrae/semi-illustrations-svelte": ["../../packages/semi-illustrations-svelte/src/index.ts"],
-            "@fibrae/semi-illustrations-svelte/*": ["../../packages/semi-illustrations-svelte/src/*"],
-            "@fibrae/semi-foundation/*": ["../../packages/semi-foundation/dist/*"],
-            "@fibrae/semi-json-viewer-core": ["../../packages/semi-json-viewer-core/dist/index.d.ts"]
+            "@fibrae/semi-foundation/*": ["../../packages/shared/semi-foundation/dist/*"],
+            "@fibrae/semi-json-viewer-core": ["../../packages/shared/semi-json-viewer-core/dist/index.d.ts"]
         }
     },
     "include": [
@@ -31,7 +29,7 @@
         "../../packages/semi-*-svelte/**/__tests__/**/*.ts",
         "../../packages/semi-*-svelte/**/__tests__/**/*.svelte",
         "../../packages/semi-*-svelte/src/*.d.ts",
-        "../../packages/semi-foundation/src/dom.d.ts",
+        "../../packages/shared/semi-foundation/src/dom.d.ts",
         "../../node_modules/@testing-library/jest-dom/types/vitest.d.ts"
     ],
     "exclude": ["../../packages/*/node_modules", "../../packages/*/dist", "../../packages/**/*.browser.test.*"]

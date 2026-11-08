@@ -6,7 +6,7 @@ import { readDataModules } from './build-icon-components.ts';
 /**
  * Writes one module per illustration data module of semi-icons-core that passes it to `createSvgComponent` from `factory`;
  * `ext` svelte writes `.svelte` files instead, where `factory` names the component that renders the data.
- * `outDir` is replaced wholesale (an illustrations package's whole `src/`), so it must hold nothing hand-written
+ * `outDir` is replaced wholesale (an icon package's `src/illustrations`), so it must hold nothing hand-written
  */
 export function buildIllustrationComponents(outDir: string, coreSrc: string, factory: string, ext: 'ts' | 'svelte' = 'ts') {
     // macOS trash fails with "File is busy" on two same-named directories at once, so build:icon runs the React and Vue

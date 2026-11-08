@@ -5,7 +5,7 @@
     import { getShowOptions } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
     import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/components/button/constants';
     import { IconEdit, IconMinus, IconPlus, IconSearch, IconSetting } from '@fibrae/semi-icons-vue';
-    import { IllustrationNoContent, IllustrationNoContentDark } from '@fibrae/semi-illustrations-vue';
+    import { IllustrationNoContent, IllustrationNoContentDark } from '@fibrae/semi-icons-vue/illustrations';
     import SlotFragment from '@fibrae/semi-ui-vue/base/slot-fragment';
     import useFoundation from '@fibrae/semi-ui-vue/base/use-foundation';
     import Button from '@fibrae/semi-ui-vue/button/index';

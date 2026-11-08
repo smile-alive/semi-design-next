@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { expect } from 'vite-plus/test';
 import { IconHome } from '@fibrae/semi-icons-react';
-import { IllustrationNoContent } from '@fibrae/semi-illustrations-react';
+import { IllustrationNoContent } from '@fibrae/semi-icons-react/illustrations';
 import {
     Anchor,
     ArrayField,

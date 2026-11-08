@@ -35,7 +35,7 @@ export default function App() {
 
 ## 与其他包的关系
 
-- 依赖 `@fibrae/semi-ai-foundation`（逻辑与样式）、`@fibrae/semi-foundation`、`@fibrae/semi-ui-solid`、`@fibrae/semi-icons-solid`、`@fibrae/semi-illustrations-solid`。
+- 依赖 `@fibrae/semi-ai-foundation`（逻辑与样式）、`@fibrae/semi-foundation`、`@fibrae/semi-ui-solid`、`@fibrae/semi-icons-solid`、`@fibrae/semi-icons-solid/illustrations`。
 - 输入框基于 tiptap（`@tiptap/core`）；扩展的框架无关部分在 foundation，本包接入 Solid。
 - 各框架的对应包是 `@fibrae/semi-ai-<框架>`。
 

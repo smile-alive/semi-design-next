@@ -45,7 +45,7 @@ export default defineConfig({
     // Compiling demos and semi-ui-react source (via semiSourceAliases) matches what consumers get with the compiler on.
     // exclude feeds compiler and Fast Refresh alike: Vue and Solid package .tsx also resolve to source; neither handles their JSX.
     // Svelte package .ts resolve to source too, and the compiler would rewrite their `use*` functions into React hooks.
-    integrations: [react({ compiler: true, exclude: [/\/packages\/semi-(ui|ai|icons|illustrations)-(vue|svelte)\//, ...solidFiles] }), vue({ appEntrypoint: '/src/lib/vue.app.ts' }), solid({ include: solidFiles }), svelte(), mdx(), sitemap({ filter: (page) => !redirectPage.test(new URL(page).pathname) })],
+    integrations: [react({ compiler: true, exclude: [/\/packages\/semi-(ui|ai|icons)-(vue|svelte)\//, ...solidFiles] }), vue({ appEntrypoint: '/src/lib/vue.app.ts' }), solid({ include: solidFiles }), svelte(), mdx(), sitemap({ filter: (page) => !redirectPage.test(new URL(page).pathname) })],
     vite: {
         plugins: [frameworkMdx(), semiInlineJsonWorker],
         build: {

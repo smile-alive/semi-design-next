@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-svelte';
+    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-icons-svelte/illustrations';
     import { Empty, Popover, Tag } from '@fibrae/semi-ui-svelte';
 </script>
 

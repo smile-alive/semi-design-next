@@ -16,7 +16,7 @@
         IllustrationNoResultDark,
         IllustrationSuccess,
         IllustrationSuccessDark,
-    } from '@fibrae/semi-illustrations-vue';
+    } from '@fibrae/semi-icons-vue/illustrations';
     import { Empty } from '@fibrae/semi-ui-vue';
 
     const emptyStyle = { padding: '30px' };

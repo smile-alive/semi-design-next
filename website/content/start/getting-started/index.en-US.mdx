@@ -71,7 +71,7 @@ Peer dependency: `svelte` ^5.57.0.
 pnpm add @fibrae/semi-ui-react @fibrae/semi-icons-react
 ```
 
-The icon package `@fibrae/semi-icons-react` and the illustration package `@fibrae/semi-illustrations-react` are dependencies of the component library. When your code imports them directly, declare them in your own `package.json`; pnpm does not allow importing undeclared packages.
+The icon package `@fibrae/semi-icons-react` is a dependency of the component library, and illustrations come from its `@fibrae/semi-icons-react/illustrations` entry. When your code imports it directly, declare it in your own `package.json`, since pnpm does not allow importing undeclared packages.
 
 </Framework>
 
@@ -81,7 +81,7 @@ The icon package `@fibrae/semi-icons-react` and the illustration package `@fibra
 pnpm add @fibrae/semi-ui-vue @fibrae/semi-icons-vue
 ```
 
-The icon package `@fibrae/semi-icons-vue` is a dependency of the component library; when your code imports it directly, declare it in your own `package.json`, since pnpm does not allow importing undeclared packages. The illustration package `@fibrae/semi-illustrations-vue` is not installed with the library; install it when you need it.
+The icon package `@fibrae/semi-icons-vue` is a dependency of the component library, and illustrations come from its `@fibrae/semi-icons-vue/illustrations` entry. When your code imports it directly, declare it in your own `package.json`, since pnpm does not allow importing undeclared packages.
 
 </Framework>
 
@@ -91,7 +91,7 @@ The icon package `@fibrae/semi-icons-vue` is a dependency of the component libra
 pnpm add @fibrae/semi-ui-solid @fibrae/semi-icons-solid
 ```
 
-The icon package `@fibrae/semi-icons-solid` is a dependency of the component library; when your code imports it directly, declare it in your own `package.json`, since pnpm does not allow importing undeclared packages. The illustration package `@fibrae/semi-illustrations-solid` is not installed with the library; install it when you need it.
+The icon package `@fibrae/semi-icons-solid` is a dependency of the component library, and illustrations come from its `@fibrae/semi-icons-solid/illustrations` entry. When your code imports it directly, declare it in your own `package.json`, since pnpm does not allow importing undeclared packages.
 
 </Framework>
 
@@ -101,7 +101,7 @@ The icon package `@fibrae/semi-icons-solid` is a dependency of the component lib
 pnpm add svelte @fibrae/semi-ui-svelte @fibrae/semi-icons-svelte
 ```
 
-The icon package `@fibrae/semi-icons-svelte` is a dependency of the component library; when your code imports it directly, declare it in your own `package.json`, since pnpm does not allow importing undeclared packages. The illustration package `@fibrae/semi-illustrations-svelte` is not installed with the library; install it when you need it.
+The icon package `@fibrae/semi-icons-svelte` is a dependency of the component library, and illustrations come from its `@fibrae/semi-icons-svelte/illustrations` entry. When your code imports it directly, declare it in your own `package.json`, since pnpm does not allow importing undeclared packages.
 
 The Svelte packages ship `.svelte` sources and `.d.ts` files, not compiled output: `exports` carries a `svelte` condition, and `@sveltejs/vite-plugin-svelte` (built into SvelteKit) compiles them for the app's target, DOM or server. Tools that do not recognise the `svelte` condition or do not compile `.svelte` cannot use these packages.
 
@@ -384,7 +384,7 @@ export function HomeIcon() {
 }
 ```
 
-Illustrations are imported from `@fibrae/semi-illustrations-react`, such as `IllustrationNoContent`.
+Illustrations are imported from `@fibrae/semi-icons-react/illustrations`, such as `IllustrationNoContent`.
 
 </Framework>
 
@@ -400,7 +400,7 @@ Illustrations are imported from `@fibrae/semi-illustrations-react`, such as `Ill
 </template>
 ```
 
-For a custom SVG, use the default slot of Icon. Illustrations are imported from `@fibrae/semi-illustrations-vue`, such as `IllustrationNoContent`.
+For a custom SVG, use the default slot of Icon. Illustrations are imported from `@fibrae/semi-icons-vue/illustrations`, such as `IllustrationNoContent`.
 
 </Framework>
 
@@ -414,7 +414,7 @@ export function HomeIcon() {
 }
 ```
 
-Illustrations are imported from `@fibrae/semi-illustrations-solid`, such as `IllustrationNoContent`.
+Illustrations are imported from `@fibrae/semi-icons-solid/illustrations`, such as `IllustrationNoContent`.
 
 </Framework>
 
@@ -442,7 +442,7 @@ For a custom SVG, use the `children` snippet of the default export `Icon`; its a
 </Icon>
 ```
 
-Illustrations are imported from `@fibrae/semi-illustrations-svelte`, such as `IllustrationNoContent`.
+Illustrations are imported from `@fibrae/semi-icons-svelte/illustrations`, such as `IllustrationNoContent`.
 
 </Framework>
 

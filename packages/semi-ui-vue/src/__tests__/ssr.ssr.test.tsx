@@ -2,7 +2,7 @@
 import { h } from 'vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import * as icons from '@fibrae/semi-icons-vue';
-import * as illustrations from '@fibrae/semi-illustrations-vue';
+import * as illustrations from '@fibrae/semi-icons-vue/illustrations';
 import { expectCleanServerRender, renderOnServer, uncoveredExports } from '@test/utils/vue.ssr';
 import * as ui from '..';
 import { nonComponentExports, ssrCases } from './ssr-cases';

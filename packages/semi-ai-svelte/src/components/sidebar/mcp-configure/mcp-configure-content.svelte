@@ -4,7 +4,7 @@
     import { getShowOptions } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
     import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/components/button/constants';
     import { IconEdit, IconMinus, IconPlus, IconSearch, IconSetting } from '@fibrae/semi-icons-svelte';
-    import { IllustrationNoContent, IllustrationNoContentDark } from '@fibrae/semi-illustrations-svelte';
+    import { IllustrationNoContent, IllustrationNoContentDark } from '@fibrae/semi-icons-svelte/illustrations';
     import useFoundation from '@fibrae/semi-ui-svelte/base/use-foundation.svelte.js';
     import Button from '@fibrae/semi-ui-svelte/button/button.svelte';
     import Empty from '@fibrae/semi-ui-svelte/empty/empty.svelte';

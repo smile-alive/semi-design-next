@@ -5,7 +5,7 @@ import { semiPackStyles } from '../../vite.semi.ts';
 
 export default defineConfig({
     pack: {
-        entry: ['src/index.ts', 'src/lab/index.ts', 'src/components/create-icon.ts'],
+        entry: ['src/index.ts', 'src/lab/index.ts', 'src/illustrations/index.ts', 'src/components/create-icon.ts'],
         unbundle: true,
         platform: 'browser',
         outDir: 'dist',

@@ -1,5 +1,5 @@
 import { createSignal } from 'solid-js';
-import { IllustrationNoContent } from '@fibrae/semi-illustrations-solid';
+import { IllustrationNoContent } from '@fibrae/semi-icons-solid/illustrations';
 import { AutoComplete, Empty } from '@fibrae/semi-ui-solid';
 
 export default function AutoCompleteDemo() {
