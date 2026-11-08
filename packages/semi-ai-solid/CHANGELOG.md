@@ -1,5 +1,15 @@
 # @fibrae/semi-ai-solid
 
+## 0.5.0
+
+### Patch Changes
+
+- Updated dependencies [26c215d]
+    - @fibrae/semi-icons-solid@0.5.0
+    - @fibrae/semi-ui-solid@0.5.0
+    - @fibrae/semi-ai-foundation@0.5.0
+    - @fibrae/semi-foundation@0.5.0
+
 ## 0.4.0
 
 ### Minor Changes
