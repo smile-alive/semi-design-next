@@ -16,7 +16,7 @@
         IllustrationNoResultDark,
         IllustrationSuccess,
         IllustrationSuccessDark,
-    } from '@fibrae/semi-illustrations-svelte';
+    } from '@fibrae/semi-icons-svelte/illustrations';
     import { Empty } from '@fibrae/semi-ui-svelte';
 
     const emptyStyle = 'padding: 30px';

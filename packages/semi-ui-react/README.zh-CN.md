@@ -58,7 +58,7 @@ import en_GB from '@fibrae/semi-ui-react/locale/source/en_GB';
 </LocaleProvider>;
 ```
 
-不传 `locale` 时继承外层。语言包的结构见 [@fibrae/semi-foundation](../semi-foundation/README.zh-CN.md#语言包)。
+不传 `locale` 时继承外层。语言包的结构见 [@fibrae/semi-foundation](../shared/semi-foundation/README.zh-CN.md#语言包)。
 
 ### 服务端渲染
 
@@ -76,7 +76,7 @@ import en_GB from '@fibrae/semi-ui-react/locale/source/en_GB';
 
 ## 与其他包的关系
 
-- 依赖 `@fibrae/semi-foundation`（逻辑与样式）、`@fibrae/semi-icons-react`、`@fibrae/semi-illustrations-react`。
+- 依赖 `@fibrae/semi-foundation`（逻辑与样式）、`@fibrae/semi-icons-react`、`@fibrae/semi-icons-react/illustrations`。
 - 被 `@fibrae/semi-ai-react` 和文档站 `website` 使用。
 - 各框架的 UI 包（`semi-ui-<框架>`）共用同一份 foundation。
 

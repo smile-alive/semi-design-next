@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref } from 'vue';
-    import { IllustrationNoContent } from '@fibrae/semi-illustrations-vue';
+    import { IllustrationNoContent } from '@fibrae/semi-icons-vue/illustrations';
     import { AutoComplete, Empty } from '@fibrae/semi-ui-vue';
 
     const data = ref<number[]>([]);

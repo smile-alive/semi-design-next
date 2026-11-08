@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-react';
+import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-icons-react/illustrations';
 import { Feedback, Button, Empty, TextArea } from '@fibrae/semi-ui-react';
 
 const showThankProps = { title: ' ', footer: null };

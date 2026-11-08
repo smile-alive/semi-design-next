@@ -1,5 +1,5 @@
 import { optimize, type CustomPlugin, type PluginConfig, type XastElement } from 'svgo';
-import type { IconData, IconNode } from '../packages/semi-icons-core/src/types.ts';
+import type { IconData, IconNode } from '../packages/shared/semi-icons-core/src/types.ts';
 
 function toValue(value: string) {
     return Number.isNaN(Number(value) - parseFloat(value)) ? value : String(Number(value));

@@ -38,7 +38,7 @@ peer 依赖：`vue`（3.5+）。`@fibrae/semi-ui-vue` 是本包的依赖。
 
 ## 与其他包的关系
 
-- 依赖 `@fibrae/semi-ai-foundation`（逻辑与样式）、`@fibrae/semi-foundation`、`@fibrae/semi-ui-vue`、`@fibrae/semi-icons-vue`、`@fibrae/semi-illustrations-vue`。
+- 依赖 `@fibrae/semi-ai-foundation`（逻辑与样式）、`@fibrae/semi-foundation`、`@fibrae/semi-ui-vue`、`@fibrae/semi-icons-vue`、`@fibrae/semi-icons-vue/illustrations`。
 - 输入框基于 tiptap（`@tiptap/vue-3`）；扩展的框架无关部分在 foundation，本包接入 Vue。
 - 各框架的对应包是 `@fibrae/semi-ai-<框架>`。
 

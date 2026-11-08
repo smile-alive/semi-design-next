@@ -15,7 +15,7 @@ import {
     IllustrationNoResultDark,
     IllustrationSuccess,
     IllustrationSuccessDark,
-} from '@fibrae/semi-illustrations-solid';
+} from '@fibrae/semi-icons-solid/illustrations';
 import { Empty } from '@fibrae/semi-ui-solid';
 
 const emptyStyle = { padding: '30px' };

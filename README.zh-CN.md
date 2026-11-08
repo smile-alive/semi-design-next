@@ -119,17 +119,16 @@ pnpm add svelte @fibrae/semi-ui-svelte @fibrae/semi-icons-svelte
 
 把 `<framework>` 换成 `react`、`vue`、`solid` 或 `svelte`。
 
-| 包                                                                                                                                                                                     | 用途                                                |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| `@fibrae/semi-ui-<framework>`                                                                                                                                                          | 组件                                                |
-| `@fibrae/semi-ai-<framework>`                                                                                                                                                          | AI 组件                                             |
-| `@fibrae/semi-icons-<framework>`                                                                                                                                                       | 图标                                                |
-| `@fibrae/semi-illustrations-<framework>`                                                                                                                                               | 插画                                                |
-| [`@fibrae/semi-animation`](packages/semi-animation/README.zh-CN.md)                                                                                                                    | Motion 与 View Transition 预设                      |
-| [`@fibrae/semi-polyfill`](packages/semi-polyfill/README.zh-CN.md)                                                                                                                      | 面向受支持的较旧 Safari 版本的可选 polyfill         |
-| [`@fibrae/semi-vite-plugin`](packages/semi-vite/README.zh-CN.md)、[`-webpack-plugin`](packages/semi-webpack/README.zh-CN.md)、[`-rspack-plugin`](packages/semi-rspack/README.zh-CN.md) | 处理类名前缀、`@layer semi` 与 `omitCss` 的构建插件 |
-| [`@fibrae/semi-next`](packages/semi-next/README.zh-CN.md)、[`@fibrae/semi-nuxt`](packages/semi-nuxt/README.zh-CN.md)                                                                   | Next.js 与 Nuxt 集成                                |
-| [`@fibrae/semi-scss-compile`](packages/semi-scss-compile/README.zh-CN.md)                                                                                                              | 把 Semi SCSS 编译为 CSS                             |
+| 包                                                                                                                                                                                                             | 用途                                                |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `@fibrae/semi-ui-<framework>`                                                                                                                                                                                  | 组件                                                |
+| `@fibrae/semi-ai-<framework>`                                                                                                                                                                                  | AI 组件                                             |
+| `@fibrae/semi-icons-<framework>`                                                                                                                                                                               | 图标；插画在子路径 `/illustrations`                 |
+| [`@fibrae/semi-animation`](packages/shared/semi-animation/README.zh-CN.md)                                                                                                                                     | Motion 与 View Transition 预设                      |
+| [`@fibrae/semi-polyfill`](packages/shared/semi-polyfill/README.zh-CN.md)                                                                                                                                       | 面向受支持的较旧 Safari 版本的可选 polyfill         |
+| [`@fibrae/semi-vite-plugin`](packages/plugins/semi-vite/README.zh-CN.md)、[`-webpack-plugin`](packages/plugins/semi-webpack/README.zh-CN.md)、[`-rspack-plugin`](packages/plugins/semi-rspack/README.zh-CN.md) | 处理类名前缀、`@layer semi` 与 `omitCss` 的构建插件 |
+| [`@fibrae/semi-next`](packages/plugins/semi-next/README.zh-CN.md)、[`@fibrae/semi-nuxt`](packages/plugins/semi-nuxt/README.zh-CN.md)                                                                           | Next.js 与 Nuxt 集成                                |
+| [`@fibrae/semi-scss-compile`](packages/plugins/semi-scss-compile/README.zh-CN.md)                                                                                                                              | 把 Semi SCSS 编译为 CSS                             |
 
 ## 从 Semi Design 迁移
 

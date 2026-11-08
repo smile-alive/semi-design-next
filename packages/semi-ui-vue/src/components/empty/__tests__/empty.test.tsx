@@ -2,7 +2,7 @@
 import { createSSRApp, createTextVNode, nextTick, type VNode } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { IllustrationConstruction, IllustrationConstructionDark } from '@fibrae/semi-illustrations-vue';
+import { IllustrationConstruction, IllustrationConstructionDark } from '@fibrae/semi-icons-vue/illustrations';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render } from '@test/utils/vue';
 import Empty from '../index';

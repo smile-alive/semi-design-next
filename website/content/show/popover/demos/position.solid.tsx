@@ -1,5 +1,5 @@
 import { For } from 'solid-js';
-import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-solid';
+import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-icons-solid/illustrations';
 import { Popover, Tag, Empty, type TooltipPosition as Position } from '@fibrae/semi-ui-solid';
 
 const tops: [Position, string][] = [

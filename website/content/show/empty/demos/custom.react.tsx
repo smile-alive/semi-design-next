@@ -1,4 +1,4 @@
-import { IllustrationNoContent, IllustrationNoContentDark } from '@fibrae/semi-illustrations-react';
+import { IllustrationNoContent, IllustrationNoContentDark } from '@fibrae/semi-icons-react/illustrations';
 import { Empty, Button } from '@fibrae/semi-ui-react';
 
 const imageStyle = { width: 150, height: 150 };

@@ -3,17 +3,17 @@ import type { Exemption } from './framework.ts';
 export const exemptions: Exemption[] = [
     // DOM methods go only to expect()/vi.mocked(), or are kept to restore or run with .call(this); none runs unbound
     {
-        files: ['packages/semi-foundation/src/components/upload/__tests__/upload-batch-auto-remove.test.ts'],
+        files: ['packages/shared/semi-foundation/src/components/upload/__tests__/upload-batch-auto-remove.test.ts'],
         off: ['typescript/unbound-method'],
     },
     // The shim tests save the native AbortSignal.any and checkVisibility to restore them; none runs unbound
     {
-        files: ['packages/semi-polyfill/src/__tests__/polyfill.test.ts'],
+        files: ['packages/shared/semi-polyfill/src/__tests__/polyfill.test.ts'],
         off: ['typescript/unbound-method'],
     },
     // Bundler plugin tests build entries that import both React and Vue packages
     {
-        files: ['packages/{semi-vite,semi-rspack,semi-webpack}/test/fixture/**'],
+        files: ['packages/plugins/{semi-vite,semi-rspack,semi-webpack}/test/fixture/**'],
         off: ['no-restricted-imports'],
     },
     // Registers the Astro integration of each demo framework

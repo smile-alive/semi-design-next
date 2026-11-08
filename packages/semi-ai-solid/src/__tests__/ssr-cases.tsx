@@ -1,5 +1,5 @@
 import { For } from 'solid-js';
-import { IllustrationConstruction, IllustrationFailure, IllustrationIdleDark, IllustrationNoContent, IllustrationNoContentDark } from '@fibrae/semi-illustrations-solid';
+import { IllustrationConstruction, IllustrationFailure, IllustrationIdleDark, IllustrationNoContent, IllustrationNoContentDark } from '@fibrae/semi-icons-solid/illustrations';
 import type { SsrCase } from '@test/solid/ssr.solid';
 import { AIChatDialogue, AIChatInput, Annotation, Chat, MCPConfigure, Sidebar, type ChatMessage, type AIChatDialogueMessage } from '..';
 import type * as Entry from '..';

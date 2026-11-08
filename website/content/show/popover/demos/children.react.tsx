@@ -1,4 +1,4 @@
-import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-react';
+import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-icons-react/illustrations';
 import { Popover, Space, Empty, Tag } from '@fibrae/semi-ui-react';
 
 const style = { border: '2px solid var(--semi-color-border)', paddingInlineStart: 4, paddingInlineEnd: 4, borderRadius: 4 };

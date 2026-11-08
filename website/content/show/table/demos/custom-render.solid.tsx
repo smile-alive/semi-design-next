@@ -1,6 +1,6 @@
 import { createSignal } from 'solid-js';
 import { IconTickCircle, IconComment, IconClear, IconDelete } from '@fibrae/semi-icons-solid';
-import { IllustrationNoResult, IllustrationNoResultDark } from '@fibrae/semi-illustrations-solid';
+import { IllustrationNoResult, IllustrationNoResultDark } from '@fibrae/semi-icons-solid/illustrations';
 import { Table, Avatar, Button, Empty, Typography, Tag, type ColumnProps } from '@fibrae/semi-ui-solid';
 
 interface Row {

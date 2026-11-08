@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { reactive } from 'vue';
-    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-vue';
+    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-icons-vue/illustrations';
     import { Button, Empty, Feedback, TextArea } from '@fibrae/semi-ui-vue';
 
     const createState = () => reactive({ visible: false, value: '', showThanks: false });

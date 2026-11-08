@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-svelte';
+    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-icons-svelte/illustrations';
     import { Empty, Popover, Radio, RadioGroup, type RadioValue } from '@fibrae/semi-ui-svelte';
 
     let value = $state<RadioValue | undefined>(false);

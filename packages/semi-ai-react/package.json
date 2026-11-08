@@ -30,7 +30,6 @@
         "@fibrae/semi-ai-foundation": "workspace:*",
         "@fibrae/semi-foundation": "workspace:*",
         "@fibrae/semi-icons-react": "workspace:*",
-        "@fibrae/semi-illustrations-react": "workspace:*",
         "@fibrae/semi-ui-react": "workspace:*",
         "@tiptap/core": "catalog:",
         "@tiptap/pm": "catalog:",

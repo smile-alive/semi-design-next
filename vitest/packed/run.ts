@@ -8,7 +8,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type * as Vite from 'vite';
-import type * as SemiVite from '../../packages/semi-vite/src/index.ts';
+import type * as SemiVite from '../../packages/plugins/semi-vite/src/index.ts';
 
 const rootDir = path.resolve(import.meta.dirname, '../..');
 const packages = [
@@ -16,25 +16,21 @@ const packages = [
     'semi-ai-solid',
     'semi-ai-svelte',
     'semi-ai-vue',
-    'semi-ai-foundation',
-    'semi-animation',
-    'semi-foundation',
-    'semi-icons-core',
     'semi-icons-react',
     'semi-icons-solid',
     'semi-icons-svelte',
     'semi-icons-vue',
-    'semi-illustrations-react',
-    'semi-illustrations-solid',
-    'semi-illustrations-svelte',
-    'semi-illustrations-vue',
-    'semi-json-viewer-core',
-    'semi-scss-compile',
     'semi-ui-react',
     'semi-ui-solid',
     'semi-ui-svelte',
     'semi-ui-vue',
-    'semi-vite',
+    'shared/semi-ai-foundation',
+    'shared/semi-animation',
+    'shared/semi-foundation',
+    'shared/semi-icons-core',
+    'shared/semi-json-viewer-core',
+    'plugins/semi-scss-compile',
+    'plugins/semi-vite',
 ];
 
 const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'semi-packed-'));
@@ -124,7 +120,7 @@ write(
         "import Icon from '@fibrae/semi-ui-vue/icons/index';",
         "import { IconHome } from '@fibrae/semi-icons-vue';",
         "import { IconAvatar } from '@fibrae/semi-icons-vue/lab';",
-        "import { IllustrationSuccess } from '@fibrae/semi-illustrations-vue';",
+        "import { IllustrationSuccess } from '@fibrae/semi-icons-vue/illustrations';",
         'export { BaseFoundation };',
         'export function render() {',
         "    return renderToString(createSSRApp({ render: () => h('main', [",
@@ -201,7 +197,7 @@ write(
         "import type * as Icons from '@fibrae/semi-icons-react';",
         "import type * as LabIcons from '@fibrae/semi-icons-react/lab';",
         "import type * as IconData from '@fibrae/semi-icons-core';",
-        "import type * as Illustrations from '@fibrae/semi-illustrations-react';",
+        "import type * as Illustrations from '@fibrae/semi-icons-react/illustrations';",
         "import type * as Animation from '@fibrae/semi-animation';",
         "import type * as SemiVite from '@fibrae/semi-vite-plugin';",
         "import '@fibrae/semi-ui-react/tokens';",
@@ -262,7 +258,7 @@ write(
         "import type * as Ai from '@fibrae/semi-ai-vue';",
         "import type * as Icons from '@fibrae/semi-icons-vue';",
         "import type * as LabIcons from '@fibrae/semi-icons-vue/lab';",
-        "import type * as Illustrations from '@fibrae/semi-illustrations-vue';",
+        "import type * as Illustrations from '@fibrae/semi-icons-vue/illustrations';",
         "import type { IconProps } from '@fibrae/semi-ui-vue/icons/index';",
         "import type { ChatProps } from '@fibrae/semi-ai-vue/chat/interface';",
         "import '@fibrae/semi-ui-vue/tokens';",
@@ -278,7 +274,7 @@ write(
         "import Icon from '@fibrae/semi-ui-vue/icons/index';",
         "import { IconHome } from '@fibrae/semi-icons-vue';",
         "import { IconAvatar } from '@fibrae/semi-icons-vue/lab';",
-        "import { IllustrationSuccess } from '@fibrae/semi-illustrations-vue';",
+        "import { IllustrationSuccess } from '@fibrae/semi-icons-vue/illustrations';",
         "import Chat from '@fibrae/semi-ai-vue/chat/index';",
         '</script>',
         '<template>',
@@ -329,7 +325,7 @@ write(
         "import Input from '@fibrae/semi-ui-solid/input/index';",
         "import { AIChatInput } from '@fibrae/semi-ai-solid';",
         "import { IconHome } from '@fibrae/semi-icons-solid';",
-        "import { IllustrationSuccess } from '@fibrae/semi-illustrations-solid';",
+        "import { IllustrationSuccess } from '@fibrae/semi-icons-solid/illustrations';",
         'function App() {',
         '    const [count, setCount] = createSignal(0);',
         '    return (',
@@ -417,9 +413,9 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
         'semi-foundation imports only @shikijs/core, shiki/engine/javascript and shiki/themes/*'
     );
     // A Solid-aware bundler takes `.jsx`; every other consumer takes the dom `.js` twin
-    for (const name of ['semi-ui-solid', 'semi-ai-solid', 'semi-icons-solid', 'semi-illustrations-solid']) {
+    for (const name of ['semi-ui-solid', 'semi-ai-solid', 'semi-icons-solid']) {
         const { exports } = JSON.parse(fs.readFileSync(path.join(scope, name, 'package.json'), 'utf-8'));
-        for (const key of ['.', './*', ...(name === 'semi-icons-solid' ? ['./lab'] : [])]) {
+        for (const key of ['.', './*', ...(name === 'semi-icons-solid' ? ['./lab', './illustrations'] : [])]) {
             const entry = exports[key];
             // Conditions match in key order, so `solid` must precede `default`
             assert.ok(entry?.default?.endsWith('.js') && entry.solid === entry.default.replace(/\.js$/, '.jsx') && Object.keys(entry).indexOf('solid') < Object.keys(entry).indexOf('default'), `${name} exports ${key} maps the solid condition to .jsx before default to .js`);
@@ -431,7 +427,7 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
     // Svelte ships `.svelte` sources (compiled output would import svelte/internal, Y-H9); Svelte-aware bundlers pick them
     // up through the `svelte` condition; the bundler checks further down build them with vite-plugin-svelte
     const scope = path.join(appDir, 'node_modules/@fibrae');
-    for (const name of ['semi-ui-svelte', 'semi-ai-svelte', 'semi-icons-svelte', 'semi-illustrations-svelte']) {
+    for (const name of ['semi-ui-svelte', 'semi-ai-svelte', 'semi-icons-svelte']) {
         const root = path.join(scope, name);
         const { exports } = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf-8'));
         for (const [key, entry] of Object.entries<string | Record<string, string>>(exports)) {
@@ -484,10 +480,10 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
     // under React Server Components the 'use client' modules must be the only ones that touch client-only React APIs
     const scope = path.join(appDir, 'node_modules/@fibrae');
     const distDirs = (names: string[]) => names.map((name) => path.join(scope, name, 'dist'));
-    const reactDists = distDirs(['semi-ui-react', 'semi-ai-react', 'semi-icons-react', 'semi-illustrations-react']);
+    const reactDists = distDirs(['semi-ui-react', 'semi-ai-react', 'semi-icons-react']);
     const importDist = path.join(import.meta.dirname, 'import-dist.ts');
     const exportsFile = path.join(workDir, 'dist-exports.json');
-    execFileSync(process.execPath, [importDist, 'collect', exportsFile, ...reactDists, ...distDirs(['semi-ui-vue', 'semi-ai-vue', 'semi-icons-vue', 'semi-illustrations-vue'])], { stdio: 'inherit' });
+    execFileSync(process.execPath, [importDist, 'collect', exportsFile, ...reactDists, ...distDirs(['semi-ui-vue', 'semi-ai-vue', 'semi-icons-vue'])], { stdio: 'inherit' });
 
     const startsWithUseClient = (distDir: string, file: string) => /^["']use client["']/.test(fs.readFileSync(path.join(distDir, file), 'utf-8').slice(0, 20));
     // The root entry only re-exports, and the locale re-exports are plain data
@@ -498,10 +494,10 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
         assert.deepStrictEqual(missing, [], `every ${name} module but the root entry starts with 'use client'`);
         assert.ok(!startsWithUseClient(distDir, 'index.js'), `the ${name} root entry is not marked 'use client'`);
     }
-    for (const name of ['semi-icons-react', 'semi-illustrations-react']) {
-        const distDir = path.join(scope, name, 'dist');
+    {
+        const distDir = path.join(scope, 'semi-icons-react', 'dist');
         const marked = fs.globSync('**/*.js', { cwd: distDir }).filter((file) => startsWithUseClient(distDir, file));
-        assert.deepStrictEqual(marked, [], `${name} modules are not marked 'use client'`);
+        assert.deepStrictEqual(marked, [], `semi-icons-react modules are not marked 'use client'`);
     }
     execFileSync(process.execPath, ['--conditions=react-server', importDist, 'rsc', exportsFile, ...reactDists], { stdio: 'inherit' });
 
@@ -616,7 +612,7 @@ for (const ui of ['', 'vue-']) {
 {
     // Components import their dependencies by direct path, so a deep import must not pull in dist/index.js
     // (which re-exports every component) of its own package or of semi-ui-react
-    for (const name of ['semi-ui-react', 'semi-ai-react', 'semi-ui-vue', 'semi-ai-vue', 'semi-icons-vue', 'semi-illustrations-vue']) {
+    for (const name of ['semi-ui-react', 'semi-ai-react', 'semi-ui-vue', 'semi-ai-vue', 'semi-icons-vue']) {
         const distDir = path.join(appDir, 'node_modules/@fibrae', name, 'dist');
         const importsRootIndex = fs
             .readdirSync(distDir, { recursive: true, encoding: 'utf8' })
@@ -786,7 +782,7 @@ for (const ui of ['', 'vue-']) {
     // server. Every module must compile that way, and each must export what its dom `.js` twin does
     const { default: solid }: { default: (options?: object) => Vite.Plugin } = await import(path.join(appDir, 'node_modules/vite-plugin-solid/dist/esm/index.mjs'));
     const scope = path.join(appDir, 'node_modules/@fibrae');
-    const names = ['semi-ui-solid', 'semi-ai-solid', 'semi-icons-solid', 'semi-illustrations-solid'];
+    const names = ['semi-ui-solid', 'semi-ai-solid', 'semi-icons-solid'];
     async function compileTree(extension: '.js' | '.jsx') {
         // `_virtual/` holds the bundler's own helpers, which only the pass that needs them emits
         const input = Object.fromEntries(names.flatMap((name) => fs.globSync(`**/*${extension}`, { cwd: path.join(scope, name, 'dist'), exclude: ['_virtual/**'] }).map((file) => [`${name}/${file.slice(0, -extension.length)}`, path.join(scope, name, 'dist', file)])));
@@ -825,7 +821,7 @@ for (const ui of ['', 'vue-']) {
             "    import { Button, LocaleProvider, Switch } from '@fibrae/semi-ui-svelte';",
             "    import en_US from '@fibrae/semi-ui-svelte/locale/source/en_US';",
             "    import { IconHome } from '@fibrae/semi-icons-svelte';",
-            "    import { IllustrationIdle } from '@fibrae/semi-illustrations-svelte';",
+            "    import { IllustrationIdle } from '@fibrae/semi-icons-svelte/illustrations';",
             '</script>',
             '',
             '<LocaleProvider locale={en_US}>',
@@ -854,7 +850,7 @@ for (const ui of ['', 'vue-']) {
             "import type * as Ai from '@fibrae/semi-ai-svelte';",
             "import type * as Icons from '@fibrae/semi-icons-svelte';",
             "import type * as LabIcons from '@fibrae/semi-icons-svelte/lab';",
-            "import type * as Illustrations from '@fibrae/semi-illustrations-svelte';",
+            "import type * as Illustrations from '@fibrae/semi-icons-svelte/illustrations';",
             "import type * as EnUS from '@fibrae/semi-ui-svelte/locale/source/en_US';",
             'export type Probe = [typeof Ui, typeof Hooks, typeof Ai, typeof Icons, typeof LabIcons, typeof Illustrations, typeof EnUS];',
             '',

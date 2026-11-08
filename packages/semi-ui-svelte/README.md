@@ -64,7 +64,7 @@ The default locale is `zh_CN`. Pass a locale pack with `LocaleProvider`. Call `u
 </LocaleProvider>
 ```
 
-For the structure of a locale pack, see [@fibrae/semi-foundation](../semi-foundation/README.md#locale-packs).
+For the structure of a locale pack, see [@fibrae/semi-foundation](../shared/semi-foundation/README.md#locale-packs).
 
 ### Server rendering
 

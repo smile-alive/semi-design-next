@@ -1,4 +1,4 @@
-import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-solid';
+import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-icons-solid/illustrations';
 import { Button, Empty } from '@fibrae/semi-ui-solid';
 
 const imageStyle = { width: '150px', height: '150px' };

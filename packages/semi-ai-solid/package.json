@@ -46,7 +46,6 @@
         "@fibrae/semi-ai-foundation": "workspace:*",
         "@fibrae/semi-foundation": "workspace:*",
         "@fibrae/semi-icons-solid": "workspace:*",
-        "@fibrae/semi-illustrations-solid": "workspace:*",
         "@fibrae/semi-ui-solid": "workspace:*",
         "@tiptap/core": "catalog:",
         "@tiptap/pm": "catalog:",

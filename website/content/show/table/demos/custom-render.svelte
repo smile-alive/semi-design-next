@@ -1,6 +1,6 @@
 <script lang="ts">
     import { IconClear, IconComment, IconDelete, IconTickCircle } from '@fibrae/semi-icons-svelte';
-    import { IllustrationNoResult, IllustrationNoResultDark } from '@fibrae/semi-illustrations-svelte';
+    import { IllustrationNoResult, IllustrationNoResultDark } from '@fibrae/semi-icons-svelte/illustrations';
     import { Avatar, Button, Empty, Table, Tag, Typography, type ColumnProps } from '@fibrae/semi-ui-svelte';
 
     interface Row {

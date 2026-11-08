@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-svelte';
+    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-icons-svelte/illustrations';
     import { Button, Empty } from '@fibrae/semi-ui-svelte';
 
     const imageStyle = 'width: 150px; height: 150px';

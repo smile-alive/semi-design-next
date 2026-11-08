@@ -1,7 +1,7 @@
 {
     "name": "@fibrae/semi-icons-vue",
     "version": "0.4.0",
-    "description": "Semi icons as Vue components",
+    "description": "Semi icons as Vue components; full-colour icons under @fibrae/semi-icons-vue/lab, illustrations under @fibrae/semi-icons-vue/illustrations",
     "license": "MIT",
     "homepage": "https://semi-design-next.pages.dev",
     "repository": {
@@ -16,6 +16,7 @@
     "exports": {
         ".": "./dist/index.js",
         "./lab": "./dist/lab/index.js",
+        "./illustrations": "./dist/illustrations/index.js",
         "./package.json": "./package.json",
         "./*": "./dist/*.js"
     },

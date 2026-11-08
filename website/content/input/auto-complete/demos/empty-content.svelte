@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { IllustrationNoContent } from '@fibrae/semi-illustrations-svelte';
+    import { IllustrationNoContent } from '@fibrae/semi-icons-svelte/illustrations';
     import { AutoComplete, Empty } from '@fibrae/semi-ui-svelte';
 
     let data = $state<number[]>([]);

@@ -63,7 +63,7 @@ jobs:
                               if [[ $file =~ ^packages/semi-[a-z-]+-(react|vue|solid|svelte)/(src|__tests__)/ ]]; then
                                   pkg=1
                                   case " $frameworks " in *" ${BASH_REMATCH[1]} "*) ;; *) frameworks="$frameworks ${BASH_REMATCH[1]}" ;; esac
-                              elif [[ $file =~ ^packages/semi-[a-z-]+/(src|__tests__)/ ]]; then
+                              elif [[ $file =~ ^packages/(shared|plugins)/semi-[a-z-]+/(src|__tests__)/ ]]; then
                                   shared=1
                               else
                                   infra=1

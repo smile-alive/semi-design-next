@@ -1,4 +1,4 @@
-import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-solid';
+import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-icons-solid/illustrations';
 import { Popover, Tag, Empty } from '@fibrae/semi-ui-solid';
 
 export default function PopoverDemo() {

@@ -15,7 +15,7 @@ import {
     IllustrationNoContentDark,
     IllustrationNotFoundDark,
     IllustrationNoResultDark,
-} from '@fibrae/semi-illustrations-react';
+} from '@fibrae/semi-icons-react/illustrations';
 import { Empty } from '@fibrae/semi-ui-react';
 
 const emptyStyle = { padding: 30 };

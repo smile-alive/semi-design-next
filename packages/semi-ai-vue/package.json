@@ -35,7 +35,6 @@
         "@fibrae/semi-ai-foundation": "workspace:*",
         "@fibrae/semi-foundation": "workspace:*",
         "@fibrae/semi-icons-vue": "workspace:*",
-        "@fibrae/semi-illustrations-vue": "workspace:*",
         "@fibrae/semi-ui-vue": "workspace:*",
         "@tiptap/core": "catalog:",
         "@tiptap/pm": "catalog:",

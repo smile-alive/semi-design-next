@@ -1,0 +1,48 @@
+{
+    "name": "@fibrae/semi-webpack-plugin",
+    "version": "0.4.0",
+    "description": "A webpack plugin for Semi Design Next to custom theme, replace prefix and so on.",
+    "license": "MIT",
+    "homepage": "https://semi-design-next.pages.dev",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/smile-alive/semi-design-next.git",
+        "directory": "packages/plugins/semi-webpack"
+    },
+    "bugs": {
+        "url": "https://github.com/smile-alive/semi-design-next/issues"
+    },
+    "type": "module",
+    "exports": {
+        ".": "./dist/index.mjs",
+        "./semi-omit-css-loader": "./dist/semi-omit-css-loader.mjs",
+        "./semi-prefix-loader": "./dist/semi-prefix-loader.mjs",
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "scripts": {
+        "build": "vp pack",
+        "test": "node test/run.ts"
+    },
+    "dependencies": {
+        "css-loader": "catalog:",
+        "sass": "catalog:",
+        "style-loader": "^4.0.0"
+    },
+    "peerDependencies": {
+        "webpack": "catalog:peer"
+    },
+    "peerDependenciesMeta": {
+        "webpack": {
+            "optional": true
+        }
+    },
+    "devDependencies": {
+        "@fibrae/semi-scss-compile": "workspace:*",
+        "typescript": "catalog:",
+        "webpack": "catalog:"
+    }
+}

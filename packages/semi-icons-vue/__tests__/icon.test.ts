@@ -1,6 +1,6 @@
 import { defineComponent, h, useTemplateRef } from 'vue';
 import { describe, expect, it } from 'vite-plus/test';
-import { IllustrationFailure } from '@fibrae/semi-illustrations-vue';
+import { IllustrationFailure } from '@fibrae/semi-icons-vue/illustrations';
 import { render } from '@test/utils/vue';
 import Icon, { IconActivity, IconAIBellLevel2, IconAILoading, IconAlarm } from '../src';
 import { createSvgComponent } from '../src/components/create-icon';

@@ -1,7 +1,7 @@
 {
     "name": "@fibrae/semi-icons-react",
     "version": "0.4.0",
-    "description": "Semi icons as React components; full-colour icons under @fibrae/semi-icons-react/lab",
+    "description": "Semi icons as React components; full-colour icons under @fibrae/semi-icons-react/lab, illustrations under @fibrae/semi-icons-react/illustrations",
     "license": "MIT",
     "homepage": "https://semi-design-next.pages.dev",
     "repository": {
@@ -14,12 +14,14 @@
     },
     "keywords": [
         "semi",
-        "icons"
+        "icons",
+        "illustrations"
     ],
     "type": "module",
     "exports": {
         ".": "./dist/index.js",
         "./lab": "./dist/lab/index.js",
+        "./illustrations": "./dist/illustrations/index.js",
         "./package.json": "./package.json",
         "./*": "./dist/*.js"
     },

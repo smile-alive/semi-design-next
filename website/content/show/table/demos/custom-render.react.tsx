@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IconTickCircle, IconComment, IconClear, IconDelete } from '@fibrae/semi-icons-react';
-import { IllustrationNoResult, IllustrationNoResultDark } from '@fibrae/semi-illustrations-react';
+import { IllustrationNoResult, IllustrationNoResultDark } from '@fibrae/semi-icons-react/illustrations';
 import { Table, Avatar, Button, Empty, Typography, Tag, type ColumnProps } from '@fibrae/semi-ui-react';
 
 const raw = [

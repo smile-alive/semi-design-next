@@ -36,7 +36,6 @@
         "@dnd-kit/react": "catalog:",
         "@fibrae/semi-foundation": "workspace:*",
         "@fibrae/semi-icons-react": "workspace:*",
-        "@fibrae/semi-illustrations-react": "workspace:*",
         "@tanstack/react-virtual": "catalog:",
         "clsx": "catalog:",
         "date-fns": "catalog:",

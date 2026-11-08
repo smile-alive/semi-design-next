@@ -53,4 +53,4 @@ pnpm --filter semi-website check:pages http://127.0.0.1:4321      # 控制台报
 
 ## 与其他包的关系
 
-依赖全部 UI 相关包：各框架的 UI 包与 AI 包、`@fibrae/semi-ai-foundation`、`@fibrae/semi-foundation`，以及各框架的图标与插画包。文档站不挂 `@fibrae/semi-vite-plugin`。
+依赖全部 UI 相关包：各框架的 UI 包与 AI 包、`@fibrae/semi-ai-foundation`、`@fibrae/semi-foundation`，以及各框架的图标包。文档站不挂 `@fibrae/semi-vite-plugin`。

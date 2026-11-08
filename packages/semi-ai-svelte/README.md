@@ -36,7 +36,7 @@ Component docs and examples are in [website/content](../../website/content):
 
 ## Related packages
 
-- Depends on `@fibrae/semi-ai-foundation` (logic and styles), `@fibrae/semi-foundation`, `@fibrae/semi-ui-svelte`, `@fibrae/semi-icons-svelte` and `@fibrae/semi-illustrations-svelte`.
+- Depends on `@fibrae/semi-ai-foundation` (logic and styles), `@fibrae/semi-foundation`, `@fibrae/semi-ui-svelte`, `@fibrae/semi-icons-svelte` and `@fibrae/semi-icons-svelte/illustrations`.
 - The input and the Sidebar file editor are built on tiptap (`@tiptap/core`). The framework-agnostic parts of the extensions live in the foundation, and this package connects them to Svelte.
 - The equivalent package for each framework is `@fibrae/semi-ai-<framework>`.
 

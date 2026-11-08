@@ -58,7 +58,7 @@ import en_GB from '@fibrae/semi-ui-react/locale/source/en_GB';
 </LocaleProvider>;
 ```
 
-Without `locale`, it inherits from the outer provider. For the structure of a locale pack, see [@fibrae/semi-foundation](../semi-foundation/README.md#locale-packs).
+Without `locale`, it inherits from the outer provider. For the structure of a locale pack, see [@fibrae/semi-foundation](../shared/semi-foundation/README.md#locale-packs).
 
 ### Server rendering
 
@@ -76,7 +76,7 @@ Component docs are in [website/content](../../website/content). To get started, 
 
 ## Related packages
 
-- Depends on `@fibrae/semi-foundation` (logic and styles), `@fibrae/semi-icons-react` and `@fibrae/semi-illustrations-react`.
+- Depends on `@fibrae/semi-foundation` (logic and styles), `@fibrae/semi-icons-react` and `@fibrae/semi-icons-react/illustrations`.
 - Used by `@fibrae/semi-ai-react` and the docs site `website`.
 - The UI package of each framework (`semi-ui-<framework>`) shares the same foundation.
 

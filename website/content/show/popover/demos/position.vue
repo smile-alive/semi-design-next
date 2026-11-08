@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-vue';
+    import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-icons-vue/illustrations';
     import { Empty, Popover, Tag, type Position } from '@fibrae/semi-ui-vue';
 
     const tops: [Position, string][] = [

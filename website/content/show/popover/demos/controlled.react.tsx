@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-illustrations-react';
+import { IllustrationSuccess, IllustrationSuccessDark } from '@fibrae/semi-icons-react/illustrations';
 import { Popover, RadioGroup, Radio, Empty } from '@fibrae/semi-ui-react';
 
 const content = (
