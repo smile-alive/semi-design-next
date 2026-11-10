@@ -49,7 +49,7 @@ export type TriggerRenderProps = {
     componentProps?: DatePickerFoundationProps;
 };
 
-export interface DatePickerProps extends Omit<DatePickerFoundationProps, 'dateFnsLocale'>, ElementProps<'div', 'prefix' | 'style' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus'> {
+export interface DatePickerProps extends Omit<DatePickerFoundationProps, 'dateFnsLocale' | 'customTrigger'>, ElementProps<'div', 'prefix' | 'style' | 'defaultValue' | 'onChange' | 'onBlur' | 'onFocus'> {
     clearIcon?: React.ReactNode;
     timePickerOpts?: DatePickerTimePickerOpts;
     bottomSlot?: React.ReactNode;

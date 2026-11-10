@@ -26,6 +26,31 @@ it('类型：表头与单元格的默认节点是渲染函数', () => {
     expectTypeOf<Parameters<RowSelectionRenderCell<Row>>[0]['originNode']>().toEqualTypeOf<() => JSX.Element>();
 });
 
+it('首帧已应用默认展开与默认选中键', async () => {
+    const tree = [
+        {
+            key: 'parent',
+            name: 'parent',
+            children: [
+                { key: 'child-1', name: 'child-1' },
+                { key: 'child-2', name: 'child-2' },
+            ],
+        },
+    ];
+    const columns: ColumnProps<Row>[] = [{ title: 'Name', dataIndex: 'name' }];
+    const expanded = await renderServer({ render: () => <Table columns={columns} dataSource={tree} childrenRecordName="children" pagination={false} defaultExpandAllRows /> });
+    expect(expanded.errors).toEqual([]);
+    expect(expanded.html).toContain('data-row-key="child-2"');
+
+    const selected = await renderServer({ render: () => <Table columns={columns} dataSource={tree[0].children} pagination={false} rowSelection={{ defaultSelectedRowKeys: ['child-1'] }} /> });
+    expect(selected.html.match(/semi-checkbox-inner-checked/g)).toHaveLength(1);
+
+    const related = await renderServer({
+        render: () => <Table columns={columns} dataSource={tree} childrenRecordName="children" pagination={false} defaultExpandAllRows rowSelection={{ checkRelation: 'related', defaultSelectedRowKeys: ['parent'] }} />,
+    });
+    expect(related.html.match(/semi-checkbox-inner-checked/g)).toHaveLength(4);
+});
+
 it('useFullRender 的 title 在插入处调用 sorter、selection', async () => {
     const columns: ColumnProps<Row>[] = [
         {

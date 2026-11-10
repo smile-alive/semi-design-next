@@ -10,7 +10,7 @@ import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useDidUpdate from '../../hooks/use-did-update';
 import useMergedRef from '../../hooks/use-merged-ref';
-import useReplayImageEvents from '../../hooks/use-replay-image-events';
+import HydratedImage from '../../internal/hydrated-image';
 import { hasContent } from '../../utils';
 import { useAvatarGroupContext } from './context';
 import type { AvatarProps } from './interface';
@@ -60,7 +60,6 @@ export default function Avatar(rawProps: AvatarProps) {
 
     const rootRef = useRef<HTMLSpanElement>(null);
     const contentRef = useRef<HTMLSpanElement>(null);
-    const imgRef = useRef<HTMLImageElement>(null);
 
     const [foundation, state] = useFoundation<Foundation, Adapter, AvatarProps, AvatarState>(
         AvatarFoundation,
@@ -101,8 +100,6 @@ export default function Avatar(rawProps: AvatarProps) {
         }
     };
 
-    useReplayImageEvents(imgRef);
-
     // mount is measured by foundation.init; the text also appears when the image fails
     useDidUpdate(text, (value) => {
         if (value !== undefined) {
@@ -136,8 +133,7 @@ export default function Avatar(rawProps: AvatarProps) {
         );
     } else if (isImg) {
         content = (
-            <img
-                ref={imgRef}
+            <HydratedImage
                 alt={alt}
                 src={src}
                 srcSet={srcSet}

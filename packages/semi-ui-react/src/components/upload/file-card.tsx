@@ -7,6 +7,7 @@ import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
 import type { Locale } from '@fibrae/semi-foundation/locale/interface';
 import { noop } from '@fibrae/semi-foundation/utils/function';
 import { IconAlertCircle, IconClose, IconClear, IconFile, IconRefresh } from '@fibrae/semi-icons-react';
+import HydratedImage from '../../internal/hydrated-image';
 import Button from '../button/index';
 import useLocale from '../locale/use-locale';
 import Progress from '../progress/index';
@@ -180,7 +181,7 @@ function renderPic(props: FileCardProps, locale: Locale['Upload'], fallbackPrevi
         itemStyle.width = picWidth;
         imgStyle.width = picWidth;
     }
-    const defaultThumbnail = !fallbackPreview ? <img style={imgStyle} alt={name} src={url} onError={onImageError} /> : <IconFile size="large" />;
+    const defaultThumbnail = !fallbackPreview ? <HydratedImage style={imgStyle} alt={name} src={url} onError={onImageError} /> : <IconFile size="large" />;
     const thumbnail = customThumbnail ? renderThumbnail(props) : defaultThumbnail;
 
     return (
@@ -211,7 +212,7 @@ function renderFile(props: FileCardProps, locale: Locale['Upload'], fallbackPrev
         [`${prefixCls}-file-card-preview-placeholder`]: !preview || previewFile || fallbackPreview,
     });
     const infoCls = `${prefixCls}-file-card-info`;
-    let previewContent: ReactNode = preview && !fallbackPreview ? <img alt="" src={url} onError={onImageError} /> : <IconFile size="large" />;
+    let previewContent: ReactNode = preview && !fallbackPreview ? <HydratedImage alt="" src={url} onError={onImageError} /> : <IconFile size="large" />;
     if (previewFile) {
         previewContent = previewFile(props);
     }

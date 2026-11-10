@@ -37,6 +37,29 @@ describe('Svelte Table 服务端首帧', () => {
         expect(body).toMatch(/<button[^>]*aria-expanded="false"[^>]*class="semi-table-expand-icon"/);
     });
 
+    it('首帧已应用默认展开与默认选中键', () => {
+        const tree = [
+            {
+                key: 'parent',
+                name: 'parent',
+                children: [
+                    { key: 'child-1', name: 'child-1' },
+                    { key: 'child-2', name: 'child-2' },
+                ],
+            },
+        ];
+        const expanded = render(Table, { props: { columns, dataSource: tree, childrenRecordName: 'children', pagination: false, defaultExpandAllRows: true } });
+        expect(expanded.body).toContain('data-row-key="child-2"');
+
+        const selected = render(Table, { props: { columns, dataSource: tree[0].children, pagination: false, rowSelection: { defaultSelectedRowKeys: ['child-1'] } } });
+        expect(selected.body.match(/semi-checkbox-inner-checked/g)).toHaveLength(1);
+
+        const related = render(Table, {
+            props: { columns, dataSource: tree, childrenRecordName: 'children', pagination: false, defaultExpandAllRows: true, rowSelection: { checkRelation: 'related', defaultSelectedRowKeys: ['parent'] } },
+        });
+        expect(related.body.match(/semi-checkbox-inner-checked/g)).toHaveLength(4);
+    });
+
     it('空数据首帧显示空状态，固定表头首帧输出拆分的表', () => {
         const { body } = render(Table, { props: { columns, dataSource: [], scroll: { y: 200 } } });
         expect(body).toContain('semi-table-empty');

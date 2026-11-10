@@ -214,6 +214,9 @@
 - Svelte：`needConfirm` 下点清除按钮立即写回空值（`undefined`，范围类型为 `[]`），不等确认；`autoSwitchDate` 选年份只通知一次 `onChange`；范围类型的清除按钮因值清空而消失时（键盘清除、指针清除、父级清空），焦点交给起始输入框，焦点原本不在清除按钮上时不移交；单值类型清除后焦点落在输入框；实例 `open()`、`close()` 在用户交互后仍有效；新增类型导出 `DatePickerHandle`（`open`、`close`、`focus(focusType?)`、`blur`）。
 - 受控 `value` 加 `autoSwitchDate` 时，选年只触发一次 `onChange`。范围选择中一侧显示时间或年月列表时，另一侧月份周数变化后列表选中项保持居中。React：input 上不再有 `format` 属性。
 - 设置 `timeZone` 后，输入按目标时区解析：系统时区夏令时跳过、目标时区有效的时刻可以输入并正确显示；目标时区自身跳过的时刻一律不接受。
+- 破坏性：设置 `timeZone` 后，`Date` 与时间戳是时刻，字符串是目标时区的钟点。`value`、`defaultValue`、`presets`、`defaultPickerValue` 中的字符串按 `format` 解析为目标时区的钟点（原来按系统时区解析再换算），`defaultPickerValue` 的 `Date` 也按时刻换算。受控时切换 `timeZone` 按新时区重读 `value`，字符串值的钟点不变。
+- 破坏性：设置 `timeZone` 后，交给使用方的日期都是 `TZDate`（`Date` 子类）：`onChange`、`onConfirm`、`onCancel`、`onPanelChange` 的 `date`，`disabledDate`、`disabledTime` 的参数，`triggerRender` 的 `value`。`getTime()` 是时刻，getter 与 date-fns 按目标时区读，`toISOString()` 与 `JSON.stringify` 输出带偏移（如 `+09:00`）而不是 `Z`（原来 `disabledDate` 的 `getDay()` 读到系统时区的日期，`triggerRender` 拿到内部表示）。`dateString` 按目标时区格式化，与输入框文字一致，可原样传回 `value`（原来按系统时区格式化）。
+- 设置 `timeZone` 后，今天的标记、默认面板月份、空输入回落的今天、嵌入输入框自动补的时间都按目标时区取当前时间。
 - `utcToZonedTime`（TimePicker 同用）遇到系统时区跳过的时刻不再后移一小时，返回 `TZDate`（`Date` 子类），其 `toISOString()` 带偏移而不带 `Z`。`TZDate` 在首次加载时从 `Date.prototype` 复制 getter，测试中 mock `Date` 且用 `timeZone` 时，要在 mock 之前加载组件。
 - 受控 DatePicker 在值已为空时点清除不再触发 `onChange([])`，值非空时照旧触发，输入框在使用方改值前继续显示原值。
 - 范围选择：焦点移到另一端发生在 `onChange` 之后（原来在之前），`onChange` 里读到的焦点仍是选中日期所属的输入框。
@@ -473,7 +476,7 @@
 
 - 破坏性：删除 `@fibrae/semi-ui-react/image` 的 `PreviewInner` 导出、静态标记 `isSemiImage` 与 `ImageProps.imageID`（分组位置由缩略图文档顺序决定）。破坏性（类型）：单图 `preview` 改为 `ImagePreviewProps`（不含 `lazyLoad`、`children`、`className`、`style` 等，预览层样式用 `previewCls`、`previewStyle`）；`PreviewImageProps` 删除 `clickZoom`、`setRatio`、`style`；`onLoad`、`onError` 参数改为 `React.SyntheticEvent<HTMLImageElement>`；`renderLeftIcon`、`renderRightIcon` 返回类型收紧为 `ReactElement`。分组改为注册式：封装组件内部的 Image 也加入分组；Image 的 ref 指向 `img`，未声明属性落在缩略图分组元素上；预览图 `max-width: none` 写在 `.semi-image-preview-image-img`。
 - 行为变化：受控 `currentIndex={0}`、`visible={false}` 首次渲染时不再被 `defaultCurrentIndex`、`defaultVisible` 覆盖。
-- React：服务端渲染的 Image 在 hydration 前已加载完成或失败时，hydration 提交后补发 `onLoad` 或 `onError` 并更新加载状态（原来一直停在加载中）。
+- React、Vue、Solid：服务端渲染的 Image 在 hydration 前已加载完成或失败时，hydration 后补发 `onLoad` 或 `onError` 并更新加载状态（原来一直停在加载中）。Avatar、Cropper 与 Upload 的文件卡片同样补发；Svelte 的 hydration 自带补发。
 - Vue：自定义内容用插槽 `#title="{ title, index }"`、`#previewMenu`、`#leftIcon`、`#rightIcon`、`#closeIcon`，Image 另有 `#placeholder`、`#fallback`，`previewTitle`、`fallback` 只接受字符串；`v-model:visible`、`v-model:currentIndex`；单图配置对象为 `ImagePreviewProps`，组件 props 为 `ImagePreviewComponentProps`；`<KeepAlive>` 失活时释放 inert、滚动锁与键盘监听。
 - Solid：`onLoad`、`onError` 收到原生 `Event`；`style`、`imgStyle`、`previewStyle` 接受对象或字符串；`renderLeftIcon`、`renderRightIcon`、`renderCloseIcon` 接受任意 JSX（含字符串，空内容回落默认图标）；`renderPreviewMenu` 只在函数身份变化时重新调用，`MenuProps` 的字段是 getter，`menuItems` 的节点整个生命周期复用；Image 的 `ref` 指向 `img`，ImagePreview 的 `ref` 与未声明属性落在分组 div 上；Image 不重新挂载而移动位置时，分组在 MutationObserver 回调（微任务）之后按新的文档顺序排列。
 - Svelte：分组列表是数据，由 `ImagePreview` 的 `src`（`string | string[]`）给出，Image 不向父级注册；Image 用自己的 `src`（或 `preview.src` 的第一项）在列表里找索引，找不到或 `preview` 为 false 时不入组，前者单独预览；不再按 DOM 顺序排序，不支持「src 加子元素」的组合写法；逐张的 `alt`、`title` 改为 `ImagePreview` 的 `titles`、`alts` 数组属性（按索引对应）。
@@ -587,6 +590,7 @@
 - 破坏性：删除 `getPopupContainer`、`zIndex`、`dropdownMargin`（面板在 top layer）、`onChangeWithDateFirst`（`onChange` 固定为 `(value, valueString)`）、无效的 `clearText`。
 - 破坏性（类型）：`TimePickerProps` 改为类型别名（`interface X extends TimePickerProps` 改交叉类型），`onChange` 按 `type` 判别为 `(Date, string)` 或 `(Date[], string[])`；删除无效的 `locale`、`localeCode`、`dateFnsLocale`（改用 `LocaleProvider`、`ConfigProvider`）；`scrollItemProps` 收窄为 `cycled`、`mode`、`motion`、`transform`；`triggerRender` 参数改为 `TimePickerTriggerRenderProps`；ref 为 `TimePickerHandle { focus, blur }`。
 - `timeRange` 只选一侧时 `value` 固定长度 2，空侧为 `undefined`，字符串为 `['07:00:00', '']`，`disabledTime` 收到 `[date, undefined]`；按 `length === 1` 判断的代码需调整。
+- 破坏性：设置 `timeZone` 后，字符串 `value` 按目标时区的钟点解析；`onChange` 的字符串是目标时区的钟点，即输入框文字（原来按系统时区格式化），日期与 `disabledTime` 的参数为 `TZDate`，序列化时带偏移而不是 `Z`。受控时切换 `timeZone` 按新时区重读 `value`。
 - `ref.focus()` 聚焦触发器内第一个可聚焦元素，没有时聚焦根元素（自定义触发器同样可用）；`ref.blur()` 让触发器或面板内当前聚焦的元素失焦。
 - 受控 `open` 时点击外部会调用 `onOpenChange(false)` 与 `onBlur`；`open={undefined}` 按非受控；`value` 为 `null` 是受控空值，时间戳 `0` 有效；`hourStep` 等非正整数抛 `RangeError`。
 - Vue：`v-model`（`modelValue`）与 `v-model:open`；清空时单选上报 `undefined`、范围上报 `[]`；`triggerRender` 改 `#trigger`，`panelHeader`、`panelFooter`、`panels` 改 `#panelHeader`、`#panelFooter`、`#panel`。
@@ -601,6 +605,7 @@
 - 破坏性（类型）：`FileItem`、`BaseFileItem` 删除 `[key: string]: any`（Chat 的 `attachment`、AIChatInput 的 `Attachment` 随之变化）；`RenderFileItemProps` 不再含 `key`；`transformFile` 改为 `(file: File) => File`；`cropModalProps` 收窄为 `UploadCropModalProps`；ref 为 `UploadHandle { insert, upload, openFileDialog }`。
 - 上传事件不再原地改写文件项，每次生成新对象，用 `===` 比较旧文件项需改为比较 `uid`；卸载、隐藏或缓存时进行中的上传不再中止（需要中止的用 `customRequest`），卸载后请求结果仍会回调 `onChange`、`onSuccess`、`onError` 等（Vue 的事件卸载后不再发出）。
 - 选择文件后清空隐藏文件输入框的值而不重新挂载它，同一文件可再次选择；React 的 `UploadState` 删除 `inputKey`、`replaceInputKey`。
+- React、Vue、Solid：服务端渲染的文件卡片缩略图在 hydration 前已加载失败时，hydration 后切到回退图标（原来保留破图）。
 - DOM 变化：图片墙空列表也渲染 `.semi-upload-file-list`（依赖 `.semi-upload > .semi-upload-add` 的样式需调整）；`tabIndex` 落在添加按钮上，根元素不再输出 `aria-required`、`tabIndex`；列表缩略图 `alt` 为空，卡片操作与「清空」改为原生 `button`。
 - Vue：受控列表用 `v-model:fileList`；回调改为事件 `change`、`success`、`error`、`progress`、`remove`、`retry`、`exceed`、`drop`、`clear`、`pastingError`、`cropError` 等，`onPreviewClick` 仍是函数 prop；卸载后不再发出这些事件。
 - Vue：节点与 render props 改为插槽，如 `#dragIcon`、`#dragMainText`、`#prompt`、`#fileItem`、`#thumbnail`、`#picClose`、`#fileOperation`、`#fileListHeader`；`validateMessage` 只收字符串，节点用 `#fileValidateMessage`；逐文件插槽的文件数据在 `file` 字段。
@@ -618,6 +623,7 @@
 - Solid：`ref` 拿到根元素 `CropperElement`，其上带 `getCropperCanvas`；`imgProps`（类型 `CropperImgProps`）的 `style` 与 `cropperBoxStyle` 只接受对象。
 - Svelte：`zoom` 可绑定（`bind:zoom`、函数绑定或单向传值），滚轮缩放同时调 `onZoomChange(zoom)`，`zoom` 不读全局默认值；`imgProps` 为 `HTMLImgAttributes`（加载回调用 `onload`），`style`、`cropperBoxStyle` 只接受字符串；`getCropperCanvas()` 经 `bind:this` 调用。
 - 换图后保持当前 zoom，图片尺寸与 zoom 一致。切换 `aspectRatio` 时结束进行中的角点与裁剪框拖动。
+- React、Vue、Solid：服务端渲染的图片在 hydration 前已加载完成时，hydration 后补发 load 并初始化裁剪框（原来裁剪框保持 0 尺寸）。
 
 ### Resizable
 
@@ -896,7 +902,7 @@
 - 破坏性（样式钩子）：TagInput 悬停改由 CSS `:hover` 提供，不再加 `semi-tagInput-hover` 类；删除 `semi-tagInput-clearBtn-invisible` 与 `semi-avatar-focus`。TagInput 清除按钮与拖拽句柄改为带名称（`TagInput.clear`、`TagInput.dragSort`）的原生 button，`onFocus`、`onBlur` 以整个组件为界。
 - Avatar：可点击头像的焦点目标为 `role="button"`（按 `img` 查询的测试需改为 button），不再加语言包 `Avatar.clickable` 前缀（键已删除）；AvatarGroup 未声明属性落在根 div，`size`、`shape` 经 context 下发到被 Tooltip、Popover 包住的头像。PinCode：`autoFocus` 默认值由 `true` 改为 `false`，需要时显式传 `autoFocus` 或用 `PinCodeHandle.focus(0)`；`onFocus`、`onBlur` 按整组计，焦点从外部进入整个 PinCode 时触发一次 `onFocus`，格子之间移动不触发。
 - Avatar：`border.motion` 的外圈动画只放大并淡出，边框粗细不再随动画变细到 0（原来每帧触发布局与重绘）；删除 Sass 变量 `$animation_width-additionalBorder-end`。
-- React：服务端渲染的 Avatar 图片在 hydration 前已加载失败时，hydration 提交后调用 `onError` 并显示文字（原来保留破图）。
+- React、Vue、Solid：服务端渲染的 Avatar 图片在 hydration 前已加载失败时，hydration 后调用 `onError` 并显示文字（原来保留破图）。
 - AutoComplete：受控值回显但没有匹配项时保留已输入的文本（四个框架一致）。
 - AutoComplete：下拉中有可聚焦元素（`renderItem`、`emptyContent` 里的按钮或链接）时，方向键只移动高亮，焦点不再移入下拉。
 - Vue：AutoComplete、PinCode、TagInput 用 `v-model`（`modelValue`，TagInput 另有 `v-model:inputValue`），回调为同名事件，`autoFocus` 写作 `autofocus`；AutoComplete 的 `renderItem`、`triggerRender` 为 `#item`、`#trigger`，`prefix`、`suffix`、`insetLabel`、`clearIcon`、`emptyContent` 只有插槽，ref 为 `{ nativeElement }`；TagInput 插槽 `#prefix`、`#suffix`、`#insetLabel`、`#clearIcon`、`#tag`；PinCode 新增按整组计的 `focus`、`blur` 事件。

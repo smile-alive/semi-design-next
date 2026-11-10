@@ -16,16 +16,66 @@ function initialState(props: Record<string, any> = {}) {
 }
 
 describe('TableFoundation.getInitialState', () => {
-    it('按初始分页切出当前页，展开 key 合并受控与默认值', () => {
-        const state = initialState({
-            pagination: { pageSize: 2, defaultCurrentPage: 2 },
-            expandedRowKeys: ['1'],
-            defaultExpandedRowKeys: ['2'],
-        });
+    it('按初始分页切出当前页，查询带默认排序与筛选值', () => {
+        const state = initialState({ pagination: { pageSize: 2, defaultCurrentPage: 2 } });
         expect(state.dataSource.map((record) => record.key)).toEqual(['3']);
         expect(state.pagination).toMatchObject({ currentPage: 2, pageSize: 2, total: 3 });
-        expect(state.expandedRowKeys).toEqual(['1', '2']);
         expect(state.queries).toEqual([{ dataIndex: 'name', sorter: true, sortOrder: false, filteredValue: [] }]);
+    });
+
+    it('展开 key：默认键、全部展开与受控键', () => {
+        expect(initialState({ defaultExpandedRowKeys: ['2', '2'] }).expandedRowKeys).toEqual(['2']);
+        expect(initialState({ expandedRowKeys: ['1'] }).expandedRowKeys).toEqual(['1']);
+        expect(initialState({}).expandedRowKeys).toEqual([]);
+
+        const tree = [{ key: 'p', children: [{ key: 'c1' }, { key: 'c2' }] }, { key: 'q' }];
+        expect(initialState({ dataSource: tree, defaultExpandAllRows: true, childrenRecordName: 'children' }).expandedRowKeys).toEqual(['p', 'c1', 'c2', 'q']);
+        expect(initialState({ dataSource: tree, expandAllRows: true, childrenRecordName: 'children' }).expandedRowKeys).toEqual(['p', 'c1', 'c2', 'q']);
+    });
+
+    it('展开 key：分组行按 defaultExpandAllGroupRows、expandAllGroupRows 展开，defaultExpandAllRows 不覆盖受控键', () => {
+        const grouped = [
+            { key: '1', name: 'a' },
+            { key: '2', name: 'a' },
+            { key: '3', name: 'b' },
+        ];
+        const props = { groupBy: 'name', dataSource: grouped, pagination: false };
+        expect(initialState({ ...props, defaultExpandAllGroupRows: true }).expandedRowKeys).toEqual(['a', 'b']);
+        expect(initialState({ ...props, expandAllGroupRows: true, expandedRowKeys: ['1'] }).expandedRowKeys).toEqual(['1', 'a', 'b']);
+        expect(initialState({ ...props, defaultExpandAllRows: true }).expandedRowKeys).toEqual(['1', '2', '3', 'a', 'b']);
+        expect(initialState({ ...props, defaultExpandAllRows: true, expandedRowKeys: ['1'] }).expandedRowKeys).toEqual(['1']);
+    });
+
+    it('选中 key：默认键写入 rowSelection 与对应 Set，受控时取受控键', () => {
+        const uncontrolled = initialState({ rowSelection: { defaultSelectedRowKeys: ['1', '1', '3'] } });
+        expect(uncontrolled.rowSelection.selectedRowKeys).toEqual(['1', '3']);
+        expect(uncontrolled.rowSelection.selectedRowKeysSet).toEqual(new Set(['1', '3']));
+
+        const bare = initialState({ rowSelection: true });
+        expect(bare.rowSelection.selectedRowKeys).toEqual([]);
+
+        const controlled = initialState({ rowSelection: { selectedRowKeys: ['2'], defaultSelectedRowKeys: ['1'] } });
+        expect(controlled.rowSelection.selectedRowKeys).toEqual(['2']);
+        expect(controlled.rowSelection.selectedRowKeysSet).toEqual(new Set(['2']));
+
+        expect(initialState({}).rowSelection).toBeNull();
+    });
+
+    it('选中 key：checkRelation 为 related 时默认键推出子孙、父级与半选', () => {
+        const tree = [
+            { key: 'p', children: [{ key: 'c1' }, { key: 'c2' }] },
+            { key: 'q', children: [{ key: 'd1' }, { key: 'd2' }] },
+        ];
+        const props = { dataSource: tree, childrenRecordName: 'children', pagination: false };
+        const state = initialState({ ...props, rowSelection: { checkRelation: 'related', defaultSelectedRowKeys: ['p', 'd1'] } });
+        expect(new Set(state.rowSelection.selectedRowKeys)).toEqual(new Set(['p', 'c1', 'c2', 'd1']));
+        expect(state.rowSelection.selectedRowKeysSet).toEqual(new Set(state.rowSelection.selectedRowKeys));
+        expect(state.halfCheckedRowKeys).toEqual(['q']);
+        expect(state.halfCheckedRowKeysSet).toEqual(new Set(['q']));
+
+        const unrelated = initialState({ ...props, rowSelection: { defaultSelectedRowKeys: ['p'] } });
+        expect(unrelated.rowSelection.selectedRowKeys).toEqual(['p']);
+        expect(unrelated.halfCheckedRowKeys).toEqual([]);
     });
 
     it('传 groupBy 时首帧状态已有分组', () => {

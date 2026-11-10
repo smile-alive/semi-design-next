@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { Transition, h, normalizeStyle, onActivated, onDeactivated, shallowRef, useAttrs, useId, useTemplateRef, vShow, watch, withDirectives, type CSSProperties, type ComponentPublicInstance, type TransitionProps } from 'vue';
+    import { Transition, h, normalizeStyle, onActivated, onDeactivated, onMounted, shallowRef, useAttrs, useId, useTemplateRef, vShow, watch, withDirectives, type CSSProperties, type ComponentPublicInstance, type TransitionProps } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
     import ModalContentFoundation, { type ModalContentAdapter, isModal } from '@fibrae/semi-foundation/components/modal/modal-content-foundation';
     import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
@@ -7,7 +7,7 @@
     import useFoundation from '../../base/use-foundation';
     import useRecordFocus from '../../composables/use-record-focus';
     import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs';
-    import type { ModalContentProps, ModalSlots } from './interface';
+    import type { ModalContentEmits, ModalContentProps, ModalSlots } from './interface';
     import ModalDialog from './modal-dialog.vue';
 
     type FoundationProps = Omit<ModalContentProps, 'bodyStyle' | 'maskStyle'>;
@@ -21,6 +21,7 @@
         preventScroll: undefined,
     });
 
+    const emit = defineEmits<ModalContentEmits>();
     const slots = defineSlots<ModalSlots>();
     const attrs = useAttrs();
 
@@ -34,7 +35,7 @@
         props,
         () => ({}),
         () => ({
-            notifyClose: (event) => props.onClose(event),
+            notifyClose: (event) => emit('close', event),
             getRoot: () => root.value,
             getDialog: () => dialog.value,
         })
@@ -58,7 +59,7 @@
         },
         onAfterLeave: () => {
             displayed.value = false;
-            props.onAfterLeave();
+            emit('afterLeave');
         },
     });
 
@@ -132,6 +133,12 @@
         },
         { flush: 'post' }
     );
+
+    // Portal renders its content a flush after mounting, so a close in that gap mounts the dialog already hidden: no
+    // leave runs, and the Modal would hold its lock waiting for an after-leave that never comes
+    onMounted(() => {
+        if (!props.visible) emit('afterLeave');
+    });
 
     onDeactivated(() => {
         active.value = false;

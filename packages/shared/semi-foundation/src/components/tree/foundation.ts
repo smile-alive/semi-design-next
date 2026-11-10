@@ -472,7 +472,7 @@ export default class TreeFoundation<E = unknown> extends BaseFoundation<TreeAdap
 
     /** The state that props imply, given the previous state; null when nothing changed (see `deriveTreeState`) */
     static deriveState(props: BasicTreeProps, prevState: BasicTreeInnerData): Partial<BasicTreeInnerData> | null {
-        return deriveTreeState(props, prevState, TreeFoundation.propKeys);
+        return deriveTreeState(props, prevState, TreeFoundation.propKeys, Boolean(props.motion));
     }
 
     static getInitialState(props: BasicTreeProps): BasicTreeInnerData {

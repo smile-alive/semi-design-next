@@ -37,6 +37,8 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
     #compositionEnter: boolean = false;
     #composedSinceFocus = false;
     #reported: string | undefined;
+    // the text compositionend reported in composition mode, until the next input event
+    #committed: string | undefined;
 
     protected get composedSinceFocus() {
         return this.#composedSinceFocus;
@@ -103,8 +105,14 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
 
     handleChange = (value: string, e: unknown) => {
         const { composition } = this.getProps();
-        let nextValue = value;
+        const committed = this.#committed;
+        this.#committed = undefined;
         this.#reported = value;
+        // Gecko follows compositionend with an input event of the same text (w3c/uievents#202), already reported there
+        if (value === committed) {
+            return;
+        }
+        let nextValue = value;
         // composing: state must still follow, controlled or not, so the element shows the composing text
         if (composition && this.#compositionEnter) {
             this.setEntryState({ value: nextValue });
@@ -119,6 +127,7 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
     handleCompositionStart = (e: CE) => {
         this.#compositionEnter = true;
         this.#composedSinceFocus = true;
+        this.#committed = undefined;
         this.adapter.notifyCompositionStart(e);
     };
 
@@ -136,6 +145,7 @@ export default class TextEntryFoundation<A extends TextEntryAdapter<P, S, CE>, P
         if (composition) {
             const nextValue = this.getNextValue(value);
             this.#reported = value;
+            this.#committed = value;
             this.changeValue(nextValue, e);
             if (this.isControlledComponent()) {
                 // the parent may reject the result; the value prop then does not change

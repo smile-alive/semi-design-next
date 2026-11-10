@@ -7,6 +7,7 @@
     import '@fibrae/semi-foundation/components/upload/upload.scss';
     import { IconAlertCircle, IconClear, IconClose, IconFile, IconRefresh } from '@fibrae/semi-icons-vue';
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
+    import HydratedImage from '../../internal/hydrated-image.vue';
     import { hasSlotContent } from '../../utils/slot-nodes';
     import Button from '../button';
     import useLocale from '../locale/use-locale';
@@ -122,7 +123,7 @@
             ]"
         >
             <slot v-if="$slots.previewFile" name="previewFile" v-bind="slotProps()" />
-            <img v-else-if="props.file.preview && !fallbackPreview" alt="" :src="props.file.url" @error="onImageError" />
+            <HydratedImage v-else-if="props.file.preview && !fallbackPreview" alt="" :src="props.file.url" @error="onImageError" />
             <IconFile v-else size="large" />
         </div>
         <div :class="`${info}-main`">
@@ -190,7 +191,7 @@
         @click="props.onPreviewClick?.()"
     >
         <slot v-if="$slots.thumbnail" name="thumbnail" v-bind="slotProps()" />
-        <img v-else-if="!fallbackPreview" :alt="props.file.name" :src="props.file.url" :style="sizeStyle" @error="onImageError" />
+        <HydratedImage v-else-if="!fallbackPreview" :alt="props.file.name" :src="props.file.url" :style="sizeStyle" @error="onImageError" />
         <IconFile v-else size="large" />
         <button v-if="props.onPreviewClick" :aria-label="i18n.locale.preview" :class="`${prefix}-preview-trigger`" type="button" />
         <Progress v-if="flags.showPicProgress" :aria-label="i18n.locale.uploadProgress" orbitStroke="var(--semi-color-white)" :percent="props.file.percent" size="small" type="circle" />

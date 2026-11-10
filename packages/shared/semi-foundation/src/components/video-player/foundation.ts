@@ -217,8 +217,9 @@ export default class VideoPlayerFoundation<P extends VideoPlayerBaseProps = Vide
         const { playbackRate, volume, muted } = this.getStates();
         const video = this.adapter.getVideo();
         if (video) {
-            // the duration is NaN until the metadata loads
-            this.setState({ totalTime: video.duration || 0 });
+            // the duration is NaN until the metadata loads; a server-rendered element may also have failed or autoplayed before
+            // hydration attached the listeners
+            this.setState({ totalTime: video.duration || 0, isError: video.error != null, isPlaying: !video.paused });
             video.volume = volume / 100;
             video.muted = muted;
             // the media load algorithm resets playbackRate to defaultPlaybackRate

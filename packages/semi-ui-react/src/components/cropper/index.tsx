@@ -11,6 +11,7 @@ import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
 import useEventListener from '../../hooks/use-event-listener';
 import useResizeObserver from '../../hooks/use-resize-observer';
+import HydratedImage from '../../internal/hydrated-image';
 import useLocale from '../locale/use-locale';
 
 type Foundation = CropperFoundation;
@@ -90,7 +91,7 @@ export default function Cropper(rawProps: CropperProps) {
         <div role={namedRole(rest)} {...rest} ref={containerRef} className={clsx(prefixCls, className)} style={style}>
             <div className={cssClasses.IMG_WRAPPER}>
                 {/* the cropping surface, not content: there is no description to give */}
-                <img
+                <HydratedImage
                     alt=""
                     crossOrigin="anonymous"
                     {...imgProps}

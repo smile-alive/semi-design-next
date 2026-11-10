@@ -64,6 +64,7 @@ semi-ui-vue 的 Vue 3 组件写法。组件内语句顺序、foundation、属性
 
 - 服务端只执行 `setup`、`immediate` 的 watcher 和 `flush` 不是 `'post'` 的 `watchEffect`，不执行 `onBeforeMount`、`onMounted` 与其他 watcher。读写 DOM 的首次执行放 `onBeforeMount`、`onMounted`，不用 `immediate` watcher；读写 DOM 的 `watchEffect` 用 `flush: 'post'`。打开时记录焦点用 `composables/use-record-focus.ts`；只在挂载后渲染的内容用 `composables/use-mounted.ts`；其他「首次执行加后续变化」的逻辑写 `onBeforeMount` 加不带 `immediate` 的 `watch`。
 - 弹层经 `internal/portal.vue` 在 `onMounted` 后才渲染 `Teleport`，服务端 HTML 只含触发器，默认打开的弹层在 hydration 后出现。
+- Vue 在 hydration 时才给 `img` 挂 `load`、`error` 监听，之前已完成的图片不会上报；依赖图片事件的 `<img>` 写成 `internal/hydrated-image.vue`，它等父组件 `onMounted`（foundation init）之后补发。要拿元素时读组件 ref 的 `$el`。
 - 服务端渲染用例在 `vue-ssr` 项目（`*.ssr.test.tsx`），hydration 用例在 `vue` 项目：用例表 `__tests__/ssr-cases.tsx` 按导出列出，守卫检查两个方向；新增导出必须补用例。
 
 ## 模板与事件

@@ -142,8 +142,6 @@ export interface ModalContentProps {
     visible: boolean;
     motion: boolean;
     inBody: boolean;
-    onClose: (event: MouseEvent | KeyboardEvent) => void;
-    onAfterLeave: () => void;
     /** The footer button that takes focus on open when the content has no autofocus element */
     initialFocus?: 'ok' | 'cancel';
     title?: string;
@@ -161,6 +159,11 @@ export interface ModalContentProps {
     height?: string | number;
     isFullScreen: boolean;
     contentClass?: HTMLAttributes['class'];
+}
+
+export interface ModalContentEmits {
+    close: [event: MouseEvent | KeyboardEvent];
+    afterLeave: [];
 }
 
 export interface ModalDialogProps {

@@ -87,9 +87,13 @@ export default class AudioPlayerFoundation<P extends AudioPlayerBaseProps = Audi
         audio?.addEventListener('ended', () => this.#endHandler(), { signal: this.signal });
         // the load algorithm pauses the element without a pause event, so a new src leaves isPlaying stale
         audio?.addEventListener('loadstart', () => this.setState({ isPlaying: !audio.paused }), { signal: this.signal });
-        // a server-rendered element loads before hydration mounts the player, and then loadedmetadata never reaches it
+        // a server-rendered element loads before hydration mounts the player, and then loadedmetadata, error and an autoplay
+        // play event never reach it
         if (audio && audio.readyState >= HTMLMediaElement.HAVE_METADATA) {
             this.#initAudioState();
+        }
+        if (audio) {
+            this.setState({ isPlaying: !audio.paused, error: audio.error != null });
         }
     }
 

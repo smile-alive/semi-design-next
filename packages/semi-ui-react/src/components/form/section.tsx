@@ -2,6 +2,7 @@ import type React from 'react';
 import { memo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
+import '@fibrae/semi-foundation/components/form/form.scss';
 import type { ElementProps } from '../../base/base';
 
 const prefix = cssClasses.PREFIX;

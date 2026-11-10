@@ -5,7 +5,6 @@ import { cssClasses } from './constants';
 import type { ModalProps } from './modal-foundation';
 
 export interface ModalContentProps extends Omit<ModalProps, 'getPopupContainer'> {
-    onClose: (e: any) => void;
     /** Whether the dialog renders into body rather than a custom container; Modal resolves it once per render */
     inBody: boolean;
     /** The default footer button (its `data-type`) focused on opening when nothing inside the dialog has focus */
@@ -23,7 +22,7 @@ export function isModal({ mask, maskFixed, inBody }: Pick<ModalContentProps, 'ma
     return Boolean(mask) && (inBody || Boolean(maskFixed));
 }
 
-/** E is the host's click event, which the foundation passes on to onClose; Escape passes the native KeyboardEvent */
+/** E is the host's click event, which the foundation passes on to notifyClose; Escape passes the native KeyboardEvent */
 export interface ModalContentAdapter<P extends ModalContentProps = ModalContentProps, E = unknown> extends DefaultAdapter<P> {
     notifyClose: (e: E | KeyboardEvent) => void;
     /** The outermost element, which goes on the overlay stack */

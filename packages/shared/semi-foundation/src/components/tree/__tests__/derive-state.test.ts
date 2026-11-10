@@ -110,3 +110,28 @@ describe('Tree deriveState 的搜索与展开', () => {
         expect(keysOf(opened)).toEqual(['fruit', 'veg', 'bean']);
     });
 });
+
+describe('受控 expandedKeys 变化的展开动画', () => {
+    const data = [{ key: 'p', label: 'P', value: 'p', children: [{ key: 'c', label: 'C', value: 'c' }] }];
+    const expand = (Foundation: typeof TreeFoundation | typeof TreeSelectFoundation, props: Record<string, unknown>) => {
+        const base = { treeData: data, multiple: false, expandedKeys: [] as string[], ...props };
+        const first = Foundation.getInitialState(base) as BasicTreeInnerData & BasicTreeSelectInnerData;
+        return Foundation.deriveState({ ...base, expandedKeys: ['p'] }, first)?.motionKeys;
+    };
+
+    it.each([
+        [true, ['c']],
+        [false, undefined],
+    ])('Tree 按 motion=%s 生成动画键', (motion, expected) => {
+        expect(expand(TreeFoundation, { motion })?.size).toBe(expected?.length);
+    });
+
+    it.each([
+        [true, true, ['c']],
+        [true, false, undefined],
+        [false, true, ['c']],
+        [false, false, undefined],
+    ])('TreeSelect 按 motionExpand 而非 motion 生成动画键（motion=%s, motionExpand=%s）', (motion, motionExpand, expected) => {
+        expect(expand(TreeSelectFoundation, { motion, motionExpand })?.size).toBe(expected?.length);
+    });
+});

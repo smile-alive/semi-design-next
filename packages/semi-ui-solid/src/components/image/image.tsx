@@ -7,6 +7,7 @@ import '@fibrae/semi-foundation/components/image/image.scss';
 import { IconUploadError } from '@fibrae/semi-icons-solid';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
+import HydratedImage from '../../internal/hydrated-image';
 import callHandler from '../../utils/call-handler';
 import hasContent from '../../utils/has-content';
 import mergeStyles from '../../utils/merge-styles';
@@ -139,7 +140,7 @@ export default function Image(rawProps: ImageProps) {
                 onClick={handleClick}
                 onKeyDown={handleKeyDown}
             >
-                <img
+                <HydratedImage
                     {...rest}
                     class={clsx(
                         `${prefixCls}-img`,
