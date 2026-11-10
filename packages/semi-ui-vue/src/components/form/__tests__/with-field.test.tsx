@@ -3,7 +3,7 @@ import { defineComponent, KeepAlive, nextTick, reactive, ref } from 'vue';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { render } from '@test/utils/vue';
-import { Form, FormInputGroup, withField, type FormApi } from '..';
+import { FormInputGroup, withField, type FormApi } from '..';
 import { FormInput, getInputs, renderForm } from './fixtures/fields';
 import GroupToggle from './fixtures/group-toggle.vue';
 
@@ -198,6 +198,5 @@ describe('withField Vue 专属行为', () => {
         api().reset();
         await nextTick();
         expect(api().getValue('user')).toEqual({ name: 'semi' });
-        expect(Form).toBeDefined();
     });
 });

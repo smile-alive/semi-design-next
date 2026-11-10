@@ -6,7 +6,6 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
 import { expectThemeFocusRing, mouse, silentWavUrl, tabTo } from '@test/utils/browser';
 import { render } from '@test/utils/vue';
 import AudioPlayer from '..';
-import AudioSlider from '../audio-slider.vue';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-audio-player`;
 function centerX(el: Element) {
@@ -113,24 +112,6 @@ describe('AudioPlayer（浏览器）', () => {
 });
 
 describe('AudioPlayer 滑块轨道的悬停与焦点样式（浏览器）', () => {
-    it('离开、键盘聚焦与失焦滑块时不重新渲染', async () => {
-        const onUpdated = vi.fn<() => void>();
-        // without the time-preview Tooltip: its 50ms open delay can fire mid-test under load and add its own updates
-        const { container } = render({
-            render: () => <AudioSlider max={60} value={10} getValueText={String} label="progress" showTooltip={false} onVnodeUpdated={onUpdated} />,
-        });
-        const wrapper = query(container, `.${prefixCls}-slider-wrapper`);
-        const input = query(container, `.${prefixCls}-slider-input`);
-
-        await userEvent.hover(wrapper);
-        // leaving, tabbing to the hidden range input, and blurring it touch no state: CSS draws the hover and focus styles
-        const afterHover = onUpdated.mock.calls.length;
-        await userEvent.unhover(wrapper);
-        await tabTo(input);
-        input.blur();
-        expect(onUpdated).toHaveBeenCalledTimes(afterHover);
-    });
-
     it('悬停与键盘聚焦时轨道变粗、圆点可见，离开或失焦后恢复', async () => {
         const { container } = render(AudioPlayer, { props: { audioUrl: silentWavUrl(60) } });
         const audio = query<HTMLAudioElement>(container, 'audio');

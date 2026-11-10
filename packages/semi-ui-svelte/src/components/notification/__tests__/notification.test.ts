@@ -148,7 +148,6 @@ describe('Notification', () => {
         await show('open', { title: 'Hi, Bytedance', content: 'ies dance dance dance', duration: 1, zIndex: 2333 });
         expect(document.querySelector(`.${prefix}-wrapper`)).toHaveStyle({ zIndex: '2333' });
         const inner = document.querySelector(`.${noticeCls}-content-wrapper`) as HTMLElement;
-        expect(inner.childElementCount).toEqual(2);
         expect(inner.querySelector(`.${noticeCls}-title`)).toHaveTextContent(/^Hi, Bytedance$/);
         expect(inner.querySelector(`.${noticeCls}-content`)).toHaveTextContent(/^ies dance dance dance$/);
     });

@@ -1211,13 +1211,12 @@ describe('Chat 默认值', () => {
     it('全局的 align 与 showStopGenerate 生效，显式传入的值优先', () => {
         semiGlobal.config.overrideDefaultProps = { Chat: { align: 'leftAlign', showStopGenerate: true } };
         const loading = [...chats.slice(0, 2), { ...chats[2], status: 'loading' as const }];
-        const { container, store } = renderChat({}, {}, { chats: loading });
+        const { container } = renderChat({}, {}, { chats: loading });
         expect(container.querySelector('.semi-chat-chatBox-right')).toBeNull();
         expect(container.querySelector('.semi-chat-action-stop')).not.toBeNull();
         const explicit = renderChat({ align: 'leftRight', showStopGenerate: false }, {}, { chats: loading });
         expect(explicit.container.querySelector('.semi-chat-chatBox-right')).not.toBeNull();
         expect(explicit.container.querySelector('.semi-chat-action-stop')).toBeNull();
-        expect(store).toBeTruthy();
     });
 });
 

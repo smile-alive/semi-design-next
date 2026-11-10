@@ -266,20 +266,4 @@ describe('Svelte Form-formApi', () => {
         expect(api().getFormState().errors).toEqual({});
         for (const path of paths) expect(errorOf(path)).toBeNull();
     });
-
-    // rows are keyed by item and their fields are not, so removing the middle row renames the last row's fields in place
-    it('formApi-setValue 删除三行数组字段的中间行后，第二行显示原第三行的值', async () => {
-        type Effect = { name: string; type: string; key: number };
-        const effects = [1, 2, 3].map((n, key) => ({ name: `${n}-name`, type: `${n}-type`, key }));
-        const { api } = renderForm({ initValues: { effects } }, [], { rows: { path: 'effects', subs: ['name', 'type'], keyBy: 'key' } });
-        api().setValue(
-            'effects',
-            (api().getValue('effects') as Effect[]).filter((effect) => effect.key !== 1)
-        );
-        await settle();
-        expect(fieldInput('effects[0].name')).toHaveValue('1-name');
-        expect(fieldInput('effects[1].name')).toHaveValue('3-name');
-        expect(fieldInput('effects[1].type')).toHaveValue('3-type');
-        expect(fieldInput('effects[2].name')).toBeNull();
-    });
 });

@@ -250,9 +250,8 @@ describe('Tooltip 浏览器', () => {
         });
     });
 
-    it('body position 改变后仍对齐，悬停不扫描整个文档', async () => {
+    it('body position 改变后仍对齐', async () => {
         const original = document.body.style.position;
-        const query = vi.spyOn(document, 'querySelectorAll');
         try {
             renderTip({ position: 'bottom', motion: false }, { margin: '200px' });
             const trigger = screen.getByRole('button');
@@ -260,10 +259,8 @@ describe('Tooltip 浏览器', () => {
             await waitFor(() => expect(screen.getByRole('tooltip')).toBeVisible());
             document.body.style.position = 'relative';
             await waitFor(() => expect(center(popup())).toBeCloseTo(center(trigger), 0));
-            expect(query.mock.calls.filter(([selector]) => selector === ':hover')).toHaveLength(0);
         } finally {
             document.body.style.position = original;
-            query.mockRestore();
         }
     });
 

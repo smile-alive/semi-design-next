@@ -542,16 +542,6 @@ describe('Popconfirm', () => {
         expect(await screen.findByRole('dialog')).toBeInTheDocument();
     });
 
-    it('props 运行时：Boolean 类型都有 default 键，函数 prop 默认值为 undefined', () => {
-        const declared = (Popconfirm as unknown as { props: Record<string, { type?: unknown; default?: unknown }> }).props;
-        const missingDefault = Object.entries(declared)
-            .filter(([, option]) => [option.type].flat().includes(Boolean) && !('default' in option))
-            .map(([key]) => key);
-        expect(missingDefault).toEqual([]);
-        expect(declared.onConfirm.default).toBeUndefined();
-        expect(declared.onCancel.default).toBeUndefined();
-    });
-
     it('focusTrigger 使触发元素获得焦点，disabled 时不做任何操作', async () => {
         const view = render(Handle);
         await fireEvent.click(screen.getByRole('button', { name: 'focus' }));

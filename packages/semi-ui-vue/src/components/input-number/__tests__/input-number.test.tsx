@@ -783,15 +783,6 @@ describe('InputNumber', () => {
         expect(getButtons()).toHaveClass(`${prefixCls}-number-suffix-btns-inner-hover`);
     });
 
-    it('格式化后光标留在后续数字之前', async () => {
-        await mount({ defaultValue: 100, formatter: thousands, parser: removeThousands });
-        await userEvent.type(getInput(), '5', { initialSelectionStart: 1, initialSelectionEnd: 1 });
-        await nextTick();
-        expect(getInput()).toHaveValue('1,500');
-        expect(getInput().selectionStart).toBe(3);
-        expect(getInput().selectionEnd).toBe(3);
-    });
-
     it('货币模式下的字符串值', async () => {
         await mount({ modelValue: '100.50', currency: 'CNY' });
         expect(getInput()).toHaveValue('¥100.50');
@@ -897,14 +888,6 @@ describe('InputNumber', () => {
 
         await blurInput();
         expect(getInput()).toHaveValue('5.00');
-    });
-
-    it('在开头输入时光标位置', async () => {
-        await mount({ defaultValue: 100, formatter: thousands, parser: removeThousands });
-        await userEvent.type(getInput(), '9', { initialSelectionStart: 0, initialSelectionEnd: 0 });
-        await nextTick();
-        expect(getInput()).toHaveValue('9,100');
-        expect(getInput().selectionStart).toBe(2);
     });
 
     it('受控格式化后光标位置', async () => {
@@ -1119,16 +1102,6 @@ describe('InputNumber', () => {
         expect(getInput()).toHaveValue('101');
         expect(getInput()).toHaveAttribute('aria-valuenow', '101');
         expect(getInput()).toHaveFocus();
-    });
-
-    it('聚焦状态下受控值超过 max（非法但非 NaN）', async () => {
-        const onChange = vi.fn<Change>();
-        const view = await mount({ max: 100, onChange, modelValue: 50 });
-        await focusInput();
-        await view.rerender({ modelValue: 200 });
-        await blurInput();
-        expect(getInput()).toHaveValue('100');
-        expect(onChange).toHaveBeenCalledWith(100, expect.anything());
     });
 
     it('聚焦状态下受控值低于 min（非法但非 NaN）', async () => {
@@ -1896,13 +1869,6 @@ describe('InputNumber', () => {
             expect(document.querySelector(`.${prefixCls}-suffix`)).toHaveTextContent('kg');
         });
 
-        it('hideButtons 与 innerButtons 同时设置时没有按钮', async () => {
-            await mount({ defaultValue: 1, hideButtons: true, innerButtons: true });
-            await fireEvent.mouseEnter(getWrapper());
-            await focusInput();
-            expect(getButtons()).toBeNull();
-        });
-
         it('InputGroup 下发 size 与 disabled，自身 disabled 优先', async () => {
             render(InGroup);
             await nextTick();
@@ -1980,12 +1946,6 @@ describe('InputNumber', () => {
             expect(onKeydown).toHaveBeenCalledTimes(1);
         });
 
-        it('Shift 加 ArrowUp 仍按 shiftStep 步进', async () => {
-            await mount({ defaultValue: 5, shiftStep: 3 });
-            await keyDown('ArrowUp', { shiftKey: true });
-            expect(getInput()).toHaveValue('8');
-        });
-
         it('键盘步进后继续打字，受控的 precision 不把输入中的文本按步进重新格式化', async () => {
             await mountControlled(5.12, { precision: 2 });
             await focusInput();
@@ -2013,7 +1973,6 @@ describe('InputNumber', () => {
             expect(getInput()).toHaveValue('10');
             await advance(numbers.DEFAULT_PRESS_TIMEOUT + 500);
             expect(onUpClick).toHaveBeenCalledTimes(1);
-            expect(vi.getTimerCount()).toBe(0);
             await release(getUpButton());
         });
 

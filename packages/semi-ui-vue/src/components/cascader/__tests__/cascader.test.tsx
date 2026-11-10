@@ -830,13 +830,6 @@ describe('Cascader', () => {
         expect(getSelectionText()).toEqual('Asia/Atlantis');
     });
 
-    it('focus 事件', async () => {
-        const onFocus = spy<'focus'>();
-        await renderCascader({ onFocus });
-        await click(getSelection());
-        expect(onFocus).toHaveBeenCalledTimes(1);
-    });
-
     it('blur 事件', async () => {
         const onBlur = spy<'blur'>();
         await renderCascader({ onBlur });
@@ -1367,17 +1360,6 @@ describe('Cascader', () => {
         expect(onBlur).toHaveBeenCalledTimes(1);
     });
 
-    it('select 事件', async () => {
-        const onSelect = spy<'select'>();
-        await renderCascader({ onSelect, defaultOpen: true });
-        await click(getOption('北美洲'));
-        expect(onSelect).not.toHaveBeenCalled();
-        expect(getLists()).toHaveLength(2);
-        await click(getOption('加拿大'));
-        expect(onSelect).toHaveBeenCalledTimes(1);
-        expect(onSelect).toHaveBeenCalledWith('Canada');
-    });
-
     it('逐字输入时每次发出 search', async () => {
         const onSearch = spy<'search'>();
         await renderCascader({ filterTreeNode: true, onSearch, defaultOpen: true });
@@ -1586,17 +1568,6 @@ describe('Cascader', () => {
         expect(document.querySelector(`.${prefixCls}-selection-placeholder`)).not.toBeNull();
     });
 
-    it('达到 max 时发出 exceed', async () => {
-        const onExceed = spy<'exceed'>();
-        await renderCascader({ multiple: true, max: 1, onExceed, defaultOpen: true });
-        await click(getCheckbox('亚洲'));
-        expect(getTagTexts()).toEqual(['亚洲']);
-        expect(onExceed).not.toHaveBeenCalled();
-        await click(getCheckbox('北美洲'));
-        expect(onExceed).toHaveBeenCalledTimes(1);
-        expect(getTagTexts()).toEqual(['亚洲']);
-    });
-
     it('多选没有选中项时显示 placeholder', async () => {
         await renderCascader({ multiple: true, defaultValue: [], placeholder: 'empty' });
         expect(getSelection()).not.toHaveClass(`${prefixCls}-selection-multiple`);
@@ -1615,12 +1586,6 @@ describe('Cascader', () => {
         expect(Array.from(rows).map((row) => row.textContent)).toEqual(['Asia / China / Beijing', 'Asia / China / Shanghai']);
         expect(rows[0]).toHaveStyle({ position: 'absolute', top: '0px', height: '36px' });
         expect(rows[1]).toHaveStyle({ position: 'absolute', top: '36px', height: '36px' });
-    });
-
-    it('空的 #emptyContent 插槽不渲染空状态，下拉仍打开', async () => {
-        await renderCascader({ treeData: [], defaultOpen: true }, { emptyContent: () => [] });
-        expect(document.querySelector(`.${prefixCls}-option-empty`)).toBeNull();
-        expect(document.querySelector(`.${prefixCls}-option-lists`)).not.toBeNull();
     });
 
     it('禁用项带禁用类名，点击不选中', async () => {

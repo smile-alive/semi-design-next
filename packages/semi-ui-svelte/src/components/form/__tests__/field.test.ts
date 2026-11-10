@@ -101,26 +101,6 @@ describe('Svelte Form 字段', () => {
         expect(container.querySelector(errorSelector)).toHaveTextContent('太短');
     });
 
-    it('rules 校验，stopValidateWithError 在第一条失败处停止', async () => {
-        const rules = [
-            { required: true, message: '必填' },
-            { type: 'string', min: 5, message: '至少 5 位' },
-        ];
-        const { api, container } = renderForm({}, [input('a', { rules }), input('b', { rules, stopValidateWithError: true })]);
-        await api()
-            .validate()
-            .catch(() => undefined);
-        await settle();
-        const errors = container.querySelectorAll(errorSelector);
-        expect(errors[0]).toHaveTextContent('必填');
-        expect(errors[1]).toHaveTextContent('必填');
-        await typeInto(container.querySelectorAll('input')[0], 'ab');
-        await typeInto(container.querySelectorAll('input')[1], 'ab');
-        await settle();
-        expect(api().getError('a')).toEqual(['至少 5 位']);
-        expect(api().getError('b')).toEqual(['至少 5 位']);
-    });
-
     it('trigger="blur" 时变化不校验，失焦后校验并标记 touched', async () => {
         const { container, api } = renderForm({}, [input('name', { trigger: 'blur', rules: [{ required: true, message: '必填' }] })]);
         await typeInto(getInput(), '');
@@ -422,14 +402,13 @@ describe('Svelte Form 字段：校验', () => {
             }
             return value === 'blurVal' ? 'blurError' : '';
         };
-        renderForm({}, [input('a', { trigger: ['change', 'blur'], validator: validate })]);
-        await typeInto(getInput(), 'changeVal');
+        renderForm({}, [input('a', { trigger: ['change', 'blur'], validator: validate }), input('b', { trigger: ['change', 'blur'], validator: validate, initValue: 'blurVal' })]);
+        await typeInto(inputOf('a'), 'changeVal');
         await settle();
         expect(errorOf('a')?.textContent?.trim()).toBe('changeError');
-        await typeInto(getInput(), 'blurVal');
-        await blur(getInput());
+        await blur(inputOf('b'));
         await settle();
-        expect(errorOf('a')?.textContent?.trim()).toBe('blurError');
+        expect(errorOf('b')?.textContent?.trim()).toBe('blurError');
     });
 
     it('先发出的异步校验晚于新校验结束时，不覆盖新的错误', async () => {

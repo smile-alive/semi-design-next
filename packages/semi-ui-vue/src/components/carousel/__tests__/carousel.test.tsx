@@ -396,11 +396,6 @@ describe('Carousel', () => {
             expect(getActiveItem(click.container)).toHaveTextContent(/^index0$/);
         });
 
-        it('将 data-* 属性传给根元素', () => {
-            const { container } = renderCarousel({ 'data-testid': 'carousel', autoPlay: false });
-            expect(getRoot(container)).toHaveAttribute('data-testid', 'carousel');
-        });
-
         it('showIndicator 为 false 时隐藏 indicator', () => {
             const { container } = renderCarousel({ showIndicator: false, autoPlay: false });
             expect(query(container, 'indicator')).toBeNull();

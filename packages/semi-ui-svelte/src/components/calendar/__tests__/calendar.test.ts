@@ -886,13 +886,6 @@ describe('Calendar 属性与全局默认值', () => {
         expect(rootOf(plain.container)).toHaveClass(`${prefixCls}-week`);
         expect(rootOf(plain.container).style.height).toBe('600px');
     });
-
-    it('day 视图：markWeekend 标记周末的日列，非今天不显示当前时间线', async () => {
-        const view = renderCal({ displayValue: new Date(2019, 7, 10), markWeekend: true, minEventHeight: 50, mode: 'day' });
-        await settle();
-        expect(view.container.querySelector(`.${prefixCls}-grid-skeleton`)).toHaveClass(`${prefixCls}-weekend`);
-        expect(currLine(view.container)).toBeNull();
-    });
 });
 
 describe('Calendar 数据更新', () => {

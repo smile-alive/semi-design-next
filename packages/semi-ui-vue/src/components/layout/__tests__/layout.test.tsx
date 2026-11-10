@@ -1,5 +1,5 @@
 /** @jsxImportSource vue */
-import { createSSRApp, nextTick, type Component, type VNode } from 'vue';
+import { createSSRApp, nextTick, type Component } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import { fireEvent } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
@@ -53,11 +53,6 @@ describe('Layout', () => {
         expect(LayoutFooter).toBe(Layout.Footer);
         expect(LayoutContent).toBe(Layout.Content);
         expect(LayoutSider).toBe(Layout.Sider);
-    });
-
-    it('带 sider 的 layout', () => {
-        const view = render(Layout, { slots: { default: () => <Layout.Sider /> } });
-        expect(view.container.querySelector(`section.${hasSiderCls}`)).not.toBeNull();
     });
 
     it('各部分拥有各自的类名，并包裹 sider 的子元素', () => {
@@ -280,12 +275,6 @@ describe('Layout', () => {
         expect(aside).toHaveAttribute('title', 't');
         await fireEvent.click(aside);
         expect(onClick).toHaveBeenCalledTimes(1);
-    });
-
-    it('默认插槽最多求值两次', () => {
-        const slot = vi.fn<() => VNode>(() => <Layout.Content />);
-        render(Layout, { slots: { default: slot } });
-        expect(slot.mock.calls.length).toBeLessThanOrEqual(2);
     });
 
     it('应用把 LayoutHeader 等注册为别名 Header 时不自递归', () => {

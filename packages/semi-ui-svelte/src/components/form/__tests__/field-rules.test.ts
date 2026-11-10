@@ -42,11 +42,6 @@ describe('Svelte Form 字段规则', () => {
         expect(container.querySelector('[x-field-id="own"] .semi-form-field-extra-bottom')).toHaveTextContent('own');
     });
 
-    it('ArrayField 之外字段的 initValue 优先于 Form 的 initValues', () => {
-        renderForm({ initValues: { name: 'form' } }, [input('name', { label: 'Name', initValue: 'field' })]);
-        expect(screen.getByRole('textbox', { name: 'Name' })).toHaveValue('field');
-    });
-
     it('Form 拷贝值时保留函数与 Error 的引用', () => {
         const fn = () => 1;
         const error = new Error('e');

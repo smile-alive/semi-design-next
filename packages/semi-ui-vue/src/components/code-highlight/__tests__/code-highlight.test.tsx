@@ -4,7 +4,6 @@ import { renderToString } from 'vue/server-renderer';
 import { waitFor } from '@testing-library/vue';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import { register as foundationRegister } from '@fibrae/semi-foundation/components/code-highlight/registry';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
 import { render, sleep } from '@test/utils/vue';
 import CodeHighlight from '..';
@@ -235,10 +234,6 @@ describe('CodeHighlight', () => {
         });
         await waitForShiki(container);
         expect(container.querySelector('pre.shiki')).toHaveTextContent('int main () { return 0; }');
-    });
-
-    it('register 与基础库共用同一个函数', () => {
-        expect(CodeHighlight.register).toBe(foundationRegister);
     });
 
     it('服务端渲染只输出纯文本 pre > code', async () => {

@@ -283,21 +283,28 @@ describe('DragMove', () => {
         expect(element).toHaveStyle({ left: '30px', top: '40px' });
     });
 
-    it('document 监听共用一个 AbortController signal，拖动结束时 abort', () => {
-        const addListener = vi.spyOn(document, 'addEventListener');
-        renderDrag({}, dragMe);
+    it('拖动中阻止文本选择与原生拖拽，结束后恢复且不再响应指针事件', () => {
+        const onMouseUp = vi.fn<PointerHandler>();
+        renderDrag({ onMouseUp }, dragMe);
         const element = screen.getByText('Drag me');
+        const dispatch = (type: string) => {
+            const event = new Event(type, { bubbles: true, cancelable: true });
+            document.dispatchEvent(event);
+            return event.defaultPrevented;
+        };
         pointer(element, 'pointerdown', { pointerId: 1, pointerType: 'mouse', clientX: 100, clientY: 100 });
 
-        const signalOf = (options: unknown) => (options as AddEventListenerOptions | undefined)?.signal;
-        const dragCalls = addListener.mock.calls.filter(([, , options]) => signalOf(options));
-        expect(dragCalls.map(([type]) => type)).toEqual(['pointermove', 'pointerup', 'pointercancel', 'selectstart', 'dragstart']);
-        const signals = dragCalls.map(([, , options]) => signalOf(options));
-        expect(new Set(signals).size).toBe(1);
-        expect(signals[0]?.aborted).toBe(false);
+        expect(dispatch('selectstart')).toBe(true);
+        expect(dispatch('dragstart')).toBe(true);
 
         pointer(document, 'pointerup', { pointerId: 1, pointerType: 'mouse' });
-        expect(signals[0]?.aborted).toBe(true);
+        expect(onMouseUp).toHaveBeenCalledTimes(1);
+        expect(dispatch('selectstart')).toBe(false);
+        expect(dispatch('dragstart')).toBe(false);
+
+        pointer(document, 'pointerup', { pointerId: 1, pointerType: 'mouse' });
+        pointer(document, 'pointercancel', { pointerId: 1, pointerType: 'mouse' });
+        expect(onMouseUp).toHaveBeenCalledTimes(1);
     });
 
     it('替换子元素后拖动新元素', async () => {

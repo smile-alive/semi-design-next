@@ -100,7 +100,7 @@ export function compatBrowserProjects(id: string, browserProject: () => TestProj
                 ...project.test,
                 ...browserBase(browser),
                 name: `${id}-${browser}-browser`,
-                include: [`packages/semi-*-${id}/src/${compatComponents}/__tests__/**/*.browser.test.{ts,tsx}`],
+                include: [`packages/semi-*-${id}/src/components/${compatComponents}/__tests__/**/*.browser.test.{ts,tsx}`],
                 // gc() exists only under Chromium's --expose-gc
                 exclude: ['**/node_modules/**', '**/*-gc.browser.test.*', '**/*.hydration.browser.test.*'],
             },

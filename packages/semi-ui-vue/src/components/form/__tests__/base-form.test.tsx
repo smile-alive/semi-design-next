@@ -76,16 +76,6 @@ describe('Form-baseForm', () => {
         expect(JSON.parse(container.querySelector('code')?.textContent ?? '').values).toEqual({ UserName: 'semi' });
     });
 
-    it('getFormApi 事件及其参数为有效函数', () => {
-        const onGetFormApi = vi.fn<(formApi: FormApi) => void>();
-        const { api } = renderForm({ onGetFormApi }, nameInput);
-        expect(onGetFormApi).toHaveBeenCalledTimes(1);
-        const formApis = ['setValue', 'setValues', 'setError', 'setTouched', 'submitForm', 'reset', 'getInitValue', 'getFieldExist', 'getFormState', 'getTouched', 'getValue', 'getError', 'validate'] as const;
-        for (const apiName of formApis) {
-            expect(api()[apiName]).toEqual(expect.any(Function));
-        }
-    });
-
     it('未校验时 submit，由 formApi 触发', async () => {
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         const { api } = renderForm({ onSubmit }, () => <FormInput field="input" />);

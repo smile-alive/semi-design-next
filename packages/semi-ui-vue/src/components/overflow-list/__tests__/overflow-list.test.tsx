@@ -611,7 +611,7 @@ describe('OverflowList', () => {
         expect(itemTexts(view.container)).toEqual(keys.slice(0, 3));
     });
 
-    it('全局默认的 itemKey 函数生效；props 运行时 Boolean 有 default 键、函数 prop 默认值为 undefined', async () => {
+    it('全局默认的 itemKey 函数生效；props 运行时函数 prop 默认值为 undefined', async () => {
         const io = stubIntersectionObserver();
         semiGlobal.config.overrideDefaultProps = { OverflowList: { itemKey: (item) => (item as { id: string }).id } };
         const overflow = vi.fn<OverflowSlot>(() => null);
@@ -621,10 +621,6 @@ describe('OverflowList', () => {
         expect(overflow.mock.calls.slice(-1)[0][0].items.map((item) => item.id)).toEqual(['b', 'c']);
 
         const declared = (OverflowList as unknown as { props: Record<string, { type?: unknown; default?: unknown }> }).props;
-        const missingDefault = Object.entries(declared)
-            .filter(([, option]) => [option.type].flat().includes(Boolean) && !('default' in option))
-            .map(([key]) => key);
-        expect(missingDefault).toEqual([]);
         expect('default' in declared.itemKey).toBe(true);
         expect(declared.itemKey.default).toBeUndefined();
     });

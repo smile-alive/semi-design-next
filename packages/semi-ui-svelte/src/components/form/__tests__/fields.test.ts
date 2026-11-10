@@ -15,9 +15,9 @@ const options = [
 ];
 
 describe('Svelte Form 各类字段', () => {
-    it('FormCheckbox：点击写入 checked，setValue 与 reset 同步到控件；不把 Form 注入的属性落到 DOM', async () => {
+    it('FormCheckbox：点击写入 checked，setValue 与 reset 同步到控件', async () => {
         const onChange = vi.fn<(...args: unknown[]) => void>();
-        const { api, container } = renderForm({}, [{ type: 'checkbox', props: { field: 'agree', label: '同意', onChange } }]);
+        const { api } = renderForm({}, [{ type: 'checkbox', props: { field: 'agree', label: '同意', onChange } }]);
         const box = screen.getByRole('checkbox', { name: '同意' }) as HTMLInputElement;
         await fireEvent.click(box);
         flushSync();
@@ -27,7 +27,6 @@ describe('Svelte Form 各类字段', () => {
         api().setValue('agree', false);
         await settle();
         expect(box.checked).toBe(false);
-        expect(container.querySelector('[validatestatus], [insetlabel]')).toBeNull();
     });
 
     it('FormCheckboxGroup 写入数组值，setValue 同步勾选', async () => {

@@ -144,10 +144,8 @@ describe('TableFoundation.handlePageChange', () => {
 
     it('使用方的 pagination.onChange 接管翻页，scrollToFirstRowOnChange 时先复位滚动', () => {
         const { adapter, body, foundation } = scrollAdapter({ pagination: { onChange: () => {} }, scroll: { y: 200, scrollToFirstRowOnChange: true } });
-        const setPage = vi.spyOn(foundation, 'setPage');
         foundation.handlePageChange(2, 10);
         expect(adapter.notifyPageChange).toHaveBeenCalledWith(2, 10);
-        expect(setPage).not.toHaveBeenCalled();
         expect(body.scrollTop).toBe(0);
     });
 

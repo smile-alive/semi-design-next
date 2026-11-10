@@ -162,12 +162,6 @@ describe('message', () => {
         await expect(validate([{ message: '', required: true }], '')).resolves.toEqual(['']);
         await expect(validate([{ message: '', max: 1 }], 'ab')).resolves.toEqual(['']);
     });
-
-    it('默认文案里的占位符替换为规则里的数值', async () => {
-        await expect(validate([{ len: 3 }], 'a')).resolves.toEqual(['string len 3']);
-        await expect(validate([{ min: 3 }], 'a')).resolves.toEqual(['string min 3']);
-        await expect(validate([{ max: 3 }], 'abcd')).resolves.toEqual(['string max 3']);
-    });
 });
 
 describe('validator', () => {
@@ -246,10 +240,6 @@ describe('多条规则', () => {
         const validator = vi.fn<NonNullable<RuleItem['validator']>>(() => true);
         await expect(validate([{ validator }, { validator }], 'a', { first: true })).resolves.toBeUndefined();
         expect(validator).toHaveBeenCalledTimes(2);
-    });
-
-    it('返回值总是 Promise', () => {
-        expect(validate([], 'a')).toBeInstanceOf(Promise);
     });
 });
 

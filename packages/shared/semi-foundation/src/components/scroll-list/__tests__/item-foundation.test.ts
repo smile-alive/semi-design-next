@@ -127,9 +127,10 @@ describe('ItemFoundation', () => {
         column.wrapper.remove();
     });
 
-    it('handleWheelClick 先拦截事件，再按点击的行选中', () => {
+    it('handleWheelClick 先拦截事件，再按点击的行选中，禁用行不通知', () => {
+        vi.useFakeTimers();
         const column = createColumn({
-            list: Array.from({ length: 5 }, (_, value) => ({ value })),
+            list: Array.from({ length: 5 }, (_, value) => ({ value, disabled: value === 4 })),
             selectedIndex: 0,
             cycled: false,
             mode: 'wheel',
@@ -139,8 +140,15 @@ describe('ItemFoundation', () => {
         const stopImmediatePropagation = vi.fn<() => void>();
         column.foundation.handleWheelClick({ target: column.list.children[3], stopImmediatePropagation });
         expect(stopImmediatePropagation).toHaveBeenCalledTimes(1);
+        vi.advanceTimersByTime(200);
+        expect(column.notifySelectItem.mock.calls.map(([data]) => data.index)).toEqual([3]);
+
+        column.foundation.handleWheelClick({ target: column.list.children[4], stopImmediatePropagation });
+        vi.advanceTimersByTime(200);
+        expect(column.notifySelectItem).toHaveBeenCalledTimes(1);
         column.foundation.destroy();
         column.wrapper.remove();
+        vi.useRealTimers();
     });
 
     describe('wheel 模式', () => {

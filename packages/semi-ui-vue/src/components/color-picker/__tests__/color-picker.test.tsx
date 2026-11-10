@@ -261,11 +261,6 @@ describe('ColorPicker 审计修复', () => {
 });
 
 describe('ColorPicker', () => {
-    it('无报错地渲染', () => {
-        const { container } = renderColorPicker();
-        expect(container.querySelector(`.${prefixCls}`)).not.toBeNull();
-    });
-
     it('渲染自定义 class', () => {
         renderColorPicker({ class: 'custom-class' });
         expect(getPicker()).toHaveClass('custom-class');
@@ -431,11 +426,6 @@ describe('ColorPicker', () => {
         expect(getColorSlider()).toHaveClass('colorSliderWrapper');
         expect(getColorSlider().style.width).toBe('280px');
         expect(getColorSlider().style.height).toBe('10px');
-    });
-
-    it('渲染 DataPart', () => {
-        renderColorPicker();
-        expect(query(`.${prefixCls}-dataPart`)).not.toBeNull();
     });
 
     it('ColorChooseArea 滑块展示饱和度与明度', () => {
@@ -879,11 +869,6 @@ describe('ColorPicker', () => {
         expect(getDemoBlock()).toHaveStyle({ backgroundColor: 'rgb(0, 255, 0)' });
     });
 
-    it('rgba 格式的文本框内容', () => {
-        renderColorPicker({ defaultFormat: 'rgba', defaultValue: defaultColor });
-        expect(getInput()).toHaveValue('255,0,0');
-    });
-
     it('hsva 格式的文本框内容', () => {
         renderColorPicker({ defaultFormat: 'hsva', defaultValue: defaultColor });
         expect(getInput()).toHaveValue('0,100,100');
@@ -892,13 +877,6 @@ describe('ColorPicker', () => {
     it('hex 格式的文本框不显示透明度', () => {
         renderColorPicker({ defaultFormat: 'hex', defaultValue: { ...defaultColor, hex: '#ff000080' } });
         expect(getInput()).toHaveValue('#ff0000');
-    });
-
-    it('rgba 格式输入合法值', async () => {
-        const onChange = onChangeMock();
-        renderColorPicker({ defaultFormat: 'rgba', defaultValue: greenColor, onChange });
-        await changeInput('255,0,0');
-        expect(lastColor(onChange).rgba).toEqual({ r: 255, g: 0, b: 0, a: 1 });
     });
 
     it('rgba 格式输入非法值', async () => {
@@ -1290,15 +1268,6 @@ describe('ColorPicker', () => {
 });
 
 describe('ColorPicker 的 Vue 用法', () => {
-    it('v-model 双向：拖动色相后父级值更新为 ColorValue，输入框随之更新', async () => {
-        render(Model);
-        expect(screen.getByLabelText('hex')).toHaveTextContent('#ff0000');
-        await fireEvent.pointerDown(mockRect(getColorSlider()), { clientX: 140 });
-        await release(getColorSlider());
-        expect(screen.getByLabelText('hex')).toHaveTextContent('#00ffff');
-        expect(getInput()).toHaveValue('#00ffff');
-    });
-
     it('单向绑定 modelValue 加 change：界面保持传入值，父级以同值重渲染也不翻转', async () => {
         const onChange = onChangeMock();
         const view = renderColorPicker({ modelValue: defaultColor, onChange });

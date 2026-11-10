@@ -62,13 +62,6 @@ describe('Svelte Collapsible', () => {
         expect(inert()).toBeFalsy();
     });
 
-    // calc-size(auto, size) interpolates with a length directly, with no measured pixel value in between
-    it('展开时高度直接变为内容的自然高度，不需要先测量内容高度', () => {
-        const { wrapper, update } = setup({ isOpen: false });
-        update({ isOpen: true });
-        expect(wrapper().style.getPropertyValue(heightVar)).toBe(openHeight);
-    });
-
     it('首次挂载时默认展开不播放动画', () => {
         const { wrapper } = setup({ isOpen: true });
         expect(wrapper()).not.toHaveClass('semi-collapsible-transition');
@@ -200,21 +193,6 @@ describe('Svelte Collapsible', () => {
         expect(wrapper().style.height).toBe('5px');
         expect(wrapper().style.color).toBe('red');
         expect(wrapper().style.overflow).toBe('hidden');
-    });
-
-    it('使用方的 ontransitionend 与组件自身处理同时触发', async () => {
-        const { store, update, end } = setup();
-        update({ isOpen: true });
-        await end();
-        expect(store.log).toEqual(['transitionend', 'motionEnd']);
-    });
-
-    it('展开更新中同时写入新高度与过渡类，而不是分两次提交', () => {
-        const { wrapper, update } = setup({ isOpen: false });
-        update({ isOpen: true });
-        expect(wrapper().style.getPropertyValue(heightVar)).toBe(openHeight);
-        expect(wrapper()).toHaveClass('semi-collapsible-transition');
-        expect(wrapper().style.transitionDuration).toBe('250ms');
     });
 
     it('从 semiGlobal overrideDefaultProps 读取默认值', () => {

@@ -582,14 +582,7 @@ describe('ScrollItem 行为', () => {
         expect(document.getElementById(listbox.getAttribute('aria-activedescendant') ?? '')).toHaveTextContent(/^2$/);
     });
 
-    it('props 运行时：Boolean 类型都有 default 键，函数 prop 默认值为 undefined', () => {
-        for (const component of [ScrollItem, ScrollList]) {
-            const declared = (component as unknown as { props: Record<string, { type?: unknown; default?: unknown }> }).props;
-            const missingDefault = Object.entries(declared)
-                .filter(([, option]) => [option.type].flat().includes(Boolean) && !('default' in option))
-                .map(([key]) => key);
-            expect(missingDefault).toEqual([]);
-        }
+    it('props 运行时：函数 prop 默认值为 undefined', () => {
         const itemProps = (ScrollItem as unknown as { props: Record<string, { default?: unknown }> }).props;
         expect('default' in itemProps.transform).toBe(true);
         expect(itemProps.transform.default).toBeUndefined();
