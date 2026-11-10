@@ -1,13 +1,12 @@
 import { type CSSProperties, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import clsx from 'clsx';
-import { getStackDepths, hasLostFocus, isStackExpanded, isStackHidden } from '@fibrae/semi-foundation/base/list-store';
+import { getStackDepths, hasLostFocus, isStackExpanded, isStackHidden } from '@fibrae/semi-foundation/base';
 import { cssClasses, getStackItemTransform } from '@fibrae/semi-foundation/components/notification/constants';
 import type { NoticeInstance } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import { type ConfigProps, groupNoticesByPosition, noticePositions, type NotificationListProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
-import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
-import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+import { pinAnimatedHeight, toCssLength } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/notification/notification.scss';
-import useNoticeListEffects from '../../hooks/use-notice-list-effects';
+import { useNoticeListEffects } from '../../hooks/index';
 import CSSAnimation from '../../internal/css-animation';
 import { useConfigContext } from '../config-provider/context';
 import Notice from './notice';

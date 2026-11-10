@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import { IconChevronLeft, IconChevronRight, IconDownload, IconMinus, IconPlus, IconRealSizeStroked, IconRotate, IconWindowAdaptionStroked } from '@fibrae/semi-icons-vue';
-    import SlotFragment from '../../../base/slot-fragment';
+    import { SlotFragment } from '../../../base/index';
     import Slider from '../../slider';
     import Tooltip from '../../tooltip';
     import type { FooterButtonName, FooterItemName, FooterView } from './footer';

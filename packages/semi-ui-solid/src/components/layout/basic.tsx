@@ -3,7 +3,7 @@ import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
 import '@fibrae/semi-foundation/components/layout/layout.scss';
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 
 export interface BasicProps extends ElementProps<'section'> {
     tagName?: keyof HTMLElementTagNameMap;

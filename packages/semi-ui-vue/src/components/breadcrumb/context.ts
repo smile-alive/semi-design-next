@@ -1,5 +1,5 @@
 import type { ComputedRef, VNode } from 'vue';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { BreadcrumbClick, ShowTooltipProps } from './interface';
 
 export interface BreadcrumbContextView {

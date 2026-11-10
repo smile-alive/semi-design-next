@@ -69,7 +69,7 @@ export default function Spin(rawProps: SpinProps) {
 - 视口可见性：`useIntersectionObserver(getTargets, callback, { rootMargin, threshold }, targetsKey)`，`getTargets` 在提交后执行，可以查询渲染出的 DOM；需要重新观察时改变 `targetsKey`，包括回调里 unobserve 过的同一批元素。不手写 IntersectionObserver 加 effect。
 - 复制反馈：`useCopied(毫秒)` 返回 `[copied, copy]`，`copy(text)` 解析为是否成功，定时器在重复复制和卸载时清理。
 - 元素 id 用 `useId`；`getUuidShort` 只用于 React 之外创建的 DOM。
-- 根元素是无角色的 div、使用方可能给它命名时写 `role={namedRole(rest)}`（`@fibrae/semi-foundation/utils/a11y`），放在 `{...rest}` 之前：有 `aria-label` 或 `aria-labelledby` 时为 `group`，使用方的 `role` 优先。
+- 根元素是无角色的 div、使用方可能给它命名时写 `role={namedRole(rest)}`（`@fibrae/semi-foundation/utils`），放在 `{...rest}` 之前：有 `aria-label` 或 `aria-labelledby` 时为 `group`，使用方的 `role` 优先。
 - 操作会移除或重挂当前持焦的节点（自身消失的按钮、按 key 重挂的项）时，把 `useFocusHandover(getTarget)`（`hooks/use-focus-handover.ts`）返回的回调 ref 挂在该节点上：节点持焦被移除后，在同一次提交的 layout effect 中把焦点交给 `getTarget()`，目标可以是同一次提交新挂载的节点；处理函数已把焦点移到别处时不抢回。能让节点不重挂的（稳定 key、不换包裹结构）先修结构。
 
 ## 静态成员与子组件识别
@@ -107,7 +107,7 @@ export default function Spin(rawProps: SpinProps) {
 - 弹层经 `internal/portal` 挂载，它在服务端与 hydration 期间不输出任何内容，默认打开的弹层在下一次提交中出现。依赖弹层 DOM 的 effect（焦点、`beforeShow`、滚动锁）不写在外层组件，写在 Portal 内、渲染在内容之后的子组件里（如 SideSheet 的 `SideSheetOpenEffects`），保证 effect 运行时容器与内容已经插入。
 - `renderToString` 不等待 `lazy`，Suspense 边界会以客户端重渲染的形式输出，hydration 报 recoverable error。按需加载的增强（Table 的 `resizable`、Transfer 的 `draggable`）在 `useIsServerRender()` 为 `true` 时直接渲染原有的回退内容，之后再进入 `lazy` 边界。
 - React 在 hydration 时才给 `img` 挂 `load`、`error` 监听，之前已完成的图片不会上报；依赖图片事件的 `<img>` 写成 `internal/hydrated-image`，它在 hydration 后的 passive effect 里补发，此时父组件的 foundation 已经 init。
-- 命令式 API 在创建容器前调用 `@fibrae/semi-foundation/utils/assert-client` 的 `assertClient(api, hint)`。
+- 命令式 API 在创建容器前调用 `@fibrae/semi-foundation/utils` 的 `assertClient(api, hint)`。
 - 用例与工具见 [testing](testing.md#服务端渲染与-hydration)。
 
 ## 写法补充

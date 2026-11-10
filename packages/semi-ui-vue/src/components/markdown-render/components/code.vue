@@ -2,7 +2,7 @@
     import { Text, normalizeClass, useAttrs, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
     import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
-    import slotNodes from '../../../utils/slot-nodes';
+    import { slotNodes } from '../../../utils/index';
     import CodeHighlight from '../../code-highlight';
     import codeText from '../code-text';
 

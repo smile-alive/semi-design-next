@@ -1,5 +1,4 @@
-import { createContext } from '../../base/create-context.js';
-import { getPopupLayerContext } from '../../base/popup-layer.js';
+import { createContext, getPopupLayerContext } from '../../base/index.js';
 import type { InputSize } from './interface.js';
 
 export interface InputGroupContextValue {

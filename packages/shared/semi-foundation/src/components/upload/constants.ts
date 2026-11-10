@@ -1,4 +1,4 @@
-import { VALIDATE_STATUS, BASE_CLASS_PREFIX } from '../../base/constants';
+import { VALIDATE_STATUS, BASE_CLASS_PREFIX } from '../../base/index';
 const PREFIX = `${BASE_CLASS_PREFIX}-upload`;
 
 const FILE_LIST_PIC = 'picture' as const;

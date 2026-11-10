@@ -3,8 +3,8 @@ import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified, type PluggableList } from 'unified';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { isDev } from '../../utils/warning';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { isDev } from '../../utils/index';
 
 export interface MarkdownRenderAdapter<P extends MarkdownRenderBaseProps = MarkdownRenderBaseProps> extends DefaultAdapter<P, MarkdownRenderBaseState> {
     /** `Fragment`, `jsx` and `jsxs` of the automatic JSX runtime */

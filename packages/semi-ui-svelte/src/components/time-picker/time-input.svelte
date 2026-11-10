@@ -2,7 +2,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/time-picker/constants';
     import TimeInputFoundation, { type TimeInputAdapter, type TimeInputState } from '@fibrae/semi-foundation/components/time-picker/input-foundation';
     import { IconClock } from '@fibrae/semi-icons-svelte';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useFoundation } from '../../base/index.js';
     import { Input } from '../input/index.js';
     import type { TimeInputProps } from './interface.js';
 

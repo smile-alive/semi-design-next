@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
+import type { Locale } from '@fibrae/semi-foundation/locale';
 import useLocale, { type LocaleComponentName } from './use-locale';
 
 type ChildrenRender<T> = (componentLocale: T, localeCode: string, currency: string) => React.ReactNode;

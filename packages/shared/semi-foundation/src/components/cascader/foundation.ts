@@ -1,16 +1,12 @@
 import { isEqual } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { calcCheckedStatus, calcRelatedCheckedKeys } from '../tree/shared';
 import { findAncestorKeys, calcCheckedKeys, calcDisabledKeys, normalizeKeyList, normalizedArr } from '../tree/tree-util';
 import { strings } from './constants';
 import { type KeyMapProps, filter, getColumns, convertDataToEntities, calcMergeType, getKeyByValuePath, getKeysByValuePath, getKeyByPos, getValueOrKey } from './util';
 
 export type { KeyMapProps };
-import { getListTargetIndex, isInnerControlActivation, isTextEditor, Typeahead } from '../../utils/a11y';
-import isEnterPress from '../../utils/is-enter-press';
-import isObject from '../../utils/is-object';
-import { ESC_KEY } from '../../utils/key-code';
-import type { Size } from '../../utils/type';
+import { getListTargetIndex, isInnerControlActivation, isTextEditor, Typeahead, isEnterPress, isObject, ESC_KEY, type Size } from '../../utils/index';
 
 export interface BasicData {
     data: BasicCascaderData;

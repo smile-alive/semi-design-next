@@ -1,4 +1,4 @@
-import { BASE_CLASS_PREFIX } from '../../base/constants';
+import { BASE_CLASS_PREFIX } from '../../base/index';
 
 export const cssClasses = {
     CAROUSEL: `${BASE_CLASS_PREFIX}-carousel`,

@@ -2,9 +2,9 @@ import { createRef, StrictMode, useState } from 'react';
 import { render, screen, fireEvent, createEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { ConfigProvider, Tooltip, Tree } from '@fibrae/semi-ui-react';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import type { TreeHandle, TreeProps } from '../interface';
 
 const treeData = [

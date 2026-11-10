@@ -2,10 +2,10 @@ import { createRef, StrictMode } from 'react';
 import { render, screen, fireEvent, within, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi, type Mock } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Tooltip } from '@fibrae/semi-ui-react';
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import Transfer, { type SelectedPanelProps, type SourcePanelProps, type TransferHandle, type TransferPaginationProps, type TransferProps } from '../index';
 
 // mock.lastCall is undefined until the first call; fail loudly instead of asserting on nothing

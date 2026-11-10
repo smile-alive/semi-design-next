@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAnchorAttributes, HTMLAttributes } from 'svelte/elements';
 import type { strings } from '@fibrae/semi-foundation/components/typography/constants';
-import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { PopoverProps } from '../popover/interface.js';
 import type { TooltipProps } from '../tooltip/interface.js';
 

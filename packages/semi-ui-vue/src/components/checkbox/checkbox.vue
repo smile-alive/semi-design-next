@@ -2,14 +2,11 @@
     import { computed, useAttrs, useId, useTemplateRef, type InputHTMLAttributes } from 'vue';
     import CheckboxFoundation, { type CheckboxAdapter, type CheckboxBaseState, type CheckboxView } from '@fibrae/semi-foundation/components/checkbox/checkbox-foundation';
     import { checkboxClasses } from '@fibrae/semi-foundation/components/checkbox/constants';
-    import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
     import { IconCheckboxIndeterminate, IconCheckboxTick } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import { hasAutofocus, vAutofocus } from '../../utils/autofocus';
-    import { isNativeInputKey, splitControlAttrs } from '../../utils/control-attrs';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
+    import { hasAutofocus, vAutofocus, isNativeInputKey, splitControlAttrs } from '../../utils/index';
     import { useCheckboxGroupContext } from './context';
     import type { CheckboxEmits, CheckboxEvent, CheckboxHandle, CheckboxProps, CheckboxSlots } from './interface';
 

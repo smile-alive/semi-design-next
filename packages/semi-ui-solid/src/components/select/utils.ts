@@ -1,7 +1,7 @@
 import type { JSX } from 'solid-js';
 import { type OptionRecord as BaseOptionRecord, optionListToRecords, toOptionRecord } from '@fibrae/semi-foundation/components/select/option-foundation';
-import warning from '@fibrae/semi-foundation/utils/warning';
-import { isToken } from '../../base/token';
+import { warning } from '@fibrae/semi-foundation/utils';
+import { isToken } from '../../base/index';
 import { OPTION, type OptionProps } from './option';
 import { OPTGROUP, type OptionGroupProps } from './option-group';
 

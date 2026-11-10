@@ -2,11 +2,11 @@ import { createRef, StrictMode, type KeyboardEvent as ReactKeyboardEvent, type M
 import { render, screen, fireEvent, waitFor, act, within, createEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { ConfigProvider, Form, FormSelect, Popover, Select, Tag } from '@fibrae/semi-ui-react';
 import type { InputChangeEvent, InputHandle } from '@fibrae/semi-ui-react/input';
 import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { mockResizeObserver } from '@test/utils/react';
 import type { OptionRenderProps, RenderMultipleSelectedItemFn, RenderSingleSelectedItemFn, SelectHandle, SelectProps, TriggerRenderProps } from '../index';
 

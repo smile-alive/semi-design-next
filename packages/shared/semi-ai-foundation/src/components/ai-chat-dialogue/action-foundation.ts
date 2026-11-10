@@ -1,4 +1,4 @@
-import ActionBarFoundation, { type ActionBarAdapter, type ActionBarState } from '../../base/action-bar-foundation';
+import { ActionBarFoundation, type ActionBarAdapter, type ActionBarState } from '../../base/index';
 import { isUnfinishedStatus, strings } from './constants';
 import type { Message } from './foundation';
 import { getMessageText } from './message-text';

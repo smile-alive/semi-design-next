@@ -4,13 +4,8 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/button/constants';
 import { groupLineClass, inheritGroupLooks, resolveButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
 import '@fibrae/semi-foundation/components/button/button.scss';
-import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-props';
-import { usePopupLayer } from '../../base/popup-layer';
-import useDefaultProps from '../../base/use-default-props';
-import elementTypeOf from '../../utils/element-type';
-import flattenChildren from '../../utils/flatten-children';
-import { readGlobalDefaults } from '../../utils/semi-global';
+import { type ElementProps, type BaseProps, usePopupLayer, useDefaultProps } from '../../base/index';
+import { elementTypeOf, flattenChildren, readGlobalDefaults } from '../../utils/index';
 import type { Type, Size, ButtonProps, Theme } from './base-button';
 import { type ButtonGroupLooks, ButtonGroupContext, useInheritedButtonLooks } from './context';
 

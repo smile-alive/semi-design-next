@@ -2,7 +2,7 @@ import { flushSync } from 'svelte';
 import { render } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
-import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils';
 import type { HighlightProps } from '../interface';
 import HighlightStore from './highlight-store.svelte';
 

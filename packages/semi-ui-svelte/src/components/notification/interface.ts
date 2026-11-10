@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { HookApi } from '@fibrae/semi-foundation/base/hook-api';
+import type { HookApi } from '@fibrae/semi-foundation/base';
 import type { NoticeProps as FoundationNoticeProps, NoticePosition } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
 

@@ -3,8 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/grid/constants';
     import { getColClassName, getColStyle } from '@fibrae/semi-foundation/components/grid/utils';
     import '@fibrae/semi-foundation/components/grid/grid.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import { semiGlobalDefault } from '../../base/semi-default';
+    import { type ElementProps, semiGlobalDefault } from '../../base/index';
     import type { ColProps, ColSlots } from './interface';
 
     const props = withDefaults(defineProps<ColProps & /* @vue-ignore */ ElementProps<'div', keyof ColProps>>(), {

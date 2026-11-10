@@ -1,6 +1,6 @@
 import type { ComputedRef } from 'vue';
 import type { DropdownMenuContext, DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { Trigger } from '../tooltip/interface';
 
 export interface DropdownContextView {

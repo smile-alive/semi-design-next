@@ -1,4 +1,4 @@
-import { BASE_CLASS_PREFIX } from '../../base/constants';
+import { BASE_CLASS_PREFIX } from '../../base/index';
 
 const TYPE_TIME_PICKER = 'time' as const;
 const TYPE_TIME_RANGE_PICKER = 'timeRange' as const;

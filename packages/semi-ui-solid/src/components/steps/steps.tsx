@@ -2,12 +2,10 @@ import { children, createEffect, createMemo, For, Match, mergeProps, splitProps,
 import clsx from 'clsx';
 import { stepsClasses as css } from '@fibrae/semi-foundation/components/steps/constants';
 import { getStepState } from '@fibrae/semi-foundation/components/steps/utils';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import warning from '@fibrae/semi-foundation/utils/warning';
+import { namedRole, warning } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/steps/steps.scss';
-import { isToken, type Token } from '../../base/token';
-import useDefaultProps from '../../base/use-default-props';
-import hasContent from '../../utils/has-content';
+import { isToken, type Token, useDefaultProps } from '../../base/index';
+import { hasContent } from '../../utils/index';
 import { Col, Row } from '../grid';
 import BasicStep from './basic-step';
 import FillStep from './fill-step';

@@ -2,8 +2,8 @@
     import { onMount, untrack } from 'svelte';
     import ArrayFieldRows from '@fibrae/semi-foundation/components/form/array-field-rows';
     import { resolveKeepState } from '@fibrae/semi-foundation/components/form/utils';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import watch from '../../hooks/watch.svelte.js';
+    import { useDefaultProps } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
     import { getArrayFieldContext, getFormContext, setArrayFieldContext } from './context.js';
     import type { ArrayFieldItem, ArrayFieldProps } from './interface.js';
     import { cloneDeep } from './utils.js';

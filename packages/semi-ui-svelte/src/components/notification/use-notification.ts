@@ -1,11 +1,9 @@
 import { getAllContexts, getContext, mount, onDestroy, unmount } from 'svelte';
-import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
-import { createHookApi } from '@fibrae/semi-foundation/base/hook-api';
-import StaticListWrapper from '@fibrae/semi-foundation/base/static-list-wrapper';
+import { omitInstanceIds, createHookApi, StaticListWrapper } from '@fibrae/semi-foundation/base';
 import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
 import { createNotificationListStore } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
-import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
-import semiGlobal, { type SemiGlobal, semiGlobalKey } from '../../utils/semi-global.js';
+import { assertClient } from '@fibrae/semi-foundation/utils';
+import { semiGlobal, type SemiGlobal, semiGlobalKey } from '../../utils/index.js';
 import type { NotificationHookApi, NotificationHookOptions } from './interface.js';
 import NotificationList from './notification-list.svelte';
 

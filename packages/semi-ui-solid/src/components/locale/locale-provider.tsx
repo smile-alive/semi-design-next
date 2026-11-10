@@ -1,5 +1,5 @@
 import { type JSX, createMemo } from 'solid-js';
-import type { LocaleInput } from '@fibrae/semi-foundation/locale/index';
+import type { LocaleInput } from '@fibrae/semi-foundation/locale';
 import { LocaleContext, useLocaleContext } from './context';
 
 export interface LocaleProviderProps {

@@ -1,5 +1,5 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import isPromise from '../../utils/is-promise';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { isPromise } from '../../utils/index';
 import type { CheckboxValue } from '../checkbox/checkbox-group-foundation';
 import type { RadioChangeEvent } from '../radio/radio-foundation';
 

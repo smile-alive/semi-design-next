@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
     import { toggleFilteredValue } from '@fibrae/semi-foundation/components/table/utils';
-    import SlotFragment from '../../base/slot-fragment';
+    import { SlotFragment } from '../../base/index';
     import Button from '../button';
     import Checkbox from '../checkbox';
     import Dropdown, { DropdownItem, DropdownMenu } from '../dropdown';

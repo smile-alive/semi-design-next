@@ -1,17 +1,15 @@
 <script setup lang="ts">
     import { computed, h, useAttrs, useTemplateRef } from 'vue';
-    import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
+    import { followChats, followHints } from '@fibrae/semi-ai-foundation/base';
     import { cssClasses, isUnfinishedStatus } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import DialogueFoundation, { type DialogueAdapter, type DialogueState, type Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/ai-chat-dialogue.scss';
     import { IconChevronDown } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/base/element-props';
-    import semiDefault, { semiGlobalDefault } from '@fibrae/semi-ui-vue/base/semi-default';
-    import useFoundation from '@fibrae/semi-ui-vue/base/use-foundation';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation } from '@fibrae/semi-ui-vue/base';
     import Button from '@fibrae/semi-ui-vue/button/index';
     import { useFocusHandover, useLocale } from '@fibrae/semi-ui-vue/composables';
-    import { handOnSlots } from '@fibrae/semi-ui-vue/utils/hand-on';
+    import { handOnSlots } from '@fibrae/semi-ui-vue/utils';
     import { provideAIChatDialogueContext } from './context';
     import DialogueHint from './dialogue/dialogue-hint.vue';
     import Dialogue from './dialogue/dialogue.vue';

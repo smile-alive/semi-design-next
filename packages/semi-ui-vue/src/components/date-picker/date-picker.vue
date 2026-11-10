@@ -1,19 +1,16 @@
 <script setup lang="ts">
     import { computed, onMounted, onUpdated, shallowRef, useId, useTemplateRef } from 'vue';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
     import DatePickerFoundation, { getYearMonthFromValue, isRangeType, isRangeValueComplete, isYearOrMonthType, needConfirm, type DatePickerAdapter, type DatePickerFoundationProps, type DatePickerFoundationState, type DisabledDateOptions } from '@fibrae/semi-foundation/components/date-picker/foundation';
     import type { RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
     import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
-    import { isInnerControlKey } from '@fibrae/semi-foundation/utils/a11y';
+    import { isInnerControlKey } from '@fibrae/semi-foundation/utils';
     import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import '@fibrae/semi-foundation/components/date-picker/date-picker.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
-    import useClickOutside from '../../composables/use-click-outside';
-    import { splitControlAttrs } from '../../utils/control-attrs';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation, useKeepAliveFoundation } from '../../base/index';
+    import { useClickOutside } from '../../composables/index';
+    import { splitControlAttrs } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import useGroupLooks from '../input/composables/use-group-looks';
     import { provideInputGroupContext } from '../input/context';

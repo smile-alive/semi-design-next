@@ -3,7 +3,7 @@ import { isServer } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/carousel/constants';
 import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-solid';
-import { serverHtml } from '../../utils/is-markup';
+import { serverHtml } from '../../utils/index';
 import useLocale from '../locale/use-locale';
 import type { CarouselArrowProps } from './interface';
 

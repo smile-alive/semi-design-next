@@ -3,16 +3,12 @@ import { cloneElement, isValidElement, useLayoutEffect, useState, type CSSProper
 import clsx from 'clsx';
 import { cssClasses, SCROLL_KEY_ATTRIBUTE, strings } from '@fibrae/semi-foundation/components/overflow-list/constants';
 import OverflowListFoundation, { type OverflowListAdapter, type OverflowListBaseState } from '@fibrae/semi-foundation/components/overflow-list/foundation';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import { isHTMLElement } from '@fibrae/semi-foundation/utils/dom';
+import { namedRole, isHTMLElement } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useIntersectionObserver from '../../hooks/use-intersection-observer';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { useIntersectionObserver } from '../../hooks/index';
 import ReactResizeObserver, { type ResizeEntry } from '../../internal/resize-observer';
-import { hasContent } from '../../utils';
-import { mergeRefs } from '../../utils/merge-refs';
+import { hasContent, mergeRefs } from '../../utils/index';
 
 type Foundation = OverflowListFoundation<OverflowListProps>;
 type Adapter = OverflowListAdapter<OverflowListProps>;

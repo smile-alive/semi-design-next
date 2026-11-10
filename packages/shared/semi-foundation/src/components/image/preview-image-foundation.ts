@@ -1,5 +1,5 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { isSecondaryPress } from '../../utils/pointer';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { isSecondaryPress } from '../../utils/index';
 import type { RatioType } from './preview-inner-foundation';
 import { clampZoom } from './utils';
 

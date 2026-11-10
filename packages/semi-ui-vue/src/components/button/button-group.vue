@@ -3,11 +3,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/button/constants';
     import { groupLineClass, inheritGroupLooks } from '@fibrae/semi-foundation/components/button/utils';
     import '@fibrae/semi-foundation/components/button/button.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import { usePopupLayer } from '../../base/popup-layer';
-    import { readSemiDefault, useSemiGlobal } from '../../base/semi-default';
-    import elementType from '../../utils/element-type';
-    import slotNodes from '../../utils/slot-nodes';
+    import { type ElementProps, usePopupLayer, readSemiDefault, useSemiGlobal } from '../../base/index';
+    import { elementType, slotNodes } from '../../utils/index';
     import { useInputGroupInScope } from '../input/context';
     import { type ButtonGroupContext, provideButtonGroupContext, useButtonGroupContext } from './context';
     import type { ButtonGroupProps, ButtonGroupSlots } from './interface';

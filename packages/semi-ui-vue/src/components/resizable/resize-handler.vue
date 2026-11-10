@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import { computed, onBeforeUnmount, onMounted, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
-    import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
+    import { isSecondaryPress } from '@fibrae/semi-foundation/utils';
     import { IconHandle } from '@fibrae/semi-icons-vue';
-    import type { ElementProps } from '../../base/element-props';
+    import type { ElementProps } from '../../base/index';
     import useLocale from '../locale/use-locale';
     import { useResizeGroupContext } from './context';
     import type { ResizeHandlerSlots } from './interface';

@@ -2,13 +2,11 @@
     import { untrack } from 'svelte';
     import { SvelteMap } from 'svelte/reactivity';
     import { omit } from 'es-toolkit';
-    import { FreshItems, getStackDepths, hasLostFocus, isStackExpanded, isStackHidden, readNoticeText } from '@fibrae/semi-foundation/base/list-store';
+    import { FreshItems, getStackDepths, hasLostFocus, isStackExpanded, isStackHidden, readNoticeText } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
     import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
     import '@fibrae/semi-foundation/components/toast/toast.scss';
-    import useAnnouncer from '../../hooks/use-announcer.svelte.js';
-    import useStoreSnapshot from '../../hooks/use-store-snapshot.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
+    import { useAnnouncer, useStoreSnapshot, watch } from '../../hooks/index.js';
     import { setToastListContext } from './context.js';
     import type { ToastItemProps, ToastListProps } from './interface.js';
     import Toast from './toast.svelte';

@@ -1,10 +1,10 @@
 import { type ConfirmType, resolveConfirmProps } from '@fibrae/semi-foundation/components/modal/confirm';
 import ConfirmInstance from '@fibrae/semi-foundation/components/modal/confirm-instance';
 import ConfirmRegistry from '@fibrae/semi-foundation/components/modal/confirm-registry';
-import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
+import { assertClient } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/modal/modal.scss';
 import { IconAlertCircle, IconAlertTriangle, IconHelpCircle, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-react';
-import { render as reactRender, unmount as reactUnmount } from '../../utils/react-render';
+import { render as reactRender, unmount as reactUnmount } from '../../utils/index';
 import ConfirmModal from './confirm-modal';
 import type { ModalReactProps } from './modal';
 import type { HookModalRef } from './use-modal';

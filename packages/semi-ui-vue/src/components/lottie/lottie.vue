@@ -2,10 +2,7 @@
     import { toRaw, useAttrs, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/lottie/constants';
     import LottieFoundation, { type LottieAdapter, type LottieBaseProps, type LottieBaseState } from '@fibrae/semi-foundation/components/lottie/foundation';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import { semiGlobalDefault } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
+    import { type ElementProps, type EmitHandlers, semiGlobalDefault, useFoundation, useKeepAliveFoundation } from '../../base/index';
     import type { LottieEmits, LottieProps } from './interface';
 
     type Foundation = LottieFoundation<LottieBaseProps>;

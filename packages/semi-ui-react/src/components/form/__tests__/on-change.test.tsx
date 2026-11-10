@@ -1,6 +1,6 @@
 import { render, fireEvent, waitFor, act } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Form, FormInput, FormSelect } from '@fibrae/semi-ui-react';
 import type { FormState } from '@fibrae/semi-ui-react/form/interface';
 

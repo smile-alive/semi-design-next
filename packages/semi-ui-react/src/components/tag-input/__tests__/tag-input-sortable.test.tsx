@@ -1,7 +1,7 @@
 import type { FocusEvent } from 'react';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { SortableProps } from '@fibrae/semi-ui-react/internal/sortable/index';
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import TagInput from '..';

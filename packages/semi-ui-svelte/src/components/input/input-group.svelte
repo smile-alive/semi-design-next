@@ -1,8 +1,7 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
     import '@fibrae/semi-foundation/components/input/input.scss';
-    import { getPopupLayerContext } from '../../base/popup-layer.js';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { getPopupLayerContext, useDefaultProps } from '../../base/index.js';
     import FormLabel from '../form/label.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import { setInputGroupContext } from './context.js';

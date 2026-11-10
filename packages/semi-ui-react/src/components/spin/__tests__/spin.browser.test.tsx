@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { List, Table } from '@fibrae/semi-ui-react';
 import IconButton from '@fibrae/semi-ui-react/icon-button';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';

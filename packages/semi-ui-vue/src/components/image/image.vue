@@ -3,14 +3,12 @@
     import { isEqual, omit } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import ImageFoundation, { type ImageAdapter, type ImageState } from '@fibrae/semi-foundation/components/image/image-foundation';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/image/image.scss';
     import { IconUploadError } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import HydratedImage from '../../internal/hydrated-image.vue';
-    import { isNotClassOrStyle, splitControlAttrs } from '../../utils/control-attrs';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
+    import { HydratedImage } from '../../internal/index';
+    import { isNotClassOrStyle, splitControlAttrs } from '../../utils/index';
     import useLocale from '../locale/use-locale';
     import { SkeletonImage } from '../skeleton';
     import { usePreviewContext, type GroupImage } from './context';

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Button, Select } from '@fibrae/semi-ui-react';
 import { clickOutside, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
 import type { OptionRenderProps, SelectProps } from '../index';

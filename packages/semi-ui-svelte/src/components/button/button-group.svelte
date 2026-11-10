@@ -4,8 +4,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/button/constants';
     import { inheritGroupLooks } from '@fibrae/semi-foundation/components/button/utils';
     import '@fibrae/semi-foundation/components/button/button.scss';
-    import { getPopupLayerContext } from '../../base/popup-layer.js';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { getPopupLayerContext, useDefaultProps } from '../../base/index.js';
     import { getInputGroupInScope } from '../input/context.js';
     import { getButtonGroupInScope, setButtonGroupContext } from './context.js';
     import type { ButtonGroupProps } from './interface.js';

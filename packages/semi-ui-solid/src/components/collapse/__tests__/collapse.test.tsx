@@ -3,9 +3,9 @@ import { Portal } from 'solid-js/web';
 import { render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconCopy, IconMinus, IconPlus } from '@fibrae/semi-icons-solid';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import Collapse, { type CollapsePanelProps, type CollapseProps } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-collapse`;

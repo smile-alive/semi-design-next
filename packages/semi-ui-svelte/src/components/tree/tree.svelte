@@ -6,10 +6,9 @@
     import { buildRowProps, getClearedSelection, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
     import '@fibrae/semi-foundation/components/tree/tree.scss';
     import { IconSearch } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
-    import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
+    import { isAriaKey, splitControlAttrs } from '../../utils/index.js';
     import { useConfig } from '../config-provider/index.js';
     import Input from '../input/input.svelte';
     import { useLocale } from '../locale/index.js';

@@ -2,7 +2,7 @@ import { flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
-import semiGlobal, { SemiGlobal } from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal, SemiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import type { FloatButtonGroupItem, FloatButtonGroupProps, FloatButtonProps } from '../interface';
 import DynamicGroup from './dynamic-group.svelte';
 import FloatButtonFixture from './float-button-fixture.svelte';

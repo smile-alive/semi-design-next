@@ -3,8 +3,7 @@ import { type ReactNode, type CSSProperties, memo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/skeleton/constants';
 import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
+import { type ElementProps, useDefaultProps } from '../../base/index';
 
 export type { BasicProps, ParagraphProps, AvatarProps, GenericProps } from './item';
 

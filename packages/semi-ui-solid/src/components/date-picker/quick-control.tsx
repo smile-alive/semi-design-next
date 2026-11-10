@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/date-picker/constants';
 import type { PresetPosition, PresetsType, PresetType } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import type { DateInputFoundationProps } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
+import type { Locale } from '@fibrae/semi-foundation/locale';
 import Button from '../button';
 import Text from '../typography/text';
 

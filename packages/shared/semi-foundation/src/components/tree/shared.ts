@@ -5,7 +5,7 @@
  * foundation.
  */
 import { difference, isEqual, pick } from 'es-toolkit';
-import { getListTargetIndex, type Typeahead } from '../../utils/a11y';
+import { getListTargetIndex, type Typeahead } from '../../utils/index';
 import { cssClasses } from './constants';
 import type { BasicFlattenNode, BasicKeyEntities, BasicKeyEntity, BasicTreeInnerData, BasicTreeNodeData, BasicTreeNodeProps, BasicTreeProps, TreeMotionType } from './foundation';
 import {

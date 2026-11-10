@@ -1,8 +1,7 @@
 <script setup lang="ts">
     import { useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
-    import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/base/element-props';
-    import { semiGlobalDefault } from '@fibrae/semi-ui-vue/base/semi-default';
+    import { type ElementProps, type EmitHandlers, semiGlobalDefault } from '@fibrae/semi-ui-vue/base';
     import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import pickContainerProps from '../container/container-props';
     import Container from '../container/container.vue';

@@ -1,7 +1,7 @@
 /** @jsxImportSource vue */
 import { createCommentVNode, createTextVNode, defineComponent } from 'vue';
 import { describe, expect, it } from 'vite-plus/test';
-import slotNodes from '@fibrae/semi-ui-vue/utils/slot-nodes';
+import { slotNodes } from '@fibrae/semi-ui-vue/utils';
 import slotText from '../slot-text';
 
 const Box = defineComponent({

@@ -3,12 +3,11 @@ import { cloneElement, isValidElement, useId, useImperativeHandle, useRef } from
 import clsx from 'clsx';
 import { cssClasses, numbers } from '@fibrae/semi-foundation/components/carousel/constants';
 import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/components/carousel/foundation';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { formatLocale } from '@fibrae/semi-foundation/locale';
 import '@fibrae/semi-foundation/components/carousel/carousel.scss';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useDidUpdate from '../../hooks/use-did-update';
-import flattenChildren from '../../utils/flatten-children';
+import { useDefaultProps, useFoundation } from '../../base/index';
+import { useDidUpdate } from '../../hooks/index';
+import { flattenChildren } from '../../utils/index';
 import { useConfigContext } from '../config-provider/context';
 import useLocale from '../locale/use-locale';
 import CarouselArrow from './carousel-arrow';

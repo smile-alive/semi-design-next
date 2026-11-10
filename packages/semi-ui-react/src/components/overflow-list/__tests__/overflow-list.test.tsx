@@ -1,8 +1,8 @@
 import React, { StrictMode, type ReactNode } from 'react';
 import { render, act, screen } from '@testing-library/react';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { mockResizeObserver } from '@test/utils/react';
 import OverflowList, { type OverflowItem, type OverflowListInternalProps, type OverflowListProps } from '../index';
 

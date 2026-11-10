@@ -2,8 +2,7 @@
     import { computed, useAttrs } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
     import '@fibrae/semi-foundation/components/list/list.scss';
-    import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import { isAriaKey, splitControlAttrs, hasSlotContent } from '../../utils/index';
     import { useListContext } from './context';
     import type { ListItemProps, ListItemSlots } from './interface';
 

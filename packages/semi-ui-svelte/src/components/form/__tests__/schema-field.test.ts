@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US } from '@fibrae/semi-ui-svelte/locale';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import FormCheckbox from '../fields/form-checkbox.svelte';
 import FormTextArea from '../fields/form-text-area.svelte';
 import type { FormApi, SchemaFieldRenderProps } from '../interface';

@@ -1,5 +1,5 @@
 import type { ExpandAction } from '@fibrae/semi-foundation/components/tree/foundation';
-import { createContext } from '../../base/create-context.js';
+import { createContext } from '../../base/index.js';
 import type { TreeRowProps } from './interface.js';
 
 /** A host without the optional methods (TreeSelect) leaves those interactions out; the fields are getters */

@@ -4,7 +4,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
     import { hsvaToHslaString, hsvaToRgbaString } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
     import { round } from '@fibrae/semi-foundation/components/color-picker/utils/round';
-    import useFoundation from '../../base/use-foundation';
+    import { useFoundation } from '../../base/index';
     import useLocale from '../locale/use-locale';
     import { toDragEvent } from './drag-event';
     import type { AlphaSliderProps } from './interface';

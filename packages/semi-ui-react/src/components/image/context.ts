@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { GroupImage } from './interface';
 export interface PreviewContextProps {
     isGroup: boolean;

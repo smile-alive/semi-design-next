@@ -1,8 +1,8 @@
 import { type Accessor, type JSX, children, createMemo, createRenderEffect, onCleanup } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import { SCROLL_KEY_ATTRIBUTE } from '@fibrae/semi-foundation/components/overflow-list/constants';
-import { isHTMLElement } from '@fibrae/semi-foundation/utils/dom';
-import isMarkup from '../../utils/is-markup';
+import { isHTMLElement } from '@fibrae/semi-foundation/utils';
+import { isMarkup } from '../../utils/index';
 
 export interface ScrollItemProps<T> {
     scrollKey: string;

@@ -2,7 +2,7 @@
     import { omit } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
     import '@fibrae/semi-foundation/components/list/list.scss';
-    import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs.js';
+    import { isAriaKey, splitControlAttrs } from '../../utils/index.js';
     import { Col } from '../grid/index.js';
     import { getListContext } from './context.js';
     import type { ListItemProps } from './interface.js';

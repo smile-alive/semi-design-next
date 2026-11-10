@@ -4,12 +4,11 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import ImageFoundation, { type ImageAdapter, type ImageState } from '@fibrae/semi-foundation/components/image/image-foundation';
     import { loadLazyImages } from '@fibrae/semi-foundation/components/image/preview-foundation';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/image/image.scss';
     import { IconUploadError } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import { splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { splitControlAttrs } from '../../utils/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { SkeletonImage } from '../skeleton/index.js';
     import { getPreviewContext } from './context.js';

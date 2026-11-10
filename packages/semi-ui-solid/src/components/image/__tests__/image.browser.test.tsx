@@ -2,7 +2,7 @@ import { For, createSignal } from 'solid-js';
 import { render, screen, waitFor } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { page, userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconChevronLeft, IconChevronRight, IconDownload, IconMinus, IconPlus, IconRealSizeStroked, IconRotate, IconUploadError, IconWindowAdaptionStroked } from '@fibrae/semi-icons-solid';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import Image, { ImagePreview, type ImagePreviewProps, type MenuProps, type PreviewProps } from '..';

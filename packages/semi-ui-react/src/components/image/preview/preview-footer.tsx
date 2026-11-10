@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
 import PreviewFooterFoundation, { type PreviewFooterAdapter, type PreviewFooterState } from '@fibrae/semi-foundation/components/image/preview-footer-foundation';
 import { IconChevronLeft, IconChevronRight, IconMinus, IconPlus, IconRotate, IconDownload, IconWindowAdaptionStroked, IconRealSizeStroked } from '@fibrae/semi-icons-react';
-import useFoundation from '../../../base/use-foundation';
+import { useFoundation } from '../../../base/index';
 import Divider from '../../divider';
 import useLocale from '../../locale/use-locale';
 import Slider from '../../slider';

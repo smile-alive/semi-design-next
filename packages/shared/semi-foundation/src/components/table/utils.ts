@@ -2,7 +2,7 @@ import clsx from 'clsx';
 // compat get resolves deep path strings such as 'a.b'
 import { xor } from 'es-toolkit';
 import { get } from 'es-toolkit/compat';
-import { addClass, removeClass } from '../../utils/classnames';
+import { addClass, removeClass } from '../../utils/index';
 import { cssClasses, strings, numbers } from './constants';
 import type { BaseEllipsis, BaseHeadWidth, BaseRowKeyType } from './foundation';
 

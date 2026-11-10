@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { ElementProps } from '../../base/base';
+import type { ElementProps } from '../../base/index';
 import BasicStep from './basic-step';
 import { useStepsContext } from './context';
 import FillStep from './fill-step';

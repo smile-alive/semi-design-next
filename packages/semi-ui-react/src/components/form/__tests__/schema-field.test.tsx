@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
 import { Button, Form, SchemaField, SchemaForm } from '@fibrae/semi-ui-react';
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import type { FormApi } from '../interface';
 import type { JsonSchema } from '../schema-form/schema-field';
 

@@ -3,7 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
     import { hsvaToHslaString, hsvaToRgbaString } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
     import { round } from '@fibrae/semi-foundation/components/color-picker/utils/round';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useFoundation } from '../../base/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { toDragEvent } from './drag-event.js';
     import type { AlphaSliderProps } from './interface.js';

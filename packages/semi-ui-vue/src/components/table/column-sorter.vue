@@ -3,8 +3,8 @@
     import { strings } from '@fibrae/semi-foundation/components/table/constants';
     import { getNextSortOrder } from '@fibrae/semi-foundation/components/table/utils';
     import { IconCaretdown, IconCaretup } from '@fibrae/semi-icons-vue';
-    import SlotFragment from '../../base/slot-fragment';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import { SlotFragment } from '../../base/index';
+    import { hasSlotContent } from '../../utils/index';
     import useLocale from '../locale/use-locale';
     import Tooltip from '../tooltip';
     import { useTableContext } from './context';

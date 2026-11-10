@@ -2,7 +2,7 @@ import { type JSX, createSignal } from 'solid-js';
 import { fireEvent, render, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { isWebKit, tab } from '@test/utils/browser';
 import Slider, { type SliderProps } from '..';
 import ConfigProvider from '../../config-provider';

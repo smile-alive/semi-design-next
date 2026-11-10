@@ -1,6 +1,6 @@
 import { SvelteMap } from 'svelte/reactivity';
 import type { DropdownMenuContext, DropdownSelectionMode } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
-import { createContext } from '../../base/create-context.js';
+import { createContext } from '../../base/index.js';
 import type { Trigger } from '../tooltip/index.js';
 
 export interface DropdownContextView {

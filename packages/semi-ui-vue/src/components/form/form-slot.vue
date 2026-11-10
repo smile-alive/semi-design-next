@@ -2,10 +2,10 @@
     import { computed, useAttrs, useId } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { getFieldIds } from '@fibrae/semi-foundation/components/form/utils';
-    import { joinIds, namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds, namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/form/form.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import type { ElementProps } from '../../base/index';
+    import { hasSlotContent } from '../../utils/index';
     import { useFormContext } from './context';
     import FormErrorMessage from './error-message.vue';
     import FieldGrid from './field-grid.vue';

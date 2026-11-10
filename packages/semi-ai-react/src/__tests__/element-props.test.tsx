@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { AIChatDialogue, AIChatInput, Annotation, Chat, MCPConfigure, Sidebar } from '../index';
 
 // Literal JSX attributes, because spread props skip the excess-property check (F6); runtime checks where they land (F2)

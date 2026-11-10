@@ -1,6 +1,6 @@
 <script lang="ts">
     import { flattenColumns, getColumnsMinWidth } from '@fibrae/semi-foundation/components/table/utils';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import ColGroup from '../col-group.svelte';
     import { getTableContext } from '../context.js';
     import type { ColumnProps } from '../interface.js';

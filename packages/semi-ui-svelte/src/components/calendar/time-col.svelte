@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constants';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { CalendarTimeDisplayArgs } from './interface.js';
 

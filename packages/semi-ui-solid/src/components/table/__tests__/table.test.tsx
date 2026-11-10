@@ -2,7 +2,7 @@ import { For, type JSX, createSignal } from 'solid-js';
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconStar } from '@fibrae/semi-icons-solid';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { endLeaveAnimations, getData, getNestData, getRandomNumber, getTreeData } from '@test/utils/solid';

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { omit } from 'es-toolkit';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/table/constants';
 import { getHeadWidths, parseHeaderRows, getHeaderStickyOffset, isFirstFixedRight, isLastLeftFixed, isFixedLeft, isFixedRight, sliceColumnsByLevel, getColumnsByLevel, getRTLAlign, getNextSortOrder, type TableHeaderCell } from '@fibrae/semi-foundation/components/table/utils';
-import { hasContent } from '../../../utils';
+import { hasContent } from '../../../utils/index';
 import LocaleConsumer from '../../locale/locale-consumer';
 import useLocale from '../../locale/use-locale';
 import Tooltip from '../../tooltip';

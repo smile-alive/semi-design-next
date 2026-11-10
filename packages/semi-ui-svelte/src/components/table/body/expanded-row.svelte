@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
     import { arrayAdd, genExpandedRowKey } from '@fibrae/semi-foundation/components/table/utils';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import { getTableContext } from '../context.js';
     import type { ColumnProps, TableCellAttrs } from '../interface.js';
     import TableCell from '../table-cell.svelte';

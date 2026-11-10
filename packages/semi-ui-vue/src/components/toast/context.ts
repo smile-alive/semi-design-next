@@ -1,6 +1,6 @@
 import type { ComputedRef } from 'vue';
-import type { AutoCloseListState } from '@fibrae/semi-foundation/base/auto-close-foundation';
-import { createContext } from '../../base/create-context';
+import type { AutoCloseListState } from '@fibrae/semi-foundation/base';
+import { createContext } from '../../base/index';
 
 export interface ToastListContext {
     /** What every toast's countdown follows */

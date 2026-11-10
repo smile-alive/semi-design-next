@@ -1,7 +1,7 @@
 <script lang="ts">
     import { strings } from '@fibrae/semi-foundation/components/button/constants';
     import { resolveButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import Button from '../button/button.svelte';
     import { getButtonGroupInScope } from '../button/context.js';
     import { getInputGroupInScope } from '../input/context.js';

@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import { createContext } from '../../base/create-context.js';
+import { createContext } from '../../base/index.js';
 import type { AnchorClickEvent, AnchorProps, AnchorTitleContext } from './interface.js';
 
 export interface AnchorContext {

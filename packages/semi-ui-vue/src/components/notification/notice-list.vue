@@ -1,12 +1,11 @@
 <script setup lang="ts">
     import { computed, shallowRef, useTemplateRef, watch } from 'vue';
     import { omit } from 'es-toolkit';
-    import { hasLostFocus, isStackExpanded } from '@fibrae/semi-foundation/base/list-store';
+    import { hasLostFocus, isStackExpanded } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
     import type { NoticeInstance, NoticePosition } from '@fibrae/semi-foundation/components/notification/notification-foundation';
     import type { NotificationListProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
-    import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { pinAnimatedHeight, toCssLength } from '@fibrae/semi-foundation/utils';
     import { provideNoticeListContext, type ListedNotice, type RegisterNotice } from './context';
     import Notice from './notice.vue';
 

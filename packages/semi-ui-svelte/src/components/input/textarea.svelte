@@ -1,17 +1,16 @@
 <script lang="ts">
     import { onMount, tick } from 'svelte';
     import { throttle } from 'es-toolkit';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
     import TextAreaFoundation, { type TextAreaAdapter, type TextAreaBaseProps } from '@fibrae/semi-foundation/components/input/textarea-foundation';
     import { syncLineNumberHeights } from '@fibrae/semi-foundation/components/input/util/line-number';
-    import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/input/textarea.scss';
     import { IconClear } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
-    import { splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
+    import { splitControlAttrs } from '../../utils/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { observeResize } from '../resize-observer/index.js';
     import { getInputGroupInScope } from './context.js';

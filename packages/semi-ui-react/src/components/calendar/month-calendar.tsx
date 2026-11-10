@@ -6,13 +6,12 @@ import { cssClasses } from '@fibrae/semi-foundation/components/calendar/constant
 import { toPercent, type DateObj } from '@fibrae/semi-foundation/components/calendar/event-util';
 import CalendarFoundation, { type ParsedRangeEvent } from '@fibrae/semi-foundation/components/calendar/foundation';
 import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/components/calendar/month-foundation';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { formatLocale } from '@fibrae/semi-foundation/locale';
 import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
 import '@fibrae/semi-foundation/components/calendar/calendar.scss';
 import { IconClose } from '@fibrae/semi-icons-react';
-import useFoundation from '../../base/use-foundation';
-import useClickOutside from '../../hooks/use-click-outside';
-import useMergedRef from '../../hooks/use-merged-ref';
+import { useFoundation } from '../../base/index';
+import { useClickOutside, useMergedRef } from '../../hooks/index';
 import { useConfigContext } from '../config-provider/context';
 import Button from '../icon-button';
 import useLocale from '../locale/use-locale';

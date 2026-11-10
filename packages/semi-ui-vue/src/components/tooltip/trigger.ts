@@ -1,8 +1,7 @@
 import { type CSSProperties, type VNode, Text, normalizeStyle } from 'vue';
 import { cssClasses, canRoleCarryPopupState, isBlockDisplay, wrapsSpecialTrigger } from '@fibrae/semi-foundation/components/tooltip/constants';
-import { POPUP_ID_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
-import elementType from '../../utils/element-type';
-import type { NativeTagComponent } from '../../utils/native-tag';
+import { POPUP_ID_ATTRIBUTE } from '@fibrae/semi-foundation/utils';
+import { elementType, type NativeTagComponent } from '../../utils/index';
 import type { TooltipProps } from './interface';
 
 type Attrs = Record<string, unknown>;

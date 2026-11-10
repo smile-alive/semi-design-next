@@ -1,4 +1,4 @@
-import { BASE_CLASS_PREFIX } from '../../base/constants';
+import { BASE_CLASS_PREFIX } from '../../base/index';
 
 const PREFIX = `${BASE_CLASS_PREFIX}-spin`;
 

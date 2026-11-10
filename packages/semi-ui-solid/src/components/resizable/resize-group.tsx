@@ -2,14 +2,11 @@ import { Show, createMemo, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
 import { ResizeGroupFoundation, type ResizeGroupAdapter, type ResizeGroupBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/resizable/resizable.scss';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useEventListener from '../../primitives/use-event-listener';
-import useResizeObserver from '../../primitives/use-resize-observer';
-import mergeRefs from '../../utils/merge-refs';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { useEventListener, useResizeObserver } from '../../primitives/index';
+import { mergeRefs } from '../../utils/index';
 import { ResizeGroupContext, type ResizeGroupContextValue } from './context';
 import { joinStyle } from './style';
 

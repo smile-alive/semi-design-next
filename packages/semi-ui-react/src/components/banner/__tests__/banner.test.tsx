@@ -2,10 +2,10 @@ import { StrictMode, createRef, useState, type MouseEvent as ReactMouseEvent } f
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Banner, LocaleProvider } from '@fibrae/semi-ui-react';
 import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import type { BannerProps } from '../index';
 
 const prefix = `${BASE_CLASS_PREFIX}-banner`;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import type { KeyedNode } from '../../utils/slot-nodes';
+    import type { KeyedNode } from '../../utils/index';
 
     defineProps<{ nodes: KeyedNode[]; fallback?: string }>();
 </script>

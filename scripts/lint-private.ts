@@ -6,6 +6,8 @@
 //    importSource that only the per-file pragma overrides, and no lint sees the runtime import the compiler injects.
 // 4. An AI package imports its UI package only by a subpath the UI package publishes, never by its root entry, which
 //    would pull in every component.
+// 5. Files inside an infrastructure directory never import a directory entry (their own or a sibling's): entries
+//    re-export the whole directory, so such an import forms a cycle.
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -46,13 +48,16 @@ for (const file of files.filter((name) => /^packages\/semi-[^/]+-vue\//.test(nam
 // other subpath is a component under src/components/
 const uiDirs = new Set(['base', 'utils', 'hooks', 'composables', 'primitives', 'internal']);
 const uiSource = (framework: string, source: string) => path.join(`packages/semi-ui-${framework}/src`, source.includes('/') && !uiDirs.has(source.split('/')[0]) ? 'components' : '', source);
+// Directory entries the exports map lists explicitly
+const uiEntries = new Set(['base', 'utils', 'internal']);
 
 const publishedSubpath: Record<string, (subpath: string) => string | undefined> = {
     // A bare SFC subpath does not resolve (no `.vue` in resolve.extensions), and a `.vue` one is published as
     // `.vue.js`, which `./*` does not map
-    vue: (subpath) => (subpath.endsWith('.vue') ? undefined : ['.ts', '.tsx'].map((ext) => `${subpath}${ext}`).find((source) => fs.existsSync(uiSource('vue', source)))),
+    vue: (subpath) => (uiEntries.has(subpath) ? `${subpath}/index.ts` : subpath.endsWith('.vue') ? undefined : ['.ts', '.tsx'].map((ext) => `${subpath}${ext}`).find((source) => fs.existsSync(uiSource('vue', source)))),
     // `./*.svelte.js` maps to a rune module `<name>.svelte.ts`, `./*.svelte` to a component, and `./*` to `<name>.ts`
     svelte: (subpath) => {
+        if (uiEntries.has(subpath)) return `${subpath}/index.ts`;
         const source = subpath.endsWith('.svelte.js') ? `${subpath.slice(0, -3)}.ts` : subpath.endsWith('.svelte') ? subpath : `${subpath}.ts`;
         return fs.existsSync(uiSource('svelte', source)) ? source : undefined;
     },
@@ -67,6 +72,16 @@ for (const [framework, resolve] of Object.entries(publishedSubpath)) {
                 failed = true;
             }
         }
+    }
+}
+
+const entryImport = /from\s+['"]([^'"]*\/(?:base|utils|hooks|composables|primitives|internal)\/index(?:\.js)?|@fibrae\/semi-[a-z-]+\/(?:base|utils|internal))['"]/g;
+const infraFiles = listFiles('packages/**/src/base/*', 'packages/**/src/utils/*', 'packages/**/src/hooks/*', 'packages/**/src/composables/*', 'packages/**/src/primitives/*', 'packages/**/src/internal/*', 'packages/**/src/locale/*');
+for (const file of infraFiles.filter((name) => /\.(ts|tsx|vue|svelte)$/.test(name) && !name.includes('/__tests__/'))) {
+    const source = fs.readFileSync(file, 'utf8');
+    for (const { 1: specifier, index } of source.matchAll(entryImport)) {
+        console.error(`${file}:${source.slice(0, index).split('\n').length}: an infrastructure directory imports the module directly, not the entry ${specifier}`);
+        failed = true;
     }
 }
 

@@ -1,6 +1,6 @@
 <script lang="ts">
     import * as dateFns from 'date-fns';
-    import { addClass, removeClass } from '@fibrae/semi-foundation/utils/classnames';
+    import { addClass, removeClass } from '@fibrae/semi-foundation/utils';
     import { Avatar, Table, type ColumnProps, type TableResizableProps } from '@fibrae/semi-ui-svelte';
 
     const DAY = 24 * 60 * 60 * 1000;

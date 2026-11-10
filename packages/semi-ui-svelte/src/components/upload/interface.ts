@@ -2,7 +2,7 @@ import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { strings } from '@fibrae/semi-foundation/components/upload/constants';
 import type { AfterUploadResult as FoundationAfterUploadResult, BaseFileItem, BeforeUploadObjectResult as FoundationBeforeUploadObjectResult, CustomFile } from '@fibrae/semi-foundation/components/upload/foundation';
-import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { ValidateStatus } from '../input/interface.js';
 import type { ModalProps } from '../modal/interface.js';
 import type { ShowTooltip, TypographyEllipsisTooltipProps } from '../typography/interface.js';

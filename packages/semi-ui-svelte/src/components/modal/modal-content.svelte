@@ -5,12 +5,11 @@
     import ModalContentFoundation, { type ModalContentAdapter, type ModalContentProps as FoundationProps, isModal } from '@fibrae/semi-foundation/components/modal/modal-content-foundation';
     import type { Size } from '@fibrae/semi-foundation/components/modal/modal-foundation';
     import { cssClasses as typographyClasses } from '@fibrae/semi-foundation/components/typography/constants';
-    import { warnIfDialogUnnamed } from '@fibrae/semi-foundation/utils/a11y';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { warnIfDialogUnnamed, toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/typography/typography.scss';
     import { IconClose } from '@fibrae/semi-icons-svelte';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useFoundation } from '../../base/index.js';
+    import { isAriaKey, splitControlAttrs } from '../../utils/index.js';
     import IconButton from '../icon-button/icon-button.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import useShowHide from './hooks/use-show-hide.svelte.js';

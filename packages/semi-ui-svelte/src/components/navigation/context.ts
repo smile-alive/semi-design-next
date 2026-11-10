@@ -1,4 +1,4 @@
-import { createContext } from '../../base/create-context.js';
+import { createContext } from '../../base/index.js';
 import type { ItemKey, Mode, NavClickData, NavOpenChangeData, NavProps, OnSelectedData } from './interface.js';
 
 /** Getters over the Nav's live values, so readers stay reactive; a Sub provides a copy of it to its own subtree */

@@ -1,11 +1,10 @@
 <script setup lang="ts">
     import { computed, onMounted, watch } from 'vue';
-    import { FreshItems, type ListStoreState, readNoticeText } from '@fibrae/semi-foundation/base/list-store';
+    import { FreshItems, type ListStoreState, readNoticeText } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
     import { groupNoticesByPosition, noticePositions, type NotificationListProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
     import '@fibrae/semi-foundation/components/notification/notification.scss';
-    import useAnnouncer from '../../composables/use-announcer';
-    import useStoreSnapshot from '../../composables/use-store-snapshot';
+    import { useAnnouncer, useStoreSnapshot } from '../../composables/index';
     import useConfig from '../config-provider/use-config';
     import type { ListedNotice, RegisterNotice } from './context';
     import NoticeList from './notice-list.vue';

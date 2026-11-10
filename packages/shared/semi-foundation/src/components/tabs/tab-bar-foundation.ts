@@ -1,5 +1,5 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { scrollIntoViewWithin } from '../../utils/supports';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { scrollIntoViewWithin } from '../../utils/index';
 import { cssClasses as overflowListClasses, SCROLL_KEY_ATTRIBUTE } from '../overflow-list/constants';
 import { cssClasses, getBarItemKey, getItemKeyByBarItemKey } from './constants';
 

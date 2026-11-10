@@ -1,5 +1,5 @@
-import FocusTrapHandle from '../../base/focus-handle';
-import { handoverFocus } from '../../utils/focus-handover';
+import { FocusTrapHandle } from '../../base/index';
+import { handoverFocus } from '../../utils/index';
 import { cssClasses } from './constants';
 
 export const byteKB = 1024;

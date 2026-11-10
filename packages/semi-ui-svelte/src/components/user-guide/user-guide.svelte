@@ -3,9 +3,8 @@
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/user-guide/constants';
     import UserGuideFoundation, { type UserGuideAdapter, type UserGuideBaseState } from '@fibrae/semi-foundation/components/user-guide/foundation';
     import '@fibrae/semi-foundation/components/user-guide/user-guide.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
     import { Button } from '../button/index.js';
     import { useConfig } from '../config-provider/index.js';
     import useLocale from '../locale/use-locale.svelte.js';

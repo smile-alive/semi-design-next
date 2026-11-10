@@ -3,9 +3,9 @@ import { cloneElement, Children, type ReactElement, isValidElement } from 'react
 import clsx from 'clsx';
 import { stepsClasses as css } from '@fibrae/semi-foundation/components/steps/constants';
 import { getStepState } from '@fibrae/semi-foundation/components/steps/utils';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import type { ElementProps } from '../../base/base';
-import flattenChildren from '../../utils/flatten-children';
+import { namedRole } from '@fibrae/semi-foundation/utils';
+import type { ElementProps } from '../../base/index';
+import { flattenChildren } from '../../utils/index';
 import { Row, Col } from '../grid';
 import type { Direction, Status } from './types';
 

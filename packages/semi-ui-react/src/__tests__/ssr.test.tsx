@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import TagInput from '@fibrae/semi-ui-react/tag-input';
 import Upload from '@fibrae/semi-ui-react/upload';
 import { renderWithoutDocument } from '@test/utils/react';
-import useClickOutside from '../hooks/use-click-outside';
+import { useClickOutside } from '../hooks/index';
 
 function ClickOutsideProbe() {
     const ref = useRef<HTMLDivElement>(null);

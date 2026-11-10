@@ -2,9 +2,9 @@ import type React from 'react';
 import { useLayoutEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { checkboxClasses as css } from '@fibrae/semi-foundation/components/checkbox/constants';
-import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+import { joinIds } from '@fibrae/semi-foundation/utils';
 import { IconCheckboxTick, IconCheckboxIndeterminate } from '@fibrae/semi-icons-react';
-import useMergedRef from '../../hooks/use-merged-ref';
+import { useMergedRef } from '../../hooks/index';
 
 export interface CheckboxInnerProps {
     'aria-describedby'?: React.AriaAttributes['aria-describedby'];

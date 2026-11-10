@@ -1,5 +1,5 @@
 import { type ShallowRef, onMounted, shallowRef, watch } from 'vue';
-import useResizeObserver from '../../../composables/use-resize-observer';
+import { useResizeObserver } from '../../../composables/index';
 
 export default function useScrollGrid(root: Readonly<ShallowRef<HTMLElement | null>>, scroll: Readonly<ShallowRef<HTMLElement | null>>, scrollTop: () => number): Readonly<ShallowRef<number>> {
     const scrollHeight = shallowRef(0);

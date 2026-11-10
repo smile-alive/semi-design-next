@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { flattenColumns } from '@fibrae/semi-foundation/components/table/utils';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import { nativeTag } from '../../utils/native-tag';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
+    import { nativeTag } from '../../utils/index';
     import type { ColumnProps, TableComponent } from './interface';
 
     const props = defineProps<{

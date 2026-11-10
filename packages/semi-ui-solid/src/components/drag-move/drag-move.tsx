@@ -1,7 +1,6 @@
 import { type JSX, children, createEffect, onCleanup } from 'solid-js';
 import DragMoveFoundation, { type DragMoveAdapter } from '@fibrae/semi-foundation/components/drag-move/foundation';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
+import { useDefaultProps, useFoundation } from '../../base/index';
 
 export interface DragMoveProps {
     handler?: () => HTMLElement | null;

@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/sve
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, type Mock, onTestFinished, vi } from 'vite-plus/test';
 import { chatCompletionToMessage } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/data-adapter/index';
 import type { Annotation } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 // the package entry, which also loads the semi-global type augmentation
 import { AIChatDialogue } from '@fibrae/semi-ai-svelte';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
@@ -11,7 +11,7 @@ import type { AvatarProps } from '@fibrae/semi-ui-svelte/avatar/interface';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { Modal } from '@fibrae/semi-ui-svelte/modal/index';
 import { Toast } from '@fibrae/semi-ui-svelte/toast/index';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import ReferenceWidget from '../dialogue/content-item/reference.svelte';
 import type { AIChatDialogueProps, DefaultActionNodeObj, MarkdownRenderProps, Message, Metadata } from '../interface';
 import CustomStrong from './custom-strong.svelte';

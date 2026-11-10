@@ -3,9 +3,8 @@ import clsx from 'clsx';
 import { cssClasses as css } from '@fibrae/semi-foundation/components/dropdown/constants';
 import { getItemRole } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
 import { IconTick } from '@fibrae/semi-icons-react';
-import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-props';
-import useMergedRef from '../../hooks/use-merged-ref';
+import type { ElementProps, BaseProps } from '../../base/index';
+import { useMergedRef } from '../../hooks/index';
 import { useDropdownContext } from './context';
 
 export type Type = 'primary' | 'secondary' | 'tertiary' | 'warning' | 'danger';

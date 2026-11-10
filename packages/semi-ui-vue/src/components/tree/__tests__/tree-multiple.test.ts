@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import { fireEvent, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { TreeNodeData } from '..';
 import { defaultKeyMaps, getLevelNodes, getNode, optionCls, renderTree as renderBase, specialTreeData, spyOn, treeData } from './fixtures/data';
 

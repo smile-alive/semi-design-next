@@ -2,7 +2,7 @@
     import type { CSSProperties } from 'vue';
     import type { BaseRowKeyType } from '@fibrae/semi-foundation/components/table/foundation';
     import { arrayAdd, genExpandedRowKey } from '@fibrae/semi-foundation/components/table/utils';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import { useTableContext } from '../context';
     import type { ColumnProps } from '../interface';
     import TableCell from '../table-cell.vue';

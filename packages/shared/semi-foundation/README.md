@@ -23,14 +23,16 @@ Build plugins need it to resolve `semi:` addresses, and the UI packages already 
 
 ## Usage
 
-This package has no root entry. It offers only deep file paths, which map one-to-one to the directories under `src/` and come with type declarations:
+This package has no root entry. The `base`, `utils` and `locale` directories each have an entry that gathers the directory's exports. Other modules are imported by deep file paths, which map one-to-one to the directories under `src/`. All come with type declarations:
 
 ```ts
-import BaseFoundation from '@fibrae/semi-foundation/base/foundation';
+import { BaseFoundation, FocusScope } from '@fibrae/semi-foundation/base';
 import InputFoundation from '@fibrae/semi-foundation/components/input/foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
+import type { Locale } from '@fibrae/semi-foundation/locale';
 import { utcToZonedTime } from '@fibrae/semi-foundation/utils/date-fns-extra';
 ```
+
+The `utils` entry leaves out the date modules (`date-fns-extra`, `date-fns-locale`, `zoned-time`), and the `base` entry leaves out `base/env`. Import those by deep path.
 
 `exports` also includes `./*.css` and `./*.scss`. The component CSS is compiled by `vp pack`. The published `.scss` contains `semi:` addresses and cannot be compiled by Sass directly; it goes through a build plugin or `@fibrae/semi-scss-compile`.
 
@@ -46,7 +48,7 @@ import { utcToZonedTime } from '@fibrae/semi-foundation/utils/date-fns-extra';
 
 ## Locale packs
 
-`src/locale/source/` holds the two built-in packs, `zh_CN` and `en_US`. Each file default-exports a `Locale`. `src/locale/index.ts` exports both packs and the `Locale`, `LocaleInput`, `LocaleComponentName` and `LocaleResult` types, and other packages import from `@fibrae/semi-foundation/locale/index`:
+`src/locale/source/` holds the two built-in packs, `zh_CN` and `en_US`. Each file default-exports a `Locale`. `src/locale/index.ts` exports both packs and the `Locale`, `LocaleInput`, `LocaleComponentName` and `LocaleResult` types, and other packages import from `@fibrae/semi-foundation/locale`:
 
 - `code`: the language code. Date components pick their date-fns locale by it (`src/utils/date-fns-locale.ts` builds in only zh-CN and en-US; others come from ConfigProvider's `dateFnsLocale`).
 - `currency`: the ISO 4217 currency code, passed by InputNumber to `Intl.NumberFormat`.

@@ -1,8 +1,8 @@
 import { StrictMode, createRef } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { beforeAll, describe, expect, it } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { sleep } from '@test/utils/react';
 import CodeHighlight from '../index';
 

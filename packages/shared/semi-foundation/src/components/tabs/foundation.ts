@@ -1,5 +1,5 @@
 import { isEqual } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter, type DirectionContext } from '../../base/index';
 import { cssClasses, TAB_DATA_KEY_PREFIX, TAB_KEY_ATTRIBUTE } from './constants';
 
 /** What the previous update showed, so the pane motion is derived in the same update as the key change */

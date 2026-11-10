@@ -3,8 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/markdown-render/constants';
     import MarkdownRenderFoundation, { type MarkdownRenderAdapter, type MarkdownRenderBaseProps, type MarkdownRenderBaseState } from '@fibrae/semi-foundation/components/markdown-render/foundation';
     import '@fibrae/semi-foundation/components/markdown-render/markdown-render.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import * as defaultComponents from './components/index.js';
     import type { MarkdownRenderProps } from './interface.js';
     import MarkdownChildren from './markdown-children.svelte';

@@ -1,6 +1,6 @@
 import type React from 'react';
 import type { CSSProperties, KeyboardEvent, MouseEvent, ReactNode } from 'react';
-import type { ElementProps } from '../../base/base';
+import type { ElementProps } from '../../base/index';
 import type { DropdownProps } from '../dropdown';
 import type TabBar from './tab-bar';
 import type { OverflowItem } from './tab-bar';

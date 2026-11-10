@@ -2,7 +2,7 @@
     import { onMounted, onUnmounted, ref, useId, useTemplateRef } from 'vue';
     import '@fibrae/semi-foundation/base/tokens.scss';
     import '@fibrae/semi-foundation/components/button/button.scss';
-    import useResizeObserver from '../../composables/use-resize-observer';
+    import { useResizeObserver } from '../../composables/index';
 
     const id = useId();
     const count = ref(0);

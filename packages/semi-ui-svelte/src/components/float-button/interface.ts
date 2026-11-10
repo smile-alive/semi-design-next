@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 import type { strings } from '@fibrae/semi-foundation/components/float-button/constants';
-import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { BadgeProps } from '../badge/interface.js';
 
 export type FloatButtonShape = ArrayElement<typeof strings.SHAPE>;

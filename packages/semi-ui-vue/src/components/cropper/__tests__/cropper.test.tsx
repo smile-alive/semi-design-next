@@ -3,7 +3,7 @@ import { createSSRApp, nextTick } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { mockResizeObserver, render } from '@test/utils/vue';
 import Cropper from '../cropper.vue';
 import type { CropperHandle, CropperProps } from '../interface';

@@ -3,9 +3,7 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
 import CollapseFoundation, { type CollapseAdapter, type CollapseProps, type CollapseState } from '@fibrae/semi-foundation/components/collapse/foundation';
 import '@fibrae/semi-foundation/components/collapse/collapse.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 import { CollapseContext } from './context';
 
 type Foundation = CollapseFoundation<CollapseClickEvent>;

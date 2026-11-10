@@ -2,7 +2,7 @@
 import { cleanup, screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconSetting } from '@fibrae/semi-icons-vue';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import { render, sleep } from '@test/utils/vue';

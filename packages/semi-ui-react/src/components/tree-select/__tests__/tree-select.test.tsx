@@ -2,12 +2,12 @@ import { StrictMode, useState } from 'react';
 import { render, screen, fireEvent, waitFor, act, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { BasicTreeNodeData } from '@fibrae/semi-foundation/components/tree/foundation';
 import { CheckboxGroup, ConfigProvider, Form, FormTreeSelect, Popover, Tag, TreeSelect } from '@fibrae/semi-ui-react';
 import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import type { TreeNodeData } from '@fibrae/semi-ui-react/tree/interface';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { countLiveListeners } from '@test/utils/react';
 import type { TreeSelectProps, TriggerRenderProps } from '../index';
 

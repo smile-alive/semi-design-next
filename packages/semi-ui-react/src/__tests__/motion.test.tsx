@@ -1,7 +1,7 @@
 import { describe, expectTypeOf, it } from 'vite-plus/test';
 import type { ProgressProps } from '@fibrae/semi-ui-react/progress';
 import type { ScrollItemProps } from '@fibrae/semi-ui-react/scroll-list/scroll-item';
-import type { Motion } from '../base/base';
+import type { Motion } from '../base/index';
 
 describe('Motion 类型', () => {
     it('只是动画开关', () => {

@@ -2,7 +2,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
     import { getHorizontalList } from '@fibrae/semi-foundation/components/descriptions/foundation';
     import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import type { DescriptionsData, DescriptionsProps } from './interface.js';
 
     const defaults = useDefaultProps('Descriptions');

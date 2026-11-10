@@ -1,6 +1,4 @@
-import FocusTrapHandle from '../../base/focus-handle';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import ModalResources from '../../base/modal-resources';
+import { FocusTrapHandle, BaseFoundation, type DefaultAdapter, ModalResources } from '../../base/index';
 import { cssClasses } from './constants';
 import type { ModalProps } from './modal-foundation';
 

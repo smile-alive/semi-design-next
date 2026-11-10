@@ -1,5 +1,5 @@
 import type { BaseFormApi, FieldBridge, FormState } from '@fibrae/semi-foundation/components/form/interface';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 
 export const [FormStateContext, useFormStateContext] = createContext<FormState>('FormState', { defaultValue: {} });
 

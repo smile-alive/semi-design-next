@@ -1,6 +1,6 @@
 <script lang="ts">
     import { setContext } from 'svelte';
-    import { type SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils/semi-global';
+    import { type SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils';
     import FloatButtonGroup from '../float-button-group.svelte';
     import FloatButton from '../float-button.svelte';
 

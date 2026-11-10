@@ -1,6 +1,5 @@
-import type { Size } from '@fibrae/semi-foundation/utils/type';
-import { createContext } from '../../base/create-context';
-import { usePopupLayer } from '../../base/popup-layer';
+import type { Size } from '@fibrae/semi-foundation/utils';
+import { createContext, usePopupLayer } from '../../base/index';
 
 export interface InputGroupLooks {
     size?: Size;

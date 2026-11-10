@@ -1,6 +1,6 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/form/form.scss';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { LabelProps } from './interface.js';

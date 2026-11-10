@@ -1,4 +1,4 @@
-import ListStore, { type ListStoreState } from '../../base/list-store';
+import { ListStore, type ListStoreState } from '../../base/index';
 import type { NoticeInstance, NoticePosition } from './notification-foundation';
 
 /** A notice of the list: `open` gives every notice an id */

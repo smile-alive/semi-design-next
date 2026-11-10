@@ -1,9 +1,9 @@
 import { type ComponentProps, flushSync, tick } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import { mockResizeObserverCore } from '@test/utils/dom/resize-observer-core';
 import { sleep } from '@test/utils/function';
 import type { OverflowListItem, OverflowListProps } from '..';

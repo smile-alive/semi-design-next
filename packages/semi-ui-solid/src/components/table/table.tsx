@@ -1,6 +1,6 @@
 import { Show, mergeProps } from 'solid-js';
 import { numbers, strings } from '@fibrae/semi-foundation/components/table/constants';
-import useDefaultProps from '../../base/use-default-props';
+import { useDefaultProps } from '../../base/index';
 import useConfig from '../config-provider/use-config';
 import Column from './column';
 import type { TableProps } from './interface';

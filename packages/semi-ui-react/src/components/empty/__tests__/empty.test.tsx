@@ -3,7 +3,7 @@ import { render, screen, act } from '@testing-library/react';
 import { afterEach, describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import { IllustrationConstruction, IllustrationConstructionDark } from '@fibrae/semi-icons-react/illustrations';
 import { Empty } from '@fibrae/semi-ui-react';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import type { EmptyProps } from '../index';
 
 describe('Empty', () => {

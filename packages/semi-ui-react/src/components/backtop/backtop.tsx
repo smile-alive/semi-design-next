@@ -5,11 +5,9 @@ import { cssClasses, numbers } from '@fibrae/semi-foundation/components/backtop/
 import BackTopFoundation, { type BackTopAdapter, type BackTopState, type Target } from '@fibrae/semi-foundation/components/backtop/foundation';
 import '@fibrae/semi-foundation/components/backtop/backtop.scss';
 import { IconBackTop } from '@fibrae/semi-icons-react';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useMergedRef from '../../hooks/use-merged-ref';
-import { hasContent } from '../../utils';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { useMergedRef } from '../../hooks/index';
+import { hasContent } from '../../utils/index';
 import FloatButton from '../float-button';
 import type { FloatButtonProps } from '../float-button/interface';
 import useLocale from '../locale/use-locale';

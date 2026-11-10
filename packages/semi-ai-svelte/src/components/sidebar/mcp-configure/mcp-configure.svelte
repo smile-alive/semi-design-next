@@ -1,5 +1,5 @@
 <script lang="ts">
-    import useDefaultProps from '@fibrae/semi-ui-svelte/base/use-default-props';
+    import { useDefaultProps } from '@fibrae/semi-ui-svelte/base';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';
     import Container from '../container/container.svelte';
     import type { MCPConfigureProps } from './interface.js';

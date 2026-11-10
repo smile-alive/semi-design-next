@@ -1,6 +1,6 @@
 import type { VNode } from 'vue';
 import type { StrokeArr } from '@fibrae/semi-foundation/components/progress/generates';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import type { Size } from '@fibrae/semi-foundation/utils';
 
 export type { StrokeArr };
 export type ProgressSize = Size;

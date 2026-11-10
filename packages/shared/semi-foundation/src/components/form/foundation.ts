@@ -1,10 +1,9 @@
 import { isEqual, isPlainObject } from 'es-toolkit';
 import { toPath } from 'es-toolkit/compat';
 import scrollIntoViewIfNeeded, { type Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
-import BaseFoundation from '../../base/foundation';
-import isPromise from '../../utils/is-promise';
+import { BaseFoundation } from '../../base/index';
+import { isPromise, warning } from '../../utils/index';
 import * as ObjectUtil from '../../utils/object';
-import warning from '../../utils/warning';
 import { cssClasses } from './constants';
 import { type FieldError, hasErrors, isErrorLeaf, normalizeFieldError, normalizeFormErrors } from './errors';
 import type FieldStore from './field-store';

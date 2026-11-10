@@ -1,8 +1,8 @@
 <script lang="ts" generics="T = any">
     import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/list/list.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import { Row } from '../grid/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import Spin from '../spin/spin.svelte';

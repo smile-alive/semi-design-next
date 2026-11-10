@@ -2,8 +2,8 @@
     import { computed, useTemplateRef, type StyleValue } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageBaseProps, type PreviewImageState } from '@fibrae/semi-foundation/components/image/preview-image-foundation';
-    import useFoundation from '../../../base/use-foundation';
-    import useEventListener, { getWindow } from '../../../composables/use-event-listener';
+    import { useFoundation } from '../../../base/index';
+    import { useEventListener, getWindow } from '../../../composables/index';
     import Spin from '../../spin';
     import type { RatioType } from '../interface';
 

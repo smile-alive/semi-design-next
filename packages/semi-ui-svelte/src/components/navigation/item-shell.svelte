@@ -6,8 +6,8 @@
     import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
     import ItemFoundation, { type ItemAdapter, type ItemKey, type ItemProps, copySelectedItem, countPlaceholderIcons } from '@fibrae/semi-foundation/components/navigation/item-foundation';
     import '@fibrae/semi-foundation/components/navigation/navigation.scss';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useFoundation } from '../../base/index.js';
+    import { isAriaKey, splitControlAttrs } from '../../utils/index.js';
     import { DropdownItem } from '../dropdown/index.js';
     import { Tooltip, type TooltipTriggerProps } from '../tooltip/index.js';
     import { getNavContext } from './context.js';

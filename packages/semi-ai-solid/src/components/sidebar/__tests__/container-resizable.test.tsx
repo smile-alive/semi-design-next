@@ -1,7 +1,7 @@
 import { createSignal } from 'solid-js';
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
+import { openLayer } from '@fibrae/semi-foundation/utils';
 import Container from '../container';
 import type { ContainerSolidProps } from '../interface';
 

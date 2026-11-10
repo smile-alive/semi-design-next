@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { ClassValue, HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import type { Size } from '@fibrae/semi-foundation/utils';
 import type { ValidateStatus } from '../input/index.js';
 import type { Position } from '../tooltip/index.js';
 

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { IconArticle, IconHome } from '@fibrae/semi-icons-solid';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import Breadcrumb, { type BreadcrumbItemInfo, type BreadcrumbItemProps, type BreadcrumbProps, type RouteProps } from '..';
 
 type RouteClick = NonNullable<BreadcrumbProps['onClick']>;

@@ -2,11 +2,11 @@
     import { untrack } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/components/tag/constants';
     import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/components/tag/focus';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
     import '@fibrae/semi-foundation/components/tag/tag.scss';
     import { IconClose } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import observeMutations from '../../utils/observe-mutations.js';
+    import { useDefaultProps } from '../../base/index.js';
+    import { observeMutations } from '../../utils/index.js';
     import Avatar from '../avatar/avatar.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { TagCloseEvent, TagProps } from './interface.js';

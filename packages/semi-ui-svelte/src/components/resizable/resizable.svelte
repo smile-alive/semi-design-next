@@ -4,12 +4,9 @@
     import { ResizableFoundation, type ResizableAdapter, type ResizableBaseProps, type ResizableBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
     import { directions, type Direction } from '@fibrae/semi-foundation/components/resizable/types';
     import { getStringSize, isKeyboardEdge } from '@fibrae/semi-foundation/components/resizable/utils';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
+    import { namedRole, toCssLength, isSecondaryPress } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/resizable/resizable.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { observeResize } from '../resize-observer/index.js';
     import type { ResizableProps } from './interface.js';

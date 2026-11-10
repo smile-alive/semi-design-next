@@ -3,8 +3,7 @@ import { memo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
 import '@fibrae/semi-foundation/components/typography/typography.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
+import { type ElementProps, useDefaultProps } from '../../base/index';
 
 const prefixCls = cssClasses.PREFIX;
 

@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import Avatar from '@fibrae/semi-ui-react/avatar';
 import ConfigProvider from '@fibrae/semi-ui-react/config-provider';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import Badge, { type BadgeProps } from '../index';
 
 function getBadge(props) {

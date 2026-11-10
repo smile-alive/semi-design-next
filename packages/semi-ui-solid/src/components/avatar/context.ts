@@ -1,5 +1,5 @@
 import type { Accessor, JSX } from 'solid-js';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { AvatarProps, AvatarShape } from './interface';
 
 export interface AvatarGroupItem {

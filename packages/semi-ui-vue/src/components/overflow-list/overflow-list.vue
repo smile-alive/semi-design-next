@@ -2,14 +2,11 @@
     import { computed, onBeforeUpdate, onMounted, onUpdated, shallowRef, Text, useAttrs, useTemplateRef, type CSSProperties } from 'vue';
     import { cssClasses, SCROLL_KEY_ATTRIBUTE } from '@fibrae/semi-foundation/components/overflow-list/constants';
     import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState } from '@fibrae/semi-foundation/components/overflow-list/foundation';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useIntersectionObserver from '../../composables/use-intersection-observer';
-    import useResizeObserver from '../../composables/use-resize-observer';
-    import slotNodes from '../../utils/slot-nodes';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
+    import { useIntersectionObserver, useResizeObserver } from '../../composables/index';
+    import { slotNodes } from '../../utils/index';
     import type { OverflowListEmits, OverflowListItem, OverflowListKey, OverflowListProps, OverflowListSlots } from './interface';
     import MeasuredBox from './measured-box.vue';
 

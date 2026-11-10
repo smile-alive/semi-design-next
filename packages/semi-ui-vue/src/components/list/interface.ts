@@ -1,5 +1,5 @@
 import type { StyleValue, VNode } from 'vue';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import type { Size } from '@fibrae/semi-foundation/utils';
 import type { ColProps, RowProps } from '../grid/interface';
 
 /** Row and Col layout props shared by every item; `class` and `style` land on each item's Col */

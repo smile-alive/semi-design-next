@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
+import type { Locale } from '@fibrae/semi-foundation/locale';
 import { IconChevronDown, IconChevronUp, IconAISearchLevel2 } from '@fibrae/semi-icons-react';
-import type { ElementProps } from '@fibrae/semi-ui-react/base/base';
+import type { ElementProps } from '@fibrae/semi-ui-react/base';
 import Collapsible from '@fibrae/semi-ui-react/collapsible/index';
 import LocaleConsumer from '@fibrae/semi-ui-react/locale/locale-consumer';
 import MarkdownRender from '@fibrae/semi-ui-react/markdown-render/index';

@@ -2,7 +2,7 @@ import { type JSX, Show, children, createMemo, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
 import { IconClose } from '@fibrae/semi-icons-solid';
-import hasContent from '../../../utils/has-content';
+import { hasContent } from '../../../utils/index';
 import useLocale from '../../locale/use-locale';
 import type { HeaderProps } from '../interface';
 

@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import { describe, expect, it } from 'vite-plus/test';
 import { ContractFoundation, stateText } from '@test/utils/host-contract';
-import useFoundation from '../base/use-foundation';
+import { useFoundation } from '../base/index';
 
 class StateWritingFoundation extends ContractFoundation {
     override init() {

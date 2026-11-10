@@ -1,5 +1,5 @@
 import type { ComputedRef } from 'vue';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { StepStatus, StepsSize, StepsType } from './interface';
 
 export interface StepsView {

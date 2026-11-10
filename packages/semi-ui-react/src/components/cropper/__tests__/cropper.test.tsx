@@ -2,7 +2,7 @@ import { Activity, StrictMode, createRef } from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { Cropper } from '@fibrae/semi-ui-react';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { mockResizeObserver } from '@test/utils/react';
 import type { CropperHandle, CropperProps } from '../index';
 

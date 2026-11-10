@@ -2,10 +2,9 @@
     import { computed, onBeforeUnmount, onMounted, watch, type Slots, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/anchor/constants';
     import AnchorFoundation, { type AnchorNode } from '@fibrae/semi-foundation/components/anchor/foundation';
-    import isEnterPress from '@fibrae/semi-foundation/utils/is-enter-press';
-    import type { ElementProps } from '../../base/element-props';
-    import elementType from '../../utils/element-type';
-    import slotNodes, { type KeyedNode } from '../../utils/slot-nodes';
+    import { isEnterPress } from '@fibrae/semi-foundation/utils';
+    import type { ElementProps } from '../../base/index';
+    import { elementType, slotNodes, type KeyedNode } from '../../utils/index';
     import { elementChildren } from '../typography/slot-text';
     import TypographyText from '../typography/text.vue';
     import { provideAnchorContext, useAnchorContext } from './context';

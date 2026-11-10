@@ -3,7 +3,7 @@ import { useImperativeHandle, useRef } from 'react';
 import { pick as pickKeys } from 'es-toolkit';
 import { applyItem, getOptions, type formatOption, type ColumnType, type TimeStamp } from '@fibrae/semi-foundation/components/time-picker/combobox-options';
 import { strings } from '@fibrae/semi-foundation/components/time-picker/constants';
-import type { BaseProps } from '../../base/base-props';
+import type { BaseProps } from '../../base/index';
 import useLocale from '../locale/use-locale';
 import ScrollList from '../scroll-list/index';
 import ScrollItem, { type ScrollItemHandle } from '../scroll-list/scroll-item';

@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import TimePicker from '..';
 
 const GLOBAL_INPUT = { prefix: 'mark-prefix', insetLabel: 'mark-label', addonBefore: 'mark-before', addonAfter: 'mark-after' };

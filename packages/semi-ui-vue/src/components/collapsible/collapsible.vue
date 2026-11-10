@@ -3,9 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/collapsible/constants';
     import CollapsibleFoundation, { type CollapsibleAdapter, type CollapsibleBaseProps } from '@fibrae/semi-foundation/components/collapsible/foundation';
     import '@fibrae/semi-foundation/components/collapsible/collapsible.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
+    import { type ElementProps, type EmitHandlers, semiDefault, useFoundation } from '../../base/index';
     import type { CollapsibleEmits, CollapsibleProps, CollapsibleSlots } from './interface';
 
     type Foundation = CollapsibleFoundation<CollapsibleBaseProps>;

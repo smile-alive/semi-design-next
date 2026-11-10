@@ -1,10 +1,9 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/feedback/constants';
     import FeedbackFoundation, { type FeedbackAdapter, type FeedbackBaseState, isFeedbackValueEmpty } from '@fibrae/semi-foundation/components/feedback/foundation';
-    import isPromise from '@fibrae/semi-foundation/utils/is-promise';
+    import { isPromise } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/feedback/feedback.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import Button from '../button/button.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import Modal from '../modal/modal.svelte';

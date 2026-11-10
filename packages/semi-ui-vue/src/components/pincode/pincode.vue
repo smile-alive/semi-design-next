@@ -3,12 +3,10 @@
     import { FORM_INJECTED_PROP_KEYS } from '@fibrae/semi-foundation/components/form/constants';
     import { cssClasses } from '@fibrae/semi-foundation/components/pincode/constants';
     import PinCodeFoundation, { type PinCodeAdapter } from '@fibrae/semi-foundation/components/pincode/foundation';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
     import '@fibrae/semi-foundation/components/pincode/pincode.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import { splitControlAttrs } from '../../utils/control-attrs';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
+    import { splitControlAttrs } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import Input, { type InputChangeEvent, type InputHandle } from '../input';
     import useLocale from '../locale/use-locale';

@@ -4,9 +4,8 @@ import clsx from 'clsx';
 import { format } from 'date-fns';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import MonthFoundation, { type MonthAdapter, type MonthDayInfo, type MonthFoundationProps, type MonthFoundationState } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
-import type { BaseProps } from '../../base/base-props';
-import useFoundation from '../../base/use-foundation';
+import type { Locale } from '@fibrae/semi-foundation/locale';
+import { type BaseProps, useFoundation } from '../../base/index';
 import useToday from '../calendar/hooks/use-today';
 import { useConfigContext } from '../config-provider/context';
 

@@ -1,8 +1,7 @@
 import { Text, type VNode } from 'vue';
 import type { NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
 import type { ItemKey } from '@fibrae/semi-foundation/components/navigation/item-foundation';
-import elementType from '../../utils/element-type';
-import slotNodes from '../../utils/slot-nodes';
+import { elementType, slotNodes } from '../../utils/index';
 
 /**
  * A Semi icon takes the size of its slot unless it sets its own; any other node is no Semi icon and gets no `size`

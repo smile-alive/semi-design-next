@@ -5,12 +5,8 @@
     import { buildRowProps, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
     import '@fibrae/semi-foundation/components/tree/tree.scss';
     import { IconSearch } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import { rootAppContext } from '../../base/installed-app';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs';
-    import slotNodes, { hasSlotContent, type KeyedNode } from '../../utils/slot-nodes';
+    import { type ElementProps, type EmitHandlers, rootAppContext, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
+    import { isAriaKey, splitControlAttrs, slotNodes, hasSlotContent, type KeyedNode } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import Input from '../input';
     import useLocale from '../locale/use-locale';

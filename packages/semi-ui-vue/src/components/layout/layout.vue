@@ -2,11 +2,8 @@
     import { ref } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
     import '@fibrae/semi-foundation/components/layout/layout.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import elementType from '../../utils/element-type';
-    import { nativeTag } from '../../utils/native-tag';
-    import slotNodes from '../../utils/slot-nodes';
+    import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
+    import { elementType, nativeTag, slotNodes } from '../../utils/index';
     import { provideLayoutContext } from './context';
     import type { LayoutProps, LayoutSlots } from './interface';
 

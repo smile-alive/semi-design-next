@@ -4,8 +4,7 @@ import { strings, numbers, cssClasses } from '@fibrae/semi-foundation/components
 import { isRangeType } from '@fibrae/semi-foundation/components/date-picker/foundation';
 import MonthsGridFoundation, { type PanelState, type MonthsGridAdapter, type MonthsGridFoundationProps, type MonthsGridFoundationState, type PanelPart, type PanelType, type PanelView } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
 import { IconClock, IconCalendar } from '@fibrae/semi-icons-react';
-import type { BaseProps } from '../../base/base-props';
-import useFoundation from '../../base/use-foundation';
+import { type BaseProps, useFoundation } from '../../base/index';
 import Combobox, { type ComboboxHandle, type ComboboxProps } from '../time-picker/combobox';
 import type { DatePickerProps } from './date-picker';
 import Month from './month';

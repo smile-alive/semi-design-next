@@ -2,14 +2,11 @@ import { createEffect, createMemo, createSignal, on, splitProps, untrack } from 
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/anchor/constants';
 import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/components/anchor/foundation';
-import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
+import { toCssLength, shallowEqualObjects } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/anchor/anchor.scss';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useResizeObserver from '../../primitives/use-resize-observer';
-import mergeRefs from '../../utils/merge-refs';
-import mergeStyles from '../../utils/merge-styles';
+import { useDefaultProps, useFoundation } from '../../base/index';
+import { useResizeObserver } from '../../primitives/index';
+import { mergeRefs, mergeStyles } from '../../utils/index';
 import useLocale from '../locale/use-locale';
 import { AnchorContext, type AnchorView } from './context';
 import type { AnchorClickEvent, AnchorProps } from './interface';

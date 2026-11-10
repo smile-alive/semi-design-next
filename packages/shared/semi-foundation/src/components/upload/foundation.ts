@@ -1,8 +1,7 @@
 import { isPlainObject } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import type { Locale } from '../../locale/interface';
-import isPromise from '../../utils/is-promise';
-import { createId } from '../../utils/uuid';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import type { Locale } from '../../locale/index';
+import { isPromise, createId } from '../../utils/index';
 import { strings, numbers } from './constants';
 import { getFileSize, byteKB, mapFileTree, removeUnlessPrevented } from './utils';
 

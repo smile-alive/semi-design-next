@@ -1,7 +1,7 @@
 import type { JSX } from 'solid-js';
 import type { PreviewGroupImage } from '@fibrae/semi-foundation/components/image/preview-foundation';
 import type { RatioType, RotateDirection } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 
 export type { RatioType } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
 

@@ -3,12 +3,9 @@ import clsx from 'clsx';
 import { omitBy, pickBy } from 'es-toolkit';
 import { cssClasses } from '@fibrae/semi-foundation/components/switch/constants';
 import SwitchFoundation, { type SwitchAdapter, type SwitchState } from '@fibrae/semi-foundation/components/switch/foundation';
-import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import { isAriaKey, type Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/switch/switch.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 import Spin from '../spin';
 
 type Foundation = SwitchFoundation<SwitchProps, React.ChangeEvent<HTMLInputElement>>;

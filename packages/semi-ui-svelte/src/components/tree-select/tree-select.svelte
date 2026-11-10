@@ -1,20 +1,17 @@
 <script lang="ts">
     import { isEqual } from 'es-toolkit';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { comboboxName } from '@fibrae/semi-foundation/components/select/combobox-name';
     import { cssClasses } from '@fibrae/semi-foundation/components/tree-select/constants';
     import TreeSelectFoundation, { type BasicTreeSelectInnerData, type BasicTreeSelectProps, type TreeSelectAdapter } from '@fibrae/semi-foundation/components/tree-select/foundation';
     import { buildRowProps, getClearedSelection, getNodeData as getTreeNodeData, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
-    import { isInnerControlKey, isTextEditor, joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { isInnerControlKey, isTextEditor, joinIds } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/tree/tree.scss';
     import '@fibrae/semi-foundation/components/tree-select/tree-select.scss';
     import { IconChevronDown, IconClear, IconSearch } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import useClickOutside from '../../hooks/use-click-outside.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
-    import { splitControlAttrs } from '../../utils/control-attrs.js';
-    import { type SlotKind, trackSlotKind } from '../../utils/slot-kind.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { useClickOutside, watch } from '../../hooks/index.js';
+    import { splitControlAttrs, type SlotKind, trackSlotKind } from '../../utils/index.js';
     import { useConfig } from '../config-provider/index.js';
     import { getInputGroupInScope, setInputGroupContext } from '../input/context.js';
     import { Input } from '../input/index.js';

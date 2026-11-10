@@ -2,8 +2,7 @@ import { type JSX, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/skeleton/constants';
 import '@fibrae/semi-foundation/components/skeleton/skeleton.scss';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
+import { type ElementProps, useDefaultProps } from '../../base/index';
 import { Avatar, Button, Image, Paragraph, Title } from './item';
 
 const prefixCls = cssClasses.PREFIX;

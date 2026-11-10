@@ -4,11 +4,8 @@
     import BackTopFoundation, { type BackTopAdapter } from '@fibrae/semi-foundation/components/backtop/foundation';
     import '@fibrae/semi-foundation/components/backtop/backtop.scss';
     import { IconBackTop } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation, useKeepAliveFoundation } from '../../base/index';
+    import { hasSlotContent } from '../../utils/index';
     import FloatButton from '../float-button';
     import useLocale from '../locale/use-locale';
     import type { BackTopEmits, BackTopProps, BackTopSlots, BackTopState } from './interface';

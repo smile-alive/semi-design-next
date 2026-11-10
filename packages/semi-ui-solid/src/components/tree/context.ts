@@ -1,6 +1,6 @@
 import type { Accessor } from 'solid-js';
 import type { ExpandAction } from '@fibrae/semi-foundation/components/tree/foundation';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { TreeProps, TreeRowProps } from './interface';
 
 export interface TreeContextView {

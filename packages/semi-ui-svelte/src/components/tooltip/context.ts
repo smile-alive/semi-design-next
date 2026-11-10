@@ -1,4 +1,4 @@
-import { createContext } from '../../base/create-context.js';
+import { createContext } from '../../base/index.js';
 
 export interface PopupRegistry {
     register: (container: () => HTMLElement | null) => () => void;

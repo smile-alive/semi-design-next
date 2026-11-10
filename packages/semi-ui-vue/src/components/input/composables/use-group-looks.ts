@@ -1,5 +1,5 @@
 import { computed } from 'vue';
-import { useSemiGlobal } from '../../../base/semi-default';
+import { useSemiGlobal } from '../../../base/index';
 import { useInputGroupInScope } from '../context';
 import type { InputSize } from '../interface';
 

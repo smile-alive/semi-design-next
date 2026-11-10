@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Select } from '@fibrae/semi-ui-react';
 
 const getSelectionText = () => document.querySelector(`.${BASE_CLASS_PREFIX}-select-selection-text`);

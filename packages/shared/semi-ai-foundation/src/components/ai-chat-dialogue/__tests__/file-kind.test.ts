@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vite-plus/test';
-import { getFileSuffix } from '@fibrae/semi-ai-foundation/utils/file-suffix';
+import { getFileSuffix } from '@fibrae/semi-ai-foundation/utils';
 import { getDialogueFileKind } from '../constants';
 
 describe('getDialogueFileKind', () => {

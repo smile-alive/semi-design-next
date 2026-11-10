@@ -1,6 +1,6 @@
 import type { Accessor } from 'solid-js';
 import type { FieldBridge } from '@fibrae/semi-foundation/components/form/interface';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { FormApi, FormProps, FormState } from './interface';
 
 export interface FormContextValue {

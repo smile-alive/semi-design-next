@@ -2,7 +2,7 @@ import { batch, createEffect, createSignal } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { type ContractAdapter, type ContractHost, type ContractMountOptions, type ContractProps, type ContractState, ContractFoundation, defineHostContract, stateText } from '@test/utils/host-contract';
-import useFoundation from '../base/use-foundation';
+import { useFoundation } from '../base/index';
 
 async function mount(options: ContractMountOptions = {}): Promise<ContractHost> {
     const log: string[] = [];

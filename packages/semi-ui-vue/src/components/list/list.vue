@@ -1,11 +1,10 @@
 <script setup lang="ts" generic="T = any">
     import { computed, Comment, Fragment, useAttrs, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/list/constants';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/list/list.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import { type KeyedNode, hasSlotContent } from '../../utils/slot-nodes';
+    import { type ElementProps, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/index';
+    import { type KeyedNode, hasSlotContent } from '../../utils/index';
     import { Row } from '../grid';
     import useLocale from '../locale/use-locale';
     import Spin from '../spin';

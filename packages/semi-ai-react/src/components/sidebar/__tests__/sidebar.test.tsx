@@ -6,7 +6,7 @@ import { Annotation, MCPConfigure, Sidebar } from '@fibrae/semi-ai-react';
 import { IconCode, IconFile } from '@fibrae/semi-icons-react';
 import { JsonViewer } from '@fibrae/semi-json-viewer-core';
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import type { CodeItemProps } from '../code';
 import type { Option, SideBarProps } from '../interface';
 

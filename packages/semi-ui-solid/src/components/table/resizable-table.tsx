@@ -1,6 +1,6 @@
 import { Show, batch, children, createEffect, createMemo, createSignal, splitProps, untrack } from 'solid-js';
 import { applyColumnResize, findColumn, getColumnResizeChange, getExpandColumn, getResizableColumns, getSelectionColumn } from '@fibrae/semi-foundation/components/table/utils';
-import warning from '@fibrae/semi-foundation/utils/warning';
+import { warning } from '@fibrae/semi-foundation/utils';
 import type { ColumnProps, OnHeaderCellReturnObject, RowSelectionProps, TableComponents, TableProps } from './interface';
 import NormalTable from './normal-table';
 import ResizableHeaderCell, { type ResizeHandler } from './table-header/resizable-header-cell';

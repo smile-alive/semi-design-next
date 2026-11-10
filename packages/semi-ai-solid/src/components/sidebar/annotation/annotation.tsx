@@ -1,7 +1,7 @@
 import { splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
-import useDefaultProps from '@fibrae/semi-ui-solid/base/use-default-props';
+import { useDefaultProps } from '@fibrae/semi-ui-solid/base';
 import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import Container from '../container';
 import type { ContainerSolidProps } from '../interface';

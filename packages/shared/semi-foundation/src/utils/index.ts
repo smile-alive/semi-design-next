@@ -1,0 +1,34 @@
+// date-fns-extra, date-fns-locale and zoned-time stay out: they pull date-fns data, and Vite dev and SSR load every
+// module of an entry, so only the date components import them by deep path.
+export * from './a11y';
+export * from './animated-height';
+export { default as Announcer } from './announcer';
+export * from './announcer';
+export { default as arrayMove } from './array-move';
+export * from './array';
+export * from './assert-client';
+export * from './classnames';
+export * from './clipboard';
+export * from './dom';
+export * from './escape-html';
+export { default as EventEmitter } from './event';
+export * from './field-sizing';
+export * from './focus-handover';
+export * from './function';
+export { default as getDataAttr } from './get-data-attr';
+export { default as isEnterPress } from './is-enter-press';
+export { default as isObject } from './is-object';
+export { default as isPromise } from './is-promise';
+export { default as isValidTimeZone } from './is-valid-time-zone';
+export * from './key-code';
+export * from './layer';
+export * from './object';
+export * from './pointer';
+export * from './scroll-lock';
+export { default as shallowEqualObjects } from './shallow-equal-objects';
+export * from './supports';
+export * from './tween';
+export * from './type';
+export * from './uuid';
+export { default as warning } from './warning';
+export * from './warning';

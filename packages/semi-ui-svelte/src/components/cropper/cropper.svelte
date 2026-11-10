@@ -5,8 +5,7 @@
     import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/components/cropper/foundation';
     import { getCropperGeometry } from '@fibrae/semi-foundation/components/cropper/utils';
     import '@fibrae/semi-foundation/components/cropper/cropper.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { observeResize } from '../resize-observer/index.js';
     import type { CropperProps } from './interface.js';

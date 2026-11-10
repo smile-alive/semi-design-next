@@ -2,8 +2,7 @@
     import { computed } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
     import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import SlotFragment from '../../base/slot-fragment';
+    import { type ElementProps, SlotFragment } from '../../base/index';
     import { useDescriptionsContext } from './context';
     import type { DescriptionsItemProps, DescriptionsItemSlots } from './interface';
 

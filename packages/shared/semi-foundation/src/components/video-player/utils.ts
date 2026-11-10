@@ -1,5 +1,5 @@
 import { clamp } from 'es-toolkit';
-import { formatLocale } from '../../locale/format';
+import { formatLocale } from '../../locale/index';
 
 /** The clock form of a time: mm:ss, and h:mm:ss from one hour on. A non-finite time (an unknown duration) reads 00:00. */
 export function formatTime(time: number) {

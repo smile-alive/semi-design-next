@@ -1,5 +1,4 @@
-import FocusTrapHandle from '../../base/focus-handle';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { FocusTrapHandle, BaseFoundation, type DefaultAdapter } from '../../base/index';
 
 export interface SpinState {
     loading: boolean;

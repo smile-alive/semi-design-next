@@ -2,12 +2,11 @@
     import { onMount } from 'svelte';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/carousel/constants';
     import CarouselFoundation, { type CarouselAdapter, type CarouselBaseProps, type CarouselState } from '@fibrae/semi-foundation/components/carousel/foundation';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
     import '@fibrae/semi-foundation/components/carousel/carousel.scss';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
     import { getConfigContext } from '../config-provider/context.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { CarouselProps } from './interface.js';

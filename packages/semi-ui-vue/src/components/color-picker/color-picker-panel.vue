@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import AlphaSlider from './alpha-slider.vue';
     import ColorChooseArea from './color-choose-area.vue';
     import ColorSlider from './color-slider.vue';

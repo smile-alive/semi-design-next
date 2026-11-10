@@ -1,13 +1,12 @@
 <script lang="ts">
     import { tick } from 'svelte';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/banner/constants';
     import BannerFoundation, { type BannerAdapter, type BannerState } from '@fibrae/semi-foundation/components/banner/foundation';
-    import { findFocusAfter, handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
+    import { findFocusAfter, handoverFocus } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/banner/banner.scss';
     import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import IconButton from '../icon-button/icon-button.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import { TypographyParagraph, TypographyTitle } from '../typography/index.js';

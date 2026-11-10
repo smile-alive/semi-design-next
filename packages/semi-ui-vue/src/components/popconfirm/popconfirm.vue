@@ -4,9 +4,8 @@
     import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
     import '@fibrae/semi-foundation/components/popconfirm/popconfirm.scss';
     import { IconAlertTriangle, IconClose } from '@fibrae/semi-icons-vue';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import { semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
+    import { hasSlotContent } from '../../utils/index';
     import Button from '../button';
     import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';

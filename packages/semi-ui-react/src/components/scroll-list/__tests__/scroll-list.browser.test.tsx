@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { ScrollList, ScrollItem } from '@fibrae/semi-ui-react';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import { sleep } from '@test/utils/react';

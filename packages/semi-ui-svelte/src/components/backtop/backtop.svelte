@@ -4,8 +4,7 @@
     import BackTopFoundation, { type BackTopAdapter, type BackTopBaseProps } from '@fibrae/semi-foundation/components/backtop/foundation';
     import '@fibrae/semi-foundation/components/backtop/backtop.scss';
     import { IconBackTop } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import FloatButton from '../float-button/float-button.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { BackTopProps, BackTopState } from './interface.js';

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import type { ElementProps } from '../../base/element-props';
+    import type { ElementProps } from '../../base/index';
     import type { SkeletonAvatarProps } from './interface';
     import SkeletonItem from './skeleton-item.vue';
 

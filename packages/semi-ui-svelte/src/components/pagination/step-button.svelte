@@ -2,8 +2,7 @@
     import type { Snippet } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/components/pagination/constants';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-svelte';
-    import observeMutations from '../../utils/observe-mutations.js';
-    import { type SlotKind, getSlotKind } from '../../utils/slot-kind.js';
+    import { observeMutations, type SlotKind, getSlotKind } from '../../utils/index.js';
 
     interface StepButtonProps {
         kind: 'prev' | 'next';

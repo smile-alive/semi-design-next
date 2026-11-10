@@ -2,7 +2,7 @@
     import type { Snippet } from 'svelte';
     import type { HTMLAttributes } from 'svelte/elements';
     import { addAreaObservedAttributes, containsControl, containsName } from '@fibrae/semi-foundation/components/upload/utils';
-    import observeMutations from '../../utils/observe-mutations.js';
+    import { observeMutations } from '../../utils/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
 
     interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'tabindex'> {

@@ -1,7 +1,7 @@
 import type { Accessor } from 'solid-js';
 import type { strings } from '@fibrae/semi-foundation/components/radio/constants';
 import type { RadioChangeEvent, RadioContextView } from '@fibrae/semi-foundation/components/radio/radio-foundation';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 
 export type RadioGroupButtonSize = (typeof strings.BUTTON_SIZE)[number];
 export type RadioMode = (typeof strings.MODE)[number];

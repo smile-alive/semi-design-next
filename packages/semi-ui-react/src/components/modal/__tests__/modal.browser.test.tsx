@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Button, ConfigProvider, Modal, Radio, RadioGroup, Select, Tag } from '@fibrae/semi-ui-react';
 import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import { keyboardClick, tab } from '@test/utils/browser';

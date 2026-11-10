@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
 import type { CheckRelation, ExpandAction } from '@fibrae/semi-foundation/components/tree/foundation';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import type { Size } from '@fibrae/semi-foundation/utils';
 import type { ValidateStatus } from '../input/index.js';
 import type { PopoverProps } from '../popover/index.js';
 import type { TagCloseEvent } from '../tag/index.js';

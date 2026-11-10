@@ -2,9 +2,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
     import { getPosCls } from '@fibrae/semi-foundation/components/timeline/utils';
     import '@fibrae/semi-foundation/components/timeline/timeline.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import slotNodes from '../../utils/slot-nodes';
+    import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
+    import { slotNodes } from '../../utils/index';
     import type { TimelineProps, TimelineSlots } from './interface';
     import TimelineItem from './timeline-item.vue';
 

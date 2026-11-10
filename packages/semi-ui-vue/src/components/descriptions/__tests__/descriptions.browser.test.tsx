@@ -1,6 +1,6 @@
 /** @jsxImportSource vue */
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { render } from '@test/utils/vue';
 import ConfigProvider from '../../config-provider';
 import Descriptions from '../index';

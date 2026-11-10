@@ -1,6 +1,6 @@
 import { onBeforeUnmount, onMounted, watch } from 'vue';
 import { EllipsisRuntime } from '@fibrae/semi-foundation/components/typography/ellipsis';
-import useResizeObserver from '../../composables/use-resize-observer';
+import { useResizeObserver } from '../../composables/index';
 
 /**
  * Connecting waits for mount so the runtime's ResizeObserver gate counts from the first frame.

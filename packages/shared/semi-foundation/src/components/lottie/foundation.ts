@@ -1,8 +1,8 @@
 import { isEqual } from 'es-toolkit';
 import type lottie from 'lottie-web';
 import type { AnimationItem } from 'lottie-web';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { isDev } from '../../utils/warning';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { isDev } from '../../utils/index';
 
 type LoadParams = Parameters<typeof lottie.loadAnimation>[0];
 

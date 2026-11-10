@@ -2,8 +2,7 @@ import { splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/tag/constants';
 import '@fibrae/semi-foundation/components/tag/tag.scss';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
+import { type ElementProps, useDefaultProps } from '../../base/index';
 
 const prefixCls = cssClasses.PREFIX;
 

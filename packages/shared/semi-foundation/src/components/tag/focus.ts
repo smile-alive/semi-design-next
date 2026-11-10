@@ -1,4 +1,4 @@
-import FocusTrapHandle from '../../base/focus-handle';
+import { FocusTrapHandle } from '../../base/index';
 import { cssClasses } from './constants';
 
 const tagCls = cssClasses.PREFIX;

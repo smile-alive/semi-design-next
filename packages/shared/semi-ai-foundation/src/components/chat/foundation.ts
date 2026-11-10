@@ -1,9 +1,7 @@
 import { isPlainObject } from 'es-toolkit';
-import { handlePrevent } from '@fibrae/semi-foundation/utils/a11y';
-import { escapeHtmlInMarkdown } from '@fibrae/semi-foundation/utils/escape-html';
-import { createId } from '@fibrae/semi-foundation/utils/uuid';
-import MessageListFoundation, { type MessageListAdapter, type MessageListBaseProps, type MessageListState } from '../../base/message-list-foundation';
-import { isImageFile } from '../../utils/file-suffix';
+import { handlePrevent, escapeHtmlInMarkdown, createId } from '@fibrae/semi-foundation/utils';
+import { MessageListFoundation, type MessageListAdapter, type MessageListBaseProps, type MessageListState } from '../../base/index';
+import { isImageFile } from '../../utils/index';
 import { cssClasses, strings, type MessageStatus } from './constants';
 
 const { MESSAGE_STATUS, MODE, ROLE } = strings;

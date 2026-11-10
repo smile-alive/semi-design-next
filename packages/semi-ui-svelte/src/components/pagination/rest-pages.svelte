@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/pagination/constants';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import VirtualList from '../../internal/virtual-list.svelte';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
+    import { VirtualList } from '../../internal/index.js';
     import { getConfigContext } from '../config-provider/context.js';
     import useLocale from '../locale/use-locale.svelte.js';
 

@@ -6,8 +6,7 @@
     import { cssClasses as buttonClasses } from '@fibrae/semi-foundation/components/button/constants';
     import { IconEdit, IconMinus, IconPlus, IconSearch, IconSetting } from '@fibrae/semi-icons-vue';
     import { IllustrationNoContent, IllustrationNoContentDark } from '@fibrae/semi-icons-vue/illustrations';
-    import SlotFragment from '@fibrae/semi-ui-vue/base/slot-fragment';
-    import useFoundation from '@fibrae/semi-ui-vue/base/use-foundation';
+    import { SlotFragment, useFoundation } from '@fibrae/semi-ui-vue/base';
     import Button from '@fibrae/semi-ui-vue/button/index';
     import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import Empty from '@fibrae/semi-ui-vue/empty/index';

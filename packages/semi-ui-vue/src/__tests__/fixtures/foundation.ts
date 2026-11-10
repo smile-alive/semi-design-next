@@ -1,4 +1,4 @@
-import BaseFoundation, { type DefaultAdapter } from '@fibrae/semi-foundation/base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '@fibrae/semi-foundation/base';
 
 export interface Props {
     value?: string;

@@ -1,8 +1,7 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/float-button/constants';
     import '@fibrae/semi-foundation/components/float-button/float-button.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault } from '../../base/index';
     import Badge from '../badge';
     import FloatButtonAction from './float-button-action.vue';
     import FloatButtonBody from './float-button-body.vue';

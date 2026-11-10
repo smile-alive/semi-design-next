@@ -4,9 +4,8 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
 import { getPosCls } from '@fibrae/semi-foundation/components/timeline/utils';
 import '@fibrae/semi-foundation/components/timeline/timeline.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import flattenChildren from '../../utils/flatten-children';
+import { type ElementProps, useDefaultProps } from '../../base/index';
+import { flattenChildren } from '../../utils/index';
 import Item, { type TimelineItemProps } from './item';
 
 export type { TimelineItemProps } from './item';

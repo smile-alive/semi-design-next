@@ -1,7 +1,7 @@
 import { StrictMode, createRef } from 'react';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import Lottie, { type LottieProps } from '../index';
 
 // a hoisted mock the tests read directly: lottie-web types loadAnimation as a method, which lint forbids passing around

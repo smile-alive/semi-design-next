@@ -3,9 +3,9 @@ import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-lib
 import userEvent from '@testing-library/user-event';
 import { addDays, format, set } from 'date-fns';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import { countLiveListeners } from '@test/utils/solid';
 import DatePicker, { type DatePickerElement, type DatePickerProps, type DisabledDateType } from '..';
 import ConfigProvider from '../../config-provider';

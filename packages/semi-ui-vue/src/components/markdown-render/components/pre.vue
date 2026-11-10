@@ -1,10 +1,8 @@
 <script setup lang="ts">
     import { type VNode, Text, normalizeClass } from 'vue';
     import MarkdownRenderFoundation from '@fibrae/semi-foundation/components/markdown-render/foundation';
-    import SlotFragment from '../../../base/slot-fragment';
-    import elementType from '../../../utils/element-type';
-    import { childSlots, toVNodes } from '../../../utils/read-vnode';
-    import slotNodes from '../../../utils/slot-nodes';
+    import { SlotFragment } from '../../../base/index';
+    import { elementType, childSlots, toVNodes, slotNodes } from '../../../utils/index';
 
     defineOptions({ inheritAttrs: false });
 

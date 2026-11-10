@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/tabs/constants';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-vue';
-    import SlotFragment from '../../base/slot-fragment';
-    import slotNodes, { hasSlotContent } from '../../utils/slot-nodes';
+    import { SlotFragment } from '../../base/index';
+    import { slotNodes, hasSlotContent } from '../../utils/index';
     import Button from '../button';
     import Dropdown, { DropdownItem, DropdownMenu } from '../dropdown';
     import useLocale from '../locale/use-locale';

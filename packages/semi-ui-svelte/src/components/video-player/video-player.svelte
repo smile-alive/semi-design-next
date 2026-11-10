@@ -2,12 +2,10 @@
     import { cssClasses, DEFAULT_CONTROLS_LIST, DEFAULT_PLAYBACK_RATE, numbers, strings, type VideoControl } from '@fibrae/semi-foundation/components/video-player/constants';
     import VideoPlayerFoundation, { type VideoPlayerAdapter, type VideoPlayerBaseProps, type VideoPlayerState } from '@fibrae/semi-foundation/components/video-player/foundation';
     import { formatTime } from '@fibrae/semi-foundation/components/video-player/utils';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { namedRole, toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/video-player/video-player.scss';
     import { IconFlipHorizontal, IconMaximize, IconMiniPlayer, IconMinimize, IconMute, IconPause, IconPlay, IconPlayCircle, IconRestart, IconVolume1, IconVolume2 } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import AudioSlider from '../audio-player/audio-slider.svelte';
     import { Button } from '../button/index.js';
     import useLocale from '../locale/use-locale.svelte.js';

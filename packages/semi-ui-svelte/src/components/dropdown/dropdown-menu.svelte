@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/dropdown/constants';
     import DropdownMenuFoundation, { type DropdownContextAdapter } from '@fibrae/semi-foundation/components/dropdown/menu-foundation';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useFoundation } from '../../base/index.js';
     import { getConfigContext } from '../config-provider/context.js';
     import { getDropdownContext, menuContext } from './context.js';
     import type { DropdownMenuProps } from './interface.js';

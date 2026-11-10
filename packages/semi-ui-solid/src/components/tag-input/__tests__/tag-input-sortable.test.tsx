@@ -2,7 +2,7 @@ import { For } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { SortableProps } from '@fibrae/semi-ui-solid/internal/sortable/types';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import TagInput, { type TagInputProps } from '..';

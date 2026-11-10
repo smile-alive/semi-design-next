@@ -2,8 +2,7 @@
     import { computed } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
     import '@fibrae/semi-foundation/components/typography/typography.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import { readSemiDefault, useSemiGlobal } from '../../base/semi-default';
+    import { type ElementProps, readSemiDefault, useSemiGlobal } from '../../base/index';
     import type { TypographyProps, TypographySlots } from './interface';
 
     // component may be a function component, so its default is read at render instead of in a default factory.

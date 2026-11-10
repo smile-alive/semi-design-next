@@ -2,10 +2,9 @@
     import { omit } from 'es-toolkit';
     import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/constants';
     import ColorPickerFoundation, { type ColorPickerAdapter, type ColorPickerProps as FoundationProps, type ColorPickerState } from '@fibrae/semi-foundation/components/color-picker/foundation';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/color-picker/color-picker.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { Popover } from '../popover/index.js';
     import type { TooltipTriggerProps } from '../tooltip/index.js';

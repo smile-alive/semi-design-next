@@ -1,8 +1,8 @@
 import { isValid, type Locale } from 'date-fns';
 import { isEqual } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { zonedTimeToUtc } from '../../utils/date-fns-extra';
-import isValidTimeZone from '../../utils/is-valid-time-zone';
+import { isValidTimeZone } from '../../utils/index';
 import { fromWallTime, parseReference, toWallTime } from '../../utils/zoned-time';
 import { getColumns } from './combobox-options';
 import { cssClasses, strings, type PanelType } from './constants';

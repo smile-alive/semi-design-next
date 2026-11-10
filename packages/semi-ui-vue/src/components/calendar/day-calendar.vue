@@ -5,7 +5,7 @@
     import { checkWeekend } from '@fibrae/semi-foundation/components/calendar/event-util';
     import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
     import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import { hasSlotContent } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';
     import useScrollGrid from './composables/use-scroll-grid';

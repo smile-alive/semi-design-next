@@ -2,7 +2,7 @@
     import { computed, normalizeStyle, useTemplateRef, type CSSProperties } from 'vue';
     import { cssClasses, getPopoverRole, getPopoverSpacing } from '@fibrae/semi-foundation/components/popover/constants';
     import '@fibrae/semi-foundation/components/popover/popover.scss';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
+    import { semiDefault, semiGlobalDefault } from '../../base/index';
     import { provideTooltipPrefixContext } from '../tooltip/context';
     import type { TooltipProps } from '../tooltip/interface';
     import Tooltip from '../tooltip/tooltip.vue';

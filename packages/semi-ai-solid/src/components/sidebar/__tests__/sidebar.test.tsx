@@ -5,7 +5,7 @@ import type { Editor } from '@tiptap/core';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { JsonViewer } from '@fibrae/semi-json-viewer-core';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import Annotation from '../annotation';
 import type { CodeContentProps, CodeItemProps } from '../code';
 import type { ContainerSolidProps, Option, SideBarProps } from '../interface';

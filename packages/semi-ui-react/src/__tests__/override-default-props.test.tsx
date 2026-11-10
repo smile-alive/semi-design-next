@@ -10,7 +10,7 @@ import { default as Input } from '@fibrae/semi-ui-react/input';
 import { default as Tag } from '@fibrae/semi-ui-react/tag';
 import { default as TagGroup } from '@fibrae/semi-ui-react/tag/group';
 import { default as SplitTagGroup } from '@fibrae/semi-ui-react/tag/split-tag-group';
-import semiGlobal from '../utils/semi-global';
+import { semiGlobal } from '../utils/index';
 
 const getClearableWrapper = (container) => container.querySelector('.semi-input-wrapper-clearable');
 

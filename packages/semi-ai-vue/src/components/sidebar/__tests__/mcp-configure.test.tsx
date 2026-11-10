@@ -4,7 +4,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
-import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import MCPConfigure, { type MCPConfigureEmits, type MCPConfigureItemSlotProps, type MCPConfigureOption } from '../mcp-configure';
 import MCPModel from './fixtures/mcp-model.vue';

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { useTemplateRef } from 'vue';
-    import useClickOutside from '@fibrae/semi-ui-vue/composables/use-click-outside';
+    import { useClickOutside } from '@fibrae/semi-ui-vue/composables/index';
     import Popover from '@fibrae/semi-ui-vue/popover/index';
     import { useNestedPopups } from '../../context';
 

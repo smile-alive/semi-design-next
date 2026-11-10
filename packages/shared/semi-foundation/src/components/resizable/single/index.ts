@@ -1,6 +1,6 @@
 import { isEqual } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../../base/foundation';
-import { isSecondaryPress } from '../../../utils/pointer';
+import { BaseFoundation, type DefaultAdapter } from '../../../base/index';
+import { isSecondaryPress } from '../../../utils/index';
 import { type Size, type NumberSize, type Direction, type NewSize, type ResizeCallback, type ResizeStartCallback, DEFAULT_SIZE, KEYBOARD_STEP } from '../types';
 import { getStringSize, getNumberSize, has, calculateNewMax, findNextSnap, snap, clamp } from '../utils';
 

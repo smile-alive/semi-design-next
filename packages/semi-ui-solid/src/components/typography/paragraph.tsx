@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 import Base, { type BaseTypographyProps } from './base';
 import type { OmitTypographyProps, TypographyBaseSize, TypographyBaseSpacing, TypographyCommonProps, TypographyEllipsisProps } from './interface';
 

@@ -5,7 +5,7 @@ import { escapeRegExp } from 'es-toolkit';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { IconSetting } from '@fibrae/semi-icons-react';
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { sleep } from '@test/utils/react';
 import Dropdown from '../../dropdown';
 import type Base from '../base';

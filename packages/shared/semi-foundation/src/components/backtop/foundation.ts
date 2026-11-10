@@ -1,7 +1,6 @@
 import { throttle, type ThrottledFunction } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { easeInOutCubic, tween } from '../../utils/tween';
-import warning, { isDev } from '../../utils/warning';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { easeInOutCubic, tween, warning, isDev } from '../../utils/index';
 import { strings } from './constants';
 
 export type Target = Window | HTMLElement;

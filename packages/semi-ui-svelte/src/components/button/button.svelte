@@ -2,11 +2,11 @@
     import { onMount } from 'svelte';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/button/constants';
     import { buttonClassList, colorfulFill, groupLineClass, isAILoading, paddingSides, resolveButtonLooks } from '@fibrae/semi-foundation/components/button/utils';
-    import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/button/button.scss';
     import '@fibrae/semi-foundation/components/button/icon-button.scss';
     import { IconAILoading } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import { getInputGroupInScope } from '../input/context.js';
     import SpinIcon from '../spin/icon.svelte';
     import type { TriggerBinding } from '../tooltip/context.js';

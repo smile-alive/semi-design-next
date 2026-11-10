@@ -3,12 +3,8 @@ import clsx from 'clsx';
 import { radioGroupClasses as css, strings } from '@fibrae/semi-foundation/components/radio/constants';
 import type { RadioChangeEvent } from '@fibrae/semi-foundation/components/radio/radio-foundation';
 import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/components/radio/radio-group-foundation';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import callHandler from '../../utils/call-handler';
-import { omitFormInjected } from '../../utils/control-attrs';
-import isMarkup from '../../utils/is-markup';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { callHandler, omitFormInjected, isMarkup } from '../../utils/index';
 import { RadioGroupContext, type RadioGroupButtonSize, type RadioGroupContextValue, type RadioMode } from './context';
 import Radio, { type RadioType } from './radio';
 

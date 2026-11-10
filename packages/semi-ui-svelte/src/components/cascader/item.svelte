@@ -4,7 +4,7 @@
     import CascaderFoundation, { type BasicData } from '@fibrae/semi-foundation/components/cascader/foundation';
     import { getColumns, highlightParts } from '@fibrae/semi-foundation/components/cascader/util';
     import { IconChevronRight, IconTick } from '@fibrae/semi-icons-svelte';
-    import VirtualList from '../../internal/virtual-list.svelte';
+    import { VirtualList } from '../../internal/index.js';
     import { Checkbox, type CheckboxEvent } from '../checkbox/index.js';
     import { useConfig } from '../config-provider/index.js';
     import { useLocale } from '../locale/index.js';

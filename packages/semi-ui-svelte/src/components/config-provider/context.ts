@@ -1,4 +1,4 @@
-import { createContext } from '../../base/create-context.js';
+import { createContext } from '../../base/index.js';
 import type { ContextValue } from './interface.js';
 
 // The value's fields are getters over the provider's state, so readers stay reactive by reading `config.x`

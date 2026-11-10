@@ -3,8 +3,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
     import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-svelte';
-    import useFoundation from '../../../base/use-foundation.svelte.js';
-    import Portal from '../../../internal/portal.svelte';
+    import { useFoundation } from '../../../base/index.js';
+    import { Portal } from '../../../internal/index.js';
     import { getConfigContext } from '../../config-provider/context.js';
     import useLocale from '../../locale/use-locale.svelte.js';
     import type { PreviewOptions, PreviewSnippets } from '../interface.js';

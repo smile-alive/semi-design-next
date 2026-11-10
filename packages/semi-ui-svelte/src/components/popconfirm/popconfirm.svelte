@@ -5,9 +5,8 @@
     import PopconfirmFoundation, { type PopconfirmAdapter, type PopconfirmBaseProps, type PopconfirmBaseState } from '@fibrae/semi-foundation/components/popconfirm/popconfirm-foundation';
     import '@fibrae/semi-foundation/components/popconfirm/popconfirm.scss';
     import { IconAlertTriangle, IconClose } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
     import { Button } from '../button/index.js';
     import { useConfig } from '../config-provider/index.js';
     import useLocale from '../locale/use-locale.svelte.js';

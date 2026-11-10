@@ -1,8 +1,8 @@
 import { StrictMode, createRef } from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import Skeleton, { type AvatarProps, type BasicProps, type GenericProps, type ParagraphProps } from '../index';
 
 const { Avatar, Image, Title, Button, Paragraph } = Skeleton;

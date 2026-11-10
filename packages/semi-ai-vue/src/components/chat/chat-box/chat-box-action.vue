@@ -2,7 +2,7 @@
     import { type VNode, computed, h, normalizeClass } from 'vue';
     import ChatBoxActionFoundation, { type ChatBoxActionAdapter, type ChatBoxActionKey, type ChatBoxActionState, getChatBoxActionFlags, getChatBoxActionKeys } from '@fibrae/semi-ai-foundation/components/chat/chat-box-action-foundation';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/chat/constants';
-    import useFoundation from '@fibrae/semi-ui-vue/base/use-foundation';
+    import { useFoundation } from '@fibrae/semi-ui-vue/base';
     import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import { useChatContext } from '../context';
     import type { ChatDefaultActionNodeObj, ChatMessage, ChatSlots } from '../interface';

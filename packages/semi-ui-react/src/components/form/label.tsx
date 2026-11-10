@@ -3,7 +3,7 @@ import { memo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import '@fibrae/semi-foundation/components/form/form.scss';
-import type { ElementProps } from '../../base/base';
+import type { ElementProps } from '../../base/index';
 import useLocale from '../locale/use-locale';
 
 const prefixCls = cssClasses.PREFIX;

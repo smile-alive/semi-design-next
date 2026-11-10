@@ -1,6 +1,6 @@
 import type { Accessor } from 'solid-js';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
-import { createContext } from '../../base/create-context';
+import type { Size } from '@fibrae/semi-foundation/utils';
+import { createContext } from '../../base/index';
 
 export interface InputGroupView {
     size?: Size;

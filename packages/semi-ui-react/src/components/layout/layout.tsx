@@ -3,10 +3,8 @@ import { type CSSProperties, createElement, memo, useState } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/layout/constants';
 import '@fibrae/semi-foundation/components/layout/layout.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import elementTypeOf from '../../utils/element-type';
-import flattenChildren from '../../utils/flatten-children';
+import { type ElementProps, useDefaultProps } from '../../base/index';
+import { elementTypeOf, flattenChildren } from '../../utils/index';
 import { LayoutContext, type ContextType } from './context';
 import Sider from './sider';
 

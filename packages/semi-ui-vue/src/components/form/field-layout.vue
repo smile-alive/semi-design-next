@@ -2,8 +2,7 @@
     import type { StyleValue, VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import '@fibrae/semi-foundation/components/form/form.scss';
-    import slotKind from '../../utils/slot-kind';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import { slotKind, hasSlotContent } from '../../utils/index';
     import type { ColProps } from '../grid/interface';
     import type { ValidateStatus } from '../input/interface';
     import FormErrorMessage from './error-message.vue';

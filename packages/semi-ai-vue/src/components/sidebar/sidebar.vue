@@ -2,14 +2,13 @@
     import { computed, onBeforeUnmount, useTemplateRef, watch } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import { focusAfterModeChange } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
-    import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
+    import { copyText } from '@fibrae/semi-foundation/utils';
     import { IconClose, IconCopyStroked } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/base/element-props';
-    import semiDefault, { semiGlobalDefault } from '@fibrae/semi-ui-vue/base/semi-default';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault } from '@fibrae/semi-ui-vue/base';
     import Button from '@fibrae/semi-ui-vue/button/index';
     import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import { ToastFactory } from '@fibrae/semi-ui-vue/toast/index';
-    import { hasSlotContent } from '@fibrae/semi-ui-vue/utils/slot-nodes';
+    import { hasSlotContent } from '@fibrae/semi-ui-vue/utils';
     import CodeItem from './code-item.vue';
     import pickContainerProps from './container/container-props';
     import Container from './container/container.vue';

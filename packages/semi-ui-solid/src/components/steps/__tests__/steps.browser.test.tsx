@@ -1,6 +1,6 @@
 import { render } from '@solidjs/testing-library';
 import { describe, it } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import Steps from '..';
 

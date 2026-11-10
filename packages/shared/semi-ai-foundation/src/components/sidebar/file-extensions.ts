@@ -17,7 +17,7 @@ import { Text } from '@tiptap/extension-text';
 import { TextAlign } from '@tiptap/extension-text-align';
 import { TextStyleKit } from '@tiptap/extension-text-style';
 import { Dropcursor, Gapcursor, TrailingNode, UndoRedo } from '@tiptap/extensions';
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
+import type { Locale } from '@fibrae/semi-foundation/locale';
 
 // Frameworks call ChainedCommands (toggleBold, setLink, ...) typed by each extension's augmentation of @tiptap/core;
 // re-exporting a type keeps that augmentation in the generated declarations they read

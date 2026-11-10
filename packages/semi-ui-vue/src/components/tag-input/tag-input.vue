@@ -1,18 +1,15 @@
 <script setup lang="ts">
     import { computed, nextTick, shallowRef, useAttrs, useId, useTemplateRef, watch, type InputHTMLAttributes } from 'vue';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/tag-input/constants';
     import TagInputFoundation, { type OnSortEndProps, type TagInputAdapter, type TagInputBaseState } from '@fibrae/semi-foundation/components/tag-input/foundation';
     import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/components/tag-input/utils/tag-focus';
     import '@fibrae/semi-foundation/components/tag-input/tag-input.scss';
     import { IconClear } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useClickOutside from '../../composables/use-click-outside';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
+    import { useClickOutside } from '../../composables/index';
     import type SortableComponent from '../../internal/sortable/sortable.vue';
-    import { splitControlAttrs } from '../../utils/control-attrs';
-    import slotKind from '../../utils/slot-kind';
+    import { splitControlAttrs, slotKind } from '../../utils/index';
     import Input, { type InputHandle } from '../input';
     import useGroupLooks from '../input/composables/use-group-looks';
     import { provideInputGroupContext } from '../input/context';

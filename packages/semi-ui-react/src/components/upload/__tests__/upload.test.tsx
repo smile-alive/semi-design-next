@@ -2,12 +2,12 @@ import { createRef, StrictMode, useState, type ReactNode } from 'react';
 import { render, screen, fireEvent, waitFor, act, createEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { CustomFile } from '@fibrae/semi-foundation/components/upload/foundation';
 import { IconUser } from '@fibrae/semi-icons-react';
 import { Upload, Button } from '@fibrae/semi-ui-react';
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import FileCard, { type FileCardProps } from '../file-card';
 import type { AfterUploadProps, AfterUploadResult, BeforeUploadObjectResult, BeforeUploadProps, FileItem, RenderFileItemProps, UploadHandle, UploadProps } from '../index';
 

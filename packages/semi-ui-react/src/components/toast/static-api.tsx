@@ -2,10 +2,9 @@ import type React from 'react';
 import type { CSSProperties } from 'react';
 import ToastApi from '@fibrae/semi-foundation/components/toast/toast-api-foundation';
 import type { ConfigProps, ToastProps } from '@fibrae/semi-foundation/components/toast/toast-foundation';
-import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
-import type { ElementProps } from '../../base/base';
-import { render as reactRender, unmount as reactUnmount } from '../../utils/react-render';
-import { readGlobalDefaults } from '../../utils/semi-global';
+import { assertClient } from '@fibrae/semi-foundation/utils';
+import type { ElementProps } from '../../base/index';
+import { render as reactRender, unmount as reactUnmount, readGlobalDefaults } from '../../utils/index';
 import ToastList from './toast-list';
 import useToast from './use-toast';
 

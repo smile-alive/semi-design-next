@@ -1,15 +1,13 @@
 import { memo, useCallback, useId, useImperativeHandle, useLayoutEffect, useRef, useState, type ReactNode, type CSSProperties, type ChangeEvent, type DragEvent, type FocusEvent, type KeyboardEvent } from 'react';
 import clsx from 'clsx';
-import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
+import type { ValidateStatus } from '@fibrae/semi-foundation/base';
 import { strings, cssClasses } from '@fibrae/semi-foundation/components/upload/constants';
 import UploadFoundation, { type CustomFile, type UploadAdapter, type UploadBaseState, type BeforeUploadObjectResult, type AfterUploadResult, type FileItemStatus } from '@fibrae/semi-foundation/components/upload/foundation';
 import { addAreaObservedAttributes, containsControl, containsName, ListFocusTracker } from '@fibrae/semi-foundation/components/upload/utils';
-import { joinIds, namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { joinIds, namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/upload/upload.scss';
 import { IconUpload } from '@fibrae/semi-icons-react';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
 import Cropper, { type CropperHandle } from '../cropper';
 import useLocale from '../locale/use-locale';
 import Modal from '../modal';

@@ -2,14 +2,11 @@
     import { Comment, Text, computed, isVNode, onMounted, onUpdated, useId, useTemplateRef, type VNode } from 'vue';
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/carousel/constants';
     import CarouselFoundation, { type CarouselAdapter, type CarouselState } from '@fibrae/semi-foundation/components/carousel/foundation';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
     import '@fibrae/semi-foundation/components/carousel/carousel.scss';
     import { IconChevronLeft, IconChevronRight } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
-    import slotNodes, { type KeyedNode } from '../../utils/slot-nodes';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation, useKeepAliveFoundation } from '../../base/index';
+    import { slotNodes, type KeyedNode } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';
     import type { CarouselEmits, CarouselHandle, CarouselProps, CarouselSlots } from './interface';

@@ -1,7 +1,6 @@
 <script setup lang="ts">
     import { type VNode, Text, useAttrs } from 'vue';
-    import { childSlots, toVNodes } from '../../../utils/read-vnode';
-    import slotNodes, { type KeyedNode } from '../../../utils/slot-nodes';
+    import { childSlots, toVNodes, slotNodes, type KeyedNode } from '../../../utils/index';
     import Table, { type ColumnAlign, type ColumnProps } from '../../table';
 
     defineOptions({ inheritAttrs: false });

@@ -2,15 +2,10 @@ import { type JSX, For, Show, children, createMemo, mergeProps, splitProps } fro
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/rating/constants';
 import RatingFoundation, { type RatingAdapter, type RatingState } from '@fibrae/semi-foundation/components/rating/foundation';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { formatLocale } from '@fibrae/semi-foundation/locale';
 import '@fibrae/semi-foundation/components/rating/rating.scss';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import callHandler from '../../utils/call-handler';
-import { omitFormInjected } from '../../utils/control-attrs';
-import forwardFocus from '../../utils/forward-focus';
-import mergeRefs from '../../utils/merge-refs';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { callHandler, omitFormInjected, forwardFocus, mergeRefs } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 import { useLocale } from '../locale';
 import Tooltip from '../tooltip';

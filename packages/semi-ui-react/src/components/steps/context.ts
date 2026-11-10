@@ -1,4 +1,4 @@
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 
 export interface ContextValue {
     type?: 'nav' | 'fill' | 'basic';

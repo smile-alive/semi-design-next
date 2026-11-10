@@ -1,12 +1,10 @@
 import type React from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
-import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-props';
-import useDefaultProps from '../../base/use-default-props';
-import { hasContent } from '../../utils';
+import { type ElementProps, type BaseProps, useDefaultProps } from '../../base/index';
+import { hasContent } from '../../utils/index';
 
 export type { ScrollItemProps, ScrollItemHandle } from './scroll-item';
 export interface ScrollListProps extends BaseProps, ElementProps<'div'> {

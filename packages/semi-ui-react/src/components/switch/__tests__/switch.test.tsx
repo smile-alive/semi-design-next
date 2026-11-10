@@ -2,10 +2,10 @@ import { StrictMode, useState } from 'react';
 import { act, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Form, FormSwitch } from '@fibrae/semi-ui-react/form';
 import Tooltip from '@fibrae/semi-ui-react/tooltip';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import Switch from '../index';
 
 type SwitchChange = (checked: boolean, e: React.ChangeEvent<HTMLInputElement>) => void;

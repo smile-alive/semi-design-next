@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
-import type { Locale } from '@fibrae/semi-foundation/locale/interface';
+import type { Locale } from '@fibrae/semi-foundation/locale';
 import DateInputFoundation, { type DateInputAdapter } from '../input-foundation';
 
 describe('DateInputFoundation', () => {

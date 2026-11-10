@@ -1,14 +1,11 @@
 <script setup lang="ts">
     import { Text, computed, useTemplateRef, type ComponentPublicInstance } from 'vue';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/rating/constants';
     import RatingFoundation, { type RatingAdapter, type RatingFocusEvent, type RatingState } from '@fibrae/semi-foundation/components/rating/foundation';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
     import '@fibrae/semi-foundation/components/rating/rating.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import SlotFragment from '../../base/slot-fragment';
-    import useFoundation from '../../base/use-foundation';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, SlotFragment, useFoundation } from '../../base/index';
     import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';
     import Tooltip from '../tooltip';

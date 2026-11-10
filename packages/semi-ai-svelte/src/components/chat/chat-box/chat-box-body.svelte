@@ -9,7 +9,7 @@
 <script lang="ts">
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import ChatFoundation from '@fibrae/semi-ai-foundation/components/chat/foundation';
-    import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
+    import { getFileType } from '@fibrae/semi-ai-foundation/utils';
     import MarkdownRender from '@fibrae/semi-ui-svelte/markdown-render/markdown-render.svelte';
     import { getChatContext } from '../context.js';
     import FileAttachment from '../file-attachment.svelte';

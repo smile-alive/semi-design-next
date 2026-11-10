@@ -2,13 +2,10 @@
     import { computed, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
     import { ResizeGroupFoundation, type ResizeGroupAdapter, type ResizeGroupBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/resizable/resizable.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useEventListener, { getWindow } from '../../composables/use-event-listener';
-    import useResizeObserver from '../../composables/use-resize-observer';
+    import { type ElementProps, semiDefault, useFoundation } from '../../base/index';
+    import { useEventListener, getWindow, useResizeObserver } from '../../composables/index';
     import { provideResizeGroupContext } from './context';
     import type { ResizeGroupProps, ResizeGroupSlots } from './interface';
 

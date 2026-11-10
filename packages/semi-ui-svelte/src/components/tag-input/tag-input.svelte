@@ -1,18 +1,15 @@
 <script lang="ts">
     import { tick, untrack } from 'svelte';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/tag-input/constants';
     import TagInputFoundation, { type OnSortEndProps, type TagInputAdapter, type TagInputBaseProps, type TagInputBaseState, type TagSortIds } from '@fibrae/semi-foundation/components/tag-input/foundation';
     import { focusTagStop, getFocusedTagStop } from '@fibrae/semi-foundation/components/tag-input/utils/tag-focus';
     import '@fibrae/semi-foundation/components/tag-input/tag-input.scss';
     import { IconClear } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import useClickOutside from '../../hooks/use-click-outside.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { useClickOutside, watch } from '../../hooks/index.js';
     import type SortableComponent from '../../internal/sortable/sortable.svelte';
-    import { splitControlAttrs } from '../../utils/control-attrs.js';
-    import { type SlotKind, trackSlotKind } from '../../utils/slot-kind.js';
+    import { splitControlAttrs, type SlotKind, trackSlotKind } from '../../utils/index.js';
     import { getInputGroupInScope, setInputGroupContext } from '../input/context.js';
     import { Input } from '../input/index.js';
     import useLocale from '../locale/use-locale.svelte.js';

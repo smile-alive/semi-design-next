@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
     import { IconClose } from '@fibrae/semi-icons-vue';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import { hasSlotContent } from '../../utils/index';
     import IconButton from '../icon-button';
     import useLocale from '../locale/use-locale';
     import Typography from '../typography';

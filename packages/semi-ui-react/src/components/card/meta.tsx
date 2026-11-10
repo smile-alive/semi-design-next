@@ -2,8 +2,8 @@ import type React from 'react';
 import { memo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
-import type { ElementProps } from '../../base/base';
-import { hasContent } from '../../utils';
+import type { ElementProps } from '../../base/index';
+import { hasContent } from '../../utils/index';
 
 const prefixcls = cssClasses.PREFIX;
 

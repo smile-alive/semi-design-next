@@ -2,11 +2,8 @@ import { Show, children, createMemo, createUniqueId, splitProps, untrack } from 
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
 import '@fibrae/semi-foundation/components/input/input.scss';
-import type { ElementProps } from '../../base/element-props';
-import { usePopupLayer } from '../../base/popup-layer';
-import useDefaultProps from '../../base/use-default-props';
-import hasContent from '../../utils/has-content';
-import mergeRefs from '../../utils/merge-refs';
+import { type ElementProps, usePopupLayer, useDefaultProps } from '../../base/index';
+import { hasContent, mergeRefs } from '../../utils/index';
 import Label, { type LabelProps } from '../form/label';
 import useLocale from '../locale/use-locale';
 import { type InputGroupContextValue, InputGroupContext } from './context';

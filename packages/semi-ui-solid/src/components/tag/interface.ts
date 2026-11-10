@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js';
 import type { strings } from '@fibrae/semi-foundation/components/tag/constants';
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 import type { PopoverProps } from '../popover';
 
 export type TagColor = (typeof strings.TAG_COLOR)[number];

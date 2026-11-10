@@ -1,8 +1,8 @@
 import { StrictMode, createRef } from 'react';
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { Row, Col } from '../index';
 
 const breakpoints = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl'] as const;

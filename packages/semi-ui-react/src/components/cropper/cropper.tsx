@@ -4,14 +4,11 @@ import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/cropper/constants';
 import CropperFoundation, { type CropperAdapter, type CropperFoundationProps, type CropperState } from '@fibrae/semi-foundation/components/cropper/foundation';
 import { getCropperGeometry } from '@fibrae/semi-foundation/components/cropper/utils';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/cropper/cropper.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useEventListener from '../../hooks/use-event-listener';
-import useResizeObserver from '../../hooks/use-resize-observer';
-import HydratedImage from '../../internal/hydrated-image';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { useEventListener, useResizeObserver } from '../../hooks/index';
+import { HydratedImage } from '../../internal/index';
 import useLocale from '../locale/use-locale';
 
 type Foundation = CropperFoundation;

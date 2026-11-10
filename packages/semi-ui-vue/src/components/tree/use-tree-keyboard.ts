@@ -1,6 +1,6 @@
 import { computed, shallowRef, type ComputedRef, type ShallowRef } from 'vue';
 import { getTreeKeyboardAction, isTreeNodeLeaf } from '@fibrae/semi-foundation/components/tree/shared';
-import { Typeahead } from '@fibrae/semi-foundation/utils/a11y';
+import { Typeahead } from '@fibrae/semi-foundation/utils';
 import type { FlattenNode, TreeRowProps } from './interface';
 
 export interface TreeKeyboardOptions {

@@ -1,6 +1,6 @@
 import type { Accessor } from 'solid-js';
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
-import { createContext } from '../../base/create-context';
+import type { Locale } from '@fibrae/semi-foundation/locale';
+import { createContext } from '../../base/index';
 import type { ItemKey, Mode, NavProps, OnClickData, OnOpenChangeData, OnSelectedData } from './interface';
 
 /**

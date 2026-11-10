@@ -2,8 +2,8 @@ import type React from 'react';
 import { useRef } from 'react';
 import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
 import PreviewImageFoundation, { type PreviewImageAdapter, type PreviewImageState } from '@fibrae/semi-foundation/components/image/preview-image-foundation';
-import useFoundation from '../../../base/use-foundation';
-import useEventListener, { getWindow } from '../../../hooks/use-event-listener';
+import { useFoundation } from '../../../base/index';
+import { useEventListener, getWindow } from '../../../hooks/index';
 import Spin from '../../spin';
 import type { PreviewImageProps } from '../interface';
 

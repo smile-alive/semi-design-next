@@ -2,7 +2,7 @@
     import { computed } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import ChatFoundation from '@fibrae/semi-ai-foundation/components/chat/foundation';
-    import { getFileType } from '@fibrae/semi-ai-foundation/utils/file-suffix';
+    import { getFileType } from '@fibrae/semi-ai-foundation/utils';
     import MarkdownRender from '@fibrae/semi-ui-vue/markdown-render/index';
     import Code from '../code.vue';
     import { useChatContext } from '../context';

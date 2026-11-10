@@ -1,15 +1,12 @@
 import type React from 'react';
 import { cloneElement, useLayoutEffect, type CSSProperties } from 'react';
 import clsx from 'clsx';
-import type { AutoCloseListState } from '@fibrae/semi-foundation/base/auto-close-foundation';
-import { isAlertType } from '@fibrae/semi-foundation/base/list-store';
+import { type AutoCloseListState, isAlertType } from '@fibrae/semi-foundation/base';
 import { numbers, cssClasses, getStackLayerTransform } from '@fibrae/semi-foundation/components/toast/constants';
 import ToastFoundation, { type ToastAdapter, type ToastInstance, type ToastState } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 import { IconClose, IconAlertTriangle, IconInfoCircle, IconTickCircle, IconAlertCircle } from '@fibrae/semi-icons-react';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import { isSemiIcon } from '../../utils';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { isSemiIcon } from '../../utils/index';
 import { useConfigContext } from '../config-provider/context';
 import Button from '../icon-button/index';
 import useLocale from '../locale/use-locale';

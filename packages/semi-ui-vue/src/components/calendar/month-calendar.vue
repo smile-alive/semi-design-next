@@ -5,14 +5,12 @@
     import { toPercent } from '@fibrae/semi-foundation/components/calendar/event-util';
     import CalendarFoundation from '@fibrae/semi-foundation/components/calendar/foundation';
     import CalendarMonthFoundation, { type CalendarMonthAdapter, type CalendarMonthBaseState } from '@fibrae/semi-foundation/components/calendar/month-foundation';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
     import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import { IconClose } from '@fibrae/semi-icons-vue';
-    import SlotFragment from '../../base/slot-fragment';
-    import useFoundation from '../../base/use-foundation';
-    import useClickOutside from '../../composables/use-click-outside';
-    import useResizeObserver from '../../composables/use-resize-observer';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import { SlotFragment, useFoundation } from '../../base/index';
+    import { useClickOutside, useResizeObserver } from '../../composables/index';
+    import { hasSlotContent } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import IconButton from '../icon-button';
     import useLocale from '../locale/use-locale';

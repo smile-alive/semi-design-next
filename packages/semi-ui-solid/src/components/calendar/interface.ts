@@ -1,8 +1,8 @@
 import type { JSX } from 'solid-js';
 import type { strings } from '@fibrae/semi-foundation/components/calendar/constants';
 import type { DailyEventLayout, EventObject, WeekStartsOn } from '@fibrae/semi-foundation/components/calendar/foundation';
-import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
-import type { ElementProps } from '../../base/element-props';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils';
+import type { ElementProps } from '../../base/index';
 
 export interface CalendarProps extends ElementProps<'div', 'onClick' | 'onClose' | 'children'> {
     displayValue?: Date;

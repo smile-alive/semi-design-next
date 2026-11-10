@@ -2,7 +2,7 @@ import { cssClasses } from '@fibrae/semi-foundation/components/color-picker/cons
 import DataPartFoundation, { type DataPartAdapter, type DataPartBaseProps, type DataPartBaseState } from '@fibrae/semi-foundation/components/color-picker/data-part-foundation';
 import type { ColorFormat } from '@fibrae/semi-foundation/components/color-picker/interface';
 import { IconEyedropper } from '@fibrae/semi-icons-react';
-import useFoundation from '../../base/use-foundation';
+import { useFoundation } from '../../base/index';
 import Button from '../button';
 import Input from '../input';
 import InputNumber from '../input-number';

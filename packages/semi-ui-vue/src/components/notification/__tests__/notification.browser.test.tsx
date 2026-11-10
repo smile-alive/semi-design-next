@@ -3,7 +3,7 @@ import { inject } from 'vue';
 import { waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
+import { openLayer } from '@fibrae/semi-foundation/utils';
 import { tabTo } from '@test/utils/browser';
 import { render } from '@test/utils/vue';
 import Notification from '../index';

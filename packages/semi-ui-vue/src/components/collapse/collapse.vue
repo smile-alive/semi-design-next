@@ -3,9 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
     import CollapseFoundation, { type CollapseAdapter, type CollapseProps as FoundationProps, type CollapseState } from '@fibrae/semi-foundation/components/collapse/foundation';
     import '@fibrae/semi-foundation/components/collapse/collapse.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
     import { provideCollapseContext, type CollapseView } from './context';
     import type { CollapseEmits, CollapseProps, CollapseSlots } from './interface';
 

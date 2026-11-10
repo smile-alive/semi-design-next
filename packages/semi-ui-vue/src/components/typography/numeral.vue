@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { computed, useAttrs } from 'vue';
     import FormatNumeral from '@fibrae/semi-foundation/components/typography/format-numeral';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import slotNodes from '../../utils/slot-nodes';
+    import type { ElementProps, EmitHandlers } from '../../base/index';
+    import { slotNodes } from '../../utils/index';
     import TypographyBase from './base.vue';
     import type { TypographyNumeralEmits, TypographyNumeralProps, TypographyNumeralSlots } from './interface';
 

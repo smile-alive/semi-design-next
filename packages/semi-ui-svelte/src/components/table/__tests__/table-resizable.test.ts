@@ -1,7 +1,7 @@
 import { flushSync } from 'svelte';
 import { fireEvent } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import type { ColumnProps, TableResizeFn } from '../interface';
 import { P, getData, mountTable, query, queryAll } from './helpers';
 

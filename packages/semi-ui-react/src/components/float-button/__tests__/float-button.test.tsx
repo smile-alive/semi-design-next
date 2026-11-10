@@ -2,7 +2,7 @@ import { createElement, createRef } from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { FloatButton, FloatButtonGroup } from '@fibrae/semi-ui-react';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import type { FloatButtonGroupProps } from '../float-button-group';
 import type { FloatButtonProps } from '../interface';
 

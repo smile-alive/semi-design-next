@@ -1,5 +1,5 @@
 import { type JSX, createSignal } from 'solid-js';
-import useResizeObserver from '../../primitives/use-resize-observer';
+import { useResizeObserver } from '../../primitives/index';
 
 export interface MeasuredBoxProps {
     class: string;

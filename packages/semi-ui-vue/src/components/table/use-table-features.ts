@@ -1,7 +1,7 @@
 import { h, type VNode } from 'vue';
 import TableFoundation, { type ColumnFlags as BaseColumnFlags } from '@fibrae/semi-foundation/components/table/foundation';
 import { getExpandColumn, getSelectionColumn } from '@fibrae/semi-foundation/components/table/utils';
-import isObject from '@fibrae/semi-foundation/utils/is-object';
+import { isObject } from '@fibrae/semi-foundation/utils';
 import ColumnFilter from './column-filter.vue';
 import ColumnSelection from './column-selection.vue';
 import ColumnSorter from './column-sorter.vue';

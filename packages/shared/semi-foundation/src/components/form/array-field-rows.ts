@@ -1,6 +1,6 @@
 import { clamp } from 'es-toolkit';
+import { createId } from '../../utils/index';
 import * as ObjectUtil from '../../utils/object';
-import { createId } from '../../utils/uuid';
 import type { FieldBridge } from './interface';
 import { generateKeys } from './utils';
 

@@ -1,6 +1,6 @@
 import { act } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Toast } from '@fibrae/semi-ui-react';
 
 const getContentText = (type) => document.querySelector(`.${BASE_CLASS_PREFIX}-toast-${type} .${BASE_CLASS_PREFIX}-toast-content-text`);

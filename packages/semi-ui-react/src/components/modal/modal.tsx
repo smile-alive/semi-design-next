@@ -3,14 +3,10 @@ import { type CSSProperties, type ReactNode, useLayoutEffect, useState } from 'r
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
 import ModalFoundation, { type ModalAdapter, type ModalProps, type ModalState } from '@fibrae/semi-foundation/components/modal/modal-foundation';
-import { coversPage } from '@fibrae/semi-foundation/utils/dom';
+import { coversPage } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/modal/modal.scss';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useDidUpdate from '../../hooks/use-did-update';
-import useIsServerRender from '../../hooks/use-is-server-render';
-import useMergedRef from '../../hooks/use-merged-ref';
-import useRealUnmount from '../../hooks/use-real-unmount';
+import { useDefaultProps, useFoundation } from '../../base/index';
+import { useDidUpdate, useIsServerRender, useMergedRef, useRealUnmount } from '../../hooks/index';
 import CSSAnimation from '../../internal/css-animation';
 import Portal from '../../internal/portal';
 import Button from '../button';

@@ -2,13 +2,10 @@
     import { computed, mergeProps, onUpdated, useAttrs, useTemplateRef, watch, type StyleValue } from 'vue';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/avatar/constants';
     import AvatarFoundation, { type AvatarAdapter, type AvatarState } from '@fibrae/semi-foundation/components/avatar/foundation';
-    import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
+    import { isAriaKey } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/avatar/avatar.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import { usePopupLayer } from '../../base/popup-layer';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import { hasClickListener, splitControlAttrs } from '../../utils/control-attrs';
+    import { type ElementProps, type EmitHandlers, usePopupLayer, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
+    import { hasClickListener, splitControlAttrs } from '../../utils/index';
     import AvatarContent from './avatar-content.vue';
     import { provideAvatarGroupContext, provideAvatarGroupMoreContext, useAvatarGroupContext, useAvatarGroupMoreContext } from './context';
     import type { AvatarEmits, AvatarProps, AvatarSlots } from './interface';

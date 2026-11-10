@@ -79,7 +79,7 @@ semi-ui-solid 的写法。框架版本以其 `peerDependencies` 为准（Solid 1
 - 持有焦点的节点可能被自己移除时（自隐藏的按钮、重新挂载的项）用 `primitives/use-focus-handover.ts`，卸载后把焦点交给指定目标。
 - 状态变化需要屏幕阅读器播报时用 `primitives/use-announcer.ts`，它提供常驻的 live region 文本。
 - 复制到剪贴板并短暂显示「已复制」时用 `primitives/use-copied.ts`。
-- 无 role 的 div 有名称时需要 `group` 角色，用 `@fibrae/semi-foundation/utils/a11y` 的 `namedRole`。
+- 无 role 的 div 有名称时需要 `group` 角色，用 `@fibrae/semi-foundation/utils` 的 `namedRole`。
 - 进出场动画用 `internal/css-animation.ts` 的 `useCSSAnimation`：变化的值传访问器，回调传普通函数；`ref` 放在动画元素上，`className()`、`style()` 写到该元素。它不管挂载：元素是否挂载由 foundation 状态决定，调用方在 `onAnimationEnd` 里卸载；一轮里没有运行中的 CSS 动画时立即结束。jsdom 的 `getAnimations()` 恒为空，测动画事件路径时 spy `Element.prototype.getAnimations`。
 - 命令式 API（`Toast.info`、`Modal.confirm`）用 `base/detached-render.ts` 的 `renderDetached` 渲染：树在任何 owner 之外，只读全局默认值与默认语言包；每次调用是一个新根，只能经 `code` 里读的 signal 更新；返回的 dispose 同步移除容器，在微任务里释放树。自建容器的调用方（Toast、Notification）在访问 `document` 之前先调 `@fibrae/semi-foundation/utils/assert-client` 的 `assertClient(api, hint)`，服务端调用抛出说明性错误。hook 形式返回 `[api, contextHolder]`，holder 在调用方的 owner 下创建，继承其 context。
 - 渲染到 `getPopupContainer` 的浮层（Modal、SideSheet）用 `internal/popup-portal.tsx` 的 `PopupPortal`，它负责容器回落、`semi-portal` 包裹元素和外层 Tooltip 的弹层登记。
@@ -95,7 +95,7 @@ semi-ui-solid 的写法。框架版本以其 `peerDependencies` 为准（Solid 1
 - 收集子组件数据（Tabs、Select、Steps）用 `base/token.ts` 的 token：子组件 `return createToken('Parent.Child', props)`，标签用公开访问路径（`Tabs.TabPane`、`Select.Option`、`Steps.Step`）。
 - `props` 原样保存子组件收到的 Solid props 对象，不复制、不 mergeProps：getter 让父组件读到的每个字段都是响应式的，子项 prop 变化不需要重新收集。
 - 子组件体不读 `props.children` 和其他 JSX 字段；父组件在渲染位置读取，且每个 JSX 字段只在一个 JSX 位置读一次（每次读都会新建节点）。内容归读取处的 owner（For 项、Show 分支）所有，随之释放，context 也从读取处查找。子组件体不读 context：token 在父组件体的 `children()` memo 中创建，位于父组件的 Provider 之外。
-- 父组件只调用一次 `children(() => local.children)`，再从 `resolved.toArray()` 中按 `isToken<P>(node, type)` 取出 token。非 token 节点由组件决定怎么处理：Tabs 当内容按原顺序渲染；Steps、Select 丢弃并调 `@fibrae/semi-foundation/utils/warning`。所以 helper 不带过滤策略参数。数组的 filter 类型守卫对 token 不生效，用 `flatMap((n) => isToken(n, type) ? [n] : [])`。
+- 父组件只调用一次 `children(() => local.children)`，再从 `resolved.toArray()` 中按 `isToken<P>(node, type)` 取出 token。非 token 节点由组件决定怎么处理：Tabs 当内容按原顺序渲染；Steps、Select 丢弃并调 `@fibrae/semi-foundation/utils` 的 `warning`。所以 helper 不带过滤策略参数。数组的 filter 类型守卫对 token 不生效，用 `flatMap((n) => isToken(n, type) ? [n] : [])`。
 - 把 children 原样插入 DOM 之前先滤掉 token：token 单独插入时被跳过，但在数组中插入时 Solid 会把它渲染为 "[object Object]" 文本。
 - render 类函数 prop（如 renderTabBar）用 `<Show keyed when={local.renderX} fallback={...}>{(render) => render(liveProps, Default)}</Show>` 调用：Show 的函数子项在 untrack 中执行，同一个函数只调用一次，传入的活对象只有在返回的 JSX 中读取的字段才被跟踪；必须加 keyed，否则非 keyed 的 Show 只按真假判断，换成另一个函数时不会重新调用。
 - 需要「同一次更新」语义的派生（如 Tabs 的 forceDisableMotion）只在使用方用 batch 包住多次 set 时成立；不在 memo 中用 queueMicrotask 等副作用模拟 React 的自动批处理，差异写进 release-notes。

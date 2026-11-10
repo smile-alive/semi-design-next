@@ -1,5 +1,5 @@
 import type { Accessor, JSX } from 'solid-js';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { BreadcrumbItemInfo, ShowTooltipProps } from './interface';
 
 /** Live values: every field is a getter, so a reader only re-runs when the field it reads changes */

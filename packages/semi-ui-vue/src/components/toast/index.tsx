@@ -2,13 +2,12 @@
 // JSX because the imperative API mounts a ToastList vnode outside any template and sets its appContext by hand.
 
 import { type App, render } from 'vue';
-import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
+import { omitInstanceIds } from '@fibrae/semi-foundation/base';
 import ToastApi from '@fibrae/semi-foundation/components/toast/toast-api-foundation';
 import type { ConfigProps, ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
-import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
-import { getInstalledApp, rootAppContext, setInstalledApp } from '../../base/installed-app';
-import { useSemiGlobal } from '../../base/semi-default';
-import semiGlobal from '../../utils/semi-global';
+import { assertClient } from '@fibrae/semi-foundation/utils';
+import { getInstalledApp, rootAppContext, setInstalledApp, useSemiGlobal } from '../../base/index';
+import { semiGlobal } from '../../utils/index';
 import type { ToastProps } from './interface';
 import ToastList from './toast-list.vue';
 import useToast from './use-toast';

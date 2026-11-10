@@ -1,9 +1,9 @@
 import { type JSX, Show, children, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/select/constants';
-import getDataAttr from '@fibrae/semi-foundation/utils/get-data-attr';
+import { getDataAttr } from '@fibrae/semi-foundation/utils';
 import { IconTick } from '@fibrae/semi-icons-solid';
-import { createToken } from '../../base/token';
+import { createToken } from '../../base/index';
 import Highlight from '../highlight';
 
 export const OPTION = 'Select.Option';

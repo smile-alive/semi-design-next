@@ -1,7 +1,7 @@
 import { within } from '@testing-library/svelte';
 import { addDays, format } from 'date-fns';
 import { describe, expect, it } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import { click, getPopup, getPresetButtons, getYMLists, getYMSelected, nextSibling, setupPinned, ymd } from './date-picker-dom-utils';
 import { changes, dp, getContainer, getDay, getInput, getInputs, getRoot, getSelectedDays, setup, typeText, useBaseDate } from './test-utils';

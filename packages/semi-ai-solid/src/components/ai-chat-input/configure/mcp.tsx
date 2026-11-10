@@ -1,7 +1,7 @@
 import { For, type JSX, Show, mergeProps, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { formatLocale } from '@fibrae/semi-foundation/locale';
 import Button from '@fibrae/semi-ui-solid/button/index';
 import Dropdown, { type DropdownProps } from '@fibrae/semi-ui-solid/dropdown/index';
 import { useLocale } from '@fibrae/semi-ui-solid/primitives';

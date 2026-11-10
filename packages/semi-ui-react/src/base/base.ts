@@ -20,11 +20,3 @@ export type ByMultiple<Multiple, Single, Many> = Multiple extends unknown ? (tru
  * mode's narrower props type is assignable to it, so no cast is needed.
  */
 export type Bivariant<Args extends unknown[], R = void> = { callback(...args: Args): R }['callback'];
-
-// Semi theme tokens and Grid read CSS custom properties from `style`; React's types reject `--*` keys, while Vue's and
-// Solid's accept them. Lives here because every component's d.ts imports this module, so consumers get it too.
-declare module 'react' {
-    interface CSSProperties {
-        [key: `--${string}`]: string | number | undefined;
-    }
-}

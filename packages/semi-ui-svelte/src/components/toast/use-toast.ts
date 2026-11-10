@@ -1,12 +1,10 @@
 import { getAllContexts, getContext, mount, onDestroy, unmount } from 'svelte';
-import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
-import { createHookApi } from '@fibrae/semi-foundation/base/hook-api';
-import StaticListWrapper from '@fibrae/semi-foundation/base/static-list-wrapper';
+import { omitInstanceIds, createHookApi, StaticListWrapper } from '@fibrae/semi-foundation/base';
 import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
 import type { ToastInstance } from '@fibrae/semi-foundation/components/toast/toast-foundation';
 import { createToastListStore } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
-import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
-import semiGlobal, { type SemiGlobal, semiGlobalKey } from '../../utils/semi-global.js';
+import { assertClient } from '@fibrae/semi-foundation/utils';
+import { semiGlobal, type SemiGlobal, semiGlobalKey } from '../../utils/index.js';
 import type { ToastHookApi, ToastHookOptions } from './interface.js';
 import ToastList from './toast-list.svelte';
 

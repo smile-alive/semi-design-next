@@ -2,8 +2,7 @@
     import { computed } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/tag/constants';
     import { getTagListKeys } from '@fibrae/semi-foundation/components/tag/tag-key';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault } from '../../base/index';
     import Popover from '../popover';
     import type { TagGroupEmits, TagGroupItem, TagGroupProps, TagGroupSlots, TagProps } from './interface';
     import Tag from './tag.vue';

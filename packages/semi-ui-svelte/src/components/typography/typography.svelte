@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
     import '@fibrae/semi-foundation/components/typography/typography.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import type { TypographyProps } from './interface.js';
 
     const defaults = useDefaultProps('Typography');

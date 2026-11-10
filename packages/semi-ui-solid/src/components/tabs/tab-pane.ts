@@ -1,4 +1,4 @@
-import { createToken } from '../../base/token';
+import { createToken } from '../../base/index';
 import type { TabPaneProps } from './interface';
 
 export const TAB_PANE = 'Tabs.TabPane';

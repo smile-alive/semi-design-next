@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { shallowRef, useTemplateRef } from 'vue';
     import { addAreaObservedAttributes, containsControl, containsName } from '@fibrae/semi-foundation/components/upload/utils';
-    import useMutationObserver from '../../composables/use-mutation-observer';
+    import { useMutationObserver } from '../../composables/index';
     import useLocale from '../locale/use-locale';
 
     /** `describedby` describes the area only while it is the button; a slotted control is out of its reach */

@@ -1,6 +1,6 @@
 import { type Locale, format, isSameMonth, isWeekend, differenceInCalendarDays, isBefore, isAfter, compareAsc, addDays, startOfWeek, getSeconds, differenceInHours, getMinutes, getHours, addHours, isSameDay, endOfDay, startOfDay, toDate } from 'date-fns';
 import { groupBy } from 'es-toolkit';
-import warning from '../../utils/warning';
+import { warning } from '../../utils/index';
 import type { EventObject, ParsedRangeEvent } from './foundation';
 
 function copyEvent(event: EventObject, date: Date, start?: Date, end?: Date, allDay = false) {

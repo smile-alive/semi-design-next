@@ -1,6 +1,6 @@
 /** @jsxImportSource vue */
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import { Col, Row, type RowProps } from '../index';
 import InstanceRefs from './fixtures/instance-refs.vue';

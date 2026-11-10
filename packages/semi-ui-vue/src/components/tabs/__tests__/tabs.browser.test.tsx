@@ -3,7 +3,7 @@ import { defineComponent, nextTick, ref, shallowReactive, type VNode } from 'vue
 import { screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { cdp, userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { expectThemeFocusRing, isChromium, tabTo } from '@test/utils/browser';
 import { render, sleep } from '@test/utils/vue';

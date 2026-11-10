@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { act, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { TreeDataSimpleJson } from '@fibrae/semi-foundation/components/tree/foundation';
 import { IconMapPin } from '@fibrae/semi-icons-react';
 import { Tree, Button } from '@fibrae/semi-ui-react';

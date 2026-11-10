@@ -1,7 +1,7 @@
 import { createSignal, type JSX } from 'solid-js';
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import Badge, { type BadgeProps } from '..';
 import ConfigProvider from '../../config-provider';
 

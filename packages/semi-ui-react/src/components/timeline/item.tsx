@@ -3,7 +3,7 @@ import { memo } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
 import '@fibrae/semi-foundation/components/timeline/timeline.scss';
-import type { ElementProps } from '../../base/base';
+import type { ElementProps } from '../../base/index';
 
 export interface TimelineItemProps extends ElementProps<'li', 'content'> {
     color?: string;

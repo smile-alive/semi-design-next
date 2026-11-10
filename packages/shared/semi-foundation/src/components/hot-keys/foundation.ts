@@ -1,4 +1,4 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
 import { keyToCode, Keys } from './constants';
 
 export interface HotKeysAdapter<P extends HotKeysBaseProps = HotKeysBaseProps> extends DefaultAdapter<P, object> {

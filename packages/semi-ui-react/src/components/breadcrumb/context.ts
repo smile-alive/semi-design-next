@@ -1,5 +1,5 @@
 import type React from 'react';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { ShowTooltipProps } from './breadcrumb';
 import type { BreadcrumbItemInfo } from './item';
 

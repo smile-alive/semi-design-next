@@ -2,7 +2,7 @@ import { createContext, useEffect } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Button, Toast, ToastFactory } from '@fibrae/semi-ui-react';
 import { tabTo } from '@test/utils/browser';
 

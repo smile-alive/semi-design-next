@@ -1,5 +1,5 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { isSecondaryPress } from '../../utils/pointer';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { isSecondaryPress } from '../../utils/index';
 import { getPointerRatio } from './utils';
 
 /** The fields read from a framework's mouse or pointer event over the track */

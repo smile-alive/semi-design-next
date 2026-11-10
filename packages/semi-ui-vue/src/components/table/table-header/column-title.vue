@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import type { BaseEllipsis } from '@fibrae/semi-foundation/components/table/foundation';
     import { shouldShowEllipsisTitle } from '@fibrae/semi-foundation/components/table/utils';
-    import SlotFragment from '../../../base/slot-fragment';
-    import type { KeyedNode } from '../../../utils/slot-nodes';
+    import { SlotFragment } from '../../../base/index';
+    import type { KeyedNode } from '../../../utils/index';
     import useLocale from '../../locale/use-locale';
     import ColumnFilter from '../column-filter.vue';
     import ColumnSorter from '../column-sorter.vue';

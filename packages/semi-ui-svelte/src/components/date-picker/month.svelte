@@ -3,8 +3,8 @@
     import { format } from 'date-fns';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
     import MonthFoundation, { type MonthAdapter, type MonthDayInfo, type MonthFoundationProps, type MonthFoundationState } from '@fibrae/semi-foundation/components/date-picker/month-foundation';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
+    import { useFoundation } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
     import useToday from '../calendar/hooks/use-today.svelte.js';
     import { useConfig } from '../config-provider/index.js';
     import type { MonthProps } from './internal.js';

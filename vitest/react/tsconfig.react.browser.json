@@ -8,6 +8,7 @@
         "../../packages/semi-*-react/**/__tests__/**/*.browser.test.ts",
         "../../packages/semi-*-react/**/__tests__/**/*.browser.test.tsx",
         "../../packages/semi-ui-react/src/styles.d.ts",
+        "../../packages/semi-ui-react/src/css-properties.d.ts",
         "../../packages/semi-ai-react/src/styles.d.ts",
         "../../packages/semi-ai-react/src/utils/semi-global.ts",
         "../../packages/semi-icons-react/src/styles.d.ts",

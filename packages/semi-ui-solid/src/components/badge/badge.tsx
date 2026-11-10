@@ -2,9 +2,8 @@ import { children, Show, splitProps, type JSX } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/badge/constants';
 import '@fibrae/semi-foundation/components/badge/badge.scss';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import hasContent from '../../utils/has-content';
+import { type ElementProps, useDefaultProps } from '../../base/index';
+import { hasContent } from '../../utils/index';
 import useConfig from '../config-provider/use-config';
 
 const prefixCls = cssClasses.PREFIX;

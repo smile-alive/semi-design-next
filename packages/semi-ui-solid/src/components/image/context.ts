@@ -1,5 +1,5 @@
 import type { Accessor } from 'solid-js';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { GroupImage, PreviewProps } from './interface';
 
 export interface PreviewGroupView {

@@ -4,8 +4,8 @@
     import CascaderFoundation, { type BasicData } from '@fibrae/semi-foundation/components/cascader/foundation';
     import { getColumns, highlightParts } from '@fibrae/semi-foundation/components/cascader/util';
     import { IconChevronRight, IconTick } from '@fibrae/semi-icons-vue';
-    import VirtualList from '../../internal/virtual-list.vue';
-    import slotNodes, { hasSlotContent, type KeyedNode } from '../../utils/slot-nodes';
+    import { VirtualList } from '../../internal/index';
+    import { slotNodes, hasSlotContent, type KeyedNode } from '../../utils/index';
     import Checkbox from '../checkbox';
     import type { CheckboxEvent } from '../checkbox/interface';
     import useConfig from '../config-provider/use-config';

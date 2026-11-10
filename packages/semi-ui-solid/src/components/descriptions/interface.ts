@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 
 export type DescriptionsAlign = 'center' | 'justify' | 'left' | 'plain';
 export type DescriptionsLayout = 'horizontal' | 'vertical';

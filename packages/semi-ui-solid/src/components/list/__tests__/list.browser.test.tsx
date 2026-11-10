@@ -1,7 +1,7 @@
 import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import List from '..';
 import Button from '../../button';
 import type { ListItemEventHandler } from '../context';

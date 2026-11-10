@@ -2,12 +2,11 @@
     import { onMount } from 'svelte';
     import { radioClasses } from '@fibrae/semi-foundation/components/radio/constants';
     import RadioFoundation, { type RadioAdapter, type RadioBaseProps, type RadioBaseState } from '@fibrae/semi-foundation/components/radio/radio-foundation';
-    import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/radio/radio.scss';
     import { IconRadio } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import { isNativeInputKey, splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { isNativeInputKey, splitControlAttrs } from '../../utils/index.js';
     import { getRadioGroupContext } from './context.js';
     import type { RadioProps } from './interface.js';
 

@@ -1,5 +1,5 @@
 import type { Locale as DateFnsLocale } from 'date-fns';
-import type { LocaleInput } from '../../locale/interface';
+import type { LocaleInput } from '../../locale/index';
 import type { ResponsiveMap } from './responsive-types';
 
 export interface InheritableConfig {

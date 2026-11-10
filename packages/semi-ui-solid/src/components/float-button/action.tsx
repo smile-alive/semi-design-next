@@ -1,6 +1,5 @@
 import { Show, splitProps, untrack, type JSX } from 'solid-js';
-import callHandler from '../../utils/call-handler';
-import mergeRefs from '../../utils/merge-refs';
+import { callHandler, mergeRefs } from '../../utils/index';
 import type { FloatButtonElement, FloatButtonProps } from './interface';
 
 export interface ActionProps extends Omit<FloatButtonProps, 'icon' | 'shape' | 'size' | 'colorful' | 'badge'> {

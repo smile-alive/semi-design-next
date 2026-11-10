@@ -1,7 +1,7 @@
 import NotificationApi from '@fibrae/semi-foundation/components/notification/notification-api-foundation';
-import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
-import renderDetached from '../../base/detached-render';
-import { readGlobalDefaults } from '../../utils/semi-global';
+import { assertClient } from '@fibrae/semi-foundation/utils';
+import { renderDetached } from '../../base/index';
+import { readGlobalDefaults } from '../../utils/index';
 import type { NotificationOptions } from './notice';
 import NotificationList from './notification-list';
 import useNotification from './use-notification';

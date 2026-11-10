@@ -4,8 +4,8 @@
     import ColorPickerFoundation from '@fibrae/semi-foundation/components/color-picker/foundation';
     import { hsvaToHslString, hsvaToRgba } from '@fibrae/semi-foundation/components/color-picker/utils/convert';
     import { round } from '@fibrae/semi-foundation/components/color-picker/utils/round';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
+    import { useFoundation } from '../../base/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { toDragEvent } from './drag-event.js';
     import type { ColorChooseAreaProps } from './interface.js';

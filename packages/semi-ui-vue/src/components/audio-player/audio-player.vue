@@ -4,13 +4,11 @@
     import AudioPlayerFoundation, { type AudioPlayerAdapter, type AudioPlayerState } from '@fibrae/semi-foundation/components/audio-player/foundation';
     import { getCurrentTrack } from '@fibrae/semi-foundation/components/audio-player/utils';
     import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/audio-player/audio-player.scss';
     import { IconAlertCircle, IconBackward, IconFastForward, IconPause, IconPlay, IconRefresh, IconRestart, IconVolume2, IconVolumnSilent } from '@fibrae/semi-icons-vue';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
+    import { type ElementProps, semiDefault, useFoundation } from '../../base/index';
     import Button from '../button';
     import Dropdown, { DropdownItem, DropdownMenu } from '../dropdown';
     import Image from '../image';

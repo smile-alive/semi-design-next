@@ -3,9 +3,9 @@ import { defineComponent, h, KeepAlive, ref, type Component, type VNodeChild } f
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
-import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import Cascader, { type CascaderData, type CascaderDisplaySlotProps, type CascaderEmits, type CascaderFilterItemSlotProps, type CascaderHandle, type CascaderLabelSlotProps, type CascaderSimpleValue, type CascaderTagSlotProps, type CascaderTriggerSlotProps, type CascaderValue } from '..';
 import ConfigProvider from '../../config-provider';

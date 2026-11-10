@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { onMounted, shallowRef } from 'vue';
-    import useTimeout from '../../composables/use-timeout';
+    import { useTimeout } from '../../composables/index';
     import Collapsible from '../collapsible';
 
     /**

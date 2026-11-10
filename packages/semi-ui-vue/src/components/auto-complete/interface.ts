@@ -1,5 +1,5 @@
 import type { HTMLAttributes, StyleValue, VNode } from 'vue';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import type { Size } from '@fibrae/semi-foundation/utils';
 import type { ModelModifiers, ValidateStatus } from '../input/interface';
 import type { Position } from '../tooltip/interface';
 

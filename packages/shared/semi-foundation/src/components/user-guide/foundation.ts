@@ -1,7 +1,5 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import ModalResources from '../../base/modal-resources';
-import { coversPage } from '../../utils/dom';
-import warning from '../../utils/warning';
+import { BaseFoundation, type DefaultAdapter, ModalResources } from '../../base/index';
+import { coversPage, warning } from '../../utils/index';
 import { numbers } from './constants';
 
 /** What the guide reads around it: ConfigProvider's popup container, which the guide's own prop overrides */

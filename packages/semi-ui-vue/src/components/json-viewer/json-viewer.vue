@@ -2,12 +2,9 @@
     import { computed, h, shallowRef, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
     import JsonViewerFoundation, { type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState, type JsonViewerOptions as CoreOptions } from '@fibrae/semi-foundation/components/json-viewer/foundation';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { namedRole, toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/json-viewer/json-viewer.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
     import useLocale from '../locale/use-locale';
     import { provideJsonViewerContext } from './context';
     import type { JsonViewerCustomRenderSlotProps, JsonViewerEmits, JsonViewerHandle, JsonViewerProps, JsonViewerSearchButtonSlotProps, JsonViewerSlots } from './interface';

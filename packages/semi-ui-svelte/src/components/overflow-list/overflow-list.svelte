@@ -2,10 +2,9 @@
     import { untrack } from 'svelte';
     import { cssClasses } from '@fibrae/semi-foundation/components/overflow-list/constants';
     import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState, type OverflowListView } from '@fibrae/semi-foundation/components/overflow-list/foundation';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import { observeResize } from '../resize-observer/index.js';
     import type { OverflowListItem, OverflowListKey, OverflowListProps } from './interface.js';
     import { markScrollItem } from './observers.js';

@@ -1,19 +1,16 @@
 <script setup lang="ts">
     import { computed, mergeProps, onBeforeUnmount, onMounted, shallowRef, useAttrs, useId, useTemplateRef, watch, type StyleValue, type TextareaHTMLAttributes } from 'vue';
     import { throttle } from 'es-toolkit';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/input/constants';
     import TextAreaFoundation, { type TextAreaAdapter } from '@fibrae/semi-foundation/components/input/textarea-foundation';
     import { syncLineNumberHeights } from '@fibrae/semi-foundation/components/input/util/line-number';
-    import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/input/textarea.scss';
     import { IconClear } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useRaf from '../../composables/use-raf';
-    import useResizeObserver from '../../composables/use-resize-observer';
-    import { isBooleanAttrOn, isNotClassOrStyle, splitControlAttrs } from '../../utils/control-attrs';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
+    import { useRaf, useResizeObserver } from '../../composables/index';
+    import { isBooleanAttrOn, isNotClassOrStyle, splitControlAttrs } from '../../utils/index';
     import useLocale from '../locale/use-locale';
     import useGroupLooks from './composables/use-group-looks';
     import useTextEntry from './composables/use-text-entry';

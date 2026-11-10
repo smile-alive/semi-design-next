@@ -6,9 +6,8 @@ import TreeFoundation, { type TreeAdapter, type BasicFlattenNode, type BasicTree
 import { buildRowProps, nodeId } from '@fibrae/semi-foundation/components/tree/shared';
 import '@fibrae/semi-foundation/components/tree/tree.scss';
 import { IconSearch } from '@fibrae/semi-icons-react';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import VirtualList, { type VirtualListHandle, type VirtualListRowProps } from '../../internal/virtual-list';
+import { useDefaultProps, useFoundation } from '../../base/index';
+import { VirtualList, type VirtualListHandle, type VirtualListRowProps } from '../../internal/index';
 import { useConfigContext } from '../config-provider/context';
 import Input from '../input/index';
 import useLocale from '../locale/use-locale';

@@ -442,8 +442,9 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
         }
     }
     // Svelte-aware tools resolve with the `svelte` condition; plain Node and other bundlers take `default`. The AI package
-    // reaches the UI package's internals by deep path: a `.ts` module without extension, a `.svelte.ts` one as `.svelte.js`
-    const subpaths = ['hooks', 'tokens', 'styles.css', 'tailwind.css', 'switch/switch.svelte', 'base/create-context', 'base/use-foundation.svelte.js', 'hooks/watch.svelte.js', 'internal/portal.svelte'];
+    // reaches the UI package's internals through the directory entries, or by deep path: a `.ts` module without extension,
+    // a `.svelte.ts` one as `.svelte.js`
+    const subpaths = ['hooks', 'tokens', 'styles.css', 'tailwind.css', 'switch/switch.svelte', 'base', 'utils', 'internal', 'hooks/index', 'base/create-context', 'base/use-foundation.svelte.js', 'hooks/watch.svelte.js', 'internal/portal.svelte'];
     for (const condition of [[], ['--conditions=svelte']]) {
         const resolved = execFileSync(process.execPath, [...condition, '--input-type=module', '-e', 'for (const specifier of process.argv.slice(1)) console.log(import.meta.resolve(specifier));', ...subpaths.map((subpath) => `@fibrae/semi-ui-svelte/${subpath}`)], { cwd: appDir, encoding: 'utf-8' })
             .trim()
@@ -454,7 +455,9 @@ execFileSync(process.execPath, [path.join(appDir, 'node_modules/typescript/bin/t
             });
         assert.deepStrictEqual(
             resolved,
-            ['hooks.js', 'tokens.js', 'styles.css', 'tailwind.css', 'components/switch/switch.svelte', 'base/create-context.js', 'base/use-foundation.svelte.js', 'hooks/watch.svelte.js', 'internal/portal.svelte'].map((file) => `semi-ui-svelte/dist/${file}`),
+            ['hooks.js', 'tokens.js', 'styles.css', 'tailwind.css', 'components/switch/switch.svelte', 'base/index.js', 'utils/index.js', 'internal/index.js', 'hooks/index.js', 'base/create-context.js', 'base/use-foundation.svelte.js', 'hooks/watch.svelte.js', 'internal/portal.svelte'].map(
+                (file) => `semi-ui-svelte/dist/${file}`
+            ),
             `the semi-ui-svelte subpaths resolve ${condition.join(' ') || 'by default'}`
         );
     }

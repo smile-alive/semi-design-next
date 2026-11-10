@@ -18,8 +18,8 @@
         type FlattenData,
         type GroupFlattenData,
     } from '@fibrae/semi-foundation/components/table/utils';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import VirtualList, { type VirtualListAlign } from '../../../internal/virtual-list.svelte';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
+    import { VirtualList, type VirtualListAlign } from '../../../internal/index.js';
     import useLocale from '../../locale/use-locale.svelte.js';
     import { observeResize } from '../../resize-observer/index.js';
     import ColGroup from '../col-group.svelte';

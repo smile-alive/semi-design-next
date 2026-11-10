@@ -2,7 +2,7 @@
 import { defineComponent, nextTick, ref, type VNodeChild } from 'vue';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { render, sleep } from '@test/utils/vue';
 import { Form, type FieldHandle, type FormApi } from '..';
 import type { InputHandle } from '../../input';

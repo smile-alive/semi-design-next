@@ -5,13 +5,10 @@ import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constan
 import { ResizableFoundation, type ResizableAdapter, type ResizableBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
 import { type Direction, type Size, type Enable, type ResizeStartCallback, type ResizeCallback, type HandleClassName, directions } from '@fibrae/semi-foundation/components/resizable/types';
 import { isKeyboardEdge } from '@fibrae/semi-foundation/components/resizable/utils';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/resizable/resizable.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useMergedRef from '../../hooks/use-merged-ref';
-import useResizeObserver from '../../hooks/use-resize-observer';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { useMergedRef, useResizeObserver } from '../../hooks/index';
 import useLocale from '../locale/use-locale';
 import ResizableHandler from './resizable-handler';
 

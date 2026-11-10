@@ -2,9 +2,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/spin/constants';
     import SpinFoundation, { type SpinAdapter, type SpinState } from '@fibrae/semi-foundation/components/spin/foundation';
     import '@fibrae/semi-foundation/components/spin/spin.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import SpinIcon from './icon.svelte';
     import type { SpinProps } from './interface.js';

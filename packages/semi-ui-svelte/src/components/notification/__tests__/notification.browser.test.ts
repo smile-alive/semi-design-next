@@ -1,7 +1,7 @@
 import { render, waitFor } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
+import { openLayer } from '@fibrae/semi-foundation/utils';
 import { tabTo } from '@test/utils/browser';
 import { Notification } from '../index';
 import type { NotificationHookApi, NotificationHookOptions } from '../interface';

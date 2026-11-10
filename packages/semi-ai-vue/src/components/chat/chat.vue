@@ -1,20 +1,18 @@
 <script setup lang="ts">
     import { computed, h, useTemplateRef, watch } from 'vue';
-    import { followChats, followHints } from '@fibrae/semi-ai-foundation/base/message-list-foundation';
+    import { followChats, followHints } from '@fibrae/semi-ai-foundation/base';
     import { cssClasses, isUnfinishedMessageStatus, strings } from '@fibrae/semi-ai-foundation/components/chat/constants';
     import ChatFoundation, { type ChatAdapter, type ChatState } from '@fibrae/semi-ai-foundation/components/chat/foundation';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-ai-foundation/components/chat/chat.scss';
     import { IconChevronDown, IconDisc } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '@fibrae/semi-ui-vue/base/element-props';
-    import semiDefault, { semiGlobalDefault } from '@fibrae/semi-ui-vue/base/semi-default';
-    import useFoundation from '@fibrae/semi-ui-vue/base/use-foundation';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation } from '@fibrae/semi-ui-vue/base';
     import Button from '@fibrae/semi-ui-vue/button/index';
     import { useLocale, useResizeObserver } from '@fibrae/semi-ui-vue/composables';
     import Divider from '@fibrae/semi-ui-vue/divider/index';
     import Toast from '@fibrae/semi-ui-vue/toast/index';
-    import { handOnSlots } from '@fibrae/semi-ui-vue/utils/hand-on';
+    import { handOnSlots } from '@fibrae/semi-ui-vue/utils';
     import ChatBox from './chat-box/chat-box.vue';
     import { provideChatContext } from './context';
     import Hint from './hint.vue';

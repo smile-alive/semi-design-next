@@ -2,7 +2,7 @@
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/upload/constants';
     import UploadFoundation from '@fibrae/semi-foundation/components/upload/foundation';
     import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/upload/upload.scss';
     import { IconAlertCircle, IconClear, IconClose, IconFile, IconRefresh } from '@fibrae/semi-icons-svelte';
     import Button from '../button/button.svelte';

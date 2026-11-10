@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/vue';
 import { describe, expect, it } from 'vite-plus/test';
-import { openLayer } from '@fibrae/semi-foundation/utils/layer';
+import { openLayer } from '@fibrae/semi-foundation/utils';
 import { render } from '@test/utils/vue';
 import Sidebar from '..';
 

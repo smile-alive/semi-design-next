@@ -4,7 +4,7 @@
     import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
     import TabBarFoundation, { type TabBarAdapter, type TabBarBaseProps, type TabBarState } from '@fibrae/semi-foundation/components/tabs/tab-bar-foundation';
     import { IconChevronDown } from '@fibrae/semi-icons-svelte';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useFoundation } from '../../base/index.js';
     import { Dropdown, DropdownItem, DropdownMenu, type DropdownTriggerProps } from '../dropdown/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { OverflowList } from '../overflow-list/index.js';

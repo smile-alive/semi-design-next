@@ -2,9 +2,9 @@ import type React from 'react';
 import { cloneElement, Children, isValidElement, type ReactElement } from 'react';
 import clsx from 'clsx';
 import { stepsClasses as css } from '@fibrae/semi-foundation/components/steps/constants';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import type { ElementProps } from '../../base/base';
-import flattenChildren from '../../utils/flatten-children';
+import { namedRole } from '@fibrae/semi-foundation/utils';
+import type { ElementProps } from '../../base/index';
+import { flattenChildren } from '../../utils/index';
 import type { Size } from './types';
 
 const prefixCls = css.PREFIX;

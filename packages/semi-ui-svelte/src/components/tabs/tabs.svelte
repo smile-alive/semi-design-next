@@ -3,10 +3,9 @@
     import { cssClasses, getPanelId, getTabId } from '@fibrae/semi-foundation/components/tabs/constants';
     import TabsFoundation, { type MotionView, type TabsAdapter, type TabsBaseProps, type TabsState } from '@fibrae/semi-foundation/components/tabs/foundation';
     import '@fibrae/semi-foundation/components/tabs/tabs.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
-    import { splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
+    import { splitControlAttrs } from '../../utils/index.js';
     import { getConfigContext } from '../config-provider/context.js';
     import { setTabsContext, type TabsView } from './context.js';
     import type { TabBarProps, TabsProps } from './interface.js';

@@ -2,7 +2,7 @@ import { type JSX, Show, createSignal, splitProps, untrack } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
 import { IconAISearchLevel2, IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-solid';
-import type { ElementProps } from '@fibrae/semi-ui-solid/base/element-props';
+import type { ElementProps } from '@fibrae/semi-ui-solid/base';
 import Collapsible from '@fibrae/semi-ui-solid/collapsible/index';
 import MarkdownRender from '@fibrae/semi-ui-solid/markdown-render/index';
 import { useLocale } from '@fibrae/semi-ui-solid/primitives';

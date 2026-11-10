@@ -1,9 +1,5 @@
-import FocusTrapHandle from '../../base/focus-handle';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { crossesFocusBoundary } from '../../utils/a11y';
-import arrayMove from '../../utils/array-move';
-import { fitInputWidth, onFontsLoaded, supportsFieldSizing } from '../../utils/field-sizing';
-import { isComposing } from '../../utils/key-code';
+import { FocusTrapHandle, BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { crossesFocusBoundary, arrayMove, fitInputWidth, onFontsLoaded, supportsFieldSizing, isComposing } from '../../utils/index';
 import getSplitedArray from './utils/get-splited-array';
 
 export type TagInputValidateStatus = 'default' | 'error' | 'warning';

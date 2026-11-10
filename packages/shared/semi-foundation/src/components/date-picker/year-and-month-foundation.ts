@@ -1,5 +1,5 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import type { ArrayElement } from '../../utils/type';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import type { ArrayElement } from '../../utils/index';
 import getYearAndMonth from './_utils/get-year-and-month';
 import getYears from './_utils/get-years';
 import { strings } from './constants';

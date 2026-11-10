@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
 import type { FileItem, UploadOnChangeProps } from '@fibrae/semi-ui-vue/upload/index';
-import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
 import { mockResizeObserver, render, sleep } from '@test/utils/vue';
 import Chat from '..';
 import type { ChatActionSlotProps, ChatAvatarSlotProps, ChatContentSlotProps, ChatDefaultActionNodeObj, ChatEmits, ChatFullChatBoxSlotProps, ChatHandle, ChatHintBoxSlotProps, ChatInputAreaSlotProps, ChatMarkdownRenderProps, ChatMessage, ChatProps, ChatTitleSlotProps } from '../interface';

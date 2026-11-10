@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { onUpdated, watch } from 'vue';
-    import useFoundation from '../../base/use-foundation';
+    import { useFoundation } from '../../base/index';
     import FixtureFoundation, { type Adapter, type Props, type State } from './foundation';
 
     const props = withDefaults(

@@ -6,7 +6,7 @@
     import { IconWrench } from '@fibrae/semi-icons-vue';
     import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import Image from '@fibrae/semi-ui-vue/image/index';
-    import slotNodes, { isSlotContent } from '@fibrae/semi-ui-vue/utils/slot-nodes';
+    import { slotNodes, isSlotContent } from '@fibrae/semi-ui-vue/utils';
     import { useAIChatDialogueContext } from '../context';
     import type { AIChatDialogueSlots, MessageInnerItem } from '../interface';
     import AnnotationWidget from './content-item/annotation.vue';

@@ -1,9 +1,9 @@
 import type { JSX } from 'solid-js';
-import { createHookApi, type HookApi } from '@fibrae/semi-foundation/base/hook-api';
+import { createHookApi, type HookApi } from '@fibrae/semi-foundation/base';
 import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
 import { createNotificationListStore } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
-import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
-import { readGlobalDefaults } from '../../utils/semi-global';
+import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils';
+import { readGlobalDefaults } from '../../utils/index';
 import type { NotificationOptions } from './notice';
 import NotificationList from './notification-list';
 

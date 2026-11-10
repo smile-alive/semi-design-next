@@ -1,10 +1,10 @@
 import { StrictMode, createRef, type ReactNode } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Card, Rating, Typography, Avatar, CardGroup } from '@fibrae/semi-ui-react';
 import type { SpaceProps } from '@fibrae/semi-ui-react/space';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import type { CardGroupProps } from '../card-group';
 
 const { Meta } = Card;

@@ -1,9 +1,9 @@
 import type { JSX } from 'solid-js';
-import { createHookApi, type HookApi } from '@fibrae/semi-foundation/base/hook-api';
+import { createHookApi, type HookApi } from '@fibrae/semi-foundation/base';
 import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
 import { createToastListStore } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
-import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils/layer';
-import { readGlobalDefaults } from '../../utils/semi-global';
+import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils';
+import { readGlobalDefaults } from '../../utils/index';
 import type { ToastProps } from './toast';
 import ToastList from './toast-list';
 

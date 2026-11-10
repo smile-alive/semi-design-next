@@ -1,5 +1,5 @@
-import { BASE_CLASS_PREFIX } from '../../base/constants';
-import { toCssLength } from '../../utils/dom';
+import { BASE_CLASS_PREFIX } from '../../base/index';
+import { toCssLength } from '../../utils/index';
 
 const PREFIX = `${BASE_CLASS_PREFIX}-toast`;
 export const cssClasses = {

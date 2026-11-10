@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/card/constants';
     import '@fibrae/semi-foundation/components/card/card.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import Space from '../space/space.svelte';
     import type { CardGroupProps } from './interface.js';
 

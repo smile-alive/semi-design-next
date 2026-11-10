@@ -4,7 +4,7 @@ import BreakpointObserver, { noScreens } from '@fibrae/semi-foundation/component
 import { inheritConfig, switchesDirection } from '@fibrae/semi-foundation/components/config-provider/inherit-config';
 import type { ResponsiveMap } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
 import { defaultResponsiveMap } from '@fibrae/semi-foundation/components/grid/constants';
-import shallowEqualObjects from '@fibrae/semi-foundation/utils/shallow-equal-objects';
+import { shallowEqualObjects } from '@fibrae/semi-foundation/utils';
 import { ConfigContext, type ContextValue, useConfigContext } from './context';
 
 export interface ConfigProviderProps extends Omit<ContextValue, 'onBreakpoint' | 'screens'> {

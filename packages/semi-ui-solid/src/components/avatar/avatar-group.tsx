@@ -1,11 +1,9 @@
 import { type Accessor, children, createEffect, createMemo, createSignal, type JSX, onCleanup, Show, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/avatar/constants';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+import { formatLocale } from '@fibrae/semi-foundation/locale';
 import '@fibrae/semi-foundation/components/avatar/avatar.scss';
-import { usePopupLayer } from '../../base/popup-layer';
-import { isToken } from '../../base/token';
-import useDefaultProps from '../../base/use-default-props';
+import { usePopupLayer, isToken, useDefaultProps } from '../../base/index';
 import useLocale from '../locale/use-locale';
 import Avatar from './avatar';
 import { AvatarGroupContext, type AvatarGroupHiddenItem, type AvatarGroupItem, hiddenAvatar, useAvatarGroupContext } from './context';

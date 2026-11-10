@@ -3,7 +3,7 @@ import { isServer } from 'solid-js/web';
 import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
 import { isTreeNodeLeaf } from '@fibrae/semi-foundation/components/tree/shared';
 import { IconTreeTriangleDown } from '@fibrae/semi-icons-solid';
-import hasContent from '../../utils/has-content';
+import { hasContent } from '../../utils/index';
 import Spin from '../spin';
 import { useTreeContext } from './context';
 import type { ExpandIcon, ExpandIconProps, TreeRowProps } from './interface';

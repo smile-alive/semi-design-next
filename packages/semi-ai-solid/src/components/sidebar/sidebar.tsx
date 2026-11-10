@@ -2,13 +2,13 @@ import { Match, Show, Switch, children, createEffect, createMemo, on, onCleanup,
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import { focusAfterModeChange } from '@fibrae/semi-ai-foundation/components/sidebar/utils';
-import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
+import { copyText } from '@fibrae/semi-foundation/utils';
 import { IconClose, IconCopyStroked } from '@fibrae/semi-icons-solid';
-import useDefaultProps from '@fibrae/semi-ui-solid/base/use-default-props';
+import { useDefaultProps } from '@fibrae/semi-ui-solid/base';
 import Button from '@fibrae/semi-ui-solid/button/index';
 import { useLocale } from '@fibrae/semi-ui-solid/primitives';
 import { ToastFactory } from '@fibrae/semi-ui-solid/toast/index';
-import hasContent from '@fibrae/semi-ui-solid/utils/has-content';
+import { hasContent } from '@fibrae/semi-ui-solid/utils';
 import CodeContent, { CodeItem, type CodeItemProps } from './code';
 import Container from './container';
 import FileContent, { FileItem, type FileItemProps } from './file';

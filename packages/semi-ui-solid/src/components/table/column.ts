@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import { createToken } from '../../base/token';
+import { createToken } from '../../base/index';
 import type { ColumnProps, Data } from './interface';
 
 export const TABLE_COLUMN = 'Table.Column';

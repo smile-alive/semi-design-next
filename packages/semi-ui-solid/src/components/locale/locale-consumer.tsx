@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js';
-import type { Locale, LocaleComponentName } from '@fibrae/semi-foundation/locale/index';
+import type { Locale, LocaleComponentName } from '@fibrae/semi-foundation/locale';
 import useLocale from './use-locale';
 
 export interface LocaleConsumerProps<K extends LocaleComponentName> {

@@ -1,13 +1,10 @@
 import { type JSX, Show, children, onCleanup, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
-import { isSecondaryPress } from '@fibrae/semi-foundation/utils/pointer';
+import { isSecondaryPress } from '@fibrae/semi-foundation/utils';
 import { IconHandle } from '@fibrae/semi-icons-solid';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import callHandler from '../../utils/call-handler';
-import hasContent from '../../utils/has-content';
-import mergeRefs from '../../utils/merge-refs';
+import { type ElementProps, useDefaultProps } from '../../base/index';
+import { callHandler, hasContent, mergeRefs } from '../../utils/index';
 import { useLocale } from '../locale';
 import { useResizeGroupContext } from './context';
 

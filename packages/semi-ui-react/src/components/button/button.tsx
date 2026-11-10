@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import useDefaultProps from '../../base/use-default-props';
+import { useDefaultProps } from '../../base/index';
 import BaseButton, { type ButtonProps as BaseButtonProps } from './base-button';
 import { useInheritedButtonLooks, withGroupLooks } from './context';
 

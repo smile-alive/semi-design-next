@@ -3,14 +3,10 @@ import { useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/resizable/constants';
 import { ResizeGroupFoundation, type ResizeGroupAdapter, type ResizeGroupBaseState } from '@fibrae/semi-foundation/components/resizable/foundation';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/resizable/resizable.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useEventListener, { getWindow } from '../../hooks/use-event-listener';
-import useMergedRef from '../../hooks/use-merged-ref';
-import useResizeObserver from '../../hooks/use-resize-observer';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { useEventListener, getWindow, useMergedRef, useResizeObserver } from '../../hooks/index';
 import { ResizeContext } from './context';
 
 type Foundation = ResizeGroupFoundation<ResizeGroupProps>;

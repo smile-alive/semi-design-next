@@ -4,9 +4,8 @@ import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/descriptions/constants';
 import { getHorizontalList } from '@fibrae/semi-foundation/components/descriptions/foundation';
 import '@fibrae/semi-foundation/components/descriptions/descriptions.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import flattenChildren from '../../utils/flatten-children';
+import { type ElementProps, useDefaultProps } from '../../base/index';
+import { flattenChildren } from '../../utils/index';
 import { DescriptionsContext, type DescriptionsAlign, type DescriptionLayout } from './context';
 import Item, { type DescriptionsItemProps } from './item';
 

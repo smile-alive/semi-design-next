@@ -1,9 +1,6 @@
 import { debounce } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import ModalResources from '../../base/modal-resources';
-import PopupLifecycle from '../../base/popup-lifecycle';
-import { coversPage, resolvePopupContainer } from '../../utils/dom';
-import isPromise from '../../utils/is-promise';
+import { BaseFoundation, type DefaultAdapter, ModalResources, PopupLifecycle } from '../../base/index';
+import { coversPage, resolvePopupContainer, isPromise } from '../../utils/index';
 import { isModal } from './modal-content-foundation';
 
 export type OKType = 'primary' | 'secondary' | 'tertiary' | 'warning' | 'danger';

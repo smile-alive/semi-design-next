@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { act, render, screen } from '@testing-library/react';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { InputNumber } from '@fibrae/semi-ui-react';
 import type { InputNumberProps } from '../index';
 

@@ -1,5 +1,5 @@
 <script lang="ts" generics="Values extends Record<string, any> = any, Output = Values">
-    import useDefaultProps from '../../../base/use-default-props.js';
+    import { useDefaultProps } from '../../../base/index.js';
     import Form from '../form.svelte';
     import type { FormApi, SchemaFormProps } from '../interface.js';
     import SchemaField from './schema-field.svelte';

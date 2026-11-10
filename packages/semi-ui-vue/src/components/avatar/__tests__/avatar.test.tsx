@@ -2,7 +2,7 @@
 import { nextTick } from 'vue';
 import { fireEvent } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import Avatar from '../avatar.vue';
 import type { AvatarColor, AvatarEmits, AvatarProps } from '../interface';

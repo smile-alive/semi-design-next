@@ -2,9 +2,8 @@
     import { useAttrs, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/timeline/constants';
     import '@fibrae/semi-foundation/components/timeline/timeline.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import { hasClickListener, splitControlAttrs } from '../../utils/control-attrs';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import type { ElementProps } from '../../base/index';
+    import { hasClickListener, splitControlAttrs, hasSlotContent } from '../../utils/index';
     import type { TimelineItemProps, TimelineItemSlots } from './interface';
 
     defineOptions({ inheritAttrs: false });

@@ -1,8 +1,8 @@
 import { createSignal, type JSX } from 'solid-js';
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
-import semiGlobal from '@fibrae/semi-ui-solid/utils/semi-global';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
 import { sleep } from '@test/utils/solid';
 import CodeHighlight from '../../code-highlight';
 import { grammar } from '../../code-highlight/__tests__/grammars';

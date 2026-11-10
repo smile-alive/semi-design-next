@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
+    import type { ElementProps, EmitHandlers } from '../../base/index';
     import { useNav } from './context';
     import type { NavItemEmits, NavItemProps, NavItemSlots } from './interface';
     import ItemShell from './item-shell.vue';

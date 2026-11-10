@@ -1,7 +1,7 @@
 import { Suspense, lazy, memo } from 'react';
 import { numbers } from '@fibrae/semi-foundation/components/table/constants';
-import useDefaultProps from '../../base/use-default-props';
-import useIsServerRender from '../../hooks/use-is-server-render';
+import { useDefaultProps } from '../../base/index';
+import { useIsServerRender } from '../../hooks/index';
 import { useConfigContext } from '../config-provider/context';
 import type { TableProps, Data } from './interface';
 import NormalTable from './normal-table';

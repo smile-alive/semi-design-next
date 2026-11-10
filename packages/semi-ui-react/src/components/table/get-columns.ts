@@ -1,6 +1,6 @@
 import React from 'react';
 import { omit } from 'es-toolkit';
-import elementTypeOf from '../../utils/element-type';
+import { elementTypeOf } from '../../utils/index';
 import Column from './column';
 import type { ColumnProps } from './interface';
 

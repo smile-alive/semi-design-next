@@ -3,11 +3,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/switch/constants';
     import SwitchFoundation, { type SwitchAdapter, type SwitchState } from '@fibrae/semi-foundation/components/switch/foundation';
     import '@fibrae/semi-foundation/components/switch/switch.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import { hasAutofocus, vAutofocus } from '../../utils/autofocus';
-    import { isNativeInputKey, splitControlAttrs } from '../../utils/control-attrs';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
+    import { hasAutofocus, vAutofocus, isNativeInputKey, splitControlAttrs } from '../../utils/index';
     import Spin from '../spin';
     import type { SwitchEmits, SwitchProps, SwitchSlots } from './interface';
 

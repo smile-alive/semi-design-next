@@ -5,7 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import Popover from '@fibrae/semi-ui-react/popover/index';
 import type { UploadProps } from '@fibrae/semi-ui-react/upload/index';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { countLiveListeners } from '@test/utils/react';
 import AIChatInput, { getConfigureItem, type AIChatInputHandle, type AIChatInputProps, type Attachment, type Setup } from '../index';
 

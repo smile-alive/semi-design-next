@@ -7,7 +7,7 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import type { strings } from '@fibrae/semi-foundation/components/calendar/constants';
 import { calcRowHeight } from '@fibrae/semi-foundation/components/calendar/event-util';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { countLiveListeners, endLeaveAnimations, mockResizeObserver, render } from '@test/utils/vue';
 import LocaleProvider from '../../locale/locale-provider.vue';
 import Calendar, { type CalendarEmits, type CalendarEventSlotProps, type CalendarMode, type CalendarProps, type EventObject } from '../index';

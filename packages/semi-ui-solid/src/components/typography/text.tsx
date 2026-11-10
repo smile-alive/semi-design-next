@@ -1,4 +1,4 @@
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 import Base, { type BaseTypographyProps } from './base';
 import type { OmitTypographyProps, TypographyBaseSize, TypographyCommonProps, TypographyEllipsisProps, TypographyIcon } from './interface';
 

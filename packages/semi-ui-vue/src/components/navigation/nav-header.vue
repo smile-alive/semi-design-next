@@ -2,9 +2,8 @@
     import { computed, mergeProps } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/navigation/constants';
     import '@fibrae/semi-foundation/components/navigation/navigation.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import SlotFragment from '../../base/slot-fragment';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import { type ElementProps, SlotFragment } from '../../base/index';
+    import { hasSlotContent } from '../../utils/index';
     import { useNav } from './context';
     import type { NavHeaderProps, NavHeaderSlots } from './interface';
 

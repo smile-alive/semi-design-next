@@ -3,10 +3,10 @@ import { renderToString } from 'react-dom/server';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconHome } from '@fibrae/semi-icons-react';
 import type { DropdownProps } from '@fibrae/semi-ui-react/dropdown';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import Nav, { type ItemKey, type NavFooterProps, type NavItemProps, type NavProps, type OnSelectedData } from '../index';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-navigation`;

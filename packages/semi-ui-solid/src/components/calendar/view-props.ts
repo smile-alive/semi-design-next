@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js';
-import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-import mergeStyles from '../../utils/merge-styles';
+import { toCssLength } from '@fibrae/semi-foundation/utils';
+import { mergeStyles } from '../../utils/index';
 
 export const viewPropKeys = [
     'allDayEventsRender',

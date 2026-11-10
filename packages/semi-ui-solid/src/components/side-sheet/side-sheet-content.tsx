@@ -2,13 +2,10 @@ import { type JSX, Show, children, createUniqueId, splitProps } from 'solid-js';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/side-sheet/constants';
 import type { SheetSize } from '@fibrae/semi-foundation/components/side-sheet/side-sheet-foundation';
-import { isAriaKey } from '@fibrae/semi-foundation/utils/a11y';
-import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+import { isAriaKey, toCssLength } from '@fibrae/semi-foundation/utils';
 import { IconClose } from '@fibrae/semi-icons-solid';
-import type { ElementProps } from '../../base/element-props';
-import { splitControlAttrs } from '../../utils/control-attrs';
-import hasContent from '../../utils/has-content';
-import mergeStyles from '../../utils/merge-styles';
+import type { ElementProps } from '../../base/index';
+import { splitControlAttrs, hasContent, mergeStyles } from '../../utils/index';
 import IconButton from '../icon-button';
 import useLocale from '../locale/use-locale';
 

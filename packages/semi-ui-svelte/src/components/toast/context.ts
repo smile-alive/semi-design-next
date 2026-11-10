@@ -1,5 +1,5 @@
-import { createContext } from '../../base/create-context.js';
-import type { NoticeListState } from '../../hooks/use-notice-close.js';
+import { createContext } from '../../base/index.js';
+import type { NoticeListState } from '../../hooks/index.js';
 
 export interface ToastListContext extends Readonly<NoticeListState> {
     /** Gives the list the toast element it reads when it announces the toast; returns the unregister */

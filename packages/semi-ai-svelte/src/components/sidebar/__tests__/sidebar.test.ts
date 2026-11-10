@@ -4,7 +4,7 @@ import type { Editor } from '@tiptap/core';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import { Annotation, MCPConfigure, Sidebar } from '../index';
 import type { SideBarMainContentSnippetProps, SideBarProps } from '../interface';
 import BindHost, { type BindHostStore } from './bind-host.svelte';

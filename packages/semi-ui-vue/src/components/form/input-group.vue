@@ -3,13 +3,11 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import { isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
     import { getFieldIds } from '@fibrae/semi-foundation/components/form/utils';
-    import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds, warning } from '@fibrae/semi-foundation/utils';
     import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
-    import warning from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/components/form/form.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import slotKind from '../../utils/slot-kind';
-    import slotNodes, { hasSlotContent } from '../../utils/slot-nodes';
+    import type { ElementProps } from '../../base/index';
+    import { slotKind, slotNodes, hasSlotContent } from '../../utils/index';
     import InputGroup from '../input/input-group.vue';
     import { provideFormInputGroupContext, useFormContext } from './context';
     import FormErrorMessage from './error-message.vue';

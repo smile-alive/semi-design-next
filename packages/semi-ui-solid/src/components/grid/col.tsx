@@ -1,9 +1,8 @@
 import { splitProps } from 'solid-js';
 import { cssClasses } from '@fibrae/semi-foundation/components/grid/constants';
 import { getColClassName, getColStyle, type ColSize } from '@fibrae/semi-foundation/components/grid/utils';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import mergeStyles from '../../utils/merge-styles';
+import { type ElementProps, useDefaultProps } from '../../base/index';
+import { mergeStyles } from '../../utils/index';
 
 export type { ColSize };
 

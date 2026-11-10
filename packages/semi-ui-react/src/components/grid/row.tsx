@@ -6,8 +6,7 @@ import { cssClasses, type Breakpoint } from '@fibrae/semi-foundation/components/
 import { gutterStyle, normalizeGutter, type Gutter } from '@fibrae/semi-foundation/components/grid/gutter';
 import { getRowClassName } from '@fibrae/semi-foundation/components/grid/utils';
 import '@fibrae/semi-foundation/components/grid/grid.scss';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
+import { type ElementProps, useDefaultProps } from '../../base/index';
 
 export type { Breakpoint, Gutter };
 

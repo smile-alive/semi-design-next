@@ -5,7 +5,7 @@ import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import type { BackTopBaseProps } from '@fibrae/semi-foundation/components/backtop/foundation';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
-import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import LocaleProvider from '../../locale/locale-provider.vue';
 import BackTop from '../backtop.vue';

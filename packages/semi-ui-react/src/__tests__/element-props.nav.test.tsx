@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Anchor, BackTop, Breadcrumb, Dropdown, FloatButton, FloatButtonGroup, HotKeys, Nav, Pagination, SplitButtonGroup, Steps, Tabs } from '@fibrae/semi-ui-react';
 
 // Literal JSX attributes on purpose: spread props skip the excess-property check (F6 type half); runtime checks F2.

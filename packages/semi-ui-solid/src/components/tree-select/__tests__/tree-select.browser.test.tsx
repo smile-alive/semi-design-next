@@ -3,7 +3,7 @@ import { Dynamic } from 'solid-js/web';
 import { render, screen, waitFor, within } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import TreeSelect, { type TreeSelectProps, type TriggerRenderProps } from '..';
 import Button from '../../button';

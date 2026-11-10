@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { copyText } from '@fibrae/semi-foundation/utils/clipboard';
+import { copyText } from '@fibrae/semi-foundation/utils';
 import DialogueActionFoundation, { type DialogueActionAdapter, getDialogueActionFlags, getDialogueActionKeys } from '../action-foundation';
 
 vi.mock('@fibrae/semi-foundation/utils/clipboard', () => ({ copyText: vi.fn<(text: string) => Promise<boolean>>() }));

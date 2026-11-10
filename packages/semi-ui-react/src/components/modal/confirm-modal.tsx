@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { settleConfirm } from '@fibrae/semi-foundation/components/modal/confirm';
 import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
 import '@fibrae/semi-foundation/components/modal/modal.scss';
-import { isSemiIcon } from '../../utils';
+import { isSemiIcon } from '../../utils/index';
 import { useConfigContext } from '../config-provider/context';
 import type { ConfirmProps } from './confirm';
 import Modal from './modal';

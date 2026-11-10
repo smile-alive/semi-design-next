@@ -4,9 +4,9 @@ import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialog
 import type { Annotation } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
 import { IconChevronRight } from '@fibrae/semi-icons-solid';
 import Avatar, { AvatarGroup } from '@fibrae/semi-ui-solid/avatar/index';
-import type { ElementProps } from '@fibrae/semi-ui-solid/base/element-props';
+import type { ElementProps } from '@fibrae/semi-ui-solid/base';
 import { useLocale } from '@fibrae/semi-ui-solid/primitives';
-import callHandler from '@fibrae/semi-ui-solid/utils/call-handler';
+import { callHandler } from '@fibrae/semi-ui-solid/utils';
 
 export interface AnnotationItemProps {
     title?: string;

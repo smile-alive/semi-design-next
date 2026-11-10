@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import slotNodes from '../../utils/slot-nodes';
+    import type { ElementProps, EmitHandlers } from '../../base/index';
+    import { slotNodes } from '../../utils/index';
     import TypographyBase from './base.vue';
     import type { TypographyParagraphEmits, TypographyParagraphProps, TypographyParagraphSlots } from './interface';
 

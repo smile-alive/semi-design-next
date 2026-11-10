@@ -1,6 +1,6 @@
 import type { Accessor } from 'solid-js';
 import type { NotificationListState } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 
 export interface NotificationListContextValue {
     paused: Accessor<boolean>;

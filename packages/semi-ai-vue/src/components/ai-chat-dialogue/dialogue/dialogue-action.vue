@@ -3,8 +3,8 @@
     import DialogueActionFoundation, { type DialogueActionAdapter, type DialogueActionKey, type DialogueActionState, getDialogueActionFlags, getDialogueActionKeys } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/action-foundation';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/constants';
     import type { Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-    import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
-    import useFoundation from '@fibrae/semi-ui-vue/base/use-foundation';
+    import { handoverFocus } from '@fibrae/semi-foundation/utils';
+    import { useFoundation } from '@fibrae/semi-ui-vue/base';
     import { useLocale } from '@fibrae/semi-ui-vue/composables';
     import Modal from '@fibrae/semi-ui-vue/modal/index';
     import Toast from '@fibrae/semi-ui-vue/toast/index';

@@ -1,15 +1,14 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import type { Locale } from 'date-fns';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/time-picker/constants';
     import TimePickerFoundation, { type TimePickerAdapter, type TimePickerBaseProps } from '@fibrae/semi-foundation/components/time-picker/foundation';
     import { getDateFnsLocale } from '@fibrae/semi-foundation/utils/date-fns-locale';
     import '@fibrae/semi-foundation/components/time-picker/time-picker.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import useClickOutside from '../../hooks/use-click-outside.svelte.js';
-    import { splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { useClickOutside } from '../../hooks/index.js';
+    import { splitControlAttrs } from '../../utils/index.js';
     import { useConfig } from '../config-provider/index.js';
     import { getInputGroupInScope, setInputGroupContext } from '../input/context.js';
     import { useLocale } from '../locale/index.js';

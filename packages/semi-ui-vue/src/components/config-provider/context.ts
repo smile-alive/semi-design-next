@@ -1,5 +1,5 @@
 import type { ComputedRef } from 'vue';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 import type { ContextValue } from './interface';
 
 export const [provideConfigContext, useConfigContext] = createContext<ComputedRef<ContextValue>>('ConfigProvider', { optional: true });

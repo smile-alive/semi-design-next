@@ -2,7 +2,7 @@ import { Activity, Component, StrictMode, useState, type Ref } from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { page, userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconHelpCircle } from '@fibrae/semi-icons-react';
 import { Button, Input, Modal, Popover, Select, Switch, Tag, Tooltip, Typography } from '@fibrae/semi-ui-react';
 import type { InputProps } from '@fibrae/semi-ui-react/input';

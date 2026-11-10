@@ -4,12 +4,9 @@
     import { cssClasses, numbers } from '@fibrae/semi-foundation/components/navigation/constants';
     import NavigationFoundation, { type NavigationAdapter, type NavigationBaseProps, type NavigationState, type NavItemType } from '@fibrae/semi-foundation/components/navigation/foundation';
     import '@fibrae/semi-foundation/components/navigation/navigation.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useSlotVersion from '../../composables/use-slot-version';
-    import elementType from '../../utils/element-type';
-    import slotNodes, { type KeyedNode } from '../../utils/slot-nodes';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
+    import { useSlotVersion } from '../../composables/index';
+    import { elementType, slotNodes, type KeyedNode } from '../../utils/index';
     import { provideNavContext } from './context';
     import type { NavEmits, NavProps, NavSlots } from './interface';
     import NavFooter from './nav-footer.vue';

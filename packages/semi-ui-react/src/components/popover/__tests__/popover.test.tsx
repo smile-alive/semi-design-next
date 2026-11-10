@@ -2,10 +2,10 @@ import { StrictMode, createRef, useState } from 'react';
 import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { Button, Select, Tag } from '@fibrae/semi-ui-react';
 import type { RenderContent } from '@fibrae/semi-ui-react/tooltip';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import Popover, { type PopoverHandle, type PopoverProps } from '../index';
 
 const wrapSelector = `.${BASE_CLASS_PREFIX}-popover`;

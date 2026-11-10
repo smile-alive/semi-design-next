@@ -2,7 +2,7 @@
 import { fireEvent } from '@testing-library/vue';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
-import { semiGlobalKey, SemiGlobal } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobalKey, SemiGlobal } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import TagGroup from '../group.vue';
 import type { TagCloseEvent, TagEmits, TagGroupEmits, TagGroupItem, TagGroupProps } from '../interface';

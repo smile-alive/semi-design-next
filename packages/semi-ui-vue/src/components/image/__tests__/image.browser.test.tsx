@@ -3,7 +3,7 @@ import { shallowRef, type VNode } from 'vue';
 import { screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { page, userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconChevronLeft, IconChevronRight, IconDownload, IconMinus, IconPlus, IconRealSizeStroked, IconRotate, IconUploadError, IconWindowAdaptionStroked } from '@fibrae/semi-icons-vue';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import { render } from '@test/utils/vue';

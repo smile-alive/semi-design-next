@@ -3,7 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
     import type { ScrollAlign } from '@fibrae/semi-foundation/components/tree/foundation';
     import { getTransitionNodes, sameKeys } from '@fibrae/semi-foundation/components/tree/shared';
-    import VirtualList from '../../internal/virtual-list.svelte';
+    import { VirtualList } from '../../internal/index.js';
     import { useConfig } from '../config-provider/index.js';
     import AutoSizer from './auto-sizer.svelte';
     import type { FlattenNode, NodeListProps } from './interface.js';

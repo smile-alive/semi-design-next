@@ -2,9 +2,8 @@
     import { Text, type VNode } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/empty/constants';
     import '@fibrae/semi-foundation/components/empty/empty.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import slotNodes, { type KeyedNode } from '../../utils/slot-nodes';
+    import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
+    import { slotNodes, type KeyedNode } from '../../utils/index';
     import { TypographyTitle } from '../typography';
     import type { EmptyProps, EmptySlots } from './interface';
     import useThemeMode from './use-theme-mode';

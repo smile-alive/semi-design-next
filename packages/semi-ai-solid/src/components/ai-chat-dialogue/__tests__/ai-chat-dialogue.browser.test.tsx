@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { cdp, page, userEvent } from 'vite-plus/test/browser';
 import type { ContentItem, Message } from '@fibrae/semi-ai-foundation/components/ai-chat-dialogue/foundation';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import Modal from '@fibrae/semi-ui-solid/modal/index';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import AIChatDialogue from '../index';

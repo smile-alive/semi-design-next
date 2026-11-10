@@ -1,6 +1,6 @@
 import { clamp } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { isSecondaryPress } from '../../utils/pointer';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { isSecondaryPress } from '../../utils/index';
 
 export interface DragMoveAdapter<P extends DragMoveBaseProps = DragMoveBaseProps> extends DefaultAdapter<P, object> {
     notifyMouseDown: (e: PointerEvent) => void;

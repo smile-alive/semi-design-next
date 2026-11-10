@@ -3,11 +3,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/scroll-list/constants';
     import ItemFoundation, { type ScrollItemAdapter, type ScrollItemBaseState, wheelMode } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
     import '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import SlotFragment from '../../base/slot-fragment';
-    import useFoundation from '../../base/use-foundation';
-    import { splitControlAttrs } from '../../utils/control-attrs';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, SlotFragment, useFoundation } from '../../base/index';
+    import { splitControlAttrs } from '../../utils/index';
     import type { ScrollItemEmits, ScrollItemHandle, ScrollItemProps, ScrollItemSelectData, ScrollListItem } from './interface';
 
     type Foundation = ItemFoundation<T, ScrollItemProps<T>>;

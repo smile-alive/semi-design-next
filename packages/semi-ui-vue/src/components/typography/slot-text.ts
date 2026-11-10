@@ -1,6 +1,5 @@
 import { type VNode, Text, createTextVNode } from 'vue';
-import { toVNodes } from '../../utils/read-vnode';
-import slotNodes, { type KeyedNode } from '../../utils/slot-nodes';
+import { toVNodes, slotNodes, type KeyedNode } from '../../utils/index';
 
 export function elementChildren(node: VNode): KeyedNode[] {
     // h() children may hold strings, numbers and nested arrays, which Vue only normalizes on mount

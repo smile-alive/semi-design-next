@@ -1,6 +1,6 @@
 <script lang="ts">
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/ai-chat-input/constants';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
     import { Button } from '@fibrae/semi-ui-svelte/button/index';
     import { Dropdown, DropdownItem, DropdownMenu } from '@fibrae/semi-ui-svelte/dropdown/index';
     import { useLocale } from '@fibrae/semi-ui-svelte/hooks';

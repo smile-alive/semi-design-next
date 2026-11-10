@@ -3,9 +3,8 @@
 import { type Component, type IntrinsicElementAttributes, type PropType, type Slot, camelize, capitalize, createTextVNode, createVNode, defineComponent, mergeProps, shallowRef, toHandlerKey, watch } from 'vue';
 import { cssClasses, type FieldPropKey } from '@fibrae/semi-foundation/components/form/constants';
 import { getFieldAriaProps, resolveFieldView } from '@fibrae/semi-foundation/components/form/utils';
-import warning from '@fibrae/semi-foundation/utils/warning';
-import { handOn } from '../../utils/hand-on';
-import { hasSlotContent } from '../../utils/slot-nodes';
+import { warning } from '@fibrae/semi-foundation/utils';
+import { handOn, hasSlotContent } from '../../utils/index';
 import type { ValidateStatus } from '../input/interface';
 import useField from './composables/use-field';
 import FieldLayout from './field-layout.vue';

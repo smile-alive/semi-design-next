@@ -2,11 +2,10 @@ import { type JSX, Show, children, createMemo, createUniqueId, mergeProps, split
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/collapse/constants';
 import CollapseFoundation from '@fibrae/semi-foundation/components/collapse/foundation';
-import { isEventInside } from '@fibrae/semi-foundation/utils/dom';
+import { isEventInside } from '@fibrae/semi-foundation/utils';
 import { IconChevronDown, IconChevronUp } from '@fibrae/semi-icons-solid';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import hasContent from '../../utils/has-content';
+import { type ElementProps, useDefaultProps } from '../../base/index';
+import { hasContent } from '../../utils/index';
 import Collapsible from '../collapsible';
 import { useCollapseContext } from './context';
 

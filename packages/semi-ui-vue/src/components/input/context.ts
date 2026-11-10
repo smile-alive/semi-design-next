@@ -1,6 +1,5 @@
 import type { ComputedRef } from 'vue';
-import { createContext } from '../../base/create-context';
-import { usePopupLayer } from '../../base/popup-layer';
+import { createContext, usePopupLayer } from '../../base/index';
 import type { InputSize } from './interface';
 
 export interface InputGroupContext {

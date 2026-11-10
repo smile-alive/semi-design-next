@@ -1,8 +1,8 @@
 <script lang="ts">
     import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/steps/steps.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import { Col, Row } from '../grid/index.js';
     import { setStepsContext } from './context.js';
     import type { StepsProps } from './interface.js';

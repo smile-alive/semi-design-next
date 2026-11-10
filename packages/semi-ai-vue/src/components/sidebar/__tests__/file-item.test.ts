@@ -5,7 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import Toast from '@fibrae/semi-ui-vue/toast/index';
 import type { UploadCustomRequestArgs, UploadEmits } from '@fibrae/semi-ui-vue/upload/interface';
-import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
 import { render } from '@test/utils/vue';
 import Sidebar, { type ImageUploadNodeOptions } from '..';
 

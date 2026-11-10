@@ -4,12 +4,11 @@
     import FieldStore from '@fibrae/semi-foundation/components/form/field-store';
     import type { FieldRegistration } from '@fibrae/semi-foundation/components/form/interface';
     import { createFieldRegistration, getFieldAriaProps, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue, resolveFieldView } from '@fibrae/semi-foundation/components/form/utils';
-    import { joinIds } from '@fibrae/semi-foundation/utils/a11y';
+    import { joinIds, warning } from '@fibrae/semi-foundation/utils';
     import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
-    import warning from '@fibrae/semi-foundation/utils/warning';
     import '@fibrae/semi-foundation/components/form/form.scss';
-    import useStoreSnapshot from '../../hooks/use-store-snapshot.svelte.js';
-    import { type SlotKind, trackSlotKind } from '../../utils/slot-kind.js';
+    import { useStoreSnapshot } from '../../hooks/index.js';
+    import { type SlotKind, trackSlotKind } from '../../utils/index.js';
     import type { ColProps } from '../grid/interface.js';
     import { type FormContextValue, getArrayFieldContext, getFormContext, getFormInputGroupContext } from './context.js';
     import ErrorMessage from './error-message.svelte';

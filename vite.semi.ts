@@ -36,6 +36,7 @@ const sourcePackages: { name: string; dir: string; entry?: string }[] = [
 // A UI or AI package's subpaths mirror its exports map: entry files and the infrastructure directories map to src/ as
 // written, every other subpath is a component under src/components/
 const uiEntryFiles = 'hooks|composables|primitives|tokens|locale';
+const uiDirEntries = 'base|utils|internal';
 const uiDirs = 'base|utils|hooks|composables|primitives|internal|__tests__';
 
 export const semiSourceAliases: Alias[] = [
@@ -44,6 +45,7 @@ export const semiSourceAliases: Alias[] = [
             ? [
                   { find: new RegExp(`^${name}/?$`), replacement: resolve(`${dir}/${entry}`) },
                   { find: new RegExp(`^${name}/(${uiEntryFiles})$`), replacement: `${resolve(dir)}/$1.ts` },
+                  { find: new RegExp(`^${name}/(${uiDirEntries})$`), replacement: `${resolve(dir)}/$1/index` },
                   { find: new RegExp(`^${name}/(${uiDirs})/`), replacement: `${resolve(dir)}/$1/` },
                   { find: new RegExp(`^${name}/`), replacement: `${resolve(dir)}/components/` },
               ]

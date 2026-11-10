@@ -1,6 +1,5 @@
-import BaseFoundation, { type DefaultAdapter, type DirectionContext } from '../../base/foundation';
-import { handlePrevent, getListTargetIndex, setFocusToItem, Typeahead } from '../../utils/a11y';
-import { getPopupTrigger, POPUP_SELECTOR } from '../../utils/layer';
+import { BaseFoundation, type DefaultAdapter, type DirectionContext } from '../../base/index';
+import { handlePrevent, getListTargetIndex, setFocusToItem, Typeahead, getPopupTrigger, POPUP_SELECTOR } from '../../utils/index';
 import { strings } from './constants';
 
 const { ITEM_SELECTOR } = strings;

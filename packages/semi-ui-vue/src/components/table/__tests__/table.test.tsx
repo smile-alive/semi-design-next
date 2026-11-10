@@ -3,11 +3,11 @@ import { defineComponent, nextTick, reactive, shallowReactive, shallowRef, type 
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { numbers } from '@fibrae/semi-foundation/components/table/constants';
-import type { VirtualListScrollArgs } from '@fibrae/semi-ui-vue/internal/virtual-list.vue';
+import type { VirtualListScrollArgs } from '@fibrae/semi-ui-vue/internal';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
-import semiGlobal from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
 import { getData, getNestData, getRandomNumber, render } from '@test/utils/vue';
 import Table, { TableColumn, type ColumnProps, type TableCellSlotProps, type TableHandle, type TableHeaderCellSlotProps, type TableRowAttrs, type TableTitleSlotProps } from '..';
 import { Col } from '../../grid';

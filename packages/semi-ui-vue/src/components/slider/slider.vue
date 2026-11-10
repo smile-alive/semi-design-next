@@ -3,12 +3,8 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/slider/constants';
     import SliderFoundation, { type HandleDot, type SliderAdapter, type SliderProps as BasicSliderProps, type SliderState } from '@fibrae/semi-foundation/components/slider/foundation';
     import '@fibrae/semi-foundation/components/slider/slider.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import SlotFragment from '../../base/slot-fragment';
-    import useFoundation from '../../base/use-foundation';
-    import { hasAutofocus, vAutofocus } from '../../utils/autofocus';
-    import { isAriaKey, splitControlAttrs } from '../../utils/control-attrs';
+    import { type ElementProps, type EmitHandlers, semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, SlotFragment, useFoundation } from '../../base/index';
+    import { hasAutofocus, vAutofocus, isAriaKey, splitControlAttrs } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';
     import Tooltip from '../tooltip';

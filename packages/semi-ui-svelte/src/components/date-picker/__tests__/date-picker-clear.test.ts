@@ -1,6 +1,6 @@
 import { fireEvent } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { changes, dp, getInput, getInputs, getRoot, setup, settle, useBaseDate } from './test-utils';
 
 useBaseDate();

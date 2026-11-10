@@ -1,6 +1,6 @@
 import React from 'react';
 import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
-import { noop } from '@fibrae/semi-foundation/utils/function';
+import { noop } from '@fibrae/semi-foundation/utils';
 import { IconChevronRight, IconTreeTriangleRight } from '@fibrae/semi-icons-react';
 import CSSAnimation from '../../internal/css-animation';
 import useLocale from '../locale/use-locale';

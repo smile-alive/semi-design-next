@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import { format } from 'date-fns';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { dp, settle, setup } from './test-utils';
 
 export async function click(element: Element) {

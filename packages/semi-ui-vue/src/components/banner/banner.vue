@@ -1,14 +1,12 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/banner/constants';
     import BannerFoundation, { type BannerAdapter } from '@fibrae/semi-foundation/components/banner/foundation';
-    import { findFocusAfter } from '@fibrae/semi-foundation/utils/focus-handover';
+    import { findFocusAfter } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/banner/banner.scss';
     import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useFocusHandover from '../../composables/use-focus-handover';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import { type ElementProps, type EmitHandlers, semiDefault, useFoundation } from '../../base/index';
+    import { useFocusHandover } from '../../composables/index';
+    import { hasSlotContent } from '../../utils/index';
     import IconButton from '../icon-button';
     import useLocale from '../locale/use-locale';
     import { TypographyParagraph, TypographyTitle } from '../typography';

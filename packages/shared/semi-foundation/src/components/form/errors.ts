@@ -1,5 +1,5 @@
 import { isPlainObject } from 'es-toolkit';
-import warning from '../../utils/warning';
+import { warning } from '../../utils/index';
 
 /** A field's errors; undefined when valid. `['']` fails without a text, as a rule with `message: ''` does */
 export type FieldError = string[];

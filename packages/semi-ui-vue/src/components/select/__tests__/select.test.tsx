@@ -3,9 +3,9 @@ import { createApp, defineComponent, h, KeepAlive, reactive, ref, type Component
 import userEvent from '@testing-library/user-event';
 import { createEvent, fireEvent, screen, waitFor, within } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
-import semiGlobal, { type OverrideDefaultProps } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal, type OverrideDefaultProps } from '@fibrae/semi-ui-vue/utils';
 import { mockResizeObserver, render } from '@test/utils/vue';
 import Select, { SelectOptGroup, SelectOption, type SelectHandle, type SelectOptionProps } from '..';
 import ConfigProvider from '../../config-provider';

@@ -1,6 +1,6 @@
 /** @jsxImportSource vue */
 import { defineComponent, nextTick, shallowReactive, shallowRef } from 'vue';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { render } from '@test/utils/vue';
 import Table, { type ColumnProps, type TableHandle } from '..';
 

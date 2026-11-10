@@ -6,7 +6,7 @@ import { escapeRegExp } from 'es-toolkit';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, onTestFinished, vi, type Mock } from 'vite-plus/test';
 import { IconSetting } from '@fibrae/semi-icons-vue';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
-import semiGlobal, { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils/semi-global';
+import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
 import { render, sleep } from '@test/utils/vue';
 import { DropdownItem } from '../../dropdown';
 import Typography, { TypographyNumeral, TypographyParagraph, TypographyText, TypographyTitle, type TypographyCopyActionProps, type TypographyCopyableConfig, type TypographyEllipsisTooltipProps, type TypographyNumeralProps, type TypographyTitleProps } from '../index';

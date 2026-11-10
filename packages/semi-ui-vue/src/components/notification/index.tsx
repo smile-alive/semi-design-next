@@ -2,12 +2,11 @@
 // JSX because the imperative API mounts a NotificationList vnode outside any template and sets its appContext by hand.
 
 import { type App, render } from 'vue';
-import { omitInstanceIds } from '@fibrae/semi-foundation/base/constants';
+import { omitInstanceIds } from '@fibrae/semi-foundation/base';
 import NotificationApi from '@fibrae/semi-foundation/components/notification/notification-api-foundation';
-import { assertClient } from '@fibrae/semi-foundation/utils/assert-client';
-import { getInstalledApp, rootAppContext, setInstalledApp } from '../../base/installed-app';
-import { useSemiGlobal } from '../../base/semi-default';
-import semiGlobal from '../../utils/semi-global';
+import { assertClient } from '@fibrae/semi-foundation/utils';
+import { getInstalledApp, rootAppContext, setInstalledApp, useSemiGlobal } from '../../base/index';
+import { semiGlobal } from '../../utils/index';
 import type { NoticeProps } from './interface';
 import NotificationList from './notification-list.vue';
 import useNotification from './use-notification';

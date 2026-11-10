@@ -2,7 +2,7 @@ import { flushSync } from 'svelte';
 import { fireEvent, render as renderSvelte } from '@testing-library/svelte';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
-import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils';
 import { mockResizeObserverCore } from '@test/utils/dom/resize-observer-core';
 import Cropper from '../cropper.svelte';
 import type { CropperProps } from '../interface';

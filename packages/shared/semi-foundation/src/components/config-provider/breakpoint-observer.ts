@@ -1,6 +1,5 @@
 import { isEqual } from 'es-toolkit';
-import { registerMediaQuery } from '../../utils/dom';
-import warning from '../../utils/warning';
+import { registerMediaQuery, warning } from '../../utils/index';
 import { defaultResponsiveMap } from '../grid/constants';
 import type { Breakpoint, BreakpointScreens, OnBreakpointChangeCallback, OnBreakpointScreensCallback, ResponsiveMap } from './responsive-types';
 

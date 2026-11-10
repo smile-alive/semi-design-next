@@ -1,7 +1,7 @@
 import React, { type ReactNode } from 'react';
 import type { strings } from '@fibrae/semi-foundation/components/carousel/constants';
 import type { CarouselAutoPlay } from '@fibrae/semi-foundation/components/carousel/foundation';
-import type { ElementProps } from '../../base/base';
+import type { ElementProps } from '../../base/index';
 
 export interface CarouselHandle {
     next: () => void;

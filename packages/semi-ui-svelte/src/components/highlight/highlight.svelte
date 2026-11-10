@@ -2,7 +2,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/highlight/constants';
     import { findAll } from '@fibrae/semi-foundation/components/highlight/foundation';
     import '@fibrae/semi-foundation/components/highlight/highlight.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import type { HighlightProps, HighlightStyle } from './interface.js';
 
     const defaults = useDefaultProps('Highlight');

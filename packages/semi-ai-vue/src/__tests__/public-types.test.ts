@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, expectTypeOf, it } from 'vite-plus/test';
-import type { OverrideDefaultProps } from '@fibrae/semi-ui-vue/utils/semi-global';
+import type { OverrideDefaultProps } from '@fibrae/semi-ui-vue/utils';
 import type { SidebarContainerHandle as SubpathHandle } from '../components/sidebar/index';
 import type { AIChatDialogueMessage, AIChatDialogueProps, AIChatInputEmits, AIChatInputMessageContent, ChatEmits, ChatMessage, ChatProps, SidebarContainerHandle } from '../index';
 

@@ -1,5 +1,5 @@
 import { Text, type VNode } from 'vue';
-import slotNodes from '../../utils/slot-nodes';
+import { slotNodes } from '../../utils/index';
 
 /** The source of a code element from its slot, untrimmed: a fenced block ends with its newline, as in React. */
 export default function codeText(nodes: VNode[]): string {

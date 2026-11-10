@@ -2,7 +2,7 @@ import type { JSX, Ref } from 'solid-js';
 import type { ChatAlign, ChatMode, SendHotKey } from '@fibrae/semi-ai-foundation/components/chat/constants';
 import type { EnableUploadProps, Message } from '@fibrae/semi-ai-foundation/components/chat/foundation';
 import type { AvatarProps } from '@fibrae/semi-ui-solid/avatar/index';
-import type { ElementProps } from '@fibrae/semi-ui-solid/base/element-props';
+import type { ElementProps } from '@fibrae/semi-ui-solid/base';
 import type { MarkdownRenderComponents, MarkdownRenderProps as OriginMarkdownRenderProps } from '@fibrae/semi-ui-solid/markdown-render/index';
 import type { TooltipProps } from '@fibrae/semi-ui-solid/tooltip/index';
 import type { FileItem, UploadProps } from '@fibrae/semi-ui-solid/upload/index';

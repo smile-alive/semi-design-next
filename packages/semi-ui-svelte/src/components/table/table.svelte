@@ -9,12 +9,10 @@
     import { cssClasses, numbers, strings } from '@fibrae/semi-foundation/components/table/constants';
     import TableFoundation, { type BaseColumnProps, type TableAdapter } from '@fibrae/semi-foundation/components/table/foundation';
     import { amendTableWidth, applyColumnResize, findColumn, flattenColumns, flattenData, getCellWidths, getColumnResizeChange, getHeaderRowCount, getResizableColumns, mergedRowExpandable, type FlattenData, type GroupFlattenData } from '@fibrae/semi-foundation/components/table/utils';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
-    import warning from '@fibrae/semi-foundation/utils/warning';
+    import { toCssLength, warning } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/table/table.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
     import { getConfigContext } from '../config-provider/context.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import Spin from '../spin/spin.svelte';

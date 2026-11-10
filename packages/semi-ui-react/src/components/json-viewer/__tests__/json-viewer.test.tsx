@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, expectTypeOf, it, vi, type Mock } from 'v
 import { JsonViewer as Core } from '@fibrae/semi-json-viewer-core';
 import { en_US, zh_CN } from '@fibrae/semi-ui-react/locale';
 import LocaleProvider from '@fibrae/semi-ui-react/locale/locale-provider';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { mockResizeObserver, sleep } from '@test/utils/react';
 import JsonViewer, { type JsonViewerHandle, type JsonViewerProps } from '../index';
 

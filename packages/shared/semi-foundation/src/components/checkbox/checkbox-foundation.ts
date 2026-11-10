@@ -1,5 +1,5 @@
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { focusWithoutRing } from '../../utils/supports';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { focusWithoutRing } from '../../utils/index';
 import type { CheckboxValue } from './checkbox-group-foundation';
 import { strings } from './constants';
 

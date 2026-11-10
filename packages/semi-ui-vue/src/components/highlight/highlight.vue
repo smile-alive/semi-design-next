@@ -3,7 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/highlight/constants';
     import { findAll } from '@fibrae/semi-foundation/components/highlight/foundation';
     import '@fibrae/semi-foundation/components/highlight/highlight.scss';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
+    import { semiDefault, semiGlobalDefault } from '../../base/index';
     import type { HighlightProps } from './interface';
 
     defineOptions({ inheritAttrs: false });

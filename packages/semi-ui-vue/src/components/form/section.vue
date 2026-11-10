@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
     import '@fibrae/semi-foundation/components/form/form.scss';
-    import type { ElementProps } from '../../base/element-props';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import type { ElementProps } from '../../base/index';
+    import { hasSlotContent } from '../../utils/index';
     import type { FormSectionSlots } from './interface';
 
     defineProps</* @vue-ignore */ ElementProps<'fieldset'>>();

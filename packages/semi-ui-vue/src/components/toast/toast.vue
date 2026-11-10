@@ -1,14 +1,13 @@
 <script setup lang="ts">
     import { computed, isVNode, onBeforeUnmount, onMounted, useTemplateRef, type Component } from 'vue';
-    import { isAlertType } from '@fibrae/semi-foundation/base/list-store';
+    import { isAlertType } from '@fibrae/semi-foundation/base';
     import { cssClasses, getStackLayerTransform, numbers } from '@fibrae/semi-foundation/components/toast/constants';
     import ToastFoundation, { type ToastAdapter, type ToastState, type ToastType } from '@fibrae/semi-foundation/components/toast/toast-foundation';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import { IconAlertCircle, IconAlertTriangle, IconClose, IconInfoCircle, IconTickCircle } from '@fibrae/semi-icons-vue';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useNoticeClose from '../../composables/use-notice-close';
-    import elementType from '../../utils/element-type';
+    import { semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation } from '../../base/index';
+    import { useNoticeClose } from '../../composables/index';
+    import { elementType } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import IconButton from '../icon-button';
     import useLocale from '../locale/use-locale';

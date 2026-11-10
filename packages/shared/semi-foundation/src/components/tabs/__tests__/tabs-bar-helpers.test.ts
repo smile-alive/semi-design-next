@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
-import { scrollIntoViewWithin } from '@fibrae/semi-foundation/utils/supports';
+import { scrollIntoViewWithin } from '@fibrae/semi-foundation/utils';
 import { getBarItemKey, getItemKeyByBarItemKey, getTabKeyAttrs } from '../constants';
 import TabsFoundation, { type MotionView } from '../foundation';
 import TabBarFoundation from '../tab-bar-foundation';

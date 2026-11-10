@@ -4,7 +4,7 @@
     import type { Editor } from '@tiptap/vue-3';
     import { cssClasses } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
     import { type FileMenuButton, type FileMenuButtonKey, type Level, type TextRange, clearSelectionHighlight, confirmLink, getFileMenuItems, readFileMenuState, readLinkEditorOpenState, unsetLink } from '@fibrae/semi-ai-foundation/components/sidebar/file-extensions';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
     import {
         IconAlignCenter,
         IconAlignJustify,

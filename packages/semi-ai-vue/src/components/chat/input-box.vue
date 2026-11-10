@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { computed, h, type StyleValue, useTemplateRef } from 'vue';
     import InputBoxFoundation, { type InputBoxAdapter, type InputBoxState } from '@fibrae/semi-ai-foundation/components/chat/inputbox-foundation';
-    import useFoundation from '@fibrae/semi-ui-vue/base/use-foundation';
+    import { useFoundation } from '@fibrae/semi-ui-vue/base';
     import type { FileItem } from '@fibrae/semi-ui-vue/upload/index';
     import ClearButton from './clear-button.vue';
     import InputBoxInput from './input-box-input.vue';

@@ -5,10 +5,9 @@ import { getFormApiProxyInternals } from '@fibrae/semi-foundation/components/for
 import FormFoundation, { type BaseFormAdapter } from '@fibrae/semi-foundation/components/form/foundation';
 import type { AllErrors, FieldBridge, FormFoundationState } from '@fibrae/semi-foundation/components/form/interface';
 import { pickFormProps } from '@fibrae/semi-foundation/components/form/utils';
-import warning from '@fibrae/semi-foundation/utils/warning';
+import { warning } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/form/form.scss';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
+import { useDefaultProps, useFoundation } from '../../base/index';
 import { cloneDeep } from '../../utils/index';
 import useLocale from '../locale/use-locale';
 import { FormStateContext, FormApiContext, FieldBridgeContext } from './context';

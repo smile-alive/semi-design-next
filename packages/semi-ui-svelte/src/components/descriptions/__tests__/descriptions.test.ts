@@ -1,9 +1,9 @@
 import { flushSync } from 'svelte';
 import { render } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
-import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils';
 import type { DescriptionsData, DescriptionsProps } from '../interface';
 import DescriptionsStore from './descriptions-store.svelte';
 

@@ -4,9 +4,7 @@
     import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxGroupBaseState } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
     import { checkboxGroupClasses, strings } from '@fibrae/semi-foundation/components/checkbox/constants';
     import '@fibrae/semi-foundation/components/checkbox/checkbox.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
     import Checkbox from './checkbox.vue';
     import { provideCheckboxGroupContext } from './context';
     import type { CheckboxGroupEmits, CheckboxGroupProps, CheckboxGroupSlots, CheckboxOptionItem, CheckboxValue } from './interface';

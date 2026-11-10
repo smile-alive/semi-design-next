@@ -3,11 +3,9 @@ import { useId } from 'react';
 import clsx from 'clsx';
 import CheckboxGroupFoundation, { type CheckboxGroupAdapter, type CheckboxGroupBaseState, type CheckboxValue } from '@fibrae/semi-foundation/components/checkbox/checkbox-group-foundation';
 import { checkboxGroupClasses as css, strings } from '@fibrae/semi-foundation/components/checkbox/constants';
-import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
-import type { ElementProps } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import { hasContent } from '../../utils';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { hasContent } from '../../utils/index';
 import Checkbox, { type CheckboxProps } from './checkbox';
 import { CheckboxGroupContext } from './context';
 

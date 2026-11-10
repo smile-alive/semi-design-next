@@ -1,7 +1,7 @@
 import { For, type JSX, Show, createSignal } from 'solid-js';
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { sleep } from '@test/utils/solid';
 import { type FormApi, type FormProps, Form, FormInput, FormSelect } from '..';
 

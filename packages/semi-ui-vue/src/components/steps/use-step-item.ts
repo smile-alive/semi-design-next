@@ -1,6 +1,6 @@
 import { useAttrs } from 'vue';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
-import { hasClickListener } from '../../utils/control-attrs';
+import { namedRole } from '@fibrae/semi-foundation/utils';
+import { hasClickListener } from '../../utils/index';
 
 /**
  * The click and keyboard behavior every step type shares: a step is a button when its Steps listens for changes

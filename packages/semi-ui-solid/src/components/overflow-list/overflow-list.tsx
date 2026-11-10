@@ -2,15 +2,11 @@ import { type Accessor, type JSX, type ResolvedChildren, For, Show, children, cr
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/overflow-list/constants';
 import OverflowListFoundation, { type ItemKeyOption, type OverflowListAdapter, type OverflowListBaseProps, type OverflowListBaseState } from '@fibrae/semi-foundation/components/overflow-list/foundation';
-import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+import { namedRole } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/overflow-list/overflow-list.scss';
-import type { ElementProps } from '../../base/element-props';
-import useDefaultProps from '../../base/use-default-props';
-import useFoundation from '../../base/use-foundation';
-import useIntersectionObserver from '../../primitives/use-intersection-observer';
-import useResizeObserver from '../../primitives/use-resize-observer';
-import hasContent from '../../utils/has-content';
-import mergeRefs from '../../utils/merge-refs';
+import { type ElementProps, useDefaultProps, useFoundation } from '../../base/index';
+import { useIntersectionObserver, useResizeObserver } from '../../primitives/index';
+import { hasContent, mergeRefs } from '../../utils/index';
 import MeasuredBox from './measured-box';
 import ScrollItem from './scroll-item';
 

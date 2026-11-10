@@ -1,4 +1,4 @@
-import { VALIDATE_STATUS, BASE_CLASS_PREFIX } from '../../base/constants';
+import { VALIDATE_STATUS, BASE_CLASS_PREFIX } from '../../base/index';
 import { strings as tooltipStrings } from '../tooltip/constants';
 
 export const cssClasses = {

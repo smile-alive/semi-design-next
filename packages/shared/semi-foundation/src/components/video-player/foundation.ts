@@ -1,7 +1,6 @@
 import { clamp, throttle } from 'es-toolkit';
-import FocusTrapHandle from '../../base/focus-handle';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { formatLocale } from '../../locale/format';
+import { FocusTrapHandle, BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { formatLocale } from '../../locale/index';
 import { ignoreExpectedMediaErrors } from './utils';
 
 export interface VideoPlayerBaseProps {

@@ -1,4 +1,4 @@
-import { createToken } from '../../base/token';
+import { createToken } from '../../base/index';
 import type { LinkProps } from './interface';
 
 export const LINK = 'Anchor.Link';

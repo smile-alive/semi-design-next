@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-ai-foundation/components/sidebar/constants';
 import { IconCodeStroked, IconFullScreenStroked, IconFile } from '@fibrae/semi-icons-react';
-import type { ElementProps } from '@fibrae/semi-ui-react/base/base';
+import type { ElementProps } from '@fibrae/semi-ui-react/base';
 import Button from '@fibrae/semi-ui-react/button/index';
 import CodeHighlight, { type CodeHighlightProps } from '@fibrae/semi-ui-react/code-highlight/index';
 import Collapse from '@fibrae/semi-ui-react/collapse/index';

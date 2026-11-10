@@ -1,8 +1,8 @@
 import type { ComputedRef } from 'vue';
-import type { AutoCloseListState } from '@fibrae/semi-foundation/base/auto-close-foundation';
+import type { AutoCloseListState } from '@fibrae/semi-foundation/base';
 import type { NoticeInstance } from '@fibrae/semi-foundation/components/notification/notification-foundation';
 import type { ConfigProps } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 
 /** A notice as the store holds it: `open` always gives an id, and the offsets ride along from the options */
 export type ListedNotice = NoticeInstance & Required<Pick<NoticeInstance, 'id'>> & Pick<ConfigProps, 'top' | 'bottom' | 'left' | 'right'>;

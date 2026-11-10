@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { Toast } from '@fibrae/semi-ui-svelte/toast/index';
 import type { UploadCustomRequestArgs } from '@fibrae/semi-ui-svelte/upload/interface';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import { Sidebar } from '../index';
 import type { FileItemProps, ImageUploadNodeOptions } from '../interface';
 

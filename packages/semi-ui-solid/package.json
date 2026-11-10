@@ -37,6 +37,21 @@
             "solid": "./dist/locale.jsx",
             "default": "./dist/locale.js"
         },
+        "./base": {
+            "types": "./dist/base/index.d.ts",
+            "solid": "./dist/base/index.jsx",
+            "default": "./dist/base/index.js"
+        },
+        "./internal": {
+            "types": "./dist/internal/index.d.ts",
+            "solid": "./dist/internal/index.jsx",
+            "default": "./dist/internal/index.js"
+        },
+        "./utils": {
+            "types": "./dist/utils/index.d.ts",
+            "solid": "./dist/utils/index.jsx",
+            "default": "./dist/utils/index.js"
+        },
         "./base/*": {
             "types": "./dist/base/*.d.ts",
             "solid": "./dist/base/*.jsx",

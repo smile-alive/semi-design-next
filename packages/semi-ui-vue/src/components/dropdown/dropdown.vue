@@ -4,10 +4,8 @@
     import DropdownFoundation, { type DropdownAdapter, type DropdownBaseState } from '@fibrae/semi-foundation/components/dropdown/foundation';
     import { cssClasses as tooltipClasses } from '@fibrae/semi-foundation/components/tooltip/constants';
     import '@fibrae/semi-foundation/components/dropdown/dropdown.scss';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import elementType from '../../utils/element-type';
-    import slotNodes, { type KeyedNode } from '../../utils/slot-nodes';
+    import { semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
+    import { elementType, slotNodes, type KeyedNode } from '../../utils/index';
     import useConfig from '../config-provider/use-config';
     import { provideTooltipPrefixContext } from '../tooltip/context';
     import type { FocusTarget, TooltipHandle, TooltipProps } from '../tooltip/interface';

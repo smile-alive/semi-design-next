@@ -4,9 +4,9 @@
     import TabsFoundation from '@fibrae/semi-foundation/components/tabs/foundation';
     import TabBarFoundation, { type TabBarAdapter, type TabBarState } from '@fibrae/semi-foundation/components/tabs/tab-bar-foundation';
     import { IconChevronDown } from '@fibrae/semi-icons-vue';
-    import useFoundation from '../../base/use-foundation';
-    import useResizeObserver from '../../composables/use-resize-observer';
-    import slotNodes, { type KeyedNode } from '../../utils/slot-nodes';
+    import { useFoundation } from '../../base/index';
+    import { useResizeObserver } from '../../composables/index';
+    import { slotNodes, type KeyedNode } from '../../utils/index';
     import Dropdown, { DropdownItem, DropdownMenu } from '../dropdown';
     import useLocale from '../locale/use-locale';
     import OverflowList from '../overflow-list';

@@ -1,9 +1,8 @@
 import { format, set, addMonths, subMonths, subYears, addYears, differenceInCalendarMonths, isSameDay, parseISO } from 'date-fns';
 import { isEqual } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { formatLocale } from '../../locale/format';
-import type { Locale } from '../../locale/interface';
-import type { ArrayElement } from '../../utils/type';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { formatLocale, type Locale } from '../../locale/index';
+import type { ArrayElement } from '../../utils/index';
 import { getDefaultFormatTokenByType } from './_utils/get-default-format-token';
 import getDefaultPickerDate from './_utils/get-default-picker-date';
 import type { WeekStartNumber } from './_utils/get-month-table';

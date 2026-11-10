@@ -2,8 +2,8 @@ import { computed, onActivated, onBeforeUnmount, onDeactivated, onMounted, onSco
 import FieldStore from '@fibrae/semi-foundation/components/form/field-store';
 import type { FieldRegistration } from '@fibrae/semi-foundation/components/form/interface';
 import { createFieldRegistration, isRequiredByRules, mergeFieldConfig, resolveFieldInitValue } from '@fibrae/semi-foundation/components/form/utils';
+import { warning } from '@fibrae/semi-foundation/utils';
 import * as ObjectUtil from '@fibrae/semi-foundation/utils/object';
-import warning from '@fibrae/semi-foundation/utils/warning';
 import { useArrayFieldContext, useFormContext, useFormInputGroupContext } from '../context';
 import type { CommonFieldProps } from '../interface';
 import { cloneDeep } from '../utils';

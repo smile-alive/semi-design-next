@@ -5,9 +5,8 @@
     import '@fibrae/semi-foundation/components/button/button.scss';
     import '@fibrae/semi-foundation/components/button/icon-button.scss';
     import { IconAILoading } from '@fibrae/semi-icons-vue';
-    import type { ElementProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import slotNodes, { hasSlotContent } from '../../utils/slot-nodes';
+    import { type ElementProps, semiDefault, semiGlobalDefault } from '../../base/index';
+    import { slotNodes, hasSlotContent } from '../../utils/index';
     import SpinIcon from '../spin/icon.vue';
     import type { ButtonProps, ButtonSlots } from './interface';
     import useButtonLooks from './use-button';

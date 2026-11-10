@@ -4,11 +4,10 @@ import clsx from 'clsx';
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/progress/constants';
 import { type StrokeArr, generateColor } from '@fibrae/semi-foundation/components/progress/generates';
 import { calcCircleGeometry, calcPercent, createPercentAnimation } from '@fibrae/semi-foundation/components/progress/utils';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import type { Size } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/progress/progress.scss';
-import type { ElementProps, Motion } from '../../base/base';
-import useDefaultProps from '../../base/use-default-props';
-import useDidUpdate from '../../hooks/use-did-update';
+import { type ElementProps, type Motion, useDefaultProps } from '../../base/index';
+import { useDidUpdate } from '../../hooks/index';
 
 const prefixCls = cssClasses.PREFIX;
 

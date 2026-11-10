@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js';
 import type { TimelineMode } from '@fibrae/semi-foundation/components/timeline/utils';
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 
 export interface TimelineItemProps extends ElementProps<'li', 'content' | 'type'> {
     color?: string;

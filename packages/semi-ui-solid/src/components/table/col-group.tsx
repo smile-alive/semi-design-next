@@ -3,7 +3,7 @@ import { Dynamic } from 'solid-js/web';
 import clsx from 'clsx';
 import { cssClasses } from '@fibrae/semi-foundation/components/table/constants';
 import { flattenColumns } from '@fibrae/semi-foundation/components/table/utils';
-import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+import { toCssLength } from '@fibrae/semi-foundation/utils';
 import type { ColumnProps } from './interface';
 import type { MergedTableComponents } from './utils';
 

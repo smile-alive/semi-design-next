@@ -2,7 +2,7 @@ import { StrictMode, createRef, useState, type ComponentProps } from 'react';
 import { act, fireEvent, render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { Resizable, ResizeGroup, ResizeHandler, ResizeItem } from '@fibrae/semi-ui-react';
-import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-react/utils';
 import { mockResizeObserver } from '@test/utils/react';
 
 type ResizeCallback = NonNullable<ComponentProps<typeof Resizable>['onChange']>;

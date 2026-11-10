@@ -1,12 +1,11 @@
 <script lang="ts">
     import { untrack } from 'svelte';
     import { SvelteMap } from 'svelte/reactivity';
-    import { FreshItems, type ListStoreState, readNoticeText } from '@fibrae/semi-foundation/base/list-store';
+    import { FreshItems, type ListStoreState, readNoticeText } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/notification/constants';
     import { groupNoticesByPosition, noticePositions } from '@fibrae/semi-foundation/components/notification/notification-list-foundation';
     import '@fibrae/semi-foundation/components/notification/notification.scss';
-    import useAnnouncer from '../../hooks/use-announcer.svelte.js';
-    import useStoreSnapshot from '../../hooks/use-store-snapshot.svelte.js';
+    import { useAnnouncer, useStoreSnapshot } from '../../hooks/index.js';
     import { getConfigContext } from '../config-provider/context.js';
     import type { ListedNotice, RegisterNotice } from './context.js';
     import type { NotificationListProps } from './interface.js';

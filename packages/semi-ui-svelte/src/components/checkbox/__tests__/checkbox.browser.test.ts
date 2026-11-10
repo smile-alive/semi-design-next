@@ -2,7 +2,7 @@ import { createRawSnippet } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tab } from '@test/utils/browser';
 import CheckboxGroup from '../checkbox-group.svelte';
 import Checkbox from '../checkbox.svelte';

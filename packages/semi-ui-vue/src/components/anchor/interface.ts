@@ -1,7 +1,7 @@
 import type { VNode } from 'vue';
 import type { Options as ScrollIntoViewOptions } from 'scroll-into-view-if-needed';
 import type { strings } from '@fibrae/semi-foundation/components/anchor/constants';
-import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils';
 import type { Position } from '../tooltip/interface';
 import type { ShowTooltip } from '../typography/interface';
 

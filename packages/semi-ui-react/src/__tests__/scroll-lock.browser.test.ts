@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vite-plus/test';
-import { lockBodyScroll } from '@fibrae/semi-foundation/utils/scroll-lock';
+import { lockBodyScroll } from '@fibrae/semi-foundation/utils';
 
 describe('lockBodyScroll 布局', () => {
     afterEach(() => {

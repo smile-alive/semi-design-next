@@ -2,9 +2,9 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/date-picker/constants';
     import { isSplitRangeInputs } from '@fibrae/semi-foundation/components/date-picker/foundation';
     import DateInputFoundation, { type DateInputAdapter, type DateInputFoundationProps, type InsetInputChangeFoundationProps, type InsetInputValue, type RangeInput } from '@fibrae/semi-foundation/components/date-picker/input-foundation';
-    import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
+    import { handoverFocus } from '@fibrae/semi-foundation/utils';
     import { IconCalendar, IconCalendarClock, IconClear } from '@fibrae/semi-icons-svelte';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useFoundation } from '../../base/index.js';
     import { Input } from '../input/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import InsetInput from './inset-input.svelte';

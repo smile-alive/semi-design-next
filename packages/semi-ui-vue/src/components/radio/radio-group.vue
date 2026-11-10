@@ -3,9 +3,7 @@
     import { radioGroupClasses, strings } from '@fibrae/semi-foundation/components/radio/constants';
     import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseState } from '@fibrae/semi-foundation/components/radio/radio-group-foundation';
     import '@fibrae/semi-foundation/components/radio/radio.scss';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
+    import { type ElementProps, type EmitHandlers, semiDefault, semiGlobalDefault, useFoundation } from '../../base/index';
     import { provideRadioGroupContext, type RadioGroupContextView } from './context';
     import type { RadioChangeEvent, RadioGroupEmits, RadioGroupProps, RadioGroupSlots, RadioOptionItem, RadioValue } from './interface';
     import Radio from './radio.vue';

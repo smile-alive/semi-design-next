@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/space/constants';
     import '@fibrae/semi-foundation/components/space/space.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
+    import { useDefaultProps } from '../../base/index.js';
     import type { SpaceProps, Spacing } from './interface.js';
 
     const defaults = useDefaultProps('Space');

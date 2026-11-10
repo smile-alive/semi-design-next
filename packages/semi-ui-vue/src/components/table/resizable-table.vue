@@ -1,11 +1,10 @@
 <script setup lang="ts" generic="R extends Record<string, any>">
     import { computed, onMounted, shallowReactive, useTemplateRef, watch } from 'vue';
     import { applyColumnResize, findColumn, getColumnResizeChange, getExpandColumn, getResizableColumns, getSelectionColumn } from '@fibrae/semi-foundation/components/table/utils';
-    import warning from '@fibrae/semi-foundation/utils/warning';
-    import type { EmitProps } from '../../base/element-props';
-    import semiDefault, { semiGlobalDefault } from '../../base/semi-default';
-    import useSlotVersion from '../../composables/use-slot-version';
-    import type { VirtualListAlign } from '../../internal/virtual-list.vue';
+    import { warning } from '@fibrae/semi-foundation/utils';
+    import { type EmitProps, semiDefault, semiGlobalDefault } from '../../base/index';
+    import { useSlotVersion } from '../../composables/index';
+    import type { VirtualListAlign } from '../../internal/index';
     import type { ColumnProps, ResizableProps, RowSelectionProps, TableComponents, TableEmits, TableHandle, TableProps, TableSlots } from './interface';
     import NormalTable from './normal-table.vue';
     import ResizableHeaderCell from './table-header/resizable-header-cell.vue';

@@ -4,8 +4,8 @@ import { cssClasses } from '@fibrae/semi-foundation/components/form/constants';
 import { errorMessages, isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
 import '@fibrae/semi-foundation/components/form/form.scss';
 import { IconAlertCircle, IconAlertTriangle } from '@fibrae/semi-icons-solid';
-import type { ElementProps } from '../../base/element-props';
-import hasContent from '../../utils/has-content';
+import type { ElementProps } from '../../base/index';
+import { hasContent } from '../../utils/index';
 import type { FieldError } from './interface';
 
 const prefix = cssClasses.PREFIX;

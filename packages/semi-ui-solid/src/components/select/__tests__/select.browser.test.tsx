@@ -2,7 +2,7 @@ import { For, createSignal, splitProps } from 'solid-js';
 import { render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { clickOutside, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
 import Select, { type OptionRenderProps, type SelectProps } from '..';
 import Button from '../../button';

@@ -1,9 +1,9 @@
 import { flushSync } from 'svelte';
 import { render } from '@testing-library/svelte';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
-import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils';
 import { registerCodeHighlight } from '../index';
 import type { CodeHighlightProps } from '../interface';
 import CodeHighlightStore from './code-highlight-store.svelte';

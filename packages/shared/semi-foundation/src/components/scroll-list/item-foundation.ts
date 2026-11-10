@@ -1,7 +1,6 @@
 import { debounce } from 'es-toolkit';
-import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { getListTargetIndex, Typeahead } from '../../utils/a11y';
-import { isHTMLElement } from '../../utils/dom';
+import { BaseFoundation, type DefaultAdapter } from '../../base/index';
+import { getListTargetIndex, Typeahead, isHTMLElement } from '../../utils/index';
 import { numbers } from './constants';
 import animatedScrollTo from './scroll-to';
 

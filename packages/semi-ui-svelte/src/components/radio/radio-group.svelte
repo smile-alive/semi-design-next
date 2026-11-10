@@ -3,8 +3,7 @@
     import { radioGroupClasses, strings } from '@fibrae/semi-foundation/components/radio/constants';
     import RadioGroupFoundation, { type RadioGroupAdapter, type RadioGroupBaseProps, type RadioGroupBaseState } from '@fibrae/semi-foundation/components/radio/radio-group-foundation';
     import '@fibrae/semi-foundation/components/radio/radio.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import { setRadioGroupContext } from './context.js';
     import type { RadioGroupProps, RadioOptionItem, RadioValue } from './interface.js';
     import Radio from './radio.svelte';

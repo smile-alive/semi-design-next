@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Snippet } from 'svelte';
-    import { getPopupLayerContext } from '../../base/popup-layer.js';
+    import { getPopupLayerContext } from '../../base/index.js';
     import { type AvatarGroupMoreValue, setAvatarGroupMoreContext } from './context.js';
 
     let { children, ...value }: Omit<AvatarGroupMoreValue, 'layer'> & { children: Snippet } = $props();

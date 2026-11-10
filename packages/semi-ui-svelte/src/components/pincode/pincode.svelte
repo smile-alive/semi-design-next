@@ -2,11 +2,10 @@
     import { FORM_INJECTED_PROP_KEYS } from '@fibrae/semi-foundation/components/form/constants';
     import { cssClasses } from '@fibrae/semi-foundation/components/pincode/constants';
     import PinCodeFoundation, { type PinCodeAdapter, type PinCodeBaseProps } from '@fibrae/semi-foundation/components/pincode/foundation';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
     import '@fibrae/semi-foundation/components/pincode/pincode.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import { splitControlAttrs } from '../../utils/control-attrs.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { splitControlAttrs } from '../../utils/index.js';
     import { getConfigContext } from '../config-provider/context.js';
     import { Input, type InputChangeEvent } from '../input/index.js';
     import useLocale from '../locale/use-locale.svelte.js';

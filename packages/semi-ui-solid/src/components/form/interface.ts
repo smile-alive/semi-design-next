@@ -1,7 +1,7 @@
 import type { JSX } from 'solid-js';
-import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
+import type { ValidateStatus } from '@fibrae/semi-foundation/base';
 import type { AllErrors, BaseFormApi, DeepPartial, ExclusiveFieldValidation, ExclusiveFormValidation, FieldError, FieldPath, FieldValidateTriggerType, FormState, FormValidator, StandardSchema } from '@fibrae/semi-foundation/components/form/interface';
-import type { ElementProps } from '../../base/element-props';
+import type { ElementProps } from '../../base/index';
 import type { ColProps } from '../grid';
 import type { LabelProps } from './label';
 

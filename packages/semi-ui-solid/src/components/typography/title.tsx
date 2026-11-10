@@ -1,7 +1,7 @@
 import { splitProps } from 'solid-js';
 import { strings } from '@fibrae/semi-foundation/components/typography/constants';
-import type { ArrayElement } from '@fibrae/semi-foundation/utils/type';
-import type { ElementProps } from '../../base/element-props';
+import type { ArrayElement } from '@fibrae/semi-foundation/utils';
+import type { ElementProps } from '../../base/index';
 import Base, { type BaseTypographyProps } from './base';
 import type { OmitTypographyProps, TypographyCommonProps, TypographyEllipsisProps } from './interface';
 

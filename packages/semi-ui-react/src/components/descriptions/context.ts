@@ -1,4 +1,4 @@
-import { createContext } from '../../base/create-context';
+import { createContext } from '../../base/index';
 
 export type DescriptionsAlign = 'center' | 'justify' | 'left' | 'plain';
 export type DescriptionLayout = 'horizontal' | 'vertical';

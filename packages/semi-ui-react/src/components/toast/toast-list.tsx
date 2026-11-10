@@ -1,11 +1,11 @@
 import { useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import clsx from 'clsx';
-import { getStackDepths, hasLostFocus, isStackExpanded, isStackHidden } from '@fibrae/semi-foundation/base/list-store';
+import { getStackDepths, hasLostFocus, isStackExpanded, isStackHidden } from '@fibrae/semi-foundation/base';
 import { cssClasses } from '@fibrae/semi-foundation/components/toast/constants';
 import type { ToastListProps } from '@fibrae/semi-foundation/components/toast/toast-list-foundation';
-import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils/animated-height';
+import { pinAnimatedHeight } from '@fibrae/semi-foundation/utils';
 import '@fibrae/semi-foundation/components/toast/toast.scss';
-import useNoticeListEffects from '../../hooks/use-notice-list-effects';
+import { useNoticeListEffects } from '../../hooks/index';
 import CSSAnimation from '../../internal/css-animation';
 import Toast from './toast';
 

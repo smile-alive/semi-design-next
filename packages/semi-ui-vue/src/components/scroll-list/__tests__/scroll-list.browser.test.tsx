@@ -3,7 +3,7 @@ import { createApp } from 'vue';
 import { screen, waitFor, within } from '@testing-library/vue';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
 import { render, sleep } from '@test/utils/vue';
 import ScrollList, { ScrollItem, type ScrollItemSelectData } from '..';

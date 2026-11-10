@@ -3,12 +3,11 @@
     import AudioPlayerFoundation, { type AudioPlayerAdapter, type AudioPlayerBaseProps, type AudioPlayerState } from '@fibrae/semi-foundation/components/audio-player/foundation';
     import { getCurrentTrack } from '@fibrae/semi-foundation/components/audio-player/utils';
     import { formatTime, formatTimeText } from '@fibrae/semi-foundation/components/video-player/utils';
-    import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-    import { namedRole } from '@fibrae/semi-foundation/utils/a11y';
+    import { formatLocale } from '@fibrae/semi-foundation/locale';
+    import { namedRole } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/audio-player/audio-player.scss';
     import { IconAlertCircle, IconBackward, IconFastForward, IconPause, IconPlay, IconRefresh, IconRestart, IconVolume2, IconVolumnSilent } from '@fibrae/semi-icons-svelte';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
     import { Button } from '../button/index.js';
     import { Dropdown, DropdownItem, DropdownMenu, type DropdownTriggerProps } from '../dropdown/index.js';
     import { Image } from '../image/index.js';

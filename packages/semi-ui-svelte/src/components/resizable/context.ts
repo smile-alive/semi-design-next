@@ -1,5 +1,5 @@
 import type { ResizeGroupItem } from '@fibrae/semi-foundation/components/resizable/foundation';
-import { createContext } from '../../base/create-context.js';
+import { createContext } from '../../base/index.js';
 
 export interface ResizeGroupContext {
     readonly direction: 'horizontal' | 'vertical';

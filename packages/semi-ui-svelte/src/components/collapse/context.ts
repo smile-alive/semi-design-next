@@ -1,5 +1,5 @@
 import type { Snippet } from 'svelte';
-import { createContext } from '../../base/create-context.js';
+import { createContext } from '../../base/index.js';
 
 export interface CollapseContextValue {
     activeSet: Set<string>;

@@ -3,7 +3,7 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/tree/constants';
     import { isTreeNodeLeaf } from '@fibrae/semi-foundation/components/tree/shared';
     import { IconTreeTriangleDown } from '@fibrae/semi-icons-vue';
-    import slotNodes, { hasSlotContent, type KeyedNode } from '../../utils/slot-nodes';
+    import { slotNodes, hasSlotContent, type KeyedNode } from '../../utils/index';
     import Spin from '../spin';
     import { useTreeContext } from './context';
     import type { TreeExpandIconSlotProps, TreeRowProps } from './interface';

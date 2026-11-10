@@ -3,10 +3,9 @@
     import { cssClasses } from '@fibrae/semi-foundation/components/image/constants';
     import PreviewInnerFoundation, { type PreviewInnerAdapter, type PreviewInnerBaseProps, type PreviewInnerState } from '@fibrae/semi-foundation/components/image/preview-inner-foundation';
     import { IconArrowLeft, IconArrowRight } from '@fibrae/semi-icons-vue';
-    import useFoundation from '../../../base/use-foundation';
-    import useKeepAliveFoundation from '../../../base/use-keep-alive-foundation';
-    import useRecordFocus from '../../../composables/use-record-focus';
-    import Portal from '../../../internal/portal.vue';
+    import { useFoundation, useKeepAliveFoundation } from '../../../base/index';
+    import { useRecordFocus } from '../../../composables/index';
+    import { Portal } from '../../../internal/index';
     import useConfig from '../../config-provider/use-config';
     import useLocale from '../../locale/use-locale';
     import { usePreviewContext } from '../context';

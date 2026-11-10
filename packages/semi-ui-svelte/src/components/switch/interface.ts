@@ -1,6 +1,6 @@
 import type { Snippet } from 'svelte';
 import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
-import type { Size } from '@fibrae/semi-foundation/utils/type';
+import type { Size } from '@fibrae/semi-foundation/utils';
 
 // name reaches the inner input, which the div's attributes do not cover
 export interface SwitchProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'>, Pick<HTMLInputAttributes, 'name'> {

@@ -2,7 +2,7 @@ import { createSignal } from 'solid-js';
 import { fireEvent, render, waitFor } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import Tree, { type TreeNodeData, type TreeProps } from '..';
 
 const treeChildren = [

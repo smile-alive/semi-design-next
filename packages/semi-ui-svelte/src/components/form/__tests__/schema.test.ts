@@ -1,7 +1,7 @@
 import { flushSync } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
-import semiGlobal from '@fibrae/semi-ui-svelte/utils/semi-global';
+import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
 import { errorSelector, getInput, input, labelSelector, renderForm, settle, typeInto } from './helpers';
 
 const nameSchema = z.object({ name: z.string({ error: 'required' }).min(2, 'too short') });

@@ -3,7 +3,7 @@ import type { MouseEvent, ReactNode } from 'react';
 import clsx from 'clsx';
 import { cssClasses, getTabKeyAttrs } from '@fibrae/semi-foundation/components/tabs/constants';
 import { IconClose } from '@fibrae/semi-icons-react';
-import type { ElementProps } from '../../base/base';
+import type { ElementProps } from '../../base/index';
 import useLocale from '../locale/use-locale';
 import { useTabsContext } from './context';
 import { getPanelId, getTabId } from './ids';

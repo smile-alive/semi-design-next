@@ -1,7 +1,6 @@
 import React, { type CSSProperties } from 'react';
 import type { strings } from '@fibrae/semi-foundation/components/avatar/constants';
-import type { ElementProps } from '../../base/base';
-import type { BaseProps } from '../../base/base-props';
+import type { ElementProps, BaseProps } from '../../base/index';
 
 export type AvatarShape = 'circle' | 'square';
 export type AvatarSize = (typeof strings.SIZE)[number];

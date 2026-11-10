@@ -1,13 +1,12 @@
 <script setup lang="ts">
     import { type StyleValue, computed, h, mergeProps, nextTick, onMounted, shallowRef, useAttrs, useTemplateRef, watch, watchEffect } from 'vue';
-    import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
+    import { FocusTrapHandle } from '@fibrae/semi-foundation/base';
     import { cssClasses } from '@fibrae/semi-foundation/components/typography/constants';
     import { getCopyConfig } from '@fibrae/semi-foundation/components/typography/copy';
     import { canUseCSSEllipsis, getEllipsisOpt, getExpandButton, getRenderText, isExpandFocusTarget, isInsideWidgetItem, isOverflowed, isOverflowing, isPopoverTooltip, isTooltipTriggerFocusable } from '@fibrae/semi-foundation/components/typography/ellipsis';
-    import { handoverFocus } from '@fibrae/semi-foundation/utils/focus-handover';
-    import warning from '@fibrae/semi-foundation/utils/warning';
+    import { handoverFocus, warning } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/typography/typography.scss';
-    import { hasClickListener } from '../../utils/control-attrs';
+    import { hasClickListener } from '../../utils/index';
     import useLocale from '../locale/use-locale';
     import Popover from '../popover/popover.vue';
     import Tooltip from '../tooltip/tooltip.vue';

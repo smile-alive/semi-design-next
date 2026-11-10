@@ -2,12 +2,10 @@
     import { computed, onBeforeUnmount, onMounted, shallowRef, useTemplateRef, watch } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/modal/constants';
     import ModalFoundation, { type ModalAdapter } from '@fibrae/semi-foundation/components/modal/modal-foundation';
-    import isPromise from '@fibrae/semi-foundation/utils/is-promise';
+    import { isPromise } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/modal/modal.scss';
-    import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
-    import useFoundation from '../../base/use-foundation';
-    import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
-    import Portal from '../../internal/portal.vue';
+    import { semiDefault, readSemiDefault, semiGlobalDefault, useSemiGlobal, useFoundation, useKeepAliveFoundation } from '../../base/index';
+    import { Portal } from '../../internal/index';
     import Button from '../button';
     import useConfig from '../config-provider/use-config';
     import useLocale from '../locale/use-locale';

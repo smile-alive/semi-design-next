@@ -2,10 +2,9 @@ import { type JSX, type Ref, Show, createMemo, mergeProps, onCleanup, untrack } 
 import { cssClasses, strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import type { PanelType } from '@fibrae/semi-foundation/components/date-picker/months-grid-foundation';
 import YearAndMonthFoundation, { type MonthScrollItem, type YearAndMonthAdapter, type YearAndMonthFoundationProps, type YearScrollItem } from '@fibrae/semi-foundation/components/date-picker/year-and-month-foundation';
-import { formatLocale } from '@fibrae/semi-foundation/locale/format';
-import type { Locale } from '@fibrae/semi-foundation/locale/index';
+import { formatLocale, type Locale } from '@fibrae/semi-foundation/locale';
 import { IconChevronLeft } from '@fibrae/semi-icons-solid';
-import useFoundation from '../../base/use-foundation';
+import { useFoundation } from '../../base/index';
 import IconButton from '../icon-button';
 import ScrollList, { ScrollItem, type ScrollItemHandle, type ScrollItemProps } from '../scroll-list';
 

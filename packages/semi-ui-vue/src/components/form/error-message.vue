@@ -3,8 +3,8 @@
     import { errorMessages, isErrorLeaf } from '@fibrae/semi-foundation/components/form/errors';
     import '@fibrae/semi-foundation/components/form/form.scss';
     import { IconAlertCircle, IconAlertTriangle } from '@fibrae/semi-icons-vue';
-    import type { ElementProps } from '../../base/element-props';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import type { ElementProps } from '../../base/index';
+    import { hasSlotContent } from '../../utils/index';
     import type { FormErrorMessageProps, FormErrorMessageSlots } from './interface';
 
     const props = withDefaults(defineProps<FormErrorMessageProps & /* @vue-ignore */ ElementProps<'div', keyof FormErrorMessageProps>>(), {

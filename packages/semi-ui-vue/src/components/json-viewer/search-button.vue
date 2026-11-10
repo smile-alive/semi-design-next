@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { nextTick, useTemplateRef } from 'vue';
     import { cssClasses } from '@fibrae/semi-foundation/components/json-viewer/constants';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import { IconSearch } from '@fibrae/semi-icons-vue';
     import Button from '../button';
     import DragMove from '../drag-move';

@@ -2,11 +2,10 @@
     import { onMount } from 'svelte';
     import { cssClasses, strings } from '@fibrae/semi-foundation/components/anchor/constants';
     import AnchorFoundation, { type AnchorAdapter, type AnchorBaseState } from '@fibrae/semi-foundation/components/anchor/foundation';
-    import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
+    import { toCssLength } from '@fibrae/semi-foundation/utils';
     import '@fibrae/semi-foundation/components/anchor/anchor.scss';
-    import useDefaultProps from '../../base/use-default-props.js';
-    import useFoundation from '../../base/use-foundation.svelte.js';
-    import watch from '../../hooks/watch.svelte.js';
+    import { useDefaultProps, useFoundation } from '../../base/index.js';
+    import { watch } from '../../hooks/index.js';
     import useLocale from '../locale/use-locale.svelte.js';
     import { setAnchorContext } from './context.js';
     import type { AnchorClickEvent, AnchorProps } from './interface.js';

@@ -1,7 +1,7 @@
 import { h, type Component, type VNodeChild } from 'vue';
 import { fireEvent, screen } from '@testing-library/vue';
 import { vi } from 'vite-plus/test';
-import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import ConfigProvider from '@fibrae/semi-ui-vue/config-provider/index';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { render } from '@test/utils/vue';

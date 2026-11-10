@@ -2,8 +2,8 @@
     import { computed } from 'vue';
     import { cssClasses, getTabKeyAttrs } from '@fibrae/semi-foundation/components/tabs/constants';
     import { IconClose } from '@fibrae/semi-icons-vue';
-    import type { ElementProps, EmitHandlers } from '../../base/element-props';
-    import { hasSlotContent } from '../../utils/slot-nodes';
+    import type { ElementProps, EmitHandlers } from '../../base/index';
+    import { hasSlotContent } from '../../utils/index';
     import useLocale from '../locale/use-locale';
     import { useTabsContext } from './context';
     import { getPanelId, getTabId } from './ids';

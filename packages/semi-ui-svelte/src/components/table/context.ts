@@ -1,7 +1,7 @@
 import type { Snippet } from 'svelte';
 import type TableFoundation from '@fibrae/semi-foundation/components/table/foundation';
 import type { BaseHeadWidth, BaseRowKeyType, TableBaseProps, TableBaseState, TableBaseStateRowSelection } from '@fibrae/semi-foundation/components/table/foundation';
-import { createContext } from '../../base/create-context.js';
+import { createContext } from '../../base/index.js';
 import type { ColumnProps, TableExpandIconSnippetProps, TableProps, TableRowKey, TableScroll, TableSize, TableSticky, TableVirtualizedProps } from './interface.js';
 
 type AnyRecord = Record<string, any>;
