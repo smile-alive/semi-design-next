@@ -6,7 +6,7 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal, type OverrideDefaultProps } from '@fibrae/semi-ui-vue/utils';
-import { mockResizeObserver, render } from '@test/utils/vue';
+import { mockResizeObserver, render, getElement } from '@test/utils/vue';
 import Select, { SelectOptGroup, SelectOption, type SelectHandle, type SelectOptionProps } from '..';
 import ConfigProvider from '../../config-provider';
 import Popover from '../../popover';
@@ -80,12 +80,12 @@ const getOptions = () => screen.queryAllByRole('option');
 const getOptionTexts = () => getOptions().map((option) => option.textContent);
 const getSelectionText = () => document.querySelector(`.${prefixCls}-selection-text`);
 const getTagTexts = () => Array.from(document.querySelectorAll(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-content`)).map((tag) => tag.textContent);
-const getTriggerInput = () => document.querySelector<HTMLInputElement>(`.${prefixCls} input`) as HTMLInputElement;
+const getTriggerInput = () => getElement<HTMLInputElement>(`.${prefixCls} input`);
 const getClearIcon = () => document.querySelector(`.${BASE_CLASS_PREFIX}-icon-clear`);
-const getPopover = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`) as HTMLElement;
+const getPopover = () => getElement(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
 const getOptionByText = (text: string) => getOptions().find((option) => option.textContent === text);
 const getFocusedOption = () => document.querySelector(`.${prefixCls}-option-focused`);
-const getRoot = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
+const getRoot = () => getElement(`.${prefixCls}`);
 async function search(value: string, input = getTriggerInput()) {
     await fireEvent.update(input, value);
     await settle();
@@ -288,7 +288,7 @@ describe('Select', async () => {
     it('multiple 配合 maxTagCount', async () => {
         await renderSelect({ multiple: true, defaultValue: ['abc', 'hotsoon'], maxTagCount: 2, defaultOpen: true });
         await userEvent.click(getOptions()[3]);
-        const tagGroup = document.querySelector(`.${BASE_CLASS_PREFIX}-tag-group`) as HTMLElement;
+        const tagGroup = getElement(`.${BASE_CLASS_PREFIX}-tag-group`);
         expect(tagGroup.children).toHaveLength(3);
         expect(tagGroup.children[2]).toHaveTextContent(/^\+1$/);
     });
@@ -521,7 +521,7 @@ describe('Select', async () => {
                 tag: ({ option, index }) => <div class={`item-${index as number}`}>{`${(option as SelectOptionProps).value}-${(option as SelectOptionProps).extra}`}</div>,
             }
         );
-        const items = (document.querySelector(`.${prefixCls}-content-wrapper`) as HTMLElement).children;
+        const items = getElement(`.${prefixCls}-content-wrapper`).children;
         expect(items[0]).toHaveClass('item-0');
         expect(items[0]).toHaveTextContent(/^abc-a1$/);
         expect(items[1]).toHaveClass('item-1');
@@ -1672,7 +1672,7 @@ describe('Select', async () => {
     it('多选不可搜索时，已选 Tag 上的 Enter 与 Space 不打开下拉、不改值', async () => {
         const onChange = vi.fn<(value: unknown) => void>();
         await renderSelect({ multiple: true, optionList: defaultList, defaultValue: ['hotsoon', 'abc'], onChange });
-        const getTag = () => document.querySelector(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag`) as HTMLElement;
+        const getTag = () => getElement(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag`);
         getTag().focus();
         await userEvent.keyboard('{Enter}');
         await userEvent.keyboard(' ');
@@ -2896,7 +2896,7 @@ describe('Select', async () => {
         expect(document.querySelector('.test-slot')).not.toBeNull();
         expect(getFocusedOption()).not.toBeNull();
         const kebab = name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`).replace(/-slot$/, '-slot');
-        await userEvent.hover(document.querySelector(`.${prefixCls}-option-list-${kebab}`) as Element);
+        await userEvent.hover(getElement(`.${prefixCls}-option-list-${kebab}`));
         await settle();
         expect(getFocusedOption()).toBeNull();
     });
@@ -2935,7 +2935,7 @@ describe('Select', async () => {
             optionList: defaultList,
             style: { width: '200px' },
         });
-        const collapse = () => document.querySelector(`.${prefixCls}-content-wrapper-collapse`) as HTMLElement;
+        const collapse = () => getElement(`.${prefixCls}-content-wrapper-collapse`);
         const overflowList = collapse().firstElementChild;
         expect(overflowList).not.toBeNull();
         await click(getTrigger());
@@ -3128,14 +3128,14 @@ describe('Select', async () => {
     it('打开的列表中按 Tab 关闭列表，焦点仍在组件内时不发 blur', async () => {
         const onBlur = vi.fn<(event: Event) => void>();
         await renderSelect({ defaultOpen: true, filter: true, optionList: defaultList, onBlur });
-        await keyDown('Tab', {}, document.querySelector(`.${prefixCls}-option-list-wrapper`) as Element);
+        await keyDown('Tab', {}, getElement(`.${prefixCls}-option-list-wrapper`));
         await expectClosed();
         expect(onBlur).not.toHaveBeenCalled();
     });
 
     it('下拉容器上按其他键', async () => {
         await renderSelect({ defaultOpen: true, filter: true, optionList: defaultList });
-        await keyDown(' ', {}, document.querySelector(`.${prefixCls}-option-list-wrapper`) as Element);
+        await keyDown(' ', {}, getElement(`.${prefixCls}-option-list-wrapper`));
         expect(getOptionList()).not.toBeNull();
     });
 
@@ -3749,7 +3749,7 @@ describe('Select', async () => {
         await renderSelect({ multiple: true, filter: true, showClear: true, optionList: defaultList, onChange });
         await click(getTrigger());
         await search('ab');
-        await fireEvent.click(document.querySelector(`.${prefixCls}-clear`) as Element);
+        await fireEvent.click(getElement(`.${prefixCls}-clear`));
         await settle();
         expect(getTriggerInput()).toHaveValue('');
         expect(onChange).not.toHaveBeenCalled();

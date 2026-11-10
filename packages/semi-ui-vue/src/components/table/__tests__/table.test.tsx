@@ -8,7 +8,7 @@ import { numbers } from '@fibrae/semi-foundation/components/table/constants';
 import type { VirtualListScrollArgs } from '@fibrae/semi-ui-vue/internal';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { getData, getNestData, getRandomNumber, render } from '@test/utils/vue';
+import { getData, getNestData, getRandomNumber, render, getElement } from '@test/utils/vue';
 import Table, { TableColumn, type ColumnProps, type TableCellSlotProps, type TableHandle, type TableHeaderCellSlotProps, type TableRowAttrs, type TableTitleSlotProps } from '..';
 import { Col } from '../../grid';
 import LocaleProvider from '../../locale/locale-provider.vue';
@@ -539,7 +539,7 @@ describe('Table 行为基线', () => {
         });
         expect(container.querySelector(`.${P}-wrapper`)).toHaveAttribute('data-column-fixed', 'true');
         expect(container.querySelector(`.${P}-header`)).toBeInTheDocument();
-        const body = container.querySelector(`.${P}-body`) as HTMLElement;
+        const body = getElement(`.${P}-body`, container);
         expect(body).toHaveStyle({ maxHeight: '300px' });
         await nextTick();
         const heads = getHeads();
@@ -574,7 +574,7 @@ describe('Table 行为基线', () => {
             scroll: { y: 300 },
             virtualized: { itemSize: 50 },
         });
-        const rowGroup = () => container.querySelector(`.${P}-body .${P}-tbody`) as HTMLElement;
+        const rowGroup = () => getElement(`.${P}-body .${P}-tbody`, container);
         await waitFor(() => expect(getBodyRows().length).toBeGreaterThan(0));
         expect(rowGroup()).toHaveStyle({ height: '5000px' });
         await update({ props: { virtualized: { itemSize: 80 } } });
@@ -594,7 +594,7 @@ describe('Table 行为基线', () => {
         await update({ props: { virtualized: false } });
         await update({ props: { virtualized: true } });
         await waitFor(() => expect(getBodyRows().length).toBeGreaterThan(0));
-        const body = container.querySelector(`.${P}-body`) as HTMLElement;
+        const body = getElement(`.${P}-body`, container);
         Object.defineProperty(body, 'scrollLeft', { value: 600, configurable: true });
         await fireEvent.scroll(body);
         expect(container.querySelector(`.${P}-header`)?.scrollLeft).toBe(600);
@@ -1028,7 +1028,7 @@ describe('Table 表头', () => {
         await update({ props: { dataSource: getData(3) } });
         expect(rowProps).toEqual({ class: 'my-row' });
         expect(cellProps).toEqual({ class: 'my-cell' });
-        const headerRow = document.querySelector(`.${P}-thead tr`) as HTMLElement;
+        const headerRow = getElement(`.${P}-thead tr`);
         expect([...headerRow.classList]).toEqual(['my-row', `${P}-row`]);
         const th = screen.getByRole('columnheader', { name: 'Name' });
         expect([...th.classList].filter((name) => name === 'col')).toHaveLength(1);
@@ -1085,7 +1085,7 @@ describe('Table Vue 写法', () => {
         );
         expect(cellTexts(getBodyRows()[0])).toEqual(['Edward King 0']);
         slotCalls = 0;
-        await userEvent.click(getHeads()[0].querySelector(`.${P}-column-sorter-wrapper`) as HTMLElement);
+        await userEvent.click(getElement(`.${P}-column-sorter-wrapper`, getHeads()[0]));
         expect(cellTexts(getBodyRows()[0])).toEqual(['Edward King 1']);
         expect(slotCalls).toBe(0);
     });
@@ -1262,7 +1262,7 @@ describe('Table Vue 写法', () => {
 
         mountTable({ columns, dataSource: getData(1), pagination: false }, { title: () => [<span>Staff</span>] });
         const table = screen.getByRole('table', { name: 'Staff' });
-        expect(table).toHaveAttribute('aria-labelledby', (document.querySelector(`.${P}-title`) as HTMLElement).id);
+        expect(table).toHaveAttribute('aria-labelledby', getElement(`.${P}-title`).id);
     });
 
     it('非虚拟化时调用 scrollTo 给出开发警告', () => {
@@ -1307,7 +1307,7 @@ describe('Table Vue 写法', () => {
         });
         await waitFor(() => expect(getBodyRows().length).toBeGreaterThan(0));
         await nextTick();
-        const body = document.querySelector(`.${P}-body`) as HTMLElement;
+        const body = getElement(`.${P}-body`);
         body.scrollLeft = 50;
         await fireEvent.scroll(body);
         expect(onScroll).not.toHaveBeenCalled();

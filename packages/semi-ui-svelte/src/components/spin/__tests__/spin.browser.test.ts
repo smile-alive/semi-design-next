@@ -5,6 +5,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import SpinFixture from './spin-fixture.svelte';
 
 function keyframesNames(rules: CSSRuleList): string[] {
@@ -16,7 +17,7 @@ function keyframesNames(rules: CSSRuleList): string[] {
     });
 }
 
-const spinOf = (container: ParentNode) => container.querySelector(`.${BASE_CLASS_PREFIX}-spin`) as HTMLElement;
+const spinOf = (container: ParentNode) => getElement(`.${BASE_CLASS_PREFIX}-spin`, container);
 const inside = () => screen.getByRole('button', { name: 'inside' });
 const after = () => screen.getByRole('button', { name: 'after' });
 
@@ -35,8 +36,8 @@ describe('Svelte Spin（浏览器）', () => {
         const first = render(SpinFixture, { props: { store: createStore({ props: {} }) } });
         const second = render(SpinFixture, { props: { store: createStore({ props: {} }) } });
         const name = `${BASE_CLASS_PREFIX}-animation-rotate`;
-        expect(getComputedStyle(first.container.querySelector('svg') as SVGSVGElement).animationName).toBe(name);
-        expect(getComputedStyle(second.container.querySelector('svg') as SVGSVGElement).animationName).toBe(name);
+        expect(getComputedStyle(getElement<SVGSVGElement>('svg', first.container)).animationName).toBe(name);
+        expect(getComputedStyle(getElement<SVGSVGElement>('svg', second.container)).animationName).toBe(name);
         const defined = Array.from(document.styleSheets).flatMap((sheet) => keyframesNames(sheet.cssRules));
         expect(defined.filter((item) => item === name)).toHaveLength(1);
     });
@@ -87,7 +88,7 @@ describe('Svelte Spin 加载期间的焦点（浏览器）', () => {
         const container = document.createElement('div');
         shadow.append(container);
         const { set } = setup(false, container);
-        const innerButton = shadow.querySelector('button') as HTMLButtonElement;
+        const innerButton = getElement<HTMLButtonElement>('button', shadow);
         innerButton.focus();
         set(true);
         expect(shadow.activeElement).toBe(spinOf(container));

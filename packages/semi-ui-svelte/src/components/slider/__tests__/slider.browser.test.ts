@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { isWebKit, mouse, tab } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import type { SliderProps } from '../interface';
 import SliderBrowser from './slider-browser.svelte';
 import SliderConfig from './slider-config.svelte';
@@ -27,7 +28,7 @@ function setup(props: SliderProps = {}, { bound = false, value, count = 1, rootS
         store,
         change,
         container,
-        rail: container.querySelector(`.${prefix}-rail`) as HTMLElement,
+        rail: getElement(`.${prefix}-rail`, container),
         handles: [...container.querySelectorAll<HTMLElement>(`.${prefix}-handle`)],
         inputs: [...container.querySelectorAll<HTMLInputElement>('input[type="range"]')],
     };
@@ -60,7 +61,7 @@ describe('Svelte Slider（浏览器）滚动容器', () => {
         const change = vi.fn<OnChange>();
         const { container } = render(SliderScroll, { props: { props: { onChange: change } } });
         (container.firstElementChild as HTMLElement).scrollLeft = 1000;
-        const rail = container.querySelector(`.${prefix}-rail`) as HTMLElement;
+        const rail = getElement(`.${prefix}-rail`, container);
         const rect = rail.getBoundingClientRect();
         expect(rect.left).toBeLessThan(0);
 
@@ -76,7 +77,7 @@ describe('Svelte Slider（浏览器）滚动容器', () => {
         const change = vi.fn<OnChange>();
         const { container } = render(SliderScroll, { props: { props: { onChange: change }, vertical: true } });
         (container.firstElementChild as HTMLElement).scrollTop = 1000;
-        const rail = container.querySelector(`.${prefix}-rail`) as HTMLElement;
+        const rail = getElement(`.${prefix}-rail`, container);
         const rect = rail.getBoundingClientRect();
         expect(rect.top).toBeLessThan(0);
 
@@ -156,7 +157,7 @@ describe('Svelte Slider 拖动（浏览器）', () => {
         expect(store.value).toBe(100);
 
         // Drop on the wrapper: the track covers the rail and Playwright refuses targets that are covered
-        const wrapper = container.querySelector(`.${prefix}-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${prefix}-wrapper`, container);
         const wrapperRect = wrapper.getBoundingClientRect();
         const railRect = rail.getBoundingClientRect();
         await userEvent.dragAndDrop(handle, wrapper, {
@@ -234,7 +235,7 @@ describe('Svelte Slider 键盘（浏览器）', () => {
         const { container } = render(SliderConfig, { props: { props: { value: 50, style: 'width: 300px; height: 300px', ...sliderProps }, ...config } });
         flushSync();
         const input = container.querySelector('input[type="range"]');
-        await userEvent.click(container.querySelector(`.${prefix}-handle`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-handle`, container));
         await userEvent.keyboard(increase);
         expect(input).toHaveValue('51');
         await userEvent.keyboard(`${decrease}${decrease}`);
@@ -276,7 +277,7 @@ describe('Svelte Slider 键盘（浏览器）', () => {
     // Safari focuses only text fields on a click, through a label too
     it.skipIf(isWebKit)('点击 label 会聚焦滑块输入框', async () => {
         const { container } = render(SliderLabelled, { props: { kind: 'for' } });
-        await userEvent.click(container.querySelector('label') as HTMLElement);
+        await userEvent.click(getElement('label', container));
         expect(container.querySelector('input[type="range"]')).toHaveFocus();
     });
 

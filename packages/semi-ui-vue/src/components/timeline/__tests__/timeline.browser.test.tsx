@@ -1,7 +1,7 @@
 /** @jsxImportSource vue */
 import { describe, it } from 'vite-plus/test';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Timeline, { TimelineItem } from '../index';
 
 describe('Timeline（浏览器）', () => {
@@ -12,7 +12,7 @@ describe('Timeline（浏览器）', () => {
                 <Timeline>{() => <TimelineItem onClick={() => {}}>{() => 'a'}</TimelineItem>}</Timeline>
             </div>
         ));
-        const content = container.querySelector('[role="button"]') as Element;
+        const content = getElement('[role="button"]', container);
         await tabTo(content);
         expectThemeFocusRing(content);
     });

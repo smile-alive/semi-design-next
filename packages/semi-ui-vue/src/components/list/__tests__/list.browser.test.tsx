@@ -2,7 +2,7 @@
 import { screen } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import List, { ListItem } from '..';
 import Button from '../../button';
 
@@ -22,7 +22,7 @@ describe('list', () => {
                 ),
             },
         });
-        const item = container.querySelector('.semi-list-item') as HTMLElement;
+        const item = getElement('.semi-list-item', container);
         const rect = item.getBoundingClientRect();
         // A blank spot far from the title text still lands on the button, so a pointer there targets the control
         const x = rect.left + rect.width / 2;

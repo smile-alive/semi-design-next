@@ -5,7 +5,7 @@ import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { cdp } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, isChromium, tab, tabTo } from '@test/utils/browser';
-import { getData, render } from '@test/utils/vue';
+import { getData, render, getElement } from '@test/utils/vue';
 import Table, { type ColumnProps, type TableCellSlotProps, type TableHandle, type TableRowAttrs } from '..';
 import ConfigProvider from '../../config-provider';
 
@@ -28,7 +28,7 @@ const fixedBothSideColumns: ColumnProps[] = [
     { title: 'Description', dataIndex: 'description', fixed: 'right', width: 150 },
 ];
 
-const getBody = () => document.querySelector(`.${prefix}-body`) as HTMLElement;
+const getBody = () => getElement(`.${prefix}-body`);
 const getHeadEllipsis = () => Array.from(document.querySelectorAll<HTMLElement>(`.${prefix}-row-head-ellipsis`));
 const hasTitle = (el: Element) => el.matches('[title]') || el.querySelector('[title]') !== null;
 const showInfo = ({ column }: TableCellSlotProps) => (column.dataIndex ? [] : [<span>Show Info</span>]);
@@ -79,7 +79,7 @@ describe('Table（浏览器）', () => {
         const { container } = mountTable({ bordered: true, columns, dataSource: data, pagination: false, scroll: { y: 300 } }, {}, { width: '800px' });
         expect(container.querySelector(`.${prefix}-header table`)).toHaveStyle({ tableLayout: 'fixed' });
         const headerCells = Array.from(container.querySelectorAll(`.${prefix}-thead .${prefix}-row-head`));
-        const bodyCells = Array.from((container.querySelector(`.${prefix}-tbody .${prefix}-row`) as HTMLElement).children);
+        const bodyCells = Array.from(getElement(`.${prefix}-tbody .${prefix}-row`, container).children);
         expect(headerCells).toHaveLength(columns.length);
         headerCells.forEach((th, i) => {
             const thRect = th.getBoundingClientRect();
@@ -159,7 +159,7 @@ describe('Table（浏览器）', () => {
         const wrapper = container.querySelector(`.${prefix}-wrapper`);
         expect(wrapper).toHaveAttribute('data-column-fixed', 'true');
         expect(wrapper).toHaveStyle({ zIndex: '1' });
-        const fixedHeadCell = container.querySelector(`.${prefix}-thead .${prefix}-cell-fixed-left`) as HTMLElement;
+        const fixedHeadCell = getElement(`.${prefix}-thead .${prefix}-cell-fixed-left`, container);
         const rect = fixedHeadCell.getBoundingClientRect();
         expect(rect.top).toBeLessThan(60);
         const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + Math.min(rect.height, 60) / 2);
@@ -190,7 +190,7 @@ describe('Table（浏览器）', () => {
             virtualized: true,
         });
         await waitFor(() => expect(container.querySelector(`.${prefix}-placeholder`)).not.toBeNull());
-        const emptyRect = (container.querySelector(`.${prefix}-placeholder`) as HTMLElement).getBoundingClientRect();
+        const emptyRect = getElement(`.${prefix}-placeholder`, container).getBoundingClientRect();
         expect(emptyRect.height).toBeGreaterThan(0);
         expect(getBody().getBoundingClientRect().height).toBeLessThan(600);
         expect(getBody().getBoundingClientRect().bottom).toBeGreaterThanOrEqual(emptyRect.bottom - 1);
@@ -245,7 +245,7 @@ describe('Table（浏览器）', () => {
             { width: '800px' }
         );
         const wrapper = container.firstElementChild as HTMLElement;
-        const section = () => container.querySelector(`.${prefix}-section-inner`) as HTMLElement;
+        const section = () => getElement(`.${prefix}-section-inner`, container);
         await waitFor(() => expect(section().getBoundingClientRect().width).toBeGreaterThan(0));
         await nextFrame();
         const before = renders();
@@ -279,14 +279,14 @@ describe('Table（浏览器）', () => {
         const supports = CSS.supports.bind(CSS);
         vi.spyOn(CSS, 'supports').mockImplementation(((property: string, value?: string) => (property === 'container-type' && value === 'scroll-state' ? false : value === undefined ? supports(property) : supports(property, value))) as typeof CSS.supports);
         const { container } = mountTable({ columns: fixedBothSideColumns, dataSource: getFileData(3), pagination: false }, {}, { width: '300px' });
-        const tableContainer = container.querySelector(`.${prefix}-container`) as HTMLElement;
+        const tableContainer = getElement(`.${prefix}-container`, container);
         const body = await waitFor(() => {
             const element = getBody();
             expect(element).not.toBeNull();
             return element;
         });
         // [left, right] shadows shown; container queries restyle a frame after the scroll
-        const shadows = () => (['left-last', 'right-first'] as const).map((side) => getComputedStyle(body.querySelector(`.${prefix}-cell-fixed-${side}`) as Element, '::after').display !== 'none');
+        const shadows = () => (['left-last', 'right-first'] as const).map((side) => getComputedStyle(getElement(`.${prefix}-cell-fixed-${side}`, body), '::after').display !== 'none');
 
         await waitFor(() => expect(tableContainer).toHaveAttribute('data-scrollable-right'));
         expect(tableContainer).not.toHaveAttribute('data-scrollable-left');
@@ -344,8 +344,8 @@ describe('Table（浏览器）', () => {
         const min = -(body.scrollWidth - body.clientWidth);
         await waitFor(() => expect(min).toBeLessThan(0));
 
-        const leftLast = () => container.querySelector(`.${prefix}-cell-fixed-left-last`) as HTMLElement;
-        const rightFirst = () => container.querySelector(`.${prefix}-cell-fixed-right-first`) as HTMLElement;
+        const leftLast = () => getElement(`.${prefix}-cell-fixed-left-last`, container);
+        const rightFirst = () => getElement(`.${prefix}-cell-fixed-right-first`, container);
         const hasShadow = (el: HTMLElement) => getComputedStyle(el, '::after').display !== 'none';
 
         await expect.poll(() => hasShadow(rightFirst())).toBe(false);
@@ -364,7 +364,7 @@ describe('Table（浏览器）', () => {
         const { container } = mountTable({ bordered: true, columns: fixedBothSideColumns, dataSource: getFileData(3), pagination: false }, {}, { width: '300px' });
         const body = getBody();
         await waitFor(() => expect(body.scrollWidth).toBeGreaterThan(body.clientWidth));
-        const tableContainer = container.querySelector(`.${prefix}-container`) as HTMLElement;
+        const tableContainer = getElement(`.${prefix}-container`, container);
         const lastCells = Array.from(container.querySelectorAll<HTMLElement>(`.${prefix}-cell-last`));
 
         expect(lastCells.length).toBeGreaterThan(0);
@@ -464,7 +464,7 @@ describe('table', () => {
             { cell: showInfo }
         );
         await waitFor(() => expect(document.querySelector(`.${prefix}-header`)).not.toBeNull());
-        const header = document.querySelector(`.${prefix}-header`) as HTMLElement;
+        const header = getElement(`.${prefix}-header`);
         const body = getBody();
         body.scrollLeft = 300;
         await waitFor(() => expect(header.scrollLeft).toBe(300));
@@ -678,7 +678,7 @@ describe('table', () => {
         });
         const secondCell = () => container.querySelector(`.${prefix}-tbody .${prefix}-row`)?.children[1] as HTMLElement;
         await waitFor(() => expect(getComputedStyle(secondCell()).left).toBe('200px'));
-        const thead = container.querySelector(`.${prefix}-thead`) as HTMLElement;
+        const thead = getElement(`.${prefix}-thead`, container);
         expect(thead.getBoundingClientRect().height).toBe(0);
         expect(thead.querySelector('th')?.getBoundingClientRect().width).toBeGreaterThan(0);
     });
@@ -690,7 +690,7 @@ describe('table', () => {
             pagination: false,
             scroll: { y: 200 },
         });
-        const body = container.querySelector(`.${prefix}-body`) as HTMLElement;
+        const body = getElement(`.${prefix}-body`, container);
         await tabTo(body);
         expectThemeFocusRing(body);
         // rows are no Tab stops; a stop follows, since past the document's end Firefox keeps the focus where it is

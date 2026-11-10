@@ -58,7 +58,7 @@ export function getNestData(total = 25) {
 }
 
 export function getTreeData() {
-    const childrenData = [
+    return [
         {
             key: 1,
             name: 'ZhangSan',
@@ -122,5 +122,4 @@ export function getTreeData() {
             address: 'bytedance 8',
         },
     ];
-    return childrenData;
 }

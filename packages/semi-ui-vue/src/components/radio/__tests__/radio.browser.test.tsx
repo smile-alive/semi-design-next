@@ -4,14 +4,14 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Radio, { RadioGroup } from '..';
 import GroupModel from './fixtures/group-model.vue';
 import Model from './fixtures/model.vue';
 
 const prefix = `${BASE_CLASS_PREFIX}-radio`;
 const outlineOf = (el: Element) => getComputedStyle(el).outlineStyle;
-const display = (el: Element) => el.querySelector(`.${prefix}-inner-display`) as Element;
+const display = (el: Element) => getElement(`.${prefix}-inner-display`, el);
 
 describe('Radio（浏览器）', () => {
     // Chrome sends no click for Space on a checked radio; the jsdom tests that press Space simulate one and miss this.
@@ -61,7 +61,7 @@ describe('Radio（浏览器）', () => {
 
     it('鼠标点击单选框后不显示焦点环，再按键后显示主题焦点环', async () => {
         const { container } = render(Radio, { slots: { default: () => 'label' } });
-        await userEvent.click(container.querySelector(`.${prefix}`) as Element);
+        await userEvent.click(getElement(`.${prefix}`, container));
         expect(screen.getByRole('radio')).toHaveFocus();
         expect(outlineOf(display(container))).toBe('none');
         // Backspace does nothing on a radio, it only makes the browser treat the focus as keyboard focus
@@ -85,7 +85,7 @@ describe('Radio（浏览器）', () => {
         expect(outlineOf(display(card))).toBe('none');
         await userEvent.keyboard('{Tab}');
         expect(screen.getByRole('radio', { name: 'button' })).toHaveFocus();
-        expectThemeFocusRing(button.querySelector(`.${prefix}-addon-buttonRadio`) as Element);
+        expectThemeFocusRing(getElement(`.${prefix}-addon-buttonRadio`, button));
         expect(outlineOf(button)).toBe('none');
         expect(outlineOf(card)).toBe('none');
     });
@@ -105,7 +105,7 @@ describe('Radio（浏览器）', () => {
         const { container } = render(Model);
         expect(container.querySelector(`.${prefix} svg`)).not.toBeNull();
 
-        await userEvent.click(container.querySelector(`.${prefix}`) as Element);
+        await userEvent.click(getElement(`.${prefix}`, container));
         await userEvent.keyboard('{Backspace}');
         expect(container.querySelector(`.${prefix} svg`)).toBeNull();
         expect(container.querySelector(`.${prefix}`)).not.toHaveClass(`${prefix}-checked`);
@@ -129,7 +129,7 @@ describe('Radio（浏览器）', () => {
             ),
         });
         const [card, button] = container.querySelectorAll<HTMLElement>('label') as unknown as HTMLElement[];
-        const addon = button.querySelector<HTMLElement>(`.${prefix}-addon-buttonRadio`) as HTMLElement;
+        const addon = getElement(`.${prefix}-addon-buttonRadio`, button);
         // the transition would leave the computed value between the two colors right after the pointer moves
         card.style.transition = 'none';
         addon.style.transition = 'none';
@@ -143,7 +143,7 @@ describe('Radio（浏览器）', () => {
         await userEvent.click(addon);
         expect(screen.getByRole('radio', { name: 'button' })).toBeChecked();
         expect(getComputedStyle(addon).backgroundColor).not.toBe(probe('--semi-color-fill-1'));
-        await userEvent.click(card.querySelector(`.${prefix}-addon`) as Element);
+        await userEvent.click(getElement(`.${prefix}-addon`, card));
         expect(screen.getByRole('radio', { name: 'card' })).toBeChecked();
         expect(getComputedStyle(card).backgroundColor).not.toBe(probe('--semi-color-fill-0'));
     });

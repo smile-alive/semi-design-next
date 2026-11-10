@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import Checkbox from '../checkbox.svelte';
 import type { CheckboxEvent } from '../interface';
 import CheckboxModes from './checkbox-modes.svelte';
@@ -12,7 +13,7 @@ import Scenes from './scenes.svelte';
 
 type Change = (event: CheckboxEvent) => void;
 const prefixCls = `${BASE_CLASS_PREFIX}-checkbox`;
-const getWrapper = () => document.querySelector<HTMLElement>(`.${prefixCls}`) as HTMLElement;
+const getWrapper = () => getElement(`.${prefixCls}`);
 const getInput = () => screen.getByRole<HTMLInputElement>('checkbox');
 const text = (content: string) => createRawSnippet(() => ({ render: () => `<span>${content}</span>` }));
 const label = text('Semi Design');
@@ -126,7 +127,7 @@ describe('Svelte Checkbox', () => {
 
     it('extra 片段：带 x-semi-prop 且被 aria-describedby 引用', () => {
         render(Checkbox, { props: { children: label, extra: text('abcd') } });
-        const extra = document.querySelector(`.${prefixCls}-extra`) as HTMLElement;
+        const extra = getElement(`.${prefixCls}-extra`);
         expect(extra).toHaveTextContent(/^abcd$/);
         expect(extra).toHaveAttribute('x-semi-prop', 'extra');
         expect(getInput()).toHaveAttribute('aria-describedby', extra.id);
@@ -184,7 +185,7 @@ describe('Svelte Checkbox', () => {
         expect(input).toHaveAttribute('aria-invalid', 'true');
         expect(input).toHaveAttribute('aria-errormessage', 'err');
         expect(input).toHaveAttribute('aria-required', 'true');
-        const addon = document.querySelector(`.${prefixCls}-addon`) as HTMLElement;
+        const addon = getElement(`.${prefixCls}-addon`);
         expect(addon.id).not.toBe('');
         expect(input).toHaveAttribute('aria-labelledby', `outer ${addon.id}`);
         expect(getWrapper()).not.toHaveAttribute('aria-labelledby');
@@ -273,7 +274,7 @@ describe('Svelte Checkbox', () => {
         await userEvent.click(screen.getByRole('link', { name: 'extra link' }));
         expect(getInput()).not.toBeChecked();
         expect(store.log).toEqual([]);
-        await userEvent.click(document.querySelector(`.${prefixCls}-addon`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-addon`));
         expect(getInput()).toBeChecked();
         expect(store.log).toEqual(['change']);
     });

@@ -5,7 +5,7 @@ import { fireEvent, screen } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Checkbox, { CheckboxGroup } from '..';
 import type { CheckboxEvent, CheckboxGroupEmits, CheckboxGroupProps, CheckboxGroupSlots, CheckboxOptionItem, CheckboxValue } from '../interface';
 import Conditional from './fixtures/conditional.vue';
@@ -111,7 +111,7 @@ describe('CheckboxGroup', () => {
         expect(container.querySelectorAll(`.${prefixCls}-disabled`)).toHaveLength(4);
         screen.getAllByRole('checkbox').forEach((el) => expect(el).toBeDisabled());
         // The native input swallows clicks while disabled, so click the visible box the user sees.
-        await userEvent.click(container.querySelector(`.${prefixCls}-inner`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-inner`, container));
         expect(change).not.toHaveBeenCalled();
         expect(getCheckbox('Abc')).not.toBeChecked();
     });

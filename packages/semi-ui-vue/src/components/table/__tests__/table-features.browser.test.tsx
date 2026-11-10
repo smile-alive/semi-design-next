@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { getData, render } from '@test/utils/vue';
+import { getData, render, getElement } from '@test/utils/vue';
 import Table, { type ColumnProps, type TableCellSlotProps, type TableChangeInfo, type TableFilterDropdownSlotProps, type TableResizeFn } from '..';
 import Button from '../../button';
 import Input, { type InputHandle } from '../../input';
@@ -27,7 +27,7 @@ const getFileData = (total: number) =>
 const designFilters = ['Semi Design 设计稿', 'Semi D2C 设计稿'].map((value) => ({ text: value, value }));
 
 const getHeaderCell = (container: Element, title: string) => Array.from(container.querySelectorAll<HTMLElement>(`.${prefix}-thead .${prefix}-row-head`)).find((th) => th.textContent === title) as HTMLElement;
-const getBody = () => document.querySelector(`.${prefix}-body`) as HTMLElement;
+const getBody = () => getElement(`.${prefix}-body`);
 const getBodyRows = () => document.querySelectorAll(`.${prefix}-tbody .${prefix}-row`);
 const getDropdown = () => document.querySelector(`.${BASE_CLASS_PREFIX}-dropdown`);
 const getFilterTriggers = () => document.querySelectorAll<HTMLElement>(`.${prefix}-column-filter`);
@@ -74,7 +74,7 @@ describe('Table 列功能（浏览器）', () => {
         });
         const sizeOperate = getHeaderCell(container, 'Size').querySelector(`.${prefix}-operate-wrapper`);
         const ownerCell = getHeaderCell(container, 'Owner');
-        const ownerOperate = ownerCell.querySelector(`.${prefix}-operate-wrapper`) as HTMLElement;
+        const ownerOperate = getElement(`.${prefix}-operate-wrapper`, ownerCell);
         expect(sizeOperate).toHaveStyle({ justifyContent: 'center' });
         expect(ownerOperate).toHaveStyle({ justifyContent: 'flex-end' });
         const ownerCellRect = ownerCell.getBoundingClientRect();
@@ -112,7 +112,7 @@ describe('Table 列功能（浏览器）', () => {
         const handle = await findElement(() => getHeaderCell(container, '名称')?.querySelector(`.${prefix}-resize-handle`));
         await drag(handle, 100);
         await waitFor(() => expect(getHeaderCell(container, '名称').getBoundingClientRect().width).toBeCloseTo(300, 0));
-        await userEvent.click(container.querySelector(`.${prefix}-tbody .${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-tbody .${BASE_CLASS_PREFIX}-checkbox`, container));
         await waitFor(() => expect(container.querySelectorAll(`.${prefix}-tbody .${BASE_CLASS_PREFIX}-checkbox-checked`)).toHaveLength(1));
         expect(getHeaderCell(container, '名称').getBoundingClientRect().width).toBeCloseTo(300, 0);
     });
@@ -150,7 +150,7 @@ describe('Table 列功能（浏览器）', () => {
             dataSource: data,
             rowSelection: { getCheckboxProps: (record: Row) => ({ disabled: record.name === 'Disabled User' }) },
         });
-        await userEvent.click(document.querySelector(`.${prefix}-row-head .${BASE_CLASS_PREFIX}-checkbox-inner-display`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-row-head .${BASE_CLASS_PREFIX}-checkbox-inner-display`));
         await waitFor(() => expect(document.querySelectorAll(`.${BASE_CLASS_PREFIX}-checkbox-checked`)).toHaveLength(4));
     });
 
@@ -296,7 +296,7 @@ describe('Table 列功能（浏览器）', () => {
             );
         });
         render(Demo);
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-switch`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-switch`));
         await expect.poll(getBody).toHaveStyle({ maxHeight: '300px' });
     });
 
@@ -402,7 +402,7 @@ describe('Table 列功能（浏览器）', () => {
                 cell: ({ column, text }: TableCellSlotProps) => (column.dataIndex === 'size' ? [text ? `${text} KB` : '未知'] : []),
             }
         );
-        const sorter = document.querySelector(`.${prefix}-column-sorter`) as HTMLElement;
+        const sorter = getElement(`.${prefix}-column-sorter`);
         for (const first of ['1 KB', '5 KB']) {
             await userEvent.click(sorter);
             await waitFor(() => expect(getBodyRows()[0].textContent).toContain(first));
@@ -457,7 +457,7 @@ describe('Table 列功能（浏览器）', () => {
             ))
         );
         const hiddenRows = (name: string) => document.querySelectorAll(`[data-cy=${name}] .${prefix}-row-hidden`);
-        const expandIcon = (name: string) => document.querySelector(`[data-cy=${name}] .${prefix}-expand-icon`) as HTMLElement;
+        const expandIcon = (name: string) => getElement(`[data-cy=${name}] .${prefix}-expand-icon`);
         await waitFor(() => expect(hiddenRows('expand')).toHaveLength(3));
         expect(hiddenRows('tree')).toHaveLength(5);
         await userEvent.click(expandIcon('tree'));
@@ -579,7 +579,7 @@ describe('Table 列功能（浏览器）', () => {
             dataSource: getFileData(3),
             pagination: false,
         });
-        await userEvent.click(document.querySelector(`.${prefix}-column-filter`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-column-filter`));
         const footer = await findElement(() => document.querySelector<HTMLElement>(`.${prefix}-column-filter-footer`));
         const style = getComputedStyle(footer);
         expect(style.display).toBe('flex');
@@ -613,7 +613,7 @@ describe('Table 列功能（浏览器）', () => {
             pagination: false,
             onRow: () => ({ role: 'button', tabindex: 0 }),
         });
-        const row = container.querySelector(`.${prefix}-tbody .${prefix}-row`) as HTMLElement;
+        const row = getElement(`.${prefix}-tbody .${prefix}-row`, container);
         await tabTo(row);
         expectThemeFocusRing(row);
     });
@@ -624,7 +624,7 @@ describe('Table 列功能（浏览器）', () => {
             dataSource: getFileData(3),
             pagination: false,
         });
-        const sorter = container.querySelector(`.${prefix}-column-sorter-wrapper`) as HTMLElement;
+        const sorter = getElement(`.${prefix}-column-sorter-wrapper`, container);
         await tabTo(sorter);
         expectThemeFocusRing(sorter);
     });
@@ -635,8 +635,8 @@ describe('Table 列功能（浏览器）', () => {
             dataSource: getFileData(3),
             pagination: false,
         });
-        const th = container.querySelector('th') as HTMLElement;
-        const button = getComputedStyle(container.querySelector(`.${prefix}-column-sorter-wrapper`) as HTMLElement);
+        const th = getElement('th', container);
+        const button = getComputedStyle(getElement(`.${prefix}-column-sorter-wrapper`, container));
         const cell = getComputedStyle(th);
         for (const prop of ['color', 'fontFamily', 'fontSize', 'fontWeight', 'lineHeight'] as const) {
             expect(button[prop]).toBe(cell[prop]);
@@ -648,7 +648,7 @@ describe('Table 列功能（浏览器）', () => {
 
     it('展开按钮显示主题焦点环', async () => {
         const { container } = mountTable({ columns: [{ title: 'size', dataIndex: 'size' }], dataSource: getFileData(3), pagination: false }, { expandedRow: () => ['more'] });
-        const expand = container.querySelector(`.${prefix}-expand-icon`) as HTMLElement;
+        const expand = getElement(`.${prefix}-expand-icon`, container);
         await tabTo(expand);
         expectThemeFocusRing(expand);
     });

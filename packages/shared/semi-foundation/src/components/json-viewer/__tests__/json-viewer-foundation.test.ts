@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, onTestFinished, vi, type Mock } from 'vite-plus/test';
 import JsonViewerFoundation, { type JsonViewerAdapter, type JsonViewerBaseProps, type JsonViewerBaseState } from '@fibrae/semi-foundation/components/json-viewer/foundation';
 import { JsonViewer } from '@fibrae/semi-json-viewer-core';
+import { getElement } from '@test/utils/dom/common';
 import { mockResizeObserverCore } from '@test/utils/dom/resize-observer-core';
 
 // the foundation keeps its editor private, so the tests take it from the constructor
@@ -165,7 +166,7 @@ describe('JsonViewerFoundation', () => {
             newText: 'c',
         });
         await vi.waitFor(() => expect(editor.querySelectorAll('[role="listbox"] > [role="option"]').length).toBeGreaterThan(0));
-        const listbox = editor.querySelector('[role="listbox"]') as HTMLElement;
+        const listbox = getElement('[role="listbox"]', editor);
         const content = editor.querySelector('[role="textbox"]');
         const [first] = listbox.querySelectorAll('[role="option"]');
         expect(content).toHaveAttribute('aria-autocomplete', 'list');

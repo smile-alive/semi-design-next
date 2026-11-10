@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/t
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement, defined } from '@test/utils/solid';
 import Slider, { type SliderProps } from '..';
 import ConfigProvider from '../../config-provider';
 import Tooltip from '../../tooltip';
@@ -27,7 +28,7 @@ const findTooltip = () =>
         expect(getTooltip()).not.toBeNull();
         return getTooltip();
     });
-const getHandle = () => document.querySelector<HTMLElement>(`.${prefix}-handle`) as HTMLElement;
+const getHandle = () => getElement(`.${prefix}-handle`);
 const getHandles = () => [...document.querySelectorAll<HTMLElement>(`.${prefix}-handle`)];
 const getInput = () => screen.getByRole<HTMLInputElement>('slider');
 const getInputs = () => screen.getAllByRole<HTMLInputElement>('slider');
@@ -38,7 +39,7 @@ function tabTo(element: HTMLElement) {
     fireEvent.keyDown(document.body, { key: 'Tab' });
     element.focus();
 }
-const query = (container: ParentNode, suffix: string) => container.querySelector(`.${prefix}-${suffix}`) as HTMLElement;
+const query = (container: ParentNode, suffix: string) => getElement(`.${prefix}-${suffix}`, container);
 const queryAll = (container: ParentNode, suffix: string) => container.querySelectorAll(`.${prefix}-${suffix}`);
 const getWrapper = () => query(document, 'wrapper');
 // rects derive from inline width/height/margin: with width 100 and no margin, clientX equals the value
@@ -267,14 +268,14 @@ describe('Slider', () => {
 
     it('showMarkLabel 为 false 时不显示标签，空 marks 不渲染刻度', () => {
         const { unmount } = render(() => <Slider defaultValue={30} marks={{ 20: '20c', 40: '40c' }} showMarkLabel={false} />);
-        expect(query(document, 'marks')).toBeNull();
+        expect(document.querySelector(`.${prefix}-marks`)).toBeNull();
         expect(screen.queryByText('20c')).toBeNull();
         expect(queryAll(document, 'dot')).toHaveLength(2);
         unmount();
 
         render(() => <Slider defaultValue={30} marks={{}} />);
         expect(queryAll(document, 'dot')).toHaveLength(0);
-        expect(query(document, 'marks')).toBeNull();
+        expect(document.querySelector(`.${prefix}-marks`)).toBeNull();
     });
 
     it('renderMark 渲染刻度节点', () => {
@@ -574,7 +575,7 @@ describe('Slider 的无障碍', () => {
     });
 
     it('每个手柄都是原生 range，表单以 name 提交', () => {
-        const form = () => new FormData(document.querySelector('form') as HTMLFormElement);
+        const form = () => new FormData(getElement<HTMLFormElement>('form'));
         render(() => (
             <form>
                 <Slider name="volume" defaultValue={30} />
@@ -1101,7 +1102,7 @@ describe('Slider 作为 Tooltip 触发器', () => {
                 <Slider defaultValue={30} disabled />
             </Tooltip>
         ));
-        const wrapper = getWrapper().closest(`.${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`) as HTMLElement;
+        const wrapper = defined(getWrapper().closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`));
         expect(wrapper).not.toBeNull();
         expect(wrapper).toHaveStyle({ cursor: 'not-allowed' });
     });

@@ -3,6 +3,7 @@ import type React from 'react';
 import { render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { page } from 'vite-plus/test/browser';
+import { getElement } from '@test/utils/react';
 import { Col, Row } from '../index';
 
 const marginLeft = (el: Element) => getComputedStyle(el).getPropertyValue('margin-left');
@@ -146,8 +147,8 @@ describe('Grid（浏览器）', () => {
                     <Col />
                 </Row>
             );
-            const row = container.querySelector('.semi-row') as HTMLElement;
-            const col = container.querySelector('.semi-col') as HTMLElement;
+            const row = getElement('.semi-row', container);
+            const col = getElement('.semi-col', container);
             expect(marginLeft(row)).toBe('-8px');
             expect(marginRight(row)).toBe('-8px');
             expect(marginTop(row)).toBe('0px');
@@ -162,8 +163,8 @@ describe('Grid（浏览器）', () => {
                     <Col />
                 </Row>
             );
-            const row = container.querySelector('.semi-row') as HTMLElement;
-            const col = container.querySelector('.semi-col') as HTMLElement;
+            const row = getElement('.semi-row', container);
+            const col = getElement('.semi-col', container);
             expect(marginLeft(row)).toBe('-8px');
             expect(marginTop(row)).toBe('-12px');
             expect(paddingLeft(col)).toBe('8px');
@@ -176,8 +177,8 @@ describe('Grid（浏览器）', () => {
                     <Col />
                 </Row>
             );
-            const row = container.querySelector('.semi-row') as HTMLElement;
-            const col = container.querySelector('.semi-col') as HTMLElement;
+            const row = getElement('.semi-row', container);
+            const col = getElement('.semi-col', container);
             expect(marginLeft(row)).toBe('0px');
             expect(marginTop(row)).toBe('0px');
             expect(paddingLeft(col)).toBe('0px');
@@ -190,8 +191,8 @@ describe('Grid（浏览器）', () => {
                     <Col />
                 </Row>
             );
-            const row = container.querySelector('.semi-row') as HTMLElement;
-            const col = container.querySelector('.semi-col') as HTMLElement;
+            const row = getElement('.semi-row', container);
+            const col = getElement('.semi-col', container);
             expect(getComputedStyle(row).display).toBe('flex');
             expect(marginLeft(row)).toBe('-8px');
             expect(marginTop(row)).toBe('-12px');
@@ -205,7 +206,7 @@ describe('Grid（浏览器）', () => {
                     <Col />
                 </Row>
             );
-            const row = container.querySelector('.semi-row') as HTMLElement;
+            const row = getElement('.semi-row', container);
             await expect.poll(() => marginLeft(row)).toBe('3px');
             expect(marginRight(row)).toBe('-8px');
             expect(marginTop(row)).toBe('-12px');
@@ -221,13 +222,13 @@ describe('Grid（浏览器）', () => {
                     </Col>
                 </Row>
             );
-            const inner = container.querySelector('.inner') as HTMLElement;
+            const inner = getElement('.inner', container);
             expect(paddingLeft(inner)).toBe('4px');
         });
 
         it('Col 脱离 Row 时没有任何 gutter 变量可继承，padding 为 0', () => {
             const { container } = render(<Col span={12}>child</Col>);
-            const col = container.querySelector('.semi-col') as HTMLElement;
+            const col = getElement('.semi-col', container);
             expect(paddingLeft(col)).toBe('0px');
             expect(paddingTop(col)).toBe('0px');
         });
@@ -250,8 +251,8 @@ describe('Grid（浏览器）', () => {
                         <Col />
                     </Row>
                 );
-                const row = container.querySelector('.semi-row') as HTMLElement;
-                const col = container.querySelector('.semi-col') as HTMLElement;
+                const row = getElement('.semi-row', container);
+                const col = getElement('.semi-col', container);
                 await expect.poll(() => marginLeft(row)).toBe(expectedMargin);
                 expect(paddingLeft(col)).toBe(expectedPadding);
             });
@@ -281,7 +282,7 @@ describe('Grid（浏览器）', () => {
                     </Row>
                 </Profiler>
             );
-            const col = container.querySelector('.semi-col') as HTMLElement;
+            const col = getElement('.semi-col', container);
             await expect.poll(() => paddingLeft(col)).toBe('4px');
             expect(onRender).toHaveBeenCalledTimes(1);
 

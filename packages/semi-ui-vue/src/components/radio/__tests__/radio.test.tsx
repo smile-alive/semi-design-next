@@ -6,7 +6,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Radio, { RadioGroup } from '..';
 import type { RadioChangeEvent, RadioEmits, RadioHandle } from '../interface';
 import Handle from './fixtures/handle.vue';
@@ -23,7 +23,7 @@ const getRadio = () => screen.getByRole<HTMLInputElement>('radio');
 function settle() {
     vi.setSystemTime(Date.now() + 10);
 }
-const getLabel = () => document.querySelector<HTMLLabelElement>('label') as HTMLLabelElement;
+const getLabel = () => getElement<HTMLLabelElement>('label');
 function handleOf(props: Record<string, unknown> = {}) {
     const holder: { current?: RadioHandle } = {};
     render(Handle, { props: { ...props, onReady: (handle: RadioHandle) => (holder.current = handle) } });
@@ -141,7 +141,7 @@ describe('Radio', () => {
 
     it('extra 插槽', () => {
         render(Radio, { slots: { default: () => 'Radio with extra', extra: () => 'Extra information' } });
-        const extra = document.querySelector(`.${prefixCls}-extra`) as HTMLElement;
+        const extra = getElement(`.${prefixCls}-extra`);
         expect(extra).toHaveTextContent(/^Extra information$/);
         expect(extra).toHaveAttribute('x-semi-prop', 'extra');
         expect(getRadio()).toHaveAttribute('aria-describedby', extra.id);
@@ -235,11 +235,11 @@ describe('Radio', () => {
         const app = createSSRApp({ render: () => <Radio>{{ default: () => 'label', extra: () => 'more' }}</Radio> });
         const container = document.createElement('div');
         container.innerHTML = await renderToString(app);
-        const input = container.querySelector('input') as HTMLInputElement;
-        const addonId = (container.querySelector(`.${prefixCls}-addon`) as HTMLElement).id;
+        const input = getElement<HTMLInputElement>('input', container);
+        const addonId = getElement(`.${prefixCls}-addon`, container).id;
         expect(addonId).not.toBe('');
         expect(input.getAttribute('aria-labelledby')).toBe(addonId);
-        expect(input.getAttribute('aria-describedby')).toBe((container.querySelector(`.${prefixCls}-extra`) as HTMLElement).id);
+        expect(input.getAttribute('aria-describedby')).toBe(getElement(`.${prefixCls}-extra`, container).id);
     });
 
     it('modelValue 变化时当次渲染的 DOM 就已是新值', async () => {
@@ -342,7 +342,7 @@ describe('Radio', () => {
 
     it('aria-labelledby 与 aria-describedby 指向 addon 与 extra', () => {
         const first = render(Radio, { slots: { default: () => 'A', extra: () => 'more' } });
-        const addon = document.querySelector(`.${prefixCls}-addon`) as HTMLElement;
+        const addon = getElement(`.${prefixCls}-addon`);
         expect(addon.id).toBeTruthy();
         expect(getRadio()).toHaveAttribute('aria-labelledby', addon.id);
         expect(screen.getByRole('radio', { name: 'A' })).toHaveAccessibleDescription('more');
@@ -378,7 +378,7 @@ describe('Radio', () => {
             props: { type: 'button', addonClassName: 'ac', addonStyle: { color: 'red' } },
             slots: { default: () => 'A', extra: () => 'more' },
         });
-        const addon = document.querySelector(`.${prefixCls}-addon-buttonRadio`) as HTMLElement;
+        const addon = getElement(`.${prefixCls}-addon-buttonRadio`);
         expect(addon).toHaveClass('ac');
         expect(addon).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(document.querySelector(`.${prefixCls}-extra`)).toBeNull();
@@ -387,7 +387,7 @@ describe('Radio', () => {
 
     it('button 类型的选中类名', async () => {
         render(Radio, { props: { type: 'button' }, slots: { default: () => 'A' } });
-        const addon = document.querySelector(`.${prefixCls}-addon-buttonRadio`) as HTMLElement;
+        const addon = getElement(`.${prefixCls}-addon-buttonRadio`);
         await userEvent.click(getRadio());
         expect(addon).toHaveClass(`${prefixCls}-addon-buttonRadio-checked`);
     });

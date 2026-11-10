@@ -1,7 +1,7 @@
 /** @jsxImportSource vue */
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import { Col, Row, type RowProps } from '../index';
 import InstanceRefs from './fixtures/instance-refs.vue';
 
@@ -22,7 +22,7 @@ function colVars(col: HTMLElement) {
 const zeros = { xs: '0px', sm: '0px', md: '0px', lg: '0px', xl: '0px', xxl: '0px' };
 
 const renderRow = (props: RowProps = {}) => render(Row, { props, slots: { default: () => <Col /> } });
-const getRow = (container: Element) => container.querySelector('.semi-row') as HTMLElement;
+const getRow = (container: Element) => getElement('.semi-row', container);
 
 describe('Row', () => {
     it('渲染基础 row 类名与默认插槽，并把未声明属性透传到根元素', () => {
@@ -127,7 +127,7 @@ describe('Row', () => {
 
     it('嵌套 Row 完整写出自己的变量，不依赖外层', () => {
         const view = render(() => <Row gutter={20}>{() => <Col>{() => <Row gutter={8} class="inner" />}</Col>}</Row>);
-        const inner = view.container.querySelector('.inner') as HTMLElement;
+        const inner = getElement('.inner', view.container);
         expect(gutterVars(inner, 'x')).toMatchObject({ xs: '8px', xxl: '8px' });
         expect(gutterVars(inner, 'y')).toEqual(zeros);
     });
@@ -148,14 +148,14 @@ describe('Row', () => {
 describe('Col', () => {
     it('span、order、offset、push 与 pull 写成内联 CSS 变量，类名只有基础类名与 class', () => {
         const view = render(() => <Row>{() => <Col class="custom" offset={3} order={2} pull={5} push={4} span={6} />}</Row>);
-        const col = view.container.querySelector('.semi-col') as HTMLElement;
+        const col = getElement('.semi-col', view.container);
         expect(col.className).toBe('semi-col custom');
         expect(colVars(col)).toEqual({ '--semi-col-span': '6', '--semi-col-offset': '3', '--semi-col-push': '4', '--semi-col-pull': '5', '--semi-col-order': '2' });
     });
 
     it('值为 0 也写入变量；span 为 0 时另写 display 变量隐藏', () => {
         const view = render(Col, { props: { offset: 0, order: 0, pull: 0, push: 0, span: 0 } });
-        expect(colVars(view.container.querySelector('.semi-col') as HTMLElement)).toEqual({ '--semi-col-span': '0', '--semi-col-offset': '0', '--semi-col-push': '0', '--semi-col-pull': '0', '--semi-col-order': '0', '--semi-col-display': 'none' });
+        expect(colVars(getElement('.semi-col', view.container))).toEqual({ '--semi-col-span': '0', '--semi-col-offset': '0', '--semi-col-push': '0', '--semi-col-pull': '0', '--semi-col-order': '0', '--semi-col-display': 'none' });
     });
 
     it('没有属性时不写任何变量', () => {
@@ -167,7 +167,7 @@ describe('Col', () => {
         const view = render(Col, {
             props: { md: { span: 12, order: 0, offset: 2, push: 1, pull: 0 }, xs: 24, xxl: { order: 3 } },
         });
-        const col = view.container.querySelector('.semi-col') as HTMLElement;
+        const col = getElement('.semi-col', view.container);
         expect(colVars(col)).toEqual({
             '--semi-col-span-xs': '24',
             '--semi-col-span-md': '12',
@@ -212,7 +212,7 @@ describe('Col', () => {
                 )}
             </Row>
         ));
-        const col = view.container.querySelector('.semi-col') as HTMLElement;
+        const col = getElement('.semi-col', view.container);
         expect(col).toHaveAttribute('data-testid', 'col');
         expect(col).toHaveAttribute('id', 'c');
         expect(col).toHaveAttribute('x-semi-prop', 'children');
@@ -222,7 +222,7 @@ describe('Col', () => {
 
     it('在 Row 之外渲染，样式里只有 Col 自己的变量', () => {
         const view = render(Col, { props: { span: 12 }, slots: { default: () => 'child' } });
-        const col = view.container.querySelector('.semi-col') as HTMLElement;
+        const col = getElement('.semi-col', view.container);
         expect(colVars(col)).toEqual({ '--semi-col-span': '12' });
         expect(col).toHaveTextContent('child');
     });
@@ -230,7 +230,7 @@ describe('Col', () => {
     it('span 等 prop 变化后变量响应式更新', async () => {
         const view = render(Col, { props: { span: 6 } });
         await view.rerender({ span: 8, xs: { offset: 1 } });
-        expect(colVars(view.container.querySelector('.semi-col') as HTMLElement)).toEqual({ '--semi-col-span': '8', '--semi-col-offset-xs': '1' });
+        expect(colVars(getElement('.semi-col', view.container))).toEqual({ '--semi-col-span': '8', '--semi-col-offset-xs': '1' });
     });
 
     it('读取 app 的全局默认值，显式属性优先', () => {

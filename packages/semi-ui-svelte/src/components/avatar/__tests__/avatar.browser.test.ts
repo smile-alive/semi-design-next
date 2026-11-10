@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import type { AvatarProps } from '../interface';
 import AvatarFixture from './avatar-fixture.svelte';
 
@@ -26,13 +27,13 @@ describe('Svelte Avatar 浏览器', () => {
         ['extra-large', '12px'],
     ])('方形描边 %s 的圆角跟随头像', (size, radius) => {
         const { container } = setup({ border: true, shape: 'square', size, src: image });
-        expect(getComputedStyle(container.querySelector(`.${prefix}-additionalBorder`) as HTMLElement).borderTopLeftRadius).toBe(radius);
+        expect(getComputedStyle(getElement(`.${prefix}-additionalBorder`, container)).borderTopLeftRadius).toBe(radius);
     });
 
     it.each(['image', 'text', 'element'])('%s 内容可点击头像支持 Tab 到达、键盘激活、Escape 保留焦点和主题焦点环', async (kind) => {
         const click = vi.fn<(event: MouseEvent) => void>();
         const { container } = setup({ alt: 'avatar', src: kind === 'image' ? image : undefined, onclick: click, node: kind === 'element', label: kind === 'text' ? 'U' : 'icon' });
-        const root = container.querySelector(`.${prefix}`) as HTMLElement;
+        const root = getElement(`.${prefix}`, container);
         const button = await screen.findByRole('button', { name: 'avatar' });
         await userEvent.click(button);
         expect(button).toHaveFocus();
@@ -54,7 +55,7 @@ describe('Svelte Avatar 浏览器', () => {
         const { store, container } = setup({ src: image, label: 'A very long avatar label' });
         store.src = 'data:image/png;base64,AAAA';
         await vi.waitFor(() => expect(container.querySelector('img')).toBeNull());
-        const text = container.querySelector(`.${prefix}-content`) as HTMLElement;
+        const text = getElement(`.${prefix}-content`, container);
         await vi.waitFor(() => expect(getComputedStyle(text).transform).not.toBe('matrix(1, 0, 0, 1, 0, 0)'));
         store.src = image;
         await vi.waitFor(() => expect(container.querySelector('img')).not.toBeNull());

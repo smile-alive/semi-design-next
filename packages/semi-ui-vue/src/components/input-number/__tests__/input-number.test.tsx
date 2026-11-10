@@ -8,7 +8,7 @@ import { numbers } from '@fibrae/semi-foundation/components/input-number/constan
 import { IconSearch } from '@fibrae/semi-icons-vue';
 import type { LocaleInput } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import InputNumber, { type InputNumberChangeEvent, type InputNumberHandle, type InputNumberProps } from '..';
 import { LocaleProvider } from '../../locale';
 import Controlled from './fixtures/controlled.vue';
@@ -28,9 +28,9 @@ const prefixCls = `${BASE_CLASS_PREFIX}-input`;
 
 const getInput = () => screen.getByRole<HTMLInputElement>('spinbutton');
 const getButtons = () => document.querySelector(`.${prefixCls}-number-suffix-btns`);
-const getUpButton = () => document.querySelector(`.${prefixCls}-number-suffix-btns .${prefixCls}-number-button-up`) as HTMLElement;
-const getDownButton = () => document.querySelector(`.${prefixCls}-number-suffix-btns .${prefixCls}-number-button-down`) as HTMLElement;
-const getWrapper = () => document.querySelector(`.${prefixCls}-number`) as HTMLElement;
+const getUpButton = () => getElement(`.${prefixCls}-number-suffix-btns .${prefixCls}-number-button-up`);
+const getDownButton = () => getElement(`.${prefixCls}-number-suffix-btns .${prefixCls}-number-button-down`);
+const getWrapper = () => getElement(`.${prefixCls}-number`);
 
 async function mount(props: Props = {}, attrs: Record<string, unknown> = {}) {
     const view = render(InputNumber, { props, attrs });
@@ -1163,7 +1163,7 @@ describe('InputNumber', () => {
     it('清除按钮清空值', async () => {
         const onChange = vi.fn<Change>();
         await mount({ defaultValue: 100, showClear: true, onChange });
-        const clearBtn = document.querySelector(`.${prefixCls}-clearbtn`) as HTMLElement;
+        const clearBtn = getElement(`.${prefixCls}-clearbtn`);
         expect(clearBtn).not.toBeNull();
         await fireEvent.mouseDown(clearBtn);
         expect(getInput()).toHaveValue('');
@@ -1817,7 +1817,7 @@ describe('InputNumber', () => {
             expect(onEnterPress).toHaveBeenCalledTimes(1);
             expect(onKeyup).toHaveBeenCalledTimes(1);
             expect(onKeydown).toHaveBeenCalledTimes(1);
-            await fireEvent.mouseDown(document.querySelector(`.${prefixCls}-clearbtn`) as HTMLElement);
+            await fireEvent.mouseDown(getElement(`.${prefixCls}-clearbtn`));
             expect(onClear).toHaveBeenCalledTimes(1);
             await blurInput();
             expect(onFocus).toHaveBeenCalledTimes(1);

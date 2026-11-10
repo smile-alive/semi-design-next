@@ -4,7 +4,7 @@ import { screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, defined, getElement } from '@test/utils/vue';
 import Nav, { NavHeader, NavItem, SubNav, type ItemKey, type NavItems, type OnSelectedData } from '..';
 import Button from '../../button';
 import MiniRouter from './fixtures/mini-router.vue';
@@ -102,7 +102,7 @@ describe('Navigation（浏览器）', () => {
     it('悬停项内的按钮时，其 li 应用悬停样式', async () => {
         render(Nav, { slots: { default: () => <NavItem itemKey="home" text="首页" /> } });
         const button = screen.getByRole('button', { name: '首页' });
-        const li = button.closest('li') as HTMLElement;
+        const li = defined(button.closest<HTMLElement>('li'));
         const probe = document.createElement('span');
         probe.style.backgroundColor = 'var(--semi-color-fill-0)';
         li.append(probe);
@@ -125,14 +125,14 @@ describe('Navigation（浏览器）', () => {
             },
         });
         const button = screen.getByRole('button', { name: '首页' });
-        const li = button.closest('li') as HTMLElement;
+        const li = defined(button.closest<HTMLElement>('li'));
         expect(button.getBoundingClientRect().toJSON()).toEqual(li.getBoundingClientRect().toJSON());
         const text = screen.getByText('首页').getBoundingClientRect();
         expect(text.left - li.getBoundingClientRect().left).toBe(12);
         expect(text.top - li.getBoundingClientRect().top).toBe(8);
         const disabled = screen.getByRole('button', { name: '关于' });
         expect(getComputedStyle(disabled).cursor).toBe('not-allowed');
-        expect(getComputedStyle(disabled).color).toBe(getComputedStyle(disabled.closest('li') as HTMLElement).color);
+        expect(getComputedStyle(disabled).color).toBe(getComputedStyle(defined(disabled.closest<HTMLElement>('li'))).color);
     });
 
     it('窄导航中头部文字与项文字一同缩小，与收起动画期间一致', () => {
@@ -151,7 +151,7 @@ describe('Navigation（浏览器）', () => {
         });
         const within = (text: string, box: Element) => expect(screen.getByText(text).getBoundingClientRect().right).toBeLessThanOrEqual(box.getBoundingClientRect().right);
         within('用户管理', screen.getByRole('button', { name: '用户管理' }));
-        within('Semi 运营后台', document.querySelector(`.${prefix}-header`) as HTMLElement);
+        within('Semi 运营后台', getElement(`.${prefix}-header`));
     });
 
     it('展开时文字一起淡入，首次渲染时不执行', async () => {
@@ -168,10 +168,10 @@ describe('Navigation（浏览器）', () => {
                 icon: ({ level }: { level: number }) => (level === 0 ? <span /> : []),
             },
         });
-        const nav = container.querySelector(`.${prefix}`) as HTMLElement;
+        const nav = getElement(`.${prefix}`, container);
         const fading = () => document.getAnimations().filter((animation) => (animation as CSSTransition).transitionProperty === 'opacity');
         expect(fading()).toEqual([]);
-        const toggleButton = () => container.querySelector<HTMLButtonElement>(`.${prefix}-collapse-btn button`) as HTMLButtonElement;
+        const toggleButton = () => getElement<HTMLButtonElement>(`.${prefix}-collapse-btn button`, container);
         await userEvent.click(toggleButton());
         await waitFor(() => expect(nav).not.toHaveClass(`${prefix}-collapse-animating`));
         // A DOM click and one tick keep the expand and the checks below in one task: the 200ms fades cannot finish
@@ -201,7 +201,7 @@ describe('Navigation（浏览器）', () => {
     ])('%s时，切换折叠后 collapse-animating 随即移除', async (_, style) => {
         const items = [{ itemKey: 'user', text: '用户管理' }];
         const view = render(Nav, { props: { style, items }, slots: { icon: () => <span /> } });
-        const nav = view.container.querySelector(`.${prefix}`) as HTMLElement;
+        const nav = getElement(`.${prefix}`, view.container);
         await view.rerender({ style, items, isCollapsed: true });
         expect(nav).toHaveClass(`${prefix}-collapsed`);
         await waitFor(() => expect(nav).not.toHaveClass(`${prefix}-collapse-animating`));
@@ -226,7 +226,7 @@ describe('Navigation（浏览器）', () => {
         });
         await userEvent.click(screen.getByText('外层'));
         await userEvent.click(await screen.findByText('内层'));
-        const link = (await screen.findByText('文档')).closest('a') as HTMLAnchorElement;
+        const link = defined((await screen.findByText('文档')).closest<HTMLAnchorElement>('a'));
         link.addEventListener('click', click);
         await userEvent.click(link);
         expect(click).toHaveBeenCalledTimes(1);

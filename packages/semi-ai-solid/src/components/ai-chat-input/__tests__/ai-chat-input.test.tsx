@@ -6,7 +6,7 @@ import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import Popover from '@fibrae/semi-ui-solid/popover/index';
 import type { UploadHandle, UploadProps } from '@fibrae/semi-ui-solid/upload/index';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { countLiveListeners } from '@test/utils/solid';
+import { countLiveListeners, getElement } from '@test/utils/solid';
 import AIChatInput, { getConfigureItem, type AIChatInputElement, type AIChatInputHandle, type AIChatInputProps, type Attachment, type Setup } from '../index';
 
 type Props = AIChatInputProps;
@@ -29,7 +29,7 @@ async function setup(props: Partial<Props> & Record<string, unknown> = {}, wrap?
     return { ...result, ref, rerender, editor: () => ref.current.getEditor() as Editor };
 }
 
-const el = (parent: ParentNode, selector: string) => parent.querySelector(selector) as HTMLElement;
+const el = (parent: ParentNode, selector: string) => getElement(selector, parent);
 const root = (container: HTMLElement) => el(container, `.${prefix}`);
 const pm = (container: HTMLElement) => el(container, '.ProseMirror');
 const sendButton = (container: HTMLElement) => el(container, `.${prefix}-footer-action > .${prefix}-footer-action-button`);

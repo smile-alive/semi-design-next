@@ -1,6 +1,7 @@
 import { flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
+import { getElement } from '@test/utils/dom/common';
 import type { TreeProps } from '../interface';
 import { click, getNode, getSearchWrapper, optionCls, press, search, spyOn } from './data';
 import TreeSnippets from './tree-snippets.svelte';
@@ -27,7 +28,7 @@ describe('Tree snippet', () => {
     it('expandIcon 收到 class 与 onClick，点击只展开一次', async () => {
         const onExpand = spyOn('onExpand');
         renderKind('expandIcon', { onExpand });
-        const button = getNode('yazhou').querySelector('button') as HTMLButtonElement;
+        const button = getElement<HTMLButtonElement>('button', getNode('yazhou'));
         expect(button).toHaveClass(`${optionCls}-expand-icon`);
         expect(button).toHaveTextContent('+');
         await click(button);

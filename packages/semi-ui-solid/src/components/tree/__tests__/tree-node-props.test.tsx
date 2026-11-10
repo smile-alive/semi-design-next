@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconMapPin } from '@fibrae/semi-icons-solid';
+import { getElement } from '@test/utils/solid';
 import Tree, { type TreeProps } from '..';
 import Button from '../../button';
 
@@ -67,7 +68,7 @@ function renderTree(props: TreeProps) {
     return render(() => <Tree defaultExpandAll {...props} />);
 }
 
-const getNode = (key: string) => document.querySelector<HTMLElement>(`[role="treeitem"][data-key="${key}"]`) as HTMLElement;
+const getNode = (key: string) => getElement(`[role="treeitem"][data-key="${key}"]`);
 
 describe('Tree', () => {
     it('disable 节点属性', async () => {
@@ -76,7 +77,7 @@ describe('Tree', () => {
             treeData: treeDataDisabled,
             onChange: spyOnChange,
         });
-        const node = document.querySelector(`.${BASE_CLASS_PREFIX}-tree-option-disabled`) as HTMLElement;
+        const node = getElement(`.${BASE_CLASS_PREFIX}-tree-option-disabled`);
         expect(node).toHaveTextContent(/^中国$/);
         expect(node).toHaveAttribute('aria-disabled', 'true');
         await userEvent.click(node);
@@ -91,7 +92,7 @@ describe('Tree', () => {
             onChange: spyOnChange,
             multiple: true,
         });
-        const node = document.querySelector(`.${BASE_CLASS_PREFIX}-tree-option-disabled`) as HTMLElement;
+        const node = getElement(`.${BASE_CLASS_PREFIX}-tree-option-disabled`);
         expect(node).toHaveTextContent(/^中国$/);
         await userEvent.click(node);
         expect(spyOnChange).not.toHaveBeenCalled();

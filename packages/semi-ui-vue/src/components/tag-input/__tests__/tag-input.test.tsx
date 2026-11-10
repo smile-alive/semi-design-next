@@ -8,7 +8,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconSearch } from '@fibrae/semi-icons-vue';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { countLiveListeners, render } from '@test/utils/vue';
+import { countLiveListeners, render, getElement } from '@test/utils/vue';
 import TagInput, { type TagInputEmits, type TagInputHandle, type TagInputSlots, type TagInputTagSlotProps } from '..';
 import ConfigProvider from '../../config-provider';
 import Popover from '../../popover';
@@ -23,7 +23,7 @@ type Slots = { [K in keyof TagInputSlots]: (props: never) => VNode | VNode[] | s
 const tagInputCls = `${BASE_CLASS_PREFIX}-tagInput`;
 const tagSelector = `.${tagInputCls}-wrapper .${BASE_CLASS_PREFIX}-tag-content`;
 
-const getRoot = () => document.querySelector(`.${tagInputCls}`) as HTMLElement;
+const getRoot = () => getElement(`.${tagInputCls}`);
 const getInput = () => screen.getByRole<HTMLInputElement>('textbox');
 const getTagTexts = () => [...document.querySelectorAll(tagSelector)].map((node) => node.textContent);
 const getClearBtn = () => document.querySelector<HTMLElement>(`.${tagInputCls}-clearBtn`);
@@ -476,7 +476,7 @@ describe('TagInput', () => {
     it('blur 方法在焦点位于标签或清空按钮时同样移出焦点', async () => {
         const onBlur = vi.fn<Handler<'blur'>>();
         const { handle } = renderWithHandle({ defaultValue: ['abc'], showClear: true, onBlur });
-        const tag = document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tag`) as HTMLElement;
+        const tag = getElement(`.${BASE_CLASS_PREFIX}-tag`);
         tag.focus();
         handle().blur();
         await nextTick();
@@ -598,7 +598,7 @@ describe('TagInput', () => {
 
     it('点击 suffix 会聚焦输入框', async () => {
         renderTagInput({ defaultValue: ['abc'] }, { suffix: () => <span class="test-suffix">Suffix</span> });
-        await userEvent.click(document.querySelector('.test-suffix') as Element);
+        await userEvent.click(getElement('.test-suffix'));
         expect(getInput()).toHaveFocus();
     });
 
@@ -1172,7 +1172,7 @@ describe('TagInput 全局默认值与属性落点', () => {
             onKeyup,
         });
         expect(document.querySelector('input')).toBe(screen.getByRole('combobox', { name: 'Tags' }));
-        const native = document.querySelector('input') as HTMLInputElement;
+        const native = getElement<HTMLInputElement>('input');
         for (const [attr, value] of [
             ['id', 'tags'],
             ['name', 'tags'],
@@ -1313,7 +1313,7 @@ describe('TagInput（Vue）', () => {
         await userEvent.click(getInput());
         await userEvent.type(getInput(), 'a');
         await fireEvent.change(getInput());
-        await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-tag`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-tag`));
         await userEvent.click(document.body);
         expect(onFocus).toHaveBeenCalledTimes(1);
         expect(onBlur).toHaveBeenCalledTimes(1);

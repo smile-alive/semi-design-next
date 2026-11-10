@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { clickOutside } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import { getNavTitles } from './date-picker-browser-utils';
 import { dp, getInput, getInputs, getRoot, getSelectedDays, setup } from './test-utils';
 
@@ -18,7 +19,7 @@ describe('Svelte DatePicker 键入完成（浏览器）', () => {
         const input = getInput();
         await typeInto(input, '2022-10-10');
         await userEvent.hover(input);
-        await userEvent.click(getRoot().querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`, getRoot()));
         expect(input).toHaveValue('');
 
         await typeInto(input, '2022-10-10,2022-10-11');

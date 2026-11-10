@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { RatingProps } from '../interface';
 import RatingItem from '../item.svelte';
 import RatingFixture from './rating-fixture.svelte';
@@ -20,7 +21,7 @@ type OnFocus = (event: FocusEvent) => void;
 const prefixCls = `${BASE_CLASS_PREFIX}-rating`;
 const tooltips = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
-const getList = () => document.querySelector<HTMLUListElement>(`ul.${prefixCls}`) as HTMLUListElement;
+const getList = () => getElement<HTMLUListElement>(`ul.${prefixCls}`);
 const getRadios = () => screen.getAllByRole('radio');
 const getRadio = (name: string) => screen.getByRole('radio', { name });
 const getFullStars = () => document.querySelectorAll(`.${prefixCls}-star-full`);

@@ -6,7 +6,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement, defined } from '@test/utils/vue';
 import Cascader, { type CascaderData, type CascaderEmits, type CascaderValue } from '..';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
@@ -29,12 +29,12 @@ function mount(node: () => VNodeChild) {
 describe('Cascader（浏览器）', () => {
     it.each(['small', 'default', 'large'] as const)('修复 #1468：单选 Cascader 的搜索输入框在尺寸 %s 下垂直居中', async (size) => {
         const { container } = mount(() => <Cascader style={{ width: '300px' }} filterTreeNode leafOnly motion={false} size={size} treeData={treeData} />);
-        const trigger = container.querySelector(`.${prefixCls}`) as HTMLElement;
+        const trigger = getElement(`.${prefixCls}`, container);
         await userEvent.click(trigger);
-        const getInput = () => container.querySelector(`.${prefixCls}-selection input`) as HTMLInputElement;
+        const getInput = () => getElement<HTMLInputElement>(`.${prefixCls}-selection input`, container);
         await waitFor(() => expect(getInput()).not.toBeNull());
         const input = getInput();
-        const wrapper = (container.querySelector(`.${prefixCls}-search-wrapper`) as HTMLElement).getBoundingClientRect();
+        const wrapper = getElement(`.${prefixCls}-search-wrapper`, container).getBoundingClientRect();
         const triggerRect = trigger.getBoundingClientRect();
         expect(input).toHaveFocus();
         expect(wrapper.top).toBeGreaterThanOrEqual(triggerRect.top);
@@ -56,14 +56,14 @@ describe('Cascader（浏览器）', () => {
         const input = screen.getByRole('combobox', { name: 'searchable' });
         expect(input.tagName).toBe('INPUT');
         await tabTo(input);
-        expect(getComputedStyle(input.closest(`.${prefixCls}`) as HTMLElement).borderColor).toBe(focusBorder);
+        expect(getComputedStyle(defined(input.closest<HTMLElement>(`.${prefixCls}`))).borderColor).toBe(focusBorder);
     });
 
     it('修复 #2967：可搜索多选 Cascader 中的长标签在触发器内被截断', () => {
         const { container } = mount(() => <Cascader style={{ width: '200px' }} defaultValue={['1']} multiple filterTreeNode treeData={[{ label: '这是一个超长的用于测试的选项这是一个超长的用于测试的选项', value: '1' }]} />);
-        const trigger = (container.querySelector(`.${prefixCls}`) as HTMLElement).getBoundingClientRect();
-        const tag = screen.getByText(/^这是一个超长/).closest(`.${BASE_CLASS_PREFIX}-tag`) as HTMLElement;
-        const content = tag.querySelector(`.${BASE_CLASS_PREFIX}-tag-content`) as HTMLElement;
+        const trigger = getElement(`.${prefixCls}`, container).getBoundingClientRect();
+        const tag = defined(screen.getByText(/^这是一个超长/).closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-tag`));
+        const content = getElement(`.${BASE_CLASS_PREFIX}-tag-content`, tag);
         expect(tag.getBoundingClientRect().right).toBeLessThanOrEqual(trigger.right);
         expect(content.scrollWidth).toBeGreaterThan(content.clientWidth);
     });
@@ -131,16 +131,18 @@ const zhejiangTreeData: CascaderData[] = [
     },
 ];
 
-const getTrigger = () => document.querySelector<HTMLElement>(`.${prefixCls}`) as HTMLElement;
+const getTrigger = () => getElement(`.${prefixCls}`);
 const getPopover = () => document.querySelector<HTMLElement>(`.${prefixCls}-popover`);
 async function getOption(label: string) {
     await waitFor(() => expect(getPopover()).not.toBeNull());
-    return within(getPopover() as HTMLElement)
-        .getByText(label)
-        .closest(`.${prefixCls}-option`) as HTMLElement;
+    return defined(
+        within(getPopover() as HTMLElement)
+            .getByText(label)
+            .closest<HTMLElement>(`.${prefixCls}-option`)
+    );
 }
 const clickOption = async (label: string) => userEvent.click(await getOption(label));
-const clickCheckbox = async (label: string) => userEvent.click((await getOption(label)).querySelector(`.${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement);
+const clickCheckbox = async (label: string) => userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-checkbox`, await getOption(label)));
 const getTagTexts = () => [...document.querySelectorAll(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-content`)].map((tag) => tag.textContent);
 const getSearchText = () => document.querySelector(`.${prefixCls}-search-wrapper span`)?.textContent;
 const findClearButton = () =>
@@ -214,7 +216,7 @@ describe('cascader', () => {
         await userEvent.click(getTrigger());
         await clickCheckbox('Node1');
         expect(getTagTexts()).not.toEqual([]);
-        await userEvent.click(document.querySelector(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-close`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-selection .${BASE_CLASS_PREFIX}-tag-close`));
         await waitFor(() => expect(getTagTexts()).toEqual([]));
     });
 
@@ -290,7 +292,7 @@ describe('cascader', () => {
                 />
             ));
         // Open from the arrow: a click on the trigger centre lands on a tag, which stops propagation
-        const open = () => userEvent.click(document.querySelector(`.${prefixCls}-arrow`) as HTMLElement);
+        const open = () => userEvent.click(getElement(`.${prefixCls}-arrow`));
 
         // autoMergeValue: the default value already exceeds max, so it may only shrink
         const { unmount } = renderCascader({ max: 1 });
@@ -388,7 +390,7 @@ describe('cascader', () => {
                 treeData={regionTreeData}
             />
         ));
-        const plusN = container.querySelector(`.${prefixCls}-selection-n`) as HTMLElement;
+        const plusN = getElement(`.${prefixCls}-selection-n`, container);
         await tabTo(plusN);
         expectThemeFocusRing(plusN);
     });
@@ -400,7 +402,7 @@ describe('cascader', () => {
         await userEvent.keyboard('{Enter}');
         await screen.findByRole('tree');
         await userEvent.keyboard('{ArrowDown}');
-        const option = () => document.getElementById(trigger.getAttribute('aria-activedescendant') ?? '') as HTMLElement;
+        const option = () => defined(document.getElementById(trigger.getAttribute('aria-activedescendant') ?? ''));
         await waitFor(() => expect(option()).toMatchTextContent('浙江省'));
         expectThemeFocusRing(option());
         await userEvent.keyboard('{ArrowRight}{ArrowRight}{ArrowRight}{ArrowRight}{Enter}');
@@ -438,11 +440,11 @@ describe('cascader', () => {
         await tabTo(trigger);
         await userEvent.keyboard('{End}');
         const option = await waitFor(() => {
-            const el = document.getElementById(trigger.getAttribute('aria-activedescendant') ?? '') as HTMLElement;
+            const el = defined(document.getElementById(trigger.getAttribute('aria-activedescendant') ?? ''));
             expect(el).toMatchTextContent('区 29');
             return el;
         });
-        const list = option.closest<HTMLElement>(`.${prefixCls}-option-list`) as HTMLElement;
+        const list = defined(option.closest<HTMLElement>(`.${prefixCls}-option-list`));
         await waitFor(() => expect(option.getBoundingClientRect().bottom).toBeLessThanOrEqual(list.getBoundingClientRect().bottom + 1));
     });
 
@@ -457,15 +459,15 @@ describe('cascader', () => {
         const leaves = Array.from({ length: 30 }, (_, i) => ({ label: `区 ${i}`, value: `${i}` }));
         const view = render(() => <Cascader style={{ width: '300px' }} motion={false} treeData={leaves} />, { container });
         try {
-            const trigger = shadow.querySelector('[role="combobox"]') as HTMLElement;
+            const trigger = getElement('[role="combobox"]', shadow);
             trigger.focus();
             await userEvent.keyboard('{End}');
             const option = await waitFor(() => {
-                const el = shadow.getElementById(trigger.getAttribute('aria-activedescendant') ?? '') as HTMLElement;
+                const el = defined(shadow.getElementById(trigger.getAttribute('aria-activedescendant') ?? ''));
                 expect(el).toMatchTextContent('区 29');
                 return el;
             });
-            const list = option.closest<HTMLElement>(`.${prefixCls}-option-list`) as HTMLElement;
+            const list = defined(option.closest<HTMLElement>(`.${prefixCls}-option-list`));
             await waitFor(() => expect(option.getBoundingClientRect().bottom).toBeLessThanOrEqual(list.getBoundingClientRect().bottom + 1));
         } finally {
             view.unmount();
@@ -481,7 +483,7 @@ describe('cascader', () => {
         shadow.append(container);
         const view = render(() => <Cascader style={{ width: '300px' }} filterTreeNode motion={false} treeData={treeData} />, { container });
         try {
-            const trigger = shadow.querySelector('[role="combobox"]') as HTMLElement;
+            const trigger = getElement('[role="combobox"]', shadow);
             await userEvent.click(trigger);
             await waitFor(() => expect(shadow.activeElement?.tagName).toBe('INPUT'));
             await userEvent.keyboard('{Escape}');
@@ -531,7 +533,7 @@ describe('cascader', () => {
         await userEvent.type(input, '区');
         const listbox = await screen.findByRole('listbox');
         await userEvent.keyboard('{ArrowUp}');
-        const option = () => document.getElementById(input.getAttribute('aria-activedescendant') ?? '') as HTMLElement;
+        const option = () => defined(document.getElementById(input.getAttribute('aria-activedescendant') ?? ''));
         await waitFor(() => expect(option()).toMatchTextContent('区 99'));
         expect(option().getBoundingClientRect().bottom).toBeLessThanOrEqual(listbox.getBoundingClientRect().bottom);
         await userEvent.keyboard('{Tab}');
@@ -549,7 +551,7 @@ describe('cascader', () => {
         const [first] = within(listbox).getAllByRole('option');
         expect(getComputedStyle(first).paddingTop).not.toBe('0px');
         await userEvent.keyboard('{ArrowUp}');
-        const option = () => document.getElementById(input.getAttribute('aria-activedescendant') ?? '') as HTMLElement;
+        const option = () => defined(document.getElementById(input.getAttribute('aria-activedescendant') ?? ''));
         await waitFor(() => expect(option()).toMatchTextContent('区 99'));
         const rect = option().getBoundingClientRect();
         const lists = listbox.getBoundingClientRect();

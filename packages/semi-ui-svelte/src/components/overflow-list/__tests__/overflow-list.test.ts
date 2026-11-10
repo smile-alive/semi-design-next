@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import { mockResizeObserverCore } from '@test/utils/dom/resize-observer-core';
 import { sleep } from '@test/utils/function';
 import type { OverflowListItem, OverflowListProps } from '..';
@@ -83,11 +84,12 @@ function stubIntersectionObserver() {
     };
 }
 
-const getList = (container: Element) => container.querySelector<HTMLElement>(`.${prefixCls}`) as HTMLElement;
+const getList = (container: Element) => getElement(`.${prefixCls}`, container);
 const getItems = (container: Element) => [...container.querySelectorAll<HTMLElement>(`.${prefixCls}-item`)];
 const itemTexts = (container: Element) => getItems(container).map((item) => item.textContent?.trim());
 const overflowNode = (container: Element) => container.querySelector(`.${prefixCls}-overflow`);
-const scrollWrapper = (container: Element) => container.querySelector<HTMLElement>(`.${prefixCls}-scroll-wrapper`) as HTMLElement;
+const scrollWrapper = (container: Element) => getElement(`.${prefixCls}-scroll-wrapper`, container);
+const queryScrollWrapper = (container: Element) => container.querySelector(`.${prefixCls}-scroll-wrapper`);
 const scrollKeys = (container: Element) => [...container.querySelectorAll<HTMLElement>('[data-scrollkey]')].map((node) => node.dataset.scrollkey);
 
 function renderList(storeInit: Partial<OverflowListProps<OverflowListItem>> & { attrs?: Record<string, unknown> } = {}, fixture: Fixture = {}) {
@@ -143,7 +145,7 @@ describe('OverflowList', () => {
         expect(list).toHaveClass('custom');
         expect(list).toHaveStyle({ color: 'rgb(255, 0, 0)', maxWidth: '100%', visibility: 'hidden' });
         expect(itemTexts(view.container)).toEqual(keys);
-        expect(scrollWrapper(view.container)).toBeNull();
+        expect(queryScrollWrapper(view.container)).toBeNull();
     });
 
     it('collapse: 容器变窄或变宽时，放不下的 items 在 overflow 与可见区之间移动', async () => {
@@ -423,7 +425,7 @@ describe('OverflowList', () => {
         await view.set({ renderMode: 'collapse' });
         expect(io.observed()).toEqual([]);
         expect(itemTexts(view.container)).toEqual(keys);
-        expect(scrollWrapper(view.container)).toBeNull();
+        expect(queryScrollWrapper(view.container)).toBeNull();
 
         await view.set({ renderMode: 'scroll' });
         expect(io.observed().map((node) => node.dataset.scrollkey)).toEqual(keys);

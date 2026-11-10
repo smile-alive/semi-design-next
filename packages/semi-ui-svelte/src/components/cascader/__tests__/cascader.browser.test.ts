@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { clickOutside, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { CascaderChangeValue, CascaderData, CascaderProps, CascaderValue } from '..';
 import CascaderCase from './cascader-case.svelte';
 
@@ -24,7 +26,7 @@ function setup(props: Omit<CascaderProps, 'value' | 'treeData'> = {}, { data = t
     const view = render(CascaderCase, { props: { mode: 'bind', store, props }, ...(target ? { target } : {}) });
     flushSync();
     // screen only queries the document, a ShadowRoot needs its own query
-    const combobox = target ? (target.querySelector('[role="combobox"]') as HTMLElement) : screen.getByRole('combobox', { name: 'Region' });
+    const combobox = target ? getElement('[role="combobox"]', target) : screen.getByRole('combobox', { name: 'Region' });
     return { store, combobox, unmount: view.unmount };
 }
 
@@ -111,11 +113,11 @@ describe('Svelte Cascader 浏览器：键盘与焦点', () => {
         await tabTo(combobox);
         await userEvent.keyboard('{End}');
         const option = await waitFor(() => {
-            const element = document.getElementById(combobox.getAttribute('aria-activedescendant') ?? '') as HTMLElement;
+            const element = defined(document.getElementById(combobox.getAttribute('aria-activedescendant') ?? ''));
             expect(element).toHaveTextContent('区 29');
             return element;
         });
-        const list = option.closest<HTMLElement>('.semi-cascader-option-list') as HTMLElement;
+        const list = defined(option.closest<HTMLElement>('.semi-cascader-option-list'));
         await waitFor(() => expect(option.getBoundingClientRect().bottom).toBeLessThanOrEqual(list.getBoundingClientRect().bottom + 1));
     });
 
@@ -126,11 +128,11 @@ describe('Svelte Cascader 浏览器：键盘与焦点', () => {
             combobox.focus();
             await userEvent.keyboard('{End}');
             const option = await waitFor(() => {
-                const element = shadow.getElementById(combobox.getAttribute('aria-activedescendant') ?? '') as HTMLElement;
+                const element = defined(shadow.getElementById(combobox.getAttribute('aria-activedescendant') ?? ''));
                 expect(element).toHaveTextContent('区 29');
                 return element;
             });
-            const list = option.closest<HTMLElement>('.semi-cascader-option-list') as HTMLElement;
+            const list = defined(option.closest<HTMLElement>('.semi-cascader-option-list'));
             await waitFor(() => expect(option.getBoundingClientRect().bottom).toBeLessThanOrEqual(list.getBoundingClientRect().bottom + 1));
         } finally {
             unmount();
@@ -166,7 +168,7 @@ describe('Svelte Cascader 浏览器：虚拟搜索列表', () => {
             await userEvent.type(input, '区');
             const listbox = await screen.findByRole('listbox');
             await userEvent.keyboard('{ArrowUp}');
-            const option = () => document.getElementById(input.getAttribute('aria-activedescendant') ?? '') as HTMLElement;
+            const option = () => defined(document.getElementById(input.getAttribute('aria-activedescendant') ?? ''));
             await waitFor(() => expect(option()).toHaveTextContent('城市 / 区 99'));
             expect(option().getBoundingClientRect().bottom).toBeLessThanOrEqual(listbox.getBoundingClientRect().bottom);
             await userEvent.keyboard('{Tab}');
@@ -187,7 +189,7 @@ describe('Svelte Cascader 浏览器：虚拟搜索列表', () => {
         const [first] = within(listbox).getAllByRole('option');
         expect(getComputedStyle(first).paddingTop).not.toBe('0px');
         await userEvent.keyboard('{ArrowUp}');
-        const option = () => document.getElementById(input.getAttribute('aria-activedescendant') ?? '') as HTMLElement;
+        const option = () => defined(document.getElementById(input.getAttribute('aria-activedescendant') ?? ''));
         await waitFor(() => expect(option()).toHaveTextContent('城市 / 区 99'));
         const rect = option().getBoundingClientRect();
         const lists = listbox.getBoundingClientRect();

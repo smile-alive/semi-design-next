@@ -1,5 +1,6 @@
 import { createRawSnippet } from 'svelte';
 import { describe, expect, it } from 'vite-plus/test';
+import { getElement } from '@test/utils/dom/common';
 import { renderForm } from './helpers';
 
 describe('Svelte Form 字段（浏览器）', () => {
@@ -13,7 +14,7 @@ describe('Svelte Form 字段（浏览器）', () => {
                 props: { multiple: true, accept: 'image/*', action: 'https://semi.design/upload', field: 'files', initValue: [{ uid: '1', name: 'dy.png', status: 'uploadFail', url: '' }], listType: 'picture', children },
             },
         ]);
-        const card = container.querySelector('.semi-upload-picture-file-card-error') as HTMLElement;
+        const card = getElement('.semi-upload-picture-file-card-error', container);
         expect(card).not.toBeNull();
         const style = getComputedStyle(card);
         expect(style.borderTopStyle).toBe('solid');

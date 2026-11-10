@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import { fireEvent } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { getData } from '@test/utils/vue';
+import { getData, getElement } from '@test/utils/vue';
 import type { ColumnProps, RowSelectionProps, TableProps } from '..';
 import { P, getBodyRows, mountTable } from './table-helpers';
 
@@ -44,7 +44,7 @@ describe('Table onRow', () => {
         expect(second).toHaveClass(`${P}-row`, 'own-row');
         expect(second).not.toHaveClass('even');
         expect(first).toHaveStyle({ color: 'rgb(255, 0, 0)' });
-        await userEvent.click(first.querySelector('td:last-child') as HTMLElement);
+        await userEvent.click(getElement('td:last-child', first));
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onSelectionChange).toHaveBeenCalledWith(['0'], [rowData[0]]);
         expect(getBodyRows()[0]).toHaveClass(`${P}-row-selected`, 'own-row');

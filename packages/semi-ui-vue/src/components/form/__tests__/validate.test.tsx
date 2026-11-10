@@ -2,13 +2,13 @@
 import { nextTick, ref } from 'vue';
 import { fireEvent } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { render, sleep } from '@test/utils/vue';
+import { render, sleep, getElement } from '@test/utils/vue';
 import { Form, useForm, type FormApi, type FormDefaultSlotProps } from '..';
 import { FormInput, renderForm } from './fixtures/fields';
 
 function renderNameForm(props: Record<string, unknown> = {}, fieldProps: Record<string, unknown> = {}) {
     const view = renderForm(props, () => <FormInput field="name" rules={[{ required: true, message: 'req' }]} {...fieldProps} />);
-    const input = () => view.container.querySelector('input') as HTMLInputElement;
+    const input = () => getElement<HTMLInputElement>('input', view.container);
     return { ...view, input };
 }
 

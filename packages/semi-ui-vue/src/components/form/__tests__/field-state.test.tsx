@@ -2,7 +2,7 @@
 import { defineComponent, nextTick } from 'vue';
 import { fireEvent, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { render, sleep } from '@test/utils/vue';
+import { render, sleep, getElement } from '@test/utils/vue';
 import { ArrayField, Form, withField, type ArrayFieldSlotProps, type FormApi, type FormState } from '..';
 import { FormInput, getInputs, renderForm } from './fixtures/fields';
 
@@ -54,7 +54,7 @@ describe('Form 字段提交回滚', () => {
             global: { config: { errorHandler: (error) => void errors.push(error) } },
         });
         const changesBefore = onFormChange.mock.calls.length;
-        await fireEvent.update(container.querySelector('input') as HTMLInputElement, 'next');
+        await fireEvent.update(getElement<HTMLInputElement>('input', container), 'next');
         expect(errors).toHaveLength(1);
         expect(api?.getValue('name')).toBe('init');
         expect(container.querySelector('input')).toHaveValue('init');

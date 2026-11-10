@@ -3,6 +3,7 @@ import { render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { misplacedAriaRequired } from '@test/utils/dom/common';
+import { getElement } from '@test/utils/solid';
 import {
     type FormApi,
     type FormProps,
@@ -115,7 +116,7 @@ describe('Form 字段的 aria 引用', () => {
     it('错误是多条消息时，aria-errormessage 指向渲染出的全部消息', () => {
         const { container, getApi } = renderForm(() => <FormInput field="name" />);
         getApi().setError('name', ['first', 'second']);
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         expect(input).toHaveAttribute('aria-invalid', 'true');
         expectReferencesExist(input);
         expect(document.getElementById(input.getAttribute('aria-errormessage') ?? '')).toHaveTextContent('first, second');
@@ -124,7 +125,7 @@ describe('Form 字段的 aria 引用', () => {
     it("错误是 [''] 时字段标为错误，但不设置 aria-errormessage", () => {
         const { container, getApi } = renderForm(() => <FormInput field="name" helpText="help" />);
         getApi().setError('name', ['']);
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         expect(input).toHaveAttribute('aria-invalid', 'true');
         expect(input).not.toHaveAttribute('aria-errormessage');
         expect(screen.queryByText('help')).toBeNull();
@@ -134,7 +135,7 @@ describe('Form 字段的 aria 引用', () => {
     it('错误态下带 helpText，aria-describedby 不引用未渲染的 helpText', () => {
         const { container, getApi } = renderForm(() => <FormInput field="name" helpText="help" />);
         getApi().setError('name', 'bad');
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         expect(screen.queryByText('help')).toBeNull();
         expectReferencesExist(input);
         expect(input.getAttribute('aria-describedby') ?? '').not.toContain('helpText');
@@ -143,7 +144,7 @@ describe('Form 字段的 aria 引用', () => {
     it('noErrorMessage 时不设置 aria-errormessage', () => {
         const { container, getApi } = renderForm(() => <FormInput field="name" noErrorMessage />);
         getApi().setError('name', 'bad');
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         expect(input).not.toHaveAttribute('aria-errormessage');
         expectReferencesExist(input);
     });
@@ -183,7 +184,7 @@ describe('Form 字段的 aria 引用', () => {
                 <FormInput id="a" aria-describedby="y" aria-labelledby="x" extraText="e" field="a" label="A" />
             </>
         ));
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         expect(input).toHaveAttribute('aria-labelledby', 'x a-label');
         expect(input).toHaveAttribute('aria-describedby', 'y a-extraText');
         expectReferencesExist(input);
@@ -242,7 +243,7 @@ describe('Form labelPosition="inset"', () => {
         const names = Object.keys(fields);
         renderForm(() => <For each={names}>{(name) => fields[name](name, [{ required: true }])}</For>);
         expect(document.querySelectorAll('[aria-required="true"]').length).toBeGreaterThan(0);
-        expect(Object.fromEntries(names.map((name) => [name, misplacedAriaRequired(document.querySelector(`.${name}`) as Element)]))).toEqual(Object.fromEntries(names.map((name) => [name, []])));
+        expect(Object.fromEntries(names.map((name) => [name, misplacedAriaRequired(getElement(`.${name}`))]))).toEqual(Object.fromEntries(names.map((name) => [name, []])));
     });
 
     it('不支持内嵌标签的字段以渲染出的 top label 命名控件', () => {
@@ -384,7 +385,7 @@ describe('Form 字段的注入属性', () => {
         await getApi()
             .validate()
             .catch(() => undefined);
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         expect(input).toHaveAttribute('aria-invalid', 'true');
         expect(input).not.toHaveAttribute('aria-errormessage');
         expectReferencesExist(input);

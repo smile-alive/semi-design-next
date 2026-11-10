@@ -974,7 +974,7 @@ describe(`Table`, () => {
     });
     it('单元格对齐', async () => {
         const columns = getColumns();
-        const alignRightColumns = columns.map((column) => {
+        const alignRightColumns = columns.map((column: ColumnProps) => {
             column.align = 'right';
             return column;
         });
@@ -988,7 +988,7 @@ describe(`Table`, () => {
     });
     it('列 className', async () => {
         const columns = getColumns();
-        const alignRightColumns = columns.map((column) => {
+        const alignRightColumns = columns.map((column: ColumnProps) => {
             column.className = 'test';
             return column;
         });
@@ -1084,7 +1084,7 @@ describe(`Table`, () => {
             onClick: onHeaderRowClick,
         }));
         const columns = getColumns();
-        const onCellColumns = columns.map((column, index) => {
+        const onCellColumns = columns.map((column: ColumnProps, index) => {
             const style =
                 index === 0
                     ? {

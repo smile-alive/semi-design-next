@@ -2,12 +2,13 @@ import { createRawSnippet } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import Label from '../label.svelte';
 import ALabelLocale from './a-label-locale.svelte';
 import { labelSelector, prefix } from './helpers';
 
 const prefixCls = `${prefix}-field-label`;
-const getLabel = () => document.querySelector(labelSelector) as HTMLLabelElement;
+const getLabel = () => getElement<HTMLLabelElement>(labelSelector);
 const html = (markup: string) => createRawSnippet(() => ({ render: () => markup }));
 
 describe('FormLabel', () => {

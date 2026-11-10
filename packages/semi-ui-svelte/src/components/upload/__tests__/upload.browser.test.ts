@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import { Upload } from '..';
 import type { FileItem } from '../interface';
 
@@ -32,7 +33,7 @@ describe('Svelte Upload 浏览器', () => {
     it('拖入文件：显示松手提示，放下后进入列表并发出 drop', async () => {
         const onDrop = vi.fn<(event: DragEvent, files: File[], fileList: FileItem[]) => void>();
         render(Upload, { props: { action, draggable: true, customRequest: () => {}, onDrop } });
-        const area = document.querySelector(`.${prefix}-drag-area`) as HTMLElement;
+        const area = getElement(`.${prefix}-drag-area`);
         drag(area, 'dragenter');
         await waitFor(() => expect(area).toHaveClass(`${prefix}-drag-area-legal`));
         expect(screen.getByText('松手开始上传')).toBeInTheDocument();
@@ -46,8 +47,8 @@ describe('Svelte Upload 浏览器', () => {
 
     it('拖拽经过拖拽区内的子元素时提示不闪烁，离开后复位', async () => {
         render(Upload, { props: { action, draggable: true } });
-        const area = document.querySelector(`.${prefix}-drag-area`) as HTMLElement;
-        const child = area.querySelector(`.${prefix}-drag-area-main-text`) as HTMLElement;
+        const area = getElement(`.${prefix}-drag-area`);
+        const child = getElement(`.${prefix}-drag-area-main-text`, area);
         drag(area, 'dragenter');
         drag(child, 'dragenter');
         drag(area, 'dragleave');
@@ -60,7 +61,7 @@ describe('Svelte Upload 浏览器', () => {
         const inputClick = vi.spyOn(HTMLInputElement.prototype, 'click').mockImplementation(() => {});
         const onOpenFileDialog = vi.fn<() => void>();
         render(Upload, { props: { action, style: ringStyle, onOpenFileDialog } });
-        const add = document.querySelector(`.${prefix}-add`) as HTMLElement;
+        const add = getElement(`.${prefix}-add`);
         await tabTo(add);
         expectThemeFocusRing(add);
         await userEvent.keyboard('{Enter}');
@@ -76,7 +77,7 @@ describe('Svelte Upload 浏览器', () => {
         await tabTo(closes()[1]);
         await userEvent.keyboard('{Enter}');
         await waitFor(() => expect(names()).toEqual(['a.png', 'c.png']));
-        const list = document.querySelector(`.${prefix}-file-list-main`) as HTMLElement;
+        const list = getElement(`.${prefix}-file-list-main`);
         await waitFor(() => expect(list.contains(document.activeElement)).toBe(true));
         for (let left = 2; left > 0; left--) {
             (document.activeElement as HTMLElement).click();
@@ -87,9 +88,9 @@ describe('Svelte Upload 浏览器', () => {
 
     it('图片墙里添加第一张图片时添加按钮保持焦点', async () => {
         render(Upload, { props: { action, listType: 'picture', customRequest: () => {} } });
-        const add = document.querySelector(`.${prefix}-picture-add`) as HTMLElement;
+        const add = getElement(`.${prefix}-picture-add`);
         await tabTo(add);
-        const input = document.querySelector(`.${prefix}-hidden-input`) as HTMLInputElement;
+        const input = getElement<HTMLInputElement>(`.${prefix}-hidden-input`);
         input.files = dataTransferOf(new File(['x'], 'first.png', { type: 'image/png' })).files;
         input.dispatchEvent(new Event('change', { bubbles: true }));
         await waitFor(() => expect(document.querySelectorAll(`.${prefix}-picture-file-card`)).toHaveLength(1));

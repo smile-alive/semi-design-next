@@ -4,6 +4,7 @@ import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { clickOutside, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
+import { getElement, defined } from '@test/utils/solid';
 import Select, { type OptionRenderProps, type SelectProps } from '..';
 import Button from '../../button';
 import Popover from '../../popover';
@@ -23,8 +24,8 @@ const getOptionList = () => screen.queryByRole('listbox');
 const getOptionTexts = () => Array.from(document.querySelectorAll(`.${prefixCls}-option`), (option) => option.textContent);
 const getGroupTexts = () => Array.from(document.querySelectorAll(`.${prefixCls}-group`), (group) => group.textContent);
 const getFocusedText = () => document.querySelector(`.${prefixCls}-option-focused .${prefixCls}-option-text`)?.textContent;
-const byCy = (name: string) => document.querySelector(`[data-cy=${name}]`) as HTMLElement;
-const scrollerOf = (listbox: HTMLElement) => listbox.querySelector<HTMLElement>('[style*="overflow"]') as HTMLElement;
+const byCy = (name: string) => getElement(`[data-cy=${name}]`);
+const scrollerOf = (listbox: HTMLElement) => getElement('[style*="overflow"]', listbox);
 
 async function expectEverySelectionAccountedFor(selectedCount: number, restCount?: number) {
     await waitFor(() => {
@@ -37,7 +38,7 @@ async function expectEverySelectionAccountedFor(selectedCount: number, restCount
 
 async function toggle(label: string) {
     if (!screen.queryByRole('listbox')) {
-        await userEvent.click(document.querySelector(`.${prefixCls}-arrow`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-arrow`));
     }
     await userEvent.click(getOption(label));
 }
@@ -62,9 +63,9 @@ describe('Select（浏览器）', () => {
                 <Select motion={false} optionList={options} style={{ width: '120px' }} />
             </div>
         ));
-        const trigger = document.querySelector(`.${prefixCls}`) as HTMLElement;
+        const trigger = getElement(`.${prefixCls}`);
         await userEvent.click(trigger);
-        const popup = (await screen.findByRole('listbox')).closest('[popover]') as HTMLElement;
+        const popup = defined((await screen.findByRole('listbox')).closest<HTMLElement>('[popover]'));
         await waitFor(() => expect(Math.abs(popup.getBoundingClientRect().left - trigger.getBoundingClientRect().left)).toBeLessThanOrEqual(1));
         screen.getByTestId('box').style.left = '300px';
         // the move is reported on the next rendering update, and headless WebKit on Linux CI has gone ~2s without one
@@ -241,7 +242,7 @@ describe('Select', () => {
                 </Select.OptGroup>
             </Select>
         ));
-        await userEvent.click(document.getElementById('without-key') as HTMLElement);
+        await userEvent.click(defined(document.getElementById('without-key')));
         expect(document.querySelector(`#without-key .${BASE_CLASS_PREFIX}-input`)).toHaveFocus();
         await userEvent.keyboard('dou');
         await waitFor(() => expect(document.querySelector(`.${prefixCls}-option-keyword`)).toMatchTextContent(/^Dou$/));
@@ -386,7 +387,7 @@ describe('Select', () => {
         const expectActiveInView = async (name: RegExp) => {
             const combobox = screen.getByRole('combobox');
             await waitFor(() => {
-                const active = document.getElementById(String(combobox.getAttribute('aria-activedescendant'))) as HTMLElement;
+                const active = defined(document.getElementById(String(combobox.getAttribute('aria-activedescendant'))));
                 expect(active).toMatchTextContent(name);
                 const list = screen.getByRole('listbox').getBoundingClientRect();
                 const row = active.getBoundingClientRect();
@@ -515,7 +516,7 @@ describe('Select', () => {
     it('鼠标按下清空按钮会清空，焦点留在 combobox 上', async () => {
         render(() => <Select defaultValue="abc" optionList={options} showClear />);
         await userEvent.hover(screen.getByRole('combobox'));
-        await userEvent.click(document.querySelector(`.${prefixCls}-clear`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-clear`));
         await waitFor(() => expect(document.querySelector(`.${prefixCls}-clear`)).toBeNull());
         expect(screen.getByRole('combobox')).toHaveFocus();
         expect(screen.queryByRole('listbox')).toBeNull();
@@ -528,7 +529,7 @@ describe('Select', () => {
     ])('%s：点击选项后焦点留在 combobox 上', async (_name, props) => {
         render(() => <Select motion={false} optionList={options} {...props} />);
         // the search input sits under the selection area, so click the root
-        await userEvent.click(document.querySelector(`.${prefixCls}`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}`));
         await userEvent.click(getOption('剪映'));
         await waitFor(() => expect(screen.getByRole('combobox')).toHaveFocus());
         expect(document.querySelector(`.${prefixCls}`)).toHaveClass(`${prefixCls}-focus`);
@@ -592,7 +593,7 @@ describe.each<[string, SelectProps<string, boolean>]>([
     it('从 combobox 按 Shift+Tab 离开 Select 时只触发一次 onBlur，跳过其中的标签', async () => {
         const { onBlur } = renderWithSpies();
         await tabTo(screen.getByRole('combobox'));
-        const root = document.querySelector(`.${prefixCls}`) as HTMLElement;
+        const root = getElement(`.${prefixCls}`);
         while (root.contains(document.activeElement)) {
             expect(onBlur).not.toHaveBeenCalled();
             await tab({ shift: true });
@@ -707,9 +708,9 @@ describe('Select 分组', () => {
             { container: mount }
         );
         onTestFinished(() => view.unmount());
-        await userEvent.click(shadow.querySelector('[role="combobox"]') as HTMLElement);
+        await userEvent.click(getElement('[role="combobox"]', shadow));
         await waitFor(() => {
-            const listbox = shadow.querySelector('[role="listbox"]') as HTMLElement;
+            const listbox = getElement('[role="listbox"]', shadow);
             const selected = Array.from(shadow.querySelectorAll('[role="option"]')).find((option) => option.textContent === 'G2-6') as HTMLElement;
             const box = listbox.getBoundingClientRect();
             expect(selected.getBoundingClientRect().top).toBeGreaterThanOrEqual(box.top);
@@ -821,7 +822,7 @@ describe('Select 在 ShadowRoot 内的焦点', () => {
         const { shadow, container } = mountInShadow();
         const [value, setValue] = createSignal(['abc']);
         render(() => <Select multiple value={value()} optionList={options} showClear />, { container });
-        const combobox = shadow.querySelector<HTMLElement>('[role="combobox"]') as HTMLElement;
+        const combobox = getElement('[role="combobox"]', shadow);
         combobox.focus();
         await tab();
         await tab();
@@ -834,7 +835,7 @@ describe('Select 在 ShadowRoot 内的焦点', () => {
     it('在面板最后一个可聚焦元素上按 Tab，焦点回到 combobox 并关闭面板', async () => {
         const { shadow, container } = mountInShadow();
         render(() => <Select motion={false} optionList={options} outerBottomSlot={<button type="button">bottom</button>} />, { container });
-        const combobox = shadow.querySelector<HTMLElement>('[role="combobox"]') as HTMLElement;
+        const combobox = getElement('[role="combobox"]', shadow);
         combobox.focus();
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(() => expect(shadow.querySelector('[role="listbox"]')).not.toBeNull());
@@ -913,8 +914,8 @@ describe('Select 与外层浮层（浏览器）', () => {
                 </Popover>
             </div>
         ));
-        await userEvent.click(container.querySelector(`.${BASE_CLASS_PREFIX}-tag`) as HTMLElement);
-        const select = (await screen.findByTestId('select-in-popover')).querySelector(`.${prefixCls}`) as HTMLElement;
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-tag`, container));
+        const select = getElement(`.${prefixCls}`, await screen.findByTestId('select-in-popover'));
         await userEvent.click(select);
         await userEvent.click(await screen.findByText('西瓜视频'));
         // Clicking inside the nested Select popup must not count as a click outside the Popover (#818)

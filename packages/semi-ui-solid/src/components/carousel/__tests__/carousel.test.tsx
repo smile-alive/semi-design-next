@@ -6,7 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { numbers } from '@fibrae/semi-foundation/components/carousel/constants';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { mockMatchMedia } from '@test/utils/solid';
+import { mockMatchMedia, getElement } from '@test/utils/solid';
 import Carousel, { type CarouselElement, type CarouselHandle, type CarouselProps } from '..';
 import ConfigProvider from '../../config-provider';
 
@@ -34,7 +34,7 @@ function setup(initial: CarouselProps = {}, initialLabels = ['index0', 'index1',
 const query = (container: HTMLElement, suffix: string) => container.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-carousel-${suffix}`);
 const getActiveItem = (container: HTMLElement) => query(container, 'content-item-active');
 const getIndicatorItems = (container: HTMLElement) => container.querySelectorAll(`.${BASE_CLASS_PREFIX}-carousel-indicator-item`);
-const getRoot = (container: HTMLElement) => container.querySelector(`.${BASE_CLASS_PREFIX}-carousel`) as HTMLElement;
+const getRoot = (container: HTMLElement) => getElement(`.${BASE_CLASS_PREFIX}-carousel`, container);
 const clickNext = (container: HTMLElement) => fireEvent.click(query(container, 'arrow-next') as Element);
 const clickPrev = (container: HTMLElement) => fireEvent.click(query(container, 'arrow-prev') as Element);
 const tick = (ms: number) => vi.advanceTimersByTime(ms);

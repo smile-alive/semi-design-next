@@ -1,6 +1,7 @@
 import { createRawSnippet, flushSync } from 'svelte';
 import { screen } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
+import { getElement } from '@test/utils/dom/common';
 import { renderAnyFields, renderGroup, renderWithField } from './b-helpers';
 import { blur, getInput, input, labelSelector, prefix, renderForm, settle, typeInto } from './helpers';
 
@@ -35,7 +36,7 @@ describe('Svelte Form 包装自定义控件', () => {
         });
         api().setError('plain', 'bad');
         await settle();
-        const control = container.querySelector('input') as HTMLInputElement;
+        const control = getElement<HTMLInputElement>('input', container);
         expect(control).not.toHaveAttribute('data-status');
         expect(control).not.toHaveAttribute('validatestatus');
         expect(control).not.toHaveAttribute('insetlabelid');
@@ -48,7 +49,7 @@ describe('Svelte Form 包装自定义控件', () => {
 
     it('声明了 validateStatus 的组件收到字段的校验状态，id 与 aria-labelledby 指向标签，值经 onChange 写入', async () => {
         const { api, container } = renderWithField({ control: 'plain', form: {}, fieldProps: { field: 'custom', id: 'custom' } });
-        const control = container.querySelector('input') as HTMLInputElement;
+        const control = getElement<HTMLInputElement>('input', container);
         await typeInto(control, 'semi');
         expect(api().getValue('custom')).toBe('semi');
         expect(control).toHaveValue('semi');

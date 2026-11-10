@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, onTestFinish
 import { IconSetting } from '@fibrae/semi-icons-vue';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render, sleep } from '@test/utils/vue';
+import { render, sleep, getElement } from '@test/utils/vue';
 import { DropdownItem } from '../../dropdown';
 import Typography, { TypographyNumeral, TypographyParagraph, TypographyText, TypographyTitle, type TypographyCopyActionProps, type TypographyCopyableConfig, type TypographyEllipsisTooltipProps, type TypographyNumeralProps, type TypographyTitleProps } from '../index';
 import type { TypographyBaseProps } from '../internal';
@@ -92,7 +92,7 @@ function captureResizeObserver() {
     return { observers, report };
 }
 
-const root = (container: Element = document.body) => container.querySelector<HTMLElement>(`.${prefix}`) as HTMLElement;
+const root = (container: Element = document.body) => getElement(`.${prefix}`, container);
 const textSlot = (value: string) => ({ default: () => value });
 
 let writeText: Mock<(data: string) => Promise<void>>;
@@ -194,7 +194,7 @@ describe('Typography', () => {
     it('typography 可复制时，剪贴板写入被拒绝会报错且保持未复制状态', async () => {
         writeText.mockRejectedValue(new Error('NotAllowedError'));
         const view = render(Paragraph, { props: { copyable: true }, slots: textSlot('Semi Design') });
-        await userEvent.click(view.container.querySelector('.semi-icon-copy') as Element);
+        await userEvent.click(getElement('.semi-icon-copy', view.container));
         await waitFor(() => expect(view.emitted('copy')).toHaveLength(1));
         expect(view.emitted<CopyPayload>('copy')[0].slice(1)).toEqual(['Semi Design', false]);
         expect(view.container.querySelector(`.${prefix}-action-copied`)).toBeNull();
@@ -428,7 +428,7 @@ describe('Typography 行为基线', () => {
         const element = root(view.container);
         expect(element).toHaveClass(`${prefix}-link`);
         expect(element).not.toHaveClass(`${prefix}-danger`);
-        const anchor = element.querySelector(':scope > a') as HTMLElement;
+        const anchor = getElement(':scope > a', element);
         expect(anchor).toHaveAttribute('href', '#target');
         expect(anchor).toHaveAttribute('target', '_blank');
         const inner = anchor.querySelector(`:scope > del > strong > code > mark > span.${prefix}-link-text.${prefix}-link-underline`);
@@ -496,7 +496,7 @@ describe('Typography 行为基线', () => {
         const [inherit, plain] = view.container.querySelectorAll(`.${prefix}-paragraph > .${prefix}`);
         expect(inherit).toHaveClass(`${prefix}-small`);
         expect(inherit).not.toHaveClass(`${prefix}-inherit`);
-        const icon = inherit.querySelector(`:scope > span.${prefix}-icon[x-semi-prop="icon"]`) as Element;
+        const icon = getElement(`:scope > span.${prefix}-icon[x-semi-prop="icon"]`, inherit);
         expect(icon.querySelector('.semi-icon')).toHaveClass('semi-icon-small');
         expect(plain).toHaveClass(`${prefix}-normal`);
         expect(plain.querySelector(`.${prefix}-icon`)).toHaveTextContent(/^\*$/);
@@ -511,7 +511,7 @@ describe('Typography 行为基线', () => {
             render(Numeral, { attrs: { 'data-x': 'numeral' }, slots: textSlot('1') }),
             render(Typography, { attrs: { 'data-x': 'typography' }, slots: textSlot('d') }),
         ];
-        const nodes = views.map((view) => view.container.querySelector<HTMLElement>('[data-x]') as HTMLElement);
+        const nodes = views.map((view) => getElement('[data-x]', view.container));
         expect(nodes.map((node) => [node.tagName, node.dataset.x])).toEqual([
             ['SPAN', 'text'],
             ['H1', 'title'],
@@ -596,7 +596,7 @@ describe('Typography 行为基线', () => {
         await waitFor(() => expect(root(view.container)).toHaveAttribute('tabindex', '0'));
         await userEvent.hover(root(view.container));
         await waitFor(() => expect(document.querySelector('.semi-popover-content')).not.toBeNull());
-        const popover = document.querySelector<HTMLElement>(`.${prefix}-ellipsis-popover`) as HTMLElement;
+        const popover = getElement(`.${prefix}-ellipsis-popover`);
         expect(popover).toHaveClass('user-pop');
         expect(popover).toHaveTextContent('popover text');
         expect(popover.style.color).toBe('red');
@@ -717,7 +717,7 @@ describe('Typography 行为基线', () => {
             attrs: { style: lineHeight },
             slots: textSlot(LETTERS),
         });
-        const box = () => view.container.querySelector<HTMLElement>('.box') as HTMLElement;
+        const box = () => getElement('.box', view.container);
         await waitFor(() => expect(box()).toHaveTextContent(/^abcdefghijklmn\.\.\.EX$/));
         await userEvent.click(screen.getByRole('button', { name: 'EX' }));
         await waitFor(() => expect(box()).toHaveFocus());
@@ -951,10 +951,10 @@ describe('Typography 行为基线', () => {
             props: { copyable: { content: 'configured' } },
             slots: { default: () => 'children', copySuccessTip: () => 'done', copyTip: () => 'press' },
         });
-        expect((view.container.querySelector(`.${prefix}-action-copy`) as HTMLElement).style.marginLeft).toBe('');
-        await userEvent.hover(view.container.querySelector('.semi-icon-copy') as Element);
+        expect(getElement(`.${prefix}-action-copy`, view.container).style.marginLeft).toBe('');
+        await userEvent.hover(getElement('.semi-icon-copy', view.container));
         await waitFor(() => expect(document.querySelector('.semi-tooltip-content')).toHaveTextContent('press'));
-        await userEvent.click(view.container.querySelector('.semi-icon-copy') as Element);
+        await userEvent.click(getElement('.semi-icon-copy', view.container));
         expect(writeText).toHaveBeenCalledWith('configured');
         await waitFor(() => expect(view.container.querySelector(`.${prefix}-action-copied`)).toHaveTextContent(/^done$/));
     });
@@ -1016,7 +1016,7 @@ describe('Typography 行为基线', () => {
         await waitFor(() => expect(root(view.container)).toHaveTextContent(/^abcdefghi\.\.\.EXfalse$/));
         await userEvent.click(screen.getByRole('button', { name: 'EX' }));
         expect(root(view.container)).toHaveTextContent(new RegExp(`^${LETTERS}COfalse$`));
-        await userEvent.click(view.container.querySelector('.copy') as Element);
+        await userEvent.click(getElement('.copy', view.container));
         await waitFor(() => expect(view.container.querySelector('.copy')).toHaveTextContent('true'));
         expect(view.emitted('copy')).toHaveLength(1);
     });
@@ -1091,15 +1091,15 @@ describe('Typography 行为基线', () => {
     it('条件渲染为假的 v-if 不会被复制成字面文本，也不进入 JS 截断的文本', async () => {
         mockTextHeight(2);
         const view = render(Conditional);
-        await userEvent.click(view.container.querySelector('.semi-icon-copy') as Element);
+        await userEvent.click(getElement('.semi-icon-copy', view.container));
         expect(writeText).toHaveBeenLastCalledWith('Bob');
-        const paragraph = view.container.querySelector<HTMLElement>(`.${prefix}-paragraph`) as HTMLElement;
+        const paragraph = getElement(`.${prefix}-paragraph`, view.container);
         await waitFor(() => expect(paragraph).toHaveTextContent(/^abcdefghijklmn\.\.\.EX$/));
     });
 
     it('没有插槽内容时复制空字符串', async () => {
         const view = render(Text, { props: { copyable: true } });
-        await userEvent.click(view.container.querySelector('.semi-icon-copy') as Element);
+        await userEvent.click(getElement('.semi-icon-copy', view.container));
         expect(writeText).toHaveBeenLastCalledWith('');
     });
 
@@ -1315,11 +1315,11 @@ describe('Typography Vue', () => {
 
     it('复制内容：多行模板文本去掉首尾空白，content 显式为 undefined 时复制插槽文本', async () => {
         const multiline = render(MultilineCopy);
-        await userEvent.click(multiline.container.querySelector('.semi-icon-copy') as Element);
+        await userEvent.click(getElement('.semi-icon-copy', multiline.container));
         expect(writeText).toHaveBeenLastCalledWith('Semi Design copies trimmed text');
         multiline.unmount();
         const view = render(Text, { props: { copyable: { content: undefined } }, slots: textSlot('abc') });
-        await userEvent.click(view.container.querySelector('.semi-icon-copy') as Element);
+        await userEvent.click(getElement('.semi-icon-copy', view.container));
         expect(writeText).toHaveBeenLastCalledWith('abc');
     });
 
@@ -1397,7 +1397,7 @@ describe('Typography Vue', () => {
         expect(own).toHaveBeenCalledTimes(1);
 
         const plain = render(Text, { props: { link: true }, slots: textSlot('plain') });
-        const anchor = plain.container.querySelector('a') as HTMLElement;
+        const anchor = getElement('a', plain.container);
         expect(anchor).not.toHaveAttribute('role');
         expect(anchor).not.toHaveAttribute('tabindex');
     });
@@ -1443,7 +1443,7 @@ describe('Typography Vue', () => {
 
     it('Numeral 重建的元素保留使用方的 scoped 属性', () => {
         const view = render(NumeralScoped);
-        const paragraph = view.container.querySelector('p.x') as HTMLElement;
+        const paragraph = getElement('p.x', view.container);
         expect(paragraph).toHaveTextContent(/^1\.2$/);
         expect(paragraph.getAttributeNames().some((name) => name.startsWith('data-v-'))).toBe(true);
     });

@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import ClearIconFixture, { type ClearIconFixtureStore } from './date-picker-clear-icon-fixture.svelte';
 import { click, getPopup, ymd } from './date-picker-dom-utils';
 import SlotsFixture, { type SlotsFixtureStore } from './date-picker-slots-fixture.svelte';
@@ -70,14 +71,14 @@ describe('Svelte DatePicker 输入框文本与状态', () => {
 
     it('点击日历后缀开始范围选择', async () => {
         const { container } = await setup({ value: juneRange, props: { type: 'dateRange' } });
-        await click(container.querySelector(`.${dp}-range-input-suffix`) as HTMLElement);
+        await click(getElement(`.${dp}-range-input-suffix`, container));
         expect(container.querySelector(`.${dp}-range-input-wrapper-start`)).toHaveClass(`${dp}-range-input-wrapper-active`);
         expect(getPopup()).not.toBeNull();
     });
 
     it('disabled 时不能打开，取消禁用后可以', async () => {
         const { store, container } = await setup({ props: { type: 'date', disabled: true } });
-        await fireEvent.click(container.querySelector(`.${dp}-input`) as HTMLElement);
+        await fireEvent.click(getElement(`.${dp}-input`, container));
         await settle();
         expect(store.log).toEqual([]);
         expect(getPopup()).toBeNull();
@@ -94,7 +95,7 @@ describe('Svelte DatePicker 输入框文本与状态', () => {
 
     it('dateRange 禁用时点击分隔符不触发聚焦', async () => {
         const { store, container } = await setup({ value: juneRange, props: { type: 'dateRange', disabled: true } });
-        await fireEvent.click(container.querySelector(`.${dp}-range-input-separator`) as HTMLElement);
+        await fireEvent.click(getElement(`.${dp}-range-input-separator`, container));
         await settle();
         expect(store.log.filter((entry) => entry.startsWith('focus'))).toEqual([]);
         expect(getPopup()).toBeNull();
@@ -206,7 +207,7 @@ describe('Svelte DatePicker 键入', () => {
 describe('Svelte DatePicker 内嵌输入框', () => {
     it('date 类型没有时间输入框与分隔符', async () => {
         await setup({ value: baseDate, open: true, props: { type: 'date', insetInput: true } });
-        const wrapper = (getPopup() as HTMLElement).querySelector(`.${dp}-inset-input-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${dp}-inset-input-wrapper`, getPopup() as HTMLElement);
         expect(wrapper).toHaveAttribute('x-type', 'date');
         expect(wrapper.querySelectorAll('input')).toHaveLength(1);
         expect(wrapper.querySelector(`.${dp}-inset-input-separator`)).toBeNull();

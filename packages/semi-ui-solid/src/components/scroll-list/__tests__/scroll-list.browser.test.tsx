@@ -4,7 +4,7 @@ import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { sleep } from '@test/utils/solid';
+import { sleep, getElement } from '@test/utils/solid';
 import ScrollList, { ScrollItem } from '..';
 
 const prefix = `${BASE_CLASS_PREFIX}-scrolllist`;
@@ -53,7 +53,7 @@ describe('scrollList', () => {
         document.body.setAttribute('theme-mode', 'dark');
         onTestFinished(() => document.body.removeAttribute('theme-mode'));
         const { container } = render(() => <Demo />);
-        expect(getComputedStyle(container.querySelector(`.${prefix}`) as HTMLElement).boxShadow).toContain('inset');
+        expect(getComputedStyle(getElement(`.${prefix}`, container)).boxShadow).toContain('inset');
     });
 
     it('点击后滚动到指定位置', async () => {
@@ -90,7 +90,7 @@ describe('scrollList', () => {
         ));
         const listbox = screen.getAllByRole('listbox')[0];
         await tabTo(listbox);
-        expectThemeFocusRing(container.querySelector(`.${prefix}-${columnClass}`) as HTMLElement);
+        expectThemeFocusRing(getElement(`.${prefix}-${columnClass}`, container));
     });
 
     describe('wheel 模式的受控 onSelect', () => {
@@ -151,7 +151,7 @@ describe('scrollList', () => {
                 <ScrollItem aria-label="wheel" cycled={cycled} list={list} selectedIndex={selectedIndex()} />
             </ScrollList>
         ));
-        const outer = container.querySelector(`.${prefix}-list-outer`) as HTMLElement;
+        const outer = getElement(`.${prefix}-list-outer`, container);
         await waitFor(() => expect(centredText(outer)).toBe('5'));
         setSelectedIndex(12);
         await waitFor(() => expect(centredText(outer)).toBe('12'));

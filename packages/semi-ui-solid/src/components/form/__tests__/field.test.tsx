@@ -2,7 +2,7 @@ import { For, type JSX, Show, createSignal } from 'solid-js';
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
-import { sleep } from '@test/utils/solid';
+import { sleep, getElement } from '@test/utils/solid';
 import { type FormApi, type FormProps, Form, FormInput, FormSelect } from '..';
 
 function renderForm(props: FormProps, content: () => JSX.Element) {
@@ -11,7 +11,7 @@ function renderForm(props: FormProps, content: () => JSX.Element) {
 
 const inputSelector = `.${BASE_CLASS_PREFIX}-input`;
 const emSelector = `.${BASE_CLASS_PREFIX}-form-field-error-message`;
-const getInputDOM = (scope = '') => document.querySelector(`${scope} ${inputSelector}`) as HTMLInputElement;
+const getInputDOM = (scope = '') => getElement<HTMLInputElement>(`${scope} ${inputSelector}`);
 const getErrorMessage = (scope = '') => document.querySelector(`${scope} ${emSelector}`);
 const type = (input: Element, value: string) => fireEvent.input(input, { target: { value } });
 

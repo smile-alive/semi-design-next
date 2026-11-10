@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/solid';
 import Notification, { type NotificationHookApi, type NotificationHookOptions } from '..';
 import Button from '../../button';
 
@@ -105,7 +106,7 @@ describe('Notification', () => {
             const next = list[index + 1];
             const leavingTop = top(leaving);
             const nextTop = top(next);
-            await userEvent.click(leaving.querySelector(`.${prefix}-notice-icon-close`) as HTMLElement);
+            await userEvent.click(getElement(`.${prefix}-notice-icon-close`, leaving));
             const seek = await pausedAnimations(leaving, 'slideHide');
             seek(60);
             expect(top(next)).toBeLessThan(nextTop - 10);
@@ -226,7 +227,7 @@ describe('Notification', () => {
             notices()[0]
                 .getAnimations({ subtree: true })
                 .forEach((a) => a.finish());
-            (notices()[0].querySelector('button') as HTMLElement).focus();
+            getElement('button', notices()[0]).focus();
             notification.info({ title: 'second', duration: 0 });
             await waitFor(() => expect(notices()).toHaveLength(2));
             await new Promise((resolve) => setTimeout(resolve, 1500));

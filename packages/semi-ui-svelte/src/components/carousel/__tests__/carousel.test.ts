@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import { mockMatchMediaCore } from '@test/utils/dom/match-media-core';
 import Arrows from './carousel-arrows.svelte';
 import Fixture, { type FixtureStore } from './carousel-fixture.svelte';
@@ -15,7 +16,7 @@ type Mode = 'bind' | 'function' | 'one-way' | 'uncontrolled';
 
 const prefix = `${BASE_CLASS_PREFIX}-carousel`;
 const query = (container: Element, suffix: string) => container.querySelector<HTMLElement>(`.${prefix}-${suffix}`);
-const getRoot = (container: Element) => container.querySelector<HTMLElement>(`.${prefix}`) as HTMLElement;
+const getRoot = (container: Element) => getElement(`.${prefix}`, container);
 const getActive = (container: Element) => query(container, 'content-item-active');
 const getIndicators = (container: Element) => [...container.querySelectorAll<HTMLElement>(`.${prefix}-indicator-item`)];
 const activeTitle = (container: Element) => getActive(container)?.textContent;

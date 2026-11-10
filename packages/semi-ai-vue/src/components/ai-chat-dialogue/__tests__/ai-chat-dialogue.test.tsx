@@ -11,7 +11,7 @@ import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
 import Modal from '@fibrae/semi-ui-vue/modal/index';
 import Toast from '@fibrae/semi-ui-vue/toast/index';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { countLiveListeners, endLeaveAnimations, endTransitions, render, sleep } from '@test/utils/vue';
+import { countLiveListeners, endLeaveAnimations, endTransitions, render, sleep, getElement } from '@test/utils/vue';
 import AIChatDialogue from '..';
 import ReferenceWidget from '../dialogue/content-item/reference.vue';
 import DialogueAvatar from '../dialogue/dialogue-avatar.vue';
@@ -37,7 +37,7 @@ const baseChats: Message[] = [
 
 const $ = (selector: string) => document.querySelector<HTMLElement>(selector);
 const getRoot = (container: Element) => container.firstElementChild as HTMLElement;
-const getList = (container: Element) => container.querySelector<HTMLElement>(`.${prefix}-list`) as HTMLElement;
+const getList = (container: Element) => getElement(`.${prefix}-list`, container);
 const getWrappers = (container: Element) => container.querySelectorAll<HTMLElement>(`.${prefix}-wrapper`);
 const getActionButton = (wrapper: Element, icon: string) => wrapper.querySelector(`.${actionCls} .${BASE_CLASS_PREFIX}-icon-${icon}`)?.closest('button') ?? null;
 const click = (el: Element | null) => fireEvent.click(el as Element);
@@ -288,7 +288,7 @@ describe('AIChatDialogue 内容块', () => {
         const onClick = vi.fn<(e: MouseEvent | KeyboardEvent, items: unknown[]) => void>();
         const items = [{ title: 'A', url: 'https://a.example' }];
         const { container } = render(AIChatDialogue.Annotation, { props: { annotation: items, maxCount: 3, onClick } });
-        await fireEvent.keyDown(container.querySelector(`.${prefix}-annotation-wrapper`) as Element, { key: 'Enter' });
+        await fireEvent.keyDown(getElement(`.${prefix}-annotation-wrapper`, container), { key: 'Enter' });
         expect(onClick).toHaveBeenCalledWith(expect.objectContaining({ key: 'Enter' }), items);
     });
 
@@ -301,7 +301,7 @@ describe('AIChatDialogue 内容块', () => {
             props: { annotation: items, maxCount: 3, onClick },
             attrs: { onKeydown },
         });
-        await fireEvent.keyDown(container.querySelector(`.${prefix}-annotation-wrapper`) as Element, { key: 'Enter' });
+        await fireEvent.keyDown(getElement(`.${prefix}-annotation-wrapper`, container), { key: 'Enter' });
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onKeydown).toHaveBeenCalledWith(expect.objectContaining({ key: 'Enter' }));
         expect(order).toEqual(['click', 'keydown']);
@@ -338,7 +338,7 @@ describe('AIChatDialogue 内容块', () => {
                 },
             ],
         });
-        const reasoning = container.querySelector(`.${prefix}-reasoning-wrapper`) as HTMLElement;
+        const reasoning = getElement(`.${prefix}-reasoning-wrapper`, container);
         const toggle = screen.getByRole('button', { name: text.reasoning.completed });
         expect(toggle).toHaveAttribute('aria-expanded', 'false');
         expect(reasoning.querySelector(`.${BASE_CLASS_PREFIX}-icon-chevron_down`)).not.toBeNull();
@@ -363,7 +363,7 @@ describe('AIChatDialogue 内容块', () => {
                 },
             ],
         });
-        const reasoning = container.querySelector(`.${prefix}-reasoning-wrapper`) as HTMLElement;
+        const reasoning = getElement(`.${prefix}-reasoning-wrapper`, container);
         expect(reasoning).toHaveTextContent(text.reasoning.thinking);
         expect(reasoning.querySelector(`.${BASE_CLASS_PREFIX}-icon-chevron_up`)).not.toBeNull();
     });
@@ -401,7 +401,7 @@ describe('AIChatDialogue 内容块', () => {
         await click(img);
         expect(onImageClick).toHaveBeenCalledWith(image);
 
-        const link = container.querySelector(`a.${contentCls}-file`) as HTMLElement;
+        const link = getElement(`a.${contentCls}-file`, container);
         expect(link).toHaveAttribute('href', file.file_url);
         expect(link).toHaveTextContent('report.pdf');
         expect(link.querySelector(`.${contentCls}-file-icon-pdf`)).not.toBeNull();
@@ -415,7 +415,7 @@ describe('AIChatDialogue 内容块', () => {
             disabledFileItemClick: true,
         });
         const prevented = new MouseEvent('click', { bubbles: true, cancelable: true });
-        (container.querySelector(`a.${contentCls}-file`) as HTMLElement).dispatchEvent(prevented);
+        getElement(`a.${contentCls}-file`, container).dispatchEvent(prevented);
         expect(prevented.defaultPrevented).toBe(true);
         expect(onFileClick).toHaveBeenCalledTimes(2);
     });
@@ -1236,7 +1236,7 @@ describe('AIChatDialogue 已修复问题', () => {
 
     it('纯图标操作按钮的名称从语言包读取', () => {
         const { container } = renderDialogue();
-        const [user, assistant] = Array.from(getWrappers(container), (w) => within(w.querySelector(`.${actionCls}`) as HTMLElement));
+        const [user, assistant] = Array.from(getWrappers(container), (w) => within(getElement(`.${actionCls}`, w)));
         for (const name of [text.copy, text.share, text.edit, text.more]) {
             expect(user.getByRole('button', { name })).toBeInTheDocument();
         }

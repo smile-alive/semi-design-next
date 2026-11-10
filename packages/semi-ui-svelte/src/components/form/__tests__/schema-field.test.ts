@@ -5,6 +5,7 @@ import * as z from 'zod';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import FormCheckbox from '../fields/form-checkbox.svelte';
 import FormTextArea from '../fields/form-text-area.svelte';
 import type { FormApi, SchemaFieldRenderProps } from '../interface';
@@ -26,7 +27,8 @@ function renderSchema(options: SchemaFixtureStore) {
     return { ...view, store, api: () => formApi as FormApi };
 }
 
-const fieldOf = (path: string) => document.querySelector<HTMLElement>(`.semi-form-field[x-field-id="${path}"]`) as HTMLElement;
+const fieldOf = (path: string) => getElement(`.semi-form-field[x-field-id="${path}"]`);
+const queryField = (path: string) => document.querySelector(`.semi-form-field[x-field-id="${path}"]`);
 const button = (name: string) => screen.getByRole('button', { name });
 const itemName = (key: 'item' | 'removeItem' | 'moveUpItem' | 'moveDownItem', index: number) => en_US.Form[key].replace('${index}', String(index + 1));
 
@@ -71,7 +73,7 @@ describe('Svelte SchemaField', () => {
         expect(fieldOf('address.city')).not.toBeNull();
         store.fieldProps = { field: 'address' };
         await settle();
-        expect(fieldOf('name')).toBeNull();
+        expect(queryField('name')).toBeNull();
         expect(fieldOf('address.city')).not.toBeNull();
     });
 
@@ -82,7 +84,7 @@ describe('Svelte SchemaField', () => {
         expect(fieldOf('site').querySelector('textarea')).not.toBeNull();
         expect(fieldOf('on').querySelector('.semi-checkbox')).not.toBeNull();
         expect(screen.getByTestId('custom')).toHaveTextContent('tags[0].note');
-        expect(fieldOf('tags[0].note')).toBeNull();
+        expect(queryField('tags[0].note')).toBeNull();
     });
 
     it('数组行的按钮取 en_US 可访问名称，按 minItems 与 maxItems 禁用，新增、移动与删除改写值', async () => {
@@ -101,7 +103,7 @@ describe('Svelte SchemaField', () => {
         expect(button(en_US.Form.addItem)).toBeDisabled();
         expect(api().getValue('items')).toEqual([{ name: 'a' }, {}]);
         expect([...container.querySelectorAll('.semi-form-section-text')].map((node) => node.textContent)).toEqual(['items', itemName('item', 0), itemName('item', 1)]);
-        await typeInto(fieldOf('items[1].name').querySelector('input') as HTMLInputElement, 'b');
+        await typeInto(getElement<HTMLInputElement>('input', fieldOf('items[1].name')), 'b');
         await click(itemName('moveDownItem', 0));
         expect(api().getValue('items')).toEqual([{ name: 'b' }, { name: 'a' }]);
         await click(itemName('removeItem', 1));
@@ -157,9 +159,9 @@ describe('Svelte SchemaForm', () => {
     it('按 schema 渲染字段，children 跟在字段之后，提交时 onSubmit 拿到 schema 的输出', async () => {
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         const { api, container } = renderSchema({ asForm: true, formProps: { schema: z.object({ name: z.string().trim() }), onSubmit } });
-        const form = container.querySelector('form') as HTMLFormElement;
+        const form = getElement<HTMLFormElement>('form', container);
         expect(form.lastElementChild).toHaveAttribute('type', 'submit');
-        await typeInto(fieldOf('name').querySelector('input') as HTMLInputElement, ' a ');
+        await typeInto(getElement<HTMLInputElement>('input', fieldOf('name')), ' a ');
         await fireEvent.click(screen.getByRole('button', { name: 'submit' }));
         await vi.waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
         expect(onSubmit.mock.calls[0][0]).toEqual({ name: 'a' });

@@ -6,7 +6,7 @@ import { cdp, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { clickOutside, expectThemeFocusRing, isChromium, tab, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Input, { TextArea, type InputHandle } from '..';
 import Model from './fixtures/model.vue';
 
@@ -40,7 +40,7 @@ function expectScrollable(el: Element) {
     el.scrollTop = el.scrollHeight;
     expect(el.scrollTop).toBeGreaterThan(0);
 }
-const lineNumberPanel = () => document.querySelector<HTMLElement>(`.${prefix}-textarea-lineNumber`) as HTMLElement;
+const lineNumberPanel = () => getElement(`.${prefix}-textarea-lineNumber`);
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe('Input（浏览器）', () => {
@@ -182,7 +182,7 @@ describe('Input（浏览器）', () => {
         const rows = Math.round(contentHeight / lineHeight);
         // more rows than the textarea shows, so scrollHeight is the content and not the box
         expect(rows).toBeGreaterThan(4);
-        const item = document.querySelector<HTMLElement>(`.${prefix}-textarea-lineNumber-item`) as HTMLElement;
+        const item = getElement(`.${prefix}-textarea-lineNumber-item`);
         await expect.poll(() => item.getBoundingClientRect().height).toBeCloseTo(rows * lineHeight, 0);
     });
 
@@ -246,10 +246,10 @@ describe('Input（浏览器）', () => {
             expect(input).not.toHaveFocus();
         };
         for (const [index, wrapper] of container.querySelectorAll(`.${prefix}-wrapper`).entries()) {
-            const input = wrapper.querySelector('input') as HTMLInputElement;
-            await userEvent.click(wrapper.querySelector(`.${prefix}-prefix`) as Element);
+            const input = getElement<HTMLInputElement>('input', wrapper);
+            await userEvent.click(getElement(`.${prefix}-prefix`, wrapper));
             await expectFocusThenBlur(input);
-            await userEvent.click(wrapper.querySelector(`.${prefix}-suffix`) as Element);
+            await userEvent.click(getElement(`.${prefix}-suffix`, wrapper));
             await expectFocusThenBlur(input);
             if (index > 0) {
                 await userEvent.click(screen.getByRole('button', { name: 'template ref' }));
@@ -304,7 +304,7 @@ describe('Input（浏览器）', () => {
         });
         const view = render(Demo, { container: mount });
         try {
-            const input = shadow.querySelector('input') as HTMLInputElement;
+            const input = getElement<HTMLInputElement>('input', shadow);
             await userEvent.click(input);
             await userEvent.keyboard('1.');
             await vi.waitFor(() => expect(input).toHaveValue('1.'));

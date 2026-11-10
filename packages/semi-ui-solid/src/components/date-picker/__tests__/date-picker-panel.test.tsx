@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import DatePicker, { type DatePickerProps, type YearAndMonthProps } from '..';
 import YearAndMonth from '../year-and-month';
 
@@ -37,7 +38,8 @@ function renderYearAndMonth(initial: Partial<YearAndMonthProps> = {}) {
     return { ...result, rerender: (next: Partial<YearAndMonthProps>) => setProps(next) };
 }
 
-const getPopup = () => document.querySelector<HTMLElement>(popupSelector) as HTMLElement;
+const getPopup = () => getElement(popupSelector);
+const queryPopup = () => document.querySelector(popupSelector);
 const ymd = (date: Date) => format(date, 'yyyy-MM-dd');
 const getYMLists = (root: ParentNode = document) => root.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-scrolllist-item ul`);
 const getYMSelected = (root: ParentNode = document) => Array.from(root.querySelectorAll(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`)).map((li) => li.textContent);
@@ -194,14 +196,14 @@ describe('DatePicker 输入框', () => {
     it('dateInput handleChange 触发 onChange', () => {
         const onChange = vi.fn<ChangeHandler>();
         const { container } = renderDatePicker({ defaultValue: baseDate, motion: false, onChange });
-        fireEvent.input(container.querySelector('input') as HTMLInputElement, { target: { value: '2021-06-15' } });
+        fireEvent.input(getElement<HTMLInputElement>('input', container), { target: { value: '2021-06-15' } });
         expect(onChange).toHaveBeenCalledWith(new Date(2021, 5, 15), '2021-06-15');
     });
 
     it('dateInput handleEnterPress 处理回车', async () => {
         const onChange = vi.fn<ChangeHandler>();
         const { container } = renderDatePicker({ defaultValue: baseDate, motion: false, onChange });
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         fireEvent.input(input, { target: { value: '2021-06-1' } });
         expect(input).toHaveValue('2021-06-1');
         await userEvent.type(input, '{Enter}');
@@ -302,18 +304,18 @@ describe('DatePicker 输入框', () => {
     it('foundation openPanel 与 closePanel', async () => {
         const onOpenChange = vi.fn<NonNullable<DatePickerProps['onOpenChange']>>();
         const { container } = renderDatePicker({ defaultValue: baseDate, motion: false, onOpenChange });
-        await userEvent.click(container.querySelector('input') as HTMLInputElement);
+        await userEvent.click(getElement<HTMLInputElement>('input', container));
         expect(onOpenChange).toHaveBeenLastCalledWith(true);
         expect(getPopup()).not.toBeNull();
         fireEvent.mouseDown(document.body);
         expect(onOpenChange).toHaveBeenLastCalledWith(false);
-        await waitFor(() => expect(getPopup()).toBeNull());
+        await waitFor(() => expect(queryPopup()).toBeNull());
     });
 
     it('foundation handleInputComplete 处理合法输入', async () => {
         const onChange = vi.fn<ChangeHandler>();
         const { container } = renderDatePicker({ defaultValue: baseDate, motion: false, onChange });
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         await userEvent.clear(input);
         await userEvent.type(input, '2021-06-15{Enter}');
         expect(onChange).toHaveBeenLastCalledWith(new Date(2021, 5, 15), '2021-06-15');
@@ -323,7 +325,7 @@ describe('DatePicker 输入框', () => {
     it('foundation handleInputComplete 输入为空时使用当前日期', async () => {
         const onChange = vi.fn<ChangeHandler>();
         const { container } = renderDatePicker({ motion: false, onChange });
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         await userEvent.type(input, '{Enter}');
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(input).toHaveValue(ymd(new Date()));

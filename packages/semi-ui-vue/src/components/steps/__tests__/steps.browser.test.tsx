@@ -2,7 +2,7 @@
 import { describe, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Steps, { Step } from '../index';
 
 describe('Steps（浏览器）', () => {
@@ -15,7 +15,7 @@ describe('Steps（浏览器）', () => {
                 </Steps>
             </div>
         ));
-        const item = container.querySelector(`.${BASE_CLASS_PREFIX}-steps-item`) as Element;
+        const item = getElement(`.${BASE_CLASS_PREFIX}-steps-item`, container);
         await tabTo(item);
         expectThemeFocusRing(item);
     });

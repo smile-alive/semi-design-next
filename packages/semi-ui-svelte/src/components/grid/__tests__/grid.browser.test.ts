@@ -3,10 +3,11 @@ import { render } from '@testing-library/svelte';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { page } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { getElement } from '@test/utils/dom/common';
 import type { ColProps, RowProps } from '../interface';
 import GridFixture from './grid-fixture.svelte';
 
-const q = (root: ParentNode, selector: string) => root.querySelector(selector) as Element;
+const q = (root: ParentNode, selector: string) => getElement(selector, root);
 const style = (el: Element, name: string) => getComputedStyle(el).getPropertyValue(name);
 
 function setup(row: RowProps, col: ColProps = {}, nested?: RowProps) {

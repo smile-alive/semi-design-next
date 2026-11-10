@@ -2,6 +2,7 @@ import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { disableFieldSizing } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import TagInput from '..';
 
 describe('TagInput 输入框宽度（不支持 field-sizing）', () => {
@@ -31,7 +32,7 @@ describe('TagInput 输入框宽度（不支持 field-sizing）', () => {
             </div>
         ));
         const input = screen.getByRole<HTMLInputElement>('textbox');
-        const tag = document.querySelector('.semi-tag') as HTMLElement;
+        const tag = getElement('.semi-tag');
         expect(input.getBoundingClientRect().top).toBeLessThan(tag.getBoundingClientRect().bottom);
 
         await userEvent.fill(input, 'W'.repeat(40));

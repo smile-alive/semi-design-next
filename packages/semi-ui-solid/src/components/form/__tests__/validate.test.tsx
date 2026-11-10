@@ -2,6 +2,7 @@ import { Show, createSignal } from 'solid-js';
 import { render } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
+import { getElement } from '@test/utils/solid';
 import { type FormApi, type FormProps, Form, FormInput, useForm } from '..';
 
 function renderNameForm(props: FormProps = {}, fieldProps: Record<string, unknown> = {}) {
@@ -11,7 +12,7 @@ function renderNameForm(props: FormProps = {}, fieldProps: Record<string, unknow
             <FormInput field="name" rules={[{ required: true, message: 'req' }]} {...fieldProps} />
         </Form>
     ));
-    return { ...utils, getApi: () => api as FormApi, input: () => utils.container.querySelector('input') as HTMLInputElement };
+    return { ...utils, getApi: () => api as FormApi, input: () => getElement<HTMLInputElement>('input', utils.container) };
 }
 
 describe('Form 静默校验', () => {

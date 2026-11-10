@@ -1,5 +1,6 @@
 import { render } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
+import { getElement } from '@test/utils/solid';
 import { type FormApi, Form, FormInput } from '..';
 
 const toTop = { behavior: 'auto', block: 'start' } as const;
@@ -28,7 +29,7 @@ describe('Form（ShadowRoot）', () => {
             { container: mount }
         );
         try {
-            const field = shadow.querySelector('.semi-form-field[x-field-id="b"]') as Element;
+            const field = getElement('.semi-form-field[x-field-id="b"]', shadow);
             await expect(api?.validate()).rejects.toBeDefined();
             await expect.poll(() => field.getBoundingClientRect().top).toBeLessThan(window.innerHeight);
             expectInViewport(field);

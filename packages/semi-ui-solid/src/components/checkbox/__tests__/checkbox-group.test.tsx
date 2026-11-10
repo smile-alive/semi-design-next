@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Checkbox, { CheckboxGroup, type CheckboxGroupProps, type CheckboxOptionItem, type CheckboxProps } from '..';
 import Popover from '../../popover';
 
@@ -112,7 +113,7 @@ describe('CheckboxGroup', () => {
         expect(document.querySelectorAll(`.${prefixCls}-disabled`)).toHaveLength(4);
         screen.getAllByRole('checkbox').forEach((el) => expect(el).toBeDisabled());
         // the native input swallows clicks while disabled, so click the visible box
-        await userEvent.click(document.querySelector(`.${prefixCls}-inner`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-inner`));
         expect(onChange).not.toHaveBeenCalled();
         expect(getCheckbox('Abc')).not.toBeChecked();
     });

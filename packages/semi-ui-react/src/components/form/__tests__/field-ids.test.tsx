@@ -27,6 +27,7 @@ import {
     FormUpload,
 } from '@fibrae/semi-ui-react';
 import { misplacedAriaRequired } from '@test/utils/dom/common';
+import { getElement } from '@test/utils/react';
 import type { FormApi } from '../interface';
 
 interface Harness {
@@ -241,7 +242,7 @@ describe('Form labelPosition="inset"', () => {
         const names = Object.keys(fields);
         renderForm(names.map((name) => cloneElement(fields[name], { key: name, fieldClassName: name, label: name, rules: [{ required: true }] })));
         expect(document.querySelectorAll('[aria-required="true"]').length).toBeGreaterThan(0);
-        expect(Object.fromEntries(names.map((name) => [name, misplacedAriaRequired(document.querySelector(`.${name}`) as Element)]))).toEqual(Object.fromEntries(names.map((name) => [name, []])));
+        expect(Object.fromEntries(names.map((name) => [name, misplacedAriaRequired(getElement(`.${name}`))]))).toEqual(Object.fromEntries(names.map((name) => [name, []])));
     });
 
     it('不支持内嵌标签的字段以渲染出的 top label 命名控件', () => {

@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { disableFieldSizing, dragTo, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import type { TagInputProps } from '../interface';
 import TagInputBrowser from './tag-input-browser.svelte';
 import TagInputCase from './tag-input-case.svelte';
@@ -15,7 +16,7 @@ type Case = NonNullable<Parameters<typeof TagInputCase>[1]>['store'];
 
 const tagInputCls = `${BASE_CLASS_PREFIX}-tagInput`;
 const getHandles = () => document.querySelectorAll(`.${tagInputCls}-drag-handler`);
-const getRoot = () => document.querySelector(`.${tagInputCls}`) as HTMLElement;
+const getRoot = () => getElement(`.${tagInputCls}`);
 const getInput = () => screen.getByRole<HTMLInputElement>('textbox');
 const getRest = () => document.querySelector(`.${tagInputCls}-wrapper-n`);
 const getClear = () => screen.getByRole('button', { name: zh_CN.TagInput.clear });
@@ -151,7 +152,7 @@ describe('Svelte TagInput（浏览器）tag 与 +N', () => {
         await userEvent.keyboard('{Enter}');
         await waitFor(() => expect(clear()).toBeNull());
         expect(getInput()).toHaveFocus();
-        const placeholder = document.querySelector(`.${tagInputCls}-clearBtn-placeholder`) as Element;
+        const placeholder = getElement(`.${tagInputCls}-clearBtn-placeholder`);
         expect(placeholder.getBoundingClientRect().width).toBe(width);
     });
 
@@ -165,10 +166,10 @@ describe('Svelte TagInput（浏览器）tag 与 +N', () => {
 });
 
 describe('Svelte TagInput（浏览器）输入框宽度跟随文字', () => {
-    const getField = () => document.querySelector(`.${tagInputCls}-wrapper-input`) as Element;
-    const getTag = () => document.querySelector(`.${BASE_CLASS_PREFIX}-tag`) as Element;
+    const getField = () => getElement(`.${tagInputCls}-wrapper-input`);
+    const getTag = () => getElement(`.${BASE_CLASS_PREFIX}-tag`);
     const rowEnd = () => {
-        const row = document.querySelector(`.${tagInputCls}-wrapper`) as Element;
+        const row = getElement(`.${tagInputCls}-wrapper`);
         const style = getComputedStyle(row);
         return row.getBoundingClientRect().right - parseFloat(style.paddingRight) - parseFloat(style.borderRightWidth);
     };

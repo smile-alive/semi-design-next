@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import DatePicker, { type DatePickerProps } from '..';
 
 type ChangeHandler = NonNullable<DatePickerProps['onChange']>;
@@ -21,15 +22,16 @@ function renderDatePicker(initial: DatePickerProps = {}) {
     return { ...result, rerender: (next: DatePickerProps) => setProps(next) };
 }
 
-const getPopup = () => document.querySelector<HTMLElement>(popupSelector) as HTMLElement;
-const getDay = (fullDate: string) => document.querySelector<HTMLElement>(`.${dp}-day[aria-label="${fullDate}"]`) as HTMLElement;
-const getPanel = (side: string) => document.querySelector<HTMLElement>(`.${dp}-month-grid-${side}`) as HTMLElement;
+const getPopup = () => getElement(popupSelector);
+const queryPopup = () => document.querySelector(popupSelector);
+const getDay = (fullDate: string) => getElement(`.${dp}-day[aria-label="${fullDate}"]`);
+const getPanel = (side: string) => getElement(`.${dp}-month-grid-${side}`);
 const getNavTitle = (side: string) => getPanel(side).querySelector(`.${dp}-navigation-month`)?.textContent;
 const ymd = (date: Date) => format(date, 'yyyy-MM-dd');
 const getYMLists = (root: ParentNode = document) => root.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-scrolllist-item ul`);
 const inputs = (container: HTMLElement) => Array.from(container.querySelectorAll('input'));
 const typeIn = (input: Element, value: string) => fireEvent.input(input, { target: { value } });
-const panelButton = (side: string, label: 'prevYear' | 'nextYear' | 'prevMonth' | 'nextMonth' | 'switchToTime') => getPanel(side).querySelector(`[aria-label="${zh_CN.DatePicker[label]}"]`) as HTMLElement;
+const panelButton = (side: string, label: 'prevYear' | 'nextYear' | 'prevMonth' | 'nextMonth' | 'switchToTime') => getElement(`[aria-label="${zh_CN.DatePicker[label]}"]`, getPanel(side));
 const timeLists = (root: ParentNode = getPopup()) => root.querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`);
 
 afterEach(() => {
@@ -64,8 +66,8 @@ describe('DatePicker 内嵌输入框', () => {
         const { container } = renderDatePicker({ type: 'date', defaultValue: baseDate, defaultOpen: true, insetInput: true, motion: false });
         typeIn(within(getPopup()).getByPlaceholderText('yyyy-MM-dd'), '2019-09-1');
         fireEvent.mouseDown(document.body);
-        await waitFor(() => expect(getPopup()).toBeNull());
-        await userEvent.click(container.querySelector('input') as HTMLInputElement);
+        await waitFor(() => expect(queryPopup()).toBeNull());
+        await userEvent.click(getElement<HTMLInputElement>('input', container));
         expect(within(getPopup()).getByPlaceholderText('yyyy-MM-dd')).toHaveValue('2019-09-08');
     });
 
@@ -150,8 +152,8 @@ describe('DatePicker 内嵌输入框', () => {
         const onChange = vi.fn<ChangeHandler>();
         const { container } = renderDatePicker({ defaultValue: baseDate, inputReadOnly: true, motion: false, showClear: true, onChange });
         expect(container.querySelector('input')).toHaveAttribute('readonly');
-        await userEvent.hover(container.querySelector(`.${BASE_CLASS_PREFIX}-input-wrapper`) as HTMLElement);
-        fireEvent.mouseDown(container.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        await userEvent.hover(getElement(`.${BASE_CLASS_PREFIX}-input-wrapper`, container));
+        fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`, container));
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(container.querySelector('input')).toHaveValue('');
     });
@@ -323,11 +325,11 @@ describe('DatePicker 月份网格', () => {
 
     it('monthsGrid foundation toMonth 与 toYear', async () => {
         renderDatePicker({ type: 'date', defaultValue: baseDate, defaultOpen: true, motion: false });
-        await userEvent.click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         const [yearList, monthList] = getYMLists();
         await userEvent.click(within(monthList).getByRole('option', { name: '4月' }));
         await userEvent.click(within(yearList).getByRole('option', { name: '2023' }));
-        await userEvent.click(getPopup().querySelector(`.${dp}-yearmonth-header button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-yearmonth-header button`, getPopup()));
         expect(getNavTitle('left')).toBe('2023年 4月');
     });
 
@@ -405,7 +407,7 @@ describe('DatePicker 月份网格', () => {
 
     it('monthsGrid foundation toYearMonth', async () => {
         renderDatePicker({ type: 'dateRange', defaultValue: [new Date(2021, 2), new Date(2021, 8)], defaultOpen: true, motion: false });
-        await userEvent.click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         const [yearList, monthList] = getYMLists(getPanel('left'));
         await userEvent.click(within(yearList).getByRole('option', { name: '2023' }));
         expect(getNavTitle('left')).toBe('2023年 3月');
@@ -416,9 +418,9 @@ describe('DatePicker 月份网格', () => {
     it('monthsGrid getYAMOpenType 右侧打开', async () => {
         renderDatePicker({ type: 'dateRange', defaultValue: [new Date(2021, 5, 1), new Date(2021, 6, 15)], defaultOpen: true, motion: false });
         const monthGrid = getPopup().querySelector(`.${dp}-month-grid`);
-        await userEvent.click(getPanel('right').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('right')));
         expect(monthGrid).toHaveAttribute('x-panel-yearandmonth-open-type', 'right');
-        await userEvent.click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         expect(monthGrid).toHaveAttribute('x-panel-yearandmonth-open-type', 'both');
     });
 
@@ -493,7 +495,7 @@ describe('DatePicker 月份网格', () => {
 
     it('monthsGrid foundation handleSyncChangeMonths 右侧面板与左侧同月', async () => {
         renderDatePicker({ type: 'dateRange', defaultValue: [new Date(2021, 5, 1), new Date(2021, 6, 15)], defaultOpen: true, motion: false });
-        await userEvent.click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         const [, monthList] = getYMLists(getPanel('left'));
         await userEvent.click(within(monthList).getByRole('option', { name: '7月' }));
         expect(getNavTitle('left')).toBe('2021年 7月');
@@ -579,8 +581,8 @@ describe('DatePicker 范围输入框', () => {
     it('dateRange 禁用时点击分隔符不触发聚焦', () => {
         const onFocus = vi.fn<NonNullable<DatePickerProps['onFocus']>>();
         const { container } = renderDatePicker({ type: 'dateRange', defaultValue: [new Date(2021, 5, 1), new Date(2021, 5, 15)], disabled: true, motion: false, onFocus });
-        fireEvent.click(container.querySelector(`.${dp}-range-input-separator`) as HTMLElement);
+        fireEvent.click(getElement(`.${dp}-range-input-separator`, container));
         expect(onFocus).not.toHaveBeenCalled();
-        expect(getPopup()).toBeNull();
+        expect(queryPopup()).toBeNull();
     });
 });

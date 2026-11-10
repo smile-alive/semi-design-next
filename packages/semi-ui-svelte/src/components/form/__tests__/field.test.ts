@@ -1,6 +1,7 @@
 import { createRawSnippet, flushSync } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
+import { getElement } from '@test/utils/dom/common';
 import FormInput from '../fields/form-input.svelte';
 import { blur, errorSelector, fieldSelector, getInput, input, labelSelector, prefix, renderForm, settle, typeInto } from './helpers';
 
@@ -9,7 +10,7 @@ const text = (content: string) => createRawSnippet(() => ({ render: () => `<span
 describe('Svelte Form 字段', () => {
     it('fieldClassName、fieldStyle 落在字段外层，class 落在控件上', () => {
         const { container } = renderForm({}, [input('name', { fieldClassName: 'f-cls', fieldStyle: 'color: red', class: 'ctl' })]);
-        const field = container.querySelector(fieldSelector) as HTMLElement;
+        const field = getElement(fieldSelector, container);
         expect(field).toHaveClass('f-cls');
         expect(field).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(field).toHaveAttribute('x-field-id', 'name');
@@ -79,7 +80,7 @@ describe('Svelte Form 字段', () => {
         const { container } = renderForm({}, [input('name', { validator: (value: string) => (value === 'bad' ? '不合法' : '') })]);
         await typeInto(getInput(), 'bad');
         await settle();
-        const error = container.querySelector(errorSelector) as HTMLElement;
+        const error = getElement(errorSelector, container);
         expect(error).toHaveTextContent('不合法');
         const control = getInput();
         expect(control).toHaveAttribute('aria-invalid', 'true');
@@ -147,7 +148,7 @@ describe('Svelte Form 字段', () => {
 
     it('extraTextPosition="middle" 时额外信息在控件之前', () => {
         const { container } = renderForm({}, [input('name', { extraText: text('额外'), extraTextPosition: 'middle' })]);
-        const main = container.querySelector(`.${prefix}-field-main`) as HTMLElement;
+        const main = getElement(`.${prefix}-field-main`, container);
         expect(main.firstElementChild).toHaveClass(`${prefix}-field-extra-middle`);
     });
 
@@ -249,7 +250,7 @@ describe('Svelte Form 字段', () => {
 });
 
 const scoped = (field: string) => `[x-field-id="${field}"]`;
-const inputOf = (field: string) => document.querySelector<HTMLInputElement>(`${scoped(field)} input`) as HTMLInputElement;
+const inputOf = (field: string) => getElement<HTMLInputElement>(`${scoped(field)} input`);
 const errorOf = (field: string) => document.querySelector(`${scoped(field)} ${errorSelector}`);
 
 describe('Svelte Form 字段：标签与布局', () => {

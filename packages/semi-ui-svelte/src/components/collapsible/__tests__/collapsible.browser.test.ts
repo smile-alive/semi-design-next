@@ -3,12 +3,13 @@ import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { tab } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import type { CollapsibleProps } from '../interface';
 import Host from './collapsible-host.svelte';
 
 type Store = CollapsibleProps & { text?: string; height?: string; inside?: boolean; log?: string[] };
 
-const getWrapper = (container: Element) => container.querySelector<HTMLElement>('.semi-collapsible-wrapper') as HTMLElement;
+const getWrapper = (container: Element) => getElement('.semi-collapsible-wrapper', container);
 const getInside = () => [...document.querySelectorAll('button')].find((button) => button.textContent === 'inside');
 
 function mount(props: Store = {}) {

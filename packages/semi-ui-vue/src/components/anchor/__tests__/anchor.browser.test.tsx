@@ -2,7 +2,7 @@
 import { screen, waitFor, within } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { render, sleep } from '@test/utils/vue';
+import { render, sleep, defined, getElement } from '@test/utils/vue';
 import Anchor, { AnchorLink } from '../index';
 import Collapsible from './fixtures/collapsible.vue';
 import DocBox from './fixtures/doc-box.vue';
@@ -33,14 +33,14 @@ describe('Anchor（浏览器）', () => {
     it('FixContainerScrollBug1158：点击链接只滚动目标容器，不滚动其可滚动祖先', async () => {
         render(NestedScroll);
         const outer = screen.getByTestId('outer');
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         expect(outer.scrollHeight).toBeGreaterThan(outer.clientHeight);
         expect(box.scrollHeight).toBeGreaterThan(box.clientHeight);
 
         await userEvent.click(screen.getByRole('link', { name: 'docs' }));
 
         await waitFor(() => expect(box.scrollTop).toBe(300));
-        expect((document.getElementById('docs') as HTMLElement).getBoundingClientRect().top).toBeCloseTo(box.getBoundingClientRect().top, 0);
+        expect(defined(document.getElementById('docs')).getBoundingClientRect().top).toBeCloseTo(box.getBoundingClientRect().top, 0);
         expect(outer.scrollTop).toBe(0);
     });
 
@@ -78,7 +78,7 @@ describe('Anchor（浏览器）', () => {
 
     it('按键', async () => {
         render(DocBox);
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         screen.getByRole('link', { name: 'contact' }).focus();
         await userEvent.keyboard('{ArrowUp}');
         expect(box.scrollTop).toBe(0);
@@ -90,7 +90,7 @@ describe('Anchor（浏览器）', () => {
 
     it('滚动', async () => {
         render(DocBox, { props: { fixedBar: true, scrollMotion: true, targetOffset: 100 } });
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         box.scrollTo(0, box.scrollHeight);
         await waitFor(() => expect(activeTitle()).toHaveTextContent('doc1'));
 
@@ -100,18 +100,18 @@ describe('Anchor（浏览器）', () => {
 
     it('点击', async () => {
         render(DocBox, { props: { fixedBar: true, scrollMotion: true, targetOffset: 100 } });
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         await userEvent.click(screen.getByRole('link', { name: 'api too much to show' }));
         await waitFor(() => {
-            const offset = (document.getElementById('api') as HTMLElement).getBoundingClientRect().top - box.getBoundingClientRect().top;
+            const offset = defined(document.getElementById('api')).getBoundingClientRect().top - box.getBoundingClientRect().top;
             expect(Math.abs(offset - 100)).toBeLessThanOrEqual(2);
         });
     });
 
     it('展开与收起子链接后，rail 高度跟随链接列表', async () => {
         render(Collapsible, { props: { autoCollapse: true } });
-        const slide = () => document.querySelector(`.${prefix}-slide`) as HTMLElement;
-        const wrapper = () => document.querySelector(`.${prefix}-link-wrapper`) as HTMLElement;
+        const slide = () => getElement(`.${prefix}-slide`);
+        const wrapper = () => getElement(`.${prefix}-link-wrapper`);
         const railHeight = () => slide().getBoundingClientRect().height;
         const listHeight = () => wrapper().getBoundingClientRect().height;
         const collapsedHeight = listHeight();
@@ -128,8 +128,8 @@ describe('Anchor（浏览器）', () => {
 
     it('CssOnlyRailHeight：新增链接后同一帧内 rail 高度已等于列表高度，无需等待任何回调', async () => {
         const view = render(RailGrow);
-        const slide = () => document.querySelector(`.${prefix}-slide`) as HTMLElement;
-        const wrapper = () => document.querySelector(`.${prefix}-link-wrapper`) as HTMLElement;
+        const slide = () => getElement(`.${prefix}-slide`);
+        const wrapper = () => getElement(`.${prefix}-link-wrapper`);
 
         await view.rerender({ wide: true });
         // no waitFor/sleep: a ResizeObserver-based rail would still show the previous height here, because its
@@ -145,9 +145,9 @@ describe('Anchor（浏览器）', () => {
             },
         });
         const nav = screen.getByRole('navigation');
-        const slide = document.querySelector(`.${prefix}-slide`) as HTMLElement;
-        const wrapper = document.querySelector(`.${prefix}-link-wrapper`) as HTMLElement;
-        const bar = document.querySelector(`.${prefix}-slide-bar`) as HTMLElement;
+        const slide = getElement(`.${prefix}-slide`);
+        const wrapper = getElement(`.${prefix}-link-wrapper`);
+        const bar = getElement(`.${prefix}-slide-bar`);
         const activeTitleTop = () => screen.getByRole('link', { name: 'l14' }).getBoundingClientRect().top;
         await waitFor(() => expect(bar).toHaveClass(`${prefix}-slide-bar-active`));
 
@@ -164,7 +164,7 @@ describe('Anchor（浏览器）', () => {
 
     it('容器已滚到底后点击底部链接，再向上滚动时高亮仍更新', async () => {
         render(DocBox);
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         box.scrollTo(0, box.scrollHeight);
         await waitFor(() => expect(activeTitle()).toHaveTextContent('doc1'));
 
@@ -203,7 +203,7 @@ describe('Anchor（浏览器）', () => {
         document.body.append(box);
         try {
             render(Collapsible, { props: { autoCollapse: true, getContainer: () => box } });
-            const avatarTop = (document.getElementById('头像') as HTMLElement).offsetTop;
+            const avatarTop = defined(document.getElementById('头像')).offsetTop;
             for (let top = 0; top < avatarTop; top += 50) {
                 box.scrollTop = top;
                 await sleep(120);
@@ -236,7 +236,7 @@ describe('Anchor（浏览器）', () => {
             { container: mount }
         );
         try {
-            await userEvent.click(shadow.querySelector(`.${prefix}-link-title`) as Element);
+            await userEvent.click(getElement(`.${prefix}-link-title`, shadow));
             await waitFor(() => expect(window.scrollY).toBeGreaterThan(0));
         } finally {
             view.unmount();

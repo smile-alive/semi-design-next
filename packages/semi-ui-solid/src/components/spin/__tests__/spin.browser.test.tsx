@@ -4,6 +4,7 @@ import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Spin from '..';
 import IconButton from '../../icon-button';
 
@@ -25,15 +26,15 @@ describe('Spin（浏览器）', () => {
             </>
         ));
         const name = `${BASE_CLASS_PREFIX}-animation-rotate`;
-        expect(getComputedStyle(container.querySelector(`.${BASE_CLASS_PREFIX}-spin-wrapper > svg`) as Element).animationName).toBe(name);
-        expect(getComputedStyle(container.querySelector(`.${BASE_CLASS_PREFIX}-button-content > svg`) as Element).animationName).toBe(name);
+        expect(getComputedStyle(getElement(`.${BASE_CLASS_PREFIX}-spin-wrapper > svg`, container)).animationName).toBe(name);
+        expect(getComputedStyle(getElement(`.${BASE_CLASS_PREFIX}-button-content > svg`, container)).animationName).toBe(name);
         const defined = Array.from(document.styleSheets).flatMap((sheet) => keyframesNames(sheet.cssRules));
         expect(defined.filter((item) => item === name)).toHaveLength(1);
     });
 });
 
 describe('Spin 加载期间的焦点（浏览器）', () => {
-    const getSpin = (container: ParentNode) => container.querySelector(`.${BASE_CLASS_PREFIX}-spin`) as HTMLElement;
+    const getSpin = (container: ParentNode) => getElement(`.${BASE_CLASS_PREFIX}-spin`, container);
     const inside = () => screen.getByRole('button', { name: 'inside' });
 
     function View(props: { spinning: boolean }) {
@@ -75,7 +76,7 @@ describe('Spin 加载期间的焦点（浏览器）', () => {
         shadow.append(container);
         const [spinning, setSpinning] = createSignal(false);
         render(() => <View spinning={spinning()} />, { container });
-        const innerButton = shadow.querySelector('button') as HTMLButtonElement;
+        const innerButton = getElement<HTMLButtonElement>('button', shadow);
         innerButton.focus();
         setSpinning(true);
         expect(shadow.activeElement).toBe(getSpin(container));

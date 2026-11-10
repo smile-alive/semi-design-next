@@ -2,6 +2,7 @@ import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/solid';
 import List from '..';
 import Button from '../../button';
 import type { ListItemEventHandler } from '../context';
@@ -17,7 +18,7 @@ describe('list', () => {
                 <List.Item style={{ height: '80px' }} main="Title" extra={<Button onClick={onExtra}>Act</Button>} onClick={onClick} />
             </List>
         ));
-        const item = container.querySelector(`.${prefixCls}-item`) as HTMLElement;
+        const item = getElement(`.${prefixCls}-item`, container);
         const rect = item.getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.bottom - 4;

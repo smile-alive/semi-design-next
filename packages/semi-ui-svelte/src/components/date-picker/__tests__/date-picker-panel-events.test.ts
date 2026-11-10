@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import { click, getFooterButtons, getPanel, getPopup, getPopups, getWeekDays, getYMSelected, setupPinned, ymd } from './date-picker-dom-utils';
 import NestedFixture, { type NestedFixtureStore } from './date-picker-nested-fixture.svelte';
 import { changes, clickOutside, dp, getContainer, getDay, getGrid, getInput, getInputs, getNavTitle, getRoot, opens, settle, setup, useBaseDate } from './test-utils';
@@ -40,7 +41,7 @@ describe('Svelte DatePicker 范围的初始值与面板导航', () => {
     it('点击年月文字打开年月选择器', async () => {
         await setup({ value: baseDate, open: true });
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'date');
-        await click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'year');
         expect(getPopup()?.querySelector(`.${dp}-yam`)).not.toBeNull();
         expect(getYMSelected()).toEqual(['2019年', '9月']);
@@ -52,7 +53,7 @@ describe('Svelte DatePicker 范围的初始值与面板导航', () => {
         document.addEventListener('click', onDocumentClick);
         try {
             await setup({ value: baseDate, open: true, props: { stopPropagation: false } });
-            await click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+            await click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
             expect(onDocumentClick).toHaveBeenCalledTimes(1);
             await click(screen.getByRole('button', { name: zh_CN.DatePicker.selectDate }));
             expect(onDocumentClick).toHaveBeenCalledTimes(2);
@@ -118,7 +119,7 @@ describe('Svelte DatePicker 面板的关闭与回调', () => {
         render(NestedFixture, { props: { store } });
         await settle();
 
-        const timePanel = document.querySelector(`.${BASE_CLASS_PREFIX}-timepicker-panel`) as HTMLElement;
+        const timePanel = getElement(`.${BASE_CLASS_PREFIX}-timepicker-panel`);
         expect(timePanel).not.toBeNull();
         await fireEvent.mouseDown(timePanel);
         await settle();
@@ -148,7 +149,7 @@ describe('Svelte DatePicker 面板的关闭与回调', () => {
     it('点击清除按钮：onClear 与 onChange 各一次，输入框清空', async () => {
         const { store } = await setup({ value: baseDate });
 
-        await fireEvent.mouseDown(getRoot().querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        await fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`, getRoot()));
         await settle();
         expect(logged(store, 'clear')).toHaveLength(1);
         expect(changes(store)).toEqual(['change undefined undefined']);
@@ -222,7 +223,7 @@ describe('Svelte DatePicker trigger snippet', () => {
         expect(getRoot().querySelector('.custom-trigger')).not.toBeNull();
         expect(getRoot().querySelector('input')).toBeNull();
 
-        await click(getRoot().querySelector('.custom-trigger') as HTMLElement);
+        await click(getElement('.custom-trigger', getRoot()));
         expect(getPopup()).not.toBeNull();
     });
 

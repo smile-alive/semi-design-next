@@ -2,10 +2,11 @@ import { createSignal } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { tab } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Collapsible from '..';
 
 const content = <button type="button">inside</button>;
-const getWrapper = (container: HTMLElement) => container.querySelector<HTMLElement>('.semi-collapsible-wrapper') as HTMLElement;
+const getWrapper = (container: HTMLElement) => getElement('.semi-collapsible-wrapper', container);
 const transitionClass = 'semi-collapsible-transition';
 
 describe('Collapsible（浏览器）', () => {

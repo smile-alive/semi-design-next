@@ -5,6 +5,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { List, Table } from '@fibrae/semi-ui-react';
 import IconButton from '@fibrae/semi-ui-react/icon-button';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/react';
 import Spin from '..';
 
 function keyframesNames(rules: CSSRuleList): string[] {
@@ -90,7 +91,7 @@ describe('Spin 加载期间的焦点（浏览器）', () => {
         const container = document.createElement('div');
         shadow.append(container);
         const { rerender } = render(view(false), { container });
-        const inside = shadow.querySelector('button') as HTMLButtonElement;
+        const inside = getElement<HTMLButtonElement>('button', shadow);
         inside.focus();
         rerender(view(true));
         expect(shadow.activeElement).toBe(getSpin(container));

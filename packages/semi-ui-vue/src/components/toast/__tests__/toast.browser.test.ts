@@ -3,14 +3,14 @@ import { waitFor } from '@testing-library/vue';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import { ToastFactory } from '../index';
 import type { ToastHookApi } from '../interface';
 import HookHost from './fixtures/hook-host.vue';
 import { reachableKey } from './fixtures/reachable';
 
 const prefix = 'semi-toast';
-const closeButton = (toast: Element) => toast.querySelector(`.${prefix}-close-button .semi-button`) as HTMLButtonElement;
+const closeButton = (toast: Element) => getElement<HTMLButtonElement>(`.${prefix}-close-button .semi-button`, toast);
 const finishAnimations = (elements: Element[]) => elements.forEach((el) => el.getAnimations({ subtree: true }).forEach((a) => a.finish()));
 const wrapperOf = (toast: Element) => toast.parentElement as HTMLElement;
 
@@ -47,7 +47,7 @@ describe('Toast 浏览器', () => {
         const [first, second] = toasts();
         const firstTop = first.getBoundingClientRect().top;
         const secondTop = second.getBoundingClientRect().top;
-        const content = first.querySelector(`.${prefix}-content`) as HTMLElement;
+        const content = getElement(`.${prefix}-content`, first);
         const contentTop = content.getBoundingClientRect().top;
 
         await userEvent.click(closeButton(first));
@@ -76,7 +76,7 @@ describe('Toast 浏览器', () => {
         const toasts = () => [...document.querySelectorAll<HTMLElement>(`.${prefix}-zero-height-wrapper > .${prefix}`)];
         await waitFor(() => expect(toasts()).toHaveLength(2));
         const [first, second] = toasts();
-        await userEvent.hover(second.querySelector(`.${prefix}-content`) as HTMLElement);
+        await userEvent.hover(getElement(`.${prefix}-content`, second));
         const wrappers = toasts().map(wrapperOf);
         await waitFor(() => expect(wrappers[0].getBoundingClientRect().height).toBeGreaterThan(0));
         finishAnimations(wrappers);
@@ -114,10 +114,10 @@ describe('Toast 浏览器', () => {
         front.forEach((t) => expect(t).not.toHaveClass(`${prefix}-stack-hidden`));
 
         finishAnimations(toasts().map(wrapperOf));
-        await userEvent.hover(front[2].querySelector(`.${prefix}-content`) as HTMLElement);
+        await userEvent.hover(getElement(`.${prefix}-content`, front[2]));
         await waitFor(() => expect(expandedStates().every(Boolean)).toBe(true));
         expect(oldest).not.toHaveClass(`${prefix}-stack-hidden`);
-        await userEvent.unhover(front[2].querySelector(`.${prefix}-content`) as HTMLElement);
+        await userEvent.unhover(getElement(`.${prefix}-content`, front[2]));
         await waitFor(() => expect(oldest).toHaveClass(`${prefix}-stack-hidden`));
 
         toast.close(ids[0]);
@@ -171,11 +171,11 @@ describe('Toast 浏览器', () => {
         const toasts = () => document.querySelectorAll<HTMLElement>(`.${prefix}`);
         await waitFor(() => expect(toasts()).toHaveLength(2));
         finishAnimations([...toasts()].map(wrapperOf));
-        await userEvent.hover(toasts()[0].querySelector(`.${prefix}-content`) as HTMLElement);
+        await userEvent.hover(getElement(`.${prefix}-content`, toasts()[0]));
         toast.info({ content: 'third', duration: 1 });
         await new Promise((resolve) => setTimeout(resolve, 1500));
         expect(toasts()).toHaveLength(3);
-        await userEvent.unhover(toasts()[0].querySelector(`.${prefix}-content`) as HTMLElement);
+        await userEvent.unhover(getElement(`.${prefix}-content`, toasts()[0]));
         await waitFor(() => expect(toasts()).toHaveLength(0), { timeout: 3000 });
     });
 

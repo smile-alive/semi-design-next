@@ -1,6 +1,7 @@
 import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/solid';
 import { type FormProps, type SlotProps, Form, FormSlot } from '..';
 
 const Slot = FormSlot;
@@ -85,7 +86,7 @@ describe('Form-slot', () => {
         const { container } = renderSlot({ label: 'slot', noLabel: true, children: <span class="slot-child">content</span> }, { labelCol: { span: 6 }, wrapperCol: { span: 18 } });
         const main = container.querySelector(`${slotSelector} .${BASE_CLASS_PREFIX}-col > .${BASE_CLASS_PREFIX}-form-slot-main`);
         expect(main?.parentElement).toHaveStyle({ '--semi-col-span': '18' });
-        expect(main).toContainElement(container.querySelector('.slot-child') as HTMLElement);
+        expect(main).toContainElement(getElement('.slot-child', container));
         expect(container.querySelector(`${slotSelector} .${BASE_CLASS_PREFIX}-form-field-label`)).toBeNull();
         expect(container.querySelector(`${slotSelector} .${BASE_CLASS_PREFIX}-col`)).toHaveStyle({ '--semi-col-span': '6' });
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-form-col-undefined`)).toBeNull();

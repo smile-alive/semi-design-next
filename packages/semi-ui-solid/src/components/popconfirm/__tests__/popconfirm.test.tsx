@@ -5,7 +5,7 @@ import { describe, expect, expectTypeOf, it, onTestFinished, vi } from 'vite-plu
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { sleep } from '@test/utils/solid';
+import { sleep, getElement } from '@test/utils/solid';
 import Popconfirm, { type PopconfirmHandle, type PopconfirmProps } from '..';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
@@ -284,7 +284,7 @@ describe('Popconfirm', () => {
         renderPopconfirm({ onCancel, onVisibleChange, motion: false });
         const trigger = screen.getByRole('button', { name: 'Save' });
         await openByClick(onVisibleChange);
-        await userEvent.click(document.querySelector(`.${prefix}-btn-close`) as Element);
+        await userEvent.click(getElement(`.${prefix}-btn-close`));
         expect(onCancel).toHaveBeenCalledTimes(1);
         await waitFor(() => expect(getPopconfirm()).toBeNull());
         expect(trigger).toHaveFocus();
@@ -355,7 +355,7 @@ describe('Popconfirm', () => {
         const cancel = deferred();
         const onCancel = vi.fn<() => Promise<unknown>>(() => cancel.promise);
         renderPopconfirm({ defaultVisible: true, onCancel });
-        const close = document.querySelector(`.${prefix}-btn-close`) as Element;
+        const close = getElement(`.${prefix}-btn-close`);
         await userEvent.click(close);
         await userEvent.click(close);
         expect(onCancel).toHaveBeenCalledTimes(1);

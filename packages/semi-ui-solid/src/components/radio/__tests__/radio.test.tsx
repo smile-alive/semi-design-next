@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Radio, { type RadioChangeEvent, type RadioProps } from '..';
 import Tooltip from '../../tooltip';
 
@@ -58,7 +59,7 @@ describe('Radio', () => {
             </Radio>
         ));
         const input = screen.getByRole('radio');
-        const label = container.querySelector(`.${prefixCls}`) as HTMLElement;
+        const label = getElement(`.${prefixCls}`, container);
 
         await userEvent.click(input);
         expect(input).toBeChecked();
@@ -115,7 +116,7 @@ describe('Radio', () => {
                 Test
             </Radio>
         ));
-        const label = container.querySelector('label') as HTMLLabelElement;
+        const label = getElement<HTMLLabelElement>('label', container);
         await userEvent.hover(label);
         expect(onMouseEnter).toHaveBeenCalledTimes(1);
         await userEvent.unhover(label);
@@ -124,7 +125,7 @@ describe('Radio', () => {
 
     it('extra 属性', () => {
         const { container } = render(() => <Radio extra="Extra information">Radio with extra</Radio>);
-        const extra = container.querySelector(`.${prefixCls}-extra`) as HTMLElement;
+        const extra = getElement(`.${prefixCls}-extra`, container);
         expect(extra).toHaveTextContent(/^Extra information$/);
         expect(screen.getByRole('radio')).toHaveAttribute('aria-describedby', extra.id);
     });
@@ -305,7 +306,7 @@ describe('Radio', () => {
 
     it('aria-labelledby 与 aria-describedby 指向 addon 与 extra', () => {
         const first = render(() => <Radio extra="more">A</Radio>);
-        const addon = first.container.querySelector(`.${prefixCls}-addon`) as HTMLElement;
+        const addon = getElement(`.${prefixCls}-addon`, first.container);
         expect(addon.id).toBeTruthy();
         expect(screen.getByRole('radio')).toHaveAttribute('aria-labelledby', addon.id);
         expect(screen.getByRole('radio', { name: 'A' })).toHaveAccessibleDescription('more');
@@ -334,7 +335,7 @@ describe('Radio', () => {
                 A
             </Radio>
         ));
-        const addon = container.querySelector(`.${prefixCls}-addon-buttonRadio`) as HTMLElement;
+        const addon = getElement(`.${prefixCls}-addon-buttonRadio`, container);
         expect(addon).toHaveClass('ac');
         expect(addon).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(container.querySelector(`.${prefixCls}-extra`)).toBeNull();
@@ -343,14 +344,14 @@ describe('Radio', () => {
 
     it('button 类型的选中类名', async () => {
         const { container } = render(() => <Radio type="button">A</Radio>);
-        const addon = container.querySelector(`.${prefixCls}-addon-buttonRadio`) as HTMLElement;
+        const addon = getElement(`.${prefixCls}-addon-buttonRadio`, container);
         await userEvent.click(screen.getByRole('radio'));
         expect(addon).toHaveClass(`${prefixCls}-addon-buttonRadio-checked`);
     });
 
     it('card 类型的选中类名', async () => {
         const { container } = render(() => <Radio type="card">A</Radio>);
-        const label = container.querySelector('label') as HTMLLabelElement;
+        const label = getElement<HTMLLabelElement>('label', container);
         await userEvent.click(screen.getByRole('radio'));
         expect(label).toHaveClass(`${prefixCls}-cardRadioGroup_checked`);
         expect(container.querySelector(`.${prefixCls}-isCardRadioGroup_content`)).not.toBeNull();
@@ -362,7 +363,7 @@ describe('Radio', () => {
                 A
             </Radio>
         ));
-        const label = container.querySelector('label') as HTMLLabelElement;
+        const label = getElement<HTMLLabelElement>('label', container);
         expect(label).toHaveClass('c', prefixCls);
         expect(label).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(label).toHaveAttribute('data-test', 'x');
@@ -386,7 +387,7 @@ describe('Radio', () => {
                 A
             </Radio>
         ));
-        const label = container.querySelector('label') as HTMLLabelElement;
+        const label = getElement<HTMLLabelElement>('label', container);
         expect(label).toHaveAttribute('title', 'tip');
         await userEvent.click(label);
         expect(onClick).toHaveBeenCalled();
@@ -400,7 +401,7 @@ describe('Radio', () => {
                 A
             </Radio>
         ));
-        const label = container.querySelector('label') as HTMLLabelElement;
+        const label = getElement<HTMLLabelElement>('label', container);
         expect(label).not.toHaveAttribute('tabindex');
         expect(label).not.toHaveAttribute('aria-describedby');
         expect(screen.getByRole('radio')).toHaveAttribute('tabindex', '-1');
@@ -417,7 +418,7 @@ describe('Radio', () => {
                 {(trigger) => <Radio {...trigger()}>A</Radio>}
             </Tooltip>
         ));
-        const label = container.querySelector('label') as HTMLLabelElement;
+        const label = getElement<HTMLLabelElement>('label', container);
         expect(label).not.toHaveAttribute('tabindex');
         expect(label).not.toHaveAttribute('aria-describedby');
         expect(screen.getByRole('radio')).toHaveAttribute('tabindex', '0');
@@ -434,7 +435,7 @@ describe('Radio', () => {
                 )}
             </Tooltip>
         ));
-        const wrapper = container.querySelector('.probe') as HTMLElement;
+        const wrapper = getElement('.probe', container);
         expect(wrapper).toContainElement(container.querySelector('label'));
         expect(wrapper).toHaveAttribute('tabindex', '0');
         await userEvent.click(wrapper);
@@ -453,7 +454,7 @@ describe('Radio', () => {
         const input = screen.getByRole('radio');
         ['aria-invalid', 'aria-errormessage', 'aria-required'].forEach((name) => expect(input).not.toHaveAttribute(name));
         expect(input).toHaveAccessibleDescription('must be off');
-        const label = container.querySelector('label') as HTMLLabelElement;
+        const label = getElement<HTMLLabelElement>('label', container);
         ['aria-invalid', 'aria-errormessage', 'aria-required'].forEach((name) => expect(label).not.toHaveAttribute(name));
     });
 

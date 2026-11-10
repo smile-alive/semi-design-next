@@ -7,7 +7,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi, type MockInstance } 
 import { IconHome } from '@fibrae/semi-icons-vue';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement, defined } from '@test/utils/vue';
 import Nav, { NavFooter, NavHeader, NavItem, SubNav, type ItemKey, type NavClickData, type NavItemConfig, type NavOpenChangeData, type NavWrapperSlotProps, type OnSelectedData, type SelectedData } from '..';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
@@ -19,12 +19,13 @@ import SsrNav from './fixtures/ssr-nav.vue';
 
 const prefixCls = 'semi-navigation';
 
-const getList = () => document.querySelector(`.${prefixCls} .${prefixCls}-list`) as HTMLElement;
+const getList = () => getElement(`.${prefixCls} .${prefixCls}-list`);
 const getOpenSubs = () => document.querySelectorAll(`.${prefixCls}-item-sub .${prefixCls}-sub-open`);
-const getCollapseButton = () => document.querySelector(`.${prefixCls}-footer .${prefixCls}-collapse-btn button`) as HTMLElement;
-const getSubTitle = (text: string) => screen.getByText(text).closest(`.${prefixCls}-sub-title`) as HTMLElement;
-const getItem = (text: string) => screen.getByText(text).closest(`.${prefixCls}-item`) as HTMLElement;
-const getItemControl = (text: string) => screen.getByText(text).closest('a, button') as HTMLElement;
+const getCollapseButton = () => getElement(`.${prefixCls}-footer .${prefixCls}-collapse-btn button`);
+const queryCollapseButton = () => document.querySelector(`.${prefixCls}-footer .${prefixCls}-collapse-btn button`);
+const getSubTitle = (text: string) => defined(screen.getByText(text).closest<HTMLElement>(`.${prefixCls}-sub-title`));
+const getItem = (text: string) => defined(screen.getByText(text).closest<HTMLElement>(`.${prefixCls}-item`));
+const getItemControl = (text: string) => defined(screen.getByText(text).closest<HTMLElement>('a, button'));
 const isSelected = (text: string) => getItem(text).classList.contains(`${prefixCls}-item-selected`);
 const isOpen = (text: string) => getSubTitle(text).getAttribute('aria-expanded') === 'true';
 
@@ -214,13 +215,13 @@ describe('Navigation', () => {
             onOpenChange,
             onSelect,
         });
-        await userEvent.click(document.querySelector(`.${prefixCls}-sub-title`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-sub-title`));
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onOpenChange).toHaveBeenCalledTimes(1);
         expect(onClick.mock.calls[0][0].itemKey).toBe('job');
         expect(onOpenChange.mock.calls[0][0].itemKey).toBe('job');
 
-        await userEvent.click(document.querySelector(`.${prefixCls}-item-button`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-item-button`));
         expect(onSelect).toHaveBeenCalledTimes(1);
         expect(onSelect.mock.calls[0][0].itemKey).toBe('user');
 
@@ -241,7 +242,7 @@ describe('Navigation', () => {
             onOpenChange,
         });
         expect(getOpenSubs()).toHaveLength(0);
-        await userEvent.click(document.querySelector(`.${prefixCls}-sub-title`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-sub-title`));
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onOpenChange).toHaveBeenCalledTimes(1);
         expect(onClick.mock.calls[0][0].itemKey).toBe(2);
@@ -269,7 +270,7 @@ describe('Navigation', () => {
         const title = screen.getByRole('button', { name: '用户管理' });
         expect(title).toHaveClass(`${prefixCls}-sub-title`);
         expect(title).toHaveAttribute('aria-expanded', 'true');
-        const subList = document.getElementById(title.getAttribute('aria-controls') as string) as HTMLElement;
+        const subList = defined(document.getElementById(title.getAttribute('aria-controls') as string));
         expect(subList.tagName).toBe('UL');
         expect(subList).toContainElement(screen.getByRole('button', { name: '用户列表' }));
 
@@ -567,7 +568,7 @@ describe('Navigation 行为', () => {
     it('defaultIsCollapsed 时折叠，并可通过折叠按钮切换', async () => {
         const onCollapseChange = onCollapseChangeSpy();
         renderEnglish(() => <Nav defaultIsCollapsed footer={{ collapseButton: true }} header={{ text: 'Semi 运营后台' }} items={treeItems} onCollapseChange={onCollapseChange} />);
-        const root = document.querySelector(`.${prefixCls}`) as HTMLElement;
+        const root = getElement(`.${prefixCls}`);
         expect(root).toHaveClass(`${prefixCls}-collapsed`);
         expect(document.querySelector(`.${prefixCls}-header`)).toHaveClass(`${prefixCls}-header-collapsed`);
         expect(document.querySelector(`.${prefixCls}-header-text`)).toBeNull();
@@ -627,7 +628,7 @@ describe('Navigation 行为', () => {
             </>
         ));
         expect(screen.getByText('custom button')).toBeInTheDocument();
-        expect(getCollapseButton()).toBeNull();
+        expect(queryCollapseButton()).toBeNull();
         await userEvent.click(screen.getByText('custom button'));
         expect(onFooterClick).toHaveBeenCalledTimes(1);
         expect(onFooterClick.mock.calls[0][0]).toBeInstanceOf(MouseEvent);
@@ -924,7 +925,7 @@ describe('Navigation 行为', () => {
 
     it('通过 toggleIconPosition 把展开图标放在左侧', () => {
         renderJsx({ toggleIconPosition: 'left' });
-        const inner = getSubTitle('用户').querySelector(`.${prefixCls}-item-inner`) as HTMLElement;
+        const inner = getElement(`.${prefixCls}-item-inner`, getSubTitle('用户'));
         expect(inner.firstElementChild).toHaveClass(`${prefixCls}-item-icon-toggle-left`);
     });
 
@@ -977,7 +978,7 @@ describe('Navigation 行为', () => {
         view.unmount();
         renderJsx({ mode: 'vertical' });
         expect(document.querySelector(`.${prefixCls}`)).toHaveClass(`${prefixCls}-vertical`);
-        const inner = getSubTitle('用户').querySelector(`.${prefixCls}-item-inner`) as HTMLElement;
+        const inner = getElement(`.${prefixCls}-item-inner`, getSubTitle('用户'));
         expect(inner.firstElementChild).toHaveClass(`${prefixCls}-item-icon-toggle-left`);
     });
 
@@ -990,7 +991,7 @@ describe('Navigation 行为', () => {
     });
 
     describe('Sub 的 dropdownProps', () => {
-        const popupOf = (text: string) => screen.getByText(text).closest('.semi-dropdown') as HTMLElement;
+        const popupOf = (text: string) => defined(screen.getByText(text).closest<HTMLElement>('.semi-dropdown'));
         const renderMore = (props: Record<string, unknown>, navProps: Record<string, unknown> = {}) =>
             renderNav({ mode: 'horizontal', ...navProps }, () => (
                 <SubNav itemKey="more" text="更多" {...props}>
@@ -1238,7 +1239,7 @@ describe('Navigation 的类名前缀', () => {
                 </SubNav>
             </>
         ));
-        const root = document.querySelector(`.${prefixCls}`) as HTMLElement;
+        const root = getElement(`.${prefixCls}`);
         const suffixes = ['list-wrapper', 'list', 'item', 'item-link', 'item-button', 'item-text', 'item-sub', 'sub-title', 'sub', 'sub-wrap', 'header', 'header-link', 'header-logo', 'header-text', 'footer', 'collapse-btn'];
         expect(suffixes.filter((suffix) => !root.querySelector(`.${prefixCls}-${suffix}`))).toEqual([]);
         const stray = [...root.querySelectorAll('[class*="navigation"]')].flatMap((el) => [...el.classList]).filter((name) => name.includes('navigation') && !name.startsWith(prefixCls));
@@ -1354,7 +1355,7 @@ describe('Navigation 的 Vue 用法', () => {
 
     it('受控的 isCollapsed 变回 undefined 时回到内部状态', async () => {
         const view = renderJsx({ isCollapsed: true });
-        const root = document.querySelector(`.${prefixCls}`) as HTMLElement;
+        const root = getElement(`.${prefixCls}`);
         expect(root).toHaveClass(`${prefixCls}-collapsed`);
         await view.rerender({ isCollapsed: false });
         expect(root).not.toHaveClass(`${prefixCls}-collapsed`);
@@ -1387,7 +1388,7 @@ describe('Navigation 的 Vue 用法', () => {
                 expandIcon: ({ item }: { item: NavItemConfig }) => <span data-expand={item.itemKey} />,
             },
         });
-        const nav = view.container.querySelector(`.${prefixCls}`) as HTMLElement;
+        const nav = getElement(`.${prefixCls}`, view.container);
         expect(nav).toHaveTextContent('首页@0');
         expect(nav).toHaveTextContent('用户列表@1');
         expect(levels).toContainEqual(['ban', 1]);
@@ -1459,7 +1460,7 @@ describe('Navigation 的 Vue 用法', () => {
     it('Footer 有内容时显示内容而不显示折叠按钮', () => {
         renderNav({}, () => <NavFooter collapseButton>{() => '版权所有'}</NavFooter>);
         expect(document.querySelector(`.${prefixCls}-footer`)).toHaveTextContent('版权所有');
-        expect(getCollapseButton()).toBeNull();
+        expect(queryCollapseButton()).toBeNull();
     });
 
     it('折叠时 header 链接仍有可访问名称', () => {

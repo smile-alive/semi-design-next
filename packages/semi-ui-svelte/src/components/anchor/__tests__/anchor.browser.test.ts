@@ -3,7 +3,8 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { tab } from '@test/utils/browser';
-import { sleep } from '@test/utils/function';
+import { getElement } from '@test/utils/dom/common';
+import { sleep, defined } from '@test/utils/function';
 import type { AnchorProps } from '../interface';
 import AnchorFixture from './anchor-fixture.svelte';
 import DocBox from './doc-box.svelte';
@@ -56,14 +57,14 @@ describe('Svelte Anchor（浏览器）', () => {
     it('FixContainerScrollBug1158：点击链接只滚动目标容器，不滚动其可滚动祖先', async () => {
         render(NestedScroll);
         const outer = screen.getByTestId('outer');
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         expect(outer.scrollHeight).toBeGreaterThan(outer.clientHeight);
         expect(box.scrollHeight).toBeGreaterThan(box.clientHeight);
 
         await userEvent.click(screen.getByRole('link', { name: 'docs' }));
 
         await waitFor(() => expect(box.scrollTop).toBe(300));
-        expect((document.getElementById('docs') as HTMLElement).getBoundingClientRect().top).toBeCloseTo(box.getBoundingClientRect().top, 0);
+        expect(defined(document.getElementById('docs')).getBoundingClientRect().top).toBeCloseTo(box.getBoundingClientRect().top, 0);
         expect(outer.scrollTop).toBe(0);
     });
 
@@ -94,7 +95,7 @@ describe('Svelte Anchor（浏览器）', () => {
 
     it('按键：Enter 激活焦点所在的链接并滚动到目标，方向键不滚动', async () => {
         render(DocBox);
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         screen.getByRole('link', { name: 'contact' }).focus();
         await userEvent.keyboard('{ArrowUp}');
         expect(box.scrollTop).toBe(0);
@@ -106,7 +107,7 @@ describe('Svelte Anchor（浏览器）', () => {
 
     it('滚动：高亮跟随容器滚动位置，回到顶部时清空', async () => {
         render(DocBox, { props: { fixedBar: true, scrollMotion: true, targetOffset: 100 } });
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         box.scrollTo(0, box.scrollHeight);
         await waitFor(() => expect(activeTitle()).toHaveTextContent('doc1'));
 
@@ -116,18 +117,18 @@ describe('Svelte Anchor（浏览器）', () => {
 
     it('点击：目标滚动到 targetOffset 指定的位置', async () => {
         render(DocBox, { props: { fixedBar: true, scrollMotion: true, targetOffset: 100 } });
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         await userEvent.click(screen.getByRole('link', { name: 'api too much to show' }));
         await waitFor(() => {
-            const offset = (document.getElementById('api') as HTMLElement).getBoundingClientRect().top - box.getBoundingClientRect().top;
+            const offset = defined(document.getElementById('api')).getBoundingClientRect().top - box.getBoundingClientRect().top;
             expect(Math.abs(offset - 100)).toBeLessThanOrEqual(2);
         });
     });
 
     it('展开与收起子链接后，rail 高度跟随链接列表', async () => {
         setup({ links: collapsible, autoCollapse: true });
-        const slide = () => document.querySelector(`.${prefix}-slide`) as HTMLElement;
-        const wrapper = () => document.querySelector(`.${prefix}-link-wrapper`) as HTMLElement;
+        const slide = () => getElement(`.${prefix}-slide`);
+        const wrapper = () => getElement(`.${prefix}-link-wrapper`);
         const railHeight = () => slide().getBoundingClientRect().height;
         const listHeight = () => wrapper().getBoundingClientRect().height;
         const collapsedHeight = listHeight();
@@ -144,8 +145,8 @@ describe('Svelte Anchor（浏览器）', () => {
 
     it('CssOnlyRailHeight：新增链接后同一帧内 rail 高度已等于列表高度', async () => {
         const store = setup({ style: 'width: 160px', links: flat('welcome') });
-        const slide = () => document.querySelector(`.${prefix}-slide`) as HTMLElement;
-        const wrapper = () => document.querySelector(`.${prefix}-link-wrapper`) as HTMLElement;
+        const slide = () => getElement(`.${prefix}-slide`);
+        const wrapper = () => getElement(`.${prefix}-link-wrapper`);
 
         store.props.links = [...flat('welcome'), { href: '#long', title: '一行放不下、会在渲染时立即换行撑高列表的很长很长的标题' }];
         await waitFor(() => expect(wrapper().querySelectorAll(`.${prefix}-link`)).toHaveLength(2));
@@ -155,9 +156,9 @@ describe('Svelte Anchor（浏览器）', () => {
     it('maxHeight 限制列表可滚动时，rail 高度等于内容总高且随内容整体滚动，滑块与激活链接对齐', async () => {
         setup({ defaultAnchor: '#l14', maxHeight: 100, links: Array.from({ length: 15 }, (_, i) => ({ href: `#l${i}`, title: `l${i}` })) });
         const nav = screen.getByRole('navigation');
-        const slide = document.querySelector(`.${prefix}-slide`) as HTMLElement;
-        const wrapper = document.querySelector(`.${prefix}-link-wrapper`) as HTMLElement;
-        const bar = document.querySelector(`.${prefix}-slide-bar`) as HTMLElement;
+        const slide = getElement(`.${prefix}-slide`);
+        const wrapper = getElement(`.${prefix}-link-wrapper`);
+        const bar = getElement(`.${prefix}-slide-bar`);
         const activeTitleTop = () => screen.getByRole('link', { name: 'l14' }).getBoundingClientRect().top;
         await waitFor(() => expect(bar).toHaveClass(`${prefix}-slide-bar-active`));
 
@@ -173,7 +174,7 @@ describe('Svelte Anchor（浏览器）', () => {
 
     it('容器已滚到底后点击底部链接，再向上滚动时高亮仍更新', async () => {
         render(DocBox);
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         box.scrollTo(0, box.scrollHeight);
         await waitFor(() => expect(activeTitle()).toHaveTextContent('doc1'));
 
@@ -210,7 +211,7 @@ describe('Svelte Anchor（浏览器）', () => {
         document.body.append(box);
         try {
             setup({ links: collapsible, autoCollapse: true, getContainer: () => box, scrollMotion: false });
-            const avatarTop = (document.getElementById('头像') as HTMLElement).offsetTop;
+            const avatarTop = defined(document.getElementById('头像')).offsetTop;
             for (let top = 0; top < avatarTop; top += step) {
                 box.scrollTop = top;
                 await sleep(120);
@@ -230,7 +231,7 @@ describe('Svelte Anchor（浏览器）', () => {
         shadow.append(mount);
         const view = render(ShadowTarget, { target: mount });
         try {
-            await userEvent.click(shadow.querySelector(`.${prefix}-link-title`) as Element);
+            await userEvent.click(getElement(`.${prefix}-link-title`, shadow));
             await waitFor(() => expect(window.scrollY).toBeGreaterThan(0));
         } finally {
             view.unmount();

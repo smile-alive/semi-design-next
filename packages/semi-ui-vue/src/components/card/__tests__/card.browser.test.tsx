@@ -1,7 +1,7 @@
 /** @jsxImportSource vue */
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Card from '..';
 
 const properties = ['display', 'font-family', 'font-size', 'font-weight', 'font-style', 'line-height', 'letter-spacing', 'color', 'margin-top', 'margin-bottom', 'margin-inline-start', 'margin-inline-end', 'padding-top', 'padding-bottom', 'text-overflow', 'overflow', 'white-space'];
@@ -16,7 +16,7 @@ const inDir = (dir: 'ltr' | 'rtl', slots: Record<string, () => string>) =>
 describe('Card 标题（浏览器）', () => {
     it('外观与被替换的 h6 一致', () => {
         const { container } = render(Card, { slots: { title: () => 'title' } });
-        const title = container.querySelector('.semi-typography-h6') as HTMLElement;
+        const title = getElement('.semi-typography-h6', container);
         expect(title.tagName).toBe('DIV');
         const heading = document.createElement('h6');
         heading.className = title.className;

@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import PinCode, { type PinCodeHandle, type PinCodeProps } from '..';
 import ConfigProvider from '../../config-provider';
 import { LocaleProvider } from '../../locale';
@@ -21,7 +21,7 @@ const inputFocusCls = `${BASE_CLASS_PREFIX}-input-wrapper-focus`;
 
 const textFormat = 'text' as unknown as PinCodeProps['format'];
 
-const getWrapper = () => document.querySelector(wrapperSelector) as HTMLElement;
+const getWrapper = () => getElement(wrapperSelector);
 const getInputs = () => screen.getAllByRole<HTMLInputElement>('textbox');
 const getValues = () => getInputs().map((input) => input.value);
 // Vue ignores an ancestor listener attached at or after the timestamp of an event coming up from a child, and the

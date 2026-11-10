@@ -5,12 +5,13 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Tag, { SplitTagGroup, TagGroup } from '..';
 import type { SplitTagGroupProps, TagCloseEvent, TagGroupItem, TagGroupProps, TagProps } from '../interface';
 
 const prefix = `${BASE_CLASS_PREFIX}-tag`;
-const closeIcon = (container: HTMLElement) => container.querySelector(`.${prefix}-close`) as HTMLElement;
-const tagNode = (container: HTMLElement) => container.querySelector(`.${prefix}`) as HTMLElement;
+const closeIcon = (container: HTMLElement) => getElement(`.${prefix}-close`, container);
+const tagNode = (container: HTMLElement) => getElement(`.${prefix}`, container);
 const tagNodes = (container: HTMLElement) => [...container.querySelectorAll<HTMLElement>(`.${prefix}`)];
 
 afterEach(() => {
@@ -343,7 +344,7 @@ describe('TagGroup', () => {
         const [version, setVersion] = createSignal(0);
         const { container } = render(() => <TagGroup tagList={['A', 'B'].map((children) => ({ children, closable: true, class: `v${version()}` }))} />);
         const before = tagNodes(container);
-        await userEvent.click(before[0].querySelector<HTMLElement>(`.${prefix}-close`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-close`, before[0]));
         setVersion(1);
         const after = tagNodes(container);
         after.forEach((tag, index) => expect(tag).toBe(before[index]));
@@ -448,10 +449,10 @@ describe('SplitTagGroup', () => {
                 </SplitTagGroup>
             </>
         ));
-        const single = container.querySelector('.single') as HTMLElement;
+        const single = getElement('.single', container);
         expect(single.children).toHaveLength(1);
         expect(single).toHaveTextContent('Only');
-        expect((container.querySelector('.fragment') as HTMLElement).children).toHaveLength(2);
+        expect(getElement('.fragment', container).children).toHaveLength(2);
     });
 
     it('子元素变化时同步渲染并保留已有节点', () => {
@@ -462,7 +463,7 @@ describe('SplitTagGroup', () => {
                 {extra() && <Tag>C</Tag>}
             </SplitTagGroup>
         ));
-        const group = container.querySelector('[role="group"]') as HTMLElement;
+        const group = getElement('[role="group"]', container);
         const first = group.firstElementChild;
         setExtra(true);
         expect(group.children).toHaveLength(2);
@@ -480,7 +481,7 @@ describe('SplitTagGroup', () => {
                 {false}text<Tag>B</Tag>
             </SplitTagGroup>
         ));
-        const group = container.querySelector('[role="group"]') as HTMLElement;
+        const group = getElement('[role="group"]', container);
         expect(group.children).toHaveLength(2);
         expect(group).toHaveTextContent('outernestedtextB');
     });

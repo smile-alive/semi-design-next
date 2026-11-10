@@ -5,7 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { countLiveListeners } from '@test/utils/solid';
+import { countLiveListeners, getElement } from '@test/utils/solid';
 import AutoComplete, { type AutoCompleteProps, type AutoCompleteTriggerRenderProps, type BaseDataItem } from '..';
 import ConfigProvider from '../../config-provider';
 import { type FormApi, Form, FormAutoComplete } from '../../form';
@@ -25,13 +25,13 @@ function renderAc(initial: Props = {}) {
 }
 
 const getInput = () => screen.getByRole('combobox') as HTMLInputElement;
-const getRoot = () => document.querySelector(`.${BASE_CLASS_PREFIX}-autocomplete`) as HTMLElement;
+const getRoot = () => getElement(`.${BASE_CLASS_PREFIX}-autocomplete`);
 const getList = () => document.querySelector<HTMLElement>(`.${optionCls}-list`);
 const getOptions = () => Array.from(document.querySelectorAll<HTMLElement>(`.${optionCls}`));
 const getOptionTexts = () => getOptions().map((option) => option.textContent);
 const getFocusedOption = () => document.querySelector(`.${optionCls}-focused`);
-const getPopupWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`) as HTMLElement;
-const getClearBtn = () => document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement;
+const getPopupWrapper = () => getElement(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
+const getClearBtn = () => getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`);
 const focusInput = () => getInput().focus();
 const keyNames = { UP: 'ArrowUp', DOWN: 'ArrowDown', ENTER: 'Enter', ESC: 'Escape', TAB: 'Tab' };
 const pressKey = (name: keyof typeof keyNames) => fireEvent.keyDown(getInput(), { key: keyNames[name] });
@@ -154,7 +154,7 @@ describe('AutoComplete', () => {
 
     it('loading 为 true 时隐藏 optionList 并显示加载中', () => {
         renderAc({ loading: true, defaultOpen: true, data: stringData, ...commonProps });
-        const loading = document.querySelector(`.${BASE_CLASS_PREFIX}-autocomplete-loading-wrapper`) as HTMLElement;
+        const loading = getElement(`.${BASE_CLASS_PREFIX}-autocomplete-loading-wrapper`);
         expect(loading.querySelector(`.${BASE_CLASS_PREFIX}-spin`)).not.toBeNull();
         expect(getOptions()).toHaveLength(0);
     });
@@ -619,7 +619,7 @@ describe('AutoComplete', () => {
     it('triggerRender 替换输入框，点击后打开列表', async () => {
         const triggerRender = (props: AutoCompleteTriggerRenderProps) => <div class="custom-trigger">{props.value.length ? 'picked' : 'Select'}</div>;
         const { container } = renderAc({ data: stringData, triggerRender, ...commonProps });
-        const trigger = container.querySelector('.custom-trigger') as HTMLElement;
+        const trigger = getElement('.custom-trigger', container);
         expect(trigger).not.toBeNull();
         expect(container.querySelector('input')).toBeNull();
         await userEvent.click(trigger);
@@ -738,7 +738,7 @@ describe('AutoComplete', () => {
             ),
             ...commonProps,
         });
-        const trigger = document.querySelector<HTMLElement>('.custom-trigger') as HTMLElement;
+        const trigger = getElement('.custom-trigger');
         expect(trigger.dataset).toMatchObject({
             disabled: 'true',
             placeholder: 'pick one',

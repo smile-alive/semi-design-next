@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import { IconWifi } from '@fibrae/semi-icons-vue';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { endTransitions, render } from '@test/utils/vue';
+import { endTransitions, render, getElement, defined } from '@test/utils/vue';
 import Toast, { ToastFactory } from '../index';
 import type { ToastHookApi, ToastHookOptions, ToastProps } from '../interface';
 import ToastItem from '../toast.vue';
@@ -16,7 +16,7 @@ import { reachableKey } from './fixtures/reachable';
 const prefix = 'semi-toast';
 const getInfoToast = () => document.querySelector<HTMLElement>(`.${prefix}-info`);
 const texts = (selector = `.${prefix}-info`) => [...document.querySelectorAll(selector)].map((toast) => toast.textContent);
-const innerWrapper = (root: ParentNode = document) => root.querySelector(`.${prefix}-innerWrapper`) as HTMLElement;
+const innerWrapper = (root: ParentNode = document) => getElement(`.${prefix}-innerWrapper`, root);
 async function show(opts: Omit<ToastProps, 'type'> | string) {
     Toast.info(opts);
     await nextTick();
@@ -158,7 +158,7 @@ describe('Toast', () => {
         Toast.config({ top: '400px', theme: 'light', zIndex: 2333, duration: 0 });
         Toast.resetConfig();
         await show('semi');
-        const wrapper = document.getElementById(Toast.getWrapperId() ?? '') as HTMLElement;
+        const wrapper = defined(document.getElementById(Toast.getWrapperId() ?? ''));
         expect(wrapper.style.zIndex).toBe('1010');
         expect(wrapper.style.top).toBe('');
         expect(getInfoToast()).not.toHaveClass(`${prefix}-light`);
@@ -171,7 +171,7 @@ describe('Toast', () => {
         expect(Other.defaultOpts).toMatchObject({ top: 77, zIndex: 3000, duration: 5 });
         Other.info('other');
         await nextTick();
-        const wrapper = document.getElementById(Other.getWrapperId() ?? '') as HTMLElement;
+        const wrapper = defined(document.getElementById(Other.getWrapperId() ?? ''));
         expect(wrapper.style.top).toBe('77px');
         expect(wrapper.style.zIndex).toBe('3000');
         Other.destroyAll();
@@ -297,8 +297,8 @@ describe('Toast', () => {
         Toast.info({ content: 'main', duration: 0 });
         Other.info({ content: 'other', duration: 0 });
         await nextTick();
-        const main = document.getElementById(Toast.getWrapperId() ?? '') as HTMLElement;
-        const other = document.getElementById(Other.getWrapperId() ?? '') as HTMLElement;
+        const main = defined(document.getElementById(Toast.getWrapperId() ?? ''));
+        const other = defined(document.getElementById(Other.getWrapperId() ?? ''));
         expect(main).not.toBe(other);
         expect(main.style.zIndex).toBe('1010');
         expect(main.style.top).toBe('');
@@ -341,7 +341,7 @@ describe('Toast', () => {
         expect(holder.querySelector(`.${prefix}`)).toBeNull();
         api.info({ content: 'again', duration: 0 });
         await nextTick();
-        await clickAfterMount(holder.querySelector('button') as HTMLButtonElement);
+        await clickAfterMount(getElement<HTMLButtonElement>('button', holder));
         expect(wrapperOf(holder.querySelector(`.${prefix}-info`))).toHaveClass(`${prefix}-animation-hide`);
         await endTransitions();
         expect(holder.querySelector(`.${prefix}`)).toBeNull();
@@ -377,7 +377,7 @@ describe('Toast', () => {
         api.info({ content: 'hook', duration: 0 });
         await show({ content: 'static', duration: 0 });
         const holder = view.getByTestId('holder');
-        const hooked = holder.querySelector(`.${prefix}-info`) as HTMLElement;
+        const hooked = getElement(`.${prefix}-info`, holder);
         expect(hooked).toHaveAttribute('aria-label', en_US.Toast.info);
         expect(hooked).toHaveAttribute('dir', 'rtl');
         expect(hooked.querySelector('button')).toHaveAccessibleName(en_US.Toast.close);
@@ -575,7 +575,7 @@ describe('Toast', () => {
         Toast.info({ content: '1', duration: 0, stack: true, class: 'mine', style: { color: 'red' } });
         ['2', '3', '4'].forEach((content) => Toast.info({ content, duration: 0, stack: true }));
         await nextTick();
-        const oldest = screen.getByText('1').closest(`.${prefix}`) as HTMLElement;
+        const oldest = defined(screen.getByText('1').closest<HTMLElement>(`.${prefix}`));
         expect(oldest).toHaveClass('mine', `${prefix}-stack-hidden`);
         expect(wrapperOf(oldest)).toHaveClass(`${prefix}-zero-height-wrapper`, `${prefix}-animation-show`);
         expect(oldest.style.color).toBe('red');
@@ -601,7 +601,7 @@ describe('Toast', () => {
         vi.useFakeTimers();
         await show({ id: 'a', content: 'a', duration: 0, motion: false });
         await show({ id: 'b', content: 'b', duration: 1, motion: false });
-        (document.querySelector(`.${prefix}-info button`) as HTMLButtonElement).focus();
+        getElement<HTMLButtonElement>(`.${prefix}-info button`).focus();
         await nextTick();
         await advance(2000);
         expect(texts()).toEqual(['a', 'b']);
@@ -619,7 +619,7 @@ describe('Toast', () => {
         const expandedCls = `${prefix}-zero-height-wrapper-expanded`;
         const wrappers = () => [...document.querySelectorAll(`.${prefix}-zero-height-wrapper`)];
         expect(wrappers().some((wrapper) => wrapper.classList.contains(expandedCls))).toBe(false);
-        (document.querySelector(`.${prefix}-info button`) as HTMLButtonElement).focus();
+        getElement<HTMLButtonElement>(`.${prefix}-info button`).focus();
         await nextTick();
         expect(wrappers().every((wrapper) => wrapper.classList.contains(expandedCls))).toBe(true);
     });

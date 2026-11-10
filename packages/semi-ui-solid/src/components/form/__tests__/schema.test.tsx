@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import { type FormApi, Form, FormInput } from '..';
 
 const errorSelector = '.semi-form-field-error-message';
@@ -19,7 +20,7 @@ describe('Form schema', () => {
                 <FormInput field="name" />
             </Form>
         ));
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         expect(container.querySelector('form')).not.toHaveAttribute('schema');
         await userEvent.type(input, 'a');
         await vi.waitFor(() => expect(container.querySelector(errorSelector)).toHaveTextContent('too short'));
@@ -35,7 +36,7 @@ describe('Form schema', () => {
                 <FormInput field="name" />
             </Form>
         ));
-        await userEvent.type(container.querySelector('input') as HTMLInputElement, ' abc ');
+        await userEvent.type(getElement<HTMLInputElement>('input', container), ' abc ');
         api?.submitForm();
         await vi.waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
         expect(onSubmit.mock.calls[0][0]).toEqual({ name: 'abc' });
@@ -78,7 +79,7 @@ describe('Form schema', () => {
                     <FormInput field="name" />
                 </Form>
             ));
-            const input = container.querySelector('input') as HTMLInputElement;
+            const input = getElement<HTMLInputElement>('input', container);
             fireEvent.input(input, { target: { value: 'a' } });
             await vi.advanceTimersByTimeAsync(200);
             fireEvent.input(input, { target: { value: 'b' } });
@@ -114,7 +115,7 @@ describe('Form schema', () => {
                 <FormInput field="name" validator={z.string().min(3, 'too short')} />
             </Form>
         ));
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         await userEvent.type(input, 'ab');
         await vi.waitFor(() => expect(container.querySelector(errorSelector)).toHaveTextContent('too short'));
         await userEvent.type(input, 'c');

@@ -4,7 +4,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import TagInput from '..';
 
 // The sortable list loads lazily; this stand-in waits for the test to release it
@@ -42,7 +42,7 @@ vi.mock('@fibrae/semi-ui-vue/internal/sortable/sortable.vue', async () => {
 });
 
 const tagCls = `${BASE_CLASS_PREFIX}-tagInput`;
-const getRoot = () => document.querySelector(`.${tagCls}`) as HTMLElement;
+const getRoot = () => getElement(`.${tagCls}`);
 const tagButton = (value: string) => screen.getByRole('button', { name: zh_CN.Tag.closableTag.replace('${tag}', value) });
 const items = () => [...document.querySelectorAll<HTMLElement>(`.${tagCls}-sortable-list .item`)];
 

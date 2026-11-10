@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import { Pagination } from '..';
 import type { PaginationProps } from '../interface';
 
@@ -25,14 +26,14 @@ describe('Svelte Pagination 浏览器', () => {
     ])('%s 显示主题焦点环', async (_, props, selector) => {
         // the theme is not loaded here: give the focus token a value so the ring color is not invalid at computed time
         const { container } = render(Pagination, { props: { ...props, style: '--semi-color-primary-light-active: rgb(1, 2, 3)' } });
-        const el = container.querySelector(selector) as HTMLElement;
+        const el = getElement(selector, container);
         await tabTo(el);
         expectThemeFocusRing(el);
     });
 
     it.each<[string, PaginationProps, (c: Element) => Element, number]>([
         ['隐藏页码', { currentPage: 10 }, (c) => c.querySelectorAll('[aria-label="更多"]')[1], 12],
-        ['small 的页码选择', { currentPage: 5, size: 'small', hoverShowPageSelect: true }, (c) => c.querySelector(`.${prefix}-item-small`) as Element, 1],
+        ['small 的页码选择', { currentPage: 5, size: 'small', hoverShowPageSelect: true }, (c) => getElement(`.${prefix}-item-small`, c), 1],
     ])('通过键盘打开%s并跳转到其中一页', async (_, props, getTrigger, firstPage) => {
         const onChange = vi.fn<(page: number, size: number) => void>();
         const view = render(Pagination, { props: { total: 200, onChange, ...props } });
@@ -76,7 +77,7 @@ describe('Svelte Pagination 浏览器', () => {
             const target = document.body.appendChild(document.createElement('div'));
             target.style.width = width;
             render(Pagination, { props, target });
-            const { width: measured, height } = (target.querySelector(`.${prefix}-total`) as Element).getBoundingClientRect();
+            const { width: measured, height } = getElement(`.${prefix}-total`, target).getBoundingClientRect();
             return { width: measured, height };
         };
         const roomy = mountIn('900px');

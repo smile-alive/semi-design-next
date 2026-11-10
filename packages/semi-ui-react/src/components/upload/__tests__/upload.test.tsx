@@ -8,6 +8,7 @@ import { IconUser } from '@fibrae/semi-icons-react';
 import { Upload, Button } from '@fibrae/semi-ui-react';
 import { zh_CN } from '@fibrae/semi-ui-react/locale';
 import { semiGlobal } from '@fibrae/semi-ui-react/utils';
+import { defined } from '@test/utils/react';
 import FileCard, { type FileCardProps } from '../file-card';
 import type { AfterUploadProps, AfterUploadResult, BeforeUploadObjectResult, BeforeUploadProps, FileItem, RenderFileItemProps, UploadHandle, UploadProps } from '../index';
 
@@ -2671,7 +2672,7 @@ describe('Upload React 侧修复', () => {
         );
         selectFiles([createFile(10, 'a.png')]);
         const dialog = await screen.findByRole('dialog');
-        expect((dialog.closest(`.${BASE_CLASS_PREFIX}-modal`) as HTMLElement).style.width).toBe('800px');
+        expect(defined(dialog.closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-modal`)).style.width).toBe('800px');
     });
 
     it('不传 cropModalProps.width 时裁剪弹窗宽 600px', async () => {
@@ -2683,7 +2684,7 @@ describe('Upload React 侧修复', () => {
         );
         selectFiles([createFile(10, 'a.png')]);
         const dialog = await screen.findByRole('dialog');
-        expect((dialog.closest(`.${BASE_CLASS_PREFIX}-modal`) as HTMLElement).style.width).toBe('600px');
+        expect(defined(dialog.closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-modal`)).style.width).toBe('600px');
     });
 
     it('children 里禁用的 Button 仍是使用方的控件：添加区域不成为按钮，移除按钮可用，恢复后不变', async () => {

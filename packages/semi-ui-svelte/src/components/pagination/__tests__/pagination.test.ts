@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { PaginationProps } from '../interface';
 import Pagination from '../pagination.svelte';
 import PaginationCase from './pagination-case.svelte';
@@ -19,9 +20,9 @@ const defaultPageSize = 10;
 const getPageItems = (container: Element) => [...container.querySelectorAll<HTMLButtonElement>(`.${prefix}-item`)];
 const getActivePage = (container: Element) => container.querySelector(`.${prefix}-item-active`);
 const pageName = (page: number) => zh_CN.Pagination.pageN.replace('${page}', String(page));
-const getRestPages = () => within(document.querySelector<HTMLElement>(`.${prefix}-rest-list`) as HTMLElement).getAllByRole('button');
-const getJumper = (container: Element) => container.querySelector(`.${prefix}-quickjump-input-number input`) as HTMLInputElement;
-const getCounter = (container: Element) => container.querySelector(`.${prefix}-item-small`) as HTMLElement;
+const getRestPages = () => within(getElement(`.${prefix}-rest-list`)).getAllByRole('button');
+const getJumper = (container: Element) => getElement<HTMLInputElement>(`.${prefix}-quickjump-input-number input`, container);
+const getCounter = (container: Element) => getElement(`.${prefix}-item-small`, container);
 const getSelectionText = () => document.querySelector('.semi-select-selection-text');
 const getPageTexts = (container: Element) =>
     getPageItems(container)
@@ -53,7 +54,7 @@ async function type(input: HTMLInputElement, text: string) {
 }
 
 async function chooseSize(label: string) {
-    await click(document.querySelector('.semi-select') as Element);
+    await click(getElement('.semi-select'));
     await click(await screen.findByRole('option', { name: label }));
 }
 
@@ -82,7 +83,7 @@ describe('Svelte Pagination 渲染', () => {
     it('total 与 pageSize', () => {
         const getPageChild = (props: PaginationProps) => {
             const view = setup(props);
-            const children = (view.container.querySelector('ul') as HTMLElement).children;
+            const children = getElement('ul', view.container).children;
             const result = { length: children.length, lastPage: children[children.length - 2].textContent?.trim() };
             view.unmount();
             return result;
@@ -97,7 +98,7 @@ describe('Svelte Pagination 渲染', () => {
         for (const size of ['default', 'small'] as const) {
             const onclick = vi.fn<(event: MouseEvent) => void>();
             const view = setup({ total: 200, size, id: 'pager', 'aria-label': 'Pages', 'data-foo': 'bar', class: 'mine', style: 'color: red', onclick });
-            const root = view.container.querySelector('ul') as HTMLElement;
+            const root = getElement('ul', view.container);
             expect(root).toHaveClass('mine', prefix);
             expect(root).toHaveAttribute('id', 'pager');
             expect(root).toHaveAttribute('data-foo', 'bar');
@@ -111,7 +112,7 @@ describe('Svelte Pagination 渲染', () => {
 
     it('渲染 small 尺寸：当前页/总页数，上一页下一页翻页，没有每页条数', async () => {
         const { container, onChange } = setup({ showQuickJumper: true, showSizeChanger: true, size: 'small', total: 90 });
-        const root = container.querySelector('ul') as HTMLElement;
+        const root = getElement('ul', container);
         expect(root).toHaveClass(prefix, `${prefix}-small`);
         expect(getCounter(container).textContent).toBe('1/9 ');
         expect(getCounter(container).tagName).toBe('DIV');
@@ -279,13 +280,13 @@ describe('Svelte Pagination 交互与事件', () => {
 
     it('pageSizeOpts 与缺少的 pageSize 按顺序插入', async () => {
         setup({ pageSizeOpts: [10, 20, 40], pageSize: 30, showSizeChanger: true, total: 200 });
-        await click(document.querySelector('.semi-select') as Element);
+        await click(getElement('.semi-select'));
         expect(screen.getAllByRole('option').map((option) => option.textContent?.trim())).toEqual(['每页条数：10', '每页条数：20', '每页条数：30', '每页条数：40']);
     });
 
     it('比所有选项都大的 pageSize 排在最后', async () => {
         setup({ pageSize: 200, showSizeChanger: true, total: 2000 });
-        await click(document.querySelector('.semi-select') as Element);
+        await click(getElement('.semi-select'));
         expect(screen.getAllByRole('option').map((option) => option.textContent?.trim())).toEqual(['每页条数：10', '每页条数：20', '每页条数：40', '每页条数：100', '每页条数：200']);
     });
 

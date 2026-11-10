@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@solidjs/testing-library';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Progress, { type ProgressProps } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-progress`;
@@ -199,7 +200,7 @@ describe('Progress', () => {
         const [arc, total] = (arcs.getAttribute('stroke-dasharray') as string).split(' ').map(Number);
         expect(arc / total).toBeCloseTo(0.3, 3);
         expect(arcs).toHaveAttribute('stroke-dashoffset', '0');
-        const track = container.querySelector(`.${prefixCls}-circle-ring-track`) as Element;
+        const track = getElement(`.${prefixCls}-circle-ring-track`, container);
         const [trackArc, trackTotal] = (track.getAttribute('stroke-dasharray') as string).split(' ').map(Number);
         expect(trackArc).toEqual(trackTotal);
         expect(text(container, 'circle')).toBeNull();

@@ -7,7 +7,7 @@ import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/te
 import { IconUser } from '@fibrae/semi-icons-vue';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, defined } from '@test/utils/vue';
 import UploadIndex, { UploadFileCard } from '../index';
 import type { AfterUploadProps, AfterUploadResult, BeforeUploadObjectResult, BeforeUploadProps, CustomFile, FileItem, UploadEmits, UploadFileItemSlotProps, UploadHandle, UploadPicCloseSlotProps, UploadProps } from '../interface';
 import Upload from '../upload.vue';
@@ -21,7 +21,7 @@ import { action, createFile, createObjectURL, defaultFileList, fn, getCardNames,
 type BeforeUpload = NonNullable<UploadProps['beforeUpload']>;
 
 const file = new File(['(⌐□_□)'], 'chucknorris.png', { type: 'image/png' });
-const getCard = (name: string) => screen.getByText(name).closest(`.${prefix}-file-card`) as HTMLElement;
+const getCard = (name: string) => defined(screen.getByText(name).closest<HTMLElement>(`.${prefix}-file-card`));
 const text = (content: string) => () => content;
 const replaceButton = () => query(`button.${prefix}-file-card-replace`);
 

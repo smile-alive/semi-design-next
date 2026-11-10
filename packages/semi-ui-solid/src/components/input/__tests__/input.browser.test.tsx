@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { clickOutside, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
+import { defined, getElement } from '@test/utils/solid';
 import Input, { type InputProps, type TextAreaProps, TextArea } from '..';
 import Button from '../../button';
 
@@ -43,7 +44,7 @@ describe('Input（浏览器）', () => {
             </>
         ));
         const readonly = screen.getByRole('textbox', { name: 'readonly' });
-        expect(styleOf(readonly.closest(`.${prefix}-wrapper`) as HTMLElement).cursor).toBe('default');
+        expect(styleOf(defined(readonly.closest<HTMLElement>(`.${prefix}-wrapper`))).cursor).toBe('default');
         expect(styleOf(readonly).cursor).toBe('default');
         // WebKit's user agent sheet leaves `auto` on text fields, which the browser resolves to the I-beam; Chromium reports `text`
         expect(['text', 'auto']).toContain(styleOf(screen.getByRole('textbox', { name: 'editable' })).cursor);
@@ -155,7 +156,7 @@ describe('Input（浏览器）', () => {
                 <TextArea defaultValue={`short\n${'word '.repeat(60)}`} showLineNumber />
             </div>
         ));
-        await waitFor(() => expect((document.querySelector(`.${prefix}-textarea-lineNumber`) as HTMLElement).style.height).not.toBe(''));
+        await waitFor(() => expect(getElement(`.${prefix}-textarea-lineNumber`).style.height).not.toBe(''));
         const [short, long] = [...document.querySelectorAll<HTMLElement>(`.${prefix}-textarea-lineNumber-item`)];
         await waitFor(() => expect(short.style.lineHeight).not.toBe(''));
         const lineHeight = parseFloat(short.style.lineHeight);
@@ -168,7 +169,7 @@ describe('Input（浏览器）', () => {
         const createElement = vi.spyOn(document, 'createElement');
         const lines = Array.from({ length: 40 }, (_, i) => `line ${i}`).join('\n');
         render(() => <TextArea defaultValue={lines} showLineNumber />);
-        await waitFor(() => expect((document.querySelector(`.${prefix}-textarea-lineNumber`) as HTMLElement).style.height).not.toBe(''));
+        await waitFor(() => expect(getElement(`.${prefix}-textarea-lineNumber`).style.height).not.toBe(''));
         const canvases = createElement.mock.calls.filter(([tag]) => tag === 'canvas');
         createElement.mockRestore();
         expect(canvases).toHaveLength(0);
@@ -189,7 +190,7 @@ describe('Input（浏览器）', () => {
         const rows = Math.round(contentHeight / lineHeight);
         // more rows than the textarea shows, so scrollHeight is the content and not the box
         expect(rows).toBeGreaterThan(4);
-        const item = document.querySelector<HTMLElement>(`.${prefix}-textarea-lineNumber-item`) as HTMLElement;
+        const item = getElement(`.${prefix}-textarea-lineNumber-item`);
         await expect.poll(() => item.getBoundingClientRect().height).toBeCloseTo(rows * lineHeight, 0);
     });
 
@@ -234,15 +235,15 @@ describe('Input（浏览器）', () => {
                 <Input style={{ width: '200px' }} defaultValue="hi" inputRef={(node) => (input = node)} prefix="Prefix" suffix="Suffix" />
             </>
         ));
-        const wrapper = container.querySelector(`.${prefix}-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${prefix}-wrapper`, container);
         const expectFocusThenBlur = async () => {
             expect(input).toHaveFocus();
             await clickOutside();
             expect(input).not.toHaveFocus();
         };
-        await userEvent.click(wrapper.querySelector(`.${prefix}-prefix`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-prefix`, wrapper));
         await expectFocusThenBlur();
-        await userEvent.click(wrapper.querySelector(`.${prefix}-suffix`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-suffix`, wrapper));
         await expectFocusThenBlur();
         await userEvent.click(screen.getByRole('button', { name: 'focus' }));
         await expectFocusThenBlur();
@@ -393,7 +394,7 @@ it.each([
     const [value, setValue] = createSignal('abc');
     const view = render(() => <Dynamic component={Control} aria-label="shadow field" value={value()} showClear onChange={() => {}} />, { container: mount });
     try {
-        (shadow.querySelector(`.${prefix}-clearbtn`) as HTMLElement).focus();
+        getElement(`.${prefix}-clearbtn`, shadow).focus();
         setValue('');
         await waitFor(() => expect(shadow.querySelector(`.${prefix}-clearbtn`)).toBeNull());
         expect(shadow.activeElement).toBe(shadow.querySelector(tag));

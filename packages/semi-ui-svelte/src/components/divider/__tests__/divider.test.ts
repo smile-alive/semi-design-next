@@ -3,13 +3,14 @@ import { render } from '@testing-library/svelte';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { DividerProps } from '../interface';
 import DividerFixture from './divider-fixture.svelte';
 
 function setup(props: DividerProps = {}, content?: 'text' | 'element') {
     const store = createStore({ props, content });
     const view = render(DividerFixture, { props: { store } });
-    const divider = () => view.container.querySelector<HTMLElement>('.semi-divider') as HTMLElement;
+    const divider = () => getElement('.semi-divider', view.container);
     return { store, view, divider };
 }
 

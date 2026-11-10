@@ -3,7 +3,7 @@ import { nextTick, ref, type ComponentPublicInstance, type VNode } from 'vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { mockResizeObserver, render } from '@test/utils/vue';
+import { mockResizeObserver, render, getElement } from '@test/utils/vue';
 import { ResizeGroup, ResizeHandler, ResizeItem, type ResizeCallback, type Size } from '..';
 import ConfigProvider from '../../config-provider';
 import Group from './fixtures/group.vue';
@@ -11,7 +11,7 @@ import { down, drag, key, mockLayout, move, nonPrimaryPresses, up } from './help
 
 type Props = Record<string, unknown>;
 
-const getGroup = () => document.querySelector<HTMLElement>('.semi-resizable-group') as HTMLElement;
+const getGroup = () => getElement('.semi-resizable-group');
 const getItems = () => [...document.querySelectorAll<HTMLElement>('.semi-resizable-item')];
 const getHandlers = () => [...document.querySelectorAll<HTMLElement>('.semi-resizable-handler')];
 const getBackground = () => document.querySelector('.semi-resizable-background');

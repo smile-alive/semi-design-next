@@ -3,6 +3,7 @@ import { addDays, format } from 'date-fns';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
+import { getElement } from '@test/utils/dom/common';
 import { click, getPopup, getPresetButtons, getYMLists, getYMSelected, nextSibling, setupPinned, ymd } from './date-picker-dom-utils';
 import { changes, dp, getContainer, getDay, getInput, getInputs, getRoot, getSelectedDays, setup, typeText, useBaseDate } from './test-utils';
 
@@ -97,9 +98,9 @@ describe('Svelte DatePicker 年月类型', () => {
         const { store } = await setup({ value: new Date(baseDate), open: true, props: { type: 'month' } });
 
         const yearList = getYMLists()[0];
-        await click(nextSibling(yearList.querySelector(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`) as Element, yearOffset));
+        await click(nextSibling(getElement(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`, yearList), yearOffset));
         const monthList = getYMLists()[1];
-        await click(nextSibling(monthList.querySelector(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`) as Element, monOffset));
+        await click(nextSibling(getElement(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`, monthList), monOffset));
 
         expect(changes(store).at(-1)).toBe('change 2022-11-01 00:00:00 "2022-11"');
         expect(getInput()).toHaveValue(format(new Date(2019 + yearOffset, 8 + monOffset), 'yyyy-MM'));

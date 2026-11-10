@@ -5,13 +5,15 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Banner from '..';
 import { LocaleProvider } from '../../locale';
 import type { BannerProps } from '../banner';
 
 const prefix = `${BASE_CLASS_PREFIX}-banner`;
-const getRoot = (container: HTMLElement) => container.querySelector(`.${prefix}`) as HTMLElement;
-const query = (container: HTMLElement, selector: string) => container.querySelector(selector) as HTMLElement;
+const getRoot = (container: HTMLElement) => getElement(`.${prefix}`, container);
+const queryRoot = (container: HTMLElement) => container.querySelector(`.${prefix}`);
+const query = (container: HTMLElement, selector: string) => getElement(selector, container);
 const closeButton = () => screen.getByRole('button', { name: zh_CN.Banner.close });
 
 afterEach(() => {
@@ -75,7 +77,7 @@ describe('Banner', () => {
         await userEvent.click(button);
         expect(onClose).toHaveBeenCalledTimes(1);
         expect(onClose.mock.results[0].value).toBe(button);
-        expect(getRoot(container)).toBeNull();
+        expect(queryRoot(container)).toBeNull();
     });
 
     it('根元素默认不设 role，每种 type 在 icon 插槽中显示默认图标', () => {
@@ -182,10 +184,10 @@ describe('Banner', () => {
             expect(onClose).toHaveBeenCalledTimes(1);
             expect(onClose.mock.calls[0][0].type).toBe('click');
             expect(onBodyClick).not.toHaveBeenCalled();
-            expect(getRoot(container)).toBeNull();
+            expect(queryRoot(container)).toBeNull();
 
             setTitle('again');
-            expect(getRoot(container)).toBeNull();
+            expect(queryRoot(container)).toBeNull();
         } finally {
             document.body.removeEventListener('click', onBodyClick);
         }
@@ -194,7 +196,7 @@ describe('Banner', () => {
     it('未传 onClose 时关闭仍正常', async () => {
         const { container } = render(() => <Banner />);
         await userEvent.click(closeButton());
-        expect(getRoot(container)).toBeNull();
+        expect(queryRoot(container)).toBeNull();
     });
 
     it('将 data-* 属性传给根元素', () => {
@@ -277,6 +279,6 @@ describe('Banner', () => {
         expect(screen.getByTestId('my-icon')).toBe(icon);
         await userEvent.click(closeButton());
         setProps((prev) => ({ ...prev, bordered: true }));
-        expect(getRoot(container)).toBeNull();
+        expect(queryRoot(container)).toBeNull();
     });
 });

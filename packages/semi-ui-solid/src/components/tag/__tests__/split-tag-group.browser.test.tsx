@@ -1,6 +1,7 @@
 import { createSignal } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
+import { getElement } from '@test/utils/solid';
 import Tag, { SplitTagGroup } from '..';
 
 describe('SplitTagGroup 样式（浏览器）', () => {
@@ -22,7 +23,7 @@ describe('SplitTagGroup 样式（浏览器）', () => {
         expect(getComputedStyle(tags[1]).borderRadius).toBe('0px');
         expect(getComputedStyle(tags[2]).borderTopLeftRadius).toBe('0px');
         expect(getComputedStyle(tags[2]).borderTopRightRadius).toBe(radius);
-        expect(getComputedStyle(document.querySelector('.nested') as HTMLElement).borderTopLeftRadius).not.toBe('0px');
+        expect(getComputedStyle(getElement('.nested')).borderTopLeftRadius).not.toBe('0px');
         setOnly(true);
         expect(getComputedStyle(screen.getByRole('group').children[0]).borderTopLeftRadius).toBe(radius);
         expect(getComputedStyle(screen.getByRole('group').children[0]).borderTopRightRadius).toBe(radius);

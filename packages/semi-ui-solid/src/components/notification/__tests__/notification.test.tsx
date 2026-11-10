@@ -9,6 +9,7 @@ import { KEEP_INTERACTIVE_ATTRIBUTE } from '@fibrae/semi-foundation/utils';
 import { IconToutiaoLogo } from '@fibrae/semi-icons-solid';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Notification, { type NoticeProps, type NoticeState, type NotificationHookApi, type NotificationHookOptions } from '..';
 import ConfigProvider from '../../config-provider';
 import { LocaleProvider } from '../../locale';
@@ -21,7 +22,8 @@ const hideTopRight = `${noticeCls}-animation-hide_topRight`;
 type Method = 'open' | 'info' | 'success' | 'warning' | 'error';
 const show = (method: Method, opts: NoticeProps) => Notification[method](opts);
 const getTitle = (selector: string) => document.querySelector(`${selector} .${noticeCls}-title`);
-const getList = () => document.querySelector<HTMLElement>(`.${prefixCls}-list`) as HTMLElement;
+const getList = () => getElement(`.${prefixCls}-list`);
+const queryList = () => document.querySelector(`.${prefixCls}-list`);
 const endAnimation = (element: Element) => element.dispatchEvent(new Event('animationend', { bubbles: true }));
 
 let api: NotificationHookApi;
@@ -114,7 +116,7 @@ describe('Notification', () => {
     it('title&content、zIndex', () => {
         show('open', { title: 'Hi, Bytedance', content: 'ies dance dance dance', duration: 1, zIndex: 2333 });
         expect(document.querySelector(`.${prefixCls}-wrapper`)).toHaveStyle({ zIndex: '2333' });
-        const notificationInner = document.querySelector(`.${noticeCls}-content-wrapper`) as HTMLElement;
+        const notificationInner = getElement(`.${noticeCls}-content-wrapper`);
         expect(notificationInner.childElementCount).toEqual(2);
         expect(notificationInner.querySelector(`.${noticeCls}-title`)).toHaveTextContent(/^Hi, Bytedance$/);
         expect(notificationInner.querySelector(`.${noticeCls}-content`)).toHaveTextContent(/^ies dance dance dance$/);
@@ -130,7 +132,7 @@ describe('Notification', () => {
         const notice = screen.getByRole('status');
         expect(notice).toHaveClass(hideTopRight);
         endAnimation(notice);
-        expect(getList()).toBeNull();
+        expect(queryList()).toBeNull();
     });
 
     it('页面取消了动画时，离场立即结束', () => {
@@ -389,7 +391,7 @@ describe('Notification', () => {
         vi.useFakeTimers();
         show('info', { title: 'hovered', duration: 1, position: 'top' });
         show('info', { title: 'other', duration: 1, position: 'bottom' });
-        fireEvent.mouseEnter(document.querySelector(`.${prefixCls}-list[x-placement=top]`) as HTMLElement);
+        fireEvent.mouseEnter(getElement(`.${prefixCls}-list[x-placement=top]`));
         vi.advanceTimersByTime(1000);
         expect(document.querySelector(`.${noticeCls}-animation-hide_top`)).toBeNull();
         expect(document.querySelector(`.${noticeCls}-animation-hide_bottom`)).toHaveTextContent('other');
@@ -455,7 +457,7 @@ describe('Notification', () => {
         show('info', { id: 'one', title: 'one', duration: 0 });
         show('info', { id: 'two', title: 'two', duration: 0 });
         Notification.close('one');
-        const leaving = document.querySelector(`.${hideTopRight}`) as HTMLElement;
+        const leaving = getElement(`.${hideTopRight}`);
         expect(leaving).toHaveTextContent('one');
         endAnimation(leaving);
         expect(screen.getAllByRole('status').map((notice) => notice.textContent)).toEqual(['two']);
@@ -468,7 +470,7 @@ describe('Notification', () => {
         show('info', { title: 'b', duration: 0, position: 'bottom' });
         show('info', { title: 'c', duration: 0, position: 'topLeft' });
         expect(document.querySelectorAll(`.${prefixCls}-list`)).toHaveLength(2);
-        const bottom = document.querySelector(`.${prefixCls}-list[x-placement=bottom]`) as HTMLElement;
+        const bottom = getElement(`.${prefixCls}-list[x-placement=bottom]`);
         expect([...bottom.querySelectorAll(`.${noticeCls}-title`)].map((title) => title.textContent)).toEqual(['b', 'a']);
     });
 
@@ -497,7 +499,7 @@ describe('Notification', () => {
         ));
         api.info({ title: 'hooked', duration: 0 });
         Notification.success({ title: 'static', duration: 0 });
-        const holderList = screen.getByTestId('holder').querySelector(`.${prefixCls}-list`) as HTMLElement;
+        const holderList = getElement(`.${prefixCls}-list`, screen.getByTestId('holder'));
         expect(holderList).toHaveAttribute('x-placement', 'topLeft');
         const hooked = screen.getByRole('status', { name: 'hooked' });
         expect(hooked).toHaveAttribute('dir', 'rtl');
@@ -565,7 +567,7 @@ describe('Notification', () => {
             render(() => <HookHost />);
             api.info({ title: 'hooked', duration: 0, position: 'bottom' });
             api.info({ title: 'hooked', duration: 0, position: 'bottom' });
-            const list = screen.getByTestId('holder').querySelector(`.${prefixCls}-list[x-placement=bottom]`) as HTMLElement;
+            const list = getElement(`.${prefixCls}-list[x-placement=bottom]`, screen.getByTestId('holder'));
             expect(list.querySelectorAll(`[role=status].${noticeCls}-info`)).toHaveLength(2);
             expect([...document.querySelectorAll(`.${prefixCls}-wrapper`)]).toEqual([list.parentElement]);
         });
@@ -756,7 +758,7 @@ describe('Notification', () => {
         fireEvent.mouseEnter(getList());
         Notification.close('only');
         endAnimation(screen.getByRole('status'));
-        expect(getList()).toBeNull();
+        expect(queryList()).toBeNull();
         show('info', { title: 'next', duration: 1 });
         vi.advanceTimersByTime(1000);
         expect(screen.getByRole('status')).toHaveClass(hideTopRight);

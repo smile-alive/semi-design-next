@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import { HotKeys } from '..';
 import type { HotKeysProps } from '../interface';
 import HotKeysHost from './hot-keys-host.svelte';
@@ -247,7 +248,7 @@ describe('HotKeys 行为', () => {
 
     it('目标是兄弟元素的 bind:this 时，挂载时已能取到', () => {
         const view = render(TemplateRefTarget);
-        const input = view.container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', view.container);
         press(input, { code: 'KeyK' });
         flushSync();
         expect(view.getByTestId('count')).toHaveTextContent('1');

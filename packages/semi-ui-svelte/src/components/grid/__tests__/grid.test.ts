@@ -3,6 +3,7 @@ import { render } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { ColProps, RowProps } from '../interface';
 import GridFixture from './grid-fixture.svelte';
 
@@ -25,8 +26,8 @@ const zeros = { xs: '0px', sm: '0px', md: '0px', lg: '0px', xl: '0px', xxl: '0px
 function setup(row: RowProps = {}, col: ColProps = {}, nested?: RowProps) {
     const store = createStore({ row, col, nested });
     const view = render(GridFixture, { props: { store } });
-    const rowEl = () => view.container.querySelector('.semi-row') as HTMLElement;
-    const colEl = () => view.container.querySelector('.semi-col') as HTMLElement;
+    const rowEl = () => getElement('.semi-row', view.container);
+    const colEl = () => getElement('.semi-col', view.container);
     return { store, view, rowEl, colEl };
 }
 
@@ -112,7 +113,7 @@ describe('Svelte Row', () => {
 
     it('嵌套 Row 完整写出自己的变量，不依赖外层', () => {
         const { view } = setup({ gutter: 20 }, {}, { gutter: 8 });
-        const inner = view.container.querySelector('.inner') as HTMLElement;
+        const inner = getElement('.inner', view.container);
         expect(gutterVars(inner, 'x')).toMatchObject({ xs: '8px', xxl: '8px' });
         expect(gutterVars(inner, 'y')).toEqual(zeros);
     });

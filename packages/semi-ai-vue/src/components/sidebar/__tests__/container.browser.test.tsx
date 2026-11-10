@@ -4,7 +4,7 @@ import { waitFor } from '@testing-library/vue';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { page, userEvent } from 'vite-plus/test/browser';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Sidebar from '..';
 
 const { Container } = Sidebar;
@@ -46,7 +46,7 @@ describe('Sidebar.Container', () => {
             ),
         });
         render(Host, { container: mount });
-        const opener = mount.querySelector('button') as HTMLElement;
+        const opener = getElement('button', mount);
         opener.focus();
         visible.value = true;
         const close = await waitFor(() => {

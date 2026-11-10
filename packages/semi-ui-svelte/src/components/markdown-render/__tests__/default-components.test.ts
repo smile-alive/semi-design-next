@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/dom/common';
 import { registerCodeHighlight } from '../../code-highlight';
 import { grammar } from '../../code-highlight/__tests__/grammars';
 import { MarkdownRender } from '../index';
@@ -79,7 +80,7 @@ describe('Svelte MarkdownRender 默认组件', () => {
         const warn = vi.spyOn(console, 'warn');
         const { container } = setup({ format, raw: 'before ![cat](a.png "cat") after' });
         await waitFor(() => expect(container.querySelector(`.${prefix}-component-image`)).not.toBeNull());
-        const image = container.querySelector(`.${prefix}-component-image`) as HTMLElement;
+        const image = getElement(`.${prefix}-component-image`, container);
         expect(image.closest('p')).toBeNull();
         const paragraph = image.closest(`.${prefix}-component-p`);
         expect(paragraph).toHaveTextContent('before');
@@ -92,7 +93,7 @@ describe('Svelte MarkdownRender 默认组件', () => {
         await waitFor(() => expect(container.querySelectorAll(`.${prefix}-component-image`)).toHaveLength(2));
         const [linked, plain] = container.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-image`);
         for (const image of [linked, plain]) {
-            await fireEvent.load(image.querySelector('img') as HTMLImageElement);
+            await fireEvent.load(getElement<HTMLImageElement>('img', image));
         }
         expect(linked.closest('p')).toBeNull();
         expect(linked.closest(`.${prefix}-component-p`)?.tagName).toBe('DIV');
@@ -107,8 +108,8 @@ describe('Svelte MarkdownRender 默认组件', () => {
     it('使用方显式传 preview 时，链接内的图片可预览', async () => {
         const { container } = setup({ components: { img: PreviewableImg }, format: 'md', raw: '[![a](s.png)](#t)' });
         await waitFor(() => expect(container.querySelector(`.${BASE_CLASS_PREFIX}-image`)).not.toBeNull());
-        const image = container.querySelector(`.${BASE_CLASS_PREFIX}-image`) as HTMLElement;
-        await fireEvent.load(image.querySelector('img') as HTMLImageElement);
+        const image = getElement(`.${BASE_CLASS_PREFIX}-image`, container);
+        await fireEvent.load(getElement<HTMLImageElement>('img', image));
         expect(image.closest('a')).not.toBeNull();
         expect(image).toHaveAttribute('role', 'button');
     });
@@ -130,7 +131,7 @@ describe('Svelte MarkdownRender 默认组件', () => {
     it.each(['md', 'mdx'] as const)('%s 下有语言的代码块外层没有 pre，无语言的保留 pre，行内代码是 code 元素', async (format) => {
         const { container } = setup({ format, raw: '```js\nlet a = 1;\n```\n\n```\nplain\n```\n\ninline `x` code' });
         await waitFor(() => expect(container.querySelector(`.${BASE_CLASS_PREFIX}-codeHighlight`)).not.toBeNull());
-        const highlight = container.querySelector(`.${BASE_CLASS_PREFIX}-codeHighlight`) as HTMLElement;
+        const highlight = getElement(`.${BASE_CLASS_PREFIX}-codeHighlight`, container);
         expect(highlight.parentElement?.closest('pre')).toBeNull();
         expect(highlight).toHaveTextContent('let a = 1;');
         const simple = container.querySelectorAll(`code.${prefix}-simple-code`);
@@ -232,7 +233,7 @@ describe('Svelte MarkdownRender 默认组件', () => {
 
         it('表头加粗的 table', async () => {
             const container = await renderTable({ raw: '| Name | **Brand** | **Price** |\n| - | :- | -: |\n| Book | Semi | ￥100 |' });
-            const thead = container.querySelector(`.${BASE_CLASS_PREFIX}-table-thead`) as HTMLElement;
+            const thead = getElement(`.${BASE_CLASS_PREFIX}-table-thead`, container);
             expect(Array.from(thead.querySelectorAll('strong'), (node) => node.textContent)).toEqual(['Brand', 'Price']);
             expect(thead).toHaveTextContent('Name Brand Price');
             expect(bodyRows(container)).toHaveLength(1);
@@ -240,7 +241,7 @@ describe('Svelte MarkdownRender 默认组件', () => {
 
         it('表头加粗且带组件的 table', async () => {
             const container = await renderTable({ format: 'mdx', raw: '| Name | <h1>Brand</h1> | **Price** |\n| - | :- | :-: |\n| Book | Semi | ￥100 |' });
-            const thead = container.querySelector(`.${BASE_CLASS_PREFIX}-table-thead`) as HTMLElement;
+            const thead = getElement(`.${BASE_CLASS_PREFIX}-table-thead`, container);
             expect(thead.querySelector('h1')).toHaveTextContent(/^Brand$/);
             expect(thead.querySelector('strong')).toHaveTextContent(/^Price$/);
             expect(bodyRows(container)).toHaveLength(1);

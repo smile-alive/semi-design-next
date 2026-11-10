@@ -6,15 +6,15 @@ import { cdp, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { expectThemeFocusRing, isChromium, tabTo } from '@test/utils/browser';
-import { render, sleep } from '@test/utils/vue';
+import { render, sleep, getElement } from '@test/utils/vue';
 import Tabs, { TabPane } from '..';
 import ConfigProvider from '../../config-provider';
 
-const arrowButton = (container: Element, pos: 'start' | 'end') => container.querySelector(`.${BASE_CLASS_PREFIX}-tabs-bar-arrow-${pos} .${BASE_CLASS_PREFIX}-button`) as HTMLButtonElement;
-const scrollWrapper = (container: Element) => container.querySelector(`.${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`) as HTMLElement;
+const arrowButton = (container: Element, pos: 'start' | 'end') => getElement<HTMLButtonElement>(`.${BASE_CLASS_PREFIX}-tabs-bar-arrow-${pos} .${BASE_CLASS_PREFIX}-button`, container);
+const scrollWrapper = (container: Element) => getElement(`.${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`, container);
 const activePane = (container: Element) => container.querySelector(`.${BASE_CLASS_PREFIX}-tabs-pane-active`);
 const tabContent = (container: Element) => container.querySelector(`.${BASE_CLASS_PREFIX}-tabs-content`);
-const tabByDataKey = (dataKey: string) => document.querySelector(`[data-tabkey="${dataKey}"]`) as HTMLElement;
+const tabByDataKey = (dataKey: string) => getElement(`[data-tabkey="${dataKey}"]`);
 
 function isInside(inner: Element, outer: Element) {
     const a = inner.getBoundingClientRect();
@@ -164,7 +164,7 @@ describe('Tabs（浏览器）', () => {
         await waitFor(() => expect(screen.getAllByRole('tab').map((tab) => tab.textContent)).toContain('tab-15'));
         await expectArrows(container, { start: false, end: true });
 
-        (container.querySelector('#wrapper') as HTMLElement).scrollTop = 40;
+        getElement('#wrapper', container).scrollTop = 40;
         await sleep(300);
         await expectArrows(container, { start: false, end: true });
     });
@@ -319,7 +319,7 @@ describe('Tabs（浏览器）', () => {
 
     it('可关闭 Tabs 的键盘测试', async () => {
         render(TabClosableDemo);
-        const tab = document.querySelector('[data-tabkey=semiTab1]') as HTMLElement;
+        const tab = getElement('[data-tabkey=semiTab1]');
         await userEvent.click(tab);
         expect(tab).toHaveFocus();
         await userEvent.keyboard('{Backspace}');
@@ -354,7 +354,7 @@ describe('Tabs（浏览器）', () => {
 
     it.each(['line', 'card', 'button', 'slash'] as const)('%s 类型的标签显示主题焦点环', async (type) => {
         const { container } = render(() => <Tabs type={type}>{() => [pane('1', 'one', () => 'one'), pane('2', 'two', () => 'two')]}</Tabs>);
-        const tab = container.querySelector(`.${BASE_CLASS_PREFIX}-tabs-tab`) as HTMLElement;
+        const tab = getElement(`.${BASE_CLASS_PREFIX}-tabs-tab`, container);
         await tabTo(tab);
         expectThemeFocusRing(tab);
     });
@@ -374,8 +374,8 @@ describe('Tabs（浏览器）', () => {
                 )}
             </ConfigProvider>
         ));
-        const bar = (container.querySelector(`.${BASE_CLASS_PREFIX}-tabs-bar`) as HTMLElement).getBoundingClientRect();
-        const extra = (container.querySelector(`.${BASE_CLASS_PREFIX}-tabs-bar-extra`) as HTMLElement).getBoundingClientRect();
+        const bar = getElement(`.${BASE_CLASS_PREFIX}-tabs-bar`, container).getBoundingClientRect();
+        const extra = getElement(`.${BASE_CLASS_PREFIX}-tabs-bar-extra`, container).getBoundingClientRect();
         const gapToInlineEnd = direction === 'rtl' ? extra.left - bar.left : bar.right - extra.right;
         expect(gapToInlineEnd).toBeCloseTo(0, 0);
     });
@@ -397,7 +397,7 @@ describe('Tabs（浏览器）', () => {
             const observer = new MutationObserver(() => {
                 changes++;
             });
-            observer.observe(view.container.querySelector(`.${BASE_CLASS_PREFIX}-tabs-bar`) as Element, { attributes: true, attributeFilter: ['class'] });
+            observer.observe(getElement(`.${BASE_CLASS_PREFIX}-tabs-bar`, view.container), { attributes: true, attributeFilter: ['class'] });
             await sleep(400);
             observer.disconnect();
             expect(changes, `delta=${delta}`).toBeLessThanOrEqual(1);
@@ -418,7 +418,7 @@ describe('Tabs（浏览器）', () => {
         probe.unmount();
 
         const view = render(() => tabs(total + 6, 'auto'));
-        const root = view.container.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tabs`) as HTMLElement;
+        const root = getElement(`.${BASE_CLASS_PREFIX}-tabs`, view.container);
         const collapsed = () => root.querySelector(`.${BASE_CLASS_PREFIX}-tabs-bar-overflow-list`) !== null;
         const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)));
         let mutations = 0;

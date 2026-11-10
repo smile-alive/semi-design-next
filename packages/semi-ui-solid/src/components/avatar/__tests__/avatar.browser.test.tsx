@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Avatar, { AvatarGroup } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-avatar`;
@@ -19,13 +20,13 @@ describe('Avatar', () => {
         ['extra-large', '12px'],
     ] as const)('方形头像的描边环在 %s 尺寸下圆角跟随头像', (size, radius) => {
         const { container } = render(() => <Avatar border shape="square" size={size} src={svg('red')} />);
-        const ring = container.querySelector(`.${prefixCls}-additionalBorder`) as Element;
+        const ring = getElement(`.${prefixCls}-additionalBorder`, container);
         expect(getComputedStyle(ring).borderTopLeftRadius).toBe(radius);
     });
 
     it('extra-small 方形头像的底部 slot 应用该尺寸的边框宽度', () => {
         const { container } = render(() => <Avatar bottomSlot={{ shape: 'square', text: 'N' }} size="extra-small" src={svg('red')} />);
-        const slot = container.querySelector(`.${prefixCls}-bottom_slot-shape_square-extra-small`) as Element;
+        const slot = getElement(`.${prefixCls}-bottom_slot-shape_square-extra-small`, container);
         expect(getComputedStyle(slot).borderTopWidth).toBe('2px');
     });
 
@@ -66,7 +67,7 @@ describe('Avatar', () => {
         ],
     ])('可点击的%s头像：鼠标点击后不显示焦点环，再按键后显示主题焦点环', async (_, avatarElement) => {
         const { container } = render(avatarElement);
-        const avatar = container.querySelector(`.${prefixCls}`) as Element;
+        const avatar = getElement(`.${prefixCls}`, container);
         await userEvent.click(screen.getByRole('button'));
         expect(screen.getByRole('button')).toHaveFocus();
         expect(getComputedStyle(avatar).outlineStyle).toBe('none');
@@ -83,7 +84,7 @@ describe('Avatar', () => {
         ));
         await userEvent.keyboard('{Tab}');
         expect(screen.getByRole('link')).toHaveFocus();
-        expect(getComputedStyle(container.querySelector(`.${prefixCls}`) as Element).outlineStyle).toBe('none');
+        expect(getComputedStyle(getElement(`.${prefixCls}`, container)).outlineStyle).toBe('none');
     });
 
     it('src 变化', async () => {
@@ -112,8 +113,8 @@ describe('Avatar', () => {
 
 describe('Avatar 文字缩放', () => {
     const measure = (container: HTMLElement) => {
-        const content = container.querySelector(`.${prefixCls}-content`) as HTMLElement;
-        const avatar = container.querySelector(`.${prefixCls}`) as HTMLElement;
+        const content = getElement(`.${prefixCls}-content`, container);
+        const avatar = getElement(`.${prefixCls}`, container);
         return { transform: content.style.transform, contentWidth: content.getBoundingClientRect().width, avatarWidth: avatar.getBoundingClientRect().width };
     };
 

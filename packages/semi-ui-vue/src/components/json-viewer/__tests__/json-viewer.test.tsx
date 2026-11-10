@@ -5,7 +5,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { beforeEach, describe, expect, expectTypeOf, it, vi, type Mock } from 'vite-plus/test';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { mockResizeObserver, render, sleep } from '@test/utils/vue';
+import { mockResizeObserver, render, sleep, getElement } from '@test/utils/vue';
 import JsonViewer, { type JsonViewerHandle, type JsonViewerOptions, type JsonViewerProps } from '..';
 import LocaleProvider from '../../locale/locale-provider.vue';
 import CustomRender from './fixtures/custom-render.vue';
@@ -104,7 +104,7 @@ const searchInput = () => query(`.${prefixCls}-search-bar input`);
 const replaceInput = () => query(`.${prefixCls}-replace-bar input`);
 const replaceButtons = () => document.querySelectorAll<HTMLElement>(`.${prefixCls}-replace-bar button`);
 const optionItems = () => document.querySelectorAll<HTMLElement>(`.${prefixCls}-search-options-item`);
-const optionButton = (index: number) => optionItems()[index].querySelector('button') as HTMLElement;
+const optionButton = (index: number) => getElement('button', optionItems()[index]);
 const closeButton = () => get(`.${prefixCls}-search-bar > button:last-child`);
 async function emit(event: string, data: unknown = {}) {
     current().emitter.emit(event, data);
@@ -816,7 +816,7 @@ describe('JsonViewer', () => {
         it('开启 autoWrap 时宽度变化会重新布局编辑器', async () => {
             const view = mount();
             expect(liveObservers()).toHaveLength(1);
-            const viewer = view.container.querySelector(`.${prefixCls}`) as HTMLElement;
+            const viewer = getElement(`.${prefixCls}`, view.container);
             expect(liveObservers()[0].targets).toContain(viewer);
             const editor = current();
             editor.layout.mockClear();
@@ -835,7 +835,7 @@ describe('JsonViewer', () => {
 
         it('高度变化时重新布局，不清除已测量的行高', async () => {
             const view = mount({ height: 400 });
-            const viewer = view.container.querySelector(`.${prefixCls}`) as HTMLElement;
+            const viewer = getElement(`.${prefixCls}`, view.container);
             const editor = current();
             editor.layout.mockClear();
             await view.rerender({ height: 800 });
@@ -846,7 +846,7 @@ describe('JsonViewer', () => {
 
         it('未开启 autoWrap 时只在高度变化时重新布局', async () => {
             const view = mount({ options: { autoWrap: false } });
-            const viewer = view.container.querySelector(`.${prefixCls}`) as HTMLElement;
+            const viewer = getElement(`.${prefixCls}`, view.container);
             const editor = current();
             editor.layout.mockClear();
             await resize.fire(viewer, [{ borderBoxSize: [{ inlineSize: 120, blockSize: 400 }] }]);

@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi, type Moc
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import { mockResizeObserverCore } from '@test/utils/dom/resize-observer-core';
 import type { JsonViewerOptions, JsonViewerProps } from '../interface';
 import type JsonViewer from '../json-viewer.svelte';
@@ -100,7 +101,7 @@ const searchInput = () => query(`.${prefixCls}-search-bar input`) as HTMLInputEl
 const replaceInput = () => query(`.${prefixCls}-replace-bar input`) as HTMLInputElement | null;
 const replaceButtons = () => document.querySelectorAll<HTMLElement>(`.${prefixCls}-replace-bar button`);
 const optionItems = () => document.querySelectorAll<HTMLElement>(`.${prefixCls}-search-options-item`);
-const optionButton = (index: number) => optionItems()[index].querySelector('button') as HTMLElement;
+const optionButton = (index: number) => getElement('button', optionItems()[index]);
 const closeButton = () => get(`.${prefixCls}-search-bar > button:last-child`);
 
 async function settle() {
@@ -830,7 +831,7 @@ describe('Svelte JsonViewer', () => {
         it('开启 autoWrap 时宽度变化会重新布局编辑器', () => {
             const { view } = setup();
             expect(liveObservers()).toHaveLength(1);
-            const viewer = view.container.querySelector(`.${prefixCls}`) as HTMLElement;
+            const viewer = getElement(`.${prefixCls}`, view.container);
             expect(liveObservers()[0].targets).toContain(viewer);
             const editor = current();
             editor.layout.mockClear();
@@ -849,7 +850,7 @@ describe('Svelte JsonViewer', () => {
 
         it('高度变化时重新布局，不清除已测量的行高', () => {
             const { view } = setup({ height: 400 });
-            const viewer = view.container.querySelector(`.${prefixCls}`) as HTMLElement;
+            const viewer = getElement(`.${prefixCls}`, view.container);
             const editor = current();
             editor.layout.mockClear();
             resize.fire(viewer, [{ borderBoxSize: [{ inlineSize: 400, blockSize: 800 }] }]);
@@ -859,7 +860,7 @@ describe('Svelte JsonViewer', () => {
 
         it('未开启 autoWrap 时只在高度变化时重新布局', () => {
             const { view } = setup({ options: { autoWrap: false } });
-            const viewer = view.container.querySelector(`.${prefixCls}`) as HTMLElement;
+            const viewer = getElement(`.${prefixCls}`, view.container);
             const editor = current();
             editor.layout.mockClear();
             resize.fire(viewer, [{ borderBoxSize: [{ inlineSize: 120, blockSize: 400 }] }]);

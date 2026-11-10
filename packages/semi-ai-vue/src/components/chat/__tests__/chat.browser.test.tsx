@@ -8,7 +8,7 @@ import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
 import Modal from '@fibrae/semi-ui-vue/modal/index';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement, defined } from '@test/utils/vue';
 import Chat from '..';
 import type { ChatMessage } from '../interface';
 
@@ -63,7 +63,7 @@ describe('Chat 浏览器', () => {
             </div>
         ));
         await waitFor(() => expect(container.textContent).toContain('history 19'));
-        const area = container.querySelector('.semi-chat-container') as HTMLElement;
+        const area = getElement('.semi-chat-container', container);
         area.scrollTop = 0;
         await new Promise((resolve) => requestAnimationFrame(resolve));
         const anchor = () => [...container.querySelectorAll<HTMLElement>('.semi-chat-chatBox')].find((el) => el.textContent?.includes('history 10')) as HTMLElement;
@@ -146,7 +146,7 @@ describe('Chat 浏览器', () => {
 
     it('删除确认框按 Escape 关闭', async () => {
         const { container } = renderChat({ chats: twoChats });
-        const trigger = (await find(container, '.semi-icon-delete_stroked')).closest('button') as HTMLElement;
+        const trigger = defined((await find(container, '.semi-icon-delete_stroked')).closest<HTMLElement>('button'));
         await userEvent.click(trigger);
         await expect.element(page.getByText(text.deleteConfirm)).toBeVisible();
         await userEvent.keyboard('{Escape}');
@@ -160,7 +160,7 @@ describe('Chat 浏览器', () => {
                 {() => chat}
             </Modal>
         ));
-        const trigger = (await find(baseElement, '.semi-icon-delete_stroked')).closest('button') as HTMLElement;
+        const trigger = defined((await find(baseElement, '.semi-icon-delete_stroked')).closest<HTMLElement>('button'));
         await tabTo(trigger);
         await userEvent.keyboard('{Enter}');
         await expect.element(page.getByText(text.deleteConfirm)).toBeVisible();
@@ -173,7 +173,7 @@ describe('Chat 浏览器', () => {
     it('消息操作栏默认不可见但可聚焦，聚焦其中的按钮后显示', async () => {
         const { container } = renderChat({ chats: twoChats });
         const action = await find(container, '.semi-chat-chatBox-action');
-        const button = action.querySelector('button') as HTMLElement;
+        const button = getElement('button', action);
         expect(getComputedStyle(action).opacity).toBe('0');
         // visibility: hidden would take the buttons out of the tab order
         expect(getComputedStyle(action).visibility).toBe('visible');
@@ -211,10 +211,10 @@ describe('Chat 浏览器', () => {
         const copy = container.querySelectorAll<HTMLElement>('.semi-chat-chatBox-action-btn')[0];
         await userEvent.click(copy);
         const toast = await find(container, '.semi-chat-toast .semi-toast-content');
-        const line = toast.querySelector('.semi-toast-content-text') as HTMLElement;
+        const line = getElement('.semi-toast-content-text', toast);
         expect(line).toHaveTextContent(text.copySuccess);
         expect(line.getBoundingClientRect().height).toBeLessThan(30);
-        const area = (container.querySelector('.semi-chat-content') as HTMLElement).getBoundingClientRect();
+        const area = getElement('.semi-chat-content', container).getBoundingClientRect();
         await expect.poll(() => toast.getBoundingClientRect().top).toBeGreaterThanOrEqual(area.top);
         const box = toast.getBoundingClientRect();
         expect(box.left + box.width / 2).toBeCloseTo(area.left + area.width / 2, 0);
@@ -264,7 +264,7 @@ describe('Chat 浏览器', () => {
     it('确认删除消息后，焦点交给消息列表而不是落到 body', async () => {
         const list = shallowRef<ChatMessage[]>([...twoChats]);
         const { container } = render(() => <LocaleProvider locale={en_US}>{() => <Chat chats={list.value} roleConfig={roleConfig} onUpdate:chats={(next: ChatMessage[]) => (list.value = next)} />}</LocaleProvider>);
-        const trigger = (await find(container, '.semi-icon-delete_stroked')).closest('button') as HTMLElement;
+        const trigger = defined((await find(container, '.semi-icon-delete_stroked')).closest<HTMLElement>('button'));
         await tabTo(trigger);
         await userEvent.keyboard('{Enter}');
         await userEvent.click(page.getByRole('button', { name: en_US.Popconfirm.confirm }));

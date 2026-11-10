@@ -1,6 +1,7 @@
 import { add, addDays, addWeeks, endOfWeek, startOfWeek } from 'date-fns';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import { click, getFooterButtons, getPanel, getPopups, getPresetButtons, getWeekDays, setupPinned, ymd } from './date-picker-dom-utils';
 import { changes, dp, getContainer, getDay, getInputs, getNavTitle, getRoot, getSelectedDays, settle, setup, typeText, useBaseDate } from './test-utils';
 
@@ -20,13 +21,13 @@ describe('Svelte DatePicker 范围选择', () => {
         const leftPrevClickTimes = 3;
         const { store } = await setupPinned({ value: rangeValue(dayOffset), props: { type: 'dateTimeRange', needConfirm: false } });
 
-        const startDay = document.querySelector(`.${dp}-day-selected-start`) as Element;
+        const startDay = getElement(`.${dp}-day-selected-start`);
         const endDay = document.querySelector(`.${dp}-day-selected-end`);
         expect(Array.from({ length: dayOffset }).reduce<Element>((current) => current.nextElementSibling as Element, startDay)).toBe(endDay);
 
-        await click(getPanel('right').querySelector(`[aria-label="${zh_CN.DatePicker.nextMonth}"]`) as HTMLElement);
+        await click(getElement(`[aria-label="${zh_CN.DatePicker.nextMonth}"]`, getPanel('right')));
         for (let i = 0; i < leftPrevClickTimes; i++) {
-            await click(getPanel('left').querySelector(`[aria-label="${zh_CN.DatePicker.prevMonth}"]`) as HTMLElement);
+            await click(getElement(`[aria-label="${zh_CN.DatePicker.prevMonth}"]`, getPanel('left')));
         }
 
         const [startInput, endInput] = getInputs();
@@ -144,7 +145,7 @@ describe('Svelte DatePicker 范围面板导航', () => {
         'Previous month': zh_CN.DatePicker.prevMonth,
         'Next month': zh_CN.DatePicker.nextMonth,
     };
-    const navButton = (side: string, label: string) => getPanel(side).querySelector(`[aria-label="${navNames[label]}"]`) as HTMLElement;
+    const navButton = (side: string, label: string) => getElement(`[aria-label="${navNames[label]}"]`, getPanel(side));
 
     it('点击上一年与下一年按钮', async () => {
         await setup({ open: true, props: { type: 'dateRange', defaultPickerValue: new Date('2021-12-01') } });
@@ -198,7 +199,7 @@ describe('Svelte DatePicker 范围的预设与输入', () => {
 
     it('trigger snippet 的 dateRange：点击打开面板，选完两端后关闭', async () => {
         await setup({ trigger: 'button', props: { type: 'dateRange' } });
-        await click(document.querySelector('.custom-trigger') as HTMLElement);
+        await click(getElement('.custom-trigger'));
         expect(getPopups()).toHaveLength(1);
         await click(getWeekDays('left', 1)[0]);
         expect(getPopups()).toHaveLength(1);
@@ -285,7 +286,7 @@ describe('Svelte DatePicker 禁用与多选', () => {
             open: true,
             props: { type: 'dateTimeRange', disabledTime, timePickerOpts: { scrollItemProps: { cycled: false } } },
         });
-        const switchTime = () => document.querySelector(`.${dp}-month-grid-left .${dp}-switch-time`) as HTMLElement;
+        const switchTime = () => getElement(`.${dp}-month-grid-left .${dp}-switch-time`);
 
         await click(switchTime());
         const args = disabledTime.mock.lastCall as unknown[];

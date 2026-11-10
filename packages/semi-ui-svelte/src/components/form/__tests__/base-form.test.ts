@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { FormApi } from '../interface';
 import FormRef from './form-ref.svelte';
 import { errorSelector, fieldSelector, getInput, input, inputIn, labelSelector, prefix, renderForm, select, settle, sleep, typeInto } from './helpers';
@@ -79,7 +80,7 @@ describe('Svelte Form-baseForm', () => {
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         const { container } = renderForm({ onSubmit }, [input('input')]);
         await typeInto(getInput(), 'semi');
-        await fireEvent.submit(container.querySelector('form') as HTMLFormElement);
+        await fireEvent.submit(getElement<HTMLFormElement>('form', container));
         await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
         expect(onSubmit.mock.calls[0][0]).toEqual({ input: 'semi' });
     });
@@ -120,7 +121,7 @@ describe('Svelte Form-baseForm', () => {
                 api().reset();
             },
         ],
-        ['DOM reset 事件', async (container: HTMLElement) => void (await fireEvent.reset(container.querySelector('form') as HTMLFormElement))],
+        ['DOM reset 事件', async (container: HTMLElement) => void (await fireEvent.reset(getElement<HTMLFormElement>('form', container)))],
     ])('reset：%s 恢复初值、清除错误并发出 onReset', async (_name, trigger) => {
         const onReset = vi.fn<(...args: unknown[]) => void>();
         const { container, api } = renderForm({ onReset, initValues: { name: 'init' } }, [input('name', { rules: [{ required: true, message: '必填' }] })]);
@@ -264,7 +265,7 @@ describe('Svelte Form-baseForm', () => {
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         const onSubmitFail = vi.fn<(...args: unknown[]) => void>();
         const { container } = renderForm({ onSubmit, onSubmitFail, validator: () => ({}) }, [input('input')]);
-        await fireEvent.submit(container.querySelector('form') as HTMLFormElement);
+        await fireEvent.submit(getElement<HTMLFormElement>('form', container));
         await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
         expect(onSubmitFail).not.toHaveBeenCalled();
     });
@@ -355,8 +356,8 @@ describe('Svelte Form-baseForm 行为', () => {
         const { container } = renderForm({ stopPropagation: { submit: true, reset: true } });
         container.addEventListener('submit', outer);
         container.addEventListener('reset', outer);
-        await fireEvent.submit(container.querySelector('form') as HTMLFormElement);
-        await fireEvent.reset(container.querySelector('form') as HTMLFormElement);
+        await fireEvent.submit(getElement<HTMLFormElement>('form', container));
+        await fireEvent.reset(getElement<HTMLFormElement>('form', container));
         expect(outer).not.toHaveBeenCalled();
     });
 
@@ -370,7 +371,7 @@ describe('Svelte Form-baseForm 行为', () => {
     it('trigger 为 custom 时跳过变化校验，mount 时挂载即校验', async () => {
         const { api } = renderForm({}, [input('a', { trigger: 'custom', validator: () => 'a-err' }), input('b', { trigger: 'mount', validator: () => 'b-err' })]);
         await waitFor(() => expect(api().getError('b')).toEqual(['b-err']));
-        await typeInto(document.querySelector('[x-field-id="a"] input') as HTMLInputElement, 'x');
+        await typeInto(getElement<HTMLInputElement>('[x-field-id="a"] input'), 'x');
         await sleep(10);
         expect(api().getError('a')).toBeUndefined();
         await expect(api().validate(['a'])).rejects.toEqual({ a: ['a-err'], b: ['b-err'] });

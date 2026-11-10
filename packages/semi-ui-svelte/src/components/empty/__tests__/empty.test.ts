@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/svelte';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal, SemiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { EmptyProps } from '../interface';
 import EmptyFixture from './empty-fixture.svelte';
 import EmptyGlobal from './empty-global.svelte';
@@ -12,7 +13,7 @@ type Store = Parameters<typeof createStore<{ props: EmptyProps; titleSnippet?: b
 function setup(store: Store = { props: {} }) {
     const state = createStore(store);
     const view = render(EmptyFixture, { props: { store: state } });
-    return { store: state, view, root: () => view.container.querySelector<HTMLElement>('.semi-empty') as HTMLElement };
+    return { store: state, view, root: () => getElement('.semi-empty', view.container) };
 }
 
 describe('Svelte Empty', () => {

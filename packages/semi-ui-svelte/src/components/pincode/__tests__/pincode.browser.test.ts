@@ -5,6 +5,7 @@ import { cdp, userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { tabTo } from '@test/utils/browser';
+import { defined } from '@test/utils/function';
 import type { PinCodeProps } from '../interface';
 import PinCodeFixture from './pincode-fixture.svelte';
 import PinCodeModes from './pincode-modes.svelte';
@@ -37,7 +38,7 @@ describe('Svelte PinCode（浏览器）', () => {
         document.body.append(probe);
         const focusBorder = getComputedStyle(probe).color;
         probe.remove();
-        expect(getComputedStyle(input(1).closest('.semi-input-wrapper') as Element).borderColor).toBe(focusBorder);
+        expect(getComputedStyle(defined(input(1).closest('.semi-input-wrapper'))).borderColor).toBe(focusBorder);
 
         await userEvent.keyboard('1');
         expect(input(2)).toHaveFocus();

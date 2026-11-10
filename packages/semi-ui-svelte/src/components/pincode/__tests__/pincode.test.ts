@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { PinCodeProps } from '../interface';
 import PinCodeFixture from './pincode-fixture.svelte';
 import InTooltip from './pincode-in-tooltip.svelte';
@@ -17,7 +18,7 @@ type Notify = (value: string) => void;
 const wrapperSelector = `.${BASE_CLASS_PREFIX}-pincode-wrapper`;
 const inputFocusCls = `${BASE_CLASS_PREFIX}-input-wrapper-focus`;
 
-const getWrapper = () => document.querySelector(wrapperSelector) as HTMLElement;
+const getWrapper = () => getElement(wrapperSelector);
 const getInputs = () => screen.getAllByRole<HTMLInputElement>('textbox');
 const getValues = () => getInputs().map((input) => input.value);
 

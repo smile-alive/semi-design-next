@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { TagInputProps } from '../interface';
 import TagInput from '../tag-input.svelte';
 import TagInputCase from './tag-input-case.svelte';
@@ -17,7 +18,7 @@ type Modes = Parameters<typeof TagInputModes>[1];
 const tagInputCls = `${BASE_CLASS_PREFIX}-tagInput`;
 const tagSelector = `.${tagInputCls}-wrapper .${BASE_CLASS_PREFIX}-tag-content`;
 
-const getRoot = () => document.querySelector(`.${tagInputCls}`) as HTMLElement;
+const getRoot = () => getElement(`.${tagInputCls}`);
 const getInput = () => screen.getByRole<HTMLInputElement>('textbox');
 const getTagTexts = () => [...document.querySelectorAll(tagSelector)].map((node) => node.textContent);
 const getClearBtn = () => document.querySelector<HTMLElement>(`.${tagInputCls}-clearBtn`);
@@ -611,7 +612,7 @@ describe('Svelte TagInput', () => {
     it('blur 方法在焦点位于标签或清除按钮时同样移出焦点', async () => {
         const onBlur = vi.fn<NonNullable<Props['onBlur']>>();
         const { store } = setup({ props: { value: ['abc'], showClear: true, onBlur } });
-        const tag = document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tag`) as HTMLElement;
+        const tag = getElement(`.${BASE_CLASS_PREFIX}-tag`);
         tag.focus();
         handleOf(store).blur();
         await settle();
@@ -795,7 +796,7 @@ describe('Svelte TagInput', () => {
                 onkeyup,
             },
         });
-        const native = document.querySelector('input') as HTMLInputElement;
+        const native = getElement<HTMLInputElement>('input');
         expect(native).toBe(screen.getByRole('combobox', { name: 'Tags' }));
         for (const [attr, value] of [
             ['id', 'tags'],

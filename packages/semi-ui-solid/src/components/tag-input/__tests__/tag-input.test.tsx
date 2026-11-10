@@ -5,7 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { countLiveListeners } from '@test/utils/solid';
+import { countLiveListeners, getElement } from '@test/utils/solid';
 import TagInput, { type TagInputProps } from '..';
 import { type FormApi, Form, FormTagInput } from '../../form';
 import Tooltip from '../../tooltip';
@@ -13,10 +13,11 @@ import Tooltip from '../../tooltip';
 const tagInputCls = `${BASE_CLASS_PREFIX}-tagInput`;
 const tagSelector = `.${tagInputCls}-wrapper .${BASE_CLASS_PREFIX}-tag-content`;
 
-const getRoot = () => document.querySelector(`.${tagInputCls}`) as HTMLElement;
+const getRoot = () => getElement(`.${tagInputCls}`);
 const getInput = () => screen.getByRole('textbox') as HTMLInputElement;
 const getTagTexts = () => Array.from(document.querySelectorAll(tagSelector)).map((node) => node.textContent);
-const getClearBtn = () => document.querySelector(`.${tagInputCls}-clearBtn`) as HTMLElement;
+const getClearBtn = () => getElement(`.${tagInputCls}-clearBtn`);
+const queryClearBtn = () => document.querySelector(`.${tagInputCls}-clearBtn`);
 const getRestCount = () => document.querySelector(`.${tagInputCls}-wrapper-n`);
 const pressEnter = () => fireEvent.keyDown(getInput(), { key: 'Enter' });
 const pressBackspace = () => fireEvent.keyDown(getInput(), { key: 'Backspace' });
@@ -354,7 +355,7 @@ describe('TagInput', () => {
             insetLabel: <span class="inset-label">Label</span>,
             insetLabelId: 'inset-label-id',
         });
-        const label = document.querySelector('.inset-label') as HTMLElement;
+        const label = getElement('.inset-label');
         expect(label).toHaveTextContent('Label');
         expect(label.parentElement).toHaveAttribute('id', 'inset-label-id');
     });
@@ -523,7 +524,7 @@ describe('TagInput', () => {
 
     it('禁用时静态标签不带 aria-label，标签文字本身可见', () => {
         renderTagInput({ disabled: true, defaultValue: ['abc'] });
-        const tag = document.querySelector(`.${BASE_CLASS_PREFIX}-tag`) as HTMLElement;
+        const tag = getElement(`.${BASE_CLASS_PREFIX}-tag`);
         expect(tag).toHaveTextContent('abc');
         expect(tag).not.toHaveAttribute('role');
         expect(tag).not.toHaveAttribute('aria-label');
@@ -558,7 +559,7 @@ describe('TagInput', () => {
 
     it('点击 suffix 会聚焦输入框', async () => {
         renderTagInput({ defaultValue: ['abc'], suffix: <span class="test-suffix">Suffix</span> });
-        await userEvent.click(document.querySelector('.test-suffix') as Element);
+        await userEvent.click(getElement('.test-suffix'));
         expect(getInput()).toHaveFocus();
     });
 
@@ -752,7 +753,7 @@ describe('TagInput', () => {
     it('禁用状态下的 showClear', async () => {
         renderTagInput({ showClear: true, disabled: true, defaultValue: ['abc'] });
         await userEvent.hover(getRoot());
-        expect(getClearBtn()).toBeNull();
+        expect(queryClearBtn()).toBeNull();
         expect(getRoot()).not.toHaveClass(`${tagInputCls}-hover`);
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-tag-close`)).toBeNull();
     });
@@ -760,7 +761,7 @@ describe('TagInput', () => {
     it('无输入文字也无标签时的 showClear', async () => {
         renderTagInput({ showClear: true, defaultValue: [], inputValue: '' });
         await userEvent.hover(getRoot());
-        expect(getClearBtn()).toBeNull();
+        expect(queryClearBtn()).toBeNull();
     });
 
     it('使用 Sortable 组件的 draggable', async () => {
@@ -1102,7 +1103,7 @@ describe('TagInput 函数组件', () => {
         renderTagInput({ inputValue: 'a-b', separator: null, showClear: false });
         pressEnter();
         expect(getTagTexts()).toEqual(['a-b']);
-        expect(getClearBtn()).toBeNull();
+        expect(queryClearBtn()).toBeNull();
     });
 
     it('全局 Input 默认值不给内部输入框加清除按钮与前后缀', () => {
@@ -1159,7 +1160,7 @@ describe('TagInput 函数组件', () => {
 
     it('id、name、aria-* 与 role 落在文本输入框，根元素不带', () => {
         renderTagInput({ id: 'tags', name: 'tags-name', 'aria-labelledby': 'tags-label', 'aria-required': true, 'aria-describedby': 'tip', role: 'combobox' });
-        const input = getRoot().querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', getRoot());
         expect(input).toHaveAttribute('id', 'tags');
         expect(input).toHaveAttribute('name', 'tags-name');
         expect(input).toHaveAttribute('aria-labelledby', 'tags-label');

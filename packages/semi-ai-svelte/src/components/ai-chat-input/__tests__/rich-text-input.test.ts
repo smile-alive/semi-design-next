@@ -6,6 +6,8 @@ import { strings } from '@fibrae/semi-ai-foundation/components/ai-chat-input/con
 import { handleZeroWidthCharLogic } from '@fibrae/semi-ai-foundation/components/ai-chat-input/extension/plugins';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN, type Locale } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { PlaceholderProps } from '../interface';
 import RichTextHost from './rich-text-host.svelte';
 
@@ -24,7 +26,7 @@ function setup(initial: Partial<Store> = {}) {
     const store = createStore<Store>({ id: 'editor', log: [], ...initial });
     const result = render(RichTextHost, { props: { store } });
     flushSync();
-    const pm = () => result.container.querySelector('.ProseMirror') as HTMLElement;
+    const pm = () => getElement('.ProseMirror', result.container);
     return { ...result, store, pm, editor: () => store.editor as Editor };
 }
 
@@ -101,7 +103,7 @@ describe('RichTextInput 插槽节点视图', () => {
     it('skill 芯片显示标签，删除按钮只删除芯片并保留其后的文字', async () => {
         const { pm } = setup({ defaultContent: `<p>${skill}hello</p>` });
         expect(pm().querySelector('.node-skillSlot .skill-slot')).toHaveTextContent('Writing');
-        const remove = pm().querySelector('.skill-slot-delete') as HTMLElement;
+        const remove = getElement('.skill-slot-delete', pm());
         expect(remove).toHaveAccessibleName(zh_CN.AIChatInput.removeSkill);
         await fireEvent.click(remove);
         flushSync();
@@ -124,8 +126,8 @@ describe('RichTextInput 插槽节点视图', () => {
             editor().view.dispatch(tr);
         }
         flushSync();
-        const slot = pm().querySelector('.node-inputSlot') as HTMLElement;
-        const placeholder = slot.querySelector('.input-slot-placeholder') as HTMLElement;
+        const slot = getElement('.node-inputSlot', pm());
+        const placeholder = getElement('.input-slot-placeholder', slot);
         expect(placeholder).toHaveTextContent('object');
         expect(slot.querySelector('.content')?.textContent).toBe(strings.ZERO_WIDTH_CHAR);
         expect(placeholder).toBeVisible();
@@ -152,10 +154,10 @@ describe('RichTextInput 插槽节点视图', () => {
 
     it('select slot 渲染为带选项的 Select，选择后写回节点属性', async () => {
         const { pm, editor } = setup({ defaultContent: `<p>${select('a')}</p>` });
-        const combobox = pm().querySelector('.node-selectSlot [role="combobox"]') as HTMLElement;
+        const combobox = getElement('.node-selectSlot [role="combobox"]', pm());
         expect(combobox).toHaveTextContent('a');
         await fireEvent.click(combobox);
-        const listbox = document.getElementById(combobox.getAttribute('aria-controls') as string) as HTMLElement;
+        const listbox = defined(document.getElementById(combobox.getAttribute('aria-controls') as string));
         expect([...listbox.querySelectorAll('[role="option"]')].map((option) => option.textContent?.trim())).toEqual(['a', 'b']);
         await fireEvent.click(listbox.querySelectorAll('[role="option"]')[1]);
         flushSync();
@@ -173,7 +175,7 @@ describe('RichTextInput 插槽节点视图', () => {
 
     it('编辑器销毁时卸载节点视图', () => {
         const { pm, unmount } = setup({ defaultContent: `<p>${skill}</p>` });
-        const button = pm().querySelector('.skill-slot-delete') as HTMLElement;
+        const button = getElement('.skill-slot-delete', pm());
         unmount();
         flushSync();
         expect(button.isConnected).toBe(false);

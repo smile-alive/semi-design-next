@@ -8,7 +8,7 @@ import { strings } from '@fibrae/semi-foundation/components/tooltip/constants';
 import { openLayer } from '@fibrae/semi-foundation/utils';
 import { PopupLayerContext, usePopupLayer } from '@fibrae/semi-ui-solid/base';
 import { semiGlobal, type OverrideDefaultProps } from '@fibrae/semi-ui-solid/utils';
-import { sleep } from '@test/utils/solid';
+import { sleep, getElement, defined } from '@test/utils/solid';
 import Tooltip, { type RenderContentProps, type TooltipHandle, type TooltipProps } from '..';
 import Button, { ButtonGroup } from '../../button';
 import ConfigProvider from '../../config-provider';
@@ -343,7 +343,7 @@ describe('Tooltip', () => {
                     <Button>second</Button>
                 </Tooltip>
             ));
-            const span = document.querySelector('.probe') as HTMLElement;
+            const span = getElement('.probe');
             expect(span).toContainElement(screen.getByRole('button', { name: 'first' }));
             expect(span).toContainElement(screen.getByRole('button', { name: 'second' }));
             expect(span).toHaveAttribute('tabindex', '-1');
@@ -408,7 +408,7 @@ describe('Tooltip', () => {
                 </Tooltip>
             ));
             const button = screen.getByRole('button');
-            const span = document.querySelector('.probe') as HTMLElement;
+            const span = getElement('.probe');
             expect(span).toContainElement(button);
             expect(span).toHaveAttribute('tabindex', '0');
             expect(span.style.cursor).toBe('not-allowed');
@@ -443,7 +443,7 @@ describe('Tooltip', () => {
                 </Tooltip>
             ));
             const button = screen.getByRole('button');
-            const span = document.querySelector('.probe') as HTMLElement;
+            const span = getElement('.probe');
             expect(span).toHaveAttribute('tabindex', '-1');
             expect(span).toHaveAttribute('data-popupid');
             expect(button.style.pointerEvents).toBe('none');
@@ -522,7 +522,7 @@ describe('Tooltip', () => {
             ));
             const button = screen.getByRole('button');
             setDisabled(true);
-            const span = document.querySelector('.probe') as HTMLElement;
+            const span = getElement('.probe');
             expect(span).toContainElement(screen.getByRole('button'));
             expect(screen.getByRole('button')).toBe(button);
             await userEvent.click(span);
@@ -560,7 +560,7 @@ describe('Tooltip', () => {
             ));
             const idle = screen.getByRole('button', { name: 'idle' });
             setBusy(true);
-            const span = document.querySelector('.probe') as HTMLElement;
+            const span = getElement('.probe');
             expect(span).toContainElement(screen.getByRole('button', { name: 'busy' }));
             expect(idle).not.toBeInTheDocument();
             expect(span).toHaveTextContent(/^busy$/);
@@ -581,14 +581,14 @@ describe('Tooltip', () => {
                     )}
                 </Tooltip>
             ));
-            const outerSpan = document.querySelector('.outer') as HTMLElement;
+            const outerSpan = getElement('.outer');
             expect(outerSpan).toContainElement(screen.getByRole('button'));
             expect(outerSpan).toHaveTextContent(/^btn$/);
             setStatus('loading');
-            expect(outerSpan).toContainElement(document.querySelector('.inner') as HTMLElement);
+            expect(outerSpan).toContainElement(getElement('.inner'));
             expect(document.querySelector('.inner')).toContainElement(screen.getByRole('button'));
             expect(outerSpan).toHaveTextContent(/^btn$/);
-            await userEvent.hover(document.querySelector('.inner') as HTMLElement);
+            await userEvent.hover(getElement('.inner'));
             await waitFor(() => expect(screen.getByText('inner')).toBeInTheDocument());
         });
     });
@@ -1292,7 +1292,7 @@ describe('Tooltip', () => {
             const trigger = screen.getByRole('button');
             fireEvent.click(trigger);
             const nested = await screen.findByText('nested');
-            const outerPopup = screen.getByText('inner trigger').closest(wrapperSelector) as HTMLElement;
+            const outerPopup = defined(screen.getByText('inner trigger').closest<HTMLElement>(wrapperSelector));
             fireEvent.mouseDown(trigger);
             fireEvent.mouseDown(outerPopup);
             fireEvent.mouseDown(nested);
@@ -1415,7 +1415,7 @@ describe('Tooltip', () => {
             ));
             const button = screen.getByRole('button', { name: 'both' });
             const innerAction = await screen.findByRole('button', { name: 'inner action' });
-            const innerPopup = innerAction.closest(wrapperSelector) as HTMLElement;
+            const innerPopup = defined(innerAction.closest<HTMLElement>(wrapperSelector));
             button.focus();
             await screen.findByText('outer tip');
             // past the hover check that runs a task after opening

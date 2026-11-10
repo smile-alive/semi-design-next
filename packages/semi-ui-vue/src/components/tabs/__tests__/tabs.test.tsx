@@ -7,7 +7,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { mockResizeObserver, render } from '@test/utils/vue';
+import { mockResizeObserver, render, getElement } from '@test/utils/vue';
 import Tabs, { TabItem, TabPane, type PlainTab, type TabBarProps, type TabPaneProps, type TabsArrowSlotProps, type TabsDropdownItemProps, type TabsEmits, type TabsMoreContentSlotProps, type TabsProps, type TabsTabBarSlotProps, type TabsTabSlotProps } from '..';
 import ConfigProvider from '../../config-provider';
 import Closable from './fixtures/closable.vue';
@@ -65,11 +65,11 @@ function mountTabs(props: Record<string, unknown> = {}, panes: Pane[] = threePan
 const tab = (name: string) => screen.getByRole('tab', { name });
 const tabNames = () => screen.getAllByRole('tab').map((t) => t.textContent);
 const selectedTab = () => screen.queryByRole('tab', { selected: true })?.textContent ?? null;
-const getBar = () => document.querySelector(`.${prefix}-bar`) as HTMLElement;
-const getRoot = () => document.querySelector(`.${prefix}`) as HTMLElement;
-const getContent = () => document.querySelector(`.${prefix}-content`) as HTMLElement;
-const paneOf = (itemKey: string) => document.querySelector(`[role="tabpanel"][id$="-panel-${itemKey}"]`) as HTMLElement;
-const overlayClass = (itemKey: string) => (paneOf(itemKey).querySelector(`.${prefix}-pane-motion-overlay`) as HTMLElement).className;
+const getBar = () => getElement(`.${prefix}-bar`);
+const getRoot = () => getElement(`.${prefix}`);
+const getContent = () => getElement(`.${prefix}-content`);
+const paneOf = (itemKey: string) => getElement(`[role="tabpanel"][id$="-panel-${itemKey}"]`);
+const overlayClass = (itemKey: string) => getElement(`.${prefix}-pane-motion-overlay`, paneOf(itemKey)).className;
 const closeButtons = () => screen.queryAllByRole('button', { name: zh_CN.Tabs.close });
 
 const changeSpy = () => vi.fn<(activeKey: string) => void>();
@@ -599,7 +599,7 @@ describe('Tabs 行为', () => {
         mountTabs({}, threePanes, {
             tabBarExtraContent: () => <button style={{ color: 'red' }}>Extra</button>,
         });
-        const extra = document.querySelector(`.${prefix}-bar-extra`) as HTMLElement;
+        const extra = getElement(`.${prefix}-bar-extra`);
         expect(getBar()).toContainElement(extra);
         expect(screen.getByRole('tablist')).not.toContainElement(extra);
         expect(extra).toHaveAttribute('x-semi-prop', 'tabBarExtraContent');
@@ -828,8 +828,8 @@ describe('Tabs 行为', () => {
             },
             panes
         );
-        const arrow = (pos: string) => document.querySelector(`.${prefix}-bar-arrow-${pos}`) as HTMLElement;
-        const arrowButton = (pos: string) => arrow(pos).querySelector('button') as HTMLButtonElement;
+        const arrow = (pos: string) => getElement(`.${prefix}-bar-arrow-${pos}`);
+        const arrowButton = (pos: string) => getElement<HTMLButtonElement>('button', arrow(pos));
         const wrapper = document.querySelector(`.${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`);
         expect(getBar()).toHaveClass(`${prefix}-bar-collapse`);
         expect(screen.getByRole('tablist')).toBe(wrapper);
@@ -921,13 +921,13 @@ describe('Tabs 行为', () => {
         ));
         mountTabs({ collapsible: true, arrowPosition: 'end', showRestInDropdown: false }, keyPanes(['k0', 'k1', 'k2']), { arrow });
         await io.intersect({ 'k0-bar': true });
-        const list = document.querySelector(`.${BASE_CLASS_PREFIX}-overflow-list`) as HTMLElement;
+        const list = getElement(`.${BASE_CLASS_PREFIX}-overflow-list`);
         expect(list.firstElementChild).toHaveClass(`${BASE_CLASS_PREFIX}-overflow-list-scroll-wrapper`);
         expect(document.querySelector('.custom-start')).toHaveTextContent(/^0$/);
         expect(document.querySelector('.custom-end')).toHaveTextContent(/^2$/);
         expect(arrow.mock.lastCall?.[0].position).toBe('end');
         expect(arrow.mock.lastCall?.[0].items.map((item) => item.itemKey)).toEqual(['k1', 'k2']);
-        await userEvent.click(document.querySelector(`.custom-end .${prefix}-bar-arrow`) as HTMLElement);
+        await userEvent.click(getElement(`.custom-end .${prefix}-bar-arrow`));
         expect(screen.queryByRole('menuitemcheckbox')).toBeNull();
         expect(scrollIntoView.mock.contexts.at(-1)).toBe(tab('tab-k1'));
     });
@@ -1063,7 +1063,7 @@ describe('Tabs 行为', () => {
         target.dispatchEvent(new Event('animationend', { bubbles: true }));
         await nextTick();
     };
-    const overlayOf = (itemKey: string) => paneOf(itemKey).querySelector(`.${prefix}-pane-motion-overlay`) as HTMLElement;
+    const overlayOf = (itemKey: string) => getElement(`.${prefix}-pane-motion-overlay`, paneOf(itemKey));
 
     it('motion：动画结束后去掉面板的方向 class，再次选中时重新播放', async () => {
         const animate = `${prefix}-pane-animate`;
@@ -1267,7 +1267,7 @@ describe('Tabs Tab 停靠点', () => {
         const io = stubIntersectionObserver();
         mountTabs({ collapsible: true }, keyPanes(['k0', 'k1', 'k2']));
         await io.intersect({ 'k0-bar': true });
-        const arrow = document.querySelector(`.${prefix}-bar-arrow-end`) as HTMLElement;
+        const arrow = getElement(`.${prefix}-bar-arrow-end`);
         expect(arrow.querySelector('button')).toBeEnabled();
         expect(arrow).toHaveAttribute('tabindex', '-1');
     });
@@ -1277,8 +1277,8 @@ describe('Tabs Tab 停靠点', () => {
         const io = stubIntersectionObserver();
         mountTabs({ collapsible: true }, keyPanes(['k0', 'k1', 'k2']));
         await io.intersect({ 'k0-bar': true });
-        const arrow = document.querySelector(`.${prefix}-bar-arrow-end`) as HTMLElement;
-        for (const node of [arrow, arrow.querySelector('button') as HTMLElement]) {
+        const arrow = getElement(`.${prefix}-bar-arrow-end`);
+        for (const node of [arrow, getElement('button', arrow)]) {
             expect(node).not.toHaveAttribute('aria-describedby');
             expect(node).not.toHaveAttribute('aria-haspopup');
             expect(node).not.toHaveAttribute('aria-expanded');

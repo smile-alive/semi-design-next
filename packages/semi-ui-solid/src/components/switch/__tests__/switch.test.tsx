@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Switch, { type SwitchProps } from '..';
 import Tooltip from '../../tooltip';
 
@@ -372,7 +373,7 @@ describe('Switch', () => {
                 {(trigger) => <Switch disabled={disabled()} {...trigger()} />}
             </Tooltip>
         ));
-        const span = document.querySelector('.probe') as HTMLElement;
+        const span = getElement('.probe');
         expect(span).toContainElement(getWrapper());
         expect(span).toHaveAttribute('tabindex', '0');
         expect(span.style.cursor).toBe('not-allowed');

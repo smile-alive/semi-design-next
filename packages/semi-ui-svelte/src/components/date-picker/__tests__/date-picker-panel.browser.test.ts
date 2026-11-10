@@ -5,11 +5,13 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import scrollListCss from '@fibrae/semi-foundation/components/scroll-list/scroll-list.scss?inline';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { clickOutside } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { DatePickerProps } from '../interface';
 import { getPanel, getPopup, getYMLists, getYMSelected } from './date-picker-dom-utils';
 import { dp, getInput, getInputs, getRoot, setup } from './test-utils';
 
-const getTitle = (side: string) => getPanel(side).querySelector<HTMLElement>(`.${dp}-navigation-month button`) as HTMLElement;
+const getTitle = (side: string) => getElement(`.${dp}-navigation-month button`, getPanel(side));
 const toggleYearMonth = async (side: string) => userEvent.click(await waitFor(() => getTitle(side)));
 
 const expectSelectedYMVisible = (length?: number) =>
@@ -22,7 +24,7 @@ const expectSelectedYMVisible = (length?: number) =>
         }
         for (const item of selected) {
             const itemRect = item.getBoundingClientRect();
-            const viewport = (item.closest(`.${BASE_CLASS_PREFIX}-scrolllist-item`) as Element).getBoundingClientRect();
+            const viewport = defined(item.closest(`.${BASE_CLASS_PREFIX}-scrolllist-item`)).getBoundingClientRect();
             expect(itemRect.top).toBeGreaterThanOrEqual(viewport.top);
             expect(itemRect.bottom).toBeLessThanOrEqual(viewport.bottom);
         }
@@ -50,7 +52,7 @@ describe('Svelte DatePicker 面板与回调（浏览器）', () => {
         const onClickOutSide = vi.fn<NonNullable<DatePickerProps['onClickOutSide']>>();
         await setup({ props: { type: 'dateTime', needConfirm: true, onClickOutSide } });
         await userEvent.click(getInput());
-        await userEvent.click(await waitFor(() => document.querySelector(`.${dp}-footer`) as HTMLElement));
+        await userEvent.click(await waitFor(() => getElement(`.${dp}-footer`)));
         await clickOutside();
         expect(onClickOutSide).toHaveBeenCalledTimes(1);
     });
@@ -75,7 +77,7 @@ describe('Svelte DatePicker 面板与回调（浏览器）', () => {
         await setup({ mode: 'bind', value, props: { type } });
         await waitFor(() => expect(getInput()).not.toHaveValue(''));
         await userEvent.click(getInput());
-        await userEvent.click(getRoot().querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`, getRoot()));
         const nextMonth = month + 1 <= 12 ? { year, month: month + 1 } : { year: year + 1, month: 1 };
         await waitFor(() => expect(getYMSelected()).toEqual(type === 'month' ? [`${year}年`, `${month}月`] : [`${year}年`, `${month}月`, `${nextMonth.year}年`, `${nextMonth.month}月`]));
     });

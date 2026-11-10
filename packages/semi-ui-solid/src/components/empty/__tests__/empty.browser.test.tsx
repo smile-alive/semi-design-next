@@ -1,5 +1,6 @@
 import { render } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
+import { getElement } from '@test/utils/solid';
 import Empty from '..';
 import type { EmptyProps } from '../empty';
 
@@ -11,7 +12,7 @@ describe('Empty 标题（浏览器）', () => {
         ['without an image', 'H6', {}],
     ])('外观与被替换的标题一致（%s）', (_, tag, props) => {
         const { container } = render(() => <Empty title="title" {...props} />);
-        const title = container.querySelector('.semi-empty-title') as HTMLElement;
+        const title = getElement('.semi-empty-title', container);
         expect(title.tagName).toBe('DIV');
         const heading = document.createElement(tag);
         heading.className = title.className;

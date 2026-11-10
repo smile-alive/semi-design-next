@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import Fixture from './typography-fixture.svelte';
 
 const prefix = 'semi-typography';
@@ -14,7 +15,7 @@ const LONGER = `${LONG} `.repeat(4);
 function setup(store: { kind?: 'text' | 'title' | 'paragraph' | 'numeral'; text?: string; props?: Record<string, unknown> }) {
     const state = createStore(store);
     const view = render(Fixture, { props: { store: state } });
-    return { state, ...view, node: () => view.container.querySelector(`.${prefix}`) as HTMLElement };
+    return { state, ...view, node: () => getElement(`.${prefix}`, view.container) };
 }
 
 const visibleText = (node: Element): string => [...node.childNodes].map((child) => (child.nodeType === Node.TEXT_NODE ? child.textContent : child instanceof HTMLElement && child.hidden ? '' : visibleText(child as Element))).join('');
@@ -99,7 +100,7 @@ describe('Svelte Typography（浏览器）', () => {
     it('复制按钮的焦点环贴合图标，键盘聚焦不移动文字', async () => {
         const { node } = setup({ kind: 'paragraph', text: '点击复制', props: { copyable: true } });
         const button = screen.getByRole('button', { name: '复制' });
-        const icon = button.querySelector('svg') as SVGElement;
+        const icon = getElement<SVGElement>('svg', button);
         const rect = (element: Element) => element.getBoundingClientRect().toJSON() as DOMRect;
         const before = { paragraph: rect(node()), button: rect(button) };
         const buttonRect = button.getBoundingClientRect();
@@ -171,7 +172,7 @@ describe('Svelte Typography（浏览器）', () => {
         // let the resize-observer driven truncation settle before asserting an absence
         await new Promise((resolve) => setTimeout(resolve, 300));
         expect(container.querySelector(`.${prefix}-ellipsis-expand`)).toBeNull();
-        expect(visibleText(container.querySelector(`.${prefix}`) as HTMLElement)).toContain('不应该显示展开的。');
+        expect(visibleText(getElement(`.${prefix}`, container))).toContain('不应该显示展开的。');
     });
 
     it('JS 省略下文本放得下时不截断，不显示 Tooltip', async () => {
@@ -189,7 +190,7 @@ describe('Svelte Typography（浏览器）', () => {
         const state = createStore({ kind: 'text' as const, text: 'text', props: { copyable: true } });
         const view = render(Fixture, { props: { store: state }, target: host });
         try {
-            const style = getComputedStyle(host.querySelector(`.${prefix}-action-copy`) as Element);
+            const style = getComputedStyle(getElement(`.${prefix}-action-copy`, host));
             expect(style.marginRight).toBe('4px');
             expect(style.marginLeft).toBe('0px');
         } finally {

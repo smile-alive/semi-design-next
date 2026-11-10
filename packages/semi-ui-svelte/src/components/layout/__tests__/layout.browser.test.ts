@@ -2,10 +2,11 @@ import { flushSync } from 'svelte';
 import { render } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { getElement } from '@test/utils/dom/common';
 import type { LayoutProps } from '../interface';
 import LayoutFixture from './layout-fixture.svelte';
 
-const flexDirection = (container: Element) => getComputedStyle(container.querySelector('.semi-layout') as HTMLElement).flexDirection;
+const flexDirection = (container: Element) => getComputedStyle(getElement('.semi-layout', container)).flexDirection;
 
 describe('Svelte Layout 浏览器', () => {
     it('has-sider 使 Layout 横向排列，无 Sider 时纵向排列', async () => {

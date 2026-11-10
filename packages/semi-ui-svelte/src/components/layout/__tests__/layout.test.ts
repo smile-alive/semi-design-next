@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import { mockMatchMediaCore } from '@test/utils/dom/match-media-core';
 import type { LayoutProps } from '../interface';
 import Sider from '../sider.svelte';
@@ -39,7 +40,7 @@ describe('Svelte Layout', () => {
 
     it('Sider 渲染 aside 并包裹子内容', () => {
         const { root } = setup({}, 'direct');
-        const aside = root().querySelector('aside') as HTMLElement;
+        const aside = getElement('aside', root());
         expect(aside).toHaveClass(`${prefixCls}-sider`);
         expect(aside.firstElementChild).toHaveClass(`${prefixCls}-sider-children`);
     });

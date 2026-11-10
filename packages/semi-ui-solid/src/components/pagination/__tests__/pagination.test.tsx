@@ -5,6 +5,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Pagination, { type PaginationProps } from '..';
 import ConfigProvider from '../../config-provider';
 import LocaleProvider from '../../locale/locale-provider';
@@ -16,8 +17,8 @@ const prefixCls = `${BASE_CLASS_PREFIX}-page`;
 const getPageItems = (container: HTMLElement) => Array.from(container.querySelectorAll<HTMLButtonElement>(`.${prefixCls}-item`));
 const getActivePage = (container: HTMLElement) => container.querySelector(`.${prefixCls}-item-active`);
 const pageName = (page: number) => zh_CN.Pagination.pageN.replace('${page}', String(page));
-const getRestPages = () => within(document.querySelector(`.${prefixCls}-rest-list`) as HTMLElement).getAllByRole('button');
-const getJumper = (container: HTMLElement) => container.querySelector(`.${prefixCls}-quickjump-input-number input`) as HTMLInputElement;
+const getRestPages = () => within(getElement(`.${prefixCls}-rest-list`)).getAllByRole('button');
+const getJumper = (container: HTMLElement) => getElement<HTMLInputElement>(`.${prefixCls}-quickjump-input-number input`, container);
 const getSelectionText = (container: HTMLElement) => container.querySelector(`.${BASE_CLASS_PREFIX}-select-selection-text`);
 
 function renderPagination(initial: PaginationProps) {
@@ -46,7 +47,7 @@ describe('Pagination', () => {
 
         const getPageChild = (props: PaginationProps) => {
             const { container, unmount } = render(() => <Pagination {...props} />);
-            const children = (container.querySelector('ul') as HTMLUListElement).children;
+            const children = getElement<HTMLUListElement>('ul', container).children;
             const lastPage = children[children.length - 2].textContent;
             unmount();
             return { length: children.length, lastPage };
@@ -196,7 +197,7 @@ describe('Pagination', () => {
         const props = { total: 200, onChange: spyOnChange, showQuickJumper: true };
         const quickJumpPage = 5;
         const { container } = render(() => <Pagination {...props} />);
-        const jumper = container.querySelector(`.${prefixCls} .${prefixCls}-quickjump-input-number.${BASE_CLASS_PREFIX}-input-number input`) as HTMLInputElement;
+        const jumper = getElement<HTMLInputElement>(`.${prefixCls} .${prefixCls}-quickjump-input-number.${BASE_CLASS_PREFIX}-input-number input`, container);
         await userEvent.type(jumper, String(quickJumpPage));
         jumper.blur();
         expect(spyOnChange).toHaveBeenCalledWith(quickJumpPage, defaultPageSize);
@@ -413,7 +414,7 @@ describe('Pagination', () => {
     it('未传 pageSize 时，small 模式的 hoverShowPageSelect 在 total 变化后保持有效', async () => {
         const { container, setProps } = renderPagination({ hoverShowPageSelect: true, size: 'small', total: 90 });
         setProps({ hoverShowPageSelect: true, size: 'small', total: 120 });
-        await userEvent.hover(container.querySelector(`.${prefixCls}-item-small`) as Element);
+        await userEvent.hover(getElement(`.${prefixCls}-item-small`, container));
         await waitFor(() => expect(screen.getByRole('button', { name: pageName(1) })).toBeInTheDocument());
         expect(container.querySelector(`.${prefixCls}-item-small`)?.textContent).toBe('1/12 ');
     });
@@ -453,7 +454,7 @@ describe('Pagination', () => {
     });
 
     describe('small 尺寸', () => {
-        const getCounter = (container: HTMLElement) => container.querySelector(`.${prefixCls}-item-small`) as HTMLElement;
+        const getCounter = (container: HTMLElement) => getElement(`.${prefixCls}-item-small`, container);
 
         it('显示当前页 / 总页数，并可通过上一页与下一页翻页', async () => {
             const onChange = vi.fn<NonNullable<PaginationProps['onChange']>>();
@@ -522,8 +523,8 @@ describe('Pagination', () => {
                 {(trigger) => <Pagination disabled={disabled()} total={200} {...trigger()} />}
             </Tooltip>
         ));
-        const root = container.querySelector(`ul.${prefixCls}`) as HTMLElement;
-        const span = container.querySelector('.probe') as HTMLElement;
+        const root = getElement(`ul.${prefixCls}`, container);
+        const span = getElement('.probe', container);
         expect(span).toContainElement(root);
         expect(span).toHaveAttribute('tabindex', '0');
         expect(span.style.cursor).toBe('not-allowed');

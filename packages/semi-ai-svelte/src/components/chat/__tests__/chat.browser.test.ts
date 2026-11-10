@@ -5,6 +5,7 @@ import { page, userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { tabTo } from '@test/utils/browser';
+import { defined } from '@test/utils/function';
 import type { ChatMessage } from '../interface';
 import ChatHost, { type ChatHostStore } from './chat-host.svelte';
 
@@ -45,7 +46,7 @@ describe('Chat 浏览器', () => {
 
     it('删除确认框按 Escape 关闭', async () => {
         const { container } = renderChat(twoChats);
-        const trigger = (await find(container, '.semi-icon-delete_stroked')).closest('button') as HTMLElement;
+        const trigger = defined((await find(container, '.semi-icon-delete_stroked')).closest<HTMLElement>('button'));
         await userEvent.click(trigger);
         await expect.element(page.getByText(text.deleteConfirm)).toBeVisible();
         await userEvent.keyboard('{Escape}');
@@ -54,7 +55,7 @@ describe('Chat 浏览器', () => {
 
     it('确认删除消息后，焦点交给消息列表而不是落到 body', async () => {
         const { container } = renderChat(twoChats);
-        const trigger = (await find(container, '.semi-icon-delete_stroked')).closest('button') as HTMLElement;
+        const trigger = defined((await find(container, '.semi-icon-delete_stroked')).closest<HTMLElement>('button'));
         await tabTo(trigger);
         await userEvent.keyboard('{Enter}');
         await userEvent.click(page.getByRole('button', { name: zh_CN.Popconfirm.confirm }));

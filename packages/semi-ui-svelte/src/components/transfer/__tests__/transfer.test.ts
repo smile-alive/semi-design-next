@@ -6,6 +6,8 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { TransferDataItem, TransferHandle, TransferPagination, TransferProps, TransferSelectedPanelSnippetProps, TransferSourceHeaderSnippetProps, TransferSourcePanelSnippetProps, TransferValue } from '../interface';
 import Transfer from '../transfer.svelte';
 import TransferCase from './transfer-case.svelte';
@@ -78,8 +80,8 @@ function getHandle(store: Case): TransferHandle {
     return handle;
 }
 
-const getRoot = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
-const getSearchInput = () => document.querySelector(`.${prefixCls}-filter input`) as HTMLInputElement;
+const getRoot = () => getElement(`.${prefixCls}`);
+const getSearchInput = () => getElement<HTMLInputElement>(`.${prefixCls}-filter input`);
 const getLeftList = () => screen.getByRole('list', { name: zh_CN.Transfer.optionList });
 const getSelectedList = () => screen.getByRole('list', { name: zh_CN.Transfer.selectedList });
 const getLeftItem = (label: string) => within(getLeftList()).getByText(label);
@@ -992,14 +994,14 @@ describe('Svelte Transfer treeList', () => {
         },
     ];
     const leaves = ['Shanghai', 'Chengdu', 'Chongqing', 'Osaka', 'United States', 'Canada'];
-    const getTreeRow = (label: string) => screen.getByText(label).closest('li') as HTMLElement;
+    const getTreeRow = (label: string) => defined(screen.getByText(label).closest<HTMLElement>('li'));
 
     it('树形 Transfer 渲染：点击节点选中其全部子叶，搜索通知 onSearch', async () => {
         const onChange = vi.fn<Change>();
         const onSearch = vi.fn<(searchValue: string) => void>();
         renderTransfer({ type: 'treeList', value: ['Shanghai'], dataSource: getTreeData(), draggable: true, showPath: true, onChange, onSearch });
 
-        await click(document.querySelector(`li.${BASE_CLASS_PREFIX}-tree-option`) as HTMLElement);
+        await click(getElement(`li.${BASE_CLASS_PREFIX}-tree-option`));
         await type('1');
 
         expect(onChange).toHaveBeenCalledOnce();
@@ -1164,7 +1166,7 @@ describe('Svelte Transfer 排序与禁用', () => {
         render(Transfer, { props: { draggable: true, value: ['1'], dataSource: defaultItems } });
         // once the enabled one shows sortable items, the sortable chunk has loaded for both
         await waitFor(() => expect(document.querySelector(`.${prefixCls}-right-item-sortable-item`)).not.toBeNull());
-        const disabledTransfer = document.querySelector(`.${prefixCls}`) as HTMLElement;
+        const disabledTransfer = getElement(`.${prefixCls}`);
         const handles = within(disabledTransfer).getAllByRole('button', { name: zh_CN.Transfer.dragSort });
         expect(handles).toHaveLength(2);
         handles.forEach((handle) => expect(handle).toHaveAttribute('aria-disabled', 'true'));

@@ -5,6 +5,8 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import Rating from '../rating.svelte';
 import RatingFixture from './rating-fixture.svelte';
 import RatingModel from './rating-model.svelte';
@@ -13,8 +15,8 @@ type FixtureStore = NonNullable<Parameters<typeof RatingFixture>[1]>['store'];
 
 const getStars = () => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-rating-star-second`)];
 const getStar = (index: number) => getStars()[index] as HTMLElement;
-const getList = () => document.querySelector<HTMLElement>(`ul.${BASE_CLASS_PREFIX}-rating`) as HTMLElement;
-const getWrapper = (radio: HTMLElement) => radio.closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-rating-star-wrapper`) as HTMLElement;
+const getList = () => getElement(`ul.${BASE_CLASS_PREFIX}-rating`);
+const getWrapper = (radio: HTMLElement) => defined(radio.closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-rating-star-wrapper`));
 const getTip = () => document.querySelector(`.${BASE_CLASS_PREFIX}-tooltip-wrapper`);
 
 function renderRating(props: FixtureStore['props'], extra: Partial<Omit<FixtureStore, 'props'>> = {}) {
@@ -33,7 +35,7 @@ describe('Svelte Rating（浏览器）', () => {
         // mount() leaves effects pending: bind:this has not run yet
         flushSync();
         try {
-            const star = shadow.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-rating-star-second`) as HTMLElement;
+            const star = getElement(`.${BASE_CLASS_PREFIX}-rating-star-second`, shadow);
             star.focus();
             expect(shadow.activeElement).toBe(star);
             instance.blur();

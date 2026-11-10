@@ -4,12 +4,12 @@ import { screen } from '@testing-library/vue';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import LocaleProvider from '../../locale/locale-provider.vue';
 import Label from '../label.vue';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-form-field-label`;
-const getLabel = () => document.querySelector('label') as HTMLLabelElement;
+const getLabel = () => getElement<HTMLLabelElement>('label');
 
 describe('Form Label', () => {
     it('class 与 style', () => {

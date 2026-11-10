@@ -3,6 +3,7 @@ import { render } from '@solidjs/testing-library';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Space, { type SpaceProps } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-space`;
@@ -13,10 +14,10 @@ function renderSpace(spacing: SpaceProps['spacing']) {
             <For each={Array.from(Array(5))}>{() => <div>content</div>}</For>
         </Space>
     ));
-    return [container.querySelector(`.${prefixCls}`) as HTMLElement, unmount] as const;
+    return [getElement(`.${prefixCls}`, container), unmount] as const;
 }
 
-const getSpace = (container: HTMLElement) => container.querySelector<HTMLElement>(`.${prefixCls}`) as HTMLElement;
+const getSpace = (container: HTMLElement) => getElement(`.${prefixCls}`, container);
 
 describe('Space', () => {
     afterEach(() => {

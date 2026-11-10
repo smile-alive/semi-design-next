@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import type { CalendarProps, EventObject } from '../interface';
 import CalendarBrowser from './calendar-browser.svelte';
 
@@ -45,18 +46,18 @@ describe('Svelte Calendar 浏览器', () => {
 
     it.each(['day', 'week'] as const)('%s 视图的根元素是 Tab 停靠点并显示主题焦点环', async (mode) => {
         const { container } = setup({ displayValue: day, mode });
-        const root = container.querySelector(`.${prefix}-${mode}`) as HTMLElement;
+        const root = getElement(`.${prefix}-${mode}`, container);
         await tabTo(root);
         expectThemeFocusRing(root);
     });
 
     it('隐藏挂载后变为可见：重新定位事件与当前时间线，并应用 scrollTop', async () => {
         const { container, store } = setup({ displayValue: day, events: [event('a', new Date(2019, 7, 8, 10), new Date(2019, 7, 8, 11))], mode: 'day', scrollTop: 300 }, true);
-        const item = () => container.querySelector<HTMLElement>(`.${prefix}-event-day`) as HTMLElement;
+        const item = () => getElement(`.${prefix}-event-day`, container);
         expect(parseFloat(item().style.top)).toBe(0);
         store.hidden = false;
         await waitFor(() => expect(parseFloat(item().style.top)).toBeGreaterThan(0));
-        const root = container.querySelector(`.${prefix}-day`) as HTMLElement;
+        const root = getElement(`.${prefix}-day`, container);
         await waitFor(() => expect(root.scrollTop).toBeGreaterThan(0));
     });
 });

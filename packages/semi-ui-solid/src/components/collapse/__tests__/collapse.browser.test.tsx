@@ -2,6 +2,7 @@ import { render } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement, defined } from '@test/utils/solid';
 import Collapse from '..';
 
 describe('Collapse（浏览器）', () => {
@@ -14,7 +15,7 @@ describe('Collapse（浏览器）', () => {
                 </Collapse.Panel>
             </Collapse>
         ));
-        const content = container.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-collapse-content`) as HTMLElement;
+        const content = getElement(`.${BASE_CLASS_PREFIX}-collapse-content`, container);
         content.style.cssText = 'max-height: 40px; overflow: auto';
         await tabTo(content);
         expectThemeFocusRing(content);
@@ -31,7 +32,7 @@ describe('Collapse（浏览器）', () => {
         ));
         const button = view.getByRole('button', { name: 'panel' });
         await tabTo(button);
-        expectThemeFocusRing(button.closest(`.${BASE_CLASS_PREFIX}-collapse-header`) as Element);
+        expectThemeFocusRing(defined(button.closest(`.${BASE_CLASS_PREFIX}-collapse-header`)));
         expect(getComputedStyle(button).outlineStyle).toBe('none');
     });
 });

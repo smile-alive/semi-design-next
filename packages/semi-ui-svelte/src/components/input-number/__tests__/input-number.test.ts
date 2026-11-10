@@ -5,6 +5,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { numbers } from '@fibrae/semi-foundation/components/input-number/constants';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import InputNumber from '../input-number.svelte';
 import type { InputNumberChangeEvent, InputNumberProps } from '../interface';
 import InputNumberFixture from './input-number-fixture.svelte';
@@ -21,9 +22,9 @@ const prefixCls = `${BASE_CLASS_PREFIX}-input`;
 
 const getInput = () => screen.getByRole<HTMLInputElement>('spinbutton');
 const getButtons = () => document.querySelector(`.${prefixCls}-number-suffix-btns`);
-const getUpButton = () => document.querySelector(`.${prefixCls}-number-suffix-btns .${prefixCls}-number-button-up`) as HTMLElement;
-const getDownButton = () => document.querySelector(`.${prefixCls}-number-suffix-btns .${prefixCls}-number-button-down`) as HTMLElement;
-const getWrapper = () => document.querySelector(`.${prefixCls}-number`) as HTMLElement;
+const getUpButton = () => getElement(`.${prefixCls}-number-suffix-btns .${prefixCls}-number-button-up`);
+const getDownButton = () => getElement(`.${prefixCls}-number-suffix-btns .${prefixCls}-number-button-down`);
+const getWrapper = () => getElement(`.${prefixCls}-number`);
 
 function mount(props: InputNumberProps = {}, slots = false) {
     const store = createStore<{ props: InputNumberProps; slots: boolean }>({ props, slots });
@@ -619,7 +620,7 @@ describe('Svelte InputNumber', () => {
     it('清除按钮清空值', async () => {
         const onChange = vi.fn<Change>();
         mount({ value: 100, showClear: true, onChange });
-        const clearBtn = document.querySelector(`.${prefixCls}-clearbtn`) as HTMLElement;
+        const clearBtn = getElement(`.${prefixCls}-clearbtn`);
         expect(clearBtn).not.toBeNull();
         await fireEvent.mouseDown(clearBtn);
         flushSync();

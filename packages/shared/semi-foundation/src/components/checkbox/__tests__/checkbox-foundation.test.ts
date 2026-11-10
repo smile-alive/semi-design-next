@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vite-plus/test';
+import { getElement } from '@test/utils/dom/common';
 import CheckboxFoundation, { type BaseCheckboxProps, type BasicCheckboxEvent, type CheckboxAdapter, type CheckboxContextView, type CheckboxGroupView } from '../checkbox-foundation';
 
 const group: CheckboxGroupView = {
@@ -112,9 +113,9 @@ describe('CheckboxFoundation', () => {
     describe('isInnerInteractiveClick', () => {
         const root = document.createElement('span');
         root.innerHTML = '<input type="checkbox"><div><a href="#">link</a><b>text</b></div>';
-        const input = root.querySelector('input') as HTMLInputElement;
-        const link = root.querySelector('a') as HTMLAnchorElement;
-        const text = root.querySelector('b') as HTMLElement;
+        const input = getElement<HTMLInputElement>('input', root);
+        const link = getElement<HTMLAnchorElement>('a', root);
+        const text = getElement('b', root);
 
         it('点在内部的链接上为 true，点在文本或自身的 input 上为 false', () => {
             expect(CheckboxFoundation.isInnerInteractiveClick(link, root, input)).toBe(true);

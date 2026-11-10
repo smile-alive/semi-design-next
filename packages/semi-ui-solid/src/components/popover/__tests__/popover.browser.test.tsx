@@ -2,6 +2,7 @@ import { For, createSignal } from 'solid-js';
 import { render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
+import { getElement } from '@test/utils/solid';
 import Popover from '..';
 import Button from '../../button';
 import Input from '../../input';
@@ -55,7 +56,7 @@ describe('Popover（浏览器）', () => {
             { container: mount }
         );
         try {
-            const trigger = shadow.querySelector('button') as HTMLButtonElement;
+            const trigger = getElement<HTMLButtonElement>('button', shadow);
             trigger.focus();
             await userEvent.keyboard('{Enter}');
             await waitFor(() => expect(shadow.querySelector('input')).not.toBeNull());
@@ -205,7 +206,7 @@ describe('Popover（浏览器）', () => {
         for (const [, label] of cases) {
             const button = screen.getByRole('button', { name: label });
             await userEvent.click(button);
-            const pop = document.querySelector<HTMLElement>('.semi-popover-wrapper') as HTMLElement;
+            const pop = getElement('.semi-popover-wrapper');
             const buttonRect = button.getBoundingClientRect();
             const popRect = pop.getBoundingClientRect();
             const centerX = buttonRect.left + buttonRect.width / 2;

@@ -2,6 +2,7 @@ import { render, screen, waitFor, within } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/solid';
 import Select from '..';
 import Popover from '../../popover';
 import Tag from '../../tag';
@@ -24,8 +25,8 @@ describe('Select 与 Tooltip、Popover 的集成', () => {
                 )}
             </Tooltip>
         ));
-        const root = document.querySelector(`.${prefixCls}`) as HTMLElement;
-        const span = document.querySelector('.probe') as HTMLElement;
+        const root = getElement(`.${prefixCls}`);
+        const span = getElement('.probe');
         expect(span).toContainElement(root);
         expect(span).toHaveAttribute('tabindex', '0');
         expect(span.style.cursor).toBe('not-allowed');

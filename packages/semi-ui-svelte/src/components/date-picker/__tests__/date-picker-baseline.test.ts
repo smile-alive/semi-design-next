@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
-import { countLiveListeners } from '@test/utils/dom/common';
+import { countLiveListeners, getElement } from '@test/utils/dom/common';
 import { click, getPanel, getPopup, getYMLists, setupPinned } from './date-picker-dom-utils';
 import ScenarioFixture, { type ScenarioStore } from './date-picker-scenarios-fixture.svelte';
 import SlotsFixture, { type SlotsFixtureStore } from './date-picker-slots-fixture.svelte';
@@ -223,7 +223,7 @@ describe('Svelte DatePicker 组件实例', () => {
         const store = createStore<ScenarioStore>({ scenario: 'trigger-scope', props: { class: 'custom', 'data-testid': 'dp', motion: false } });
         render(ScenarioFixture, { props: { store } });
         await settle();
-        const scope = document.querySelector('[data-keys]') as HTMLElement;
+        const scope = getElement('[data-keys]');
         expect(scope).toHaveAttribute('data-type', 'date');
         const keys = (scope.dataset.keys as string).split(',');
         for (const key of ['class', 'data-testid', 'trigger']) {
@@ -243,7 +243,7 @@ describe('Svelte DatePicker 组件实例', () => {
     it('autoSwitchDate 在本地零点将日期切换到年份选择器中选中的年份，且只切换一次', async () => {
         const { store } = await setupPinned();
         await click(getDay('2019-08-08'));
-        await click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         await click(within(getYMLists()[0]).getByRole('option', { name: '2020' }));
         const panels = store.log.filter((entry) => entry.startsWith('panel'));
         expect(panels).toHaveLength(1);
@@ -253,7 +253,7 @@ describe('Svelte DatePicker 组件实例', () => {
 
     it.each(['bind', 'one-way'] as const)('autoSwitchDate 在 %s 的 value 下同样只切换一次，且保留本地零点', async (mode) => {
         const { store } = await setup({ mode, value: baseDate, open: true });
-        await click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         await click(within(getYMLists()[0]).getByRole('option', { name: '2020' }));
         expect(store.log.filter((entry) => entry.startsWith('panel'))).toHaveLength(1);
         expect(changes(store)).toEqual(['change 2020-09-08 00:00:00 "2020-09-08"']);

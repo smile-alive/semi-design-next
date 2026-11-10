@@ -5,6 +5,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { keyboardClick, tab } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Modal, { type ModalHookRef, type ModalProps } from '..';
 import Button from '../../button';
 import ConfigProvider from '../../config-provider';
@@ -13,7 +14,7 @@ import Radio, { RadioGroup } from '../../radio';
 import Tag from '../../tag';
 
 const prefix = `${BASE_CLASS_PREFIX}-modal`;
-const query = (selector: string) => document.querySelector<HTMLElement>(selector) as HTMLElement;
+const query = (selector: string) => getElement(selector);
 
 function UseModalDemo(props: { onOpen: (handle: ModalHookRef) => void }) {
     const [modal, contextHolder] = Modal.useModal();
@@ -109,7 +110,7 @@ describe('Modal（浏览器）', () => {
         expect(footerButtons[footerButtons.length - 1]).toHaveTextContent('Confirm');
 
         await userEvent.click(query(`.${prefix}-header .${prefix}-close`));
-        await waitFor(() => expect(query(`.${prefix}`)).toBeNull());
+        await waitFor(() => expect(document.querySelector(`.${prefix}`)).toBeNull());
     });
 
     it('useModal destroy', async () => {
@@ -118,13 +119,13 @@ describe('Modal（浏览器）', () => {
         await userEvent.click(screen.getByRole('button', { name: 'Confirm Modal' }));
         await waitFor(() => expect(query(`.${prefix}`)).not.toBeNull());
         currentModal?.destroy();
-        await waitFor(() => expect(query(`.${prefix}`)).toBeNull());
+        await waitFor(() => expect(document.querySelector(`.${prefix}`)).toBeNull());
     });
 
     it('useModal afterClose', async () => {
         render(() => <UseModalAfterClose />);
         await userEvent.click(screen.getByRole('button', { name: 'Confirm Modal' }));
-        await waitFor(() => expect(query(`.${prefix}`)).toBeNull());
+        await waitFor(() => expect(document.querySelector(`.${prefix}`)).toBeNull());
         await waitFor(() => expect(query(`.${BASE_CLASS_PREFIX}-tag`)).toHaveTextContent('closed: true'));
     });
 

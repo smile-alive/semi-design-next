@@ -6,7 +6,7 @@ import { page, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconChevronLeft, IconChevronRight, IconDownload, IconMinus, IconPlus, IconRealSizeStroked, IconRotate, IconUploadError, IconWindowAdaptionStroked } from '@fibrae/semi-icons-vue';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement, defined } from '@test/utils/vue';
 import Image, { ImagePreview, type ImageProps, type MenuProps } from '..';
 import Button from '../../button';
 import { Col, Row } from '../../grid';
@@ -26,7 +26,7 @@ const beach = svg('khaki', 1080, 720);
 const srcList1 = [lion, seaside, beach];
 const lamps: ImageProps[] = srcList1.map((src, index) => ({ alt: `lamp${index + 1}`, src, width: 200 }));
 
-const $ = (selector: string) => document.querySelector<HTMLElement>(selector) as HTMLElement;
+const $ = (selector: string) => getElement(selector);
 const preview = () => document.querySelector<HTMLElement>(`.${previewCls}`);
 const previewImg = () => $(`.${previewCls}-image-img`);
 const footerIcon = (name: string) => $(`.${previewCls}-footer .${BASE_CLASS_PREFIX}-icon-${name}`);
@@ -323,7 +323,7 @@ describe('Image', () => {
     it('自定义容器', async () => {
         render(() => (
             <div id="container" style={{ height: '400px', position: 'relative', margin: '100px 200px' }}>
-                <Group images={lamps} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} getPopupContainer={() => document.getElementById('container') as HTMLElement} />
+                <Group images={lamps} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }} getPopupContainer={() => defined(document.getElementById('container'))} />
             </div>
         ));
         await openPreview(0);
@@ -634,7 +634,7 @@ describe('Image', () => {
         const footerButton = screen.getByRole('button', { name: '旋转' });
         expect(getComputedStyle(footerButton).backgroundColor).toBe('rgba(0, 0, 0, 0)');
         const { width, height } = footerButton.getBoundingClientRect();
-        const icon = (footerButton.querySelector(`.${BASE_CLASS_PREFIX}-icon`) as HTMLElement).getBoundingClientRect();
+        const icon = getElement(`.${BASE_CLASS_PREFIX}-icon`, footerButton).getBoundingClientRect();
         expect([width, height]).toEqual([icon.width, icon.height]);
         expect(getComputedStyle($(`.${previewCls}-header-close`)).backgroundColor).toBe('rgba(0, 0, 0, 0)');
     });
@@ -653,7 +653,7 @@ describe('Image', () => {
             <div>
                 <button type="button">page action</button>
                 <div id="host" style={{ height: '400px', position: 'relative' }}>
-                    <Group images={lamps} getPopupContainer={() => document.getElementById('host') as HTMLElement} />
+                    <Group images={lamps} getPopupContainer={() => defined(document.getElementById('host'))} />
                 </div>
             </div>
         ));

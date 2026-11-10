@@ -8,6 +8,7 @@ import { strings } from '@fibrae/semi-foundation/components/date-picker/constant
 import { zonedTimeToUtc } from '@fibrae/semi-foundation/utils/date-fns-extra';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import DatePicker, { type DatePickerElement, type DatePickerProps, type DisabledDateType } from '..';
 import { LocaleProvider } from '../../locale';
 
@@ -25,7 +26,7 @@ function renderDatePicker(initial: DatePickerProps = {}) {
 }
 
 const getPopup = () => document.querySelector<HTMLElement>(popupSelector);
-const getDay = (fullDate: string) => document.querySelector<HTMLElement>(`.${dp}-day[aria-label="${fullDate}"]`) as HTMLElement;
+const getDay = (fullDate: string) => getElement(`.${dp}-day[aria-label="${fullDate}"]`);
 const getSelectedDays = () => Array.from(document.querySelectorAll(`.${dp}-day-selected`)).map((d) => d.getAttribute('aria-label'));
 const getFooterButtons = () => document.querySelectorAll<HTMLElement>(`.${dp}-footer .${BASE_CLASS_PREFIX}-button`);
 const ymd = (date: Date) => format(date, 'yyyy-MM-dd');
@@ -33,7 +34,7 @@ const getYMLists = (root: ParentNode = document) => root.querySelectorAll<HTMLEl
 const getYMSelected = (root: ParentNode = document) => Array.from(root.querySelectorAll(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`)).map((li) => li.textContent);
 const inputs = (container: HTMLElement) => Array.from(container.querySelectorAll('input'));
 const typeIn = (input: Element, value: string) => fireEvent.input(input, { target: { value } });
-const getPanel = (side: string) => document.querySelector<HTMLElement>(`.${dp}-month-grid-${side}`) as HTMLElement;
+const getPanel = (side: string) => getElement(`.${dp}-month-grid-${side}`);
 const getNavTitle = (side: string) => getPanel(side).querySelector(`.${dp}-navigation-month`)?.textContent;
 
 afterEach(() => {
@@ -166,7 +167,7 @@ describe('DatePicker foundation 行为', () => {
     it('foundation _parseValue 处理各种输入', () => {
         const inputValueOf = (defaultValue: DatePickerProps['defaultValue']) => {
             const { container, unmount } = renderDatePicker({ defaultValue, motion: false });
-            const value = (container.querySelector('input') as HTMLInputElement).value;
+            const value = getElement<HTMLInputElement>('input', container).value;
             unmount();
             return value;
         };
@@ -188,7 +189,7 @@ describe('DatePicker foundation 行为', () => {
     it('点击范围输入框打开面板并聚焦起始输入框', async () => {
         const onOpenChange = vi.fn<NonNullable<DatePickerProps['onOpenChange']>>();
         const { container } = renderDatePicker({ type: 'dateRange', defaultValue: [new Date(2021, 5, 1), new Date(2021, 5, 15)], motion: false, onOpenChange });
-        await userEvent.click(container.querySelector(`.${dp}-range-input`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-range-input`, container));
         expect(onOpenChange).toHaveBeenCalledWith(true);
         expect(getPopup()).not.toBeNull();
         await waitFor(() => expect(inputs(container)[0]).toHaveFocus());
@@ -197,7 +198,7 @@ describe('DatePicker foundation 行为', () => {
     it('禁用时点击范围输入框不打开面板', () => {
         const onOpenChange = vi.fn<NonNullable<DatePickerProps['onOpenChange']>>();
         const { container } = renderDatePicker({ type: 'dateRange', disabled: true, motion: false, onOpenChange });
-        fireEvent.click(container.querySelector(`.${dp}-range-input`) as HTMLElement);
+        fireEvent.click(getElement(`.${dp}-range-input`, container));
         expect(onOpenChange).not.toHaveBeenCalled();
         expect(getPopup()).toBeNull();
     });
@@ -258,7 +259,7 @@ describe('DatePicker foundation 行为', () => {
 
     it('foundation handlePanelVisibleChange', async () => {
         const { container } = renderDatePicker({ type: 'dateTime', defaultValue: baseDate, insetInput: true, motion: false });
-        const triggerInput = container.querySelector('input') as HTMLInputElement;
+        const triggerInput = getElement<HTMLInputElement>('input', container);
         await userEvent.click(triggerInput);
         expect(getPopup()).not.toBeNull();
         await waitFor(() => expect(triggerInput).toBeDisabled());
@@ -273,7 +274,7 @@ describe('DatePicker foundation 行为', () => {
 
     it('triggerRender 的范围类型下点击触发器打开面板并聚焦起始输入', async () => {
         const { container } = renderDatePicker({ type: 'dateRange', motion: false, triggerRender: (p) => <div class="custom-trigger">{String(p.rangeInputFocus)}</div> });
-        const trigger = container.querySelector('.custom-trigger') as HTMLElement;
+        const trigger = getElement('.custom-trigger', container);
         expect(trigger).toHaveTextContent('undefined');
         await userEvent.click(trigger);
         expect(getPopup()).not.toBeNull();
@@ -374,7 +375,7 @@ describe('DatePicker foundation 行为', () => {
         renderDatePicker({ type: 'date', defaultValue: baseDate, defaultOpen: true, motion: false });
         const popup = getPopup() as HTMLElement;
         expect(popup.querySelector(`.${dp}-month-grid`)).toHaveAttribute('x-panel-yearandmonth-open-type', 'none');
-        await userEvent.click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         expect(popup.querySelector(`.${dp}-month-grid`)).toHaveAttribute('x-panel-yearandmonth-open-type', 'left');
         expect(getPanel('left')).toHaveClass(`${dp}-yam-showing`);
         expect(getPanel('left').querySelector(`.${dp}-month`)).toBeNull();

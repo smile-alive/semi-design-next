@@ -5,15 +5,15 @@ import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement, defined } from '@test/utils/vue';
 import Rating from '..';
 import type { RatingHandle } from '../interface';
 import Model from './fixtures/model.vue';
 
 const getStars = () => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-rating-star-second`)];
 const getStar = (index: number) => getStars()[index] as HTMLElement;
-const getList = () => document.querySelector<HTMLElement>(`ul.${BASE_CLASS_PREFIX}-rating`) as HTMLElement;
-const getWrapper = (radio: HTMLElement) => radio.closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-rating-star-wrapper`) as HTMLElement;
+const getList = () => getElement(`ul.${BASE_CLASS_PREFIX}-rating`);
+const getWrapper = (radio: HTMLElement) => defined(radio.closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-rating-star-wrapper`));
 
 describe('Rating（浏览器）', () => {
     it('ShadowRoot 内 ref.blur() 让聚焦的星星失焦', async () => {
@@ -25,7 +25,7 @@ describe('Rating（浏览器）', () => {
         const handle = shallowRef<RatingHandle | null>(null);
         const view = render(() => <Rating ref={handle} />, { container: mount });
         try {
-            const star = shadow.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-rating-star-second`) as HTMLElement;
+            const star = getElement(`.${BASE_CLASS_PREFIX}-rating-star-second`, shadow);
             star.focus();
             expect(shadow.activeElement).toBe(star);
             handle.value?.blur();

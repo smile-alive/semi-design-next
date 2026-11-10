@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import DatePicker from '..';
 
 const clearButtonIn = (root: ParentNode) => root.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`);
@@ -23,7 +23,7 @@ describe('全局 Input 默认值不给 DatePicker 内部输入框加清除按钮
         semiGlobal.config.overrideDefaultProps = { Input: { showClear: true } };
         render(DatePicker, { props: { type: 'dateTime', insetInput: true, defaultOpen: true, motion: false, defaultValue: new Date(2024, 0, 15) } });
         await settle();
-        const insetInputs = document.querySelector(`.${BASE_CLASS_PREFIX}-datepicker-inset-input-wrapper`) as HTMLElement;
+        const insetInputs = getElement(`.${BASE_CLASS_PREFIX}-datepicker-inset-input-wrapper`);
         expect(insetInputs.querySelectorAll('input').length).toBeGreaterThan(0);
         expect(clearButtonIn(insetInputs)).toBeNull();
     });

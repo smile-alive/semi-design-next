@@ -3,6 +3,7 @@ import { fireEvent, render, waitFor } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/solid';
 import Tree, { type TreeNodeData, type TreeProps } from '..';
 
 const treeChildren = [
@@ -207,7 +208,7 @@ function renderTree(initial: TreeProps, haveDisabled = false) {
 }
 
 const getLevelNodes = (level: number) => document.querySelectorAll<HTMLElement>(`.${optionCls}.${optionCls}-level-${level}`);
-const getNode = (key: string) => document.querySelector(`[role="treeitem"][data-key="${key}"]`) as HTMLElement;
+const getNode = (key: string) => getElement(`[role="treeitem"][data-key="${key}"]`);
 const getLabel = (node: Element) => node.querySelector(`.${optionCls}-label-text`)?.textContent;
 const isChecked = (node: Element) => node.querySelector(`.${innerCheckedCls}`) !== null;
 const isHalfChecked = (node: Element) => node.querySelector(`.${indeterminateCls}`) !== null;
@@ -303,7 +304,7 @@ describe('Tree', () => {
     it('点击复选框只勾选一次', async () => {
         const spyOnChange = vi.fn<NonNullable<TreeProps['onChange']>>();
         renderTree({ defaultExpandAll: true, onChange: spyOnChange });
-        await userEvent.click(getNode('beijing').querySelector(`.${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-checkbox`, getNode('beijing')));
         expect(spyOnChange).toHaveBeenCalledTimes(1);
         expect(spyOnChange).toHaveBeenLastCalledWith(['Beijing']);
     });
@@ -620,7 +621,7 @@ describe('Tree', () => {
                 },
             ],
         });
-        await userEvent.click(getNode('asia').querySelector(`.${optionCls}-expand-icon`) as HTMLElement);
+        await userEvent.click(getElement(`.${optionCls}-expand-icon`, getNode('asia')));
         await waitFor(() => expect(getCheckedKeys()).toEqual(['asia', 'beijing', 'shanghai']));
     });
 
@@ -670,7 +671,7 @@ describe('Tree', () => {
             motion: false,
             keyMaps: defaultKeyMaps,
         });
-        expect(getLabel(document.querySelector(`.${optionCls}-disabled`) as HTMLElement)).toEqual('中国');
+        expect(getLabel(getElement(`.${optionCls}-disabled`))).toEqual('中国');
         const selectedNode = getLevelNodes(3)[0];
         expect(isChecked(selectedNode)).toBe(true);
         expect(getLabel(selectedNode)).toEqual('北京');
@@ -694,7 +695,7 @@ describe('Tree', () => {
             defaultExpandAll: true,
             keyMaps: defaultKeyMaps,
         });
-        expect(getLabel(document.querySelector(`.${optionCls}-disabled`) as HTMLElement)).toEqual('中国');
+        expect(getLabel(getElement(`.${optionCls}-disabled`))).toEqual('中国');
         const selectedNode = getLevelNodes(3)[0];
         expect(isChecked(selectedNode)).toBe(true);
         expect(getLabel(selectedNode)).toEqual('北京');

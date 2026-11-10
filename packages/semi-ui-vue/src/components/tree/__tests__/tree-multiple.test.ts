@@ -2,6 +2,7 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/vue';
 import type { TreeNodeData } from '..';
 import { defaultKeyMaps, getLevelNodes, getNode, optionCls, renderTree as renderBase, specialTreeData, spyOn, treeData } from './fixtures/data';
 
@@ -326,7 +327,7 @@ describe('Tree 多选', () => {
         const { rerender } = renderTree({ loadData, defaultValue: 'Asia', treeData: [data] });
         expect(getCheckedKeys()).toEqual(['asia']);
         await rerender({ treeData: [{ ...data, children: treeChildren }] });
-        await userEvent.click(getNode('asia').querySelector(`.${optionCls}-expand-icon`) as HTMLElement);
+        await userEvent.click(getElement(`.${optionCls}-expand-icon`, getNode('asia')));
         await waitFor(() => expect(getCheckedKeys()).toEqual(['asia', 'beijing', 'shanghai']));
     });
 

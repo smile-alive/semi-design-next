@@ -4,12 +4,13 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { clickOutside } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import type { AutoCompleteItems, AutoCompleteProps } from '..';
 import AutoCompleteCase from './auto-complete-case.svelte';
 
 const getPopupWrapper = () => document.querySelector<HTMLElement>('.semi-popover-wrapper');
 const getInput = () => screen.getByRole<HTMLInputElement>('combobox');
-const getClearButton = () => document.querySelector<HTMLElement>('.semi-input-clearbtn') as HTMLElement;
+const getClearButton = () => getElement('.semi-input-clearbtn');
 
 function setup(props: Omit<AutoCompleteProps, 'value' | 'data'> = {}, data: AutoCompleteItems[] = []) {
     const store = createStore<{ value?: string | number; accept: boolean; log: string[]; data: AutoCompleteItems[] }>({ value: '', accept: true, log: [], data });
@@ -30,7 +31,7 @@ describe('Svelte AutoComplete 浏览器', () => {
             expect(element).not.toBeNull();
             return element as HTMLElement;
         });
-        const spin = wrapper.querySelector('.semi-spin') as HTMLElement;
+        const spin = getElement('.semi-spin', wrapper);
         const { top, bottom } = wrapper.getBoundingClientRect();
         const style = getComputedStyle(wrapper);
         expect(spin.getBoundingClientRect().bottom).toBeLessThanOrEqual(bottom - parseFloat(style.paddingBottom));
@@ -92,7 +93,7 @@ describe('Svelte AutoComplete 浏览器', () => {
         await userEvent.click(getInput());
         await userEvent.keyboard('1');
         await screen.findByText('1@163.com');
-        const trigger = document.querySelector<HTMLElement>('.semi-autocomplete') as HTMLElement;
+        const trigger = getElement('.semi-autocomplete');
         // offsetWidth ignores the enter animation's scale transform
         expect((getPopupWrapper() as HTMLElement).offsetWidth).toBeGreaterThanOrEqual(trigger.offsetWidth);
     });

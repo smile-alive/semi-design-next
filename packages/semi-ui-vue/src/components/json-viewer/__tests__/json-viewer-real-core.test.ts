@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/vue';
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import JsonViewer from '..';
 
 // The real editor core, unlike json-viewer.test.ts. jsdom has no Worker, blob URLs or idle callbacks: the fake worker
@@ -31,7 +31,7 @@ describe('JsonViewer 与编辑器内核', () => {
         });
         const span = (await screen.findAllByText('custom'))[0].parentElement;
         matching = false;
-        await fireEvent.scroll(document.querySelector('.json-viewer-container') as HTMLElement);
+        await fireEvent.scroll(getElement('.json-viewer-container'));
         expect(span).toBeEmptyDOMElement();
     });
 });

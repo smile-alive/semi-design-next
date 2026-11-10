@@ -2,6 +2,7 @@ import { createSignal } from 'solid-js';
 import { render, screen, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/solid';
 import OverflowList, { type OverflowItem, type OverflowListProps } from '..';
 
 const items = ['alarm', 'bookmark', 'camera', 'duration', 'edit', 'folder'].map((key) => ({ key }));
@@ -68,7 +69,7 @@ describe('OverflowList（浏览器）', () => {
         setWidth(200);
         await waitFor(() => expect(screen.getByText('+3')).toBeInTheDocument());
         expect(visibleKeys()).toEqual(['alarm', 'bookmark', 'camera']);
-        const list = container.querySelector(`.${prefixCls}`) as HTMLElement;
+        const list = getElement(`.${prefixCls}`, container);
         const plus = screen.getByText('+3').getBoundingClientRect();
         expect(Math.round(plus.top)).toBe(Math.round(screen.getByText('alarm').getBoundingClientRect().top));
         expect(plus.left).toBeGreaterThanOrEqual(list.getBoundingClientRect().left);
@@ -85,7 +86,7 @@ describe('OverflowList（浏览器）', () => {
                 <OverflowList items={items.slice(0, 3)} overflowRenderer={(overflow) => (overflow.length ? <Chip>+{overflow.length}</Chip> : null)} visibleItemRenderer={(item) => <Chip width={33.75}>{item.key}</Chip>} />
             </div>
         ));
-        const list = container.querySelector(`.${prefixCls}`) as HTMLElement;
+        const list = getElement(`.${prefixCls}`, container);
         await expect.poll(() => getComputedStyle(list).visibility).toBe('visible');
         expect(['alarm', 'bookmark', 'camera'].map((key) => screen.queryByText(key) !== null)).toEqual([true, true, true]);
         expect(screen.queryByText(/^\+\d$/)).toBeNull();
@@ -120,7 +121,7 @@ describe('OverflowList（浏览器）', () => {
         await waitFor(() => expect(Number(sideTexts()[1])).toBeGreaterThan(5));
         expect(sideTexts()[0]).toBe('0');
 
-        const wrapper = container.querySelector(`.${prefixCls}-scroll-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${prefixCls}-scroll-wrapper`, container);
         wrapper.scrollLeft = wrapper.scrollWidth;
         await waitFor(() => expect(Number(sideTexts()[0])).toBeGreaterThan(5));
         expect(sideTexts()[1]).toBe('0');
@@ -150,7 +151,7 @@ describe('OverflowList（浏览器）', () => {
         const sideTexts = () => Array.from(container.querySelectorAll('b'), (side) => side.textContent);
         await waitFor(() => expect(Number(sideTexts()[1])).toBeGreaterThan(0));
 
-        const wrapper = container.querySelector(`.${prefixCls}-scroll-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${prefixCls}-scroll-wrapper`, container);
         wrapper.scrollLeft = 120;
         const scrolled = wrapper.scrollLeft;
         expect(scrolled).toBeGreaterThan(0);

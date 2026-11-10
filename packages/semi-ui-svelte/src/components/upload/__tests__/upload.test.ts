@@ -1,13 +1,14 @@
 import { flushSync } from 'svelte';
 import { createEvent, fireEvent, screen, waitFor } from '@testing-library/svelte';
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
+import { defined } from '@test/utils/function';
 import type { AfterUploadProps, AfterUploadResult, BeforeUploadObjectResult, BeforeUploadProps, FileItem, UploadProps } from '../interface';
 import { action, click, createFile, createObjectURL, defaultFileList, fn, getCardNames, getDragArea, getInput, getPicCards, getReplaceInput, installFakeXhr, lastFileList, prefix, PROGRESS_COEFFICIENT, query, renderUpload, revokeObjectURL, selectFiles, type FakeXhr } from './helpers';
 
 type BeforeUpload = NonNullable<UploadProps['beforeUpload']>;
 
 const file = new File(['(⌐□_□)'], 'chucknorris.png', { type: 'image/png' });
-const getCard = (name: string) => screen.getByText(name).closest(`.${prefix}-file-card`) as HTMLElement;
+const getCard = (name: string) => defined(screen.getByText(name).closest<HTMLElement>(`.${prefix}-file-card`));
 const replaceButton = () => query(`button.${prefix}-file-card-replace`);
 
 let requests: FakeXhr[];

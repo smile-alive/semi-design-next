@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
-import { getData, getRandomNumber, getTreeData, render } from '@test/utils/vue';
+import { getData, getRandomNumber, getTreeData, render, defined } from '@test/utils/vue';
 import Table, { type ColumnProps, type TableEmits, type TableExpandIconSlotProps, type TableExpandedRowSlotProps } from '..';
 import ExpandedRow from './fixtures/expanded-row.vue';
 import { P, getBodyRows, getExpandButtons, mountTable, query, queryAll, rowKeys, type Row } from './table-helpers';
@@ -273,7 +273,7 @@ describe('Table 展开行为基线', () => {
         });
         expect(screen.queryByText('child')).not.toBeInTheDocument();
         await userEvent.click(query(`.${P}-tbody .${P}-expand-icon`));
-        const childCell = screen.getByText('child').closest('td') as HTMLElement;
+        const childCell = defined(screen.getByText('child').closest<HTMLElement>('td'));
         expect(childCell.querySelector(`.${P}-row-indent`)).toHaveStyle({ paddingInlineStart: '60px' });
     });
 
@@ -291,7 +291,7 @@ describe('Table 展开行为基线', () => {
         for (const cell of selectionCells) {
             expect(cell.querySelector(`.${P}-expand-icon, .${P}-row-indent`)).toBeNull();
         }
-        expect((screen.getByText('parent').closest('td') as HTMLElement).querySelector(`.${P}-expand-icon`)).not.toBeNull();
+        expect(defined(screen.getByText('parent').closest<HTMLElement>('td')).querySelector(`.${P}-expand-icon`)).not.toBeNull();
     });
 
     it('展开行时仅重新渲染显示展开状态的展开按钮', async () => {

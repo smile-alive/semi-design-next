@@ -3,7 +3,7 @@ import { render, screen, waitFor, within } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
-import { sleep } from '@test/utils/solid';
+import { sleep, defined, getElement } from '@test/utils/solid';
 import Anchor, { type AnchorProps } from '..';
 
 const { Link } = Anchor;
@@ -122,14 +122,14 @@ describe('Anchor（浏览器）', () => {
             </div>
         ));
         const outer = screen.getByTestId('outer');
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         expect(outer.scrollHeight).toBeGreaterThan(outer.clientHeight);
         expect(box.scrollHeight).toBeGreaterThan(box.clientHeight);
 
         await userEvent.click(screen.getByRole('link', { name: 'docs' }));
 
         await waitFor(() => expect(box.scrollTop).toBe(300));
-        expect((document.getElementById('docs') as HTMLElement).getBoundingClientRect().top).toBeCloseTo(box.getBoundingClientRect().top, 0);
+        expect(defined(document.getElementById('docs')).getBoundingClientRect().top).toBeCloseTo(box.getBoundingClientRect().top, 0);
         expect(outer.scrollTop).toBe(0);
     });
 
@@ -188,7 +188,7 @@ describe('Anchor（浏览器）', () => {
                 </div>
             </div>
         ));
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         screen.getByRole('link', { name: 'contact' }).focus();
         await userEvent.keyboard('{ArrowUp}');
         expect(box.scrollTop).toBe(0);
@@ -200,7 +200,7 @@ describe('Anchor（浏览器）', () => {
 
     it('滚动', async () => {
         renderTargetOffset();
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         box.scrollTo(0, box.scrollHeight);
         await waitFor(() => expect(activeTitle()).toHaveTextContent('doc1'));
 
@@ -210,10 +210,10 @@ describe('Anchor（浏览器）', () => {
 
     it('点击', async () => {
         renderTargetOffset();
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         await userEvent.click(screen.getByRole('link', { name: 'api too much to show' }));
         await waitFor(() => {
-            const offset = (document.getElementById('api') as HTMLElement).getBoundingClientRect().top - box.getBoundingClientRect().top;
+            const offset = defined(document.getElementById('api')).getBoundingClientRect().top - box.getBoundingClientRect().top;
             expect(Math.abs(offset - 100)).toBeLessThanOrEqual(2);
         });
     });
@@ -224,8 +224,8 @@ describe('Anchor（浏览器）', () => {
                 <CollapsibleLinks />
             </Anchor>
         ));
-        const slide = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-anchor-slide`) as HTMLElement;
-        const wrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-anchor-link-wrapper`) as HTMLElement;
+        const slide = () => getElement(`.${BASE_CLASS_PREFIX}-anchor-slide`);
+        const wrapper = () => getElement(`.${BASE_CLASS_PREFIX}-anchor-link-wrapper`);
         const railHeight = () => slide().getBoundingClientRect().height;
         const listHeight = () => wrapper().getBoundingClientRect().height;
         const collapsedHeight = listHeight();
@@ -248,8 +248,8 @@ describe('Anchor（浏览器）', () => {
                 {wide() && <Link title="一行放不下、会在渲染时立即换行撑高列表的很长很长的标题" href="#long" />}
             </Anchor>
         ));
-        const slide = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-anchor-slide`) as HTMLElement;
-        const wrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-anchor-link-wrapper`) as HTMLElement;
+        const slide = () => getElement(`.${BASE_CLASS_PREFIX}-anchor-slide`);
+        const wrapper = () => getElement(`.${BASE_CLASS_PREFIX}-anchor-link-wrapper`);
 
         setWide(true);
         // no waitFor: a ResizeObserver-based rail would still show the old height before its callback runs
@@ -263,9 +263,9 @@ describe('Anchor（浏览器）', () => {
             </Anchor>
         ));
         const nav = screen.getByRole('navigation');
-        const slide = document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-anchor-slide`) as HTMLElement;
-        const wrapper = document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-anchor-link-wrapper`) as HTMLElement;
-        const bar = document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-anchor-slide-bar`) as HTMLElement;
+        const slide = getElement(`.${BASE_CLASS_PREFIX}-anchor-slide`);
+        const wrapper = getElement(`.${BASE_CLASS_PREFIX}-anchor-link-wrapper`);
+        const bar = getElement(`.${BASE_CLASS_PREFIX}-anchor-slide-bar`);
         const activeTitleTop = () => screen.getByRole('link', { name: 'l14' }).getBoundingClientRect().top;
 
         expect(slide.getBoundingClientRect().height).toBe(wrapper.getBoundingClientRect().height);
@@ -288,7 +288,7 @@ describe('Anchor（浏览器）', () => {
                 </div>
             </div>
         ));
-        const box = document.getElementById('box') as HTMLElement;
+        const box = defined(document.getElementById('box'));
         box.scrollTo(0, box.scrollHeight);
         await waitFor(() => expect(activeTitle()).toHaveTextContent('doc1'));
 
@@ -318,7 +318,7 @@ describe('Anchor（浏览器）', () => {
         const linkTitles = (id: string) => [...document.querySelectorAll(`#${id} .${BASE_CLASS_PREFIX}-anchor-link-title`)].map((el) => el.textContent);
 
         expect(linkTitles('collapse')).not.toContain('1.1 组件');
-        await userEvent.click(within(document.getElementById('collapse') as HTMLElement).getByRole('link', { name: '1. Semi Design' }));
+        await userEvent.click(within(defined(document.getElementById('collapse'))).getByRole('link', { name: '1. Semi Design' }));
         await waitFor(() => expect(linkTitles('collapse')).toEqual(expect.arrayContaining(['1.1 组件', '1.2 物料', '1.3 主题商店'])));
 
         expect(linkTitles('no-collapse')).toEqual(expect.arrayContaining(['1.1 组件', '1.1.1 Avatar', '1.1.2 Button', '1.1.3 Icon']));
@@ -341,7 +341,7 @@ describe('Anchor（浏览器）', () => {
                     <CollapsibleLinks />
                 </Anchor>
             ));
-            const avatarTop = (document.getElementById('头像') as HTMLElement).offsetTop;
+            const avatarTop = defined(document.getElementById('头像')).offsetTop;
             for (let top = 0; top < avatarTop; top += 50) {
                 box.scrollTop = top;
                 await sleep(120);
@@ -372,7 +372,7 @@ describe('Anchor（浏览器）', () => {
             { container: mount }
         );
         try {
-            await userEvent.click(shadow.querySelector(`.${BASE_CLASS_PREFIX}-anchor-link-title`) as Element);
+            await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-anchor-link-title`, shadow));
             await waitFor(() => expect(window.scrollY).toBeGreaterThan(0));
         } finally {
             view.unmount();
@@ -398,8 +398,8 @@ describe('Anchor scrollIntoViewOptions（浏览器）', () => {
                 </div>
             </>
         ));
-        const box = document.getElementById('box') as HTMLElement;
-        const offset = () => (document.getElementById('docs') as HTMLElement).getBoundingClientRect().top - box.getBoundingClientRect().top;
+        const box = defined(document.getElementById('box'));
+        const offset = () => defined(document.getElementById('docs')).getBoundingClientRect().top - box.getBoundingClientRect().top;
         return { box, offset };
     };
 

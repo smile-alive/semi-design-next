@@ -4,7 +4,7 @@ import { fireEvent } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import HotKeys from '../index';
 import MutableKeys from './fixtures/mutable-keys.vue';
 import TemplateRefTarget from './fixtures/template-ref-target.vue';
@@ -228,7 +228,7 @@ describe('HotKeys 行为', () => {
 
     it('目标是兄弟元素的模板 ref 时，挂载时已能取到', async () => {
         const view = render(TemplateRefTarget);
-        const input = view.container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', view.container);
         press(input, { code: 'KeyK' });
         await vi.waitFor(() => expect(view.getByTestId('count')).toHaveTextContent('1'));
     });

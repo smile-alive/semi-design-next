@@ -8,7 +8,7 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { countLiveListeners, endLeaveAnimations, render } from '@test/utils/vue';
+import { countLiveListeners, endLeaveAnimations, render, getElement } from '@test/utils/vue';
 import TimePicker, { type TimePickerEmits, type TimePickerHandle, type TimePickerProps, type TimePickerSlots, type TimePickerTriggerSlotProps } from '..';
 import ConfigProvider from '../../config-provider';
 import { LocaleProvider } from '../../locale';
@@ -57,10 +57,12 @@ async function mountInPlace(node: () => unknown) {
     await settle();
 }
 
-const getRoot = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
-const getInput = () => document.querySelector<HTMLInputElement>(`.${prefixCls} input`) as HTMLInputElement;
+const getRoot = () => getElement(`.${prefixCls}`);
+const getInput = () => getElement<HTMLInputElement>(`.${prefixCls} input`);
+const queryInput = () => document.querySelector(`.${prefixCls} input`);
+const queryList = (type: string) => document.querySelector(`.${prefixCls}-panel-list-${type}`);
 const getPanels = () => Array.from(document.querySelectorAll<HTMLElement>(`.${scrollListCls}`));
-const getList = (type: string, panel: ParentNode = document) => panel.querySelector<HTMLElement>(`.${prefixCls}-panel-list-${type}`) as HTMLElement;
+const getList = (type: string, panel: ParentNode = document) => getElement(`.${prefixCls}-panel-list-${type}`, panel);
 const getItems = (type: string, panel?: ParentNode) => Array.from(getList(type, panel).querySelectorAll('li'));
 const getSelectedText = (type: string, panel?: ParentNode) => getList(type, panel).querySelector(`.${scrollListCls}-item-sel`)?.textContent;
 async function clickItem(type: string, index: number, panel?: ParentNode) {
@@ -122,7 +124,7 @@ describe('TimePicker', () => {
         expect(document.querySelectorAll(`.${scrollListCls}-footer`)).toHaveLength(1);
         expect(getInput()).toHaveValue('10:24:18');
 
-        await fireEvent.click(getList('minute').querySelector(`.${scrollListCls}-list-outer ul li`) as HTMLElement);
+        await fireEvent.click(getElement(`.${scrollListCls}-list-outer ul li`, getList('minute')));
         await waitFor(() => expect(onChange).toHaveBeenCalledTimes(1));
         const [selectedDate, selectedStr] = onChange.mock.calls[0];
         expect(hms(selectedDate)).toEqual([10, 0, 18]);
@@ -136,7 +138,7 @@ describe('TimePicker', () => {
         expect((lastCall<ChangeFn>(onChange)[0] as Date).getMinutes()).toBe(18);
         expect(lastCall<ChangeFn>(onChange)[1]).toBe('10:18:18');
 
-        await fireEvent.mouseDown(document.querySelector(`.${scrollListCls}`) as HTMLElement);
+        await fireEvent.mouseDown(getElement(`.${scrollListCls}`));
         expect(getPanels()).toHaveLength(1);
 
         await clickOutside();
@@ -244,7 +246,7 @@ describe('TimePicker', () => {
         const onChange = vi.fn<ChangeFn>();
         await renderTimePicker({ defaultValue: '10:23:15', showClear: true, onChange });
 
-        await fireEvent.mouseDown(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        await fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`));
         await settle();
 
         expect(onChange).toHaveBeenCalledTimes(1);
@@ -428,15 +430,15 @@ describe('TimePicker', () => {
         expect(getPanels()).toHaveLength(1);
         expect(getList('hour')).not.toBeNull();
         expect(getList('minute')).not.toBeNull();
-        expect(getList('second')).toBeNull();
+        expect(queryList('second')).toBeNull();
     });
 
     it('只含小时的 format（HH）', async () => {
         await renderTimePicker({ format: 'HH', defaultValue: '10', defaultOpen: true, ...normalList });
         expect(getPanels()).toHaveLength(1);
         expect(getSelectedText('hour')).toBe('10时');
-        expect(getList('minute')).toBeNull();
-        expect(getList('second')).toBeNull();
+        expect(queryList('minute')).toBeNull();
+        expect(queryList('second')).toBeNull();
     });
 
     it('#trigger 自定义触发器', async () => {
@@ -453,7 +455,7 @@ describe('TimePicker', () => {
 
         const customTrigger = screen.getByRole('button', { name: 'Select Time' });
         expect(customTrigger).toHaveClass('custom-trigger');
-        expect(getInput()).toBeNull();
+        expect(queryInput()).toBeNull();
         expect(getPanels()).toHaveLength(0);
 
         await userEvent.click(customTrigger);
@@ -742,7 +744,7 @@ describe('TimePicker', () => {
         await renderTimePicker({ defaultValue: '10:23:15', inputReadOnly: true, showClear: true, onChange });
 
         expect(getInput()).toHaveAttribute('readonly');
-        await fireEvent.mouseDown(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        await fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`));
         await settle();
 
         expect(onChange).toHaveBeenCalledTimes(1);
@@ -781,7 +783,7 @@ describe('TimePicker', () => {
 
         const [start, end] = getPanels();
         for (const slot of ['header', 'footer']) {
-            const area = start.querySelector<HTMLElement>(`.${scrollListCls}-${slot}`) as HTMLElement;
+            const area = getElement(`.${scrollListCls}-${slot}`, start);
             expect(within(area).getByRole('button', { name: 'now' })).toBeInTheDocument();
         }
         expect(end.querySelector(`.${scrollListCls}-header`)).toHaveTextContent(/^end header$/);
@@ -885,7 +887,7 @@ describe('TimePicker', () => {
 
     it('不含小时的 format（mm:ss）', async () => {
         await renderTimePicker({ format: 'mm:ss', defaultValue: '23:15', defaultOpen: true, ...normalList });
-        expect(getList('hour')).toBeNull();
+        expect(queryList('hour')).toBeNull();
         expect(getSelectedText('minute')).toBe('23分');
         expect(getSelectedText('second')).toBe('15秒');
     });
@@ -1263,7 +1265,7 @@ describe('TimePicker', () => {
             expect(getList('second')).not.toBeNull();
             await view.rerender({ format: 'HH:mm' });
             expect(getInput()).toHaveValue('10:23');
-            expect(getList('second')).toBeNull();
+            expect(queryList('second')).toBeNull();
         });
 
         it('设了 timeZone 时只改 format，显示的时间不被重复换算', async () => {
@@ -1674,7 +1676,7 @@ describe('TimePicker Vue 写法', () => {
         expect(hms(host?.value)).toEqual([11, 30, 0]);
         await clickItem('minute', 10);
         expect(hms(host?.value)).toEqual([11, 10, 0]);
-        await fireEvent.mouseDown(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        await fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`));
         await settle();
         expect(host?.value).toBeUndefined();
         expect(getInput()).toHaveValue('');
@@ -1748,7 +1750,7 @@ describe('TimePicker Vue 写法', () => {
             onChange: onRangeChange,
             'onUpdate:modelValue': onUpdate,
         });
-        await fireEvent.mouseDown(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        await fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`));
         await settle();
         expect(onRangeChange.mock.calls).toEqual([[[], ['']]]);
         expect(onUpdate.mock.calls).toEqual([[[]]]);
@@ -1772,7 +1774,7 @@ describe('TimePicker Vue 写法', () => {
         const onBlur = vi.fn<BlurFn>();
         await renderTimePicker({ defaultValue: '10:23:15', onFocus, onBlur });
         await focusInput();
-        (document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement).focus();
+        getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`).focus();
         await settle();
         await focusInput();
         await blurInput();
@@ -1933,7 +1935,7 @@ describe('TimePicker Vue 写法', () => {
 
         await renderNode(() => <Combobox prefixCls={`${prefixCls}-panel`} />);
         expect(getList('hour')).not.toBeNull();
-        expect(getList('ampm')).toBeNull();
+        expect(queryList('ampm')).toBeNull();
     });
 
     it('Combobox 单独使用：defaultIsAM 为 false 时无值显示下午，选择后发出 timeStampValue', async () => {

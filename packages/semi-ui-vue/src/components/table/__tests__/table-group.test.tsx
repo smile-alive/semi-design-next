@@ -3,7 +3,7 @@ import { nextTick } from 'vue';
 import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
-import { getGroupData } from '@test/utils/vue';
+import { getGroupData, getElement } from '@test/utils/vue';
 import type { ColumnProps, TableEmits, TableExpandedRowSlotProps, TableProps } from '..';
 import { P, mountTable, query, queryAll, type Row } from './table-helpers';
 
@@ -301,7 +301,7 @@ describe('Table 分组顺序与插槽', () => {
         await nextTick();
         const [first] = getSections();
         expect(first).toHaveTextContent('B: 1');
-        const cell = first.querySelector('td') as HTMLElement;
+        const cell = getElement('td', first);
         expect(cell).toHaveClass('group-B');
         expect(cell).toHaveStyle({ textAlign: 'center' });
     });

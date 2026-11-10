@@ -5,6 +5,7 @@ import { type ConfigProps, createNotificationListStore } from '@fibrae/semi-foun
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import { Notification } from '../index';
 import type { NoticeProps, NotificationHookApi, NotificationHookOptions } from '../interface';
 import NoticeItem from '../notice.svelte';
@@ -147,7 +148,7 @@ describe('Notification', () => {
     it('title、content 与 zIndex', async () => {
         await show('open', { title: 'Hi, Bytedance', content: 'ies dance dance dance', duration: 1, zIndex: 2333 });
         expect(document.querySelector(`.${prefix}-wrapper`)).toHaveStyle({ zIndex: '2333' });
-        const inner = document.querySelector(`.${noticeCls}-content-wrapper`) as HTMLElement;
+        const inner = getElement(`.${noticeCls}-content-wrapper`);
         expect(inner.querySelector(`.${noticeCls}-title`)).toHaveTextContent(/^Hi, Bytedance$/);
         expect(inner.querySelector(`.${noticeCls}-content`)).toHaveTextContent(/^ies dance dance dance$/);
     });
@@ -369,7 +370,7 @@ describe('Notification', () => {
         holdAnimations();
         await show('info', { title: 'right', duration: 1, position: 'topRight' });
         await show('info', { title: 'left', duration: 1, position: 'topLeft' });
-        await dispatch(document.querySelector(`.${prefix}-list[x-placement=topRight]`) as HTMLElement, 'mouseenter');
+        await dispatch(getElement(`.${prefix}-list[x-placement=topRight]`), 'mouseenter');
         await advance(1000);
         const byTitle = (title: string) => notices().find((notice) => notice.querySelector(`.${noticeCls}-title`)?.textContent?.trim() === title);
         expect(wrapperOf(byTitle('left'))).toHaveClass(hideCls('topLeft'));
@@ -380,7 +381,7 @@ describe('Notification', () => {
         vi.useFakeTimers();
         holdAnimations();
         await show('info', { title: 'focus', duration: 1 });
-        const button = document.querySelector(`.${noticeCls} button`) as HTMLButtonElement;
+        const button = getElement<HTMLButtonElement>(`.${noticeCls} button`);
         button.focus();
         await tick();
         await advance(2000);
@@ -399,7 +400,7 @@ describe('Notification', () => {
         await show('info', { id: 'a', title: 'a', duration: 0 });
         await show('info', { id: 'b', title: 'b', duration: 1 });
         const a = notices().find((notice) => notice.querySelector(`.${noticeCls}-title`)?.textContent?.trim() === 'a') as HTMLElement;
-        (a.querySelector('button') as HTMLButtonElement).focus();
+        getElement<HTMLButtonElement>('button', a).focus();
         await tick();
         await advance(2000);
         expect(titles()).toEqual(['b', 'a']);
@@ -418,7 +419,7 @@ describe('Notification', () => {
         const items = () => [...document.querySelectorAll(`.${noticeCls}-stack-item`)];
         expect(items()).toHaveLength(4);
         expect(items().some((item) => item.classList.contains(expandedCls))).toBe(false);
-        (document.querySelector(`.${noticeCls} button`) as HTMLButtonElement).focus();
+        getElement<HTMLButtonElement>(`.${noticeCls} button`).focus();
         await tick();
         expect(items().every((item) => item.classList.contains(expandedCls))).toBe(true);
     });
@@ -500,7 +501,7 @@ describe('Notification', () => {
         const onClose = vi.fn<() => void>();
         await show('info', { id: 'btn', title: 'btn', duration: 1, onClose });
         await advance(1);
-        (document.querySelector(`.${noticeCls} button`) as HTMLButtonElement).click();
+        getElement<HTMLButtonElement>(`.${noticeCls} button`).click();
         await tick();
         expect(onClose).toHaveBeenCalledTimes(1);
         expect(wrapperOf(notices()[0])).toHaveClass(hideCls());
@@ -590,7 +591,7 @@ describe('Notification', () => {
         await show('info', { title: 'b', duration: 0, position: 'bottom' });
         await show('info', { title: 'c', duration: 0, position: 'topLeft' });
         expect(document.querySelectorAll(`.${prefix}-list`)).toHaveLength(2);
-        const bottom = document.querySelector(`.${prefix}-list[x-placement=bottom]`) as HTMLElement;
+        const bottom = getElement(`.${prefix}-list[x-placement=bottom]`);
         expect(titles(bottom)).toEqual(['b', 'a']);
     });
 
@@ -641,7 +642,7 @@ describe('Notification', () => {
         const notice = screen.getByRole('status');
         expect(notice).toHaveClass(`${noticeCls}-light`);
         expect(notice.querySelector('button')).toBeNull();
-        const direct = renderNotice({ title: 'direct' }).container.querySelector(`.${noticeCls}`) as HTMLElement;
+        const direct = getElement(`.${noticeCls}`, renderNotice({ title: 'direct' }).container);
         expect(direct).toHaveClass(`${noticeCls}-light`);
         expect(direct.querySelector('button')).toBeNull();
         await show('success', { title: 'explicit', duration: 0, showClose: true, theme: 'normal' });
@@ -675,7 +676,7 @@ describe('Notification', () => {
         api.info({ title: 'a' });
         api.info({ title: 'b' });
         await tick();
-        const list = holder.querySelector(`.${prefix}-list`) as HTMLElement;
+        const list = getElement(`.${prefix}-list`, holder);
         expect(list).toHaveAttribute('x-placement', 'bottomLeft');
         expect(list.style.top).toBe('20px');
         expect(list.querySelectorAll(`.${noticeCls}-stack-item`)).toHaveLength(2);
@@ -726,7 +727,7 @@ describe('Notification', () => {
         expect(stacked.parentElement).not.toHaveClass('mine');
 
         const view = renderNotice({ title: 'item', 'data-foo': 'bar' });
-        const item = view.container.querySelector(`.${noticeCls}`) as HTMLElement;
+        const item = getElement(`.${noticeCls}`, view.container);
         expect(item).toHaveAttribute('data-foo', 'bar');
         expect(item.parentElement).not.toHaveAttribute('data-foo');
     });
@@ -778,7 +779,7 @@ describe('Notification', () => {
             api.info({ title: 'hooked', duration: 0, position: 'bottom' });
             api.info({ title: 'hooked', duration: 0, position: 'bottom' });
             await tick();
-            const list = holder.querySelector(`.${prefix}-list[x-placement=bottom]`) as HTMLElement;
+            const list = getElement(`.${prefix}-list[x-placement=bottom]`, holder);
             expect(list.querySelectorAll(`[role=status].${noticeCls}-info`)).toHaveLength(2);
             expect(holder.querySelector(`.${prefix}-wrapper`)).toHaveAttribute('data-semi-keep-interactive');
             expect(holder.querySelector<HTMLElement>(`.${prefix}-wrapper`)?.style.display).toBe('contents');
@@ -895,11 +896,11 @@ describe('Notification', () => {
             api.info({ title: 'hook', duration: 0 });
             await show('info', { title: 'static', duration: 0 });
             const hookedWrapper = [...document.querySelectorAll(`.${prefix}-wrapper`)].find((el) => el.textContent?.includes('hook')) as HTMLElement;
-            const hooked = hookedWrapper.querySelector(`.${noticeCls}`) as HTMLElement;
+            const hooked = getElement(`.${noticeCls}`, hookedWrapper);
             expect(hooked).toHaveAttribute('dir', 'rtl');
             expect(hooked.querySelector('button')).toHaveAccessibleName(en_US.Notification.close);
             expect(hookedWrapper.querySelector(`.${prefix}-list`)).toHaveAttribute('x-placement', 'topLeft');
-            const staticNotice = document.body.querySelector(`:scope > .${prefix}-wrapper:not([style*="contents"]) .${noticeCls}`) as HTMLElement;
+            const staticNotice = getElement(`:scope > .${prefix}-wrapper:not([style*="contents"]) .${noticeCls}`, document.body);
             expect(staticNotice).toHaveTextContent('static');
             expect(staticNotice).not.toHaveAttribute('dir');
             expect(staticNotice.querySelector('button')).not.toHaveAccessibleName(en_US.Notification.close);

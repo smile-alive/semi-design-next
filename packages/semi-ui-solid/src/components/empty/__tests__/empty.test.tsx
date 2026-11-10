@@ -2,6 +2,7 @@ import { createSignal } from 'solid-js';
 import { render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, expectTypeOf, it } from 'vite-plus/test';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Empty from '..';
 import type { EmptyProps } from '../empty';
 
@@ -10,7 +11,7 @@ afterEach(() => {
     semiGlobal.config.overrideDefaultProps = {};
 });
 
-const query = (container: HTMLElement, selector: string) => container.querySelector(selector) as HTMLElement;
+const query = (container: HTMLElement, selector: string) => getElement(selector, container);
 
 // Solid leaves empty text nodes for empty inserts, which toBeEmptyDOMElement counts
 function expectEmpty(element: HTMLElement) {

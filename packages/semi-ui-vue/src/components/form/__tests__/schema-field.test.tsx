@@ -5,7 +5,7 @@ import { fireEvent, screen, within } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import * as z from 'zod';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import { type FormApi, SchemaField, type SchemaFieldRenderer, SchemaForm, withField } from '..';
 import Button from '../../button';
 import { errorSelector, flush, FormInput, labelSelector, renderForm } from './fixtures/fields';
@@ -140,7 +140,7 @@ describe('SchemaForm', () => {
                 {() => <Button htmlType="submit">{() => 'submit'}</Button>}
             </SchemaForm>
         ));
-        const form = document.querySelector('form') as HTMLFormElement;
+        const form = getElement<HTMLFormElement>('form');
         expect(within(form).getByRole('textbox', { name: 'age' })).toHaveValue('3');
         await userEvent.click(screen.getByRole('button', { name: 'submit' }));
         await vi.waitFor(() => expect(onSubmit).toHaveBeenCalledWith({ age: 3 }, expect.anything()));

@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconAlertTriangle } from '@fibrae/semi-icons-vue';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Timeline, { TimelineItem, type TimelineData, type TimelineItemSlots, type TimelineMode, type TimelineProps, type TimelineSlots } from '../index';
 import Conditional from './fixtures/conditional.vue';
 import DataSlots from './fixtures/data-slots.vue';
@@ -35,7 +35,7 @@ describe('Timeline', () => {
     it('Timeline 的 dataSource', () => {
         const { container } = renderTl();
         expect(getItems(container)).toHaveLength(4);
-        const firstItem = container.querySelector(`.${prefixCls}-item .${prefixCls}-item-content`) as Element;
+        const firstItem = getElement(`.${prefixCls}-item .${prefixCls}-item-content`, container);
         expect(firstItem.textContent).toEqual('第一个节点内容节点辅助说明信息2019-07-14 10:35');
         expect(firstItem.querySelector(`.${prefixCls}-item-content-extra`)).toHaveTextContent(/^节点辅助说明信息$/);
         expect(firstItem.querySelector(`.${prefixCls}-item-content-time`)).toHaveTextContent(/^2019-07-14 10:35$/);
@@ -47,7 +47,7 @@ describe('Timeline', () => {
 
     it('Timeline 的 Item 子节点', () => {
         const { container } = renderItems(() => [item({}, '第一个节点内容', timeSlot('2019-07-14 10:35')), item({}, '第二个节点内容', timeSlot('2019-06-13 16:17')), item({}, '第三个节点内容', timeSlot('2019-05-14 18:34'))]);
-        const firstItem = container.querySelector(`.${prefixCls}-item .${prefixCls}-item-content`) as Element;
+        const firstItem = getElement(`.${prefixCls}-item .${prefixCls}-item-content`, container);
         expect(firstItem.textContent).toEqual('第一个节点内容2019-07-14 10:35');
     });
 
@@ -103,7 +103,7 @@ describe('Timeline', () => {
 
     it('Item 的 #time 放节点', () => {
         const { container } = renderItems(() => [item({}, '第一个节点内容', { time: () => [<span>2019-07-14 10:35</span>] }), item({}, '第二个节点内容', timeSlot('2019-06-13 16:17'))]);
-        const time = container.querySelector(`.${prefixCls}-item-content-time`) as Element;
+        const time = getElement(`.${prefixCls}-item-content-time`, container);
         expect(time.innerHTML).toEqual('<span>2019-07-14 10:35</span>');
     });
 
@@ -140,7 +140,7 @@ describe('Timeline', () => {
             props: { dataSource: [] },
             slots: { default: () => ['text', item({}, 'a')] },
         });
-        const list = container.querySelector('ul') as Element;
+        const list = getElement('ul', container);
         expect(getItems(container)).toHaveLength(1);
         // Vue fragments add empty anchor text nodes, so only non-empty nodes are compared
         const nodes = [...list.childNodes].filter((node) => node.nodeType !== Node.TEXT_NODE || node.nodeValue);

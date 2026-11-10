@@ -1,6 +1,7 @@
 /** @jsxImportSource vue */
 import { createApp, defineComponent, h, type VNode } from 'vue';
 import { describe, expect, it } from 'vite-plus/test';
+import { getElement } from '@test/utils/vue';
 import { createHolder } from '../../base/holder';
 import { nativeTag } from '../native-tag';
 
@@ -36,7 +37,7 @@ describe('nativeTag', () => {
             () => {},
             () => h(nativeTag('search'), { class: 'x', onClick: () => sticky++ })
         );
-        const el = host.querySelector('search') as HTMLElement;
+        const el = getElement('search', host);
         expect(el.className).toBe('x');
         el.click();
         expect(sticky).toBe(1);

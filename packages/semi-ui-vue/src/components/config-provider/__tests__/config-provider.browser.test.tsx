@@ -2,7 +2,7 @@
 import { screen } from '@testing-library/vue';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import type { OnBreakpointScreensCallback } from '@fibrae/semi-foundation/components/config-provider/responsive-types';
-import { countLiveListeners, render } from '@test/utils/vue';
+import { countLiveListeners, render, defined, getElement } from '@test/utils/vue';
 import Modal from '../../modal';
 import Switch from '../../switch';
 import Tooltip from '../../tooltip';
@@ -10,9 +10,9 @@ import ConfigProvider, { defaultResponsiveMap } from '../index';
 import Tree from './fixtures/tree.vue';
 
 function layoutOf(name: string) {
-    const root = screen.getByRole('switch', { name }).closest('.semi-switch') as HTMLElement;
+    const root = defined(screen.getByRole('switch', { name }).closest<HTMLElement>('.semi-switch'));
     const box = root.getBoundingClientRect();
-    const knob = (root.querySelector('.semi-switch-knob') as HTMLElement).getBoundingClientRect();
+    const knob = getElement('.semi-switch-knob', root).getBoundingClientRect();
     return { direction: getComputedStyle(root).direction, knobOnLeft: knob.left - box.left < box.right - knob.right };
 }
 
@@ -78,7 +78,7 @@ describe('弹层方向（浏览器）', () => {
         </>
     );
     const directionsOf = async (name: string) => {
-        const tooltip = (await screen.findByText(`tip-${name}`)).closest('.semi-tooltip-wrapper') as HTMLElement;
+        const tooltip = defined((await screen.findByText(`tip-${name}`)).closest<HTMLElement>('.semi-tooltip-wrapper'));
         const modal = await screen.findByRole('dialog', { name: `modal-${name}` });
         return [getComputedStyle(tooltip).direction, getComputedStyle(modal).direction];
     };

@@ -6,6 +6,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import type { DatePickerDisabledDateType, DatePickerProps } from '../interface';
 import { focusClass } from './date-picker-browser-utils';
 import { getPanel, getPopup } from './date-picker-dom-utils';
@@ -32,7 +33,7 @@ describe('Svelte DatePicker 实例方法 focus 与 blur（浏览器）', () => {
     it('focus + blur + dateRange 类型', async () => {
         const { component } = await setup({ props: { type: 'dateRange' } });
         const [startInput, endInput] = getInputs();
-        const wrapper = (side: string) => getRoot().querySelector(`.${dp}-range-input-wrapper-${side}`) as Element;
+        const wrapper = (side: string) => getElement(`.${dp}-range-input-wrapper-${side}`, getRoot());
         component.api()?.focus();
         await waitFor(() => expect(wrapper('start').querySelector(`.${focusClass}`)).not.toBeNull());
         expect(startInput).toHaveFocus();
@@ -278,7 +279,7 @@ describe('Svelte DatePicker 年月选择器的焦点（浏览器）', () => {
         { type: 'date', value: new Date(2030, 4, 10) },
         { type: 'dateRange', value: [new Date(2030, 4, 10), new Date(2030, 7, 12)] },
     ];
-    const getTitle = () => getPanel('left').querySelector<HTMLElement>(`.${dp}-navigation-month button`) as HTMLElement;
+    const getTitle = () => getElement(`.${dp}-navigation-month button`, getPanel('left'));
 
     it.each(cases)('$type 用键盘从月份标题进入年月选择器，焦点落在年份列表', async ({ type, value }) => {
         await setup({ value, open: true, props: { type } });
@@ -319,7 +320,7 @@ describe('Svelte DatePicker ShadowRoot 内的焦点（浏览器）', () => {
 
     it('键盘焦点在面板内时 Esc 关闭面板，焦点回到输入框', async () => {
         const { shadow } = await setupInShadow({ value: new Date(2019, 8, 11) });
-        const input = shadow.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', shadow);
         input.focus();
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(() => expect(shadow.querySelector(`.${dp}-month-grid`)).not.toBeNull());
@@ -338,7 +339,7 @@ describe('Svelte DatePicker ShadowRoot 内的焦点（浏览器）', () => {
             return button as HTMLElement;
         });
         title.click();
-        const left = shadow.querySelector(`.${dp}-month-grid-left`) as HTMLElement;
+        const left = getElement(`.${dp}-month-grid-left`, shadow);
         const back = await within(left).findByRole('button', { name: zh_CN.DatePicker.selectDate });
         // the year list takes focus once rendered, which would pull it off the back button
         await waitFor(() => expect(shadow.activeElement).toBe(left.querySelector('[role="listbox"]')));
@@ -349,7 +350,7 @@ describe('Svelte DatePicker ShadowRoot 内的焦点（浏览器）', () => {
 
     it('实例方法 blur() 让输入框失焦', async () => {
         const { shadow, component } = await setupInShadow();
-        const input = shadow.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', shadow);
         input.focus();
         expect(shadow.activeElement).toBe(input);
         component.api()?.blur();

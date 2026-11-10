@@ -2,6 +2,7 @@ import { render } from '@testing-library/svelte';
 import { describe, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import { Steps } from '../index';
 
 describe('Steps（浏览器）', () => {
@@ -11,7 +12,7 @@ describe('Steps（浏览器）', () => {
         const { container } = render(Steps, {
             props: { type, current: 1, onChange: () => {}, dataSource: ['A', 'B', 'C'].map((title) => ({ title, description: title.toLowerCase() })) },
         });
-        const item = container.querySelector(`.${BASE_CLASS_PREFIX}-steps-item`) as Element;
+        const item = getElement(`.${BASE_CLASS_PREFIX}-steps-item`, container);
         await tabTo(item);
         expectThemeFocusRing(item);
     });

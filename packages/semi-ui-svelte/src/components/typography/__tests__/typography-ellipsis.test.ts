@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import Extras from './extras-fixture.svelte';
 import Fixture from './typography-fixture.svelte';
 
@@ -20,7 +21,7 @@ function setup(store: Store, target?: HTMLElement) {
     return { state, ...view };
 }
 
-const root = (container: Element = document.body) => container.querySelector(`.${prefix}`) as HTMLElement;
+const root = (container: Element = document.body) => getElement(`.${prefix}`, container);
 const settle = (ms = 50) => new Promise((resolve) => setTimeout(resolve, ms));
 // mouseenter does not bubble: the hover listener sits on the span wrapping the text, a pointer over the text enters it first
 const enterText = (node: HTMLElement) => fireEvent.mouseEnter(node.firstElementChild as Element);
@@ -157,7 +158,7 @@ describe('Svelte Typography CSS 省略', () => {
         await waitFor(() => expect(root(container)).toHaveAttribute('tabindex', '0'));
         await userEvent.hover(root(container));
         await waitFor(() => expect(document.querySelector('.semi-popover-content')).not.toBeNull());
-        const popover = document.querySelector(`.${prefix}-ellipsis-popover`) as HTMLElement;
+        const popover = getElement(`.${prefix}-ellipsis-popover`);
         expect(popover).toHaveClass('user-pop');
         expect(popover).toHaveTextContent('popover text');
         expect(popover.style.color).toBe('red');
@@ -572,7 +573,7 @@ describe('Svelte Typography JS 省略', () => {
         mockTextHeight(2);
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
         const { container } = render(Extras, { props: { mode: 'conditional' } });
-        await waitFor(() => expect(visibleText(container.querySelector(`.${prefix}-paragraph`) as HTMLElement)).toContain('...'));
+        await waitFor(() => expect(visibleText(getElement(`.${prefix}-paragraph`, container))).toContain('...'));
         expect(warn).not.toHaveBeenCalled();
     });
 });

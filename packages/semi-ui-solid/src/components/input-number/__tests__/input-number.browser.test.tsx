@@ -3,10 +3,11 @@ import { render, screen } from '@solidjs/testing-library';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/solid';
 import InputNumber, { type InputNumberProps } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-input-number`;
-const button = (direction: 'up' | 'down') => document.querySelector(`.${prefixCls}-button-${direction}`) as HTMLElement;
+const button = (direction: 'up' | 'down') => getElement(`.${prefixCls}-button-${direction}`);
 
 describe('InputNumber（浏览器）', () => {
     it('删除精度值后输入非法字符，失焦后保持为空', async () => {
@@ -51,7 +52,7 @@ describe('InputNumber（浏览器）', () => {
         const input = screen.getByRole('spinbutton');
         const outside = screen.getByRole('button', { name: 'outside' });
         for (const part of ['prefix', 'suffix']) {
-            await userEvent.click(container.querySelector(`.${BASE_CLASS_PREFIX}-input-${part}`) as HTMLElement);
+            await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-input-${part}`, container));
             expect(input).toHaveFocus();
             await userEvent.click(outside);
             expect(input).not.toHaveFocus();
@@ -159,7 +160,7 @@ describe('InputNumber（浏览器）', () => {
         onTestFinished(() => {
             vi.useRealTimers();
         });
-        await userEvent.dragAndDrop(up, container.querySelector('[data-testid="outside"]') as HTMLElement);
+        await userEvent.dragAndDrop(up, getElement('[data-testid="outside"]', container));
         expect(input).toHaveValue('2');
         vi.advanceTimersByTime(1000);
         expect(input).toHaveValue('2');
@@ -173,7 +174,7 @@ describe('InputNumber（浏览器）', () => {
         shadow.append(mount);
         const view = render(() => <InputNumber defaultValue={1} keepFocus />, { container: mount });
         try {
-            const input = shadow.querySelector('input') as HTMLInputElement;
+            const input = getElement<HTMLInputElement>('input', shadow);
             input.focus();
             await userEvent.keyboard('{ArrowUp}');
             expect(input).toHaveValue('2');

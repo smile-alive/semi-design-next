@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi, type Mock } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement, defined } from '@test/utils/solid';
 import Transfer, { type DataItem, type SelectedPanelProps, type SourcePanelProps, type TransferElement, type TransferPaginationProps, type TransferProps } from '..';
 import Tooltip from '../../tooltip';
 
@@ -91,7 +92,7 @@ const getTreeData = () => [
     },
 ];
 
-const getSearchInput = () => document.querySelector(`.${prefixCls}-filter input`) as HTMLInputElement;
+const getSearchInput = () => getElement<HTMLInputElement>(`.${prefixCls}-filter input`);
 const getLeftList = () => screen.getByRole('list', { name: zh_CN.Transfer.optionList });
 const getLeftItem = (label: string) => within(getLeftList()).getByText(label);
 const getLeftCheckedTexts = () => Array.from(document.querySelectorAll(`.${prefixCls}-left .${BASE_CLASS_PREFIX}-checkbox-checked`)).map((item) => item.textContent);
@@ -227,7 +228,7 @@ describe('Transfer', () => {
         const onSearch = vi.fn<NonNullable<TransferProps['onSearch']>>();
         const { container } = render(() => <Transfer type="treeList" value={['Shanghai']} dataSource={getTreeData()} draggable showPath onChange={onChange} onSearch={onSearch} />);
 
-        await userEvent.click(container.querySelector(`li.${BASE_CLASS_PREFIX}-tree-option`) as HTMLElement);
+        await userEvent.click(getElement(`li.${BASE_CLASS_PREFIX}-tree-option`, container));
 
         fireEvent.input(getSearchInput(), { target: { value: '1' } });
 
@@ -480,7 +481,7 @@ describe('Transfer', () => {
         const onChange = vi.fn<NonNullable<TransferProps['onChange']>>();
         render(() => <Transfer defaultValue={['1']} dataSource={defaultItems} onChange={onChange} />);
 
-        await userEvent.click(document.querySelector(`.${prefixCls}-item-close-icon`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefixCls}-item-close-icon`));
 
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange.mock.calls[0][0]).toHaveLength(0);
@@ -797,7 +798,7 @@ describe('Transfer 行为', () => {
         render(() => <Transfer type="treeList" defaultValue={['Osaka']} dataSource={getTreeData()} showPath renderSelectedItem={(item) => <div class="custom-selected">{item.fullPath?.map((node) => node.label).join('/')}</div>} onChange={onChange} />);
         expect(document.querySelector('.custom-selected')).toHaveTextContent('Asia/Japan/Osaka');
 
-        await userEvent.click(screen.getByText('Canada').closest('li') as HTMLElement);
+        await userEvent.click(defined(screen.getByText('Canada').closest<HTMLElement>('li')));
         expect(onChange).toHaveBeenCalledTimes(1);
         const [values, changedItems] = onChange.mock.calls[0];
         expect(values).toEqual(expect.arrayContaining(['Osaka', 'Canada']));
@@ -1154,7 +1155,7 @@ describe('Transfer 树形与搜索', () => {
                 onChange={onChange}
             />
         ));
-        await userEvent.click(screen.getByText('Osaka').closest('li') as HTMLElement);
+        await userEvent.click(defined(screen.getByText('Osaka').closest<HTMLElement>('li')));
         expect(lastArg(onChange)).toEqual(['Osaka']);
         expect(getRightItemTexts()).toEqual(['Osaka']);
     });
@@ -1163,7 +1164,7 @@ describe('Transfer 树形与搜索', () => {
         const { container } = render(() => <Transfer dataSource={[]} emptyContent={{ left: null, right: null }} />);
         expect(container.querySelector(`.${prefixCls}-empty`)).toBeNull();
         const { container: searching } = render(() => <Transfer dataSource={defaultItems} emptyContent={{ search: null }} />);
-        await userEvent.type(searching.querySelector(`.${prefixCls}-filter input`) as HTMLInputElement, 'none');
+        await userEvent.type(getElement<HTMLInputElement>(`.${prefixCls}-filter input`, searching), 'none');
         expect(searching.querySelector(`.${prefixCls}-left-empty`)).toBeNull();
     });
 

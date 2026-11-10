@@ -2,6 +2,7 @@ import { render } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { getElement } from '@test/utils/dom/common';
 import type { CardProps } from '../interface';
 import CardFixture from './card-fixture.svelte';
 import type { Parts } from './fixture-parts';
@@ -21,7 +22,7 @@ function setup(props: CardProps, parts: Parts, dir: 'ltr' | 'rtl' = 'ltr') {
 describe('Svelte Card 标题（浏览器）', () => {
     it('外观与被替换的 h6 一致', () => {
         const { container } = setup({ title: 'title' }, { body: true });
-        const title = container.querySelector('.semi-typography-h6') as HTMLElement;
+        const title = getElement('.semi-typography-h6', container);
         expect(title.tagName).toBe('DIV');
         const heading = document.createElement('h6');
         heading.className = title.className;
@@ -58,12 +59,12 @@ describe('Svelte Card 阴影（浏览器）', () => {
 
     it('shadows="always" 时始终显示阴影', () => {
         const { container } = setup({ shadows: 'always' }, { body: true });
-        expect(shadowOf(container.querySelector('.semi-card') as Element)()).not.toBe('none');
+        expect(shadowOf(getElement('.semi-card', container))()).not.toBe('none');
     });
 
     it('shadows="hover" 时仅悬停时显示阴影', async () => {
         const { container } = setup({ shadows: 'hover' }, { body: true });
-        const card = container.querySelector('.semi-card') as Element;
+        const card = getElement('.semi-card', container);
         expect(shadowOf(card)()).toBe('none');
         await userEvent.hover(card);
         await expect.poll(shadowOf(card)).not.toBe('none');

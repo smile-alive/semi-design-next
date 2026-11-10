@@ -5,6 +5,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { defined, getElement } from '@test/utils/solid';
 import Feedback from '..';
 import Button from '../../button';
 import SideSheet from '../../side-sheet';
@@ -33,8 +34,8 @@ describe('Feedback（浏览器）', () => {
         render(() => <Feedback title="Feedback" motion={false} visible />);
         const bad = await screen.findByRole('radio', { name: zh_CN.Feedback.bad });
         const normal = screen.getByRole('radio', { name: zh_CN.Feedback.normal });
-        const item = (radio: HTMLElement) => radio.closest(`.${prefix}-emoji-item`) as HTMLElement;
-        const glyph = (radio: HTMLElement) => item(radio).querySelector(`.${prefix}-emoji-glyph`) as HTMLElement;
+        const item = (radio: HTMLElement) => defined(radio.closest<HTMLElement>(`.${prefix}-emoji-item`));
+        const glyph = (radio: HTMLElement) => getElement(`.${prefix}-emoji-glyph`, item(radio));
         expect(getComputedStyle(glyph(bad)).filter).toBe('grayscale(1)');
 
         await tabTo(bad);

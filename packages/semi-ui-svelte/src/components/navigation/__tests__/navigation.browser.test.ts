@@ -4,6 +4,8 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { NavProps } from '../interface';
 import NavChildren from './nav-children.svelte';
 import NavFixture from './nav-fixture.svelte';
@@ -35,7 +37,7 @@ function setup(props: NavProps = {}, init: Partial<Store> = {}) {
     const store = createStore<Store>({ props: { items, ...props }, snippets: false, wrap: false, ...init });
     const view = render(NavFixture, { props: { store } });
     flushSync();
-    return { store, nav: view.container.querySelector(`.${prefix}`) as HTMLElement };
+    return { store, nav: getElement(`.${prefix}`, view.container) };
 }
 
 describe('Svelte Navigation 键盘与焦点（浏览器）', () => {
@@ -91,7 +93,7 @@ describe('Svelte Navigation 键盘与焦点（浏览器）', () => {
     it('悬停项内的按钮时，其 li 应用悬停样式', async () => {
         setup();
         const button = screen.getByRole('button', { name: '首页' });
-        const li = button.closest('li') as HTMLElement;
+        const li = defined(button.closest<HTMLElement>('li'));
         const probe = document.createElement('span');
         probe.style.backgroundColor = 'var(--semi-color-fill-0)';
         li.append(probe);
@@ -110,7 +112,7 @@ describe('Svelte Navigation 键盘与焦点（浏览器）', () => {
             ],
         });
         const button = screen.getByRole('button', { name: '首页' });
-        const li = button.closest('li') as HTMLElement;
+        const li = defined(button.closest<HTMLElement>('li'));
         expect(button.getBoundingClientRect().toJSON()).toEqual(li.getBoundingClientRect().toJSON());
         const text = screen.getByText('首页').getBoundingClientRect();
         expect(text.left - li.getBoundingClientRect().left).toBe(12);
@@ -207,7 +209,7 @@ describe('Svelte Navigation 折叠态与弹出子菜单（浏览器）', () => {
 
     it('折叠按钮切换后焦点保持在按钮上，子菜单标题在折叠与展开间保持焦点', async () => {
         setup({ footer: { collapseButton: true }, openKeys: ['user'] }, { snippets: true });
-        const toggle = () => document.querySelector<HTMLButtonElement>(`.${prefix}-collapse-btn button`) as HTMLButtonElement;
+        const toggle = () => getElement<HTMLButtonElement>(`.${prefix}-collapse-btn button`);
         toggle().focus();
         await userEvent.keyboard('{Enter}');
         await waitFor(() => expect(document.querySelector(`.${prefix}`)).toHaveClass(`${prefix}-collapsed`));
@@ -226,7 +228,7 @@ describe('Svelte Navigation 折叠态与弹出子菜单（浏览器）', () => {
     it('折叠与展开时文字淡入只发生在宽度动画期间', async () => {
         const { nav } = setup({ footer: { collapseButton: true } });
         expect(nav).not.toHaveClass(`${prefix}-collapse-animating`);
-        const toggle = nav.querySelector<HTMLButtonElement>(`.${prefix}-collapse-btn button`) as HTMLButtonElement;
+        const toggle = getElement<HTMLButtonElement>(`.${prefix}-collapse-btn button`, nav);
         await userEvent.click(toggle);
         await waitFor(() => expect(nav).toHaveClass(`${prefix}-collapsed`));
         await waitFor(() => expect(nav).not.toHaveClass(`${prefix}-collapse-animating`));

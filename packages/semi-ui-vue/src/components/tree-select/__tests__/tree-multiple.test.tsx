@@ -5,7 +5,7 @@ import { fireEvent } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import TreeSelect, { type TreeSelectEmits } from '..';
 import ConfigProvider from '../../config-provider';
 import type { TreeNodeData } from '../../tree';
@@ -183,7 +183,7 @@ const isHalfChecked = (node: Element | null) => node?.querySelector(`.${indeterm
 const isCollapsed = (node: Element) => node.classList.contains(`${optionCls}-collapsed`);
 const getCheckedCount = () => document.querySelectorAll(`.${innerCheckedCls}`).length;
 const getHighlights = () => document.querySelectorAll(`.${optionCls}-highlight`);
-const getSelection = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-select-selection`) as HTMLElement;
+const getSelection = () => getElement(`.${BASE_CLASS_PREFIX}-tree-select-selection`);
 const getTags = () => Array.from(getSelection().querySelectorAll(`.${BASE_CLASS_PREFIX}-tag`));
 const getTagTexts = () => getTags().map((tag) => tag.textContent);
 async function click(element: Element | null) {
@@ -192,7 +192,7 @@ async function click(element: Element | null) {
 }
 const closeTag = (index: number) => click(getTags()[index].querySelector(`.${BASE_CLASS_PREFIX}-tag-close`));
 async function searchInTrigger(value: string) {
-    await fireEvent.update(getSelection().querySelector(`.${BASE_CLASS_PREFIX}-tagInput input`) as HTMLInputElement, value);
+    await fireEvent.update(getElement<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-tagInput input`, getSelection()), value);
     await settle();
 }
 

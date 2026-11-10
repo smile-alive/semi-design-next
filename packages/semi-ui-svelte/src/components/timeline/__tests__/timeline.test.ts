@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import { Timeline, type TimelineData, type TimelineMode } from '../index';
 import TimelineDemo from './timeline-demo.svelte';
 
@@ -27,7 +28,7 @@ describe('Timeline', () => {
     it('dataSource', () => {
         const { container } = renderTl();
         expect(getItems(container)).toHaveLength(4);
-        const firstItem = container.querySelector(`.${prefixCls}-item .${prefixCls}-item-content`) as Element;
+        const firstItem = getElement(`.${prefixCls}-item .${prefixCls}-item-content`, container);
         expect(firstItem.textContent).toEqual('第一个节点内容节点辅助说明信息2019-07-14 10:35');
         expect(firstItem.querySelector(`.${prefixCls}-item-content-extra`)).toHaveTextContent(/^节点辅助说明信息$/);
         expect(firstItem.querySelector(`.${prefixCls}-item-content-time`)).toHaveTextContent(/^2019-07-14 10:35$/);

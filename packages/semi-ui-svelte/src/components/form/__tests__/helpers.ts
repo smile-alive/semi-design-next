@@ -2,6 +2,7 @@ import { flushSync } from 'svelte';
 import { fireEvent, render } from '@testing-library/svelte';
 import { vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { getElement } from '@test/utils/dom/common';
 import type { FormApi } from '../interface';
 import FormFixture, { type FieldSpec, type FormFixtureStore } from './form-fixture.svelte';
 
@@ -38,10 +39,10 @@ export const select = (props: Record<string, unknown> = {}): FieldSpec => ({ typ
 
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const inputIn = (scope: string) => document.querySelector<HTMLInputElement>(`${scope} input.semi-input`) as HTMLInputElement;
+export const inputIn = (scope: string) => getElement<HTMLInputElement>(`${scope} input.semi-input`);
 
 export function getInput(scope: ParentNode = document) {
-    return scope.querySelector<HTMLInputElement>('input.semi-input') as HTMLInputElement;
+    return getElement<HTMLInputElement>('input.semi-input', scope);
 }
 
 export async function typeInto(element: HTMLInputElement | HTMLTextAreaElement, value: string) {

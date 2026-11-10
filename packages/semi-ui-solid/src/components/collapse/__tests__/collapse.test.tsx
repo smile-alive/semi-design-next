@@ -6,6 +6,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconCopy, IconMinus, IconPlus } from '@fibrae/semi-icons-solid';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { defined, getElement } from '@test/utils/solid';
 import Collapse, { type CollapsePanelProps, type CollapseProps } from '..';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-collapse`;
@@ -294,7 +295,7 @@ describe('Collapse', () => {
 
     it('keepDOM 下关闭面板的内容设为 inert 而非 aria-hidden，其控件移出 Tab 顺序', () => {
         setup({ keepDOM: true, motion: false });
-        const region = document.getElementById(getHeaders()[0].getAttribute('aria-controls') as string) as HTMLElement;
+        const region = defined(document.getElementById(getHeaders()[0].getAttribute('aria-controls') as string));
         // Solid writes inert as a property, which jsdom does not reflect to the attribute
         expect(region.inert).toBe(true);
         expect(region).not.toHaveAttribute('aria-hidden');
@@ -430,7 +431,7 @@ describe('Collapse', () => {
         await userEvent.click(getRows(container)[0]);
         expect(onChange).not.toHaveBeenCalled();
         expectExpanded([false, false, false]);
-        await userEvent.click(container.querySelector(`.${prefixCls}-header-icon`) as Element);
+        await userEvent.click(getElement(`.${prefixCls}-header-icon`, container));
         expect(onChange).toHaveBeenLastCalledWith(['1'], expect.anything());
         expectExpanded([true, false, false]);
         await userEvent.click(screen.getByText('This is panel header 2'));

@@ -3,6 +3,8 @@ import { fireEvent, render, screen, within } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { SelectOptionItemSnippetProps, SelectOptionProps, SelectProps, SelectValue } from '..';
 import SelectCase from './select-case.svelte';
 
@@ -37,13 +39,13 @@ function setup(props: Omit<SelectProps, 'value' | 'optionList'> = {}, { value, m
     return { store, api, ...result };
 }
 
-const getRoot = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
+const getRoot = () => getElement(`.${prefixCls}`);
 const getTrigger = () => screen.getByRole('combobox');
 const getOptions = () => screen.queryAllByRole('option');
 const getOptionTexts = () => getOptions().map((option) => option.textContent?.trim());
 const getSelectionText = () => document.querySelector(`.${prefixCls}-selection-text`)?.textContent?.trim();
 const getTagTexts = () => [...document.querySelectorAll(`.${prefixCls}-selection .semi-tag-content`)].map((tag) => tag.textContent?.trim());
-const getTriggerInput = () => document.querySelector(`.${prefixCls} input`) as HTMLInputElement;
+const getTriggerInput = () => getElement<HTMLInputElement>(`.${prefixCls} input`);
 
 async function clickTrigger() {
     await fireEvent.click(getRoot());
@@ -264,7 +266,7 @@ describe('Svelte Select 多选', () => {
         expect(store.value).toEqual(['abc', 'hotsoon']);
         expect(getTagTexts()).toEqual(['Abc', 'Hotsoon']);
         expect(screen.getByRole('listbox')).toHaveAttribute('aria-multiselectable', 'true');
-        const close = document.querySelector(`.${prefixCls}-selection .semi-tag-close`) as HTMLElement;
+        const close = getElement(`.${prefixCls}-selection .semi-tag-close`);
         await fireEvent.click(close);
         await settle();
         expect(store.value).toEqual(['hotsoon']);
@@ -347,7 +349,7 @@ describe('Svelte Select 搜索与新建', () => {
     it('searchPosition 为 dropdown 时搜索框在下拉中，触发器仍是 combobox', async () => {
         setup({ filter: true, searchPosition: 'dropdown' });
         await clickTrigger();
-        const input = document.querySelector(`.${prefixCls}-dropdown-search-wrapper input`) as HTMLInputElement;
+        const input = getElement<HTMLInputElement>(`.${prefixCls}-dropdown-search-wrapper input`);
         expect(getRoot()).toHaveAttribute('role', 'combobox');
         expect(input).toHaveAttribute('aria-controls', screen.getByRole('listbox').id);
         input.value = 'top';
@@ -531,7 +533,7 @@ describe('Svelte Select 分组与 optionLabel', () => {
         await keyDown('ArrowDown');
         await keyDown('ArrowDown');
         await keyDown('ArrowDown');
-        const active = () => document.getElementById(getTrigger().getAttribute('aria-activedescendant') ?? '') as HTMLElement;
+        const active = () => defined(document.getElementById(getTrigger().getAttribute('aria-activedescendant') ?? ''));
         expect(active()).toHaveTextContent('Carrot');
         expect(active().closest('[role="group"]')).toBe(screen.getByRole('group', { name: 'Vegetables' }));
         await keyDown('ArrowDown');

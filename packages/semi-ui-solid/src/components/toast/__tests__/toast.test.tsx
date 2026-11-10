@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconWifi } from '@fibrae/semi-icons-solid';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement, defined } from '@test/utils/solid';
 import Toast, { ToastFactory, type ToastHookApi, type ToastProps } from '..';
 import ConfigProvider from '../../config-provider';
 import { LocaleProvider } from '../../locale';
@@ -14,7 +15,7 @@ import ToastItem from '../toast';
 const prefix = `${BASE_CLASS_PREFIX}-toast`;
 const hideCls = `${prefix}-animation-hide`;
 const getInfoToast = () => document.querySelector<HTMLElement>(`.${prefix}-info`);
-const getList = () => document.querySelector<HTMLElement>(`.${prefix}-innerWrapper`) as HTMLElement;
+const getList = () => getElement(`.${prefix}-innerWrapper`);
 const endLeave = (scope: ParentNode = document) => scope.querySelectorAll(`.${hideCls}`).forEach((toast) => toast.dispatchEvent(new Event('animationend', { bubbles: true })));
 
 let api: ToastHookApi;
@@ -154,7 +155,7 @@ describe('Toast', () => {
         Toast.config({ top: '400px', theme: 'light', zIndex: 2333, duration: 0 });
         Toast.resetConfig();
         Toast.info('semi');
-        const wrapper = document.getElementById(Toast.getWrapperId() as string) as HTMLElement;
+        const wrapper = defined(document.getElementById(Toast.getWrapperId() as string));
         expect(wrapper).toHaveStyle({ zIndex: '1010' });
         expect(wrapper.style.top).toBe('');
         expect(getInfoToast()).not.toHaveClass(`${prefix}-light`);
@@ -164,7 +165,7 @@ describe('Toast', () => {
     it('config({ top: undefined }) 清除容器上已有的 top', () => {
         Toast.config({ top: 10 });
         Toast.info('first');
-        const wrapper = document.getElementById(Toast.getWrapperId() as string) as HTMLElement;
+        const wrapper = defined(document.getElementById(Toast.getWrapperId() as string));
         expect(wrapper.style.top).toBe('10px');
         Toast.config({ top: undefined });
         Toast.info('second');
@@ -352,8 +353,8 @@ describe('Toast', () => {
         const Other = ToastFactory.create({ top: 77, zIndex: 3000 });
         Toast.info({ content: 'main', duration: 0 });
         Other.info({ content: 'other', duration: 0 });
-        const main = document.getElementById(Toast.getWrapperId() as string) as HTMLElement;
-        const other = document.getElementById(Other.getWrapperId() as string) as HTMLElement;
+        const main = defined(document.getElementById(Toast.getWrapperId() as string));
+        const other = defined(document.getElementById(Other.getWrapperId() as string));
         expect(main).not.toBe(other);
         expect(main).toHaveStyle({ zIndex: '1010' });
         expect(main.style.top).toBe('');
@@ -577,7 +578,7 @@ describe('Toast', () => {
     it('后一条 Toast 切换 stack 时，已显示的 Toast 节点与焦点保持不变', () => {
         Toast.info({ content: 'a', duration: 0, stack: true });
         const first = getInfoToast() as HTMLElement;
-        const closeButton = first.querySelector('button') as HTMLElement;
+        const closeButton = getElement('button', first);
         closeButton.focus();
         Toast.info({ content: 'b', duration: 0 });
         expect(first.isConnected).toBe(true);
@@ -589,7 +590,7 @@ describe('Toast', () => {
         vi.useFakeTimers();
         Toast.info({ id: 'gone', content: 'gone', duration: 0, motion: false });
         Toast.success({ id: 'stays', content: 'stays', duration: 1, motion: false });
-        ((getInfoToast() as HTMLElement).querySelector('button') as HTMLElement).focus();
+        getElement('button', getInfoToast() as HTMLElement).focus();
         Toast.close('gone');
         expect(getInfoToast()).toBeNull();
         vi.advanceTimersByTime(1000);

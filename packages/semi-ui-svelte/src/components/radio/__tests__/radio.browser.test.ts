@@ -4,6 +4,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { expectThemeFocusRing } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import type { RadioGroupProps, RadioProps } from '../interface';
 import GroupFixture from './group-fixture.svelte';
 import GroupModes from './group-modes.svelte';
@@ -11,7 +12,7 @@ import RadioFixture from './radio-fixture.svelte';
 
 const prefix = `${BASE_CLASS_PREFIX}-radio`;
 const outlineOf = (el: Element) => getComputedStyle(el).outlineStyle;
-const display = (el: Element) => el.querySelector(`.${prefix}-inner-display`) as Element;
+const display = (el: Element) => getElement(`.${prefix}-inner-display`, el);
 const group = (props: RadioGroupProps = {}) => render(GroupFixture, { props: { store: createStore({ props }) } });
 const radio = (props: RadioProps, label: string) => render(RadioFixture, { props: { store: createStore({ props, label }) } });
 
@@ -31,7 +32,7 @@ describe('Svelte Radio（浏览器）', () => {
         const { container } = radio({}, 'label');
         await userEvent.keyboard('{Tab}');
         expectThemeFocusRing(display(container));
-        await userEvent.click(container.querySelector(`.${prefix}`) as Element);
+        await userEvent.click(getElement(`.${prefix}`, container));
         expect(outlineOf(display(container))).toBe('none');
         await userEvent.keyboard('{Backspace}');
         expectThemeFocusRing(display(container));
@@ -88,7 +89,7 @@ describe('Svelte Radio（浏览器）', () => {
             return color;
         };
         const { container } = radio({ type: 'card' }, 'card');
-        const card = container.querySelector<HTMLElement>('label') as HTMLElement;
+        const card = getElement('label', container);
         card.style.transition = 'none';
         await userEvent.hover(card);
         expect(getComputedStyle(card).backgroundColor).toBe(probe('--semi-color-fill-0'));

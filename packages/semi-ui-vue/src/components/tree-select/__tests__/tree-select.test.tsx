@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, onTestFinished, vi } from 'vite-plus/t
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { countLiveListeners, render } from '@test/utils/vue';
+import { countLiveListeners, render, getElement } from '@test/utils/vue';
 import TreeSelect, { type TreeSelectEmits, type TreeSelectHandle, type TreeSelectSearchSlotProps, type TreeSelectSelectedItemSlotProps, type TreeSelectTriggerSlotProps } from '..';
 import { CheckboxGroup } from '../../checkbox';
 import ConfigProvider from '../../config-provider';
@@ -273,9 +273,9 @@ async function act(run: () => unknown) {
     await settle();
 }
 
-const getTrigger = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-select`) as HTMLElement;
+const getTrigger = () => getElement(`.${BASE_CLASS_PREFIX}-tree-select`);
 const getPopover = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-select-popover`);
-const getPopoverWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`) as HTMLElement;
+const getPopoverWrapper = () => getElement(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
 const getOptions = () => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option`)];
 const getOptionsOfLevel = (level: number) => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option.${BASE_CLASS_PREFIX}-tree-option-level-${level}`)];
 const getNode = (label: string) => getOptions().find((node) => node.textContent === label) as HTMLElement;
@@ -283,10 +283,11 @@ const getNodeLabels = () => getOptions().map((node) => node.textContent);
 const getSelectedLabels = () => [...document.querySelectorAll(`.${BASE_CLASS_PREFIX}-tree-option-selected`)].map((node) => node.textContent);
 const getHighlights = () => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option-highlight`)];
 const isCollapsed = (node: HTMLElement) => node.classList.contains(`${BASE_CLASS_PREFIX}-tree-option-collapsed`);
-const getSelection = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-select-selection`) as HTMLElement;
-const getSelectionSpan = () => getSelection().querySelector('span') as HTMLElement;
-const getSearchInput = () => document.querySelector<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-tree-search-wrapper input`) as HTMLInputElement;
-const getTriggerInput = () => getTrigger().querySelector('input') as HTMLInputElement;
+const getSelection = () => getElement(`.${BASE_CLASS_PREFIX}-tree-select-selection`);
+const getSelectionSpan = () => getElement('span', getSelection());
+const getSearchInput = () => getElement<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-tree-search-wrapper input`);
+const querySearchInput = () => document.querySelector(`.${BASE_CLASS_PREFIX}-tree-search-wrapper input`);
+const getTriggerInput = () => getElement<HTMLInputElement>('input', getTrigger());
 const getTags = () => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-select-selection .${BASE_CLASS_PREFIX}-tag`)];
 const getTagTexts = () => getTags().map((tag) => tag.textContent);
 const getTagClose = (index = 0) => getTags()[index].querySelector(`.${BASE_CLASS_PREFIX}-tag-close`);
@@ -560,9 +561,9 @@ describe('TreeSelect', () => {
 
     it('filterTreeNode 为 true 时显示输入框', async () => {
         const { rerender } = await renderTreeSelect({});
-        expect(getSearchInput()).toBeNull();
+        expect(querySearchInput()).toBeNull();
         await rerender({ filterTreeNode: true });
-        expect(getSearchInput()).not.toBeNull();
+        expect(querySearchInput()).not.toBeNull();
     });
 
     it('searchPlaceholder 属性', async () => {
@@ -845,7 +846,7 @@ describe('TreeSelect', () => {
             defaultExpandAll: true,
             keyMaps: defaultKeyMaps,
         });
-        const disabledNode = document.querySelector(`.${BASE_CLASS_PREFIX}-tree-option-disabled`) as HTMLElement;
+        const disabledNode = getElement(`.${BASE_CLASS_PREFIX}-tree-option-disabled`);
         expect(disabledNode.querySelector(`.${BASE_CLASS_PREFIX}-tree-option-label-text`)).toHaveTextContent('中国');
         expect(getSelectedLabels()).toEqual(['北京']);
         await click(getNode('上海'));
@@ -864,7 +865,7 @@ describe('TreeSelect', () => {
             defaultExpandAll: true,
             keyMaps: defaultKeyMaps,
         });
-        const disabledNode = document.querySelector(`.${BASE_CLASS_PREFIX}-tree-option-disabled`) as HTMLElement;
+        const disabledNode = getElement(`.${BASE_CLASS_PREFIX}-tree-option-disabled`);
         expect(disabledNode.querySelector(`.${BASE_CLASS_PREFIX}-tree-option-label-text`)).toHaveTextContent('中国');
         expect(getSelectedLabels()).toEqual(['北京']);
         await click(getNode('上海'));
@@ -1167,7 +1168,7 @@ describe('TreeSelect', () => {
 
     it('空 #search 插槽不渲染搜索框', async () => {
         await renderTreeSelect({ filterTreeNode: true }, { search: () => [] });
-        expect(getSearchInput()).toBeNull();
+        expect(querySearchInput()).toBeNull();
         expect(getPopover()?.querySelector('input')).toBeNull();
     });
 
@@ -2061,7 +2062,7 @@ describe('TreeSelect', () => {
     it('#outerTopSlot 取代默认搜索框', async () => {
         await renderTreeSelect({ filterTreeNode: true }, { outerTopSlot: () => <div class="custom-search">Custom Search</div> });
         expect(screen.getByText('Custom Search')).toBeInTheDocument();
-        expect(getSearchInput()).toBeNull();
+        expect(querySearchInput()).toBeNull();
     });
 
     it('showSearchClear 属性', async () => {
@@ -2356,7 +2357,7 @@ describe('TreeSelect', () => {
 
     it('单选无值时选择框为空的 placeholder', async () => {
         await renderTreeSelect({ treeData: treeDataEn });
-        const content = document.querySelector(`.${BASE_CLASS_PREFIX}-tree-select-selection-content`) as HTMLElement;
+        const content = getElement(`.${BASE_CLASS_PREFIX}-tree-select-selection-content`);
         expect(content).toHaveClass(`${BASE_CLASS_PREFIX}-tree-select-selection-placeholder`);
         expect(content.textContent).toEqual('');
     });
@@ -2581,7 +2582,7 @@ describe('TreeSelect', () => {
             searchPosition: 'dropdown',
             defaultOpen: false,
         });
-        expect(getSearchInput()).toBeNull();
+        expect(querySearchInput()).toBeNull();
         await click(getTrigger());
         await waitFor(() => expect(getSearchInput()).toHaveFocus());
     });
@@ -2813,7 +2814,7 @@ describe('TreeSelect', () => {
     it('收起动画结束后移除子行', async () => {
         await renderTreeSelect({ motion: true, motionExpand: true, treeData: treeDataEn, defaultExpandAll: true });
         await clickExpandIcon('Asia');
-        const collapsible = document.querySelector(`.${BASE_CLASS_PREFIX}-collapsible-wrapper`) as HTMLElement;
+        const collapsible = getElement(`.${BASE_CLASS_PREFIX}-collapsible-wrapper`);
         expect(collapsible).toContainElement(getNode('China'));
         await waitFor(() => expect(collapsible).toHaveStyle({ '--semi-collapsible-height': '0px' }));
         await fireEvent.transitionEnd(collapsible, { propertyName: 'height' });
@@ -3669,7 +3670,7 @@ describe('TreeSelect 键盘操作（APG combobox 配合树形弹层）', () => {
                 ),
             }
         );
-        const input = document.querySelector('.custom-search') as HTMLElement;
+        const input = getElement('.custom-search');
         await focus(input);
         await keyboard('{ArrowDown}');
         expect(activeLabel(input)).toBe('Asia');

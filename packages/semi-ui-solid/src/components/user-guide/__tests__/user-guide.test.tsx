@@ -4,14 +4,15 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { sleep } from '@test/utils/solid';
+import { sleep, getElement } from '@test/utils/solid';
 import UserGuide, { type StepItem, type StepRenderProps, type UserGuideProps } from '..';
 import ConfigProvider from '../../config-provider';
 import { LocaleProvider } from '../../locale';
 import Modal from '../../modal';
 
 const prefix = `${BASE_CLASS_PREFIX}-userGuide`;
-const $ = (selector: string) => document.querySelector<HTMLElement>(selector) as HTMLElement;
+const $ = (selector: string) => getElement(selector);
+const query = (selector: string) => document.querySelector(selector);
 const $$ = (selector: string) => document.querySelectorAll(selector);
 
 type TestTarget = HTMLDivElement & { rect: { x: number; y: number; width: number; height: number } };
@@ -54,6 +55,7 @@ function renderGuide(initial: UserGuideProps, wrap: (guide: () => JSX.Element) =
 
 const withEnglish = (guide: () => JSX.Element) => <LocaleProvider locale={en_US}>{guide()}</LocaleProvider>;
 const spotRect = () => $(`.${prefix}-spotlight-rect`);
+const querySpotRect = () => query(`.${prefix}-spotlight-rect`);
 const rectOf = (el: Element) => ['x', 'y', 'width', 'height'].map((key) => Number(el.getAttribute(key)));
 const indicator = () => document.querySelector(`.${prefix}-popup-content-indicator`)?.textContent;
 
@@ -68,12 +70,12 @@ afterEach(() => {
 describe('UserGuide 弹出模式', () => {
     it('隐藏或无步骤时不渲染任何内容', () => {
         const { unmount } = renderGuide({ steps: makeSteps() });
-        expect($(`.${prefix}-popover`)).toBeNull();
-        expect($(`.${prefix}-spotlight`)).toBeNull();
+        expect(query(`.${prefix}-popover`)).toBeNull();
+        expect(query(`.${prefix}-spotlight`)).toBeNull();
         unmount();
         renderGuide({ steps: [], visible: true });
-        expect($(`.${prefix}-popover`)).toBeNull();
-        expect($(`.${prefix}-spotlight`)).toBeNull();
+        expect(query(`.${prefix}-popover`)).toBeNull();
+        expect(query(`.${prefix}-spotlight`)).toBeNull();
     });
 
     it('在 popover 中渲染当前步骤，并应用 class 与 style', async () => {
@@ -175,7 +177,7 @@ describe('UserGuide 弹出模式', () => {
 
         rerender({ steps, visible: false });
         expect(screen.queryByText('Title B')).toBeNull();
-        expect($(`.${prefix}-spotlight`)).toBeNull();
+        expect(query(`.${prefix}-spotlight`)).toBeNull();
 
         rerender({ steps, visible: true });
         await screen.findByText('Title A');
@@ -207,7 +209,7 @@ describe('UserGuide 弹出模式', () => {
     it('mask={false} 保留镂空定义但不绘制遮罩', async () => {
         renderGuide({ mask: false, steps: makeSteps(), visible: true });
         await waitFor(() => expect(spotRect()).not.toBeNull());
-        expect($(`.${prefix}-spotlight rect[mask]`)).toBeNull();
+        expect(query(`.${prefix}-spotlight rect[mask]`)).toBeNull();
         expect($$(`.${prefix}-spotlight-transparent-rect`)).toHaveLength(0);
     });
 
@@ -215,7 +217,7 @@ describe('UserGuide 弹出模式', () => {
         renderGuide({ steps: [{ title: 'Nowhere' }], visible: true });
         await sleep(20);
         expect(screen.queryByText('Nowhere')).toBeNull();
-        expect($(`.${prefix}-spotlight`)).toBeNull();
+        expect(query(`.${prefix}-spotlight`)).toBeNull();
     });
 
     it('主题可由组件或步骤设置为 primary', async () => {
@@ -223,7 +225,7 @@ describe('UserGuide 弹出模式', () => {
         steps[1].theme = 'primary';
         renderGuide({ steps, visible: true });
         await screen.findByText('Title A');
-        expect($(`.${prefix}-popup-content-primary`)).toBeNull();
+        expect(query(`.${prefix}-popup-content-primary`)).toBeNull();
         fireEvent.click(screen.getByRole('button', { name: '下一步' }));
         await screen.findByText('Title B');
         expect($(`.${prefix}-popup-content-primary`)).not.toBeNull();
@@ -237,13 +239,13 @@ describe('UserGuide 弹出模式', () => {
         expect($(`.${prefix}-popup-content-primary`)).not.toBeNull();
         fireEvent.click(screen.getByRole('button', { name: '下一步' }));
         await screen.findByText('Title B');
-        expect($(`.${prefix}-popup-content-primary`)).toBeNull();
+        expect(query(`.${prefix}-popup-content-primary`)).toBeNull();
     });
 
     it('steps 在显示后才到达时，补上聚光区域', async () => {
         const steps = makeSteps();
         const { rerender } = renderGuide({ steps: [], visible: true });
-        expect(spotRect()).toBeNull();
+        expect(querySpotRect()).toBeNull();
         rerender({ steps, visible: true });
         await waitFor(() => expect(rectOf(spotRect())).toEqual([5, 15, 110, 40]));
         await screen.findByText('Title A');
@@ -253,7 +255,7 @@ describe('UserGuide 弹出模式', () => {
     it('target 在显示后才挂载时，下一次缩放或滚动补上聚光区域', async () => {
         let target: Element | undefined;
         renderGuide({ steps: [{ target: () => target, title: 'Late' }], visible: true });
-        expect(spotRect()).toBeNull();
+        expect(querySpotRect()).toBeNull();
         target = makeTarget(10, 20, 100, 30);
         fireEvent(window, new Event('resize'));
         await waitFor(() => expect(rectOf(spotRect())).toEqual([5, 15, 110, 40]));
@@ -264,7 +266,7 @@ describe('UserGuide 弹出模式', () => {
         renderGuide({ steps: [steps[0], { title: 'Nowhere' }], visible: true });
         await waitFor(() => expect(spotRect()).not.toBeNull());
         fireEvent.click(screen.getByRole('button', { name: '下一步' }));
-        await waitFor(() => expect(spotRect()).toBeNull());
+        await waitFor(() => expect(querySpotRect()).toBeNull());
         expect(screen.queryByText('Nowhere')).toBeNull();
     });
 
@@ -411,7 +413,7 @@ describe('传递到各层的 UserGuide 属性', () => {
         steps[1].mask = false;
         const { rerender } = renderGuide({ current: 1, steps, visible: true });
         await waitFor(() => expect(spotRect()).not.toBeNull());
-        expect($(`.${prefix}-spotlight rect[mask]`)).toBeNull();
+        expect(query(`.${prefix}-spotlight rect[mask]`)).toBeNull();
         rerender({ current: 0, steps, visible: true });
         await waitFor(() => expect($(`.${prefix}-spotlight rect[mask]`)).not.toBeNull());
         rerender({ current: 0, mask: false, steps: steps.map((step, i) => (i === 0 ? { ...step, mask: true } : step)), visible: true });
@@ -448,7 +450,7 @@ describe('传递到各层的 UserGuide 属性', () => {
         expect(modal.querySelector(`.${BASE_CLASS_PREFIX}-modal`)).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(container.contains(modal)).toBe(true);
         expect(modal.closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-portal`)?.style.zIndex).toBe('2000');
-        expect($(`.${BASE_CLASS_PREFIX}-modal-mask`)).toBeNull();
+        expect(query(`.${BASE_CLASS_PREFIX}-modal-mask`)).toBeNull();
         container.remove();
     });
 
@@ -519,15 +521,15 @@ describe('UserGuide 测量', () => {
         const { rerender } = renderGuide({ steps: [] });
         rerender({ steps: [], visible: true });
         await sleep(20);
-        expect($(`.${prefix}-spotlight`)).toBeNull();
+        expect(query(`.${prefix}-spotlight`)).toBeNull();
     });
 
     it('受控 current 超出 steps 范围时不渲染且不抛错', () => {
         const steps = makeSteps();
         renderGuide({ current: 5, steps, visible: true });
         renderGuide({ current: 5, mode: 'modal', steps, visible: true });
-        expect($(`.${prefix}-popover`)).toBeNull();
-        expect($(`.${prefix}-modal`)).toBeNull();
+        expect(query(`.${prefix}-popover`)).toBeNull();
+        expect(query(`.${prefix}-modal`)).toBeNull();
     });
 
     it('读取 semiGlobal.config.overrideDefaultProps', async () => {
@@ -552,8 +554,8 @@ describe('UserGuide 弹窗模式', () => {
         renderGuide({ mode: 'modal', steps: makeSteps(), visible: true, renderCover: firstCover, onFinish, onNext });
         await screen.findByText('Title A');
         expect($(`.${modalPrefix}`)).not.toBeNull();
-        expect($(`.${prefix}-spotlight`)).toBeNull();
-        expect($(`.${prefix}-popover`)).toBeNull();
+        expect(query(`.${prefix}-spotlight`)).toBeNull();
+        expect(query(`.${prefix}-popover`)).toBeNull();
         expect(screen.getByAltText('cover-a').parentElement).toHaveClass(`${modalPrefix}-cover`);
         expect($$(`.${modalPrefix}-indicator-item`)).toHaveLength(3);
         expect(activeDot()).toBe(0);
@@ -564,7 +566,7 @@ describe('UserGuide 弹窗模式', () => {
         fireEvent.click(screen.getByRole('button', { name: '下一步' }));
         expect(onNext).toHaveBeenCalledWith(1);
         await screen.findByText('Title B');
-        expect($(`.${modalPrefix}-cover`)).toBeNull();
+        expect(query(`.${modalPrefix}-cover`)).toBeNull();
         expect(screen.getByRole('button', { name: '上一步' })).toBeInTheDocument();
 
         fireEvent.click(screen.getByRole('button', { name: '下一步' }));
@@ -595,7 +597,7 @@ describe('UserGuide 弹窗模式', () => {
         fireEvent.click(screen.getByRole('button', { name: '下一步' }));
         await screen.findByText('Title B');
         expect(screen.getByText('Desc B')).toHaveClass(`${modalPrefix}-body-description`);
-        expect($(`.${modalPrefix}-cover`)).toBeNull();
+        expect(query(`.${modalPrefix}-cover`)).toBeNull();
         expect([...indices]).toEqual([0, 1]);
     });
 

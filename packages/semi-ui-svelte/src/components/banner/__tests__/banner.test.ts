@@ -4,6 +4,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal, SemiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { BannerProps, BannerType } from '../interface';
 import BannerFixture from './banner-fixture.svelte';
 import BannerGlobal from './banner-global.svelte';
@@ -122,9 +123,9 @@ describe('Svelte Banner', () => {
         const rootEl = root() as HTMLElement;
         expect(rootEl.children).toHaveLength(2);
         expect(rootEl.firstElementChild).toHaveClass(`${prefix}-content-wrapper`);
-        const body = view.container.querySelector(`.${prefix}-content-body`) as HTMLElement;
-        const title = view.container.querySelector('[x-semi-prop="title"]') as HTMLElement;
-        const description = view.container.querySelector('[x-semi-prop="description"]') as HTMLElement;
+        const body = getElement(`.${prefix}-content-body`, view.container);
+        const title = getElement('[x-semi-prop="title"]', view.container);
+        const description = getElement('[x-semi-prop="description"]', view.container);
         expect(title.tagName).toBe('DIV');
         expect(title).toHaveClass(`${prefix}-title`, 'semi-typography');
         expect(title).toHaveTextContent(/^slotted$/);

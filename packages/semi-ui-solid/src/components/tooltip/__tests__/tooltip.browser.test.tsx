@@ -6,7 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { openLayer } from '@fibrae/semi-foundation/utils';
 import { IconHelpCircle } from '@fibrae/semi-icons-solid';
 import { clickOutside, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
-import { sleep } from '@test/utils/solid';
+import { sleep, defined, getElement } from '@test/utils/solid';
 import Tooltip, { type Position, type RenderContentProps, type TooltipProps } from '..';
 import Button from '../../button';
 import Switch from '../../switch';
@@ -15,8 +15,8 @@ const wrapperSelector = `.${BASE_CLASS_PREFIX}-tooltip-wrapper`;
 const shown = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tooltip-wrapper-show`);
 const expectShown = (text: string) => waitFor(() => expect(shown()).toHaveTextContent(text));
 const expectHidden = () => waitFor(() => expect(shown()).toBeNull());
-const popupOf = (trigger: Element) => document.getElementById(String(trigger.getAttribute('data-popupid')).split(' ')[0]) as HTMLElement;
-const wrapperOf = (text: string) => screen.getByText(text).closest(wrapperSelector) as HTMLElement;
+const popupOf = (trigger: Element) => defined(document.getElementById(String(trigger.getAttribute('data-popupid')).split(' ')[0]));
+const wrapperOf = (text: string) => defined(screen.getByText(text).closest<HTMLElement>(wrapperSelector));
 const center = (rect: DOMRect) => rect.left + rect.width / 2;
 type Callback = () => void;
 type Side = 'top' | 'bottom' | 'left' | 'right';
@@ -96,14 +96,14 @@ describe('Tooltip 触发（浏览器）', () => {
                 )}
             </Tooltip>
         ));
-        const wrapper = container.querySelector('span[tabindex="0"]') as HTMLElement;
+        const wrapper = getElement('span[tabindex="0"]', container);
         await tabTo(wrapper);
         expectThemeFocusRing(wrapper);
     });
 
     it('由 Tooltip 设为可聚焦的图标触发器显示主题焦点环', async () => {
         const { container } = render(() => <Tooltip content="tip">{(t) => <IconHelpCircle aria-label="help" {...t()} />}</Tooltip>);
-        const icon = container.querySelector(`.${BASE_CLASS_PREFIX}-icon`) as HTMLElement;
+        const icon = getElement(`.${BASE_CLASS_PREFIX}-icon`, container);
         await tabTo(icon);
         expectThemeFocusRing(icon);
     });
@@ -422,7 +422,7 @@ describe('Tooltip 定位（浏览器）', () => {
             const tip = wrapperOf('beside tip').getBoundingClientRect();
             expect(tip.bottom).toBeLessThanOrEqual(button.top);
             expect(button.top - tip.bottom).toBeLessThan(20);
-            const arrow = (wrapperOf('beside tip').querySelector('svg') as SVGElement).getBoundingClientRect();
+            const arrow = getElement<SVGElement>('svg', wrapperOf('beside tip')).getBoundingClientRect();
             expect(Math.abs(center(arrow) - center(button))).toBeLessThanOrEqual(1);
         });
     });
@@ -586,7 +586,7 @@ describe('Tooltip 定位（浏览器）', () => {
             expectInViewport(rect);
             const gaps: Record<Side, number> = { bottom: rect.top - trigger.bottom, top: trigger.top - rect.bottom, right: rect.left - trigger.right, left: trigger.left - rect.right };
             expect(gaps[side]).toBeGreaterThanOrEqual(0);
-            const arrow = popup.querySelector('svg') as SVGElement;
+            const arrow = getElement<SVGElement>('svg', popup);
             const arrowRect = arrow.getBoundingClientRect();
             const difference = vertical ? center(arrowRect) - center(trigger) : arrowRect.top + arrowRect.height / 2 - (trigger.top + trigger.height / 2);
             expect(Math.abs(difference)).toBeLessThanOrEqual(1);
@@ -686,7 +686,7 @@ describe('Tooltip 顶层弹层（浏览器）', () => {
         expect(checkbox).not.toBeChecked();
         await userEvent.keyboard('{Enter}');
         expect(onSubmit).not.toHaveBeenCalled();
-        const popup = input.closest(wrapperSelector) as HTMLElement;
+        const popup = defined(input.closest<HTMLElement>(wrapperSelector));
         expect(getComputedStyle(popup).whiteSpace).toBe('normal');
         expect(getComputedStyle(popup).fontWeight).not.toBe('700');
     });
@@ -719,12 +719,12 @@ describe('Tooltip 顶层弹层（浏览器）', () => {
             { container: mount }
         );
         onTestFinished(() => view.unmount());
-        const trigger = shadow.querySelector('button') as HTMLButtonElement;
+        const trigger = getElement<HTMLButtonElement>('button', shadow);
         trigger.click();
         await waitFor(() => expect(shadow.querySelector('[popover] button')).not.toBeNull());
-        const layer = shadow.querySelector('[popover]') as HTMLElement;
+        const layer = getElement('[popover]', shadow);
         expect(layer.getRootNode()).toBe(shadow);
-        const inside = layer.querySelector('button') as HTMLButtonElement;
+        const inside = getElement<HTMLButtonElement>('button', layer);
         inside.focus();
         inside.click();
         expect(onFocusIn).toHaveBeenCalledTimes(1);
@@ -751,7 +751,9 @@ describe('Tooltip 全屏（浏览器）', () => {
                     type="button"
                     onClick={() => {
                         // the popup must be inserted after fullscreen starts
-                        void (document.getElementById('stage') as HTMLElement).requestFullscreen().then(() => setVisible(true));
+                        void defined(document.getElementById('stage'))
+                            .requestFullscreen()
+                            .then(() => setVisible(true));
                     }}
                 >
                     enter
@@ -792,7 +794,7 @@ describe('Tooltip 全屏（浏览器）', () => {
             </Tooltip>
         ));
         expect((await firstFrame).filter((entry) => entry.endsWith(':0'))).toEqual([]);
-        const span = document.querySelector(`.${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`) as HTMLElement;
+        const span = getElement(`.${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`);
         expect(span).toHaveAttribute('tabindex', '-1');
     });
 });

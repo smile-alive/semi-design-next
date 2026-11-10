@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import Fixture, { type FixtureStore } from './date-picker-fixture.svelte';
 
 const dp = `${BASE_CLASS_PREFIX}-datepicker`;
@@ -20,9 +21,9 @@ function setup({ props, ...init }: SetupInit = {}) {
 }
 
 const getPopup = () => document.querySelector<HTMLElement>(`.${dp}-container`);
-const getDay = (fullDate: string) => document.querySelector<HTMLElement>(`.${dp}-day[aria-label="${fullDate}"]`) as HTMLElement;
-const getInput = () => document.querySelector<HTMLInputElement>(`.${dp} input`) as HTMLInputElement;
-const getTitle = () => document.querySelector<HTMLElement>(`.${dp}-month-grid-left .${dp}-navigation-month button`) as HTMLElement;
+const getDay = (fullDate: string) => getElement(`.${dp}-day[aria-label="${fullDate}"]`);
+const getInput = () => getElement<HTMLInputElement>(`.${dp} input`);
+const getTitle = () => getElement(`.${dp}-month-grid-left .${dp}-navigation-month button`);
 
 describe('Svelte DatePicker 键盘与焦点', () => {
     it('ArrowDown 打开面板，再按 ArrowDown 焦点移入面板，Esc 关闭后焦点回到输入框', async () => {
@@ -62,7 +63,7 @@ describe('Svelte DatePicker 键盘与焦点', () => {
 
     it('trigger snippet 内的按钮：Enter 打开，面板内 Esc 关闭后焦点回到按钮', async () => {
         setup({ value: new Date(2019, 8, 11), trigger: 'button' });
-        const trigger = document.querySelector<HTMLElement>('.custom-trigger') as HTMLElement;
+        const trigger = getElement('.custom-trigger');
         await tabTo(trigger);
         await userEvent.keyboard('{Enter}');
         await tabTo(await screen.findByRole('grid'));
@@ -97,7 +98,7 @@ describe('Svelte DatePicker 键盘与焦点', () => {
         const titleId = getTitle().id;
         await tabTo(getTitle());
         await userEvent.keyboard('{Enter}');
-        const left = document.querySelector<HTMLElement>(`.${dp}-month-grid-left`) as HTMLElement;
+        const left = getElement(`.${dp}-month-grid-left`);
         await waitFor(() => expect(document.activeElement).toBe(left.querySelector('[role="listbox"]')));
         const back = await within(left).findByRole('button', { name: zh_CN.DatePicker.selectDate });
         await tabTo(back);

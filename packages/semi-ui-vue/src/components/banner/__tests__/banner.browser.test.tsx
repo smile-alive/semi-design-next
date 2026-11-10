@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Banner from '../banner.vue';
 
 describe('Banner 浏览器', () => {
@@ -39,7 +39,7 @@ describe('Banner 浏览器', () => {
             { container: mount }
         );
         try {
-            (shadow.querySelector('button[aria-label]') as HTMLElement).focus();
+            getElement('button[aria-label]', shadow).focus();
             await userEvent.keyboard('{Enter}');
             await waitFor(() => expect(shadow.activeElement).toHaveTextContent('after'));
         } finally {

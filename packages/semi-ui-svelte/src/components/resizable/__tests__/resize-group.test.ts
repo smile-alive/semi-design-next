@@ -4,12 +4,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { ResizeCallback } from '..';
 import Group from './group.svelte';
 import { down, drag, key, mockLayout, up } from './helpers';
 import KeyedGroup from './keyed-group.svelte';
 
-const getGroup = () => document.querySelector<HTMLElement>('.semi-resizable-group') as HTMLElement;
+const getGroup = () => getElement('.semi-resizable-group');
 const getItems = () => [...document.querySelectorAll<HTMLElement>('.semi-resizable-item')];
 const getHandlers = () => [...document.querySelectorAll<HTMLElement>('.semi-resizable-handler')];
 const getBackground = () => document.querySelector('.semi-resizable-background');

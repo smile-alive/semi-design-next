@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { stepsClasses } from '@fibrae/semi-foundation/components/steps/constants';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import { Steps, type StepData, type StepStatus } from '../index';
 import StepsDemo from './steps-demo.svelte';
 
@@ -197,7 +198,7 @@ describe('Steps 基线', () => {
     it.each(types)('%s 忽略在步骤内可聚焦子元素中按下的按键', async (type) => {
         const onChange = vi.fn<(current: number) => void>();
         const { container } = renderSteps({ type, current: 0, onChange, snippets: ['input-title'] });
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         input.focus();
         await userEvent.keyboard(' x');
         expect(input).toHaveValue(' x');

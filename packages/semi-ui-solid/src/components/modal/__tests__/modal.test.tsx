@@ -6,7 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconEyeClosed } from '@fibrae/semi-icons-solid';
 import { en_US } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { sleep } from '@test/utils/solid';
+import { sleep, getElement } from '@test/utils/solid';
 import Modal, { type ModalProps } from '..';
 import ConfigProvider from '../../config-provider';
 import Input from '../../input';
@@ -29,7 +29,8 @@ function renderModal(initial: TestProps = {}, children: () => JSX.Element = defa
     return { ...result, rerender: (next: TestProps) => setProps(next) };
 }
 
-const $ = (selector: string) => document.querySelector<HTMLElement>(selector) as HTMLElement;
+const $ = (selector: string) => getElement(selector);
+const query = (selector: string) => document.querySelector(selector);
 const getButtons = () => document.querySelectorAll(`.${BASE_CLASS_PREFIX}-button`);
 const footerButtons = () => document.querySelectorAll<HTMLElement>(`.${p}-footer .${BASE_CLASS_PREFIX}-button`);
 const loadingCls = `${BASE_CLASS_PREFIX}-button-loading`;
@@ -67,7 +68,7 @@ describe('Modal', () => {
         const { rerender } = renderModal({ visible: true, footer: 0 as unknown as JSX.Element });
         expect($(`.${p}-footer`)).toHaveTextContent(/^0$/);
         rerender({ visible: true, footer: null });
-        expect($(`.${p}-footer`)).toBeNull();
+        expect(query(`.${p}-footer`)).toBeNull();
     });
 
     it('离场动画期间的点击不再触发 onCancel', async () => {
@@ -102,13 +103,13 @@ describe('Modal', () => {
 
     it('visible 属性', () => {
         const { rerender } = renderModal();
-        expect($(`div.${p}`)).toBeNull();
+        expect(query(`div.${p}`)).toBeNull();
         rerender({ visible: true });
         expect($(`div.${p}`)).not.toBeNull();
         expect(document.body.style.overflow).toEqual('hidden');
         rerender({ visible: false });
         expect(document.body.style.overflow).not.toEqual('hidden');
-        expect($(`div.${p}`)).toBeNull();
+        expect(query(`div.${p}`)).toBeNull();
     });
 
     it('渲染基础内容', () => {
@@ -156,7 +157,7 @@ describe('Modal', () => {
         expect($(`.${p}-close`)).not.toBeNull();
         unmount();
         renderModal({ closable: false, visible: true });
-        expect($(`.${p}-close`)).toBeNull();
+        expect(query(`.${p}-close`)).toBeNull();
     });
 
     it('getPopupContainer', () => {
@@ -232,7 +233,7 @@ describe('Modal', () => {
     it('无遮罩', () => {
         renderModal({ mask: false, visible: true });
         expect($(`div.${p}`)).not.toBeNull();
-        expect($(`.${p}-mask`)).toBeNull();
+        expect(query(`.${p}-mask`)).toBeNull();
     });
 
     it('closeIcon', () => {
@@ -244,7 +245,7 @@ describe('Modal', () => {
         const { rerender } = renderModal({ visible: true, motion: false });
         expect($(`div.${p}`).style.transform).toBe('');
         rerender({ visible: false, motion: false });
-        expect($(`div.${p}`)).toBeNull();
+        expect(query(`div.${p}`)).toBeNull();
     });
 
     it('有动效时播放进场动画', () => {
@@ -261,10 +262,10 @@ describe('Modal', () => {
 
     it('keepDOM', () => {
         const { rerender } = renderModal({ keepDOM: true });
-        expect($(`div.${p}`)).toBeNull();
+        expect(query(`div.${p}`)).toBeNull();
         rerender({ keepDOM: true, visible: true });
         expect($(`div.${p}`)).not.toBeNull();
-        expect($(`.${p}-displayNone`)).toBeNull();
+        expect(query(`.${p}-displayNone`)).toBeNull();
         expect(document.body.style.overflow).toEqual('hidden');
         rerender({ keepDOM: true, visible: false });
         expect($(`.${p}-displayNone`)).not.toBeNull();
@@ -276,7 +277,7 @@ describe('Modal', () => {
         expect($(`div.${p}`)).not.toBeNull();
         expect($(`.${p}-displayNone`)).not.toBeNull();
         rerender({ keepDOM: true, lazyRender: false, visible: true });
-        expect($(`.${p}-displayNone`)).toBeNull();
+        expect(query(`.${p}-displayNone`)).toBeNull();
         expect(document.body.style.overflow).toEqual('hidden');
         rerender({ keepDOM: true, lazyRender: false, visible: false });
         expect($(`.${p}-displayNone`)).not.toBeNull();
@@ -388,7 +389,7 @@ describe('Modal 行为', () => {
         expect(document.body.style.overflow).toBe('hidden');
         expect(afterClose).not.toHaveBeenCalled();
         animationEnd($(`.${p}-content`));
-        expect($(`.${p}`)).toBeNull();
+        expect(query(`.${p}`)).toBeNull();
         expect(document.body.style.overflow).toBe('');
         expect(afterClose).toHaveBeenCalledTimes(1);
     });
@@ -402,7 +403,7 @@ describe('Modal 行为', () => {
         expect($(`.${p}`)).not.toBeNull();
         expect(afterClose).not.toHaveBeenCalled();
         animationEnd($(`.${p}-content`));
-        expect($(`.${p}`)).toBeNull();
+        expect(query(`.${p}`)).toBeNull();
         expect(afterClose).toHaveBeenCalledTimes(1);
     });
 
@@ -622,7 +623,7 @@ describe('Modal 行为', () => {
         semiGlobal.config.overrideDefaultProps = { Modal: { okText: 'Global OK', closable: false, motion: false } };
         try {
             render(() => <Modal title="T" visible />);
-            expect($(`.${p}-close`)).toBeNull();
+            expect(query(`.${p}-close`)).toBeNull();
             expect(footerButtons()[1]).toHaveTextContent('Global OK');
         } finally {
             semiGlobal.config.overrideDefaultProps = {};
@@ -712,7 +713,7 @@ describe('Modal 行为', () => {
         rerender({ visible: true, motion: true });
         rerender({ visible: false, motion: true });
         animationEnd($(`.${p}-content`));
-        expect($(`.${p}`)).toBeNull();
+        expect(query(`.${p}`)).toBeNull();
         expect(document.body.style.overflow).toBe('');
     });
 

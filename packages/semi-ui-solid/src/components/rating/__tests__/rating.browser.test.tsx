@@ -4,11 +4,12 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement, defined } from '@test/utils/solid';
 import Rating from '..';
 
 const getStars = () => document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-rating-star-second`);
-const getList = () => document.querySelector(`ul.${BASE_CLASS_PREFIX}-rating`) as HTMLElement;
-const getWrapper = (radio: HTMLElement) => radio.closest(`.${BASE_CLASS_PREFIX}-rating-star-wrapper`) as HTMLElement;
+const getList = () => getElement(`ul.${BASE_CLASS_PREFIX}-rating`);
+const getWrapper = (radio: HTMLElement) => defined(radio.closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-rating-star-wrapper`));
 
 describe('Rating（浏览器）', () => {
     it('radio 搭配额外内容：指针悬停显示 tooltip 后点击与方向键更新值', async () => {
@@ -22,7 +23,7 @@ describe('Rating（浏览器）', () => {
                 <Rating value={value()} tooltips={desc} onChange={setValue} />
             </div>
         ));
-        const result = () => document.querySelector('#rating-result') as HTMLElement;
+        const result = () => getElement('#rating-result');
         const press = async (key: string, focusedIndex: number) => {
             expect(getStars()[focusedIndex]).toHaveFocus();
             await userEvent.keyboard(key);
@@ -53,7 +54,7 @@ describe('Rating（浏览器）', () => {
     it('指针真实悬停星的右半与左半得到整星与半星值', async () => {
         const onHoverChange = vi.fn<(value?: number) => void>();
         render(() => <Rating allowHalf onHoverChange={onHoverChange} />);
-        const star = getStars()[2].closest('li') as HTMLElement;
+        const star = defined(getStars()[2].closest<HTMLElement>('li'));
         const rect = star.getBoundingClientRect();
         await userEvent.hover(getWrapper(getStars()[2]), { position: { x: rect.width * 0.25, y: rect.height / 2 } });
         expect(onHoverChange).toHaveBeenLastCalledWith(2.5);

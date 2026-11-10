@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/svelte';
 import { beforeEach, describe, expect, it, vi } from 'vite-plus/test';
+import { getElement } from '@test/utils/dom/common';
 import { click, createFile, createObjectURL, fn, getCardNames, getInput, installFakeXhr, lastFileList, renderUpload, revokeObjectURL, selectFiles, type FakeXhr } from './helpers';
 
 vi.mock('../../cropper/cropper.svelte', async () => ({ default: (await import('./cropper-stub.svelte')).default }));
@@ -119,7 +120,7 @@ describe('Upload 裁剪', () => {
 
     it('crop 开启时拖入的图片也先裁剪', async () => {
         renderUpload({ crop: true, cropModalProps, draggable: true });
-        await fireEvent.drop(document.querySelector('.semi-upload-drag-area') as HTMLElement, { dataTransfer: { files: [createFile(10, 'drop.png')] } });
+        await fireEvent.drop(getElement('.semi-upload-drag-area'), { dataTransfer: { files: [createFile(10, 'drop.png')] } });
         await waitFor(() => expect(screen.getByTestId('cropper-stub')).toHaveAttribute('src', 'blob:crop-drop.png'));
     });
 });

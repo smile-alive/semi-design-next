@@ -2,7 +2,7 @@
 import { screen } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import FloatButtonGroup from '../float-button-group.vue';
 import FloatButton from '../float-button.vue';
 
@@ -34,7 +34,7 @@ describe('FloatButton 布局与样式', () => {
         const roots = view.container.querySelectorAll(`.${prefixCls}`);
         [24, 32, 40, 32].forEach((size, index) => {
             const root = roots[index];
-            const body = root.querySelector(`.${prefixCls}-body`) as Element;
+            const body = getElement(`.${prefixCls}-body`, root);
             expect(rectOf(root)).toMatchObject({ width: size, height: size });
             expect(rectOf(body)).toEqual(rectOf(root));
         });
@@ -42,7 +42,7 @@ describe('FloatButton 布局与样式', () => {
 
     it('根元素没有浏览器默认的按钮或链接样式', () => {
         const view = render(FloatButton, { props: { shape: 'square' }, slots: { icon } });
-        const style = getComputedStyle(view.container.querySelector(`.${prefixCls}`) as Element);
+        const style = getComputedStyle(getElement(`.${prefixCls}`, view.container));
         expect(style.paddingTop).toBe('0px');
         expect(style.paddingLeft).toBe('0px');
         expect(style.borderTopWidth).toBe('0px');
@@ -70,8 +70,8 @@ describe('FloatButtonGroup 布局与样式', () => {
                 </FloatButtonGroup>
             </div>
         ));
-        const root = view.container.querySelector(`.${groupCls}`) as Element;
-        const item = root.querySelector(`.${groupCls}-item`) as Element;
+        const root = getElement(`.${groupCls}`, view.container);
+        const item = getElement(`.${groupCls}-item`, root);
         const style = getComputedStyle(item);
         expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
         expect(style.borderTopWidth).toBe('0px');
@@ -140,7 +140,7 @@ describe('FloatButtonGroup 布局与样式', () => {
                 </FloatButtonGroup>
             </div>
         ));
-        const [roomy, narrow] = [...view.container.querySelectorAll(`.${groupCls}`)].map((group) => rectOf(group.querySelector(`.${groupCls}-item`) as Element));
+        const [roomy, narrow] = [...view.container.querySelectorAll(`.${groupCls}`)].map((group) => rectOf(getElement(`.${groupCls}-item`, group)));
         expect({ width: narrow.width, height: narrow.height }).toEqual({ width: roomy.width, height: roomy.height });
     });
 });

@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconStar } from '@fibrae/semi-icons-solid';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
-import { endLeaveAnimations, getData, getNestData, getRandomNumber, getTreeData } from '@test/utils/solid';
+import { endLeaveAnimations, getData, getNestData, getRandomNumber, getTreeData, defined } from '@test/utils/solid';
 import Table from '..';
 import LocaleProvider from '../../locale/locale-provider';
 import Tag from '../../tag';
@@ -1100,7 +1100,7 @@ describe('Table 回归用例', () => {
             { title: '', dataIndex: 'operate', fixed: 'right', width: 100 },
         ];
         render(() => <Table columns={fixedColumns} dataSource={getFileData(46)} rowSelection={{ fixed: true }} scroll={{ y: 300, x: 1200 }} onHeaderRow={() => ({ onClick: onHeaderRowClick, class: 'test-header-row' })} />);
-        const headerRow = screen.getByText('标题').closest('tr') as HTMLElement;
+        const headerRow = defined(screen.getByText('标题').closest<HTMLElement>('tr'));
         expect(headerRow.closest(`.${P}-header`)).not.toBeNull();
         expect(headerRow).toHaveClass('test-header-row');
         await userEvent.click(screen.getByText('标题'));

@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import DatePicker, { type DatePickerElement, type DatePickerProps } from '..';
 
 type ChangeHandler = NonNullable<DatePickerProps['onChange']>;
@@ -21,11 +22,12 @@ function renderDatePicker(initial: DatePickerProps = {}) {
     return { ...result, rerender: (next: DatePickerProps) => setProps(next) };
 }
 
-const getPopup = () => document.querySelector<HTMLElement>(popupSelector) as HTMLElement;
-const getDay = (fullDate: string) => document.querySelector<HTMLElement>(`.${dp}-day[aria-label="${fullDate}"]`) as HTMLElement;
+const getPopup = () => getElement(popupSelector);
+const queryPopup = () => document.querySelector(popupSelector);
+const getDay = (fullDate: string) => getElement(`.${dp}-day[aria-label="${fullDate}"]`);
 const getSelectedDays = () => Array.from(document.querySelectorAll(`.${dp}-day-selected`)).map((d) => d.getAttribute('aria-label'));
 const getFooterButtons = () => document.querySelectorAll<HTMLElement>(`.${dp}-footer .${BASE_CLASS_PREFIX}-button`);
-const getPanel = (side: string) => document.querySelector<HTMLElement>(`.${dp}-month-grid-${side}`) as HTMLElement;
+const getPanel = (side: string) => getElement(`.${dp}-month-grid-${side}`);
 const getWeekDays = (side: string, weekIndex: number) => getPanel(side).querySelectorAll(`.${dp}-week`)[weekIndex].querySelectorAll<HTMLElement>(`.${dp}-day`);
 const getNavTitle = (side: string) => getPanel(side).querySelector(`.${dp}-navigation-month`)?.textContent;
 const ymd = (date: Date) => format(date, 'yyyy-MM-dd');
@@ -33,7 +35,7 @@ const getYMLists = (root: ParentNode = document) => root.querySelectorAll<HTMLEl
 const getYMSelected = (root: ParentNode = document) => Array.from(root.querySelectorAll(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`)).map((li) => li.textContent);
 const inputs = (container: HTMLElement) => Array.from(container.querySelectorAll('input'));
 const typeIn = (input: Element, value: string) => fireEvent.input(input, { target: { value } });
-const panelButton = (side: string, label: 'nextMonth' | 'switchToTime') => getPanel(side).querySelector(`[aria-label="${zh_CN.DatePicker[label]}"]`) as HTMLElement;
+const panelButton = (side: string, label: 'nextMonth' | 'switchToTime') => getElement(`[aria-label="${zh_CN.DatePicker[label]}"]`, getPanel(side));
 const rangeValue: DatePickerProps['defaultValue'] = [new Date(2021, 5, 1), new Date(2021, 5, 15)];
 const timeRangeValue: DatePickerProps['defaultValue'] = [new Date(2021, 5, 1, 10, 0), new Date(2021, 5, 15, 18, 0)];
 
@@ -65,7 +67,7 @@ describe('DatePicker 选择流程', () => {
 
     it('date 类型无时间的 insetInput', () => {
         renderDatePicker({ type: 'date', defaultValue: baseDate, defaultOpen: true, insetInput: true, motion: false });
-        const wrapper = getPopup().querySelector(`.${dp}-inset-input-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${dp}-inset-input-wrapper`, getPopup());
         expect(wrapper).toHaveAttribute('x-type', 'date');
         expect(wrapper.querySelectorAll('input')).toHaveLength(1);
         expect(wrapper.querySelector(`.${dp}-inset-input-separator`)).toBeNull();
@@ -137,7 +139,7 @@ describe('DatePicker 选择流程', () => {
         await userEvent.click(getDay('2019-09-11'));
         expect(onChange).toHaveBeenCalledWith(new Date(2019, 8, 11));
         expect(container.querySelector('input')).toHaveValue('2019-09-11');
-        await waitFor(() => expect(getPopup()).toBeNull());
+        await waitFor(() => expect(queryPopup()).toBeNull());
     });
 
     it('范围不完整时禁用确认按钮', async () => {
@@ -158,17 +160,17 @@ describe('DatePicker 选择流程', () => {
     it('禁用时点击不打开，解除禁用后可打开', async () => {
         const onOpenChange = vi.fn<NonNullable<DatePickerProps['onOpenChange']>>();
         const { container, rerender } = renderDatePicker({ type: 'date', disabled: true, motion: false, onOpenChange });
-        fireEvent.click(container.querySelector(`.${dp}-input`) as HTMLElement);
+        fireEvent.click(getElement(`.${dp}-input`, container));
         expect(onOpenChange).not.toHaveBeenCalled();
-        expect(getPopup()).toBeNull();
+        expect(queryPopup()).toBeNull();
 
         rerender({ type: 'date', motion: false, onOpenChange });
-        await userEvent.click(container.querySelector('input') as HTMLInputElement);
+        await userEvent.click(getElement<HTMLInputElement>('input', container));
         expect(onOpenChange).toHaveBeenCalledWith(true);
         expect(getPopup()).not.toBeNull();
         fireEvent.mouseDown(document.body);
         expect(onOpenChange).toHaveBeenLastCalledWith(false);
-        await waitFor(() => expect(getPopup()).toBeNull());
+        await waitFor(() => expect(queryPopup()).toBeNull());
     });
 
     it('输入禁用日期不通知，清空时通知', () => {
@@ -270,7 +272,7 @@ describe('DatePicker 选择流程', () => {
         picker.open();
         expect(getPopup()).not.toBeNull();
         picker.close();
-        await waitFor(() => expect(getPopup()).toBeNull());
+        await waitFor(() => expect(queryPopup()).toBeNull());
     });
 
     it('insetInput 面板打开时聚焦已获焦的范围输入框', async () => {
@@ -284,11 +286,11 @@ describe('DatePicker 选择流程', () => {
 
     it('左侧打开年月选择器后返回日期面板', async () => {
         renderDatePicker({ type: 'dateRange', defaultValue: [new Date(2021, 5, 1), new Date(2021, 6, 15)], defaultOpen: true, motion: false });
-        await userEvent.click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         expect(getPanel('left').querySelector(`.${dp}-yam`)).not.toBeNull();
         expect(getPanel('right').querySelector(`.${dp}-yam`)).toBeNull();
         expect(getYMSelected(getPanel('left'))).toEqual(['2021年', '6月']);
-        await userEvent.click(getPanel('left').querySelector(`.${dp}-yearmonth-header button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-yearmonth-header button`, getPanel('left')));
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'date');
     });
 
@@ -307,14 +309,14 @@ describe('DatePicker 选择流程', () => {
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'time');
         expect(getPanel('right')).toHaveAttribute('x-open-type', 'time');
         expect(getPopup().querySelectorAll(`.${dp}-tpk`)).toHaveLength(2);
-        await userEvent.click(getPanel('left').querySelector(`[aria-label="${zh_CN.DatePicker.switchToDate}"]`) as HTMLElement);
+        await userEvent.click(getElement(`[aria-label="${zh_CN.DatePicker.switchToDate}"]`, getPanel('left')));
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'date');
         expect(getPanel('right')).toHaveAttribute('x-open-type', 'time');
     });
 
     it('点击范围后缀聚焦起始输入框', async () => {
         const { container } = renderDatePicker({ type: 'dateRange', defaultValue: rangeValue, motion: false });
-        await userEvent.click(container.querySelector(`.${dp}-range-input-suffix`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-range-input-suffix`, container));
         expect(container.querySelector(`.${dp}-range-input-wrapper-start`)).toHaveClass(`${dp}-range-input-wrapper-active`);
         expect(getPopup()).not.toBeNull();
     });
@@ -341,7 +343,7 @@ describe('DatePicker 选择流程', () => {
         const weekRows = (side: string) => getPanel(side).querySelectorAll(`.${dp}-week`);
         expect(getNavTitle('right')).toBe('2021年 3月');
         expect(weekRows('right')).toHaveLength(5);
-        await userEvent.click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'year');
         await userEvent.click(panelButton('right', 'nextMonth'));
         await userEvent.click(panelButton('right', 'nextMonth'));
@@ -352,9 +354,9 @@ describe('DatePicker 选择流程', () => {
 
     it('年月选择器的返回按钮回到日期面板', async () => {
         renderDatePicker({ type: 'date', defaultValue: new Date(2021, 5, 1), defaultOpen: true, motion: false });
-        await userEvent.click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         expect(getPanel('left').querySelector(`.${dp}-navigation`)).toBeNull();
-        await userEvent.click(getPopup().querySelector(`.${dp}-yearmonth-header button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-yearmonth-header button`, getPopup()));
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'date');
         expect(getNavTitle('left')).toBe('2021年 6月');
     });
@@ -388,14 +390,14 @@ describe('DatePicker 选择流程', () => {
 
     it('点击起始输入框外层聚焦 rangeStart', () => {
         const { container } = renderDatePicker({ type: 'dateRange', motion: false });
-        fireEvent.click(container.querySelector(`.${dp}-range-input-wrapper-start`) as HTMLElement);
+        fireEvent.click(getElement(`.${dp}-range-input-wrapper-start`, container));
         expect(container.querySelector(`.${dp}-range-input-wrapper-start`)).toHaveClass(`${dp}-range-input-wrapper-active`);
         expect(getPopup()).not.toBeNull();
     });
 
     it('点击结束输入框外层聚焦 rangeEnd', () => {
         const { container } = renderDatePicker({ type: 'dateRange', defaultValue: rangeValue, defaultOpen: true, motion: false });
-        fireEvent.click(container.querySelector(`.${dp}-range-input-wrapper-end`) as HTMLElement);
+        fireEvent.click(getElement(`.${dp}-range-input-wrapper-end`, container));
         expect(container.querySelector(`.${dp}-range-input-wrapper-end`)).toHaveClass(`${dp}-range-input-wrapper-active`);
         expect(container.querySelector(`.${dp}-range-input-wrapper-start`)).not.toHaveClass(`${dp}-range-input-wrapper-active`);
     });
@@ -438,7 +440,7 @@ describe('DatePicker 选择流程', () => {
 
     it('点击范围前缀聚焦起始输入框', async () => {
         const { container } = renderDatePicker({ type: 'dateRange', motion: false, prefix: 'Date:' });
-        await userEvent.click(container.querySelector(`.${dp}-range-input-prefix`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-range-input-prefix`, container));
         expect(container.querySelector(`.${dp}-range-input-wrapper-start`)).toHaveClass(`${dp}-range-input-wrapper-active`);
         expect(getPopup()).not.toBeNull();
     });
@@ -484,11 +486,11 @@ describe('DatePicker 选择流程', () => {
     it('年月选择器切换面板但不改值', async () => {
         const onChange = vi.fn<ChangeHandler>();
         renderDatePicker({ type: 'date', defaultValue: new Date(2021, 5, 1), autoSwitchDate: false, defaultOpen: true, motion: false, onChange });
-        await userEvent.click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         const [yearList, monthList] = getYMLists();
         await userEvent.click(within(yearList).getByRole('option', { name: '2022' }));
         await userEvent.click(within(monthList).getByRole('option', { name: '3月' }));
-        await userEvent.click(getPopup().querySelector(`.${dp}-yearmonth-header button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-yearmonth-header button`, getPopup()));
         expect(getNavTitle('left')).toBe('2022年 3月');
         expect(onChange).not.toHaveBeenCalled();
     });

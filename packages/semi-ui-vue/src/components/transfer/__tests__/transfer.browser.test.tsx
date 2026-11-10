@@ -6,7 +6,7 @@ import { cdp, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Transfer, { type TransferValue } from '..';
 import Button from '../../button';
 import Popover from '../../popover';
@@ -79,7 +79,7 @@ describe('Transfer（浏览器）', () => {
             props: { dataSource: data.map((item) => ({ ...item, disabled: true })) },
             attrs: { style: { width: '400px', height: '150px' } },
         });
-        const list = document.querySelector(`.${prefixCls}-left-list`) as HTMLElement;
+        const list = getElement(`.${prefixCls}-left-list`);
         await tabTo(list);
         expectThemeFocusRing(list);
     });
@@ -90,7 +90,7 @@ describe('Transfer（浏览器）', () => {
             attrs: { style: { width: '400px', height: '300px' } },
         });
         await waitFor(() => expect(getSortableItems()).toHaveLength(2));
-        const handle = document.querySelector(`.${prefixCls}-right-item-sortable-handle`) as HTMLElement;
+        const handle = getElement(`.${prefixCls}-right-item-sortable-handle`);
         await tabTo(handle);
         expectThemeFocusRing(handle);
     });
@@ -118,7 +118,7 @@ describe('Transfer（浏览器）', () => {
         });
         // the virtualizer takes the scroll container after the first render and resets its offset
         await nextTick();
-        const list = document.querySelector(`.${prefixCls}-right-virtual-list`) as HTMLElement;
+        const list = getElement(`.${prefixCls}-right-virtual-list`);
         expect(screen.queryByText('条目 40', { selector: `.${prefixCls}-right-item-text` })).toBeNull();
         list.scrollTop = 30 * 40;
         await waitFor(() => expect(screen.getByText('条目 40', { selector: `.${prefixCls}-right-item-text` })).toBeInTheDocument());
@@ -140,7 +140,7 @@ describe('Transfer（浏览器）', () => {
             expect(node?.getBoundingClientRect().height).toBeGreaterThan(0);
             return node as HTMLElement;
         });
-        expect(list.getBoundingClientRect().bottom).toBeLessThanOrEqual((document.querySelector(`.${prefixCls}-right`) as HTMLElement).getBoundingClientRect().bottom + 1);
+        expect(list.getBoundingClientRect().bottom).toBeLessThanOrEqual(getElement(`.${prefixCls}-right`).getBoundingClientRect().bottom + 1);
         expect(screen.getByText('条目 0', { selector: `.${prefixCls}-right-item-text` })).toBeInTheDocument();
         expect(screen.queryByText('条目 40', { selector: `.${prefixCls}-right-item-text` })).toBeNull();
     });

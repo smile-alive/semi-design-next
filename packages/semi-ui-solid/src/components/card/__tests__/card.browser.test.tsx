@@ -1,16 +1,17 @@
 import { render } from '@solidjs/testing-library';
 import { describe, expect, it } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
+import { getElement } from '@test/utils/solid';
 import Card from '..';
 
-const rectOf = (container: HTMLElement, selector: string) => (container.querySelector(selector) as Element).getBoundingClientRect();
+const rectOf = (container: HTMLElement, selector: string) => getElement(selector, container).getBoundingClientRect();
 
 const properties = ['display', 'font-family', 'font-size', 'font-weight', 'font-style', 'line-height', 'letter-spacing', 'color', 'margin-top', 'margin-bottom', 'margin-inline-start', 'margin-inline-end', 'padding-top', 'padding-bottom', 'text-overflow', 'overflow', 'white-space'];
 
 describe('Card 标题（浏览器）', () => {
     it('外观与被替换的 h6 一致', () => {
         const { container } = render(() => <Card title="title" />);
-        const title = container.querySelector('.semi-typography-h6') as HTMLElement;
+        const title = getElement('.semi-typography-h6', container);
         expect(title.tagName).toBe('DIV');
         const heading = document.createElement('h6');
         heading.className = title.className;

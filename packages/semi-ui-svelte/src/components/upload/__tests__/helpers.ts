@@ -2,6 +2,7 @@ import { flushSync, tick } from 'svelte';
 import { fireEvent, render } from '@testing-library/svelte';
 import { vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { getElement } from '@test/utils/dom/common';
 import type { FileItem, UploadHandle, UploadProps } from '../interface';
 import UploadHost from './upload-host.svelte';
 
@@ -14,11 +15,11 @@ export const prefix = 'semi-upload';
 export type Listener = (...args: any[]) => unknown;
 export const fn = () => vi.fn<Listener>();
 
-export const getInput = () => document.querySelector<HTMLInputElement>(`.${prefix}-hidden-input`) as HTMLInputElement;
-export const getReplaceInput = () => document.querySelector<HTMLInputElement>(`.${prefix}-hidden-input-replace`) as HTMLInputElement;
+export const getInput = () => getElement<HTMLInputElement>(`.${prefix}-hidden-input`);
+export const getReplaceInput = () => getElement<HTMLInputElement>(`.${prefix}-hidden-input-replace`);
 export const getCardNames = () => Array.from(document.querySelectorAll(`.${prefix}-file-card-info-name`)).map((node) => node.textContent?.trim());
 export const getPicCards = () => document.querySelectorAll<HTMLElement>(`.${prefix}-picture-file-card`);
-export const getDragArea = () => document.querySelector(`.${prefix}-drag-area`) as HTMLElement;
+export const getDragArea = () => getElement(`.${prefix}-drag-area`);
 export function query<E extends Element = HTMLElement>(selector: string, root: ParentNode = document) {
     const found = root.querySelector<E>(selector);
     if (!found) throw new Error(`missing ${selector}`);

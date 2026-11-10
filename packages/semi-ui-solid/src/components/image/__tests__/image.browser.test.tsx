@@ -5,6 +5,7 @@ import { page, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconChevronLeft, IconChevronRight, IconDownload, IconMinus, IconPlus, IconRealSizeStroked, IconRotate, IconUploadError, IconWindowAdaptionStroked } from '@fibrae/semi-icons-solid';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement, defined } from '@test/utils/solid';
 import Image, { ImagePreview, type ImagePreviewProps, type MenuProps, type PreviewProps } from '..';
 import Button from '../../button';
 import { Col, Row } from '../../grid';
@@ -61,11 +62,12 @@ const seaside = svg('steelblue', 1080, 720);
 const beach = svg('khaki', 1080, 720);
 const srcList1 = [lion, seaside, beach];
 
-const preview = () => document.querySelector<HTMLElement>(`.${previewCls}`) as HTMLElement;
-const previewImg = () => document.querySelector<HTMLElement>(`.${previewCls}-image-img`) as HTMLElement;
-const footerIcon = (name: string) => document.querySelector<HTMLElement>(`.${previewCls}-footer .${BASE_CLASS_PREFIX}-icon-${name}`) as HTMLElement;
+const preview = () => getElement(`.${previewCls}`);
+const queryPreview = () => document.querySelector(`.${previewCls}`);
+const previewImg = () => getElement(`.${previewCls}-image-img`);
+const footerIcon = (name: string) => getElement(`.${previewCls}-footer .${BASE_CLASS_PREFIX}-icon-${name}`);
 const thumbnails = () => document.querySelectorAll<HTMLElement>(`.${prefixCls}-img-preview`);
-const query = (selector: string) => document.querySelector<HTMLElement>(selector) as HTMLElement;
+const query = (selector: string) => getElement(selector);
 
 async function openPreview(index = 0) {
     await waitFor(() => expect(thumbnails()[index]).toBeInTheDocument());
@@ -122,11 +124,11 @@ describe('Image', () => {
         await expect.poll(() => thumbnails()[0]).toHaveStyle({ width: '360px', height: '200px' });
         await openPreview();
         await userEvent.click(preview());
-        await waitFor(() => expect(preview()).toBeNull());
+        await waitFor(() => expect(queryPreview()).toBeNull());
 
         setPreviewProp(false);
         await userEvent.click(query(`.${prefixCls}-img`));
-        expect(preview()).toBeNull();
+        expect(queryPreview()).toBeNull();
     });
 
     it('加载失败的 Image', async () => {
@@ -148,7 +150,7 @@ describe('Image', () => {
         await userEvent.click(screen.getByText('show'));
         await waitFor(() => expect(preview()).toBeInTheDocument());
         await userEvent.click(preview());
-        await waitFor(() => expect(preview()).toBeNull());
+        await waitFor(() => expect(queryPreview()).toBeNull());
     });
 
     it('受控的 image show', async () => {
@@ -156,7 +158,7 @@ describe('Image', () => {
         render(() => <Image height={200} preview={{ visible: visible(), onVisibleChange: setVisible }} src={abstractLite} width={360} />);
         await openPreview();
         await userEvent.click(preview());
-        await waitFor(() => expect(preview()).toBeNull());
+        await waitFor(() => expect(queryPreview()).toBeNull());
     });
 
     it('受控多张预览', async () => {
@@ -289,14 +291,14 @@ describe('Image', () => {
         render(() => <Image height={200} preview={{ closeOnEsc: closeOnEsc() }} src={abstractLite} width={360} />);
         await openPreview();
         await userEvent.keyboard('{Escape}');
-        await waitFor(() => expect(preview()).toBeNull());
+        await waitFor(() => expect(queryPreview()).toBeNull());
 
         setCloseOnEsc(false);
         await openPreview();
         await userEvent.keyboard('{Escape}');
         expect(preview()).toBeInTheDocument();
         await userEvent.click(preview());
-        await waitFor(() => expect(preview()).toBeNull());
+        await waitFor(() => expect(queryPreview()).toBeNull());
     });
 
     it('禁用下载', async () => {
@@ -311,13 +313,13 @@ describe('Image', () => {
         await userEvent.click(preview());
         expect(preview()).toBeInTheDocument();
         await userEvent.click(query(`.${BASE_CLASS_PREFIX}-icon-close`));
-        await waitFor(() => expect(preview()).toBeNull());
+        await waitFor(() => expect(queryPreview()).toBeNull());
     });
 
     it('自定义容器', async () => {
         render(() => (
             <div id="container" style={{ height: '400px', position: 'relative', margin: '100px 200px' }}>
-                <Group style={{ height: '100%', display: 'flex', 'align-items': 'center', 'justify-content': 'center' }} getPopupContainer={() => document.getElementById('container') as HTMLElement} />
+                <Group style={{ height: '100%', display: 'flex', 'align-items': 'center', 'justify-content': 'center' }} getPopupContainer={() => defined(document.getElementById('container'))} />
             </div>
         ));
         await openPreview(0);
@@ -510,7 +512,7 @@ describe('Image', () => {
     // https://github.com/DouyinFE/semi-design/issues/1838
     it('小高度 Image', async () => {
         render(() => <Image height={10} src={abstractLite} width={360} />);
-        const img = document.querySelector(`.${prefixCls}-img`) as HTMLImageElement;
+        const img = getElement<HTMLImageElement>(`.${prefixCls}-img`);
         await waitFor(() => expect(img.complete && img.naturalWidth).toBeGreaterThan(0));
         expect(img.getBoundingClientRect().top).toBe(query(`.${prefixCls}`).getBoundingClientRect().top);
     });
@@ -528,7 +530,7 @@ describe('Image', () => {
         expect(preview()).toHaveClass('test-preview');
         expect(preview().getAttribute('style')).toContain('background: lightblue;');
         await userEvent.click(preview());
-        await waitFor(() => expect(preview()).toBeNull());
+        await waitFor(() => expect(queryPreview()).toBeNull());
 
         await openPreview(1);
         expect(preview()).toHaveClass('test-imagePreview');
@@ -568,7 +570,7 @@ describe('Image', () => {
         await waitFor(() => expect(pageInfo()).toHaveTextContent('2/3'));
 
         await userEvent.keyboard('{Escape}');
-        await waitFor(() => expect(preview()).toBeNull());
+        await waitFor(() => expect(queryPreview()).toBeNull());
         expect(document.activeElement).toBe(screen.getByRole('button', { name: 'show' }));
     });
 
@@ -584,7 +586,7 @@ describe('Image', () => {
         const footerButton = screen.getByRole('button', { name: '旋转' });
         expect(getComputedStyle(footerButton).backgroundColor).toBe('rgba(0, 0, 0, 0)');
         const { width, height } = footerButton.getBoundingClientRect();
-        const icon = (footerButton.querySelector(`.${BASE_CLASS_PREFIX}-icon`) as HTMLElement).getBoundingClientRect();
+        const icon = getElement(`.${BASE_CLASS_PREFIX}-icon`, footerButton).getBoundingClientRect();
         expect([width, height]).toEqual([icon.width, icon.height]);
         expect(getComputedStyle(query(`.${previewCls}-header-close`)).backgroundColor).toBe('rgba(0, 0, 0, 0)');
     });

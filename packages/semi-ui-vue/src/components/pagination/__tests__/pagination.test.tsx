@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { IconChevronLeft } from '@fibrae/semi-icons-vue';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { endLeaveAnimations, render } from '@test/utils/vue';
+import { endLeaveAnimations, render, getElement } from '@test/utils/vue';
 import ConfigProvider from '../../config-provider';
 import LocaleProvider from '../../locale/locale-provider.vue';
 import Pagination from '../index';
@@ -22,9 +22,9 @@ const defaultPageSize = 10;
 const getPageItems = (container: Element) => Array.from(container.querySelectorAll<HTMLButtonElement>(`.${prefix}-item`));
 const getActivePage = (container: Element) => container.querySelector(`.${prefix}-item-active`);
 const pageName = (page: number) => zh_CN.Pagination.pageN.replace('${page}', String(page));
-const getRestPages = () => within(document.querySelector<HTMLElement>(`.${prefix}-rest-list`) as HTMLElement).getAllByRole('button');
-const getJumper = (container: Element) => container.querySelector(`.${prefix}-quickjump-input-number input`) as HTMLInputElement;
-const getCounter = (container: Element) => container.querySelector(`.${prefix}-item-small`) as HTMLElement;
+const getRestPages = () => within(getElement(`.${prefix}-rest-list`)).getAllByRole('button');
+const getJumper = (container: Element) => getElement<HTMLInputElement>(`.${prefix}-quickjump-input-number input`, container);
+const getCounter = (container: Element) => getElement(`.${prefix}-item-small`, container);
 const getSelectionText = () => document.querySelector('.semi-select-selection-text');
 const renderPagination = (props: PaginationProps = {}) => render(Pagination, { props });
 
@@ -44,7 +44,7 @@ describe('Pagination', () => {
         const maxItemCount = 9;
         const getPageChild = (props: PaginationProps) => {
             const view = renderPagination(props);
-            const children = (view.container.querySelector('ul') as HTMLElement).children;
+            const children = getElement('ul', view.container).children;
             const lastPage = children[children.length - 2].textContent?.trim();
             view.unmount();
             return { length: children.length, lastPage };
@@ -528,7 +528,7 @@ describe('Pagination', () => {
                     onClick,
                 },
             });
-            const root = view.container.querySelector('ul') as HTMLElement;
+            const root = getElement('ul', view.container);
             expect(view.container.querySelectorAll('[id="pager"]')).toHaveLength(1);
             expect(root).toHaveAttribute('id', 'pager');
             expect(root).toHaveAttribute('aria-label', 'Pages');

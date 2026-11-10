@@ -3,6 +3,7 @@ import { render, waitFor } from '@solidjs/testing-library';
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
+import { getElement } from '@test/utils/solid';
 import Container from '../container';
 
 describe('Sidebar.Container', () => {
@@ -25,7 +26,7 @@ describe('Sidebar.Container', () => {
             ),
             { container: mount }
         );
-        const opener = mount.querySelector('button') as HTMLElement;
+        const opener = getElement('button', mount);
         opener.focus();
         await userEvent.keyboard('{Enter}');
         const close = await waitFor(() => {

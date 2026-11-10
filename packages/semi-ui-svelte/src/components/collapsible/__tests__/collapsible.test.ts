@@ -3,14 +3,15 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { CollapsibleProps } from '../interface';
 import Host from './collapsible-host.svelte';
 
 type Store = CollapsibleProps & { text?: string; height?: string; log?: string[] };
 
 const queryContent = () => screen.queryByText('hello');
-const getWrapper = (container: Element) => container.querySelector<HTMLElement>('.semi-collapsible-wrapper') as HTMLElement;
-const getInner = (container: Element) => container.querySelector<HTMLElement>('[x-semi-prop="children"]') as HTMLElement;
+const getWrapper = (container: Element) => getElement('.semi-collapsible-wrapper', container);
+const getInner = (container: Element) => getElement('[x-semi-prop="children"]', container);
 const heightVar = '--semi-collapsible-height';
 const openHeight = 'calc-size(auto, size)';
 

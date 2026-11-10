@@ -5,10 +5,10 @@ import { createEvent, fireEvent, screen, waitFor } from '@testing-library/vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Tree, { type TreeDraggingNodeSlotProps, type TreeExpandIconSlotProps, type TreeFullLabelSlotProps, type TreeLabelSlotProps } from '..';
 import Tooltip from '../../tooltip';
-import { collapsedCls, getExpandIcon, getNode, optionCls, renderTree, selectedCls, spyOn, treeData } from './fixtures/data';
+import { collapsedCls, getExpandIcon, getNode, optionCls, queryExpandIcon, queryNode, renderTree, selectedCls, spyOn, treeData } from './fixtures/data';
 
 const prefix = `${BASE_CLASS_PREFIX}-tree`;
 
@@ -163,7 +163,7 @@ describe('Tree 行为', () => {
             expect(screen.getByRole('tree')).toHaveFocus();
             unmount();
             renderTree({ multiple: true });
-            const checkbox = document.querySelector('input[type="checkbox"]') as HTMLInputElement;
+            const checkbox = getElement<HTMLInputElement>('input[type="checkbox"]');
             await userEvent.click(checkbox);
             expect(screen.getByRole('tree')).toHaveFocus();
             const before = activeKey();
@@ -278,9 +278,9 @@ describe('Tree 行为', () => {
     it('leafOnly 只上报叶子节点的值', async () => {
         const onChange = spyOn<'change'>();
         renderTree({ multiple: true, defaultExpandAll: true, leafOnly: true, onChange });
-        await userEvent.click(getNode('zhongguo').querySelector(`.${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-checkbox`, getNode('zhongguo')));
         expect(onChange).toHaveBeenLastCalledWith(['Beijing', 'Shanghai']);
-        await userEvent.click(getNode('riben').querySelector(`.${BASE_CLASS_PREFIX}-checkbox`) as HTMLElement);
+        await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-checkbox`, getNode('riben')));
         expect(onChange).toHaveBeenLastCalledWith(['Beijing', 'Shanghai', 'Dongjing', 'Daban']);
         expect(isChecked('yazhou')).toBe(true);
     });
@@ -320,10 +320,10 @@ describe('Tree 行为', () => {
         await nextTick();
         expect(getNode('beimeizhou')).not.toHaveClass(collapsedCls);
         expect(getNode('meiguo')).not.toBeNull();
-        expect(getNode('riben')).toBeNull();
+        expect(queryNode('riben')).toBeNull();
         await rerender({ autoExpandParent: true, expandedKeys: ['riben'] });
         expect(getNode('dongjing')).not.toBeNull();
-        expect(getNode('meiguo')).toBeNull();
+        expect(queryNode('meiguo')).toBeNull();
     });
 
     it('搜索时 treeData 变化，保留搜索过滤', async () => {
@@ -341,9 +341,9 @@ describe('Tree 行为', () => {
         await nextTick();
         expect(getNode('beijing')).not.toBeNull();
         await userEvent.click(getExpandIcon(getNode('zhongguo')));
-        expect(getNode('beijing')).toBeNull();
+        expect(queryNode('beijing')).toBeNull();
         await rerender({ treeData: treeData.map((node) => ({ ...node })) });
-        expect(getNode('beijing')).toBeNull();
+        expect(queryNode('beijing')).toBeNull();
         expect(getNode('zhongguo')).toHaveAttribute('aria-expanded', 'false');
     });
 
@@ -423,7 +423,7 @@ describe('Tree 行为', () => {
             onLoad,
             'onUpdate:loadedKeys': onUpdate,
         });
-        expect(getExpandIcon(getNode('a'))).toBeNull();
+        expect(queryExpandIcon(getNode('a'))).toBeNull();
         await userEvent.click(getExpandIcon(getNode('b')));
         await waitFor(() => expect(onLoad).toHaveBeenCalledTimes(1));
         expect(onLoad).toHaveBeenCalledWith(new Set(['a', 'b']), expect.objectContaining({ key: 'b' }));
@@ -495,7 +495,7 @@ describe('Tree 行为', () => {
         expect(onExpand).toHaveBeenLastCalledWith(['yazhou', 'riben'], expect.anything());
         await userEvent.click(getExpandIcon(getNode('yazhou')));
         expect(onExpand).toHaveBeenLastCalledWith(['riben'], expect.anything());
-        expect(getNode('riben')).toBeNull();
+        expect(queryNode('riben')).toBeNull();
     });
 });
 
@@ -572,7 +572,7 @@ describe('Tree 审计修复', () => {
         await fireEvent.drop(getNode('beimeizhou'));
         await new Promise((resolve) => setTimeout(resolve, 600));
         await nextTick();
-        expect(getNode('meiguo')).toBeNull();
+        expect(queryNode('meiguo')).toBeNull();
         expect(onDragEnter).not.toHaveBeenCalled();
     });
 
@@ -584,7 +584,7 @@ describe('Tree 审计修复', () => {
         await fireEvent.dragLeave(getNode('beimeizhou'));
         await new Promise((resolve) => setTimeout(resolve, 450));
         await nextTick();
-        expect(getNode('meiguo')).toBeNull();
+        expect(queryNode('meiguo')).toBeNull();
     });
 
     it('#renderDraggingNode 的内容作为拖拽图像，拖拽开始后移除', async () => {
@@ -652,7 +652,7 @@ describe('Tree 节点数据与行状态', () => {
     it('keyMaps.children 映射到其他字段时，节点自带的 children 业务字段不让叶子变成分支', () => {
         renderTree({ keyMaps: { children: 'items' }, treeData: [{ key: 'a', label: 'A', value: 'a', children: [{ key: 'x', label: 'X', value: 'x' }] }] });
         expect(getNode('a')).not.toHaveAttribute('aria-expanded');
-        expect(getExpandIcon(getNode('a'))).toBeNull();
+        expect(queryExpandIcon(getNode('a'))).toBeNull();
     });
 
     it('单选树 defaultValue 为 0 时选中值为 0 的节点并展开其祖先', () => {

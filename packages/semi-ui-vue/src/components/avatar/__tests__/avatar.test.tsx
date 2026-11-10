@@ -3,7 +3,7 @@ import { nextTick } from 'vue';
 import { fireEvent } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Avatar from '../avatar.vue';
 import type { AvatarColor, AvatarEmits, AvatarProps } from '../interface';
 import TopSlotSvg from '../top-slot-svg.vue';
@@ -13,7 +13,7 @@ import ClickListener from './fixtures/click-listener.vue';
 
 const prefix = 'semi-avatar';
 const src = 'https://example.com/avatar.png';
-const root = (container: Element) => container.querySelector(`.${prefix}`) as HTMLElement;
+const root = (container: Element) => getElement(`.${prefix}`, container);
 afterEach(() => {
     semiGlobal.config = {};
 });
@@ -30,7 +30,7 @@ describe('Avatar', () => {
     it('切换边框与顶部插槽时根元素和事件落点保持一致', async () => {
         const view = render(AvatarRoot, { attrs: { 'data-avatar': 'avatar' } });
         await view.rerender({ border: true });
-        const wrapper = view.container.querySelector(`.${prefix}-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${prefix}-wrapper`, view.container);
         expect(view.emitted<[Element]>('root').at(-1)?.[0]).toBe(wrapper);
         expect(root(view.container)).toHaveAttribute('data-avatar', 'avatar');
         await fireEvent.click(root(view.container));
@@ -95,7 +95,7 @@ describe('Avatar', () => {
             props: { size: '64px', shape: 'square', border: { color: 'red', motion: true } },
             attrs: { style: { margin: '4px' } },
         });
-        const wrapper = view.container.querySelector(`.${prefix}-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${prefix}-wrapper`, view.container);
         expect(wrapper).toHaveStyle({ width: '64px', height: '64px', margin: '4px' });
         expect(root(view.container)).not.toHaveStyle({ margin: '4px' });
         const rings = view.container.querySelectorAll(`.${prefix}-additionalBorder`);
@@ -122,13 +122,13 @@ describe('Avatar', () => {
         expect(root(view.container)).toHaveClass(`${prefix}-red`);
         await view.rerender({ src: `${src}?new` });
         expect(view.container.querySelector('img')).toHaveAttribute('src', `${src}?new`);
-        await fireEvent.error(view.container.querySelector('img') as HTMLImageElement);
+        await fireEvent.error(getElement<HTMLImageElement>('img', view.container));
         expect(onError).toHaveBeenCalledTimes(2);
     });
 
     it('onError 返回 false 时保留图片', async () => {
         const view = render(Avatar, { props: { src, onError: () => false } });
-        await fireEvent.error(view.container.querySelector('img') as HTMLImageElement);
+        await fireEvent.error(getElement<HTMLImageElement>('img', view.container));
         expect(view.container.querySelector('img')).toHaveAttribute('src', src);
     });
 
@@ -165,7 +165,7 @@ describe('Avatar', () => {
             attrs: { onClick: click },
             slots: { default: () => <b>B</b> },
         });
-        await fireEvent.error(view.container.querySelector('img') as HTMLImageElement);
+        await fireEvent.error(getElement<HTMLImageElement>('img', view.container));
         expect(view.container.querySelector(`.${prefix}-content`)).toBeNull();
         const button = view.getByRole('button', { name: 'icon' });
         await fireEvent.keyDown(button, { key: 'Enter' });
@@ -184,7 +184,7 @@ describe('Avatar', () => {
             attrs: { tabindex: 2, 'aria-describedby': 'help', onClick: click },
             slots: { default: () => 'Semi', hoverMask: () => 'mask' },
         });
-        const eventRoot = border ? (view.container.querySelector(`.${prefix}-wrapper`) as HTMLElement) : root(view.container);
+        const eventRoot = border ? getElement(`.${prefix}-wrapper`, view.container) : root(view.container);
         await fireEvent.mouseEnter(eventRoot);
         expect(view.emitted<AvatarEmits['mouseEnter']>('mouseEnter')).toHaveLength(1);
         expect(view.getByText('mask')).toBeInTheDocument();
@@ -259,7 +259,7 @@ describe('Avatar', () => {
         semiGlobal.config = { overrideDefaultProps: { Avatar: { shape: 'square', color: 'red', onError } } };
         const view = render(Avatar, { props: { src } });
         expect(root(view.container)).toHaveClass(`${prefix}-square`);
-        await fireEvent.error(view.container.querySelector('img') as HTMLImageElement);
+        await fireEvent.error(getElement<HTMLImageElement>('img', view.container));
         expect(onError).toHaveBeenCalledOnce();
         await view.rerender({ shape: 'circle' });
         expect(root(view.container)).toHaveClass(`${prefix}-circle`);
@@ -277,7 +277,7 @@ describe('Avatar', () => {
         await nextTick();
         expect(view.container.querySelector(`.${prefix}-content`)).toHaveStyle({ transform: 'scale(1)' });
         await view.rerender({ src, label: 'Semi Design' });
-        await fireEvent.error(view.container.querySelector('img') as HTMLImageElement);
+        await fireEvent.error(getElement<HTMLImageElement>('img', view.container));
         await nextTick();
         expect(view.container.querySelector(`.${prefix}-content`)).toHaveStyle({ transform: `scale(${30 / 110})` });
     });

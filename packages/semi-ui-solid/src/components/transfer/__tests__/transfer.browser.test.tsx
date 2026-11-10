@@ -4,6 +4,7 @@ import { cdp, userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Transfer from '..';
 import Button from '../../button';
 import Popover from '../../popover';
@@ -37,7 +38,7 @@ describe('Transfer（浏览器）', () => {
 
     it('修复 #1149：被拖拽项绘制在所在 Popover 之上', async () => {
         await openTransferInPopover();
-        const item = (document.querySelector(`.${prefixCls}-right-item-sortable-item`) as HTMLElement).getBoundingClientRect();
+        const item = getElement(`.${prefixCls}-right-item-sortable-item`).getBoundingClientRect();
         getHandles()[0].focus();
         await userEvent.keyboard(' ');
 
@@ -71,7 +72,7 @@ describe('Transfer（浏览器）', () => {
 
     it('左侧滚动列表获得键盘焦点时显示主题焦点环', async () => {
         const { container } = render(() => <Transfer style={{ width: '400px', height: '150px' }} dataSource={data.map((item) => ({ ...item, disabled: true }))} />);
-        const list = container.querySelector(`.${prefixCls}-left-list`) as HTMLElement;
+        const list = getElement(`.${prefixCls}-left-list`, container);
         await tabTo(list);
         expectThemeFocusRing(list);
     });
@@ -79,7 +80,7 @@ describe('Transfer（浏览器）', () => {
     it('可排序手柄获得键盘焦点时显示主题焦点环', async () => {
         const { container } = render(() => <Transfer style={{ width: '400px', height: '300px' }} defaultValue={[2, 4]} dataSource={data} draggable />);
         await waitFor(() => expect(container.querySelectorAll(`.${prefixCls}-right-item-sortable-item`)).toHaveLength(2));
-        const handle = container.querySelector(`.${prefixCls}-right-item-sortable-handle`) as HTMLElement;
+        const handle = getElement(`.${prefixCls}-right-item-sortable-handle`, container);
         await tabTo(handle);
         expectThemeFocusRing(handle);
     });
@@ -87,7 +88,7 @@ describe('Transfer（浏览器）', () => {
     it('滚动已选虚拟列表后渲染靠后的已选项', async () => {
         const many = Array.from({ length: 50 }, (_v, i) => ({ label: `条目 ${i}`, value: i, key: i }));
         const { container } = render(() => <Transfer defaultValue={many.map((item) => item.value)} dataSource={many} virtualize={{ height: 100, itemSize: 30 }} />);
-        const list = container.querySelector(`.${prefixCls}-right-virtual-list`) as HTMLElement;
+        const list = getElement(`.${prefixCls}-right-virtual-list`, container);
         expect(screen.queryByText('条目 40', { selector: `.${prefixCls}-right-item-text` })).toBeNull();
         list.scrollTop = 30 * 40;
         await waitFor(() => expect(screen.getByText('条目 40', { selector: `.${prefixCls}-right-item-text` })).toBeInTheDocument());
@@ -102,7 +103,7 @@ describe('Transfer（浏览器）', () => {
             expect(node).not.toBeNull();
             return node as HTMLElement;
         });
-        const panel = (container.querySelector(`.${prefixCls}-right`) as HTMLElement).getBoundingClientRect();
+        const panel = getElement(`.${prefixCls}-right`, container).getBoundingClientRect();
         expect(list.getBoundingClientRect().height).toBeGreaterThan(100);
         expect(list.getBoundingClientRect().bottom).toBeLessThanOrEqual(panel.bottom + 1);
         expect(screen.getByText('条目 0', { selector: `.${prefixCls}-right-item-text` })).toBeInTheDocument();

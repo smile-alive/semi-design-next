@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import { mockResizeObserverCore as mockResizeObserver } from '@test/utils/dom/resize-observer-core';
 import type { TextAreaChangeEvent } from '../interface';
 import TextAreaCase from './textarea-case.svelte';
@@ -19,8 +20,8 @@ const prefixCls = `${BASE_CLASS_PREFIX}-input`;
 const getValueLength = (str: string) => [...new Intl.Segmenter().segment(str)].length;
 
 const getTextArea = () => screen.getByRole<HTMLTextAreaElement>('textbox');
-const getWrapper = () => document.querySelector<HTMLElement>(`.${prefixCls}-textarea-wrapper`) as HTMLElement;
-const getCounter = () => document.querySelector<HTMLElement>(`.${prefixCls}-textarea-counter`) as HTMLElement;
+const getWrapper = () => getElement(`.${prefixCls}-textarea-wrapper`);
+const getCounter = () => getElement(`.${prefixCls}-textarea-counter`);
 const getClearBtn = () => document.querySelector<HTMLElement>(`.${prefixCls}-clearbtn`);
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 async function settle() {

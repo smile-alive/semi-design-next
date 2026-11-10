@@ -1,4 +1,5 @@
 import { describe, expect, it, onTestFinished } from 'vite-plus/test';
+import { getElement } from '@test/utils/dom/common';
 import { setup } from './setup';
 
 describe('Svelte MarkdownRender（浏览器）', () => {
@@ -12,7 +13,7 @@ describe('Svelte MarkdownRender（浏览器）', () => {
         const { container } = setup({ raw: '- a\n  - b\n\n1. c\n' });
         await expect.poll(() => container.querySelectorAll('ul').length).toBe(2);
         const [ul, nested] = container.querySelectorAll('ul');
-        const ol = container.querySelector('ol') as HTMLOListElement;
+        const ol = getElement<HTMLOListElement>('ol', container);
 
         expect(getComputedStyle(ul).listStyleType).toBe('disc');
         expect(getComputedStyle(nested).listStyleType).not.toBe('none');
@@ -27,7 +28,7 @@ describe('Svelte MarkdownRender（浏览器）', () => {
     it('各级标题（含 h6）都有上下间距', async () => {
         const { container } = setup({ raw: '###### six\n\n# one' });
         await expect.poll(() => container.querySelector('h6')).not.toBeNull();
-        const style = getComputedStyle(container.querySelector('h6') as HTMLElement);
+        const style = getComputedStyle(getElement('h6', container));
         expect(parseFloat(style.marginBlockStart)).toBe(16);
         expect(parseFloat(style.marginBlockEnd)).toBe(16);
     });
@@ -46,8 +47,8 @@ describe('Svelte MarkdownRender（浏览器）', () => {
         const { container } = setup({ format: 'md', raw: '[![cat](a.png)](https://x.test)' });
         await expect.poll(() => container.querySelector('.semi-markdownRender-component-image')).not.toBeNull();
         container.querySelector('.semi-markdownRender-component-image img')?.dispatchEvent(new Event('load'));
-        const link = container.querySelector('a') as HTMLElement;
+        const link = getElement('a', container);
         expect(link.querySelector('[role="button"], [tabindex="0"]')).toBeNull();
-        expect(getComputedStyle(container.querySelector('.semi-markdownRender-component-image img') as Element).cursor).not.toBe('zoom-in');
+        expect(getComputedStyle(getElement('.semi-markdownRender-component-image img', container)).cursor).not.toBe('zoom-in');
     });
 });

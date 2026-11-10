@@ -4,6 +4,7 @@ import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import BannerFixture from './banner-fixture.svelte';
 
 function setup(props = {}, neighbors = false, container?: HTMLElement) {
@@ -36,7 +37,7 @@ describe('Svelte Banner（浏览器）', () => {
         shadow.append(mount);
         const view = setup({}, true, mount);
         try {
-            (shadow.querySelector('button[aria-label]') as HTMLElement).focus();
+            getElement('button[aria-label]', shadow).focus();
             await userEvent.keyboard('{Enter}');
             await waitFor(() => expect(shadow.activeElement).toHaveTextContent('after'));
         } finally {

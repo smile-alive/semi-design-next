@@ -6,6 +6,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { InputChangeEvent } from '../interface';
 import InputCase from './input-case.svelte';
 import InputModes from './input-modes.svelte';
@@ -18,9 +19,9 @@ type Modes = Parameters<typeof InputModes>[1]['mode'];
 const prefixCls = `${BASE_CLASS_PREFIX}-input`;
 const getValueLength = (str: string) => [...new Intl.Segmenter().segment(str)].length;
 
-const getInput = () => document.querySelector('input') as HTMLInputElement;
-const getWrapper = () => document.querySelector<HTMLElement>(`.${prefixCls}-wrapper`) as HTMLElement;
-const query = (cls: string) => document.querySelector<HTMLElement>(`.${cls}`) as HTMLElement;
+const getInput = () => getElement<HTMLInputElement>('input');
+const getWrapper = () => getElement(`.${prefixCls}-wrapper`);
+const query = (cls: string) => getElement(`.${cls}`);
 const getClearBtn = () => document.querySelector<HTMLElement>(`.${prefixCls}-clearbtn`);
 const getModeBtn = () => document.querySelector<HTMLElement>(`.${prefixCls}-modebtn`);
 async function settle() {

@@ -3,7 +3,7 @@ import { render, screen } from '@solidjs/testing-library';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { mockResizeObserver } from '@test/utils/solid';
+import { mockResizeObserver, getElement } from '@test/utils/solid';
 import OverflowList, { type OverflowItem, type OverflowListInternalProps, type OverflowListProps } from '..';
 
 const InternalOverflowList = OverflowList as (props: OverflowListInternalProps) => JSX.Element;
@@ -71,7 +71,7 @@ function stubIntersectionObserver() {
     };
 }
 
-const getList = (container: HTMLElement) => container.querySelector<HTMLElement>(`.${prefixCls}`) as HTMLElement;
+const getList = (container: HTMLElement) => getElement(`.${prefixCls}`, container);
 const getItems = (container: HTMLElement) => [...container.querySelectorAll<HTMLElement>(`.${prefixCls}-item`)];
 const texts = (container: HTMLElement) => getItems(container).map((item) => item.textContent);
 const plusRenderer = (overflow: OverflowItem[]) => (overflow.length ? <span>+{overflow.length}</span> : null);
@@ -182,7 +182,7 @@ describe('OverflowList', () => {
         expect(onOverflow).toHaveBeenCalledTimes(1);
         expect(onOverflow.mock.lastCall?.[0].map((item) => item.key)).toEqual(keys.slice(2));
 
-        resize(container.querySelector(`.${prefixCls}-overflow`) as Element, 30);
+        resize(getElement(`.${prefixCls}-overflow`, container), 30);
         expect(texts(container)).toEqual(['alarm']);
         expect(onOverflow).toHaveBeenCalledTimes(2);
         expect(onOverflow.mock.lastCall?.[0].map((item) => item.key)).toEqual(keys.slice(1));
@@ -273,7 +273,7 @@ describe('OverflowList', () => {
         const resize = stubResizeObserver();
         const { container } = render(() => <OverflowList items={items} overflowRenderer={(overflow) => `+${overflow.length}`} visibleItemRenderer={(item) => <span>{item.key}</span>} />);
         measure(resize, container, 120);
-        const overflowNode = container.querySelector(`.${prefixCls}-overflow`) as Element;
+        const overflowNode = getElement(`.${prefixCls}-overflow`, container);
         expect(overflowNode).toHaveTextContent('+4');
         // the node's width counts against the items: 50 + 50 + 30 fits 130 but not 120
         resize(overflowNode, 30);
@@ -420,7 +420,7 @@ describe('OverflowList', () => {
         expect(list).toHaveClass('custom');
         expect(list).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(list.style.visibility).toBe('');
-        const wrapper = container.querySelector(`.${prefixCls}-scroll-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${prefixCls}-scroll-wrapper`, container);
         expect(wrapper).toHaveClass('wrapper');
         expect(wrapper).toHaveStyle({ gap: '4px' });
         expect([...wrapper.children].map((child) => (child as HTMLElement).dataset.scrollkey)).toEqual(keys);

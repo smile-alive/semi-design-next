@@ -1,6 +1,7 @@
 import { render, screen, within } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import DatePicker from '../date-picker.svelte';
 import type { DatePickerProps } from '../interface';
 import { click, getFooterButtons, getPanel, getPopup } from './date-picker-dom-utils';
@@ -14,7 +15,7 @@ const baseDate = new Date(2019, 8, 8, 8, 8, 8, 8);
 const rangeValue = [new Date(2021, 5, 1, 10, 0), new Date(2021, 5, 15, 18, 0)];
 
 const switchTime = () => screen.getByRole('button', { name: zh_CN.DatePicker.switchToTime });
-const switchOf = (side: string, name: string) => getPanel(side).querySelector(`[aria-label="${name}"]`) as HTMLElement;
+const switchOf = (side: string, name: string) => getElement(`[aria-label="${name}"]`, getPanel(side));
 const timeLists = (root: ParentNode) => root.querySelectorAll<HTMLElement>(`.${dp}-tpk ul[role="listbox"]`);
 const hourList = (root: ParentNode = getPopup() as HTMLElement) => timeLists(root)[0];
 

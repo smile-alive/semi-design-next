@@ -6,7 +6,7 @@ import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/tes
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconEdit } from '@fibrae/semi-icons-vue';
 import { elementType, semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import IconButton from '../../icon-button';
 import Tooltip from '../../tooltip';
 import ButtonGroup from '../button-group.vue';
@@ -78,7 +78,7 @@ describe('Button', () => {
         });
         expect(container.querySelectorAll(`.${prefixCls}-content-left`)).toHaveLength(1);
         expect(container.querySelectorAll(`.${prefixCls}-content-right`)).toHaveLength(0);
-        const content = container.querySelector(`.${prefixCls}-content`) as HTMLElement;
+        const content = getElement(`.${prefixCls}-content`, container);
         expect(content.firstElementChild).toHaveTextContent('x');
     });
 
@@ -155,7 +155,7 @@ describe('Button', () => {
 
     it('icon 布局时文本 span 带 x-semi-prop，内容 span 不带；无 icon 时内容 span 带', () => {
         const view = render(Button, { slots: { ...iconSlot, ...text } });
-        const content = view.container.querySelector(`.${prefixCls}-content`) as HTMLElement;
+        const content = getElement(`.${prefixCls}-content`, view.container);
         expect(content).not.toHaveAttribute('x-semi-prop');
         expect(content.querySelector('[x-semi-prop="children"]')).toHaveTextContent('x');
         view.unmount();

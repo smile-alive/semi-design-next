@@ -7,7 +7,7 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { IconEdit } from '@fibrae/semi-icons-vue';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Input, { InputGroup, TextArea, type InputGroupProps } from '..';
 import AutoComplete from '../../auto-complete';
 import Button, { ButtonGroup } from '../../button';
@@ -26,7 +26,7 @@ import GroupProps from './fixtures/group-props.vue';
 const prefixCls = `${BASE_CLASS_PREFIX}-input`;
 const labelCls = `${BASE_CLASS_PREFIX}-form-field-label`;
 const buttonCls = `${BASE_CLASS_PREFIX}-button`;
-const getInput = () => document.querySelector('input') as HTMLInputElement;
+const getInput = () => getElement<HTMLInputElement>('input');
 const byPlaceholder = (text: string) => screen.getByPlaceholderText(text);
 // Vue ignores an ancestor listener attached at or after the timestamp of an event coming up from a child, and the
 // suite freezes the system clock, so time has to be moved on by hand.

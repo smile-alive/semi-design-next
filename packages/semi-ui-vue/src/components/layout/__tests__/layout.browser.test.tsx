@@ -1,11 +1,11 @@
 /** @jsxImportSource vue */
 import { nextTick } from 'vue';
 import { describe, expect, it } from 'vite-plus/test';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Layout from '../index';
 import DeepSider from './fixtures/deep-sider.vue';
 
-const flexDirection = (container: Element) => getComputedStyle(container.querySelector('.semi-layout') as HTMLElement).flexDirection;
+const flexDirection = (container: Element) => getComputedStyle(getElement('.semi-layout', container)).flexDirection;
 
 describe('Layout 浏览器', () => {
     it('has-sider 使 Layout 横向排列，无 Sider 时纵向排列', () => {

@@ -2,6 +2,8 @@ import { flushSync } from 'svelte';
 import { fireEvent, render, screen } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import Fixture from './special-trigger.svelte';
 
 type Store = NonNullable<Parameters<typeof Fixture>[1]>['store'];
@@ -20,7 +22,7 @@ function setup(init: Partial<Store> = {}) {
     const store = createStore<Store>({ kind: 'button', tip: { trigger: 'click', wrapperClassName: 'wrapper' }, props: {}, ...init });
     render(Fixture, { props: { store } });
     flushSync();
-    const span = () => document.querySelector<HTMLElement>('.wrapper') as HTMLElement;
+    const span = () => getElement('.wrapper');
     return { store, span };
 }
 
@@ -149,7 +151,7 @@ describe('Svelte Tooltip 的特殊触发器', () => {
             document.body.replaceChildren();
             const { span } = setup({ kind, props: { disabled: true } });
             const control = screen.getByRole(kind);
-            expect(control.parentElement === span() ? control : (control.closest('.semi-switch, .semi-checkbox') as HTMLElement)).toHaveStyle({ pointerEvents: 'none' });
+            expect(control.parentElement === span() ? control : defined(control.closest<HTMLElement>('.semi-switch, .semi-checkbox'))).toHaveStyle({ pointerEvents: 'none' });
             expect(span()).toHaveStyle({ cursor: 'not-allowed' });
             await fireEvent.click(span());
             await settle();

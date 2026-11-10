@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import Radio, { RadioGroup, type RadioChangeEvent } from '..';
 
 const prefix = `${BASE_CLASS_PREFIX}-radio`;
@@ -40,8 +41,8 @@ describe('Radio（浏览器）', () => {
         expect(inputs[0]).toBeChecked();
         await userEvent.keyboard('{Tab}');
         expect(inputs[1]).toHaveFocus();
-        expectThemeFocusRing(radios[1].querySelector(`.${prefix}-inner-display`) as HTMLElement);
-        expect(outlineOf(radios[0].querySelector(`.${prefix}-inner-display`) as HTMLElement)).toBe('none');
+        expectThemeFocusRing(getElement(`.${prefix}-inner-display`, radios[1]));
+        expect(outlineOf(getElement(`.${prefix}-inner-display`, radios[0]))).toBe('none');
         await userEvent.keyboard('{Backspace}');
         expect(inputs[0]).toBeChecked();
         expect(inputs[1]).not.toBeChecked();
@@ -49,7 +50,7 @@ describe('Radio（浏览器）', () => {
 
     it('键盘聚焦未选中的单选框，圆圈显示主题焦点环和悬停描边色', async () => {
         const { container } = render(() => <Radio>label</Radio>);
-        const display = container.querySelector(`.${prefix}-inner-display`) as HTMLElement;
+        const display = getElement(`.${prefix}-inner-display`, container);
         await userEvent.keyboard('{Tab}');
         expectThemeFocusRing(display);
         expect(getComputedStyle(display).borderTopColor).not.toBe('rgba(0, 0, 0, 0)');
@@ -57,8 +58,8 @@ describe('Radio（浏览器）', () => {
 
     it('鼠标点击单选框后不显示焦点环，再按键后显示主题焦点环', async () => {
         const { container } = render(() => <Radio>label</Radio>);
-        const display = container.querySelector(`.${prefix}-inner-display`) as HTMLElement;
-        await userEvent.click(container.querySelector(`.${prefix}`) as HTMLElement);
+        const display = getElement(`.${prefix}-inner-display`, container);
+        await userEvent.click(getElement(`.${prefix}`, container));
         expect(screen.getByRole('radio')).toHaveFocus();
         expect(outlineOf(display)).toBe('none');
         // Backspace does nothing on a radio, it only makes the browser treat the focus as keyboard focus
@@ -77,10 +78,10 @@ describe('Radio（浏览器）', () => {
         await userEvent.keyboard('{Tab}');
         expect(screen.getByRole('radio', { name: 'card' })).toHaveFocus();
         expectThemeFocusRing(card);
-        expect(outlineOf(card.querySelector(`.${prefix}-inner-display`) as HTMLElement)).toBe('none');
+        expect(outlineOf(getElement(`.${prefix}-inner-display`, card))).toBe('none');
         await userEvent.keyboard('{Tab}');
         expect(screen.getByRole('radio', { name: 'button' })).toHaveFocus();
-        expectThemeFocusRing(button.querySelector(`.${prefix}-addon-buttonRadio`) as HTMLElement);
+        expectThemeFocusRing(getElement(`.${prefix}-addon-buttonRadio`, button));
         expect(outlineOf(button)).toBe('none');
         expect(outlineOf(card)).toBe('none');
     });
@@ -120,7 +121,7 @@ describe('Radio（浏览器）', () => {
         ));
         expect(container.querySelector(`.${prefix} svg`)).not.toBeNull();
 
-        await userEvent.click(container.querySelector(`.${prefix}`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}`, container));
         await userEvent.keyboard('{Backspace}');
         // asserts the rendered mark only: preventDefault in onChange makes the browser restore the native state
         expect(container.querySelector(`.${prefix} svg`)).toBeNull();
@@ -143,7 +144,7 @@ describe('Radio（浏览器）', () => {
             </>
         ));
         const [card, button] = container.querySelectorAll('label');
-        const addon = button.querySelector(`.${prefix}-addon-buttonRadio`) as HTMLElement;
+        const addon = getElement(`.${prefix}-addon-buttonRadio`, button);
         // the transition would leave the computed value between the two colors right after the pointer moves
         card.style.transition = 'none';
         addon.style.transition = 'none';
@@ -157,7 +158,7 @@ describe('Radio（浏览器）', () => {
         await userEvent.click(addon);
         expect(screen.getByRole('radio', { name: 'button' })).toBeChecked();
         expect(getComputedStyle(addon).backgroundColor).not.toBe(probe('--semi-color-fill-1'));
-        await userEvent.click(card.querySelector(`.${prefix}-addon`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}-addon`, card));
         expect(screen.getByRole('radio', { name: 'card' })).toBeChecked();
         expect(getComputedStyle(card).backgroundColor).not.toBe(probe('--semi-color-fill-0'));
     });

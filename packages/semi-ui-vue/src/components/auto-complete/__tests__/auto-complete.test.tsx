@@ -6,7 +6,7 @@ import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import AutoComplete, { type AutoCompleteDataItem, type AutoCompleteHandle, type AutoCompleteTriggerSlotProps } from '..';
 import ConfigProvider from '../../config-provider';
 import Popover from '../../popover';
@@ -46,13 +46,13 @@ async function renderWith(component: Component, props: Record<string, unknown> =
 const renderAc = (props: Record<string, unknown> = {}, slots: Slots = {}) => renderWith(AutoComplete, { ...commonProps, ...props }, slots);
 
 const getInput = () => screen.getByRole<HTMLInputElement>('combobox');
-const getRoot = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-autocomplete`) as HTMLElement;
+const getRoot = () => getElement(`.${BASE_CLASS_PREFIX}-autocomplete`);
 const getList = () => document.querySelector<HTMLElement>(`.${optionCls}-list`);
 const getOptions = () => Array.from(document.querySelectorAll<HTMLElement>(`.${optionCls}`));
 const getOptionTexts = () => getOptions().map((option) => option.textContent);
 const getFocusedOption = () => document.querySelector<HTMLElement>(`.${optionCls}-focused`);
-const getPopupWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`) as HTMLElement;
-const getClearBtn = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement;
+const getPopupWrapper = () => getElement(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
+const getClearBtn = () => getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`);
 async function type(value: string, input: HTMLInputElement = getInput()) {
     await fireEvent.update(input, value);
     await settle();
@@ -656,7 +656,7 @@ describe('AutoComplete', () => {
 
     it('【loading】显示 Spin', async () => {
         await renderAc({ data: stringData, defaultOpen: true, loading: true });
-        const loading = document.querySelector(`.${BASE_CLASS_PREFIX}-autocomplete-loading-wrapper`) as HTMLElement;
+        const loading = getElement(`.${BASE_CLASS_PREFIX}-autocomplete-loading-wrapper`);
         expect(loading.querySelector(`.${BASE_CLASS_PREFIX}-spin`)).not.toBeNull();
     });
 
@@ -1384,7 +1384,7 @@ describe('AutoComplete Vue 写法', () => {
             attrs: { name: 'tname' },
         });
         await settle();
-        const custom = document.querySelector('.custom-input') as HTMLInputElement;
+        const custom = getElement<HTMLInputElement>('.custom-input');
         expect(custom.parentElement?.parentElement).toHaveAttribute('id', 'tid');
         expect(custom).toHaveAttribute('aria-label', 'Pick');
         expect(custom).toHaveAttribute('aria-describedby', 'desc');
@@ -1455,7 +1455,7 @@ describe('AutoComplete Vue 写法', () => {
         const onBlur = vi.fn<(event: FocusEvent) => void>();
         render(TriggerSlot, { props: { onSearch, onChange, onClear, onFocus, onBlur } });
         await settle();
-        const customInput = document.querySelector('.custom-input') as HTMLInputElement;
+        const customInput = getElement<HTMLInputElement>('.custom-input');
         customInput.focus();
         await settle();
         expect(onFocus).toHaveBeenCalledTimes(1);
@@ -1468,7 +1468,7 @@ describe('AutoComplete Vue 写法', () => {
         expect(screen.getByTestId('placeholder')).toHaveTextContent('pick');
         expect(screen.getByTestId('disabled')).toHaveTextContent('undefined');
         expect(screen.getByTestId('props')).toHaveTextContent('true');
-        await type('se', document.querySelector('.custom-input') as HTMLInputElement);
+        await type('se', getElement<HTMLInputElement>('.custom-input'));
         expect(onSearch).toHaveBeenLastCalledWith('se');
         expect(onChange).toHaveBeenLastCalledWith('se');
         expect(screen.getByTestId('input')).toHaveTextContent('se');

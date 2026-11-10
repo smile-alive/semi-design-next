@@ -2,6 +2,7 @@ import { flushSync } from 'svelte';
 import { fireEvent } from '@testing-library/svelte';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { ColumnProps, TableResizeFn } from '../interface';
 import { P, getData, mountTable, query, queryAll } from './helpers';
 
@@ -95,7 +96,7 @@ describe('Svelte Table 列宽调整', () => {
         expect(th.classList.contains('selection-head')).toBe(true);
         expect(th.querySelector(`.${P}-resize-handle`)).not.toBeNull();
         expect(query(`th.${P}-column-expand .${P}-resize-handle`)).not.toBeNull();
-        await drag(th.querySelector(`.${P}-resize-handle`) as Element, [40]);
+        await drag(getElement(`.${P}-resize-handle`, th), [40]);
         expect(getColWidths()[0]).toBe('100px');
         expect(query(`th.${P}-column-selection`).classList.contains('selection-head')).toBe(true);
         expect(query(`td.${P}-column-selection`)).not.toBeNull();

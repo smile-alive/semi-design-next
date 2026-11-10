@@ -2,6 +2,7 @@ import { flushSync } from 'svelte';
 import { fireEvent } from '@testing-library/svelte';
 import { vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/dom/common';
 import type { TreeNodeData, TreeProps } from '../interface';
 
 type Callback<K extends keyof TreeProps> = Extract<NonNullable<TreeProps[K]>, (...args: never[]) => unknown>;
@@ -71,11 +72,11 @@ export const selectedCls = `${optionCls}-selected`;
 
 export const getOptions = () => document.querySelectorAll(`.${optionCls}`);
 export const getLevelNodes = (level: number) => document.querySelectorAll(`.${optionCls}.${optionCls}-level-${level}`);
-export const getNode = (key: string) => document.querySelector(`[role="treeitem"][data-key="${key}"]`) as HTMLElement;
-export const getExpandIcon = (node: Element) => node.querySelector(`.${optionCls}-expand-icon`) as HTMLElement;
+export const getNode = (key: string) => getElement(`[role="treeitem"][data-key="${key}"]`);
+export const getExpandIcon = (node: Element) => getElement(`.${optionCls}-expand-icon`, node);
 export const getSelected = () => document.querySelectorAll(`.${selectedCls}`);
 export const getSearchWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-search-wrapper`);
-export const getTree = () => document.querySelector('[role="tree"]') as HTMLElement;
+export const getTree = () => getElement('[role="tree"]');
 
 export async function click(element: Element) {
     await fireEvent.click(element);
@@ -83,7 +84,7 @@ export async function click(element: Element) {
 }
 
 export async function search(value: string) {
-    const input = document.querySelector(`.${BASE_CLASS_PREFIX}-tree-search-wrapper input`) as HTMLInputElement;
+    const input = getElement<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-tree-search-wrapper input`);
     await fireEvent.input(input, { target: { value } });
     flushSync();
 }

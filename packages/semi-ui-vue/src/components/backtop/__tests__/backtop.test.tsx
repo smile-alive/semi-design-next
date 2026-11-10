@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import type { BackTopBaseProps } from '@fibrae/semi-foundation/components/backtop/foundation';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import LocaleProvider from '../../locale/locale-provider.vue';
 import BackTop from '../backtop.vue';
 import type { BackTopEmits } from '../interface';
@@ -73,7 +73,7 @@ describe('BackTop', () => {
     it('点击发出 click 事件', async () => {
         const view = render(BackTop, { attrs: { class: 'test' }, props: { visibilityHeight: -1 } });
         await frame();
-        await fireEvent.click(view.container.querySelector('.semi-backtop.test') as Element);
+        await fireEvent.click(getElement('.semi-backtop.test', view.container));
         expect(view.emitted().click).toHaveLength(1);
     });
 

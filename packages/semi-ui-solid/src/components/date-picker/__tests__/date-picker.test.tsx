@@ -9,6 +9,7 @@ import { strings } from '@fibrae/semi-foundation/components/date-picker/constant
 import { toIANA, zonedTimeToUtc } from '@fibrae/semi-foundation/utils/date-fns-extra';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import DatePicker, { type DatePickerProps, type PresetType } from '..';
 import ConfigProvider from '../../config-provider';
 import { LocaleProvider } from '../../locale';
@@ -32,11 +33,11 @@ function renderDatePicker(initial: DatePickerProps = {}) {
 }
 
 const getPopup = () => document.querySelector<HTMLElement>(popupSelector);
-const getDay = (fullDate: string) => document.querySelector<HTMLElement>(`.${dp}-day[aria-label="${fullDate}"]`) as HTMLElement;
+const getDay = (fullDate: string) => getElement(`.${dp}-day[aria-label="${fullDate}"]`);
 const getSelectedDays = () => Array.from(document.querySelectorAll(`.${dp}-day-selected`)).map((d) => d.getAttribute('aria-label'));
 const getPresetButtons = () => document.querySelectorAll<HTMLElement>(`.${dp}-quick-control button`);
 const getFooterButtons = () => document.querySelectorAll<HTMLElement>(`.${dp}-footer .${BASE_CLASS_PREFIX}-button`);
-const getPanel = (side: string) => document.querySelector<HTMLElement>(`.${dp}-month-grid-${side}`) as HTMLElement;
+const getPanel = (side: string) => getElement(`.${dp}-month-grid-${side}`);
 const getWeekDays = (side: string, weekIndex: number) => getPanel(side).querySelectorAll(`.${dp}-week`)[weekIndex].querySelectorAll<HTMLElement>(`.${dp}-day`);
 const ymd = (date: Date) => format(date, 'yyyy-MM-dd');
 const getYMLists = (root: ParentNode = document) => root.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-scrolllist-item ul`);
@@ -45,7 +46,7 @@ const inputs = (container: HTMLElement) => Array.from(container.querySelectorAll
 const getPopoverWrapper = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover-wrapper`);
 const getNavTitle = (side: string) => getPanel(side).querySelector(`.${dp}-navigation-month`)?.textContent;
 const getYMSelected = (root: ParentNode = document) => Array.from(root.querySelectorAll(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`)).map((li) => li.textContent);
-const navButton = (side: string, label: 'prevYear' | 'nextYear' | 'prevMonth' | 'nextMonth') => getPanel(side).querySelector(`[aria-label="${zh_CN.DatePicker[label]}"]`) as HTMLElement;
+const navButton = (side: string, label: 'prevYear' | 'nextYear' | 'prevMonth' | 'nextMonth') => getElement(`[aria-label="${zh_CN.DatePicker[label]}"]`, getPanel(side));
 
 function getRandomIANATimeZone(): [string, number] {
     const offset = Math.floor(Math.random() * 26) - 11;
@@ -191,11 +192,11 @@ describe('DatePicker', () => {
         await userEvent.click(document.body);
         expect(onOpenChange).not.toHaveBeenCalled();
 
-        const inputWrapper = container.querySelector(`.${BASE_CLASS_PREFIX}-input-wrapper`) as HTMLElement;
+        const inputWrapper = getElement(`.${BASE_CLASS_PREFIX}-input-wrapper`, container);
         await userEvent.click(inputWrapper.parentElement as HTMLElement);
         expect(onOpenChange).toHaveBeenCalledWith(true);
 
-        fireEvent.input(container.querySelector(`.${BASE_CLASS_PREFIX}-input-wrapper input`) as HTMLInputElement, { target: { value: '2019-10-02 08:30:02' } });
+        fireEvent.input(getElement<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-input-wrapper input`, container), { target: { value: '2019-10-02 08:30:02' } });
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange.mock.calls[0][1]).toBe('2019-10-02 08:30:02');
     });
@@ -208,13 +209,13 @@ describe('DatePicker', () => {
 
         const { container } = renderDatePicker({ type: 'dateTimeRange', defaultValue: currentValue, defaultOpen: true, motion: false, needConfirm: false, onChange });
 
-        const startDayDom = document.querySelector(`.${dp}-day-selected-start`) as Element;
+        const startDayDom = getElement(`.${dp}-day-selected-start`);
         const endDayDom = document.querySelector(`.${dp}-day-selected-end`);
         expect(nthNext(startDayDom, dayOffset)).toBe(endDayDom);
 
-        await userEvent.click(getPanel('right').querySelector(`[aria-label="${zh_CN.DatePicker.nextMonth}"]`) as HTMLElement);
+        await userEvent.click(getElement(`[aria-label="${zh_CN.DatePicker.nextMonth}"]`, getPanel('right')));
         for (let i = 0; i < leftPrevClickTimes; i++) {
-            await userEvent.click(getPanel('left').querySelector(`[aria-label="${zh_CN.DatePicker.prevMonth}"]`) as HTMLElement);
+            await userEvent.click(getElement(`[aria-label="${zh_CN.DatePicker.prevMonth}"]`, getPanel('left')));
         }
 
         const [startInput, endInput] = inputs(container);
@@ -276,10 +277,10 @@ describe('DatePicker', () => {
         const { container } = renderDatePicker({ type: 'month', defaultValue: new Date(baseDate), defaultOpen: true, motion: false, onChange });
 
         const [yearList, monthList] = getYMLists();
-        const currentSelectedYear = yearList.querySelector(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`) as Element;
+        const currentSelectedYear = getElement(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`, yearList);
         await userEvent.click(nthNext(currentSelectedYear, yearOffset));
 
-        const currentSelectedMon = monthList.querySelector(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`) as Element;
+        const currentSelectedMon = getElement(`.${BASE_CLASS_PREFIX}-scrolllist-item-sel`, monthList);
         await userEvent.click(nthNext(currentSelectedMon, monOffset));
 
         const value = onChange.mock.calls[onChange.mock.calls.length - 1][0] as Date;
@@ -349,7 +350,7 @@ describe('DatePicker', () => {
     it('onClear', () => {
         const onClear = vi.fn<NonNullable<DatePickerProps['onClear']>>();
         const { container } = renderDatePicker({ defaultOpen: true, motion: false, autofocus: true, defaultValue: baseDate, showClear: true, onClear });
-        fireEvent.mouseDown(container.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`, container));
         expect(onClear).toHaveBeenCalledTimes(1);
     });
 
@@ -362,7 +363,7 @@ describe('DatePicker', () => {
             onChange,
             disabledDate: (date) => (date as Date).getDate() === 15,
         });
-        const input = container.querySelector(`.${BASE_CLASS_PREFIX}-input-wrapper input`) as HTMLInputElement;
+        const input = getElement<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-input-wrapper input`, container);
         fireEvent.input(input, { target: { value: '2021-04-15' } });
         expect(onChange).not.toHaveBeenCalled();
         fireEvent.input(input, { target: { value: '2021-04-13' } });
@@ -417,7 +418,7 @@ describe('DatePicker', () => {
         const days = document.querySelectorAll(`.${dp}-day`);
         await userEvent.click(days[6]);
         expect(document.querySelectorAll(`.${dp}-day-selected`)).toHaveLength(1);
-        const input = container.querySelector<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-input`) as HTMLInputElement;
+        const input = getElement<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-input`, container);
         const selectedDay = parse(input.value, strings.FORMAT_DATE_TIME, new Date());
         expect(ymd(selectedDay)).toBe(days[6].getAttribute('aria-label'));
         expect(format(selectedDay, 'HH:mm:ss')).toBe('22:00:00');
@@ -438,7 +439,7 @@ describe('DatePicker', () => {
             </ConfigProvider>
         ));
 
-        const input = container.querySelector<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-input`) as HTMLInputElement;
+        const input = getElement<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-input`, container);
         expect(input.value).toEqual(format(now, strings.FORMAT_DATE_TIME));
         setTimeZone(newZone);
         expect(input.value).toEqual(format(add(now, { hours: newOffset - originOffset }), strings.FORMAT_DATE_TIME));
@@ -586,13 +587,13 @@ describe('DatePicker', () => {
             timePickerOpts: { scrollItemProps: { cycled: false } },
         };
         const { rerender } = renderDatePicker(props);
-        await userEvent.click(document.querySelector(`.${dp}-month-grid-left .${dp}-switch-time`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-month-grid-left .${dp}-switch-time`));
         const args = disabledTime.mock.lastCall as Parameters<typeof disabledTime>;
         expect((args[0] as Date[]).length).toBe(2);
         expect(args[1]).toBe('left');
 
         rerender({ ...props, type: 'dateTime' });
-        await userEvent.click(document.querySelector(`.${dp}-month-grid-left .${dp}-switch-time`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-month-grid-left .${dp}-switch-time`));
         const args2 = disabledTime.mock.lastCall as Parameters<typeof disabledTime>;
         expect(Array.isArray(args2[0])).toBe(false);
         expect(args2[1]).toBe('left');
@@ -615,7 +616,7 @@ describe('DatePicker', () => {
         const handleChange = vi.fn<ChangeHandler>();
         const { container } = renderDatePicker({ motion: false, defaultOpen: true, defaultValue: '2021-12-21', onChange: handleChange });
 
-        fireEvent.input(container.querySelector('input') as HTMLInputElement, { target: { value: '20221-12-21' } });
+        fireEvent.input(getElement<HTMLInputElement>('input', container), { target: { value: '20221-12-21' } });
         expect(handleChange).not.toHaveBeenCalled();
     });
 
@@ -872,7 +873,7 @@ describe('DatePicker', () => {
     it('点击年月文字打开年月选择器', async () => {
         renderDatePicker({ defaultValue: baseDate, defaultOpen: true, motion: false });
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'date');
-        await userEvent.click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         expect(getPanel('left')).toHaveAttribute('x-open-type', 'year');
         expect(getPopup()?.querySelector(`.${dp}-yam`)).not.toBeNull();
         expect(getYMSelected()).toEqual(['2019年', '9月']);
@@ -886,7 +887,7 @@ describe('DatePicker', () => {
         try {
             // Popover stops click propagation unless stopPropagation is false
             renderDatePicker({ defaultValue: baseDate, defaultOpen: true, motion: false, stopPropagation: false });
-            await userEvent.click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+            await userEvent.click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
             expect(onDocumentClick).toHaveBeenCalledTimes(1);
             await userEvent.click(screen.getByRole('button', { name: zh_CN.DatePicker.selectDate }));
             expect(onDocumentClick).toHaveBeenCalledTimes(2);
@@ -987,7 +988,7 @@ describe('DatePicker', () => {
         const onChange = vi.fn<ChangeHandler>();
         const { container } = renderDatePicker({ defaultValue: baseDate, motion: false, onChange, onClear });
 
-        fireEvent.mouseDown(container.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`, container));
         expect(onClear).toHaveBeenCalledTimes(1);
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(container.querySelector('input')).toHaveValue('');
@@ -1035,7 +1036,7 @@ describe('DatePicker', () => {
         expect(container.querySelector('.custom-trigger')).not.toBeNull();
         expect(container.querySelector('input')).toBeNull();
 
-        await userEvent.click(container.querySelector('.custom-trigger') as HTMLElement);
+        await userEvent.click(getElement('.custom-trigger', container));
         expect(getPopup()).not.toBeNull();
     });
 
@@ -1101,7 +1102,7 @@ describe('DatePicker', () => {
         const onChange = vi.fn<ChangeHandler>();
         const { container } = renderDatePicker({ motion: false, onChange });
 
-        fireEvent.input(container.querySelector('input') as HTMLInputElement, { target: { value: '2021-08-15' } });
+        fireEvent.input(getElement<HTMLInputElement>('input', container), { target: { value: '2021-08-15' } });
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange.mock.calls[0][1]).toBe('2021-08-15');
     });
@@ -1110,7 +1111,7 @@ describe('DatePicker', () => {
         const onChange = vi.fn<ChangeHandler>();
         const { container } = renderDatePicker({ motion: false, onChange });
 
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         fireEvent.input(input, { target: { value: 'invalid-date' } });
         expect(onChange).not.toHaveBeenCalled();
         expect(input).toHaveValue('invalid-date');
@@ -1169,7 +1170,7 @@ describe('DatePicker', () => {
     it('showClear 属性', async () => {
         const onClear = vi.fn<NonNullable<DatePickerProps['onClear']>>();
         const { container, rerender } = renderDatePicker({ defaultValue: baseDate, motion: false, showClear: true, onClear });
-        const inputWrapper = container.querySelector(`.${BASE_CLASS_PREFIX}-input-wrapper`) as HTMLElement;
+        const inputWrapper = getElement(`.${BASE_CLASS_PREFIX}-input-wrapper`, container);
         await userEvent.hover(inputWrapper);
         expect(container.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`)).not.toBeNull();
 

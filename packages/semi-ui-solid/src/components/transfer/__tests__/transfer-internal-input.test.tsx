@@ -2,6 +2,7 @@ import { render } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import Transfer from '..';
 
 describe('全局 Input 默认值不给 Transfer 搜索框加后缀与标签', () => {
@@ -14,7 +15,7 @@ describe('全局 Input 默认值不给 Transfer 搜索框加后缀与标签', ()
             Input: { suffix: 'mark-suffix', insetLabel: 'mark-label', addonBefore: 'mark-before', addonAfter: 'mark-after' },
         };
         const { container } = render(() => <Transfer dataSource={[{ key: '1', label: 'one', value: '1' }]} />);
-        await userEvent.type(container.querySelector('input') as HTMLInputElement, 'a');
+        await userEvent.type(getElement<HTMLInputElement>('input', container), 'a');
         expect(container.textContent).not.toMatch(/mark-/);
     });
 });

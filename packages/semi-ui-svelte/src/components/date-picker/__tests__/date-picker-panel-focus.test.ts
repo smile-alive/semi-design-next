@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { en_US, zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import { click, getPanel, getPopup, ymd } from './date-picker-dom-utils';
 import ProviderFixture, { type ProviderFixtureStore } from './date-picker-provider-fixture.svelte';
 import SlotsFixture, { type SlotsFixtureStore } from './date-picker-slots-fixture.svelte';
@@ -32,7 +33,7 @@ describe('Svelte DatePicker 面板导航', () => {
         await setup({ value: baseDate, open: true, props: { type: 'date' } });
         const grid = getPopup()?.querySelector(`.${dp}-month-grid`);
         expect(grid).toHaveAttribute('x-panel-yearandmonth-open-type', 'none');
-        await click(getPanel('left').querySelector(`.${dp}-navigation-month button`) as HTMLElement);
+        await click(getElement(`.${dp}-navigation-month button`, getPanel('left')));
         expect(grid).toHaveAttribute('x-panel-yearandmonth-open-type', 'left');
         expect(getPanel('left')).toHaveClass(`${dp}-yam-showing`);
         expect(getPanel('left').querySelector(`.${dp}-month`)).toBeNull();
@@ -121,7 +122,7 @@ describe('Svelte DatePicker 受控值与展开', () => {
 describe('Svelte DatePicker 范围触发器', () => {
     it('点击范围触发器的空白处打开面板，焦点落在开始输入框', async () => {
         const { store } = await setup({ value: [new Date(2021, 5, 1), new Date(2021, 5, 15)], props: { type: 'dateRange' } });
-        await click(getRoot().querySelector(`.${dp}-range-input`) as HTMLElement);
+        await click(getElement(`.${dp}-range-input`, getRoot()));
         expect(opens(store)).toContain('open true');
         expect(getPopup()).not.toBeNull();
         expect(getInputs()[0]).toHaveFocus();
@@ -129,7 +130,7 @@ describe('Svelte DatePicker 范围触发器', () => {
 
     it('禁用时点击范围触发器不打开', async () => {
         const { store } = await setup({ props: { type: 'dateRange', disabled: true } });
-        await fireEvent.click(getRoot().querySelector(`.${dp}-range-input`) as HTMLElement);
+        await fireEvent.click(getElement(`.${dp}-range-input`, getRoot()));
         await settle();
         expect(opens(store)).toEqual([]);
         expect(getPopup()).toBeNull();
@@ -200,7 +201,7 @@ describe('Svelte DatePicker trigger snippet 的 rangeInputFocus', () => {
 
     it('没有值时点击前为 undefined，点击后为 rangeStart', async () => {
         await renderTrigger({ type: 'dateRange' });
-        const trigger = document.querySelector('.custom-trigger') as HTMLElement;
+        const trigger = getElement('.custom-trigger');
         expect(trigger).toHaveTextContent('undefined');
         await click(trigger);
         expect(getPopup()).not.toBeNull();
@@ -218,8 +219,8 @@ describe('Svelte DatePicker 只读、前缀与语言包', () => {
     it('inputReadOnly 只锁定打字，仍可清除', async () => {
         const { store } = await setup({ value: baseDate, props: { inputReadOnly: true, showClear: true } });
         expect(getInput()).toHaveAttribute('readonly');
-        await userEvent.hover(getRoot().querySelector(`.${BASE_CLASS_PREFIX}-input-wrapper`) as HTMLElement);
-        await fireEvent.mouseDown(getRoot().querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`) as HTMLElement);
+        await userEvent.hover(getElement(`.${BASE_CLASS_PREFIX}-input-wrapper`, getRoot()));
+        await fireEvent.mouseDown(getElement(`.${BASE_CLASS_PREFIX}-input-clearbtn`, getRoot()));
         await settle();
         expect(changes(store)).toHaveLength(1);
         expect(getInput()).toHaveValue('');

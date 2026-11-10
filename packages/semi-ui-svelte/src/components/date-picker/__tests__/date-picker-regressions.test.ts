@@ -3,6 +3,7 @@ import { addDays, set } from 'date-fns';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
+import { getElement } from '@test/utils/dom/common';
 import { click, getFooterButtons, getPanel, getYMLists, getYMSelected } from './date-picker-dom-utils';
 import ProviderFixture, { type ProviderFixtureStore } from './date-picker-provider-fixture.svelte';
 import ScenarioFixture, { type ScenarioStore } from './date-picker-scenarios-fixture.svelte';
@@ -162,7 +163,7 @@ describe('Svelte DatePicker 回归：defaultPickerValue 与面板定位', () => 
             await setup({ ...init, props: { type: 'date', multiple: true, defaultPickerValue: '2019-07-01' } });
             await openFromInput();
             await click(getDay('2019-07-20'));
-            await click(getPanel('left').querySelector(`[aria-label="${zh_CN.DatePicker.nextMonth}"]`) as HTMLElement);
+            await click(getElement(`[aria-label="${zh_CN.DatePicker.nextMonth}"]`, getPanel('left')));
             await click(getDay('2019-08-20'));
             expect(getNavTitle('left')).toBe('2019年 8月');
             expect(getSelectedDays()).toEqual(['2019-08-20']);
@@ -351,7 +352,7 @@ describe('Svelte DatePicker 回归：自定义内容与外部控制', () => {
 
     it('FixNeedConfirmInTabs：离开标签页时，bind:this 的 close() 隐藏 needConfirm 面板', async () => {
         await setupScenario({ scenario: 'tabs' });
-        await click(document.querySelector('input') as HTMLElement);
+        await click(getElement('input'));
         expect(getContainer()).not.toBeNull();
         await click(screen.getByRole('tab', { name: 'start' }));
         await closed();

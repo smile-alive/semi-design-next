@@ -4,7 +4,7 @@ import { screen } from '@testing-library/vue';
 import { afterEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { mockResizeObserver, render, sleep } from '@test/utils/vue';
+import { mockResizeObserver, render, sleep, getElement } from '@test/utils/vue';
 import OverflowList, { type OverflowListEmits, type OverflowListItem, type OverflowListItemSlotProps, type OverflowListOverflowSlotProps, type OverflowListProps, type OverflowListSlots } from '..';
 import ScrollRefs from './fixtures/scroll-refs.vue';
 import Typed from './fixtures/typed.vue';
@@ -329,7 +329,7 @@ describe('OverflowList', () => {
         expect(list).toHaveClass('custom');
         expect(list).toHaveStyle({ color: 'rgb(255, 0, 0)' });
         expect(list.style.visibility).toBe('');
-        const wrapper = view.container.querySelector(`.${prefixCls}-scroll-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${prefixCls}-scroll-wrapper`, view.container);
         expect(wrapper).toHaveClass('wrapper');
         expect(wrapper).toHaveStyle({ gap: '4px' });
         expect([...wrapper.children].map((child) => (child as HTMLElement).dataset.scrollkey)).toEqual(keys);

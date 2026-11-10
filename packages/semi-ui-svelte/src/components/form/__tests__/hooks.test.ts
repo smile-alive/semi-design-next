@@ -2,6 +2,7 @@ import type { ComponentProps } from 'svelte';
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { getElement } from '@test/utils/dom/common';
 import useForm from '../hooks/use-form.svelte';
 import type { FormApi } from '../interface';
 import HooksFixture from './b-hooks.svelte';
@@ -25,7 +26,7 @@ function renderHooks(field = 'a', initValues?: Record<string, unknown>, outside 
 }
 
 const stateOf = (testId: string) => JSON.parse(screen.getByTestId(testId).textContent ?? '');
-const inputOf = (field: string) => document.querySelector<HTMLInputElement>(`[x-field-id="${field}"] input`) as HTMLInputElement;
+const inputOf = (field: string) => getElement<HTMLInputElement>(`[x-field-id="${field}"] input`);
 
 describe('Svelte Form hooks', () => {
     it('useFormApi 返回 getFormApi 交出的 api', async () => {

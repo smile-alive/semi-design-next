@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'v
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import type { Item } from '@fibrae/semi-foundation/components/scroll-list/item-foundation';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { sleep } from '@test/utils/solid';
+import { sleep, getElement } from '@test/utils/solid';
 import ScrollList, { ScrollItem, type ScrollItemElement, type ScrollItemProps } from '..';
 import Button from '../../button';
 
@@ -215,7 +215,7 @@ describe('ScrollList 行为', () => {
         const { container } = render(() => <ScrollList bodyHeight="50%">child</ScrollList>);
         expect(container.querySelector(`.${prefix}-body`)).toHaveStyle({ height: '50%' });
         const zero = render(() => <ScrollList bodyHeight={0}>child</ScrollList>);
-        expect((zero.container.querySelector(`.${prefix}-body`) as HTMLElement).style.height).toBe('');
+        expect(getElement(`.${prefix}-body`, zero.container).style.height).toBe('');
     });
 
     it('传入 aria-label 时根元素是有名称的 group，没有名称时不加 role，显式 role 优先', () => {
@@ -434,7 +434,7 @@ describe('ScrollItem 行为', () => {
         const [list, setList] = createSignal<Item[]>([]);
         const [selectedIndex, setSelectedIndex] = createSignal(0);
         const { container } = render(() => <ScrollItem list={list()} mode="wheel" motion={false} selectedIndex={selectedIndex()} />);
-        const wrapper = container.querySelector(`.${prefix}-list-outer`) as HTMLElement;
+        const wrapper = getElement(`.${prefix}-list-outer`, container);
         // data and the new selectedIndex arrive together
         setList(numbers(10));
         setSelectedIndex(4);
@@ -477,7 +477,7 @@ describe('ScrollItem 行为', () => {
         mockRects();
         const [selectedIndex, setSelectedIndex] = createSignal(2);
         const { container } = render(() => <ScrollItem cycled list={numbers(12)} motion={false} selectedIndex={selectedIndex()} />);
-        const wrapper = container.querySelector(`.${prefix}-list-outer`) as HTMLElement;
+        const wrapper = getElement(`.${prefix}-list-outer`, container);
         // item 2 of the middle copy is the 15th li: 14 * 36 - (180 - 36) / 2
         expect(wrapper.scrollTop).toBe(432);
 

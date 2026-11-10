@@ -6,6 +6,8 @@ import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { expectThemeFocusRing, keyboardClick, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import FeedbackFixture from './feedback-fixture.svelte';
 import Page from './page.svelte';
 import Sibling from './sibling.svelte';
@@ -31,8 +33,8 @@ describe('Svelte Feedback（浏览器）', () => {
         flushSync();
         const bad = await screen.findByRole('radio', { name: zh_CN.Feedback.bad });
         const normal = screen.getByRole('radio', { name: zh_CN.Feedback.normal });
-        const item = (radio: HTMLElement) => radio.closest(`.${prefix}-emoji-item`) as HTMLElement;
-        const glyph = (radio: HTMLElement) => item(radio).querySelector(`.${prefix}-emoji-glyph`) as HTMLElement;
+        const item = (radio: HTMLElement) => defined(radio.closest<HTMLElement>(`.${prefix}-emoji-item`));
+        const glyph = (radio: HTMLElement) => getElement(`.${prefix}-emoji-glyph`, item(radio));
         expect(getComputedStyle(glyph(bad)).filter).toBe('grayscale(1)');
 
         await tabTo(bad);

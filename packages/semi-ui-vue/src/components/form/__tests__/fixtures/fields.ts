@@ -1,6 +1,6 @@
 import { h, type VNodeChild } from 'vue';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import { Form, type FormApi, type FormDefaultSlotProps } from '../..';
 import { FormSelect } from '../../field';
 
@@ -11,7 +11,7 @@ export const fieldSelector = `.${prefix}-field`;
 export const labelSelector = `.${prefix}-field-label`;
 export const errorSelector = `.${prefix}-field-error-message`;
 
-export const getInput = (scope = '') => document.querySelector<HTMLInputElement>(`${scope} .${BASE_CLASS_PREFIX}-input`) as HTMLInputElement;
+export const getInput = (scope = '') => getElement<HTMLInputElement>(`${scope} .${BASE_CLASS_PREFIX}-input`);
 export const getInputs = () => Array.from(document.querySelectorAll<HTMLInputElement>(`.${BASE_CLASS_PREFIX}-input`));
 
 export const flush = () => new Promise((resolve) => setTimeout(resolve));

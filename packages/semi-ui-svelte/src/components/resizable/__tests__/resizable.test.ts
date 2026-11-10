@@ -4,12 +4,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test'
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { ResizeCallback, ResizeStartCallback } from '..';
 import Box from './box.svelte';
 import { down, drag, key, mockLayout, move, up } from './helpers';
 
-const getRoot = () => document.querySelector<HTMLElement>('.semi-resizable-resizable') as HTMLElement;
-const getHandle = (dir: string) => document.querySelector<HTMLElement>(`.semi-resizable-resizableHandler-${dir}`) as HTMLElement;
+const getRoot = () => getElement('.semi-resizable-resizable');
+const getHandle = (dir: string) => getElement(`.semi-resizable-resizableHandler-${dir}`);
+const queryHandle = (dir: string) => document.querySelector(`.semi-resizable-resizableHandler-${dir}`);
 const getBackground = () => document.querySelector('.semi-resizable-background');
 function sizeOf() {
     const { width, height } = getRoot().style;
@@ -122,8 +124,8 @@ describe('Svelte Resizable', () => {
         expect(document.querySelectorAll('.semi-resizable-resizableHandler')).toHaveLength(0);
         unmount();
         renderBox({ enable: { top: false, left: false } });
-        expect(getHandle('top')).toBeNull();
-        expect(getHandle('right')).not.toBeNull();
+        expect(queryHandle('top')).toBeNull();
+        expect(queryHandle('right')).not.toBeNull();
     });
 
     it('有键盘可达的边时手柄是带语言包名称与取值范围的 separator，方向键缩放', async () => {

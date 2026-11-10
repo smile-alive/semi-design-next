@@ -6,7 +6,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render, sleep } from '@test/utils/vue';
+import { render, sleep, getElement } from '@test/utils/vue';
 import { Form, type FormApi, type FormDefaultSlotProps, type FormHandle } from '..';
 import Button from '../../button';
 import { fieldSelector, flush, FormInput, getInput, getInputs, labelSelector, prefix, renderForm, selectWithOptions } from './fixtures/fields';
@@ -88,7 +88,7 @@ describe('Form-baseForm', () => {
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         const { container } = renderForm({ onSubmit }, () => <FormInput field="input" />);
         await fireEvent.update(getInput(), 'semi');
-        await fireEvent.submit(container.querySelector('form') as HTMLFormElement);
+        await fireEvent.submit(getElement<HTMLFormElement>('form', container));
         await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
         expect(onSubmit.mock.calls[0][0]).toEqual({ input: 'semi' });
     });
@@ -285,7 +285,7 @@ describe('Form-baseForm', () => {
         const onSubmit = vi.fn<(...args: unknown[]) => void>();
         const onSubmitFail = vi.fn<(...args: unknown[]) => void>();
         const { container } = renderForm({ onSubmit, onSubmitFail, validator: () => ({}) }, () => <FormInput field="input" />);
-        await fireEvent.submit(container.querySelector('form') as HTMLFormElement);
+        await fireEvent.submit(getElement<HTMLFormElement>('form', container));
         await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
         expect(onSubmitFail).not.toHaveBeenCalled();
     });
@@ -382,8 +382,8 @@ describe('Form-baseForm 行为', () => {
                 <Form stopPropagation={{ submit: true, reset: true }} />
             </div>
         ));
-        await fireEvent.submit(container.querySelector('form') as HTMLFormElement);
-        await fireEvent.reset(container.querySelector('form') as HTMLFormElement);
+        await fireEvent.submit(getElement<HTMLFormElement>('form', container));
+        await fireEvent.reset(getElement<HTMLFormElement>('form', container));
         expect(outerSubmit).not.toHaveBeenCalled();
         expect(outerReset).not.toHaveBeenCalled();
     });
@@ -403,7 +403,7 @@ describe('Form-baseForm 行为', () => {
             </>
         ));
         await waitFor(() => expect(api().getError('b')).toEqual(['b-err']));
-        await fireEvent.update(document.querySelector('[x-field-id="a"] input') as HTMLInputElement, 'x');
+        await fireEvent.update(getElement<HTMLInputElement>('[x-field-id="a"] input'), 'x');
         await sleep(10);
         expect(api().getError('a')).toBeUndefined();
         await expect(api().validate(['a'])).rejects.toEqual({ a: ['a-err'], b: ['b-err'] });

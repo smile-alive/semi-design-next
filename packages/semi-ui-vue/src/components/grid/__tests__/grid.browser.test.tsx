@@ -2,10 +2,10 @@
 import { nextTick } from 'vue';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { page } from 'vite-plus/test/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import { Col, Row, type RowProps } from '../index';
 
-const q = (root: ParentNode, selector: string) => root.querySelector(selector) as Element;
+const q = (root: ParentNode, selector: string) => getElement(selector, root);
 const style = (el: Element, name: string) => getComputedStyle(el).getPropertyValue(name);
 const marginLeft = (el: Element) => style(el, 'margin-left');
 const marginRight = (el: Element) => style(el, 'margin-right');

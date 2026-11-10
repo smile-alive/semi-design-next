@@ -4,16 +4,16 @@ import { screen } from '@testing-library/vue';
 import { describe, expect, it, onTestFinished, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import InputNumber from '..';
 import Controlled from './fixtures/controlled.vue';
 
 const prefixCls = `${BASE_CLASS_PREFIX}-input-number`;
 
 const getInput = () => screen.getByRole<HTMLInputElement>('spinbutton');
-const getButton = (direction: 'up' | 'down') => document.querySelector(`.${prefixCls}-button-${direction}`) as HTMLElement;
+const getButton = (direction: 'up' | 'down') => getElement(`.${prefixCls}-button-${direction}`);
 const getButtons = () => document.querySelector(`.${prefixCls}-suffix-btns`);
-const getWrapper = () => document.querySelector(`.${BASE_CLASS_PREFIX}-input-number`) as HTMLElement;
+const getWrapper = () => getElement(`.${BASE_CLASS_PREFIX}-input-number`);
 const thousands = (value: number | string) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 const removeThousands = (value: string) => value.replace(/,/g, '');
 
@@ -64,7 +64,7 @@ describe('InputNumber（浏览器）', () => {
         const input = getInput();
         const outside = screen.getByRole('button', { name: 'outside' });
         for (const part of ['prefix', 'suffix']) {
-            await userEvent.click(document.querySelector(`.${BASE_CLASS_PREFIX}-input-${part}`) as HTMLElement);
+            await userEvent.click(getElement(`.${BASE_CLASS_PREFIX}-input-${part}`));
             expect(input).toHaveFocus();
             await userEvent.click(outside);
             expect(input).not.toHaveFocus();
@@ -127,7 +127,7 @@ describe('InputNumber（浏览器）', () => {
         shadow.append(mount);
         const view = render(InputNumber, { container: mount, props: { defaultValue: 1, keepFocus: true } });
         try {
-            const input = shadow.querySelector('input') as HTMLInputElement;
+            const input = getElement<HTMLInputElement>('input', shadow);
             input.focus();
             await userEvent.keyboard('{ArrowUp}');
             expect(input).toHaveValue('2');

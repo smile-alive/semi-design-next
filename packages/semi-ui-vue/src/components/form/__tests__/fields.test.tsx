@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { misplacedAriaRequired } from '@test/utils/dom/common';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import {
     FormAutoComplete,
     FormCascader,
@@ -235,7 +235,7 @@ const names = Object.keys(cases);
 function renderField(name: string, props: Record<string, unknown> = {}) {
     const { component, props: own, slots } = cases[name];
     const view = renderForm({}, () => h(component, { field: 'f', ...own, ...props }, slots));
-    return { ...view, field: () => view.container.querySelector(`.${BASE_CLASS_PREFIX}-form-field`) as HTMLElement };
+    return { ...view, field: () => getElement(`.${BASE_CLASS_PREFIX}-form-field`, view.container) };
 }
 
 const shown = (root: Element) =>
@@ -318,7 +318,7 @@ describe('Form 字段', () => {
         const attributes = [...document.querySelectorAll('*')].flatMap((element) => element.getAttributeNames());
         expect(attributes.filter((key) => /^(validate-?status|inset-?label-?id)$/i.test(key))).toEqual([]);
 
-        const group = document.querySelector(`.FormCheckboxGroup`) as HTMLElement;
+        const group = getElement(`.FormCheckboxGroup`);
         const checkboxes = within(group).getAllByRole('checkbox');
         expect(checkboxes.length).toBeGreaterThan(0);
         expect(checkboxes.map((input) => input.getAttribute('aria-invalid'))).toEqual(checkboxes.map(() => 'true'));
@@ -338,7 +338,7 @@ describe('Form 字段', () => {
         renderForm({}, () => names.map((name) => h(cases[name].component, { field: name, label: name, fieldClassName: name, rules: [{ required: true }], ...cases[name].props }, cases[name].slots)));
         await settle();
         expect(document.querySelectorAll('[aria-required="true"]').length).toBeGreaterThan(0);
-        expect(Object.fromEntries(names.map((name) => [name, misplacedAriaRequired(document.querySelector(`.${name}`) as Element)]))).toEqual(Object.fromEntries(names.map((name) => [name, []])));
+        expect(Object.fromEntries(names.map((name) => [name, misplacedAriaRequired(getElement(`.${name}`))]))).toEqual(Object.fromEntries(names.map((name) => [name, []])));
     });
 
     it('labelPosition="inset" 时，不支持内嵌标签的字段以渲染出的 top label 命名控件', async () => {

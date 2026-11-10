@@ -5,7 +5,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/vue';
 import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render, sleep } from '@test/utils/vue';
+import { render, sleep, getElement } from '@test/utils/vue';
 import CodeHighlight from '../../code-highlight';
 import { grammar } from '../../code-highlight/__tests__/grammars';
 import { code as Code, h1 as H1, h2 as H2, p as P } from '../components';
@@ -100,7 +100,7 @@ describe('MarkdownRender', () => {
         const warn = vi.spyOn(console, 'warn');
         const { container } = render(TemplateDefaults);
         expect(screen.getByRole('heading', { level: 2, name: 't' })).toHaveClass('x', `${prefix}-component-header`);
-        const paragraph = container.querySelector(`.${prefix}-component-p`) as HTMLElement;
+        const paragraph = getElement(`.${prefix}-component-p`, container);
         expect(paragraph).toHaveClass('y');
         expect(paragraph.tagName).toBe('DIV');
         expect(paragraph.querySelector(`.${prefix}-component-image`)).not.toBeNull();
@@ -122,7 +122,7 @@ describe('MarkdownRender', () => {
         const warn = vi.spyOn(console, 'warn');
         const { container } = renderMarkdown({ format, raw: 'before ![cat](a.png "cat") after' });
         await waitFor(() => expect(container.querySelector(`.${prefix}-component-image`)).not.toBeNull());
-        const image = container.querySelector(`.${prefix}-component-image`) as HTMLElement;
+        const image = getElement(`.${prefix}-component-image`, container);
         expect(image.closest('p')).toBeNull();
         const paragraph = image.closest(`.${prefix}-component-p`);
         expect(paragraph).toHaveTextContent('before');
@@ -135,7 +135,7 @@ describe('MarkdownRender', () => {
         await waitFor(() => expect(container.querySelectorAll(`.${prefix}-component-image`)).toHaveLength(2));
         const [linked, plain] = container.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-image`);
         for (const image of [linked, plain]) {
-            await fireEvent.load(image.querySelector('img') as HTMLImageElement);
+            await fireEvent.load(getElement<HTMLImageElement>('img', image));
         }
         expect(linked.closest('p')).toBeNull();
         expect(linked.closest(`.${prefix}-component-p`)?.tagName).toBe('DIV');
@@ -165,8 +165,8 @@ describe('MarkdownRender', () => {
             components: { img: WithPreview },
         });
         await waitFor(() => expect(container.querySelector(`.${BASE_CLASS_PREFIX}-image`)).not.toBeNull());
-        const image = container.querySelector(`.${BASE_CLASS_PREFIX}-image`) as HTMLElement;
-        await fireEvent.load(image.querySelector('img') as HTMLImageElement);
+        const image = getElement(`.${BASE_CLASS_PREFIX}-image`, container);
+        await fireEvent.load(getElement<HTMLImageElement>('img', image));
         expect(image.closest('a')).not.toBeNull();
         expect(image).toHaveAttribute('role', 'button');
     });
@@ -191,7 +191,7 @@ describe('MarkdownRender', () => {
             raw: '```js\nlet a = 1;\n```\n\n```\nplain\n```\n\ninline `x` code',
         });
         await waitFor(() => expect(container.querySelector(`.${BASE_CLASS_PREFIX}-codeHighlight`)).not.toBeNull());
-        const highlight = container.querySelector(`.${BASE_CLASS_PREFIX}-codeHighlight`) as HTMLElement;
+        const highlight = getElement(`.${BASE_CLASS_PREFIX}-codeHighlight`, container);
         expect(highlight.parentElement?.closest('pre')).toBeNull();
         expect(highlight).toHaveTextContent('let a = 1;');
         const simple = container.querySelectorAll(`code.${prefix}-simple-code`);
@@ -560,7 +560,7 @@ describe('MarkdownRender', () => {
             const container = await renderTable({
                 raw: '| Name | **Brand** | **Price** |\n| - | :- | -: |\n| Book | Semi | ￥100 |',
             });
-            const thead = container.querySelector(`.${tablePrefix}-table-thead`) as HTMLElement;
+            const thead = getElement(`.${tablePrefix}-table-thead`, container);
             expect(Array.from(thead.querySelectorAll('strong'), (node) => node.textContent)).toEqual(['Brand', 'Price']);
             expect(thead).toHaveTextContent('NameBrandPrice');
             expect(bodyRows(container)).toHaveLength(1);
@@ -571,7 +571,7 @@ describe('MarkdownRender', () => {
                 format: 'mdx',
                 raw: '| Name | <h1>Brand</h1> | **Price** |\n| - | :- | :-: |\n| Book | Semi | ￥100 |',
             });
-            const thead = container.querySelector(`.${tablePrefix}-table-thead`) as HTMLElement;
+            const thead = getElement(`.${tablePrefix}-table-thead`, container);
             expect(thead.querySelector('h1')).toHaveTextContent(/^Brand$/);
             expect(thead.querySelector('strong')).toHaveTextContent(/^Price$/);
             expect(bodyRows(container)).toHaveLength(1);

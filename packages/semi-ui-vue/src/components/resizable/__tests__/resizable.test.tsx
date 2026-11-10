@@ -4,7 +4,7 @@ import { screen } from '@testing-library/vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
 import { en_US } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import { Resizable, type ResizeCallback, type ResizeStartCallback, type Size } from '..';
 import ConfigProvider from '../../config-provider';
 import Controlled from './fixtures/controlled.vue';
@@ -13,8 +13,9 @@ import { down, drag, key, mockLayout, move, nonPrimaryPresses, up } from './help
 type Props = Record<string, unknown>;
 
 const BOX = { width: '1000px', height: '800px' };
-const getRoot = () => document.querySelector<HTMLElement>('.semi-resizable-resizable') as HTMLElement;
-const getHandle = (dir: string) => document.querySelector<HTMLElement>(`.semi-resizable-resizableHandler-${dir}`) as HTMLElement;
+const getRoot = () => getElement('.semi-resizable-resizable');
+const getHandle = (dir: string) => getElement(`.semi-resizable-resizableHandler-${dir}`);
+const queryHandle = (dir: string) => document.querySelector(`.semi-resizable-resizableHandler-${dir}`);
 const getBackground = () => document.querySelector('.semi-resizable-background');
 function sizeOf() {
     const { width, height } = getRoot().style;
@@ -270,8 +271,8 @@ describe('Resizable', () => {
     it('只为启用的方向渲染手柄', async () => {
         const view = await renderResizable({ enable: { right: false, top: false } });
         expect(document.querySelectorAll('.semi-resizable-resizableHandler')).toHaveLength(6);
-        expect(getHandle('right')).toBeNull();
-        expect(getHandle('top')).toBeNull();
+        expect(queryHandle('right')).toBeNull();
+        expect(queryHandle('top')).toBeNull();
         await view.setProps({ enable: false });
         expect(document.querySelectorAll('.semi-resizable-resizableHandler')).toHaveLength(0);
     });
@@ -466,7 +467,7 @@ describe('Resizable', () => {
             await renderBox({ enable: { right: false, bottom: false } });
             const left = getHandle('left');
             const top = getHandle('top');
-            expect(getHandle('right')).toBeNull();
+            expect(queryHandle('right')).toBeNull();
             expect(left).toHaveAttribute('role', 'separator');
             expect(left).toHaveAttribute('aria-orientation', 'vertical');
             expect(left).toHaveAttribute('aria-valuenow', '200');

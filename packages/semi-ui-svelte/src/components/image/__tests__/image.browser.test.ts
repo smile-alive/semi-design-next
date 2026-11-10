@@ -3,6 +3,7 @@ import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { keyboardClick, mouse } from '@test/utils/browser';
+import { defined } from '@test/utils/function';
 import type { ImageProps, PreviewProps } from '../interface';
 import GroupFixture from './group-fixture.svelte';
 import { $, arrow, footerIcon, getPreview, pageInfo, prefixCls, previewCls, previewImg, thumbs } from './helpers';
@@ -17,7 +18,7 @@ function renderGroup(props: PreviewProps = {}, images: ImageProps[] = list.map((
 }
 
 // The thumbnail's root is the button; Safari does not focus a clicked button, so open it from the keyboard
-const thumbRoot = (index: number) => thumbs()[index].closest(`.${prefixCls}`) as HTMLElement;
+const thumbRoot = (index: number) => defined(thumbs()[index].closest<HTMLElement>(`.${prefixCls}`));
 
 async function openPreview(index = 0) {
     await keyboardClick(thumbRoot(index));

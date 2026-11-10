@@ -2,6 +2,7 @@ import type { JSX } from 'solid-js';
 import { fireEvent, render } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
+import { getElement } from '@test/utils/solid';
 import { AIChatDialogue, AIChatInput, Annotation, Chat, MCPConfigure, Sidebar } from '../index';
 
 // Literal JSX attributes, because spread props skip the excess-property check (F6); runtime checks where they land (F2)
@@ -29,7 +30,7 @@ describe('未声明属性落在根元素上，且 Props 类型接受', () => {
     it.each(cases)('%s', (_, renderElement, cls) => {
         onKeyDown.mockClear();
         const { container } = render(renderElement);
-        const root = container.querySelector('[data-probe]') as HTMLElement;
+        const root = getElement('[data-probe]', container);
         expect(root).toHaveClass(`${BASE_CLASS_PREFIX}-${cls}`);
         expect(root).toHaveAttribute('id', 'probe');
         fireEvent.keyDown(root, { key: 'Enter' });
@@ -46,7 +47,7 @@ describe('未声明属性落在根元素上，且 Props 类型接受', () => {
     it('Annotation.AnnotationContent 的 onClick 仍只给条目，不落到根元素', () => {
         const onClick = vi.fn<() => void>();
         const { container } = render(() => <Annotation.AnnotationContent data-probe="" onClick={onClick} />);
-        fireEvent.click(container.querySelector('[data-probe]') as HTMLElement);
+        fireEvent.click(getElement('[data-probe]', container));
         expect(onClick).not.toHaveBeenCalled();
     });
 });

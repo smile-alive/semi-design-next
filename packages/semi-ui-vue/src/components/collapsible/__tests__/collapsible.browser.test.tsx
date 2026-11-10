@@ -2,7 +2,7 @@
 import { nextTick, reactive, type VNodeChild } from 'vue';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { tab } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Collapsible from '..';
 import type { CollapsibleProps } from '../interface';
 
@@ -260,7 +260,7 @@ describe('Collapsible（浏览器）- 内容的样式', () => {
                 <div style={{ height: '100px' }} />
             </div>
         ));
-        const inner = document.querySelector<HTMLElement>('[data-testid="inner"]') as HTMLElement;
+        const inner = getElement('[data-testid="inner"]');
         await expect.poll(() => inner.getBoundingClientRect().height).toBe(100);
         inner.style.height = '0px';
         // without interpolation the change is discrete and lands at once; with it, 10s of linear motion barely moves

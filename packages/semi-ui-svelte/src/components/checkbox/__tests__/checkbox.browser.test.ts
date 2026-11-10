@@ -4,12 +4,13 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, tab } from '@test/utils/browser';
+import { getElement } from '@test/utils/dom/common';
 import CheckboxGroup from '../checkbox-group.svelte';
 import Checkbox from '../checkbox.svelte';
 
 const prefix = `${BASE_CLASS_PREFIX}-checkbox`;
 const outlineOf = (el: Element) => getComputedStyle(el).outlineStyle;
-const display = (el: Element) => el.querySelector(`.${prefix}-inner-display`) as Element;
+const display = (el: Element) => getElement(`.${prefix}-inner-display`, el);
 const agree = createRawSnippet(() => ({ render: () => '<span>agree</span>' }));
 
 describe('Svelte Checkbox（浏览器）', () => {

@@ -6,14 +6,14 @@ import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { dragTo, expectThemeFocusRing, tab, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import TagInput, { type TagInputHandle, type TagInputTagSlotProps } from '..';
 import Button from '../../button';
 import Popover from '../../popover';
 
 const tagInputCls = `${BASE_CLASS_PREFIX}-tagInput`;
 const getHandles = () => document.querySelectorAll(`.${tagInputCls}-drag-handler`);
-const getRoot = () => document.querySelector(`.${tagInputCls}`) as HTMLElement;
+const getRoot = () => getElement(`.${tagInputCls}`);
 const getInput = () => screen.getByRole<HTMLInputElement>('textbox');
 const afterButton = () => <Button>{() => 'after'}</Button>;
 
@@ -127,7 +127,7 @@ describe('tag', () => {
         const { container } = render(TagInput, {
             props: { defaultValue: ['抖音', '火山', '西瓜视频'], expandRestTagsOnClick: false, maxTagCount: 1 },
         });
-        const plusN = container.querySelector(`.${tagInputCls}-wrapper-n`) as Element;
+        const plusN = getElement(`.${tagInputCls}-wrapper-n`, container);
         await tabTo(plusN);
         expectThemeFocusRing(plusN);
     });
@@ -151,7 +151,7 @@ describe('tag', () => {
         await userEvent.keyboard('{Enter}');
         await waitFor(() => expect(clear()).toBeNull());
         expect(getInput()).toHaveFocus();
-        const placeholder = document.querySelector(`.${tagInputCls}-clearBtn-placeholder`) as Element;
+        const placeholder = getElement(`.${tagInputCls}-clearBtn-placeholder`);
         expect(placeholder.getBoundingClientRect().width).toBe(width);
     });
 
@@ -176,7 +176,7 @@ describe('tag', () => {
         await userEvent.unhover(root);
         expect(look(root)).toEqual(idle);
 
-        await tabTo(root.querySelector('input') as Element);
+        await tabTo(getElement('input', root));
         const focused = look(root);
         await userEvent.hover(root);
         expect(look(root)).toEqual(focused);
@@ -189,10 +189,10 @@ describe('tag', () => {
 });
 
 describe('TagInput 输入框宽度跟随文字', () => {
-    const getField = () => document.querySelector(`.${tagInputCls}-wrapper-input`) as Element;
-    const getTag = () => document.querySelector(`.${BASE_CLASS_PREFIX}-tag`) as Element;
+    const getField = () => getElement(`.${tagInputCls}-wrapper-input`);
+    const getTag = () => getElement(`.${BASE_CLASS_PREFIX}-tag`);
     const rowEnd = () => {
-        const row = document.querySelector(`.${tagInputCls}-wrapper`) as Element;
+        const row = getElement(`.${tagInputCls}-wrapper`);
         const style = getComputedStyle(row);
         return row.getBoundingClientRect().right - parseFloat(style.paddingRight) - parseFloat(style.borderRightWidth);
     };
@@ -408,7 +408,7 @@ describe('TagInput 输入框与其清空按钮之间的焦点移动保持在内�
         const container = document.createElement('div');
         shadow.append(container);
         const view = render(TagInput, { props: { modelValue: ['abc'], showClear: true }, container });
-        const input = shadow.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', shadow);
         input.focus();
         await tab();
         expect(shadow.activeElement).toBe(shadow.querySelector(`.${tagInputCls}-clearBtn`));

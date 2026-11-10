@@ -1,7 +1,7 @@
 import { h, nextTick, type VNode } from 'vue';
 import { fireEvent } from '@testing-library/vue';
 import { vi } from 'vite-plus/test';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Button from '../../button';
 import type { FileItem } from '../interface';
 import Upload from '../upload.vue';
@@ -21,11 +21,11 @@ export function renderUpload(props: Record<string, unknown> = {}, slots: Slots =
     return render(Upload, { props: { action, ...props } as never, slots: slots as never });
 }
 
-export const getInput = () => document.querySelector<HTMLInputElement>(`.${prefix}-hidden-input`) as HTMLInputElement;
-export const getReplaceInput = () => document.querySelector<HTMLInputElement>(`.${prefix}-hidden-input-replace`) as HTMLInputElement;
+export const getInput = () => getElement<HTMLInputElement>(`.${prefix}-hidden-input`);
+export const getReplaceInput = () => getElement<HTMLInputElement>(`.${prefix}-hidden-input-replace`);
 export const getCardNames = () => Array.from(document.querySelectorAll(`.${prefix}-file-card-info-name`)).map((node) => node.textContent?.trim());
 export const getPicCards = () => document.querySelectorAll<HTMLElement>(`.${prefix}-picture-file-card`);
-export const getDragArea = () => document.querySelector(`.${prefix}-drag-area`) as HTMLElement;
+export const getDragArea = () => getElement(`.${prefix}-drag-area`);
 export function query<E extends Element = HTMLElement>(selector: string, root: ParentNode = document) {
     const found = root.querySelector<E>(selector);
     if (!found) throw new Error(`missing ${selector}`);

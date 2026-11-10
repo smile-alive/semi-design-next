@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@solidjs/testing-library';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import BackTop, { type BackTopProps } from '..';
 
 type ClickHandler = (event: MouseEvent) => void;
@@ -37,7 +38,7 @@ describe('BackTop', () => {
     it('onClick', async () => {
         const onClick = vi.fn<ClickHandler>();
         const { container } = renderBackTop({ onClick, class: 'test', visibilityHeight: -1 });
-        await userEvent.click(container.querySelector('.semi-backtop.test') as Element);
+        await userEvent.click(getElement('.semi-backtop.test', container));
         expect(onClick).toHaveBeenCalledTimes(1);
     });
 });
@@ -106,7 +107,7 @@ describe('BackTop 行为', () => {
     it('默认渲染一个圆形原生 FloatButton，图标为回到顶部', () => {
         const { container } = render(() => <BackTop visibilityHeight={-1} />);
         frame();
-        const root = container.querySelector('.semi-backtop') as HTMLElement;
+        const root = getElement('.semi-backtop', container);
         expect(root.tagName).toBe('BUTTON');
         expect(root).toHaveAttribute('type', 'button');
         expect(root).not.toHaveAttribute('role');
@@ -120,9 +121,9 @@ describe('BackTop 行为', () => {
     it('将 icon、shape、size、colorful 与 badge 传给 FloatButton', () => {
         const { container } = render(() => <BackTop badge={{ dot: true }} colorful shape="square" size="large" visibilityHeight={-1} icon={<i data-testid="icon" />} />);
         frame();
-        const root = container.querySelector('.semi-backtop') as HTMLElement;
+        const root = getElement('.semi-backtop', container);
         expect(root).toHaveClass('semi-floatButton-square', 'semi-floatButton-large');
-        const body = root.querySelector('.semi-floatButton-body') as HTMLElement;
+        const body = getElement('.semi-floatButton-body', root);
         expect(body).toHaveClass('semi-floatButton-colorful');
         expect(body.querySelector('[data-testid="icon"]')).not.toBeNull();
         expect(root.querySelector('.semi-icon-back_top')).toBeNull();
@@ -136,7 +137,7 @@ describe('BackTop 行为', () => {
             </BackTop>
         ));
         frame();
-        const root = container.querySelector('.semi-backtop') as HTMLElement;
+        const root = getElement('.semi-backtop', container);
         expect(root.tagName).toBe('BUTTON');
         expect(root.querySelector('.semi-floatButton-body .custom')).toHaveTextContent('UP');
         expect(root.querySelector('[data-testid="icon"]')).toBeNull();
@@ -151,7 +152,7 @@ describe('BackTop 行为', () => {
             </BackTop>
         ));
         frame();
-        const root = container.querySelector('.semi-backtop') as HTMLElement;
+        const root = getElement('.semi-backtop', container);
         expect(root.querySelector('[data-testid="icon"]')).not.toBeNull();
         expect(root).toHaveAttribute('aria-label', '回到顶部');
     });
@@ -251,7 +252,7 @@ describe('BackTop 行为', () => {
         scroll(node, 1000);
         frame();
 
-        fireEvent.click(container.querySelector('.semi-backtop') as Element);
+        fireEvent.click(getElement('.semi-backtop', container));
         expect(onClick).toHaveBeenCalledTimes(1);
         expect(onClick.mock.calls[0][0].type).toBe('click');
 
@@ -270,7 +271,7 @@ describe('BackTop 行为', () => {
         scroll(window, 1000);
         frame();
 
-        fireEvent.click(container.querySelector('.semi-backtop') as Element);
+        fireEvent.click(getElement('.semi-backtop', container));
         vi.advanceTimersByTime(500);
         expect(document.documentElement.scrollTop).toBe(0);
         expect(document.body.scrollTop).toBe(1000);
@@ -280,7 +281,7 @@ describe('BackTop 行为', () => {
         const onClick = vi.fn<ClickHandler>();
         const { container } = render(() => <BackTop duration={300} visibilityHeight={-1} onClick={onClick} />);
         frame();
-        const root = container.querySelector('.semi-backtop') as Element;
+        const root = getElement('.semi-backtop', container);
 
         fireEvent.click(root);
         vi.advanceTimersByTime(500);
@@ -299,7 +300,7 @@ describe('BackTop 行为', () => {
         const onClick = vi.fn<ClickHandler>();
         const { container } = render(() => <BackTop duration={duration()} visibilityHeight={-1} onClick={onClick} />);
         frame();
-        const root = container.querySelector('.semi-backtop') as Element;
+        const root = getElement('.semi-backtop', container);
 
         setDuration(100);
         fireEvent.click(root);
@@ -314,7 +315,7 @@ describe('BackTop 行为', () => {
         const [p, setP] = createSignal<BackTopProps>({ duration: 300, visibilityHeight: -1, onClick });
         const { container } = render(() => <BackTop {...p()} />);
         frame();
-        const root = container.querySelector('.semi-backtop') as Element;
+        const root = getElement('.semi-backtop', container);
 
         fireEvent.click(root);
         setP((prev) => ({ ...prev, class: 'other' }));
@@ -331,7 +332,7 @@ describe('BackTop 行为', () => {
         scroll(node, 1000);
         frame();
 
-        fireEvent.click(container.querySelector('.semi-backtop') as Element);
+        fireEvent.click(getElement('.semi-backtop', container));
         vi.advanceTimersByTime(100);
         const position = node.scrollTop;
         unmount();
@@ -389,7 +390,7 @@ describe('BackTop 行为', () => {
         const { container, unmount } = render(() => <BackTop duration={300} target={() => node} onClick={onClick} />);
         scroll(node, 1000);
         frame();
-        const root = container.querySelector('.semi-backtop') as Element;
+        const root = getElement('.semi-backtop', container);
 
         fireEvent.click(root);
         fireEvent.click(root);

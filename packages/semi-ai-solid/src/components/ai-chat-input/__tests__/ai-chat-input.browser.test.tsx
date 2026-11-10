@@ -4,6 +4,7 @@ import { describe, expect, it, onTestFinished } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import type { UploadProps } from '@fibrae/semi-ui-solid/upload/index';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import AIChatInput from '../index';
 
 const prefix = 'semi-aiChatInput';
@@ -25,7 +26,7 @@ function contrast(foreground: string, background: string) {
     return (light + 0.05) / (dark + 0.05);
 }
 
-const el = (parent: ParentNode, selector: string) => parent.querySelector(selector) as HTMLElement;
+const el = (parent: ParentNode, selector: string) => getElement(selector, parent);
 
 async function find<T extends Element = HTMLElement>(query: () => T | null | undefined) {
     return waitFor(() => {

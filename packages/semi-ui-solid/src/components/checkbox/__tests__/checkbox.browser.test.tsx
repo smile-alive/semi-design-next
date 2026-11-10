@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { expectThemeFocusRing, preventBackspaceNavigation, tab } from '@test/utils/browser';
+import { getElement, defined } from '@test/utils/solid';
 import Checkbox, { CheckboxGroup, type CheckboxProps, type CheckboxType } from '..';
 
 const prefix = `${BASE_CLASS_PREFIX}-checkbox`;
@@ -11,7 +12,7 @@ const outlineOf = (el: Element) => getComputedStyle(el).outlineStyle;
 describe('Checkbox（浏览器）', () => {
     it.each(['box', 'text'])('鼠标点击%s后焦点进入勾选框但不显示焦点环', async (part) => {
         const { container } = render(() => <Checkbox>agree</Checkbox>);
-        const display = container.querySelector(`.${prefix}-inner-display`) as HTMLElement;
+        const display = getElement(`.${prefix}-inner-display`, container);
         await userEvent.click(part === 'box' ? display : screen.getByText('agree'));
         expect(screen.getByRole('checkbox')).toHaveFocus();
         expect(outlineOf(display)).toBe('none');
@@ -22,7 +23,7 @@ describe('Checkbox（浏览器）', () => {
         await tab();
         await userEvent.keyboard(' ');
         expect(screen.getByRole('checkbox')).toBeChecked();
-        expectThemeFocusRing(container.querySelector(`.${prefix}-inner-display`) as HTMLElement);
+        expectThemeFocusRing(getElement(`.${prefix}-inner-display`, container));
     });
 
     it('分组内 Tab 逐个聚焦，只有当前聚焦的勾选框显示焦点环', async () => {
@@ -41,8 +42,8 @@ describe('Checkbox（浏览器）', () => {
         expect(checkboxes[0]).toHaveClass(`${prefix}-checked`);
         await tab();
         expect(screen.getByRole('checkbox', { name: '火山' })).toHaveFocus();
-        expectThemeFocusRing(checkboxes[1].querySelector(`.${prefix}-inner-display`) as HTMLElement);
-        expect(outlineOf(checkboxes[0].querySelector(`.${prefix}-inner-display`) as HTMLElement)).toBe('none');
+        expectThemeFocusRing(getElement(`.${prefix}-inner-display`, checkboxes[1]));
+        expect(outlineOf(getElement(`.${prefix}-inner-display`, checkboxes[0]))).toBe('none');
         await userEvent.keyboard('{Backspace}');
         expect(checkboxes[1]).toHaveClass(`${prefix}-unChecked`);
         expect(checkboxes[0]).toHaveClass(`${prefix}-checked`);
@@ -63,7 +64,7 @@ describe('Checkbox（浏览器）', () => {
         ));
         const displays = container.querySelectorAll(`.${prefix}-inner-display`);
 
-        await userEvent.click(container.querySelector(`.${prefix}`) as HTMLElement);
+        await userEvent.click(getElement(`.${prefix}`, container));
         await tab();
         await tab();
         await tab();
@@ -82,7 +83,7 @@ describe('Checkbox（浏览器）', () => {
         const input = screen.getByRole<HTMLInputElement>('checkbox', { name: 'partial' });
         expect(input.matches(':indeterminate')).toBe(true);
         // the native input is visually hidden, so the click goes to the wrapper like a pointer would
-        await userEvent.click(input.closest(`.${prefix}`) as HTMLElement);
+        await userEvent.click(defined(input.closest<HTMLElement>(`.${prefix}`)));
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(input.matches(':indeterminate')).toBe(true);
         expect(input).toBePartiallyChecked();
@@ -115,7 +116,7 @@ describe('Checkbox（浏览器）', () => {
         await tab();
         expectThemeFocusRing(cards[1]);
         expect(Array.from(cards).filter((card) => outlineOf(card) !== 'none')).toEqual([cards[1]]);
-        expect(outlineOf(cards[1].querySelector(`.${prefix}-inner-display`) as HTMLElement)).toBe('none');
+        expect(outlineOf(getElement(`.${prefix}-inner-display`, cards[1]))).toBe('none');
         await userEvent.keyboard('{Backspace}');
         expect(tick(cards[1])).toBeNull();
         await userEvent.keyboard('{Space}');

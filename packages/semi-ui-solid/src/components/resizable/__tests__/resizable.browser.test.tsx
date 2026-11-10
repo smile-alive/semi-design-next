@@ -3,9 +3,10 @@ import { render } from '@solidjs/testing-library';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
+import { getElement } from '@test/utils/solid';
 import { Resizable, ResizeGroup, ResizeHandler, ResizeItem } from '..';
 
-const find = (root: ParentNode, selector: string) => root.querySelector(selector) as HTMLElement;
+const find = (root: ParentNode, selector: string) => getElement(selector, root);
 
 describe('Resizable', () => {
     it('拖动手柄时，即使指针移出盒子也继续缩放，松开后结束', async () => {

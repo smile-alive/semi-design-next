@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-solid/locale';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
-import { endLeaveAnimations } from '@test/utils/solid';
+import { endLeaveAnimations, getElement, defined } from '@test/utils/solid';
 import Rating, { type RatingProps } from '..';
 import ConfigProvider from '../../config-provider';
 import { LocaleProvider } from '../../locale';
@@ -18,7 +18,7 @@ const render = (ui: () => JSX.Element) => renderWithLibrary(() => <LocaleProvide
 
 const prefixCls = `${BASE_CLASS_PREFIX}-rating`;
 
-const getList = () => document.querySelector<HTMLUListElement>(`ul.${prefixCls}`) as HTMLUListElement;
+const getList = () => getElement<HTMLUListElement>(`ul.${prefixCls}`);
 const getRadios = () => screen.getAllByRole('radio');
 const getFullStars = () => document.querySelectorAll(`.${prefixCls}-star-full`);
 const getHalfStars = () => document.querySelectorAll(`.${prefixCls}-star-half`);
@@ -93,7 +93,7 @@ describe('Rating', () => {
 
     it('自定义字符，两个半边各有一份', () => {
         render(() => <Rating character={<b>赞</b>} allowHalf />);
-        const star = document.querySelector(`li.${prefixCls}-star`) as HTMLElement;
+        const star = getElement(`li.${prefixCls}-star`);
         expect(star.querySelectorAll('b')).toHaveLength(2);
         expect(star.querySelector(`.${prefixCls}-star-second`)).toHaveTextContent(/^赞$/);
     });
@@ -769,7 +769,7 @@ describe('Rating 作为 Tooltip 触发器', () => {
                 <Rating defaultValue={2} disabled />
             </Tooltip>
         ));
-        const wrapper = getList().closest(`.${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`) as HTMLElement;
+        const wrapper = defined(getList().closest<HTMLElement>(`.${BASE_CLASS_PREFIX}-tooltip-trigger-wrapper`));
         expect(wrapper).not.toBeNull();
         expect(wrapper).toHaveStyle({ cursor: 'not-allowed' });
     });

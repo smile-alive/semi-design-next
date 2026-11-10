@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import Avatar from '../avatar.svelte';
 import type { AvatarColor, AvatarProps } from '../interface';
 import TopSlotSvg from '../top-slot-svg.svelte';
@@ -10,7 +11,7 @@ import AvatarFixture from './avatar-fixture.svelte';
 
 const prefix = 'semi-avatar';
 const src = 'https://example.com/avatar.png';
-const root = (container: Element) => container.querySelector(`.${prefix}`) as HTMLElement;
+const root = (container: Element) => getElement(`.${prefix}`, container);
 
 type Store = AvatarProps & { label?: string; node?: boolean; hover?: string; top?: boolean; bottom?: boolean; customMarks?: boolean };
 
@@ -66,7 +67,7 @@ describe('Svelte Avatar', () => {
 
     it('自定义尺寸与 style 只作用在外层，边框支持颜色与动画', () => {
         const { container } = setup({ size: '64px', shape: 'square', border: { color: 'red', motion: true }, style: 'margin: 4px' });
-        const wrapper = container.querySelector(`.${prefix}-wrapper`) as HTMLElement;
+        const wrapper = getElement(`.${prefix}-wrapper`, container);
         expect(wrapper).toHaveStyle({ width: '64px', height: '64px', margin: '4px' });
         expect(root(container)).not.toHaveStyle({ margin: '4px' });
         const rings = container.querySelectorAll(`.${prefix}-additionalBorder`);
@@ -92,13 +93,13 @@ describe('Svelte Avatar', () => {
         store.src = `${src}?new`;
         flushSync();
         expect(container.querySelector('img')).toHaveAttribute('src', `${src}?new`);
-        await fireEvent.error(container.querySelector('img') as HTMLImageElement);
+        await fireEvent.error(getElement<HTMLImageElement>('img', container));
         expect(onError).toHaveBeenCalledTimes(2);
     });
 
     it('onError 返回 false 时保留图片', async () => {
         const { container } = setup({ src, onError: () => false });
-        await fireEvent.error(container.querySelector('img') as HTMLImageElement);
+        await fireEvent.error(getElement<HTMLImageElement>('img', container));
         flushSync();
         expect(container.querySelector('img')).toHaveAttribute('src', src);
     });
@@ -125,7 +126,7 @@ describe('Svelte Avatar', () => {
     it('非文字内容原样回退，可点击元素有 alt 名称', async () => {
         const click = vi.fn<(event: MouseEvent) => void>();
         const { container } = setup({ src, alt: 'icon', onclick: click, node: true, label: 'B' });
-        await fireEvent.error(container.querySelector('img') as HTMLImageElement);
+        await fireEvent.error(getElement<HTMLImageElement>('img', container));
         flushSync();
         await tick();
         expect(container.querySelector(`.${prefix}-content`)).toBeNull();
@@ -165,7 +166,7 @@ describe('Svelte Avatar', () => {
         const enter = vi.fn<(event: MouseEvent) => void>();
         const leave = vi.fn<(event: MouseEvent) => void>();
         const { container } = setup({ border, alt: 'user', tabindex: 2, 'aria-describedby': 'help', onclick: click, onMouseEnter: enter, onMouseLeave: leave, label: 'Semi', hover: 'mask' });
-        const eventRoot = border ? (container.querySelector(`.${prefix}-wrapper`) as HTMLElement) : root(container);
+        const eventRoot = border ? getElement(`.${prefix}-wrapper`, container) : root(container);
         await fireEvent.mouseEnter(eventRoot);
         flushSync();
         expect(enter).toHaveBeenCalledTimes(1);
@@ -232,7 +233,7 @@ describe('Svelte Avatar', () => {
         semiGlobal.config = { overrideDefaultProps: { Avatar: { shape: 'square', color: 'red', onError } } };
         const view = render(Avatar, { props: { src } });
         expect(root(view.container)).toHaveClass(`${prefix}-square`);
-        await fireEvent.error(view.container.querySelector('img') as HTMLImageElement);
+        await fireEvent.error(getElement<HTMLImageElement>('img', view.container));
         expect(onError).toHaveBeenCalledOnce();
         view.unmount();
         const explicit = render(Avatar, { props: { shape: 'circle' } });

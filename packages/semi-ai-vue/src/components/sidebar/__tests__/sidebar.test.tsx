@@ -7,7 +7,7 @@ import { IconCode } from '@fibrae/semi-icons-vue';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { LocaleProvider } from '@fibrae/semi-ui-vue/locale/index';
 import { semiGlobal } from '@fibrae/semi-ui-vue/utils';
-import { endTransitions, render } from '@test/utils/vue';
+import { endTransitions, render, getElement } from '@test/utils/vue';
 import Sidebar from '..';
 import Annotation from '../annotation';
 import type { SideBarEmits, SideBarMainContentSlotProps, SideBarProps } from '../interface';
@@ -549,7 +549,7 @@ describe('Sidebar', () => {
         const { container } = render(Sidebar, {
             props: { detailContent: codeDetail, mode: 'code', visible: true, onBackWard },
         });
-        await fireEvent.click(container.querySelector('.semi-sidebar-detail-header-left button') as Element);
+        await fireEvent.click(getElement('.semi-sidebar-detail-header-left button', container));
         expect(onBackWard).toHaveBeenCalledWith(expect.objectContaining({ type: 'click' }), 'main');
     });
 
@@ -560,7 +560,7 @@ describe('Sidebar', () => {
         const { container } = render(Sidebar, {
             props: { detailContent: codeDetail, mode: 'code', visible: true, onDetailContentCopy },
         });
-        await fireEvent.click(container.querySelector('.semi-sidebar-detail-header-right button') as Element);
+        await fireEvent.click(getElement('.semi-sidebar-detail-header-right button', container));
         expect(writeText).toHaveBeenCalledWith('const a = 1;');
         await waitFor(() => expect(onDetailContentCopy).toHaveBeenCalledWith(expect.objectContaining({ type: 'click' }), 'const a = 1;', true));
         await waitFor(() => expect(sidebarContainer(container)).toHaveTextContent(text.copySuccess));
@@ -573,7 +573,7 @@ describe('Sidebar', () => {
         const { container } = render(Sidebar, {
             props: { detailContent: codeDetail, mode: 'code', visible: true, onDetailContentCopy },
         });
-        await fireEvent.click(container.querySelector('.semi-sidebar-detail-header-right button') as Element);
+        await fireEvent.click(getElement('.semi-sidebar-detail-header-right button', container));
         await waitFor(() => expect(onDetailContentCopy).toHaveBeenCalledWith(expect.anything(), 'const a = 1;', false));
         expect(sidebarContainer(container)?.querySelector('.semi-toast-wrapper')).toBeNull();
     });
@@ -823,7 +823,7 @@ describe('Sidebar 全局默认值与透传', () => {
         const { container, ...view } = render(Sidebar, {
             props: { detailContent: codeDetail, mode: 'code', visible: true },
         });
-        await fireEvent.click(container.querySelector('.semi-sidebar-detail-header-right button') as Element);
+        await fireEvent.click(getElement('.semi-sidebar-detail-header-right button', container));
         await waitFor(() => expect(sidebarContainer(container)).toHaveTextContent(text.copySuccess));
 
         await view.rerender({ visible: false });
@@ -831,7 +831,7 @@ describe('Sidebar 全局默认值与透传', () => {
         expect(document.querySelector('.semi-toast-wrapper')).toBeNull();
 
         await view.rerender({ visible: true });
-        await fireEvent.click(container.querySelector('.semi-sidebar-detail-header-right button') as Element);
+        await fireEvent.click(getElement('.semi-sidebar-detail-header-right button', container));
         await waitFor(() => expect(sidebarContainer(container)).toHaveTextContent(text.copySuccess));
     });
 

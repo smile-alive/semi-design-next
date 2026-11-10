@@ -2,9 +2,10 @@ import { flushSync } from 'svelte';
 import { render, screen, waitFor } from '@testing-library/svelte';
 import { describe, expect, it } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
+import { defined } from '@test/utils/function';
 import SplitCase from './split-case.svelte';
 
-const button = (name: string) => screen.getByText(name).closest('button') as HTMLButtonElement;
+const button = (name: string) => defined(screen.getByText(name).closest<HTMLButtonElement>('button'));
 
 describe('Svelte SplitButtonGroup', () => {
     it('根元素为 role="group"，aria-label 命名，使用方 role 不覆盖 group', () => {

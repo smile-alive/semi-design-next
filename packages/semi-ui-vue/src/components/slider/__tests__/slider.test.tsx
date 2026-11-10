@@ -6,7 +6,7 @@ import { afterEach, describe, expect, expectTypeOf, it, onTestFinished, vi } fro
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { en_US, zh_CN } from '@fibrae/semi-ui-vue/locale';
 import { semiGlobal, SemiGlobal, semiGlobalKey } from '@fibrae/semi-ui-vue/utils';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import Slider, { type HandleDot, type SliderProps } from '..';
 import ConfigProvider from '../../config-provider';
 import InTooltip from './fixtures/in-tooltip.vue';
@@ -31,11 +31,12 @@ const findTooltip = () =>
         expect(getTooltip()).not.toBeNull();
         return getTooltip();
     });
-const getHandle = () => document.querySelector<HTMLElement>(`.${prefix}-handle`) as HTMLElement;
+const getHandle = () => getElement(`.${prefix}-handle`);
 const getHandles = () => [...document.querySelectorAll<HTMLElement>(`.${prefix}-handle`)];
 const getInput = () => screen.getByRole<HTMLInputElement>('slider');
 const getInputs = () => screen.getAllByRole<HTMLInputElement>('slider');
-const query = (suffix: string) => document.querySelector<HTMLElement>(`.${prefix}-${suffix}`) as HTMLElement;
+const query = (suffix: string) => getElement(`.${prefix}-${suffix}`);
+const queryOptional = (suffix: string) => document.querySelector(`.${prefix}-${suffix}`);
 const queryAll = (suffix: string) => [...document.querySelectorAll<HTMLElement>(`.${prefix}-${suffix}`)];
 // A key on a native range changes its value; jsdom runs no such default action, so the input event is fired directly.
 const changeTo = (input: HTMLInputElement, value: number) => fireEvent.update(input, String(value));
@@ -289,7 +290,7 @@ describe('Slider', () => {
 
     it('showMarkLabel 为 false', () => {
         renderSlider({ defaultValue: 30, marks: { 20: '20c', 40: '40c' }, showMarkLabel: false });
-        expect(query('marks')).toBeNull();
+        expect(queryOptional('marks')).toBeNull();
         expect(screen.queryByText('20c')).toBeNull();
         expect(queryAll('dot')).toHaveLength(2);
     });
@@ -596,13 +597,13 @@ describe('Slider', () => {
     it('disabled 变化后禁用与恢复', async () => {
         const change = vi.fn<OnChange>();
         const view = renderSlider({ defaultValue: 30, onChange: change }, SIZED);
-        expect(query('disabled')).toBeNull();
+        expect(queryOptional('disabled')).toBeNull();
         await view.rerender({ disabled: true });
         expect(query('disabled')).not.toBeNull();
         await fireEvent.click(query('rail'), { clientX: 80 });
         expect(change).not.toHaveBeenCalled();
         await view.rerender({ disabled: false });
-        expect(query('disabled')).toBeNull();
+        expect(queryOptional('disabled')).toBeNull();
         await fireEvent.click(query('rail'), { clientX: 80 });
         expect(change).toHaveBeenCalledWith(80);
     });
@@ -948,7 +949,7 @@ describe('Slider', () => {
     it('空的 marks 对象', () => {
         renderSlider({ defaultValue: 30, marks: {} });
         expect(queryAll('dot')).toHaveLength(0);
-        expect(query('marks')).toBeNull();
+        expect(queryOptional('marks')).toBeNull();
     });
 
     it('rtl 方向下，滑块和 track 从右侧定位', () => {
@@ -1369,7 +1370,7 @@ describe('Slider', () => {
                 </form>
             ),
         });
-        const form = container.querySelector('form') as HTMLFormElement;
+        const form = getElement<HTMLFormElement>('form', container);
         expect(new FormData(form).getAll('volume')).toEqual(['30']);
         expect(new FormData(form).getAll('price')).toEqual(['20', '60']);
         await changeTo(getInputs()[0] as HTMLInputElement, 45);

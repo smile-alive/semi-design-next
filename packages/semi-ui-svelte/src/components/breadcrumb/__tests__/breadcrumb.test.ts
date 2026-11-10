@@ -5,6 +5,8 @@ import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { zh_CN } from '@fibrae/semi-ui-svelte/locale';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
+import { defined } from '@test/utils/function';
 import type { BreadcrumbClick, BreadcrumbProps } from '../interface';
 import BreadcrumbFixture from './breadcrumb-fixture.svelte';
 
@@ -173,8 +175,8 @@ describe('Svelte Breadcrumb', () => {
     it('moreType 为 popover 时在气泡中显示被隐藏的项，以 restItem 分隔', async () => {
         setup({ routes: ['one', 'two', 'three', 'four'], maxItemCount: 2, moreType: 'popover', separator: '>' });
         expect(list().children).toHaveLength(3);
-        await userEvent.hover(document.querySelector(`.${prefix}-item-more .semi-icon-more`) as HTMLElement);
-        const content = await screen.findByText('two', { selector: '.semi-popover-content *' }).then(() => document.querySelector('.semi-popover-content') as HTMLElement);
+        await userEvent.hover(getElement(`.${prefix}-item-more .semi-icon-more`));
+        const content = await screen.findByText('two', { selector: '.semi-popover-content *' }).then(() => getElement('.semi-popover-content'));
         const hidden = content.querySelectorAll(`:scope > ol > .${prefix}-item-wrap`);
         expect([...hidden].map((el) => el.textContent)).toEqual(['two', 'three']);
         expect([...content.querySelectorAll(`.${prefix}-restItem`)].map((el) => el.textContent)).toEqual(['>']);
@@ -183,8 +185,8 @@ describe('Svelte Breadcrumb', () => {
     it('moreType 为 popover 时，气泡内的链接点击仍调用 onClick，且不展开', async () => {
         const onClick = vi.fn<BreadcrumbClick>();
         setup({ routes: ['one', 'two', 'three', 'four'].map((name) => ({ name, href: 'https://semi.design/' })), maxItemCount: 2, moreType: 'popover', onClick });
-        await userEvent.hover(document.querySelector(`.${prefix}-item-more .semi-icon-more`) as HTMLElement);
-        const link = (await screen.findByText('two', { selector: '.semi-popover-content *' })).closest('a') as HTMLElement;
+        await userEvent.hover(getElement(`.${prefix}-item-more .semi-icon-more`));
+        const link = defined((await screen.findByText('two', { selector: '.semi-popover-content *' })).closest<HTMLElement>('a'));
         expect(link.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true }))).toBe(true);
         link.addEventListener('click', (event) => event.preventDefault());
         link.click();
@@ -211,7 +213,7 @@ describe('Svelte Breadcrumb', () => {
 
     it('item snippet 收到路由与下标，内容内联渲染', () => {
         setup({ routes: [{ path: 'path', href: 'href', name: 'test' }] }, { item: true });
-        const title = document.querySelector(`.${prefix}-item-title`) as HTMLElement;
+        const title = getElement(`.${prefix}-item-title`);
         expect(title).toHaveClass(`${prefix}-item-title-inline`);
         expect(title.querySelector('.path')).toHaveTextContent(/^path$/);
         expect(title.querySelector('.href')).toHaveTextContent(/^href$/);
@@ -292,7 +294,7 @@ describe('Svelte Breadcrumb', () => {
     });
 
     it('showTooltip 设置截断宽度，且不改写传入的对象', () => {
-        const width = () => (document.querySelector('.semi-typography') as HTMLElement).style.maxWidth;
+        const width = () => getElement('.semi-typography').style.maxWidth;
         const { store } = setup();
         expect(width()).toBe('150px');
         const showTooltip = { width: 80, opts: { mouseEnterDelay: 10 } };

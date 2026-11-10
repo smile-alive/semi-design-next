@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vite-plus/test';
 import { userEvent } from 'vite-plus/test/browser';
 import { IconEdit } from '@fibrae/semi-icons-vue';
 import { expectThemeFocusRing, tabTo } from '@test/utils/browser';
-import { render } from '@test/utils/vue';
+import { render, getElement } from '@test/utils/vue';
 import IconButton from '../../icon-button';
 import ButtonGroup from '../button-group.vue';
 import Button from '../index';
@@ -65,7 +65,7 @@ describe('Button 浏览器', () => {
         ));
         const root = container.firstElementChild as HTMLElement;
         root.style.setProperty('--semi-color-primary', 'rgb(1, 2, 3)');
-        await expect.poll(() => getComputedStyle(container.querySelector('.semi-button-primary') as Element).backgroundColor).toBe('rgb(1, 2, 3)');
+        await expect.poll(() => getComputedStyle(getElement('.semi-button-primary', container)).backgroundColor).toBe('rgb(1, 2, 3)');
     });
 
     it('Enter 与 Space 激活 click，loading 时都不触发', async () => {

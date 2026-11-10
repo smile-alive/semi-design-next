@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { zh_CN } from '@fibrae/semi-ui-solid/locale';
+import { getElement, defined } from '@test/utils/solid';
 import { type FormApi, Form, FormAutoComplete, FormCascader, FormCheckbox, FormCheckboxGroup, FormDatePicker, FormRadio, FormRadioGroup, FormSwitch, FormTagInput, FormTransfer, FormTreeSelect, FormUpload } from '..';
 
 const leakedAttrs = ['insetlabel', 'insetlabelid', 'validatestatus'];
@@ -113,8 +114,8 @@ describe('FormCheckbox 与 FormRadio', () => {
 
 describe('FormTagInput', () => {
     const tagInputCls = `${BASE_CLASS_PREFIX}-tagInput`;
-    const getRoot = () => document.querySelector(`.${tagInputCls}`) as HTMLElement;
-    const getInput = () => getRoot().querySelector('input') as HTMLInputElement;
+    const getRoot = () => getElement(`.${tagInputCls}`);
+    const getInput = () => getElement<HTMLInputElement>('input', getRoot());
 
     it('formApi.reset 后清空，并在 blur 时校验', async () => {
         let formApi: FormApi | undefined;
@@ -154,8 +155,8 @@ describe('FormTagInput', () => {
 
 describe('FormAutoComplete', () => {
     const data = ['semi', 'design'];
-    const getRoot = () => document.querySelector(`.${BASE_CLASS_PREFIX}-autocomplete`) as HTMLElement;
-    const getInput = () => getRoot().querySelector('input') as HTMLInputElement;
+    const getRoot = () => getElement(`.${BASE_CLASS_PREFIX}-autocomplete`);
+    const getInput = () => getElement<HTMLInputElement>('input', getRoot());
 
     it('Form label 可聚焦并命名 input', () => {
         render(() => (
@@ -200,9 +201,9 @@ describe('FormCascader', () => {
         { label: '北美洲', value: 'North America', key: 'na', children: [{ label: '美国', value: 'United States', key: 'us' }] },
         { label: '亚洲', value: 'Asia', key: 'asia', children: [{ label: '中国', value: 'China', key: 'cn' }] },
     ];
-    const getTrigger = () => document.querySelector(`.${prefixCls}`) as HTMLElement;
-    const getSelection = () => document.querySelector(`.${prefixCls}-selection`) as HTMLElement;
-    const getOption = (label: string) => screen.getByText(label, { selector: `.${prefixCls}-option-label > span` }).closest('li') as HTMLElement;
+    const getTrigger = () => getElement(`.${prefixCls}`);
+    const getSelection = () => getElement(`.${prefixCls}-selection`);
+    const getOption = (label: string) => defined(screen.getByText(label, { selector: `.${prefixCls}-option-label > span` }).closest<HTMLElement>('li'));
 
     it('formApi.reset 后为空，失焦时校验一次', async () => {
         let formApi: FormApi | undefined;
@@ -244,8 +245,8 @@ describe('FormTreeSelect', () => {
         { label: '北京', value: 'Beijing', key: 'bj' },
         { label: '上海', value: 'Shanghai', key: 'sh' },
     ];
-    const getTrigger = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-select`) as HTMLElement;
-    const getSelection = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-select-selection`) as HTMLElement;
+    const getTrigger = () => getElement(`.${BASE_CLASS_PREFIX}-tree-select`);
+    const getSelection = () => getElement(`.${BASE_CLASS_PREFIX}-tree-select-selection`);
     const getNode = (label: string) => [...document.querySelectorAll<HTMLElement>(`.${BASE_CLASS_PREFIX}-tree-option`)].find((node) => node.textContent === label) as HTMLElement;
 
     it('blur 校验与重置', async () => {
@@ -272,7 +273,7 @@ describe('FormTreeSelect', () => {
 describe('FormDatePicker', () => {
     const dp = `${BASE_CLASS_PREFIX}-datepicker`;
     const getPopup = () => document.querySelector<HTMLElement>(`.${BASE_CLASS_PREFIX}-popover .${dp}`);
-    const getDay = (fullDate: string) => document.querySelector<HTMLElement>(`.${dp}-day[aria-label="${fullDate}"]`) as HTMLElement;
+    const getDay = (fullDate: string) => getElement(`.${dp}-day[aria-label="${fullDate}"]`);
 
     it('范围字段按 Label 取到 group，必填标在输入框上', () => {
         render(() => (
@@ -304,7 +305,7 @@ describe('FormDatePicker', () => {
                 <FormDatePicker defaultPickerValue="2019-09-01" field="day" motion={false} />
             </Form>
         ));
-        await userEvent.click(container.querySelector('input') as HTMLInputElement);
+        await userEvent.click(getElement<HTMLInputElement>('input', container));
         await userEvent.click(getDay('2019-09-12'));
         expect(format(formApi?.getValue('day') as Date, 'yyyy-MM-dd')).toBe('2019-09-12');
         formApi?.reset();
@@ -318,7 +319,7 @@ describe('FormDatePicker', () => {
                 <FormDatePicker field="day" motion={false} rules={[{ required: true, message: 'required' }]} trigger="blur" />
             </Form>
         ));
-        const input = container.querySelector('input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('input', container);
         await userEvent.click(input);
         expect(getPopup()).not.toBeNull();
         fireEvent.focusOut(input);
@@ -347,7 +348,7 @@ describe('FormTransfer', () => {
     ];
     const selectedTexts = () => Array.from(document.querySelectorAll(`.${BASE_CLASS_PREFIX}-transfer-right-item-text`)).map((item) => item.textContent);
     const pick = (name: string) => userEvent.click(within(screen.getByRole('list', { name: zh_CN.Transfer.optionList })).getByText(name));
-    const getRoot = () => document.querySelector(`.${BASE_CLASS_PREFIX}-transfer`) as HTMLElement;
+    const getRoot = () => getElement(`.${BASE_CLASS_PREFIX}-transfer`);
 
     it('显示 initValue 的已选项并以 label 命名，Form 的 disabled 传给 Transfer，Form 属性不进入 DOM', () => {
         render(() => (

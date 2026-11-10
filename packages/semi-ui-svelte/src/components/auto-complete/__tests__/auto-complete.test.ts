@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/svelte';
 import { afterEach, describe, expect, it, vi } from 'vite-plus/test';
 import { createStore } from '@fibrae/semi-ui-svelte/__tests__/store.svelte';
 import { semiGlobal } from '@fibrae/semi-ui-svelte/utils';
+import { getElement } from '@test/utils/dom/common';
 import type { AutoCompleteDataItem, AutoCompleteItems, AutoCompleteProps, AutoCompleteTriggerSnippetProps } from '..';
 import AutoCompleteCase from './auto-complete-case.svelte';
 
@@ -35,13 +36,13 @@ function setup(props: Omit<AutoCompleteProps, 'value' | 'data'> = {}, { value, m
 }
 
 const getInput = () => screen.getByRole<HTMLInputElement>('combobox');
-const getRoot = () => document.querySelector<HTMLElement>(`.${prefixCls}`) as HTMLElement;
+const getRoot = () => getElement(`.${prefixCls}`);
 const getList = () => document.querySelector<HTMLElement>(`.${optionCls}-list`);
 const getOptions = () => [...document.querySelectorAll<HTMLElement>(`.${optionCls}`)];
 const getOptionTexts = () => getOptions().map((option) => option.textContent?.trim());
 const getFocusedOption = () => document.querySelector<HTMLElement>(`.${optionCls}-focused`);
-const getPopupWrapper = () => document.querySelector<HTMLElement>('.semi-popover-wrapper') as HTMLElement;
-const getClearButton = () => document.querySelector<HTMLElement>('.semi-input-clearbtn') as HTMLElement;
+const getPopupWrapper = () => getElement('.semi-popover-wrapper');
+const getClearButton = () => getElement('.semi-input-clearbtn');
 
 async function type(value: string, input: HTMLInputElement = getInput()) {
     input.value = value;
@@ -737,7 +738,7 @@ describe('Svelte AutoComplete trigger snippet', () => {
             render: () => '<div class="custom-trigger"><input class="custom-input" /><button type="button" class="custom-clear"></button></div>',
             setup: (node) => {
                 capture(args);
-                const input = node.querySelector('input') as HTMLInputElement;
+                const input = getElement<HTMLInputElement>('input', node);
                 const handleInput = () => args().onChange(input.value);
                 const handleFocus = (event: FocusEvent) => args().onFocus(event);
                 const handleBlur = (event: FocusEvent) => args().onBlur(event);
@@ -773,7 +774,7 @@ describe('Svelte AutoComplete trigger snippet', () => {
         const { store } = setup({ trigger: triggerSnippet((get) => (received = get)), onSearch, onClear });
         await settle();
         expect(received?.().value).toEqual([]);
-        const input = document.querySelector<HTMLInputElement>('.custom-input') as HTMLInputElement;
+        const input = getElement<HTMLInputElement>('.custom-input');
         await type('se', input);
         expect(onSearch).toHaveBeenLastCalledWith('se');
         expect(store.log.at(-1)).toBe('change "se"');
@@ -789,7 +790,7 @@ describe('Svelte AutoComplete trigger snippet', () => {
         const onkeydown = vi.fn<(event: KeyboardEvent) => void>();
         setup({ trigger: triggerSnippet(), onkeydown });
         await settle();
-        const button = document.querySelector('.custom-clear') as HTMLElement;
+        const button = getElement('.custom-clear');
         await keyDown('Enter', button);
         await keyDown(' ', button);
         await keyDown('ArrowDown', button);

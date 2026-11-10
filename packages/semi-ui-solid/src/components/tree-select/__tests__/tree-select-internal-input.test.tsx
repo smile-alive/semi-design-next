@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vite-plus/test';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base';
 import { semiGlobal } from '@fibrae/semi-ui-solid/utils';
+import { getElement } from '@test/utils/solid';
 import TreeSelect from '..';
 
 const treeData = [{ label: 'Asia', value: 'asia', key: 'asia' }];
@@ -22,7 +23,7 @@ describe('全局 Input 默认值不给 TreeSelect 搜索框加清除按钮与前
         unmount();
 
         const { container } = render(() => <TreeSelect filterTreeNode searchPosition="trigger" treeData={treeData} />);
-        await userEvent.type(container.querySelector('input') as HTMLInputElement, 'a');
+        await userEvent.type(getElement<HTMLInputElement>('input', container), 'a');
         expect(document.body.textContent).not.toMatch(/mark-/);
         expect(document.querySelector(`.${BASE_CLASS_PREFIX}-input-clearbtn`)).toBeNull();
     });
