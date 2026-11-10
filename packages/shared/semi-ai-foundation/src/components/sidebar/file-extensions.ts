@@ -248,7 +248,6 @@ const FILE_MENU_ITEMS: FileMenuItem[] = [
 
 const IMAGE_MENU_ITEMS: FileMenuItem[] = [DIVIDER, menuButton('image', (chain) => chain.insertContent({ type: 'imageUpload' }), { enabledKey: 'canInsertImage' })];
 
-/** The toolbar in order, dividers included; `canUpload` appends the image button */
 export function getFileMenuItems(canUpload: boolean): FileMenuItem[] {
     return canUpload ? [...FILE_MENU_ITEMS, ...IMAGE_MENU_ITEMS] : FILE_MENU_ITEMS;
 }

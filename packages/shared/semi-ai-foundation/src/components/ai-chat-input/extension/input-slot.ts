@@ -51,7 +51,6 @@ export function isSelectionInsideNode({ from, to }: { from: number; to: number }
     return pos !== undefined && from > pos && to < pos + nodeSize;
 }
 
-/** The `update` option of the inputSlot node view renderer */
 export function updateInputSlotNodeView(editor: Editor, { oldNode, newNode, updateProps }: { oldNode: ProseMirrorNode; newNode: ProseMirrorNode; updateProps: () => void }) {
     if (newNode.type !== oldNode.type) {
         return false;

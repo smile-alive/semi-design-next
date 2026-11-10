@@ -50,7 +50,6 @@ export interface SelectBaseState {
     isOpen: boolean;
     options: OptionRecord[];
     overflowItemCount: number;
-    /** The selected options' data by value */
     selections: Map<any, any>;
     showInput: boolean;
 }

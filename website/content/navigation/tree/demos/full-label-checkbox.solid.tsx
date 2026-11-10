@@ -1,7 +1,7 @@
 import { Show } from 'solid-js';
 import { Checkbox, Tree, type TreeNodeData, type TreeRenderFullLabelProps } from '@fibrae/semi-ui-solid';
 
-const isLeaf = (row: TreeRenderFullLabelProps) => !(row.data.children && row.data.children.length);
+const isLeaf = (row: TreeRenderFullLabelProps) => !row.data.children?.length;
 
 const renderLabel = (row: TreeRenderFullLabelProps) => (
     // Focus stays on the tree (arrows expand, Enter/Space check), so the inline checkbox is display-only

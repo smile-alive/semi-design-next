@@ -1,12 +1,12 @@
 <script lang="ts">
     import { untrack } from 'svelte';
-    import type { Attachment } from 'svelte/attachments';
     import { cssClasses } from '@fibrae/semi-foundation/components/tag/constants';
     import { moveFocusToAdjacentTag } from '@fibrae/semi-foundation/components/tag/focus';
     import { formatLocale } from '@fibrae/semi-foundation/locale/format';
     import '@fibrae/semi-foundation/components/tag/tag.scss';
     import { IconClose } from '@fibrae/semi-icons-svelte';
     import useDefaultProps from '../../base/use-default-props.js';
+    import observeMutations from '../../utils/observe-mutations.js';
     import Avatar from '../avatar/avatar.svelte';
     import useLocale from '../locale/use-locale.svelte.js';
     import type { TagCloseEvent, TagProps } from './interface.js';
@@ -83,18 +83,15 @@
         onkeydown?.(event);
     };
 
-    const readText: Attachment<HTMLElement> = (node) => {
-        const sync = () => {
+    const readText = observeMutations(
+        (node: HTMLElement) => {
             // Svelte's comment anchors and empty text nodes are not content
             const nodes = [...node.childNodes].filter((child) => child.nodeType !== Node.COMMENT_NODE && child.textContent !== '');
             isText = nodes.length > 0 && nodes.every((child) => child.nodeType === Node.TEXT_NODE);
             text = isText ? nodes.map((child) => child.textContent).join('') : undefined;
-        };
-        sync();
-        const observer = new MutationObserver(sync);
-        observer.observe(node, { childList: true, subtree: true, characterData: true });
-        return () => observer.disconnect();
-    };
+        },
+        { childList: true, subtree: true, characterData: true }
+    );
 </script>
 
 <div

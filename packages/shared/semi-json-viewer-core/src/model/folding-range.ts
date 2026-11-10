@@ -174,7 +174,7 @@ export class FoldingRegions {
      * 		it overlaps a preceding entry and is not fully contained by that entry.
      */
     static sanitizeAndMerge(rangesA: FoldingRegions | FoldRange[], rangesB: FoldingRegions | FoldRange[], maxLineNumber?: number) {
-        maxLineNumber = maxLineNumber ?? Number.MAX_VALUE;
+        maxLineNumber ??= Number.MAX_VALUE;
 
         const getIndexedFunction = (r: FoldingRegions | FoldRange[], limit: number) => {
             return Array.isArray(r)

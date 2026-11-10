@@ -190,8 +190,8 @@ export default function InputNumber(rawProps: InputNumberProps) {
     );
 
     const { value, number, hovering, focusing } = state;
-    const notAllowedUp = disabled ? disabled : reachesBound(number, max, 1);
-    const notAllowedDown = disabled ? disabled : reachesBound(number, min, -1);
+    const notAllowedUp = disabled || reachesBound(number, max, 1);
+    const notAllowedDown = disabled || reachesBound(number, min, -1);
 
     const buttons = (
         <div

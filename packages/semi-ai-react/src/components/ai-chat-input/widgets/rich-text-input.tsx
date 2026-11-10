@@ -62,7 +62,6 @@ export default function RichTextInput({
     onChange: (content: string) => void;
     extensions?: Extensions;
     handleKeyDown?: (view: EditorView, event: KeyboardEvent) => boolean;
-    /** File paste upload */
     onPaste?: (files: File[]) => void;
     /** Paste event on the editor content DOM */
     onPasteEvent?: (event: React.ClipboardEvent<HTMLDivElement>) => void;

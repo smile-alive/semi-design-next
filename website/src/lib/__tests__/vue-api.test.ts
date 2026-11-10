@@ -12,7 +12,6 @@ const description: ApiDescription = {
     slots: { default: text },
     exposed: { focus: text },
 };
-// Only the public metadata consumed by the renderer is needed for this fixture.
 const meta = {
     props: [
         { name: 'value', type: 'string | undefined', required: false, global: false, default: 'undefined', getDeclarations: () => [{ file: '/src/example.vue', range: [0, 0] }] },

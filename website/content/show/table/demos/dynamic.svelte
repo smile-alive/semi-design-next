@@ -108,7 +108,7 @@
             const filteredValue = filter.filteredValue;
             const dataIndex = filter.dataIndex;
             if (Array.isArray(filteredValue) && filteredValue.length && dataIndex) {
-                result = result.filter((data) => filteredValue.filter((value) => String(data[dataIndex as keyof Row]).indexOf(value) > -1).length);
+                result = result.filter((data) => filteredValue.filter((value) => String(data[dataIndex as keyof Row]).includes(value)).length);
             }
         });
         return result;

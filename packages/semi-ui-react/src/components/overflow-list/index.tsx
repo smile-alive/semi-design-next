@@ -78,6 +78,7 @@ export default function OverflowList(rawProps: OverflowListProps) {
     const props = useDefaultProps('OverflowList', rawProps, defaultProps);
     const { ref, className, collapseFrom, items, minVisibleItems, onIntersect, onOverflow, overflowRenderer, renderMode, style, threshold, visibleItemRenderer, wrapperClassName, wrapperStyle, wrapperProps, itemKey, onVisibleStateChange, overflowRenderDirection, ...rest } = props;
 
+    // not a ref: the item ref callbacks go through mergeRefs during render, where the Compiler rejects ref access
     const [itemNodes] = useState(() => new Map<Key, Element>());
     const [storedView, setView] = useState(() => OverflowListFoundation.createView(props));
 

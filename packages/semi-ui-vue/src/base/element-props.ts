@@ -12,5 +12,4 @@ export type ElementProps<E extends keyof IntrinsicElementAttributes, Omitted ext
 // Vue derives an onXxx prop from every emit; a native handler of the same name would intersect with it and reject the emit's own signature.
 export type EmitHandlers<Emits> = `on${Capitalize<keyof Emits & string>}`;
 
-/** The `onXxx` props a template listener checks against, from an emits declaration */
 export type EmitProps<Emits> = { [K in keyof Emits & string as `on${Capitalize<K>}`]?: (...args: Extract<Emits[K], unknown[]>) => void };

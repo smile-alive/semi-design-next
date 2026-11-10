@@ -1,6 +1,6 @@
 import { Tree, type TreeNodeData, type TreeRenderFullLabelProps } from '@fibrae/semi-ui-solid';
 
-const isLeaf = (row: TreeRenderFullLabelProps) => !(row.data.children && row.data.children.length);
+const isLeaf = (row: TreeRenderFullLabelProps) => !row.data.children?.length;
 
 const renderLabel = (row: TreeRenderFullLabelProps) => (
     <div class={row.class} onClick={(e) => (isLeaf(row) ? row.onClick(e) : row.onExpand(e))}>

@@ -208,7 +208,6 @@ export interface FieldViewInput {
     isNode?: (label: unknown) => boolean;
     noLabel?: boolean;
     validateStatus?: string;
-    /** The validation status */
     status?: string;
     /** The merged config: Form props where the field sets none */
     labelPosition?: string;

@@ -459,7 +459,7 @@ export default class SliderFoundation<P extends SliderProps = SliderProps> exten
             const [mantissa, exponent = '0'] = String(num).split('e');
             return Math.max(0, (mantissa.split('.')[1]?.length ?? 0) - Number(exponent));
         };
-        const multipler = Math.pow(10, Math.max(countDecimals(step), countDecimals(min)));
+        const multipler = 10 ** Math.max(countDecimals(step), countDecimals(min));
         const transWay = (value: number) => Math.round(value * multipler) / multipler;
 
         if (Array.isArray(inputValue)) {

@@ -11,10 +11,10 @@ import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 import type { ModalReactProps } from '../modal';
 
 function getModal(modalProps?, children?) {
-    let props = modalProps ? modalProps : {};
+    let props = modalProps || {};
     return (
         <Modal motion={false} {...props}>
-            {children ? children : <p>This is content of basic modal</p>}
+            {children || <p>This is content of basic modal</p>}
         </Modal>
     );
 }

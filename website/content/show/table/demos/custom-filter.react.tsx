@@ -59,7 +59,7 @@ export default function TableDemo() {
                 );
             },
             onFilterDropdownVisibleChange: () => {
-                if (inputRef.current && inputRef.current.focus) {
+                if (inputRef.current?.focus) {
                     inputRef.current.focus();
                 }
             },

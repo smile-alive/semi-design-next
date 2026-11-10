@@ -49,18 +49,14 @@ function Mcp({ className, style, options = [], num, children, onConfigureButtonC
                                     </Button>
                                 )}
                             </div>
-                            {children ? (
-                                children
-                            ) : (
-                                <>
-                                    <Dropdown.Menu>
-                                        {options.map((item: any) => (
-                                            <Dropdown.Item key={item.value} icon={item.icon}>
-                                                {item.label}
-                                            </Dropdown.Item>
-                                        ))}
-                                    </Dropdown.Menu>
-                                </>
+                            {children || (
+                                <Dropdown.Menu>
+                                    {options.map((item: any) => (
+                                        <Dropdown.Item key={item.value} icon={item.icon}>
+                                            {item.label}
+                                        </Dropdown.Item>
+                                    ))}
+                                </Dropdown.Menu>
                             )}
                         </>
                     )}

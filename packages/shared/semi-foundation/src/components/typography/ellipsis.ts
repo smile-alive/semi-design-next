@@ -56,7 +56,7 @@ export function isTooltipTriggerFocusable({ tabIndex, overflowed, condition, ins
 }
 
 /** `showTooltip.type` is case-insensitive */
-export function isPopoverTooltip(showTooltip: boolean | { type?: string } | undefined) {
+export function isPopoverTooltip(showTooltip?: boolean | { type?: string }) {
     return typeof showTooltip === 'object' && showTooltip.type?.toLowerCase() === 'popover';
 }
 

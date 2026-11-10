@@ -529,9 +529,7 @@ function Upload(rawProps: UploadProps) {
         });
         return (
             <div className={dragAreaCls} role={addAreaRole} {...addAreaProps} {...dragHandlers} onClick={openFileDialog}>
-                {children ? (
-                    children
-                ) : (
+                {children || (
                     <>
                         <div className={`${dragAreaBaseCls}-icon`} x-semi-prop="dragIcon">
                             {dragIcon || <IconUpload size="extra-large" />}

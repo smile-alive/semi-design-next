@@ -13,7 +13,7 @@ import { describe, expect, expectTypeOf, it, vi } from 'vite-plus/test';
 import { IconPlus, IconMinus, IconCopy } from '@fibrae/semi-icons-react';
 
 let getCollapse = (collapseProps?, panel1Props?) => {
-    let panelProps = panel1Props ? panel1Props : {};
+    let panelProps = panel1Props || {};
 
     return (
         <Collapse {...collapseProps}>

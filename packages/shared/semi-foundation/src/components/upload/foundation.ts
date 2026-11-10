@@ -812,7 +812,7 @@ export default class UploadFoundation<P extends UploadBaseProps = UploadBaseProp
         delete fileInstance.status;
 
         const _file: BaseFileItem = {
-            status: (status ? status : uploadTrigger === TRIGGER_AUTO ? FILE_STATUS_UPLOADING : FILE_STATUS_WAIT_UPLOAD) as FileItemStatus,
+            status: (status || (uploadTrigger === TRIGGER_AUTO ? FILE_STATUS_UPLOADING : FILE_STATUS_WAIT_UPLOAD)) as FileItemStatus,
             name: fileInstance.name,
             size: getFileSize(fileInstance.size),
             uid: fileInstance.uid,

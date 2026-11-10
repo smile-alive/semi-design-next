@@ -49,7 +49,7 @@ describe('Table 筛选', () => {
                     { text: '名字包含"1"', value: '1' },
                     { text: '名字包含"2"', value: '2' },
                 ],
-                onFilter: (value, record) => record.name.indexOf(value) > -1,
+                onFilter: (value, record) => record.name.includes(value),
             },
             { title: 'Age', dataIndex: 'age', width: 150, sorter: (a, b) => (a.age - b.age > 0 ? 1 : -1) },
             { title: 'Address', dataIndex: 'address' },

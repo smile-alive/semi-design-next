@@ -8,6 +8,7 @@
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
     import useLocale from '../locale/use-locale.svelte.js';
+    import { observeResize } from '../resize-observer/index.js';
     import type { CropperProps } from './interface.js';
 
     type Adapter = CropperAdapter<CropperFoundationProps>;
@@ -113,19 +114,13 @@
     // preventDefault in handleWheel must stop a pinch from zooming the page, which only works from a non-passive listener
     const wheel = (node: HTMLElement) => on(node, 'wheel', foundation.handleWheel, { passive: false });
 
-    const observeSize = (node: HTMLElement) => {
-        const observer = new ResizeObserver(foundation.handleResize);
-        observer.observe(node);
-        return () => observer.disconnect();
-    };
-
     /** Draws the area inside the cropper box, at the image's own resolution, onto a new canvas */
     export function getCropperCanvas() {
         return foundation.getCropperCanvas();
     }
 </script>
 
-<div {...rest} {@attach wheel} {@attach observeSize} bind:this={root} class={[prefix, rest.class]} {role}>
+<div {...rest} {@attach wheel} {@attach observeResize(foundation.handleResize)} bind:this={root} class={[prefix, rest.class]} {role}>
     <div class={cssClasses.IMG_WRAPPER}>
         <!-- the cropping surface, not content: there is no description to give -->
         <img {...imgAttrs} alt={imgProps?.alt ?? ''} bind:this={img} class={[cssClasses.IMG, imgProps?.class]} {src} style={[imgProps?.style, imgStyle].filter(Boolean).join('; ')} onload={handleLoad} />

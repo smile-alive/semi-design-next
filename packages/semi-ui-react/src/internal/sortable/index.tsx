@@ -1,4 +1,4 @@
-import React, { type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DragDropProvider, DragOverlay, type DragEndEvent } from '@dnd-kit/react';
 import { isSortable, useSortable, type UseSortableInput } from '@dnd-kit/react/sortable';
 import clsx from 'clsx';
@@ -83,7 +83,7 @@ export function Sortable({ items, onSortEnd, renderItem, transition, useDragOver
         [items, onSortEnd, onDraggingChange]
     );
 
-    useLayoutEffect(() => announcer.update(locale, items.length), [announcer, locale, items.length]);
+    useEffect(() => announcer.update(locale, items.length), [announcer, locale, items.length]);
 
     useEffect(() => {
         const before = itemsBeforeSort.current;

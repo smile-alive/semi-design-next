@@ -54,5 +54,4 @@ function Timeline(rawProps: TimelineProps) {
     );
 }
 
-// memo keeps the PureComponent behaviour
 export default Object.assign(memo(Timeline), { Item });

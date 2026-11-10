@@ -67,7 +67,7 @@ export default function TreeDemo() {
             if (!item) return;
             const { children } = item;
 
-            if (children && children.length) {
+            if (children?.length) {
                 children.forEach((child) => {
                     res.push(child.key);
                     findChild(child);

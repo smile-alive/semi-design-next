@@ -123,7 +123,7 @@ const renderFooter = () => <p style={{ margin: '0px' }}>This is footer.</p>;
 function mergeColumns(column: ColumnProps<Row>, columns: ColumnProps<Row>[], keys: (keyof ColumnProps<Row>)[] = ['dataIndex']) {
     const nextColumns = [...columns];
     nextColumns.forEach((curColumn, index) => {
-        let isTarget = !!(keys && keys.length);
+        let isTarget = !!keys?.length;
         for (const key of keys) {
             if (column[key] !== curColumn[key]) {
                 isTarget = false;
@@ -143,7 +143,7 @@ function filterData(filters: ColumnProps<Row>[], dataSource: Row[]) {
         const filteredValue = filter.filteredValue;
         const dataIndex = filter.dataIndex as keyof Row | undefined;
         if (Array.isArray(filteredValue) && filteredValue.length && dataIndex) {
-            result = result.filter((data) => filteredValue.filter((value) => String(data[dataIndex]).indexOf(value) > -1).length);
+            result = result.filter((data) => filteredValue.filter((value) => String(data[dataIndex]).includes(value)).length);
         }
     });
     return result;
@@ -248,7 +248,7 @@ export default function TableDemo() {
         const current = pagination();
         const currentPage = typeof page === 'number' ? page : (current && current.currentPage) || 1;
         setLoading(true);
-        load(current || defaultPagination, currentPage, sorter || getSorterColumn(columns()), filters || getFilterColumns(columns()));
+        load(current || defaultPagination, currentPage, sorter ?? getSorterColumn(columns()), filters ?? getFilterColumns(columns()));
     };
 
     // Initial load: the first page with the default sorter

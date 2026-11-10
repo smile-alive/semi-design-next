@@ -19,7 +19,7 @@ export function _generateTreeData(dataSource: BasicDataItem[]): BasicResolvedDat
     while (stack.length) {
         // roots are the caller's objects: copy before writing _path and _isLeaf (underscored to avoid their fields)
         const current = { ...stack.pop() };
-        current._path = current._path || [omit(current, ['children'])];
+        current._path ||= [omit(current, ['children'])];
         // children: [] is a leaf, as the Tree on the left renders it
         if (Array.isArray(current.children) && current.children.length > 0) {
             const nodes = current.children;

@@ -36,7 +36,6 @@ export interface OverflowListView {
     fromStart: boolean;
 }
 
-/** A visible item with its `items` index and key */
 export interface OverflowListEntry {
     item: Record<string, any>;
     index: number;

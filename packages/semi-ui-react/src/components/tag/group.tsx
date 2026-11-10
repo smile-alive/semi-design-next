@@ -54,7 +54,7 @@ function TagGroup(rawProps: TagGroupProps) {
     let content: React.ReactNode = tags;
 
     if (typeof maxTagCount !== 'undefined') {
-        const n = restCount ? restCount : tagList.length - maxTagCount;
+        const n = restCount || tagList.length - maxTagCount;
         if (n > 0) {
             const nTag = (
                 <Tag key="_+n" style={{ backgroundColor: 'transparent' }} closable={false} color="grey" size={size} onMouseEnter={onPlusNMouseEnter}>

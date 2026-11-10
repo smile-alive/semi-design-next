@@ -397,7 +397,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     }
 
     #getAllFilters(queries?: BaseColumnProps<RecordType>[]) {
-        queries = queries || this.getState('queries');
+        queries ||= this.getState('queries');
         const filters: BaseChangeInfoFilter<RecordType>[] = [];
 
         queries?.forEach((query) => {
@@ -410,7 +410,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     }
 
     #getAllSorters(queries?: BaseColumnProps<RecordType>[]) {
-        queries = queries || this.getState('queries');
+        queries ||= this.getState('queries');
 
         return queries?.filter((query) => query.sorter && query.sortOrder) ?? [];
     }
@@ -622,7 +622,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     }
 
     protected getQuery(dataIndex: string, queries?: BaseColumnProps<RecordType>[]) {
-        queries = queries || this.getState('queries');
+        queries ||= this.getState('queries');
 
         if (dataIndex != null) {
             return queries?.find((query) => query.dataIndex === dataIndex);
@@ -670,7 +670,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             props,
             dataSource,
             queries.filter((query) => {
-                const currentFilteredValue = query.filteredValue ? query.filteredValue : query.defaultFilteredValue;
+                const currentFilteredValue = query.filteredValue || query.defaultFilteredValue;
                 return typeof query.onFilter === 'function' && Array.isArray(currentFilteredValue) && currentFilteredValue.length;
             })
         );
@@ -756,19 +756,17 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             if (typeof sorter === 'function' && (currentSortOrder === 'ascend' || currentSortOrder === 'descend')) {
                 if (sortChildrenRecord) {
                     const { childrenRecordName } = props;
-                    dataSource =
-                        dataSource &&
-                        dataSource.map((record) => {
-                            const children = get(record, childrenRecordName);
+                    dataSource &&= dataSource.map((record) => {
+                        const children = get(record, childrenRecordName);
 
-                            if (Array.isArray(children) && children.length) {
-                                return {
-                                    ...record,
-                                    [childrenRecordName]: TableFoundation.sortDataSource(props, children, [sorterObj]),
-                                };
-                            }
-                            return record;
-                        });
+                        if (Array.isArray(children) && children.length) {
+                            return {
+                                ...record,
+                                [childrenRecordName]: TableFoundation.sortDataSource(props, children, [sorterObj]),
+                            };
+                        }
+                        return record;
+                    });
                 }
 
                 dataSource = dataSource.toSorted(withOrderSort(sorter, currentSortOrder));
@@ -1024,7 +1022,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             showSortTip: !TableFoundation.#sortOrderIsControlled(column) && column.showSortTip === true,
             query,
             sortOrder: TableFoundation.isSortOrderValid(stateSortOrder) ? stateSortOrder : ((query?.defaultSortOrder ?? false) as BaseSortOrder),
-            filteredValue: query?.filteredValue ? query.filteredValue : query?.defaultFilteredValue,
+            filteredValue: query?.filteredValue || query?.defaultFilteredValue,
         };
     }
 
@@ -1236,7 +1234,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
 
     setPage = (currentPage: number, currentPageSize: number) => {
         const currentPagination = this.getState('pagination');
-        currentPage = currentPage || (currentPagination?.currentPage ?? 1);
+        currentPage ||= currentPagination?.currentPage ?? 1;
         const { dataSource, pagination, disabledRowKeys, allRowKeys } = this.#getPageData(null, {
             ...currentPagination,
             currentPage,
@@ -1305,7 +1303,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
                     }
                     this.adapter.notifySelect(selectedRow, selected, selectedRows, e);
                     this.adapter.notifySelectionChange(selectedRowKeys, selectedRows);
-                } else if (selectedRowKeys.indexOf(realKey) === -1 && selected === true) {
+                } else if (!selectedRowKeys.includes(realKey) && selected === true) {
                     selectedRowKeys.push(realKey);
                     selectedRows = this.getRecordsByKeys(null, selectedRowKeys);
                     if (!this.#selectionIsControlled()) {

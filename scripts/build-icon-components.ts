@@ -2,7 +2,6 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import { resolve } from 'node:path';
 
-// Directory names shared by the core data and the framework package output
 const sets = ['icons', 'lab'] as const;
 
 /**

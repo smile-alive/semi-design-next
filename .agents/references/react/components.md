@@ -7,6 +7,7 @@ semi-ui-react 的 React 19 函数组件写法。组件内语句顺序、foundati
 - 对外导出的 React 顶层组件调用 `useDefaultProps`（F7），名称用组件导出名，并在 `packages/semi-ui-react/src/utils/semi-global.ts` 的 `overrideDefaultProps` 类型中补上组件名。
 - React 组件和 hook 要能通过 `compiler-check.ts`（`pnpm lint:react`）。
 - render 中不写副作用，定时器等放到事件处理或 `useDidUpdate` 里。
+- state 只读：`useState` 返回的对象、数组、Map 不就地修改（`state.x = ...`、`map.set(...)`），要变就用 setter 传新值；不触发重渲染的可变值放进 `useRef`。唯一例外是 React Compiler 一节的 `useState(() => new Runtime())`。
 
 ## 声明与导出
 
@@ -82,11 +83,11 @@ export default function Spin(rawProps: SpinProps) {
 
 - 库构建不经过 Compiler（C1），`website/scripts/compiler-check.ts` 只保证使用方开启 Compiler 时能编译。需要稳定引用的值（合并后的 ref 回调、传给子组件的回调、context 值）照常用 `useMemo`、`useCallback`，不交给 Compiler 记忆化。
 - 组件和 hook 内不写以下代码，Compiler 遇到后会整个放弃编译该函数，构建和测试都发现不了，`react/todo` lint 规则能查出这类语法，`pnpm lint:react`（`compiler-check.ts`，在 `pnpm lint` 中运行）还能查出 hook 落在 memo cache 分支等问题：
-    - `||=`、`&&=`、`??=`；
+    - `||=`、`&&=`、`??=`，写成 `a = a || b`（React 文件关闭了全仓的 `logical-assignment-operators`）；
     - 参数解构默认值里的 JSX，如 `{ icon = <IconChevronDown /> }`，改为在函数体内判断 `=== undefined`；
     - 对象字面量里的 getter。
 - Compiler 的 infer 模式不把 `use()` 算作 hook 调用：只调用 `use(Context)` 的自定义 hook 会被整个跳过。hook 里还有需要记忆化的计算时改用 `useContext`；只读 context 的 hook（`base/create-context.ts`）没有可记忆化的内容，跳过无影响，照常用 `use()`。组件里另有其他 hook 时，`use()` 照常用。
-- 以 `Ref` 结尾的变量会被当作 ref；把对象的方法直接作为 `ref` 传入也会被推断为 ref，要用 `useCallback` 包一层。DOM 节点、组件句柄和只在 effect 里比较的值，每个直接用一个 `useRef`，在事件回调、effect 或 adapter 方法里读 `.current`，多个节点也不合成对象。只有两种情况放进 `useState(() => new Runtime())` 创建的对象：读这些值的函数会在渲染期传进调用（用户的 render prop、`renderXxx()` 内构造的回调），Compiler 对 ref 报 `Cannot access refs during render`；或者多个可变对象（定时器、观察器与相关操作）带有自己的逻辑。
+- 以 `Ref` 结尾的变量会被当作 ref；把对象的方法直接作为 `ref` 传入也会被推断为 ref，要用 `useCallback` 包一层。DOM 节点、组件句柄和只在 effect 里比较的值放进 `useRef`，在事件回调、ref 回调、effect 或 adapter 方法里读写 `.current`。按 key 查找或整体遍历的一组节点、句柄放进同一个 ref 的对象、Map 或 Set，由 ref 回调写入（如 `months-grid.tsx` 的 `nodesRef`、`toast-list.tsx` 的 `elementsRef`），不拆成每个一个 `useRef`。只有两种情况放进 `useState(() => new Runtime())` 创建的对象：读这些值的函数会在渲染期传进调用（用户的 render prop、`renderXxx()` 内构造的回调），Compiler 对 ref 报 `Cannot access refs during render`；或者多个可变对象（定时器、观察器与相关操作）带有自己的逻辑。
 - `MutationObserver` 回调里改 class 前，先判断 `classList.contains`：`classList.add` 即使 class 已存在也会写属性，再次触发观察器。
 - 虚拟列表一律用 `internal/virtual-list.tsx` 的 `VirtualList`，组件不直接调用 `@tanstack/react-virtual` 的 `useVirtualizer`：Compiler 会整个放弃编译调用它的函数，oxlint 报 `react/incompatible-library`。只有 `virtual-list.tsx` 带 `'use no memo'` 与 `lint/react/exemptions.ts` 的豁免条目。
 

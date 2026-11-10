@@ -5,7 +5,6 @@ import { easeInOutCubic, tween } from '@fibrae/semi-foundation/utils/tween';
 const SCROLL_ANIMATION_TIME = 300;
 const SHOW_SCROLL_GAP = 100;
 
-/** The fields of a message the list reads */
 export interface ListMessage {
     id?: string;
     status?: string;
@@ -50,7 +49,6 @@ export function followHints(hints?: readonly string[]) {
     return [...(hints ?? [])];
 }
 
-/** The message list of Chat and AIChatDialogue: follows new content to the bottom and edits single messages */
 export default abstract class MessageListFoundation<M extends ListMessage, A extends MessageListAdapter<M, P, S>, P extends MessageListBaseProps<M>, S extends MessageListState> extends BaseFoundation<A, P, S> {
     #cancelAnimation?: () => void;
     #scrollFrame?: number;
@@ -149,7 +147,6 @@ export default abstract class MessageListFoundation<M extends ListMessage, A ext
         return this.getProp('chats') ?? [];
     }
 
-    /** Reports a list the component built itself */
     protected notifyChats(chats: M[]) {
         this.adapter.notifyChatsChange(chats);
     }
@@ -159,7 +156,7 @@ export default abstract class MessageListFoundation<M extends ListMessage, A ext
     }
 
     /** Drops `undefined` entries of `custom`: one would replace the built-in component with a non-component */
-    static mergeMarkdownComponents<B extends object, C extends Record<string, any>>(builtin: B, custom: C | undefined) {
+    static mergeMarkdownComponents<B extends object, C extends Record<string, any>>(builtin: B, custom?: C) {
         return { ...builtin, ...omitBy(custom ?? {}, (component) => component === undefined) };
     }
 

@@ -25,10 +25,10 @@
     const titleStyle = { position: 'absolute', top: '100px', left: '100px' } as const;
     const colorStyle = { color: '#1C1F23' };
 
-    const changeShow = (value: RadioValue | undefined) => {
+    const changeShow = (value?: RadioValue) => {
         if (typeof value === 'boolean') show.value = value;
     };
-    const changeArrowType = (value: RadioValue | undefined) => {
+    const changeArrowType = (value?: RadioValue) => {
         if (value === 'always' || value === 'hover') arrowType.value = value;
     };
 </script>

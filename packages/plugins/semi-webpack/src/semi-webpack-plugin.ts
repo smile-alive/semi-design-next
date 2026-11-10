@@ -36,7 +36,7 @@ export default class SemiWebpackPlugin {
     #omitCss(module: any) {
         const compatiblePath = transformPath(module.resource);
         if (SEMI_DIST_JS_RE.test(compatiblePath)) {
-            module.loaders = module.loaders || [];
+            module.loaders ||= [];
             module.loaders.push({
                 loader: loaderPath('semi-omit-css-loader'),
             });
@@ -46,7 +46,7 @@ export default class SemiWebpackPlugin {
     #customTheme(module: any) {
         const compatiblePath = transformPath(module.resource);
         if (SEMI_DIST_JS_RE.test(compatiblePath)) {
-            module.loaders = module.loaders || [];
+            module.loaders ||= [];
             module.loaders.push({
                 loader: loaderPath('semi-source-suffix-loader'),
             });
@@ -75,7 +75,7 @@ export default class SemiWebpackPlugin {
     #customPrefix(module: any, prefix: string) {
         const compatiblePath = transformPath(module.resource);
         if (/@fibrae\/semi-[^/]+\/.+env\.js$/.test(compatiblePath)) {
-            module.loaders = module.loaders || [];
+            module.loaders ||= [];
             module.loaders.push({
                 loader: loaderPath('semi-prefix-loader'),
                 options: {

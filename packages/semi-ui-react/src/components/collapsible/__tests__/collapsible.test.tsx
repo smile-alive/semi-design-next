@@ -6,7 +6,7 @@ import { Collapsible } from '@fibrae/semi-ui-react';
 import semiGlobal from '@fibrae/semi-ui-react/utils/semi-global';
 
 function getCollapsible(props?, children?) {
-    return <Collapsible {...(props || {})}>{children ? children : <div>hello</div>}</Collapsible>;
+    return <Collapsible {...(props || {})}>{children || <div>hello</div>}</Collapsible>;
 }
 
 const queryContent = () => screen.queryByText('hello');

@@ -13,6 +13,7 @@
     import watch from '../../hooks/watch.svelte.js';
     import { splitControlAttrs } from '../../utils/control-attrs.js';
     import useLocale from '../locale/use-locale.svelte.js';
+    import { observeResize } from '../resize-observer/index.js';
     import { getInputGroupInScope } from './context.js';
     import { isNotClassOrStyle } from './control-attrs.js';
     import type { TextAreaProps, TextAreaState } from './interface.js';
@@ -211,27 +212,12 @@
         }
     });
 
-    $effect(() => {
-        const element = autosize || (resize !== undefined && resize !== 'none') ? textarea : undefined;
-        if (!element) {
-            return;
-        }
-        const observer = new ResizeObserver((entries) => throttledResize(entries));
-        observer.observe(element);
-        return () => observer.disconnect();
-    });
+    const trackSize = observeResize((entries) => throttledResize(entries));
 
-    $effect(() => {
-        if (!showLineNumber || !textarea) {
-            return;
-        }
-        const observer = new ResizeObserver((entries) => {
-            // contentRect does not include borders; align with textarea.clientHeight
-            const { width, height } = entries[entries.length - 1].contentRect;
-            lineLayout = { width, height };
-        });
-        observer.observe(textarea);
-        return () => observer.disconnect();
+    const trackLineLayout = observeResize((entries) => {
+        // contentRect does not include borders; align with textarea.clientHeight
+        const { width, height } = entries[entries.length - 1].contentRect;
+        lineLayout = { width, height };
     });
 
     $effect(() => {
@@ -282,6 +268,8 @@
     <textarea
         bind:this={textarea}
         {...attrs.control}
+        {@attach (autosize || (resize !== undefined && resize !== 'none')) && trackSize}
+        {@attach showLineNumber && trackLineLayout}
         aria-describedby={joinIds(attrs.control['aria-describedby'] as string | undefined, hasCounter && counterId)}
         aria-invalid={invalid}
         class={[

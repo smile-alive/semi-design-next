@@ -1,5 +1,5 @@
 import type React from 'react';
-import { memo, useId, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
+import { memo, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import clsx from 'clsx';
 import type { ValidateStatus } from '@fibrae/semi-foundation/base/constants';
 import FocusTrapHandle from '@fibrae/semi-foundation/base/focus-handle';
@@ -256,7 +256,7 @@ function TimePicker(rawProps: TimePickerProps & { ref?: React.Ref<TimePickerHand
     // only the rendered DOM tells whether a custom trigger has its own focus target.
     // Known limit: re-measured only when triggerRender changes; a stable one that switches between focusable and
     // plain markup needs a MutationObserver
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (typeof props.triggerRender === 'function') {
             setCustomTriggerFocusable(FocusTrapHandle.getFocusableElements(rootRef.current).length > 0);
         }

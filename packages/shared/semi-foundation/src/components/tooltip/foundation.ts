@@ -263,7 +263,6 @@ export default class Tooltip<P extends TooltipBaseProps = TooltipBaseProps> exte
         }
     }
 
-    // positions the popup and keeps it beside the trigger until it closes
     #handleShown() {
         if (!this.#stopTracking) {
             this.#startTracking();

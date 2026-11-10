@@ -184,7 +184,7 @@ export class SearchParams {
         if (this.isRegex) {
             multiline = isMultilineRegexSource(this.searchString);
         } else {
-            multiline = this.searchString.indexOf('\n') >= 0;
+            multiline = this.searchString.includes('\n');
         }
 
         let regex: RegExp | null = null;

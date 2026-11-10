@@ -128,7 +128,7 @@ function snapshot() {
     // because its page position derives from the trigger.
     for (const portal of document.querySelectorAll('body > .semi-portal')) {
         const key = `portal:${portal.querySelectorAll('*').length}:${portal.textContent.slice(0, 60)}`;
-        const popup = portal.firstElementChild || portal;
+        const popup = portal.firstElementChild ?? portal;
         groups[key in groups ? `${key}#${Object.keys(groups).length}` : key] = collect(popup, popup.getBoundingClientRect());
     }
     return groups;

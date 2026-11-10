@@ -922,7 +922,7 @@ function Select<T = BasicSelectValue, Multiple extends boolean | undefined = und
                 {hasContent(suffix) && renderTriggerSuffix(prefixcls, suffix)}
                 {clearable && (
                     <button ref={setClearButton} type="button" className={`${prefixcls}-clear`} aria-label={locale.clear} onClick={foundation.handleClearClick} onKeyDown={stopButtonActivationKeys}>
-                        {clearIcon ? clearIcon : <IconClear />}
+                        {clearIcon || <IconClear />}
                     </button>
                 )}
                 {showArrow ? (

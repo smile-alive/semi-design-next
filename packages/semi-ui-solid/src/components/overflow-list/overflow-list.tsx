@@ -40,7 +40,6 @@ interface OverflowListCommonProps<T> extends ElementProps<'div', 'children'> {
 
 interface OverflowListCollapseProps<T> extends OverflowListCommonProps<T> {
     renderMode?: 'collapse';
-    /** Renders the items that do not fit */
     overflowRenderer?: (overflowItems: Array<T>) => JSX.Element;
 }
 

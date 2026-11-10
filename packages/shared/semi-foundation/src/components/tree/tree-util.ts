@@ -189,7 +189,7 @@ export function convertDataToEntities(dataNodes: any[], keyMaps?: KeyMapProps) {
 
             entity.parent = posEntities[parentPos];
             if (entity.parent) {
-                entity.parent.children = entity.parent.children || [];
+                entity.parent.children ||= [];
                 entity.parent.children.push(entity);
             }
         },

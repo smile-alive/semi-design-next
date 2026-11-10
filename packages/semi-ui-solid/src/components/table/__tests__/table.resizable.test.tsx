@@ -30,7 +30,7 @@ function drag(handle: HTMLElement, from: number, ...moves: number[]) {
 describe('Table 可调整列宽', () => {
     it('有数字 width 的列都有拖动手柄', () => {
         const columns: ColumnProps[] = [
-            { title: 'Name', dataIndex: 'name', width: 150, filters: [{ text: '名字包含"1"', value: '1' }], onFilter: (value, record) => record.name.indexOf(value) > -1 },
+            { title: 'Name', dataIndex: 'name', width: 150, filters: [{ text: '名字包含"1"', value: '1' }], onFilter: (value, record) => record.name.includes(value) },
             { title: 'Age', dataIndex: 'age', width: 150, sorter: true },
             { title: 'Address', dataIndex: 'address', width: 300 },
             { render: () => 'more' },

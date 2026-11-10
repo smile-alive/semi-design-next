@@ -9,7 +9,7 @@
     const many = ref<string[]>([]);
     const node = ref<TreeNodeData>();
     const nodes = ref<TreeNodeData[]>([]);
-    const onSingle = (_value: string | undefined) => undefined;
+    const onSingle = (_value?: string) => undefined;
     const onMultiple = (_value: string[]) => undefined;
     const onNodes = (_nodes: TreeNodeData[], _event: ChangeEvent) => undefined;
 </script>

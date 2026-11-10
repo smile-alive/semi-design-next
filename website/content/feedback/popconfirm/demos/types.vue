@@ -15,7 +15,7 @@
     const type = ref<TypeKey>('default');
     const visible = ref(true);
 
-    const changeType = (value: RadioValue | undefined) => {
+    const changeType = (value?: RadioValue) => {
         const key = keys.find((item) => item === value);
         if (key) type.value = key;
     };

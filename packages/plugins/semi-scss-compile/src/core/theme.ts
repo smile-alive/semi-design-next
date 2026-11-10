@@ -72,7 +72,6 @@ export interface CompileSemiScssOptions extends SemiScssOptions {
 // Warnings scroll past in build logs; failing is the only way deprecated constructs get fixed before Sass removes them
 const activeDeprecations = Object.values(sass.deprecations).filter((d) => d.status === 'active');
 
-/** Compiles one Semi stylesheet (a file, or `source` read as that file) against the theme */
 export function compileSemiScss(file: string, { cssLayer = true, style, charset, fatalDeprecations = activeDeprecations, ...options }: CompileSemiScssOptions, source?: string) {
     // quietDeps keeps importer-served (theme) deprecations from being fatal or repeated per component; safe because the
     // tests compile the theme entries directly and still fail there
@@ -126,7 +125,6 @@ export interface SemiScssLoaderOptions {
     cssLayer?: boolean;
 }
 
-/** webpack/rspack loader compiling Semi's own stylesheets against the theme, in place of sass-loader */
 export function semiScssLoader(
     this: {
         getOptions(): SemiScssLoaderOptions;

@@ -11,6 +11,7 @@
     import useDefaultProps from '../../base/use-default-props.js';
     import useFoundation from '../../base/use-foundation.svelte.js';
     import useLocale from '../locale/use-locale.svelte.js';
+    import { observeResize } from '../resize-observer/index.js';
     import type { ResizableProps } from './interface.js';
     import { joinStyle } from './style.js';
 
@@ -159,15 +160,9 @@
         e.currentTarget.setPointerCapture(e.pointerId);
         foundation.onResizeStart(e, dir);
     };
-
-    const observeResize = (node: HTMLDivElement) => {
-        const observer = new ResizeObserver(foundation.updateAriaRange);
-        observer.observe(node);
-        return () => observer.disconnect();
-    };
 </script>
 
-<div bind:this={root} {...rest} {@attach observeResize} class={[`${prefix}-resizable`, rest.class]} role={namedRole(rest)} style={rootStyle}>
+<div bind:this={root} {...rest} {@attach observeResize(foundation.updateAriaRange)} class={[`${prefix}-resizable`, rest.class]} role={namedRole(rest)} style={rootStyle}>
     {#if states().isResizing}
         <div class={`${prefix}-background`} style={joinStyle(states().backgroundStyle as Record<string, string | undefined>)}></div>
     {/if}

@@ -41,6 +41,7 @@ TS/TSX 源码中工具决定不了的写法。格式（含 `sortImports`）交�
 - 变量注解与初始值的 `as` 断言写的是同一类型时只留断言：写 `const props = { ... } as Props`，不写 `const props: Props = { ... } as Props`。
 - 纯类型导入写 `import type`；同一模块既导入值又导入类型时合并成一条，类型写成行内 `type`：`import BaseFoundation, { type DefaultAdapter } from '...'`（由 `import/no-duplicates` 的 `preferInline` 检查）。oxlint 1.85 的 `--fix` 合并默认导入与 `import type` 时会生成非法的 `import X, type { Y }`，这类报错手工合并。
 - 判空写 `x == null`、`x != null`（同时覆盖 null 与 undefined），默认值用 `??`；类型判断用 `typeof`。一个 `typeof`、`== null` 或 `instanceof` 就能写完的判断不封装（不写 `isNullOrUndefined`、`isString`）。要组合多个条件的类型判断（`isObject`、`isElement`、`isPromise`）只在 `semi-foundation/src/utils` 定义一次，各框架包导入使用，不在框架包里另写一份；不依赖 foundation 的包（如 `semi-json-viewer-core`）在调用处直接写判断。
+- 运算符简化由 `lint/base.ts` 检查：`a ? a : b` 写 `a || b`，`a = a || b` 写 `a ||= b`（`&&=`、`??=` 同理），`Math.pow` 写 `**`，判断存在用 `includes`，不用 `indexOf` 比较。以下写法结果不同，保持原样：`x !== undefined ? x : y` 不换成 `??`（受控值的 `null` 表示已清空，`??` 会换掉它），`if (x === undefined) x = y` 不换成 `??=`；`v | 0` 会截成 32 位整数，不换成 `Math.trunc`；`x && x.y` 只在条件判断里等价于 `x?.y`，作为值时 `x` 为 `null`、`''`、`0` 的结果不同，未开 `strictNullChecks` 的包逐处判断。React 组件和 hook 内不写逻辑赋值，见 [react/components](react/components.md#react-compiler)。
 - semi-foundation 和沿用 `tsconfig.base.json` 设置的包没有开 `strictNullChecks`（D11），框架包以自己的 `tsconfig.json` 为准；`semi-animation` 单独开了 strict。
 
 ## 类成员

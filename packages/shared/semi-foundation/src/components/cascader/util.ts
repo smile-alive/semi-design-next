@@ -160,7 +160,7 @@ export function convertDataToEntities(dataNodes: BasicCascaderData[], keyMaps?: 
 
             entity.parent = keyEntities[parentKey];
             if (entity.parent) {
-                entity.parent.children = entity.parent.children || [];
+                entity.parent.children ||= [];
                 entity.parent.children.push(entity);
             }
         },

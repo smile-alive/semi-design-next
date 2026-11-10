@@ -11,14 +11,14 @@ import Toast from './toast';
 
 export default function ToastList({ store }: ToastListProps) {
     const { items: shown, removedItems, order, stack, updatedItems } = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot);
-    const [elements] = useState(() => new Map<string, HTMLDivElement>());
+    const elementsRef = useRef(new Map<string, HTMLDivElement>());
     const [stackExpanded, setStackExpanded] = useState(false);
     const [hovered, setHovered] = useState(false);
     const [focused, setFocused] = useState(false);
     const innerWrapper = useRef<HTMLDivElement>(null);
     const byId = new Map([...shown, ...removedItems].map((item) => [item.id, item]));
 
-    const announcement = useNoticeListEffects(shown, updatedItems, elements, cssClasses.PREFIX);
+    const announcement = useNoticeListEffects(shown, updatedItems, elementsRef, cssClasses.PREFIX);
 
     const items = order.filter((id) => byId.has(id)).map((id) => byId.get(id));
     const depths = getStackDepths(items.map(({ id }) => id).reverse(), new Set(shown.map(({ id }) => id)));
@@ -84,7 +84,7 @@ export default function ToastList({ store }: ToastListProps) {
                             key={item.id}
                             startClassName={isRemoved ? `${cssClasses.PREFIX}-animation-hide` : `${cssClasses.PREFIX}-animation-show`}
                             animationState={animationState}
-                            getElement={() => elements.get(item.id)}
+                            getElement={() => elementsRef.current.get(item.id)}
                             motion={item.motion}
                             onAnimationEnd={() => {
                                 // a late enter-animation end must not cut the leave short
@@ -92,7 +92,7 @@ export default function ToastList({ store }: ToastListProps) {
                                     store.finishLeave(item.id);
                                 }
                             }}
-                            onAnimationStart={() => pinAnimatedHeight(elements.get(item.id))}
+                            onAnimationStart={() => pinAnimatedHeight(elementsRef.current.get(item.id))}
                         >
                             {({ animationClassName, animationEventsNeedBind }) => (
                                 <Toast
@@ -107,9 +107,9 @@ export default function ToastList({ store }: ToastListProps) {
                                     stackExpanded={expanded && !isRemoved}
                                     {...animationEventsNeedBind}
                                     ref={(element) => {
-                                        elements.set(item.id, element);
+                                        elementsRef.current.set(item.id, element);
                                         return () => {
-                                            elements.delete(item.id);
+                                            elementsRef.current.delete(item.id);
                                         };
                                     }}
                                     style={{ ...item.style }}

@@ -21,7 +21,6 @@ export interface ActionBarAdapter<P, S extends ActionBarState = ActionBarState> 
     notifyResetMessage: () => void;
 }
 
-/** The action bar of a message in Chat and AIChatDialogue: stays shown while its menu is open and briefly after */
 export default abstract class ActionBarFoundation<A extends ActionBarAdapter<P, S>, P, S extends ActionBarState> extends BaseFoundation<A, P, S> {
     #hideTimer = new ResetTimer();
 

@@ -11,9 +11,9 @@
     const many = ref<string[]>([]);
     const item = ref<Item | undefined>();
     const items = ref<Item[]>([]);
-    const onSingle = (_value: string | undefined) => undefined;
+    const onSingle = (_value?: string) => undefined;
     const onMultiple = (_value: string[]) => undefined;
-    const onItem = (_value: Item | undefined) => undefined;
+    const onItem = (_value?: Item) => undefined;
     const onItems = (_value: Item[]) => undefined;
 </script>
 

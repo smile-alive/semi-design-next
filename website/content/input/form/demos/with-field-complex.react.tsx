@@ -20,7 +20,7 @@ const roles = [
 
 // id and aria-labelledby go on the fieldset (named by the field label); aria-required goes to each control
 function MyComponent({ id, onChange, value, 'aria-labelledby': labelledBy, 'aria-required': required }: MyComponentProps) {
-    const { name, role } = value || {};
+    const { name, role } = value ?? {};
     const handleChange = (v: string | undefined, type: 'name' | 'role') => {
         const newValue = { ...value, [type === 'name' ? 'name' : 'role']: v };
         onChange?.(newValue);

@@ -297,7 +297,7 @@ export function canCarryPopupState(child: React.ReactElement<Record<string, any>
 
 export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<TooltipHandle> }) {
     const props = useDefaultProps('Tooltip', rawProps, defaultProps);
-    const { wrapWhenSpecial, role, trigger, wrapperClassName } = props;
+    const { wrapWhenSpecial, role, trigger, wrapperClassName, showArrow, prefixCls, style, content, motion, className: propClassName } = props;
 
     const context = useConfigContext();
 
@@ -373,7 +373,7 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
     const isOpen = state.isInsert && state.transitionState !== 'leave';
 
     // the name may point into the content, so check after it mounts
-    const warnsUnnamedDialog = props.role === 'dialog';
+    const warnsUnnamedDialog = role === 'dialog';
 
     // wrappers keep the runtime out of a ref position, which the React Compiler would treat as a ref
     const setTrigger = useCallback((frag: FragmentInstance | null) => runtime.setTrigger(frag), [runtime]);
@@ -381,7 +381,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
     const setContainer = useCallback((node: HTMLDivElement | null) => runtime.setContainer(node), [runtime]);
 
     const renderIcon = () => {
-        const { showArrow, prefixCls, style } = props;
         if (!showArrow) {
             return null;
         }
@@ -394,7 +393,6 @@ export default function Tooltip(rawProps: TooltipProps & { ref?: React.Ref<Toolt
 
     const renderPortal = () => {
         const { visible, portalEventSet } = state;
-        const { prefixCls, content, showArrow, style, motion, role, className: propClassName } = props;
         const contentNode = typeof content === 'function' ? content({ initialFocusRef: runtime.initialFocus }) : content;
         const pointAtCenter = Boolean(showArrow) && props.arrowPointAtCenter;
         const className = clsx(state.colorScheme, propClassName, {

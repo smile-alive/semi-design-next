@@ -66,7 +66,7 @@ const hasNode = (node: unknown) => node != null && typeof node !== 'boolean' && 
 
 export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref<PopconfirmHandle> }): React.ReactNode {
     const props = useDefaultProps('Popconfirm', rawProps, defaultProps);
-    const { title, content } = props;
+    const { title, content, icon, showCloseIcon, okText, cancelText, okType, cancelType, okButtonProps, cancelButtonProps } = props;
 
     const { locale } = useLocale('Popconfirm');
     const { direction } = useConfigContext();
@@ -136,7 +136,6 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
     const handleConfirm = (e: React.MouseEvent) => foundation.handleConfirm(e.nativeEvent);
 
     const renderControls = () => {
-        const { okText, cancelText, okType, cancelType, cancelButtonProps, okButtonProps } = props;
         return (
             <>
                 {/* data-type locates the buttons for focus; a pending callback keeps its loading over the user's */}
@@ -170,7 +169,6 @@ export default function Popconfirm(rawProps: PopconfirmProps & { ref?: React.Ref
     };
 
     const renderConfirmPopCard = ({ initialFocusRef }: RenderContentProps) => {
-        const { content, className, style, cancelType, icon, prefixCls, showCloseIcon } = props;
         const popCardCls = clsx(prefixCls, className);
         const hasIcon = hasNode(icon);
         const setFooter = (footer: HTMLDivElement | null) => {

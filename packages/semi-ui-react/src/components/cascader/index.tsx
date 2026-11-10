@@ -488,7 +488,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
         return (
             <div className={wrappercls}>
                 <span id={selectionTextId} className={spanCls}>
-                    {displayText ? displayText : inputPlaceHolder}
+                    {displayText || inputPlaceHolder}
                 </span>
                 {/* the trigger draws its own clear button and adornments: global Input defaults must not add them */}
                 {showInput && (
@@ -618,7 +618,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
         const spanCls = clsx({
             [`${prefixcls}-selection-placeholder`]: !displayText,
         });
-        return <span className={spanCls}>{displayText ? displayText : placeholder}</span>;
+        return <span className={spanCls}>{displayText || placeholder}</span>;
     };
 
     const renderCustomTrigger = () => {
@@ -668,7 +668,7 @@ export default function Cascader<Multiple extends boolean | undefined = undefine
                 }}
                 onKeyDown={stopButtonActivationKeys}
             >
-                {clearIcon ? clearIcon : <IconClear />}
+                {clearIcon || <IconClear />}
             </button>
         );
     };

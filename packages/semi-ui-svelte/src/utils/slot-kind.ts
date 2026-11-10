@@ -1,5 +1,6 @@
 import type { Attachment } from 'svelte/attachments';
 import { BASE_CLASS_PREFIX } from '@fibrae/semi-foundation/base/constants';
+import observeMutations from './observe-mutations.js';
 
 export type SlotKind = 'text' | 'icon' | 'node';
 
@@ -23,11 +24,5 @@ export function getSlotKind(container: Element): SlotKind | undefined {
 }
 
 export function trackSlotKind(report: (kind?: SlotKind) => void): Attachment<Element> {
-    return (container) => {
-        const update = () => report(getSlotKind(container));
-        update();
-        const observer = new MutationObserver(update);
-        observer.observe(container, { childList: true });
-        return () => observer.disconnect();
-    };
+    return observeMutations((container: Element) => report(getSlotKind(container)), { childList: true });
 }

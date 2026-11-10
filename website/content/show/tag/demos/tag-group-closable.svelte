@@ -9,7 +9,7 @@
         { tagKey: '5', color: 'white', children: '飞书', closable: true },
     ]);
 
-    const closeTag = (_event: TagCloseEvent, tagKey: string | number | undefined) => {
+    const closeTag = (_event: TagCloseEvent, tagKey?: string | number) => {
         tagList = tagList.filter((tag) => tag.tagKey !== tagKey);
     };
 </script>

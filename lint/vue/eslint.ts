@@ -1,6 +1,7 @@
 import type { Linter } from 'eslint';
 import vue from 'eslint-plugin-vue';
 import accessibility from 'eslint-plugin-vuejs-accessibility';
+import { templateTernary } from '../template-ternary.ts';
 import { builtinOwnLine } from './builtin-own-line.ts';
 import { vueExemptions } from './exemptions.ts';
 
@@ -16,9 +17,10 @@ export function vueEslint(overlappingRules: Linter.Config[]): Linter.Config[] {
         {
             files: ['**/*.vue'],
             languageOptions: { parserOptions: { parser: '@typescript-eslint/parser' } },
-            plugins: { semi: { rules: { 'builtin-own-line': builtinOwnLine } } },
+            plugins: { semi: { rules: { 'builtin-own-line': builtinOwnLine, 'template-ternary': templateTernary } } },
             rules: {
                 'semi/builtin-own-line': 'error',
+                'semi/template-ternary': 'error',
                 // Core no-unused-vars counts the parameters of a function type as unused; vue-tsc's noUnusedParameters checks SFC parameters
                 'no-unused-vars': ['error', { ignoreRestSiblings: true, args: 'none', caughtErrors: 'none' }],
                 // D-2: components keep Semi's names, including single words and reserved DOM names such as Nav

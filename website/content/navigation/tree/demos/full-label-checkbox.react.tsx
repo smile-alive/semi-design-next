@@ -64,7 +64,7 @@ const treeStyle = {
 
 export default function TreeDemo() {
     const renderLabel: TreeProps['renderFullLabel'] = (row) => {
-        const isLeaf = !(row.data.children && row.data.children.length);
+        const isLeaf = !row.data.children?.length;
         const handleClick = isLeaf ? row.onCheck : row.onExpand;
         // Focus stays on the tree (arrows expand, Enter/Space check), so the inline checkbox is display-only
         return (

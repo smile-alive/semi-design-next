@@ -203,7 +203,7 @@ export default function ColumnFilter(props: ColumnFilterProps) {
     };
 
     const confirm: RenderFilterDropdownProps['confirm'] = (options = {}) => {
-        const newFilteredValue = options.filteredValue || tempFilteredValue();
+        const newFilteredValue = options.filteredValue ?? tempFilteredValue();
         if (!isEqual(newFilteredValue, props.filteredValue)) {
             props.onSelect?.({ filteredValue: newFilteredValue });
         }

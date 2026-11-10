@@ -286,7 +286,7 @@ export class JSONModel {
         );
 
         let matchMapper: (value: Range, index: number, array: Range[]) => FindMatch[];
-        if (!isRegex && searchString.indexOf('\n') < 0) {
+        if (!isRegex && !searchString.includes('\n')) {
             const searchParams = new SearchParams(searchString, isRegex, matchCase, wordSeparators);
             const searchData = searchParams.parseSearchRequest();
             if (!searchData) {

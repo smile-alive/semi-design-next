@@ -7,7 +7,7 @@
     const formatToken = 'yyyy-MM-dd HH:mm:ss';
     const date = ref<DatePickerValueType>();
 
-    const onChange = (value: Date | Date[] | undefined) => {
+    const onChange = (value?: Date | Date[]) => {
         console.log(value);
     };
 </script>

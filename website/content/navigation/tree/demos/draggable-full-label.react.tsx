@@ -87,12 +87,12 @@ export default function TreeDemo() {
 
         if (!dropToGap) {
             loop(data, dropKey, (item) => {
-                item.children = item.children || [];
+                item.children = item.children ?? [];
                 item.children.push(dragObj);
             });
         } else if (dropPosition === 1 && node.children && node.expanded) {
             loop(data, dropKey, (item) => {
-                item.children = item.children || [];
+                item.children = item.children ?? [];
                 item.children.unshift(dragObj);
             });
         } else {
@@ -117,7 +117,7 @@ export default function TreeDemo() {
             if (!item) return;
             const { children } = item;
 
-            if (children && children.length) {
+            if (children?.length) {
                 children.forEach((child) => {
                     res.push(child.key);
                     findChild(child);

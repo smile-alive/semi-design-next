@@ -5,7 +5,7 @@
     const mode = ref<RadioValue | undefined>('week');
     const displayValue = ref<Date | undefined>(new Date(2019, 6, 23, 8, 32, 0));
 
-    const onChangeDate = (value: Date | Date[] | undefined) => {
+    const onChangeDate = (value?: Date | Date[]) => {
         if (!Array.isArray(value)) displayValue.value = value;
     };
 

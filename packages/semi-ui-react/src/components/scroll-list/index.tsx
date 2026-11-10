@@ -50,7 +50,7 @@ function ScrollList(rawProps: ScrollListProps) {
                     <div className={`${prefix}-line`} />
                 </div>
             )}
-            <div className={`${prefix}-body`} style={{ height: bodyHeight ? bodyHeight : '' }} x-semi-prop="children">
+            <div className={`${prefix}-body`} style={{ height: bodyHeight || '' }} x-semi-prop="children">
                 {children}
             </div>
             {hasContent(footer) && (

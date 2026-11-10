@@ -431,7 +431,7 @@ describe(`Table`, () => {
                         value: '2',
                     },
                 ],
-                onFilter: (value, record) => record.name.indexOf(value) > -1,
+                onFilter: (value, record) => record.name.includes(value),
             },
             {
                 title: 'Age',
@@ -509,7 +509,7 @@ describe(`Table`, () => {
                         value: '2',
                     },
                 ],
-                onFilter: (value, record) => record.name.indexOf(value) > -1,
+                onFilter: (value, record) => record.name.includes(value),
             },
             {
                 title: 'Age',
@@ -531,10 +531,10 @@ describe(`Table`, () => {
                 return checkbox;
             })
         );
-        const filteredData = data.filter((item) => item.name.indexOf('1') > -1);
+        const filteredData = data.filter((item) => item.name.includes('1'));
         expect(queryAll('.semi-table-tbody .name-col')).toHaveLength(filteredData.length);
         const newData = getData(10);
-        const newFilteredData = newData.filter((item) => item.name.indexOf('1') > -1);
+        const newFilteredData = newData.filter((item) => item.name.includes('1'));
         rerender(<Table columns={columns} dataSource={newData} pagination={false} />);
         expect(queryAll('.semi-table-tbody .name-col')).toHaveLength(newFilteredData.length);
     });
@@ -580,7 +580,7 @@ describe(`Table`, () => {
                         value: '2',
                     },
                 ],
-                onFilter: (value, record) => record.name.indexOf(value) > -1,
+                onFilter: (value, record) => record.name.includes(value),
             },
             {
                 title: 'Age',
@@ -643,7 +643,7 @@ describe(`Table`, () => {
                         value: '2',
                     },
                 ],
-                onFilter: (value, record) => record.name.indexOf(value) > -1,
+                onFilter: (value, record) => record.name.includes(value),
             },
             {
                 title: 'Age',
@@ -1213,7 +1213,7 @@ describe(`Table`, () => {
                         value: '2',
                     },
                 ],
-                onFilter: (value, record) => record.name.indexOf(value) > -1,
+                onFilter: (value, record) => record.name.includes(value),
                 sorter: (a, b) => a.name.length - b.name.length,
                 useFullRender: true,
                 render: (text, _record, _index, { expandIcon, selection, indentText }) => {
