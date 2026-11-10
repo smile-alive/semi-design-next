@@ -263,24 +263,28 @@ describe('tree 共享的值与派生状态', () => {
 
     it('deriveExpandedKeys 首次只算展开键，之后按展开与收起给出动画键', () => {
         const flattenNodes = flattenTreeData(treeData, new Set(['p']), undefined);
-        expect(deriveExpandedKeys({ expandedKeys: ['p'], motion: true }, { expandedKeys: new Set(), flattenNodes: [], prevProps: null }, keyEntities, false)).toEqual({ expandedKeys: new Set(['p']) });
-        const shown = deriveExpandedKeys({ expandedKeys: ['p'], motion: true }, { expandedKeys: new Set(), flattenNodes: [], prevProps: {} }, keyEntities, false);
+        expect(deriveExpandedKeys({ expandedKeys: ['p'] }, { expandedKeys: new Set(), flattenNodes: [], prevProps: null }, keyEntities, false, true)).toEqual({ expandedKeys: new Set(['p']) });
+        const shown = deriveExpandedKeys({ expandedKeys: ['p'] }, { expandedKeys: new Set(), flattenNodes: [], prevProps: {} }, keyEntities, false, true);
         expect(shown.motionType).toBe('show');
         expect(sorted(shown.motionKeys)).toEqual(['a', 'b', 'c']);
-        const hidden = deriveExpandedKeys({ expandedKeys: [], motion: true }, { expandedKeys: new Set(['p']), flattenNodes, prevProps: {} }, keyEntities, false);
+        const hidden = deriveExpandedKeys({ expandedKeys: [] }, { expandedKeys: new Set(['p']), flattenNodes, prevProps: {} }, keyEntities, false, true);
         expect(hidden.motionType).toBe('hide');
         expect(hidden.cachedFlattenNodes).toBe(flattenNodes);
-        expect(deriveExpandedKeys({ expandedKeys: [], motion: true }, { expandedKeys: new Set(['p']), flattenNodes, prevProps: {} }, keyEntities, true)).toEqual({ expandedKeys: new Set() });
+        expect(deriveExpandedKeys({ expandedKeys: [] }, { expandedKeys: new Set(['p']), flattenNodes, prevProps: {} }, keyEntities, true, true)).toEqual({ expandedKeys: new Set() });
+        expect(deriveExpandedKeys({ expandedKeys: ['p'] }, { expandedKeys: new Set(), flattenNodes: [], prevProps: {} }, keyEntities, false, false)).toEqual({ expandedKeys: new Set(['p']) });
     });
 
     it('deriveSearchingState 对新 treeData 重新过滤，受控 expandedKeys 未变时不写状态', () => {
         const prevState = { inputValue: 'C', treeData, flattenNodes: [], filteredExpandedKeys: new Set(['p']), filteredShownKeys: new Set(['c', 'p']), prevProps: { showFilteredOnly: false } };
-        const refiltered = deriveSearchingState({ filterTreeNode: true, treeNodeFilterProp: 'label' }, prevState, { treeData, structureChanged: true, keyEntities });
+        const refiltered = deriveSearchingState({ filterTreeNode: true, treeNodeFilterProp: 'label' }, prevState, { treeData, structureChanged: true, keyEntities, animated: false });
         expect(sorted(refiltered.filteredKeys)).toEqual(['c']);
         expect(sorted(refiltered.filteredExpandedKeys)).toEqual(['p']);
-        expect(deriveSearchingState({ expandedKeys: ['p'], showFilteredOnly: false }, prevState, { structureChanged: false, keyEntities })).toEqual({});
-        const collapsed = deriveSearchingState({ expandedKeys: [], showFilteredOnly: false }, prevState, { structureChanged: false, keyEntities });
+        expect(deriveSearchingState({ expandedKeys: ['p'], showFilteredOnly: false }, prevState, { structureChanged: false, keyEntities, animated: false })).toEqual({});
+        const collapsed = deriveSearchingState({ expandedKeys: [], showFilteredOnly: false }, prevState, { structureChanged: false, keyEntities, animated: false });
         expect(collapsed.filteredExpandedKeys.size).toBe(0);
+        expect(collapsed.motionKeys).toBeUndefined();
+        const animatedCollapse = deriveSearchingState({ expandedKeys: [], showFilteredOnly: false }, prevState, { structureChanged: false, keyEntities, animated: true });
+        expect(animatedCollapse.motionType).toBe('hide');
         expect(collapsed.flattenNodes.map(({ key }) => key)).toEqual(['p']);
     });
 });
@@ -289,7 +293,7 @@ describe('deriveTreeState', () => {
     const propKeys = ['treeData', 'value', 'defaultValue', 'expandAll', 'multiple', 'onChangeWithObject', 'filterTreeNode', 'remote'] as const;
     type State = Parameters<typeof deriveTreeState>[1];
     const empty = { ...getClearedSelection(), prevProps: null, inputValue: '', keyEntities: {}, treeData: [], flattenNodes: [], expandedKeys: new Set(), cachedKeyValuePairs: {}, filteredExpandedKeys: new Set(), filteredShownKeys: new Set() } as unknown as State;
-    const derive = (props: Parameters<typeof deriveTreeState>[0], prev: State = empty): State => ({ ...prev, ...deriveTreeState(props, prev, propKeys) });
+    const derive = (props: Parameters<typeof deriveTreeState>[0], prev: State = empty, animated = false): State => ({ ...prev, ...deriveTreeState(props, prev, propKeys, animated) });
     const rows = (s: State) => s.flattenNodes.map(({ key }) => key);
 
     it('treeData 换引用但结构不变时重建实体、保留展开，结构变化才按 expandAll 重新展开', () => {

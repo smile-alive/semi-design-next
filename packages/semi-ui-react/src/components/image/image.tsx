@@ -7,8 +7,7 @@ import '@fibrae/semi-foundation/components/image/image.scss';
 import { IconUploadError } from '@fibrae/semi-icons-react';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
-import useMergedRef from '../../hooks/use-merged-ref';
-import useReplayImageEvents from '../../hooks/use-replay-image-events';
+import HydratedImage from '../../internal/hydrated-image';
 import useLocale from '../locale/use-locale';
 import Skeleton from '../skeleton';
 import { usePreviewContext } from './context';
@@ -34,7 +33,6 @@ export default function Image(rawProps: ImageProps) {
 
     let extra = null;
     const thumbRef = useRef<HTMLDivElement>(null);
-    const imgRef = useRef<HTMLImageElement>(null);
 
     const [foundation, state] = useFoundation<Foundation, Adapter, ImageProps, ImageState>(
         ImageFoundation,
@@ -55,7 +53,6 @@ export default function Image(rawProps: ImageProps) {
         context
     );
 
-    const mergedImgRef = useMergedRef(ref, imgRef);
     const { loadStatus } = state;
     const previewObject = typeof preview === 'object' && preview !== null ? preview : null;
     const previewVisible = ImageFoundation.getPreviewVisible(preview, state);
@@ -79,8 +76,6 @@ export default function Image(rawProps: ImageProps) {
                   style: previewObject.previewStyle,
               }
             : {};
-
-    useReplayImageEvents(imgRef);
 
     useLayoutEffect(() => {
         if (!isInGroup) {
@@ -117,8 +112,8 @@ export default function Image(rawProps: ImageProps) {
                 onClick={canOpen ? foundation.handleClick : undefined}
                 onKeyDown={canOpen ? foundation.handleKeyDown : undefined}
             >
-                <img
-                    ref={mergedImgRef}
+                <HydratedImage
+                    ref={ref}
                     {...restProps}
                     className={clsx(`${prefixCls}-img`, {
                         [`${prefixCls}-img-preview`]: canOpen,

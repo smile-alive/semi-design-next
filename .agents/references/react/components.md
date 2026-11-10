@@ -104,7 +104,7 @@ export default function Spin(rawProps: SpinProps) {
 - 只在客户端确定的值用 `hooks/use-is-server-render.ts`：服务端与 hydration 期间为 `true`，hydration 之后的重渲染为 `false`，纯客户端渲染始终为 `false`。依赖外部数据源的值写 `useSyncExternalStore`，服务端快照只给与运行环境和当前时间无关的值。
 - 弹层经 `internal/portal` 挂载，它在服务端与 hydration 期间不输出任何内容，默认打开的弹层在下一次提交中出现。依赖弹层 DOM 的 effect（焦点、`beforeShow`、滚动锁）不写在外层组件，写在 Portal 内、渲染在内容之后的子组件里（如 SideSheet 的 `SideSheetOpenEffects`），保证 effect 运行时容器与内容已经插入。
 - `renderToString` 不等待 `lazy`，Suspense 边界会以客户端重渲染的形式输出，hydration 报 recoverable error。按需加载的增强（Table 的 `resizable`、Transfer 的 `draggable`）在 `useIsServerRender()` 为 `true` 时直接渲染原有的回退内容，之后再进入 `lazy` 边界。
-- React 在 hydration 时才给 `img` 挂 `load`、`error` 监听，之前已完成的图片不会上报；依赖图片事件的组件在 `useFoundation` 之后调用 `hooks/use-replay-image-events.ts`（Image、Avatar），补发的事件才能到达已 init 的 foundation。
+- React 在 hydration 时才给 `img` 挂 `load`、`error` 监听，之前已完成的图片不会上报；依赖图片事件的 `<img>` 写成 `internal/hydrated-image`，它在 hydration 后的 passive effect 里补发，此时父组件的 foundation 已经 init。
 - 命令式 API 在创建容器前调用 `@fibrae/semi-foundation/utils/assert-client` 的 `assertClient(api, hint)`。
 - 用例与工具见 [testing](testing.md#服务端渲染与-hydration)。
 

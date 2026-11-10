@@ -12,6 +12,7 @@
     import useKeepAliveFoundation from '../../base/use-keep-alive-foundation';
     import useEventListener from '../../composables/use-event-listener';
     import useResizeObserver from '../../composables/use-resize-observer';
+    import HydratedImage from '../../internal/hydrated-image.vue';
     import useLocale from '../locale/use-locale';
     import type { CropperEmits, CropperHandle, CropperProps } from './interface';
 
@@ -43,7 +44,7 @@
 
     const helpId = useId();
     const root = useTemplateRef('root');
-    const img = useTemplateRef('img');
+    const img = useTemplateRef<InstanceType<typeof HydratedImage>>('img');
 
     const prefix = cssClasses.PREFIX;
     const preview = computed(() => props.preview ?? readSemiDefault(semi, 'Cropper', 'preview'));
@@ -54,7 +55,7 @@
         () => CropperFoundation.getInitialState(),
         () => ({
             getContainer: () => root.value as HTMLDivElement,
-            getImg: () => img.value as HTMLImageElement,
+            getImg: () => img.value?.$el as HTMLImageElement,
             notifyZoomChange: (zoom) => {
                 emit('update:zoom', zoom);
                 emit('zoomChange', zoom);
@@ -111,7 +112,7 @@
 <template>
     <div ref="root" :class="prefix" :role="namedRole($attrs)">
         <div :class="cssClasses.IMG_WRAPPER">
-            <img v-bind="imgAttrs" ref="img" :alt="props.imgProps?.alt ?? ''" :class="[cssClasses.IMG, props.imgProps?.class]" :src="props.src" :style="[props.imgProps?.style, imgStyle]" @load="handleLoad($event)" />
+            <HydratedImage v-bind="imgAttrs" ref="img" :alt="props.imgProps?.alt ?? ''" :class="[cssClasses.IMG, props.imgProps?.class]" :src="props.src" :style="[props.imgProps?.style, imgStyle]" @load="handleLoad($event)" />
         </div>
         <div :class="cssClasses.MASK" @lostpointercapture="foundation.handleMaskLostPointerCapture" @pointerdown="foundation.handleMaskPointerDown" @pointermove="foundation.handleMaskPointerMove" />
         <!-- not a widget role: the box has no single value, so it is a named group that says how to use it -->

@@ -9,6 +9,7 @@
     import type { ElementProps, EmitHandlers } from '../../base/element-props';
     import semiDefault, { readSemiDefault, semiGlobalDefault, useSemiGlobal } from '../../base/semi-default';
     import useFoundation from '../../base/use-foundation';
+    import HydratedImage from '../../internal/hydrated-image.vue';
     import { isNotClassOrStyle, splitControlAttrs } from '../../utils/control-attrs';
     import useLocale from '../locale/use-locale';
     import { SkeletonImage } from '../skeleton';
@@ -134,7 +135,7 @@
         @click="onClick"
         @keydown="onKeydown"
     >
-        <img
+        <HydratedImage
             v-bind="imgAttrs($attrs)"
             :alt="props.alt"
             :class="[

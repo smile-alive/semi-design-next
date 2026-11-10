@@ -202,7 +202,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         body.parentElement?.toggleAttribute('data-scrollable-right', right);
     }
 
-    #addNoDuplicatedItemsToArr(srcArr: any[] = [], ...objArrs: any[][]) {
+    static #addNoDuplicatedItemsToArr(srcArr: any[] = [], ...objArrs: any[][]) {
         for (const objArr of objArrs) {
             if (Array.isArray(objArr)) {
                 for (const item of objArr) {
@@ -214,6 +214,42 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         }
 
         return srcArr;
+    }
+
+    // an uncontrolled selection starts from its default keys; deriveState carries them over and derives the half-checked rows
+    static #getInitialRowSelection<R>(rowSelection: TableBaseProps<R>['rowSelection'], keyEntities: BaseEntitys): TableBaseStateRowSelection<R> {
+        if (!rowSelection) {
+            return null;
+        }
+        const selection: NonNullable<TableBaseStateRowSelection<R>> = isObject(rowSelection) ? { ...rowSelection } : {};
+        if (!Array.isArray(selection.selectedRowKeys)) {
+            let rowKeys: BaseRowKeyType[] = TableFoundation.#addNoDuplicatedItemsToArr([], selection.defaultSelectedRowKeys);
+            if (selection.checkRelation === 'related') {
+                // default keys check descendants and parents as a click would; keys outside the data stay
+                const known = new Set(rowKeys.map(String));
+                rowKeys = [...rowKeys, ...TableFoundation.#getRelatedCheckedRowKeys(rowKeys, keyEntities).checkedRowKeys.filter((key) => !known.has(String(key)))];
+            }
+            selection.selectedRowKeys = rowKeys;
+            selection.selectedRowKeysSet = new Set(rowKeys);
+        }
+        return selection;
+    }
+
+    static #getExpandedRowKeys<R>(props: TableBaseProps<R>, groups?: TableBaseState<R>['groups'] | null) {
+        const { defaultExpandAllRows, defaultExpandedRowKeys, expandedRowKeys, dataSource = [], expandAllRows, defaultExpandAllGroupRows, expandAllGroupRows } = props;
+        const groupKeys = groups?.size ? [...groups.keys()] : [];
+        const rowKeys: BaseRowKeyType[] = [];
+
+        if (defaultExpandAllRows || expandAllRows) {
+            TableFoundation.#addNoDuplicatedItemsToArr(rowKeys, TableFoundation.getAllRowKeys(props, dataSource), groupKeys);
+        } else if (defaultExpandAllGroupRows || expandAllGroupRows) {
+            TableFoundation.#addNoDuplicatedItemsToArr(rowKeys, expandedRowKeys, groupKeys);
+        } else if (!Array.isArray(expandedRowKeys) && Array.isArray(defaultExpandedRowKeys) && defaultExpandedRowKeys.length) {
+            TableFoundation.#addNoDuplicatedItemsToArr(rowKeys, defaultExpandedRowKeys);
+        } else {
+            TableFoundation.#addNoDuplicatedItemsToArr(rowKeys, expandedRowKeys);
+        }
+        return rowKeys;
     }
 
     #notifyChange(pagination: BasePagination, filters?: BaseChangeInfoFilter<RecordType>[], sorter?: BaseChangeInfoSorter<RecordType>, extra?: OnChangeExtra) {
@@ -417,36 +453,6 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         return null;
     }
 
-    #initSelectedRowKeys(keyEntities: BaseEntitys) {
-        const rowSelection = this.getProp('rowSelection');
-        let rowKeys: BaseRowKeyType[] = [];
-        if (rowSelection) {
-            const selectedRowKeys = isObject(rowSelection) ? rowSelection.selectedRowKeys : undefined;
-            const defaultSelectedRowKeys = isObject(rowSelection) ? rowSelection.defaultSelectedRowKeys : undefined;
-            const controlled = Array.isArray(selectedRowKeys);
-
-            if (controlled) {
-                this.#addNoDuplicatedItemsToArr(rowKeys, selectedRowKeys);
-            } else if (Array.isArray(defaultSelectedRowKeys)) {
-                this.#addNoDuplicatedItemsToArr(rowKeys, defaultSelectedRowKeys);
-            }
-
-            let halfCheckedRowKeys: BaseRowKeyType[] = [];
-            if (this.#getCheckRelation() === 'related') {
-                const related = TableFoundation.#getRelatedCheckedRowKeys(rowKeys, keyEntities);
-                halfCheckedRowKeys = related.halfCheckedRowKeys;
-                if (!controlled) {
-                    // default keys check descendants and parents as a click would; keys outside the data stay
-                    const known = new Set(rowKeys.map(String));
-                    rowKeys = [...rowKeys, ...related.checkedRowKeys.filter((key) => !known.has(String(key)))];
-                }
-            }
-
-            this.#setSelectedRowKeys(rowKeys);
-            this.#setHalfCheckedRowKeys(halfCheckedRowKeys);
-        }
-    }
-
     // each argument left out comes from the state
     #getPageData(dataSource?: RecordType[], pagination?: BasePagination, queries?: BaseColumnProps<RecordType>[]) {
         const filteredSortedDataSource = this.getState('filteredSortedDataSource') ?? [];
@@ -625,13 +631,6 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     }
 
     protected override initOnce() {
-        const { defaultExpandAllRows, expandAllRows, expandAllGroupRows } = this.getProps();
-        const groups = this.getState('groups');
-        // defaultExpandAllRows is only a default, so its groups leave controlled keys alone; the other options still apply
-        if (!(defaultExpandAllRows && !expandAllRows && !expandAllGroupRows && groups?.size && this.#rowExpansionIsControlled())) {
-            this.initExpandedRowKeys({ groups });
-        }
-        this.#initSelectedRowKeys(this.getState('keyEntities'));
         this.#warnMissingDataIndex();
     }
 
@@ -1107,13 +1106,16 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
         const filteredSortedRowKeys = TableFoundation.getAllRowKeys(props, filteredSortedDataSource);
         const pageData = TableFoundation.getPageData(props, filteredSortedDataSource, isObject(props.pagination) ? props.pagination : {}, queries);
         const related = isObject(props.rowSelection) && props.rowSelection.checkRelation === 'related';
+        const keyEntities = related && props.dataSource?.length ? TableFoundation.buildKeyEntities(props, props.dataSource) : {};
+        // defaultExpandAllRows is only a default, so its groups leave controlled keys alone; the other options still apply
+        const keepsControlledKeys = props.defaultExpandAllRows && !props.expandAllRows && !props.expandAllGroupRows && pageData.groups?.size && Array.isArray(props.expandedRowKeys);
         const state: TableColumnsState<R, C> = {
             flattenColumns,
             queries,
             dataSource: pageData.dataSource,
-            expandedRowKeys: [...(props.expandedRowKeys || []), ...(props.defaultExpandedRowKeys || [])],
+            expandedRowKeys: keepsControlledKeys ? [...(props.expandedRowKeys ?? [])] : TableFoundation.#getExpandedRowKeys(props, pageData.groups),
             preExpandedRowKeys: props.expandedRowKeys,
-            rowSelection: props.rowSelection ? (isObject(props.rowSelection) ? { ...props.rowSelection } : {}) : null,
+            rowSelection: TableFoundation.#getInitialRowSelection(props.rowSelection, keyEntities),
             pagination: pageData.pagination,
             groups: pageData.groups ?? null,
             allRowKeys: pageData.allRowKeys,
@@ -1127,7 +1129,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
             prePagination: undefined,
             halfCheckedRowKeys: [],
             halfCheckedRowKeysSet: new Set(),
-            keyEntities: related && props.dataSource?.length ? TableFoundation.buildKeyEntities(props, props.dataSource) : {},
+            keyEntities,
             filteredSortedDataSource,
             filteredSortedRowKeys,
             filteredSortedRowKeysSet: new Set(filteredSortedRowKeys),
@@ -1211,19 +1213,7 @@ export default class TableFoundation<RecordType, P extends TableBaseProps<Record
     }
 
     initExpandedRowKeys({ groups }: { groups?: Map<string | number, Set<BaseRowKeyType>> } = {}) {
-        const { defaultExpandAllRows, defaultExpandedRowKeys = [], expandedRowKeys: propExpandedRowKeys = [], dataSource = [], expandAllRows, defaultExpandAllGroupRows, expandAllGroupRows } = this.getProps();
-        const expandedRowKeys: BaseRowKeyType[] = [];
-
-        if (defaultExpandAllRows || expandAllRows) {
-            this.#addNoDuplicatedItemsToArr(expandedRowKeys, this.getAllRowKeys(dataSource), groups && groups instanceof Map && groups.size ? Array.from(groups.keys()) : []);
-        } else if (defaultExpandAllGroupRows || expandAllGroupRows) {
-            this.#addNoDuplicatedItemsToArr(expandedRowKeys, propExpandedRowKeys, groups && groups instanceof Map && groups.size ? Array.from(groups.keys()) : []);
-        } else if (Array.isArray(defaultExpandedRowKeys) && defaultExpandedRowKeys.length) {
-            this.#addNoDuplicatedItemsToArr(expandedRowKeys, defaultExpandedRowKeys);
-        } else if (Array.isArray(propExpandedRowKeys) && propExpandedRowKeys.length) {
-            this.#addNoDuplicatedItemsToArr(expandedRowKeys, propExpandedRowKeys);
-        }
-        this.setState({ expandedRowKeys });
+        this.setState({ expandedRowKeys: TableFoundation.#getExpandedRowKeys(this.getProps(), groups) });
     }
 
     /** The rows and groups of the current page as the foundation keeps them; the host clones them before handing them out */

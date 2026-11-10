@@ -189,7 +189,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
         'filterTreeNode',
         'keyMaps',
         'loadedKeys',
-        'motion',
+        'motionExpand',
         'multiple',
         'onChangeWithObject',
         'remote',
@@ -424,7 +424,7 @@ export default class TreeSelectFoundation<P extends BasicTreeSelectProps = Basic
 
     /** The state that props imply, given the previous state; null when nothing changed (see `deriveTreeState`) */
     static deriveState(props: BasicTreeSelectProps, prevState: BasicTreeSelectInnerData): Partial<BasicTreeSelectInnerData> | null {
-        return deriveTreeState(props, prevState, TreeSelectFoundation.propKeys);
+        return deriveTreeState(props, prevState, TreeSelectFoundation.propKeys, Boolean(props.motionExpand));
     }
 
     static getInitialState(props: BasicTreeSelectProps): BasicTreeSelectInnerData {

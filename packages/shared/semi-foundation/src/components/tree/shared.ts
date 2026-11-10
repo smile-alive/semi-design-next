@@ -488,14 +488,15 @@ export function loadTreeNode(host: TreeLoadHost, key: string, data: BasicTreeNod
  * or closes without a treeData change, the rows that animate
  */
 export function deriveExpandedKeys(
-    props: Pick<BasicTreeProps, 'expandedKeys' | 'autoExpandParent' | 'motion'>,
+    props: Pick<BasicTreeProps, 'expandedKeys' | 'autoExpandParent'>,
     prevState: Pick<BasicTreeInnerData, 'expandedKeys' | 'flattenNodes'> & { prevProps: object | null },
     keyEntities: BasicKeyEntities,
-    treeDataChanged: boolean
+    treeDataChanged: boolean,
+    animated: boolean
 ): Partial<Pick<BasicTreeInnerData, 'expandedKeys' | 'motionKeys' | 'motionType' | 'cachedFlattenNodes'>> {
     const { prevProps } = prevState;
     const expandedKeys = calcExpandedKeys(props.expandedKeys, keyEntities, props.autoExpandParent || !prevProps);
-    if (!prevProps || !props.motion || treeDataChanged) {
+    if (!prevProps || !animated || treeDataChanged) {
         return { expandedKeys };
     }
     const { motionKeys, motionType } = calcMotionKeys(prevState.expandedKeys, expandedKeys, keyEntities);
@@ -514,9 +515,9 @@ export function deriveExpandedKeys(
  * the same structure, whose ancestors stay as the user left them.
  */
 export function deriveSearchingState(
-    props: Pick<BasicTreeProps, 'filterTreeNode' | 'treeNodeFilterProp' | 'showFilteredOnly' | 'keyMaps' | 'expandedKeys' | 'autoExpandParent' | 'motion'>,
+    props: Pick<BasicTreeProps, 'filterTreeNode' | 'treeNodeFilterProp' | 'showFilteredOnly' | 'keyMaps' | 'expandedKeys' | 'autoExpandParent'>,
     prevState: Pick<BasicTreeInnerData, 'inputValue' | 'treeData' | 'flattenNodes' | 'filteredExpandedKeys' | 'filteredShownKeys'> & { prevProps: Pick<BasicTreeProps, 'showFilteredOnly'> | null },
-    { treeData, structureChanged, keyEntities, prevFilteredKeys }: { treeData?: BasicTreeNodeData[]; structureChanged: boolean; keyEntities: BasicKeyEntities; prevFilteredKeys?: Set<string> }
+    { treeData, structureChanged, keyEntities, prevFilteredKeys, animated }: { treeData?: BasicTreeNodeData[]; structureChanged: boolean; keyEntities: BasicKeyEntities; prevFilteredKeys?: Set<string>; animated: boolean }
 ) {
     const { prevProps } = prevState;
     const { keyMaps } = props;
@@ -546,7 +547,7 @@ export function deriveSearchingState(
         const unchanged = prevProps && !treeData && prevProps.showFilteredOnly === props.showFilteredOnly && filteredExpandedKeys.size === prevState.filteredExpandedKeys.size && [...filteredExpandedKeys].every((key) => prevState.filteredExpandedKeys.has(key));
         if (!unchanged) {
             newState.filteredExpandedKeys = filteredExpandedKeys;
-            if (prevProps && props.motion && !structureChanged) {
+            if (prevProps && animated && !structureChanged) {
                 const motionResult = calcMotionKeys(prevState.filteredExpandedKeys, filteredExpandedKeys, keyEntities);
                 let { motionKeys } = motionResult;
                 const { motionType } = motionResult;
@@ -600,7 +601,11 @@ function keepUncontrolledKeys(keys: Iterable<string>, prevKeyEntities: BasicKeyE
 
 type DerivedTreeStateKey = Exclude<keyof BasicTreeInnerData, 'prevProps' | 'dragging' | 'dragNodesKeys' | 'dragOverNodeKey' | 'dropPosition'>;
 
-/** The props deriveTreeState reads; `remote` is TreeSelect's, whose search the user runs, so the tree is never filtered */
+/**
+ * The props deriveTreeState reads. `remote` and `motionExpand` are TreeSelect's: its search is run by the user, so the
+ * tree is never filtered, and its expand animation is `motionExpand` (`motion` is the dropdown's). `motion` is Tree's
+ * and only listed so a host can keep it in `propKeys`.
+ */
 export type DeriveTreeProps = Pick<
     BasicTreeProps,
     | 'autoExpandParent'
@@ -622,7 +627,7 @@ export type DeriveTreeProps = Pick<
     | 'treeDataSimpleJson'
     | 'treeNodeFilterProp'
     | 'value'
-> & { remote?: boolean };
+> & { remote?: boolean; motionExpand?: boolean };
 
 /**
  * The state that props imply for Tree and TreeSelect, given the previous state (modeled on rc-tree's
@@ -630,7 +635,7 @@ export type DeriveTreeProps = Pick<
  * last derivation, and the result keeps the `propKeys` of these props as the next one. Returns null when nothing
  * changed, so a host that writes the result back settles.
  */
-export function deriveTreeState(props: DeriveTreeProps, prevState: Pick<BasicTreeInnerData, DerivedTreeStateKey> & { prevProps: DeriveTreeProps | null }, propKeys: readonly (keyof DeriveTreeProps)[]): (Partial<Pick<BasicTreeInnerData, DerivedTreeStateKey>> & { prevProps?: DeriveTreeProps }) | null {
+export function deriveTreeState(props: DeriveTreeProps, prevState: Pick<BasicTreeInnerData, DerivedTreeStateKey> & { prevProps: DeriveTreeProps | null }, propKeys: readonly (keyof DeriveTreeProps)[], animated: boolean): (Partial<Pick<BasicTreeInnerData, DerivedTreeStateKey>> & { prevProps?: DeriveTreeProps }) | null {
     const { prevProps } = prevState;
     const { keyMaps, onChangeWithObject: withObject, multiple: isMultiple } = props;
     let treeData: BasicTreeNodeData[];
@@ -659,13 +664,13 @@ export function deriveTreeState(props: DeriveTreeProps, prevState: Pick<BasicTre
     }
 
     const dataUpdated = needUpdateSimpleJson || treeDataStructureUpdated;
-    if (dataUpdated && props.motion && prevProps) {
+    if (dataUpdated && animated && prevProps) {
         newState.motionKeys = new Set([]);
         newState.motionType = null;
     }
     if (!isSearching) {
         if (needUpdate('expandedKeys') || (prevProps && needUpdate('autoExpandParent'))) {
-            Object.assign(newState, deriveExpandedKeys(props, prevState, keyEntities, dataUpdated));
+            Object.assign(newState, deriveExpandedKeys(props, prevState, keyEntities, dataUpdated, animated));
         } else if ((!prevProps && (props.defaultExpandAll || props.expandAll)) || (dataUpdated && props.expandAll)) {
             newState.expandedKeys = new Set(Object.keys(keyEntities));
         } else if (!prevProps && props.defaultExpandedKeys) {
@@ -681,7 +686,7 @@ export function deriveTreeState(props: DeriveTreeProps, prevState: Pick<BasicTre
         }
     } else {
         // the same structure under a new reference keeps the ancestors as the user left them during the search
-        Object.assign(newState, deriveSearchingState(props, prevState, { treeData, structureChanged: dataUpdated, keyEntities, prevFilteredKeys: dataUpdated ? undefined : prevState.filteredKeys }));
+        Object.assign(newState, deriveSearchingState(props, prevState, { treeData, structureChanged: dataUpdated, keyEntities, prevFilteredKeys: dataUpdated ? undefined : prevState.filteredKeys, animated }));
     }
 
     let selectedKeys: string[] | undefined;

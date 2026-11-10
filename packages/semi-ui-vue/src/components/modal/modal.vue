@@ -202,13 +202,13 @@
                 :maskFixed="props.maskFixed"
                 :maskStyle="props.maskStyle"
                 :motion="props.motion"
-                :onAfterLeave="() => (displayNone = true)"
-                :onClose="cancel"
                 :preventScroll="props.preventScroll"
                 :size="props.size"
                 :title="props.title"
                 :visible="props.visible"
                 :width="props.width"
+                @afterLeave="displayNone = true"
+                @close="cancel"
             >
                 <template v-for="name in passedSlots()" #[name]="scope">
                     <slot :name="name as keyof ModalSlots" v-bind="scope" />

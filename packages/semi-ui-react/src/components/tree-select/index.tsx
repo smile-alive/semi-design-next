@@ -203,8 +203,6 @@ function getVirtualItemKey(index: number, data: Record<string, any>) {
     return data.visibleOptions[index].key;
 }
 
-const NO_MOTION_KEYS: Set<string> = new Set();
-
 export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNodeValue, Multiple extends boolean | undefined = undefined, WithObject extends boolean | undefined = undefined>(rawProps: TreeSelectProps<T, Multiple, WithObject>) {
     const bodyProps: TreeSelectBodyProps = rawProps;
     const props = useDefaultProps('TreeSelect', withInputGroup(bodyProps, useInputGroupInScope()), defaultProps);
@@ -851,7 +849,7 @@ export default function TreeSelect<T extends TreeSelectNodeValue = TreeSelectNod
                 <NodeList
                     flattenList={listView.cachedFlattenNodes}
                     flattenNodes={flattenNodes}
-                    motionKeys={motionExpand ? motionKeys : NO_MOTION_KEYS}
+                    motionKeys={motionKeys}
                     motionType={motionType}
                     // a search hit has empty motionKeys but non-empty filteredKeys; tell it from ordinary motionKeys
                     searchTargetIsDeep={props.expandedKeys !== undefined && motionExpand && motionKeys.size === 0 && filteredKeys.size > 0}

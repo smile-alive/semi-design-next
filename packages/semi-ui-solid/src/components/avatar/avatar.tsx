@@ -8,6 +8,7 @@ import { usePopupLayer } from '../../base/popup-layer';
 import { createToken } from '../../base/token';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
+import HydratedImage from '../../internal/hydrated-image';
 import useWatch from '../../primitives/use-watch';
 import callHandler from '../../utils/call-handler';
 import { splitControlAttrs } from '../../utils/control-attrs';
@@ -151,7 +152,7 @@ function AvatarView(rawProps: AvatarProps) {
                 <span ref={trackFocusWrapper} class={focusClass()} aria-label={local.alt} {...focusProps()} />
             </Match>
             <Match when={isImg()}>
-                <img
+                <HydratedImage
                     alt={local.alt}
                     src={local.src}
                     srcset={local.srcSet}

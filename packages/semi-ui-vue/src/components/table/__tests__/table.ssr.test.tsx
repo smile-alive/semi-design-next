@@ -15,6 +15,28 @@ it('传 groupBy 时服务端首帧已有分组行', async () => {
     expect(html.match(/semi-table-row-section/g)).toHaveLength(2);
 });
 
+it('服务端首帧已应用默认展开与默认选中键', async () => {
+    const tree = [
+        {
+            key: 'parent',
+            name: 'parent',
+            children: [
+                { key: 'child-1', name: 'child-1' },
+                { key: 'child-2', name: 'child-2' },
+            ],
+        },
+    ];
+    const columns = [{ title: 'Name', dataIndex: 'name' }];
+    const expanded = await renderOnServer(() => <Table columns={columns} dataSource={tree} childrenRecordName="children" pagination={false} defaultExpandAllRows />);
+    expect(expanded.html).toContain('data-row-key="child-2"');
+
+    const selected = await renderOnServer(() => <Table columns={columns} dataSource={tree[0].children} pagination={false} rowSelection={{ defaultSelectedRowKeys: ['child-1'] }} />);
+    expect(selected.html.match(/semi-checkbox-inner-checked/g)).toHaveLength(1);
+
+    const related = await renderOnServer(() => <Table columns={columns} dataSource={tree} childrenRecordName="children" pagination={false} defaultExpandAllRows rowSelection={{ checkRelation: 'related', defaultSelectedRowKeys: ['parent'] }} />);
+    expect(related.html.match(/semi-checkbox-inner-checked/g)).toHaveLength(4);
+});
+
 it('用 Table.Column 子列写法时服务端首帧的表头与数据行列数一致', async () => {
     const { html } = await renderOnServer(() => (
         <Table dataSource={[{ key: '1', name: 'Alice', age: 18 }]} pagination={false}>

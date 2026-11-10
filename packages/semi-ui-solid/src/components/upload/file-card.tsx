@@ -5,6 +5,7 @@ import UploadFoundation from '@fibrae/semi-foundation/components/upload/foundati
 import { getFileSize } from '@fibrae/semi-foundation/components/upload/utils';
 import { toCssLength } from '@fibrae/semi-foundation/utils/dom';
 import { IconAlertCircle, IconClear, IconClose, IconFile, IconRefresh } from '@fibrae/semi-icons-solid';
+import HydratedImage from '../../internal/hydrated-image';
 import { splitControlAttrs } from '../../utils/control-attrs';
 import hasContent from '../../utils/has-content';
 import Button from '../button';
@@ -125,7 +126,7 @@ export default function FileCard(props: FileCardProps) {
                     when={props.renderThumbnail}
                     fallback={
                         <Show when={!fallbackPreview()} fallback={<IconFile size="large" />}>
-                            <img style={sizeStyle()} alt={props.name ?? ''} src={props.url} onError={onImageError} />
+                            <HydratedImage style={sizeStyle()} alt={props.name ?? ''} src={props.url} onError={onImageError} />
                         </Show>
                     }
                 >
@@ -221,7 +222,7 @@ export default function FileCard(props: FileCardProps) {
                         when={props.previewFile}
                         fallback={
                             <Show when={props.preview && !fallbackPreview()} fallback={<IconFile size="large" />}>
-                                <img alt="" src={props.url} onError={onImageError} />
+                                <HydratedImage alt="" src={props.url} onError={onImageError} />
                             </Show>
                         }
                     >

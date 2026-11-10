@@ -20,6 +20,7 @@ type Adapter = ModalContentAdapter<ModalContentReactProps, React.MouseEvent>;
 export interface ModalContentReactProps extends ModalContentProps, React.AriaAttributes {
     /** whether the dialog is shown: from opening until the leave animation ends */
     open: boolean;
+    onClose: (e: React.MouseEvent | KeyboardEvent) => void;
     children?: React.ReactNode;
     modalRender?: (node: ReactNode) => ReactNode;
     /** Attached to the outer div inside the portal */

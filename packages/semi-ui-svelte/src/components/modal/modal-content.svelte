@@ -95,7 +95,6 @@
             get initialFocus() {
                 return initialFocus;
             },
-            onClose: (event) => onClose(event),
         },
         () => ({}),
         () => ({

@@ -166,6 +166,16 @@ const options = [
 const treeData = [{ key: 'asia', value: 'asia', label: 'Asia', children: [{ key: 'china', value: 'china', label: 'China' }] }];
 const columns = [{ title: 'Name', dataIndex: 'name', sorter: (a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name) }];
 const rows = Array.from({ length: 30 }, (_, index) => ({ key: String(index), name: `row-${index}` }));
+const treeRows = [
+    {
+        key: 'parent',
+        name: 'parent',
+        children: [
+            { key: 'child-1', name: 'child-1' },
+            { key: 'child-2', name: 'child-2' },
+        ],
+    },
+];
 const transferData = [
     { key: 'a', label: 'Alpha', value: 'a' },
     { key: 'b', label: 'Bravo', value: 'b' },
@@ -731,6 +741,31 @@ export const ssrCases: SsrCase[] = [
     { name: 'table/排序', covers: ['Table'], element: () => <Table columns={[{ ...columns[0], sortOrder: 'descend' }]} dataSource={rows.slice(0, 3)} pagination={false} />, html: ['row-2'] },
     { name: 'table/虚拟列表', covers: ['Table'], element: () => <Table columns={columns} dataSource={rows} pagination={false} scroll={{ y: 200 }} virtualized /> },
     { name: 'table/resizable', covers: ['Table'], element: () => <Table columns={[{ title: 'Name', dataIndex: 'name', width: 120 }]} dataSource={rows.slice(0, 3)} pagination={false} resizable /> },
+    {
+        name: 'table/默认展开全部树形行',
+        covers: ['Table'],
+        element: () => <Table childrenRecordName="children" columns={[{ title: 'Name', dataIndex: 'name' }]} dataSource={treeRows} defaultExpandAllRows pagination={false} />,
+        html: ['data-row-key="child-1"', 'data-row-key="child-2"'],
+    },
+    {
+        name: 'table/默认展开分组行',
+        covers: ['Table'],
+        element: () => <Table columns={[{ title: 'Name', dataIndex: 'name' }]} dataSource={rows.slice(0, 4)} defaultExpandAllGroupRows groupBy={(record) => (Number(record.key) % 2 ? 'odd' : 'even')} pagination={false} />,
+        html: ['data-row-key="0"', 'data-row-key="3"'],
+    },
+    {
+        name: 'table/默认选中键',
+        covers: ['Table'],
+        element: () => <Table columns={[{ title: 'Name', dataIndex: 'name' }]} dataSource={rows.slice(0, 3)} pagination={false} rowSelection={{ defaultSelectedRowKeys: ['1'] }} />,
+        check: (markup) => expect(markup.match(/semi-checkbox-inner-checked/g)).toHaveLength(1),
+    },
+    {
+        name: 'table/关联选中的默认键',
+        covers: ['Table'],
+        element: () => <Table childrenRecordName="children" columns={[{ title: 'Name', dataIndex: 'name' }]} dataSource={treeRows} defaultExpandAllRows pagination={false} rowSelection={{ checkRelation: 'related', defaultSelectedRowKeys: ['parent'] }} />,
+        // the parent's default key checks both children and, with every row checked, the header checkbox
+        check: (markup) => expect(markup.match(/semi-checkbox-inner-checked/g)).toHaveLength(4),
+    },
     {
         name: 'tabs/受控激活项',
         covers: ['Tabs', 'TabPane'],

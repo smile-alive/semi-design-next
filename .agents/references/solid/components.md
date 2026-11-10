@@ -44,6 +44,7 @@ semi-ui-solid 的写法。框架版本以其 `peerDependencies` 为准（Solid 1
     - 组件要把数据交给内容时用带参数的渲染函数，类型写成 `JSX.Element | ((...args) => JSX.Element)` 联合类型，读到函数就在插入处传参调用（`ErrorBoundary` 的 `fallback`、`tooltip` 的 `PopupContent`），不用 `as unknown as JSX.Element` 把函数当作 JSX 传递。
     - 数据对象里不放 JSX，也不放 getter。列表、树、表格类数据只放数据（`label: string | number`），内容交给 `renderXxx` 或列的 `render`，与 Vue 版一致。
     - 只为检查而读取的 JSX（是不是纯文本、有没有内容）改为检查插入处解析出的同一个结果；做不到时，为检查提供单独的非 JSX prop。首帧不插入的项（超出 `maxCount`、折叠、弹层里）写成「数据 + 渲染函数」，由显示它的分支自己创建。不在 hydration 编号之外读取 JSX：那要改写 Solid 的内部字段 `sharedConfig.context`。
+- Solid 在 hydration 时才给 `img` 挂 `onLoad`、`onError`，之前已完成的图片不会上报；依赖图片事件的 `<img>` 写成 `internal/hydrated-image.tsx`，它透传 `ref` 并补发事件。
 - 服务端要从标记里读属性时用 `utils/is-markup.ts` 的 `serverHtml` 取 HTML 字符串，不在各处断言 `{ t }` 形状。
 - 原生元素上服务端与浏览器写法不同的属性：受控文本用 `attr:value`（input）、`textContent`（textarea）带进服务端 HTML，两端都写，浏览器显示的文字仍由 ref 与同步函数写 `value` 属性（不用 `value` 绑定：它在输入法组合中也会写入）；`isServer` 只用来跳过副作用，不决定输出的标记（唯一例外：Tooltip 函数 children 外包的 span，见「触发器」）；布尔属性用小写的 HTML 名（`readonly`），驼峰的 `readOnly` 在服务端输出 `readOnly="false"`。
 

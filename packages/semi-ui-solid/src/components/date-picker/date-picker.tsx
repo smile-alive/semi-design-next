@@ -42,6 +42,7 @@ import YearAndMonth, { type YearAndMonthOpts } from './year-and-month';
 
 type RedeclaredKeys =
     | 'dateFnsLocale'
+    | 'customTrigger'
     | 'className'
     | 'style'
     | 'autoFocus'

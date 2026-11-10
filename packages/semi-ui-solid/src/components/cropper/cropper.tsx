@@ -8,6 +8,7 @@ import '@fibrae/semi-foundation/components/cropper/cropper.scss';
 import type { ElementProps } from '../../base/element-props';
 import useDefaultProps from '../../base/use-default-props';
 import useFoundation from '../../base/use-foundation';
+import HydratedImage from '../../internal/hydrated-image';
 import useEventListener from '../../primitives/use-event-listener';
 import useResizeObserver from '../../primitives/use-resize-observer';
 import callHandler from '../../utils/call-handler';
@@ -102,7 +103,7 @@ export default function Cropper(rawProps: CropperProps) {
         <div {...rest} ref={(node) => mergeRefs(local.ref)((root = Object.assign(node, handle)))} class={clsx(cssClasses.PREFIX, local.class)} role={namedRole(rest)}>
             <div class={cssClasses.IMG_WRAPPER}>
                 {/* the cropping surface, not content: there is no description to give */}
-                <img
+                <HydratedImage
                     alt=""
                     crossorigin="anonymous"
                     {...local.imgProps}
