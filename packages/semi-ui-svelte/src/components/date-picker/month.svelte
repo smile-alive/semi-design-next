@@ -16,7 +16,7 @@
     const gridId = $props.id();
 
     // empty until mounted, so the server render and the hydration pass mark no day as today
-    const today = useToday();
+    const today = useToday(() => props.timeZone);
 
     // the props the foundation reads; getters keep them live
     const view = {

@@ -475,12 +475,13 @@ describe(`DatePicker`, () => {
     });
 
     it('切换 timeZone 时 inputValue 正确', async () => {
-        const today = set(new Date(), { hours: 22, minutes: 0, seconds: 0 });
         const [originZone, originOffset] = getRandomIANATimeZone();
         const [newZone, newOffset] = getRandomIANATimeZone();
+        // 22:00 today in the original zone: a Date is an instant
+        const pickerValue = zonedTimeToUtc(set(new Date(), { hours: 22, minutes: 0, seconds: 0 }), originZone);
         const renderWithZone = (timeZone) => (
             <ConfigProvider timeZone={timeZone}>
-                <DatePicker type="dateTime" defaultOpen defaultPickerValue={today} motion={false} />
+                <DatePicker type="dateTime" defaultOpen defaultPickerValue={pickerValue} motion={false} />
             </ConfigProvider>
         );
 

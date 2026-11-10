@@ -35,6 +35,7 @@
         insetInputValue: undefined,
         defaultPickerValue: undefined,
         density: undefined,
+        timeZone: undefined,
     });
 
     const emit = defineEmits<DatePickerDateInputEmits>();

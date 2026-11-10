@@ -38,7 +38,7 @@ import ApiType from '#/components/ApiType.astro';
 | popupClassName | 弹出层的类名。 | `string` | `semiGlobalDefault("TimePicker", "popupClassName")` |
 | popupStyle | 弹出层的样式。 | `StyleValue` | `semiGlobalDefault("TimePicker", "popupStyle")` |
 | stopPropagation | 是否阻止弹出层上的点击事件冒泡。 | `boolean` | `semiDefault("TimePicker", "stopPropagation", true)` |
-| timeZone | 时区，未设置时依次取 ConfigProvider 的 timeZone、全局默认值。 | `string \| number` | `undefined` |
+| timeZone | 时区：数字为相对 UTC 的小时偏移，字符串为 IANA 时区名或 `GMT±HH:MM`。设置后 `Date` 与时间戳按时刻解释，字符串按该时区的钟点解释；回调收到的日期为 `TZDate`，字符串为该时区的钟点。未设置时依次取 ConfigProvider 的 timeZone、全局默认值。 | `string \| number` | `undefined` |
 | scrollItemProps | 传给各列的属性，只支持 cycled、mode、motion、transform，含义同 ScrollList 的 ScrollItem。 | `TimePickerScrollItemProps` | `semiGlobalDefault("TimePicker", "scrollItemProps")` |
 
 **Events**

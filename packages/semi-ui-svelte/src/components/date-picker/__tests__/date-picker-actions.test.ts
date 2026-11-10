@@ -3,14 +3,12 @@ import { format } from 'date-fns';
 import { describe, expect, it, vi } from 'vite-plus/test';
 import { strings } from '@fibrae/semi-foundation/components/date-picker/constants';
 import zh_CN from '@fibrae/semi-foundation/locale/source/zh_CN';
-import { zonedTimeToUtc } from '@fibrae/semi-foundation/utils/date-fns-extra';
 import { click, getFooterButtons, getYMLists, ymd } from './date-picker-dom-utils';
 import { changes, dp, getContainer, getDay, getGrid, getInput, getInputs, getSelectedDays, settle, setup, typeText, useBaseDate } from './test-utils';
 
 useBaseDate();
 
 const baseDate = new Date(2019, 8, 8, 8, 8, 8, 8);
-const fullFormat = 'yyyy-MM-dd HH:mm:ss';
 
 async function focusInput(input: HTMLInputElement) {
     input.focus();
@@ -157,8 +155,8 @@ describe('Svelte DatePicker timeZone 与 locale', () => {
     it('回调参数按 timeZone 换算', async () => {
         const { store } = await setup({ value: baseDate, props: { type: 'date', timeZone: 'Asia/Tokyo' } });
         await typeText('2021-06-10');
-        const expected = zonedTimeToUtc(new Date(2021, 5, 10), 'Asia/Tokyo');
-        expect(changes(store)).toEqual([`change ${format(expected, fullFormat)} "${format(expected, 'yyyy-MM-dd')}"`]);
+        // the date is a TZDate, which formats in Tokyo whatever the test zone
+        expect(changes(store)).toEqual(['change 2021-06-10 00:00:00 "2021-06-10"']);
     });
 
     it('与系统时区相同的 timeZone 原样显示', async () => {

@@ -377,6 +377,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
                 rangeInputStartRef={rangeInputStartRef}
                 rangeSeparator={rangeSeparator}
                 rangeSeparatorNode={rangeSeparatorNode}
+                timeZone={timeZone}
                 handleInsetDateFocus={foundation.handleInsetDateFocus}
                 handleInsetTimeFocus={foundation.handleInsetTimeFocus}
                 onInsetInputChange={foundation.handleInsetInputChange}
@@ -572,7 +573,7 @@ export default function DatePicker(rawProps: DatePickerProps) {
                             }
                         }}
                     >
-                        {typeof triggerRender === 'function' ? <Trigger {...inputProps} componentProps={componentProps} triggerRender={triggerRender} /> : <DateInput {...inputProps} />}
+                        {typeof triggerRender === 'function' ? <Trigger {...inputProps} value={DatePickerFoundation.getTriggerValue(value, timeZone)} componentProps={componentProps} triggerRender={triggerRender} /> : <DateInput {...inputProps} />}
                     </div>
                 </Popover>
             </div>

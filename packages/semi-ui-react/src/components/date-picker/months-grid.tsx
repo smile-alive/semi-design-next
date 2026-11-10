@@ -69,6 +69,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
         presetPosition,
         renderQuickControls,
         renderDateInput,
+        timeZone,
     } = props;
 
     const titleId = useId();
@@ -147,6 +148,7 @@ export default function MonthsGrid({ ref, ...rawProps }: MonthsGridProps) {
                     rangeInputFocus={rangeInputFocus}
                     rangeStart={rangeStart}
                     selected={selected}
+                    timeZone={timeZone}
                     weekStartsOn={weekStartsOn}
                     renderDate={renderDate}
                     renderFullDate={renderFullDate}

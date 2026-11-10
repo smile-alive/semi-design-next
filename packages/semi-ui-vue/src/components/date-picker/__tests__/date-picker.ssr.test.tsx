@@ -14,6 +14,12 @@ it('受控值与 defaultValue 在服务端 HTML 中已显示在输入框', async
     expect(uncontrolled.html).toContain('2024-05-07');
 });
 
+it('设置 timeZone 时字符串值按该时区的钟点显示，与运行环境的时区无关', async () => {
+    const { html, warnings } = await renderOnServer(() => <DatePicker modelValue="2024-05-06 10:00:00" timeZone="America/New_York" type="dateTime" />);
+    expect(warnings).toEqual([]);
+    expect(html).toContain('value="2024-05-06 10:00:00"');
+});
+
 it('日期范围受控值在服务端 HTML 中两端都已显示', async () => {
     const { html, warnings } = await renderOnServer(() => <DatePicker modelValue={[new Date(2024, 4, 6), new Date(2024, 4, 20)]} type="dateRange" />);
     expect(warnings).toEqual([]);

@@ -33,6 +33,12 @@ it('日期面板在服务端不标记今天', async () => {
     expect(html).not.toMatch(/semi-datepicker-day-today(?![-\w])/);
 });
 
+it('设置 timeZone 时字符串值按该时区的钟点显示，与运行环境的时区无关', async () => {
+    const { html, errors } = await renderServer({ render: () => <DatePicker value="2024-05-06 10:00:00" timeZone="America/New_York" type="dateTime" /> });
+    expect(errors).toEqual([]);
+    expect(html).toContain('value="2024-05-06 10:00:00"');
+});
+
 function counter(text: string) {
     const state = { created: 0 };
     const Counted = () => {

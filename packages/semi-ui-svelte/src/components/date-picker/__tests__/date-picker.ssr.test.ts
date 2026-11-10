@@ -32,4 +32,9 @@ describe('Svelte DatePicker 服务端首帧', () => {
         expect(body).toContain('2021-06-01</button>');
         expect(body).not.toContain('<input');
     });
+
+    it('设置 timeZone 时字符串值按该时区的钟点显示，与运行环境的时区无关', () => {
+        const body = renderBody({ value: '2024-05-06 10:00:00', props: { type: 'dateTime', timeZone: 'America/New_York' } });
+        expect(body).toMatch(/<input[^>]*value="2024-05-06 10:00:00"/);
+    });
 });

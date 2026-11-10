@@ -213,6 +213,7 @@
         insetInput: props.insetInput,
         insetInputValue: state.value.insetInputValue,
         rangeSeparator: rangeSeparator.value,
+        timeZone: timeZone.value,
         type: type.value,
         value: state.value.value,
     }));

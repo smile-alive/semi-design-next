@@ -111,6 +111,7 @@
         disabledMinutes: props.disabledMinutes ?? readSemiDefault(semi, 'TimePicker', 'disabledMinutes'),
         disabledSeconds: props.disabledSeconds ?? readSemiDefault(semi, 'TimePicker', 'disabledSeconds'),
         disabledTime: props.disabledTime ?? readSemiDefault(semi, 'TimePicker', 'disabledTime'),
+        timeZone: timeZone.value,
     });
 
     const { foundation, state } = useFoundation<Foundation, Adapter, FoundationProps, TimePickerState>(

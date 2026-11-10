@@ -25,7 +25,7 @@ export default function Month(props: MonthProps) {
     const gridId = createUniqueId();
 
     // empty until mounted, so the server render and the hydration pass mark no day as today
-    const today = useToday();
+    const today = useToday(() => props.timeZone);
 
     const { foundation, state } = useFoundation<MonthFoundation, MonthAdapter, MonthProps, MonthFoundationState>(
         MonthFoundation,

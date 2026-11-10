@@ -1,8 +1,9 @@
 import { isValid, type Locale } from 'date-fns';
 import { isEqual } from 'es-toolkit';
 import BaseFoundation, { type DefaultAdapter } from '../../base/foundation';
-import { utcToZonedTime, zonedTimeToUtc } from '../../utils/date-fns-extra';
+import { zonedTimeToUtc } from '../../utils/date-fns-extra';
 import isValidTimeZone from '../../utils/is-valid-time-zone';
+import { fromWallTime, parseReference, toWallTime } from '../../utils/zoned-time';
 import ComboboxFoundation from './combox-foundation';
 import { cssClasses, strings, type PanelType } from './constants';
 import { formatToString, parseToDate, hourIsDisabled, minuteIsDisabled, secondIsDisabled, transformToArray, isTimeFormatLike } from './utils';
@@ -67,20 +68,19 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
      * The dates a `value` shows, on mount and on every update. An empty side of a range ('' or undefined) stays
      * undefined, as the panel reports it, so one picked side shows with its separator. No picked side at all is no
      * value, and so is a time that cannot be parsed: an Invalid Date in the state would make every later format throw.
-     * With `prevTimeZone`, `value` is the shown value in that zone and is re-zoned into `timeZone`.
+     * A Date or timestamp is an instant and a string a `timeZone` wall time. With `prevTimeZone`, `value` is the shown
+     * value in that zone and is re-zoned into `timeZone`.
      */
     static #parseDates(value: unknown, props: Record<string, any>, timeZone?: string | number, prevTimeZone?: string | number) {
         const formatToken = TimePickerFoundation.getValidFormat(props);
         const values: TimeValue[] = Array.isArray(value) ? value : isEmptyValue(value) ? [] : [value as TimeValue];
-        const dates = values.map((v) => parseToDate(v, formatToken, props.dateFnsLocale));
+        const reference = parseReference(timeZone);
+        const dates = values.map((v) => parseToDate(v, formatToken, props.dateFnsLocale, reference));
 
         if (dates.every((d) => d === undefined) || dates.some((d) => d !== undefined && isNaN(Number(d)))) {
             return [];
         }
-        if (!isValidTimeZone(timeZone)) {
-            return dates;
-        }
-        return dates.map((date) => (date === undefined ? undefined : utcToZonedTime(isValidTimeZone(prevTimeZone) ? zonedTimeToUtc(date, prevTimeZone) : date, timeZone)));
+        return dates.map((date) => date && toWallTime(isValidTimeZone(prevTimeZone) ? zonedTimeToUtc(date, prevTimeZone) : date, timeZone));
     }
 
     static #formatDates(dates: Date[], props: Record<string, any>) {
@@ -105,31 +105,17 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
         this.setState({ inputValue: this.formatValue(this.getState('value')) });
     }
 
+    /** The string is the input text, a `timeZone` wall time, so it can be passed back as `value` */
     #notifyChange(value: Date[], inputValue: string) {
-        let str: string | string[] = inputValue;
-        let _value: Date | Date[] = value;
         const timeZone = this.getProp('timeZone');
+        const dates = value.map((date) => date && fromWallTime(date, timeZone));
         if (this.#isRange()) {
             const parts = inputValue.split(this.getProp('rangeSeparator'));
             // text typed for one side has no separator, but a range value always has both sides
-            str = value.length === 2 ? [parts[0], parts[1] ?? ''] : parts;
+            this.adapter.notifyChange(dates, value.length === 2 ? [parts[0], parts[1] ?? ''] : parts);
         } else {
-            _value = Array.isArray(_value) ? _value[0] : _value;
+            this.adapter.notifyChange(dates[0], inputValue);
         }
-
-        if (isValidTimeZone(timeZone) && _value) {
-            const formatToken = this.getValidFormat();
-            // localized like the input text, so the string can be passed back as `value`
-            const dateFnsLocale = this.getProp('dateFnsLocale');
-            if (Array.isArray(_value)) {
-                _value = _value.map((v) => (v === undefined ? undefined : zonedTimeToUtc(v, timeZone)));
-                str = _value.map((v) => (v === undefined ? '' : formatToString(v, formatToken, dateFnsLocale)));
-            } else {
-                _value = zonedTimeToUtc(_value, timeZone);
-                str = formatToString(_value, formatToken, dateFnsLocale);
-            }
-        }
-        this.adapter.notifyChange(_value, str);
     }
 
     #hasChanged(dates: Date[] = [], oldDates: Date[] = []) {
@@ -217,8 +203,15 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
      * range-only: it gives the left and right panel their own rules, and each callback it leaves out falls back to the
      * top-level prop.
      */
-    static getDisabledTimeFns({ disabledHours, disabledMinutes, disabledSeconds, disabledTime }: TimePickerBaseProps, dates: Date[], panelType: PanelType, isRange: boolean): DisabledTimeFns {
-        const panel = (typeof disabledTime === 'function' && isRange && disabledTime(dates, panelType)) || {};
+    static getDisabledTimeFns({ disabledHours, disabledMinutes, disabledSeconds, disabledTime, timeZone }: TimePickerBaseProps, dates: Date[], panelType: PanelType, isRange: boolean): DisabledTimeFns {
+        const panel =
+            (typeof disabledTime === 'function' &&
+                isRange &&
+                disabledTime(
+                    dates.map((date) => date && fromWallTime(date, timeZone)),
+                    panelType
+                )) ||
+            {};
         return {
             disabledHours: panel.disabledHours || disabledHours,
             disabledMinutes: panel.disabledMinutes || disabledMinutes,
@@ -268,7 +261,8 @@ export default class TimePickerFoundation<P extends TimePickerBaseProps = TimePi
     /** A new value wins (back to undefined clears it), else a new timeZone re-zones the shown value, else only the text is re-formatted */
     override handlePropsChange(prev: Partial<P>) {
         const { value, timeZone, disabled } = this.getProps();
-        if (!isEqual(value, prev.value)) {
+        if (!isEqual(value, prev.value) || (timeZone !== prev.timeZone && this.isControlledComponent('value'))) {
+            // a controlled string is a wall time of whichever zone is current, so a new zone reads it again
             this.#syncValueFromProps({ value: value as TimeValue, timeZone });
         } else if (timeZone !== prev.timeZone) {
             this.#syncValueFromProps({ value: this.getState('value'), timeZone, prevTimeZone: prev.timeZone });

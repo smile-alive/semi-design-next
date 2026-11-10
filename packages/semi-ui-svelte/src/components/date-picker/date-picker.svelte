@@ -289,7 +289,7 @@
     ]);
 
     const triggerProps: DatePickerTriggerRenderProps = $derived({
-        value: states().value,
+        value: DatePickerFoundation.getTriggerValue(states().value, zone),
         inputValue: states().inputValue,
         placeholder: shownPlaceholder,
         disabled: inputDisabled,
@@ -413,6 +413,7 @@
         onInsetInputChange={foundation.handleInsetInputChange}
         onInsetTimeFocus={foundation.handleInsetTimeFocus}
         {rangeSeparator}
+        timeZone={zone}
         {type}
         value={states().value}
     />

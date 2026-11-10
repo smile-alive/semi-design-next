@@ -42,6 +42,8 @@ export interface MonthFoundationProps {
     focusRecords: FocusRecords;
     locale: any;
     multiple: boolean;
+    /** marks today of this zone */
+    timeZone?: string | number;
 }
 
 export type MonthDayInfo =

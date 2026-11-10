@@ -21,14 +21,14 @@ export interface MonthProps extends MonthFoundationProps, BaseProps {
 }
 
 export default function Month(props: MonthProps) {
-    const { ref, labelledby, month, weekStartsOn, locale, multiple, renderDate, renderFullDate, selected, rangeStart, rangeEnd, offsetRangeStart, offsetRangeEnd, disabledDate, hoverDay, rangeInputFocus, focusRecords, onDayHover, onWeeksRowNumChange } = props;
+    const { ref, labelledby, month, weekStartsOn, locale, multiple, renderDate, renderFullDate, selected, rangeStart, rangeEnd, offsetRangeStart, offsetRangeEnd, disabledDate, hoverDay, rangeInputFocus, focusRecords, timeZone, onDayHover, onWeeksRowNumChange } = props;
 
     const context = useConfigContext();
 
     const gridId = useId();
     const reportedRowNum = useRef(0);
 
-    const today = useToday();
+    const today = useToday(timeZone);
 
     const [foundation, state] = useFoundation<MonthFoundation, MonthAdapter, MonthProps, MonthFoundationState>(
         MonthFoundation,

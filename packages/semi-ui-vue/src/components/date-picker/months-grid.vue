@@ -159,6 +159,7 @@
                             :rangeInputFocus="props.rangeInputFocus"
                             :rangeStart="state.rangeStart"
                             :selected="state.selected"
+                            :timeZone="props.timeZone"
                             :weekStartsOn="props.weekStartsOn"
                             @dayClick="foundation.handleDayClick($event, panelType)"
                             @dayHover="foundation.handleDayHover"

@@ -42,8 +42,9 @@ describe('Svelte DatePicker timeZone', () => {
     const zoneOf = (index: number) => toIANA(index - 11);
 
     it.each(zones)('切换 ConfigProvider 的 timeZone 时，已选日期的输入框跟随换算（%i -> %i）', async (originIndex, newIndex) => {
-        const today = set(new Date(), { hours: 22, minutes: 0, seconds: 0 });
-        const store = await renderProvided({ timeZone: zoneOf(originIndex), props: { type: 'dateTime', open: true, defaultPickerValue: today } });
+        // 22:00 today in the original zone: a Date is an instant
+        const pickerValue = zonedTimeToUtc(set(new Date(), { hours: 22, minutes: 0, seconds: 0 }), zoneOf(originIndex));
+        const store = await renderProvided({ timeZone: zoneOf(originIndex), props: { type: 'dateTime', open: true, defaultPickerValue: pickerValue } });
 
         const days = document.querySelectorAll<HTMLElement>(`.${dp}-day`);
         // index 6 is always a valid date: the first row holds 7 cells, at most one of which belongs to the previous month

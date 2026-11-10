@@ -105,6 +105,7 @@ export default function DateInput(rawProps: DateInputProps) {
         showClearIgnoreDisabled,
         locale,
         format: _format,
+        timeZone: _timeZone,
         ...rest
     } = props;
 
@@ -246,7 +247,7 @@ export default function DateInput(rawProps: DateInputProps) {
                 </div>
                 {allowClear && (
                     <button ref={clearHandover} type="button" className={`${prefixCls}-range-input-clearbtn`} aria-label={locale.clearRange} onClick={foundation.handleRangeInputClearClick} onMouseDown={foundation.handleRangeInputClearMouseDown}>
-                        {clearIcon ? clearIcon : <IconClear />}
+                        {clearIcon || <IconClear />}
                     </button>
                 )}
                 {Boolean(suffix) && (

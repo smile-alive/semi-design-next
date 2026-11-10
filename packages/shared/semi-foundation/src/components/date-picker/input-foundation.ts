@@ -70,6 +70,8 @@ export interface DateInputFoundationProps extends DateInputElementProps, DateInp
     insetInputValue?: InsetInputValue;
     density?: (typeof strings.DENSITY_SET)[number];
     defaultPickerValue?: ValueType;
+    /** the zone whose current time fills an inset time input */
+    timeZone?: string | number;
 }
 
 export interface InsetInputValue {
@@ -168,7 +170,7 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
     }
 
     #autoFillTimeToInsetInputValue({ panel, field, insetInputValue, format }: { insetInputValue: InsetInputValue; format: string } & Pick<InsetInputChangeFoundationProps, 'panel' | 'field'>) {
-        const { type, defaultPickerValue, dateFnsLocale } = this.adapter.getProps();
+        const { type, defaultPickerValue, dateFnsLocale, timeZone } = this.adapter.getProps();
         const { dateInput, timeInput } = insetInputValue[panel];
         if (!type.includes('Time') || field !== 'dateInput' || timeInput) {
             return insetInputValue;
@@ -179,7 +181,7 @@ export default class InputFoundation extends BaseFoundation<DateInputAdapter, Da
         if (dateInput.length !== dateFormatToken.length || !isValidDate(compatibleParse(dateInput, dateFormatToken))) {
             return insetInputValue;
         }
-        const { nowDate, nextDate } = getDefaultPickerDate({ defaultPickerValue, format, dateFnsLocale });
+        const { nowDate, nextDate } = getDefaultPickerDate({ defaultPickerValue, format, dateFnsLocale, timeZone });
         const panelDate = panel === 'monthRight' ? nextDate : nowDate;
         return {
             ...insetInputValue,
