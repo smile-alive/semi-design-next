@@ -331,6 +331,8 @@ export default class CropperFoundation extends BaseFoundation<CropperAdapter<Cro
         img.src = src;
         // a mirror of the cropping area, not content
         img.alt = '';
+        // the translate is measured from the top-left corner, and an RTL container would start the image at its right edge
+        img.style.float = 'left';
         previewNode.appendChild(img);
         previewNode.style.overflow = 'hidden';
         const { width: previewWidth, height: previewHeight } = previewNode.getBoundingClientRect();

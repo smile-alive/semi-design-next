@@ -678,6 +678,7 @@
 - Svelte：`zoom` 可绑定（`bind:zoom`、函数绑定或单向传值），滚轮缩放同时调 `onZoomChange(zoom)`，`zoom` 不读全局默认值；`imgProps` 为 `HTMLImgAttributes`（加载回调用 `onload`），`style`、`cropperBoxStyle` 只接受字符串；`getCropperCanvas()` 经 `bind:this` 调用。
 - 换图后保持当前 zoom，图片尺寸与 zoom 一致。切换 `aspectRatio` 时结束进行中的角点与裁剪框拖动。
 - React、Vue、Solid：服务端渲染的图片在 hydration 前已加载完成时，hydration 后补发 load 并初始化裁剪框（原来裁剪框保持 0 尺寸）。
+- RTL 下裁剪器内部固定为 `direction: ltr`，裁剪框、图片与 `preview` 容器里的预览图都从左上角定位，与 LTR 一致（原来三者错位）；预览图带内联 `float: left`。
 
 ### Resizable
 

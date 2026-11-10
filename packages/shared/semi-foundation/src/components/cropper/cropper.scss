@@ -10,6 +10,8 @@ $half_corner_width: calc($width-cropper_box_corner / 2);
     position: relative;
     // scrolling the page would cancel the pointer mid-drag
     touch-action: none;
+    // the foundation positions the image and the box by physical translate from the top-left corner
+    direction: ltr;
 
     & img {
         // Tailwind's preflight sets img max-width: 100%
