@@ -20,30 +20,30 @@ export const reactExemptions: Exemption[] = [
     },
     // role="button" divs hold block content; a file card's action cannot be a button inside the card's <a>
     {
-        files: ['packages/semi-ai-react/src/components/ai-chat-dialogue/widgets/dialogue-hint.tsx'],
+        files: ['packages/semi-ai-react/src/components/ai-chat-dialogue/dialogue/dialogue-hint.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     {
-        files: ['packages/semi-ai-react/src/components/ai-chat-dialogue/widgets/content-item/annotation.tsx'],
+        files: ['packages/semi-ai-react/src/components/ai-chat-dialogue/dialogue/content-item/annotation.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     {
-        files: ['packages/semi-ai-react/src/components/ai-chat-dialogue/widgets/dialogue-content.tsx'],
+        files: ['packages/semi-ai-react/src/components/ai-chat-dialogue/dialogue/dialogue-content.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     // Root click only focuses the editor, where the keys are handled; the skill and suggestion lists are textbox-driven
     // listboxes of rich options, which a native select or datalist cannot render
     {
-        files: ['packages/semi-ai-react/src/components/ai-chat-input/index.tsx'],
+        files: ['packages/semi-ai-react/src/components/ai-chat-input/ai-chat-input.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions', 'jsx-a11y/prefer-tag-over-role'],
     },
     {
-        files: ['packages/semi-ai-react/src/components/ai-chat-input/widgets/skill-item.tsx', 'packages/semi-ai-react/src/components/ai-chat-input/widgets/suggestion-item.tsx'],
+        files: ['packages/semi-ai-react/src/components/ai-chat-input/skill-item.tsx', 'packages/semi-ai-react/src/components/ai-chat-input/suggestion-item.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/interactive-supports-focus', 'jsx-a11y/prefer-tag-over-role'],
     },
     // Links are role="link" divs because an <a href> would write the hash
     {
-        files: ['packages/semi-ui-react/src/components/anchor/index.tsx', 'packages/semi-ui-react/src/components/anchor/link.tsx'],
+        files: ['packages/semi-ui-react/src/components/anchor/anchor.tsx', 'packages/semi-ui-react/src/components/anchor/link.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     // The track is a pointer drag surface; the keyboard works on the visually hidden range input
@@ -53,17 +53,17 @@ export const reactExemptions: Exemption[] = [
     },
     // A text Avatar is a role="img" span holding initials; AvatarGroup is a role="list" div of role="listitem" spans
     {
-        files: ['packages/semi-ui-react/src/components/avatar/index.tsx', 'packages/semi-ui-react/src/components/avatar/avatar-group.tsx'],
+        files: ['packages/semi-ui-react/src/components/avatar/avatar.tsx', 'packages/semi-ui-react/src/components/avatar/avatar-group.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     // Callbacks only leave rest props or are called plainly; method-signature Props accept narrower handlers (F6)
     {
-        files: ['packages/semi-ui-react/src/components/banner/index.tsx', 'packages/semi-ui-react/src/components/navigation/item.tsx', 'packages/semi-ui-react/src/components/navigation/collapse-button.tsx'],
+        files: ['packages/semi-ui-react/src/components/banner/banner.tsx', 'packages/semi-ui-react/src/components/navigation/item.tsx', 'packages/semi-ui-react/src/components/navigation/collapse-button.tsx'],
         off: ['typescript/unbound-method'],
     },
     // The collapsed "more" trigger is a role="button" span
     {
-        files: ['packages/semi-ui-react/src/components/breadcrumb/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/breadcrumb/breadcrumb.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     // Keyboard target is the role="button" div around block content; the li only receives the bubbled click, and the
@@ -79,7 +79,7 @@ export const reactExemptions: Exemption[] = [
     },
     // Stops clicks inside a disabled button from reaching ancestors (React skips only the button's own onClick)
     {
-        files: ['packages/semi-ui-react/src/components/button/button.tsx'],
+        files: ['packages/semi-ui-react/src/components/button/base-button.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
     // role="group" divs: a fieldset brings its own border and padding
@@ -89,7 +89,7 @@ export const reactExemptions: Exemption[] = [
             'packages/semi-ui-react/src/components/button/split-button-group.tsx',
             'packages/semi-ui-react/src/components/float-button/float-button-group.tsx',
             'packages/semi-ui-react/src/components/tag/split-tag-group.tsx',
-            'packages/semi-ui-react/src/components/tag-input/index.tsx',
+            'packages/semi-ui-react/src/components/tag-input/tag-input.tsx',
         ],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
@@ -113,12 +113,12 @@ export const reactExemptions: Exemption[] = [
     },
     // Trigger wrapper takes clicks while the search input is the combobox; the dropdown div catches keys after a click
     {
-        files: ['packages/semi-ui-react/src/components/cascader/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/cascader/cascader.tsx'],
         off: ['jsx-a11y/no-static-element-interactions'],
     },
     // APG carousel region: an unnamed <section> is generic and disallows aria-roledescription; handlers pause rotation
     {
-        files: ['packages/semi-ui-react/src/components/carousel/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/carousel/carousel.tsx'],
         off: ['jsx-a11y/no-noninteractive-element-interactions', 'jsx-a11y/prefer-tag-over-role'],
     },
     // APG treeitems/options: the combobox keeps focus (aria-activedescendant) and handles their keys
@@ -143,7 +143,7 @@ export const reactExemptions: Exemption[] = [
     },
     // The input area click only hands focus to the textarea
     {
-        files: ['packages/semi-ai-react/src/components/chat/widgets/input-box.tsx'],
+        files: ['packages/semi-ai-react/src/components/chat/input-box.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
     // role="heading" div because host pages style h3 outside Semi's layers; the row click is a pointer shortcut
@@ -153,7 +153,7 @@ export const reactExemptions: Exemption[] = [
     },
     // Focusable role="group" div (fieldset adds border and padding); arrow keys move and resize, mouse-down drags
     {
-        files: ['packages/semi-ui-react/src/components/cropper/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/cropper/cropper.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role', 'jsx-a11y/no-noninteractive-tabindex', 'jsx-a11y/no-noninteractive-element-interactions'],
     },
     // role="button" div only for a custom trigger, else it collects bubbled clicks/keys; affix clicks focus an input
@@ -206,27 +206,27 @@ export const reactExemptions: Exemption[] = [
         off: ['jsx-a11y/no-static-element-interactions'],
     },
     {
-        files: ['packages/semi-ui-react/src/components/image/preview-inner.tsx'],
+        files: ['packages/semi-ui-react/src/components/image/preview/preview-inner.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role', 'jsx-a11y/no-noninteractive-element-interactions'],
     },
     {
-        files: ['packages/semi-ui-react/src/components/image/preview-image.tsx'],
+        files: ['packages/semi-ui-react/src/components/image/preview/preview-image.tsx'],
         off: ['jsx-a11y/no-noninteractive-element-interactions'],
     },
     // Prefix, suffix and wrapper clicks only focus the native input, which owns the keyboard
     {
-        files: ['packages/semi-ui-react/src/components/input/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/input/input.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
     // Root click toggles the panel (keyboard is on the input); the role="listbox" div never takes focus and only
     // cancels the focus-stealing mousedown
     {
-        files: ['packages/semi-ui-react/src/components/auto-complete/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/auto-complete/auto-complete.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role', 'jsx-a11y/no-static-element-interactions', 'jsx-a11y/interactive-supports-focus'],
     },
     // Root, prefix and suffix clicks only focus the input; focus/blur handlers track entering and leaving the group
     {
-        files: ['packages/semi-ui-react/src/components/tag-input/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/tag-input/tag-input.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-noninteractive-element-interactions', 'jsx-a11y/no-static-element-interactions'],
     },
     // Counter and wrapper clicks only focus the native textarea, which also receives the documented autoFocus
@@ -242,7 +242,7 @@ export const reactExemptions: Exemption[] = [
     // role="spinbutton" because type="number" would change parsing and formatting.
     // The step spans are pointer-only (the keyboard uses the input's arrow keys) and their mousedown keeps focus in the input
     {
-        files: ['packages/semi-ui-react/src/components/input-number/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/input-number/input-number.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role', 'jsx-a11y/no-static-element-interactions'],
     },
     // List.Item: li gets onClick/onRightClick bubbled from the inner button; the div marks inner clicks the row skips.
@@ -277,17 +277,17 @@ export const reactExemptions: Exemption[] = [
     },
     // role="group" div (fieldset adds border and padding); blur forwards only the focusout leaving the group
     {
-        files: ['packages/semi-ui-react/src/components/pincode/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/pincode/pincode.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role', 'jsx-a11y/no-noninteractive-element-interactions'],
     },
     // Only stops the click reaching an outer popup's document listener; its browser test needs a clickable div
     {
-        files: ['packages/semi-ui-react/src/components/popconfirm/index.tsx', 'packages/semi-ui-react/src/components/popconfirm/__tests__/popconfirm.browser.test.tsx'],
+        files: ['packages/semi-ui-react/src/components/popconfirm/popconfirm.tsx', 'packages/semi-ui-react/src/components/popconfirm/__tests__/popconfirm.browser.test.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
     // A native <progress> cannot draw the track or SVG ring
     {
-        files: ['packages/semi-ui-react/src/components/progress/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/progress/progress.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     // The documented autoFocus goes to the native input
@@ -322,7 +322,7 @@ export const reactExemptions: Exemption[] = [
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/interactive-supports-focus', 'jsx-a11y/prefer-tag-over-role'],
     },
     {
-        files: ['packages/semi-ui-react/src/components/select/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/select/select.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/interactive-supports-focus', 'jsx-a11y/prefer-tag-over-role', 'jsx-a11y/no-static-element-interactions'],
     },
     // role="dialog" div for the same reason as Modal; the title is any ReactNode and may hold block content, which an <hN> does not allow
@@ -333,13 +333,13 @@ export const reactExemptions: Exemption[] = [
     // Rail, track, dots and marks are pointer shortcuts; the keyboard works on the handle inputs.
     // The documented autoFocus goes to the first native handle input
     {
-        files: ['packages/semi-ui-react/src/components/slider/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/slider/slider.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions', 'jsx-a11y/no-autofocus'],
     },
     // Native checkbox with role="switch"; a duplicate aria-checked could contradict the native checked.
     // The documented autoFocus goes to the native input
     {
-        files: ['packages/semi-ui-react/src/components/switch/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/switch/switch.tsx'],
         off: ['jsx-a11y/role-has-required-aria-props', 'jsx-a11y/no-autofocus'],
     },
     // The role is the consumer's or else "button", computed at render; the rule cannot resolve it
@@ -349,17 +349,17 @@ export const reactExemptions: Exemption[] = [
     },
     // Table elements are replaceable `components` and become divs when virtualized, so they state their roles
     {
-        files: ['packages/semi-ui-react/src/components/table/table-header-row.tsx', 'packages/semi-ui-react/src/components/table/table-cell.tsx', 'packages/semi-ui-react/src/components/table/body/base-row.tsx', 'packages/semi-ui-react/src/components/table/body/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/table/table-header/table-header-row.tsx', 'packages/semi-ui-react/src/components/table/table-cell.tsx', 'packages/semi-ui-react/src/components/table/body/base-row.tsx', 'packages/semi-ui-react/src/components/table/body/body.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     // A scrolling body may hold no focusable cell, so its scroll container is the Tab stop
     {
-        files: ['packages/semi-ui-react/src/components/table/body/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/table/body/body.tsx'],
         off: ['jsx-a11y/no-noninteractive-tabindex'],
     },
     // Pointer-only resize handle, no role (keyboard resizing is out of scope, see the Table section of docs/component-issues.md); click stops sorting
     {
-        files: ['packages/semi-ui-react/src/components/table/resizable-header-cell.tsx'],
+        files: ['packages/semi-ui-react/src/components/table/table-header/resizable-header-cell.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
     // The close icon is a role="button" span (the keyboard closes the tab with Backspace or Delete)
@@ -369,7 +369,7 @@ export const reactExemptions: Exemption[] = [
     },
     // A clickable Tag holds block content, so it is a role="button" div
     {
-        files: ['packages/semi-ui-react/src/components/tag/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/tag/tag.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     // APG combobox input that opens the panel of time lists
@@ -380,13 +380,13 @@ export const reactExemptions: Exemption[] = [
     // The popup's role is the `role` prop (tooltip or dialog), which jsx-a11y only accepts as a literal; its click only
     // applies clickToHide, and its keys (Escape, the guardFocus Tab trap) are listeners the foundation adds
     {
-        files: ['packages/semi-ui-react/src/components/tooltip/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/tooltip/tooltip.tsx'],
         off: ['jsx-a11y/no-static-element-interactions', 'jsx-a11y/click-events-have-key-events'],
     },
     // role="list" divs (items are Checkbox spans, virtual rows or dnd-kit wrappers, not li); a disabled Transfer has no
     // focusable item, so each scrolling list is the Tab stop
     {
-        files: ['packages/semi-ui-react/src/components/transfer/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/transfer/transfer.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role', 'jsx-a11y/no-noninteractive-tabindex'],
     },
     // APG treeitem: the tree keeps focus (aria-activedescendant) and handles row keys, including checking
@@ -397,12 +397,12 @@ export const reactExemptions: Exemption[] = [
     // Trigger wrapper takes clicks while the search input is the combobox; placeholder click only focuses the input Tab
     // already reaches; the dropdown div catches Esc
     {
-        files: ['packages/semi-ui-react/src/components/tree-select/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/tree-select/tree-select.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
     // Add areas are role="button" divs around block content; with an inner control the role drops, the click bubbles
     {
-        files: ['packages/semi-ui-react/src/components/upload/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/upload/upload.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role', 'jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
     // A file card's click is the pointer shortcut for its preview button
@@ -418,7 +418,7 @@ export const reactExemptions: Exemption[] = [
     // role="dialog" is Popover's role prop (no tag to swap) and holds a range a tooltip may not; role="status" stays a
     // div because form.reset() empties <output>
     {
-        files: ['packages/semi-ui-react/src/components/audio-player/index.tsx', 'packages/semi-ui-react/src/components/video-player/index.tsx'],
+        files: ['packages/semi-ui-react/src/components/audio-player/audio-player.tsx', 'packages/semi-ui-react/src/components/video-player/video-player.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     // Like Select's Option: aria-activedescendant keeps focus on the input; native <option> needs <select>

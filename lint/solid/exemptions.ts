@@ -264,11 +264,11 @@ export const solidExemptions: Exemption[] = [
         off: ['jsx-a11y/no-static-element-interactions'],
     },
     {
-        files: ['packages/semi-ui-solid/src/components/image/preview-inner.tsx'],
+        files: ['packages/semi-ui-solid/src/components/image/preview/preview-inner.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role', 'jsx-a11y/no-noninteractive-element-interactions'],
     },
     {
-        files: ['packages/semi-ui-solid/src/components/image/preview-image.tsx'],
+        files: ['packages/semi-ui-solid/src/components/image/preview/preview-image.tsx'],
         off: ['jsx-a11y/no-noninteractive-element-interactions'],
     },
     // Focusable role="group" div (fieldset adds border and padding); arrow keys move and resize, pointer-down drags
@@ -359,30 +359,30 @@ export const solidExemptions: Exemption[] = [
     // Options stay out of the Tab order: the textbox owns focus and moves the active option through
     // aria-activedescendant, so a click is a pointer shortcut
     {
-        files: ['packages/semi-ai-solid/src/components/ai-chat-input/widgets/skill-item.tsx', 'packages/semi-ai-solid/src/components/ai-chat-input/widgets/suggestion-item.tsx'],
+        files: ['packages/semi-ai-solid/src/components/ai-chat-input/skill-item.tsx', 'packages/semi-ai-solid/src/components/ai-chat-input/suggestion-item.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/interactive-supports-focus', 'jsx-a11y/prefer-tag-over-role'],
     },
     // The editor host relays focusin, focusout, keydown and paste from the Tiptap contenteditable inside it, which holds
     // the textbox role
     {
-        files: ['packages/semi-ai-solid/src/components/ai-chat-input/widgets/rich-text-input.tsx'],
+        files: ['packages/semi-ai-solid/src/components/ai-chat-input/rich-text-input.tsx'],
         off: ['jsx-a11y/no-static-element-interactions'],
     },
     // The input area click only hands focus to the textarea
     {
-        files: ['packages/semi-ai-solid/src/components/chat/widgets/input-box.tsx'],
+        files: ['packages/semi-ai-solid/src/components/chat/input-box.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
     // role="button" divs hold block content; a file card's reference action cannot be a native button inside the
     // card's <a>
     {
-        files: ['packages/semi-ai-solid/src/components/ai-chat-dialogue/widgets/dialogue-hint.tsx', 'packages/semi-ai-solid/src/components/ai-chat-dialogue/widgets/content-item/annotation.tsx', 'packages/semi-ai-solid/src/components/ai-chat-dialogue/widgets/dialogue-content.tsx'],
+        files: ['packages/semi-ai-solid/src/components/ai-chat-dialogue/dialogue/dialogue-hint.tsx', 'packages/semi-ai-solid/src/components/ai-chat-dialogue/dialogue/content-item/annotation.tsx', 'packages/semi-ai-solid/src/components/ai-chat-dialogue/dialogue/dialogue-content.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     // The step header takes role="button", tabIndex and its handlers only when it has actions to expand; the rule
     // cannot see the conditional role
     {
-        files: ['packages/semi-ai-solid/src/components/ai-chat-dialogue/widgets/content-item/dialogue-step.tsx'],
+        files: ['packages/semi-ai-solid/src/components/ai-chat-dialogue/dialogue/content-item/dialogue-step.tsx'],
         off: ['jsx-a11y/no-static-element-interactions'],
     },
     // The single-selection text beside the trigger search input only focuses that input on click; the dropdown div
@@ -414,18 +414,18 @@ export const solidExemptions: Exemption[] = [
     },
     // Table elements are replaceable `components` and become divs when virtualized, so they state their roles
     {
-        files: ['packages/semi-ui-solid/src/components/table/table-header-row.tsx', 'packages/semi-ui-solid/src/components/table/table-cell.tsx', 'packages/semi-ui-solid/src/components/table/body/base-row.tsx', 'packages/semi-ui-solid/src/components/table/body/index.tsx'],
+        files: ['packages/semi-ui-solid/src/components/table/table-header/table-header-row.tsx', 'packages/semi-ui-solid/src/components/table/table-cell.tsx', 'packages/semi-ui-solid/src/components/table/body/base-row.tsx', 'packages/semi-ui-solid/src/components/table/body/body.tsx'],
         off: ['jsx-a11y/prefer-tag-over-role'],
     },
     // A scrolling body may hold no focusable cell, so its scroll container is the Tab stop
     {
-        files: ['packages/semi-ui-solid/src/components/table/body/index.tsx'],
+        files: ['packages/semi-ui-solid/src/components/table/body/body.tsx'],
         off: ['jsx-a11y/no-noninteractive-tabindex'],
     },
     // Pointer-only resize handle, no role (keyboard resizing is out of scope, see the Table section of
     // docs/component-issues.md); click stops sorting
     {
-        files: ['packages/semi-ui-solid/src/components/table/resizable-header-cell.tsx'],
+        files: ['packages/semi-ui-solid/src/components/table/table-header/resizable-header-cell.tsx'],
         off: ['jsx-a11y/click-events-have-key-events', 'jsx-a11y/no-static-element-interactions'],
     },
     // Like Select's Option: aria-activedescendant keeps focus on the input; native <option> needs <select>

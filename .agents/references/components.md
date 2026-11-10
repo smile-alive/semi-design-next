@@ -4,7 +4,7 @@
 
 ## 目录
 
-- 组件目录的根只放入口组件（React 为 `index.tsx`，其他框架为与目录同名的组件文件）、`index`、`interface` 与 `context`；其余子组件和它们专用的辅助文件放 `widgets/`（`chat/widgets/chat-box-action.tsx`）。文件名就是它导出的组件或 hook。按功能独立成块的部分用自己的子目录（Sidebar 的 `container/`、`annotation/`，AIChatInput 的 `configure/`、`extension/`），不放进 `widgets/`。不建只放一个 `index` 的子目录，也不建 `hooks/`、`hoc/` 这类按种类分的子目录。AI 包已按这条整理；UI 包的组件目录仍是平铺，待迁移，见 [component-issues](../../docs/component-issues.md)。四个框架用同样的子目录。`__tests__/` 与 `_` 开头的内部目录不受此限。
+- 组件目录平铺（D18）：入口组件、`index`、`interface`、`context`、子组件、hook 与工具函数放在同一层。四个框架的入口组件都是与目录同名的组件文件（`select/select.tsx`、`select/select.vue`），导出的组件名与目录名不同时以组件名命名（`navigation/nav.vue`），`index` 只做导出与挂载子组件。文件名就是它导出的组件或 hook。多个文件合起来组成一个有名字的部分（单独导出的子组件、一块 DOM 区域、一块独立功能）时，用这个部分的名字建子目录（Table 的 `body/`、`table-header/`，Image 的 `preview/`，Form 的 `schema-form/`，Chat 的 `chat-box/`，AIChatInput 的 `configure/`、`extension/`）。子目录的主组件同样与子目录同名（`dialogue/dialogue.tsx`、`table/body/body.vue`）。没有主组件的同类集合也可以成块，目录名写这类东西的名字（Svelte Form 的 `fields/`、MarkdownRender 的 `components/`）。不按文件数硬性拆分；根目录超过约 15 个文件时，回头找可拆的块，找不到就保持平铺。一个组件有两个及以上 hook 时，hook 放进以本框架 hook 目录命名的子目录（React、Svelte 为 `hooks/`，Vue 为 `composables/`，Solid 为 `primitives/`）。不建 `widgets/` 这类收纳子组件的目录，不建只放一个 `index` 的子目录，也不建 `hoc/` 等其他按种类分的子目录。同一个部分在各框架用同样的子目录名；某个框架里这部分只有一个文件时不建子目录（Sidebar 的 `container/` 只在 Vue、Svelte 中成块，React、Solid 为 `container.tsx`）。`__tests__/` 与 `_` 开头的内部目录不受此限。
 
 ## 组件内语句顺序
 

@@ -297,7 +297,7 @@ export const svelteExemptions: SvelteExemption[] = [
     },
     // The column resize handle is a pointer-only drag surface (no keyboard resize, as in the other frameworks); its click only stops a drag's last click from sorting
     {
-        files: ['packages/semi-ui-svelte/src/components/table/table-header-row.svelte'],
+        files: ['packages/semi-ui-svelte/src/components/table/table-header/table-header-row.svelte'],
         off: [],
         compilerOff: ['a11y_click_events_have_key_events', 'a11y_no_static_element_interactions'],
     },
